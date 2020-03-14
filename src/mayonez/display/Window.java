@@ -6,6 +6,9 @@ import java.awt.Dimension;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
+import mayonez.input.KeyInput;
+import mayonez.input.MouseInput;
+
 /**
  * The main display component of the engine.
  */
@@ -22,6 +25,13 @@ public class Window extends JFrame {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 
 		createView();
+	}
+
+	public synchronized void addInputListeners(KeyInput k, MouseInput m) {
+		addKeyListener(k);
+		renderer.addMouseListener(m);
+		renderer.addMouseMotionListener(m);
+		renderer.addMouseWheelListener(m);
 	}
 
 	private void createView() {
