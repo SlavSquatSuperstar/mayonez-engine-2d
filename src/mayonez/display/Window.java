@@ -8,6 +8,7 @@ import javax.swing.SwingUtilities;
 
 import mayonez.input.KeyInput;
 import mayonez.input.MouseInput;
+import mayonez.level.Level;
 
 /**
  * The main display component of the engine.
@@ -49,11 +50,11 @@ public class Window extends JFrame {
 		});
 	}
 
-	public void render() {
+	public void render(Level l) {
 		if (!isVisible())
 			return;
 
-		renderer.render();
+		renderer.render(l);
 	}
 
 }
