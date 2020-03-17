@@ -10,6 +10,8 @@ import java.awt.event.MouseWheelListener;
 import java.util.Observable;
 import java.util.Observer;
 
+import mayonez.event.Event;
+
 public abstract class InputListener extends Observable
 		implements KeyListener, MouseListener, MouseMotionListener, MouseWheelListener {
 
@@ -20,6 +22,16 @@ public abstract class InputListener extends Observable
 	protected void publish(String msg) {
 		setChanged();
 		notifyObservers(msg);
+	}
+	
+	protected void publish(Object arg) {
+		setChanged();
+		notifyObservers(arg);
+	}
+	
+	protected void publish(Event e) {
+		setChanged();
+		notifyObservers(e);
 	}
 
 	// Key Events

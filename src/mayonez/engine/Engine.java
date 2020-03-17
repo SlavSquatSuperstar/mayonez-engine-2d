@@ -100,6 +100,7 @@ public class Engine implements Runnable {
 			try {
 				System.out.println("Engine: Stopping");
 				thread.join();
+				System.exit(0);
 			} catch (InterruptedException e) {
 				System.out.println("Engine: Error shutting down");
 				e.printStackTrace();

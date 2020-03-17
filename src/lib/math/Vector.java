@@ -3,6 +3,10 @@ package lib.math;
 public class Vector {
 
 	double[] components;
+	
+	public Vector() {
+		this(0, 0);
+	}
 
 	public Vector(double x, double y) {
 		components = new double[] { x, y };

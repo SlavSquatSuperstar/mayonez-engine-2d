@@ -3,6 +3,8 @@ package mayonez.input;
 import java.awt.event.MouseEvent;
 import java.util.Observer;
 
+import mayonez.event.MouseInputEvent;
+
 public class MouseInput extends InputListener {
 
 	public MouseInput(Observer o) {
@@ -11,24 +13,7 @@ public class MouseInput extends InputListener {
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		String button;
-		
-		switch (e.getButton()) {
-		
-		case MouseEvent.BUTTON1:
-			button = "left mouse";
-			break;
-		case MouseEvent.BUTTON3:
-			button = "right mouse";
-			break;
-		default:
-			button = "mouse";
-			break;
-			
-		}
-		
-		
-		publish(String.format("Clicked %s at %d, %d", button, e.getX(), e.getY()));
+		publish(new MouseInputEvent(e.getButton(), e.getX(), e.getY()));
 	}
 
 }

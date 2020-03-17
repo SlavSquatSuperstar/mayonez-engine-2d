@@ -1,10 +1,8 @@
 package mayonez.game;
 
-import java.util.Observable;
-import java.util.Observer;
-
 import mayonez.Launcher;
 import mayonez.display.Window;
+import mayonez.event.EventHandler;
 import mayonez.input.KeyInput;
 import mayonez.input.MouseInput;
 import mayonez.level.Level;
@@ -14,12 +12,13 @@ import mayonez.object.Square;
  * The main logic component of the engine that communicates between the display
  * and level.
  */
-public class Game implements Observer {
+public class Game {
 
 	// Display
 	private Window window;
 
 	// Event
+	private EventHandler handler;
 
 	// Input
 	private KeyInput keys;
@@ -31,16 +30,20 @@ public class Game implements Observer {
 	// State
 
 	public Game() {
-		keys = new KeyInput(this);
-		mouse = new MouseInput(this);
-
+		
 		level = new Level();
-		for (int i = 0; i < 10; i++)
+		for (int i = 0; i < 16; i++)
 			level.addObject(new Square());
+		
+		handler = new EventHandler(level);
 
-		window = new Window("Mayonez Engine v0.3", Launcher.WIDTH, Launcher.HEIGHT);
+		keys = new KeyInput(handler);
+		mouse = new MouseInput(handler);
+
+		window = new Window(Launcher.NAME + " " + Launcher.VERSION, Launcher.WIDTH, Launcher.HEIGHT);
 		window.addInputListeners(keys, mouse);
 		window.display();
+		
 	}
 
 	public void update() {
@@ -49,11 +52,6 @@ public class Game implements Observer {
 
 	public void render() {
 		window.render(level);
-	}
-
-	@Override
-	public void update(Observable o, Object arg) {
-		System.out.println(arg);
 	}
 
 }
