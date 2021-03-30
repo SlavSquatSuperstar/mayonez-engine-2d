@@ -18,10 +18,14 @@ public class Player extends GameObject {
 
 	// Physics
 	private Vector velocity;
-	private double accel = 8;
-	private double topSpeed = 12;
+	private double thrustForce = 8;
+	private double breakForce = 2;
+	private double topSpeed = 8;
 	private double mass = 1;
 	private double drag = 0.2; // [0, 1]
+
+	private double boostMultiplier = 3;
+	private boolean boosting, recovering;
 
 	public Player(double x, double y, int length) {
 		super(x, y);
@@ -42,11 +46,23 @@ public class Player extends GameObject {
 		// Get Input
 		int xInput = Input.getAxis("horizontal");
 		int yInput = Input.getAxis("vertical");
-		applyForce(new Vector(xInput, yInput).scale(accel));
+		Vector appliedForce = new Vector(xInput, yInput).scale(thrustForce);
+		// Boost (increase thrust and top speed)
+		if (Input.keyDown(KeyEvent.VK_SHIFT)) {
+			appliedForce.scale(boostMultiplier);
+			boosting = true;
+		} else {
+			boosting = false;
+			recovering = true;
+		}
+		applyForce(appliedForce);
 
 		// Apply Drag Unless Stationary -> divide by 0
 		if (velocity.magnitude() != 0) {
 			Vector dragForce = velocity.scale(-drag);
+			// Break (increase drag)
+			if (Input.keyDown(KeyEvent.VK_SPACE))
+				dragForce = dragForce.scale((drag + breakForce) / drag);
 			applyForce(dragForce);
 
 			// Just stop if moving really slow and not pressing move keys
@@ -57,14 +73,20 @@ public class Player extends GameObject {
 		}
 
 		// Limit Top Speed
-		if (speed() > topSpeed) {
-			velocity = velocity.scale(topSpeed / speed());
+		if (boosting) {
+			if (speed() > topSpeed * boostMultiplier)
+				velocity = velocity.scale(topSpeed / speed());
+		} else if (recovering) {
+			if (speed() > topSpeed * boostMultiplier)
+				velocity = velocity.scale(topSpeed / speed());
+			if (speed() < topSpeed)
+				recovering = false;
+		} else {
+			if (speed() > topSpeed)
+				velocity = velocity.scale(topSpeed / speed());
 		}
 
 		move(velocity);
-
-//		if (Input.keyDown(KeyEvent.VK_SPACE))
-//			decelerate(accel / 4);
 
 		// Bounds Detection X
 		if (getX() + length < 0)

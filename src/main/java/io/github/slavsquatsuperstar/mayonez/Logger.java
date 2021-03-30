@@ -13,12 +13,12 @@ public class Logger {
 	private static BufferedWriter writer;
 
 	static {
-		// create the log directory if needed
+		// Create the log directory if needed
 		File logDirectory = new File("logs/");
 		if (!logDirectory.exists())
 			logDirectory.mkdir();
 
-		// count number of log files with the same date
+		// Count number of log files with the same date
 		LocalDate today = LocalDate.now();
 		int count = 0;
 		for (File f : logDirectory.listFiles())
