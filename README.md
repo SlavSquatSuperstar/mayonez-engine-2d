@@ -1,7 +1,7 @@
 # MayonezEngine
  The 2D Java game engine to fit your Slavic needs!*†
  
- Java Version: JDK 1.8
+ Java Version: JDK 11
 
  Dependencies: none
  

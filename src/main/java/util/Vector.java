@@ -1,38 +1,13 @@
-package io.github.slavsquatsuperstar.mathlib;
+package util;
 
-/**
- * Representation of an x- and y- value in the 2D plane. Note that Vectors are
- * immutable, like Strings, so make sure the assign a function's return value to
- * the variable to modify it.
- */
 public class Vector {
 
-	private double x, y;
+	public static final Vector POINT_VECTOR = new Vector(0, 0);
 
-	public Vector() {
-		this(0, 0);
-	}
+	public double x, y;
 
 	public Vector(double x, double y) {
 		this.x = x;
-		this.y = y;
-	}
-
-	// Getter and Setter Methods
-
-	public double getX() {
-		return x;
-	}
-
-	public void setX(double x) {
-		this.x = x;
-	}
-
-	public double getY() {
-		return y;
-	}
-
-	public void setY(double y) {
 		this.y = y;
 	}
 
@@ -57,7 +32,7 @@ public class Vector {
 	}
 
 	public Vector unitVector() {
-		return scale(1 / magnitude());
+		return magnitude() == 0 ? Vector.POINT_VECTOR : scale(1 / magnitude());
 	}
 
 	@Override
