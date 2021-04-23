@@ -2,16 +2,15 @@ package mayonez;
 
 import java.awt.Rectangle;
 
-import util.Vector;
+import util.Vector2;
 
 public class RectangleCollider extends Component {
 
 	private double x, y;
 	private int width, height;
-	private double bounceModifier = 0.5;
+	private double bounceModifier = 0.4;
 
-	public RectangleCollider(GameObject parent, int width, int height) {
-		super(parent);
+	public RectangleCollider(int width, int height) {
 		this.width = width;
 		this.height = height;
 	}
@@ -27,7 +26,7 @@ public class RectangleCollider extends Component {
 		if (scene.isBounded()) {
 
 			RigidBody rb = parent.getComponent(RigidBody.class);
-			Vector velocity = (null == rb) ? null : rb.velocity();
+			Vector2 velocity = (null == rb) ? null : rb.velocity();
 
 			if (x < 0) {
 				x = 0;
@@ -49,7 +48,7 @@ public class RectangleCollider extends Component {
 					velocity.y = -bounceModifier * velocity.y;
 			}
 
-			parent.setPosition(new Vector(x, y));
+			parent.setPosition(new Vector2(x, y));
 		}
 
 	}

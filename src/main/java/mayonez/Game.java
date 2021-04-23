@@ -232,10 +232,10 @@ public class Game implements Runnable {
 	}
 
 	public static Scene getCurrentScene() {
-		return instance().currentScene;
+		return getGame().currentScene;
 	}
 
-	public static Game instance() { // only create the game once
+	public static Game getGame() { // only create the game once
 		return (null == instance) ? instance = new Game() : instance;
 	}
 

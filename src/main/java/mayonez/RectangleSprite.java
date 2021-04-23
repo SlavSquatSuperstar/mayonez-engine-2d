@@ -3,13 +3,12 @@ package mayonez;
 import java.awt.Color;
 import java.awt.Graphics;
 
-public class RectangleMesh extends Component implements Renderable {
+public class RectangleSprite extends Component implements Renderable {
 
 	private int width, height;
 	private Color color;
 
-	public RectangleMesh(GameObject parent, int width, int height, Color color) {
-		super(parent);
+	public RectangleSprite(int width, int height, Color color) {
 		this.width = width;
 		this.height = height;
 		this.color = color;

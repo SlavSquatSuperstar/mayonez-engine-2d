@@ -7,10 +7,6 @@ public abstract class Component {
 	protected GameObject parent;
 	protected Scene scene;
 
-	public Component(GameObject parent) {
-		this.parent = parent;
-	}
-
 	public void start() {
 		if (null == scene)
 			scene = parent.scene;

@@ -30,6 +30,14 @@ public abstract class Scene {
 		objects = new LinkedList<GameObject>();
 		components = new LinkedList<Component>();
 		toDestroy = new LinkedList<GameObject>();
+
+		init();
+	}
+
+	/**
+	 * Add necessary objects
+	 */
+	protected void init() {
 	}
 
 	public void start() {

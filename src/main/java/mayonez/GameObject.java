@@ -3,12 +3,13 @@ package mayonez;
 import java.util.LinkedList;
 
 import util.Logger;
-import util.Vector;
+import util.Vector2;
 
-public class GameObject {
+public class GameObject { 
 
 	private String name;
-	private Vector position;
+	private Vector2 position;
+	// TODO add width and height?
 	private boolean destroyed;
 
 	private LinkedList<Component> components;
@@ -16,8 +17,15 @@ public class GameObject {
 
 	public GameObject(String name, int x, int y) {
 		this.name = name;
-		position = new Vector(x, y);
+		position = new Vector2(x, y);
 		components = new LinkedList<Component>();
+		init();
+	}
+	
+	/**
+	 * Add necessary components
+	 */
+	protected void init() {
 	}
 
 	// Game Methods
@@ -33,15 +41,15 @@ public class GameObject {
 
 	// Getters and Setters
 
-	public Vector getPosition() {
+	public Vector2 getPosition() {
 		return position;
 	}
 
-	public void setPosition(Vector position) {
+	public void setPosition(Vector2 position) {
 		this.position = position;
 	}
 
-	public void move(Vector displacement) {
+	public void move(Vector2 displacement) {
 		position = position.add(displacement);
 	}
 

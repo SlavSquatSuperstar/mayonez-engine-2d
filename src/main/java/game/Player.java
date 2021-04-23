@@ -1,45 +1,44 @@
 package game;
 
-import java.awt.Color;
 import java.awt.event.KeyEvent;
 
 import mayonez.GameObject;
 import mayonez.KeyInput;
 import mayonez.RectangleCollider;
-import mayonez.RectangleMesh;
 import mayonez.RigidBody;
-import util.Vector;
+import mayonez.Texture;
+import util.Vector2;
 
-public class TestObject extends GameObject {
+public class Player extends GameObject {
 
 	private RigidBody rb;
 
-	private double thrustForce = 12;
+	private double thrustForce = 10;
 	private double breakForce = 2;
 	private double topSpeed = 6;
-	private double mass = 3;
-	private double drag = 0.2; // [0, 1]
-	private int length = 32;
+	private double mass = 2;
+	private double drag = 0.4; // [0, 1]
+	private int length = 64;
 
 	private double boostMultiplier = 3;
 	private MoveState state = MoveState.MOVING;
 
-	public TestObject(String name) {
+	public Player(String name) {
 		super(name, 100, 100);
-		addComponent(new RectangleMesh(this, length, length, Color.BLUE));
-		addComponent(new RectangleCollider(this, length, length));
-		addComponent(rb = new RigidBody(this, mass));
+		addComponent(new Texture(length, length, "mario.png"));
+		addComponent(new RectangleCollider(length, length));
+		addComponent(rb = new RigidBody(mass));
 	}
 
 	@Override
 	public void update() {
 
-		Vector velocity = rb.velocity();
+		Vector2 velocity = rb.velocity();
 
 		int xInput = KeyInput.getAxis("horizontal");
 		int yInput = KeyInput.getAxis("vertical");
 		// Don't want to move faster diagonally
-		Vector appliedForce = new Vector(xInput, yInput).unitVector().scale(thrustForce);
+		Vector2 appliedForce = new Vector2(xInput, yInput).unitVector().scale(thrustForce);
 
 		// Hold space to increase acceleration and top speed
 		if (KeyInput.keyDown(KeyEvent.VK_SHIFT)) {
@@ -54,7 +53,7 @@ public class TestObject extends GameObject {
 
 		// Apply Drag Unless Stationary (prevent divide by 0)
 		if (velocity.magnitude() != 0) {
-			Vector dragForce = velocity.scale(-drag);
+			Vector2 dragForce = velocity.scale(-drag);
 			// Break (increase drag)
 			if (KeyInput.keyDown(KeyEvent.VK_SPACE))
 				dragForce = dragForce.scale((drag + breakForce) / drag);
