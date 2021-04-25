@@ -29,13 +29,9 @@ public class Game implements Runnable {
 	private String title;
 
 	// Renderer Fields
-	private Canvas renderer;
+	private Canvas screen;
 	private BufferStrategy bs;
 	private Graphics g;
-
-	// Image Fields
-//	private BufferedImage image;
-//	private int[] pixels;
 
 	// Scene Fields
 	private Scene currentScene;
@@ -49,13 +45,15 @@ public class Game implements Runnable {
 	 * Method Declarations
 	 */
 
-	private Game() {
-		width = 1080;
-		height = 720;
-		title = "Mayonez Engine";
+	private Game(int width, int height, String title) {
+		this.width = width;
+		this.height = height;
+		this.title = title;
+
+		createView();
 	}
 
-	private void init() {
+	private void createView() {
 		// Set up the window
 		window = new JFrame(title);
 		Dimension size = new Dimension(width, height);
@@ -64,41 +62,42 @@ public class Game implements Runnable {
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // make sure 'x' button quits program
 
 		// Set up and add the renderer
-		renderer = new Canvas();
-		renderer.setPreferredSize(size);
-		renderer.setMaximumSize(size);
-		renderer.setMinimumSize(size);
-		renderer.setFocusable(false);
-		window.add(renderer);
+		screen = new Canvas();
+		screen.setPreferredSize(size);
+		screen.setMaximumSize(size);
+		screen.setMinimumSize(size);
+		screen.setFocusable(false);
+		window.add(screen);
 
 		// Add input listeners
 		window.addKeyListener(KeyInput.instance());
 		window.addMouseListener(MouseInput.instance());
 		window.addMouseMotionListener(MouseInput.instance());
-		renderer.addMouseListener(MouseInput.instance());
-		renderer.addMouseMotionListener(MouseInput.instance());
+		screen.addMouseListener(MouseInput.instance());
+		screen.addMouseMotionListener(MouseInput.instance());
+	}
 
+	private void init() {
 		// Display the window
-		window.setLocationRelativeTo(null); // center window in screen
-		window.requestFocusInWindow(); // make sure window gets input focus
+		window.setLocationRelativeTo(null);
+		window.requestFocusInWindow();
 		window.setVisible(true);
 
 		// Set up the graphics components
 		/*
-		 * Do this before starting to prevent the white "flash" when nothing has been
-		 * drawn yet Do this after making window visible to prevent
-		 * IllegalStateException: Component must have a valid peer
+		 * Do this before starting to prevent the white flash when nothing has been
+		 * drawn yet, and after making window visible to prevent IllegalStateException:
+		 * "Component must have a valid peer"
 		 */
-		renderer.createBufferStrategy(3);
-		bs = renderer.getBufferStrategy();
+		screen.createBufferStrategy(3);
+		bs = screen.getBufferStrategy();
 		g = bs.getDrawGraphics();
 
-//		image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-//		pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
-
 		// Start the scene
-		if (null != currentScene)
+		if (null != currentScene) {
+			Logger.log("Game: Loaded scene \"%s\"", currentScene.getName());
 			currentScene.start();
+		}
 	}
 
 	// Update Methods
@@ -108,12 +107,13 @@ public class Game implements Runnable {
 			currentScene.update();
 	}
 
+	// TODO move to new class
 	public void render() {
 		// Don't render if the window is invisible;
-		if (null == bs || null == g || !renderer.isVisible()) {
+		if (null == bs || null == g || !screen.isVisible()) {
 			// Set up the graphics components
-			renderer.createBufferStrategy(3);
-			bs = renderer.getBufferStrategy();
+			screen.createBufferStrategy(3);
+			bs = screen.getBufferStrategy();
 			g = bs.getDrawGraphics();
 			return;
 		}
@@ -125,11 +125,10 @@ public class Game implements Runnable {
 		g.setColor(Color.WHITE);
 		g.fillRect(0, 0, width, height);
 
-		// g.drawImage(image, 0, 0, width, height, null);
-
 		// Draw all textures
-		if (null != currentScene)
+		if (null != currentScene) {
 			currentScene.render(g);
+		}
 
 		bs.show();
 	}
@@ -151,7 +150,6 @@ public class Game implements Runnable {
 
 		// For debugging
 		double timer = 0;
-		// int ticks = 0;
 		int frames = 0;
 
 		while (running) {
@@ -175,7 +173,6 @@ public class Game implements Runnable {
 				// Update = Graphics frame rate, FixedUpdate = Physics frame rate
 				unprocessedTime -= deltaTime;
 				ticked = true;
-				// ticks++;
 			}
 
 			// Only render if the game has updated to save resources
@@ -187,9 +184,7 @@ public class Game implements Runnable {
 
 			// Print ticks and frames each second
 			if (timer >= 1) {
-				// Logger.log("Ticks: %d, Frames: %d", ticks, frames);
-				Logger.log("FPS: %d", frames);
-				// ticks = 0;
+				Logger.log("Frames per Second: %d", frames);
 				frames = 0;
 				timer = 0;
 			}
@@ -203,19 +198,23 @@ public class Game implements Runnable {
 	// Thread Methods
 
 	public synchronized void start() {
-		if (!running) { // don't start if already running
-			Logger.log("Engine: Starting");
-			running = true;
-			thread = new Thread(this);
-			thread.start();
-		}
+		if (running) // don't start if already running
+			return;
+
+		Logger.log("Engine: Starting");
+		running = true;
+		thread = new Thread(this);
+		thread.start();
 	}
 
 	public synchronized void stop() {
 		if (running)
 			running = false;
 
+		// Free System resources
 		window.setVisible(false);
+		g.dispose();
+		bs.dispose();
 		window.dispose();
 
 		Logger.log("Engine: Stopping");
@@ -225,18 +224,25 @@ public class Game implements Runnable {
 
 	// Getters and Setters
 
+	public static Game getGame() { // only create the game once
+		// get params from preferences
+		return (null == instance) ? instance = new Game(800, 600, "Mayonez Engine") : instance;
+	}
+
 	public void loadScene(Scene newScene) {
 		currentScene = newScene;
-//		if (running)
-//			currentScene.start(); // starts twice
 	}
 
 	public static Scene getCurrentScene() {
 		return getGame().currentScene;
 	}
 
-	public static Game getGame() { // only create the game once
-		return (null == instance) ? instance = new Game() : instance;
+	public static int getWidth() {
+		return getGame().width;
+	}
+
+	public static int getHeight() {
+		return getGame().height;
 	}
 
 	public static double getTime() {

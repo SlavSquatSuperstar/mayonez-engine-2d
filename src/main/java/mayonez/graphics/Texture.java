@@ -1,4 +1,4 @@
-package mayonez;
+package mayonez.graphics;
 
 import java.awt.Graphics;
 import java.awt.Point;
@@ -10,31 +10,43 @@ import javax.imageio.ImageIO;
 
 import util.Logger;
 
-public class Texture extends Component implements Renderable {
+public class Texture {
 
-	private int width, height;
 	private BufferedImage image;
-	private Point origin, edge;
+	private Point origin, edge; // top left and bottom right
 
 	public static final String TEXTURES_DIRECTORY = "assets/";
 
-	public Texture(int width, int height, String path) {
-		this.width = width;
-		this.height = height;
-		
+	public Texture(String path) {
 		image = loadImage(path);
 		origin = new Point();
 		edge = (null == image) ? new Point() : new Point(image.getWidth(), image.getHeight());
 	}
 
-	@Override
-	public void render(Graphics g) {
-		int x = (int) parent.getPosition().x;
-		int y = (int) parent.getPosition().y;
+	// Image Methods
+	
+	public void drawImage(Graphics g, int x, int y, int width, int height) {
+		if (null == image)
+			return;
+
 		// stretches the image asset to fit the object's dimensions (map image vertices
 		// to screen)
 		g.drawImage(image, x, y, x + width, y + height, origin.x, origin.y, edge.x, edge.y, null);
 	}
+
+	public BufferedImage loadImage(String path) {
+		path = TEXTURES_DIRECTORY + path;
+		BufferedImage image = null;
+		try {
+			image = ImageIO.read(new File(path));
+			Logger.log("Texture: Loaded image \"%s\"", path);
+		} catch (IOException e) {
+			Logger.log("Texture: Failed to load image \"%s\"", path);
+		}
+		return image;
+	}
+
+	
 
 	// Image Manipulation Methods
 
@@ -53,24 +65,15 @@ public class Texture extends Component implements Renderable {
 	// Getters and Setters
 
 	public int getWidth() {
-		return width;
+		return image.getWidth();
 	}
 
 	public int getHeight() {
-		return height;
+		return image.getHeight();
 	}
 
-	// Static Methods
-
-	// find a way to save images (to hash map?)
-	public static BufferedImage loadImage(String path) {
-		path = TEXTURES_DIRECTORY + path;
-		try {
-			return ImageIO.read(new File(path));
-		} catch (IOException e) {
-			Logger.log("Texture: Failed to load image \"%s\"", path);
-		}
-		return null;
+	public BufferedImage getImage() {
+		return image;
 	}
 
 }

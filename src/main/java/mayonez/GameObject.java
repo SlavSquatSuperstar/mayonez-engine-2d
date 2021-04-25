@@ -5,64 +5,37 @@ import java.util.LinkedList;
 import util.Logger;
 import util.Vector2;
 
-public class GameObject { 
+public class GameObject {
 
 	private String name;
-	private Vector2 position;
+	protected Vector2 position, dimensions;
 	// TODO add width and height?
 	private boolean destroyed;
 
 	private LinkedList<Component> components;
 	protected Scene scene;
 
-	public GameObject(String name, int x, int y) {
+	public GameObject(String name, int x, int y, int width, int height) {
 		this.name = name;
 		position = new Vector2(x, y);
+		dimensions = new Vector2(width, height);
 		components = new LinkedList<Component>();
-		init();
-	}
-	
-	/**
-	 * Add necessary components
-	 */
-	protected void init() {
 	}
 
 	// Game Methods
+	protected void init() {
+	}
 
-	public void start() {
-		Logger.log("%s: Created object \"%s\"", getClass().getSimpleName(), name);
-		for (Component c : components)
+	void start() {
+		for (Component c : components) {
+			c.scene = scene;
 			c.start();
+		}
 	}
 
-	public void update() {
-	}
-
-	// Getters and Setters
-
-	public Vector2 getPosition() {
-		return position;
-	}
-
-	public void setPosition(Vector2 position) {
-		this.position = position;
-	}
-
-	public void move(Vector2 displacement) {
-		position = position.add(displacement);
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public boolean isDestroyed() {
-		return destroyed;
-	}
-
-	public void destroy() {
-		destroyed = true;
+	void update() {
+		for (Component c : components)
+			c.update();
 	}
 
 	// Component Methods
@@ -81,9 +54,13 @@ public class GameObject {
 	}
 
 	public void addComponent(Component c) {
-		components.add(c);
+		if (null != getComponent(c.getClass()))
+			// maybe make annotation (multiple scripts should suprress warning)
+			Logger.log("GameObject: Adding multiple components of the same type is not recommended");
+
 		c.parent = this;
 		c.scene = scene;
+		components.add(c);
 	}
 
 	public <T extends Component> void removeComponent(Class<T> componentClass) {
@@ -98,6 +75,44 @@ public class GameObject {
 
 	public LinkedList<Component> getComponents() {
 		return components; // clone?
+	}
+
+	// Getters and Setters
+
+	public int getWidth() {
+		return (int) dimensions.x;
+	}
+
+	public int getHeight() {
+		return (int) dimensions.y;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public boolean isDestroyed() {
+		return destroyed;
+	}
+
+	public void destroy() {
+		destroyed = true;
+	}
+
+	public Vector2 getPosition() {
+		return position;
+	}
+
+	public void setPosition(Vector2 position) {
+		this.position = position;
+	}
+
+	public void move(Vector2 displacement) {
+		position = position.add(displacement);
+	}
+
+	public void setScene(Scene scene) {
+		this.scene = scene;
 	}
 
 }

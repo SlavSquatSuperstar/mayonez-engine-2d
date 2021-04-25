@@ -2,14 +2,13 @@ package game;
 
 import java.awt.event.KeyEvent;
 
-import mayonez.GameObject;
+import mayonez.Component;
 import mayonez.KeyInput;
-import mayonez.RectangleCollider;
 import mayonez.RigidBody;
-import mayonez.Texture;
+import util.Logger;
 import util.Vector2;
 
-public class Player extends GameObject {
+public class PlayerController extends Component {
 
 	private RigidBody rb;
 
@@ -18,21 +17,18 @@ public class Player extends GameObject {
 	private double topSpeed = 6;
 	private double mass = 2;
 	private double drag = 0.4; // [0, 1]
-	private int length = 64;
 
 	private double boostMultiplier = 3;
 	private MoveState state = MoveState.MOVING;
 
-	public Player(String name) {
-		super(name, 100, 100);
-		addComponent(new Texture(length, length, "mario.png"));
-		addComponent(new RectangleCollider(length, length));
-		addComponent(rb = new RigidBody(mass));
+	@Override
+	public void start() {
+		rb = parent.getComponent(RigidBody.class);
+		rb.mass = mass;
 	}
 
 	@Override
 	public void update() {
-
 		Vector2 velocity = rb.velocity();
 
 		int xInput = KeyInput.getAxis("horizontal");
@@ -83,8 +79,8 @@ public class Player extends GameObject {
 				velocity = velocity.scale(topSpeed / rb.speed());
 		}
 
-		move(velocity);
-		
+		parent.move(velocity);
+		Logger.log("Player: %.2f, %.2f", parent.getPosition().x, parent.getPosition().y);
 	}
 
 	private enum MoveState {

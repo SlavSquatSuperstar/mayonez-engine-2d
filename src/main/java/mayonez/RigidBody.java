@@ -5,11 +5,11 @@ import util.Vector2;
 public class RigidBody extends Component {
 
 	private Vector2 velocity;
-	private double mass;
+	public double mass;
 
 	public RigidBody(double mass) {
 		this.mass = mass;
-		this.velocity = Vector2.POINT_VECTOR;
+		this.velocity = new Vector2();
 	}
 
 	// ForceMode.Force, should be used with keyboard axes

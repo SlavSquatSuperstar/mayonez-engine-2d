@@ -1,4 +1,4 @@
-package mayonez;
+package mayonez.graphics;
 
 import java.awt.Graphics;
 

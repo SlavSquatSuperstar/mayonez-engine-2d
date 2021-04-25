@@ -10,7 +10,7 @@ public class MouseInput extends MouseAdapter {
 
 	// Mouse Fields
 	private static int mouseX, mouseY;
-	private static boolean dragging;
+//	private static boolean dragging;
 	private static boolean[] buttons = new boolean[MouseEvent.MOUSE_LAST];
 
 	// MouseListener Methods
@@ -24,7 +24,7 @@ public class MouseInput extends MouseAdapter {
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		dragging = false;
+//		dragging = false;
 		buttons[e.getButton() - 1] = false;
 		updateMouseCoords(e);
 	}
@@ -37,7 +37,7 @@ public class MouseInput extends MouseAdapter {
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
-		dragging = true;
+//		dragging = true;
 		updateMouseCoords(e);
 	}
 

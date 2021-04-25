@@ -2,9 +2,11 @@ package util;
 
 public class Vector2 {
 
-	public static final Vector2 POINT_VECTOR = new Vector2(0, 0);
-
 	public double x, y;
+
+	public Vector2() {
+		this(0, 0);
+	}
 
 	public Vector2(double x, double y) {
 		this.x = x;
@@ -32,7 +34,7 @@ public class Vector2 {
 	}
 
 	public Vector2 unitVector() {
-		return magnitude() == 0 ? Vector2.POINT_VECTOR : scale(1 / magnitude());
+		return magnitude() == 0 ? new Vector2() : scale(1 / magnitude());
 	}
 
 	@Override

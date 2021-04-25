@@ -3,24 +3,25 @@ package mayonez;
 import java.awt.Graphics;
 import java.util.LinkedList;
 
+import mayonez.graphics.Renderable;
+import mayonez.graphics.Renderer;
 import util.Logger;
 
 public abstract class Scene {
-
-//	public static final int UNBOUNDED = 0;
-//	public static final int BOUNDED = 1;
-//	public static final int WRAPPING = 2;
 
 	private String name;
 	private int width, height;
 
 	// TODO camera
 	private boolean running;
-//	private int boundType = 1;
 	private boolean bounded = true;
+	// private BoundType = BOUNDED;
 
-	protected LinkedList<GameObject> objects, toDestroy;
-	protected LinkedList<Component> components;
+//	private Camera camera;
+//	private BufferedImage background;
+	private Renderer renderer;
+
+	protected LinkedList<GameObject> objects, toRemove;
 
 	public Scene(String name, int width, int height) {
 		this.name = name;
@@ -28,69 +29,83 @@ public abstract class Scene {
 		this.height = height;
 
 		objects = new LinkedList<GameObject>();
-		components = new LinkedList<Component>();
-		toDestroy = new LinkedList<GameObject>();
+		toRemove = new LinkedList<GameObject>();
 
-		init();
+		renderer = new Renderer();
+
+//		camera = new Camera(this);
+//		background = Texture.loadImage("background.png");
+		// load this after
 	}
 
-	/**
-	 * Add necessary objects
-	 */
-	protected void init() {
-	}
+	// User defined start behavior
+	protected abstract void init();
 
-	public void start() {
+	void start() {
+		if (running)
+			return;
+
 		running = true;
-		Logger.log("%s: Started scene \"%s\"", getClass().getSimpleName(), name);
-
+		init();
 		for (GameObject o : objects)
 			o.start();
+		Logger.log("Scene: Started scene \"%s\"", name);
 	}
 
-	public void update() {
+	void update() {
 		if (!running)
 			return;
 
+		// Update Objects and Camera
 		for (GameObject o : objects) {
 			o.update();
 			// Flag objects for destruction
 			if (o.isDestroyed())
 				removeObject(o);
 		}
-
-		for (Component c : components)
-			c.update();
+//		camera.update();
 
 		// Remove destroyed objects at the end of the frame
-		for (GameObject o : toDestroy) {
-			components.removeAll(o.getComponents());
+		for (GameObject o : toRemove)
 			objects.remove(o);
-			// set null for garbage collection?
-		}
-
-		toDestroy.clear();
+		toRemove.clear();
 	}
 
-	public void render(Graphics g) {
-		for (Component c : components)
-			if (c instanceof Renderable)
-				((Renderable) c).render(g);
+	void render(Graphics g) {
+		if (!running)
+			return;
+
+		renderer.render(g);
+
+		// g.drawImage(background, 0, 0, height, width, camera.getXOffset(),
+		// camera.getYOffset(), background.getWidth(), background.getHeight(), null);
+
+		// g.translate(camera.getXOffset(), camera.getYOffset());
+		// g.translate(-camera.getXOffset(), -camera.getYOffset());
 	}
 
 	// Object Methods
 
 	public void addObject(GameObject object) {
-		object.scene = this;
+		object.setScene(this);
+		object.init();
 		objects.add(object);
-		components.addAll(object.getComponents());
+
+		// Add any renderables into the renderer
+		for (Component c : object.getComponents())
+			if (c instanceof Renderable)
+				renderer.addObject((Renderable) c);
+
 		if (running)
 			object.start();
 	}
 
 	public void removeObject(GameObject object) {
 		object.destroy();
-		toDestroy.add(object);
+		for (Component c : object.getComponents())
+			if (c instanceof Renderable)
+				renderer.removeObject((Renderable) c);
+		toRemove.add(object);
 	}
 
 	// Getters and Setters
@@ -103,8 +118,16 @@ public abstract class Scene {
 		return height;
 	}
 
+	public String getName() {
+		return name;
+	}
+
 	public boolean isBounded() {
 		return bounded;
 	}
+
+//	public Camera getCamera() {
+//		return camera;
+//	}
 
 }

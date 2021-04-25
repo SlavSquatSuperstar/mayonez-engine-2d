@@ -3,6 +3,8 @@ package mayonez;
 import java.awt.Color;
 import java.awt.Graphics;
 
+import mayonez.graphics.Renderable;
+
 public class RectangleSprite extends Component implements Renderable {
 
 	private int width, height;

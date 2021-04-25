@@ -1,19 +1,19 @@
 package mayonez;
 
-import util.Logger;
-
+// TODO Observable?
 public abstract class Component {
 
 	protected GameObject parent;
 	protected Scene scene;
 
 	public void start() {
-		if (null == scene)
-			scene = parent.scene;
-		Logger.log("%s: Created new component", getClass().getSimpleName());
 	}
 
 	public void update() {
+	}
+
+	public boolean isInScene(Scene scene) {
+		return this.scene == scene;
 	}
 
 }
