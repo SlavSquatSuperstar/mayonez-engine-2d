@@ -79,7 +79,6 @@ public class PlayerController extends Component {
 		}
 
 		parent.transform.move(velocity);
-//		Logger.log("Player: %.2f, %.2f", parent.getPosition().x, parent.getPosition().y);
 	}
 
 	private enum MoveState {

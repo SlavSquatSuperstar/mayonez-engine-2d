@@ -6,6 +6,12 @@ import java.util.ArrayList;
 import com.mayonez.components.Component;
 import com.util.Logger;
 
+/**
+ * A collection of {@link Component}s representing an in-game object.
+ * 
+ * @author SlavSquatSuperstar
+ *
+ */
 public class GameObject {
 
 	private String name;
@@ -18,10 +24,15 @@ public class GameObject {
 	public GameObject(String name, Transform transform) {
 		this.name = name;
 		this.transform = transform;
-		components = new ArrayList<Component>();
+		components = new ArrayList<>();
+		init();
 	}
 
 	// Game Methods
+
+	/**
+	 * Add necessary components.
+	 */
 	protected void init() {
 	}
 
@@ -59,8 +70,9 @@ public class GameObject {
 
 	public void addComponent(Component c) {
 		if (null != getComponent(c.getClass()))
-			// maybe make annotation (multiple scripts should suprress warning)
-			Logger.log("GameObject: Adding multiple components of the same type is not recommended");
+			;
+		// maybe make annotation (multiple scripts should suprress warning)
+//			Logger.log("GameObject: Adding multiple components of the same type is not recommended");
 
 		c.parent = this;
 		c.scene = scene;

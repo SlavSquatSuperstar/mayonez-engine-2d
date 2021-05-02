@@ -4,6 +4,11 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 
+/**
+ * A collection of {@link GameObject}s that represents an in-game world.
+ * 
+ * @author SlavSquatSuperstar
+ */
 public abstract class Scene {
 
 	protected String name;
@@ -25,14 +30,18 @@ public abstract class Scene {
 		this.width = width;
 		this.height = height;
 
-		objects = new ArrayList<GameObject>();
-		toRemove = new ArrayList<GameObject>();
+		objects = new ArrayList<>();
+		toRemove = new ArrayList<>();
 
 //		camera = new Camera(this);
 //		background = Texture.loadImage("background.png");
 	}
 
-	// User defined start behavior
+	// Game Methods
+	
+	/**
+	 * Add necessary objects.
+	 */
 	protected abstract void init();
 
 	void start() {
@@ -86,7 +95,6 @@ public abstract class Scene {
 
 	public void addObject(GameObject object) {
 		object.setScene(this);
-		object.init();
 		objects.add(object);
 
 		if (running)

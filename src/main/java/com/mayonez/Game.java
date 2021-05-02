@@ -9,9 +9,7 @@ import javax.swing.JFrame;
 import com.util.Logger;
 import com.util.Preferences;
 
-// TODO Extend frame?
-@SuppressWarnings("serial")
-public class Game extends JFrame implements Runnable {
+public class Game implements Runnable {
 
 	/*
 	 * Field Declarations
@@ -28,7 +26,8 @@ public class Game extends JFrame implements Runnable {
 	private KeyInput keyboard;
 	private MouseInput mouse;
 
-	// Renderer Fields
+	// Window Fields
+	private JFrame window;
 	private Image img; // Double-buffered Image
 	private Graphics gfx;
 
@@ -46,19 +45,20 @@ public class Game extends JFrame implements Runnable {
 
 	private Game() {
 		// Set up the window
-		super(Preferences.TITLE);
-		setSize(Preferences.WIDTH, Preferences.HEIGHT);
-		setResizable(false);
-		setLocationRelativeTo(null); // center in screen
-		setDefaultCloseOperation(EXIT_ON_CLOSE); // make sure 'x' button quits program
+		window = new JFrame(Preferences.TITLE);
+		window.setSize(Preferences.WIDTH, Preferences.HEIGHT);
+		window.setResizable(false);
+		window.setLocationRelativeTo(null); // center in screen
+		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // make sure 'x' button quits program
 
 		// Add input listeners
-		addKeyListener(keyboard = new KeyInput());
-		addMouseListener(mouse = new MouseInput());
-		addMouseMotionListener(mouse);
+		window.addKeyListener(keyboard = new KeyInput());
+		window.addMouseListener(mouse = new MouseInput());
+		window.addMouseMotionListener(mouse);
 	}
 
-	// Game Loop
+	// Game Loop Methods
+
 	@Override
 	public void run() {
 
@@ -87,12 +87,11 @@ public class Game extends JFrame implements Runnable {
 				// Update = Graphics frame rate, FixedUpdate = Physics frame rate
 				deltaTime -= timestep;
 				ticked = true;
-
 			}
 
 			// Only render if the game has updated to save resources
 			if (ticked) {
-				render(getGraphics());
+				render(window.getGraphics());
 				frames++;
 				ticked = false;
 			}
@@ -106,69 +105,85 @@ public class Game extends JFrame implements Runnable {
 
 		} // end loop
 
-		stop();
+		stop(0);
 
 	}
 
-	// Frame Methods
-
+	/**
+	 * Refreshes all objects in the current scene.
+	 * 
+	 * @param dt The time elapse since the last frame
+	 */
 	public void update(double dt) {
 		// Poll events
 		if (keyboard.keyDown("exit")) {
 			running = false;
 		}
-
 		if (currentScene != null)
 			currentScene.update(dt);
 	}
 
+	/**
+	 * Repaints all objects in the current scene.
+	 */
+	// Issue white, sometimes nothing renders at all
 	public void render(Graphics g) {
-		if (img == null) {
-			img = createImage(getWidth(), getHeight());
+		if (g == null || !window.isVisible())
+			return;
+
+		if (img == null || gfx == null) {
+			img = window.createImage(window.getWidth(), window.getHeight());
 			gfx = img.getGraphics();
 		}
 
-		// render image before drawing to screen
+		// Render image before drawing to screen
 		currentScene.render((Graphics2D) gfx);
-
-		g.drawImage(img, 0, 0, getWidth(), getHeight(), null);
+		g.drawImage(img, 0, 0, window.getWidth(), window.getHeight(), null);
 	}
 
 	// Thread Methods
 
+	/**
+	 * Begins running this engine, initializing its thread, displaying the window,
+	 * and starting its scene
+	 */
 	public synchronized void start() {
 		if (running) // don't start if already running
 			return;
 
 		Logger.log("Engine: Starting");
+		running = true;
 
-		// Display the Window
-		requestFocusInWindow();
-		setVisible(true);
+		// Start thread
+		thread = new Thread(this);
+		thread.start();
 
-		// Start the scene
+		// Display window and initialize graphics buffer
+		window.setVisible(true);
+		img = window.createImage(window.getWidth(), window.getHeight());
+		gfx = img.getGraphics();
+
+		// Start scene
 		if (currentScene != null) {
 			currentScene.start();
 			Logger.log("Game: Loaded scene \"%s\"", currentScene.getName());
 		}
-
-		thread = new Thread(this);
-		thread.start();
-		running = true;
 	}
 
-	public synchronized void stop() {
-		if (running)
-			running = false;
+	/**
+	 * Shuts down the engine, stopping its thread and hiding its window.
+	 */
+	public synchronized void stop(int status) {
+		running = false;
+		Logger.log("Engine: Stopping");
 
 		// Free System resources
-		setVisible(false);
-		gfx.dispose();
-		dispose();
+		window.setVisible(false);
+		window.dispose();
 
-		Logger.log("Engine: Stopping");
+		// Stop thread
 		thread.interrupt();
-		System.exit(0);
+		System.exit(status);
 	}
 
 	// Getters and Setters
@@ -203,6 +218,9 @@ public class Game extends JFrame implements Runnable {
 		return instance.mouse;
 	}
 
+	/**
+	 * @return the time in seconds since this game started.
+	 */
 	public static double getTime() {
 		return (System.nanoTime() - timeStarted) / 1E9;
 	}

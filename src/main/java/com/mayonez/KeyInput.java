@@ -28,6 +28,10 @@ public class KeyInput extends KeyAdapter {
 		return keys[keyCode];
 	}
 
+	/**
+	 * Whether the specified {@link KeyMapping} is pressed.
+	 * @param keyName The name of the {@link KeyMapping}.
+	 */
 	public boolean keyDown(String keyName) {
 		for (KeyMapping m : KeyMapping.values()) {
 			if (m.toString().equalsIgnoreCase(keyName)) // if the desired mapping exists
@@ -48,25 +52,25 @@ public class KeyInput extends KeyAdapter {
 	 * Enum Definitions
 	 */
 
-	// TODO keyboard acceleration
+	/**
+	 * Stores two keys intended to perform opposite actions.
+	 */
 	enum KeyAxis {
-
 		VERTICAL(KeyMapping.DOWN, KeyMapping.UP), HORIZONTAL(KeyMapping.RIGHT, KeyMapping.LEFT);
 
 		private int posKey, negKey;
 
-		// make reference to key instead of code
 		private KeyAxis(KeyMapping posKey, KeyMapping negKey) {
 			this.posKey = posKey.keyCode();
 			this.negKey = negKey.keyCode();
 		}
 
-//		// if contains key code
-//		public boolean match(int keyCode) {
-//			return keyCode == posKeyCode || keyCode == negKeyCode;
-//		}
-
-		public int value() {
+		/**
+		 * @return 1 if the positive key is pressed.<br/>
+		 *         -1 if the negative key is pressed.<br/>
+		 *         0 if the both or neither key is pressed.<br/>
+		 */
+		public int value() { // TODO keyboard acceleration?
 			// "vector "method to make sure keys don't override each other
 			int negComp = (Game.keyboard().keyDown(negKey)) ? -1 : 0;
 			int posComp = (Game.keyboard().keyDown(posKey)) ? 1 : 0;
@@ -77,25 +81,35 @@ public class KeyInput extends KeyAdapter {
 		public String toString() {
 			return name().toLowerCase();
 		}
-
 	}
 
+	/**
+	 * Associates a virtual key code to a name.
+	 */
 	enum KeyMapping {
 
 		// TODO read from file to assign keybinds
 		UP(KeyEvent.VK_W), DOWN(KeyEvent.VK_S), LEFT(KeyEvent.VK_A), RIGHT(KeyEvent.VK_D), EXIT(KeyEvent.VK_ESCAPE),
 		SPACE(KeyEvent.VK_SPACE);
 
-		private int keyCode; // allow for multiple?
+		private int keyCode; // TODO allow for multiple?
+//		private int[] keyCodes;
 
 		private KeyMapping(int keyCode) {
 			this.keyCode = keyCode;
-			// KeyEvent.getKeyText(keyCode);
 		}
+
+//		private KeyMapping(int... keyCodes) {
+//			this.keyCodes = keyCodes;
+//		}
 
 		public int keyCode() {
 			return keyCode;
 		}
+
+//		public int[] getKeyCodes() {
+//			return keyCodes;
+//		}
 
 		@Override
 		public String toString() {
