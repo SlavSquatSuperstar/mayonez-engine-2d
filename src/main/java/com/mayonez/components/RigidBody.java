@@ -1,6 +1,7 @@
-package mayonez;
+package com.mayonez.components;
 
-import util.Vector2;
+import com.mayonez.Game;
+import com.util.Vector2;
 
 public class RigidBody extends Component {
 
@@ -9,19 +10,19 @@ public class RigidBody extends Component {
 
 	public RigidBody(double mass) {
 		this.mass = mass;
-		this.velocity = new Vector2();
+		this.velocity = Vector2.ZERO;
 	}
 
 	// ForceMode.Force, should be used with keyboard axes
 	public void addForce(Vector2 force) {
 		// dv = F*t/m
-		velocity = velocity.add(force.scale(Game.deltaTime).scale(1 / mass));
+		velocity = velocity.add(force.scale(Game.timestep).scale(1 / mass));
 	}
 
 	// ForceMode.Acceleration, should be used with keyboard axes
 	public void addAcceleration(Vector2 acceleration) {
 		// dv = a*t
-		velocity = velocity.add(acceleration.scale(Game.deltaTime));
+		velocity = velocity.add(acceleration.scale(Game.timestep));
 	}
 
 	// ForceMode.Impulse, should be used with button presses
@@ -33,7 +34,7 @@ public class RigidBody extends Component {
 	// ForceMode.VelocityChange, should be used with button presses
 	public void addVelocityChange(Vector2 velocityChange) {
 		// dv
-		velocity = velocity.add(velocityChange).scale(Game.deltaTime);
+		velocity = velocity.add(velocityChange).scale(Game.timestep);
 	}
 
 	public void addDisplacement(Vector2 displacement) {

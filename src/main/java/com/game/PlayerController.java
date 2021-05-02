@@ -1,12 +1,11 @@
-package game;
+package com.game;
 
 import java.awt.event.KeyEvent;
 
-import mayonez.Component;
-import mayonez.KeyInput;
-import mayonez.RigidBody;
-import util.Logger;
-import util.Vector2;
+import com.mayonez.Game;
+import com.mayonez.components.Component;
+import com.mayonez.components.RigidBody;
+import com.util.Vector2;
 
 public class PlayerController extends Component {
 
@@ -28,16 +27,16 @@ public class PlayerController extends Component {
 	}
 
 	@Override
-	public void update() {
+	public void update(double dt) {
 		Vector2 velocity = rb.velocity();
 
-		int xInput = KeyInput.getAxis("horizontal");
-		int yInput = KeyInput.getAxis("vertical");
+		int xInput = Game.keyboard().getAxis("horizontal");
+		int yInput = Game.keyboard().getAxis("vertical");
 		// Don't want to move faster diagonally
 		Vector2 appliedForce = new Vector2(xInput, yInput).unitVector().scale(thrustForce);
 
 		// Hold space to increase acceleration and top speed
-		if (KeyInput.keyDown(KeyEvent.VK_SHIFT)) {
+		if (Game.keyboard().keyDown(KeyEvent.VK_SHIFT)) {
 			appliedForce.scale(boostMultiplier);
 			state = MoveState.BOOSTING;
 		} else {
@@ -51,7 +50,7 @@ public class PlayerController extends Component {
 		if (velocity.magnitude() != 0) {
 			Vector2 dragForce = velocity.scale(-drag);
 			// Break (increase drag)
-			if (KeyInput.keyDown(KeyEvent.VK_SPACE))
+			if (Game.keyboard().keyDown(KeyEvent.VK_SPACE))
 				dragForce = dragForce.scale((drag + breakForce) / drag);
 			rb.addForce(dragForce);
 
@@ -79,8 +78,8 @@ public class PlayerController extends Component {
 				velocity = velocity.scale(topSpeed / rb.speed());
 		}
 
-		parent.move(velocity);
-		Logger.log("Player: %.2f, %.2f", parent.getPosition().x, parent.getPosition().y);
+		parent.transform.move(velocity);
+//		Logger.log("Player: %.2f, %.2f", parent.getPosition().x, parent.getPosition().y);
 	}
 
 	private enum MoveState {

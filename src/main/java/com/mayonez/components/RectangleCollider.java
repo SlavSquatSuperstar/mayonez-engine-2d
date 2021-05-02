@@ -1,8 +1,8 @@
-package mayonez;
+package com.mayonez.components;
 
 import java.awt.Rectangle;
 
-import util.Vector2;
+import com.util.Vector2;
 
 public class RectangleCollider extends Component {
 
@@ -16,16 +16,16 @@ public class RectangleCollider extends Component {
 	}
 
 	@Override
-	public void update() {
-		x = parent.position.x;
-		y = parent.position.y;
+	public void update(double dt) {
+		x = parent.transform.position.x;
+		y = parent.transform.position.y;
 
 		// Bounds detection
 		// TODO: When hitting walls, set velocity to 0
 		// TODO: Make collision detector, move to physics
 		if (scene.isBounded()) {
 			RigidBody rb = parent.getComponent(RigidBody.class);
-			Vector2 velocity = (null == rb) ? new Vector2() : rb.velocity();
+			Vector2 velocity = (null == rb) ? Vector2.ZERO : rb.velocity();
 
 			if (x < 0) {
 				x = 0;
@@ -43,7 +43,7 @@ public class RectangleCollider extends Component {
 				velocity.y = -bounceModifier * velocity.y;
 			}
 
-			parent.position = new Vector2(x, y);
+			parent.transform.position = new Vector2(x, y);
 		}
 
 	}

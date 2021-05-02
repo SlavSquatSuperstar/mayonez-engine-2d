@@ -1,4 +1,4 @@
-package util;
+package com.util;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -6,7 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDate;
 
-import mayonez.Game;
+import com.mayonez.Game;
 
 public final class Logger {
 

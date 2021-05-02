@@ -1,6 +1,6 @@
-package mayonez.graphics;
+package com.mayonez;
 
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -8,7 +8,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import util.Logger;
+import com.util.Logger;
 
 public class Texture {
 
@@ -24,14 +24,14 @@ public class Texture {
 	}
 
 	// Image Methods
-	
-	public void drawImage(Graphics g, int x, int y, int width, int height) {
+
+	public void drawImage(Graphics2D g2, int x, int y, int width, int height) {
 		if (null == image)
 			return;
 
 		// stretches the image asset to fit the object's dimensions (map image vertices
 		// to screen)
-		g.drawImage(image, x, y, x + width, y + height, origin.x, origin.y, edge.x, edge.y, null);
+		g2.drawImage(image, x, y, x + width, y + height, origin.x, origin.y, edge.x, edge.y, null);
 	}
 
 	public BufferedImage loadImage(String path) {
@@ -45,8 +45,6 @@ public class Texture {
 		}
 		return image;
 	}
-
-	
 
 	// Image Manipulation Methods
 

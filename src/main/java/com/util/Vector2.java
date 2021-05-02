@@ -1,12 +1,11 @@
-package util;
+package com.util;
 
 public class Vector2 {
 
-	public double x, y;
+	public static final Vector2 ZERO = new Vector2(0, 0);
+	public static final Vector2 ONE = new Vector2(1, 1);
 
-	public Vector2() {
-		this(0, 0);
-	}
+	public double x, y;
 
 	public Vector2(double x, double y) {
 		this.x = x;
@@ -34,12 +33,12 @@ public class Vector2 {
 	}
 
 	public Vector2 unitVector() {
-		return magnitude() == 0 ? new Vector2() : scale(1 / magnitude());
+		return magnitude() == 0 ? ZERO : scale(1 / magnitude());
 	}
 
 	@Override
 	public String toString() {
-		return String.format("<%f, %f>", x, y);
+		return String.format("(%f, %f)", x, y);
 	}
 
 }

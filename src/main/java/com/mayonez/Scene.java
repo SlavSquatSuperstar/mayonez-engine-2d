@@ -1,41 +1,35 @@
-package mayonez;
+package com.mayonez;
 
-import java.awt.Graphics;
-import java.util.LinkedList;
-
-import mayonez.graphics.Renderable;
-import mayonez.graphics.Renderer;
-import util.Logger;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.util.ArrayList;
 
 public abstract class Scene {
 
-	private String name;
-	private int width, height;
+	protected String name;
+	protected int width, height;
 
 	// TODO camera
 	private boolean running;
 	private boolean bounded = true;
+	protected Color background;
 	// private BoundType = BOUNDED;
 
 //	private Camera camera;
 //	private BufferedImage background;
-	private Renderer renderer;
 
-	protected LinkedList<GameObject> objects, toRemove;
+	protected ArrayList<GameObject> objects, toRemove;
 
 	public Scene(String name, int width, int height) {
 		this.name = name;
 		this.width = width;
 		this.height = height;
 
-		objects = new LinkedList<GameObject>();
-		toRemove = new LinkedList<GameObject>();
-
-		renderer = new Renderer();
+		objects = new ArrayList<GameObject>();
+		toRemove = new ArrayList<GameObject>();
 
 //		camera = new Camera(this);
 //		background = Texture.loadImage("background.png");
-		// load this after
 	}
 
 	// User defined start behavior
@@ -45,20 +39,19 @@ public abstract class Scene {
 		if (running)
 			return;
 
-		running = true;
 		init();
 		for (GameObject o : objects)
 			o.start();
-		Logger.log("Scene: Started scene \"%s\"", name);
+		running = true;
 	}
 
-	void update() {
+	void update(double dt) {
 		if (!running)
 			return;
 
 		// Update Objects and Camera
 		for (GameObject o : objects) {
-			o.update();
+			o.update(dt);
 			// Flag objects for destruction
 			if (o.isDestroyed())
 				removeObject(o);
@@ -71,11 +64,16 @@ public abstract class Scene {
 		toRemove.clear();
 	}
 
-	void render(Graphics g) {
+	void render(Graphics2D g2) {
 		if (!running)
 			return;
 
-		renderer.render(g);
+		g2.setColor(background);
+		g2.fillRect(0, 0, width, height);
+
+		for (GameObject o : objects) {
+			o.render(g2);
+		}
 
 		// g.drawImage(background, 0, 0, height, width, camera.getXOffset(),
 		// camera.getYOffset(), background.getWidth(), background.getHeight(), null);
@@ -91,20 +89,12 @@ public abstract class Scene {
 		object.init();
 		objects.add(object);
 
-		// Add any renderables into the renderer
-		for (Component c : object.getComponents())
-			if (c instanceof Renderable)
-				renderer.addObject((Renderable) c);
-
 		if (running)
 			object.start();
 	}
 
 	public void removeObject(GameObject object) {
 		object.destroy();
-		for (Component c : object.getComponents())
-			if (c instanceof Renderable)
-				renderer.removeObject((Renderable) c);
 		toRemove.add(object);
 	}
 

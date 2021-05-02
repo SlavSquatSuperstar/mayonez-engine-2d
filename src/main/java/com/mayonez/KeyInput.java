@@ -1,15 +1,12 @@
-package mayonez;
+package com.mayonez;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 public class KeyInput extends KeyAdapter {
 
-	// Singleton Field
-	private static KeyInput instance;
-
 	// Key Fields
-	private static boolean[] keys = new boolean[KeyEvent.KEY_LAST];
+	private boolean[] keys = new boolean[256];
 
 	// KeyListener Methods
 
@@ -27,11 +24,11 @@ public class KeyInput extends KeyAdapter {
 
 	// Getters and Setters
 
-	public static boolean keyDown(int keyCode) {
+	public boolean keyDown(int keyCode) {
 		return keys[keyCode];
 	}
 
-	public static boolean keyDown(String keyName) {
+	public boolean keyDown(String keyName) {
 		for (KeyMapping m : KeyMapping.values()) {
 			if (m.toString().equalsIgnoreCase(keyName)) // if the desired mapping exists
 				return keys[m.keyCode];
@@ -39,16 +36,12 @@ public class KeyInput extends KeyAdapter {
 		return false;
 	}
 
-	public static int getAxis(String axisName) {
+	public int getAxis(String axisName) {
 		for (KeyAxis a : KeyAxis.values()) {
 			if (a.toString().equalsIgnoreCase(axisName))
 				return a.value();
 		}
 		return 0;
-	}
-
-	public static KeyInput instance() {
-		return (null == instance) ? instance = new KeyInput() : instance;
 	}
 
 	/*
@@ -75,8 +68,8 @@ public class KeyInput extends KeyAdapter {
 
 		public int value() {
 			// "vector "method to make sure keys don't override each other
-			int negComp = (KeyInput.keyDown(negKey)) ? -1 : 0;
-			int posComp = (KeyInput.keyDown(posKey)) ? 1 : 0;
+			int negComp = (Game.keyboard().keyDown(negKey)) ? -1 : 0;
+			int posComp = (Game.keyboard().keyDown(posKey)) ? 1 : 0;
 			return negComp + posComp;
 		}
 

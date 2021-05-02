@@ -1,25 +1,24 @@
-package mayonez;
+package com.mayonez;
 
-import java.util.LinkedList;
+import java.awt.Graphics2D;
+import java.util.ArrayList;
 
-import util.Logger;
-import util.Vector2;
+import com.mayonez.components.Component;
+import com.util.Logger;
 
 public class GameObject {
 
 	private String name;
-	protected Vector2 position, dimensions;
-	// TODO add width and height?
+	public Transform transform;
 	private boolean destroyed;
 
-	private LinkedList<Component> components;
+	private ArrayList<Component> components;
 	protected Scene scene;
 
-	public GameObject(String name, int x, int y, int width, int height) {
+	public GameObject(String name, Transform transform) {
 		this.name = name;
-		position = new Vector2(x, y);
-		dimensions = new Vector2(width, height);
-		components = new LinkedList<Component>();
+		this.transform = transform;
+		components = new ArrayList<Component>();
 	}
 
 	// Game Methods
@@ -33,9 +32,14 @@ public class GameObject {
 		}
 	}
 
-	void update() {
+	void update(double dt) {
 		for (Component c : components)
-			c.update();
+			c.update(dt);
+	}
+
+	void render(Graphics2D g2) {
+		for (Component c : components)
+			c.render(g2);
 	}
 
 	// Component Methods
@@ -73,19 +77,11 @@ public class GameObject {
 		}
 	}
 
-	public LinkedList<Component> getComponents() {
+	public ArrayList<Component> getComponents() {
 		return components; // clone?
 	}
 
 	// Getters and Setters
-
-	public int getWidth() {
-		return (int) dimensions.x;
-	}
-
-	public int getHeight() {
-		return (int) dimensions.y;
-	}
 
 	public String getName() {
 		return name;
@@ -97,18 +93,6 @@ public class GameObject {
 
 	public void destroy() {
 		destroyed = true;
-	}
-
-	public Vector2 getPosition() {
-		return position;
-	}
-
-	public void setPosition(Vector2 position) {
-		this.position = position;
-	}
-
-	public void move(Vector2 displacement) {
-		position = position.add(displacement);
 	}
 
 	public void setScene(Scene scene) {
