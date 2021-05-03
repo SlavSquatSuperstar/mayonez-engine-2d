@@ -12,10 +12,12 @@ import com.util.Vector2;
 public class Transform {
 
 	public Vector2 position, scale;
+	public double rotation;
 
-	public Transform(Vector2 position, Vector2 scale) {
+	public Transform(Vector2 position) {
 		this.position = position;
-		this.scale = scale;
+		scale = Vector2.ONE;
+		rotation = 0.0;
 	}
 
 	public void move(Vector2 displacement) {

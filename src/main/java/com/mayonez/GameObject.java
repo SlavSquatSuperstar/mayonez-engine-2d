@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import com.mayonez.components.Component;
 import com.util.Logger;
+import com.util.Vector2;
 
 /**
  * A collection of {@link Component}s representing an in-game object.
@@ -21,9 +22,9 @@ public class GameObject {
 	private ArrayList<Component> components;
 	protected Scene scene;
 
-	public GameObject(String name, Transform transform) {
+	public GameObject(String name, Vector2 position) {
 		this.name = name;
-		this.transform = transform;
+		this.transform = new Transform(position);
 		components = new ArrayList<>();
 		init();
 	}

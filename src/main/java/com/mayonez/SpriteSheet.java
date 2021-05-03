@@ -31,7 +31,6 @@ public class SpriteSheet {
 					break;
 			}
 			row++;
-
 		}
 	}
 

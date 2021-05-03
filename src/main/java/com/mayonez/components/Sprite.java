@@ -1,6 +1,7 @@
 package com.mayonez.components;
 
 import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
@@ -8,6 +9,7 @@ import javax.imageio.ImageIO;
 
 import com.mayonez.GameObject;
 import com.util.Logger;
+import com.util.Preferences;
 
 /**
  * An image used to display a {@link GameObject} or background.
@@ -43,9 +45,17 @@ public class Sprite extends Component {
 
 	@Override
 	public void render(Graphics2D g2) {
-		int x = (int) parent.transform.position.x;
-		int y = (int) parent.transform.position.y;
-		g2.drawImage(image, x, y, width, height, null);
+		AffineTransform transform = new AffineTransform();
+		transform.setToIdentity();
+		transform.translate(parent.transform.position.x, parent.transform.position.y);
+		transform.scale(parent.transform.scale.x, parent.transform.scale.y);
+		transform.rotate(Math.toRadians(parent.transform.rotation), Preferences.PLAYER_WIDTH / 2, Preferences.PLAYER_HEIGHT / 2);
+		
+		g2.drawImage(image, transform, null);
+		
+//		int x = (int) parent.transform.position.x;
+//		int y = (int) parent.transform.position.y;
+//		g2.drawImage(image, x, y, width, height, null);
 
 		// stretches the image asset to fit the object's dimensions (map image vertices
 		// to screen)

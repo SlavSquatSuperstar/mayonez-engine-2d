@@ -2,10 +2,11 @@ package com.mayonez;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
+import java.awt.image.BufferStrategy;
 
 import javax.swing.JFrame;
 
+import com.game.LevelEditorScene;
 import com.util.Logger;
 import com.util.Preferences;
 
@@ -28,8 +29,11 @@ public class Game implements Runnable {
 
 	// Window Fields
 	private JFrame window;
-	private Image img; // Double-buffered Image
-	private Graphics gfx;
+	private int width, height;
+
+	// Renderer Fields
+	private Graphics g;
+	private BufferStrategy bs;
 
 	// Scene Fields
 	private Scene currentScene;
@@ -45,8 +49,10 @@ public class Game implements Runnable {
 
 	private Game() {
 		// Set up the window
-		window = new JFrame(Preferences.TITLE);
-		window.setSize(Preferences.WIDTH, Preferences.HEIGHT);
+		window = new JFrame(Preferences.SCREEN_TITLE);
+		width = Preferences.SCREEN_WIDTH;
+		height = Preferences.SCREEN_HEIGHT;
+		window.setSize(Preferences.SCREEN_WIDTH, height);
 		window.setResizable(false);
 		window.setLocationRelativeTo(null); // center in screen
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // make sure 'x' button quits program
@@ -55,6 +61,8 @@ public class Game implements Runnable {
 		window.addKeyListener(keyboard = new KeyInput());
 		window.addMouseListener(mouse = new MouseInput());
 		window.addMouseMotionListener(mouse);
+
+		initGraphics();
 	}
 
 	// Game Loop Methods
@@ -91,7 +99,8 @@ public class Game implements Runnable {
 
 			// Only render if the game has updated to save resources
 			if (ticked) {
-				render(window.getGraphics());
+//				render(window.getGraphics());
+				render();
 				frames++;
 				ticked = false;
 			}
@@ -126,19 +135,30 @@ public class Game implements Runnable {
 	/**
 	 * Repaints all objects in the current scene.
 	 */
-	// Issue white, sometimes nothing renders at all
-	public void render(Graphics g) {
-		if (g == null || !window.isVisible())
-			return;
+	// Issue: white flicked, sometimes nothing renders at all
+	public void render() {
 
-		if (img == null || gfx == null) {
-			img = window.createImage(window.getWidth(), window.getHeight());
-			gfx = img.getGraphics();
+		if (bs == null) {
+			initGraphics();
+			return;
 		}
 
-		// Render image before drawing to screen
-		currentScene.render((Graphics2D) gfx);
-		g.drawImage(img, 0, 0, window.getWidth(), window.getHeight(), null);
+		/*
+		 * Use a do-while loop to avoid lose buffer frames Source:
+		 * https://stackoverflow.com/questions/13590002/understand-bufferstrategy
+		 */
+		do {
+			// Clear the screen
+			g = bs.getDrawGraphics();
+			g.clearRect(0, 0, width, height);
+
+			if (null != currentScene)
+				currentScene.render((Graphics2D) g);
+
+			g.dispose();
+			bs.show();
+		} while (bs.contentsLost());
+
 	}
 
 	// Thread Methods
@@ -160,8 +180,6 @@ public class Game implements Runnable {
 
 		// Display window and initialize graphics buffer
 		window.setVisible(true);
-		img = window.createImage(window.getWidth(), window.getHeight());
-		gfx = img.getGraphics();
 
 		// Start scene
 		if (currentScene != null) {
@@ -180,6 +198,7 @@ public class Game implements Runnable {
 		// Free System resources
 		window.setVisible(false);
 		window.dispose();
+		g.dispose();
 
 		// Stop thread
 		thread.interrupt();
@@ -196,7 +215,7 @@ public class Game implements Runnable {
 	public void changeScene(int scene) {
 		switch (scene) {
 		case 0:
-			this.currentScene = new LevelEditorScene("Level Editor", Preferences.WIDTH, Preferences.HEIGHT);
+			this.currentScene = new LevelEditorScene("Level Editor", Preferences.SCREEN_WIDTH, Preferences.SCREEN_HEIGHT);
 			break;
 		default:
 			Logger.log("Game: Unknown scene");
@@ -223,6 +242,15 @@ public class Game implements Runnable {
 	 */
 	public static double getTime() {
 		return (System.nanoTime() - timeStarted) / 1E9;
+	}
+
+	private void initGraphics() {
+		if (window == null || !window.isVisible())
+			return;
+
+		window.createBufferStrategy(2);
+		bs = window.getBufferStrategy();
+//		g = bs.getDrawGraphics();
 	}
 
 }

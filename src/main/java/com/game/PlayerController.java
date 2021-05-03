@@ -1,15 +1,19 @@
 package com.game;
 
+import java.awt.Color;
 import java.awt.event.KeyEvent;
 
 import com.mayonez.Game;
 import com.mayonez.components.Component;
 import com.mayonez.components.RigidBody;
+import com.mayonez.components.Sprite;
 import com.util.Vector2;
 
 public class PlayerController extends Component {
 
 	private RigidBody rb;
+
+	public Sprite[] layers;
 
 	private double thrustForce = 10;
 	private double breakForce = 2;
@@ -17,8 +21,22 @@ public class PlayerController extends Component {
 	private double mass = 2;
 	private double drag = 0.4; // [0, 1]
 
-	private double boostMultiplier = 3;
-	private MoveState state = MoveState.MOVING;
+	public PlayerController(Sprite layer1, Sprite layer2, Sprite layer3, Color color1, Color color2) {
+		int threshold = 200;
+		this.layers = new Sprite[] { layer1, layer2, layer3 };
+		Color[] colors = { color1, color2 };
+
+		for (int i = 0; i < colors.length; i++) {
+			Sprite l = layers[i];
+			for (int y = 0; y < l.getImage().getWidth(); y++) {
+				for (int x = 0; x < l.getImage().getHeight(); x++) {
+					Color color = new Color(l.getImage().getRGB(x, y));
+					if (color.getRed() > threshold && color.getGreen() > threshold && color.getBlue() > threshold)
+						l.getImage().setRGB(x, y, colors[i].getRGB());
+				}
+			}
+		}
+	}
 
 	@Override
 	public void start() {
@@ -35,15 +53,6 @@ public class PlayerController extends Component {
 		// Don't want to move faster diagonally
 		Vector2 appliedForce = new Vector2(xInput, yInput).unitVector().scale(thrustForce);
 
-		// Hold space to increase acceleration and top speed
-		if (Game.keyboard().keyDown(KeyEvent.VK_SHIFT)) {
-			appliedForce.scale(boostMultiplier);
-			state = MoveState.BOOSTING;
-		} else {
-			if (state == MoveState.BOOSTING) {
-				state = MoveState.RECOVERING;
-			}
-		}
 		rb.addForce(appliedForce);
 
 		// Apply Drag Unless Stationary (prevent divide by 0)
@@ -64,25 +73,10 @@ public class PlayerController extends Component {
 		}
 
 		// Limit Top Speed
-		switch (state) {
-		case BOOSTING:
-			if (rb.speed() > topSpeed * boostMultiplier)
-				velocity = velocity.scale(topSpeed / rb.speed());
-		case RECOVERING:
-			if (rb.speed() > topSpeed * boostMultiplier)
-				velocity = velocity.scale(topSpeed / rb.speed());
-			else if (rb.speed() <= topSpeed)
-				state = MoveState.RECOVERING;
-		case MOVING:
-			if (rb.speed() > topSpeed)
-				velocity = velocity.scale(topSpeed / rb.speed());
-		}
+		if (rb.speed() > topSpeed)
+			velocity = velocity.scale(topSpeed / rb.speed());
 
 		parent.transform.move(velocity);
-	}
-
-	private enum MoveState {
-		MOVING, BOOSTING, RECOVERING;
 	}
 
 }

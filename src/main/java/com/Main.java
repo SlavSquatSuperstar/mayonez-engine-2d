@@ -1,4 +1,4 @@
-package com.main;
+package com;
 import com.mayonez.Game;
 
 public class Main {
