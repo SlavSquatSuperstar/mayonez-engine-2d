@@ -2,6 +2,7 @@ package com.game;
 
 import java.awt.Color;
 
+import com.mayonez.Assets;
 import com.mayonez.GameObject;
 import com.mayonez.Scene;
 import com.mayonez.SpriteSheet;
@@ -20,7 +21,7 @@ public class LevelEditorScene extends Scene {
 
 	@Override
 	public void init() {
-		GameObject player = new GameObject("Test Object", new Vector2(100, 100)) {
+		GameObject player = new GameObject("Player", new Vector2(100, 100)) {
 			@Override
 			protected void init() {
 				int id = 19;
@@ -29,14 +30,23 @@ public class LevelEditorScene extends Scene {
 				SpriteSheet layer3 = new SpriteSheet("assets/player/layer3.png", 42, 42, 2, 13, 13 * 5);
 				addComponent(new PlayerController(layer1.getSprite(id), layer2.getSprite(id), layer3.getSprite(id),
 						Color.RED, Color.GREEN));
-				addComponent(new RigidBody(2));
 				for (Sprite s : getComponent(PlayerController.class).layers)
 					addComponent(s);
+				addComponent(new RigidBody(2));
 				addComponent(new RectangleCollider(Preferences.PLAYER_WIDTH, Preferences.PLAYER_HEIGHT));
-
 			}
 		};
+
+		GameObject testObject = new GameObject("Test Object", new Vector2(400, 400)) {
+			@Override
+			protected void init() {
+				addComponent(Assets.getSprite("assets/mario.png"));
+				transform.scale = new Vector2(2, 2);
+			}
+		};
+
 		addObject(player);
+		addObject(testObject);
 	}
 
 }

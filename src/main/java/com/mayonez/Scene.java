@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 
+import com.util.Vector2;
+
 /**
  * A collection of {@link GameObject}s that represents an in-game world.
  * 
@@ -14,31 +16,30 @@ public abstract class Scene {
 	protected String name;
 	protected int width, height;
 
-	// TODO camera
 	private boolean running;
 	private boolean bounded = true;
 	protected Color background;
-	// private BoundType = BOUNDED;
 
-//	private Camera camera;
-//	private BufferedImage background;
-
+	// Rendering Fields
+	private Renderer renderer;
+	private Camera camera;
 	protected ArrayList<GameObject> objects, toRemove;
+
+	// private BoundType = BOUNDED;
 
 	public Scene(String name, int width, int height) {
 		this.name = name;
 		this.width = width;
 		this.height = height;
 
+		camera = new Camera(Vector2.ZERO, width, height);
+		renderer = new Renderer(camera);
 		objects = new ArrayList<>();
 		toRemove = new ArrayList<>();
-
-//		camera = new Camera(this);
-//		background = Texture.loadImage("background.png");
 	}
 
 	// Game Methods
-	
+
 	/**
 	 * Add necessary objects.
 	 */
@@ -65,11 +66,13 @@ public abstract class Scene {
 			if (o.isDestroyed())
 				removeObject(o);
 		}
-//		camera.update();
+		camera.update();
 
 		// Remove destroyed objects at the end of the frame
-		for (GameObject o : toRemove)
+		for (GameObject o : toRemove) {
 			objects.remove(o);
+			renderer.remove(o);
+		}
 		toRemove.clear();
 	}
 
@@ -80,30 +83,26 @@ public abstract class Scene {
 		g2.setColor(background);
 		g2.fillRect(0, 0, width, height);
 
-		for (GameObject o : objects) {
-			o.render(g2);
-		}
+		renderer.render(g2);
 
 		// g.drawImage(background, 0, 0, height, width, camera.getXOffset(),
 		// camera.getYOffset(), background.getWidth(), background.getHeight(), null);
-
-		// g.translate(camera.getXOffset(), camera.getYOffset());
-		// g.translate(-camera.getXOffset(), -camera.getYOffset());
 	}
 
 	// Object Methods
 
-	public void addObject(GameObject object) {
-		object.setScene(this);
-		objects.add(object);
+	public void addObject(GameObject obj) {
+		obj.setScene(this);
+		objects.add(obj);
+		renderer.add(obj);
 
 		if (running)
-			object.start();
+			obj.start();
 	}
 
-	public void removeObject(GameObject object) {
-		object.destroy();
-		toRemove.add(object);
+	public void removeObject(GameObject obj) {
+		obj.destroy();
+		toRemove.add(obj);
 	}
 
 	// Getters and Setters
@@ -124,8 +123,8 @@ public abstract class Scene {
 		return bounded;
 	}
 
-//	public Camera getCamera() {
-//		return camera;
-//	}
+	public Camera getCamera() {
+		return camera;
+	}
 
 }

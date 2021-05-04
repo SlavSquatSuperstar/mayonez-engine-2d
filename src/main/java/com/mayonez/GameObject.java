@@ -69,15 +69,15 @@ public class GameObject {
 		return null;
 	}
 
-	public void addComponent(Component c) {
-		if (null != getComponent(c.getClass()))
-			;
+	public void addComponent(Component comp) {
+//		if (null != getComponent(comp.getClass()))
+//			;
 		// maybe make annotation (multiple scripts should suprress warning)
 //			Logger.log("GameObject: Adding multiple components of the same type is not recommended");
 
-		c.parent = this;
-		c.scene = scene;
-		components.add(c);
+		comp.parent = this;
+		comp.scene = scene;
+		components.add(comp);
 	}
 
 	public <T extends Component> void removeComponent(Class<T> componentClass) {

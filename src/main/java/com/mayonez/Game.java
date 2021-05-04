@@ -52,14 +52,16 @@ public class Game implements Runnable {
 		window = new JFrame(Preferences.SCREEN_TITLE);
 		width = Preferences.SCREEN_WIDTH;
 		height = Preferences.SCREEN_HEIGHT;
-		window.setSize(Preferences.SCREEN_WIDTH, height);
+		window.setSize(width, height);
 		window.setResizable(false);
 		window.setLocationRelativeTo(null); // center in screen
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // make sure 'x' button quits program
 
 		// Add input listeners
-		window.addKeyListener(keyboard = new KeyInput());
-		window.addMouseListener(mouse = new MouseInput());
+		keyboard = new KeyInput();
+		mouse = new MouseInput();
+		window.addKeyListener(keyboard);
+		window.addMouseListener(mouse);
 		window.addMouseMotionListener(mouse);
 
 		initGraphics();
@@ -215,7 +217,8 @@ public class Game implements Runnable {
 	public void changeScene(int scene) {
 		switch (scene) {
 		case 0:
-			this.currentScene = new LevelEditorScene("Level Editor", Preferences.SCREEN_WIDTH, Preferences.SCREEN_HEIGHT);
+			this.currentScene = new LevelEditorScene("Level Editor", Preferences.SCREEN_WIDTH * 2,
+					Preferences.SCREEN_HEIGHT * 2);
 			break;
 		default:
 			Logger.log("Game: Unknown scene");
