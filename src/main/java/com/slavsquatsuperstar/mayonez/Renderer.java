@@ -1,4 +1,4 @@
-package com.mayonez;
+package com.slavsquatsuperstar.mayonez;
 
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
@@ -26,15 +26,22 @@ public class Renderer {
 	}
 
 	public void render(Graphics2D g2) {
-		// Save the unmodified transform
+		// Save a copy of the unmodified transform
 		AffineTransform transform = g2.getTransform();
 
 		// Move the screen and render everything at the offset position
-		g2.translate(-camera.position.x, -camera.position.y);
-		for (GameObject o : objects)
-			o.render(g2);
+		double camX = (double) camera.position.x;
+		double camY = (double) camera.position.y;
+		g2.translate(-camX, -camY);
+		// TODO only render if in screen
+//		Rectangle screen = new Rectangle((int) camX, (int) camY, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
+		
+		for (GameObject o : objects) {
+			if (true)
+				o.render(g2);
+		}
 
-		// Reset the screen's transform
+		// Reset the screen's transform to its unmodified state
 		g2.setTransform(transform);
 	}
 

@@ -1,10 +1,10 @@
-package com.mayonez;
+package com.slavsquatsuperstar.mayonez;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 
-import com.util.Vector2;
+import com.slavsquatsuperstar.util.Vector2;
 
 /**
  * A collection of {@link GameObject}s that represents an in-game world.
@@ -16,7 +16,7 @@ public abstract class Scene {
 	protected String name;
 	protected int width, height;
 
-	private boolean running;
+	private boolean started;
 	private boolean bounded = true;
 	protected Color background;
 
@@ -46,17 +46,17 @@ public abstract class Scene {
 	protected abstract void init();
 
 	void start() {
-		if (running)
+		if (started)
 			return;
 
 		init();
 		for (GameObject o : objects)
 			o.start();
-		running = true;
+		started = true;
 	}
 
-	void update(double dt) {
-		if (!running)
+	void update(float dt) {
+		if (!started)
 			return;
 
 		// Update Objects and Camera
@@ -77,7 +77,7 @@ public abstract class Scene {
 	}
 
 	void render(Graphics2D g2) {
-		if (!running)
+		if (!started)
 			return;
 
 		g2.setColor(background);
@@ -96,13 +96,25 @@ public abstract class Scene {
 		objects.add(obj);
 		renderer.add(obj);
 
-		if (running)
+		if (started)
 			obj.start();
 	}
 
 	public void removeObject(GameObject obj) {
 		obj.destroy();
 		toRemove.add(obj);
+	}
+
+//	@SuppressWarnings("unchecked")
+	public <T extends GameObject> ArrayList<T> getObjects(Class<T> cls) {
+		ArrayList<T> objects = new ArrayList<>();
+		for (GameObject o : objects) {
+			if (cls == null || cls.isInstance(o)) {
+				objects.add(cls.cast(o));
+//				objects.add((T) o);
+			}
+		}
+		return objects;
 	}
 
 	// Getters and Setters

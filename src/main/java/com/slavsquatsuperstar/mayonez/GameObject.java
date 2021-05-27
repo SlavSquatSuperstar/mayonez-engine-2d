@@ -1,11 +1,11 @@
-package com.mayonez;
+package com.slavsquatsuperstar.mayonez;
 
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 
-import com.mayonez.components.Component;
-import com.util.Logger;
-import com.util.Vector2;
+import com.slavsquatsuperstar.mayonez.components.Component;
+import com.slavsquatsuperstar.util.Logger;
+import com.slavsquatsuperstar.util.Vector2;
 
 /**
  * A collection of {@link Component}s representing an in-game object.
@@ -44,7 +44,7 @@ public class GameObject {
 		}
 	}
 
-	void update(double dt) {
+	void update(float dt) {
 		for (Component c : components)
 			c.update(dt);
 	}
@@ -80,10 +80,11 @@ public class GameObject {
 		components.add(comp);
 	}
 
-	public <T extends Component> void removeComponent(Class<T> componentClass) {
+	public <T extends Component> void removeComponent(Class<T> cls) {
 		for (int i = 0; i < components.size(); i++) { // Use indexing loop to avoid concurrent errors
 			Component c = components.get(i);
-			if (componentClass.isAssignableFrom(c.getClass())) {
+//			if (cls.isAssignableFrom(c.getClass())) {
+			if (cls.isInstance(c)) {
 				components.remove(i);
 				return;
 			}
@@ -91,10 +92,26 @@ public class GameObject {
 	}
 
 	public ArrayList<Component> getComponents() {
-		return components; // clone?
+		return components;
 	}
 
 	// Getters and Setters
+	
+	public float getX() {
+		return transform.position.x;
+	}
+	
+	public void setX(float x) {
+		transform.position.x = x;
+	}
+	
+	public float getY() {
+		return transform.position.y;
+	}
+	
+	public void setY(float y) {
+		transform.position.y = y;
+	}
 
 	public String getName() {
 		return name;

@@ -1,14 +1,14 @@
-package com.mayonez.components;
+package com.slavsquatsuperstar.mayonez.components;
 
-import com.mayonez.Game;
-import com.util.Vector2;
+import com.slavsquatsuperstar.mayonez.Game;
+import com.slavsquatsuperstar.util.Vector2;
 
 public class RigidBody extends Component {
 
 	private Vector2 velocity;
-	public double mass;
+	public float mass;
 
-	public RigidBody(double mass) {
+	public RigidBody(float mass) {
 		this.mass = mass;
 		this.velocity = Vector2.ZERO;
 	}
@@ -16,25 +16,25 @@ public class RigidBody extends Component {
 	// ForceMode.Force, should be used with keyboard axes
 	public void addForce(Vector2 force) {
 		// dv = F*t/m
-		velocity = velocity.add(force.scale(Game.timestep).scale(1 / mass));
+		velocity = velocity.add(force.multiply(Game.timestep).multiply(1 / mass));
 	}
 
 	// ForceMode.Acceleration, should be used with keyboard axes
 	public void addAcceleration(Vector2 acceleration) {
 		// dv = a*t
-		velocity = velocity.add(acceleration.scale(Game.timestep));
+		velocity = velocity.add(acceleration.multiply(Game.timestep));
 	}
 
 	// ForceMode.Impulse, should be used with button presses
 	public void addImpulse(Vector2 impulse) {
 		// dv = dp/m
-		velocity = velocity.add(impulse.scale(1 / mass));
+		velocity = velocity.add(impulse.multiply(1 / mass));
 	}
 
 	// ForceMode.VelocityChange, should be used with button presses
 	public void addVelocityChange(Vector2 velocityChange) {
 		// dv
-		velocity = velocity.add(velocityChange).scale(Game.timestep);
+		velocity = velocity.add(velocityChange).multiply(Game.timestep);
 	}
 
 	public void addDisplacement(Vector2 displacement) {
@@ -46,7 +46,7 @@ public class RigidBody extends Component {
 	public Vector2 velocity() {
 		return velocity;
 	}
-	
+
 	public double speed() {
 		return velocity.magnitude();
 	}

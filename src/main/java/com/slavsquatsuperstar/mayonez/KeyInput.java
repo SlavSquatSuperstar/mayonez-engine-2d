@@ -1,4 +1,4 @@
-package com.mayonez;
+package com.slavsquatsuperstar.mayonez;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -30,21 +30,20 @@ public class KeyInput extends KeyAdapter {
 
 	/**
 	 * Whether the specified {@link KeyMapping} is pressed.
+	 * 
 	 * @param keyName The name of the {@link KeyMapping}.
 	 */
 	public boolean keyDown(String keyName) {
-		for (KeyMapping m : KeyMapping.values()) {
+		for (KeyMapping m : KeyMapping.values())
 			if (m.toString().equalsIgnoreCase(keyName)) // if the desired mapping exists
 				return keys[m.keyCode];
-		}
 		return false;
 	}
 
 	public int getAxis(String axisName) {
-		for (KeyAxis a : KeyAxis.values()) {
+		for (KeyAxis a : KeyAxis.values())
 			if (a.toString().equalsIgnoreCase(axisName))
 				return a.value();
-		}
 		return 0;
 	}
 
@@ -56,6 +55,7 @@ public class KeyInput extends KeyAdapter {
 	 * Stores two keys intended to perform opposite actions.
 	 */
 	enum KeyAxis {
+		
 		VERTICAL(KeyMapping.DOWN, KeyMapping.UP), HORIZONTAL(KeyMapping.RIGHT, KeyMapping.LEFT);
 
 		private int posKey, negKey;
@@ -79,7 +79,7 @@ public class KeyInput extends KeyAdapter {
 
 		@Override
 		public String toString() {
-			return name().toLowerCase();
+			return name().substring(0, 1).toUpperCase() + name().substring(1).toLowerCase();
 		}
 	}
 
@@ -90,7 +90,7 @@ public class KeyInput extends KeyAdapter {
 
 		// TODO read from file to assign keybinds
 		UP(KeyEvent.VK_W), DOWN(KeyEvent.VK_S), LEFT(KeyEvent.VK_A), RIGHT(KeyEvent.VK_D), EXIT(KeyEvent.VK_ESCAPE),
-		SPACE(KeyEvent.VK_SPACE);
+		SPACE(KeyEvent.VK_SPACE), SHIFT(KeyEvent.VK_SHIFT);
 
 		private int keyCode; // TODO allow for multiple?
 //		private int[] keyCodes;

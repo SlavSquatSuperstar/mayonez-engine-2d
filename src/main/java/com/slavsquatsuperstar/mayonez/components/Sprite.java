@@ -1,4 +1,4 @@
-package com.mayonez.components;
+package com.slavsquatsuperstar.mayonez.components;
 
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
@@ -7,9 +7,9 @@ import java.io.File;
 
 import javax.imageio.ImageIO;
 
-import com.mayonez.GameObject;
-import com.util.Logger;
-import com.util.Preferences;
+import com.slavsquatsuperstar.mayonez.GameObject;
+import com.slavsquatsuperstar.util.Constants;
+import com.slavsquatsuperstar.util.Logger;
 
 /**
  * An image used to display a {@link GameObject} or background.
@@ -27,7 +27,6 @@ public class Sprite extends Component {
 			this.image = ImageIO.read(file);
 			this.width = image.getWidth();
 			this.height = image.getHeight();
-
 		} catch (Exception e) {
 			Logger.log("Sprite: Error loading image %s", filename);
 			System.exit(-1);
@@ -35,7 +34,7 @@ public class Sprite extends Component {
 	}
 
 	public Sprite(BufferedImage image) {
-		this.image = image;
+		this.image = image; // TODO copy rather than reference?
 		this.width = image.getWidth();
 		this.height = image.getHeight();
 	}
@@ -46,8 +45,8 @@ public class Sprite extends Component {
 		transform.setToIdentity();
 		transform.translate(parent.transform.position.x, parent.transform.position.y);
 		transform.scale(parent.transform.scale.x, parent.transform.scale.y);
-		transform.rotate(Math.toRadians(parent.transform.rotation), Preferences.PLAYER_WIDTH / 2,
-				Preferences.PLAYER_HEIGHT / 2);
+		transform.rotate(Math.toRadians(parent.transform.rotation), Constants.PLAYER_WIDTH / 2,
+				Constants.PLAYER_HEIGHT / 2);
 
 		g2.drawImage(image, transform, null);
 

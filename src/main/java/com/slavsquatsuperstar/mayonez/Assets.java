@@ -1,9 +1,9 @@
-package com.mayonez;
+package com.slavsquatsuperstar.mayonez;
 
 import java.util.HashMap;
 
-import com.mayonez.components.Sprite;
-import com.util.Logger;
+import com.slavsquatsuperstar.mayonez.components.Sprite;
+import com.slavsquatsuperstar.util.Logger;
 
 public final class Assets {
 

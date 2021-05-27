@@ -1,6 +1,6 @@
-package com.mayonez;
+package com.slavsquatsuperstar.mayonez;
 
-import com.util.Vector2;
+import com.slavsquatsuperstar.util.Vector2;
 
 /**
  * Stores the position and scale of a GameObject and provides additional
@@ -12,12 +12,12 @@ import com.util.Vector2;
 public class Transform {
 
 	public Vector2 position, scale;
-	public double rotation;
+	public float rotation;
 
 	public Transform(Vector2 position) {
 		this.position = position;
 		scale = Vector2.ONE;
-		rotation = 0.0;
+		rotation = 0f;
 	}
 
 	public void move(Vector2 displacement) {

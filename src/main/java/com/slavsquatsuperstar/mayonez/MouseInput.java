@@ -1,4 +1,4 @@
-package com.mayonez;
+package com.slavsquatsuperstar.mayonez;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;

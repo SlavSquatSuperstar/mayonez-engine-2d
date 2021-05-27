@@ -1,12 +1,13 @@
-package com.util;
+package com.slavsquatsuperstar.util;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.IllegalFormatException;
 
-import com.mayonez.Game;
+import com.slavsquatsuperstar.mayonez.Game;
 
 public final class Logger {
 
@@ -43,20 +44,25 @@ public final class Logger {
 	}
 
 	public static void log(Object msg, Object... args) {
-		String output = String.format("[%.6f] %s", Game.getTime(), String.format(msg.toString(), args));
-		System.out.println(output);
+		String output = String.format("[%.4f] ", Game.getTime());
 
-		if (saveLogs) {
-			try {
+		try {
+			output += String.format("%s", String.format(msg.toString(), args));
+
+			if (saveLogs) {
 				writer.write(output);
 				writer.newLine();
 				writer.flush();
-			} catch (IOException e) {
-				System.out.println("Error: Could not write to file");
-				e.printStackTrace();
 			}
+		} catch (NullPointerException e) {
+			output += "Logger: Null message";
+		} catch (IllegalFormatException e) {
+			output += "Logger: Could not format message";
+		} catch (IOException e) {
+			output += "Logger: Could not write to log file";
+		} finally {
+			System.out.println(output);
 		}
-
 	}
 
 	public static void log(Object msg) {

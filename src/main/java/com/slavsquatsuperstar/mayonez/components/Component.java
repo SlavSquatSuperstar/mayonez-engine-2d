@@ -1,9 +1,9 @@
-package com.mayonez.components;
+package com.slavsquatsuperstar.mayonez.components;
 
 import java.awt.Graphics2D;
 
-import com.mayonez.GameObject;
-import com.mayonez.Scene;
+import com.slavsquatsuperstar.mayonez.GameObject;
+import com.slavsquatsuperstar.mayonez.Scene;
 
 // TODO Observable?
 /**
@@ -22,7 +22,7 @@ public abstract class Component {
 	public void start() {
 	}
 
-	public void update(double dt) {
+	public void update(float dt) {
 	}
 
 	public void render(Graphics2D g2) {

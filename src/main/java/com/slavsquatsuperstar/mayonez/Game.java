@@ -1,14 +1,16 @@
-package com.mayonez;
+package com.slavsquatsuperstar.mayonez;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import java.awt.image.BufferStrategy;
 
 import javax.swing.JFrame;
 
-import com.game.LevelEditorScene;
-import com.util.Logger;
-import com.util.Preferences;
+import com.slavsquatsuperstar.game.LevelEditorScene;
+import com.slavsquatsuperstar.util.Constants;
+import com.slavsquatsuperstar.util.Logger;
 
 public class Game implements Runnable {
 
@@ -39,9 +41,8 @@ public class Game implements Runnable {
 	private Scene currentScene;
 
 	// Time Fields
-	public static int fps = 60;
-	public static double timestep = 1.0 / fps;
-	public static double timeStarted = System.nanoTime();
+	public static float timestep = 1.0f / Constants.FPS;
+	public static long timeStarted = System.nanoTime();
 
 	/*
 	 * Method Declarations
@@ -49,9 +50,9 @@ public class Game implements Runnable {
 
 	private Game() {
 		// Set up the window
-		window = new JFrame(Preferences.SCREEN_TITLE);
-		width = Preferences.SCREEN_WIDTH;
-		height = Preferences.SCREEN_HEIGHT;
+		window = new JFrame(Constants.SCREEN_TITLE);
+		width = Constants.SCREEN_WIDTH;
+		height = Constants.SCREEN_HEIGHT;
 		window.setSize(width, height);
 		window.setResizable(false);
 		window.setLocationRelativeTo(null); // center in screen
@@ -73,20 +74,20 @@ public class Game implements Runnable {
 	public void run() {
 
 		// All time values are in seconds
-		double lastTime = 0; // Last time the game loop iterated
-		double deltaTime = 0; // Time since last frame
+		float lastTime = 0; // Last time the game loop iterated
+		float deltaTime = 0; // Time since last frame
 
 		// For rendering
 		boolean ticked = false; // Has engine actually updated?
 
 		// For debugging
-		double timer = 0;
+		float timer = 0;
 		int frames = 0;
 
 		while (running) {
 
-			double currentFrameTime = getTime(); // Time for current frame
-			double passedTime = currentFrameTime - lastTime;
+			float currentFrameTime = getTime(); // Time for current frame
+			float passedTime = currentFrameTime - lastTime;
 			deltaTime += passedTime;
 			timer += passedTime;
 			lastTime = currentFrameTime; // Reset lastTime
@@ -125,7 +126,7 @@ public class Game implements Runnable {
 	 * 
 	 * @param dt The time elapse since the last frame
 	 */
-	public void update(double dt) {
+	public void update(float dt) {
 		// Poll events
 		if (keyboard.keyDown("exit")) {
 			running = false;
@@ -209,7 +210,7 @@ public class Game implements Runnable {
 
 	// Getters and Setters
 
-	public static Game getGame() { // only create the game once
+	public static Game instance() { // only create the game once
 		// get params from preferences
 		return (null == instance) ? instance = new Game() : instance;
 	}
@@ -217,8 +218,8 @@ public class Game implements Runnable {
 	public void changeScene(int scene) {
 		switch (scene) {
 		case 0:
-			this.currentScene = new LevelEditorScene("Level Editor", Preferences.SCREEN_WIDTH * 2,
-					Preferences.SCREEN_HEIGHT * 2);
+			this.currentScene = new LevelEditorScene("Level Editor", Constants.SCREEN_WIDTH * 2,
+					Constants.SCREEN_HEIGHT * 2);
 			break;
 		default:
 			Logger.log("Game: Unknown scene");
@@ -243,8 +244,14 @@ public class Game implements Runnable {
 	/**
 	 * @return the time in seconds since this game started.
 	 */
-	public static double getTime() {
-		return (System.nanoTime() - timeStarted) / 1E9;
+	public static float getTime() {
+		return (System.nanoTime() - timeStarted) / 1.0E9f;
+	}
+
+	public static boolean isFullScreen() {
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		GraphicsDevice device = ge.getDefaultScreenDevice();
+		return device.getFullScreenWindow() != null;
 	}
 
 	private void initGraphics() {
