@@ -8,8 +8,8 @@ import java.io.File;
 import javax.imageio.ImageIO;
 
 import com.slavsquatsuperstar.mayonez.GameObject;
+import com.slavsquatsuperstar.mayonez.Logger;
 import com.slavsquatsuperstar.util.Constants;
-import com.slavsquatsuperstar.util.Logger;
 
 /**
  * An image used to display a {@link GameObject} or background.
@@ -19,14 +19,11 @@ import com.slavsquatsuperstar.util.Logger;
 public class Sprite extends Component {
 
 	private BufferedImage image;
-	public int width, height;
 
 	public Sprite(String filename) {
 		try {
 			File file = new File(filename);
 			this.image = ImageIO.read(file);
-			this.width = image.getWidth();
-			this.height = image.getHeight();
 		} catch (Exception e) {
 			Logger.log("Sprite: Error loading image %s", filename);
 			System.exit(-1);
@@ -35,8 +32,6 @@ public class Sprite extends Component {
 
 	public Sprite(BufferedImage image) {
 		this.image = image; // TODO copy rather than reference?
-		this.width = image.getWidth();
-		this.height = image.getHeight();
 	}
 
 	@Override
@@ -49,16 +44,20 @@ public class Sprite extends Component {
 				Constants.PLAYER_HEIGHT / 2);
 
 		g2.drawImage(image, transform, null);
-
-		// stretches the image asset to fit the object's dimensions (map image vertices
-		// to screen)
-//		g2.drawImage(image, x, y, x + width, y + height, origin.x, origin.y, edge.x, edge.y, null);
 	}
 
 	// Getters and Setters
 
 	public BufferedImage getImage() {
 		return image;
+	}
+
+	public int getWidth() {
+		return image.getWidth();
+	}
+
+	public int getHeight() {
+		return image.getHeight();
 	}
 
 }

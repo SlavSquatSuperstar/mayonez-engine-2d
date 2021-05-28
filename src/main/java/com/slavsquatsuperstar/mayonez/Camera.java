@@ -2,11 +2,10 @@ package com.slavsquatsuperstar.mayonez;
 
 import com.slavsquatsuperstar.mayonez.components.Sprite;
 import com.slavsquatsuperstar.util.Constants;
-import com.slavsquatsuperstar.util.Vector2;
 
 public class Camera {
 
-	Vector2 position;
+	private Vector2 position;
 	private int width, height;
 	private int minX, minY, maxX, maxY;
 	private Sprite subject;
@@ -16,7 +15,7 @@ public class Camera {
 		width = Constants.SCREEN_WIDTH;
 		height = Constants.SCREEN_HEIGHT;
 		minX = 0;
-		minY = -28; // account for the bar on top of the window
+		minY = 0;//-28; // account for the bar on top of the window
 		maxX = sceneWidth - width;
 		maxY = sceneHeight - height;
 	}
@@ -61,6 +60,14 @@ public class Camera {
 
 	public void setSubject(Sprite subject) {
 		this.subject = subject;
+	}
+	
+	public float getX() {
+		return position.x;
+	}
+	
+	public float getY() {
+		return position.y;
 	}
 
 }

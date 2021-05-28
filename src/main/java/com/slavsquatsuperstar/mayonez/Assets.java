@@ -3,7 +3,6 @@ package com.slavsquatsuperstar.mayonez;
 import java.util.HashMap;
 
 import com.slavsquatsuperstar.mayonez.components.Sprite;
-import com.slavsquatsuperstar.util.Logger;
 
 public final class Assets {
 
@@ -42,7 +41,7 @@ public final class Assets {
 		if (hasSprite(filename)) {
 			return sprites.get(filename);
 		} else {
-			Logger.log("Assets: Sprite \"%s\" not found", filename);
+//			Logger.log("Assets: Sprite \"%s\" not found", filename);
 			addSprite(filename);
 			return sprites.get(filename);
 		}

@@ -30,15 +30,14 @@ public class Renderer {
 		AffineTransform transform = g2.getTransform();
 
 		// Move the screen and render everything at the offset position
-		double camX = (double) camera.position.x;
-		double camY = (double) camera.position.y;
+		double camX = (double) camera.getX();
+		double camY = (double) camera.getY();
 		g2.translate(-camX, -camY);
 		// TODO only render if in screen
 //		Rectangle screen = new Rectangle((int) camX, (int) camY, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
-		
+
 		for (GameObject o : objects) {
-			if (true)
-				o.render(g2);
+			o.render(g2);
 		}
 
 		// Reset the screen's transform to its unmodified state

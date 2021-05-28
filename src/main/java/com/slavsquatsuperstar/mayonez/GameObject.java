@@ -4,8 +4,6 @@ import java.awt.Graphics2D;
 import java.util.ArrayList;
 
 import com.slavsquatsuperstar.mayonez.components.Component;
-import com.slavsquatsuperstar.util.Logger;
-import com.slavsquatsuperstar.util.Vector2;
 
 /**
  * A collection of {@link Component}s representing an in-game object.
@@ -26,7 +24,6 @@ public class GameObject {
 		this.name = name;
 		this.transform = new Transform(position);
 		components = new ArrayList<>();
-		init();
 	}
 
 	// Game Methods
@@ -37,19 +34,27 @@ public class GameObject {
 	protected void init() {
 	}
 
-	void start() {
-		for (Component c : components) {
-			c.scene = scene;
+	/**
+	 * Initialize all components. Make sure to call super() if overriding!
+	 */
+	protected void start() {
+		init();
+		for (Component c : components)
 			c.start();
-		}
 	}
 
-	void update(float dt) {
+	/**
+	 * Update all components. Make sure to call super() if overriding!
+	 */
+	protected void update(float dt) {
 		for (Component c : components)
 			c.update(dt);
 	}
 
-	void render(Graphics2D g2) {
+	/**
+	 * Render all components. Make sure to call super() if overriding!
+	 */
+	protected void render(Graphics2D g2) {
 		for (Component c : components)
 			c.render(g2);
 	}
@@ -76,7 +81,6 @@ public class GameObject {
 //			Logger.log("GameObject: Adding multiple components of the same type is not recommended");
 
 		comp.parent = this;
-		comp.scene = scene;
 		components.add(comp);
 	}
 
@@ -96,19 +100,19 @@ public class GameObject {
 	}
 
 	// Getters and Setters
-	
+
 	public float getX() {
 		return transform.position.x;
 	}
-	
+
 	public void setX(float x) {
 		transform.position.x = x;
 	}
-	
+
 	public float getY() {
 		return transform.position.y;
 	}
-	
+
 	public void setY(float y) {
 		transform.position.y = y;
 	}
@@ -123,6 +127,10 @@ public class GameObject {
 
 	public void destroy() {
 		destroyed = true;
+	}
+
+	public Scene getScene() {
+		return scene;
 	}
 
 	public void setScene(Scene scene) {

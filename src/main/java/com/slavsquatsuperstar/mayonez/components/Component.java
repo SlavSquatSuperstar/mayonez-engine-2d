@@ -13,8 +13,10 @@ import com.slavsquatsuperstar.mayonez.Scene;
  */
 public abstract class Component {
 
+	/**
+	 * The {@link GameObject} this component belongs to.
+	 */
 	public GameObject parent;
-	public Scene scene;
 
 	/**
 	 * Initialize any fields needed for subclasses or scripts.
@@ -22,15 +24,27 @@ public abstract class Component {
 	public void start() {
 	}
 
+	/**
+	 * Refresh this component in the world.
+	 */
 	public void update(float dt) {
 	}
 
+	/**
+	 * Draw this component on the screen.
+	 */
 	public void render(Graphics2D g2) {
+	}
 
+	/**
+	 * @return The {@link Scene} the parent object belongs to.
+	 */
+	public Scene getScene() {
+		return parent.getScene();
 	}
 
 	public boolean isInScene(Scene scene) {
-		return this.scene == scene;
+		return scene.equals(getScene());
 	}
 
 }

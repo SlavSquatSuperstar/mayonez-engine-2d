@@ -4,8 +4,6 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 
-import com.slavsquatsuperstar.util.Vector2;
-
 /**
  * A collection of {@link GameObject}s that represents an in-game world.
  * 
@@ -32,7 +30,7 @@ public abstract class Scene {
 		this.width = width;
 		this.height = height;
 
-		camera = new Camera(Vector2.ZERO, width, height);
+		camera = new Camera(new Vector2(), width, height);
 		renderer = new Renderer(camera);
 		objects = new ArrayList<>();
 		toRemove = new ArrayList<>();
@@ -43,7 +41,8 @@ public abstract class Scene {
 	/**
 	 * Add necessary objects.
 	 */
-	protected abstract void init();
+	protected void init() {
+	}
 
 	void start() {
 		if (started)
@@ -95,6 +94,7 @@ public abstract class Scene {
 		obj.setScene(this);
 		objects.add(obj);
 		renderer.add(obj);
+		Logger.log("Scene: Added GameObject \"%s\"", obj.getName());
 
 		if (started)
 			obj.start();
@@ -105,13 +105,19 @@ public abstract class Scene {
 		toRemove.add(obj);
 	}
 
-//	@SuppressWarnings("unchecked")
+	// TODO use hash map or bin search?
+	public GameObject getObject(String name) {
+		for (GameObject o : objects)
+			if (o.getName().equalsIgnoreCase(name))
+				return o;
+		return null;
+	}
+
 	public <T extends GameObject> ArrayList<T> getObjects(Class<T> cls) {
 		ArrayList<T> objects = new ArrayList<>();
 		for (GameObject o : objects) {
 			if (cls == null || cls.isInstance(o)) {
 				objects.add(cls.cast(o));
-//				objects.add((T) o);
 			}
 		}
 		return objects;

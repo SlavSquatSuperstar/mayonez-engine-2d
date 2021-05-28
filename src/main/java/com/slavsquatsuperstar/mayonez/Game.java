@@ -10,7 +10,6 @@ import javax.swing.JFrame;
 
 import com.slavsquatsuperstar.game.LevelEditorScene;
 import com.slavsquatsuperstar.util.Constants;
-import com.slavsquatsuperstar.util.Logger;
 
 public class Game implements Runnable {
 
@@ -19,7 +18,7 @@ public class Game implements Runnable {
 	 */
 
 	// Singleton Fields
-	private static Game instance;
+	private static Game game;
 
 	// Thread Fields
 	private Thread thread;
@@ -136,18 +135,16 @@ public class Game implements Runnable {
 	}
 
 	/**
-	 * Repaints all objects in the current scene.
+	 * Redraws all objects in the current scene.
 	 */
-	// Issue: white flicked, sometimes nothing renders at all
 	public void render() {
-
 		if (bs == null) {
 			initGraphics();
 			return;
 		}
 
 		/*
-		 * Use a do-while loop to avoid lose buffer frames Source:
+		 * Use a do-while loop to avoid losing buffer frames Source:
 		 * https://stackoverflow.com/questions/13590002/understand-bufferstrategy
 		 */
 		do {
@@ -212,33 +209,32 @@ public class Game implements Runnable {
 
 	public static Game instance() { // only create the game once
 		// get params from preferences
-		return (null == instance) ? instance = new Game() : instance;
+		return (null == game) ? game = new Game() : game;
 	}
 
-	public void changeScene(int scene) {
+	public static void changeScene(int scene) {
 		switch (scene) {
 		case 0:
-			this.currentScene = new LevelEditorScene("Level Editor", Constants.SCREEN_WIDTH * 2,
-					Constants.SCREEN_HEIGHT * 2);
+			game.currentScene = new LevelEditorScene("Level Editor Scene");
 			break;
 		default:
 			Logger.log("Game: Unknown scene");
 		}
 
-		if (running && currentScene != null)
-			currentScene.start();
+		if (game.running && game.currentScene != null)
+			game.currentScene.start();
 	}
 
-	public static Scene getCurrentScene() {
-		return instance.currentScene;
+	public Scene getCurrentScene() {
+		return game.currentScene;
 	}
 
 	public static KeyInput keyboard() {
-		return instance.keyboard;
+		return game.keyboard;
 	}
 
 	public static MouseInput mouse() {
-		return instance.mouse;
+		return game.mouse;
 	}
 
 	/**

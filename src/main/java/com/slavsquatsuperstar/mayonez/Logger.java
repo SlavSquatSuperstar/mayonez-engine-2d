@@ -1,4 +1,4 @@
-package com.slavsquatsuperstar.util;
+package com.slavsquatsuperstar.mayonez;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -6,8 +6,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.IllegalFormatException;
-
-import com.slavsquatsuperstar.mayonez.Game;
 
 public final class Logger {
 
