@@ -46,10 +46,10 @@ public class PlayerController extends Component {
 		int yInput = 0;// Game.keyboard().getAxis("vertical");
 
 		// Don't want to move faster diagonally so normalize
-		Vector2 input = new Vector2(xInput, yInput).unitVector().multiply(topSpeed);
+		Vector2 input = new Vector2(xInput, yInput).unit().mul(topSpeed);
 		parent.transform.move(input);
 
-		Vector2 appliedForce = new Vector2(xInput, yInput).unitVector().multiply(thrustForce);
+		Vector2 appliedForce = new Vector2(xInput, yInput).unit().mul(thrustForce);
 //		rb.addForce(appliedForce);
 
 		// Apply Drag Unless Stationary (prevent divide by 0)

@@ -12,7 +12,7 @@ import com.slavsquatsuperstar.util.Constants;
 public class LevelEditorScene extends Scene {
 	
 	public LevelEditorScene(String name) {
-		super(name, (int) (Constants.SCREEN_WIDTH * 1.0), (int) (Constants.SCREEN_HEIGHT * 1.0));
+		super(name, (int) (Constants.SCREEN_WIDTH * 1.2), (int) (Constants.SCREEN_HEIGHT * 1.5));
 		background = Color.WHITE;
 	}
 
@@ -42,7 +42,7 @@ public class LevelEditorScene extends Scene {
 			@Override
 			protected void init() {
 				addComponent(Assets.getSprite("assets/mario.png"));
-				transform.scale = transform.scale.multiply(2);
+				transform.scale = transform.scale.mul(2);
 			}
 		});
 		addObject(new GameObject("Test Object 2", new Vector2(width - 32, height - 32)) {

@@ -7,47 +7,47 @@ import com.slavsquatsuperstar.util.Constants;
 
 public class RigidBody2D extends Component {
 
-	private Vector2 velocity;
-	public float mass, rotation;
-	public boolean followsGravity;
+    private Vector2 velocity;
+    public float mass, rotation;
+    public boolean followsGravity;
 
-	public RigidBody2D(float mass, boolean followsGravity) {
-		this.mass = mass;
-		this.followsGravity = followsGravity;
-		this.velocity = new Vector2();
-	}
+    public RigidBody2D(float mass, boolean followsGravity) {
+        this.mass = mass;
+        this.followsGravity = followsGravity;
+        this.velocity = new Vector2();
+    }
 
-	@Override
-	public void update(float dt) {
-		// TODO account for direction of gravity
-		if (Math.abs(velocity.y) > Constants.TERMINAL_VELOCITY)
-			velocity.y = Math.signum(velocity.y) * Constants.TERMINAL_VELOCITY;
+    @Override
+    public void update(float dt) {
+        // TODO account for direction of gravity
+        if (Math.abs(velocity.y) > Constants.TERMINAL_VELOCITY)
+            velocity.y = Math.signum(velocity.y) * Constants.TERMINAL_VELOCITY;
 
-		if (followsGravity)
-			addAcceleration(Constants.GRAVITY);
+        if (followsGravity)
+            addAcceleration(Constants.GRAVITY);
 
-		parent.transform.move(velocity); // s = v*t
-	}
+        parent.transform.move(velocity); // s = v*t
+    }
 
-	// Physics Methods
+    // Physics Methods
 
-	// ForceMode.Force, should be used with keyboard axes
-	public void addForce(Vector2 force) {
-		// dv = F*t/m
-		velocity = velocity.add(force.multiply(Game.timestep).divide(mass));
-	}
+    // ForceMode.Force, should be used with keyboard axes
+    public void addForce(Vector2 force) {
+        // dv = F*t/m
+        velocity = velocity.add(force.mul(Game.timestep).div(mass));
+    }
 
-	// ForceMode.Acceleration, should be used with keyboard axes
-	public void addAcceleration(Vector2 acceleration) {
-		// dv = a*t
-		velocity = velocity.add(acceleration.multiply(Game.timestep));
-	}
+    // ForceMode.Acceleration, should be used with keyboard axes
+    public void addAcceleration(Vector2 acceleration) {
+        // dv = a*t
+        velocity = velocity.add(acceleration.mul(Game.timestep));
+    }
 
-	// ForceMode.Impulse, should be used with button presses
-	public void addImpulse(Vector2 impulse) {
-		// dv = dp/m
-		velocity = velocity.add(impulse.divide(mass));
-	}
+    // ForceMode.Impulse, should be used with button presses
+    public void addImpulse(Vector2 impulse) {
+        // dv = dp/m
+        velocity = velocity.add(impulse.div(mass));
+    }
 
 //	// ForceMode.VelocityChange, should be used with button presses
 //	public void addVelocityChange(Vector2 velocityChange) {
@@ -59,23 +59,23 @@ public class RigidBody2D extends Component {
 //		velocity = displacement;
 //	}
 
-	// Object Properties
+    // Object Properties
 
-	public Vector2 velocity() {
-		return velocity;
-	}
+    public Vector2 velocity() {
+        return velocity;
+    }
 
-	public float speed() {
-		return velocity.magnitude();
-	}
+    public float speed() {
+        return velocity.magnitude();
+    }
 
-	public float getMass() {
-		return mass;
-	}
+    public float mass() {
+        return mass;
+    }
 
-	// TODO Top left vs center positioning
-	public Vector2 getPosition() {
-		return parent.transform.position;
-	}
+    // TODO Top left vs center positioning
+    public Vector2 position() {
+        return parent.transform.position;
+    }
 
 }

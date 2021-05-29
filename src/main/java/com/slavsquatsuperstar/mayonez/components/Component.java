@@ -6,45 +6,46 @@ import com.slavsquatsuperstar.mayonez.GameObject;
 import com.slavsquatsuperstar.mayonez.Scene;
 
 // TODO Observable?
+
 /**
  * A data structure representing traits and behaviors of a {@link GameObject}.
- * 
+ *
  * @author SlavSquatSuperstar
  */
 public abstract class Component {
 
-	/**
-	 * The {@link GameObject} this component belongs to.
-	 */
-	public GameObject parent;
+    /**
+     * The {@link GameObject} this component belongs to.
+     */
+    public GameObject parent;
 
-	/**
-	 * Initialize any fields needed for subclasses or scripts.
-	 */
-	public void start() {
-	}
+    /**
+     * Initialize any fields needed for subclasses or scripts.
+     */
+    public void start() {
+    }
 
-	/**
-	 * Refresh this component in the world.
-	 */
-	public void update(float dt) {
-	}
+    /**
+     * Refresh this component in the world.
+     */
+    public void update(float dt) {
+    }
 
-	/**
-	 * Draw this component on the screen.
-	 */
-	public void render(Graphics2D g2) {
-	}
+    /**
+     * Draw this component on the screen.
+     */
+    public void render(Graphics2D g2) {
+    }
 
-	/**
-	 * @return The {@link Scene} the parent object belongs to.
-	 */
-	public Scene getScene() {
-		return parent.getScene();
-	}
+    /**
+     * @return The {@link Scene} the parent object belongs to.
+     */
+    public Scene getScene() {
+        return parent.getScene();
+    }
 
-	public boolean isInScene(Scene scene) {
-		return scene.equals(getScene());
-	}
+    public boolean isInScene(Scene scene) {
+        return scene.equals(getScene());
+    }
 
 }
