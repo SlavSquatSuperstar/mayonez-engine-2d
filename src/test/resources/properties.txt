@@ -1,0 +1,6 @@
+name=Mayonez Engine
+version=0.5
+author=Eric Weng
+birthday=05-26-2003
+in_progress=true
+languages=Java,Groovy

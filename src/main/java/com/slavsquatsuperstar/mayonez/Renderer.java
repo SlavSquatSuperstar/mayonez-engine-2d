@@ -36,9 +36,7 @@ public class Renderer {
 		// TODO only render if in screen
 //		Rectangle screen = new Rectangle((int) camX, (int) camY, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
 
-		for (GameObject o : objects) {
-			o.render(g2);
-		}
+		objects.forEach(o -> o.render(g2));
 
 		// Reset the screen's transform to its unmodified state
 		g2.setTransform(transform);

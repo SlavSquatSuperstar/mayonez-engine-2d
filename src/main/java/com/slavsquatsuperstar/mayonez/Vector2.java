@@ -144,7 +144,7 @@ public class Vector2 {
         return super.equals(obj);
     }
 
-    // TODO specify rounding, matrix form
+    // TODO specify rounding
     @Override
     public String toString() {
         return String.format("(%.4f, %.4f)", x, y);

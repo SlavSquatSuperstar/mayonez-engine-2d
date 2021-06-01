@@ -7,12 +7,12 @@ import com.slavsquatsuperstar.mayonez.Assets;
 import com.slavsquatsuperstar.mayonez.GameObject;
 import com.slavsquatsuperstar.mayonez.Scene;
 import com.slavsquatsuperstar.mayonez.Vector2;
-import com.slavsquatsuperstar.util.Constants;
+import com.slavsquatsuperstar.util.Preferences;
 
 public class LevelEditorScene extends Scene {
 	
 	public LevelEditorScene(String name) {
-		super(name, (int) (Constants.SCREEN_WIDTH * 1.2), (int) (Constants.SCREEN_HEIGHT * 1.5));
+		super(name, (int) (Preferences.SCREEN_WIDTH * 1.2), (int) (Preferences.SCREEN_HEIGHT));
 		background = Color.WHITE;
 	}
 
@@ -30,7 +30,7 @@ public class LevelEditorScene extends Scene {
 				super.render(g2);
 				g2.setColor(Color.BLACK);
 				g2.getTransform().getTranslateX();
-				g2.fillRect((int) getX() - 10, (int) getY(), Constants.SCREEN_WIDTH + 20, height);
+				g2.fillRect((int) getX() - 10, (int) getY(), Preferences.SCREEN_WIDTH + 20, height);
 			}
 		};
 		addObject(ground);
@@ -38,17 +38,17 @@ public class LevelEditorScene extends Scene {
 		GameObject player = new Player("Player", new Vector2(100, 100), ground);
 		addObject(player);
 
-		addObject(new GameObject("Test Object 1", new Vector2(0, 0)) {
+		addObject(new GameObject("Mario", new Vector2(0, 28)) {
 			@Override
 			protected void init() {
-				addComponent(Assets.getSprite("assets/mario.png"));
+				addComponent(Assets.getSprite("mario.png"));
 				transform.scale = transform.scale.mul(2);
 			}
 		});
-		addObject(new GameObject("Test Object 2", new Vector2(width - 32, height - 32)) {
+		addObject(new GameObject("Goomba", new Vector2(width - 32, height - 52)) {
 			@Override
 			protected void init() {
-				addComponent(Assets.getSprite("assets/goomba.png"));
+				addComponent(Assets.getSprite("goomba.png"));
 			}
 		});
 	}

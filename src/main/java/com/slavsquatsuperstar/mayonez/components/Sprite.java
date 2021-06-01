@@ -9,7 +9,7 @@ import javax.imageio.ImageIO;
 
 import com.slavsquatsuperstar.mayonez.GameObject;
 import com.slavsquatsuperstar.mayonez.Logger;
-import com.slavsquatsuperstar.util.Constants;
+import com.slavsquatsuperstar.util.Preferences;
 
 /**
  * An image used to display a {@link GameObject} or background.
@@ -40,8 +40,8 @@ public class Sprite extends Component {
 		transform.setToIdentity();
 		transform.translate(parent.transform.position.x, parent.transform.position.y);
 		transform.scale(parent.transform.scale.x, parent.transform.scale.y);
-		transform.rotate(Math.toRadians(parent.transform.rotation), Constants.PLAYER_WIDTH / 2,
-				Constants.PLAYER_HEIGHT / 2);
+		transform.rotate(Math.toRadians(parent.transform.rotation), Preferences.PLAYER_WIDTH / 2,
+				Preferences.PLAYER_HEIGHT / 2);
 
 		g2.drawImage(image, transform, null);
 	}

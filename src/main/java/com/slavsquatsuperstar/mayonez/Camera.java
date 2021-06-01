@@ -1,7 +1,7 @@
 package com.slavsquatsuperstar.mayonez;
 
 import com.slavsquatsuperstar.mayonez.components.Sprite;
-import com.slavsquatsuperstar.util.Constants;
+import com.slavsquatsuperstar.util.Preferences;
 
 public class Camera {
 
@@ -12,8 +12,8 @@ public class Camera {
 
     public Camera(Vector2 position, int sceneWidth, int sceneHeight) {
         this.position = position;
-        width = Constants.SCREEN_WIDTH;
-        height = Constants.SCREEN_HEIGHT;
+        width = Preferences.SCREEN_WIDTH;
+        height = Preferences.SCREEN_HEIGHT;
         minX = 0;
         minY = 0;//-28; // account for the bar on top of the window
         maxX = sceneWidth - width;

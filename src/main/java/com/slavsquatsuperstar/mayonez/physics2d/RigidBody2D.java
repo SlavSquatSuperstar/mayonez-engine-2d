@@ -3,7 +3,7 @@ package com.slavsquatsuperstar.mayonez.physics2d;
 import com.slavsquatsuperstar.mayonez.Game;
 import com.slavsquatsuperstar.mayonez.Vector2;
 import com.slavsquatsuperstar.mayonez.components.Component;
-import com.slavsquatsuperstar.util.Constants;
+import com.slavsquatsuperstar.util.Preferences;
 
 public class RigidBody2D extends Component {
 
@@ -20,11 +20,11 @@ public class RigidBody2D extends Component {
     @Override
     public void update(float dt) {
         // TODO account for direction of gravity
-        if (Math.abs(velocity.y) > Constants.TERMINAL_VELOCITY)
-            velocity.y = Math.signum(velocity.y) * Constants.TERMINAL_VELOCITY;
+        if (Math.abs(velocity.y) > Preferences.TERMINAL_VELOCITY)
+            velocity.y = Math.signum(velocity.y) * Preferences.TERMINAL_VELOCITY;
 
         if (followsGravity)
-            addAcceleration(Constants.GRAVITY);
+            addAcceleration(Preferences.GRAVITY);
 
         parent.transform.move(velocity); // s = v*t
     }

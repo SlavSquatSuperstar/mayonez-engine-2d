@@ -9,7 +9,7 @@ import java.awt.image.BufferStrategy;
 import javax.swing.JFrame;
 
 import com.slavsquatsuperstar.game.LevelEditorScene;
-import com.slavsquatsuperstar.util.Constants;
+import com.slavsquatsuperstar.util.Preferences;
 
 public class Game implements Runnable {
 
@@ -40,7 +40,7 @@ public class Game implements Runnable {
     private Scene currentScene;
 
     // Time Fields
-    public static float timestep = 1.0f / Constants.FPS;
+    public static float timestep = 1.0f / Preferences.FPS;
     public static long timeStarted = System.nanoTime();
 
     /*
@@ -49,9 +49,9 @@ public class Game implements Runnable {
 
     private Game() {
         // Set up the window
-        window = new JFrame(Constants.SCREEN_TITLE);
-        width = Constants.SCREEN_WIDTH;
-        height = Constants.SCREEN_HEIGHT;
+        window = new JFrame(Preferences.SCREEN_TITLE);
+        width = Preferences.SCREEN_WIDTH;
+        height = Preferences.SCREEN_HEIGHT;
         window.setSize(width, height);
         window.setResizable(false);
         window.setLocationRelativeTo(null); // center in screen
@@ -199,6 +199,7 @@ public class Game implements Runnable {
 
         // Stop thread
         thread.interrupt();
+        Logger.log("Logger: Saved log to file \"%s\".", Logger.outputFile);
         System.exit(status);
     }
 

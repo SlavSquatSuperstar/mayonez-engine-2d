@@ -30,32 +30,28 @@ public class GameObject {
     /**
      * Add necessary components.
      */
-    protected void init() {
-    }
+    protected void init() {}
 
     /**
      * Initialize all components. Make sure to call super() if overriding!
      */
     protected void start() {
         init();
-        for (Component c : components)
-            c.start();
+        components.forEach(c -> c.start());
     }
 
     /**
      * Update all components. Make sure to call super() if overriding!
      */
     protected void update(float dt) {
-        for (Component c : components)
-            c.update(dt);
+    	components.forEach(c -> c.update(dt));
     }
 
     /**
      * Render all components. Make sure to call super() if overriding!
      */
     protected void render(Graphics2D g2) {
-        for (Component c : components)
-            c.render(g2);
+    	components.forEach(c -> c.render(g2));
     }
 
     // Component Methods
