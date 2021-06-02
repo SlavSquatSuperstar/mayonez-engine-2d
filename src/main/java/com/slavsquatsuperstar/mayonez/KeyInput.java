@@ -70,7 +70,7 @@ public class KeyInput extends KeyAdapter {
 		 *         -1 if the negative key is pressed.<br/>
 		 *         0 if the both or neither key is pressed.<br/>
 		 */
-		public int value() { // TODO keyboard acceleration?
+		int value() { // TODO keyboard acceleration?
 			// "vector "method to make sure keys don't override each other
 			int negComp = (Game.keyboard().keyDown(negKey)) ? -1 : 0;
 			int posComp = (Game.keyboard().keyDown(posKey)) ? 1 : 0;
@@ -103,7 +103,7 @@ public class KeyInput extends KeyAdapter {
 //			this.keyCodes = keyCodes;
 //		}
 
-		public int keyCode() {
+		int keyCode() {
 			return keyCode;
 		}
 

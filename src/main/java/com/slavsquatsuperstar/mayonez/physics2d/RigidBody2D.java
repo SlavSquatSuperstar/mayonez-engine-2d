@@ -3,7 +3,7 @@ package com.slavsquatsuperstar.mayonez.physics2d;
 import com.slavsquatsuperstar.mayonez.Game;
 import com.slavsquatsuperstar.mayonez.Vector2;
 import com.slavsquatsuperstar.mayonez.components.Component;
-import com.slavsquatsuperstar.util.Preferences;
+import com.slavsquatsuperstar.mayonez.Preferences;
 
 public class RigidBody2D extends Component {
 

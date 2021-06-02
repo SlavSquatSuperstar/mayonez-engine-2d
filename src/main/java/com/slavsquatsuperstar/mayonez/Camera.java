@@ -1,75 +1,63 @@
 package com.slavsquatsuperstar.mayonez;
 
+import com.slavsquatsuperstar.mayonez.components.CameraController;
 import com.slavsquatsuperstar.mayonez.components.Sprite;
-import com.slavsquatsuperstar.util.Preferences;
+import com.slavsquatsuperstar.util.MathUtil;
 
-public class Camera {
+public class Camera extends GameObject {
 
-    private Vector2 position;
     private int width, height;
     private int minX, minY, maxX, maxY;
     private Sprite subject;
 
     public Camera(Vector2 position, int sceneWidth, int sceneHeight) {
-        this.position = position;
+        super("Camera", position);
         width = Preferences.SCREEN_WIDTH;
         height = Preferences.SCREEN_HEIGHT;
         minX = 0;
         minY = 0;//-28; // account for the bar on top of the window
         maxX = sceneWidth - width;
         maxY = sceneHeight - height;
+        keepInScene = false;
+    }
+
+    @Override
+    protected void init() {
+        addComponent(new CameraController());
     }
 
     public void move(Vector2 displacement) {
-        position = position.add(displacement);
+        transform.move(displacement);
     }
 
-    void update() {
-        // Center on the center of the subject
-        if (subject == null)
-            return;
-
-        // Camera Position = Subject Center - Camera Center
-        // Camera X = Subject X + Subject Width / 2 - Camera Width / 2
-        // Camera Y = Subject Y + Subject Height / 2 - Camera Height / 2
-        float offX = (subject.parent.getX() + subject.getImage().getWidth() / 2) - width / 2;
-        float offY = (subject.parent.getY() + subject.getImage().getHeight() / 2) - height / 2;
-
-        position = new Vector2(offX, offY);
-        // will this cause a memory leak?
-        // TODO set params vs assign new
-//			Logger.log("Subject: %.2f, %.2f", subject.getX(), subject.getY());
-
-        // Keep the camera inside the scene
-//		position.x = MathUtil.clamp(position.x, minX, maxX);
-//		position.y = MathUtil.clamp(position.y, minY, maxY);
-
-        if (position.x < minX)
-            position.x = minX;
-        else if (position.x > maxX)
-            position.x = maxX;
-
-        if (position.y < minY)
-            position.y = minY;
-        else if (position.y > maxY)
-            position.y = maxY;
-
-//		Logger.log("Camera: %.2f, %.2f", position.x, position.y);
-
+    @Override
+    protected void update(float dt) {
+        super.update(dt);
+        // Follow subject (Set camera's center equal to subject's center)
+        if (subject != null) {
+            setX((subject.parent.getX() + subject.getImage().getWidth() / 2) - width / 2);
+            setY((subject.parent.getY() + subject.getImage().getHeight() / 2) - height / 2);
+        }
+        // Keep camera inside scene
+        if (scene.isBounded() && keepInScene) {
+            setX(MathUtil.clamp(getX(), minX, maxX));
+            setY(MathUtil.clamp(getY(), minY, maxY));
+        }
     }
 
     // Getters and Setters
-
     public void setSubject(Sprite subject) {
         this.subject = subject;
     }
 
-    public float getX() {
-        return position.x;
+    // Don't want to get rid of the camera!
+    @Override
+    public void destroy() {
+        return;
     }
 
-    public float getY() {
-        return position.y;
+    @Override
+    public boolean isDestroyed() {
+        return false;
     }
-
 }

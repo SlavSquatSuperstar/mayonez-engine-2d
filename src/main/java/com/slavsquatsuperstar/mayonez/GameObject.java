@@ -2,8 +2,11 @@ package com.slavsquatsuperstar.mayonez;
 
 import java.awt.Graphics2D;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
+import com.slavsquatsuperstar.game.PlayerController;
 import com.slavsquatsuperstar.mayonez.components.Component;
+import com.slavsquatsuperstar.mayonez.components.Script;
 
 /**
  * A collection of {@link Component}s representing an in-game object.
@@ -13,16 +16,19 @@ import com.slavsquatsuperstar.mayonez.components.Component;
 public class GameObject {
 
     private String name;
-    public Transform transform;
     private boolean destroyed;
+    protected boolean keepInScene;
 
+    public Transform transform;
     private ArrayList<Component> components;
+    private ArrayList<Script> scripts;
     protected Scene scene;
 
     public GameObject(String name, Vector2 position) {
         this.name = name;
         this.transform = new Transform(position);
         components = new ArrayList<>();
+        scripts = new ArrayList<>(4);
     }
 
     // Game Methods
@@ -38,45 +44,45 @@ public class GameObject {
     protected void start() {
         init();
         components.forEach(c -> c.start());
+        scripts.forEach(s -> s.start());
     }
 
     /**
      * Update all components. Make sure to call super() if overriding!
      */
     protected void update(float dt) {
-    	components.forEach(c -> c.update(dt));
+        // TODO component call order
+        // TODO just make a new collection for scripts
+        components.forEach(c -> c.update(dt));
+        scripts.forEach(s -> {
+            if (s.enabled)
+                s.update(dt);
+        });
+        components.stream().filter(Script.class::isInstance).forEachOrdered(s -> {
+            if (((Script) s).enabled)
+                s.update(dt);
+        });
     }
 
     /**
      * Render all components. Make sure to call super() if overriding!
      */
     protected void render(Graphics2D g2) {
-    	components.forEach(c -> c.render(g2));
+        components.forEach(c -> c.render(g2));
     }
 
     // Component Methods
 
-    public <T extends Component> T getComponent(Class<T> componentClass) {
-        try {
-            for (Component c : components)
-                if (componentClass.isAssignableFrom(c.getClass()))
-                    return componentClass.cast(c);
-        } catch (ClassCastException e) { // This shouldn't happen!
-            Logger.log("Object: Error accessing %s component", componentClass.getName());
-            Logger.log(e.getStackTrace());
-        }
-
-        return null;
-    }
-
     public void addComponent(Component comp) {
-//		if (null != getComponent(comp.getClass()))
-//			;
-        // maybe make annotation (multiple scripts should suprress warning)
+        // maybe make annotation (multiple scripts should suppress warning)
+//		if (null != getComponent(comp.getClass()));
 //			Logger.log("GameObject: Adding multiple components of the same type is not recommended");
 
         comp.parent = this;
-        components.add(comp);
+        if (comp instanceof Script)
+            scripts.add((Script) comp);
+        else
+            components.add(comp);
     }
 
     public <T extends Component> void removeComponent(Class<T> cls) {
@@ -92,6 +98,27 @@ public class GameObject {
 
     public ArrayList<Component> getComponents() {
         return components;
+    }
+
+    public <T extends Component> ArrayList<T> getComponents(Class<T> componentCls) {
+        ArrayList<T> found = new ArrayList<>();
+        components.forEach(c -> {
+            if (componentCls.isInstance(c))
+                found.add(componentCls.cast(c));
+        });
+        return found;
+    }
+
+    public <T extends Component> T getComponent(Class<T> componentCls) {
+        try {
+            for (Component c : components)
+                if (componentCls.isAssignableFrom(c.getClass()))
+                    return componentCls.cast(c);
+        } catch (ClassCastException e) { // This shouldn't happen!
+            Logger.log("GameObject: Error accessing %s component", componentCls.getName());
+            Logger.log(e.getStackTrace());
+        }
+        return null;
     }
 
     // Getters and Setters

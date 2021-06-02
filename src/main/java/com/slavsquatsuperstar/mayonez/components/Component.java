@@ -35,12 +35,13 @@ public abstract class Component {
 	/**
 	 * @return The {@link Scene} the parent object belongs to.
 	 */
-	public Scene getScene() {
+	public Scene scene() {
 		return parent.getScene();
 	}
 
 	public boolean isInScene(Scene scene) {
-		return scene.equals(getScene());
+		// This could cause a NPE
+		return scene.equals(scene());
 	}
 
 }

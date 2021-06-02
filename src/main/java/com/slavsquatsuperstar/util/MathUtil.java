@@ -25,11 +25,11 @@ public final class MathUtil {
 
     // Clamp Methods
 
-    public static float clamp(float value, float upperBound, float lowerBound) {
+    public static float clamp(float value, float lowerBound, float upperBound) {
         return (value > upperBound ? upperBound : (value < lowerBound ? lowerBound : value));
     }
 
-    public static int clamp(int value, int upperBound, int lowerBound) {
+    public static int clamp(int value, int lowerBound, int upperBound) {
         return (value > upperBound ? upperBound : (value < lowerBound ? lowerBound : value));
     }
 

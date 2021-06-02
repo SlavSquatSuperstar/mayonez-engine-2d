@@ -9,7 +9,7 @@ import javax.imageio.ImageIO;
 
 import com.slavsquatsuperstar.mayonez.GameObject;
 import com.slavsquatsuperstar.mayonez.Logger;
-import com.slavsquatsuperstar.util.Preferences;
+import com.slavsquatsuperstar.mayonez.Preferences;
 
 /**
  * An image used to display a {@link GameObject} or background.

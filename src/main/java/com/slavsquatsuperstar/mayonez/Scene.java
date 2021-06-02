@@ -15,15 +15,13 @@ public abstract class Scene {
 	protected int width, height;
 
 	private boolean started;
-	private boolean bounded = true;
+	protected boolean bounded;
 	protected Color background;
 
 	// Rendering Fields
 	private Renderer renderer;
 	private Camera camera;
 	protected ArrayList<GameObject> objects, toRemove;
-
-	// private BoundType = BOUNDED;
 
 	public Scene(String name, int width, int height) {
 		this.name = name;
@@ -48,6 +46,7 @@ public abstract class Scene {
 		if (started)
 			return;
 
+		addObject(camera);
 		init();
 		objects.forEach(o -> o.start());
 		started = true;
@@ -58,13 +57,12 @@ public abstract class Scene {
 			return;
 
 		// Update Objects and Camera
-		for (GameObject o : objects) {
+		objects.forEach(o -> {
 			o.update(dt);
 			// Flag objects for destruction
 			if (o.isDestroyed())
 				removeObject(o);
-		}
-		camera.update();
+		});
 
 		// Remove destroyed objects at the end of the frame
 		toRemove.forEach(o -> {
@@ -104,20 +102,25 @@ public abstract class Scene {
 		toRemove.add(obj);
 	}
 
+	public ArrayList<GameObject> getObjects() {
+		return objects;
+	}
+
+	public <T extends GameObject> ArrayList<T> getObjects(Class<T> cls) {
+		ArrayList<T> found = new ArrayList<>();
+		objects.forEach(o -> {
+			if (cls == null || cls.isInstance(o))
+				found.add(cls.cast(o));
+		});
+		return found;
+	}
+
 	// TODO use hash map or bin search?
 	public GameObject getObject(String name) {
 		for (GameObject o : objects)
 			if (o.getName().equalsIgnoreCase(name))
 				return o;
 		return null;
-	}
-
-	public <T extends GameObject> ArrayList<T> getObjects(Class<T> cls) {
-		ArrayList<T> objects = new ArrayList<>();
-		for (GameObject o : objects)
-			if (cls == null || cls.isInstance(o))
-				objects.add(cls.cast(o));
-		return objects;
 	}
 
 	// Getters and Setters
@@ -138,7 +141,7 @@ public abstract class Scene {
 		return bounded;
 	}
 
-	public Camera getCamera() {
+	public Camera camera() {
 		return camera;
 	}
 

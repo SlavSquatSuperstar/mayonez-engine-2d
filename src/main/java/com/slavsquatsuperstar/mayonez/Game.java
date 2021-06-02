@@ -9,7 +9,6 @@ import java.awt.image.BufferStrategy;
 import javax.swing.JFrame;
 
 import com.slavsquatsuperstar.game.LevelEditorScene;
-import com.slavsquatsuperstar.util.Preferences;
 
 public class Game implements Runnable {
 
@@ -98,7 +97,6 @@ public class Game implements Runnable {
                 deltaTime -= timestep;
                 ticked = true;
             }
-
             // Only render if the game has updated to save resources
             if (ticked) {
 //				render(window.getGraphics());
@@ -106,7 +104,6 @@ public class Game implements Runnable {
                 frames++;
                 ticked = false;
             }
-
             // Print ticks and frames each second
             if (timer >= 1) {
                 Logger.log("Frames per Second: %d", frames);
@@ -190,7 +187,7 @@ public class Game implements Runnable {
      */
     public synchronized void stop(int status) {
         running = false;
-        Logger.log("Engine: Stopping");
+        Logger.log("Engine: Stopping with exit code %d", status);
 
         // Free System resources
         window.setVisible(false);

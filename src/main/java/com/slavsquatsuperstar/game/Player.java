@@ -9,7 +9,7 @@ import com.slavsquatsuperstar.mayonez.components.Component;
 import com.slavsquatsuperstar.mayonez.components.Sprite;
 import com.slavsquatsuperstar.mayonez.physics2d.AlignedBoxCollider2D;
 import com.slavsquatsuperstar.mayonez.physics2d.RigidBody2D;
-import com.slavsquatsuperstar.util.Preferences;
+import com.slavsquatsuperstar.mayonez.Preferences;
 
 public class Player extends GameObject {
 
@@ -52,16 +52,6 @@ public class Player extends GameObject {
 		addComponent(new RigidBody2D(2, true));
 		PlayerController pc = new PlayerController(ground);
 		addComponent(pc);
-	}
-
-	@Override
-	protected void update(float dt) {
-//		super.update(dt);
-		// TODO component call order, add script class
-		for (Component c : getComponents())
-			if (!(c instanceof PlayerController))
-				c.update(dt);
-		getComponent(PlayerController.class).update(dt);
 	}
 
 }

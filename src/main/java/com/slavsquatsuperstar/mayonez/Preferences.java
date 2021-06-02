@@ -1,6 +1,7 @@
-package com.slavsquatsuperstar.util;
+package com.slavsquatsuperstar.mayonez;
 
 import com.slavsquatsuperstar.mayonez.Vector2;
+import com.slavsquatsuperstar.util.JSONFile;
 
 public final class Preferences {
 
@@ -21,12 +22,13 @@ public final class Preferences {
 	// Game
 	public static final int FPS = 60;
 
-	// Player
+	// Level
 	public static final int PLAYER_WIDTH = 42;
 	public static final int PLAYER_HEIGHT = 42;
+	public static final int GROUND_HEIGHT = SCREEN_HEIGHT - 30;
 
 	// Physics
-	public static final Vector2 GRAVITY = new Vector2(0, 50f);
-	public static final float TERMINAL_VELOCITY = GRAVITY.y * 5;
+	public static final Vector2 GRAVITY = new Vector2(0, 60f);
+	public static final float TERMINAL_VELOCITY = GRAVITY.y * 2;
 
 }

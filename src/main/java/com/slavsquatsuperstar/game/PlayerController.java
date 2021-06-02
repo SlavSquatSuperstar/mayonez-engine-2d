@@ -3,13 +3,13 @@ package com.slavsquatsuperstar.game;
 import com.slavsquatsuperstar.mayonez.Game;
 import com.slavsquatsuperstar.mayonez.GameObject;
 import com.slavsquatsuperstar.mayonez.Vector2;
-import com.slavsquatsuperstar.mayonez.components.Component;
-import com.slavsquatsuperstar.mayonez.components.Sprite;
+import com.slavsquatsuperstar.mayonez.components.Script;
 import com.slavsquatsuperstar.mayonez.physics2d.AlignedBoxCollider2D;
 import com.slavsquatsuperstar.mayonez.physics2d.RigidBody2D;
+import com.slavsquatsuperstar.util.MathUtil;
 
 @SuppressWarnings("unused")
-public class PlayerController extends Component {
+public class PlayerController extends Script {
 
     // Movement Fields
     private RigidBody2D rb;
@@ -17,11 +17,10 @@ public class PlayerController extends Component {
     public GameObject ground;
 
     private float topSpeed = 8f;
-    private float thrustForce = 120f;
+    private float thrustForce = 150f;
     private float brakeForce = 10f;
     private float mass = 8f;
     private float drag = 0.33f; // [0, 1]
-    private float bounceModifier = 0.25f;
 
     public PlayerController(GameObject ground) {
         this.ground = ground;
@@ -29,7 +28,7 @@ public class PlayerController extends Component {
 
     @Override
     public void start() {
-        getScene().getCamera().setSubject(parent.getComponent(Sprite.class)); // TODO pass camera in player c'tor?
+//        getScene().getCamera().setSubject(parent.getComponent(Sprite.class)); // TODO pass camera in player c'tor?
         box = parent.getComponent(AlignedBoxCollider2D.class);
         rb = parent.getComponent(RigidBody2D.class);
         rb.mass = mass;
@@ -69,28 +68,20 @@ public class PlayerController extends Component {
 //		}
 
         // Bounds detection
-        // TODO: When hitting walls, set velocity to 0
         // TODO: Make collision detector, move to physics
-
-        if (box.getMin().x < 0) {
-            parent.setX(0);
-//			velocity.x *= -bounceModifier;
-        } else if (box.getMax().x > getScene().getWidth()) {
-            parent.setX(getScene().getWidth() - box.getSize().x);
-//			velocity.x *= -bounceModifier;
+        // TODO make KeepInScene script (but detach Collider from RB)
+        if (scene().isBounded()) {
+            parent.setX(MathUtil.clamp(box.getMin().x, 0, scene().getWidth() - box.getSize().x));
+            parent.setY(MathUtil.clamp(box.getMin().y, 0, scene().getHeight() - box.getSize().y));
         }
-
-        if (box.getMin().y < 0) {
-            parent.setY(0);
-//			velocity.y *= -bounceModifier;
-        } else if (box.getMax().y > ground.getY()) { // TODO detect & resolve collisions elsewhere
+        // Collide with ground
+        if (box.getMax().y > ground.getY()) { // TODO detect & resolve collisions elsewhere
             parent.setY(ground.getY() - box.getSize().y);
             rb.velocity().y = 0;
             // Jump
             if (Game.keyboard().keyDown("up"))
                 // Impulse must be big enough to not get stuck on ground next frame
                 rb.addImpulse(new Vector2(0, -thrustForce));
-//			velocity.y *= -bounceModifier;
         }
 
         // Limit Top Speed

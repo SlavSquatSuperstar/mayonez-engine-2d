@@ -40,8 +40,7 @@ public class MouseInput extends MouseAdapter {
 	public void mouseDragged(MouseEvent e) {
 		mouseDragged = true;
 		dx = e.getX() - mouseX;
-		dy = e.getX() - mouseY;
-
+		dy = e.getY() - mouseY;
 	}
 
 	// Getters and Setters
@@ -69,15 +68,15 @@ public class MouseInput extends MouseAdapter {
 		return dy;
 	}
 
-	public int getButton() {
+	public int button() {
 		return button;
 	}
 
-	public boolean mousePressed() {
+	public boolean pressed() {
 		return mousePressed;
 	}
 
-	public boolean mouseDragged() {
+	public boolean dragged() {
 		return mouseDragged;
 	}
 
@@ -91,7 +90,7 @@ public class MouseInput extends MouseAdapter {
 			this.button = button;
 		}
 
-		public int button() {
+		int button() {
 			return button;
 		}
 
