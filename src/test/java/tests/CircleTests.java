@@ -1,19 +1,26 @@
 package tests;
 
+import com.slavsquatsuperstar.mayonez.Game;
+import com.slavsquatsuperstar.mayonez.GameObject;
+import com.slavsquatsuperstar.mayonez.Scene;
+import com.slavsquatsuperstar.mayonez.Vector2;
+import com.slavsquatsuperstar.mayonez.physics2d.CircleCollider;
+import com.slavsquatsuperstar.mayonez.physics2d.Line2D;
+import com.slavsquatsuperstar.mayonez.physics2d.RigidBody2D;
+import org.junit.BeforeClass;
+import org.junit.Ignore;
+import org.junit.Test;
+
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import com.slavsquatsuperstar.mayonez.*;
-import com.slavsquatsuperstar.mayonez.physics2d.Line2D;
-
-import com.slavsquatsuperstar.mayonez.physics2d.CircleCollider;
-import com.slavsquatsuperstar.mayonez.physics2d.RigidBody2D;
-
+@Ignore
 public class CircleTests {
-    private Game game;
-    private CircleCollider c;
+    private static Game game;
+    private static CircleCollider c;
 
-    public CircleTests() {
+    @BeforeClass
+    public static void getCircle() {
         c = new CircleCollider(2);
         game = Game.instance();
         game.start();
@@ -31,7 +38,7 @@ public class CircleTests {
         });
     }
 
-    //    @Test
+    @Test
     public void pointIsInCircle() {
         assertTrue(c.contains(new Vector2(0, 2)));
         assertTrue(c.contains(new Vector2(2, 0)));
@@ -40,13 +47,13 @@ public class CircleTests {
         assertTrue(c.contains(new Vector2(4, 2)));
     }
 
-    //    @Test
+    @Test
     public void pointNotInCircle() {
         assertFalse(c.contains(new Vector2(0, 0)));
         assertFalse(c.contains(new Vector2(4, 4)));
     }
 
-    //    @Test
+    @Test
     public void lineIsInCircle() {
         assertTrue(c.intersects(new Line2D(new Vector2(2, 0), new Vector2(2, 4))));
         assertTrue(c.intersects(new Line2D(new Vector2(0, 2), new Vector2(4, 2))));
@@ -54,7 +61,7 @@ public class CircleTests {
         assertTrue(c.intersects(new Line2D(new Vector2(1, 1), new Vector2(3, 3))));
     }
 
-    //    @Test
+    @Test
     public void lineNotInCircle() {
         assertFalse(c.intersects(new Line2D(new Vector2(0, 5), new Vector2(4, 5))));
     }

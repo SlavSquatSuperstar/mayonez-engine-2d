@@ -3,13 +3,12 @@ package com.slavsquatsuperstar.game;
 import java.awt.Color;
 
 import com.slavsquatsuperstar.mayonez.GameObject;
+import com.slavsquatsuperstar.mayonez.Preferences;
 import com.slavsquatsuperstar.mayonez.SpriteSheet;
 import com.slavsquatsuperstar.mayonez.Vector2;
-import com.slavsquatsuperstar.mayonez.components.Component;
 import com.slavsquatsuperstar.mayonez.components.Sprite;
 import com.slavsquatsuperstar.mayonez.physics2d.AlignedBoxCollider2D;
 import com.slavsquatsuperstar.mayonez.physics2d.RigidBody2D;
-import com.slavsquatsuperstar.mayonez.Preferences;
 
 public class Player extends GameObject {
 

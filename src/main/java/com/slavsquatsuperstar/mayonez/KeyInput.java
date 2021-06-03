@@ -29,14 +29,19 @@ public class KeyInput extends KeyAdapter {
 	}
 
 	/**
-	 * Whether the specified {@link KeyMapping} is pressed.
-	 * 
+	 * Whether any of the keys associated with the specified {@link KeyMapping} are pressed.
+	 *
 	 * @param keyName The name of the {@link KeyMapping}.
+	 * @return Whether the specified key is pressed.
 	 */
 	public boolean keyDown(String keyName) {
-		for (KeyMapping m : KeyMapping.values())
-			if (m.toString().equalsIgnoreCase(keyName)) // if the desired mapping exists
-				return keys[m.keyCode];
+		for (KeyMapping m : KeyMapping.values()) {
+			if (m.name().equalsIgnoreCase(keyName)) { // if the desired mapping exists
+				for (int code : m.keyCodes)
+					if (keys[code])
+						return true;
+			}
+		}
 		return false;
 	}
 
@@ -54,15 +59,14 @@ public class KeyInput extends KeyAdapter {
 	/**
 	 * Stores two keys intended to perform opposite actions.
 	 */
-	enum KeyAxis {
-		
+	public enum KeyAxis {
 		VERTICAL(KeyMapping.DOWN, KeyMapping.UP), HORIZONTAL(KeyMapping.RIGHT, KeyMapping.LEFT);
 
-		private int posKey, negKey;
+		private String posKey, negKey;
 
 		private KeyAxis(KeyMapping posKey, KeyMapping negKey) {
-			this.posKey = posKey.keyCode();
-			this.negKey = negKey.keyCode();
+			this.posKey = posKey.name();
+			this.negKey = negKey.name();
 		}
 
 		/**
@@ -84,38 +88,31 @@ public class KeyInput extends KeyAdapter {
 	}
 
 	/**
-	 * Associates a virtual key code to a name.
+	 * Stores any number of virtual key codes under a common name.
 	 */
-	enum KeyMapping {
+	public enum KeyMapping {
+		// TODO read from file to assign keybinds (deserialize)
+		UP(KeyEvent.VK_W, KeyEvent.VK_UP), DOWN(KeyEvent.VK_S, KeyEvent.VK_DOWN), LEFT(KeyEvent.VK_A, KeyEvent.VK_LEFT),
+		RIGHT(KeyEvent.VK_D, KeyEvent.VK_RIGHT), SPACE(KeyEvent.VK_SPACE), SHIFT(KeyEvent.VK_SHIFT),
+		EXIT(KeyEvent.VK_ESCAPE);
 
-		// TODO read from file to assign keybinds
-		UP(KeyEvent.VK_W), DOWN(KeyEvent.VK_S), LEFT(KeyEvent.VK_A), RIGHT(KeyEvent.VK_D), EXIT(KeyEvent.VK_ESCAPE),
-		SPACE(KeyEvent.VK_SPACE), SHIFT(KeyEvent.VK_SHIFT);
+		private int[] keyCodes;
 
-		private int keyCode; // TODO allow for multiple?
-//		private int[] keyCodes;
-
-		private KeyMapping(int keyCode) {
-			this.keyCode = keyCode;
+		private KeyMapping(int... keyCodes) {
+			this.keyCodes = keyCodes;
 		}
-
-//		private KeyMapping(int... keyCodes) {
-//			this.keyCodes = keyCodes;
-//		}
-
-		int keyCode() {
-			return keyCode;
-		}
-
-//		public int[] getKeyCodes() {
-//			return keyCodes;
-//		}
 
 		@Override
 		public String toString() {
-			return name().toLowerCase();
+			StringBuilder str = new StringBuilder(name() + " (");
+			for (int i = 0; i < keyCodes.length; i++) {
+				str.append(KeyEvent.getKeyText(keyCodes[i]));
+				if (i < keyCodes.length - 1)
+					str.append(", ");
+			}
+			str.append(")");
+			return str.toString();
 		}
-
 	}
 
 }

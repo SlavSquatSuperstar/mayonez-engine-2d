@@ -7,7 +7,7 @@ import com.slavsquatsuperstar.mayonez.Preferences;
 
 public class RigidBody2D extends Component {
 
-    private Vector2 velocity;
+    private Vector2 velocity, netForce;
     public float mass, rotation;
     public boolean followsGravity;
 
@@ -15,6 +15,7 @@ public class RigidBody2D extends Component {
         this.mass = mass;
         this.followsGravity = followsGravity;
         this.velocity = new Vector2();
+        this.netForce = new Vector2();
     }
 
     @Override
@@ -23,18 +24,22 @@ public class RigidBody2D extends Component {
         if (Math.abs(velocity.y) > Preferences.TERMINAL_VELOCITY)
             velocity.y = Math.signum(velocity.y) * Preferences.TERMINAL_VELOCITY;
 
+        // TODO force generators, gravity should be applied inside Scene
         if (followsGravity)
             addAcceleration(Preferences.GRAVITY);
 
+        velocity = velocity.add(netForce.div(mass).mul(dt));
         parent.transform.move(velocity); // s = v*t
+        netForce.x = netForce.y = 0; // reset accumulated force
     }
 
     // Physics Methods
 
     // ForceMode.Force, should be used with keyboard axes
     public void addForce(Vector2 force) {
+        netForce = netForce.add(force);
         // dv = F*t/m
-        velocity = velocity.add(force.mul(Game.timestep).div(mass));
+//        velocity = velocity.add(force.mul(Game.timestep).div(mass));
     }
 
     // ForceMode.Acceleration, should be used with keyboard axes

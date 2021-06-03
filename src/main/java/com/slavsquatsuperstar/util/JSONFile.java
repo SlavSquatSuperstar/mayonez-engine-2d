@@ -1,11 +1,10 @@
 package com.slavsquatsuperstar.util;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-
 import com.slavsquatsuperstar.mayonez.Logger;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 
 // TODO extends TextFile
 // TODO private method read internal
@@ -29,8 +28,8 @@ public class JSONFile {
      */
     public void readJSON() {
         try {
-            json = (JSONObject) new JSONParser().parse(new TextFile(filename).readText());
-        } catch (ParseException e) {
+            json = new JSONObject(new JSONTokener(new TextFile(filename).readText()));
+        } catch (JSONException e) {
             Logger.log("JSONUtil: Could not parse JSON file");
         }
     }
@@ -39,63 +38,70 @@ public class JSONFile {
      * Saves JSON data to this file.
      */
     public void saveJSON() {
-        new TextFile(filename).save(json.toJSONString());
+        new TextFile(filename).save(json.toString());
     }
 
     // JSON Methods
 
     public JSONObject getObj(String key) {
         try {
-            return (JSONObject) json.get(key);
-        } catch (ClassCastException e) {
-            System.out.println("JSONFile: Value is not a JSONObject");
+            return json.getJSONObject(key);
+        } catch (JSONException e) {
+            logError(key, "an object");
         }
         return null;
     }
 
     public JSONArray getArr(String key) {
         try {
-            return (JSONArray) json.get(key);
-        } catch (ClassCastException e) {
-            System.out.println("JSONFile: Value is not a JSONArray");
+            return json.getJSONArray(key);
+        } catch (JSONException e) {
+            logError(key, "an array");
         }
         return null;
     }
 
     public String getStr(String key) {
         try {
-            return json.get(key).toString();
-        } catch (NullPointerException e) {
-            return null;
+            return json.getString(key);
+        } catch (JSONException e) {
+            logError(key, "a string");
         }
+        return null;
     }
 
     public boolean getBool(String key) {
-        String val = getStr(key);
-        return val.equalsIgnoreCase("true") || val.equalsIgnoreCase("yes");
-        // TODO check for number
+        try {
+            return json.getBoolean(key);
+        } catch (JSONException e) {
+            logError(key, "a boolean");
+        }
+        return false;
     }
 
     public int getInt(String key) {
         try {
-            return Integer.parseInt(getStr(key));
-        } catch (NumberFormatException e) {
-            System.out.println("JSONFile: Value is not an integer");
+            return json.getInt(key);
+        } catch (JSONException e) {
+            logError(key, "an integer");
         }
         return -1;
     }
 
-    public double getFloat(String key) {
+    public double getFlt(String key) {
         try {
-            return Float.parseFloat(getStr(key));
+            return json.getFloat(key);
         } catch (NumberFormatException e) {
-            System.out.println("JSONFile: Value is not a float");
+            logError(key, "a float");
         }
         return -1f;
     }
 
-    @SuppressWarnings("unchecked")
-	public void setProperty(String key, Object value) {
+    public void setProperty(String key, Object value) {
         json.put(key, value);
+    }
+
+    private static void logError(String key, String type) {
+        Logger.log("JSONFile: Value at \"%s\" is not %s.", key, type);
     }
 }

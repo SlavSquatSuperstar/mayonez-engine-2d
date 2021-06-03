@@ -20,6 +20,10 @@ public class Line2D {
 		return end;
 	}
 
+	public Vector2 toVector() {
+		return end.sub(start);
+	}
+
 	public boolean contains(Vector2 point) {
 		float slope = (end.y - start.y) / (end.x - start.x);
 		if (Float.isInfinite(slope)) { // vertical line (just compare x-values)

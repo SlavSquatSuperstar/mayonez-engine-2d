@@ -4,6 +4,7 @@
 	"author": "Eric Weng",
 	"birthday": "05-26-2003",
 	"in_progress": true,
+	"uses_dependencies": "TRUE",
 	"languages": [
 		"Java",
 		"Groovy"
