@@ -1,16 +1,14 @@
 package com.slavsquatsuperstar.mayonez;
 
+import com.slavsquatsuperstar.util.TextFile;
+
 import java.io.File;
 import java.time.LocalDate;
 import java.util.IllegalFormatException;
 
-import com.slavsquatsuperstar.util.TextFile;
-
 public final class Logger {
 
-    private Logger() {}
-
-    public static boolean saveLogs = true;
+    public static boolean saveLogs;
     public static String outputFile;
     private static TextFile logFile;
 
@@ -33,6 +31,8 @@ public final class Logger {
         }
     }
 
+    private Logger() {}
+
     public static void log(Object msg, Object... args) {
         String output = String.format("[%.4f] ", Game.getTime());
         try {
@@ -40,7 +40,7 @@ public final class Logger {
             if (saveLogs)
                 logFile.append(output);
         } catch (NullPointerException e) {
-            output += "Logger: Null message";
+            output += "null";
         } catch (IllegalFormatException e) {
             output += "Logger: Could not format message";
         } finally {

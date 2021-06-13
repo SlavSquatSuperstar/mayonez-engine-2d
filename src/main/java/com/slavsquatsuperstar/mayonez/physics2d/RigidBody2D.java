@@ -1,15 +1,14 @@
 package com.slavsquatsuperstar.mayonez.physics2d;
 
-import com.slavsquatsuperstar.mayonez.Game;
+import com.slavsquatsuperstar.mayonez.Preferences;
 import com.slavsquatsuperstar.mayonez.Vector2;
 import com.slavsquatsuperstar.mayonez.components.Component;
-import com.slavsquatsuperstar.mayonez.Preferences;
 
 public class RigidBody2D extends Component {
 
-    private Vector2 velocity, netForce;
-    public float mass, rotation;
+    public float mass;
     public boolean followsGravity;
+    private Vector2 velocity, netForce;
 
     public RigidBody2D(float mass, boolean followsGravity) {
         this.mass = mass;
@@ -20,49 +19,31 @@ public class RigidBody2D extends Component {
 
     @Override
     public void update(float dt) {
+        // Don't do anything if parent object is static
+        if (!parent.shouldFollowPhysics())
+            return;
+
         // TODO account for direction of gravity
         if (Math.abs(velocity.y) > Preferences.TERMINAL_VELOCITY)
             velocity.y = Math.signum(velocity.y) * Preferences.TERMINAL_VELOCITY;
 
-        // TODO force generators, gravity should be applied inside Scene
-        if (followsGravity)
-            addAcceleration(Preferences.GRAVITY);
-
         velocity = velocity.add(netForce.div(mass).mul(dt));
         parent.transform.move(velocity); // s = v*t
-        netForce.x = netForce.y = 0; // reset accumulated force
+        netForce.x = netForce.y = 0; // reset accumulated forces
     }
 
     // Physics Methods
 
-    // ForceMode.Force, should be used with keyboard axes
     public void addForce(Vector2 force) {
         netForce = netForce.add(force);
-        // dv = F*t/m
+        // dv = F/m*t
 //        velocity = velocity.add(force.mul(Game.timestep).div(mass));
     }
 
-    // ForceMode.Acceleration, should be used with keyboard axes
-    public void addAcceleration(Vector2 acceleration) {
-        // dv = a*t
-        velocity = velocity.add(acceleration.mul(Game.timestep));
-    }
-
-    // ForceMode.Impulse, should be used with button presses
     public void addImpulse(Vector2 impulse) {
-        // dv = dp/m
+        // dv = dp/m = m*dv/m
         velocity = velocity.add(impulse.div(mass));
     }
-
-//	// ForceMode.VelocityChange, should be used with button presses
-//	public void addVelocityChange(Vector2 velocityChange) {
-//		// dv
-//		velocity = velocity.add(velocityChange).multiply(Game.timestep);
-//	}
-
-//	public void addDisplacement(Vector2 displacement) {
-//		velocity = displacement;
-//	}
 
     // Object Properties
 
@@ -74,13 +55,21 @@ public class RigidBody2D extends Component {
         return velocity.magnitude();
     }
 
-    public float mass() {
-        return mass;
-    }
-
     // TODO Top left vs center positioning
     public Vector2 position() {
         return parent.transform.position;
+    }
+
+    public void setPosition(Vector2 position) {
+        parent.transform.position = position;
+    }
+
+    public float rotation() {
+        return parent.transform.rotation;
+    }
+
+    public void setRotation(float rotation) {
+        parent.transform.rotation = rotation;
     }
 
 }

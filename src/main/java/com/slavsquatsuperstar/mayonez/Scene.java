@@ -1,7 +1,8 @@
 package com.slavsquatsuperstar.mayonez;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
+import com.slavsquatsuperstar.mayonez.physics2d.Physics2D;
+
+import java.awt.*;
 import java.util.ArrayList;
 
 /**
@@ -9,140 +10,162 @@ import java.util.ArrayList;
  *
  * @author SlavSquatSuperstar
  */
+// TODO coordinate system
 public abstract class Scene {
 
-	protected String name;
-	protected int width, height;
+    protected String name;
+    protected int width, height;
 
-	private boolean started;
-	protected boolean bounded;
-	protected Color background;
+    protected boolean bounded;
+    protected Color background;
+    // Object Fields
+    protected ArrayList<GameObject> objects, toRemove;
+    private boolean started;
+    private Renderer renderer;
+    private Physics2D physics; // rbs are being updated twice
+    private Camera camera;
 
-	// Rendering Fields
-	private Renderer renderer;
-	private Camera camera;
-	protected ArrayList<GameObject> objects, toRemove;
+    public Scene(String name, int width, int height) {
+        this.name = name;
+        this.width = width;
+        this.height = height;
 
-	public Scene(String name, int width, int height) {
-		this.name = name;
-		this.width = width;
-		this.height = height;
+        objects = new ArrayList<>();
+        toRemove = new ArrayList<>();
 
-		camera = new Camera(new Vector2(), width, height);
-		renderer = new Renderer(camera);
-		objects = new ArrayList<>();
-		toRemove = new ArrayList<>();
-	}
+        camera = new Camera(width, height);
+        renderer = new Renderer(camera);
+        physics = new Physics2D(Preferences.GRAVITY);
+    }
 
-	// Game Methods
+    // Game Methods
 
-	/**
-	 * Add necessary objects.
-	 */
-	protected void init() {
-	}
+    /**
+     * Add necessary objects.
+     */
+    protected void init() {}
 
-	void start() {
-		if (started)
-			return;
+    public final void start() {
+        if (started)
+            return;
 
-		addObject(camera);
-		init();
-		objects.forEach(o -> o.start());
-		started = true;
-	}
+        addObject(new GameObject("Camera", new Vector2()) {
+            @Override
+            protected void init() {
+                addComponent(camera);
+            }
 
-	void update(float dt) {
-		if (!started)
-			return;
+            // Don't want to get rid of the camera!
+            @Override
+            public void destroy() {
+                return;
+            }
 
-		// Update Objects and Camera
-		objects.forEach(o -> {
-			o.update(dt);
-			// Flag objects for destruction
-			if (o.isDestroyed())
-				removeObject(o);
-		});
+            @Override
+            public boolean isDestroyed() {
+                return false;
+            }
+        });
+        init();
+        started = true;
+    }
 
-		// Remove destroyed objects at the end of the frame
-		toRemove.forEach(o -> {
-			objects.remove(o);
-			renderer.remove(o);
-		});
-		toRemove.clear();
-	}
+    public final void update(float dt) {
+        if (!started)
+            return;
 
-	void render(Graphics2D g2) {
-		if (!started)
-			return;
+        // Update Objects and Camera
+        objects.forEach(o -> {
+            o.update(dt);
+            // Flag objects for destruction
+            if (o.isDestroyed())
+                removeObject(o);
+        });
+        physics.update(dt);
 
-		g2.setColor(background);
-		g2.fillRect(0, 0, width, height);
+        // Remove destroyed objects at the end of the frame
+        toRemove.forEach(o -> {
+            objects.remove(o);
+            renderer.remove(o);
+            physics.remove(o);
+        });
+        toRemove.clear();
+    }
 
-		renderer.render(g2);
+    public final void render(Graphics2D g2) {
+        if (!started)
+            return;
 
-		// g.drawImage(background, 0, 0, height, width, camera.getXOffset(),
-		// camera.getYOffset(), background.getWidth(), background.getHeight(), null);
-	}
+        g2.setColor(background);
+        g2.fillRect(0, 0, width, height);
+        renderer.render(g2);
 
-	// Object Methods
+        // g.drawImage(background, 0, 0, height, width, camera.getXOffset(),
+        // camera.getYOffset(), background.getWidth(), background.getHeight(), null);
+    }
 
-	public void addObject(GameObject obj) {
-		obj.setScene(this);
-		objects.add(obj);
-		renderer.add(obj);
-		Logger.log("Scene: Added GameObject \"%s\"", obj.getName());
+    // Object Methods
 
-		if (started)
-			obj.start();
-	}
+    public void addObject(GameObject obj) {
+        obj.setScene(this);
+        obj.start(); // add components so renderer and physics can access it
+        objects.add(obj);
+        renderer.add(obj);
+        physics.add(obj);
+        Logger.log("Scene: Added GameObject \"%s\"", obj.name);
+    }
 
-	public void removeObject(GameObject obj) {
-		obj.destroy();
-		toRemove.add(obj);
-	}
+    public void removeObject(GameObject obj) {
+        obj.destroy();
+        toRemove.add(obj);
+    }
 
-	public ArrayList<GameObject> getObjects() {
-		return objects;
-	}
+    public ArrayList<GameObject> getObjects() {
+        return objects;
+    }
 
-	public <T extends GameObject> ArrayList<T> getObjects(Class<T> cls) {
-		ArrayList<T> found = new ArrayList<>();
-		objects.forEach(o -> {
-			if (cls == null || cls.isInstance(o))
-				found.add(cls.cast(o));
-		});
-		return found;
-	}
+    public <T extends GameObject> ArrayList<T> getObjects(Class<T> cls) {
+        ArrayList<T> found = new ArrayList<>();
+        objects.forEach(o -> {
+            if (cls == null || cls.isInstance(o))
+                found.add(cls.cast(o));
+        });
+        return found;
+    }
 
-	// TODO use hash map or bin search?
-	public GameObject getObject(String name) {
-		for (GameObject o : objects)
-			if (o.getName().equalsIgnoreCase(name))
-				return o;
-		return null;
-	}
+    // TODO use hash map or bin search?
+    public GameObject getObject(String name) {
+        for (GameObject o : objects)
+            if (o.name.equalsIgnoreCase(name))
+                return o;
+        return null;
+    }
 
-	// Getters and Setters
+    // Getters and Setters
 
-	public int getWidth() {
-		return width;
-	}
+    public int getWidth() {
+        return width;
+    }
 
-	public int getHeight() {
-		return height;
-	}
+    public int getHeight() {
+        return height;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public boolean isBounded() {
-		return bounded;
-	}
+    public boolean isBounded() {
+        return bounded;
+    }
 
-	public Camera camera() {
-		return camera;
-	}
+    public Camera camera() {
+        return camera;
+    }
 
+    @Override
+    public String toString() {
+        return String.format("%s (%s)", name, getClass().isAnonymousClass() ?
+                "Scene" : getClass().getSimpleName());
+    }
 }

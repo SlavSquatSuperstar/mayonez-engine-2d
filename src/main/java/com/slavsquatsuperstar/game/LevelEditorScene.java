@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 
 import com.slavsquatsuperstar.mayonez.*;
+import com.slavsquatsuperstar.mayonez.Scene;
 
 public class LevelEditorScene extends Scene {
 
@@ -14,10 +15,10 @@ public class LevelEditorScene extends Scene {
     }
 
     @Override
-    public void init() {
+    protected void init() {
         GameObject ground = new GameObject("Ground", new Vector2(0, Preferences.GROUND_HEIGHT)) {
             @Override
-            protected void update(float dt) {
+            public void update(float dt) {
                 super.update(dt);
                 setX(scene.camera().getX());
             }

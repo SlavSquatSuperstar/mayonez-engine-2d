@@ -1,9 +1,9 @@
 package com.slavsquatsuperstar.mayonez.components;
 
-import java.awt.Graphics2D;
-
 import com.slavsquatsuperstar.mayonez.GameObject;
 import com.slavsquatsuperstar.mayonez.Scene;
+
+import java.awt.*;
 
 /**
  * A data structure representing traits and behaviors of a {@link GameObject}.
@@ -12,36 +12,43 @@ import com.slavsquatsuperstar.mayonez.Scene;
  */
 public abstract class Component {
 
-	/**
-	 * The {@link GameObject} this component belongs to.
-	 */
-	public GameObject parent;
+    public boolean enabled = true;
 
-	/**
-	 * Initialize any fields needed for subclasses or scripts.
-	 */
-	public void start() {}
+    /**
+     * The {@link GameObject} this component belongs to.
+     */
+    public GameObject parent;
 
-	/**
-	 * Refresh this component in the world.
-	 */
-	public void update(float dt) {}
+    /**
+     * Initialize any fields needed for subclasses or scripts.
+     */
+    public void start() {}
 
-	/**
-	 * Draw this component on the screen.
-	 */
-	public void render(Graphics2D g2) {}
+    /**
+     * Refresh this component in the world.
+     */
+    public void update(float dt) {}
 
-	/**
-	 * @return The {@link Scene} the parent object belongs to.
-	 */
-	public Scene scene() {
-		return parent.getScene();
-	}
+    /**
+     * Draw this component on the screen.
+     */
+    public void render(Graphics2D g2) {}
 
-	public boolean isInScene(Scene scene) {
-		// This could cause a NPE
-		return scene.equals(scene());
-	}
+    /**
+     * @return The {@link Scene} the parent object belongs to.
+     */
+    public Scene scene() {
+        return parent.getScene();
+    }
 
+    public boolean isInScene(Scene scene) {
+        // This could cause a NPE
+        return scene.equals(scene());
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s (%s)", getClass().isAnonymousClass() ?
+                "Component" : getClass().getSimpleName(), parent.name);
+    }
 }

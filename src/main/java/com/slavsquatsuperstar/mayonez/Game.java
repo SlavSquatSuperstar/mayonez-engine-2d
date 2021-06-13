@@ -1,20 +1,21 @@
 package com.slavsquatsuperstar.mayonez;
 
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
-import java.awt.image.BufferStrategy;
-
-import javax.swing.JFrame;
-
 import com.slavsquatsuperstar.game.LevelEditorScene;
+import org.apache.commons.lang3.exception.ExceptionUtils;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.image.BufferStrategy;
 
 public class Game implements Runnable {
 
     /*
      * Field Declarations
      */
+
+    // Time Fields
+    public static float timeStep = 1.0f / Preferences.FPS;
+    public static long timeStarted = System.nanoTime();
 
     // Singleton Fields
     private static Game game;
@@ -37,10 +38,6 @@ public class Game implements Runnable {
 
     // Scene Fields
     private Scene currentScene;
-
-    // Time Fields
-    public static float timestep = 1.0f / Preferences.FPS;
-    public static long timeStarted = System.nanoTime();
 
     /*
      * Method Declarations
@@ -90,25 +87,30 @@ public class Game implements Runnable {
             timer += passedTime;
             lastTime = currentFrameTime; // Reset lastTime
 
-            // Update the game as many times as necessary even if the frame freezes
-            while (deltaTime >= timestep) {
-                update(deltaTime);
-                // Update = Graphics frame rate, FixedUpdate = Physics frame rate
-                deltaTime -= timestep;
-                ticked = true;
-            }
-            // Only render if the game has updated to save resources
-            if (ticked) {
-//				render(window.getGraphics());
-                render();
-                frames++;
-                ticked = false;
-            }
-            // Print ticks and frames each second
-            if (timer >= 1) {
-                Logger.log("Frames per Second: %d", frames);
-                frames = 0;
-                timer = 0;
+            try {
+                // Update the game as many times as necessary even if the frame freezes
+                while (deltaTime >= timeStep) {
+                    update(deltaTime);
+                    // Update = Graphics frame rate, FixedUpdate = Physics frame rate
+                    deltaTime -= timeStep;
+                    ticked = true;
+                }
+                // Only render if the game has updated to save resources
+                if (ticked) {
+                    render();
+                    frames++;
+                    ticked = false;
+                }
+                // Print ticks and frames each second
+                if (timer >= 1) {
+                    Logger.log("Frames per Second: %d", frames);
+                    frames = 0;
+                    timer = 0;
+                }
+            } catch (Exception e) {
+                Logger.log(ExceptionUtils.getStackTrace(e));
+                e.printStackTrace();
+                stop(1);
             }
 
         } // end loop
@@ -120,13 +122,13 @@ public class Game implements Runnable {
     /**
      * Refreshes all objects in the current scene.
      *
-     * @param dt The time elapse since the last frame
+     * @param dt The time elapsed since the last frame
      */
-    public void update(float dt) {
+    public void update(float dt) throws Exception {
         // Poll events
-        if (keyboard.keyDown("exit")) {
+        if (keyboard.keyDown("exit"))
             running = false;
-        }
+
         if (currentScene != null)
             currentScene.update(dt);
     }
@@ -134,7 +136,7 @@ public class Game implements Runnable {
     /**
      * Redraws all objects in the current scene.
      */
-    public void render() {
+    public void render() throws Exception {
         if (bs == null) {
             initGraphics();
             return;
@@ -196,36 +198,16 @@ public class Game implements Runnable {
 
         // Stop thread
         thread.interrupt();
-        Logger.log("Logger: Saved log to file \"%s\".", Logger.outputFile);
+        if (Logger.saveLogs)
+            Logger.log("Logger: Saved log to file \"%s\".", Logger.outputFile);
         System.exit(status);
     }
 
     // Getters and Setters
 
-    public static Game instance() { // only create the game once
+    public synchronized static Game instance() { // only create the game once
         // get params from preferences
         return (null == game) ? game = new Game() : game;
-    }
-
-    public void loadScene(int scene) {
-        switch (scene) {
-            case 0:
-                game.currentScene = new LevelEditorScene("Level Editor Scene");
-                break;
-            default:
-                Logger.log("Game: Unknown scene");
-        }
-
-        startCurrentScene();
-    }
-
-    public void loadScene(Scene scene) {
-        this.currentScene = scene;
-        startCurrentScene();
-    }
-
-    public Scene currentScene() {
-        return game.currentScene;
     }
 
     public static KeyInput keyboard() {
@@ -249,6 +231,27 @@ public class Game implements Runnable {
         return device.getFullScreenWindow() != null;
     }
 
+    public static void loadScene(int scene) {
+        switch (scene) {
+            case 0:
+                game.currentScene = new LevelEditorScene("Level Editor Scene");
+                break;
+            default:
+                Logger.log("Game: Unknown scene");
+        }
+
+        game.startCurrentScene();
+    }
+
+    public static void loadScene(Scene scene) {
+        game.currentScene = scene;
+        game.startCurrentScene();
+    }
+
+    public static Scene currentScene() {
+        return game.currentScene;
+    }
+
     // Private Methods
 
     private void initGraphics() {
@@ -257,7 +260,6 @@ public class Game implements Runnable {
 
         window.createBufferStrategy(2);
         bs = window.getBufferStrategy();
-//		g = bs.getDrawGraphics();
     }
 
     private void startCurrentScene() {

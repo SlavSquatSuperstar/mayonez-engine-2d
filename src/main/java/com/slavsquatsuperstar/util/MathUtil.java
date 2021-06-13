@@ -1,26 +1,34 @@
 package com.slavsquatsuperstar.util;
 
-import com.slavsquatsuperstar.mayonez.Vector2;
-
 public final class MathUtil {
+
+    public static final float EPSILON = 1e-6f;
 
     private MathUtil() {
     }
 
-    // Average Methods
+    // Accumulator Methods
 
-    public static float average(float[] values) {
+    public static float sum(float[] values) {
         float sum = 0;
         for (float value : values)
             sum += value;
-        return sum / values.length;
+        return sum;
     }
 
-    public static int average(int[] values) {
+    public static int sum(int[] values) {
         int sum = 0;
         for (int value : values)
             sum += value;
-        return sum / values.length;
+        return sum;
+    }
+
+    public static float average(float[] values) {
+        return sum(values) / values.length;
+    }
+
+    public static int average(int[] values) {
+        return sum(values) / values.length;
     }
 
     // Clamp Methods
@@ -35,48 +43,44 @@ public final class MathUtil {
 
     // Random Number Methods
 
+    /**
+     * Generates a random integer between the two provided bounds.
+     *
+     * @param lowerBound The minimum allowed value (inclusive).
+     * @param upperBound The maximum allowed value (inclusive).
+     * @return The random float.
+     */
     public static float random(float lowerBound, float upperBound) {
-        return (float) ((Math.random() * (upperBound - lowerBound)) + lowerBound);
+        return (float) (Math.random() * (upperBound - lowerBound + EPSILON)) + lowerBound;
     }
 
+    /**
+     * Generates a random integer between the two provided bounds.
+     *
+     * @param lowerBound The minimum allowed value (inclusive).
+     * @param upperBound The maximum allowed value (inclusive).
+     * @return The random integer.
+     */
     public static int random(int lowerBound, int upperBound) {
-        return (int) ((Math.random() * (upperBound - lowerBound)) + lowerBound - 1);
+        return (int) (Math.random() * (upperBound - lowerBound + 1)) + lowerBound;
     }
 
     // Rounding Methods
 
     public static float round(float value, int decimalPlaces) {
-        value += 5 / Math.pow(10, decimalPlaces + 1);
+        value += 5f / Math.pow(10, decimalPlaces + 1);
         return truncate(value, decimalPlaces);
     }
 
     public static float truncate(float value, int decimalPlaces) {
-        return (float) ((value * Math.pow(10, decimalPlaces)) / Math.pow(10, decimalPlaces));
-    }
-
-    // Vector Methods
-
-    // See: https://www.youtube.com/watch?v=dlUcIGnaAnk
-    public static Vector2 rotate(Vector2 v, float degrees, Vector2 origin) {
-        // Translate the vector space to the origin (0, 0)
-        float x = v.x - origin.x;
-        float y = v.y - origin.y;
-
-        // Rotate the point around the new origin
-        float cos = (float) Math.cos(Math.toRadians(degrees));
-        float sin = (float) Math.sin(Math.toRadians(degrees));
-
-        float xPrime = (x * cos) - (y * sin);
-        float yPrime = (y * sin) + (x * sin);
-
-        // Revert the vector space to the old point
-        return new Vector2(xPrime, yPrime).add(origin);
+        String s = String.valueOf(value);
+        return Float.parseFloat(s.substring(0, s.indexOf('.') + decimalPlaces + 1));
     }
 
     // Comparison Methods
 
     public static boolean equals(float a, float b) {
-        return Math.abs(a - b) <= Float.MIN_VALUE * Math.max(1.0, Math.max(Math.abs(a), Math.abs(b)));
+        return Math.abs(a - b) <= EPSILON * Math.max(1.0, Math.max(Math.abs(a), Math.abs(b)));
     }
 
 }
