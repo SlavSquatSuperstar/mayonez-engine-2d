@@ -6,13 +6,11 @@ import com.slavsquatsuperstar.mayonez.components.Component;
 
 public class RigidBody2D extends Component {
 
-    public float mass;
-    public boolean followsGravity;
+    public float mass = 1;
+    public boolean followsGravity = true;
     private Vector2 velocity, netForce;
 
-    public RigidBody2D(float mass, boolean followsGravity) {
-        this.mass = mass;
-        this.followsGravity = followsGravity;
+    public RigidBody2D() {
         this.velocity = new Vector2();
         this.netForce = new Vector2();
     }

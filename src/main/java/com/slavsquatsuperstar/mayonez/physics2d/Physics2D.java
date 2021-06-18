@@ -8,8 +8,8 @@ import java.util.ArrayList;
 // World simulation
 public class Physics2D {
 
+    public Vector2 gravity;
     private ArrayList<RigidBody2D> rigidBodies;
-    private Vector2 gravity;
 
     public Physics2D(Vector2 gravity) {
         this.gravity = gravity;

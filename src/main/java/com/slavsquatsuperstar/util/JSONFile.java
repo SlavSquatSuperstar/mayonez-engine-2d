@@ -7,10 +7,14 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 // TODO extends TextFile
-// TODO private method read internal
+// TODO private method readInternal
+
+/**
+ * Stores and manipulates a JSON object from a .json file.
+ */
 public class JSONFile {
 
-    private String filename;
+    private final String filename;
     private JSONObject json;
 
     public JSONFile(String filename) {
@@ -38,7 +42,7 @@ public class JSONFile {
      * Saves JSON data to this file.
      */
     public void saveJSON() {
-        new TextFile(filename).save(json.toString());
+        new TextFile(filename).write(json.toString(4));
     }
 
     // JSON Methods

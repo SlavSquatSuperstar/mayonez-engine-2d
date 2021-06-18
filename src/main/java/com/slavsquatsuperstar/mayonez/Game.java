@@ -45,7 +45,7 @@ public class Game implements Runnable {
 
     private Game() {
         // Set up the window
-        window = new JFrame(Preferences.SCREEN_TITLE);
+        window = new JFrame(Preferences.SCREEN_TITLE + " " + Preferences.VERSION);
         width = Preferences.SCREEN_WIDTH;
         height = Preferences.SCREEN_HEIGHT;
         window.setSize(width, height);
@@ -64,6 +64,52 @@ public class Game implements Runnable {
     }
 
     // Game Loop Methods
+
+    public synchronized static Game instance() { // only create the game once
+        // get params from preferences
+        return (null == game) ? game = new Game() : game;
+    }
+
+    public static KeyInput keyboard() {
+        return game.keyboard;
+    }
+
+    public static MouseInput mouse() {
+        return game.mouse;
+    }
+
+    // Thread Methods
+
+    /**
+     * @return the time in seconds since this game started.
+     */
+    public static float getTime() {
+        return (System.nanoTime() - timeStarted) / 1.0E9f;
+    }
+
+    public static boolean isFullScreen() {
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsDevice device = ge.getDefaultScreenDevice();
+        return device.getFullScreenWindow() != null;
+    }
+
+    // Getters and Setters
+
+    public static void loadScene(int scene) {
+        switch (scene) {
+            case 0:
+                game.currentScene = new LevelEditorScene("Level Editor");
+                break;
+            default:
+                Logger.log("Game: Unknown scene");
+        }
+
+        game.startCurrentScene();
+    }
+
+    public static Scene currentScene() {
+        return game.currentScene;
+    }
 
     @Override
     public void run() {
@@ -160,8 +206,6 @@ public class Game implements Runnable {
 
     }
 
-    // Thread Methods
-
     /**
      * Begins running this engine, initializing its thread, displaying the window,
      * and starting its scene
@@ -201,55 +245,6 @@ public class Game implements Runnable {
         if (Logger.saveLogs)
             Logger.log("Logger: Saved log to file \"%s\".", Logger.outputFile);
         System.exit(status);
-    }
-
-    // Getters and Setters
-
-    public synchronized static Game instance() { // only create the game once
-        // get params from preferences
-        return (null == game) ? game = new Game() : game;
-    }
-
-    public static KeyInput keyboard() {
-        return game.keyboard;
-    }
-
-    public static MouseInput mouse() {
-        return game.mouse;
-    }
-
-    /**
-     * @return the time in seconds since this game started.
-     */
-    public static float getTime() {
-        return (System.nanoTime() - timeStarted) / 1.0E9f;
-    }
-
-    public static boolean isFullScreen() {
-        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        GraphicsDevice device = ge.getDefaultScreenDevice();
-        return device.getFullScreenWindow() != null;
-    }
-
-    public static void loadScene(int scene) {
-        switch (scene) {
-            case 0:
-                game.currentScene = new LevelEditorScene("Level Editor Scene");
-                break;
-            default:
-                Logger.log("Game: Unknown scene");
-        }
-
-        game.startCurrentScene();
-    }
-
-    public static void loadScene(Scene scene) {
-        game.currentScene = scene;
-        game.startCurrentScene();
-    }
-
-    public static Scene currentScene() {
-        return game.currentScene;
     }
 
     // Private Methods

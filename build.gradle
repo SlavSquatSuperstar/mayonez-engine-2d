@@ -4,14 +4,7 @@ plugins {
 }
 
 group 'com.slavsquatsuperstar'
-version '0.5.7-SNAPSHOT'
-
-sourceSets {
-    main.resources {
-        srcDir 'assets'
-        include '*'
-    }
-}
+version '0.5.8-SNAPSHOT'
 
 repositories {
     mavenCentral()
@@ -20,17 +13,17 @@ repositories {
 dependencies {
     implementation 'org.json:json:20210307'
     implementation 'org.apache.commons:commons-lang3:3.12.0'
+    implementation 'commons-io:commons-io:2.8.0'
     testImplementation 'junit:junit:4.13.2'
 }
 
-sourceCompatibility = 1.11
-targetCompatibility = 1.11
+sourceCompatibility = targetCompatibility = JavaVersion.VERSION_11
 mainClassName = 'com.slavsquatsuperstar.Main'
 
 jar {
-    into 'assets', { from sourceSets.main.resources }
     manifest.attributes 'Main-Class': mainClassName
-    from configurations.runtimeClasspath.files.collect { it.getName() }.join(' ')
+    exclude '**/*.txt' // avoid duplicate LICENSE/NOTICE .txt files
+    from configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
 }
 
 test {
