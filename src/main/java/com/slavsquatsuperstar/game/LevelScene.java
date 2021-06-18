@@ -1,17 +1,14 @@
 package com.slavsquatsuperstar.game;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
-
 import com.slavsquatsuperstar.mayonez.*;
-import com.slavsquatsuperstar.mayonez.Scene;
 
-public class LevelEditorScene extends Scene {
+import java.awt.*;
 
-    public LevelEditorScene(String name) {
-        super(name, (int) (Preferences.SCREEN_WIDTH * 1.0), (int) (Preferences.SCREEN_HEIGHT * 1.0));
+public class LevelScene extends Scene {
+
+    public LevelScene(String name) {
+        super(name, (int) (Preferences.SCREEN_WIDTH * 1.5), (int) (Preferences.SCREEN_HEIGHT * 1.0));
         background = Color.WHITE;
-        setGravity(new Vector2());
     }
 
     @Override
@@ -33,10 +30,9 @@ public class LevelEditorScene extends Scene {
         };
         addObject(ground);
 
-        addObject(new Grid(new Vector2(), ground));
-
         GameObject player = new Player("Player", new Vector2(100, 100), ground);
         addObject(player);
+        camera().setSubject(player);
 
         addObject(new GameObject("Mario", new Vector2(0, 28)) {
             @Override

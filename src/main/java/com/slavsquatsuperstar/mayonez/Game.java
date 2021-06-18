@@ -1,6 +1,7 @@
 package com.slavsquatsuperstar.mayonez;
 
 import com.slavsquatsuperstar.game.LevelEditorScene;
+import com.slavsquatsuperstar.game.LevelScene;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import javax.swing.*;
@@ -45,7 +46,7 @@ public class Game implements Runnable {
 
     private Game() {
         // Set up the window
-        window = new JFrame(Preferences.SCREEN_TITLE);
+        window = new JFrame(Preferences.SCREEN_TITLE + " " + Preferences.VERSION);
         width = Preferences.SCREEN_WIDTH;
         height = Preferences.SCREEN_HEIGHT;
         window.setSize(width, height);
@@ -234,17 +235,15 @@ public class Game implements Runnable {
     public static void loadScene(int scene) {
         switch (scene) {
             case 0:
-                game.currentScene = new LevelEditorScene("Level Editor Scene");
+                game.currentScene = new LevelEditorScene("Level Editor");
+                break;
+            case 1:
+                game.currentScene = new LevelScene("Level");
                 break;
             default:
                 Logger.log("Game: Unknown scene");
         }
 
-        game.startCurrentScene();
-    }
-
-    public static void loadScene(Scene scene) {
-        game.currentScene = scene;
         game.startCurrentScene();
     }
 

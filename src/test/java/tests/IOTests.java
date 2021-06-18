@@ -1,20 +1,35 @@
 package tests;
 
-import static org.junit.Assert.assertTrue;
-
+import com.slavsquatsuperstar.util.TextFile;
+import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
-import com.slavsquatsuperstar.util.TextFile;
+import java.time.LocalDate;
+import java.time.LocalTime;
+
+import static org.junit.Assert.assertEquals;
 
 public class IOTests {
 
-    static final String RESOURCES = "src/test/resources/";
+    TextFile file;
+
+    @Before
+    public void getFile() {
+        file = new TextFile("properties.txt");
+    }
 
     @Test
     public void readTextFile() {
-        TextFile file = new TextFile(RESOURCES + "properties.txt");
         String[] properties = file.readLines();
-        assertTrue(properties[0].split("=")[1].equals("Mayonez Engine"));
+        assertEquals("Mayonez Engine", properties[0].split("=")[1]);
+    }
+
+    @Ignore
+    @Test
+    public void saveTextFile() {
+        file.append("date=" + LocalDate.now(), "time=" + LocalTime.now());
+        System.out.println("saved to txt");
     }
 
 }

@@ -1,5 +1,6 @@
 package com.slavsquatsuperstar.mayonez;
 
+import com.slavsquatsuperstar.mayonez.components.Camera;
 import com.slavsquatsuperstar.mayonez.physics2d.Physics2D;
 
 import java.awt.*;
@@ -25,10 +26,16 @@ public abstract class Scene {
     private Physics2D physics; // rbs are being updated twice
     private Camera camera;
 
+    public Scene(String name) {
+        this(name, 0, 0);
+        bounded = false;
+    }
+
     public Scene(String name, int width, int height) {
         this.name = name;
         this.width = width;
         this.height = height;
+        bounded = true;
 
         objects = new ArrayList<>();
         toRemove = new ArrayList<>();
@@ -52,6 +59,7 @@ public abstract class Scene {
         addObject(new GameObject("Camera", new Vector2()) {
             @Override
             protected void init() {
+                keepInScene = true;
                 addComponent(camera);
             }
 
@@ -161,6 +169,10 @@ public abstract class Scene {
 
     public Camera camera() {
         return camera;
+    }
+
+    public void setGravity(Vector2 gravity) {
+        physics.gravity = gravity;
     }
 
     @Override

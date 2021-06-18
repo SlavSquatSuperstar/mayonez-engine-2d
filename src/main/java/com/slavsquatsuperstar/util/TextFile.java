@@ -1,19 +1,25 @@
 package com.slavsquatsuperstar.util;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-
+import com.slavsquatsuperstar.mayonez.Assets;
 import com.slavsquatsuperstar.mayonez.Logger;
+import com.slavsquatsuperstar.mayonez.Preferences;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 
 // TODO one method for handling exceptions
 // TODO store text in class
+// TODO manipulate config file
 public class TextFile {
 
-    private String filename;
+    private final String filename;
 
     public TextFile(String filename) {
         this.filename = filename;
@@ -26,19 +32,16 @@ public class TextFile {
      * @return The body of text read from this file.
      */
     public String readText() {
-        StringBuilder text = new StringBuilder("");
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(filename));
-            for (String textLine = reader.readLine(); textLine != null; textLine = reader.readLine())
-                text.append(textLine + "\n");
+        String text = "";
+        try (FileInputStream in = FileUtils.openInputStream(FileUtils.toFile(Assets.getFile(filename)))) {
+            text = IOUtils.toString(in, Preferences.CHARSET);
             Logger.log("TextFile: Read successful");
-            reader.close();
         } catch (FileNotFoundException e) {
-        	Logger.log("TextFile: File \"%s\" not found\n", filename);
+            Logger.log("TextFile: File \"%s\" not found\n", filename);
         } catch (IOException e) {
-        	Logger.log("TextFile: Could not read file");
+            Logger.log("TextFile: Could not read file");
         }
-        return text.toString();
+        return text;
     }
 
     /**
@@ -55,20 +58,15 @@ public class TextFile {
      *
      * @param text The line or lines to save.
      */
-    public void save(String... text) {
-        try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
-            //TODO what to do if file not found
-            for (String line : text) {
-                writer.write(line);
-                writer.newLine();
-            }
-			Logger.log("TextFile: Save successful");
-            writer.close();
+    public void write(String... text) {
+        try (FileOutputStream out = FileUtils.openOutputStream(FileUtils.toFile(Assets.getFile(filename)), false)) {
+            IOUtils.writeLines(Arrays.asList(text), "\n", out, StandardCharsets.UTF_8);
+            Logger.log("TextFile: Save successful");
+        } catch (FileNotFoundException e) {
+            Logger.log("TextFile: File \"%s\" not found\n", filename);
         } catch (IOException e) {
+            Logger.log(ExceptionUtils.getStackTrace(e));
             Logger.log("TextFile: Could not save to file");
-        } catch (NullPointerException e) {
-            Logger.log("TextFile: File contents empty");
         }
     }
 
@@ -78,19 +76,14 @@ public class TextFile {
      * @param text The line or lines to append.
      */
     public void append(String... text) {
-        try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(filename, true));
-            for (String line : text) {
-                writer.write(line);
-                writer.newLine();
-                writer.flush();
-            }
-            writer.close();
+        try (FileOutputStream out = FileUtils.openOutputStream(FileUtils.toFile(Assets.getFile(filename)), true)) {
+            IOUtils.writeLines(Arrays.asList(text), "\n", out, StandardCharsets.UTF_8);
+            Logger.log("TextFile: Save successful");
         } catch (IOException e) {
             Logger.log("TextFile: Could not append to file");
         } catch (NullPointerException e) {
             Logger.log("TextFile: File contents empty");
-		}
-	}
+        }
+    }
 
 }

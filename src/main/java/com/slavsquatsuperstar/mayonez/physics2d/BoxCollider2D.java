@@ -3,7 +3,7 @@ package com.slavsquatsuperstar.mayonez.physics2d;
 import com.slavsquatsuperstar.mayonez.Vector2;
 import com.slavsquatsuperstar.util.MathUtil;
 
-// Oriented Bounding Box (can be rotated)
+// Object Oriented Bounding Box (can be rotated)
 public class BoxCollider2D extends Collider2D {
 
     private Vector2 size;
@@ -12,34 +12,41 @@ public class BoxCollider2D extends Collider2D {
         this.size = size;
     }
 
-    public Vector2 min() {
-        return rb.position();
+    public Vector2 localMin() {
+        return transform.position;
     }
 
-    public Vector2 max() {
-        return rb.position().add(size);
+    public Vector2 worldMin() {
+        return localMin().rotate(transform.rotation, center());
+    }
+
+    public Vector2 localMax() {
+        return localMin().add(size);
+    }
+
+    public Vector2 worldMax() {
+        return localMax().rotate(transform.rotation, center());
     }
 
     public Vector2 size() {
         return size;
     }
 
-    @Override
     public Vector2 center() {
-        return min().add(max().div(2));
+        return localMin().add(localMax().div(2));
     }
 
     public Vector2[] getVertices() {
-        Vector2 min = min();
-        Vector2 max = max();
+        Vector2 min = localMin();
+        Vector2 max = localMax();
         Vector2[] vertices = new Vector2[]{new Vector2(min), new Vector2(max), new Vector2(min.x, max.y),
                 new Vector2(max.x, min.y)};
 
         // floating point inaccuracy, solve with epsilon comparison
-        if (MathUtil.equals(rb.rotation, 0f)) {
+        if (MathUtil.equals(rb.rotation(), 0f)) {
             for (Vector2 v : vertices) {
                 // Rotate a point about the center by a rotation
-                v = v.rotate(rb.rotation, center());
+                v = v.rotate(rb.rotation(), center());
             }
         }
 
@@ -50,23 +57,59 @@ public class BoxCollider2D extends Collider2D {
     public boolean contains(Vector2 point) {
         // Translate the point into the box's local space
         Vector2 pointLocal = new Vector2(point);
-        pointLocal = pointLocal.rotate(rb.rotation, rb.position());
+        pointLocal = pointLocal.rotate(rb.rotation(), rb.position());
 
-        Vector2 min = min();
-        Vector2 max = max();
+        Vector2 min = localMin();
+        Vector2 max = localMax();
 
         return pointLocal.x <= max.x && min.x <= pointLocal.x && pointLocal.y <= max.y && min.y <= pointLocal.y;
     }
 
     @Override
-    public boolean intersects(Line2D l) {
-        float rot = -rb.rotation;
-        Vector2 localStart = l.start().rotate(rot, center());
-        Vector2 localEnd = l.end().rotate(rot, center());
+    public boolean intersects(Line2D line) {
+        float rot = -rb.rotation();
+        Vector2 localStart = line.start().rotate(rot, center());
+        Vector2 localEnd = line.end().rotate(rot, center());
+        // rotate the line into AABB's local space
 
         Line2D localLine = new Line2D(localStart, localEnd);
-        AlignedBoxCollider2D aabb = new AlignedBoxCollider2D(max().sub(min()));
+        // Create AABB with same size
+        AlignedBoxCollider2D aabb = new AlignedBoxCollider2D(localMax().sub(localMin()));
         aabb.rb = this.rb;
         return aabb.intersects(localLine);
     }
+
+    public boolean intersects(CircleCollider circle) {
+        return circle.intersects(this);
+    }
+
+//    public AlignedBoxCollider2D toAABB() {
+//        AlignedBoxCollider2D aabb;
+//
+//        if (MathUtil.equals(rb.rotation(), 0)) {
+//            aabb = new AlignedBoxCollider2D(size);
+//        } else {
+//            Vector2[] vertices = getVertices();
+//            Vector2 newMin = vertices[0];
+//            Vector2 newMax = vertices[0];
+//            for (int i = 1; i < vertices.length; i++) {
+//                Vector2 v = vertices[i];
+//
+//                if (v.x < newMin.x)
+//                    newMin.x = v.x;
+//                else if (v.x < newMax.x)
+//                    newMax.x = v.x;
+//
+//                if (v.y < newMin.y)
+//                    newMin.y = v.y;
+//                else if (v.y < newMax.y)
+//                    newMax.y = v.y;
+//            }
+//            aabb = new AlignedBoxCollider2D(newMax.sub(newMin));
+//            // TODO set position?
+//        }
+//
+//        aabb.rb = this.rb;
+//        return aabb;
+//    }
 }

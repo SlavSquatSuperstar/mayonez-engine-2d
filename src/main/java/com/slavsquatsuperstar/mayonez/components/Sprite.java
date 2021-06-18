@@ -3,10 +3,10 @@ package com.slavsquatsuperstar.mayonez.components;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.io.File;
 
 import javax.imageio.ImageIO;
 
+import com.slavsquatsuperstar.mayonez.Assets;
 import com.slavsquatsuperstar.mayonez.GameObject;
 import com.slavsquatsuperstar.mayonez.Logger;
 import com.slavsquatsuperstar.mayonez.Preferences;
@@ -22,8 +22,7 @@ public class Sprite extends Component {
 
 	public Sprite(String filename) {
 		try {
-			File file = new File(filename);
-			this.image = ImageIO.read(file);
+			this.image = ImageIO.read(Assets.getFile(filename));
 		} catch (Exception e) {
 			Logger.log("Sprite: Error loading image %s", filename);
 			System.exit(-1);

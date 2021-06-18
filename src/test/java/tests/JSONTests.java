@@ -1,22 +1,24 @@
 package tests;
 
 import com.slavsquatsuperstar.util.JSONFile;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
+
+import java.time.LocalTime;
 
 import static org.junit.Assert.*;
 
 public class JSONTests {
 
-    private static JSONFile json;
+    JSONFile json;
 
-    @BeforeClass
-    public static void openJson() {
-        json = new JSONFile("src/test/resources/properties.json");
+    @Before
+    public void readJSONFile() {
+        json = new JSONFile("properties.json");
     }
 
     @Test
-    public void getProperties() {
+    public void getPropertiesFromJSON() {
         assertTrue(json.getBool("in_progress"));
         assertTrue(json.getBool("uses_dependencies"));
         assertEquals("Java", json.getArr("languages").get(0));
@@ -29,8 +31,14 @@ public class JSONTests {
     }
 
     @Test
-    public void getPropertiesFail() {
+    public void getPropertiesFromJSONFail() {
         assertNull(json.getStr("version"));
+    }
+
+    @Test
+    public void savePropertiesToJSON() {
+        json.setProperty("time", LocalTime.now());
+        json.saveJSON();
     }
 
 }

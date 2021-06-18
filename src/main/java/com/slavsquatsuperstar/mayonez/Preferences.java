@@ -4,7 +4,7 @@ import com.slavsquatsuperstar.util.JSONFile;
 
 public final class Preferences {
 
-    private static JSONFile json = new JSONFile("assets/preferences.json");;
+    private final static JSONFile json = new JSONFile("preferences.json");
 
     private Preferences() {}
 
@@ -25,5 +25,8 @@ public final class Preferences {
     // Physics
     public static final Vector2 GRAVITY = new Vector2(0, 60f);
     public static final float TERMINAL_VELOCITY = GRAVITY.y * 2;
+
+    // File I/O
+    public static final String CHARSET = "UTF-8";
 
 }

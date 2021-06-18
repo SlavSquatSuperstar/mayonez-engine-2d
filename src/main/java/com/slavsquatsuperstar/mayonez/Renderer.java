@@ -1,5 +1,7 @@
 package com.slavsquatsuperstar.mayonez;
 
+import com.slavsquatsuperstar.mayonez.components.Camera;
+
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.util.ArrayList;

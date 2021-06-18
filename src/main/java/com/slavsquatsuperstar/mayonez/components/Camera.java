@@ -1,9 +1,6 @@
-package com.slavsquatsuperstar.mayonez;
+package com.slavsquatsuperstar.mayonez.components;
 
-import com.slavsquatsuperstar.mayonez.Game;
-import com.slavsquatsuperstar.mayonez.MouseInput;
-import com.slavsquatsuperstar.mayonez.Preferences;
-import com.slavsquatsuperstar.mayonez.Vector2;
+import com.slavsquatsuperstar.mayonez.*;
 import com.slavsquatsuperstar.mayonez.components.Script;
 import com.slavsquatsuperstar.mayonez.components.Sprite;
 import com.slavsquatsuperstar.util.MathUtil;
@@ -60,7 +57,7 @@ public class Camera extends Script {
         return parent.getY();
     }
 
-    public void setSubject(Sprite subject) {
-        this.subject = subject;
+    public void setSubject(GameObject subject) {
+        this.subject = subject.getComponent(Sprite.class);
     }
 }

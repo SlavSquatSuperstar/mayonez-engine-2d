@@ -1,7 +1,8 @@
-package com.slavsquatsuperstar.mayonez;
+package com.slavsquatsuperstar.util;
 
 import java.util.ArrayList;
 
+import com.slavsquatsuperstar.mayonez.Assets;
 import com.slavsquatsuperstar.mayonez.components.Sprite;
 
 public class SpriteSheet {
