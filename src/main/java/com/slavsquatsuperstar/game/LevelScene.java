@@ -24,7 +24,6 @@ public class LevelScene extends Scene {
             public void render(Graphics2D g2) {
                 super.render(g2);
                 g2.setColor(Color.BLACK);
-                g2.getTransform().getTranslateX();
                 g2.fillRect((int) getX() - 20, (int) getY(), Preferences.SCREEN_WIDTH + 40, height);
             }
         };
@@ -41,7 +40,7 @@ public class LevelScene extends Scene {
                 transform.scale = transform.scale.mul(2);
             }
         });
-        addObject(new GameObject("Goomba", new Vector2(width - 32, height - 52)) {
+        addObject(new GameObject("Goomba", new Vector2(width - 32, Preferences.GROUND_HEIGHT - 52)) {
             @Override
             protected void init() {
                 addComponent(Assets.getSprite("goomba.png"));

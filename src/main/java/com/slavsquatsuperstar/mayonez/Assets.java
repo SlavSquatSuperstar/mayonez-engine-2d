@@ -23,7 +23,6 @@ public final class Assets {
      */
     public static URL getFile(String filename) {
         URL url = Assets.class.getClassLoader().getResource(filename);
-        Logger.log(url.getFile());
         return Objects.requireNonNull(url);
     }
 

@@ -26,7 +26,7 @@ public class SpriteSheet {
 				int imgX = (col * tileWidth) + (col * spacing);
 				int imgY = (row * tileHeight) + (row * spacing);
 
-				sprites.add(new Sprite(sheet.getImage().getSubimage(imgX, imgY, tileWidth, tileHeight)));
+				sprites.add(new Sprite(sheet.image().getSubimage(imgX, imgY, tileWidth, tileHeight)));
 				count++;
 				if (count > size - 1)
 					break;

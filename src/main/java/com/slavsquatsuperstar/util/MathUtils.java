@@ -1,11 +1,15 @@
 package com.slavsquatsuperstar.util;
 
-public final class MathUtil {
+import com.slavsquatsuperstar.mayonez.Logger;
 
+public final class MathUtils {
+
+    /**
+     * The maximum precision a float should have (equal to 10^-6).
+     */
     public static final float EPSILON = 1e-6f;
 
-    private MathUtil() {
-    }
+    private MathUtils() {}
 
     // Accumulator Methods
 
@@ -34,11 +38,11 @@ public final class MathUtil {
     // Clamp Methods
 
     public static float clamp(float value, float lowerBound, float upperBound) {
-        return (value > upperBound ? upperBound : (value < lowerBound ? lowerBound : value));
+        return (value > upperBound ? upperBound : (Math.max(value, lowerBound)));
     }
 
     public static int clamp(int value, int lowerBound, int upperBound) {
-        return (value > upperBound ? upperBound : (value < lowerBound ? lowerBound : value));
+        return (value > upperBound ? upperBound : (Math.max(value, lowerBound)));
     }
 
     // Random Number Methods
@@ -79,6 +83,10 @@ public final class MathUtil {
 
     // Comparison Methods
 
+    /**
+     * Determines whether two floats are approximately equal within 6 decimal places.
+     * @return If they are equal.
+     */
     public static boolean equals(float a, float b) {
         return Math.abs(a - b) <= EPSILON * Math.max(1.0, Math.max(Math.abs(a), Math.abs(b)));
     }

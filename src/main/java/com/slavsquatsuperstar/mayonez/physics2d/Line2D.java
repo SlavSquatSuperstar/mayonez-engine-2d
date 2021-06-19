@@ -1,7 +1,7 @@
 package com.slavsquatsuperstar.mayonez.physics2d;
 
 import com.slavsquatsuperstar.mayonez.Vector2;
-import com.slavsquatsuperstar.util.MathUtil;
+import com.slavsquatsuperstar.util.MathUtils;
 
 public class Line2D {
 
@@ -29,10 +29,10 @@ public class Line2D {
     public boolean contains(Vector2 point) {
         float slope = (end.y - start.y) / (end.x - start.x);
         if (Float.isInfinite(slope)) { // vertical line (just compare x-values)
-            return MathUtil.equals(point.x, start.x);
+            return MathUtils.equals(point.x, start.x);
         } else {
             float yInt = end.y - (slope * end.x);
-            return MathUtil.equals(point.y, yInt + point.x * slope);
+            return MathUtils.equals(point.y, yInt + point.x * slope);
         }
     }
 

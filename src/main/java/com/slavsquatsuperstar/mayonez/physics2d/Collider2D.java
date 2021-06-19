@@ -10,6 +10,10 @@ public abstract class Collider2D extends Component {
     protected RigidBody2D rb = null;
     protected Transform transform;
 
+    public Vector2 center() {
+        return transform.position;
+    }
+
     public abstract boolean contains(Vector2 point);
 
     public abstract boolean intersects(Line2D l);

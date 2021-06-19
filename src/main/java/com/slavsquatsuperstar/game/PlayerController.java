@@ -2,17 +2,18 @@ package com.slavsquatsuperstar.game;
 
 import com.slavsquatsuperstar.mayonez.Game;
 import com.slavsquatsuperstar.mayonez.GameObject;
+import com.slavsquatsuperstar.mayonez.Logger;
 import com.slavsquatsuperstar.mayonez.Vector2;
 import com.slavsquatsuperstar.mayonez.components.Script;
 import com.slavsquatsuperstar.mayonez.physics2d.AlignedBoxCollider2D;
 import com.slavsquatsuperstar.mayonez.physics2d.RigidBody2D;
-import com.slavsquatsuperstar.util.MathUtil;
+import com.slavsquatsuperstar.util.MathUtils;
 
 @SuppressWarnings("unused")
 public class PlayerController extends Script {
 
     // Physics Fields
-    private GameObject ground;
+    private final GameObject ground;
     private RigidBody2D rb;
     private AlignedBoxCollider2D box;
 
@@ -29,7 +30,7 @@ public class PlayerController extends Script {
 
     @Override
     public void start() {
-//        scene().camera().setSubject(parent.getComponent(Sprite.class)); // TODO pass camera in player c'tor?
+//        scene().camera().setSubject(this); // TODO pass camera in player c'tor?
         box = parent.getComponent(AlignedBoxCollider2D.class);
         rb = parent.getComponent(RigidBody2D.class);
         rb.mass = this.mass;
@@ -37,7 +38,6 @@ public class PlayerController extends Script {
 
     @Override
     public void update(float dt) {
-
         // Detect player input
         int xInput = Game.keyboard().getAxis("horizontal");
         int yInput = Game.keyboard().getAxis("vertical");
@@ -76,7 +76,7 @@ public class PlayerController extends Script {
             rb.velocity().y = 0;
         } else if (box.max().y > ground.getY()) {
             rb.velocity().y = 0;
-            parent.setY(ground.getY() - box.size().y);
+            parent.setY(ground.getY() - box.height() / 2);
 //            // Jump if on ground
 //            if (Game.keyboard().keyDown("up"))
 //                // Impulse must be big enough to not get stuck on ground next frame
@@ -89,13 +89,11 @@ public class PlayerController extends Script {
 
         // Bounds detection
         // TODO: Make collision detector, move to physics
-        // TODO make KeepInScene script (but detach Collider from RB)
+        // TODO make KeepInScene script
         if (scene().isBounded()) {
-            parent.setX(MathUtil.clamp(box.min().x, 0, scene().getWidth() - box.size().x));
-            parent.setY(MathUtil.clamp(box.min().y, 0, scene().getHeight() - box.size().y));
+            parent.setX(MathUtils.clamp(box.center().x, 0 + box.width() / 2f, scene().getWidth() - box.width() / 2f));
+            parent.setY(MathUtils.clamp(box.center().y, 0 + box.height() / 2f, scene().getHeight() - box.height() / 2f));
         }
-
-//		Logger.log("Player: %.2f, %.2f", parent.getX(), parent.getY());
 
     }
 

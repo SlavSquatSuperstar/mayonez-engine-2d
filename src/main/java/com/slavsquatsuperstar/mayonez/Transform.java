@@ -12,6 +12,10 @@ public class Transform {
     public Vector2 scale = new Vector2(1, 1);
     public float rotation = 0;
 
+    public Transform() {
+        this(new Vector2());
+    }
+
     public Transform(Vector2 position) {
         this.position = position;
     }

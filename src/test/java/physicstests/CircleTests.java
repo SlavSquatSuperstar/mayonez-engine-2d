@@ -7,7 +7,6 @@ import com.slavsquatsuperstar.mayonez.physics2d.CircleCollider;
 import com.slavsquatsuperstar.mayonez.physics2d.Line2D;
 import com.slavsquatsuperstar.mayonez.physics2d.RigidBody2D;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import static junit.framework.TestCase.*;
@@ -17,12 +16,12 @@ public class CircleTests {
     public static CircleCollider c;
 
     /**
-     * Create a circle centered at (0, 0) with radius 2
+     * Create a circle centered at (2, 2) with radius 2
      */
     @BeforeClass
     public static void getCircle() {
         c = new CircleCollider(2);
-        c.setTransform(new Transform(new Vector2(0, 0)));
+        c.setTransform(new Transform(new Vector2(2, 2)));
         c.setRigidBody(new RigidBody2D());
     }
 

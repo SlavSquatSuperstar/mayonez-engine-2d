@@ -6,7 +6,6 @@ import com.slavsquatsuperstar.mayonez.physics2d.AlignedBoxCollider2D;
 import com.slavsquatsuperstar.mayonez.physics2d.Line2D;
 import com.slavsquatsuperstar.mayonez.physics2d.RigidBody2D;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import static junit.framework.TestCase.*;
@@ -21,7 +20,7 @@ public class BoxTests {
     @BeforeClass
     public static void getAABB() {
         aabb = new AlignedBoxCollider2D(new Vector2(4, 4));
-        aabb.setTransform(new Transform(new Vector2(-2, -2)));
+        aabb.setTransform(new Transform());
         aabb.setRigidBody(new RigidBody2D());
     }
 
@@ -32,10 +31,10 @@ public class BoxTests {
 
     @Test
     public void cornerPointIsInAABB() {
-        assertTrue(aabb.contains(new Vector2(-2,-2)));
+        assertTrue(aabb.contains(new Vector2(-2, -2)));
         assertTrue(aabb.contains(new Vector2(-2, 2)));
         assertTrue(aabb.contains(new Vector2(2, 2)));
-        assertTrue(aabb.contains(new Vector2(2,2)));
+        assertTrue(aabb.contains(new Vector2(2, 2)));
     }
 
     @Test

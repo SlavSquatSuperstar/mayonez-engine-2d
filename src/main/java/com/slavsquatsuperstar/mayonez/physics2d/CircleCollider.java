@@ -1,18 +1,15 @@
 package com.slavsquatsuperstar.mayonez.physics2d;
 
 import com.slavsquatsuperstar.mayonez.Vector2;
-import com.slavsquatsuperstar.util.MathUtil;
+import com.slavsquatsuperstar.util.MathUtils;
 
+// TODO scale with transform
 public class CircleCollider extends Collider2D {
 
     public float radius;
 
     public CircleCollider(float radius) {
         this.radius = radius;
-    }
-
-    public Vector2 center() {
-        return transform.position.add(new Vector2(radius, radius));
     }
 
     @Override
@@ -51,32 +48,32 @@ public class CircleCollider extends Collider2D {
 
     // Raycast
     // Source: https://www.youtube.com/watch?v=23kTf-36Fcw
-    public boolean raycast(Ray2D ray, RaycastResult result) {
-        Vector2 originToCenter = center().sub(ray.origin);
-        float radiusSquared = radius * radius;
-        float lengthSquared = originToCenter.lengthSquared();
-
-        // Project vector
-        float a = originToCenter.dot(ray.direction);
-        float bSq = lengthSquared - a * a;
-        if (radiusSquared - bSq < 0f) // dot result is negative, don't want imaginary
-            return false;
-
-        float f = (float) Math.sqrt(radiusSquared - bSq);
-        float t = 0; // unit lengths along projected vector
-        if (lengthSquared < radiusSquared) // ray starts inside circle
-            t = a + f;
-        else
-            t = a - f;
-
-        if (result != null) {
-            Vector2 point = ray.origin.add(ray.direction.mul(t));
-            Vector2 normal = point.sub(center()).unit();
-            result.set(point, normal, t, true);
-        }
-
-        return true; // ray will intersect circle eventually
-    }
+//    public boolean raycast(Ray2D ray, RaycastResult result) {
+//        Vector2 originToCenter = center().sub(ray.origin);
+//        float radiusSquared = radius * radius;
+//        float lengthSquared = originToCenter.lengthSquared();
+//
+//        // Project vector
+//        float a = originToCenter.dot(ray.direction);
+//        float bSq = lengthSquared - a * a;
+//        if (radiusSquared - bSq < 0f) // dot result is negative, don't want imaginary
+//            return false;
+//
+//        float f = (float) Math.sqrt(radiusSquared - bSq);
+//        float t; // unit lengths along projected vector
+//        if (lengthSquared < radiusSquared) // ray starts inside circle
+//            t = a + f;
+//        else
+//            t = a - f;
+//
+//        if (result != null) {
+//            Vector2 point = ray.origin.add(ray.direction.mul(t));
+//            Vector2 normal = point.sub(center()).unit();
+//            result.set(point, normal, t, true);
+//        }
+//
+//        return true; // ray will intersect circle eventually
+//    }
 
     public boolean intersects(CircleCollider circle) {
         float distSquared = this.center().sub(circle.center()).lengthSquared();
@@ -89,8 +86,8 @@ public class CircleCollider extends Collider2D {
         Vector2 max = aabb.max();
 
         Vector2 closest = new Vector2(center());
-        closest.x = MathUtil.clamp(closest.x, min.x, max.x);
-        closest.y = MathUtil.clamp(closest.y, min.y, max.y);
+        closest.x = MathUtils.clamp(closest.x, min.x, max.x);
+        closest.y = MathUtils.clamp(closest.y, min.y, max.y);
 
         float distanceSquared = center().sub(closest).lengthSquared();
         return distanceSquared <= radius * radius;
@@ -104,8 +101,8 @@ public class CircleCollider extends Collider2D {
         localRadius = localRadius.rotate(box.rb.rotation(), new Vector2());
 
         Vector2 closest = new Vector2(center());
-        closest.x = MathUtil.clamp(closest.x, min.x, max.x);
-        closest.y = MathUtil.clamp(closest.y, min.y, max.y);
+        closest.x = MathUtils.clamp(closest.x, min.x, max.x);
+        closest.y = MathUtils.clamp(closest.y, min.y, max.y);
 
         float distanceSquared = center().sub(closest).lengthSquared();
         return distanceSquared <= radius * radius;

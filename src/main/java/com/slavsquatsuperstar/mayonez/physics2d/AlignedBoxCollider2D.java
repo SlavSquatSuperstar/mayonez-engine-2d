@@ -2,7 +2,12 @@ package com.slavsquatsuperstar.mayonez.physics2d;
 
 import com.slavsquatsuperstar.mayonez.Vector2;
 
-// Axis Aligned Bounding Box (is never rotated)
+// TODO scale with transform
+
+/**
+ * Represents an axis-aligned bounding box, a rectangle that is is never rotated.
+ * The sides will always align with the x and y axes.
+ */
 public class AlignedBoxCollider2D extends Collider2D {
 
     private Vector2 size;
@@ -11,20 +16,20 @@ public class AlignedBoxCollider2D extends Collider2D {
         this.size = size;
     }
 
+    public float width() {
+        return size.x;
+    }
+
+    public float height() {
+        return size.y;
+    }
+
     public Vector2 min() {
-        return transform.position;
+        return center().sub(size.div(2f));
     }
 
     public Vector2 max() {
-        return min().add(size);
-    }
-
-    public Vector2 size() {
-        return size;
-    }
-
-    public Vector2 center() {
-        return min().add(size().div(2));
+        return center().add(size.div(2f));
     }
 
     @Override

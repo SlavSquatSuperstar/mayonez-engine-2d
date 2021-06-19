@@ -46,7 +46,7 @@ public class Game implements Runnable {
 
     private Game() {
         // Set up the window
-        window = new JFrame(Preferences.SCREEN_TITLE + " " + Preferences.VERSION);
+        window = new JFrame(Preferences.PROJECT_TITLE + " " + Preferences.PROJECT_NAME);
         width = Preferences.SCREEN_WIDTH;
         height = Preferences.SCREEN_HEIGHT;
         window.setSize(width, height);

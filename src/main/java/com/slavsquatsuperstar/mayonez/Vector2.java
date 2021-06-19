@@ -1,6 +1,6 @@
 package com.slavsquatsuperstar.mayonez;
 
-import com.slavsquatsuperstar.util.MathUtil;
+import com.slavsquatsuperstar.util.MathUtils;
 
 // TODO clamp magnitude, clamp values
 /**
@@ -64,8 +64,10 @@ public class Vector2 {
 	 * @return the scalar division of this vector and the factor.
 	 */
 	public Vector2 div(float scaleFactor) {
-		if (scaleFactor == 0)
+		if (scaleFactor == 0) {
 			Logger.log("Vector2: Attempted division by 0");
+			return this.mul(0);
+		}
 		return new Vector2(x / scaleFactor, y / scaleFactor);
 	}
 
@@ -103,13 +105,16 @@ public class Vector2 {
 	}
 
 	/**
-	 * Normalizes this vector.
+	 * Normalizes this vector, or calculates its unit vector.
 	 *
-	 * @return a vector with magnitude 1 and the same direction as this vector.
-	 * @return (0, 0) if the magnitude of this vector is 0
+	 * @return a vector with magnitude 1 and the same direction as this vector. Returns (0, 0) if this vector is (0, 0)
 	 */
 	public Vector2 unit() {
-		return (MathUtil.equals(lengthSquared(), 0)) ? this : this.div(magnitude());
+		return (MathUtils.equals(lengthSquared(), 0)) ? this : this.div(magnitude());
+	}
+
+	public float angle(Vector2 v) {
+		return (float) Math.toDegrees(Math.acos(this.dot(v) / this.magnitude() / v.magnitude()));
 	}
 
 	/**
@@ -144,7 +149,7 @@ public class Vector2 {
 	public boolean equals(Object obj) {
 		if (obj instanceof Vector2) {
 			Vector2 v = (Vector2) obj;
-			return MathUtil.equals(this.x, v.x) && MathUtil.equals(this.y, v.y);
+			return MathUtils.equals(this.x, v.x) && MathUtils.equals(this.y, v.y);
 		}
 		return super.equals(obj);
 	}
