@@ -1,6 +1,7 @@
 {
 	"title": "Mayonez Engine",
-	"version": "0.5.8",
+	"version": "0.5.9",
 	"width": 1080,
-	"height": 720
+	"height": 720,
+	"tile_size": 42
 }

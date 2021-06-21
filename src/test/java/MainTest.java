@@ -15,7 +15,7 @@ public class MainTest {
 
         JFrame frame = new JFrame("image from jar");
         JLabel l = new JLabel();
-        ImageIcon img = getImage("assets/mario.png");
+        ImageIcon img = getImage("mario.png");
         l.setIcon(img);
         frame.add(l);
         frame.pack();

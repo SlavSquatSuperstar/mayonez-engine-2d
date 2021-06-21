@@ -15,6 +15,7 @@ build/
 
 # Log files
 *.log
+logs/
 hs_err_pid*
 
 

@@ -11,7 +11,6 @@ public class MouseInput extends MouseAdapter {
     private boolean mousePressed, mouseDragged;
     private int button;
     private int clicks;
-//	private boolean[] buttons = new boolean[4];
 
     // MouseListener Methods
 
@@ -20,7 +19,6 @@ public class MouseInput extends MouseAdapter {
         mousePressed = true;
         button = e.getButton();
         clicks = e.getClickCount();
-//		buttons[e.getButton()] = true;
     }
 
     @Override
@@ -28,7 +26,6 @@ public class MouseInput extends MouseAdapter {
         mousePressed = mouseDragged = false;
         dx = dy = 0;
         clicks = 0;
-//		buttons[e.getButton()] = false;
     }
 
     @Override
@@ -86,23 +83,23 @@ public class MouseInput extends MouseAdapter {
     }
 
     // Enum Declaration
-    enum MouseMapping {
-        LEFT_MOUSE(MouseEvent.BUTTON1), RIGHT_MOUSE(MouseEvent.BUTTON3);
-
-        private int button;
-
-        private MouseMapping(int button) {
-            this.button = button;
-        }
-
-        int button() {
-            return button;
-        }
-
-        @Override
-        public String toString() {
-            return name().toLowerCase();
-        }
-    }
+//    enum MouseMapping {
+//        LEFT_MOUSE(MouseEvent.BUTTON1), RIGHT_MOUSE(MouseEvent.BUTTON3);
+//
+//        private int button;
+//
+//        private MouseMapping(int button) {
+//            this.button = button;
+//        }
+//
+//        int button() {
+//            return button;
+//        }
+//
+//        @Override
+//        public String toString() {
+//            return name().toLowerCase();
+//        }
+//    }
 
 }

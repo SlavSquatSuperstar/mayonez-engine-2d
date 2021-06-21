@@ -1,10 +1,11 @@
 plugins {
     id 'java'
     id 'application'
+    id 'com.github.johnrengelman.shadow' version '7.0.0' // For making fat jars
 }
 
 group 'com.slavsquatsuperstar'
-version '0.5.8-SNAPSHOT'
+version '0.5.9-SNAPSHOT'
 
 repositories {
     mavenCentral()
@@ -20,10 +21,10 @@ dependencies {
 sourceCompatibility = targetCompatibility = JavaVersion.VERSION_11
 mainClassName = 'com.slavsquatsuperstar.Main'
 
-jar {
+shadowJar {
+    archiveClassifier.set('')
     manifest.attributes 'Main-Class': mainClassName
-    exclude '**/*.txt' // avoid duplicate LICENSE/NOTICE .txt files
-    from configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    exclude '**/LICENSE.txt', '**/NOTICE.txt' // avoid duplicate APACHE .txt files
 }
 
 test {

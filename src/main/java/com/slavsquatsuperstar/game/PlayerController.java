@@ -89,7 +89,6 @@ public class PlayerController extends Script {
 
         // Bounds detection
         // TODO: Make collision detector, move to physics
-        // TODO make KeepInScene script (but detach Collider from RB)
         if (scene().isBounded()) {
             parent.setX(MathUtil.clamp(box.min().x, 0, scene().getWidth() - box.size().x));
             parent.setY(MathUtil.clamp(box.min().y, 0, scene().getHeight() - box.size().y));

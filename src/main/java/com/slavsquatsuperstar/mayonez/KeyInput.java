@@ -6,7 +6,7 @@ import java.awt.event.KeyEvent;
 public class KeyInput extends KeyAdapter {
 
     // Key Fields
-    private boolean[] keys = new boolean[256];
+    private final boolean[] keys = new boolean[256];
 
     // KeyListener Methods
 
@@ -52,9 +52,7 @@ public class KeyInput extends KeyAdapter {
         return 0;
     }
 
-    /*
-     * Enum Definitions
-     */
+    // Enum Definitions
 
     /**
      * Stores two keys intended to perform opposite actions.
@@ -64,7 +62,7 @@ public class KeyInput extends KeyAdapter {
 
         private String posKey, negKey;
 
-        private KeyAxis(KeyMapping posKey, KeyMapping negKey) {
+        KeyAxis(KeyMapping posKey, KeyMapping negKey) {
             this.posKey = posKey.name();
             this.negKey = negKey.name();
         }
@@ -98,7 +96,7 @@ public class KeyInput extends KeyAdapter {
 
         private int[] keyCodes;
 
-        private KeyMapping(int... keyCodes) {
+        KeyMapping(int... keyCodes) {
             this.keyCodes = keyCodes;
         }
 

@@ -2,7 +2,7 @@ package com.slavsquatsuperstar.game;
 
 import com.slavsquatsuperstar.mayonez.GameObject;
 import com.slavsquatsuperstar.mayonez.Preferences;
-import com.slavsquatsuperstar.util.SpriteSheet;
+import com.slavsquatsuperstar.mayonez.assets.SpriteSheet;
 import com.slavsquatsuperstar.mayonez.Vector2;
 import com.slavsquatsuperstar.mayonez.components.Sprite;
 import com.slavsquatsuperstar.mayonez.physics2d.AlignedBoxCollider2D;
@@ -12,7 +12,7 @@ import java.awt.*;
 
 public class Player extends GameObject {
 
-    private GameObject ground;
+    private final GameObject ground;
 
     public Player(String name, Vector2 position, GameObject ground) {
         super(name, position);
@@ -47,7 +47,7 @@ public class Player extends GameObject {
             addComponent(s);
 
         // Add player script
-        addComponent(new AlignedBoxCollider2D(new Vector2(Preferences.PLAYER_WIDTH, Preferences.PLAYER_HEIGHT)));
+        addComponent(new AlignedBoxCollider2D(new Vector2(Preferences.TILE_SIZE, Preferences.TILE_SIZE)));
         addComponent(new RigidBody2D());
         PlayerController pc = new PlayerController(ground);
         addComponent(pc);

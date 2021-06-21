@@ -18,7 +18,7 @@ public class GameObject {
     public final String name;
     public Transform transform;
 
-    protected boolean keepInScene = false;
+    protected boolean keepInScene = false; // TODO convert to KeepInBounds script
     /**
      * Whether this object can be moved or rotated through the physics engine and collisions.
      * Scripts can still change this object's {@link Transform} regardless.
@@ -27,7 +27,7 @@ public class GameObject {
     protected Scene scene;
     private boolean destroyed = false;
 
-    private ArrayList<Component> components = new ArrayList<>();
+    private final ArrayList<Component> components = new ArrayList<>();
     private ArrayList<Class> updateOrder = null;
 
     public GameObject(String name, Vector2 position) {

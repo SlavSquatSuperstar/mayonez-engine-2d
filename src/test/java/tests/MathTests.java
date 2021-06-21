@@ -78,8 +78,8 @@ public class MathTests {
         for (int i = 0; i < nums.length; i++)
             nums[i] = MathUtil.random(min, max);
         Logger.log("Min: %d, Max: %d", NumberUtils.min(nums), NumberUtils.max(nums));
-        assertEquals(NumberUtils.min(nums), min);
-        assertEquals(NumberUtils.max(nums), max);
+        assertTrue(NumberUtils.min(nums) >= min);
+        assertTrue(NumberUtils.max(nums) <= max);
     }
 
     @Test
