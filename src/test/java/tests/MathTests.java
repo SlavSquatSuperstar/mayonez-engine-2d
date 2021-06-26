@@ -1,7 +1,7 @@
 package tests;
 
-import com.slavsquatsuperstar.mayonez.Logger;
-import com.slavsquatsuperstar.util.MathUtils;
+import slavsquatsuperstar.mayonez.Logger;
+import slavsquatsuperstar.util.MathUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.junit.Test;
 

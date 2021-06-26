@@ -3,7 +3,7 @@ plugins {
     id 'application'
 }
 
-group 'com.slavsquatsuperstar'
+group 'slavsquatsuperstar'
 version '0.6-SNAPSHOT-pre1'
 
 repositories {
@@ -18,7 +18,7 @@ dependencies {
 }
 
 sourceCompatibility = targetCompatibility = JavaVersion.VERSION_11
-mainClassName = 'com.slavsquatsuperstar.Main'
+mainClassName = 'slavsquatsuperstar.Main'
 
 jar {
     manifest.attributes 'Main-Class': mainClassName

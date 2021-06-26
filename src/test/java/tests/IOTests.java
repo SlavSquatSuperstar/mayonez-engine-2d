@@ -1,6 +1,6 @@
 package tests;
 
-import com.slavsquatsuperstar.util.TextFile;
+import slavsquatsuperstar.util.TextFile;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;

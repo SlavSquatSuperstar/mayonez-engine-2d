@@ -1,11 +1,11 @@
 package physicstests;
 
-import com.slavsquatsuperstar.mayonez.Transform;
-import com.slavsquatsuperstar.mayonez.Vector2;
-import com.slavsquatsuperstar.mayonez.physics2d.AlignedBoxCollider2D;
-import com.slavsquatsuperstar.mayonez.physics2d.CircleCollider;
-import com.slavsquatsuperstar.mayonez.physics2d.Line2D;
-import com.slavsquatsuperstar.mayonez.physics2d.RigidBody2D;
+import slavsquatsuperstar.mayonez.Transform;
+import slavsquatsuperstar.mayonez.Vector2;
+import slavsquatsuperstar.mayonez.physics2d.AlignedBoxCollider2D;
+import slavsquatsuperstar.mayonez.physics2d.CircleCollider;
+import slavsquatsuperstar.mayonez.physics2d.Line2D;
+import slavsquatsuperstar.mayonez.physics2d.RigidBody2D;
 import org.junit.BeforeClass;
 import org.junit.Test;
 

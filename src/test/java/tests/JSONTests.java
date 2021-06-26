@@ -1,6 +1,6 @@
 package tests;
 
-import com.slavsquatsuperstar.util.JSONFile;
+import slavsquatsuperstar.util.JSONFile;
 import org.junit.Before;
 import org.junit.Test;
 

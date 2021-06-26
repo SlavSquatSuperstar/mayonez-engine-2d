@@ -1,7 +1,7 @@
 package tests;
 
-import com.slavsquatsuperstar.mayonez.Vector2;
-import com.slavsquatsuperstar.util.MathUtils;
+import slavsquatsuperstar.mayonez.Vector2;
+import slavsquatsuperstar.util.MathUtils;
 import org.junit.Ignore;
 import org.junit.Test;
 
