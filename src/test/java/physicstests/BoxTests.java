@@ -46,6 +46,12 @@ public class BoxTests {
     }
 
     @Test
+    public void tangentLineIsInAABB() {
+        assertTrue(aabb.intersects(new Line2D(new Vector2(1, 3), new Vector2(3, 1))));
+        assertTrue(aabb.intersects(new Line2D(new Vector2(-1, -3), new Vector2(-3, -1))));
+    }
+
+    @Test
     public void bisectLineIsInAABB() {
         assertTrue(aabb.intersects(new Line2D(new Vector2(-2, -2), new Vector2(2, 2))));
         assertTrue(aabb.intersects(new Line2D(new Vector2(-2, 2), new Vector2(2, -2))));
@@ -76,6 +82,7 @@ public class BoxTests {
     @Test
     public void lineNotInAABB() {
         assertFalse(aabb.intersects(new Line2D(new Vector2(3, 3), new Vector2(4, 4))));
+        assertFalse(aabb.intersects(new Line2D(new Vector2(3, 1), new Vector2(3, -1))));
     }
 
 }

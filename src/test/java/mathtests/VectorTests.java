@@ -1,9 +1,8 @@
-package tests;
+package mathtests;
 
+import org.junit.Test;
 import slavsquatsuperstar.mayonez.Vector2;
 import slavsquatsuperstar.util.MathUtils;
-import org.junit.Ignore;
-import org.junit.Test;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
@@ -45,7 +44,6 @@ public class VectorTests {
         assertTrue(v1.dot(v2) > 0);
     }
 
-    @Ignore
     @Test
     public void obtuseDotProductIsPositive() {
         Vector2 v1 = new Vector2(5, 1);
@@ -53,4 +51,33 @@ public class VectorTests {
         assertTrue(v1.angle(v2) > 90f);
         assertTrue(v1.dot(v2) < 0);
     }
+
+    @Test
+    public void acuteProjectionIsPositive() {
+        Vector2 v1 = new Vector2(6, 4);
+        Vector2 v2 = new Vector2(4, 0);
+        assertEquals(new Vector2(6, 0), v1.project(v2));
+    }
+
+    @Test
+    public void obtuseProjectionIsNegative() {
+        Vector2 v1 = new Vector2(-6, 4);
+        Vector2 v2 = new Vector2(4, 0);
+        assertEquals(new Vector2(-6, 0), v1.project(v2));
+    }
+
+    @Test
+    public void perpendicularProjectionIsZero() {
+        Vector2 v1 = new Vector2(0, 1);
+        Vector2 v2 = new Vector2(1, 0);
+        assertEquals(0f, v1.project(v2).magnitude(), MathUtils.EPSILON);
+    }
+
+    @Test
+    public void parallelProjectionIsSelf() {
+        Vector2 v1 = new Vector2(2, 2);
+        Vector2 v2 = new Vector2(4, 4);
+        assertEquals(v1, v1.project(v2));
+    }
+
 }

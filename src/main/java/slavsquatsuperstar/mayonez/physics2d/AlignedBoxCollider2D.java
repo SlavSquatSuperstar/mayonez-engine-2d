@@ -38,32 +38,45 @@ public class AlignedBoxCollider2D extends Collider2D {
     }
 
     @Override
-    // Raycast
-    // Source: https://www.youtube.com/watch?v=eo_hrg6kVA8
     public boolean intersects(Line2D line) {
-        if (contains(line.start()) || contains(line.end()))
+        if (contains(line.start) || contains(line.end))
             return true;
-
-        Vector2 unit = line.toVector().unit();
-        Vector2 min = min().sub(line.start());
-        min.x /= unit.x;
-        min.y /= unit.y;
-        Vector2 max = max().sub(line.start());
-        max.x /= unit.x;
-        max.y /= unit.y;
-
-        // If we extend the line segment forever
-        // Is the distance from start to intersection shorter than the line segment
-        // itself?
-        float tmin = Math.max(Math.min(min.x, max.x), Math.min(min.y, max.y));
-        float tmax = Math.min(Math.max(min.x, max.x), Math.max(min.y, max.y));
-        if (tmax < 0f || tmin > tmax)
-            return false;
-        float t = (tmin < 0f) ? tmax : tmin;
-        return t > 0f && t * t < line.toVector().lengthSquared();
+        return raycast(new Ray2D(line), null);
     }
 
     public boolean intersects(CircleCollider circle) {
         return circle.intersects(this);
+    }
+
+    @Override
+    public boolean raycast(Ray2D ray, RaycastResult result) {
+        RaycastResult.reset(result);
+
+        // Component division
+        Vector2 dir = ray.direction;
+        Vector2 min = min().sub(ray.origin);
+        min.x /= dir.x;
+        min.y /= dir.y;
+        Vector2 max = max().sub(ray.origin);
+        max.x /= dir.x;
+        max.y /= dir.y;
+
+        float tmin = Math.max(Math.min(min.x, max.x), Math.min(min.y, max.y));
+        float tmax = Math.min(Math.max(min.x, max.x), Math.max(min.y, max.y));
+        if (tmax < 0f || tmin > tmax)
+            return false;
+
+        float distToBox = (tmin < 0f) ? tmax : tmin;
+        boolean hit = distToBox > 0f;
+        if (ray.getLimit() > -1)
+            hit = hit && distToBox * distToBox < ray.getLimit(); // limit ray if constructed from line
+
+        if (result != null) {
+            Vector2 point = ray.origin.add(ray.direction.mul(distToBox));
+            Vector2 normal = point.sub(center()).unit();
+            result.set(point, normal, distToBox, hit);
+        }
+
+        return hit;
     }
 }

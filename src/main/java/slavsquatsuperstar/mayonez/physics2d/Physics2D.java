@@ -5,7 +5,13 @@ import slavsquatsuperstar.mayonez.Vector2;
 
 import java.util.ArrayList;
 
-// World simulation
+/**
+ * A simulation of the world inside the game.
+ * <p>
+ * Thanks to GamesWithGabe's <a href = https://youtube.com/playlist?list=PLtrSb4XxIVbpZpV65kk73OoUcIrBzoSiO>
+ * Coding a 2D Physics Engine playlist</a>for explaining the math and logic.
+ * </p>
+ */
 public class Physics2D {
 
     public Vector2 gravity;

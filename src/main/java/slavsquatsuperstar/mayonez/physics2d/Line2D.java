@@ -5,23 +5,19 @@ import slavsquatsuperstar.util.MathUtils;
 
 public class Line2D {
 
-    private Vector2 start, end;
+    public final Vector2 start, end;
 
     public Line2D(Vector2 start, Vector2 end) {
         this.start = start;
         this.end = end;
     }
 
-    public Vector2 start() {
-        return start;
-    }
-
-    public Vector2 end() {
-        return end;
-    }
-
     public Vector2 toVector() {
         return end.sub(start);
+    }
+
+    public float length() {
+        return toVector().magnitude();
     }
 
     // TODO intersects another line? intermediate value theorem

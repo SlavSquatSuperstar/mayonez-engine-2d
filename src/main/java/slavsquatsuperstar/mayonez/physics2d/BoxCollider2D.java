@@ -71,11 +71,12 @@ public class BoxCollider2D extends Collider2D {
     @Override
     public boolean intersects(Line2D line) {
         float rot = -rb.rotation();
-        Vector2 localStart = line.start().rotate(rot, center());
-        Vector2 localEnd = line.end().rotate(rot, center());
-        // rotate the line into AABB's local space
 
+        // rotate the line into the AABB's local space
+        Vector2 localStart = line.start.rotate(rot, center());
+        Vector2 localEnd = line.end.rotate(rot, center());
         Line2D localLine = new Line2D(localStart, localEnd);
+
         // Create AABB with same size
         AlignedBoxCollider2D aabb = new AlignedBoxCollider2D(localMax().sub(localMin()));
         aabb.rb = this.rb;
@@ -86,7 +87,55 @@ public class BoxCollider2D extends Collider2D {
         return circle.intersects(this);
     }
 
-    public AlignedBoxCollider2D toAABB() {
+    @Override
+    public boolean raycast(Ray2D ray, RaycastResult result) {
+        float rot = -rb.rotation();
+
+        // Rotate the line into the AABB's local space
+        Vector2 localOrigin = ray.origin.rotate(rot, center());
+        Vector2 localDir = ray.direction.rotate(rot, center());
+        Ray2D localRay = new Ray2D(localOrigin, localDir);
+
+        // Create AABB with same size
+        AlignedBoxCollider2D aabb = new AlignedBoxCollider2D(localMax().sub(localMin()));
+        aabb.rb = this.rb;
+        return aabb.raycast(ray, result);
+
+        // Gabe's Method
+//        Vector2 xAxis = new Vector2(1, 0).rotate(rot, new Vector2());
+//        Vector2 yAxis = new Vector2(0, 1).rotate(rot, new Vector2());
+//
+//        Vector2 rayToCenter = center().sub(ray.origin);
+//        Vector2 f = new Vector2(xAxis.dot(ray.direction), yAxis.dot(ray.direction));
+//        Vector2 e = new Vector2(xAxis.dot(rayToCenter), yAxis.dot(rayToCenter));
+//
+//        Vector2 halfSize = size.div(2);
+//        float[] tArr = new float[4];
+//        for (int i = 0; i < 2; i++) {
+//            if (MathUtils.equals(i, 0f)) { // if perpendicular and not inside box
+//                if (e.components()[i] - halfSize.components()[i] > 0 || -e.components()[i] + halfSize.components()[i] < 0)
+//                    return false;
+//            }
+//            tArr[i * 2] = (e.components()[i] + size.components()[i]) / f.components()[i]; // tmax
+//            tArr[i * 2 + 1] = (e.components()[i] - size.components()[i]) / f.components()[i]; // tmin
+//        }
+//
+//        float tmin = Math.max(Math.min(tArr[0], tArr[1]), Math.min(tArr[2], tArr[3]));
+//        float tmax = Math.min(Math.max(tArr[0], tArr[1]), Math.max(tArr[2], tArr[3]));
+//
+//        float dist = (tmin < 0f) ? tmax : tmin;
+//        boolean hit = dist > 0f; //&& t * t < ray.getMaximum();
+//
+//        if (result != null) {
+//            Vector2 point = ray.origin.add(ray.direction.mul(dist));
+//            Vector2 normal = point.sub(center()).unit();
+//            result.set(point, normal, dist, hit);
+//        }
+//
+//        return hit;
+    }
+
+    public AlignedBoxCollider2D getMinBounds() {
         AlignedBoxCollider2D aabb;
 
         if (MathUtils.equals(rb.rotation(), 0)) {

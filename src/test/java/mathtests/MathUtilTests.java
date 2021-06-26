@@ -1,4 +1,4 @@
-package tests;
+package mathtests;
 
 import slavsquatsuperstar.mayonez.Logger;
 import slavsquatsuperstar.util.MathUtils;
@@ -8,7 +8,7 @@ import org.junit.Test;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 
-public class MathTests {
+public class MathUtilTests {
 
     @Test
     public void epsilonEqualsZero() {

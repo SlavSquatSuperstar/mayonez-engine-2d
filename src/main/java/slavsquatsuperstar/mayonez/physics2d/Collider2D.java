@@ -18,6 +18,20 @@ public abstract class Collider2D extends Component {
 
     public abstract boolean intersects(Line2D l);
 
+    public boolean intersects(Collider2D collider) {
+        return false;
+    }
+
+    /**
+     * Casts a ray onto this collider and calculates whether the ray
+     * eventually intersects this collider.
+     *
+     * @param ray    A unit vector
+     * @param result An object to store the point of contact
+     * @return Whether the ray is pointed at the shape.
+     */
+    public abstract boolean raycast(Ray2D ray, RaycastResult result);
+
     @Override
     public void start() {
         this.transform = parent.transform;

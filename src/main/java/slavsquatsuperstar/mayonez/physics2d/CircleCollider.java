@@ -4,6 +4,7 @@ import slavsquatsuperstar.mayonez.Vector2;
 import slavsquatsuperstar.util.MathUtils;
 
 // TODO scale with transform
+// TODO local instead of world space?
 public class CircleCollider extends Collider2D {
 
     public float radius;
@@ -18,62 +19,12 @@ public class CircleCollider extends Collider2D {
     }
 
     @Override
-    // Projection
-    // Source: https://www.youtube.com/watch?v=Yx1fo2YLJOs
+    // TODO put in superclass?
     public boolean intersects(Line2D line) {
-        // Return true if either endpoint is in the circle
-        if (contains(line.start()) || contains(line.end()))
+        if (contains(line.start) || contains(line.end))
             return true;
-
-//        return raycast(new Ray2D(line.start(), line.direction()), null);
-
-        // Project the segment from start to center onto the original line object
-        Vector2 projectFrom = center().sub(line.start());
-        Vector2 projectOnto = line.toVector();
-        Vector2 projected = projectOnto.mul(projectFrom.dot(projectOnto) / projectOnto.lengthSquared());
-
-        // Check if the point on the line closest to the center is inside the circle
-        Vector2 closest = line.start().add(projected);
-        return contains(closest);
-
-//		// Get the percentage of the line segment shared with the circle
-//		float t = cntrToStart.dot(toProject) / toProject.dot(toProject); // parameterized position
-//		if (t < 0f || t > 1f)
-//			return false;
-//
-//		// Find the point closest to the segment (endpoint of projected line)
-//		Vector2 closest = line.start().add(toProject).mul(t);
-//		return contains(closest);
+        return raycast(new Ray2D(line), null);
     }
-
-    // Raycast
-    // Source: https://www.youtube.com/watch?v=23kTf-36Fcw
-//    public boolean raycast(Ray2D ray, RaycastResult result) {
-//        Vector2 originToCenter = center().sub(ray.origin);
-//        float radiusSquared = radius * radius;
-//        float lengthSquared = originToCenter.lengthSquared();
-//
-//        // Project vector
-//        float a = originToCenter.dot(ray.direction);
-//        float bSq = lengthSquared - a * a;
-//        if (radiusSquared - bSq < 0f) // dot result is negative, don't want imaginary
-//            return false;
-//
-//        float f = (float) Math.sqrt(radiusSquared - bSq);
-//        float t; // unit lengths along projected vector
-//        if (lengthSquared < radiusSquared) // ray starts inside circle
-//            t = a + f;
-//        else
-//            t = a - f;
-//
-//        if (result != null) {
-//            Vector2 point = ray.origin.add(ray.direction.mul(t));
-//            Vector2 normal = point.sub(center()).unit();
-//            result.set(point, normal, t, true);
-//        }
-//
-//        return true; // ray will intersect circle eventually
-//    }
 
     public boolean intersects(CircleCollider circle) {
         float distSquared = this.center().sub(circle.center()).lengthSquared();
@@ -106,6 +57,37 @@ public class CircleCollider extends Collider2D {
 
         float distanceSquared = center().sub(closest).lengthSquared();
         return distanceSquared <= radius * radius;
+    }
+
+    @Override
+    public boolean raycast(Ray2D ray, RaycastResult result) {
+        RaycastResult.reset(result);
+
+        // Trace the ray's origin to the circle's center
+        Vector2 originToCenter = center().sub(ray.origin);
+        float radiusSquared = radius * radius;
+        float lengthSquared = originToCenter.lengthSquared();
+
+        // TODO create nearestToPoint() method
+        // Project originToCenter onto the ray
+        float projLength = originToCenter.dot(ray.direction);
+        float distNearest = lengthSquared - projLength * projLength; // Closest distance from center to extended ray
+        if (radiusSquared - distNearest < 0f) // dot result is negative, don't want imaginary
+            return false;
+
+        float f = (float) Math.sqrt(radiusSquared - distNearest);
+        // unit lengths along projected vector
+        float distToCircle = contains(ray.origin) ? projLength + f : projLength - f;
+
+        boolean hit = ray.getLimit() <= -1 || distToCircle <= ray.getLimit(); // limit ray if constructed from line
+
+        if (result != null) {
+            Vector2 point = ray.origin.add(ray.direction.mul(distToCircle));
+            Vector2 normal = point.sub(center()).unit();
+            result.set(point, normal, distToCircle, hit);
+        }
+
+        return hit;
     }
 
 }
