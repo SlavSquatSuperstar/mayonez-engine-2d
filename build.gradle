@@ -4,8 +4,8 @@ plugins {
     id 'com.github.johnrengelman.shadow' version '7.0.0' // For making fat jars
 }
 
-group 'com.slavsquatsuperstar'
-version '0.5.9-SNAPSHOT'
+group 'slavsquatsuperstar'
+version '0.6-SNAPSHOT-pre2'
 
 repositories {
     mavenCentral()
@@ -19,7 +19,7 @@ dependencies {
 }
 
 sourceCompatibility = targetCompatibility = JavaVersion.VERSION_11
-mainClassName = 'com.slavsquatsuperstar.Main'
+mainClassName = 'slavsquatsuperstar.Main'
 
 shadowJar {
     archiveClassifier.set('')

@@ -1,6 +1,6 @@
 package iotests;
 
-import com.slavsquatsuperstar.mayonez.assets.Asset;
+import slavsquatsuperstar.mayonez.assets.Asset;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertFalse;

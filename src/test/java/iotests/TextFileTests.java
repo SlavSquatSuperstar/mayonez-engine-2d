@@ -1,6 +1,6 @@
 package iotests;
 
-import com.slavsquatsuperstar.mayonez.assets.TextFile;
+import slavsquatsuperstar.mayonez.assets.TextFile;
 import org.junit.Test;
 
 import java.time.LocalDate;

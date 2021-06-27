@@ -1,7 +1,7 @@
 package physicstests;
 
-import com.slavsquatsuperstar.mayonez.Vector2;
-import com.slavsquatsuperstar.mayonez.physics2d.Line2D;
+import slavsquatsuperstar.mayonez.Vector2;
+import slavsquatsuperstar.mayonez.physics2d.Line2D;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertTrue;
@@ -39,7 +39,6 @@ public class LineTests {
         Vector2 point = new Vector2(0, 5);
         assertTrue(line.contains(point));
     }
-
 
 
 }

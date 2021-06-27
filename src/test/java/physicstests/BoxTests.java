@@ -1,11 +1,12 @@
 package physicstests;
 
-import com.slavsquatsuperstar.mayonez.Transform;
-import com.slavsquatsuperstar.mayonez.Vector2;
-import com.slavsquatsuperstar.mayonez.physics2d.AlignedBoxCollider2D;
-import com.slavsquatsuperstar.mayonez.physics2d.Line2D;
-import com.slavsquatsuperstar.mayonez.physics2d.RigidBody2D;
 import org.junit.Before;
+import slavsquatsuperstar.mayonez.Transform;
+import slavsquatsuperstar.mayonez.Vector2;
+import slavsquatsuperstar.mayonez.physics2d.AlignedBoxCollider2D;
+import slavsquatsuperstar.mayonez.physics2d.Line2D;
+import slavsquatsuperstar.mayonez.physics2d.RigidBody2D;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import static junit.framework.TestCase.*;
@@ -14,13 +15,11 @@ public class BoxTests {
 
     AlignedBoxCollider2D aabb;
 
-    /**
-     * Create a box centered at (0, 0) with dimensions 4x4
-     */
+    // Create box centered at (0, 0) with dimensions 4x4
     @Before
     public void getAABB() {
         aabb = new AlignedBoxCollider2D(new Vector2(4, 4));
-        aabb.setTransform(new Transform(new Vector2(-2, -2)));
+        aabb.setTransform(new Transform(new Vector2(0, 0)));
         aabb.setRigidBody(new RigidBody2D());
     }
 
@@ -43,6 +42,12 @@ public class BoxTests {
         assertFalse(aabb.contains(new Vector2(-3, 3)));
         assertFalse(aabb.contains(new Vector2(-3, -3)));
         assertFalse(aabb.contains(new Vector2(3, 3)));
+    }
+
+    @Test
+    public void tangentLineIsInAABB() {
+        assertTrue(aabb.intersects(new Line2D(new Vector2(1, 3), new Vector2(3, 1))));
+        assertTrue(aabb.intersects(new Line2D(new Vector2(-1, -3), new Vector2(-3, -1))));
     }
 
     @Test
@@ -76,6 +81,7 @@ public class BoxTests {
     @Test
     public void lineNotInAABB() {
         assertFalse(aabb.intersects(new Line2D(new Vector2(3, 3), new Vector2(4, 4))));
+        assertFalse(aabb.intersects(new Line2D(new Vector2(3, 1), new Vector2(3, -1))));
     }
 
 }

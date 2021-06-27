@@ -1,6 +1,6 @@
 package iotests;
 
-import com.slavsquatsuperstar.mayonez.assets.JSONFile;
+import slavsquatsuperstar.mayonez.assets.JSONFile;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -44,7 +44,7 @@ public class JSONTests {
 
     @Test
     public void savePropertiesToJSON() {
-        JSONFile json = new JSONFile("logs/foobar.json", false);
+        JSONFile json = new JSONFile("src/test/resources/foobar.json", false);
         json.setProperty("time", LocalTime.now());
         json.setProperty("date", LocalDate.now());
         json.save();
