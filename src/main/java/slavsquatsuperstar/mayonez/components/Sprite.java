@@ -1,6 +1,7 @@
 package slavsquatsuperstar.mayonez.components;
 
 import slavsquatsuperstar.mayonez.*;
+import slavsquatsuperstar.mayonez.assets.Assets;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -14,14 +15,16 @@ import java.awt.image.BufferedImage;
  */
 public class Sprite extends Component {
 
+    private static final String TEXTURES_DIRECTORY = "assets/";
     private BufferedImage image;
 
     public Sprite(String filename) {
+        filename = TEXTURES_DIRECTORY + filename;
         try {
-            this.image = ImageIO.read(Assets.getFile(filename));
+            this.image = ImageIO.read(Assets.getAsset(filename, true).path);
         } catch (Exception e) {
-            Logger.log("Sprite: Error loading image %s", filename);
-            System.exit(-1);
+            Logger.log("Sprite: Error loading image \"%s\"", filename);
+            Game.instance().stop(-1);
         }
     }
 
@@ -32,8 +35,11 @@ public class Sprite extends Component {
     @Override
     public void start() {
         // Move the parent so the top-left edge of this image is at the parent's previous positoin
-        parent.transform.move(new Vector2(image().getWidth() / 2f, image().getHeight() / 2f));
+        parent.transform.move(new Vector2(getImage().getWidth() / 2f, getImage().getHeight() / 2f));
     }
+
+    @Override
+    public final void update(float dt) {} // Sprites shouldn't update any game logic
 
     @Override
     public void render(Graphics2D g2) {
@@ -47,9 +53,7 @@ public class Sprite extends Component {
         g2.drawImage(image, transform, null);
     }
 
-    // Getters and Setters
-
-    public BufferedImage image() {
+    public BufferedImage getImage() {
         return image;
     }
 

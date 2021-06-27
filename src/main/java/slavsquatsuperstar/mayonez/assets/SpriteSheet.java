@@ -1,4 +1,4 @@
-package slavsquatsuperstar.util;
+package slavsquatsuperstar.mayonez.assets;
 
 import slavsquatsuperstar.mayonez.components.Sprite;
 

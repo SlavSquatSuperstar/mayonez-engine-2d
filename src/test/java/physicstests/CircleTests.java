@@ -1,6 +1,6 @@
 package physicstests;
 
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
 import slavsquatsuperstar.mayonez.Transform;
 import slavsquatsuperstar.mayonez.Vector2;
@@ -13,13 +13,11 @@ import static junit.framework.TestCase.*;
 
 public class CircleTests {
 
-    public static CircleCollider c;
+    CircleCollider c;
 
-    /**
-     * Create a circle centered at (2, 2) with radius 2
-     */
-    @BeforeClass
-    public static void getCircle() {
+    // Create circle centered at (2, 2) with radius 2
+    @Before
+    public void getCircle() {
         c = new CircleCollider(2);
         c.setTransform(new Transform(new Vector2(2, 2)));
         c.setRigidBody(new RigidBody2D());

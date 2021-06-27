@@ -12,6 +12,9 @@ import java.awt.*;
  */
 public abstract class Component {
 
+    /**
+     * Whether this component should be updated.
+     */
     public boolean enabled = true;
 
     /**
@@ -25,12 +28,12 @@ public abstract class Component {
     public void start() {}
 
     /**
-     * Refresh this component in the world.
+     * Refresh the component state in the world.
      */
     public void update(float dt) {}
 
     /**
-     * Draw this component on the screen.
+     * Draw the component on the screen.
      */
     public void render(Graphics2D g2) {}
 

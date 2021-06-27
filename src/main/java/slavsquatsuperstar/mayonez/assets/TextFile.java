@@ -1,29 +1,26 @@
-package slavsquatsuperstar.util;
+package slavsquatsuperstar.mayonez.assets;
 
-import slavsquatsuperstar.mayonez.Assets;
 import slavsquatsuperstar.mayonez.Logger;
 import slavsquatsuperstar.mayonez.Preferences;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
-// TODO one method for handling exceptions
-// TODO store text in class
 // TODO manipulate config file
-public class TextFile {
 
-    private final String filename;
+/**
+ * Facilitates reading from and saving data to a plain text file.
+ */
+public final class TextFile extends Asset {
 
-    public TextFile(String filename) {
-        this.filename = filename;
-        // TODO assert file exists?
+    public TextFile(String filename, boolean isClasspath) {
+        super(filename, isClasspath);
     }
 
     /**
@@ -32,16 +29,14 @@ public class TextFile {
      * @return The body of text read from this file.
      */
     public String readText() {
-        String text = "";
-        try (FileInputStream in = FileUtils.openInputStream(FileUtils.toFile(Assets.getFile(filename)))) {
-            text = IOUtils.toString(in, Preferences.CHARSET);
-            Logger.log("TextFile: Read successful");
+        try (InputStream in = inputStream()) {
+            return IOUtils.toString(in, Preferences.CHARSET);
         } catch (FileNotFoundException e) {
-            Logger.log("TextFile: File \"%s\" not found\n", filename);
+            Logger.log("TextFile: File \"%s\" not found");
         } catch (IOException e) {
             Logger.log("TextFile: Could not read file");
         }
-        return text;
+        return "";
     }
 
     /**
@@ -59,11 +54,10 @@ public class TextFile {
      * @param text The line or lines to save.
      */
     public void write(String... text) {
-        try (FileOutputStream out = FileUtils.openOutputStream(FileUtils.toFile(Assets.getFile(filename)), false)) {
+        try (OutputStream out = outputStream(false)) {
             IOUtils.writeLines(Arrays.asList(text), "\n", out, StandardCharsets.UTF_8);
-            Logger.log("TextFile: Save successful");
         } catch (FileNotFoundException e) {
-            Logger.log("TextFile: File \"%s\" not found\n", filename);
+            Logger.log("TextFile: File \"%s\" not found");
         } catch (IOException e) {
             Logger.log(ExceptionUtils.getStackTrace(e));
             Logger.log("TextFile: Could not save to file");
@@ -76,13 +70,10 @@ public class TextFile {
      * @param text The line or lines to append.
      */
     public void append(String... text) {
-        try (FileOutputStream out = FileUtils.openOutputStream(FileUtils.toFile(Assets.getFile(filename)), true)) {
+        try (OutputStream out = outputStream(true)) {
             IOUtils.writeLines(Arrays.asList(text), "\n", out, StandardCharsets.UTF_8);
-            Logger.log("TextFile: Save successful");
         } catch (IOException e) {
             Logger.log("TextFile: Could not append to file");
-        } catch (NullPointerException e) {
-            Logger.log("TextFile: File contents empty");
         }
     }
 

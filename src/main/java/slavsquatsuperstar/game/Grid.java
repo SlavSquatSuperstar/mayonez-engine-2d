@@ -15,8 +15,8 @@ public class Grid extends GameObject {
     public Grid(Vector2 position, GameObject ground) {
         super("Grid", position);
         this.ground = ground;
-        gridWidth = Preferences.PLAYER_WIDTH;
-        gridHeight = Preferences.PLAYER_HEIGHT;
+        gridWidth = Preferences.TILE_SIZE;
+        gridHeight = Preferences.TILE_SIZE;
     }
 
     @Override

@@ -65,9 +65,7 @@ public abstract class Scene {
 
             // Don't want to get rid of the camera!
             @Override
-            public void destroy() {
-                return;
-            }
+            public void destroy() {}
 
             @Override
             public boolean isDestroyed() {
@@ -120,7 +118,7 @@ public abstract class Scene {
         objects.add(obj);
         renderer.add(obj);
         physics.add(obj);
-        Logger.log("Scene: Added GameObject \"%s\"", obj.name);
+        Logger.log("%s: Added object \"%s\"", this.name, obj.name);
     }
 
     public void removeObject(GameObject obj) {

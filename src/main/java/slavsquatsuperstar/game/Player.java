@@ -12,7 +12,7 @@ import java.awt.*;
 
 public class Player extends GameObject {
 
-    private GameObject ground;
+    private final GameObject ground;
 
     public Player(String name, Vector2 position, GameObject ground) {
         super(name, position);
@@ -35,11 +35,11 @@ public class Player extends GameObject {
         // Create sprite layers
         for (int i = 0; i < colors.length; i++) {
             Sprite l = layers[i];
-            for (int y = 0; y < l.image().getWidth(); y++) {
-                for (int x = 0; x < l.image().getHeight(); x++) {
-                    Color color = new Color(l.image().getRGB(x, y));
+            for (int y = 0; y < l.getImage().getWidth(); y++) {
+                for (int x = 0; x < l.getImage().getHeight(); x++) {
+                    Color color = new Color(l.getImage().getRGB(x, y));
                     if (color.getRed() > threshold && color.getGreen() > threshold && color.getBlue() > threshold)
-                        l.image().setRGB(x, y, colors[i].getRGB());
+                        l.getImage().setRGB(x, y, colors[i].getRGB());
                 }
             }
         }
@@ -47,7 +47,7 @@ public class Player extends GameObject {
             addComponent(s);
 
         // Add player script
-        addComponent(new AlignedBoxCollider2D(new Vector2(Preferences.PLAYER_WIDTH, Preferences.PLAYER_HEIGHT)));
+        addComponent(new AlignedBoxCollider2D(new Vector2(Preferences.TILE_SIZE, Preferences.TILE_SIZE)));
         addComponent(new RigidBody2D());
         PlayerController pc = new PlayerController(ground);
         addComponent(pc);

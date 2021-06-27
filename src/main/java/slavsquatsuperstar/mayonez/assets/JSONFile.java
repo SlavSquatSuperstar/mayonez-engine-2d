@@ -1,51 +1,66 @@
-package slavsquatsuperstar.util;
+package slavsquatsuperstar.mayonez.assets;
 
 import slavsquatsuperstar.mayonez.Logger;
+import slavsquatsuperstar.mayonez.Preferences;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-// TODO extends TextFile
-// TODO private method readInternal
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Stores and manipulates a JSON object from a .json file.
  */
-public class JSONFile {
+public class JSONFile extends Asset {
 
-    private final String filename;
     private JSONObject json;
 
-    public JSONFile(String filename) {
-        this.filename = filename;
-        readJSON();
+    public JSONFile(String filename, boolean isClasspath) {
+        super(filename, isClasspath);
+        read();
     }
 
     // File I/O Methods
 
     /**
-     * Parses JSON data from this file.
-     *
-     * @return The JSON object stored in this file.
-     * @return {@code null} if this file is invalid.
+     * Parses the JSON object stored in this file. Called automatically upon object creation.
      */
-    public void readJSON() {
-        try {
-            json = new JSONObject(new JSONTokener(new TextFile(filename).readText()));
+    public void read() {
+        try (InputStream in = inputStream()) {
+            json = new JSONObject(new JSONTokener(IOUtils.toString(in, Preferences.CHARSET)));
+        } catch (FileNotFoundException e) {
+            Logger.log("JSONFile: File \"%s\" not found", path);
+        } catch (IOException e) {
+            Logger.log("TextFile: Could not read file");
         } catch (JSONException e) {
             Logger.log("JSONUtil: Could not parse JSON file");
         }
     }
 
+    // JSON Methods
+
     /**
      * Saves JSON data to this file.
      */
-    public void saveJSON() {
-        new TextFile(filename).write(json.toString(4));
+    public void save() {
+        try (OutputStream out = outputStream(false)) {
+            IOUtils.write(json.toString(4).getBytes(StandardCharsets.UTF_8), out);
+        } catch (FileNotFoundException e) {
+            Logger.log("TextFile: File \"%s\" not found\n", path);
+        } catch (IOException e) {
+            Logger.log(ExceptionUtils.getStackTrace(e));
+            Logger.log("TextFile: Could not save to file");
+        }
     }
 
-    // JSON Methods
+    // JSON Getters and Setters
 
     public JSONObject getObj(String key) {
         try {
@@ -56,7 +71,7 @@ public class JSONFile {
         return null;
     }
 
-    public JSONArray getArr(String key) {
+    public JSONArray getArray(String key) {
         try {
             return json.getJSONArray(key);
         } catch (JSONException e) {
@@ -92,7 +107,7 @@ public class JSONFile {
         return -1;
     }
 
-    public double getFlt(String key) {
+    public double getFloat(String key) {
         try {
             return json.getFloat(key);
         } catch (NumberFormatException e) {
@@ -108,4 +123,5 @@ public class JSONFile {
     private static void logError(String key, String type) {
         Logger.log("JSONFile: Value at \"%s\" is not %s.", key, type);
     }
+
 }

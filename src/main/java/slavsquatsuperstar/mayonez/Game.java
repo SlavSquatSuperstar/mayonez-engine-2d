@@ -46,7 +46,7 @@ public class Game implements Runnable {
 
     private Game() {
         // Set up the window
-        window = new JFrame(Preferences.PROJECT_TITLE + " " + Preferences.PROJECT_NAME);
+        window = new JFrame(Preferences.TITLE + " " + Preferences.VERSION);
         width = Preferences.SCREEN_WIDTH;
         height = Preferences.SCREEN_HEIGHT;
         window.setSize(width, height);
@@ -161,17 +161,15 @@ public class Game implements Runnable {
 
     }
 
-    // Thread Methods
-
     /**
-     * Begins running this engine, initializing its thread, displaying the window,
-     * and starting its scene
+     * Initializes the game engine, displays the window, and starts the current scene (if not null).
      */
     public synchronized void start() {
         if (running) // don't start if already running
             return;
 
         Logger.log("Engine: Starting");
+        Logger.log("Welcome to %s %s", Preferences.TITLE, Preferences.VERSION);
         running = true;
 
         // Start thread
@@ -186,7 +184,7 @@ public class Game implements Runnable {
     }
 
     /**
-     * Shuts down the engine, stopping its thread and hiding its window.
+     * Shuts down the engine and hides the window.
      */
     public synchronized void stop(int status) {
         running = false;
@@ -200,7 +198,7 @@ public class Game implements Runnable {
         // Stop thread
         thread.interrupt();
         if (Logger.saveLogs)
-            Logger.log("Logger: Saved log to file \"%s\".", Logger.outputFile);
+            Logger.log("Logger: Saved log to file \"%s\"", Logger.logFilename);
         System.exit(status);
     }
 

@@ -1,6 +1,10 @@
 package slavsquatsuperstar.game;
 
-import slavsquatsuperstar.mayonez.*;
+import slavsquatsuperstar.mayonez.GameObject;
+import slavsquatsuperstar.mayonez.Preferences;
+import slavsquatsuperstar.mayonez.Scene;
+import slavsquatsuperstar.mayonez.Vector2;
+import slavsquatsuperstar.mayonez.components.Sprite;
 
 import java.awt.*;
 
@@ -38,14 +42,14 @@ public class LevelEditorScene extends Scene {
         addObject(new GameObject("Mario", new Vector2(0, 28)) {
             @Override
             protected void init() {
-                addComponent(Assets.getSprite("mario.png"));
+                addComponent(new Sprite("mario.png"));
                 transform.scale = transform.scale.mul(2);
             }
         });
         addObject(new GameObject("Goomba", new Vector2(width - 32, Preferences.GROUND_HEIGHT - 32)) {
             @Override
             protected void init() {
-                addComponent(Assets.getSprite("goomba.png"));
+                addComponent(new Sprite("goomba.png"));
             }
         });
     }

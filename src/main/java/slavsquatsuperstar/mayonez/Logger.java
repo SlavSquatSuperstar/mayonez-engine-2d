@@ -1,6 +1,6 @@
 package slavsquatsuperstar.mayonez;
 
-import slavsquatsuperstar.util.TextFile;
+import slavsquatsuperstar.mayonez.assets.TextFile;
 
 import java.io.File;
 import java.time.LocalDate;
@@ -8,8 +8,8 @@ import java.util.IllegalFormatException;
 
 public final class Logger {
 
-    public static boolean saveLogs;
-    public static String outputFile;
+    public static boolean saveLogs = true;
+    static String logFilename;
     private static TextFile logFile;
 
     static {
@@ -26,12 +26,13 @@ public final class Logger {
                 if (f.getName().startsWith(today.toString()))
                     logCount++;
 
-            outputFile = String.format("%s/%s-%d.log", logDirectory.getPath(), today, ++logCount);
-            logFile = new TextFile(outputFile);
+            logFilename = String.format("%s/%s-%d.log", logDirectory.getPath(), today, ++logCount);
+            logFile = new TextFile(logFilename, false);
         }
     }
 
-    private Logger() {}
+    private Logger() {
+    }
 
     public static void log(Object msg, Object... args) {
         String output = String.format("[%.4f] ", Game.getTime());

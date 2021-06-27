@@ -6,8 +6,8 @@ public class Main {
 
     public static void main(String[] args) {
         Game game = Game.instance();
-        game.loadScene(0);
         game.start();
+        Game.loadScene(0);
     }
 
 }

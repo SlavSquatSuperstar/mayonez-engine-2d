@@ -1,5 +1,6 @@
 package physicstests;
 
+import org.junit.Before;
 import slavsquatsuperstar.mayonez.Transform;
 import slavsquatsuperstar.mayonez.Vector2;
 import slavsquatsuperstar.mayonez.physics2d.AlignedBoxCollider2D;
@@ -12,15 +13,13 @@ import static junit.framework.TestCase.*;
 
 public class BoxTests {
 
-    private static AlignedBoxCollider2D aabb;
+    AlignedBoxCollider2D aabb;
 
-    /**
-     * Create a box centered at (0, 0) with dimensions 4x4
-     */
-    @BeforeClass
-    public static void getAABB() {
+    // Create box centered at (0, 0) with dimensions 4x4
+    @Before
+    public void getAABB() {
         aabb = new AlignedBoxCollider2D(new Vector2(4, 4));
-        aabb.setTransform(new Transform());
+        aabb.setTransform(new Transform(new Vector2(0, 0)));
         aabb.setRigidBody(new RigidBody2D());
     }
 
