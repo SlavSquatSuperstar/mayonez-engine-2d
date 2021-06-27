@@ -1,21 +1,22 @@
-# MacOS files
-.DS_Store
-
 # Binary files
-bin/
+bin
+build
 *.class
 *.jar
 
 # Gradle folders
-build/
-.gradle/
+.gradle
 
 # IDE files
-.idea/
+.idea
+.classpath
+.project
+.settings
 
 # Log files
 *.log
-logs/
+logs
 hs_err_pid*
 
-
+# MacOS files
+.DS_Store
