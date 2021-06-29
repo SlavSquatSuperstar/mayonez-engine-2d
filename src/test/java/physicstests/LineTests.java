@@ -1,7 +1,7 @@
 package physicstests;
 
 import slavsquatsuperstar.mayonez.Vector2;
-import slavsquatsuperstar.mayonez.physics2d.Line2D;
+import slavsquatsuperstar.mayonez.physics2d.primitives.Line2D;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertTrue;

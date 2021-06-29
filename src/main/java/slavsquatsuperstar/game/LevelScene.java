@@ -11,7 +11,6 @@ public class LevelScene extends Scene {
 
     public LevelScene(String name) {
         super(name, (int) (Preferences.SCREEN_WIDTH * 1.5), (int) (Preferences.SCREEN_HEIGHT * 1.0));
-        background = Color.WHITE;
     }
 
     @Override

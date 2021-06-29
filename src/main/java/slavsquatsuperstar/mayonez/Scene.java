@@ -18,13 +18,14 @@ public abstract class Scene {
     protected int width, height;
 
     protected boolean bounded;
-    protected Color background;
+    protected Color background = Color.WHITE;
     // Object Fields
     protected ArrayList<GameObject> objects, toRemove;
     private boolean started;
-    private Renderer renderer;
-    private Physics2D physics; // rbs are being updated twice
-    private Camera camera;
+    // TODO maybe Scene, Physics, Render layers should be separate (MVC)
+    private final Renderer renderer;
+    private final Physics2D physics;
+    private final Camera camera;
 
     public Scene(String name) {
         this(name, 0, 0);

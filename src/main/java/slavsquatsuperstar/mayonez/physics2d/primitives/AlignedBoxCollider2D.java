@@ -1,4 +1,4 @@
-package slavsquatsuperstar.mayonez.physics2d;
+package slavsquatsuperstar.mayonez.physics2d.primitives;
 
 import slavsquatsuperstar.mayonez.Vector2;
 
@@ -72,13 +72,8 @@ public class AlignedBoxCollider2D extends AbstractBoxCollider2D {
         RaycastResult.reset(result);
 
         // Component division
-        Vector2 dir = ray.direction;
-        Vector2 min = min().sub(ray.origin);
-        min.x /= dir.x;
-        min.y /= dir.y;
-        Vector2 max = max().sub(ray.origin);
-        max.x /= dir.x;
-        max.y /= dir.y;
+        Vector2 min = min().sub(ray.origin).mul(ray.direction);
+        Vector2 max = max().sub(ray.origin).mul(ray.direction);
 
         float tmin = Math.max(Math.min(min.x, max.x), Math.min(min.y, max.y));
         float tmax = Math.min(Math.max(min.x, max.x), Math.max(min.y, max.y));

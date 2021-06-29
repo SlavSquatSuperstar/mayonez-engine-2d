@@ -1,18 +1,28 @@
 package slavsquatsuperstar.mayonez.physics2d;
 
+import slavsquatsuperstar.mayonez.Transform;
 import slavsquatsuperstar.mayonez.Vector2;
 import slavsquatsuperstar.mayonez.components.Component;
 
-public class RigidBody2D extends Component {
+public class Rigidbody2D extends Component {
 
     public boolean followsGravity = true;
-
     public float mass;
+    public float drag = 1f; // Modeled using F_d = -b*v
+    /**
+     * A reference to the parent object's transform.
+     */
+    private Transform transform;
     private Vector2 netForce = new Vector2();
     private Vector2 velocity = new Vector2();
 
-    public RigidBody2D(float mass) {
+    public Rigidbody2D(float mass) {
         this.mass = mass;
+    }
+
+    @Override
+    public void start() {
+        transform = parent.transform;
     }
 
     public void physicsUpdate(float dt) {
@@ -23,9 +33,8 @@ public class RigidBody2D extends Component {
 //        if (Math.abs(velocity.y) > Preferences.TERMINAL_VELOCITY)
 //            velocity.y = Math.signum(velocity.y) * Preferences.TERMINAL_VELOCITY;
 
-        velocity = velocity.add(netForce.div(mass).mul(dt));
-        parent.transform.move(velocity); // s = v*t
-
+        velocity = velocity.add(netForce.div(mass).mul(dt)); // dv = F/m*dt
+        transform.move(velocity); // ds = v*t
         netForce.set(0, 0); // Reset accumulated forces
     }
 
@@ -55,20 +64,39 @@ public class RigidBody2D extends Component {
     // Getters and Setters
 
     public Vector2 getPosition() {
-        return parent.transform.position;
+        return transform.position;
     }
 
     public void setPosition(Vector2 position) {
-        parent.transform.position = position;
+        transform.position = position;
     }
 
     public float getRotation() {
-        return parent.transform.rotation;
+        return transform.rotation;
     }
 
     public void setRotation(float rotation) {
-        parent.transform.rotation = rotation;
+        transform.rotation = rotation;
     }
 
-//    public enum BodyType {
+    // For unit testing mainly
+    public void setTransform(Transform transform) {
+        this.transform = transform;
+    }
+
+    //    public enum BodyType {
+//        /**
+//         * Cannot be moved by scripts or physics.
+//         */
+//        STATIC,
+//        /**
+//         * Object transform can be modified through scripts.
+//         */
+//        KINEMATIC,
+//        /**
+//         * Can be moved by physics engine and scripts.
+//         */
+//        DYNAMIC
+//    }
+
 }

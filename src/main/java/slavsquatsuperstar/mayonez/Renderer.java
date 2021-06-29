@@ -8,8 +8,8 @@ import java.util.ArrayList;
 
 public class Renderer {
 
-    private ArrayList<GameObject> objects;
-    private Camera camera;
+    private final ArrayList<GameObject> objects;
+    private final Camera camera;
 
     public Renderer(Camera camera) {
         this.camera = camera;

@@ -1,4 +1,4 @@
-package slavsquatsuperstar.mayonez.physics2d;
+package slavsquatsuperstar.mayonez.physics2d.primitives;
 
 import slavsquatsuperstar.mayonez.Vector2;
 

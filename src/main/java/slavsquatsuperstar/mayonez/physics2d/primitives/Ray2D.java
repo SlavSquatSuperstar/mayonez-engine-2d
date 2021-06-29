@@ -1,6 +1,7 @@
-package slavsquatsuperstar.mayonez.physics2d;
+package slavsquatsuperstar.mayonez.physics2d.primitives;
 
 import slavsquatsuperstar.mayonez.Vector2;
+import slavsquatsuperstar.mayonez.physics2d.primitives.Line2D;
 
 public class Ray2D {
 

@@ -4,10 +4,10 @@ import org.junit.Before;
 import org.junit.Test;
 import slavsquatsuperstar.mayonez.Transform;
 import slavsquatsuperstar.mayonez.Vector2;
-import slavsquatsuperstar.mayonez.physics2d.AlignedBoxCollider2D;
-import slavsquatsuperstar.mayonez.physics2d.CircleCollider;
-import slavsquatsuperstar.mayonez.physics2d.Line2D;
-import slavsquatsuperstar.mayonez.physics2d.RigidBody2D;
+import slavsquatsuperstar.mayonez.physics2d.primitives.AlignedBoxCollider2D;
+import slavsquatsuperstar.mayonez.physics2d.primitives.CircleCollider;
+import slavsquatsuperstar.mayonez.physics2d.primitives.Line2D;
+import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
 
 import static junit.framework.TestCase.*;
 
@@ -20,7 +20,7 @@ public class CircleTests {
     public void getCircle() {
         c = new CircleCollider(2);
         c.setTransform(new Transform(new Vector2(2, 2)));
-        c.setRigidBody(new RigidBody2D(0f));
+        c.setRigidBody(new Rigidbody2D(0f));
     }
 
     @Test
@@ -75,7 +75,7 @@ public class CircleTests {
     public void circleIntersectsAABB() {
         AlignedBoxCollider2D aabb = new AlignedBoxCollider2D(new Vector2(4, 4));
         aabb.setTransform(new Transform(new Vector2(0, 0)));
-        aabb.setRigidBody(new RigidBody2D(0f));
+        aabb.setRigidBody(new Rigidbody2D(0f));
         assertTrue(c.detectCollision(aabb));
     }
 

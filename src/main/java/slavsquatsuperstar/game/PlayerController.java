@@ -4,8 +4,8 @@ import slavsquatsuperstar.mayonez.Game;
 import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Vector2;
 import slavsquatsuperstar.mayonez.components.Script;
-import slavsquatsuperstar.mayonez.physics2d.AlignedBoxCollider2D;
-import slavsquatsuperstar.mayonez.physics2d.RigidBody2D;
+import slavsquatsuperstar.mayonez.physics2d.primitives.AlignedBoxCollider2D;
+import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
 import slavsquatsuperstar.util.MathUtils;
 
 import java.awt.event.KeyEvent;
@@ -15,15 +15,15 @@ public class PlayerController extends Script {
 
     // Physics Fields
     private final GameObject ground;
-    private RigidBody2D rb;
+    private Rigidbody2D rb;
     private AlignedBoxCollider2D box;
 
     // Movement Parameters
     private float topSpeed = 10f;
     private float thrustForce = 150f;
-    private float brakeForce = 8f;
+    private float brakeForce = 10f;
     private float drag = 0.5f; // [0, 1]
-    private float mass = 8f;
+    private float mass = 10f;
 
     public PlayerController(GameObject ground) {
         this.ground = ground;
@@ -31,10 +31,11 @@ public class PlayerController extends Script {
 
     @Override
     public void start() {
-//        scene().camera().setSubject(this); // TODO pass camera in player c'tor?
+//        scene().camera().setSubject(parent); // TODO pass camera in player c'tor?
         box = parent.getComponent(AlignedBoxCollider2D.class);
-        rb = parent.getComponent(RigidBody2D.class);
+        rb = parent.getComponent(Rigidbody2D.class);
         rb.mass = this.mass;
+        rb.drag = this.drag;
     }
 
     @Override
@@ -61,18 +62,17 @@ public class PlayerController extends Script {
 
 //         Apply Drag Unless Stationary (prevent divide by 0)
         if (velocity.magnitude() != 0) {
-            Vector2 dragForce = velocity.div(-drag);
-//			dragForce.y = 0; // horizontal only
             // Increase drag by braking
             if (Game.keyboard().keyDown("space"))
-                dragForce = dragForce.mul((drag + brakeForce) / drag);
-            rb.addForce(dragForce);
+                rb.drag = this.drag + brakeForce;
+            else
+                rb.drag = this.drag;
 
             // Just stop if moving really slow and not pressing move keys
-            if (xInput == 0 && Math.abs(velocity.x) < drag)
-                velocity.x = 0;
-            if (yInput == 0 && Math.abs(velocity.y) < drag)
-                velocity.y = 0;
+//            if (xInput == 0 && Math.abs(velocity.x) < drag)
+//                velocity.x = 0;
+//            if (yInput == 0 && Math.abs(velocity.y) < drag)
+//                velocity.y = 0;
         }
 
         // Collide with walls

@@ -5,8 +5,8 @@ import slavsquatsuperstar.mayonez.Preferences;
 import slavsquatsuperstar.util.SpriteSheet;
 import slavsquatsuperstar.mayonez.Vector2;
 import slavsquatsuperstar.mayonez.components.Sprite;
-import slavsquatsuperstar.mayonez.physics2d.AlignedBoxCollider2D;
-import slavsquatsuperstar.mayonez.physics2d.RigidBody2D;
+import slavsquatsuperstar.mayonez.physics2d.primitives.AlignedBoxCollider2D;
+import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
 
 import java.awt.*;
 
@@ -48,7 +48,7 @@ public class Player extends GameObject {
 
         // Add player script
         addComponent(new AlignedBoxCollider2D(new Vector2(Preferences.TILE_SIZE, Preferences.TILE_SIZE)));
-        addComponent(new RigidBody2D(0f));
+        addComponent(new Rigidbody2D(0f));
         PlayerController pc = new PlayerController(ground);
         addComponent(pc);
     }

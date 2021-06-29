@@ -12,16 +12,25 @@ public class Vector2 {
 
     public float x, y;
 
+    /**
+     * Initialize this vector to (0, 0).
+     */
     public Vector2() {
         this(0f, 0f);
     }
 
+    /**
+     * Initialize this vector from an x and y value.
+     */
     public Vector2(float x, float y) {
         set(x, y);
     }
 
+    /**
+     * Initialize this vector to another vector's x and y values.
+     */
     public Vector2(Vector2 v) {
-        set(v.x, v.y);
+        this(v.x, v.y);
     }
 
     /**
@@ -35,10 +44,10 @@ public class Vector2 {
     // Vector Operations
 
     /**
-     * Adds another vector from this vector
+     * Adds another vector to this vector.
      *
-     * @param v another 2D vector.
-     * @return the sum of this vector and the other.
+     * @param v another 2D vector
+     * @return the vector sum
      */
     public Vector2 add(Vector2 v) {
         return new Vector2(this.x + v.x, this.y + v.y);
@@ -47,39 +56,60 @@ public class Vector2 {
     /**
      * Subtracts another vector from this vector.
      *
-     * @param v another 2D vector.
-     * @return the difference of this vector and the other vector.
+     * @param v another 2D vector
+     * @return the vector difference
      */
     public Vector2 sub(Vector2 v) {
         return new Vector2(this.x - v.x, this.y - v.y);
     }
 
     /**
-     * Scales this vector by a number.
+     * Multiplies both components vector by a number.
      *
-     * @param scaleFactor any number.
-     * @return the scalar multiplication of this vector and the factor.
+     * @param scalar any number
+     * @return the multiplied vector
      */
-    public Vector2 mul(float scaleFactor) {
-        return new Vector2(x * scaleFactor, y * scaleFactor);
+    public Vector2 mul(float scalar) {
+        return new Vector2(x * scalar, y * scalar);
     }
 
     /**
-     * Scales this vector inversely by a number.
+     * Multiplies the components of this vector by the corresponding components of another vector.
      *
-     * @param scaleFactor any number.
-     * @return the scalar division of this vector and the factor.
+     * @param v another vector
+     * @return the multiplied vector
      */
-    public Vector2 div(float scaleFactor) {
-        if (scaleFactor == 0) {
+    public Vector2 mul(Vector2 v) {
+        return new Vector2(this.x * v.x, this.y * v.y);
+    }
+
+    /**
+     * Divides both components vector by a number.
+     *
+     * @param scalar any non-zero number
+     * @return the divided vector
+     */
+    public Vector2 div(float scalar) {
+        if (scalar == 0) {
             Logger.log("Vector2: Attempted division by 0");
             return this.mul(0);
         }
-        return new Vector2(x / scaleFactor, y / scaleFactor);
+        return new Vector2(x / scalar, y / scalar);
+    }
+
+    /**
+     * Divided the components of this vector by the corresponding components of another vector.
+     *
+     * @param v another vector with non-zero components
+     * @return the divided vector
+     */
+    public Vector2 div(Vector2 v) {
+        return new Vector2(this.x / v.x, this.y / v.y);
     }
 
     /**
      * Projects this vector onto another vector.
+     *
      * @param v another vector
      * @return the projected vector
      */
@@ -90,10 +120,10 @@ public class Vector2 {
     // Scalar Operations
 
     /**
-     * Multiplies the components of this vector and another vector.
+     * Multiplies the corresponding components of this vector and another vector.
      *
      * @param v another vector
-     * @return the dot product of this vector and the other vector.
+     * @return the dot product
      */
     public float dot(Vector2 v) {
         return (this.x * v.x) + (this.y * v.y);
@@ -105,7 +135,7 @@ public class Vector2 {
      * Calculates the length squared of this vector (less CPU expensive than square
      * root).
      *
-     * @return the length squared of this vector.
+     * @return the length squared of this vector
      */
     public float lengthSquared() {
         return (x * x) + (y * y);
@@ -114,16 +144,17 @@ public class Vector2 {
     /**
      * Calculates the length of this vector.
      *
-     * @return the magnitude of this vector.
+     * @return the magnitude
      */
     public float magnitude() {
         return (float) Math.sqrt(lengthSquared());
     }
 
     /**
-     * Normalizes this vector, or calculates its unit vector.
+     * Calculates the vector the same direction as this vector and a magnitude of 1.
+     * Returns (0, 0) if this vector is (0, 0).
      *
-     * @return a vector with magnitude 1 and the same direction as this vector. Returns (0, 0) if this vector is (0, 0)
+     * @return the unit vector
      */
     public Vector2 unit() {
         if (MathUtils.equals(lengthSquared(), 0))
@@ -135,26 +166,37 @@ public class Vector2 {
     }
 
     /**
-     * @return the angle between this vector and another.
+     * Calculates the angle in degrees between this vector and another.
+     *
+     * @return the angle
      */
     public float angle(Vector2 v) {
         return (float) Math.toDegrees(Math.acos(this.dot(v) / this.magnitude() / v.magnitude()));
     }
 
     /**
-     * @return the angle of this vector in degrees.
+     * Calculates the angle in degrees between this vector and the x-axis
+     *
+     * @return the angle.
      */
     public float angle() {
         return (float) Math.toDegrees(Math.atan2(y, x));
     }
 
     public float[] components() {
-        return new float[] {x, y};
+        return new float[]{x, y};
     }
 
     // Transform Methods
 
     // Source: https://www.youtube.com/watch?v=dlUcIGnaAnk
+
+    /**
+     * Rotates this vector by an angle around some origin.
+     * @param degrees the angle, in degrees
+     * @param origin the point to rotate around
+     * @return the rotated vector
+     */
     public Vector2 rotate(float degrees, Vector2 origin) {
         // Translate the vector space to the origin (0, 0)
         float x = this.x - origin.x;
