@@ -24,6 +24,10 @@ public class Transform {
         position = position.add(displacement);
     }
 
+    public void rotate(float degrees) {
+        rotation += degrees;
+    }
+
     @Override
     public String toString() {
         return String.format("Position: %s, Scale: %s", position, scale);

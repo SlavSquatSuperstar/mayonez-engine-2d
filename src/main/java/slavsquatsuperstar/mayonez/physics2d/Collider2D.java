@@ -7,8 +7,14 @@ import slavsquatsuperstar.mayonez.components.Component;
 
 public abstract class Collider2D extends Component {
 
-    protected RigidBody2D rb = null;
+    /**
+     * A reference to the parent object's transform.
+     */
     protected Transform transform;
+    /**
+     * A reference to the parent object's rigidbody.
+     */
+    protected RigidBody2D rb = null;
 
     public Vector2 center() {
         return transform.position;
@@ -18,9 +24,7 @@ public abstract class Collider2D extends Component {
 
     public abstract boolean intersects(Line2D l);
 
-    public boolean intersects(Collider2D collider) {
-        return false;
-    }
+//    public abstract boolean intersects(Collider2D collider);
 
     /**
      * Casts a ray onto this collider and calculates whether the ray
@@ -35,7 +39,7 @@ public abstract class Collider2D extends Component {
     @Override
     public void start() {
         this.transform = parent.transform;
-        if (parent.shouldFollowPhysics()) {
+        if (parent.followPhysics) {
             rb = parent.getComponent(RigidBody2D.class);
             if (rb == null)
                 Logger.log("%s needs a RigidBody to function!", getClass().getSimpleName());

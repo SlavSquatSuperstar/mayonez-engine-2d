@@ -2,7 +2,7 @@ package slavsquatsuperstar.mayonez;
 
 import slavsquatsuperstar.mayonez.assets.JSONFile;
 
-public final class Preferences {
+public final class Preferences { // TODO defaults
 
     private final static JSONFile preferences = new JSONFile("preferences.json", true);
 
@@ -15,7 +15,7 @@ public final class Preferences {
     public static final int SCREEN_HEIGHT = preferences.getInt("height");
 
     // Game
-    public static final int FPS = 60;
+    public static final int FPS = preferences.getInt("fps");;
 
     // Level
     public static final int TILE_SIZE = preferences.getInt("tile_size");

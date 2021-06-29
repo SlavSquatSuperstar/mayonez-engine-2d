@@ -1,5 +1,3 @@
-package tests;
-
 import org.apache.commons.lang3.math.NumberUtils;
 import org.junit.Test;
 import slavsquatsuperstar.mayonez.Logger;

@@ -8,28 +8,17 @@ import slavsquatsuperstar.mayonez.Vector2;
  * Represents an axis-aligned bounding box, a rectangle that is is never rotated.
  * The sides will always align with the x and y axes.
  */
-public class AlignedBoxCollider2D extends Collider2D {
-
-    private Vector2 size;
+public class AlignedBoxCollider2D extends AbstractBoxCollider2D {
 
     public AlignedBoxCollider2D(Vector2 size) {
-        this.size = size;
+        super(size);
     }
 
-    public float width() {
-        return size.x;
-    }
-
-    public float height() {
-        return size.y;
-    }
-
-    public Vector2 min() {
-        return center().sub(size.div(2f));
-    }
-
-    public Vector2 max() {
-        return center().add(size.div(2f));
+    @Override
+    public Vector2[] getVertices() {
+        return new Vector2[]{
+                new Vector2(min()), new Vector2(min().x, max().y), new Vector2(max().x, min().y), new Vector2(max())
+        };
     }
 
     @Override
@@ -46,6 +35,25 @@ public class AlignedBoxCollider2D extends Collider2D {
 
     public boolean intersects(CircleCollider circle) {
         return circle.intersects(this);
+    }
+
+    // Separating axis theorem
+    public boolean intersects(AlignedBoxCollider2D aabb) {
+        // if there is overlap in interval for both x and y, then boxes are colliding
+        return overlapOnAxis(aabb, new Vector2(0, 1)) && overlapOnAxis(aabb, new Vector2(1, 0));
+    }
+
+    // Separating axis theorem
+    public boolean intersects(BoxCollider2D box) {
+        // rotate around box center, or origin?
+        Vector2[] axes = {new Vector2(0, 1), new Vector2(1, 0),
+                new Vector2(0, 1).rotate(box.rb.rotation(), new Vector2()), new Vector2(1, 0).rotate(box.rb.rotation(), new Vector2())};
+
+        // top right - min, bottom left - min
+        for (Vector2 axis : axes)
+            if (!overlapOnAxis(box, axis))
+                return false;
+        return true;
     }
 
     @Override

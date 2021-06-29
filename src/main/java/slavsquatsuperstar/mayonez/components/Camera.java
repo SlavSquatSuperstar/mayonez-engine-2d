@@ -41,7 +41,7 @@ public class Camera extends Script {
             parent.setY((subject.getY()) - height / 2f);
         }
         // Keep camera inside scene
-        if (scene().isBounded() && parent.shouldKeepInScene()) {
+        if (scene().isBounded() && parent.keepInScene) {
             parent.setX(MathUtils.clamp(parent.getX(), minX, maxX));
             parent.setY(MathUtils.clamp(parent.getY(), minY, maxY));
         }
@@ -57,5 +57,6 @@ public class Camera extends Script {
 
     public void setSubject(GameObject subject) {
         this.subject = subject;
+        parent.keepInScene = subject.keepInScene;
     }
 }

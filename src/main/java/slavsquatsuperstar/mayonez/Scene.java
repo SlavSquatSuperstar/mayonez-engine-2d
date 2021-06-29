@@ -59,7 +59,6 @@ public abstract class Scene {
         addObject(new GameObject("Camera", new Vector2()) {
             @Override
             protected void init() {
-                keepInScene = true;
                 addComponent(camera);
             }
 

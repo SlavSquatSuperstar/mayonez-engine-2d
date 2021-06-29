@@ -8,6 +8,8 @@ import slavsquatsuperstar.mayonez.physics2d.AlignedBoxCollider2D;
 import slavsquatsuperstar.mayonez.physics2d.RigidBody2D;
 import slavsquatsuperstar.util.MathUtils;
 
+import java.awt.event.KeyEvent;
+
 @SuppressWarnings("unused")
 public class PlayerController extends Script {
 
@@ -45,6 +47,12 @@ public class PlayerController extends Script {
         // Don't want to move faster diagonally so normalize
         Vector2 input = new Vector2(xInput, yInput).unit().mul(thrustForce);
         rb.addForce(input);
+
+        // Rotate player
+        if (Game.keyboard().keyDown(KeyEvent.VK_Q))
+            parent.transform.rotate(-2);
+        if (Game.keyboard().keyDown(KeyEvent.VK_E))
+            parent.transform.rotate(2);
 
         Vector2 velocity = rb.velocity();
         // Limit Top Speed

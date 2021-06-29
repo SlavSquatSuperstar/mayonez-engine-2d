@@ -34,8 +34,6 @@ public class LevelEditorScene extends Scene {
         };
         addObject(ground);
 
-        addObject(new Grid(new Vector2(), ground));
-
         GameObject player = new Player("Player", new Vector2(100, 100), ground);
         addObject(player);
 
@@ -46,12 +44,15 @@ public class LevelEditorScene extends Scene {
                 transform.scale = transform.scale.mul(2);
             }
         });
+
         addObject(new GameObject("Goomba", new Vector2(width - 32, Preferences.GROUND_HEIGHT - 32)) {
             @Override
             protected void init() {
                 addComponent(new Sprite("goomba.png"));
             }
         });
+
+        addObject(new Grid(new Vector2(), ground));
     }
 
 }

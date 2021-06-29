@@ -15,8 +15,8 @@ public class Game implements Runnable {
      */
 
     // Time Fields
-    public static float timeStep = 1.0f / Preferences.FPS;
-    public static long timeStarted = System.nanoTime();
+    public static final float TIME_STEP = 1.0f / Preferences.FPS;
+    public static final long TIME_STARTED = System.nanoTime();
 
     // Singleton Fields
     private static Game game;
@@ -26,15 +26,15 @@ public class Game implements Runnable {
     private boolean running;
 
     // Input Fields
-    private KeyInput keyboard;
-    private MouseInput mouse;
+    private final KeyInput keyboard;
+    private final MouseInput mouse;
 
     // Window Fields
-    private JFrame window;
+    private final JFrame window;
     private int width, height;
 
     // Renderer Fields
-    private Graphics g;
+    private Graphics gfx;
     private BufferStrategy bs;
 
     // Scene Fields
@@ -90,10 +90,10 @@ public class Game implements Runnable {
 
             try {
                 // Update the game as many times as necessary even if the frame freezes
-                while (deltaTime >= timeStep) {
+                while (deltaTime >= TIME_STEP) {
                     update(deltaTime);
                     // Update = Graphics frame rate, FixedUpdate = Physics frame rate
-                    deltaTime -= timeStep;
+                    deltaTime -= TIME_STEP;
                     ticked = true;
                 }
                 // Only render if the game has updated to save resources
@@ -125,7 +125,7 @@ public class Game implements Runnable {
      *
      * @param dt The time elapsed since the last frame
      */
-    public void update(float dt) throws Exception {
+    public void update(float dt) throws Exception { // TODO pass dt or use Game.timestep?
         // Poll events
         if (keyboard.keyDown("exit"))
             running = false;
@@ -149,13 +149,13 @@ public class Game implements Runnable {
          */
         do {
             // Clear the screen
-            g = bs.getDrawGraphics();
-            g.clearRect(0, 0, width, height);
+            gfx = bs.getDrawGraphics();
+            gfx.clearRect(0, 0, width, height);
 
             if (null != currentScene)
-                currentScene.render((Graphics2D) g);
+                currentScene.render((Graphics2D) gfx);
 
-            g.dispose();
+            gfx.dispose();
             bs.show();
         } while (bs.contentsLost());
 
@@ -193,7 +193,7 @@ public class Game implements Runnable {
         // Free System resources
         window.setVisible(false);
         window.dispose();
-        g.dispose();
+        gfx.dispose();
 
         // Stop thread
         thread.interrupt();
@@ -221,7 +221,7 @@ public class Game implements Runnable {
      * @return the time in seconds since this game started.
      */
     public static float getTime() {
-        return (System.nanoTime() - timeStarted) / 1.0E9f;
+        return (System.nanoTime() - TIME_STARTED) / 1.0E9f;
     }
 
     public static boolean isFullScreen() {

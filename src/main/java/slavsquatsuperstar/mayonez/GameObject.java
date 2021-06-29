@@ -18,12 +18,12 @@ public class GameObject {
     public final String name;
     public Transform transform;
 
-    protected boolean keepInScene = false; // TODO convert to KeepInBounds script
+    public boolean keepInScene = false; // TODO convert to KeepInBounds script, and enable/disable
     /**
      * Whether this object can be moved or rotated through the physics engine and collisions.
      * Scripts can still change this object's {@link Transform} regardless.
      */
-    protected boolean followPhysics = true;
+    public boolean followPhysics = true;
     protected Scene scene;
     private boolean destroyed = false;
 
@@ -142,14 +142,6 @@ public class GameObject {
 
     public void destroy() {
         destroyed = true;
-    }
-
-    public boolean shouldFollowPhysics() {
-        return followPhysics;
-    }
-
-    public boolean shouldKeepInScene() {
-        return keepInScene;
     }
 
     public Scene getScene() {

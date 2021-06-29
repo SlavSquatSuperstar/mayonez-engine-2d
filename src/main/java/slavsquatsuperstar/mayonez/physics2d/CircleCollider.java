@@ -45,8 +45,8 @@ public class CircleCollider extends Collider2D {
     }
 
     public boolean intersects(BoxCollider2D box) {
-        Vector2 min = box.localMin();
-        Vector2 max = box.localMax();
+        Vector2 min = box.min();
+        Vector2 max = box.max();
 
         Vector2 localRadius = center().sub(box.center());
         localRadius = localRadius.rotate(box.rb.rotation(), new Vector2());

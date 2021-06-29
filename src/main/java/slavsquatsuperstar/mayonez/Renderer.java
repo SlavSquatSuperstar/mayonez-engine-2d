@@ -27,6 +27,7 @@ public class Renderer {
         objects.remove(obj);
     }
 
+    // TODO Render layer: clear list and submit visible objects every frame?
     public void render(Graphics2D g2) {
         // Save a copy of the unmodified transform
         AffineTransform transform = g2.getTransform();

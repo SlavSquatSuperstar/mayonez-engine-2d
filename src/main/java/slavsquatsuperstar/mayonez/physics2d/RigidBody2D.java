@@ -18,7 +18,7 @@ public class RigidBody2D extends Component {
     @Override
     public void update(float dt) {
         // Don't do anything if parent object is static
-        if (!parent.shouldFollowPhysics())
+        if (!parent.followPhysics)
             return;
 
         // TODO account for direction of gravity
