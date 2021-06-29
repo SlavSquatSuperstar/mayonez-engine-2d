@@ -42,7 +42,7 @@ public abstract class Scene {
 
         camera = new Camera(width, height);
         renderer = new Renderer(camera);
-        physics = new Physics2D(Preferences.GRAVITY);
+        physics = new Physics2D(Game.TIME_STEP, Preferences.GRAVITY);
     }
 
     // Game Methods
@@ -86,7 +86,7 @@ public abstract class Scene {
             if (o.isDestroyed())
                 removeObject(o);
         });
-        physics.update(dt);
+        physics.physicsUpdate(dt);
 
         // Remove destroyed objects at the end of the frame
         toRemove.forEach(o -> {
@@ -169,7 +169,7 @@ public abstract class Scene {
     }
 
     public void setGravity(Vector2 gravity) {
-        physics.gravity = gravity;
+        physics.setGravity(gravity);
     }
 
     @Override

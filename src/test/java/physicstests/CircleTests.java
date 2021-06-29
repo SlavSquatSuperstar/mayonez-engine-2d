@@ -20,7 +20,7 @@ public class CircleTests {
     public void getCircle() {
         c = new CircleCollider(2);
         c.setTransform(new Transform(new Vector2(2, 2)));
-        c.setRigidBody(new RigidBody2D());
+        c.setRigidBody(new RigidBody2D(0f));
     }
 
     @Test
@@ -75,8 +75,8 @@ public class CircleTests {
     public void circleIntersectsAABB() {
         AlignedBoxCollider2D aabb = new AlignedBoxCollider2D(new Vector2(4, 4));
         aabb.setTransform(new Transform(new Vector2(0, 0)));
-        aabb.setRigidBody(new RigidBody2D());
-        assertTrue(c.intersects(aabb));
+        aabb.setRigidBody(new RigidBody2D(0f));
+        assertTrue(c.detectCollision(aabb));
     }
 
 }

@@ -3,6 +3,7 @@ package slavsquatsuperstar.mayonez;
 import slavsquatsuperstar.game.LevelEditorScene;
 import slavsquatsuperstar.game.LevelScene;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import slavsquatsuperstar.game.PhysicsTestScene;
 
 import javax.swing.*;
 import java.awt.*;
@@ -238,6 +239,8 @@ public class Game implements Runnable {
             case 1:
                 game.currentScene = new LevelScene("Level");
                 break;
+            case 2:
+                game.currentScene = new PhysicsTestScene("Physics Test Scene");
             default:
                 Logger.log("Game: Unknown scene");
         }

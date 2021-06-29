@@ -48,7 +48,7 @@ public class Player extends GameObject {
 
         // Add player script
         addComponent(new AlignedBoxCollider2D(new Vector2(Preferences.TILE_SIZE, Preferences.TILE_SIZE)));
-        addComponent(new RigidBody2D());
+        addComponent(new RigidBody2D(0f));
         PlayerController pc = new PlayerController(ground);
         addComponent(pc);
     }

@@ -27,32 +27,43 @@ public class AlignedBoxCollider2D extends AbstractBoxCollider2D {
     }
 
     @Override
-    public boolean intersects(Line2D line) {
-        if (contains(line.start) || contains(line.end))
-            return true;
-        return raycast(new Ray2D(line), null);
+    public boolean detectCollision(Collider2D collider) {
+        if (collider == this)
+            return false;
+
+        if (collider instanceof CircleCollider) {
+            return intersects((CircleCollider) collider);
+        } else if (collider instanceof AlignedBoxCollider2D) {
+            return intersects((AlignedBoxCollider2D) collider);
+        } else if (collider instanceof BoxCollider2D) {
+            return intersects((BoxCollider2D) collider);
+        } else {
+            return false;
+        }
     }
 
-    public boolean intersects(CircleCollider circle) {
+    boolean intersects(CircleCollider circle) {
         return circle.intersects(this);
     }
 
-    // Separating axis theorem
-    public boolean intersects(AlignedBoxCollider2D aabb) {
+    boolean intersects(AlignedBoxCollider2D aabb) {
         // if there is overlap in interval for both x and y, then boxes are colliding
         return overlapOnAxis(aabb, new Vector2(0, 1)) && overlapOnAxis(aabb, new Vector2(1, 0));
     }
 
-    // Separating axis theorem
-    public boolean intersects(BoxCollider2D box) {
+    boolean intersects(BoxCollider2D box) {
         // rotate around box center, or origin?
-        Vector2[] axes = {new Vector2(0, 1), new Vector2(1, 0),
-                new Vector2(0, 1).rotate(box.rb.rotation(), new Vector2()), new Vector2(1, 0).rotate(box.rb.rotation(), new Vector2())};
+        Vector2[] axes = {
+                new Vector2(0, 1), new Vector2(1, 0),
+                new Vector2(0, 1).rotate(box.rb.getRotation(), new Vector2()),
+                new Vector2(1, 0).rotate(box.rb.getRotation(), new Vector2())
+        };
 
         // top right - min, bottom left - min
         for (Vector2 axis : axes)
             if (!overlapOnAxis(box, axis))
                 return false;
+
         return true;
     }
 

@@ -21,10 +21,10 @@ public class BoxCollider2D extends AbstractBoxCollider2D {
         Vector2[] vertices = new Vector2[]{new Vector2(min), new Vector2(max), new Vector2(min.x, max.y),
                 new Vector2(max.x, min.y)};
 
-        if (MathUtils.equals(rb.rotation(), 0f)) {
+        if (MathUtils.equals(rb.getRotation(), 0f)) {
             for (Vector2 v : vertices) {
                 // Rotate a point about the center by a rotation
-                v = v.rotate(rb.rotation(), center());
+                v = v.rotate(rb.getRotation(), center());
             }
         }
 
@@ -35,7 +35,7 @@ public class BoxCollider2D extends AbstractBoxCollider2D {
     public boolean contains(Vector2 point) {
         // Translate the point into the box's local space
         Vector2 pointLocal = new Vector2(point);
-        pointLocal = pointLocal.rotate(rb.rotation(), rb.position());
+        pointLocal = pointLocal.rotate(rb.getRotation(), rb.getPosition());
 
         Vector2 min = min();
         Vector2 max = max();
@@ -45,7 +45,7 @@ public class BoxCollider2D extends AbstractBoxCollider2D {
 
     @Override
     public boolean intersects(Line2D line) {
-        float rot = -rb.rotation();
+        float rot = -rb.getRotation();
 
         // rotate the line into the AABB's local space
         Vector2 localStart = line.start.rotate(rot, center());
@@ -58,17 +58,50 @@ public class BoxCollider2D extends AbstractBoxCollider2D {
         return aabb.intersects(localLine);
     }
 
-    public boolean intersects(CircleCollider circle) {
+    @Override
+    public boolean detectCollision(Collider2D collider) {
+        if (collider == this)
+            return false;
+
+        if (collider instanceof CircleCollider) {
+            return intersects((CircleCollider) collider);
+        } else if (collider instanceof AlignedBoxCollider2D) {
+            return intersects((AlignedBoxCollider2D) collider);
+        } else if (collider instanceof BoxCollider2D) {
+            return intersects((BoxCollider2D) collider);
+        } else {
+            return false;
+        }
+    }
+
+    boolean intersects(CircleCollider circle) {
         return circle.intersects(this);
     }
 
-    public boolean intersects(AlignedBoxCollider2D aabb) {
+    boolean intersects(AlignedBoxCollider2D aabb) {
         return aabb.intersects(this);
+    }
+
+    boolean intersects(BoxCollider2D box) {
+        // rotate around box center, or origin?
+        Vector2[] axes = {
+                new Vector2(0, 1).rotate(this.rb.getRotation(), new Vector2()),
+                new Vector2(1, 0).rotate(this.rb.getRotation(), new Vector2()),
+                new Vector2(0, 1).rotate(box.rb.getRotation(), new Vector2()),
+                new Vector2(1, 0).rotate(box.rb.getRotation(), new Vector2())
+        };
+
+        // top right - min, bottom left - min
+        for (Vector2 axis : axes)
+            if (!overlapOnAxis(box, axis))
+                return false;
+
+        return true;
     }
 
     @Override
     public boolean raycast(Ray2D ray, RaycastResult result) {
-        float rot = -rb.rotation();
+        float rot = -rb.getRotation();
 
         // Rotate the line into the AABB's local space
         Vector2 localOrigin = ray.origin.rotate(rot, center());

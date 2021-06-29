@@ -4,7 +4,6 @@ import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Preferences;
 import slavsquatsuperstar.mayonez.Scene;
 import slavsquatsuperstar.mayonez.Vector2;
-import slavsquatsuperstar.mayonez.components.Sprite;
 
 import java.awt.*;
 
@@ -17,6 +16,7 @@ public class LevelScene extends Scene {
 
     @Override
     protected void init() {
+        // Give ground a collider
         GameObject ground = new GameObject("Ground", new Vector2(0, Preferences.GROUND_HEIGHT)) {
             @Override
             public void update(float dt) {
@@ -31,25 +31,12 @@ public class LevelScene extends Scene {
                 g2.fillRect((int) getX() - 20, (int) getY(), Preferences.SCREEN_WIDTH + 40, height);
             }
         };
-        addObject(ground);
+//        addObject(ground);
 
         GameObject player = new Player("Player", new Vector2(100, 100), ground);
+        player.keepInScene = true;
         addObject(player);
         camera().setSubject(player);
-
-        addObject(new GameObject("Mario", new Vector2(0, 28)) {
-            @Override
-            protected void init() {
-                addComponent(new Sprite("mario.png"));
-                transform.scale = transform.scale.mul(2);
-            }
-        });
-        addObject(new GameObject("Goomba", new Vector2(width - 32, Preferences.GROUND_HEIGHT - 52)) {
-            @Override
-            protected void init() {
-                addComponent(new Sprite("goomba.png"));
-            }
-        });
     }
 
 }

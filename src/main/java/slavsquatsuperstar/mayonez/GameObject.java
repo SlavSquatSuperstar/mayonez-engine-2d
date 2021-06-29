@@ -19,11 +19,6 @@ public class GameObject {
     public Transform transform;
 
     public boolean keepInScene = false; // TODO convert to KeepInBounds script, and enable/disable
-    /**
-     * Whether this object can be moved or rotated through the physics engine and collisions.
-     * Scripts can still change this object's {@link Transform} regardless.
-     */
-    public boolean followPhysics = true;
     protected Scene scene;
     private boolean destroyed = false;
 

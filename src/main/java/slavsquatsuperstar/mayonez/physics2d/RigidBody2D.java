@@ -1,33 +1,32 @@
 package slavsquatsuperstar.mayonez.physics2d;
 
-import slavsquatsuperstar.mayonez.Preferences;
 import slavsquatsuperstar.mayonez.Vector2;
 import slavsquatsuperstar.mayonez.components.Component;
 
 public class RigidBody2D extends Component {
 
-    public float mass = 1;
     public boolean followsGravity = true;
-    private Vector2 velocity, netForce;
 
-    public RigidBody2D() {
-        this.velocity = new Vector2();
-        this.netForce = new Vector2();
+    public float mass;
+    private Vector2 netForce = new Vector2();
+    private Vector2 velocity = new Vector2();
+
+    public RigidBody2D(float mass) {
+        this.mass = mass;
     }
 
-    @Override
-    public void update(float dt) {
-        // Don't do anything if parent object is static
-        if (!parent.followPhysics)
+    public void physicsUpdate(float dt) {
+        if (mass == 0) // Zero mass means static
             return;
 
-        // TODO account for direction of gravity
-        if (Math.abs(velocity.y) > Preferences.TERMINAL_VELOCITY)
-            velocity.y = Math.signum(velocity.y) * Preferences.TERMINAL_VELOCITY;
+//        // TODO account for direction of gravity
+//        if (Math.abs(velocity.y) > Preferences.TERMINAL_VELOCITY)
+//            velocity.y = Math.signum(velocity.y) * Preferences.TERMINAL_VELOCITY;
 
         velocity = velocity.add(netForce.div(mass).mul(dt));
         parent.transform.move(velocity); // s = v*t
-        netForce.x = netForce.y = 0; // reset accumulated forces
+
+        netForce.set(0, 0); // Reset accumulated forces
     }
 
     // Physics Methods
@@ -53,8 +52,9 @@ public class RigidBody2D extends Component {
         return velocity.magnitude();
     }
 
-    // TODO Top left vs center positioning
-    public Vector2 position() {
+    // Getters and Setters
+
+    public Vector2 getPosition() {
         return parent.transform.position;
     }
 
@@ -62,7 +62,7 @@ public class RigidBody2D extends Component {
         parent.transform.position = position;
     }
 
-    public float rotation() {
+    public float getRotation() {
         return parent.transform.rotation;
     }
 
@@ -70,4 +70,5 @@ public class RigidBody2D extends Component {
         parent.transform.rotation = rotation;
     }
 
+//    public enum BodyType {
 }

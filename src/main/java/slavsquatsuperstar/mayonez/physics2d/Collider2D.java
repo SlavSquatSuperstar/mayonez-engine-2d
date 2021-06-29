@@ -16,15 +16,24 @@ public abstract class Collider2D extends Component {
      */
     protected RigidBody2D rb = null;
 
-    public Vector2 center() {
-        return transform.position;
+    @Override
+    public void start() {
+        this.transform = parent.transform;
+        rb = parent.getComponent(RigidBody2D.class);
+        if (rb == null) // TODO what to do if object is static
+            Logger.log("%s needs a RigidBody to function!", getClass().getSimpleName());
     }
 
+    // Collision Methods
     public abstract boolean contains(Vector2 point);
 
-    public abstract boolean intersects(Line2D l);
+    public boolean intersects(Line2D line) {
+        if (contains(line.start) || contains(line.end))
+            return true;
+        return raycast(new Ray2D(line), null);
+    }
 
-//    public abstract boolean intersects(Collider2D collider);
+    public abstract boolean detectCollision(Collider2D collider);
 
     /**
      * Casts a ray onto this collider and calculates whether the ray
@@ -36,14 +45,10 @@ public abstract class Collider2D extends Component {
      */
     public abstract boolean raycast(Ray2D ray, RaycastResult result);
 
-    @Override
-    public void start() {
-        this.transform = parent.transform;
-        if (parent.followPhysics) {
-            rb = parent.getComponent(RigidBody2D.class);
-            if (rb == null)
-                Logger.log("%s needs a RigidBody to function!", getClass().getSimpleName());
-        }
+    // Properties
+
+    public Vector2 center() {
+        return transform.position;
     }
 
     public void setRigidBody(RigidBody2D rb) {

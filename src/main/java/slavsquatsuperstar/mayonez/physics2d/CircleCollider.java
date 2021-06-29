@@ -19,20 +19,28 @@ public class CircleCollider extends Collider2D {
     }
 
     @Override
-    // TODO put in superclass?
-    public boolean intersects(Line2D line) {
-        if (contains(line.start) || contains(line.end))
-            return true;
-        return raycast(new Ray2D(line), null);
+    public boolean detectCollision(Collider2D collider) {
+        if (collider == this)
+            return false;
+
+        if (collider instanceof CircleCollider) {
+            return intersects((CircleCollider) collider);
+        } else if (collider instanceof AlignedBoxCollider2D) {
+            return intersects((AlignedBoxCollider2D) collider);
+        } else if (collider instanceof BoxCollider2D) {
+            return intersects((BoxCollider2D) collider);
+        } else {
+            return false;
+        }
     }
 
-    public boolean intersects(CircleCollider circle) {
+    boolean intersects(CircleCollider circle) {
         float distSquared = this.center().sub(circle.center()).lengthSquared();
         float radiiSum = this.radius + circle.radius;
         return distSquared <= radiiSum * radiiSum;
     }
 
-    public boolean intersects(AlignedBoxCollider2D aabb) {
+    boolean intersects(AlignedBoxCollider2D aabb) {
         Vector2 min = aabb.min();
         Vector2 max = aabb.max();
 
@@ -44,12 +52,12 @@ public class CircleCollider extends Collider2D {
         return distanceSquared <= radius * radius;
     }
 
-    public boolean intersects(BoxCollider2D box) {
+    boolean intersects(BoxCollider2D box) {
         Vector2 min = box.min();
         Vector2 max = box.max();
 
         Vector2 localRadius = center().sub(box.center());
-        localRadius = localRadius.rotate(box.rb.rotation(), new Vector2());
+        localRadius = localRadius.rotate(box.rb.getRotation(), new Vector2());
 
         Vector2 closest = new Vector2(center());
         closest.x = MathUtils.clamp(closest.x, min.x, max.x);
