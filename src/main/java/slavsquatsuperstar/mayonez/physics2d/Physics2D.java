@@ -35,11 +35,13 @@ public class Physics2D {
         dragForce = (rb, dt) -> {
             // Apply drag if moving
             if (!MathUtils.equals(rb.velocity().lengthSquared(), 0f))
-                rb.addForce(rb.velocity().mul(rb.velocity().magnitude() * -rb.drag));
+                rb.addForce(rb.velocity().mul(-rb.drag));
         };
     }
 
     public void physicsUpdate(float dt) {
+        // TODO Pre-collision optimizations
+
         // Detect collisions
         colliders.forEach(col -> colliders.forEach(other -> {
             if (col.detectCollision(other))

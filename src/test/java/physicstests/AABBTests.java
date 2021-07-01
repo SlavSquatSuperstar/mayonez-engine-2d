@@ -10,7 +10,7 @@ import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
 
 import static junit.framework.TestCase.*;
 
-public class BoxTests {
+public class AABBTests {
 
     AlignedBoxCollider2D aabb;
 
@@ -18,13 +18,13 @@ public class BoxTests {
     @Before
     public void getAABB() {
         aabb = new AlignedBoxCollider2D(new Vector2(4, 4));
-        aabb.setTransform(new Transform(new Vector2(0, 0)));
+        aabb.setTransform(new Transform());
         aabb.setRigidBody(new Rigidbody2D(0f));
     }
 
     @Test
     public void aabbIsAtObjectCenter() {
-        assertEquals(new Vector2(0, 0), aabb.center());
+        assertEquals(new Vector2(0, 0), aabb.getCenter());
     }
 
     @Test

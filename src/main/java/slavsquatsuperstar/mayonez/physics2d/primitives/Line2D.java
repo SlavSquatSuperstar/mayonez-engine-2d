@@ -17,7 +17,7 @@ public class Line2D {
     }
 
     public float length() {
-        return toVector().magnitude();
+        return toVector().length();
     }
 
     // TODO intersects another line? intermediate value theorem

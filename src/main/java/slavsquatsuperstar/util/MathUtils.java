@@ -9,21 +9,7 @@ public final class MathUtils {
 
     private MathUtils() {}
 
-    // Accumulator Methods
-
-    public static float sum(float[] values) {
-        float sum = 0;
-        for (float value : values)
-            sum += value;
-        return sum;
-    }
-
-    public static int sum(int[] values) {
-        int sum = 0;
-        for (int value : values)
-            sum += value;
-        return sum;
-    }
+    // Average Methods
 
     public static float average(float[] values) {
         return sum(values) / values.length;
@@ -35,12 +21,84 @@ public final class MathUtils {
 
     // Clamp Methods
 
-    public static float clamp(float value, float lowerBound, float upperBound) {
-        return (value > upperBound ? upperBound : (Math.max(value, lowerBound)));
+    /**
+     * Restricts a float's value within a provided range.
+     *
+     * @param value any real number
+     * @param min   the lower bound, inclusive
+     * @param max   the upper bound, inclusive
+     * @return a number within the bounds
+     */
+    public static float clamp(float value, float min, float max) {
+        Range range = new Range(min, max);
+        return Math.min(Math.max(range.min, value), range.max);
     }
 
-    public static int clamp(int value, int lowerBound, int upperBound) {
-        return (value > upperBound ? upperBound : (Math.max(value, lowerBound)));
+    /**
+     * Restricts an integer's value within a provided range.
+     *
+     * @param value any real number
+     * @param min   the lower bound, inclusive
+     * @param max   the upper bound, inclusive
+     * @return a number within the bounds
+     */
+    public static int clamp(int value, int min, int max) {
+        return (int) clamp((float) value, (float) min, (float) max);
+    }
+
+    // Equality Methods
+
+    /**
+     * Determines whether two floats are approximately equal within 6 decimal places.
+     *
+     * @return if they are equal
+     */
+    public static boolean equals(float a, float b) {
+        return Math.abs(a - b) <= EPSILON * Math.max(1.0, Math.max(Math.abs(a), Math.abs(b)));
+    }
+
+    // Range Methods
+
+    /**
+     * Checks whether a number is within a provided range, including the bounds.
+     *
+     * @param value any real number
+     * @param min   the lower bound, inclusive
+     * @param max   the upper bound, inclusive
+     * @return if the value is within range
+     */
+    public static boolean inRange(float value, float min, float max) {
+        Range range = new Range(min, max);
+        return range.min <= value && value <= range.max;
+    }
+
+    /**
+     * Checks whether a number is within a provided range, excluding the bounds.
+     *
+     * @param value any real number
+     * @param min   the lower bound, exclusive
+     * @param max   the upper bound, exclusive
+     * @return if the value is within range
+     */
+    public static boolean inRangeUnbounded(float value, float min, float max) {
+        Range range = new Range(min, max);
+        return range.min < value && value < range.max;
+    }
+
+    // Sum Methods
+
+    public static float sum(float... values) {
+        float sum = 0;
+        for (float value : values)
+            sum += value;
+        return sum;
+    }
+
+    public static int sum(int... values) {
+        int sum = 0;
+        for (int value : values)
+            sum += value;
+        return sum;
     }
 
     // Random Number Methods
@@ -48,23 +106,25 @@ public final class MathUtils {
     /**
      * Generates a random integer between the two provided bounds.
      *
-     * @param lowerBound The minimum allowed value (inclusive).
-     * @param upperBound The maximum allowed value (inclusive).
-     * @return The random float.
+     * @param min the lower bound (inclusive)
+     * @param max the maximum bound (inclusive)
+     * @return the random float
      */
-    public static float random(float lowerBound, float upperBound) {
-        return (float) (Math.random() * (upperBound - lowerBound + EPSILON)) + lowerBound;
+    public static float random(float min, float max) {
+        Range range = new Range(min, max);
+        return (float) (Math.random() * (range.max - range.min + Float.MIN_VALUE)) + range.min;
     }
 
     /**
      * Generates a random integer between the two provided bounds.
      *
-     * @param lowerBound The minimum allowed value (inclusive).
-     * @param upperBound The maximum allowed value (inclusive).
+     * @param min the lower bound (inclusive)
+     * @param max the maximum bound (inclusive)
      * @return The random integer.
      */
-    public static int random(int lowerBound, int upperBound) {
-        return (int) (Math.random() * (upperBound - lowerBound + 1)) + lowerBound;
+    public static int random(int min, int max) {
+        Range range = new Range(min, max);
+        return (int) ((Math.random() * (range.max - range.min + 1)) + range.min);
     }
 
     // Rounding Methods
@@ -79,14 +139,23 @@ public final class MathUtils {
         return Float.parseFloat(s.substring(0, s.indexOf('.') + decimalPlaces + 1));
     }
 
-    // Comparison Methods
+    // Helper Class
 
     /**
-     * Determines whether two floats are approximately equal within 6 decimal places.
-     * @return If they are equal.
+     * Stores a minimum and maximum value and ensures they are int the correct order.
      */
-    public static boolean equals(float a, float b) {
-        return Math.abs(a - b) <= EPSILON * Math.max(1.0, Math.max(Math.abs(a), Math.abs(b)));
+    public static class Range {
+        public float min, max;
+
+        public Range(float min, float max) {
+            if (min > max) {
+                float temp = min;
+                min = max;
+                max = temp;
+            }
+            this.min = min;
+            this.max = max;
+        }
     }
 
 }

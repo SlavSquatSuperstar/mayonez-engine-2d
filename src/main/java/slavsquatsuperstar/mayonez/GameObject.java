@@ -68,7 +68,7 @@ public class GameObject {
 
     // Component Methods
 
-    public void addComponent(Component comp) {
+    public final void addComponent(Component comp) {
         // maybe make annotation (multiple scripts should suppress warning)
 //		if (null != getComponent(comp.getClass()))
 //			Logger.log("GameObject: Adding multiple components of the same type is not recommended");

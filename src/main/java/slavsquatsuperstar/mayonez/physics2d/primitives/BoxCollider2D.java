@@ -4,7 +4,7 @@ import slavsquatsuperstar.mayonez.Vector2;
 import slavsquatsuperstar.util.MathUtils;
 
 /**
- * Represents an object-oriented bounding box, a rectangle that can be rotated.
+ * Represents an oriented bounding box, a rectangle that can be rotated.
  * The sides will align with the object's rotation angle.
  */
 public class BoxCollider2D extends AbstractBoxCollider2D {
@@ -15,6 +15,8 @@ public class BoxCollider2D extends AbstractBoxCollider2D {
 
     // TODO world- min/max methods?
 
+    // Properties
+
     public Vector2[] getVertices() {
         Vector2 min = min();
         Vector2 max = max();
@@ -24,23 +26,50 @@ public class BoxCollider2D extends AbstractBoxCollider2D {
         if (MathUtils.equals(rb.getRotation(), 0f)) {
             for (Vector2 v : vertices) {
                 // Rotate a point about the center by a rotation
-                v = v.rotate(rb.getRotation(), center());
+                v = v.rotate(rb.getRotation(), getCenter());
             }
         }
 
         return vertices;
     }
 
+    public AlignedBoxCollider2D getMinBounds() {
+        AlignedBoxCollider2D aabb;
+
+        if (MathUtils.equals(rb.getRotation(), 0f)) {
+            aabb = new AlignedBoxCollider2D(size);
+        } else {
+            Vector2[] vertices = getVertices();
+            Vector2 newMin = vertices[0];
+            Vector2 newMax = vertices[0];
+            for (int i = 1; i < vertices.length; i++) {
+                Vector2 v = vertices[i];
+
+                if (v.x < newMin.x)
+                    newMin.x = v.x;
+                else if (v.x > newMax.x)
+                    newMax.x = v.x;
+
+                if (v.y < newMin.y)
+                    newMin.y = v.y;
+                else if (v.y > newMax.y)
+                    newMax.y = v.y;
+            }
+            aabb = new AlignedBoxCollider2D(newMax.sub(newMin));
+        }
+
+        aabb.rb = this.rb;
+        aabb.transform = this.transform;
+        return aabb;
+    }
+
+    // Collision Methods
+
     @Override
     public boolean contains(Vector2 point) {
         // Translate the point into the box's local space
-        Vector2 pointLocal = new Vector2(point);
-        pointLocal = pointLocal.rotate(rb.getRotation(), rb.getPosition());
-
-        Vector2 min = min();
-        Vector2 max = max();
-
-        return pointLocal.x <= max.x && min.x <= pointLocal.x && pointLocal.y <= max.y && min.y <= pointLocal.y;
+        Vector2 pointLocal = point.rotate(-rb.getRotation(), rb.getPosition());
+        return MathUtils.inRange(pointLocal.x, min().x, max().x) && MathUtils.inRange(pointLocal.y, min().y, max().y);
     }
 
     @Override
@@ -48,8 +77,8 @@ public class BoxCollider2D extends AbstractBoxCollider2D {
         float rot = -rb.getRotation();
 
         // rotate the line into the AABB's local space
-        Vector2 localStart = line.start.rotate(rot, center());
-        Vector2 localEnd = line.end.rotate(rot, center());
+        Vector2 localStart = line.start.rotate(rot, getCenter());
+        Vector2 localEnd = line.end.rotate(rot, getCenter());
         Line2D localLine = new Line2D(localStart, localEnd);
 
         // Create AABB with same size
@@ -104,8 +133,8 @@ public class BoxCollider2D extends AbstractBoxCollider2D {
         float rot = -rb.getRotation();
 
         // Rotate the line into the AABB's local space
-        Vector2 localOrigin = ray.origin.rotate(rot, center());
-        Vector2 localDir = ray.direction.rotate(rot, center());
+        Vector2 localOrigin = ray.origin.rotate(rot, getCenter());
+        Vector2 localDir = ray.direction.rotate(rot, getCenter());
         Ray2D localRay = new Ray2D(localOrigin, localDir);
 
         // Create AABB with same size
@@ -146,34 +175,4 @@ public class BoxCollider2D extends AbstractBoxCollider2D {
 //
 //        return hit;
     }
-
-//    public AlignedBoxCollider2D getMinBounds() {
-//        AlignedBoxCollider2D aabb;
-//
-//        if (MathUtils.equals(rb.rotation(), 0)) {
-//            aabb = new AlignedBoxCollider2D(size);
-//        } else {
-//            Vector2[] vertices = getVertices();
-//            Vector2 newMin = vertices[0];
-//            Vector2 newMax = vertices[0];
-//            for (int i = 1; i < vertices.length; i++) {
-//                Vector2 v = vertices[i];
-//
-//                if (v.x < newMin.x)
-//                    newMin.x = v.x;
-//                else if (v.x < newMax.x)
-//                    newMax.x = v.x;
-//
-//                if (v.y < newMin.y)
-//                    newMin.y = v.y;
-//                else if (v.y < newMax.y)
-//                    newMax.y = v.y;
-//            }
-//            aabb = new AlignedBoxCollider2D(newMax.sub(newMin));
-//        }
-//
-//        aabb.rb = this.rb;
-//        aabb.transform = this.transform;
-//        return aabb;
-//    }
 }

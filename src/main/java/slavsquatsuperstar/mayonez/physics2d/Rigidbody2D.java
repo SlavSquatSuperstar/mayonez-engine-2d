@@ -10,7 +10,7 @@ public class Rigidbody2D extends Component {
     public float mass;
     public float drag = 1f; // Modeled using F_d = -b*v
     /**
-     * A reference to the parent object's transform.
+     * A reference to the parent object's {@link Transform}.
      */
     private Transform transform;
     private Vector2 netForce = new Vector2();
@@ -58,7 +58,7 @@ public class Rigidbody2D extends Component {
     }
 
     public float speed() {
-        return velocity.magnitude();
+        return velocity.length();
     }
 
     // Getters and Setters

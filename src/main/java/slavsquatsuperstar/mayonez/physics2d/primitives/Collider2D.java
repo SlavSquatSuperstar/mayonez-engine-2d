@@ -8,19 +8,20 @@ import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
 
 public abstract class Collider2D extends Component {
 
+    // TODO debug draw
     /**
-     * A reference to the parent object's transform.
+     * A reference to the parent object's {@link Transform}.
      */
     protected Transform transform;
     /**
-     * A reference to the parent object's rigidbody.
+     * A reference to the parent object's {@link Rigidbody2D}.
      */
     protected Rigidbody2D rb = null;
 
     // Game Loop Methods
 
     @Override
-    public void start() {
+    public final void start() {
         this.transform = parent.transform;
         rb = parent.getComponent(Rigidbody2D.class);
         if (rb == null) // TODO what to do if object is static
@@ -29,21 +30,17 @@ public abstract class Collider2D extends Component {
 
     // Shape Properties
 
-    public Vector2 center() {
+    public Vector2 getCenter() {
         return transform.position;
     }
+
+    public abstract AlignedBoxCollider2D getMinBounds();
 
     // Collision Methods
 
     public abstract boolean contains(Vector2 point);
 
-    public boolean intersects(Line2D line) {
-        if (contains(line.start) || contains(line.end))
-            return true;
-        return raycast(new Ray2D(line), null);
-    }
-
-    public abstract boolean detectCollision(Collider2D collider);
+    public abstract boolean intersects(Line2D line);
 
     /**
      * Casts a ray onto this collider and calculates whether the ray
@@ -54,6 +51,14 @@ public abstract class Collider2D extends Component {
      * @return Whether the ray is pointed at the shape.
      */
     public abstract boolean raycast(Ray2D ray, RaycastResult result);
+
+    /**
+     * Detects whether this shape is touching or intersecting another {@link Collider2D}.
+     *
+     * @param collider another collider
+     * @return if there is a collision
+     */
+    public abstract boolean detectCollision(Collider2D collider);
 
     // Getters and Setters
 

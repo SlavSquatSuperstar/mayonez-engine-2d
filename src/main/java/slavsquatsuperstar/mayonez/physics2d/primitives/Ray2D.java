@@ -1,7 +1,6 @@
 package slavsquatsuperstar.mayonez.physics2d.primitives;
 
 import slavsquatsuperstar.mayonez.Vector2;
-import slavsquatsuperstar.mayonez.physics2d.primitives.Line2D;
 
 public class Ray2D {
 
@@ -14,7 +13,7 @@ public class Ray2D {
     }
 
     public Ray2D(Line2D line) {
-        this(line.start, line.toVector().unit());
+        this(line.start, line.toVector().unitVector());
         this.limit = line.length();
     }
 

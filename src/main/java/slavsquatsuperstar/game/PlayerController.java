@@ -23,7 +23,6 @@ public class PlayerController extends Script {
     private float thrustForce = 150f;
     private float brakeForce = 10f;
     private float drag = 0.5f; // [0, 1]
-    private float mass = 10f;
 
     public PlayerController(GameObject ground) {
         this.ground = ground;
@@ -46,7 +45,7 @@ public class PlayerController extends Script {
 //        yInput = 0;
 
         // Don't want to move faster diagonally so normalize
-        Vector2 input = new Vector2(xInput, yInput).unit().mul(thrustForce);
+        Vector2 input = new Vector2(xInput, yInput).clampLength(thrustForce);
         rb.addForce(input);
 
         // Rotate player
@@ -61,7 +60,7 @@ public class PlayerController extends Script {
             velocity = velocity.mul(topSpeed / rb.speed());
 
 //         Apply Drag Unless Stationary (prevent divide by 0)
-        if (velocity.magnitude() != 0) {
+        if (velocity.length() != 0) {
             // Increase drag by braking
             if (Game.keyboard().keyDown("space"))
                 rb.drag = this.drag + brakeForce;
@@ -98,8 +97,8 @@ public class PlayerController extends Script {
         // TODO: Make collision detector, move to physics
         // TODO make KeepInScene script
         if (scene().isBounded()) {
-            parent.setX(MathUtils.clamp(box.center().x, 0 + box.width() / 2f, scene().getWidth() - box.width() / 2f));
-            parent.setY(MathUtils.clamp(box.center().y, 0 + box.height() / 2f, scene().getHeight() - box.height() / 2f));
+            parent.setX(MathUtils.clamp(box.getCenter().x, 0 + box.width() / 2f, scene().getWidth() - box.width() / 2f));
+            parent.setY(MathUtils.clamp(box.getCenter().y, 0 + box.height() / 2f, scene().getHeight() - box.height() / 2f));
         }
 
     }

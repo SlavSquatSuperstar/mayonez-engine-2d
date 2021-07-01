@@ -11,14 +11,14 @@ public class VectorTests {
 
     @Test
     public void unitVectorLengthIsOne() {
-        assertEquals(1f, new Vector2(500, 500).unit().lengthSquared(), MathUtils.EPSILON);
-        assertEquals(1f, new Vector2(-500, -500).unit().lengthSquared(), MathUtils.EPSILON);
+        assertEquals(1f, new Vector2(500, 500).unitVector().lengthSquared(), MathUtils.EPSILON);
+        assertEquals(1f, new Vector2(-500, -500).unitVector().lengthSquared(), MathUtils.EPSILON);
     }
 
     @Test
     public void unitVectorOfZeroIsZero() {
         Vector2 v = new Vector2();
-        assertEquals(v.unit(), v);
+        assertEquals(v.unitVector(), v);
     }
 
     @Test
@@ -70,7 +70,7 @@ public class VectorTests {
     public void perpendicularProjectionIsZero() {
         Vector2 v1 = new Vector2(0, 1);
         Vector2 v2 = new Vector2(1, 0);
-        assertEquals(0f, v1.project(v2).magnitude(), MathUtils.EPSILON);
+        assertEquals(0f, v1.project(v2).length(), MathUtils.EPSILON);
     }
 
     @Test

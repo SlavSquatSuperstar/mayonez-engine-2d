@@ -1,6 +1,7 @@
 package slavsquatsuperstar.mayonez.physics2d.primitives;
 
 import slavsquatsuperstar.mayonez.Vector2;
+import slavsquatsuperstar.util.MathUtils;
 
 // TODO scale with transform
 
@@ -14,6 +15,8 @@ public class AlignedBoxCollider2D extends AbstractBoxCollider2D {
         super(size);
     }
 
+    // Properties
+
     @Override
     public Vector2[] getVertices() {
         return new Vector2[]{
@@ -22,8 +25,22 @@ public class AlignedBoxCollider2D extends AbstractBoxCollider2D {
     }
 
     @Override
+    public AlignedBoxCollider2D getMinBounds() {
+        return this;
+    }
+
+    // Collision Methods
+
+    @Override
     public boolean contains(Vector2 point) {
-        return point.x >= min().x && point.x <= max().x && point.y >= min().y && point.y <= max().y;
+        return MathUtils.inRange(point.x, min().x, max().x) && MathUtils.inRange(point.y, min().y, max().y);
+    }
+
+    @Override
+    public boolean intersects(Line2D line) {
+        if (contains(line.start) || contains(line.end))
+            return true;
+        return raycast(new Ray2D(line), null);
     }
 
     @Override
@@ -87,7 +104,7 @@ public class AlignedBoxCollider2D extends AbstractBoxCollider2D {
 
         if (result != null) {
             Vector2 point = ray.origin.add(ray.direction.mul(distToBox));
-            Vector2 normal = point.sub(center()).unit();
+            Vector2 normal = point.sub(getCenter()).unitVector();
             result.set(point, normal, distToBox, hit);
         }
 

@@ -34,16 +34,6 @@ public class Vector2 {
     }
 
     /**
-     * Shorthand for <code>this.x = x; this.y = y</code>.
-     */
-    public void set(float x, float y) {
-        this.x = x;
-        this.y = y;
-    }
-
-    // Vector Operations
-
-    /**
      * Adds another vector to this vector.
      *
      * @param v another 2D vector
@@ -54,13 +44,101 @@ public class Vector2 {
     }
 
     /**
-     * Subtracts another vector from this vector.
+     * Calculates the angle in degrees between this vector and another.
      *
-     * @param v another 2D vector
-     * @return the vector difference
+     * @return the angle
      */
-    public Vector2 sub(Vector2 v) {
-        return new Vector2(this.x - v.x, this.y - v.y);
+    public float angle(Vector2 v) {
+        return (float) Math.toDegrees(Math.acos(this.dot(v) / this.length() / v.length()));
+    }
+
+    /**
+     * Calculates the angle in degrees between this vector and the x-axis.
+     *
+     * @return the angle.
+     */
+    public float angle() {
+        return (float) Math.toDegrees(Math.atan2(y, x));
+    }
+
+    /**
+     * Clamps the length of this vector, while keeping the same direction.
+     * Useful for movement scripts.
+     *
+     * @param length any number
+     * @return the clamped vector
+     */
+    public Vector2 clampLength(float length) {
+        if (lengthSquared() <= length * length)
+            return this;
+        return unitVector().mul(length);
+    }
+
+    /**
+     * Returns the components of this vector in array form. Useful for looping.
+     *
+     * @return an array <code>{x, y}</code>
+     */
+    public float[] components() {
+        return new float[]{x, y};
+    }
+
+     *
+     * @param v another vector
+     */
+    }
+
+    /**
+     * Divides both components vector by a number.
+     *
+     * @param scalar any non-zero number
+     * @return the divided vector
+     */
+    public Vector2 div(float scalar) {
+        if (scalar == 0) {
+            Logger.log("Vector2: Attempted division by 0");
+            return this.mul(0);
+        }
+        return this.mul(1 / scalar);
+    }
+
+    /**
+     * Divided the components of this vector by the corresponding components of another vector.
+     *
+     * @param v another vector with non-zero components
+     * @return the divided vector
+     */
+    public Vector2 div(Vector2 v) {
+        return new Vector2(this.x / v.x, this.y / v.y);
+    }
+
+    /**
+     * Multiplies the corresponding components of this vector and another vector.
+     *
+     * @param v another vector
+     * @return the dot product
+     */
+    public float dot(Vector2 v) {
+        return (this.x * v.x) + (this.y * v.y);
+    }
+
+    /**
+     * Calculates the length of this vector.
+     *
+     * @return this vector's length
+     */
+    public float length() {
+        return (float) Math.sqrt(lengthSquared());
+    }
+
+    /**
+     * Calculates the length squared of this vector (less CPU expensive than square
+     * root).
+     *
+     * @return this vector's length squared
+     */
+    public float lengthSquared() {
+        return (x * x) + (y * y);
     }
 
     /**
@@ -84,117 +162,20 @@ public class Vector2 {
     }
 
     /**
-     * Divides both components vector by a number.
-     *
-     * @param scalar any non-zero number
-     * @return the divided vector
-     */
-    public Vector2 div(float scalar) {
-        if (scalar == 0) {
-            Logger.log("Vector2: Attempted division by 0");
-            return this.mul(0);
-        }
-        return new Vector2(x / scalar, y / scalar);
-    }
-
-    /**
-     * Divided the components of this vector by the corresponding components of another vector.
-     *
-     * @param v another vector with non-zero components
-     * @return the divided vector
-     */
-    public Vector2 div(Vector2 v) {
-        return new Vector2(this.x / v.x, this.y / v.y);
-    }
-
-    /**
      * Projects this vector onto another vector.
      *
-     * @param v another vector
+     * @param vOnto another vector
      * @return the projected vector
      */
-    public Vector2 project(Vector2 v) {
-        return v.mul(this.dot(v) / v.lengthSquared());
+    public Vector2 project(Vector2 vOnto) {
+        return vOnto.mul(this.dot(vOnto) / vOnto.lengthSquared());
     }
-
-    // Scalar Operations
-
-    /**
-     * Multiplies the corresponding components of this vector and another vector.
-     *
-     * @param v another vector
-     * @return the dot product
-     */
-    public float dot(Vector2 v) {
-        return (this.x * v.x) + (this.y * v.y);
-    }
-
-    // Properties
-
-    /**
-     * Calculates the length squared of this vector (less CPU expensive than square
-     * root).
-     *
-     * @return the length squared of this vector
-     */
-    public float lengthSquared() {
-        return (x * x) + (y * y);
-    }
-
-    /**
-     * Calculates the length of this vector.
-     *
-     * @return the magnitude
-     */
-    public float magnitude() {
-        return (float) Math.sqrt(lengthSquared());
-    }
-
-    /**
-     * Calculates the vector the same direction as this vector and a magnitude of 1.
-     * Returns (0, 0) if this vector is (0, 0).
-     *
-     * @return the unit vector
-     */
-    public Vector2 unit() {
-        if (MathUtils.equals(lengthSquared(), 0))
-            return this;
-        else if (MathUtils.equals(lengthSquared(), 0))
-            return this;
-        else
-            return this.div(magnitude());
-    }
-
-    /**
-     * Calculates the angle in degrees between this vector and another.
-     *
-     * @return the angle
-     */
-    public float angle(Vector2 v) {
-        return (float) Math.toDegrees(Math.acos(this.dot(v) / this.magnitude() / v.magnitude()));
-    }
-
-    /**
-     * Calculates the angle in degrees between this vector and the x-axis
-     *
-     * @return the angle.
-     */
-    public float angle() {
-        return (float) Math.toDegrees(Math.atan2(y, x));
-    }
-
-    public float[] components() {
-        return new float[]{x, y};
-    }
-
-    // Transform Methods
-
-    // Source: https://www.youtube.com/watch?v=dlUcIGnaAnk
 
     /**
      * Rotates this vector by an angle around some origin.
+     *
      * @param degrees the angle, in degrees
-     * @param origin the point to rotate around
+     * @param origin  the point to rotate around
      * @return the rotated vector
      */
     public Vector2 rotate(float degrees, Vector2 origin) {
@@ -203,14 +184,44 @@ public class Vector2 {
         float y = this.y - origin.y;
 
         // Rotate the point around the new origin
-        float cos = (float) Math.cos(Math.toRadians(degrees));
-        float sin = (float) Math.sin(Math.toRadians(degrees));
+        float cosTheta = (float) Math.cos(Math.toRadians(degrees));
+        float sinTheta = (float) Math.sin(Math.toRadians(degrees));
 
-        float xPrime = (x * cos) - (y * sin);
-        float yPrime = (y * sin) + (x * sin);
+        float xPrime = (x * cosTheta) - (y * sinTheta);
+        float yPrime = (y * sinTheta) + (x * sinTheta);
 
         // Revert the vector space to the old point
         return new Vector2(xPrime, yPrime).add(origin);
+    }
+
+    /**
+     * Shorthand for <code>this.x = x; this.y = y</code>.
+     */
+    public void set(float x, float y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    /**
+     * Subtracts another vector from this vector.
+     *
+     * @param v another 2D vector
+     * @return the vector difference
+     */
+    public Vector2 sub(Vector2 v) {
+        return new Vector2(this.x - v.x, this.y - v.y);
+    }
+
+    /**
+     * Calculates the vector the same direction as this vector and a magnitude of 1.
+     * Returns (0, 0) if this vector is (0, 0).
+     *
+     * @return the unit vector
+     */
+    public Vector2 unitVector() {
+        if (MathUtils.equals(lengthSquared(), 0))
+            return this;
+        return this.div(length());
     }
 
     // Overrides
