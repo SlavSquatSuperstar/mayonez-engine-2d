@@ -27,13 +27,43 @@ public class VectorTests {
         assertEquals(v.div(0), v);
     }
 
+    // Cross Product
+    @Test
+    public void parallelDotProductIsZero() {
+        Vector2 v1 = new Vector2(1, 0);
+        Vector2 v2 = new Vector2(-1, 0);
+        assertEquals(v1.cross(v2), 0f, MathUtils.EPSILON);
+    }
+
+    @Test
+    public void rightHandCrossProductIsPositive() {
+        Vector2 v1 = new Vector2(1, 0);
+        Vector2 v2 = new Vector2(0, 1);
+        assertTrue(v1.cross(v2) > 0f);
+    }
+
+    @Test
+    public void leftHandCrossProductIsNegative() {
+        Vector2 v2 = new Vector2(0, 1);
+        Vector2 v1 = new Vector2(1, 0);
+        assertTrue(v2.cross(v1) < 0f);
+    }
+
+    @Test
+    public void crossProductIsAntiCommutative() {
+        Vector2 v1 = new Vector2(1, 0);
+        Vector2 v2 = new Vector2(0, 1);
+        assertEquals(v1.cross(v2), -v2.cross(v1), MathUtils.EPSILON);
+    }
+
+    // Dot Product
+
     @Test
     public void perpendicularDotProductIsZero() {
         Vector2 v1 = new Vector2(1, 0);
         Vector2 v2 = new Vector2(0, 1);
         assertEquals(90f, v1.angle(v2), MathUtils.EPSILON);
-        assertEquals(0f, v1.dot(v2));
-        assertEquals(0f, v2.dot(v1));
+        assertEquals(0f, v1.dot(v2), MathUtils.EPSILON);
     }
 
     @Test
@@ -51,6 +81,8 @@ public class VectorTests {
         assertTrue(v1.angle(v2) > 90f);
         assertTrue(v1.dot(v2) < 0);
     }
+
+    // Projections
 
     @Test
     public void acuteProjectionIsPositive() {

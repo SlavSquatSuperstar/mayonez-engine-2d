@@ -83,9 +83,14 @@ public class Vector2 {
         return new float[]{x, y};
     }
 
+    /**
+     * Returns the z-component of the cross product between this vector and another.
      *
      * @param v another vector
+     * @return the 2D cross product
      */
+    public float cross(Vector2 v) {
+        return this.x * v.y - this.y * v.x;
     }
 
     /**

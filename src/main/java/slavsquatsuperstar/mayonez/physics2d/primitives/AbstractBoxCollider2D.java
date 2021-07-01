@@ -23,12 +23,12 @@ abstract class AbstractBoxCollider2D extends Collider2D {
 
     // unrotated top left in world coords
     public Vector2 min() {
-        return getCenter().sub(size.div(2f));
+        return getCenter().sub(size.mul(0.5f));
     }
 
     // unrotated bottom right in world coords
     public Vector2 max() {
-        return getCenter().add(size.div(2f));
+        return getCenter().add(size.mul(0.5f));
     }
 
     public abstract Vector2[] getVertices();

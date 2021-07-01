@@ -23,6 +23,7 @@ public class PlayerController extends Script {
     private float thrustForce = 150f;
     private float brakeForce = 10f;
     private float drag = 0.5f; // [0, 1]
+    private float mass = 0.2f;
 
     public PlayerController(GameObject ground) {
         this.ground = ground;

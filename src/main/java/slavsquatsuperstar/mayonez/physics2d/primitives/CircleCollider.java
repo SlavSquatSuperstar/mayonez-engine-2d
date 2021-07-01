@@ -1,6 +1,7 @@
 package slavsquatsuperstar.mayonez.physics2d.primitives;
 
 import slavsquatsuperstar.mayonez.Vector2;
+import slavsquatsuperstar.mayonez.physics2d.CollisionManifold;
 import slavsquatsuperstar.util.MathUtils;
 
 // TODO scale with transform
@@ -43,12 +44,12 @@ public class CircleCollider extends Collider2D {
         if (!MathUtils.inRange(projected.lengthSquared() / line.toVector().lengthSquared(), 0, 1))
             return false;
         Vector2 nearestPointOnLine = line.start.add(projected);
-        return this.contains(nearestPointOnLine);
+        return contains(nearestPointOnLine);
     }
 
     @Override
     public boolean detectCollision(Collider2D collider) {
-        if (collider == this)
+        if (collider == this) // If same object ignore
             return false;
 
         if (collider instanceof CircleCollider) {

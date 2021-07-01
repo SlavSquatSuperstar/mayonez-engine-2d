@@ -14,7 +14,7 @@ public class Ray2D {
 
     public Ray2D(Line2D line) {
         this(line.start, line.toVector().unitVector());
-        this.limit = line.length();
+        this.limit = line.toVector().length();
     }
 
     float getLimit() {

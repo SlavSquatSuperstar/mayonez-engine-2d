@@ -11,16 +11,17 @@ import slavsquatsuperstar.mayonez.physics2d.primitives.Line2D;
 import java.awt.*;
 
 public class PhysicsTestScene extends Scene {
+    
+    Line2D line = new Line2D(new Vector2(300, 300), new Vector2(600, 300));
+
     public PhysicsTestScene(String name) {
         super(name);
         setGravity(new Vector2(0, 0));
     }
 
-    Line2D line = new Line2D(new Vector2(300, 300), new Vector2(600, 300));
-
     @Override
     protected void init() {
-        addObject(new GameObject("Debug Draw", new Vector2()){
+        addObject(new GameObject("Debug Draw", new Vector2()) {
             @Override
             public void render(Graphics2D g2) {
                 super.render(g2);
