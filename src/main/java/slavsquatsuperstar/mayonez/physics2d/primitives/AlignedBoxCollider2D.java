@@ -72,8 +72,8 @@ public class AlignedBoxCollider2D extends AbstractBoxCollider2D {
         // rotate around box center, or origin?
         Vector2[] axes = {
                 new Vector2(0, 1), new Vector2(1, 0),
-                new Vector2(0, 1).rotate(box.rb.getRotation(), new Vector2()),
-                new Vector2(1, 0).rotate(box.rb.getRotation(), new Vector2())
+                new Vector2(0, 1).rotate(box.getRotation(), new Vector2()),
+                new Vector2(1, 0).rotate(box.getRotation(), new Vector2())
         };
 
         // top right - min, bottom left - min

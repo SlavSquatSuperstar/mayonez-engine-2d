@@ -23,20 +23,18 @@ public class BoxCollider2D extends AbstractBoxCollider2D {
         Vector2[] vertices = new Vector2[]{new Vector2(min), new Vector2(max), new Vector2(min.x, max.y),
                 new Vector2(max.x, min.y)};
 
-        if (MathUtils.equals(rb.getRotation(), 0f)) {
-            for (Vector2 v : vertices) {
+        if (!MathUtils.equals(getRotation(), 0f)) {
+            for (int i = 0; i < vertices.length; i++)
                 // Rotate a point about the center by a rotation
-                v = v.rotate(rb.getRotation(), getCenter());
-            }
+                vertices[i] = vertices[i].rotate(getRotation(), getCenter());
         }
-
         return vertices;
     }
 
     public AlignedBoxCollider2D getMinBounds() {
         AlignedBoxCollider2D aabb;
 
-        if (MathUtils.equals(rb.getRotation(), 0f)) {
+        if (MathUtils.equals(getRotation(), 0f)) {
             aabb = new AlignedBoxCollider2D(size);
         } else {
             Vector2[] vertices = getVertices();
@@ -68,13 +66,13 @@ public class BoxCollider2D extends AbstractBoxCollider2D {
     @Override
     public boolean contains(Vector2 point) {
         // Translate the point into the box's local space
-        Vector2 pointLocal = point.rotate(-rb.getRotation(), rb.getPosition());
+        Vector2 pointLocal = point.rotate(-getRotation(), getCenter());
         return MathUtils.inRange(pointLocal.x, min().x, max().x) && MathUtils.inRange(pointLocal.y, min().y, max().y);
     }
 
     @Override
     public boolean intersects(Line2D line) {
-        float rot = -rb.getRotation();
+        float rot = -getRotation();
 
         // rotate the line into the AABB's local space
         Vector2 localStart = line.start.rotate(rot, getCenter());
@@ -84,6 +82,7 @@ public class BoxCollider2D extends AbstractBoxCollider2D {
         // Create AABB with same size
         AlignedBoxCollider2D aabb = new AlignedBoxCollider2D(size);
         aabb.rb = this.rb;
+        aabb.transform = this.transform;
         return aabb.intersects(localLine);
     }
 
@@ -114,10 +113,10 @@ public class BoxCollider2D extends AbstractBoxCollider2D {
     boolean intersects(BoxCollider2D box) {
         // rotate around box center, or origin?
         Vector2[] axes = {
-                new Vector2(0, 1).rotate(this.rb.getRotation(), new Vector2()),
-                new Vector2(1, 0).rotate(this.rb.getRotation(), new Vector2()),
-                new Vector2(0, 1).rotate(box.rb.getRotation(), new Vector2()),
-                new Vector2(1, 0).rotate(box.rb.getRotation(), new Vector2())
+                new Vector2(0, 1).rotate(this.getRotation(), new Vector2()),
+                new Vector2(1, 0).rotate(this.getRotation(), new Vector2()),
+                new Vector2(0, 1).rotate(box.getRotation(), new Vector2()),
+                new Vector2(1, 0).rotate(box.getRotation(), new Vector2())
         };
 
         // top right - min, bottom left - min
@@ -130,7 +129,7 @@ public class BoxCollider2D extends AbstractBoxCollider2D {
 
     @Override
     public boolean raycast(Ray2D ray, RaycastResult result) {
-        float rot = -rb.getRotation();
+        float rot = -getRotation();
 
         // Rotate the line into the AABB's local space
         Vector2 localOrigin = ray.origin.rotate(rot, getCenter());
@@ -174,5 +173,9 @@ public class BoxCollider2D extends AbstractBoxCollider2D {
 //        }
 //
 //        return hit;
+    }
+
+    public float getRotation() {
+        return transform.rotation;
     }
 }

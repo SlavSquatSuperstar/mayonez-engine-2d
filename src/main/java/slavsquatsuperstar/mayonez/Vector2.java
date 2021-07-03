@@ -192,11 +192,11 @@ public class Vector2 {
         float cosTheta = (float) Math.cos(Math.toRadians(degrees));
         float sinTheta = (float) Math.sin(Math.toRadians(degrees));
 
-        float xPrime = (x * cosTheta) - (y * sinTheta);
-        float yPrime = (y * sinTheta) + (x * sinTheta);
+        float newX = (x * cosTheta) - (y * sinTheta);
+        float newY = (x * sinTheta) + (y * cosTheta);
 
         // Revert the vector space to the old point
-        return new Vector2(xPrime, yPrime).add(origin);
+        return new Vector2(newX, newY).add(origin);
     }
 
     /**

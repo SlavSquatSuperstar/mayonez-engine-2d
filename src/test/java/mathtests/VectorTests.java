@@ -28,6 +28,7 @@ public class VectorTests {
     }
 
     // Cross Product
+
     @Test
     public void parallelDotProductIsZero() {
         Vector2 v1 = new Vector2(1, 0);
@@ -110,6 +111,18 @@ public class VectorTests {
         Vector2 v1 = new Vector2(2, 2);
         Vector2 v2 = new Vector2(4, 4);
         assertEquals(v1, v1.project(v2));
+    }
+
+    // Rotation
+
+    @Test
+    public void vectorRotateSuccess() {
+        Vector2 v = new Vector2(6, 1);
+        assertEquals(v, v.rotate(0, new Vector2()));
+        assertEquals(new Vector2(-1, 6), v.rotate(90, new Vector2()));
+        assertEquals(new Vector2(-6, -1), v.rotate(180, new Vector2()));
+        assertEquals(new Vector2(1, -6), v.rotate(270, new Vector2()));
+        assertEquals(v, v.rotate(360, new Vector2()));
     }
 
 }

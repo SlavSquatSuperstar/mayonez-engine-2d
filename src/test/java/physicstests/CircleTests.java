@@ -86,6 +86,14 @@ public class CircleTests {
     // Circle vs Primitive
 
     @Test
+    public void circleIntersectsCircle() {
+        CircleCollider other = new CircleCollider(4);
+        other.setTransform(new Transform(new Vector2(2, 2)));
+        other.setRigidBody(new Rigidbody2D(0f));
+        assertTrue(c.detectCollision(other));
+    }
+
+    @Test
     public void circleIntersectsAABB() {
         AlignedBoxCollider2D aabb = new AlignedBoxCollider2D(new Vector2(4, 4));
         aabb.setTransform(new Transform(new Vector2(0, 0)));

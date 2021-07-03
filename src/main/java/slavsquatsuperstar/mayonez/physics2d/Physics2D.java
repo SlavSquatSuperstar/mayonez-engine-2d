@@ -44,7 +44,7 @@ public class Physics2D {
 
         // Detect collisions
         colliders.forEach(col -> colliders.forEach(other -> {
-            if (col.detectCollision(other))
+            if (other != col && col.detectCollision(other)) // Don't want to check against self
                 Logger.log("%s intersects %s", col, other);
         }));
 
@@ -57,6 +57,8 @@ public class Physics2D {
         // Update object transforms
         rigidbodies.forEach(rb -> rb.physicsUpdate(dt));
     }
+
+    // Game Object Methods
 
     public void add(GameObject o) {
         Rigidbody2D rb = o.getComponent(Rigidbody2D.class);

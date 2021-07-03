@@ -75,12 +75,31 @@ public class CircleCollider extends Collider2D {
         Vector2 max = aabb.max();
 
         // Closest point on box to circle
-        Vector2 closest = new Vector2(getCenter());
+        Vector2 closestToCircle = new Vector2(getCenter());
+        closestToCircle.x = MathUtils.clamp(closestToCircle.x, min.x, max.x);
+        closestToCircle.y = MathUtils.clamp(closestToCircle.y, min.y, max.y);
+
+        return contains(closestToCircle);
+    }
+
+    boolean intersects(BoxCollider2D box) {
+        Vector2 min = box.min();
+        Vector2 max = box.max();
+
+        // Create a circle in the box's local space
+        Vector2 localCirclePos = getCenter().rotate(box.getRotation(), box.getCenter());
+//        Vector2 localCenter = getCenter().sub(box.getCenter());
+//        localCenter = localCenter.rotate(box.getRotation(), new Vector2());
+//
+//        Vector2f r = new Vector2f(circle.getCenter()).sub(box.getRigidbody().getPosition());
+//        JMath.rotate(r, -box.getRigidbody().getRotation(), new Vector2f());
+//        Vector2f localCirclePos = new Vector2f(r).add(box.getHalfSize());
+
+        Vector2 closest = new Vector2(localCirclePos);
         closest.x = MathUtils.clamp(closest.x, min.x, max.x);
         closest.y = MathUtils.clamp(closest.y, min.y, max.y);
 
-        float distanceSquared = getCenter().sub(closest).lengthSquared();
-        return distanceSquared <= radius * radius;
+        return contains(localCirclePos);
     }
 
     @Override
@@ -112,21 +131,6 @@ public class CircleCollider extends Collider2D {
         }
 
         return hit;
-    }
-
-    boolean intersects(BoxCollider2D box) {
-        Vector2 min = box.min();
-        Vector2 max = box.max();
-
-        Vector2 localRadius = getCenter().sub(box.getCenter());
-        localRadius = localRadius.rotate(box.rb.getRotation(), new Vector2());
-
-        Vector2 closest = new Vector2(getCenter());
-        closest.x = MathUtils.clamp(closest.x, min.x, max.x);
-        closest.y = MathUtils.clamp(closest.y, min.y, max.y);
-
-        float distanceSquared = getCenter().sub(closest).lengthSquared();
-        return distanceSquared <= radius * radius;
     }
 
 }

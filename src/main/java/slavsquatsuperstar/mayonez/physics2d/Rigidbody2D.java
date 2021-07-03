@@ -8,7 +8,7 @@ public class Rigidbody2D extends Component {
 
     public boolean followsGravity = true;
     public float mass;
-    public float drag = 1f; // Modeled using F_d = -b*v
+    public float drag = 0f; // Modeled using F_d = -b*v
     /**
      * A reference to the parent object's {@link Transform}.
      */
@@ -34,6 +34,7 @@ public class Rigidbody2D extends Component {
 //            velocity.y = Math.signum(velocity.y) * Preferences.TERMINAL_VELOCITY;
 
         velocity = velocity.add(netForce.div(mass).mul(dt)); // dv = F/m*dt
+        // TODO use average velocity?
         transform.move(velocity); // ds = v*t
         netForce.set(0, 0); // Reset accumulated forces
     }
