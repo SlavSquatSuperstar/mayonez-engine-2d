@@ -1,14 +1,13 @@
 package slavsquatsuperstar.mayonez;
 
-import slavsquatsuperstar.mayonez.components.Camera;
-
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Renderer {
 
-    private final ArrayList<GameObject> objects;
+    private final List<GameObject> objects;
     private final Camera camera;
 
     public Renderer(Camera camera) {

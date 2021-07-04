@@ -16,6 +16,7 @@ public class RectangleSprite extends Component {
     @Override
     public void render(Graphics2D g2) {
         g2.setColor(color);
+        g2.setStroke(new BasicStroke(2));
         g2.drawRect((int) (parent.getX() - width / 2f), (int) (parent.getY() - height / 2f), (int) width, (int) height);
     }
 

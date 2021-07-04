@@ -1,6 +1,5 @@
 package slavsquatsuperstar.mayonez;
 
-import slavsquatsuperstar.mayonez.components.Camera;
 import slavsquatsuperstar.mayonez.physics2d.Physics2D;
 
 import java.awt.*;
@@ -14,22 +13,20 @@ import java.util.ArrayList;
 // TODO coordinate system
 public abstract class Scene {
 
-    protected String name;
-    protected int width, height;
-
-    protected boolean bounded;
-    protected Color background = Color.WHITE;
-    // Object Fields
-    protected ArrayList<GameObject> objects, toRemove;
-    private boolean started;
     // TODO maybe Scene, Physics, Render layers should be separate (MVC)
     private final Renderer renderer;
     private final Physics2D physics;
     private final Camera camera;
+    protected String name;
+    protected int width, height;
+    protected boolean bounded = false;
+    protected Color background = Color.WHITE;
+    // Object Fields
+    protected ArrayList<GameObject> objects, toRemove;
+    private boolean started;
 
     public Scene(String name) {
         this(name, 0, 0);
-        bounded = false;
     }
 
     public Scene(String name, int width, int height) {
@@ -51,27 +48,14 @@ public abstract class Scene {
     /**
      * Add necessary objects.
      */
-    protected void init() {}
+    protected void init() {
+    }
 
     public final void start() {
         if (started)
             return;
 
-        addObject(new GameObject("Camera", new Vector2()) {
-            @Override
-            protected void init() {
-                addComponent(camera);
-            }
-
-            // Don't want to get rid of the camera!
-            @Override
-            public void destroy() {}
-
-            @Override
-            public boolean isDestroyed() {
-                return false;
-            }
-        });
+        addObject(Camera.createCameraObject(camera));
         init();
         started = true;
     }
@@ -84,8 +68,9 @@ public abstract class Scene {
         objects.forEach(o -> {
             o.update(dt);
             // Flag objects for destruction
-            if (o.isDestroyed())
+            if (o.isDestroyed()) {
                 removeObject(o);
+            }
         });
         physics.physicsUpdate(dt);
 
@@ -118,12 +103,13 @@ public abstract class Scene {
         objects.add(obj);
         renderer.add(obj);
         physics.add(obj);
-        Logger.log("%s: Added object \"%s\"", this.name, obj.name);
+        Logger.log("Added object \"%s\" to scene \"%s\"", obj.name, this.name);
     }
 
     public void removeObject(GameObject obj) {
         obj.destroy();
-        toRemove.add(obj);
+        toRemove.add(obj); // Use a separate list to avoid concurrent exceptions
+        Logger.log("Removed object \"%s\" to scene \"%s\"", obj.name, this.name);
     }
 
     public ArrayList<GameObject> getObjects() {

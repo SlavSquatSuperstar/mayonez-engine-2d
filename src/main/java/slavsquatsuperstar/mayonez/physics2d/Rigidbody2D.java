@@ -3,12 +3,14 @@ package slavsquatsuperstar.mayonez.physics2d;
 import slavsquatsuperstar.mayonez.Transform;
 import slavsquatsuperstar.mayonez.Vector2;
 import slavsquatsuperstar.mayonez.components.Component;
+import slavsquatsuperstar.util.MathUtils;
 
 public class Rigidbody2D extends Component {
 
     public boolean followsGravity = true;
     public float mass;
     public float drag = 0f; // Modeled using F_d = -b*v
+
     /**
      * A reference to the parent object's {@link Transform}.
      */
@@ -18,6 +20,11 @@ public class Rigidbody2D extends Component {
 
     public Rigidbody2D(float mass) {
         this.mass = mass;
+    }
+
+    public Rigidbody2D(float mass, boolean followsGravity) {
+        this.mass = mass;
+        this.followsGravity = followsGravity;
     }
 
     @Override
@@ -41,12 +48,19 @@ public class Rigidbody2D extends Component {
 
     // Physics Methods
 
+    /**
+     * Applies a force to this rigidbody's center of mass.
+     * @param force a vector
+     */
     public void addForce(Vector2 force) {
         netForce = netForce.add(force);
         // dv = F/m*t
-//        velocity = velocity.add(force.mul(Game.timestep).div(mass));
     }
 
+    /**
+     * Applies an impulse to this rigidbody's center of mass.
+     * @param impulse a vector
+     */
     public void addImpulse(Vector2 impulse) {
         // dv = dp/m = m*dv/m
         velocity = velocity.add(impulse.div(mass));
@@ -63,6 +77,14 @@ public class Rigidbody2D extends Component {
     }
 
     // Getters and Setters
+
+    public boolean hasInfiniteMass() {
+        return MathUtils.equals(mass, 0f);
+    }
+
+    public float getInverseMass() {
+        return hasInfiniteMass() ? 0 : 1 / mass;
+    }
 
     public Vector2 getPosition() {
         return transform.position;

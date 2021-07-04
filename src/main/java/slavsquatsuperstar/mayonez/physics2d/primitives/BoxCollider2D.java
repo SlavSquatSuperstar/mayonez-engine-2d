@@ -23,7 +23,7 @@ public class BoxCollider2D extends AbstractBoxCollider2D {
         Vector2[] vertices = new Vector2[]{new Vector2(min), new Vector2(max), new Vector2(min.x, max.y),
                 new Vector2(max.x, min.y)};
 
-        if (!MathUtils.equals(getRotation(), 0f)) {
+        if (!MathUtils.equals(getRotation(), 0)) {
             for (int i = 0; i < vertices.length; i++)
                 // Rotate a point about the center by a rotation
                 vertices[i] = vertices[i].rotate(getRotation(), getCenter());
@@ -34,7 +34,7 @@ public class BoxCollider2D extends AbstractBoxCollider2D {
     public AlignedBoxCollider2D getMinBounds() {
         AlignedBoxCollider2D aabb;
 
-        if (MathUtils.equals(getRotation(), 0f)) {
+        if (MathUtils.equals(getRotation(), 0)) {
             aabb = new AlignedBoxCollider2D(size);
         } else {
             Vector2[] vertices = getVertices();

@@ -62,6 +62,10 @@ public abstract class Collider2D extends Component {
 
     // Getters and Setters
 
+    public Rigidbody2D getRigidbody() {
+        return rb;
+    }
+
     public void setRigidBody(Rigidbody2D rb) {
         this.rb = rb;
     }

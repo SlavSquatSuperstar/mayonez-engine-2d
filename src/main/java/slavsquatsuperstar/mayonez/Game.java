@@ -1,8 +1,8 @@
 package slavsquatsuperstar.mayonez;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import slavsquatsuperstar.game.LevelEditorScene;
 import slavsquatsuperstar.game.LevelScene;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import slavsquatsuperstar.game.PhysicsTestScene;
 
 import javax.swing.*;
@@ -21,17 +21,14 @@ public class Game implements Runnable {
 
     // Singleton Fields
     private static Game game;
-
-    // Thread Fields
-    private Thread thread;
-    private boolean running;
-
     // Input Fields
     private final KeyInput keyboard;
     private final MouseInput mouse;
-
     // Window Fields
     private final JFrame window;
+    // Thread Fields
+    private Thread thread;
+    private boolean running;
     private int width, height;
 
     // Renderer Fields
@@ -61,11 +58,58 @@ public class Game implements Runnable {
         window.addKeyListener(keyboard);
         window.addMouseListener(mouse);
         window.addMouseMotionListener(mouse);
-
-        initGraphics();
     }
 
     // Game Loop Methods
+
+    public synchronized static Game instance() { // only create the game once
+        // get params from preferences
+        return (null == game) ? game = new Game() : game;
+    }
+
+    public static KeyInput keyboard() {
+        return game.keyboard;
+    }
+
+    public static MouseInput mouse() {
+        return game.mouse;
+    }
+
+    /**
+     * @return the time in seconds since this game started.
+     */
+    public static float getTime() {
+        return (System.nanoTime() - TIME_STARTED) / 1.0E9f;
+    }
+
+    public static boolean isFullScreen() {
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsDevice device = ge.getDefaultScreenDevice();
+        return device.getFullScreenWindow() != null;
+    }
+
+    // Getters and Setters
+
+    public static void loadScene(int scene) {
+        switch (scene) {
+            case 0:
+                game.currentScene = new LevelEditorScene("Level Editor");
+                break;
+            case 1:
+                game.currentScene = new LevelScene("Level");
+                break;
+            case 2:
+                game.currentScene = new PhysicsTestScene("Physics Test Scene");
+            default:
+                Logger.log("Game: Unknown scene");
+        }
+
+        game.startCurrentScene();
+    }
+
+    public static Scene currentScene() {
+        return game.currentScene;
+    }
 
     @Override
     public void run() {
@@ -127,7 +171,7 @@ public class Game implements Runnable {
      * @param dt The time elapsed since the last frame
      */
     public void update(float dt) throws Exception { // TODO pass dt or use Game.timestep?
-        // Poll events
+        // TODO Poll input events
         if (keyboard.keyDown("exit"))
             running = false;
 
@@ -179,13 +223,13 @@ public class Game implements Runnable {
 
         // Display window and initialize graphics buffer
         window.setVisible(true);
+        initGraphics();
 
-        // Start scene
         startCurrentScene();
     }
 
     /**
-     * Shuts down the engine and hides the window.
+     * Shuts down the engine and closes the window.
      */
     public synchronized void stop(int status) {
         running = false;
@@ -203,55 +247,6 @@ public class Game implements Runnable {
         System.exit(status);
     }
 
-    // Getters and Setters
-
-    public synchronized static Game instance() { // only create the game once
-        // get params from preferences
-        return (null == game) ? game = new Game() : game;
-    }
-
-    public static KeyInput keyboard() {
-        return game.keyboard;
-    }
-
-    public static MouseInput mouse() {
-        return game.mouse;
-    }
-
-    /**
-     * @return the time in seconds since this game started.
-     */
-    public static float getTime() {
-        return (System.nanoTime() - TIME_STARTED) / 1.0E9f;
-    }
-
-    public static boolean isFullScreen() {
-        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        GraphicsDevice device = ge.getDefaultScreenDevice();
-        return device.getFullScreenWindow() != null;
-    }
-
-    public static void loadScene(int scene) {
-        switch (scene) {
-            case 0:
-                game.currentScene = new LevelEditorScene("Level Editor");
-                break;
-            case 1:
-                game.currentScene = new LevelScene("Level");
-                break;
-            case 2:
-                game.currentScene = new PhysicsTestScene("Physics Test Scene");
-            default:
-                Logger.log("Game: Unknown scene");
-        }
-
-        game.startCurrentScene();
-    }
-
-    public static Scene currentScene() {
-        return game.currentScene;
-    }
-
     // Private Methods
 
     private void initGraphics() {
@@ -262,6 +257,9 @@ public class Game implements Runnable {
         bs = window.getBufferStrategy();
     }
 
+    /**
+     * Start sthe current scene, if not null
+     */
     private void startCurrentScene() {
         if (currentScene != null && running) {
             currentScene.start();

@@ -3,10 +3,11 @@ package slavsquatsuperstar.mayonez.assets;
 import slavsquatsuperstar.mayonez.components.Sprite;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class SpriteSheet {
 
-    public ArrayList<Sprite> sprites;
+    public List<Sprite> sprites;
     public Sprite sheet;
     public int tileWidth, tileHeight, spacing;
 

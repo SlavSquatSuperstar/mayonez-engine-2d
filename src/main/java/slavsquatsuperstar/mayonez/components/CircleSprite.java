@@ -15,6 +15,7 @@ public class CircleSprite extends Component {
     @Override
     public void render(Graphics2D g2) {
         g2.setColor(color);
+        g2.setStroke(new BasicStroke(2));
         g2.drawOval((int) (parent.getX() - radius), (int) (parent.getY() - radius), (int) radius * 2, (int) radius * 2);
     }
 }

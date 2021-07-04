@@ -2,8 +2,6 @@ package slavsquatsuperstar.mayonez;
 
 import slavsquatsuperstar.util.MathUtils;
 
-// TODO clamp magnitude, clamp values
-
 /**
  * An object in 2D space that has magnitude and direction. Also represents a
  * point (x, y). Note: all methods, except for set() are non-mutating!
@@ -62,16 +60,16 @@ public class Vector2 {
     }
 
     /**
-     * Clamps the length of this vector, while keeping the same direction.
-     * Useful for movement scripts.
+     * Clamps the length of this vector if it exceeds the provided value,
+     * while keeping the same direction. Useful for movement scripts.
      *
      * @param length any number
      * @return the clamped vector
      */
     public Vector2 clampLength(float length) {
-        if (lengthSquared() <= length * length)
-            return this;
-        return unitVector().mul(length);
+        if (lengthSquared() > length * length) // too long
+            return this.mul(length / length());
+        return this;
     }
 
     /**
@@ -91,6 +89,14 @@ public class Vector2 {
      */
     public float cross(Vector2 v) {
         return this.x * v.y - this.y * v.x;
+    }
+
+    public float distanceSquared(Vector2 v) {
+        return (this.x - v.x) * (this.x - v.x) + (this.y - v.y) * (this.y - v.y);
+    }
+
+    public float distance(Vector2 v) {
+        return (float) Math.sqrt(distanceSquared(v));
     }
 
     /**
@@ -200,11 +206,20 @@ public class Vector2 {
     }
 
     /**
-     * Shorthand for <code>this.x = x; this.y = y</code>.
+     * Sets this vector's components to the provided x and y coordinates.
+     * Note: this method is a mutating method!
      */
     public void set(float x, float y) {
         this.x = x;
         this.y = y;
+    }
+
+    /**
+     * Sets this vector's components to the given vector's components.
+     * Note: this method is a mutating method!
+     */
+    public void set(Vector2 v) {
+        set(v.x, v.y);
     }
 
     /**

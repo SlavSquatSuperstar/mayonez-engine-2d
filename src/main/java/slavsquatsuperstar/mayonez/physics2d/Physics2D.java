@@ -21,20 +21,25 @@ public class Physics2D {
     private final ArrayList<Rigidbody2D> rigidbodies;
     private final ArrayList<Collider2D> colliders;
     private final ArrayList<ForceRegistration> forceRegistry;
+    // Collision Stuff
+    private final List<Collider2D> colliders;
+    private final List<ForceRegistration> forceRegistry;
     private final ForceGenerator gravityForce;
     private final ForceGenerator dragForce;
+    private final float deltaTime;
     private Vector2 gravity; // acceleration to due gravity
 
     public Physics2D(float deltaTime, Vector2 gravity) {
         this.deltaTime = deltaTime;
         rigidbodies = new ArrayList<>();
         colliders = new ArrayList<>();
+
         forceRegistry = new ArrayList<>();
         setGravity(gravity);
         gravityForce = (rb, dt) -> rb.addForce(getGravity().mul(rb.mass));
         dragForce = (rb, dt) -> {
             // Apply drag if moving
-            if (!MathUtils.equals(rb.velocity().lengthSquared(), 0f))
+            if (!MathUtils.equals(rb.velocity().lengthSquared(), 0))
                 rb.addForce(rb.velocity().mul(-rb.drag));
         };
     }

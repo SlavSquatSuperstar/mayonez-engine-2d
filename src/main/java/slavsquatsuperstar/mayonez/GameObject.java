@@ -1,7 +1,7 @@
 package slavsquatsuperstar.mayonez;
 
 import slavsquatsuperstar.mayonez.components.Component;
-import slavsquatsuperstar.mayonez.components.Script;
+import slavsquatsuperstar.mayonez.components.scripts.Script;
 
 import java.awt.*;
 import java.util.ArrayList;

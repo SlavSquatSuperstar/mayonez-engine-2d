@@ -7,8 +7,8 @@ public class MouseInput extends MouseAdapter {
 
     // Mouse Fields
     private int mouseX, mouseY;
-    private int dx, dy; // displacement of drag
-    private boolean mousePressed, mouseDragged;
+    private int dx, dy; // drag displacement
+    private boolean pressed, dragged;
     private int button;
     private int clicks;
 
@@ -16,14 +16,14 @@ public class MouseInput extends MouseAdapter {
 
     @Override
     public void mousePressed(MouseEvent e) {
-        mousePressed = true;
+        pressed = true;
         button = e.getButton();
         clicks = e.getClickCount();
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        mousePressed = mouseDragged = false;
+        pressed = dragged = false;
         dx = dy = 0;
         clicks = 0;
     }
@@ -36,19 +36,21 @@ public class MouseInput extends MouseAdapter {
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        mouseDragged = true;
+        dragged = true;
         dx = e.getX() - mouseX;
         dy = e.getY() - mouseY;
+        mouseX = e.getX();
+        mouseY = e.getY();
     }
 
     // Getters and Setters
 
-//	public boolean buttonDown(String buttonName) {
-//		for (MouseMapping b : MouseMapping.values())
-//			if (b.toString().equalsIgnoreCase(buttonName))
-//				return buttons[b.button() - 1];
-//		return false;
-//	}
+    public boolean buttonDown(String buttonName) {
+        for (MouseMapping b : MouseMapping.values())
+            if (b.toString().equalsIgnoreCase(buttonName))
+                return pressed && button == b.button;
+        return false;
+    }
 
     public int getX() {
         return mouseX;
@@ -56,6 +58,10 @@ public class MouseInput extends MouseAdapter {
 
     public int getY() {
         return mouseY;
+    }
+
+    public Vector2 getPosition() {
+        return new Vector2(getX(), getY());
     }
 
     public int getDx() {
@@ -75,31 +81,28 @@ public class MouseInput extends MouseAdapter {
     }
 
     public boolean dragged() {
-        return mouseDragged;
+        return dragged;
     }
 
     public boolean pressed() {
-        return mousePressed;
+        return pressed;
     }
 
     // Enum Declaration
-//    enum MouseMapping {
-//        LEFT_MOUSE(MouseEvent.BUTTON1), RIGHT_MOUSE(MouseEvent.BUTTON3);
-//
-//        private int button;
-//
-//        private MouseMapping(int button) {
-//            this.button = button;
-//        }
-//
-//        int button() {
-//            return button;
-//        }
-//
-//        @Override
-//        public String toString() {
-//            return name().toLowerCase();
-//        }
-//    }
+    enum MouseMapping {
+        LEFT_MOUSE(MouseEvent.BUTTON1), RIGHT_MOUSE(MouseEvent.BUTTON3), MIDDLE_MOUSE(MouseEvent.BUTTON2);
+
+        int button;
+
+        MouseMapping(int button) {
+            this.button = button;
+        }
+
+        @Override
+        public String toString() {
+            // ex: MouseMapping.LEFT_MOUSE returns "left mouse"
+            return name().replace('_', ' ').toLowerCase();
+        }
+    }
 
 }
