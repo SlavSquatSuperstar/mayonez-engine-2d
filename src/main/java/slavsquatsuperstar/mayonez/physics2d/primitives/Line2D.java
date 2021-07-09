@@ -10,7 +10,7 @@ import slavsquatsuperstar.util.MathUtils;
 /**
  * Represents a line segment with start and end points.
  */
-public class Line2D {
+public class Line2D extends Collider2D {
 
     public final Vector2 start, end;
 
@@ -89,6 +89,17 @@ public class Line2D {
             return true;
         }
         return false;
+    }
+
+    // TODO implement me
+    @Override
+    public boolean raycast(Ray2D ray, RaycastResult result) {
+        return false;
+    }
+
+    @Override
+    public boolean detectCollision(Collider2D collider) {
+        return collider.intersects(this);
     }
 
     @Override

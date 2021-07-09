@@ -10,8 +10,8 @@ public class MouseMovement extends MovementScript {
         mode = Mode.FOLLOW_MOUSE;
     }
 
-    public MouseMovement(float speed, Mode mode) {
-        super(speed, mode);
+    public MouseMovement(Mode mode, float speed) {
+        super(mode, speed);
     }
 
     @Override

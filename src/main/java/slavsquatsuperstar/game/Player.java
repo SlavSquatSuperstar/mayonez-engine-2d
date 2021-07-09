@@ -51,9 +51,9 @@ public class Player extends GameObject {
         // Add player script
         addComponent(new AlignedBoxCollider2D(new Vector2(Preferences.TILE_SIZE, Preferences.TILE_SIZE)));
         addComponent(new Rigidbody2D(0f));
-        addComponent(new KeyMovement(0, KeyMovement.Mode.FORCE));
+        addComponent(new KeyMovement(KeyMovement.Mode.FORCE, 0));
         addComponent(new PlayerController(ground));
-        addComponent(new KeepInScene(0, 0, scene.getWidth(), scene.getHeight(), KeepInScene.Mode.WRAP));
+        addComponent(new KeepInScene(0, 0, getScene().getWidth(), getScene().getHeight(), KeepInScene.Mode.STOP));
     }
 
 }

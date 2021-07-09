@@ -1,9 +1,8 @@
 package slavsquatsuperstar.mayonez;
 
 import slavsquatsuperstar.mayonez.components.scripts.DragAndDrop;
-import slavsquatsuperstar.mayonez.components.scripts.Script;
-import slavsquatsuperstar.util.MathUtils;
 
+// TODO set keep in scene, to parent?
 public class Camera extends Script {
 
     private int width, height;
@@ -20,6 +19,7 @@ public class Camera extends Script {
         maxY = sceneHeight - height;
     }
 
+    // Static (Factory) Methods
     /**
      * Creates a container {@link GameObject} to hold a Camera Object
      *
@@ -31,15 +31,14 @@ public class Camera extends Script {
             @Override
             protected void init() {
                 addComponent(camera);
-                addComponent(new DragAndDrop("right mouse", true));
-                // add trigger collider
+                addComponent(new DragAndDrop("right mouse", true)); // Keep camera inside scene
 //                addComponent(new KeepInScene(0, 0, scene.getWidth(), scene.getHeight(), KeepInScene.Mode.STOP));
+                // add camera collider/trigger
             }
 
             // Don't want to get rid of the camera!
             @Override
-            public void destroy() {
-            }
+            public void destroy() { }
 
             @Override
             public boolean isDestroyed() {
@@ -59,11 +58,6 @@ public class Camera extends Script {
         if (subject != null) {
             parent.setX((subject.getX()) - width / 2f);
             parent.setY((subject.getY()) - height / 2f);
-        }
-        // Keep camera inside scene
-        if (scene().isBounded() && parent.keepInScene) {
-            parent.setX(MathUtils.clamp(parent.getX(), minX, maxX));
-            parent.setY(MathUtils.clamp(parent.getY(), minY, maxY));
         }
     }
 

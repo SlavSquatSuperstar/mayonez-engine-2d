@@ -21,7 +21,7 @@ public class LevelEditorScene extends Scene {
             @Override
             public void update(float dt) {
                 super.update(dt);
-                setX(scene.camera().getX());
+                setX(getScene().camera().getX());
             }
 
             @Override

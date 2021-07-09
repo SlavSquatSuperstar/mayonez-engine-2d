@@ -4,7 +4,7 @@ import slavsquatsuperstar.mayonez.Game;
 import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Vector2;
 import slavsquatsuperstar.mayonez.components.scripts.KeyMovement;
-import slavsquatsuperstar.mayonez.components.scripts.Script;
+import slavsquatsuperstar.mayonez.Script;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
 import slavsquatsuperstar.mayonez.physics2d.primitives.AlignedBoxCollider2D;
 

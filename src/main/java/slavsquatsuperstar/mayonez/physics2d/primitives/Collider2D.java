@@ -1,5 +1,6 @@
 package slavsquatsuperstar.mayonez.physics2d.primitives;
 
+import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Logger;
 import slavsquatsuperstar.mayonez.Transform;
 import slavsquatsuperstar.mayonez.Vector2;
@@ -22,7 +23,6 @@ public abstract class Collider2D extends Component {
 
     @Override
     public final void start() {
-        this.transform = parent.transform;
         rb = parent.getComponent(Rigidbody2D.class);
         if (rb == null) // TODO what to do if object is static
             Logger.log("%s needs a RigidBody to function!", getClass().getSimpleName());
@@ -61,6 +61,12 @@ public abstract class Collider2D extends Component {
     public abstract boolean detectCollision(Collider2D collider);
 
     // Getters and Setters
+
+    @Override
+    public void setParent(GameObject parent) {
+        super.setParent(parent);
+        transform = parent.transform;
+    }
 
     public Rigidbody2D getRigidbody() {
         return rb;

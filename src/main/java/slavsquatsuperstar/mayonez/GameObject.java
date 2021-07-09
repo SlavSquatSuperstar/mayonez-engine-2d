@@ -1,7 +1,6 @@
 package slavsquatsuperstar.mayonez;
 
 import slavsquatsuperstar.mayonez.components.Component;
-import slavsquatsuperstar.mayonez.components.scripts.Script;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -19,7 +18,7 @@ public class GameObject {
     public Transform transform;
 
     public boolean keepInScene = false; // TODO convert to KeepInBounds script, and enable/disable
-    protected Scene scene;
+    private Scene scene;
     private boolean destroyed = false;
 
     private final ArrayList<Component> components = new ArrayList<>();
@@ -73,7 +72,7 @@ public class GameObject {
 //		if (null != getComponent(comp.getClass()))
 //			Logger.log("GameObject: Adding multiple components of the same type is not recommended");
 
-        comp.parent = this;
+        comp.setParent(this);
         components.add(comp);
     }
 

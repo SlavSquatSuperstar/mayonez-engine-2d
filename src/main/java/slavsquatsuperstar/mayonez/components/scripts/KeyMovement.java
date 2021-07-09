@@ -5,14 +5,14 @@ import slavsquatsuperstar.mayonez.Vector2;
 
 public class KeyMovement extends MovementScript {
 
-    public KeyMovement(float speed, Mode mode) {
-        super(speed, mode);
+    public KeyMovement(Mode mode, float speed) {
+        super(mode, speed);
     }
 
     @Override
     public void update(float dt) {
         // Don't want to move faster diagonally so normalize
-        Vector2 input = getRawInput().mul(speed).unitVector();
+        Vector2 input = getRawInput().unitVector().mul(speed);
         switch (mode) {
             case POSITION:
                 parent.transform.move(input);

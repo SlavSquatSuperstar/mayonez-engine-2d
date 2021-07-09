@@ -1,6 +1,7 @@
 package slavsquatsuperstar.mayonez.components.scripts;
 
 import slavsquatsuperstar.mayonez.Logger;
+import slavsquatsuperstar.mayonez.Script;
 import slavsquatsuperstar.mayonez.Vector2;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
 
@@ -12,9 +13,9 @@ public abstract class MovementScript extends Script {
 
     protected MovementScript() {}
 
-    public MovementScript(float speed, Mode mode) {
-        this.speed = speed;
+    public MovementScript(Mode mode, float speed) {
         this.mode = mode;
+        this.speed = speed;
     }
 
     @Override

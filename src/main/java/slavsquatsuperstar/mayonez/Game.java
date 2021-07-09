@@ -16,16 +16,20 @@ public class Game implements Runnable {
      */
 
     // Time Fields
-    public static final float TIME_STEP = 1.0f / Preferences.FPS;
     public static final long TIME_STARTED = System.nanoTime();
+    public static final float TIME_STEP = 1.0f / Preferences.FPS;
 
     // Singleton Fields
     private static Game game;
+
     // Input Fields
+    // TODO make singleton
     private final KeyInput keyboard;
     private final MouseInput mouse;
+
     // Window Fields
     private final JFrame window;
+
     // Thread Fields
     private Thread thread;
     private boolean running;
@@ -33,7 +37,8 @@ public class Game implements Runnable {
 
     // Renderer Fields
     private Graphics gfx;
-    private BufferStrategy bs;
+    private BufferStrategy buffers;
+    private DebugDraw debugDraw;
 
     // Scene Fields
     private Scene currentScene;
@@ -100,6 +105,7 @@ public class Game implements Runnable {
                 break;
             case 2:
                 game.currentScene = new PhysicsTestScene("Physics Test Scene");
+                break;
             default:
                 Logger.log("Game: Unknown scene");
         }
@@ -183,7 +189,7 @@ public class Game implements Runnable {
      * Redraws all objects in the current scene.
      */
     public void render() throws Exception {
-        if (bs == null) {
+        if (buffers == null) {
             initGraphics();
             return;
         }
@@ -194,15 +200,16 @@ public class Game implements Runnable {
          */
         do {
             // Clear the screen
-            gfx = bs.getDrawGraphics();
+            gfx = buffers.getDrawGraphics();
             gfx.clearRect(0, 0, width, height);
 
             if (null != currentScene)
                 currentScene.render((Graphics2D) gfx);
+            debugDraw.render((Graphics2D) gfx);
 
             gfx.dispose();
-            bs.show();
-        } while (bs.contentsLost());
+            buffers.show();
+        } while (buffers.contentsLost());
 
     }
 
@@ -250,11 +257,15 @@ public class Game implements Runnable {
     // Private Methods
 
     private void initGraphics() {
-        if (window == null || !window.isVisible())
+        if (window == null)
             return;
-
-        window.createBufferStrategy(2);
-        bs = window.getBufferStrategy();
+        try {
+            window.createBufferStrategy(2);
+            buffers = window.getBufferStrategy();
+            debugDraw = new DebugDraw();
+        } catch (IllegalStateException e) {
+            Logger.log("Engine: Error initializing window graphics; trying again next frame.");
+        }
     }
 
     /**

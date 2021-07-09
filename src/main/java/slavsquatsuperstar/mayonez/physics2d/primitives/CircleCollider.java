@@ -16,6 +16,14 @@ public class CircleCollider extends Collider2D {
 
     // Properties
 
+    public Vector2 min() {
+        return new Vector2(getCenter().x - radius, getCenter().y - radius);
+    }
+
+    public Vector2 max() {
+        return new Vector2(getCenter().x + radius, getCenter().y + radius);
+    }
+
     @Override
     public AlignedBoxCollider2D getMinBounds() {
         AlignedBoxCollider2D aabb = new AlignedBoxCollider2D(new Vector2(radius * 2, radius * 2));
@@ -131,6 +139,28 @@ public class CircleCollider extends Collider2D {
         }
 
         return hit;
+    }
+
+    public CollisionManifold getCollisionInfo(CircleCollider circle) {
+        CollisionManifold result = new CollisionManifold();
+
+        float sumRadii = this.radius + circle.radius;
+        Vector2 distance = circle.getCenter().sub(this.getCenter());
+        if (distance.lengthSquared() > sumRadii * sumRadii) // No intersection
+            return result;
+
+        // Divide by 2 to separate each circle evenly
+        // TODO factor collider mass and velocity
+        float massProportion = this.rb.mass / (this.rb.mass + circle.rb.mass);
+        float depth = Math.abs(distance.length() - sumRadii) * 0.5f;
+        Vector2 normal = distance.unitVector(); // direction of displacement
+
+        // Simulate real physics, where circles only contact at one point
+        Vector2 contactPoint = this.getCenter().add(normal.mul(this.radius - depth));
+
+        result = new CollisionManifold(normal, depth);
+        result.addContactPoint(contactPoint);
+        return result;
     }
 
 }

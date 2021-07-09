@@ -1,7 +1,6 @@
 package slavsquatsuperstar.mayonez.components.scripts;
 
-import slavsquatsuperstar.mayonez.Logger;
-import slavsquatsuperstar.mayonez.Vector2;
+import slavsquatsuperstar.mayonez.*;
 import slavsquatsuperstar.mayonez.physics2d.primitives.AlignedBoxCollider2D;
 import slavsquatsuperstar.mayonez.physics2d.primitives.Collider2D;
 import slavsquatsuperstar.util.MathUtils;
@@ -14,6 +13,10 @@ public class KeepInScene extends Script {
     public float minX, minY, maxX, maxY;
     private Mode mode;
     private AlignedBoxCollider2D objectCollider;
+
+    public KeepInScene(Scene scene, Mode mode) { // Use scene bounds
+        this(0, 0, scene.getWidth(), scene.getHeight(), mode);
+    }
 
     public KeepInScene(float minX, float minY, float maxX, float maxY, Mode mode) {
         this.minX = minX;
@@ -36,6 +39,7 @@ public class KeepInScene extends Script {
 
     @Override
     public void update(float dt) {
+        Logger.log("position = %s", objectCollider.getCenter());
         Vector2 boxMin = objectCollider.min();
         Vector2 boxMax = objectCollider.max();
         // TODO preferably create a method for resolving collisions between shapes and lines
@@ -44,24 +48,24 @@ public class KeepInScene extends Script {
             case STOP:
             case BOUNCE:
                 if (boxMin.x < minX)
-                    parent.setX(minX + objectCollider.width() / 2);
+                    parent.setX(minX + objectCollider.width() / 2f);
                 else if (boxMax.x > maxX)
-                    parent.setX(maxX - objectCollider.width() / 2);
+                    parent.setX(maxX - objectCollider.width() / 2f);
 
                 if (boxMin.y < minY)
-                    parent.setY(minY + objectCollider.height() / 2);
+                    parent.setY(minY + objectCollider.height() / 2f);
                 else if (boxMax.y > maxY)
-                    parent.setY(maxY - objectCollider.height() / 2);
+                    parent.setY(maxY - objectCollider.height() / 2f);
                 break;
             case WRAP:
                 if (boxMax.x < minX)
-                    parent.setX(maxX + objectCollider.width() / 2);
+                    parent.setX(maxX + objectCollider.width() / 2f);
                 else if (boxMin.x > maxX)
-                    parent.setX(minX - objectCollider.width() / 2);
+                    parent.setX(minX - objectCollider.width() / 2f);
                 if (boxMax.y < minY)
-                    parent.setY(maxY + objectCollider.height() / 2);
+                    parent.setY(maxY + objectCollider.height() / 2f);
                 else if (boxMin.y > maxY)
-                    parent.setY(this.minY - objectCollider.height() / 2);
+                    parent.setY(this.minY - objectCollider.height() / 2f);
                 break;
             case DELETE:
                 if (!MathUtils.inRange(boxMin.x, minX - objectCollider.width(), maxX) ||

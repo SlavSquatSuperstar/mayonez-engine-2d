@@ -31,26 +31,36 @@ public final class Logger {
         }
     }
 
-    private Logger() {
-    }
+    private Logger() {}
 
+    /**
+     * Prints a formatted message to the console.
+     *
+     * @param msg  a formatted string
+     * @param args (optional) string format arguments
+     */
     public static void log(Object msg, Object... args) {
-        String output = String.format("[%.4f] ", Game.getTime());
+        String output = String.format("[%02d:%.4f] ", (int) (Game.getTime() / 60), Game.getTime() % 60);
         try {
             output += String.format("%s", String.format(msg.toString(), args));
             if (saveLogs)
                 logFile.append(output);
         } catch (NullPointerException e) {
-            output += "null";
+            output += "(null)";
         } catch (IllegalFormatException e) {
-            output += "Logger: Could not format message";
+            output += String.format("Logger: Could not format message \"%s\"", msg);
         } finally {
             System.out.println(output);
         }
     }
 
+    /**
     public static void log(Object msg) {
         log(msg, new Object[0]);
+    }
+
+    public static void warn(Object msg, Object... args) {
+        log("[WARNING] " + msg, args);
     }
 
 }

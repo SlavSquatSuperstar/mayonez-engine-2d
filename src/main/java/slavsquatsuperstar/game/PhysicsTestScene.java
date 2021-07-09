@@ -1,10 +1,8 @@
 package slavsquatsuperstar.game;
 
-import slavsquatsuperstar.mayonez.GameObject;
-import slavsquatsuperstar.mayonez.Scene;
-import slavsquatsuperstar.mayonez.Vector2;
-import slavsquatsuperstar.mayonez.components.CircleSprite;
+import slavsquatsuperstar.mayonez.*;
 import slavsquatsuperstar.mayonez.components.scripts.DragAndDrop;
+import slavsquatsuperstar.mayonez.components.scripts.KeepInScene;
 import slavsquatsuperstar.mayonez.components.scripts.KeyMovement;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
 import slavsquatsuperstar.mayonez.physics2d.primitives.CircleCollider;
@@ -17,52 +15,43 @@ public class PhysicsTestScene extends Scene {
     Line2D line = new Line2D(new Vector2(300, 300), new Vector2(600, 300));
 
     public PhysicsTestScene(String name) {
-        super(name);
+        super(name, Preferences.SCREEN_WIDTH, Preferences.SCREEN_HEIGHT);
         setGravity(new Vector2(0, 0));
     }
 
     @Override
     protected void init() {
-//        addObject(new GameObject("Debug Draw", new Vector2()) {
-//            @Override
-//            public void render(Graphics2D g2) {
-//                super.render(g2);
-//                CircleCollider circle = getObject("Circle 1").getComponent(CircleCollider.class);
-//                g2.setStroke(new BasicStroke(3f));
-//                g2.setColor(Color.BLACK);
-//                g2.drawLine((int) line.start.x, (int) line.start.y, (int) line.end.x, (int) line.end.y);
-//                g2.setColor(Color.RED);
-//                g2.drawLine((int) line.start.x, (int) line.start.y, (int) circle.getCenter().x, (int) circle.getCenter().y);
-//
-//                Vector2 startToCenter = circle.getCenter().sub(line.start);
-//                Vector2 projected = startToCenter.project(line.toVector());
-//                g2.setColor(Color.GREEN);
-//                g2.drawLine((int) line.start.x, (int) line.start.y, (int) (line.start.x + projected.x), (int) (line.start.y + projected.y));
-//                Vector2 nearest = line.start.add(projected);
-//                g2.setColor(Color.RED);
-//                g2.fillOval((int) (nearest.x - 2), (int) (nearest.y - 2), 4, 4);
-//            }
-//        });
+        Logger.log(null);
+
+        addObject(new GameObject("Debug Draw", new Vector2()) {
+            @Override
+            public void render(Graphics2D g2) {
+                CircleCollider c1 = getObject("Circle 1").getComponent(CircleCollider.class);
+                DebugDraw.drawVector(c1.getRigidbody().velocity(), c1.getCenter(), Color.BLUE);
+                DebugDraw.drawCircle(c1, Color.BLUE);
+                CircleCollider c2 = getObject("Circle 2").getComponent(CircleCollider.class);
+                DebugDraw.drawCircle(c2, Color.CYAN);
+            }
+        });
 
         addObject(new GameObject("Circle 1", new Vector2(300, 100)) {
             @Override
             protected void init() {
-                float radius = 25;
-                addComponent(new CircleSprite(radius, Color.BLUE));
-                addComponent(new CircleCollider(radius));
+                addComponent(new CircleCollider(25f));
                 addComponent(new Rigidbody2D(10f));
                 addComponent(new DragAndDrop("left mouse", false));
-                addComponent(new KeyMovement(2, KeyMovement.Mode.IMPULSE));
+//                addComponent(new MouseMovement());
+                addComponent(new KeyMovement(KeyMovement.Mode.IMPULSE, 2));
+                addComponent(new KeepInScene(getScene(), KeepInScene.Mode.WRAP));
             }
         });
 
         addObject(new GameObject("Circle 2", new Vector2(300, 150)) {
             @Override
             protected void init() {
-                float radius = 35;
-                addComponent(new CircleSprite(radius, Color.CYAN));
-                addComponent(new CircleCollider(radius));
+                addComponent(new CircleCollider(35f));
                 addComponent(new Rigidbody2D(20f, false));
+                addComponent(new KeepInScene(getScene(), KeepInScene.Mode.WRAP));
             }
         });
 

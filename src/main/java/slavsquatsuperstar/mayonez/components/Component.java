@@ -20,7 +20,7 @@ public abstract class Component {
     /**
      * The {@link GameObject} this component belongs to.
      */
-    public GameObject parent;
+    protected GameObject parent;
 
     /**
      * Initialize any fields needed for subclasses or scripts.
@@ -36,6 +36,12 @@ public abstract class Component {
      * Draw the component on the screen.
      */
     public void render(Graphics2D g2) {}
+
+    // Getters and Setters
+
+    public void setParent(GameObject parent) {
+        this.parent = parent;
+    }
 
     /**
      * @return The {@link Scene} the parent object belongs to.

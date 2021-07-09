@@ -2,6 +2,7 @@ package slavsquatsuperstar.mayonez.components.scripts;
 
 import slavsquatsuperstar.mayonez.Game;
 import slavsquatsuperstar.mayonez.MouseInput;
+import slavsquatsuperstar.mayonez.Script;
 import slavsquatsuperstar.mayonez.Vector2;
 import slavsquatsuperstar.mayonez.physics2d.primitives.Collider2D;
 
