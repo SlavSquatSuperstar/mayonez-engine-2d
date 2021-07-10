@@ -1,13 +1,13 @@
 package slavsquatsuperstar.mayonez;
 
 import slavsquatsuperstar.mayonez.components.scripts.DragAndDrop;
+import slavsquatsuperstar.mayonez.components.scripts.KeepInScene;
 
 // TODO set keep in scene, to parent?
 public class Camera extends Script {
 
     private int width, height;
     private int minX, minY, maxX, maxY;
-    private float lastMx, lastMy;
     private GameObject subject;
 
     public Camera(int sceneWidth, int sceneHeight) {
@@ -15,8 +15,8 @@ public class Camera extends Script {
         height = Preferences.SCREEN_HEIGHT;
         minX = 0;
         minY = 0;//-28; // account for the bar on top of the window
-        maxX = sceneWidth - width;
-        maxY = sceneHeight - height;
+        maxX = sceneWidth;
+        maxY = sceneHeight;
     }
 
     // Static (Factory) Methods
@@ -32,13 +32,13 @@ public class Camera extends Script {
             protected void init() {
                 addComponent(camera);
                 addComponent(new DragAndDrop("right mouse", true)); // Keep camera inside scene
-//                addComponent(new KeepInScene(0, 0, scene.getWidth(), scene.getHeight(), KeepInScene.Mode.STOP));
+                addComponent(new KeepInScene(camera.minX, camera.minY, camera.maxX, camera.maxY, KeepInScene.Mode.STOP));
                 // add camera collider/trigger
             }
 
             // Don't want to get rid of the camera!
             @Override
-            public void destroy() { }
+            public void destroy() {}
 
             @Override
             public boolean isDestroyed() {
@@ -61,6 +61,8 @@ public class Camera extends Script {
         }
     }
 
+    // Getters and setters
+
     public float getX() {
         return parent.getX();
     }
@@ -69,13 +71,19 @@ public class Camera extends Script {
         return parent.getY();
     }
 
+    public Camera setKeepInScene(boolean enabled) {
+        parent.getComponent(KeepInScene.class).setEnabled(enabled);
+        return this;
+    }
+
     /**
      * Sets a subject for this Camera to follow, or disables subject following.
      *
      * @param subject a {@link GameObject} in the scene
      */
-    public void setSubject(GameObject subject) {
+    public Camera setSubject(GameObject subject) {
         this.subject = subject;
-        parent.keepInScene = subject.keepInScene;
+        setKeepInScene(subject.getComponent(KeepInScene.class) != null);
+        return this;
     }
 }

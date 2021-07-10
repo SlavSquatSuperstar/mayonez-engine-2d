@@ -33,7 +33,6 @@ public class LevelScene extends Scene {
 //        addObject(ground);
 
         GameObject player = new Player("Player", new Vector2(100, 100), ground);
-        player.keepInScene = true;
         addObject(player);
         camera().setSubject(player);
     }

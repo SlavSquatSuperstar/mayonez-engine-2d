@@ -55,6 +55,10 @@ public final class Logger {
     }
 
     /**
+     * Prints a message to the console.
+     *
+     * @param msg an object
+     */
     public static void log(Object msg) {
         log(msg, new Object[0]);
     }

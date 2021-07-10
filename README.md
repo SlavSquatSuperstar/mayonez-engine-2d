@@ -20,12 +20,16 @@ incorrect squatting position.
 
 A huge thanks to the following people and resources for inspiration and guidance:
 
-- [GamesWithGabe](https://youtube.com/c/GamesWithGabe) (for doing the hard math and coding work for me)
-- [The Cherno](https://youtube.com/c/TheChernoProject) (for explaining the theoretical side of designing game engines.)
-- [CodeNMore](https://www.youtube.com/playlist?list=PLah6faXAgguMnTBs3JnEJY0shAc18XYQZ) (for creating first game engine
-  tutorial I ever followed)
-- Unity Technologies (~~who I'm ripping off~~ for making Game Dev accessible for everybody and their excellent
-  documentation)
-- Greenfoot Developers (for proving you **can** use Java for Game Dev)
-- Stack Overflow/Reddit (for answering questions I never knew I had)
-- And many more!
+- [GamesWithGabe](https://youtube.com/c/GamesWithGabe): For keeping me excited to work on my engine every day.
+- [The Cherno](https://youtube.com/c/TheChernoProject): For teaching me the theoretical side of designing game engines.
+- [javidx9/OneLoneCoder](https://www.youtube.com/c/javidx9): For explaining all the hard math concepts.
+- [CodeNMore](https://www.youtube.com/playlist?list=PLah6faXAgguMnTBs3JnEJY0shAc18XYQZ): For creating first game engine
+  tutorial I ever followed and starting me on this journey.
+- [Life of Boris](https://www.youtube.com/c/LifeofBoris/featured): For showing me the Slav way in my time of need.
+  🥔🤘🥃
+- [Unity Technologies](https://docs.unity3d.com/ScriptReference/): ~~Who I'm ripping off~~ For making Game Dev
+  accessible for everybody and providing excellent documentation.
+- [Greenfoot Developers](https://www.greenfoot.org/files/javadoc/): For proving you **can** use Java for Game Dev and
+  showing the beauty of simplicity.
+- Stack Overflow/Reddit: For answering questions I never knew I had.
+- …And many more!

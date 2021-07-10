@@ -9,6 +9,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 
+/**
+ * The application that contains the engine's core loop.
+ *
+ * @author SlavSquatSuperstar
+ */
 public class Game implements Runnable {
 
     /*

@@ -10,7 +10,8 @@ import java.util.List;
 
 public class DebugDraw {
 
-    private static final Stroke stroke = new BasicStroke(2);
+    private static final int strokeSize = 2;
+    private static final Stroke stroke = new BasicStroke(strokeSize);
     private static final List<ShapeDrawer> shapes = new ArrayList<>(); // Use Map
 
     public static void drawAABB(AlignedBoxCollider2D aabb, Color color) {
@@ -44,7 +45,7 @@ public class DebugDraw {
     }
 
     public static void drawPoint(Vector2 position, Color color) {
-        CircleCollider point = new CircleCollider(3);
+        CircleCollider point = new CircleCollider(strokeSize);
         point.setTransform(new Transform(position));
         shapes.add(g2 -> {
             g2.setColor(color);
@@ -54,6 +55,7 @@ public class DebugDraw {
 
     public static void drawVector(Vector2 vector, Vector2 origin, Color color) {
         drawLine(origin, origin.add(vector), color);
+//        drawPoint(origin.add(vector), color);
     }
 
     public void render(Graphics2D g2) {

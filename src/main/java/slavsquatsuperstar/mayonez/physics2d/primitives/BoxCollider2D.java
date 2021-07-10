@@ -56,9 +56,7 @@ public class BoxCollider2D extends AbstractBoxCollider2D {
             aabb = new AlignedBoxCollider2D(newMax.sub(newMin));
         }
 
-        aabb.rb = this.rb;
-        aabb.transform = this.transform;
-        return aabb;
+        return aabb.setTransform(transform).setRigidBody(rb);
     }
 
     // Collision Methods

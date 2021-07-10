@@ -30,9 +30,8 @@ public class Line2D extends Collider2D {
     public AlignedBoxCollider2D getMinBounds() {
         AlignedBoxCollider2D aabb = new AlignedBoxCollider2D(toVector());
         Vector2 center = start.add(end).mul(0.5f);
-        aabb.setRigidBody(new Rigidbody2D(0f)); // make static
-        aabb.setTransform(new Transform(center));
-        return aabb;
+        return aabb.setTransform(new Transform(center)).setRigidBody(new Rigidbody2D(0f));
+        // make rigidbody static
     }
 
     /**

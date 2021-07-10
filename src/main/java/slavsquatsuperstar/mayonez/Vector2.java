@@ -3,8 +3,10 @@ package slavsquatsuperstar.mayonez;
 import slavsquatsuperstar.util.MathUtils;
 
 /**
- * An object in 2D space that has magnitude and direction. Also represents a
- * point (x, y). Note: all methods, except for set() are non-mutating!
+ * An object in 2D space that has magnitude and direction. Also represents a point (x, y). Note: all methods, except for
+ * set() are non-mutating!
+ *
+ * @author SlavSquatSuperstar
  */
 public class Vector2 {
 
@@ -60,8 +62,8 @@ public class Vector2 {
     }
 
     /**
-     * Clamps the length of this vector if it exceeds the provided value,
-     * while keeping the same direction. Useful for movement scripts.
+     * Clamps the length of this vector if it exceeds the provided value, while keeping the same direction. Useful for
+     * movement scripts.
      *
      * @param length any number
      * @return the clamped vector
@@ -143,8 +145,7 @@ public class Vector2 {
     }
 
     /**
-     * Calculates the length squared of this vector (less CPU expensive than square
-     * root).
+     * Calculates the length squared of this vector (less CPU expensive than square root).
      *
      * @return this vector's length squared
      */
@@ -206,8 +207,7 @@ public class Vector2 {
     }
 
     /**
-     * Sets this vector's components to the provided x and y coordinates.
-     * Note: this method is a mutating method!
+     * Sets this vector's components to the provided x and y coordinates. Note: this method is a mutating method!
      */
     public void set(float x, float y) {
         this.x = x;
@@ -215,8 +215,7 @@ public class Vector2 {
     }
 
     /**
-     * Sets this vector's components to the given vector's components.
-     * Note: this method is a mutating method!
+     * Sets this vector's components to the given vector's components. Note: this method is a mutating method!
      */
     public void set(Vector2 v) {
         set(v.x, v.y);
@@ -233,8 +232,8 @@ public class Vector2 {
     }
 
     /**
-     * Calculates the vector the same direction as this vector and a magnitude of 1.
-     * Returns (0, 0) if this vector is (0, 0).
+     * Calculates the vector the same direction as this vector and a magnitude of 1. Returns (0, 0) if this vector is
+     * (0, 0).
      *
      * @return the unit vector
      */

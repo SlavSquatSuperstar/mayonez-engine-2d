@@ -26,10 +26,7 @@ public class CircleCollider extends Collider2D {
 
     @Override
     public AlignedBoxCollider2D getMinBounds() {
-        AlignedBoxCollider2D aabb = new AlignedBoxCollider2D(new Vector2(radius * 2, radius * 2));
-        aabb.transform = this.transform;
-        aabb.rb = this.rb;
-        return aabb;
+        return new AlignedBoxCollider2D(new Vector2(radius * 2, radius * 2)).setTransform(transform).setRigidBody(rb);
     }
 
     // Collision Methods
@@ -151,12 +148,12 @@ public class CircleCollider extends Collider2D {
 
         // Divide by 2 to separate each circle evenly
         // TODO factor collider mass and velocity
-        float massProportion = this.rb.mass / (this.rb.mass + circle.rb.mass);
-        float depth = Math.abs(distance.length() - sumRadii) * 0.5f;
+        float massProportion = this.rb.getMass() / (this.rb.getMass() + circle.rb.getMass());
+        float depth = Math.abs(distance.length() - sumRadii);
         Vector2 normal = distance.unitVector(); // direction of displacement
 
         // Simulate real physics, where circles only contact at one point
-        Vector2 contactPoint = this.getCenter().add(normal.mul(this.radius - depth));
+        Vector2 contactPoint = this.getCenter().add(normal.mul(this.radius - depth * massProportion));
 
         result = new CollisionManifold(normal, depth);
         result.addContactPoint(contactPoint);

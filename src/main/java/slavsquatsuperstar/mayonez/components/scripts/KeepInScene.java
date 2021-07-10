@@ -1,6 +1,10 @@
 package slavsquatsuperstar.mayonez.components.scripts;
 
-import slavsquatsuperstar.mayonez.*;
+import slavsquatsuperstar.mayonez.Logger;
+import slavsquatsuperstar.mayonez.Scene;
+import slavsquatsuperstar.mayonez.Script;
+import slavsquatsuperstar.mayonez.Vector2;
+import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
 import slavsquatsuperstar.mayonez.physics2d.primitives.AlignedBoxCollider2D;
 import slavsquatsuperstar.mayonez.physics2d.primitives.Collider2D;
 import slavsquatsuperstar.util.MathUtils;
@@ -13,6 +17,7 @@ public class KeepInScene extends Script {
     public float minX, minY, maxX, maxY;
     private Mode mode;
     private AlignedBoxCollider2D objectCollider;
+    private Rigidbody2D rb = null;
 
     public KeepInScene(Scene scene, Mode mode) { // Use scene bounds
         this(0, 0, scene.getWidth(), scene.getHeight(), mode);
@@ -30,6 +35,11 @@ public class KeepInScene extends Script {
     public void start() {
         try {
             objectCollider = parent.getComponent(Collider2D.class).getMinBounds();
+            if (mode == Mode.BOUNCE) {
+                rb = objectCollider.getRigidbody();
+                if (rb == null)
+                    mode = Mode.STOP;
+            }
         } catch (NullPointerException e) {
             Logger.log("Script KeepInScene needs a collider to function!");
             objectCollider = new AlignedBoxCollider2D(new Vector2());
@@ -39,14 +49,12 @@ public class KeepInScene extends Script {
 
     @Override
     public void update(float dt) {
-        Logger.log("position = %s", objectCollider.getCenter());
         Vector2 boxMin = objectCollider.min();
         Vector2 boxMax = objectCollider.max();
-        // TODO preferably create a method for resolving collisions between shapes and lines
-        // TODO announce collisions
+        // TODO use line vs shape detection and announce collisions
+        // ex: on collide left, set vel.x to 0 or inverse vel.x
         switch (mode) {
             case STOP:
-            case BOUNCE:
                 if (boxMin.x < minX)
                     parent.setX(minX + objectCollider.width() / 2f);
                 else if (boxMax.x > maxX)
@@ -56,6 +64,24 @@ public class KeepInScene extends Script {
                     parent.setY(minY + objectCollider.height() / 2f);
                 else if (boxMax.y > maxY)
                     parent.setY(maxY - objectCollider.height() / 2f);
+                break;
+            case BOUNCE:
+                float bounce = -rb.getBounce();
+                if (boxMin.x < minX) {
+                    parent.setX(minX + objectCollider.width() / 2f);
+                    rb.velocity().x *= bounce;
+                } else if (boxMax.x > maxX) {
+                    parent.setX(maxX - objectCollider.width() / 2f);
+                    rb.velocity().x *= bounce;
+                }
+
+                if (boxMin.y < minY) {
+                    parent.setY(minY + objectCollider.height() / 2f);
+                    rb.velocity().y *= bounce;
+                } else if (boxMax.y > maxY) {
+                    parent.setY(maxY - objectCollider.height() / 2f);
+                    rb.velocity().y *= bounce;
+                }
                 break;
             case WRAP:
                 if (boxMax.x < minX)

@@ -13,14 +13,10 @@ import java.awt.*;
 public abstract class Component {
 
     /**
-     * Whether this component should be updated.
-     */
-    public boolean enabled = true;
-
-    /**
      * The {@link GameObject} this component belongs to.
      */
     protected GameObject parent;
+    private boolean enabled = true;
 
     /**
      * Initialize any fields needed for subclasses or scripts.
@@ -39,8 +35,9 @@ public abstract class Component {
 
     // Getters and Setters
 
-    public void setParent(GameObject parent) {
+    public Component setParent(GameObject parent) {
         this.parent = parent;
+        return this;
     }
 
     /**
@@ -53,6 +50,20 @@ public abstract class Component {
     public boolean isInScene(Scene scene) {
         // This could cause a NPE
         return scene.equals(scene());
+    }
+
+    /**
+     * Whether this component should be updated.
+     *
+     * @return if this component is enabled
+     */
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public Component setEnabled(boolean enabled) {
+        this.enabled = enabled;
+        return this;
     }
 
     @Override

@@ -11,8 +11,7 @@ public final class Assets {
 
     private static final HashMap<String, Asset> ASSETS = new HashMap<>();
 
-    private Assets() {
-    }
+    private Assets() {}
 
     // Asset Getters and Setters
 

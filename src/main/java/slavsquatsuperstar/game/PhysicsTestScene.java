@@ -7,6 +7,7 @@ import slavsquatsuperstar.mayonez.components.scripts.KeyMovement;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
 import slavsquatsuperstar.mayonez.physics2d.primitives.CircleCollider;
 import slavsquatsuperstar.mayonez.physics2d.primitives.Line2D;
+import slavsquatsuperstar.util.MathUtils;
 
 import java.awt.*;
 
@@ -26,11 +27,13 @@ public class PhysicsTestScene extends Scene {
         addObject(new GameObject("Debug Draw", new Vector2()) {
             @Override
             public void render(Graphics2D g2) {
-                CircleCollider c1 = getObject("Circle 1").getComponent(CircleCollider.class);
-                DebugDraw.drawVector(c1.getRigidbody().velocity(), c1.getCenter(), Color.BLUE);
-                DebugDraw.drawCircle(c1, Color.BLUE);
-                CircleCollider c2 = getObject("Circle 2").getComponent(CircleCollider.class);
-                DebugDraw.drawCircle(c2, Color.CYAN);
+                for (GameObject o : getScene().getObjects(null)) {
+                    CircleCollider c = o.getComponent(CircleCollider.class);
+                    if (c != null) {
+                        DebugDraw.drawCircle(c, Colors.BLUE);
+                        DebugDraw.drawVector(c.getRigidbody().velocity().mul(5), c.getCenter(), Colors.BLUE);
+                    }
+                }
             }
         });
 
@@ -38,20 +41,36 @@ public class PhysicsTestScene extends Scene {
             @Override
             protected void init() {
                 addComponent(new CircleCollider(25f));
-                addComponent(new Rigidbody2D(10f));
+                addComponent(new Rigidbody2D(15f));
+//                addComponent(new MouseMovement(MovementScript.Mode.IMPULSE, 2));
                 addComponent(new DragAndDrop("left mouse", false));
-//                addComponent(new MouseMovement());
                 addComponent(new KeyMovement(KeyMovement.Mode.IMPULSE, 2));
-                addComponent(new KeepInScene(getScene(), KeepInScene.Mode.WRAP));
+                addComponent(new KeepInScene(getScene(), KeepInScene.Mode.BOUNCE));
+                addComponent(new Script() {
+                    @Override
+                    public void update(float dt) {
+                        if (Game.mouse().buttonDown("left mouse")) {
+                            scene().addObject(new GameObject("Circle", Game.mouse().getPosition()) {
+                                @Override
+                                protected void init() {
+                                    float radius = MathUtils.random(10f, 40f);
+                                    addComponent(new CircleCollider(radius));
+                                    addComponent(new Rigidbody2D(radius * 0.5f));
+                                    addComponent(new KeepInScene(getScene(), KeepInScene.Mode.BOUNCE));
+                                }
+                            });
+                        }
+                    }
+                });
             }
         });
 
-        addObject(new GameObject("Circle 2", new Vector2(300, 150)) {
+        addObject(new GameObject("Circle 2", new Vector2(300, 200)) {
             @Override
             protected void init() {
-                addComponent(new CircleCollider(35f));
-                addComponent(new Rigidbody2D(20f, false));
-                addComponent(new KeepInScene(getScene(), KeepInScene.Mode.WRAP));
+                addComponent(new CircleCollider(50f));
+                addComponent(new Rigidbody2D(0));
+                addComponent(new KeepInScene(getScene(), KeepInScene.Mode.BOUNCE));
             }
         });
 

@@ -4,25 +4,31 @@ import slavsquatsuperstar.mayonez.physics2d.Physics2D;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
- * A collection of {@link GameObject}s that represents an in-game world.
+ * A collection of {@link GameObject}s representing an in-game world.
  *
  * @author SlavSquatSuperstar
  */
 // TODO coordinate system
 public abstract class Scene {
 
-    // TODO maybe Scene, Physics, Render layers should be separate (MVC)
+    // Object Fields
+    private final List<GameObject> objects;
+    private final List<SceneModifier> toModify; // Use a separate list to avoid concurrent exceptions
+
+    // Layers
     private final Renderer renderer;
     private final Physics2D physics;
     private final Camera camera;
+
+    // Scene Info
     protected String name;
     protected int width, height;
-    protected boolean bounded = false;
+    protected boolean bounded;
     protected Color background = Color.WHITE;
-    // Object Fields
-    protected ArrayList<GameObject> objects, toRemove;
     private boolean started;
 
     public Scene(String name) {
@@ -36,7 +42,7 @@ public abstract class Scene {
         bounded = true;
 
         objects = new ArrayList<>();
-        toRemove = new ArrayList<>();
+        toModify = new ArrayList<SceneModifier>();
 
         camera = new Camera(width, height);
         renderer = new Renderer(camera);
@@ -67,20 +73,14 @@ public abstract class Scene {
         // Update Objects and Camera
         objects.forEach(o -> {
             o.update(dt);
-            // Flag objects for destruction
-            if (o.isDestroyed()) {
+            if (o.isDestroyed())
                 removeObject(o);
-            }
         });
         physics.physicsUpdate(dt);
 
-        // Remove destroyed objects at the end of the frame
-        toRemove.forEach(o -> {
-            objects.remove(o);
-            renderer.remove(o);
-            physics.remove(o);
-        });
-        toRemove.clear();
+        // Remove destroyed objects or add new ones at the end of the frame
+        toModify.forEach(SceneModifier::modify);
+        toModify.clear();
     }
 
     public final void render(Graphics2D g2) {
@@ -97,35 +97,38 @@ public abstract class Scene {
 
     // Object Methods
 
-    public void addObject(GameObject obj) {
-        obj.setScene(this);
-        obj.start(); // add components so renderer and physics can access it
-        objects.add(obj);
-        renderer.add(obj);
-        physics.add(obj);
-        Logger.log("Added object \"%s\" to scene \"%s\"", obj.name, this.name);
+    public final void addObject(GameObject obj) {
+        SceneModifier sm = () -> {
+            objects.add(obj.setScene(this));
+            obj.start(); // add object components so renderer and physics can access it
+            renderer.add(obj);
+            physics.add(obj);
+            Logger.log("Added object \"%s\" to scene \"%s\"", obj.name, this.name);
+        };
+        if (started)
+            toModify.add(sm);
+        else
+            sm.modify();
     }
 
-    public void removeObject(GameObject obj) {
+    public final void removeObject(GameObject obj) {
         obj.destroy();
-        toRemove.add(obj); // Use a separate list to avoid concurrent exceptions
-        Logger.log("Removed object \"%s\" to scene \"%s\"", obj.name, this.name);
-    }
-
-    public ArrayList<GameObject> getObjects() {
-        return objects;
-    }
-
-    public <T extends GameObject> ArrayList<T> getObjects(Class<T> cls) {
-        ArrayList<T> found = new ArrayList<>();
-        objects.forEach(o -> {
-            if (cls == null || cls.isInstance(o))
-                found.add(cls.cast(o));
+        toModify.add(() -> {
+            objects.remove(obj);
+            renderer.remove(obj);
+            physics.remove(obj);
+            Logger.log("Removed object \"%s\" to scene \"%s\"", obj.name, this.name);
         });
-        return found;
     }
 
     // TODO use hash map or bin search?
+
+    /**
+     * Finds the {@link GameObject} with the given name. For consistent results, avoid duplicate names.
+     *
+     * @param name a unique object identifier
+     * @return the object
+     */
     public GameObject getObject(String name) {
         for (GameObject o : objects)
             if (o.name.equalsIgnoreCase(name))
@@ -133,7 +136,32 @@ public abstract class Scene {
         return null;
     }
 
+    /**
+     * Finds all objects with the specified class.
+     *
+     * @param cls a {@link GameObject} subclass (use null to get all objects)
+     * @param <T> the object type
+     * @return the list of objects
+     */
+    @SuppressWarnings({"unchecked"})
+    public <T extends GameObject> java.util.List<T> getObjects(Class<T> cls) {
+        return objects.stream().filter(o -> cls == null || cls.isInstance(o)).map(o -> (T) o).collect(Collectors.toList());
+    }
+
+    /**
+     * Counts the number of objects in the scene.
+     *
+     * @return the amount
+     */
+    public int countObjects() {
+        return objects.size();
+    }
+
     // Getters and Setters
+
+    public String getName() {
+        return name;
+    }
 
     public int getWidth() {
         return width;
@@ -141,10 +169,6 @@ public abstract class Scene {
 
     public int getHeight() {
         return height;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public boolean isBounded() {
@@ -163,5 +187,11 @@ public abstract class Scene {
     public String toString() {
         return String.format("%s (%s)", name, getClass().isAnonymousClass() ?
                 "Scene" : getClass().getSimpleName());
+    }
+
+    @FunctionalInterface
+    private interface SceneModifier {
+        // Flags an object to be added or removed
+        void modify();
     }
 }

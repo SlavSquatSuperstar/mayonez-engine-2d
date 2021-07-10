@@ -1,4 +1,7 @@
 import org.junit.Test;
+import slavsquatsuperstar.mayonez.GameObject;
+import slavsquatsuperstar.mayonez.Scene;
+import slavsquatsuperstar.mayonez.Vector2;
 
 import static junit.framework.TestCase.*;
 
@@ -46,16 +49,39 @@ public class ClassTests {
         assertNotSame(c.getClass().getClass(), Box.class);
     }
 
-    static class Component {
+    @Test
+    public void getObjectsInSceneGeneric() {
+        Scene scene = new Scene("ClassTests Scene", 0, 0) {
+            @Override
+            protected void init() {
+                addObject(new GameObject("obj1", new Vector2()));
+                addObject(new GameObject("obj2", new Vector2()));
+                addObject(new GameObject("obj3", new Vector2()));
+                addObject(new A("obj4", new Vector2()));
+                addObject(new A("obj5", new Vector2()));
+            }
+        };
+        scene.start();
+        assertEquals(scene.getObject("Obj1").name, "obj1");
+        assertEquals(scene.getObjects(GameObject.class).get(1).getClass(), GameObject.class);
+        assertEquals(scene.getObjects(A.class).get(0).getClass(), A.class);
+        assertEquals(scene.getObjects(null).get(4).getClass(), A.class);
 
+    }
+
+    static class Component {
     }
 
     static class Collider extends Component {
-
     }
 
     static class Box extends Collider {
+    }
 
+    static class A extends GameObject {
+        public A(String name, Vector2 position) {
+            super(name, position);
+        }
     }
 
 }

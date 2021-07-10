@@ -3,10 +3,7 @@ package slavsquatsuperstar.mayonez.assets;
 import slavsquatsuperstar.mayonez.Logger;
 import org.apache.commons.io.FileUtils;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.URL;
 
 /**
@@ -30,7 +27,7 @@ public class Asset {
     public OutputStream outputStream(boolean append) throws IOException {
         if (isClasspath) {
             Logger.log("%s: Cannot write to classpath resource", getClass().getSimpleName());
-            throw new IOException();
+            throw new UnsupportedOperationException("Cannot open output stream for classpath asset");
         }
         return FileUtils.openOutputStream(toFile(), append);
     }

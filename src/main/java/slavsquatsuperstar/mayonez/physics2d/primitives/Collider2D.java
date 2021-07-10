@@ -7,6 +7,11 @@ import slavsquatsuperstar.mayonez.Vector2;
 import slavsquatsuperstar.mayonez.components.Component;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
 
+/**
+ * An object's spatial representation in the world.
+ *
+ * @author SlavSquatSuperstar
+ */
 public abstract class Collider2D extends Component {
 
     // TODO debug draw
@@ -63,21 +68,26 @@ public abstract class Collider2D extends Component {
     // Getters and Setters
 
     @Override
-    public void setParent(GameObject parent) {
+    public Collider2D setParent(GameObject parent) {
         super.setParent(parent);
         transform = parent.transform;
+        return this;
     }
 
     public Rigidbody2D getRigidbody() {
         return rb;
     }
 
-    public void setRigidBody(Rigidbody2D rb) {
+    @SuppressWarnings("unchecked")
+    public <T extends Collider2D> T setRigidBody(Rigidbody2D rb) {
         this.rb = rb;
+        return (T) this;
     }
 
-    public void setTransform(Transform transform) {
+    @SuppressWarnings("unchecked")
+    public <T extends Collider2D> T setTransform(Transform transform) {
         this.transform = transform;
+        return (T) this;
     }
 
 }
