@@ -4,10 +4,11 @@ import org.junit.Test;
 import slavsquatsuperstar.mayonez.Vector2;
 import slavsquatsuperstar.mayonez.physics2d.primitives.Line2D;
 
-import static junit.framework.TestCase.assertFalse;
-import static junit.framework.TestCase.assertTrue;
+import static junit.framework.TestCase.*;
 
 public class LineTests {
+
+    // Line vs Point
 
     @Test
     public void lineContainsEndpoints() {
@@ -47,6 +48,24 @@ public class LineTests {
         Line2D l2 = new Line2D(new Vector2(1, -1), new Vector2(-1, 1));
         assertTrue(l1.intersects(l2));
     }
+
+    @Test
+    public void nearestPointInsideLine() {
+        Line2D line = new Line2D(new Vector2(-4, -4), new Vector2(4, 4));
+        assertEquals(line.start, line.nearestPoint(line.start));
+        assertEquals(line.end, line.nearestPoint(line.end));
+        assertEquals(line.center(), line.nearestPoint(line.center()));
+    }
+
+    @Test
+    public void nearestPointOutsideLine() {
+        Line2D line = new Line2D(new Vector2(0, 0), new Vector2(0, 4));
+        assertEquals(new Vector2(0, 3), line.nearestPoint(new Vector2(1, 3)));
+        assertEquals(new Vector2(0, 3), line.nearestPoint(new Vector2(-1, 3)));
+        assertEquals(new Vector2(0, 4), line.nearestPoint(new Vector2(2, 5)));
+    }
+
+    // Line vs Line
 
     @Test
     public void lineIntersectsOnePointTShape() {

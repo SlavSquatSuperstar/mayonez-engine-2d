@@ -66,7 +66,7 @@ public class KeepInScene extends Script {
                     parent.setY(maxY - objectCollider.height() / 2f);
                 break;
             case BOUNCE:
-                float bounce = -rb.getBounce();
+                float bounce = -objectCollider.getBounce();
                 if (boxMin.x < minX) {
                     parent.setX(minX + objectCollider.width() / 2f);
                     rb.velocity().x *= bounce;

@@ -4,8 +4,8 @@ import slavsquatsuperstar.mayonez.Vector2;
 import slavsquatsuperstar.util.MathUtils;
 
 /**
- * Represents an oriented bounding box, a rectangle that can be rotated.
- * The sides will align with the object's rotation angle.
+ * Represents an oriented bounding box, a rectangle that can be rotated. The sides will align with the object's rotation
+ * angle.
  */
 public class BoxCollider2D extends AbstractBoxCollider2D {
 
@@ -26,7 +26,7 @@ public class BoxCollider2D extends AbstractBoxCollider2D {
         if (!MathUtils.equals(getRotation(), 0)) {
             for (int i = 0; i < vertices.length; i++)
                 // Rotate a point about the center by a rotation
-                vertices[i] = vertices[i].rotate(getRotation(), getCenter());
+                vertices[i] = vertices[i].rotate(getRotation(), center());
         }
         return vertices;
     }
@@ -64,7 +64,7 @@ public class BoxCollider2D extends AbstractBoxCollider2D {
     @Override
     public boolean contains(Vector2 point) {
         // Translate the point into the box's local space
-        Vector2 pointLocal = point.rotate(-getRotation(), getCenter());
+        Vector2 pointLocal = point.rotate(-getRotation(), center());
         return MathUtils.inRange(pointLocal.x, min().x, max().x) && MathUtils.inRange(pointLocal.y, min().y, max().y);
     }
 
@@ -73,8 +73,8 @@ public class BoxCollider2D extends AbstractBoxCollider2D {
         float rot = -getRotation();
 
         // rotate the line into the AABB's local space
-        Vector2 localStart = line.start.rotate(rot, getCenter());
-        Vector2 localEnd = line.end.rotate(rot, getCenter());
+        Vector2 localStart = line.start.rotate(rot, center());
+        Vector2 localEnd = line.end.rotate(rot, center());
         Line2D localLine = new Line2D(localStart, localEnd);
 
         // Create AABB with same size
@@ -89,23 +89,14 @@ public class BoxCollider2D extends AbstractBoxCollider2D {
         if (collider == this)
             return false;
 
-        if (collider instanceof CircleCollider) {
-            return intersects((CircleCollider) collider);
-        } else if (collider instanceof AlignedBoxCollider2D) {
-            return intersects((AlignedBoxCollider2D) collider);
-        } else if (collider instanceof BoxCollider2D) {
+        if (collider instanceof CircleCollider)
+            return collider.detectCollision(this);
+        else if (collider instanceof AlignedBoxCollider2D)
+            return collider.detectCollision(this);
+        else if (collider instanceof BoxCollider2D)
             return intersects((BoxCollider2D) collider);
-        } else {
-            return false;
-        }
-    }
 
-    boolean intersects(CircleCollider circle) {
-        return circle.intersects(this);
-    }
-
-    boolean intersects(AlignedBoxCollider2D aabb) {
-        return aabb.intersects(this);
+        return false;
     }
 
     boolean intersects(BoxCollider2D box) {
@@ -126,18 +117,26 @@ public class BoxCollider2D extends AbstractBoxCollider2D {
     }
 
     @Override
-    public boolean raycast(Ray2D ray, RaycastResult result) {
+    public Vector2 nearestPoint(Vector2 position) {
+        if (contains(position))
+            return position;
+        // rotate the point into lcoal space
+        return position.rotate(-getRotation(), center()).clampInbounds(min(), max());
+    }
+
+    @Override
+    public boolean raycast(Ray2D ray, RaycastResult result, float limit) {
         float rot = -getRotation();
 
         // Rotate the line into the AABB's local space
-        Vector2 localOrigin = ray.origin.rotate(rot, getCenter());
-        Vector2 localDir = ray.direction.rotate(rot, getCenter());
+        Vector2 localOrigin = ray.origin.rotate(rot, center());
+        Vector2 localDir = ray.direction.rotate(rot, center());
         Ray2D localRay = new Ray2D(localOrigin, localDir);
 
         // Create AABB with same size
         AlignedBoxCollider2D aabb = new AlignedBoxCollider2D(size);
         aabb.rb = this.rb;
-        return aabb.raycast(ray, result);
+        return aabb.raycast(ray, result, limit);
 
         // Gabe's Method
 //        Vector2 xAxis = new Vector2(1, 0).rotate(rot, new Vector2());

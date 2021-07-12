@@ -2,28 +2,41 @@ package slavsquatsuperstar.mayonez.physics2d.primitives;
 
 import slavsquatsuperstar.mayonez.Vector2;
 
+/**
+ * Provides additional information about a raycast if passed into {@link Collider2D}.raycast().
+ *
+ * @author SlavSquatSuperstar
+ */
 public class RaycastResult {
 
-    private Ray2D ray = new Ray2D(new Vector2(), new Vector2());
-    private float t = -1; // unit lengths from ray origin to contact point
-    private boolean hit = false;
-
-    public void set(Vector2 point, Vector2 normal, float t, boolean hit) {
-        ray = new Ray2D(point, normal);
-        this.t = t;
-        this.hit = hit;
-    }
-
-    public Vector2 contactPoint() {
-        return hit ? ray.origin.add(ray.direction.mul(t)) : null;
-    }
+    private Vector2 contact = new Vector2(); // intersection point
+    private Vector2 normal = new Vector2(); // contact normal
+    private float distance = -1; // unit lengths from ray origin to contact point
 
     public static void reset(RaycastResult result) {
         if (result != null) {
-            result.ray = new Ray2D(new Vector2(), new Vector2());
-            result.t = -1;
-            result.hit = false;
+            result.contact = new Vector2();
+            result.normal = new Vector2();
+            result.distance = -1;
         }
+    }
+
+    void set(Vector2 contact, Vector2 normal, float distance) {
+        this.contact = contact;
+        this.normal = normal.unitVector();
+        this.distance = distance;
+    }
+
+    public Vector2 getContact() {
+        return contact;
+    }
+
+    public Vector2 getNormal() {
+        return normal;
+    }
+
+    public float getDistance() {
+        return distance;
     }
 
 }

@@ -3,6 +3,7 @@ package slavsquatsuperstar.mayonez;
 import slavsquatsuperstar.mayonez.physics2d.primitives.AlignedBoxCollider2D;
 import slavsquatsuperstar.mayonez.physics2d.primitives.BoxCollider2D;
 import slavsquatsuperstar.mayonez.physics2d.primitives.CircleCollider;
+import slavsquatsuperstar.mayonez.physics2d.primitives.Collider2D;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -21,7 +22,9 @@ public class DebugDraw {
         });
     }
 
-    public static void drawBox2D(BoxCollider2D box, Color color) {
+    // Shapes
+
+    public static void drawBox(BoxCollider2D box, Color color) {
         Polygon obb = new Polygon();
         for (Vector2 point : box.getVertices()) obb.addPoint((int) point.x, (int) point.y);
         shapes.add(g2 -> {
@@ -37,11 +40,27 @@ public class DebugDraw {
         });
     }
 
+    public static void drawShape(Collider2D shape, Color color) {
+        if (shape instanceof CircleCollider)
+            drawCircle((CircleCollider) shape, color);
+        else if (shape instanceof AlignedBoxCollider2D)
+            drawAABB((AlignedBoxCollider2D) shape, color);
+        else if (shape instanceof BoxCollider2D)
+            drawBox((BoxCollider2D) shape, color);
+    }
+
     public static void drawLine(Vector2 start, Vector2 end, Color color) {
         shapes.add(g2 -> {
             g2.setColor(color);
             g2.drawLine((int) start.x, (int) start.y, (int) end.x, (int) end.y);
         });
+    }
+
+    // Lines
+
+    public static void drawVector(Vector2 direction, Vector2 origin, Color color) {
+        drawLine(origin, origin.add(direction), color);
+//        drawPoint(origin.add(direction), color);
     }
 
     public static void drawPoint(Vector2 position, Color color) {
@@ -53,10 +72,7 @@ public class DebugDraw {
         });
     }
 
-    public static void drawVector(Vector2 vector, Vector2 origin, Color color) {
-        drawLine(origin, origin.add(vector), color);
-//        drawPoint(origin.add(vector), color);
-    }
+    // Points
 
     public void render(Graphics2D g2) {
         g2.setStroke(stroke);

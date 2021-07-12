@@ -19,6 +19,8 @@ public class Line2D extends Collider2D {
         this.end = end;
     }
 
+    // Properties
+
     float getSlope() {
         return (end.y - start.y) / (end.x - start.x);
     }
@@ -27,6 +29,12 @@ public class Line2D extends Collider2D {
         return end.sub(start);
     }
 
+    @Override
+    public Vector2 center() {
+        return new Vector2(start.x + end.x, start.y + end.y).mul(0.5f);
+    }
+
+    @Override
     public AlignedBoxCollider2D getMinBounds() {
         AlignedBoxCollider2D aabb = new AlignedBoxCollider2D(toVector());
         Vector2 center = start.add(end).mul(0.5f);
@@ -42,10 +50,10 @@ public class Line2D extends Collider2D {
      */
     public boolean contains(Vector2 point) {
         // triangle side length or projection distance
-        float distToStart = start.sub(point).length();
-        float distToEnd = end.sub(point).length();
+        float distToStart = start.distance(point);
+        float distToEnd = end.distance(point);
         float lineLength = toVector().length();
-        return distToStart + distToEnd <= lineLength;
+        return MathUtils.equals(distToStart + distToEnd, lineLength);
     }
 
     /**
@@ -66,6 +74,12 @@ public class Line2D extends Collider2D {
         }
     }
 
+    @Override
+    public boolean detectCollision(Collider2D collider) {
+        return collider.intersects(this);
+    }
+
+    @Override
     public boolean intersects(Line2D line) {
         // If parallel, must be overlapping (co-linear)
         if (MathUtils.equals(this.getSlope(), line.getSlope())) {
@@ -90,15 +104,26 @@ public class Line2D extends Collider2D {
         return false;
     }
 
-    // TODO implement me
     @Override
-    public boolean raycast(Ray2D ray, RaycastResult result) {
-        return false;
+    public Vector2 nearestPoint(Vector2 position) {
+        if (contains(position))
+            return position;
+//        Vector2 inBounds = position.clampInbounds(start, end);
+//        return start.add(inBounds.sub(start).project(toVector()));
+
+        float angle = toVector().angle();
+        Vector2 localStart = start.rotate(-angle, center());
+        Vector2 localEnd = end.rotate(-angle, center());
+        Vector2 localPoint = position.rotate(-angle, center());
+        Vector2 localNearest = new Vector2(MathUtils.clamp(localPoint.x, localStart.x, localEnd.x), localStart.y);
+        return localNearest.rotate(angle, center());
+
     }
 
+    // TODO implement me
     @Override
-    public boolean detectCollision(Collider2D collider) {
-        return collider.intersects(this);
+    public boolean raycast(Ray2D ray, RaycastResult result, float limit) {
+        return false;
     }
 
     @Override

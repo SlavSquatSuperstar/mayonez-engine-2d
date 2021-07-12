@@ -4,27 +4,29 @@ import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Transform;
 import slavsquatsuperstar.mayonez.Vector2;
 import slavsquatsuperstar.mayonez.components.Component;
+import slavsquatsuperstar.mayonez.physics2d.primitives.Collider2D;
 import slavsquatsuperstar.util.MathUtils;
 
 /**
- * A physical object with mass that interacts with the world.
+ * A physical object with mass that responds to forces and collisions.
  *
  * @author SlavSquatSuperstar
  */
 public class Rigidbody2D extends Component {
 
-    // Physics Properties
-    public boolean followsGravity = true;
+    // Physics Update Fields
     /**
      * A reference to the parent object's {@link Transform}.
      */
     Transform transform;
-    // Physics Update Fields
+    private Collider2D collider;
     private Vector2 netForce = new Vector2();
     private Vector2 velocity = new Vector2();
+
+    // Physics Properties
     private float mass;
     private float drag = 0.1f; // Modeled using F_d = -b*v
-    private float bounce = 0.5f;
+    private boolean followGravity = true;
 
     public Rigidbody2D(float mass) {
         this.setMass(mass);
@@ -32,7 +34,12 @@ public class Rigidbody2D extends Component {
 
     public Rigidbody2D(float mass, boolean followsGravity) {
         setMass(mass);
-        this.followsGravity = followsGravity;
+        this.setFollowGravity(followsGravity);
+    }
+
+    @Override
+    public void start() {
+        collider = parent.getComponent(Collider2D.class);
     }
 
     public void physicsUpdate(float dt) {
@@ -88,7 +95,7 @@ public class Rigidbody2D extends Component {
         return velocity.length();
     }
 
-    // Getters and Setters
+    // Component Getters and Setters
 
     @Override
     public Rigidbody2D setParent(GameObject parent) {
@@ -96,6 +103,23 @@ public class Rigidbody2D extends Component {
         transform = parent.transform;
         return this;
     }
+
+    // For unit testing mainly
+    public Rigidbody2D setTransform(Transform transform) {
+        this.transform = transform;
+        return this;
+    }
+
+    /**
+     * Returns the parent object's {@link Collider2D}. May be null.
+     *
+     * @return the attached collider
+     */
+    public Collider2D getCollider() {
+        return collider;
+    }
+
+    // Property Getter and Setters
 
     public float getMass() {
         return mass;
@@ -109,7 +133,7 @@ public class Rigidbody2D extends Component {
     }
 
     public boolean hasInfiniteMass() {
-        return MathUtils.equals(getMass(), 0f);
+        return MathUtils.equals(mass, 0f);
     }
 
     public float getInverseMass() {
@@ -122,15 +146,6 @@ public class Rigidbody2D extends Component {
 
     public Rigidbody2D setDrag(float drag) {
         this.drag = MathUtils.clamp(drag, 0, 1);
-        return this;
-    }
-
-    public float getBounce() {
-        return bounce;
-    }
-
-    public Rigidbody2D setBounce(float bounce) {
-        this.bounce = MathUtils.clamp(bounce, 0f, 1f);
         return this;
     }
 
@@ -150,9 +165,12 @@ public class Rigidbody2D extends Component {
         transform.rotation = rotation;
     }
 
-    // For unit testing mainly
-    public Rigidbody2D setTransform(Transform transform) {
-        this.transform = transform;
+    public boolean followGravity() {
+        return followGravity;
+    }
+
+    public Rigidbody2D setFollowGravity(boolean followGravity) {
+        this.followGravity = followGravity;
         return this;
     }
 

@@ -25,7 +25,7 @@ public class AABBTests {
 
     @Test
     public void aabbIsAtObjectCenter() {
-        assertEquals(new Vector2(0, 0), aabb.getCenter());
+        assertEquals(new Vector2(0, 0), aabb.center());
     }
 
     @Test
@@ -74,11 +74,14 @@ public class AABBTests {
         assertTrue(aabb.intersects(new Line2D(new Vector2(2, 2), new Vector2(2, 3))));
         assertTrue(aabb.intersects(new Line2D(new Vector2(2, 2), new Vector2(3, 1))));
         assertTrue(aabb.intersects(new Line2D(new Vector2(-1, -1), new Vector2(-3, -3))));
+        assertTrue(aabb.intersects(new Line2D(new Vector2(3, 2), new Vector2(2, 2))));
+
     }
 
     @Test
     public void lineNotInAABB() {
         assertFalse(aabb.intersects(new Line2D(new Vector2(3, 3), new Vector2(4, 4))));
+        assertFalse(aabb.intersects(new Line2D(new Vector2(4, 4), new Vector2(3, 3))));
         assertFalse(aabb.intersects(new Line2D(new Vector2(5, 2), new Vector2(4, 2))));
         assertFalse(aabb.intersects(new Line2D(new Vector2(3, 1), new Vector2(3, -1))));
     }

@@ -17,11 +17,15 @@ public class CircleCollider extends Collider2D {
     // Properties
 
     public Vector2 min() {
-        return new Vector2(getCenter().x - radius, getCenter().y - radius);
+        return new Vector2(center().x - radius, center().y - radius);
     }
 
     public Vector2 max() {
-        return new Vector2(getCenter().x + radius, getCenter().y + radius);
+        return new Vector2(center().x + radius, center().y + radius);
+    }
+
+    public float area() {
+        return MathUtils.PI * radius * radius;
     }
 
     @Override
@@ -33,7 +37,14 @@ public class CircleCollider extends Collider2D {
 
     @Override
     public boolean contains(Vector2 point) {
-        return point.sub(getCenter()).lengthSquared() <= radius * radius;
+        return point.sub(center()).lengthSquared() <= radius * radius;
+    }
+
+    @Override
+    public Vector2 nearestPoint(Vector2 position) {
+        if (contains(position))
+            return position;
+        return position.sub(center()).clampLength(radius);
     }
 
     @Override
@@ -43,7 +54,7 @@ public class CircleCollider extends Collider2D {
 
         // TODO Do circle and line interval overlap?
 
-        Vector2 startToCenter = getCenter().sub(line.start);
+        Vector2 startToCenter = center().sub(line.start);
         Vector2 projected = startToCenter.project(line.toVector());
         // Is nearest point outside of actual line segment?
         if (!MathUtils.inRange(projected.lengthSquared() / line.toVector().lengthSquared(), 0, 1))
@@ -53,66 +64,12 @@ public class CircleCollider extends Collider2D {
     }
 
     @Override
-    public boolean detectCollision(Collider2D collider) {
-        if (collider == this) // If same object ignore
-            return false;
-
-        if (collider instanceof CircleCollider) {
-            return intersects((CircleCollider) collider);
-        } else if (collider instanceof AlignedBoxCollider2D) {
-            return intersects((AlignedBoxCollider2D) collider);
-        } else if (collider instanceof BoxCollider2D) {
-            return intersects((BoxCollider2D) collider);
-        } else {
-            return false;
-        }
-    }
-
-    // TODO intersects or touches (< or <=)
-    boolean intersects(CircleCollider circle) {
-        float distSquared = this.getCenter().sub(circle.getCenter()).lengthSquared();
-        float radiiSum = this.radius + circle.radius;
-        return distSquared <= radiiSum * radiiSum;
-    }
-
-    boolean intersects(AlignedBoxCollider2D aabb) {
-        Vector2 min = aabb.min();
-        Vector2 max = aabb.max();
-
-        // Closest point on box to circle
-        Vector2 closestToCircle = new Vector2(getCenter());
-        closestToCircle.x = MathUtils.clamp(closestToCircle.x, min.x, max.x);
-        closestToCircle.y = MathUtils.clamp(closestToCircle.y, min.y, max.y);
-
-        return contains(closestToCircle);
-    }
-
-    boolean intersects(BoxCollider2D box) {
-        Vector2 min = box.min();
-        Vector2 max = box.max();
-
-        // Create a circle in the box's local space
-        Vector2 localCirclePos = getCenter().rotate(box.getRotation(), box.getCenter());
-//        Vector2 localCenter = getCenter().sub(box.getCenter());
-//        localCenter = localCenter.rotate(box.getRotation(), new Vector2());
-//
-//        Vector2f r = new Vector2f(circle.getCenter()).sub(box.getRigidbody().getPosition());
-//        JMath.rotate(r, -box.getRigidbody().getRotation(), new Vector2f());
-//        Vector2f localCirclePos = new Vector2f(r).add(box.getHalfSize());
-
-        Vector2 closest = new Vector2(localCirclePos);
-        closest.x = MathUtils.clamp(closest.x, min.x, max.x);
-        closest.y = MathUtils.clamp(closest.y, min.y, max.y);
-
-        return contains(localCirclePos);
-    }
-
-    @Override
-    public boolean raycast(Ray2D ray, RaycastResult result) {
+    public boolean raycast(Ray2D ray, RaycastResult result, float limit) {
         RaycastResult.reset(result);
+        limit = Math.abs(limit);
 
         // Trace the ray's origin to the circle's center
-        Vector2 originToCenter = getCenter().sub(ray.origin);
+        Vector2 originToCenter = center().sub(ray.origin);
         float radiusSquared = radius * radius;
         float lengthSquared = originToCenter.lengthSquared();
 
@@ -127,22 +84,46 @@ public class CircleCollider extends Collider2D {
         // unit lengths along projected vector
         float distToCircle = contains(ray.origin) ? projLength + f : projLength - f;
 
-        boolean hit = ray.getLimit() <= -1 || distToCircle <= ray.getLimit(); // limit ray if constructed from line
+        // is limit too far?
+        if (limit > 0 && distToCircle > limit)
+            return false;
 
         if (result != null) {
-            Vector2 point = ray.origin.add(ray.direction.mul(distToCircle));
-            Vector2 normal = point.sub(getCenter()).unitVector();
-            result.set(point, normal, distToCircle, hit);
+            Vector2 point = ray.getPoint(distToCircle);
+            Vector2 normal = point.sub(center()).unitVector();
+            result.set(point, normal, distToCircle);
         }
-
-        return hit;
+        return true;
     }
 
-    public CollisionManifold getCollisionInfo(CircleCollider circle) {
+    @Override
+    public boolean detectCollision(Collider2D collider) {
+        if (collider == this) // If same object ignore
+            return false;
+
+        if (collider instanceof CircleCollider) {
+            float distSquared = this.center().distanceSquared(collider.center());
+            float radiiSum = this.radius + ((CircleCollider) collider).radius;
+            return distSquared <= radiiSum * radiiSum;
+        } else if (collider instanceof AlignedBoxCollider2D)
+            return contains(collider.nearestPoint(this.center()));
+        else if (collider instanceof BoxCollider2D)
+            return contains(collider.nearestPoint(this.center()));
+
+        return false;
+    }
+
+    @Override
+    public CollisionManifold getCollisionInfo(Collider2D collider) {
         CollisionManifold result = new CollisionManifold();
 
+        if (!(collider instanceof CircleCollider))
+            return null;
+
+        CircleCollider circle = (CircleCollider) collider;
+
         float sumRadii = this.radius + circle.radius;
-        Vector2 distance = circle.getCenter().sub(this.getCenter());
+        Vector2 distance = circle.center().sub(this.center());
         if (distance.lengthSquared() > sumRadii * sumRadii) // No intersection
             return result;
 
@@ -153,7 +134,7 @@ public class CircleCollider extends Collider2D {
         Vector2 normal = distance.unitVector(); // direction of displacement
 
         // Simulate real physics, where circles only contact at one point
-        Vector2 contactPoint = this.getCenter().add(normal.mul(this.radius - depth * massProportion));
+        Vector2 contactPoint = this.center().add(normal.mul(this.radius - depth * massProportion));
 
         result = new CollisionManifold(normal, depth);
         result.addContactPoint(contactPoint);

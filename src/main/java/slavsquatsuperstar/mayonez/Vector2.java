@@ -12,6 +12,8 @@ public class Vector2 {
 
     public float x, y;
 
+    // Constructors
+
     /**
      * Initialize this vector to (0, 0).
      */
@@ -33,6 +35,25 @@ public class Vector2 {
         this(v.x, v.y);
     }
 
+    // Mutators
+
+    /**
+     * Sets this vector's components to the provided x and y coordinates. Note: this method is a mutating method!
+     */
+    public void set(float x, float y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    /**
+     * Sets this vector's components to the given vector's components. Note: this method is a mutating method!
+     */
+    public void set(Vector2 v) {
+        set(v.x, v.y);
+    }
+
+    // Arithmetic Operations
+
     /**
      * Adds another vector to this vector.
      *
@@ -44,113 +65,13 @@ public class Vector2 {
     }
 
     /**
-     * Calculates the angle in degrees between this vector and another.
+     * Subtracts another vector from this vector.
      *
-     * @return the angle
+     * @param v another 2D vector
+     * @return the vector difference
      */
-    public float angle(Vector2 v) {
-        return (float) Math.toDegrees(Math.acos(this.dot(v) / this.length() / v.length()));
-    }
-
-    /**
-     * Calculates the angle in degrees between this vector and the x-axis.
-     *
-     * @return the angle.
-     */
-    public float angle() {
-        return (float) Math.toDegrees(Math.atan2(y, x));
-    }
-
-    /**
-     * Clamps the length of this vector if it exceeds the provided value, while keeping the same direction. Useful for
-     * movement scripts.
-     *
-     * @param length any number
-     * @return the clamped vector
-     */
-    public Vector2 clampLength(float length) {
-        if (lengthSquared() > length * length) // too long
-            return this.mul(length / length());
-        return this;
-    }
-
-    /**
-     * Returns the components of this vector in array form. Useful for looping.
-     *
-     * @return an array <code>{x, y}</code>
-     */
-    public float[] components() {
-        return new float[]{x, y};
-    }
-
-    /**
-     * Returns the z-component of the cross product between this vector and another.
-     *
-     * @param v another vector
-     * @return the 2D cross product
-     */
-    public float cross(Vector2 v) {
-        return this.x * v.y - this.y * v.x;
-    }
-
-    public float distanceSquared(Vector2 v) {
-        return (this.x - v.x) * (this.x - v.x) + (this.y - v.y) * (this.y - v.y);
-    }
-
-    public float distance(Vector2 v) {
-        return (float) Math.sqrt(distanceSquared(v));
-    }
-
-    /**
-     * Divides both components vector by a number.
-     *
-     * @param scalar any non-zero number
-     * @return the divided vector
-     */
-    public Vector2 div(float scalar) {
-        if (scalar == 0) {
-            Logger.log("Vector2: Attempted division by 0");
-            return this.mul(0);
-        }
-        return this.mul(1 / scalar);
-    }
-
-    /**
-     * Divided the components of this vector by the corresponding components of another vector.
-     *
-     * @param v another vector with non-zero components
-     * @return the divided vector
-     */
-    public Vector2 div(Vector2 v) {
-        return new Vector2(this.x / v.x, this.y / v.y);
-    }
-
-    /**
-     * Multiplies the corresponding components of this vector and another vector.
-     *
-     * @param v another vector
-     * @return the dot product
-     */
-    public float dot(Vector2 v) {
-        return (this.x * v.x) + (this.y * v.y);
-    }
-
-    /**
-     * Calculates the length of this vector.
-     *
-     * @return this vector's length
-     */
-    public float length() {
-        return (float) Math.sqrt(lengthSquared());
-    }
-
-    /**
-     * Calculates the length squared of this vector (less CPU expensive than square root).
-     *
-     * @return this vector's length squared
-     */
-    public float lengthSquared() {
-        return (x * x) + (y * y);
+    public Vector2 sub(Vector2 v) {
+        return new Vector2(this.x - v.x, this.y - v.y);
     }
 
     /**
@@ -174,13 +95,127 @@ public class Vector2 {
     }
 
     /**
-     * Projects this vector onto another vector.
+     * Divides both components vector by a number.
+     *
+     * @param scalar any non-zero number
+     * @return the divided vector
+     */
+    public Vector2 div(float scalar) {
+        if (scalar == 0) {
+            Logger.log("Vector2: Attempted division by 0");
+            return this.mul(0);
+        }
+        return this.mul(1 / scalar);
+    }
+
+    /**
+     * Divided the components of this vector by the corresponding components of another vector.
+     *
+     * @param v another vector with non-zero components
+     * @return the divided vector
+     */
+    // TODO handle infinity
+    public Vector2 div(Vector2 v) {
+        return new Vector2(this.x / v.x, this.y / v.y);
+    }
+
+    // Products
+
+    /**
+     * Multiplies the corresponding components of this vector and another vector.
+     *
+     * @param v another vector
+     * @return the dot product
+     */
+    public float dot(Vector2 v) {
+        return (this.x * v.x) + (this.y * v.y);
+    }
+
+    /**
+     * Returns the z-component of the cross product between this vector and another.
+     *
+     * @param v another vector
+     * @return the 2D cross product
+     */
+    public float cross(Vector2 v) {
+        return this.x * v.y - this.y * v.x;
+    }
+
+    /**
+     * Projects this vector onto another vector, returning the components of this vector in the direction of another.
      *
      * @param vOnto another vector
      * @return the projected vector
      */
     public Vector2 project(Vector2 vOnto) {
         return vOnto.mul(this.dot(vOnto) / vOnto.lengthSquared());
+    }
+
+    // Other Operations
+
+    public Vector2 clampInbounds(Vector2 min, Vector2 max) {
+        return new Vector2(MathUtils.clamp(x, min.x, max.x), MathUtils.clamp(y, min.y, max.y));
+    }
+
+    /**
+     * Clamps the length of this vector if it exceeds the provided value, while keeping the same direction. Useful for
+     * movement scripts.
+     *
+     * @param length any number
+     * @return the clamped vector
+     */
+    public Vector2 clampLength(float length) {
+        if (lengthSquared() > length * length) // too long
+            return this.mul(length / length());
+        return new Vector2(this);
+    }
+
+    // Pythagorean Methods
+
+    public float distanceSquared(Vector2 v) {
+        return (this.x - v.x) * (this.x - v.x) + (this.y - v.y) * (this.y - v.y);
+    }
+
+    public float distance(Vector2 v) {
+        return (float) Math.sqrt(distanceSquared(v));
+    }
+
+    /**
+     * Calculates the length of this vector.
+     *
+     * @return this vector's length
+     */
+    public float length() {
+        return (float) Math.sqrt(lengthSquared());
+    }
+
+    /**
+     * Calculates the length squared of this vector (less CPU expensive than square root).
+     *
+     * @return this vector's length squared
+     */
+    public float lengthSquared() {
+        return (x * x) + (y * y);
+    }
+
+    // Angle Methods
+
+    /**
+     * Calculates the angle in degrees between this vector and another.
+     *
+     * @return the angle
+     */
+    public float angle(Vector2 v) {
+        return (float) Math.toDegrees(Math.acos(this.dot(v) / this.length() / v.length()));
+    }
+
+    /**
+     * Calculates the angle in degrees between this vector and the x-axis.
+     *
+     * @return the angle.
+     */
+    public float angle() {
+        return (float) Math.toDegrees(Math.atan2(y, x));
     }
 
     /**
@@ -206,40 +241,26 @@ public class Vector2 {
         return new Vector2(newX, newY).add(origin);
     }
 
-    /**
-     * Sets this vector's components to the provided x and y coordinates. Note: this method is a mutating method!
-     */
-    public void set(float x, float y) {
-        this.x = x;
-        this.y = y;
-    }
+    // Other Properties
 
     /**
-     * Sets this vector's components to the given vector's components. Note: this method is a mutating method!
-     */
-    public void set(Vector2 v) {
-        set(v.x, v.y);
-    }
-
-    /**
-     * Subtracts another vector from this vector.
+     * Returns the components of this vector in array form. Useful for looping.
      *
-     * @param v another 2D vector
-     * @return the vector difference
+     * @return an array <code>{x, y}</code>
      */
-    public Vector2 sub(Vector2 v) {
-        return new Vector2(this.x - v.x, this.y - v.y);
+    public float[] components() {
+        return new float[]{x, y};
     }
 
     /**
-     * Calculates the vector the same direction as this vector and a magnitude of 1. Returns (0, 0) if this vector is
-     * (0, 0).
+     * Calculates the vector with the same direction as this vector and a magnitude of 1. Returns (0, 0) if this vector
+     * is (0, 0).
      *
      * @return the unit vector
      */
     public Vector2 unitVector() {
-        if (MathUtils.equals(lengthSquared(), 0))
-            return this;
+        if (MathUtils.equals(lengthSquared(), 0) || MathUtils.equals(lengthSquared(), 1))
+            return new Vector2(this);
         return this.div(length());
     }
 

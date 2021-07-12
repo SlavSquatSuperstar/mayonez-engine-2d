@@ -1,15 +1,21 @@
 package slavsquatsuperstar.util;
 
+// TODO less precise sqrt, sin, cos
+
+/**
+ * A library of common math operations designed for float using a precision of six decimal places.
+ */
 public final class MathUtils {
 
     /**
      * The maximum precision a float should have (equal to 10^-6).
      */
     public static final float EPSILON = 1e-6f;
+    public static final float PI = 3.1415927f;
 
     private MathUtils() {}
 
-    // Average Methods
+    // Accumulator Methods
 
     public static float average(float[] values) {
         return sum(values) / values.length;
@@ -19,45 +25,21 @@ public final class MathUtils {
         return sum(values) / values.length;
     }
 
-    // Clamp Methods
-
-    /**
-     * Restricts a float's value within a provided range.
-     *
-     * @param value any real number
-     * @param min   the lower bound, inclusive
-     * @param max   the upper bound, inclusive
-     * @return a number within the bounds
-     */
-    public static float clamp(float value, float min, float max) {
-        Range range = new Range(min, max);
-        return Math.min(Math.max(range.min, value), range.max);
+    public static float sum(float... values) {
+        float sum = 0;
+        for (float value : values)
+            sum += value;
+        return sum;
     }
 
-    /**
-     * Restricts an integer's value within a provided range.
-     *
-     * @param value any real number
-     * @param min   the lower bound, inclusive
-     * @param max   the upper bound, inclusive
-     * @return a number within the bounds
-     */
-    public static int clamp(int value, int min, int max) {
-        return (int) clamp((float) value, (float) min, (float) max);
+    public static int sum(int... values) {
+        int sum = 0;
+        for (int value : values)
+            sum += value;
+        return sum;
     }
 
-    // Equality Methods
-
-    /**
-     * Determines whether two floats are approximately equal within 6 decimal places.
-     *
-     * @return if they are equal
-     */
-    public static boolean equals(float a, float b) {
-        return Math.abs(a - b) <= EPSILON * Math.max(1.0, Math.max(Math.abs(a), Math.abs(b)));
-    }
-
-    // Range Methods
+    // Range / Clamp Methods
 
     /**
      * Checks whether a number is within a provided range, including the bounds.
@@ -85,20 +67,29 @@ public final class MathUtils {
         return range.min < value && value < range.max;
     }
 
-    // Sum Methods
-
-    public static float sum(float... values) {
-        float sum = 0;
-        for (float value : values)
-            sum += value;
-        return sum;
+    /**
+     * Restricts a float's value within a provided range.
+     *
+     * @param value any real number
+     * @param min   the lower bound, inclusive
+     * @param max   the upper bound, inclusive
+     * @return a number within the bounds
+     */
+    public static float clamp(float value, float min, float max) {
+        Range range = new Range(min, max);
+        return Math.min(Math.max(range.min, value), range.max);
     }
 
-    public static int sum(int... values) {
-        int sum = 0;
-        for (int value : values)
-            sum += value;
-        return sum;
+    /**
+     * Restricts an integer's value within a provided range.
+     *
+     * @param value any real number
+     * @param min   the lower bound, inclusive
+     * @param max   the upper bound, inclusive
+     * @return a number within the bounds
+     */
+    public static int clamp(int value, int min, int max) {
+        return (int) clamp((float) value, (float) min, (float) max);
     }
 
     // Random Number Methods
@@ -137,6 +128,17 @@ public final class MathUtils {
     public static float truncate(float value, int decimalPlaces) {
         String s = String.valueOf(value);
         return Float.parseFloat(s.substring(0, s.indexOf('.') + decimalPlaces + 1));
+    }
+
+    // Equality Methods
+
+    /**
+     * Determines whether two floats are approximately equal within 6 decimal places.
+     *
+     * @return if they are equal
+     */
+    public static boolean equals(float num1, float num2) {
+        return Math.abs(num1 - num2) <= EPSILON * Math.max(1.0, Math.max(Math.abs(num1), Math.abs(num2)));
     }
 
     // Helper Class

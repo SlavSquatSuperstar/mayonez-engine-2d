@@ -25,10 +25,11 @@ public class Game implements Runnable {
     public static final float TIME_STEP = 1.0f / Preferences.FPS;
 
     // Singleton Fields
+    // TODO make start/stop static?
     private static Game game;
 
     // Input Fields
-    // TODO make singleton
+    // TODO make input singleton
     private final KeyInput keyboard;
     private final MouseInput mouse;
 

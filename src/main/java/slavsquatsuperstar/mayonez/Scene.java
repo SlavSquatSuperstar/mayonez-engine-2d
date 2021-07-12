@@ -42,7 +42,7 @@ public abstract class Scene {
         bounded = true;
 
         objects = new ArrayList<>();
-        toModify = new ArrayList<SceneModifier>();
+        toModify = new ArrayList<>();
 
         camera = new Camera(width, height);
         renderer = new Renderer(camera);

@@ -8,10 +8,11 @@ import slavsquatsuperstar.mayonez.physics2d.primitives.Collider2D;
 
 public class DragAndDrop extends Script {
 
-    public boolean inverted = false;
-    private String button;
-    private float lastMx, lastMy;
+    public boolean inverted;
     private Collider2D collider; // Reference to object collider
+    private float lastMx, lastMy;
+    private String button;
+    private boolean mouseHeld;
 
     public DragAndDrop(String button, boolean inverted) {
         this.button = button;
@@ -26,7 +27,14 @@ public class DragAndDrop extends Script {
     @Override
     public void update(float dt) {
         MouseInput mouse = Game.mouse();
-        if (isMouseOnObject() && mouse.buttonDown(button)) {
+        if (!mouseHeld) {
+            // If the mouse is pressed while on this object, start moving, even if the pointer comes off.
+            if (isMouseOnObject() && mouse.buttonDown(button))
+                mouseHeld = true;
+        } else {
+            // Once the mouse is released, stop moving
+            if (!mouse.buttonDown(button))
+                mouseHeld = false;
             float dx = (mouse.getX() - lastMx + mouse.getDx()) * (inverted ? -1 : 1);
             float dy = (mouse.getY() - lastMy + mouse.getDy()) * (inverted ? -1 : 1);
             transform.move(new Vector2(dx, dy));

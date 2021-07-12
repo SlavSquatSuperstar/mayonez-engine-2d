@@ -25,14 +25,14 @@ public class CircleTests {
 
     @Test
     public void circleIsAtObjectCenter() {
-        assertEquals(new Vector2(), c.getCenter());
+        assertEquals(new Vector2(), c.center());
     }
 
     // Circle vs Point
 
     @Test
     public void centerPointIsInCircle() {
-        assertTrue(c.contains(c.getCenter()));
+        assertTrue(c.contains(c.center()));
     }
 
     @Test
@@ -47,6 +47,19 @@ public class CircleTests {
     public void pointNotInCircle() {
         assertFalse(c.contains(new Vector2(-2, -2)));
         assertFalse(c.contains(new Vector2(2, 2)));
+    }
+
+    @Test
+    public void nearestPointInsideCircle() {
+        assertEquals(c.center(), c.nearestPoint(c.center()));
+        assertEquals(new Vector2(2, 0), c.nearestPoint(new Vector2(2, 0)));
+    }
+
+    @Test
+    public void nearestPointOutsideCircle() {
+        assertEquals(new Vector2(2, 0), c.nearestPoint(new Vector2(4, 0)));
+        assertEquals(new Vector2(-2, 0), c.nearestPoint(new Vector2(-4, 0)));
+
     }
 
     // Circle vs Line

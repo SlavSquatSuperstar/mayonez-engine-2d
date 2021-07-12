@@ -5,7 +5,7 @@ import slavsquatsuperstar.util.MathUtils;
 
 abstract class AbstractBoxCollider2D extends Collider2D {
 
-    protected final Vector2 size;
+    protected Vector2 size;
 
     public AbstractBoxCollider2D(Vector2 size) {
         this.size = size;
@@ -21,19 +21,23 @@ abstract class AbstractBoxCollider2D extends Collider2D {
         return size.y;
     }
 
+    public float area() {
+        return width() * height();
+    }
+
     // unrotated top left in world coords
     public Vector2 min() {
-        return getCenter().sub(size.mul(0.5f));
+        return center().sub(size.mul(0.5f));
     }
 
     // unrotated bottom right in world coords
     public Vector2 max() {
-        return getCenter().add(size.mul(0.5f));
+        return center().add(size.mul(0.5f));
     }
 
     public abstract Vector2[] getVertices();
 
-    private MathUtils.Range getIntervalOnAxis(Vector2 axis) {
+    protected final MathUtils.Range getIntervalOnAxis(Vector2 axis) {
         Vector2[] vertices = getVertices();
         MathUtils.Range interval = new MathUtils.Range(0, 0);
 
@@ -53,6 +57,12 @@ abstract class AbstractBoxCollider2D extends Collider2D {
         MathUtils.Range thisInterval = this.getIntervalOnAxis(axis);
         MathUtils.Range otherInterval = box.getIntervalOnAxis(axis);
         return (thisInterval.min <= otherInterval.max) && (otherInterval.min <= thisInterval.max);
+    }
+
+    protected final float getAxisOverlap(AbstractBoxCollider2D box, Vector2 axis) {
+        MathUtils.Range thisInterval = this.getIntervalOnAxis(axis);
+        MathUtils.Range otherInterval = box.getIntervalOnAxis(axis);
+        return Math.min(Math.abs(thisInterval.min - otherInterval.max), Math.abs(otherInterval.min - thisInterval.max));
     }
 
 }

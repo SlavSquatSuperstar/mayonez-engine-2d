@@ -2,10 +2,7 @@ package slavsquatsuperstar.mayonez.physics2d;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
-import slavsquatsuperstar.mayonez.GameObject;
-import slavsquatsuperstar.mayonez.Logger;
-import slavsquatsuperstar.mayonez.Vector2;
-import slavsquatsuperstar.mayonez.physics2d.primitives.CircleCollider;
+import slavsquatsuperstar.mayonez.*;
 import slavsquatsuperstar.mayonez.physics2d.primitives.Collider2D;
 import slavsquatsuperstar.util.MathUtils;
 
@@ -58,9 +55,9 @@ public class Physics2D {
         collisions.clear();
 
         // TODO Pre-collision optimizations and spatial partitioning
+        // Detect Collisions and Create Collision Events
         detectCollisions();
 //        colliders.forEach(col -> colliders.forEach(other -> {
-//            // TODO Use rb.getCollider instead
 //            if (other != col && col.detectCollision(other))
 //                Logger.log("%s intersects %s", col, other);
 //        }));
@@ -71,29 +68,44 @@ public class Physics2D {
         // TODO Create collision events and call GameObject.onCollision()
         resolveCollisions();
 
-        // Update object transforms
+        // Update object transforms independent of colliders
         rigidbodies.forEach(rb -> rb.physicsUpdate(dt));
     }
 
+    /*
+     * Collider & Rigidbody (dynamic): Can move and push
+     *  - Ex: player, enemy
+     * Collider & no Rigidbody (static): Can push but not move
+     *  - Ex: fire area
+     * Rigidbody & no Collider (sprite): Can move but not push
+     *  - Ex: sun
+     *
+     * Static vs Static (ignore)
+     * Dynamic vs Static (ignore for now)
+     * Dynamic vs Dynamic
+     */
     private void detectCollisions() {
-        for (int i = 0; i < rigidbodies.size(); i++) {
-            for (int j = i; j < rigidbodies.size(); j++) { // Set j to i to avoid duplicate collisions
-                if (i == j) // Don't want to check against self
-                    continue;
-
-                CollisionManifold result = null;
+        for (int i = 0; i < colliders.size(); i++) {
+            // Set j to i + 1 to avoid duplicate collisions and checking against self
+            for (int j = i + 1; j < colliders.size(); j++) {
                 Collider2D c1 = colliders.get(i);
                 Collider2D c2 = colliders.get(j);
                 Rigidbody2D r1 = c1.getRigidbody();
                 Rigidbody2D r2 = c2.getRigidbody();
 
-                if (r1 != null && r2 != null && !(r1.hasInfiniteMass() && r2.hasInfiniteMass())) {
-                    if (c1 instanceof CircleCollider && c2 instanceof CircleCollider)
-                        result = ((CircleCollider) c1).getCollisionInfo((CircleCollider) c2);
-                }
+                // Ignore collision if either rigidbody is static
+                if (r1 == null || r2 == null)
+                    continue;
+                else if (r1.hasInfiniteMass() || r2.hasInfiniteMass())
+                    continue;
 
-                // May be null b/c only circle-circle collisions are implemented
+                // Get collision info
+                CollisionManifold result = c1.getCollisionInfo(c2);
+
+                // May be null b/c not all collisions are implemented
                 if (result != null && result.isColliding()) {
+//                    if (c1.detectCollision(c2)) // Draw line between two colliding shapes
+                    DebugDraw.drawLine(c1.center(), c2.center(), Colors.RED);
                     collidingPairs.add(new ImmutablePair<>(r1, r2));
                     collisions.add(result);
                     Logger.log("%s intersects %s", c1, c2);
@@ -110,14 +122,13 @@ public class Physics2D {
             Rigidbody2D r1 = collidingPairs.get(i).getLeft();
             Rigidbody2D r2 = collidingPairs.get(i).getRight();
 
-            // Draw line between two shapes
-//                DebugDraw.drawLine(r1.getPosition(), r2.getPosition(), Color.RED);
-//                DebugDraw.drawPoint(contact, Colors.BLACK);
+            // Draw contact point
+            DebugDraw.drawPoint(col.getContactPoints().get(0), Colors.BLACK);
 
             if (r1.hasInfiniteMass() && r2.hasInfiniteMass())
                 return; // Return in case both infinite mass
 
-            // Resolve static collisions and separate objects
+            // Resolve static collisions and w objects
             float sumMass = r1.getMass() + r2.getMass();
             float depth1 = col.getDepth() * r1.getMass() / sumMass;
             float depth2 = col.getDepth() * r2.getMass() / sumMass;
@@ -133,34 +144,6 @@ public class Physics2D {
 
     // Collision Helper Methods
 
-    // Can't push objects after colliding, velocity slows to 0.
-    private void applyImpulse(Rigidbody2D r1, Rigidbody2D r2, CollisionManifold collision) {
-
-        Vector2 vel1 = r1.velocity();
-        Vector2 vel2 = r2.velocity();
-        Vector2 normal = collision.getNormal(); // Direction of collision
-        Vector2 tangent = new Vector2(-normal.y, normal.x); // Collision plane
-
-        float dotTan1 = vel1.dot(tangent);
-        float dotTan2 = vel2.dot(tangent);
-        float dotNorm1 = vel1.dot(normal);
-        float dotNorm2 = vel2.dot(normal);
-
-        // Conservation of momentum
-        float sumMass = r1.getMass() + r2.getMass();
-        float elasticity = r1.getBounce() * r2.getBounce(); // coefficient of restitution
-        float momentum1 = (dotNorm1 * (r1.getMass() - r2.getMass()) + 2f * r2.getMass() * dotNorm2) / sumMass * elasticity;
-        float momentum2 = (dotNorm2 * (r2.getMass() - r1.getMass()) + 2f * r1.getMass() * dotNorm1) / sumMass * elasticity;
-
-        float vx1 = tangent.x * dotTan1 + normal.x * momentum1;
-        float vy1 = tangent.y * dotTan1 + normal.y * momentum1;
-        float vx2 = tangent.x * dotTan2 + normal.x * momentum2;
-        float vy2 = tangent.y * dotTan2 + normal.y * momentum2;
-
-        r1.velocity().set(vx1, vy1);
-        r2.velocity().set(vx2, vy2);
-    }
-
     private void applyImpulse1(Rigidbody2D r1, Rigidbody2D r2, CollisionManifold collision) {
         // Solve for linear velocity.
         float invMass1 = r1.getInverseMass();
@@ -174,7 +157,7 @@ public class Physics2D {
         if (relativeVel.dot(normal) > 0f) // Stop if moving away or stationary
             return;
 
-        float elasticity = r1.getBounce() * r2.getBounce(); // coefficient of restitution
+        float elasticity = r1.getCollider().getBounce() * r2.getCollider().getBounce(); // Coefficient of restitution
         float collisionVel = -(1f + elasticity) * relativeVel.dot(normal);
         float impulse = collisionVel / sumInvMass;
         if (!collision.getContactPoints().isEmpty())
@@ -182,6 +165,34 @@ public class Physics2D {
 
         r1.addImpulse(normal.mul(-impulse));
         r2.addImpulse(normal.mul(impulse));
+    }
+
+    // Can't push objects after colliding, velocity slows to 0.
+    private void applyImpulse2(Rigidbody2D r1, Rigidbody2D r2, CollisionManifold collision) {
+
+        Vector2 vel1 = r1.velocity();
+        Vector2 vel2 = r2.velocity();
+        Vector2 normal = collision.getNormal(); // Direction of collision
+        Vector2 tangent = new Vector2(-normal.y, normal.x); // Collision plane
+
+        float dotTan1 = vel1.dot(tangent);
+        float dotTan2 = vel2.dot(tangent);
+        float dotNorm1 = vel1.dot(normal);
+        float dotNorm2 = vel2.dot(normal);
+
+        // Conservation of momentum
+        float sumMass = r1.getMass() + r2.getMass();
+        float elasticity = r1.getCollider().getBounce() * r2.getCollider().getBounce(); // Coefficient of restitution
+        float momentum1 = (dotNorm1 * (r1.getMass() - r2.getMass()) + 2f * r2.getMass() * dotNorm2) / sumMass * elasticity;
+        float momentum2 = (dotNorm2 * (r2.getMass() - r1.getMass()) + 2f * r1.getMass() * dotNorm1) / sumMass * elasticity;
+
+        float vx1 = tangent.x * dotTan1 + normal.x * momentum1;
+        float vy1 = tangent.y * dotTan1 + normal.y * momentum1;
+        float vx2 = tangent.x * dotTan2 + normal.x * momentum2;
+        float vy2 = tangent.y * dotTan2 + normal.y * momentum2;
+
+        r1.velocity().set(vx1, vy1);
+        r2.velocity().set(vx2, vy2);
     }
 
     // Game Object Methods
@@ -193,7 +204,7 @@ public class Physics2D {
 
         if (rb != null) {
             rigidbodies.add(rb);
-            if (rb.followsGravity)
+            if (rb.followGravity())
                 forceRegistry.add(new ForceRegistration(gravityForce, rb));
             forceRegistry.add(new ForceRegistration(dragForce, rb));
         }
