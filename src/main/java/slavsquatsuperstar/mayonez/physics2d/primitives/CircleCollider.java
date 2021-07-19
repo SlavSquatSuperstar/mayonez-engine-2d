@@ -115,20 +115,21 @@ public class CircleCollider extends Collider2D {
 
     @Override
     public CollisionManifold getCollisionInfo(Collider2D collider) {
-        CollisionManifold result = new CollisionManifold();
+        if (collider instanceof CircleCollider)
+            return getCollisionInfo((CircleCollider) collider);
+        if (collider instanceof AlignedBoxCollider2D)
+            return getCollisionInfo((AlignedBoxCollider2D) collider);
+        return null;
+    }
 
-        if (!(collider instanceof CircleCollider))
-            return null;
-
-        CircleCollider circle = (CircleCollider) collider;
-
+    private CollisionManifold getCollisionInfo(CircleCollider circle) {
         float sumRadii = this.radius + circle.radius;
         Vector2 distance = circle.center().sub(this.center());
         if (distance.lengthSquared() > sumRadii * sumRadii) // No intersection
-            return result;
+            return null;
 
-        // Divide by 2 to separate each circle evenly
-        // TODO factor collider mass and velocity
+        // Separate circles factoring in mass
+        // TODO bad idea if no rb, just use overlap instead
         float massProportion = this.rb.getMass() / (this.rb.getMass() + circle.rb.getMass());
         float depth = Math.abs(distance.length() - sumRadii);
         Vector2 normal = distance.unitVector(); // direction of displacement
@@ -136,8 +137,19 @@ public class CircleCollider extends Collider2D {
         // Simulate real physics, where circles only contact at one point
         Vector2 contactPoint = this.center().add(normal.mul(this.radius - depth * massProportion));
 
-        result = new CollisionManifold(normal, depth);
+        CollisionManifold result = new CollisionManifold(normal, depth);
         result.addContactPoint(contactPoint);
+        return result;
+    }
+
+    private CollisionManifold getCollisionInfo(AlignedBoxCollider2D box) {
+        if (!detectCollision(box))
+            return null;
+
+        Vector2 closestToCircle = box.nearestPoint(this.center());
+        float overlap = radius - closestToCircle.distance(this.center());
+        CollisionManifold result = new CollisionManifold(closestToCircle.sub(this.center()), overlap);
+        result.addContactPoint(closestToCircle);
         return result;
     }
 

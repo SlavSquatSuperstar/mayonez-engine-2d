@@ -57,10 +57,6 @@ public class Physics2D {
         // TODO Pre-collision optimizations and spatial partitioning
         // Detect Collisions and Create Collision Events
         detectCollisions();
-//        colliders.forEach(col -> colliders.forEach(other -> {
-//            if (other != col && col.detectCollision(other))
-//                Logger.log("%s intersects %s", col, other);
-//        }));
 
         // Update force generators
         forceRegistry.forEach(fr -> fr.fg.applyForce(fr.rb, dt));
@@ -104,7 +100,6 @@ public class Physics2D {
 
                 // May be null b/c not all collisions are implemented
                 if (result != null && result.isColliding()) {
-//                    if (c1.detectCollision(c2)) // Draw line between two colliding shapes
                     DebugDraw.drawLine(c1.center(), c2.center(), Colors.RED);
                     collidingPairs.add(new ImmutablePair<>(r1, r2));
                     collisions.add(result);

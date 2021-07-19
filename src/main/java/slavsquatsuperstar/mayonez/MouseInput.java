@@ -61,7 +61,7 @@ public class MouseInput extends MouseAdapter {
     }
 
     public Vector2 getPosition() {
-        return new Vector2(getX(), getY());
+        return new Vector2(mouseX, mouseY);
     }
 
     public int getDx() {
@@ -70,6 +70,10 @@ public class MouseInput extends MouseAdapter {
 
     public int getDy() {
         return dy;
+    }
+
+    public Vector2 getDisplacement() {
+        return new Vector2(dx, dy);
     }
 
     public int button() {

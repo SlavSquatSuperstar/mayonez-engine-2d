@@ -4,6 +4,7 @@ import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Preferences;
 import slavsquatsuperstar.mayonez.components.scripts.KeepInScene;
 import slavsquatsuperstar.mayonez.components.scripts.KeyMovement;
+import slavsquatsuperstar.mayonez.components.scripts.MoveMode;
 import slavsquatsuperstar.util.SpriteSheet;
 import slavsquatsuperstar.mayonez.Vector2;
 import slavsquatsuperstar.mayonez.components.Sprite;
@@ -15,6 +16,12 @@ import java.awt.*;
 public class Player extends GameObject {
 
     private final GameObject ground;
+
+    // Movement Parameters
+    private float thrustForce = 100f;
+    private float topSpeed = 10f;
+    private float mass = 10f;
+    private float drag = 0.1f; // [0, 1]
 
     public Player(String name, Vector2 position, GameObject ground) {
         super(name, position);
@@ -48,10 +55,10 @@ public class Player extends GameObject {
         for (Sprite s : layers)
             addComponent(s);
 
-        // Add player script
+        // Add player scripts
         addComponent(new AlignedBoxCollider2D(new Vector2(Preferences.TILE_SIZE, Preferences.TILE_SIZE)));
-        addComponent(new Rigidbody2D(0f));
-        addComponent(new KeyMovement(KeyMovement.Mode.FORCE, 0));
+        addComponent(new Rigidbody2D(mass).setDrag(drag));
+        addComponent(new KeyMovement(MoveMode.FORCE, thrustForce).setTopSpeed(topSpeed));
         addComponent(new PlayerController(ground));
         addComponent(new KeepInScene(0, 0, getScene().getWidth(), getScene().getHeight(), KeepInScene.Mode.STOP));
     }

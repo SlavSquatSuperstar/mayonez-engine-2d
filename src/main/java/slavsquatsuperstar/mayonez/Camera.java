@@ -21,9 +21,9 @@ public class Camera extends Script {
 
     // Static (Factory) Methods
     /**
-     * Creates a container {@link GameObject} to hold a Camera Object
+     * Creates a container {@link GameObject} to hold a Camera object
      *
-     * @param camera an Camera instance
+     * @param camera the camera instance
      * @return the object
      */
     public static GameObject createCameraObject(Camera camera) {
@@ -31,7 +31,8 @@ public class Camera extends Script {
             @Override
             protected void init() {
                 addComponent(camera);
-                addComponent(new DragAndDrop("right mouse", true)); // Keep camera inside scene
+                addComponent(new DragAndDrop("right mouse", true));
+                // Keep camera inside scene
                 addComponent(new KeepInScene(camera.minX, camera.minY, camera.maxX, camera.maxY, KeepInScene.Mode.STOP));
                 // add camera collider/trigger
             }

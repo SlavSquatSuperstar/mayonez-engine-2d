@@ -1,6 +1,5 @@
 package slavsquatsuperstar.mayonez.physics2d.primitives;
 
-import slavsquatsuperstar.mayonez.Logger;
 import slavsquatsuperstar.mayonez.Vector2;
 import slavsquatsuperstar.mayonez.physics2d.CollisionManifold;
 import slavsquatsuperstar.util.MathUtils;
@@ -96,7 +95,6 @@ public class AlignedBoxCollider2D extends AbstractBoxCollider2D {
             tFar.y = temp;
         }
 
-        Logger.log("%f < %f, %f < %f", tNear.x, tFar.y, tNear.y, tFar.x);
         if (tNear.x > tFar.y || tNear.y > tFar.x) // No intersection
             return false;
 
@@ -123,15 +121,12 @@ public class AlignedBoxCollider2D extends AbstractBoxCollider2D {
 
         Vector2 contactNear = ray.getPoint(tHitNear);
         Vector2 contactFar = ray.getPoint(tHitFar);
-//        DebugDraw.drawPoint(contactNear, Colors.RED);
-//        DebugDraw.drawPoint(contactFar, Colors.LIGHT_BLUE);
 
         Vector2 normal = new Vector2(); // Use (0, 0) for diagonal collision
         if (tNear.x > tNear.y) // Horizontal collision
             normal = (ray.direction.x < 0) ? new Vector2(1, 0) : new Vector2(-1, 0);
         else if (tNear.x < tNear.y) // Vertical collision
             normal = (ray.direction.y < 0) ? new Vector2(0, 1) : new Vector2(0, -1);
-//        DebugDraw.drawVector(normal.mul(10), contactNear, Colors.PINK);
 
         // TODO make normal orthogonal or use contact - center?
         if (result != null)
@@ -160,9 +155,22 @@ public class AlignedBoxCollider2D extends AbstractBoxCollider2D {
 
     @Override
     public CollisionManifold getCollisionInfo(Collider2D collider) {
-        if (collider instanceof AlignedBoxCollider2D)
+        if (collider instanceof CircleCollider)
+            return getCollisionInfo((CircleCollider) collider);
+        else if (collider instanceof AlignedBoxCollider2D)
             return getCollisionInfo((AlignedBoxCollider2D) collider);
         return null;
+    }
+
+    private CollisionManifold getCollisionInfo(CircleCollider circle) {
+        if (!detectCollision(circle))
+            return null;
+
+        Vector2 closestToCircle = this.nearestPoint(circle.center());
+        float overlap = circle.radius - closestToCircle.distance(circle.center());
+        CollisionManifold result = new CollisionManifold(closestToCircle.sub(this.center()), overlap);
+        result.addContactPoint(closestToCircle);
+        return result;
     }
 
     private CollisionManifold getCollisionInfo(AlignedBoxCollider2D aabb) {

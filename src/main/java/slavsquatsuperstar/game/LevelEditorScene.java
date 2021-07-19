@@ -17,6 +17,8 @@ public class LevelEditorScene extends Scene {
 
     @Override
     protected void init() {
+        camera().setKeepInScene(false);
+
         GameObject ground = new GameObject("Ground", new Vector2(0, Preferences.GROUND_HEIGHT)) {
             @Override
             public void update(float dt) {

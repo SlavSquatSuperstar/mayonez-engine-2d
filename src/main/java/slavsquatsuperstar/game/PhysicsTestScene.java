@@ -1,9 +1,7 @@
 package slavsquatsuperstar.game;
 
 import slavsquatsuperstar.mayonez.*;
-import slavsquatsuperstar.mayonez.components.scripts.DragAndDrop;
-import slavsquatsuperstar.mayonez.components.scripts.KeepInScene;
-import slavsquatsuperstar.mayonez.components.scripts.KeyMovement;
+import slavsquatsuperstar.mayonez.components.scripts.*;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
 import slavsquatsuperstar.mayonez.physics2d.primitives.AlignedBoxCollider2D;
 import slavsquatsuperstar.mayonez.physics2d.primitives.CircleCollider;
@@ -52,6 +50,13 @@ public class PhysicsTestScene extends Scene {
             }
         });
 
+//        for (int i = 0; i < 10; i++) {
+//            if (i % 2 == 0)
+//                addObject(createCircle(MathUtils.random(10, 40)));
+//            else
+//                addObject(createAABB(MathUtils.random(20, 80), MathUtils.random(20, 80)));
+//        }
+
         addObject(new GameObject("Player Shape", new Vector2(300, 100)) {
             @Override
             protected void init() {
@@ -60,37 +65,11 @@ public class PhysicsTestScene extends Scene {
 //                addComponent(new CircleCollider(radius));
                 addComponent(new AlignedBoxCollider2D(new Vector2(size, size)));
                 addComponent(new Rigidbody2D(radius * radius * MathUtils.PI / 100f));
-//                addComponent(new MouseMovement(MovementScript.Mode.FOLLOW_MOUSE, 2));
+//                addComponent(new MouseFlick("left mouse", 10, false));
+//                addComponent(new FollowMouse(MoveMode.FOLLOW_MOUSE, 2));
                 addComponent(new DragAndDrop("left mouse", false));
-                addComponent(new KeyMovement(KeyMovement.Mode.IMPULSE, 4));
+                addComponent(new KeyMovement(MoveMode.IMPULSE, 4));
                 addComponent(new KeepInScene(getScene(), KeepInScene.Mode.BOUNCE));
-                addComponent(new Script() {
-                    @Override
-                    public void update(float dt) {
-                        if (Game.mouse().buttonDown("left mouse")) {
-                            scene().addObject(new GameObject("Circle", Game.mouse().getPosition()) {
-                                @Override
-                                protected void init() {
-                                    float radius = MathUtils.random(10f, 40f);
-                                    addComponent(new CircleCollider(radius));
-                                    addComponent(new Rigidbody2D(radius * radius * MathUtils.PI * 0.5f));
-                                    addComponent(new KeepInScene(getScene(), KeepInScene.Mode.BOUNCE));
-                                }
-                            });
-                        } else if (Game.mouse().buttonDown("right mouse")) {
-                            scene().addObject(new GameObject("Rectangle", Game.mouse().getPosition()) {
-                                @Override
-                                protected void init() {
-                                    float width = MathUtils.random(10f, 40f);
-                                    float height = MathUtils.random(10f, 40f);
-                                    addComponent(new AlignedBoxCollider2D(new Vector2(width, height)));
-                                    addComponent(new Rigidbody2D(width * height / 100f));
-                                    addComponent(new KeepInScene(getScene(), KeepInScene.Mode.BOUNCE));
-                                }
-                            });
-                        }
-                    }
-                });
             }
         });
 
@@ -99,7 +78,6 @@ public class PhysicsTestScene extends Scene {
             protected void init() {
                 float radius = 20f;
                 addComponent(new CircleCollider(radius));
-//                addComponent(new AlignedBoxCollider2D(new Vector2(100, 100)));
                 addComponent(new Rigidbody2D(radius * radius * MathUtils.PI / 100f));
                 addComponent(new KeepInScene(getScene(), KeepInScene.Mode.BOUNCE));
             }
@@ -110,7 +88,6 @@ public class PhysicsTestScene extends Scene {
             protected void init() {
                 float radius = 50f;
                 addComponent(new CircleCollider(radius));
-//                addComponent(new AlignedBoxCollider2D(new Vector2(100, 100)));
                 addComponent(new Rigidbody2D(radius * radius * MathUtils.PI / 100f));
                 addComponent(new KeepInScene(getScene(), KeepInScene.Mode.BOUNCE));
             }
@@ -136,5 +113,29 @@ public class PhysicsTestScene extends Scene {
             }
         });
 
+    }
+
+    public GameObject createCircle(float radius) {
+        return new GameObject("Circle", new Vector2(MathUtils.random(0, width), MathUtils.random(0, height))) {
+            @Override
+            protected void init() {
+                addComponent(new CircleCollider(radius));
+                addComponent(new Rigidbody2D(radius * radius * MathUtils.PI / 100f));
+                addComponent(new KeepInScene(getScene(), KeepInScene.Mode.BOUNCE));
+                addComponent(new DragAndDrop("left mouse", false));
+            }
+        };
+    }
+
+    public GameObject createAABB(float width, float height) {
+        return new GameObject("Rectangle", new Vector2(MathUtils.random(0, width), MathUtils.random(0, height))) {
+            @Override
+            protected void init() {
+                addComponent(new AlignedBoxCollider2D(new Vector2(width, height)));
+                addComponent(new Rigidbody2D(width * height / 100f));
+                addComponent(new KeepInScene(getScene(), KeepInScene.Mode.BOUNCE));
+                addComponent(new DragAndDrop("left mouse", false));
+            }
+        };
     }
 }

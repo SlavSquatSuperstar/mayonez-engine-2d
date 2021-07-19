@@ -200,22 +200,26 @@ public class Game implements Runnable {
             return;
         }
 
-        /*
-         * Use a do-while loop to avoid losing buffer frames Source:
-         * https://stackoverflow.com/questions/13590002/understand-bufferstrategy
-         */
-        do {
-            // Clear the screen
-            gfx = buffers.getDrawGraphics();
-            gfx.clearRect(0, 0, width, height);
+        try {
+            /*
+             * Use a do-while loop to avoid losing buffer frames Source:
+             * https://stackoverflow.com/questions/13590002/understand-bufferstrategy
+             */
+            do {
+                // Clear the screen
+                gfx = buffers.getDrawGraphics();
+                gfx.clearRect(0, 0, width, height);
 
-            if (null != currentScene)
-                currentScene.render((Graphics2D) gfx);
-            debugDraw.render((Graphics2D) gfx);
+                if (null != currentScene)
+                    currentScene.render((Graphics2D) gfx);
+                debugDraw.render((Graphics2D) gfx);
 
-            gfx.dispose();
-            buffers.show();
-        } while (buffers.contentsLost());
+                gfx.dispose();
+                buffers.show();
+            } while (buffers.contentsLost());
+        } catch (IllegalStateException e) {
+            Logger.log("Engine: Error rendering screen; trying again next frame.");
+        }
 
     }
 
@@ -230,13 +234,13 @@ public class Game implements Runnable {
         Logger.log("Welcome to %s %s", Preferences.TITLE, Preferences.VERSION);
         running = true;
 
-        // Start thread
-        thread = new Thread(this);
-        thread.start();
-
         // Display window and initialize graphics buffer
         window.setVisible(true);
         initGraphics();
+
+        // Start thread
+        thread = new Thread(this);
+        thread.start();
 
         startCurrentScene();
     }

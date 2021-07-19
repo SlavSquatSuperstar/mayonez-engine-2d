@@ -5,7 +5,10 @@ import slavsquatsuperstar.mayonez.Vector2;
 
 public class KeyMovement extends MovementScript {
 
-    public KeyMovement(Mode mode, float speed) {
+    private String xAxis = "horizontal";
+    private String yAxis = "vertical";
+
+    public KeyMovement(MoveMode mode, float speed) {
         super(mode, speed);
     }
 
@@ -24,11 +27,27 @@ public class KeyMovement extends MovementScript {
                 rb.addForce(input);
                 break;
         }
+        // Limit Top Speed
+        if (rb != null && topSpeed > -1 && rb.speed() > topSpeed)
+            rb.velocity().set(rb.velocity().mul(topSpeed / rb.speed()));
     }
 
     @Override
     protected Vector2 getRawInput() {
-        return new Vector2(Game.keyboard().getAxis("horizontal"), Game.keyboard().getAxis("vertical"));
+        return new Vector2(Game.keyboard().getAxis(xAxis), Game.keyboard().getAxis(yAxis));
+    }
+
+    public void setXAxis(String xAxis) {
+        this.xAxis = xAxis;
+    }
+
+    public void setYAxis(String yAxis) {
+        this.yAxis = yAxis;
+    }
+
+    public KeyMovement setTopSpeed(float topSpeed) {
+        this.topSpeed = topSpeed;
+        return this;
     }
 
 }
