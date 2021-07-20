@@ -32,9 +32,9 @@ public class Renderer {
         AffineTransform transform = g2.getTransform();
 
         // Move the screen and render everything at the offset position
-        float camX = camera.getX();
-        float camY = camera.getY();
-        g2.translate(-camX, -camY);
+//        float camX = camera.getX();
+//        float camY = camera.getY();
+//        g2.translate(-camX, -camY);
         // TODO only render if in screen
 
         objects.forEach(o -> o.render(g2));

@@ -6,13 +6,13 @@ import slavsquatsuperstar.mayonez.components.scripts.KeepInScene;
 // TODO set keep in scene, to parent?
 public class Camera extends Script {
 
-    private int width, height;
+    private float width, height; // in world units
     private int minX, minY, maxX, maxY;
     private GameObject subject;
 
     public Camera(int sceneWidth, int sceneHeight) {
-        width = Preferences.SCREEN_WIDTH;
-        height = Preferences.SCREEN_HEIGHT;
+        width = (float) Preferences.SCREEN_WIDTH / Preferences.TILE_SIZE;
+        height = (float) Preferences.SCREEN_HEIGHT  / Preferences.TILE_SIZE;
         minX = 0;
         minY = 0;//-28; // account for the bar on top of the window
         maxX = sceneWidth;

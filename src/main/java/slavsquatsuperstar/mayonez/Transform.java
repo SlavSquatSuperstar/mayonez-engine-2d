@@ -44,6 +44,14 @@ public class Transform { // TODO extend component?
         rotation += degrees;
     }
 
+    /**
+     * Resizes the parent object and all its components by the given x and y axes
+     * @param dilation a vector
+     */
+    public void stretch(Vector2 dilation) {
+        scale = scale.mul(dilation);
+    }
+
     @Override
     public String toString() {
         return String.format("Position: %s, Scale: %s", position, scale);

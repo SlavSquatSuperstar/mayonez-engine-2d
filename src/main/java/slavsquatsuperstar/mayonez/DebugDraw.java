@@ -63,6 +63,8 @@ public class DebugDraw {
 //        drawPoint(origin.add(direction), color);
     }
 
+    // Points
+
     public static void drawPoint(Vector2 position, Color color) {
         CircleCollider point = new CircleCollider(strokeSize);
         point.setTransform(new Transform(position));
@@ -71,8 +73,6 @@ public class DebugDraw {
             g2.fillOval((int) point.min().x, (int) point.min().y, (int) (point.radius * 2f), (int) (point.radius * 2f));
         });
     }
-
-    // Points
 
     public void render(Graphics2D g2) {
         g2.setStroke(stroke);

@@ -4,6 +4,7 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import slavsquatsuperstar.game.LevelEditorScene;
 import slavsquatsuperstar.game.LevelScene;
 import slavsquatsuperstar.game.PhysicsTestScene;
+import slavsquatsuperstar.game.RendererTestScene;
 
 import javax.swing.*;
 import java.awt.*;
@@ -111,6 +112,9 @@ public class Game implements Runnable {
                 break;
             case 2:
                 game.currentScene = new PhysicsTestScene("Physics Test Scene");
+                break;
+            case 3:
+                game.currentScene = new RendererTestScene("Renderer Test Scene");
                 break;
             default:
                 Logger.log("Game: Unknown scene");

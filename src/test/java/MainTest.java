@@ -1,20 +1,50 @@
+import slavsquatsuperstar.mayonez.Logger;
 
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainTest {
 
     public static void main(String[] args) throws Exception {
-        float posInfty = Float.POSITIVE_INFINITY;
-        float negInfty = Float.NEGATIVE_INFINITY;
-        System.out.println(posInfty > negInfty);
-        System.out.println(negInfty < posInfty);
-        System.out.println(0 < posInfty);
-        System.out.println(0 > negInfty);
-        System.out.println(posInfty == posInfty);
-        System.out.println(negInfty == negInfty);
-        System.out.println(1 / 0f);
-        System.out.println(-1 / 0f);
-        System.out.println(0 / 0f);
+        EventListener myListener1 = event -> Logger.log("Listener 1: %s", event);
+        EventListener myListener2 = event -> Logger.log("Listener 2 reports: %s", event);
+        EventGenerator myGenerator = new EventGenerator();
+        myGenerator.addListener(myListener1);
+        myGenerator.addListener(myListener2);
+        myGenerator.createEvent(new Event("Clankers inbound!"));
+    }
 
+    interface EventListener {
+        void onReceiveEvent(Event event);
+    }
+
+    static class Event {
+        private String msg;
+
+        public Event(String msg) {
+            this.msg = msg;
+        }
+
+        @Override
+        public String toString() {
+            return msg;
+        }
+    }
+
+    static class EventGenerator {
+        private List<EventListener> listeners = new ArrayList<>();
+
+        public void addListener(EventListener e) {
+            listeners.add(e);
+        }
+
+        public void removeListener(EventListener e) {
+            listeners.remove(e);
+        }
+
+        public void createEvent(Event event) {
+            listeners.forEach(l -> l.onReceiveEvent(event));
+        }
     }
 
 }

@@ -33,23 +33,19 @@ public class Sprite extends Component {
     }
 
     @Override
-    public void start() {
-        // Move the parent so the top-left edge of this image is at the parent's previous positoin
-        parent.transform.move(new Vector2(getImage().getWidth() / 2f, getImage().getHeight() / 2f));
-    }
-
-    @Override
     public final void update(float dt) {} // Sprites shouldn't update any game logic
 
     @Override
     public void render(Graphics2D g2) {
         AffineTransform transform = new AffineTransform();
         transform.setToIdentity();
-        transform.translate(parent.getX() - image.getWidth() / 2f, parent.getY() - image.getHeight() / 2f); // Draw at parent's center
-//            transform.translate(parent.getX(), parent.getY());
+        Vector2 imageCenter = new Vector2(image.getWidth() / 2f, image.getHeight() / 2f);
+        transform.translate(parent.getX() * Preferences.TILE_SIZE - imageCenter.x,
+                parent.getY() * Preferences.TILE_SIZE - imageCenter.y); // Draw at parent's center
         transform.scale(parent.transform.scale.x, parent.transform.scale.y);
-        transform.rotate(Math.toRadians(parent.transform.rotation), image.getWidth() / 2f,
-                image.getHeight() / 2f);
+        transform.rotate(Math.toRadians(parent.transform.rotation), imageCenter.x,
+                imageCenter.y);
+        Logger.log("Mario, Screen: (%.4f, %.4f)", transform.getTranslateX() + imageCenter.x, transform.getTranslateY() + imageCenter.y);
         g2.drawImage(image, transform, null);
     }
 
