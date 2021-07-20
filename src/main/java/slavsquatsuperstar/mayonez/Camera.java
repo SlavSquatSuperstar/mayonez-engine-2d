@@ -3,7 +3,6 @@ package slavsquatsuperstar.mayonez;
 import slavsquatsuperstar.mayonez.components.scripts.DragAndDrop;
 import slavsquatsuperstar.mayonez.components.scripts.KeepInScene;
 
-// TODO set keep in scene, to parent?
 public class Camera extends Script {
 
     private float width, height; // in world units
@@ -28,22 +27,29 @@ public class Camera extends Script {
      * @return the object
      */
     public static GameObject createCameraObject(Camera camera) {
-        return new GameObject("Camera", new Vector2()) {
+        return new GameObject("Camera", camera.getHalfSize()) {
             @Override
             protected void init() {
                 addComponent(camera);
-                addComponent(new DragAndDrop("right mouse", true));
+                addComponent(new DragAndDrop("right mouse", true) {
+                    // Reset camera position with double click
+                    @Override
+                    public void onMouseDown() {
+                        if (Game.mouse().clicks() == 2) {
+                            camera.setOffset(new Vector2(0, 0));
+                        }
+                    }
+                }.setEnabled(false));
                 // Keep camera inside scene and add camera collider
                 addComponent(new KeepInScene(camera.minX, camera.minY, camera.maxX, camera.maxY, KeepInScene.Mode.STOP));
             }
 
             // Don't want to get rid of the camera!
             @Override
-            public void destroy() {
-            }
+            public final void destroy() {}
 
             @Override
-            public boolean isDestroyed() {
+            public final boolean isDestroyed() {
                 return false;
             }
         };
@@ -51,30 +57,32 @@ public class Camera extends Script {
 
     @Override
     public void update(float dt) {
-        // Reset camera position with double click
-        if (Game.mouse().buttonDown("right mouse") && Game.mouse().clicks() == 2) {
-            parent.setX(0);
-            parent.setY(0);
-        }
         // Follow subject (Set position to subject position)
-        if (subject != null) {
-            parent.setX((subject.getX()));
-            parent.setY((subject.getY()));
-        }
+        if (subject != null)
+            transform.position.set(subject.transform.position);
     }
 
     // Getters and setters
 
-    public float getOffsetX() {
+    // TODO remove
+    public float getX() {
         return parent.getX();
     }
 
-    public float getOffsetY() {
+    public float getY() {
         return parent.getY();
     }
 
-    public Vector2 getMin() {
-        return new Vector2(getOffsetX() - width * 0.5f, getOffsetY() - height * 0.5f);
+    public Vector2 getOffset() {
+        return transform.position.sub(getHalfSize());
+    }
+
+    public void setOffset(Vector2 offset) {
+        transform.position.set(offset.add(getHalfSize()));
+    }
+
+    public Vector2 getHalfSize() {
+        return new Vector2(width, height).div(2);
     }
 
     /**

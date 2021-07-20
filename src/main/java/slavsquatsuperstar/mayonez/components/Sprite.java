@@ -37,15 +37,25 @@ public class Sprite extends Component {
 
     @Override
     public void render(Graphics2D g2) {
+        // Graphics screen coordinates with camera offset
+        double g2X = g2.getTransform().getTranslateX();
+        double g2Y = g2.getTransform().getTranslateY();
+
+        // Measurements are in screen coordinates (pixels)
+        Vector2 cameraOffset = new Vector2((float) g2X, (float) g2Y);
+        Vector2 parentCenter = parent.transform.position.mul(Preferences.TILE_SIZE); // no offset
+        Vector2 imageHalfSize = new Vector2(image.getWidth(), image.getHeight()).div(2);
+        Logger.log("Sprite, Screen: (%.4f, %.4f)", parentCenter.x + g2X, parentCenter.y + g2Y);
+//        DebugDraw.drawPoint(parentCenter.add(cameraOffset).add(imageHalfSize), Colors.BLUE);
+
+        // Use the parent's transform to draw the sprite
         AffineTransform transform = new AffineTransform();
         transform.setToIdentity();
-        Vector2 imageCenter = new Vector2(image.getWidth() * 0.5f, image.getHeight() * 0.5f);
-        transform.translate(parent.getX() * Preferences.TILE_SIZE - imageCenter.x,
-                parent.getY() * Preferences.TILE_SIZE - imageCenter.y); // Draw at parent's center
+        transform.translate(parentCenter.x - image.getWidth(),
+                parentCenter.y - image.getHeight()); // Draw at parent's center
         transform.scale(parent.transform.scale.x, parent.transform.scale.y);
-        transform.rotate(Math.toRadians(parent.transform.rotation), imageCenter.x,
-                imageCenter.y);
-        Logger.log("Sprite, Screen: (%.4f, %.4f)", transform.getTranslateX() + imageCenter.x, transform.getTranslateY() + imageCenter.y);
+        transform.rotate(Math.toRadians(parent.transform.rotation), imageHalfSize.x, imageHalfSize.y);
+
         g2.drawImage(image, transform, null);
     }
 

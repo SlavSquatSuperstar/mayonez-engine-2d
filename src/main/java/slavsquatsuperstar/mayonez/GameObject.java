@@ -16,14 +16,17 @@ import java.util.stream.Collectors;
  */
 public class GameObject {
 
-    public final String name;
+    // Object Information
+    public String name;
     public Transform transform;
+
+    // Scene Information
     private Scene scene;
     private boolean destroyed = false;
 
     // Component Fields
     private final List<Component> components;
-    private ArrayList<Class> updateOrder = null;
+    private List<Class> updateOrder = null;
 
     public GameObject(String name, Vector2 position) {
         this.name = name;
@@ -36,8 +39,7 @@ public class GameObject {
     /**
      * Add necessary components.
      */
-    protected void init() {
-    }
+    protected void init() {}
 
     /**
      * Initializes all components.
@@ -74,7 +76,6 @@ public class GameObject {
         // maybe make annotation (multiple scripts should suppress warning)
 //		if (null != getComponent(comp.getClass()))
 //			Logger.log("GameObject: Adding multiple components of the same type is not recommended");
-
         components.add(comp.setParent(this));
     }
 
@@ -120,6 +121,27 @@ public class GameObject {
         return null;
     }
 
+    /**
+     * Sets the update order of this object's components. A subclass's order will override the order of its superclass.
+     *
+     * @param order an array of component subclasses
+     */
+    public void setUpdateOrder(Class... order) {
+        if (updateOrder == null) {
+            updateOrder = new ArrayList<>();
+            updateOrder.addAll(Arrays.asList(order));
+        }
+        components.sort(Comparator.comparingInt(c -> getUpdateOrder(c.getClass())));
+    }
+
+    private int getUpdateOrder(Class componentCls) {
+        int i = updateOrder.indexOf(componentCls);
+        if (i > -1)
+            return i;
+        i = getUpdateOrder(componentCls.getSuperclass());
+        return (i > -1) ? i : updateOrder.size();
+    }
+
     // Getters and Setters
 
     public float getX() {
@@ -159,22 +181,6 @@ public class GameObject {
     public String toString() {
         return String.format("%s (%s)", name, getClass().isAnonymousClass() ?
                 "GameObject" : getClass().getSimpleName());
-    }
-
-    private int getUpdateOrder(ArrayList<Class> classOrder, Class cls) {
-        int i = classOrder.indexOf(cls);
-        if (i > -1)
-            return i;
-        i = getUpdateOrder(classOrder, cls.getSuperclass());
-        return (i > -1) ? i : classOrder.size();
-    }
-
-    public void setUpdateOrder(Class... order) {
-        if (updateOrder == null) {
-            updateOrder = new ArrayList<>();
-            updateOrder.addAll(Arrays.asList(order));
-        }
-        components.sort(Comparator.comparingInt(c -> getUpdateOrder(updateOrder, c.getClass())));
     }
 
 }

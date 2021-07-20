@@ -43,7 +43,7 @@ public class KeepInScene extends Script {
         } catch (NullPointerException e) {
             Logger.log("Script KeepInScene needs a collider to function!");
             objectCollider = new AlignedBoxCollider2D(new Vector2());
-            objectCollider.setTransform(parent.transform);
+            objectCollider.setTransform(transform);
         }
     }
 

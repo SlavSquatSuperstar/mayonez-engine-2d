@@ -17,10 +17,10 @@ public class FollowMouse extends MouseMovement {
         Vector2 mouseDirection = getRawInput().clampLength(speed);
         switch (mode) {
             case FOLLOW_MOUSE:
-                parent.transform.position.set(Game.mouse().getPosition());
+                transform.position.set(Game.mouse().getPosition());
                 break;
             case POSITION:
-                parent.transform.move(mouseDirection);
+                transform.move(mouseDirection);
                 break;
             case VELOCITY:
                 rb.addVelocity(mouseDirection);
@@ -39,6 +39,6 @@ public class FollowMouse extends MouseMovement {
 
     @Override
     protected Vector2 getRawInput() {
-        return Game.mouse().getPosition().sub(parent.transform.position);
+        return Game.mouse().getPosition().sub(transform.position);
     }
 }

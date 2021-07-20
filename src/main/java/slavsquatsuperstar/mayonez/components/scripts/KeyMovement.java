@@ -18,7 +18,7 @@ public class KeyMovement extends MovementScript {
         Vector2 input = getRawInput().unitVector().mul(speed);
         switch (mode) {
             case POSITION:
-                parent.transform.move(input);
+                transform.move(input);
                 break;
             case IMPULSE:
                 rb.addImpulse(input);

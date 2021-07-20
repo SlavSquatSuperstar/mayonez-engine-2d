@@ -15,21 +15,21 @@ import java.util.stream.Collectors;
 // TODO individual cell size
 public abstract class Scene {
 
-    // Object Fields
-    private final List<GameObject> objects;
-    private final List<SceneModifier> toModify; // Use a separate list to avoid concurrent exceptions
-
-    // Layers
-    private final Renderer renderer;
-    private final Physics2D physics;
-    private final Camera camera;
-
-    // Scene Info
+    // Scene Information
     protected String name;
     protected int width, height;
     protected boolean bounded;
     protected Color background = Color.WHITE;
     private boolean started;
+
+    // Game Layers
+    private final Renderer renderer;
+    private final Physics2D physics;
+    private final Camera camera;
+
+    // Object Fields
+    private final List<GameObject> objects;
+    private final List<SceneModifier> toModify; // Use a separate list to avoid concurrent exceptions
 
     public Scene(String name) {
         this(name, 0, 0);
@@ -54,8 +54,7 @@ public abstract class Scene {
     /**
      * Add necessary objects.
      */
-    protected void init() {
-    }
+    protected void init() {}
 
     public final void start() {
         if (started)
@@ -63,6 +62,8 @@ public abstract class Scene {
 
         addObject(Camera.createCameraObject(camera));
         init();
+        // TODO late update?
+        objects.add(objects.remove(0)); // update the camera last
         started = true;
     }
 
@@ -79,8 +80,12 @@ public abstract class Scene {
         physics.physicsUpdate(dt);
 
         // Remove destroyed objects or add new ones at the end of the frame
-        toModify.forEach(SceneModifier::modify);
-        toModify.clear();
+        if (!toModify.isEmpty()) {
+            toModify.forEach(SceneModifier::modify);
+            toModify.clear();
+            objects.add(objects.remove(0)); // move the camera to the last index
+        }
+
     }
 
     public final void render(Graphics2D g2) {

@@ -35,9 +35,9 @@ public class PlayerController extends Script {
     public void update(float dt) {
         // Rotate player
         if (Game.keyboard().keyDown(KeyEvent.VK_Q))
-            parent.transform.rotate(-2);
+            transform.rotate(-2);
         if (Game.keyboard().keyDown(KeyEvent.VK_E))
-            parent.transform.rotate(2);
+            transform.rotate(2);
 
         Vector2 velocity = rb.velocity();
 
