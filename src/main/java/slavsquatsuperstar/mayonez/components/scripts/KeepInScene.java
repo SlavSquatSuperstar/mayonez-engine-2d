@@ -56,42 +56,42 @@ public class KeepInScene extends Script {
         switch (mode) {
             case STOP:
                 if (boxMin.x < minX)
-                    parent.setX(minX + objectCollider.width() / 2f);
+                    parent.setX(minX + objectCollider.width() * 0.5f);
                 else if (boxMax.x > maxX)
-                    parent.setX(maxX - objectCollider.width() / 2f);
+                    parent.setX(maxX - objectCollider.width() * 0.5f);
 
                 if (boxMin.y < minY)
-                    parent.setY(minY + objectCollider.height() / 2f);
+                    parent.setY(minY + objectCollider.height() * 0.5f);
                 else if (boxMax.y > maxY)
-                    parent.setY(maxY - objectCollider.height() / 2f);
+                    parent.setY(maxY - objectCollider.height() * 0.5f);
                 break;
             case BOUNCE:
                 float bounce = -objectCollider.getBounce();
                 if (boxMin.x < minX) {
-                    parent.setX(minX + objectCollider.width() / 2f);
+                    parent.setX(minX + objectCollider.width() * 0.5f);
                     rb.velocity().x *= bounce;
                 } else if (boxMax.x > maxX) {
-                    parent.setX(maxX - objectCollider.width() / 2f);
+                    parent.setX(maxX - objectCollider.width() * 0.5f);
                     rb.velocity().x *= bounce;
                 }
 
                 if (boxMin.y < minY) {
-                    parent.setY(minY + objectCollider.height() / 2f);
+                    parent.setY(minY + objectCollider.height() * 0.5f);
                     rb.velocity().y *= bounce;
                 } else if (boxMax.y > maxY) {
-                    parent.setY(maxY - objectCollider.height() / 2f);
+                    parent.setY(maxY - objectCollider.height() * 0.5f);
                     rb.velocity().y *= bounce;
                 }
                 break;
             case WRAP:
                 if (boxMax.x < minX)
-                    parent.setX(maxX + objectCollider.width() / 2f);
+                    parent.setX(maxX + objectCollider.width() * 0.5f);
                 else if (boxMin.x > maxX)
-                    parent.setX(minX - objectCollider.width() / 2f);
+                    parent.setX(minX - objectCollider.width() * 0.5f);
                 if (boxMax.y < minY)
-                    parent.setY(maxY + objectCollider.height() / 2f);
+                    parent.setY(maxY + objectCollider.height() * 0.5f);
                 else if (boxMin.y > maxY)
-                    parent.setY(this.minY - objectCollider.height() / 2f);
+                    parent.setY(minY - objectCollider.height() * 0.5f);
                 break;
             case DELETE:
                 if (!MathUtils.inRange(boxMin.x, minX - objectCollider.width(), maxX) ||

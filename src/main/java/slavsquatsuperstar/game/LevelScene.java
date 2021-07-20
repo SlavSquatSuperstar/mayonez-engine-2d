@@ -20,7 +20,7 @@ public class LevelScene extends Scene {
             @Override
             public void update(float dt) {
                 super.update(dt);
-                setX(getScene().camera().getX());
+                setX(getScene().camera().getOffsetX());
             }
 
             @Override

@@ -2,6 +2,7 @@ package slavsquatsuperstar.mayonez.components.scripts;
 
 import slavsquatsuperstar.mayonez.Game;
 import slavsquatsuperstar.mayonez.MouseInput;
+import slavsquatsuperstar.mayonez.Preferences;
 import slavsquatsuperstar.mayonez.Vector2;
 
 public class DragAndDrop extends MouseMovement {
@@ -15,7 +16,7 @@ public class DragAndDrop extends MouseMovement {
     @Override
     public void onMouseMove() {
         if (isMouseHeld())
-            transform.move(getRawInput());
+            transform.move(getRawInput().div(Preferences.TILE_SIZE));
     }
 
     @Override

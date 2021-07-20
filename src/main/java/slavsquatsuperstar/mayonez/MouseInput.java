@@ -60,8 +60,9 @@ public class MouseInput extends MouseAdapter {
         return mouseY;
     }
 
+    // TODO world vs screen
     public Vector2 getPosition() {
-        return new Vector2(mouseX, mouseY);
+        return new Vector2(mouseX, mouseY).div(Preferences.TILE_SIZE);
     }
 
     public int getDx() {
@@ -73,7 +74,7 @@ public class MouseInput extends MouseAdapter {
     }
 
     public Vector2 getDisplacement() {
-        return new Vector2(dx, dy);
+        return new Vector2(dx, dy).div(Preferences.TILE_SIZE);
     }
 
     public int button() {

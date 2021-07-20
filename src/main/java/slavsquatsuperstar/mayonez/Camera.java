@@ -12,7 +12,7 @@ public class Camera extends Script {
 
     public Camera(int sceneWidth, int sceneHeight) {
         width = (float) Preferences.SCREEN_WIDTH / Preferences.TILE_SIZE;
-        height = (float) Preferences.SCREEN_HEIGHT  / Preferences.TILE_SIZE;
+        height = (float) Preferences.SCREEN_HEIGHT / Preferences.TILE_SIZE;
         minX = 0;
         minY = 0;//-28; // account for the bar on top of the window
         maxX = sceneWidth;
@@ -20,6 +20,7 @@ public class Camera extends Script {
     }
 
     // Static (Factory) Methods
+
     /**
      * Creates a container {@link GameObject} to hold a Camera object
      *
@@ -32,14 +33,14 @@ public class Camera extends Script {
             protected void init() {
                 addComponent(camera);
                 addComponent(new DragAndDrop("right mouse", true));
-                // Keep camera inside scene
+                // Keep camera inside scene and add camera collider
                 addComponent(new KeepInScene(camera.minX, camera.minY, camera.maxX, camera.maxY, KeepInScene.Mode.STOP));
-                // add camera collider/trigger
             }
 
             // Don't want to get rid of the camera!
             @Override
-            public void destroy() {}
+            public void destroy() {
+            }
 
             @Override
             public boolean isDestroyed() {
@@ -55,36 +56,49 @@ public class Camera extends Script {
             parent.setX(0);
             parent.setY(0);
         }
-        // Follow subject (Set camera's center equal to subject's center)
+        // Follow subject (Set position to subject position)
         if (subject != null) {
-            parent.setX((subject.getX()) - width / 2f);
-            parent.setY((subject.getY()) - height / 2f);
+            parent.setX((subject.getX()));
+            parent.setY((subject.getY()));
         }
     }
 
     // Getters and setters
 
-    public float getX() {
+    public float getOffsetX() {
         return parent.getX();
     }
 
-    public float getY() {
+    public float getOffsetY() {
         return parent.getY();
     }
 
+    public Vector2 getMin() {
+        return new Vector2(getOffsetX() - width * 0.5f, getOffsetY() - height * 0.5f);
+    }
+
+    /**
+     * Toggles the camera's ability to stay within the scene bounds.
+     *
+     * @param enabled if the camera should stay inside the scene
+     * @return the camera
+     */
     public Camera setKeepInScene(boolean enabled) {
         parent.getComponent(KeepInScene.class).setEnabled(enabled);
         return this;
     }
 
     /**
-     * Sets a subject for this Camera to follow, or disables subject following.
+     * Sets a subject for this Camera to follow, or enables free camera movement.
      *
-     * @param subject a {@link GameObject} in the scene
+     * @param subject A {@link GameObject} in the scene. Set to null to disable subject following.
+     * @return the camera
      */
     public Camera setSubject(GameObject subject) {
         this.subject = subject;
-        setKeepInScene(subject.getComponent(KeepInScene.class) != null);
+        parent.getComponent(DragAndDrop.class).setEnabled(subject == null);
+        if (subject != null)
+            setKeepInScene(subject.getComponent(KeepInScene.class) != null);
         return this;
     }
 }

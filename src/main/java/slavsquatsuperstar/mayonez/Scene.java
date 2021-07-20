@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
  *
  * @author SlavSquatSuperstar
  */
-// TODO coordinate system
+// TODO individual cell size
 public abstract class Scene {
 
     // Object Fields

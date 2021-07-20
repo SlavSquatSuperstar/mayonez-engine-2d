@@ -39,13 +39,13 @@ public class Sprite extends Component {
     public void render(Graphics2D g2) {
         AffineTransform transform = new AffineTransform();
         transform.setToIdentity();
-        Vector2 imageCenter = new Vector2(image.getWidth() / 2f, image.getHeight() / 2f);
+        Vector2 imageCenter = new Vector2(image.getWidth() * 0.5f, image.getHeight() * 0.5f);
         transform.translate(parent.getX() * Preferences.TILE_SIZE - imageCenter.x,
                 parent.getY() * Preferences.TILE_SIZE - imageCenter.y); // Draw at parent's center
         transform.scale(parent.transform.scale.x, parent.transform.scale.y);
         transform.rotate(Math.toRadians(parent.transform.rotation), imageCenter.x,
                 imageCenter.y);
-        Logger.log("Mario, Screen: (%.4f, %.4f)", transform.getTranslateX() + imageCenter.x, transform.getTranslateY() + imageCenter.y);
+        Logger.log("Sprite, Screen: (%.4f, %.4f)", transform.getTranslateX() + imageCenter.x, transform.getTranslateY() + imageCenter.y);
         g2.drawImage(image, transform, null);
     }
 

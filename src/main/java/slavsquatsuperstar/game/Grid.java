@@ -24,8 +24,8 @@ public class Grid extends GameObject {
         g2.setStroke(new BasicStroke(1f));
         g2.setColor(new Color(0.3f, 0.3f, 0.3f, 0.5f));
 
-        float camX = getScene().camera().getX();
-        float camY = getScene().camera().getY();
+        float camX = getScene().camera().getOffsetX();
+        float camY = getScene().camera().getOffsetY();
 
         //Which grid coords are we at?
         float startX = (float) Math.floor(camX / gridWidth) * gridWidth;

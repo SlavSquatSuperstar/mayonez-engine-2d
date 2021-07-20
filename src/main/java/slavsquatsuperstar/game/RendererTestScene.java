@@ -22,6 +22,7 @@ public class RendererTestScene extends Scene {
             @Override
             protected void init() {
                 getScene().camera().setSubject(this);
+                getScene().camera().setKeepInScene(false);
                 transform.stretch(new Vector2(2, 2));
                 addComponent(new Sprite("mario.png"));
                 addComponent(new KeyMovement(MoveMode.POSITION, 0.5f));
@@ -35,24 +36,25 @@ public class RendererTestScene extends Scene {
                     }
                 });
             }
+
             @Override
             public void update(float dt) {
                 super.update(dt);
-                Logger.log("Mario, World: %s", transform.position);
-//                Logger.log("Camera: (%.4f, %.4f)", getScene().camera().getX(), getScene().camera().getY());
+                Logger.log("Sprite, World: %s", transform.position);
+                Logger.log("Camera, World: (%.4f, %.4f)", getScene().camera().getOffsetX(), getScene().camera().getOffsetY());
             }
         });
-//        addObject(new GameObject("Mario 2", new Vector2(2, 1)) {
-//            @Override
-//            protected void init() {
-//                addComponent(new Sprite("mario.png"));
-//            }
-//        });
-//        addObject(new GameObject("Mario 3", new Vector2(1, 2)) {
-//            @Override
-//            protected void init() {
-//                addComponent(new Sprite("mario.png"));
-//            }
-//        });
+        addObject(new GameObject("Mario 2", new Vector2(2, 1)) {
+            @Override
+            protected void init() {
+                addComponent(new Sprite("mario.png"));
+            }
+        });
+        addObject(new GameObject("Mario 3", new Vector2(1, 2)) {
+            @Override
+            protected void init() {
+                addComponent(new Sprite("mario.png"));
+            }
+        });
     }
 }
