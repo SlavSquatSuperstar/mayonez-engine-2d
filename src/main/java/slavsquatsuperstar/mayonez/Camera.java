@@ -9,9 +9,9 @@ public class Camera extends Script {
     private int minX, minY, maxX, maxY;
     private GameObject subject;
 
-    public Camera(int sceneWidth, int sceneHeight) {
-        width = (float) Preferences.SCREEN_WIDTH;
-        height = (float) Preferences.SCREEN_HEIGHT;
+    public Camera(int sceneWidth, int sceneHeight, int cellSize) {
+        width = (float) Preferences.SCREEN_WIDTH / cellSize;
+        height = (float) Preferences.SCREEN_HEIGHT / cellSize;
         minX = 0;
         minY = 0;//-28; // account for the bar on top of the window
         maxX = sceneWidth;

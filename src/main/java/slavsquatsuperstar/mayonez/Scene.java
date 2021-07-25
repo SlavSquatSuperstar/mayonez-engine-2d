@@ -53,6 +53,7 @@ public abstract class Scene {
 
         camera = new Camera(width, height);
         renderer = new Renderer(camera);
+        camera = new Camera(this.width, this.height, cellSize);
         physics = new Physics2D(Game.TIME_STEP, Preferences.GRAVITY);
     }
 
@@ -61,8 +62,7 @@ public abstract class Scene {
     /**
      * Add necessary objects.
      */
-    protected void init() {
-    }
+    protected void init() {}
 
     public final void start() {
         if (started)
