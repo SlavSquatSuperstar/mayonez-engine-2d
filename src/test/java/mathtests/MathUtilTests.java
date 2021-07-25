@@ -7,6 +7,11 @@ import slavsquatsuperstar.util.MathUtils;
 
 import static junit.framework.TestCase.*;
 
+/**
+ * Unit tests for {@link MathUtilTests} class.
+ *
+ * @author SlavSquatSuperstar
+ */
 public class MathUtilTests {
 
     @Test

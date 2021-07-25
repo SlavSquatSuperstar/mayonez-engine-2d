@@ -5,6 +5,11 @@ import slavsquatsuperstar.mayonez.Vector2;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A collision between two objects.
+ *
+ * @author SlavSquatSuperstar
+ */
 public class CollisionManifold {
 
     private Vector2 normal = new Vector2();

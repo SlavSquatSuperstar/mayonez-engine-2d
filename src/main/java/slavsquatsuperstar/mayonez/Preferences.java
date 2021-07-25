@@ -2,6 +2,11 @@ package slavsquatsuperstar.mayonez;
 
 import slavsquatsuperstar.mayonez.assets.JSONFile;
 
+/**
+ * A storage class for game parameters and statistics.
+ *
+ * @author SlavSquatSuperstar
+ */
 public final class Preferences { // TODO defaults
 
     private final static JSONFile preferences = new JSONFile("preferences.json", true);

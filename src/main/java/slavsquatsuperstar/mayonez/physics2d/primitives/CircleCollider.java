@@ -6,6 +6,12 @@ import slavsquatsuperstar.util.MathUtils;
 
 // TODO scale with transform
 // TODO local instead of world space?
+
+/**
+ * A circle with a center and radius.
+ *
+ * @author SlavSquatSuperstar
+ */
 public class CircleCollider extends Collider2D {
 
     public final float radius;
@@ -48,19 +54,19 @@ public class CircleCollider extends Collider2D {
     }
 
     @Override
-    public boolean intersects(Line2D line) {
-        if (contains(line.start) || contains(line.end)) // Check if contains endpoints
+    public boolean intersects(Edge2D edge) {
+        if (contains(edge.start) || contains(edge.end)) // Check if contains endpoints
             return true;
 
         // TODO Do circle and line interval overlap?
 
-        Vector2 startToCenter = center().sub(line.start);
-        Vector2 projected = startToCenter.project(line.toVector());
+        Vector2 startToCenter = center().sub(edge.start);
+        Vector2 projected = startToCenter.project(edge.toVector());
         // Is nearest point outside of actual line segment?
-        if (!MathUtils.inRange(projected.lengthSquared() / line.toVector().lengthSquared(), 0, 1))
+        if (!MathUtils.inRange(projected.lengthSquared() / edge.toVector().lengthSquared(), 0, 1))
             return false;
-        Vector2 nearestPointOnLine = line.start.add(projected);
-        return contains(nearestPointOnLine);
+        Vector2 nearestPointOnEdge = edge.start.add(projected); // TODO use edge.nearest ?
+        return contains(nearestPointOnEdge);
     }
 
     @Override

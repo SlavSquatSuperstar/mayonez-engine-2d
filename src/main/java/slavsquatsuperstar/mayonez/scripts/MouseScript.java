@@ -8,7 +8,9 @@ import slavsquatsuperstar.mayonez.physics2d.primitives.Collider2D;
 // TODO use mouse events and save states (held, released)
 
 /**
- * A base class providing utility methods for scripts using mouse.
+ * Provides utility methods for scripts using mouse.
+ *
+ * @author SlavSquatSuperstar
  */
 public abstract class MouseScript extends MovementScript {
 

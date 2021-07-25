@@ -15,11 +15,6 @@ import java.util.stream.Collectors;
 // TODO individual cell size
 public abstract class Scene {
 
-    // Object Fields
-    private final List<GameObject> objects;
-    private final List<SceneModifier> toModify; // Use a separate list to avoid concurrent exceptions
-    private final Camera camera;
-
     // Scene Information
     protected final String name;
     /**
@@ -30,6 +25,10 @@ public abstract class Scene {
      * How many pixels (screen units) make up a world unit.
      */
     protected final int cellSize;
+    // Object Fields
+    private final List<GameObject> objects;
+    private final List<SceneModifier> toModify; // Use a separate list to avoid concurrent exceptions
+    private final Camera camera;
     protected boolean bounded;
     protected Color background = Color.WHITE;
     private boolean started;
@@ -60,6 +59,9 @@ public abstract class Scene {
      */
     protected void init() {}
 
+    /**
+     * Initialize all objects and begin updating the scene.
+     */
     public final void start() {
         if (started)
             return;
@@ -71,6 +73,11 @@ public abstract class Scene {
         started = true;
     }
 
+    /**
+     * Refresh the internal states of all objects in the scene.
+     *
+     * @param dt seconds since the last frame
+     */
     public final void update(float dt) {
         if (!started)
             return;
@@ -81,7 +88,6 @@ public abstract class Scene {
             if (o.isDestroyed())
                 removeObject(o);
         });
-//        physics.physicsUpdate(dt);
 
         // Remove destroyed objects or add new ones at the end of the frame
         if (!toModify.isEmpty()) {
@@ -94,6 +100,7 @@ public abstract class Scene {
 
     /**
      * Draw the background image.
+     *
      * @param g2 the window's graphics object
      */
     protected final void render(Graphics2D g2) {
@@ -102,7 +109,6 @@ public abstract class Scene {
 
         g2.setColor(background);
         g2.fillRect(0, 0, width, height);
-//        renderer.render(g2);
 
         // g.drawImage(background, 0, 0, height, width, camera.getXOffset(),
         // camera.getYOffset(), background.getWidth(), background.getHeight(), null);

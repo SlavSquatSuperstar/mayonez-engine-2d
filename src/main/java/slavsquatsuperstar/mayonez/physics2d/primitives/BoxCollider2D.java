@@ -4,8 +4,10 @@ import slavsquatsuperstar.mayonez.Vector2;
 import slavsquatsuperstar.util.MathUtils;
 
 /**
- * Represents an oriented bounding box, a rectangle that can be rotated. The sides will align with the object's rotation
+ * An oriented bounding box, a rectangle that can be rotated. The sides will align with the object's rotation
  * angle.
+ *
+ * @author SlavSquatSuperstar
  */
 public class BoxCollider2D extends AbstractBoxCollider2D {
 
@@ -69,19 +71,19 @@ public class BoxCollider2D extends AbstractBoxCollider2D {
     }
 
     @Override
-    public boolean intersects(Line2D line) {
+    public boolean intersects(Edge2D edge) {
         float rot = -getRotation();
 
         // rotate the line into the AABB's local space
-        Vector2 localStart = line.start.rotate(rot, center());
-        Vector2 localEnd = line.end.rotate(rot, center());
-        Line2D localLine = new Line2D(localStart, localEnd);
+        Vector2 localStart = edge.start.rotate(rot, center());
+        Vector2 localEnd = edge.end.rotate(rot, center());
+        Edge2D localEdge = new Edge2D(localStart, localEnd);
 
         // Create AABB with same size
         AlignedBoxCollider2D aabb = new AlignedBoxCollider2D(size);
         aabb.rb = this.rb;
         aabb.transform = this.transform;
-        return aabb.intersects(localLine);
+        return aabb.intersects(localEdge);
     }
 
     @Override
@@ -128,7 +130,7 @@ public class BoxCollider2D extends AbstractBoxCollider2D {
     public boolean raycast(Ray2D ray, RaycastResult result, float limit) {
         float rot = -getRotation();
 
-        // Rotate the line into the AABB's local space
+        // Rotate the edge into the AABB's local space
         Vector2 localOrigin = ray.origin.rotate(rot, center());
         Vector2 localDir = ray.direction.rotate(rot, center());
         Ray2D localRay = new Ray2D(localOrigin, localDir);

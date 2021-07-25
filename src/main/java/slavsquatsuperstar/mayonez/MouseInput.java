@@ -4,6 +4,11 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 // TODO world vs screen
+/**
+ * The receiver for all mouse-related input events.
+ *
+ * @author SlavSquatSuperstar
+ */
 public class MouseInput extends MouseAdapter {
 
     // Mouse Fields

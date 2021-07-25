@@ -7,8 +7,10 @@ import slavsquatsuperstar.util.MathUtils;
 // TODO scale with transform
 
 /**
- * Represents an axis-aligned bounding box, a rectangle that is is never rotated. The sides will always align with the x
+ * An axis-aligned bounding box, a rectangle that is is never rotated. The sides will always align with the x
  * and y axes.
+ *
+ * @author SlavSquatSuperstar
  */
 public class AlignedBoxCollider2D extends AbstractBoxCollider2D {
 
@@ -47,11 +49,11 @@ public class AlignedBoxCollider2D extends AbstractBoxCollider2D {
     // AABB vs Line
 
     @Override
-    public boolean intersects(Line2D line) {
-        if (contains(line.start) || contains(line.end))
+    public boolean intersects(Edge2D edge) {
+        if (contains(edge.start) || contains(edge.end))
             return true;
         // Make rays from the line that goes both ways
-        return raycast(new Ray2D(line), null, line.toVector().length()) || raycast(new Ray2D(new Line2D(line.end, line.start)), null, line.toVector().length());
+        return raycast(new Ray2D(edge), null, edge.toVector().length()) || raycast(new Ray2D(new Edge2D(edge.end, edge.start)), null, edge.toVector().length());
     }
 
     boolean intersects(BoxCollider2D box) {

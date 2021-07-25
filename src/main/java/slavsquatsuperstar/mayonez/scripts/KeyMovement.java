@@ -3,6 +3,11 @@ package slavsquatsuperstar.mayonez.scripts;
 import slavsquatsuperstar.mayonez.Game;
 import slavsquatsuperstar.mayonez.Vector2;
 
+/**
+ * Allows objects to be moved with the WASD/arrow keys.
+ *
+ * @author SlavSquatSuperstar
+ */
 public class KeyMovement extends MovementScript {
 
     private String xAxis = "horizontal";

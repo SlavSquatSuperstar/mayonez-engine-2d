@@ -6,6 +6,11 @@ import java.io.File;
 import java.time.LocalDate;
 import java.util.IllegalFormatException;
 
+/**
+ * Prints messages to the console that can be formatted and given a priority level.
+ *
+ * @author SlavSquatSuperstar
+ */
 public final class Logger {
 
     public static boolean saveLogs = true;

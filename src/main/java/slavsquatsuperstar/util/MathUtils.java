@@ -4,6 +4,8 @@ package slavsquatsuperstar.util;
 
 /**
  * A library of common math operations designed for float using a precision of six decimal places.
+ *
+ * @author SlavSquatSuperstar
  */
 public final class MathUtils {
 
@@ -135,6 +137,8 @@ public final class MathUtils {
     /**
      * Determines whether two floats are approximately equal within 6 decimal places.
      *
+     * @param num1 a number
+     * @param num2 another number
      * @return if they are equal
      */
     public static boolean equals(float num1, float num2) {

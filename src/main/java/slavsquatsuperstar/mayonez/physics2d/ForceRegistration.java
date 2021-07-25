@@ -1,5 +1,10 @@
 package slavsquatsuperstar.mayonez.physics2d;
 
+/**
+ * An interaction between a physical object and a force.
+ *
+ * @author SlavSquatSuperstar
+ */
 public class ForceRegistration {
 
     ForceGenerator fg;

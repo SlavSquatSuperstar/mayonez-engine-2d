@@ -8,6 +8,8 @@ import java.net.URL;
 
 /**
  * A resource file used by this program.
+ *
+ * @author SlavSquatSuperstar
  */
 public class Asset {
 

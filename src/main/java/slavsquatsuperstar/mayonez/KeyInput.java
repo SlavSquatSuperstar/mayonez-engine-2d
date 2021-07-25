@@ -3,6 +3,11 @@ package slavsquatsuperstar.mayonez;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
+/**
+ * The receiver for all keyboard-related input events.
+ *
+ * @author SlavSquatSuperstar
+ */
 public class KeyInput extends KeyAdapter {
 
     // Key Fields

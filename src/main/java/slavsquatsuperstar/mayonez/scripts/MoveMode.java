@@ -5,6 +5,8 @@ import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
 
 /**
  * How a {@link Script} should affect the object's position or movement.
+ *
+ * @author SlavSquatSuperstar
  */
 public enum MoveMode {
     /**

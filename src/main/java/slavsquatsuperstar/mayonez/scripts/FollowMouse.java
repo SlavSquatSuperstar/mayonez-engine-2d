@@ -4,7 +4,9 @@ import slavsquatsuperstar.mayonez.Game;
 import slavsquatsuperstar.mayonez.Vector2;
 
 /**
- * A simple script that moves an object with or towards the mouse pointer, depending on the mode.
+ * Moves an object with or towards the mouse pointer, depending on the mode.
+ *
+ * @author SlavSquatSuperstar
  */
 public class FollowMouse extends MouseScript {
 

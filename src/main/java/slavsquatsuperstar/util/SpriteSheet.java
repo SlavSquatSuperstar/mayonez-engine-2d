@@ -5,6 +5,11 @@ import slavsquatsuperstar.mayonez.renderer.Sprite;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Create multiple {@link Sprite}s from a larger image.
+ *
+ * @author SlavSquatSuperstar
+ */
 public class SpriteSheet {
 
     public List<Sprite> sprites;

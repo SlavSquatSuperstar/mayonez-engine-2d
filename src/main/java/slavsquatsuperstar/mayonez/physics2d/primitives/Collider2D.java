@@ -17,6 +17,7 @@ import slavsquatsuperstar.util.MathUtils;
 public abstract class Collider2D extends Component {
 
     // Object References
+
     /**
      * A reference to the parent object's {@link Transform}.
      */
@@ -68,12 +69,12 @@ public abstract class Collider2D extends Component {
     // Shape vs Line Collisions
 
     /**
-     * Calculates whether the given {@link Line2D} touches passes through this collider.
+     * Calculates whether the given {@link Edge2D} touches or passes through this collider.
      *
-     * @param line a line
-     * @return if the line intersects the line
+     * @param edge a line segment
+     * @return if the edge intersects this shape
      */
-    public abstract boolean intersects(Line2D line);
+    public abstract boolean intersects(Edge2D edge);
 
     /**
      * Casts a ray onto this collider and calculates whether the ray intersects the collider and where.

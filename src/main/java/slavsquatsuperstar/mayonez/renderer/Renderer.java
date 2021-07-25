@@ -1,6 +1,9 @@
 package slavsquatsuperstar.mayonez.renderer;
 
-import slavsquatsuperstar.mayonez.*;
+import slavsquatsuperstar.mayonez.Game;
+import slavsquatsuperstar.mayonez.GameObject;
+import slavsquatsuperstar.mayonez.Scene;
+import slavsquatsuperstar.mayonez.Vector2;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -59,6 +62,8 @@ public class Renderer {
 
     /**
      * Submit a {@link GameObject} for rendering.
+     *
+     * @param obj the game object
      */
     public void add(GameObject obj) {
         objects.add(obj);

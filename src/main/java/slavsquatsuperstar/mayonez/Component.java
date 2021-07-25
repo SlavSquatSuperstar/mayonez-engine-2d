@@ -21,12 +21,16 @@ public abstract class Component {
     public void start() {}
 
     /**
-     * Refresh the component state in the world.
+     * Refresh the component's game logic.
+     *
+     * @param dt seconds since the last frame
      */
     public void update(float dt) {}
 
     /**
      * Draw the component on the screen.
+     *
+     * @param g2 the window's graphics object
      */
     public void render(Graphics2D g2) {}
 

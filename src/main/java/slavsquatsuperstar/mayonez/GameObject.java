@@ -50,6 +50,8 @@ public class GameObject {
 
     /**
      * Updates all components. Make sure to call super() if overriding!
+     *
+     * @param dt seconds since the last frame
      */
     public void update(float dt) {
         // TODO component call order
@@ -61,6 +63,8 @@ public class GameObject {
 
     /**
      * Renders all components. Make sure to call super() if overriding!
+     *
+     * @param g2 the window's graphics object
      */
     public void render(Graphics2D g2) {
         components.forEach(c -> {

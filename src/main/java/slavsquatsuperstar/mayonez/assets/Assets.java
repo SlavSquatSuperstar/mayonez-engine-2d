@@ -7,6 +7,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 
+/**
+ * A utility class for managing the application's resources.
+ *
+ * @author SlavSquatSuperstar
+ */
 public final class Assets {
 
     private static final HashMap<String, Asset> ASSETS = new HashMap<>();

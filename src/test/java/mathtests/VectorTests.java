@@ -7,6 +7,11 @@ import slavsquatsuperstar.util.MathUtils;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 
+/**
+ * Unit tests for {@link Vector2} class.
+ *
+ * @author SlavSquatSuperstar
+ */
 public class VectorTests {
 
     @Test

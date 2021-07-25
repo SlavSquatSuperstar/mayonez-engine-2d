@@ -17,6 +17,8 @@ import java.nio.charset.StandardCharsets;
 
 /**
  * Stores and manipulates a JSON object from a .json file.
+ *
+ * @author SlavSquatSuperstar
  */
 public class JSONFile extends Asset {
 

@@ -8,10 +8,15 @@ import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
 import slavsquatsuperstar.mayonez.physics2d.primitives.AlignedBoxCollider2D;
 import slavsquatsuperstar.mayonez.physics2d.primitives.BoxCollider2D;
 import slavsquatsuperstar.mayonez.physics2d.primitives.CircleCollider;
-import slavsquatsuperstar.mayonez.physics2d.primitives.Line2D;
+import slavsquatsuperstar.mayonez.physics2d.primitives.Edge2D;
 
 import static junit.framework.TestCase.assertTrue;
 
+/**
+ * Unit tests for {@link BoxCollider2D} class.
+ *
+ * @author SlavSquatSuperstar
+ */
 public class OBBTests {
 
     BoxCollider2D obb;
@@ -36,7 +41,7 @@ public class OBBTests {
     public void edgeLineIsInOBB() {
         Vector2[] vertices = obb.getVertices();
         for (int i = 0; i < vertices.length; i++)
-            assertTrue(obb.intersects(new Line2D(vertices[i], vertices[(i + 1) / 4])));
+            assertTrue(obb.intersects(new Edge2D(vertices[i], vertices[(i + 1) / 4])));
     }
 
     @Test

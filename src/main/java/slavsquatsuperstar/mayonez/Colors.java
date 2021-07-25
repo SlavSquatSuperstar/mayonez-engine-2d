@@ -8,10 +8,10 @@ import java.awt.*;
  * Source: https://htmlcolorcodes.com/color-names/
  * <br>
  * See also: https://en.wikipedia.org/wiki/Web_colors#HTML_color_names
+ *
+ * @author SlavSquatSuperstar
  */
 public final class Colors {
-
-    private Colors() {}
 
     // Rainbow
     public static final Color RED = new Color(255, 0, 0); // Java Red
@@ -34,5 +34,7 @@ public final class Colors {
     public static final Color GRAY = Color.GRAY;
     public static final Color DARK_GRAY = Color.DARK_GRAY;
     public static final Color BLACK = Color.BLACK;
+
+    private Colors() {}
 
 }

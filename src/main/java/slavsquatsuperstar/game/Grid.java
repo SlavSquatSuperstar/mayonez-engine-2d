@@ -8,6 +8,11 @@ import slavsquatsuperstar.mayonez.Vector2;
 import java.awt.*;
 import java.awt.geom.Line2D;
 
+/**
+ * Draws gridlines to indicate where the world coordinates are.
+ *
+ * @author SlavSquatSuperstar
+ */
 public class Grid extends GameObject {
 
     private GameObject ground;
@@ -26,7 +31,7 @@ public class Grid extends GameObject {
         float camX = getScene().camera().getOffset().x;
         float camY = getScene().camera().getOffset().y;
 
-        //Which grid coords are we at?
+        // Which grid coords are we at?
         float startX = (float) Math.floor(camX / gridWidth) * gridWidth;
         float startY = (float) Math.floor(camY / gridHeight) * gridHeight;
         float endX = startX + Preferences.SCREEN_WIDTH + gridWidth;

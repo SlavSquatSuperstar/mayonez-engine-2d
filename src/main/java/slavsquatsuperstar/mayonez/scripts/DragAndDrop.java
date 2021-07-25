@@ -4,6 +4,11 @@ import slavsquatsuperstar.mayonez.Game;
 import slavsquatsuperstar.mayonez.MouseInput;
 import slavsquatsuperstar.mayonez.Vector2;
 
+/**
+ * Allows objects to be picked up using the mouse.
+ *
+ * @author SlavSquatSuperstar
+ */
 public class DragAndDrop extends MouseScript {
 
     public DragAndDrop(String button, boolean inverted) {

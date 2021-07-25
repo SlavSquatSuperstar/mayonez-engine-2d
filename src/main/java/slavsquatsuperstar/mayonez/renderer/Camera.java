@@ -4,6 +4,11 @@ import slavsquatsuperstar.mayonez.*;
 import slavsquatsuperstar.mayonez.scripts.DragAndDrop;
 import slavsquatsuperstar.mayonez.scripts.KeepInScene;
 
+/**
+ * The viewport into the world.
+ *
+ * @author SlavSquatSuperstar
+ */
 public class Camera extends Script {
 
     private float width, height; // in world units

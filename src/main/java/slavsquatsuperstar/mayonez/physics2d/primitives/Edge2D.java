@@ -5,16 +5,16 @@ import slavsquatsuperstar.mayonez.Vector2;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
 import slavsquatsuperstar.util.MathUtils;
 
-// TODO should extend collider?
-
 /**
- * Represents a line segment with start and end points.
+ * A line segment with start and end points.
+ *
+ * @author SlavSquatSuperstar
  */
-public class Line2D extends Collider2D {
+public class Edge2D extends Collider2D {
 
     public final Vector2 start, end;
 
-    public Line2D(Vector2 start, Vector2 end) {
+    public Edge2D(Vector2 start, Vector2 end) {
         this.start = start;
         this.end = end;
     }
@@ -52,8 +52,8 @@ public class Line2D extends Collider2D {
         // triangle side length or projection distance
         float distToStart = start.distance(point);
         float distToEnd = end.distance(point);
-        float lineLength = toVector().length();
-        return MathUtils.equals(distToStart + distToEnd, lineLength);
+        float length = toVector().length();
+        return MathUtils.equals(distToStart + distToEnd, length);
     }
 
     /**
@@ -80,18 +80,18 @@ public class Line2D extends Collider2D {
     }
 
     @Override
-    public boolean intersects(Line2D line) {
+    public boolean intersects(Edge2D edge) {
         // If parallel, must be overlapping (co-linear)
-        if (MathUtils.equals(this.getSlope(), line.getSlope())) {
-            return this.contains(line.start) || this.contains(line.end) ||
-                    line.contains(this.start) || line.contains(this.end);
+        if (MathUtils.equals(this.getSlope(), edge.getSlope())) {
+            return this.contains(edge.start) || this.contains(edge.end) ||
+                    edge.contains(this.start) || edge.contains(this.end);
         }
 
         // Calculate point of intersection using cross product
         Vector2 start1 = this.start;
-        Vector2 start2 = line.start;
+        Vector2 start2 = edge.start;
         Vector2 line1 = this.toVector();
-        Vector2 line2 = line.toVector();
+        Vector2 line2 = edge.toVector();
         float cross = line1.cross(line2);
 
         float len1 = start2.sub(start1).cross(line2) / cross;

@@ -9,6 +9,11 @@ import java.time.LocalTime;
 
 import static org.junit.Assert.*;
 
+/**
+ * Unit tests for {@link JSONFile} class.
+ *
+ * @author SlavSquatSuperstar
+ */
 public class JSONTests {
 
     JSONFile json;

@@ -17,8 +17,8 @@ public class Ray2D {
         this.direction = direction.unitVector();
     }
 
-    public Ray2D(Line2D line) {
-        this(line.start, line.toVector());
+    public Ray2D(Edge2D edge) {
+        this(edge.start, edge.toVector());
     }
 
     /**

@@ -16,6 +16,8 @@ import java.util.Arrays;
 
 /**
  * Facilitates reading from and saving data to a plain text file.
+ *
+ * @author SlavSquatSuperstar
  */
 public final class TextFile extends Asset {
 

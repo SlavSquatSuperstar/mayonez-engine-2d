@@ -209,7 +209,7 @@ public class Game implements Runnable {
             running = false;
             return;
         }
-        
+
         physics.physicsUpdate(dt);
         if (currentScene != null)
             currentScene.update(dt);
@@ -218,6 +218,7 @@ public class Game implements Runnable {
     /**
      * Redraws all objects in the current scene.
      */
+
     public void render() throws Exception {
         if (buffers == null) {
             initGraphics();
@@ -275,6 +276,9 @@ public class Game implements Runnable {
 
     /**
      * Shuts down the engine and closes the window.
+     *
+     * @param status The exit code for this application. A value of 0 indicates normal, while non-zero status codes
+     *               indicate an error.
      */
     public synchronized void stop(int status) {
         running = false;

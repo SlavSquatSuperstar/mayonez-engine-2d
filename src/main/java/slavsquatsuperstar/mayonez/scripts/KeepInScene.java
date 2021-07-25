@@ -10,7 +10,9 @@ import slavsquatsuperstar.mayonez.physics2d.primitives.Collider2D;
 import slavsquatsuperstar.util.MathUtils;
 
 /**
- * Performs edge-handling for objects
+ * Dictates what happens when an object reaches the edge of the scene.
+ *
+ * @author SlavSquatSuperstar
  */
 public class KeepInScene extends Script {
 

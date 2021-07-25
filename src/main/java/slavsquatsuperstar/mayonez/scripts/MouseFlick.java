@@ -4,6 +4,11 @@ import slavsquatsuperstar.mayonez.Game;
 import slavsquatsuperstar.mayonez.Vector2;
 import slavsquatsuperstar.mayonez.physics2d.primitives.Collider2D;
 
+/**
+ * Allows objects to be pushed around using the mouse.
+ *
+ * @author SlavSquatSuperstar
+ */
 public class MouseFlick extends MouseScript {
 
     private Vector2 dragDisplacement = new Vector2();

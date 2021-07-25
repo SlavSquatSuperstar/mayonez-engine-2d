@@ -6,6 +6,11 @@ import org.junit.Test;
 import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;
 
+/**
+ * Unit tests for {@link Asset} class.
+ *
+ * @author SlavSquatSuperstar
+ */
 public class AssetTests {
 
     @Test
