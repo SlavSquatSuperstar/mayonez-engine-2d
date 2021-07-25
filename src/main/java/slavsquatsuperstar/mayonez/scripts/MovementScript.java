@@ -1,4 +1,4 @@
-package slavsquatsuperstar.mayonez.components.scripts;
+package slavsquatsuperstar.mayonez.scripts;
 
 import slavsquatsuperstar.mayonez.Logger;
 import slavsquatsuperstar.mayonez.Script;

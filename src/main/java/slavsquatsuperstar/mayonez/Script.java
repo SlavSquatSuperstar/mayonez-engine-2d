@@ -1,7 +1,5 @@
 package slavsquatsuperstar.mayonez;
 
-import slavsquatsuperstar.mayonez.components.Component;
-
 import java.awt.*;
 
 /**

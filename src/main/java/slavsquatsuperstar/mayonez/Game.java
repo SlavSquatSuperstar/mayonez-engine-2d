@@ -5,6 +5,7 @@ import slavsquatsuperstar.game.LevelEditorScene;
 import slavsquatsuperstar.game.LevelScene;
 import slavsquatsuperstar.game.PhysicsTestScene;
 import slavsquatsuperstar.game.RendererTestScene;
+import slavsquatsuperstar.mayonez.physics2d.Physics2D;
 import slavsquatsuperstar.mayonez.renderer.IMGUI;
 import slavsquatsuperstar.mayonez.renderer.Renderer;
 
@@ -50,7 +51,9 @@ public class Game implements Runnable {
 
     // Game Layers
     private Scene currentScene;
+    private Physics2D physics;
     private Renderer renderer;
+    private IMGUI imgui;
 
     /*
      * Method Declarations
@@ -73,7 +76,9 @@ public class Game implements Runnable {
         window.addMouseListener(mouse);
         window.addMouseMotionListener(mouse);
 
+        physics = new Physics2D(Game.TIME_STEP, Preferences.GRAVITY);
         renderer = new Renderer();
+        imgui = new IMGUI();
     }
 
     // Game Loop Methods
@@ -129,6 +134,14 @@ public class Game implements Runnable {
 
     public static Scene currentScene() {
         return game.currentScene;
+    }
+
+    public static Renderer getRenderer() {
+        return game.renderer;
+    }
+
+    public static Physics2D getPhysics() {
+        return game.physics;
     }
 
     @Override
@@ -192,9 +205,12 @@ public class Game implements Runnable {
      */
     public void update(float dt) throws Exception { // TODO pass dt or use Game.timestep?
         // TODO Poll input events
-        if (keyboard.keyDown("exit"))
+        if (keyboard.keyDown("exit")) {
             running = false;
-
+            return;
+        }
+        
+        physics.physicsUpdate(dt);
         if (currentScene != null)
             currentScene.update(dt);
     }
@@ -222,6 +238,7 @@ public class Game implements Runnable {
                 if (null != currentScene)
                     currentScene.render(g2);
                 renderer.render(g2);
+                imgui.render(g2);
 
                 gfx.dispose();
                 buffers.show();
@@ -231,6 +248,8 @@ public class Game implements Runnable {
         }
 
     }
+
+    // Helper Methods
 
     /**
      * Initializes the game engine, displays the window, and starts the current scene (if not null).
@@ -273,7 +292,7 @@ public class Game implements Runnable {
         System.exit(status);
     }
 
-    // Private Methods
+    // Getter methods
 
     private void initGraphics() {
         if (window == null)
@@ -292,6 +311,7 @@ public class Game implements Runnable {
     private void startCurrentScene() {
         if (currentScene != null && running) {
             currentScene.start();
+            physics.setScene(currentScene);
             renderer.setScene(currentScene);
             Logger.log("Game: Loaded scene \"%s\"", currentScene.getName());
         }

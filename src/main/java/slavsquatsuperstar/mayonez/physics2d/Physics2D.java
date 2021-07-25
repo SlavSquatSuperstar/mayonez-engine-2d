@@ -193,10 +193,11 @@ public class Physics2D {
 
     // Game Object Methods
 
-    public void add(GameObject o) {
+    public void addObject(GameObject o) {
         Rigidbody2D rb = o.getComponent(Rigidbody2D.class);
         // TODO register force method
         // TODO rules for registration (e.g. if object is static, ignore)
+        // TODO or just apply forces based on tags
 
         if (rb != null) {
             rigidbodies.add(rb);
@@ -210,11 +211,19 @@ public class Physics2D {
             colliders.add(c);
     }
 
-    public void remove(GameObject o) {
+    public void removeObject(GameObject o) {
         rigidbodies.remove(o.getComponent(Rigidbody2D.class));
         colliders.remove(o.getComponent(Collider2D.class));
         // remove from force registry
     }
+
+    public void setScene(Scene newScene) {
+        rigidbodies.clear();
+        colliders.clear();
+        newScene.getObjects(null).forEach(this::addObject);
+    }
+
+    // Getters and Setters
 
     private Vector2 getGravity() {
         return gravity;

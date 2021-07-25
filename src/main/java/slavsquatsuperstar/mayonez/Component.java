@@ -1,7 +1,4 @@
-package slavsquatsuperstar.mayonez.components;
-
-import slavsquatsuperstar.mayonez.GameObject;
-import slavsquatsuperstar.mayonez.Scene;
+package slavsquatsuperstar.mayonez;
 
 import java.awt.*;
 

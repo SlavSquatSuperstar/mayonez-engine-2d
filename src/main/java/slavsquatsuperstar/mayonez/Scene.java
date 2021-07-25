@@ -1,6 +1,5 @@
 package slavsquatsuperstar.mayonez;
 
-import slavsquatsuperstar.mayonez.physics2d.Physics2D;
 import slavsquatsuperstar.mayonez.renderer.Camera;
 
 import java.awt.*;
@@ -16,6 +15,13 @@ import java.util.stream.Collectors;
 // TODO individual cell size
 public abstract class Scene {
 
+    // Object Fields
+    private final List<GameObject> objects;
+    private final List<SceneModifier> toModify; // Use a separate list to avoid concurrent exceptions
+    private final Camera camera;
+
+    // Scene Information
+    protected final String name;
     /**
      * How wide and tall the scene is in world units.
      */
@@ -24,17 +30,6 @@ public abstract class Scene {
      * How many pixels (screen units) make up a world unit.
      */
     protected final int cellSize;
-    // Game Layers
-//    private final Renderer renderer;
-    private final Camera camera;
-    private final Physics2D physics;
-
-    // Object Fields
-    private final List<GameObject> objects;
-    private final List<SceneModifier> toModify; // Use a separate list to avoid concurrent exceptions
-
-    // Scene Information
-    protected String name;
     protected boolean bounded;
     protected Color background = Color.WHITE;
     private boolean started;
@@ -55,7 +50,7 @@ public abstract class Scene {
 
         camera = new Camera(this.width, this.height, cellSize);
 //        renderer = new Renderer();
-        physics = new Physics2D(Game.TIME_STEP, Preferences.GRAVITY);
+//        physics = new Physics2D(Game.TIME_STEP, Preferences.GRAVITY);
     }
 
     // Game Methods
@@ -86,7 +81,7 @@ public abstract class Scene {
             if (o.isDestroyed())
                 removeObject(o);
         });
-        physics.physicsUpdate(dt);
+//        physics.physicsUpdate(dt);
 
         // Remove destroyed objects or add new ones at the end of the frame
         if (!toModify.isEmpty()) {
@@ -119,10 +114,13 @@ public abstract class Scene {
         SceneModifier sm = () -> {
             objects.add(obj.setScene(this));
             obj.start(); // add object components so renderer and physics can access it
-//            renderer.add(obj); // TODO send event
-            physics.add(obj);
+            if (started) {
+                Game.getRenderer().add(obj);
+                Game.getPhysics().addObject(obj);
+            }
             Logger.log("Added object \"%s\" to scene \"%s\"", obj.name, this.name);
         };
+
         if (started)
             toModify.add(sm);
         else
@@ -133,8 +131,8 @@ public abstract class Scene {
         obj.destroy();
         toModify.add(() -> {
             objects.remove(obj);
-//            renderer.remove(obj);
-            physics.remove(obj);
+            Game.getRenderer().remove(obj);
+            Game.getPhysics().removeObject(obj);
             Logger.log("Removed object \"%s\" to scene \"%s\"", obj.name, this.name);
         });
     }
@@ -202,7 +200,7 @@ public abstract class Scene {
     }
 
     public void setGravity(Vector2 gravity) {
-        physics.setGravity(gravity);
+        Game.getPhysics().setGravity(gravity);
     }
 
     @Override

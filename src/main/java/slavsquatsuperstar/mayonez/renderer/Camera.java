@@ -1,8 +1,8 @@
 package slavsquatsuperstar.mayonez.renderer;
 
 import slavsquatsuperstar.mayonez.*;
-import slavsquatsuperstar.mayonez.components.scripts.DragAndDrop;
-import slavsquatsuperstar.mayonez.components.scripts.KeepInScene;
+import slavsquatsuperstar.mayonez.scripts.DragAndDrop;
+import slavsquatsuperstar.mayonez.scripts.KeepInScene;
 
 public class Camera extends Script {
 

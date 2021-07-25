@@ -4,7 +4,7 @@ import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Logger;
 import slavsquatsuperstar.mayonez.Transform;
 import slavsquatsuperstar.mayonez.Vector2;
-import slavsquatsuperstar.mayonez.components.Component;
+import slavsquatsuperstar.mayonez.Component;
 import slavsquatsuperstar.mayonez.physics2d.CollisionManifold;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
 import slavsquatsuperstar.util.MathUtils;

@@ -1,4 +1,4 @@
-package slavsquatsuperstar.mayonez.components.scripts;
+package slavsquatsuperstar.mayonez.scripts;
 
 import slavsquatsuperstar.mayonez.Script;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;

@@ -3,7 +3,7 @@ package slavsquatsuperstar.mayonez.physics2d;
 import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Transform;
 import slavsquatsuperstar.mayonez.Vector2;
-import slavsquatsuperstar.mayonez.components.Component;
+import slavsquatsuperstar.mayonez.Component;
 import slavsquatsuperstar.mayonez.physics2d.primitives.Collider2D;
 import slavsquatsuperstar.util.MathUtils;
 

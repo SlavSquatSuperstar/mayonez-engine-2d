@@ -1,9 +1,10 @@
 package slavsquatsuperstar.game;
 
 import slavsquatsuperstar.mayonez.*;
+import slavsquatsuperstar.mayonez.renderer.IMGUI;
 import slavsquatsuperstar.mayonez.renderer.Sprite;
-import slavsquatsuperstar.mayonez.components.scripts.KeyMovement;
-import slavsquatsuperstar.mayonez.components.scripts.MoveMode;
+import slavsquatsuperstar.mayonez.scripts.KeyMovement;
+import slavsquatsuperstar.mayonez.scripts.MoveMode;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -41,8 +42,9 @@ public class RendererTestScene extends Scene {
             @Override
             public void render(Graphics2D g2) {
                 super.render(g2);
-//                DebugDraw.drawPoint(getScene().camera().getOffset(), Colors.GREEN);
-//                DebugDraw.drawPoint(new Vector2(540, 360), Colors.RED);
+                IMGUI.fillCircle(new Vector2(Preferences.SCREEN_WIDTH / 2f - 50, Preferences.SCREEN_HEIGHT / 2f + 32), 50, Colors.BLUE);
+                IMGUI.drawCircle(new Vector2(Preferences.SCREEN_WIDTH / 2f - 50, Preferences.SCREEN_HEIGHT / 2f + 32), 50, Colors.BLACK);
+                IMGUI.drawPoint(new Vector2(Preferences.SCREEN_WIDTH / 2f, Preferences.SCREEN_HEIGHT / 2f + 82), Colors.LIGHT_BLUE);
             }
         });
         addObject(new GameObject("Mario 2", new Vector2(2, 1)) {
