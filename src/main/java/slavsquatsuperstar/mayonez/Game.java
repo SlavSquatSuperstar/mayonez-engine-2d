@@ -45,7 +45,6 @@ public class Game implements Runnable {
     // Renderer Fields
     private Graphics gfx;
     private BufferStrategy buffers;
-    private DebugDraw debugDraw;
 
     // Scene Fields
     private Scene currentScene;
@@ -216,7 +215,6 @@ public class Game implements Runnable {
 
                 if (null != currentScene)
                     currentScene.render((Graphics2D) gfx);
-                debugDraw.render((Graphics2D) gfx);
 
                 gfx.dispose();
                 buffers.show();
@@ -276,7 +274,6 @@ public class Game implements Runnable {
         try {
             window.createBufferStrategy(2);
             buffers = window.getBufferStrategy();
-            debugDraw = new DebugDraw();
         } catch (IllegalStateException e) {
             Logger.log("Engine: Error initializing window graphics; trying again next frame.");
         }

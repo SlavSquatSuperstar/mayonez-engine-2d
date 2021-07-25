@@ -2,6 +2,7 @@ package slavsquatsuperstar.game;
 
 import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Preferences;
+import slavsquatsuperstar.mayonez.Scene;
 import slavsquatsuperstar.mayonez.Vector2;
 
 import java.awt.*;
@@ -15,8 +16,6 @@ public class Grid extends GameObject {
     public Grid(Vector2 position, GameObject ground) {
         super("Grid", position);
         this.ground = ground;
-        gridWidth = Preferences.TILE_SIZE;
-        gridHeight = Preferences.TILE_SIZE;
     }
 
     @Override
@@ -24,8 +23,8 @@ public class Grid extends GameObject {
         g2.setStroke(new BasicStroke(1f));
         g2.setColor(new Color(0.3f, 0.3f, 0.3f, 0.5f));
 
-        float camX = getScene().camera().getX();
-        float camY = getScene().camera().getY();
+        float camX = getScene().camera().getOffset().x;
+        float camY = getScene().camera().getOffset().y;
 
         //Which grid coords are we at?
         float startX = (float) Math.floor(camX / gridWidth) * gridWidth;
@@ -43,4 +42,11 @@ public class Grid extends GameObject {
             g2.draw(new Line2D.Float(startX, drawY, endX, drawY));
     }
 
+    @Override
+    public GameObject setScene(Scene scene) {
+        super.setScene(scene);
+        gridWidth = getScene().getCellSize();
+        gridHeight = getScene().getCellSize();
+        return this;
+    }
 }

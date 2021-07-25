@@ -10,7 +10,7 @@ import slavsquatsuperstar.mayonez.physics2d.primitives.Collider2D;
 /**
  * A base class providing utility methods for scripts using mouse.
  */
-public abstract class MouseMovement extends MovementScript {
+public abstract class MouseScript extends MovementScript {
 
     protected Collider2D collider; // Reference to object collider
 
@@ -22,11 +22,11 @@ public abstract class MouseMovement extends MovementScript {
     protected float lastMx, lastMy;
     private boolean mouseHeld;
 
-    public MouseMovement() {
+    public MouseScript() {
         mode = MoveMode.FOLLOW_MOUSE;
     }
 
-    public MouseMovement(MoveMode mode, float speed) {
+    public MouseScript(MoveMode mode, float speed) {
         super(mode, speed);
     }
 
@@ -39,6 +39,7 @@ public abstract class MouseMovement extends MovementScript {
     @Override
     public void update(float dt) {
         MouseInput mouse = Game.mouse();
+
         if (!mouseHeld) {
             // If the mouse is up and then pressed on this object
             if (isMouseOnObject() && mouse.buttonDown(button)) {
@@ -52,6 +53,7 @@ public abstract class MouseMovement extends MovementScript {
                 onMouseUp();
             }
         }
+
         onMouseMove();
         lastMx = mouse.getX() + mouse.getDx();
         lastMy = mouse.getY() + mouse.getDy();
@@ -63,7 +65,7 @@ public abstract class MouseMovement extends MovementScript {
     protected boolean isMouseOnObject() {
         // Using last mouse position is more reliable when mouse is moving fast
         if (collider != null)
-               return collider.contains(new Vector2(scene().camera().getX() + lastMx, scene().camera().getY() + lastMy));
+            return collider.contains(new Vector2(scene().camera().getOffset().x + lastMx, scene().camera().getOffset().y + lastMy));
         return true;
 
     }

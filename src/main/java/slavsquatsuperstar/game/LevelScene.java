@@ -10,7 +10,7 @@ import java.awt.*;
 public class LevelScene extends Scene {
 
     public LevelScene(String name) {
-        super(name, (int) (Preferences.SCREEN_WIDTH * 1.5), (int) (Preferences.SCREEN_HEIGHT * 1.0));
+        super(name, (int) (Preferences.SCREEN_WIDTH * 1.5), (int) (Preferences.SCREEN_HEIGHT * 1.0), 42);
     }
 
     @Override
@@ -20,7 +20,7 @@ public class LevelScene extends Scene {
             @Override
             public void update(float dt) {
                 super.update(dt);
-                setX(getScene().camera().getX());
+                setX(getScene().camera().getOffset().x);
             }
 
             @Override

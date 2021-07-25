@@ -5,14 +5,17 @@ import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 import java.util.List;
 
+// TODO should be independent of scene
 public class Renderer {
 
     private final List<GameObject> objects;
     private final Camera camera;
+    private DebugDraw debugDraw;
 
     public Renderer(Camera camera) {
         this.camera = camera;
         objects = new ArrayList<>();
+        debugDraw = new DebugDraw();
     }
 
     /**
@@ -32,13 +35,12 @@ public class Renderer {
         AffineTransform transform = g2.getTransform();
 
         // Move the screen and render everything at the offset position
-        float camX = camera.getOffset().x * Preferences.TILE_SIZE;
-        float camY = camera.getOffset().y * Preferences.TILE_SIZE;
-        g2.translate(-camX, -camY);
-        Logger.log("Camera, Screen: (%.4f, %.4f)", camX, camY);
+        Vector2 camOffset = camera.getOffset().mul(-Game.currentScene().getCellSize());
+        g2.translate(camOffset.x, camOffset.y);
         // TODO only render if in screen
 
         objects.forEach(o -> o.render(g2));
+        debugDraw.render(g2);
 
         // Reset the screen's transform to its unmodified state
         g2.setTransform(transform);

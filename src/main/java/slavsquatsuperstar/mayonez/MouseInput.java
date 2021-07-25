@@ -3,6 +3,7 @@ package slavsquatsuperstar.mayonez;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+// TODO world vs screen
 public class MouseInput extends MouseAdapter {
 
     // Mouse Fields
@@ -52,30 +53,49 @@ public class MouseInput extends MouseAdapter {
         return false;
     }
 
-    public int getX() {
+    // Mouse Pointer Methods
+
+    public float getX() {
+        return (float) mouseX / Game.currentScene().getCellSize();
+    }
+
+    public float getY() {
+        return (float) mouseY / Game.currentScene().getCellSize();
+    }
+
+    public int getXScreen() {
         return mouseX;
     }
 
-    public int getY() {
+    public int getYScreen() {
         return mouseY;
     }
 
-    // TODO world vs screen
     public Vector2 getPosition() {
-        return new Vector2(mouseX, mouseY).div(Preferences.TILE_SIZE);
+        return new Vector2(getX(), getY());
     }
 
-    public int getDx() {
+    public float getDx() {
+        return (float) dx / Game.currentScene().getCellSize();
+    }
+
+    public int getDxScreen() {
         return dx;
     }
 
-    public int getDy() {
+    public float getDy() {
+        return (float) dy / Game.currentScene().getCellSize();
+    }
+
+    public int getDyScreen() {
         return dy;
     }
 
     public Vector2 getDisplacement() {
-        return new Vector2(dx, dy).div(Preferences.TILE_SIZE);
+        return new Vector2(getDx(), getDy());
     }
+
+    // Mouse State Methods
 
     public int button() {
         return button;

@@ -1,8 +1,7 @@
 {
 	"title": "Mayonez Engine",
-	"version": "v0.6.3-pre3",
+	"version": "v0.6.3-pre4",
 	"width": 1080,
 	"height": 720,
 	"fps": 60,
-	"tile_size": 32
 }

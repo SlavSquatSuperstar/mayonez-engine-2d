@@ -10,8 +10,8 @@ public class Camera extends Script {
     private GameObject subject;
 
     public Camera(int sceneWidth, int sceneHeight) {
-        width = (float) Preferences.SCREEN_WIDTH / Preferences.TILE_SIZE;
-        height = (float) Preferences.SCREEN_HEIGHT / Preferences.TILE_SIZE;
+        width = (float) Preferences.SCREEN_WIDTH;
+        height = (float) Preferences.SCREEN_HEIGHT;
         minX = 0;
         minY = 0;//-28; // account for the bar on top of the window
         maxX = sceneWidth;
@@ -63,15 +63,6 @@ public class Camera extends Script {
     }
 
     // Getters and setters
-
-    // TODO remove
-    public float getX() {
-        return parent.getX();
-    }
-
-    public float getY() {
-        return parent.getY();
-    }
 
     public Vector2 getOffset() {
         return transform.position.sub(getHalfSize());

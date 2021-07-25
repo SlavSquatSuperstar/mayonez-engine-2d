@@ -15,30 +15,37 @@ import java.util.stream.Collectors;
 // TODO individual cell size
 public abstract class Scene {
 
-    // Scene Information
-    protected String name;
-    protected int width, height;
-    protected boolean bounded;
-    protected Color background = Color.WHITE;
-    private boolean started;
-
     // Game Layers
     private final Renderer renderer;
     private final Physics2D physics;
     private final Camera camera;
-
     // Object Fields
     private final List<GameObject> objects;
     private final List<SceneModifier> toModify; // Use a separate list to avoid concurrent exceptions
 
+    // Scene Information
+    protected String name;
+    /**
+     * How wide and tall the scene is in world units.
+     */
+    protected final int width, height;
+    /**
+     * How many pixels (screen units) make up a world unit.
+     */
+    protected final int cellSize;
+    protected boolean bounded;
+    protected Color background = Color.WHITE;
+    private boolean started;
+
     public Scene(String name) {
-        this(name, 0, 0);
+        this(name, 0, 0, 1);
     }
 
-    public Scene(String name, int width, int height) {
+    public Scene(String name, int width, int height, int cellSize) {
         this.name = name;
-        this.width = width;
-        this.height = height;
+        this.width = width / cellSize;
+        this.height = height / cellSize;
+        this.cellSize = cellSize;
         bounded = true;
 
         objects = new ArrayList<>();
@@ -54,7 +61,8 @@ public abstract class Scene {
     /**
      * Add necessary objects.
      */
-    protected void init() {}
+    protected void init() {
+    }
 
     public final void start() {
         if (started)
@@ -174,6 +182,10 @@ public abstract class Scene {
 
     public int getHeight() {
         return height;
+    }
+
+    public int getCellSize() {
+        return cellSize;
     }
 
     public boolean isBounded() {

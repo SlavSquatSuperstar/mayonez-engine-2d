@@ -12,10 +12,8 @@ import java.awt.*;
 
 public class PhysicsTestScene extends Scene {
 
-//    Line2D line = new Line2D(new Vector2(300, 300), new Vector2(600, 300));
-
     public PhysicsTestScene(String name) {
-        super(name, Preferences.SCREEN_WIDTH, Preferences.SCREEN_HEIGHT);
+        super(name, Preferences.SCREEN_WIDTH, Preferences.SCREEN_HEIGHT, 10);
         setGravity(new Vector2(0, 0));
     }
 
@@ -26,7 +24,7 @@ public class PhysicsTestScene extends Scene {
         addObject(new GameObject("Debug Draw", new Vector2()) {
             @Override
             public void render(Graphics2D g2) {
-//                Line2D line = new Line2D(new Vector2(200, 200), Game.mouse().getPosition());
+//                Line2D line = new Line2D(new Vector2(20, 00), Game.mouse().getPosition());
 //                DebugDraw.drawVector(line.toVector().mul(1), line.start, Colors.BLACK);
 
                 for (GameObject o : getScene().getObjects(null)) {
@@ -50,89 +48,56 @@ public class PhysicsTestScene extends Scene {
             }
         });
 
-//        for (int i = 0; i < 10; i++) {
-//            if (i % 2 == 0)
-//                addObject(createCircle(MathUtils.random(10, 40)));
-//            else
-//                addObject(createAABB(MathUtils.random(20, 80), MathUtils.random(20, 80)));
-//        }
-
-        addObject(new GameObject("Player Shape", new Vector2(300, 100)) {
+        addObject(new GameObject("Player Shape", new Vector2(30, 10)) {
             @Override
             protected void init() {
-                float radius = 35f;
-                float size = 50f;
+                float radius = 3.5f;
+                float size = 5f;
 //                addComponent(new CircleCollider(radius));
                 addComponent(new AlignedBoxCollider2D(new Vector2(size, size)));
-                addComponent(new Rigidbody2D(radius * radius * MathUtils.PI / 100f));
+                addComponent(new Rigidbody2D(radius * radius * MathUtils.PI));
 //                addComponent(new MouseFlick("left mouse", 10, false));
 //                addComponent(new FollowMouse(MoveMode.FOLLOW_MOUSE, 2));
                 addComponent(new DragAndDrop("left mouse", false));
-                addComponent(new KeyMovement(MoveMode.IMPULSE, 4));
+                addComponent(new KeyMovement(MoveMode.IMPULSE, 1f));
                 addComponent(new KeepInScene(getScene(), KeepInScene.Mode.BOUNCE));
             }
         });
 
-        addObject(new GameObject("Small Circle", new Vector2(100, 100)) {
-            @Override
-            protected void init() {
-                float radius = 20f;
-                addComponent(new CircleCollider(radius));
-                addComponent(new Rigidbody2D(radius * radius * MathUtils.PI / 100f));
-                addComponent(new KeepInScene(getScene(), KeepInScene.Mode.BOUNCE));
-            }
-        });
+        addObject(createCircle(2, new Vector2(10, 10)));
+        addObject(createCircle(5, new Vector2(30, 30)));
 
-        addObject(new GameObject("Big Circle", new Vector2(300, 300)) {
-            @Override
-            protected void init() {
-                float radius = 50f;
-                addComponent(new CircleCollider(radius));
-                addComponent(new Rigidbody2D(radius * radius * MathUtils.PI / 100f));
-                addComponent(new KeepInScene(getScene(), KeepInScene.Mode.BOUNCE));
-            }
-        });
+        addObject(createAABB(12, 8, new Vector2(50, 20)));
+        addObject(createAABB(5, 10, new Vector2(70, 20)));
 
-        addObject(new GameObject("Small AABB", new Vector2(500, 200)) {
-            @Override
-            protected void init() {
-                float width = 120, height = 80;
-                addComponent(new AlignedBoxCollider2D(new Vector2(width, height)));
-                addComponent(new Rigidbody2D(width * height / 100f));
-                addComponent(new KeepInScene(getScene(), KeepInScene.Mode.BOUNCE));
-            }
-        });
-
-        addObject(new GameObject("Big AABB", new Vector2(700, 200)) {
-            @Override
-            protected void init() {
-                float width = 50, height = 100;
-                addComponent(new AlignedBoxCollider2D(new Vector2(width, height)));
-                addComponent(new Rigidbody2D(width * height / 100f));
-                addComponent(new KeepInScene(getScene(), KeepInScene.Mode.BOUNCE));
-            }
-        });
+        // Randomly generate Circles and AABBs
+        for (int i = 0; i < 10; i++) {
+            if (i % 2 == 0)
+                addObject(createCircle(MathUtils.random(2, 5), new Vector2(MathUtils.random(0, width), MathUtils.random(0, height))));
+            else
+                addObject(createAABB(MathUtils.random(4, 10), MathUtils.random(4, 10), new Vector2(MathUtils.random(0, width), MathUtils.random(0, height))));
+        }
 
     }
 
-    public GameObject createCircle(float radius) {
-        return new GameObject("Circle", new Vector2(MathUtils.random(0, width), MathUtils.random(0, height))) {
+    public GameObject createCircle(float radius, Vector2 position) {
+        return new GameObject("Circle", position) {
             @Override
             protected void init() {
                 addComponent(new CircleCollider(radius));
-                addComponent(new Rigidbody2D(radius * radius * MathUtils.PI / 100f));
+                addComponent(new Rigidbody2D(radius * radius * MathUtils.PI));
                 addComponent(new KeepInScene(getScene(), KeepInScene.Mode.BOUNCE));
                 addComponent(new DragAndDrop("left mouse", false));
             }
         };
     }
 
-    public GameObject createAABB(float width, float height) {
-        return new GameObject("Rectangle", new Vector2(MathUtils.random(0, width), MathUtils.random(0, height))) {
+    public GameObject createAABB(float width, float height, Vector2 position) {
+        return new GameObject("Rectangle", position) {
             @Override
             protected void init() {
                 addComponent(new AlignedBoxCollider2D(new Vector2(width, height)));
-                addComponent(new Rigidbody2D(width * height / 100f));
+                addComponent(new Rigidbody2D(width * height));
                 addComponent(new KeepInScene(getScene(), KeepInScene.Mode.BOUNCE));
                 addComponent(new DragAndDrop("left mouse", false));
             }

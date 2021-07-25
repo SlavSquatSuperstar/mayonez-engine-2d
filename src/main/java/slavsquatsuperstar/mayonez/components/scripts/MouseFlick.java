@@ -4,7 +4,7 @@ import slavsquatsuperstar.mayonez.Game;
 import slavsquatsuperstar.mayonez.Vector2;
 import slavsquatsuperstar.mayonez.physics2d.primitives.Collider2D;
 
-public class MouseFlick extends MouseMovement {
+public class MouseFlick extends MouseScript {
 
     private Vector2 dragDisplacement = new Vector2();
 

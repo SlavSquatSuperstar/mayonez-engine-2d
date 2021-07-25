@@ -6,7 +6,7 @@ import slavsquatsuperstar.mayonez.Vector2;
 /**
  * A simple script that moves an object with or towards the mouse pointer, depending on the mode.
  */
-public class FollowMouse extends MouseMovement {
+public class FollowMouse extends MouseScript {
 
     public FollowMouse(MoveMode mode, float speed) {
         super(mode, speed);

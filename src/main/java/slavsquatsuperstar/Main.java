@@ -7,7 +7,7 @@ public class Main {
     public static void main(String[] args) {
         Game game = Game.instance();
         game.start();
-        Game.loadScene(3);
+        Game.loadScene(2);
     }
 
 }

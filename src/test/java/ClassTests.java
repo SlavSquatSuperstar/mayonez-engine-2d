@@ -51,7 +51,7 @@ public class ClassTests {
 
     @Test
     public void getObjectsInSceneGeneric() {
-        Scene scene = new Scene("ClassTests Scene", 0, 0) {
+        Scene scene = new Scene("ClassTests Scene") {
             @Override
             protected void init() {
                 addObject(new GameObject("obj1", new Vector2()));

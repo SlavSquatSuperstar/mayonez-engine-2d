@@ -37,16 +37,10 @@ public class Sprite extends Component {
 
     @Override
     public void render(Graphics2D g2) {
-        // Graphics screen coordinates with camera offset
-        double g2X = g2.getTransform().getTranslateX();
-        double g2Y = g2.getTransform().getTranslateY();
-
         // Measurements are in screen coordinates (pixels)
-        Vector2 cameraOffset = new Vector2((float) g2X, (float) g2Y);
-        Vector2 parentCenter = parent.transform.position.mul(Preferences.TILE_SIZE); // no offset
+        Vector2 parentCenter = parent.transform.position.mul(scene().getCellSize()); // no offset
         Vector2 imageHalfSize = new Vector2(image.getWidth(), image.getHeight()).div(2);
-        Logger.log("Sprite, Screen: (%.4f, %.4f)", parentCenter.x + g2X, parentCenter.y + g2Y);
-//        DebugDraw.drawPoint(parentCenter.add(cameraOffset).add(imageHalfSize), Colors.BLUE);
+        DebugDraw.drawPoint(parentCenter, Colors.BLUE);
 
         // Use the parent's transform to draw the sprite
         AffineTransform transform = new AffineTransform();

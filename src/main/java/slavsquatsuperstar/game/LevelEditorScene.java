@@ -11,7 +11,7 @@ import java.awt.*;
 public class LevelEditorScene extends Scene {
 
     public LevelEditorScene(String name) {
-        super(name, (int) (Preferences.SCREEN_WIDTH * 1.0), (int) (Preferences.SCREEN_HEIGHT * 1.0));
+        super(name, (int) (Preferences.SCREEN_WIDTH * 1.0), (int) (Preferences.SCREEN_HEIGHT * 1.0), 42);
         setGravity(new Vector2());
     }
 
@@ -23,7 +23,7 @@ public class LevelEditorScene extends Scene {
             @Override
             public void update(float dt) {
                 super.update(dt);
-                setX(getScene().camera().getX());
+                setX(getScene().camera().getOffset().x);
             }
 
             @Override

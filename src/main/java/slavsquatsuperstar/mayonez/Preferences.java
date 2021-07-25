@@ -17,13 +17,11 @@ public final class Preferences { // TODO defaults
     // Game
     public static final int FPS = preferences.getInt("fps");;
 
-    // Level
-    public static final int TILE_SIZE = preferences.getInt("tile_size");
+    // Scene
     public static final int GROUND_HEIGHT = SCREEN_HEIGHT - 30;
 
     // Physics
     public static final Vector2 GRAVITY = new Vector2(0, 60f);
-    public static final float TERMINAL_VELOCITY = GRAVITY.y * 2;
 
     // File I/O
     public static final String CHARSET = "UTF-8";

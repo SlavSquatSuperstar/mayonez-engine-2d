@@ -1,15 +1,14 @@
 package slavsquatsuperstar.game;
 
 import slavsquatsuperstar.mayonez.GameObject;
-import slavsquatsuperstar.mayonez.Preferences;
+import slavsquatsuperstar.mayonez.Vector2;
+import slavsquatsuperstar.mayonez.components.Sprite;
 import slavsquatsuperstar.mayonez.components.scripts.KeepInScene;
 import slavsquatsuperstar.mayonez.components.scripts.KeyMovement;
 import slavsquatsuperstar.mayonez.components.scripts.MoveMode;
-import slavsquatsuperstar.util.SpriteSheet;
-import slavsquatsuperstar.mayonez.Vector2;
-import slavsquatsuperstar.mayonez.components.Sprite;
-import slavsquatsuperstar.mayonez.physics2d.primitives.AlignedBoxCollider2D;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
+import slavsquatsuperstar.mayonez.physics2d.primitives.AlignedBoxCollider2D;
+import slavsquatsuperstar.util.SpriteSheet;
 
 import java.awt.*;
 
@@ -56,7 +55,7 @@ public class Player extends GameObject {
             addComponent(s);
 
         // Add player scripts
-        addComponent(new AlignedBoxCollider2D(new Vector2(Preferences.TILE_SIZE, Preferences.TILE_SIZE)));
+        addComponent(new AlignedBoxCollider2D(new Vector2(getScene().getCellSize(), getScene().getCellSize())));
         addComponent(new Rigidbody2D(mass).setDrag(drag));
         addComponent(new KeyMovement(MoveMode.FORCE, thrustForce).setTopSpeed(topSpeed));
         addComponent(new PlayerController(ground));
