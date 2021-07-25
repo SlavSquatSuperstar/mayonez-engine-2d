@@ -4,7 +4,7 @@ import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Preferences;
 import slavsquatsuperstar.mayonez.Scene;
 import slavsquatsuperstar.mayonez.Vector2;
-import slavsquatsuperstar.mayonez.components.Sprite;
+import slavsquatsuperstar.mayonez.renderer.Sprite;
 
 import java.awt.*;
 

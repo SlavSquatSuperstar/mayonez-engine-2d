@@ -1,5 +1,6 @@
-package slavsquatsuperstar.mayonez;
+package slavsquatsuperstar.mayonez.renderer;
 
+import slavsquatsuperstar.mayonez.*;
 import slavsquatsuperstar.mayonez.components.scripts.DragAndDrop;
 import slavsquatsuperstar.mayonez.components.scripts.KeepInScene;
 

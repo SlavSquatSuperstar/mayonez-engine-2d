@@ -5,6 +5,8 @@ import slavsquatsuperstar.game.LevelEditorScene;
 import slavsquatsuperstar.game.LevelScene;
 import slavsquatsuperstar.game.PhysicsTestScene;
 import slavsquatsuperstar.game.RendererTestScene;
+import slavsquatsuperstar.mayonez.renderer.IMGUI;
+import slavsquatsuperstar.mayonez.renderer.Renderer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -46,8 +48,9 @@ public class Game implements Runnable {
     private Graphics gfx;
     private BufferStrategy buffers;
 
-    // Scene Fields
+    // Game Layers
     private Scene currentScene;
+    private Renderer renderer;
 
     /*
      * Method Declarations
@@ -69,6 +72,8 @@ public class Game implements Runnable {
         window.addKeyListener(keyboard);
         window.addMouseListener(mouse);
         window.addMouseMotionListener(mouse);
+
+        renderer = new Renderer();
     }
 
     // Game Loop Methods
@@ -213,8 +218,10 @@ public class Game implements Runnable {
                 gfx = buffers.getDrawGraphics();
                 gfx.clearRect(0, 0, width, height);
 
+                Graphics2D g2 = (Graphics2D) gfx;
                 if (null != currentScene)
-                    currentScene.render((Graphics2D) gfx);
+                    currentScene.render(g2);
+                renderer.render(g2);
 
                 gfx.dispose();
                 buffers.show();
@@ -280,11 +287,12 @@ public class Game implements Runnable {
     }
 
     /**
-     * Start sthe current scene, if not null
+     * Starts the current scene, if not null
      */
     private void startCurrentScene() {
         if (currentScene != null && running) {
             currentScene.start();
+            renderer.setScene(currentScene);
             Logger.log("Game: Loaded scene \"%s\"", currentScene.getName());
         }
     }

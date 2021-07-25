@@ -26,6 +26,9 @@ public class PhysicsTestScene extends Scene {
             public void render(Graphics2D g2) {
 //                Line2D line = new Line2D(new Vector2(20, 00), Game.mouse().getPosition());
 //                DebugDraw.drawVector(line.toVector().mul(1), line.start, Colors.BLACK);
+                IMGUI.fillCircle(new Vector2(100, 100), 50, Colors.BLUE);
+                IMGUI.drawCircle(new Vector2(100, 100), 50, Colors.BLACK);
+                IMGUI.drawPoint(new Vector2(150, 150), Colors.LIGHT_BLUE);
 
                 for (GameObject o : getScene().getObjects(null)) {
                     Collider2D col = o.getComponent(Collider2D.class);

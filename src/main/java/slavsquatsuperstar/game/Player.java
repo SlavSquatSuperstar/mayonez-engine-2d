@@ -2,7 +2,7 @@ package slavsquatsuperstar.game;
 
 import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Vector2;
-import slavsquatsuperstar.mayonez.components.Sprite;
+import slavsquatsuperstar.mayonez.renderer.Sprite;
 import slavsquatsuperstar.mayonez.components.scripts.KeepInScene;
 import slavsquatsuperstar.mayonez.components.scripts.KeyMovement;
 import slavsquatsuperstar.mayonez.components.scripts.MoveMode;

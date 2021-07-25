@@ -1,7 +1,8 @@
-package slavsquatsuperstar.mayonez.components;
+package slavsquatsuperstar.mayonez.renderer;
 
 import slavsquatsuperstar.mayonez.*;
 import slavsquatsuperstar.mayonez.assets.Assets;
+import slavsquatsuperstar.mayonez.components.Component;
 
 import javax.imageio.ImageIO;
 import java.awt.*;

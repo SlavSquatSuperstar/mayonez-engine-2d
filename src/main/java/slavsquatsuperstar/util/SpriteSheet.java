@@ -1,6 +1,6 @@
 package slavsquatsuperstar.util;
 
-import slavsquatsuperstar.mayonez.components.Sprite;
+import slavsquatsuperstar.mayonez.renderer.Sprite;
 
 import java.util.ArrayList;
 import java.util.List;

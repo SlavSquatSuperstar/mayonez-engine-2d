@@ -1,6 +1,7 @@
 package slavsquatsuperstar.mayonez;
 
 import slavsquatsuperstar.mayonez.physics2d.Physics2D;
+import slavsquatsuperstar.mayonez.renderer.Camera;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -15,16 +16,6 @@ import java.util.stream.Collectors;
 // TODO individual cell size
 public abstract class Scene {
 
-    // Game Layers
-    private final Renderer renderer;
-    private final Physics2D physics;
-    private final Camera camera;
-    // Object Fields
-    private final List<GameObject> objects;
-    private final List<SceneModifier> toModify; // Use a separate list to avoid concurrent exceptions
-
-    // Scene Information
-    protected String name;
     /**
      * How wide and tall the scene is in world units.
      */
@@ -33,6 +24,17 @@ public abstract class Scene {
      * How many pixels (screen units) make up a world unit.
      */
     protected final int cellSize;
+    // Game Layers
+//    private final Renderer renderer;
+    private final Camera camera;
+    private final Physics2D physics;
+
+    // Object Fields
+    private final List<GameObject> objects;
+    private final List<SceneModifier> toModify; // Use a separate list to avoid concurrent exceptions
+
+    // Scene Information
+    protected String name;
     protected boolean bounded;
     protected Color background = Color.WHITE;
     private boolean started;
@@ -51,9 +53,8 @@ public abstract class Scene {
         objects = new ArrayList<>();
         toModify = new ArrayList<>();
 
-        camera = new Camera(width, height);
-        renderer = new Renderer(camera);
         camera = new Camera(this.width, this.height, cellSize);
+//        renderer = new Renderer();
         physics = new Physics2D(Game.TIME_STEP, Preferences.GRAVITY);
     }
 
@@ -96,13 +97,17 @@ public abstract class Scene {
 
     }
 
-    public final void render(Graphics2D g2) {
+    /**
+     * Draw the background image.
+     * @param g2 the window's graphics object
+     */
+    protected final void render(Graphics2D g2) {
         if (!started)
             return;
 
         g2.setColor(background);
         g2.fillRect(0, 0, width, height);
-        renderer.render(g2);
+//        renderer.render(g2);
 
         // g.drawImage(background, 0, 0, height, width, camera.getXOffset(),
         // camera.getYOffset(), background.getWidth(), background.getHeight(), null);
@@ -114,7 +119,7 @@ public abstract class Scene {
         SceneModifier sm = () -> {
             objects.add(obj.setScene(this));
             obj.start(); // add object components so renderer and physics can access it
-            renderer.add(obj);
+//            renderer.add(obj); // TODO send event
             physics.add(obj);
             Logger.log("Added object \"%s\" to scene \"%s\"", obj.name, this.name);
         };
@@ -128,7 +133,7 @@ public abstract class Scene {
         obj.destroy();
         toModify.add(() -> {
             objects.remove(obj);
-            renderer.remove(obj);
+//            renderer.remove(obj);
             physics.remove(obj);
             Logger.log("Removed object \"%s\" to scene \"%s\"", obj.name, this.name);
         });

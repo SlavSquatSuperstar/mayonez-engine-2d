@@ -1,5 +1,7 @@
-package slavsquatsuperstar.mayonez;
+package slavsquatsuperstar.mayonez.renderer;
 
+import slavsquatsuperstar.mayonez.Game;
+import slavsquatsuperstar.mayonez.Vector2;
 import slavsquatsuperstar.mayonez.physics2d.primitives.AlignedBoxCollider2D;
 import slavsquatsuperstar.mayonez.physics2d.primitives.BoxCollider2D;
 import slavsquatsuperstar.mayonez.physics2d.primitives.CircleCollider;
@@ -9,32 +11,23 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO create IMGUI implementation
+/**
+ * Draws colliders and mathematical objects onto the screen as shapes. Note: all methods use position as the center.
+ */
 public class DebugDraw {
 
     private static final int STROKE_SIZE = 2;
     private static final Stroke stroke = new BasicStroke(STROKE_SIZE);
-    private static final List<ShapeDrawer> shapes = new ArrayList<>(); // map to color?
+    private static final List<Renderable> shapes = new ArrayList<>(); // map to color?
 
     // Points
 
     public static void drawPoint(Vector2 position, Color color) {
-        Logger.log("Point: %s", position);
         // Fill a circle with radius "STROKE_SIZE"
         Vector2 min = position;
         shapes.add(g2 -> {
             g2.setColor(color);
             g2.fillOval(toScreen(min.x) - STROKE_SIZE, toScreen(min.y) - STROKE_SIZE, STROKE_SIZE * 2, STROKE_SIZE * 2);
-        });
-    }
-
-    public static void drawPointScreen(Vector2 position, Color color) {
-        Logger.log("Point: %s", position);
-        // Fill a circle with radius "STROKE_SIZE"
-        Vector2 min = position.sub(new Vector2(STROKE_SIZE, STROKE_SIZE));
-        shapes.add(g2 -> {
-            g2.setColor(color);
-            g2.fillOval((int) min.x, (int) min.y, STROKE_SIZE * 2, STROKE_SIZE * 2);
         });
     }
 
@@ -45,13 +38,6 @@ public class DebugDraw {
             g2.setColor(color);
             g2.drawLine(toScreen(start.x), toScreen(start.y),
                     toScreen(end.x), toScreen(end.y));
-        });
-    }
-
-    public static void drawLineScreen(Vector2 start, Vector2 end, Color color) {
-        shapes.add(g2 -> {
-            g2.setColor(color);
-            g2.drawLine((int) start.x, (int) start.y, (int) end.x, (int) end.y);
         });
     }
 
@@ -71,15 +57,6 @@ public class DebugDraw {
             drawBox((BoxCollider2D) shape, color);
     }
 
-    public static void drawShapeScreen(Collider2D shape, Color color) {
-        if (shape instanceof CircleCollider)
-            drawCircleScreen((CircleCollider) shape, color);
-        else if (shape instanceof AlignedBoxCollider2D)
-            drawAABBScreen((AlignedBoxCollider2D) shape, color);
-        else if (shape instanceof BoxCollider2D)
-            drawBoxScreen((BoxCollider2D) shape, color);
-    }
-
     private static void drawCircle(CircleCollider circle, Color color) {
         shapes.add(g2 -> {
             g2.setColor(color);
@@ -88,24 +65,10 @@ public class DebugDraw {
         });
     }
 
-    private static void drawCircleScreen(CircleCollider circle, Color color) {
-        shapes.add(g2 -> {
-            g2.setColor(color);
-            g2.drawOval((int) circle.min().x, (int) circle.min().y, (int) (circle.radius * 2), (int) (circle.radius * 2));
-        });
-    }
-
     private static void drawAABB(AlignedBoxCollider2D aabb, Color color) {
         shapes.add(g2 -> {
             g2.setColor(color);
             g2.drawRect(toScreen(aabb.min().x), toScreen(aabb.min().y), toScreen(aabb.width()), toScreen(aabb.height()));
-        });
-    }
-
-    private static void drawAABBScreen(AlignedBoxCollider2D aabb, Color color) {
-        shapes.add(g2 -> {
-            g2.setColor(color);
-            g2.drawRect((int) aabb.min().x, (int) aabb.min().y, (int) aabb.width(), (int) aabb.height());
         });
     }
 
@@ -119,20 +82,15 @@ public class DebugDraw {
         });
     }
 
-    private static void drawBoxScreen(BoxCollider2D box, Color color) {
-        Polygon obb = new Polygon();
-        for (Vector2 point : box.getVertices()) obb.addPoint((int) point.x, (int) point.y);
-        shapes.add(g2 -> {
-            g2.setColor(color);
-            g2.drawPolygon(obb);
-        });
-    }
-
+    /**
+     * Converts world coordinate to screen coordinates, rounding to the nearest integer.
+     *
+     * @param world the location of something in the world
+     * @return the corresponding screen pixel
+     */
     private static int toScreen(float world) {
         return Math.round(world * Game.currentScene().getCellSize());
     }
-
-    // Helper Members
 
     public void render(Graphics2D g2) {
         if (!shapes.isEmpty()) {
@@ -140,11 +98,6 @@ public class DebugDraw {
             shapes.forEach(s -> s.draw(g2));
             shapes.clear();
         }
-    }
-
-    @FunctionalInterface
-    private interface ShapeDrawer { // Maps a shape to a draw function
-        void draw(Graphics2D g2);
     }
 
 }
