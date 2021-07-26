@@ -23,4 +23,16 @@ public abstract class Script extends Component {
         transform = parent.transform;
         return this;
     }
+
+    @Override
+    public Script setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Script %s (%s)", getClass().isAnonymousClass() ?
+                "Script" : getClass().getSimpleName(), parent.name);
+    }
 }

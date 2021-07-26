@@ -104,7 +104,7 @@ public class Physics2D {
                     DebugDraw.drawLine(c1.center(), c2.center(), Colors.RED);
                     collidingPairs.add(new ImmutablePair<>(r1, r2));
                     collisions.add(result);
-                    Logger.log("%s intersects %s", c1, c2);
+//                    Logger.log("%s intersects %s", c1, c2);
                 }
             }
         }

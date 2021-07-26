@@ -29,7 +29,6 @@ public abstract class Scene {
     private final List<GameObject> objects;
     private final List<SceneModifier> toModify; // Use a separate list to avoid concurrent exceptions
     private final Camera camera;
-    protected boolean bounded;
     protected Color background = Color.WHITE;
     private boolean started;
 
@@ -42,7 +41,6 @@ public abstract class Scene {
         this.width = width / cellSize;
         this.height = height / cellSize;
         this.cellSize = cellSize;
-        bounded = true;
 
         objects = new ArrayList<>();
         toModify = new ArrayList<>();
@@ -68,7 +66,6 @@ public abstract class Scene {
 
         addObject(Camera.createCameraObject(camera));
         init();
-        // TODO late update?
         objects.add(objects.remove(0)); // update the camera last
         started = true;
     }
@@ -78,6 +75,7 @@ public abstract class Scene {
      *
      * @param dt seconds since the last frame
      */
+    // TODO late update?
     public final void update(float dt) {
         if (!started)
             return;
@@ -195,10 +193,6 @@ public abstract class Scene {
 
     public int getCellSize() {
         return cellSize;
-    }
-
-    public boolean isBounded() {
-        return bounded;
     }
 
     public Camera camera() {

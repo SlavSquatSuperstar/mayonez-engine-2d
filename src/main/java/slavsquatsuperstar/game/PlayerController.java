@@ -1,11 +1,10 @@
 package slavsquatsuperstar.game;
 
 import slavsquatsuperstar.mayonez.Game;
-import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Script;
 import slavsquatsuperstar.mayonez.Vector2;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
-import slavsquatsuperstar.mayonez.physics2d.primitives.AlignedBoxCollider2D;
+import slavsquatsuperstar.mayonez.renderer.Camera;
 
 import java.awt.event.KeyEvent;
 
@@ -13,22 +12,20 @@ import java.awt.event.KeyEvent;
 public class PlayerController extends Script {
 
     // Physics Fields
-    private final GameObject ground;
     private Rigidbody2D rb;
-    private AlignedBoxCollider2D box;
 
     // Movement Parameters
     private float brakeForce = 0.6f;
 
-    public PlayerController(GameObject ground) {
-        this.ground = ground;
-    }
-
     @Override
     public void start() {
-//        getScene().camera().setSubject(parent); // TODO pass camera in player c'tor?
+        Camera cam = scene().camera();
+        cam.setSubject(parent); // TODO pass camera in player c'tor?
+        if (scene() instanceof LevelEditorScene) {
+            cam.enableFreeMovement(true);
+            cam.enableKeepInScene(true);
+        }
         rb = parent.getComponent(Rigidbody2D.class);
-        box = parent.getComponent(AlignedBoxCollider2D.class);
     }
 
     @Override

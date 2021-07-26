@@ -24,7 +24,7 @@ public class RendererTestScene extends Scene {
             @Override
             protected void init() {
                 getScene().camera().setSubject(this);
-                getScene().camera().setKeepInScene(false);
+                getScene().camera().enableKeepInScene(false);
                 transform.stretch(new Vector2(2, 2));
                 addComponent(new Sprite("mario.png"));
                 addComponent(new KeyMovement(MoveMode.POSITION, 0.5f));

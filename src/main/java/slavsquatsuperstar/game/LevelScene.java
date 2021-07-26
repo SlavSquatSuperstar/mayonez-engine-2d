@@ -32,7 +32,7 @@ public class LevelScene extends Scene {
         };
 //        addObject(ground);
 
-        GameObject player = new Player("Player", new Vector2(100, 100), ground);
+        GameObject player = new Player("Player", new Vector2(100, 100));
         addObject(player);
         camera().setSubject(player);
     }

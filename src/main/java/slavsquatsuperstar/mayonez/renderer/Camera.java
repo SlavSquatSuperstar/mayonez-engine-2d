@@ -9,11 +9,13 @@ import slavsquatsuperstar.mayonez.scripts.KeepInScene;
  *
  * @author SlavSquatSuperstar
  */
+// TODO reference parent scripts
 public class Camera extends Script {
 
-    private float width, height; // in world units
+    private float width, height; // In world units
     private int minX, minY, maxX, maxY;
     private GameObject subject;
+    private Script keepInScene, dragAndDrop; // Reference to parent scripts
 
     public Camera(int sceneWidth, int sceneHeight, int cellSize) {
         width = (float) Preferences.SCREEN_WIDTH / cellSize;
@@ -37,7 +39,7 @@ public class Camera extends Script {
             @Override
             protected void init() {
                 addComponent(camera);
-                addComponent(new DragAndDrop("right mouse", true) {
+                addComponent(camera.dragAndDrop = new DragAndDrop("right mouse", true) {
                     // Reset camera position with double click
                     @Override
                     public void onMouseDown() {
@@ -47,12 +49,13 @@ public class Camera extends Script {
                     }
                 }.setEnabled(false));
                 // Keep camera inside scene and add camera collider
-                addComponent(new KeepInScene(camera.minX, camera.minY, camera.maxX, camera.maxY, KeepInScene.Mode.STOP));
+                addComponent(camera.keepInScene = new KeepInScene(camera.minX, camera.minY, camera.maxX, camera.maxY, KeepInScene.Mode.STOP));
             }
 
             // Don't want to get rid of the camera!
             @Override
-            public final void destroy() {}
+            public final void destroy() {
+            }
 
             @Override
             public final boolean isDestroyed() {
@@ -83,27 +86,43 @@ public class Camera extends Script {
     }
 
     /**
-     * Toggles the camera's ability to stay within the scene bounds.
+     * Toggles the camera's ability to be dragged with the mouse.
      *
-     * @param enabled if the camera should stay inside the scene
-     * @return the camera
+     * @param enabled If mouse should move the camera. Set to true to disable subject following.
      */
-    public Camera setKeepInScene(boolean enabled) {
-        parent.getComponent(KeepInScene.class).setEnabled(enabled);
+    public Camera enableFreeMovement(boolean enabled) {
+        dragAndDrop.setEnabled(enabled);
+        if (enabled && subject != null) {
+            subject = null;
+            Logger.log("Subject following for %s has been disabled because freecam was enabled.", this, dragAndDrop);
+        }
         return this;
     }
 
     /**
-     * Sets a subject for this Camera to follow, or enables free camera movement.
+     * Toggles the camera's ability to stay within the scene bounds.
+     *
+     * @param enabled if the camera should stay inside the scene
+     */
+    public Camera enableKeepInScene(boolean enabled) {
+        keepInScene.setEnabled(enabled);
+        return this;
+    }
+
+    /**
+     * Sets a subject for this Camera to follow, disabling free camera movement.
      *
      * @param subject A {@link GameObject} in the scene. Set to null to disable subject following.
-     * @return the camera
      */
     public Camera setSubject(GameObject subject) {
         this.subject = subject;
-        parent.getComponent(DragAndDrop.class).setEnabled(subject == null);
-        if (subject != null)
-            setKeepInScene(subject.getComponent(KeepInScene.class) != null);
+        if (subject != null) {
+//            enableKeepInScene(subject.getComponent(KeepInScene.class) != null);
+            if (dragAndDrop.isEnabled()) {
+                dragAndDrop.setEnabled(false);
+                Logger.log("Freecam for %s has been disabled because a subject was set.", this, dragAndDrop);
+            }
+        }
         return this;
     }
 }

@@ -39,19 +39,19 @@ public class Sprite extends Component {
     @Override
     public void render(Graphics2D g2) {
         // Measurements are in screen coordinates (pixels)
-        Vector2 parentCenter = parent.transform.position.mul(scene().getCellSize()); // no offset
+        Vector2 parentCenter = parent.transform.position.mul(scene().getCellSize()); // no camera offset
         Vector2 imageHalfSize = new Vector2(image.getWidth(), image.getHeight()).div(2);
-        DebugDraw.drawPoint(parentCenter, Colors.BLUE);
 
         // Use the parent's transform to draw the sprite
         AffineTransform transform = new AffineTransform();
         transform.setToIdentity();
-        transform.translate(parentCenter.x - image.getWidth(),
-                parentCenter.y - image.getHeight()); // Draw at parent's center
+        transform.translate(parentCenter.x - imageHalfSize.x,
+                parentCenter.y - imageHalfSize.y); // Line up image center with parent center
         transform.scale(parent.transform.scale.x, parent.transform.scale.y);
         transform.rotate(Math.toRadians(parent.transform.rotation), imageHalfSize.x, imageHalfSize.y);
 
         g2.drawImage(image, transform, null);
+        DebugDraw.drawPoint(parentCenter, Colors.BLUE);
     }
 
     public BufferedImage getImage() {

@@ -1,9 +1,6 @@
 package slavsquatsuperstar.game;
 
-import slavsquatsuperstar.mayonez.GameObject;
-import slavsquatsuperstar.mayonez.Preferences;
-import slavsquatsuperstar.mayonez.Scene;
-import slavsquatsuperstar.mayonez.Vector2;
+import slavsquatsuperstar.mayonez.*;
 
 import java.awt.*;
 import java.awt.geom.Line2D;
@@ -18,6 +15,10 @@ public class Grid extends GameObject {
     private GameObject ground;
     private int gridWidth, gridHeight;
 
+    public Grid(Vector2 position) {
+        super("Grid", position);
+    }
+
     public Grid(Vector2 position, GameObject ground) {
         super("Grid", position);
         this.ground = ground;
@@ -30,12 +31,14 @@ public class Grid extends GameObject {
 
         float camX = getScene().camera().getOffset().x;
         float camY = getScene().camera().getOffset().y;
+        Logger.log("Cam Offset: %f, %f", camX, camY);
 
-        // Which grid coords are we at?
-        float startX = (float) Math.floor(camX / gridWidth) * gridWidth;
-        float startY = (float) Math.floor(camY / gridHeight) * gridHeight;
+        // Which world coordinates are we at?
+        float startX = (float) Math.floor(camX) * gridWidth;
+        float startY = (float) Math.floor(camY) * gridHeight;
         float endX = startX + Preferences.SCREEN_WIDTH + gridWidth;
-        float endY = Math.min(startY + Preferences.SCREEN_HEIGHT + gridHeight, ground.getY());
+//        float endY = Math.min(startY + Preferences.SCREEN_HEIGHT + gridHeight, ground.getY());
+        float endY = startY + Preferences.SCREEN_HEIGHT + gridHeight;
         // Either bottom of screen or top of ground
 
         // Vertical Lines

@@ -28,7 +28,7 @@ public abstract class MovementScript extends Script {
         if (mode.requireRigidbody) {
             rb = parent.getComponent(Rigidbody2D.class);
             if (rb == null) {
-                Logger.warn("%s needs a Rigidbody to function!", getClass().getSimpleName());
+                Logger.warn("%s needs a Rigidbody to function!", this);
                 mode = MoveMode.POSITION;
             }
         }

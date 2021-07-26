@@ -9,6 +9,8 @@ import slavsquatsuperstar.mayonez.Vector2;
  *
  * @author SlavSquatSuperstar
  */
+// Issue: activating for multiple objects
+// Solution: use static boolean active?
 public class DragAndDrop extends MouseScript {
 
     public DragAndDrop(String button, boolean inverted) {

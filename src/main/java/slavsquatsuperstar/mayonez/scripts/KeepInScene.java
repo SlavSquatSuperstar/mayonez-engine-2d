@@ -14,6 +14,7 @@ import slavsquatsuperstar.util.MathUtils;
  *
  * @author SlavSquatSuperstar
  */
+// TODO create line objects in scene and detect collision with tag "bounds"
 public class KeepInScene extends Script {
 
     public float minX, minY, maxX, maxY;
@@ -37,13 +38,13 @@ public class KeepInScene extends Script {
     public void start() {
         try {
             objectCollider = parent.getComponent(Collider2D.class).getMinBounds();
-            if (mode == Mode.BOUNCE) {
+            if (mode == Mode.BOUNCE || mode == Mode.STOP) {
                 rb = objectCollider.getRigidbody();
                 if (rb == null)
                     mode = Mode.STOP;
             }
         } catch (NullPointerException e) {
-            Logger.log("Script KeepInScene needs a collider to function!");
+            Logger.warn("%s needs a collider to function!", this);
             objectCollider = new AlignedBoxCollider2D(new Vector2());
             objectCollider.setTransform(transform);
         }
@@ -53,55 +54,128 @@ public class KeepInScene extends Script {
     public void update(float dt) {
         Vector2 boxMin = objectCollider.min();
         Vector2 boxMax = objectCollider.max();
-        // TODO use line vs shape detection and announce collisions
-        // ex: on collide left, set vel.x to 0 or inverse vel.x
-        switch (mode) {
-            case STOP:
-                if (boxMin.x < minX)
-                    parent.setX(minX + objectCollider.width() * 0.5f);
-                else if (boxMax.x > maxX)
-                    parent.setX(maxX - objectCollider.width() * 0.5f);
 
-                if (boxMin.y < minY)
-                    parent.setY(minY + objectCollider.height() * 0.5f);
-                else if (boxMax.y > maxY)
-                    parent.setY(maxY - objectCollider.height() * 0.5f);
-                break;
-            case BOUNCE:
-                float bounce = -objectCollider.getBounce();
-                if (boxMin.x < minX) {
-                    parent.setX(minX + objectCollider.width() * 0.5f);
-                    rb.velocity().x *= bounce;
-                } else if (boxMax.x > maxX) {
-                    parent.setX(maxX - objectCollider.width() * 0.5f);
-                    rb.velocity().x *= bounce;
-                }
+        Logger.log("Position: %s", transform.position);
 
-                if (boxMin.y < minY) {
-                    parent.setY(minY + objectCollider.height() * 0.5f);
-                    rb.velocity().y *= bounce;
-                } else if (boxMax.y > maxY) {
-                    parent.setY(maxY - objectCollider.height() * 0.5f);
-                    rb.velocity().y *= bounce;
-                }
-                break;
-            case WRAP:
-                if (boxMax.x < minX)
-                    parent.setX(maxX + objectCollider.width() * 0.5f);
-                else if (boxMin.x > maxX)
-                    parent.setX(minX - objectCollider.width() * 0.5f);
-                if (boxMax.y < minY)
-                    parent.setY(maxY + objectCollider.height() * 0.5f);
-                else if (boxMin.y > maxY)
-                    parent.setY(minY - objectCollider.height() * 0.5f);
-                break;
-            case DELETE:
-                if (!MathUtils.inRange(boxMin.x, minX - objectCollider.width(), maxX) ||
-                        !MathUtils.inRange(boxMin.y, minY - objectCollider.height(), maxY))
-                    parent.destroy();
-                break;
+        // Edge Checking for x
+        // Skip checking if still in scene bounds
+        if (!MathUtils.inRange(boxMin.x, minX, maxX - objectCollider.width())) {
+            // Detect if colliding with edge
+            if (boxMin.x < minX)
+                onReachLeft();
+            else if (boxMax.x > maxX)
+                onReachRight();
+
+            // Detect if moved completely past edge
+            if (boxMax.x < minX)
+                onPassLeft();
+            else if (boxMin.x > maxX)
+                onPassRight();
         }
 
+        // Edge Checking for y
+        if (!MathUtils.inRange(boxMin.y, minY, maxY - objectCollider.height())) {
+            if (boxMin.y < minY)
+                onReachTop();
+            else if (boxMax.y > maxY)
+                onReachBottom();
+
+            if (boxMax.y < minY)
+                onPassTop();
+            else if (boxMin.y > maxY)
+                onPassBottom();
+        }
+    }
+
+    // Collision Event Methods
+
+    public void onReachLeft() {
+        switch (mode) {
+            case STOP: // Set velocity to 0 if stopping
+                if (rb != null)
+                    rb.velocity().x = 0;
+                break;
+            case BOUNCE: // Reverse velocity if bouncing
+                rb.velocity().x *= -objectCollider.getBounce();
+                break;
+            default: // Stop if neither
+                return;
+        }
+        parent.setX(minX + objectCollider.width() * 0.5f); // Align with edge of screen for both
+    }
+
+    public void onReachRight() {
+        switch (mode) {
+            case STOP:
+                if (rb != null)
+                    rb.velocity().x = 0;
+                break;
+            case BOUNCE:
+                rb.velocity().x *= -objectCollider.getBounce();
+                break;
+            default:
+                return;
+        }
+        parent.setX(maxX - objectCollider.width() * 0.5f);
+    }
+
+    public void onReachTop() {
+        switch (mode) {
+            case STOP:
+                if (rb != null)
+                    rb.velocity().y = 0;
+                break;
+            case BOUNCE:
+                rb.velocity().y *= -objectCollider.getBounce();
+                break;
+            default:
+                return;
+        }
+        parent.setY(minY + objectCollider.height() * 0.5f);
+
+    }
+
+    public void onReachBottom() {
+        switch (mode) {
+            case STOP:
+                if (rb != null)
+                    rb.velocity().y = 0;
+                break;
+            case BOUNCE:
+                rb.velocity().y *= -objectCollider.getBounce();
+                break;
+            default:
+                return;
+        }
+        parent.setY(maxY - objectCollider.height() * 0.5f);
+    }
+
+    public void onPassLeft() {
+        if (mode == Mode.WRAP)
+            parent.setX(maxX + objectCollider.width() * 0.5f);
+        else if (mode == Mode.DELETE)
+            parent.destroy();
+    }
+
+    public void onPassRight() {
+        if (mode == Mode.WRAP)
+            parent.setX(minX - objectCollider.width() * 0.5f);
+        else if (mode == Mode.DELETE)
+            parent.destroy();
+    }
+
+    public void onPassTop() {
+        if (mode == Mode.WRAP)
+            parent.setY(maxY + objectCollider.height() * 0.5f);
+        else if (mode == Mode.DELETE)
+            parent.destroy();
+    }
+
+    public void onPassBottom() {
+        if (mode == Mode.WRAP)
+            parent.setY(minY - objectCollider.height() * 0.5f);
+        else if (mode == Mode.DELETE)
+            parent.destroy();
     }
 
     public enum Mode {
@@ -121,5 +195,9 @@ public class KeepInScene extends Script {
          * Remove objects from the scene when touching an edge.
          */
         DELETE
+    }
+
+    private enum Direction {
+        LEFT, RIGHT, TOP, BOTTOM
     }
 }

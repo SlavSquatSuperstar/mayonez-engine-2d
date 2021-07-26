@@ -35,7 +35,7 @@ public class PhysicsTestScene extends Scene {
                             color = Colors.LIGHT_GREEN;
 
                         // Draw velocity vector
-                        DebugDraw.drawVector(col.getRigidbody().velocity().mul(5), col.center(), color);
+                        DebugDraw.drawVector(col.center(), col.getRigidbody().velocity().mul(5), color);
 
                         // Draw Shape
                         DebugDraw.drawShape(col, color);

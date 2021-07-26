@@ -2,17 +2,18 @@ package slavsquatsuperstar.mayonez.renderer;
 
 import slavsquatsuperstar.mayonez.Game;
 import slavsquatsuperstar.mayonez.Vector2;
-import slavsquatsuperstar.mayonez.physics2d.primitives.AlignedBoxCollider2D;
-import slavsquatsuperstar.mayonez.physics2d.primitives.BoxCollider2D;
-import slavsquatsuperstar.mayonez.physics2d.primitives.CircleCollider;
-import slavsquatsuperstar.mayonez.physics2d.primitives.Collider2D;
+import slavsquatsuperstar.mayonez.physics2d.primitives.*;
 
 import java.awt.*;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.Line2D;
+import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Draws colliders and mathematical objects onto the screen as shapes. Note: all methods use position as the center.
+ * Draws colliders and mathematical objects onto the screen. All methods use world coordinates, and shapes are centered
+ * around the collider's position.
  */
 public class DebugDraw {
 
@@ -22,32 +23,58 @@ public class DebugDraw {
 
     // Points
 
+    /**
+     * Draws a point onto the screen
+     *
+     * @param position where the point is located, in world coordinates
+     * @param color    the color to use
+     */
     public static void drawPoint(Vector2 position, Color color) {
-        // Fill a circle with radius "STROKE_SIZE"
-        Vector2 min = position;
+        float radiusPx = STROKE_SIZE; // Fill a circle with radius "STROKE_SIZE"
         shapes.add(g2 -> {
             g2.setColor(color);
-            g2.fillOval(toScreen(min.x) - STROKE_SIZE, toScreen(min.y) - STROKE_SIZE, STROKE_SIZE * 2, STROKE_SIZE * 2);
+            g2.fill(new Ellipse2D.Float(toScreen(position.x) - radiusPx, toScreen(position.y) - radiusPx, radiusPx * 2, radiusPx * 2));
         });
     }
 
     // Lines
 
+    /**
+     * Draws a line segment onto the screen.
+     *
+     * @param start the segment's starting point, in world coordinates
+     * @param end   the segment's ending point in, world coordinates
+     * @param color the color to use
+     */
     public static void drawLine(Vector2 start, Vector2 end, Color color) {
+        Vector2 startPx = toScreen(start);
+        Vector2 endPx = toScreen(end);
         shapes.add(g2 -> {
             g2.setColor(color);
-            g2.drawLine(toScreen(start.x), toScreen(start.y),
-                    toScreen(end.x), toScreen(end.y));
+            g2.draw(new Line2D.Float(startPx.x, startPx.y, endPx.x, endPx.y));
         });
     }
 
-    public static void drawVector(Vector2 direction, Vector2 origin, Color color) {
+    /**
+     * Draws a vector onto the screen.
+     *
+     * @param origin    the vector's starting point, in world coordinates
+     * @param direction how far away the vector's end point is, in world coordinates
+     * @param color     the color to use
+     */
+    public static void drawVector(Vector2 origin, Vector2 direction, Color color) {
         drawLine(origin, origin.add(direction), color);
-//        drawPoint(origin.add(direction), color);
+//        drawPoint(origin.add(direction), color); // draw the "arrowhead"
     }
 
     // Shapes
 
+    /**
+     * Draws a shape onto the screen.
+     *
+     * @param shape a {@link Collider2D} instance
+     * @param color the color to use
+     */
     public static void drawShape(Collider2D shape, Color color) {
         if (shape instanceof CircleCollider)
             drawCircle((CircleCollider) shape, color);
@@ -55,27 +82,31 @@ public class DebugDraw {
             drawAABB((AlignedBoxCollider2D) shape, color);
         else if (shape instanceof BoxCollider2D)
             drawBox((BoxCollider2D) shape, color);
+        else if (shape instanceof Edge2D)
+            drawLine(((Edge2D) shape).start, ((Edge2D) shape).end, color);
     }
 
     private static void drawCircle(CircleCollider circle, Color color) {
+        Vector2 minPx = toScreen(circle.min());
+        float diameterPx = toScreen(circle.radius * 2);
         shapes.add(g2 -> {
             g2.setColor(color);
-            g2.drawOval(toScreen(circle.min().x), toScreen(circle.min().y),
-                    toScreen(circle.radius * 2), toScreen(circle.radius * 2));
+            g2.draw(new Ellipse2D.Float(minPx.x, minPx.y, diameterPx, diameterPx));
         });
     }
 
     private static void drawAABB(AlignedBoxCollider2D aabb, Color color) {
+        Vector2 minPx = toScreen(aabb.min());
         shapes.add(g2 -> {
             g2.setColor(color);
-            g2.drawRect(toScreen(aabb.min().x), toScreen(aabb.min().y), toScreen(aabb.width()), toScreen(aabb.height()));
+            g2.draw(new Rectangle2D.Float(minPx.x, minPx.y, toScreen(aabb.width()), toScreen(aabb.height())));
         });
     }
 
     private static void drawBox(BoxCollider2D box, Color color) {
         Polygon obb = new Polygon();
         for (Vector2 point : box.getVertices())
-            obb.addPoint(toScreen(point.x), toScreen(point.y));
+            obb.addPoint(Math.round(toScreen(point.x)), Math.round(toScreen(point.y)));
         shapes.add(g2 -> {
             g2.setColor(color);
             g2.drawPolygon(obb);
@@ -83,13 +114,23 @@ public class DebugDraw {
     }
 
     /**
-     * Converts world coordinate to screen coordinates, rounding to the nearest integer.
+     * Converts a world coordinate to screen coordinates.
      *
-     * @param world the location of something in the world
+     * @param world the location of something in the world along an axis
      * @return the corresponding screen pixel
      */
-    private static int toScreen(float world) {
-        return Math.round(world * Game.currentScene().getCellSize());
+    private static float toScreen(float world) {
+        return world * Game.currentScene().getCellSize();
+    }
+
+    /**
+     * Converts a world position to screen coordinates.
+     *
+     * @param world the location of something in the world along both axes
+     * @return the corresponding screen pixels
+     */
+    private static Vector2 toScreen(Vector2 world) {
+        return world.mul(Game.currentScene().getCellSize());
     }
 
     public void render(Graphics2D g2) {

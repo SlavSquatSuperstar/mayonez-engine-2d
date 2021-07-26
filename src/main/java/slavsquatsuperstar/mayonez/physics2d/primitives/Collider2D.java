@@ -36,7 +36,7 @@ public abstract class Collider2D extends Component {
     public final void start() {
         rb = parent.getComponent(Rigidbody2D.class);
         if (rb == null) // TODO what to do if object is static
-            Logger.warn("%s needs a Rigidbody to function!", getClass().getSimpleName());
+            Logger.warn("%s needs a Rigidbody to function!", this);
         // TODO disable component?
     }
 
