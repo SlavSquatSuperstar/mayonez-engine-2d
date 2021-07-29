@@ -67,7 +67,7 @@ public abstract class MouseScript extends MovementScript {
     protected boolean isMouseOnObject() {
         // Using last mouse position is more reliable when mouse is moving fast
         if (collider != null)
-            return collider.contains(new Vector2(scene().camera().getOffset().x + lastMx, scene().camera().getOffset().y + lastMy));
+            return collider.contains(new Vector2(getScene().camera().getOffset().x + lastMx, getScene().camera().getOffset().y + lastMy));
         return true;
 
     }

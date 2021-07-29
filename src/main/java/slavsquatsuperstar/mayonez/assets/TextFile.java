@@ -19,7 +19,7 @@ import java.util.Arrays;
  *
  * @author SlavSquatSuperstar
  */
-public final class TextFile extends Asset {
+public class TextFile extends Asset {
 
     public TextFile(String filename, boolean isClasspath) {
         super(filename, isClasspath);

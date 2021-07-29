@@ -16,6 +16,7 @@ public class PhysicsTestScene extends Scene {
     public PhysicsTestScene(String name) {
         super(name, Preferences.SCREEN_WIDTH, Preferences.SCREEN_HEIGHT, 10);
         setGravity(new Vector2(0, 0));
+        setBackground(Colors.WHITE);
     }
 
     @Override
@@ -68,9 +69,9 @@ public class PhysicsTestScene extends Scene {
         // Randomly generate Circles and AABBs
         for (int i = 0; i < 4; i++) {
             if (i % 2 == 0)
-                addObject(createCircle(MathUtils.random(2, 5), new Vector2(MathUtils.random(0, width), MathUtils.random(0, height))));
+                addObject(createCircle(MathUtils.random(2, 5), new Vector2(MathUtils.random(0, getWidth()), MathUtils.random(0, getHeight()))));
             else
-                addObject(createAABB(MathUtils.random(4, 10), MathUtils.random(4, 10), new Vector2(MathUtils.random(0, width), MathUtils.random(0, height))));
+                addObject(createAABB(MathUtils.random(4, 10), MathUtils.random(4, 10), new Vector2(MathUtils.random(0, getWidth()), MathUtils.random(0, getHeight()))));
         }
 
     }

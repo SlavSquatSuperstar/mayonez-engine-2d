@@ -1,9 +1,10 @@
 package slavsquatsuperstar.game;
 
-import slavsquatsuperstar.mayonez.GameObject;
-import slavsquatsuperstar.mayonez.Preferences;
-import slavsquatsuperstar.mayonez.Scene;
-import slavsquatsuperstar.mayonez.Vector2;
+import slavsquatsuperstar.mayonez.*;
+import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
+import slavsquatsuperstar.mayonez.physics2d.primitives.AlignedBoxCollider2D;
+import slavsquatsuperstar.mayonez.physics2d.primitives.Collider2D;
+import slavsquatsuperstar.mayonez.renderer.DebugDraw;
 
 import java.awt.*;
 
@@ -11,30 +12,27 @@ public class LevelScene extends Scene {
 
     public LevelScene(String name) {
         super(name, (int) (Preferences.SCREEN_WIDTH * 1.5), (int) (Preferences.SCREEN_HEIGHT * 1.0), 42);
+        setGravity(new Vector2(0, 2));
     }
 
     @Override
     protected void init() {
-        // Give ground a collider
-        GameObject ground = new GameObject("Ground", new Vector2(0, Preferences.GROUND_HEIGHT)) {
+        addObject(new GameObject("Ground", new Vector2(getWidth() * 0.5f, getHeight())) {
             @Override
-            public void update(float dt) {
-                super.update(dt);
-                setX(getScene().camera().getOffset().x);
+            protected void init() {
+                addComponent(new Rigidbody2D(0f));
+                addComponent(new AlignedBoxCollider2D(new Vector2(getWidth() + 2f, 2f)).setBounce(0f));
+                System.out.println(transform.position);
             }
 
             @Override
             public void render(Graphics2D g2) {
                 super.render(g2);
-                g2.setColor(Color.BLACK);
-                g2.fillRect((int) getX() - 20, (int) getY(), Preferences.SCREEN_WIDTH + 40, height);
+                DebugDraw.fillShape(getComponent(Collider2D.class), Colors.BLACK);
             }
-        };
-//        addObject(ground);
+        });
 
-        GameObject player = new Player("Player", new Vector2(100, 100));
-        addObject(player);
-        camera().setSubject(player);
+        addObject(new Player("Player", new Vector2(5, 5)));
     }
 
 }

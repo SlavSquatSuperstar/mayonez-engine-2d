@@ -28,7 +28,15 @@ public abstract class Collider2D extends Component {
     protected Rigidbody2D rb = null;
 
     // Physics Properties
+
+    /**
+     * What percentage of energy is conserved after a collision (0-1).
+     */
     private float bounce = 0.25f;
+    /**
+     * Whether this collider is non-physical and should not react to collisions.
+     */
+    private boolean trigger;
 
     // Game Loop Methods
 
@@ -36,7 +44,7 @@ public abstract class Collider2D extends Component {
     public final void start() {
         rb = parent.getComponent(Rigidbody2D.class);
         if (rb == null) // TODO what to do if object is static
-            Logger.warn("%s needs a Rigidbody to function!", this);
+            Logger.warn("%s needs a Rigidbody to function properly!", this);
         // TODO disable component?
     }
 
@@ -138,6 +146,15 @@ public abstract class Collider2D extends Component {
 
     public Collider2D setBounce(float bounce) {
         this.bounce = MathUtils.clamp(bounce, 0f, 1f);
+        return this;
+    }
+
+    public boolean isTrigger() {
+        return trigger;
+    }
+
+    public Collider2D setTrigger(boolean trigger) {
+        this.trigger = trigger;
         return this;
     }
 

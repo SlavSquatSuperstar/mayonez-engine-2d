@@ -16,9 +16,9 @@ public class Player extends GameObject {
 
     // Movement Parameters
     private float thrustForce = 6f;
-    private float topSpeed = 4f;
+    private float topSpeed = 5f;
     private float mass = 12f;
-    private float drag = 0.5f; // [0, 1]
+    private float drag = 0.4f; // [0, 1]
 
     public Player(String name, Vector2 position) {
         super(name, position);
@@ -57,7 +57,7 @@ public class Player extends GameObject {
         addComponent(new Rigidbody2D(mass).setDrag(drag));
         addComponent(new KeyMovement(MoveMode.FORCE, thrustForce).setTopSpeed(topSpeed));
         addComponent(new KeepInScene(0, 0, getScene().getWidth(), getScene().getHeight(), KeepInScene.Mode.STOP));
-        addComponent(new PlayerController());
+        addComponent(new PlayerController(thrustForce));
     }
 
 }

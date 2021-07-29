@@ -61,13 +61,17 @@ public class Rigidbody2D extends Component {
     /**
      * Applies a force to this rigidbody's center of mass.
      *
-     * @param force a vector
+     * @param force a vector with the units <code>kg•m/s/s</code>
      */
     public void addForce(Vector2 force) {
         netForce = netForce.add(force);
-
     }
 
+    /**
+     * Accelerates this object in the given direction.
+     *
+     * @param acceleration a vector with the units <code>m/s/s</code>
+     */
     public void addAcceleration(Vector2 acceleration) {
         netForce = netForce.add(acceleration.mul(mass)); // dF = a/m
     }
@@ -75,12 +79,17 @@ public class Rigidbody2D extends Component {
     /**
      * Applies an impulse to the object's center of mass.
      *
-     * @param impulse a vector
+     * @param impulse a vector with the units <code>kg•m/s</code>
      */
     public void addImpulse(Vector2 impulse) {
         velocity = velocity.add(impulse.div(getMass())); // dv = J/m = m*dv/m
     }
 
+    /**
+     * Adds a velocity to this object in the given direction.
+     *
+     * @param velocityChange a vector with the units <code>m/s</code>
+     */
     public void addVelocity(Vector2 velocityChange) {
         velocity = velocity.add(velocityChange);
     }

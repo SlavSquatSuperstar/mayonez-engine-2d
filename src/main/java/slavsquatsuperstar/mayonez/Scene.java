@@ -15,21 +15,19 @@ import java.util.stream.Collectors;
 // TODO individual cell size
 public abstract class Scene {
 
-    // Scene Information
-    protected final String name;
-    /**
-     * How wide and tall the scene is in world units.
-     */
-    protected final int width, height;
-    /**
-     * How many pixels (screen units) make up a world unit.
-     */
-    protected final int cellSize;
     // Object Fields
     private final List<GameObject> objects;
     private final List<SceneModifier> toModify; // Use a separate list to avoid concurrent exceptions
     private final Camera camera;
-    protected Color background = Color.WHITE;
+
+    // Scene Information
+    private String name;
+    /**
+     * How wide and tall the scene is in world units.
+     */
+    private int width, height;
+    private int cellSize;
+    private Color background = Color.LIGHT_GRAY;
     private boolean started;
 
     public Scene(String name) {
@@ -46,8 +44,6 @@ public abstract class Scene {
         toModify = new ArrayList<>();
 
         camera = new Camera(this.width, this.height, cellSize);
-//        renderer = new Renderer();
-//        physics = new Physics2D(Game.TIME_STEP, Preferences.GRAVITY);
     }
 
     // Game Methods
@@ -55,7 +51,8 @@ public abstract class Scene {
     /**
      * Add necessary objects.
      */
-    protected void init() {}
+    protected void init() {
+    }
 
     /**
      * Initialize all objects and begin updating the scene.
@@ -141,8 +138,6 @@ public abstract class Scene {
         });
     }
 
-    // TODO use hash map or bin search?
-
     /**
      * Finds the {@link GameObject} with the given name. For consistent results, avoid duplicate names.
      *
@@ -179,6 +174,11 @@ public abstract class Scene {
 
     // Getters and Setters
 
+    /**
+     * Returns the name of this scene.
+     *
+     * @return the scene name.
+     */
     public String getName() {
         return name;
     }
@@ -191,10 +191,28 @@ public abstract class Scene {
         return height;
     }
 
+    /**
+     * Returns the conversion between pixels on the screen and meters in the world. Defaults to a 1:1 scale.
+     *
+     * @return how many pixels make up a meter
+     */
     public int getCellSize() {
         return cellSize;
     }
 
+    /**
+     * Sets the background color of this scene. Defaults to a very light gray.
+     *
+     * @param background an RGB color
+     */
+    public void setBackground(Color background) {
+        this.background = background;
+    }
+
+    /**
+     * Returns the main camera of the scene.
+     * @return the {@link Camera} instance
+     */
     public Camera camera() {
         return camera;
     }
@@ -210,8 +228,8 @@ public abstract class Scene {
     }
 
     @FunctionalInterface
+    // Flags an object to be added or removed
     private interface SceneModifier {
-        // Flags an object to be added or removed
         void modify();
     }
 }

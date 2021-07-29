@@ -2,7 +2,10 @@ package slavsquatsuperstar.mayonez.physics2d;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
-import slavsquatsuperstar.mayonez.*;
+import slavsquatsuperstar.mayonez.Colors;
+import slavsquatsuperstar.mayonez.GameObject;
+import slavsquatsuperstar.mayonez.Scene;
+import slavsquatsuperstar.mayonez.Vector2;
 import slavsquatsuperstar.mayonez.physics2d.primitives.Collider2D;
 import slavsquatsuperstar.mayonez.renderer.DebugDraw;
 import slavsquatsuperstar.util.MathUtils;
@@ -21,6 +24,8 @@ import java.util.List;
  */
 public class Physics2D {
 
+    public final static float GRAVITY_CONSTANT = 9.8f;
+
     // Collisions
     private final List<Rigidbody2D> rigidbodies;
     private final List<Pair<Rigidbody2D, Rigidbody2D>> collidingPairs;
@@ -31,21 +36,19 @@ public class Physics2D {
     private final List<ForceRegistration> forceRegistry;
     private final ForceGenerator gravityForce;
     private final ForceGenerator dragForce;
-    private final float deltaTime;
     private Vector2 gravity; // acceleration to due gravity
 
-    public Physics2D(float deltaTime, Vector2 gravity) {
-        this.deltaTime = deltaTime;
+    public Physics2D() {
         rigidbodies = new ArrayList<>();
         collidingPairs = new ArrayList<>();
         collisions = new ArrayList<>();
         colliders = new ArrayList<>();
 
         forceRegistry = new ArrayList<>();
-        setGravity(gravity);
+        setGravity(new Vector2(0, Physics2D.GRAVITY_CONSTANT));
         gravityForce = (rb, dt) -> rb.addForce(getGravity().mul(rb.getMass()));
         dragForce = (rb, dt) -> {
-            // Apply drag if moving
+            // Apply drag if moving (prevent divide by 0)
             if (!MathUtils.equals(rb.velocity().lengthSquared(), 0))
                 rb.addForce(rb.velocity().mul(-rb.getDrag()));
         };
@@ -90,10 +93,12 @@ public class Physics2D {
                 Rigidbody2D r1 = c1.getRigidbody();
                 Rigidbody2D r2 = c2.getRigidbody();
 
-                // Ignore collision if either rigidbody is static
+                // TODO figure out which objects can check for collision
+                // Ignore collision if no rigidbody
                 if (r1 == null || r2 == null)
                     continue;
-                else if (r1.hasInfiniteMass() || r2.hasInfiniteMass())
+                    // Ignore collision if both are static
+                else if (r1.hasInfiniteMass() && r2.hasInfiniteMass())
                     continue;
 
                 // Get collision info
@@ -101,10 +106,13 @@ public class Physics2D {
 
                 // May be null b/c not all collisions are implemented
                 if (result != null && result.isColliding()) {
-                    DebugDraw.drawLine(c1.center(), c2.center(), Colors.RED);
-                    collidingPairs.add(new ImmutablePair<>(r1, r2));
-                    collisions.add(result);
-//                    Logger.log("%s intersects %s", c1, c2);
+                    // Add the collisions if neither is a trigger
+                    if (!c1.isTrigger() && !c2.isTrigger()) {
+//                        DebugDraw.drawLine(c1.center(), c2.center(), Colors.RED);
+                        collidingPairs.add(new ImmutablePair<>(r1, r2));
+                        collisions.add(result);
+//                        Logger.log("%s intersects %s", c1, c2);
+                    }
                 }
             }
         }

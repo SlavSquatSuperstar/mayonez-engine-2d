@@ -39,7 +39,7 @@ public class Sprite extends Component {
     @Override
     public void render(Graphics2D g2) {
         // Measurements are in screen coordinates (pixels)
-        Vector2 parentCenter = parent.transform.position.mul(scene().getCellSize()); // no camera offset
+        Vector2 parentCenter = parent.transform.position.mul(getScene().getCellSize()); // no camera offset
         Vector2 imageHalfSize = new Vector2(image.getWidth(), image.getHeight()).div(2);
 
         // Use the parent's transform to draw the sprite

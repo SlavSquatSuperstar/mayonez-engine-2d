@@ -76,7 +76,7 @@ public class Game implements Runnable {
         window.addMouseListener(mouse);
         window.addMouseMotionListener(mouse);
 
-        physics = new Physics2D(Game.TIME_STEP, Preferences.GRAVITY);
+        physics = new Physics2D();
         renderer = new Renderer();
         imgui = new IMGUI();
     }

@@ -67,7 +67,7 @@ public class DebugDraw {
 //        drawPoint(origin.add(direction), color); // draw the "arrowhead"
     }
 
-    // Shapes
+    // Shapes (Outline)
 
     /**
      * Draws a shape onto the screen.
@@ -110,6 +110,52 @@ public class DebugDraw {
         shapes.add(g2 -> {
             g2.setColor(color);
             g2.drawPolygon(obb);
+        });
+    }
+
+    // Shapes (Filled)
+
+    /**
+     * Fills in a shape onto the screen.
+     *
+     * @param shape a {@link Collider2D} instance
+     * @param color the color to use
+     */
+    public static void fillShape(Collider2D shape, Color color) {
+        if (shape instanceof CircleCollider)
+            fillCircle((CircleCollider) shape, color);
+        else if (shape instanceof AlignedBoxCollider2D)
+            fillAABB((AlignedBoxCollider2D) shape, color);
+        else if (shape instanceof BoxCollider2D)
+            fillBox((BoxCollider2D) shape, color);
+        else if (shape instanceof Edge2D)
+            drawLine(((Edge2D) shape).start, ((Edge2D) shape).end, color);
+    }
+
+    private static void fillCircle(CircleCollider circle, Color color) {
+        Vector2 minPx = toScreen(circle.min());
+        float diameterPx = toScreen(circle.radius * 2);
+        shapes.add(g2 -> {
+            g2.setColor(color);
+            g2.fill(new Ellipse2D.Float(minPx.x, minPx.y, diameterPx, diameterPx));
+        });
+    }
+
+    private static void fillAABB(AlignedBoxCollider2D aabb, Color color) {
+        Vector2 minPx = toScreen(aabb.min());
+        shapes.add(g2 -> {
+            g2.setColor(color);
+            g2.fill(new Rectangle2D.Float(minPx.x, minPx.y, toScreen(aabb.width()), toScreen(aabb.height())));
+        });
+    }
+
+    private static void fillBox(BoxCollider2D box, Color color) {
+        Polygon obb = new Polygon();
+        for (Vector2 point : box.getVertices())
+            obb.addPoint(Math.round(toScreen(point.x)), Math.round(toScreen(point.y)));
+        shapes.add(g2 -> {
+            g2.setColor(color);
+            g2.fillPolygon(obb);
         });
     }
 

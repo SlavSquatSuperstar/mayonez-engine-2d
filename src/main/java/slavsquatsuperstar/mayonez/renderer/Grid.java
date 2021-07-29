@@ -1,6 +1,7 @@
-package slavsquatsuperstar.game;
+package slavsquatsuperstar.mayonez.renderer;
 
 import slavsquatsuperstar.mayonez.*;
+import slavsquatsuperstar.mayonez.Component;
 
 import java.awt.*;
 import java.awt.geom.Line2D;
@@ -10,18 +11,13 @@ import java.awt.geom.Line2D;
  *
  * @author SlavSquatSuperstar
  */
-public class Grid extends GameObject {
+public class Grid extends Component {
 
-    private GameObject ground;
     private int gridWidth, gridHeight;
 
-    public Grid(Vector2 position) {
-        super("Grid", position);
-    }
-
-    public Grid(Vector2 position, GameObject ground) {
-        super("Grid", position);
-        this.ground = ground;
+    public Grid(int gridWidth, int gridHeight){
+        this.gridWidth = gridWidth;
+        this.gridHeight = gridHeight;
     }
 
     @Override
@@ -31,7 +27,7 @@ public class Grid extends GameObject {
 
         float camX = getScene().camera().getOffset().x;
         float camY = getScene().camera().getOffset().y;
-        Logger.log("Cam Offset: %f, %f", camX, camY);
+//        Logger.log("Cam Offset: %f, %f", camX, camY);
 
         // Which world coordinates are we at?
         float startX = (float) Math.floor(camX) * gridWidth;
@@ -48,13 +44,5 @@ public class Grid extends GameObject {
         // Horizontal Lines
         for (float drawY = startY; drawY <= endY; drawY += gridHeight)
             g2.draw(new Line2D.Float(startX, drawY, endX, drawY));
-    }
-
-    @Override
-    public GameObject setScene(Scene scene) {
-        super.setScene(scene);
-        gridWidth = getScene().getCellSize();
-        gridHeight = getScene().getCellSize();
-        return this;
     }
 }

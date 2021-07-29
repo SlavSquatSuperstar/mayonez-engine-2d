@@ -13,6 +13,9 @@ public final class MathUtils {
      * The maximum precision a float should have (equal to 10^-6).
      */
     public static final float EPSILON = 1e-6f;
+    /**
+     * The number π (pi) to 6 decimal places.
+     */
     public static final float PI = 3.1415927f;
 
     private MathUtils() {}

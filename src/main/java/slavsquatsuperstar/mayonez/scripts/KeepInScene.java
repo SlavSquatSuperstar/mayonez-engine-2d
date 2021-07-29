@@ -55,8 +55,6 @@ public class KeepInScene extends Script {
         Vector2 boxMin = objectCollider.min();
         Vector2 boxMax = objectCollider.max();
 
-        Logger.log("Position: %s", transform.position);
-
         // Edge Checking for x
         // Skip checking if still in scene bounds
         if (!MathUtils.inRange(boxMin.x, minX, maxX - objectCollider.width())) {

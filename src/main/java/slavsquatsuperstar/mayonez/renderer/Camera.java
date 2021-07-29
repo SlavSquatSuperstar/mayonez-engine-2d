@@ -1,6 +1,7 @@
 package slavsquatsuperstar.mayonez.renderer;
 
 import slavsquatsuperstar.mayonez.*;
+import slavsquatsuperstar.mayonez.physics2d.primitives.AlignedBoxCollider2D;
 import slavsquatsuperstar.mayonez.scripts.DragAndDrop;
 import slavsquatsuperstar.mayonez.scripts.KeepInScene;
 
@@ -21,7 +22,7 @@ public class Camera extends Script {
         width = (float) Preferences.SCREEN_WIDTH / cellSize;
         height = (float) Preferences.SCREEN_HEIGHT / cellSize;
         minX = 0;
-        minY = 0;//-28; // account for the bar on top of the window
+        minY = 0; //(int) (-28f / cellSize); // account for the bar on top of the window
         maxX = sceneWidth;
         maxY = sceneHeight;
     }
@@ -39,6 +40,7 @@ public class Camera extends Script {
             @Override
             protected void init() {
                 addComponent(camera);
+                // Allow camera to be moved with mouse
                 addComponent(camera.dragAndDrop = new DragAndDrop("right mouse", true) {
                     // Reset camera position with double click
                     @Override
@@ -49,6 +51,7 @@ public class Camera extends Script {
                     }
                 }.setEnabled(false));
                 // Keep camera inside scene and add camera collider
+                addComponent(new AlignedBoxCollider2D(new Vector2(camera.width, camera.height)).setTrigger(true));
                 addComponent(camera.keepInScene = new KeepInScene(camera.minX, camera.minY, camera.maxX, camera.maxY, KeepInScene.Mode.STOP));
             }
 
