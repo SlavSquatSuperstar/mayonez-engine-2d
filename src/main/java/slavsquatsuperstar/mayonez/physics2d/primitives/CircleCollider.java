@@ -43,7 +43,7 @@ public class CircleCollider extends Collider2D {
 
     @Override
     public boolean contains(Vector2 point) {
-        return point.sub(center()).lengthSquared() <= radius * radius;
+        return point.sub(center()).lenSquared() <= radius * radius;
     }
 
     @Override
@@ -63,7 +63,7 @@ public class CircleCollider extends Collider2D {
         Vector2 startToCenter = center().sub(edge.start);
         Vector2 projected = startToCenter.project(edge.toVector());
         // Is nearest point outside of actual line segment?
-        if (!MathUtils.inRange(projected.lengthSquared() / edge.toVector().lengthSquared(), 0, 1))
+        if (!MathUtils.inRange(projected.lenSquared() / edge.toVector().lenSquared(), 0, 1))
             return false;
         Vector2 nearestPointOnEdge = edge.start.add(projected); // TODO use edge.nearest ?
         return contains(nearestPointOnEdge);
@@ -77,7 +77,7 @@ public class CircleCollider extends Collider2D {
         // Trace the ray's origin to the circle's center
         Vector2 originToCenter = center().sub(ray.origin);
         float radiusSquared = radius * radius;
-        float lengthSquared = originToCenter.lengthSquared();
+        float lengthSquared = originToCenter.lenSquared();
 
         // TODO create nearestToPoint() method
         // Project originToCenter onto the ray
@@ -131,13 +131,13 @@ public class CircleCollider extends Collider2D {
     private CollisionManifold getCollisionInfo(CircleCollider circle) {
         float sumRadii = this.radius + circle.radius;
         Vector2 distance = circle.center().sub(this.center());
-        if (distance.lengthSquared() > sumRadii * sumRadii) // No intersection
+        if (distance.lenSquared() > sumRadii * sumRadii) // No intersection
             return null;
 
         // Separate circles factoring in mass
         // TODO bad idea if no rb, just use overlap instead
         float massProportion = this.rb.getMass() / (this.rb.getMass() + circle.rb.getMass());
-        float depth = Math.abs(distance.length() - sumRadii);
+        float depth = Math.abs(distance.len() - sumRadii);
         Vector2 normal = distance.unitVector(); // direction of displacement
 
         // Simulate real physics, where circles only contact at one point

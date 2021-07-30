@@ -1,8 +1,9 @@
 package slavsquatsuperstar.mayonez.renderer;
 
+import slavsquatsuperstar.mayonez.Component;
 import slavsquatsuperstar.mayonez.*;
 import slavsquatsuperstar.mayonez.assets.Assets;
-import slavsquatsuperstar.mayonez.Component;
+import slavsquatsuperstar.util.MathUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -48,7 +49,7 @@ public class Sprite extends Component {
         transform.translate(parentCenter.x - imageHalfSize.x,
                 parentCenter.y - imageHalfSize.y); // Line up image center with parent center
         transform.scale(parent.transform.scale.x, parent.transform.scale.y);
-        transform.rotate(Math.toRadians(parent.transform.rotation), imageHalfSize.x, imageHalfSize.y);
+        transform.rotate(MathUtils.toRadians(parent.transform.rotation), imageHalfSize.x, imageHalfSize.y);
 
         g2.drawImage(image, transform, null);
         DebugDraw.drawPoint(parentCenter, Colors.BLUE);

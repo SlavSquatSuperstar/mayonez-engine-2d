@@ -27,12 +27,10 @@ public class PlayerController extends Script {
     public void start() {
         Camera cam = getScene().camera();
         if (getScene() instanceof LevelEditorScene) {
-            cam.enableFreeMovement(true);
-            cam.enableKeepInScene(false);
+            cam.enableFreeMovement(true).enableKeepInScene(false);
             parent.getComponent(KeepInScene.class).setEnabled(false);
         } else if (getScene() instanceof LevelScene) {
-            cam.enableKeepInScene(true);
-            cam.setSubject(parent); // TODO pass camera in player c'tor?
+            cam.enableKeepInScene(true).setSubject(parent); // TODO pass camera in player c'tor?
         }
         rb = parent.getComponent(Rigidbody2D.class);
     }

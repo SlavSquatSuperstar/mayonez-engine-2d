@@ -1,7 +1,7 @@
 package physicstests;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import slavsquatsuperstar.mayonez.Transform;
 import slavsquatsuperstar.mayonez.Vector2;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
@@ -9,7 +9,7 @@ import slavsquatsuperstar.mayonez.physics2d.primitives.AlignedBoxCollider2D;
 import slavsquatsuperstar.mayonez.physics2d.primitives.CircleCollider;
 import slavsquatsuperstar.mayonez.physics2d.primitives.Edge2D;
 
-import static junit.framework.TestCase.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Unit tests for {@link AlignedBoxCollider2D} class.
@@ -18,11 +18,11 @@ import static junit.framework.TestCase.*;
  */
 public class AABBTests {
 
-    AlignedBoxCollider2D aabb;
+    static AlignedBoxCollider2D aabb;
 
     // Create box centered at (0, 0) with dimensions 4x4
-    @Before
-    public void getAABB() {
+    @BeforeAll
+    public static void getAABB() {
         aabb = new AlignedBoxCollider2D(new Vector2(4, 4));
         aabb.setTransform(new Transform());
         aabb.setRigidBody(new Rigidbody2D(0f));

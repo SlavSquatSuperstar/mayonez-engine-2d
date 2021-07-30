@@ -1,14 +1,14 @@
 package mathtests;
 
 import org.apache.commons.lang3.math.NumberUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import slavsquatsuperstar.mayonez.Logger;
 import slavsquatsuperstar.util.MathUtils;
 
-import static junit.framework.TestCase.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit tests for {@link MathUtilTests} class.
+ * Unit tests for {@link MathUtils} class.
  *
  * @author SlavSquatSuperstar
  */
@@ -17,7 +17,7 @@ public class MathUtilTests {
     @Test
     public void averageIntsSuccess() {
         int[] nums = {1, 2, 3, 4, 5};
-        assertEquals(MathUtils.average(nums), 3);
+        assertEquals(MathUtils.avg(nums), 3);
     }
 
     @Test
@@ -128,6 +128,7 @@ public class MathUtilTests {
     public void roundDownSuccess() {
         assertEquals(0.04f, MathUtils.round(0.0420f, 2), MathUtils.EPSILON);
         assertEquals(0.004f, MathUtils.round(0.00420f, 3), MathUtils.EPSILON);
+        assertEquals(0.06f, MathUtils.truncate(0.069f, 2), MathUtils.EPSILON);
     }
 
     @Test

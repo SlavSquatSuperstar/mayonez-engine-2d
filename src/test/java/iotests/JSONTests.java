@@ -1,13 +1,13 @@
 package iotests;
 
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import slavsquatsuperstar.mayonez.assets.JSONFile;
-import org.junit.Before;
-import org.junit.Test;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Unit tests for {@link JSONFile} class.
@@ -16,14 +16,14 @@ import static org.junit.Assert.*;
  */
 public class JSONTests {
 
-    JSONFile json;
+    static JSONFile json;
 
-    @Before
-    public void readLocalJSONFile() {
+    @BeforeAll
+    public static void readLocalJSONFile() {
         json = new JSONFile("src/test/resources/properties.json", false);
     }
 
-    @Before
+    @Test
     public void readClasspathJSONFile() {
         JSONFile json = new JSONFile("properties.json", true);
         json.read();
@@ -38,7 +38,7 @@ public class JSONTests {
 
         assertEquals("Mayonez Engine", json.getStr("name"));
         assertTrue(json.getBool("in_progress"));
-        assertEquals(0.5f, json.getFloat("version"), 0.0f);
+        assertEquals(0.6f, json.getFloat("version"), 0.0f);
         assertNull(json.getObj(null));
     }
 

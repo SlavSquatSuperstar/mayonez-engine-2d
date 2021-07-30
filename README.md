@@ -9,6 +9,7 @@ Dependencies (bundled in JAR)
 - JSON in Java (org.json)
 - Apache Commons Lang
 - Apache Commons IO
+- Kotlin Standard Library
 
 *This statement has not been evaluated by the International Council of Slavs. This software is not intended to idealize,
 encourage, promote, or spread Communism.

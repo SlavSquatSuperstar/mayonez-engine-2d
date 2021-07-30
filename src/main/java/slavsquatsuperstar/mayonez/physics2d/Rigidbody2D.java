@@ -101,7 +101,7 @@ public class Rigidbody2D extends Component {
     }
 
     public float speed() {
-        return velocity.length();
+        return velocity.len();
     }
 
     // Component Getters and Setters

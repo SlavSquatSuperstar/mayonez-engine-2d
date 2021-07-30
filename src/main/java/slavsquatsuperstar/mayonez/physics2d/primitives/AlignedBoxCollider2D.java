@@ -53,7 +53,7 @@ public class AlignedBoxCollider2D extends AbstractBoxCollider2D {
         if (contains(edge.start) || contains(edge.end))
             return true;
         // Make rays from the line that goes both ways
-        return raycast(new Ray2D(edge), null, edge.toVector().length()) || raycast(new Ray2D(new Edge2D(edge.end, edge.start)), null, edge.toVector().length());
+        return raycast(new Ray2D(edge), null, edge.toVector().len()) || raycast(new Ray2D(new Edge2D(edge.end, edge.start)), null, edge.toVector().len());
     }
 
     boolean intersects(BoxCollider2D box) {
@@ -189,7 +189,7 @@ public class AlignedBoxCollider2D extends AbstractBoxCollider2D {
         else if (yOverlap < xOverlap)
             collision = new CollisionManifold(distance.project(new Vector2(0, 1)).unitVector(), yOverlap);
         else
-            collision = new CollisionManifold(distance.unitVector(), new Vector2(xOverlap, yOverlap).length());
+            collision = new CollisionManifold(distance.unitVector(), new Vector2(xOverlap, yOverlap).len());
         collision.addContactPoint(this.center());
         return collision;
     }

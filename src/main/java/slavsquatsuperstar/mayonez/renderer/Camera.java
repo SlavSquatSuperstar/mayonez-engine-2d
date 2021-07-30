@@ -92,6 +92,7 @@ public class Camera extends Script {
      * Toggles the camera's ability to be dragged with the mouse.
      *
      * @param enabled If mouse should move the camera. Set to true to disable subject following.
+     * @return this object
      */
     public Camera enableFreeMovement(boolean enabled) {
         dragAndDrop.setEnabled(enabled);
@@ -106,6 +107,7 @@ public class Camera extends Script {
      * Toggles the camera's ability to stay within the scene bounds.
      *
      * @param enabled if the camera should stay inside the scene
+     * @return this object
      */
     public Camera enableKeepInScene(boolean enabled) {
         keepInScene.setEnabled(enabled);
@@ -116,6 +118,7 @@ public class Camera extends Script {
      * Sets a subject for this Camera to follow, disabling free camera movement.
      *
      * @param subject A {@link GameObject} in the scene. Set to null to disable subject following.
+     * @return this object
      */
     public Camera setSubject(GameObject subject) {
         this.subject = subject;

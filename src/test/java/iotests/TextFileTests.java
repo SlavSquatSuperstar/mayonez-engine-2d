@@ -1,13 +1,13 @@
 package iotests;
 
+import org.junit.jupiter.api.Test;
 import slavsquatsuperstar.mayonez.assets.TextFile;
-import org.junit.Test;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Arrays;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Unit tests for {@link TextFile} class.

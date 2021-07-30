@@ -52,7 +52,7 @@ public class Edge2D extends Collider2D {
         // triangle side length or projection distance
         float distToStart = start.distance(point);
         float distToEnd = end.distance(point);
-        float length = toVector().length();
+        float length = toVector().len();
         return MathUtils.equals(distToStart + distToEnd, length);
     }
 

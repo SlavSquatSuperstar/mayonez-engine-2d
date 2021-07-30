@@ -49,11 +49,12 @@ public class Physics2D {
         gravityForce = (rb, dt) -> rb.addForce(getGravity().mul(rb.getMass()));
         dragForce = (rb, dt) -> {
             // Apply drag if moving (prevent divide by 0)
-            if (!MathUtils.equals(rb.velocity().lengthSquared(), 0))
+            if (!MathUtils.equals(rb.velocity().lenSquared(), 0))
                 rb.addForce(rb.velocity().mul(-rb.getDrag()));
         };
     }
 
+    // TODO seems to be some tunneling at high speeds, resulting in division by 0
     public void physicsUpdate(float dt) {
         collidingPairs.clear();
         collisions.clear();

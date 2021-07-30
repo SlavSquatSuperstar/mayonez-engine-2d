@@ -1,11 +1,10 @@
 package mathtests;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import slavsquatsuperstar.mayonez.Vector2;
 import slavsquatsuperstar.util.MathUtils;
 
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Unit tests for {@link Vector2} class.
@@ -15,9 +14,18 @@ import static junit.framework.TestCase.assertTrue;
 public class VectorTests {
 
     @Test
+    public void vectorEquals() {
+        Vector2 v1 = new Vector2(5, 5);
+        Vector2 v2 = new Vector2(5, 5);
+        assertSame(v1, v1);
+        assertSame(v2, v2);
+        assertEquals(v1, v2);
+    }
+
+    @Test
     public void unitVectorLengthIsOne() {
-        assertEquals(1f, new Vector2(500, 500).unitVector().lengthSquared(), MathUtils.EPSILON);
-        assertEquals(1f, new Vector2(-500, -500).unitVector().lengthSquared(), MathUtils.EPSILON);
+        assertEquals(1f, new Vector2(500, 500).unitVector().lenSquared(), MathUtils.EPSILON);
+        assertEquals(1f, new Vector2(-500, -500).unitVector().lenSquared(), MathUtils.EPSILON);
     }
 
     @Test
@@ -108,7 +116,7 @@ public class VectorTests {
     public void perpendicularProjectionIsZero() {
         Vector2 v1 = new Vector2(0, 1);
         Vector2 v2 = new Vector2(1, 0);
-        assertEquals(0f, v1.project(v2).length(), MathUtils.EPSILON);
+        assertEquals(0f, v1.project(v2).len(), MathUtils.EPSILON);
     }
 
     @Test

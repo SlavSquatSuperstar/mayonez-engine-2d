@@ -1,25 +1,40 @@
 plugins {
     id 'java'
     id 'application'
+    id 'org.jetbrains.kotlin.jvm' version '1.5.21'
+    id 'org.jetbrains.dokka' version '1.5.0' // For Kotlin Documentation
     id 'com.github.johnrengelman.shadow' version '7.0.0' // For making fat jars
 }
 
 group 'slavsquatsuperstar'
-version '0.6.4-SNAPSHOT-pre5'
+version '0.6.4-SNAPSHOT'
 
-repositories {
-    mavenCentral()
-}
+repositories.mavenCentral()
 
 dependencies {
-    implementation 'org.json:json:20210307'
     implementation 'org.apache.commons:commons-lang3:3.12.0'
     implementation 'commons-io:commons-io:2.11.0'
-    testImplementation 'junit:junit:4.13.2'
+    implementation 'org.json:json:20210307'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.21'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.7.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
 }
 
-sourceCompatibility = targetCompatibility = JavaVersion.VERSION_11
+String javaVersion = '11'
+sourceCompatibility = targetCompatibility = javaVersion
 mainClassName = 'slavsquatsuperstar.Main'
+
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = javaVersion
+    }
+}
+compileTestKotlin {
+    kotlinOptions {
+        jvmTarget = javaVersion
+    }
+}
 
 shadowJar {
     archiveClassifier.set('')
@@ -27,6 +42,4 @@ shadowJar {
     exclude '**/LICENSE.txt', '**/NOTICE.txt' // avoid duplicate APACHE .txt files
 }
 
-test {
-    useJUnit()
-}
+test.useJUnitPlatform()

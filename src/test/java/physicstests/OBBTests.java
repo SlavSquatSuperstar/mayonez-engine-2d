@@ -1,7 +1,7 @@
 package physicstests;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import slavsquatsuperstar.mayonez.Transform;
 import slavsquatsuperstar.mayonez.Vector2;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
@@ -10,7 +10,7 @@ import slavsquatsuperstar.mayonez.physics2d.primitives.BoxCollider2D;
 import slavsquatsuperstar.mayonez.physics2d.primitives.CircleCollider;
 import slavsquatsuperstar.mayonez.physics2d.primitives.Edge2D;
 
-import static junit.framework.TestCase.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Unit tests for {@link BoxCollider2D} class.
@@ -19,11 +19,11 @@ import static junit.framework.TestCase.assertTrue;
  */
 public class OBBTests {
 
-    BoxCollider2D obb;
+    static BoxCollider2D obb;
 
     // Create box centered at (0, 0) with dimensions 4x4 with a rotation of 30 degrees
-    @Before
-    public void getAABB() {
+    @BeforeAll
+    public static void getAABB() {
         obb = new BoxCollider2D(new Vector2(4, 4));
         Transform t = new Transform();
         t.rotate(30);

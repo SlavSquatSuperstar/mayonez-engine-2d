@@ -1,10 +1,10 @@
 package physicstests;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import slavsquatsuperstar.mayonez.Vector2;
 import slavsquatsuperstar.mayonez.physics2d.primitives.Edge2D;
 
-import static junit.framework.TestCase.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Unit tests for {@link Edge2D} class.

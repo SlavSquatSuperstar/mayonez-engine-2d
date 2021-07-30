@@ -1,9 +1,9 @@
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Scene;
 import slavsquatsuperstar.mayonez.Vector2;
 
-import static junit.framework.TestCase.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ClassTests {
 
@@ -45,8 +45,8 @@ public class ClassTests {
     public void compareClassSucceedAndFail() {
         Component c = new Collider();
         assertEquals(c.getClass(), Collider.class);
-        assertNotSame(c.getClass().getClass(), Component.class);
-        assertNotSame(c.getClass().getClass(), Box.class);
+        assertNotSame(c.getClass(), Component.class);
+        assertNotSame(c.getClass(), Box.class);
     }
 
     @Test
