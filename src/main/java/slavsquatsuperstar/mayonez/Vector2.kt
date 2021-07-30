@@ -1,7 +1,7 @@
 package slavsquatsuperstar.mayonez
 
-import slavsquatsuperstar.util.MathUtils.Companion.clamp
-import slavsquatsuperstar.util.MathUtils.Companion.equals
+import slavsquatsuperstar.util.MathUtils.clamp
+import slavsquatsuperstar.util.MathUtils.equals
 import kotlin.math.*
 
 /**

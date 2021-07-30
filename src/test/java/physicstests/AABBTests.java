@@ -5,9 +5,9 @@ import org.junit.jupiter.api.Test;
 import slavsquatsuperstar.mayonez.Transform;
 import slavsquatsuperstar.mayonez.Vector2;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
-import slavsquatsuperstar.mayonez.physics2d.primitives.AlignedBoxCollider2D;
-import slavsquatsuperstar.mayonez.physics2d.primitives.CircleCollider;
-import slavsquatsuperstar.mayonez.physics2d.primitives.Edge2D;
+import slavsquatsuperstar.mayonez.physics2d.colliders.AlignedBoxCollider2D;
+import slavsquatsuperstar.mayonez.physics2d.colliders.CircleCollider;
+import slavsquatsuperstar.mayonez.physics2d.colliders.Edge2D;
 
 import static org.junit.jupiter.api.Assertions.*;
 

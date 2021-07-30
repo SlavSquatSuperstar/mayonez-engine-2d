@@ -2,8 +2,8 @@ package slavsquatsuperstar.game;
 
 import slavsquatsuperstar.mayonez.*;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
-import slavsquatsuperstar.mayonez.physics2d.primitives.AlignedBoxCollider2D;
-import slavsquatsuperstar.mayonez.physics2d.primitives.Collider2D;
+import slavsquatsuperstar.mayonez.physics2d.colliders.AlignedBoxCollider2D;
+import slavsquatsuperstar.mayonez.physics2d.colliders.Collider2D;
 import slavsquatsuperstar.mayonez.renderer.DebugDraw;
 
 import java.awt.*;

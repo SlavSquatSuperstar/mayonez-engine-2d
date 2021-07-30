@@ -1,6 +1,5 @@
 package slavsquatsuperstar.mayonez.scripts;
 
-import slavsquatsuperstar.mayonez.Game;
 import slavsquatsuperstar.mayonez.MouseInput;
 import slavsquatsuperstar.mayonez.Vector2;
 
@@ -27,7 +26,7 @@ public class DragAndDrop extends MouseScript {
 
     @Override
     protected Vector2 getRawInput() {
-        MouseInput mouse = Game.mouse();
+        MouseInput mouse = MouseInput.INSTANCE;
         return new Vector2(mouse.getX() - lastMx + mouse.getDx(), mouse.getY() - lastMy + mouse.getDy()).mul(inverted ? -1 : 1);
     }
 }

@@ -11,63 +11,63 @@ import java.awt.Color
  *
  * @author SlavSquatSuperstar
  */
-class Colors private constructor() {
-    companion object {
-        // Rainbow
-        @JvmField
-        val RED = Color(255, 0, 0) // Java Red
+object Colors {
 
-        @JvmField
-        val ORANGE = Color(255, 165, 0) // HTML Orange
+    // Rainbow
+    @JvmField
+    val RED = Color(255, 0, 0) // Java Red
 
-        @JvmField
-        val YELLOW = Color(255, 238, 0) // HTML Bright Yellow
+    @JvmField
+    val ORANGE = Color(255, 165, 0) // HTML Orange
 
-        @JvmField
-        val LIME = Color(0, 255, 0) // Java Green
+    @JvmField
+    val YELLOW = Color(255, 238, 0) // HTML Bright Yellow
 
-        @JvmField
-        val LIGHT_GREEN = Color(50, 205, 50) // HTML Lime Green
+    @JvmField
+    val LIME = Color(0, 255, 0) // Java Green
 
-        @JvmField
-        val GREEN = Color(0, 128, 0) // HTML Green
+    @JvmField
+    val LIGHT_GREEN = Color(50, 205, 50) // HTML Lime Green
 
-        @JvmField
-        val CYAN = Color(0, 238, 255) // #00EEFFF
+    @JvmField
+    val GREEN = Color(0, 128, 0) // HTML Green
 
-        @JvmField
-        val AQUA = CYAN
+    @JvmField
+    val CYAN = Color(0, 238, 255) // #00EEFFF
 
-        @JvmField
-        val LIGHT_BLUE = Color(30, 144, 255) // HTML Dodger Blue
+    @JvmField
+    val AQUA = CYAN
 
-        @JvmField
-        val BLUE = Color(0, 0, 205) // HTML Medium Blue
+    @JvmField
+    val LIGHT_BLUE = Color(30, 144, 255) // HTML Dodger Blue
 
-        @JvmField
-        val PURPLE = Color(148, 0, 211) // HTML Dark Violet
+    @JvmField
+    val BLUE = Color(0, 0, 205) // HTML Medium Blue
 
-        // Accents
-        @JvmField
-        val PINK = Color(255, 105, 180) // HTML Hot Pink
+    @JvmField
+    val PURPLE = Color(148, 0, 211) // HTML Dark Violet
 
-        @JvmField
-        val BROWN = Color(150, 75, 0) // #964B00
+    // Accents
+    @JvmField
+    val PINK = Color(255, 105, 180) // HTML Hot Pink
 
-        // Grayscale
-        @JvmField
-        val WHITE = Color.WHITE
+    @JvmField
+    val BROWN = Color(150, 75, 0) // #964B00
 
-        @JvmField
-        val LIGHT_GRAY = Color.LIGHT_GRAY
+    // Grayscale
+    @JvmField
+    val WHITE = Color.WHITE
 
-        @JvmField
-        val GRAY = Color.GRAY
+    @JvmField
+    val LIGHT_GRAY = Color.LIGHT_GRAY
 
-        @JvmField
-        val DARK_GRAY = Color.DARK_GRAY
+    @JvmField
+    val GRAY = Color.GRAY
 
-        @JvmField
-        val BLACK = Color.BLACK
-    }
+    @JvmField
+    val DARK_GRAY = Color.DARK_GRAY
+
+    @JvmField
+    val BLACK = Color.BLACK
+
 }

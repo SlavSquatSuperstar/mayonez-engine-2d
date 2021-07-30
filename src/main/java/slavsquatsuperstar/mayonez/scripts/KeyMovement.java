@@ -1,6 +1,6 @@
 package slavsquatsuperstar.mayonez.scripts;
 
-import slavsquatsuperstar.mayonez.Game;
+import slavsquatsuperstar.mayonez.KeyInput;
 import slavsquatsuperstar.mayonez.Vector2;
 
 /**
@@ -39,7 +39,7 @@ public class KeyMovement extends MovementScript {
 
     @Override
     protected Vector2 getRawInput() {
-        return new Vector2(Game.keyboard().getAxis(xAxis), Game.keyboard().getAxis(yAxis));
+        return new Vector2(KeyInput.getAxis(xAxis), KeyInput.getAxis(yAxis));
     }
 
     public void setXAxis(String xAxis) {

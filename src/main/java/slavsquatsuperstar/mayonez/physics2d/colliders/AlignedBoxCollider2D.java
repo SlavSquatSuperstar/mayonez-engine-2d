@@ -1,4 +1,4 @@
-package slavsquatsuperstar.mayonez.physics2d.primitives;
+package slavsquatsuperstar.mayonez.physics2d.colliders;
 
 import slavsquatsuperstar.mayonez.Vector2;
 import slavsquatsuperstar.mayonez.physics2d.CollisionManifold;
@@ -191,6 +191,7 @@ public class AlignedBoxCollider2D extends AbstractBoxCollider2D {
         else
             collision = new CollisionManifold(distance.unitVector(), new Vector2(xOverlap, yOverlap).len());
         collision.addContactPoint(this.center());
+        collision.addContactPoint(aabb.center());
         return collision;
     }
 

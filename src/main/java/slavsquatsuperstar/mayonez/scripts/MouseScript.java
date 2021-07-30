@@ -1,9 +1,8 @@
 package slavsquatsuperstar.mayonez.scripts;
 
-import slavsquatsuperstar.mayonez.Game;
 import slavsquatsuperstar.mayonez.MouseInput;
 import slavsquatsuperstar.mayonez.Vector2;
-import slavsquatsuperstar.mayonez.physics2d.primitives.Collider2D;
+import slavsquatsuperstar.mayonez.physics2d.colliders.Collider2D;
 
 // TODO use mouse events and save states (held, released)
 
@@ -40,7 +39,7 @@ public abstract class MouseScript extends MovementScript {
 
     @Override
     public void update(float dt) {
-        MouseInput mouse = Game.mouse();
+        MouseInput mouse = MouseInput.INSTANCE;
 
         if (!mouseHeld) {
             // If the mouse is up and then pressed on this object

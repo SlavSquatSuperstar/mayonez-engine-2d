@@ -1,4 +1,4 @@
-package slavsquatsuperstar.mayonez.physics2d.primitives;
+package slavsquatsuperstar.mayonez.physics2d.colliders;
 
 import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Logger;
@@ -156,6 +156,11 @@ public abstract class Collider2D extends Component {
     public Collider2D setTrigger(boolean trigger) {
         this.trigger = trigger;
         return this;
+    }
+
+    public boolean isStatic() {
+//        return rb != null && rb.hasInfiniteMass();
+        return rb == null || rb.hasInfiniteMass();
     }
 
 }

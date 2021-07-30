@@ -1,6 +1,6 @@
 package slavsquatsuperstar.mayonez.scripts;
 
-import slavsquatsuperstar.mayonez.Game;
+import slavsquatsuperstar.mayonez.MouseInput;
 import slavsquatsuperstar.mayonez.Vector2;
 
 /**
@@ -19,7 +19,7 @@ public class FollowMouse extends MouseScript {
         Vector2 mouseDirection = getRawInput().clampLength(speed);
         switch (mode) {
             case FOLLOW_MOUSE:
-                transform.position.set(Game.mouse().getPosition());
+                transform.position.set(MouseInput.getPosition());
                 break;
             case POSITION:
                 transform.move(mouseDirection);
@@ -41,6 +41,6 @@ public class FollowMouse extends MouseScript {
 
     @Override
     protected Vector2 getRawInput() {
-        return Game.mouse().getPosition().sub(transform.position);
+        return MouseInput.getPosition().sub(transform.position);
     }
 }

@@ -1,8 +1,8 @@
 package slavsquatsuperstar.mayonez.scripts;
 
-import slavsquatsuperstar.mayonez.Game;
+import slavsquatsuperstar.mayonez.MouseInput;
 import slavsquatsuperstar.mayonez.Vector2;
-import slavsquatsuperstar.mayonez.physics2d.primitives.Collider2D;
+import slavsquatsuperstar.mayonez.physics2d.colliders.Collider2D;
 
 /**
  * Allows objects to be pushed around using the mouse.
@@ -31,7 +31,7 @@ public class MouseFlick extends MouseScript {
 
     @Override
     public void onMouseMove() {
-        dragDisplacement = dragDisplacement.add(Game.mouse().getDisplacement());
+        dragDisplacement = dragDisplacement.add(MouseInput.getDisplacement());
     }
 
     @Override

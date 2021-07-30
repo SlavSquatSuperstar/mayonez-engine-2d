@@ -2,7 +2,7 @@ package physicstests;
 
 import org.junit.jupiter.api.Test;
 import slavsquatsuperstar.mayonez.Vector2;
-import slavsquatsuperstar.mayonez.physics2d.primitives.Edge2D;
+import slavsquatsuperstar.mayonez.physics2d.colliders.Edge2D;
 
 import static org.junit.jupiter.api.Assertions.*;
 

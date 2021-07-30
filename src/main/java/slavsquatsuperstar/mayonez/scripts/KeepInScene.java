@@ -5,8 +5,8 @@ import slavsquatsuperstar.mayonez.Scene;
 import slavsquatsuperstar.mayonez.Script;
 import slavsquatsuperstar.mayonez.Vector2;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
-import slavsquatsuperstar.mayonez.physics2d.primitives.AlignedBoxCollider2D;
-import slavsquatsuperstar.mayonez.physics2d.primitives.Collider2D;
+import slavsquatsuperstar.mayonez.physics2d.colliders.AlignedBoxCollider2D;
+import slavsquatsuperstar.mayonez.physics2d.colliders.Collider2D;
 import slavsquatsuperstar.util.MathUtils;
 
 /**
@@ -19,7 +19,7 @@ public class KeepInScene extends Script {
 
     public float minX, minY, maxX, maxY;
     private Mode mode;
-    private AlignedBoxCollider2D objectCollider;
+    private AlignedBoxCollider2D objectCollider = null;
     private Rigidbody2D rb = null;
 
     public KeepInScene(Scene scene, Mode mode) { // Use scene bounds
@@ -193,9 +193,5 @@ public class KeepInScene extends Script {
          * Remove objects from the scene when touching an edge.
          */
         DELETE
-    }
-
-    private enum Direction {
-        LEFT, RIGHT, TOP, BOTTOM
     }
 }

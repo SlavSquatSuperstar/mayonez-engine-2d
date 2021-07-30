@@ -9,6 +9,7 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.util.Objects;
 
 /**
  * An image used to display a {@link GameObject} or background.
@@ -23,7 +24,7 @@ public class Sprite extends Component {
     public Sprite(String filename) {
         filename = TEXTURES_DIRECTORY + filename;
         try {
-            this.image = ImageIO.read(Assets.getAsset(filename, true).path);
+            this.image = ImageIO.read(Objects.requireNonNull(Assets.getAsset(filename, true)).path);
         } catch (Exception e) {
             Logger.log("Sprite: Error loading image \"%s\"", filename);
             Game.instance().stop(-1);

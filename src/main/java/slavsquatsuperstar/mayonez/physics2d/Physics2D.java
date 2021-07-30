@@ -6,7 +6,7 @@ import slavsquatsuperstar.mayonez.Colors;
 import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Scene;
 import slavsquatsuperstar.mayonez.Vector2;
-import slavsquatsuperstar.mayonez.physics2d.primitives.Collider2D;
+import slavsquatsuperstar.mayonez.physics2d.colliders.Collider2D;
 import slavsquatsuperstar.mayonez.renderer.DebugDraw;
 import slavsquatsuperstar.util.MathUtils;
 
@@ -94,6 +94,10 @@ public class Physics2D {
                 Rigidbody2D r1 = c1.getRigidbody();
                 Rigidbody2D r2 = c2.getRigidbody();
 
+                // Dynamic vs Dynamic
+                // Dynamic vs Static
+                // Static vs Static (ignore)
+
                 // TODO figure out which objects can check for collision
                 // Ignore collision if no rigidbody
                 if (r1 == null || r2 == null)
@@ -107,9 +111,11 @@ public class Physics2D {
 
                 // May be null b/c not all collisions are implemented
                 if (result != null && result.isColliding()) {
+                    // TODO still send collision events if triggers
                     // Add the collisions if neither is a trigger
                     if (!c1.isTrigger() && !c2.isTrigger()) {
 //                        DebugDraw.drawLine(c1.center(), c2.center(), Colors.RED);
+                        DebugDraw.drawVector(c1.center(), result.getNormal(), Colors.RED);
                         collidingPairs.add(new ImmutablePair<>(r1, r2));
                         collisions.add(result);
 //                        Logger.log("%s intersects %s", c1, c2);
@@ -128,7 +134,8 @@ public class Physics2D {
             Rigidbody2D r2 = collidingPairs.get(i).getRight();
 
             // Draw contact point
-            DebugDraw.drawPoint(col.getContactPoints().get(0), Colors.BLACK);
+            for (Vector2 contact : col.getContactPoints())
+                DebugDraw.drawPoint(contact, Colors.BLACK);
 
             if (r1.hasInfiniteMass() && r2.hasInfiniteMass())
                 return; // Return in case both infinite mass
@@ -141,7 +148,7 @@ public class Physics2D {
             r2.transform.move(col.getNormal().mul(depth2));
 
             // Resolve dynamic collisions and change velocities
-            applyImpulse1(r1, r2, col);
+            applyImpulse(r1, r2, col);
 //            }
         }
 //        }
@@ -149,7 +156,7 @@ public class Physics2D {
 
     // Collision Helper Methods
 
-    private void applyImpulse1(Rigidbody2D r1, Rigidbody2D r2, CollisionManifold collision) {
+    private void applyImpulse(Rigidbody2D r1, Rigidbody2D r2, CollisionManifold collision) {
         // Solve for linear velocity.
         float invMass1 = r1.getInverseMass();
         float invMass2 = r2.getInverseMass();
@@ -165,11 +172,11 @@ public class Physics2D {
         float elasticity = r1.getCollider().getBounce() * r2.getCollider().getBounce(); // Coefficient of restitution
         float collisionVel = -(1f + elasticity) * relativeVel.dot(normal);
         float impulse = collisionVel / sumInvMass;
-        if (!collision.getContactPoints().isEmpty())
-            impulse /= collision.getContactPoints().size();
 
-        r1.addImpulse(normal.mul(-impulse));
-        r2.addImpulse(normal.mul(impulse));
+        if (!r1.hasInfiniteMass())
+            r1.addImpulse(normal.mul(-impulse));
+        if (!r2.hasInfiniteMass())
+            r2.addImpulse(normal.mul(impulse));
     }
 
     // Can't push objects after colliding, velocity slows to 0.

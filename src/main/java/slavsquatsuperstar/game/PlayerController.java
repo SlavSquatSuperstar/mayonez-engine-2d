@@ -1,10 +1,10 @@
 package slavsquatsuperstar.game;
 
-import slavsquatsuperstar.mayonez.renderer.Camera;
-import slavsquatsuperstar.mayonez.Game;
+import slavsquatsuperstar.mayonez.KeyInput;
 import slavsquatsuperstar.mayonez.Script;
 import slavsquatsuperstar.mayonez.Vector2;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
+import slavsquatsuperstar.mayonez.renderer.Camera;
 import slavsquatsuperstar.mayonez.scripts.KeepInScene;
 
 import java.awt.event.KeyEvent;
@@ -38,21 +38,21 @@ public class PlayerController extends Script {
     @Override
     public void update(float dt) {
         // Rotate player
-        if (Game.keyboard().keyDown(KeyEvent.VK_Q))
+        if (KeyInput.keyDown(KeyEvent.VK_Q))
             transform.rotate(-2);
-        if (Game.keyboard().keyDown(KeyEvent.VK_E))
+        if (KeyInput.keyDown(KeyEvent.VK_E))
             transform.rotate(2);
 
         Vector2 velocity = rb.velocity();
 
         if (getScene() instanceof LevelScene) {
             // Jump if on ground
-            if (Game.keyboard().keyDown("up"))
+            if (KeyInput.keyDown("up"))
                 // Impulse must be big enough to not get stuck on ground next frame
                 rb.addImpulse(new Vector2(0, -speed / 5f));
 
             // Ground Pound if in air
-            if (Game.keyboard().keyDown("down"))
+            if (KeyInput.keyDown("down"))
                 rb.addImpulse(new Vector2(0, speed / 5f));
         }
 

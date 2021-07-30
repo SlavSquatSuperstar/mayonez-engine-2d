@@ -31,9 +31,9 @@ public class RendererTestScene extends Scene {
                 addComponent(new Script() {
                     @Override
                     public void update(float dt) {
-                        if (Game.keyboard().keyDown(KeyEvent.VK_Q))
+                        if (KeyInput.keyDown(KeyEvent.VK_Q))
                             transform.rotate(-2);
-                        if (Game.keyboard().keyDown(KeyEvent.VK_E))
+                        if (KeyInput.keyDown(KeyEvent.VK_E))
                             transform.rotate(2);
                     }
                 });

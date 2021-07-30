@@ -1,12 +1,12 @@
 package slavsquatsuperstar.game;
 
 import slavsquatsuperstar.mayonez.*;
-import slavsquatsuperstar.mayonez.scripts.*;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
-import slavsquatsuperstar.mayonez.physics2d.primitives.AlignedBoxCollider2D;
-import slavsquatsuperstar.mayonez.physics2d.primitives.CircleCollider;
-import slavsquatsuperstar.mayonez.physics2d.primitives.Collider2D;
+import slavsquatsuperstar.mayonez.physics2d.colliders.AlignedBoxCollider2D;
+import slavsquatsuperstar.mayonez.physics2d.colliders.CircleCollider;
+import slavsquatsuperstar.mayonez.physics2d.colliders.Collider2D;
 import slavsquatsuperstar.mayonez.renderer.DebugDraw;
+import slavsquatsuperstar.mayonez.scripts.*;
 import slavsquatsuperstar.util.MathUtils;
 
 import java.awt.*;
@@ -27,6 +27,9 @@ public class PhysicsTestScene extends Scene {
             @Override
             public void render(Graphics2D g2) {
                 for (GameObject o : getScene().getObjects(null)) {
+                    if (o.name.equals("Camera"))
+                        continue;
+
                     Collider2D col = o.getComponent(Collider2D.class);
                     if (col != null) {
                         Color color = Colors.BLACK;
@@ -36,7 +39,8 @@ public class PhysicsTestScene extends Scene {
                             color = Colors.LIGHT_GREEN;
 
                         // Draw velocity vector
-                        DebugDraw.drawVector(col.center(), col.getRigidbody().velocity().mul(5), color);
+                        if (!col.isStatic())
+                            DebugDraw.drawVector(col.center(), col.getRigidbody().velocity().mul(5), color);
 
                         // Draw Shape
                         DebugDraw.drawShape(col, color);
@@ -51,8 +55,9 @@ public class PhysicsTestScene extends Scene {
                 float radius = 3.5f;
                 float size = 5f;
 //                addComponent(new CircleCollider(radius));
+//                addComponent(new Rigidbody2D(radius * radius * MathUtils.PI));
                 addComponent(new AlignedBoxCollider2D(new Vector2(size, size)));
-                addComponent(new Rigidbody2D(radius * radius * MathUtils.PI));
+                addComponent(new Rigidbody2D(size * size));
                 addComponent(new MouseFlick("right mouse", 1, false));
                 addComponent(new DragAndDrop("left mouse", false));
                 addComponent(new KeyMovement(MoveMode.IMPULSE, 1));
@@ -85,7 +90,6 @@ public class PhysicsTestScene extends Scene {
                 addComponent(new KeepInScene(getScene(), KeepInScene.Mode.BOUNCE));
                 addComponent(new DragAndDrop("left mouse", false));
                 addComponent(new MouseFlick("right mouse", 1, false));
-
             }
         };
     }

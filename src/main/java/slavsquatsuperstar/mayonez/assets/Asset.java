@@ -19,6 +19,7 @@ public class Asset {
     public Asset(String filename, boolean isClasspath) {
         this.isClasspath = isClasspath;
         this.path = isClasspath ? Assets.getClasspathURL(filename) : Assets.getFileURL(filename);
+        System.out.println(path);
     }
 
     // Getters

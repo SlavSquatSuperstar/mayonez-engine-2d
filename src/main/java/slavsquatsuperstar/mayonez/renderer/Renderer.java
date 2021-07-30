@@ -21,7 +21,7 @@ public class Renderer {
 
     public Renderer() {
         objects = new ArrayList<>();
-        debugDraw = new DebugDraw();
+        debugDraw = DebugDraw.INSTANCE;
     }
 
     // TODO Render layer: clear list and submit visible objects every frame?

@@ -1,7 +1,7 @@
 package slavsquatsuperstar.mayonez.renderer;
 
 import slavsquatsuperstar.mayonez.*;
-import slavsquatsuperstar.mayonez.physics2d.primitives.AlignedBoxCollider2D;
+import slavsquatsuperstar.mayonez.physics2d.colliders.AlignedBoxCollider2D;
 import slavsquatsuperstar.mayonez.scripts.DragAndDrop;
 import slavsquatsuperstar.mayonez.scripts.KeepInScene;
 
@@ -45,7 +45,7 @@ public class Camera extends Script {
                     // Reset camera position with double click
                     @Override
                     public void onMouseDown() {
-                        if (Game.mouse().clicks() == 2) {
+                        if (MouseInput.getClicks() == 2) {
                             camera.setOffset(new Vector2(0, 0));
                         }
                     }

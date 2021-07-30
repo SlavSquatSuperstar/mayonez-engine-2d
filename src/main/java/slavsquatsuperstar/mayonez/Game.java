@@ -32,13 +32,12 @@ public class Game implements Runnable {
     // TODO make start/stop static?
     private static Game game;
 
-    // Input Fields
-    // TODO make input singleton
-    private final KeyInput keyboard;
-    private final MouseInput mouse;
-
     // Window Fields
     private final JFrame window;
+
+    // Input Fields
+    private final KeyInput keyboard;
+    private final MouseInput mouse;
 
     // Thread Fields
     private Thread thread;
@@ -70,15 +69,15 @@ public class Game implements Runnable {
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // make sure 'x' button quits program
 
         // Add input listeners
-        keyboard = new KeyInput();
-        mouse = new MouseInput();
+        keyboard = KeyInput.INSTANCE;
+        mouse = MouseInput.INSTANCE;
         window.addKeyListener(keyboard);
         window.addMouseListener(mouse);
         window.addMouseMotionListener(mouse);
 
         physics = new Physics2D();
         renderer = new Renderer();
-        imgui = new IMGUI();
+        imgui = IMGUI.INSTANCE;
     }
 
     // Game Loop Methods
@@ -86,10 +85,6 @@ public class Game implements Runnable {
     public synchronized static Game instance() { // only create the game once
         // get params from preferences
         return (null == game) ? game = new Game() : game;
-    }
-
-    public static KeyInput keyboard() {
-        return game.keyboard;
     }
 
     public static MouseInput mouse() {
@@ -205,7 +200,7 @@ public class Game implements Runnable {
      */
     public void update(float dt) throws Exception { // TODO pass dt or use Game.timestep?
         // TODO Poll input events
-        if (keyboard.keyDown("exit")) {
+        if (KeyInput.keyDown("exit")) {
             running = false;
             return;
         }

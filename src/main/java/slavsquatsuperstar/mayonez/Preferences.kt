@@ -7,32 +7,35 @@ import slavsquatsuperstar.mayonez.assets.JSONFile
  *
  * @author SlavSquatSuperstar
  */
-class Preferences private constructor() {
-    companion object {
-        // TODO default compile tile constants
-        private val preferences = JSONFile("preferences.json", true)
+object Preferences {
 
-        // Window
-        @JvmField
-        val TITLE: String = preferences.getStr("title")
+    // TODO default compile tile constants
+    private val preferences = JSONFile("preferences.json", true)
 
-        @JvmField
-        val VERSION: String = preferences.getStr("version")
+    // Window
+    @JvmField
+    val TITLE: String = preferences.getStr("title")
 
-        @JvmField
-        val SCREEN_WIDTH: Int = preferences.getInt("width")
+    @JvmField
+    val VERSION: String = preferences.getStr("version")
 
-        @JvmField
-        val SCREEN_HEIGHT: Int = preferences.getInt("height")
+    @JvmField
+    val SCREEN_WIDTH: Int = preferences.getInt("width")
 
-        // Engine
-        @JvmField
-        val FPS: Int = preferences.getInt("fps")
+    @JvmField
+    val SCREEN_HEIGHT: Int = preferences.getInt("height")
 
-        @JvmField
-        val SAVE_LOGS: Boolean = preferences.getBool("save_logs")
+    // Engine
+    @JvmField
+    val FPS: Int = preferences.getInt("fps")
 
-        // File I/O
-        const val CHARSET: String = "UTF-8"
-    }
+    @JvmField
+    val SAVE_LOGS: Boolean = preferences.getBool("save_logs")
+
+    @JvmField
+    val LOGS_DIRECTORY: String = preferences.getStr("logs_directory")
+
+    // File I/O
+    const val CHARSET: String = "UTF-8"
+
 }
