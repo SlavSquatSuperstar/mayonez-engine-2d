@@ -1,46 +1,46 @@
 package slavsquatsuperstar.mayonez.physics2d.colliders;
 
-import slavsquatsuperstar.mayonez.Vector2;
+import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.physics2d.CollisionManifold;
-import slavsquatsuperstar.util.MathUtils;
+import slavsquatsuperstar.math.MathUtils;
 
 // TODO scale with transform
 
 /**
- * An axis-aligned bounding box, a rectangle that is is never rotated. The sides will always align with the x
- * and y axes.
+ * An axis-aligned bounding box, a rectangle that is is never rotated. The sides will always align with the x and y
+ * axes.
  *
  * @author SlavSquatSuperstar
  */
 public class AlignedBoxCollider2D extends AbstractBoxCollider2D {
 
-    public AlignedBoxCollider2D(Vector2 size) {
+    public AlignedBoxCollider2D(Vec2 size) {
         super(size);
     }
 
     // Properties
 
     @Override
-    public Vector2[] getVertices() {
-        return new Vector2[]{
-                new Vector2(min()), new Vector2(min().x, max().y), new Vector2(max().x, min().y), new Vector2(max())
+    public Vec2[] vertices() {
+        return new Vec2[]{
+                new Vec2(min()), new Vec2(min().x, max().y), new Vec2(max()), new Vec2(max().x, min().y)
         };
     }
 
     @Override
     public AlignedBoxCollider2D getMinBounds() {
-        return this;
+        return new AlignedBoxCollider2D(localSize()).setRigidBody(rb).setTransform(transform);
     }
 
     // AABB vs Point
 
     @Override
-    public boolean contains(Vector2 point) {
+    public boolean contains(Vec2 point) {
         return MathUtils.inRange(point.x, min().x, max().x) && MathUtils.inRange(point.y, min().y, max().y);
     }
 
     @Override
-    public Vector2 nearestPoint(Vector2 position) {
+    public Vec2 nearestPoint(Vec2 position) {
         if (contains(position))
             return position;
         return position.clampInbounds(min(), max());
@@ -58,14 +58,14 @@ public class AlignedBoxCollider2D extends AbstractBoxCollider2D {
 
     boolean intersects(BoxCollider2D box) {
         // rotate around box center, or origin?
-        Vector2[] axes = {
-                new Vector2(0, 1), new Vector2(1, 0),
-                new Vector2(0, 1).rotate(box.getRotation(), new Vector2()),
-                new Vector2(1, 0).rotate(box.getRotation(), new Vector2())
+        Vec2[] axes = {
+                new Vec2(0, 1), new Vec2(1, 0),
+                new Vec2(0, 1).rotate(box.getRotation(), new Vec2()),
+                new Vec2(1, 0).rotate(box.getRotation(), new Vec2())
         };
 
         // top right - min, bottom left - min
-        for (Vector2 axis : axes)
+        for (Vec2 axis : axes)
             if (!overlapOnAxis(box, axis))
                 return false;
 
@@ -78,8 +78,8 @@ public class AlignedBoxCollider2D extends AbstractBoxCollider2D {
         limit = Math.abs(limit);
 
         // Parametric distance to x and y axes of box
-        Vector2 tNear = min().sub(ray.origin).div(ray.direction);
-        Vector2 tFar = max().sub(ray.origin).div(ray.direction);
+        Vec2 tNear = min().sub(ray.origin).div(ray.direction);
+        Vec2 tFar = max().sub(ray.origin).div(ray.direction);
 
         // If parallel and not intersecting
         if (Float.isNaN(tNear.x) || Float.isNaN(tNear.y) || Float.isNaN(tFar.x) || Float.isNaN(tFar.y))
@@ -121,14 +121,14 @@ public class AlignedBoxCollider2D extends AbstractBoxCollider2D {
         if (limit > 0 && distToBox > limit)
             return false;
 
-        Vector2 contactNear = ray.getPoint(tHitNear);
-        Vector2 contactFar = ray.getPoint(tHitFar);
+        Vec2 contactNear = ray.getPoint(tHitNear);
+        Vec2 contactFar = ray.getPoint(tHitFar);
 
-        Vector2 normal = new Vector2(); // Use (0, 0) for diagonal collision
+        Vec2 normal = new Vec2(); // Use (0, 0) for diagonal collision
         if (tNear.x > tNear.y) // Horizontal collision
-            normal = (ray.direction.x < 0) ? new Vector2(1, 0) : new Vector2(-1, 0);
+            normal = (ray.direction.x < 0) ? new Vec2(1, 0) : new Vec2(-1, 0);
         else if (tNear.x < tNear.y) // Vertical collision
-            normal = (ray.direction.y < 0) ? new Vector2(0, 1) : new Vector2(0, -1);
+            normal = (ray.direction.y < 0) ? new Vec2(0, 1) : new Vec2(0, -1);
 
         // TODO make normal orthogonal or use contact - center?
         if (result != null)
@@ -147,8 +147,8 @@ public class AlignedBoxCollider2D extends AbstractBoxCollider2D {
         if (collider instanceof CircleCollider)
             return collider.detectCollision(this);
         else if (collider instanceof AlignedBoxCollider2D)
-            return overlapOnAxis((AlignedBoxCollider2D) collider, new Vector2(0, 1)) &&
-                    overlapOnAxis((AlignedBoxCollider2D) collider, new Vector2(1, 0));
+            return overlapOnAxis((AlignedBoxCollider2D) collider, new Vec2(0, 1)) &&
+                    overlapOnAxis((AlignedBoxCollider2D) collider, new Vec2(1, 0));
         else if (collider instanceof BoxCollider2D)
             return intersects((BoxCollider2D) collider);
 
@@ -168,8 +168,8 @@ public class AlignedBoxCollider2D extends AbstractBoxCollider2D {
         if (!detectCollision(circle))
             return null;
 
-        Vector2 closestToCircle = this.nearestPoint(circle.center());
-        float overlap = circle.radius - closestToCircle.distance(circle.center());
+        Vec2 closestToCircle = this.nearestPoint(circle.center());
+        float overlap = circle.radius() - closestToCircle.distance(circle.center());
         CollisionManifold result = new CollisionManifold(closestToCircle.sub(this.center()), overlap);
         result.addContactPoint(closestToCircle);
         return result;
@@ -179,17 +179,17 @@ public class AlignedBoxCollider2D extends AbstractBoxCollider2D {
         if (!detectCollision(aabb))
             return null;
 
-        float xOverlap = getAxisOverlap(aabb, new Vector2(1, 0));
-        float yOverlap = getAxisOverlap(aabb, new Vector2(0, 1));
-        Vector2 distance = aabb.center().sub(this.center());
+        float xOverlap = getAxisOverlap(aabb, new Vec2(1, 0));
+        float yOverlap = getAxisOverlap(aabb, new Vec2(0, 1));
+        Vec2 distance = aabb.center().sub(this.center());
 
         CollisionManifold collision;
         if (xOverlap < yOverlap)
-            collision = new CollisionManifold(distance.project(new Vector2(1, 0)).unitVector(), xOverlap);
+            collision = new CollisionManifold(distance.project(new Vec2(1, 0)).unitVector(), xOverlap);
         else if (yOverlap < xOverlap)
-            collision = new CollisionManifold(distance.project(new Vector2(0, 1)).unitVector(), yOverlap);
+            collision = new CollisionManifold(distance.project(new Vec2(0, 1)).unitVector(), yOverlap);
         else
-            collision = new CollisionManifold(distance.unitVector(), new Vector2(xOverlap, yOverlap).len());
+            collision = new CollisionManifold(distance.unitVector(), new Vec2(xOverlap, yOverlap).len());
         collision.addContactPoint(this.center());
         collision.addContactPoint(aabb.center());
         return collision;

@@ -2,10 +2,10 @@ package slavsquatsuperstar.mayonez.physics2d;
 
 import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Transform;
-import slavsquatsuperstar.mayonez.Vector2;
+import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.Component;
 import slavsquatsuperstar.mayonez.physics2d.colliders.Collider2D;
-import slavsquatsuperstar.util.MathUtils;
+import slavsquatsuperstar.math.MathUtils;
 
 /**
  * A physical object with mass that responds to forces and collisions.
@@ -20,8 +20,8 @@ public class Rigidbody2D extends Component {
      */
     Transform transform;
     private Collider2D collider;
-    private Vector2 netForce = new Vector2();
-    private Vector2 velocity = new Vector2();
+    private Vec2 netForce = new Vec2();
+    private Vec2 velocity = new Vec2();
 
     // Physics Properties
     private float mass;
@@ -63,7 +63,7 @@ public class Rigidbody2D extends Component {
      *
      * @param force a vector with the units <code>kg•m/s/s</code>
      */
-    public void addForce(Vector2 force) {
+    public void addForce(Vec2 force) {
         netForce = netForce.add(force);
     }
 
@@ -72,7 +72,7 @@ public class Rigidbody2D extends Component {
      *
      * @param acceleration a vector with the units <code>m/s/s</code>
      */
-    public void addAcceleration(Vector2 acceleration) {
+    public void addAcceleration(Vec2 acceleration) {
         netForce = netForce.add(acceleration.mul(mass)); // dF = a/m
     }
 
@@ -81,7 +81,7 @@ public class Rigidbody2D extends Component {
      *
      * @param impulse a vector with the units <code>kg•m/s</code>
      */
-    public void addImpulse(Vector2 impulse) {
+    public void addImpulse(Vec2 impulse) {
         velocity = velocity.add(impulse.div(getMass())); // dv = J/m = m*dv/m
     }
 
@@ -90,13 +90,13 @@ public class Rigidbody2D extends Component {
      *
      * @param velocityChange a vector with the units <code>m/s</code>
      */
-    public void addVelocity(Vector2 velocityChange) {
+    public void addVelocity(Vec2 velocityChange) {
         velocity = velocity.add(velocityChange);
     }
 
     // Object Properties
 
-    public Vector2 velocity() {
+    public Vec2 velocity() {
         return velocity;
     }
 
@@ -158,11 +158,11 @@ public class Rigidbody2D extends Component {
         return this;
     }
 
-    public Vector2 getPosition() {
+    public Vec2 getPosition() {
         return transform.position;
     }
 
-    public void setPosition(Vector2 position) {
+    public void setPosition(Vec2 position) {
         transform.position = position;
     }
 

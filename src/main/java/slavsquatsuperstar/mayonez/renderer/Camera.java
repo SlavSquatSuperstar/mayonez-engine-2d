@@ -1,5 +1,6 @@
 package slavsquatsuperstar.mayonez.renderer;
 
+import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.*;
 import slavsquatsuperstar.mayonez.physics2d.colliders.AlignedBoxCollider2D;
 import slavsquatsuperstar.mayonez.scripts.DragAndDrop;
@@ -46,12 +47,12 @@ public class Camera extends Script {
                     @Override
                     public void onMouseDown() {
                         if (MouseInput.getClicks() == 2) {
-                            camera.setOffset(new Vector2(0, 0));
+                            camera.setOffset(new Vec2(0, 0));
                         }
                     }
                 }.setEnabled(false));
                 // Keep camera inside scene and add camera collider
-                addComponent(new AlignedBoxCollider2D(new Vector2(camera.width, camera.height)).setTrigger(true));
+                addComponent(new AlignedBoxCollider2D(new Vec2(camera.width, camera.height)).setTrigger(true));
                 addComponent(camera.keepInScene = new KeepInScene(camera.minX, camera.minY, camera.maxX, camera.maxY, KeepInScene.Mode.STOP));
             }
 
@@ -76,16 +77,16 @@ public class Camera extends Script {
 
     // Getters and setters
 
-    public Vector2 getOffset() {
+    public Vec2 getOffset() {
         return transform.position.sub(getHalfSize());
     }
 
-    public void setOffset(Vector2 offset) {
+    public void setOffset(Vec2 offset) {
         transform.position.set(offset.add(getHalfSize()));
     }
 
-    public Vector2 getHalfSize() {
-        return new Vector2(width, height).div(2);
+    public Vec2 getHalfSize() {
+        return new Vec2(width, height).div(2);
     }
 
     /**

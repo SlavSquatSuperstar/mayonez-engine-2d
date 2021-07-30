@@ -2,7 +2,7 @@ package slavsquatsuperstar.mayonez.scripts;
 
 import slavsquatsuperstar.mayonez.Logger;
 import slavsquatsuperstar.mayonez.Script;
-import slavsquatsuperstar.mayonez.Vector2;
+import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
 
 /**
@@ -39,6 +39,6 @@ public abstract class MovementScript extends Script {
      *
      * @return the input vector
      */
-    protected abstract Vector2 getRawInput();
+    protected abstract Vec2 getRawInput();
 
 }

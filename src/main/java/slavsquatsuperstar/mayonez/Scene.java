@@ -1,5 +1,6 @@
 package slavsquatsuperstar.mayonez;
 
+import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.renderer.Camera;
 
 import java.awt.*;
@@ -217,7 +218,7 @@ public abstract class Scene {
         return camera;
     }
 
-    public void setGravity(Vector2 gravity) {
+    public void setGravity(Vec2 gravity) {
         Game.getPhysics().setGravity(gravity);
     }
 

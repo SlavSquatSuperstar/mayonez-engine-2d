@@ -1,7 +1,7 @@
 package slavsquatsuperstar.mayonez.scripts;
 
 import slavsquatsuperstar.mayonez.KeyInput;
-import slavsquatsuperstar.mayonez.Vector2;
+import slavsquatsuperstar.math.Vec2;
 
 /**
  * Allows objects to be moved with the WASD/arrow keys.
@@ -20,7 +20,7 @@ public class KeyMovement extends MovementScript {
     @Override
     public void update(float dt) {
         // Don't want to move faster diagonally so normalize
-        Vector2 input = getRawInput().unitVector().mul(speed);
+        Vec2 input = getRawInput().unitVector().mul(speed);
         switch (mode) {
             case POSITION:
                 transform.move(input);
@@ -38,8 +38,8 @@ public class KeyMovement extends MovementScript {
     }
 
     @Override
-    protected Vector2 getRawInput() {
-        return new Vector2(KeyInput.getAxis(xAxis), KeyInput.getAxis(yAxis));
+    protected Vec2 getRawInput() {
+        return new Vec2(KeyInput.getAxis(xAxis), KeyInput.getAxis(yAxis));
     }
 
     public void setXAxis(String xAxis) {

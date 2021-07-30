@@ -3,11 +3,11 @@ package slavsquatsuperstar.mayonez.scripts;
 import slavsquatsuperstar.mayonez.Logger;
 import slavsquatsuperstar.mayonez.Scene;
 import slavsquatsuperstar.mayonez.Script;
-import slavsquatsuperstar.mayonez.Vector2;
+import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
 import slavsquatsuperstar.mayonez.physics2d.colliders.AlignedBoxCollider2D;
 import slavsquatsuperstar.mayonez.physics2d.colliders.Collider2D;
-import slavsquatsuperstar.util.MathUtils;
+import slavsquatsuperstar.math.MathUtils;
 
 /**
  * Dictates what happens when an object reaches the edge of the scene.
@@ -45,15 +45,15 @@ public class KeepInScene extends Script {
             }
         } catch (NullPointerException e) {
             Logger.warn("%s needs a collider to function!", this);
-            objectCollider = new AlignedBoxCollider2D(new Vector2());
+            objectCollider = new AlignedBoxCollider2D(new Vec2());
             objectCollider.setTransform(transform);
         }
     }
 
     @Override
     public void update(float dt) {
-        Vector2 boxMin = objectCollider.min();
-        Vector2 boxMax = objectCollider.max();
+        Vec2 boxMin = objectCollider.min();
+        Vec2 boxMax = objectCollider.max();
 
         // Edge Checking for x
         // Skip checking if still in scene bounds

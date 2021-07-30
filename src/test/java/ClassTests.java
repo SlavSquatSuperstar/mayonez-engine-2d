@@ -1,7 +1,7 @@
 import org.junit.jupiter.api.Test;
 import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Scene;
-import slavsquatsuperstar.mayonez.Vector2;
+import slavsquatsuperstar.math.Vec2;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -54,11 +54,11 @@ public class ClassTests {
         Scene scene = new Scene("ClassTests Scene") {
             @Override
             protected void init() {
-                addObject(new GameObject("obj1", new Vector2()));
-                addObject(new GameObject("obj2", new Vector2()));
-                addObject(new GameObject("obj3", new Vector2()));
-                addObject(new A("obj4", new Vector2()));
-                addObject(new A("obj5", new Vector2()));
+                addObject(new GameObject("obj1", new Vec2()));
+                addObject(new GameObject("obj2", new Vec2()));
+                addObject(new GameObject("obj3", new Vec2()));
+                addObject(new A("obj4", new Vec2()));
+                addObject(new A("obj5", new Vec2()));
             }
         };
         scene.start();
@@ -79,7 +79,7 @@ public class ClassTests {
     }
 
     static class A extends GameObject {
-        public A(String name, Vector2 position) {
+        public A(String name, Vec2 position) {
             super(name, position);
         }
     }

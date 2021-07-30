@@ -1,7 +1,7 @@
 package slavsquatsuperstar.mayonez.scripts;
 
 import slavsquatsuperstar.mayonez.MouseInput;
-import slavsquatsuperstar.mayonez.Vector2;
+import slavsquatsuperstar.math.Vec2;
 
 /**
  * Moves an object with or towards the mouse pointer, depending on the mode.
@@ -16,7 +16,7 @@ public class FollowMouse extends MouseScript {
 
     @Override
     public void onMouseMove() {
-        Vector2 mouseDirection = getRawInput().clampLength(speed);
+        Vec2 mouseDirection = getRawInput().clampLength(speed);
         switch (mode) {
             case FOLLOW_MOUSE:
                 transform.position.set(MouseInput.getPosition());
@@ -40,7 +40,7 @@ public class FollowMouse extends MouseScript {
     }
 
     @Override
-    protected Vector2 getRawInput() {
+    protected Vec2 getRawInput() {
         return MouseInput.getPosition().sub(transform.position);
     }
 }

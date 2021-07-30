@@ -1,5 +1,6 @@
 package slavsquatsuperstar.mayonez.renderer;
 
+import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.*;
 
 import java.awt.*;
@@ -31,7 +32,7 @@ public class Renderer {
 
         // Move the screen and render everything at the offset position
         if (camera != null) {
-            Vector2 camOffset = camera.getOffset().mul(-Game.currentScene().getCellSize());
+            Vec2 camOffset = camera.getOffset().mul(-Game.currentScene().getCellSize());
             g2.translate(camOffset.x, camOffset.y);
         }
 

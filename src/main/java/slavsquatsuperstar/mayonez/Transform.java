@@ -1,5 +1,7 @@
 package slavsquatsuperstar.mayonez;
 
+import slavsquatsuperstar.math.Vec2;
+
 /**
  * Stores the position, rotation and scale of a GameObject and provides additional methods.
  *
@@ -10,11 +12,11 @@ public class Transform { // TODO extend component?
     /**
      * Where the object is located in the scene.
      */
-    public Vector2 position = new Vector2();
+    public Vec2 position = new Vec2();
     /**
      * How much the object is being stretched along its axes.
      */
-    public Vector2 scale = new Vector2(1, 1);
+    public Vec2 scale = new Vec2(1, 1);
     /**
      * The angle in degrees the object is oriented.
      */
@@ -22,7 +24,7 @@ public class Transform { // TODO extend component?
 
     public Transform() {}
 
-    public Transform(Vector2 position) {
+    public Transform(Vec2 position) {
         this.position = position;
     }
 
@@ -31,7 +33,7 @@ public class Transform { // TODO extend component?
      *
      * @param displacement a vector
      */
-    public void move(Vector2 displacement) {
+    public void move(Vec2 displacement) {
         position = position.add(displacement);
     }
 
@@ -45,10 +47,10 @@ public class Transform { // TODO extend component?
     }
 
     /**
-     * Resizes the parent object and all its components by the given x and y axes
+     * Stretches the parent object and all its components by the given x and y axes
      * @param dilation a vector
      */
-    public void stretch(Vector2 dilation) {
+    public void resize(Vec2 dilation) {
         scale = scale.mul(dilation);
     }
 

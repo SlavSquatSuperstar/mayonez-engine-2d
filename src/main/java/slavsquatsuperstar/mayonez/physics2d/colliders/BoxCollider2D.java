@@ -1,29 +1,27 @@
 package slavsquatsuperstar.mayonez.physics2d.colliders;
 
-import slavsquatsuperstar.mayonez.Vector2;
-import slavsquatsuperstar.util.MathUtils;
+import slavsquatsuperstar.math.Vec2;
+import slavsquatsuperstar.math.MathUtils;
 
 /**
- * An oriented bounding box, a rectangle that can be rotated. The sides will align with the object's rotation
- * angle.
+ * An oriented bounding box, a rectangle that can be rotated. The sides will align with the object's rotation angle.
  *
  * @author SlavSquatSuperstar
  */
 public class BoxCollider2D extends AbstractBoxCollider2D {
 
-    public BoxCollider2D(Vector2 size) {
+    public BoxCollider2D(Vec2 size) {
         super(size);
     }
 
-    // TODO world- min/max methods?
-
     // Properties
 
-    public Vector2[] getVertices() {
-        Vector2 min = min();
-        Vector2 max = max();
-        Vector2[] vertices = new Vector2[]{new Vector2(min), new Vector2(max), new Vector2(min.x, max.y),
-                new Vector2(max.x, min.y)};
+    public Vec2[] vertices() {
+        Vec2 min = min();
+        Vec2 max = max();
+        Vec2[] vertices = new Vec2[]{
+                new Vec2(min), new Vec2(min.x, max.y), new Vec2(max), new Vec2(max.x, min.y)
+        };
 
         if (!MathUtils.equals(getRotation(), 0)) {
             for (int i = 0; i < vertices.length; i++)
@@ -33,40 +31,36 @@ public class BoxCollider2D extends AbstractBoxCollider2D {
         return vertices;
     }
 
+    @Override
     public AlignedBoxCollider2D getMinBounds() {
-        AlignedBoxCollider2D aabb;
+        Vec2 aabbSize;
 
-        if (MathUtils.equals(getRotation(), 0)) {
-            aabb = new AlignedBoxCollider2D(size);
+        if (MathUtils.equals(getRotation() % 360f, 0)) {
+            aabbSize = localSize(); // If not rotated return a copy
         } else {
-            Vector2[] vertices = getVertices();
-            Vector2 newMin = vertices[0];
-            Vector2 newMax = vertices[0];
-            for (int i = 1; i < vertices.length; i++) {
-                Vector2 v = vertices[i];
+            Vec2[] vertices = vertices();
+            float[] verticesX = new float[vertices.length];
+            float[] verticesY = new float[vertices.length];
 
-                if (v.x < newMin.x)
-                    newMin.x = v.x;
-                else if (v.x > newMax.x)
-                    newMax.x = v.x;
-
-                if (v.y < newMin.y)
-                    newMin.y = v.y;
-                else if (v.y > newMax.y)
-                    newMax.y = v.y;
+            for (int i = 0; i < vertices.length; i++) {
+                verticesX[i] = vertices[i].x;
+                verticesY[i] = vertices[i].y;
             }
-            aabb = new AlignedBoxCollider2D(newMax.sub(newMin));
+
+            Vec2 newMin = new Vec2(MathUtils.min(verticesX), MathUtils.min(verticesY));
+            Vec2 newMax = new Vec2(MathUtils.max(verticesX), MathUtils.max(verticesY));
+            aabbSize = newMax.sub(newMin).div(transform.scale);
         }
 
-        return aabb.setTransform(transform).setRigidBody(rb);
+        return new AlignedBoxCollider2D(aabbSize).setTransform(transform).setRigidBody(rb);
     }
 
     // Collision Methods
 
     @Override
-    public boolean contains(Vector2 point) {
+    public boolean contains(Vec2 point) {
         // Translate the point into the box's local space
-        Vector2 pointLocal = point.rotate(-getRotation(), center());
+        Vec2 pointLocal = point.rotate(-getRotation(), center());
         return MathUtils.inRange(pointLocal.x, min().x, max().x) && MathUtils.inRange(pointLocal.y, min().y, max().y);
     }
 
@@ -75,12 +69,12 @@ public class BoxCollider2D extends AbstractBoxCollider2D {
         float rot = -getRotation();
 
         // rotate the line into the AABB's local space
-        Vector2 localStart = edge.start.rotate(rot, center());
-        Vector2 localEnd = edge.end.rotate(rot, center());
+        Vec2 localStart = edge.start.rotate(rot, center());
+        Vec2 localEnd = edge.end.rotate(rot, center());
         Edge2D localEdge = new Edge2D(localStart, localEnd);
 
         // Create AABB with same size
-        AlignedBoxCollider2D aabb = new AlignedBoxCollider2D(size);
+        AlignedBoxCollider2D aabb = new AlignedBoxCollider2D(size());
         aabb.rb = this.rb;
         aabb.transform = this.transform;
         return aabb.intersects(localEdge);
@@ -103,15 +97,15 @@ public class BoxCollider2D extends AbstractBoxCollider2D {
 
     boolean intersects(BoxCollider2D box) {
         // rotate around box center, or origin?
-        Vector2[] axes = {
-                new Vector2(0, 1).rotate(this.getRotation(), new Vector2()),
-                new Vector2(1, 0).rotate(this.getRotation(), new Vector2()),
-                new Vector2(0, 1).rotate(box.getRotation(), new Vector2()),
-                new Vector2(1, 0).rotate(box.getRotation(), new Vector2())
+        Vec2[] axes = {
+                new Vec2(0, 1).rotate(this.getRotation(), new Vec2()),
+                new Vec2(1, 0).rotate(this.getRotation(), new Vec2()),
+                new Vec2(0, 1).rotate(box.getRotation(), new Vec2()),
+                new Vec2(1, 0).rotate(box.getRotation(), new Vec2())
         };
 
         // top right - min, bottom left - min
-        for (Vector2 axis : axes)
+        for (Vec2 axis : axes)
             if (!overlapOnAxis(box, axis))
                 return false;
 
@@ -119,7 +113,7 @@ public class BoxCollider2D extends AbstractBoxCollider2D {
     }
 
     @Override
-    public Vector2 nearestPoint(Vector2 position) {
+    public Vec2 nearestPoint(Vec2 position) {
         if (contains(position))
             return position;
         // rotate the point into lcoal space
@@ -131,12 +125,12 @@ public class BoxCollider2D extends AbstractBoxCollider2D {
         float rot = -getRotation();
 
         // Rotate the edge into the AABB's local space
-        Vector2 localOrigin = ray.origin.rotate(rot, center());
-        Vector2 localDir = ray.direction.rotate(rot, center());
+        Vec2 localOrigin = ray.origin.rotate(rot, center());
+        Vec2 localDir = ray.direction.rotate(rot, center());
         Ray2D localRay = new Ray2D(localOrigin, localDir);
 
         // Create AABB with same size
-        AlignedBoxCollider2D aabb = new AlignedBoxCollider2D(size);
+        AlignedBoxCollider2D aabb = new AlignedBoxCollider2D(size());
         aabb.rb = this.rb;
         return aabb.raycast(ray, result, limit);
 

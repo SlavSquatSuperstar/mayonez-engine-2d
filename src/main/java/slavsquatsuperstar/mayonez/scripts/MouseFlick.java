@@ -1,7 +1,7 @@
 package slavsquatsuperstar.mayonez.scripts;
 
 import slavsquatsuperstar.mayonez.MouseInput;
-import slavsquatsuperstar.mayonez.Vector2;
+import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.physics2d.colliders.Collider2D;
 
 /**
@@ -11,7 +11,7 @@ import slavsquatsuperstar.mayonez.physics2d.colliders.Collider2D;
  */
 public class MouseFlick extends MouseScript {
 
-    private Vector2 dragDisplacement = new Vector2();
+    private Vec2 dragDisplacement = new Vec2();
 
     public MouseFlick(String button, float speed, boolean inverted) {
         this.button = button;
@@ -41,7 +41,7 @@ public class MouseFlick extends MouseScript {
     }
 
     @Override
-    protected Vector2 getRawInput() {
+    protected Vec2 getRawInput() {
         return dragDisplacement.mul(inverted ? -1 : 1);
     }
 

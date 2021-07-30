@@ -1,7 +1,7 @@
 package slavsquatsuperstar.game;
 
 import slavsquatsuperstar.mayonez.GameObject;
-import slavsquatsuperstar.mayonez.Vector2;
+import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
 import slavsquatsuperstar.mayonez.physics2d.colliders.AlignedBoxCollider2D;
 import slavsquatsuperstar.mayonez.renderer.Sprite;
@@ -20,7 +20,7 @@ public class Player extends GameObject {
     private float mass = 12f;
     private float drag = 0.4f; // [0, 1]
 
-    public Player(String name, Vector2 position) {
+    public Player(String name, Vec2 position) {
         super(name, position);
     }
 
@@ -53,7 +53,7 @@ public class Player extends GameObject {
             addComponent(s);
 
         // Add player scripts
-        addComponent(new AlignedBoxCollider2D(new Vector2(1, 1)));
+        addComponent(new AlignedBoxCollider2D(new Vec2(1, 1)));
         addComponent(new Rigidbody2D(mass).setDrag(drag));
         addComponent(new KeyMovement(MoveMode.FORCE, thrustForce).setTopSpeed(topSpeed));
         addComponent(new KeepInScene(0, 0, getScene().getWidth(), getScene().getHeight(), KeepInScene.Mode.STOP));

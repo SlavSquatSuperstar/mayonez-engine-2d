@@ -1,6 +1,6 @@
 package slavsquatsuperstar.mayonez.renderer
 
-import slavsquatsuperstar.mayonez.Vector2
+import slavsquatsuperstar.math.Vec2
 import java.awt.BasicStroke
 import java.awt.Color
 import java.awt.Graphics2D
@@ -29,7 +29,7 @@ object IMGUI {
     // Draw Shapes
 
     @JvmStatic
-    fun drawCircle(position: Vector2, radius: Float, color: Color?) {
+    fun drawCircle(position: Vec2, radius: Float, color: Color?) {
         shapes.add(Renderable { g2: Graphics2D ->
             g2.color = color
             g2.drawOval(round(position.x), round(position.y), round(radius * 2), round(radius * 2))
@@ -37,7 +37,7 @@ object IMGUI {
     }
 
     @JvmStatic
-    fun drawRect(position: Vector2, width: Float, height: Float, color: Color?) {
+    fun drawRect(position: Vec2, width: Float, height: Float, color: Color?) {
         shapes.add(Renderable { g2: Graphics2D ->
             g2.color = color
             g2.drawRect(round(position.x), round(position.y), round(width), round(height))
@@ -47,7 +47,7 @@ object IMGUI {
     // Fill Shapes
 
     @JvmStatic
-    fun fillCircle(position: Vector2, radius: Float, color: Color?) {
+    fun fillCircle(position: Vec2, radius: Float, color: Color?) {
         shapes.add(Renderable { g2: Graphics2D ->
             g2.color = color
             g2.fillOval(round(position.x), round(position.y), round(radius * 2), round(radius * 2))
@@ -55,7 +55,7 @@ object IMGUI {
     }
 
     @JvmStatic
-    fun fillRect(position: Vector2, width: Float, height: Float, color: Color?) {
+    fun fillRect(position: Vec2, width: Float, height: Float, color: Color?) {
         shapes.add(Renderable { g2: Graphics2D ->
             g2.color = color
             g2.fillRect(round(position.x), round(position.y), round(width), round(height))
@@ -65,14 +65,14 @@ object IMGUI {
     // Draw Other Objects
 
     @JvmStatic
-    fun drawPoint(position: Vector2, color: Color?) {
+    fun drawPoint(position: Vec2, color: Color?) {
         // Fill a circle with diameter "STROKE_SIZE" centered at "position"
-        val min = position.sub(Vector2(STROKE_SIZE.toFloat(), STROKE_SIZE.toFloat()).div(2f))
+        val min = position.sub(Vec2(STROKE_SIZE.toFloat(), STROKE_SIZE.toFloat()).div(2f))
         fillCircle(min, STROKE_SIZE * 0.5f, color)
     }
 
     @JvmStatic
-    fun drawLine(start: Vector2, end: Vector2, color: Color?) {
+    fun drawLine(start: Vec2, end: Vec2, color: Color?) {
         shapes.add(Renderable { g2: Graphics2D ->
             g2.color = color
             g2.drawLine(round(start.x), round(start.y), round(end.x), round(end.y))

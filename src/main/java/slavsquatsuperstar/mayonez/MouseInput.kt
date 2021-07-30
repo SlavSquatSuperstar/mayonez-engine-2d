@@ -1,5 +1,6 @@
 package slavsquatsuperstar.mayonez
 
+import slavsquatsuperstar.math.Vec2
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.util.*
@@ -86,7 +87,7 @@ object MouseInput : MouseAdapter() {
     fun getY(): Float = yScreen.toFloat() / Game.currentScene().cellSize
 
     @JvmStatic
-    fun getPosition(): Vector2 = Vector2(getX(), getY())
+    fun getPosition(): Vec2 = Vec2(getX(), getY())
 
     @JvmStatic
     fun getDx(): Float = dxScreen.toFloat() / Game.currentScene().cellSize
@@ -95,7 +96,7 @@ object MouseInput : MouseAdapter() {
     fun getDy(): Float = dyScreen.toFloat() / Game.currentScene().cellSize
 
     @JvmStatic
-    fun getDisplacement(): Vector2 = Vector2(getDx(), getDy())
+    fun getDisplacement(): Vec2 = Vec2(getDx(), getDy())
 
     // Enum Declaration
     internal enum class MouseMapping(var button: Int) {

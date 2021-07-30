@@ -1,6 +1,6 @@
 package slavsquatsuperstar.mayonez.physics2d;
 
-import slavsquatsuperstar.mayonez.Vector2;
+import slavsquatsuperstar.math.Vec2;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,21 +12,21 @@ import java.util.List;
  */
 public class CollisionManifold {
 
-    private Vector2 normal = new Vector2();
+    private Vec2 normal = new Vec2();
     private float depth;
     private boolean colliding = false;
-    private List<Vector2> contactPoints = new ArrayList<>();
+    private List<Vec2> contactPoints = new ArrayList<>();
 
     public CollisionManifold() {}
 
-    public CollisionManifold(Vector2 normal, float depth) {
+    public CollisionManifold(Vec2 normal, float depth) {
         this.normal = normal.unitVector();
         this.depth = depth;
     }
 
     // Getters and Setters
 
-    public Vector2 getNormal() {
+    public Vec2 getNormal() {
         return normal;
     }
 
@@ -38,11 +38,11 @@ public class CollisionManifold {
         return colliding;
     }
 
-    public List<Vector2> getContactPoints() {
+    public List<Vec2> getContactPoints() {
         return contactPoints;
     }
 
-    public void addContactPoint(Vector2 contactPoint) {
+    public void addContactPoint(Vec2 contactPoint) {
         colliding = true;
         contactPoints.add(contactPoint);
     }

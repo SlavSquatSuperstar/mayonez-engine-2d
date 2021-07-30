@@ -5,10 +5,10 @@ import org.apache.commons.lang3.tuple.Pair;
 import slavsquatsuperstar.mayonez.Colors;
 import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Scene;
-import slavsquatsuperstar.mayonez.Vector2;
+import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.physics2d.colliders.Collider2D;
 import slavsquatsuperstar.mayonez.renderer.DebugDraw;
-import slavsquatsuperstar.util.MathUtils;
+import slavsquatsuperstar.math.MathUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +36,7 @@ public class Physics2D {
     private final List<ForceRegistration> forceRegistry;
     private final ForceGenerator gravityForce;
     private final ForceGenerator dragForce;
-    private Vector2 gravity; // acceleration to due gravity
+    private Vec2 gravity; // acceleration to due gravity
 
     public Physics2D() {
         rigidbodies = new ArrayList<>();
@@ -45,7 +45,7 @@ public class Physics2D {
         colliders = new ArrayList<>();
 
         forceRegistry = new ArrayList<>();
-        setGravity(new Vector2(0, Physics2D.GRAVITY_CONSTANT));
+        setGravity(new Vec2(0, Physics2D.GRAVITY_CONSTANT));
         gravityForce = (rb, dt) -> rb.addForce(getGravity().mul(rb.getMass()));
         dragForce = (rb, dt) -> {
             // Apply drag if moving (prevent divide by 0)
@@ -134,7 +134,7 @@ public class Physics2D {
             Rigidbody2D r2 = collidingPairs.get(i).getRight();
 
             // Draw contact point
-            for (Vector2 contact : col.getContactPoints())
+            for (Vec2 contact : col.getContactPoints())
                 DebugDraw.drawPoint(contact, Colors.BLACK);
 
             if (r1.hasInfiniteMass() && r2.hasInfiniteMass())
@@ -161,11 +161,11 @@ public class Physics2D {
         float invMass1 = r1.getInverseMass();
         float invMass2 = r2.getInverseMass();
         float sumInvMass = invMass1 + invMass2;
-        Vector2 vel1 = r1.velocity();
-        Vector2 vel2 = r2.velocity();
+        Vec2 vel1 = r1.velocity();
+        Vec2 vel2 = r2.velocity();
 
-        Vector2 relativeVel = vel2.sub(vel1);
-        Vector2 normal = collision.getNormal(); // Direction of collision
+        Vec2 relativeVel = vel2.sub(vel1);
+        Vec2 normal = collision.getNormal(); // Direction of collision
         if (relativeVel.dot(normal) > 0f) // Stop if moving away or stationary
             return;
 
@@ -182,10 +182,10 @@ public class Physics2D {
     // Can't push objects after colliding, velocity slows to 0.
     private void applyImpulse2(Rigidbody2D r1, Rigidbody2D r2, CollisionManifold collision) {
 
-        Vector2 vel1 = r1.velocity();
-        Vector2 vel2 = r2.velocity();
-        Vector2 normal = collision.getNormal(); // Direction of collision
-        Vector2 tangent = new Vector2(-normal.y, normal.x); // Collision plane
+        Vec2 vel1 = r1.velocity();
+        Vec2 vel2 = r2.velocity();
+        Vec2 normal = collision.getNormal(); // Direction of collision
+        Vec2 tangent = new Vec2(-normal.y, normal.x); // Collision plane
 
         float dotTan1 = vel1.dot(tangent);
         float dotTan2 = vel2.dot(tangent);
@@ -241,11 +241,11 @@ public class Physics2D {
 
     // Getters and Setters
 
-    private Vector2 getGravity() {
+    private Vec2 getGravity() {
         return gravity;
     }
 
-    public void setGravity(Vector2 gravity) {
+    public void setGravity(Vec2 gravity) {
         this.gravity = gravity;
     }
 }

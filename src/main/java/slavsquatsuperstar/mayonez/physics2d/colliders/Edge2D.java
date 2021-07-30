@@ -1,9 +1,9 @@
 package slavsquatsuperstar.mayonez.physics2d.colliders;
 
 import slavsquatsuperstar.mayonez.Transform;
-import slavsquatsuperstar.mayonez.Vector2;
+import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
-import slavsquatsuperstar.util.MathUtils;
+import slavsquatsuperstar.math.MathUtils;
 
 /**
  * A line segment with start and end points.
@@ -12,9 +12,9 @@ import slavsquatsuperstar.util.MathUtils;
  */
 public class Edge2D extends Collider2D {
 
-    public final Vector2 start, end;
+    public final Vec2 start, end;
 
-    public Edge2D(Vector2 start, Vector2 end) {
+    public Edge2D(Vec2 start, Vec2 end) {
         this.start = start;
         this.end = end;
     }
@@ -25,19 +25,19 @@ public class Edge2D extends Collider2D {
         return (end.y - start.y) / (end.x - start.x);
     }
 
-    public Vector2 toVector() {
+    public Vec2 toVector() {
         return end.sub(start);
     }
 
     @Override
-    public Vector2 center() {
-        return new Vector2(start.x + end.x, start.y + end.y).mul(0.5f);
+    public Vec2 center() {
+        return new Vec2(start.x + end.x, start.y + end.y).mul(0.5f);
     }
 
     @Override
     public AlignedBoxCollider2D getMinBounds() {
         AlignedBoxCollider2D aabb = new AlignedBoxCollider2D(toVector());
-        Vector2 center = start.add(end).mul(0.5f);
+        Vec2 center = start.add(end).mul(0.5f);
         return aabb.setTransform(new Transform(center)).setRigidBody(new Rigidbody2D(0f));
         // make rigidbody static
     }
@@ -48,7 +48,7 @@ public class Edge2D extends Collider2D {
      * @param point a point in 2D space
      * @return if the point is on the line
      */
-    public boolean contains(Vector2 point) {
+    public boolean contains(Vec2 point) {
         // triangle side length or projection distance
         float distToStart = start.distance(point);
         float distToEnd = end.distance(point);
@@ -62,7 +62,7 @@ public class Edge2D extends Collider2D {
      * @param point a point in 2D space
      * @return if the point is colinear
      */
-    public boolean isColinear(Vector2 point) {
+    public boolean isColinear(Vec2 point) {
         float slope = getSlope();
         if (Float.isInfinite(slope)) { // if vertical line, compare x-values
             return MathUtils.equals(point.x, start.x);
@@ -88,34 +88,34 @@ public class Edge2D extends Collider2D {
         }
 
         // Calculate point of intersection using cross product
-        Vector2 start1 = this.start;
-        Vector2 start2 = edge.start;
-        Vector2 line1 = this.toVector();
-        Vector2 line2 = edge.toVector();
+        Vec2 start1 = this.start;
+        Vec2 start2 = edge.start;
+        Vec2 line1 = this.toVector();
+        Vec2 line2 = edge.toVector();
         float cross = line1.cross(line2);
 
         float len1 = start2.sub(start1).cross(line2) / cross;
         float len2 = start1.sub(start2).cross(line1) / -cross;
 
         if (MathUtils.inRange(len1, 0, 1) && MathUtils.inRange(len2, 0, 1)) {
-            Vector2 contact = start1.add(line1.mul(len1));
+            Vec2 contact = start1.add(line1.mul(len1));
             return true;
         }
         return false;
     }
 
     @Override
-    public Vector2 nearestPoint(Vector2 position) {
+    public Vec2 nearestPoint(Vec2 position) {
         if (contains(position))
             return position;
 //        Vector2 inBounds = position.clampInbounds(start, end);
 //        return start.add(inBounds.sub(start).project(toVector()));
 
         float angle = toVector().angle();
-        Vector2 localStart = start.rotate(-angle, center());
-        Vector2 localEnd = end.rotate(-angle, center());
-        Vector2 localPoint = position.rotate(-angle, center());
-        Vector2 localNearest = new Vector2(MathUtils.clamp(localPoint.x, localStart.x, localEnd.x), localStart.y);
+        Vec2 localStart = start.rotate(-angle, center());
+        Vec2 localEnd = end.rotate(-angle, center());
+        Vec2 localPoint = position.rotate(-angle, center());
+        Vec2 localNearest = new Vec2(MathUtils.clamp(localPoint.x, localStart.x, localEnd.x), localStart.y);
         return localNearest.rotate(angle, center());
 
     }

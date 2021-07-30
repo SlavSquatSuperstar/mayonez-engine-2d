@@ -1,4 +1,4 @@
-package slavsquatsuperstar.util
+package slavsquatsuperstar.math
 
 import kotlin.math.abs
 import kotlin.math.pow
@@ -34,7 +34,10 @@ object MathUtils {
     // Accumulator Methods
 
     @JvmStatic
-    fun average(vararg values: Float): Float = sum(*values) / values.size
+    fun avg(vararg values: Float): Float = sum(*values) / values.size
+
+    @JvmStatic
+    fun avg(vararg values: Int): Int = sum(*values) / values.size
 
     @JvmStatic
     fun sum(vararg values: Float): Float {
@@ -45,9 +48,6 @@ object MathUtils {
     }
 
     @JvmStatic
-    fun avg(vararg values: Int): Int = sum(*values) / values.size
-
-    @JvmStatic
     fun sum(vararg values: Int): Int {
         var sum = 0
         for (v in values)
@@ -55,18 +55,53 @@ object MathUtils {
         return sum
     }
 
-    // Range / Clamp Methods
+    // Find Extreme Methods
 
-    /**
-     * Checks whether a number is within a provided range, including the bounds.
-     *
-     * @param value any real number
-     * @param min   the lower bound, inclusive
-     * @param max   the upper bound, inclusive
-     * @return if the value is within range
-     */
     @JvmStatic
-    fun inRange(value: Float, min: Float, max: Float): Boolean = value in Range(min, max)
+    fun min(vararg values: Float): Float {
+        if (values.isEmpty())
+            return 0F
+        var min = values[0]
+        for (i in 1 until values.size)
+            if (values[i] < min)
+                min = values[i]
+        return min
+    }
+
+    @JvmStatic
+    fun min(vararg values: Int): Int {
+        if (values.isEmpty())
+            return 0
+        var min = values[0]
+        for (i in 1 until values.size)
+            if (values[i] < min)
+                min = values[i]
+        return min
+    }
+
+    @JvmStatic
+    fun max(vararg values: Float): Float {
+        if (values.isEmpty())
+            return 0F
+        var max = values[0]
+        for (i in 1 until values.size)
+            if (values[i] > max)
+                max = values[i]
+        return max
+    }
+
+    @JvmStatic
+    fun max(vararg values: Int): Int {
+        if (values.isEmpty())
+            return 0
+        var max = values[0]
+        for (i in 1 until values.size)
+            if (values[i] > max)
+                max = values[i]
+        return max
+    }
+
+    // Clamp / Range Methods
 
     /**
      * Restricts a float's value within a provided range.
@@ -92,6 +127,17 @@ object MathUtils {
      */
     @JvmStatic
     fun clamp(value: Int, min: Int, max: Int): Int = clamp(value.toFloat(), min.toFloat(), max.toFloat()).toInt()
+
+    /**
+     * Checks whether a number is within a provided range, including the bounds.
+     *
+     * @param value any real number
+     * @param min   the lower bound, inclusive
+     * @param max   the upper bound, inclusive
+     * @return if the value is within range
+     */
+    @JvmStatic
+    fun inRange(value: Float, min: Float, max: Float): Boolean = value in Range(min, max)
 
     // Random Number Methods
 
@@ -140,7 +186,7 @@ object MathUtils {
     // Trig / Angle Methods
 
     @JvmStatic
-    fun toDegrees(radians: Float): Float = radians * TO_RADIANS
+    fun toDegrees(radians: Float): Float = radians * TO_DEGREES
 
     @JvmStatic
     fun toRadians(degrees: Float): Float = degrees * TO_RADIANS

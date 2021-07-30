@@ -1,5 +1,6 @@
 package slavsquatsuperstar.game;
 
+import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.*;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
 import slavsquatsuperstar.mayonez.physics2d.colliders.AlignedBoxCollider2D;
@@ -13,16 +14,16 @@ public class LevelEditorScene extends Scene {
 
     public LevelEditorScene(String name) {
         super(name, Preferences.SCREEN_WIDTH, Preferences.SCREEN_HEIGHT, 42);
-        setGravity(new Vector2());
+        setGravity(new Vec2());
     }
 
     @Override
     protected void init() {
-        addObject(new GameObject("Ground", new Vector2(getWidth() * 0.5f, getHeight())) {
+        addObject(new GameObject("Ground", new Vec2(getWidth() * 0.5f, getHeight())) {
             @Override
             protected void init() {
                 addComponent(new Rigidbody2D(0f));
-                addComponent(new AlignedBoxCollider2D(new Vector2(getWidth() + 2f, 2f)).setBounce(0f));
+                addComponent(new AlignedBoxCollider2D(new Vec2(getWidth() + 2f, 2f)).setBounce(0f));
                 System.out.println(transform.position);
             }
 
@@ -33,9 +34,9 @@ public class LevelEditorScene extends Scene {
             }
         });
 
-        addObject(new Player("Player", new Vector2(5, 5)));
+        addObject(new Player("Player", new Vec2(5, 5)));
 
-        addObject(new GameObject("Grid", new Vector2()) {
+        addObject(new GameObject("Grid", new Vec2()) {
             @Override
             protected void init() {
                 addComponent(new Grid(getCellSize(), getCellSize()));

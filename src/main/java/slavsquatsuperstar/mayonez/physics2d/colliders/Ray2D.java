@@ -1,6 +1,6 @@
 package slavsquatsuperstar.mayonez.physics2d.colliders;
 
-import slavsquatsuperstar.mayonez.Vector2;
+import slavsquatsuperstar.math.Vec2;
 
 /**
  * An object in space with an origin point, a direction, and a length of one (a unit vector).
@@ -9,10 +9,10 @@ import slavsquatsuperstar.mayonez.Vector2;
  */
 public class Ray2D {
 
-    public final Vector2 origin;
-    public final Vector2 direction;
+    public final Vec2 origin;
+    public final Vec2 direction;
 
-    public Ray2D(Vector2 origin, Vector2 direction) {
+    public Ray2D(Vec2 origin, Vec2 direction) {
         this.origin = origin;
         this.direction = direction.unitVector();
     }
@@ -27,7 +27,7 @@ public class Ray2D {
      * @param distance parameterized distance
      * @return the point
      */
-    public Vector2 getPoint(float distance) {
+    public Vec2 getPoint(float distance) {
         return origin.add(direction.mul(distance));
     }
 

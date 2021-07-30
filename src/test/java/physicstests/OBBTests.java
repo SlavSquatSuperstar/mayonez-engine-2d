@@ -3,7 +3,7 @@ package physicstests;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import slavsquatsuperstar.mayonez.Transform;
-import slavsquatsuperstar.mayonez.Vector2;
+import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
 import slavsquatsuperstar.mayonez.physics2d.colliders.AlignedBoxCollider2D;
 import slavsquatsuperstar.mayonez.physics2d.colliders.BoxCollider2D;
@@ -24,7 +24,7 @@ public class OBBTests {
     // Create box centered at (0, 0) with dimensions 4x4 with a rotation of 30 degrees
     @BeforeAll
     public static void getAABB() {
-        obb = new BoxCollider2D(new Vector2(4, 4));
+        obb = new BoxCollider2D(new Vec2(4, 4));
         Transform t = new Transform();
         t.rotate(30);
         obb.setTransform(t);
@@ -33,13 +33,13 @@ public class OBBTests {
 
     @Test
     public void vertexPointIsInOBB() {
-        for (Vector2 v : obb.getVertices())
+        for (Vec2 v : obb.vertices())
             assertTrue(obb.contains(v));
     }
 
     @Test
     public void edgeLineIsInOBB() {
-        Vector2[] vertices = obb.getVertices();
+        Vec2[] vertices = obb.vertices();
         for (int i = 0; i < vertices.length; i++)
             assertTrue(obb.intersects(new Edge2D(vertices[i], vertices[(i + 1) / 4])));
     }
@@ -47,15 +47,15 @@ public class OBBTests {
     @Test
     public void obbIntersectsCircle() {
         CircleCollider c = new CircleCollider(4);
-        c.setTransform(new Transform(new Vector2(2, 2)));
+        c.setTransform(new Transform(new Vec2(2, 2)));
         c.setRigidBody(new Rigidbody2D(0f));
         assertTrue(obb.detectCollision(c));
     }
 
     @Test
     public void obbIntersectsAABB() {
-        AlignedBoxCollider2D box = new AlignedBoxCollider2D(new Vector2(4, 4));
-        box.setTransform(new Transform(new Vector2(2, 2)));
+        AlignedBoxCollider2D box = new AlignedBoxCollider2D(new Vec2(4, 4));
+        box.setTransform(new Transform(new Vec2(2, 2)));
         box.setRigidBody(new Rigidbody2D(0f));
         assertTrue(obb.detectCollision(box));
     }

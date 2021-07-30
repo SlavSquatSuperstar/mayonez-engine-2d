@@ -1,5 +1,7 @@
 package slavsquatsuperstar.mayonez;
 
+import slavsquatsuperstar.math.Vec2;
+
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,7 +28,7 @@ public class GameObject {
     private final List<Component> components;
     private List<Class> updateOrder = null;
 
-    public GameObject(String name, Vector2 position) {
+    public GameObject(String name, Vec2 position) {
         this.name = name;
         this.transform = new Transform(position);
         components = new ArrayList<>();

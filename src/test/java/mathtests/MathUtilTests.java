@@ -3,7 +3,7 @@ package mathtests;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.junit.jupiter.api.Test;
 import slavsquatsuperstar.mayonez.Logger;
-import slavsquatsuperstar.util.MathUtils;
+import slavsquatsuperstar.math.MathUtils;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -14,41 +14,61 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class MathUtilTests {
 
+    // Equality
+
     @Test
-    public void averageIntsSuccess() {
-        int[] nums = {1, 2, 3, 4, 5};
-        assertEquals(MathUtils.avg(nums), 3);
+    public void epsilonEqualsZero() {
+        assertEquals(0f, Float.MIN_VALUE, MathUtils.EPSILON);
+    }
+
+    // Accumulator
+
+    @Test
+    public void findAverageSuccess() {
+        assertEquals(MathUtils.avg(1, 2, 3, 4, 5), 3);
+        assertEquals(MathUtils.avg(1f, 2f, 3f, 4f), 2.5f, MathUtils.EPSILON);
+
     }
 
     @Test
-    public void averageFloatsSuccess() {
-        float[] nums = {1f, 2f, 3f, 4f};
-        assertEquals(MathUtils.average(nums), 2.5f, MathUtils.EPSILON);
+    public void findSumSuccess() {
+        assertEquals(MathUtils.sum(1, 2, 3, 4), 10);
+        assertEquals(MathUtils.sum(0.5f, 1f, 1.5f, 2f, 2.5f), 7.5f, MathUtils.EPSILON);
     }
+
+    // Find Extreme
+    @Test
+    public void findMinSuccess() {
+        assertEquals(MathUtils.min(-6, 1, 2, 3, 5), -6);
+        assertEquals(MathUtils.min(-6.5f, 1, 2, 3, 5.5f), -6.5f, MathUtils.EPSILON);
+    }
+
+    @Test
+    public void findMaxSuccess() {
+        assertEquals(MathUtils.max(-6, 1, 2, 3, 5), 5);
+        assertEquals(MathUtils.max(-6.5f, 1, 2, 3, 5.5f), 5.5f, MathUtils.EPSILON);
+    }
+
+    // Clamp / Range
 
     @Test
     public void clampUpSuccess() {
-        assertEquals(0, MathUtils.clamp(-1, 0, 5), MathUtils.EPSILON);
+        assertEquals(0, MathUtils.clamp(-1, 0, 5));
         assertEquals(-5f, MathUtils.clamp(-6f, -5f, 0f), MathUtils.EPSILON);
         assertEquals(2.5f, MathUtils.clamp(0f, 2.5f, 7.5f), MathUtils.EPSILON);
     }
 
     @Test
     public void clampDownSuccess() {
-        assertEquals(5, MathUtils.clamp(6, 0, 5), MathUtils.EPSILON);
+        assertEquals(5, MathUtils.clamp(6, 0, 5));
         assertEquals(0f, MathUtils.clamp(1f, -5f, 0f), MathUtils.EPSILON);
         assertEquals(7.5f, MathUtils.clamp(10f, 2.5f, 7.5f), MathUtils.EPSILON);
     }
 
     @Test
     public void clampNoneSuccess() {
-        assertEquals(1, MathUtils.clamp(1, 0, 5), MathUtils.EPSILON);
+        assertEquals(1, MathUtils.clamp(1, 0, 5));
         assertEquals(-1f, MathUtils.clamp(-1f, -5f, 0f), MathUtils.EPSILON);
-    }
-
-    @Test
-    public void epsilonEqualsZero() {
-        assertEquals(0f, Float.MIN_VALUE, MathUtils.EPSILON);
     }
 
     @Test
@@ -71,6 +91,8 @@ public class MathUtilTests {
         assertFalse(MathUtils.inRange(0, -10, -1));
         assertFalse(MathUtils.inRange(6, -5, 5));
     }
+
+    // Random
 
     @Test
     public void randomPositiveIntsSuccess() {
@@ -107,6 +129,8 @@ public class MathUtilTests {
         assertTrue(NumberUtils.max(nums) <= max);
     }
 
+    // Rounding
+
     @Test
     public void randomFloatsSuccess() {
         float[] nums = new float[100];
@@ -129,18 +153,6 @@ public class MathUtilTests {
         assertEquals(0.04f, MathUtils.round(0.0420f, 2), MathUtils.EPSILON);
         assertEquals(0.004f, MathUtils.round(0.00420f, 3), MathUtils.EPSILON);
         assertEquals(0.06f, MathUtils.truncate(0.069f, 2), MathUtils.EPSILON);
-    }
-
-    @Test
-    public void sumIntsSuccess() {
-        int[] nums = {1, 2, 3, 4};
-        assertEquals(MathUtils.sum(nums), 10);
-    }
-
-    @Test
-    public void sumFloatsSuccess() {
-        float[] nums = {0.5f, 1f, 1.5f, 2f, 2.5f};
-        assertEquals(MathUtils.sum(nums), 7.5f, MathUtils.EPSILON);
     }
 
 }

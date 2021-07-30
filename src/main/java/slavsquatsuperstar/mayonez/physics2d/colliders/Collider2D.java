@@ -3,11 +3,11 @@ package slavsquatsuperstar.mayonez.physics2d.colliders;
 import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Logger;
 import slavsquatsuperstar.mayonez.Transform;
-import slavsquatsuperstar.mayonez.Vector2;
+import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.Component;
 import slavsquatsuperstar.mayonez.physics2d.CollisionManifold;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
-import slavsquatsuperstar.util.MathUtils;
+import slavsquatsuperstar.math.MathUtils;
 
 /**
  * A shape that takes up space and can detect collisions. Requires a {@link Rigidbody2D} to respond to collisions properly.
@@ -28,6 +28,7 @@ public abstract class Collider2D extends Component {
     protected Rigidbody2D rb = null;
 
     // Physics Properties
+    // TODO world vs local property getters?
 
     /**
      * What percentage of energy is conserved after a collision (0-1).
@@ -50,7 +51,7 @@ public abstract class Collider2D extends Component {
 
     // Shape Properties
 
-    public Vector2 center() {
+    public Vec2 center() {
         return transform.position;
     }
 
@@ -64,7 +65,7 @@ public abstract class Collider2D extends Component {
      * @param point a vector
      * @return if the shape contains the point
      */
-    public abstract boolean contains(Vector2 point);
+    public abstract boolean contains(Vec2 point);
 
     /**
      * Returns the point on or inside the collider nearest to the given position.
@@ -72,7 +73,7 @@ public abstract class Collider2D extends Component {
      * @param position a 2D vector
      * @return the point
      */
-    public abstract Vector2 nearestPoint(Vector2 position);
+    public abstract Vec2 nearestPoint(Vec2 position);
 
     // Shape vs Line Collisions
 

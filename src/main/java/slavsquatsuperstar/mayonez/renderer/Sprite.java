@@ -1,9 +1,10 @@
 package slavsquatsuperstar.mayonez.renderer;
 
+import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.Component;
 import slavsquatsuperstar.mayonez.*;
 import slavsquatsuperstar.mayonez.assets.Assets;
-import slavsquatsuperstar.util.MathUtils;
+import slavsquatsuperstar.math.MathUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -41,8 +42,8 @@ public class Sprite extends Component {
     @Override
     public void render(Graphics2D g2) {
         // Measurements are in screen coordinates (pixels)
-        Vector2 parentCenter = parent.transform.position.mul(getScene().getCellSize()); // no camera offset
-        Vector2 imageHalfSize = new Vector2(image.getWidth(), image.getHeight()).div(2);
+        Vec2 parentCenter = parent.transform.position.mul(getScene().getCellSize()); // no camera offset
+        Vec2 imageHalfSize = new Vec2(image.getWidth(), image.getHeight()).div(2);
 
         // Use the parent's transform to draw the sprite
         AffineTransform transform = new AffineTransform();

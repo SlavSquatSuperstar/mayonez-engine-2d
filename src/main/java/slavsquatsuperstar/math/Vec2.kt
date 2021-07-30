@@ -1,11 +1,13 @@
-package slavsquatsuperstar.mayonez
+package slavsquatsuperstar.math
 
-import slavsquatsuperstar.util.MathUtils.clamp
-import slavsquatsuperstar.util.MathUtils.equals
+import slavsquatsuperstar.mayonez.Logger
+import slavsquatsuperstar.math.MathUtils.clamp
+import slavsquatsuperstar.math.MathUtils.equals
 import kotlin.math.*
 
 /**
- * An object in 2D space that has magnitude and direction, or just a point (x, y).
+ * A Vector2 represents an object in 2D space that has magnitude and direction (arrow), the location of something in the
+ * xy-plane (point), or even an ordered pair of two numbers (list).
  **
  * @param x the new x-component
  * @param y the new y-component
@@ -14,7 +16,7 @@ import kotlin.math.*
  *
  * @author SlavSquatSuperstar
  */
-open class Vector2 constructor(
+open class Vec2 constructor(
     /**
      * The vector's x component.
      */
@@ -37,7 +39,7 @@ open class Vector2 constructor(
      *
      * @param v the vector to copy
      */
-    constructor(v: Vector2) : this(v.x, v.y)
+    constructor(v: Vec2) : this(v.x, v.y)
 
     // Mutators
 
@@ -57,20 +59,20 @@ open class Vector2 constructor(
      *
      * @param v another 2D vector
      */
-    fun set(v: Vector2) = set(v.x, v.y)
+    fun set(v: Vec2) = set(v.x, v.y)
 
     // Operator Overloads
 
-    operator fun plus(v: Vector2) = Vector2(this.x + v.x, this.y + v.y)
-    operator fun minus(v: Vector2) = Vector2(this.x - v.x, this.y - v.y)
-    operator fun times(scalar: Float) = Vector2(this.x * scalar, this.y * scalar)
-    operator fun times(v: Vector2) = Vector2(this.x * v.x, this.y * v.y)
+    operator fun plus(v: Vec2) = Vec2(this.x + v.x, this.y + v.y)
+    operator fun minus(v: Vec2) = Vec2(this.x - v.x, this.y - v.y)
+    operator fun times(scalar: Float) = Vec2(this.x * scalar, this.y * scalar)
+    operator fun times(v: Vec2) = Vec2(this.x * v.x, this.y * v.y)
 
     /**
      * Copies this vector.
      * @return a new vector with the same components
      */
-    operator fun unaryPlus() = Vector2(this)
+    operator fun unaryPlus() = Vec2(this)
 
     /**
      * Negates this vector.
@@ -86,7 +88,7 @@ open class Vector2 constructor(
      * @param v another 2D vector
      * @return the vector sum
      */
-    fun add(v: Vector2): Vector2 = this + v
+    fun add(v: Vec2): Vec2 = this + v
 
     /**
      * Subtracts another vector from this vector.
@@ -94,7 +96,7 @@ open class Vector2 constructor(
      * @param v another 2D vector
      * @return the vector difference
      */
-    fun sub(v: Vector2): Vector2 = this - v
+    fun sub(v: Vec2): Vec2 = this - v
 
     /**
      * Multiplies both components vector by a number.
@@ -102,7 +104,7 @@ open class Vector2 constructor(
      * @param scalar any number
      * @return the multiplied vector
      */
-    fun mul(scalar: Float): Vector2 = this * scalar
+    fun mul(scalar: Float): Vec2 = this * scalar
 
     /**
      * Multiplies the components of this vector by the corresponding components of another vector.
@@ -110,7 +112,7 @@ open class Vector2 constructor(
      * @param v another vector
      * @return the multiplied vector
      */
-    fun mul(v: Vector2): Vector2 = this * v
+    fun mul(v: Vec2): Vec2 = this * v
 
     /**
      * Divides both components vector by a number.
@@ -118,10 +120,10 @@ open class Vector2 constructor(
      * @param scalar a non-zero number
      * @return the divided vector
      */
-    operator fun div(scalar: Float): Vector2 {
+    operator fun div(scalar: Float): Vec2 {
         if (scalar == 0F) {
             Logger.warn("Vector2: Attempted division by 0")
-            return Vector2()
+            return Vec2()
         }
         return this * (1 / scalar)
     }
@@ -132,7 +134,7 @@ open class Vector2 constructor(
      * @param v another vector with non-zero components
      * @return the divided vector
      */
-    operator fun div(v: Vector2): Vector2 = Vector2(this.x / v.x, this.y / v.y)
+    operator fun div(v: Vec2): Vec2 = Vec2(this.x / v.x, this.y / v.y)
 
     // Vector Operations
 
@@ -142,7 +144,7 @@ open class Vector2 constructor(
      * @param v another vector
      * @return the dot product
      */
-    fun dot(v: Vector2): Float = this.x * v.x + this.y * v.y
+    fun dot(v: Vec2): Float = this.x * v.x + this.y * v.y
 
     /**
      * Returns the z-component of the cross product between this vector and another.
@@ -150,7 +152,7 @@ open class Vector2 constructor(
      * @param v another vector
      * @return the 2D cross product
      */
-    fun cross(v: Vector2): Float = this.x * v.y - this.y * v.x
+    fun cross(v: Vec2): Float = this.x * v.y - this.y * v.x
 
     /**
      * Projects this vector onto another vector, returning the components of this vector in the direction of another.
@@ -158,7 +160,7 @@ open class Vector2 constructor(
      * @param vOnto another vector
      * @return the projected vector
      */
-    fun project(vOnto: Vector2) = vOnto * (this.dot(vOnto) / vOnto.lenSquared())
+    fun project(vOnto: Vec2) = vOnto * (this.dot(vOnto) / vOnto.lenSquared())
 
     // Other Operations
 
@@ -169,7 +171,7 @@ open class Vector2 constructor(
      * @param max the maximum value for each of the components
      * @return the clamped vector
      */
-    fun clampInbounds(min: Vector2, max: Vector2): Vector2 = Vector2(clamp(x, min.x, max.x), clamp(y, min.y, max.y))
+    fun clampInbounds(min: Vec2, max: Vec2): Vec2 = Vec2(clamp(x, min.x, max.x), clamp(y, min.y, max.y))
 
     /**
      * Clamps the length of this vector if it exceeds the provided value, while keeping the same direction. Useful for
@@ -178,7 +180,7 @@ open class Vector2 constructor(
      * @param length any number
      * @return the clamped vector
      */
-    fun clampLength(length: Float): Vector2 {
+    fun clampLength(length: Float): Vec2 {
         return if (lenSquared() > length * length)
             this * (length / len())
         else +this
@@ -186,9 +188,9 @@ open class Vector2 constructor(
 
     // Pythagorean Theorem Methods
 
-    fun distance(v: Vector2): Float = sqrt(distanceSquared(v))
+    fun distance(v: Vec2): Float = sqrt(distanceSquared(v))
 
-    fun distanceSquared(v: Vector2): Float = (x - v.x) * (x - v.x) + (y - v.y) * (y - v.y)
+    fun distanceSquared(v: Vec2): Float = (x - v.x) * (x - v.x) + (y - v.y) * (y - v.y)
 
     /**
      * Calculates the length of this vector.
@@ -210,9 +212,9 @@ open class Vector2 constructor(
      *
      * @return the unit vector
      */
-    fun unitVector(): Vector2 {
+    fun unitVector(): Vec2 {
         return if (equals(lenSquared(), 0F) || equals(lenSquared(), 1F))
-            Vector2(this)
+            Vec2(this)
         else this / len()
     }
 
@@ -231,7 +233,7 @@ open class Vector2 constructor(
      * @param v another 2D vector
      * @return the angle between the two vectors
      */
-    fun angle(v: Vector2): Float = Math.toDegrees(acos((dot(v) / len() / v.len()).toDouble())).toFloat()
+    fun angle(v: Vec2): Float = Math.toDegrees(acos((dot(v) / len() / v.len()).toDouble())).toFloat()
 
     /**
      * Rotates this vector by an angle around some origin.
@@ -240,7 +242,7 @@ open class Vector2 constructor(
      * @param origin  the point to rotate around
      * @return the rotated vector
      */
-    fun rotate(degrees: Float, origin: Vector2): Vector2 {
+    fun rotate(degrees: Float, origin: Vec2): Vec2 {
         if (degrees % 360 == 0F)
             return +this
 
@@ -255,13 +257,13 @@ open class Vector2 constructor(
         val newY = x * sinTheta + y * cosTheta
 
         // Revert the vector space to the old point
-        return Vector2(newX, newY) + origin
+        return Vec2(newX, newY) + origin
     }
 
     // Overrides
 
     override fun equals(other: Any?): Boolean {
-        return if (other is Vector2)
+        return if (other is Vec2)
             equals(x, other.x) && equals(y, other.y)
         else super.equals(other)
     }
