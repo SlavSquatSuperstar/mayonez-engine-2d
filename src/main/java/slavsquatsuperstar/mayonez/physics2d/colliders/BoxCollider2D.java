@@ -1,58 +1,69 @@
 package slavsquatsuperstar.mayonez.physics2d.colliders;
 
-import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.math.MathUtils;
+import slavsquatsuperstar.math.Vec2;
 
 /**
- * An oriented bounding box, a rectangle that can be rotated. The sides will align with the object's rotation angle.
+ * An oriented bounding box (OBB), a rectangle that can be rotated. The sides will align with the object's rotation
+ * angle.
  *
  * @author SlavSquatSuperstar
  */
-public class BoxCollider2D extends AbstractBoxCollider2D {
+public class BoxCollider2D extends PolygonCollider2D {
 
-    public BoxCollider2D(Vec2 size) {
-        super(size);
+    private final Vec2 size;
+
+    private BoxCollider2D(Vec2 min, Vec2 max) {
+        super(new Vec2(min), new Vec2(min.x, max.y), new Vec2(max), new Vec2(max.x, min.y));
+        this.size = max.sub(min);
     }
 
-    // Properties
+    public BoxCollider2D(Vec2 size) {
+        this(size.div(-2), size.div(2));
+    }
 
-    public Vec2[] vertices() {
-        Vec2 min = min();
-        Vec2 max = max();
-        Vec2[] vertices = new Vec2[]{
-                new Vec2(min), new Vec2(min.x, max.y), new Vec2(max), new Vec2(max.x, min.y)
-        };
+    // Shape Properties
 
-        if (!MathUtils.equals(getRotation(), 0)) {
-            for (int i = 0; i < vertices.length; i++)
-                // Rotate a point about the center by a rotation
-                vertices[i] = vertices[i].rotate(getRotation(), center());
-        }
-        return vertices;
+    /**
+     * Returns the unscaled size of this box.
+     *
+     * @return the size in local space
+     */
+    // TODO parent send scale event to modify size directly
+    protected Vec2 localSize() {
+        return size;
+    }
+
+    /**
+     * Calculates the dimensions of this box factoring in the object's scale.
+     *
+     * @return the size in the world
+     */
+    public Vec2 size() {
+        return size.mul(transform.scale);
+    }
+
+    public float width() {
+        return size().x;
+    }
+
+    public float height() {
+        return size().y;
+    }
+
+    // unrotated top left in world coords
+    public Vec2 min() {
+        return center().sub(size().div(2));
+    }
+
+    // unrotated bottom right in world coords
+    public Vec2 max() {
+        return center().add(size().div(2));
     }
 
     @Override
-    public AlignedBoxCollider2D getMinBounds() {
-        Vec2 aabbSize;
-
-        if (MathUtils.equals(getRotation() % 360f, 0)) {
-            aabbSize = localSize(); // If not rotated return a copy
-        } else {
-            Vec2[] vertices = vertices();
-            float[] verticesX = new float[vertices.length];
-            float[] verticesY = new float[vertices.length];
-
-            for (int i = 0; i < vertices.length; i++) {
-                verticesX[i] = vertices[i].x;
-                verticesY[i] = vertices[i].y;
-            }
-
-            Vec2 newMin = new Vec2(MathUtils.min(verticesX), MathUtils.min(verticesY));
-            Vec2 newMax = new Vec2(MathUtils.max(verticesX), MathUtils.max(verticesY));
-            aabbSize = newMax.sub(newMin).div(transform.scale);
-        }
-
-        return new AlignedBoxCollider2D(aabbSize).setTransform(transform).setRigidBody(rb);
+    public Vec2[] getNormals() {
+        return new Vec2[] {new Vec2(1, 0).rotate(-getRotation()), new Vec2(0, 1).rotate(-getRotation())};
     }
 
     // Collision Methods
@@ -168,7 +179,4 @@ public class BoxCollider2D extends AbstractBoxCollider2D {
 //        return hit;
     }
 
-    public float getRotation() {
-        return transform.rotation;
-    }
 }

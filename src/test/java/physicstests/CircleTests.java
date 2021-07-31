@@ -23,9 +23,7 @@ public class CircleTests {
     // Create circle centered at (0, 0) with radius 2
     @BeforeAll
     public static void getCircle() {
-        c = new CircleCollider(2);
-        c.setTransform(new Transform(new Vec2(0, 0)));
-        c.setRigidBody(new Rigidbody2D(0f));
+        c = new CircleCollider(2).setTransform(new Transform());
     }
 
     @Test

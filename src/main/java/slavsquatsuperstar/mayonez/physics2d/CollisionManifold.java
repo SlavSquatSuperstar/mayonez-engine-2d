@@ -38,6 +38,10 @@ public class CollisionManifold {
         return colliding;
     }
 
+    public int countContactPoints() {
+        return contactPoints.size();
+    }
+
     public List<Vec2> getContactPoints() {
         return contactPoints;
     }

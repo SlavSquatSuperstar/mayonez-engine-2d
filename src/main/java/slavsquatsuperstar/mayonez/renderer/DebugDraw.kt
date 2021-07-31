@@ -101,7 +101,7 @@ object DebugDraw {
     }
 
     private fun drawCircle(circle: CircleCollider, color: Color) {
-        val minPx = toScreen(circle.min())
+        val minPx = toScreen(circle.center().sub(Vec2(circle.radius(), circle.radius())))
         val diameterPx = toScreen(circle.radius() * 2)
         shapes.add(Renderable { g2: Graphics2D ->
             g2.color = color
@@ -119,7 +119,7 @@ object DebugDraw {
 
     private fun drawBox(box: BoxCollider2D, color: Color) {
         val obb = Polygon()
-        for (point in box.vertices()) obb.addPoint(toScreen(point.x).roundToInt(), toScreen(point.y).roundToInt())
+        for (point in box.vertices) obb.addPoint(toScreen(point.x).roundToInt(), toScreen(point.y).roundToInt())
         shapes.add(Renderable { g2: Graphics2D ->
             g2.color = color
             g2.drawPolygon(obb)
@@ -145,7 +145,7 @@ object DebugDraw {
     }
 
     private fun fillCircle(circle: CircleCollider, color: Color) {
-        val minPx = toScreen(circle.min())
+        val minPx = toScreen(circle.center().sub(Vec2(circle.radius(), circle.radius())))
         val diameterPx = toScreen(circle.radius() * 2)
         shapes.add(Renderable { g2: Graphics2D ->
             g2.color = color
@@ -163,7 +163,7 @@ object DebugDraw {
 
     private fun fillBox(box: BoxCollider2D, color: Color) {
         val obb = Polygon()
-        for (point in box.vertices()) obb.addPoint(toScreen(point.x).roundToInt(), toScreen(point.y).roundToInt())
+        for (point in box.vertices) obb.addPoint(toScreen(point.x).roundToInt(), toScreen(point.y).roundToInt())
         shapes.add(Renderable { g2: Graphics2D ->
             g2.color = color
             g2.fillPolygon(obb)

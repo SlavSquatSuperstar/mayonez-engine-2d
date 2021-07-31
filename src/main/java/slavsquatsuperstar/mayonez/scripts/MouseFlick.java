@@ -1,7 +1,7 @@
 package slavsquatsuperstar.mayonez.scripts;
 
-import slavsquatsuperstar.mayonez.MouseInput;
 import slavsquatsuperstar.math.Vec2;
+import slavsquatsuperstar.mayonez.MouseInput;
 import slavsquatsuperstar.mayonez.physics2d.colliders.Collider2D;
 
 /**
@@ -28,10 +28,14 @@ public class MouseFlick extends MouseScript {
 
     // Overrides
 
-
     @Override
     public void onMouseMove() {
         dragDisplacement = dragDisplacement.add(MouseInput.getDisplacement());
+    }
+
+    @Override
+    public void onMouseDown() {
+        rb.addVelocity(rb.velocity().mul(-1)); // Stop the object
     }
 
     @Override

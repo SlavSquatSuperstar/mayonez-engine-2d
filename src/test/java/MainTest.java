@@ -1,17 +1,15 @@
-import slavsquatsuperstar.mayonez.Logger;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainTest {
 
     public static void main(String[] args) throws Exception {
-        EventListener myListener1 = event -> Logger.log("Listener 1: %s", event);
-        EventListener myListener2 = event -> Logger.log("Listener 2 reports: %s", event);
-        EventGenerator myGenerator = new EventGenerator();
-        myGenerator.addListener(myListener1);
-        myGenerator.addListener(myListener2);
-        myGenerator.createEvent(new Event("Clankers inbound!"));
+//        EventListener myListener1 = event -> Logger.log("Listener 1: %s", event);
+//        EventListener myListener2 = event -> Logger.log("Listener 2 reports: %s", event);
+//        EventGenerator myGenerator = new EventGenerator();
+//        myGenerator.addListener(myListener1);
+//        myGenerator.addListener(myListener2);
+//        myGenerator.createEvent(new Event("Clankers inbound!"));
     }
 
     interface EventListener {

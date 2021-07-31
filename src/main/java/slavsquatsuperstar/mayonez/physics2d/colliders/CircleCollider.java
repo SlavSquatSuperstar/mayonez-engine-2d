@@ -31,17 +31,6 @@ public class CircleCollider extends Collider2D {
         return radius * MathUtils.max(transform.scale.x, transform.scale.y);
     }
 
-    public Vec2 min() {
-        return new Vec2(center().x - radius(), center().y - radius());
-    }
-
-    public Vec2 max() {
-        return new Vec2(center().x + radius(), center().y + radius());
-    }
-
-    public float area() {
-        return MathUtils.PI * radius() * radius();
-    }
 
     @Override
     public AlignedBoxCollider2D getMinBounds() {
@@ -88,7 +77,6 @@ public class CircleCollider extends Collider2D {
         float radiusSquared = radius() * radius();
         float lengthSquared = originToCenter.lenSquared();
 
-        // TODO create nearestToPoint() method
         // Project originToCenter onto the ray
         float projLength = originToCenter.dot(ray.direction);
         float distNearestSquared = lengthSquared - projLength * projLength; // Closest distance from center to extended ray
@@ -99,7 +87,7 @@ public class CircleCollider extends Collider2D {
         // unit lengths along projected vector
         float distToCircle = contains(ray.origin) ? projLength + f : projLength - f;
 
-        // is limit too far?
+        // Is limit too far?
         if (limit > 0 && distToCircle > limit)
             return false;
 

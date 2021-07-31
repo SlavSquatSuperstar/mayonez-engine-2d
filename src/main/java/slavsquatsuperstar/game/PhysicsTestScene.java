@@ -54,7 +54,6 @@ public class PhysicsTestScene extends Scene {
         addObject(new GameObject("Player Shape", new Vec2(30, 10)) {
             @Override
             protected void init() {
-                transform.resize(new Vec2(2, 2));
                 float radius = 4f;
                 float size = 8f;
 //                addComponent(new CircleCollider(radius));
@@ -74,7 +73,7 @@ public class PhysicsTestScene extends Scene {
         addObject(createAABB(12, 8, new Vec2(50, 20)));
         addObject(createAABB(5, 10, new Vec2(70, 20)));
 
-        addObject(createOBB(6, 8, new Vec2(70, 40), 45));
+        addObject(createOBB(8, 8, new Vec2(70, 40), 45));
         addObject(createOBB(5, 5, new Vec2(90, 40), 0));
 
 //        // Randomly generate Circles and AABBs
@@ -123,7 +122,6 @@ public class PhysicsTestScene extends Scene {
                 addComponent(new KeepInScene(getScene(), KeepInScene.Mode.BOUNCE));
                 addComponent(new DragAndDrop("left mouse", false));
                 addComponent(new MouseFlick("right mouse", 1, false));
-                transform.resize(new Vec2(2, 2));
             }
         };
     }

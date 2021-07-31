@@ -23,9 +23,7 @@ public class AABBTests {
     // Create box centered at (0, 0) with dimensions 4x4
     @BeforeAll
     public static void getAABB() {
-        aabb = new AlignedBoxCollider2D(new Vec2(4, 4));
-        aabb.setTransform(new Transform());
-        aabb.setRigidBody(new Rigidbody2D(0f));
+        aabb = new AlignedBoxCollider2D(new Vec2(4, 4)).setTransform(new Transform());
     }
 
     @Test
@@ -35,7 +33,7 @@ public class AABBTests {
 
     @Test
     public void vertexPointIsInOBB() {
-        for (Vec2 v : aabb.vertices())
+        for (Vec2 v : aabb.getVertices())
             assertTrue(aabb.contains(v));
     }
 

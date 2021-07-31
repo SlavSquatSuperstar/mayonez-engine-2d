@@ -7,24 +7,34 @@ import slavsquatsuperstar.math.MathUtils;
 // TODO scale with transform
 
 /**
- * An axis-aligned bounding box, a rectangle that is is never rotated. The sides will always align with the x and y
+ * An axis-aligned bounding box (AABB), a rectangle that is never rotated. The sides will always align with the x and y
  * axes.
  *
  * @author SlavSquatSuperstar
  */
-public class AlignedBoxCollider2D extends AbstractBoxCollider2D {
+public class AlignedBoxCollider2D extends BoxCollider2D {
 
     public AlignedBoxCollider2D(Vec2 size) {
         super(size);
     }
 
-    // Properties
+    // Shape Properties
 
     @Override
-    public Vec2[] vertices() {
+    public float getRotation() {
+        return 0f;
+    }
+
+    @Override
+    public Vec2[] getVertices() {
         return new Vec2[]{
                 new Vec2(min()), new Vec2(min().x, max().y), new Vec2(max()), new Vec2(max().x, min().y)
         };
+    }
+
+    @Override
+    public Vec2[] getNormals() {
+        return new Vec2[] {new Vec2(1, 0), new Vec2(0, 1)};
     }
 
     @Override
@@ -60,8 +70,8 @@ public class AlignedBoxCollider2D extends AbstractBoxCollider2D {
         // rotate around box center, or origin?
         Vec2[] axes = {
                 new Vec2(0, 1), new Vec2(1, 0),
-                new Vec2(0, 1).rotate(box.getRotation(), new Vec2()),
-                new Vec2(1, 0).rotate(box.getRotation(), new Vec2())
+                new Vec2(0, 1).rotate(box.getRotation()),
+                new Vec2(1, 0).rotate(box.getRotation())
         };
 
         // top right - min, bottom left - min

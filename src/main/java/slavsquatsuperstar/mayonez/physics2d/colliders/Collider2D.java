@@ -34,6 +34,7 @@ public abstract class Collider2D extends Component {
      * What percentage of energy is conserved after a collision (0-1).
      */
     private float bounce = 0.25f;
+
     /**
      * Whether this collider is non-physical and should not react to collisions.
      */
@@ -46,7 +47,6 @@ public abstract class Collider2D extends Component {
         rb = parent.getComponent(Rigidbody2D.class);
         if (rb == null) // TODO what to do if object is static
             Logger.warn("%s needs a Rigidbody to function properly!", this);
-        // TODO disable component?
     }
 
     // Shape Properties

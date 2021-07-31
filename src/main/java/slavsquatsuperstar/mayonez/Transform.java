@@ -32,31 +32,58 @@ public class Transform { // TODO extend component?
      * Translates the parent object along the x and y axes.
      *
      * @param displacement a vector
+     * @return this transform
      */
-    public void move(Vec2 displacement) {
+    public Transform move(Vec2 displacement) {
         position = position.add(displacement);
+        return this;
     }
 
     /**
      * Rotates the parent object around its center.
      *
      * @param degrees the angle
+     * @return this transform
      */
-    public void rotate(float degrees) {
+    public Transform rotate(float degrees) {
         rotation += degrees;
+        return this;
     }
 
     /**
-     * Stretches the parent object and all its components by the given x and y axes
+     * Stretches the parent object and all its components by the given factors along the x and y axes
+     *
      * @param dilation a vector
+     * @return this transform
      */
-    public void resize(Vec2 dilation) {
+    public Transform resize(Vec2 dilation) {
         scale = scale.mul(dilation);
+        return this;
+    }
+
+    /**
+     * Transforms a point from world space to the object's local space.
+     *
+     * @param world a 2D point in the world
+     * @return the localized point
+     */
+    public Vec2 toLocal(Vec2 world) {
+        return world.sub(position).div(scale).rotate(-rotation);
+    }
+
+    /**
+     * Transforms a point from the object's local space to world space.
+     *
+     * @param local a localized 2D point
+     * @return the point in the world
+     */
+    public Vec2 toWorld(Vec2 local) {
+        return local.rotate(rotation).mul(scale).add(position);
     }
 
     @Override
     public String toString() {
-        return String.format("Position: %s, Scale: %s", position, scale);
+        return String.format("Position: %s, Rotation: %.2f, Scale: %s", position, rotation, scale);
     }
 
 }

@@ -2,13 +2,13 @@ package slavsquatsuperstar.mayonez.physics2d;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
+import slavsquatsuperstar.math.MathUtils;
+import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.Colors;
 import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Scene;
-import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.physics2d.colliders.Collider2D;
 import slavsquatsuperstar.mayonez.renderer.DebugDraw;
-import slavsquatsuperstar.math.MathUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +25,7 @@ import java.util.List;
 public class Physics2D {
 
     public final static float GRAVITY_CONSTANT = 9.8f;
+    private final static int IMPULSE_ITERATIONS = 6;
 
     // Collisions
     private final List<Rigidbody2D> rigidbodies;
@@ -36,7 +37,7 @@ public class Physics2D {
     private final List<ForceRegistration> forceRegistry;
     private final ForceGenerator gravityForce;
     private final ForceGenerator dragForce;
-    private Vec2 gravity; // acceleration to due gravity
+    private Vec2 gravity; // acceleration due to gravity
 
     public Physics2D() {
         rigidbodies = new ArrayList<>();
@@ -54,7 +55,13 @@ public class Physics2D {
         };
     }
 
-    // TODO seems to be some tunneling at high speeds, resulting in division by 0
+    // TODO seems to be some tunneling at high speeds
+
+    /**
+     * Updates all  objects in the physics simulation.
+     *
+     * @param dt seconds since the last frame
+     */
     public void physicsUpdate(float dt) {
         collidingPairs.clear();
         collisions.clear();
@@ -126,10 +133,8 @@ public class Physics2D {
     }
 
     private void resolveCollisions() {
-//        for (int k = 0; k < 6; k++) { // Iterative impulse resolution
         for (int i = 0; i < collisions.size(); i++) {
             CollisionManifold col = collisions.get(i);
-//            for (Vector2 contact : col.getContactPoints()) {
             Rigidbody2D r1 = collidingPairs.get(i).getLeft();
             Rigidbody2D r2 = collidingPairs.get(i).getRight();
 
@@ -147,11 +152,11 @@ public class Physics2D {
             r1.transform.move(col.getNormal().mul(-depth1));
             r2.transform.move(col.getNormal().mul(depth2));
 
-            // Resolve dynamic collisions and change velocities
-            applyImpulse(r1, r2, col);
-//            }
+            // Iterative impulse resolution
+            for (int k = 0; k < IMPULSE_ITERATIONS; k++)
+                // Resolve dynamic collisions and change velocities
+                applyImpulse(r1, r2, col);
         }
-//        }
     }
 
     // Collision Helper Methods
@@ -171,7 +176,7 @@ public class Physics2D {
 
         float elasticity = r1.getCollider().getBounce() * r2.getCollider().getBounce(); // Coefficient of restitution
         float collisionVel = -(1f + elasticity) * relativeVel.dot(normal);
-        float impulse = collisionVel / sumInvMass;
+        float impulse = collisionVel / sumInvMass / (float) collision.countContactPoints();
 
         if (!r1.hasInfiniteMass())
             r1.addImpulse(normal.mul(-impulse));

@@ -2,8 +2,8 @@ package physicstests;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import slavsquatsuperstar.mayonez.Transform;
 import slavsquatsuperstar.math.Vec2;
+import slavsquatsuperstar.mayonez.Transform;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
 import slavsquatsuperstar.mayonez.physics2d.colliders.AlignedBoxCollider2D;
 import slavsquatsuperstar.mayonez.physics2d.colliders.BoxCollider2D;
@@ -24,22 +24,18 @@ public class OBBTests {
     // Create box centered at (0, 0) with dimensions 4x4 with a rotation of 30 degrees
     @BeforeAll
     public static void getAABB() {
-        obb = new BoxCollider2D(new Vec2(4, 4));
-        Transform t = new Transform();
-        t.rotate(30);
-        obb.setTransform(t);
-        obb.setRigidBody(new Rigidbody2D(0f));
+        obb = new BoxCollider2D(new Vec2(4, 4)).setTransform(new Transform().rotate(30));
     }
 
     @Test
     public void vertexPointIsInOBB() {
-        for (Vec2 v : obb.vertices())
+        for (Vec2 v : obb.getVertices())
             assertTrue(obb.contains(v));
     }
 
     @Test
     public void edgeLineIsInOBB() {
-        Vec2[] vertices = obb.vertices();
+        Vec2[] vertices = obb.getVertices();
         for (int i = 0; i < vertices.length; i++)
             assertTrue(obb.intersects(new Edge2D(vertices[i], vertices[(i + 1) / 4])));
     }

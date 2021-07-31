@@ -196,7 +196,7 @@ public class Game implements Runnable {
     /**
      * Refreshes all objects in the current scene.
      *
-     * @param dt The time elapsed since the last frame
+     * @param dt seconds since the last frame
      */
     public void update(float dt) throws Exception { // TODO pass dt or use Game.timestep?
         // TODO Poll input events

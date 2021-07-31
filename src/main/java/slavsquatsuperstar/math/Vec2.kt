@@ -6,7 +6,7 @@ import slavsquatsuperstar.math.MathUtils.equals
 import kotlin.math.*
 
 /**
- * A Vector2 represents an object in 2D space that has magnitude and direction (arrow), the location of something in the
+ * A Vec2 represents an object in 2D space that has magnitude and direction (arrow), the location of something in the
  * xy-plane (point), or even an ordered pair of two numbers (list).
  **
  * @param x the new x-component
@@ -238,11 +238,12 @@ open class Vec2 constructor(
     /**
      * Rotates this vector by an angle around some origin.
      *
-     * @param degrees the angle, in degrees
+     * @param degrees the angle, in degrees counterclockwise
      * @param origin  the point to rotate around
      * @return the rotated vector
      */
-    fun rotate(degrees: Float, origin: Vec2): Vec2 {
+    @JvmOverloads
+    fun rotate(degrees: Float, origin: Vec2 = Vec2()): Vec2 {
         if (degrees % 360 == 0F)
             return +this
 
@@ -262,6 +263,8 @@ open class Vec2 constructor(
 
     // Overrides
 
+    override fun hashCode(): Int = 31 * x.hashCode() + y.hashCode()
+
     override fun equals(other: Any?): Boolean {
         return if (other is Vec2)
             equals(x, other.x) && equals(y, other.y)
@@ -269,8 +272,6 @@ open class Vec2 constructor(
     }
 
     override fun toString(): String = String.format("(%.4f, %.4f)", x, y)
-
-    override fun hashCode(): Int = 31 * x.hashCode() + y.hashCode()
 
 
 }
