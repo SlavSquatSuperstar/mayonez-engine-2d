@@ -68,11 +68,10 @@ object KeyInput : KeyAdapter() {
         private val negKey: String = negKey.name
 
         /**
-         * @return 1 if the positive key is pressed.<br></br>
-         * -1 if the negative key is pressed.<br></br>
-         * 0 if the both or neither key is pressed.<br></br>
+         * @return The value of this axis. 1 if the positive key is pressed. -1 if the negative key is pressed.
+         * 0 if the both or neither key is pressed.
          */
-        fun value(): Int { // TODO keyboard acceleration?
+        internal fun value(): Int {
             // "vector "method to make sure keys don't override each other
             val negComp = if (keyDown(negKey)) -1 else 0
             val posComp = if (keyDown(posKey)) 1 else 0
@@ -93,7 +92,9 @@ object KeyInput : KeyAdapter() {
         // TODO read from file to assign keybinds (deserialize)
         UP(KeyEvent.VK_W, KeyEvent.VK_UP), DOWN(KeyEvent.VK_S, KeyEvent.VK_DOWN),
         LEFT(KeyEvent.VK_A, KeyEvent.VK_LEFT), RIGHT(KeyEvent.VK_D, KeyEvent.VK_RIGHT),
-        SPACE(KeyEvent.VK_SPACE), SHIFT(KeyEvent.VK_SHIFT), EXIT(KeyEvent.VK_ESCAPE);
+        Q(KeyEvent.VK_Q), E(KeyEvent.VK_E),
+        SPACE(KeyEvent.VK_SPACE), SHIFT(KeyEvent.VK_SHIFT),
+        EXIT(KeyEvent.VK_ESCAPE);
 
         override fun toString(): String {
             val str = StringBuilder("$name (")

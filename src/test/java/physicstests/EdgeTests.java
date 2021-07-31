@@ -16,42 +16,36 @@ public class EdgeTests {
     // Line vs Point
 
     @Test
-    public void lineContainsEndpoints() {
+    public void endpointIsInLine() {
         Edge2D edge = new Edge2D(new Vec2(0, 0), new Vec2(10, 5));
-        Vec2 start = new Vec2(0, 0);
-        assertTrue(edge.contains(start));
-        Vec2 end = new Vec2(10, 5);
-        assertTrue(edge.contains(end));
+        assertTrue(edge.contains(edge.end));
+        assertTrue(edge.contains(edge.start));
     }
 
     @Test
-    public void lineContainsPoint() {
+    public void pointIsInLine() {
         Edge2D edge = new Edge2D(new Vec2(0, 0), new Vec2(10, 5));
-        Vec2 point = new Vec2(5, 2.5f);
-        assertTrue(edge.contains(point));
+        assertTrue(edge.contains(new Vec2(5, 2.5f)));
     }
 
     @Test
-    public void verticalLineContainsEndpoints() {
+    public void endpointIsInVerticalLine() {
         Edge2D edge = new Edge2D(new Vec2(0, 0), new Vec2(0, 10));
-        Vec2 start = new Vec2(0, 0);
-        assertTrue(edge.contains(start));
-        Vec2 end = new Vec2(0, 10);
-        assertTrue(edge.contains(end));
+        assertTrue(edge.contains(edge.start));
+        assertTrue(edge.contains(edge.end));
     }
 
     @Test
-    public void verticalLineContainsPoint() {
+    public void pointISInVerticalLine() {
         Edge2D edge = new Edge2D(new Vec2(0, 0), new Vec2(0, 10));
-        Vec2 point = new Vec2(0, 5);
-        assertTrue(edge.contains(point));
+        assertTrue(edge.contains(new Vec2(0, 5)));
     }
 
     @Test
-    public void lineIntersectsOnePoint() {
-        Edge2D e1 = new Edge2D(new Vec2(-1, -1), new Vec2(1, 1));
-        Edge2D e2 = new Edge2D(new Vec2(1, -1), new Vec2(-1, 1));
-        assertTrue(e1.intersects(e2));
+    public void pointNotInLine() {
+        Edge2D edge = new Edge2D(new Vec2(-2, -2), new Vec2(2, 2));
+        assertFalse(edge.contains(new Vec2(-1, 1)));
+        assertFalse(edge.contains(new Vec2(1, -1)));
     }
 
     @Test
@@ -73,32 +67,45 @@ public class EdgeTests {
     // Line vs Line
 
     @Test
-    public void lineIntersectsOnePointTShape() {
-        Edge2D e1 = new Edge2D(new Vec2(-1, 0), new Vec2(1, -0));
-        Edge2D e2 = new Edge2D(new Vec2(0, -1), new Vec2(0, 0));
+    public void linesIntersectOnce() {
+        Edge2D e1 = new Edge2D(new Vec2(-1, -1), new Vec2(1, 1));
+        Edge2D e2 = new Edge2D(new Vec2(1, -1), new Vec2(-1, 1));
         assertTrue(e1.intersects(e2));
     }
 
     @Test
-    public void sameLineIntersects() {
+    public void linesIntersectOnceTShape() {
+        Edge2D e1 = new Edge2D(new Vec2(-2, 0), new Vec2(2, 0));
+        Edge2D e2 = new Edge2D(new Vec2(0, 0), new Vec2(0, 2));
+        assertTrue(e1.intersects(e2));
+    }
+
+    @Test
+    public void sameLinesIntersect() {
         Edge2D e1 = new Edge2D(new Vec2(1, 1), new Vec2(3, 1));
         Edge2D e2 = new Edge2D(new Vec2(1, 1), new Vec2(3, 1));
         assertTrue(e1.intersects(e2));
     }
 
     @Test
-    public void overlappingLineIntersects() {
+    public void overlappingLinesIntersect() {
         Edge2D e1 = new Edge2D(new Vec2(1, 1), new Vec2(3, 3));
         Edge2D e2 = new Edge2D(new Vec2(2, 2), new Vec2(4, 4));
         assertTrue(e1.intersects(e2));
     }
 
     @Test
-    public void parallelLineNotIntersects() {
+    public void parallelLinesNoIntersection() {
         Edge2D e1 = new Edge2D(new Vec2(1, 1), new Vec2(3, 2));
         Edge2D e2 = new Edge2D(new Vec2(2, 2), new Vec2(4, 3));
         assertFalse(e1.intersects(e2));
     }
 
+    @Test
+    public void skewLinesNoIntersection() {
+        Edge2D e1 = new Edge2D(new Vec2(0, 0), new Vec2(2, 4));
+        Edge2D e2 = new Edge2D(new Vec2(1, 0), new Vec2(3, 1));
+        assertFalse(e1.intersects(e2));
+    }
 
 }

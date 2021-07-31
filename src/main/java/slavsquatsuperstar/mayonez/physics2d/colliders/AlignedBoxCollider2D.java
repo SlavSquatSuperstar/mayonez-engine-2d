@@ -14,11 +14,23 @@ import slavsquatsuperstar.math.MathUtils;
  */
 public class AlignedBoxCollider2D extends BoxCollider2D {
 
+    // Need to lock rotation somehow
+
     public AlignedBoxCollider2D(Vec2 size) {
         super(size);
     }
 
     // Shape Properties
+
+    // min in world space
+    public Vec2 min() {
+        return center().sub(size().div(2));
+    }
+
+    // max in world space
+    public Vec2 max() {
+        return center().add(size().div(2));
+    }
 
     @Override
     public float getRotation() {
@@ -39,7 +51,7 @@ public class AlignedBoxCollider2D extends BoxCollider2D {
 
     @Override
     public AlignedBoxCollider2D getMinBounds() {
-        return new AlignedBoxCollider2D(localSize()).setRigidBody(rb).setTransform(transform);
+        return new AlignedBoxCollider2D(localSize()).setTransform(transform).setRigidBody(rb);
     }
 
     // AABB vs Point
@@ -66,26 +78,9 @@ public class AlignedBoxCollider2D extends BoxCollider2D {
         return raycast(new Ray2D(edge), null, edge.toVector().len()) || raycast(new Ray2D(new Edge2D(edge.end, edge.start)), null, edge.toVector().len());
     }
 
-    boolean intersects(BoxCollider2D box) {
-        // rotate around box center, or origin?
-        Vec2[] axes = {
-                new Vec2(0, 1), new Vec2(1, 0),
-                new Vec2(0, 1).rotate(box.getRotation()),
-                new Vec2(1, 0).rotate(box.getRotation())
-        };
-
-        // top right - min, bottom left - min
-        for (Vec2 axis : axes)
-            if (!overlapOnAxis(box, axis))
-                return false;
-
-        return true;
-    }
-
     @Override
     public boolean raycast(Ray2D ray, RaycastResult result, float limit) {
         RaycastResult.reset(result);
-        limit = Math.abs(limit);
 
         // Parametric distance to x and y axes of box
         Vec2 tNear = min().sub(ray.origin).div(ray.direction);
@@ -120,14 +115,14 @@ public class AlignedBoxCollider2D extends BoxCollider2D {
             return false;
 
         // If ray starts inside shape, swap near and far
-        float distToBox = (tHitNear < 0f) ? tHitFar : tHitNear;
         if (tHitNear < 0) {
             float temp = tHitNear;
             tHitNear = tHitFar;
             tHitFar = temp;
         }
+        float distToBox = tHitNear;
 
-        // Is the contact point past the ray limit?
+        // If enabled, check if contact point is past the ray limit
         if (limit > 0 && distToBox > limit)
             return false;
 
@@ -156,11 +151,8 @@ public class AlignedBoxCollider2D extends BoxCollider2D {
 
         if (collider instanceof CircleCollider)
             return collider.detectCollision(this);
-        else if (collider instanceof AlignedBoxCollider2D)
-            return overlapOnAxis((AlignedBoxCollider2D) collider, new Vec2(0, 1)) &&
-                    overlapOnAxis((AlignedBoxCollider2D) collider, new Vec2(1, 0));
         else if (collider instanceof BoxCollider2D)
-            return intersects((BoxCollider2D) collider);
+            return super.detectCollision(collider);
 
         return false;
     }

@@ -19,7 +19,8 @@ public class KeepInScene extends Script {
 
     public float minX, minY, maxX, maxY;
     private Mode mode;
-    private AlignedBoxCollider2D objectCollider = null;
+    private Collider2D objectCollider = null;
+    private AlignedBoxCollider2D boundingBox = null;
     private Rigidbody2D rb = null;
 
     public KeepInScene(Scene scene, Mode mode) { // Use scene bounds
@@ -37,7 +38,7 @@ public class KeepInScene extends Script {
     @Override
     public void start() {
         try {
-            objectCollider = parent.getComponent(Collider2D.class).getMinBounds();
+            objectCollider = parent.getComponent(Collider2D.class);
             if (mode == Mode.BOUNCE || mode == Mode.STOP) {
                 rb = objectCollider.getRigidbody();
                 if (rb == null)
@@ -45,19 +46,22 @@ public class KeepInScene extends Script {
             }
         } catch (NullPointerException e) {
             Logger.warn("%s needs a collider to function!", this);
-            objectCollider = new AlignedBoxCollider2D(new Vec2());
-            objectCollider.setTransform(transform);
+            boundingBox = new AlignedBoxCollider2D(new Vec2());
+            boundingBox.setTransform(transform);
+            mode = Mode.STOP;
         }
     }
 
     @Override
     public void update(float dt) {
-        Vec2 boxMin = objectCollider.min();
-        Vec2 boxMax = objectCollider.max();
+        if (objectCollider != null)
+            boundingBox = objectCollider.getMinBounds();
+        Vec2 boxMin = boundingBox.min();
+        Vec2 boxMax = boundingBox.max();
 
         // Edge Checking for x
         // Skip checking if still in scene bounds
-        if (!MathUtils.inRange(boxMin.x, minX, maxX - objectCollider.width())) {
+        if (!MathUtils.inRange(boxMin.x, minX, maxX - boundingBox.width())) {
             // Detect if colliding with edge
             if (boxMin.x < minX)
                 onReachLeft();
@@ -72,7 +76,7 @@ public class KeepInScene extends Script {
         }
 
         // Edge Checking for y
-        if (!MathUtils.inRange(boxMin.y, minY, maxY - objectCollider.height())) {
+        if (!MathUtils.inRange(boxMin.y, minY, maxY - boundingBox.height())) {
             if (boxMin.y < minY)
                 onReachTop();
             else if (boxMax.y > maxY)
@@ -94,12 +98,12 @@ public class KeepInScene extends Script {
                     rb.velocity().x = 0;
                 break;
             case BOUNCE: // Reverse velocity if bouncing
-                rb.velocity().x *= -objectCollider.getBounce();
+                rb.velocity().x *= -boundingBox.getBounce();
                 break;
             default: // Stop if neither
                 return;
         }
-        parent.setX(minX + objectCollider.width() * 0.5f); // Align with edge of screen for both
+        parent.setX(minX + boundingBox.width() * 0.5f); // Align with edge of screen for both
     }
 
     public void onReachRight() {
@@ -109,12 +113,12 @@ public class KeepInScene extends Script {
                     rb.velocity().x = 0;
                 break;
             case BOUNCE:
-                rb.velocity().x *= -objectCollider.getBounce();
+                rb.velocity().x *= -boundingBox.getBounce();
                 break;
             default:
                 return;
         }
-        parent.setX(maxX - objectCollider.width() * 0.5f);
+        parent.setX(maxX - boundingBox.width() * 0.5f);
     }
 
     public void onReachTop() {
@@ -124,12 +128,12 @@ public class KeepInScene extends Script {
                     rb.velocity().y = 0;
                 break;
             case BOUNCE:
-                rb.velocity().y *= -objectCollider.getBounce();
+                rb.velocity().y *= -boundingBox.getBounce();
                 break;
             default:
                 return;
         }
-        parent.setY(minY + objectCollider.height() * 0.5f);
+        parent.setY(minY + boundingBox.height() * 0.5f);
 
     }
 
@@ -140,38 +144,38 @@ public class KeepInScene extends Script {
                     rb.velocity().y = 0;
                 break;
             case BOUNCE:
-                rb.velocity().y *= -objectCollider.getBounce();
+                rb.velocity().y *= -boundingBox.getBounce();
                 break;
             default:
                 return;
         }
-        parent.setY(maxY - objectCollider.height() * 0.5f);
+        parent.setY(maxY - boundingBox.height() * 0.5f);
     }
 
     public void onPassLeft() {
         if (mode == Mode.WRAP)
-            parent.setX(maxX + objectCollider.width() * 0.5f);
+            parent.setX(maxX + boundingBox.width() * 0.5f);
         else if (mode == Mode.DELETE)
             parent.destroy();
     }
 
     public void onPassRight() {
         if (mode == Mode.WRAP)
-            parent.setX(minX - objectCollider.width() * 0.5f);
+            parent.setX(minX - boundingBox.width() * 0.5f);
         else if (mode == Mode.DELETE)
             parent.destroy();
     }
 
     public void onPassTop() {
         if (mode == Mode.WRAP)
-            parent.setY(maxY + objectCollider.height() * 0.5f);
+            parent.setY(maxY + boundingBox.height() * 0.5f);
         else if (mode == Mode.DELETE)
             parent.destroy();
     }
 
     public void onPassBottom() {
         if (mode == Mode.WRAP)
-            parent.setY(minY - objectCollider.height() * 0.5f);
+            parent.setY(minY - boundingBox.height() * 0.5f);
         else if (mode == Mode.DELETE)
             parent.destroy();
     }

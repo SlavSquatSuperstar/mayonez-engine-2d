@@ -11,7 +11,8 @@ import slavsquatsuperstar.mayonez.physics2d.colliders.Collider2D;
  */
 public class MouseFlick extends MouseScript {
 
-    private Vec2 dragDisplacement = new Vec2();
+    private static MouseFlick activeInstance = null; // only want to move one object
+    private Vec2 lastMouse = new Vec2();
 
     public MouseFlick(String button, float speed, boolean inverted) {
         this.button = button;
@@ -29,23 +30,25 @@ public class MouseFlick extends MouseScript {
     // Overrides
 
     @Override
-    public void onMouseMove() {
-        dragDisplacement = dragDisplacement.add(MouseInput.getDisplacement());
-    }
-
-    @Override
     public void onMouseDown() {
-        rb.addVelocity(rb.velocity().mul(-1)); // Stop the object
+        if (activeInstance == null) {
+            activeInstance = this;
+            lastMouse = MouseInput.getPosition();
+            rb.velocity().set(0, 0); // Stop the object
+        }
     }
 
     @Override
     public void onMouseUp() {
-        rb.addVelocity(getRawInput().clampLength(speed));
-        dragDisplacement.set(0, 0);
+        if (activeInstance == this) {
+            rb.addVelocity(getRawInput().clampLength(speed));
+            activeInstance = null;
+        }
     }
 
     @Override
     protected Vec2 getRawInput() {
+        Vec2 dragDisplacement = MouseInput.getPosition().sub(lastMouse);
         return dragDisplacement.mul(inverted ? -1 : 1);
     }
 

@@ -214,7 +214,7 @@ open class Vec2 constructor(
      */
     fun unitVector(): Vec2 {
         return if (equals(lenSquared(), 0F) || equals(lenSquared(), 1F))
-            Vec2(this)
+            this // TODO return self or copy?
         else this / len()
     }
 

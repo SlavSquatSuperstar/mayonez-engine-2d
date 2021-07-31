@@ -1,5 +1,6 @@
 package slavsquatsuperstar.game;
 
+import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.*;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
@@ -9,7 +10,6 @@ import slavsquatsuperstar.mayonez.physics2d.colliders.CircleCollider;
 import slavsquatsuperstar.mayonez.physics2d.colliders.Collider2D;
 import slavsquatsuperstar.mayonez.renderer.DebugDraw;
 import slavsquatsuperstar.mayonez.scripts.*;
-import slavsquatsuperstar.math.MathUtils;
 
 import java.awt.*;
 
@@ -58,12 +58,22 @@ public class PhysicsTestScene extends Scene {
                 float size = 8f;
 //                addComponent(new CircleCollider(radius));
 //                addComponent(new Rigidbody2D(radius * radius * MathUtils.PI));
-                addComponent(new AlignedBoxCollider2D(new Vec2(size, size)));
+//                addComponent(new AlignedBoxCollider2D(new Vec2(size, size)));
+                addComponent(new BoxCollider2D(new Vec2(size, size)));
                 addComponent(new Rigidbody2D(size * size));
                 addComponent(new MouseFlick("right mouse", 1, false));
                 addComponent(new DragAndDrop("left mouse", false));
                 addComponent(new KeyMovement(MoveMode.IMPULSE, 1));
                 addComponent(new KeepInScene(getScene(), KeepInScene.Mode.BOUNCE));
+                addComponent(new Script() {
+                    @Override
+                    public void update(float dt) {
+                        if (KeyInput.keyDown("Q"))
+                            transform.rotate(-2);
+                        else if (KeyInput.keyDown("E"))
+                            transform.rotate(2);
+                    }
+                });
             }
         });
 
@@ -73,7 +83,7 @@ public class PhysicsTestScene extends Scene {
         addObject(createAABB(12, 8, new Vec2(50, 20)));
         addObject(createAABB(5, 10, new Vec2(70, 20)));
 
-        addObject(createOBB(8, 8, new Vec2(70, 40), 45));
+        addObject(createOBB(10, 6, new Vec2(70, 40), 45));
         addObject(createOBB(5, 5, new Vec2(90, 40), 0));
 
 //        // Randomly generate Circles and AABBs

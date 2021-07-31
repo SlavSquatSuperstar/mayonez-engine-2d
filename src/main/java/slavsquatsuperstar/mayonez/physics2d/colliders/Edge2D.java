@@ -1,16 +1,14 @@
 package slavsquatsuperstar.mayonez.physics2d.colliders;
 
-import slavsquatsuperstar.mayonez.Transform;
-import slavsquatsuperstar.math.Vec2;
-import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
 import slavsquatsuperstar.math.MathUtils;
+import slavsquatsuperstar.math.Vec2;
 
 /**
- * A line segment with start and end points.
+ * A 2D line segment with start and end points.
  *
  * @author SlavSquatSuperstar
  */
-public class Edge2D extends Collider2D {
+public class Edge2D {
 
     public final Vec2 start, end;
 
@@ -25,22 +23,23 @@ public class Edge2D extends Collider2D {
         return (end.y - start.y) / (end.x - start.x);
     }
 
+    public float getLength() {
+        return start.distance(end);
+    }
+
     public Vec2 toVector() {
         return end.sub(start);
     }
 
-    @Override
+    public Edge2D getReverse() {
+        return new Edge2D(end, start);
+    }
+
     public Vec2 center() {
         return new Vec2(start.x + end.x, start.y + end.y).mul(0.5f);
     }
 
-    @Override
-    public AlignedBoxCollider2D getMinBounds() {
-        AlignedBoxCollider2D aabb = new AlignedBoxCollider2D(toVector());
-        Vec2 center = start.add(end).mul(0.5f);
-        return aabb.setTransform(new Transform(center)).setRigidBody(new Rigidbody2D(0f));
-        // make rigidbody static
-    }
+    // Line vs Points
 
     /**
      * Calculates whether the given point is on this line segment.
@@ -48,6 +47,7 @@ public class Edge2D extends Collider2D {
      * @param point a point in 2D space
      * @return if the point is on the line
      */
+    // TODO project on point and find t, or is that too expensive?
     public boolean contains(Vec2 point) {
         // triangle side length or projection distance
         float distToStart = start.distance(point);
@@ -56,30 +56,22 @@ public class Edge2D extends Collider2D {
         return MathUtils.equals(distToStart + distToEnd, length);
     }
 
-    /**
-     * Calculates whether the given point is on this line if it were extended infinitely in both directions.
-     *
-     * @param point a point in 2D space
-     * @return if the point is colinear
-     */
-    public boolean isColinear(Vec2 point) {
-        float slope = getSlope();
-        if (Float.isInfinite(slope)) { // if vertical line, compare x-values
-            return MathUtils.equals(point.x, start.x);
-        } else if (MathUtils.equals(slope, 9)) { // if horizontal line, compare y values
-            return MathUtils.equals(point.y, start.y);
-        } else {
-            float yInt = end.y - (slope * end.x);
-            return MathUtils.equals(point.y, yInt + point.x * slope);
-        }
+    public Vec2 nearestPoint(Vec2 position) {
+        if (contains(position))
+            return position;
+//        Vector2 inBounds = position.clampInbounds(start, end);
+//        return start.add(inBounds.sub(start).project(toVector()));
+
+        float angle = toVector().angle();
+        Vec2 localStart = start.rotate(-angle, center());
+        Vec2 localEnd = end.rotate(-angle, center());
+        Vec2 localPoint = position.rotate(-angle, center());
+        Vec2 localNearest = new Vec2(MathUtils.clamp(localPoint.x, localStart.x, localEnd.x), localStart.y);
+        return localNearest.rotate(angle, center());
     }
 
-    @Override
-    public boolean detectCollision(Collider2D collider) {
-        return collider.intersects(this);
-    }
+    // Line vs Line Methods
 
-    @Override
     public boolean intersects(Edge2D edge) {
         // If parallel, must be overlapping (co-linear)
         if (MathUtils.equals(this.getSlope(), edge.getSlope())) {
@@ -101,28 +93,6 @@ public class Edge2D extends Collider2D {
             Vec2 contact = start1.add(line1.mul(len1));
             return true;
         }
-        return false;
-    }
-
-    @Override
-    public Vec2 nearestPoint(Vec2 position) {
-        if (contains(position))
-            return position;
-//        Vector2 inBounds = position.clampInbounds(start, end);
-//        return start.add(inBounds.sub(start).project(toVector()));
-
-        float angle = toVector().angle();
-        Vec2 localStart = start.rotate(-angle, center());
-        Vec2 localEnd = end.rotate(-angle, center());
-        Vec2 localPoint = position.rotate(-angle, center());
-        Vec2 localNearest = new Vec2(MathUtils.clamp(localPoint.x, localStart.x, localEnd.x), localStart.y);
-        return localNearest.rotate(angle, center());
-
-    }
-
-    // TODO implement me
-    @Override
-    public boolean raycast(Ray2D ray, RaycastResult result, float limit) {
         return false;
     }
 

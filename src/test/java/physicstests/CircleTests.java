@@ -26,11 +26,6 @@ public class CircleTests {
         c = new CircleCollider(2).setTransform(new Transform());
     }
 
-    @Test
-    public void circleIsAtObjectCenter() {
-        assertEquals(new Vec2(), c.center());
-    }
-
     // Circle vs Point
 
     @Test
@@ -62,7 +57,6 @@ public class CircleTests {
     public void nearestPointOutsideCircle() {
         assertEquals(new Vec2(2, 0), c.nearestPoint(new Vec2(4, 0)));
         assertEquals(new Vec2(-2, 0), c.nearestPoint(new Vec2(-4, 0)));
-
     }
 
     // Circle vs Line

@@ -96,7 +96,6 @@ object DebugDraw {
             is CircleCollider -> drawCircle(shape, color)
             is AlignedBoxCollider2D -> drawAABB(shape, color)
             is BoxCollider2D -> drawBox(shape, color)
-            is Edge2D -> drawLine(shape.start, shape.end, color)
         }
     }
 
@@ -140,7 +139,6 @@ object DebugDraw {
             is CircleCollider -> fillCircle(shape, color)
             is AlignedBoxCollider2D -> fillAABB(shape, color)
             is BoxCollider2D -> fillBox(shape, color)
-            is Edge2D -> drawLine(shape.start, shape.end, color)
         }
     }
 

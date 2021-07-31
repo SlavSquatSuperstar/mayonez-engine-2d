@@ -28,7 +28,7 @@ public abstract class PolygonCollider2D extends Collider2D {
         return vertices.length;
     }
 
-    public Vec2[] getVertices() { // in world
+    public Vec2[] getVertices() { // rotated in world
         Vec2[] results = new Vec2[countVertices()];
         for (int i = 0; i < results.length; i++)
             results[i] = transform.toWorld(vertices[i]);
@@ -41,15 +41,15 @@ public abstract class PolygonCollider2D extends Collider2D {
         float[] verticesX = new float[vertices.length];
         float[] verticesY = new float[vertices.length];
 
+        // Get the min and max coordinates of any point on the box
         for (int i = 0; i < vertices.length; i++) {
             verticesX[i] = vertices[i].x;
             verticesY[i] = vertices[i].y;
         }
-
         Vec2 newMin = new Vec2(MathUtils.min(verticesX), MathUtils.min(verticesY));
         Vec2 newMax = new Vec2(MathUtils.max(verticesX), MathUtils.max(verticesY));
-        Vec2 aabbSize = newMax.sub(newMin).div(transform.scale);
 
+        Vec2 aabbSize = newMax.sub(newMin).div(transform.scale);
         return new AlignedBoxCollider2D(aabbSize).setTransform(transform).setRigidBody(rb);
     }
 

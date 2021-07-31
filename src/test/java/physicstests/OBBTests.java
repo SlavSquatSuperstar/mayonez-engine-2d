@@ -5,12 +5,9 @@ import org.junit.jupiter.api.Test;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.Transform;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
-import slavsquatsuperstar.mayonez.physics2d.colliders.AlignedBoxCollider2D;
-import slavsquatsuperstar.mayonez.physics2d.colliders.BoxCollider2D;
-import slavsquatsuperstar.mayonez.physics2d.colliders.CircleCollider;
-import slavsquatsuperstar.mayonez.physics2d.colliders.Edge2D;
+import slavsquatsuperstar.mayonez.physics2d.colliders.*;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Unit tests for {@link BoxCollider2D} class.
@@ -21,10 +18,22 @@ public class OBBTests {
 
     static BoxCollider2D obb;
 
-    // Create box centered at (0, 0) with dimensions 4x4 with a rotation of 30 degrees
+    // Create box centered at (0, 0) with dimensions 4x4 with a rotation of 45 degrees counterclockwise
     @BeforeAll
-    public static void getAABB() {
-        obb = new BoxCollider2D(new Vec2(4, 4)).setTransform(new Transform().rotate(30));
+    public static void getOBB() {
+        obb = new BoxCollider2D(new Vec2(4, 4)).setTransform(new Transform().rotate(45));
+    }
+
+    // OBB vs Point
+
+    @Test
+    public void nearestPointInsideOBB() {
+        assertEquals(new Vec2(1, 1), obb.nearestPoint(new Vec2(1, 1)));
+    }
+
+    @Test
+    public void nearestPointOutsideOBB() {
+        assertEquals(new Vec2(2, 0).rotate(45), obb.nearestPoint(new Vec2(2, 2)));
     }
 
     @Test
@@ -33,12 +42,40 @@ public class OBBTests {
             assertTrue(obb.contains(v));
     }
 
+    // OBB vs Line
+
+    @Test
+    public void outsideRayHitsOBB() {
+        assertTrue(obb.raycast(new Ray2D(new Vec2(-10, 0), new Vec2(1, 0)), null, 0));
+        assertTrue(obb.raycast(new Ray2D(new Vec2(-5, 5), new Vec2(1, -1)), null, 0));
+    }
+
+    @Test
+    public void limitedOutsideRayHitsOBB() {
+        assertTrue(obb.raycast(new Ray2D(new Vec2(-4, 0), new Vec2(1, 0)), null, 5));
+        assertTrue(obb.raycast(new Ray2D(new Vec2(-4, 4), new Vec2(1, -1)), null, 5));
+    }
+
+    @Test
+    public void outsideRayMissesOBB() {
+        assertFalse(obb.raycast(new Ray2D(new Vec2(-10, 0), new Vec2(-1, 0)), null, 0));
+        assertFalse(obb.raycast(new Ray2D(new Vec2(-5, 5), new Vec2(-1, 1)), null, 0));
+    }
+
+    @Test
+    public void insideRayHitsOBB() {
+        assertTrue(obb.raycast(new Ray2D(new Vec2(-2, 0), new Vec2(1, 0)), null, 0));
+        assertTrue(obb.raycast(new Ray2D(new Vec2(-1, 1), new Vec2(1, -1)), null, 0));
+    }
+
     @Test
     public void edgeLineIsInOBB() {
         Vec2[] vertices = obb.getVertices();
         for (int i = 0; i < vertices.length; i++)
             assertTrue(obb.intersects(new Edge2D(vertices[i], vertices[(i + 1) / 4])));
     }
+
+    // OBB vs Shape
 
     @Test
     public void obbIntersectsCircle() {
