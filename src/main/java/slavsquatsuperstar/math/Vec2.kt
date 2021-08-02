@@ -1,9 +1,11 @@
 package slavsquatsuperstar.math
 
-import slavsquatsuperstar.mayonez.Logger
 import slavsquatsuperstar.math.MathUtils.clamp
 import slavsquatsuperstar.math.MathUtils.equals
-import kotlin.math.*
+import slavsquatsuperstar.mayonez.Logger
+import kotlin.math.acos
+import kotlin.math.atan2
+import kotlin.math.sqrt
 
 /**
  * A Vec2 represents an object in 2D space that has magnitude and direction (arrow), the location of something in the
@@ -16,7 +18,7 @@ import kotlin.math.*
  *
  * @author SlavSquatSuperstar
  */
-open class Vec2 constructor(
+class Vec2 constructor(
     /**
      * The vector's x component.
      */
@@ -144,7 +146,7 @@ open class Vec2 constructor(
      * @param v another vector
      * @return the dot product
      */
-    fun dot(v: Vec2): Float = this.x * v.x + this.y * v.y
+    fun dot(v: Vec2): Float = (this.x * v.x) + (this.y * v.y)
 
     /**
      * Returns the z-component of the cross product between this vector and another.
@@ -152,7 +154,7 @@ open class Vec2 constructor(
      * @param v another vector
      * @return the 2D cross product
      */
-    fun cross(v: Vec2): Float = this.x * v.y - this.y * v.x
+    fun cross(v: Vec2): Float = (this.x * v.y) - (this.y * v.x)
 
     /**
      * Projects this vector onto another vector, returning the components of this vector in the direction of another.
@@ -226,6 +228,7 @@ open class Vec2 constructor(
      * @return this vector's angle in the x-y plane
      */
     fun angle(): Float = Math.toDegrees(atan2(y.toDouble(), x.toDouble())).toFloat()
+    // fun angle(): Float = this.angle(Vec2(1F, 0F))
 
     /**
      * Calculates the angle in degrees between this vector and another.
@@ -233,7 +236,7 @@ open class Vec2 constructor(
      * @param v another 2D vector
      * @return the angle between the two vectors
      */
-    fun angle(v: Vec2): Float = Math.toDegrees(acos((dot(v) / len() / v.len()).toDouble())).toFloat()
+    fun angle(v: Vec2): Float = MathUtils.toDegrees(acos((this.dot(v) / this.len() / v.len())))
 
     /**
      * Rotates this vector by an angle around some origin.
@@ -252,8 +255,8 @@ open class Vec2 constructor(
         val y = y - origin.y
 
         // Rotate the point around the new origin
-        val cosTheta = cos(Math.toRadians(degrees.toDouble()).toFloat())
-        val sinTheta = sin(Math.toRadians(degrees.toDouble()).toFloat())
+        val cosTheta = MathUtils.cos(degrees)
+        val sinTheta = MathUtils.sin(degrees)
         val newX = x * cosTheta - y * sinTheta
         val newY = x * sinTheta + y * cosTheta
 

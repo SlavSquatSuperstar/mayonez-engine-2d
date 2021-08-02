@@ -43,7 +43,7 @@ public class VectorTests {
     // Cross Product
 
     @Test
-    public void parallelDotProductIsZero() {
+    public void parallelCrossProductIsZero() {
         Vec2 v1 = new Vec2(1, 0);
         Vec2 v2 = new Vec2(-1, 0);
         assertEquals(v1.cross(v2), 0f, MathUtils.EPSILON);
@@ -126,7 +126,7 @@ public class VectorTests {
         assertEquals(v1, v1.project(v2));
     }
 
-    // Rotation
+    // Rotation / Angles
 
     @Test
     public void vectorRotateSuccess() {
@@ -136,6 +136,12 @@ public class VectorTests {
         assertEquals(new Vec2(-6, -1), v.rotate(180, new Vec2()));
         assertEquals(new Vec2(1, -6), v.rotate(270, new Vec2()));
         assertEquals(v, v.rotate(360, new Vec2()));
+    }
+
+    @Test
+    public void vectorAngleSuccess() {
+        assertEquals(new Vec2(0, 2).angle(), 90, MathUtils.EPSILON);
+        assertEquals(new Vec2(-2, 0).rotate(-30).angle(), 150, MathUtils.EPSILON);
     }
 
 }

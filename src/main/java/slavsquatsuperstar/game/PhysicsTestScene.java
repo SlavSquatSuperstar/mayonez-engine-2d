@@ -4,10 +4,7 @@ import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.*;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
-import slavsquatsuperstar.mayonez.physics2d.colliders.AlignedBoxCollider2D;
-import slavsquatsuperstar.mayonez.physics2d.colliders.BoxCollider2D;
-import slavsquatsuperstar.mayonez.physics2d.colliders.CircleCollider;
-import slavsquatsuperstar.mayonez.physics2d.colliders.Collider2D;
+import slavsquatsuperstar.mayonez.physics2d.colliders.*;
 import slavsquatsuperstar.mayonez.renderer.DebugDraw;
 import slavsquatsuperstar.mayonez.scripts.*;
 
@@ -23,9 +20,43 @@ public class PhysicsTestScene extends Scene {
 
     @Override
     protected void init() {
+        GameObject player = new GameObject("Player Shape", new Vec2(30, 10)) {
+            @Override
+            protected void init() {
+                float radius = 4f;
+                float size = 8f;
+//                addComponent(new CircleCollider(radius));
+//                addComponent(new Rigidbody2D(radius * radius * MathUtils.PI));
+//                addComponent(new AlignedBoxCollider2D(new Vec2(size, size)));
+                addComponent(new BoxCollider2D(new Vec2(size, size)));
+                addComponent(new Rigidbody2D(size * size));
+                addComponent(new MouseFlick("right mouse", 1, false));
+                addComponent(new KeyMovement(MoveMode.IMPULSE, 1));
+                addComponent(new DragAndDrop("left mouse", false));
+                addComponent(new Script() {
+                    private float spin = 2;
+
+                    @Override
+                    public void update(float dt) {
+                        if (KeyInput.keyDown("Q"))
+                            transform.rotate(-spin);
+                        if (KeyInput.keyDown("E"))
+                            transform.rotate(spin);
+                    }
+                });
+                addComponent(new KeepInScene(getScene(), KeepInScene.Mode.BOUNCE));
+            }
+        };
+        addObject(player);
+
         addObject(new GameObject("Debug Draw", new Vec2()) {
+            RaycastResult rc = new RaycastResult();
+
             @Override
             public void render(Graphics2D g2) {
+                Edge2D ray = new Edge2D(player.transform.position, MouseInput.getPosition());
+                DebugDraw.drawLine(ray.start, ray.end, Colors.BLACK);
+
                 for (GameObject o : getScene().getObjects(null)) {
                     if (o.name.equals("Camera"))
                         continue;
@@ -46,34 +77,12 @@ public class PhysicsTestScene extends Scene {
 
                         // Draw Shape
                         DebugDraw.drawShape(col, color);
+
+                        // Draw Ray
+                        if (col.raycast(new Ray2D(ray), rc, ray.getLength()))
+                            DebugDraw.drawPoint(rc.getContact(), Colors.RED);
                     }
                 }
-            }
-        });
-
-        addObject(new GameObject("Player Shape", new Vec2(30, 10)) {
-            @Override
-            protected void init() {
-                float radius = 4f;
-                float size = 8f;
-//                addComponent(new CircleCollider(radius));
-//                addComponent(new Rigidbody2D(radius * radius * MathUtils.PI));
-//                addComponent(new AlignedBoxCollider2D(new Vec2(size, size)));
-                addComponent(new BoxCollider2D(new Vec2(size, size)));
-                addComponent(new Rigidbody2D(size * size));
-                addComponent(new MouseFlick("right mouse", 1, false));
-                addComponent(new DragAndDrop("left mouse", false));
-                addComponent(new KeyMovement(MoveMode.IMPULSE, 1));
-                addComponent(new KeepInScene(getScene(), KeepInScene.Mode.BOUNCE));
-                addComponent(new Script() {
-                    @Override
-                    public void update(float dt) {
-                        if (KeyInput.keyDown("Q"))
-                            transform.rotate(-2);
-                        else if (KeyInput.keyDown("E"))
-                            transform.rotate(2);
-                    }
-                });
             }
         });
 

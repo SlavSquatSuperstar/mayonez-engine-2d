@@ -39,25 +39,23 @@ public abstract class MouseScript extends MovementScript {
 
     @Override
     public void update(float dt) {
-        MouseInput mouse = MouseInput.INSTANCE;
-
         if (!mouseHeld) {
             // If the mouse is up and then pressed on this object
-            if (isMouseOnObject() && mouse.buttonDown(button)) {
+            if (isMouseOnObject() && MouseInput.buttonDown(button)) {
                 mouseHeld = true;
                 onMouseDown();
             }
         } else {
             // If the mouse is pressed and then released
-            if (!mouse.buttonDown(button)) {
+            if (!MouseInput.buttonDown(button)) {
                 mouseHeld = false;
                 onMouseUp();
             }
         }
 
         onMouseMove();
-        lastMx = mouse.getX() + mouse.getDx();
-        lastMy = mouse.getY() + mouse.getDy();
+        lastMx = MouseInput.getX() + MouseInput.getDx();
+        lastMy = MouseInput.getY() + MouseInput.getDy();
     }
 
     // Input Helper Methods

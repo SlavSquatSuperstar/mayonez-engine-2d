@@ -2,12 +2,11 @@ package physicstests;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.mayonez.Transform;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
-import slavsquatsuperstar.mayonez.physics2d.colliders.AlignedBoxCollider2D;
-import slavsquatsuperstar.mayonez.physics2d.colliders.CircleCollider;
-import slavsquatsuperstar.mayonez.physics2d.colliders.Edge2D;
+import slavsquatsuperstar.mayonez.physics2d.colliders.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -20,32 +19,35 @@ public class CircleTests {
 
     static CircleCollider c;
 
-    // Create circle centered at (0, 0) with radius 2
+    // Create a circle centered at (0, 0) with a radius of 1 and scale it by 2x
     @BeforeAll
     public static void getCircle() {
-        c = new CircleCollider(2).setTransform(new Transform());
+        c = new CircleCollider(1).setTransform(new Transform().resize(new Vec2(2, 2)));
     }
 
-    // Circle vs Point
+    // Contains Point
 
     @Test
-    public void centerPointIsInCircle() {
+    public void interiorPointIsInCircle() {
         assertTrue(c.contains(c.center()));
+        assertTrue(c.contains(new Vec2(1, 1)));
+        assertTrue(c.contains(new Vec2(-1.9f, 0)));
     }
 
     @Test
     public void edgePointIsInCircle() {
-        assertTrue(c.contains(new Vec2(-2, 0)));
-        assertTrue(c.contains(new Vec2(0, -2)));
         assertTrue(c.contains(new Vec2(0, 2)));
-        assertTrue(c.contains(new Vec2(2, 0)));
+        assertTrue(c.contains(new Vec2(2, 0).rotate(45)));
     }
 
     @Test
-    public void pointNotInCircle() {
+    public void exteriorPointNotInCircle() {
+        assertFalse(c.contains(new Vec2(0, 3)));
         assertFalse(c.contains(new Vec2(-2, -2)));
-        assertFalse(c.contains(new Vec2(2, 2)));
+        assertFalse(c.contains(new Vec2(2.1f, 0).rotate(45)));
     }
+
+    // Nearest Point
 
     @Test
     public void nearestPointInsideCircle() {
@@ -59,7 +61,41 @@ public class CircleTests {
         assertEquals(new Vec2(-2, 0), c.nearestPoint(new Vec2(-4, 0)));
     }
 
-    // Circle vs Line
+    // Raycast
+    @Test
+    public void outsideRayHitsCircle() {
+        RaycastResult rc = new RaycastResult();
+        assertTrue(c.raycast(new Ray2D(new Vec2(-5, 0), new Vec2(1, 0)), rc, 0));
+        assertEquals(3, rc.getDistance(), MathUtils.EPSILON);
+        assertEquals(new Vec2(-2, 0), rc.getContact());
+        assertTrue(c.raycast(new Ray2D(new Vec2(5, 5), new Vec2(-1, -1.5f)), null, 0));
+    }
+
+    @Test
+    public void outsideRayMissesCircle() {
+        assertFalse(c.raycast(new Ray2D(new Vec2(-5, 0), new Vec2(-1, 0)), null, 0));
+        assertFalse(c.raycast(new Ray2D(new Vec2(5, 5), new Vec2(1, 1.5f)), null, 0));
+    }
+
+    @Test
+    public void limitedOutsideRayHitsCircle() {
+        assertTrue(c.raycast(new Ray2D(new Vec2(-5, 0), new Vec2(1, 0)), null, 5));
+        assertTrue(c.raycast(new Ray2D(new Vec2(3, 3), new Vec2(-1, -1.5f)), null, 5));
+    }
+
+    @Test
+    public void limitedOutsideRayMissesCircle() {
+        assertFalse(c.raycast(new Ray2D(new Vec2(-15, 0), new Vec2(1, 0)), null, 5));
+        assertFalse(c.raycast(new Ray2D(new Vec2(10, 10), new Vec2(-1, -1.5f)), null, 5));
+    }
+
+    @Test
+    public void insideRayHitsCircle() {
+        assertTrue(c.raycast(new Ray2D(new Vec2(-1, -1), new Vec2(1, 1.5f)), null, 0));
+        assertTrue(c.raycast(new Ray2D(new Vec2(1, 0), new Vec2(0, 1)), null, 0));
+    }
+
+    // Line Intersection
 
     @Test
     public void tangentLineIsInCircle() {
@@ -78,7 +114,7 @@ public class CircleTests {
     }
 
     @Test
-    public void lineIsInCircle() {
+    public void perpendicularLineIsInCircle() {
         assertTrue(c.intersects(new Edge2D(new Vec2(1, 1), new Vec2(3, 3))));
         assertTrue(c.intersects(new Edge2D(new Vec2(0, 1), new Vec2(0, 4))));
     }

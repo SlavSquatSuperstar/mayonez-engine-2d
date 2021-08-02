@@ -71,6 +71,7 @@ object MouseInput : MouseAdapter() {
 
     // Mouse Button Getters
 
+    @JvmStatic
     fun buttonDown(buttonName: String?): Boolean {
         for (b in MouseMapping.values()) if (b.toString()
                 .equals(buttonName, ignoreCase = true)

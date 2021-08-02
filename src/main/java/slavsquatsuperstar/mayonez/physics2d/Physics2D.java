@@ -121,8 +121,8 @@ public class Physics2D {
                     // TODO still send collision events if triggers
                     // Add the collisions if neither is a trigger
                     if (!c1.isTrigger() && !c2.isTrigger()) {
-//                        DebugDraw.drawLine(c1.center(), c2.center(), Colors.RED);
-                        DebugDraw.drawVector(c1.center(), result.getNormal(), Colors.RED);
+                        DebugDraw.drawLine(c1.center(), c2.center(), Colors.RED);
+//                        DebugDraw.drawVector(c1.center(), result.getNormal(), Colors.RED);
                         collidingPairs.add(new ImmutablePair<>(r1, r2));
                         collisions.add(result);
 //                        Logger.log("%s intersects %s", c1, c2);

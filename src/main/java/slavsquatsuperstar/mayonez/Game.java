@@ -87,10 +87,6 @@ public class Game implements Runnable {
         return (null == game) ? game = new Game() : game;
     }
 
-    public static MouseInput mouse() {
-        return game.mouse;
-    }
-
     /**
      * @return the time in seconds since this game started.
      */

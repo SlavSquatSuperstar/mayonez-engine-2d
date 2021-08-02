@@ -54,12 +54,12 @@ public class BoxCollider2D extends PolygonCollider2D {
 
     // unrotated top left in local space
     protected Vec2 localMin() {
-        return center().sub(size.div(2));
+        return size.div(-2);
     }
 
     // unrotated bottom right in local space
     protected Vec2 localMax() {
-        return center().add(size.div(2));
+        return size.div(2);
     }
 
     @Override
@@ -106,8 +106,8 @@ public class BoxCollider2D extends PolygonCollider2D {
         Ray2D localRay = new Ray2D(transform.toLocal(ray.origin), transform.toLocal(ray.direction));
 
         // Parametric distance to x and y axes of box
-        Vec2 tNear = localMin().sub(ray.origin).div(ray.direction);
-        Vec2 tFar = localMax().sub(ray.origin).div(ray.direction);
+        Vec2 tNear = localMin().sub(localRay.origin).div(localRay.direction);
+        Vec2 tFar = localMax().sub(localRay.origin).div(localRay.direction);
 
         // If parallel and not intersecting
         if (Float.isNaN(tNear.x) || Float.isNaN(tNear.y) || Float.isNaN(tFar.x) || Float.isNaN(tFar.y))
@@ -146,22 +146,19 @@ public class BoxCollider2D extends PolygonCollider2D {
         // Is the contact point past the ray limit?
         if (limit > 0 && distToBox > limit)
             return false;
-        Vec2 contactNear = ray.getPoint(tHitNear);
-        Vec2 contactFar = ray.getPoint(tHitFar);
+        Vec2 contactNear = localRay.getPoint(tHitNear);
+        Vec2 contactFar = localRay.getPoint(tHitFar);
 
         Vec2 normal = new Vec2(); // Use (0, 0) for diagonal collision
         if (tNear.x > tNear.y) // Horizontal collision
-            normal = (ray.direction.x < 0) ? new Vec2(1, 0) : new Vec2(-1, 0);
+            normal = (localRay.direction.x < 0) ? new Vec2(1, 0) : new Vec2(-1, 0);
         else if (tNear.x < tNear.y) // Vertical collision
-            normal = (ray.direction.y < 0) ? new Vec2(0, 1) : new Vec2(0, -1);
+            normal = (localRay.direction.y < 0) ? new Vec2(0, 1) : new Vec2(0, -1);
 
         if (result != null)
-            result.set(ray.getPoint(distToBox), normal, tHitNear);
+            result.set(localRay.getPoint(distToBox), normal, tHitNear);
 
         return true;
-
-//        // Create AABB with same size
-//        return new AlignedBoxCollider2D(size).setRigidBody(rb).raycast(localRay, result, limit);
     }
 
     // Shape vs Shape

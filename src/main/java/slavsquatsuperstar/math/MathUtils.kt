@@ -1,11 +1,9 @@
 package slavsquatsuperstar.math
 
-import kotlin.math.abs
-import kotlin.math.pow
+import kotlin.math.*
 
-// TODO less precise sqrt, sin, cos
 /**
- * A library of common math operations designed for float using a precision of six decimal places.
+ * A library of common math operations designed for the float data type and precision.
  *
  * @author SlavSquatSuperstar
  */
@@ -21,15 +19,52 @@ object MathUtils {
      */
     const val PI = 3.1415927F
 
-    /**
-     * The conversion between radians and degrees in float precision.
-     */
-    private const val TO_DEGREES = 57.2957795F
+    // Comparison Methods
 
     /**
-     * The conversion between degrees and radians in float precision.
+     * Determines whether two floats are approximately equal within 6 decimal places.
+     *
+     * @param num1 a number
+     * @param num2 another number
+     * @return if they are equal
      */
-    private const val TO_RADIANS = 0.0174532F
+    @JvmStatic
+    fun equals(num1: Float, num2: Float): Boolean =
+        abs(num1 - num2) <= EPSILON * 1.0.coerceAtLeast(abs(num1).coerceAtLeast(abs(num2)).toDouble())
+
+    // Pythagorean Theorem
+
+    /**
+     * Takes the principal square root of a number.
+     *
+     * @param value a positive number
+     * @return the square root, in float precision.
+     */
+    @JvmStatic
+    fun sqrt(value: Float): Float = sqrt(value.toDouble()).toFloat()
+
+    /**
+     * Calculates the squared length of the diagonal of an n-dimensional figure with perpendicular edges (rectangle, cuboid, hyper-cuboid, etc.).
+     *
+     * @param sides the lengths of the figure's sides
+     * @return the result of the pythagorean theorem in n-dimensions, squared
+     */
+    @JvmStatic
+    fun pythagoreanSquared(vararg sides: Float): Float {
+        val sidesSq = sides.copyOf()
+        for (i in sidesSq.indices)
+            sidesSq[i] = sidesSq[i] * sidesSq[i]
+        return sum(*sidesSq)
+    }
+
+    /**
+     * Calculates the length of the diagonal of an n-dimensional figure with perpendicular edges (rectangle, cuboid, hyper-cuboid, etc.).
+     *
+     * @param sides the lengths of the figure's sides
+     * @return the result of the pythagorean theorem in n-dimensions
+     */
+    @JvmStatic
+    fun pythagorean(vararg sides: Float): Float = sqrt(pythagoreanSquared(*sides))
 
     // Accumulator Methods
 
@@ -169,6 +204,14 @@ object MathUtils {
 
     // Rounding Methods
 
+    /**
+     * Rounds up the given number according to the specified precision.
+     *
+     * @param value a decimal number
+     * @param decimalPlaces the number of decimal places to round
+     *
+     * @return the rounded number
+     */
     @JvmStatic
     fun round(value: Float, decimalPlaces: Int): Float {
         var temp = value * 10F.pow(decimalPlaces)
@@ -176,6 +219,14 @@ object MathUtils {
         return temp / 10F.pow(decimalPlaces)
     }
 
+    /**
+     * Rounds down the given number according to the specified precision.
+     *
+     * @param value a decimal number
+     * @param decimalPlaces the number of decimal places to round
+     *
+     * @return the truncated number
+     */
     @JvmStatic
     fun truncate(value: Float, decimalPlaces: Int): Float {
         var temp = value * 10F.pow(decimalPlaces)
@@ -185,25 +236,41 @@ object MathUtils {
 
     // Trig / Angle Methods
 
-    @JvmStatic
-    fun toDegrees(radians: Float): Float = radians * TO_DEGREES
-
-    @JvmStatic
-    fun toRadians(degrees: Float): Float = degrees * TO_RADIANS
-
-    // Equality Methods
-
     /**
-     * Determines whether two floats are approximately equal within 6 decimal places.
+     * Takes the sine of an angle.
      *
-     * @param num1 a number
-     * @param num2 another number
-     * @return if they are equal
+     * @param degrees the measure of the angle, in degrees
+     * @return the sine of the angle
      */
     @JvmStatic
-    fun equals(num1: Float, num2: Float): Boolean =
-        abs(num1 - num2) <= EPSILON * 1.0.coerceAtLeast(abs(num1).coerceAtLeast(abs(num2)).toDouble())
+    fun sin(degrees: Float): Float = sin(Math.toRadians(degrees.toDouble())).toFloat()
 
+    /**
+     * Takes the cosine of an angle.
+     *
+     * @param degrees the measure of the angle, in degrees
+     * @return the cosine of the angle
+     */
+    @JvmStatic
+    fun cos(degrees: Float): Float = cos(Math.toRadians(degrees.toDouble())).toFloat()
+
+    /**
+     * Converts an angle from radians to degrees.
+     *
+     * @param radians the angle measure in radians
+     * @return the angle measure in degrees
+     */
+    @JvmStatic
+    fun toDegrees(radians: Float): Float = Math.toDegrees(radians.toDouble()).toFloat()
+
+    /**
+     * Converts an angle from degrees to radians.
+     *
+     * @param degrees the angle measure in degrees
+     * @return the angle measure in radians
+     */
+    @JvmStatic
+    fun toRadians(degrees: Float): Float = Math.toRadians(degrees.toDouble()).toFloat()
 
     // Helper Class
 

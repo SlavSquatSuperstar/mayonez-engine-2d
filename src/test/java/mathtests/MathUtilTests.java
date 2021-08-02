@@ -155,4 +155,18 @@ public class MathUtilTests {
         assertEquals(0.06f, MathUtils.truncate(0.069f, 2), MathUtils.EPSILON);
     }
 
+    // Trig
+
+    @Test
+    public void angleConversionSuccess() {
+        assertEquals(180, MathUtils.toDegrees(MathUtils.PI), MathUtils.EPSILON);
+        assertEquals(MathUtils.PI, MathUtils.toRadians(180), MathUtils.EPSILON);
+    }
+
+    @Test
+    public void pythagoreanNDimensionsSuccess() {
+        assertEquals(10, MathUtils.pythagorean(6, 8), MathUtils.EPSILON);
+        assertEquals(13, MathUtils.pythagorean(3, 4, 12), MathUtils.EPSILON);
+    }
+
 }

@@ -1,8 +1,8 @@
 package slavsquatsuperstar.mayonez.physics2d.colliders;
 
+import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.physics2d.CollisionManifold;
-import slavsquatsuperstar.math.MathUtils;
 
 // TODO scale with transform
 // TODO local instead of world space?
@@ -41,7 +41,7 @@ public class CircleCollider extends Collider2D {
 
     @Override
     public boolean contains(Vec2 point) {
-        return point.sub(center()).lenSquared() <= radius() * radius();
+        return point.distanceSquared(center()) <= radius() * radius();
     }
 
     @Override
@@ -56,8 +56,6 @@ public class CircleCollider extends Collider2D {
         if (contains(edge.start) || contains(edge.end)) // Check if contains endpoints
             return true;
 
-        // TODO Do circle and line interval overlap?
-
         Vec2 startToCenter = center().sub(edge.start);
         Vec2 projected = startToCenter.project(edge.toVector());
         // Is nearest point outside of actual line segment?
@@ -67,34 +65,42 @@ public class CircleCollider extends Collider2D {
         return contains(nearestPointOnEdge);
     }
 
-    @Override
     public boolean raycast(Ray2D ray, RaycastResult result, float limit) {
         RaycastResult.reset(result);
-        limit = Math.abs(limit);
 
         // Trace the ray's origin to the circle's center
         Vec2 originToCenter = center().sub(ray.origin);
-        float radiusSquared = radius() * radius();
-        float lengthSquared = originToCenter.lenSquared();
+        float radiusSq = radius() * radius();
 
-        // Project originToCenter onto the ray
+        // Project originToCenter onto the ray and get length
+        /*
+         * v = originToCenter
+         * d = ray.direction (unit vector)
+         * l = length of projected vector
+         *
+         * v•d = |v|*|d|*cos(theta)
+         * v•d = |v|*|d|*l/|v|
+         * l = v•d
+         */
         float projLength = originToCenter.dot(ray.direction);
-        float distNearestSquared = lengthSquared - projLength * projLength; // Closest distance from center to extended ray
-        if (radiusSquared - distNearestSquared < 0f) // dot result is negative, don't want imaginary
+        float distNearestSq = originToCenter.lenSquared() - projLength * projLength; // Closest distance from center to extended ray
+        if (distNearestSq > radiusSq) // Nearest point on ray is outside the circle
             return false;
 
-        float f = (float) Math.sqrt(radiusSquared - distNearestSquared);
-        // unit lengths along projected vector
-        float distToCircle = contains(ray.origin) ? projLength + f : projLength - f;
+        float contactToNearest = MathUtils.sqrt(radiusSq - distNearestSq);
+        // Distance along ray to contact, depends if ray starts in circle
+        float hitDist = contains(ray.origin) ? projLength + contactToNearest : projLength - contactToNearest;
 
-        // Is limit too far?
-        if (limit > 0 && distToCircle > limit)
+        if (Math.abs(limit) > 0 && hitDist > Math.abs(limit)) // Ray exceeds limit
+            return false;
+
+        if (hitDist < 0) // Contact point is behind ray
             return false;
 
         if (result != null) {
-            Vec2 point = ray.getPoint(distToCircle);
-            Vec2 normal = point.sub(center()).unitVector();
-            result.set(point, normal, distToCircle);
+            Vec2 point = ray.getPoint(hitDist);
+            Vec2 normal = point.sub(center());
+            result.set(point, normal, hitDist);
         }
         return true;
     }

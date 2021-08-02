@@ -13,7 +13,7 @@ import java.awt.Color
  */
 object Colors {
 
-    // Rainbow
+    // Warm Colors
     @JvmField
     val RED = Color(255, 0, 0) // Java Red
 
@@ -22,6 +22,8 @@ object Colors {
 
     @JvmField
     val YELLOW = Color(255, 238, 0) // HTML Bright Yellow
+
+    // Shades of Green
 
     @JvmField
     val LIME = Color(0, 255, 0) // Java Green
@@ -32,6 +34,7 @@ object Colors {
     @JvmField
     val GREEN = Color(0, 128, 0) // HTML Green
 
+    // Shades of Blue
     @JvmField
     val CYAN = Color(0, 238, 255) // #00EEFFF
 
@@ -44,15 +47,19 @@ object Colors {
     @JvmField
     val BLUE = Color(0, 0, 205) // HTML Medium Blue
 
+    // Shades of Purple / Pink
     @JvmField
-    val PURPLE = Color(148, 0, 211) // HTML Dark Violet
-
-    // Accents
-    @JvmField
-    val PINK = Color(255, 105, 180) // HTML Hot Pink
+    val PURPLE = Color(170, 0, 170) // Minecraft Dark Purple
 
     @JvmField
-    val BROWN = Color(150, 75, 0) // #964B00
+    val MAGENTA = Color(238, 0, 238) // HTML Magenta
+
+    @JvmField
+    val PINK = Color(255, 182, 193) // HTML Light Pink
+
+    // Brown
+    @JvmField
+    val BROWN = Color(149, 69, 53) // HTML Chestnut
 
     // Grayscale
     @JvmField

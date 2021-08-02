@@ -14,11 +14,8 @@ public class RaycastResult {
     private float distance = -1; // unit lengths from ray origin to contact point
 
     public static void reset(RaycastResult result) {
-        if (result != null) {
-            result.contact = new Vec2();
-            result.normal = new Vec2();
-            result.distance = -1;
-        }
+        if (result != null)
+            result.set(new Vec2(), new Vec2(), -1);
     }
 
     void set(Vec2 contact, Vec2 normal, float distance) {
