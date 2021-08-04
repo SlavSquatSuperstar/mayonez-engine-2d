@@ -95,7 +95,7 @@ object DebugDraw {
         when (shape) {
             is CircleCollider -> drawCircle(shape, color)
             is AlignedBoxCollider2D -> drawAABB(shape, color)
-            is BoxCollider2D -> drawBox(shape, color)
+            is PolygonCollider2D -> drawPolygon(shape, color)
         }
     }
 
@@ -116,12 +116,12 @@ object DebugDraw {
         })
     }
 
-    private fun drawBox(box: BoxCollider2D, color: Color) {
-        val obb = Polygon()
-        for (point in box.vertices) obb.addPoint(toScreen(point.x).roundToInt(), toScreen(point.y).roundToInt())
+    private fun drawPolygon(polygon: PolygonCollider2D, color: Color) {
+        val shape = Polygon()
+        for (point in polygon.vertices) shape.addPoint(toScreen(point.x).roundToInt(), toScreen(point.y).roundToInt())
         shapes.add(Renderable { g2: Graphics2D ->
             g2.color = color
-            g2.drawPolygon(obb)
+            g2.drawPolygon(shape)
         })
     }
 
@@ -138,7 +138,7 @@ object DebugDraw {
         when (shape) {
             is CircleCollider -> fillCircle(shape, color)
             is AlignedBoxCollider2D -> fillAABB(shape, color)
-            is BoxCollider2D -> fillBox(shape, color)
+            is PolygonCollider2D -> fillPolygon(shape, color)
         }
     }
 
@@ -159,12 +159,12 @@ object DebugDraw {
         })
     }
 
-    private fun fillBox(box: BoxCollider2D, color: Color) {
-        val obb = Polygon()
-        for (point in box.vertices) obb.addPoint(toScreen(point.x).roundToInt(), toScreen(point.y).roundToInt())
+    private fun fillPolygon(box: PolygonCollider2D, color: Color) {
+        val shape = Polygon()
+        for (point in box.vertices) shape.addPoint(toScreen(point.x).roundToInt(), toScreen(point.y).roundToInt())
         shapes.add(Renderable { g2: Graphics2D ->
             g2.color = color
-            g2.fillPolygon(obb)
+            g2.fillPolygon(shape)
         })
     }
 

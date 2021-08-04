@@ -1,6 +1,5 @@
 package slavsquatsuperstar.mayonez.physics2d.colliders;
 
-import org.apache.commons.lang3.ArrayUtils;
 import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
 
@@ -26,16 +25,6 @@ public class BoxCollider2D extends PolygonCollider2D {
     // Shape Properties
 
     /**
-     * Returns the unscaled size of this box.
-     *
-     * @return the size in local space
-     */
-    // TODO parent send scale event to modify size directly
-    protected Vec2 localSize() {
-        return size;
-    }
-
-    /**
      * Calculates the dimensions of this box factoring in the object's scale.
      *
      * @return the size in the world
@@ -52,6 +41,16 @@ public class BoxCollider2D extends PolygonCollider2D {
         return size().y;
     }
 
+    /**
+     * Returns the unscaled size of this box.
+     *
+     * @return the size in local space
+     */
+    // TODO parent send scale event to modify size directly
+    protected Vec2 localSize() {
+        return size;
+    }
+
     // unrotated top left in local space
     protected Vec2 localMin() {
         return size.div(-2);
@@ -60,6 +59,10 @@ public class BoxCollider2D extends PolygonCollider2D {
     // unrotated bottom right in local space
     protected Vec2 localMax() {
         return size.div(2);
+    }
+
+    public float getRotation() {
+        return transform.rotation;
     }
 
     @Override
@@ -87,31 +90,27 @@ public class BoxCollider2D extends PolygonCollider2D {
 
     @Override
     public boolean intersects(Edge2D edge) {
-        // Rotate the line into local space
-        Vec2 localStart = transform.toLocal(edge.start);
-        Vec2 localEnd = transform.toLocal(edge.end);
-        Edge2D localLine = new Edge2D(localStart, localEnd);
+        if (contains(edge.start) || contains(edge.end))
+            return true;
 
-        // Create AABB with same size
-//        return raycast(new Ray2D(localLine), null, localLine.getLength()) || raycast(new Ray2D(localLine.getReverse()), null, localLine.getLength());
-        return new AlignedBoxCollider2D(size).setRigidBody(rb).setTransform(transform).intersects(localLine);
+        // No need to rotate the line because raycast will do that automatically
+        return raycast(new Ray2D(edge), null, edge.getLength());
     }
 
     @Override
     public boolean raycast(Ray2D ray, RaycastResult result, float limit) {
         RaycastResult.reset(result);
-        limit = Math.abs(limit);
 
-        // Rotate the edge into the AABB's local space
-        Ray2D localRay = new Ray2D(transform.toLocal(ray.origin), transform.toLocal(ray.direction));
+        // Transform the ray to local space (but just rotate direction)
+        Ray2D localRay = new Ray2D(transform.toLocal(ray.origin), ray.direction.rotate(-getRotation()));
 
-        // Parametric distance to x and y axes of box
+        // Parametric distance to min/max x and y axes of box
         Vec2 tNear = localMin().sub(localRay.origin).div(localRay.direction);
         Vec2 tFar = localMax().sub(localRay.origin).div(localRay.direction);
 
         // If parallel and not intersecting
-        if (Float.isNaN(tNear.x) || Float.isNaN(tNear.y) || Float.isNaN(tFar.x) || Float.isNaN(tFar.y))
-            return false;
+//        if (Float.isNaN(tNear.x) || Float.isNaN(tNear.y) || Float.isNaN(tFar.x) || Float.isNaN(tFar.y))
+//            return false;
 
         // Swap near and far components if they're out of order
         if (tNear.x > tFar.x) {
@@ -135,19 +134,12 @@ public class BoxCollider2D extends PolygonCollider2D {
         if (tHitFar < 0 || tHitNear > tHitFar) // Ray is pointing away
             return false;
 
-        // If ray starts inside shape, swap near and far
-        float distToBox = (tHitNear < 0f) ? tHitFar : tHitNear;
-        if (tHitNear < 0) {
-            float temp = tHitNear;
-            tHitNear = tHitFar;
-            tHitFar = temp;
-        }
+        // If ray starts inside shape, use far for contact
+        float distToBox = (tHitNear < 0) ? tHitFar : tHitNear;
 
         // Is the contact point past the ray limit?
         if (limit > 0 && distToBox > limit)
             return false;
-        Vec2 contactNear = localRay.getPoint(tHitNear);
-        Vec2 contactFar = localRay.getPoint(tHitFar);
 
         Vec2 normal = new Vec2(); // Use (0, 0) for diagonal collision
         if (tNear.x > tNear.y) // Horizontal collision
@@ -155,8 +147,10 @@ public class BoxCollider2D extends PolygonCollider2D {
         else if (tNear.x < tNear.y) // Vertical collision
             normal = (localRay.direction.y < 0) ? new Vec2(0, 1) : new Vec2(0, -1);
 
-        if (result != null)
-            result.set(localRay.getPoint(distToBox), normal, tHitNear);
+        if (result != null) {
+            Vec2 contact = transform.toWorld(localRay.getPoint(distToBox));
+            result.set(contact, normal.rotate(getRotation()), contact.sub(ray.origin).len());
+        }
 
         return true;
     }
@@ -170,18 +164,10 @@ public class BoxCollider2D extends PolygonCollider2D {
 
         if (collider instanceof CircleCollider)
             return collider.detectCollision(this);
-        else if (collider instanceof BoxCollider2D)
-            return intersects((BoxCollider2D) collider);
+        else if (collider instanceof PolygonCollider2D)
+            return super.detectCollision(collider);
 
         return false;
-    }
-
-    private boolean intersects(BoxCollider2D box) {
-        Vec2[] axes = ArrayUtils.addAll(this.getNormals(), box.getNormals());
-        for (Vec2 axis : axes)
-            if (!overlapOnAxis(box, axis))
-                return false;
-        return true;
     }
 
 }

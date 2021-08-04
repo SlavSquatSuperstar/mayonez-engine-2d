@@ -41,37 +41,28 @@ object Logger {
     /**
      * Prints a formatted message to the console.
      *
-     * @param fmt  a formatted string
+     * @param msg  an object or formatted string
      * @param args (optional) string format arguments
      */
     @JvmStatic
-    fun log(fmt: Any?, vararg args: Any?) {
+    fun log(msg: Any?, vararg args: Any?) {
         val output = StringBuilder("[%02d:%.4f] ".format((Game.getTime() / 60).toInt(), Game.getTime() % 60))
         try {
-            output.append(fmt.toString().format(*args))
+            output.append(msg.toString().format(*args))
             if (saveLogs)
                 logFile!!.append(output.toString())
         } catch (e: IllegalFormatException) {
-            output.append("Logger: Could not format message \"$fmt\"")
+            output.append("Logger: Could not format message \"$msg\"")
         } finally {
             println(output.toString())
         }
     }
 
     /**
-     * Prints a message to the console.
-     *
-     * @param msg an object
-     */
-    @JvmStatic
-    fun log(msg: Any?) {
-        log(msg, null)
-    }
-
-    /**
      * Prints a warning to the console.
      *
-     * @param msg an object
+     * @param msg  an object or formatted string
+     * @param args (optional) string format arguments
      */
     @JvmStatic
     fun warn(msg: Any?, vararg args: Any?) {

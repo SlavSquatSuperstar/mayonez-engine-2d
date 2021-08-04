@@ -79,8 +79,10 @@ public class PhysicsTestScene extends Scene {
                         DebugDraw.drawShape(col, color);
 
                         // Draw Ray
-                        if (col.raycast(new Ray2D(ray), rc, ray.getLength()))
+                        if (col.raycast(new Ray2D(ray), rc, ray.getLength())) {
                             DebugDraw.drawPoint(rc.getContact(), Colors.RED);
+                            DebugDraw.drawVector(rc.getContact(), rc.getNormal(), Colors.RED);
+                        }
                     }
                 }
             }

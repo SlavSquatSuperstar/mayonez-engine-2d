@@ -1,5 +1,6 @@
 package slavsquatsuperstar.mayonez.physics2d.colliders;
 
+import org.apache.commons.lang3.ArrayUtils;
 import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
 
@@ -55,13 +56,19 @@ public abstract class PolygonCollider2D extends Collider2D {
 
     // Separating-Axis Theorem Methods
 
-    public Vec2[] getNormals() { // in world
+    public Edge2D[] getEdges() { // in world
         Vec2[] vertices = getVertices();
+        Edge2D[] edges = new Edge2D[countVertices()];
+        for (int i = 0; i < edges.length; i++)
+            edges[i] = new Edge2D(vertices[i], vertices[(i + 1) % edges.length]); // Current vertex to next vertex
+        return edges;
+    }
+
+    public Vec2[] getNormals() { // in world
+        Edge2D[] edges = getEdges();
         Vec2[] normals = new Vec2[countVertices()];
-        for (int i = 0; i < normals.length; i++) {
-            Vec2 edge = vertices[(i + 1) % normals.length].sub(vertices[i]); // Next vertex - current vertex
-            normals[i] = edge.rotate(-90).unitVector(); // Rotate 90 degrees clockwise to point outward
-        }
+        for (int i = 0; i < normals.length; i++)
+            normals[i] = edges[i].toVector().rotate(-90).unitVector(); // Rotate 90 degrees clockwise to point outward
         return normals;
     }
 
@@ -97,7 +104,14 @@ public abstract class PolygonCollider2D extends Collider2D {
 
     @Override
     public boolean contains(Vec2 point) {
-        return false;
+        Edge2D[] edges = getEdges();
+        for (Edge2D edge : edges) {
+            Vec2 edgeLine = edge.toVector();
+            Vec2 projectedPoint = point.sub(edge.start).project(edgeLine);
+            if (!MathUtils.inRange(projectedPoint.len(), 0, edgeLine.len()))
+                return false;
+        }
+        return true;
     }
 
     @Override
@@ -121,6 +135,18 @@ public abstract class PolygonCollider2D extends Collider2D {
 
     @Override
     public boolean detectCollision(Collider2D collider) {
+        if (collider instanceof PolygonCollider2D)
+            return this.intersects((PolygonCollider2D) collider);
+        // TODO vs circle
         return false;
+    }
+
+    // Separating-Axis Theorem
+    private boolean intersects(PolygonCollider2D polygon) {
+        Vec2[] axes = ArrayUtils.addAll(this.getNormals(), polygon.getNormals());
+        for (Vec2 axis : axes)
+            if (!overlapOnAxis(polygon, axis))
+                return false;
+        return true;
     }
 }

@@ -158,7 +158,7 @@ public class Game implements Runnable {
             lastTime = currentFrameTime; // Reset lastTime
 
             try {
-                // Update the game as many times as necessary even if the frame freezes
+                // Update the game as many times as possible even if the frame freezes
                 while (deltaTime >= TIME_STEP) {
                     update(deltaTime);
                     // Update = Graphics frame rate, FixedUpdate = Physics frame rate
@@ -201,15 +201,15 @@ public class Game implements Runnable {
             return;
         }
 
-        physics.physicsUpdate(dt);
         if (currentScene != null)
             currentScene.update(dt);
+        // TODO multithread physics, set time step higher than refresh rate for smoother results
+        physics.physicsUpdate(dt);
     }
 
     /**
      * Redraws all objects in the current scene.
      */
-
     public void render() throws Exception {
         if (buffers == null) {
             initGraphics();

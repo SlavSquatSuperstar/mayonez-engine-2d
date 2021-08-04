@@ -192,7 +192,7 @@ class Vec2 constructor(
 
     fun distance(v: Vec2): Float = sqrt(distanceSquared(v))
 
-    fun distanceSquared(v: Vec2): Float = (x - v.x) * (x - v.x) + (y - v.y) * (y - v.y)
+    fun distanceSquared(v: Vec2): Float = MathUtils.pythagoreanSquared((x - v.x), (y - v.y))
 
     /**
      * Calculates the length of this vector.
@@ -216,7 +216,7 @@ class Vec2 constructor(
      */
     fun unitVector(): Vec2 {
         return if (equals(lenSquared(), 0F) || equals(lenSquared(), 1F))
-            this // TODO return self or copy?
+            +this
         else this / len()
     }
 

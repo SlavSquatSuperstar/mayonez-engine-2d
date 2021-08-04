@@ -47,13 +47,14 @@ public class Edge2D {
      * @param point a point in 2D space
      * @return if the point is on the line
      */
-    // TODO project on point and find t, or is that too expensive?
     public boolean contains(Vec2 point) {
-        // triangle side length or projection distance
+        if (point.equals(start) || point.equals(end))
+            return true;
         float distToStart = start.distance(point);
         float distToEnd = end.distance(point);
-        float length = toVector().len();
-        return MathUtils.equals(distToStart + distToEnd, length);
+
+        // projection length
+        return MathUtils.equals(distToStart + distToEnd, getLength());
     }
 
     public Vec2 nearestPoint(Vec2 position) {
@@ -86,6 +87,7 @@ public class Edge2D {
         Vec2 line2 = edge.toVector();
         float cross = line1.cross(line2);
 
+        // Percentage lengths along lines
         float len1 = start2.sub(start1).cross(line2) / cross;
         float len2 = start1.sub(start2).cross(line1) / -cross;
 

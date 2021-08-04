@@ -21,13 +21,40 @@ public class AABBTests {
 
     static AlignedBoxCollider2D aabb;
 
-    // Create box centered at (0, 0) with dimensions 4x4
+    // Create box centered at (0, 0) with dimensions 2x2 and scale it by 2x
     @BeforeAll
     public static void getAABB() {
-        aabb = new AlignedBoxCollider2D(new Vec2(4, 4)).setTransform(new Transform());
+        aabb = new AlignedBoxCollider2D(new Vec2(2, 2)).setTransform(new Transform().resize(new Vec2(2, 2)));
     }
 
-    // AABB vs Point
+    // Contains Point
+
+    @Test
+    public void vertexPointIsInAABB() {
+        for (Vec2 v : aabb.getVertices())
+            assertTrue(aabb.contains(v));
+    }
+
+    @Test
+    public void edgePointIsInAABB() {
+        assertTrue(aabb.contains(new Vec2(2, 0)));
+        assertTrue(aabb.contains(new Vec2(0, -2)));
+    }
+
+    @Test
+    public void interiorPointIsInAABB() {
+        assertTrue(aabb.contains(new Vec2(1.9f, -1.9f)));
+        assertTrue(aabb.contains(new Vec2(-1, -1)));
+    }
+
+    @Test
+    public void exteriorPointNotInAABB() {
+        assertFalse(aabb.contains(new Vec2(2.1f, -2.1f)));
+        assertFalse(aabb.contains(new Vec2(-3, 3)));
+        assertFalse(aabb.contains(new Vec2(0, 5)));
+    }
+
+    // Nearest Point
 
     @Test
     public void nearestPointInsideAABB() {
@@ -39,26 +66,7 @@ public class AABBTests {
         assertEquals(new Vec2(2, 2), aabb.nearestPoint(new Vec2(3, 4)));
     }
 
-    @Test
-    public void aabbIsAtObjectCenter() {
-        assertEquals(new Vec2(0, 0), aabb.center());
-    }
-
-    @Test
-    public void vertexPointIsInAABB() {
-        for (Vec2 v : aabb.getVertices())
-            assertTrue(aabb.contains(v));
-    }
-
-    @Test
-    public void pointNotInAABB() {
-        assertFalse(aabb.contains(new Vec2(3, -3)));
-        assertFalse(aabb.contains(new Vec2(-3, 3)));
-        assertFalse(aabb.contains(new Vec2(-3, -3)));
-        assertFalse(aabb.contains(new Vec2(3, 3)));
-    }
-
-    // AABB vs Line
+    // Raycast
 
     @Test
     public void outsideRayHitsAABB() {
@@ -78,16 +86,23 @@ public class AABBTests {
         assertTrue(aabb.raycast(new Ray2D(new Vec2(-4, 4), new Vec2(1, -1)), null, 5));
     }
 
-//    @Test
-//    public void limitedOutsideRayMissesAABB() {
-//        assertTrue(aabb.raycast(new Ray2D(new Vec2(-10, 0), new Vec2(1, 0)), null, 2));
-//        assertTrue(aabb.raycast(new Ray2D(new Vec2(-10, 10), new Vec2(1, -1)), null, 2));
-//    }
+    @Test
+    public void limitedOutsideRayMissesAABB() {
+        assertFalse(aabb.raycast(new Ray2D(new Vec2(-10, 0), new Vec2(1, 0)), null, 2));
+        assertFalse(aabb.raycast(new Ray2D(new Vec2(-10, 10), new Vec2(1, -1)), null, 2));
+    }
 
     @Test
     public void insideRayHitsAABB() {
         assertTrue(aabb.raycast(new Ray2D(new Vec2(-1.5f, 0), new Vec2(1, 0)), null, 0));
         assertTrue(aabb.raycast(new Ray2D(new Vec2(-1.5f, 1.5f), new Vec2(1, -1)), null, 0));
+    }
+
+    // Line Intersection
+
+    @Test
+    public void interiorLineIsInAABB() {
+        assertTrue(aabb.intersects(new Edge2D(new Vec2(1.5f, 1.5f), new Vec2(-1, -1))));
     }
 
     @Test
@@ -98,24 +113,16 @@ public class AABBTests {
 
     @Test
     public void bisectLineIsInAABB() {
-        assertTrue(aabb.intersects(new Edge2D(new Vec2(-2, -2), new Vec2(2, 2))));
-        assertTrue(aabb.intersects(new Edge2D(new Vec2(-2, 2), new Vec2(2, -2))));
-        assertTrue(aabb.intersects(new Edge2D(new Vec2(0, -2), new Vec2(0, 2))));
+        assertTrue(aabb.intersects(new Edge2D(new Vec2(-3, -3), new Vec2(3, 3))));
+        assertTrue(aabb.intersects(new Edge2D(new Vec2(0, -3), new Vec2(0, 3))));
         assertTrue(aabb.intersects(new Edge2D(new Vec2(-2, 0), new Vec2(2, 0))));
     }
 
     @Test
     public void edgeLineIsInAABB() {
         assertTrue(aabb.intersects(new Edge2D(new Vec2(-2, -2), new Vec2(-2, 2))));
-        assertTrue(aabb.intersects(new Edge2D(new Vec2(2, -2), new Vec2(2, 2))));
-        assertTrue(aabb.intersects(new Edge2D(new Vec2(-2, -2), new Vec2(2, -2))));
-        assertTrue(aabb.intersects(new Edge2D(new Vec2(-2, 2), new Vec2(2, 2))));
-
-        // doesn't work
-//        assertTrue(aabb.intersects(new Edge2D(new Vec2(-2, 3), new Vec2(-2, -3))));
-//        assertTrue(aabb.intersects(new Edge2D(new Vec2(2, 3), new Vec2(2, -3))));
-//        assertTrue(aabb.intersects(new Edge2D(new Vec2(-3, 2), new Vec2(3, 2))));
-//        assertTrue(aabb.intersects(new Edge2D(new Vec2(-3, -2), new Vec2(3, -2))));
+        assertTrue(aabb.intersects(new Edge2D(new Vec2(2, 3), new Vec2(2, -3))));
+        assertTrue(aabb.intersects(new Edge2D(new Vec2(-2.1f, 2), new Vec2(1.9f, 2))));
     }
 
     @Test

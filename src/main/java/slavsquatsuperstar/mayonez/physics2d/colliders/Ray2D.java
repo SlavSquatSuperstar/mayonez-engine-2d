@@ -31,6 +31,9 @@ public class Ray2D {
         return origin.add(direction.mul(distance));
     }
 
+    // Get length from distance along axis
+    // S = √(1 + (dy/dx)^2)
+
     @Override
     public String toString() {
         return String.format("Origin: %s, Direction, %s", origin, direction);

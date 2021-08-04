@@ -75,20 +75,20 @@ public class AlignedBoxCollider2D extends BoxCollider2D {
         if (contains(edge.start) || contains(edge.end))
             return true;
         // Make rays from the line that goes both ways
-        return raycast(new Ray2D(edge), null, edge.toVector().len()) || raycast(new Ray2D(new Edge2D(edge.end, edge.start)), null, edge.toVector().len());
+        return raycast(new Ray2D(edge), null, edge.getLength());
     }
 
     @Override
     public boolean raycast(Ray2D ray, RaycastResult result, float limit) {
         RaycastResult.reset(result);
 
-        // Parametric distance to x and y axes of box
+        // Parametric distance to min/max x and y axes of box
         Vec2 tNear = min().sub(ray.origin).div(ray.direction);
         Vec2 tFar = max().sub(ray.origin).div(ray.direction);
 
-        // If parallel and not intersecting
-        if (Float.isNaN(tNear.x) || Float.isNaN(tNear.y) || Float.isNaN(tFar.x) || Float.isNaN(tFar.y))
-            return false;
+        // Hitting parallel to the edge
+//        if (Float.isNaN(tNear.x) || Float.isNaN(tNear.y) || Float.isNaN(tFar.x) || Float.isNaN(tFar.y))
+//            return false;
 
         // Swap near and far components if they're out of order
         if (tNear.x > tFar.x) {
@@ -114,20 +114,12 @@ public class AlignedBoxCollider2D extends BoxCollider2D {
         if (tHitFar < 0 || tHitNear > tHitFar) // Ray is pointing away
             return false;
 
-        // If ray starts inside shape, swap near and far
-        if (tHitNear < 0) {
-            float temp = tHitNear;
-            tHitNear = tHitFar;
-            tHitFar = temp;
-        }
-        float distToBox = tHitNear;
+        // If ray starts inside shape, use far for contact
+        float distToBox = (tHitNear < 0) ? tHitFar : tHitNear;
 
         // If enabled, check if contact point is past the ray limit
         if (limit > 0 && distToBox > limit)
             return false;
-
-        Vec2 contactNear = ray.getPoint(tHitNear);
-        Vec2 contactFar = ray.getPoint(tHitFar);
 
         Vec2 normal = new Vec2(); // Use (0, 0) for diagonal collision
         if (tNear.x > tNear.y) // Horizontal collision
@@ -135,9 +127,8 @@ public class AlignedBoxCollider2D extends BoxCollider2D {
         else if (tNear.x < tNear.y) // Vertical collision
             normal = (ray.direction.y < 0) ? new Vec2(0, 1) : new Vec2(0, -1);
 
-        // TODO make normal orthogonal or use contact - center?
         if (result != null)
-            result.set(ray.getPoint(distToBox), normal, tHitNear);
+            result.set(ray.getPoint(distToBox), normal, distToBox);
 
         return true;
     }
@@ -146,14 +137,10 @@ public class AlignedBoxCollider2D extends BoxCollider2D {
 
     @Override
     public boolean detectCollision(Collider2D collider) {
-        if (collider == this)
-            return false;
-
         if (collider instanceof CircleCollider)
             return collider.detectCollision(this);
-        else if (collider instanceof BoxCollider2D)
+        else if (collider instanceof PolygonCollider2D)
             return super.detectCollision(collider);
-
         return false;
     }
 

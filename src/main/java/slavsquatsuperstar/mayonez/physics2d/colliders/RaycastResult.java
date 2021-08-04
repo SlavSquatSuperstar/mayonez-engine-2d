@@ -9,9 +9,9 @@ import slavsquatsuperstar.math.Vec2;
  */
 public class RaycastResult {
 
-    private Vec2 contact = new Vec2(); // intersection point
+    private Vec2 contact = new Vec2(); // contact point
     private Vec2 normal = new Vec2(); // contact normal
-    private float distance = -1; // unit lengths from ray origin to contact point
+    private float distance = -1; // unit lengths along ray to intersection
 
     public static void reset(RaycastResult result) {
         if (result != null)

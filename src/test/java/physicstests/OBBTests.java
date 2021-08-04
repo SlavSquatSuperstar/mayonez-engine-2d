@@ -24,7 +24,34 @@ public class OBBTests {
         obb = new BoxCollider2D(new Vec2(4, 4)).setTransform(new Transform().rotate(45));
     }
 
-    // OBB vs Point
+    // Contains Point
+
+    @Test
+    public void vertexPointIsInOBB() {
+        for (Vec2 v : obb.getVertices())
+            assertTrue(obb.contains(v));
+    }
+
+    @Test
+    public void edgePointIsInOBB() {
+        assertTrue(obb.contains(new Vec2(2, 0).rotate(45)));
+        assertTrue(obb.contains(new Vec2(0, -2).rotate(45)));
+    }
+
+    @Test
+    public void interiorPointIsInOBB() {
+        assertTrue(obb.contains(new Vec2(1.9f, -1.9f).rotate(45)));
+        assertTrue(obb.contains(new Vec2(-1, -1).rotate(45)));
+    }
+
+    @Test
+    public void exteriorPointNotInOBB() {
+        assertFalse(obb.contains(new Vec2(2.1f, -2.1f).rotate(45)));
+        assertFalse(obb.contains(new Vec2(3, 3)));
+        assertFalse(obb.contains(new Vec2(0, 5)));
+    }
+
+    // Nearest Point
 
     @Test
     public void nearestPointInsideOBB() {
@@ -36,13 +63,7 @@ public class OBBTests {
         assertEquals(new Vec2(2, 0).rotate(45), obb.nearestPoint(new Vec2(2, 2)));
     }
 
-    @Test
-    public void vertexPointIsInOBB() {
-        for (Vec2 v : obb.getVertices())
-            assertTrue(obb.contains(v));
-    }
-
-    // OBB vs Line
+    // Raycast
 
     @Test
     public void outsideRayHitsOBB() {
@@ -68,11 +89,25 @@ public class OBBTests {
         assertTrue(obb.raycast(new Ray2D(new Vec2(-1, 1), new Vec2(1, -1)), null, 0));
     }
 
+    // Line Intersection
+
+    @Test
+    public void secantLineIsInOBB() {
+        assertTrue(obb.intersects(new Edge2D(new Vec2(2, 5), new Vec2(2, -5))));
+        assertTrue(obb.intersects(new Edge2D(new Vec2(-5, 1), new Vec2(5, 2))));
+    }
+
+    @Test
+    public void bisectLineIsInOBB() {
+        assertTrue(obb.intersects(new Edge2D(new Vec2(0, 4), new Vec2(0, -4))));
+        assertTrue(obb.intersects(new Edge2D(new Vec2(-4, 4), new Vec2(4, -4))));
+    }
+
     @Test
     public void edgeLineIsInOBB() {
-        Vec2[] vertices = obb.getVertices();
-        for (int i = 0; i < vertices.length; i++)
-            assertTrue(obb.intersects(new Edge2D(vertices[i], vertices[(i + 1) / 4])));
+        Edge2D[] edges = obb.getEdges();
+        for (Edge2D edge : edges)
+            assertTrue(obb.intersects(edge));
     }
 
     // OBB vs Shape

@@ -28,6 +28,8 @@ public class Transform { // TODO extend component?
         this.position = position;
     }
 
+    // Mutator Methods
+
     /**
      * Translates the parent object along the x and y axes.
      *
