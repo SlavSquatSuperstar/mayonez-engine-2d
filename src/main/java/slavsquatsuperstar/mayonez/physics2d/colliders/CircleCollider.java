@@ -126,8 +126,8 @@ public class CircleCollider extends Collider2D {
     public CollisionManifold getCollisionInfo(Collider2D collider) {
         if (collider instanceof CircleCollider)
             return getCollisionInfo((CircleCollider) collider);
-        if (collider instanceof AlignedBoxCollider2D)
-            return getCollisionInfo((AlignedBoxCollider2D) collider);
+        if (collider instanceof BoxCollider2D)
+            return getCollisionInfo((BoxCollider2D) collider);
         return null;
     }
 
@@ -151,7 +151,7 @@ public class CircleCollider extends Collider2D {
         return result;
     }
 
-    private CollisionManifold getCollisionInfo(AlignedBoxCollider2D box) {
+    private CollisionManifold getCollisionInfo(BoxCollider2D box) {
         if (!detectCollision(box))
             return null;
 

@@ -1,8 +1,7 @@
 package slavsquatsuperstar.mayonez.physics2d.colliders;
 
-import slavsquatsuperstar.math.Vec2;
-import slavsquatsuperstar.mayonez.physics2d.CollisionManifold;
 import slavsquatsuperstar.math.MathUtils;
+import slavsquatsuperstar.math.Vec2;
 
 // TODO scale with transform
 
@@ -142,46 +141,6 @@ public class AlignedBoxCollider2D extends BoxCollider2D {
         else if (collider instanceof PolygonCollider2D)
             return super.detectCollision(collider);
         return false;
-    }
-
-    @Override
-    public CollisionManifold getCollisionInfo(Collider2D collider) {
-        if (collider instanceof CircleCollider)
-            return getCollisionInfo((CircleCollider) collider);
-        else if (collider instanceof AlignedBoxCollider2D)
-            return getCollisionInfo((AlignedBoxCollider2D) collider);
-        return null;
-    }
-
-    private CollisionManifold getCollisionInfo(CircleCollider circle) {
-        if (!detectCollision(circle))
-            return null;
-
-        Vec2 closestToCircle = this.nearestPoint(circle.center());
-        float overlap = circle.radius() - closestToCircle.distance(circle.center());
-        CollisionManifold result = new CollisionManifold(closestToCircle.sub(this.center()), overlap);
-        result.addContactPoint(closestToCircle);
-        return result;
-    }
-
-    private CollisionManifold getCollisionInfo(AlignedBoxCollider2D aabb) {
-        if (!detectCollision(aabb))
-            return null;
-
-        float xOverlap = getAxisOverlap(aabb, new Vec2(1, 0));
-        float yOverlap = getAxisOverlap(aabb, new Vec2(0, 1));
-        Vec2 distance = aabb.center().sub(this.center());
-
-        CollisionManifold collision;
-        if (xOverlap < yOverlap)
-            collision = new CollisionManifold(distance.project(new Vec2(1, 0)).unitVector(), xOverlap);
-        else if (yOverlap < xOverlap)
-            collision = new CollisionManifold(distance.project(new Vec2(0, 1)).unitVector(), yOverlap);
-        else
-            collision = new CollisionManifold(distance.unitVector(), new Vec2(xOverlap, yOverlap).len());
-        collision.addContactPoint(this.center());
-        collision.addContactPoint(aabb.center());
-        return collision;
     }
 
 }

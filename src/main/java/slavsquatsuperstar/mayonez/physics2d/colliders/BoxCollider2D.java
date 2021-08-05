@@ -1,7 +1,9 @@
 package slavsquatsuperstar.mayonez.physics2d.colliders;
 
+import org.apache.commons.lang3.ArrayUtils;
 import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
+import slavsquatsuperstar.mayonez.physics2d.CollisionManifold;
 
 /**
  * An oriented bounding box (OBB), a rectangle that can be rotated. The sides will align with the object's rotation
@@ -14,7 +16,7 @@ public class BoxCollider2D extends PolygonCollider2D {
     private final Vec2 size;
 
     private BoxCollider2D(Vec2 min, Vec2 max) {
-        super(new Vec2(min), new Vec2(min.x, max.y), new Vec2(max), new Vec2(max.x, min.y));
+        super(new Vec2(min), new Vec2(max.x, min.y), new Vec2(max), new Vec2(min.x, max.y));
         this.size = max.sub(min);
     }
 
@@ -170,4 +172,48 @@ public class BoxCollider2D extends PolygonCollider2D {
         return false;
     }
 
+    @Override
+    public CollisionManifold getCollisionInfo(Collider2D collider) {
+        if (collider instanceof CircleCollider)
+            return getCollisionInfo((CircleCollider) collider);
+        else if (collider instanceof BoxCollider2D)
+            return getCollisionInfo((BoxCollider2D) collider);
+        else
+            return null;
+    }
+
+    private CollisionManifold getCollisionInfo(CircleCollider circle) {
+        if (!detectCollision(circle))
+            return null;
+
+        Vec2 closestToCircle = this.nearestPoint(circle.center());
+        float overlap = circle.radius() - closestToCircle.distance(circle.center());
+        CollisionManifold result = new CollisionManifold(closestToCircle.sub(this.center()), overlap);
+        result.addContactPoint(closestToCircle);
+        return result;
+    }
+
+    private CollisionManifold getCollisionInfo(BoxCollider2D box) {
+        Vec2 centerA = this.center();
+        Vec2 centerB = box.center();
+
+        Vec2 dist = centerB.sub(centerA);
+
+        if (!detectCollision(box))
+            return null;
+
+        Vec2[] axes = ArrayUtils.addAll(this.getNormals(), box.getNormals());
+        float[] overlaps = new float[axes.length];
+        for (int i = 0; i < overlaps.length; i++)
+            overlaps[i] = getAxisOverlap(box, axes[i]);
+        int minIndex = MathUtils.minIndex(overlaps);
+
+        float overlap = overlaps[minIndex];
+        Vec2 axis = axes[minIndex];
+
+        CollisionManifold collision = new CollisionManifold(dist.project(axis).unitVector(), overlap);
+        collision.addContactPoint(centerA);
+        collision.addContactPoint(centerB);
+        return collision;
+    }
 }

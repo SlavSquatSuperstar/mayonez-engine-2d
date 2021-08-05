@@ -208,6 +208,8 @@ class Vec2 constructor(
      */
     fun lenSquared(): Float = (x * x) + (y * y)
 
+    fun projectedLength(onto: Vec2): Float = this.dot(onto) / onto.len()
+
     /**
      * Calculates the vector with the same direction as this vector and a magnitude of 1. Returns (0, 0) if this vector
      * is (0, 0).
@@ -241,7 +243,7 @@ class Vec2 constructor(
     /**
      * Rotates this vector by an angle around some origin.
      *
-     * @param degrees the angle, in degrees counterclockwise
+     * @param degrees the angle, in degrees clockwise
      * @param origin  the point to rotate around
      * @return the rotated vector
      */

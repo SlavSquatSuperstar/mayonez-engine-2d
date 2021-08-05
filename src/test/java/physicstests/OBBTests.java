@@ -18,7 +18,7 @@ public class OBBTests {
 
     static BoxCollider2D obb;
 
-    // Create box centered at (0, 0) with dimensions 4x4 with a rotation of 45 degrees counterclockwise
+    // Create box centered at (0, 0) with dimensions 4x4 with a rotation of 45 degrees clockwise
     @BeforeAll
     public static void getOBB() {
         obb = new BoxCollider2D(new Vec2(4, 4)).setTransform(new Transform().rotate(45));

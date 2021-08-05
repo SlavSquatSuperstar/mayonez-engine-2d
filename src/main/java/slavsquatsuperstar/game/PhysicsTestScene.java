@@ -97,13 +97,15 @@ public class PhysicsTestScene extends Scene {
         addObject(createOBB(10, 6, new Vec2(70, 40), 45));
         addObject(createOBB(5, 5, new Vec2(90, 40), 0));
 
-//        // Randomly generate Circles and AABBs
-//        for (int i = 0; i < 4; i++) {
-//            if (i % 2 == 0)
-//                addObject(createCircle(MathUtils.random(2, 5), new Vector2(MathUtils.random(0, getWidth()), MathUtils.random(0, getHeight()))));
-//            else
-//                addObject(createAABB(MathUtils.random(4, 10), MathUtils.random(4, 10), new Vector2(MathUtils.random(0, getWidth()), MathUtils.random(0, getHeight()))));
-//        }
+        // Randomly generate shapes
+        for (int i = 0; i < 6; i++) {
+            if (i % 3 == 0)
+                addObject(createCircle(MathUtils.random(2, 5), new Vec2(MathUtils.random(0, getWidth()), MathUtils.random(0, getHeight()))));
+            else if (i % 2 == 0)
+                addObject(createAABB(MathUtils.random(4, 10), MathUtils.random(4, 10), new Vec2(MathUtils.random(0, getWidth()), MathUtils.random(0, getHeight()))));
+            else
+                addObject(createOBB(MathUtils.random(4, 10), MathUtils.random(4, 10), new Vec2(MathUtils.random(0, getWidth()), MathUtils.random(0, getHeight())), MathUtils.random(0, 90)));
+        }
 
     }
 

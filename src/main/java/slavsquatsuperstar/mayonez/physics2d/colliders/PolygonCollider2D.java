@@ -1,8 +1,10 @@
 package slavsquatsuperstar.mayonez.physics2d.colliders;
 
 import org.apache.commons.lang3.ArrayUtils;
+import slavsquatsuperstar.math.Mat22;
 import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
+import slavsquatsuperstar.mayonez.physics2d.CollisionManifold;
 
 public abstract class PolygonCollider2D extends Collider2D {
 
@@ -11,9 +13,9 @@ public abstract class PolygonCollider2D extends Collider2D {
     // points in local space (relative to center)
 
     /**
-     * Constructs a convex polygon from an array of vertices in counterclockwise order.
+     * Constructs a convex polygon from an array of vertices in clockwise order.
      *
-     * @param vertices the vertices in counterclockwise order
+     * @param vertices the vertices in clockwise order
      */
     public PolygonCollider2D(Vec2... vertices) {
         this.vertices = vertices;
@@ -37,6 +39,7 @@ public abstract class PolygonCollider2D extends Collider2D {
     }
 
     @Override
+    // Support function
     public AlignedBoxCollider2D getMinBounds() {
         Vec2[] vertices = getVertices();
         float[] verticesX = new float[vertices.length];
@@ -67,8 +70,9 @@ public abstract class PolygonCollider2D extends Collider2D {
     public Vec2[] getNormals() { // in world
         Edge2D[] edges = getEdges();
         Vec2[] normals = new Vec2[countVertices()];
+        Mat22 rot = new Mat22(0, 1, -1, 0); // Rotate 90 degrees counterclockwise to point outward
         for (int i = 0; i < normals.length; i++)
-            normals[i] = edges[i].toVector().rotate(-90).unitVector(); // Rotate 90 degrees clockwise to point outward
+            normals[i] = rot.times(edges[i].toVector()).unitVector();
         return normals;
     }
 
@@ -88,15 +92,15 @@ public abstract class PolygonCollider2D extends Collider2D {
         return interval;
     }
 
-    protected final boolean overlapOnAxis(PolygonCollider2D box, Vec2 axis) {
+    public final boolean overlapOnAxis(PolygonCollider2D polygon, Vec2 axis) {
         MathUtils.Range thisInterval = this.getIntervalOnAxis(axis);
-        MathUtils.Range otherInterval = box.getIntervalOnAxis(axis);
+        MathUtils.Range otherInterval = polygon.getIntervalOnAxis(axis);
         return (thisInterval.min <= otherInterval.max) && (otherInterval.min <= thisInterval.max);
     }
 
-    protected final float getAxisOverlap(PolygonCollider2D box, Vec2 axis) {
+    public final float getAxisOverlap(PolygonCollider2D polygon, Vec2 axis) {
         MathUtils.Range thisInterval = this.getIntervalOnAxis(axis);
-        MathUtils.Range otherInterval = box.getIntervalOnAxis(axis);
+        MathUtils.Range otherInterval = polygon.getIntervalOnAxis(axis);
         return Math.min(Math.abs(thisInterval.min - otherInterval.max), Math.abs(otherInterval.min - thisInterval.max));
     }
 
@@ -128,6 +132,20 @@ public abstract class PolygonCollider2D extends Collider2D {
 
     @Override
     public boolean raycast(Ray2D ray, RaycastResult result, float limit) {
+//        RaycastResult.reset(result); // need result to not be null
+//
+//        Edge2D[] edges = getEdges();
+//        float[] lengths = new float[countVertices()];
+//        for (int i = 0; i < edges.length; i++) {
+//            if (edges[i].raycast(ray, result, limit))
+//                lengths[i] = result.getDistance();
+//            else
+//                lengths[i] = -1;
+//        }
+//        // find min length to get contact
+//        if (result != null) {
+//
+//        }
         return false;
     }
 
@@ -148,5 +166,10 @@ public abstract class PolygonCollider2D extends Collider2D {
             if (!overlapOnAxis(polygon, axis))
                 return false;
         return true;
+    }
+
+    @Override
+    public CollisionManifold getCollisionInfo(Collider2D collider) {
+        return null;
     }
 }

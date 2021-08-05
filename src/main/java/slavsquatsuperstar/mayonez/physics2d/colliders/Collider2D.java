@@ -107,9 +107,7 @@ public abstract class Collider2D extends Component {
      */
     public abstract boolean detectCollision(Collider2D collider);
 
-    public CollisionManifold getCollisionInfo(Collider2D collider){
-        return null;
-    }
+    public abstract CollisionManifold getCollisionInfo(Collider2D collider);
 
     // Field Getters and Setters
 

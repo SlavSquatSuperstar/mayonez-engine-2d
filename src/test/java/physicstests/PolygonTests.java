@@ -1,6 +1,7 @@
 package physicstests;
 
 import org.junit.jupiter.api.Test;
+import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.Transform;
 import slavsquatsuperstar.mayonez.physics2d.colliders.PolygonCollider2D;
@@ -66,6 +67,14 @@ public class PolygonTests {
         PolygonCollider2D shape = new PolygonCollider2D(vertices){}.setTransform(new Transform());
         Vec2[] normals = new Vec2[]{new Vec2(0, 1), new Vec2(-1, 0), new Vec2(0, -1), new Vec2(1, 0)};
         assertTrue(Objects.deepEquals(normals, shape.getNormals()));
+    }
+
+    // SAT
+    @Test
+    public void getIntervalSuccess() {
+        PolygonCollider2D p1 = new PolygonCollider2D(vertices){}.setTransform(new Transform());
+        PolygonCollider2D p2 = new PolygonCollider2D(vertices){}.setTransform(new Transform(new Vec2(0.5f, 0.5f)));
+        assertEquals(1.5f, p1.getAxisOverlap(p2, new Vec2(1, 0)), MathUtils.EPSILON);
     }
 
 }

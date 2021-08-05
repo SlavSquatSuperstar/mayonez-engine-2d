@@ -39,7 +39,7 @@ public class Edge2D {
         return new Vec2(start.x + end.x, start.y + end.y).mul(0.5f);
     }
 
-    // Line vs Points
+    // Line vs Point
 
     /**
      * Calculates whether the given point is on this line segment.
@@ -50,25 +50,17 @@ public class Edge2D {
     public boolean contains(Vec2 point) {
         if (point.equals(start) || point.equals(end))
             return true;
-        float distToStart = start.distance(point);
-        float distToEnd = end.distance(point);
-
-        // projection length
-        return MathUtils.equals(distToStart + distToEnd, getLength());
+        return nearestPoint(point).equals(point);
     }
 
     public Vec2 nearestPoint(Vec2 position) {
-        if (contains(position))
-            return position;
-//        Vector2 inBounds = position.clampInbounds(start, end);
-//        return start.add(inBounds.sub(start).project(toVector()));
-
-        float angle = toVector().angle();
-        Vec2 localStart = start.rotate(-angle, center());
-        Vec2 localEnd = end.rotate(-angle, center());
-        Vec2 localPoint = position.rotate(-angle, center());
-        Vec2 localNearest = new Vec2(MathUtils.clamp(localPoint.x, localStart.x, localEnd.x), localStart.y);
-        return localNearest.rotate(angle, center());
+        float length = getLength();
+        float projLength = position.sub(start).dot(toVector()) / length; // find point shadow on line
+        if (projLength > length) // past line end
+            return end;
+        else if (projLength < 0) // behind line start
+            return start;
+        return start.add(toVector().mul(projLength / length)); // inside line
     }
 
     // Line vs Line Methods

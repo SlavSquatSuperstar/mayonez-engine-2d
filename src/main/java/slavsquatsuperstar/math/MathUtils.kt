@@ -104,6 +104,17 @@ object MathUtils {
     }
 
     @JvmStatic
+    fun minIndex(vararg values: Float): Int {
+        if (values.isEmpty())
+            return -1
+        var minIndex = 0
+        for (i in 1 until values.size)
+            if (values[i] < values[minIndex])
+                minIndex = i
+        return minIndex
+    }
+
+    @JvmStatic
     fun min(vararg values: Int): Int {
         if (values.isEmpty())
             return 0
@@ -134,6 +145,17 @@ object MathUtils {
             if (values[i] > max)
                 max = values[i]
         return max
+    }
+
+    @JvmStatic
+    fun maxIndex(vararg values: Float): Int {
+        if (values.isEmpty())
+            return -1
+        var maxIndex = 0
+        for (i in 1 until values.size)
+            if (values[i] > values[maxIndex])
+                maxIndex = i
+        return maxIndex
     }
 
     // Clamp / Range Methods
@@ -287,6 +309,16 @@ object MathUtils {
         var max = min.coerceAtLeast(max)
 
         operator fun contains(value: Float): Boolean = (min <= value) && (value <= max)
+
+        override fun equals(other: Any?): Boolean {
+            if (other is Range)
+                return equals(this.min, other.min) && equals(this.max, other.max)
+            return super.equals(other)
+        }
+
+        override fun hashCode(): Int {
+            return min.hashCode() * 31 + max.hashCode()
+        }
     }
 
 }
