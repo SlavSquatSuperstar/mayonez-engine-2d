@@ -303,10 +303,10 @@ object MathUtils {
         min: Float, max: Float
     ) {
         @JvmField
-        var min = min.coerceAtMost(max)
+        val min = min.coerceAtMost(max)
 
         @JvmField
-        var max = min.coerceAtLeast(max)
+        val max = min.coerceAtLeast(max)
 
         operator fun contains(value: Float): Boolean = (min <= value) && (value <= max)
 

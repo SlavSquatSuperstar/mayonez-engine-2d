@@ -154,7 +154,7 @@ class Vec2 constructor(
      * @param v another vector
      * @return the 2D cross product
      */
-    fun cross(v: Vec2): Float = (this.x * v.y) - (this.y * v.x)
+    fun cross(v: Vec2): Float = Mat22(this, v).determinant()
 
     /**
      * Projects this vector onto another vector, returning the components of this vector in the direction of another.
@@ -163,6 +163,14 @@ class Vec2 constructor(
      * @return the projected vector
      */
     fun project(vOnto: Vec2) = vOnto * (this.dot(vOnto) / vOnto.lenSquared())
+
+    /**
+     * Calculates the length this vector's projection onto another vector.
+     *
+     * @param vOnto another vector
+     * @return the projected length
+     */
+    fun projectedLength(vOnto: Vec2): Float = this.dot(vOnto) / vOnto.len()
 
     // Other Operations
 
@@ -208,8 +216,6 @@ class Vec2 constructor(
      */
     fun lenSquared(): Float = (x * x) + (y * y)
 
-    fun projectedLength(onto: Vec2): Float = this.dot(onto) / onto.len()
-
     /**
      * Calculates the vector with the same direction as this vector and a magnitude of 1. Returns (0, 0) if this vector
      * is (0, 0).
@@ -217,8 +223,7 @@ class Vec2 constructor(
      * @return the unit vector
      */
     fun unitVector(): Vec2 {
-        return if (equals(lenSquared(), 0F) || equals(lenSquared(), 1F))
-            +this
+        return if (equals(lenSquared(), 1F) || equals(lenSquared(), 0F)) +this
         else this / len()
     }
 
@@ -251,19 +256,12 @@ class Vec2 constructor(
     fun rotate(degrees: Float, origin: Vec2 = Vec2()): Vec2 {
         if (degrees % 360 == 0F)
             return +this
-
-        // Translate the vector space to the origin (0, 0)
-        val x = x - origin.x
-        val y = y - origin.y
-
+        // Translate the vector space to the origin
+        val localPos = this - origin
         // Rotate the point around the new origin
-        val cosTheta = MathUtils.cos(degrees)
-        val sinTheta = MathUtils.sin(degrees)
-        val newX = x * cosTheta - y * sinTheta
-        val newY = x * sinTheta + y * cosTheta
-
+        val rot = Mat22.rotationMatrix(degrees)
         // Revert the vector space to the old point
-        return Vec2(newX, newY) + origin
+        return (rot * localPos) + origin
     }
 
     // Overrides

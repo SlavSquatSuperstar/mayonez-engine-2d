@@ -117,12 +117,12 @@ public class Physics2D {
                 CollisionManifold result = c1.getCollisionInfo(c2);
 
                 // May be null b/c not all collisions are implemented
-                if (result != null && result.isColliding()) {
+                if (result != null) {
                     // TODO still send collision events if triggers
                     // Add the collisions if neither is a trigger
                     if (!c1.isTrigger() && !c2.isTrigger()) {
                         DebugDraw.drawLine(c1.center(), c2.center(), Colors.RED);
-//                        DebugDraw.drawVector(c1.center(), result.getNormal(), Colors.RED);
+                        DebugDraw.drawVector(c1.center(), result.getNormal(), Colors.BLACK);
                         collidingPairs.add(new ImmutablePair<>(r1, r2));
                         collisions.add(result);
 //                        Logger.log("%s intersects %s", c1, c2);
@@ -132,6 +132,7 @@ public class Physics2D {
         }
     }
 
+    // TODO resolve collision for each shape (get manifold and send event to each object)
     private void resolveCollisions() {
         for (int i = 0; i < collisions.size(); i++) {
             CollisionManifold col = collisions.get(i);
@@ -145,10 +146,10 @@ public class Physics2D {
             if (r1.hasInfiniteMass() && r2.hasInfiniteMass())
                 return; // Return in case both infinite mass
 
-            // Resolve static collisions and w objects
-            float sumMass = r1.getMass() + r2.getMass();
-            float depth1 = col.getDepth() * r1.getMass() / sumMass;
-            float depth2 = col.getDepth() * r2.getMass() / sumMass;
+            // Resolve static collisions and separate objects factoring in mass
+            float massRatio = r2.getMass() / (r1.getMass() + r2.getMass());
+            float depth1 = col.getDepth() * massRatio;
+            float depth2 = col.getDepth() * (1 - massRatio);
             r1.transform.move(col.getNormal().mul(-depth1));
             r2.transform.move(col.getNormal().mul(depth2));
 

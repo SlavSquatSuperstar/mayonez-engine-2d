@@ -76,20 +76,13 @@ public abstract class PolygonCollider2D extends Collider2D {
         return normals;
     }
 
+    // Project vertices on the axis and find min and max
     protected final MathUtils.Range getIntervalOnAxis(Vec2 axis) {
         Vec2[] vertices = getVertices();
-        MathUtils.Range interval = new MathUtils.Range(0, 0);
-
-        // Project vertices on the axis and find min and max
-        interval.max = interval.min = vertices[0].dot(axis.unitVector());
-        for (int i = 1; i < vertices.length; i++) {
-            float projLength = vertices[i].dot(axis.unitVector());
-            if (projLength < interval.min)
-                interval.min = projLength;
-            if (projLength > interval.max)
-                interval.max = projLength;
-        }
-        return interval;
+        float[] projections = new float[countVertices()];
+        for (int i = 0; i < projections.length; i++)
+            projections[i] = vertices[i].projectedLength(axis);
+        return new MathUtils.Range(MathUtils.min(projections), MathUtils.max(projections));
     }
 
     public final boolean overlapOnAxis(PolygonCollider2D polygon, Vec2 axis) {
@@ -155,7 +148,7 @@ public abstract class PolygonCollider2D extends Collider2D {
     public boolean detectCollision(Collider2D collider) {
         if (collider instanceof PolygonCollider2D)
             return this.intersects((PolygonCollider2D) collider);
-        // TODO vs circle
+        // TODO vs circle, get nearest point
         return false;
     }
 

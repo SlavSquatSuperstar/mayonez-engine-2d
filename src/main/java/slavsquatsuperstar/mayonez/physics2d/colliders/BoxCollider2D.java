@@ -110,10 +110,6 @@ public class BoxCollider2D extends PolygonCollider2D {
         Vec2 tNear = localMin().sub(localRay.origin).div(localRay.direction);
         Vec2 tFar = localMax().sub(localRay.origin).div(localRay.direction);
 
-        // If parallel and not intersecting
-//        if (Float.isNaN(tNear.x) || Float.isNaN(tNear.y) || Float.isNaN(tFar.x) || Float.isNaN(tFar.y))
-//            return false;
-
         // Swap near and far components if they're out of order
         if (tNear.x > tFar.x) {
             float temp = tNear.x;
@@ -161,15 +157,9 @@ public class BoxCollider2D extends PolygonCollider2D {
 
     @Override
     public boolean detectCollision(Collider2D collider) {
-        if (collider == this)
-            return false;
-
         if (collider instanceof CircleCollider)
-            return collider.detectCollision(this);
-        else if (collider instanceof PolygonCollider2D)
-            return super.detectCollision(collider);
-
-        return false;
+            return getCollisionInfo(collider) != null;
+        return super.detectCollision(collider);
     }
 
     @Override
@@ -178,18 +168,18 @@ public class BoxCollider2D extends PolygonCollider2D {
             return getCollisionInfo((CircleCollider) collider);
         else if (collider instanceof BoxCollider2D)
             return getCollisionInfo((BoxCollider2D) collider);
-        else
-            return null;
+        return null;
     }
 
     private CollisionManifold getCollisionInfo(CircleCollider circle) {
-        if (!detectCollision(circle))
+        Vec2 closestToCircle = this.nearestPoint(circle.center());
+        if (!circle.contains(closestToCircle))
             return null;
 
-        Vec2 closestToCircle = this.nearestPoint(circle.center());
-        float overlap = circle.radius() - closestToCircle.distance(circle.center());
-        CollisionManifold result = new CollisionManifold(closestToCircle.sub(this.center()), overlap);
-        result.addContactPoint(closestToCircle);
+        float depth = circle.radius() - closestToCircle.distance(circle.center());
+        Vec2 normal = circle.center().sub(closestToCircle).unitVector();
+        CollisionManifold result = new CollisionManifold(normal, depth);
+        result.addContactPoint(closestToCircle.sub(normal.mul(depth)));
         return result;
     }
 
@@ -202,6 +192,7 @@ public class BoxCollider2D extends PolygonCollider2D {
         if (!detectCollision(box))
             return null;
 
+        // Axis with minimum overlap
         Vec2[] axes = ArrayUtils.addAll(this.getNormals(), box.getNormals());
         float[] overlaps = new float[axes.length];
         for (int i = 0; i < overlaps.length; i++)
@@ -210,8 +201,9 @@ public class BoxCollider2D extends PolygonCollider2D {
 
         float overlap = overlaps[minIndex];
         Vec2 axis = axes[minIndex];
+        Vec2 normal = dist.project(axis).unitVector();
 
-        CollisionManifold collision = new CollisionManifold(dist.project(axis).unitVector(), overlap);
+        CollisionManifold collision = new CollisionManifold(normal, overlap);
         collision.addContactPoint(centerA);
         collision.addContactPoint(centerB);
         return collision;

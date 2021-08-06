@@ -53,7 +53,6 @@ public class EdgeTests {
         Edge2D edge = new Edge2D(new Vec2(-4, -4), new Vec2(4, 4));
         assertEquals(edge.start, edge.nearestPoint(edge.start));
         assertEquals(edge.end, edge.nearestPoint(edge.end));
-        assertEquals(edge.center(), edge.nearestPoint(edge.center()));
     }
 
     @Test
@@ -64,7 +63,16 @@ public class EdgeTests {
         assertEquals(new Vec2(0, 4), edge.nearestPoint(new Vec2(2, 5)));
     }
 
-    // Line vs Line
+    // Distance to Point
+    @Test
+    public void distanceToPointIsPositive() {
+        Edge2D edge = new Edge2D(new Vec2(-4, 1), new Vec2(4, 1));
+        assertEquals(2, edge.distance(new Vec2(0, 3)));
+        assertEquals(-2, edge.distance(new Vec2(0, -1)));
+
+    }
+
+    // Line Intersection
 
     @Test
     public void linesIntersectOnce() {

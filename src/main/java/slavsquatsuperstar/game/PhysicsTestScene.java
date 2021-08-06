@@ -50,13 +50,8 @@ public class PhysicsTestScene extends Scene {
         addObject(player);
 
         addObject(new GameObject("Debug Draw", new Vec2()) {
-            RaycastResult rc = new RaycastResult();
-
             @Override
             public void render(Graphics2D g2) {
-                Edge2D ray = new Edge2D(player.transform.position, MouseInput.getPosition());
-                DebugDraw.drawLine(ray.start, ray.end, Colors.BLACK);
-
                 for (GameObject o : getScene().getObjects(null)) {
                     if (o.name.equals("Camera"))
                         continue;
@@ -123,7 +118,7 @@ public class PhysicsTestScene extends Scene {
     }
 
     public GameObject createAABB(float width, float height, Vec2 position) {
-        return new GameObject("AABB Rectangke", position) {
+        return new GameObject("AABB Rectangle", position) {
             @Override
             protected void init() {
                 addComponent(new AlignedBoxCollider2D(new Vec2(width, height)));

@@ -12,12 +12,9 @@ import java.util.List;
  */
 public class CollisionManifold {
 
-    private Vec2 normal = new Vec2();
-    private float depth;
-    private boolean colliding = false;
     private List<Vec2> contactPoints = new ArrayList<>();
-
-    public CollisionManifold() {}
+    private Vec2 normal = new Vec2(); // Direction of separation
+    private float depth; // Penetration distance
 
     public CollisionManifold(Vec2 normal, float depth) {
         this.normal = normal.unitVector();
@@ -34,10 +31,6 @@ public class CollisionManifold {
         return depth;
     }
 
-    public boolean isColliding() {
-        return colliding;
-    }
-
     public int countContactPoints() {
         return contactPoints.size();
     }
@@ -47,7 +40,6 @@ public class CollisionManifold {
     }
 
     public void addContactPoint(Vec2 contactPoint) {
-        colliding = true;
         contactPoints.add(contactPoint);
     }
 }

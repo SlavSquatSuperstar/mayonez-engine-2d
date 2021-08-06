@@ -31,14 +31,6 @@ public class Edge2D {
         return end.sub(start);
     }
 
-    public Edge2D getReverse() {
-        return new Edge2D(end, start);
-    }
-
-    public Vec2 center() {
-        return new Vec2(start.x + end.x, start.y + end.y).mul(0.5f);
-    }
-
     // Line vs Point
 
     /**
@@ -56,11 +48,16 @@ public class Edge2D {
     public Vec2 nearestPoint(Vec2 position) {
         float length = getLength();
         float projLength = position.sub(start).dot(toVector()) / length; // find point shadow on line
-        if (projLength > length) // past line end
+        if (projLength > length) // pat line end
             return end;
         else if (projLength < 0) // behind line start
             return start;
         return start.add(toVector().mul(projLength / length)); // inside line
+    }
+
+    // right (clockwise) is positives
+    public float distance(Vec2 point) {
+        return point.sub(start).projectedLength(toVector().rotate(90));
     }
 
     // Line vs Line Methods

@@ -58,7 +58,7 @@ public class CircleTests {
     @Test
     public void nearestPointOutsideCircle() {
         assertEquals(new Vec2(2, 0), c.nearestPoint(new Vec2(4, 0)));
-        assertEquals(new Vec2(-2, 0), c.nearestPoint(new Vec2(-4, 0)));
+        assertEquals(new Vec2(0, -2).rotate(-45), c.nearestPoint(new Vec2(-4, -4)));
     }
 
     // Raycast

@@ -126,6 +126,36 @@ public class VectorTests {
         assertEquals(v1, v1.project(v2));
     }
 
+    // Clamping
+    @Test
+    public void clampVectorToBoundsSame() {
+        Vec2 min = new Vec2(-2, -2);
+        Vec2 max = new Vec2(4, 4);
+        assertEquals(new Vec2(-2, 4), new Vec2(-2, 4).clampInbounds(min, max));
+        assertEquals(new Vec2(1, 1), new Vec2(1, 1).clampInbounds(min, max));
+    }
+
+    @Test
+    public void clampVectorToBoundsSmaller() {
+        Vec2 min = new Vec2(-2, -2);
+        Vec2 max = new Vec2(4, 4);
+        assertEquals(new Vec2(1, -2), new Vec2(1, -3).clampInbounds(min, max));
+        assertEquals(new Vec2(4, 1), new Vec2(5, 1).clampInbounds(min, max));
+        assertEquals(new Vec2(-2, 4), new Vec2(-3, 5).clampInbounds(min, max));
+    }
+
+    @Test
+    public void clampVectorLengthSame() {
+        assertEquals(new Vec2(4, 0), new Vec2(4, 0).clampLength(5));
+        assertEquals(new Vec2(-2, -2), new Vec2(-2, -2).clampLength(5));
+    }
+
+    @Test
+    public void clampVectorLengthShorter() {
+        assertEquals(new Vec2(5, 0), new Vec2(6, 0).clampLength(5));
+        assertEquals(new Vec2(0, -5).rotate(-45), new Vec2(-5, -5).clampLength(5));
+    }
+
     // Rotation / Angles
 
     @Test

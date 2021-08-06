@@ -48,7 +48,7 @@ public class CircleCollider extends Collider2D {
     public Vec2 nearestPoint(Vec2 position) {
         if (contains(position))
             return position;
-        return position.sub(center()).clampLength(radius());
+        return center().add(position.sub(center()).clampLength(radius()));
     }
 
     @Override
@@ -107,18 +107,10 @@ public class CircleCollider extends Collider2D {
 
     @Override
     public boolean detectCollision(Collider2D collider) {
-        if (collider == this) // If same object ignore
-            return false;
-
-        if (collider instanceof CircleCollider) {
-            float distSquared = this.center().distanceSquared(collider.center());
-            float radiiSum = this.radius() + ((CircleCollider) collider).radius();
-            return distSquared <= radiiSum * radiiSum;
-        } else if (collider instanceof AlignedBoxCollider2D)
-            return contains(collider.nearestPoint(this.center()));
+        if (collider instanceof CircleCollider)
+            return getCollisionInfo(collider) != null;
         else if (collider instanceof BoxCollider2D)
-            return contains(collider.nearestPoint(this.center()));
-
+            return getCollisionInfo(collider) != null;
         return false;
     }
 
@@ -134,30 +126,25 @@ public class CircleCollider extends Collider2D {
     private CollisionManifold getCollisionInfo(CircleCollider circle) {
         float sumRadii = this.radius() + circle.radius();
         Vec2 distance = circle.center().sub(this.center());
-        if (distance.lenSquared() > sumRadii * sumRadii) // No intersection
+
+        if (distance.lenSquared() >= sumRadii * sumRadii) // Circles too far away
             return null;
 
-        // Separate circles factoring in mass
-        // TODO bad idea if no rb, just use overlap instead
-        float massProportion = this.rb.getMass() / (this.rb.getMass() + circle.rb.getMass());
-        float depth = Math.abs(distance.len() - sumRadii);
-        Vec2 normal = distance.unitVector(); // direction of displacement
-
-        // Simulate real physics, where circles only contact at one point
-        Vec2 contactPoint = this.center().add(normal.mul(this.radius() - depth * massProportion));
+        float depth = sumRadii - distance.len();
+        Vec2 normal = distance.unitVector();
 
         CollisionManifold result = new CollisionManifold(normal, depth);
-        result.addContactPoint(contactPoint);
+        result.addContactPoint(this.center().add(normal.mul(this.radius() - depth)));
         return result;
     }
 
     private CollisionManifold getCollisionInfo(BoxCollider2D box) {
-        if (!detectCollision(box))
+        Vec2 closestToCircle = box.nearestPoint(center()); // point from box deepest in circle
+        if (!contains(closestToCircle))
             return null;
 
-        Vec2 closestToCircle = box.nearestPoint(this.center());
-        float overlap = radius() - closestToCircle.distance(this.center());
-        CollisionManifold result = new CollisionManifold(closestToCircle.sub(this.center()), overlap);
+        float depth = radius() - closestToCircle.distance(center());
+        CollisionManifold result = new CollisionManifold(closestToCircle.sub(center()), depth);
         result.addContactPoint(closestToCircle);
         return result;
     }

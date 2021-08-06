@@ -28,7 +28,6 @@ public abstract class Collider2D extends Component {
     protected Rigidbody2D rb = null;
 
     // Physics Properties
-    // TODO world vs local property getters?
 
     /**
      * What percentage of energy is conserved after a collision (0-1).
