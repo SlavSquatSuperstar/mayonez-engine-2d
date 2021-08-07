@@ -53,7 +53,7 @@ public class Transform { // TODO extend component?
     }
 
     /**
-     * Stretches the parent object and all its components by the given factors along the x and y axes
+     * Stretches the parent object and all its components by the given factors along the x and y axes.
      *
      * @param dilation a vector
      * @return this transform
@@ -63,18 +63,23 @@ public class Transform { // TODO extend component?
         return this;
     }
 
+    // Helper Methods
+
     /**
-     * Transforms a point from world space to the object's local space.
+     * Transforms a point from world space to the object's local space, with this Transform's position serving as the
+     * origin.
      *
      * @param world a 2D point in the world
      * @return the localized point
      */
+    // TODO move to collider?
     public Vec2 toLocal(Vec2 world) {
         return world.sub(position).div(scale).rotate(-rotation);
     }
 
     /**
-     * Transforms a point from the object's local space to world space.
+     * Transforms a point from the object's local space to world space, with this Transform's position serving as the *
+     * origin.
      *
      * @param local a localized 2D point
      * @return the point in the world

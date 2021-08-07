@@ -85,21 +85,24 @@ public class PhysicsTestScene extends Scene {
 
         addObject(createCircle(2, new Vec2(10, 10)));
         addObject(createCircle(5, new Vec2(30, 30)));
-
         addObject(createAABB(12, 8, new Vec2(50, 20)));
         addObject(createAABB(5, 10, new Vec2(70, 20)));
-
         addObject(createOBB(10, 6, new Vec2(70, 40), 45));
         addObject(createOBB(5, 5, new Vec2(90, 40), 0));
 
         // Randomly generate shapes
         for (int i = 0; i < 6; i++) {
-            if (i % 3 == 0)
-                addObject(createCircle(MathUtils.random(2, 5), new Vec2(MathUtils.random(0, getWidth()), MathUtils.random(0, getHeight()))));
-            else if (i % 2 == 0)
-                addObject(createAABB(MathUtils.random(4, 10), MathUtils.random(4, 10), new Vec2(MathUtils.random(0, getWidth()), MathUtils.random(0, getHeight()))));
-            else
-                addObject(createOBB(MathUtils.random(4, 10), MathUtils.random(4, 10), new Vec2(MathUtils.random(0, getWidth()), MathUtils.random(0, getHeight())), MathUtils.random(0, 90)));
+            switch (i % 3) {
+                case 0:
+                    addObject(createCircle(MathUtils.random(2, 5), new Vec2(MathUtils.random(0, getWidth()), MathUtils.random(0, getHeight()))));
+                    break;
+                case 1:
+                    addObject(createAABB(MathUtils.random(4, 10), MathUtils.random(4, 10), new Vec2(MathUtils.random(0, getWidth()), MathUtils.random(0, getHeight()))));
+                    break;
+                case 2:
+                    addObject(createOBB(MathUtils.random(4, 10), MathUtils.random(4, 10), new Vec2(MathUtils.random(0, getWidth()), MathUtils.random(0, getHeight())), MathUtils.random(0, 90)));
+                    break;
+            }
         }
 
     }

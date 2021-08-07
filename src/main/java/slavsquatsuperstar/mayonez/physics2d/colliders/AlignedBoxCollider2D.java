@@ -1,11 +1,7 @@
 package slavsquatsuperstar.mayonez.physics2d.colliders;
 
-import org.apache.commons.lang3.ArrayUtils;
 import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
-import slavsquatsuperstar.mayonez.Colors;
-import slavsquatsuperstar.mayonez.physics2d.CollisionManifold;
-import slavsquatsuperstar.mayonez.renderer.DebugDraw;
 
 // TODO scale with transform
 
@@ -130,57 +126,6 @@ public class AlignedBoxCollider2D extends BoxCollider2D {
             result.set(ray.getPoint(distToBox), normal, distToBox);
 
         return true;
-    }
-
-    @Override
-    public CollisionManifold getCollisionInfo(Collider2D collider) {
-        if (collider instanceof AlignedBoxCollider2D)
-            return getCollisionInfo((AlignedBoxCollider2D) collider);
-        return super.getCollisionInfo(collider);
-    }
-
-    private CollisionManifold getCollisionInfo(AlignedBoxCollider2D box) {
-        Vec2 centerA = this.center();
-        Vec2 centerB = box.center();
-
-        Vec2 dist = centerB.sub(centerA);
-
-        if (!detectCollision(box))
-            return null;
-
-        // Axis with minimum overlap
-        Vec2[] axes = ArrayUtils.addAll(this.getNormals(), box.getNormals());
-        float[] overlaps = new float[axes.length];
-        for (int i = 0; i < overlaps.length; i++)
-            overlaps[i] = getAxisOverlap(box, axes[i]);
-        int minIndex = MathUtils.minIndex(overlaps);
-
-        float overlap = overlaps[minIndex];
-        Vec2 axis = axes[minIndex];
-        Vec2 normal = dist.project(axis).unitVector();
-        Vec2 side = normal.rotate(90);
-
-        MathUtils.Range intervalA = this.getIntervalOnAxis(side);
-        MathUtils.Range intervalB = box.getIntervalOnAxis(side);
-        MathUtils.Range collisionFace = new MathUtils.Range(Math.max(intervalA.min, intervalB.min),
-                Math.min(intervalA.max, intervalB.max));
-        MathUtils.Range penetration = new MathUtils.Range(box.getIntervalOnAxis(normal).min, this.getIntervalOnAxis(normal).max);
-
-        Vec2 faceAMin = normal.mul(penetration.max).add(side.mul(collisionFace.max));
-        Vec2 faceAMax = normal.mul(penetration.max).add(side.mul(collisionFace.min));
-
-//        Vec2 faceBMin = normal.mul(penetration.min).add(side.mul(collisionFace.max));
-//        Vec2 faceBMax = normal.mul(penetration.min).add(side.mul(collisionFace.min));
-
-        DebugDraw.drawPoint(faceAMin, Colors.BLUE);
-        DebugDraw.drawPoint(faceAMax, Colors.BLACK);
-//        DebugDraw.drawPoint(faceBMin, Colors.PURPLE);
-//        DebugDraw.drawPoint(faceBMax, Colors.PURPLE);
-
-        CollisionManifold collision = new CollisionManifold(normal, overlap);
-        collision.addContactPoint(faceAMin);
-        collision.addContactPoint(faceAMax);
-        return collision;
     }
 
 }

@@ -177,7 +177,7 @@ public class Physics2D {
 
         float elasticity = r1.getCollider().getBounce() * r2.getCollider().getBounce(); // Coefficient of restitution
         float collisionVel = -(1f + elasticity) * relativeVel.dot(normal);
-        float impulse = collisionVel / sumInvMass / (float) collision.countContactPoints();
+        float impulse = collisionVel / sumInvMass;
 
         if (!r1.hasInfiniteMass())
             r1.addImpulse(normal.mul(-impulse));

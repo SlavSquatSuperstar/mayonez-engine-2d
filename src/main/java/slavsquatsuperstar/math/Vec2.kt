@@ -43,6 +43,18 @@ class Vec2 constructor(
      */
     constructor(v: Vec2) : this(v.x, v.y)
 
+    /**
+     * Copies this vector.
+     * @return a new vector with the same components
+     */
+    operator fun unaryPlus() = Vec2(this)
+
+    /**
+     * Negates this vector.
+     * @return a new vector with this vector's components times -1
+     */
+    operator fun unaryMinus() = this * -1F
+
     // Mutators
 
     /**
@@ -63,25 +75,6 @@ class Vec2 constructor(
      */
     fun set(v: Vec2) = set(v.x, v.y)
 
-    // Operator Overloads
-
-    operator fun plus(v: Vec2) = Vec2(this.x + v.x, this.y + v.y)
-    operator fun minus(v: Vec2) = Vec2(this.x - v.x, this.y - v.y)
-    operator fun times(scalar: Float) = Vec2(this.x * scalar, this.y * scalar)
-    operator fun times(v: Vec2) = Vec2(this.x * v.x, this.y * v.y)
-
-    /**
-     * Copies this vector.
-     * @return a new vector with the same components
-     */
-    operator fun unaryPlus() = Vec2(this)
-
-    /**
-     * Negates this vector.
-     * @return a new vector with this vector's components times -1
-     */
-    operator fun unaryMinus() = this * -1F
-
     // Arithmetic Operations
 
     /**
@@ -91,6 +84,7 @@ class Vec2 constructor(
      * @return the vector sum
      */
     fun add(v: Vec2): Vec2 = this + v
+    operator fun plus(v: Vec2) = Vec2(this.x + v.x, this.y + v.y)
 
     /**
      * Subtracts another vector from this vector.
@@ -99,6 +93,7 @@ class Vec2 constructor(
      * @return the vector difference
      */
     fun sub(v: Vec2): Vec2 = this - v
+    operator fun minus(v: Vec2) = Vec2(this.x - v.x, this.y - v.y)
 
     /**
      * Multiplies both components vector by a number.
@@ -107,6 +102,7 @@ class Vec2 constructor(
      * @return the multiplied vector
      */
     fun mul(scalar: Float): Vec2 = this * scalar
+    operator fun times(scalar: Float) = Vec2(this.x * scalar, this.y * scalar)
 
     /**
      * Multiplies the components of this vector by the corresponding components of another vector.
@@ -115,6 +111,7 @@ class Vec2 constructor(
      * @return the multiplied vector
      */
     fun mul(v: Vec2): Vec2 = this * v
+    operator fun times(v: Vec2) = Vec2(this.x * v.x, this.y * v.y)
 
     /**
      * Divides both components vector by a number.
@@ -138,7 +135,7 @@ class Vec2 constructor(
      */
     operator fun div(v: Vec2): Vec2 = Vec2(this.x / v.x, this.y / v.y)
 
-    // Vector Operations
+    // Special Vector Operations
 
     /**
      * Multiplies the corresponding components of this vector and another vector.
@@ -162,45 +159,9 @@ class Vec2 constructor(
      * @param vOnto another vector
      * @return the projected vector
      */
-    fun project(vOnto: Vec2) = vOnto * (this.dot(vOnto) / vOnto.lenSquared())
+    fun project(vOnto: Vec2): Vec2 = vOnto * (this.dot(vOnto) / vOnto.lenSquared())
 
-    /**
-     * Calculates the length this vector's projection onto another vector.
-     *
-     * @param vOnto another vector
-     * @return the projected length
-     */
-    fun projectedLength(vOnto: Vec2): Float = this.dot(vOnto) / vOnto.len()
-
-    // Other Operations
-
-    /**
-     * Clamps the components of this vector within the bounding box created by the given vectors.
-     *
-     * @param min the minimum value for each of the components
-     * @param max the maximum value for each of the components
-     * @return the clamped vector
-     */
-    fun clampInbounds(min: Vec2, max: Vec2): Vec2 = Vec2(clamp(x, min.x, max.x), clamp(y, min.y, max.y))
-
-    /**
-     * Clamps the length of this vector if it exceeds the provided value, while keeping the same direction. Useful for
-     * movement scripts.
-     *
-     * @param length any number
-     * @return the clamped vector
-     */
-    fun clampLength(length: Float): Vec2 {
-        return if (lenSquared() > length * length)
-            this * (length / len())
-        else +this
-    }
-
-    // Pythagorean Theorem Methods
-
-    fun distance(v: Vec2): Float = sqrt(distanceSquared(v))
-
-    fun distanceSquared(v: Vec2): Float = MathUtils.pythagoreanSquared((x - v.x), (y - v.y))
+    // Pythagorean Theorem / Length Methods
 
     /**
      * Calculates the length of this vector.
@@ -216,6 +177,10 @@ class Vec2 constructor(
      */
     fun lenSquared(): Float = (x * x) + (y * y)
 
+    fun distance(v: Vec2): Float = sqrt(distanceSquared(v))
+
+    fun distanceSquared(v: Vec2): Float = MathUtils.pythagoreanSquared((x - v.x), (y - v.y))
+
     /**
      * Calculates the vector with the same direction as this vector and a magnitude of 1. Returns (0, 0) if this vector
      * is (0, 0).
@@ -226,6 +191,14 @@ class Vec2 constructor(
         return if (equals(lenSquared(), 1F) || equals(lenSquared(), 0F)) +this
         else this / len()
     }
+
+    /**
+     * Calculates the length this vector's projection onto another vector.
+     *
+     * @param vOnto another vector
+     * @return the projected length
+     */
+    fun projectedLength(vOnto: Vec2): Float = this.dot(vOnto) / vOnto.len()
 
     // Angle Methods
 
@@ -262,6 +235,40 @@ class Vec2 constructor(
         val rot = Mat22.rotationMatrix(degrees)
         // Revert the vector space to the old point
         return (rot * localPos) + origin
+    }
+
+    // Other Methods
+
+    /**
+     * Clamps the components of this vector within the bounding box created by the given vectors.
+     *
+     * @param min the minimum value for each of the components
+     * @param max the maximum value for each of the components
+     * @return the clamped vector
+     */
+    fun clampInbounds(min: Vec2, max: Vec2): Vec2 = Vec2(clamp(x, min.x, max.x), clamp(y, min.y, max.y))
+
+    /**
+     * Clamps the length of this vector if it exceeds the provided value, while keeping the same direction. Useful for
+     * movement scripts.
+     *
+     * @param length any number
+     * @return the clamped vector
+     */
+    fun clampLength(length: Float): Vec2 {
+        return if (lenSquared() > length * length)
+            this * (length / len())
+        else +this
+    }
+
+    /**
+     * Calculates the average position of this vector and another.
+     *
+     * @param v a 2D vector
+     * @return the midpoint
+     */
+    fun midpoint(v: Vec2): Vec2 {
+        return (this + v) / 2F
     }
 
     // Overrides

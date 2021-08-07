@@ -184,28 +184,64 @@ public class BoxCollider2D extends PolygonCollider2D {
     }
 
     private CollisionManifold getCollisionInfo(BoxCollider2D box) {
-        Vec2 centerA = this.center();
-        Vec2 centerB = box.center();
-
-        Vec2 dist = centerB.sub(centerA);
-
+        Vec2[] normalsA = this.getNormals();
+        Vec2[] normalsB = box.getNormals();
         if (!detectCollision(box))
             return null;
 
-        // Axis with minimum overlap
-        Vec2[] axes = ArrayUtils.addAll(this.getNormals(), box.getNormals());
+        // SAT: Find axis with minimum overlap
+        Vec2[] axes = ArrayUtils.addAll(normalsA, normalsB);
         float[] overlaps = new float[axes.length];
         for (int i = 0; i < overlaps.length; i++)
             overlaps[i] = getAxisOverlap(box, axes[i]);
-        int minIndex = MathUtils.minIndex(overlaps);
+        int minOverlapIndex = MathUtils.minIndex(overlaps);
 
-        float overlap = overlaps[minIndex];
-        Vec2 axis = axes[minIndex];
+        float overlap = overlaps[minOverlapIndex];
+        Vec2 axis = axes[minOverlapIndex];
+        Vec2 dist = box.center().sub(this.center());
         Vec2 normal = dist.project(axis).unitVector();
+        Vec2 side = normal.rotate(90);
+        MathUtils.Range penetration = new MathUtils.Range(box.getIntervalOnAxis(normal).min, this.getIntervalOnAxis(normal).max);
 
         CollisionManifold collision = new CollisionManifold(normal, overlap);
-        collision.addContactPoint(centerA);
-        collision.addContactPoint(centerB);
+        if (MathUtils.equals(this.getRotation() % 90, box.getRotation() % 90)) { // Orthogonal intersection = 2 contact points
+            MathUtils.Range sideA = this.getIntervalOnAxis(side); // vertices projected onto side normal
+            MathUtils.Range sideB = box.getIntervalOnAxis(side);
+            MathUtils.Range collisionFace = new MathUtils.Range(Math.max(sideA.min, sideB.min),
+                    Math.min(sideA.max, sideB.max));
+
+            Vec2 faceAMin = normal.mul(penetration.min).add(side.mul(collisionFace.max));
+            Vec2 faceAMax = normal.mul(penetration.min).add(side.mul(collisionFace.min));
+            collision.addContactPoint(faceAMin);
+            collision.addContactPoint(faceAMax);
+        } else { // Diagonal intersection = 1 contact point
+            float dotWithAxis = normal.dot(new Vec2(1, 0).rotate(getRotation()));
+            // Other box is inside this, find the furthest vertex inside this box
+            if (MathUtils.equals(dotWithAxis, 0) || MathUtils.equals(dotWithAxis, 1) || MathUtils.equals(dotWithAxis, -1)) {
+//            if (ArrayUtils.contains(normalsA, normal)) {
+                Vec2[] vertices = box.getVertices();
+                float[] projections = new float[vertices.length];
+                for (int i = 0; i < projections.length; i++)
+                    projections[i] = vertices[i].dot(normal);
+                int minProjIndex = MathUtils.minIndex(projections);
+                float height = vertices[minProjIndex].projectedLength(side);
+
+                Vec2 contactCorner = normal.mul(penetration.min).add(side.mul(height));
+//                Vec2 contactCorner = normal.mul(penetration.min).add(side.mul(height)).add(normal.mul(overlap));
+                collision.addContactPoint(contactCorner);
+            } else { // This box inside other box, find vertex furthest inside other box
+                Vec2[] vertices = this.getVertices();
+                float[] projections = new float[vertices.length];
+                for (int i = 0; i < projections.length; i++)
+                    projections[i] = vertices[i].dot(normal);
+                int maxProjIndex = MathUtils.maxIndex(projections);
+                float height = vertices[maxProjIndex].projectedLength(side);
+
+                Vec2 contactCorner = normal.mul(penetration.max).add(side.mul(height));
+//                Vec2 contactCorner = normal.mul(penetration.max).add(side.mul(height)).sub(normal.mul(overlap));
+                collision.addContactPoint(contactCorner);
+            }
+        }
         return collision;
     }
 }
