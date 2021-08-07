@@ -20,35 +20,6 @@ public class PhysicsTestScene extends Scene {
 
     @Override
     protected void init() {
-        GameObject player = new GameObject("Player Shape", new Vec2(30, 10)) {
-            @Override
-            protected void init() {
-                float radius = 4f;
-                float size = 8f;
-//                addComponent(new CircleCollider(radius));
-//                addComponent(new Rigidbody2D(radius * radius * MathUtils.PI));
-//                addComponent(new AlignedBoxCollider2D(new Vec2(size, size)));
-                addComponent(new BoxCollider2D(new Vec2(size, size)));
-                addComponent(new Rigidbody2D(size * size));
-                addComponent(new MouseFlick("right mouse", 1, false));
-                addComponent(new KeyMovement(MoveMode.IMPULSE, 1));
-                addComponent(new DragAndDrop("left mouse", false));
-                addComponent(new Script() {
-                    private float spin = 2;
-
-                    @Override
-                    public void update(float dt) {
-                        if (KeyInput.keyDown("Q"))
-                            transform.rotate(-spin);
-                        if (KeyInput.keyDown("E"))
-                            transform.rotate(spin);
-                    }
-                });
-                addComponent(new KeepInScene(getScene(), KeepInScene.Mode.BOUNCE));
-            }
-        };
-        addObject(player);
-
         addObject(new GameObject("Debug Draw", new Vec2()) {
             @Override
             public void render(Graphics2D g2) {
@@ -68,7 +39,7 @@ public class PhysicsTestScene extends Scene {
 
                         // Draw velocity vector
                         if (!col.isStatic())
-                            DebugDraw.drawVector(col.center(), col.getRigidbody().velocity().mul(5), color);
+                            DebugDraw.drawVector(col.center(), col.getRigidbody().getVelocity().div(10), color);
 
                         // Draw Shape
                         DebugDraw.drawShape(col, color);
@@ -76,6 +47,41 @@ public class PhysicsTestScene extends Scene {
                 }
             }
         });
+
+        GameObject player = new GameObject("Player Shape", new Vec2(30, 10)) {
+            @Override
+            protected void init() {
+                float radius = 4f;
+                float size = 8f;
+                float speed = 1f;
+//                addComponent(new CircleCollider(radius));
+//                addComponent(new Rigidbody2D(radius * radius * MathUtils.PI / 20f));
+//                addComponent(new AlignedBoxCollider2D(new Vec2(size, size)));
+                addComponent(new BoxCollider2D(new Vec2(size, size)));
+                addComponent(new Rigidbody2D(size * size / 20f));
+                addComponent(new MouseFlick("right mouse", 15, false));
+                addComponent(new KeyMovement(MoveMode.IMPULSE, speed));
+                addComponent(new DragAndDrop("left mouse", false));
+                addComponent(new KeepInScene(getScene(), KeepInScene.Mode.BOUNCE));
+                addComponent(new Script() {
+                    private Rigidbody2D rb;
+
+                    @Override
+                    public void start() {
+                        rb = getComponent(Rigidbody2D.class);
+                    }
+
+                    @Override
+                    public void update(float dt) {
+                        if (KeyInput.keyDown("Q"))
+                            rb.addAngularImpulse(-speed);
+                        if (KeyInput.keyDown("E"))
+                            rb.addAngularImpulse(speed);
+                    }
+                });
+            }
+        };
+        addObject(player);
 
         addObject(createCircle(2, new Vec2(10, 10)));
         addObject(createCircle(5, new Vec2(30, 30)));
@@ -105,10 +111,10 @@ public class PhysicsTestScene extends Scene {
             @Override
             protected void init() {
                 addComponent(new CircleCollider(radius));
-                addComponent(new Rigidbody2D(radius * radius * MathUtils.PI));
+                addComponent(new Rigidbody2D(radius * radius * MathUtils.PI / 20f));
                 addComponent(new KeepInScene(getScene(), KeepInScene.Mode.BOUNCE));
                 addComponent(new DragAndDrop("left mouse", false));
-                addComponent(new MouseFlick("right mouse", 1, false));
+                addComponent(new MouseFlick("right mouse", 15, false));
             }
         };
     }
@@ -118,10 +124,10 @@ public class PhysicsTestScene extends Scene {
             @Override
             protected void init() {
                 addComponent(new AlignedBoxCollider2D(new Vec2(width, height)));
-                addComponent(new Rigidbody2D(width * height));
+                addComponent(new Rigidbody2D(width * height / 20f));
                 addComponent(new KeepInScene(getScene(), KeepInScene.Mode.BOUNCE));
                 addComponent(new DragAndDrop("left mouse", false));
-                addComponent(new MouseFlick("right mouse", 1, false));
+                addComponent(new MouseFlick("right mouse", 15, false));
             }
         };
     }
@@ -132,10 +138,10 @@ public class PhysicsTestScene extends Scene {
             protected void init() {
                 transform.rotate(rotation);
                 addComponent(new BoxCollider2D(new Vec2(width, height)));
-                addComponent(new Rigidbody2D(width * height));
+                addComponent(new Rigidbody2D(width * height / 20f));
                 addComponent(new KeepInScene(getScene(), KeepInScene.Mode.BOUNCE));
                 addComponent(new DragAndDrop("left mouse", false));
-                addComponent(new MouseFlick("right mouse", 1, false));
+                addComponent(new MouseFlick("right mouse", 15, false));
             }
         };
     }

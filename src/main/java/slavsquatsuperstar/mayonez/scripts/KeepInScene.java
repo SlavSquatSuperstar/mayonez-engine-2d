@@ -95,10 +95,10 @@ public class KeepInScene extends Script {
         switch (mode) {
             case STOP: // Set velocity to 0 if stopping
                 if (rb != null)
-                    rb.velocity().x = 0;
+                    rb.getVelocity().x = 0;
                 break;
             case BOUNCE: // Reverse velocity if bouncing
-                rb.velocity().x *= -boundingBox.getBounce();
+                rb.getVelocity().x *= -boundingBox.getBounce();
                 break;
             default: // Stop if neither
                 return;
@@ -110,10 +110,10 @@ public class KeepInScene extends Script {
         switch (mode) {
             case STOP:
                 if (rb != null)
-                    rb.velocity().x = 0;
+                    rb.getVelocity().x = 0;
                 break;
             case BOUNCE:
-                rb.velocity().x *= -boundingBox.getBounce();
+                rb.getVelocity().x *= -boundingBox.getBounce();
                 break;
             default:
                 return;
@@ -125,10 +125,10 @@ public class KeepInScene extends Script {
         switch (mode) {
             case STOP:
                 if (rb != null)
-                    rb.velocity().y = 0;
+                    rb.getVelocity().y = 0;
                 break;
             case BOUNCE:
-                rb.velocity().y *= -boundingBox.getBounce();
+                rb.getVelocity().y *= -boundingBox.getBounce();
                 break;
             default:
                 return;
@@ -141,10 +141,10 @@ public class KeepInScene extends Script {
         switch (mode) {
             case STOP:
                 if (rb != null)
-                    rb.velocity().y = 0;
+                    rb.getVelocity().y = 0;
                 break;
             case BOUNCE:
-                rb.velocity().y *= -boundingBox.getBounce();
+                rb.getVelocity().y *= -boundingBox.getBounce();
                 break;
             default:
                 return;

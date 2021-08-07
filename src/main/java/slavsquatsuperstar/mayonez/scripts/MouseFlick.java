@@ -18,7 +18,7 @@ public class MouseFlick extends MouseScript {
         this.button = button;
         this.inverted = inverted;
         this.speed = speed;
-        mode = MoveMode.IMPULSE;
+        mode = MoveMode.VELOCITY;
     }
 
     @Override
@@ -34,7 +34,10 @@ public class MouseFlick extends MouseScript {
         if (activeInstance == null) {
             activeInstance = this;
             lastMouse = MouseInput.getPosition();
-            rb.velocity().set(0, 0); // Stop the object
+            if (rb != null) {
+                rb.setVelocity(new Vec2(0, 0)); // Stop the object
+                rb.setAngularVelocity(0);
+            }
         }
     }
 

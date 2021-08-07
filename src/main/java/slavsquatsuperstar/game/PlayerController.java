@@ -43,7 +43,7 @@ public class PlayerController extends Script {
         if (KeyInput.keyDown(KeyEvent.VK_E))
             transform.rotate(2);
 
-        Vec2 velocity = rb.velocity();
+        Vec2 velocity = rb.getVelocity();
 
         if (getScene() instanceof LevelScene) {
             // Jump if on ground

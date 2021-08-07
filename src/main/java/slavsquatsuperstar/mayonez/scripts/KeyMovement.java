@@ -1,7 +1,7 @@
 package slavsquatsuperstar.mayonez.scripts;
 
-import slavsquatsuperstar.mayonez.KeyInput;
 import slavsquatsuperstar.math.Vec2;
+import slavsquatsuperstar.mayonez.KeyInput;
 
 /**
  * Allows objects to be moved with the WASD/arrow keys.
@@ -25,6 +25,9 @@ public class KeyMovement extends MovementScript {
             case POSITION:
                 transform.move(input);
                 break;
+            case VELOCITY:
+                rb.addVelocity(input);
+                break;
             case IMPULSE:
                 rb.addImpulse(input);
                 break;
@@ -33,8 +36,8 @@ public class KeyMovement extends MovementScript {
                 break;
         }
         // Limit Top Speed
-        if (rb != null && topSpeed > -1 && rb.speed() > topSpeed)
-            rb.velocity().set(rb.velocity().mul(topSpeed / rb.speed()));
+        if (rb != null && topSpeed > -1 && rb.getSpeed() > topSpeed)
+            rb.setVelocity(rb.getVelocity().mul(topSpeed / rb.getSpeed()));
     }
 
     @Override

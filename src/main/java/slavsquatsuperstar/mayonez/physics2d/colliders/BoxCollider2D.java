@@ -3,7 +3,6 @@ package slavsquatsuperstar.mayonez.physics2d.colliders;
 import org.apache.commons.lang3.ArrayUtils;
 import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
-import slavsquatsuperstar.mayonez.Logger;
 import slavsquatsuperstar.mayonez.physics2d.CollisionManifold;
 
 /**
@@ -77,7 +76,7 @@ public class BoxCollider2D extends PolygonCollider2D {
 
     @Override
     public boolean contains(Vec2 point) {
-        Vec2 pointLocal = transform.toLocal(point); // Rotate the point into the box's local space
+        Vec2 pointLocal = toLocal(point); // Rotate the point into the box's local space
         return MathUtils.inRange(pointLocal.x, localMin().x, localMax().x) && MathUtils.inRange(pointLocal.y, localMin().y, localMax().y);
     }
 
@@ -86,7 +85,7 @@ public class BoxCollider2D extends PolygonCollider2D {
         if (contains(position))
             return position;
         // Transform the point into local space, clamp it, and then transform it back
-        return transform.toWorld(transform.toLocal(position).clampInbounds(localMin(), localMax()));
+        return toWorld(toLocal(position).clampInbounds(localMin(), localMax()));
     }
 
     // Shape vs Line
@@ -105,7 +104,7 @@ public class BoxCollider2D extends PolygonCollider2D {
         RaycastResult.reset(result);
 
         // Transform the ray to local space (but just rotate direction)
-        Ray2D localRay = new Ray2D(transform.toLocal(ray.origin), ray.direction.rotate(-getRotation()));
+        Ray2D localRay = new Ray2D(toLocal(ray.origin), ray.direction.rotate(-getRotation()));
 
         // Parametric distance to min/max x and y axes of box
         Vec2 tNear = localMin().sub(localRay.origin).div(localRay.direction);
@@ -147,7 +146,7 @@ public class BoxCollider2D extends PolygonCollider2D {
             normal = (localRay.direction.y < 0) ? new Vec2(0, 1) : new Vec2(0, -1);
 
         if (result != null) {
-            Vec2 contact = transform.toWorld(localRay.getPoint(distToBox));
+            Vec2 contact = toWorld(localRay.getPoint(distToBox));
             result.set(contact, normal.rotate(getRotation()), contact.sub(ray.origin).len());
         }
 
@@ -179,19 +178,17 @@ public class BoxCollider2D extends PolygonCollider2D {
 
         float depth = circle.radius() - closestToCircle.distance(circle.center());
         Vec2 normal = circle.center().sub(closestToCircle).unitVector();
-        CollisionManifold result = new CollisionManifold(normal, depth);
-        result.addContactPoint(closestToCircle.sub(normal.mul(depth)));
+        CollisionManifold result = new CollisionManifold(this, circle, normal, depth);
+        Vec2 contact = closestToCircle.sub(normal.mul(depth));
+        result.addContactPoint(toLocal(contact));
         return result;
     }
 
-    // TODO not reliable, if angle is close, get contact point outside of overlap
     private CollisionManifold getCollisionInfo(BoxCollider2D box) {
         Vec2[] normalsA = this.getNormals();
         Vec2[] normalsB = box.getNormals();
         if (!detectCollision(box))
             return null;
-
-        Logger.log("Passed SAT");
 
         // SAT: Find axis with minimum overlap
         Vec2[] axes = ArrayUtils.addAll(normalsA, normalsB);
@@ -207,7 +204,7 @@ public class BoxCollider2D extends PolygonCollider2D {
         Vec2 side = normal.rotate(90);
         MathUtils.Range penetration = new MathUtils.Range(box.getIntervalOnAxis(normal).min, this.getIntervalOnAxis(normal).max);
 
-        CollisionManifold collision = new CollisionManifold(normal, overlap);
+        CollisionManifold collision = new CollisionManifold(this, box, normal, overlap);
         if (MathUtils.equals(this.getRotation() % 90, box.getRotation() % 90)) { // Orthogonal intersection = 2 contact points
             MathUtils.Range sideA = this.getIntervalOnAxis(side); // vertices projected onto side normal
             MathUtils.Range sideB = box.getIntervalOnAxis(side);
@@ -216,8 +213,8 @@ public class BoxCollider2D extends PolygonCollider2D {
 
             Vec2 faceAMin = normal.mul(penetration.min).add(side.mul(collisionFace.max));
             Vec2 faceAMax = normal.mul(penetration.min).add(side.mul(collisionFace.min));
-            collision.addContactPoint(faceAMin);
-            collision.addContactPoint(faceAMax);
+            collision.addContactPoint(toLocal(faceAMin));
+            collision.addContactPoint(toLocal(faceAMax));
         } else { // Diagonal intersection = 1 contact point
             float dotWithAxis = normal.dot(new Vec2(1, 0).rotate(getRotation()));
             // Other box is inside this, find the furthest vertex inside this box
@@ -231,8 +228,7 @@ public class BoxCollider2D extends PolygonCollider2D {
                 float height = vertices[minProjIndex].projectedLength(side);
 
                 Vec2 contactCorner = normal.mul(penetration.min).add(side.mul(height));
-//                Vec2 contactCorner = normal.mul(penetration.min).add(side.mul(height)).add(normal.mul(overlap));
-                collision.addContactPoint(contactCorner);
+                collision.addContactPoint(toLocal(contactCorner));
             } else { // This box inside other box, find vertex furthest inside other box
                 Vec2[] vertices = this.getVertices();
                 float[] projections = new float[vertices.length];
@@ -242,8 +238,7 @@ public class BoxCollider2D extends PolygonCollider2D {
                 float height = vertices[maxProjIndex].projectedLength(side);
 
                 Vec2 contactCorner = normal.mul(penetration.max).add(side.mul(height));
-//                Vec2 contactCorner = normal.mul(penetration.max).add(side.mul(height)).sub(normal.mul(overlap));
-                collision.addContactPoint(contactCorner);
+                collision.addContactPoint(toLocal(contactCorner));
             }
         }
         return collision;

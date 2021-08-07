@@ -53,6 +53,16 @@ public class AlignedBoxCollider2D extends BoxCollider2D {
         return new AlignedBoxCollider2D(localSize()).setTransform(transform).setRigidBody(rb);
     }
 
+    @Override
+    public Vec2 toLocal(Vec2 world) {
+        return world.sub(center()).div(size());
+    }
+
+    @Override
+    public Vec2 toWorld(Vec2 local) {
+        return local.mul(size()).add(center());
+    }
+
     // AABB vs Point
 
     @Override

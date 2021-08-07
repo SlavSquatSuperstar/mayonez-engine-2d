@@ -7,15 +7,15 @@ plugins {
 }
 
 group 'slavsquatsuperstar'
-version '0.6.5-SNAPSHOT'
+version '0.6.6-SNAPSHOT-1'
 
 repositories.mavenCentral()
 
 dependencies {
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.21'
     implementation 'org.apache.commons:commons-lang3:3.12.0'
     implementation 'commons-io:commons-io:2.11.0'
     implementation 'org.json:json:20210307'
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.21'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.7.2'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'

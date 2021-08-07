@@ -1,11 +1,14 @@
 package slavsquatsuperstar.mayonez.physics2d;
 
-import slavsquatsuperstar.mayonez.GameObject;
-import slavsquatsuperstar.mayonez.Transform;
+import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.Component;
+import slavsquatsuperstar.mayonez.GameObject;
+import slavsquatsuperstar.mayonez.Transform;
+import slavsquatsuperstar.mayonez.physics2d.colliders.AlignedBoxCollider2D;
+import slavsquatsuperstar.mayonez.physics2d.colliders.BoxCollider2D;
+import slavsquatsuperstar.mayonez.physics2d.colliders.CircleCollider;
 import slavsquatsuperstar.mayonez.physics2d.colliders.Collider2D;
-import slavsquatsuperstar.math.MathUtils;
 
 /**
  * A physical object with mass that responds to forces and collisions.
@@ -20,12 +23,21 @@ public class Rigidbody2D extends Component {
      */
     Transform transform;
     private Collider2D collider;
+
+    // Linear Movement
     private Vec2 netForce = new Vec2();
     private Vec2 velocity = new Vec2();
+    private float drag = 0.2f; // Modeled using F_d = -b*v
+
+    // Angular Movement
+    private float netTorque = 0f;
+    private float angularVelocity = 0f;
+    private float angularDrag = 0.5f; // Modeled using F_d = -b*W
+    private boolean fixedRotation = false;
+    // TODO moment of inertia based on collider
 
     // Physics Properties
     private float mass;
-    private float drag = 0.1f; // Modeled using F_d = -b*v
     private boolean followGravity = true;
 
     public Rigidbody2D(float mass) {
@@ -40,26 +52,38 @@ public class Rigidbody2D extends Component {
     @Override
     public void start() {
         collider = parent.getComponent(Collider2D.class);
+        if (collider instanceof AlignedBoxCollider2D)
+            fixedRotation = true;
     }
 
     public void physicsUpdate(float dt) {
-        if (hasInfiniteMass())
-            return;
+        if (!hasInfiniteMass()) {
+            // Integrate velocity
+            velocity = velocity.add(netForce.mul(getInverseMass() * dt)); // dv = F/m*dt
+            // Apply drag unless stationary
+            if (!MathUtils.equals(velocity.lenSquared(), 0))
+                addForce(velocity.mul(-drag));
+            // Integrate position
+            transform.move(velocity.mul(dt)); // ds = v*dt
 
-//        // TODO account for direction of gravity
-//        if (Math.abs(velocity.y) > Preferences.TERMINAL_VELOCITY)
-//            velocity.y = Math.signum(velocity.y) * Preferences.TERMINAL_VELOCITY;
+            // Do the same for angular motion
+            if (!fixedRotation) {
+                angularVelocity += (netTorque * getInverseAngularMass() * dt); // dw = T/I*dt
+                if (!MathUtils.equals(angularVelocity, 0))
+                    addTorque(angularVelocity * -angularDrag);
+                transform.rotate(MathUtils.toDegrees(angularVelocity) * dt); // dTheta = w*dt, convert radians to degrees
+            }
+        }
 
-        velocity = velocity.add(netForce.div(getMass()).mul(dt)); // dv = F/m*dt
-        // TODO use average velocity?
-        transform.move(velocity); // ds = v*t
-        netForce.set(0, 0); // Reset accumulated forces
+        // Reset accumulated forces/torques
+        netForce.set(0, 0);
+        netTorque = 0;
     }
 
-    // Physics Methods
+    // Linear Movement Methods
 
     /**
-     * Applies a force to this rigidbody's center of mass.
+     * Applies a force to this body's center of mass.
      *
      * @param force a vector with the units <code>kg•m/s/s</code>
      */
@@ -67,26 +91,36 @@ public class Rigidbody2D extends Component {
         netForce = netForce.add(force);
     }
 
+    public void addForceAtPoint(Vec2 force, Vec2 position) {
+        addForce(force);
+        addTorque(position.sub(transform.position).cross(force));
+    }
+
     /**
-     * Accelerates this object in the given direction.
+     * Accelerates this body in the given direction.
      *
      * @param acceleration a vector with the units <code>m/s/s</code>
      */
     public void addAcceleration(Vec2 acceleration) {
-        netForce = netForce.add(acceleration.mul(mass)); // dF = a/m
+        netForce = netForce.add(acceleration.mul(getInverseMass())); // dF = a/m
     }
 
     /**
-     * Applies an impulse to the object's center of mass.
+     * Applies an impulse to the body's center of mass.
      *
      * @param impulse a vector with the units <code>kg•m/s</code>
      */
     public void addImpulse(Vec2 impulse) {
-        velocity = velocity.add(impulse.div(getMass())); // dv = J/m = m*dv/m
+        velocity = velocity.add(impulse.mul(getInverseMass())); // dv = J/m = m*dv/m
+    }
+
+    public void addImpulseAtPoint(Vec2 impulse, Vec2 position) {
+        addImpulse(impulse);
+        addAngularImpulse(position.sub(transform.position).cross(impulse));
     }
 
     /**
-     * Adds a velocity to this object in the given direction.
+     * Adds a velocity to this body in the given direction.
      *
      * @param velocityChange a vector with the units <code>m/s</code>
      */
@@ -94,14 +128,124 @@ public class Rigidbody2D extends Component {
         velocity = velocity.add(velocityChange);
     }
 
-    // Object Properties
+    // Angular Movement Methods
 
-    public Vec2 velocity() {
+    /**
+     * Applies a torque to this body's center of mass in the clockwise direction.
+     *
+     * @param torque a scalar with units <code>kg•m•m/s/s</code>
+     */
+    public void addTorque(float torque) {
+        netTorque += torque;
+    }
+
+    /**
+     * Applies an angular impulse to this body in the clockwise direction.
+     *
+     * @param impulse a scalar with units <code>deg/s</code>
+     */
+    public void addAngularImpulse(float impulse) {
+        angularVelocity += impulse * getInverseAngularMass();
+    }
+
+    /**
+     * Adds an angular velocity to this body in the clockwise direction.
+     *
+     * @param velocityChange a scalar with units <code>deg/s</code>
+     */
+    public void addAngularVelocity(float velocityChange) {
+        angularVelocity += velocityChange;
+    }
+
+    // Linear Motion Properties
+
+    public Vec2 getPosition() {
+        return transform.position;
+    }
+
+    public void setPosition(Vec2 position) {
+        transform.position = position;
+    }
+
+    public Vec2 getVelocity() {
         return velocity;
     }
 
-    public float speed() {
+    public void setVelocity(Vec2 velocity) {
+        this.velocity = velocity;
+    }
+
+    public float getSpeed() {
         return velocity.len();
+    }
+
+    public float getMass() {
+        return mass;
+    }
+
+    private Rigidbody2D setMass(float mass) {
+        if (mass < 0)
+            mass = 0;
+        this.mass = mass;
+        return this;
+    }
+
+    public boolean hasInfiniteMass() {
+        return MathUtils.equals(mass, 0f);
+    }
+
+    public float getInverseMass() {
+        return hasInfiniteMass() ? 0 : 1 / getMass();
+    }
+
+    public float getDrag() {
+        return drag;
+    }
+
+    public Rigidbody2D setDrag(float drag) {
+        this.drag = MathUtils.clamp(drag, 0, 1);
+        return this;
+    }
+
+    // Angular Motion Properties
+
+    public float getRotation() {
+        return transform.rotation;
+    }
+
+    public void setRotation(float rotation) {
+        transform.rotation = rotation;
+    }
+
+    public float getAngularVelocity() {
+        return angularVelocity;
+    }
+
+    public void setAngularVelocity(float angularVelocity) {
+        this.angularVelocity = angularVelocity;
+    }
+
+    private float getInverseAngularMass() {
+        if (collider == null || hasInfiniteMass())
+            return 0;
+
+        float angularMass = mass;
+        if (collider instanceof CircleCollider)
+            angularMass *= MathUtils.PI * 0.5f * ((CircleCollider) collider).radius() * ((CircleCollider) collider).radius();
+        else if (collider instanceof BoxCollider2D)
+            angularMass *= MathUtils.pythagoreanSquared(((BoxCollider2D) collider).width(), ((BoxCollider2D) collider).height()) / 12f;
+        return 1 / angularMass;
+    }
+
+    // Behavior Getters and Setters
+
+    public boolean followGravity() {
+        return followGravity;
+    }
+
+    public Rigidbody2D setFollowGravity(boolean followGravity) {
+        this.followGravity = followGravity;
+        return this;
     }
 
     // Component Getters and Setters
@@ -126,61 +270,6 @@ public class Rigidbody2D extends Component {
      */
     public Collider2D getCollider() {
         return collider;
-    }
-
-    // Property Getter and Setters
-
-    public float getMass() {
-        return mass;
-    }
-
-    public Rigidbody2D setMass(float mass) {
-        if (mass < 0)
-            mass = 0;
-        this.mass = mass;
-        return this;
-    }
-
-    public boolean hasInfiniteMass() {
-        return MathUtils.equals(mass, 0f);
-    }
-
-    public float getInverseMass() {
-        return hasInfiniteMass() ? 0 : 1 / getMass();
-    }
-
-    public float getDrag() {
-        return drag;
-    }
-
-    public Rigidbody2D setDrag(float drag) {
-        this.drag = MathUtils.clamp(drag, 0, 1);
-        return this;
-    }
-
-    public Vec2 getPosition() {
-        return transform.position;
-    }
-
-    public void setPosition(Vec2 position) {
-        transform.position = position;
-    }
-
-    public float getRotation() {
-        return transform.rotation;
-    }
-
-    public void setRotation(float rotation) {
-        transform.rotation = rotation;
-    }
-
-    public boolean followGravity() {
-        return followGravity;
-    }
-
-    public Rigidbody2D setFollowGravity(boolean followGravity) {
-        this.followGravity = followGravity;
-        return this;
     }
 
     //    public enum BodyType {

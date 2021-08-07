@@ -1,16 +1,17 @@
 package slavsquatsuperstar.mayonez.physics2d.colliders;
 
+import slavsquatsuperstar.math.MathUtils;
+import slavsquatsuperstar.math.Vec2;
+import slavsquatsuperstar.mayonez.Component;
 import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Logger;
 import slavsquatsuperstar.mayonez.Transform;
-import slavsquatsuperstar.math.Vec2;
-import slavsquatsuperstar.mayonez.Component;
 import slavsquatsuperstar.mayonez.physics2d.CollisionManifold;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
-import slavsquatsuperstar.math.MathUtils;
 
 /**
- * A shape that takes up space and can detect collisions. Requires a {@link Rigidbody2D} to respond to collisions properly.
+ * A shape that takes up space and can detect collisions. Requires a {@link Rigidbody2D} to respond to collisions
+ * properly.
  *
  * @author SlavSquatSuperstar
  */
@@ -99,14 +100,30 @@ public abstract class Collider2D extends Component {
     // Shape vs Shape Collisions
 
     /**
-     * Detects whether this shape is touching or overlapping another {@link Collider2D}.
+     * Detects whether this collider is touching or overlapping another.
      *
      * @param collider another collider
      * @return if there is a collision
      */
     public abstract boolean detectCollision(Collider2D collider);
 
+    /**
+     * Calculates the contact points, normal, and overlap between this collider and another if they are intersecting.
+     *
+     * @param collider another collider
+     * @return the collision info, or no if there is no intersection
+     */
     public abstract CollisionManifold getCollisionInfo(Collider2D collider);
+
+    // Transform Methods
+    
+    public Vec2 toLocal(Vec2 world) {
+        return transform.toLocal(world);
+    }
+
+    public Vec2 toWorld(Vec2 local) {
+        return transform.toWorld(local);
+    }
 
     // Field Getters and Setters
 
@@ -156,8 +173,12 @@ public abstract class Collider2D extends Component {
         return this;
     }
 
+    /**
+     * Returns whether this collider has a null or static rigidbody, and thus does not respond to collisions.
+     *
+     * @return if this collider is not affected by collisions.
+     */
     public boolean isStatic() {
-//        return rb != null && rb.hasInfiniteMass();
         return rb == null || rb.hasInfiniteMass();
     }
 

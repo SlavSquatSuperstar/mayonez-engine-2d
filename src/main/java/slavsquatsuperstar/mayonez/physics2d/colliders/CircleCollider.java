@@ -31,10 +31,19 @@ public class CircleCollider extends Collider2D {
         return radius * MathUtils.max(transform.scale.x, transform.scale.y);
     }
 
-
     @Override
     public AlignedBoxCollider2D getMinBounds() {
         return new AlignedBoxCollider2D(new Vec2(radius() * 2, radius() * 2)).setTransform(transform).setRigidBody(rb);
+    }
+
+    @Override
+    public Vec2 toLocal(Vec2 world) {
+        return world.sub(center()).div(radius());
+    }
+
+    @Override
+    public Vec2 toWorld(Vec2 local) {
+        return local.mul(radius()).add(center());
     }
 
     // Collision Methods
@@ -133,8 +142,9 @@ public class CircleCollider extends Collider2D {
         float depth = sumRadii - distance.len();
         Vec2 normal = distance.unitVector();
 
-        CollisionManifold result = new CollisionManifold(normal, depth);
-        result.addContactPoint(this.center().add(normal.mul(this.radius() - depth)));
+        CollisionManifold result = new CollisionManifold(this, circle, normal, depth);
+        Vec2 contact = this.center().add(normal.mul(this.radius() - depth));
+        result.addContactPoint(toLocal(contact));
         return result;
     }
 
@@ -144,8 +154,8 @@ public class CircleCollider extends Collider2D {
             return null;
 
         float depth = radius() - closestToCircle.distance(center());
-        CollisionManifold result = new CollisionManifold(closestToCircle.sub(center()), depth);
-        result.addContactPoint(closestToCircle);
+        CollisionManifold result = new CollisionManifold(this, box, closestToCircle.sub(center()), depth);
+        result.addContactPoint(toLocal(closestToCircle));
         return result;
     }
 

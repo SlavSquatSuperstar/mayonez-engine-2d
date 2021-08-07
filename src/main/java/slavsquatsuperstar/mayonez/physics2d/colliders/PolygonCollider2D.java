@@ -34,7 +34,7 @@ public abstract class PolygonCollider2D extends Collider2D {
     public Vec2[] getVertices() { // rotated in world
         Vec2[] results = new Vec2[countVertices()];
         for (int i = 0; i < results.length; i++)
-            results[i] = transform.toWorld(vertices[i]);
+            results[i] = toWorld(vertices[i]);
         return results;
     }
 

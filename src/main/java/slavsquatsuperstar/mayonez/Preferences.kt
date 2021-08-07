@@ -30,6 +30,9 @@ object Preferences {
     val FPS: Int = preferences.getInt("fps")
 
     @JvmField
+    val IMPULSE_ITERATIONS: Int = preferences.getInt("physics_iterations")
+
+    @JvmField
     val SAVE_LOGS: Boolean = preferences.getBool("save_logs")
 
     @JvmField
