@@ -72,12 +72,6 @@ public class PhysicsTestScene extends Scene {
 
                         // Draw Shape
                         DebugDraw.drawShape(col, color);
-
-                        // Draw Ray
-                        if (col.raycast(new Ray2D(ray), rc, ray.getLength())) {
-                            DebugDraw.drawPoint(rc.getContact(), Colors.RED);
-                            DebugDraw.drawVector(rc.getContact(), rc.getNormal(), Colors.RED);
-                        }
                     }
                 }
             }
@@ -104,7 +98,6 @@ public class PhysicsTestScene extends Scene {
                     break;
             }
         }
-
     }
 
     public GameObject createCircle(float radius, Vec2 position) {

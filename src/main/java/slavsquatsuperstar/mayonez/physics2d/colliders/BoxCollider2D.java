@@ -3,6 +3,7 @@ package slavsquatsuperstar.mayonez.physics2d.colliders;
 import org.apache.commons.lang3.ArrayUtils;
 import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
+import slavsquatsuperstar.mayonez.Logger;
 import slavsquatsuperstar.mayonez.physics2d.CollisionManifold;
 
 /**
@@ -69,7 +70,7 @@ public class BoxCollider2D extends PolygonCollider2D {
 
     @Override
     public Vec2[] getNormals() {
-        return new Vec2[]{new Vec2(1, 0).rotate(-getRotation()), new Vec2(0, 1).rotate(-getRotation())};
+        return new Vec2[]{new Vec2(1, 0).rotate(getRotation()), new Vec2(0, 1).rotate(getRotation())};
     }
 
     // Shape vs Point
@@ -95,7 +96,7 @@ public class BoxCollider2D extends PolygonCollider2D {
         if (contains(edge.start) || contains(edge.end))
             return true;
 
-        // No need to rotate the line because raycast will do that automatically
+        // Don't rotate the line because raycast will do that automatically
         return raycast(new Ray2D(edge), null, edge.getLength());
     }
 
@@ -183,11 +184,14 @@ public class BoxCollider2D extends PolygonCollider2D {
         return result;
     }
 
+    // TODO not reliable, if angle is close, get contact point outside of overlap
     private CollisionManifold getCollisionInfo(BoxCollider2D box) {
         Vec2[] normalsA = this.getNormals();
         Vec2[] normalsB = box.getNormals();
         if (!detectCollision(box))
             return null;
+
+        Logger.log("Passed SAT");
 
         // SAT: Find axis with minimum overlap
         Vec2[] axes = ArrayUtils.addAll(normalsA, normalsB);

@@ -140,8 +140,8 @@ public class Physics2D {
             Rigidbody2D r2 = collidingPairs.get(i).getRight();
 
             // Draw contact point
-            for (Vec2 contact : col.getContactPoints())
-                DebugDraw.drawPoint(contact, Colors.BLACK);
+//            for (Vec2 contact : col.getContactPoints())
+//                DebugDraw.drawPoint(contact, Colors.BLACK);
 
             if (r1.hasInfiniteMass() && r2.hasInfiniteMass())
                 return; // Return in case both infinite mass
@@ -155,8 +155,7 @@ public class Physics2D {
 
             // Iterative impulse resolution
             for (int k = 0; k < IMPULSE_ITERATIONS; k++)
-                // Resolve dynamic collisions and change velocities
-                applyImpulse(r1, r2, col);
+                applyImpulse(r1, r2, col); // Resolve dynamic collisions and change velocities
         }
     }
 
@@ -179,6 +178,7 @@ public class Physics2D {
         float collisionVel = -(1f + elasticity) * relativeVel.dot(normal);
         float impulse = collisionVel / sumInvMass;
 
+        // TODO Apply force at contact points evenly
         if (!r1.hasInfiniteMass())
             r1.addImpulse(normal.mul(-impulse));
         if (!r2.hasInfiniteMass())
