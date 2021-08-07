@@ -3,10 +3,12 @@ package physicstests;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import slavsquatsuperstar.math.MathUtils;
-import slavsquatsuperstar.mayonez.Transform;
 import slavsquatsuperstar.math.Vec2;
+import slavsquatsuperstar.mayonez.Transform;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
 import slavsquatsuperstar.mayonez.physics2d.colliders.*;
+import slavsquatsuperstar.mayonez.physics2d.colliders.Ray2D;
+import slavsquatsuperstar.mayonez.physics2d.colliders.RaycastResult;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -64,35 +66,35 @@ public class CircleTests {
     // Raycast
     @Test
     public void outsideRayHitsCircle() {
-        RaycastResult rc = new RaycastResult();
-        assertTrue(c.raycast(new Ray2D(new Vec2(-5, 0), new Vec2(1, 0)), rc, 0));
+        RaycastResult rc = c.raycast(new Ray2D(new Vec2(-5, 0), new Vec2(1, 0)), 0);
+        assertNotNull(rc);
         assertEquals(3, rc.getDistance(), MathUtils.EPSILON);
         assertEquals(new Vec2(-2, 0), rc.getContact());
-        assertTrue(c.raycast(new Ray2D(new Vec2(5, 5), new Vec2(-1, -1.5f)), null, 0));
+        assertNotNull(c.raycast(new Ray2D(new Vec2(5, 5), new Vec2(-1, -1.5f)), 0));
     }
 
     @Test
     public void outsideRayMissesCircle() {
-        assertFalse(c.raycast(new Ray2D(new Vec2(-5, 0), new Vec2(-1, 0)), null, 0));
-        assertFalse(c.raycast(new Ray2D(new Vec2(5, 5), new Vec2(1, 1.5f)), null, 0));
+        assertNull(c.raycast(new Ray2D(new Vec2(-5, 0), new Vec2(-1, 0)), 0));
+        assertNull(c.raycast(new Ray2D(new Vec2(5, 5), new Vec2(1, 1.5f)), 0));
     }
 
     @Test
     public void limitedOutsideRayHitsCircle() {
-        assertTrue(c.raycast(new Ray2D(new Vec2(-5, 0), new Vec2(1, 0)), null, 5));
-        assertTrue(c.raycast(new Ray2D(new Vec2(3, 3), new Vec2(-1, -1.5f)), null, 5));
+        assertNotNull(c.raycast(new Ray2D(new Vec2(-5, 0), new Vec2(1, 0)), 5));
+        assertNotNull(c.raycast(new Ray2D(new Vec2(3, 3), new Vec2(-1, -1.5f)), 5));
     }
 
     @Test
     public void limitedOutsideRayMissesCircle() {
-        assertFalse(c.raycast(new Ray2D(new Vec2(-15, 0), new Vec2(1, 0)), null, 5));
-        assertFalse(c.raycast(new Ray2D(new Vec2(10, 10), new Vec2(-1, -1.5f)), null, 5));
+        assertNull(c.raycast(new Ray2D(new Vec2(-15, 0), new Vec2(1, 0)), 5));
+        assertNull(c.raycast(new Ray2D(new Vec2(10, 10), new Vec2(-1, -1.5f)), 5));
     }
 
     @Test
     public void insideRayHitsCircle() {
-        assertTrue(c.raycast(new Ray2D(new Vec2(-1, -1), new Vec2(1, 1.5f)), null, 0));
-        assertTrue(c.raycast(new Ray2D(new Vec2(1, 0), new Vec2(0, 1)), null, 0));
+        assertNotNull(c.raycast(new Ray2D(new Vec2(-1, -1), new Vec2(1, 1.5f)), 0));
+        assertNotNull(c.raycast(new Ray2D(new Vec2(1, 0), new Vec2(0, 1)), 0));
     }
 
     // Line Intersection

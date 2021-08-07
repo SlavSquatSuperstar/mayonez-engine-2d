@@ -6,6 +6,7 @@ import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.Transform;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
 import slavsquatsuperstar.mayonez.physics2d.colliders.*;
+import slavsquatsuperstar.mayonez.physics2d.colliders.Ray2D;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -67,26 +68,26 @@ public class OBBTests {
 
     @Test
     public void outsideRayHitsOBB() {
-        assertTrue(obb.raycast(new Ray2D(new Vec2(-10, 0), new Vec2(1, 0)), null, 0));
-        assertTrue(obb.raycast(new Ray2D(new Vec2(-5, 5), new Vec2(1, -1)), null, 0));
+        assertNotNull(obb.raycast(new Ray2D(new Vec2(-10, 0), new Vec2(1, 0)), 0));
+        assertNotNull(obb.raycast(new Ray2D(new Vec2(-5, 5), new Vec2(1, -1)), 0));
     }
 
     @Test
     public void limitedOutsideRayHitsOBB() {
-        assertTrue(obb.raycast(new Ray2D(new Vec2(-4, 0), new Vec2(1, 0)), null, 5));
-        assertTrue(obb.raycast(new Ray2D(new Vec2(-4, 4), new Vec2(1, -1)), null, 5));
+        assertNotNull(obb.raycast(new Ray2D(new Vec2(-4, 0), new Vec2(1, 0)), 5));
+        assertNotNull(obb.raycast(new Ray2D(new Vec2(-4, 4), new Vec2(1, -1)), 5));
     }
 
     @Test
     public void outsideRayMissesOBB() {
-        assertFalse(obb.raycast(new Ray2D(new Vec2(-10, 0), new Vec2(-1, 0)), null, 0));
-        assertFalse(obb.raycast(new Ray2D(new Vec2(-5, 5), new Vec2(-1, 1)), null, 0));
+        assertNull(obb.raycast(new Ray2D(new Vec2(-10, 0), new Vec2(-1, 0)), 0));
+        assertNull(obb.raycast(new Ray2D(new Vec2(-5, 5), new Vec2(-1, 1)), 0));
     }
 
     @Test
     public void insideRayHitsOBB() {
-        assertTrue(obb.raycast(new Ray2D(new Vec2(-2, 0), new Vec2(1, 0)), null, 0));
-        assertTrue(obb.raycast(new Ray2D(new Vec2(-1, 1), new Vec2(1, -1)), null, 0));
+        assertNotNull(obb.raycast(new Ray2D(new Vec2(-2, 0), new Vec2(1, 0)), 0));
+        assertNotNull(obb.raycast(new Ray2D(new Vec2(-1, 1), new Vec2(1, -1)), 0));
     }
 
     // Line Intersection

@@ -94,17 +94,15 @@ public class BoxCollider2D extends PolygonCollider2D {
     public boolean intersects(Edge2D edge) {
         if (contains(edge.start) || contains(edge.end))
             return true;
-
         // Don't rotate the line because raycast will do that automatically
-        return raycast(new Ray2D(edge), null, edge.getLength());
+        return raycast(new Ray2D(edge), edge.length()) != null;
     }
 
     @Override
-    public boolean raycast(Ray2D ray, RaycastResult result, float limit) {
-        RaycastResult.reset(result);
-
+    public RaycastResult raycast(Ray2D ray, float limit) {
         // Transform the ray to local space (but just rotate direction)
         Ray2D localRay = new Ray2D(toLocal(ray.origin), ray.direction.rotate(-getRotation()));
+        float localLimit = ray.direction.mul(limit).div(transform.scale).len();
 
         // Parametric distance to min/max x and y axes of box
         Vec2 tNear = localMin().sub(localRay.origin).div(localRay.direction);
@@ -123,34 +121,32 @@ public class BoxCollider2D extends PolygonCollider2D {
         }
 
         if (tNear.x > tFar.y || tNear.y > tFar.x) // No intersection
-            return false;
+            return null;
 
         // Parametric distances to near and far contact
         float tHitNear = Math.max(tNear.x, tNear.y);
         float tHitFar = Math.min(tFar.x, tFar.y);
+//        float tHitNear = Math.max(Math.min(tNear.x, tFar.x), Math.min(tNear.y, tFar.y));
+//        float tHitFar = Math.min(Math.max(tNear.x, tFar.x), Math.max(tNear.y, tFar.y));
 
         if (tHitFar < 0 || tHitNear > tHitFar) // Ray is pointing away
-            return false;
+            return null;
 
         // If ray starts inside shape, use far for contact
         float distToBox = (tHitNear < 0) ? tHitFar : tHitNear;
 
         // Is the contact point past the ray limit?
-        if (limit > 0 && distToBox > limit)
-            return false;
+        if (localLimit > 0 && distToBox > localLimit)
+            return null;
 
         Vec2 normal = new Vec2(); // Use (0, 0) for diagonal collision
         if (tNear.x > tNear.y) // Horizontal collision
-            normal = (localRay.direction.x < 0) ? new Vec2(1, 0) : new Vec2(-1, 0);
+            normal = new Vec2(-Math.signum(localRay.direction.x), 0);
         else if (tNear.x < tNear.y) // Vertical collision
-            normal = (localRay.direction.y < 0) ? new Vec2(0, 1) : new Vec2(0, -1);
+            normal = new Vec2(0, -Math.signum(localRay.direction.y));
 
-        if (result != null) {
-            Vec2 contact = toWorld(localRay.getPoint(distToBox));
-            result.set(contact, normal.rotate(getRotation()), contact.sub(ray.origin).len());
-        }
-
-        return true;
+        Vec2 contact = toWorld(localRay.getPoint(distToBox));
+        return new RaycastResult(contact, normal.rotate(getRotation()), contact.sub(ray.origin).len());
     }
 
     // Shape vs Shape
@@ -179,8 +175,7 @@ public class BoxCollider2D extends PolygonCollider2D {
         float depth = circle.radius() - closestToCircle.distance(circle.center());
         Vec2 normal = circle.center().sub(closestToCircle).unitVector();
         CollisionManifold result = new CollisionManifold(this, circle, normal, depth);
-        Vec2 contact = closestToCircle.sub(normal.mul(depth));
-        result.addContactPoint(toLocal(contact));
+        result.addContactPoint(closestToCircle.sub(normal.mul(depth)));
         return result;
     }
 
@@ -211,10 +206,9 @@ public class BoxCollider2D extends PolygonCollider2D {
             MathUtils.Range collisionFace = new MathUtils.Range(Math.max(sideA.min, sideB.min),
                     Math.min(sideA.max, sideB.max));
 
-            Vec2 faceAMin = normal.mul(penetration.min).add(side.mul(collisionFace.max));
-            Vec2 faceAMax = normal.mul(penetration.min).add(side.mul(collisionFace.min));
-            collision.addContactPoint(toLocal(faceAMin));
-            collision.addContactPoint(toLocal(faceAMax));
+            Vec2 faceA = normal.mul(penetration.min);
+            collision.addContactPoint(faceA.add(side.mul(collisionFace.max)));
+            collision.addContactPoint(faceA.add(side.mul(collisionFace.min)));
         } else { // Diagonal intersection = 1 contact point
             float dotWithAxis = normal.dot(new Vec2(1, 0).rotate(getRotation()));
             // Other box is inside this, find the furthest vertex inside this box
@@ -227,8 +221,7 @@ public class BoxCollider2D extends PolygonCollider2D {
                 int minProjIndex = MathUtils.minIndex(projections);
                 float height = vertices[minProjIndex].projectedLength(side);
 
-                Vec2 contactCorner = normal.mul(penetration.min).add(side.mul(height));
-                collision.addContactPoint(toLocal(contactCorner));
+                collision.addContactPoint(normal.mul(penetration.min).add(side.mul(height)));
             } else { // This box inside other box, find vertex furthest inside other box
                 Vec2[] vertices = this.getVertices();
                 float[] projections = new float[vertices.length];
@@ -237,8 +230,7 @@ public class BoxCollider2D extends PolygonCollider2D {
                 int maxProjIndex = MathUtils.maxIndex(projections);
                 float height = vertices[maxProjIndex].projectedLength(side);
 
-                Vec2 contactCorner = normal.mul(penetration.max).add(side.mul(height));
-                collision.addContactPoint(toLocal(contactCorner));
+                collision.addContactPoint(normal.mul(penetration.max).add(side.mul(height)));
             }
         }
         return collision;

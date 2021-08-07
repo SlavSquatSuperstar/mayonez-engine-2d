@@ -124,7 +124,7 @@ public abstract class PolygonCollider2D extends Collider2D {
     }
 
     @Override
-    public boolean raycast(Ray2D ray, RaycastResult result, float limit) {
+    public RaycastResult raycast(Ray2D ray, float limit) {
 //        RaycastResult.reset(result); // need result to not be null
 //
 //        Edge2D[] edges = getEdges();
@@ -139,7 +139,7 @@ public abstract class PolygonCollider2D extends Collider2D {
 //        if (result != null) {
 //
 //        }
-        return false;
+        return null;
     }
 
     // Polygon vs Shape

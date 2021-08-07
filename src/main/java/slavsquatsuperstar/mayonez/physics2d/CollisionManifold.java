@@ -66,8 +66,12 @@ public class CollisionManifold {
         return contacts;
     }
 
+    public Vec2 getContact(int index) {
+        return getSelf().toWorld(contacts.get(index));
+    }
+
     public void addContactPoint(Vec2 contactPoint) {
-        contacts.add(contactPoint);
+        contacts.add(getSelf().toLocal(contactPoint));
     }
 
     @Override

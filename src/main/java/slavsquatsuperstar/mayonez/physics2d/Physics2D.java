@@ -156,13 +156,15 @@ public class Physics2D {
 
             float elasticity = r1.getCollider().getBounce() * r2.getCollider().getBounce(); // Coefficient of restitution
             float collisionVel = -(1f + elasticity) * relativeVel.dot(normal);
-            float impulse = collisionVel / sumInvMass / (float) col.countContacts();
 
-            // Apply force at contact points evenly
-            for (Vec2 contact : col.getContacts()) {
-                Vec2 contactWorld = col.getSelf().toWorld(contact);
-                r1.addImpulseAtPoint(normal.mul(-impulse), contactWorld);
-                r2.addImpulseAtPoint(normal.mul(impulse), contactWorld);
+            int numContacts = col.countContacts();
+            float impulse = collisionVel / sumInvMass / numContacts;
+
+            // Apply impulse at contact points evenly
+            for (int i = 0; i < numContacts; i++) {
+                Vec2 contact = col.getContact(i);
+                r1.addImpulseAtPoint(normal.mul(-impulse), contact);
+                r2.addImpulseAtPoint(normal.mul(impulse), contact);
             }
         }
     }

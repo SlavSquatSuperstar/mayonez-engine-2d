@@ -62,21 +62,13 @@ public class CircleCollider extends Collider2D {
 
     @Override
     public boolean intersects(Edge2D edge) {
-        if (contains(edge.start) || contains(edge.end)) // Check if contains endpoints
+        if (contains(edge.start) || contains(edge.end))
             return true;
-
-        Vec2 startToCenter = center().sub(edge.start);
-        Vec2 projected = startToCenter.project(edge.toVector());
-        // Is nearest point outside of actual line segment?
-        if (!MathUtils.inRange(projected.lenSquared() / edge.toVector().lenSquared(), 0, 1))
-            return false;
-        Vec2 nearestPointOnEdge = edge.start.add(projected); // TODO use edge.nearest ?
-        return contains(nearestPointOnEdge);
+        return contains(edge.nearestPoint(center())); // Contains point on line nearest to circle
     }
 
-    public boolean raycast(Ray2D ray, RaycastResult result, float limit) {
-        RaycastResult.reset(result);
-
+    @Override
+    public RaycastResult raycast(Ray2D ray, float limit) {
         // Trace the ray's origin to the circle's center
         Vec2 originToCenter = center().sub(ray.origin);
         float radiusSq = radius() * radius();
@@ -94,24 +86,20 @@ public class CircleCollider extends Collider2D {
         float projLength = originToCenter.dot(ray.direction);
         float distNearestSq = originToCenter.lenSquared() - projLength * projLength; // Closest distance from center to extended ray
         if (distNearestSq > radiusSq) // Nearest point on ray is outside the circle
-            return false;
+            return null;
 
         float contactToNearest = MathUtils.sqrt(radiusSq - distNearestSq);
         // Distance along ray to contact, depends if ray starts in circle
         float hitDist = contains(ray.origin) ? projLength + contactToNearest : projLength - contactToNearest;
 
         if (Math.abs(limit) > 0 && hitDist > Math.abs(limit)) // Ray exceeds limit
-            return false;
+            return null;
 
         if (hitDist < 0) // Contact point is behind ray
-            return false;
+            return null;
 
-        if (result != null) {
-            Vec2 point = ray.getPoint(hitDist);
-            Vec2 normal = point.sub(center());
-            result.set(point, normal, hitDist);
-        }
-        return true;
+        Vec2 point = ray.getPoint(hitDist);
+        return new RaycastResult(point, point.sub(center()), hitDist);
     }
 
     @Override
@@ -143,8 +131,7 @@ public class CircleCollider extends Collider2D {
         Vec2 normal = distance.unitVector();
 
         CollisionManifold result = new CollisionManifold(this, circle, normal, depth);
-        Vec2 contact = this.center().add(normal.mul(this.radius() - depth));
-        result.addContactPoint(toLocal(contact));
+        result.addContactPoint(this.center().add(normal.mul(this.radius() - depth)));
         return result;
     }
 
@@ -155,7 +142,7 @@ public class CircleCollider extends Collider2D {
 
         float depth = radius() - closestToCircle.distance(center());
         CollisionManifold result = new CollisionManifold(this, box, closestToCircle.sub(center()), depth);
-        result.addContactPoint(toLocal(closestToCircle));
+        result.addContactPoint(closestToCircle);
         return result;
     }
 

@@ -164,16 +164,16 @@ class Vec2 constructor(
     // Pythagorean Theorem / Length Methods
 
     /**
-     * Calculates the length of this vector.
+     * Calculates the magnitude of this vector.
      *
-     * @return this vector's length
+     * @return this vector's magnitude
      */
     fun len(): Float = sqrt(lenSquared())
 
     /**
-     * Calculates the length squared of this vector (less CPU expensive than square root).
+     * Calculates the magnitude squared of this vector (less CPU expensive than square root).
      *
-     * @return this vector's length squared
+     * @return this vector's magnitude squared
      */
     fun lenSquared(): Float = (x * x) + (y * y)
 

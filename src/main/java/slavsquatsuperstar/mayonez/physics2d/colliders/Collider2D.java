@@ -86,16 +86,14 @@ public abstract class Collider2D extends Component {
     public abstract boolean intersects(Edge2D edge);
 
     /**
-     * Casts a ray onto this collider and calculates whether the ray intersects the collider and where.
+     * Casts a ray onto this collider and calculates where the ray intersects the collider.
      *
      * @param ray    the {@link Ray2D}
-     * @param result (optional) a {@link RaycastResult} object passed to store contact information if the method returns
-     *               true
      * @param limit  The maximum distance the ray is allowed to travel before hitting an object. Set to 0 to allow the
      *               ray to travel infinitely. Should be positive otherwise.
      * @return if the ray intersects this shape
      */
-    public abstract boolean raycast(Ray2D ray, RaycastResult result, float limit);
+    public abstract RaycastResult raycast(Ray2D ray, float limit);
 
     // Shape vs Shape Collisions
 
@@ -116,7 +114,7 @@ public abstract class Collider2D extends Component {
     public abstract CollisionManifold getCollisionInfo(Collider2D collider);
 
     // Transform Methods
-    
+
     public Vec2 toLocal(Vec2 world) {
         return transform.toLocal(world);
     }

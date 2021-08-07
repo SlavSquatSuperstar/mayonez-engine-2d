@@ -70,32 +70,32 @@ public class AABBTests {
 
     @Test
     public void outsideRayHitsAABB() {
-        assertTrue(aabb.raycast(new Ray2D(new Vec2(-10, 0), new Vec2(1, 0)), null, 0));
-        assertTrue(aabb.raycast(new Ray2D(new Vec2(-5, 5), new Vec2(1, -1)), null, 0));
+        assertNotNull(aabb.raycast(new Ray2D(new Vec2(-10, 0), new Vec2(1, 0)), 0));
+        assertNotNull(aabb.raycast(new Ray2D(new Vec2(-5, 5), new Vec2(1, -1)), 0));
     }
 
     @Test
     public void outsideRayMissesAABB() {
-        assertFalse(aabb.raycast(new Ray2D(new Vec2(-10, 0), new Vec2(-1, 0)), null, 0));
-        assertFalse(aabb.raycast(new Ray2D(new Vec2(-5, 5), new Vec2(-1, 1)), null, 0));
+        assertNull(aabb.raycast(new Ray2D(new Vec2(-10, 0), new Vec2(-1, 0)), 0));
+        assertNull(aabb.raycast(new Ray2D(new Vec2(-5, 5), new Vec2(-1, 1)), 0));
     }
 
     @Test
     public void limitedOutsideRayHitsAABB() {
-        assertTrue(aabb.raycast(new Ray2D(new Vec2(-4, 0), new Vec2(1, 0)), null, 5));
-        assertTrue(aabb.raycast(new Ray2D(new Vec2(-4, 4), new Vec2(1, -1)), null, 5));
+        assertNotNull(aabb.raycast(new Ray2D(new Vec2(-4, 0), new Vec2(1, 0)), 5));
+        assertNotNull(aabb.raycast(new Ray2D(new Vec2(-4, 4), new Vec2(1, -1)), 5));
     }
 
     @Test
     public void limitedOutsideRayMissesAABB() {
-        assertFalse(aabb.raycast(new Ray2D(new Vec2(-10, 0), new Vec2(1, 0)), null, 2));
-        assertFalse(aabb.raycast(new Ray2D(new Vec2(-10, 10), new Vec2(1, -1)), null, 2));
+        assertNull(aabb.raycast(new Ray2D(new Vec2(-10, 0), new Vec2(1, 0)), 2));
+        assertNull(aabb.raycast(new Ray2D(new Vec2(-10, 10), new Vec2(1, -1)), 2));
     }
 
     @Test
     public void insideRayHitsAABB() {
-        assertTrue(aabb.raycast(new Ray2D(new Vec2(-1.5f, 0), new Vec2(1, 0)), null, 0));
-        assertTrue(aabb.raycast(new Ray2D(new Vec2(-1.5f, 1.5f), new Vec2(1, -1)), null, 0));
+        assertNotNull(aabb.raycast(new Ray2D(new Vec2(-1.5f, 0), new Vec2(1, 0)), 0));
+        assertNotNull(aabb.raycast(new Ray2D(new Vec2(-1.5f, 1.5f), new Vec2(1, -1)), 0));
     }
 
     // Line Intersection

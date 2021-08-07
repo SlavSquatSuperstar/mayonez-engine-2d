@@ -9,16 +9,11 @@ import slavsquatsuperstar.math.Vec2;
  */
 public class RaycastResult {
 
-    private Vec2 contact = new Vec2(); // contact point
-    private Vec2 normal = new Vec2(); // contact normal
-    private float distance = -1; // unit lengths along ray to intersection
+    private Vec2 contact; // contact point
+    private Vec2 normal; // contact normal
+    private float distance; // unit lengths along ray to intersection
 
-    public static void reset(RaycastResult result) {
-        if (result != null)
-            result.set(new Vec2(), new Vec2(), -1);
-    }
-
-    void set(Vec2 contact, Vec2 normal, float distance) {
+    public RaycastResult(Vec2 contact, Vec2 normal, float distance) {
         this.contact = contact;
         this.normal = normal.unitVector();
         this.distance = distance;
