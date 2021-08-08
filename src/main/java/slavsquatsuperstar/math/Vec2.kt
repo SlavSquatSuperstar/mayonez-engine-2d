@@ -187,7 +187,7 @@ class Vec2 constructor(
      *
      * @return the unit vector
      */
-    fun unitVector(): Vec2 {
+    fun unit(): Vec2 {
         return if (equals(lenSquared(), 1F) || equals(lenSquared(), 0F)) +this
         else this / len()
     }

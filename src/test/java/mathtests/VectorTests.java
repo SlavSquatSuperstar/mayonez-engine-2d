@@ -24,14 +24,14 @@ public class VectorTests {
 
     @Test
     public void unitVectorLengthIsOne() {
-        assertEquals(1f, new Vec2(500, 500).unitVector().lenSquared(), MathUtils.EPSILON);
-        assertEquals(1f, new Vec2(-500, -500).unitVector().lenSquared(), MathUtils.EPSILON);
+        assertEquals(1f, new Vec2(500, 500).unit().lenSquared(), MathUtils.EPSILON);
+        assertEquals(1f, new Vec2(-500, -500).unit().lenSquared(), MathUtils.EPSILON);
     }
 
     @Test
     public void unitVectorOfZeroIsZero() {
         Vec2 v = new Vec2();
-        assertEquals(v.unitVector(), v);
+        assertEquals(v.unit(), v);
     }
 
     @Test

@@ -5,6 +5,7 @@ import slavsquatsuperstar.math.Mat22;
 import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.physics2d.CollisionManifold;
+import slavsquatsuperstar.mayonez.physics2d.RaycastResult;
 
 public abstract class PolygonCollider2D extends Collider2D {
 
@@ -39,8 +40,7 @@ public abstract class PolygonCollider2D extends Collider2D {
     }
 
     @Override
-    // Support function
-    public AlignedBoxCollider2D getMinBounds() {
+    public AlignedBoxCollider2D getMinBounds() { // TODO Support function
         Vec2[] vertices = getVertices();
         float[] verticesX = new float[vertices.length];
         float[] verticesY = new float[vertices.length];
@@ -57,11 +57,11 @@ public abstract class PolygonCollider2D extends Collider2D {
         return new AlignedBoxCollider2D(aabbSize).setTransform(transform).setRigidBody(rb);
     }
 
-    // Separating-Axis Theorem Methods
+    // Intersection Helper Methods
 
     public Edge2D[] getEdges() { // in world
         Vec2[] vertices = getVertices();
-        Edge2D[] edges = new Edge2D[countVertices()];
+        Edge2D[] edges = new Edge2D[vertices.length];
         for (int i = 0; i < edges.length; i++)
             edges[i] = new Edge2D(vertices[i], vertices[(i + 1) % edges.length]); // Current vertex to next vertex
         return edges;
@@ -72,26 +72,29 @@ public abstract class PolygonCollider2D extends Collider2D {
         Vec2[] normals = new Vec2[countVertices()];
         Mat22 rot = new Mat22(0, 1, -1, 0); // Rotate 90 degrees counterclockwise to point outward
         for (int i = 0; i < normals.length; i++)
-            normals[i] = rot.times(edges[i].toVector()).unitVector();
+            normals[i] = rot.times(edges[i].toVector()).unit();
         return normals;
     }
+
+    // Separating-Axis Theorem Methods
 
     // Project vertices on the axis and find min and max
     protected final MathUtils.Range getIntervalOnAxis(Vec2 axis) {
         Vec2[] vertices = getVertices();
         float[] projections = new float[countVertices()];
         for (int i = 0; i < projections.length; i++)
-            projections[i] = vertices[i].projectedLength(axis);
+            projections[i] = vertices[i].dot(axis);
         return new MathUtils.Range(MathUtils.min(projections), MathUtils.max(projections));
     }
 
-    public final boolean overlapOnAxis(PolygonCollider2D polygon, Vec2 axis) {
+    protected final boolean overlapOnAxis(PolygonCollider2D polygon, Vec2 axis) {
         MathUtils.Range thisInterval = this.getIntervalOnAxis(axis);
         MathUtils.Range otherInterval = polygon.getIntervalOnAxis(axis);
         return (thisInterval.min <= otherInterval.max) && (otherInterval.min <= thisInterval.max);
     }
 
-    public final float getAxisOverlap(PolygonCollider2D polygon, Vec2 axis) {
+    // Assume overlap on axis
+    protected final float getAxisOverlap(PolygonCollider2D polygon, Vec2 axis) {
         MathUtils.Range thisInterval = this.getIntervalOnAxis(axis);
         MathUtils.Range otherInterval = polygon.getIntervalOnAxis(axis);
         return Math.min(Math.abs(thisInterval.min - otherInterval.max), Math.abs(otherInterval.min - thisInterval.max));
@@ -104,8 +107,8 @@ public abstract class PolygonCollider2D extends Collider2D {
         Edge2D[] edges = getEdges();
         for (Edge2D edge : edges) {
             Vec2 edgeLine = edge.toVector();
-            Vec2 projectedPoint = point.sub(edge.start).project(edgeLine);
-            if (!MathUtils.inRange(projectedPoint.len(), 0, edgeLine.len()))
+            float projLength = point.sub(edge.start).projectedLength(edgeLine);
+            if (!MathUtils.inRange(projLength, 0, edge.length()))
                 return false;
         }
         return true;
@@ -113,33 +116,32 @@ public abstract class PolygonCollider2D extends Collider2D {
 
     @Override
     public Vec2 nearestPoint(Vec2 position) {
-        return null;
+        if (contains(position))
+            return position;
+        Edge2D[] edges = getEdges();
+        float[] distances = new float[edges.length];
+        for (int i = 0; i < distances.length; i++)
+            distances[i] = position.distance(edges[i].nearestPoint(position));
+        Edge2D nearestEdge = edges[MathUtils.minIndex(distances)];
+        return nearestEdge.nearestPoint(position);
     }
 
     // Polygon vs Line
 
     @Override
-    public boolean intersects(Edge2D edge) {
-        return false;
-    }
-
-    @Override
     public RaycastResult raycast(Ray2D ray, float limit) {
-//        RaycastResult.reset(result); // need result to not be null
-//
-//        Edge2D[] edges = getEdges();
-//        float[] lengths = new float[countVertices()];
-//        for (int i = 0; i < edges.length; i++) {
-//            if (edges[i].raycast(ray, result, limit))
-//                lengths[i] = result.getDistance();
-//            else
-//                lengths[i] = -1;
-//        }
-//        // find min length to get contact
-//        if (result != null) {
-//
-//        }
-        return null;
+        Edge2D[] edges = getEdges();
+        float[] distances = new float[edges.length];
+        for (int i = 0; i < distances.length; i++) {
+            RaycastResult rc = edges[i].raycast(ray, limit);
+            distances[i] = (rc != null) ? rc.getDistance() : Float.MAX_VALUE;
+        }
+        int minIndex = MathUtils.minIndex(distances);
+        float minDist = distances[minIndex];
+        if (minDist == Float.MAX_VALUE) // no successful raycasts
+            return null;
+        Vec2 normal = edges[minIndex].toVector().rotate(-90).unit();
+        return new RaycastResult(ray.getPoint(minDist), normal, minDist);
     }
 
     // Polygon vs Shape
@@ -147,9 +149,8 @@ public abstract class PolygonCollider2D extends Collider2D {
     @Override
     public boolean detectCollision(Collider2D collider) {
         if (collider instanceof PolygonCollider2D)
-            return this.intersects((PolygonCollider2D) collider);
-        // TODO vs circle, get nearest point
-        return false;
+            return intersects((PolygonCollider2D) collider);
+        return getCollisionInfo(collider) != null;
     }
 
     // Separating-Axis Theorem
@@ -163,6 +164,22 @@ public abstract class PolygonCollider2D extends Collider2D {
 
     @Override
     public CollisionManifold getCollisionInfo(Collider2D collider) {
+        if (collider instanceof CircleCollider)
+            return getCollisionInfo((CircleCollider) collider);
+//        if (collider instanceof PolygonCollider2D)
+//            return getCollisionInfo((PolygonCollider2D) collider);
         return null;
     }
+    private CollisionManifold getCollisionInfo(CircleCollider circle) {
+        Vec2 closestToCircle = this.nearestPoint(circle.center());
+        if (!circle.contains(closestToCircle))
+            return null;
+
+        float depth = circle.radius() - closestToCircle.distance(circle.center());
+        Vec2 normal = circle.center().sub(closestToCircle).unit();
+        CollisionManifold result = new CollisionManifold(this, circle, normal, depth);
+        result.addContact(closestToCircle.sub(normal.mul(depth)));
+        return result;
+    }
+
 }

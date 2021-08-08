@@ -14,7 +14,7 @@ public class Ray2D {
 
     public Ray2D(Vec2 origin, Vec2 direction) {
         this.origin = origin;
-        this.direction = direction.unitVector();
+        this.direction = direction.unit();
     }
 
     public Ray2D(Edge2D edge) {

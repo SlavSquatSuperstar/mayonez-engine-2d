@@ -20,7 +20,7 @@ public class KeyMovement extends MovementScript {
     @Override
     public void update(float dt) {
         // Don't want to move faster diagonally so normalize
-        Vec2 input = getRawInput().unitVector().mul(speed);
+        Vec2 input = getRawInput().unit().mul(speed);
         switch (mode) {
             case POSITION:
                 transform.move(input);

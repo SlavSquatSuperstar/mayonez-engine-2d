@@ -14,6 +14,9 @@ import java.util.List;
  */
 public class CollisionManifold {
 
+    /**
+     * Where the two colliders are intersecting, in first object's local space.
+     */
     private final ImmutablePair<Collider2D, Collider2D> colliders;
     private final Vec2 normal;
     private final float depth;
@@ -21,7 +24,7 @@ public class CollisionManifold {
 
     public CollisionManifold(Collider2D collider1, Collider2D collider2, Vec2 normal, float depth) {
         colliders = new ImmutablePair<>(collider1, collider2);
-        this.normal = normal.unitVector();
+        this.normal = normal.unit();
         this.depth = depth;
     }
 
@@ -57,21 +60,17 @@ public class CollisionManifold {
         return contacts.size();
     }
 
-    /**
-     * Where the two colliders are intersecting, in first object's local space.
-     *
-     * @return the contact points
-     */
-    public List<Vec2> getContacts() {
-        return contacts;
-    }
-
     public Vec2 getContact(int index) {
         return getSelf().toWorld(contacts.get(index));
     }
 
-    public void addContactPoint(Vec2 contactPoint) {
+    public void addContact(Vec2 contactPoint) {
         contacts.add(getSelf().toLocal(contactPoint));
+    }
+
+    public void addContacts(Vec2... contactPoints) {
+        for (Vec2 cp : contactPoints)
+            contacts.add(getSelf().toLocal(cp));
     }
 
     @Override

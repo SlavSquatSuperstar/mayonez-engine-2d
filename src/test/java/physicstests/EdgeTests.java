@@ -1,8 +1,10 @@
 package physicstests;
 
 import org.junit.jupiter.api.Test;
+import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.physics2d.colliders.Edge2D;
+import slavsquatsuperstar.mayonez.physics2d.colliders.Ray2D;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -13,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class EdgeTests {
 
-    // Line vs Point
+    // Contains Point
 
     @Test
     public void endpointIsInLine() {
@@ -64,12 +66,12 @@ public class EdgeTests {
     }
 
     // Distance to Point
+
     @Test
-    public void distanceToPointIsPositive() {
+    public void distanceToPointSuccess() {
         Edge2D edge = new Edge2D(new Vec2(-4, 1), new Vec2(4, 1));
         assertEquals(2, edge.distance(new Vec2(0, 3)));
         assertEquals(-2, edge.distance(new Vec2(0, -1)));
-
     }
 
     // Line Intersection
@@ -114,6 +116,37 @@ public class EdgeTests {
         Edge2D e1 = new Edge2D(new Vec2(0, 0), new Vec2(2, 4));
         Edge2D e2 = new Edge2D(new Vec2(1, 0), new Vec2(3, 1));
         assertFalse(e1.intersects(e2));
+    }
+
+    // Raycast
+
+    @Test
+    public void rayMissesLine() {
+        Edge2D edge = new Edge2D(new Vec2(-2, 0), new Vec2(2, 0));
+        assertNull(edge.raycast(new Ray2D(new Vec2(0, 2), new Vec2(0, 1)), 0));
+        assertNull(edge.raycast(new Ray2D(new Vec2(-3, 2), new Vec2(0, -1)), 0));
+    }
+
+    @Test
+    public void rayHitsLine() {
+        Edge2D edge = new Edge2D(new Vec2(-2, 0), new Vec2(2, 0));
+        assertNotNull(edge.raycast(new Ray2D(new Vec2(0, 2), new Vec2(0, -1)), 0));
+        assertNotNull(edge.raycast(new Ray2D(new Vec2(-2, -2), new Vec2(0.5f, 1)), 0));
+    }
+
+    @Test
+    public void lineIntersectionCorrectDistance() {
+        Edge2D e1 = new Edge2D(new Vec2(-2, 0), new Vec2(2, 0));
+        Edge2D e2 = new Edge2D(new Vec2(0, -2), new Vec2(0, 2));
+        assertEquals(2, e1.raycast(new Ray2D(e2), e2.length()).getDistance(), MathUtils.EPSILON);
+    }
+
+    @Test
+    public void lineIntersectionCorrectPoint() {
+        Edge2D e1 = new Edge2D(new Vec2(-2, 0), new Vec2(2, 0));
+        Edge2D e2 = new Edge2D(new Vec2(0, -2), new Vec2(0, 2));
+        Ray2D ray = new Ray2D(e2);
+        assertEquals(new Vec2(), ray.getPoint(e1.raycast(ray, e2.length()).getDistance()));
     }
 
 }

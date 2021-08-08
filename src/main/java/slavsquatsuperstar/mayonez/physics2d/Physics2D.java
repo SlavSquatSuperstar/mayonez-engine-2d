@@ -70,6 +70,7 @@ public class Physics2D {
         // Update environmental forces
         forceRegistry.forEach(fr -> fr.fg.applyForce(fr.rb, dt));
 
+        // Resolve collisions
         collisions.forEach(col -> {
 //            if (col.getSelf().isStatic() && col.getOther().isStatic())
 //                return; // Return if both null rb or infinite mass
@@ -124,6 +125,7 @@ public class Physics2D {
                 // Add the collisions if neither is a trigger
                 if (!c1.isTrigger() && !c2.isTrigger()) {
                     DebugDraw.drawLine(c1.center(), c2.center(), Colors.RED);
+                    DebugDraw.drawVector(c1.center(), result.getNormal(), Colors.BLACK);
                     collisions.add(result);
                 }
             }

@@ -5,10 +5,8 @@ import org.junit.jupiter.api.Test;
 import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.Transform;
-import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
+import slavsquatsuperstar.mayonez.physics2d.RaycastResult;
 import slavsquatsuperstar.mayonez.physics2d.colliders.*;
-import slavsquatsuperstar.mayonez.physics2d.colliders.Ray2D;
-import slavsquatsuperstar.mayonez.physics2d.colliders.RaycastResult;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -137,15 +135,20 @@ public class CircleTests {
     public void circleIntersectsCircle() {
         CircleCollider other = new CircleCollider(4);
         other.setTransform(new Transform(new Vec2(2, 2)));
-        other.setRigidBody(new Rigidbody2D(0f));
         assertTrue(c.detectCollision(other));
     }
 
     @Test
     public void circleIntersectsAABB() {
         AlignedBoxCollider2D aabb = new AlignedBoxCollider2D(new Vec2(4, 4));
-        aabb.setTransform(new Transform(new Vec2(0, 0)));
-        aabb.setRigidBody(new Rigidbody2D(0f));
+        aabb.setTransform(new Transform(new Vec2(1, 0)));
+        assertTrue(c.detectCollision(aabb));
+    }
+
+    @Test
+    public void circleIntersectsOBB() {
+        BoxCollider2D aabb = new BoxCollider2D(new Vec2(4, 4));
+        aabb.setTransform(new Transform(new Vec2(1, 0).rotate(45)));
         assertTrue(c.detectCollision(aabb));
     }
 

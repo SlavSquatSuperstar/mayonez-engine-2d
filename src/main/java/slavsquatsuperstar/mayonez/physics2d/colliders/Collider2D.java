@@ -7,6 +7,7 @@ import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Logger;
 import slavsquatsuperstar.mayonez.Transform;
 import slavsquatsuperstar.mayonez.physics2d.CollisionManifold;
+import slavsquatsuperstar.mayonez.physics2d.RaycastResult;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
 
 /**
@@ -83,7 +84,11 @@ public abstract class Collider2D extends Component {
      * @param edge a line segment
      * @return if the edge intersects this shape
      */
-    public abstract boolean intersects(Edge2D edge);
+    public boolean intersects(Edge2D edge) {
+        if (contains(edge.start) || contains(edge.end))
+            return true;
+        return raycast(new Ray2D(edge), edge.length()) != null;
+    }
 
     /**
      * Casts a ray onto this collider and calculates where the ray intersects the collider.
@@ -103,7 +108,9 @@ public abstract class Collider2D extends Component {
      * @param collider another collider
      * @return if there is a collision
      */
-    public abstract boolean detectCollision(Collider2D collider);
+    public boolean detectCollision(Collider2D collider) {
+        return getCollisionInfo(collider) != null;
+    }
 
     /**
      * Calculates the contact points, normal, and overlap between this collider and another if they are intersecting.

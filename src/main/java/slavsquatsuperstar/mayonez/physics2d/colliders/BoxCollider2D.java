@@ -4,6 +4,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.physics2d.CollisionManifold;
+import slavsquatsuperstar.mayonez.physics2d.RaycastResult;
 
 /**
  * An oriented bounding box (OBB), a rectangle that can be rotated. The sides will align with the object's rotation
@@ -91,14 +92,6 @@ public class BoxCollider2D extends PolygonCollider2D {
     // Shape vs Line
 
     @Override
-    public boolean intersects(Edge2D edge) {
-        if (contains(edge.start) || contains(edge.end))
-            return true;
-        // Don't rotate the line because raycast will do that automatically
-        return raycast(new Ray2D(edge), edge.length()) != null;
-    }
-
-    @Override
     public RaycastResult raycast(Ray2D ray, float limit) {
         // Transform the ray to local space (but just rotate direction)
         Ray2D localRay = new Ray2D(toLocal(ray.origin), ray.direction.rotate(-getRotation()));
@@ -152,31 +145,10 @@ public class BoxCollider2D extends PolygonCollider2D {
     // Shape vs Shape
 
     @Override
-    public boolean detectCollision(Collider2D collider) {
-        if (collider instanceof CircleCollider)
-            return getCollisionInfo(collider) != null;
-        return super.detectCollision(collider);
-    }
-
-    @Override
     public CollisionManifold getCollisionInfo(Collider2D collider) {
-        if (collider instanceof CircleCollider)
-            return getCollisionInfo((CircleCollider) collider);
-        else if (collider instanceof BoxCollider2D)
+        if (collider instanceof BoxCollider2D)
             return getCollisionInfo((BoxCollider2D) collider);
-        return null;
-    }
-
-    private CollisionManifold getCollisionInfo(CircleCollider circle) {
-        Vec2 closestToCircle = this.nearestPoint(circle.center());
-        if (!circle.contains(closestToCircle))
-            return null;
-
-        float depth = circle.radius() - closestToCircle.distance(circle.center());
-        Vec2 normal = circle.center().sub(closestToCircle).unitVector();
-        CollisionManifold result = new CollisionManifold(this, circle, normal, depth);
-        result.addContactPoint(closestToCircle.sub(normal.mul(depth)));
-        return result;
+        return super.getCollisionInfo(collider);
     }
 
     private CollisionManifold getCollisionInfo(BoxCollider2D box) {
@@ -195,7 +167,7 @@ public class BoxCollider2D extends PolygonCollider2D {
         float overlap = overlaps[minOverlapIndex];
         Vec2 axis = axes[minOverlapIndex];
         Vec2 dist = box.center().sub(this.center());
-        Vec2 normal = dist.project(axis).unitVector();
+        Vec2 normal = dist.project(axis).unit();
         Vec2 side = normal.rotate(90);
         MathUtils.Range penetration = new MathUtils.Range(box.getIntervalOnAxis(normal).min, this.getIntervalOnAxis(normal).max);
 
@@ -207,8 +179,8 @@ public class BoxCollider2D extends PolygonCollider2D {
                     Math.min(sideA.max, sideB.max));
 
             Vec2 faceA = normal.mul(penetration.min);
-            collision.addContactPoint(faceA.add(side.mul(collisionFace.max)));
-            collision.addContactPoint(faceA.add(side.mul(collisionFace.min)));
+            collision.addContact(faceA.add(side.mul(collisionFace.max)));
+            collision.addContact(faceA.add(side.mul(collisionFace.min)));
         } else { // Diagonal intersection = 1 contact point
             float dotWithAxis = normal.dot(new Vec2(1, 0).rotate(getRotation()));
             // Other box is inside this, find the furthest vertex inside this box
@@ -221,7 +193,7 @@ public class BoxCollider2D extends PolygonCollider2D {
                 int minProjIndex = MathUtils.minIndex(projections);
                 float height = vertices[minProjIndex].projectedLength(side);
 
-                collision.addContactPoint(normal.mul(penetration.min).add(side.mul(height)));
+                collision.addContact(normal.mul(penetration.min).add(side.mul(height)));
             } else { // This box inside other box, find vertex furthest inside other box
                 Vec2[] vertices = this.getVertices();
                 float[] projections = new float[vertices.length];
@@ -230,7 +202,7 @@ public class BoxCollider2D extends PolygonCollider2D {
                 int maxProjIndex = MathUtils.maxIndex(projections);
                 float height = vertices[maxProjIndex].projectedLength(side);
 
-                collision.addContactPoint(normal.mul(penetration.max).add(side.mul(height)));
+                collision.addContact(normal.mul(penetration.max).add(side.mul(height)));
             }
         }
         return collision;

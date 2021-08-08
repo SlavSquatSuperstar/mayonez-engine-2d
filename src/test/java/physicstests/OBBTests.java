@@ -4,9 +4,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.Transform;
-import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
 import slavsquatsuperstar.mayonez.physics2d.colliders.*;
-import slavsquatsuperstar.mayonez.physics2d.colliders.Ray2D;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -117,7 +115,6 @@ public class OBBTests {
     public void obbIntersectsCircle() {
         CircleCollider c = new CircleCollider(4);
         c.setTransform(new Transform(new Vec2(2, 2)));
-        c.setRigidBody(new Rigidbody2D(0f));
         assertTrue(obb.detectCollision(c));
     }
 
@@ -125,7 +122,13 @@ public class OBBTests {
     public void obbIntersectsAABB() {
         AlignedBoxCollider2D box = new AlignedBoxCollider2D(new Vec2(4, 4));
         box.setTransform(new Transform(new Vec2(2, 2)));
-        box.setRigidBody(new Rigidbody2D(0f));
+        assertTrue(obb.detectCollision(box));
+    }
+
+    @Test
+    public void obbIntersectsOBB() {
+        BoxCollider2D box = new BoxCollider2D(new Vec2(4, 4));
+        box.setTransform(new Transform(new Vec2(1.5f, 1.5f)).rotate(45));
         assertTrue(obb.detectCollision(box));
     }
 

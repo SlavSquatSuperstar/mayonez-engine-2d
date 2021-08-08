@@ -4,7 +4,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.Transform;
-import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
 import slavsquatsuperstar.mayonez.physics2d.colliders.AlignedBoxCollider2D;
 import slavsquatsuperstar.mayonez.physics2d.colliders.CircleCollider;
 import slavsquatsuperstar.mayonez.physics2d.colliders.Edge2D;
@@ -152,7 +151,6 @@ public class AABBTests {
     public void aabbIntersectsCircle() {
         CircleCollider c = new CircleCollider(4);
         c.setTransform(new Transform(new Vec2(2, 2)));
-        c.setRigidBody(new Rigidbody2D(0f));
         assertTrue(aabb.detectCollision(c));
     }
 
@@ -160,7 +158,6 @@ public class AABBTests {
     public void aabbIntersectsAABB() {
         AlignedBoxCollider2D other = new AlignedBoxCollider2D(new Vec2(4, 4));
         other.setTransform(new Transform(new Vec2(2, 2)));
-        other.setRigidBody(new Rigidbody2D(0f));
         assertTrue(aabb.detectCollision(other));
     }
 

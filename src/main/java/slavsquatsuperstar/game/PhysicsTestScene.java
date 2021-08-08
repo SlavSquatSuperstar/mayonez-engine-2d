@@ -4,7 +4,10 @@ import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.*;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
-import slavsquatsuperstar.mayonez.physics2d.colliders.*;
+import slavsquatsuperstar.mayonez.physics2d.colliders.AlignedBoxCollider2D;
+import slavsquatsuperstar.mayonez.physics2d.colliders.BoxCollider2D;
+import slavsquatsuperstar.mayonez.physics2d.colliders.CircleCollider;
+import slavsquatsuperstar.mayonez.physics2d.colliders.Collider2D;
 import slavsquatsuperstar.mayonez.renderer.DebugDraw;
 import slavsquatsuperstar.mayonez.scripts.*;
 
@@ -75,7 +78,7 @@ public class PhysicsTestScene extends Scene {
                     public void update(float dt) {
                         if (KeyInput.keyDown("Q"))
                             rb.addAngularImpulse(-speed);
-                        if (KeyInput.keyDown("E"))
+                        else if (KeyInput.keyDown("E"))
                             rb.addAngularImpulse(speed);
                     }
                 });

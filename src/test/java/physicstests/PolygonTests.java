@@ -1,15 +1,14 @@
 package physicstests;
 
 import org.junit.jupiter.api.Test;
-import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.Transform;
 import slavsquatsuperstar.mayonez.physics2d.colliders.PolygonCollider2D;
+import slavsquatsuperstar.mayonez.physics2d.colliders.Ray2D;
 
 import java.util.Objects;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Unit tests for {@link slavsquatsuperstar.mayonez.physics2d.colliders.PolygonCollider2D} class.
@@ -20,6 +19,8 @@ public class PolygonTests {
 
     static Vec2[] vertices = new Vec2[]{new Vec2(1, 1), new Vec2(-1, 1), new Vec2(-1, -1), new Vec2(1, -1)};
 
+    // Point
+
     // Create 2x2 a box centered at (0, 0) and rotate it by 45 degrees
     @Test
     public void pointIsInPolygon() {
@@ -27,6 +28,29 @@ public class PolygonTests {
         assertTrue(shape.contains(new Vec2(0, 1)));
         assertTrue(shape.contains(new Vec2(1, 0)));
     }
+
+    @Test
+    public void pointNotInPolygon() {
+        PolygonCollider2D shape = new PolygonCollider2D(vertices){}.setTransform(new Transform().rotate(45));
+        assertFalse(shape.contains(new Vec2(2, -2)));
+        assertFalse(shape.contains(new Vec2(0, -3)));
+    }
+
+    @Test
+    public void nearestPointInsidePolygon() {
+        PolygonCollider2D shape = new PolygonCollider2D(vertices){}.setTransform(new Transform());
+        assertEquals(new Vec2(1, 0), shape.nearestPoint(new Vec2(1, 0)));
+        assertEquals(new Vec2(0.5f, -0.5f), shape.nearestPoint(new Vec2(0.5f, -0.5f)));
+    }
+
+    @Test
+    public void nearestPointOutsidePolygon() {
+        PolygonCollider2D shape = new PolygonCollider2D(vertices){}.setTransform(new Transform());
+        assertEquals(new Vec2(1, 0), shape.nearestPoint(new Vec2(2, 0)));
+        assertEquals(new Vec2(1, -1), shape.nearestPoint(new Vec2(1.5f, -1.5f)));
+    }
+
+    // Properties
 
     // Create 2x2 a box centered at (0, 0)
     @Test
@@ -69,12 +93,23 @@ public class PolygonTests {
         assertTrue(Objects.deepEquals(normals, shape.getNormals()));
     }
 
+    // Raycast
+
+    @Test
+    public void outsideRayHitsPolygon() {
+        PolygonCollider2D shape = new PolygonCollider2D(vertices){}.setTransform(new Transform());
+        assertNotNull(shape.raycast(new Ray2D(new Vec2(0, 3), new Vec2(0, -1)), 0));
+    }
+
     // SAT
+
     @Test
     public void getIntervalSuccess() {
         PolygonCollider2D p1 = new PolygonCollider2D(vertices){}.setTransform(new Transform());
         PolygonCollider2D p2 = new PolygonCollider2D(vertices){}.setTransform(new Transform(new Vec2(0.5f, 0.5f)));
-        assertEquals(1.5f, p1.getAxisOverlap(p2, new Vec2(1, 0)), MathUtils.EPSILON);
+        assertTrue(p1.detectCollision(p2));
     }
+
+    // Polygon vs Shape
 
 }

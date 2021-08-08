@@ -237,6 +237,15 @@ public class Rigidbody2D extends Component {
         return 1 / angularMass;
     }
 
+    public float getAngularDrag() {
+        return angularDrag;
+    }
+
+    public Rigidbody2D setAngularDrag(float angularDrag) {
+        this.angularDrag = MathUtils.clamp(angularDrag, 0, 1);
+        return this;
+    }
+
     // Behavior Getters and Setters
 
     public boolean followGravity() {

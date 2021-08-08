@@ -3,6 +3,7 @@ package slavsquatsuperstar.mayonez.physics2d.colliders;
 import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.physics2d.CollisionManifold;
+import slavsquatsuperstar.mayonez.physics2d.RaycastResult;
 
 // TODO scale with transform
 // TODO local instead of world space?
@@ -103,46 +104,35 @@ public class CircleCollider extends Collider2D {
     }
 
     @Override
-    public boolean detectCollision(Collider2D collider) {
-        if (collider instanceof CircleCollider)
-            return getCollisionInfo(collider) != null;
-        else if (collider instanceof BoxCollider2D)
-            return getCollisionInfo(collider) != null;
-        return false;
-    }
-
-    @Override
     public CollisionManifold getCollisionInfo(Collider2D collider) {
         if (collider instanceof CircleCollider)
             return getCollisionInfo((CircleCollider) collider);
-        if (collider instanceof BoxCollider2D)
-            return getCollisionInfo((BoxCollider2D) collider);
+        else if (collider instanceof PolygonCollider2D)
+            return getCollisionInfo((PolygonCollider2D) collider);
         return null;
     }
 
     private CollisionManifold getCollisionInfo(CircleCollider circle) {
         float sumRadii = this.radius() + circle.radius();
         Vec2 distance = circle.center().sub(this.center());
-
         if (distance.lenSquared() >= sumRadii * sumRadii) // Circles too far away
             return null;
 
         float depth = sumRadii - distance.len();
-        Vec2 normal = distance.unitVector();
-
+        Vec2 normal = distance.unit();
         CollisionManifold result = new CollisionManifold(this, circle, normal, depth);
-        result.addContactPoint(this.center().add(normal.mul(this.radius() - depth)));
+        result.addContact(this.center().add(normal.mul(this.radius() - depth)));
         return result;
     }
 
-    private CollisionManifold getCollisionInfo(BoxCollider2D box) {
-        Vec2 closestToCircle = box.nearestPoint(center()); // point from box deepest in circle
+    private CollisionManifold getCollisionInfo(PolygonCollider2D polygon) {
+        Vec2 closestToCircle = polygon.nearestPoint(center()); // Point from shape deepest in circle
         if (!contains(closestToCircle))
             return null;
 
         float depth = radius() - closestToCircle.distance(center());
-        CollisionManifold result = new CollisionManifold(this, box, closestToCircle.sub(center()), depth);
-        result.addContactPoint(closestToCircle);
+        CollisionManifold result = new CollisionManifold(this, polygon, closestToCircle.sub(center()), depth);
+        result.addContact(closestToCircle);
         return result;
     }
 
