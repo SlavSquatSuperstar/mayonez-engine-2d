@@ -20,7 +20,8 @@ public class OBBTests {
     // Create box centered at (0, 0) with dimensions 4x4 with a rotation of 45 degrees clockwise
     @BeforeAll
     public static void getOBB() {
-        obb = new BoxCollider2D(new Vec2(4, 4)).setTransform(new Transform().rotate(45));
+        obb = new BoxCollider2D(new Vec2(2, 2)).setTransform(
+                new Transform().rotate(45).resize(new Vec2(2, 2)));
     }
 
     // Contains Point

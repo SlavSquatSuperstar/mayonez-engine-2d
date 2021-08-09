@@ -98,7 +98,7 @@ public class KeepInScene extends Script {
                     rb.getVelocity().x = 0;
                 break;
             case BOUNCE: // Reverse velocity if bouncing
-                rb.getVelocity().x *= -boundingBox.getBounce();
+                rb.getVelocity().x *= -objectCollider.getBounce();
                 break;
             default: // Stop if neither
                 return;
@@ -113,7 +113,7 @@ public class KeepInScene extends Script {
                     rb.getVelocity().x = 0;
                 break;
             case BOUNCE:
-                rb.getVelocity().x *= -boundingBox.getBounce();
+                rb.getVelocity().x *= -objectCollider.getBounce();
                 break;
             default:
                 return;
@@ -128,7 +128,7 @@ public class KeepInScene extends Script {
                     rb.getVelocity().y = 0;
                 break;
             case BOUNCE:
-                rb.getVelocity().y *= -boundingBox.getBounce();
+                rb.getVelocity().y *= -objectCollider.getBounce();
                 break;
             default:
                 return;
@@ -144,7 +144,7 @@ public class KeepInScene extends Script {
                     rb.getVelocity().y = 0;
                 break;
             case BOUNCE:
-                rb.getVelocity().y *= -boundingBox.getBounce();
+                rb.getVelocity().y *= -objectCollider.getBounce();
                 break;
             default:
                 return;

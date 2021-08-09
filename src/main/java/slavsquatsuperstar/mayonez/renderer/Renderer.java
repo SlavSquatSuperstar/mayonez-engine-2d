@@ -1,7 +1,9 @@
 package slavsquatsuperstar.mayonez.renderer;
 
 import slavsquatsuperstar.math.Vec2;
-import slavsquatsuperstar.mayonez.*;
+import slavsquatsuperstar.mayonez.Game;
+import slavsquatsuperstar.mayonez.GameObject;
+import slavsquatsuperstar.mayonez.Scene;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;

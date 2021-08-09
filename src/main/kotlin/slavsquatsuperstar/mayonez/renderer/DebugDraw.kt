@@ -118,7 +118,8 @@ object DebugDraw {
 
     private fun drawPolygon(polygon: PolygonCollider2D, color: Color) {
         val shape = Polygon()
-        for (point in polygon.vertices) shape.addPoint(toScreen(point.x).roundToInt(), toScreen(point.y).roundToInt())
+        for (point in polygon.getVertices())
+            shape.addPoint(toScreen(point.x).roundToInt(), toScreen(point.y).roundToInt())
         shapes.add(Renderable { g2: Graphics2D ->
             g2.color = color
             g2.drawPolygon(shape)
@@ -161,7 +162,7 @@ object DebugDraw {
 
     private fun fillPolygon(box: PolygonCollider2D, color: Color) {
         val shape = Polygon()
-        for (point in box.vertices) shape.addPoint(toScreen(point.x).roundToInt(), toScreen(point.y).roundToInt())
+        for (point in box.getVertices()) shape.addPoint(toScreen(point.x).roundToInt(), toScreen(point.y).roundToInt())
         shapes.add(Renderable { g2: Graphics2D ->
             g2.color = color
             g2.fillPolygon(shape)

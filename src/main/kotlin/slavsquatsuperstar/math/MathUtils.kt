@@ -12,12 +12,12 @@ object MathUtils {
     /**
      * The maximum precision a float should have (equal to 10^-6).
      */
-    const val EPSILON = 1e-6F
+    const val EPSILON = 1e-6f
 
     /**
      * The number π (pi) in float precision.
      */
-    const val PI = 3.1415927F
+    const val PI = 3.1415927f
 
     // Comparison Methods
 
@@ -76,7 +76,7 @@ object MathUtils {
 
     @JvmStatic
     fun sum(vararg values: Float): Float {
-        var sum = 0F
+        var sum = 0f
         for (v in values)
             sum += v
         return sum
@@ -95,7 +95,7 @@ object MathUtils {
     @JvmStatic
     fun min(vararg values: Float): Float {
         if (values.isEmpty())
-            return 0F
+            return 0f
         var min = values[0]
         for (i in 1 until values.size)
             if (values[i] < min)
@@ -128,7 +128,7 @@ object MathUtils {
     @JvmStatic
     fun max(vararg values: Float): Float {
         if (values.isEmpty())
-            return 0F
+            return 0f
         var max = values[0]
         for (i in 1 until values.size)
             if (values[i] > max)
@@ -236,9 +236,9 @@ object MathUtils {
      */
     @JvmStatic
     fun round(value: Float, decimalPlaces: Int): Float {
-        var temp = value * 10F.pow(decimalPlaces)
+        var temp = value * 10f.pow(decimalPlaces)
         temp = kotlin.math.round(temp)
-        return temp / 10F.pow(decimalPlaces)
+        return temp / 10f.pow(decimalPlaces)
     }
 
     /**
@@ -251,9 +251,9 @@ object MathUtils {
      */
     @JvmStatic
     fun truncate(value: Float, decimalPlaces: Int): Float {
-        var temp = value * 10F.pow(decimalPlaces)
+        var temp = value * 10f.pow(decimalPlaces)
         temp = kotlin.math.truncate(temp)
-        return temp / 10F.pow(decimalPlaces)
+        return temp / 10f.pow(decimalPlaces)
     }
 
     // Trig / Angle Methods

@@ -32,7 +32,7 @@ class Mat22 constructor(
     /**
      * Initialize this matrix to the identity matrix, [(1, 0), (0, 1)]
      */
-    constructor() : this(1F, 0F, 0F, 1F)
+    constructor() : this(1f, 0f, 0f, 1f)
 
     companion object {
         /**

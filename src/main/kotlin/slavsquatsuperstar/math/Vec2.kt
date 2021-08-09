@@ -34,7 +34,7 @@ class Vec2 constructor(
     /**
      * Initialize this vector to (0, 0).
      */
-    constructor() : this(0F, 0F)
+    constructor() : this(0f, 0f)
 
     /**
      * Initialize this vector to copy another vector's x and y values.
@@ -53,7 +53,7 @@ class Vec2 constructor(
      * Negates this vector.
      * @return a new vector with this vector's components times -1
      */
-    operator fun unaryMinus() = this * -1F
+    operator fun unaryMinus() = this * -1f
 
     // Mutators
 
@@ -120,7 +120,7 @@ class Vec2 constructor(
      * @return the divided vector
      */
     operator fun div(scalar: Float): Vec2 {
-        if (scalar == 0F) {
+        if (scalar == 0f) {
             Logger.warn("Vector2: Attempted division by 0")
             return Vec2()
         }
@@ -188,7 +188,7 @@ class Vec2 constructor(
      * @return the unit vector
      */
     fun unit(): Vec2 {
-        return if (equals(lenSquared(), 1F) || equals(lenSquared(), 0F)) +this
+        return if (equals(lenSquared(), 1f) || equals(lenSquared(), 0f)) +this
         else this / len()
     }
 
@@ -208,7 +208,7 @@ class Vec2 constructor(
      * @return this vector's angle in the x-y plane
      */
     fun angle(): Float = Math.toDegrees(atan2(y.toDouble(), x.toDouble())).toFloat()
-    // fun angle(): Float = this.angle(Vec2(1F, 0F))
+    // fun angle(): Float = this.angle(Vec2(1f, 0f))
 
     /**
      * Calculates the angle in degrees between this vector and another.
@@ -227,7 +227,7 @@ class Vec2 constructor(
      */
     @JvmOverloads
     fun rotate(degrees: Float, origin: Vec2 = Vec2()): Vec2 {
-        if (degrees % 360 == 0F)
+        if (degrees % 360 == 0f)
             return +this
         // Translate the vector space to the origin
         val localPos = this - origin
@@ -268,7 +268,7 @@ class Vec2 constructor(
      * @return the midpoint
      */
     fun midpoint(v: Vec2): Vec2 {
-        return (this + v) / 2F
+        return (this + v) / 2f
     }
 
     // Overrides
