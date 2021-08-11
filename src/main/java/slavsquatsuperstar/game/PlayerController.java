@@ -18,6 +18,7 @@ public class PlayerController extends Script {
     // Movement Parameters
     private float speed;
     private float brakeForce = 0.6f;
+    private float drag = 0.4f;
 
     public PlayerController(float speed) {
         this.speed = speed;
@@ -33,6 +34,7 @@ public class PlayerController extends Script {
             cam.enableKeepInScene(true).setSubject(parent); // TODO pass camera in player c'tor?
         }
         rb = parent.getComponent(Rigidbody2D.class);
+        rb.setDrag(drag);
     }
 
     @Override

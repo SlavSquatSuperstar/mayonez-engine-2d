@@ -2,20 +2,30 @@
 
 The 2D Java game engine to fit your Slavic needs!*†
 
-Java Version: JDK/JRE 11
+### Instructions for End-Users:
 
-Dependencies (bundled in JAR)
+- Java Version: JRE 11
+- To check if Java is installed, enter 'java --version' inside a Terminal window.
+- Download the repository, drag 'run.sh' from the extracted folder to a Terminal window, and press enter.
 
-- JSON in Java (org.json)
-- Apache Commons Lang
-- Apache Commons IO
-- Kotlin Standard Library
+### Instructions for Developers:
 
-*This statement has not been evaluated by the International Council of Slavs. This software is not intended to idealize,
-encourage, promote, or spread Communism.
+- Java Version: JDK 11
+- Recommended IDE: Intellij IDEA
+- Build System: Gradle
+- Dependencies (bundled in JAR)
+    - JSON in Java (org.json)
+    - Apache Commons Lang
+    - Apache Commons IO
+    - Kotlin Standard Library
 
-†The developer is not responsible for any addictions, trauma, injuries, or deaths caused by excessive drinking or
-incorrect squatting position.
+### Disclaimers:
+
+- *This statement has not been evaluated by the International Council of Slavs. This software is not intended to
+  idealize, encourage, promote, or spread Communism.
+
+- †The developer is not responsible for any addictions, trauma, injuries, or deaths caused by excessive drinking or
+  incorrect squatting position.
 
 ## Credits
 

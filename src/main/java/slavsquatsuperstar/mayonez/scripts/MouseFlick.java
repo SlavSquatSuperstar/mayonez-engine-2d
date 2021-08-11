@@ -36,7 +36,7 @@ public class MouseFlick extends MouseScript {
             lastMouse = MouseInput.getPosition();
             if (rb != null) {
                 rb.setVelocity(new Vec2(0, 0)); // Stop the object
-                rb.setAngularVelocity(0);
+                rb.setAngVelocity(0);
             }
         }
     }

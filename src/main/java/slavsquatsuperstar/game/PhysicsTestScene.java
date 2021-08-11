@@ -63,7 +63,7 @@ public class PhysicsTestScene extends Scene {
                 addComponent(new BoxCollider2D(new Vec2(size, size)));
                 addComponent(new Rigidbody2D(size * size / 20f));
                 addComponent(new MouseFlick("right mouse", 15, false));
-                addComponent(new KeyMovement(MoveMode.IMPULSE, speed));
+                addComponent(new KeyMovement(MoveMode.POSITION, speed / 2));
                 addComponent(new DragAndDrop("left mouse", false));
                 addComponent(new KeepInScene(getScene(), KeepInScene.Mode.BOUNCE));
                 addComponent(new Script() {
@@ -88,10 +88,10 @@ public class PhysicsTestScene extends Scene {
 
         addObject(createCircle(2, new Vec2(10, 10)));
         addObject(createCircle(5, new Vec2(30, 30)));
-        addObject(createAABB(12, 8, new Vec2(50, 20)));
-        addObject(createAABB(5, 10, new Vec2(70, 20)));
+        addObject(createOBB(12, 8, new Vec2(50, 20), 0));
+        addObject(createOBB(5, 10, new Vec2(70, 20), 30));
         addObject(createOBB(10, 6, new Vec2(70, 40), 45));
-        addObject(createOBB(5, 5, new Vec2(90, 40), 0));
+        addObject(createOBB(3, 15, new Vec2(90, 40), 90));
 
         // Randomly generate shapes
         for (int i = 0; i < 6; i++) {

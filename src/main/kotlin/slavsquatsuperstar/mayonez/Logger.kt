@@ -12,11 +12,8 @@ import java.util.*
  */
 object Logger {
 
-    @JvmField
-    val saveLogs = Preferences.SAVE_LOGS
-
-    @JvmField
-    var logFilename: String? = null
+    private val saveLogs = Preferences.SAVE_LOGS
+    private lateinit var logFilename: String
     private var logFile: TextFile? = null
 
     init {
@@ -67,6 +64,11 @@ object Logger {
     @JvmStatic
     fun warn(msg: Any?, vararg args: Any?) {
         log("[WARNING] $msg", *args)
+    }
+
+    @JvmStatic
+    fun printExitMessage() {
+        if (saveLogs) log("Logger: Saved log to file \"%s\"", logFilename)
     }
 
 }

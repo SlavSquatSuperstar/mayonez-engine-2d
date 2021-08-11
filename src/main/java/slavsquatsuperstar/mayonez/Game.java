@@ -282,8 +282,7 @@ public class Game implements Runnable {
 
         // Stop thread
         thread.interrupt();
-        if (Logger.saveLogs)
-            Logger.log("Logger: Saved log to file \"%s\"", Logger.logFilename);
+        Logger.printExitMessage();
         System.exit(status);
     }
 

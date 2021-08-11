@@ -21,7 +21,7 @@ import kotlin.math.abs
  *
  * @param vertices the vertices in clockwise order
  */
-abstract class PolygonCollider2D(vararg vertices: Vec2) : Collider2D() {
+open class PolygonCollider2D(vararg vertices: Vec2) : Collider2D() {
 
     // Shape Properties
 
@@ -172,29 +172,31 @@ abstract class PolygonCollider2D(vararg vertices: Vec2) : Collider2D() {
     }
 
     // Diagonals method, convex only
-//    private fun getCollisionInfo(polygon: PolygonCollider2D): CollisionManifold? {
-//        val diagonals = arrayOf(getDiagonals(), polygon.getDiagonals())
-//        val edges = arrayOf(polygon.getEdges(), getEdges())
-//
-//        var normalsAccum = Vec2()
-//        var rc: RaycastResult?
-//        for (i in diagonals.indices) {
-//            for (diag in diagonals[i]) {
-//                for (side in edges[i]) {
-//                    rc = side!!.raycast(Ray2D(diag), diag!!.length())
-//                    if (rc != null)
-//                        normalsAccum = normalsAccum.add(rc.normal * rc.distance)
-//                }
-//            }
-//        }
-//        if (normalsAccum.lenSquared() == 0f)
-//            return null
-//
-//        val depth = normalsAccum.len()
-//        val result = CollisionManifold(this, polygon, normalsAccum / depth, depth)
-//        result.addContact(this.center())
-//        result.addContact(polygon.center())
-//        return result
-//    }
+    private fun getCollisionInfo(polygon: PolygonCollider2D): CollisionManifold? {
+        val diagonals = arrayOf(getDiagonals(), polygon.getDiagonals())
+        val edges = arrayOf(polygon.getEdges(), getEdges())
+        var overlaps = FloatArray(this.countVertices() + polygon.countVertices())
+
+        var normalsAccum = Vec2()
+        var rc: RaycastResult?
+        // Raycast each shape's diagonals against other shape's edges
+        for (i in diagonals.indices) {
+            for (diag in diagonals[i]) {
+                for (side in edges[i]) {
+                    rc = side.raycast(Ray2D(diag), diag.length())
+                    if (rc != null)
+                        normalsAccum = normalsAccum.add(rc.normal * rc.distance)
+                }
+            }
+        }
+        if (normalsAccum.lenSquared() == 0f)
+            return null
+
+        val depth = normalsAccum.len()
+        val result = CollisionManifold(this, polygon, normalsAccum / depth, depth)
+        result.addContact(this.center())
+        result.addContact(polygon.center())
+        return result
+    }
 
 }

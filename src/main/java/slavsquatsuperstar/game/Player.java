@@ -14,12 +14,6 @@ import java.awt.*;
 
 public class Player extends GameObject {
 
-    // Movement Parameters
-    private float thrustForce = 6f;
-    private float topSpeed = 5f;
-    private float mass = 12f;
-    private float drag = 0.4f; // [0, 1]
-
     public Player(String name, Vec2 position) {
         super(name, position);
     }
@@ -53,9 +47,10 @@ public class Player extends GameObject {
             addComponent(s);
 
         // Add player scripts
+        float thrustForce = 6f;
         addComponent(new AlignedBoxCollider2D(new Vec2(1, 1)));
-        addComponent(new Rigidbody2D(mass).setDrag(drag));
-        addComponent(new KeyMovement(MoveMode.FORCE, thrustForce).setTopSpeed(topSpeed));
+        addComponent(new Rigidbody2D(12f));
+        addComponent(new KeyMovement(MoveMode.FORCE, thrustForce).setTopSpeed(5f));
         addComponent(new KeepInScene(0, 0, getScene().getWidth(), getScene().getHeight(), KeepInScene.Mode.STOP));
         addComponent(new PlayerController(thrustForce));
     }

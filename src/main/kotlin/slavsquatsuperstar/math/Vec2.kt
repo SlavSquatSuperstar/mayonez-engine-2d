@@ -227,7 +227,7 @@ class Vec2 constructor(
      */
     @JvmOverloads
     fun rotate(degrees: Float, origin: Vec2 = Vec2()): Vec2 {
-        if (degrees % 360 == 0f)
+        if (equals(degrees % 360, 0f))
             return +this
         // Translate the vector space to the origin
         val localPos = this - origin

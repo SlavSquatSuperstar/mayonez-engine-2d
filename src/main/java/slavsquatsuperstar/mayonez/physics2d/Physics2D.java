@@ -1,5 +1,6 @@
 package slavsquatsuperstar.mayonez.physics2d;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.Colors;
 import slavsquatsuperstar.mayonez.GameObject;
@@ -137,36 +138,43 @@ public class Physics2D {
         float massRatio = r2.getMass() / (r1.getMass() + r2.getMass());
         float depth1 = col.getDepth() * massRatio;
         float depth2 = col.getDepth() * (1 - massRatio);
-        r1.transform.move(col.getNormal().mul(-depth1));
-        r2.transform.move(col.getNormal().mul(depth2));
+        r1.getTransform().move(col.getNormal().mul(-depth1));
+        r2.getTransform().move(col.getNormal().mul(depth2));
     }
 
     private void resolveDynamicCollision(CollisionManifold col, Rigidbody2D r1, Rigidbody2D r2) {
-        // Solve for linear and angular velocity
-        float invMass1 = r1.getInverseMass();
-        float invMass2 = r2.getInverseMass();
+        // Known Values
+        float invMass1 = r1.getInvMass();
+        float invMass2 = r2.getInvMass();
         float sumInvMass = invMass1 + invMass2;
+        float elasticity = r1.getCollider().getBounce() * r2.getCollider().getBounce(); // Coefficient of restitution
+        int numContacts = col.countContacts();
 
-        for (int k = 0; k < IMPULSE_ITERATIONS; k++) {
-            Vec2 vel1 = r1.getVelocity();
-            Vec2 vel2 = r2.getVelocity();
+        for (int j = 0; j < IMPULSE_ITERATIONS; j++) {
 
-            Vec2 relativeVel = vel2.sub(vel1);
-            Vec2 normal = col.getNormal(); // Direction of collision
-            if (relativeVel.dot(normal) > 0f) // Stop if moving away or stationary
-                return;
+            ImmutablePair<Vec2, Vec2>[] contactVelocities = new ImmutablePair[numContacts];
 
-            float elasticity = r1.getCollider().getBounce() * r2.getCollider().getBounce(); // Coefficient of restitution
-            float collisionVel = -(1f + elasticity) * relativeVel.dot(normal);
-
-            int numContacts = col.countContacts();
-            float impulse = collisionVel / sumInvMass / numContacts;
-
-            // Apply impulse at contact points evenly
             for (int i = 0; i < numContacts; i++) {
                 Vec2 contact = col.getContact(i);
+                Vec2 vel1 = r1.getPointVelocity(contact);
+                Vec2 vel2 = r2.getPointVelocity(contact);
+                Vec2 relativeVel = vel2.sub(vel1);
+                contactVelocities[i] = new ImmutablePair<>(contact, relativeVel);
+            }
+
+            for (int i = 0; i < numContacts; i++) {
+                Vec2 contact = contactVelocities[i].left;
+                Vec2 normal = col.getNormal(); // Direction of collision
+                DebugDraw.drawVector(contact, contactVelocities[i].right, Colors.RED);
+                float collisionVel = contactVelocities[i].right.dot(normal);
+                if (collisionVel > 0f) // Stop if moving away or stationary
+                    break;
+
+                // Apply impulse at contact points evenly
+                float impulse = -(1f + elasticity) * collisionVel / sumInvMass / numContacts;
                 r1.addImpulseAtPoint(normal.mul(-impulse), contact);
                 r2.addImpulseAtPoint(normal.mul(impulse), contact);
+                DebugDraw.drawVector(contact, normal, Colors.BLACK);
             }
         }
     }
@@ -209,7 +217,7 @@ public class Physics2D {
 
         if (rb != null) {
             bodies.add(rb);
-            if (rb.followGravity())
+            if (rb.isFollowsGravity())
                 forceRegistry.add(new ForceRegistration(gravityForce, rb));
         }
 
