@@ -1,13 +1,11 @@
 package slavsquatsuperstar.game;
 
+import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.KeyInput;
 import slavsquatsuperstar.mayonez.Script;
-import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
 import slavsquatsuperstar.mayonez.renderer.Camera;
 import slavsquatsuperstar.mayonez.scripts.KeepInScene;
-
-import java.awt.event.KeyEvent;
 
 @SuppressWarnings("unused")
 public class PlayerController extends Script {
@@ -39,14 +37,6 @@ public class PlayerController extends Script {
 
     @Override
     public void update(float dt) {
-        // Rotate player
-        if (KeyInput.keyDown(KeyEvent.VK_Q))
-            transform.rotate(-2);
-        if (KeyInput.keyDown(KeyEvent.VK_E))
-            transform.rotate(2);
-
-        Vec2 velocity = rb.getVelocity();
-
         if (getScene() instanceof LevelScene) {
             // Jump if on ground
             if (KeyInput.keyDown("up"))
@@ -57,7 +47,6 @@ public class PlayerController extends Script {
             if (KeyInput.keyDown("down"))
                 rb.addImpulse(new Vec2(0, speed / 5f));
         }
-
     }
 
 }

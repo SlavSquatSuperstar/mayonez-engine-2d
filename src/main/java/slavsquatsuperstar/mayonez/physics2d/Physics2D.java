@@ -3,7 +3,6 @@ package slavsquatsuperstar.mayonez.physics2d;
 import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.GameObject;
-import slavsquatsuperstar.mayonez.Logger;
 import slavsquatsuperstar.mayonez.Preferences;
 import slavsquatsuperstar.mayonez.Scene;
 import slavsquatsuperstar.mayonez.physics2d.colliders.Collider2D;
@@ -144,64 +143,65 @@ public class Physics2D {
 
     private void resolveDynamicCollision(CollisionManifold col, Rigidbody2D r1, Rigidbody2D r2) {
         // Precalculated / Known Values
-        float invMass1 = r1.getInvMass();
-        float invMass2 = r2.getInvMass();
-        float sumInvMass = invMass1 + invMass2;
-        float elasticity = col.getSelf().getBounce() * col.getOther().getBounce(); // Coefficient of restitution
-        Vec2 normal = col.getNormal();
+        float sumInvMass = r1.getInvMass() + r2.getInvMass();
+        float elasticity = MathUtils.avg(col.getSelf().getBounce(), col.getOther().getBounce()); // Coefficient of restitution
+        float friction = MathUtils.avg(col.getSelf().getFriction(), col.getOther().getFriction());
+
+        Vec2 normal = col.getNormal(); // Collision direction
+        Vec2 tangent = new Vec2(-normal.y, normal.x); // Collision plane
         int numContacts = col.countContacts();
 
         for (int j = 0; j < IMPULSE_ITERATIONS; j++) {
-            // Total impulse of collision
+            // Sum up total impulse of collision
             Vec2 accumImpulse = new Vec2();
             float accumAngImpulse1 = 0;
             float accumAngImpulse2 = 0;
 
-            // Get linear and angular impulse at each contact
             for (int i = 0; i < numContacts; i++) {
+                // Relative velocity at contact point
                 Vec2 contact = col.getContact(i);
-
-                // Relative velocity at point
                 Vec2 vel1 = r1.getPointVelocity(contact);
                 Vec2 vel2 = r2.getPointVelocity(contact);
                 Vec2 relativeVel = vel1.sub(vel2);
-//                DebugDraw.drawVector(contact, relativeVel.div(5), Colors.RED);
 
-                // Velocity along collision normal
-                float collisionVel = relativeVel.dot(normal);
+                // Normal (separation) impulse
+                float collisionVel = relativeVel.dot(normal); // Velocity along collision normal
                 if (collisionVel < 0f) // Stop if moving away or stationary
                     break;
-
                 // Apply impulse at contact points evenly
-                float impulse = -(1f + elasticity) * collisionVel / sumInvMass / numContacts;
-                if (MathUtils.equals(impulse, 0)) { // Don't apply tiny impulses
-                    Logger.log("too smol");
+                float normalImpulse = -(1f + elasticity) * collisionVel / sumInvMass / numContacts;
+                if (MathUtils.equals(normalImpulse, 0)) // Don't apply tiny impulses
                     return;
-                }
-                Vec2 contactImpulse = normal.mul(impulse);
+
+                // Tangent (friction) impulse
+                /*
+                 * TODO static vs dynamic
+                 * Coulomb's law (static/dynamic friction)
+                 * F_f ≤ mu*F_n
+                 * Clamp the friction magnitude to the normal magnitude
+                 * Use dynamic friction if J_f ≥ mu*J_n
+                 */
+                float frictionVel = relativeVel.dot(tangent);
+                float tangentImpulse = -(1f + elasticity) * frictionVel / sumInvMass / numContacts;
+                tangentImpulse = MathUtils.clamp(tangentImpulse, -normalImpulse * friction, normalImpulse * friction);
+
+                // Angular impulse
+                Vec2 contactImpulse = normal.mul(normalImpulse).add(tangent.mul(tangentImpulse)); // impulse at this point
                 accumImpulse = accumImpulse.add(contactImpulse);
-
-                // Contact radii
-                Vec2 rad1 = contact.sub(r1.getPosition());
-                Vec2 rad2 = contact.sub(r2.getPosition());
-
-                // Angular impulse for this contact point
-                accumAngImpulse1 += rad1.cross(contactImpulse); // need to calculate this after impulse
-                accumAngImpulse2 += rad2.cross(contactImpulse.mul(-1));
-//                DebugDraw.drawVector(contact, normal, Colors.BLACK);
+                accumAngImpulse1 += contact.sub(r1.getPosition()).cross(contactImpulse); // need to calculate this after impulse
+                accumAngImpulse2 += contact.sub(r2.getPosition()).cross(contactImpulse.mul(-1));
             }
 
-            // Transfer linear momentum
+            // Transfer momentum
             r1.addImpulse(accumImpulse);
             r2.addImpulse(accumImpulse.mul(-1));
-
-            // Transfer angular momentum
             r1.addAngularImpulse(accumAngImpulse1);
             r2.addAngularImpulse(accumAngImpulse2);
         }
     }
 
     // Can't push objects after colliding, velocity slows to 0.
+    // javidx9 solution
     private void applyImpulse2(Rigidbody2D r1, Rigidbody2D r2, CollisionManifold collision) {
 
         Vec2 vel1 = r1.getVelocity();

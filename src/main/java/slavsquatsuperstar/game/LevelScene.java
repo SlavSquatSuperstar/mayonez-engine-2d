@@ -16,7 +16,6 @@ public class LevelScene extends Scene {
 
     public LevelScene(String name) {
         super(name, (int) (Preferences.SCREEN_WIDTH * 1.5), (int) (Preferences.SCREEN_HEIGHT * 1.0), 42);
-        setGravity(new Vec2(0, 2));
     }
 
     @Override
@@ -25,7 +24,7 @@ public class LevelScene extends Scene {
             @Override
             protected void init() {
                 addComponent(new Rigidbody2D(0f));
-                addComponent(new AlignedBoxCollider2D(new Vec2(getWidth() + 2f, 2f)).setBounce(0f));
+                addComponent(new AlignedBoxCollider2D(new Vec2(getWidth() + 2f, 2f)));
                 System.out.println(transform.position);
             }
 

@@ -23,7 +23,7 @@ public class LevelEditorScene extends Scene {
             @Override
             protected void init() {
                 addComponent(new Rigidbody2D(0f));
-                addComponent(new AlignedBoxCollider2D(new Vec2(getWidth() + 2f, 2f)).setBounce(0f));
+                addComponent(new AlignedBoxCollider2D(new Vec2(getWidth() + 2f, 2f)));
                 System.out.println(transform.position);
             }
 

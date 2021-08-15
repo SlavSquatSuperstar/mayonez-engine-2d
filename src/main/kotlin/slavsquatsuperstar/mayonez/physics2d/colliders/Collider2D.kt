@@ -56,11 +56,19 @@ abstract class Collider2D : Component() {
     /**
      * What percentage of energy is conserved after a collision (0-1).
      */
-    var bounce = 0.25f
+    var bounce: Float = 0f
+        private set
+
+    var friction: Float = 0.5f // coefficient of kinetic friction
         private set
 
     fun setBounce(bounce: Float): Collider2D {
         this.bounce = clamp(bounce, 0f, 1f)
+        return this
+    }
+
+    fun setFriction(friction: Float): Collider2D {
+        this.friction = clamp(friction, 0f, 1f)
         return this
     }
 

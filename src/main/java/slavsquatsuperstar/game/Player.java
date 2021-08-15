@@ -49,7 +49,7 @@ public class Player extends GameObject {
         // Add player scripts
         float thrustForce = 6f;
         addComponent(new AlignedBoxCollider2D(new Vec2(1, 1)));
-        addComponent(new Rigidbody2D(12f));
+        addComponent(new Rigidbody2D(1f, 0.5f, 0.1f));
         addComponent(new KeyMovement(MoveMode.FORCE, thrustForce).setTopSpeed(5f));
         addComponent(new KeepInScene(0, 0, getScene().getWidth(), getScene().getHeight(), KeepInScene.Mode.STOP));
         addComponent(new PlayerController(thrustForce));

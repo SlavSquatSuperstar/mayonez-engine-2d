@@ -21,7 +21,11 @@ import slavsquatsuperstar.mayonez.physics2d.colliders.Collider2D
  */
 class Rigidbody2D(mass: Float, drag: Float, angDrag: Float) : Component() {
 
-    // Components
+    // Constructors
+    constructor(mass: Float) : this(mass, 0f, 0.05f)
+
+    // Component Properties
+
     /**
      * A reference to the parent object's [Transform].
      */
@@ -41,7 +45,7 @@ class Rigidbody2D(mass: Float, drag: Float, angDrag: Float) : Component() {
             field = 0f.coerceAtLeast(mass)
         }
     private var followsGravity: Boolean = true
-    private var fixedRotation: Boolean = true;
+    private var fixedRotation: Boolean = false
 
     // Linear Motion Fields
     private var netForce: Vec2 = Vec2()
@@ -58,10 +62,6 @@ class Rigidbody2D(mass: Float, drag: Float, angDrag: Float) : Component() {
         set(angDrag) {
             field = clamp(angDrag, 0f, 1f)
         }
-
-    // Constructors
-
-    constructor(mass: Float) : this(mass, 0f, 0f)
 
     // Game Loop Methods
 
@@ -80,10 +80,12 @@ class Rigidbody2D(mass: Float, drag: Float, angDrag: Float) : Component() {
             addForce(velocity * -drag)
         transform?.move(velocity * dt)
 
-        angVelocity += netTorque * invAngMass * dt
-        if (!MathUtils.equals(angVelocity, 0f))
-            addTorque(angVelocity * -angDrag)
-        transform?.rotate(toDegrees(angVelocity) * dt)
+        if (!fixedRotation) {
+            angVelocity += netTorque * invAngMass * dt
+            if (!MathUtils.equals(angVelocity, 0f))
+                addTorque(angVelocity * -angDrag)
+            transform?.rotate(toDegrees(angVelocity) * dt)
+        }
 
         // Reset accumulated forces/torques
         netForce.set(0f, 0f)
@@ -92,19 +94,17 @@ class Rigidbody2D(mass: Float, drag: Float, angDrag: Float) : Component() {
 
     // Motion Properties
 
-    val position: Vec2
-        get() = if (transform != null) transform!!.position else Vec2()
+    var position: Vec2
+        get() = transform?.position ?: Vec2()
+        set(position) {
+            transform?.position = position
+        }
 
-    fun setPosition(position: Vec2) {
-        transform?.position = position
-    }
-
-    val rotation: Float
-        get() = if (transform != null) transform!!.rotation else 0f
-
-    fun setRotation(rotation: Float) {
-        transform?.rotation = rotation
-    }
+    var rotation: Float
+        get() = transform?.rotation ?: 0f
+        set(rotation) {
+            transform?.rotation = rotation
+        }
 
     val speed: Float
         get() = velocity.len()
@@ -128,7 +128,7 @@ class Rigidbody2D(mass: Float, drag: Float, angDrag: Float) : Component() {
     fun hasInfiniteMass(): Boolean = MathUtils.equals(mass, 0f)
 
     val invMass: Float
-        get() = if (hasInfiniteMass()) 0f else 1 / mass
+        get() = if (hasInfiniteMass()) 0f else 1f / mass
 
     private val invAngMass: Float
         get() {
@@ -144,7 +144,7 @@ class Rigidbody2D(mass: Float, drag: Float, angDrag: Float) : Component() {
                     (collider as BoxCollider2D).height()
                 ) / 12f
             }
-            return 1 / angMass
+            return 1f / angMass
         }
 
     // Force Methods

@@ -30,7 +30,7 @@ object MathUtils {
      */
     @JvmStatic
     fun equals(num1: Float, num2: Float): Boolean =
-        abs(num1 - num2) <= EPSILON * 1.0.coerceAtLeast(abs(num1).coerceAtLeast(abs(num2)).toDouble())
+        abs(num1 - num2) <= EPSILON
 
     // Pythagorean Theorem
 

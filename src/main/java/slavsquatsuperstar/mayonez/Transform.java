@@ -28,7 +28,7 @@ public class Transform { // TODO extend component?
         this.position = position;
     }
 
-    // Mutator Methods
+    // Property Mutator Methods
 
     /**
      * Translates the parent object along the x and y axes.
@@ -64,6 +64,14 @@ public class Transform { // TODO extend component?
     }
 
     // Helper Methods
+
+    /**
+     * Returns the x-axis, or the vector (1, 0), in this transform's local space.
+     * @return the local x-axis
+     */
+    public Vec2 getDirection() {
+        return new Vec2(1, 0).rotate(rotation);
+    }
 
     /**
      * Transforms a point from world space to the object's local space, with this Transform's position serving as the
