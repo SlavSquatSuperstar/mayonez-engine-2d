@@ -2,7 +2,6 @@ package slavsquatsuperstar.mayonez.scripts;
 
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.MouseInput;
-import slavsquatsuperstar.mayonez.physics2d.colliders.Collider2D;
 
 /**
  * Allows objects to be pushed around using the mouse.
@@ -21,12 +20,6 @@ public class MouseFlick extends MouseScript {
         mode = MoveMode.VELOCITY;
     }
 
-    @Override
-    public void start() {
-        super.start();
-        collider = parent.getComponent(Collider2D.class);
-    }
-
     // Overrides
 
     @Override
@@ -34,10 +27,6 @@ public class MouseFlick extends MouseScript {
         if (activeInstance == null) {
             activeInstance = this;
             lastMouse = MouseInput.getPosition();
-            if (rb != null) {
-                rb.setVelocity(new Vec2(0, 0)); // Stop the object
-                rb.setAngVelocity(0);
-            }
         }
     }
 

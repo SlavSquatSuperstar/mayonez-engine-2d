@@ -18,7 +18,7 @@ public class GameObject {
 
     // Object Information
     public String name;
-    public Transform transform;
+    public final Transform transform;
 
     // Scene Information
     private Scene scene;

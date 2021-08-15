@@ -1,13 +1,12 @@
 package slavsquatsuperstar.mayonez.physics2d;
 
-import org.apache.commons.lang3.tuple.ImmutablePair;
+import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
-import slavsquatsuperstar.mayonez.Colors;
 import slavsquatsuperstar.mayonez.GameObject;
+import slavsquatsuperstar.mayonez.Logger;
 import slavsquatsuperstar.mayonez.Preferences;
 import slavsquatsuperstar.mayonez.Scene;
 import slavsquatsuperstar.mayonez.physics2d.colliders.Collider2D;
-import slavsquatsuperstar.mayonez.renderer.DebugDraw;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -125,8 +124,8 @@ public class Physics2D {
                 // TODO still send collision events if triggers
                 // Add the collisions if neither is a trigger
                 if (!c1.isTrigger() && !c2.isTrigger()) {
-                    DebugDraw.drawLine(c1.center(), c2.center(), Colors.RED);
-                    DebugDraw.drawVector(c1.center(), result.getNormal(), Colors.BLACK);
+//                    DebugDraw.drawLine(c1.center(), c2.center(), Colors.RED);
+//                    DebugDraw.drawVector(c1.center(), result.getNormal(), Colors.BLACK);
                     collisions.add(result);
                 }
             }
@@ -135,7 +134,8 @@ public class Physics2D {
 
     private void resolveStaticCollision(CollisionManifold col, Rigidbody2D r1, Rigidbody2D r2) {
         // Separate objects factoring in mass
-        float massRatio = r2.getMass() / (r1.getMass() + r2.getMass());
+//        float massRatio = r2.getMass() / (r1.getMass() + r2.getMass()); // makes massless objects get displaced
+        float massRatio = r1.getMass() / (r1.getMass() + r2.getMass()); // allows smaller objects to push around heavy objects
         float depth1 = col.getDepth() * massRatio;
         float depth2 = col.getDepth() * (1 - massRatio);
         r1.getTransform().move(col.getNormal().mul(-depth1));
@@ -143,39 +143,61 @@ public class Physics2D {
     }
 
     private void resolveDynamicCollision(CollisionManifold col, Rigidbody2D r1, Rigidbody2D r2) {
-        // Known Values
+        // Precalculated / Known Values
         float invMass1 = r1.getInvMass();
         float invMass2 = r2.getInvMass();
         float sumInvMass = invMass1 + invMass2;
-        float elasticity = r1.getCollider().getBounce() * r2.getCollider().getBounce(); // Coefficient of restitution
+        float elasticity = col.getSelf().getBounce() * col.getOther().getBounce(); // Coefficient of restitution
+        Vec2 normal = col.getNormal();
         int numContacts = col.countContacts();
 
         for (int j = 0; j < IMPULSE_ITERATIONS; j++) {
+            // Total impulse of collision
+            Vec2 accumImpulse = new Vec2();
+            float accumAngImpulse1 = 0;
+            float accumAngImpulse2 = 0;
 
-            ImmutablePair<Vec2, Vec2>[] contactVelocities = new ImmutablePair[numContacts];
-
+            // Get linear and angular impulse at each contact
             for (int i = 0; i < numContacts; i++) {
                 Vec2 contact = col.getContact(i);
+
+                // Relative velocity at point
                 Vec2 vel1 = r1.getPointVelocity(contact);
                 Vec2 vel2 = r2.getPointVelocity(contact);
-                Vec2 relativeVel = vel2.sub(vel1);
-                contactVelocities[i] = new ImmutablePair<>(contact, relativeVel);
-            }
+                Vec2 relativeVel = vel1.sub(vel2);
+//                DebugDraw.drawVector(contact, relativeVel.div(5), Colors.RED);
 
-            for (int i = 0; i < numContacts; i++) {
-                Vec2 contact = contactVelocities[i].left;
-                Vec2 normal = col.getNormal(); // Direction of collision
-                DebugDraw.drawVector(contact, contactVelocities[i].right, Colors.RED);
-                float collisionVel = contactVelocities[i].right.dot(normal);
-                if (collisionVel > 0f) // Stop if moving away or stationary
+                // Velocity along collision normal
+                float collisionVel = relativeVel.dot(normal);
+                if (collisionVel < 0f) // Stop if moving away or stationary
                     break;
 
                 // Apply impulse at contact points evenly
                 float impulse = -(1f + elasticity) * collisionVel / sumInvMass / numContacts;
-                r1.addImpulseAtPoint(normal.mul(-impulse), contact);
-                r2.addImpulseAtPoint(normal.mul(impulse), contact);
-                DebugDraw.drawVector(contact, normal, Colors.BLACK);
+                if (MathUtils.equals(impulse, 0)) { // Don't apply tiny impulses
+                    Logger.log("too smol");
+                    return;
+                }
+                Vec2 contactImpulse = normal.mul(impulse);
+                accumImpulse = accumImpulse.add(contactImpulse);
+
+                // Contact radii
+                Vec2 rad1 = contact.sub(r1.getPosition());
+                Vec2 rad2 = contact.sub(r2.getPosition());
+
+                // Angular impulse for this contact point
+                accumAngImpulse1 += rad1.cross(contactImpulse); // need to calculate this after impulse
+                accumAngImpulse2 += rad2.cross(contactImpulse.mul(-1));
+//                DebugDraw.drawVector(contact, normal, Colors.BLACK);
             }
+
+            // Transfer linear momentum
+            r1.addImpulse(accumImpulse);
+            r2.addImpulse(accumImpulse.mul(-1));
+
+            // Transfer angular momentum
+            r1.addAngularImpulse(accumAngImpulse1);
+            r2.addAngularImpulse(accumAngImpulse2);
         }
     }
 

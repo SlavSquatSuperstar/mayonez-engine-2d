@@ -17,7 +17,6 @@ public class PhysicsTestScene extends Scene {
 
     public PhysicsTestScene(String name) {
         super(name, Preferences.SCREEN_WIDTH, Preferences.SCREEN_HEIGHT, 10);
-        setGravity(new Vec2(0, 0));
         setBackground(Colors.WHITE);
     }
 
@@ -33,7 +32,9 @@ public class PhysicsTestScene extends Scene {
                     Collider2D col = o.getComponent(Collider2D.class);
                     if (col != null) {
                         Color color = Colors.BLACK;
-                        if (col instanceof CircleCollider)
+                        if (col.isStatic())
+                            color = Colors.BLACK;
+                        else if (col instanceof CircleCollider)
                             color = Colors.BLUE;
                         else if (col instanceof AlignedBoxCollider2D)
                             color = Colors.LIGHT_GREEN;
@@ -51,7 +52,7 @@ public class PhysicsTestScene extends Scene {
             }
         });
 
-        GameObject player = new GameObject("Player Shape", new Vec2(30, 10)) {
+        GameObject player = new GameObject("Player Shape", new Vec2(70, 10)) {
             @Override
             protected void init() {
                 float radius = 4f;
@@ -61,9 +62,9 @@ public class PhysicsTestScene extends Scene {
 //                addComponent(new Rigidbody2D(radius * radius * MathUtils.PI / 20f));
 //                addComponent(new AlignedBoxCollider2D(new Vec2(size, size)));
                 addComponent(new BoxCollider2D(new Vec2(size, size)));
-                addComponent(new Rigidbody2D(size * size / 20f));
+                addComponent(new Rigidbody2D(size * size / 20f).setFollowsGravity(false));
                 addComponent(new MouseFlick("right mouse", 15, false));
-                addComponent(new KeyMovement(MoveMode.POSITION, speed / 2));
+                addComponent(new KeyMovement(MoveMode.IMPULSE, speed / 2));
                 addComponent(new DragAndDrop("left mouse", false));
                 addComponent(new KeepInScene(getScene(), KeepInScene.Mode.BOUNCE));
                 addComponent(new Script() {
@@ -86,27 +87,28 @@ public class PhysicsTestScene extends Scene {
         };
         addObject(player);
 
-        addObject(createCircle(2, new Vec2(10, 10)));
-        addObject(createCircle(5, new Vec2(30, 30)));
-        addObject(createOBB(12, 8, new Vec2(50, 20), 0));
-        addObject(createOBB(5, 10, new Vec2(70, 20), 30));
-        addObject(createOBB(10, 6, new Vec2(70, 40), 45));
-        addObject(createOBB(3, 15, new Vec2(90, 40), 90));
-
-        // Randomly generate shapes
-        for (int i = 0; i < 6; i++) {
-            switch (i % 3) {
-                case 0:
-                    addObject(createCircle(MathUtils.random(2, 5), new Vec2(MathUtils.random(0, getWidth()), MathUtils.random(0, getHeight()))));
-                    break;
-                case 1:
-                    addObject(createAABB(MathUtils.random(4, 10), MathUtils.random(4, 10), new Vec2(MathUtils.random(0, getWidth()), MathUtils.random(0, getHeight()))));
-                    break;
-                case 2:
-                    addObject(createOBB(MathUtils.random(4, 10), MathUtils.random(4, 10), new Vec2(MathUtils.random(0, getWidth()), MathUtils.random(0, getHeight())), MathUtils.random(0, 90)));
-                    break;
+        addObject(new GameObject("Ground", new Vec2(getWidth() / 2f, getHeight() - 1)) {
+            @Override
+            protected void init() {
+                addComponent(new Rigidbody2D(0));
+                addComponent(new AlignedBoxCollider2D(new Vec2(getWidth(), 2)).setBounce(0.1f));
             }
-        }
+        });
+        addObject(new GameObject("Ramp", new Vec2(90, 30)) {
+            @Override
+            protected void init() {
+                transform.rotate(-25);
+                addComponent(new Rigidbody2D(0));
+                addComponent(new BoxCollider2D(new Vec2(24, 4)).setBounce(0.1f));
+            }
+        });
+
+        addObject(createCircle(2, new Vec2(90, 10)));
+        addObject(createCircle(5, new Vec2(10, 30)));
+        addObject(createOBB(5, 10, new Vec2(30, 20), 30));
+        addObject(createAABB(12, 8, new Vec2(50, 20)));
+        addObject(createOBB(10, 6, new Vec2(70, 30), 45));
+        addObject(createOBB(3, 15, new Vec2(90, 40), 90));
     }
 
     public GameObject createCircle(float radius, Vec2 position) {

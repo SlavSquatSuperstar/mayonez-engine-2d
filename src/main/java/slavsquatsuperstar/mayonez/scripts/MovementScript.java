@@ -1,8 +1,8 @@
 package slavsquatsuperstar.mayonez.scripts;
 
+import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.Logger;
 import slavsquatsuperstar.mayonez.Script;
-import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
 
 /**
@@ -25,12 +25,10 @@ public abstract class MovementScript extends Script {
 
     @Override
     public void start() {
-        if (mode.requireRigidbody) {
-            rb = parent.getComponent(Rigidbody2D.class);
-            if (rb == null) {
-                Logger.warn("%s needs a Rigidbody to function!", this);
-                mode = MoveMode.POSITION;
-            }
+        rb = getRigidbody();
+        if (mode.requireRigidbody && rb == null) {
+            Logger.warn("%s needs a Rigidbody to function!", this);
+            mode = MoveMode.POSITION;
         }
     }
 

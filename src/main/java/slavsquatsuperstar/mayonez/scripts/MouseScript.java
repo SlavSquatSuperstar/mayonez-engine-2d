@@ -34,7 +34,7 @@ public abstract class MouseScript extends MovementScript {
     @Override
     public void start() {
         super.start();
-        collider = parent.getComponent(Collider2D.class);
+        collider = getCollider();
     }
 
     @Override
@@ -66,7 +66,6 @@ public abstract class MouseScript extends MovementScript {
         if (collider != null)
             return collider.contains(new Vec2(getScene().camera().getOffset().x + lastMx, getScene().camera().getOffset().y + lastMy));
         return true;
-
     }
 
     // Mouse Event Methods

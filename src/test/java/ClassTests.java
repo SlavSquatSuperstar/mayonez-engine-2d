@@ -1,10 +1,15 @@
 import org.junit.jupiter.api.Test;
+import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Scene;
-import slavsquatsuperstar.math.Vec2;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Unit tests for the {@link Class} class.
+ *
+ * @author SlavSquatSuperstar
+ */
 public class ClassTests {
 
     @Test

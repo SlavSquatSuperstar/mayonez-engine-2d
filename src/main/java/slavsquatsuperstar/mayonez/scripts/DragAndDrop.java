@@ -1,7 +1,7 @@
 package slavsquatsuperstar.mayonez.scripts;
 
-import slavsquatsuperstar.mayonez.MouseInput;
 import slavsquatsuperstar.math.Vec2;
+import slavsquatsuperstar.mayonez.MouseInput;
 
 /**
  * Allows objects to be picked up using the mouse.
@@ -28,8 +28,13 @@ public class DragAndDrop extends MouseScript {
 
     @Override
     public void onMouseMove() {
-        if (activeInstance == this && isMouseHeld())
-                transform.move(getRawInput());
+        if (activeInstance == this && isMouseHeld()) {
+            if (rb != null) {
+                rb.setVelocity(new Vec2(0, 0)); // Stop the object
+                rb.setAngVelocity(0);
+            }
+            transform.move(getRawInput());
+        }
     }
 
     @Override

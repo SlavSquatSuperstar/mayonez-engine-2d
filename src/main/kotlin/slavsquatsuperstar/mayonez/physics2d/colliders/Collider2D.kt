@@ -39,7 +39,7 @@ abstract class Collider2D : Component() {
     protected var rb: Rigidbody2D? = null
 
     /**
-     * Returns the parent object's [Rigidbody2D]. A collider should always have a rigidbody.
+     * Returns the parent object's [Rigidbody2D]. A collider should have rigidbody to react to collisions.
      *
      * @return the attached rigidbody
      */
@@ -57,9 +57,7 @@ abstract class Collider2D : Component() {
      * What percentage of energy is conserved after a collision (0-1).
      */
     var bounce = 0.25f
-        protected set(bounce) {
-            setBounce(bounce)
-        }
+        private set
 
     fun setBounce(bounce: Float): Collider2D {
         this.bounce = clamp(bounce, 0f, 1f)

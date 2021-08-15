@@ -38,7 +38,7 @@ public class KeepInScene extends Script {
     @Override
     public void start() {
         try {
-            objectCollider = parent.getComponent(Collider2D.class);
+            objectCollider = getCollider();
             if (mode == Mode.BOUNCE || mode == Mode.STOP) {
                 rb = objectCollider.getRigidbody();
                 if (rb == null)

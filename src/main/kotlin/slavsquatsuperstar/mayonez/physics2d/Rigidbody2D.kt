@@ -173,7 +173,7 @@ class Rigidbody2D(mass: Float, drag: Float, angDrag: Float) : Component() {
      * @param impulse a vector with the units `kg•m/s`
      */
     fun addImpulse(impulse: Vec2) {
-        velocity = velocity.add(impulse.mul(invMass)) // dv = J/m = m*dv/m
+        velocity += impulse * invMass // dv = J/m = m*dv/m
     }
 
     /**

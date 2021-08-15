@@ -73,7 +73,6 @@ public abstract class Scene {
      *
      * @param dt seconds since the last frame
      */
-    // TODO late update?
     public final void update(float dt) {
         if (!started)
             return;
@@ -113,6 +112,16 @@ public abstract class Scene {
     // Object Methods
 
     public final void addObject(GameObject obj) {
+        // Handle duplicate names
+        int count = 0;
+        String name = obj.name;
+        GameObject found = getObject(obj.name);
+        while (found != null) {
+            name = String.format("%s (%d)", obj.name, ++count);
+            found = getObject(name);
+        }
+        obj.name = name;
+
         SceneModifier sm = () -> {
             objects.add(obj.setScene(this));
             obj.start(); // add object components so renderer and physics can access it
@@ -212,6 +221,7 @@ public abstract class Scene {
 
     /**
      * Returns the main camera of the scene.
+     *
      * @return the {@link Camera} instance
      */
     public Camera camera() {
@@ -228,8 +238,11 @@ public abstract class Scene {
                 "Scene" : getClass().getSimpleName());
     }
 
+
+    /**
+     * Flags a {@link GameObject} to be dynamically added or removed from the scene.
+     */
     @FunctionalInterface
-    // Flags an object to be added or removed
     private interface SceneModifier {
         void modify();
     }
