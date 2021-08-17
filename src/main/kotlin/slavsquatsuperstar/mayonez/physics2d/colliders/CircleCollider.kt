@@ -50,9 +50,9 @@ class CircleCollider(private val radius: Float) : Collider2D() {
         else contains(edge.nearestPoint(center())) // Contains point on line nearest to circle
     }
 
-    override fun raycast(ray: Ray2D?, limit: Float): RaycastResult? {
+    override fun raycast(ray: Ray2D, limit: Float): RaycastResult? {
         // Trace the ray's origin to the circle's center
-        val originToCenter = center() - (ray!!.origin)
+        val originToCenter = center() - (ray.origin)
         val radiusSq = radius() * radius()
 
         // Project originToCenter onto the ray and get length
@@ -95,8 +95,7 @@ class CircleCollider(private val radius: Float) : Collider2D() {
         }
     }
 
-    // Collision Helper Methods
-
+    // Circle vs Circle: 1 contact point
     private fun getCollisionInfo(circle: CircleCollider): CollisionManifold? {
         val sumRadii = this.radius() + circle.radius()
         val distance = circle.center() - this.center()
@@ -110,6 +109,7 @@ class CircleCollider(private val radius: Float) : Collider2D() {
         return result
     }
 
+    // Circle vs Polygon: 1 contact point
     private fun getCollisionInfo(polygon: PolygonCollider2D): CollisionManifold? {
         val closestToCircle = polygon.nearestPoint(center()) // Point from shape deepest in circle
         if (!contains(closestToCircle!!))

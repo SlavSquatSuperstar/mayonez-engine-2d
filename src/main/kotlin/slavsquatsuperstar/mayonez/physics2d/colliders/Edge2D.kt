@@ -13,13 +13,16 @@ import kotlin.math.sign
 class Edge2D(@JvmField val start: Vec2, @JvmField val end: Vec2) {
 
     // Properties
-    fun slope(): Float = (end.y - start.y) / (end.x - start.x)
+    private val slope: Float
+        get() = (end.y - start.y) / (end.x - start.x)
 
-    fun length(): Float = start.distance(end)
+    val length: Float
+        get() = start.distance(end)
 
-    fun toVector(): Vec2 = end.sub(start)
+    fun toVector(): Vec2 = end - start
 
     // Line vs Point
+
     /**
      * Calculates whether the given point is on this line segment.
      *
@@ -32,7 +35,6 @@ class Edge2D(@JvmField val start: Vec2, @JvmField val end: Vec2) {
     }
 
     fun nearestPoint(position: Vec2): Vec2 {
-        val length = length()
         val projLength = position.sub(start).dot(toVector()) / length // find point shadow on line
         if (projLength > length) // pat line end
             return end else if (projLength < 0) // behind line start
@@ -40,9 +42,14 @@ class Edge2D(@JvmField val start: Vec2, @JvmField val end: Vec2) {
         return start.add(toVector().mul(projLength / length)) // inside line
     }
 
-    // right (clockwise) is positive
+    /**
+     * Calculates the distance from a point to this line segment.
+     *
+     * @param point a 2D point
+     * @return the absolute distance the point to this line
+     */
     fun distance(point: Vec2): Float {
-        return point.sub(start).projectedLength(toVector().rotate(90f))
+        return point.distance(nearestPoint(point))
     }
 
     /**
@@ -57,23 +64,25 @@ class Edge2D(@JvmField val start: Vec2, @JvmField val end: Vec2) {
     }
 
     // Line vs Line
+
     fun intersects(edge: Edge2D): Boolean {
         // If parallel, must be overlapping (co-linear)
-        return if (MathUtils.equals(slope(), edge.slope())) {
+        return if (MathUtils.equals(slope, edge.slope)) {
             this.contains(edge.start) || this.contains(edge.end) ||
                     edge.contains(start) || edge.contains(end)
-        } else raycast(Ray2D(edge), edge.length()) != null
+        } else raycast(Ray2D(edge), edge.length) != null
     }
 
     fun raycast(ray: Ray2D, limit: Float): RaycastResult? {
-        val length = length()
         val start1 = start
         val start2 = ray.origin
 
         // Calculate point of intersection using cross product
-        val line1 = toVector().div(length)
+        val line1 = toVector() / length
         val line2 = ray.direction
         val cross = line1.cross(line2)
+        if (MathUtils.equals(cross, 0f))
+            return null // if parallel
 
         // Parametric lengths along rays
         val dist1 = start2.sub(start1).cross(line2) / cross
@@ -87,6 +96,7 @@ class Edge2D(@JvmField val start: Vec2, @JvmField val end: Vec2) {
         val normal = line1.rotate(sign(pseudoDistance(start2)) * 90)
         return RaycastResult(contact, normal, dist1)
     }
+
 
     override fun toString(): String = String.format("Start: %s, End: %s", start, end)
 }

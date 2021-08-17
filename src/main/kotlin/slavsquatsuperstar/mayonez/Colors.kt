@@ -24,7 +24,6 @@ object Colors {
     val YELLOW = Color(255, 238, 0) // HTML Bright Yellow
 
     // Shades of Green
-
     @JvmField
     val LIME = Color(0, 255, 0) // Java Green
 

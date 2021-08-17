@@ -2,11 +2,11 @@ package slavsquatsuperstar.mayonez.physics2d.colliders
 
 import org.apache.commons.lang3.ArrayUtils
 import slavsquatsuperstar.math.Mat22
-import slavsquatsuperstar.math.MathUtils
 import slavsquatsuperstar.math.MathUtils.inRange
 import slavsquatsuperstar.math.MathUtils.max
 import slavsquatsuperstar.math.MathUtils.min
 import slavsquatsuperstar.math.MathUtils.minIndex
+import slavsquatsuperstar.math.Range
 import slavsquatsuperstar.math.Vec2
 import slavsquatsuperstar.mayonez.physics2d.CollisionManifold
 import slavsquatsuperstar.mayonez.physics2d.RaycastResult
@@ -73,12 +73,12 @@ open class PolygonCollider2D(vararg vertices: Vec2) : Collider2D() {
     // Separating-Axis Theorem Methods
 
     // Project vertices on the axis and find min and max
-    protected fun getIntervalOnAxis(axis: Vec2?): MathUtils.Range {
+    protected fun getIntervalOnAxis(axis: Vec2?): Range {
         val vertices = getVertices()
         val projections = FloatArray(countVertices())
         for (i in projections.indices)
             projections[i] = vertices[i].dot(axis!!)
-        return MathUtils.Range(min(*projections), max(*projections))
+        return Range(min(*projections), max(*projections))
     }
 
     protected fun overlapOnAxis(polygon: PolygonCollider2D, axis: Vec2?): Boolean {
@@ -100,7 +100,7 @@ open class PolygonCollider2D(vararg vertices: Vec2) : Collider2D() {
         for (edge in edges) {
             val edgeLine = edge.toVector()
             val projLength = point.sub(edge.start).projectedLength(edgeLine)
-            if (!inRange(projLength, 0f, edge.length())) return false
+            if (!inRange(projLength, 0f, edge.length)) return false
         }
         return true
     }
@@ -110,20 +110,17 @@ open class PolygonCollider2D(vararg vertices: Vec2) : Collider2D() {
             return position
 
         val edges = getEdges()
-        val distances = FloatArray(edges.size)
-        for (i in distances.indices)
-            distances[i] = position.distance(edges[i].nearestPoint(position))
-
+        val distances = FloatArray(edges.size) { edges[it].distance(position) }
         val nearestEdge = edges[minIndex(*distances)]
         return nearestEdge.nearestPoint(position)
     }
 
     // Polygon vs Line
-    override fun raycast(ray: Ray2D?, limit: Float): RaycastResult? {
+    override fun raycast(ray: Ray2D, limit: Float): RaycastResult? {
         val edges = getEdges()
         val distances = FloatArray(edges.size)
         for (i in distances.indices) {
-            val rc = edges[i].raycast(ray!!, limit)
+            val rc = edges[i].raycast(ray, limit)
             distances[i] = rc?.distance ?: Float.MAX_VALUE
         }
 
@@ -133,17 +130,18 @@ open class PolygonCollider2D(vararg vertices: Vec2) : Collider2D() {
             return null
 
         val normal = edges[minIndex].toVector().rotate(-90f).unit()
-        return RaycastResult(ray!!.getPoint(minDist), normal, minDist)
+        return RaycastResult(ray.getPoint(minDist), normal, minDist)
     }
 
     // Polygon vs Shape
+
     override fun detectCollision(collider: Collider2D?): Boolean {
-        return if (collider is PolygonCollider2D) intersects(collider)
+        return if (collider is PolygonCollider2D) detectCollision(collider)
         else getCollisionInfo(collider) != null
     }
 
     // Separating-Axis Theorem
-    private fun intersects(polygon: PolygonCollider2D): Boolean {
+    private fun detectCollision(polygon: PolygonCollider2D): Boolean {
         val axes = ArrayUtils.addAll(getNormals(), *polygon.getNormals())
         for (axis in axes)
             if (!overlapOnAxis(polygon, axis))
@@ -159,6 +157,7 @@ open class PolygonCollider2D(vararg vertices: Vec2) : Collider2D() {
         }
     }
 
+    // Polygon vs Circle: 1 contact point
     private fun getCollisionInfo(circle: CircleCollider): CollisionManifold? {
         val closestToCircle = nearestPoint(circle.center())
         if (closestToCircle!! !in circle)
@@ -171,6 +170,7 @@ open class PolygonCollider2D(vararg vertices: Vec2) : Collider2D() {
         return result
     }
 
+    // Polygon vs Polygon: 1-2 contact points
     // Diagonals method, convex only
     private fun getCollisionInfo(polygon: PolygonCollider2D): CollisionManifold? {
         val diagonals = arrayOf(getDiagonals(), polygon.getDiagonals())
@@ -183,7 +183,7 @@ open class PolygonCollider2D(vararg vertices: Vec2) : Collider2D() {
         for (i in diagonals.indices) {
             for (diag in diagonals[i]) {
                 for (side in edges[i]) {
-                    rc = side.raycast(Ray2D(diag), diag.length())
+                    rc = side.raycast(Ray2D(diag), diag.length)
                     if (rc != null)
                         normalsAccum = normalsAccum.add(rc.normal * rc.distance)
                 }

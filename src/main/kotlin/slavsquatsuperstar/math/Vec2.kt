@@ -1,6 +1,5 @@
 package slavsquatsuperstar.math
 
-import slavsquatsuperstar.math.MathUtils.clamp
 import slavsquatsuperstar.math.MathUtils.equals
 import slavsquatsuperstar.mayonez.Logger
 import kotlin.math.acos
@@ -237,6 +236,13 @@ class Vec2 constructor(
         return (rot * localPos) + origin
     }
 
+    /**
+     * Calculates this vector's normal by rotating this vector by 90 degrees and normalizing the result.
+     *
+     * @return a perpendicular unit vector
+     */
+    fun getNormal(): Vec2 = Vec2(-y, x).unit()
+
     // Other Methods
 
     /**
@@ -246,7 +252,8 @@ class Vec2 constructor(
      * @param max the maximum value for each of the components
      * @return the clamped vector
      */
-    fun clampInbounds(min: Vec2, max: Vec2): Vec2 = Vec2(clamp(x, min.x, max.x), clamp(y, min.y, max.y))
+    fun clampInbounds(min: Vec2, max: Vec2): Vec2 =
+        Vec2(MathUtils.clamp(x, min.x, max.x), MathUtils.clamp(y, min.y, max.y))
 
     /**
      * Clamps the length of this vector if it exceeds the provided value, while keeping the same direction. Useful for

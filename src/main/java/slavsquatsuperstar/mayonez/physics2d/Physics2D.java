@@ -148,7 +148,7 @@ public class Physics2D {
         float friction = MathUtils.avg(col.getSelf().getFriction(), col.getOther().getFriction());
 
         Vec2 normal = col.getNormal(); // Collision direction
-        Vec2 tangent = new Vec2(-normal.y, normal.x); // Collision plane
+        Vec2 tangent = normal.getNormal(); // Collision plane
         int numContacts = col.countContacts();
 
         for (int j = 0; j < IMPULSE_ITERATIONS; j++) {

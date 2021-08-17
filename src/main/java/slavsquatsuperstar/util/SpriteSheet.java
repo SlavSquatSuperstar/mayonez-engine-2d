@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Create multiple {@link Sprite}s from a larger image.
+ * Creates multiple {@link Sprite}s from a larger image.
  *
  * @author SlavSquatSuperstar
  */

@@ -13,6 +13,7 @@ public class RaycastResult {
     private final Vec2 contact; // contact point
     private final Vec2 normal; // contact normal
     private final float distance; // unit lengths along ray to intersection
+    // TODO save all intersections?
 
     public RaycastResult(Vec2 contact, Vec2 normal, float distance) {
         this.contact = contact;

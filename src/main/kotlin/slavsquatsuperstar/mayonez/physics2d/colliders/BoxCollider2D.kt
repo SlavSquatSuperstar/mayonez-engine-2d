@@ -2,6 +2,8 @@ package slavsquatsuperstar.mayonez.physics2d.colliders
 
 import org.apache.commons.lang3.ArrayUtils
 import slavsquatsuperstar.math.MathUtils
+import slavsquatsuperstar.math.MathUtils.equals
+import slavsquatsuperstar.math.Range
 import slavsquatsuperstar.math.Vec2
 import slavsquatsuperstar.mayonez.physics2d.CollisionManifold
 import slavsquatsuperstar.mayonez.physics2d.RaycastResult
@@ -66,10 +68,10 @@ open class BoxCollider2D private constructor(min: Vec2, max: Vec2) :
 
     // OBB vs Line
 
-    override fun raycast(ray: Ray2D?, limit: Float): RaycastResult? {
+    override fun raycast(ray: Ray2D, limit: Float): RaycastResult? {
         // Transform the ray to local space (but just rotate direction)
-        val localRay = Ray2D(toLocal(ray!!.origin), ray.direction.rotate(-getRotation()))
-        val localLimit = ((ray.direction * limit) / transform!!.scale).len()
+        val localRay = Ray2D(toLocal(ray.origin), ray.direction.rotate(-getRotation()))
+        val localLimit = ((ray.direction * limit) / (transform?.scale ?: Vec2(1f, 1f))).len()
 
         // Parametric distance to min/max x and y axes of box
         val tNear = (localMin() - (localRay.origin)) / localRay.direction
@@ -121,6 +123,7 @@ open class BoxCollider2D private constructor(min: Vec2, max: Vec2) :
         }
     }
 
+    // Box vs Box: 1-2 contact points
     private fun getCollisionInfo(box: BoxCollider2D): CollisionManifold? {
         val normalsA = this.getNormals()
         val normalsB = box.getNormals()
@@ -129,36 +132,33 @@ open class BoxCollider2D private constructor(min: Vec2, max: Vec2) :
 
         // SAT: Find axis with minimum overlap
         val axes = ArrayUtils.addAll(normalsA, *normalsB)
-        val overlaps = FloatArray(axes.size)
-        for (i in overlaps.indices) overlaps[i] = getAxisOverlap(box, axes[i])
-        val minOverlapIndex = MathUtils.minIndex(*overlaps)
-
+        val overlaps = Array(axes.size) { getAxisOverlap(box, axes[it]) }
+        val minOverlapIndex = MathUtils.minIndex(*overlaps.toFloatArray())
         val overlap = overlaps[minOverlapIndex]
         val axis = axes[minOverlapIndex]
+
         val dist = box.center() - this.center()
         val normal = dist.project(axis).unit()
-        val side = normal.rotate(90f)
-        val penetration = MathUtils.Range(box.getIntervalOnAxis(normal).min, getIntervalOnAxis(normal).max)
+        val side = normal.getNormal()
+        val penetration = Range(box.getIntervalOnAxis(normal).min, this.getIntervalOnAxis(normal).max)
 
         val collision = CollisionManifold(this, box, normal, overlap)
 
-        if (MathUtils.equals(
-                this.getRotation() % 90,
-                box.getRotation() % 90
-            )
-        ) { // Orthogonal intersection = 2 contact points
+        if (equals(this.getRotation() % 90, box.getRotation() % 90)) { // Orthogonal intersection = 2 contact points
             val sideA = getIntervalOnAxis(side) // vertices projected onto side normal
             val sideB = box.getIntervalOnAxis(side)
-            val collisionFace = MathUtils.Range(sideA.min.coerceAtLeast(sideB.min), sideA.max.coerceAtMost(sideB.max))
+            val collisionFace = Range(sideA.min.coerceAtLeast(sideB.min), sideA.max.coerceAtMost(sideB.max))
 
             val faceA = normal * penetration.min
             collision.addContact(faceA + (side * collisionFace.max))
             collision.addContact(faceA + (side * collisionFace.min))
         } else { // Diagonal intersection = 1 contact point
+            val verticesA = this.getVertices()
+            val verticesB = box.getVertices()
+
             val dotWithAxis = normal.dot(Vec2(1f, 0f).rotate(getRotation()))
             // Other box is inside this, find the furthest vertex inside this box
-            if (MathUtils.equals(dotWithAxis, 0f) || MathUtils.equals(dotWithAxis, 1f) ||
-                MathUtils.equals(dotWithAxis, -1f)) {
+            if (normal in this.getNormals() || -normal in this.getNormals()) {
 //            if (ArrayUtils.contains(normalsA, normal)) {
                 val vertices = box.getVertices()
                 val projections = FloatArray(vertices.size)

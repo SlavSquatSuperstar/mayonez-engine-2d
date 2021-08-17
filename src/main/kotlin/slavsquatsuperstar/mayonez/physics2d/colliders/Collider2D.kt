@@ -94,7 +94,7 @@ abstract class Collider2D : Component() {
 
     // Shape Properties
 
-    fun center(): Vec2 = if (transform != null) transform!!.position else Vec2()
+    fun center(): Vec2 = transform?.position ?: Vec2()
 
     abstract fun getMinBounds(): AlignedBoxCollider2D
 
@@ -125,18 +125,18 @@ abstract class Collider2D : Component() {
      */
     open fun intersects(edge: Edge2D): Boolean {
         return if (edge.start in this || edge.end in this) true
-        else raycast(Ray2D(edge), edge.length()) != null
+        else raycast(Ray2D(edge), edge.length) != null
     }
 
     /**
-     * Casts a ray onto this collider and calculates where the ray intersects the collider.
+     * Casts a [Ray2D] onto this collider and calculates where the ray intersects the collider.
      *
-     * @param ray    the [Ray2D]
+     * @param ray    a 2D ray
      * @param limit  The maximum distance the ray is allowed to travel before hitting an object. Set to 0 to allow the
      * ray to travel infinitely. Should be positive otherwise.
      * @return if the ray intersects this shape
      */
-    abstract fun raycast(ray: Ray2D?, limit: Float): RaycastResult?
+    abstract fun raycast(ray: Ray2D, limit: Float): RaycastResult?
 
     // Shape vs Shape Collisions
 
@@ -157,9 +157,9 @@ abstract class Collider2D : Component() {
     abstract fun getCollisionInfo(collider: Collider2D?): CollisionManifold?
 
     // Transform Methods
-    open fun toLocal(world: Vec2): Vec2 = if (transform != null) transform!!.toLocal(world) else world
+    open fun toLocal(world: Vec2): Vec2 = transform?.toLocal(world) ?: world
 
-    open fun toWorld(local: Vec2): Vec2 = if (transform != null) transform!!.toWorld(local) else local
+    open fun toWorld(local: Vec2): Vec2 = transform?.toWorld(local) ?: local
 
     // Field Getters and Setters
 

@@ -1,8 +1,11 @@
 package slavsquatsuperstar.mayonez.renderer
 
-import slavsquatsuperstar.mayonez.Game
 import slavsquatsuperstar.math.Vec2
-import slavsquatsuperstar.mayonez.physics2d.colliders.*
+import slavsquatsuperstar.mayonez.Game
+import slavsquatsuperstar.mayonez.physics2d.colliders.AlignedBoxCollider2D
+import slavsquatsuperstar.mayonez.physics2d.colliders.CircleCollider
+import slavsquatsuperstar.mayonez.physics2d.colliders.Collider2D
+import slavsquatsuperstar.mayonez.physics2d.colliders.PolygonCollider2D
 import java.awt.*
 import java.awt.geom.Ellipse2D
 import java.awt.geom.Line2D
@@ -43,7 +46,7 @@ object DebugDraw {
             g2.color = color
             g2.fill(
                 Ellipse2D.Float(
-                    toScreen(position.x) - radiusPx, toScreen(position.y) - radiusPx,
+                    position.x.toScreen() - radiusPx, position.y.toScreen() - radiusPx,
                     radiusPx * 2, radiusPx * 2
                 )
             )
@@ -61,8 +64,8 @@ object DebugDraw {
      */
     @JvmStatic
     fun drawLine(start: Vec2, end: Vec2, color: Color?) {
-        val startPx = toScreen(start)
-        val endPx = toScreen(end)
+        val startPx = start.toScreen()
+        val endPx = end.toScreen()
         shapes.add(Renderable { g2: Graphics2D ->
             g2.color = color
             g2.draw(Line2D.Float(startPx.x, startPx.y, endPx.x, endPx.y))
@@ -100,8 +103,8 @@ object DebugDraw {
     }
 
     private fun drawCircle(circle: CircleCollider, color: Color) {
-        val minPx = toScreen(circle.center().sub(Vec2(circle.radius(), circle.radius())))
-        val diameterPx = toScreen(circle.radius() * 2)
+        val minPx = (circle.center() - Vec2(circle.radius(), circle.radius())).toScreen()
+        val diameterPx = (circle.radius() * 2).toScreen()
         shapes.add(Renderable { g2: Graphics2D ->
             g2.color = color
             g2.draw(Ellipse2D.Float(minPx.x, minPx.y, diameterPx, diameterPx))
@@ -109,17 +112,17 @@ object DebugDraw {
     }
 
     private fun drawAABB(aabb: AlignedBoxCollider2D, color: Color) {
-        val minPx = toScreen(aabb.min())
+        val minPx = aabb.min().toScreen()
         shapes.add(Renderable { g2: Graphics2D ->
             g2.color = color
-            g2.draw(Rectangle2D.Float(minPx.x, minPx.y, toScreen(aabb.width()), toScreen(aabb.height())))
+            g2.draw(Rectangle2D.Float(minPx.x, minPx.y, aabb.width().toScreen(), aabb.height().toScreen()))
         })
     }
 
     private fun drawPolygon(polygon: PolygonCollider2D, color: Color) {
         val shape = Polygon()
         for (point in polygon.getVertices())
-            shape.addPoint(toScreen(point.x).roundToInt(), toScreen(point.y).roundToInt())
+            shape.addPoint(point.x.toScreen().roundToInt(), point.y.toScreen().roundToInt())
         shapes.add(Renderable { g2: Graphics2D ->
             g2.color = color
             g2.drawPolygon(shape)
@@ -144,8 +147,8 @@ object DebugDraw {
     }
 
     private fun fillCircle(circle: CircleCollider, color: Color) {
-        val minPx = toScreen(circle.center().sub(Vec2(circle.radius(), circle.radius())))
-        val diameterPx = toScreen(circle.radius() * 2)
+        val minPx = (circle.center() - Vec2(circle.radius(), circle.radius())).toScreen()
+        val diameterPx = (circle.radius() * 2).toScreen()
         shapes.add(Renderable { g2: Graphics2D ->
             g2.color = color
             g2.fill(Ellipse2D.Float(minPx.x, minPx.y, diameterPx, diameterPx))
@@ -153,16 +156,17 @@ object DebugDraw {
     }
 
     private fun fillAABB(aabb: AlignedBoxCollider2D, color: Color) {
-        val minPx = toScreen(aabb.min())
+        val minPx = aabb.min().toScreen()
         shapes.add(Renderable { g2: Graphics2D ->
             g2.color = color
-            g2.fill(Rectangle2D.Float(minPx.x, minPx.y, toScreen(aabb.width()), toScreen(aabb.height())))
+            g2.fill(Rectangle2D.Float(minPx.x, minPx.y, aabb.width().toScreen(), aabb.height().toScreen()))
         })
     }
 
     private fun fillPolygon(box: PolygonCollider2D, color: Color) {
         val shape = Polygon()
-        for (point in box.getVertices()) shape.addPoint(toScreen(point.x).roundToInt(), toScreen(point.y).roundToInt())
+        for (point in box.getVertices())
+            shape.addPoint(point.x.toScreen().roundToInt(), point.y.toScreen().roundToInt())
         shapes.add(Renderable { g2: Graphics2D ->
             g2.color = color
             g2.fillPolygon(shape)
@@ -172,22 +176,16 @@ object DebugDraw {
     // Helper Methods
 
     /**
-     * Converts a world coordinate to screen coordinates.
+     * Converts a coordinate from world to screen units.
      *
-     * @param world the location of something in the world along an axis
      * @return the corresponding screen pixel
      */
-    private fun toScreen(world: Float): Float {
-        return world * Game.currentScene().cellSize
-    }
+    private fun Float.toScreen(): Float = this * Game.currentScene().cellSize
 
     /**
-     * Converts a world position to screen coordinates.
+     * Converts a pair of coordinates from world to screen units.
      *
-     * @param world the location of something in the world along both axes
      * @return the corresponding screen pixels
      */
-    private fun toScreen(world: Vec2): Vec2 {
-        return world.mul(Game.currentScene().cellSize.toFloat())
-    }
+    private fun Vec2.toScreen(): Vec2 = this * Game.currentScene().cellSize.toFloat()
 }

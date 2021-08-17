@@ -294,31 +294,4 @@ object MathUtils {
     @JvmStatic
     fun toRadians(degrees: Float): Float = Math.toRadians(degrees.toDouble()).toFloat()
 
-    // Helper Class
-
-    /**
-     * Stores a minimum and maximum value and ensures they are int the correct order.
-     */
-    class Range(
-        min: Float, max: Float
-    ) {
-        @JvmField
-        val min = min.coerceAtMost(max)
-
-        @JvmField
-        val max = min.coerceAtLeast(max)
-
-        operator fun contains(value: Float): Boolean = (min <= value) && (value <= max)
-
-        override fun equals(other: Any?): Boolean {
-            if (other is Range)
-                return equals(this.min, other.min) && equals(this.max, other.max)
-            return super.equals(other)
-        }
-
-        override fun hashCode(): Int {
-            return min.hashCode() * 31 + max.hashCode()
-        }
-    }
-
 }

@@ -3,6 +3,7 @@ package collisiontests;
 import org.junit.jupiter.api.Test;
 import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
+import slavsquatsuperstar.mayonez.physics2d.colliders.BoxCollider2D;
 import slavsquatsuperstar.mayonez.physics2d.colliders.Edge2D;
 import slavsquatsuperstar.mayonez.physics2d.colliders.Ray2D;
 
@@ -63,15 +64,6 @@ public class EdgeTests {
         assertEquals(new Vec2(0, 3), edge.nearestPoint(new Vec2(1, 3)));
         assertEquals(new Vec2(0, 3), edge.nearestPoint(new Vec2(-1, 3)));
         assertEquals(new Vec2(0, 4), edge.nearestPoint(new Vec2(2, 5)));
-    }
-
-    // Distance to Point
-
-    @Test
-    public void distanceToPointSuccess() {
-        Edge2D edge = new Edge2D(new Vec2(-4, 1), new Vec2(4, 1));
-        assertEquals(2, edge.distance(new Vec2(0, 3)));
-        assertEquals(-2, edge.distance(new Vec2(0, -1)));
     }
 
     // Line Intersection
@@ -138,7 +130,7 @@ public class EdgeTests {
     public void lineIntersectionCorrectDistance() {
         Edge2D e1 = new Edge2D(new Vec2(-2, 0), new Vec2(2, 0));
         Edge2D e2 = new Edge2D(new Vec2(0, -2), new Vec2(0, 2));
-        assertEquals(2, e1.raycast(new Ray2D(e2), e2.length()).getDistance(), MathUtils.EPSILON);
+        assertEquals(2, e1.raycast(new Ray2D(e2), e2.getLength()).getDistance(), MathUtils.EPSILON);
     }
 
     @Test
@@ -146,7 +138,46 @@ public class EdgeTests {
         Edge2D e1 = new Edge2D(new Vec2(-2, 0), new Vec2(2, 0));
         Edge2D e2 = new Edge2D(new Vec2(0, -2), new Vec2(0, 2));
         Ray2D ray = new Ray2D(e2);
-        assertEquals(new Vec2(), ray.getPoint(e1.raycast(ray, e2.length()).getDistance()));
+        assertEquals(new Vec2(), ray.getPoint(e1.raycast(ray, e2.getLength()).getDistance()));
+    }
+
+    // Clip Line
+
+    @Test
+    public void clipLineBothEndpointsSuccess() {
+        BoxCollider2D box = new BoxCollider2D(new Vec2(2, 2));
+        Edge2D e1 = new Edge2D(new Vec2(-2, -1), new Vec2(1, 2)).clipToBounds(box);
+        assertEquals(new Edge2D(new Vec2(-1, 0), new Vec2(0, 1)), e1);
+        Edge2D e2 = new Edge2D(new Vec2(-2, 0), new Vec2(2, 0)).clipToBounds(box);
+        assertEquals(new Edge2D(new Vec2(-1, 0), new Vec2(1, 0)), e2);
+    }
+
+    @Test
+    public void clipLineOneEndpointSuccess() {
+        BoxCollider2D box = new BoxCollider2D(new Vec2(2, 2));
+        Edge2D e1 = new Edge2D(new Vec2(-2, 0), new Vec2(0, 0)).clipToBounds(box);
+        assertEquals(new Edge2D(new Vec2(-1, 0), new Vec2(0, 0)), e1);
+        Edge2D e2 = new Edge2D(new Vec2(-2, 2), new Vec2(0.5f, -0.5f)).clipToBounds(box);
+        assertEquals(new Edge2D(new Vec2(-1, 1), new Vec2(0.5f, -0.5f)), e2);
+    }
+
+    @Test
+    public void clipLineInsideShapeSuccess() {
+        BoxCollider2D box = new BoxCollider2D(new Vec2(2, 2));
+        Edge2D edge = new Edge2D(new Vec2(-1, 1), new Vec2(1, -1));
+        assertEquals(edge, edge.clipToBounds(box));
+    }
+
+    @Test
+    public void clipLineOutsideShapeFailure() {
+        BoxCollider2D box = new BoxCollider2D(new Vec2(2, 2));
+        assertNull(new Edge2D(new Vec2(-2, -1), new Vec2(-1, -2)).clipToBounds(box));
+    }
+
+    @Test
+    public void clipLineToPointFailure() {
+        BoxCollider2D box = new BoxCollider2D(new Vec2(2, 2));
+        assertNull(new Edge2D(new Vec2(-2, 0), new Vec2(0, -2)).clipToBounds(box));
     }
 
 }

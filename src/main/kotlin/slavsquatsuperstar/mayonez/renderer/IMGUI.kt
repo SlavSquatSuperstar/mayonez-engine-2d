@@ -1,6 +1,7 @@
 package slavsquatsuperstar.mayonez.renderer
 
 import slavsquatsuperstar.math.Vec2
+import slavsquatsuperstar.mayonez.renderer.IMGUI.round
 import java.awt.BasicStroke
 import java.awt.Color
 import java.awt.Graphics2D
@@ -32,7 +33,7 @@ object IMGUI {
     fun drawCircle(position: Vec2, radius: Float, color: Color?) {
         shapes.add(Renderable { g2: Graphics2D ->
             g2.color = color
-            g2.drawOval(round(position.x), round(position.y), round(radius * 2), round(radius * 2))
+            g2.drawOval(position.x.round(), position.y.round(), (radius * 2).round(), (radius * 2).round())
         })
     }
 
@@ -40,7 +41,7 @@ object IMGUI {
     fun drawRect(position: Vec2, width: Float, height: Float, color: Color?) {
         shapes.add(Renderable { g2: Graphics2D ->
             g2.color = color
-            g2.drawRect(round(position.x), round(position.y), round(width), round(height))
+            g2.drawRect(position.x.round(), position.y.round(), width.round(), height.round())
         })
     }
 
@@ -50,7 +51,7 @@ object IMGUI {
     fun fillCircle(position: Vec2, radius: Float, color: Color?) {
         shapes.add(Renderable { g2: Graphics2D ->
             g2.color = color
-            g2.fillOval(round(position.x), round(position.y), round(radius * 2), round(radius * 2))
+            g2.fillOval(position.x.round(), position.y.round(), (radius * 2).round(), (radius * 2).round())
         })
     }
 
@@ -58,7 +59,7 @@ object IMGUI {
     fun fillRect(position: Vec2, width: Float, height: Float, color: Color?) {
         shapes.add(Renderable { g2: Graphics2D ->
             g2.color = color
-            g2.fillRect(round(position.x), round(position.y), round(width), round(height))
+            g2.fillRect(position.x.round(), position.y.round(), width.round(), height.round())
         })
     }
 
@@ -75,10 +76,10 @@ object IMGUI {
     fun drawLine(start: Vec2, end: Vec2, color: Color?) {
         shapes.add(Renderable { g2: Graphics2D ->
             g2.color = color
-            g2.drawLine(round(start.x), round(start.y), round(end.x), round(end.y))
+            g2.drawLine(start.x.round(), start.y.round(), end.x.round(), end.y.round())
         })
     }
 
     // Helper Method
-    private fun round(value: Float): Int = value.roundToInt()
+    private fun Float.round(): Int = this.roundToInt()
 }
