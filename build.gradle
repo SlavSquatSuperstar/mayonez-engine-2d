@@ -7,7 +7,7 @@ plugins {
 }
 
 group 'slavsquatsuperstar'
-version '0.6.6-SNAPSHOT'
+version '0.7-SNAPSHOT-1'
 
 repositories.mavenCentral()
 

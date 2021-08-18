@@ -9,7 +9,6 @@ import slavsquatsuperstar.mayonez.physics2d.Physics2D;
 import slavsquatsuperstar.mayonez.renderer.IMGUI;
 import slavsquatsuperstar.mayonez.renderer.Renderer;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 
@@ -33,11 +32,7 @@ public class Game implements Runnable {
     private static Game game;
 
     // Window Fields
-    private final JFrame window;
-
-    // Input Fields
-    private final KeyInput keyboard;
-    private final MouseInput mouse;
+    private final Window window;
 
     // Thread Fields
     private Thread thread;
@@ -60,20 +55,13 @@ public class Game implements Runnable {
 
     private Game() {
         // Set up the window
-        window = new JFrame(Preferences.TITLE + " " + Preferences.VERSION);
         width = Preferences.SCREEN_WIDTH;
         height = Preferences.SCREEN_HEIGHT;
-        window.setSize(width, height);
-        window.setResizable(false);
-        window.setLocationRelativeTo(null); // center in screen
-        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // make sure 'x' button quits program
+        window = new Window(Preferences.TITLE + " " + Preferences.VERSION, width, height);
 
         // Add input listeners
-        keyboard = KeyInput.INSTANCE;
-        mouse = MouseInput.INSTANCE;
-        window.addKeyListener(keyboard);
-        window.addMouseListener(mouse);
-        window.addMouseMotionListener(mouse);
+        window.addKeyInput(KeyInput.INSTANCE);
+        window.addMouseInput(MouseInput.INSTANCE);
 
         physics = new Physics2D();
         renderer = new Renderer();
@@ -82,8 +70,7 @@ public class Game implements Runnable {
 
     // Game Loop Methods
 
-    public synchronized static Game instance() { // only create the game once
-        // get params from preferences
+    public synchronized static Game instance() {
         return (null == game) ? game = new Game() : game;
     }
 
@@ -95,8 +82,8 @@ public class Game implements Runnable {
     }
 
     public static boolean isFullScreen() {
-        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        GraphicsDevice device = ge.getDefaultScreenDevice();
+        GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsDevice device = env.getDefaultScreenDevice();
         return device.getFullScreenWindow() != null;
     }
 
@@ -255,7 +242,7 @@ public class Game implements Runnable {
         running = true;
 
         // Display window and initialize graphics buffer
-        window.setVisible(true);
+        window.start();
         initGraphics();
 
         // Start thread
@@ -276,8 +263,7 @@ public class Game implements Runnable {
         Logger.log("Engine: Stopping with exit code %d", status);
 
         // Free System resources
-        window.setVisible(false);
-        window.dispose();
+        window.stop();
         gfx.dispose();
 
         // Stop thread
