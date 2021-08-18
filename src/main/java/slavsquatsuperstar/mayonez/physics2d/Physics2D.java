@@ -200,35 +200,6 @@ public class Physics2D {
         }
     }
 
-    // Can't push objects after colliding, velocity slows to 0.
-    // javidx9 solution
-    private void applyImpulse2(Rigidbody2D r1, Rigidbody2D r2, CollisionManifold collision) {
-
-        Vec2 vel1 = r1.getVelocity();
-        Vec2 vel2 = r2.getVelocity();
-        Vec2 normal = collision.getNormal(); // Direction of collision
-        Vec2 tangent = new Vec2(-normal.y, normal.x); // Collision plane
-
-        float dotTan1 = vel1.dot(tangent);
-        float dotTan2 = vel2.dot(tangent);
-        float dotNorm1 = vel1.dot(normal);
-        float dotNorm2 = vel2.dot(normal);
-
-        // Conservation of momentum
-        float sumMass = r1.getMass() + r2.getMass();
-        float elasticity = r1.getCollider().getBounce() * r2.getCollider().getBounce(); // Coefficient of restitution
-        float momentum1 = (dotNorm1 * (r1.getMass() - r2.getMass()) + 2f * r2.getMass() * dotNorm2) / sumMass * elasticity;
-        float momentum2 = (dotNorm2 * (r2.getMass() - r1.getMass()) + 2f * r1.getMass() * dotNorm1) / sumMass * elasticity;
-
-        float vx1 = tangent.x * dotTan1 + normal.x * momentum1;
-        float vy1 = tangent.y * dotTan1 + normal.y * momentum1;
-        float vx2 = tangent.x * dotTan2 + normal.x * momentum2;
-        float vy2 = tangent.y * dotTan2 + normal.y * momentum2;
-
-        r1.setVelocity(new Vec2(vx1, vy1));
-        r2.setVelocity(new Vec2(vx2, vy2));
-    }
-
     // Game Object Methods
 
     public void addObject(GameObject o) {
