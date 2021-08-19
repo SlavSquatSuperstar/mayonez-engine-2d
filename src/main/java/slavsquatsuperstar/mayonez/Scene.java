@@ -98,7 +98,7 @@ public abstract class Scene {
      *
      * @param g2 the window's graphics object
      */
-    protected final void render(Graphics2D g2) {
+    public final void render(Graphics2D g2) {
         if (!started)
             return;
 

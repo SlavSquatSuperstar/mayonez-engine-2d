@@ -23,10 +23,6 @@ public class Game implements Runnable {
      * Field Declarations
      */
 
-    // Time Fields
-    public static final long TIME_STARTED = System.nanoTime();
-    public static final float TIME_STEP = 1.0f / Preferences.FPS;
-
     // Singleton Fields
     // TODO make start/stop static?
     private static Game game;
@@ -72,13 +68,6 @@ public class Game implements Runnable {
 
     public synchronized static Game instance() {
         return (null == game) ? game = new Game() : game;
-    }
-
-    /**
-     * @return the time in seconds since this game started.
-     */
-    public static float getTime() {
-        return (System.nanoTime() - TIME_STARTED) / 1.0E9f;
     }
 
     public static boolean isFullScreen() {
@@ -138,7 +127,7 @@ public class Game implements Runnable {
 
         while (running) {
 
-            float currentFrameTime = getTime(); // Time for current frame
+            float currentFrameTime = Time.getTime(); // Time for current frame
             float passedTime = currentFrameTime - lastTime;
             deltaTime += passedTime;
             timer += passedTime;
@@ -146,10 +135,10 @@ public class Game implements Runnable {
 
             try {
                 // Update the game as many times as possible even if the frame freezes
-                while (deltaTime >= TIME_STEP) {
+                while (deltaTime >= Time.TIME_STEP) {
                     update(deltaTime);
                     // Update = Graphics frame rate, FixedUpdate = Physics frame rate
-                    deltaTime -= TIME_STEP;
+                    deltaTime -= Time.TIME_STEP;
                     ticked = true;
                 }
                 // Only render if the game has updated to save resources

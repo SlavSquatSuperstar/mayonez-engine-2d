@@ -43,7 +43,7 @@ object Logger {
      */
     @JvmStatic
     fun log(msg: Any?, vararg args: Any?) {
-        val output = StringBuilder("[%02d:%.4f] ".format((Game.getTime() / 60).toInt(), Game.getTime() % 60))
+        val output = StringBuilder("[%02d:%.4f] ".format((Time.time / 60).toInt(), Time.time % 60))
         try {
             output.append(msg.toString().format(*args))
             if (saveLogs)

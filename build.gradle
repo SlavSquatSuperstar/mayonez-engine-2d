@@ -7,16 +7,43 @@ plugins {
 }
 
 group 'slavsquatsuperstar'
-version '0.7-SNAPSHOT-1'
+version '0.7-SNAPSHOT-2'
 
 repositories.mavenCentral()
 
+// LWJGL Settings
+project.ext.lwjglVersion = "3.2.3"
+project.ext.jomlVersion = "1.10.1"
+project.ext.lwjglNatives = "natives-macos"
+
 dependencies {
+    // LWJGL Libraries
+    implementation platform("org.lwjgl:lwjgl-bom:$lwjglVersion")
+
+    implementation "org.lwjgl:lwjgl"
+    implementation "org.lwjgl:lwjgl-assimp"
+    implementation "org.lwjgl:lwjgl-glfw"
+    implementation "org.lwjgl:lwjgl-nfd"
+    implementation "org.lwjgl:lwjgl-openal"
+    implementation "org.lwjgl:lwjgl-opengl"
+    implementation "org.lwjgl:lwjgl-stb"
+    runtimeOnly "org.lwjgl:lwjgl::$lwjglNatives"
+    runtimeOnly "org.lwjgl:lwjgl-assimp::$lwjglNatives"
+    runtimeOnly "org.lwjgl:lwjgl-glfw::$lwjglNatives"
+    runtimeOnly "org.lwjgl:lwjgl-nfd::$lwjglNatives"
+    runtimeOnly "org.lwjgl:lwjgl-openal::$lwjglNatives"
+    runtimeOnly "org.lwjgl:lwjgl-opengl::$lwjglNatives"
+    runtimeOnly "org.lwjgl:lwjgl-stb::$lwjglNatives"
+    implementation "org.joml:joml:${jomlVersion}"
+
+
+    // Code Dependencies
     implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.21'
     implementation 'org.apache.commons:commons-lang3:3.12.0'
     implementation 'commons-io:commons-io:2.11.0'
     implementation 'org.json:json:20210307'
 
+    // Test Libraries
     testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.7.2'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
 }
@@ -34,6 +61,10 @@ compileTestKotlin {
     kotlinOptions {
         jvmTarget = javaVersion
     }
+}
+
+run {
+    jvmArgs = ["-XstartOnFirstThread"]
 }
 
 shadowJar {
