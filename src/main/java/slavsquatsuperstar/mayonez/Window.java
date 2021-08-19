@@ -4,7 +4,12 @@ import javax.swing.JFrame;
 import java.awt.event.KeyAdapter;
 import java.awt.event.MouseAdapter;
 
-public class Window extends JFrame {
+/**
+ * The display component for the game.
+ *
+ * @author SlavSquatSuperstar
+ */
+public class Window extends JFrame implements IGameWindow {
 
     public Window(String title, int width, int height) {
         super(title);
@@ -18,11 +23,13 @@ public class Window extends JFrame {
 
     // Game Loop Methods
 
+    @Override
     public void start() {
         setLocationRelativeTo(null); // center in screen
         setVisible(true);
     }
 
+    @Override
     public void stop() {
         setVisible(false);
         dispose();
@@ -30,10 +37,12 @@ public class Window extends JFrame {
 
     // Input Methods
 
+    @Override
     public void addKeyInput(KeyAdapter keyboard) {
         addKeyListener(keyboard);
     }
 
+    @Override
     public void addMouseInput(MouseAdapter mouse) {
         addMouseListener(mouse);
         addMouseMotionListener(mouse);
