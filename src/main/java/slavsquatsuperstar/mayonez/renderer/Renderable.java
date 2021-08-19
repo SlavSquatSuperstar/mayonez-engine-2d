@@ -6,6 +6,6 @@ import java.awt.*;
  * Maps an object to a draw function.
  */
 @FunctionalInterface
-interface Renderable {
-    void draw(Graphics2D g2);
+public interface Renderable {
+    void render(Graphics2D g2);
 }

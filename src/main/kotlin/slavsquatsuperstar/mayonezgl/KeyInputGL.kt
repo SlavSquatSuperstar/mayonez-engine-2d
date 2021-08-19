@@ -4,8 +4,8 @@ import org.lwjgl.glfw.GLFW.*
 
 object KeyInputGL {
 
-    private val keysHeld = BooleanArray(350)
     private val keysPressed = BooleanArray(350)
+    private val keysHeld = BooleanArray(350)
 
     @JvmStatic
     fun endFrame() {

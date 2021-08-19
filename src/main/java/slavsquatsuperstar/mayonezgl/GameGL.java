@@ -5,6 +5,9 @@ import slavsquatsuperstar.mayonez.Logger;
 import slavsquatsuperstar.mayonez.Preferences;
 import slavsquatsuperstar.mayonez.Time;
 
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_W;
+import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_1;
+
 /**
  * The application that contains the engine's core loop.
  *
@@ -95,6 +98,8 @@ public class GameGL { // can't implement runnable otherwise GLFW will crash
                     frames = 0;
                     timer = 0;
                 }
+
+                window.endFrame();
             }
         } catch (Exception e) {
             Logger.log(ExceptionUtils.getStackTrace(e));
@@ -106,7 +111,14 @@ public class GameGL { // can't implement runnable otherwise GLFW will crash
     }
 
     public void update(float dt) {
-        // update scene
+        if (KeyInputGL.isKeyPressed(GLFW_KEY_W))
+            Logger.log("Begin W");
+        if (KeyInputGL.isKeyHeld(GLFW_KEY_W))
+            Logger.log("W");
+        if (MouseInputGL.isButtonPressed(GLFW_MOUSE_BUTTON_1))
+            Logger.log("Position: %.4f, %.4f", MouseInputGL.getX(), MouseInputGL.getY());
+        if (MouseInputGL.isDragging())
+            Logger.log("Displacement: %.4f, %.4f", MouseInputGL.getDx(), MouseInputGL.getDy());
     }
 
     public void render() {

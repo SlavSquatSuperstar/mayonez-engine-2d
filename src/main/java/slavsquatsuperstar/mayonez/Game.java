@@ -10,7 +10,6 @@ import slavsquatsuperstar.mayonez.renderer.IMGUI;
 import slavsquatsuperstar.mayonez.renderer.Renderer;
 
 import java.awt.*;
-import java.awt.image.BufferStrategy;
 
 /**
  * The application that contains the engine's core loop.
@@ -27,17 +26,13 @@ public class Game implements Runnable {
     // TODO make start/stop static?
     private static Game game;
 
-    // Window Fields
-    private final Window window;
-
     // Thread Fields
     private Thread thread;
     private boolean running;
-    private int width, height;
 
-    // Renderer Fields
-    private Graphics gfx;
-    private BufferStrategy buffers;
+    // Window Fields
+    private final IGameWindow window;
+    private int width, height;
 
     // Game Layers
     private Scene currentScene;
@@ -187,33 +182,12 @@ public class Game implements Runnable {
      * Redraws all objects in the current scene.
      */
     public void render() throws Exception {
-        if (buffers == null) {
-            initGraphics();
-            return;
-        }
-
-        try {
-            /*
-             * Use a do-while loop to avoid losing buffer frames Source:
-             * https://stackoverflow.com/questions/13590002/understand-bufferstrategy
-             */
-            do {
-                // Clear the screen
-                gfx = buffers.getDrawGraphics();
-                gfx.clearRect(0, 0, width, height);
-
-                Graphics2D g2 = (Graphics2D) gfx;
-                if (null != currentScene)
-                    currentScene.render(g2);
-                renderer.render(g2);
-                imgui.render(g2);
-
-                gfx.dispose();
-                buffers.show();
-            } while (buffers.contentsLost());
-        } catch (IllegalStateException e) {
-            Logger.log("Engine: Error rendering screen; trying again next frame.");
-        }
+        window.render((g2) -> {
+            if (null != currentScene)
+                currentScene.render(g2);
+            renderer.render(g2);
+            imgui.render(g2);
+        });
 
     }
 
@@ -226,13 +200,11 @@ public class Game implements Runnable {
         if (running) // don't start if already running
             return;
 
-        Logger.log("Engine: Starting");
-        Logger.log("Welcome to %s %s", Preferences.TITLE, Preferences.VERSION);
+        Logger.log("Engine: Starting %s %s", Preferences.TITLE, Preferences.VERSION);
         running = true;
 
-        // Display window and initialize graphics buffer
+        // Display window
         window.start();
-        initGraphics();
 
         // Start thread
         thread = new Thread(this);
@@ -253,7 +225,6 @@ public class Game implements Runnable {
 
         // Free System resources
         window.stop();
-        gfx.dispose();
 
         // Stop thread
         thread.interrupt();
@@ -261,18 +232,7 @@ public class Game implements Runnable {
         System.exit(status);
     }
 
-    // Getter methods
-
-    private void initGraphics() {
-        if (window == null)
-            return;
-        try {
-            window.createBufferStrategy(2);
-            buffers = window.getBufferStrategy();
-        } catch (IllegalStateException e) {
-            Logger.log("Engine: Error initializing window graphics; trying again next frame.");
-        }
-    }
+    // Helper Methods
 
     /**
      * Starts the current scene, if not null

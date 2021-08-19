@@ -4,7 +4,6 @@ import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
-import slavsquatsuperstar.mayonez.Logger;
 
 import java.nio.IntBuffer;
 
@@ -16,7 +15,7 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class WindowGL {
 
-    private long window; // The window handle
+    private long window; // The window pointer
     private String title;
     private int width, height;
 
@@ -56,12 +55,11 @@ public class WindowGL {
         if (window == NULL)
             throw new RuntimeException("Engine: Failed to create the GLFW window");
 
-        // Setup a key callback. It will be called every time a key is pressed, repeated or released.
+        // Add input listeners
         glfwSetKeyCallback(window, KeyInputGL::keyCallback);
-//        glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
-//            if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE)
-//                glfwSetWindowShouldClose(window, true); // We will detect this in the rendering loop
-//        });
+        glfwSetMouseButtonCallback(window, MouseInputGL::mouseButtonCallback);
+        glfwSetCursorPosCallback(window, MouseInputGL::mousePosCallback);
+        glfwSetScrollCallback(window, MouseInputGL::mouseScrollCallback);
 
         // Get the thread stack and push a new frame
         try (MemoryStack stack = stackPush()) {
@@ -97,7 +95,6 @@ public class WindowGL {
     public void start() {
         glfwShowWindow(window);
         glfwFocusWindow(window);
-        glClearColor(1.0f, 0.0f, 0.0f, 0.0f); // Set the clear color
     }
 
     // Free GLFW resources and destroy the window
@@ -111,18 +108,20 @@ public class WindowGL {
     // Reset and poll window events
     public void update() {
         glfwPollEvents();
-        if (KeyInputGL.isKeyHeld(GLFW_KEY_ESCAPE))
+        if (KeyInputGL.isKeyPressed(GLFW_KEY_ESCAPE))
             glfwSetWindowShouldClose(window, true); // Exit program by pressing escape
-        if (KeyInputGL.isKeyPressed(GLFW_KEY_W))
-            Logger.log("Begin W");
-        if (KeyInputGL.isKeyHeld(GLFW_KEY_W))
-            Logger.log("W");
-        KeyInputGL.endFrame();
     }
 
     public void render() {
+        glClearColor(1f, 0f, 0f, 1f); // Set the clear color
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
+    }
+
+    public void endFrame() {
         glfwSwapBuffers(window); // swap the color buffers
+        // Reset input data
+        KeyInputGL.endFrame();
+        MouseInputGL.endFrame();
     }
 
 }

@@ -27,7 +27,7 @@ object DebugDraw {
     fun render(g2: Graphics2D) {
         if (shapes.isNotEmpty()) {
             g2.stroke = stroke
-            shapes.forEach(Consumer { s: Renderable -> s.draw(g2) })
+            shapes.forEach(Consumer { s: Renderable -> s.render(g2) })
             shapes.clear()
         }
     }

@@ -1,7 +1,6 @@
 package slavsquatsuperstar.mayonez.renderer
 
 import slavsquatsuperstar.math.Vec2
-import slavsquatsuperstar.mayonez.renderer.IMGUI.round
 import java.awt.BasicStroke
 import java.awt.Color
 import java.awt.Graphics2D
@@ -22,7 +21,7 @@ object IMGUI {
     fun render(g2: Graphics2D) {
         if (shapes.isNotEmpty()) {
             g2.stroke = stroke
-            shapes.forEach(Consumer { s: Renderable -> s.draw(g2) })
+            shapes.forEach(Consumer { s: Renderable -> s.render(g2) })
             shapes.clear()
         }
     }
