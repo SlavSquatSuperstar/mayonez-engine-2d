@@ -15,8 +15,14 @@ import java.awt.event.KeyEvent;
  */
 public class RendererTestScene extends Scene {
 
-    public RendererTestScene(String name) {
-        super(name, Preferences.SCREEN_WIDTH, Preferences.SCREEN_HEIGHT, 32);
+    public RendererTestScene() {
+        super("Renderer Test Scene", Preferences.SCREEN_WIDTH, Preferences.SCREEN_HEIGHT, 32);
+    }
+
+    public static void main(String[] args) {
+        Game game = Game.instance();
+        game.start();
+        Game.loadScene(new RendererTestScene());
     }
 
     @Override
@@ -43,8 +49,9 @@ public class RendererTestScene extends Scene {
             @Override
             public void render(Graphics2D g2) {
                 super.render(g2);
-                IMGUI.fillCircle(new Vec2(Preferences.SCREEN_WIDTH / 2f - 50, Preferences.SCREEN_HEIGHT / 2f + 32), 50, Colors.BLUE);
-                IMGUI.drawCircle(new Vec2(Preferences.SCREEN_WIDTH / 2f - 50, Preferences.SCREEN_HEIGHT / 2f + 32), 50, Colors.BLACK);
+                Vec2 pos = new Vec2(Preferences.SCREEN_WIDTH / 2f - 50, Preferences.SCREEN_HEIGHT / 2f + 32);
+                IMGUI.fillCircle(pos, 50, Colors.BLUE);
+                IMGUI.drawCircle(pos, 50, Colors.BLACK);
                 IMGUI.drawPoint(new Vec2(Preferences.SCREEN_WIDTH / 2f, Preferences.SCREEN_HEIGHT / 2f + 82), Colors.LIGHT_BLUE);
             }
         });

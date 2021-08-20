@@ -73,6 +73,11 @@ public class Game implements Runnable {
 
     // Getters and Setters
 
+    public static void loadScene(Scene newScene) {
+        game.currentScene = newScene;
+        game.startCurrentScene();
+    }
+
     public static void loadScene(int scene) {
         switch (scene) {
             case 0:
@@ -82,10 +87,10 @@ public class Game implements Runnable {
                 game.currentScene = new LevelScene("Level");
                 break;
             case 2:
-                game.currentScene = new PhysicsTestScene("Physics Test Scene");
+                game.currentScene = new PhysicsTestScene();
                 break;
             case 3:
-                game.currentScene = new RendererTestScene("Renderer Test Scene");
+                game.currentScene = new RendererTestScene();
                 break;
             default:
                 Logger.log("Game: Unknown scene");
@@ -121,7 +126,6 @@ public class Game implements Runnable {
         int frames = 0;
 
         while (running) {
-
             float currentFrameTime = Time.getTime(); // Time for current frame
             float passedTime = currentFrameTime - lastTime;
             deltaTime += passedTime;

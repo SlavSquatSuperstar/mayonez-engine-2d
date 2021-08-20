@@ -17,6 +17,12 @@ public class LevelEditorScene extends Scene {
         setGravity(new Vec2());
     }
 
+    public static void main(String[] args) {
+        Game game = Game.instance();
+        game.start();
+        Game.loadScene(new LevelEditorScene("Level Editor"));
+    }
+
     @Override
     protected void init() {
         addObject(new GameObject("Ground", new Vec2(getWidth() * 0.5f, getHeight())) {

@@ -16,10 +16,16 @@ import java.awt.*;
 
 public class PhysicsTestScene extends Scene {
 
-    public PhysicsTestScene(String name) {
-        super(name, Preferences.SCREEN_WIDTH, Preferences.SCREEN_HEIGHT, 10);
+    public PhysicsTestScene() {
+        super("Physics Test Scene", Preferences.SCREEN_WIDTH, Preferences.SCREEN_HEIGHT, 10);
         setBackground(Colors.WHITE);
 //        setGravity(new Vec2());
+    }
+
+    public static void main(String[] args) {
+        Game game = Game.instance();
+        game.start();
+        Game.loadScene(new PhysicsTestScene());
     }
 
     @Override

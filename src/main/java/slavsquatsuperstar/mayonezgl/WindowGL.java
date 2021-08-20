@@ -106,7 +106,7 @@ public class WindowGL {
     }
 
     // Reset and poll window events
-    public void update() {
+    public void beginFrame() {
         glfwPollEvents();
         if (KeyInputGL.isKeyPressed(GLFW_KEY_ESCAPE))
             glfwSetWindowShouldClose(window, true); // Exit program by pressing escape
