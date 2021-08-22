@@ -49,6 +49,9 @@ public class WindowGL {
         glfwDefaultWindowHints(); // window settings
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // the window will stay hidden after creation
         glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE); // the window will be resizable
+        // for mac
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
 
         // Create the window
         window = glfwCreateWindow(width, height, title, NULL, NULL);
@@ -113,8 +116,8 @@ public class WindowGL {
     }
 
     public void render() {
-        glClearColor(1f, 0f, 0f, 1f); // Set the clear color
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
+        glClearColor(1f, 1f, 1f, 1f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear the screen
     }
 
     public void endFrame() {

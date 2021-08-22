@@ -24,7 +24,7 @@ public class GameGL { // can't implement runnable otherwise GLFW will crash
     private final WindowGL window;
 
     public GameGL() {
-        window = new WindowGL("Mayonez + LWJGL", 300, 300);
+        window = new WindowGL("Mayonez + LWJGL", 1080, 720);
     }
 
     public static GameGL instance() {
@@ -35,6 +35,8 @@ public class GameGL { // can't implement runnable otherwise GLFW will crash
 
     public static void setScene(SceneGL scene) {
         GameGL.scene = scene;
+        if (GameGL.scene != null)
+            GameGL.scene.start();
     }
 
     // Game Loop Methods
@@ -116,8 +118,8 @@ public class GameGL { // can't implement runnable otherwise GLFW will crash
     }
 
     public void render() {
+        window.render();
         if (scene != null)
             scene.render();
-        window.render();
     }
 }
