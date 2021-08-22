@@ -129,7 +129,7 @@ public abstract class Scene {
                 Game.getRenderer().add(obj);
                 Game.getPhysics().addObject(obj);
             }
-            Logger.log("Added object \"%s\" to scene \"%s\"", obj.name, this.name);
+            Logger.trace("Added object \"%s\" to scene \"%s\"", obj.name, this.name);
         };
 
         if (started)
@@ -144,7 +144,7 @@ public abstract class Scene {
             objects.remove(obj);
             Game.getRenderer().remove(obj);
             Game.getPhysics().removeObject(obj);
-            Logger.log("Removed object \"%s\" to scene \"%s\"", obj.name, this.name);
+            Logger.trace("Removed object \"%s\" to scene \"%s\"", obj.name, this.name);
         });
     }
 

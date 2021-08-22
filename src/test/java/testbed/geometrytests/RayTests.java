@@ -1,4 +1,4 @@
-package geometrytests;
+package testbed.geometrytests;
 
 import org.junit.jupiter.api.Test;
 import slavsquatsuperstar.math.Vec2;

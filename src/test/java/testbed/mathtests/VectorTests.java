@@ -1,4 +1,4 @@
-package mathtests;
+package testbed.mathtests;
 
 import org.junit.jupiter.api.Test;
 import slavsquatsuperstar.math.Vec2;

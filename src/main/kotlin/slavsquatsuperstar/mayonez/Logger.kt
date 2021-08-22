@@ -12,7 +12,9 @@ import java.util.*
  */
 object Logger {
 
-    private val saveLogs = Preferences.SAVE_LOGS
+    @JvmField
+    var logLevel: Int = Preferences.LOG_LEVEL
+    private val saveLogs: Boolean = Preferences.SAVE_LOGS
     private lateinit var logFilename: String
     private var logFile: TextFile? = null
 
@@ -20,8 +22,7 @@ object Logger {
         if (saveLogs) {
             // Create the log directory if needed
             val logsDirectory = File(Preferences.LOGS_DIRECTORY)
-            if (!logsDirectory.exists())
-                logsDirectory.mkdir()
+            if (!logsDirectory.exists()) logsDirectory.mkdir()
 
             // Count number of log files with the same date
             val today = LocalDate.now()
@@ -35,6 +36,20 @@ object Logger {
         }
     }
 
+    private fun logInternal(msg: Any?, vararg args: Any?, level: LogLevel) {
+        val output = StringBuilder("[%02d:%.4f] ".format((Time.time / 60).toInt(), Time.time % 60)) // Time stamp
+        try {
+            output.append(msg.toString().format(*args)) // Level prefix
+            if (saveLogs) // Always save to log regardless of level
+                logFile!!.append(output.toString())
+        } catch (e: IllegalFormatException) {
+            output.append("Logger: Could not format message \"$msg\"")
+        } finally {
+            if (level.level >= this.logLevel) // Print to console if high enough level
+                println(output.toString())
+        }
+    }
+
     /**
      * Prints a formatted message to the console.
      *
@@ -43,16 +58,18 @@ object Logger {
      */
     @JvmStatic
     fun log(msg: Any?, vararg args: Any?) {
-        val output = StringBuilder("[%02d:%.4f] ".format((Time.time / 60).toInt(), Time.time % 60))
-        try {
-            output.append(msg.toString().format(*args))
-            if (saveLogs)
-                logFile!!.append(output.toString())
-        } catch (e: IllegalFormatException) {
-            output.append("Logger: Could not format message \"$msg\"")
-        } finally {
-            println(output.toString())
-        }
+        logInternal(msg, *args, level = LogLevel.NORMAL)
+    }
+
+    /**
+     * Prints a debug message to the console.
+     *
+     * @param msg  an object or formatted string
+     * @param args (optional) string format arguments
+     */
+    @JvmStatic
+    fun trace(msg: Any?, vararg args: Any?) {
+        logInternal("[DEBUG] $msg", *args, level = LogLevel.TRACE)
     }
 
     /**
@@ -63,12 +80,29 @@ object Logger {
      */
     @JvmStatic
     fun warn(msg: Any?, vararg args: Any?) {
-        log("[WARNING] $msg", *args)
+        logInternal("[WARNING] $msg", *args, level = LogLevel.WARNING)
     }
 
     @JvmStatic
     fun printExitMessage() {
         if (saveLogs) log("Logger: Saved log to file \"%s\"", logFilename)
+    }
+
+    enum class LogLevel(val level: Int) {
+        /**
+         * A low priority debug message.
+         */
+        TRACE(0),
+
+        /**
+         * A normal priority infomational message.
+         */
+        NORMAL(1),
+
+        /**
+         * A high priority warning message
+         */
+        WARNING(2)
     }
 
 }

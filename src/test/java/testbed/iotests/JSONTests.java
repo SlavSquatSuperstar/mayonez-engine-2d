@@ -1,4 +1,4 @@
-package iotests;
+package testbed.iotests;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

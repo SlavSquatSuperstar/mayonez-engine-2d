@@ -32,11 +32,16 @@ object Preferences {
     @JvmField
     val IMPULSE_ITERATIONS: Int = preferences.getInt("physics_iterations")
 
+    // Logging
+
     @JvmField
     val SAVE_LOGS: Boolean = preferences.getBool("save_logs")
 
     @JvmField
     val LOGS_DIRECTORY: String = preferences.getStr("logs_directory")
+
+    @JvmField
+    val LOG_LEVEL: Int = preferences.getInt("log_level")
 
     // File I/O
     const val CHARSET: String = "UTF-8"

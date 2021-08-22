@@ -1,10 +1,10 @@
-package iotests;
+package testbed.iotests;
 
 import org.junit.jupiter.api.Test;
 import slavsquatsuperstar.mayonez.assets.Asset;
+import slavsquatsuperstar.mayonez.assets.Assets;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Unit tests for {@link Asset} class.
@@ -35,6 +35,16 @@ public class AssetTests {
     public void localAssetNotExists() {
         Asset a = new Asset("src/test/resources/luigi.png", false);
         assertFalse(a.exists());
+    }
+
+    @Test
+    public void getInvalidAssetReturnsNull() {
+        assertNull(Assets.getAsset("luigi.png", true));
+    }
+
+    @Test
+    public void getValidAssetReturnsNull() {
+        assertNotNull(Assets.getAsset("mario.png", true));
     }
 
 }

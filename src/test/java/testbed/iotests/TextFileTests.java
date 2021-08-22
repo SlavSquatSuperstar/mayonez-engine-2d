@@ -1,4 +1,4 @@
-package iotests;
+package testbed.iotests;
 
 import org.junit.jupiter.api.Test;
 import slavsquatsuperstar.mayonez.assets.TextFile;

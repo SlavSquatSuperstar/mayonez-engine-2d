@@ -3,6 +3,7 @@ package slavsquatsuperstar.mayonez.physics2d;
 import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.GameObject;
+import slavsquatsuperstar.mayonez.Logger;
 import slavsquatsuperstar.mayonez.Preferences;
 import slavsquatsuperstar.mayonez.Scene;
 import slavsquatsuperstar.mayonez.physics2d.colliders.Collider2D;
@@ -126,6 +127,7 @@ public class Physics2D {
 //                    DebugDraw.drawLine(c1.center(), c2.center(), Colors.RED);
 //                    DebugDraw.drawVector(c1.center(), result.getNormal(), Colors.BLACK);
                     collisions.add(result);
+                    Logger.trace("%s is intersecting %s", c1, c2);
                 }
             }
         }

@@ -103,6 +103,7 @@ public class WindowGL {
     // Free GLFW resources and destroy the window
     public void stop() {
         glfwFreeCallbacks(window);
+//        glfwSetWindowShouldClose(window, true);
         glfwDestroyWindow(window);
         glfwTerminate();
         glfwSetErrorCallback(null).free();

@@ -9,9 +9,10 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
 import static org.lwjgl.opengl.GL20.*;
-import static org.lwjgl.opengl.GL30.*;
+import static org.lwjgl.opengl.GL30.glBindVertexArray;
+import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
-public class LWJGLTestScene extends SceneGL {
+public class GLTestScene extends SceneGL {
 
     private String vertexShaderSrc = "#version 330 core\n" +
             "\n" +
@@ -31,21 +32,15 @@ public class LWJGLTestScene extends SceneGL {
             "\n" +
             "void main()\n" +
             "{\n" +
-            "    color = fColor;\n" +
+            "    clor = fColor;\n" +
             "}";
     private int vertexID, fragmentID, shaderProgram;
-
-    public LWJGLTestScene() {
-        super("LWJGL Test Scene");
-    }
-
     private float[] vertexArray = { // VBO: position, color
-            0.5f, -0.5f, 0.0f,       1.0f, 0.0f, 0.0f, 1.0f, // Bottom right 0
-            -0.5f,  0.5f, 0.0f,       0.0f, 1.0f, 0.0f, 1.0f, // Top left     1
-            0.5f,  0.5f, 0.0f ,      0.0f, 0.0f, 1.0f, 1.0f, // Top right    2
-            -0.5f, -0.5f, 0.0f,       1.0f, 1.0f, 0.0f, 1.0f, // Bottom left  3
+            0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, // Bottom right 0
+            -0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, // Top left     1
+            0.5f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, // Top right    2
+            -0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, // Bottom left  3
     };
-
     private int[] elementArray = { // counter clockwise
             /*
              *  1   2
@@ -54,8 +49,17 @@ public class LWJGLTestScene extends SceneGL {
             2, 1, 0, // Top right triangle
             0, 1, 3  // bottom left triangle
     };
-
     private int vaoID, vboID, eboID;
+
+    public GLTestScene() {
+        super("LWJGL Test Scene");
+    }
+
+    public static void main(String[] args) {
+        GameGL game = GameGL.instance();
+        GameGL.setScene(new GLTestScene());
+        game.start();
+    }
 
     @Override
     public void init() {
@@ -67,11 +71,11 @@ public class LWJGLTestScene extends SceneGL {
         // Check for compile errors
         int success = glGetShaderi(vertexID, GL_COMPILE_STATUS);
         if (success == GL_FALSE) {
-            Logger.log("Error: Could not compile \"defaultshader.glsl\" vertex shader");
-            Logger.log(glGetShaderInfoLog(vertexID));
+            Logger.warn("Error: Could not compile \"defaultshader.glsl\" vertex shader");
+            Logger.warn(glGetShaderInfoLog(vertexID));
             GameGL.instance().stop(1);
         }
-        Logger.log("Successfully compiled \"defaultshader.glsl\" vertex shader");
+        Logger.trace("Successfully compiled \"defaultshader.glsl\" vertex shader");
 
         // Repeat for Fragment Shader
         fragmentID = glCreateShader(GL_FRAGMENT_SHADER);
@@ -81,11 +85,11 @@ public class LWJGLTestScene extends SceneGL {
         // Check for compile errors
         success = glGetShaderi(fragmentID, GL_COMPILE_STATUS);
         if (success == GL_FALSE) {
-            Logger.log("Error: Could not compile \"defaultshader.glsl\" fragment shader");
-            Logger.log(glGetShaderInfoLog(fragmentID));
+            Logger.warn("Error: Could not compile \"defaultshader.glsl\" fragment shader");
+            Logger.warn(glGetShaderInfoLog(fragmentID));
             GameGL.instance().stop(1);
         }
-        Logger.log("Successfully compiled \"defaultshader.glsl\" fragment shader");
+        Logger.trace("Successfully compiled \"defaultshader.glsl\" fragment shader");
 
         // Link shaders
         shaderProgram = glCreateProgram();
@@ -95,11 +99,11 @@ public class LWJGLTestScene extends SceneGL {
 
         success = glGetProgrami(shaderProgram, GL_LINK_STATUS);
         if (success == GL_FALSE) {
-            Logger.log("Error: Could not link \"defaultshader.glsl\" shaders");
-            Logger.log(glGetProgramInfoLog(shaderProgram));
+            Logger.warn("Error: Could not link \"defaultshader.glsl\" shaders");
+            Logger.warn(glGetProgramInfoLog(shaderProgram));
             GameGL.instance().stop(1);
         }
-        Logger.log("Successfully linked \"defaultshader.glsl\" shaders");
+        Logger.trace("Successfully linked \"defaultshader.glsl\" shaders");
 
         // Generate VAO
         vaoID = glGenVertexArrays();
@@ -158,14 +162,6 @@ public class LWJGLTestScene extends SceneGL {
         glDisableVertexAttribArray(1);
         glBindVertexArray(0);
         glUseProgram(0);
-
-        Logger.log("rendered scene");
-    }
-
-    public static void main(String[] args) {
-        GameGL game = GameGL.instance();
-        GameGL.setScene(new LWJGLTestScene());
-        game.start();
     }
 
 }

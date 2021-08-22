@@ -34,9 +34,9 @@ public class TextFile extends Asset {
         try (InputStream in = inputStream()) {
             return IOUtils.toString(in, Preferences.CHARSET);
         } catch (FileNotFoundException e) {
-            Logger.log("TextFile: File \"%s\" not found");
+            Logger.warn("TextFile: File \"%s\" not found");
         } catch (IOException e) {
-            Logger.log("TextFile: Could not read file");
+            Logger.warn("TextFile: Could not read file");
         }
         return "";
     }
@@ -59,10 +59,10 @@ public class TextFile extends Asset {
         try (OutputStream out = outputStream(false)) {
             IOUtils.writeLines(Arrays.asList(text), "\n", out, StandardCharsets.UTF_8);
         } catch (FileNotFoundException e) {
-            Logger.log("TextFile: File \"%s\" not found");
+            Logger.warn("TextFile: File \"%s\" not found");
         } catch (IOException e) {
             Logger.log(ExceptionUtils.getStackTrace(e));
-            Logger.log("TextFile: Could not save to file");
+            Logger.warn("TextFile: Could not save to file");
         }
     }
 
@@ -75,7 +75,7 @@ public class TextFile extends Asset {
         try (OutputStream out = outputStream(true)) {
             IOUtils.writeLines(Arrays.asList(text), "\n", out, StandardCharsets.UTF_8);
         } catch (IOException e) {
-            Logger.log("TextFile: Could not append to file");
+            Logger.warn("TextFile: Could not append to file");
         }
     }
 

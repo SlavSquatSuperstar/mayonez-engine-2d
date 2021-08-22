@@ -50,6 +50,8 @@ public class GameGL { // can't implement runnable otherwise GLFW will crash
         running = true;
 
         window.start();
+        if (GameGL.scene != null)
+            GameGL.scene.start();
         run();
     }
 

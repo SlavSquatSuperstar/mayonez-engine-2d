@@ -38,11 +38,11 @@ public class JSONFile extends Asset {
         try (InputStream in = inputStream()) {
             json = new JSONObject(new JSONTokener(IOUtils.toString(in, Preferences.CHARSET)));
         } catch (FileNotFoundException e) {
-            Logger.log("JSONFile: File \"%s\" not found", path);
+            Logger.warn("JSONFile: File \"%s\" not found", path);
         } catch (IOException e) {
-            Logger.log("TextFile: Could not read file");
+            Logger.warn("TextFile: Could not read file");
         } catch (JSONException e) {
-            Logger.log("JSONUtil: Could not parse JSON file");
+            Logger.warn("JSONUtil: Could not parse JSON file");
         }
     }
 
@@ -55,10 +55,10 @@ public class JSONFile extends Asset {
         try (OutputStream out = outputStream(false)) {
             IOUtils.write(json.toString(4).getBytes(StandardCharsets.UTF_8), out);
         } catch (FileNotFoundException e) {
-            Logger.log("TextFile: File \"%s\" not found\n", path);
+            Logger.warn("TextFile: File \"%s\" not found\n", path);
         } catch (IOException e) {
-            Logger.log(ExceptionUtils.getStackTrace(e));
-            Logger.log("TextFile: Could not save to file");
+            Logger.warn(ExceptionUtils.getStackTrace(e));
+            Logger.warn("TextFile: Could not save to file");
         }
     }
 
@@ -123,7 +123,7 @@ public class JSONFile extends Asset {
     }
 
     private static void logError(String key, String type) {
-        Logger.log("JSONFile: Value at \"%s\" is not %s.", key, type);
+        Logger.warn("JSONFile: Value at \"%s\" is not %s.", key, type);
     }
 
 }

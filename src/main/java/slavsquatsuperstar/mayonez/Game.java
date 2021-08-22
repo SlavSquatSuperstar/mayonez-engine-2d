@@ -148,12 +148,12 @@ public class Game implements Runnable {
                 }
                 // Print ticks and frames each second
                 if (timer >= 1) {
-                    Logger.log("Frames per Second: %d", frames);
+                    Logger.trace("Frames per Second: %d", frames);
                     frames = 0;
                     timer = 0;
                 }
             } catch (Exception e) {
-                Logger.log(ExceptionUtils.getStackTrace(e));
+                Logger.warn(ExceptionUtils.getStackTrace(e));
                 e.printStackTrace();
                 stop(1);
             }
@@ -246,7 +246,7 @@ public class Game implements Runnable {
             currentScene.start();
             physics.setScene(currentScene);
             renderer.setScene(currentScene);
-            Logger.log("Game: Loaded scene \"%s\"", currentScene.getName());
+            Logger.trace("Game: Loaded scene \"%s\"", currentScene.getName());
         }
     }
 

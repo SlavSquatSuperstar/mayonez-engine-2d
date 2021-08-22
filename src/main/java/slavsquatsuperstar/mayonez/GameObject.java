@@ -119,7 +119,7 @@ public class GameObject {
                 if (cls.isAssignableFrom(c.getClass()))
                     return cls.cast(c);
         } catch (ClassCastException e) { // This shouldn't happen!
-            Logger.log("GameObject: Error accessing %s component", cls.getSimpleName());
+            Logger.warn("GameObject: Error accessing %s component", cls.getSimpleName());
             Logger.log(e.getStackTrace());
         }
         return null;
