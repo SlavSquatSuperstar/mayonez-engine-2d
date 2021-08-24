@@ -4,7 +4,7 @@ import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.Component;
 import slavsquatsuperstar.mayonez.*;
-import slavsquatsuperstar.mayonez.assets.Assets;
+import slavsquatsuperstar.fileio.Assets;
 
 import javax.imageio.ImageIO;
 import java.awt.*;

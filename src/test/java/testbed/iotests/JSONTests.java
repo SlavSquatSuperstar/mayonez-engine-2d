@@ -2,7 +2,7 @@ package testbed.iotests;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import slavsquatsuperstar.mayonez.assets.JSONFile;
+import slavsquatsuperstar.fileio.JSONFile;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -20,12 +20,12 @@ public class JSONTests {
 
     @BeforeAll
     public static void readLocalJSONFile() {
-        json = new JSONFile("src/test/resources/properties.json", false);
+        json = new JSONFile("src/test/resources/testassets/properties.json", false);
     }
 
     @Test
     public void readClasspathJSONFile() {
-        JSONFile json = new JSONFile("properties.json", true);
+        JSONFile json = new JSONFile("testassets/properties.json", true);
         json.read();
     }
 
@@ -49,7 +49,7 @@ public class JSONTests {
 
     @Test
     public void savePropertiesToJSON() {
-        JSONFile json = new JSONFile("src/test/resources/foobar.json", false);
+        JSONFile json = new JSONFile("src/test/resources/testassets/foobar/foobar.json", false);
         json.setProperty("time", LocalTime.now());
         json.setProperty("date", LocalDate.now());
         json.save();

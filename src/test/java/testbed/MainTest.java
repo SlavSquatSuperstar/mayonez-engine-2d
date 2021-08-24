@@ -1,9 +1,5 @@
 package testbed;
 
-import org.apache.commons.io.IOUtils;
-import slavsquatsuperstar.mayonez.Logger;
-
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,19 +12,6 @@ public class MainTest {
 //        myGenerator.addListener(myListener1);
 //        myGenerator.addListener(myListener2);
 //        myGenerator.createEvent(new Event("Clankers inbound!"));
-
-//        URL root = ClassLoader.getSystemResource("assets");
-//        Logger.log("Root = %s", root.getPath());
-
-//        Enumeration<URL> resources = Thread.currentThread().getContextClassLoader().getResources("assets/");
-//        while (resources.hasMoreElements()) {
-//            URL url = resources.nextElement();
-//            System.out.println(url);
-//            System.out.println(new Scanner((InputStream) url.getContent()).useDelimiter("\\A").next());
-//        }
-
-        List<String> files = IOUtils.readLines(ClassLoader.getSystemResourceAsStream("assets/"), StandardCharsets.UTF_8);
-        files.forEach(f -> Logger.log(files.toString()));
     }
 
     interface EventListener {

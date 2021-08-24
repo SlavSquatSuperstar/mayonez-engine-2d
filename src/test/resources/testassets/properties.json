@@ -7,6 +7,6 @@
 	"uses_dependencies": "TRUE",
 	"languages": [
 		"Java",
-		"Groovy"
+		"Kotlin"
 	]
 }

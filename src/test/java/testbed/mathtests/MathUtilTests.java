@@ -2,7 +2,6 @@ package testbed.mathtests;
 
 import org.apache.commons.lang3.math.NumberUtils;
 import org.junit.jupiter.api.Test;
-import slavsquatsuperstar.mayonez.Logger;
 import slavsquatsuperstar.math.MathUtils;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -101,7 +100,6 @@ public class MathUtilTests {
         int max = 20;
         for (int i = 0; i < nums.length; i++)
             nums[i] = MathUtils.random(min, max);
-        Logger.log("Min: %d, Max: %d", NumberUtils.min(nums), NumberUtils.max(nums));
         assertTrue(NumberUtils.min(nums) >= min);
         assertTrue(NumberUtils.max(nums) <= max);
     }
@@ -113,7 +111,6 @@ public class MathUtilTests {
         int max = 0;
         for (int i = 0; i < nums.length; i++)
             nums[i] = MathUtils.random(min, max);
-        Logger.log("Min: %d, Max: %d", NumberUtils.min(nums), NumberUtils.max(nums));
         assertTrue(NumberUtils.min(nums) >= min);
         assertTrue(NumberUtils.max(nums) <= max);
     }

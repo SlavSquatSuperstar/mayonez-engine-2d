@@ -1,4 +1,4 @@
-package slavsquatsuperstar.mayonez.assets;
+package slavsquatsuperstar.fileio;
 
 import slavsquatsuperstar.mayonez.Logger;
 import slavsquatsuperstar.mayonez.Preferences;
