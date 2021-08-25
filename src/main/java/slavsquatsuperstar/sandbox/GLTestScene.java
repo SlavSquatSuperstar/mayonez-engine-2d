@@ -1,9 +1,9 @@
-package slavsquatsuperstar.game;
+package slavsquatsuperstar.sandbox;
 
 import org.lwjgl.BufferUtils;
-import slavsquatsuperstar.mayonez.Logger;
 import slavsquatsuperstar.mayonezgl.GameGL;
 import slavsquatsuperstar.mayonezgl.SceneGL;
+import slavsquatsuperstar.mayonezgl.renderer.Shader;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -14,27 +14,8 @@ import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
 public class GLTestScene extends SceneGL {
 
-    private String vertexShaderSrc = "#version 330 core\n" +
-            "\n" +
-            "layout (location=0) in vec3 aPos;\n" +
-            "layout (location=1) in vec4 aColor;\n" +
-            "out vec4 fColor;\n" +
-            "\n" +
-            "void main()\n" +
-            "{\n" +
-            "    fColor = aColor;\n" +
-            "    gl_Position = vec4(aPos, 1.0);\n" +
-            "}";
-    private String fragmentShaderSrc = "#version 330 core\n" +
-            "\n" +
-            "in vec4 fColor;\n" +
-            "out vec4 color;\n" +
-            "\n" +
-            "void main()\n" +
-            "{\n" +
-            "    clor = fColor;\n" +
-            "}";
-    private int vertexID, fragmentID, shaderProgram;
+    private Shader shader;
+
     private float[] vertexArray = { // VBO: position, color
             0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, // Bottom right 0
             -0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, // Top left     1
@@ -53,6 +34,7 @@ public class GLTestScene extends SceneGL {
 
     public GLTestScene() {
         super("LWJGL Test Scene");
+        shader = new Shader("assets/shaders/default.glsl");
     }
 
     public static void main(String[] args) {
@@ -63,48 +45,6 @@ public class GLTestScene extends SceneGL {
 
     @Override
     public void init() {
-        // Compile Vertex Shader
-        vertexID = glCreateShader(GL_VERTEX_SHADER);
-        glShaderSource(vertexID, vertexShaderSrc);
-        glCompileShader(vertexID);
-
-        // Check for compile errors
-        int success = glGetShaderi(vertexID, GL_COMPILE_STATUS);
-        if (success == GL_FALSE) {
-            Logger.warn("Error: Could not compile \"defaultshader.glsl\" vertex shader");
-            Logger.warn(glGetShaderInfoLog(vertexID));
-            GameGL.instance().stop(1);
-        }
-        Logger.trace("Successfully compiled \"defaultshader.glsl\" vertex shader");
-
-        // Repeat for Fragment Shader
-        fragmentID = glCreateShader(GL_FRAGMENT_SHADER);
-        glShaderSource(fragmentID, fragmentShaderSrc);
-        glCompileShader(fragmentID);
-
-        // Check for compile errors
-        success = glGetShaderi(fragmentID, GL_COMPILE_STATUS);
-        if (success == GL_FALSE) {
-            Logger.warn("Error: Could not compile \"defaultshader.glsl\" fragment shader");
-            Logger.warn(glGetShaderInfoLog(fragmentID));
-            GameGL.instance().stop(1);
-        }
-        Logger.trace("Successfully compiled \"defaultshader.glsl\" fragment shader");
-
-        // Link shaders
-        shaderProgram = glCreateProgram();
-        glAttachShader(shaderProgram, vertexID);
-        glAttachShader(shaderProgram, fragmentID);
-        glLinkProgram(shaderProgram);
-
-        success = glGetProgrami(shaderProgram, GL_LINK_STATUS);
-        if (success == GL_FALSE) {
-            Logger.warn("Error: Could not link \"defaultshader.glsl\" shaders");
-            Logger.warn(glGetProgramInfoLog(shaderProgram));
-            GameGL.instance().stop(1);
-        }
-        Logger.trace("Successfully linked \"defaultshader.glsl\" shaders");
-
         // Generate VAO
         vaoID = glGenVertexArrays();
         glBindVertexArray(vaoID);
@@ -147,7 +87,7 @@ public class GLTestScene extends SceneGL {
         super.render();
 
         // Bind shader and VAO
-        glUseProgram(shaderProgram);
+        shader.bind();
         glBindVertexArray(vaoID);
 
         // Enable vertex attribute pointers
@@ -158,10 +98,7 @@ public class GLTestScene extends SceneGL {
         glDrawElements(GL_TRIANGLES, elementArray.length, GL_UNSIGNED_INT, 0);
 
         // Unbind everything
-        glDisableVertexAttribArray(0);
-        glDisableVertexAttribArray(1);
-        glBindVertexArray(0);
-        glUseProgram(0);
+        shader.detach();
     }
 
 }

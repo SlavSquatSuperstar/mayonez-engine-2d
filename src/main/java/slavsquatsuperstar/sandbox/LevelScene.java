@@ -1,26 +1,21 @@
-package slavsquatsuperstar.game;
+package slavsquatsuperstar.sandbox;
 
 import slavsquatsuperstar.math.Vec2;
-import slavsquatsuperstar.mayonez.*;
+import slavsquatsuperstar.mayonez.Colors;
+import slavsquatsuperstar.mayonez.GameObject;
+import slavsquatsuperstar.mayonez.Preferences;
+import slavsquatsuperstar.mayonez.Scene;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
 import slavsquatsuperstar.mayonez.physics2d.colliders.AlignedBoxCollider2D;
 import slavsquatsuperstar.mayonez.physics2d.colliders.Collider2D;
 import slavsquatsuperstar.mayonez.renderer.DebugDraw;
-import slavsquatsuperstar.mayonez.renderer.Grid;
 
 import java.awt.*;
 
-public class LevelEditorScene extends Scene {
+public class LevelScene extends Scene {
 
-    public LevelEditorScene(String name) {
-        super(name, Preferences.SCREEN_WIDTH, Preferences.SCREEN_HEIGHT, 42);
-        setGravity(new Vec2());
-    }
-
-    public static void main(String[] args) {
-        Game game = Game.instance();
-        game.start();
-        Game.loadScene(new LevelEditorScene("Level Editor"));
+    public LevelScene(String name) {
+        super(name, (int) (Preferences.SCREEN_WIDTH * 1.5), (int) (Preferences.SCREEN_HEIGHT * 1.0), 42);
     }
 
     @Override
@@ -41,13 +36,6 @@ public class LevelEditorScene extends Scene {
         });
 
         addObject(new Player("Player", new Vec2(5, 5)));
-
-        addObject(new GameObject("Grid", new Vec2()) {
-            @Override
-            protected void init() {
-                addComponent(new Grid(getCellSize(), getCellSize()));
-            }
-        });
     }
 
 }

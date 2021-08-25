@@ -1,6 +1,6 @@
 package slavsquatsuperstar;
 
-import slavsquatsuperstar.game.GLTestScene;
+import slavsquatsuperstar.sandbox.GLTestScene;
 import slavsquatsuperstar.mayonezgl.GameGL;
 
 public class Main {

@@ -1,4 +1,4 @@
-package slavsquatsuperstar.game;
+package slavsquatsuperstar.sandbox;
 
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.*;
