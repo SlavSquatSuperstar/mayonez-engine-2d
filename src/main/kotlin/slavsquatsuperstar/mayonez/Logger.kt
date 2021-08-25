@@ -1,5 +1,6 @@
 package slavsquatsuperstar.mayonez
 
+import slavsquatsuperstar.fileio.AssetType
 import slavsquatsuperstar.fileio.TextFile
 import java.io.File
 import java.time.LocalDate
@@ -32,7 +33,7 @@ object Logger {
                     logCount++
 
             logFilename = "${logsDirectory.path}/$today-${++logCount}.log"
-            logFile = TextFile(logFilename, false)
+            logFile = TextFile(logFilename, AssetType.OUTPUT)
         }
     }
 

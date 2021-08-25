@@ -27,7 +27,7 @@ public class GLTestScene extends SceneGL {
              *  1   2
              *  3   0
              */
-            2, 1, 0, // Top right triangle
+            2, 1, 0, // top right triangle
             0, 1, 3  // bottom left triangle
     };
     private int vaoID, vboID, eboID;
@@ -51,7 +51,7 @@ public class GLTestScene extends SceneGL {
 
         // Send vertices to GL
         FloatBuffer vertexBuffer = BufferUtils.createFloatBuffer(vertexArray.length);
-        vertexBuffer.put(vertexArray).flip();
+        vertexBuffer.put(vertexArray).flip(); // flip into screen coordinates
         // Create VBO with vertices
         vboID = glGenBuffers();
         glBindBuffer(GL_ARRAY_BUFFER, vboID);

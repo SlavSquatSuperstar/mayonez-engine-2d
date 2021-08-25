@@ -1,10 +1,11 @@
 package slavsquatsuperstar.mayonez.renderer;
 
+import slavsquatsuperstar.fileio.AssetType;
+import slavsquatsuperstar.fileio.Assets;
 import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.Component;
 import slavsquatsuperstar.mayonez.*;
-import slavsquatsuperstar.fileio.Assets;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -25,7 +26,7 @@ public class Sprite extends Component {
     public Sprite(String filename) {
         filename = TEXTURES_DIRECTORY + filename;
         try {
-            this.image = ImageIO.read(Objects.requireNonNull(Assets.getAsset(filename, true)).path);
+            this.image = ImageIO.read(Objects.requireNonNull(Objects.requireNonNull(Assets.getAsset(filename, AssetType.LOCAL)).path));
         } catch (Exception e) {
             Logger.log("Sprite: Error loading image \"%s\"", filename);
             Game.instance().stop(-1);

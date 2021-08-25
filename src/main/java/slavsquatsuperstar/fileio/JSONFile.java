@@ -20,16 +20,22 @@ import java.nio.charset.StandardCharsets;
  *
  * @author SlavSquatSuperstar
  */
-public class JSONFile extends Asset {
+public class JSONFile extends Asset{
 
     private JSONObject json;
 
-    public JSONFile(String filename, boolean isClasspath) {
-        super(filename, isClasspath);
+    public JSONFile(String filename, AssetType type) {
+        super(filename, type);
         read();
     }
 
     // File I/O Methods
+
+    private static void logError(String key, String type) {
+        Logger.warn("JSONFile: Value at \"%s\" is not %s.", key, type);
+    }
+
+    // JSON Methods
 
     /**
      * Parses the JSON object stored in this file. Called automatically upon object creation.
@@ -46,7 +52,7 @@ public class JSONFile extends Asset {
         }
     }
 
-    // JSON Methods
+    // JSON Getters and Setters
 
     /**
      * Saves JSON data to this file.
@@ -61,8 +67,6 @@ public class JSONFile extends Asset {
             Logger.warn("TextFile: Could not save to file");
         }
     }
-
-    // JSON Getters and Setters
 
     public JSONObject getObj(String key) {
         try {
@@ -120,10 +124,6 @@ public class JSONFile extends Asset {
 
     public void setProperty(String key, Object value) {
         json.put(key, value);
-    }
-
-    private static void logError(String key, String type) {
-        Logger.warn("JSONFile: Value at \"%s\" is not %s.", key, type);
     }
 
 }

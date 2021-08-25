@@ -1,6 +1,7 @@
 package slavsquatsuperstar.mayonezgl;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import slavsquatsuperstar.fileio.Assets;
 import slavsquatsuperstar.mayonez.Logger;
 import slavsquatsuperstar.mayonez.Preferences;
 import slavsquatsuperstar.mayonez.Time;
@@ -48,6 +49,9 @@ public class GameGL { // can't implement runnable otherwise GLFW will crash
         Logger.log("Engine: Starting");
         Logger.log("Welcome to %s %s", Preferences.TITLE, Preferences.VERSION);
         running = true;
+
+        Logger.log("Engine: Loading assets");
+        Assets.scanAllResources("assets"); // Scan all files inside resources root -> assets folder
 
         window.start();
         if (GameGL.scene != null)

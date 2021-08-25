@@ -1,9 +1,9 @@
 package slavsquatsuperstar.fileio;
 
-import slavsquatsuperstar.mayonez.Logger;
-import slavsquatsuperstar.mayonez.Preferences;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import slavsquatsuperstar.mayonez.Logger;
+import slavsquatsuperstar.mayonez.Preferences;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -19,10 +19,10 @@ import java.util.Arrays;
  *
  * @author SlavSquatSuperstar
  */
-public class TextFile extends Asset {
+public class TextFile extends Asset{
 
-    public TextFile(String filename, boolean isClasspath) {
-        super(filename, isClasspath);
+    public TextFile(String filename, AssetType type) {
+        super(filename, type);
     }
 
     /**

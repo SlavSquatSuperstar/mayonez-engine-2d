@@ -1,5 +1,6 @@
 package slavsquatsuperstar.mayonezgl.renderer;
 
+import slavsquatsuperstar.fileio.AssetType;
 import slavsquatsuperstar.fileio.TextFile;
 import slavsquatsuperstar.mayonez.Logger;
 import slavsquatsuperstar.mayonezgl.GameGL;
@@ -26,7 +27,7 @@ public class Shader {
     public void parse() {
         try {
             // Read the shader file
-            TextFile shaderFile = new TextFile(filename, true);
+            TextFile shaderFile = new TextFile(filename, AssetType.CLASSPATH);
             String source = shaderFile.readText();
             String[] shaders = source.split("(#type)( )+"); // split into vertex and fragment
 
