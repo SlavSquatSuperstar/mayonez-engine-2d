@@ -1,11 +1,14 @@
 package slavsquatsuperstar.mayonezgl.renderer;
 
+import org.joml.Matrix4f;
+import org.lwjgl.BufferUtils;
 import slavsquatsuperstar.fileio.AssetType;
 import slavsquatsuperstar.fileio.TextFile;
 import slavsquatsuperstar.mayonez.Logger;
 import slavsquatsuperstar.mayonezgl.GameGL;
 
 import java.io.IOException;
+import java.nio.FloatBuffer;
 
 import static org.lwjgl.opengl.GL11.GL_FALSE;
 import static org.lwjgl.opengl.GL20.*;
@@ -24,7 +27,7 @@ public class Shader {
         compile();
     }
 
-    public void parse() {
+    private void parse() {
         try {
             // Read the shader file
             TextFile shaderFile = new TextFile(filename, AssetType.CLASSPATH);
@@ -58,7 +61,7 @@ public class Shader {
         Logger.log("fragment = %s", fragmentSrc);
     }
 
-    public void compile() {
+    private void compile() {
         // Compile Vertex Shader
         int vertexID = glCreateShader(GL_VERTEX_SHADER);
         glShaderSource(vertexID, vertexSrc);
@@ -105,11 +108,24 @@ public class Shader {
         glUseProgram(shaderProgramID);
     }
 
-    public void detach() {
+    public void unbind() {
         glDisableVertexAttribArray(0);
         glDisableVertexAttribArray(1);
         glBindVertexArray(0);
         glUseProgram(0);
+    }
+
+    public void uploadMat4f(String varName, Matrix4f mat4) {
+        int varLocation = glGetUniformLocation(shaderProgramID, varName);
+        FloatBuffer matBuffer = BufferUtils.createFloatBuffer(16);
+        mat4.get(matBuffer);
+        glUniformMatrix4fv(varLocation, false, matBuffer);
+    }
+
+    public void uploadTexture(String varName, int slot) {
+        int varLocation = glGetUniformLocation(shaderProgramID, varName);
+        bind();
+        glUniform1i(varLocation, slot);
     }
 
 }

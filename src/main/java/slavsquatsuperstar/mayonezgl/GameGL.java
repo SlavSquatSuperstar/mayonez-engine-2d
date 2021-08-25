@@ -16,16 +16,19 @@ import static org.lwjgl.glfw.GLFW.glfwGetTime;
 public class GameGL { // can't implement runnable otherwise GLFW will crash
 
     // Singleton Fields
-    public static GameGL game;
+    public static final int WIDTH = 1080;
+    public static final int HEIGHT = 720;
+    private static GameGL game;
 
     // Game Fields
     private static boolean running = false;
     private static SceneGL scene;
+
     // Game Layers
     private final WindowGL window;
 
     public GameGL() {
-        window = new WindowGL("Mayonez + LWJGL", 1080, 720);
+        window = new WindowGL("Mayonez + LWJGL", WIDTH, HEIGHT);
     }
 
     public static GameGL instance() {
