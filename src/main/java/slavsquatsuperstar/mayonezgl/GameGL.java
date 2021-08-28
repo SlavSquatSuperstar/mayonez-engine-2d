@@ -5,6 +5,7 @@ import slavsquatsuperstar.fileio.Assets;
 import slavsquatsuperstar.mayonez.Logger;
 import slavsquatsuperstar.mayonez.Preferences;
 import slavsquatsuperstar.mayonez.Time;
+import slavsquatsuperstar.mayonezgl.renderer.RendererGL;
 
 import static org.lwjgl.glfw.GLFW.glfwGetTime;
 
@@ -27,6 +28,9 @@ public class GameGL { // can't implement runnable otherwise GLFW will crash
     private static final int WIDTH = Preferences.SCREEN_WIDTH;
     private static final int HEIGHT = Preferences.SCREEN_HEIGHT;
 
+    // Game Layers
+    private static final RendererGL renderer = new RendererGL();
+
     public GameGL() {
         window = new WindowGL("Mayonez + LWJGL", WIDTH, HEIGHT);
     }
@@ -35,12 +39,19 @@ public class GameGL { // can't implement runnable otherwise GLFW will crash
         return game == null ? game = new GameGL() : game;
     }
 
-    // Scene Methods
+    // Getter Methods
+
+    public static SceneGL getScene() {
+        return GameGL.scene;
+    }
 
     public static void setScene(SceneGL scene) {
         GameGL.scene = scene;
-        if (GameGL.scene != null && running)
-            GameGL.scene.start();
+        startScene();
+    }
+
+    public static RendererGL getRenderer() {
+        return renderer;
     }
 
     // Game Loop Methods
@@ -56,7 +67,7 @@ public class GameGL { // can't implement runnable otherwise GLFW will crash
         Assets.scanResources("assets"); // Load all game assets
 
         window.start();
-        if (GameGL.scene != null) GameGL.scene.start();
+        startScene();
         run();
     }
 
@@ -106,8 +117,6 @@ public class GameGL { // can't implement runnable otherwise GLFW will crash
                     timer = 0;
                     frames = 0;
                 }
-
-                window.endFrame();
             }
         } catch (Exception e) {
             Logger.log(ExceptionUtils.getStackTrace(e));
@@ -123,7 +132,20 @@ public class GameGL { // can't implement runnable otherwise GLFW will crash
     }
 
     public void render() {
-        window.render();
-        if (scene != null) scene.render();
+        window.render(() -> {
+            renderer.render();
+            if (scene != null) scene.render();
+        });
     }
+
+    // Helper Methods
+
+    private static void startScene() {
+        if (scene != null && running) {
+            scene.start();
+            scene.getObjects(null).forEach(renderer::addObject);
+            Logger.trace("Game: Loaded scene \"%s\"", scene.getName());
+        }
+    }
+
 }

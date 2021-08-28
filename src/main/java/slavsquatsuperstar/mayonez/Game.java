@@ -33,10 +33,10 @@ public class Game implements Runnable {
     private static final int HEIGHT = Preferences.SCREEN_HEIGHT;
 
     // Game Layers
-    private Scene currentScene;
-    private Physics2D physics;
-    private Renderer renderer;
-    private IMGUI imgui;
+    private static Scene currentScene;
+    private static Physics2D physics;
+    private static Renderer renderer;
+    private static IMGUI imgui;
 
     private Game() {
         // Set up the window
@@ -180,7 +180,6 @@ public class Game implements Runnable {
             renderer.render(g2);
             imgui.render(g2);
         });
-
     }
 
     // Helper Methods
@@ -234,8 +233,8 @@ public class Game implements Runnable {
     private void startCurrentScene() {
         if (currentScene != null && running) {
             currentScene.start();
-            physics.setScene(currentScene);
-            renderer.setScene(currentScene);
+            Game.getPhysics().setScene(currentScene);
+            Game.getRenderer().setScene(currentScene);
             Logger.trace("Game: Loaded scene \"%s\"", currentScene.getName());
         }
     }

@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 public abstract class Scene {
 
     // Object Fields
-    private final List<GameObject> objects;
+    protected final List<GameObject> objects;
     private final List<SceneModifier> toModify; // Use a separate list to avoid concurrent exceptions
     private final Camera camera;
 
@@ -122,13 +122,9 @@ public abstract class Scene {
         SceneModifier sm = () -> {
             objects.add(obj.setScene(this));
             obj.start(); // add object components so renderer and physics can access it
-            if (started) {
-                Game.getRenderer().add(obj);
-                Game.getPhysics().addObject(obj);
-            }
+            onAddObject(obj);
             Logger.trace("Added object \"%s\" to scene \"%s\"", obj.name, this.name);
         };
-
         if (started) toModify.add(sm);
         else sm.modify();
     }
@@ -137,10 +133,21 @@ public abstract class Scene {
         obj.destroy();
         toModify.add(() -> {
             objects.remove(obj);
-            Game.getRenderer().remove(obj);
-            Game.getPhysics().removeObject(obj);
-            Logger.trace("Removed object \"%s\" to scene \"%s\"", obj.name, this.name);
+            onRemoveObject(obj);
+            Logger.trace("Removed object \"%s\" from scene \"%s\"", obj.name, this.name);
         });
+    }
+
+    protected void onAddObject(GameObject obj) {
+        if (started) {
+            Game.getRenderer().add(obj);
+            Game.getPhysics().addObject(obj);
+        }
+    }
+
+    protected void onRemoveObject(GameObject obj) {
+        Game.getRenderer().remove(obj);
+        Game.getPhysics().removeObject(obj);
     }
 
     /**
@@ -232,7 +239,6 @@ public abstract class Scene {
         return String.format("%s (%s)", name, getClass().isAnonymousClass() ?
                 "Scene" : getClass().getSimpleName());
     }
-
 
     /**
      * Flags a {@link GameObject} to be dynamically added or removed from the scene.

@@ -4,6 +4,7 @@ import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
+import slavsquatsuperstar.mayonezgl.renderer.RenderableGL;
 
 import java.nio.IntBuffer;
 
@@ -116,13 +117,15 @@ public class WindowGL {
             glfwSetWindowShouldClose(window, true); // Exit program by pressing escape
     }
 
-    public void render() {
+    public void render(RenderableGL r) {
         glClearColor(1f, 1f, 1f, 1f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear the screen
+        r.render();
+        glfwSwapBuffers(window); // swap the color buffers
     }
 
     public void endFrame() {
-        glfwSwapBuffers(window); // swap the color buffers
+
         // Reset input data
         KeyInputGL.endFrame();
         MouseInputGL.endFrame();

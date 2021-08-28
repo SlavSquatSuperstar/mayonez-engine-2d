@@ -60,7 +60,7 @@ public class PhysicsTestScene extends Scene {
             }
         });
 
-        GameObject player = new GameObject("Player Shape", new Vec2(20, 10)) {
+        GameObject player = new GameObject("Player Shape", new Vec2(30, 10)) {
             @Override
             protected void init() {
                 float radius = 4f;
