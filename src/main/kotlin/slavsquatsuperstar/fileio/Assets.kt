@@ -76,7 +76,7 @@ object Assets {
      * @return if a file exists at the given path
      */
     @JvmStatic
-    fun hasAsset(filename: String): Boolean = ASSETS[filename] != null
+    fun hasAsset(filename: String): Boolean = filename in ASSETS
 
     /**
      * Retrieves the [Asset] at the given location, if it exists.

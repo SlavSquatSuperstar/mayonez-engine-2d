@@ -46,8 +46,7 @@ public class GameGL { // can't implement runnable otherwise GLFW will crash
     // Game Loop Methods
 
     public void start() {
-        if (running) // Don't start the game if already running
-            return;
+        if (running) return; // Don't start the game if already running
 
         running = true;
         Logger.log("Engine: Starting");
@@ -57,14 +56,12 @@ public class GameGL { // can't implement runnable otherwise GLFW will crash
         Assets.scanResources("assets"); // Load all game assets
 
         window.start();
-        if (GameGL.scene != null)
-            GameGL.scene.start();
+        if (GameGL.scene != null) GameGL.scene.start();
         run();
     }
 
     public void stop(int status) {
-        if (!running)
-            return;
+        if (!running) return;
 
         Logger.log("Engine: Stopping with exit code %d", status);
         running = false;
@@ -122,13 +119,11 @@ public class GameGL { // can't implement runnable otherwise GLFW will crash
     }
 
     public void update(float dt) {
-        if (scene != null)
-            scene.update(dt);
+        if (scene != null) scene.update(dt);
     }
 
     public void render() {
         window.render();
-        if (scene != null)
-            scene.render();
+        if (scene != null) scene.render();
     }
 }

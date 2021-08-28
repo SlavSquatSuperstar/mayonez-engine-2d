@@ -113,8 +113,8 @@ public class GLTestScene extends SceneGL {
         texture.bind();
 
         // Apply camera transforms
-        shader.uploadMat4f("uProjection", camera.getProjectionMatrix());
-        shader.uploadMat4f("uView", camera.getViewMatrix());
+        shader.uploadMat4("uProjection", camera.getProjectionMatrix());
+        shader.uploadMat4("uView", camera.getViewMatrix());
         glBindVertexArray(vaoID);
 
         // Enable vertex attribute pointers
@@ -125,6 +125,9 @@ public class GLTestScene extends SceneGL {
         glDrawElements(GL_TRIANGLES, elementArray.length, GL_UNSIGNED_INT, 0);
 
         // Unbind everything
+        glDisableVertexAttribArray(0);
+        glDisableVertexAttribArray(1);
+        glBindVertexArray(0);
         shader.unbind();
     }
 

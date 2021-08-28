@@ -1,6 +1,6 @@
 package slavsquatsuperstar.mayonezgl.renderer;
 
-import org.joml.Matrix4f;
+import org.joml.*;
 import org.lwjgl.BufferUtils;
 import slavsquatsuperstar.fileio.TextFile;
 import slavsquatsuperstar.mayonez.Logger;
@@ -11,7 +11,6 @@ import java.nio.FloatBuffer;
 
 import static org.lwjgl.opengl.GL11.GL_FALSE;
 import static org.lwjgl.opengl.GL20.*;
-import static org.lwjgl.opengl.GL30.glBindVertexArray;
 
 public class Shader {
 
@@ -101,27 +100,56 @@ public class Shader {
     }
 
     public void bind() {
-        glUseProgram(shaderProgramID);
+        if (!used) {
+            glUseProgram(shaderProgramID);
+            used = true;
+        }
     }
 
     public void unbind() {
-        glDisableVertexAttribArray(0);
-        glDisableVertexAttribArray(1);
-        glBindVertexArray(0);
         glUseProgram(0);
+        used = false;
     }
 
-    public void uploadMat4f(String varName, Matrix4f mat4) {
-        int varLocation = glGetUniformLocation(shaderProgramID, varName);
+    public void uploadMat4(String varName, Matrix4f mat) {
         FloatBuffer matBuffer = BufferUtils.createFloatBuffer(16);
-        mat4.get(matBuffer);
-        glUniformMatrix4fv(varLocation, false, matBuffer);
+        mat.get(matBuffer); // Compress matrix into 16x1 array
+        glUniformMatrix4fv(uploadVariable(varName), false, matBuffer);
+    }
+
+    public void uploadMat3(String varName, Matrix3f mat) {
+        FloatBuffer matBuffer = BufferUtils.createFloatBuffer(9);
+        mat.get(matBuffer);
+        glUniformMatrix4fv(uploadVariable(varName), false, matBuffer);
+    }
+
+    public void uploadVec4(String varName, Vector4f vec) {
+        glUniform4f(uploadVariable(varName), vec.x, vec.y, vec.z, vec.w);
+    }
+
+    public void uploadVec3(String varName, Vector3f vec) {
+        glUniform3f(uploadVariable(varName), vec.x, vec.y, vec.z);
+    }
+
+    public void uploadVec2(String varName, Vector2f vec) {
+        glUniform2f(uploadVariable(varName), vec.x, vec.y);
+    }
+
+    public void uploadFloat(String varName, float f) {
+        glUniform1f(uploadVariable(varName), f);
+    }
+
+    public void uploadInt(String varName, int i) {
+        glUniform1i(uploadVariable(varName), i);
     }
 
     public void uploadTexture(String varName, int slot) {
-        int varLocation = glGetUniformLocation(shaderProgramID, varName);
+        glUniform1i(uploadVariable(varName), slot);
+    }
+
+    private int uploadVariable(String varName) {
         bind();
-        glUniform1i(varLocation, slot);
+        return glGetUniformLocation(shaderProgramID, varName);
     }
 
 }

@@ -166,8 +166,7 @@ public class Game implements Runnable {
             return;
         }
 
-        if (currentScene != null)
-            currentScene.update(dt);
+        if (currentScene != null) currentScene.update(dt);
         // TODO multithread physics, set time step higher than refresh rate for smoother results
         physics.physicsUpdate(dt);
     }
@@ -177,8 +176,7 @@ public class Game implements Runnable {
      */
     public void render() throws Exception {
         window.render((g2) -> {
-            if (null != currentScene)
-                currentScene.render(g2);
+            if (null != currentScene) currentScene.render(g2);
             renderer.render(g2);
             imgui.render(g2);
         });
@@ -191,8 +189,7 @@ public class Game implements Runnable {
      * Initializes the game engine, displays the window, and starts the current scene (if not null).
      */
     public synchronized void start() {
-        if (running) // don't start if already running
-            return;
+        if (running) return; // Don't start if already running
 
         Logger.log("Engine: Starting %s %s", Preferences.TITLE, Preferences.VERSION);
         running = true;
