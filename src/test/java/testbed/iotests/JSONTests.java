@@ -21,12 +21,12 @@ public class JSONTests {
 
     @BeforeAll
     public static void readLocalJSONFile() {
-        json = new JSONFile("src/test/resources/testassets/properties.json", AssetType.LOCAL);
+        json = new JSONFile("src/test/resources/testassets/properties.json");
     }
 
     @Test
     public void readClasspathJSONFile() {
-        JSONFile json = new JSONFile("testassets/properties.json", AssetType.CLASSPATH);
+        JSONFile json = new JSONFile("testassets/properties.json");
         json.read();
     }
 
@@ -50,7 +50,7 @@ public class JSONTests {
 
     @Test
     public void savePropertiesToJSON() {
-        JSONFile json = new JSONFile("src/test/resources/testassets/foobar/foobar.json", AssetType.OUTPUT);
+        JSONFile json = new JSONFile("src/test/resources/testassets/foobar/foobar.json");
         json.setProperty("time", LocalTime.now());
         json.setProperty("date", LocalDate.now());
         json.save();

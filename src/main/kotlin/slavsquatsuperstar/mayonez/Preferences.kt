@@ -1,6 +1,7 @@
 package slavsquatsuperstar.mayonez
 
 import slavsquatsuperstar.fileio.AssetType
+import slavsquatsuperstar.fileio.Assets
 import slavsquatsuperstar.fileio.JSONFile
 
 /**
@@ -11,7 +12,7 @@ import slavsquatsuperstar.fileio.JSONFile
 object Preferences {
 
     // TODO default compile tile constants
-    private val preferences = JSONFile("preferences.json", AssetType.CLASSPATH)
+    private val preferences = JSONFile(Assets.createAsset("preferences.json", AssetType.CLASSPATH).filename)
 
     // Window
     @JvmField

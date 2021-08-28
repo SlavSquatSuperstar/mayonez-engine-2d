@@ -1,13 +1,13 @@
 package slavsquatsuperstar.fileio;
 
-import slavsquatsuperstar.mayonez.Logger;
-import slavsquatsuperstar.mayonez.Preferences;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
+import slavsquatsuperstar.mayonez.Logger;
+import slavsquatsuperstar.mayonez.Preferences;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -20,12 +20,15 @@ import java.nio.charset.StandardCharsets;
  *
  * @author SlavSquatSuperstar
  */
-public class JSONFile extends Asset{
+public class JSONFile {
 
+    private Asset file;
     private JSONObject json;
 
-    public JSONFile(String filename, AssetType type) {
-        super(filename, type);
+    public JSONFile(String filename) {
+        file = Assets.getAsset(filename);
+        if (file == null)
+            file = Assets.createAsset(filename, AssetType.LOCAL);
         read();
     }
 
@@ -41,10 +44,10 @@ public class JSONFile extends Asset{
      * Parses the JSON object stored in this file. Called automatically upon object creation.
      */
     public void read() {
-        try (InputStream in = inputStream()) {
+        try (InputStream in = file.inputStream()) {
             json = new JSONObject(new JSONTokener(IOUtils.toString(in, Preferences.CHARSET)));
         } catch (FileNotFoundException e) {
-            Logger.warn("JSONFile: File \"%s\" not found", path);
+            Logger.warn("JSONFile: File \"%s\" not found", file.path);
         } catch (IOException e) {
             Logger.warn("TextFile: Could not read file");
         } catch (JSONException e) {
@@ -58,10 +61,10 @@ public class JSONFile extends Asset{
      * Saves JSON data to this file.
      */
     public void save() {
-        try (OutputStream out = outputStream(false)) {
+        try (OutputStream out = file.outputStream(false)) {
             IOUtils.write(json.toString(4).getBytes(StandardCharsets.UTF_8), out);
         } catch (FileNotFoundException e) {
-            Logger.warn("TextFile: File \"%s\" not found\n", path);
+            Logger.warn("TextFile: File \"%s\" not found\n", file.path);
         } catch (IOException e) {
             Logger.warn(ExceptionUtils.getStackTrace(e));
             Logger.warn("TextFile: Could not save to file");

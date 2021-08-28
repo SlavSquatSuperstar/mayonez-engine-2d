@@ -6,6 +6,10 @@ import java.util.List;
 public class MainTest {
 
     public static void main(String[] args) throws Exception {
+//        System.out.println(Arrays.toString(file.listFiles()));
+//        URL url = Assets.getFileURL(file.getName());
+//        System.out.println(Files.isRegularFile(Paths.get(url.toURI())));
+
 //        EventListener myListener1 = event -> Logger.log("Listener 1: %s", event);
 //        EventListener myListener2 = event -> Logger.log("Listener 2 reports: %s", event);
 //        EventGenerator myGenerator = new EventGenerator();

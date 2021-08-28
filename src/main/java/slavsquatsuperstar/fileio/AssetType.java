@@ -1,23 +1,24 @@
 package slavsquatsuperstar.fileio;
 
 /**
- * Where to look for an [Asset] and how to treat it.
+ * Where to look for an {@link Asset} and how to treat it.
  */
 public enum AssetType {
     /**
-     * Found inside the JAR and cannot be modified.
+     * A file inside the JAR which cannot be modified.
      */
     CLASSPATH,
     /**
-     * Found in the external file system and can be modified.
+     * An file in the external file system which can be written to or created.
      */
-    LOCAL,
-    /**
-     * An empty file outside the JAR created upon use
-     */
-    OUTPUT,
+    LOCAL;
 //    /**
 //     * Retrieved from the internet and cannot be modified
 //     */
 //    WEB
+
+    @Override
+    public String toString() {
+        return name().charAt(0) + name().substring(1).toLowerCase();
+    }
 }

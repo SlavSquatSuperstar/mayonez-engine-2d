@@ -2,13 +2,13 @@ package slavsquatsuperstar.mayonez;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import slavsquatsuperstar.fileio.Assets;
+import slavsquatsuperstar.mayonez.physics2d.Physics2D;
+import slavsquatsuperstar.mayonez.renderer.IMGUI;
+import slavsquatsuperstar.mayonez.renderer.Renderer;
 import slavsquatsuperstar.sandbox.LevelEditorScene;
 import slavsquatsuperstar.sandbox.LevelScene;
 import slavsquatsuperstar.sandbox.PhysicsTestScene;
 import slavsquatsuperstar.sandbox.RendererTestScene;
-import slavsquatsuperstar.mayonez.physics2d.Physics2D;
-import slavsquatsuperstar.mayonez.renderer.IMGUI;
-import slavsquatsuperstar.mayonez.renderer.Renderer;
 
 import java.awt.*;
 
@@ -18,10 +18,6 @@ import java.awt.*;
  * @author SlavSquatSuperstar
  */
 public class Game implements Runnable {
-
-    /*
-     * Field Declarations
-     */
 
     // Singleton Fields
     // TODO make start/stop static?
@@ -33,7 +29,8 @@ public class Game implements Runnable {
 
     // Window Fields
     private final IGameWindow window;
-    private int width, height;
+    private static final int WIDTH = Preferences.SCREEN_WIDTH;
+    private static final int HEIGHT = Preferences.SCREEN_HEIGHT;
 
     // Game Layers
     private Scene currentScene;
@@ -41,15 +38,9 @@ public class Game implements Runnable {
     private Renderer renderer;
     private IMGUI imgui;
 
-    /*
-     * Method Declarations
-     */
-
     private Game() {
         // Set up the window
-        width = Preferences.SCREEN_WIDTH;
-        height = Preferences.SCREEN_HEIGHT;
-        window = new Window(Preferences.TITLE + " " + Preferences.VERSION, width, height);
+        window = new Window(Preferences.TITLE + " " + Preferences.VERSION, WIDTH, HEIGHT);
 
         // Add input listeners
         window.addKeyInput(KeyInput.INSTANCE);
@@ -114,7 +105,6 @@ public class Game implements Runnable {
 
     @Override
     public void run() {
-
         // All time values are in seconds
         float lastTime = 0; // Last time the game loop iterated
         float deltaTime = 0; // Time since last frame
@@ -162,7 +152,6 @@ public class Game implements Runnable {
         } // end loop
 
         stop(0);
-
     }
 
     /**
@@ -209,7 +198,7 @@ public class Game implements Runnable {
         running = true;
 
         Logger.log("Engine: Loading assets");
-        Assets.scanAllResources("assets"); // Scan all files inside resources root -> assets folder
+        Assets.scanResources("assets"); // Load all game assets
 
         // Display window
         window.start();

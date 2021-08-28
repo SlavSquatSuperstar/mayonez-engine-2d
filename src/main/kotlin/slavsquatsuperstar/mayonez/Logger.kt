@@ -1,6 +1,5 @@
 package slavsquatsuperstar.mayonez
 
-import slavsquatsuperstar.fileio.AssetType
 import slavsquatsuperstar.fileio.TextFile
 import java.io.File
 import java.time.LocalDate
@@ -16,8 +15,10 @@ object Logger {
     @JvmField
     var logLevel: Int = Preferences.LOG_LEVEL
     private val saveLogs: Boolean = Preferences.SAVE_LOGS
+
+    // Log File Output
     private lateinit var logFilename: String
-    private var logFile: TextFile? = null
+    private lateinit var logFile: TextFile
 
     init {
         if (saveLogs) {
@@ -29,11 +30,10 @@ object Logger {
             val today = LocalDate.now()
             var logCount = 0
             for (f in logsDirectory.listFiles()!!)
-                if (f.name.startsWith(today.toString()))
-                    logCount++
+                if (f.name.startsWith(today.toString())) logCount++
 
             logFilename = "${logsDirectory.path}/$today-${++logCount}.log"
-            logFile = TextFile(logFilename, AssetType.OUTPUT)
+            logFile = TextFile(logFilename)
         }
     }
 
@@ -41,13 +41,11 @@ object Logger {
         val output = StringBuilder("[%02d:%.4f] ".format((Time.time / 60).toInt(), Time.time % 60)) // Time stamp
         try {
             output.append(msg.toString().format(*args)) // Level prefix
-            if (saveLogs) // Always save to log regardless of level
-                logFile!!.append(output.toString())
+            if (saveLogs) logFile.append(output.toString()) // Always save to log regardless of level
         } catch (e: IllegalFormatException) {
             output.append("Logger: Could not format message \"$msg\"")
         } finally {
-            if (level.level >= this.logLevel) // Print to console if high enough level
-                println(output.toString())
+            if (level.level >= this.logLevel) println(output.toString()) // Print to console if high enough level
         }
     }
 
@@ -58,9 +56,7 @@ object Logger {
      * @param args (optional) string format arguments
      */
     @JvmStatic
-    fun log(msg: Any?, vararg args: Any?) {
-        logInternal(msg, *args, level = LogLevel.NORMAL)
-    }
+    fun log(msg: Any?, vararg args: Any?) = logInternal(msg, *args, level = LogLevel.NORMAL)
 
     /**
      * Prints a debug message to the console.
@@ -69,9 +65,7 @@ object Logger {
      * @param args (optional) string format arguments
      */
     @JvmStatic
-    fun trace(msg: Any?, vararg args: Any?) {
-        logInternal("[DEBUG] $msg", *args, level = LogLevel.TRACE)
-    }
+    fun trace(msg: Any?, vararg args: Any?) = logInternal("[DEBUG] $msg", *args, level = LogLevel.TRACE)
 
     /**
      * Prints a warning to the console.
@@ -80,16 +74,14 @@ object Logger {
      * @param args (optional) string format arguments
      */
     @JvmStatic
-    fun warn(msg: Any?, vararg args: Any?) {
-        logInternal("[WARNING] $msg", *args, level = LogLevel.WARNING)
-    }
+    fun warn(msg: Any?, vararg args: Any?) = logInternal("[WARNING] $msg", *args, level = LogLevel.WARNING)
 
     @JvmStatic
     fun printExitMessage() {
         if (saveLogs) log("Logger: Saved log to file \"%s\"", logFilename)
     }
 
-    enum class LogLevel(val level: Int) {
+    private enum class LogLevel(val level: Int) {
         /**
          * A low priority debug message.
          */

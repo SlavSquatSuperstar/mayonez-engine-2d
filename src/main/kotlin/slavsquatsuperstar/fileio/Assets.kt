@@ -7,12 +7,16 @@ import org.reflections.util.ConfigurationBuilder
 import slavsquatsuperstar.mayonez.Logger.trace
 import slavsquatsuperstar.mayonez.Logger.warn
 import java.io.File
+import java.io.IOException
+import java.io.InputStream
+import java.io.OutputStream
 import java.net.MalformedURLException
 import java.net.URL
+import java.nio.file.Path
 import java.util.regex.Pattern
 
 /**
- * A utility class for file I/O and managing the application's resources.
+ * A utility class for file I/O and managing the application's resources safely.
  *
  * @author SlavSquatSuperstar
  */
@@ -22,14 +26,48 @@ object Assets {
 
     private val ASSETS = HashMap<String, Asset?>()
 
+    /**
+     * Recursively searches a resource directory inside the JAR and adds all assets.
+     *
+     * @param directory a folder inside the jar
+     */
     @JvmStatic
-    fun scanAllResources(directory: String) {
+    fun scanResources(directory: String) {
         val reflections = Reflections(
             ConfigurationBuilder()
                 .setUrls(ClasspathHelper.forPackage(directory)).setScanners(ResourcesScanner())
         )
-        val assets = reflections.getResources(Pattern.compile(".*\\.*"))
-        assets.forEach { createAsset(it, AssetType.CLASSPATH) } // Create an asset from each path
+        val resources = reflections.getResources(Pattern.compile(".*\\.*"))
+        resources.forEach { createAsset(it, AssetType.CLASSPATH) } // Create an asset from each path
+        trace("Assets: Created ${resources.size} resources inside $directory")
+    }
+
+    /**
+     * Recursively searches a file directory outside the JAR and adds all assets.
+     *
+     * @param directory a folder outside the jar
+     */
+    @JvmStatic
+    fun scanFiles(directory: String) {
+        val files = searchFiles(directory)
+        files.forEach { createAsset(it, AssetType.LOCAL) }
+        trace("Assets: Created ${files.size} files inside $directory")
+    }
+
+    @JvmStatic
+    fun searchFiles(directory: String): MutableList<String> {
+        val folder = File(directory)
+        val files: MutableList<String> = ArrayList()
+        if (folder.listFiles() == null) return files // If file return empty list
+
+        for (f in folder.listFiles()!!) {
+            if (f.name == ".DS_Store") continue
+            val filename = Path.of(directory, f.name).toString()
+            if (f.isFile) files.add(filename) else {
+                files.addAll(searchFiles(filename))
+            }
+        }
+        return files
     }
 
     // Asset Accessors / Mutators
@@ -41,46 +79,61 @@ object Assets {
      * @return if a file exists at the given path
      */
     @JvmStatic
-    fun hasAsset(filename: String): Boolean = filename in ASSETS && ASSETS[filename] != null
+    fun hasAsset(filename: String): Boolean = ASSETS[filename] != null
 
     /**
-     * Creates a new [Asset] and stores it for future use.
-     *
-     * @param filename    the location of the asset
-     * @param type whether this asset is a classpath resource and not an external file
-     * @return if a file was successfully created
-     */
-    @JvmStatic
-    fun createAsset(filename: String, type: AssetType): Boolean {
-        return if (!hasAsset(filename)) {
-            val asset = Asset(filename, type)
-            if (asset.isValid()) {
-                ASSETS[filename] = asset
-                trace("Assets: Created resource at \"%s\"", filename)
-                true
-            } else {
-                ASSETS[filename] = null
-                trace("Assets: Resource at \"%s\" does not exist", filename)
-                false
-            }
-        } else {
-            trace("Assets: Resource \"%s\" already exists", filename)
-            false
-        }
-    }
-
-    /**
-     * Retrieves the [Asset] at the given location.
+     * Retrieves the [Asset] at the given location, if it exists.
      *
      * @param filename the path to the file
-     * @param type
      */
     @JvmStatic
-    fun getAsset(filename: String, type: AssetType): Asset? {
-        if (!hasAsset(filename))
-            createAsset(filename, type)
-        return ASSETS[filename]
+    fun getAsset(filename: String): Asset? = ASSETS[filename]
+
+    /**
+     * Creates a new [Asset], if it does not exist already, and stores it for future use.
+     *
+     * @param filename  the location of the asset
+     * @param type      what kind of asset to create
+     * @return the file, if successfully created
+     */
+    @JvmStatic
+    fun createAsset(filename: String, type: AssetType): Asset {
+        if (hasAsset(filename))
+            trace("Assets: Resource \"%s\" already exists", filename)
+        else
+            ASSETS[filename] = Asset(filename, type)
+        return getAsset(filename)!!
     }
+
+    // I/O Stream Methods
+
+    @JvmStatic
+    @Throws(IOException::class)
+    fun openInputStream(filename: String): InputStream? {
+        return if (ASSETS[filename]?.isValid() == true)
+            ASSETS[filename]?.inputStream()
+        else null
+    }
+
+    @JvmStatic
+    @Throws(IOException::class)
+    fun openOutputStream(filename: String, append: Boolean): OutputStream? {
+        return if (ASSETS[filename]?.isClasspath == true)
+            ASSETS[filename]?.outputStream(append)
+        else null
+    }
+
+    @Throws(IOException::class)
+    fun getContents(filename: String): ByteArray? {
+        return getAsset(filename)?.inputStream()?.readAllBytes()
+    }
+
+//    fun openInputStream(filename: String, isClasspath: Boolean): InputStream {
+//        val inputStream = if (isClasspath) ClassLoader.getSystemResourceAsStream(filename)
+//        else Files.newInputStream(Paths.get(filename))
+//        // The stream holding the file content
+//        return inputStream ?: throw FileNotFoundException("Assets: File \"$filename\" not found")
+//    }
 
     // Asset URL Methods
 
@@ -108,18 +161,5 @@ object Assets {
             null
         }
     }
-
-    // General File Methods
-
-//    fun openInputStream(filename: String, isClasspath: Boolean): InputStream {
-//        val inputStream = if (isClasspath) ClassLoader.getSystemResourceAsStream(filename)
-//        else Files.newInputStream(Paths.get(filename))
-//        // The stream holding the file content
-//        return inputStream ?: throw IllegalArgumentException("file not found: $filename")
-//    }
-//
-//    fun getContents(filename: String, isClasspath: Boolean): ByteArray? {
-//        return openInputStream(filename, isClasspath).readAllBytes() ?: null
-//    }
 
 }

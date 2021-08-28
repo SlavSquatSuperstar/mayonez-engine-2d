@@ -176,9 +176,21 @@ class Vec2 constructor(
      */
     fun lenSquared(): Float = (x * x) + (y * y)
 
+    /**
+     * Calculates the distance between the tips of this vector and another.
+     *
+     * @param v a 2D vector
+     * @return the distance
+     */
     fun distance(v: Vec2): Float = sqrt(distanceSquared(v))
 
-    fun distanceSquared(v: Vec2): Float = MathUtils.pythagoreanSquared((x - v.x), (y - v.y))
+    /**
+     * Calculates the distance squared between the tips of this vector and another.
+     *
+     * @param v a 2D vector
+     * @return the distance squared
+     */
+    fun distanceSquared(v: Vec2): Float = (v - this).lenSquared()
 
     /**
      * Calculates the vector with the same direction as this vector and a magnitude of 1. Returns (0, 0) if this vector

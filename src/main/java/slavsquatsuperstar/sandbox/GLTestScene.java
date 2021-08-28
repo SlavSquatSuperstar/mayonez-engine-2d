@@ -40,8 +40,6 @@ public class GLTestScene extends SceneGL {
 
     public GLTestScene() {
         super("LWJGL Test Scene");
-        shader = new Shader("assets/shaders/default.glsl");
-        texture = new SpriteGL("src/main/resources/assets/mario.png");
     }
 
     public static void main(String[] args) {
@@ -52,6 +50,10 @@ public class GLTestScene extends SceneGL {
 
     @Override
     public void init() {
+        // Load resources
+        shader = new Shader("assets/shaders/default.glsl");
+        texture = new SpriteGL("src/main/resources/assets/mario.png");
+
         // Set camera position
         camera = new CameraGL(new Vector2f(-200, -300));
 

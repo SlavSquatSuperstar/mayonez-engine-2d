@@ -3,7 +3,7 @@ package slavsquatsuperstar.mayonezgl.renderer;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
-import slavsquatsuperstar.mayonezgl.GameGL;
+import slavsquatsuperstar.mayonez.Preferences;
 
 public class CameraGL {
 
@@ -22,7 +22,7 @@ public class CameraGL {
 
     public void adjustProjection() {
         projectionMatrix.identity();
-        projectionMatrix.ortho(0, GameGL.WIDTH, 0, GameGL.HEIGHT, nearPlane, farPlane);
+        projectionMatrix.ortho(0, Preferences.SCREEN_WIDTH, 0, Preferences.SCREEN_HEIGHT, nearPlane, farPlane);
     }
 
     public Matrix4f getViewMatrix() {

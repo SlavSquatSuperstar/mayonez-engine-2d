@@ -19,10 +19,14 @@ import java.util.Arrays;
  *
  * @author SlavSquatSuperstar
  */
-public class TextFile extends Asset{
+public class TextFile {
 
-    public TextFile(String filename, AssetType type) {
-        super(filename, type);
+    private Asset file;
+
+    public TextFile(String filename) {
+        file = Assets.getAsset(filename);
+        if (file == null)
+            file = Assets.createAsset(filename, AssetType.LOCAL);
     }
 
     /**
@@ -31,7 +35,7 @@ public class TextFile extends Asset{
      * @return The body of text read from this file.
      */
     public String readText() {
-        try (InputStream in = inputStream()) {
+        try (InputStream in = file.inputStream()) {
             return IOUtils.toString(in, Preferences.CHARSET);
         } catch (FileNotFoundException e) {
             Logger.warn("TextFile: File \"%s\" not found");
@@ -56,7 +60,7 @@ public class TextFile extends Asset{
      * @param text The line or lines to save.
      */
     public void write(String... text) {
-        try (OutputStream out = outputStream(false)) {
+        try (OutputStream out = file.outputStream(false)) {
             IOUtils.writeLines(Arrays.asList(text), "\n", out, StandardCharsets.UTF_8);
         } catch (FileNotFoundException e) {
             Logger.warn("TextFile: File \"%s\" not found");
@@ -72,7 +76,7 @@ public class TextFile extends Asset{
      * @param text The line or lines to append.
      */
     public void append(String... text) {
-        try (OutputStream out = outputStream(true)) {
+        try (OutputStream out = file.outputStream(true)) {
             IOUtils.writeLines(Arrays.asList(text), "\n", out, StandardCharsets.UTF_8);
         } catch (IOException e) {
             Logger.warn("TextFile: Could not append to file");

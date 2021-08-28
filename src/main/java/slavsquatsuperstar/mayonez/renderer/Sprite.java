@@ -1,6 +1,5 @@
 package slavsquatsuperstar.mayonez.renderer;
 
-import slavsquatsuperstar.fileio.AssetType;
 import slavsquatsuperstar.fileio.Assets;
 import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
@@ -11,7 +10,6 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.util.Objects;
 
 /**
  * An image used to display a {@link GameObject} or background.
@@ -20,13 +18,11 @@ import java.util.Objects;
  */
 public class Sprite extends Component {
 
-    private static final String TEXTURES_DIRECTORY = "assets/";
     private BufferedImage image;
 
     public Sprite(String filename) {
-        filename = TEXTURES_DIRECTORY + filename;
         try {
-            this.image = ImageIO.read(Objects.requireNonNull(Objects.requireNonNull(Assets.getAsset(filename, AssetType.LOCAL)).path));
+            this.image = ImageIO.read(Assets.getAsset(filename).path);
         } catch (Exception e) {
             Logger.log("Sprite: Error loading image \"%s\"", filename);
             Game.instance().stop(-1);
@@ -38,8 +34,7 @@ public class Sprite extends Component {
     }
 
     @Override
-    public final void update(float dt) {
-    } // Sprites shouldn't update any game logic
+    public final void update(float dt) {} // Sprites shouldn't update any game logic
 
     @Override
     public void render(Graphics2D g2) {

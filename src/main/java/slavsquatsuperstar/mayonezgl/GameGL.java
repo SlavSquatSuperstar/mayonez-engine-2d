@@ -16,16 +16,16 @@ import static org.lwjgl.glfw.GLFW.glfwGetTime;
 public class GameGL { // can't implement runnable otherwise GLFW will crash
 
     // Singleton Fields
-    public static final int WIDTH = 1080;
-    public static final int HEIGHT = 720;
     private static GameGL game;
 
     // Game Fields
     private static boolean running = false;
     private static SceneGL scene;
 
-    // Game Layers
+    // Window Fields
     private final WindowGL window;
+    private static final int WIDTH = Preferences.SCREEN_WIDTH;
+    private static final int HEIGHT = Preferences.SCREEN_HEIGHT;
 
     public GameGL() {
         window = new WindowGL("Mayonez + LWJGL", WIDTH, HEIGHT);
@@ -39,7 +39,7 @@ public class GameGL { // can't implement runnable otherwise GLFW will crash
 
     public static void setScene(SceneGL scene) {
         GameGL.scene = scene;
-        if (GameGL.scene != null)
+        if (GameGL.scene != null && running)
             GameGL.scene.start();
     }
 
@@ -49,12 +49,12 @@ public class GameGL { // can't implement runnable otherwise GLFW will crash
         if (running) // Don't start the game if already running
             return;
 
+        running = true;
         Logger.log("Engine: Starting");
         Logger.log("Welcome to %s %s", Preferences.TITLE, Preferences.VERSION);
-        running = true;
 
         Logger.log("Engine: Loading assets");
-        Assets.scanAllResources("assets"); // Scan all files inside resources root -> assets folder
+        Assets.scanResources("assets"); // Load all game assets
 
         window.start();
         if (GameGL.scene != null)

@@ -9,9 +9,9 @@ import java.net.URL
  *
  * @author SlavSquatSuperstar
  */
-open class Asset(val filename: String, private val type: AssetType) {
+class Asset(val filename: String, private val type: AssetType) {
 
-    private val isClasspath: Boolean
+    internal val isClasspath: Boolean
         get() = type == AssetType.CLASSPATH
 
     @JvmField
@@ -30,11 +30,8 @@ open class Asset(val filename: String, private val type: AssetType) {
 
     @Throws(IOException::class)
     fun outputStream(append: Boolean): OutputStream? {
-        return when {
-            isClasspath -> throw UnsupportedOperationException("Cannot write to classpath resourc $filename")
-            !isValid() -> throw FileNotFoundException("Asset $filename not found")
-            else -> FileUtils.openOutputStream(toFile(), append)
-        }
+        return if (isClasspath) throw UnsupportedOperationException("Cannot write to classpath resource $filename")
+        else FileUtils.openOutputStream(toFile(), append)
     }
 
     // Helper Methods
@@ -45,10 +42,9 @@ open class Asset(val filename: String, private val type: AssetType) {
         return when (type) {
             AssetType.CLASSPATH -> path != null
             AssetType.LOCAL -> toFile().exists()
-            AssetType.OUTPUT -> true
         }
     }
 
-    override fun toString(): String = "$type asset $filename\""
+    override fun toString(): String = "$type asset \"$filename\""
 
 }
