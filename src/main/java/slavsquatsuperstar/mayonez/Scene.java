@@ -52,8 +52,7 @@ public abstract class Scene {
     /**
      * Add necessary objects.
      */
-    protected void init() {
-    }
+    protected void init() {}
 
     /**
      * Initialize all objects and begin updating the scene.
@@ -74,8 +73,7 @@ public abstract class Scene {
      * @param dt seconds since the last frame
      */
     public final void update(float dt) {
-        if (!started)
-            return;
+        if (!started) return;
 
         // Update Objects and Camera
         objects.forEach(o -> {
@@ -99,8 +97,7 @@ public abstract class Scene {
      * @param g2 the window's graphics object
      */
     public final void render(Graphics2D g2) {
-        if (!started)
-            return;
+        if (!started) return;
 
         g2.setColor(background);
         g2.fillRect(0, 0, width, height);
@@ -132,10 +129,8 @@ public abstract class Scene {
             Logger.trace("Added object \"%s\" to scene \"%s\"", obj.name, this.name);
         };
 
-        if (started)
-            toModify.add(sm);
-        else
-            sm.modify();
+        if (started) toModify.add(sm);
+        else sm.modify();
     }
 
     public final void removeObject(GameObject obj) {

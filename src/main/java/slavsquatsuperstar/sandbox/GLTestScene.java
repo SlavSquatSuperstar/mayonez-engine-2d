@@ -3,6 +3,8 @@ package slavsquatsuperstar.sandbox;
 import org.joml.Vector2f;
 import org.lwjgl.BufferUtils;
 import slavsquatsuperstar.math.MathUtils;
+import slavsquatsuperstar.math.Vec2;
+import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonezgl.GameGL;
 import slavsquatsuperstar.mayonezgl.SceneGL;
 import slavsquatsuperstar.mayonezgl.renderer.CameraGL;
@@ -92,19 +94,18 @@ public class GLTestScene extends SceneGL {
             start += sizes[i] * Float.BYTES;
         }
 
-    }
+        addObject(new GameObject("Camera Controller", new Vec2(0, 0)) {
+            @Override
+            public void update(float dt) {
+                camera.position.x -= dt * 100;
+                camera.position.y -= dt * 40;
+            }
+        });
 
-    @Override
-    public void update(float dt) {
-        super.update(dt);
-        camera.position.x -= dt * 100;
-        camera.position.y -= dt * 40;
     }
 
     @Override
     public void render() {
-        super.render();
-
         // Bind shader and VAO
         shader.bind();
 
