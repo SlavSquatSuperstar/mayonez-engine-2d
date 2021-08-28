@@ -33,7 +33,7 @@ public class RendererTestScene extends Scene {
                 getScene().camera().setSubject(this);
                 getScene().camera().enableKeepInScene(false);
                 transform.resize(new Vec2(2, 2));
-                addComponent(new Sprite("assets/mario.png"));
+                addComponent(new Sprite("assets/textures/mario.png"));
                 addComponent(new KeyMovement(MoveMode.POSITION, 0.5f));
                 addComponent(new Script() {
                     @Override
@@ -58,13 +58,13 @@ public class RendererTestScene extends Scene {
         addObject(new GameObject("Mario 2", new Vec2(2, 1)) {
             @Override
             protected void init() {
-                addComponent(new Sprite("assets/mario.png"));
+                addComponent(new Sprite("assets/textures/mario.png"));
             }
         });
         addObject(new GameObject("Mario 3", new Vec2(1, 2)) {
             @Override
             protected void init() {
-                addComponent(new Sprite("assets/mario.png"));
+                addComponent(new Sprite("assets/textures/mario.png"));
             }
         });
     }

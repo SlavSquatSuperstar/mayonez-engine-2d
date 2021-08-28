@@ -1,5 +1,7 @@
 package slavsquatsuperstar.fileio;
 
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * Where to look for an {@link Asset} and how to treat it.
  */
@@ -19,6 +21,6 @@ public enum AssetType {
 
     @Override
     public String toString() {
-        return name().charAt(0) + name().substring(1).toLowerCase();
+        return StringUtils.capitalize(name().toLowerCase());
     }
 }

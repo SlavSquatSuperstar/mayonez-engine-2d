@@ -1,5 +1,6 @@
 package slavsquatsuperstar.mayonez
 
+import org.apache.commons.lang3.StringUtils
 import java.awt.event.KeyAdapter
 import java.awt.event.KeyEvent
 import java.util.*
@@ -79,8 +80,7 @@ object KeyInput : KeyAdapter() {
         }
 
         override fun toString(): String {
-            return name.substring(0, 1).uppercase(Locale.getDefault()) + name.substring(1)
-                .lowercase(Locale.getDefault())
+            return StringUtils.capitalize(name.lowercase())
         }
 
     }

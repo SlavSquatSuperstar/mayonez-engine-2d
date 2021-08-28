@@ -22,9 +22,9 @@ public class Player extends GameObject {
     protected void init() {
         // Create player avatar
         int tileSize = getScene().getCellSize();
-        SpriteSheet layer1 = new SpriteSheet("player/layer1.png", tileSize, tileSize, 2, 13, 13 * 5);
-        SpriteSheet layer2 = new SpriteSheet("player/layer2.png", tileSize, tileSize, 2, 13, 13 * 5);
-        SpriteSheet layer3 = new SpriteSheet("player/layer3.png", tileSize, tileSize, 2, 13, 13 * 5);
+        SpriteSheet layer1 = new SpriteSheet("assets/textures/player/layer1.png", tileSize, tileSize, 2, 13, 13 * 5);
+        SpriteSheet layer2 = new SpriteSheet("assets/textures/player/layer2.png", tileSize, tileSize, 2, 13, 13 * 5);
+        SpriteSheet layer3 = new SpriteSheet("assets/textures/player/layer3.png", tileSize, tileSize, 2, 13, 13 * 5);
 
         int id = 19;
         int threshold = 200;

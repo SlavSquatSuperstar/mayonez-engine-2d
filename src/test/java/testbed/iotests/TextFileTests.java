@@ -1,6 +1,7 @@
 package testbed.iotests;
 
 import org.junit.jupiter.api.Test;
+import slavsquatsuperstar.fileio.Assets;
 import slavsquatsuperstar.fileio.TextFile;
 
 import java.time.LocalDate;
@@ -18,6 +19,8 @@ public class TextFileTests {
 
     @Test
     public void readClasspathTextFile() {
+        Assets.clearAssets();
+        Assets.scanResources("testassets");
         String[] properties = new TextFile("testassets/properties.txt").readLines();
         System.out.println(Arrays.toString(properties));
         assertEquals("Mayonez Engine", properties[0].split("=")[1]);

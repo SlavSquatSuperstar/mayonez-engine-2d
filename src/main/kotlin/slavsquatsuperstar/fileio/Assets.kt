@@ -13,7 +13,7 @@ import java.nio.file.Path
 import java.util.regex.Pattern
 
 /**
- * A utility class for file I/O and managing the application's resources safely.
+ * The central asset pool for the application and a utility class for file I/O and managing the application's resources safely.
  *
  * @author SlavSquatSuperstar
  */
@@ -21,7 +21,7 @@ object Assets {
 
     // TODO reload, create if absent
 
-    private val ASSETS = HashMap<String, Asset?>()
+    private val ASSETS = HashMap<String, Asset>()
 
     /**
      * Recursively searches a resource directory inside the JAR and adds all assets.
@@ -100,6 +100,14 @@ object Assets {
         else
             ASSETS[filename] = Asset(filename, type)
         return getAsset(filename)!!
+    }
+
+    /**
+     * Empties all Assets from the asset pool.
+     */
+    @JvmStatic
+    fun clearAssets() {
+        ASSETS.clear()
     }
 
     // I/O Stream Methods

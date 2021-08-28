@@ -1,5 +1,6 @@
 package testbed.iotests;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import slavsquatsuperstar.fileio.Asset;
 import slavsquatsuperstar.fileio.AssetType;
@@ -20,9 +21,14 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class AssetTests {
 
+    @BeforeEach
+    public void reloadAssets() {
+        Assets.clearAssets();
+        Assets.scanResources("testassets");
+    }
+
     @Test
     public void scanResourcesAddsToStorage() {
-        Assets.scanResources("testassets");
         assertTrue(Assets.hasAsset("testassets/mario.png"));
         assertFalse(Assets.hasAsset("testassets/luigi.png"));
         assertTrue(Assets.hasAsset("testassets/mario.png"));
@@ -33,6 +39,7 @@ public class AssetTests {
 
     @Test
     public void scanFilesAddsToStorage() {
+        Assets.clearAssets();
         Assets.scanFiles("src/test/resources/testassets");
         assertTrue(Assets.hasAsset("src/test/resources/testassets/mario.png"));
         assertFalse(Assets.hasAsset("src/test/resources/testassets/luigi.png"));
@@ -43,25 +50,25 @@ public class AssetTests {
 
     @Test
     public void classpathAssetExists() {
-        Asset a = new Asset("testassets/mario.png", AssetType.CLASSPATH);
+        Asset a = Assets.createAsset("testassets/mario.png", AssetType.CLASSPATH);
         assertTrue(a.isValid());
     }
 
     @Test
     public void classpathAssetNotExists() {
-        Asset a = new Asset("testassets/luigi.png", AssetType.CLASSPATH);
+        Asset a = Assets.createAsset("testassets/luigi.png", AssetType.CLASSPATH);
         assertFalse(a.isValid());
     }
 
     @Test
     public void localAssetExists() {
-        Asset a = new Asset("src/test/resources/testassets/mario.png", AssetType.LOCAL);
+        Asset a = Assets.createAsset("src/test/resources/testassets/mario.png", AssetType.LOCAL);
         assertTrue(a.isValid());
     }
 
     @Test
     public void localAssetNotExists() {
-        Asset a = new Asset("src/test/resources/testassets/luigi.png", AssetType.LOCAL);
+        Asset a = Assets.createAsset("src/test/resources/testassets/luigi.png", AssetType.LOCAL);
         assertFalse(a.isValid());
     }
 
