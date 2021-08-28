@@ -16,8 +16,6 @@ public class SceneGL extends Scene {
         camera = new CameraGL(new Vector2f());
     }
 
-    public void render() {}
-
     @Override
     protected void onAddObject(GameObject obj) {
         GameGL.getRenderer().addObject(obj);

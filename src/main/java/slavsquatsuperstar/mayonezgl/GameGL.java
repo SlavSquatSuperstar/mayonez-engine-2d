@@ -133,8 +133,7 @@ public class GameGL { // can't implement runnable otherwise GLFW will crash
 
     public void render() {
         window.render(() -> {
-            renderer.render();
-            if (scene != null) scene.render();
+            if (scene != null) renderer.render();
         });
     }
 

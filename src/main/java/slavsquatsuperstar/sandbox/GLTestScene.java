@@ -1,44 +1,15 @@
 package slavsquatsuperstar.sandbox;
 
 import org.joml.Vector2f;
-import org.lwjgl.BufferUtils;
-import slavsquatsuperstar.math.MathUtils;
+import org.joml.Vector4f;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonezgl.GameGL;
 import slavsquatsuperstar.mayonezgl.SceneGL;
 import slavsquatsuperstar.mayonezgl.renderer.CameraGL;
-import slavsquatsuperstar.mayonezgl.renderer.Shader;
-import slavsquatsuperstar.mayonezgl.renderer.SpriteGL;
-
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-
-import static org.lwjgl.opengl.GL20.*;
-import static org.lwjgl.opengl.GL30.glBindVertexArray;
-import static org.lwjgl.opengl.GL30.glGenVertexArrays;
+import slavsquatsuperstar.mayonezgl.renderer.SpriteRenderer;
 
 public class GLTestScene extends SceneGL {
-
-    private Shader shader;
-    private SpriteGL texture;
-
-    private float[] vertexArray = { // VBO: position, color, uv coords
-            100f, -0.5f, 0f, 1f,    0f, 0f, 1f,     1f, 0f, // Bottom right 0
-            -0.5f, 100f, 0f, 0f,    1f, 0f, 1f,     0f, 1f, // Top left     1
-            100f, 100f, 0f, 0f,     0f, 1f, 1f,     1f, 1f, // Top right    2
-            -0.5f, -0.5f, 0f, 1f,   1f, 0f, 1f,     0f, 0f // Bottom left  3
-    };
-
-    private int[] elementArray = { // counter clockwise
-            /*
-             *  1   2
-             *  3   0
-             */
-            2, 1, 0, // top right triangle
-            0, 1, 3  // bottom left triangle
-    };
-    private int vaoID, vboID, eboID;
 
     public GLTestScene() {
         super("LWJGL Test Scene");
@@ -53,83 +24,34 @@ public class GLTestScene extends SceneGL {
     @Override
     public void init() {
         // Load resources
-        shader = new Shader("assets/shaders/default.glsl");
 //        texture = new SpriteGL("assets/mario.png");
-        texture = new SpriteGL("src/main/resources/assets/mario.png");
+//        texture = new SpriteGL("src/main/resources/assets/mario.png");
 
         // Set camera position
-        camera = new CameraGL(new Vector2f(-200, -300));
+        camera = new CameraGL(new Vector2f(-250, -0));
 
-        // Generate VAO and fix transparency
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        vaoID = glGenVertexArrays();
-        glBindVertexArray(vaoID);
+        int xOffset = 10;
+        int yOffset = 10;
 
-        // Send vertices to GL
-        FloatBuffer vertexBuffer = BufferUtils.createFloatBuffer(vertexArray.length);
-        vertexBuffer.put(vertexArray).flip(); // flip into screen coordinates
+        float totalWidth = (float) (600 - xOffset * 2);
+        float totalHeight = (float) (300 - yOffset * 2);
+        float sizeX = totalWidth / 100f;
+        float sizeY = totalHeight / 100f;
+        float padding = 0;
 
-        // Create VBO with vertices
-        vboID = glGenBuffers();
-        glBindBuffer(GL_ARRAY_BUFFER, vboID);
-        glBufferData(GL_ARRAY_BUFFER, vertexBuffer, GL_STATIC_DRAW);
-
-        // Create EBO
-        IntBuffer elementBuffer = BufferUtils.createIntBuffer(elementArray.length);
-        elementBuffer.put(elementArray).flip();
-        eboID = glGenBuffers();
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboID);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, elementBuffer, GL_STATIC_DRAW);
-
-        // Specify vertex attributes
-        int[] sizes = {3, 4, 2}; // position, colors, uv
-        int vertexSizeBytes = MathUtils.sum(sizes) * Float.BYTES;
-        int start = 0;
-
-        // Pass position/colors attributes
-        for (int i = 0; i < sizes.length; i++) {
-            glVertexAttribPointer(i, sizes[i], GL_FLOAT, false, vertexSizeBytes, start);
-            glEnableVertexAttribArray(i);
-            start += sizes[i] * Float.BYTES;
-        }
-
-        addObject(new GameObject("Camera Controller", new Vec2(0, 0)) {
-            @Override
-            public void update(float dt) {
-                camera.position.x -= dt * 100;
-                camera.position.y -= dt * 40;
+        for (int x = 0; x < 100; x++) {
+            for (int y = 0; y < 100; y++) {
+                float xPos = xOffset + (x * sizeX) + (padding * x);
+                float yPos = yOffset + (y * sizeY) + (padding * y);
+                addObject(new GameObject(String.format("Object (%d, %d)", x, y), new Vec2(xPos, yPos)) {
+                    @Override
+                    protected void init() {
+                        transform.resize(new Vec2(sizeX, sizeY));
+                        addComponent(new SpriteRenderer(new Vector4f(xPos / totalWidth, yPos / totalHeight, 0.5f, 1)));
+                    }
+                });
             }
-        });
-
-    }
-
-    @Override
-    public void render() {
-        // Bind shader and VAO
-        shader.bind();
-
-        // Upload texture to shader
-        shader.uploadTexture("TEX_SAMPLER", 0);
-        texture.bind();
-
-        // Apply camera transforms
-        shader.uploadMat4("uProjection", camera.getProjectionMatrix());
-        shader.uploadMat4("uView", camera.getViewMatrix());
-        glBindVertexArray(vaoID);
-
-        // Enable vertex attribute pointers
-        glEnableVertexAttribArray(0);
-        glEnableVertexAttribArray(1);
-
-        // Draw the triangles
-        glDrawElements(GL_TRIANGLES, elementArray.length, GL_UNSIGNED_INT, 0);
-
-        // Unbind everything
-        glDisableVertexAttribArray(0);
-        glDisableVertexAttribArray(1);
-        glBindVertexArray(0);
-        shader.unbind();
+        }
     }
 
 }
