@@ -3,6 +3,8 @@ package slavsquatsuperstar.fileio
 import org.apache.commons.io.FileUtils
 import java.io.*
 import java.net.URL
+import java.nio.file.Files
+import java.nio.file.Paths
 
 /**
  * A resource file used by this program. Stores a path and opens streams to that location.
@@ -23,8 +25,8 @@ class Asset(val filename: String, private val type: AssetType) {
 
     @Throws(IOException::class)
     fun inputStream(): InputStream? {
-        return if (!isValid()) throw FileNotFoundException("Asset $filename not found")
-        else path!!.openStream()
+        return if (isClasspath) ClassLoader.getSystemResourceAsStream(filename)
+        else Files.newInputStream(Paths.get(filename))
     }
 
 

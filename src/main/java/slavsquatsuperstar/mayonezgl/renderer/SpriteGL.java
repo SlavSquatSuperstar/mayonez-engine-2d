@@ -39,6 +39,11 @@ public class SpriteGL {
         // Upload image to GPU
         stbi_set_flip_vertically_on_load(true);
         ByteBuffer image = stbi_load(filename, width, height, channels, 0);
+//        byte[] imageData = Assets.readContents(filename);
+//        ByteBuffer imageBuffer = BufferUtils.createByteBuffer(imageData.length);
+//        imageBuffer.put(imageData);
+//        ByteBuffer image = stbi_load_from_memory(imageBuffer, width, height, channels, 0);
+
         if (image != null) {
             int imgType;
             switch (channels.get(0)) {
@@ -58,6 +63,7 @@ public class SpriteGL {
             stbi_image_free(image);
         } else {
             Logger.warn("Sprite: Could not load image \"%s\"", filename);
+            Logger.warn(stbi_failure_reason());
         }
     }
 

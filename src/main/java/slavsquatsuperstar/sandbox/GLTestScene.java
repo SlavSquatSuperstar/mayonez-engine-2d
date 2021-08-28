@@ -52,6 +52,7 @@ public class GLTestScene extends SceneGL {
     public void init() {
         // Load resources
         shader = new Shader("assets/shaders/default.glsl");
+//        texture = new SpriteGL("assets/mario.png");
         texture = new SpriteGL("src/main/resources/assets/mario.png");
 
         // Set camera position

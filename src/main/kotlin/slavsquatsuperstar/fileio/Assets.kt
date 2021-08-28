@@ -6,10 +6,7 @@ import org.reflections.util.ClasspathHelper
 import org.reflections.util.ConfigurationBuilder
 import slavsquatsuperstar.mayonez.Logger.trace
 import slavsquatsuperstar.mayonez.Logger.warn
-import java.io.File
-import java.io.IOException
-import java.io.InputStream
-import java.io.OutputStream
+import java.io.*
 import java.net.MalformedURLException
 import java.net.URL
 import java.nio.file.Path
@@ -109,31 +106,17 @@ object Assets {
 
     @JvmStatic
     @Throws(IOException::class)
-    fun openInputStream(filename: String): InputStream? {
-        return if (ASSETS[filename]?.isValid() == true)
-            ASSETS[filename]?.inputStream()
-        else null
-    }
+    fun openInputStream(filename: String): InputStream =
+        getAsset(filename)?.inputStream() ?: throw FileNotFoundException("Assets: File \"$filename\" not found")
 
     @JvmStatic
     @Throws(IOException::class)
-    fun openOutputStream(filename: String, append: Boolean): OutputStream? {
-        return if (ASSETS[filename]?.isClasspath == true)
-            ASSETS[filename]?.outputStream(append)
-        else null
-    }
+    fun openOutputStream(filename: String, append: Boolean): OutputStream =
+        getAsset(filename)?.outputStream(append) ?: throw FileNotFoundException("Assets: File \"$filename\" not found")
 
-    @Throws(IOException::class)
-    fun getContents(filename: String): ByteArray? {
-        return getAsset(filename)?.inputStream()?.readAllBytes()
-    }
 
-//    fun openInputStream(filename: String, isClasspath: Boolean): InputStream {
-//        val inputStream = if (isClasspath) ClassLoader.getSystemResourceAsStream(filename)
-//        else Files.newInputStream(Paths.get(filename))
-//        // The stream holding the file content
-//        return inputStream ?: throw FileNotFoundException("Assets: File \"$filename\" not found")
-//    }
+    @JvmStatic
+    fun readContents(filename: String): ByteArray? = openInputStream(filename).readAllBytes()
 
     // Asset URL Methods
 
