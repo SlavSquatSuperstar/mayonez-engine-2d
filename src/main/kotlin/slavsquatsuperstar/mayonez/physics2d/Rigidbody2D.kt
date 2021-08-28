@@ -27,11 +27,6 @@ class Rigidbody2D(mass: Float, drag: Float, angDrag: Float) : Component() {
     // Component Properties
 
     /**
-     * A reference to the parent object's [Transform].
-     */
-    var transform: Transform? = null
-
-    /**
      * Returns the parent object's [Collider2D]. May be null.
      *
      * @return the attached collider
@@ -232,11 +227,5 @@ class Rigidbody2D(mass: Float, drag: Float, angDrag: Float) : Component() {
     }
 
     // Component Getters and Setters
-
-    override fun setParent(parent: GameObject): Rigidbody2D {
-        super.setParent(parent)
-        transform = parent.transform
-        return this
-    }
 
 }

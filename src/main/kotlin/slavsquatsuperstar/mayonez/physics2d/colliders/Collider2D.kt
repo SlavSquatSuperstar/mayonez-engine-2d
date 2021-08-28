@@ -20,12 +20,6 @@ abstract class Collider2D : Component() {
 
     // Object References
 
-    /**
-     * A reference to the parent object's [Transform].
-     */
-    @JvmField
-    protected var transform: Transform? = null
-
     @SuppressWarnings("unchecked")
     fun <T : Collider2D?> setTransform(transform: Transform?): T {
         this.transform = transform
@@ -162,12 +156,6 @@ abstract class Collider2D : Component() {
     open fun toWorld(local: Vec2): Vec2 = transform?.toWorld(local) ?: local
 
     // Field Getters and Setters
-
-    override fun setParent(parent: GameObject): Collider2D {
-        super.setParent(parent)
-        transform = parent.transform
-        return this
-    }
 
     /**
      * Returns whether this collider has a null or static rigidbody, and thus does not respond to collisions.

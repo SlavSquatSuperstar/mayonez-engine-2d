@@ -13,6 +13,10 @@ public abstract class Component {
      * The {@link GameObject} this component belongs to.
      */
     protected GameObject parent;
+    /**
+     * A reference to the parent object's {@link Transform}.
+     */
+    protected Transform transform;
     private boolean enabled = true;
 
     /**
@@ -38,6 +42,7 @@ public abstract class Component {
 
     public Component setParent(GameObject parent) {
         this.parent = parent;
+        this.transform = parent.transform;
         return this;
     }
 
@@ -49,8 +54,11 @@ public abstract class Component {
     }
 
     public boolean isInScene(Scene scene) {
-        // This could cause a NPE
-        return scene.equals(getScene());
+        return scene.equals(getScene()); // This could cause a NPE
+    }
+
+    public Transform getTransform() {
+        return transform;
     }
 
     /**

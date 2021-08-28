@@ -12,11 +12,6 @@ import java.awt.*;
  */
 public abstract class Script extends Component {
 
-    /**
-     * A reference to the parent object's {@link Transform}.
-     */
-    protected Transform transform;
-
     // Common Getters
 
     /**
@@ -50,13 +45,6 @@ public abstract class Script extends Component {
 
     @Override
     public final void render(Graphics2D g2) {} // Scripts shouldn't render any images
-
-    @Override
-    public Script setParent(GameObject parent) {
-        super.setParent(parent);
-        transform = parent.transform;
-        return this;
-    }
 
     @Override
     public Script setEnabled(boolean enabled) {

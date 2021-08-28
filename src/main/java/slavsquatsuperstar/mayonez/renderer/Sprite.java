@@ -34,24 +34,25 @@ public class Sprite extends Component {
     }
 
     @Override
-    public final void update(float dt) {} // Sprites shouldn't update any game logic
+    public final void update(float dt) {
+    } // Sprites shouldn't update any game logic
 
     @Override
     public void render(Graphics2D g2) {
         // Measurements are in screen coordinates (pixels)
-        Vec2 parentCenter = parent.transform.position.mul(getScene().getCellSize()); // no camera offset
+        Vec2 parentCenter = transform.position.mul(getScene().getCellSize()); // no camera offset
         Vec2 imageHalfSize = new Vec2(image.getWidth(), image.getHeight()).div(2);
 
         // Use the parent's transform to draw the sprite
-        AffineTransform transform = new AffineTransform();
-        transform.setToIdentity();
-        transform.translate(parentCenter.x - imageHalfSize.x,
+        AffineTransform g2Transform = new AffineTransform();
+        g2Transform.setToIdentity();
+        g2Transform.translate(parentCenter.x - imageHalfSize.x,
                 parentCenter.y - imageHalfSize.y); // Line up image center with parent center
-        transform.scale(parent.transform.scale.x, parent.transform.scale.y);
-        transform.rotate(MathUtils.toRadians(parent.transform.rotation), imageHalfSize.x, imageHalfSize.y);
+        g2Transform.scale(transform.scale.x, transform.scale.y);
+        g2Transform.rotate(MathUtils.toRadians(transform.rotation), imageHalfSize.x, imageHalfSize.y);
 
-        g2.drawImage(image, transform, null);
-        DebugDraw.drawPoint(parentCenter, Colors.BLUE);
+        g2.drawImage(image, g2Transform, null);
+//        DebugDraw.drawPoint(parentCenter, Colors.BLUE);
     }
 
     public BufferedImage getImage() {
