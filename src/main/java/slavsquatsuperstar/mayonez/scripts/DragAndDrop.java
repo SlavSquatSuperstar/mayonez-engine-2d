@@ -1,7 +1,7 @@
 package slavsquatsuperstar.mayonez.scripts;
 
 import slavsquatsuperstar.math.Vec2;
-import slavsquatsuperstar.mayonez.MouseInput;
+import slavsquatsuperstar.mayonez.input.MouseInput;
 
 /**
  * Allows objects to be picked up using the mouse.

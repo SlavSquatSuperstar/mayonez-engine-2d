@@ -1,7 +1,7 @@
 package slavsquatsuperstar.sandbox;
 
 import slavsquatsuperstar.math.Vec2;
-import slavsquatsuperstar.mayonez.KeyInput;
+import slavsquatsuperstar.mayonez.input.KeyInput;
 import slavsquatsuperstar.mayonez.Script;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
 import slavsquatsuperstar.mayonez.renderer.Camera;

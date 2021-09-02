@@ -4,6 +4,7 @@ import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.Component;
 import slavsquatsuperstar.mayonez.*;
+import slavsquatsuperstar.mayonez.input.KeyInput;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
 import slavsquatsuperstar.mayonez.physics2d.colliders.AlignedBoxCollider2D;
 import slavsquatsuperstar.mayonez.physics2d.colliders.BoxCollider2D;

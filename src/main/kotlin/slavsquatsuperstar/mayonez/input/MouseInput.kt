@@ -1,6 +1,7 @@
-package slavsquatsuperstar.mayonez
+package slavsquatsuperstar.mayonez.input
 
 import slavsquatsuperstar.math.Vec2
+import slavsquatsuperstar.mayonez.Game
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.util.*

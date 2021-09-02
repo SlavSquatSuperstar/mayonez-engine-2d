@@ -2,6 +2,7 @@ package slavsquatsuperstar.sandbox;
 
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.*;
+import slavsquatsuperstar.mayonez.input.KeyInput;
 import slavsquatsuperstar.mayonez.renderer.IMGUI;
 import slavsquatsuperstar.mayonez.renderer.Sprite;
 import slavsquatsuperstar.mayonez.scripts.KeyMovement;

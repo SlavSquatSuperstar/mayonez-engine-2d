@@ -1,7 +1,7 @@
 package slavsquatsuperstar.mayonez.scripts;
 
 import slavsquatsuperstar.math.Vec2;
-import slavsquatsuperstar.mayonez.KeyInput;
+import slavsquatsuperstar.mayonez.input.KeyInput;
 
 /**
  * Allows objects to be moved with the WASD/arrow keys.
