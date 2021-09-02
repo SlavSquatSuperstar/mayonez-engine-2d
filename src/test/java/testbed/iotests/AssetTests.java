@@ -2,9 +2,7 @@ package testbed.iotests;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import slavsquatsuperstar.fileio.Asset;
-import slavsquatsuperstar.fileio.AssetType;
-import slavsquatsuperstar.fileio.Assets;
+import slavsquatsuperstar.fileio.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -116,6 +114,12 @@ public class AssetTests {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Test
+    public void createAssetWithReflection() {
+        TextFile t = Assets.createAsset("testassets/properties.txt", AssetType.LOCAL, TextFile.class);
+        assertEquals("testassets/properties.txt", t.getFilename());
     }
 
 }

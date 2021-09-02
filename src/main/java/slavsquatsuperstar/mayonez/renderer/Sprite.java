@@ -1,15 +1,19 @@
 package slavsquatsuperstar.mayonez.renderer;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import slavsquatsuperstar.fileio.Assets;
 import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.Component;
-import slavsquatsuperstar.mayonez.*;
+import slavsquatsuperstar.mayonez.Game;
+import slavsquatsuperstar.mayonez.GameObject;
+import slavsquatsuperstar.mayonez.Logger;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 
 /**
  * An image used to display a {@link GameObject} or background.
@@ -22,8 +26,11 @@ public class Sprite extends Component {
 
     public Sprite(String filename) {
         try {
-            this.image = ImageIO.read(Assets.getAsset(filename).path);
+            byte[] bytes = Assets.readContents(filename);
+            this.image = ImageIO.read(new ByteArrayInputStream(bytes));
+//            this.image = ImageIO.read(Assets.getAsset(filename).path);
         } catch (Exception e) {
+            Logger.log(ExceptionUtils.getStackTrace(e));
             Logger.log("Sprite: Error loading image \"%s\"", filename);
             Game.instance().stop(-1);
         }

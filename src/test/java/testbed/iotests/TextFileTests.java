@@ -1,6 +1,7 @@
 package testbed.iotests;
 
 import org.junit.jupiter.api.Test;
+import slavsquatsuperstar.fileio.AssetType;
 import slavsquatsuperstar.fileio.Assets;
 import slavsquatsuperstar.fileio.TextFile;
 
@@ -21,7 +22,7 @@ public class TextFileTests {
     public void readClasspathTextFile() {
         Assets.clearAssets();
         Assets.scanResources("testassets");
-        String[] properties = new TextFile("testassets/properties.txt").readLines();
+        String[] properties = new TextFile("testassets/properties.txt", AssetType.CLASSPATH).readLines();
         System.out.println(Arrays.toString(properties));
         assertEquals("Mayonez Engine", properties[0].split("=")[1]);
     }

@@ -19,8 +19,7 @@ import java.util.regex.Pattern
  */
 object Assets {
 
-    // TODO reload, create if absent
-
+    // TODO preload stage, map filetype to subclass
     private val ASSETS = HashMap<String, Asset>()
 
     /**
@@ -52,7 +51,7 @@ object Assets {
     }
 
     @JvmStatic
-    fun searchFiles(directory: String): MutableList<String> {
+    private fun searchFiles(directory: String): MutableList<String> {
         val folder = File(directory)
         val files: MutableList<String> = ArrayList()
         if (folder.listFiles() == null) return files // If file return empty list
@@ -87,6 +86,21 @@ object Assets {
     fun getAsset(filename: String): Asset? = ASSETS[filename]
 
     /**
+     * Retrieves and replaces the [Asset] under the specified filename as in instance of any Asset subclass.
+     *
+     * @param filename the asset location
+     * @param cls the asset subclass
+     * @return a subclass instance with the same {@link AssetType}, if the asset is valid.
+     */
+    @JvmStatic
+    fun <T : Asset> getAsset(filename: String, cls: Class<T>): T? {
+        val asset = getAsset(filename)
+        return if (asset != null && !cls.isInstance(asset))
+            createAsset(filename, asset.type, cls)
+        else getAsset(filename) as? T
+    }
+
+    /**
      * Creates a new [Asset], if it does not exist already, and stores it for future use.
      *
      * @param filename  the location of the asset
@@ -100,6 +114,24 @@ object Assets {
         else
             ASSETS[filename] = Asset(filename, type)
         return getAsset(filename)!!
+    }
+
+    @JvmStatic
+    fun <T : Asset> createAsset(filename: String, type: AssetType, cls: Class<T>): T? {
+        val ctor = cls.getDeclaredConstructor(String::class.java, AssetType::class.java)
+        return cls.cast(ctor.newInstance(filename, type))
+    }
+
+    /**
+     * Replaces the generic asset stored under the specified filename with an [Asset] subclass.
+     *
+     * @param filename the location of the asset
+     * @param asset the asset instance
+     */
+    @JvmStatic
+    @JvmName("setAsset")
+    internal fun setAsset(filename: String, asset: Asset) {
+        ASSETS[filename] = asset
     }
 
     /**

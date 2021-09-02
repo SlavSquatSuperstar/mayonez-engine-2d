@@ -1,7 +1,10 @@
 package slavsquatsuperstar.fileio
 
 import org.apache.commons.io.FileUtils
-import java.io.*
+import java.io.File
+import java.io.IOException
+import java.io.InputStream
+import java.io.OutputStream
 import java.net.URL
 import java.nio.file.Files
 import java.nio.file.Paths
@@ -11,10 +14,9 @@ import java.nio.file.Paths
  *
  * @author SlavSquatSuperstar
  */
-class Asset(val filename: String, private val type: AssetType) {
+open class Asset(val filename: String, internal val type: AssetType) {
 
-    internal val isClasspath: Boolean
-        get() = type == AssetType.CLASSPATH
+    private val isClasspath: Boolean = type == AssetType.CLASSPATH
 
     @JvmField
     val path: URL? =
@@ -47,6 +49,6 @@ class Asset(val filename: String, private val type: AssetType) {
         }
     }
 
-    override fun toString(): String = "$type asset \"$filename\""
+    override fun toString(): String = "$type ${javaClass.simpleName} \"$filename\""
 
 }

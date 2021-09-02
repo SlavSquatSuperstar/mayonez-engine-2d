@@ -20,16 +20,18 @@ import java.nio.charset.StandardCharsets;
  *
  * @author SlavSquatSuperstar
  */
-public class JSONFile {
+public class JSONFile extends Asset {
 
-    private Asset file;
     private JSONObject json;
 
-    public JSONFile(String filename) {
-        file = Assets.getAsset(filename);
-        if (file == null)
-            file = Assets.createAsset(filename, AssetType.LOCAL);
+    public JSONFile(String filename, AssetType type) {
+        super(filename, type);
         read();
+        Assets.setAsset(filename, this);
+    }
+
+    public JSONFile(String filename) {
+        this(filename, AssetType.LOCAL);
     }
 
     // File I/O Methods
@@ -44,10 +46,10 @@ public class JSONFile {
      * Parses the JSON object stored in this file. Called automatically upon object creation.
      */
     public void read() {
-        try (InputStream in = file.inputStream()) {
+        try (InputStream in = inputStream()) {
             json = new JSONObject(new JSONTokener(IOUtils.toString(in, Preferences.CHARSET)));
         } catch (FileNotFoundException e) {
-            Logger.warn("JSONFile: File \"%s\" not found", file.path);
+            Logger.warn("JSONFile: File \"%s\" not found", path);
         } catch (IOException e) {
             Logger.warn("TextFile: Could not read file");
         } catch (JSONException e) {
@@ -61,10 +63,10 @@ public class JSONFile {
      * Saves JSON data to this file.
      */
     public void save() {
-        try (OutputStream out = file.outputStream(false)) {
+        try (OutputStream out = outputStream(false)) {
             IOUtils.write(json.toString(4).getBytes(StandardCharsets.UTF_8), out);
         } catch (FileNotFoundException e) {
-            Logger.warn("TextFile: File \"%s\" not found\n", file.path);
+            Logger.warn("TextFile: File \"%s\" not found\n", path);
         } catch (IOException e) {
             Logger.warn(ExceptionUtils.getStackTrace(e));
             Logger.warn("TextFile: Could not save to file");

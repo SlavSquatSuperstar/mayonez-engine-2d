@@ -12,7 +12,8 @@ import slavsquatsuperstar.fileio.JSONFile
 object Preferences {
 
     // TODO default compile tile constants
-    private val preferences = JSONFile(Assets.createAsset("preferences.json", AssetType.CLASSPATH).filename)
+//    private val preferences = JSONFile(Assets.createAsset("preferences.json", AssetType.CLASSPATH).filename)
+    private val preferences = Assets.createAsset("preferences.json", AssetType.CLASSPATH, JSONFile::class.java)!!
 
     // Window
     @JvmField

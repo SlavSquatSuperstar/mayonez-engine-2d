@@ -2,6 +2,7 @@ package slavsquatsuperstar.mayonezgl.renderer;
 
 import org.joml.*;
 import org.lwjgl.BufferUtils;
+import slavsquatsuperstar.fileio.Assets;
 import slavsquatsuperstar.fileio.TextFile;
 import slavsquatsuperstar.mayonez.Logger;
 import slavsquatsuperstar.mayonezgl.GameGL;
@@ -28,7 +29,7 @@ public class Shader {
     private void parse() {
         try {
             // Read the shader file
-            TextFile shaderFile = new TextFile(filename);
+            TextFile shaderFile = Assets.getAsset(filename, TextFile.class);
             String source = shaderFile.readText();
             String[] shaders = source.split("(#type)( )+"); // split into vertex and fragment
 
