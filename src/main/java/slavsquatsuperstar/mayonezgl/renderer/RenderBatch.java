@@ -1,6 +1,7 @@
 package slavsquatsuperstar.mayonezgl.renderer;
 
 import org.joml.Vector4f;
+import slavsquatsuperstar.fileio.Assets;
 import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonezgl.GameGL;
@@ -40,7 +41,7 @@ public class RenderBatch {
 
     public RenderBatch(int maxBatchSize) {
         sprites = new SpriteRenderer[maxBatchSize]; // shader array capacity
-        shader = new Shader("assets/shaders/default.glsl");
+        shader = Assets.getAsset("assets/shaders/default.glsl", Shader.class);
         vertices = new float[maxBatchSize * VERTICES_PER_SPRITE * VERTEX_SIZE];
     }
 

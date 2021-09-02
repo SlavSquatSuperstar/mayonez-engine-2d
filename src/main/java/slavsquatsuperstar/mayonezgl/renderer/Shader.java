@@ -2,7 +2,7 @@ package slavsquatsuperstar.mayonezgl.renderer;
 
 import org.joml.*;
 import org.lwjgl.BufferUtils;
-import slavsquatsuperstar.fileio.Assets;
+import slavsquatsuperstar.fileio.AssetType;
 import slavsquatsuperstar.fileio.TextFile;
 import slavsquatsuperstar.mayonez.Logger;
 import slavsquatsuperstar.mayonezgl.GameGL;
@@ -13,24 +13,28 @@ import java.nio.FloatBuffer;
 import static org.lwjgl.opengl.GL11.GL_FALSE;
 import static org.lwjgl.opengl.GL20.*;
 
-public class Shader {
+public class Shader extends TextFile {
 
     private String filename;
     private int shaderProgramID;
     private boolean used = false;
     private String vertexSrc, fragmentSrc;
 
-    public Shader(String filename) {
-        this.filename = filename;
+    // todo should maybe not provide constructors
+    public Shader(String filename, AssetType type) {
+        super(filename, type);
         parse();
         compile();
+    }
+
+    public Shader(String filename) {
+        this(filename, AssetType.CLASSPATH);
     }
 
     private void parse() {
         try {
             // Read the shader file
-            TextFile shaderFile = Assets.getAsset(filename, TextFile.class);
-            String source = shaderFile.readText();
+            String source = readText();
             String[] shaders = source.split("(#type)( )+"); // split into vertex and fragment
 
             // Parse the shader file
