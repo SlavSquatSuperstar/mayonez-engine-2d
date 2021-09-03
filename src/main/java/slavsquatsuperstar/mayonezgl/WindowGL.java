@@ -4,7 +4,10 @@ import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
-import slavsquatsuperstar.mayonezgl.renderer.RenderableGL;
+import slavsquatsuperstar.mayonez.GameWindow;
+import slavsquatsuperstar.mayonez.input.KeyInput;
+import slavsquatsuperstar.mayonez.input.MouseInput;
+import slavsquatsuperstar.mayonez.renderer.Renderable;
 
 import java.nio.IntBuffer;
 
@@ -14,11 +17,13 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
-public class WindowGL {
+public class WindowGL implements GameWindow {
 
     private long window; // The window pointer
     private String title;
     private int width, height;
+
+    private KeyInput keyboard;
 
     public WindowGL(String title, int width, int height) {
         this.title = title;
@@ -27,8 +32,9 @@ public class WindowGL {
         init();
     }
 
-    public boolean isOpen() {
-        return !glfwWindowShouldClose(window);
+    @Override
+    public boolean isClosedByUser() {
+        return glfwWindowShouldClose(window);
     }
 
     // Game Loop methods
@@ -60,10 +66,6 @@ public class WindowGL {
             throw new RuntimeException("Engine: Failed to create the GLFW window");
 
         // Add input listeners
-        glfwSetKeyCallback(window, KeyInputGL::keyCallback);
-        glfwSetMouseButtonCallback(window, MouseInputGL::mouseButtonCallback);
-        glfwSetCursorPosCallback(window, MouseInputGL::mousePosCallback);
-        glfwSetScrollCallback(window, MouseInputGL::mouseScrollCallback);
 
         // Get the thread stack and push a new frame
         try (MemoryStack stack = stackPush()) {
@@ -113,22 +115,35 @@ public class WindowGL {
     // Reset and poll window events
     public void beginFrame() {
         glfwPollEvents();
-        if (KeyInputGL.isKeyPressed(GLFW_KEY_ESCAPE))
+        if (KeyInput.keyDown(GLFW_KEY_ESCAPE))
             glfwSetWindowShouldClose(window, true); // Exit program by pressing escape
     }
 
-    public void render(RenderableGL r) {
+    public void render(Renderable r) {
         glClearColor(1f, 1f, 1f, 1f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear the screen
-        r.render();
+        r.render(null); // don't pass Graphics2D
         glfwSwapBuffers(window); // swap the color buffers
     }
 
     public void endFrame() {
-
         // Reset input data
-        KeyInputGL.endFrame();
+        keyboard.endFrame();
         MouseInputGL.endFrame();
     }
 
+    // Input Methods
+
+    @Override
+    public void setKeyInput(KeyInput keyboard) {
+        this.keyboard = keyboard;
+        glfwSetKeyCallback(window, keyboard::keyCallback);
+    }
+
+    @Override
+    public void setMouseInput(MouseInput mouse) {
+        glfwSetMouseButtonCallback(window, MouseInputGL::mouseButtonCallback);
+        glfwSetCursorPosCallback(window, MouseInputGL::mousePosCallback);
+        glfwSetScrollCallback(window, MouseInputGL::mouseScrollCallback);
+    }
 }

@@ -5,6 +5,8 @@ import slavsquatsuperstar.fileio.Assets;
 import slavsquatsuperstar.mayonez.Logger;
 import slavsquatsuperstar.mayonez.Preferences;
 import slavsquatsuperstar.mayonez.Time;
+import slavsquatsuperstar.mayonez.input.KeyInput;
+import slavsquatsuperstar.mayonez.input.MouseInput;
 import slavsquatsuperstar.mayonezgl.renderer.RendererGL;
 
 import static org.lwjgl.glfw.GLFW.glfwGetTime;
@@ -33,6 +35,8 @@ public class GameGL { // can't implement runnable otherwise GLFW will crash
 
     public GameGL() {
         window = new WindowGL("Mayonez + LWJGL", WIDTH, HEIGHT);
+        window.setKeyInput(KeyInput.INSTANCE);
+        window.setMouseInput(MouseInput.INSTANCE);
     }
 
     public static GameGL instance() {
@@ -93,7 +97,7 @@ public class GameGL { // can't implement runnable otherwise GLFW will crash
 
         try {
             // Render to the screen until the user closes the window or pressed the ESCAPE key
-            while (window.isOpen()) {
+            while (running && !window.isClosedByUser()) {
                 boolean ticked = false; // Has engine actually updated?
                 currentTime = (float) glfwGetTime();
                 float passedTime = currentTime - lastTime;
@@ -117,6 +121,7 @@ public class GameGL { // can't implement runnable otherwise GLFW will crash
                     timer = 0;
                     frames = 0;
                 }
+                window.endFrame();
             }
         } catch (Exception e) {
             Logger.log(ExceptionUtils.getStackTrace(e));
@@ -132,7 +137,7 @@ public class GameGL { // can't implement runnable otherwise GLFW will crash
     }
 
     public void render() {
-        window.render(() -> {
+        window.render((_g2) -> {
             if (scene != null) renderer.render();
         });
     }

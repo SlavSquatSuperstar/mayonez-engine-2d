@@ -30,7 +30,7 @@ public class Game implements Runnable {
     private boolean running;
 
     // Window Fields
-    private final IGameWindow window;
+    private final GameWindow window;
     private static final int WIDTH = Preferences.SCREEN_WIDTH;
     private static final int HEIGHT = Preferences.SCREEN_HEIGHT;
 
@@ -45,8 +45,8 @@ public class Game implements Runnable {
         window = new Window(Preferences.TITLE + " " + Preferences.VERSION, WIDTH, HEIGHT);
 
         // Add input listeners
-        window.addKeyInput(KeyInput.INSTANCE);
-        window.addMouseInput(MouseInput.INSTANCE);
+        window.setKeyInput(KeyInput.INSTANCE);
+        window.setMouseInput(MouseInput.INSTANCE);
 
         physics = new Physics2D();
         renderer = new Renderer();
@@ -109,7 +109,8 @@ public class Game implements Runnable {
     public void run() {
         // All time values are in seconds
         float lastTime = 0; // Last time the game loop iterated
-        float deltaTime = 0; // Time since last frame
+        float currentTime; // Time for current frame
+        float deltaTime = 0; // Time since last update frame
 
         // For rendering
         boolean ticked = false; // Has engine actually updated?
@@ -118,18 +119,19 @@ public class Game implements Runnable {
         float timer = 0;
         int frames = 0;
 
-        while (running) {
-            float currentFrameTime = Time.getTime(); // Time for current frame
-            float passedTime = currentFrameTime - lastTime;
-            deltaTime += passedTime;
-            timer += passedTime;
-            lastTime = currentFrameTime; // Reset lastTime
+        try {
+            while (running && !window.isClosedByUser()) {
+                currentTime = Time.getTime();
+                float passedTime = currentTime - lastTime; // Time since last loop iteration
+                deltaTime += passedTime;
+                timer += passedTime;
+                lastTime = currentTime; // Reset lastTime
 
-            try {
-                // Update the game as many times as possible even if the frame freezes
+                window.beginFrame();
+
+                // Update the game as many times as possible even if the screen freezes
                 while (deltaTime >= Time.TIME_STEP) {
                     update(deltaTime);
-                    // Update = Graphics frame rate, FixedUpdate = Physics frame rate
                     deltaTime -= Time.TIME_STEP;
                     ticked = true;
                 }
@@ -145,13 +147,15 @@ public class Game implements Runnable {
                     frames = 0;
                     timer = 0;
                 }
-            } catch (Exception e) {
-                Logger.warn(ExceptionUtils.getStackTrace(e));
-                e.printStackTrace();
-                stop(1);
-            }
 
-        } // end loop
+                window.endFrame();
+            } // end loop
+
+        } catch (Exception e) {
+            Logger.warn(ExceptionUtils.getStackTrace(e));
+            e.printStackTrace();
+            stop(1);
+        }
 
         stop(0);
     }
@@ -162,12 +166,6 @@ public class Game implements Runnable {
      * @param dt seconds since the last frame
      */
     public void update(float dt) throws Exception { // TODO pass dt or use Game.timestep?
-        // TODO Poll input events
-        if (KeyInput.keyDown("exit")) {
-            running = false;
-            return;
-        }
-
         if (currentScene != null) currentScene.update(dt);
         // TODO multithread physics, set time step higher than refresh rate for smoother results
         physics.physicsUpdate(dt);

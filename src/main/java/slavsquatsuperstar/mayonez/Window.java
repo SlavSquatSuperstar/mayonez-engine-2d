@@ -1,11 +1,13 @@
 package slavsquatsuperstar.mayonez;
 
+import slavsquatsuperstar.mayonez.input.KeyInput;
+import slavsquatsuperstar.mayonez.input.MouseInput;
 import slavsquatsuperstar.mayonez.renderer.Renderable;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.MouseAdapter;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferStrategy;
 
 /**
@@ -13,19 +15,27 @@ import java.awt.image.BufferStrategy;
  *
  * @author SlavSquatSuperstar
  */
-public class Window extends JFrame implements IGameWindow {
+public class Window extends JFrame implements GameWindow {
 
     private BufferStrategy bs;
     private Graphics2D g2;
+
+    private KeyInput keyboard;
+    private boolean closedbyUser;
 
     public Window(String title, int width, int height) {
         super(title);
         setSize(width, height);
         setResizable(false);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // make sure 'x' button quits program
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                closedbyUser = true; // 'x' button will notify game to exit
+            }
+        });
     }
 
-    // Game Loop Methods
+    // Engine Methods
 
     @Override
     public void start() {
@@ -39,6 +49,24 @@ public class Window extends JFrame implements IGameWindow {
         setVisible(false);
         g2.dispose();
         dispose();
+    }
+
+    // Game Loop Methods
+
+    @Override
+    public boolean isClosedByUser() {
+        return closedbyUser;
+    }
+
+    @Override
+    public void beginFrame() {
+        if (KeyInput.keyDown("exit"))
+            closedbyUser = true;
+    }
+
+    @Override
+    public void endFrame() {
+        keyboard.endFrame();
     }
 
     // Render Methods
@@ -81,12 +109,13 @@ public class Window extends JFrame implements IGameWindow {
     // Input Methods
 
     @Override
-    public void addKeyInput(KeyAdapter keyboard) {
+    public void setKeyInput(KeyInput keyboard) {
+        this.keyboard = keyboard;
         addKeyListener(keyboard);
     }
 
     @Override
-    public void addMouseInput(MouseAdapter mouse) {
+    public void setMouseInput(MouseInput mouse) {
         addMouseListener(mouse);
         addMouseMotionListener(mouse);
         addMouseWheelListener(mouse);
