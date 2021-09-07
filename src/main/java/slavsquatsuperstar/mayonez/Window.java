@@ -20,7 +20,7 @@ public class Window extends JFrame implements GameWindow {
     private BufferStrategy bs;
     private Graphics2D g2;
 
-    private KeyInput keyboard;
+//    private KeyInput keyboard;
     private boolean closedbyUser;
 
     public Window(String title, int width, int height) {
@@ -66,7 +66,7 @@ public class Window extends JFrame implements GameWindow {
 
     @Override
     public void endFrame() {
-        keyboard.endFrame();
+        KeyInput.endFrame();
     }
 
     // Render Methods
@@ -110,7 +110,7 @@ public class Window extends JFrame implements GameWindow {
 
     @Override
     public void setKeyInput(KeyInput keyboard) {
-        this.keyboard = keyboard;
+//        this.keyboard = keyboard;
         addKeyListener(keyboard);
     }
 

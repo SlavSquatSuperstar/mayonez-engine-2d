@@ -28,7 +28,7 @@ public interface GameWindow {
     boolean isClosedByUser();
 
     /**
-     * Poll any input or game events.
+     * Poll any input or window events.
      */
     void beginFrame();
 
@@ -40,7 +40,7 @@ public interface GameWindow {
     void render(Renderable r);
 
     /**
-     * Reset input listener states.
+     * Reset events and input listeners.
      */
     void endFrame();
 

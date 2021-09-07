@@ -7,8 +7,6 @@ import slavsquatsuperstar.math.MathUtils.toDegrees
 import slavsquatsuperstar.math.MathUtils.toRadians
 import slavsquatsuperstar.math.Vec2
 import slavsquatsuperstar.mayonez.Component
-import slavsquatsuperstar.mayonez.GameObject
-import slavsquatsuperstar.mayonez.Transform
 import slavsquatsuperstar.mayonez.physics2d.colliders.AlignedBoxCollider2D
 import slavsquatsuperstar.mayonez.physics2d.colliders.BoxCollider2D
 import slavsquatsuperstar.mayonez.physics2d.colliders.CircleCollider
@@ -36,11 +34,17 @@ class Rigidbody2D(mass: Float, drag: Float, angDrag: Float) : Component() {
 
     // Physics Properties
     var mass: Float = mass
-        set(mass) {
+        set(mass): Unit {
             field = 0f.coerceAtLeast(mass)
         }
-    private var followsGravity: Boolean = true
-    private var fixedRotation: Boolean = false
+
+    var followsGravity: Boolean = true
+        @JvmName("isFollowsGravity") get
+        private set
+
+    var fixedRotation: Boolean = false
+        @JvmName("isFixedRotation") get
+        private set
 
     // Linear Motion Fields
     private var netForce: Vec2 = Vec2()
@@ -104,14 +108,10 @@ class Rigidbody2D(mass: Float, drag: Float, angDrag: Float) : Component() {
     val speed: Float
         get() = velocity.len()
 
-    fun isFollowsGravity(): Boolean = followsGravity
-
     fun setFollowsGravity(followsGravity: Boolean): Rigidbody2D {
         this.followsGravity = followsGravity
         return this
     }
-
-    fun isFixedRotation(): Boolean = fixedRotation;
 
     fun setFixedRotation(fixedRotation: Boolean): Rigidbody2D {
         this.fixedRotation = fixedRotation

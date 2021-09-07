@@ -29,15 +29,15 @@ abstract class Collider2D : Component() {
     /**
      * A reference to the parent object's [Rigidbody2D]
      */
-    @JvmField
-    protected var rb: Rigidbody2D? = null
+    var rb: Rigidbody2D? = null
+        /**
+         * Returns the parent object's [Rigidbody2D]. A collider should have rigidbody to react to collisions.
+         *
+         * @return the attached rigidbody
+         */
+        @JvmName("getRigidbody") get
+        protected set
 
-    /**
-     * Returns the parent object's [Rigidbody2D]. A collider should have rigidbody to react to collisions.
-     *
-     * @return the attached rigidbody
-     */
-    fun getRigidbody(): Rigidbody2D? = rb
 
     @SuppressWarnings("unchecked")
     fun <T : Collider2D?> setRigidbody(rb: Rigidbody2D?): T {
@@ -66,12 +66,12 @@ abstract class Collider2D : Component() {
         return this
     }
 
-    /**
-     * Whether this collider is non-physical and should not react to collisions.
-     */
-    private var isTrigger = false
-
-    fun isTrigger(): Boolean = isTrigger
+    var isTrigger = false
+        /**
+         * Returns this collider is non-physical and should not react to collisions.
+         */
+        @JvmName("isTrigger") get
+        private set
 
     fun setTrigger(trigger: Boolean): Collider2D {
         isTrigger = trigger

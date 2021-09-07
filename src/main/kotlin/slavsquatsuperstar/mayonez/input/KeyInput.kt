@@ -10,6 +10,7 @@ import java.awt.event.KeyEvent
  *
  * @author SlavSquatSuperstar
  */
+// TODO game loop / callback methods shouldn't be accessible from API (called statically)
 object KeyInput : KeyAdapter() {
 
     // Key Fields
@@ -17,13 +18,17 @@ object KeyInput : KeyAdapter() {
     private val keysLast = BooleanArray(350) // continuously held
     private val keysDown = BooleanArray(350) // tapped once
 
-    // Game Loop Methods (should not be called statically)
+    // Game Loop Methods
 
+    @JvmStatic
     fun endFrame() {
         keysLast.fill(element = false)
     }
 
+    // GLFW Callback Methods
+
     @SuppressWarnings("unused")
+    @JvmStatic
     fun keyCallback(window: Long, key: Int, scancode: Int, action: Int, mods: Int) {
         if (action == GLFW_PRESS) {
             keysDown[key] = true
@@ -36,10 +41,12 @@ object KeyInput : KeyAdapter() {
 
     // KeyListener Overrides
 
-    override fun keyPressed(e: KeyEvent) {
+    override fun keyPressed(e: KeyEvent) { // works in window begin frame, but not game update
         val code = e.keyCode
-        keysLast[code] = true
-        keysDown[code] = true
+        if (!keyDown(code)) { // only register press if not down
+            keysLast[code] = true
+            keysDown[code] = true
+        }
     }
 
     override fun keyReleased(e: KeyEvent) {
@@ -57,26 +64,35 @@ object KeyInput : KeyAdapter() {
     fun keyPressed(keyCode: Int): Boolean = keysLast[keyCode]
 
     /**
-     * Whether any of the keys associated with the specified [KeyMapping] are pressed.
+     * Returns whether any of the keys associated with the specified [KeyMapping] is continuously held down.
      *
-     * @param keyName The name of the [KeyMapping].
-     * @return Whether the specified key is pressed.
+     * @param keyName the name of the [KeyMapping]
+     * @return if the specified key is down
      */
     @JvmStatic
     fun keyDown(keyName: String): Boolean {
         for (m in KeyMapping.values()) {
             if (m.name.equals(keyName, ignoreCase = true)) { // if the desired mapping exists
-                for (code in m.keyCodes) if (keysDown[code]) return true
+                for (code in m.keyCodes) if (keyDown(code)) return true
             }
         }
         return false
     }
 
+    /**
+     * Returns whether any of the keys associated with the specified [KeyMapping] has been pressed.
+     *
+     * @param keyName the name of the [KeyMapping]
+     * @return if the specified key was pressed
+     */
+    /*
+     * maybe too slow and not being called early enough
+     */
     @JvmStatic
     fun keyPressed(keyName: String): Boolean {
         for (m in KeyMapping.values()) {
             if (m.name.equals(keyName, ignoreCase = true)) { // if the desired mapping exists
-                for (code in m.keyCodes) if (keysLast[code]) return true
+                for (code in m.keyCodes) if (keyPressed(code)) return true
             }
         }
         return false

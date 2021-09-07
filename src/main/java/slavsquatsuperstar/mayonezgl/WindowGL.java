@@ -23,7 +23,7 @@ public class WindowGL implements GameWindow {
     private String title;
     private int width, height;
 
-    private KeyInput keyboard;
+//    private KeyInput keyboard;
 
     public WindowGL(String title, int width, int height) {
         this.title = title;
@@ -112,7 +112,8 @@ public class WindowGL implements GameWindow {
         glfwSetErrorCallback(null).free();
     }
 
-    // Reset and poll window events
+    // Game Loop Methods
+
     public void beginFrame() {
         glfwPollEvents();
         if (KeyInput.keyDown(GLFW_KEY_ESCAPE))
@@ -127,17 +128,16 @@ public class WindowGL implements GameWindow {
     }
 
     public void endFrame() {
-        // Reset input data
-        keyboard.endFrame();
         MouseInputGL.endFrame();
+        KeyInput.endFrame();
     }
 
     // Input Methods
 
     @Override
     public void setKeyInput(KeyInput keyboard) {
-        this.keyboard = keyboard;
-        glfwSetKeyCallback(window, keyboard::keyCallback);
+//        this.keyboard = keyboard;
+        glfwSetKeyCallback(window, KeyInput::keyCallback);
     }
 
     @Override
