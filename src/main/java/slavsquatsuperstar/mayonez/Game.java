@@ -120,7 +120,7 @@ public class Game implements Runnable {
         int frames = 0;
 
         try {
-            while (running && !window.isClosedByUser()) {
+            while (running && window.notClosedByUser()) {
                 currentTime = Time.getTime();
                 float passedTime = currentTime - lastTime; // Time since last loop iteration
                 deltaTime += passedTime;

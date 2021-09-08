@@ -97,7 +97,7 @@ public class GameGL { // can't implement runnable otherwise GLFW will crash
 
         try {
             // Render to the screen until the user closes the window or pressed the ESCAPE key
-            while (running && !window.isClosedByUser()) {
+            while (running && window.notClosedByUser()) {
                 boolean ticked = false; // Has engine actually updated?
                 currentTime = (float) glfwGetTime();
                 float passedTime = currentTime - lastTime;

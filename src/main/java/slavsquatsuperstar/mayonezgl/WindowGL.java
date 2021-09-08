@@ -36,8 +36,8 @@ public class WindowGL implements GameWindow {
     // Engine methods
 
     @Override
-    public boolean isClosedByUser() {
-        return glfwWindowShouldClose(window);
+    public boolean notClosedByUser() {
+        return !glfwWindowShouldClose(window);
     }
 
     /**

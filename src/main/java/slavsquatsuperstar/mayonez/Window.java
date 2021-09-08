@@ -55,8 +55,8 @@ public class Window extends JFrame implements GameWindow {
     // Game Loop Methods
 
     @Override
-    public boolean isClosedByUser() {
-        return closedbyUser;
+    public boolean notClosedByUser() {
+        return !closedbyUser;
     }
 
     @Override

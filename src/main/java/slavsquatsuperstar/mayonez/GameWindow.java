@@ -25,7 +25,7 @@ public interface GameWindow {
 
     // Game Loop Methods
 
-    boolean isClosedByUser();
+    boolean notClosedByUser();
 
     /**
      * Poll any input or window events.
@@ -49,9 +49,9 @@ public interface GameWindow {
     /**
      * Set the keyboard listener for this window.
      *
-     * @param keys a {@link KeyInput} instance
+     * @param keyboard a {@link KeyInput} instance
      */
-    void setKeyInput(KeyInput keys);
+    void setKeyInput(KeyInput keyboard);
 
     /**
      * Set the mouse listener for this window.
