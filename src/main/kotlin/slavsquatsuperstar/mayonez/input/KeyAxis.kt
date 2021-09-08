@@ -5,7 +5,8 @@ import org.apache.commons.lang3.StringUtils
 /**
  * Stores two keys intended to perform opposite actions.
  */
-enum class KeyAxis(posKey: KeyMapping, negKey: KeyMapping) {
+// TODO store mappings?
+internal enum class KeyAxis(posKey: KeyMapping, negKey: KeyMapping) {
     VERTICAL(KeyMapping.DOWN, KeyMapping.UP), HORIZONTAL(KeyMapping.RIGHT, KeyMapping.LEFT);
 
     private val posKey: String = posKey.name
@@ -16,14 +17,12 @@ enum class KeyAxis(posKey: KeyMapping, negKey: KeyMapping) {
      * 0 if the both or neither key is pressed.
      */
     internal fun value(): Int {
-        // "vector "method to make sure keys don't override each other
-        val negComp = if (KeyInput.keyDown(negKey)) -1 else 0
-        val posComp = if (KeyInput.keyDown(posKey)) 1 else 0
-        return negComp + posComp
+        // add neg and pos keys to make sure pressing a new key doesn't override the other
+        val negVal = if (KeyInput.keyDown(negKey)) -1 else 0
+        val posVal = if (KeyInput.keyDown(posKey)) 1 else 0
+        return negVal + posVal
     }
 
-    override fun toString(): String {
-        return StringUtils.capitalize(name.lowercase())
-    }
+    override fun toString(): String = StringUtils.capitalize(name.lowercase())
 
 }

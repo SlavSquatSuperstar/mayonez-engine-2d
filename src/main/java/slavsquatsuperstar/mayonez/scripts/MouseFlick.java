@@ -26,7 +26,7 @@ public class MouseFlick extends MouseScript {
     public void onMouseDown() {
         if (activeInstance == null) {
             activeInstance = this;
-            lastMouse = MouseInput.getPosition();
+            lastMouse = MouseInput.getWorldPos();
         }
     }
 
@@ -40,7 +40,7 @@ public class MouseFlick extends MouseScript {
 
     @Override
     protected Vec2 getRawInput() {
-        Vec2 dragDisplacement = MouseInput.getPosition().sub(lastMouse);
+        Vec2 dragDisplacement = MouseInput.getWorldPos().sub(lastMouse);
         return dragDisplacement.mul(inverted ? -1 : 1);
     }
 

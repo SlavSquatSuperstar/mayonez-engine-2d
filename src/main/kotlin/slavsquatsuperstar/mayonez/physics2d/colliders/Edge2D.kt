@@ -17,7 +17,7 @@ class Edge2D(@JvmField val start: Vec2, @JvmField val end: Vec2) {
         get() = (end.y - start.y) / (end.x - start.x)
 
     val length: Float
-        get() = start.distance(end)
+        @JvmName("length") get() = start.distance(end)
 
     fun toVector(): Vec2 = end - start
 

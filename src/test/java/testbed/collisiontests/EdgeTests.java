@@ -129,7 +129,7 @@ public class EdgeTests {
     public void lineIntersectionCorrectDistance() {
         Edge2D e1 = new Edge2D(new Vec2(-2, 0), new Vec2(2, 0));
         Edge2D e2 = new Edge2D(new Vec2(0, -2), new Vec2(0, 2));
-        assertEquals(2, e1.raycast(new Ray2D(e2), e2.getLength()).getDistance(), MathUtils.EPSILON);
+        assertEquals(2, e1.raycast(new Ray2D(e2), e2.length()).getDistance(), MathUtils.EPSILON);
     }
 
     @Test
@@ -137,7 +137,7 @@ public class EdgeTests {
         Edge2D e1 = new Edge2D(new Vec2(-2, 0), new Vec2(2, 0));
         Edge2D e2 = new Edge2D(new Vec2(0, -2), new Vec2(0, 2));
         Ray2D ray = new Ray2D(e2);
-        assertEquals(new Vec2(), ray.getPoint(e1.raycast(ray, e2.getLength()).getDistance()));
+        assertEquals(new Vec2(), ray.getPoint(e1.raycast(ray, e2.length()).getDistance()));
     }
 
     // Clip Line

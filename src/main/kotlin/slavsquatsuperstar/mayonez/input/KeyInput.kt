@@ -11,54 +11,50 @@ import java.awt.event.KeyEvent
  * @author SlavSquatSuperstar
  */
 // TODO game loop / callback methods shouldn't be accessible from API (called statically)
+// isKeyPressed() works in window begin frame, but not game update -> query too slow?
 object KeyInput : KeyAdapter() {
 
     // Key Fields
-
+    private val keys = BooleanArray(350) // tapped once
     private val keysLast = BooleanArray(350) // continuously held
-    private val keysDown = BooleanArray(350) // tapped once
 
     // Game Loop Methods
 
     @JvmStatic
     fun endFrame() {
-        keysLast.fill(element = false)
+        keysLast.fill(false)
     }
 
-    // GLFW Callback Methods
+    // Keyboard Callbacks
 
-    @SuppressWarnings("unused")
     @JvmStatic
+    @SuppressWarnings("unused")
     fun keyCallback(window: Long, key: Int, scancode: Int, action: Int, mods: Int) {
-        if (action == GLFW_PRESS) {
-            keysDown[key] = true
-            keysLast[key] = true
-        } else if (action == GLFW_RELEASE) {
-            keysDown[key] = false
-            keysLast[key] = false
+        when (action) {
+            GLFW_PRESS -> setKey(key, true)
+            GLFW_RELEASE -> setKey(key, false);
         }
     }
 
-    // KeyListener Overrides
-
-    override fun keyPressed(e: KeyEvent) { // works in window begin frame, but not game update
-        val code = e.keyCode
-        if (!keyDown(code)) { // only register press if not down
-            keysLast[code] = true
-            keysDown[code] = true
-        }
+    override fun keyPressed(e: KeyEvent) {
+        if (!keyDown(e.keyCode)) setKey(e.keyCode, true) // only register press if not down
     }
 
     override fun keyReleased(e: KeyEvent) {
-        val code = e.keyCode
-        keysLast[code] = false
-        keysDown[code] = false
+        setKey(e.keyCode, false)
+    }
+
+    private fun setKey(keyCode: Int, isDown: Boolean) {
+        if (keyCode < keys.size) {
+            keysLast[keyCode] = isDown
+            keys[keyCode] = isDown
+        }
     }
 
     // Keyboard Getters
 
     @JvmStatic
-    fun keyDown(keyCode: Int): Boolean = keysDown[keyCode]
+    fun keyDown(keyCode: Int): Boolean = keys[keyCode]
 
     @JvmStatic
     fun keyPressed(keyCode: Int): Boolean = keysLast[keyCode]
@@ -71,11 +67,9 @@ object KeyInput : KeyAdapter() {
      */
     @JvmStatic
     fun keyDown(keyName: String): Boolean {
-        for (m in KeyMapping.values()) {
-            if (m.name.equals(keyName, ignoreCase = true)) { // if the desired mapping exists
+        for (m in KeyMapping.values())
+            if (m.name.equals(keyName, ignoreCase = true)) // if the desired mapping exists
                 for (code in m.keyCodes) if (keyDown(code)) return true
-            }
-        }
         return false
     }
 
@@ -85,21 +79,16 @@ object KeyInput : KeyAdapter() {
      * @param keyName the name of the [KeyMapping]
      * @return if the specified key was pressed
      */
-    /*
-     * maybe too slow and not being called early enough
-     */
     @JvmStatic
     fun keyPressed(keyName: String): Boolean {
-        for (m in KeyMapping.values()) {
-            if (m.name.equals(keyName, ignoreCase = true)) { // if the desired mapping exists
+        for (m in KeyMapping.values())
+            if (m.name.equals(keyName, ignoreCase = true))
                 for (code in m.keyCodes) if (keyPressed(code)) return true
-            }
-        }
         return false
     }
 
     @JvmStatic
-    fun getAxis(axisName: String?): Int {
+    fun getAxis(axisName: String): Int {
         for (a in KeyAxis.values())
             if (a.toString().equals(axisName, ignoreCase = true))
                 return a.value()

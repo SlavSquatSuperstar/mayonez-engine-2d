@@ -24,6 +24,7 @@ public class WindowGL implements GameWindow {
     private int width, height;
 
 //    private KeyInput keyboard;
+//    private MouseInput mouse;
 
     public WindowGL(String title, int width, int height) {
         this.title = title;
@@ -32,12 +33,12 @@ public class WindowGL implements GameWindow {
         init();
     }
 
+    // Engine methods
+
     @Override
     public boolean isClosedByUser() {
         return glfwWindowShouldClose(window);
     }
-
-    // Game Loop methods
 
     /**
      * Initialize GLFW window and features.
@@ -128,8 +129,8 @@ public class WindowGL implements GameWindow {
     }
 
     public void endFrame() {
-        MouseInputGL.endFrame();
         KeyInput.endFrame();
+        MouseInput.endFrame();
     }
 
     // Input Methods
@@ -142,8 +143,9 @@ public class WindowGL implements GameWindow {
 
     @Override
     public void setMouseInput(MouseInput mouse) {
-        glfwSetMouseButtonCallback(window, MouseInputGL::mouseButtonCallback);
-        glfwSetCursorPosCallback(window, MouseInputGL::mousePosCallback);
-        glfwSetScrollCallback(window, MouseInputGL::mouseScrollCallback);
+//        this.mouse = mouse;
+        glfwSetMouseButtonCallback(window, MouseInput::mouseButtonCallback);
+        glfwSetCursorPosCallback(window, MouseInput::mousePosCallback);
+        glfwSetScrollCallback(window, MouseInput::mouseScrollCallback);
     }
 }

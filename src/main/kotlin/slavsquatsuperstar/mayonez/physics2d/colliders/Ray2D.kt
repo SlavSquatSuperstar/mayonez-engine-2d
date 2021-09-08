@@ -73,7 +73,6 @@ class Ray2D(val origin: Vec2, direction: Vec2) {
         // rotate left or right depending on which side ray started form
     }
 
-
     // TODO Get length from distance along axis
     // S = √(1 + (dy/dx)^2)
     override fun toString(): String {

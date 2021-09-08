@@ -1,10 +1,11 @@
 package slavsquatsuperstar.mayonez.input
 
+import org.lwjgl.glfw.GLFW
 import slavsquatsuperstar.math.Vec2
 import slavsquatsuperstar.mayonez.Game
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
-import java.util.*
+import java.awt.event.MouseWheelEvent
 
 /**
  * The receiver for all mouse-related input events.
@@ -13,100 +14,192 @@ import java.util.*
  */
 object MouseInput : MouseAdapter() {
 
-    // TODO world vs screen
+    /*
+     * Fields and Properties
+     */
+
     // Mouse Pointer Fields (in pixels)
-    var xScreen = 0
-        private set
-    var yScreen = 0
-        private set
-    var dxScreen = 0
-        private set
-    var dyScreen = 0
-        private set
+    private var mouseX: Float = 0.0f
+    private var mouseY: Float = 0.0f
+    private var mouseDx: Float = 0.0f // drag displacement
+    private var mouseDy: Float = 0.0f
 
-    // Mouse State Fields / Getters
-    @JvmStatic
-    var pressed = false
-        private set
+    // Mouse Scroll Fields
+    private var scrollX: Float = 0.0f
+    private var scrollY: Float = 0.0f
 
-    @JvmStatic
-    var dragged = false
-        private set
+    // Mouse Button Fields
+
+    private var buttons = BooleanArray(9)
+    private var buttonsLast = BooleanArray(9)
 
     @JvmStatic
-    var button = 0
+    // TODO isDragging() method
+    var pressed: Boolean = false // assuming only one button clicked at a time
+        @JvmName("isPressed") get
         private set
 
     @JvmStatic
-    var clicks = 0
+    var clicks: Int = 0 // doesn't work with GL yet
         private set
 
-    // MouseListener Method Overrides
+    // Game Loop Methods
+
+    @JvmStatic
+    fun endFrame() {
+        setMouseDisp(0, 0)
+        setScrollPos(0, 0)
+        buttonsLast.fill(false)
+    }
+
+    /*
+     * Callback Methods
+     */
+
+    // Mouse Button Callbacks
+
+    @JvmStatic
+    @SuppressWarnings("unused")
+    fun mouseButtonCallback(window: Long, button: Int, action: Int, mods: Int) {
+        if (action == GLFW.GLFW_PRESS) {
+            setButton(button, true)
+        } else if (action == GLFW.GLFW_RELEASE) {
+            setButton(button, false)
+            pressed = false
+        }
+    }
 
     override fun mousePressed(e: MouseEvent) {
-        pressed = true
-        button = e.button
+        val button = e.button
+        setButton(button, true)
         clicks = e.clickCount
     }
 
     override fun mouseReleased(e: MouseEvent) {
-        dragged = false
-        pressed = dragged
-        dyScreen = 0
-        dxScreen = dyScreen
+        val button = e.button
+        setButton(button, false)
+        setMouseDisp(0, 0)
         clicks = 0
     }
 
+    private fun setButton(button: Int, isDown: Boolean) {
+        if (button < buttons.size) {
+            buttons[button] = isDown
+            buttonsLast[button] = isDown
+            pressed = isDown
+        }
+    }
+
+    // Mouse Movement Callbacks
+
+    @JvmStatic
+    @SuppressWarnings("unused")
+    fun mousePosCallback(window: Long, xPos: Double, yPos: Double) {
+        if (pressed) setMouseDisp(xPos - mouseX, yPos - mouseY)
+        setMousePos(xPos, yPos)
+    }
+
     override fun mouseMoved(e: MouseEvent) {
-        xScreen = e.x
-        yScreen = e.y
+        setMousePos(e.x, e.y)
     }
 
     override fun mouseDragged(e: MouseEvent) {
-        dragged = true
-        dxScreen = e.x - xScreen
-        dyScreen = e.y - yScreen
-        xScreen = e.x
-        yScreen = e.y
+        pressed = true
+        setMouseDisp(e.x - mouseX, e.y - mouseY)
+        setMousePos(e.x, e.y)
+    }
+
+    private fun setMousePos(x: Number, y: Number) {
+        mouseX = x.toFloat()
+        mouseY = y.toFloat()
+    }
+
+    private fun setMouseDisp(dx: Number, dy: Number) {
+        mouseDx = dx.toFloat()
+        mouseDy = dy.toFloat()
+    }
+
+    // Mouse Scroll Callbacks
+
+    @JvmStatic
+    @SuppressWarnings("unused")
+    fun mouseScrollCallback(window: Long, xOffset: Double, yOffset: Double) {
+        setScrollPos(xOffset, yOffset)
+    }
+
+    override fun mouseWheelMoved(e: MouseWheelEvent) {
+        setScrollPos(e.x, e.y)
+    }
+
+    private fun setScrollPos(scrollX: Number, scrollY: Number) {
+        this.scrollX = scrollX.toFloat()
+        this.scrollY = scrollY.toFloat()
     }
 
     // Mouse Button Getters
 
     @JvmStatic
-    fun buttonDown(buttonName: String?): Boolean {
-        for (b in MouseMapping.values()) if (b.toString()
-                .equals(buttonName, ignoreCase = true)
-        ) return pressed && button == b.button
+    fun buttonDown(button: Int): Boolean = buttons[button]
+
+    @JvmStatic
+    fun buttonPressed(button: Int): Boolean = buttonsLast[button]
+
+    @JvmStatic
+    fun buttonDown(buttonName: String): Boolean {
+        for (b in MouseMapping.values())
+            if (b.toString().equals(buttonName, ignoreCase = true))
+                return buttons[b.button]
         return false
     }
 
-    // Mouse Pointer Getters
-
     @JvmStatic
-    fun getX(): Float = xScreen.toFloat() / Game.currentScene().cellSize
-
-    @JvmStatic
-    fun getY(): Float = yScreen.toFloat() / Game.currentScene().cellSize
-
-    @JvmStatic
-    fun getPosition(): Vec2 = Vec2(getX(), getY())
-
-    @JvmStatic
-    fun getDx(): Float = dxScreen.toFloat() / Game.currentScene().cellSize
-
-    @JvmStatic
-    fun getDy(): Float = dyScreen.toFloat() / Game.currentScene().cellSize
-
-    @JvmStatic
-    fun getDisplacement(): Vec2 = Vec2(getDx(), getDy())
-
-    // Enum Declaration
-    internal enum class MouseMapping(var button: Int) {
-        LEFT_MOUSE(MouseEvent.BUTTON1), RIGHT_MOUSE(MouseEvent.BUTTON3), MIDDLE_MOUSE(MouseEvent.BUTTON2);
-
-        override fun toString(): String {
-            // ex: MouseMapping.LEFT_MOUSE returns "left mouse"
-            return name.replace('_', ' ').lowercase(Locale.getDefault())
-        }
+    fun buttonPressed(buttonName: String): Boolean {
+        for (b in MouseMapping.values())
+            if (b.toString().equals(buttonName, ignoreCase = true))
+                return buttonsLast[b.button]
+        return false
     }
+
+    // Mouse Position Getters
+
+    @JvmStatic
+    fun getScreenX(): Float = mouseX
+
+    @JvmStatic
+    fun getScreenY(): Float = mouseY
+
+    @JvmStatic
+    fun getScreenPos(): Vec2 = Vec2(mouseX, mouseY)
+
+    @JvmStatic
+    fun getWorldX(): Float = mouseX.toWorld()
+
+    @JvmStatic
+    fun getWorldY(): Float = mouseY.toWorld()
+
+    @JvmStatic
+    fun getWorldPos(): Vec2 = Vec2(getWorldX(), getWorldY())
+
+    // Mouse Displacement Getters
+
+    @JvmStatic
+    fun getScreenDx(): Float = mouseDx
+
+    @JvmStatic
+    fun getScreenDy(): Float = mouseDy
+
+    @JvmStatic
+    fun getScreenDisp(): Vec2 = Vec2(mouseDx, mouseDy)
+
+    @JvmStatic
+    fun getWorldDx(): Float = mouseDx.toWorld()
+
+    @JvmStatic
+    fun getWorldDy(): Float = mouseDy.toWorld()
+
+    @JvmStatic
+    fun getWorldDisp(): Vec2 = Vec2(getWorldDx(), getWorldDy())
+
+    private fun Float.toWorld(): Float = this / (Game.currentScene()?.cellSize?.toFloat() ?: 1.0f)
+
 }
