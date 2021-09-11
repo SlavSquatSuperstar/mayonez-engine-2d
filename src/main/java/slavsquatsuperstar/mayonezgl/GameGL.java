@@ -134,7 +134,6 @@ public class GameGL { // can't implement runnable otherwise GLFW will crash
 
     public void update(float dt) {
         if (scene != null) scene.update(dt);
-        Logger.log(MouseInput.getScreenDisp());
     }
 
     public void render() {

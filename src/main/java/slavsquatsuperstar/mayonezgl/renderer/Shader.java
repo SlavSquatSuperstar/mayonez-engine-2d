@@ -148,8 +148,12 @@ public class Shader extends TextFile {
         glUniform1i(uploadVariable(varName), i);
     }
 
+    public void uploadIntArray(String varName, int[] arr) {
+        glUniform1iv(uploadVariable(varName), arr);
+    }
+
     public void uploadTexture(String varName, int slot) {
-        glUniform1i(uploadVariable(varName), slot);
+        uploadInt(varName, slot);
     }
 
     private int uploadVariable(String varName) {

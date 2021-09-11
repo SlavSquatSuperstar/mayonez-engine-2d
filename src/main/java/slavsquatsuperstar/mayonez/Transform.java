@@ -28,6 +28,11 @@ public class Transform { // TODO extend component?
         this.position = position;
     }
 
+    public Transform(Vec2 position, Vec2 scale) {
+        this.position = position;
+        this.scale = scale;
+    }
+
     // Property Mutator Methods
 
     /**

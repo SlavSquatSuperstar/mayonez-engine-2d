@@ -28,15 +28,7 @@ object Preferences {
     @JvmField
     val SCREEN_HEIGHT: Int = preferences.getInt("height")
 
-    // Engine
-    @JvmField
-    val FPS: Int = preferences.getInt("fps")
-
-    @JvmField
-    val IMPULSE_ITERATIONS: Int = preferences.getInt("physics_iterations")
-
     // Logging
-
     @JvmField
     val SAVE_LOGS: Boolean = preferences.getBool("save_logs")
 
@@ -45,6 +37,20 @@ object Preferences {
 
     @JvmField
     val LOG_LEVEL: Int = preferences.getInt("log_level")
+
+    // Renderer
+    @JvmField
+    val FPS: Int = preferences.getInt("fps")
+
+    @JvmField
+    val MAX_BATCH_SIZE: Int = preferences.getInt("max_batch_size")
+
+    @JvmField
+    val MAX_TEXTURE_SLOTS: Int = preferences.getInt("max_texture_slots")
+
+    // Physics
+    @JvmField
+    val IMPULSE_ITERATIONS: Int = preferences.getInt("physics_iterations")
 
     // File I/O
     const val CHARSET: String = "UTF-8"

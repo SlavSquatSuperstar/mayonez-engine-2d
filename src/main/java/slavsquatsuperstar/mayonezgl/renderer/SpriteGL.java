@@ -67,8 +67,8 @@ public class SpriteGL {
         }
     }
 
-    public void bind() {
-        glActiveTexture(GL_TEXTURE0);
+    public void bind(int texSlot) {
+        glActiveTexture(GL_TEXTURE0 + texSlot + 1);
         glBindTexture(GL_TEXTURE_2D, texID);
     }
 

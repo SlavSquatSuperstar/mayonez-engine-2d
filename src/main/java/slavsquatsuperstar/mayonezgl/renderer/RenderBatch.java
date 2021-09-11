@@ -1,10 +1,15 @@
 package slavsquatsuperstar.mayonezgl.renderer;
 
+import org.joml.Vector2f;
 import org.joml.Vector4f;
 import slavsquatsuperstar.fileio.Assets;
 import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
+import slavsquatsuperstar.mayonez.Preferences;
 import slavsquatsuperstar.mayonezgl.GameGL;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.lwjgl.opengl.GL11.GL_FLOAT;
 import static org.lwjgl.opengl.GL15.*;
@@ -22,10 +27,9 @@ public class RenderBatch {
 
     // Vertex Parameters
     /*
-     * Pos              Color
-     * float, float     float, float, float, float
+     * Pos (2), Color (4), Tex Coords (2), Tex ID (1)
      */
-    private final int[] ATTRIB_SIZES = {2, 4}; // position, colors
+    private final int[] ATTRIB_SIZES = {2, 4, 2, 1};
     private final int VERTEX_SIZE = MathUtils.sum(ATTRIB_SIZES); // floats inside one vertex
     private final int VERTICES_PER_SPRITE = 4;
     private final int VERTICES_PER_QUAD = 6;
@@ -33,8 +37,10 @@ public class RenderBatch {
     // Sprite Renderer Fields
     private final SpriteRenderer[] sprites;
     private int numSprites = 0;
+    private int[] texSlots = new int[Preferences.MAX_TEXTURE_SLOTS]; // support multiple textures in batch
 
     // Renderer Data
+    private final List<SpriteGL> textures;
     private Shader shader;
     private float[] vertices; // quads
     private int vaoID, vboID;
@@ -43,6 +49,9 @@ public class RenderBatch {
         sprites = new SpriteRenderer[maxBatchSize]; // shader array capacity
         shader = Assets.getAsset("assets/shaders/default.glsl", Shader.class);
         vertices = new float[maxBatchSize * VERTICES_PER_SPRITE * VERTEX_SIZE];
+        for (int i = 0; i < texSlots.length; i++)
+            texSlots[i] = i; // ints 0-7
+        textures = new ArrayList<>();
     }
 
     // Game Loop Methods
@@ -84,6 +93,12 @@ public class RenderBatch {
         shader.uploadMat4("uProjection", GameGL.getScene().getCamera().getProjectionMatrix());
         shader.uploadMat4("uView", GameGL.getScene().getCamera().getViewMatrix());
 
+        // Bind the texture
+        for (int i = 0; i < textures.size(); i++)
+            textures.get(i).bind(i);
+
+        shader.uploadIntArray("uTextures", texSlots);
+
         // Upload vertices and draw triangles
         glBindVertexArray(vaoID);
         glEnableVertexAttribArray(0);
@@ -94,15 +109,22 @@ public class RenderBatch {
         glDisableVertexAttribArray(0);
         glDisableVertexAttribArray(1);
         glBindVertexArray(0);
+        for (SpriteGL texture : textures)
+            texture.unbind();
         shader.unbind();
     }
 
     // Sprite Renderer Methods
 
-    public void addSprite(SpriteRenderer sr) {
+    public void addSprite(SpriteRenderer spr) {
         int index = numSprites++;
-        sprites[index] = sr;
+        sprites[index] = spr;
         loadVertexProperties(index);
+
+        SpriteGL tex = spr.getTexture();
+        // TODO limit number of textures
+        if (tex != null && !textures.contains(tex))
+            textures.add(tex);
     }
 
     // Helper Methods
@@ -123,14 +145,28 @@ public class RenderBatch {
     private void loadVertexProperties(int index) { // create vertices for a sprite
         SpriteRenderer sprite = sprites[index];
         int offset = index * VERTICES_PER_SPRITE * VERTEX_SIZE; // 4 vertices per sprite
-        Vector4f color = sprite.getColor();
 
-        // Add vertices with the appropriate properties
+        Vector4f color = sprite.getColor();
+        Vector2f[] texCoords = sprite.getTexCoords();
+
+        SpriteGL tex = sprite.getTexture();
+        if (tex != null) {
+            if (!textures.contains(tex))
+                textures.add(tex);
+        }
+        int texID = textures.indexOf(tex) + 1;
+        // texID 0 means no texture
+
+        // Load properties for each vertex
         Vec2[] quadVertices = {new Vec2(1, 1), new Vec2(1, 0), new Vec2(0, 0), new Vec2(0, 1)};
-        for (Vec2 v : quadVertices) {
-            Vec2 position = sprite.getTransform().position.add(v.mul(sprite.getTransform().scale)); // pos = obj_pos + vert_pos * obj_scale
-            float[] attributes = {position.x, position.y, color.x, color.y, color.z, color.w};
-            // Load position and color
+        for (int i = 0; i < quadVertices.length; i++) {
+            Vec2 position = sprite.getTransform().position.add(quadVertices[i].mul(sprite.getTransform().scale)); // pos = obj_pos + vert_pos * obj_scale
+            float[] attributes = {
+                    position.x, position.y,
+                    color.x, color.y, color.z, color.w,
+                    texCoords[i].x, texCoords[i].y,
+                    texID
+            };
             System.arraycopy(attributes, 0, vertices, offset, attributes.length);
             offset += VERTEX_SIZE;
         }
@@ -142,8 +178,9 @@ public class RenderBatch {
         return sprites.length;
     }
 
+    // if has capacity for sprite and text slots not full
     public boolean hasRoom() {
-        return numSprites < getMaxBatchSize();
+        return numSprites < getMaxBatchSize() && textures.size() <= texSlots.length;
     }
 
 }

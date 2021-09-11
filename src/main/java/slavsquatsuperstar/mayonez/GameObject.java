@@ -34,6 +34,12 @@ public class GameObject {
         components = new ArrayList<>();
     }
 
+    public GameObject(String name, Transform transform) {
+        this.name = name;
+        this.transform = transform;
+        components = new ArrayList<>();
+    }
+
     // Game Methods
 
     /**
