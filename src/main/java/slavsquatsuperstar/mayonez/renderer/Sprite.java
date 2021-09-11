@@ -2,6 +2,7 @@ package slavsquatsuperstar.mayonez.renderer;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import slavsquatsuperstar.fileio.Assets;
+import slavsquatsuperstar.fileio.Texture;
 import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.Component;
@@ -26,9 +27,10 @@ public class Sprite extends Component {
 
     public Sprite(String filename) {
         try {
-            byte[] bytes = Assets.readContents(filename);
+            Texture texture = Assets.getAsset(filename, Texture.class);
+            byte[] bytes = texture.getImageData();
+//            byte[] bytes = Assets.readContents(filename);
             this.image = ImageIO.read(new ByteArrayInputStream(bytes));
-//            this.image = ImageIO.read(Assets.getAsset(filename).path);
         } catch (Exception e) {
             Logger.log(ExceptionUtils.getStackTrace(e));
             Logger.log("Sprite: Error loading image \"%s\"", filename);
