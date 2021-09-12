@@ -14,6 +14,16 @@ import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.stb.STBImage.*;
 import static org.lwjgl.system.MemoryUtil.memSlice;
 
+/**
+ * A LWJGL image file used by this program.<br> Sources:
+ * <ul>
+ *    <li>https://github.com/LWJGL/lwjgl3/blob/master/modules/samples/src/test/java/org/lwjgl/demo/stb/Image.java</li>
+ *    <li>https://github.com/LWJGL/lwjgl3/blob/master/modules/samples/src/test/java/org/lwjgl/demo/util/IOUtil.java</li>
+ *    <li>https://github.com/LWJGL/lwjgl3/blob/master/modules/samples/src/test/java/org/lwjgl/demo/glfw/GLFWUtil.java</li>
+ * </ul>
+ *
+ * @author SlavSquatSuperstar
+ */
 public class TextureGL {
 
     private ByteBuffer image;

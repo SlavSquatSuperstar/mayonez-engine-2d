@@ -1,4 +1,4 @@
-package testbed.mathtests;
+package slavsquatsuperstar.test.mathtests;
 
 import org.apache.commons.lang3.math.NumberUtils;
 import org.junit.jupiter.api.Test;

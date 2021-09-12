@@ -1,4 +1,4 @@
-package testbed.collisiontests;
+package slavsquatsuperstar.test.collisiontests;
 
 import org.junit.jupiter.api.Test;
 import slavsquatsuperstar.math.MathUtils;

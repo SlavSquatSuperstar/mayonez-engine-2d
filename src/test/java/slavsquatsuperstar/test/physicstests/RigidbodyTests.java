@@ -1,4 +1,4 @@
-package testbed.physicstests;
+package slavsquatsuperstar.test.physicstests;
 
 import org.junit.jupiter.api.Test;
 import slavsquatsuperstar.math.MathUtils;

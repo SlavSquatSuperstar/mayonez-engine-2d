@@ -6,6 +6,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Objects;
 
+/**
+ * An image file used by this program.
+ *
+ * @author SlavSquatSuperstar
+ */
 public class Texture extends Asset {
 
     private byte[] imageData;

@@ -1,4 +1,4 @@
-package testbed.iotests;
+package slavsquatsuperstar.test.iotests;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
