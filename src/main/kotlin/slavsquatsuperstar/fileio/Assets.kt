@@ -156,6 +156,7 @@ object Assets {
 
 
     @JvmStatic
+    @Throws(IOException::class)
     fun readContents(filename: String): ByteArray? = openInputStream(filename).readAllBytes()
 
     // Asset URL Methods

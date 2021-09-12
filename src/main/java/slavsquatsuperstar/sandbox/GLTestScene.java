@@ -7,7 +7,7 @@ import slavsquatsuperstar.mayonez.Transform;
 import slavsquatsuperstar.mayonezgl.GameGL;
 import slavsquatsuperstar.mayonezgl.SceneGL;
 import slavsquatsuperstar.mayonezgl.renderer.CameraGL;
-import slavsquatsuperstar.mayonezgl.renderer.SpriteGL;
+import slavsquatsuperstar.mayonezgl.renderer.TextureGL;
 import slavsquatsuperstar.mayonezgl.renderer.SpriteRenderer;
 
 public class GLTestScene extends SceneGL {
@@ -25,13 +25,12 @@ public class GLTestScene extends SceneGL {
     @Override
     public void init() {
         // Load resources
-//        texture = new SpriteGL("assets/mario.png");
-        SpriteGL texture1 = new SpriteGL("src/main/resources/assets/textures/mario.png");
-        SpriteGL texture2 = new SpriteGL("src/main/resources/assets/textures/goomba.png");
+        TextureGL texture1 = new TextureGL("assets/textures/mario.png");
+        TextureGL texture2 = new TextureGL("assets/textures/goomba.png");
         camera = new CameraGL(new Vector2f(-250, -0));
 
         addObject(new GameObject("Test Object 1", new Transform(
-                new Vec2(100, 100), new Vec2(256, 256)
+                new Vec2(50, 100), new Vec2(128, 128)
         )) {
             @Override
             protected void init() {
@@ -40,7 +39,7 @@ public class GLTestScene extends SceneGL {
         });
 
         addObject(new GameObject("Test Object 2", new Transform(
-                new Vec2(400, 100), new Vec2(256, 256)
+                new Vec2(450, 100), new Vec2(128, 128)
         )) {
             @Override
             protected void init() {

@@ -23,15 +23,15 @@ public class Shader extends TextFile {
     // todo should maybe not provide constructors
     public Shader(String filename, AssetType type) {
         super(filename, type);
-        parse();
-        compile();
+        parseShader();
+        compileShader();
     }
 
     public Shader(String filename) {
         this(filename, AssetType.CLASSPATH);
     }
 
-    private void parse() {
+    private void parseShader() {
         try {
             // Read the shader file
             String source = readText();
@@ -61,7 +61,7 @@ public class Shader extends TextFile {
         }
     }
 
-    private void compile() {
+    private void compileShader() {
         // Compile Vertex Shader
         int vertexID = glCreateShader(GL_VERTEX_SHADER);
         glShaderSource(vertexID, vertexSrc);
@@ -71,7 +71,7 @@ public class Shader extends TextFile {
         int success = glGetShaderi(vertexID, GL_COMPILE_STATUS);
         if (success == GL_FALSE) {
             Logger.warn("Error: Could not compile \"defaultshader.glsl\" vertex shader");
-            Logger.warn(glGetShaderInfoLog(vertexID));
+            Logger.warn("GL: " + glGetShaderInfoLog(vertexID));
             GameGL.instance().stop(1);
         }
         Logger.trace("Successfully compiled \"defaultshader.glsl\" vertex shader");
@@ -84,7 +84,7 @@ public class Shader extends TextFile {
         success = glGetShaderi(fragmentID, GL_COMPILE_STATUS);
         if (success == GL_FALSE) {
             Logger.warn("Error: Could not compile \"defaultshader.glsl\" fragment shader");
-            Logger.warn(glGetShaderInfoLog(fragmentID));
+            Logger.warn("GL: " + glGetShaderInfoLog(fragmentID));
             GameGL.instance().stop(1);
         }
         Logger.trace("Successfully compiled \"%s\" fragment shader", filename);
@@ -98,7 +98,7 @@ public class Shader extends TextFile {
         success = glGetProgrami(shaderProgramID, GL_LINK_STATUS);
         if (success == GL_FALSE) {
             Logger.warn("Error: Could not link \"%s\" shaders", filename);
-            Logger.warn(glGetProgramInfoLog(shaderProgramID));
+            Logger.warn("GL: " + glGetProgramInfoLog(shaderProgramID));
             GameGL.instance().stop(1);
         }
         Logger.trace("Successfully linked \"%s\" shaders", filename);

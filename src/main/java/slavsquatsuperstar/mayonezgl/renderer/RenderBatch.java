@@ -40,7 +40,7 @@ public class RenderBatch {
     private int[] texSlots = new int[Preferences.MAX_TEXTURE_SLOTS]; // support multiple textures in batch
 
     // Renderer Data
-    private final List<SpriteGL> textures;
+    private final List<TextureGL> textures;
     private Shader shader;
     private float[] vertices; // quads
     private int vaoID, vboID;
@@ -109,7 +109,7 @@ public class RenderBatch {
         glDisableVertexAttribArray(0);
         glDisableVertexAttribArray(1);
         glBindVertexArray(0);
-        for (SpriteGL texture : textures)
+        for (TextureGL texture : textures)
             texture.unbind();
         shader.unbind();
     }
@@ -121,7 +121,7 @@ public class RenderBatch {
         sprites[index] = spr;
         loadVertexProperties(index);
 
-        SpriteGL tex = spr.getTexture();
+        TextureGL tex = spr.getTexture();
         // TODO limit number of textures
         if (tex != null && !textures.contains(tex))
             textures.add(tex);
@@ -149,7 +149,7 @@ public class RenderBatch {
         Vector4f color = sprite.getColor();
         Vector2f[] texCoords = sprite.getTexCoords();
 
-        SpriteGL tex = sprite.getTexture();
+        TextureGL tex = sprite.getTexture();
         if (tex != null) {
             if (!textures.contains(tex))
                 textures.add(tex);

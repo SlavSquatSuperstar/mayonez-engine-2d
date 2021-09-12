@@ -8,13 +8,13 @@ public class SpriteRenderer extends Component {
 
     private Vector4f color = new Vector4f(1, 1, 1, 1);
     private Vector2f[] texCoords;
-    private SpriteGL texture = null;
+    private TextureGL texture = null;
 
     public SpriteRenderer(Vector4f color) {
         this.color = color;
     }
 
-    public SpriteRenderer(SpriteGL sprite) {
+    public SpriteRenderer(TextureGL sprite) {
         this.texture = sprite;
     }
 
@@ -22,7 +22,7 @@ public class SpriteRenderer extends Component {
         return this.color;
     }
 
-    public SpriteGL getTexture() {
+    public TextureGL getTexture() {
         return texture;
     }
 

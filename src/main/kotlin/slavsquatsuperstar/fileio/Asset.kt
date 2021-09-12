@@ -14,6 +14,7 @@ import java.nio.file.Paths
  *
  * @author SlavSquatSuperstar
  */
+// TODO try to read as external, then go to classpath?
 open class Asset(val filename: String, internal val type: AssetType) {
 
     private val isClasspath: Boolean = type == AssetType.CLASSPATH
