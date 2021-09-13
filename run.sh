@@ -1,6 +1,6 @@
 #!/bin/sh
 
-BASEDIR=$(dirname "$0")
-cd $BASEDIR
+SCRIPT_DIR=$(dirname "$0")
+cd "$SCRIPT_DIR" || exit
 ./gradlew clean build
-java -jar build/libs/*.jar
+java -XstartOnFirstThread -jar build/libs/*.jar

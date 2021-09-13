@@ -45,21 +45,16 @@ public class TextureGL {
 
             IntBuffer w = BufferUtils.createIntBuffer(1);
             IntBuffer h = BufferUtils.createIntBuffer(1);
-            IntBuffer ch = BufferUtils.createIntBuffer(1);
+            IntBuffer comp = BufferUtils.createIntBuffer(1);
 
-            if (!stbi_info_from_memory(imageBuffer, w, h, ch))
+            if (!stbi_info_from_memory(imageBuffer, w, h, comp))
                 throw new RuntimeException("Failed to read image information: " + stbi_failure_reason());
             else
                 System.out.println("OK with reason: " + stbi_failure_reason());
 
-            System.out.println("Image width: " + w.get(0));
-            System.out.println("Image height: " + h.get(0));
-            System.out.println("Image components: " + ch.get(0));
-            System.out.println("Image is HDR: " + stbi_is_hdr_from_memory(imageBuffer));
-
             // Decode the image
             stbi_set_flip_vertically_on_load(true);
-            image = stbi_load_from_memory(imageBuffer, w, h, ch, 0);
+            image = stbi_load_from_memory(imageBuffer, w, h, comp, 0);
             if (image == null) {
                 Logger.warn("Sprite: Could not load image \"%s\"", filename);
                 Logger.warn("GL: " + stbi_failure_reason());
@@ -68,7 +63,7 @@ public class TextureGL {
 
             width = w.get(0);
             height = h.get(0);
-            channels = ch.get(0);
+            channels = comp.get(0);
         } catch (IOException | NullPointerException e) {
             Logger.log("Could not read image \"%s\"", filename);
         }
