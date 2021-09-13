@@ -1,6 +1,8 @@
 package slavsquatsuperstar.mayonezgl.renderer;
 
 import org.lwjgl.BufferUtils;
+import slavsquatsuperstar.fileio.Asset;
+import slavsquatsuperstar.fileio.AssetType;
 import slavsquatsuperstar.fileio.Assets;
 import slavsquatsuperstar.mayonez.Logger;
 
@@ -24,22 +26,26 @@ import static org.lwjgl.system.MemoryUtil.memSlice;
  *
  * @author SlavSquatSuperstar
  */
-public class TextureGL {
+public class TextureGL extends Asset {
 
     private ByteBuffer image;
-    private String filename;
     private int width, height, channels;
     private int texID;
 
-    public TextureGL(String filename) {
-        this.filename = filename;
+    public TextureGL(String filename, AssetType type) {
+        super(filename, type);
+        Assets.setAsset(filename, this);
         readImage();
         createTexture();
     }
 
+    public TextureGL(String filename) {
+        this(filename, AssetType.CLASSPATH);
+    }
+
     private void readImage() {
         try {
-            byte[] imageData = Assets.readContents(filename);
+            byte[] imageData = Assets.readContents(getFilename());
             ByteBuffer imageBuffer = BufferUtils.createByteBuffer(imageData.length);
             imageBuffer = memSlice(imageBuffer.put(imageData).flip());
 
@@ -56,7 +62,7 @@ public class TextureGL {
             stbi_set_flip_vertically_on_load(true);
             image = stbi_load_from_memory(imageBuffer, w, h, comp, 0);
             if (image == null) {
-                Logger.warn("Sprite: Could not load image \"%s\"", filename);
+                Logger.warn("Sprite: Could not load image \"%s\"", getFilename());
                 Logger.warn("GL: " + stbi_failure_reason());
                 throw new RuntimeException("Failed to load image: " + stbi_failure_reason());
             }
@@ -65,7 +71,7 @@ public class TextureGL {
             height = h.get(0);
             channels = comp.get(0);
         } catch (IOException | NullPointerException e) {
-            Logger.log("Could not read image \"%s\"", filename);
+            Logger.log("Could not read image \"%s\"", getFilename());
         }
     }
 
@@ -93,7 +99,7 @@ public class TextureGL {
         }
 
         glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, image);
-        Logger.log("Sprite: Loaded image \"%s\"", filename);
+        Logger.log("Sprite: Loaded image \"%s\"", getFilename());
         stbi_image_free(image);
     }
 
