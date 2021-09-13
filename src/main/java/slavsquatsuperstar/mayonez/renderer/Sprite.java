@@ -15,6 +15,7 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 
 /**
  * An image used to display a {@link GameObject} or background.
@@ -29,9 +30,8 @@ public class Sprite extends Component {
         try {
             Texture texture = Assets.getAsset(filename, Texture.class);
             byte[] bytes = texture.getImageData();
-//            byte[] bytes = Assets.readContents(filename);
             this.image = ImageIO.read(new ByteArrayInputStream(bytes));
-        } catch (Exception e) {
+        } catch (NullPointerException | IOException e) {
             Logger.log(ExceptionUtils.getStackTrace(e));
             Logger.log("Sprite: Error loading image \"%s\"", filename);
             Game.instance().stop(-1);
