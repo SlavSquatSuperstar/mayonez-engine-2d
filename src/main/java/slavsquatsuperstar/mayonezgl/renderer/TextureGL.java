@@ -59,7 +59,7 @@ public class TextureGL extends Asset {
                 System.out.println("OK with reason: " + stbi_failure_reason());
 
             // Decode the image
-            stbi_set_flip_vertically_on_load(true);
+            stbi_set_flip_vertically_on_load(true); // GL uses (0,0) as bottom left, unlike AWT
             image = stbi_load_from_memory(imageBuffer, w, h, comp, 0);
             if (image == null) {
                 Logger.warn("Sprite: Could not load image \"%s\"", getFilename());
@@ -112,4 +112,11 @@ public class TextureGL extends Asset {
         glBindTexture(GL_TEXTURE_2D, 0);
     }
 
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
 }

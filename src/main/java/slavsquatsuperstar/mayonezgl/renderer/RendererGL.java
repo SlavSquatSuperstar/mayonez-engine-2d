@@ -28,19 +28,23 @@ public class RendererGL {
     // Renderer Methods
 
     public void addObject(GameObject o) {
-        SpriteRenderer sprite = o.getComponent(SpriteRenderer.class);
-        if (sprite != null) {
+        SpriteGL spr = o.getComponent(SpriteGL.class);
+        if (spr != null) {
             for (RenderBatch batch : batches) {
-                if (batch.hasRoom()) {
-                    batch.addSprite(sprite);
-                    return;
+                if (batch.hasRoom()) { // has room for sprite
+                    TextureGL tex = spr.getTexture();
+                    // has texture or room for another texture
+                    if (tex == null || (batch.hasTexture(tex) || batch.hasTextureRoom())) {
+                        batch.addSprite(spr);
+                        return;
+                    }
                 }
             }
             // Sprite not added
             RenderBatch batch = new RenderBatch(MAX_BATCH_SIZE);
             batch.start();
             batches.add(batch);
-            batch.addSprite(sprite);
+            batch.addSprite(spr);
         }
     }
 

@@ -35,7 +35,7 @@ public class RenderBatch {
     private final int VERTICES_PER_QUAD = 6;
 
     // Sprite Renderer Fields
-    private final SpriteRenderer[] sprites;
+    private final SpriteGL[] sprites;
     private int numSprites = 0;
     private int[] texSlots = new int[Preferences.MAX_TEXTURE_SLOTS]; // support multiple textures in batch
 
@@ -46,7 +46,7 @@ public class RenderBatch {
     private int vaoID, vboID;
 
     public RenderBatch(int maxBatchSize) {
-        sprites = new SpriteRenderer[maxBatchSize]; // shader array capacity
+        sprites = new SpriteGL[maxBatchSize]; // shader array capacity
         shader = Assets.getAsset("assets/shaders/default.glsl", Shader.class);
         vertices = new float[maxBatchSize * VERTICES_PER_SPRITE * VERTEX_SIZE];
         for (int i = 0; i < texSlots.length; i++)
@@ -116,14 +116,13 @@ public class RenderBatch {
 
     // Sprite Renderer Methods
 
-    public void addSprite(SpriteRenderer spr) {
+    public void addSprite(SpriteGL spr) {
         int index = numSprites++;
         sprites[index] = spr;
         loadVertexProperties(index);
 
         TextureGL tex = spr.getTexture();
-        // TODO limit number of textures
-        if (tex != null && !textures.contains(tex))
+        if (tex != null && !hasTexture(tex))
             textures.add(tex);
     }
 
@@ -143,7 +142,7 @@ public class RenderBatch {
     }
 
     private void loadVertexProperties(int index) { // create vertices for a sprite
-        SpriteRenderer sprite = sprites[index];
+        SpriteGL sprite = sprites[index];
         int offset = index * VERTICES_PER_SPRITE * VERTEX_SIZE; // 4 vertices per sprite
 
         Vector4f color = sprite.getColor();
@@ -151,7 +150,7 @@ public class RenderBatch {
 
         TextureGL tex = sprite.getTexture();
         if (tex != null) {
-            if (!textures.contains(tex))
+            if (!hasTexture(tex))
                 textures.add(tex);
         }
         int texID = textures.indexOf(tex) + 1;
@@ -178,9 +177,16 @@ public class RenderBatch {
         return sprites.length;
     }
 
-    // if has capacity for sprite and text slots not full
     public boolean hasRoom() {
-        return numSprites < getMaxBatchSize() && textures.size() <= texSlots.length;
+        return numSprites < getMaxBatchSize();
+    }
+
+    public boolean hasTextureRoom() {
+        return textures.size() <= texSlots.length;
+    }
+
+    public boolean hasTexture(TextureGL t) {
+        return textures.contains(t);
     }
 
 }

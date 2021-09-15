@@ -1,15 +1,13 @@
 package slavsquatsuperstar.sandbox;
 
 import org.joml.Vector2f;
-import slavsquatsuperstar.fileio.Assets;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Transform;
 import slavsquatsuperstar.mayonezgl.GameGL;
 import slavsquatsuperstar.mayonezgl.SceneGL;
+import slavsquatsuperstar.mayonezgl.SpriteSheetGL;
 import slavsquatsuperstar.mayonezgl.renderer.CameraGL;
-import slavsquatsuperstar.mayonezgl.renderer.TextureGL;
-import slavsquatsuperstar.mayonezgl.renderer.SpriteRenderer;
 
 public class GLTestScene extends SceneGL {
 
@@ -26,8 +24,7 @@ public class GLTestScene extends SceneGL {
     @Override
     public void init() {
         // Load resources
-        TextureGL texture1 = Assets.getAsset("assets/textures/mario.png", TextureGL.class);
-        TextureGL texture2 = Assets.getAsset("assets/textures/goomba.png", TextureGL.class);
+        SpriteSheetGL sprites = new SpriteSheetGL("assets/textures/spritesheet.png", 16, 16, 26, 0);
         camera = new CameraGL(new Vector2f(-250, -0));
 
         addObject(new GameObject("Test Object 1", new Transform(
@@ -35,7 +32,7 @@ public class GLTestScene extends SceneGL {
         )) {
             @Override
             protected void init() {
-                addComponent(new SpriteRenderer(texture1));
+                addComponent(sprites.getSprite(0));
             }
         });
 
@@ -44,7 +41,7 @@ public class GLTestScene extends SceneGL {
         )) {
             @Override
             protected void init() {
-                addComponent(new SpriteRenderer(texture2));
+                addComponent(sprites.getSprite(14));
             }
         });
     }

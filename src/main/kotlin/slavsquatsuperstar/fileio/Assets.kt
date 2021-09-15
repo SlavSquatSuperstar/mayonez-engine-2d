@@ -97,7 +97,7 @@ object Assets {
         val asset = getAsset(filename)
         return if (asset != null && !cls.isInstance(asset))
             createAsset(filename, asset.type, cls)
-        else getAsset(filename) as? T
+        else asset as? T
     }
 
     /**
