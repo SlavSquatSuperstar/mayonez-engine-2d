@@ -6,9 +6,7 @@ import slavsquatsuperstar.fileio.Texture;
 import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.Component;
-import slavsquatsuperstar.mayonez.Game;
-import slavsquatsuperstar.mayonez.GameObject;
-import slavsquatsuperstar.mayonez.Logger;
+import slavsquatsuperstar.mayonez.*;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -44,7 +42,7 @@ public class Sprite extends Component {
     public void render(Graphics2D g2) {
         // Measurements are in screen coordinates (pixels)
         Vec2 parentCenter = transform.position.mul(getScene().getCellSize()); // no camera offset
-        Vec2 imageHalfSize = new Vec2(image.getWidth(), image.getHeight()).div(2);
+        Vec2 imageHalfSize = new Vec2(image.getWidth(), image.getHeight()).mul(transform.scale).div(2);
 
         // Use the parent's transform to draw the sprite
         AffineTransform g2Transform = new AffineTransform();
@@ -55,7 +53,6 @@ public class Sprite extends Component {
         g2Transform.rotate(MathUtils.toRadians(transform.rotation), imageHalfSize.x, imageHalfSize.y);
 
         g2.drawImage(image, g2Transform, null);
-//        DebugDraw.drawPoint(parentCenter, Colors.BLUE);
     }
 
     public BufferedImage getImage() {

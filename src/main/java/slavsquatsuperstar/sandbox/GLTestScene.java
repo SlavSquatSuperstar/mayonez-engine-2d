@@ -24,7 +24,7 @@ public class GLTestScene extends SceneGL {
     @Override
     public void init() {
         // Load resources
-        SpriteSheetGL sprites = new SpriteSheetGL("assets/textures/spritesheet.png", 16, 16, 26, 0);
+        SpriteSheetGL sprites = new SpriteSheetGL("assets/textures/spritesheet.png", 32, 32, 26, 0);
         camera = new CameraGL(new Vector2f(-250, -0));
 
         addObject(new GameObject("Test Object 1", new Transform(

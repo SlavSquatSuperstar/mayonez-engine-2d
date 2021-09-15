@@ -1,10 +1,10 @@
 package slavsquatsuperstar.sandbox;
 
+import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.*;
 import slavsquatsuperstar.mayonez.input.KeyInput;
 import slavsquatsuperstar.mayonez.renderer.IMGUI;
-import slavsquatsuperstar.mayonez.renderer.Sprite;
 import slavsquatsuperstar.mayonez.scripts.KeyMovement;
 import slavsquatsuperstar.mayonez.scripts.MoveMode;
 
@@ -16,8 +16,11 @@ import java.awt.event.KeyEvent;
  */
 public class RendererTestScene extends Scene {
 
+    SpriteSheet sprites;
+
     public RendererTestScene() {
         super("Renderer Test Scene", Preferences.SCREEN_WIDTH, Preferences.SCREEN_HEIGHT, 32);
+        sprites = new SpriteSheet("assets/textures/spritesheet.png", 32, 32, 26, 0);
     }
 
     public static void main(String[] args) {
@@ -28,13 +31,13 @@ public class RendererTestScene extends Scene {
 
     @Override
     protected void init() {
-        addObject(new GameObject("Mario 1", new Vec2(0.5f, 1.5f)) {
+        addObject(new GameObject("Mario", new Vec2(getWidth() / 2f, getHeight() / 2f)) {
             @Override
             protected void init() {
                 getScene().camera().setSubject(this);
                 getScene().camera().enableKeepInScene(false);
                 transform.resize(new Vec2(2, 2));
-                addComponent(new Sprite("assets/textures/mario.png"));
+                addComponent(sprites.getSprite(0));
                 addComponent(new KeyMovement(MoveMode.POSITION, 0.5f));
                 addComponent(new Script() {
                     @Override
@@ -50,24 +53,25 @@ public class RendererTestScene extends Scene {
             @Override
             public void render(Graphics2D g2) {
                 super.render(g2);
-                Vec2 center = new Vec2(Preferences.SCREEN_WIDTH, Preferences.SCREEN_HEIGHT).div(2f).add(new Vec2(0, 100));
+                Vec2 center = new Vec2(Preferences.SCREEN_WIDTH, Preferences.SCREEN_HEIGHT).div(2f).add(new Vec2(0, 82));
                 Vec2 circleMin = center.sub(new Vec2(50, 50));
                 IMGUI.fillCircle(circleMin, 50, Colors.BLUE);
                 IMGUI.drawCircle(circleMin, 50, Colors.BLACK);
                 IMGUI.drawPoint(center, Colors.LIGHT_BLUE);
             }
         });
-        addObject(new GameObject("Mario 2", new Vec2(2, 1)) {
+
+        for (int i = 0; i < 5; i++) {
+            addObject(createObject("Goomba", 14));
+        }
+    }
+
+    private GameObject createObject(String name, int spriteIndex) {
+        return new GameObject(name, new Vec2(MathUtils.random(0, 15), MathUtils.random(0, 10))) {
             @Override
             protected void init() {
-                addComponent(new Sprite("assets/textures/mario.png"));
+                addComponent(sprites.getSprite(spriteIndex));
             }
-        });
-        addObject(new GameObject("Mario 3", new Vec2(1, 2)) {
-            @Override
-            protected void init() {
-                addComponent(new Sprite("assets/textures/mario.png"));
-            }
-        });
+        };
     }
 }
