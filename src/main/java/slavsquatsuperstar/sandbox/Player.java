@@ -1,14 +1,15 @@
 package slavsquatsuperstar.sandbox;
 
-import slavsquatsuperstar.mayonez.GameObject;
+import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
+import slavsquatsuperstar.mayonez.GameObject;
+import slavsquatsuperstar.mayonez.SpriteSheet;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
 import slavsquatsuperstar.mayonez.physics2d.colliders.AlignedBoxCollider2D;
 import slavsquatsuperstar.mayonez.renderer.Sprite;
 import slavsquatsuperstar.mayonez.scripts.KeepInScene;
 import slavsquatsuperstar.mayonez.scripts.KeyMovement;
 import slavsquatsuperstar.mayonez.scripts.MoveMode;
-import slavsquatsuperstar.util.SpriteSheet;
 
 import java.awt.*;
 
@@ -22,11 +23,11 @@ public class Player extends GameObject {
     protected void init() {
         // Create player avatar
         int tileSize = getScene().getCellSize();
-        SpriteSheet layer1 = new SpriteSheet("assets/textures/player/layer1.png", tileSize, tileSize, 2, 13, 13 * 5);
-        SpriteSheet layer2 = new SpriteSheet("assets/textures/player/layer2.png", tileSize, tileSize, 2, 13, 13 * 5);
-        SpriteSheet layer3 = new SpriteSheet("assets/textures/player/layer3.png", tileSize, tileSize, 2, 13, 13 * 5);
+        SpriteSheet layer1 = new SpriteSheet("assets/textures/player/layer1.png", tileSize, tileSize, 13 * 5, 2);
+        SpriteSheet layer2 = new SpriteSheet("assets/textures/player/layer2.png", tileSize, tileSize, 13 * 5, 2);
+        SpriteSheet layer3 = new SpriteSheet("assets/textures/player/layer3.png", tileSize, tileSize, 13 * 5, 2);
 
-        int id = 19;
+        int id = MathUtils.random(18, 20);
         int threshold = 200;
 
         Sprite[] layers = new Sprite[]{layer1.getSprite(id), layer2.getSprite(id), layer3.getSprite(id)};
@@ -49,8 +50,8 @@ public class Player extends GameObject {
         // Add player scripts
         float thrustForce = 6f;
         addComponent(new AlignedBoxCollider2D(new Vec2(1, 1)));
-        addComponent(new Rigidbody2D(1f, 0.5f, 0.1f));
-        addComponent(new KeyMovement(MoveMode.FORCE, thrustForce).setTopSpeed(5f));
+        addComponent(new Rigidbody2D(1f));
+        addComponent(new KeyMovement(MoveMode.VELOCITY, thrustForce).setTopSpeed(5f));
         addComponent(new KeepInScene(0, 0, getScene().getWidth(), getScene().getHeight(), KeepInScene.Mode.STOP));
         addComponent(new PlayerController(thrustForce));
     }

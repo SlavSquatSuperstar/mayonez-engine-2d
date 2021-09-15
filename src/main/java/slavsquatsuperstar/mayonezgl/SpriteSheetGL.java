@@ -10,7 +10,6 @@ import java.util.List;
 
 public class SpriteSheetGL {
 
-    private TextureGL texture;
     private List<SpriteGL> sprites;
 
     /**
@@ -23,21 +22,21 @@ public class SpriteSheetGL {
      * @param spacing      the padding in between sprites
      */
     public SpriteSheetGL(String filename, int spriteWidth, int spriteHeight, int numSprites, int spacing) {
-        texture = Assets.getAsset(filename, TextureGL.class);
+        TextureGL texture = Assets.getAsset(filename, TextureGL.class);
         sprites = new ArrayList<>();
 
         int width = texture.getWidth();
         int height = texture.getHeight();
 
-        // Read sprite sheet starting from top left, but read image starting from bottom left
+        // Read sprite sheet from top left, but read image  from bottom left
         // Image coordinates need to be normalized
-        int x = 0;
-        int y = width - spriteHeight;
+        int imgX = 0;
+        int imgY = width - spriteHeight;
         for (int i = 0; i < numSprites; i++) {
-            float topY = (float) (y + spriteHeight) / height;
-            float rightX = (float) (x + spriteWidth) / width;
-            float leftX = (float) x / width;
-            float bottomY = (float) y / height;
+            float topY = (float) (imgY + spriteHeight) / height;
+            float rightX = (float) (imgX + spriteWidth) / width;
+            float leftX = (float) imgX / width;
+            float bottomY = (float) imgY / height;
 
             Vector2f[] texCoords = new Vector2f[]{
                     new Vector2f(rightX, topY),
@@ -47,10 +46,10 @@ public class SpriteSheetGL {
             };
             sprites.add(new SpriteGL(texture, texCoords));
 
-            x += spriteWidth + spacing;
-            if (x >= width) {
-                x = 0;
-                y -= spriteHeight + spacing;
+            imgX += spriteWidth + spacing;
+            if (imgX >= width) {
+                imgX = 0;
+                imgY -= spriteHeight + spacing;
             }
         }
 

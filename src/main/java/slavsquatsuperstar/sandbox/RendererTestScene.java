@@ -50,10 +50,11 @@ public class RendererTestScene extends Scene {
             @Override
             public void render(Graphics2D g2) {
                 super.render(g2);
-                Vec2 pos = new Vec2(Preferences.SCREEN_WIDTH / 2f - 50, Preferences.SCREEN_HEIGHT / 2f + 32);
-                IMGUI.fillCircle(pos, 50, Colors.BLUE);
-                IMGUI.drawCircle(pos, 50, Colors.BLACK);
-                IMGUI.drawPoint(new Vec2(Preferences.SCREEN_WIDTH / 2f, Preferences.SCREEN_HEIGHT / 2f + 82), Colors.LIGHT_BLUE);
+                Vec2 center = new Vec2(Preferences.SCREEN_WIDTH, Preferences.SCREEN_HEIGHT).div(2f).add(new Vec2(0, 100));
+                Vec2 circleMin = center.sub(new Vec2(50, 50));
+                IMGUI.fillCircle(circleMin, 50, Colors.BLUE);
+                IMGUI.drawCircle(circleMin, 50, Colors.BLACK);
+                IMGUI.drawPoint(center, Colors.LIGHT_BLUE);
             }
         });
         addObject(new GameObject("Mario 2", new Vec2(2, 1)) {

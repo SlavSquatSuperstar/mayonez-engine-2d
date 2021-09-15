@@ -10,15 +10,12 @@ import slavsquatsuperstar.mayonez.Game;
 import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Logger;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
 
 /**
- * An image used to display a {@link GameObject} or background.
+ * A component that draws an image at a {@link GameObject}'s position.
  *
  * @author SlavSquatSuperstar
  */
@@ -28,10 +25,8 @@ public class Sprite extends Component {
 
     public Sprite(String filename) {
         try {
-            Texture texture = Assets.getAsset(filename, Texture.class);
-            byte[] bytes = texture.getImageData();
-            this.image = ImageIO.read(new ByteArrayInputStream(bytes));
-        } catch (NullPointerException | IOException e) {
+            image = Assets.getAsset(filename, Texture.class).getImage();
+        } catch (NullPointerException e) {
             Logger.log(ExceptionUtils.getStackTrace(e));
             Logger.log("Sprite: Error loading image \"%s\"", filename);
             Game.instance().stop(-1);
@@ -39,12 +34,11 @@ public class Sprite extends Component {
     }
 
     public Sprite(BufferedImage image) {
-        this.image = image; // TODO copy rather than reference?
+        this.image = image;
     }
 
     @Override
-    public final void update(float dt) {
-    } // Sprites shouldn't update any game logic
+    public final void update(float dt) {} // Sprites shouldn't update any game logic
 
     @Override
     public void render(Graphics2D g2) {
@@ -66,6 +60,10 @@ public class Sprite extends Component {
 
     public BufferedImage getImage() {
         return image;
+    }
+
+    public Sprite copy() {
+        return new Sprite(image);
     }
 
 }

@@ -2,6 +2,9 @@ package slavsquatsuperstar.fileio;
 
 import slavsquatsuperstar.mayonez.Logger;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Objects;
@@ -13,7 +16,7 @@ import java.util.Objects;
  */
 public class Texture extends Asset {
 
-    private byte[] imageData;
+    private BufferedImage image;
 
     public Texture(String filename, AssetType type) {
         super(filename, type);
@@ -27,7 +30,7 @@ public class Texture extends Asset {
 
     public void readImage() {
         try (InputStream in = inputStream()) {
-            imageData = Objects.requireNonNull(in).readAllBytes();
+            image = ImageIO.read(new ByteArrayInputStream(Objects.requireNonNull(in).readAllBytes()));
         } catch (IOException e) {
             Logger.warn("Could not read image \"%s\".", getFilename());
         } catch (NullPointerException e) {
@@ -35,7 +38,7 @@ public class Texture extends Asset {
         }
     }
 
-    public byte[] getImageData() {
-        return imageData;
+    public BufferedImage getImage() {
+        return image;
     }
 }

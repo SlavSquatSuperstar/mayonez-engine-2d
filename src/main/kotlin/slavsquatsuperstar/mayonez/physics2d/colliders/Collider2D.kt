@@ -39,6 +39,7 @@ abstract class Collider2D : Component() {
         protected set
 
 
+    // TODO replace with set parent?
     @SuppressWarnings("unchecked")
     fun <T : Collider2D?> setRigidbody(rb: Rigidbody2D?): T {
         this.rb = rb
