@@ -1,13 +1,11 @@
 package slavsquatsuperstar.sandbox;
 
-import org.joml.Vector2f;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Transform;
 import slavsquatsuperstar.mayonezgl.GameGL;
 import slavsquatsuperstar.mayonezgl.SceneGL;
 import slavsquatsuperstar.mayonezgl.SpriteSheetGL;
-import slavsquatsuperstar.mayonezgl.renderer.CameraGL;
 
 public class GLTestScene extends SceneGL {
 
@@ -24,11 +22,10 @@ public class GLTestScene extends SceneGL {
     @Override
     public void init() {
         // Load resources
-        SpriteSheetGL sprites = new SpriteSheetGL("assets/textures/spritesheet.png", 32, 32, 26, 0);
-        camera = new CameraGL(new Vector2f(-250, -0));
+        SpriteSheetGL sprites = new SpriteSheetGL("assets/textures/spritesheet.png", 16, 16, 26, 0);
 
-        addObject(new GameObject("Test Object 1", new Transform(
-                new Vec2(50, 100), new Vec2(128, 128)
+        addObject(new GameObject("Mario", new Transform(
+                new Vec2(300, 100), new Vec2(64, 64)
         )) {
             @Override
             protected void init() {
@@ -36,8 +33,8 @@ public class GLTestScene extends SceneGL {
             }
         });
 
-        addObject(new GameObject("Test Object 2", new Transform(
-                new Vec2(450, 100), new Vec2(128, 128)
+        addObject(new GameObject("Goomba", new Transform(
+                new Vec2(700, 100), new Vec2(64, 64)
         )) {
             @Override
             protected void init() {

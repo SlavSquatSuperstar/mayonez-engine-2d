@@ -51,7 +51,7 @@ public class Player extends GameObject {
         float thrustForce = 6f;
         addComponent(new AlignedBoxCollider2D(new Vec2(1, 1)));
         addComponent(new Rigidbody2D(1f));
-        addComponent(new KeyMovement(MoveMode.VELOCITY, thrustForce).setTopSpeed(5f));
+        addComponent(new KeyMovement(MoveMode.POSITION, thrustForce).setTopSpeed(5f));
         addComponent(new KeepInScene(0, 0, getScene().getWidth(), getScene().getHeight(), KeepInScene.Mode.STOP));
         addComponent(new PlayerController(thrustForce));
     }

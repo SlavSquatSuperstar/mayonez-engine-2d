@@ -6,7 +6,9 @@ import slavsquatsuperstar.fileio.Texture;
 import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.Component;
-import slavsquatsuperstar.mayonez.*;
+import slavsquatsuperstar.mayonez.Game;
+import slavsquatsuperstar.mayonez.GameObject;
+import slavsquatsuperstar.mayonez.Logger;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -36,21 +38,23 @@ public class Sprite extends Component {
     }
 
     @Override
-    public final void update(float dt) {} // Sprites shouldn't update any game logic
+    public final void update(float dt) {
+    } // Sprites shouldn't update any game logic
 
     @Override
     public void render(Graphics2D g2) {
         // Measurements are in screen coordinates (pixels)
-        Vec2 parentCenter = transform.position.mul(getScene().getCellSize()); // no camera offset
-        Vec2 imageHalfSize = new Vec2(image.getWidth(), image.getHeight()).mul(transform.scale).div(2);
+        Vec2 parentCenter = transform.position.mul(getScene().getCellSize());
+        Vec2 parentSize = transform.scale.mul(getScene().getCellSize());
+        Vec2 parentHalfSize = parentSize.div(2);
 
         // Use the parent's transform to draw the sprite
         AffineTransform g2Transform = new AffineTransform();
         g2Transform.setToIdentity();
-        g2Transform.translate(parentCenter.x - imageHalfSize.x,
-                parentCenter.y - imageHalfSize.y); // Line up image center with parent center
-        g2Transform.scale(transform.scale.x, transform.scale.y);
-        g2Transform.rotate(MathUtils.toRadians(transform.rotation), imageHalfSize.x, imageHalfSize.y);
+        g2Transform.translate(parentCenter.x - parentHalfSize.x,
+                parentCenter.y - parentHalfSize.y); // Line up image center with parent center
+        g2Transform.rotate(MathUtils.toRadians(transform.rotation), parentHalfSize.x, parentHalfSize.y);
+        g2Transform.scale(parentSize.x / image.getWidth(), parentSize.y / image.getHeight());
 
         g2.drawImage(image, g2Transform, null);
     }

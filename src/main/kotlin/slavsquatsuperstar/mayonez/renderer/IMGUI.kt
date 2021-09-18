@@ -8,7 +8,6 @@ import java.awt.Stroke
 import java.awt.geom.Ellipse2D
 import java.awt.geom.Line2D
 import java.awt.geom.Rectangle2D
-import java.util.function.Consumer
 
 /**
  * Draws all user interface components and overlays onto the screen. Note: all shape methods use position as the top-left.
@@ -23,7 +22,7 @@ object IMGUI {
     fun render(g2: Graphics2D) {
         if (shapes.isNotEmpty()) {
             g2.stroke = stroke
-            shapes.forEach(Consumer { s: Renderable -> s.render(g2) })
+            for (shape in shapes) shape.render(g2)
             shapes.clear()
         }
     }

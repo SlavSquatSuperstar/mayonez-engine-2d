@@ -1,6 +1,7 @@
 package slavsquatsuperstar.mayonez.scripts;
 
 import slavsquatsuperstar.math.Vec2;
+import slavsquatsuperstar.mayonez.Time;
 import slavsquatsuperstar.mayonez.input.KeyInput;
 
 /**
@@ -23,10 +24,13 @@ public class KeyMovement extends MovementScript {
         Vec2 input = getRawInput().unit().mul(speed);
         switch (mode) {
             case POSITION:
-                transform.move(input);
+                transform.move(input.mul(Time.TIME_STEP));
                 break;
             case VELOCITY:
                 rb.addVelocity(input);
+                break;
+            case ACCELERATION:
+                rb.addAcceleration(input);
                 break;
             case IMPULSE:
                 rb.addImpulse(input);
