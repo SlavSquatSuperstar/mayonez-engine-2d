@@ -25,7 +25,7 @@ public class GLTestScene extends SceneGL {
         SpriteSheetGL sprites = new SpriteSheetGL("assets/textures/spritesheet.png", 16, 16, 26, 0);
 
         addObject(new GameObject("Mario", new Transform(
-                new Vec2(300, 100), new Vec2(64, 64)
+                new Vec2(300, 100), new Vec2(4, 4)
         )) {
             @Override
             protected void init() {
@@ -34,7 +34,7 @@ public class GLTestScene extends SceneGL {
         });
 
         addObject(new GameObject("Goomba", new Transform(
-                new Vec2(700, 100), new Vec2(64, 64)
+                new Vec2(700, 100), new Vec2(4, 4)
         )) {
             @Override
             protected void init() {

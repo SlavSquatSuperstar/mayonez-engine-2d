@@ -109,8 +109,7 @@ public class RenderBatch {
         glDisableVertexAttribArray(0);
         glDisableVertexAttribArray(1);
         glBindVertexArray(0);
-        for (TextureGL texture : textures)
-            texture.unbind();
+        textures.forEach(TextureGL::unbind);
         shader.unbind();
     }
 
@@ -159,9 +158,10 @@ public class RenderBatch {
         // Load properties for each vertex
         Vec2[] quadVertices = {new Vec2(1, 1), new Vec2(1, 0), new Vec2(0, 0), new Vec2(0, 1)};
         for (int i = 0; i < quadVertices.length; i++) {
-            Vec2 position = sprite.getTransform().position.add(quadVertices[i].mul(sprite.getTransform().scale)); // pos = obj_pos + vert_pos * obj_scale
+            Vec2 spritePosition = sprite.getTransform().position.add(quadVertices[i].mul(sprite.getTransform().scale.mul(GameGL.getScene().getCellSize())));
+            // pos = obj_pos + vert_pos * obj_scale --> convert from world to pixels
             float[] attributes = {
-                    position.x, position.y,
+                    spritePosition.x, spritePosition.y,
                     color.x, color.y, color.z, color.w,
                     texCoords[i].x, texCoords[i].y,
                     texID

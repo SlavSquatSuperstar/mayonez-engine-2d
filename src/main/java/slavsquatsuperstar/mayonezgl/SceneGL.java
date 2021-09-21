@@ -7,12 +7,10 @@ import slavsquatsuperstar.mayonezgl.renderer.CameraGL;
 
 public class SceneGL extends Scene {
 
-    public final String name;
     protected CameraGL camera;
 
     public SceneGL(String name) {
-        super(name);
-        this.name = name;
+        super(name, 1080, 720, 16);
         camera = new CameraGL(new Vector2f());
     }
 

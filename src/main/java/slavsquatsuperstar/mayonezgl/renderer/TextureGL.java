@@ -56,13 +56,13 @@ public class TextureGL extends Asset {
             if (!stbi_info_from_memory(imageBuffer, w, h, comp))
                 throw new RuntimeException("Failed to read image information: " + stbi_failure_reason());
             else
-                System.out.println("OK with reason: " + stbi_failure_reason());
+                Logger.log("Texture: Successfully loaded image \"%s\"", getFilename());
 
             // Decode the image
             stbi_set_flip_vertically_on_load(true); // GL uses (0,0) as bottom left, unlike AWT
             image = stbi_load_from_memory(imageBuffer, w, h, comp, 0);
             if (image == null) {
-                Logger.warn("Sprite: Could not load image \"%s\"", getFilename());
+                Logger.warn("Texture: Could not load image \"%s\"", getFilename());
                 Logger.warn("GL: " + stbi_failure_reason());
                 throw new RuntimeException("Failed to load image: " + stbi_failure_reason());
             }
@@ -99,7 +99,7 @@ public class TextureGL extends Asset {
         }
 
         glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, image);
-        Logger.log("Sprite: Loaded image \"%s\"", getFilename());
+        Logger.log("Texture: Loaded image \"%s\"", getFilename());
         stbi_image_free(image);
     }
 
