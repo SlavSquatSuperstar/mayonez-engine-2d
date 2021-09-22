@@ -1,10 +1,10 @@
 package slavsquatsuperstar.mayonez;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import slavsquatsuperstar.game.LevelEditorScene;
-import slavsquatsuperstar.game.LevelScene;
-import slavsquatsuperstar.game.PhysicsTestScene;
-import slavsquatsuperstar.game.RendererTestScene;
+import slavsquatsuperstar.sandbox.LevelEditorScene;
+import slavsquatsuperstar.sandbox.LevelScene;
+import slavsquatsuperstar.sandbox.PhysicsTestScene;
+import slavsquatsuperstar.sandbox.RendererTestScene;
 import slavsquatsuperstar.mayonez.physics2d.Physics2D;
 import slavsquatsuperstar.mayonez.renderer.IMGUI;
 import slavsquatsuperstar.mayonez.renderer.Renderer;

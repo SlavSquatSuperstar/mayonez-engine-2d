@@ -1,6 +1,7 @@
 package slavsquatsuperstar.mayonez.physics2d.colliders
 
 import slavsquatsuperstar.math.MathUtils
+import slavsquatsuperstar.math.Range
 import slavsquatsuperstar.math.Vec2
 import slavsquatsuperstar.mayonez.physics2d.RaycastResult
 import kotlin.math.sign
@@ -95,6 +96,59 @@ class Edge2D(@JvmField val start: Vec2, @JvmField val end: Vec2) {
         // rotate left or right depending on which side ray started form
         val normal = line1.rotate(sign(pseudoDistance(start2)) * 90)
         return RaycastResult(contact, normal, dist1)
+    }
+
+    // Clip Line
+
+    // should both be parallel
+    fun clipToPlanes(plane1: Ray2D, plane2: Ray2D): Edge2D {
+        val ray = Ray2D(this)
+        val contact1 = ray.getIntersection(plane1)
+        val contact2 = ray.getIntersection(plane2)
+
+        if (contact1 == null || contact2 == null)
+            return Edge2D(start, end)
+        // get distances
+        val distances = Range((contact1 - start).dot(ray.direction), (contact2 - start).dot(ray.direction))
+        val min = 0f.coerceAtLeast(distances.min)
+        val max = length.coerceAtMost(distances.max)
+
+        return Edge2D(ray.getPoint(min), ray.getPoint(max))
+    }
+
+    fun clipToSegment(segment: Edge2D): Edge2D {
+        val rayDir = segment.toVector().getNormal()
+        return clipToPlanes(Ray2D(segment.start, rayDir), Ray2D(segment.end, rayDir))
+    }
+
+    /**
+     * Clips this edge to the bounds of the given [Collider2D].
+     *
+     * @param shape a 2D shape
+     * @return The clipped edge in most cases. Null if this edge is outside the shape, or only intersects the shape at a point.
+     */
+    fun clipToBounds(shape: Collider2D): Edge2D? {
+        val newStart: Vec2? =
+            if (start in shape) +start
+            else shape.raycast(Ray2D(this), length)?.contact
+
+        val newEnd: Vec2? =
+            if (end in shape) +end
+            else shape.raycast(Ray2D(Edge2D(end, start)), length)?.contact
+
+        return if (newStart == null || newEnd == null) null // Line outside of shape
+        else if (newStart == newEnd) null // Clipped to point
+        else Edge2D(newStart, newEnd)
+    }
+
+    // Overrides
+
+    override fun hashCode(): Int = 31 * start.hashCode() + end.hashCode()
+
+    override fun equals(other: Any?): Boolean {
+        return if (other is Edge2D)
+            this.start == other.start && this.end == other.end
+        else super.equals(other)
     }
 
 
