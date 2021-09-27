@@ -144,8 +144,11 @@ public class Physics2D {
     private void resolveDynamicCollision(CollisionManifold col, Rigidbody2D r1, Rigidbody2D r2) {
         // Precalculated / Known Values
         float sumInvMass = r1.getInvMass() + r2.getInvMass();
-        float elasticity = MathUtils.avg(col.getSelf().getBounce(), col.getOther().getBounce()); // Coefficient of restitution
-        float friction = MathUtils.avg(col.getSelf().getFriction(), col.getOther().getFriction());
+        PhysicsMaterial mat1 = col.getSelf().getMaterial();
+        PhysicsMaterial mat2 = col.getOther().getMaterial();
+
+        float elasticity = MathUtils.avg(mat1.getBounce(), mat2.getBounce()); // Coefficient of restitution
+        float friction = MathUtils.avg(mat1.getFriction(), mat2.getFriction());
 
         Vec2 normal = col.getNormal(); // Collision direction
         Vec2 tangent = normal.getNormal(); // Collision plane

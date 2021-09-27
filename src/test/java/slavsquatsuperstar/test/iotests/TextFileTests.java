@@ -32,7 +32,7 @@ public class TextFileTests {
 
     @Test
     public void writeLocalTextFile() {
-        TextFile textFile = new TextFile("src/test/resources/testassets/foobar.txt", false);
+        TextFile textFile = new TextFile("src/test/resources/testassets/foo.txt", false);
         textFile.write("date=" + LocalDate.now(), "time=" + LocalTime.now());
     }
 

@@ -4,6 +4,7 @@ import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.Component;
 import slavsquatsuperstar.mayonez.*;
+import slavsquatsuperstar.mayonez.physics2d.PhysicsMaterial;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
 import slavsquatsuperstar.mayonez.physics2d.colliders.AlignedBoxCollider2D;
 import slavsquatsuperstar.mayonez.physics2d.colliders.BoxCollider2D;
@@ -15,6 +16,8 @@ import slavsquatsuperstar.mayonez.scripts.*;
 import java.awt.*;
 
 public class PhysicsTestScene extends Scene {
+
+    private PhysicsMaterial testMaterial = new PhysicsMaterial(0.5f, 0.3f);
 
     public PhysicsTestScene(String name) {
         super(name, Preferences.SCREEN_WIDTH, Preferences.SCREEN_HEIGHT, 10);
@@ -74,7 +77,7 @@ public class PhysicsTestScene extends Scene {
 
                     @Override
                     public void start() {
-                        getCollider().setBounce(0.3f);
+                        getCollider().setMaterial(testMaterial);
                         rb = getRigidbody();
                     }
 
@@ -139,7 +142,7 @@ public class PhysicsTestScene extends Scene {
         return new GameObject("Circle", position) {
             @Override
             protected void init() {
-                addComponent(new CircleCollider(radius).setBounce(0.3f));
+                addComponent(new CircleCollider(radius).setMaterial(testMaterial));
                 addComponent(new Rigidbody2D(radius * radius * MathUtils.PI / 10f));
                 addComponent(new KeepInScene(getScene(), KeepInScene.Mode.BOUNCE));
                 addComponent(new DragAndDrop("left mouse", false));
@@ -152,7 +155,7 @@ public class PhysicsTestScene extends Scene {
         return new GameObject("AABB Rectangle", position) {
             @Override
             protected void init() {
-                addComponent(new AlignedBoxCollider2D(new Vec2(width, height)).setBounce(0.3f));
+                addComponent(new AlignedBoxCollider2D(new Vec2(width, height)).setMaterial(testMaterial));
                 addComponent(new Rigidbody2D(width * height / 10f));
                 addComponent(new KeepInScene(getScene(), KeepInScene.Mode.BOUNCE));
                 addComponent(new DragAndDrop("left mouse", false));
@@ -166,7 +169,7 @@ public class PhysicsTestScene extends Scene {
             @Override
             protected void init() {
                 transform.rotate(rotation);
-                addComponent(new BoxCollider2D(new Vec2(width, height)).setBounce(0.3f));
+                addComponent(new BoxCollider2D(new Vec2(width, height)).setMaterial(testMaterial));
                 addComponent(new Rigidbody2D(width * height / 10f));
                 addComponent(new KeepInScene(getScene(), KeepInScene.Mode.BOUNCE));
                 addComponent(new DragAndDrop("left mouse", false));

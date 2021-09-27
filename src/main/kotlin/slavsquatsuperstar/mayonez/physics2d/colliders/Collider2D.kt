@@ -7,6 +7,7 @@ import slavsquatsuperstar.mayonez.GameObject
 import slavsquatsuperstar.mayonez.Logger
 import slavsquatsuperstar.mayonez.Transform
 import slavsquatsuperstar.mayonez.physics2d.CollisionManifold
+import slavsquatsuperstar.mayonez.physics2d.PhysicsMaterial
 import slavsquatsuperstar.mayonez.physics2d.RaycastResult
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D
 
@@ -53,22 +54,11 @@ abstract class Collider2D : Component() {
 
     // Physics Properties
 
-    /**
-     * What percentage of energy is conserved after a collision (0-1).
-     */
-    var bounce: Float = 0f
+    var material: PhysicsMaterial = PhysicsMaterial.DEFAULT_MATERIAL
         private set
 
-    var friction: Float = 0.5f // coefficient of kinetic friction
-        private set
-
-    fun setBounce(bounce: Float): Collider2D {
-        this.bounce = clamp(bounce, 0f, 1f)
-        return this
-    }
-
-    fun setFriction(friction: Float): Collider2D {
-        this.friction = clamp(friction, 0f, 1f)
+    fun setMaterial(material: PhysicsMaterial): Collider2D {
+        this.material = material
         return this
     }
 

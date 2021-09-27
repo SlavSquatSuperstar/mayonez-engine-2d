@@ -49,7 +49,7 @@ public class JSONTests {
 
     @Test
     public void savePropertiesToJSON() {
-        JSONFile json = new JSONFile("src/test/resources/testassets/foobar.json", false);
+        JSONFile json = new JSONFile("src/test/resources/testassets/foo.json", false);
         json.setProperty("time", LocalTime.now());
         json.setProperty("date", LocalDate.now());
         json.save();
