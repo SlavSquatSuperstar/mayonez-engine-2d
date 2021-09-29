@@ -32,7 +32,7 @@ public class RigidbodyTests {
     public void appliedForceChangesVelocity() {
         Rigidbody2D rb = new Rigidbody2D(2);
         rb.addForce(new Vec2(2, 0));
-        rb.physicsUpdate(1);
+        physicsUpdate(rb, 1);
         assertEquals(new Vec2(1, 0), rb.getVelocity());
     }
 
@@ -40,7 +40,7 @@ public class RigidbodyTests {
     public void appliedTorqueChangesAngVelocity() {
         Rigidbody2D rb = new Rigidbody2D(2);
         rb.addTorque(2);
-        rb.physicsUpdate(1);
+        physicsUpdate(rb, 1);
         assertEquals(1, rb.getAngVelocity());
     }
 
@@ -48,7 +48,7 @@ public class RigidbodyTests {
     public void torqueScalesWithRadius() {
         Rigidbody2D rb = new Rigidbody2D(2);
         rb.addForceAtPoint(new Vec2(2, 0), new Vec2(0, 2));
-        rb.physicsUpdate(1);
+        physicsUpdate(rb, 1);
         assertEquals(-2, rb.getAngVelocity());
     }
 
@@ -56,7 +56,7 @@ public class RigidbodyTests {
     public void angularVelocityScalesWithRadius() {
         Rigidbody2D rb = new Rigidbody2D(1);
         rb.addAngularVelocity(360 / MathUtils.PI);
-        rb.physicsUpdate(1);
+        physicsUpdate(rb, 1);
         assertEquals(2, rb.getRelativePointVelocity(new Vec2(1, 0)).len(), MathUtils.EPSILON);
         assertEquals(new Vec2(0, 2), rb.getRelativePointVelocity(new Vec2(1, 0)));
     }
@@ -65,7 +65,7 @@ public class RigidbodyTests {
     public void pointVelocityScalesWithRadius() {
         Rigidbody2D rb = new Rigidbody2D(1);
         rb.addAngularVelocity(360 / MathUtils.PI);
-        rb.physicsUpdate(1);
+        physicsUpdate(rb, 1);
         assertEquals(new Vec2(0, 2), rb.getRelativePointVelocity(new Vec2(1, 0)));
     }
 
@@ -74,8 +74,13 @@ public class RigidbodyTests {
         Rigidbody2D rb = new Rigidbody2D(1);
         rb.addAngularVelocity(360 / MathUtils.PI);
         rb.addVelocity(new Vec2(1, 0));
-        rb.physicsUpdate(1);
+        physicsUpdate(rb, 1);
         assertEquals(new Vec2(1, 2), rb.getPointVelocity(new Vec2(1, 0)));
+    }
+    
+    static void physicsUpdate(Rigidbody2D rb, float dt) {
+        rb.integrateForce(dt);
+        rb.integrateVelocity(dt);
     }
 
 }

@@ -17,7 +17,8 @@ import java.awt.*;
 
 public class PhysicsTestScene extends Scene {
 
-    private PhysicsMaterial testMaterial = new PhysicsMaterial(0.5f, 0.3f);
+//    private PhysicsMaterial testMaterial = new PhysicsMaterial(0.5f, 0.3f);
+    private PhysicsMaterial testMaterial = new PhysicsMaterial(0f, 0f);
 
     public PhysicsTestScene(String name) {
         super(name, Preferences.SCREEN_WIDTH, Preferences.SCREEN_HEIGHT, 10);

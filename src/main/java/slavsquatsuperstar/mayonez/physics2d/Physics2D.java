@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A simulation of the world inside the game.
+ * A simulation of the physics world inside the game.
  * <p>
  * Thanks to GamesWithGabe's <a href="https://youtube.com/playlist?list=PLtrSb4XxIVbpZpV65kk73OoUcIrBzoSiO"> Coding a 2D
  * Physics Engine playlist</a>for explaining the math and logic.
@@ -69,6 +69,9 @@ public class Physics2D {
         // Update environmental forces
         forceRegistry.forEach(fr -> fr.fg.applyForce(fr.rb, dt));
 
+        // Integrate force
+        bodies.forEach(rb -> rb.integrateForce(dt));
+
         // Resolve collisions
         collisions.forEach(col -> {
 //            if (col.getSelf().isStatic() && col.getOther().isStatic())
@@ -76,12 +79,12 @@ public class Physics2D {
 
             Rigidbody2D r1 = col.getSelf().getRigidbody();
             Rigidbody2D r2 = col.getOther().getRigidbody();
-            resolveStaticCollision(col, r1, r2); // Correct positions so contact points should line up
-            resolveDynamicCollision(col, r1, r2); // Solve for velocity
+            resolveDynamicCollision(col, r1, r2); // Simulate an impact
+            resolveStaticCollision(col, r1, r2); // Correct positions
         });
 
-        // Integrate velocity and position for bodies
-        bodies.forEach(rb -> rb.physicsUpdate(dt));
+        // Integrate velocity
+        bodies.forEach(rb -> rb.integrateVelocity(dt));
     }
 
     // Collision Helper Methods
@@ -147,7 +150,7 @@ public class Physics2D {
         PhysicsMaterial mat1 = col.getSelf().getMaterial();
         PhysicsMaterial mat2 = col.getOther().getMaterial();
 
-        float elasticity = MathUtils.avg(mat1.getBounce(), mat2.getBounce()); // Coefficient of restitution
+        float restitution = MathUtils.avg(mat1.getBounce(), mat2.getBounce());
         float friction = MathUtils.avg(mat1.getFriction(), mat2.getFriction());
 
         Vec2 normal = col.getNormal(); // Collision direction
@@ -172,7 +175,7 @@ public class Physics2D {
                 if (collisionVel < 0f) // Stop if moving away or stationary
                     break;
                 // Apply impulse at contact points evenly
-                float normalImpulse = -(1f + elasticity) * collisionVel / sumInvMass / numContacts;
+                float normalImpulse = -(1f + restitution) * collisionVel / sumInvMass / numContacts;
                 if (MathUtils.equals(normalImpulse, 0)) // Don't apply tiny impulses
                     return;
 
@@ -185,7 +188,7 @@ public class Physics2D {
                  * Use dynamic friction if J_f ≥ mu*J_n
                  */
                 float frictionVel = relativeVel.dot(tangent);
-                float tangentImpulse = -(1f + elasticity) * frictionVel / sumInvMass / numContacts;
+                float tangentImpulse = -(1f + restitution) * frictionVel / sumInvMass / numContacts;
                 tangentImpulse = MathUtils.clamp(tangentImpulse, -normalImpulse * friction, normalImpulse * friction);
 
                 // Angular impulse

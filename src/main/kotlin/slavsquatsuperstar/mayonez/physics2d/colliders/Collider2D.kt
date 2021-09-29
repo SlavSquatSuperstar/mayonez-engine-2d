@@ -164,6 +164,6 @@ abstract class Collider2D : Component() {
      *
      * @return if this collider is not affected by collisions.
      */
-    fun isStatic(): Boolean = (rb == null) || rb!!.hasInfiniteMass()
+    fun isStatic(): Boolean = rb?.hasInfiniteMass() ?: true
 
 }

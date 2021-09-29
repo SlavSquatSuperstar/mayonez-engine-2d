@@ -22,7 +22,7 @@ import slavsquatsuperstar.mayonez.physics2d.colliders.Collider2D
 class Rigidbody2D(mass: Float, drag: Float, angDrag: Float) : Component() {
 
     // Constructors
-    constructor(mass: Float) : this(mass, 0f, 0.05f)
+    constructor(mass: Float) : this(mass, 0f, 0f)
 
     // Component Properties
 
@@ -70,26 +70,34 @@ class Rigidbody2D(mass: Float, drag: Float, angDrag: Float) : Component() {
         if (collider is AlignedBoxCollider2D) fixedRotation = true
     }
 
-    fun physicsUpdate(dt: Float) {
-        if (hasInfiniteMass())
-            return
+    /**
+     * Integrate force and torque to solve for velocity and angular velocity
+     */
+    fun integrateForce(dt: Float) {
+        if (hasInfiniteMass()) return
 
-        // Integrate forces and velocities, add drag if not stationary
-        velocity += netForce * (invMass * dt) // Integrate velocity
-        if (!MathUtils.equals(velocity.lenSquared(), 0f))
+        if (!MathUtils.equals(velocity.lenSquared(), 0f)) // Apply drag first
             addForce(velocity * -drag)
-        transform?.move(velocity * dt)
+        velocity += netForce * (invMass * dt)
+
 
         if (!fixedRotation) {
-            angVelocity += netTorque * invAngMass * dt
             if (!MathUtils.equals(angVelocity, 0f))
                 addTorque(angVelocity * -angDrag)
-            transform?.rotate(toDegrees(angVelocity) * dt)
+            angVelocity += netTorque * invAngMass * dt
         }
 
         // Reset accumulated forces/torques
         netForce.set(0f, 0f)
         netTorque = 0f
+    }
+
+    /**
+     * Integrate velocity and angular velocity to solve for position and rotation
+     */
+    fun integrateVelocity(dt: Float) {
+        transform?.move(velocity * dt)
+        if (!fixedRotation) transform?.rotate(toDegrees(angVelocity) * dt)
     }
 
     // Motion Properties
