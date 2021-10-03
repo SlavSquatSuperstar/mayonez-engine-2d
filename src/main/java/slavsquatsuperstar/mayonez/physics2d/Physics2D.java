@@ -74,9 +74,6 @@ public class Physics2D {
 
         // Resolve collisions
         collisions.forEach(col -> {
-//            if (col.getSelf().isStatic() && col.getOther().isStatic())
-//                return; // Return if both null rb or infinite mass
-
             Rigidbody2D r1 = col.getSelf().getRigidbody();
             Rigidbody2D r2 = col.getOther().getRigidbody();
             resolveDynamicCollision(col, r1, r2); // Simulate an impact
@@ -104,24 +101,14 @@ public class Physics2D {
      */
     private void detectCollisions() {
         for (int i = 0; i < colliders.size(); i++) {
-            // Set j to i + 1 to avoid duplicate collisions between two objects and checking against self
+            // Want to avoid duplicate collisions between two objects and checking against self
             for (int j = i + 1; j < colliders.size(); j++) {
                 Collider2D c1 = colliders.get(i);
                 Collider2D c2 = colliders.get(j);
-                Rigidbody2D r1 = c1.getRigidbody();
-                Rigidbody2D r2 = c2.getRigidbody();
 
-                // Ignore collision if no rigidbody
-                if (r1 == null || r2 == null)
-                    continue;
-                    // Ignore collision if both are static
-                else if (r1.hasInfiniteMass() && r2.hasInfiniteMass())
-                    continue;
-
-                // Get collision info
-                CollisionManifold result = c1.getCollisionInfo(c2);
-                if (result == null)
-                    continue;
+                if (c1.isStatic() && c2.isStatic()) continue; // Don't check for collision if both are static
+                CollisionManifold result = c1.getCollisionInfo(c2); // Get collision info
+                if (result == null) continue;
 
                 // TODO still send collision events if triggers
                 // Add the collisions if neither is a trigger
@@ -134,24 +121,37 @@ public class Physics2D {
         }
     }
 
-    private void resolveStaticCollision(CollisionManifold col, Rigidbody2D r1, Rigidbody2D r2) {
+    /**
+     * Correct positions of objects if one or neither collider has an infinite-mass rigidbody.
+     */
+    private static void resolveStaticCollision(CollisionManifold col, Rigidbody2D r1, Rigidbody2D r2) {
+        float mass1 = r1 == null ? 0 : r1.getMass();
+        float mass2 = r2 == null ? 0 : r2.getMass();
+        if (mass1 + mass2 == 0) return; // Should not both be static
+
         // Separate objects factoring in mass
-//        float massRatio = r2.getMass() / (r1.getMass() + r2.getMass()); // makes massless objects get displaced
-        float massRatio = r1.getMass() / (r1.getMass() + r2.getMass()); // allows smaller objects to push around heavy objects
-        float depth1 = col.getDepth() * massRatio;
-        float depth2 = col.getDepth() * (1 - massRatio);
+        float massPercent = mass1 / (mass1 + mass2);
+        float depth1 = col.getDepth() * massPercent;
+        float depth2 = col.getDepth() * (1 - massPercent);
+
+        // Displace bodies to correct position
         r1.getTransform().move(col.getNormal().mul(-depth1));
         r2.getTransform().move(col.getNormal().mul(depth2));
     }
 
-    private void resolveDynamicCollision(CollisionManifold col, Rigidbody2D r1, Rigidbody2D r2) {
+    private static void resolveDynamicCollision(CollisionManifold col, Rigidbody2D r1, Rigidbody2D r2) {
         // Precalculated / Known Values
-        float sumInvMass = r1.getInvMass() + r2.getInvMass();
+        float invMass1 = r1 == null ? 0 : r1.getInvMass();
+        float invMass2 = r2 == null ? 0 : r2.getInvMass();
+        float sumInvMass = invMass1 + invMass2;
+        if (invMass1 + invMass2 == 0) return; // Should not both be static
+
         PhysicsMaterial mat1 = col.getSelf().getMaterial();
         PhysicsMaterial mat2 = col.getOther().getMaterial();
 
         float restitution = MathUtils.avg(mat1.getBounce(), mat2.getBounce());
-        float friction = MathUtils.avg(mat1.getFriction(), mat2.getFriction());
+        float dFriction = MathUtils.sqrt(mat1.getDynamicFriction() * mat2.getDynamicFriction());
+        float sFriction = MathUtils.sqrt(mat1.getStaticFriction() * mat2.getStaticFriction());
 
         Vec2 normal = col.getNormal(); // Collision direction
         Vec2 tangent = normal.getNormal(); // Collision plane
@@ -159,43 +159,55 @@ public class Physics2D {
 
         for (int j = 0; j < IMPULSE_ITERATIONS; j++) {
             // Sum up total impulse of collision
-            Vec2 accumImpulse = new Vec2();
+            Vec2 accumImpulse = new Vec2(); // impulse at this point
             float accumAngImpulse1 = 0;
             float accumAngImpulse2 = 0;
 
             for (int i = 0; i < numContacts; i++) {
-                // Relative velocity at contact point
+                // Relative velocity at contact point (linear + angular velocity)
                 Vec2 contact = col.getContact(i);
                 Vec2 vel1 = r1.getPointVelocity(contact);
                 Vec2 vel2 = r2.getPointVelocity(contact);
                 Vec2 relativeVel = vel1.sub(vel2);
+
+                // distance vector from center of mass
+                Vec2 rad1 = contact.sub(r1.getPosition());
+                Vec2 rad2 = contact.sub(r2.getPosition());
 
                 // Normal (separation) impulse
                 float collisionVel = relativeVel.dot(normal); // Velocity along collision normal
                 if (collisionVel < 0f) // Stop if moving away or stationary
                     break;
                 // Apply impulse at contact points evenly
-                float normalImpulse = -(1f + restitution) * collisionVel / sumInvMass / numContacts;
-                if (MathUtils.equals(normalImpulse, 0)) // Don't apply tiny impulses
-                    return;
+                float normalImp = -(1f + restitution) * collisionVel / (sumInvMass * numContacts);
+                if (MathUtils.equals(normalImp, 0)) return; // Don't apply tiny impulses
 
-                // Tangent (friction) impulse
+                // Transfer angular momentum
+                accumAngImpulse1 += rad1.cross(normal.mul(normalImp));
+                accumAngImpulse2 -= rad2.cross(normal.mul(normalImp));
+
+                // Tangential (friction) impulse
                 /*
-                 * TODO static vs dynamic
                  * Coulomb's law (static/dynamic friction)
                  * F_f ≤ mu*F_n
                  * Clamp the friction magnitude to the normal magnitude
                  * Use dynamic friction if J_f ≥ mu*J_n
                  */
                 float frictionVel = relativeVel.dot(tangent);
-                float tangentImpulse = -(1f + restitution) * frictionVel / sumInvMass / numContacts;
-                tangentImpulse = MathUtils.clamp(tangentImpulse, -normalImpulse * friction, normalImpulse * friction);
+                float tangentImp = -(1f + restitution) * frictionVel / (sumInvMass * numContacts);
+                // Ignore tiny friction impulses
+                if (MathUtils.equals(tangentImp, 0f)) tangentImp = 0;
 
-                // Angular impulse
-                Vec2 contactImpulse = normal.mul(normalImpulse).add(tangent.mul(tangentImpulse)); // impulse at this point
+                // Overcome static friction
+//                if (Math.abs(tangentImp) > normalImp * sFriction)
+//                    tangentImp = normalImp * -dFriction;
+                tangentImp = MathUtils.clamp(tangentImp, -normalImp * sFriction, normalImp * sFriction);
+
+                // Calculate angular impulse from collision
+                Vec2 contactImpulse = normal.mul(normalImp).add(tangent.mul(tangentImp));
                 accumImpulse = accumImpulse.add(contactImpulse);
-                accumAngImpulse1 += contact.sub(r1.getPosition()).cross(contactImpulse); // need to calculate this after impulse
-                accumAngImpulse2 += contact.sub(r2.getPosition()).cross(contactImpulse.mul(-1));
+                accumAngImpulse1 += rad1.cross(contactImpulse);
+                accumAngImpulse2 -= rad2.cross(contactImpulse);
             }
 
             // Transfer momentum

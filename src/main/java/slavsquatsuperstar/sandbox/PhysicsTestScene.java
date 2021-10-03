@@ -2,7 +2,6 @@ package slavsquatsuperstar.sandbox;
 
 import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
-import slavsquatsuperstar.mayonez.Component;
 import slavsquatsuperstar.mayonez.*;
 import slavsquatsuperstar.mayonez.physics2d.PhysicsMaterial;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
@@ -17,8 +16,8 @@ import java.awt.*;
 
 public class PhysicsTestScene extends Scene {
 
-//    private PhysicsMaterial testMaterial = new PhysicsMaterial(0.5f, 0.3f);
-    private PhysicsMaterial testMaterial = new PhysicsMaterial(0f, 0f);
+    private PhysicsMaterial testMaterial = new PhysicsMaterial(0.5f, 0.5f, 0.0f);
+//    private PhysicsMaterial testMaterial = new PhysicsMaterial(0f, 0f, 0f);
 
     public PhysicsTestScene(String name) {
         super(name, Preferences.SCREEN_WIDTH, Preferences.SCREEN_HEIGHT, 10);
@@ -47,9 +46,11 @@ public class PhysicsTestScene extends Scene {
                                 color = Colors.ORANGE;
                         }
 
-                        // Draw velocity vector
-                        if (!col.isStatic())
+                        // Draw velocity and direction vector
+                        if (!col.isStatic()) {
                             DebugDraw.drawVector(col.center(), col.getRigidbody().getVelocity().div(10), color);
+                            DebugDraw.drawVector(col.getRigidbody().getPosition(), col.getRigidbody().getTransform().getDirection(), Colors.BLACK);
+                        }
 
                         // Draw Shape
                         DebugDraw.drawShape(col, color);
@@ -63,12 +64,12 @@ public class PhysicsTestScene extends Scene {
             protected void init() {
                 float radius = 4f;
                 float size = 8f;
-                float speed = 1f;
-//                addComponent(new CircleCollider(radius));
-//                addComponent(new Rigidbody2D(radius * radius * MathUtils.PI / 10f));
+                float speed = 2f;
+                addComponent(new CircleCollider(radius));
+                addComponent(new Rigidbody2D(radius * radius * MathUtils.PI / 10f));
 //                addComponent(new AlignedBoxCollider2D(new Vec2(size, size)));
-                addComponent(new BoxCollider2D(new Vec2(size, size)));
-                addComponent(new Rigidbody2D(size * size / 10f).setFollowsGravity(false));
+//                addComponent(new BoxCollider2D(new Vec2(size, size)));
+//                addComponent(new Rigidbody2D(size * size / 10f).setFollowsGravity(false));
                 addComponent(new MouseFlick("right mouse", 15, false));
                 addComponent(new KeyMovement(MoveMode.IMPULSE, speed / 2));
                 addComponent(new DragAndDrop("left mouse", false));
@@ -88,19 +89,6 @@ public class PhysicsTestScene extends Scene {
                             rb.addAngularImpulse(-speed);
                         else if (KeyInput.keyDown("E"))
                             rb.addAngularImpulse(speed);
-                    }
-                });
-                addComponent(new Component() {
-                    private BoxCollider2D box;
-
-                    @Override
-                    public void start() {
-                        box = getComponent(BoxCollider2D.class);
-                    }
-
-                    @Override
-                    public void render(Graphics2D g2) {
-                        DebugDraw.drawVector(transform.position, transform.getDirection(), Colors.BLACK);
                     }
                 });
             }
