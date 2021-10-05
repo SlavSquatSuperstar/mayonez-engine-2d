@@ -140,51 +140,50 @@ public class Physics2D {
     }
 
     private static void resolveDynamicCollision(CollisionManifold col, Rigidbody2D r1, Rigidbody2D r2) {
-        // Precalculated / Known Values
+        // Collision Information
+        Vec2 normal = col.getNormal(); // Collision direction
+        Vec2 tangent = normal.getNormal(); // Collision plane
+        int numContacts = col.countContacts();
+
+        // Mass
         float invMass1 = r1 == null ? 0 : r1.getInvMass();
         float invMass2 = r2 == null ? 0 : r2.getInvMass();
         float sumInvMass = invMass1 + invMass2;
         if (invMass1 + invMass2 == 0) return; // Should not both be static
 
+        // Physics Properties
         PhysicsMaterial mat1 = col.getSelf().getMaterial();
         PhysicsMaterial mat2 = col.getOther().getMaterial();
-
         float restitution = MathUtils.avg(mat1.getBounce(), mat2.getBounce());
-        float dFriction = MathUtils.sqrt(mat1.getDynamicFriction() * mat2.getDynamicFriction());
-        float sFriction = MathUtils.sqrt(mat1.getStaticFriction() * mat2.getStaticFriction());
-
-        Vec2 normal = col.getNormal(); // Collision direction
-        Vec2 tangent = normal.getNormal(); // Collision plane
-        int numContacts = col.countContacts();
+        float kFric = MathUtils.sqrt(mat1.getKineticFriction() * mat2.getKineticFriction());
+        float sFric = MathUtils.sqrt(mat1.getStaticFriction() * mat2.getStaticFriction());
 
         for (int j = 0; j < IMPULSE_ITERATIONS; j++) {
             // Sum up total impulse of collision
-            Vec2 accumImpulse = new Vec2(); // impulse at this point
-            float accumAngImpulse1 = 0;
-            float accumAngImpulse2 = 0;
+            Vec2 accumImp = new Vec2(); // impulse at this point
+            float accumAngImp1 = 0;
+            float accumAngImp2 = 0;
 
             for (int i = 0; i < numContacts; i++) {
-                // Relative velocity at contact point (linear + angular velocity)
+                // Radius from center of mass to contact
                 Vec2 contact = col.getContact(i);
+                Vec2 rad1 = contact.sub(r1.getPosition());
+                Vec2 rad2 = contact.sub(r2.getPosition());
+
+                // Relative velocity at contact point (linear + angular velocity)
                 Vec2 vel1 = r1.getPointVelocity(contact);
                 Vec2 vel2 = r2.getPointVelocity(contact);
                 Vec2 relativeVel = vel1.sub(vel2);
 
-                // distance vector from center of mass
-                Vec2 rad1 = contact.sub(r1.getPosition());
-                Vec2 rad2 = contact.sub(r2.getPosition());
-
                 // Normal (separation) impulse
                 float collisionVel = relativeVel.dot(normal); // Velocity along collision normal
-                if (collisionVel < 0f) // Stop if moving away or stationary
-                    break;
+                if (collisionVel < 0f) return; // Stop if moving away or stationary
                 // Apply impulse at contact points evenly
                 float normalImp = -(1f + restitution) * collisionVel / (sumInvMass * numContacts);
-                if (MathUtils.equals(normalImp, 0)) return; // Don't apply tiny impulses
 
                 // Transfer angular momentum
-                accumAngImpulse1 += rad1.cross(normal.mul(normalImp));
-                accumAngImpulse2 -= rad2.cross(normal.mul(normalImp));
+                accumAngImp1 += rad1.cross(normal.mul(normalImp));
+                accumAngImp2 -= rad2.cross(normal.mul(normalImp));
 
                 // Tangential (friction) impulse
                 /*
@@ -195,26 +194,30 @@ public class Physics2D {
                  */
                 float frictionVel = relativeVel.dot(tangent);
                 float tangentImp = -(1f + restitution) * frictionVel / (sumInvMass * numContacts);
-                // Ignore tiny friction impulses
-                if (MathUtils.equals(tangentImp, 0f)) tangentImp = 0;
+//                float tangentImp = frictionVel / (sumInvMass * numContacts);
+                if (MathUtils.equals(tangentImp, 0f)) tangentImp = 0; // Ignore tiny friction impulses
 
                 // Overcome static friction
-//                if (Math.abs(tangentImp) > normalImp * sFriction)
-//                    tangentImp = normalImp * -dFriction;
-                tangentImp = MathUtils.clamp(tangentImp, -normalImp * sFriction, normalImp * sFriction);
+//                if (Math.abs(tangentImp) > normalImp * sFric)
+//                    tangentImp = normalImp * -kFric;
+                tangentImp = MathUtils.clamp(tangentImp, -normalImp * sFric, normalImp * sFric);
 
                 // Calculate angular impulse from collision
-                Vec2 contactImpulse = normal.mul(normalImp).add(tangent.mul(tangentImp));
-                accumImpulse = accumImpulse.add(contactImpulse);
-                accumAngImpulse1 += rad1.cross(contactImpulse);
-                accumAngImpulse2 -= rad2.cross(contactImpulse);
+                Vec2 contactImp = normal.mul(normalImp).add(tangent.mul(tangentImp));
+                accumImp = accumImp.add(contactImp);
+                accumAngImp1 += rad1.cross(contactImp);
+                accumAngImp2 -= rad2.cross(contactImp);
             }
 
-            // Transfer momentum
-            r1.addImpulse(accumImpulse);
-            r2.addImpulse(accumImpulse.mul(-1));
-            r1.addAngularImpulse(accumAngImpulse1);
-            r2.addAngularImpulse(accumAngImpulse2);
+            // Transfer Momentum
+            if (r1 != null) {
+                r1.addImpulse(accumImp);
+                r1.addAngularImpulse(accumAngImp1);
+            }
+            if (r2 != null) {
+                r2.addImpulse(accumImp.mul(-1));
+                r2.addAngularImpulse(accumAngImp2);
+            }
         }
     }
 

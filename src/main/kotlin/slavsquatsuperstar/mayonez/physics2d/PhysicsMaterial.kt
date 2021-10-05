@@ -5,10 +5,10 @@ class PhysicsMaterial(
      * How much this object resists applied forces and comes to rest while in motion.
      * 0 indicates no opposition, and 1 indicates a very strong opposition.
      */
-    val dynamicFriction: Float,
+    val kineticFriction: Float,
 
     /**
-     * How difficult it is to move this object form a standstill
+     * How much this object resists acceleration from a standstill.
      * 0 indicates no opposition, and 1 indicates a very strong opposition.
      */
     val staticFriction: Float,

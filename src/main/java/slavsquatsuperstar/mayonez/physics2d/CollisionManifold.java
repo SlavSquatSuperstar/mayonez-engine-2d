@@ -17,7 +17,7 @@ public class CollisionManifold {
     private final Collider2D self, other;
     private final Vec2 normal;
     private final float depth;
-    private final List<Vec2> contacts = new ArrayList<>();
+    private final List<Vec2> contacts = new ArrayList<>(2);
 
     public CollisionManifold(Collider2D self, Collider2D other, Vec2 normal, float depth) {
         this.self = self;

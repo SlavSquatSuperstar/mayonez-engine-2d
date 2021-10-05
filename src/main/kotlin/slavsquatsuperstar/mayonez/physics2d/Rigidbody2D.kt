@@ -206,7 +206,7 @@ class Rigidbody2D(mass: Float, drag: Float, angDrag: Float) : Component() {
     }
 
     // convert angular velocity to linear velocity
-    fun getRelativePointVelocity(point: Vec2): Vec2 = point.sub(position).rotate(90f) * toRadians(angVelocity)
+    fun getRelativePointVelocity(point: Vec2): Vec2 = (point - position).rotate(90f) * toRadians(angVelocity)
 
     fun getPointVelocity(point: Vec2): Vec2 = velocity + getRelativePointVelocity(point)
 
