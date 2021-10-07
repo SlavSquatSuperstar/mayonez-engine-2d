@@ -142,7 +142,7 @@ public class Physics2D {
     private static void resolveDynamicCollision(CollisionManifold col, Rigidbody2D r1, Rigidbody2D r2) {
         // Collision Information
         Vec2 normal = col.getNormal(); // Collision direction
-        Vec2 tangent = normal.getNormal(); // Collision plane
+        Vec2 tangent = normal.getNormal(); // Collision plane, may be positive or negative to actual tangent
         int numContacts = col.countContacts();
 
         // Mass
@@ -155,14 +155,14 @@ public class Physics2D {
         PhysicsMaterial mat1 = col.getSelf().getMaterial();
         PhysicsMaterial mat2 = col.getOther().getMaterial();
         float restitution = MathUtils.avg(mat1.getBounce(), mat2.getBounce());
-        float kFric = MathUtils.sqrt(mat1.getKineticFriction() * mat2.getKineticFriction());
         float sFric = MathUtils.sqrt(mat1.getStaticFriction() * mat2.getStaticFriction());
+        float kFric = MathUtils.sqrt(mat1.getKineticFriction() * mat2.getKineticFriction());
 
         for (int j = 0; j < IMPULSE_ITERATIONS; j++) {
             // Sum up total impulse of collision
-            Vec2 accumImp = new Vec2(); // impulse at this point
-            float accumAngImp1 = 0;
-            float accumAngImp2 = 0;
+            Vec2 sumImp = new Vec2(); // impulse at this point
+            float sumAngImp1 = 0;
+            float sumAngImp2 = 0;
 
             for (int i = 0; i < numContacts; i++) {
                 // Radius from center of mass to contact
@@ -182,8 +182,8 @@ public class Physics2D {
                 float normalImp = -(1f + restitution) * collisionVel / (sumInvMass * numContacts);
 
                 // Transfer angular momentum
-                accumAngImp1 += rad1.cross(normal.mul(normalImp));
-                accumAngImp2 -= rad2.cross(normal.mul(normalImp));
+                sumAngImp1 += rad1.cross(normal.mul(normalImp));
+                sumAngImp2 -= rad2.cross(normal.mul(normalImp));
 
                 // Tangential (friction) impulse
                 /*
@@ -197,26 +197,25 @@ public class Physics2D {
 //                float tangentImp = frictionVel / (sumInvMass * numContacts);
                 if (MathUtils.equals(tangentImp, 0f)) tangentImp = 0; // Ignore tiny friction impulses
 
-                // Overcome static friction
-//                if (Math.abs(tangentImp) > normalImp * sFric)
-//                    tangentImp = normalImp * -kFric;
-                tangentImp = MathUtils.clamp(tangentImp, -normalImp * sFric, normalImp * sFric);
+                // Coulomb's Law: use kinetic friction is overcome static friction
+                if (Math.abs(tangentImp) > Math.abs(normalImp * sFric))
+                    tangentImp = normalImp * -kFric;
 
                 // Calculate angular impulse from collision
                 Vec2 contactImp = normal.mul(normalImp).add(tangent.mul(tangentImp));
-                accumImp = accumImp.add(contactImp);
-                accumAngImp1 += rad1.cross(contactImp);
-                accumAngImp2 -= rad2.cross(contactImp);
+                sumImp = sumImp.add(contactImp);
+                sumAngImp1 += rad1.cross(contactImp);
+                sumAngImp2 -= rad2.cross(contactImp);
             }
 
             // Transfer Momentum
             if (r1 != null) {
-                r1.addImpulse(accumImp);
-                r1.addAngularImpulse(accumAngImp1);
+                r1.addImpulse(sumImp);
+                r1.addAngularImpulse(sumAngImp1);
             }
             if (r2 != null) {
-                r2.addImpulse(accumImp.mul(-1));
-                r2.addAngularImpulse(accumAngImp2);
+                r2.addImpulse(sumImp.mul(-1));
+                r2.addAngularImpulse(sumAngImp2);
             }
         }
     }
