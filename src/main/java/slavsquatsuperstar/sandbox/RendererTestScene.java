@@ -43,8 +43,9 @@ public class RendererTestScene extends Scene {
             @Override
             public void render(Graphics2D g2) {
                 super.render(g2);
-                IMGUI.fillCircle(new Vec2(Preferences.SCREEN_WIDTH / 2f - 50, Preferences.SCREEN_HEIGHT / 2f + 32), 50, Colors.BLUE);
-                IMGUI.drawCircle(new Vec2(Preferences.SCREEN_WIDTH / 2f - 50, Preferences.SCREEN_HEIGHT / 2f + 32), 50, Colors.BLACK);
+                Vec2 position = new Vec2(Preferences.SCREEN_WIDTH / 2f - 50, Preferences.SCREEN_HEIGHT / 2f + 32);
+                IMGUI.fillCircle(position, 50, Colors.BLUE);
+                IMGUI.drawCircle(position, 50, Colors.BLACK);
                 IMGUI.drawPoint(new Vec2(Preferences.SCREEN_WIDTH / 2f, Preferences.SCREEN_HEIGHT / 2f + 82), Colors.LIGHT_BLUE);
             }
         });
@@ -60,5 +61,11 @@ public class RendererTestScene extends Scene {
                 addComponent(new Sprite("textures/mario.png"));
             }
         });
+    }
+
+    public static void main(String[] args) {
+        Game game = Game.instance();
+        game.start();
+        Game.loadScene(new RendererTestScene("Renderer Test Scene"));
     }
 }

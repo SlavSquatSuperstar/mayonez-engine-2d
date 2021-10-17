@@ -1,10 +1,6 @@
 package slavsquatsuperstar.mayonez;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import slavsquatsuperstar.sandbox.LevelEditorScene;
-import slavsquatsuperstar.sandbox.LevelScene;
-import slavsquatsuperstar.sandbox.PhysicsTestScene;
-import slavsquatsuperstar.sandbox.RendererTestScene;
 import slavsquatsuperstar.mayonez.physics2d.Physics2D;
 import slavsquatsuperstar.mayonez.renderer.IMGUI;
 import slavsquatsuperstar.mayonez.renderer.Renderer;
@@ -102,24 +98,8 @@ public class Game implements Runnable {
 
     // Getters and Setters
 
-    public static void loadScene(int scene) {
-        switch (scene) {
-            case 0:
-                game.currentScene = new LevelEditorScene("Level Editor");
-                break;
-            case 1:
-                game.currentScene = new LevelScene("Level");
-                break;
-            case 2:
-                game.currentScene = new PhysicsTestScene("Physics Test Scene");
-                break;
-            case 3:
-                game.currentScene = new RendererTestScene("Renderer Test Scene");
-                break;
-            default:
-                Logger.log("Game: Unknown scene");
-        }
-
+    public static void loadScene(Scene newScene) {
+        game.currentScene = newScene;
         game.startCurrentScene();
     }
 
