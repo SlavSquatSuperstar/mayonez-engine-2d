@@ -34,6 +34,10 @@ public class GameObject {
         components = new ArrayList<>();
     }
 
+    public GameObject(String name) {
+        this(name, new Vec2());
+    }
+
     // Game Methods
 
     /**

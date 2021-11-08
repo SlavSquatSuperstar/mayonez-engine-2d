@@ -1,6 +1,5 @@
 package slavsquatsuperstar.mayonez.physics2d;
 
-import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Preferences;
@@ -154,9 +153,9 @@ public class Physics2D {
         // Physics Properties
         PhysicsMaterial mat1 = col.getSelf().getMaterial();
         PhysicsMaterial mat2 = col.getOther().getMaterial();
-        float restitution = MathUtils.avg(mat1.getBounce(), mat2.getBounce());
-        float sFric = MathUtils.sqrt(mat1.getStaticFriction() * mat2.getStaticFriction());
-        float kFric = MathUtils.sqrt(mat1.getKineticFriction() * mat2.getKineticFriction());
+        float restitution = PhysicsMaterial.combineBounce(mat1, mat2);
+        float sFric = PhysicsMaterial.combineStaticFriction(mat1, mat2);
+        float kFric = PhysicsMaterial.combineKineticFriction(mat1, mat2);
 
         for (int j = 0; j < IMPULSE_ITERATIONS; j++) {
             // Sum up total impulse of collision

@@ -1,5 +1,7 @@
 package slavsquatsuperstar.mayonez.physics2d
 
+import kotlin.math.sqrt
+
 class PhysicsMaterial(
     /**
      * How much this object resists applied forces and comes to rest while in motion.
@@ -22,5 +24,18 @@ class PhysicsMaterial(
     companion object {
         @JvmField
         val DEFAULT_MATERIAL = PhysicsMaterial(0.5f, 0.5f, 0f)
+
+        // Friction combine: Geometric average, could also multiply instead
+        @JvmStatic
+        fun combineKineticFriction(mat1: PhysicsMaterial, mat2: PhysicsMaterial) =
+            sqrt(mat1.kineticFriction * mat2.kineticFriction)
+
+        @JvmStatic
+        fun combineStaticFriction(mat1: PhysicsMaterial, mat2: PhysicsMaterial) =
+            sqrt(mat1.staticFriction * mat2.staticFriction)
+
+        // Bounce combine: Arithmetic average, but could also take min
+        @JvmStatic
+        fun combineBounce(mat1: PhysicsMaterial, mat2: PhysicsMaterial) = (mat1.bounce + mat2.bounce) * 0.5f
     }
 }

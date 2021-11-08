@@ -22,7 +22,7 @@ import slavsquatsuperstar.mayonez.physics2d.colliders.Collider2D
 class Rigidbody2D(mass: Float, drag: Float, angDrag: Float) : Component() {
 
     // Constructors
-    constructor(mass: Float) : this(mass, 0f, 0f)
+    constructor(mass: Float) : this(mass, 0.05f, 0.05f)
 
     // Component Properties
 
