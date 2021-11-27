@@ -1,18 +1,18 @@
 plugins {
     id 'java'
     id 'application'
-    id 'org.jetbrains.kotlin.jvm' version '1.5.31'
-    id 'org.jetbrains.dokka' version '1.5.30' // For Kotlin Documentation
-    id 'com.github.johnrengelman.shadow' version '7.0.0' // For making fat jars
+    id 'org.jetbrains.kotlin.jvm' version '1.6.0'
+    id 'org.jetbrains.dokka' version '1.6.0' // For Kotlin Documentation
+    id 'com.github.johnrengelman.shadow' version '7.1.0' // For making fat jars
 }
 
 group 'slavsquatsuperstar'
-version '0.6.7-SNAPSHOT-1'
+version '0.6.7-SNAPSHOT-2'
 
 repositories.mavenCentral()
 
 dependencies {
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.5.31'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.6.0'
     implementation 'org.apache.commons:commons-lang3:3.12.0'
     implementation 'commons-io:commons-io:2.11.0'
     implementation 'org.json:json:20210307'

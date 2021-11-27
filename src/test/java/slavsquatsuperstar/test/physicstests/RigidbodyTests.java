@@ -40,7 +40,7 @@ public class RigidbodyTests {
 
     @Test
     public void angularVelocityScalesWithRadius() {
-        Rigidbody2D rb = new Rigidbody2D(1);
+        Rigidbody2D rb = new Rigidbody2D(1, 0, 0);
         rb.addAngularVelocity(360 / MathUtils.PI);
         physicsUpdate(rb, 1);
         assertEquals(2, rb.getRelativePointVelocity(new Vec2(1, 0)).len(), MathUtils.EPSILON);
@@ -49,7 +49,7 @@ public class RigidbodyTests {
 
     @Test
     public void pointVelocityScalesWithRadius() {
-        Rigidbody2D rb = new Rigidbody2D(1);
+        Rigidbody2D rb = new Rigidbody2D(1, 0, 0);
         rb.addAngularVelocity(360 / MathUtils.PI);
         physicsUpdate(rb, 1);
         assertEquals(new Vec2(0, 2), rb.getRelativePointVelocity(new Vec2(1, 0)));
@@ -57,7 +57,7 @@ public class RigidbodyTests {
 
     @Test
     public void pointVelocityAddsWithBodyVelocity() {
-        Rigidbody2D rb = new Rigidbody2D(1);
+        Rigidbody2D rb = new Rigidbody2D(1, 0, 0);
         rb.addVelocity(new Vec2(1, 0));
         rb.addAngularVelocity(360 / MathUtils.PI);
         physicsUpdate(rb, 1);
