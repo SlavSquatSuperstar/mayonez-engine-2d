@@ -280,6 +280,9 @@ class Vec2 constructor(
 
     // Overrides
 
+    operator fun component1() = x
+    operator fun component2() = y
+
     override fun hashCode(): Int = 31 * x.hashCode() + y.hashCode()
 
     override fun equals(other: Any?): Boolean {
@@ -289,6 +292,5 @@ class Vec2 constructor(
     }
 
     override fun toString(): String = String.format("(%.4f, %.4f)", x, y)
-
 
 }

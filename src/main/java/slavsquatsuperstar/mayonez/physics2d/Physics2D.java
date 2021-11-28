@@ -1,10 +1,13 @@
 package slavsquatsuperstar.mayonez.physics2d;
 
+import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
+import slavsquatsuperstar.mayonez.Colors;
 import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Preferences;
 import slavsquatsuperstar.mayonez.Scene;
 import slavsquatsuperstar.mayonez.physics2d.colliders.Collider2D;
+import slavsquatsuperstar.mayonez.renderer.DebugDraw;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -112,8 +115,6 @@ public class Physics2D {
                 // TODO still send collision events if triggers
                 // Add the collisions if neither is a trigger
                 if (!c1.isTrigger() && !c2.isTrigger()) {
-//                    DebugDraw.drawLine(c1.center(), c2.center(), Colors.RED);
-//                    DebugDraw.drawVector(c1.center(), result.getNormal(), Colors.BLACK);
                     collisions.add(result);
                 }
             }
@@ -166,6 +167,7 @@ public class Physics2D {
             for (int i = 0; i < numContacts; i++) {
                 // Radius from center of mass to contact
                 Vec2 contact = col.getContact(i);
+                DebugDraw.drawPoint(contact, Colors.BLACK);
                 Vec2 rad1 = contact.sub(r1.getPosition());
                 Vec2 rad2 = contact.sub(r2.getPosition());
 
@@ -175,14 +177,14 @@ public class Physics2D {
                 Vec2 relativeVel = vel1.sub(vel2);
 
                 // Normal (separation) impulse
-                float collisionVel = relativeVel.dot(normal); // Velocity along collision normal
-                if (collisionVel < 0f) return; // Stop if moving away or stationary
+                float normalVel = relativeVel.dot(normal); // Velocity along collision normal
+                if (normalVel < 0f) return; // Stop if moving away or stationary
                 // Apply impulse at contact points evenly
-                float normalImp = -(1f + restitution) * collisionVel / (sumInvMass * numContacts);
+                float normalImp = -(1f + restitution) * normalVel / (sumInvMass * numContacts);
 
                 // Transfer angular momentum
-                sumAngImp1 += rad1.cross(normal.mul(normalImp));
-                sumAngImp2 -= rad2.cross(normal.mul(normalImp));
+                sumAngImp1 -= rad1.cross(normal.mul(relativeVel));
+                sumAngImp2 += rad2.cross(normal.mul(relativeVel));
 
                 // Tangential (friction) impulse
                 /*
@@ -191,20 +193,23 @@ public class Physics2D {
                  * Clamp the friction magnitude to the normal magnitude
                  * Use dynamic friction if J_f ≥ mu*J_n
                  */
-                float frictionVel = relativeVel.dot(tangent);
-                float tangentImp = -(1f + restitution) * frictionVel / (sumInvMass * numContacts);
-//                float tangentImp = frictionVel / (sumInvMass * numContacts);
+                float tangentVel = relativeVel.dot(tangent);
+                float tangentImp = -tangentVel / (sumInvMass * numContacts);
                 if (MathUtils.equals(tangentImp, 0f)) tangentImp = 0; // Ignore tiny friction impulses
 
                 // Coulomb's Law: use kinetic friction is overcome static friction
                 if (Math.abs(tangentImp) > Math.abs(normalImp * sFric))
-                    tangentImp = normalImp * -kFric;
+                    tangentImp = -normalImp * kFric;
+                tangentImp = MathUtils.clamp(tangentImp, -normalImp * kFric, normalImp * kFric);
 
                 // Calculate angular impulse from collision
-                Vec2 contactImp = normal.mul(normalImp).add(tangent.mul(tangentImp));
+                Vec2 contactImp = normal.mul(normalImp);
+                Vec2 frictionImp = tangent.mul(tangentImp);
                 sumImp = sumImp.add(contactImp);
+//                sumImp = sumImp.add(contactImp.add(frictionImp));
                 sumAngImp1 += rad1.cross(contactImp);
                 sumAngImp2 -= rad2.cross(contactImp);
+
             }
 
             // Transfer Momentum

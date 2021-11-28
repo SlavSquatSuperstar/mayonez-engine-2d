@@ -66,6 +66,7 @@ class Edge2D(@JvmField val start: Vec2, @JvmField val end: Vec2) {
 
     // Line vs Line
 
+    // SAT intersection test:  https://www.youtube.com/watch?v=RBya4M6SWwk
     fun intersects(edge: Edge2D): Boolean {
         // If parallel, must be overlapping (co-linear)
         return if (MathUtils.equals(slope, edge.slope)) {
@@ -142,6 +143,9 @@ class Edge2D(@JvmField val start: Vec2, @JvmField val end: Vec2) {
     }
 
     // Overrides
+
+    operator fun component1() = start
+    operator fun component2() = end
 
     override fun hashCode(): Int = 31 * start.hashCode() + end.hashCode()
 
