@@ -1,11 +1,11 @@
 package slavsquatsuperstar;
 
-import slavsquatsuperstar.sandbox.physics.BallTestScene;
+import slavsquatsuperstar.sandbox.physics.LinearResolutionTestScene;
 
 public class Main {
 
     public static void main(String[] args) {
-        BallTestScene.main(args);
+        LinearResolutionTestScene.main(args);
 //        AABBTestScene.main(args);
 //        PhysicsTestScene.main(args);
     }

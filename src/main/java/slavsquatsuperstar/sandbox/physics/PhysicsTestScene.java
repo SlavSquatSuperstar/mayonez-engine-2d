@@ -21,12 +21,13 @@ public abstract class PhysicsTestScene extends Scene {
     static final PhysicsMaterial TEST_MATERIAL = new PhysicsMaterial(0.5f, 0.5f, 0.2f);
     static final PhysicsMaterial BOUNCY_MATERIAL = new PhysicsMaterial(0f, 0f, 1f);
     static final PhysicsMaterial STICKY_MATERIAL = new PhysicsMaterial(1f, 1f, 0f);
-    static final int NUM_SHAPES = 10;
+    final int NUM_SHAPES;
 
-    public PhysicsTestScene(String name) {
+    public PhysicsTestScene(String name, int numShapes) {
         super(name, Preferences.SCREEN_WIDTH, Preferences.SCREEN_HEIGHT, 10);
         setBackground(Colors.WHITE);
         setGravity(new Vec2());
+        NUM_SHAPES = numShapes;
     }
 
     @Override

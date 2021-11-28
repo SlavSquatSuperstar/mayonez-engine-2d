@@ -29,8 +29,7 @@ object MathUtils {
      * @return if they are equal
      */
     @JvmStatic
-    fun equals(num1: Float, num2: Float): Boolean =
-        abs(num1 - num2) <= EPSILON
+    fun equals(num1: Float, num2: Float): Boolean = abs(num1 - num2) <= EPSILON
 
     // Pythagorean Theorem
 
@@ -52,8 +51,7 @@ object MathUtils {
     @JvmStatic
     fun pythagoreanSquared(vararg sides: Float): Float {
         val sidesSq = sides.copyOf()
-        for (i in sidesSq.indices)
-            sidesSq[i] = sidesSq[i] * sidesSq[i]
+        for (i in sidesSq.indices) sidesSq[i] = sidesSq[i] * sidesSq[i]
         return sum(*sidesSq)
     }
 
@@ -77,16 +75,14 @@ object MathUtils {
     @JvmStatic
     fun sum(vararg values: Float): Float {
         var sum = 0f
-        for (v in values)
-            sum += v
+        for (v in values) sum += v
         return sum
     }
 
     @JvmStatic
     fun sum(vararg values: Int): Int {
         var sum = 0
-        for (v in values)
-            sum += v
+        for (v in values) sum += v
         return sum
     }
 
@@ -94,67 +90,55 @@ object MathUtils {
 
     @JvmStatic
     fun min(vararg values: Float): Float {
-        if (values.isEmpty())
-            return 0f
+        if (values.isEmpty()) return 0f
         var min = values[0]
         for (i in 1 until values.size)
-            if (values[i] < min)
-                min = values[i]
+            if (values[i] < min) min = values[i]
         return min
     }
 
     @JvmStatic
     fun minIndex(vararg values: Float): Int {
-        if (values.isEmpty())
-            return -1
+        if (values.isEmpty()) return -1
         var minIndex = 0
         for (i in 1 until values.size)
-            if (values[i] < values[minIndex])
-                minIndex = i
+            if (values[i] < values[minIndex]) minIndex = i
         return minIndex
     }
 
     @JvmStatic
     fun min(vararg values: Int): Int {
-        if (values.isEmpty())
-            return 0
+        if (values.isEmpty()) return 0
         var min = values[0]
         for (i in 1 until values.size)
-            if (values[i] < min)
-                min = values[i]
+            if (values[i] < min) min = values[i]
         return min
     }
 
     @JvmStatic
     fun max(vararg values: Float): Float {
-        if (values.isEmpty())
-            return 0f
+        if (values.isEmpty()) return 0f
         var max = values[0]
         for (i in 1 until values.size)
-            if (values[i] > max)
-                max = values[i]
+            if (values[i] > max) max = values[i]
         return max
     }
 
     @JvmStatic
     fun max(vararg values: Int): Int {
-        if (values.isEmpty())
-            return 0
+        if (values.isEmpty()) return 0
         var max = values[0]
         for (i in 1 until values.size)
-            if (values[i] > max)
-                max = values[i]
+            if (values[i] > max) max = values[i]
         return max
     }
 
     @JvmStatic
     fun maxIndex(vararg values: Float): Int {
-        if (values.isEmpty())
-            return -1
+        if (values.isEmpty()) return -1
         var maxIndex = 0
         for (i in 1 until values.size)
-            if (values[i] > values[maxIndex])
-                maxIndex = i
+            if (values[i] > values[maxIndex]) maxIndex = i
         return maxIndex
     }
 
@@ -236,9 +220,8 @@ object MathUtils {
      */
     @JvmStatic
     fun round(value: Float, decimalPlaces: Int): Float {
-        var temp = value * 10f.pow(decimalPlaces)
-        temp = kotlin.math.round(temp)
-        return temp / 10f.pow(decimalPlaces)
+        val temp = value * 10f.pow(decimalPlaces)
+        return round(temp) / 10f.pow(decimalPlaces)
     }
 
     /**
@@ -251,9 +234,8 @@ object MathUtils {
      */
     @JvmStatic
     fun truncate(value: Float, decimalPlaces: Int): Float {
-        var temp = value * 10f.pow(decimalPlaces)
-        temp = kotlin.math.truncate(temp)
-        return temp / 10f.pow(decimalPlaces)
+        val temp = value * 10f.pow(decimalPlaces)
+        return truncate(temp) / 10f.pow(decimalPlaces)
     }
 
     // Trig / Angle Methods

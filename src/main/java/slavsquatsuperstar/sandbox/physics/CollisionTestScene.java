@@ -15,7 +15,7 @@ import slavsquatsuperstar.mayonez.scripts.*;
 public class CollisionTestScene extends PhysicsTestScene {
 
     public CollisionTestScene(String name) {
-        super(name);
+        super(name, 0);
     }
 
     public static void main(String[] args) {
