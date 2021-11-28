@@ -203,30 +203,31 @@ open class PolygonCollider2D(vararg vertices: Vec2) : Collider2D() {
         }
 
         // 4. Calculate reference and incident edges
-        val minIdxRef = reference.minIdx
-        val minIdxInc = incident.minIdx
+        val minOverlapIdx = reference.minIdx
+//        val minIdxInc = incident.minIdx
 
         val overlap = reference.minOverlap
-        val colNormal = reference.normals[minIdxRef]
-        val refEdge = reference.edges[minIdxRef]
-        val incEdge = incident.edges[minIdxInc]
+        val colNormal = reference.normals[minOverlapIdx]
+        val refEdge = reference.edges[minOverlapIdx]
+//        val incEdge = incident.edges[minIdxInc]
 
-        // Dot product strategy for incident, doesn't seem necessary
-//        val incNormals = incident.normals
-//        val dotProds = FloatArray(incNormals.size) { colNormal.dot(incNormals[it]) }
-//        /*
-//         * Get most negative dot product, aka the normal facing towards this normal the most
-//         */
-//        val minDPIdx = minIndex(*dotProds)
-//        val incEdge = incident.edges[minDPIdx]
+        // Get most negative dot product = edge normal facing towards collision normal the most
+        // Sometimes overlap test isn't reliable
+        val dotProds = FloatArray(incident.normals.size) { colNormal.dot(incident.normals[it]) }
+        val minDotIdx = minIndex(*dotProds)
+        val incEdge = incident.edges[minDotIdx]
+
+        DebugDraw.drawVector(reference.collider.center(), reference.normals[minOverlapIdx], Colors.BLUE);
+        DebugDraw.drawVector(incident.collider.center(), incident.normals[minDotIdx], Colors.RED);
+        DebugDraw.drawLine(refEdge, Colors.BLUE)
+        DebugDraw.drawLine(incEdge, Colors.RED)
 
         // 5. Calculate contact points
         val collision = CollisionManifold(reference.collider, incident.collider, colNormal, -overlap)
         val clippedEdge = incEdge.clipToSegment(refEdge)
         val normalFace = refEdge.start.dot(colNormal)
-        for (pt in arrayOf(clippedEdge.start, clippedEdge.end)) {
+        for (pt in arrayOf(clippedEdge.start, clippedEdge.end))
             if (pt.dot(colNormal) <= normalFace) collision.addContact(pt)
-        }
         return collision
     }
 

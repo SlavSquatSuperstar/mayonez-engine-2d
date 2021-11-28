@@ -10,7 +10,7 @@ import slavsquatsuperstar.mayonez.physics2d.colliders.AlignedBoxCollider2D;
 public class AngularResolutionTestScene extends PhysicsTestScene {
 
     public AngularResolutionTestScene(String name) {
-        super(name, 6);
+        super(name, 1);
     }
 
     @Override
@@ -26,13 +26,13 @@ public class AngularResolutionTestScene extends PhysicsTestScene {
         });
 
         for (int i = 0; i < NUM_SHAPES; i++) {
-            if (i % 3 == 0) {
-                addObject(createCircle(MathUtils.random(3f, 6f), new Vec2(MathUtils.random(0, getWidth()),
-                        MathUtils.random(0, getHeight())), BOUNCY_MATERIAL));
-            } else {
-                addObject(createOBB(MathUtils.random(5f, 12f), MathUtils.random(5f, 12f),
-                        new Vec2(MathUtils.random(0, getWidth()), MathUtils.random(0, getHeight())), MathUtils.random(0, 90), BOUNCY_MATERIAL));
-            }
+//            if (i % 3 == 0) {
+//                addObject(createCircle(MathUtils.random(3f, 6f), new Vec2(MathUtils.random(0, getWidth()),
+//                        MathUtils.random(0, getHeight())), BOUNCY_MATERIAL));
+//            } else {
+            addObject(createOBB(MathUtils.random(5f, 12f), MathUtils.random(5f, 12f),
+                    new Vec2(MathUtils.random(0, getWidth()), MathUtils.random(0, getHeight())), MathUtils.random(0, 90), BOUNCY_MATERIAL));
+//            }
         }
 
     }

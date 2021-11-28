@@ -226,14 +226,10 @@ class Vec2 constructor(
      */
     @JvmOverloads
     fun rotate(degrees: Float, origin: Vec2 = Vec2()): Vec2 {
-        if (equals(degrees % 360, 0f))
-            return +this
-        // Translate the vector space to the origin
-        val localPos = this - origin
-        // Rotate the point around the new origin
-        val rot = Mat22.rotationMatrix(degrees)
-        // Revert the vector space to the old point
-        return (rot * localPos) + origin
+        if (equals(degrees % 360, 0f)) return +this
+        val localPos = this - origin // Translate the vector space to the origin
+        val rot = Mat22(degrees) // Rotate the point around the new origin
+        return (rot * localPos) + origin // Revert the vector space to the old point
     }
 
     /**

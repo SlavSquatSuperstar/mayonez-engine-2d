@@ -2,9 +2,7 @@ package slavsquatsuperstar.mayonez.renderer;
 
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.*;
-import slavsquatsuperstar.mayonez.physics2d.colliders.AlignedBoxCollider2D;
 import slavsquatsuperstar.mayonez.scripts.DragAndDrop;
-import slavsquatsuperstar.mayonez.scripts.KeepInScene;
 
 /**
  * The viewport into the world.
@@ -52,8 +50,8 @@ public class Camera extends Script {
                     }
                 }.setEnabled(false));
                 // Keep camera inside scene and add camera collider
-                addComponent(new AlignedBoxCollider2D(new Vec2(camera.width, camera.height)).setTrigger(true));
-                addComponent(camera.keepInScene = new KeepInScene(camera.minX, camera.minY, camera.maxX, camera.maxY, KeepInScene.Mode.STOP));
+//                addComponent(new AlignedBoxCollider2D(new Vec2(camera.width, camera.height)).setTrigger(true));
+//                addComponent(camera.keepInScene = new KeepInScene(camera.minX, camera.minY, camera.maxX, camera.maxY, KeepInScene.Mode.STOP));
             }
 
             // Don't want to get rid of the camera!

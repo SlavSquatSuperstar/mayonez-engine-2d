@@ -145,7 +145,9 @@ public class Physics2D {
         Vec2 tangent = normal.getNormal(); // Collision plane, may be positive or negative to actual tangent
         int numContacts = col.countContacts();
 
-        // Mass
+//        DebugDraw.drawVector(r1.getPosition(), normal, Colors.BLUE);
+
+        // Mass Checks
         float invMass1 = r1 == null ? 0 : r1.getInvMass();
         float invMass2 = r2 == null ? 0 : r2.getInvMass();
         float sumInvMass = invMass1 + invMass2;
@@ -166,6 +168,7 @@ public class Physics2D {
 
             for (int i = 0; i < numContacts; i++) {
                 // Radius from center of mass to contact
+                // TODO transferring too much angular momentum, check radii
                 Vec2 contact = col.getContact(i);
                 DebugDraw.drawPoint(contact, Colors.BLACK);
                 Vec2 rad1 = contact.sub(r1.getPosition());
