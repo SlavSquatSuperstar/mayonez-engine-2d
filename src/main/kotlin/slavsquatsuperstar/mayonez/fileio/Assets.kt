@@ -1,7 +1,7 @@
 package slavsquatsuperstar.mayonez.fileio
 
 import org.reflections.Reflections
-import org.reflections.scanners.ResourcesScanner
+import org.reflections.scanners.Scanners
 import org.reflections.util.ClasspathHelper
 import org.reflections.util.ConfigurationBuilder
 import slavsquatsuperstar.mayonez.Logger.trace
@@ -31,7 +31,7 @@ object Assets {
     fun scanResources(directory: String) {
         val reflections = Reflections(
             ConfigurationBuilder()
-                .setUrls(ClasspathHelper.forPackage(directory)).setScanners(ResourcesScanner())
+                .setUrls(ClasspathHelper.forPackage(directory)).setScanners(Scanners.Resources)
         )
         val resources = reflections.getResources(Pattern.compile(".*\\.*"))
         resources.forEach { createAsset(it, AssetType.CLASSPATH) } // Create an asset from each path
@@ -93,6 +93,7 @@ object Assets {
      * @return a subclass instance with the same {@link AssetType}, if the asset is valid.
      */
     @JvmStatic
+    @Suppress("UNCHECKED_CAST")
     fun <T : Asset> getAsset(filename: String, cls: Class<T>): T? {
         val asset = getAsset(filename)
         return if (asset != null && !cls.isInstance(asset))

@@ -39,6 +39,10 @@ public class GameObject {
         this.transform = transform;
         components = new ArrayList<>();
     }
+    
+    public GameObject(String name) {
+        this(name, new Vec2());
+    }
 
     // Game Methods
 

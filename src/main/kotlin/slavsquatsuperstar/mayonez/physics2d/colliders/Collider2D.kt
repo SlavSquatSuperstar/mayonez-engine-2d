@@ -1,12 +1,11 @@
 package slavsquatsuperstar.mayonez.physics2d.colliders
 
-import slavsquatsuperstar.math.MathUtils.clamp
 import slavsquatsuperstar.math.Vec2
 import slavsquatsuperstar.mayonez.Component
-import slavsquatsuperstar.mayonez.GameObject
 import slavsquatsuperstar.mayonez.Logger
 import slavsquatsuperstar.mayonez.Transform
 import slavsquatsuperstar.mayonez.physics2d.CollisionManifold
+import slavsquatsuperstar.mayonez.physics2d.PhysicsMaterial
 import slavsquatsuperstar.mayonez.physics2d.RaycastResult
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D
 
@@ -20,7 +19,7 @@ abstract class Collider2D : Component() {
 
     // Object References
 
-    @SuppressWarnings("unchecked")
+    @Suppress("UNCHECKED_CAST")
     fun <T : Collider2D?> setTransform(transform: Transform?): T {
         this.transform = transform
         return this as T
@@ -29,18 +28,17 @@ abstract class Collider2D : Component() {
     /**
      * A reference to the parent object's [Rigidbody2D]
      */
-    var rb: Rigidbody2D? = null
-        /**
-         * Returns the parent object's [Rigidbody2D]. A collider should have rigidbody to react to collisions.
-         *
-         * @return the attached rigidbody
-         */
-        @JvmName("getRigidbody") get
-        protected set
+    @JvmField
+    protected var rb: Rigidbody2D? = null
 
+    /**
+     * Returns the parent object's [Rigidbody2D]. A collider should have rigidbody to react to collisions.
+     *
+     * @return the attached rigidbody
+     */
+    fun getRigidbody(): Rigidbody2D? = rb
 
-    // TODO replace with set parent?
-    @SuppressWarnings("unchecked")
+    @Suppress("UNCHECKED_CAST")
     fun <T : Collider2D?> setRigidbody(rb: Rigidbody2D?): T {
         this.rb = rb
         return this as T
@@ -48,22 +46,11 @@ abstract class Collider2D : Component() {
 
     // Physics Properties
 
-    /**
-     * What percentage of energy is conserved after a collision (0-1).
-     */
-    var bounce: Float = 0f
+    var material: PhysicsMaterial = PhysicsMaterial.DEFAULT_MATERIAL
         private set
 
-    var friction: Float = 0.5f // coefficient of kinetic friction
-        private set
-
-    fun setBounce(bounce: Float): Collider2D {
-        this.bounce = clamp(bounce, 0f, 1f)
-        return this
-    }
-
-    fun setFriction(friction: Float): Collider2D {
-        this.friction = clamp(friction, 0f, 1f)
+    fun setMaterial(material: PhysicsMaterial): Collider2D {
+        this.material = material
         return this
     }
 
@@ -92,6 +79,8 @@ abstract class Collider2D : Component() {
     fun center(): Vec2 = transform?.position ?: Vec2()
 
     abstract fun getMinBounds(): AlignedBoxCollider2D
+
+    open fun getAngMass(mass: Float): Float = mass
 
     // Shape vs Point Collisions
     /**
@@ -152,6 +141,7 @@ abstract class Collider2D : Component() {
     abstract fun getCollisionInfo(collider: Collider2D?): CollisionManifold?
 
     // Transform Methods
+
     open fun toLocal(world: Vec2): Vec2 = transform?.toLocal(world) ?: world
 
     open fun toWorld(local: Vec2): Vec2 = transform?.toWorld(local) ?: local
@@ -163,6 +153,6 @@ abstract class Collider2D : Component() {
      *
      * @return if this collider is not affected by collisions.
      */
-    fun isStatic(): Boolean = (rb == null) || rb!!.hasInfiniteMass()
+    fun isStatic(): Boolean = rb?.hasInfiniteMass() ?: true
 
 }

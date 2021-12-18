@@ -1,10 +1,10 @@
 package slavsquatsuperstar.mayonezgl;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import slavsquatsuperstar.mayonez.fileio.Assets;
 import slavsquatsuperstar.mayonez.Logger;
 import slavsquatsuperstar.mayonez.Preferences;
 import slavsquatsuperstar.mayonez.Time;
+import slavsquatsuperstar.mayonez.fileio.Assets;
 import slavsquatsuperstar.mayonez.input.KeyInput;
 import slavsquatsuperstar.mayonez.input.MouseInput;
 import slavsquatsuperstar.mayonezgl.renderer.RendererGL;
@@ -18,6 +18,10 @@ import static org.lwjgl.glfw.GLFW.glfwGetTime;
  */
 public class GameGL { // can't implement runnable otherwise GLFW will crash
 
+//    static {
+//        game = instance(); // "Lazy" singleton construction
+//    }
+
     // Singleton Fields
     private static GameGL game;
 
@@ -26,7 +30,7 @@ public class GameGL { // can't implement runnable otherwise GLFW will crash
     private static SceneGL scene;
 
     // Window Fields
-    private final WindowGL window;
+    private static WindowGL window;
     private static final int WIDTH = Preferences.SCREEN_WIDTH;
     private static final int HEIGHT = Preferences.SCREEN_HEIGHT;
 
@@ -40,7 +44,7 @@ public class GameGL { // can't implement runnable otherwise GLFW will crash
     }
 
     public static GameGL instance() {
-        return game == null ? game = new GameGL() : game;
+        return (null == game) ? game = new GameGL() : game;
     }
 
     // Getter Methods
@@ -60,7 +64,7 @@ public class GameGL { // can't implement runnable otherwise GLFW will crash
 
     // Game Loop Methods
 
-    public void start() {
+    public static void start() {
         if (running) return; // Don't start the game if already running
 
         running = true;
@@ -72,10 +76,10 @@ public class GameGL { // can't implement runnable otherwise GLFW will crash
 
         window.start();
         startScene();
-        run();
+        game.run();
     }
 
-    public void stop(int status) {
+    public static void stop(int status) {
         if (!running) return;
 
         Logger.log("Engine: Stopping with exit code %d", status);

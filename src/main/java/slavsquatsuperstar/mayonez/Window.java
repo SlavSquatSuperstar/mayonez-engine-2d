@@ -96,9 +96,7 @@ public class Window extends JFrame implements GameWindow {
             do {
                 g2 = (Graphics2D) bs.getDrawGraphics();
                 g2.clearRect(0, 0, getWidth(), getHeight()); // Clear the screen
-
-                r.render(g2); // Draw scene
-
+                r.draw(g2); // Draw scene
                 g2.dispose(); // Flush Resources
                 bs.show();
             } while (bs.contentsLost());

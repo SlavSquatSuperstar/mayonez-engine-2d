@@ -1,10 +1,7 @@
 package slavsquatsuperstar.sandbox;
 
 import slavsquatsuperstar.math.Vec2;
-import slavsquatsuperstar.mayonez.Colors;
-import slavsquatsuperstar.mayonez.GameObject;
-import slavsquatsuperstar.mayonez.Preferences;
-import slavsquatsuperstar.mayonez.Scene;
+import slavsquatsuperstar.mayonez.*;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
 import slavsquatsuperstar.mayonez.physics2d.colliders.AlignedBoxCollider2D;
 import slavsquatsuperstar.mayonez.physics2d.colliders.Collider2D;
@@ -36,6 +33,11 @@ public class LevelScene extends Scene {
         });
 
         addObject(new Player("Player", new Vec2(5, 5)));
+    }
+
+    public static void main(String[] args) {
+        Game.loadScene(new LevelScene("Level"));
+        Game.start();
     }
 
 }

@@ -124,7 +124,7 @@ public class WindowGL implements GameWindow {
     public void render(Renderable r) {
         glClearColor(1f, 1f, 1f, 1f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear the screen
-        r.render(null); // don't pass Graphics2D
+        r.draw(null); // don't pass Graphics2D
         glfwSwapBuffers(window); // swap the color buffers
     }
 

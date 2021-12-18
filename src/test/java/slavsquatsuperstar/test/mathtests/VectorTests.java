@@ -24,8 +24,8 @@ public class VectorTests {
 
     @Test
     public void unitVectorLengthIsOne() {
-        assertEquals(1f, new Vec2(500, 500).unit().lenSquared(), MathUtils.EPSILON);
-        assertEquals(1f, new Vec2(-500, -500).unit().lenSquared(), MathUtils.EPSILON);
+        assertEquals(1f, new Vec2(500, 500).unit().lenSq(), MathUtils.EPSILON);
+        assertEquals(1f, new Vec2(-500, -500).unit().lenSq(), MathUtils.EPSILON);
     }
 
     @Test

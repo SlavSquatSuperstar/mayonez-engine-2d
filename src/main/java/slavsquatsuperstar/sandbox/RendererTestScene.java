@@ -5,6 +5,7 @@ import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.*;
 import slavsquatsuperstar.mayonez.input.KeyInput;
 import slavsquatsuperstar.mayonez.renderer.IMGUI;
+import slavsquatsuperstar.mayonez.SpriteSheet;
 import slavsquatsuperstar.mayonez.scripts.KeyMovement;
 import slavsquatsuperstar.mayonez.scripts.MoveMode;
 
@@ -24,9 +25,8 @@ public class RendererTestScene extends Scene {
     }
 
     public static void main(String[] args) {
-        Game game = Game.instance();
-        game.start();
         Game.loadScene(new RendererTestScene());
+        Game.start();
     }
 
     @Override

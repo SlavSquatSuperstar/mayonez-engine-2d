@@ -25,7 +25,7 @@ class AlignedBoxCollider2D(size: Vec2) : BoxCollider2D(size) {
     override fun getVertices(): Array<Vec2> =
         arrayOf(Vec2(min()), Vec2(max().x, min().y), Vec2(max()), Vec2(min().x, max().y))
 
-    override fun getNormals(): Array<Vec2> = arrayOf(Vec2(1f, 0f), Vec2(0f, 1f))
+//    override fun getNormals(): Array<Vec2> = arrayOf(Vec2(1f, 0f), Vec2(0f, 1f))
 
     override fun getMinBounds(): AlignedBoxCollider2D =
         AlignedBoxCollider2D(localSize()).setTransform<Collider2D>(transform).setRigidbody(rb)

@@ -22,7 +22,7 @@ object IMGUI {
     fun render(g2: Graphics2D) {
         if (shapes.isNotEmpty()) {
             g2.stroke = stroke
-            for (shape in shapes) shape.render(g2)
+            for (shape in shapes) shape.draw(g2)
             shapes.clear()
         }
     }

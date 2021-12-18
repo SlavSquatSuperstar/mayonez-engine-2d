@@ -59,11 +59,10 @@ public class Camera extends Script {
 
             // Don't want to get rid of the camera!
             @Override
-            public final void destroy() {
-            }
+            public void destroy() {}
 
             @Override
-            public final boolean isDestroyed() {
+            public boolean isDestroyed() {
                 return false;
             }
         };
@@ -72,8 +71,7 @@ public class Camera extends Script {
     @Override
     public void update(float dt) {
         // Follow subject (Set position to subject position)
-        if (subject != null)
-            transform.position.set(subject.transform.position);
+        if (subject != null) transform.position.set(subject.transform.position);
     }
 
     // Getters and setters

@@ -59,7 +59,7 @@ object MouseInput : MouseAdapter() {
     // Mouse Button Callbacks
 
     @JvmStatic
-    @SuppressWarnings("unused")
+    @Suppress("unused")
     fun mouseButtonCallback(window: Long, button: Int, action: Int, mods: Int) {
         if (action == GLFW.GLFW_PRESS) {
             setButton(button, true)

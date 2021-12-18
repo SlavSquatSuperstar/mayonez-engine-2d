@@ -123,7 +123,7 @@ class Vec2 constructor(
             Logger.warn("Vector2: Attempted division by 0")
             return Vec2()
         }
-        return this * (1 / scalar)
+        return this * (1f / scalar)
     }
 
     /**
@@ -156,9 +156,17 @@ class Vec2 constructor(
      * Projects this vector onto another vector, returning the components of this vector in the direction of another.
      *
      * @param vOnto another vector
-     * @return the projected vector
+     * @return the vector projection
      */
-    fun project(vOnto: Vec2): Vec2 = vOnto * (this.dot(vOnto) / vOnto.lenSquared())
+    fun project(vOnto: Vec2): Vec2 = vOnto * (this.dot(vOnto) / vOnto.lenSq())
+
+    /**
+     * Calculates the project length, or component, of this vector onto another vector.
+     *
+     * @param vOnto another vector
+     * @return the scalar projection
+     */
+    fun comp(vOnto: Vec2): Float = this.dot(vOnto) / vOnto.len()
 
     // Pythagorean Theorem / Length Methods
 
@@ -167,14 +175,16 @@ class Vec2 constructor(
      *
      * @return this vector's magnitude
      */
-    fun len(): Float = sqrt(lenSquared())
+    fun len(): Float = sqrt(lenSq())
+    fun mag(): Float = len()
 
     /**
      * Calculates the magnitude squared of this vector (less CPU expensive than square root).
      *
      * @return this vector's magnitude squared
      */
-    fun lenSquared(): Float = (x * x) + (y * y)
+    fun lenSq(): Float = (x * x) + (y * y)
+    fun magSq(): Float = lenSq()
 
     /**
      * Calculates the distance between the tips of this vector and another.
@@ -182,7 +192,7 @@ class Vec2 constructor(
      * @param v a 2D vector
      * @return the distance
      */
-    fun distance(v: Vec2): Float = sqrt(distanceSquared(v))
+    fun distance(v: Vec2): Float = sqrt(distanceSq(v))
 
     /**
      * Calculates the distance squared between the tips of this vector and another.
@@ -190,7 +200,7 @@ class Vec2 constructor(
      * @param v a 2D vector
      * @return the distance squared
      */
-    fun distanceSquared(v: Vec2): Float = (v - this).lenSquared()
+    fun distanceSq(v: Vec2): Float = (v - this).lenSq()
 
     /**
      * Calculates the vector with the same direction as this vector and a magnitude of 1. Returns (0, 0) if this vector
@@ -199,17 +209,9 @@ class Vec2 constructor(
      * @return the unit vector
      */
     fun unit(): Vec2 {
-        return if (equals(lenSquared(), 1f) || equals(lenSquared(), 0f)) +this
+        return if (equals(lenSq(), 1f) || equals(lenSq(), 0f)) +this
         else this / len()
     }
-
-    /**
-     * Calculates the length this vector's projection onto another vector.
-     *
-     * @param vOnto another vector
-     * @return the projected length
-     */
-    fun projectedLength(vOnto: Vec2): Float = this.dot(vOnto) / vOnto.len()
 
     // Angle Methods
 
@@ -238,14 +240,10 @@ class Vec2 constructor(
      */
     @JvmOverloads
     fun rotate(degrees: Float, origin: Vec2 = Vec2()): Vec2 {
-        if (equals(degrees % 360, 0f))
-            return +this
-        // Translate the vector space to the origin
-        val localPos = this - origin
-        // Rotate the point around the new origin
-        val rot = Mat22.rotationMatrix(degrees)
-        // Revert the vector space to the old point
-        return (rot * localPos) + origin
+        if (equals(degrees % 360, 0f)) return +this
+        val localPos = this - origin // Translate the vector space to the origin
+        val rot = Mat22(degrees) // Rotate the point around the new origin
+        return (rot * localPos) + origin // Revert the vector space to the old point
     }
 
     /**
@@ -275,7 +273,7 @@ class Vec2 constructor(
      * @return the clamped vector
      */
     fun clampLength(length: Float): Vec2 {
-        return if (lenSquared() > length * length)
+        return if (lenSq() > length * length)
             this * (length / len())
         else +this
     }
@@ -292,6 +290,9 @@ class Vec2 constructor(
 
     // Overrides
 
+    operator fun component1() = x
+    operator fun component2() = y
+
     override fun hashCode(): Int = 31 * x.hashCode() + y.hashCode()
 
     override fun equals(other: Any?): Boolean {
@@ -301,6 +302,5 @@ class Vec2 constructor(
     }
 
     override fun toString(): String = String.format("(%.4f, %.4f)", x, y)
-
 
 }

@@ -2,14 +2,11 @@ package slavsquatsuperstar.mayonez.physics2d
 
 import slavsquatsuperstar.math.MathUtils
 import slavsquatsuperstar.math.MathUtils.clamp
-import slavsquatsuperstar.math.MathUtils.pythagoreanSquared
 import slavsquatsuperstar.math.MathUtils.toDegrees
 import slavsquatsuperstar.math.MathUtils.toRadians
 import slavsquatsuperstar.math.Vec2
 import slavsquatsuperstar.mayonez.Component
 import slavsquatsuperstar.mayonez.physics2d.colliders.AlignedBoxCollider2D
-import slavsquatsuperstar.mayonez.physics2d.colliders.BoxCollider2D
-import slavsquatsuperstar.mayonez.physics2d.colliders.CircleCollider
 import slavsquatsuperstar.mayonez.physics2d.colliders.Collider2D
 
 /**
@@ -20,7 +17,7 @@ import slavsquatsuperstar.mayonez.physics2d.colliders.Collider2D
 class Rigidbody2D(mass: Float, drag: Float, angDrag: Float) : Component() {
 
     // Constructors
-    constructor(mass: Float) : this(mass, 0f, 0.05f)
+    constructor(mass: Float) : this(mass, 0.05f, 0.05f)
 
     // Component Properties
 
@@ -69,26 +66,34 @@ class Rigidbody2D(mass: Float, drag: Float, angDrag: Float) : Component() {
         if (collider is AlignedBoxCollider2D) fixedRotation = true
     }
 
-    fun physicsUpdate(dt: Float) {
-        if (hasInfiniteMass())
-            return
+    /**
+     * Integrate force and torque to solve for velocity and angular velocity
+     */
+    fun integrateForce(dt: Float) {
+        if (hasInfiniteMass()) return
 
-        // Integrate forces and velocities, add drag if not stationary
-        velocity += netForce * (invMass * dt) // Integrate velocity
-        if (!MathUtils.equals(velocity.lenSquared(), 0f))
+        if (!MathUtils.equals(velocity.lenSq(), 0f)) // Apply drag first
             addForce(velocity * -drag)
-        transform?.move(velocity * dt)
+        velocity += netForce * (invMass * dt)
+
 
         if (!fixedRotation) {
-            angVelocity += netTorque * invAngMass * dt
             if (!MathUtils.equals(angVelocity, 0f))
                 addTorque(angVelocity * -angDrag)
-            transform?.rotate(toDegrees(angVelocity) * dt)
+            angVelocity += netTorque * invAngMass * dt
         }
 
         // Reset accumulated forces/torques
         netForce.set(0f, 0f)
         netTorque = 0f
+    }
+
+    /**
+     * Integrate velocity and angular velocity to solve for position and rotation
+     */
+    fun integrateVelocity(dt: Float) {
+        transform?.move(velocity * dt)
+        if (!fixedRotation) transform?.rotate(toDegrees(angVelocity) * dt)
     }
 
     // Motion Properties
@@ -125,22 +130,11 @@ class Rigidbody2D(mass: Float, drag: Float, angDrag: Float) : Component() {
     val invMass: Float
         get() = if (hasInfiniteMass()) 0f else 1f / mass
 
-    private val invAngMass: Float
-        get() {
-            if (collider == null || hasInfiniteMass())
-                return invMass
+    val angMass: Float
+        get() = collider?.getAngMass(mass) ?: mass
 
-            var angMass = mass
-            when (collider) {
-                is CircleCollider -> angMass *= MathUtils.PI * 0.5f * (collider as CircleCollider).radius() *
-                        (collider as CircleCollider).radius()
-                is BoxCollider2D -> angMass *= pythagoreanSquared(
-                    (collider as BoxCollider2D).width(),
-                    (collider as BoxCollider2D).height()
-                ) / 12f
-            }
-            return 1f / angMass
-        }
+    private val invAngMass: Float
+        get() = if (hasInfiniteMass()) invMass else 1f / angMass
 
     // Force Methods
 
@@ -193,7 +187,7 @@ class Rigidbody2D(mass: Float, drag: Float, angDrag: Float) : Component() {
     }
 
     // convert angular velocity to linear velocity
-    fun getRelativePointVelocity(point: Vec2): Vec2 = point.sub(position).rotate(90f) * toRadians(angVelocity)
+    fun getRelativePointVelocity(point: Vec2): Vec2 = (point - position).rotate(90f) * toRadians(angVelocity)
 
     fun getPointVelocity(point: Vec2): Vec2 = velocity + getRelativePointVelocity(point)
 

@@ -7,10 +7,6 @@ import slavsquatsuperstar.mayonez.input.MouseInput;
 import slavsquatsuperstar.mayonez.physics2d.Physics2D;
 import slavsquatsuperstar.mayonez.renderer.IMGUI;
 import slavsquatsuperstar.mayonez.renderer.Renderer;
-import slavsquatsuperstar.sandbox.LevelEditorScene;
-import slavsquatsuperstar.sandbox.LevelScene;
-import slavsquatsuperstar.sandbox.PhysicsTestScene;
-import slavsquatsuperstar.sandbox.RendererTestScene;
 
 import java.awt.*;
 
@@ -21,16 +17,24 @@ import java.awt.*;
  */
 public class Game implements Runnable {
 
+    static {
+        game = instance(); // "Lazy" singleton construction
+    }
+
+    /*
+     * Field Declarations
+     */
+
     // Singleton Fields
     // TODO make start/stop static?
     private static Game game;
 
     // Thread Fields
-    private Thread thread;
-    private boolean running;
+    private static Thread thread;
+    private static boolean running;
 
     // Window Fields
-    private final GameWindow window;
+    private static GameWindow window;
     private static final int WIDTH = Preferences.SCREEN_WIDTH;
     private static final int HEIGHT = Preferences.SCREEN_HEIGHT;
 
@@ -68,41 +72,20 @@ public class Game implements Runnable {
     // Getters and Setters
 
     public static void loadScene(Scene newScene) {
-        game.currentScene = newScene;
-        game.startCurrentScene();
-    }
-
-    public static void loadScene(int scene) {
-        switch (scene) {
-            case 0:
-                game.currentScene = new LevelEditorScene("Level Editor");
-                break;
-            case 1:
-                game.currentScene = new LevelScene("Level");
-                break;
-            case 2:
-                game.currentScene = new PhysicsTestScene();
-                break;
-            case 3:
-                game.currentScene = new RendererTestScene();
-                break;
-            default:
-                Logger.log("Game: Unknown scene");
-        }
-
-        game.startCurrentScene();
+        currentScene = newScene;
+        startCurrentScene();
     }
 
     public static Scene currentScene() {
-        return game.currentScene;
+        return currentScene;
     }
 
     public static Renderer getRenderer() {
-        return game.renderer;
+        return renderer;
     }
 
     public static Physics2D getPhysics() {
-        return game.physics;
+        return physics;
     }
 
     @Override
@@ -166,6 +149,11 @@ public class Game implements Runnable {
      * @param dt seconds since the last frame
      */
     public void update(float dt) throws Exception { // TODO pass dt or use Game.timestep?
+        // TODO Poll input events
+        if (KeyInput.keyDown("exit")) {
+            running = false;
+            return;
+        }
         if (currentScene != null) currentScene.update(dt);
         // TODO multithread physics, set time step higher than refresh rate for smoother results
         physics.physicsUpdate(dt);
@@ -187,7 +175,7 @@ public class Game implements Runnable {
     /**
      * Initializes the game engine, displays the window, and starts the current scene (if not null).
      */
-    public synchronized void start() {
+    public static synchronized void start() {
         if (running) return; // Don't start if already running
 
         Logger.log("Engine: Starting %s %s", Preferences.TITLE, Preferences.VERSION);
@@ -200,7 +188,7 @@ public class Game implements Runnable {
         window.start();
 
         // Start thread
-        thread = new Thread(this);
+        thread = new Thread(game);
         thread.start();
 
         startCurrentScene();
@@ -212,7 +200,7 @@ public class Game implements Runnable {
      * @param status The exit code for this application. A value of 0 indicates normal, while non-zero status codes
      *               indicate an error.
      */
-    public synchronized void stop(int status) {
+    public static synchronized void stop(int status) {
         running = false;
         Logger.log("Engine: Stopping with exit code %d", status);
 
@@ -230,7 +218,7 @@ public class Game implements Runnable {
     /**
      * Starts the current scene, if not null
      */
-    private void startCurrentScene() {
+    private static void startCurrentScene() {
         if (currentScene != null && running) {
             currentScene.start();
             Game.getPhysics().setScene(currentScene);

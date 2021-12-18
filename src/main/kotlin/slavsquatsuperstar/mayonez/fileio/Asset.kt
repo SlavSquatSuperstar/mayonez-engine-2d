@@ -32,7 +32,6 @@ open class Asset(val filename: String, internal val type: AssetType) {
         else Files.newInputStream(Paths.get(filename))
     }
 
-
     @Throws(IOException::class)
     fun outputStream(append: Boolean): OutputStream? {
         return if (isClasspath) throw UnsupportedOperationException("Cannot write to classpath resource $filename")

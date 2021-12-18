@@ -28,7 +28,7 @@ object KeyInput : KeyAdapter() {
     // Keyboard Callbacks
 
     @JvmStatic
-    @SuppressWarnings("unused")
+    @Suppress("unused")
     fun keyCallback(window: Long, key: Int, scancode: Int, action: Int, mods: Int) {
         when (action) {
             GLFW_PRESS -> setKey(key, true)

@@ -43,7 +43,6 @@ public abstract class Scene {
 
         objects = new ArrayList<>();
         toModify = new ArrayList<>();
-
         camera = new Camera(this.width, this.height, cellSize);
     }
 
