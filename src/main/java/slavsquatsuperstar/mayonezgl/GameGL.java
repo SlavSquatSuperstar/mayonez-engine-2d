@@ -1,7 +1,7 @@
 package slavsquatsuperstar.mayonezgl;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import slavsquatsuperstar.fileio.Assets;
+import slavsquatsuperstar.mayonez.fileio.Assets;
 import slavsquatsuperstar.mayonez.Logger;
 import slavsquatsuperstar.mayonez.Preferences;
 import slavsquatsuperstar.mayonez.Time;

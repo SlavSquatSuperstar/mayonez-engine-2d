@@ -1,4 +1,4 @@
-package slavsquatsuperstar.fileio
+package slavsquatsuperstar.mayonez.fileio
 
 import org.reflections.Reflections
 import org.reflections.scanners.ResourcesScanner

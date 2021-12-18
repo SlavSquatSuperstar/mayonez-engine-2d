@@ -1,4 +1,4 @@
-package slavsquatsuperstar.fileio;
+package slavsquatsuperstar.mayonez.fileio;
 
 import slavsquatsuperstar.mayonez.Logger;
 

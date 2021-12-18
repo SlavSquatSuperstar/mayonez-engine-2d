@@ -2,7 +2,7 @@ package slavsquatsuperstar.test.iotests;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import slavsquatsuperstar.fileio.JSONFile;
+import slavsquatsuperstar.mayonez.fileio.JSONFile;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

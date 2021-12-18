@@ -1,4 +1,4 @@
-package slavsquatsuperstar.fileio;
+package slavsquatsuperstar.mayonez.fileio;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;

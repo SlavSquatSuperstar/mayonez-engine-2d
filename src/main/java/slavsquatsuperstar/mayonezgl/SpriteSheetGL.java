@@ -1,7 +1,7 @@
 package slavsquatsuperstar.mayonezgl;
 
 import org.joml.Vector2f;
-import slavsquatsuperstar.fileio.Assets;
+import slavsquatsuperstar.mayonez.fileio.Assets;
 import slavsquatsuperstar.mayonezgl.renderer.SpriteGL;
 import slavsquatsuperstar.mayonezgl.renderer.TextureGL;
 

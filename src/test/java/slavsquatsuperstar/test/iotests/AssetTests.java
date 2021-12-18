@@ -3,6 +3,10 @@ package slavsquatsuperstar.test.iotests;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import slavsquatsuperstar.fileio.*;
+import slavsquatsuperstar.mayonez.fileio.Asset;
+import slavsquatsuperstar.mayonez.fileio.AssetType;
+import slavsquatsuperstar.mayonez.fileio.Assets;
+import slavsquatsuperstar.mayonez.fileio.TextFile;
 
 import java.io.BufferedReader;
 import java.io.IOException;

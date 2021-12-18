@@ -1,9 +1,9 @@
 package slavsquatsuperstar.mayonezgl.renderer;
 
 import org.lwjgl.BufferUtils;
-import slavsquatsuperstar.fileio.Asset;
-import slavsquatsuperstar.fileio.AssetType;
-import slavsquatsuperstar.fileio.Assets;
+import slavsquatsuperstar.mayonez.fileio.Asset;
+import slavsquatsuperstar.mayonez.fileio.AssetType;
+import slavsquatsuperstar.mayonez.fileio.Assets;
 import slavsquatsuperstar.mayonez.Logger;
 
 import java.io.IOException;

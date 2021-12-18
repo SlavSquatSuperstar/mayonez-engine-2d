@@ -1,9 +1,9 @@
 package slavsquatsuperstar.test.iotests;
 
 import org.junit.jupiter.api.Test;
-import slavsquatsuperstar.fileio.AssetType;
-import slavsquatsuperstar.fileio.Assets;
-import slavsquatsuperstar.fileio.TextFile;
+import slavsquatsuperstar.mayonez.fileio.AssetType;
+import slavsquatsuperstar.mayonez.fileio.Assets;
+import slavsquatsuperstar.mayonez.fileio.TextFile;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

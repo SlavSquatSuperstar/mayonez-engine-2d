@@ -1,8 +1,8 @@
 package slavsquatsuperstar.mayonez.renderer;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import slavsquatsuperstar.fileio.Assets;
-import slavsquatsuperstar.fileio.Texture;
+import slavsquatsuperstar.mayonez.fileio.Assets;
+import slavsquatsuperstar.mayonez.fileio.Texture;
 import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.Component;

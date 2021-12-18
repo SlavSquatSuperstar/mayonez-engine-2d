@@ -14,10 +14,10 @@ The 2D Java game engine to fit your Slavic needs!*†
 - Recommended IDE: Intellij IDEA
 - Build System: Gradle
 - Dependencies (bundled in JAR)
-    - JSON in Java (org.json)
-    - Apache Commons Lang
-    - Apache Commons IO
-    - Kotlin Standard Library
+  - JSON in Java (org.json)
+  - Apache Commons Lang
+  - Apache Commons IO
+  - Kotlin Standard Library
 
 ### Disclaimers:
 

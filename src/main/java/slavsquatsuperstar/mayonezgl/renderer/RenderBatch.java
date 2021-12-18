@@ -2,7 +2,7 @@ package slavsquatsuperstar.mayonezgl.renderer;
 
 import org.joml.Vector2f;
 import org.joml.Vector4f;
-import slavsquatsuperstar.fileio.Assets;
+import slavsquatsuperstar.mayonez.fileio.Assets;
 import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.Preferences;

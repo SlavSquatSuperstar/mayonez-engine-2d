@@ -1,6 +1,6 @@
 package slavsquatsuperstar.mayonez
 
-import slavsquatsuperstar.fileio.TextFile
+import slavsquatsuperstar.mayonez.fileio.TextFile
 import java.io.File
 import java.time.LocalDate
 import java.util.*

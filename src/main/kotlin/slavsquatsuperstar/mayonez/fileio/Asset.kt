@@ -1,4 +1,4 @@
-package slavsquatsuperstar.fileio
+package slavsquatsuperstar.mayonez.fileio
 
 import org.apache.commons.io.FileUtils
 import java.io.File

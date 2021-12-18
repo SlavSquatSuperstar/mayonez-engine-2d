@@ -1,8 +1,8 @@
 package slavsquatsuperstar.mayonez
 
-import slavsquatsuperstar.fileio.AssetType
-import slavsquatsuperstar.fileio.Assets
-import slavsquatsuperstar.fileio.JSONFile
+import slavsquatsuperstar.mayonez.fileio.AssetType
+import slavsquatsuperstar.mayonez.fileio.Assets
+import slavsquatsuperstar.mayonez.fileio.JSONFile
 
 /**
  * A storage class for game parameters and statistics.

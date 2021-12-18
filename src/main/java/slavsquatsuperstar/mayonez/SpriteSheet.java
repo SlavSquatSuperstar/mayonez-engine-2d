@@ -1,7 +1,7 @@
 package slavsquatsuperstar.mayonez;
 
-import slavsquatsuperstar.fileio.Assets;
-import slavsquatsuperstar.fileio.Texture;
+import slavsquatsuperstar.mayonez.fileio.Assets;
+import slavsquatsuperstar.mayonez.fileio.Texture;
 import slavsquatsuperstar.mayonez.renderer.Sprite;
 
 import java.util.ArrayList;

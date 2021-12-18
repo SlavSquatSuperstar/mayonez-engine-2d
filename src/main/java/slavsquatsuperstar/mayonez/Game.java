@@ -1,7 +1,7 @@
 package slavsquatsuperstar.mayonez;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import slavsquatsuperstar.fileio.Assets;
+import slavsquatsuperstar.mayonez.fileio.Assets;
 import slavsquatsuperstar.mayonez.input.KeyInput;
 import slavsquatsuperstar.mayonez.input.MouseInput;
 import slavsquatsuperstar.mayonez.physics2d.Physics2D;

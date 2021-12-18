@@ -2,8 +2,8 @@ package slavsquatsuperstar.mayonezgl.renderer;
 
 import org.joml.*;
 import org.lwjgl.BufferUtils;
-import slavsquatsuperstar.fileio.AssetType;
-import slavsquatsuperstar.fileio.TextFile;
+import slavsquatsuperstar.mayonez.fileio.AssetType;
+import slavsquatsuperstar.mayonez.fileio.TextFile;
 import slavsquatsuperstar.mayonez.Logger;
 import slavsquatsuperstar.mayonezgl.GameGL;
 
