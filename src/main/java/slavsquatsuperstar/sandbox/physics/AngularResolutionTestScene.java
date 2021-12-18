@@ -10,7 +10,7 @@ import slavsquatsuperstar.mayonez.physics2d.colliders.AlignedBoxCollider2D;
 public class AngularResolutionTestScene extends PhysicsTestScene {
 
     public AngularResolutionTestScene(String name) {
-        super(name, 6);
+        super(name, 8);
     }
 
     @Override

@@ -2,9 +2,10 @@ package slavsquatsuperstar.mayonez.physics2d;
 
 import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
-import slavsquatsuperstar.mayonez.*;
+import slavsquatsuperstar.mayonez.GameObject;
+import slavsquatsuperstar.mayonez.Preferences;
+import slavsquatsuperstar.mayonez.Scene;
 import slavsquatsuperstar.mayonez.physics2d.colliders.Collider2D;
-import slavsquatsuperstar.mayonez.renderer.DebugDraw;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -172,7 +173,7 @@ public class Physics2D {
                 Vec2 rad1 = contact.sub(r1.getPosition());
                 Vec2 rad2 = contact.sub(r2.getPosition());
 
-                DebugDraw.drawPoint(contact, Colors.GREEN);
+//                DebugDraw.drawPoint(contact, Colors.GREEN);
 //                DebugDraw.drawVector(r1.getPosition(), rad1, Colors.BLUE);
 //                DebugDraw.drawVector(r2.getPosition(), rad2, Colors.RED);
 
@@ -202,16 +203,15 @@ public class Physics2D {
                 float tangentImp = -tangentVel / (sumInvMass * numContacts);
                 if (MathUtils.equals(tangentImp, 0f)) tangentImp = 0; // Ignore tiny friction impulses
 
-                // Coulomb's Law: use kinetic friction is overcome static friction
+                // Coulomb's Law: use kinetic friction if overcome static friction
                 if (Math.abs(tangentImp) > Math.abs(normalImp * sFric))
-                    tangentImp = -normalImp * kFric;
+                    tangentImp = -Math.signum(tangentImp) * normalImp * kFric;
                 tangentImp = MathUtils.clamp(tangentImp, -normalImp * kFric, normalImp * kFric);
 
                 // Calculate angular impulse from collision
                 Vec2 contactImp = normal.mul(normalImp);
                 Vec2 frictionImp = tangent.mul(tangentImp);
-                sumImp = sumImp.add(contactImp);
-//                sumImp = sumImp.add(contactImp.add(frictionImp));
+                sumImp = sumImp.add(contactImp.add(frictionImp));
                 sumAngImp1 += rad1.cross(contactImp);
                 sumAngImp2 -= rad2.cross(contactImp);
             }
