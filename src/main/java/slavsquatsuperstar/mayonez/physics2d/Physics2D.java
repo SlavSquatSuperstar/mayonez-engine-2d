@@ -150,6 +150,8 @@ public class Physics2D {
         float sumInvMass = invMass1 + invMass2;
         if (invMass1 + invMass2 == 0) return; // Should not both be static
 
+        float initialKE = PhysicsUtils.getKineticEnergy(r1) + PhysicsUtils.getKineticEnergy(r2);
+
         // Physics Properties
         PhysicsMaterial mat1 = col.getSelf().getMaterial();
         PhysicsMaterial mat2 = col.getOther().getMaterial();
@@ -212,7 +214,6 @@ public class Physics2D {
 //                sumImp = sumImp.add(contactImp.add(frictionImp));
                 sumAngImp1 += rad1.cross(contactImp);
                 sumAngImp2 -= rad2.cross(contactImp);
-
             }
 
             // Transfer Momentum
@@ -226,6 +227,9 @@ public class Physics2D {
             }
 
         }
+
+        float finalKE = PhysicsUtils.getKineticEnergy(r1) + PhysicsUtils.getKineticEnergy(r2);
+//        Logger.log("Initial KE: %.3f, Final KE: %.3f", initialKE, finalKE);
     }
 
     // Game Object Methods
