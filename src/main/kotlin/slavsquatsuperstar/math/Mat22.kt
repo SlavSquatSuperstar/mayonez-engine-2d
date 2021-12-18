@@ -2,27 +2,42 @@ package slavsquatsuperstar.math
 
 /**
  * A Mat22 represents a table of numbers with 2 rows and 2 columns.
- *
- * @constructor Initialize this matrix from four numbers.
  */
-class Mat22 constructor(
+class Mat22 {
+
     /**
      * The element at the first row and first column of the matrix.
      */
-    @JvmField var m00: Float,
+    @JvmField
+    var m00: Float
+
     /**
      * The element at the first row and second column of the matrix.
      */
-    @JvmField var m01: Float,
+    @JvmField
+    var m01: Float
+
     /**
      * The element at the second row and first column of the matrix.
      */
-    @JvmField var m10: Float,
+    @JvmField
+    var m10: Float
+
     /**
      * The element at the second row and second column of the matrix.
      */
-    @JvmField var m11: Float,
-) {
+    @JvmField
+    var m11: Float
+
+    /**
+     * Initialize this matrix from four numbers, from left to right, then top to bottom.
+     */
+    constructor(m00: Float, m01: Float, m10: Float, m11: Float) {
+        this.m00 = m00
+        this.m01 = m01
+        this.m10 = m10
+        this.m11 = m11
+    }
 
     /**
      * Initialize this matrix from two column vectors. Useful for storing linear transformations.
@@ -34,19 +49,18 @@ class Mat22 constructor(
      */
     constructor() : this(1f, 0f, 0f, 1f)
 
-    companion object {
-        /**
-         * Creates a rotation matrix from the given angle.
-         *
-         * @degrees the angle measure in degrees
-         * @return a matrix that can rotate any vector
-         */
-        @JvmStatic
-        fun rotationMatrix(degrees: Float): Mat22 {
-            val cos = MathUtils.cos(degrees)
-            val sin = MathUtils.sin(degrees)
-            return Mat22(cos, -sin, sin, cos)
-        }
+    /**
+     * Creates a rotation matrix from the given angle.
+     *
+     * @degrees the angle measure in degrees
+     */
+    constructor(degrees: Float) {
+        val cos = MathUtils.cos(degrees)
+        val sin = MathUtils.sin(degrees)
+        m00 = cos
+        m01 = -sin
+        m10 = sin
+        m11 = cos
     }
 
     // Row/Column Vectors

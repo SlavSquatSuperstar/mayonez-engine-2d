@@ -22,11 +22,7 @@ class Range(
         return super.equals(other)
     }
 
-    override fun hashCode(): Int {
-        return min.hashCode() * 31 + max.hashCode()
-    }
+    override fun hashCode(): Int =  min.hashCode() * 31 + max.hashCode()
 
-    override fun toString(): String {
-        return "Min: $min Max: $max"
-    }
+    override fun toString(): String = "Min: $min Max: $max"
 }

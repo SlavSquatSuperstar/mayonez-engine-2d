@@ -1,10 +1,10 @@
 package slavsquatsuperstar.mayonez.physics2d;
 
-import org.apache.commons.lang3.tuple.ImmutablePair;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.physics2d.colliders.Collider2D;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -14,16 +14,14 @@ import java.util.List;
  */
 public class CollisionManifold {
 
-    /**
-     * Where the two colliders are intersecting, in first object's local space.
-     */
-    private final ImmutablePair<Collider2D, Collider2D> colliders;
+    private final Collider2D self, other;
     private final Vec2 normal;
     private final float depth;
-    private final List<Vec2> contacts = new ArrayList<>();
+    private final List<Vec2> contacts = new ArrayList<>(2);
 
-    public CollisionManifold(Collider2D collider1, Collider2D collider2, Vec2 normal, float depth) {
-        colliders = new ImmutablePair<>(collider1, collider2);
+    public CollisionManifold(Collider2D self, Collider2D other, Vec2 normal, float depth) {
+        this.self = self;
+        this.other = other;
         this.normal = normal.unit();
         this.depth = depth;
     }
@@ -31,11 +29,11 @@ public class CollisionManifold {
     // Getters
 
     public Collider2D getSelf() {
-        return colliders.left;
+        return self;
     }
 
     public Collider2D getOther() {
-        return colliders.right;
+        return other;
     }
 
     /**
@@ -61,20 +59,19 @@ public class CollisionManifold {
     }
 
     public Vec2 getContact(int index) {
-        return getSelf().toWorld(contacts.get(index));
+        return contacts.get(index);
     }
 
     public void addContact(Vec2 contactPoint) {
-        contacts.add(getSelf().toLocal(contactPoint));
+        contacts.add(contactPoint);
     }
 
     public void addContacts(Vec2... contactPoints) {
-        for (Vec2 cp : contactPoints)
-            contacts.add(getSelf().toLocal(cp));
+        contacts.addAll(Arrays.asList(contactPoints));
     }
 
     @Override
     public String toString() {
-        return String.format("Collision (%s and %s)", getSelf(), getOther());
+        return String.format("Collision (%s and %s)", self, other);
     }
 }

@@ -1,24 +1,24 @@
 plugins {
     id 'java'
     id 'application'
-    id 'org.jetbrains.kotlin.jvm' version '1.5.21'
-    id 'org.jetbrains.dokka' version '1.5.0' // For Kotlin Documentation
-    id 'com.github.johnrengelman.shadow' version '7.0.0' // For making fat jars
+    id 'org.jetbrains.kotlin.jvm' version '1.6.0'
+    id 'org.jetbrains.dokka' version '1.6.0' // For Kotlin Documentation
+    id 'com.github.johnrengelman.shadow' version '7.1.0' // For making fat jars
 }
 
 group 'slavsquatsuperstar'
-version '0.6.6-SNAPSHOT'
+version '0.6.7-SNAPSHOT'
 
 repositories.mavenCentral()
 
 dependencies {
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.21'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.6.0'
     implementation 'org.apache.commons:commons-lang3:3.12.0'
     implementation 'commons-io:commons-io:2.11.0'
-    implementation 'org.json:json:20210307'
+    implementation 'org.json:json:20211205'
 
-    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.7.2'
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
 }
 
 String javaVersion = '11'

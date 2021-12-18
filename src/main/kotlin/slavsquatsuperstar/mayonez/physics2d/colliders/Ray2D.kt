@@ -64,12 +64,11 @@ class Ray2D(val origin: Vec2, direction: Vec2) {
         val line1 = this.direction
         val line2 = ray.direction
         val cross = line1.cross(line2)
-        if (MathUtils.equals(cross, 0f))
-            return null // if parallel
+        if (MathUtils.equals(cross, 0f)) return null // if parallel
 
         // Parametric lengths along rays
         val dist1 = start2.sub(start1).cross(line2) / cross
-        val dist2 = start1.sub(start2).cross(line1) / -cross
+        // val dist2 = start1.sub(start2).cross(line1) / -cross
         return start1.add(line1.mul(dist1))
         // rotate left or right depending on which side ray started form
     }
