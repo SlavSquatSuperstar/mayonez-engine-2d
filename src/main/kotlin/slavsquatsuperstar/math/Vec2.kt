@@ -158,7 +158,7 @@ class Vec2 constructor(
      * @param vOnto another vector
      * @return the projected vector
      */
-    fun project(vOnto: Vec2): Vec2 = vOnto * (this.dot(vOnto) / vOnto.lenSquared())
+    fun project(vOnto: Vec2): Vec2 = vOnto * (this.dot(vOnto) / vOnto.lenSq())
 
     // Pythagorean Theorem / Length Methods
 
@@ -167,14 +167,18 @@ class Vec2 constructor(
      *
      * @return this vector's magnitude
      */
-    fun len(): Float = sqrt(lenSquared())
+    fun len(): Float = sqrt(lenSq())
+
+    fun mag(): Float = len()
 
     /**
      * Calculates the magnitude squared of this vector (less CPU expensive than square root).
      *
      * @return this vector's magnitude squared
      */
-    fun lenSquared(): Float = (x * x) + (y * y)
+    fun lenSq(): Float = (x * x) + (y * y)
+
+    fun magSq(): Float = lenSq()
 
     fun distance(v: Vec2): Float = sqrt(distanceSquared(v))
 
@@ -187,7 +191,7 @@ class Vec2 constructor(
      * @return the unit vector
      */
     fun unit(): Vec2 {
-        return if (equals(lenSquared(), 1f) || equals(lenSquared(), 0f)) +this
+        return if (equals(lenSq(), 1f) || equals(lenSq(), 0f)) +this
         else this / len()
     }
 
@@ -259,7 +263,7 @@ class Vec2 constructor(
      * @return the clamped vector
      */
     fun clampLength(length: Float): Vec2 {
-        return if (lenSquared() > length * length)
+        return if (lenSq() > length * length)
             this * (length / len())
         else +this
     }

@@ -45,9 +45,8 @@ public class LevelEditorScene extends Scene {
     }
 
     public static void main(String[] args) {
-        Game game = Game.instance();
-        game.start();
         Game.loadScene(new LevelEditorScene("Level Editor"));
+        Game.start();
     }
 
 }

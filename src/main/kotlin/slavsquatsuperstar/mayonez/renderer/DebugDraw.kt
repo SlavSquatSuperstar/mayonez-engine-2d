@@ -109,8 +109,8 @@ object DebugDraw {
     }
 
     private fun drawCircle(circle: CircleCollider, color: Color) {
-        val minPx = (circle.center() - Vec2(circle.radius(), circle.radius())).toScreen()
-        val diameterPx = (circle.radius() * 2).toScreen()
+        val minPx = (circle.center() - Vec2(circle.radius, circle.radius)).toScreen()
+        val diameterPx = (circle.radius * 2).toScreen()
         shapes.add(ShapeDrawer(DrawPriority.SHAPE) { g2: Graphics2D ->
             g2.color = color
             g2.draw(Ellipse2D.Float(minPx.x, minPx.y, diameterPx, diameterPx))
@@ -121,7 +121,7 @@ object DebugDraw {
         val minPx = aabb.min().toScreen()
         shapes.add(ShapeDrawer(DrawPriority.SHAPE) { g2: Graphics2D ->
             g2.color = color
-            g2.draw(Rectangle2D.Float(minPx.x, minPx.y, aabb.width().toScreen(), aabb.height().toScreen()))
+            g2.draw(Rectangle2D.Float(minPx.x, minPx.y, aabb.width.toScreen(), aabb.height.toScreen()))
         })
     }
 
@@ -155,8 +155,8 @@ object DebugDraw {
     }
 
     private fun fillCircle(circle: CircleCollider, color: Color) {
-        val minPx = (circle.center() - Vec2(circle.radius(), circle.radius())).toScreen()
-        val diameterPx = (circle.radius() * 2).toScreen()
+        val minPx = (circle.center() - Vec2(circle.radius, circle.radius)).toScreen()
+        val diameterPx = (circle.radius * 2).toScreen()
         shapes.add(ShapeDrawer(DrawPriority.SHAPE) { g2: Graphics2D ->
             g2.color = color
             g2.fill(Ellipse2D.Float(minPx.x, minPx.y, diameterPx, diameterPx))
@@ -167,7 +167,7 @@ object DebugDraw {
         val minPx = aabb.min().toScreen()
         shapes.add(ShapeDrawer(DrawPriority.SHAPE) { g2: Graphics2D ->
             g2.color = color
-            g2.fill(Rectangle2D.Float(minPx.x, minPx.y, aabb.width().toScreen(), aabb.height().toScreen()))
+            g2.fill(Rectangle2D.Float(minPx.x, minPx.y, aabb.width.toScreen(), aabb.height.toScreen()))
         })
     }
 

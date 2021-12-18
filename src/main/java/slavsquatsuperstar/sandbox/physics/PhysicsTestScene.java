@@ -13,6 +13,7 @@ import slavsquatsuperstar.mayonez.renderer.DebugDraw;
 import slavsquatsuperstar.mayonez.scripts.DragAndDrop;
 import slavsquatsuperstar.mayonez.scripts.KeepInScene;
 import slavsquatsuperstar.mayonez.scripts.MouseFlick;
+import slavsquatsuperstar.mayonez.scripts.MoveMode;
 
 import java.awt.*;
 
@@ -64,9 +65,11 @@ public abstract class PhysicsTestScene extends Scene {
                 addComponent(new Component() {
                     @Override
                     public void update(float dt) {
+                        if (KeyInput.keyDown("up"))
+                            getScene().setGravity(new Vec2());
+                        else if (KeyInput.keyDown("down"))
+                            getScene().setGravity(new Vec2(0, 18));
                         // can't toggle yet because input can't differentiate between press and hold
-                        boolean gravityOn = KeyInput.keyDown("space");
-                        getScene().setGravity(gravityOn ? new Vec2(0, 18) : new Vec2());
                     }
                 });
             }
@@ -81,7 +84,7 @@ public abstract class PhysicsTestScene extends Scene {
                 addComponent(new Rigidbody2D(radius));
                 addComponent(new KeepInScene(getScene(), KeepInScene.Mode.BOUNCE));
                 addComponent(new DragAndDrop("left mouse", false));
-                addComponent(new MouseFlick("right mouse", 15, false));
+                addComponent(new MouseFlick(MoveMode.VELOCITY, "right mouse", 15, false));
             }
         };
     }
@@ -94,7 +97,7 @@ public abstract class PhysicsTestScene extends Scene {
                 addComponent(new Rigidbody2D(width * height / 4f));
                 addComponent(new KeepInScene(getScene(), KeepInScene.Mode.BOUNCE));
                 addComponent(new DragAndDrop("left mouse", false));
-                addComponent(new MouseFlick("right mouse", 15, false));
+                addComponent(new MouseFlick(MoveMode.VELOCITY, "right mouse", 15, false));
             }
         };
     }
@@ -108,7 +111,7 @@ public abstract class PhysicsTestScene extends Scene {
                 addComponent(new Rigidbody2D(width * height / 4f));
                 addComponent(new KeepInScene(getScene(), KeepInScene.Mode.BOUNCE));
                 addComponent(new DragAndDrop("left mouse", false));
-                addComponent(new MouseFlick("right mouse", 15, false));
+                addComponent(new MouseFlick(MoveMode.VELOCITY, "right mouse", 15, false));
             }
         };
     }

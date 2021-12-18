@@ -88,6 +88,8 @@ abstract class Collider2D : Component() {
 
     abstract fun getMinBounds(): AlignedBoxCollider2D
 
+    open fun getAngMass(mass: Float): Float = mass
+
     // Shape vs Point Collisions
     /**
      * Calculates whether the given point is on or inside this shape.
@@ -147,6 +149,7 @@ abstract class Collider2D : Component() {
     abstract fun getCollisionInfo(collider: Collider2D?): CollisionManifold?
 
     // Transform Methods
+
     open fun toLocal(world: Vec2): Vec2 = transform?.toLocal(world) ?: world
 
     open fun toWorld(local: Vec2): Vec2 = transform?.toWorld(local) ?: local

@@ -174,7 +174,7 @@ open class PolygonCollider2D(vararg vertices: Vec2) : Collider2D() {
         val closestToCircle = nearestPoint(circle.center())
         if (closestToCircle!! !in circle) return null
 
-        val depth = circle.radius() - closestToCircle.distance(circle.center())
+        val depth = circle.radius - closestToCircle.distance(circle.center())
         val normal = (circle.center() - closestToCircle).unit()
         val result = CollisionManifold(this, circle, normal, depth)
         result.addContact(closestToCircle - (normal * depth))
@@ -217,10 +217,10 @@ open class PolygonCollider2D(vararg vertices: Vec2) : Collider2D() {
         val minDotIdx = minIndex(*dotProds)
         val incEdge = incident.edges[minDotIdx]
 
-        DebugDraw.drawVector(reference.collider.center(), reference.normals[minOverlapIdx], Colors.BLUE);
-        DebugDraw.drawVector(incident.collider.center(), incident.normals[minDotIdx], Colors.RED);
-        DebugDraw.drawLine(refEdge, Colors.BLUE)
-        DebugDraw.drawLine(incEdge, Colors.RED)
+//        DebugDraw.drawVector(reference.collider.center(), reference.normals[minOverlapIdx], Colors.BLUE);
+//        DebugDraw.drawVector(incident.collider.center(), incident.normals[minDotIdx], Colors.RED);
+//        DebugDraw.drawLine(refEdge, Colors.BLUE)
+//        DebugDraw.drawLine(incEdge, Colors.RED)
 
         // 5. Calculate contact points
         val collision = CollisionManifold(reference.collider, incident.collider, colNormal, -overlap)

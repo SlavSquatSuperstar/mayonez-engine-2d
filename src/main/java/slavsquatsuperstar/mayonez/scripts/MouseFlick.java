@@ -13,11 +13,11 @@ public class MouseFlick extends MouseScript {
     private static MouseFlick activeInstance = null; // only want to move one object
     private Vec2 lastMouse = new Vec2();
 
-    public MouseFlick(String button, float speed, boolean inverted) {
+    public MouseFlick(MoveMode mode, String button, float speed, boolean inverted) {
+        this.mode = mode;
         this.button = button;
         this.inverted = inverted;
         this.speed = speed;
-        mode = MoveMode.VELOCITY;
     }
 
     // Overrides

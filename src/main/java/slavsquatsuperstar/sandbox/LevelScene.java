@@ -36,9 +36,8 @@ public class LevelScene extends Scene {
     }
 
     public static void main(String[] args) {
-        Game game = Game.instance();
         Game.loadScene(new LevelScene("Level"));
-        game.start();
+        Game.start();
     }
 
 }

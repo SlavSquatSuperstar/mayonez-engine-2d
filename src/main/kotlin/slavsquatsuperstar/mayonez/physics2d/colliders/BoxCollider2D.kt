@@ -1,11 +1,7 @@
 package slavsquatsuperstar.mayonez.physics2d.colliders
 
-import org.apache.commons.lang3.ArrayUtils
 import slavsquatsuperstar.math.MathUtils
-import slavsquatsuperstar.math.MathUtils.equals
-import slavsquatsuperstar.math.Range
 import slavsquatsuperstar.math.Vec2
-import slavsquatsuperstar.mayonez.physics2d.CollisionManifold
 import slavsquatsuperstar.mayonez.physics2d.RaycastResult
 import kotlin.math.sign
 
@@ -31,9 +27,15 @@ open class BoxCollider2D private constructor(min: Vec2, max: Vec2) :
      */
     fun size(): Vec2 = if (transform != null) size * transform!!.scale else Vec2(1f, 1f)
 
-    fun width(): Float = size().x
+    val width: Float
+        @JvmName("width")
+        get() = size().x
 
-    fun height(): Float = size().y
+    val height: Float
+        @JvmName("height")
+        get() = size().y
+
+    override fun getAngMass(mass: Float): Float = mass * MathUtils.pythagoreanSquared(width, height) / 12f
 
     /**
      * Returns the unscaled size of this box.
@@ -113,143 +115,5 @@ open class BoxCollider2D private constructor(min: Vec2, max: Vec2) :
         val contact = toWorld(localRay.getPoint(distToBox))
         return RaycastResult(contact, normal.rotate(getRotation()), (contact - ray.origin).len())
     }
-
-    // OBB vs Shape
-
-    override fun getCollisionInfo(collider: Collider2D?): CollisionManifold? {
-        return super.getCollisionInfo(collider)
-//        return when (collider) {
-//            is BoxCollider2D -> getCollisionInfo(collider)
-//            else -> super.getCollisionInfo(collider)
-//        }
-    }
-
-    // Box vs Box: 1-2 contact points
-    private fun getCollisionInfo(box: BoxCollider2D): CollisionManifold? {
-        val normalsA = this.getNormals()
-        val normalsB = box.getNormals()
-        if (!detectCollision(box))
-            return null
-
-        // SAT: Find axis with minimum overlap
-        val axes = ArrayUtils.addAll(normalsA, *normalsB)
-        val overlaps = Array(axes.size) { getOverlapOnAxis(box, axes[it]) }
-        val minOverlapIndex = MathUtils.minIndex(*overlaps.toFloatArray())
-        val overlap = overlaps[minOverlapIndex]
-        val axis = axes[minOverlapIndex]
-
-        val dist = box.center() - this.center()
-        val normal = dist.project(axis).unit()
-        val side = normal.getNormal()
-        val penetration = Range(box.getIntervalOnAxis(normal).min, this.getIntervalOnAxis(normal).max)
-
-        val collision = CollisionManifold(this, box, normal, overlap)
-
-        if (equals(this.getRotation() % 90, box.getRotation() % 90)) { // Orthogonal intersection = 2 contact points
-            val sideA = getIntervalOnAxis(side) // vertices projected onto side normal
-            val sideB = box.getIntervalOnAxis(side)
-            val collisionFace = Range(sideA.min.coerceAtLeast(sideB.min), sideA.max.coerceAtMost(sideB.max))
-
-            val faceA = normal * penetration.min
-            collision.addContact(faceA + (side * collisionFace.max))
-            collision.addContact(faceA + (side * collisionFace.min))
-        } else { // Diagonal intersection = 1 contact point
-            val verticesA = this.getVertices()
-            val verticesB = box.getVertices()
-
-            val dotWithAxis = normal.dot(Vec2(1f, 0f).rotate(getRotation()))
-            // Other box is inside this, find the furthest vertex inside this box
-            if (normal in this.getNormals() || -normal in this.getNormals()) {
-//            if (ArrayUtils.contains(normalsA, normal)) {
-                val vertices = box.getVertices()
-                val projections = FloatArray(vertices.size)
-                for (i in projections.indices)
-                    projections[i] = vertices[i].dot(normal)
-                val minProjIndex = MathUtils.minIndex(*projections)
-                val height = vertices[minProjIndex].projectedLength(side)
-
-                collision.addContact((normal * penetration.min) + (side * height))
-            } else { // This box inside other box, find vertex furthest inside other box
-                val vertices = getVertices()
-                val projections = FloatArray(vertices.size)
-                for (i in projections.indices)
-                    projections[i] = vertices[i].dot(normal)
-                val maxProjIndex = MathUtils.maxIndex(*projections)
-                val height = vertices[maxProjIndex].projectedLength(side)
-
-                collision.addContact((normal * penetration.max) + (side * height))
-            }
-        }
-        return collision
-    }
-
-//    private fun getCollisionInfo1(box: BoxCollider2D): CollisionManifold? {
-//        if (!detectCollision(box))
-//            return null
-//
-//        // SAT: Find axis with minimum overlap
-//        val normalsA = this.getNormals()
-//        val normalsB = box.getNormals()
-//        val axes = ArrayUtils.addAll(normalsA, *normalsB)
-//        val overlaps = Array(axes.size) { getAxisOverlap(box, axes[it]) }
-//        val minOverlapIndex = MathUtils.minIndex(*overlaps.toFloatArray())
-//
-//        val overlap = overlaps[minOverlapIndex]
-//        val axis = axes[minOverlapIndex]
-//        val dist = box.center() - this.center()
-//        val frontNorm = dist.project(axis).unit()
-//        val sideNorm = Vec2(frontNorm.y, -frontNorm.x)
-////        DebugDraw.drawVector(center(), frontNorm, Colors.BLACK)
-//
-//        // Project vertices onto normals
-//        val front = this.getIntervalOnAxis(frontNorm).max
-//        val sides = this.getIntervalOnAxis(sideNorm)
-//
-//        // Determine and clip incident edge
-//        val incidentEdge = box.getIncidentEdge(frontNorm).clipToSegment(
-//            Edge2D((frontNorm * front) + (sideNorm * sides.min), (frontNorm * front) + (sideNorm * sides.max))
-//        )
-////        val incidentEdge = box.getIncidentEdge(frontNorm).clipToBounds(this) ?: return null
-////        DebugDraw.drawPoint(incidentEdge.start, Colors.GREEN)
-////        DebugDraw.drawPoint(incidentEdge.end, Colors.GREEN)
-//
-//        // Determine contact points
-//        var collision: CollisionManifold
-//        val endpoints = arrayOf(incidentEdge.start, incidentEdge.end)
-//
-//        if (frontNorm in this.getNormals() || -frontNorm in this.getNormals()) { // other box stuck in this
-//            collision = CollisionManifold(this, box, frontNorm, overlap)
-//            for (pt in endpoints) {
-//                val penetration = front - frontNorm.dot(pt)
-//                if (penetration >= 0) {
-//                    val contact = sideNorm * pt.dot(sideNorm) + frontNorm * front
-//                    collision.addContact(contact)
-//                    DebugDraw.drawPoint(contact, Colors.RED)
-//                }
-//            }
-//        } else { // this box stuck in other, switch collision this/other
-////            collision = CollisionManifold(box, this, -frontNorm, overlap)
-////            for (pt in endpoints) {
-////                val penetration = front - frontNorm.dot(pt)
-////                if (penetration >= 0) {
-////                    collision.addContact(pt)
-////                    DebugDraw.drawPoint(pt, Colors.RED)
-////                }
-////            }
-//            return box.getCollisionInfo(this)
-//        }
-//        return collision
-//    }
-//
-//    private fun getIncidentEdge(normal: Vec2): Edge2D {
-//        val oppositeNormal = -(normal.rotate(-getRotation())) // to local
-//        val edges = getEdges()
-//        return if (abs(oppositeNormal.x) > abs(oppositeNormal.y)) // x-direction
-//            if (oppositeNormal.x > 0) edges[1]  // positive (bottom)
-//            else edges[3] // negative (top)
-//        else  // y-direction
-//            if (oppositeNormal.y > 0) edges[2] // positive (right)
-//            else edges[0] // negative (left)
-//    }
 
 }

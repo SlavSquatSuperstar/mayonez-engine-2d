@@ -28,7 +28,7 @@ public class Sprite extends Component {
             this.image = ImageIO.read(Objects.requireNonNull(Assets.getAsset(filename, true)).path);
         } catch (Exception e) {
             Logger.log("Sprite: Error loading image \"%s\"", filename);
-            Game.instance().stop(-1);
+            Game.stop(-1);
         }
     }
 

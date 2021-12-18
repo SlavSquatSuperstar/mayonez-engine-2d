@@ -19,9 +19,8 @@ public class CollisionTestScene extends PhysicsTestScene {
     }
 
     public static void main(String[] args) {
-        Game game = Game.instance();
-        game.start();
         Game.loadScene(new CollisionTestScene("Collision Test Scene"));
+        Game.start();
     }
 
     @Override
@@ -39,7 +38,7 @@ public class CollisionTestScene extends PhysicsTestScene {
 //                addComponent(new AlignedBoxCollider2D(new Vec2(size, size)));
 //                addComponent(new BoxCollider2D(new Vec2(size, size)));
 //                addComponent(new Rigidbody2D(size * size / 10f).setFollowsGravity(true));
-                addComponent(new MouseFlick("right mouse", 15, false));
+                addComponent(new MouseFlick(MoveMode.VELOCITY, "right mouse", 15, false));
                 addComponent(new KeyMovement(MoveMode.IMPULSE, speed / 2));
                 addComponent(new DragAndDrop("left mouse", false));
                 addComponent(new KeepInScene(getScene(), KeepInScene.Mode.BOUNCE));

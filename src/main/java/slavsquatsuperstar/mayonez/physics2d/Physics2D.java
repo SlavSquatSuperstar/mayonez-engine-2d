@@ -2,10 +2,7 @@ package slavsquatsuperstar.mayonez.physics2d;
 
 import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
-import slavsquatsuperstar.mayonez.Colors;
-import slavsquatsuperstar.mayonez.GameObject;
-import slavsquatsuperstar.mayonez.Preferences;
-import slavsquatsuperstar.mayonez.Scene;
+import slavsquatsuperstar.mayonez.*;
 import slavsquatsuperstar.mayonez.physics2d.colliders.Collider2D;
 import slavsquatsuperstar.mayonez.renderer.DebugDraw;
 
@@ -170,9 +167,12 @@ public class Physics2D {
                 // Radius from center of mass to contact
                 // TODO transferring too much angular momentum, check radii
                 Vec2 contact = col.getContact(i);
-                DebugDraw.drawPoint(contact, Colors.BLACK);
                 Vec2 rad1 = contact.sub(r1.getPosition());
                 Vec2 rad2 = contact.sub(r2.getPosition());
+
+                DebugDraw.drawPoint(contact, Colors.GREEN);
+//                DebugDraw.drawVector(r1.getPosition(), rad1, Colors.BLUE);
+//                DebugDraw.drawVector(r2.getPosition(), rad2, Colors.RED);
 
                 // Relative velocity at contact point (linear + angular velocity)
                 Vec2 vel1 = r1.getPointVelocity(contact);
@@ -224,6 +224,7 @@ public class Physics2D {
                 r2.addImpulse(sumImp.mul(-1));
                 r2.addAngularImpulse(sumAngImp2);
             }
+
         }
     }
 

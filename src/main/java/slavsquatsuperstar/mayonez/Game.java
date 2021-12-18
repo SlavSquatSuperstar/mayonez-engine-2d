@@ -16,6 +16,10 @@ import java.awt.image.BufferStrategy;
  */
 public class Game implements Runnable {
 
+    static {
+        game = Game.instance(); // "Lazy" singleton construction
+    }
+
     /*
      * Field Declarations
      */
@@ -117,7 +121,6 @@ public class Game implements Runnable {
 
     @Override
     public void run() {
-
         // All time values are in seconds
         float lastTime = 0; // Last time the game loop iterated
         float deltaTime = 0; // Time since last frame
@@ -166,7 +169,6 @@ public class Game implements Runnable {
         } // end loop
 
         stop(0);
-
     }
 
     /**
@@ -181,8 +183,7 @@ public class Game implements Runnable {
             return;
         }
 
-        if (currentScene != null)
-            currentScene.update(dt);
+        if (currentScene != null) currentScene.update(dt);
         // TODO multithread physics, set time step higher than refresh rate for smoother results
         physics.physicsUpdate(dt);
     }
@@ -207,8 +208,7 @@ public class Game implements Runnable {
                 gfx.clearRect(0, 0, width, height);
 
                 Graphics2D g2 = (Graphics2D) gfx;
-                if (null != currentScene)
-                    currentScene.render(g2);
+                if (null != currentScene) currentScene.render(g2);
                 renderer.render(g2);
                 imgui.render(g2);
 
@@ -226,23 +226,22 @@ public class Game implements Runnable {
     /**
      * Initializes the game engine, displays the window, and starts the current scene (if not null).
      */
-    public synchronized void start() {
-        if (running) // don't start if already running
-            return;
+    public static synchronized void start() {
+        if (game.running) return; // Don't start if already running
 
         Logger.log("Engine: Starting");
         Logger.log("Welcome to %s %s", Preferences.TITLE, Preferences.VERSION);
-        running = true;
+        game.running = true;
 
         // Display window and initialize graphics buffer
-        window.setVisible(true);
-        initGraphics();
+        game.window.setVisible(true);
+        game.initGraphics();
 
         // Start thread
-        thread = new Thread(this);
-        thread.start();
+        game.thread = new Thread(game);
+        game.thread.start();
 
-        startCurrentScene();
+        game.startCurrentScene();
     }
 
     /**
@@ -251,17 +250,17 @@ public class Game implements Runnable {
      * @param status The exit code for this application. A value of 0 indicates normal, while non-zero status codes
      *               indicate an error.
      */
-    public synchronized void stop(int status) {
-        running = false;
+    public static synchronized void stop(int status) {
+        game.running = false;
         Logger.log("Engine: Stopping with exit code %d", status);
 
         // Free System resources
-        window.setVisible(false);
-        window.dispose();
-        gfx.dispose();
+        game.window.setVisible(false);
+        game.window.dispose();
+        game.gfx.dispose();
 
         // Stop thread
-        thread.interrupt();
+        game.thread.interrupt();
         Logger.printExitMessage();
         System.exit(status);
     }

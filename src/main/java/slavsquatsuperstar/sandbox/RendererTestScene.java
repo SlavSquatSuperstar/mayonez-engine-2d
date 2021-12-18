@@ -64,8 +64,7 @@ public class RendererTestScene extends Scene {
     }
 
     public static void main(String[] args) {
-        Game game = Game.instance();
-        game.start();
         Game.loadScene(new RendererTestScene("Renderer Test Scene"));
+        Game.start();
     }
 }

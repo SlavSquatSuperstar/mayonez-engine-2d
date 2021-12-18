@@ -2,7 +2,6 @@ package slavsquatsuperstar.mayonez.physics2d
 
 import slavsquatsuperstar.math.MathUtils
 import slavsquatsuperstar.math.MathUtils.clamp
-import slavsquatsuperstar.math.MathUtils.pythagoreanSquared
 import slavsquatsuperstar.math.MathUtils.toDegrees
 import slavsquatsuperstar.math.MathUtils.toRadians
 import slavsquatsuperstar.math.Vec2
@@ -10,8 +9,6 @@ import slavsquatsuperstar.mayonez.Component
 import slavsquatsuperstar.mayonez.GameObject
 import slavsquatsuperstar.mayonez.Transform
 import slavsquatsuperstar.mayonez.physics2d.colliders.AlignedBoxCollider2D
-import slavsquatsuperstar.mayonez.physics2d.colliders.BoxCollider2D
-import slavsquatsuperstar.mayonez.physics2d.colliders.CircleCollider
 import slavsquatsuperstar.mayonez.physics2d.colliders.Collider2D
 
 /**
@@ -76,7 +73,7 @@ class Rigidbody2D(mass: Float, drag: Float, angDrag: Float) : Component() {
     fun integrateForce(dt: Float) {
         if (hasInfiniteMass()) return
 
-        if (!MathUtils.equals(velocity.lenSquared(), 0f)) // Apply drag first
+        if (!MathUtils.equals(velocity.lenSq(), 0f)) // Apply drag first
             addForce(velocity * -drag)
         velocity += netForce * (invMass * dt)
 
@@ -138,22 +135,11 @@ class Rigidbody2D(mass: Float, drag: Float, angDrag: Float) : Component() {
     val invMass: Float
         get() = if (hasInfiniteMass()) 0f else 1f / mass
 
-    private val invAngMass: Float
-        get() {
-            if (collider == null || hasInfiniteMass())
-                return invMass
+    val angMass: Float
+        get() = collider?.getAngMass(mass) ?: mass
 
-            var angMass = mass
-            when (collider) {
-                is CircleCollider -> angMass *= MathUtils.PI * 0.5f * (collider as CircleCollider).radius() *
-                        (collider as CircleCollider).radius()
-                is BoxCollider2D -> angMass *= pythagoreanSquared(
-                    (collider as BoxCollider2D).width(),
-                    (collider as BoxCollider2D).height()
-                ) / 12f
-            }
-            return 1f / angMass
-        }
+    private val invAngMass: Float
+        get() = if (hasInfiniteMass()) invMass else 1f / angMass
 
     // Force Methods
 

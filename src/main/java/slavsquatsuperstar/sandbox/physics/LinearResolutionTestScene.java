@@ -47,9 +47,8 @@ public class LinearResolutionTestScene extends PhysicsTestScene {
     }
 
     public static void main(String[] args) {
-        Game game = Game.instance();
         Game.loadScene(new LinearResolutionTestScene("Linear Impulse Resolution Test"));
-        game.start();
+        Game.start();
     }
 
 }
