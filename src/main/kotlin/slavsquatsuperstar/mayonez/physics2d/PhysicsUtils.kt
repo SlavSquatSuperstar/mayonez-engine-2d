@@ -4,6 +4,8 @@ import slavsquatsuperstar.math.Vec2
 
 /**
  * A utility class for checking the conservation of physics quantities.
+ *
+ * @author SlavSquatSuperstar
  */
 object PhysicsUtils {
 

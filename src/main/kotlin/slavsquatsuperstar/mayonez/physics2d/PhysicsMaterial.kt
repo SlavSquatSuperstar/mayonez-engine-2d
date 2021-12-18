@@ -2,6 +2,11 @@ package slavsquatsuperstar.mayonez.physics2d
 
 import kotlin.math.sqrt
 
+/**
+ * A reusable preset of bounce and friction values.
+ *
+ * @author SlavSquatSuperstar
+ */
 class PhysicsMaterial(
     /**
      * How much this object resists applied forces and comes to rest while in motion.

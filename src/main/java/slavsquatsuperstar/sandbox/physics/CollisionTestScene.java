@@ -88,8 +88,8 @@ public class CollisionTestScene extends PhysicsTestScene {
         });
 
         // Add Other Test Objects
-        addObject(createCircle(5, new Vec2(10, 30), PhysicsTestScene.TEST_MATERIAL));
-        addObject(createCircle(2, new Vec2(90, 10), PhysicsTestScene.TEST_MATERIAL));
+        addObject(createCircle(5, new Vec2(90, 10), PhysicsTestScene.TEST_MATERIAL));
+        addObject(createCircle(2, new Vec2(20, 10), PhysicsTestScene.TEST_MATERIAL));
 //        addObject(createAABB(12, 8, new Vec2(50, 20)));
         addObject(createOBB(5, 10, new Vec2(40, 40), 30, PhysicsTestScene.TEST_MATERIAL));
         addObject(createOBB(10, 6, new Vec2(70, 30), 45, PhysicsTestScene.TEST_MATERIAL));

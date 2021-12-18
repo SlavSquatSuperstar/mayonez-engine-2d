@@ -1,6 +1,5 @@
 package slavsquatsuperstar.mayonez.physics2d.colliders
 
-import slavsquatsuperstar.math.MathUtils.clamp
 import slavsquatsuperstar.math.Vec2
 import slavsquatsuperstar.mayonez.Component
 import slavsquatsuperstar.mayonez.GameObject
@@ -27,7 +26,7 @@ abstract class Collider2D : Component() {
     @JvmField
     protected var transform: Transform? = null
 
-    @SuppressWarnings("unchecked")
+    @Suppress("UNCHECKED_CAST")
     fun <T : Collider2D?> setTransform(transform: Transform?): T {
         this.transform = transform
         return this as T
@@ -46,7 +45,7 @@ abstract class Collider2D : Component() {
      */
     fun getRigidbody(): Rigidbody2D? = rb
 
-    @SuppressWarnings("unchecked")
+    @Suppress("UNCHECKED_CAST")
     fun <T : Collider2D?> setRigidbody(rb: Rigidbody2D?): T {
         this.rb = rb
         return this as T
