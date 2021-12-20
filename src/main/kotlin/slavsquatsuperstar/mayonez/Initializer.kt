@@ -34,9 +34,9 @@ object Initializer {
         }
         // Configure Logger
         if (!INIT_LOGGER) {
-            val logger = Logger
             INIT_LOGGER = true
-//            Logger.log("Initialized Logger")
+            val logger = Logger
+//            println("Initialized Logger")
         }
         // Scan Assets
         // Load Scene

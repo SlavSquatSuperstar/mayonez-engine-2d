@@ -40,10 +40,4 @@ public class CameraGL {
         return projectionMatrix;
     }
 
-//    Vec2 position;
-//
-//    private static Vector2f toJoml(Vec2 v) {
-//        return new Vector2f(v.x, v.y);
-//    }
-
 }

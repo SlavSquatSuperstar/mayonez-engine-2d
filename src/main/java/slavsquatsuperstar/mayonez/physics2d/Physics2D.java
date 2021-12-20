@@ -3,7 +3,6 @@ package slavsquatsuperstar.mayonez.physics2d;
 import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.GameObject;
-import slavsquatsuperstar.mayonez.Logger;
 import slavsquatsuperstar.mayonez.Preferences;
 import slavsquatsuperstar.mayonez.Scene;
 import slavsquatsuperstar.mayonez.physics2d.colliders.Collider2D;
@@ -113,10 +112,8 @@ public class Physics2D {
 
                 // TODO still send collision events if triggers
                 // Add the collisions if neither is a trigger
-                if (!c1.isTrigger() && !c2.isTrigger()) {
+                if (!c1.isTrigger() && !c2.isTrigger())
                     collisions.add(result);
-                    Logger.trace("%s is intersecting %s", c1, c2);
-                }
             }
         }
     }
@@ -249,8 +246,7 @@ public class Physics2D {
         }
 
         Collider2D c = o.getComponent(Collider2D.class);
-        if (c != null)
-            colliders.add(c);
+        if (c != null) colliders.add(c);
     }
 
     public void removeObject(GameObject o) {

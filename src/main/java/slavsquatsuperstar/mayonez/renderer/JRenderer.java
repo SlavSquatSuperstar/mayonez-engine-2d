@@ -11,9 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Draws all in-game textures and shapes onto the screen.
+ * Draws all in-game textures and shapes onto the screen with Java's AWT and Swing libraries.
  */
-public class Renderer {
+public class JRenderer implements GameRenderer {
 
     private final List<GameObject> objects;
     private final DebugDraw debugDraw; // put DebugDraw in Renderer to access camera offset
@@ -22,7 +22,7 @@ public class Renderer {
      */
     private Camera camera = null;
 
-    public Renderer() {
+    public JRenderer() {
         objects = new ArrayList<>();
         debugDraw = DebugDraw.INSTANCE;
     }
@@ -54,6 +54,7 @@ public class Renderer {
      *
      * @param newScene a scene
      */
+    @Override
     public void setScene(Scene newScene) {
         camera = newScene.camera();
         objects.clear();
@@ -65,11 +66,13 @@ public class Renderer {
      *
      * @param obj the game object
      */
-    public void add(GameObject obj) {
+    @Override
+    public void addObject(GameObject obj) {
         objects.add(obj);
     }
 
-    public void remove(GameObject obj) {
+    @Override
+    public void removeObject(GameObject obj) {
         objects.remove(obj);
     }
 

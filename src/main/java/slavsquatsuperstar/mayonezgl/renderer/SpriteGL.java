@@ -8,7 +8,7 @@ import slavsquatsuperstar.mayonez.GameObject;
 public class SpriteGL extends Component { // = Gabe's SpriteRenderer
 
     private Vector4f color = new Vector4f(1, 1, 1, 1);
-    private TextureGL texture = null;
+    private TextureGL texture = null; // Rendering just a color
     private Vector2f[] texCoords = new Vector2f[]{
             new Vector2f(1, 1),
             new Vector2f(1, 0),

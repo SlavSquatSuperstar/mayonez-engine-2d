@@ -2,10 +2,10 @@ package slavsquatsuperstar.mayonezgl.renderer;
 
 import org.joml.Vector2f;
 import org.joml.Vector4f;
-import slavsquatsuperstar.mayonez.fileio.Assets;
 import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.Preferences;
+import slavsquatsuperstar.mayonez.fileio.Assets;
 import slavsquatsuperstar.mayonezgl.GameGL;
 
 import java.util.ArrayList;
@@ -41,17 +41,19 @@ public class RenderBatch {
 
     // Renderer Data
     private final List<TextureGL> textures;
+    private final CameraGL camera;
     private Shader shader;
     private float[] vertices; // quads
     private int vaoID, vboID;
 
-    public RenderBatch(int maxBatchSize) {
+    public RenderBatch(int maxBatchSize, CameraGL camera) {
         sprites = new SpriteGL[maxBatchSize]; // shader array capacity
         shader = Assets.getAsset("assets/shaders/default.glsl", Shader.class);
         vertices = new float[maxBatchSize * VERTICES_PER_SPRITE * VERTEX_SIZE];
-        for (int i = 0; i < texSlots.length; i++)
-            texSlots[i] = i; // ints 0-7
+        for (int i = 0; i < texSlots.length; i++) texSlots[i] = i; // ints 0-7
+
         textures = new ArrayList<>();
+        this.camera = camera;
     }
 
     // Game Loop Methods
@@ -90,8 +92,8 @@ public class RenderBatch {
 
         // Use the shader
         shader.bind();
-        shader.uploadMat4("uProjection", GameGL.getScene().getCamera().getProjectionMatrix());
-        shader.uploadMat4("uView", GameGL.getScene().getCamera().getViewMatrix());
+        shader.uploadMat4("uProjection", camera.getProjectionMatrix());
+        shader.uploadMat4("uView", camera.getViewMatrix());
 
         // Bind the texture
         for (int i = 0; i < textures.size(); i++)

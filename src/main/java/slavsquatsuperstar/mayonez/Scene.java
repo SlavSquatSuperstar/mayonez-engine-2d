@@ -139,13 +139,13 @@ public abstract class Scene {
 
     protected void onAddObject(GameObject obj) {
         if (started) {
-            Game.getRenderer().add(obj);
+            Game.getRenderer().addObject(obj);
             Game.getPhysics().addObject(obj);
         }
     }
 
     protected void onRemoveObject(GameObject obj) {
-        Game.getRenderer().remove(obj);
+        Game.getRenderer().removeObject(obj);
         Game.getPhysics().removeObject(obj);
     }
 

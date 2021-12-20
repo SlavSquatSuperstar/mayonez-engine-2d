@@ -1,13 +1,16 @@
 package slavsquatsuperstar.mayonezgl;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import slavsquatsuperstar.mayonez.GameWindow;
 import slavsquatsuperstar.mayonez.Logger;
 import slavsquatsuperstar.mayonez.Preferences;
 import slavsquatsuperstar.mayonez.Time;
 import slavsquatsuperstar.mayonez.fileio.Assets;
 import slavsquatsuperstar.mayonez.input.KeyInput;
 import slavsquatsuperstar.mayonez.input.MouseInput;
-import slavsquatsuperstar.mayonezgl.renderer.RendererGL;
+import slavsquatsuperstar.mayonez.physics2d.Physics2D;
+import slavsquatsuperstar.mayonez.renderer.GameRenderer;
+import slavsquatsuperstar.mayonezgl.renderer.GLRenderer;
 
 import static org.lwjgl.glfw.GLFW.glfwGetTime;
 
@@ -27,18 +30,19 @@ public class GameGL { // can't implement runnable otherwise GLFW will crash
 
     // Game Fields
     private static boolean running = false;
-    private static SceneGL scene;
 
     // Window Fields
-    private static WindowGL window;
+    private static GameWindow window;
     private static final int WIDTH = Preferences.SCREEN_WIDTH;
     private static final int HEIGHT = Preferences.SCREEN_HEIGHT;
 
     // Game Layers
-    private static final RendererGL renderer = new RendererGL();
+    private static SceneGL scene;
+    private static final GameRenderer renderer = new GLRenderer();
+    private static Physics2D physics;
 
     public GameGL() {
-        window = new WindowGL("Mayonez + LWJGL", WIDTH, HEIGHT);
+        window = new GLWindow("Mayonez + LWJGL", WIDTH, HEIGHT);
         window.setKeyInput(KeyInput.INSTANCE);
         window.setMouseInput(MouseInput.INSTANCE);
     }
@@ -55,11 +59,15 @@ public class GameGL { // can't implement runnable otherwise GLFW will crash
 
     public static void setScene(SceneGL scene) {
         GameGL.scene = scene;
-        startScene();
+        game.startScene();
     }
 
-    public static RendererGL getRenderer() {
+    public static GameRenderer getRenderer() {
         return renderer;
+    }
+
+    public static Physics2D getPhysics() {
+        return physics;
     }
 
     // Game Loop Methods
@@ -75,7 +83,7 @@ public class GameGL { // can't implement runnable otherwise GLFW will crash
         Assets.scanResources("assets"); // Load all game assets
 
         window.start();
-        startScene();
+        game.startScene();
         game.run();
     }
 
@@ -142,16 +150,16 @@ public class GameGL { // can't implement runnable otherwise GLFW will crash
 
     public void render() {
         window.render((_g2) -> {
-            if (scene != null) renderer.render();
+            if (scene != null) renderer.render(_g2); // don't pass a G2D object
         });
     }
 
     // Helper Methods
 
-    private static void startScene() {
+    private void startScene() {
         if (scene != null && running) {
             scene.start();
-            scene.getObjects(null).forEach(renderer::addObject);
+            renderer.setScene(scene);
             Logger.trace("Game: Loaded scene \"%s\"", scene.getName());
         }
     }

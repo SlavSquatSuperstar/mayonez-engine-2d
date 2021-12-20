@@ -1,5 +1,6 @@
 package slavsquatsuperstar.mayonez
 
+import slavsquatsuperstar.math.MathUtils
 import slavsquatsuperstar.mayonez.fileio.TextFile
 import java.io.File
 import java.time.LocalDate
@@ -12,19 +13,19 @@ import java.util.*
  */
 object Logger {
 
-    init {
-        if (!Initializer.INIT_ASSETS || !Initializer.INIT_PREFERENCES) Initializer.init() // should prevent file from not being read
-    }
-
-    @JvmField
-    var logLevel: Int = Preferences.LOG_LEVEL
-    private val saveLogs: Boolean = Preferences.SAVE_LOGS
+    private val logLevel: Int // minimum priority to print messages to console
+    private val saveLogs: Boolean
 
     // Log File Output
     private var logFilename: String? = null
     private var logFile: TextFile? = null
 
     init {
+        if (!Initializer.INIT_ASSETS || !Initializer.INIT_PREFERENCES) Initializer.init() // should prevent file from not being read
+
+        logLevel = Preferences.LOG_LEVEL
+        saveLogs = Preferences.SAVE_LOGS
+
         if (saveLogs) {
             // Create the log directory if needed
             val logsDirectory = File(Preferences.LOGS_DIRECTORY)

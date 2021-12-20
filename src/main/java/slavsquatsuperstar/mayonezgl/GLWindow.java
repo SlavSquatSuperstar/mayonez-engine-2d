@@ -17,7 +17,7 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
-public class WindowGL implements GameWindow {
+public class GLWindow implements GameWindow {
 
     private long window; // The window pointer
     private String title;
@@ -26,7 +26,7 @@ public class WindowGL implements GameWindow {
 //    private KeyInput keyboard;
 //    private MouseInput mouse;
 
-    public WindowGL(String title, int width, int height) {
+    public GLWindow(String title, int width, int height) {
         this.title = title;
         this.width = width;
         this.height = height;
@@ -124,7 +124,7 @@ public class WindowGL implements GameWindow {
     public void render(Renderable r) {
         glClearColor(1f, 1f, 1f, 1f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear the screen
-        r.draw(null); // don't pass Graphics2D
+        r.draw(null); // don't pass G2D
         glfwSwapBuffers(window); // swap the color buffers
     }
 

@@ -17,6 +17,7 @@ public class SceneGL extends Scene {
     @Override
     protected void onAddObject(GameObject obj) {
         GameGL.getRenderer().addObject(obj);
+        GameGL.getPhysics().addObject(obj);
     }
 
     public CameraGL getCamera() {

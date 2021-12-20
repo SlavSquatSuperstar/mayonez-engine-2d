@@ -16,7 +16,7 @@ public class GLTestScene extends SceneGL {
     public static void main(String[] args) {
         GameGL game = GameGL.instance();
         GameGL.setScene(new GLTestScene());
-        game.start();
+        GameGL.start();
     }
 
     @Override

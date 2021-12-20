@@ -15,7 +15,7 @@ import java.awt.image.BufferStrategy;
  *
  * @author SlavSquatSuperstar
  */
-public class Window extends JFrame implements GameWindow {
+public class JWindow extends JFrame implements GameWindow {
 
     private BufferStrategy bs;
     private Graphics2D g2;
@@ -24,7 +24,7 @@ public class Window extends JFrame implements GameWindow {
 //    private MouseInput mouse;
     private boolean closedbyUser;
 
-    public Window(String title, int width, int height) {
+    public JWindow(String title, int width, int height) {
         super(title);
         setSize(width, height);
         setResizable(false);

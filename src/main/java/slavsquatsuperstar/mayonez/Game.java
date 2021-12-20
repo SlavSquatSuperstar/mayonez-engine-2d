@@ -5,8 +5,9 @@ import slavsquatsuperstar.mayonez.fileio.Assets;
 import slavsquatsuperstar.mayonez.input.KeyInput;
 import slavsquatsuperstar.mayonez.input.MouseInput;
 import slavsquatsuperstar.mayonez.physics2d.Physics2D;
+import slavsquatsuperstar.mayonez.renderer.GameRenderer;
 import slavsquatsuperstar.mayonez.renderer.IMGUI;
-import slavsquatsuperstar.mayonez.renderer.Renderer;
+import slavsquatsuperstar.mayonez.renderer.JRenderer;
 
 import java.awt.*;
 
@@ -36,13 +37,11 @@ public class Game implements Runnable {
 
     // Window Fields
     private static GameWindow window;
-//    private static final int WIDTH;
-//    private static final int HEIGHT;
 
     // Game Layers
     private static Scene currentScene;
+    private static GameRenderer renderer;
     private static Physics2D physics;
-    private static Renderer renderer;
     private static IMGUI imgui;
 
     private Game() {
@@ -52,14 +51,14 @@ public class Game implements Runnable {
         int HEIGHT = Preferences.SCREEN_HEIGHT;
 
         // Set up the window
-        window = new Window(Preferences.TITLE + " " + Preferences.VERSION, WIDTH, HEIGHT);
+        window = new JWindow(Preferences.TITLE + " " + Preferences.VERSION, WIDTH, HEIGHT);
 
         // Add input listeners
         window.setKeyInput(KeyInput.INSTANCE);
         window.setMouseInput(MouseInput.INSTANCE);
 
         physics = new Physics2D();
-        renderer = new Renderer();
+        renderer = new JRenderer();
         imgui = IMGUI.INSTANCE;
     }
 
@@ -86,7 +85,7 @@ public class Game implements Runnable {
         return currentScene;
     }
 
-    public static Renderer getRenderer() {
+    public static GameRenderer getRenderer() {
         return renderer;
     }
 

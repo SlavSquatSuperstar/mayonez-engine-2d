@@ -37,7 +37,7 @@ public class RendererTestScene extends Scene {
                 getScene().camera().setSubject(this);
                 getScene().camera().enableKeepInScene(false);
                 addComponent(sprites.getSprite(0));
-                addComponent(new KeyMovement(MoveMode.POSITION, 0.5f));
+                addComponent(new KeyMovement(MoveMode.POSITION, 25));
                 addComponent(new Script() {
                     @Override
                     public void update(float dt) {
