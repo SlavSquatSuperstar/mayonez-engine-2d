@@ -25,8 +25,8 @@ public class RendererTestScene extends Scene {
     }
 
     public static void main(String[] args) {
-        Game.loadScene(new RendererTestScene());
         Game.start();
+        Game.loadScene(new RendererTestScene()); // need to do this after to load assets
     }
 
     @Override

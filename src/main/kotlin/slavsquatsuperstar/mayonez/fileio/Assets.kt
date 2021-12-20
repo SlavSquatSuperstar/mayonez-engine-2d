@@ -19,8 +19,9 @@ import java.util.regex.Pattern
  */
 object Assets {
 
-    // TODO preload stage, map filetype to subclass
     private val ASSETS = HashMap<String, Asset>()
+
+    // TODO preload stage, map filetype to subclass
 
     /**
      * Recursively searches a resource directory inside the JAR and adds all assets.
@@ -35,7 +36,7 @@ object Assets {
         )
         val resources = reflections.getResources(Pattern.compile(".*\\.*"))
         resources.forEach { createAsset(it, AssetType.CLASSPATH) } // Create an asset from each path
-        trace("Assets: Created ${resources.size} resources inside $directory")
+        trace("Assets: Created ${resources.size} assets inside $directory")
     }
 
     /**
@@ -140,6 +141,7 @@ object Assets {
      */
     @JvmStatic
     fun clearAssets() {
+        println("In clear method")
         ASSETS.clear()
     }
 

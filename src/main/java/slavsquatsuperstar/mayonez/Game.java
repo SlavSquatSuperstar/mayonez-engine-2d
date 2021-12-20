@@ -18,6 +18,7 @@ import java.awt.*;
 public class Game implements Runnable {
 
     static {
+        Initializer.init();
         game = instance(); // "Lazy" singleton construction
     }
 
@@ -35,8 +36,8 @@ public class Game implements Runnable {
 
     // Window Fields
     private static GameWindow window;
-    private static final int WIDTH = Preferences.SCREEN_WIDTH;
-    private static final int HEIGHT = Preferences.SCREEN_HEIGHT;
+//    private static final int WIDTH;
+//    private static final int HEIGHT;
 
     // Game Layers
     private static Scene currentScene;
@@ -45,6 +46,11 @@ public class Game implements Runnable {
     private static IMGUI imgui;
 
     private Game() {
+        // Read preferences and initialize logger
+        Initializer.init();
+        int WIDTH = Preferences.SCREEN_WIDTH;
+        int HEIGHT = Preferences.SCREEN_HEIGHT;
+
         // Set up the window
         window = new Window(Preferences.TITLE + " " + Preferences.VERSION, WIDTH, HEIGHT);
 
@@ -181,7 +187,7 @@ public class Game implements Runnable {
         Logger.log("Engine: Starting %s %s", Preferences.TITLE, Preferences.VERSION);
         running = true;
 
-        Logger.log("Engine: Loading assets");
+        Logger.trace("Engine: Loading assets");
         Assets.scanResources("assets"); // Load all game assets
 
         // Display window

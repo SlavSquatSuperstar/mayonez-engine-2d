@@ -12,13 +12,17 @@ import java.util.*
  */
 object Logger {
 
+    init {
+        if (!Initializer.INIT_ASSETS || !Initializer.INIT_PREFERENCES) Initializer.init() // should prevent file from not being read
+    }
+
     @JvmField
     var logLevel: Int = Preferences.LOG_LEVEL
     private val saveLogs: Boolean = Preferences.SAVE_LOGS
 
     // Log File Output
-    private lateinit var logFilename: String
-    private lateinit var logFile: TextFile
+    private var logFilename: String? = null
+    private var logFile: TextFile? = null
 
     init {
         if (saveLogs) {
@@ -41,7 +45,7 @@ object Logger {
         val output = StringBuilder("[%02d:%.4f] ".format((Time.time / 60).toInt(), Time.time % 60)) // Time stamp
         try {
             output.append(msg.toString().format(*args)) // Level prefix
-            if (saveLogs) logFile.append(output.toString()) // Always save to log regardless of level
+            if (saveLogs) logFile?.append(output.toString()) // Always save to log regardless of level
         } catch (e: IllegalFormatException) {
             output.append("Logger: Could not format message \"$msg\"")
         } finally {
