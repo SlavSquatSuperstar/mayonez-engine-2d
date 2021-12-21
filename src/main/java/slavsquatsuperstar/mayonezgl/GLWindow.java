@@ -50,8 +50,7 @@ public class GLWindow implements GameWindow {
         GLFWErrorCallback.createPrint(System.err).set();
 
         // Initialize GLFW
-        if (!glfwInit())
-            throw new IllegalStateException("Engine: Unable to initialize GLFW");
+        if (!glfwInit()) throw new IllegalStateException("Engine: Unable to initialize GLFW");
 
         // Configure GLFW
         glfwDefaultWindowHints(); // window settings
@@ -63,8 +62,7 @@ public class GLWindow implements GameWindow {
 
         // Create the window
         window = glfwCreateWindow(width, height, title, NULL, NULL);
-        if (window == NULL)
-            throw new RuntimeException("Engine: Failed to create the GLFW window");
+        if (window == NULL) throw new RuntimeException("Engine: Failed to create the GLFW window");
 
         // Add input listeners
 

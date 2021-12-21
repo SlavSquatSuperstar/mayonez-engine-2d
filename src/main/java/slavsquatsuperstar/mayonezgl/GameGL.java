@@ -1,10 +1,7 @@
 package slavsquatsuperstar.mayonezgl;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import slavsquatsuperstar.mayonez.GameWindow;
-import slavsquatsuperstar.mayonez.Logger;
-import slavsquatsuperstar.mayonez.Preferences;
-import slavsquatsuperstar.mayonez.Time;
+import slavsquatsuperstar.mayonez.*;
 import slavsquatsuperstar.mayonez.fileio.Assets;
 import slavsquatsuperstar.mayonez.input.KeyInput;
 import slavsquatsuperstar.mayonez.input.MouseInput;
@@ -21,9 +18,10 @@ import static org.lwjgl.glfw.GLFW.glfwGetTime;
  */
 public class GameGL { // can't implement runnable otherwise GLFW will crash
 
-//    static {
-//        game = instance(); // "Lazy" singleton construction
-//    }
+    static {
+        System.out.println("static load");
+        game = instance(); // "Lazy" singleton construction
+    }
 
     // Singleton Fields
     private static GameGL game;
@@ -31,20 +29,21 @@ public class GameGL { // can't implement runnable otherwise GLFW will crash
     // Game Fields
     private static boolean running = false;
 
-    // Window Fields
-    private static GameWindow window;
-    private static final int WIDTH = Preferences.SCREEN_WIDTH;
-    private static final int HEIGHT = Preferences.SCREEN_HEIGHT;
-
     // Game Layers
+    private static GameWindow window;
     private static SceneGL scene;
-    private static final GameRenderer renderer = new GLRenderer();
+    private static GameRenderer renderer;
     private static Physics2D physics;
 
     public GameGL() {
-        window = new GLWindow("Mayonez + LWJGL", WIDTH, HEIGHT);
+        Initializer.init();
+
+        window = new GLWindow("Mayonez + LWJGL", Preferences.SCREEN_WIDTH, Preferences.SCREEN_HEIGHT);
         window.setKeyInput(KeyInput.INSTANCE);
         window.setMouseInput(MouseInput.INSTANCE);
+
+        renderer = new GLRenderer();
+        physics = new Physics2D();
     }
 
     public static GameGL instance() {
@@ -76,8 +75,7 @@ public class GameGL { // can't implement runnable otherwise GLFW will crash
         if (running) return; // Don't start the game if already running
 
         running = true;
-        Logger.log("Engine: Starting");
-        Logger.log("Welcome to %s %s", Preferences.TITLE, Preferences.VERSION);
+        Logger.log("Engine: Starting %s %s", Preferences.TITLE, Preferences.VERSION);
 
         Logger.log("Engine: Loading assets");
         Assets.scanResources("assets"); // Load all game assets

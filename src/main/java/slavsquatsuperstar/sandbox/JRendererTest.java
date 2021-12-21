@@ -26,11 +26,6 @@ public class JRendererTest extends Scene {
         setGravity(new Vec2(0, 0));
     }
 
-    public static void main(String[] args) {
-        Game.start();
-        Game.loadScene(new JRendererTest()); // need to do this after to load assets
-    }
-
     @Override
     protected void init() {
         addObject(new GameObject("Mario", new Transform(new Vec2(getWidth() / 2f, getHeight() / 2f), new Vec2(2, 2))) {
@@ -72,5 +67,10 @@ public class JRendererTest extends Scene {
                 destroy();
             }
         };
+    }
+
+    public static void main(String[] args) {
+        Game.start();
+        Game.loadScene(new JRendererTest()); // need to do this after to load assets
     }
 }

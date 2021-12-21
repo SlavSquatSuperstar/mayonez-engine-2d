@@ -96,8 +96,7 @@ public class RenderBatch {
         shader.uploadMat4("uView", camera.getViewMatrix());
 
         // Bind the texture
-        for (int i = 0; i < textures.size(); i++)
-            textures.get(i).bind(i);
+        for (int i = 0; i < textures.size(); i++) textures.get(i).bind(i);
 
         shader.uploadIntArray("uTextures", texSlots);
 
@@ -123,8 +122,7 @@ public class RenderBatch {
         loadVertexProperties(index);
 
         TextureGL tex = spr.getTexture();
-        if (tex != null && !hasTexture(tex))
-            textures.add(tex);
+        if (tex != null && !hasTexture(tex)) textures.add(tex);
     }
 
     // Helper Methods
@@ -150,20 +148,24 @@ public class RenderBatch {
         Vector2f[] texCoords = sprite.getTexCoords();
 
         TextureGL tex = sprite.getTexture();
-        if (tex != null) {
-            if (!hasTexture(tex))
-                textures.add(tex);
-        }
+        if (tex != null && !hasTexture(tex)) textures.add(tex);
         int texID = textures.indexOf(tex) + 1;
         // texID 0 means no texture
 
         // Load properties for each vertex
-        Vec2[] quadVertices = {new Vec2(1, 1), new Vec2(1, 0), new Vec2(0, 0), new Vec2(0, 1)};
+        Vec2[] quadVertices = {
+                new Vec2(0.5f, 0.5f), new Vec2(0.5f, -0.5f), new Vec2(-0.5f, -0.5f), new Vec2(-0.5f, 0.5f)
+        }; // Render sprite at object center
         for (int i = 0; i < quadVertices.length; i++) {
-            Vec2 spritePosition = sprite.getTransform().position.add(quadVertices[i].mul(sprite.getTransform().scale.mul(GameGL.getScene().getCellSize())));
-            // pos = obj_pos + vert_pos * obj_scale --> convert from world to pixels
+            Vec2 objPos = sprite.getTransform().position;
+            Vec2 objScale = sprite.getTransform().scale;
+            Vec2 vertPos = quadVertices[i];
+            float worldScale = GameGL.getScene().getCellSize();
+
+            // sprite_pos = (obj_pos + vert_pos * obj_scale) * world_scale
+            Vec2 spritePos = objPos.add(vertPos.mul(objScale)).mul(worldScale);
             float[] attributes = {
-                    spritePosition.x, spritePosition.y,
+                    spritePos.x, spritePos.y,
                     color.x, color.y, color.z, color.w,
                     texCoords[i].x, texCoords[i].y,
                     texID

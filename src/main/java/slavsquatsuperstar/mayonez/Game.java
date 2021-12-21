@@ -35,10 +35,8 @@ public class Game implements Runnable {
     private static Thread thread;
     private static boolean running;
 
-    // Window Fields
-    private static GameWindow window;
-
     // Game Layers
+    private static GameWindow window;
     private static Scene currentScene;
     private static GameRenderer renderer;
     private static Physics2D physics;
@@ -47,18 +45,17 @@ public class Game implements Runnable {
     private Game() {
         // Read preferences and initialize logger
         Initializer.init();
-        int WIDTH = Preferences.SCREEN_WIDTH;
-        int HEIGHT = Preferences.SCREEN_HEIGHT;
 
         // Set up the window
-        window = new JWindow(Preferences.TITLE + " " + Preferences.VERSION, WIDTH, HEIGHT);
+        window = new JWindow(Preferences.TITLE + " " + Preferences.VERSION, Preferences.SCREEN_WIDTH,
+                Preferences.SCREEN_HEIGHT);
 
         // Add input listeners
         window.setKeyInput(KeyInput.INSTANCE);
         window.setMouseInput(MouseInput.INSTANCE);
 
-        physics = new Physics2D();
         renderer = new JRenderer();
+        physics = new Physics2D();
         imgui = IMGUI.INSTANCE;
     }
 
@@ -183,8 +180,8 @@ public class Game implements Runnable {
     public static synchronized void start() {
         if (running) return; // Don't start if already running
 
-        Logger.log("Engine: Starting %s %s", Preferences.TITLE, Preferences.VERSION);
         running = true;
+        Logger.log("Engine: Starting %s %s", Preferences.TITLE, Preferences.VERSION);
 
         Logger.trace("Engine: Loading assets");
         Assets.scanResources("assets"); // Load all game assets

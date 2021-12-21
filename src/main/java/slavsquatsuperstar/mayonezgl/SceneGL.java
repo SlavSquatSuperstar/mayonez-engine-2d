@@ -9,8 +9,8 @@ public class SceneGL extends Scene {
 
     protected CameraGL camera;
 
-    public SceneGL(String name) {
-        super(name, 1080, 720, 16);
+    public SceneGL(String name, int cellSize) {
+        super(name, 1080, 720, cellSize);
         camera = new CameraGL(new Vector2f());
     }
 
