@@ -34,7 +34,7 @@ open class PolygonCollider2D(vararg vertices: Vec2) : Collider2D() {
 
     open fun countVertices(): Int = vertices.size
 
-    open fun getRotation(): Float = if (transform != null) transform!!.rotation else 0f
+    open fun getRotation(): Float = transform?.rotation ?: 0f
 
     override fun getMinBounds(): AlignedBoxCollider2D { // TODO Support function
         val vertices = getVertices()

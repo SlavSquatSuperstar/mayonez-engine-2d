@@ -107,13 +107,22 @@ public class Physics2D {
                 Collider2D c2 = colliders.get(j);
 
                 if (c1.isStatic() && c2.isStatic()) continue; // Don't check for collision if both are static
-                CollisionManifold result = c1.getCollisionInfo(c2); // Get collision info
-                if (result == null) continue;
+                CollisionManifold collision = c1.getCollisionInfo(c2); // Get collision info
+                if (collision == null) continue;
 
                 // TODO still send collision events if triggers
-                // Add the collisions if neither is a trigger
-                if (!c1.isTrigger() && !c2.isTrigger())
-                    collisions.add(result);
+                // Register collisions if neither is a trigger
+                if (!c1.isTrigger() && !c2.isTrigger()) {
+                    if (c1.isTrigger()) {
+                        c2.onTrigger(c1);
+                    } else if (c2.isTrigger()) {
+                        c1.onTrigger(c2);
+                    } else {
+                        c1.onCollision(collision);
+                        c2.onCollision(collision);
+                        collisions.add(collision); // Only solve if neither are triggers
+                    }
+                }
             }
         }
     }

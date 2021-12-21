@@ -7,9 +7,9 @@ import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Script;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
 
-public class LinearResolutionTestScene extends PhysicsTestScene {
+public class LinearResolutionTest extends PhysicsTestScene {
 
-    public LinearResolutionTestScene(String name) {
+    public LinearResolutionTest(String name) {
         super(name, 6);
     }
 
@@ -47,7 +47,7 @@ public class LinearResolutionTestScene extends PhysicsTestScene {
     }
 
     public static void main(String[] args) {
-        Game.loadScene(new LinearResolutionTestScene("Linear Impulse Resolution Test"));
+        Game.loadScene(new LinearResolutionTest("Linear Impulse Resolution Test"));
         Game.start();
     }
 

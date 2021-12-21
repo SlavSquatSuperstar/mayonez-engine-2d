@@ -30,9 +30,9 @@ class AlignedBoxCollider2D(size: Vec2) : BoxCollider2D(size) {
     override fun getMinBounds(): AlignedBoxCollider2D =
         AlignedBoxCollider2D(localSize()).setTransform<Collider2D>(transform).setRigidbody(rb)
 
-    override fun toLocal(world: Vec2): Vec2 = (world - center()) / transform!!.scale
+    override fun toLocal(world: Vec2): Vec2 = (world - center()) / (transform?.scale ?: Vec2(1f, 1f))
 
-    override fun toWorld(local: Vec2): Vec2 = (local * transform!!.scale) + center()
+    override fun toWorld(local: Vec2): Vec2 = (local * (transform?.scale ?: Vec2(1f, 1f))) + center()
 
     // AABB vs Point
 

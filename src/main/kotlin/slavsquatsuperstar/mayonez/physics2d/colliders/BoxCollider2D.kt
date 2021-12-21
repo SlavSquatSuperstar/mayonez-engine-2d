@@ -25,7 +25,7 @@ open class BoxCollider2D private constructor(min: Vec2, max: Vec2) :
      *
      * @return the size in world space
      */
-    fun size(): Vec2 = if (transform != null) size * transform!!.scale else Vec2(1f, 1f)
+    fun size(): Vec2 = size * (transform?.scale ?: Vec2(1f, 1f))
 
     val width: Float
         @JvmName("width")

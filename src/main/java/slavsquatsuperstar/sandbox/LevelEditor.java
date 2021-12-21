@@ -10,9 +10,9 @@ import slavsquatsuperstar.mayonez.renderer.Grid;
 
 import java.awt.*;
 
-public class LevelEditorScene extends Scene {
+public class LevelEditor extends Scene {
 
-    public LevelEditorScene(String name) {
+    public LevelEditor(String name) {
         super(name, Preferences.SCREEN_WIDTH, Preferences.SCREEN_HEIGHT, 42);
         setGravity(new Vec2());
     }
@@ -45,7 +45,7 @@ public class LevelEditorScene extends Scene {
     }
 
     public static void main(String[] args) {
-        Game.loadScene(new LevelEditorScene("Level Editor"));
+        Game.loadScene(new LevelEditor("Level Editor"));
         Game.start();
     }
 

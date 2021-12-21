@@ -155,4 +155,10 @@ abstract class Collider2D : Component() {
      */
     fun isStatic(): Boolean = rb?.hasInfiniteMass() ?: true
 
+    // Callback Methods
+
+    fun onCollision(collision: CollisionManifold) = parent.onCollision(collision)
+
+    fun onTrigger(trigger: Collider2D) = parent.onTrigger(trigger)
+
 }

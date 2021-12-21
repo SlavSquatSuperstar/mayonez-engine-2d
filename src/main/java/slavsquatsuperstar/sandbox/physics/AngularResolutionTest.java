@@ -7,9 +7,9 @@ import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
 import slavsquatsuperstar.mayonez.physics2d.colliders.AlignedBoxCollider2D;
 
-public class AngularResolutionTestScene extends PhysicsTestScene {
+public class AngularResolutionTest extends PhysicsTestScene {
 
-    public AngularResolutionTestScene(String name) {
+    public AngularResolutionTest(String name) {
         super(name, 8);
     }
 
@@ -38,7 +38,7 @@ public class AngularResolutionTestScene extends PhysicsTestScene {
     }
 
     public static void main(String[] args) {
-        Game.loadScene(new AngularResolutionTestScene("Angular Impulse Resolution Test"));
+        Game.loadScene(new AngularResolutionTest("Angular Impulse Resolution Test"));
         Game.start();
     }
 

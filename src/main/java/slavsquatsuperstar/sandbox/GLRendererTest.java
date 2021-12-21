@@ -7,15 +7,15 @@ import slavsquatsuperstar.mayonezgl.GameGL;
 import slavsquatsuperstar.mayonezgl.SceneGL;
 import slavsquatsuperstar.mayonezgl.SpriteSheetGL;
 
-public class GLTestScene extends SceneGL {
+public class GLRendererTest extends SceneGL {
 
-    public GLTestScene() {
+    public GLRendererTest() {
         super("LWJGL Test Scene");
     }
 
     public static void main(String[] args) {
         GameGL game = GameGL.instance();
-        GameGL.setScene(new GLTestScene());
+        GameGL.setScene(new GLRendererTest());
         GameGL.start();
     }
 

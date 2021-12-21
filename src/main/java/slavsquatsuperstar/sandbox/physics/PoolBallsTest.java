@@ -18,13 +18,13 @@ import slavsquatsuperstar.mayonez.scripts.MoveMode;
  * <p>
  * Source: https://en.wikipedia.org/wiki/Billiard_ball
  */
-public class PoolBallsTestScene extends PhysicsTestScene {
+public class PoolBallsTest extends PhysicsTestScene {
 
     private final PhysicsMaterial POOL_BALL_MAT = new PhysicsMaterial(0.0f, 0.0f, 1.0f);
     private final float BALL_RADIUS = 2.28f;
     private final float BALL_MASS = 13.2f;
 
-    public PoolBallsTestScene(String name) {
+    public PoolBallsTest(String name) {
         super(name, 5);
     }
 
@@ -63,7 +63,7 @@ public class PoolBallsTestScene extends PhysicsTestScene {
     }
 
     public static void main(String[] args) {
-        Game.loadScene(new PoolBallsTestScene("Pool Balls Test"));
+        Game.loadScene(new PoolBallsTest("Pool Balls Test"));
         Game.start();
     }
 

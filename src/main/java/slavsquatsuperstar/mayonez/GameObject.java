@@ -1,6 +1,8 @@
 package slavsquatsuperstar.mayonez;
 
 import slavsquatsuperstar.math.Vec2;
+import slavsquatsuperstar.mayonez.physics2d.CollisionManifold;
+import slavsquatsuperstar.mayonez.physics2d.colliders.Collider2D;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -39,7 +41,7 @@ public class GameObject {
         this.transform = transform;
         components = new ArrayList<>();
     }
-    
+
     public GameObject(String name) {
         this(name, new Vec2());
     }
@@ -49,7 +51,8 @@ public class GameObject {
     /**
      * Add necessary components.
      */
-    protected void init() {}
+    protected void init() {
+    }
 
     /**
      * Initializes all components.
@@ -140,6 +143,7 @@ public class GameObject {
      *
      * @param order an array of component subclasses
      */
+    @SuppressWarnings("rawtypes")
     public void setUpdateOrder(Class... order) {
         if (updateOrder == null) {
             updateOrder = new ArrayList<>();
@@ -148,13 +152,29 @@ public class GameObject {
         components.sort(Comparator.comparingInt(c -> getUpdateOrder(c.getClass())));
     }
 
+    @SuppressWarnings("rawtypes")
     private int getUpdateOrder(Class componentCls) {
         int i = updateOrder.indexOf(componentCls);
-        if (i > -1)
-            return i;
+        if (i > -1) return i;
         i = getUpdateOrder(componentCls.getSuperclass());
         return (i > -1) ? i : updateOrder.size();
     }
+
+    // Callback Methods
+
+    /**
+     * What to do after making contact with another physical object
+     *
+     * @param collision the collision information
+     */
+    public void onCollision(CollisionManifold collision) {}
+
+    /**
+     * What to do after passing through a trigger area
+     *
+     * @param trigger the trigger collider
+     */
+    public void onTrigger(Collider2D trigger) {}
 
     // Getters and Setters
 
@@ -178,6 +198,9 @@ public class GameObject {
         return destroyed;
     }
 
+    /**
+     * Destroy this game object and remove it from the scene.
+     */
     public void destroy() {
         destroyed = true;
     }

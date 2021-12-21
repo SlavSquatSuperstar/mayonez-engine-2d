@@ -1,13 +1,13 @@
 package slavsquatsuperstar;
 
 import slavsquatsuperstar.mayonezgl.GameGL;
-import slavsquatsuperstar.sandbox.GLTestScene;
+import slavsquatsuperstar.sandbox.GLRendererTest;
 
 public class Main {
 
     public static void main(String[] args) {
         GameGL.instance();
-        GameGL.setScene(new GLTestScene());
+        GameGL.setScene(new GLRendererTest());
         GameGL.start();
     }
 

@@ -12,14 +12,14 @@ import slavsquatsuperstar.mayonez.physics2d.colliders.BoxCollider2D;
 import slavsquatsuperstar.mayonez.physics2d.colliders.CircleCollider;
 import slavsquatsuperstar.mayonez.scripts.*;
 
-public class CollisionTestScene extends PhysicsTestScene {
+public class CollisionTest extends PhysicsTestScene {
 
-    public CollisionTestScene(String name) {
+    public CollisionTest(String name) {
         super(name, 0);
     }
 
     public static void main(String[] args) {
-        Game.loadScene(new CollisionTestScene("Collision Test Scene"));
+        Game.loadScene(new CollisionTest("Collision Test Scene"));
         Game.start();
     }
 

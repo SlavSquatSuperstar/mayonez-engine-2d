@@ -25,7 +25,7 @@ public class PlayerController extends Script {
     @Override
     public void start() {
         Camera cam = getScene().camera();
-        if (getScene() instanceof LevelEditorScene) {
+        if (getScene() instanceof LevelEditor) {
             cam.enableFreeMovement(true).enableKeepInScene(false);
             getComponent(KeepInScene.class).setEnabled(false);
         } else if (getScene() instanceof LevelScene) {
