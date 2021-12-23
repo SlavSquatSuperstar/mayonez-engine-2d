@@ -45,7 +45,7 @@ public class KeepInScene extends Script {
                     mode = Mode.STOP;
             }
         } catch (NullPointerException e) {
-            Logger.warn("%s needs a collider to function!", this);
+            Logger.log("%s needs a collider to function!", this);
             boundingBox = new AlignedBoxCollider2D(new Vec2());
             boundingBox.setTransform(transform);
             mode = Mode.STOP;

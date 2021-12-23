@@ -19,6 +19,8 @@ public abstract class Component {
     protected Transform transform;
     private boolean enabled = true;
 
+    // Game Loop Methods
+
     /**
      * Initialize any fields needed for subclasses or scripts.
      */

@@ -30,9 +30,7 @@ public class PoolBallsTest extends PhysicsTestScene {
 
     @Override
     protected void init() {
-        super.init();
-
-        addObject(createCircle(new Vec2(10, getHeight() / 2f)));
+        addObject(createCircle("Cue Ball", new Vec2(10, getHeight() / 2f)));
 
         float xStart = 50;
         float yStart = getHeight() / 2f;
@@ -42,15 +40,15 @@ public class PoolBallsTest extends PhysicsTestScene {
                 float x = xStart + (float) i * MathUtils.sqrt(3f) * BALL_RADIUS;
                 // y = y0 + 2r * i
                 float y = yStart + (float) j * 2 * BALL_RADIUS;
-                addObject(createCircle(new Vec2(x, y)));
+                addObject(createCircle("Pool Ball", new Vec2(x, y)));
             }
             // y0 = h/2 - r * i
             yStart -= BALL_RADIUS;
         }
     }
 
-    private GameObject createCircle(Vec2 position) {
-        return new GameObject("Circle", position) {
+    private GameObject createCircle(String name, Vec2 position) {
+        return new GameObject(name, position) {
             @Override
             protected void init() {
                 addComponent(new CircleCollider(BALL_RADIUS).setMaterial(POOL_BALL_MAT));

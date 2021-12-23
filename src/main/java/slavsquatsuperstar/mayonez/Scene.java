@@ -35,7 +35,7 @@ public abstract class Scene {
      * How many pixels correspond to a world unit.
      */
     private final int cellSize;
-    private Color background = Color.WHITE;
+    private Color background = Colors.WHITE;
     private boolean started;
 
     public Scene(String name) {
@@ -53,10 +53,10 @@ public abstract class Scene {
         camera = new Camera(this.width, this.height, cellSize);
     }
 
-    // Game Methods
+    // Game Loop Methods
 
     /**
-     * Add necessary objects.
+     * Add necessary objects and provide user-defined initialization behavior.
      */
     protected void init() {}
 
@@ -65,7 +65,6 @@ public abstract class Scene {
      */
     public final void start() {
         if (started) return;
-
         addObject(Camera.createCameraObject(camera));
         init();
         objects.add(objects.remove(0)); // update the camera last
@@ -83,9 +82,9 @@ public abstract class Scene {
         // Update Objects and Camera
         objects.forEach(o -> {
             o.update(dt);
-            if (o.isDestroyed())
-                removeObject(o);
+            if (o.isDestroyed()) removeObject(o);
         });
+        onUserUpdate(dt);
 
         // Remove destroyed objects or add new ones at the end of the frame
         if (!toModify.isEmpty()) {
@@ -93,8 +92,14 @@ public abstract class Scene {
             toModify.clear();
             objects.add(objects.remove(0)); // move the camera to the last index
         }
-
     }
+
+    /**
+     * Provide user-defined update behavior for this scene.
+     *
+     * @param dt seconds since the last frame
+     */
+    protected void onUserUpdate(float dt) {}
 
     /**
      * Draw the background image.
@@ -105,7 +110,15 @@ public abstract class Scene {
         if (!started) return;
         g2.setColor(background);
         g2.fillRect(0, 0, (width + 1) * cellSize, (height + 1) * cellSize);
+        onUserRender(g2);
     }
+
+    /**
+     * Provide user-defined draw behavior for this scene.
+     *
+     * @param g2 the window's graphics object
+     */
+    protected void onUserRender(Graphics2D g2) {}
 
     // Object Methods
 

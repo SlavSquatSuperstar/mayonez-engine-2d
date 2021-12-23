@@ -47,10 +47,10 @@ public class GameObject {
         this(name, new Vec2());
     }
 
-    // Game Methods
+    // Game Loop Methods
 
     /**
-     * Add necessary components and define custom user initialization behavior.
+     * Add necessary components and provide user-defined initialization behavior.
      */
     protected void init() {
     }
@@ -77,7 +77,7 @@ public class GameObject {
     }
 
     /**
-     * An overridable draw method for custom update behavior.
+     * An overridable update method for custom update behavior.
      *
      * @param dt seconds since the last frame
      */
@@ -86,7 +86,7 @@ public class GameObject {
     /**
      * Renders all components.
      *
-     * @param g2 the window's graphics object (pass <code>null</code> for LWJGL instances)
+     * @param g2 the window's graphics object
      */
     public final void render(Graphics2D g2) {
         components.forEach(c -> {

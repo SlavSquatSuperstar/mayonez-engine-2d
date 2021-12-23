@@ -1,8 +1,10 @@
 package slavsquatsuperstar.sandbox.physics;
 
 import slavsquatsuperstar.math.Vec2;
-import slavsquatsuperstar.mayonez.Component;
-import slavsquatsuperstar.mayonez.*;
+import slavsquatsuperstar.mayonez.Colors;
+import slavsquatsuperstar.mayonez.GameObject;
+import slavsquatsuperstar.mayonez.Preferences;
+import slavsquatsuperstar.mayonez.Scene;
 import slavsquatsuperstar.mayonez.input.KeyInput;
 import slavsquatsuperstar.mayonez.physics2d.PhysicsMaterial;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
@@ -33,48 +35,35 @@ public abstract class PhysicsTestScene extends Scene {
     }
 
     @Override
-    protected void init() {
-        addObject(new GameObject("Debug Draw", new Vec2()) {
-            @Override
-            public void onUserRender(Graphics2D g2) {
-                for (GameObject o : getScene().getObjects(null)) {
-                    if (o.name.equals("Camera")) continue;
+    public void onUserRender(Graphics2D g2) {
+        for (GameObject o : objects) {
+            if (o.name.equals("Camera")) continue;
 
-                    Collider2D col = o.getComponent(Collider2D.class);
-                    if (col != null) {
-                        Color color = Colors.BLACK;
-                        if (!col.isStatic()) {
-                            if (col instanceof CircleCollider) color = Colors.BLUE;
-                            else if (col instanceof AlignedBoxCollider2D) color = Colors.LIGHT_GREEN;
-                            else if (col instanceof BoxCollider2D) color = Colors.ORANGE;
-                        }
-
-                        // Draw velocity and direction vector
-                        if (!col.isStatic()) {
-                            DebugDraw.drawVector(col.center(), col.getRigidbody().getVelocity().div(10), color);
-                            DebugDraw.drawVector(col.getRigidbody().getPosition(), col.getRigidbody().getTransform().getDirection(), Colors.BLACK);
-                        }
-                        DebugDraw.drawShape(col, color); // Draw Shape
-                    }
+            Collider2D col = o.getComponent(Collider2D.class);
+            if (col != null) {
+                Color color = Colors.BLACK;
+                if (!col.isStatic()) {
+                    if (col instanceof CircleCollider) color = Colors.BLUE;
+                    else if (col instanceof AlignedBoxCollider2D) color = Colors.LIGHT_GREEN;
+                    else if (col instanceof BoxCollider2D) color = Colors.ORANGE;
                 }
-            }
-        });
 
-        addObject(new GameObject("Gravity Switch") {
-            @Override
-            protected void init() {
-                addComponent(new Component() {
-                    @Override
-                    public void update(float dt) {
-                        if (KeyInput.keyDown("up"))
-                            getScene().setGravity(new Vec2());
-                        else if (KeyInput.keyDown("down"))
-                            getScene().setGravity(new Vec2(0, 18));
-                        // can't toggle yet because input can't differentiate between press and hold
-                    }
-                });
+                // Draw velocity and direction vector
+                if (!col.isStatic()) {
+                    DebugDraw.drawVector(col.center(), col.getRigidbody().getVelocity().mul(0.1f), color);
+                    DebugDraw.drawVector(col.getRigidbody().getPosition(), col.getRigidbody().getTransform().getDirection(), Colors.BLACK);
+                }
+                DebugDraw.drawShape(col, color); // Draw Shape
             }
-        });
+        }
+    }
+
+    @Override
+    protected void onUserUpdate(float dt) {
+        if (KeyInput.keyDown("up"))
+            setGravity(new Vec2());
+        else if (KeyInput.keyDown("down"))
+            setGravity(new Vec2(0, 18));
     }
 
     protected final GameObject createCircle(float radius, Vec2 position, PhysicsMaterial material) {

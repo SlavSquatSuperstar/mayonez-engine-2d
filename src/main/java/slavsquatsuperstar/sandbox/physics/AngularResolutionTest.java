@@ -15,8 +15,6 @@ public class AngularResolutionTest extends PhysicsTestScene {
 
     @Override
     protected void init() {
-        super.init();
-
         addObject(new GameObject("Floor", new Vec2(getWidth() / 2f, getHeight() - 1)) {
             @Override
             protected void init() {

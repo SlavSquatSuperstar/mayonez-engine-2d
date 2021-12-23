@@ -25,8 +25,6 @@ public class CollisionTest extends PhysicsTestScene {
 
     @Override
     protected void init() {
-        super.init();
-
         GameObject player = new GameObject("Player Shape", new Vec2(25, 70)) {
             @Override
             protected void init() {

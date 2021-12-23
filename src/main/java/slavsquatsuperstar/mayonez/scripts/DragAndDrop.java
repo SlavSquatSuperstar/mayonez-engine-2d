@@ -12,6 +12,7 @@ import slavsquatsuperstar.mayonez.input.MouseInput;
 // Solution: use static boolean active?
 public class DragAndDrop extends MouseScript {
 
+    // FIXME if active instance is destroyed, script breaks
     private static DragAndDrop activeInstance = null; // only want to move one object
 
     public DragAndDrop(String button, boolean inverted) {

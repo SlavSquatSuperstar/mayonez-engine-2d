@@ -15,8 +15,6 @@ public class LinearResolutionTest extends PhysicsTestScene {
 
     @Override
     protected void init() {
-        super.init();
-
         for (int i = 0; i < NUM_SHAPES; i++) {
             if (i % 3 == 0) {
                 addObject(createCircle(MathUtils.random(3f, 6f), new Vec2(MathUtils.random(0, getWidth()),
