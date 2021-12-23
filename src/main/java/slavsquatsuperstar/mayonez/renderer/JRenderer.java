@@ -37,9 +37,6 @@ public class JRenderer implements GameRenderer {
             Vec2 camOffset = camera.getOffset().mul(-Game.currentScene().getCellSize());
             g2.translate(camOffset.x, camOffset.y);
         }
-
-        // TODO optimize: only render if in screen
-
         objects.forEach(o -> o.render(g2));
         debugDraw.render(g2);
 

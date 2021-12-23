@@ -28,8 +28,7 @@ public class LevelEditor extends Scene {
             }
 
             @Override
-            public void render(Graphics2D g2) {
-                super.render(g2);
+            public void onUserRender(Graphics2D g2) {
                 DebugDraw.fillShape(getComponent(Collider2D.class), Colors.BLACK);
             }
         });

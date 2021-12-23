@@ -36,7 +36,7 @@ public abstract class PhysicsTestScene extends Scene {
     protected void init() {
         addObject(new GameObject("Debug Draw", new Vec2()) {
             @Override
-            public void render(Graphics2D g2) {
+            public void onUserRender(Graphics2D g2) {
                 for (GameObject o : getScene().getObjects(null)) {
                     if (o.name.equals("Camera")) continue;
 

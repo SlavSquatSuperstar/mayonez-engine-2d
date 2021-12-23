@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferStrategy;
 
 /**
@@ -17,12 +18,13 @@ import java.awt.image.BufferStrategy;
  */
 public class JWindow extends JFrame implements GameWindow {
 
+    private final static AffineTransform FLIP_XF = AffineTransform.getScaleInstance(1.0, -1.0);
     private BufferStrategy bs;
     private Graphics2D g2;
 
+    private boolean closedbyUser;
 //    private KeyInput keyboard;
 //    private MouseInput mouse;
-    private boolean closedbyUser;
 
     public JWindow(String title, int width, int height) {
         super(title);
@@ -73,8 +75,7 @@ public class JWindow extends JFrame implements GameWindow {
     // Render Methods
 
     private void initGraphics() {
-        if (!isVisible())
-            return;
+        if (!isVisible()) return;
         try {
             createBufferStrategy(2);
             bs = getBufferStrategy();
@@ -95,13 +96,19 @@ public class JWindow extends JFrame implements GameWindow {
             // Source: https://stackoverflow.com/questions/13590002/understand-bufferstrategy
             do {
                 g2 = (Graphics2D) bs.getDrawGraphics();
+                g2.clipRect(0, 0, getWidth(), getHeight()); // Render things only in the screen
                 g2.clearRect(0, 0, getWidth(), getHeight()); // Clear the screen
+
+                // Flip screen upside down
+                g2.transform(FLIP_XF);
+                g2.translate(0, -getHeight());
+
                 r.draw(g2); // Draw scene
                 g2.dispose(); // Flush Resources
                 bs.show();
             } while (bs.contentsLost());
         } catch (IllegalStateException e) {
-            Logger.log("Engine: Error rendering screen; trying again next frame.");
+            Logger.trace("Engine: Error rendering current frame; trying again");
         }
     }
 

@@ -22,13 +22,20 @@ public abstract class Scene {
     private final Camera camera;
 
     // Scene Information
-    private String name;
+    private final String name;
     /**
-     * How wide and tall the scene is in world units.
+     * How wide (x size) the scene is in world units.
      */
-    private int width, height;
-    private int cellSize;
-    private Color background = Color.LIGHT_GRAY;
+    private final int width;
+    /**
+     * How tall (y size) the scene is in world units.
+     */
+    private final int height;
+    /**
+     * How many pixels correspond to a world unit.
+     */
+    private final int cellSize;
+    private Color background = Color.WHITE;
     private boolean started;
 
     public Scene(String name) {
@@ -57,8 +64,7 @@ public abstract class Scene {
      * Initialize all objects and begin updating the scene.
      */
     public final void start() {
-        if (started)
-            return;
+        if (started) return;
 
         addObject(Camera.createCameraObject(camera));
         init();
@@ -97,12 +103,8 @@ public abstract class Scene {
      */
     public final void render(Graphics2D g2) {
         if (!started) return;
-
         g2.setColor(background);
-        g2.fillRect(0, 0, width, height);
-
-        // g.drawImage(background, 0, 0, height, width, camera.getXOffset(),
-        // camera.getYOffset(), background.getWidth(), background.getHeight(), null);
+        g2.fillRect(0, 0, (width + 1) * cellSize, (height + 1) * cellSize);
     }
 
     // Object Methods

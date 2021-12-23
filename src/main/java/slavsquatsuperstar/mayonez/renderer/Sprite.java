@@ -46,17 +46,21 @@ public class Sprite extends Component {
         // Measurements are in screen coordinates (pixels)
         Vec2 parentCenter = transform.position.mul(getScene().getCellSize());
         Vec2 parentSize = transform.scale.mul(getScene().getCellSize());
-        Vec2 parentHalfSize = parentSize.div(2);
+        Vec2 parentHalfSize = parentSize.mul(0.5f);
+        Vec2 imageSize = new Vec2(image.getWidth(), image.getHeight());
 
-        // Use the parent's transform to draw the sprite
-        AffineTransform g2Transform = new AffineTransform();
-        g2Transform.setToIdentity();
-        g2Transform.translate(parentCenter.x - parentHalfSize.x,
-                parentCenter.y - parentHalfSize.y); // Line up image center with parent center
-        g2Transform.rotate(MathUtils.toRadians(transform.rotation), parentHalfSize.x, parentHalfSize.y);
-        g2Transform.scale(parentSize.x / image.getWidth(), parentSize.y / image.getHeight());
+        // Draw sprite at parent center with parent rotation and scale
+        AffineTransform g2Xf = new AffineTransform(); // Identity
+        g2Xf.translate(parentCenter.x - parentHalfSize.x, parentCenter.y - parentHalfSize.y);
+        g2Xf.rotate(MathUtils.toRadians(transform.rotation), parentHalfSize.x, parentHalfSize.y);
+        g2Xf.scale(parentSize.x / imageSize.x, parentSize.y / imageSize.y);
 
-        g2.drawImage(image, g2Transform, null);
+        // Flip image vertically like GL
+        g2Xf.scale(1, -1);
+        g2Xf.translate(0, -imageSize.y); // Move to correct position
+//        Logger.log("%.2f, %.2f", g2Xf.getTranslateX(), g2Xf.getTranslateY());
+
+        g2.drawImage(image, g2Xf, null);
     }
 
     public BufferedImage getImage() {

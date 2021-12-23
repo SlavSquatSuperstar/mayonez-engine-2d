@@ -1,6 +1,5 @@
 package slavsquatsuperstar.mayonez
 
-import slavsquatsuperstar.math.MathUtils
 import slavsquatsuperstar.mayonez.fileio.TextFile
 import java.io.File
 import java.time.LocalDate
@@ -50,7 +49,10 @@ object Logger {
         } catch (e: IllegalFormatException) {
             output.append("Logger: Could not format message \"$msg\"")
         } finally {
-            if (level.level >= this.logLevel) println(output.toString()) // Print to console if high enough level
+            if (level.level >= this.logLevel) { // Print to console if high enough level
+                if (level == LogLevel.WARNING) System.err.println(output.toString())
+                else println(output.toString())
+            }
         }
     }
 

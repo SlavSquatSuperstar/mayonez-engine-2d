@@ -7,7 +7,7 @@ import org.apache.commons.lang3.StringUtils
  */
 // TODO store mappings?
 internal enum class KeyAxis(posKey: KeyMapping, negKey: KeyMapping) {
-    VERTICAL(KeyMapping.DOWN, KeyMapping.UP), HORIZONTAL(KeyMapping.RIGHT, KeyMapping.LEFT);
+    VERTICAL(KeyMapping.UP, KeyMapping.DOWN), HORIZONTAL(KeyMapping.RIGHT, KeyMapping.LEFT);
 
     private val posKey: String = posKey.name
     private val negKey: String = negKey.name

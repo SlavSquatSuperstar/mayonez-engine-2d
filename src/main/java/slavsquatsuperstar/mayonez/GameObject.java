@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
  *
  * @author SlavSquatSuperstar
  */
+@SuppressWarnings({"unchecked", "rawtypes"})
 public class GameObject {
 
     // Object Information
@@ -49,7 +50,7 @@ public class GameObject {
     // Game Methods
 
     /**
-     * Add necessary components.
+     * Add necessary components and define custom user initialization behavior.
      */
     protected void init() {
     }
@@ -64,28 +65,42 @@ public class GameObject {
     }
 
     /**
-     * Updates all components. Make sure to call super() if overriding!
+     * Updates all components.
      *
      * @param dt seconds since the last frame
      */
-    public void update(float dt) {
-        // TODO component call order
-        // TODO just make a new collection for scripts
+    public final void update(float dt) {
         components.forEach(c -> {
             if (c.isEnabled()) c.update(dt);
         });
+        onUserUpdate(dt);
     }
 
     /**
-     * Renders all components. Make sure to call super() if overriding!
+     * An overridable draw method for custom update behavior.
      *
-     * @param g2 the window's graphics object
+     * @param dt seconds since the last frame
      */
-    public void render(Graphics2D g2) {
+    protected void onUserUpdate(float dt) {}
+
+    /**
+     * Renders all components.
+     *
+     * @param g2 the window's graphics object (pass <code>null</code> for LWJGL instances)
+     */
+    public final void render(Graphics2D g2) {
         components.forEach(c -> {
             if (c.isEnabled()) c.render(g2);
         });
+        onUserRender(g2);
     }
+
+    /**
+     * An overridable draw method for custom render behavior.
+     *
+     * @param g2 the window's graphics object
+     */
+    protected void onUserRender(Graphics2D g2) {}
 
     // Component Methods
 
@@ -114,7 +129,6 @@ public class GameObject {
      * @param <T> the components type
      * @return the list of components
      */
-    @SuppressWarnings({"unchecked"})
     public <T extends Component> List<T> getComponents(Class<T> cls) {
         return components.stream().filter(o -> cls == null || cls.isInstance(o)).map(o -> (T) o).collect(Collectors.toList());
     }
@@ -143,7 +157,6 @@ public class GameObject {
      *
      * @param order an array of component subclasses
      */
-    @SuppressWarnings("rawtypes")
     public void setUpdateOrder(Class... order) {
         if (updateOrder == null) {
             updateOrder = new ArrayList<>();
@@ -167,14 +180,16 @@ public class GameObject {
      *
      * @param collision the collision information
      */
-    public void onCollision(CollisionManifold collision) {}
+    public void onCollision(CollisionManifold collision) {
+    }
 
     /**
      * What to do after passing through a trigger area
      *
      * @param trigger the trigger collider
      */
-    public void onTrigger(Collider2D trigger) {}
+    public void onTrigger(Collider2D trigger) {
+    }
 
     // Getters and Setters
 
