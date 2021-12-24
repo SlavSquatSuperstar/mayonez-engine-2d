@@ -60,10 +60,8 @@ public abstract class PhysicsTestScene extends Scene {
 
     @Override
     protected void onUserUpdate(float dt) {
-        if (KeyInput.keyDown("up"))
-            setGravity(new Vec2());
-        else if (KeyInput.keyDown("down"))
-            setGravity(new Vec2(0, 18));
+        if (KeyInput.keyDown("up")) setGravity(new Vec2());
+        else if (KeyInput.keyDown("down")) setGravity(new Vec2(0, -18));
     }
 
     protected final GameObject createCircle(float radius, Vec2 position, PhysicsMaterial material) {

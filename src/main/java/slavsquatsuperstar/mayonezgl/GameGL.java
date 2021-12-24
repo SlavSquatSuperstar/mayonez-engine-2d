@@ -6,7 +6,7 @@ import slavsquatsuperstar.mayonez.fileio.Assets;
 import slavsquatsuperstar.mayonez.input.KeyInput;
 import slavsquatsuperstar.mayonez.input.MouseInput;
 import slavsquatsuperstar.mayonez.physics2d.Physics2D;
-import slavsquatsuperstar.mayonez.renderer.GameRenderer;
+import slavsquatsuperstar.mayonez.renderer.Renderer;
 import slavsquatsuperstar.mayonezgl.renderer.GLRenderer;
 
 import static org.lwjgl.glfw.GLFW.glfwGetTime;
@@ -30,9 +30,9 @@ public class GameGL { // can't implement runnable otherwise GLFW will crash
     private static boolean running = false;
 
     // Game Layers
-    private static GameWindow window;
+    private static Window window;
     private static SceneGL scene;
-    private static GameRenderer renderer;
+    private static Renderer renderer;
     private static Physics2D physics;
 
     public GameGL() {
@@ -61,7 +61,7 @@ public class GameGL { // can't implement runnable otherwise GLFW will crash
         game.startScene();
     }
 
-    public static GameRenderer getRenderer() {
+    public static Renderer getRenderer() {
         return renderer;
     }
 

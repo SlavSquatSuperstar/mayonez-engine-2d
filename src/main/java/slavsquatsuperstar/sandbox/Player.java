@@ -6,7 +6,7 @@ import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.SpriteSheet;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
 import slavsquatsuperstar.mayonez.physics2d.colliders.AlignedBoxCollider2D;
-import slavsquatsuperstar.mayonez.renderer.Sprite;
+import slavsquatsuperstar.mayonez.renderer.JSprite;
 import slavsquatsuperstar.mayonez.scripts.KeepInScene;
 import slavsquatsuperstar.mayonez.scripts.KeyMovement;
 import slavsquatsuperstar.mayonez.scripts.MoveMode;
@@ -22,7 +22,7 @@ public class Player extends GameObject {
     @Override
     protected void init() {
         // Create player avatar
-        int tileSize = getScene().getCellSize();
+        int tileSize = (int) getScene().getCellSize();
         SpriteSheet layer1 = new SpriteSheet("assets/textures/player/layer1.png", tileSize, tileSize, 13 * 5, 2);
         SpriteSheet layer2 = new SpriteSheet("assets/textures/player/layer2.png", tileSize, tileSize, 13 * 5, 2);
         SpriteSheet layer3 = new SpriteSheet("assets/textures/player/layer3.png", tileSize, tileSize, 13 * 5, 2);
@@ -30,12 +30,12 @@ public class Player extends GameObject {
         int id = MathUtils.random(18, 20);
         int threshold = 200;
 
-        Sprite[] layers = new Sprite[]{layer1.getSprite(id), layer2.getSprite(id), layer3.getSprite(id)};
+        JSprite[] layers = new JSprite[]{layer1.getSprite(id), layer2.getSprite(id), layer3.getSprite(id)};
         Color[] colors = {Color.RED, Color.GREEN};
 
         // Create sprite layers
         for (int i = 0; i < colors.length; i++) {
-            Sprite l = layers[i];
+            JSprite l = layers[i];
             for (int y = 0; y < l.getImage().getWidth(); y++) {
                 for (int x = 0; x < l.getImage().getHeight(); x++) {
                     Color color = new Color(l.getImage().getRGB(x, y));
@@ -44,7 +44,7 @@ public class Player extends GameObject {
                 }
             }
         }
-        for (Sprite s : layers)
+        for (JSprite s : layers)
             addComponent(s);
 
         // Add player scripts

@@ -26,15 +26,15 @@ public abstract class Scene {
     /**
      * How wide (x size) the scene is in world units.
      */
-    private final int width;
+    private final float width;
     /**
      * How tall (y size) the scene is in world units.
      */
-    private final int height;
+    private final float height;
     /**
      * How many pixels correspond to a world unit.
      */
-    private final int cellSize;
+    private final float cellSize;
     private Color background = Colors.WHITE;
     private boolean started;
 
@@ -58,7 +58,8 @@ public abstract class Scene {
     /**
      * Add necessary objects and provide user-defined initialization behavior.
      */
-    protected void init() {}
+    protected void init() {
+    }
 
     /**
      * Initialize all objects and begin updating the scene.
@@ -99,7 +100,8 @@ public abstract class Scene {
      *
      * @param dt seconds since the last frame
      */
-    protected void onUserUpdate(float dt) {}
+    protected void onUserUpdate(float dt) {
+    }
 
     /**
      * Draw the background image.
@@ -109,7 +111,7 @@ public abstract class Scene {
     public final void render(Graphics2D g2) {
         if (!started) return;
         g2.setColor(background);
-        g2.fillRect(0, 0, (width + 1) * cellSize, (height + 1) * cellSize);
+        g2.fillRect(0, 0, (int) ((width + 1) * cellSize), (int) ((height + 1) * cellSize));
         onUserRender(g2);
     }
 
@@ -118,7 +120,8 @@ public abstract class Scene {
      *
      * @param g2 the window's graphics object
      */
-    protected void onUserRender(Graphics2D g2) {}
+    protected void onUserRender(Graphics2D g2) {
+    }
 
     // Object Methods
 
@@ -209,11 +212,11 @@ public abstract class Scene {
         return name;
     }
 
-    public int getWidth() {
+    public float getWidth() {
         return width;
     }
 
-    public int getHeight() {
+    public float getHeight() {
         return height;
     }
 
@@ -222,7 +225,7 @@ public abstract class Scene {
      *
      * @return how many pixels make up a meter
      */
-    public int getCellSize() {
+    public float getCellSize() {
         return cellSize;
     }
 

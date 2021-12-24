@@ -3,7 +3,6 @@ package slavsquatsuperstar.mayonez.renderer;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
-import slavsquatsuperstar.mayonez.Component;
 import slavsquatsuperstar.mayonez.Game;
 import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Logger;
@@ -19,11 +18,11 @@ import java.awt.image.BufferedImage;
  *
  * @author SlavSquatSuperstar
  */
-public class Sprite extends Component {
+public class JSprite extends Sprite {
 
     private BufferedImage image;
 
-    public Sprite(String filename) {
+    public JSprite(String filename) {
         try {
             image = Assets.getAsset(filename, Texture.class).getImage();
         } catch (NullPointerException e) {
@@ -33,13 +32,9 @@ public class Sprite extends Component {
         }
     }
 
-    public Sprite(BufferedImage image) {
+    public JSprite(BufferedImage image) {
         this.image = image;
     }
-
-    @Override
-    public final void update(float dt) {
-    } // Sprites shouldn't update any game logic
 
     @Override
     public void render(Graphics2D g2) {
@@ -58,7 +53,6 @@ public class Sprite extends Component {
         // Flip image vertically like GL
         g2Xf.scale(1, -1);
         g2Xf.translate(0, -imageSize.y); // Move to correct position
-//        Logger.log("%.2f, %.2f", g2Xf.getTranslateX(), g2Xf.getTranslateY());
 
         g2.drawImage(image, g2Xf, null);
     }
@@ -67,8 +61,14 @@ public class Sprite extends Component {
         return image;
     }
 
-    public Sprite copy() {
-        return new Sprite(image);
+    /**
+     * Returns a new sprite with the image as this instance's but not attached to any {@link GameObject}.
+     *
+     * @return a copy of this image
+     */
+    @Override
+    public JSprite copy() {
+        return new JSprite(image);
     }
 
 }

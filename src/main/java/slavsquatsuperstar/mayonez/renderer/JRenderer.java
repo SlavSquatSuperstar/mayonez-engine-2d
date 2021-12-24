@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Draws all in-game textures and shapes onto the screen with Java's AWT and Swing libraries.
  */
-public class JRenderer implements GameRenderer {
+public class JRenderer implements Renderer {
 
     private final List<GameObject> objects;
     private final DebugDraw debugDraw; // put DebugDraw in Renderer to access camera offset
@@ -29,8 +29,10 @@ public class JRenderer implements GameRenderer {
 
     // TODO Render layer: clear list and submit visible objects every frame?
     public void render(Graphics2D g2) {
+        assert g2 != null;
+
         // Save a copy of the unmodified transform
-        AffineTransform transform = g2.getTransform();
+        AffineTransform xf = g2.getTransform();
 
         // Move the screen and render everything at the offset position
         if (camera != null) {
@@ -41,7 +43,7 @@ public class JRenderer implements GameRenderer {
         debugDraw.render(g2);
 
         // Reset the screen's transform to its unmodified state
-        g2.setTransform(transform);
+        g2.setTransform(xf);
     }
 
     // GameObject Methods

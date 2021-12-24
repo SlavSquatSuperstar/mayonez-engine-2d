@@ -40,7 +40,7 @@ public class Physics2D {
         collisions = new ArrayList<>();
 
         forceRegistry = new ArrayList<>();
-        setGravity(new Vec2(0, Physics2D.GRAVITY_CONSTANT));
+        setGravity(new Vec2(0, -Physics2D.GRAVITY_CONSTANT));
         gravityForce = (rb, dt) -> rb.addForce(getGravity().mul(rb.getMass()));
     }
 

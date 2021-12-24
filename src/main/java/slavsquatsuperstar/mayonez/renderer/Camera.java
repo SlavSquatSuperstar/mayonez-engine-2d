@@ -16,11 +16,11 @@ import slavsquatsuperstar.mayonez.scripts.KeepInScene;
 public class Camera extends Script {
 
     private float width, height; // In world units
-    private int minX, minY, maxX, maxY;
+    private float minX, minY, maxX, maxY;
     private GameObject subject;
     private Script keepInScene, dragAndDrop; // Reference to parent scripts
 
-    public Camera(int sceneWidth, int sceneHeight, int cellSize) {
+    public Camera(float sceneWidth, float sceneHeight, float cellSize) {
         width = (float) Preferences.SCREEN_WIDTH / cellSize;
         height = (float) Preferences.SCREEN_HEIGHT / cellSize;
         minX = 0;

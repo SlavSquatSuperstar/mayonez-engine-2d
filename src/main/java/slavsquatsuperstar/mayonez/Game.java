@@ -5,7 +5,7 @@ import slavsquatsuperstar.mayonez.fileio.Assets;
 import slavsquatsuperstar.mayonez.input.KeyInput;
 import slavsquatsuperstar.mayonez.input.MouseInput;
 import slavsquatsuperstar.mayonez.physics2d.Physics2D;
-import slavsquatsuperstar.mayonez.renderer.GameRenderer;
+import slavsquatsuperstar.mayonez.renderer.Renderer;
 import slavsquatsuperstar.mayonez.renderer.IMGUI;
 import slavsquatsuperstar.mayonez.renderer.JRenderer;
 
@@ -36,9 +36,9 @@ public class Game implements Runnable {
     private static boolean running;
 
     // Game Layers
-    private static GameWindow window;
+    private static Window window;
     private static Scene currentScene;
-    private static GameRenderer renderer;
+    private static Renderer renderer;
     private static Physics2D physics;
     private static IMGUI imgui;
 
@@ -82,7 +82,7 @@ public class Game implements Runnable {
         return currentScene;
     }
 
-    public static GameRenderer getRenderer() {
+    public static Renderer getRenderer() {
         return renderer;
     }
 

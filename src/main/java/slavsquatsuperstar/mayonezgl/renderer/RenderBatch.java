@@ -35,7 +35,7 @@ public class RenderBatch {
     private final int VERTICES_PER_QUAD = 6;
 
     // Sprite Renderer Fields
-    private final SpriteGL[] sprites;
+    private final GLSprite[] sprites;
     private int numSprites = 0;
     private int[] texSlots = new int[Preferences.MAX_TEXTURE_SLOTS]; // support multiple textures in batch
 
@@ -47,7 +47,7 @@ public class RenderBatch {
     private int vaoID, vboID;
 
     public RenderBatch(int maxBatchSize, CameraGL camera) {
-        sprites = new SpriteGL[maxBatchSize]; // shader array capacity
+        sprites = new GLSprite[maxBatchSize]; // shader array capacity
         shader = Assets.getAsset("assets/shaders/default.glsl", Shader.class);
         vertices = new float[maxBatchSize * VERTICES_PER_SPRITE * VERTEX_SIZE];
         for (int i = 0; i < texSlots.length; i++) texSlots[i] = i; // ints 0-7
@@ -116,7 +116,7 @@ public class RenderBatch {
 
     // Sprite Renderer Methods
 
-    public void addSprite(SpriteGL spr) {
+    public void addSprite(GLSprite spr) {
         int index = numSprites++;
         sprites[index] = spr;
         loadVertexProperties(index);
@@ -141,7 +141,7 @@ public class RenderBatch {
     }
 
     private void loadVertexProperties(int index) { // create vertices for a sprite
-        SpriteGL sprite = sprites[index];
+        GLSprite sprite = sprites[index];
         int offset = index * VERTICES_PER_SPRITE * VERTEX_SIZE; // 4 vertices per sprite
 
         Vector4f color = sprite.getColor();

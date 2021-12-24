@@ -55,14 +55,7 @@ public class JRendererTest extends Scene {
             }
         });
 
-//        for (int i = 0; i < 8; i++)
-//            addObject(createObject("Goomba", 14));
-
-//        addObject(createObject("Goomba", new Vec2(0, 0), 14));
-//        addObject(createObject("Goomba", new Vec2(getWidth() / 4f, getHeight() / 4f), 14));
-//        addObject(createObject("Goomba", new Vec2(getWidth() / 2f, getHeight() / 2f), 14));
-//        addObject(createObject("Goomba", new Vec2(getWidth() * 0.75f, getHeight() * 0.75f), 14));
-//        addObject(createObject("Goomba", new Vec2(getWidth(), getHeight()), 14));
+        for (int i = 0; i < 8; i++) addObject(createObject("Goomba", 14));
     }
 
     private GameObject createObject(String name, Vec2 position, int spriteIndex) {

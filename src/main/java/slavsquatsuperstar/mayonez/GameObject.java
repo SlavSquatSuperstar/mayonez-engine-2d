@@ -52,8 +52,7 @@ public class GameObject {
     /**
      * Add necessary components and provide user-defined initialization behavior.
      */
-    protected void init() {
-    }
+    protected void init() {}
 
     /**
      * Initializes all components.

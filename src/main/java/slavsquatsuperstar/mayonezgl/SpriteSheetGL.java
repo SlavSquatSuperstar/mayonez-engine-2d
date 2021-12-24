@@ -2,7 +2,7 @@ package slavsquatsuperstar.mayonezgl;
 
 import org.joml.Vector2f;
 import slavsquatsuperstar.mayonez.fileio.Assets;
-import slavsquatsuperstar.mayonezgl.renderer.SpriteGL;
+import slavsquatsuperstar.mayonezgl.renderer.GLSprite;
 import slavsquatsuperstar.mayonezgl.renderer.TextureGL;
 
 import java.util.ArrayList;
@@ -10,7 +10,7 @@ import java.util.List;
 
 public class SpriteSheetGL {
 
-    private List<SpriteGL> sprites;
+    private List<GLSprite> sprites;
 
     /**
      * Creates a spritesheet from the given texture.
@@ -44,7 +44,7 @@ public class SpriteSheetGL {
                     new Vector2f(leftX, bottomY),
                     new Vector2f(leftX, topY)
             };
-            sprites.add(new SpriteGL(texture, texCoords));
+            sprites.add(new GLSprite(texture, texCoords));
 
             imgX += spriteWidth + spacing;
             if (imgX >= width) {
@@ -55,7 +55,7 @@ public class SpriteSheetGL {
 
     }
 
-    public SpriteGL getSprite(int index) {
+    public GLSprite getSprite(int index) {
         return sprites.get(index).copy();
     }
 

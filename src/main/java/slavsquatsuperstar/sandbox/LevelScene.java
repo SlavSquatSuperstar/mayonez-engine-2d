@@ -13,11 +13,12 @@ public class LevelScene extends Scene {
 
     public LevelScene(String name) {
         super(name, (int) (Preferences.SCREEN_WIDTH * 1.5), (int) (Preferences.SCREEN_HEIGHT * 1.0), 42);
+        setBackground(Colors.LIGHT_GRAY);
     }
 
     @Override
     protected void init() {
-        addObject(new GameObject("Ground", new Vec2(getWidth() * 0.5f, getHeight())) {
+        addObject(new GameObject("Ground", new Vec2(getWidth() * 0.5f, 0)) {
             @Override
             protected void init() {
                 addComponent(new Rigidbody2D(0f));

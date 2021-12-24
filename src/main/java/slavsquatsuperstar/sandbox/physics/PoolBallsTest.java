@@ -25,7 +25,7 @@ public class PoolBallsTest extends PhysicsTestScene {
     private final float BALL_MASS = 13.2f;
 
     public PoolBallsTest(String name) {
-        super(name, 5);
+        super(name, 0);
     }
 
     @Override
@@ -34,13 +34,14 @@ public class PoolBallsTest extends PhysicsTestScene {
 
         float xStart = 50;
         float yStart = getHeight() / 2f;
-        for (int i = 0; i < NUM_SHAPES; i++) {
+        int ballCount = 1;
+        for (int i = 0; i < 5; i++) {
             for (int j = 0; j <= i; j++) {
                 // x = x0 + √3r * i
                 float x = xStart + (float) i * MathUtils.sqrt(3f) * BALL_RADIUS;
                 // y = y0 + 2r * i
                 float y = yStart + (float) j * 2 * BALL_RADIUS;
-                addObject(createCircle("Pool Ball", new Vec2(x, y)));
+                addObject(createCircle(String.format("Pool Ball #%d", ballCount++), new Vec2(x, y)));
             }
             // y0 = h/2 - r * i
             yStart -= BALL_RADIUS;
@@ -61,8 +62,8 @@ public class PoolBallsTest extends PhysicsTestScene {
     }
 
     public static void main(String[] args) {
-        Game.loadScene(new PoolBallsTest("Pool Balls Test"));
         Game.start();
+        Game.loadScene(new PoolBallsTest("Pool Balls Test"));
     }
 
 }

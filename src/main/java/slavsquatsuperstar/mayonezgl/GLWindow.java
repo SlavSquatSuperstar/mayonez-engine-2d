@@ -4,7 +4,7 @@ import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
-import slavsquatsuperstar.mayonez.GameWindow;
+import slavsquatsuperstar.mayonez.Window;
 import slavsquatsuperstar.mayonez.input.KeyInput;
 import slavsquatsuperstar.mayonez.input.MouseInput;
 import slavsquatsuperstar.mayonez.renderer.Renderable;
@@ -17,7 +17,7 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
-public class GLWindow implements GameWindow {
+public class GLWindow implements Window {
 
     private long window; // The window pointer
     private String title;

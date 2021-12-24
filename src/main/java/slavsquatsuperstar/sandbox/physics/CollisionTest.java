@@ -25,7 +25,7 @@ public class CollisionTest extends PhysicsTestScene {
 
     @Override
     protected void init() {
-        GameObject player = new GameObject("Player Shape", new Vec2(25, 70)) {
+        GameObject player = new GameObject("Player Shape", new Vec2(25, 60)) {
             @Override
             protected void init() {
                 float radius = 4f;
@@ -61,37 +61,36 @@ public class CollisionTest extends PhysicsTestScene {
         };
         addObject(player);
 
-        addObject(new GameObject("Ground", new Vec2(getWidth() / 2f, getHeight() - 1)) {
+        addObject(new GameObject("Ground", new Vec2(getWidth() / 2f, 1)) {
             @Override
             protected void init() {
                 addComponent(new Rigidbody2D(0));
                 addComponent(new AlignedBoxCollider2D(new Vec2(getWidth(), 2)));
             }
         });
-        addObject(new GameObject("Left Ramp", new Vec2(20, 20)) {
+        addObject(new GameObject("Left Ramp", new Vec2(20, 40)) {
             @Override
             protected void init() {
-                transform.rotate(40);
+                transform.rotate(-40);
                 addComponent(new Rigidbody2D(0));
                 addComponent(new BoxCollider2D(new Vec2(20, 4)));
             }
         });
-        addObject(new GameObject("Right Ramp", new Vec2(90, 30)) {
+        addObject(new GameObject("Right Ramp", new Vec2(90, 40)) {
             @Override
             protected void init() {
-                transform.rotate(-25);
+                transform.rotate(25);
                 addComponent(new Rigidbody2D(0));
                 addComponent(new BoxCollider2D(new Vec2(24, 4)));
             }
         });
 
         // Add Other Test Objects
-        addObject(createCircle(5, new Vec2(90, 10), PhysicsTestScene.TEST_MATERIAL));
-        addObject(createCircle(2, new Vec2(20, 10), PhysicsTestScene.TEST_MATERIAL));
-//        addObject(createAABB(12, 8, new Vec2(50, 20)));
-        addObject(createOBB(5, 10, new Vec2(40, 40), 30, PhysicsTestScene.TEST_MATERIAL));
-        addObject(createOBB(10, 6, new Vec2(70, 30), 45, PhysicsTestScene.TEST_MATERIAL));
-        addObject(createOBB(3, 15, new Vec2(90, 40), 90, PhysicsTestScene.TEST_MATERIAL));
+        addObject(createCircle(5, new Vec2(90, 50), PhysicsTestScene.TEST_MATERIAL));
+        addObject(createCircle(2, new Vec2(10, 30), PhysicsTestScene.TEST_MATERIAL));
+        addObject(createOBB(5, 10, new Vec2(40, 40), -30, PhysicsTestScene.TEST_MATERIAL));
+        addObject(createOBB(10, 6, new Vec2(70, 30), -45, PhysicsTestScene.TEST_MATERIAL));
+        addObject(createOBB(3, 15, new Vec2(90, 20), 90, PhysicsTestScene.TEST_MATERIAL));
     }
 
 }

@@ -1,63 +1,60 @@
-package slavsquatsuperstar.mayonez;
+package slavsquatsuperstar.mayonez
 
-import slavsquatsuperstar.mayonez.input.KeyInput;
-import slavsquatsuperstar.mayonez.input.MouseInput;
-import slavsquatsuperstar.mayonez.renderer.Renderable;
+import slavsquatsuperstar.mayonez.renderer.Renderable
+import slavsquatsuperstar.mayonez.input.KeyInput
+import slavsquatsuperstar.mayonez.input.MouseInput
 
 /**
  * An interface containing common functionality for all game windows.
  *
  * @author SlavSquatSuperstar
  */
-public interface GameWindow {
+interface Window {
 
     // Engine Methods
-
     /**
      * Initialize the window and setup system resources.
      */
-    void start();
+    fun start()
 
     /**
      * Destroy the window and free system resources.
      */
-    void stop();
+    fun stop()
 
     // Game Loop Methods
-
-    boolean notClosedByUser();
+    fun notClosedByUser(): Boolean
 
     /**
      * Poll any input or window events.
      */
-    void beginFrame();
+    fun beginFrame()
 
     /**
      * Draw the game to the screen.
      *
      * @param r a draw function
      */
-    void render(Renderable r);
+    fun render(r: Renderable)
 
     /**
      * Reset events and input listeners.
      */
-    void endFrame();
+    fun endFrame()
 
     // Input Methods
-
     /**
      * Set the keyboard listener for this window.
      *
-     * @param keyboard a {@link KeyInput} instance
+     * @param keyboard a [KeyInput] instance
      */
-    void setKeyInput(KeyInput keyboard);
+    fun setKeyInput(keyboard: KeyInput)
 
     /**
      * Set the mouse listener for this window.
      *
-     * @param mouse a {@link MouseInput} instance
+     * @param mouse a [MouseInput] instance
      */
-    void setMouseInput(MouseInput mouse);
+    fun setMouseInput(mouse: MouseInput)
 
 }

@@ -13,9 +13,9 @@ import java.awt.geom.Line2D;
  */
 public class Grid extends Component {
 
-    private int gridWidth, gridHeight;
+    private final float gridWidth, gridHeight;
 
-    public Grid(int gridWidth, int gridHeight){
+    public Grid(float gridWidth, float gridHeight){
         this.gridWidth = gridWidth;
         this.gridHeight = gridHeight;
     }

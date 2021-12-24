@@ -16,7 +16,7 @@ import java.awt.image.BufferStrategy;
  *
  * @author SlavSquatSuperstar
  */
-public class JWindow extends JFrame implements GameWindow {
+public class JWindow extends JFrame implements Window {
 
     private final static AffineTransform FLIP_XF = AffineTransform.getScaleInstance(1.0, -1.0);
     private BufferStrategy bs;

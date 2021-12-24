@@ -2,19 +2,19 @@ package slavsquatsuperstar.mayonez;
 
 import slavsquatsuperstar.mayonez.fileio.Assets;
 import slavsquatsuperstar.mayonez.fileio.Texture;
-import slavsquatsuperstar.mayonez.renderer.Sprite;
+import slavsquatsuperstar.mayonez.renderer.JSprite;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Creates multiple {@link Sprite}s from a larger image.
+ * Creates multiple {@link JSprite}s from a larger image.
  *
  * @author SlavSquatSuperstar
  */
 public class SpriteSheet {
 
-    private List<Sprite> sprites; // store images in memory
+    private List<JSprite> sprites; // store images in memory
 
     /**
      * Creates a spritesheet from the given image file.
@@ -36,7 +36,7 @@ public class SpriteSheet {
         int imgX = 0;
         int imgY = 0;
         for (int count = 0; count < numSprites; count++) {
-            sprites.add(new Sprite(texture.getImage().getSubimage(imgX, imgY, spriteWidth, spriteHeight)));
+            sprites.add(new JSprite(texture.getImage().getSubimage(imgX, imgY, spriteWidth, spriteHeight)));
             imgX += spriteWidth + spacing;
             if (imgX >= width) {
                 imgX = 0;
@@ -45,7 +45,7 @@ public class SpriteSheet {
         }
     }
 
-    public Sprite getSprite(int index) {
+    public JSprite getSprite(int index) {
         return sprites.get(index).copy();
     }
 

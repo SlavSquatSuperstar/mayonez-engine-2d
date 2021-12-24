@@ -3,7 +3,7 @@ package slavsquatsuperstar.mayonezgl.renderer;
 import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Preferences;
 import slavsquatsuperstar.mayonez.Scene;
-import slavsquatsuperstar.mayonez.renderer.GameRenderer;
+import slavsquatsuperstar.mayonez.renderer.Renderer;
 import slavsquatsuperstar.mayonezgl.SceneGL;
 
 import java.awt.*;
@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Draws all in-game textures and shapes onto the screen using LWJGL's OpenGL library.
  */
-public class GLRenderer implements GameRenderer {
+public class GLRenderer implements Renderer {
 
     private final int MAX_BATCH_SIZE = Preferences.MAX_BATCH_SIZE;
     private final List<RenderBatch> batches;
@@ -40,7 +40,7 @@ public class GLRenderer implements GameRenderer {
     }
 
     public void addObject(GameObject o) {
-        SpriteGL spr = o.getComponent(SpriteGL.class);
+        GLSprite spr = o.getComponent(GLSprite.class);
         if (spr != null) {
             for (RenderBatch batch : batches) {
                 if (batch.hasRoom()) { // has room for sprite

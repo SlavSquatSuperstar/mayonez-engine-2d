@@ -19,7 +19,7 @@ public class LevelEditor extends Scene {
 
     @Override
     protected void init() {
-        addObject(new GameObject("Ground", new Vec2(getWidth() * 0.5f, getHeight())) {
+        addObject(new GameObject("Ground", new Vec2(getWidth() * 0.5f, 0)) {
             @Override
             protected void init() {
                 addComponent(new Rigidbody2D(0f));
