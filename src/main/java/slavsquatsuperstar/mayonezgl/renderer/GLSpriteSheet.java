@@ -6,7 +6,7 @@ import slavsquatsuperstar.mayonez.fileio.Assets;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SpriteSheetGL {
+public class GLSpriteSheet {
 
     private final List<GLSprite> sprites;
 
@@ -19,8 +19,8 @@ public class SpriteSheetGL {
      * @param numSprites   how many sprites to create
      * @param spacing      the padding in between sprites
      */
-    public SpriteSheetGL(String filename, int spriteWidth, int spriteHeight, int numSprites, int spacing) {
-        TextureGL texture = Assets.getAsset(filename, TextureGL.class);
+    public GLSpriteSheet(String filename, int spriteWidth, int spriteHeight, int numSprites, int spacing) {
+        GLTexture texture = Assets.getAsset(filename, GLTexture.class);
         sprites = new ArrayList<>();
 
         int width = texture.getWidth();

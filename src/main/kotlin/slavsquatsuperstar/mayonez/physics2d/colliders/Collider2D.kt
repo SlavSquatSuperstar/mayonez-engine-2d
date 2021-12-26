@@ -15,11 +15,13 @@ import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D
  *
  * @author SlavSquatSuperstar
  */
+@Suppress("UNCHECKED_CAST")
 abstract class Collider2D : Component() {
+
+    var ignoreCurrentCollision = false
 
     // Object References
 
-    @Suppress("UNCHECKED_CAST")
     fun <T : Collider2D?> setTransform(transform: Transform?): T {
         this.transform = transform
         return this as T
@@ -38,7 +40,6 @@ abstract class Collider2D : Component() {
      */
     fun getRigidbody(): Rigidbody2D? = rb
 
-    @Suppress("UNCHECKED_CAST")
     fun <T : Collider2D?> setRigidbody(rb: Rigidbody2D?): T {
         this.rb = rb
         return this as T
@@ -159,5 +160,9 @@ abstract class Collider2D : Component() {
     fun onCollision(collision: CollisionManifold) = parent.onCollision(collision)
 
     fun onTrigger(trigger: Collider2D) = parent.onTrigger(trigger)
+
+    override fun destroy() {
+        ignoreCurrentCollision = true
+    }
 
 }

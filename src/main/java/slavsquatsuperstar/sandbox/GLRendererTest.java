@@ -1,31 +1,35 @@
 package slavsquatsuperstar.sandbox;
 
+import org.joml.Vector2f;
 import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Mayonez;
+import slavsquatsuperstar.mayonez.Scene;
 import slavsquatsuperstar.mayonez.Transform;
-import slavsquatsuperstar.mayonez.physics2d.CollisionManifold;
+import slavsquatsuperstar.mayonez.input.KeyInput;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
 import slavsquatsuperstar.mayonez.physics2d.colliders.AlignedBoxCollider2D;
 import slavsquatsuperstar.mayonez.scripts.DragAndDrop;
 import slavsquatsuperstar.mayonez.scripts.KeyMovement;
 import slavsquatsuperstar.mayonez.scripts.MoveMode;
-import slavsquatsuperstar.mayonezgl.SceneGL;
-import slavsquatsuperstar.mayonezgl.renderer.SpriteSheetGL;
+import slavsquatsuperstar.mayonezgl.renderer.GLCamera;
+import slavsquatsuperstar.mayonezgl.renderer.GLSpriteSheet;
 
-public class GLRendererTest extends SceneGL {
+public class GLRendererTest extends Scene {
 
-    SpriteSheetGL sprites;
+    private GLCamera camera;
+    private GLSpriteSheet sprites;
 
     public GLRendererTest() {
-        super("LWJGL Test Scene", 32);
+        super("LWJGL Test Scene", 1080, 720, 32);
+        camera = new GLCamera(new Vector2f());
     }
 
     @Override
     public void init() {
         // Load resources
-        sprites = new SpriteSheetGL("assets/textures/spritesheet.png", 16, 16, 26, 0);
+        sprites = new GLSpriteSheet("assets/textures/spritesheet.png", 16, 16, 26, 0);
 
         addObject(new GameObject("Mario", new Transform(
                 new Vec2(20, 6), new Vec2(2, 2)
@@ -42,6 +46,11 @@ public class GLRendererTest extends SceneGL {
         for (int i = 0; i < 8; i++) addObject(createObject("Goomba", 14));
     }
 
+    @Override
+    protected void onUserUpdate(float dt) {
+        getCamera().setOffset(getCamera().getOffset().add(new Vec2(KeyInput.getAxis("horizontal"), KeyInput.getAxis("vertical")).mul(5)));
+    }
+
     private GameObject createObject(String name, int spriteIndex) {
         return new GameObject(name, new Vec2(MathUtils.random(0, getWidth()), MathUtils.random(0, getHeight()))) {
             @Override
@@ -52,11 +61,16 @@ public class GLRendererTest extends SceneGL {
                 addComponent(new DragAndDrop("left mouse", false));
             }
 
-            @Override
-            public void onCollision(CollisionManifold collision) {
-                destroy();
-            }
+//            @Override
+//            public void onCollision(CollisionManifold collision) {
+//                destroy();
+//            }
         };
+    }
+
+    @Override
+    public GLCamera getCamera() {
+        return camera;
     }
 
     public static void main(String[] args) {

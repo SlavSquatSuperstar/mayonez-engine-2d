@@ -1,7 +1,7 @@
 package slavsquatsuperstar.mayonez.renderer;
 
 import slavsquatsuperstar.mayonez.fileio.Assets;
-import slavsquatsuperstar.mayonez.fileio.Texture;
+import slavsquatsuperstar.mayonez.fileio.JTexture;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +11,7 @@ import java.util.List;
  *
  * @author SlavSquatSuperstar
  */
-public class SpriteSheet {
+public class JSpriteSheet {
 
     private final List<JSprite> sprites; // store images in memory
 
@@ -24,9 +24,9 @@ public class SpriteSheet {
      * @param numSprites   how many sprites to create
      * @param spacing      the padding in between sprites
      */
-    public SpriteSheet(String filename, int spriteWidth, int spriteHeight, int numSprites, int spacing) {
+    public JSpriteSheet(String filename, int spriteWidth, int spriteHeight, int numSprites, int spacing) {
         sprites = new ArrayList<>();
-        Texture texture = Assets.getAsset(filename, Texture.class);
+        JTexture texture = Assets.getAsset(filename, JTexture.class);
         int width = texture.getImage().getWidth();
 //        int height = sheet.getImage().getHeight();
 

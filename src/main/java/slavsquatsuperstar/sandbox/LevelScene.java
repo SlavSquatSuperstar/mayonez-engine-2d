@@ -11,8 +11,8 @@ import java.awt.*;
 
 public class LevelScene extends Scene {
 
-    public LevelScene(String name) {
-        super(name, (int) (Preferences.SCREEN_WIDTH * 1.5), (int) (Preferences.SCREEN_HEIGHT * 1.0), 42);
+    public LevelScene() {
+        super("Level", (int) (Preferences.SCREEN_WIDTH * 1.5), (int) (Preferences.SCREEN_HEIGHT * 1.0), 42);
         setBackground(Colors.LIGHT_GRAY);
     }
 
@@ -37,7 +37,7 @@ public class LevelScene extends Scene {
 
     public static void main(String[] args) {
         Mayonez.setUseGL(false);
-        Mayonez.setScene(new LevelScene("Level"));
+        Mayonez.setScene(new LevelScene());
         Mayonez.start();
     }
 

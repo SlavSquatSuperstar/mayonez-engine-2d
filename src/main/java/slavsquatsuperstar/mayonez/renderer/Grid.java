@@ -1,7 +1,7 @@
 package slavsquatsuperstar.mayonez.renderer;
 
-import slavsquatsuperstar.mayonez.*;
 import slavsquatsuperstar.mayonez.Component;
+import slavsquatsuperstar.mayonez.Preferences;
 
 import java.awt.*;
 import java.awt.geom.Line2D;
@@ -25,8 +25,8 @@ public class Grid extends Component {
         g2.setStroke(new BasicStroke(1f));
         g2.setColor(new Color(0.3f, 0.3f, 0.3f, 0.5f));
 
-        float camX = getScene().camera().getOffset().x;
-        float camY = getScene().camera().getOffset().y;
+        float camX = getScene().getCamera().getOffset().x;
+        float camY = getScene().getCamera().getOffset().y;
 //        Logger.log("Cam Offset: %f, %f", camX, camY);
 
         // Which world coordinates are we at?

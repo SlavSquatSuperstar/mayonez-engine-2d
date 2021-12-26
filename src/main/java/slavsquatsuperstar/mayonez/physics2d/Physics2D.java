@@ -62,7 +62,7 @@ public class Physics2D {
         collisions.clear();
 
         // TODO Pre-collision optimizations and spatial partitioning
-        // TODO Create collision events and call GameObject.onCollision()
+        // TODO Create collision events
         // Detect Collisions and Create Collision Events
         detectCollisions();
 
@@ -120,6 +120,8 @@ public class Physics2D {
                     } else {
                         c1.onCollision(collision);
                         c2.onCollision(collision);
+                        if (collision.shouldIgnore() || c1.getIgnoreCurrentCollision() || c2.getIgnoreCurrentCollision())
+                            continue; // Stop if either object has called ignore collision
                         collisions.add(collision); // Only solve if neither are triggers
                     }
                 }

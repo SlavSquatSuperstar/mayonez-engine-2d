@@ -18,6 +18,7 @@ public class CollisionManifold {
     private final Vec2 normal;
     private final float depth;
     private final List<Vec2> contacts = new ArrayList<>(2);
+    private boolean ignore; // Don't resolve
 
     public CollisionManifold(Collider2D self, Collider2D other, Vec2 normal, float depth) {
         this.self = self;
@@ -53,6 +54,16 @@ public class CollisionManifold {
     public float getDepth() {
         return depth;
     }
+
+    public boolean shouldIgnore() {
+        return ignore;
+    }
+
+    public void ignore() {
+        ignore = true;
+    }
+
+    // Contact Methods
 
     public int countContacts() {
         return contacts.size();

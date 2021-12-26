@@ -2,6 +2,7 @@ package slavsquatsuperstar.mayonez;
 
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.renderer.Camera;
+import slavsquatsuperstar.mayonez.renderer.JCamera;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ public abstract class Scene {
     // Object Fields
     protected final List<GameObject> objects;
     private final List<SceneModifier> toModify; // Use a separate list to avoid concurrent exceptions
-    private final Camera camera;
+    private final JCamera camera;
 
     // Scene Information
     private final String name;
@@ -41,7 +42,15 @@ public abstract class Scene {
         this(name, 0, 0, 1);
     }
 
-    public Scene(String name, int width, int height, int cellSize) {
+    /**
+     * Creates a new empty scene.
+     *
+     * @param name     the name of the scene
+     * @param width    the width of the scene, in pixels
+     * @param height   the height of the scene, in pixels
+     * @param cellSize the number of pixels corresponding to a world unit
+     */
+    public Scene(String name, int width, int height, float cellSize) {
         this.name = name;
         this.width = width / cellSize;
         this.height = height / cellSize;
@@ -49,7 +58,7 @@ public abstract class Scene {
 
         objects = new ArrayList<>();
         toModify = new ArrayList<>();
-        camera = new Camera(this.width, this.height, cellSize);
+        camera = new JCamera(this.width, this.height, cellSize);
     }
 
     // Game Loop Methods
@@ -63,11 +72,11 @@ public abstract class Scene {
      * Initialize all objects and begin updating the scene.
      */
     public final void start() {
-        if (started) return;
-        addObject(Camera.createCameraObject(camera));
-        init();
-        objects.add(objects.remove(0)); // update the camera last
-        started = true;
+        if (!started) {
+            addObject(JCamera.createCameraObject(camera));
+            init();
+            started = true;
+        }
     }
 
     /**
@@ -76,20 +85,20 @@ public abstract class Scene {
      * @param dt seconds since the last frame
      */
     public final void update(float dt) {
-        if (!started) return;
+        if (started) {
+            // Update Objects and Camera
+            objects.forEach(o -> {
+                o.update(dt);
+                if (o.isDestroyed()) removeObject(o);
+            });
+            camera.parent.update(dt);
+            onUserUpdate(dt);
 
-        // Update Objects and Camera
-        objects.forEach(o -> {
-            o.update(dt);
-            if (o.isDestroyed()) removeObject(o);
-        });
-        onUserUpdate(dt);
-
-        // Remove destroyed objects or add new ones at the end of the frame
-        if (!toModify.isEmpty()) {
-            toModify.forEach(SceneModifier::modify);
-            toModify.clear();
-            objects.add(objects.remove(0)); // move the camera to the last index
+            // Remove destroyed objects or add new ones at the end of the frame
+            if (!toModify.isEmpty()) {
+                toModify.forEach(SceneModifier::modify);
+                toModify.clear();
+            }
         }
     }
 
@@ -106,10 +115,11 @@ public abstract class Scene {
      * @param g2 the window's graphics object
      */
     public final void render(Graphics2D g2) {
-        if (!started) return;
-        g2.setColor(background);
-        g2.fillRect(0, 0, (int) ((width + 1) * cellSize), (int) ((height + 1) * cellSize));
-        onUserRender(g2);
+        if (started) {
+            g2.setColor(background);
+            g2.fillRect(0, 0, (int) ((width + 1) * cellSize), (int) ((height + 1) * cellSize));
+            onUserRender(g2);
+        }
     }
 
     /**
@@ -174,7 +184,7 @@ public abstract class Scene {
      * @return the list of objects
      */
     @SuppressWarnings({"unchecked"})
-    public <T extends GameObject> java.util.List<T> getObjects(Class<T> cls) {
+    public <T extends GameObject> List<T> getObjects(Class<T> cls) {
         return objects.stream().filter(o -> cls == null || cls.isInstance(o)).map(o -> (T) o).collect(Collectors.toList());
     }
 
@@ -227,9 +237,9 @@ public abstract class Scene {
     /**
      * Returns the main camera of the scene.
      *
-     * @return the {@link Camera} instance
+     * @return the {@link JCamera} instance
      */
-    public Camera camera() {
+    public Camera getCamera() {
         return camera;
     }
 

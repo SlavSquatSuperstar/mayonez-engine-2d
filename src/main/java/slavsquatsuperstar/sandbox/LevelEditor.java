@@ -12,8 +12,8 @@ import java.awt.*;
 
 public class LevelEditor extends Scene {
 
-    public LevelEditor(String name) {
-        super(name, Preferences.SCREEN_WIDTH, Preferences.SCREEN_HEIGHT, 42);
+    public LevelEditor() {
+        super("Level Editor", Preferences.SCREEN_WIDTH, Preferences.SCREEN_HEIGHT, 42);
         setGravity(new Vec2());
     }
 
@@ -45,7 +45,7 @@ public class LevelEditor extends Scene {
 
     public static void main(String[] args) {
         Mayonez.setUseGL(false);
-        Mayonez.setScene(new LevelEditor("Level Editor"));
+        Mayonez.setScene(new LevelEditor());
         Mayonez.start();
     }
 

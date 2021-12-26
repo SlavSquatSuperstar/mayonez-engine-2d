@@ -4,11 +4,12 @@ import slavsquatsuperstar.mayonez.Logger.log
 import slavsquatsuperstar.mayonez.Logger.printExitMessage
 import slavsquatsuperstar.mayonez.Logger.trace
 import slavsquatsuperstar.mayonez.Logger.warn
+import slavsquatsuperstar.mayonez.engine.GLGame
+import slavsquatsuperstar.mayonez.engine.GameEngine
 import slavsquatsuperstar.mayonez.engine.JGame
 import slavsquatsuperstar.mayonez.fileio.Assets
 import slavsquatsuperstar.mayonez.physics2d.Physics2D
 import slavsquatsuperstar.mayonez.renderer.Renderer
-import slavsquatsuperstar.mayonezgl.engine.GLGame
 import kotlin.system.exitProcess
 
 object Mayonez {
@@ -37,6 +38,14 @@ object Mayonez {
     private var INIT_RESOURCES = false
 
     // Game
+    @JvmStatic
+    var useGL: Boolean? = null
+        @JvmName("shouldUseGL")
+        get() = field!!
+        set(value) {
+            field = value
+            game = if (field!!) GLGame() else JGame()
+        }
     private var game: GameEngine? = null // Engine config, either Java or GL
     private var started = false
 
@@ -46,11 +55,6 @@ object Mayonez {
     }
 
     // Init Methods
-
-    @JvmStatic
-    fun setUseGL(useGL: Boolean) {
-        game = if (useGL) GLGame() else JGame()
-    }
 
     /**
      * Instantiate singleton objects in the correct order to avoid ExceptionInInitializer errors from circular dependencies.
@@ -77,13 +81,13 @@ object Mayonez {
 
     private fun exitIfNotConfigured() {
         warn("Game Engine \"Use GL\" option has not been configured yet")
-        stop(1)
+        stop(2)
     }
 
     /* Game Loop */
 
     @JvmStatic
-    fun start() {
+    fun start() { // TODO make setScene auto start
         if (started) return
         started = true
         game?.start() ?: exitIfNotConfigured()

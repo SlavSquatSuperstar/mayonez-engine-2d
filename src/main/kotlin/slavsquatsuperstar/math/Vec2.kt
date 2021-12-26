@@ -1,5 +1,6 @@
 package slavsquatsuperstar.math
 
+import org.joml.Vector2f
 import slavsquatsuperstar.math.MathUtils.equals
 import slavsquatsuperstar.mayonez.Logger
 import kotlin.math.acos
@@ -41,6 +42,13 @@ class Vec2 constructor(
      * @param v the vector to copy
      */
     constructor(v: Vec2) : this(v.x, v.y)
+
+    /**
+     * Initialize this vector with the x and y values from a JOML [Vector2f].
+     *
+     * @param v the vector to copy
+     */
+    constructor(v: Vector2f) : this(v.x, v.y)
 
     /**
      * Copies this vector.
@@ -302,5 +310,11 @@ class Vec2 constructor(
     }
 
     override fun toString(): String = String.format("(%.4f, %.4f)", x, y)
+
+    // Helper Methods
+    /**
+     * Convert this vector to a JOML [Vector2f] with the same x and y values
+     */
+    fun toJOML(): Vector2f = Vector2f(x, y)
 
 }

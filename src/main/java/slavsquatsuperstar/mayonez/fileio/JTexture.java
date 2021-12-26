@@ -14,17 +14,17 @@ import java.util.Objects;
  *
  * @author SlavSquatSuperstar
  */
-public class Texture extends Asset {
+public class JTexture extends Asset {
 
     private BufferedImage image;
 
-    public Texture(String filename, AssetType type) {
+    public JTexture(String filename, AssetType type) {
         super(filename, type);
         Assets.setAsset(filename, this);
         readImage();
     }
 
-    public Texture(String filename) {
+    public JTexture(String filename) {
         this(filename, AssetType.LOCAL);
     }
 

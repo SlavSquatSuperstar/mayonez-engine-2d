@@ -40,13 +40,13 @@ public class RenderBatch {
     private int[] texSlots = new int[Preferences.MAX_TEXTURE_SLOTS]; // support multiple textures in batch
 
     // Renderer Data
-    private final List<TextureGL> textures;
-    private final CameraGL camera;
+    private final List<GLTexture> textures;
+    private final GLCamera camera;
     private Shader shader;
     private float[] vertices; // quads
     private int vaoID, vboID;
 
-    public RenderBatch(int maxBatchSize, CameraGL camera) {
+    public RenderBatch(int maxBatchSize, GLCamera camera) {
         sprites = new GLSprite[maxBatchSize]; // shader array capacity
         shader = Assets.getAsset("assets/shaders/default.glsl", Shader.class);
         vertices = new float[maxBatchSize * VERTICES_PER_SPRITE * VERTEX_SIZE];
@@ -110,7 +110,7 @@ public class RenderBatch {
         glDisableVertexAttribArray(0);
         glDisableVertexAttribArray(1);
         glBindVertexArray(0);
-        textures.forEach(TextureGL::unbind);
+        textures.forEach(GLTexture::unbind);
         shader.unbind();
     }
 
@@ -121,7 +121,7 @@ public class RenderBatch {
         sprites[index] = spr;
         loadVertexProperties(index);
 
-        TextureGL tex = spr.getTexture();
+        GLTexture tex = spr.getTexture();
         if (tex != null && !hasTexture(tex)) textures.add(tex);
     }
 
@@ -147,7 +147,7 @@ public class RenderBatch {
         Vector4f color = sprite.getColor();
         Vector2f[] texCoords = sprite.getTexCoords();
 
-        TextureGL tex = sprite.getTexture();
+        GLTexture tex = sprite.getTexture();
         if (tex != null && !hasTexture(tex)) textures.add(tex);
         int texID = textures.indexOf(tex) + 1;
         // texID 0 means no texture
@@ -189,7 +189,7 @@ public class RenderBatch {
         return textures.size() <= texSlots.length;
     }
 
-    public boolean hasTexture(TextureGL t) {
+    public boolean hasTexture(GLTexture t) {
         return textures.contains(t);
     }
 

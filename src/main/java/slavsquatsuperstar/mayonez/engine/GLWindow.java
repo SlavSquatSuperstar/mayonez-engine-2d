@@ -1,11 +1,9 @@
-package slavsquatsuperstar.mayonezgl.engine;
+package slavsquatsuperstar.mayonez.engine;
 
-import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
-import slavsquatsuperstar.mayonez.engine.Window;
 import slavsquatsuperstar.mayonez.input.KeyInput;
 import slavsquatsuperstar.mayonez.input.MouseInput;
 import slavsquatsuperstar.mayonez.renderer.Renderable;
@@ -18,7 +16,7 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
-public class GLWindow implements Window {
+public final class GLWindow implements Window {
 
     private long window; // The window pointer
     private final String title;
@@ -150,7 +148,6 @@ public class GLWindow implements Window {
 
     // Properties
 
-    @NotNull
     @Override
     public String getTitle() {
         return title;

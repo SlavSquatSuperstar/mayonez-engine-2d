@@ -1,6 +1,5 @@
 package slavsquatsuperstar.mayonez.engine;
 
-import slavsquatsuperstar.mayonez.GameEngine;
 import slavsquatsuperstar.mayonez.Mayonez;
 import slavsquatsuperstar.mayonez.Preferences;
 import slavsquatsuperstar.mayonez.input.KeyInput;
@@ -16,7 +15,7 @@ import java.awt.*;
  *
  * @author SlavSquatSuperstar
  */
-public class JGame extends GameEngine {
+public final class JGame extends GameEngine {
 
     private final IMGUI imgui;
 
@@ -25,8 +24,8 @@ public class JGame extends GameEngine {
         if (!Mayonez.INSTANCE.getINIT_PREFERENCES()) Mayonez.init();
 
         // Set up the window
-        window = new JWindow(Preferences.TITLE + " " + Preferences.VERSION, Preferences.SCREEN_WIDTH,
-                Preferences.SCREEN_HEIGHT);
+        window = new JWindow(Preferences.TITLE + " " + Preferences.VERSION,
+                Preferences.SCREEN_WIDTH, Preferences.SCREEN_HEIGHT);
 
         // Add input listeners
         window.setKeyInput(KeyInput.INSTANCE);
@@ -41,25 +40,6 @@ public class JGame extends GameEngine {
         GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
         GraphicsDevice device = env.getDefaultScreenDevice();
         return device.getFullScreenWindow() != null;
-    }
-
-    // Resource Management
-
-    @Override
-    public synchronized void start() {
-        if (running) return; // Don't start if already running
-        running = true;
-
-        window.start();
-        startScene();
-        run();
-    }
-
-    @Override
-    public synchronized void stop() {
-        if (!running) return;
-        running = false;
-        window.stop();
     }
 
     // Game Loop Methods

@@ -47,6 +47,10 @@ public abstract class Component {
 
     // Getters and Setters
 
+    public GameObject getParent() {
+        return parent;
+    }
+
     public Component setParent(GameObject parent) {
         this.parent = parent;
         this.transform = parent.transform;
@@ -77,9 +81,10 @@ public abstract class Component {
         return enabled;
     }
 
-    public Component setEnabled(boolean enabled) {
+    @SuppressWarnings({"unchecked"})
+    public <T extends Component> T setEnabled(boolean enabled) {
         this.enabled = enabled;
-        return this;
+        return (T) this;
     }
 
     @Override

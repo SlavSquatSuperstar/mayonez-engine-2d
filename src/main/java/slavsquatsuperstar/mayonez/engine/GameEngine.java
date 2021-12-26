@@ -1,7 +1,9 @@
-package slavsquatsuperstar.mayonez;
+package slavsquatsuperstar.mayonez.engine;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import slavsquatsuperstar.mayonez.engine.Window;
+import slavsquatsuperstar.mayonez.Logger;
+import slavsquatsuperstar.mayonez.Mayonez;
+import slavsquatsuperstar.mayonez.Scene;
 import slavsquatsuperstar.mayonez.physics2d.Physics2D;
 import slavsquatsuperstar.mayonez.renderer.Renderer;
 
@@ -12,9 +14,9 @@ import slavsquatsuperstar.mayonez.renderer.Renderer;
  */
 // TODO probably better off with enums of companion objects
 // TODO sealed, core package
-public abstract class GameEngine {
+public sealed abstract class GameEngine permits JGame, GLGame{
 
-    protected boolean running = false;
+    private boolean running = false;
 
     // Game Layers
     protected Physics2D physics;
@@ -29,12 +31,24 @@ public abstract class GameEngine {
     /**
      * Set up system resources and initialize the application
      */
-    public abstract void start();
+    public final void start() {
+        if (!running) {
+            running = true;
+            window.start();
+            startScene();
+            run();
+        }
+    }
 
     /**
      * Free system resources and quit the application.
      */
-    public abstract void stop();
+    public final void stop() {
+        if (running) {
+            running = false;
+            window.stop();
+        }
+    }
 
     // Game Loop Methods
 
@@ -63,8 +77,7 @@ public abstract class GameEngine {
                 timer += passedTime;
                 lastTime = currentTime;  // Reset lastTime
 
-                window.beginFrame();
-
+                beginFrame();
                 // Update the game as many times as possible even if the screen freezes
                 while (deltaTime >= Mayonez.TIME_STEP) {
                     update(deltaTime);
@@ -83,7 +96,7 @@ public abstract class GameEngine {
                     timer = 0;
                 }
 
-                window.endFrame();
+                endFrame();
             }
         } catch (Exception e) {
             Logger.warn(ExceptionUtils.getStackTrace(e));
@@ -110,12 +123,38 @@ public abstract class GameEngine {
         window.endFrame();
     }
 
-    // Scene Methods
+    // Getters and Setters
+
+    public Window getWindow() {
+        return window;
+    }
+
+    public Scene getScene() {
+        return scene;
+    }
+
+    public void setScene(Scene scene) {
+        this.scene = scene;
+        startScene();
+    }
+
+    public Renderer getRenderer() {
+        return renderer;
+    }
+
+    public Physics2D getPhysics() {
+        return physics;
+    }
+
+
+    // Helper Methods
+
+    public abstract float getCurrentTime();
 
     /**
      * Starts the current scene, if not null
      */
-    protected void startScene() {
+    private void startScene() {
         if (scene != null && running) {
             scene.start();
             physics.setScene(scene);
@@ -123,14 +162,5 @@ public abstract class GameEngine {
             Logger.trace("Game: Loaded scene \"%s\"", scene.getName());
         }
     }
-
-    protected void setScene(Scene scene) {
-        this.scene = scene;
-        startScene();
-    }
-
-    // Helper Methods
-
-    public abstract float getCurrentTime();
 
 }

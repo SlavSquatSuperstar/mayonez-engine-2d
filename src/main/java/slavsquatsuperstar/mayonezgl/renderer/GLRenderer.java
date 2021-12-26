@@ -4,7 +4,6 @@ import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Preferences;
 import slavsquatsuperstar.mayonez.Scene;
 import slavsquatsuperstar.mayonez.renderer.Renderer;
-import slavsquatsuperstar.mayonezgl.SceneGL;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -17,7 +16,7 @@ public class GLRenderer implements Renderer {
 
     private final int MAX_BATCH_SIZE = Preferences.MAX_BATCH_SIZE;
     private final List<RenderBatch> batches;
-    private CameraGL camera;
+    private GLCamera camera;
 
     public GLRenderer() {
         batches = new ArrayList<>();
@@ -34,7 +33,7 @@ public class GLRenderer implements Renderer {
 
     @Override
     public void setScene(Scene newScene) {
-        camera = ((SceneGL) newScene).getCamera();
+        camera = (GLCamera) newScene.getCamera();
         batches.clear();
         newScene.getObjects(null).forEach(this::addObject);
     }
@@ -44,7 +43,7 @@ public class GLRenderer implements Renderer {
         if (spr != null) {
             for (RenderBatch batch : batches) {
                 if (batch.hasRoom()) { // has room for sprite
-                    TextureGL tex = spr.getTexture();
+                    GLTexture tex = spr.getTexture();
                     // has texture or room for another texture
                     if (tex == null || (batch.hasTexture(tex) || batch.hasTextureRoom())) {
                         batch.addSprite(spr);

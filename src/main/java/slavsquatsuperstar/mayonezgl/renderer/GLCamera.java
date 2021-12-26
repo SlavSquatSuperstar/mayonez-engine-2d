@@ -3,20 +3,27 @@ package slavsquatsuperstar.mayonezgl.renderer;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
+import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.Preferences;
+import slavsquatsuperstar.mayonez.renderer.Camera;
 
-public class CameraGL {
+/**
+ * A scene camera for the GL engine.
+ *
+ * @author SlavSquatSuperstar
+ */
+public final class GLCamera implements Camera {
 
     private Matrix4f projectionMatrix, viewMatrix;
-    public Vector2f position;
+    private Vector2f position;
     public float nearPlane = 0f;
     public float farPlane = 100f;
-    public float zPosition;
+    public float zPosition = 0f;
 
-    public CameraGL(Vector2f position) {
+    public GLCamera(Vector2f position) {
         this.position = position;
-        this.projectionMatrix = new Matrix4f();
-        this.viewMatrix = new Matrix4f();
+        projectionMatrix = new Matrix4f();
+        viewMatrix = new Matrix4f();
         adjustProjection();
     }
 
@@ -32,7 +39,6 @@ public class CameraGL {
         viewMatrix.lookAt(new Vector3f(position.x, position.y, zPosition),
                 cameraFront.add(position.x, position.y, 0),
                 cameraUp);
-
         return viewMatrix;
     }
 
@@ -40,4 +46,13 @@ public class CameraGL {
         return projectionMatrix;
     }
 
+    @Override
+    public Vec2 getOffset() {
+        return new Vec2(position);
+    }
+
+    @Override
+    public void setOffset(Vec2 offset) {
+        this.position = offset.toJOML();
+    }
 }

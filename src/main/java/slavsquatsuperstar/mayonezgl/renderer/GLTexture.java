@@ -26,20 +26,20 @@ import static org.lwjgl.system.MemoryUtil.memSlice;
  *
  * @author SlavSquatSuperstar
  */
-public class TextureGL extends Asset {
+public class GLTexture extends Asset {
 
     private ByteBuffer image;
     private int width, height, channels;
     private int texID;
 
-    public TextureGL(String filename, AssetType type) {
+    public GLTexture(String filename, AssetType type) {
         super(filename, type);
         Assets.setAsset(filename, this);
         readImage();
         createTexture();
     }
 
-    public TextureGL(String filename) {
+    public GLTexture(String filename) {
         this(filename, AssetType.CLASSPATH);
     }
 

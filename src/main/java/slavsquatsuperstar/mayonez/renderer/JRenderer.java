@@ -20,7 +20,7 @@ public class JRenderer implements Renderer {
     /**
      * Reference to scene camera
      */
-    private Camera camera = null;
+    private JCamera camera = null;
 
     public JRenderer() {
         objects = new ArrayList<>();
@@ -54,7 +54,7 @@ public class JRenderer implements Renderer {
      */
     @Override
     public void setScene(Scene newScene) {
-        camera = newScene.camera();
+        camera = (JCamera) newScene.getCamera();
         objects.clear();
         objects.addAll(newScene.getObjects(null));
     }

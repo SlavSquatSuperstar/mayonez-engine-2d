@@ -1,6 +1,5 @@
 package slavsquatsuperstar.mayonez.engine;
 
-import org.jetbrains.annotations.NotNull;
 import slavsquatsuperstar.mayonez.Logger;
 import slavsquatsuperstar.mayonez.Preferences;
 import slavsquatsuperstar.mayonez.input.KeyInput;
@@ -19,7 +18,7 @@ import java.awt.image.BufferStrategy;
  *
  * @author SlavSquatSuperstar
  */
-public class JWindow extends JFrame implements Window {
+public final class JWindow extends JFrame implements Window {
 
     private final static AffineTransform FLIP_XF = AffineTransform.getScaleInstance(1.0, -1.0);
     private BufferStrategy bs;
@@ -133,7 +132,6 @@ public class JWindow extends JFrame implements Window {
 
     // Properties
 
-    @NotNull
     @Override
     public String getTitle() {
         return super.getTitle();

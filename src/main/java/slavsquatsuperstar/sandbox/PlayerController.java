@@ -1,10 +1,10 @@
 package slavsquatsuperstar.sandbox;
 
 import slavsquatsuperstar.math.Vec2;
-import slavsquatsuperstar.mayonez.input.KeyInput;
 import slavsquatsuperstar.mayonez.Script;
+import slavsquatsuperstar.mayonez.input.KeyInput;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
-import slavsquatsuperstar.mayonez.renderer.Camera;
+import slavsquatsuperstar.mayonez.renderer.JCamera;
 import slavsquatsuperstar.mayonez.scripts.KeepInScene;
 
 @SuppressWarnings("unused")
@@ -24,7 +24,7 @@ public class PlayerController extends Script {
 
     @Override
     public void start() {
-        Camera cam = getScene().camera();
+        JCamera cam = (JCamera) getScene().getCamera();
         if (getScene() instanceof LevelEditor) {
             cam.enableFreeMovement(true).enableKeepInScene(false);
             getComponent(KeepInScene.class).setEnabled(false);

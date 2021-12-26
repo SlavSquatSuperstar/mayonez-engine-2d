@@ -7,7 +7,7 @@ import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Logger;
 import slavsquatsuperstar.mayonez.Mayonez;
 import slavsquatsuperstar.mayonez.fileio.Assets;
-import slavsquatsuperstar.mayonez.fileio.Texture;
+import slavsquatsuperstar.mayonez.fileio.JTexture;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -24,7 +24,7 @@ public class JSprite extends Sprite {
 
     public JSprite(String filename) {
         try {
-            image = Assets.getAsset(filename, Texture.class).getImage();
+            image = Assets.getAsset(filename, JTexture.class).getImage();
         } catch (NullPointerException e) {
             Logger.log(ExceptionUtils.getStackTrace(e));
             Logger.log("Sprite: Error loading image \"%s\"", filename);

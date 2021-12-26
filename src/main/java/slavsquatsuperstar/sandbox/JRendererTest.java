@@ -7,7 +7,8 @@ import slavsquatsuperstar.mayonez.input.KeyInput;
 import slavsquatsuperstar.mayonez.physics2d.CollisionManifold;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
 import slavsquatsuperstar.mayonez.physics2d.colliders.AlignedBoxCollider2D;
-import slavsquatsuperstar.mayonez.renderer.SpriteSheet;
+import slavsquatsuperstar.mayonez.renderer.JCamera;
+import slavsquatsuperstar.mayonez.renderer.JSpriteSheet;
 import slavsquatsuperstar.mayonez.scripts.DragAndDrop;
 import slavsquatsuperstar.mayonez.scripts.KeyMovement;
 import slavsquatsuperstar.mayonez.scripts.MoveMode;
@@ -19,11 +20,11 @@ import java.awt.event.KeyEvent;
  */
 public class JRendererTest extends Scene {
 
-    private final SpriteSheet sprites;
+    private final JSpriteSheet sprites;
 
     public JRendererTest() {
         super("Renderer Test Scene", Preferences.SCREEN_WIDTH, Preferences.SCREEN_HEIGHT, 32);
-        sprites = new SpriteSheet("assets/textures/spritesheet.png", 16, 16, 26, 0);
+        sprites = new JSpriteSheet("assets/textures/spritesheet.png", 16, 16, 26, 0);
         setGravity(new Vec2());
     }
 
@@ -32,13 +33,13 @@ public class JRendererTest extends Scene {
         addObject(new GameObject("Mario", new Transform(new Vec2(getWidth() / 2f, getHeight() / 2f), new Vec2(2, 2))) {
             @Override
             protected void init() {
-//                getScene().camera().setSubject(this);
-                getScene().camera().enableKeepInScene(false);
+                JCamera cam = (JCamera) getScene().getCamera();
+                cam.setSubject(this);
+                cam.enableKeepInScene(false);
                 addComponent(sprites.getSprite(0));
                 addComponent(new AlignedBoxCollider2D(new Vec2(0.8f, 1)));
                 addComponent(new Rigidbody2D(1f));
                 addComponent(new KeyMovement(MoveMode.POSITION, 20));
-                addComponent(new DragAndDrop("left mouse", false));
                 addComponent(new Script() {
                     @Override
                     public void update(float dt) {
@@ -67,6 +68,8 @@ public class JRendererTest extends Scene {
             @Override
             public void onCollision(CollisionManifold collision) {
                 destroy();
+//                if (collision.getOther().getParent().name.equals("Mario")) destroy();
+//                else collision.ignore();
             }
         };
     }

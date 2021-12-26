@@ -9,7 +9,7 @@ import slavsquatsuperstar.mayonez.renderer.Sprite;
 public class GLSprite extends Sprite { // = Gabe's SpriteRenderer
 
     private Vector4f color = new Vector4f(1, 1, 1, 1);
-    private TextureGL texture = null; // Rendering just a color
+    private GLTexture texture = null; // Rendering just a color
 
     private Vector2f[] texCoords = new Vector2f[]{
             new Vector2f(1, 1),
@@ -22,11 +22,11 @@ public class GLSprite extends Sprite { // = Gabe's SpriteRenderer
         this.color = color;
     }
 
-    public GLSprite(TextureGL texture) {
+    public GLSprite(GLTexture texture) {
         this.texture = texture;
     }
 
-    public GLSprite(TextureGL texture, Vector2f[] texCoords) {
+    public GLSprite(GLTexture texture, Vector2f[] texCoords) {
         this.texture = texture;
         this.texCoords = texCoords;
     }
@@ -35,7 +35,7 @@ public class GLSprite extends Sprite { // = Gabe's SpriteRenderer
         return this.color;
     }
 
-    public TextureGL getTexture() {
+    public GLTexture getTexture() {
         return texture;
     }
 
