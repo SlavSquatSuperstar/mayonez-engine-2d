@@ -1,6 +1,7 @@
 package slavsquatsuperstar.mayonez;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import slavsquatsuperstar.mayonez.engine.Window;
 import slavsquatsuperstar.mayonez.physics2d.Physics2D;
 import slavsquatsuperstar.mayonez.renderer.Renderer;
 
@@ -21,8 +22,7 @@ public abstract class GameEngine {
     protected Scene scene;
     protected Window window;
 
-    protected GameEngine() {
-    }
+    protected GameEngine() {}
 
     // Resource Management Methods
 

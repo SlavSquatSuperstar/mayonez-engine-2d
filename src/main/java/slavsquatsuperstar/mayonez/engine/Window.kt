@@ -1,4 +1,4 @@
-package slavsquatsuperstar.mayonez
+package slavsquatsuperstar.mayonez.engine
 
 import slavsquatsuperstar.mayonez.renderer.Renderable
 import slavsquatsuperstar.mayonez.input.KeyInput

@@ -1,6 +1,8 @@
-package slavsquatsuperstar.mayonez;
+package slavsquatsuperstar.mayonez.engine;
 
 import org.jetbrains.annotations.NotNull;
+import slavsquatsuperstar.mayonez.Logger;
+import slavsquatsuperstar.mayonez.Preferences;
 import slavsquatsuperstar.mayonez.input.KeyInput;
 import slavsquatsuperstar.mayonez.input.MouseInput;
 import slavsquatsuperstar.mayonez.renderer.Renderable;

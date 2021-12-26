@@ -1,4 +1,4 @@
-package slavsquatsuperstar.mayonezgl;
+package slavsquatsuperstar.mayonezgl.engine;
 
 import slavsquatsuperstar.mayonez.GameEngine;
 import slavsquatsuperstar.mayonez.Logger;

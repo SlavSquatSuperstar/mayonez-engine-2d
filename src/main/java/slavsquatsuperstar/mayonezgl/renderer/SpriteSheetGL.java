@@ -1,16 +1,14 @@
-package slavsquatsuperstar.mayonezgl;
+package slavsquatsuperstar.mayonezgl.renderer;
 
 import org.joml.Vector2f;
 import slavsquatsuperstar.mayonez.fileio.Assets;
-import slavsquatsuperstar.mayonezgl.renderer.GLSprite;
-import slavsquatsuperstar.mayonezgl.renderer.TextureGL;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class SpriteSheetGL {
 
-    private List<GLSprite> sprites;
+    private final List<GLSprite> sprites;
 
     /**
      * Creates a spritesheet from the given texture.

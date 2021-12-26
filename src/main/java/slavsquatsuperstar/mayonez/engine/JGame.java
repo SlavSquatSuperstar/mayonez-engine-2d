@@ -1,5 +1,8 @@
-package slavsquatsuperstar.mayonez;
+package slavsquatsuperstar.mayonez.engine;
 
+import slavsquatsuperstar.mayonez.GameEngine;
+import slavsquatsuperstar.mayonez.Mayonez;
+import slavsquatsuperstar.mayonez.Preferences;
 import slavsquatsuperstar.mayonez.input.KeyInput;
 import slavsquatsuperstar.mayonez.input.MouseInput;
 import slavsquatsuperstar.mayonez.physics2d.Physics2D;

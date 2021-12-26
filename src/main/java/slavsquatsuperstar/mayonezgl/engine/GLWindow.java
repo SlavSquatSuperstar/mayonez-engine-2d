@@ -1,11 +1,11 @@
-package slavsquatsuperstar.mayonezgl;
+package slavsquatsuperstar.mayonezgl.engine;
 
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
-import slavsquatsuperstar.mayonez.Window;
+import slavsquatsuperstar.mayonez.engine.Window;
 import slavsquatsuperstar.mayonez.input.KeyInput;
 import slavsquatsuperstar.mayonez.input.MouseInput;
 import slavsquatsuperstar.mayonez.renderer.Renderable;

@@ -4,10 +4,11 @@ import slavsquatsuperstar.mayonez.Logger.log
 import slavsquatsuperstar.mayonez.Logger.printExitMessage
 import slavsquatsuperstar.mayonez.Logger.trace
 import slavsquatsuperstar.mayonez.Logger.warn
+import slavsquatsuperstar.mayonez.engine.JGame
 import slavsquatsuperstar.mayonez.fileio.Assets
 import slavsquatsuperstar.mayonez.physics2d.Physics2D
 import slavsquatsuperstar.mayonez.renderer.Renderer
-import slavsquatsuperstar.mayonezgl.GLGame
+import slavsquatsuperstar.mayonezgl.engine.GLGame
 import kotlin.system.exitProcess
 
 object Mayonez {

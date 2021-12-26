@@ -1,8 +1,7 @@
-package slavsquatsuperstar.mayonez;
+package slavsquatsuperstar.mayonez.renderer;
 
 import slavsquatsuperstar.mayonez.fileio.Assets;
 import slavsquatsuperstar.mayonez.fileio.Texture;
-import slavsquatsuperstar.mayonez.renderer.JSprite;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +13,7 @@ import java.util.List;
  */
 public class SpriteSheet {
 
-    private List<JSprite> sprites; // store images in memory
+    private final List<JSprite> sprites; // store images in memory
 
     /**
      * Creates a spritesheet from the given image file.

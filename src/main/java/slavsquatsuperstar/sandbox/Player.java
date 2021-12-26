@@ -3,7 +3,7 @@ package slavsquatsuperstar.sandbox;
 import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.GameObject;
-import slavsquatsuperstar.mayonez.SpriteSheet;
+import slavsquatsuperstar.mayonez.renderer.SpriteSheet;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
 import slavsquatsuperstar.mayonez.physics2d.colliders.AlignedBoxCollider2D;
 import slavsquatsuperstar.mayonez.renderer.JSprite;

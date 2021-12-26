@@ -12,7 +12,7 @@ import slavsquatsuperstar.mayonez.scripts.DragAndDrop;
 import slavsquatsuperstar.mayonez.scripts.KeyMovement;
 import slavsquatsuperstar.mayonez.scripts.MoveMode;
 import slavsquatsuperstar.mayonezgl.SceneGL;
-import slavsquatsuperstar.mayonezgl.SpriteSheetGL;
+import slavsquatsuperstar.mayonezgl.renderer.SpriteSheetGL;
 
 public class GLRendererTest extends SceneGL {
 
