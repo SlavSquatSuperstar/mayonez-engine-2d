@@ -13,8 +13,8 @@ import slavsquatsuperstar.mayonez.physics2d.colliders.AlignedBoxCollider2D;
 import slavsquatsuperstar.mayonez.scripts.DragAndDrop;
 import slavsquatsuperstar.mayonez.scripts.KeyMovement;
 import slavsquatsuperstar.mayonez.scripts.MoveMode;
-import slavsquatsuperstar.mayonezgl.renderer.GLCamera;
-import slavsquatsuperstar.mayonezgl.renderer.GLSpriteSheet;
+import slavsquatsuperstar.mayonez.graphics.GLCamera;
+import slavsquatsuperstar.mayonez.graphics.GLSpriteSheet;
 
 public class GLRendererTest extends Scene {
 

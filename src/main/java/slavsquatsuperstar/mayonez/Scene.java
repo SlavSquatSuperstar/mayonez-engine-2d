@@ -1,8 +1,8 @@
 package slavsquatsuperstar.mayonez;
 
 import slavsquatsuperstar.math.Vec2;
-import slavsquatsuperstar.mayonez.renderer.Camera;
-import slavsquatsuperstar.mayonez.renderer.JCamera;
+import slavsquatsuperstar.mayonez.graphics.Camera;
+import slavsquatsuperstar.mayonez.graphics.JCamera;
 
 import java.awt.*;
 import java.util.ArrayList;

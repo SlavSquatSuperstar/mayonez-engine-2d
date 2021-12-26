@@ -1,8 +1,9 @@
-package slavsquatsuperstar.mayonez.renderer
+package slavsquatsuperstar.mayonez.graphics
 
 import slavsquatsuperstar.math.Vec2
 import slavsquatsuperstar.mayonez.Mayonez
 import slavsquatsuperstar.mayonez.physics2d.colliders.*
+import slavsquatsuperstar.mayonez.renderer.Renderable
 import java.awt.*
 import java.awt.geom.Ellipse2D
 import java.awt.geom.Line2D

@@ -1,7 +1,8 @@
-package slavsquatsuperstar.mayonezgl.renderer;
+package slavsquatsuperstar.mayonez.graphics;
 
 import org.joml.Vector2f;
 import slavsquatsuperstar.mayonez.fileio.Assets;
+import slavsquatsuperstar.mayonez.fileio.GLTexture;
 
 import java.util.ArrayList;
 import java.util.List;

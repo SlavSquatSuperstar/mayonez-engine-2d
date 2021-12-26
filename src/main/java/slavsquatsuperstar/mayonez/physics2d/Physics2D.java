@@ -19,7 +19,7 @@ import java.util.List;
  *
  * @author SlavSquatSuperstar
  */
-public class Physics2D {
+public final class Physics2D {
 
     public final static float GRAVITY_CONSTANT = 9.8f;
     private final static int IMPULSE_ITERATIONS = Preferences.IMPULSE_ITERATIONS;

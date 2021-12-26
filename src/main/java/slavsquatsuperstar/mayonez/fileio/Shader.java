@@ -1,11 +1,9 @@
-package slavsquatsuperstar.mayonezgl.renderer;
+package slavsquatsuperstar.mayonez.fileio;
 
 import org.joml.*;
 import org.lwjgl.BufferUtils;
 import slavsquatsuperstar.mayonez.Logger;
 import slavsquatsuperstar.mayonez.Mayonez;
-import slavsquatsuperstar.mayonez.fileio.AssetType;
-import slavsquatsuperstar.mayonez.fileio.TextFile;
 
 import java.io.IOException;
 import java.nio.FloatBuffer;

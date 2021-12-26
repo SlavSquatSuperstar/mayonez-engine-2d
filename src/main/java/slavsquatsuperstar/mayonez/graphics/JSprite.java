@@ -1,4 +1,4 @@
-package slavsquatsuperstar.mayonez.renderer;
+package slavsquatsuperstar.mayonez.graphics;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import slavsquatsuperstar.math.MathUtils;

@@ -1,9 +1,9 @@
-package slavsquatsuperstar.mayonezgl.renderer;
+package slavsquatsuperstar.mayonez.graphics;
 
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 import slavsquatsuperstar.mayonez.GameObject;
-import slavsquatsuperstar.mayonez.renderer.Sprite;
+import slavsquatsuperstar.mayonez.fileio.GLTexture;
 
 // FIXME only rendering at initial position
 public class GLSprite extends Sprite { // = Gabe's SpriteRenderer

@@ -5,7 +5,7 @@ import slavsquatsuperstar.mayonez.Preferences;
 import slavsquatsuperstar.mayonez.input.KeyInput;
 import slavsquatsuperstar.mayonez.input.MouseInput;
 import slavsquatsuperstar.mayonez.physics2d.Physics2D;
-import slavsquatsuperstar.mayonezgl.renderer.GLRenderer;
+import slavsquatsuperstar.mayonez.renderer.GLRenderer;
 
 import static org.lwjgl.glfw.GLFW.glfwGetTime;
 

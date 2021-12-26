@@ -4,6 +4,8 @@ import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Mayonez;
 import slavsquatsuperstar.mayonez.Scene;
+import slavsquatsuperstar.mayonez.graphics.DebugDraw;
+import slavsquatsuperstar.mayonez.graphics.JCamera;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -13,7 +15,7 @@ import java.util.List;
 /**
  * Draws all in-game textures and shapes onto the screen with Java's AWT and Swing libraries.
  */
-public class JRenderer implements Renderer {
+public final class JRenderer extends Renderer {
 
     private final List<GameObject> objects;
     private final DebugDraw debugDraw; // put DebugDraw in Renderer to access camera offset

@@ -9,7 +9,6 @@ import slavsquatsuperstar.mayonez.engine.GameEngine
 import slavsquatsuperstar.mayonez.engine.JGame
 import slavsquatsuperstar.mayonez.fileio.Assets
 import slavsquatsuperstar.mayonez.physics2d.Physics2D
-import slavsquatsuperstar.mayonez.renderer.Renderer
 import kotlin.system.exitProcess
 
 object Mayonez {

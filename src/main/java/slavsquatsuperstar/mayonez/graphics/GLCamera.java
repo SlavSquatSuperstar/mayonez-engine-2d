@@ -1,11 +1,10 @@
-package slavsquatsuperstar.mayonezgl.renderer;
+package slavsquatsuperstar.mayonez.graphics;
 
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.Preferences;
-import slavsquatsuperstar.mayonez.renderer.Camera;
 
 /**
  * A scene camera for the GL engine.

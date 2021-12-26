@@ -4,7 +4,7 @@ import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.Script;
 import slavsquatsuperstar.mayonez.input.KeyInput;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
-import slavsquatsuperstar.mayonez.renderer.JCamera;
+import slavsquatsuperstar.mayonez.graphics.JCamera;
 import slavsquatsuperstar.mayonez.scripts.KeepInScene;
 
 @SuppressWarnings("unused")

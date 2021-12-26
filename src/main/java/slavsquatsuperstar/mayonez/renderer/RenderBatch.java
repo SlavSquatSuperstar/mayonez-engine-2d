@@ -1,4 +1,4 @@
-package slavsquatsuperstar.mayonezgl.renderer;
+package slavsquatsuperstar.mayonez.renderer;
 
 import org.joml.Vector2f;
 import org.joml.Vector4f;
@@ -7,6 +7,10 @@ import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.Mayonez;
 import slavsquatsuperstar.mayonez.Preferences;
 import slavsquatsuperstar.mayonez.fileio.Assets;
+import slavsquatsuperstar.mayonez.graphics.GLCamera;
+import slavsquatsuperstar.mayonez.graphics.GLSprite;
+import slavsquatsuperstar.mayonez.fileio.GLTexture;
+import slavsquatsuperstar.mayonez.fileio.Shader;
 
 import java.util.ArrayList;
 import java.util.List;
