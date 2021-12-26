@@ -18,16 +18,17 @@ import java.awt.event.KeyEvent;
  */
 public class JRendererTest extends Scene {
 
-    SpriteSheet sprites;
+    private final SpriteSheet sprites;
 
     public JRendererTest() {
         super("Renderer Test Scene", Preferences.SCREEN_WIDTH, Preferences.SCREEN_HEIGHT, 32);
         sprites = new SpriteSheet("assets/textures/spritesheet.png", 16, 16, 26, 0);
-        setGravity(new Vec2(0, 0));
     }
 
     @Override
     protected void init() {
+        setGravity(new Vec2());
+
         addObject(new GameObject("Mario", new Transform(new Vec2(getWidth() / 2f, getHeight() / 2f), new Vec2(2, 2))) {
             @Override
             protected void init() {
@@ -75,7 +76,8 @@ public class JRendererTest extends Scene {
     }
 
     public static void main(String[] args) {
-        Game.start();
-        Game.loadScene(new JRendererTest()); // need to do this after to load assets
+        Mayonez.setUseGL(false);
+        Mayonez.setScene(new JRendererTest());
+        Mayonez.start();
     }
 }

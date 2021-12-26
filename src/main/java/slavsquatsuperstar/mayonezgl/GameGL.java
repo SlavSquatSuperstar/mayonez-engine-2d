@@ -18,11 +18,6 @@ import static org.lwjgl.glfw.GLFW.glfwGetTime;
  */
 public class GameGL { // can't implement runnable otherwise GLFW will crash
 
-    static {
-        System.out.println("static load");
-        game = instance(); // "Lazy" singleton construction
-    }
-
     // Singleton Fields
     private static GameGL game;
 
@@ -36,7 +31,7 @@ public class GameGL { // can't implement runnable otherwise GLFW will crash
     private static Physics2D physics;
 
     public GameGL() {
-        Initializer.init();
+        Mayonez.init();
 
         window = new GLWindow("Mayonez + LWJGL", Preferences.SCREEN_WIDTH, Preferences.SCREEN_HEIGHT);
         window.setKeyInput(KeyInput.INSTANCE);
@@ -50,26 +45,7 @@ public class GameGL { // can't implement runnable otherwise GLFW will crash
         return (null == game) ? game = new GameGL() : game;
     }
 
-    // Getter Methods
-
-    public static SceneGL getScene() {
-        return GameGL.scene;
-    }
-
-    public static void setScene(SceneGL scene) {
-        GameGL.scene = scene;
-        game.startScene();
-    }
-
-    public static Renderer getRenderer() {
-        return renderer;
-    }
-
-    public static Physics2D getPhysics() {
-        return physics;
-    }
-
-    // Game Loop Methods
+    // Resource Management
 
     public static void start() {
         if (running) return; // Don't start the game if already running
@@ -85,6 +61,14 @@ public class GameGL { // can't implement runnable otherwise GLFW will crash
         game.run();
     }
 
+    private void startScene() {
+        if (scene != null && running) {
+            scene.start();
+            renderer.setScene(scene);
+            Logger.trace("Game: Loaded scene \"%s\"", scene.getName());
+        }
+    }
+
     public static void stop(int status) {
         if (!running) return;
 
@@ -95,6 +79,8 @@ public class GameGL { // can't implement runnable otherwise GLFW will crash
         Logger.printExitMessage();
         System.exit(status);
     }
+
+    // Game Loop Methods
 
     public void run() {
         // All time values are in seconds
@@ -144,6 +130,7 @@ public class GameGL { // can't implement runnable otherwise GLFW will crash
 
     public void update(float dt) {
         if (scene != null) scene.update(dt);
+        physics.physicsUpdate(dt);
     }
 
     public void render() {
@@ -152,14 +139,23 @@ public class GameGL { // can't implement runnable otherwise GLFW will crash
         });
     }
 
-    // Helper Methods
+    // Getter Methods
 
-    private void startScene() {
-        if (scene != null && running) {
-            scene.start();
-            renderer.setScene(scene);
-            Logger.trace("Game: Loaded scene \"%s\"", scene.getName());
-        }
+    public static SceneGL getScene() {
+        return GameGL.scene;
+    }
+
+    public static void setScene(SceneGL scene) {
+        GameGL.scene = scene;
+        game.startScene();
+    }
+
+    public static Renderer getRenderer() {
+        return renderer;
+    }
+
+    public static Physics2D getPhysics() {
+        return physics;
     }
 
 }

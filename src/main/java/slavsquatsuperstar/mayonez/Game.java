@@ -1,50 +1,27 @@
 package slavsquatsuperstar.mayonez;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import slavsquatsuperstar.mayonez.fileio.Assets;
 import slavsquatsuperstar.mayonez.input.KeyInput;
 import slavsquatsuperstar.mayonez.input.MouseInput;
 import slavsquatsuperstar.mayonez.physics2d.Physics2D;
-import slavsquatsuperstar.mayonez.renderer.Renderer;
 import slavsquatsuperstar.mayonez.renderer.IMGUI;
 import slavsquatsuperstar.mayonez.renderer.JRenderer;
 
 import java.awt.*;
 
 /**
- * The application that contains the engine's core loop.
+ * An instance of this game using Java's AWT and Swing libraries.
  *
  * @author SlavSquatSuperstar
  */
-public class Game implements Runnable {
+class Game extends GameEngine implements Runnable {
 
-    static {
-        Initializer.init();
-        game = instance(); // "Lazy" singleton construction
-    }
+    private final IMGUI imgui;
+    private Thread thread;
 
-    /*
-     * Field Declarations
-     */
-
-    // Singleton Fields
-    // TODO make start/stop static?
-    private static Game game;
-
-    // Thread Fields
-    private static Thread thread;
-    private static boolean running;
-
-    // Game Layers
-    private static Window window;
-    private static Scene currentScene;
-    private static Renderer renderer;
-    private static Physics2D physics;
-    private static IMGUI imgui;
-
-    private Game() {
+    public Game() {
         // Read preferences and initialize logger
-        Initializer.init();
+        if (!Mayonez.INSTANCE.getINIT_PREFERENCES()) Mayonez.init();
 
         // Set up the window
         window = new JWindow(Preferences.TITLE + " " + Preferences.VERSION, Preferences.SCREEN_WIDTH,
@@ -59,44 +36,35 @@ public class Game implements Runnable {
         imgui = IMGUI.INSTANCE;
     }
 
-    // Game Loop Methods
-
-    public synchronized static Game instance() {
-        return (null == game) ? game = new Game() : game;
-    }
-
-    public static boolean isFullScreen() {
+    public boolean isFullScreen() {
         GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
         GraphicsDevice device = env.getDefaultScreenDevice();
         return device.getFullScreenWindow() != null;
     }
 
-    // Getters and Setters
+    // Resource Management
 
-    public static Scene currentScene() {
-        return currentScene;
+    @Override
+    public synchronized void start() {
+        if (running) return; // Don't start if already running
+        running = true;
+
+        window.start();
+        thread = new Thread(this);
+        thread.start();
+        startScene();
     }
 
-    public static void loadScene(Scene newScene) {
-        currentScene = newScene;
-        startCurrentScene();
+    @Override
+    public synchronized void stop() {
+        if (!running) return;
+        running = false;
+
+        window.stop();
+        thread.interrupt();
     }
 
-    public static Renderer getRenderer() {
-        return renderer;
-    }
-
-    public static Physics2D getPhysics() {
-        return physics;
-    }
-
-    public static int getWindowWidth() {
-        return window.getWidth();
-    }
-
-    public static int getWindowHeight() {
-        return window.getHeight();
-    }
+    // Game Loop Methods
 
     @Override
     public void run() {
@@ -147,94 +115,27 @@ public class Game implements Runnable {
         } catch (Exception e) {
             Logger.warn(ExceptionUtils.getStackTrace(e));
             e.printStackTrace();
-            stop(1);
+            Mayonez.stop(1);
         }
 
-        stop(0);
+        Mayonez.stop(0);
     }
 
-    /**
-     * Refreshes all objects in the current scene.
-     *
-     * @param dt seconds since the last frame
-     */
-    public void update(float dt) throws Exception { // TODO pass dt or use Game.timestep?
+    @Override
+    public void update(float dt) {
         // TODO Poll input events
-        if (KeyInput.keyDown("exit")) {
-            running = false;
-            return;
-        }
-        if (currentScene != null) currentScene.update(dt);
+        if (scene != null) scene.update(dt);
         // TODO multithread physics, set time step higher than refresh rate for smoother results
         physics.physicsUpdate(dt);
     }
 
-    /**
-     * Redraws all objects in the current scene.
-     */
-    public void render() throws Exception {
+    @Override
+    public void render() {
         window.render((g2) -> {
-            if (null != currentScene) currentScene.render(g2);
+            if (null != scene) scene.render(g2);
             renderer.render(g2);
             imgui.render(g2);
         });
-    }
-
-    // Helper Methods
-
-    /**
-     * Initializes the game engine, displays the window, and starts the current scene (if not null).
-     */
-    public static synchronized void start() {
-        if (running) return; // Don't start if already running
-
-        running = true;
-        Logger.log("Engine: Starting %s %s", Preferences.TITLE, Preferences.VERSION);
-
-        Logger.trace("Engine: Loading assets");
-        Assets.scanResources("assets"); // Load all game assets
-
-        // Display window
-        window.start();
-
-        // Start thread
-        thread = new Thread(game);
-        thread.start();
-
-        startCurrentScene();
-    }
-
-    /**
-     * Shuts down the engine and closes the window.
-     *
-     * @param status The exit code for this application. A value of 0 indicates normal, while non-zero status codes
-     *               indicate an error.
-     */
-    public static synchronized void stop(int status) {
-        running = false;
-        Logger.log("Engine: Stopping with exit code %d", status);
-
-        // Free System resources
-        window.stop();
-
-        // Stop thread
-        thread.interrupt();
-        Logger.printExitMessage();
-        System.exit(status);
-    }
-
-    // Helper Methods
-
-    /**
-     * Starts the current scene, if not null
-     */
-    private static void startCurrentScene() {
-        if (currentScene != null && running) {
-            currentScene.start();
-            Game.getPhysics().setScene(currentScene);
-            Game.getRenderer().setScene(currentScene);
-            Logger.trace("Game: Loaded scene \"%s\"", currentScene.getName());
-        }
     }
 
 }

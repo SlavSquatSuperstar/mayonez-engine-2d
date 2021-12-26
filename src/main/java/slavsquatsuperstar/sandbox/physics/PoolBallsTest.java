@@ -2,8 +2,8 @@ package slavsquatsuperstar.sandbox.physics;
 
 import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
-import slavsquatsuperstar.mayonez.Game;
 import slavsquatsuperstar.mayonez.GameObject;
+import slavsquatsuperstar.mayonez.Mayonez;
 import slavsquatsuperstar.mayonez.physics2d.PhysicsMaterial;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
 import slavsquatsuperstar.mayonez.physics2d.colliders.CircleCollider;
@@ -62,8 +62,8 @@ public class PoolBallsTest extends PhysicsTestScene {
     }
 
     public static void main(String[] args) {
-        Game.start();
-        Game.loadScene(new PoolBallsTest("Pool Balls Test"));
+        Mayonez.start();
+        Mayonez.setScene(new PoolBallsTest("Pool Balls Test"));
     }
 
 }

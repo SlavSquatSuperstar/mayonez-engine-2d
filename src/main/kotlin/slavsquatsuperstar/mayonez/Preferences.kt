@@ -16,7 +16,7 @@ object Preferences {
 
     init {
         // Don't set preferences until after file has been read to prevent default values
-        if (!Initializer.INIT_ASSETS) Initializer.init()
+        if (!Mayonez.INIT_ASSETS) Mayonez.init()
         PREFERENCES = Assets.createAsset("preferences.json", AssetType.CLASSPATH, JSONFile::class.java)!!
     }
 
@@ -44,6 +44,9 @@ object Preferences {
     val LOG_LEVEL: Int = PREFERENCES.getInt("log_level")
 
     // Renderer
+    @JvmField
+    val BUFFER_COUNT = PREFERENCES.getInt("buffers")
+
     @JvmField
     val FPS: Int = PREFERENCES.getInt("fps")
 

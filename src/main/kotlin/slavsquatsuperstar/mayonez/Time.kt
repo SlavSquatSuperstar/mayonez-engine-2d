@@ -13,6 +13,7 @@ object Time {
      * @return the duration of this program
      */
     @JvmStatic
+    // TODO use DateTime?
     val time: Float
         get() = (System.nanoTime() - TIME_STARTED) / 1.0E9f
 }

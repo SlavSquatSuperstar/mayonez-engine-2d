@@ -36,8 +36,8 @@ public class LevelScene extends Scene {
     }
 
     public static void main(String[] args) {
-        Game.loadScene(new LevelScene("Level"));
-        Game.start();
+        Mayonez.setScene(new LevelScene("Level"));
+        Mayonez.start();
     }
 
 }

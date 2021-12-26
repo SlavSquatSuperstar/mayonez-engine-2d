@@ -30,8 +30,12 @@ public abstract class PhysicsTestScene extends Scene {
     public PhysicsTestScene(String name, int numShapes) {
         super(name, Preferences.SCREEN_WIDTH, Preferences.SCREEN_HEIGHT, 10);
         setBackground(Colors.WHITE);
-        setGravity(new Vec2());
         NUM_SHAPES = numShapes;
+    }
+
+    @Override
+    protected void init() {
+        setGravity(new Vec2());
     }
 
     @Override

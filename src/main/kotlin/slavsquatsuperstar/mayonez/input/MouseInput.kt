@@ -2,8 +2,7 @@ package slavsquatsuperstar.mayonez.input
 
 import org.lwjgl.glfw.GLFW
 import slavsquatsuperstar.math.Vec2
-import slavsquatsuperstar.mayonez.Game
-import slavsquatsuperstar.mayonez.Logger
+import slavsquatsuperstar.mayonez.Mayonez
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.awt.event.MouseWheelEvent
@@ -164,7 +163,7 @@ object MouseInput : MouseAdapter() {
 
     @JvmStatic
     fun getWorldPos(): Vec2 {
-        val flipped = Vec2(mousePos.x, Game.getWindowHeight() - mousePos.y) // Mirror y
+        val flipped = Vec2(mousePos.x, Mayonez.windowHeight - mousePos.y) // Mirror y
         return flipped.toWorld()
     }
 
@@ -197,7 +196,7 @@ object MouseInput : MouseAdapter() {
     // Helper Methods
 
     private fun Vec2.toWorld(): Vec2 {
-        return this / (Game.currentScene()?.cellSize ?: 1.0f)
+        return this / Mayonez.scene.cellSize
     }
 
 }

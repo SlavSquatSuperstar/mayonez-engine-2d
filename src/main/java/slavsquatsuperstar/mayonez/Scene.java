@@ -58,8 +58,7 @@ public abstract class Scene {
     /**
      * Add necessary objects and provide user-defined initialization behavior.
      */
-    protected void init() {
-    }
+    protected void init() {}
 
     /**
      * Initialize all objects and begin updating the scene.
@@ -100,8 +99,7 @@ public abstract class Scene {
      *
      * @param dt seconds since the last frame
      */
-    protected void onUserUpdate(float dt) {
-    }
+    protected void onUserUpdate(float dt) {}
 
     /**
      * Draw the background image.
@@ -156,14 +154,14 @@ public abstract class Scene {
 
     protected void onAddObject(GameObject obj) {
         if (started) {
-            Game.getRenderer().addObject(obj);
-            Game.getPhysics().addObject(obj);
+            Mayonez.getRenderer().addObject(obj);
+            Mayonez.getPhysics().addObject(obj);
         }
     }
 
     protected void onRemoveObject(GameObject obj) {
-        Game.getRenderer().removeObject(obj);
-        Game.getPhysics().removeObject(obj);
+        Mayonez.getRenderer().removeObject(obj);
+        Mayonez.getPhysics().removeObject(obj);
     }
 
     /**
@@ -247,7 +245,7 @@ public abstract class Scene {
     }
 
     public void setGravity(Vec2 gravity) {
-        Game.getPhysics().setGravity(gravity);
+        Mayonez.getPhysics().setGravity(gravity);
     }
 
     @Override

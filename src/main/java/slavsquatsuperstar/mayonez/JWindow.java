@@ -78,7 +78,7 @@ public class JWindow extends JFrame implements Window {
     private void initGraphics() {
         if (!isVisible()) return;
         try {
-            createBufferStrategy(2);
+            createBufferStrategy(Preferences.BUFFER_COUNT);
             bs = getBufferStrategy();
         } catch (IllegalStateException e) {
             Logger.log("Engine: Error initializing window graphics; trying again next frame.");

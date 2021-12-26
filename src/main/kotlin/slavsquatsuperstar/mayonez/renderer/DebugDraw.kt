@@ -1,7 +1,7 @@
 package slavsquatsuperstar.mayonez.renderer
 
 import slavsquatsuperstar.math.Vec2
-import slavsquatsuperstar.mayonez.Game
+import slavsquatsuperstar.mayonez.Mayonez
 import slavsquatsuperstar.mayonez.physics2d.colliders.*
 import java.awt.*
 import java.awt.geom.Ellipse2D
@@ -188,14 +188,14 @@ object DebugDraw {
      *
      * @return the corresponding screen pixel
      */
-    private fun Float.toScreen(): Float = this * Game.currentScene().cellSize
+    private fun Float.toScreen(): Float = this * Mayonez.scene.cellSize
 
     /**
      * Converts a pair of coordinates from world to screen units.
      *
      * @return the corresponding screen pixels
      */
-    private fun Vec2.toScreen(): Vec2 = this * Game.currentScene().cellSize.toFloat()
+    private fun Vec2.toScreen(): Vec2 = this * Mayonez.scene.cellSize
 
     /**
      * The order an object should be drawn. Higher priority objects (smaller enum order) will be drawn last to be more visible.

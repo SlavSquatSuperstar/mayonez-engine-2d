@@ -2,8 +2,8 @@ package slavsquatsuperstar.sandbox.physics;
 
 import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
-import slavsquatsuperstar.mayonez.Game;
 import slavsquatsuperstar.mayonez.GameObject;
+import slavsquatsuperstar.mayonez.Mayonez;
 import slavsquatsuperstar.mayonez.Script;
 import slavsquatsuperstar.mayonez.input.KeyInput;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
@@ -19,8 +19,8 @@ public class CollisionTest extends PhysicsTestScene {
     }
 
     public static void main(String[] args) {
-        Game.loadScene(new CollisionTest("Collision Test Scene"));
-        Game.start();
+        Mayonez.setScene(new CollisionTest("Collision Test Scene"));
+        Mayonez.start();
     }
 
     @Override

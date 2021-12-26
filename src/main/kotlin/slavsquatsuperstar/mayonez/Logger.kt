@@ -16,11 +16,11 @@ object Logger {
     private val saveLogs: Boolean
 
     // Log File Output
-    private var logFilename: String? = null
-    private var logFile: TextFile? = null
+    private lateinit var logFilename: String
+    private lateinit var logFile: TextFile
 
     init {
-        if (!Initializer.INIT_ASSETS || !Initializer.INIT_PREFERENCES) Initializer.init() // should prevent file from not being read
+        if (!Mayonez.INIT_ASSETS || !Mayonez.INIT_PREFERENCES) Mayonez.init() // should prevent file from not being read
 
         logLevel = Preferences.LOG_LEVEL
         saveLogs = Preferences.SAVE_LOGS
@@ -42,10 +42,10 @@ object Logger {
     }
 
     private fun logInternal(msg: Any?, vararg args: Any?, level: LogLevel) {
-        val output = StringBuilder("[%02d:%.4f] ".format((Time.time / 60).toInt(), Time.time % 60)) // Time stamp
+        val output = StringBuilder("[%02d:%2.4f] ".format((Time.time / 60).toInt(), Time.time % 60)) // Time stamp
         try {
             output.append(msg.toString().format(*args)) // Level prefix
-            if (saveLogs) logFile?.append(output.toString()) // Always save to log regardless of level
+            if (saveLogs) logFile.append(output.toString()) // Always save to log regardless of level
         } catch (e: IllegalFormatException) {
             output.append("Logger: Could not format message \"$msg\"")
         } finally {

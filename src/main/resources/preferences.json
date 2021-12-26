@@ -6,6 +6,7 @@
 	"save_logs": true,
 	"logs_directory": "logs/",
 	"log_level": "1",
+	"buffers": 2,
 	"fps": 60,
 	"physics_iterations": 8,
 	"max_batch_size": 1000,

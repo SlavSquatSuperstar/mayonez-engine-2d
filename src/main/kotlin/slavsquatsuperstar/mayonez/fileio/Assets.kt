@@ -17,11 +17,10 @@ import java.util.regex.Pattern
  *
  * @author SlavSquatSuperstar
  */
+// TODO preload stage, map filetype to subclass
 object Assets {
 
     private val ASSETS = HashMap<String, Asset>()
-
-    // TODO preload stage, map filetype to subclass
 
     /**
      * Recursively searches a resource directory inside the JAR and adds all assets.
@@ -141,7 +140,6 @@ object Assets {
      */
     @JvmStatic
     fun clearAssets() {
-        println("In clear method")
         ASSETS.clear()
     }
 

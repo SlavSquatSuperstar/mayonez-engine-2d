@@ -3,9 +3,9 @@ package slavsquatsuperstar.mayonez.renderer;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
-import slavsquatsuperstar.mayonez.Game;
 import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Logger;
+import slavsquatsuperstar.mayonez.Mayonez;
 import slavsquatsuperstar.mayonez.fileio.Assets;
 import slavsquatsuperstar.mayonez.fileio.Texture;
 
@@ -28,7 +28,7 @@ public class JSprite extends Sprite {
         } catch (NullPointerException e) {
             Logger.log(ExceptionUtils.getStackTrace(e));
             Logger.log("Sprite: Error loading image \"%s\"", filename);
-            Game.stop(-1);
+            Mayonez.stop(-1);
         }
     }
 

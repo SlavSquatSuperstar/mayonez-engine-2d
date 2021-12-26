@@ -2,8 +2,8 @@ package slavsquatsuperstar.sandbox.physics;
 
 import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
-import slavsquatsuperstar.mayonez.Game;
 import slavsquatsuperstar.mayonez.GameObject;
+import slavsquatsuperstar.mayonez.Mayonez;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
 import slavsquatsuperstar.mayonez.physics2d.colliders.AlignedBoxCollider2D;
 
@@ -36,8 +36,8 @@ public class AngularResolutionTest extends PhysicsTestScene {
     }
 
     public static void main(String[] args) {
-        Game.loadScene(new AngularResolutionTest("Angular Impulse Resolution Test"));
-        Game.start();
+        Mayonez.setScene(new AngularResolutionTest("Angular Impulse Resolution Test"));
+        Mayonez.start();
     }
 
 }
