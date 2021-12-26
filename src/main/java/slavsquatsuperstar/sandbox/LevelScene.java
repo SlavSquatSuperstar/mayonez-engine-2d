@@ -36,6 +36,7 @@ public class LevelScene extends Scene {
     }
 
     public static void main(String[] args) {
+        Mayonez.setUseGL(false);
         Mayonez.setScene(new LevelScene("Level"));
         Mayonez.start();
     }

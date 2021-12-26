@@ -1,7 +1,9 @@
 package slavsquatsuperstar.mayonezgl;
 
-import org.apache.commons.lang3.exception.ExceptionUtils;
-import slavsquatsuperstar.mayonez.*;
+import slavsquatsuperstar.mayonez.GameEngine;
+import slavsquatsuperstar.mayonez.Logger;
+import slavsquatsuperstar.mayonez.Mayonez;
+import slavsquatsuperstar.mayonez.Preferences;
 import slavsquatsuperstar.mayonez.fileio.Assets;
 import slavsquatsuperstar.mayonez.input.KeyInput;
 import slavsquatsuperstar.mayonez.input.MouseInput;
@@ -54,61 +56,19 @@ public class GLGame extends GameEngine { // can't implement runnable otherwise G
 
     // Game Loop Methods
 
-    public void run() {
-        // All time values are in seconds
-        float lastTime = 0f; // Last time the game loop iterated
-        float currentTime; // Time of current frame
-        float deltaTime = 0f; // Unprocessed time since last frame
-
-        float timer = 0f;
-        int frames = 0;
-
-        try {
-            // Render to the screen until the user closes the window or pressed the ESCAPE key
-            while (running && window.notClosedByUser()) {
-                boolean ticked = false; // Has engine actually updated?
-                currentTime = (float) glfwGetTime();
-                float passedTime = currentTime - lastTime;
-                deltaTime += passedTime;
-                timer += passedTime;
-                lastTime = currentTime;
-
-                window.beginFrame(); // Poll input
-
-                while (deltaTime >= Time.TIME_STEP) {
-                    deltaTime -= Time.TIME_STEP;
-                    update(Time.TIME_STEP);
-                    ticked = true;
-                }
-                if (ticked) {
-                    render();
-                    frames++;
-                }
-                if (timer >= 1) {
-                    Logger.log("Frames per Second: %d", frames);
-                    timer = 0;
-                    frames = 0;
-                }
-                window.endFrame();
-            }
-        } catch (Exception e) {
-            Logger.log(ExceptionUtils.getStackTrace(e));
-            e.printStackTrace();
-            Mayonez.stop(1);
-        }
-
-        Mayonez.stop(0);
-    }
-
-    public void update(float dt) {
+    public void update(float dt) throws Exception {
         if (scene != null) scene.update(dt);
         physics.physicsUpdate(dt);
     }
 
-    public void render() {
+    public void render() throws Exception {
         window.render((_g2) -> {
             if (scene != null) renderer.render(_g2); // don't pass a G2D object
         });
     }
 
+    @Override
+    public float getCurrentTime() {
+        return (float) glfwGetTime();
+    }
 }

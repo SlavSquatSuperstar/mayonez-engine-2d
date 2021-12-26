@@ -14,12 +14,11 @@ public class LevelEditor extends Scene {
 
     public LevelEditor(String name) {
         super(name, Preferences.SCREEN_WIDTH, Preferences.SCREEN_HEIGHT, 42);
+        setGravity(new Vec2());
     }
 
     @Override
     protected void init() {
-        setGravity(new Vec2());
-
         addObject(new GameObject("Ground", new Vec2(getWidth() * 0.5f, 0)) {
             @Override
             protected void init() {
@@ -45,6 +44,7 @@ public class LevelEditor extends Scene {
     }
 
     public static void main(String[] args) {
+        Mayonez.setUseGL(false);
         Mayonez.setScene(new LevelEditor("Level Editor"));
         Mayonez.start();
     }

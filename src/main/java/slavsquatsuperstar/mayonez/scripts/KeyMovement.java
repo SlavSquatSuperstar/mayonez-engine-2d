@@ -1,7 +1,7 @@
 package slavsquatsuperstar.mayonez.scripts;
 
 import slavsquatsuperstar.math.Vec2;
-import slavsquatsuperstar.mayonez.Time;
+import slavsquatsuperstar.mayonez.Mayonez;
 import slavsquatsuperstar.mayonez.input.KeyInput;
 
 /**
@@ -23,7 +23,7 @@ public class KeyMovement extends MovementScript {
         // Don't want to move faster diagonally so normalize
         Vec2 input = getRawInput().unit().mul(speed);
         switch (mode) {
-            case POSITION -> transform.move(input.mul(Time.TIME_STEP));
+            case POSITION -> transform.move(input.mul(Mayonez.TIME_STEP));
             case VELOCITY -> rb.addVelocity(input);
             case ACCELERATION -> rb.addAcceleration(input);
             case IMPULSE -> rb.addImpulse(input);

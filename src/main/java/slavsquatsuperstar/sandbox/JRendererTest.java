@@ -23,12 +23,11 @@ public class JRendererTest extends Scene {
     public JRendererTest() {
         super("Renderer Test Scene", Preferences.SCREEN_WIDTH, Preferences.SCREEN_HEIGHT, 32);
         sprites = new SpriteSheet("assets/textures/spritesheet.png", 16, 16, 26, 0);
+        setGravity(new Vec2());
     }
 
     @Override
     protected void init() {
-        setGravity(new Vec2());
-
         addObject(new GameObject("Mario", new Transform(new Vec2(getWidth() / 2f, getHeight() / 2f), new Vec2(2, 2))) {
             @Override
             protected void init() {

@@ -12,6 +12,22 @@ import kotlin.system.exitProcess
 
 object Mayonez {
 
+    @JvmField
+    val TIME_STARTED: Long = System.nanoTime()
+
+    @JvmField
+    val TIME_STEP: Float
+
+    /**
+     * Returns the time in seconds since the program started.
+     *
+     * @return the duration of this program
+     */
+    @JvmStatic
+    // TODO use DateTime?
+    val time: Float
+        get() = (System.nanoTime() - TIME_STARTED) / 1.0E9f
+
     // Initializer
     var INIT_ASSETS = false
         private set
@@ -24,8 +40,8 @@ object Mayonez {
     private var started = false
 
     init {
-//        println("Mayonez init")
         init()
+        TIME_STEP = 1.0f / Preferences.FPS
     }
 
     // Init Methods
@@ -43,12 +59,12 @@ object Mayonez {
         // Set up Assets system
         if (!INIT_ASSETS) {
             INIT_ASSETS = true
-            val assets = Assets
+//            val assets = Assets
         }
         // Read Preferences
         if (!INIT_PREFERENCES) {
             INIT_PREFERENCES = true
-            val prefs = Preferences
+//            val prefs = Preferences
         }
         if (!INIT_RESOURCES) {
             INIT_RESOURCES = true

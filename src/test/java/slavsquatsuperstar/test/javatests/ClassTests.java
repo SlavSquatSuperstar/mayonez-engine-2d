@@ -3,6 +3,7 @@ package slavsquatsuperstar.test.javatests;
 import org.junit.jupiter.api.Test;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.GameObject;
+import slavsquatsuperstar.mayonez.Mayonez;
 import slavsquatsuperstar.mayonez.Scene;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -58,6 +59,8 @@ public class ClassTests {
 
     @Test
     public void getObjectsInSceneGeneric() {
+        // TODO needs decoupling
+        Mayonez.setUseGL(false);
         Scene scene = new Scene("ClassTests Scene") {
             @Override
             protected void init() {
@@ -68,6 +71,7 @@ public class ClassTests {
                 addObject(new A("obj5", new Vec2()));
             }
         };
+        Mayonez.setScene(scene);
         scene.start();
         assertEquals(scene.getObject("Obj1").name, "obj1");
         assertEquals(scene.getObjects(GameObject.class).get(1).getClass(), GameObject.class);

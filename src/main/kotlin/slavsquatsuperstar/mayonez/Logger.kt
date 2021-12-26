@@ -42,7 +42,8 @@ object Logger {
     }
 
     private fun logInternal(msg: Any?, vararg args: Any?, level: LogLevel) {
-        val output = StringBuilder("[%02d:%2.4f] ".format((Time.time / 60).toInt(), Time.time % 60)) // Time stamp
+        val time = Mayonez.time
+        val output = StringBuilder("[%02d:%2.4f] ".format((time / 60).toInt(), time % 60)) // Time stamp
         try {
             output.append(msg.toString().format(*args)) // Level prefix
             if (saveLogs) logFile.append(output.toString()) // Always save to log regardless of level
