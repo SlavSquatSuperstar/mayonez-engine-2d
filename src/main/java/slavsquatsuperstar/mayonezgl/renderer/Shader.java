@@ -2,10 +2,10 @@ package slavsquatsuperstar.mayonezgl.renderer;
 
 import org.joml.*;
 import org.lwjgl.BufferUtils;
+import slavsquatsuperstar.mayonez.Logger;
+import slavsquatsuperstar.mayonez.Mayonez;
 import slavsquatsuperstar.mayonez.fileio.AssetType;
 import slavsquatsuperstar.mayonez.fileio.TextFile;
-import slavsquatsuperstar.mayonez.Logger;
-import slavsquatsuperstar.mayonezgl.GameGL;
 
 import java.io.IOException;
 import java.nio.FloatBuffer;
@@ -67,7 +67,7 @@ public class Shader extends TextFile {
         if (success == GL_FALSE) {
             Logger.warn("Error: Could not compile \"defaultshader.glsl\" vertex shader");
             Logger.warn("GL: " + glGetShaderInfoLog(vertexID));
-            GameGL.stop(1);
+            Mayonez.stop(1);
         }
         Logger.trace("Successfully compiled \"defaultshader.glsl\" vertex shader");
 
@@ -80,7 +80,7 @@ public class Shader extends TextFile {
         if (success == GL_FALSE) {
             Logger.warn("Error: Could not compile \"defaultshader.glsl\" fragment shader");
             Logger.warn("GL: " + glGetShaderInfoLog(fragmentID));
-            GameGL.stop(1);
+            Mayonez.stop(1);
         }
         Logger.trace("Successfully compiled \"%s\" fragment shader", filename);
 
@@ -94,7 +94,7 @@ public class Shader extends TextFile {
         if (success == GL_FALSE) {
             Logger.warn("Error: Could not link \"%s\" shaders", filename);
             Logger.warn("GL: " + glGetProgramInfoLog(shaderProgramID));
-            GameGL.stop(1);
+            Mayonez.stop(1);
         }
         Logger.trace("Successfully linked \"%s\" shaders", filename);
     }

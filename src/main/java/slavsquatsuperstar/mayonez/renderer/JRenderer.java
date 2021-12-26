@@ -27,7 +27,6 @@ public class JRenderer implements Renderer {
         debugDraw = DebugDraw.INSTANCE;
     }
 
-    // TODO Render layer: clear list and submit visible objects every frame?
     public void render(Graphics2D g2) {
         assert g2 != null;
 

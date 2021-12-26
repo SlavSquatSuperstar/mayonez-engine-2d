@@ -6,7 +6,6 @@ import slavsquatsuperstar.mayonez.fileio.Assets;
 import slavsquatsuperstar.mayonez.input.KeyInput;
 import slavsquatsuperstar.mayonez.input.MouseInput;
 import slavsquatsuperstar.mayonez.physics2d.Physics2D;
-import slavsquatsuperstar.mayonez.renderer.Renderer;
 import slavsquatsuperstar.mayonezgl.renderer.GLRenderer;
 
 import static org.lwjgl.glfw.GLFW.glfwGetTime;
@@ -16,22 +15,10 @@ import static org.lwjgl.glfw.GLFW.glfwGetTime;
  *
  * @author SlavSquatSuperstar
  */
-public class GameGL { // can't implement runnable otherwise GLFW will crash
-
-    // Singleton Fields
-    private static GameGL game;
-
-    // Game Fields
-    private static boolean running = false;
-
-    // Game Layers
-    private static Window window;
-    private static SceneGL scene;
-    private static Renderer renderer;
-    private static Physics2D physics;
-
-    public GameGL() {
-        Mayonez.init();
+public class GLGame extends GameEngine { // can't implement runnable otherwise GLFW will crash
+    
+    public GLGame() {
+        if (!Mayonez.INSTANCE.getINIT_PREFERENCES()) Mayonez.init();
 
         window = new GLWindow("Mayonez + LWJGL", Preferences.SCREEN_WIDTH, Preferences.SCREEN_HEIGHT);
         window.setKeyInput(KeyInput.INSTANCE);
@@ -41,13 +28,10 @@ public class GameGL { // can't implement runnable otherwise GLFW will crash
         physics = new Physics2D();
     }
 
-    public static GameGL instance() {
-        return (null == game) ? game = new GameGL() : game;
-    }
-
     // Resource Management
 
-    public static void start() {
+    @Override
+    public void start() {
         if (running) return; // Don't start the game if already running
 
         running = true;
@@ -57,27 +41,15 @@ public class GameGL { // can't implement runnable otherwise GLFW will crash
         Assets.scanResources("assets"); // Load all game assets
 
         window.start();
-        game.startScene();
-        game.run();
+        startScene();
+        run();
     }
 
-    private void startScene() {
-        if (scene != null && running) {
-            scene.start();
-            renderer.setScene(scene);
-            Logger.trace("Game: Loaded scene \"%s\"", scene.getName());
-        }
-    }
-
-    public static void stop(int status) {
+    @Override
+    public void stop() {
         if (!running) return;
-
-        Logger.log("Engine: Stopping with exit code %d", status);
         running = false;
         window.stop();
-
-        Logger.printExitMessage();
-        System.exit(status);
     }
 
     // Game Loop Methods
@@ -122,10 +94,10 @@ public class GameGL { // can't implement runnable otherwise GLFW will crash
         } catch (Exception e) {
             Logger.log(ExceptionUtils.getStackTrace(e));
             e.printStackTrace();
-            stop(1);
+            Mayonez.stop(1);
         }
 
-        stop(0);
+        Mayonez.stop(0);
     }
 
     public void update(float dt) {
@@ -137,25 +109,6 @@ public class GameGL { // can't implement runnable otherwise GLFW will crash
         window.render((_g2) -> {
             if (scene != null) renderer.render(_g2); // don't pass a G2D object
         });
-    }
-
-    // Getter Methods
-
-    public static SceneGL getScene() {
-        return GameGL.scene;
-    }
-
-    public static void setScene(SceneGL scene) {
-        GameGL.scene = scene;
-        game.startScene();
-    }
-
-    public static Renderer getRenderer() {
-        return renderer;
-    }
-
-    public static Physics2D getPhysics() {
-        return physics;
     }
 
 }

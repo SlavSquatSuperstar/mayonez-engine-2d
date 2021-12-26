@@ -176,7 +176,6 @@ public class Physics2D {
 
             for (int i = 0; i < numContacts; i++) {
                 // Radius from center of mass to contact
-                // TODO transferring too much angular momentum, check radii
                 Vec2 contact = col.getContact(i);
                 Vec2 rad1 = contact.sub(r1.getPosition());
                 Vec2 rad2 = contact.sub(r2.getPosition());

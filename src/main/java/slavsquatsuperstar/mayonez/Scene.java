@@ -13,7 +13,6 @@ import java.util.stream.Collectors;
  *
  * @author SlavSquatSuperstar
  */
-// TODO individual cell size
 public abstract class Scene {
 
     // Object Fields
@@ -136,7 +135,8 @@ public abstract class Scene {
         SceneModifier sm = () -> {
             objects.add(obj.setScene(this));
             obj.start(); // add object components so renderer and physics can access it
-            onAddObject(obj);
+            Mayonez.getRenderer().addObject(obj);
+            Mayonez.getPhysics().addObject(obj);
             Logger.trace("Added object \"%s\" to scene \"%s\"", obj.name, this.name);
         };
         if (started) toModify.add(sm);
@@ -147,21 +147,10 @@ public abstract class Scene {
         obj.destroy();
         toModify.add(() -> {
             objects.remove(obj);
-            onRemoveObject(obj);
+            Mayonez.getRenderer().removeObject(obj);
+            Mayonez.getPhysics().removeObject(obj);
             Logger.trace("Removed object \"%s\" from scene \"%s\"", obj.name, this.name);
         });
-    }
-
-    protected void onAddObject(GameObject obj) {
-        if (started) {
-            Mayonez.getRenderer().addObject(obj);
-            Mayonez.getPhysics().addObject(obj);
-        }
-    }
-
-    protected void onRemoveObject(GameObject obj) {
-        Mayonez.getRenderer().removeObject(obj);
-        Mayonez.getPhysics().removeObject(obj);
     }
 
     /**

@@ -70,8 +70,7 @@ abstract class Collider2D : Component() {
 
     override fun start() {
         rb = parent.getComponent(Rigidbody2D::class.java)
-        if (rb == null) // TODO what to do if object is static
-            Logger.log("%s needs a rigidbody to function properly!", this)
+        if (rb == null) Logger.log("%s needs a rigidbody to function properly!", this)
     }
 
     // Shape Properties

@@ -12,7 +12,6 @@ import slavsquatsuperstar.mayonez.scripts.KeepInScene;
  *
  * @author SlavSquatSuperstar
  */
-// TODO reference parent scripts
 public class Camera extends Script {
 
     private float width, height; // In world units

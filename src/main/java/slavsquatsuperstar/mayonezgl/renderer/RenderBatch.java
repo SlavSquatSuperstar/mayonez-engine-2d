@@ -4,9 +4,9 @@ import org.joml.Vector2f;
 import org.joml.Vector4f;
 import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
+import slavsquatsuperstar.mayonez.Mayonez;
 import slavsquatsuperstar.mayonez.Preferences;
 import slavsquatsuperstar.mayonez.fileio.Assets;
-import slavsquatsuperstar.mayonezgl.GameGL;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -160,7 +160,7 @@ public class RenderBatch {
             Vec2 objPos = sprite.getTransform().position;
             Vec2 objScale = sprite.getTransform().scale;
             Vec2 vertPos = quadVertices[i];
-            float worldScale = GameGL.getScene().getCellSize();
+            float worldScale = Mayonez.getScene().getCellSize();
 
             // sprite_pos = (obj_pos + vert_pos * obj_scale) * world_scale
             Vec2 spritePos = objPos.add(vertPos.mul(objScale)).mul(worldScale);

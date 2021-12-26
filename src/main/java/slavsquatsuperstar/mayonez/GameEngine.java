@@ -9,7 +9,7 @@ import slavsquatsuperstar.mayonez.renderer.Renderer;
  * @author SlavSquatSuperstar
  */
 // TODO probably better off with enums of companion objects
-abstract class GameEngine {
+public abstract class GameEngine {
 
     protected boolean running = false;
 
@@ -18,6 +18,8 @@ abstract class GameEngine {
     protected Renderer renderer;
     protected Scene scene;
     protected Window window;
+
+    protected GameEngine() {}
 
     // Resource Management Methods
 

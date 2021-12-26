@@ -7,6 +7,7 @@ import slavsquatsuperstar.mayonez.Logger.warn
 import slavsquatsuperstar.mayonez.fileio.Assets
 import slavsquatsuperstar.mayonez.physics2d.Physics2D
 import slavsquatsuperstar.mayonez.renderer.Renderer
+import slavsquatsuperstar.mayonezgl.GLGame
 import kotlin.system.exitProcess
 
 object Mayonez {
@@ -31,11 +32,7 @@ object Mayonez {
 
     @JvmStatic
     fun setUseGL(useGL: Boolean) {
-        if (useGL) {
-//            game = GameGL()
-        } else {
-            game = Game()
-        }
+        game = if (useGL) GLGame() else JGame()
     }
 
     /**

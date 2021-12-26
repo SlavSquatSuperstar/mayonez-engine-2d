@@ -3,12 +3,14 @@ package slavsquatsuperstar.sandbox;
 import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.GameObject;
+import slavsquatsuperstar.mayonez.Mayonez;
 import slavsquatsuperstar.mayonez.Transform;
+import slavsquatsuperstar.mayonez.physics2d.CollisionManifold;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
 import slavsquatsuperstar.mayonez.physics2d.colliders.AlignedBoxCollider2D;
+import slavsquatsuperstar.mayonez.scripts.DragAndDrop;
 import slavsquatsuperstar.mayonez.scripts.KeyMovement;
 import slavsquatsuperstar.mayonez.scripts.MoveMode;
-import slavsquatsuperstar.mayonezgl.GameGL;
 import slavsquatsuperstar.mayonezgl.SceneGL;
 import slavsquatsuperstar.mayonezgl.SpriteSheetGL;
 
@@ -47,20 +49,20 @@ public class GLRendererTest extends SceneGL {
                 addComponent(sprites.getSprite(spriteIndex));
                 addComponent(new AlignedBoxCollider2D(new Vec2(0.8f, 1)));
                 addComponent(new Rigidbody2D(1f));
-//                addComponent(new DragAndDrop("left mouse", false));
+                addComponent(new DragAndDrop("left mouse", false));
             }
 
-//            @Override
-//            public void onCollision(CollisionManifold collision) {
-//                destroy();
-//            }
+            @Override
+            public void onCollision(CollisionManifold collision) {
+                destroy();
+            }
         };
     }
 
     public static void main(String[] args) {
-        GameGL.instance();
-        GameGL.setScene(new GLRendererTest());
-        GameGL.start();
+        Mayonez.setUseGL(true);
+        Mayonez.setScene(new GLRendererTest());
+        Mayonez.start();
     }
 
 }

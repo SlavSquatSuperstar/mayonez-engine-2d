@@ -14,12 +14,12 @@ import java.awt.*;
  *
  * @author SlavSquatSuperstar
  */
-class Game extends GameEngine implements Runnable {
+public class JGame extends GameEngine implements Runnable {
 
     private final IMGUI imgui;
     private Thread thread;
 
-    public Game() {
+    public JGame() {
         // Read preferences and initialize logger
         if (!Mayonez.INSTANCE.getINIT_PREFERENCES()) Mayonez.init();
 
@@ -59,7 +59,6 @@ class Game extends GameEngine implements Runnable {
     public synchronized void stop() {
         if (!running) return;
         running = false;
-
         window.stop();
         thread.interrupt();
     }
