@@ -1,5 +1,6 @@
 package slavsquatsuperstar.mayonezgl;
 
+import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
@@ -20,8 +21,8 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 public class GLWindow implements Window {
 
     private long window; // The window pointer
-    private String title;
-    private int width, height;
+    private final String title;
+    private final int width, height;
 
 //    private KeyInput keyboard;
 //    private MouseInput mouse;
@@ -145,5 +146,23 @@ public class GLWindow implements Window {
         glfwSetMouseButtonCallback(window, MouseInput::mouseButtonCallback);
         glfwSetCursorPosCallback(window, MouseInput::mousePosCallback);
         glfwSetScrollCallback(window, MouseInput::mouseScrollCallback);
+    }
+
+    // Properties
+
+    @NotNull
+    @Override
+    public String getTitle() {
+        return title;
+    }
+
+    @Override
+    public int getWidth() {
+        return width;
+    }
+
+    @Override
+    public int getHeight() {
+        return height;
     }
 }

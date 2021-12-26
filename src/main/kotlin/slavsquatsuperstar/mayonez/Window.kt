@@ -11,6 +11,10 @@ import slavsquatsuperstar.mayonez.input.MouseInput
  */
 interface Window {
 
+    val width: Int
+    val height: Int
+    val title: String
+
     // Engine Methods
     /**
      * Initialize the window and setup system resources.

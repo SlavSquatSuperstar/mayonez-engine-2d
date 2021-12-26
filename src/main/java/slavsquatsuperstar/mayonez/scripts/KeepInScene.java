@@ -1,13 +1,13 @@
 package slavsquatsuperstar.mayonez.scripts;
 
+import slavsquatsuperstar.math.MathUtils;
+import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.Logger;
 import slavsquatsuperstar.mayonez.Scene;
 import slavsquatsuperstar.mayonez.Script;
-import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
 import slavsquatsuperstar.mayonez.physics2d.colliders.AlignedBoxCollider2D;
 import slavsquatsuperstar.mayonez.physics2d.colliders.Collider2D;
-import slavsquatsuperstar.math.MathUtils;
 
 /**
  * Dictates what happens when an object reaches the edge of the scene.
@@ -94,8 +94,7 @@ public class KeepInScene extends Script {
     public void onReachLeft() {
         switch (mode) {
             case STOP: // Set velocity to 0 if stopping
-                if (rb != null)
-                    rb.getVelocity().x = 0;
+                if (rb != null) rb.getVelocity().x = 0;
                 break;
             case BOUNCE: // Reverse velocity if bouncing
                 rb.getVelocity().x *= -objectCollider.getMaterial().getBounce();
@@ -109,8 +108,7 @@ public class KeepInScene extends Script {
     public void onReachRight() {
         switch (mode) {
             case STOP:
-                if (rb != null)
-                    rb.getVelocity().x = 0;
+                if (rb != null) rb.getVelocity().x = 0;
                 break;
             case BOUNCE:
                 rb.getVelocity().x *= -objectCollider.getMaterial().getBounce();
@@ -124,8 +122,7 @@ public class KeepInScene extends Script {
     public void onReachTop() {
         switch (mode) {
             case STOP:
-                if (rb != null)
-                    rb.getVelocity().y = 0;
+                if (rb != null) rb.getVelocity().y = 0;
                 break;
             case BOUNCE:
                 rb.getVelocity().y *= -objectCollider.getMaterial().getBounce();
@@ -140,8 +137,7 @@ public class KeepInScene extends Script {
     public void onReachBottom() {
         switch (mode) {
             case STOP:
-                if (rb != null)
-                    rb.getVelocity().y = 0;
+                if (rb != null) rb.getVelocity().y = 0;
                 break;
             case BOUNCE:
                 rb.getVelocity().y *= -objectCollider.getMaterial().getBounce();
@@ -153,31 +149,31 @@ public class KeepInScene extends Script {
     }
 
     public void onPassLeft() {
-        if (mode == Mode.WRAP)
-            parent.setX(maxX + boundingBox.width() * 0.5f);
-        else if (mode == Mode.DELETE)
-            parent.destroy();
+        switch (mode) {
+            case WRAP -> parent.setX(maxX + boundingBox.width() * 0.5f);
+            case DELETE -> parent.destroy();
+        }
     }
 
     public void onPassRight() {
-        if (mode == Mode.WRAP)
-            parent.setX(minX - boundingBox.width() * 0.5f);
-        else if (mode == Mode.DELETE)
-            parent.destroy();
+        switch (mode) {
+            case WRAP -> parent.setX(minX - boundingBox.width() * 0.5f);
+            case DELETE -> parent.destroy();
+        }
     }
 
     public void onPassTop() {
-        if (mode == Mode.WRAP)
-            parent.setY(maxY + boundingBox.height() * 0.5f);
-        else if (mode == Mode.DELETE)
-            parent.destroy();
+        switch (mode) {
+            case WRAP -> parent.setY(maxY + boundingBox.height() * 0.5f);
+            case DELETE -> parent.destroy();
+        }
     }
 
     public void onPassBottom() {
-        if (mode == Mode.WRAP)
-            parent.setY(minY - boundingBox.height() * 0.5f);
-        else if (mode == Mode.DELETE)
-            parent.destroy();
+        switch (mode) {
+            case WRAP -> parent.setY(minY - boundingBox.height() * 0.5f);
+            case DELETE -> parent.destroy();
+        }
     }
 
     public enum Mode {

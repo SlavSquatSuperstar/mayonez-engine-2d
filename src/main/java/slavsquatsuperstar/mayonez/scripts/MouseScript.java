@@ -1,7 +1,7 @@
 package slavsquatsuperstar.mayonez.scripts;
 
-import slavsquatsuperstar.mayonez.input.MouseInput;
 import slavsquatsuperstar.math.Vec2;
+import slavsquatsuperstar.mayonez.input.MouseInput;
 import slavsquatsuperstar.mayonez.physics2d.colliders.Collider2D;
 
 // TODO use mouse events and save states (held, released)
@@ -20,7 +20,7 @@ public abstract class MouseScript extends MovementScript {
     protected String button = "left mouse";
 
     // Internal Script
-    protected float lastMx, lastMy;
+    protected Vec2 lastMouse = new Vec2();
     private boolean mouseHeld;
 
     public MouseScript() {
@@ -54,8 +54,7 @@ public abstract class MouseScript extends MovementScript {
         }
 
         onMouseMove();
-        lastMx = MouseInput.getWorldX() + MouseInput.getWorldDx();
-        lastMy = MouseInput.getWorldY() + MouseInput.getWorldDy();
+        lastMouse = MouseInput.getWorldPos().add(MouseInput.getWorldDisp());
     }
 
     // Input Helper Methods
@@ -63,9 +62,7 @@ public abstract class MouseScript extends MovementScript {
     // TODO Use MouseInput collision detection instead
     protected boolean isMouseOnObject() {
         // Using last mouse position is more reliable when mouse is moving fast
-        if (collider != null)
-            return collider.contains(getScene().camera().getOffset().add(new Vec2(lastMx, lastMy)));
-        return true;
+        return collider == null || collider.contains(getScene().camera().getOffset().add(lastMouse));
     }
 
     // Mouse Event Methods
@@ -76,7 +73,7 @@ public abstract class MouseScript extends MovementScript {
     public void onMouseMove() {}
 
     /**
-     * What to do when the specified button is pressed.
+     * What to do when the specified button is pressed on this object.
      */
     public void onMouseDown() {}
 
@@ -85,6 +82,11 @@ public abstract class MouseScript extends MovementScript {
      */
     public void onMouseUp() {}
 
+    /**
+     * If the specified mouse button is held down.
+     *
+     * @return if the button is down
+     */
     public boolean isMouseHeld() {
         return mouseHeld;
     }

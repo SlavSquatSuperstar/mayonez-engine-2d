@@ -3,6 +3,7 @@ package slavsquatsuperstar.mayonez.input
 import org.lwjgl.glfw.GLFW
 import slavsquatsuperstar.math.Vec2
 import slavsquatsuperstar.mayonez.Game
+import slavsquatsuperstar.mayonez.Logger
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.awt.event.MouseWheelEvent
@@ -12,24 +13,19 @@ import java.awt.event.MouseWheelEvent
  *
  * @author SlavSquatSuperstar
  */
+@Suppress("unused")
 object MouseInput : MouseAdapter() {
 
-    /*
-     * Fields and Properties
-     */
+    /* Fields and Properties */
 
     // Mouse Pointer Fields (in pixels)
-    private var mouseX: Float = 0.0f
-    private var mouseY: Float = 0.0f
-    private var mouseDx: Float = 0.0f // drag displacement
-    private var mouseDy: Float = 0.0f
+    private var mousePos = Vec2()
+    private var mouseDisp = Vec2() // drag displacement
 
     // Mouse Scroll Fields
-    private var scrollX: Float = 0.0f
-    private var scrollY: Float = 0.0f
+    private var scroll = Vec2()
 
     // Mouse Button Fields
-
     private var buttons = BooleanArray(9)
     private var buttonsLast = BooleanArray(9)
 
@@ -52,14 +48,11 @@ object MouseInput : MouseAdapter() {
         buttonsLast.fill(false)
     }
 
-    /*
-     * Callback Methods
-     */
+    /* Callback Methods */
 
     // Mouse Button Callbacks
 
     @JvmStatic
-    @Suppress("unused")
     fun mouseButtonCallback(window: Long, button: Int, action: Int, mods: Int) {
         if (action == GLFW.GLFW_PRESS) {
             setButton(button, true)
@@ -93,9 +86,8 @@ object MouseInput : MouseAdapter() {
     // Mouse Movement Callbacks
 
     @JvmStatic
-    @SuppressWarnings("unused")
     fun mousePosCallback(window: Long, xPos: Double, yPos: Double) {
-        if (pressed) setMouseDisp(xPos - mouseX, yPos - mouseY)
+        if (pressed) setMouseDisp(xPos - mousePos.x, yPos - mousePos.y)
         setMousePos(xPos, yPos)
     }
 
@@ -105,18 +97,16 @@ object MouseInput : MouseAdapter() {
 
     override fun mouseDragged(e: MouseEvent) {
         pressed = true
-        setMouseDisp(e.x - mouseX, e.y - mouseY)
+        setMouseDisp(e.x - mousePos.x, e.y - mousePos.y)
         setMousePos(e.x, e.y)
     }
 
     private fun setMousePos(x: Number, y: Number) {
-        mouseX = x.toFloat()
-        mouseY = y.toFloat()
+        mousePos.set(x.toFloat(), y.toFloat())
     }
 
     private fun setMouseDisp(dx: Number, dy: Number) {
-        mouseDx = dx.toFloat()
-        mouseDy = dy.toFloat()
+        mouseDisp.set(dx.toFloat(), dy.toFloat())
     }
 
     // Mouse Scroll Callbacks
@@ -132,9 +122,10 @@ object MouseInput : MouseAdapter() {
     }
 
     private fun setScrollPos(scrollX: Number, scrollY: Number) {
-        this.scrollX = scrollX.toFloat()
-        this.scrollY = scrollY.toFloat()
+        scroll.set(scrollX.toFloat(), scrollY.toFloat())
     }
+
+    /* Getter Methods */
 
     // Mouse Button Getters
 
@@ -163,43 +154,50 @@ object MouseInput : MouseAdapter() {
     // Mouse Position Getters
 
     @JvmStatic
-    fun getScreenX(): Float = mouseX
+    fun getScreenPos(): Vec2 = mousePos
 
     @JvmStatic
-    fun getScreenY(): Float = mouseY
+    fun getScreenX(): Float = mousePos.x
 
     @JvmStatic
-    fun getScreenPos(): Vec2 = Vec2(mouseX, mouseY)
+    fun getScreenY(): Float = mousePos.y
 
     @JvmStatic
-    fun getWorldX(): Float = mouseX.toWorld()
+    fun getWorldPos(): Vec2 {
+        val flipped = Vec2(mousePos.x, Game.getWindowHeight() - mousePos.y) // Mirror y
+        return flipped.toWorld()
+    }
 
     @JvmStatic
-    fun getWorldY(): Float = mouseY.toWorld()
+    fun getWorldX(): Float = getWorldPos().x
 
     @JvmStatic
-    fun getWorldPos(): Vec2 = Vec2(getWorldX(), getWorldY())
+    fun getWorldY(): Float = getWorldPos().y
 
     // Mouse Displacement Getters
 
     @JvmStatic
-    fun getScreenDx(): Float = mouseDx
+    fun getScreenDisp(): Vec2 = mouseDisp
 
     @JvmStatic
-    fun getScreenDy(): Float = mouseDy
+    fun getScreenDx(): Float = mouseDisp.x
 
     @JvmStatic
-    fun getScreenDisp(): Vec2 = Vec2(mouseDx, mouseDy)
+    fun getScreenDy(): Float = mouseDisp.y
 
     @JvmStatic
-    fun getWorldDx(): Float = mouseDx.toWorld()
+    fun getWorldDisp(): Vec2 = (mouseDisp * Vec2(1f, -1f)).toWorld() // Invert y
 
     @JvmStatic
-    fun getWorldDy(): Float = mouseDy.toWorld()
+    fun getWorldDx(): Float = getWorldDisp().x
 
     @JvmStatic
-    fun getWorldDisp(): Vec2 = Vec2(getWorldDx(), getWorldDy())
+    fun getWorldDy(): Float = getWorldDisp().y
 
-    private fun Float.toWorld(): Float = this / (Game.currentScene()?.cellSize?.toFloat() ?: 1.0f)
+    // Helper Methods
+
+    private fun Vec2.toWorld(): Vec2 {
+        return this / (Game.currentScene()?.cellSize ?: 1.0f)
+    }
 
 }

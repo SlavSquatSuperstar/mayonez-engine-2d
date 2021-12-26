@@ -1,5 +1,6 @@
 package slavsquatsuperstar.mayonez;
 
+import org.jetbrains.annotations.NotNull;
 import slavsquatsuperstar.mayonez.input.KeyInput;
 import slavsquatsuperstar.mayonez.input.MouseInput;
 import slavsquatsuperstar.mayonez.renderer.Renderable;
@@ -128,4 +129,21 @@ public class JWindow extends JFrame implements Window {
         addMouseWheelListener(mouse);
     }
 
+    // Properties
+
+    @NotNull
+    @Override
+    public String getTitle() {
+        return super.getTitle();
+    }
+
+    @Override
+    public int getWidth() {
+        return super.getWidth();
+    }
+
+    @Override
+    public int getHeight() {
+        return super.getHeight();
+    }
 }

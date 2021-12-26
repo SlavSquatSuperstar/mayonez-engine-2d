@@ -115,7 +115,7 @@ public class GameObject {
             Component c = components.get(i);
 //			if (cls.isAssignableFrom(c.getClass())) {
             if (cls.isInstance(c)) {
-                components.remove(i);
+                components.remove(i).destroy();
                 return;
             }
         }
@@ -179,15 +179,22 @@ public class GameObject {
      *
      * @param collision the collision information
      */
-    public void onCollision(CollisionManifold collision) {
-    }
+    public void onCollision(CollisionManifold collision) {}
 
     /**
      * What to do after passing through a trigger area
      *
      * @param trigger the trigger collider
      */
-    public void onTrigger(Collider2D trigger) {
+    public void onTrigger(Collider2D trigger) {}
+
+    /**
+     * Destroy this game object and remove it from the scene.
+     */
+    public void destroy() {
+        destroyed = true;
+        components.forEach(Component::destroy);
+        components.clear();
     }
 
     // Getters and Setters
@@ -210,13 +217,6 @@ public class GameObject {
 
     public boolean isDestroyed() {
         return destroyed;
-    }
-
-    /**
-     * Destroy this game object and remove it from the scene.
-     */
-    public void destroy() {
-        destroyed = true;
     }
 
     public Scene getScene() {

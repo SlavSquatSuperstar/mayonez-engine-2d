@@ -8,8 +8,6 @@ import slavsquatsuperstar.mayonez.input.MouseInput;
  *
  * @author SlavSquatSuperstar
  */
-// Issue: activating for multiple objects
-// Solution: use static boolean active?
 public class DragAndDrop extends MouseScript {
 
     // FIXME if active instance is destroyed, script breaks
@@ -23,8 +21,7 @@ public class DragAndDrop extends MouseScript {
 
     @Override
     public void onMouseDown() {
-        if (activeInstance == null)
-            activeInstance = this;
+        if (activeInstance == null) activeInstance = this;
     }
 
     @Override
@@ -40,12 +37,16 @@ public class DragAndDrop extends MouseScript {
 
     @Override
     public void onMouseUp() {
-        if (activeInstance == this)
-            activeInstance = null;
+        if (activeInstance == this) activeInstance = null;
     }
 
     @Override
     protected Vec2 getRawInput() {
-        return new Vec2(MouseInput.getWorldX() - lastMx + MouseInput.getWorldDx(), MouseInput.getWorldY() - lastMy + MouseInput.getWorldDy()).mul(inverted ? -1 : 1);
+        return MouseInput.getWorldPos().sub(lastMouse).add(MouseInput.getWorldDisp()).mul(inverted ? -1 : 1);
+    }
+
+    @Override
+    public void destroy() {
+        onMouseUp(); // If parent destroyed while this instance is active, free up active instance
     }
 }

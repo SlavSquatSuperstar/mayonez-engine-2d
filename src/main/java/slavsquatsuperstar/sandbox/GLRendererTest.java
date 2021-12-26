@@ -31,13 +31,13 @@ public class GLRendererTest extends SceneGL {
             @Override
             protected void init() {
                 addComponent(sprites.getSprite(0));
-                addComponent(new KeyMovement(MoveMode.POSITION, 5));
+                addComponent(new AlignedBoxCollider2D(new Vec2(0.8f, 1)));
+                addComponent(new Rigidbody2D(1f));
+                addComponent(new KeyMovement(MoveMode.POSITION, 20));
             }
         });
 
-
-        for (int i = 0; i < 8; i++)
-            addObject(createObject("Goomba", 14));
+        for (int i = 0; i < 8; i++) addObject(createObject("Goomba", 14));
     }
 
     private GameObject createObject(String name, int spriteIndex) {
@@ -58,7 +58,7 @@ public class GLRendererTest extends SceneGL {
     }
 
     public static void main(String[] args) {
-        GameGL game = GameGL.instance();
+        GameGL.instance();
         GameGL.setScene(new GLRendererTest());
         GameGL.start();
     }

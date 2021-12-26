@@ -18,24 +18,12 @@ public class FollowMouse extends MouseScript {
     public void onMouseMove() {
         Vec2 mouseDirection = getRawInput().clampLength(speed);
         switch (mode) {
-            case FOLLOW_MOUSE:
-                transform.position.set(MouseInput.getWorldPos());
-                break;
-            case POSITION:
-                transform.move(mouseDirection);
-                break;
-            case VELOCITY:
-                rb.addVelocity(mouseDirection);
-                break;
-            case IMPULSE:
-                rb.addImpulse(mouseDirection);
-                break;
-            case ACCELERATION:
-                rb.addAcceleration(mouseDirection);
-                break;
-            case FORCE:
-                rb.addForce(mouseDirection);
-                break;
+            case FOLLOW_MOUSE -> transform.position.set(MouseInput.getWorldPos());
+            case POSITION -> transform.move(mouseDirection);
+            case VELOCITY -> rb.addVelocity(mouseDirection);
+            case IMPULSE -> rb.addImpulse(mouseDirection);
+            case ACCELERATION -> rb.addAcceleration(mouseDirection);
+            case FORCE -> rb.addForce(mouseDirection);
         }
     }
 

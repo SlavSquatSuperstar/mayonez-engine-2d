@@ -73,13 +73,13 @@ public class Game implements Runnable {
 
     // Getters and Setters
 
+    public static Scene currentScene() {
+        return currentScene;
+    }
+
     public static void loadScene(Scene newScene) {
         currentScene = newScene;
         startCurrentScene();
-    }
-
-    public static Scene currentScene() {
-        return currentScene;
     }
 
     public static Renderer getRenderer() {
@@ -88,6 +88,14 @@ public class Game implements Runnable {
 
     public static Physics2D getPhysics() {
         return physics;
+    }
+
+    public static int getWindowWidth() {
+        return window.getWidth();
+    }
+
+    public static int getWindowHeight() {
+        return window.getHeight();
     }
 
     @Override

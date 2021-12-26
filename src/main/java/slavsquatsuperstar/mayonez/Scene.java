@@ -120,8 +120,7 @@ public abstract class Scene {
      *
      * @param g2 the window's graphics object
      */
-    protected void onUserRender(Graphics2D g2) {
-    }
+    protected void onUserRender(Graphics2D g2) {}
 
     // Object Methods
 

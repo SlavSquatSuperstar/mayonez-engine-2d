@@ -23,21 +23,11 @@ public class KeyMovement extends MovementScript {
         // Don't want to move faster diagonally so normalize
         Vec2 input = getRawInput().unit().mul(speed);
         switch (mode) {
-            case POSITION:
-                transform.move(input.mul(Time.TIME_STEP));
-                break;
-            case VELOCITY:
-                rb.addVelocity(input);
-                break;
-            case ACCELERATION:
-                rb.addAcceleration(input);
-                break;
-            case IMPULSE:
-                rb.addImpulse(input);
-                break;
-            case FORCE:
-                rb.addForce(input);
-                break;
+            case POSITION -> transform.move(input.mul(Time.TIME_STEP));
+            case VELOCITY -> rb.addVelocity(input);
+            case ACCELERATION -> rb.addAcceleration(input);
+            case IMPULSE -> rb.addImpulse(input);
+            case FORCE -> rb.addForce(input);
         }
         // Limit Top Speed
         if (rb != null && topSpeed > -1 && rb.getSpeed() > topSpeed)

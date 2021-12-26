@@ -40,6 +40,11 @@ public abstract class Component {
      */
     public void render(Graphics2D g2) {}
 
+    /**
+     * Destroy this component if the parent game object is destroyed.
+     */
+    public void destroy() {}
+
     // Getters and Setters
 
     public Component setParent(GameObject parent) {

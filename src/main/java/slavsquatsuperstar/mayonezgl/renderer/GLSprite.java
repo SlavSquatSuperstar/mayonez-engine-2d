@@ -5,6 +5,7 @@ import org.joml.Vector4f;
 import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.renderer.Sprite;
 
+// FIXME only rendering at initial position
 public class GLSprite extends Sprite { // = Gabe's SpriteRenderer
 
     private Vector4f color = new Vector4f(1, 1, 1, 1);

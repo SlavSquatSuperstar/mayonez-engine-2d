@@ -46,14 +46,9 @@ public class Shader extends TextFile {
 
                 shader = shader.substring(endLn + 1);
                 switch (pattern) {
-                    case "vertex":
-                        vertexSrc = shader;
-                        break;
-                    case "fragment":
-                        fragmentSrc = shader;
-                        break;
-                    default:
-                        throw new IOException("Unexpected shader type \"" + pattern + "\"");
+                    case "vertex" -> vertexSrc = shader;
+                    case "fragment" -> fragmentSrc = shader;
+                    default -> throw new IOException("Unexpected shader type \"" + pattern + "\"");
                 }
             }
         } catch (Exception e) {
@@ -72,7 +67,7 @@ public class Shader extends TextFile {
         if (success == GL_FALSE) {
             Logger.warn("Error: Could not compile \"defaultshader.glsl\" vertex shader");
             Logger.warn("GL: " + glGetShaderInfoLog(vertexID));
-            GameGL.instance().stop(1);
+            GameGL.stop(1);
         }
         Logger.trace("Successfully compiled \"defaultshader.glsl\" vertex shader");
 
@@ -85,7 +80,7 @@ public class Shader extends TextFile {
         if (success == GL_FALSE) {
             Logger.warn("Error: Could not compile \"defaultshader.glsl\" fragment shader");
             Logger.warn("GL: " + glGetShaderInfoLog(fragmentID));
-            GameGL.instance().stop(1);
+            GameGL.stop(1);
         }
         Logger.trace("Successfully compiled \"%s\" fragment shader", filename);
 
@@ -99,7 +94,7 @@ public class Shader extends TextFile {
         if (success == GL_FALSE) {
             Logger.warn("Error: Could not link \"%s\" shaders", filename);
             Logger.warn("GL: " + glGetProgramInfoLog(shaderProgramID));
-            GameGL.instance().stop(1);
+            GameGL.stop(1);
         }
         Logger.trace("Successfully linked \"%s\" shaders", filename);
     }
