@@ -1,4 +1,4 @@
-package slavsquatsuperstar.mayonez.renderer;
+package slavsquatsuperstar.mayonez.graphics.renderer;
 
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.GameObject;

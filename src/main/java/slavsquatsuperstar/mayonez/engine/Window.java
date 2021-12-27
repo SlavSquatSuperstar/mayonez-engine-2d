@@ -2,7 +2,7 @@ package slavsquatsuperstar.mayonez.engine;
 
 import slavsquatsuperstar.mayonez.input.KeyInput;
 import slavsquatsuperstar.mayonez.input.MouseInput;
-import slavsquatsuperstar.mayonez.renderer.Renderable;
+import slavsquatsuperstar.mayonez.graphics.renderer.Renderable;
 
 /**
  * An interface containing common functionality for all game windows.

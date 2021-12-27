@@ -4,7 +4,7 @@ import slavsquatsuperstar.mayonez.Logger;
 import slavsquatsuperstar.mayonez.Preferences;
 import slavsquatsuperstar.mayonez.input.KeyInput;
 import slavsquatsuperstar.mayonez.input.MouseInput;
-import slavsquatsuperstar.mayonez.renderer.Renderable;
+import slavsquatsuperstar.mayonez.graphics.renderer.Renderable;
 
 import javax.swing.*;
 import java.awt.*;

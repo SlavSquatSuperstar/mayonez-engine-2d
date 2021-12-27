@@ -1,19 +1,89 @@
+import org.gradle.internal.os.OperatingSystem
+
 plugins {
+    id 'com.github.johnrengelman.shadow' version '7.1.1' // For making fat jars
+
+    id 'org.jetbrains.kotlin.jvm' version '1.6.10'
+    id 'org.jetbrains.dokka' version '1.6.0' // For Kotlin documentation
+
     id 'java'
     id 'application'
-    id 'org.jetbrains.kotlin.jvm' version '1.6.10'
-    id 'org.jetbrains.dokka' version '1.6.0' // For Kotlin Documentation
-    id 'com.github.johnrengelman.shadow' version '7.1.1' // For making fat jars
 }
+
+// Project Info
 
 group 'slavsquatsuperstar'
 version '0.7.2-SNAPSHOT-5'
+description = 'The root project for MayonezEngine that contains library classes, demo projects, and unit tests'
 
-repositories.mavenCentral()
+// Custom Settings
+project.ext {
+    javaVersion = '17'
+    lwjglVersion = '3.3.0'
+    junitVersion = '5.8.2'
+    mainClass = 'slavsquatsuperstar.Main'
+}
 
-// LWJGL Settings
-project.ext.lwjglVersion = '3.3.0'
-project.ext.lwjglNatives = 'natives-macos' // Configure LWJGL OS here
+sourceCompatibility = javaVersion
+
+// Configure LWJGL OS (source: https://github.com/azurite-engine/Azurite)
+def osArch = System.getProperty("os.arch")
+switch (OperatingSystem.current()) {
+    case OperatingSystem.LINUX:
+        project.ext.lwjglNatives = osArch.startsWith("arm") || osArch.startsWith("aarch64")
+                ? "natives-linux-${osArch.contains("64") || osArch.startsWith("armv8") ? "arm64" : "arm32"}"
+                : "natives-linux"
+        break
+    case OperatingSystem.MAC_OS:
+        run.jvmArgs = ["-XstartOnFirstThread"] // For LWJGL on macOS
+        project.ext.lwjglNatives = osArch.contains("arm") ? "natives-macos-arm64" :
+                "natives-macos"
+        break
+    case OperatingSystem.WINDOWS:
+        project.ext.lwjglNatives = osArch.contains("64")
+                ? "natives-windows${osArch.startsWith("aarch64") ? "-arm64" : ""}"
+                : "natives-windows-x86"
+        break
+}
+
+repositories {
+    mavenCentral()
+}
+
+// Tasks and Plugins
+
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = javaVersion
+        suppressWarnings = true
+    }
+}
+
+application { // For 'run' task
+    mainClass = project.ext.mainClass
+    // set mainModule
+}
+
+jar {
+    manifest.attributes('Main-Class': project.ext.mainClass)
+}
+
+
+shadowJar {
+    dependsOn jar
+    archiveClassifier.set('')
+    manifest.from jar.manifest
+    exclude "**/LICENSE.txt",
+            "**/NOTICE.txt",
+            "META-INF/*.SF",
+            "META-INF/*.DSA",
+            "META-INF/*.RSA",
+            "META-INF/*.LIST"
+}
+
+test {
+    useJUnitPlatform()
+}
 
 dependencies {
     // Code Dependencies
@@ -28,49 +98,18 @@ dependencies {
     implementation platform("org.lwjgl:lwjgl-bom:$lwjglVersion")
 
     implementation "org.lwjgl:lwjgl"
-    implementation "org.lwjgl:lwjgl-assimp"
     implementation "org.lwjgl:lwjgl-glfw"
-    implementation "org.lwjgl:lwjgl-nfd"
     implementation "org.lwjgl:lwjgl-openal"
     implementation "org.lwjgl:lwjgl-opengl"
     implementation "org.lwjgl:lwjgl-stb"
     runtimeOnly "org.lwjgl:lwjgl::$lwjglNatives"
-    runtimeOnly "org.lwjgl:lwjgl-assimp::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-glfw::$lwjglNatives"
-    runtimeOnly "org.lwjgl:lwjgl-nfd::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-openal::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-opengl::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-stb::$lwjglNatives"
     implementation "org.joml:joml:1.10.2"
 
     // Test Libraries
-    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+    testImplementation "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-api:$junitVersion"
 }
-
-String javaVersion = '17'
-sourceCompatibility = targetCompatibility = javaVersion
-mainClassName = 'slavsquatsuperstar.Main'
-
-compileKotlin {
-    kotlinOptions {
-        jvmTarget = javaVersion
-    }
-}
-compileTestKotlin {
-    kotlinOptions {
-        jvmTarget = javaVersion
-    }
-}
-
-run {
-    jvmArgs = ["-XstartOnFirstThread"] // For LWJGL on macOS
-}
-
-shadowJar {
-    archiveClassifier.set('')
-    manifest.attributes 'Main-Class': mainClassName
-    exclude '**/LICENSE.txt', '**/NOTICE.txt' // avoid duplicate APACHE .txt files
-}
-
-test.useJUnitPlatform()

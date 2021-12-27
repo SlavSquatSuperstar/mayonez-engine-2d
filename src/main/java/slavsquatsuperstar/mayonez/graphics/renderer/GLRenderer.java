@@ -1,4 +1,4 @@
-package slavsquatsuperstar.mayonez.renderer;
+package slavsquatsuperstar.mayonez.graphics.renderer;
 
 import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Preferences;

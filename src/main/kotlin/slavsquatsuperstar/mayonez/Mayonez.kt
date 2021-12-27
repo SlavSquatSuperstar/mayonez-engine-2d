@@ -8,6 +8,7 @@ import slavsquatsuperstar.mayonez.engine.GLGame
 import slavsquatsuperstar.mayonez.engine.GameEngine
 import slavsquatsuperstar.mayonez.engine.JGame
 import slavsquatsuperstar.mayonez.fileio.Assets
+import slavsquatsuperstar.mayonez.graphics.renderer.Renderer
 import slavsquatsuperstar.mayonez.physics2d.Physics2D
 import kotlin.system.exitProcess
 
@@ -78,11 +79,6 @@ object Mayonez {
         }
     }
 
-    private fun exitIfNotConfigured() {
-        warn("Game Engine \"Use GL\" option has not been configured yet")
-        stop(2)
-    }
-
     /* Game Loop */
 
     @JvmStatic
@@ -133,5 +129,12 @@ object Mayonez {
     @JvmStatic
     val windowHeight: Int
         get() = game!!.window.height
+
+    // Helper Methods
+
+    private fun exitIfNotConfigured() {
+        warn("Game Engine \"Use GL\" option has not been configured yet")
+        stop(1)
+    }
 
 }

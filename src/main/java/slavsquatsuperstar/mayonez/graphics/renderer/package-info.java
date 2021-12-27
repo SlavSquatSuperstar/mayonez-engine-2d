@@ -3,4 +3,4 @@
  *
  * @author SlavSquatSuperstar
  */
-package slavsquatsuperstar.mayonez.renderer;
+package slavsquatsuperstar.mayonez.graphics.renderer;

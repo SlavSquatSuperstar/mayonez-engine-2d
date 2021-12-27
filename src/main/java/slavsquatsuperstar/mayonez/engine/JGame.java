@@ -6,7 +6,7 @@ import slavsquatsuperstar.mayonez.input.KeyInput;
 import slavsquatsuperstar.mayonez.input.MouseInput;
 import slavsquatsuperstar.mayonez.physics2d.Physics2D;
 import slavsquatsuperstar.mayonez.graphics.IMGUI;
-import slavsquatsuperstar.mayonez.renderer.JRenderer;
+import slavsquatsuperstar.mayonez.graphics.renderer.JRenderer;
 
 import java.awt.*;
 

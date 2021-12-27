@@ -1,7 +1,7 @@
 package slavsquatsuperstar.mayonez.graphics
 
 import slavsquatsuperstar.math.Vec2
-import slavsquatsuperstar.mayonez.renderer.Renderable
+import slavsquatsuperstar.mayonez.graphics.renderer.Renderable
 import java.awt.BasicStroke
 import java.awt.Color
 import java.awt.Graphics2D

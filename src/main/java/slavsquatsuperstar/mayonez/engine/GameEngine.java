@@ -5,7 +5,7 @@ import slavsquatsuperstar.mayonez.Logger;
 import slavsquatsuperstar.mayonez.Mayonez;
 import slavsquatsuperstar.mayonez.Scene;
 import slavsquatsuperstar.mayonez.physics2d.Physics2D;
-import slavsquatsuperstar.mayonez.renderer.Renderer;
+import slavsquatsuperstar.mayonez.graphics.renderer.Renderer;
 
 /**
  * The application that contains the engine's core loop.

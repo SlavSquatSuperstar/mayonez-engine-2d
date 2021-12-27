@@ -2,10 +2,10 @@ package slavsquatsuperstar.mayonez.engine;
 
 import slavsquatsuperstar.mayonez.Mayonez;
 import slavsquatsuperstar.mayonez.Preferences;
+import slavsquatsuperstar.mayonez.graphics.renderer.GLRenderer;
 import slavsquatsuperstar.mayonez.input.KeyInput;
 import slavsquatsuperstar.mayonez.input.MouseInput;
 import slavsquatsuperstar.mayonez.physics2d.Physics2D;
-import slavsquatsuperstar.mayonez.renderer.GLRenderer;
 
 import static org.lwjgl.glfw.GLFW.glfwGetTime;
 
@@ -18,7 +18,6 @@ public final class GLGame extends GameEngine { // can't implement runnable other
 
     public GLGame() {
         if (!Mayonez.INSTANCE.getINIT_PREFERENCES()) Mayonez.init();
-
 
         window = new GLWindow(String.format("%s %s (LWJGL)", Preferences.TITLE, Preferences.VERSION),
                 Preferences.SCREEN_WIDTH, Preferences.SCREEN_HEIGHT);

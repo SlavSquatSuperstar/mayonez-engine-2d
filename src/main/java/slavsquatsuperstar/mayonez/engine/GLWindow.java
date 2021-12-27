@@ -4,9 +4,11 @@ import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
+import slavsquatsuperstar.mayonez.Logger;
+import slavsquatsuperstar.mayonez.Mayonez;
+import slavsquatsuperstar.mayonez.graphics.renderer.Renderable;
 import slavsquatsuperstar.mayonez.input.KeyInput;
 import slavsquatsuperstar.mayonez.input.MouseInput;
-import slavsquatsuperstar.mayonez.renderer.Renderable;
 
 import java.nio.IntBuffer;
 
@@ -41,7 +43,7 @@ public final class GLWindow implements Window {
 
     /**
      * Initialize GLFW window and features.
-     * <p>
+     * <br>
      * Source: https://www.lwjgl.org/guide
      */
     private void init() {
@@ -49,7 +51,12 @@ public final class GLWindow implements Window {
         GLFWErrorCallback.createPrint(System.err).set();
 
         // Initialize GLFW
-        if (!glfwInit()) throw new IllegalStateException("Engine: Unable to initialize GLFW");
+        try {
+            if (!glfwInit()) throw new IllegalStateException("Engine: Unable to initialize GLFW");
+        } catch (IllegalStateException | ExceptionInInitializerError e) {
+            Logger.warn("Window: LWJGL must be run with \"-XstartOnFirstThread\" on macOS");
+            Mayonez.stop(1);
+        }
 
         // Configure GLFW
         glfwDefaultWindowHints(); // window settings

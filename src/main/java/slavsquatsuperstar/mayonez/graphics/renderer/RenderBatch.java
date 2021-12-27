@@ -1,4 +1,4 @@
-package slavsquatsuperstar.mayonez.renderer;
+package slavsquatsuperstar.mayonez.graphics.renderer;
 
 import org.joml.Vector2f;
 import org.joml.Vector4f;

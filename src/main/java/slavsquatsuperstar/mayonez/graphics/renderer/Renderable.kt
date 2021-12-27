@@ -1,4 +1,4 @@
-package slavsquatsuperstar.mayonez.renderer
+package slavsquatsuperstar.mayonez.graphics.renderer
 
 import java.awt.Graphics2D
 
