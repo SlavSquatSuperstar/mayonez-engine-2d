@@ -3,9 +3,9 @@ package slavsquatsuperstar.mayonez.graphics.renderer;
 import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Preferences;
 import slavsquatsuperstar.mayonez.Scene;
+import slavsquatsuperstar.mayonez.fileio.GLTexture;
 import slavsquatsuperstar.mayonez.graphics.GLCamera;
 import slavsquatsuperstar.mayonez.graphics.GLSprite;
-import slavsquatsuperstar.mayonez.fileio.GLTexture;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -19,6 +19,7 @@ public final class GLRenderer extends Renderer {
     private final int MAX_BATCH_SIZE = Preferences.MAX_BATCH_SIZE;
     private final List<RenderBatch> batches;
     private GLCamera camera;
+    private boolean checkForDestroyed = false; // Remove sprites with deleted game objects
 
     public GLRenderer() {
         batches = new ArrayList<>();
@@ -29,6 +30,7 @@ public final class GLRenderer extends Renderer {
     @Override
     public void render(Graphics2D g2) {
         batches.forEach(RenderBatch::render);
+        if (checkForDestroyed) batches.forEach(RenderBatch::removeDestroyedSprites);
     }
 
     // Game Object Methods
@@ -63,6 +65,7 @@ public final class GLRenderer extends Renderer {
 
     @Override
     public void removeObject(GameObject o) {
+        checkForDestroyed = true;
         // tell renderer to look for sprites with null parent in next frame
     }
 

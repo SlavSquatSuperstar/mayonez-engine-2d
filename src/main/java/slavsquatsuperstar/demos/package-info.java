@@ -3,4 +3,4 @@
  *
  * @author SlavSquatSuperstar
  */
-package slavsquatsuperstar.sandbox;
+package slavsquatsuperstar.demos;

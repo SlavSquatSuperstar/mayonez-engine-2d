@@ -17,7 +17,7 @@ import java.util.List;
  */
 public final class JRenderer extends Renderer {
 
-    private final List<GameObject> objects;
+    private final List<GameObject> objects; // TODO store sprites instead of objects?
     private final DebugDraw debugDraw; // put DebugDraw in Renderer to access camera offset
     /**
      * Reference to scene camera

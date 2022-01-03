@@ -1,4 +1,4 @@
-package slavsquatsuperstar.sandbox.physics;
+package slavsquatsuperstar.demos.physics;
 
 import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;

@@ -199,22 +199,6 @@ public class GameObject {
 
     // Getters and Setters
 
-    public float getX() {
-        return transform.position.x;
-    }
-
-    public void setX(float x) {
-        transform.position.x = x;
-    }
-
-    public float getY() {
-        return transform.position.y;
-    }
-
-    public void setY(float y) {
-        transform.position.y = y;
-    }
-
     public boolean isDestroyed() {
         return destroyed;
     }

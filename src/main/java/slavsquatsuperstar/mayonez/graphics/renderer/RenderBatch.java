@@ -4,13 +4,14 @@ import org.joml.Vector2f;
 import org.joml.Vector4f;
 import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
+import slavsquatsuperstar.mayonez.Logger;
 import slavsquatsuperstar.mayonez.Mayonez;
 import slavsquatsuperstar.mayonez.Preferences;
 import slavsquatsuperstar.mayonez.fileio.Assets;
-import slavsquatsuperstar.mayonez.graphics.GLCamera;
-import slavsquatsuperstar.mayonez.graphics.GLSprite;
 import slavsquatsuperstar.mayonez.fileio.GLTexture;
 import slavsquatsuperstar.mayonez.fileio.Shader;
+import slavsquatsuperstar.mayonez.graphics.GLCamera;
+import slavsquatsuperstar.mayonez.graphics.GLSprite;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,16 +31,14 @@ import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 public class RenderBatch {
 
     // Vertex Parameters
-    /*
-     * Pos (2), Color (4), Tex Coords (2), Tex ID (1)
-     */
+    /* Pos (2), Color (4), Tex Coords (2), Tex ID (1) */
     private final int[] ATTRIB_SIZES = {2, 4, 2, 1};
     private final int VERTEX_SIZE = MathUtils.sum(ATTRIB_SIZES); // floats inside one vertex
     private final int VERTICES_PER_SPRITE = 4;
     private final int VERTICES_PER_QUAD = 6;
 
     // Sprite Renderer Fields
-    private final GLSprite[] sprites;
+    private GLSprite[] sprites;
     private int numSprites = 0;
     private int[] texSlots = new int[Preferences.MAX_TEXTURE_SLOTS]; // support multiple textures in batch
 
@@ -118,7 +117,7 @@ public class RenderBatch {
         shader.unbind();
     }
 
-    // Sprite Renderer Methods
+    // Sprite Methods
 
     public void addSprite(GLSprite spr) {
         int index = numSprites++;
@@ -127,6 +126,18 @@ public class RenderBatch {
 
         GLTexture tex = spr.getTexture();
         if (tex != null && !hasTexture(tex)) textures.add(tex);
+    }
+
+    // TODO tell the renderer there is free space in this batch
+    void removeDestroyedSprites() {
+        int numDestroyed = 0;
+        for (int i = 0; i < numSprites; i++) {
+            if (sprites[i] != null && sprites[i].getParent().isDestroyed()) {
+                sprites[i] = null;
+                numDestroyed++;
+            }
+        }
+        if (numDestroyed > 0) Logger.log("Removed %d destroyed sprites", numDestroyed);
     }
 
     // Helper Methods

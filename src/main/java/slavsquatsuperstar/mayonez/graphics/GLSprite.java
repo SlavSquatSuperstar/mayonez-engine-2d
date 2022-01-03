@@ -2,11 +2,10 @@ package slavsquatsuperstar.mayonez.graphics;
 
 import org.joml.Vector2f;
 import org.joml.Vector4f;
-import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.fileio.GLTexture;
 
 // FIXME only rendering at initial position
-public class GLSprite extends Sprite { // = Gabe's SpriteRenderer
+public final class GLSprite extends Sprite { // = Gabe's SpriteRenderer
 
     private Vector4f color = new Vector4f(1, 1, 1, 1);
     private GLTexture texture = null; // Rendering just a color
@@ -43,11 +42,6 @@ public class GLSprite extends Sprite { // = Gabe's SpriteRenderer
         return texCoords;
     }
 
-    /**
-     * Returns a new sprite with the image as this instance's but not attached to any {@link GameObject}.
-     *
-     * @return a copy of this image
-     */
     @Override
     public GLSprite copy() {
         return new GLSprite(texture, texCoords);

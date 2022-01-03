@@ -1,4 +1,4 @@
-package slavsquatsuperstar.sandbox.physics;
+package slavsquatsuperstar.demos.physics;
 
 import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
@@ -63,8 +63,8 @@ public class PoolBallsTest extends PhysicsTestScene {
 
     public static void main(String[] args) {
         Mayonez.setUseGL(false);
-        Mayonez.start();
         Mayonez.setScene(new PoolBallsTest("Pool Balls Test"));
+        Mayonez.start();
     }
 
 }

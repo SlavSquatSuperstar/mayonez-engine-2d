@@ -41,7 +41,7 @@ public abstract class Component {
     public void render(Graphics2D g2) {}
 
     /**
-     * Destroy this component if the parent game object is destroyed.
+     * Destroy this component ånd and free up system resources once the parent {@link GameObject} is destroyed.
      */
     public void destroy() {}
 

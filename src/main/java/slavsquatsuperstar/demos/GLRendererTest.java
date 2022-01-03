@@ -1,29 +1,32 @@
-package slavsquatsuperstar.sandbox;
+package slavsquatsuperstar.demos;
 
 import org.joml.Vector2f;
 import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
-import slavsquatsuperstar.mayonez.GameObject;
-import slavsquatsuperstar.mayonez.Mayonez;
-import slavsquatsuperstar.mayonez.Scene;
-import slavsquatsuperstar.mayonez.Transform;
+import slavsquatsuperstar.mayonez.*;
+import slavsquatsuperstar.mayonez.graphics.GLCamera;
+import slavsquatsuperstar.mayonez.graphics.GLSpriteSheet;
 import slavsquatsuperstar.mayonez.input.KeyInput;
+import slavsquatsuperstar.mayonez.input.MouseInput;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
 import slavsquatsuperstar.mayonez.physics2d.colliders.AlignedBoxCollider2D;
 import slavsquatsuperstar.mayonez.scripts.DragAndDrop;
 import slavsquatsuperstar.mayonez.scripts.KeyMovement;
 import slavsquatsuperstar.mayonez.scripts.MoveMode;
-import slavsquatsuperstar.mayonez.graphics.GLCamera;
-import slavsquatsuperstar.mayonez.graphics.GLSpriteSheet;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GLRendererTest extends Scene {
 
     private GLCamera camera;
     private GLSpriteSheet sprites;
+    private List<GameObject> enemies;
 
     public GLRendererTest() {
         super("LWJGL Test Scene", 1080, 720, 32);
         camera = new GLCamera(new Vector2f());
+        enemies = new ArrayList<>();
     }
 
     @Override
@@ -43,12 +46,21 @@ public class GLRendererTest extends Scene {
             }
         });
 
-        for (int i = 0; i < 8; i++) addObject(createObject("Goomba", 14));
+        for (int i = 0; i < 8; i++) {
+            GameObject o = createObject("Goomba", 14);
+            enemies.add(o);
+            addObject(o);
+        }
     }
 
     @Override
     protected void onUserUpdate(float dt) {
         getCamera().setOffset(getCamera().getOffset().add(new Vec2(KeyInput.getAxis("horizontal"), KeyInput.getAxis("vertical")).mul(5)));
+
+        if (MouseInput.isPressed() && !enemies.isEmpty()) {
+            removeObject(enemies.remove(0));
+            Logger.log("Enemies: %d", enemies.size());
+        }
     }
 
     private GameObject createObject(String name, int spriteIndex) {

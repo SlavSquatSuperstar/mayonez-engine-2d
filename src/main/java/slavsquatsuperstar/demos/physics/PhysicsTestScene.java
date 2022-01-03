@@ -1,4 +1,4 @@
-package slavsquatsuperstar.sandbox.physics;
+package slavsquatsuperstar.demos.physics;
 
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.Colors;

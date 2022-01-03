@@ -18,7 +18,7 @@ import java.awt.image.BufferedImage;
  *
  * @author SlavSquatSuperstar
  */
-public class JSprite extends Sprite {
+public final class JSprite extends Sprite {
 
     private BufferedImage image;
 
@@ -61,11 +61,6 @@ public class JSprite extends Sprite {
         return image;
     }
 
-    /**
-     * Returns a new sprite with the image as this instance's but not attached to any {@link GameObject}.
-     *
-     * @return a copy of this image
-     */
     @Override
     public JSprite copy() {
         return new JSprite(image);

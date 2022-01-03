@@ -102,7 +102,7 @@ public class KeepInScene extends Script {
             default: // Stop if neither
                 return;
         }
-        parent.setX(minX + boundingBox.width() * 0.5f); // Align with edge of screen for both
+        setX(minX + boundingBox.width() * 0.5f); // Align with edge of screen for both
     }
 
     public void onReachRight() {
@@ -116,7 +116,7 @@ public class KeepInScene extends Script {
             default:
                 return;
         }
-        parent.setX(maxX - boundingBox.width() * 0.5f);
+        setX(maxX - boundingBox.width() * 0.5f);
     }
 
     public void onReachTop() {
@@ -130,7 +130,7 @@ public class KeepInScene extends Script {
             default:
                 return;
         }
-        parent.setY(minY + boundingBox.height() * 0.5f);
+        setY(minY + boundingBox.height() * 0.5f);
 
     }
 
@@ -145,35 +145,43 @@ public class KeepInScene extends Script {
             default:
                 return;
         }
-        parent.setY(maxY - boundingBox.height() * 0.5f);
+        setY(maxY - boundingBox.height() * 0.5f);
     }
 
     public void onPassLeft() {
         switch (mode) {
-            case WRAP -> parent.setX(maxX + boundingBox.width() * 0.5f);
+            case WRAP -> setX(maxX + boundingBox.width() * 0.5f);
             case DELETE -> parent.destroy();
         }
     }
 
     public void onPassRight() {
         switch (mode) {
-            case WRAP -> parent.setX(minX - boundingBox.width() * 0.5f);
+            case WRAP -> setX(minX - boundingBox.width() * 0.5f);
             case DELETE -> parent.destroy();
         }
     }
 
     public void onPassTop() {
         switch (mode) {
-            case WRAP -> parent.setY(maxY + boundingBox.height() * 0.5f);
+            case WRAP -> setY(maxY + boundingBox.height() * 0.5f);
             case DELETE -> parent.destroy();
         }
     }
 
     public void onPassBottom() {
         switch (mode) {
-            case WRAP -> parent.setY(minY - boundingBox.height() * 0.5f);
+            case WRAP -> setY(minY - boundingBox.height() * 0.5f);
             case DELETE -> parent.destroy();
         }
+    }
+    
+    private void setX(float x) {
+        transform.position.x = x;
+    }
+
+    private void setY(float y) {
+        transform.position.y = y;
     }
 
     public enum Mode {
