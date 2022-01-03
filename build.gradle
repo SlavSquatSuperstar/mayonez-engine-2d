@@ -17,7 +17,7 @@ plugins {
 // Project Info
 
 group 'slavsquatsuperstar'
-version '0.7.2-SNAPSHOT-6'
+version '0.7.2-SNAPSHOT'
 description = 'The root project for MayonezEngine that contains library classes, demo projects, and unit tests'
 
 // Custom Settings

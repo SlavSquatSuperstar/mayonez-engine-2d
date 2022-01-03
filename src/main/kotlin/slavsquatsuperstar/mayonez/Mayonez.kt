@@ -12,6 +12,10 @@ import slavsquatsuperstar.mayonez.graphics.renderer.Renderer
 import slavsquatsuperstar.mayonez.physics2d.Physics2D
 import kotlin.system.exitProcess
 
+/**
+ * The entry point into any game. Loads application resources, configures the engine instance,
+ * and sets the scene to be played.
+ */
 object Mayonez {
 
     @JvmField
