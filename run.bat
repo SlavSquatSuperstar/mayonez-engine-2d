@@ -1,7 +1,7 @@
-@rem Builds and runs the application on Windows
-@rem I have no idea if this works lol
-
+@rem Build the application for Windows
 SCRIPT_DIR=$(dirname "$0")
 cd "$SCRIPT_DIR" || exit
 ./gradlew clean build
-java -jar build/libs/*.jar
+
+@rem Run the created jar file
+java -jar build\libs\*.jar

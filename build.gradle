@@ -1,5 +1,3 @@
-import org.gradle.internal.os.OperatingSystem
-
 buildscript {
     project.ext.kotlinVersion = '1.6.10'
 }
@@ -17,93 +15,52 @@ plugins {
 // Project Info
 
 group 'slavsquatsuperstar'
-version '0.7.3-SNAPSHOT-2'
-description = 'The root project for MayonezEngine that contains library classes, demo projects, and unit tests'
+version '0.7.2-SNAPSHOT-5'
+description = 'The root project for Mayonez Engine that all modules'
+
+allprojects {
+    group 'slavsquatsuperstar'
+    version '0.7.3-pre2'
+}
 
 // Custom Settings
 project.ext {
     javaVersion = '17'
-    lwjglVersion = '3.3.0'
     junitVersion = '5.8.2'
     mainClass = 'slavsquatsuperstar.demos.GLRendererTest'
+    mainModule = 'mayonez.demos'
 }
-
 sourceCompatibility = javaVersion
-
-// Configure LWJGL OS (source: https://github.com/azurite-engine/Azurite)
-def osArch = System.getProperty("os.arch")
-switch (OperatingSystem.current()) {
-    case OperatingSystem.WINDOWS:
-        project.ext.lwjglNatives = osArch.contains("64")
-                ? "natives-windows${osArch.startsWith("aarch64") ? "-arm64" : ""}"
-                : "natives-windows-x86"
-        break
-    case OperatingSystem.MAC_OS:
-        run.jvmArgs = ["-XstartOnFirstThread"] // For LWJGL on macOS
-        project.ext.lwjglNatives = osArch.contains("arm") ? "natives-macos-arm64" :
-                "natives-macos"
-        break
-    case OperatingSystem.LINUX:
-        project.ext.lwjglNatives = osArch.startsWith("arm") || osArch.startsWith("aarch64")
-                ? "natives-linux-${osArch.contains("64") || osArch.startsWith("armv8") ? "arm64" : "arm32"}"
-                : "natives-linux"
-        break
-}
 
 // Dependencies
 
-repositories {
-    mavenCentral()
+allprojects {
+    repositories {
+        mavenCentral()
+    }
 }
 
 dependencies {
-    // Code Dependencies
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.6.10'
-    implementation 'org.apache.commons:commons-lang3:3.12.0'
-    implementation 'commons-io:commons-io:2.11.0'
-    implementation 'org.json:json:20211205'
-    implementation 'org.reflections:reflections:0.10.2'
-    implementation 'org.slf4j:slf4j-simple:1.7.32'
-
-    // LWJGL Libraries
-    implementation platform("org.lwjgl:lwjgl-bom:$lwjglVersion")
-
-    implementation "org.lwjgl:lwjgl"
-    implementation "org.lwjgl:lwjgl-glfw"
-    implementation "org.lwjgl:lwjgl-openal"
-    implementation "org.lwjgl:lwjgl-opengl"
-    implementation "org.lwjgl:lwjgl-stb"
-    runtimeOnly "org.lwjgl:lwjgl::$lwjglNatives"
-    runtimeOnly "org.lwjgl:lwjgl-glfw::$lwjglNatives"
-    runtimeOnly "org.lwjgl:lwjgl-openal::$lwjglNatives"
-    runtimeOnly "org.lwjgl:lwjgl-opengl::$lwjglNatives"
-    runtimeOnly "org.lwjgl:lwjgl-stb::$lwjglNatives"
-    implementation "org.joml:joml:1.10.2"
-
-    // Test Libraries
-    testImplementation "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
-    testRuntimeOnly "org.junit.jupiter:junit-jupiter-api:$junitVersion"
+    // Subprojects
+    implementation project(':mayonez-base')
+    implementation project(':mayonez-demos')
 }
 
 // Tasks and Plugins
 
-compileKotlin {
-    kotlinOptions {
-        jvmTarget = javaVersion
-        suppressWarnings = true
-    }
-}
-
 application { // For 'run' task
     mainClass = project.ext.mainClass
-    // set mainModule
+    mainModule = project.ext.mainModule
+}
+
+run {
+    jvmArgs = ["-XstartOnFirstThread", "-Dorg.lwjgl.util.Debug=true"] // For LWJGL
 }
 
 jar {
     manifest.attributes('Main-Class': project.ext.mainClass)
     // 'Class-Path': configurations.runtimeClasspath.files.collect { it.getName() }.join(' ')
 }
-
 
 shadowJar {
     dependsOn jar
@@ -114,8 +71,4 @@ shadowJar {
             'META-INF/*.DSA',
             'META-INF/*.RSA',
             'META-INF/*.LIST'
-}
-
-test {
-    useJUnitPlatform()
 }
