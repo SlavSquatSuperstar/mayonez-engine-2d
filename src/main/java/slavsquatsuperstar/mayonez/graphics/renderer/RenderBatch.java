@@ -37,6 +37,10 @@ public class RenderBatch {
     private final int VERTICES_PER_SPRITE = 4;
     private final int VERTICES_PER_QUAD = 6;
 
+    // World Data
+    private final GLCamera camera;
+    private final float worldScale;
+
     // Sprite Renderer Fields
     private GLSprite[] sprites;
     private int numSprites = 0;
@@ -44,7 +48,6 @@ public class RenderBatch {
 
     // Renderer Data
     private final List<GLTexture> textures;
-    private final GLCamera camera;
     private Shader shader;
     private float[] vertices; // quads
     private int vaoID, vboID;
@@ -57,6 +60,7 @@ public class RenderBatch {
 
         textures = new ArrayList<>();
         this.camera = camera;
+        worldScale = Mayonez.getScene().getCellSize();
     }
 
     // Game Loop Methods
@@ -89,18 +93,30 @@ public class RenderBatch {
     }
 
     public void render() {
-        // Refresh buffer data
-        glBindBuffer(GL_ARRAY_BUFFER, vboID);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, vertices);
+        // Check for dirty sprites
+        boolean rebufferData = false;
+        for (int i = 0; i < numSprites; i++) {
+            GLSprite spr = sprites[i];
+            if (spr != null && spr.isDirty()) {
+                loadVertexProperties(i);
+                spr.setClean();
+                rebufferData = true;
+            }
+        }
 
-        // Use the shader
+        // Refresh buffer data
+        if (rebufferData) {
+            glBindBuffer(GL_ARRAY_BUFFER, vboID);
+            glBufferSubData(GL_ARRAY_BUFFER, 0, vertices);
+        }
+
+        // Use shader
         shader.bind();
         shader.uploadMat4("uProjection", camera.getProjectionMatrix());
         shader.uploadMat4("uView", camera.getViewMatrix());
 
-        // Bind the texture
+        // Bind textures
         for (int i = 0; i < textures.size(); i++) textures.get(i).bind(i);
-
         shader.uploadIntArray("uTextures", texSlots);
 
         // Upload vertices and draw triangles
@@ -134,6 +150,7 @@ public class RenderBatch {
         for (int i = 0; i < numSprites; i++) {
             if (sprites[i] != null && sprites[i].getParent().isDestroyed()) {
                 sprites[i] = null;
+                // reload
                 numDestroyed++;
             }
         }
@@ -156,26 +173,27 @@ public class RenderBatch {
     }
 
     private void loadVertexProperties(int index) { // create vertices for a sprite
-        GLSprite sprite = sprites[index];
+        GLSprite spr = sprites[index];
+
         int offset = index * VERTICES_PER_SPRITE * VERTEX_SIZE; // 4 vertices per sprite
 
-        Vector4f color = sprite.getColor();
-        Vector2f[] texCoords = sprite.getTexCoords();
+        Vector4f color = spr.getColor();
+        Vector2f[] texCoords = spr.getTexCoords();
 
-        GLTexture tex = sprite.getTexture();
+        GLTexture tex = spr.getTexture();
         if (tex != null && !hasTexture(tex)) textures.add(tex);
-        int texID = textures.indexOf(tex) + 1;
-        // texID 0 means no texture
+        int texID = tex == null ? 0 : textures.indexOf(tex) + 1; // ID of 0 means no texture (use color)
+
+        Vec2 objPos = spr.getTransform().position;
+        Vec2 objScale = spr.getTransform().scale;
 
         // Load properties for each vertex
         Vec2[] quadVertices = {
                 new Vec2(0.5f, 0.5f), new Vec2(0.5f, -0.5f), new Vec2(-0.5f, -0.5f), new Vec2(-0.5f, 0.5f)
         }; // Render sprite at object center
+
         for (int i = 0; i < quadVertices.length; i++) {
-            Vec2 objPos = sprite.getTransform().position;
-            Vec2 objScale = sprite.getTransform().scale;
             Vec2 vertPos = quadVertices[i];
-            float worldScale = Mayonez.getScene().getCellSize();
 
             // sprite_pos = (obj_pos + vert_pos * obj_scale) * world_scale
             Vec2 spritePos = objPos.add(vertPos.mul(objScale)).mul(worldScale);
@@ -185,7 +203,7 @@ public class RenderBatch {
                     texCoords[i].x, texCoords[i].y,
                     texID
             };
-            System.arraycopy(attributes, 0, vertices, offset, attributes.length);
+            System.arraycopy(attributes, 0, vertices, offset, attributes.length); // Copy attributes to VAO
             offset += VERTEX_SIZE;
         }
     }

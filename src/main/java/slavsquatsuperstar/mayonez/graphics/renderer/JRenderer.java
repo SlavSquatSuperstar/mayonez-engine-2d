@@ -58,7 +58,7 @@ public final class JRenderer extends Renderer {
     public void setScene(Scene newScene) {
         camera = (JCamera) newScene.getCamera();
         objects.clear();
-        objects.addAll(newScene.getObjects(null));
+        newScene.getObjects(null).forEach(this::addObject);
     }
 
     /**

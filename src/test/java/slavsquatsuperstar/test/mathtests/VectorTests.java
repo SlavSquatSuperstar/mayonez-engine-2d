@@ -14,12 +14,31 @@ import static org.junit.jupiter.api.Assertions.*;
 public class VectorTests {
 
     @Test
-    public void vectorEquals() {
+    public void equivalentVectorEquals() {
         Vec2 v1 = new Vec2(5, 5);
         Vec2 v2 = new Vec2(5, 5);
-        assertSame(v1, v1);
-        assertSame(v2, v2);
         assertEquals(v1, v2);
+    }
+
+    @Test
+    public void sameVectorEquals() {
+        Vec2 v = new Vec2(5, 5);
+        assertSame(v, v);
+        assertEquals(v, v);
+    }
+
+    @Test
+    public void differentVectorNotEquals() {
+        Vec2 v1 = new Vec2(3, 4);
+        Vec2 v2 = new Vec2(5, 5);
+        assertNotEquals(v1, v2);
+    }
+
+    @Test
+    public void nullVectorNotEquals() {
+        Vec2 v = new Vec2(5, 5);
+        assertNotEquals(v, null);
+        assertNotEquals(null, v);
     }
 
     @Test

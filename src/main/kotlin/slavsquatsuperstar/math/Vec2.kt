@@ -296,25 +296,33 @@ class Vec2 constructor(
         return (this + v) / 2f
     }
 
+    /**
+     * Convert this vector to a JOML [Vector2f] with the same x and y values
+     */
+    fun toJOML(): Vector2f = Vector2f(x, y)
+
     // Overrides
 
     operator fun component1() = x
     operator fun component2() = y
 
-    override fun hashCode(): Int = 31 * x.hashCode() + y.hashCode()
-
     override fun equals(other: Any?): Boolean {
-        return if (other is Vec2)
-            equals(x, other.x) && equals(y, other.y)
-        else super.equals(other)
+        return when {
+            this === other -> true // same object
+            other is Vec2 -> equals(x, other.x) && equals(y, other.y) // equivalent
+            else -> false // null or not a vector
+        }
     }
 
-    override fun toString(): String = String.format("(%.4f, %.4f)", x, y)
+    override fun hashCode(): Int = 31 * x.hashCode() + y.hashCode()
 
-    // Helper Methods
-    /**
-     * Convert this vector to a JOML [Vector2f] with the same x and y values
-     */
-    fun toJOML(): Vector2f = Vector2f(x, y)
+//    override fun hashCode(): Int = 31 * x.hashCode() + y.hashCode()
+//
+//    override fun equals(other: Any?): Boolean {
+//        return if (other is Vec2) equals(x, other.x) && equals(y, other.y)
+//        else false
+//    }
+
+    override fun toString(): String = String.format("(%.4f, %.4f)", x, y)
 
 }

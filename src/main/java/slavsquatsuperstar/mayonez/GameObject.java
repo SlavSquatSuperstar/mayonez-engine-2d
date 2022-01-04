@@ -195,6 +195,7 @@ public class GameObject {
         destroyed = true;
         components.forEach(Component::destroy);
         components.clear();
+        scene = null;
     }
 
     // Getters and Setters

@@ -103,13 +103,6 @@ public abstract class Scene {
     }
 
     /**
-     * Provide user-defined update behavior for this scene.
-     *
-     * @param dt seconds since the last frame
-     */
-    protected void onUserUpdate(float dt) {}
-
-    /**
      * Draw the background image.
      *
      * @param g2 the window's graphics object
@@ -123,6 +116,13 @@ public abstract class Scene {
     }
 
     /**
+     * Provide user-defined update behavior for this scene.
+     *
+     * @param dt seconds since the last frame
+     */
+    protected void onUserUpdate(float dt) {}
+
+    /**
      * Provide user-defined draw behavior for this scene.
      *
      * @param g2 the window's graphics object
@@ -131,28 +131,41 @@ public abstract class Scene {
 
     // Object Methods
 
+    /**
+     * Adds an object to this scene and initializes it. Also adds the object to the renderer and physics engine.
+     *
+     * @param obj a {@link GameObject}
+     */
     public final void addObject(GameObject obj) {
         // Handle duplicate names
         int count = 0;
-        String name = obj.name;
-        GameObject found = getObject(obj.name);
-        while (found != null) {
-            name = String.format("%s (%d)", obj.name, ++count);
-            found = getObject(name);
-        }
-        obj.name = name;
+        String fmtName = obj.name;
+        for (GameObject found = getObject(obj.name); found != null; found = getObject(fmtName))
+            fmtName = String.format("%s (%d)", obj.name, ++count);
+        obj.name = fmtName;
 
-        SceneModifier sm = () -> {
+        if (started) { // TODO use events
+            toModify.add(() -> {
+                objects.add(obj.setScene(this));
+                obj.start(); // add object components so renderer and physics can access it
+                if (started) { // Dynamic add
+                    Mayonez.getRenderer().addObject(obj);
+                    Mayonez.getPhysics().addObject(obj);
+                }
+                Logger.trace("Added object \"%s\" to scene \"%s\"", obj.name, this.name);
+            });
+        } else {
             objects.add(obj.setScene(this));
             obj.start(); // add object components so renderer and physics can access it
-            Mayonez.getRenderer().addObject(obj);
-            Mayonez.getPhysics().addObject(obj);
-            Logger.trace("Added object \"%s\" to scene \"%s\"", obj.name, this.name);
-        };
-        if (started) toModify.add(sm);
-        else sm.modify();
+            Logger.log("Added object \"%s\" to scene \"%s\"", obj.name, this.name);
+        }
     }
 
+    /**
+     * Removes an object to this scene and destroys it. Also removes the object from the renderer and physics engine.
+     *
+     * @param obj a {@link GameObject}
+     */
     public final void removeObject(GameObject obj) {
         obj.destroy();
         toModify.add(() -> {

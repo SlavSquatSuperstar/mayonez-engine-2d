@@ -10,9 +10,6 @@ import slavsquatsuperstar.mayonez.GameObject;
  */
 public abstract sealed class Sprite extends Component permits GLSprite, JSprite {
 
-    @Override
-    public final void update(float dt) {} // Sprites shouldn't update any game logic
-
     /**
      * Returns a new sprite with the same image but not attached to any {@link GameObject}.
      *

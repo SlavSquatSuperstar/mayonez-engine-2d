@@ -1,4 +1,4 @@
-package slavsquatsuperstar.test.geometrytests;
+package slavsquatsuperstar.test.collisiontests;
 
 import org.junit.jupiter.api.Test;
 import slavsquatsuperstar.math.Vec2;

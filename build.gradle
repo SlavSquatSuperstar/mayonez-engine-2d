@@ -5,10 +5,10 @@ buildscript {
 }
 
 plugins {
-    id 'com.github.johnrengelman.shadow' version '7.1.1' // For making fat jars
+    id 'com.github.johnrengelman.shadow' version '7.1.2' // For making fat jars
 
     id 'org.jetbrains.kotlin.jvm' version "$kotlinVersion"
-    id 'org.jetbrains.dokka' version '1.6.0' // For Kotlin documentation
+    id 'org.jetbrains.dokka' version '1.6.10' // For Kotlin documentation
 
     id 'java'
     id 'application'
@@ -17,7 +17,7 @@ plugins {
 // Project Info
 
 group 'slavsquatsuperstar'
-version '0.7.2-SNAPSHOT'
+version '0.7.3-SNAPSHOT-1'
 description = 'The root project for MayonezEngine that contains library classes, demo projects, and unit tests'
 
 // Custom Settings
