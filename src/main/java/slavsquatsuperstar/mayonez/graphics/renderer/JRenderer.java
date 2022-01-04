@@ -10,6 +10,7 @@ import slavsquatsuperstar.mayonez.graphics.JCamera;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -58,7 +59,8 @@ public final class JRenderer extends Renderer {
     public void setScene(Scene newScene) {
         camera = (JCamera) newScene.getCamera();
         objects.clear();
-        newScene.getObjects(null).forEach(this::addObject);
+        objects.addAll(newScene.getObjects(null));
+        objects.sort(Comparator.comparingInt(GameObject::getZIndex));
     }
 
     /**
@@ -69,6 +71,7 @@ public final class JRenderer extends Renderer {
     @Override
     public void addObject(GameObject obj) {
         objects.add(obj);
+        objects.sort(Comparator.comparingInt(GameObject::getZIndex));
     }
 
     @Override

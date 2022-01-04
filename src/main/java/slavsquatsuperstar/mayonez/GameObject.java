@@ -22,6 +22,7 @@ public class GameObject {
     // Object Information
     public String name;
     public final Transform transform;
+    private int zIndex;
 
     // Scene Information
     private Scene scene;
@@ -31,20 +32,23 @@ public class GameObject {
     private final List<Component> components;
     private List<Class> updateOrder = null;
 
+    public GameObject(String name) {
+        this(name, new Vec2());
+    }
+
     public GameObject(String name, Vec2 position) {
-        this.name = name;
-        this.transform = new Transform(position);
-        components = new ArrayList<>();
+        this(name, new Transform(position));
     }
 
     public GameObject(String name, Transform transform) {
-        this.name = name;
-        this.transform = transform;
-        components = new ArrayList<>();
+        this(name, transform, 0);
     }
 
-    public GameObject(String name) {
-        this(name, new Vec2());
+    public GameObject(String name, Transform transform, int zIndex) {
+        this.name = name;
+        this.transform = transform;
+        this.zIndex = zIndex;
+        components = new ArrayList<>();
     }
 
     // Game Loop Methods
@@ -200,8 +204,14 @@ public class GameObject {
 
     // Getters and Setters
 
-    public boolean isDestroyed() {
-        return destroyed;
+
+    public int getZIndex() {
+        return zIndex;
+    }
+
+    public GameObject setZIndex(int zIndex) { // can't change while scene is running in GL yet
+        this.zIndex = zIndex;
+        return this;
     }
 
     public Scene getScene() {
@@ -211,6 +221,10 @@ public class GameObject {
     public GameObject setScene(Scene scene) {
         this.scene = scene;
         return this;
+    }
+
+    public boolean isDestroyed() {
+        return destroyed;
     }
 
     @Override

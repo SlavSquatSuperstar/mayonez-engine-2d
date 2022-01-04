@@ -12,7 +12,7 @@ public final class GLSprite extends Sprite { // = Gabe's SpriteRenderer
     private GLTexture texture = null; // Rendering just a color
 
     private Transform lastTransform;
-    private boolean dirty = false; // "Dirty" flag, object state changed since last frame
+    private boolean dirty = true; // "Dirty" flag, object state changed since last frame
 
     private Vector2f[] texCoords = new Vector2f[]{
             new Vector2f(1, 1),
@@ -43,11 +43,10 @@ public final class GLSprite extends Sprite { // = Gabe's SpriteRenderer
 
     @Override
     public void update(float dt) { // Have we moved?
-//        if (!lastTransform.equals(parent.transform)) {
-//            Logger.log("stinky");
-//            lastTransform.set(parent.transform);
+        if (!lastTransform.equals(parent.transform)) {
+            lastTransform.set(parent.transform);
             dirty = true;
-//        }
+        }
     }
 
     // Getters and Setters

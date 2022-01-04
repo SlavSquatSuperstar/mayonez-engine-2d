@@ -100,6 +100,9 @@ public final class GLWindow implements Window {
         // creates the GLCapabilities instance and makes the OpenGL
         // bindings available for use.
         GL.createCapabilities();
+
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
 
     // Make the window visible

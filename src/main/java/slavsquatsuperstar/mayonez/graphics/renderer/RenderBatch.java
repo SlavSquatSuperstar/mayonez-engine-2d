@@ -37,10 +37,6 @@ public class RenderBatch {
     private final int VERTICES_PER_SPRITE = 4;
     private final int VERTICES_PER_QUAD = 6;
 
-    // World Data
-    private final GLCamera camera;
-    private final float worldScale;
-
     // Sprite Renderer Fields
     private GLSprite[] sprites;
     private int numSprites = 0;
@@ -51,14 +47,20 @@ public class RenderBatch {
     private Shader shader;
     private float[] vertices; // quads
     private int vaoID, vboID;
+    private final int zIndex;
 
-    public RenderBatch(int maxBatchSize, GLCamera camera) {
+    // World Data
+    private final GLCamera camera;
+    private final float worldScale;
+
+    public RenderBatch(int maxBatchSize, int zIndex, GLCamera camera) {
         sprites = new GLSprite[maxBatchSize]; // shader array capacity
+        textures = new ArrayList<>();
         shader = Assets.getAsset("assets/shaders/default.glsl", Shader.class);
         vertices = new float[maxBatchSize * VERTICES_PER_SPRITE * VERTEX_SIZE];
         for (int i = 0; i < texSlots.length; i++) texSlots[i] = i; // ints 0-7
 
-        textures = new ArrayList<>();
+        this.zIndex = zIndex;
         this.camera = camera;
         worldScale = Mayonez.getScene().getCellSize();
     }
@@ -67,8 +69,6 @@ public class RenderBatch {
 
     public void start() {
         // Generate and bind VAO
-//        glEnable(GL_BLEND);
-//        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         vaoID = glGenVertexArrays();
         glBindVertexArray(vaoID);
 
@@ -210,20 +210,28 @@ public class RenderBatch {
 
     // Getter Methods
 
-    public int getMaxBatchSize() {
+    int getMaxBatchSize() {
         return sprites.length;
     }
 
-    public boolean hasRoom() {
+    int getZIndex() {
+        return zIndex;
+    }
+
+    boolean hasRoom() {
         return numSprites < getMaxBatchSize();
     }
 
-    public boolean hasTextureRoom() {
+    boolean hasTextureRoom() {
         return textures.size() <= texSlots.length;
     }
 
-    public boolean hasTexture(GLTexture t) {
+    boolean hasTexture(GLTexture t) {
         return textures.contains(t);
     }
 
+    @Override
+    public String toString() {
+        return String.format("Render Batch (Capacity: %d/%d, Z-Index: %d)", numSprites, getMaxBatchSize(), zIndex);
+    }
 }

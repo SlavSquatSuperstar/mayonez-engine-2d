@@ -17,7 +17,7 @@ plugins {
 // Project Info
 
 group 'slavsquatsuperstar'
-version '0.7.3-SNAPSHOT-1'
+version '0.7.3-SNAPSHOT-2'
 description = 'The root project for MayonezEngine that contains library classes, demo projects, and unit tests'
 
 // Custom Settings
@@ -109,7 +109,7 @@ shadowJar {
     dependsOn jar
     archiveClassifier.set('')
     manifest.from jar.manifest
-    exclude 'META-INF/*.txt',
+    exclude 'META-INF/*.txt', // Extraneous readme and license files
             'META-INF/*.SF',
             'META-INF/*.DSA',
             'META-INF/*.RSA',

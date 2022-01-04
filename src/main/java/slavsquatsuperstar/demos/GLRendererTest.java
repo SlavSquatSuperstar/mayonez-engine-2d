@@ -7,7 +7,10 @@ import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Mayonez;
 import slavsquatsuperstar.mayonez.Scene;
 import slavsquatsuperstar.mayonez.Transform;
+import slavsquatsuperstar.mayonez.fileio.Assets;
+import slavsquatsuperstar.mayonez.fileio.GLTexture;
 import slavsquatsuperstar.mayonez.graphics.GLCamera;
+import slavsquatsuperstar.mayonez.graphics.GLSprite;
 import slavsquatsuperstar.mayonez.graphics.GLSpriteSheet;
 import slavsquatsuperstar.mayonez.physics2d.CollisionManifold;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
@@ -34,6 +37,20 @@ public class GLRendererTest extends Scene {
 
     @Override
     public void init() {
+        addObject(new GameObject("Red Square", new Transform(new Vec2(6, 6), new Vec2(4, 4)), -2) {
+            @Override
+            protected void init() {
+                addComponent(new GLSprite(Assets.getAsset("assets/textures/blend_red.png", GLTexture.class)));
+            }
+        });
+
+        addObject(new GameObject("Green Square", new Transform(new Vec2(9, 6), new Vec2(4, 4)), 2) {
+            @Override
+            protected void init() {
+                addComponent(new GLSprite(Assets.getAsset("assets/textures/blend_green.png", GLTexture.class)));
+            }
+        });
+
         // Load resources
         sprites = new GLSpriteSheet("assets/textures/spritesheet.png", 16, 16, 26, 0);
 
@@ -47,7 +64,7 @@ public class GLRendererTest extends Scene {
                 addComponent(new Rigidbody2D(1f));
                 addComponent(new KeyMovement(MoveMode.POSITION, 20));
             }
-        });
+        }.setZIndex(1));
 
         for (int i = 0; i < 8; i++) addObject(createObject("Goomba", 14));
     }

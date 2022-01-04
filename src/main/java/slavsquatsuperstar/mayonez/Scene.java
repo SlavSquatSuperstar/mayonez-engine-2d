@@ -66,7 +66,8 @@ public abstract class Scene {
     /**
      * Add necessary objects and provide user-defined initialization behavior.
      */
-    protected void init() {}
+    protected void init() {
+    }
 
     /**
      * Initialize all objects and begin updating the scene.
@@ -120,14 +121,16 @@ public abstract class Scene {
      *
      * @param dt seconds since the last frame
      */
-    protected void onUserUpdate(float dt) {}
+    protected void onUserUpdate(float dt) {
+    }
 
     /**
      * Provide user-defined draw behavior for this scene.
      *
      * @param g2 the window's graphics object
      */
-    protected void onUserRender(Graphics2D g2) {}
+    protected void onUserRender(Graphics2D g2) {
+    }
 
     // Object Methods
 
@@ -144,7 +147,8 @@ public abstract class Scene {
             fmtName = String.format("%s (%d)", obj.name, ++count);
         obj.name = fmtName;
 
-        if (started) { // TODO use events
+        // TODO use events
+        if (started) { // Dynamic add: add to scene and layers
             toModify.add(() -> {
                 objects.add(obj.setScene(this));
                 obj.start(); // add object components so renderer and physics can access it
@@ -154,7 +158,7 @@ public abstract class Scene {
                 }
                 Logger.trace("Added object \"%s\" to scene \"%s\"", obj.name, this.name);
             });
-        } else {
+        } else { // Init add: add to scene, and add to layers on start
             objects.add(obj.setScene(this));
             obj.start(); // add object components so renderer and physics can access it
             Logger.log("Added object \"%s\" to scene \"%s\"", obj.name, this.name);

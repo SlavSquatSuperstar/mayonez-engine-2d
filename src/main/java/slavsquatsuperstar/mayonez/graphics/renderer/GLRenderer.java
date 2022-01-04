@@ -9,6 +9,7 @@ import slavsquatsuperstar.mayonez.graphics.GLSprite;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -42,11 +43,11 @@ public final class GLRenderer extends Renderer {
         newScene.getObjects(null).forEach(this::addObject);
     }
 
-    public void addObject(GameObject o) {
-        GLSprite spr = o.getComponent(GLSprite.class);
+    public void addObject(GameObject obj) {
+        GLSprite spr = obj.getComponent(GLSprite.class);
         if (spr != null) {
             for (RenderBatch batch : batches) {
-                if (batch.hasRoom()) { // has room for sprite
+                if (batch.hasRoom() && batch.getZIndex() == obj.getZIndex()) { // has room for sprite
                     GLTexture tex = spr.getTexture();
                     // has texture or room for another texture
                     if (tex == null || (batch.hasTexture(tex) || batch.hasTextureRoom())) {
@@ -56,10 +57,13 @@ public final class GLRenderer extends Renderer {
                 }
             }
             // Sprite not added
-            RenderBatch batch = new RenderBatch(MAX_BATCH_SIZE, camera);
+            RenderBatch batch = new RenderBatch(MAX_BATCH_SIZE, obj.getZIndex(), camera);
             batch.start();
             batches.add(batch);
             batch.addSprite(spr);
+
+            // Sort batches by z-index
+            batches.sort(Comparator.comparingInt(RenderBatch::getZIndex));
         }
     }
 
