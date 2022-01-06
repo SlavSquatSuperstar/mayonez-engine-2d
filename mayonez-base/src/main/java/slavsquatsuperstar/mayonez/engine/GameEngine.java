@@ -1,6 +1,7 @@
 package slavsquatsuperstar.mayonez.engine;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.mayonez.Logger;
 import slavsquatsuperstar.mayonez.Mayonez;
 import slavsquatsuperstar.mayonez.Scene;
@@ -56,11 +57,11 @@ public sealed abstract class GameEngine permits JGame, GLGame{
         window.beginFrame();
     }
 
+    // Semi-fixed time-step: https://gafferongames.com/post/fix_your_timestep/
     public final void run() {
         // All time values are in seconds
-        float lastTime = 0f; // Last time the game loop iterated
-        float currentTime; // Time of current frame
-        float deltaTime = 0f; // Unprocessed time since last frame
+        float timeStep = Mayonez.TIME_STEP;
+        float lastTime = getCurrentTime(); // Last time the game loop iterated
 
         // For Debugging
         float timer = 0f;
@@ -71,17 +72,17 @@ public sealed abstract class GameEngine permits JGame, GLGame{
             while (running && window.notClosedByUser()) {
                 boolean ticked = false; // Has the engine actually updated?
 
-                currentTime = getCurrentTime();
-                float passedTime = currentTime - lastTime;
-                deltaTime += passedTime;
-                timer += passedTime;
-                lastTime = currentTime;  // Reset lastTime
+                float newTime = getCurrentTime();
+                float frameTime = newTime - lastTime; // Track the time passed since last frame
+                timer += frameTime;
+                lastTime = newTime;  // Reset lastTime
 
                 beginFrame();
                 // Update the game as many times as possible even if the screen freezes
-                while (deltaTime >= Mayonez.TIME_STEP) {
+                while (frameTime > 0) { // Will update any left over sliver of time
+                    float deltaTime = MathUtils.min(frameTime, timeStep);
                     update(deltaTime);
-                    deltaTime -= Mayonez.TIME_STEP;
+                    frameTime -= deltaTime;
                     ticked = true;
                 }
                 // Only render if the game has updated to save resources

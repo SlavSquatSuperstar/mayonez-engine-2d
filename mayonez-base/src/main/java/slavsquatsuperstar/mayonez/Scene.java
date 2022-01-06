@@ -24,13 +24,9 @@ public abstract class Scene {
     // Scene Information
     private final String name;
     /**
-     * How wide (x size) the scene is in world units.
+     * How the dimensions of the scene is in world units.
      */
-    private final float width;
-    /**
-     * How tall (y size) the scene is in world units.
-     */
-    private final float height;
+    private final Vec2 size;
     /**
      * How many pixels correspond to a world unit.
      */
@@ -52,13 +48,12 @@ public abstract class Scene {
      */
     public Scene(String name, int width, int height, float cellSize) {
         this.name = name;
-        this.width = width / cellSize;
-        this.height = height / cellSize;
+        this.size = new Vec2(width, height).div(cellSize);
         this.cellSize = cellSize;
 
         objects = new ArrayList<>();
         toModify = new ArrayList<>();
-        camera = new JCamera(this.width, this.height, cellSize);
+        camera = new JCamera(size, cellSize);
     }
 
     // Game Loop Methods
@@ -111,7 +106,7 @@ public abstract class Scene {
     public final void render(Graphics2D g2) {
         if (started) {
             g2.setColor(background);
-            g2.fillRect(0, 0, (int) ((width + 1) * cellSize), (int) ((height + 1) * cellSize));
+            g2.fillRect(0, 0, (int) ((size.x + 1) * cellSize), (int) ((size.y + 1) * cellSize));
             onUserRender(g2);
         }
     }
@@ -161,7 +156,7 @@ public abstract class Scene {
         } else { // Init add: add to scene, and add to layers on start
             objects.add(obj.setScene(this));
             obj.start(); // add object components so renderer and physics can access it
-            Logger.log("Added object \"%s\" to scene \"%s\"", obj.name, this.name);
+            Logger.trace("Added object \"%s\" to scene \"%s\"", obj.name, this.name);
         }
     }
 
@@ -226,11 +221,15 @@ public abstract class Scene {
     }
 
     public float getWidth() {
-        return width;
+        return size.x;
     }
 
     public float getHeight() {
-        return height;
+        return size.y;
+    }
+
+    public Vec2 getSize() {
+        return size;
     }
 
     /**

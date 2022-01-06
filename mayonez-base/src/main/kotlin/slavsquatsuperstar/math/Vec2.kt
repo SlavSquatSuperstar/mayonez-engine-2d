@@ -3,9 +3,7 @@ package slavsquatsuperstar.math
 import org.joml.Vector2f
 import slavsquatsuperstar.math.MathUtils.equals
 import slavsquatsuperstar.mayonez.Logger
-import kotlin.math.acos
-import kotlin.math.atan2
-import kotlin.math.sqrt
+import kotlin.math.*
 
 /**
  * A Vec2 represents an object in 2D space that has magnitude and direction (arrow), the location of something in the
@@ -34,7 +32,14 @@ class Vec2 constructor(
     /**
      * Initialize this vector to (0, 0).
      */
-    constructor() : this(0f, 0f)
+    constructor() : this(0f)
+
+    /**
+     * Initialize this vector to have the same x and y components.
+     *
+     * @param num the value for both x and y
+     */
+    constructor(num: Float) : this(num, num)
 
     /**
      * Initialize this vector to copy another vector's x and y values.
@@ -261,7 +266,7 @@ class Vec2 constructor(
      */
     fun getNormal(): Vec2 = Vec2(-y, x).unit()
 
-    // Other Methods
+    // Math Utils Methods
 
     /**
      * Clamps the components of this vector within the bounding box created by the given vectors.
@@ -285,6 +290,20 @@ class Vec2 constructor(
             this * (length / len())
         else +this
     }
+
+    /**
+     * Rounds the components of this vector up and returns them in a new vector.
+     *
+     * @return the ceiling vector
+     */
+    fun ceiling(): Vec2 = Vec2(ceil(x), ceil(y))
+
+    /**
+     * Rounds the components of this vector down and returns them in a new vector.
+     *
+     * @return the floored vector
+     */
+    fun floor(): Vec2 = Vec2(floor(x), floor(y))
 
     /**
      * Calculates the average position of this vector and another.

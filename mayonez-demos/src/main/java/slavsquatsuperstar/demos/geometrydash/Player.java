@@ -1,12 +1,13 @@
-package slavsquatsuperstar.demos;
+package slavsquatsuperstar.demos.geometrydash;
 
+import slavsquatsuperstar.demos.geometrydash.components.PlayerController;
 import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.GameObject;
+import slavsquatsuperstar.mayonez.graphics.JSprite;
 import slavsquatsuperstar.mayonez.graphics.JSpriteSheet;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
 import slavsquatsuperstar.mayonez.physics2d.colliders.AlignedBoxCollider2D;
-import slavsquatsuperstar.mayonez.graphics.JSprite;
 import slavsquatsuperstar.mayonez.scripts.KeepInScene;
 import slavsquatsuperstar.mayonez.scripts.KeyMovement;
 import slavsquatsuperstar.mayonez.scripts.MoveMode;
@@ -44,15 +45,14 @@ public class Player extends GameObject {
                 }
             }
         }
-        for (JSprite s : layers)
-            addComponent(s);
+        for (JSprite s : layers) addComponent(s);
 
         // Add player scripts
         float thrustForce = 10f;
         addComponent(new AlignedBoxCollider2D(new Vec2(1, 1)));
         addComponent(new Rigidbody2D(1f));
         addComponent(new KeyMovement(MoveMode.POSITION, thrustForce).setTopSpeed(5f));
-        addComponent(new KeepInScene(0, 0, getScene().getWidth(), getScene().getHeight(), KeepInScene.Mode.STOP));
+        addComponent(new KeepInScene(new Vec2(), getScene().getSize(), KeepInScene.Mode.STOP));
         addComponent(new PlayerController(thrustForce));
     }
 

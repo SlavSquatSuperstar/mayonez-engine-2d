@@ -71,7 +71,7 @@ public abstract class PhysicsTestScene extends Scene {
                 addComponent(new CircleCollider(radius).setMaterial(material));
                 addComponent(new Rigidbody2D(radius));
                 addComponent(new KeepInScene(getScene(), KeepInScene.Mode.BOUNCE));
-                addComponent(new DragAndDrop("left mouse", false));
+                addComponent(new DragAndDrop("left mouse"));
                 addComponent(new MouseFlick(MoveMode.VELOCITY, "right mouse", 15, false));
             }
         };
@@ -84,7 +84,7 @@ public abstract class PhysicsTestScene extends Scene {
                 addComponent(new AlignedBoxCollider2D(new Vec2(width, height)).setMaterial(material));
                 addComponent(new Rigidbody2D(width * height / 4f));
                 addComponent(new KeepInScene(getScene(), KeepInScene.Mode.BOUNCE));
-                addComponent(new DragAndDrop("left mouse", false));
+                addComponent(new DragAndDrop("left mouse"));
                 addComponent(new MouseFlick(MoveMode.VELOCITY, "right mouse", 15, false));
             }
         };
@@ -98,7 +98,7 @@ public abstract class PhysicsTestScene extends Scene {
                 addComponent(new BoxCollider2D(new Vec2(width, height)).setMaterial(material));
                 addComponent(new Rigidbody2D(width * height / 4f));
                 addComponent(new KeepInScene(getScene(), KeepInScene.Mode.BOUNCE));
-                addComponent(new DragAndDrop("left mouse", false));
+                addComponent(new DragAndDrop("left mouse"));
                 addComponent(new MouseFlick(MoveMode.VELOCITY, "right mouse", 15, false));
             }
         };

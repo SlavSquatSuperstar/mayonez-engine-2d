@@ -55,7 +55,7 @@ public class PoolBallsTest extends PhysicsTestScene {
                 addComponent(new CircleCollider(BALL_RADIUS).setMaterial(POOL_BALL_MAT));
                 addComponent(new Rigidbody2D(BALL_MASS));
                 addComponent(new KeepInScene(getScene(), KeepInScene.Mode.BOUNCE));
-                addComponent(new DragAndDrop("left mouse", false));
+                addComponent(new DragAndDrop("left mouse"));
                 addComponent(new MouseFlick(MoveMode.IMPULSE, "right mouse", 80, false));
             }
         };

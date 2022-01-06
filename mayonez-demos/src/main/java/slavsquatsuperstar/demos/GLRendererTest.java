@@ -76,7 +76,7 @@ public class GLRendererTest extends Scene {
                 addComponent(sprites.getSprite(spriteIndex));
                 addComponent(new AlignedBoxCollider2D(new Vec2(0.8f, 1)));
                 addComponent(new Rigidbody2D(1f));
-                addComponent(new DragAndDrop("left mouse", false));
+                addComponent(new DragAndDrop("left mouse"));
             }
 
             @Override

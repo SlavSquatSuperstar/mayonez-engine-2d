@@ -39,7 +39,7 @@ public class CollisionTest extends PhysicsTestScene {
 //                addComponent(new Rigidbody2D(size * size / 10f).setFollowsGravity(true));
                 addComponent(new MouseFlick(MoveMode.VELOCITY, "right mouse", 15, false));
                 addComponent(new KeyMovement(MoveMode.IMPULSE, speed / 2));
-                addComponent(new DragAndDrop("left mouse", false));
+                addComponent(new DragAndDrop("left mouse"));
                 addComponent(new KeepInScene(getScene(), KeepInScene.Mode.BOUNCE));
                 addComponent(new Script() {
                     private Rigidbody2D rb;

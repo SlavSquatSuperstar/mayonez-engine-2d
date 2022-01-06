@@ -17,18 +17,14 @@ import slavsquatsuperstar.mayonez.scripts.KeepInScene;
  */
 public final class JCamera extends Script implements Camera {
 
-    private final float width, height; // In world units
-    private final float minX, minY, maxX, maxY;
+    private final Vec2 size, minPos, maxPos;  // In world units
     private GameObject subject;
     private Script keepInScene, dragAndDrop; // Reference to parent scripts
 
-    public JCamera(float sceneWidth, float sceneHeight, float cellSize) {
-        width = (float) Preferences.SCREEN_WIDTH / cellSize;
-        height = (float) Preferences.SCREEN_HEIGHT / cellSize;
-        minX = 0;
-        minY = 0; //(int) (-28f / cellSize); // account for the bar on top of the window
-        maxX = sceneWidth;
-        maxY = sceneHeight;
+    public JCamera(Vec2 screenSize, float cellSize) {
+        size = new Vec2(Preferences.SCREEN_WIDTH, Preferences.SCREEN_HEIGHT).div(cellSize);
+        minPos = new Vec2(); //minY = (int) (-28f / cellSize); // account for the bar on top of the window
+        maxPos = screenSize;
     }
 
     // Static (Factory) Methods
@@ -45,27 +41,24 @@ public final class JCamera extends Script implements Camera {
             protected void init() {
                 addComponent(camera);
                 // Allow camera to be moved with mouse
-                addComponent(camera.dragAndDrop = new DragAndDrop("right mouse", true) {
+                addComponent(camera.dragAndDrop = new DragAndDrop("right mouse", true, true) {
                     // Reset camera position with double click
                     @Override
                     public void onMouseDown() {
-                        if (MouseInput.getClicks() == 2) {
-                            camera.setOffset(new Vec2(0, 0));
-                        }
+                        if (MouseInput.getClicks() == 2) camera.setOffset(new Vec2(0, 0));
                     }
                 }.setEnabled(false));
                 // Keep camera inside scene and add camera collider
-                addComponent(new AlignedBoxCollider2D(new Vec2(camera.width, camera.height)).setTrigger(true));
-                addComponent(camera.keepInScene = new KeepInScene(camera.minX, camera.minY, camera.maxX, camera.maxY, KeepInScene.Mode.STOP));
+                addComponent(new AlignedBoxCollider2D(camera.size).setTrigger(true));
+                addComponent(camera.keepInScene = new KeepInScene(camera.minPos, camera.maxPos, KeepInScene.Mode.STOP));
             }
 
             // Don't want to get rid of the camera!
             @Override
-            public void destroy() {
-            }
+            public final void destroy() {}
 
             @Override
-            public boolean isDestroyed() {
+            public final boolean isDestroyed() {
                 return false;
             }
         };
@@ -90,7 +83,7 @@ public final class JCamera extends Script implements Camera {
     }
 
     public Vec2 getHalfSize() {
-        return new Vec2(width, height).div(2);
+        return size.mul(0.5f);
     }
 
     /**
@@ -99,11 +92,11 @@ public final class JCamera extends Script implements Camera {
      * @param enabled If mouse should move the camera. Set to true to disable subject following.
      * @return this object
      */
-    public JCamera enableFreeMovement(boolean enabled) {
+    public JCamera enableDragAndDrop(boolean enabled) {
         dragAndDrop.setEnabled(enabled);
         if (enabled && subject != null) {
             subject = null;
-            Logger.log("Subject following for %s has been disabled because freecam was enabled.", this, dragAndDrop);
+            Logger.trace("Subject following for %s has been disabled because freecam was enabled.", this, dragAndDrop);
         }
         return this;
     }
@@ -131,7 +124,7 @@ public final class JCamera extends Script implements Camera {
 //            enableKeepInScene(subject.getComponent(KeepInScene.class) != null);
             if (dragAndDrop.isEnabled()) {
                 dragAndDrop.setEnabled(false);
-                Logger.log("Freecam for %s has been disabled because a subject was set.", this, dragAndDrop);
+                Logger.trace("Freecam for %s has been disabled because a subject was set.", this, dragAndDrop);
             }
         }
         return this;

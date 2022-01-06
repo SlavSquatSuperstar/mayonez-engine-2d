@@ -1,11 +1,12 @@
-package slavsquatsuperstar.demos;
+package slavsquatsuperstar.demos.geometrydash.components;
 
+import slavsquatsuperstar.demos.geometrydash.LevelEditor;
+import slavsquatsuperstar.demos.geometrydash.LevelScene;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.Script;
+import slavsquatsuperstar.mayonez.graphics.JCamera;
 import slavsquatsuperstar.mayonez.input.KeyInput;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
-import slavsquatsuperstar.mayonez.graphics.JCamera;
-import slavsquatsuperstar.mayonez.scripts.KeepInScene;
 
 @SuppressWarnings("unused")
 public class PlayerController extends Script {
@@ -26,8 +27,7 @@ public class PlayerController extends Script {
     public void start() {
         JCamera cam = (JCamera) getScene().getCamera();
         if (getScene() instanceof LevelEditor) {
-            cam.enableFreeMovement(true).enableKeepInScene(false);
-            getComponent(KeepInScene.class).setEnabled(false);
+            cam.enableDragAndDrop(true).enableKeepInScene(false);
         } else if (getScene() instanceof LevelScene) {
             cam.enableKeepInScene(true).setSubject(parent); // TODO pass camera in player c'tor?
         }

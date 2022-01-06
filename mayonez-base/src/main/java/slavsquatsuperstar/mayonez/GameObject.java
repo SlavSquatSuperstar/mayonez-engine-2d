@@ -114,15 +114,21 @@ public class GameObject {
         components.add(comp.setParent(this));
     }
 
-    public <T extends Component> void removeComponent(Class<T> cls) {
-        for (int i = 0; i < components.size(); i++) { // Use indexing loop to avoid concurrent errors
-            Component c = components.get(i);
-//			if (cls.isAssignableFrom(c.getClass())) {
+    /**
+     * Remove the component of the specified class from this game object.
+     * @param cls the component class
+     * @param <T> a subclass of {@link Component}
+     * @return if the component was removed
+     */
+    public <T extends Component> boolean removeComponent(Class<T> cls) {
+        for (Component c : components) {
             if (cls.isInstance(c)) {
-                components.remove(i).destroy();
-                return;
+                c.destroy();
+                components.remove(c);
+                return true;
             }
         }
+        return false;
     }
 
     /**

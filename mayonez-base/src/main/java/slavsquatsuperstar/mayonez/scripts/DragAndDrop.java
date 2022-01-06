@@ -4,19 +4,24 @@ import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.input.MouseInput;
 
 /**
- * Allows objects to be picked up using the mouse.
+ * Allows objects to be picked up and moved using the mouse.
  *
  * @author SlavSquatSuperstar
  */
 public class DragAndDrop extends MouseScript {
 
-    // FIXME if active instance is destroyed, script breaks
-    private static DragAndDrop activeInstance = null; // only want to move one object
+    private static DragAndDrop activeInstance = null; // Make sure we only move one object at a time
+    private final boolean alwaysAllow; // Always enable drag and drop.
 
-    public DragAndDrop(String button, boolean inverted) {
+    public DragAndDrop(String button) {
+        this(button, false, false);
+    }
+
+    public DragAndDrop(String button, boolean inverted, boolean alwaysAllow) {
         super(MoveMode.POSITION, 0);
         this.inverted = inverted;
         this.button = button;
+        this.alwaysAllow = alwaysAllow;
     }
 
     @Override
@@ -26,9 +31,9 @@ public class DragAndDrop extends MouseScript {
 
     @Override
     public void onMouseMove() {
-        if (activeInstance == this && isMouseHeld()) {
+        if ((activeInstance == this || alwaysAllow) && isMouseHeld()) {
             if (rb != null) {
-                rb.setVelocity(new Vec2(0, 0)); // Stop the object
+                rb.setVelocity(new Vec2()); // Stop the object
                 rb.setAngVelocity(0);
             }
             transform.move(getRawInput());

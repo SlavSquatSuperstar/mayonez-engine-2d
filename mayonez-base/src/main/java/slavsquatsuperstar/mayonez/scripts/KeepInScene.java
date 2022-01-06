@@ -17,21 +17,19 @@ import slavsquatsuperstar.mayonez.physics2d.colliders.Collider2D;
 // TODO create line objects in scene and detect collision with tag "bounds"
 public class KeepInScene extends Script {
 
-    public float minX, minY, maxX, maxY;
+    private final Vec2 minPos, maxPos;
     private Mode mode;
     private Collider2D objectCollider = null;
     private AlignedBoxCollider2D boundingBox = null;
     private Rigidbody2D rb = null;
 
     public KeepInScene(Scene scene, Mode mode) { // Use scene bounds
-        this(0, 0, scene.getWidth(), scene.getHeight(), mode);
+        this(new Vec2(), scene.getSize(), mode);
     }
 
-    public KeepInScene(float minX, float minY, float maxX, float maxY, Mode mode) {
-        this.minX = minX;
-        this.minY = minY;
-        this.maxX = maxX;
-        this.maxY = maxY;
+    public KeepInScene(Vec2 minPos, Vec2 maxPos, Mode mode) {
+        this.minPos = minPos;
+        this.maxPos = maxPos;
         this.mode = mode;
     }
 
@@ -61,30 +59,30 @@ public class KeepInScene extends Script {
 
         // Edge Checking for x
         // Skip checking if still in scene bounds
-        if (!MathUtils.inRange(boxMin.x, minX, maxX - boundingBox.width())) {
+        if (!MathUtils.inRange(boxMin.x, minPos.x, maxPos.x - boundingBox.width())) {
             // Detect if colliding with edge
-            if (boxMin.x < minX)
+            if (boxMin.x < minPos.x)
                 onReachLeft();
-            else if (boxMax.x > maxX)
+            else if (boxMax.x > maxPos.x)
                 onReachRight();
 
             // Detect if moved completely past edge
-            if (boxMax.x < minX)
+            if (boxMax.x < minPos.x)
                 onPassLeft();
-            else if (boxMin.x > maxX)
+            else if (boxMin.x > maxPos.x)
                 onPassRight();
         }
 
         // Edge Checking for y
-        if (!MathUtils.inRange(boxMin.y, minY, maxY - boundingBox.height())) {
-            if (boxMin.y < minY)
+        if (!MathUtils.inRange(boxMin.y, minPos.y, maxPos.y - boundingBox.height())) {
+            if (boxMin.y < minPos.y)
                 onReachTop();
-            else if (boxMax.y > maxY)
+            else if (boxMax.y > maxPos.y)
                 onReachBottom();
 
-            if (boxMax.y < minY)
+            if (boxMax.y < minPos.y)
                 onPassTop();
-            else if (boxMin.y > maxY)
+            else if (boxMin.y > maxPos.y)
                 onPassBottom();
         }
     }
@@ -102,7 +100,7 @@ public class KeepInScene extends Script {
             default: // Stop if neither
                 return;
         }
-        setX(minX + boundingBox.width() * 0.5f); // Align with edge of screen for both
+        setX(minPos.x + boundingBox.width() * 0.5f); // Align with edge of screen for both
     }
 
     public void onReachRight() {
@@ -116,7 +114,7 @@ public class KeepInScene extends Script {
             default:
                 return;
         }
-        setX(maxX - boundingBox.width() * 0.5f);
+        setX(maxPos.x - boundingBox.width() * 0.5f);
     }
 
     public void onReachTop() {
@@ -130,7 +128,7 @@ public class KeepInScene extends Script {
             default:
                 return;
         }
-        setY(minY + boundingBox.height() * 0.5f);
+        setY(minPos.y + boundingBox.height() * 0.5f);
 
     }
 
@@ -145,33 +143,33 @@ public class KeepInScene extends Script {
             default:
                 return;
         }
-        setY(maxY - boundingBox.height() * 0.5f);
+        setY(maxPos.y - boundingBox.height() * 0.5f);
     }
 
     public void onPassLeft() {
         switch (mode) {
-            case WRAP -> setX(maxX + boundingBox.width() * 0.5f);
+            case WRAP -> setX(maxPos.x + boundingBox.width() * 0.5f);
             case DELETE -> parent.destroy();
         }
     }
 
     public void onPassRight() {
         switch (mode) {
-            case WRAP -> setX(minX - boundingBox.width() * 0.5f);
+            case WRAP -> setX(minPos.x - boundingBox.width() * 0.5f);
             case DELETE -> parent.destroy();
         }
     }
 
     public void onPassTop() {
         switch (mode) {
-            case WRAP -> setY(maxY + boundingBox.height() * 0.5f);
+            case WRAP -> setY(maxPos.y + boundingBox.height() * 0.5f);
             case DELETE -> parent.destroy();
         }
     }
 
     public void onPassBottom() {
         switch (mode) {
-            case WRAP -> setY(minY - boundingBox.height() * 0.5f);
+            case WRAP -> setY(minPos.y - boundingBox.height() * 0.5f);
             case DELETE -> parent.destroy();
         }
     }

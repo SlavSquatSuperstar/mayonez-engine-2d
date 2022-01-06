@@ -6,7 +6,7 @@ The 2D Java game engine to fit your Slavic needs!*†
 
 - Download the latest Java version: [JRE 17](https://jdk.java.net/17/)
 - To check if Java is installed, enter 'java --version' inside a command line window.
-- Download the repository, drag 'run.sh' (Unix)/'run.bat' (Windows) from the extracted folder to a command line window,
+- Download the repository, drag 'run.sh' (Mac/Linux) or 'run.bat' (Windows) from the extracted folder to a command line window,
   and press enter.
 
 ### Instructions for Developers:

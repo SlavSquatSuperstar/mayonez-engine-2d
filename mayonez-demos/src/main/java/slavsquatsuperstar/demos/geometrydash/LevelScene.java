@@ -1,4 +1,4 @@
-package slavsquatsuperstar.demos;
+package slavsquatsuperstar.demos.geometrydash;
 
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.*;
@@ -23,7 +23,6 @@ public class LevelScene extends Scene {
             protected void init() {
                 addComponent(new Rigidbody2D(0f));
                 addComponent(new AlignedBoxCollider2D(new Vec2(getWidth() + 2f, 2f)));
-                System.out.println(transform.position);
             }
 
             @Override
