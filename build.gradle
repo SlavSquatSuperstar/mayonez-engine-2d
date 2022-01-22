@@ -15,20 +15,21 @@ plugins {
 // Project Info
 
 group 'slavsquatsuperstar'
-version '0.7.2-SNAPSHOT-5'
+version '0.7.3-SNAPSHOT-4'
 description = 'The root project for Mayonez Engine that all modules'
 
 allprojects {
     group 'slavsquatsuperstar'
-    version '0.7.3-pre3'
+    version '0.7.3-pre4'
 }
 
 // Custom Settings
 project.ext {
     javaVersion = '17'
     junitVersion = '5.8.2'
-//    mainClass = 'slavsquatsuperstar.demos.GLRendererTest'
-    mainClass = 'slavsquatsuperstar.demos.geometrydash.LevelEditor'
+    // TODO separate into GL/AWT modules
+    mainClass = 'slavsquatsuperstar.demos.GLRendererTest'
+//    mainClass = 'slavsquatsuperstar.demos.geometrydash.LevelEditor'
     mainModule = 'mayonez.demos'
 }
 sourceCompatibility = javaVersion
@@ -54,9 +55,9 @@ application { // For 'run' task
     mainModule = project.ext.mainModule
 }
 
-//run {
-//    jvmArgs = ["-XstartOnFirstThread"] // For LWJGL
-//}
+run {
+    jvmArgs = ["-XstartOnFirstThread"] // For LWJGL
+}
 
 jar {
     manifest.attributes('Main-Class': project.ext.mainClass)

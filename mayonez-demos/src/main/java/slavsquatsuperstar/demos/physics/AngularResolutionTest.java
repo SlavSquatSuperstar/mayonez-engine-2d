@@ -26,10 +26,10 @@ public class AngularResolutionTest extends PhysicsTestScene {
         for (int i = 0; i < NUM_SHAPES; i++) {
             if (i % 3 == 0) {
                 addObject(createCircle(MathUtils.random(3f, 6f), new Vec2(MathUtils.random(0, getWidth()),
-                        MathUtils.random(0, getHeight())), TEST_MATERIAL));
+                        MathUtils.random(0, getHeight())), NORMAL_MATERIAL));
             } else {
             addObject(createOBB(MathUtils.random(5f, 12f), MathUtils.random(5f, 12f),
-                    new Vec2(MathUtils.random(0, getWidth()), MathUtils.random(0, getHeight())), MathUtils.random(0, 90), TEST_MATERIAL));
+                    new Vec2(MathUtils.random(0, getWidth()), MathUtils.random(0, getHeight())), MathUtils.random(0, 90), NORMAL_MATERIAL));
             }
         }
 

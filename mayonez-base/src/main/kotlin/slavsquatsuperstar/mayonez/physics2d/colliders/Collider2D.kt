@@ -149,7 +149,7 @@ abstract class Collider2D : Component() {
     // Field Getters and Setters
 
     /**
-     * Returns whether this collider has a null or static rigidbody, and thus does not respond to collisions.
+     * Whether this collider has a null or infinite-mass rigidbody, and does not respond to collisions.
      *
      * @return if this collider is not affected by collisions.
      */

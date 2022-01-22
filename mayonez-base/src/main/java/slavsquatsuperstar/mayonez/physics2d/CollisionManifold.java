@@ -4,7 +4,6 @@ import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.physics2d.colliders.Collider2D;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -12,6 +11,7 @@ import java.util.List;
  *
  * @author SlavSquatSuperstar
  */
+// TODO create separate collision event class
 public class CollisionManifold {
 
     private final Collider2D self, other;
@@ -27,7 +27,7 @@ public class CollisionManifold {
         this.depth = depth;
     }
 
-    // Getters
+    // Collision Objects
 
     public Collider2D getSelf() {
         return self;
@@ -37,12 +37,14 @@ public class CollisionManifold {
         return other;
     }
 
+    // Collision Information
+
     /**
      * What direction the two colliders should be separated when resolving the collision.
      *
      * @return the direction of separation
      */
-    public Vec2 getNormal() {
+    Vec2 getNormal() {
         return normal;
     }
 
@@ -51,16 +53,8 @@ public class CollisionManifold {
      *
      * @return the penetration distance
      */
-    public float getDepth() {
+    float getDepth() {
         return depth;
-    }
-
-    public boolean shouldIgnore() {
-        return ignore;
-    }
-
-    public void ignore() {
-        ignore = true;
     }
 
     // Contact Methods
@@ -73,12 +67,21 @@ public class CollisionManifold {
         return contacts.get(index);
     }
 
-    public void addContact(Vec2 contactPoint) {
+    public void addContact(Vec2 contactPoint) { // Should be package-protected
         contacts.add(contactPoint);
     }
 
-    public void addContacts(Vec2... contactPoints) {
-        contacts.addAll(Arrays.asList(contactPoints));
+    // Callback Methods
+
+    public boolean shouldIgnore() {
+        return ignore;
+    }
+
+    /**
+     * Flag this collision to be ignored by the physics engine
+     */
+    public void ignore() {
+        ignore = true;
     }
 
     @Override
