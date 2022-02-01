@@ -1,7 +1,6 @@
 package slavsquatsuperstar.mayonez;
 
 import slavsquatsuperstar.math.Vec2;
-import slavsquatsuperstar.mayonez.physics2d.CollisionManifold;
 import slavsquatsuperstar.mayonez.physics2d.colliders.Collider2D;
 
 import java.awt.*;
@@ -185,14 +184,14 @@ public class GameObject {
     // Callback Methods
 
     /**
-     * What to do after making contact with another physical object
+     * What to do after making contact with another physical object.
      *
-     * @param collision the collision information
+     * @param other the other object in the collision
      */
-    public void onCollision(CollisionManifold collision) {}
+    public void onCollision(GameObject other) {}
 
     /**
-     * What to do after passing through a trigger area
+     * What to do after passing through a trigger area.
      *
      * @param trigger the trigger collider
      */

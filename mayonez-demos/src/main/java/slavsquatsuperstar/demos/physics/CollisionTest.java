@@ -4,7 +4,7 @@ import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Mayonez;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
-import slavsquatsuperstar.mayonez.physics2d.colliders.AlignedBoxCollider2D;
+import slavsquatsuperstar.mayonez.physics2d.colliders.BoundingBoxCollider2D;
 import slavsquatsuperstar.mayonez.physics2d.colliders.BoxCollider2D;
 
 public class CollisionTest extends PhysicsTestScene {
@@ -19,7 +19,7 @@ public class CollisionTest extends PhysicsTestScene {
             @Override
             protected void init() {
                 addComponent(new Rigidbody2D(0));
-                addComponent(new AlignedBoxCollider2D(new Vec2(getWidth(), 2)));
+                addComponent(new BoundingBoxCollider2D(new Vec2(getWidth(), 2)));
             }
         });
         addObject(new GameObject("Left Ramp", new Vec2(20, 40)) {

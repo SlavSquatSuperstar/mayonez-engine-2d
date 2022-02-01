@@ -6,7 +6,7 @@ import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.graphics.Sprite;
 import slavsquatsuperstar.mayonez.input.MouseInput;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
-import slavsquatsuperstar.mayonez.physics2d.colliders.AlignedBoxCollider2D;
+import slavsquatsuperstar.mayonez.physics2d.colliders.BoundingBoxCollider2D;
 import slavsquatsuperstar.mayonez.scripts.Counter;
 
 import java.awt.*;
@@ -45,7 +45,7 @@ public class SnapToGrid extends Component {
                 @Override
                 protected void init() {
                     addComponent(cursor.copy());
-                    addComponent(new AlignedBoxCollider2D(new Vec2(1f)));
+                    addComponent(new BoundingBoxCollider2D(new Vec2(1f)));
                     addComponent(new Rigidbody2D(0f));
                 }
             });

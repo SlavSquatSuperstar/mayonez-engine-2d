@@ -9,8 +9,8 @@ import slavsquatsuperstar.math.MathUtils.min
 import slavsquatsuperstar.math.MathUtils.minIndex
 import slavsquatsuperstar.math.Range
 import slavsquatsuperstar.math.Vec2
-import slavsquatsuperstar.mayonez.physics2d.CollisionManifold
-import slavsquatsuperstar.mayonez.physics2d.RaycastResult
+import slavsquatsuperstar.mayonez.physics2d.collision.Manifold
+import slavsquatsuperstar.mayonez.physics2d.collision.RaycastResult
 import kotlin.math.abs
 
 /**
@@ -24,6 +24,10 @@ import kotlin.math.abs
  */
 open class PolygonCollider2D(vararg vertices: Vec2) : Collider2D() {
 
+    constructor(sides: Int, radius: Float) : this(sides, Vec2(radius, 0f), 360f / sides)
+
+    private constructor(sides: Int, start: Vec2, angle: Float) : this(*Array(sides) { start.rotate(angle * (it - 1)) })
+
     // Shape Properties
 
     // points in local space (relative to center)
@@ -36,20 +40,16 @@ open class PolygonCollider2D(vararg vertices: Vec2) : Collider2D() {
 
     open fun getRotation(): Float = transform?.rotation ?: 0f
 
-    override fun getMinBounds(): AlignedBoxCollider2D { // TODO Support function
+    override fun getMinBounds(): BoundingBoxCollider2D { // TODO Support function
         val vertices = getVertices()
-        val verticesX = FloatArray(vertices.size)
-        val verticesY = FloatArray(vertices.size)
-
         // Get the min and max coordinates of any point on the box
-        for (i in vertices.indices) {
-            verticesX[i] = vertices[i].x
-            verticesY[i] = vertices[i].y
-        }
+        val verticesX = FloatArray(vertices.size) { vertices[it].x }
+        val verticesY = FloatArray(vertices.size) { vertices[it].y }
+
         val newMin = Vec2(min(*verticesX), min(*verticesY))
         val newMax = Vec2(max(*verticesX), max(*verticesY))
-        val aabbSize = newMax.sub(newMin).div(transform!!.scale)
-        return AlignedBoxCollider2D(aabbSize).setTransform<Collider2D>(transform).setRigidbody(rb)
+        val aabbSize = (newMax - newMin) / (transform!!.scale)
+        return BoundingBoxCollider2D(aabbSize).setTransform<Collider2D>(transform).setRigidbody(rb)
     }
 
     // Intersection Helper Methods
@@ -78,7 +78,7 @@ open class PolygonCollider2D(vararg vertices: Vec2) : Collider2D() {
      * Positive is in axis direction
      * (-) ---> (+)
      */
-    protected fun getIntervalOnAxis(axis: Vec2): Range {
+    private fun getIntervalOnAxis(axis: Vec2): Range {
         val vertices = getVertices()
         val projections = FloatArray(vertices.size) { vertices[it].dot(axis) }
         return Range(min(*projections), max(*projections))
@@ -159,7 +159,7 @@ open class PolygonCollider2D(vararg vertices: Vec2) : Collider2D() {
         return true
     }
 
-    override fun getCollisionInfo(collider: Collider2D?): CollisionManifold? {
+    override fun getCollisionInfo(collider: Collider2D?): Manifold? {
         return when (collider) {
             is CircleCollider -> getCollisionInfo(collider)
             is PolygonCollider2D -> getCollisionInfo(collider)
@@ -168,20 +168,20 @@ open class PolygonCollider2D(vararg vertices: Vec2) : Collider2D() {
     }
 
     // Polygon vs Circle: 1 contact point
-    private fun getCollisionInfo(circle: CircleCollider): CollisionManifold? {
+    private fun getCollisionInfo(circle: CircleCollider): Manifold? {
         val closestToCircle = nearestPoint(circle.center())
         if (closestToCircle!! !in circle) return null
 
         val depth = circle.radius - closestToCircle.distance(circle.center())
         val normal = (circle.center() - closestToCircle).unit()
-        val result = CollisionManifold(this, circle, normal, depth)
+        val result = Manifold(this, circle, normal, depth)
         result.addContact(closestToCircle - (normal * depth))
         return result
     }
 
     // Polygon vs Polygon: 1-2 contact points
     // SAT method, convex only
-    private fun getCollisionInfo(poly: PolygonCollider2D): CollisionManifold? {
+    private fun getCollisionInfo(poly: PolygonCollider2D): Manifold? {
         // 1. Store edges and normals in structs and calculate overlaps
         val poly1 = SATPolygon(this, poly)
         val poly2 = SATPolygon(poly, this)
@@ -221,7 +221,7 @@ open class PolygonCollider2D(vararg vertices: Vec2) : Collider2D() {
 //        DebugDraw.drawLine(incEdge, Colors.RED)
 
         // 5. Calculate contact points
-        val collision = CollisionManifold(reference.collider, incident.collider, colNormal, -overlap)
+        val collision = Manifold(reference.collider, incident.collider, colNormal, -overlap)
         val clippedEdge = incEdge.clipToSegment(refEdge)
         val normalFace = refEdge.start.dot(colNormal)
         for (pt in arrayOf(clippedEdge.start, clippedEdge.end))

@@ -6,7 +6,7 @@ import slavsquatsuperstar.mayonez.Logger;
 import slavsquatsuperstar.mayonez.Preferences;
 import slavsquatsuperstar.mayonez.Script;
 import slavsquatsuperstar.mayonez.input.MouseInput;
-import slavsquatsuperstar.mayonez.physics2d.colliders.AlignedBoxCollider2D;
+import slavsquatsuperstar.mayonez.physics2d.colliders.BoundingBoxCollider2D;
 import slavsquatsuperstar.mayonez.scripts.DragAndDrop;
 import slavsquatsuperstar.mayonez.scripts.KeepInScene;
 
@@ -49,7 +49,7 @@ public final class JCamera extends Script implements Camera {
                     }
                 }.setEnabled(false));
                 // Keep camera inside scene and add camera collider
-                addComponent(new AlignedBoxCollider2D(camera.size).setTrigger(true));
+                addComponent(new BoundingBoxCollider2D(camera.size).setTrigger(true));
                 addComponent(camera.keepInScene = new KeepInScene(camera.minPos, camera.maxPos, KeepInScene.Mode.STOP));
             }
 

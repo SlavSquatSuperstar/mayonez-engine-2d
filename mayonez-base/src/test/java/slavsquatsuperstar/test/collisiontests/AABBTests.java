@@ -4,7 +4,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.Transform;
-import slavsquatsuperstar.mayonez.physics2d.colliders.AlignedBoxCollider2D;
+import slavsquatsuperstar.mayonez.physics2d.colliders.BoundingBoxCollider2D;
 import slavsquatsuperstar.mayonez.physics2d.colliders.CircleCollider;
 import slavsquatsuperstar.mayonez.physics2d.colliders.Edge2D;
 import slavsquatsuperstar.mayonez.physics2d.colliders.Ray2D;
@@ -12,18 +12,18 @@ import slavsquatsuperstar.mayonez.physics2d.colliders.Ray2D;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit tests for {@link AlignedBoxCollider2D} class.
+ * Unit tests for {@link BoundingBoxCollider2D} class.
  *
  * @author SlavSquatSuperstar
  */
 public class AABBTests {
 
-    static AlignedBoxCollider2D aabb;
+    static BoundingBoxCollider2D aabb;
 
     // Create box centered at (0, 0) with dimensions 2x2 and scale it by 2x
     @BeforeAll
     public static void getAABB() {
-        aabb = new AlignedBoxCollider2D(new Vec2(2, 2)).setTransform(new Transform().resize(new Vec2(2, 2)));
+        aabb = new BoundingBoxCollider2D(new Vec2(2, 2)).setTransform(new Transform().resize(new Vec2(2, 2)));
     }
 
     // Contains Point
@@ -156,7 +156,7 @@ public class AABBTests {
 
     @Test
     public void aabbIntersectsAABB() {
-        AlignedBoxCollider2D other = new AlignedBoxCollider2D(new Vec2(4, 4));
+        BoundingBoxCollider2D other = new BoundingBoxCollider2D(new Vec2(4, 4));
         other.setTransform(new Transform(new Vec2(2, 2)));
         assertTrue(aabb.detectCollision(other));
     }

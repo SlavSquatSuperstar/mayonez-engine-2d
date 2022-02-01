@@ -2,8 +2,8 @@ package slavsquatsuperstar.mayonez.physics2d.colliders
 
 import slavsquatsuperstar.math.MathUtils
 import slavsquatsuperstar.math.Vec2
-import slavsquatsuperstar.mayonez.physics2d.CollisionManifold
-import slavsquatsuperstar.mayonez.physics2d.RaycastResult
+import slavsquatsuperstar.mayonez.physics2d.collision.Manifold
+import slavsquatsuperstar.mayonez.physics2d.collision.RaycastResult
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.sqrt
@@ -25,8 +25,8 @@ class CircleCollider(radius: Float) : Collider2D() {
         get() = field * max(transform!!.scale.x, transform!!.scale.y)
 
     // Properties
-    override fun getMinBounds(): AlignedBoxCollider2D {
-        return AlignedBoxCollider2D(Vec2(radius * 2, radius * 2))
+    override fun getMinBounds(): BoundingBoxCollider2D {
+        return BoundingBoxCollider2D(Vec2(radius * 2, radius * 2))
             .setTransform<Collider2D>(transform).setRigidbody(rb)
     }
 
@@ -91,7 +91,7 @@ class CircleCollider(radius: Float) : Collider2D() {
 
     // Circle vs Shape
 
-    override fun getCollisionInfo(collider: Collider2D?): CollisionManifold? {
+    override fun getCollisionInfo(collider: Collider2D?): Manifold? {
         return when (collider) {
             is CircleCollider -> getCollisionInfo(collider)
             is PolygonCollider2D -> getCollisionInfo(collider)
@@ -100,7 +100,7 @@ class CircleCollider(radius: Float) : Collider2D() {
     }
 
     // Circle vs Circle: 1 contact point
-    private fun getCollisionInfo(circle: CircleCollider): CollisionManifold? {
+    private fun getCollisionInfo(circle: CircleCollider): Manifold? {
         val sumRadii = this.radius + circle.radius
         val distance = circle.center() - this.center()
         if (distance.lenSq() >= sumRadii * sumRadii) // Circles too far away
@@ -108,19 +108,19 @@ class CircleCollider(radius: Float) : Collider2D() {
 
         val depth = sumRadii - distance.len()
         val normal = distance.unit()
-        val result = CollisionManifold(this, circle, normal, depth)
+        val result = Manifold(this, circle, normal, depth)
         result.addContact(center() + (normal * (radius - depth)))
         return result
     }
 
     // Circle vs Polygon: 1 contact point
-    private fun getCollisionInfo(polygon: PolygonCollider2D): CollisionManifold? {
+    private fun getCollisionInfo(polygon: PolygonCollider2D): Manifold? {
         val closestToCircle = polygon.nearestPoint(center()) // Point from shape deepest in circle
         if (!contains(closestToCircle!!))
             return null
 
         val depth = radius - closestToCircle.distance(center())
-        val result = CollisionManifold(this, polygon, closestToCircle - center(), depth)
+        val result = Manifold(this, polygon, closestToCircle - center(), depth)
         result.addContact(closestToCircle)
         return result
     }

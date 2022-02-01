@@ -2,7 +2,7 @@ package slavsquatsuperstar.mayonez.physics2d.colliders
 
 import slavsquatsuperstar.math.MathUtils
 import slavsquatsuperstar.math.Vec2
-import slavsquatsuperstar.mayonez.physics2d.RaycastResult
+import slavsquatsuperstar.mayonez.physics2d.collision.RaycastResult
 import kotlin.math.sign
 
 /**

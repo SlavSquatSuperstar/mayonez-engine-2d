@@ -104,7 +104,7 @@ object DebugDraw {
     fun drawShape(shape: Collider2D?, color: Color) {
         when (shape) {
             is CircleCollider -> drawCircle(shape, color)
-            is AlignedBoxCollider2D -> drawAABB(shape, color)
+            is BoundingBoxCollider2D -> drawAABB(shape, color)
             is PolygonCollider2D -> drawPolygon(shape, color)
         }
     }
@@ -118,7 +118,7 @@ object DebugDraw {
         })
     }
 
-    private fun drawAABB(aabb: AlignedBoxCollider2D, color: Color) {
+    private fun drawAABB(aabb: BoundingBoxCollider2D, color: Color) {
         val minPx = aabb.min().toScreen()
         shapes.add(ShapeDrawer(DrawPriority.SHAPE) { g2: Graphics2D ->
             g2.color = color
@@ -150,7 +150,7 @@ object DebugDraw {
     fun fillShape(shape: Collider2D?, color: Color) {
         when (shape) {
             is CircleCollider -> fillCircle(shape, color)
-            is AlignedBoxCollider2D -> fillAABB(shape, color)
+            is BoundingBoxCollider2D -> fillAABB(shape, color)
             is PolygonCollider2D -> fillPolygon(shape, color)
         }
     }
@@ -164,7 +164,7 @@ object DebugDraw {
         })
     }
 
-    private fun fillAABB(aabb: AlignedBoxCollider2D, color: Color) {
+    private fun fillAABB(aabb: BoundingBoxCollider2D, color: Color) {
         val minPx = aabb.min().toScreen()
         shapes.add(ShapeDrawer(DrawPriority.SHAPE) { g2: Graphics2D ->
             g2.color = color

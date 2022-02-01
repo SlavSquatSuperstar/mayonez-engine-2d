@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.Transform;
-import slavsquatsuperstar.mayonez.physics2d.RaycastResult;
+import slavsquatsuperstar.mayonez.physics2d.collision.RaycastResult;
 import slavsquatsuperstar.mayonez.physics2d.colliders.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -140,7 +140,7 @@ public class CircleTests {
 
     @Test
     public void circleIntersectsAABB() {
-        AlignedBoxCollider2D aabb = new AlignedBoxCollider2D(new Vec2(4, 4));
+        BoundingBoxCollider2D aabb = new BoundingBoxCollider2D(new Vec2(4, 4));
         aabb.setTransform(new Transform(new Vec2(1, 0)));
         assertTrue(c.detectCollision(aabb));
     }

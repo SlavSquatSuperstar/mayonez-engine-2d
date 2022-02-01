@@ -8,7 +8,7 @@ import slavsquatsuperstar.mayonez.Scene;
 import slavsquatsuperstar.mayonez.input.KeyInput;
 import slavsquatsuperstar.mayonez.physics2d.PhysicsMaterial;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
-import slavsquatsuperstar.mayonez.physics2d.colliders.AlignedBoxCollider2D;
+import slavsquatsuperstar.mayonez.physics2d.colliders.BoundingBoxCollider2D;
 import slavsquatsuperstar.mayonez.physics2d.colliders.BoxCollider2D;
 import slavsquatsuperstar.mayonez.physics2d.colliders.CircleCollider;
 import slavsquatsuperstar.mayonez.physics2d.colliders.Collider2D;
@@ -44,7 +44,7 @@ public abstract class PhysicsTestScene extends Scene {
                 Color color = Colors.BLACK;
                 if (!col.isStatic()) {
                     if (col instanceof CircleCollider) color = Colors.BLUE;
-                    else if (col instanceof AlignedBoxCollider2D) color = Colors.LIGHT_GREEN;
+                    else if (col instanceof BoundingBoxCollider2D) color = Colors.LIGHT_GREEN;
                     else if (col instanceof BoxCollider2D) color = Colors.ORANGE;
                 }
 
@@ -81,7 +81,7 @@ public abstract class PhysicsTestScene extends Scene {
         return new GameObject("AABB Rectangle", position) {
             @Override
             protected void init() {
-                addComponent(new AlignedBoxCollider2D(new Vec2(width, height)).setMaterial(material));
+                addComponent(new BoundingBoxCollider2D(new Vec2(width, height)).setMaterial(material));
                 addComponent(new Rigidbody2D(width * height / 4f));
                 addComponent(new KeepInScene(getScene(), KeepInScene.Mode.BOUNCE));
                 addComponent(new DragAndDrop("left mouse"));

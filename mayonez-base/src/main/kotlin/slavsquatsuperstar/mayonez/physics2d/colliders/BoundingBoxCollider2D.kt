@@ -10,7 +10,7 @@ import slavsquatsuperstar.math.Vec2
  *
  * @author SlavSquatSuperstar
  */
-class AlignedBoxCollider2D(size: Vec2) : BoxCollider2D(size) {
+class BoundingBoxCollider2D(size: Vec2) : BoxCollider2D(size) {
 
     // Shape Properties
 
@@ -27,8 +27,8 @@ class AlignedBoxCollider2D(size: Vec2) : BoxCollider2D(size) {
 
 //    override fun getNormals(): Array<Vec2> = arrayOf(Vec2(1f, 0f), Vec2(0f, 1f))
 
-    override fun getMinBounds(): AlignedBoxCollider2D =
-        AlignedBoxCollider2D(localSize()).setTransform<Collider2D>(transform).setRigidbody(rb)
+    override fun getMinBounds(): BoundingBoxCollider2D =
+        BoundingBoxCollider2D(localSize()).setTransform<Collider2D>(transform).setRigidbody(rb)
 
     override fun toLocal(world: Vec2): Vec2 = (world - center()) / (transform?.scale ?: Vec2(1f, 1f))
 

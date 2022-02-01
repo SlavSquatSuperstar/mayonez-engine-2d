@@ -1,7 +1,10 @@
-package slavsquatsuperstar.mayonez.physics2d
+package slavsquatsuperstar.mayonez.physics2d.collision
 
 import slavsquatsuperstar.math.MathUtils
 import slavsquatsuperstar.math.Vec2
+import slavsquatsuperstar.mayonez.physics2d.Physics2D
+import slavsquatsuperstar.mayonez.physics2d.PhysicsMaterial
+import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D
 import slavsquatsuperstar.mayonez.physics2d.colliders.Collider2D
 import kotlin.math.abs
 import kotlin.math.sign
@@ -11,12 +14,25 @@ import kotlin.math.sign
  *
  * @author SlavSquatSuperstar
  */
-class CollisionSolver(private val cm: CollisionManifold) {
-    private val c1: Collider2D = cm.self
-    private val c2: Collider2D = cm.other
+class Solver(private val man: Manifold) {
+    private val c1: Collider2D = man.self
+    private val c2: Collider2D = man.other
     private val r1: Rigidbody2D? = c1.getRigidbody()
     private val r2: Rigidbody2D? = c2.getRigidbody()
 
+    /*
+     * Collider & Rigidbody (dynamic): Can move and push
+     *  - Ex: player, enemy
+     * Collider & no Rigidbody (static): Can push but not move
+     *  - Ex: fire area
+     * Rigidbody & no Collider (intangible): Can move but not push
+     *  - Ex: sun
+     *
+     * // Require RB
+     * Static vs Static (ignore)
+     * Dynamic vs Static
+     * Dynamic vs Dynamic
+     */
     fun solve() {
         // Check masses once, cannot both be static
         if (c1.isStatic() && c2.isStatic()) return
@@ -28,20 +44,18 @@ class CollisionSolver(private val cm: CollisionManifold) {
      * Transfer linear and angular momentum between objects and apply friction.
      */
     private fun solveDynamic() {
-//        if (r1 == null || r2 == null) return; // Need both rigidbodies for dynamic
-
         // Collision Information
-        val normal = cm.normal // Collision direction
+        val normal = man.normal // Collision direction
         val tangent = normal.getNormal() // Collision plane
-        val numContacts = cm.countContacts()
+        val numContacts = man.countContacts()
 
         // Physics Properties
         val sumInvMass = (r1?.invMass ?: 0f) + (r2?.invMass ?: 0f)
         val mat1 = c1.material
         val mat2 = c2.material
-        val restitution = PhysicsMaterial.combineBounce(mat1, mat2)
-        val sFric = PhysicsMaterial.combineStaticFriction(mat1, mat2)
-        val kFric = PhysicsMaterial.combineKineticFriction(mat1, mat2)
+        val kRest = PhysicsMaterial.combineBounce(mat1, mat2) // coefficient of restitution, e
+        val sFric = PhysicsMaterial.combineStaticFriction(mat1, mat2) // combined static friction, mu_s
+        val kFric = PhysicsMaterial.combineKineticFriction(mat1, mat2) // combined kinetic friction, mu_k
 
         for (i in 0 until Physics2D.IMPULSE_ITERATIONS) {
             // Net impulse of collision
@@ -51,7 +65,7 @@ class CollisionSolver(private val cm: CollisionManifold) {
 
             for (j in 0 until numContacts) {
                 // Radius from center of mass to contact
-                val contact = cm.getContact(j)
+                val contact = man.getContact(j)
                 val rad1 = contact - r1!!.position
                 val rad2 = contact - r2!!.position
 
@@ -64,7 +78,7 @@ class CollisionSolver(private val cm: CollisionManifold) {
                 val normalVel = relativeVel.dot(normal) // Velocity along collision normal
                 if (normalVel < 0f) return  // Stop if moving away or stationary
                 // Apply impulse at contact points evenly
-                val normalImp = -(1f + restitution) * normalVel / (sumInvMass * numContacts)
+                val normalImp = -(1f + kRest) * normalVel / (sumInvMass * numContacts)
 
                 // Transfer angular momentum
                 sumAngImp1 -= rad1.cross(normal * relativeVel)
@@ -110,11 +124,11 @@ class CollisionSolver(private val cm: CollisionManifold) {
 
         // Separate objects factoring in mass
         val massRatio = mass1 / (mass1 + mass2)
-        val depth1 = cm.depth * massRatio
-        val depth2 = cm.depth * (1 - massRatio)
+        val depth1 = man.depth * massRatio
+        val depth2 = man.depth * (1 - massRatio)
 
         // Displace bodies to correct position
-        c1.transform.move(cm.normal * -depth1)
-        c2.transform.move(cm.normal * depth2)
+        c1.transform.move(man.normal * -depth1)
+        c2.transform.move(man.normal * depth2)
     }
 }

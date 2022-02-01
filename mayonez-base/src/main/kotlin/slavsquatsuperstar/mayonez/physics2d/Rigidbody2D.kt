@@ -6,7 +6,7 @@ import slavsquatsuperstar.math.MathUtils.toDegrees
 import slavsquatsuperstar.math.MathUtils.toRadians
 import slavsquatsuperstar.math.Vec2
 import slavsquatsuperstar.mayonez.Component
-import slavsquatsuperstar.mayonez.physics2d.colliders.AlignedBoxCollider2D
+import slavsquatsuperstar.mayonez.physics2d.colliders.BoundingBoxCollider2D
 import slavsquatsuperstar.mayonez.physics2d.colliders.Collider2D
 
 /**
@@ -63,7 +63,7 @@ class Rigidbody2D(mass: Float, drag: Float, angDrag: Float) : Component() {
 
     override fun start() {
         collider = parent.getComponent(Collider2D::class.java)
-        if (collider is AlignedBoxCollider2D) fixedRotation = true
+        if (collider is BoundingBoxCollider2D) fixedRotation = true
     }
 
     /**

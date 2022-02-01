@@ -6,7 +6,7 @@ import slavsquatsuperstar.mayonez.Mayonez;
 import slavsquatsuperstar.mayonez.Script;
 import slavsquatsuperstar.mayonez.input.KeyInput;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
-import slavsquatsuperstar.mayonez.physics2d.colliders.AlignedBoxCollider2D;
+import slavsquatsuperstar.mayonez.physics2d.colliders.BoundingBoxCollider2D;
 import slavsquatsuperstar.mayonez.physics2d.colliders.BoxCollider2D;
 import slavsquatsuperstar.mayonez.physics2d.colliders.CircleCollider;
 import slavsquatsuperstar.mayonez.scripts.DragAndDrop;
@@ -26,7 +26,7 @@ public class FrictionTest extends PhysicsTestScene {
             @Override
             protected void init() {
                 addComponent(new Rigidbody2D(0));
-                addComponent(new AlignedBoxCollider2D(new Vec2(getWidth(), 2)));
+                addComponent(new BoundingBoxCollider2D(new Vec2(getWidth(), 2)));
             }
         });
 

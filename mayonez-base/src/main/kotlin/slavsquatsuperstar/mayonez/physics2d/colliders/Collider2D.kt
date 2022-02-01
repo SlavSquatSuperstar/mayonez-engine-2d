@@ -2,12 +2,13 @@ package slavsquatsuperstar.mayonez.physics2d.colliders
 
 import slavsquatsuperstar.math.Vec2
 import slavsquatsuperstar.mayonez.Component
+import slavsquatsuperstar.mayonez.GameObject
 import slavsquatsuperstar.mayonez.Logger
 import slavsquatsuperstar.mayonez.Transform
-import slavsquatsuperstar.mayonez.physics2d.CollisionManifold
 import slavsquatsuperstar.mayonez.physics2d.PhysicsMaterial
-import slavsquatsuperstar.mayonez.physics2d.RaycastResult
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D
+import slavsquatsuperstar.mayonez.physics2d.collision.Manifold
+import slavsquatsuperstar.mayonez.physics2d.collision.RaycastResult
 
 /**
  * A shape that takes up space and can detect collisions. Requires a [Rigidbody2D] to respond to collisions
@@ -18,6 +19,9 @@ import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D
 @Suppress("UNCHECKED_CAST")
 abstract class Collider2D : Component() {
 
+    /**
+     * If any collisions in the current frame should not be resolved by the physics engine.
+     */
     var ignoreCurrentCollision = false
 
     // Object References
@@ -78,7 +82,7 @@ abstract class Collider2D : Component() {
 
     fun center(): Vec2 = transform?.position ?: Vec2()
 
-    abstract fun getMinBounds(): AlignedBoxCollider2D
+    abstract fun getMinBounds(): BoundingBoxCollider2D
 
     open fun getAngMass(mass: Float): Float = mass
 
@@ -138,7 +142,7 @@ abstract class Collider2D : Component() {
      * @param collider another collider
      * @return the collision info, or no if there is no intersection
      */
-    abstract fun getCollisionInfo(collider: Collider2D?): CollisionManifold?
+    abstract fun getCollisionInfo(collider: Collider2D?): Manifold?
 
     // Transform Methods
 
@@ -157,8 +161,18 @@ abstract class Collider2D : Component() {
 
     // Callback Methods
 
-    fun onCollision(collision: CollisionManifold) = parent.onCollision(collision)
+    /**
+     * A callback event broadcasted when two solid objects collide with each other.
+     *
+     * @param other the other game object
+     */
+    fun onCollision(other: GameObject) = parent.onCollision(other)
 
+    /**
+     * A callback event broadcasted when one solid object enters a trigger area.
+     *
+     * @param trigger the trigger
+     */
     fun onTrigger(trigger: Collider2D) = parent.onTrigger(trigger)
 
     override fun destroy() {

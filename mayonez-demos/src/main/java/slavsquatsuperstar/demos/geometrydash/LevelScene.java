@@ -3,7 +3,7 @@ package slavsquatsuperstar.demos.geometrydash;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.*;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
-import slavsquatsuperstar.mayonez.physics2d.colliders.AlignedBoxCollider2D;
+import slavsquatsuperstar.mayonez.physics2d.colliders.BoundingBoxCollider2D;
 import slavsquatsuperstar.mayonez.physics2d.colliders.Collider2D;
 import slavsquatsuperstar.mayonez.graphics.DebugDraw;
 
@@ -22,7 +22,7 @@ public class LevelScene extends Scene {
             @Override
             protected void init() {
                 addComponent(new Rigidbody2D(0f));
-                addComponent(new AlignedBoxCollider2D(new Vec2(getWidth() + 2f, 2f)));
+                addComponent(new BoundingBoxCollider2D(new Vec2(getWidth() + 2f, 2f)));
             }
 
             @Override

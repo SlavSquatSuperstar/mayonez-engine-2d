@@ -12,9 +12,8 @@ import slavsquatsuperstar.mayonez.fileio.GLTexture;
 import slavsquatsuperstar.mayonez.graphics.GLCamera;
 import slavsquatsuperstar.mayonez.graphics.GLSprite;
 import slavsquatsuperstar.mayonez.graphics.GLSpriteSheet;
-import slavsquatsuperstar.mayonez.physics2d.CollisionManifold;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
-import slavsquatsuperstar.mayonez.physics2d.colliders.AlignedBoxCollider2D;
+import slavsquatsuperstar.mayonez.physics2d.colliders.BoundingBoxCollider2D;
 import slavsquatsuperstar.mayonez.scripts.DragAndDrop;
 import slavsquatsuperstar.mayonez.scripts.KeyMovement;
 import slavsquatsuperstar.mayonez.scripts.MoveMode;
@@ -60,7 +59,7 @@ public class GLRendererTest extends Scene {
             @Override
             protected void init() {
                 addComponent(sprites.getSprite(0));
-                addComponent(new AlignedBoxCollider2D(new Vec2(0.8f, 1)));
+                addComponent(new BoundingBoxCollider2D(new Vec2(0.8f, 1)));
                 addComponent(new Rigidbody2D(1f));
                 addComponent(new KeyMovement(MoveMode.POSITION, 20));
             }
@@ -74,13 +73,13 @@ public class GLRendererTest extends Scene {
             @Override
             protected void init() {
                 addComponent(sprites.getSprite(spriteIndex));
-                addComponent(new AlignedBoxCollider2D(new Vec2(0.8f, 1)));
+                addComponent(new BoundingBoxCollider2D(new Vec2(0.8f, 1)));
                 addComponent(new Rigidbody2D(1f));
                 addComponent(new DragAndDrop("left mouse"));
             }
 
             @Override
-            public void onCollision(CollisionManifold collision) {
+            public void onCollision(GameObject other) {
                 destroy();
             }
         };

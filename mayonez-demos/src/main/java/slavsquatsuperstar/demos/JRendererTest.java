@@ -3,12 +3,11 @@ package slavsquatsuperstar.demos;
 import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.*;
-import slavsquatsuperstar.mayonez.input.KeyInput;
-import slavsquatsuperstar.mayonez.physics2d.CollisionManifold;
-import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
-import slavsquatsuperstar.mayonez.physics2d.colliders.AlignedBoxCollider2D;
 import slavsquatsuperstar.mayonez.graphics.JCamera;
 import slavsquatsuperstar.mayonez.graphics.JSpriteSheet;
+import slavsquatsuperstar.mayonez.input.KeyInput;
+import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
+import slavsquatsuperstar.mayonez.physics2d.colliders.BoundingBoxCollider2D;
 import slavsquatsuperstar.mayonez.scripts.DragAndDrop;
 import slavsquatsuperstar.mayonez.scripts.KeyMovement;
 import slavsquatsuperstar.mayonez.scripts.MoveMode;
@@ -37,7 +36,7 @@ public class JRendererTest extends Scene {
                 cam.setSubject(this);
                 cam.enableKeepInScene(false);
                 addComponent(sprites.getSprite(0));
-                addComponent(new AlignedBoxCollider2D(new Vec2(0.8f, 1)));
+                addComponent(new BoundingBoxCollider2D(new Vec2(0.8f, 1)));
                 addComponent(new Rigidbody2D(1f));
                 addComponent(new KeyMovement(MoveMode.POSITION, 20));
                 addComponent(new Script() {
@@ -60,13 +59,13 @@ public class JRendererTest extends Scene {
             @Override
             protected void init() {
                 addComponent(sprites.getSprite(spriteIndex));
-                addComponent(new AlignedBoxCollider2D(new Vec2(0.8f, 1)));
+                addComponent(new BoundingBoxCollider2D(new Vec2(0.8f, 1)));
                 addComponent(new Rigidbody2D(1f));
                 addComponent(new DragAndDrop("left mouse"));
             }
 
             @Override
-            public void onCollision(CollisionManifold collision) {
+            public void onCollision(GameObject other) {
                 destroy();
 //                if (collision.getOther().getParent().name.equals("Mario")) destroy();
 //                else collision.ignore();

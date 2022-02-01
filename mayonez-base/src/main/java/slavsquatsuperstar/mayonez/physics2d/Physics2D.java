@@ -5,6 +5,8 @@ import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Preferences;
 import slavsquatsuperstar.mayonez.Scene;
 import slavsquatsuperstar.mayonez.physics2d.colliders.Collider2D;
+import slavsquatsuperstar.mayonez.physics2d.collision.Manifold;
+import slavsquatsuperstar.mayonez.physics2d.collision.Solver;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,12 +22,12 @@ import java.util.List;
 public final class Physics2D {
 
     public final static float GRAVITY_CONSTANT = 9.8f;
-    final static int IMPULSE_ITERATIONS = Preferences.IMPULSE_ITERATIONS;
+    public final static int IMPULSE_ITERATIONS = Preferences.IMPULSE_ITERATIONS;
 
     // Collisions
     private final List<Rigidbody2D> bodies;
     private final List<Collider2D> colliders;
-    private final List<CollisionManifold> collisions;
+    private final List<Manifold> collisions;
 
     // Forces
     private final List<ForceRegistration> forceRegistry;
@@ -71,7 +73,7 @@ public final class Physics2D {
         bodies.forEach(rb -> rb.integrateForce(dt));
 
         // Resolve collisions
-        collisions.forEach(col -> new CollisionSolver(col).solve());
+        collisions.forEach(col -> new Solver(col).solve());
 
         // Integrate velocity
         bodies.forEach(rb -> rb.integrateVelocity(dt));
@@ -79,19 +81,6 @@ public final class Physics2D {
 
     // Collision Helper Methods
 
-    /*
-     * Collider & Rigidbody (dynamic): Can move and push
-     *  - Ex: player, enemy
-     * Collider & no Rigidbody (static): Can push but not move
-     *  - Ex: fire area
-     * Rigidbody & no Collider (sprite): Can move but not push
-     *  - Ex: sun
-     *
-     * // Require RB
-     * Static vs Static (ignore)
-     * Dynamic vs Static
-     * Dynamic vs Dynamic
-     */
     private void detectCollisions() {
         for (int i = 0; i < colliders.size(); i++) {
             // Want to avoid duplicate collisions between two objects and checking against self
@@ -100,21 +89,23 @@ public final class Physics2D {
                 Collider2D c2 = colliders.get(j);
 
                 if (c1.isStatic() && c2.isStatic()) continue; // Don't check for collision if both are static
-                CollisionManifold collision = c1.getCollisionInfo(c2); // Get collision info
+                Manifold collision = c1.getCollisionInfo(c2); // Get collision info
                 if (collision == null) continue;
 
-                // TODO still send collision events if triggers
-                // Register collisions if neither is a trigger
+                // Send collision callbacks if both are not triggers
                 if (!c1.isTrigger() && !c2.isTrigger()) {
                     if (c1.isTrigger()) {
                         c2.onTrigger(c1);
                     } else if (c2.isTrigger()) {
                         c1.onTrigger(c2);
                     } else {
-                        c1.onCollision(collision);
-                        c2.onCollision(collision);
-                        if (collision.shouldIgnore() || c1.getIgnoreCurrentCollision() || c2.getIgnoreCurrentCollision())
+                        c1.onCollision(c2.getParent());
+                        c2.onCollision(c1.getParent());
+                        if (c1.getIgnoreCurrentCollision() || c2.getIgnoreCurrentCollision()) {
+                            c1.setIgnoreCurrentCollision(true);
+                            c2.setIgnoreCurrentCollision(true);
                             continue; // Stop if either object has called ignore collision
+                        }
                         collisions.add(collision); // Only solve if neither are triggers
                     }
                 }

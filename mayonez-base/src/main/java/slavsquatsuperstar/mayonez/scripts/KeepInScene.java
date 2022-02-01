@@ -6,7 +6,7 @@ import slavsquatsuperstar.mayonez.Logger;
 import slavsquatsuperstar.mayonez.Scene;
 import slavsquatsuperstar.mayonez.Script;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
-import slavsquatsuperstar.mayonez.physics2d.colliders.AlignedBoxCollider2D;
+import slavsquatsuperstar.mayonez.physics2d.colliders.BoundingBoxCollider2D;
 import slavsquatsuperstar.mayonez.physics2d.colliders.Collider2D;
 
 /**
@@ -20,7 +20,7 @@ public class KeepInScene extends Script {
     private final Vec2 minPos, maxPos;
     private Mode mode;
     private Collider2D objectCollider = null;
-    private AlignedBoxCollider2D boundingBox = null;
+    private BoundingBoxCollider2D boundingBox = null;
     private Rigidbody2D rb = null;
 
     public KeepInScene(Scene scene, Mode mode) { // Use scene bounds
@@ -44,7 +44,7 @@ public class KeepInScene extends Script {
             }
         } catch (NullPointerException e) {
             Logger.log("%s needs a collider to function!", this);
-            boundingBox = new AlignedBoxCollider2D(new Vec2());
+            boundingBox = new BoundingBoxCollider2D(new Vec2());
             boundingBox.setTransform(transform);
             mode = Mode.STOP;
         }

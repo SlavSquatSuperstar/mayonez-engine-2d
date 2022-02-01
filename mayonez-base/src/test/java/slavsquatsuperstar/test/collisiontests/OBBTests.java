@@ -121,7 +121,7 @@ public class OBBTests {
 
     @Test
     public void obbIntersectsAABB() {
-        AlignedBoxCollider2D box = new AlignedBoxCollider2D(new Vec2(4, 4));
+        BoundingBoxCollider2D box = new BoundingBoxCollider2D(new Vec2(4, 4));
         box.setTransform(new Transform(new Vec2(2, 2)));
         assertTrue(obb.detectCollision(box));
     }
