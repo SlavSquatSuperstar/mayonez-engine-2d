@@ -35,7 +35,7 @@ class Ray2D(val origin: Vec2, direction: Vec2) {
      * negative if to the right, and zero if on this ray.
      */
     fun distance(point: Vec2): Float {
-        return point.sub(origin).comp(Vec2(-direction.y, direction.x))
+        return point.sub(origin).component(Vec2(-direction.y, direction.x))
     }
 
     /**

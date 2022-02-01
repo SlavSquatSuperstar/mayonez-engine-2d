@@ -35,7 +35,7 @@ open class BoxCollider2D private constructor(min: Vec2, max: Vec2) :
         @JvmName("height")
         get() = size().y
 
-    override fun getAngMass(mass: Float): Float = mass * MathUtils.pythagoreanSquared(width, height) / 12f
+    override fun getAngMass(mass: Float): Float = mass * MathUtils.hypotSq(width, height) / 12f
 
     /**
      * Returns the unscaled size of this box.

@@ -39,6 +39,7 @@ public final class JCamera extends Script implements Camera {
         return new GameObject("Camera", camera.getHalfSize()) {
             @Override
             protected void init() {
+                addTag("Ignore Collisions");
                 addComponent(camera);
                 // Allow camera to be moved with mouse
                 addComponent(camera.dragAndDrop = new DragAndDrop("right mouse", true, true) {

@@ -5,10 +5,13 @@ import slavsquatsuperstar.mayonez.Component
 import slavsquatsuperstar.mayonez.GameObject
 import slavsquatsuperstar.mayonez.Logger
 import slavsquatsuperstar.mayonez.Transform
+import slavsquatsuperstar.mayonez.graphics.DebugDraw
 import slavsquatsuperstar.mayonez.physics2d.PhysicsMaterial
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D
 import slavsquatsuperstar.mayonez.physics2d.collision.Manifold
 import slavsquatsuperstar.mayonez.physics2d.collision.RaycastResult
+import java.awt.Color
+import java.awt.Graphics2D
 
 /**
  * A shape that takes up space and can detect collisions. Requires a [Rigidbody2D] to respond to collisions
@@ -20,7 +23,7 @@ import slavsquatsuperstar.mayonez.physics2d.collision.RaycastResult
 abstract class Collider2D : Component() {
 
     /**
-     * If any collisions in the current frame should not be resolved by the physics engine.
+     * If the collision in [onCollision] should not be resolved by the physics engine.
      */
     var ignoreCurrentCollision = false
 
@@ -61,7 +64,7 @@ abstract class Collider2D : Component() {
 
     var isTrigger = false
         /**
-         * Returns this collider is non-physical and should not react to collisions.
+         * Returns whether this collider is non-physical and should not react to collisions.
          */
         @JvmName("isTrigger") get
         private set
@@ -71,11 +74,29 @@ abstract class Collider2D : Component() {
         return this
     }
 
+    // Debug Properties
+    var drawColor: Color? = null
+        private set
+
+    /**
+     * Set this shape' color for [DebugDraw], or disable debug drawing for this shape.
+     *
+     * @param color the draw color (disables drawing if null)
+     */
+    fun <T : Collider2D?> setDrawColor(color: Color?): T {
+        this.drawColor = color
+        return this as T
+    }
+
     // Game Loop Methods
 
     override fun start() {
         rb = parent.getComponent(Rigidbody2D::class.java)
         if (rb == null) Logger.log("%s needs a rigidbody to function properly!", this)
+    }
+
+    override fun render(g2: Graphics2D?) {
+        DebugDraw.drawShape(this, drawColor ?: return)
     }
 
     // Shape Properties

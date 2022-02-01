@@ -43,13 +43,13 @@ object MathUtils {
     fun sqrt(value: Float): Float = sqrt(value.toDouble()).toFloat()
 
     /**
-     * Calculates the squared length of the diagonal of an n-dimensional figure with perpendicular edges (rectangle, cuboid, hyper-cuboid, etc.).
+     * Calculates the length squared of the diagonal of an n-dimensional figure with perpendicular edges (rectangle, cuboid, hyper-cuboid, etc.).
      *
      * @param sides the lengths of the figure's sides
-     * @return the result of the pythagorean theorem in n-dimensions, squared
+     * @return the hypotenuse (pythagorean theorem) in n-dimensions, squared
      */
     @JvmStatic
-    fun pythagoreanSquared(vararg sides: Float): Float {
+    fun hypotSq(vararg sides: Float): Float {
         val sidesSq = sides.copyOf()
         for (i in sidesSq.indices) sidesSq[i] = sidesSq[i] * sidesSq[i]
         return sum(*sidesSq)
@@ -59,10 +59,10 @@ object MathUtils {
      * Calculates the length of the diagonal of an n-dimensional figure with perpendicular edges (rectangle, cuboid, hyper-cuboid, etc.).
      *
      * @param sides the lengths of the figure's sides
-     * @return the result of the pythagorean theorem in n-dimensions
+     * @return the hypotenuse (pythagorean theorem) in n-dimensions
      */
     @JvmStatic
-    fun pythagorean(vararg sides: Float): Float = sqrt(pythagoreanSquared(*sides))
+    fun hypot(vararg sides: Float): Float = sqrt(hypotSq(*sides))
 
     // Accumulator Methods
 

@@ -179,7 +179,7 @@ class Vec2 constructor(
      * @param vOnto another vector
      * @return the scalar projection
      */
-    fun comp(vOnto: Vec2): Float = this.dot(vOnto) / vOnto.len()
+    fun component(vOnto: Vec2): Float = this.dot(vOnto) / vOnto.len()
 
     // Pythagorean Theorem / Length Methods
 

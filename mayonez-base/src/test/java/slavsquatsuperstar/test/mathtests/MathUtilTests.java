@@ -162,8 +162,8 @@ public class MathUtilTests {
 
     @Test
     public void pythagoreanNDimensionsSuccess() {
-        assertEquals(10, MathUtils.pythagorean(6, 8), MathUtils.EPSILON);
-        assertEquals(13, MathUtils.pythagorean(3, 4, 12), MathUtils.EPSILON);
+        assertEquals(10, MathUtils.hypot(6, 8), MathUtils.EPSILON);
+        assertEquals(13, MathUtils.hypot(3, 4, 12), MathUtils.EPSILON);
     }
 
 }

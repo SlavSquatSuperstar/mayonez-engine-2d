@@ -2,7 +2,6 @@ package slavsquatsuperstar.mayonez.physics2d;
 
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.GameObject;
-import slavsquatsuperstar.mayonez.Preferences;
 import slavsquatsuperstar.mayonez.Scene;
 import slavsquatsuperstar.mayonez.physics2d.colliders.Collider2D;
 import slavsquatsuperstar.mayonez.physics2d.collision.Manifold;
@@ -22,7 +21,7 @@ import java.util.List;
 public final class Physics2D {
 
     public final static float GRAVITY_CONSTANT = 9.8f;
-    public final static int IMPULSE_ITERATIONS = Preferences.IMPULSE_ITERATIONS;
+    public final static int IMPULSE_ITERATIONS = 1;
 
     // Collisions
     private final List<Rigidbody2D> bodies;
@@ -87,6 +86,9 @@ public final class Physics2D {
             for (int j = i + 1; j < colliders.size(); j++) {
                 Collider2D c1 = colliders.get(i);
                 Collider2D c2 = colliders.get(j);
+                if (c1.getParent().hasTag("Ignore Collisions") ||
+                        c2.getParent().hasTag("Ignore Collisions"))
+                    continue;
 
                 if (c1.isStatic() && c2.isStatic()) continue; // Don't check for collision if both are static
                 Manifold collision = c1.getCollisionInfo(c2); // Get collision info
@@ -94,21 +96,36 @@ public final class Physics2D {
 
                 // Send collision callbacks if both are not triggers
                 if (!c1.isTrigger() && !c2.isTrigger()) {
-                    if (c1.isTrigger()) {
-                        c2.onTrigger(c1);
-                    } else if (c2.isTrigger()) {
-                        c1.onTrigger(c2);
-                    } else {
-                        c1.onCollision(c2.getParent());
-                        c2.onCollision(c1.getParent());
-                        if (c1.getIgnoreCurrentCollision() || c2.getIgnoreCurrentCollision()) {
-                            c1.setIgnoreCurrentCollision(true);
-                            c2.setIgnoreCurrentCollision(true);
-                            continue; // Stop if either object has called ignore collision
-                        }
-                        collisions.add(collision); // Only solve if neither are triggers
+                    c1.onCollision(c2.getParent());
+                    c2.onCollision(c1.getParent());
+                    if (c1.getIgnoreCurrentCollision() || c2.getIgnoreCurrentCollision()) {
+                        c1.setIgnoreCurrentCollision(false);
+                        c2.setIgnoreCurrentCollision(false);
+                        continue; // Stop if either object has called ignore collision
                     }
+                    collisions.add(collision); // Only solve if neither are triggers
+                } else if (c1.isTrigger()) {
+                    c2.onTrigger(c1);
+                } else if (c2.isTrigger()) {
+                    c1.onTrigger(c2);
                 }
+
+//                if (!c1.isTrigger() && !c2.isTrigger()) {
+//                    if (c1.isTrigger()) {
+//                        c2.onTrigger(c1);
+//                    } else if (c2.isTrigger()) {
+//                        c1.onTrigger(c2);
+//                    } else {
+//                        c1.onCollision(c2.getParent());
+//                        c2.onCollision(c1.getParent());
+//                        if (c1.getIgnoreCurrentCollision() || c2.getIgnoreCurrentCollision()) {
+//                            c1.setIgnoreCurrentCollision(true);
+//                            c2.setIgnoreCurrentCollision(true);
+//                            continue; // Stop if either object has called ignore collision
+//                        }
+//                        collisions.add(collision); // Only solve if neither are triggers
+//                    }
+//                }
             }
         }
     }

@@ -24,6 +24,12 @@ import kotlin.math.abs
  */
 open class PolygonCollider2D(vararg vertices: Vec2) : Collider2D() {
 
+    /**
+     * Constructs a regular polygon with the specified number of and radius.
+     *
+     * @param sides the number of sides/vertices
+     * @param radius the distance from the center to each vertex
+     */
     constructor(sides: Int, radius: Float) : this(sides, Vec2(radius, 0f), 360f / sides)
 
     private constructor(sides: Int, start: Vec2, angle: Float) : this(*Array(sides) { start.rotate(angle * (it - 1)) })
@@ -108,13 +114,13 @@ open class PolygonCollider2D(vararg vertices: Vec2) : Collider2D() {
         return nearestVertex - normalFace
     }
 
-
     // Polygon vs Point
+
     override fun contains(point: Vec2): Boolean {
         val edges = getEdges()
         for (edge in edges) {
             val edgeLine = edge.toVector()
-            val projLength = point.sub(edge.start).comp(edgeLine)
+            val projLength = point.sub(edge.start).component(edgeLine)
             if (!inRange(projLength, 0f, edge.length)) return false
         }
         return true
@@ -129,6 +135,7 @@ open class PolygonCollider2D(vararg vertices: Vec2) : Collider2D() {
     }
 
     // Polygon vs Line
+
     override fun raycast(ray: Ray2D, limit: Float): RaycastResult? {
         val edges = getEdges()
         val distances = FloatArray(edges.size)
@@ -153,6 +160,7 @@ open class PolygonCollider2D(vararg vertices: Vec2) : Collider2D() {
     }
 
     // Separating-Axis Theorem
+
     private fun detectCollision(polygon: PolygonCollider2D): Boolean {
         val axes = ArrayUtils.addAll(getNormals(), *polygon.getNormals())
         axes.forEach { axis -> if (!hasOverlapOnAxis(polygon, axis)) return false }
@@ -215,15 +223,16 @@ open class PolygonCollider2D(vararg vertices: Vec2) : Collider2D() {
         val minDotIdx = minIndex(*dotProds)
         val incEdge = incident.edges[minDotIdx]
 
-//        DebugDraw.drawVector(reference.collider.center(), reference.normals[minOverlapIdx], Colors.BLUE);
-//        DebugDraw.drawVector(incident.collider.center(), incident.normals[minDotIdx], Colors.RED);
-//        DebugDraw.drawLine(refEdge, Colors.BLUE)
-//        DebugDraw.drawLine(incEdge, Colors.RED)
-
         // 5. Calculate contact points
         val collision = Manifold(reference.collider, incident.collider, colNormal, -overlap)
         val clippedEdge = incEdge.clipToSegment(refEdge)
         val normalFace = refEdge.start.dot(colNormal)
+
+//        DebugDraw.drawVector(reference.collider.center(), reference.normals[minOverlapIdx], Colors.BLUE);
+//        DebugDraw.drawVector(incident.collider.center(), incident.normals[minDotIdx], Colors.RED);
+//        DebugDraw.drawLine(refEdge, Colors.BLUE)
+//        DebugDraw.drawLine(clippedEdge, Colors.RED)
+
         for (pt in arrayOf(clippedEdge.start, clippedEdge.end))
             if (pt.dot(colNormal) <= normalFace) collision.addContact(pt)
         return collision

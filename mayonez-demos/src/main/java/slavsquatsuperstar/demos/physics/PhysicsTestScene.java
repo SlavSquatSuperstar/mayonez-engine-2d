@@ -5,6 +5,7 @@ import slavsquatsuperstar.mayonez.Colors;
 import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Preferences;
 import slavsquatsuperstar.mayonez.Scene;
+import slavsquatsuperstar.mayonez.graphics.DebugDraw;
 import slavsquatsuperstar.mayonez.input.KeyInput;
 import slavsquatsuperstar.mayonez.physics2d.PhysicsMaterial;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
@@ -12,7 +13,6 @@ import slavsquatsuperstar.mayonez.physics2d.colliders.BoundingBoxCollider2D;
 import slavsquatsuperstar.mayonez.physics2d.colliders.BoxCollider2D;
 import slavsquatsuperstar.mayonez.physics2d.colliders.CircleCollider;
 import slavsquatsuperstar.mayonez.physics2d.colliders.Collider2D;
-import slavsquatsuperstar.mayonez.graphics.DebugDraw;
 import slavsquatsuperstar.mayonez.scripts.DragAndDrop;
 import slavsquatsuperstar.mayonez.scripts.KeepInScene;
 import slavsquatsuperstar.mayonez.scripts.MouseFlick;
@@ -37,23 +37,15 @@ public abstract class PhysicsTestScene extends Scene {
     @Override
     public void onUserRender(Graphics2D g2) {
         for (GameObject o : objects) {
-            if (o.name.equals("Camera")) continue;
-
             Collider2D col = o.getComponent(Collider2D.class);
             if (col != null) {
-                Color color = Colors.BLACK;
-                if (!col.isStatic()) {
-                    if (col instanceof CircleCollider) color = Colors.BLUE;
-                    else if (col instanceof BoundingBoxCollider2D) color = Colors.LIGHT_GREEN;
-                    else if (col instanceof BoxCollider2D) color = Colors.ORANGE;
-                }
-
+                Color color = col.getDrawColor();
                 // Draw velocity and direction vector
-                if (!col.isStatic()) {
+                if (color != null && !col.isStatic()) {
                     DebugDraw.drawVector(col.center(), col.getRigidbody().getVelocity().mul(0.1f), color);
                     DebugDraw.drawVector(col.getRigidbody().getPosition(), col.getRigidbody().getTransform().getDirection(), Colors.BLACK);
+//                    DebugDraw.drawShape(col, color); // Draw Shape
                 }
-                DebugDraw.drawShape(col, color); // Draw Shape
             }
         }
     }
@@ -68,7 +60,7 @@ public abstract class PhysicsTestScene extends Scene {
         return new GameObject("Circle", position) {
             @Override
             protected void init() {
-                addComponent(new CircleCollider(radius).setMaterial(material));
+                addComponent(new CircleCollider(radius).setMaterial(material).setDrawColor(Colors.BLUE));
                 addComponent(new Rigidbody2D(radius));
                 addComponent(new KeepInScene(getScene(), KeepInScene.Mode.BOUNCE));
                 addComponent(new DragAndDrop("left mouse"));
@@ -81,7 +73,7 @@ public abstract class PhysicsTestScene extends Scene {
         return new GameObject("AABB Rectangle", position) {
             @Override
             protected void init() {
-                addComponent(new BoundingBoxCollider2D(new Vec2(width, height)).setMaterial(material));
+                addComponent(new BoundingBoxCollider2D(new Vec2(width, height)).setMaterial(material).setDrawColor(Colors.LIGHT_GREEN));
                 addComponent(new Rigidbody2D(width * height / 4f));
                 addComponent(new KeepInScene(getScene(), KeepInScene.Mode.BOUNCE));
                 addComponent(new DragAndDrop("left mouse"));
@@ -95,11 +87,22 @@ public abstract class PhysicsTestScene extends Scene {
             @Override
             protected void init() {
                 transform.rotate(rotation);
-                addComponent(new BoxCollider2D(new Vec2(width, height)).setMaterial(material));
+                addComponent(new BoxCollider2D(new Vec2(width, height)).setMaterial(material).setDrawColor(Colors.ORANGE));
                 addComponent(new Rigidbody2D(width * height / 4f));
                 addComponent(new KeepInScene(getScene(), KeepInScene.Mode.BOUNCE));
                 addComponent(new DragAndDrop("left mouse"));
                 addComponent(new MouseFlick(MoveMode.VELOCITY, "right mouse", 15, false));
+            }
+        };
+    }
+
+    protected final GameObject createStaticOBB(String name, Vec2 position, Vec2 size, float rotation) {
+        return new GameObject(name, position) {
+            @Override
+            protected void init() {
+                transform.rotate(rotation);
+                addComponent(new Rigidbody2D(0f));
+                addComponent(new BoxCollider2D(size).setDrawColor(Colors.BLACK));
             }
         };
     }

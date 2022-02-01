@@ -4,10 +4,8 @@ import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.physics2d.colliders.Collider2D;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -22,6 +20,7 @@ public class GameObject {
     public String name;
     public final Transform transform;
     private int zIndex;
+    private Set<String> tags;
 
     // Scene Information
     private Scene scene;
@@ -47,6 +46,7 @@ public class GameObject {
         this.name = name;
         this.transform = transform;
         this.zIndex = zIndex;
+        tags = new HashSet<>(3);
         components = new ArrayList<>();
     }
 
@@ -209,13 +209,21 @@ public class GameObject {
 
     // Getters and Setters
 
-
     public int getZIndex() {
         return zIndex;
     }
 
     public GameObject setZIndex(int zIndex) { // can't change while scene is running in GL yet
         this.zIndex = zIndex;
+        return this;
+    }
+
+    public boolean hasTag(String tag) {
+        return tags.contains(tag);
+    }
+
+    public GameObject addTag(String tag) {
+        tags.add(tag);
         return this;
     }
 

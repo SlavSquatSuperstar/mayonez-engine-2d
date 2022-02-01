@@ -2,6 +2,7 @@ package slavsquatsuperstar.demos.physics;
 
 import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
+import slavsquatsuperstar.mayonez.Colors;
 import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Mayonez;
 import slavsquatsuperstar.mayonez.physics2d.PhysicsMaterial;
@@ -52,7 +53,7 @@ public class PoolBallsTest extends PhysicsTestScene {
         return new GameObject(name, position) {
             @Override
             protected void init() {
-                addComponent(new CircleCollider(BALL_RADIUS).setMaterial(POOL_BALL_MAT));
+                addComponent(new CircleCollider(BALL_RADIUS).setMaterial(POOL_BALL_MAT).setDrawColor(Colors.BLUE));
                 addComponent(new Rigidbody2D(BALL_MASS));
                 addComponent(new KeepInScene(getScene(), KeepInScene.Mode.BOUNCE));
                 addComponent(new DragAndDrop("left mouse"));

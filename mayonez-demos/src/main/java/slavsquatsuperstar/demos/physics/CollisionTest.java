@@ -1,11 +1,7 @@
 package slavsquatsuperstar.demos.physics;
 
 import slavsquatsuperstar.math.Vec2;
-import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Mayonez;
-import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
-import slavsquatsuperstar.mayonez.physics2d.colliders.BoundingBoxCollider2D;
-import slavsquatsuperstar.mayonez.physics2d.colliders.BoxCollider2D;
 
 public class CollisionTest extends PhysicsTestScene {
 
@@ -15,29 +11,10 @@ public class CollisionTest extends PhysicsTestScene {
 
     @Override
     protected void init() {
-        addObject(new GameObject("Ground", new Vec2(getWidth() / 2f, 1)) {
-            @Override
-            protected void init() {
-                addComponent(new Rigidbody2D(0));
-                addComponent(new BoundingBoxCollider2D(new Vec2(getWidth(), 2)));
-            }
-        });
-        addObject(new GameObject("Left Ramp", new Vec2(20, 40)) {
-            @Override
-            protected void init() {
-                transform.rotate(-40);
-                addComponent(new Rigidbody2D(0));
-                addComponent(new BoxCollider2D(new Vec2(20, 4)));
-            }
-        });
-        addObject(new GameObject("Right Ramp", new Vec2(90, 40)) {
-            @Override
-            protected void init() {
-                transform.rotate(25);
-                addComponent(new Rigidbody2D(0));
-                addComponent(new BoxCollider2D(new Vec2(24, 4)));
-            }
-        });
+        addObject(createStaticOBB("Ground", new Vec2(getWidth() / 2f, 1), new Vec2(getWidth(), 2), 0));
+
+        addObject(createStaticOBB("Left Ramp", new Vec2(20, 40), new Vec2(20, 4), -40));
+        addObject(createStaticOBB("Right Ramp", new Vec2(90, 40), new Vec2(24, 4), 25));
 
         // Add Other Test Objects
         addObject(createCircle(4, new Vec2(25, 60), PhysicsTestScene.STICKY_MATERIAL));

@@ -1,6 +1,7 @@
 package slavsquatsuperstar.demos.physics;
 
 import slavsquatsuperstar.math.Vec2;
+import slavsquatsuperstar.mayonez.Colors;
 import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Mayonez;
 import slavsquatsuperstar.mayonez.Script;
@@ -26,7 +27,7 @@ public class FrictionTest extends PhysicsTestScene {
             @Override
             protected void init() {
                 addComponent(new Rigidbody2D(0));
-                addComponent(new BoundingBoxCollider2D(new Vec2(getWidth(), 2)));
+                addComponent(new BoundingBoxCollider2D(new Vec2(getWidth(), 2)).setDrawColor(Colors.BLACK));
             }
         });
 
@@ -35,7 +36,7 @@ public class FrictionTest extends PhysicsTestScene {
             protected void init() {
                 transform.rotate(-25);
                 addComponent(new Rigidbody2D(0));
-                addComponent(new BoxCollider2D(new Vec2(40, 5)).setMaterial(NORMAL_MATERIAL));
+                addComponent(new BoxCollider2D(new Vec2(40, 5)).setMaterial(NORMAL_MATERIAL).setDrawColor(Colors.BLACK));
             }
         });
 
@@ -46,7 +47,7 @@ public class FrictionTest extends PhysicsTestScene {
             protected void init() {
                 float speed = 2f;
 //                addComponent(new AlignedBoxCollider2D(new Vec2(6, 6)));
-                addComponent(new CircleCollider(3f));
+                addComponent(new CircleCollider(3f).setDrawColor(Colors.BLUE));
                 addComponent(new Rigidbody2D(10f));
                 addComponent(new MouseFlick(MoveMode.VELOCITY, "right mouse", 15, false));
                 addComponent(new DragAndDrop("left mouse"));
