@@ -22,6 +22,7 @@ module mayonez.base {
 
     // Public API
     exports slavsquatsuperstar.math;
+    exports slavsquatsuperstar.math.geom;
     exports slavsquatsuperstar.mayonez;
     exports slavsquatsuperstar.mayonez.fileio;
     exports slavsquatsuperstar.mayonez.graphics;

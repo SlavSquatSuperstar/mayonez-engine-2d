@@ -305,15 +305,16 @@ class Vec2 constructor(
      */
     fun floor(): Vec2 = Vec2(floor(x), floor(y))
 
+    fun inRange(min: Vec2, max: Vec2): Boolean =
+        MathUtils.inRange(this.x, min.x, max.x) && MathUtils.inRange(this.y, min.y, max.y)
+
     /**
      * Calculates the average position of this vector and another.
      *
      * @param v a 2D vector
      * @return the midpoint
      */
-    fun midpoint(v: Vec2): Vec2 {
-        return (this + v) / 2f
-    }
+    fun midpoint(v: Vec2): Vec2 = (this + v) / 2f
 
     /**
      * Convert this vector to a JOML [Vector2f] with the same x and y values

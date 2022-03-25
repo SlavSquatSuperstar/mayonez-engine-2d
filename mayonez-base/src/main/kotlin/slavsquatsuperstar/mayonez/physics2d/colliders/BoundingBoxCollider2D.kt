@@ -1,6 +1,5 @@
 package slavsquatsuperstar.mayonez.physics2d.colliders
 
-import slavsquatsuperstar.math.MathUtils.inRange
 import slavsquatsuperstar.math.Vec2
 
 
@@ -36,8 +35,7 @@ class BoundingBoxCollider2D(size: Vec2) : BoxCollider2D(size) {
 
     // AABB vs Point
 
-    override fun contains(point: Vec2): Boolean =
-        inRange(point.x, min().x, max().x) && inRange(point.y, min().y, max().y)
+    override fun contains(point: Vec2): Boolean = point.inRange(min(), max())
 
     override fun nearestPoint(position: Vec2): Vec2 =
         if (position in this) position else position.clampInbounds(min(), max())

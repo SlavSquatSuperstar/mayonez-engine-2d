@@ -57,9 +57,8 @@ open class BoxCollider2D private constructor(min: Vec2, max: Vec2) :
     // OBB vs Point
 
     override fun contains(point: Vec2): Boolean {
-        val pointLocal = toLocal(point) // Rotate the point into the box's local space
-        return MathUtils.inRange(pointLocal.x, localMin().x, localMax().x)
-                && MathUtils.inRange(pointLocal.y, localMin().y, localMax().y)
+        // Rotate the point into the box's local space then compare to local min and max
+        return toLocal(point).inRange(localMin(), localMax())
     }
 
     override fun nearestPoint(position: Vec2): Vec2 {

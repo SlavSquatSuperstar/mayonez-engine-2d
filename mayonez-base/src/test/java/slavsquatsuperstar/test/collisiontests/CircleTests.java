@@ -11,7 +11,7 @@ import slavsquatsuperstar.mayonez.physics2d.colliders.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit tests for {@link CircleTests} class.
+ * Unit tests for {@link CircleCollider} class.
  *
  * @author SlavSquatSuperstar
  */
