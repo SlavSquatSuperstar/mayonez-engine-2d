@@ -32,7 +32,8 @@ abstract class Shape() {
     // Phyiscal Properties
 
     /**
-     * The angular mass, (moment of inertia/rotational inertia) of the shape around its centroid.
+     * The angular mass, (moment of inertia/rotational inertia) of the shape around its centroid, assuming a uniform
+     * density throughout the shape.
      *
      * @param mass the mass of the shape
      */

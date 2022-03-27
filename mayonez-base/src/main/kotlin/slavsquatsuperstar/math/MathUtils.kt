@@ -34,9 +34,9 @@ object MathUtils {
     // Pythagorean Theorem
 
     /**
-     * Takes the principal square root of a number.
+     * Takes the principal square root of a number. Intended for Java files as an equivalent for Math.sqrt(double).
      *
-     * @param value a positive number
+     * @param value a non-negative number
      * @return the square root, in float precision.
      */
     @JvmStatic
@@ -50,9 +50,7 @@ object MathUtils {
      */
     @JvmStatic
     fun hypotSq(vararg sides: Float): Float {
-        val sidesSq = sides.copyOf()
-        for (i in sidesSq.indices) sidesSq[i] = sidesSq[i] * sidesSq[i]
-        return sum(*sidesSq)
+        return sum(*FloatArray(sides.size) { sides[it] * sides[it] })
     }
 
     /**

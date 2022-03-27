@@ -4,12 +4,17 @@ import slavsquatsuperstar.math.MathUtils
 import slavsquatsuperstar.math.MathUtils.PI
 import slavsquatsuperstar.math.Vec2
 
+/**
+ * A round shape defined by a center and radius. Every point on the boundary of a circle is the same distance
+ * away from the center, which is the length of the radius.
+ */
 class Circle(private val center: Vec2, val radius: Float) : Shape() {
 
     /**
      * The square of the circle's radius, equal to r^2.
      */
-    private val radiusSq: Float = radius * radius
+    private val radiusSq: Float
+        get() = radius * radius
 
     /**
      * The area of a circle, equal to πr^2.

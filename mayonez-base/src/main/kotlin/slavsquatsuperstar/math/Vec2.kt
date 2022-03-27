@@ -158,12 +158,13 @@ class Vec2 constructor(
     fun dot(v: Vec2): Float = (this.x * v.x) + (this.y * v.y)
 
     /**
-     * Returns the z-component of the cross product between this vector and another.
+     * Returns the z-component of the cross product between this vector and another,
+     * equal to the determinant of the matrix with this vector and the other as columns
      *
      * @param v another vector
      * @return the 2D cross product
      */
-    fun cross(v: Vec2): Float = Mat22(this, v).determinant()
+    fun cross(v: Vec2): Float = (this.x * v.y) - (v.x * this.y)
 
     /**
      * Projects this vector onto another vector, returning the components of this vector in the direction of another.
@@ -229,12 +230,11 @@ class Vec2 constructor(
     // Angle Methods
 
     /**
-     * Calculates the angle in degrees between this vector and the x-axis.
+     * Calculates the angle in degrees between this vector and the x-axis (1, 0).
      *
      * @return this vector's angle in the x-y plane
      */
     fun angle(): Float = Math.toDegrees(atan2(y.toDouble(), x.toDouble())).toFloat()
-    // fun angle(): Float = this.angle(Vec2(1f, 0f))
 
     /**
      * Calculates the angle in degrees between this vector and another.

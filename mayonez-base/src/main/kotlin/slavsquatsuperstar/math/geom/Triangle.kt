@@ -3,16 +3,15 @@ package slavsquatsuperstar.math.geom
 import slavsquatsuperstar.math.MathUtils
 import slavsquatsuperstar.math.Vec2
 import kotlin.math.abs
+import kotlin.math.sqrt
 
-class Triangle(v1: Vec2, v2: Vec2, v3: Vec2) : Shape() {
+/**
+ * A three-sided polygon capable of performing additional operations. A triangle is the simplest polynomial
+ * (contains the least vertices).
+ */
+class Triangle(v1: Vec2, v2: Vec2, v3: Vec2) : Polygon(v1, v2, v3) {
 
-    val vertices: Array<Vec2>
-    private val edges: Array<Vec2>
-
-    init {
-        vertices = arrayOf(v1, v2, v3)
-        edges = Array(vertices.size) { vertices[(it + 1) % vertices.size] - vertices[it] }
-    }
+    constructor(vararg vertices: Vec2) : this(vertices[0], vertices[1], vertices[2])
 
     /**
      * The base length of the triangle, b.
@@ -22,10 +21,7 @@ class Triangle(v1: Vec2, v2: Vec2, v3: Vec2) : Shape() {
     /**
      * The height of the triangle, h.
      */
-    fun height(): Float {
-        val altitude = edges[0].getNormal()
-        return abs(edges[1].component(altitude))
-    }
+    fun height(): Float = abs(edges[1].component(edges[0].getNormal())) // get altitude length
 
     /**
      * The area of the triangle, equal to 1/2*bh.
@@ -34,28 +30,23 @@ class Triangle(v1: Vec2, v2: Vec2, v3: Vec2) : Shape() {
         return abs(0.5f * (vertices[0].x * (edges[1].y) + vertices[1].x * (edges[2].y) + vertices[2].x * (edges[0].y)))
     }
 
-    override fun perimeter(): Float {
-        var perimeter = 0f
-        for (v in vertices)
-            perimeter += v.len()
-        return perimeter
-    }
-
     /**
-     * The center of the triangle, equal to 2/3 along any median.
+     * The center of the triangle, equal to the average position of its vertices, and two-thirds along any median.
      */
-    override fun center(): Vec2 {
-        val midpoint = vertices[0] + edges[0] * 0.5f // midpoint of base
-        val median = midpoint - edges[2] // vertex opposite base to midpoint
-        return edges[2] + median * (2 / 3f) // 2/3 way along median
-    }
+    override fun center(): Vec2 = (vertices[0] + vertices[1] + vertices[2]) * (1 / 3f)
 
     /**
      * The centroidal moment of inertia of the triangle, equal to 1/18*m(b^2 + h^2).
      *
-     * Second moment of area: I_z = 1/36*(hb^3 + bh^3) = 1/18*A(b^2 + h^2)
+     * Second moment of area: I_z = 1/36*(b^3*h - b^2*ha + bha^2 + bh^3) = 1/18*A(b^2 + h^2 + a^2 - ab),
+     * where a is the length of either segment of the base cut by the altitude.
      */
-    override fun angMass(mass: Float): Float = 1 / 18f * mass * MathUtils.hypotSq(base(), height())
+    override fun angMass(mass: Float): Float {
+        val base = base()
+        val height = height()
+        val offset = base - sqrt(edges[2].lenSq() - height * height)
+        return 1 / 18f * mass * (MathUtils.hypotSq(base, height) + offset * offset - offset * base)
+    }
 
     /**
      * Whether the point is in the triangle.
@@ -99,7 +90,7 @@ class Triangle(v1: Vec2, v2: Vec2, v3: Vec2) : Shape() {
     }
 
     /**
-     * A description of the circle in the form Circle (v1, v2, v3)
+     * A description of the triangle in the form Triangle (v1, v2, v3)
      */
     override fun toString(): String = "Triangle ${vertices[0]}, ${vertices[1]}, ${vertices[2]}"
 

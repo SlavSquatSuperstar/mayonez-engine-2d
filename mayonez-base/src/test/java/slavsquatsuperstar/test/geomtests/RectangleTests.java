@@ -2,11 +2,11 @@ package slavsquatsuperstar.test.geomtests;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.math.geom.Rectangle;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static slavsquatsuperstar.math.MathUtils.EPSILON;
 
 /**
  * Unit tests for {@link Rectangle} class.
@@ -25,12 +25,12 @@ public class RectangleTests {
 
     @Test
     public void areaCorrect() {
-        assertEquals(rect.area(), rect.getWidth() * rect.getHeight(), MathUtils.EPSILON);
+        assertEquals(rect.area(), rect.getWidth() * rect.getHeight(), EPSILON);
     }
 
     @Test
     public void perimeterCorrect() {
-        assertEquals(rect.perimeter(), 2 * (rect.getWidth() + rect.getHeight()), MathUtils.EPSILON);
+        assertEquals(rect.perimeter(), 2 * (rect.getWidth() + rect.getHeight()), EPSILON);
     }
 
     @Test
