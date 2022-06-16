@@ -1,12 +1,12 @@
 buildscript {
-    project.ext.kotlinVersion = '1.6.10'
+    project.ext.kotlinVersion = '1.7.0'
 }
 
 plugins {
     id 'com.github.johnrengelman.shadow' version '7.1.2' // For making fat jars
 
     id 'org.jetbrains.kotlin.jvm' version "$kotlinVersion"
-    id 'org.jetbrains.dokka' version '1.6.10' // For Kotlin documentation
+    id 'org.jetbrains.dokka' version '1.6.21' // For Kotlin documentation
 
     id 'java'
     id 'application'
@@ -15,12 +15,12 @@ plugins {
 // Project Info
 
 group 'slavsquatsuperstar'
-version '0.7.3-SNAPSHOT-5'
+version '0.7.3-SNAPSHOT-6'
 description = 'The root project for Mayonez Engine that contains all modules'
 
 allprojects {
     group 'slavsquatsuperstar'
-    version '0.7.3-pre5'
+    version '0.7.3-pre6'
 }
 
 // Custom Settings

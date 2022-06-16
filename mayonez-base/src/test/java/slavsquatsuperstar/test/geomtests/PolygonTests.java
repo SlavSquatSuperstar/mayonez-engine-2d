@@ -18,7 +18,6 @@ import static slavsquatsuperstar.math.MathUtils.EPSILON;
  * @author SlavSquatSuperstar
  */
 public class PolygonTests {
-
     @Test
     public void triangleVsPolygon() {
         Vec2[] verts = {new Vec2(0, 0), new Vec2(2, 3), new Vec2(3, 0)};
@@ -37,7 +36,7 @@ public class PolygonTests {
     @Test
     public void rectangleVsPolygon() {
         Polygon poly = new Polygon(new Vec2(0, 0), new Vec2(2, 0), new Vec2(2, 3), new Vec2(0, 3));
-        Rectangle rect = new Rectangle(new Vec2(1, 1.5f), new Vec2(2, 3));
+        Rectangle rect = new Rectangle(new Vec2(1, 1.5f), new Vec2(2, 3), 0);
 
         assertEquals(poly.area(), rect.area(), EPSILON);
         assertEquals(poly.perimeter(), rect.perimeter(), EPSILON);
@@ -50,12 +49,13 @@ public class PolygonTests {
 
     @Test
     public void polygonVsSquare() {
-        Polygon poly = new Polygon(new Vec2(1, 1), 4, 2* MathUtils.sqrt(2));
-        Square square = new Square(new Vec2(1, 1), 4);
+        Polygon poly = new Polygon(new Vec2(1, 1), 4, 2 * MathUtils.sqrt(2));
+        Square square = new Square(new Vec2(1, 1), 4, 0);
 
         assertEquals(poly.area(), square.area(), EPSILON);
         assertEquals(poly.perimeter(), square.perimeter(), EPSILON);
         assertEquals(poly.center(), square.center());
         assertEquals(poly.angMass(5), square.angMass(5), EPSILON);
     }
+
 }

@@ -4,6 +4,8 @@ import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.Colors;
 import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Mayonez;
+import slavsquatsuperstar.mayonez.Script;
+import slavsquatsuperstar.mayonez.input.KeyInput;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
 import slavsquatsuperstar.mayonez.physics2d.colliders.PolygonCollider2D;
 import slavsquatsuperstar.mayonez.scripts.DragAndDrop;
@@ -39,6 +41,12 @@ public class AngularResolutionTest extends PhysicsTestScene {
                 addComponent(new KeepInScene(getScene(), KeepInScene.Mode.BOUNCE));
                 addComponent(new DragAndDrop("left mouse"));
                 addComponent(new MouseFlick(MoveMode.VELOCITY, "right mouse", 15, false));
+                addComponent(new Script() {
+                    @Override
+                    public void update(float dt) {
+                        transform.rotate(KeyInput.getAxis("horizontal"));
+                    }
+                });
             }
         });
 

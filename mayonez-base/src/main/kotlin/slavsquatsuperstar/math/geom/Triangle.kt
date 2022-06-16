@@ -13,6 +13,8 @@ class Triangle(v1: Vec2, v2: Vec2, v3: Vec2) : Polygon(v1, v2, v3) {
 
     constructor(vararg vertices: Vec2) : this(vertices[0], vertices[1], vertices[2])
 
+    // Triangle Properties
+
     /**
      * The base length of the triangle, b.
      */
@@ -48,8 +50,17 @@ class Triangle(v1: Vec2, v2: Vec2, v3: Vec2) : Polygon(v1, v2, v3) {
         return 1 / 18f * mass * (MathUtils.hypotSq(base, height) + offset * offset - offset * base)
     }
 
+    // Transformations
+    override fun translate(direction: Vec2): Triangle = super.translate(direction) as Triangle
+
+    override fun rotate(angle: Float): Triangle = super.rotate(angle) as Triangle
+
+    override fun scale(factor: Vec2): Triangle = super.scale(factor) as Triangle
+
+    // Overrides
+
     /**
-     * Whether the point is in the triangle.
+     * Whether a point is in this triangle.
      *
      * Source: https://www.youtube.com/watch?v=HYAgJN3x4GA
      */

@@ -36,7 +36,7 @@ class Transform(
     /**
      * Translates the parent object along the x and y axes.
      *
-     * @param displacement a vector
+     * @param displacement how much and which direction to move
      * @return this transform
      */
     fun move(displacement: Vec2): Transform {
@@ -47,7 +47,7 @@ class Transform(
     /**
      * Rotates the parent object around its center.
      *
-     * @param degrees the angle
+     * @param degrees the counterclockwise angle
      * @return this transform
      */
     fun rotate(degrees: Float): Transform {
@@ -58,11 +58,11 @@ class Transform(
     /**
      * Stretches the parent object and all its components by the given factors along the x and y axes.
      *
-     * @param dilation a vector
+     * @param scale the new x and y size compared to the current dimensions
      * @return this transform
      */
-    fun resize(dilation: Vec2): Transform {
-        scale *= dilation
+    fun resize(scale: Vec2): Transform {
+        this.scale *= scale
         return this
     }
 

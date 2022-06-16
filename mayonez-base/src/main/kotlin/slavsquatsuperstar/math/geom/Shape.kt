@@ -5,11 +5,11 @@ import slavsquatsuperstar.math.Vec2
 /**
  * A bounded, flat figure that exists in the 2D plane and has no intersecting edges.
  * Can also represent an infinitesimally thin cross-section of a solid (lamina).
- * Shape objects are immutable, meaning their position and other characteristics cannot change.
+ * Shape objects are immutable, meaning their component points and other characteristics cannot change.
  *
  * @author SlavSquatSuperstar
  */
-abstract class Shape() {
+abstract class Shape {
 
     // Geometric Properties
 
@@ -39,12 +39,55 @@ abstract class Shape() {
      */
     abstract fun angMass(mass: Float): Float
 
+    // Geometric Transformations
+
+    /**
+     * Translates every point on this shape along the same vector.
+     * This is a rigid transformation and preserves the area and perimeter.
+     *
+     * @param direction the direction to move
+     * @return the translated shape
+     */
+    abstract fun translate(direction: Vec2): Shape
+
+    /**
+     * Rotates every point on this shape around the center of mass by the same angle.
+     * This is a rigid transformation and preserves the area and perimeter.
+     *
+     * @param angle the counterclockwise angle
+     * @return the rotated shape
+     */
+    abstract fun rotate(angle: Float): Shape
+
+    /**
+     * Stretches the dimensions of this shape by a given scale vector.
+     * This is a non-linear (anisotropic) transformation and may alter the overall form and area.
+     *
+     * @param factor how much to scale the dimensions by
+     * @return the scaled shape
+     */
+    open fun scale(factor: Vec2): Shape {
+        throw UnsupportedOperationException("Must be a non-regular shape")
+    }
+
+    /**
+     * Stretches both dimensions of this shape by the same scale factor.
+     * This is a linear but not rigid transformation and maintains the overall form but not the area.
+     *
+     * @param factor how much to scale the shape by
+     * @return the scaled shape
+     */
+    open fun scale(factor: Float): Shape {
+        throw UnsupportedOperationException("Must be a regular shape")
+    }
+
     // Overrides
 
     /**
      * Whether the specified point lies on or within the boundary of the shape.
      *
      * @param point a vector in 2D space
+     * @return the scaled shape
      */
     // TODO boundary vs interior vs exterior
     abstract operator fun contains(point: Vec2): Boolean

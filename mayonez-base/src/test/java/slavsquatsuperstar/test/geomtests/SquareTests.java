@@ -6,7 +6,8 @@ import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.math.geom.Rectangle;
 import slavsquatsuperstar.math.geom.Square;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static slavsquatsuperstar.math.MathUtils.EPSILON;
 
 /**
@@ -22,8 +23,8 @@ public class SquareTests {
     @BeforeAll
     public static void getShapes() {
         // min: (-1, -1), max: (3, 3)
-        rect = new Rectangle(new Vec2(1, 1), 4, 4);
-        square = new Square(new Vec2(1, 1), 4);
+        rect = new Rectangle(new Vec2(1, 1), 4, 4, 0);
+        square = new Square(new Vec2(1, 1), 4, 0);
     }
 
     @Test
@@ -43,6 +44,15 @@ public class SquareTests {
         assertTrue(rect.contains(bdryPt) && square.contains(bdryPt));
 
         Vec2 extPt = new Vec2(5, 5);
-        assertTrue(!rect.contains(extPt) && !square.contains(extPt));}
+        assertTrue(!rect.contains(extPt) && !square.contains(extPt));
+    }
+
+    @Test
+    public void squareTransformedProperly() {
+        Square transformed = square.scale(2f).translate(new Vec2(-1, -1)).rotate(45);
+        assertEquals(transformed.center(), new Vec2(0, 0));
+        assertEquals(square.perimeter() * 2f, transformed.perimeter());
+        assertEquals(square.area() * 4f, transformed.area());
+    }
 
 }

@@ -47,8 +47,17 @@ public class CircleTests {
 
     @Test
     public void exteriorPointNotInCircle() {
-        assertFalse(circle.contains(new Vec2(0,0)));
-        assertFalse(circle.contains(new Vec2(4,4)));
+        assertFalse(circle.contains(new Vec2(0, 0)));
+        assertFalse(circle.contains(new Vec2(4, 4)));
     }
+
+    @Test
+    public void circleTransformedProperly() {
+        Circle newCircle = circle.scale(2f).translate(new Vec2(1, 1));
+        assertEquals(newCircle.center(), new Vec2(3, 3));
+        assertEquals(circle.perimeter() * 2f, newCircle.perimeter());
+        assertEquals(circle.area() * 4f, newCircle.area());
+    }
+
 
 }

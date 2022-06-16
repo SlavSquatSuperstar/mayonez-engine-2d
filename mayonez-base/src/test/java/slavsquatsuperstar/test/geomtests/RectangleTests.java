@@ -19,7 +19,7 @@ public class RectangleTests {
 
     @BeforeAll
     public static void getRect() {
-        rect = new Rectangle(new Vec2(3, 1.5f), new Vec2(4, 3)); // center (3, 1.5f), size(4, 3)
+        rect = new Rectangle(new Vec2(3, 1.5f), new Vec2(4, 3), 0); // center (3, 1.5f), size(4, 3), no rotation
         // vertices (1, 1), (5, 1), (1, 3), (5, 3)
     }
 
@@ -50,6 +50,21 @@ public class RectangleTests {
     public void exteriorPointNotInRect() {
         assertFalse(rect.contains(new Vec2(0, 5)));
         assertFalse(rect.contains(new Vec2(-1, 2)));
+    }
+
+    @Test
+    public void rectTransformedProperly() {
+        Rectangle transformed = rect.scale(new Vec2(2, 2)).translate(new Vec2(-1, 0.5f)).rotate(45);
+        assertEquals(transformed.center(), new Vec2(2, 2));
+        assertEquals(rect.perimeter() * 2f, transformed.perimeter());
+        assertEquals(rect.area() * 4f, transformed.area());
+    }
+
+    @Test
+    public void rectNonLinearTransformedProperly() {
+        Rectangle transformed = rect.scale(new Vec2(3, 4));
+        assertEquals(rect.center(), transformed.center());
+        assertEquals(rect.area() * 12, transformed.area());
     }
 
 }

@@ -7,20 +7,21 @@ import slavsquatsuperstar.math.Vec2
  * A four-sided polygon with four perpendicular edges and defined by a width and height.
  * Two opposing sides will always have the same length.
  */
-open class Rectangle(protected val center: Vec2, val size: Vec2) : Polygon(*getVertices(center, size)) {
+// TODO quad class
+open class Rectangle(protected val center: Vec2, val size: Vec2, protected val angle: Float) :
+    Polygon(*getVertices(center, size, angle)) {
 
-    constructor(center: Vec2, width: Float, height: Float) : this(center, Vec2(width, height))
-
-//    constructor(min: Vec2, max: Vec2) : this(min.midpoint(max), max - min)
+    constructor(center: Vec2, width: Float, height: Float, angle: Float) : this(center, Vec2(width, height), angle)
 
     companion object {
-        fun getVertices(center: Vec2, size: Vec2): Array<Vec2> {
-            val halfSize = size * 0.5f
-            val min = center - halfSize
-            val max = center + halfSize
-            return arrayOf(Vec2(min), Vec2(max.x, min.y), Vec2(max), Vec2(min.x, max.y))
+        fun getVertices(center: Vec2, size: Vec2, angle: Float): Array<Vec2> {
+            val min = center - size * 0.5f
+            val max = center + size * 0.5f
+            return arrayOf(Vec2(min), Vec2(max.x, min.y), Vec2(max), Vec2(min.x, max.y)).rotate(angle, center)
         }
     }
+
+    // Rectangle Properties
 
     /**
      * The rectangle's width (base), b.
@@ -62,6 +63,16 @@ open class Rectangle(protected val center: Vec2, val size: Vec2) : Polygon(*getV
      */
     override fun angMass(mass: Float): Float = (1 / 12f) * mass * MathUtils.hypotSq(width, height)
 
+    // Transformations
+
+    override fun translate(direction: Vec2): Rectangle = Rectangle(center + direction, size, angle)
+
+    override fun rotate(angle: Float): Rectangle = Rectangle(center, size, this.angle + angle)
+
+    override fun scale(factor: Vec2): Rectangle = Rectangle(center, size * factor, angle)
+
+    // Overrides
+
     /**
      * Whether a point is inside the rectangle, meaning it lies within all four corners
      */
@@ -73,8 +84,8 @@ open class Rectangle(protected val center: Vec2, val size: Vec2) : Polygon(*getV
     }
 
     /**
-     * A description of the rectangle in the form Rectangle (x, y), size=(b, h)
+     * A description of the rectangle in the form "Rectangle (x, y), size=(b, h), rotation=theta"
      */
-    override fun toString(): String = "Rectangle $center, size=$size"
+    override fun toString(): String = String.format("Rectangle $center, size=$size, rotation=%.2f°", angle)
 
 }
