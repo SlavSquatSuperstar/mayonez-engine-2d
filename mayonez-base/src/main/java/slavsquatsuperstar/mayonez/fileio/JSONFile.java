@@ -92,39 +92,19 @@ public class JSONFile extends Asset {
     }
 
     public String getStr(String key) {
-        try {
-            return json.getString(key);
-        } catch (JSONException e) {
-            logError(key, "a string");
-        }
-        return null;
+        return json.getString(key);
     }
 
     public boolean getBool(String key) {
-        try {
-            return json.getBoolean(key);
-        } catch (JSONException e) {
-            logError(key, "a boolean");
-        }
-        return false;
+        return json.getBoolean(key);
     }
 
     public int getInt(String key) {
-        try {
-            return json.getInt(key);
-        } catch (JSONException e) {
-            logError(key, "an integer");
-        }
-        return -1;
+        return json.getInt(key);
     }
 
     public double getFloat(String key) {
-        try {
-            return json.getFloat(key);
-        } catch (NumberFormatException e) {
-            logError(key, "a float");
-        }
-        return -1f;
+        return json.getFloat(key);
     }
 
     public void setProperty(String key, Object value) {

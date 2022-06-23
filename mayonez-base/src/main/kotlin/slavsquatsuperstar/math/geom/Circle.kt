@@ -5,8 +5,10 @@ import slavsquatsuperstar.math.MathUtils.PI
 import slavsquatsuperstar.math.Vec2
 
 /**
- * A round shape defined by a center and radius. Every point on the boundary of a circle is the same distance
- * away from the center, which is the length of the radius.
+ * A round shape defined by a center and radius. The distance between every point on the circle's boundary curve
+ * and the center equal to the radius.
+ *
+ * @author SlavSquatSuperstar
  */
 class Circle(private val center: Vec2, val radius: Float) : Shape() {
 
@@ -19,9 +21,20 @@ class Circle(private val center: Vec2, val radius: Float) : Shape() {
     // Circle Properties
 
     /**
+     * The diameter, or width of the circle, equal to 2r.
+     */
+    val diameter: Float
+        get() = 2f * radius
+
+    /**
      * The area of a circle, equal to πr^2.
      */
     override fun area(): Float = PI * radiusSq
+
+    /**
+     * The circumference of a circle, equal to 2πr.
+     */
+    fun circumference(): Float = 2f * PI * radius
 
     /**
      * The perimeter of the circle, equal to its circumference 2πr.
@@ -29,41 +42,40 @@ class Circle(private val center: Vec2, val radius: Float) : Shape() {
     override fun perimeter(): Float = circumference()
 
     /**
-     * The circumference of a circle, equal to 2πr.
-     */
-    fun circumference(): Float = 2 * PI * radius
-
-    /**
      * The center of the circle, equal to its center.
      */
     override fun center(): Vec2 = center
 
     /**
-     * The circle's centroidal moment of inertia, equal to 1/2*m*r^2.
+     * The circle's centroidal moment of inertia, equal to 1/2*mr^2.
      *
-     * Second moment of area: I_z = π/4*r^4 = 1/2*Ar^2
+     * Second moment of area: I_z = π/4*r^4 = 1/2*(πr^2)r^2 = 1/2*Ar^2
      */
-    override fun angMass(mass: Float): Float = 0.5f * mass * radiusSq
+    override fun angularMass(mass: Float): Float = 0.5f * mass * radiusSq
 
     // Transformations
 
     override fun translate(direction: Vec2): Circle = Circle(center + direction, radius)
 
     /**
-     * Returns a copy of this circle as rotating produces no difference.
+     * Rotates this circle around a point. If rotating around the center, returns a copy of this circle.
      *
+     * @param angle the counterclockwise angle
+     * @param origin The point to rotate around. Pass in null to rotate around the center of mass.
      * @return a circle with the same center and radius
      */
-    override fun rotate(angle: Float): Circle = Circle(center, radius)
+    override fun rotate(angle: Float, origin: Vec2?): Circle = Circle(center.rotate(angle, origin ?: center), radius)
 
     /**
-     * Scales this circle uniformly by the given scale factor.
-     * To scale a circle non-uniformly, use the Ellipse class.
+     * Scales this circle uniformly using the given vector's x-component as the scale factor.
      *
      * @param factor how much to scale the radius by
+     * @param centered whether to scale the circle from its center and not the origin (0, 0)
      * @return the scaled circle
      */
-    override fun scale(factor: Float): Circle = Circle(center, radius * factor)
+    // To scale a circle non-uniformly, use the Ellipse class.
+    override fun scale(factor: Vec2, centered: Boolean): Circle =
+        Circle(if (centered) center else center * factor, radius * factor.x)
 
     // Overrides
 

@@ -56,7 +56,7 @@ public class PolygonTests {
     @Test
     public void polygonVerticesReturnsWorld() {
         PolygonCollider2D shape = new PolygonCollider2D(vertices);
-        assertEquals(4, shape.countVertices());
+        assertEquals(4, shape.getNumVertices());
         assertTrue(Objects.deepEquals(vertices, shape.getVertices()));
     }
 

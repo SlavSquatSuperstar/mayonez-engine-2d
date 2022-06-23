@@ -54,7 +54,7 @@ public class RectangleTests {
 
     @Test
     public void rectTransformedProperly() {
-        Rectangle transformed = rect.scale(new Vec2(2, 2)).translate(new Vec2(-1, 0.5f)).rotate(45);
+        Rectangle transformed = rect.scale(new Vec2(2, 2), true).translate(new Vec2(-1, 0.5f)).rotate(45, null);
         assertEquals(transformed.center(), new Vec2(2, 2));
         assertEquals(rect.perimeter() * 2f, transformed.perimeter());
         assertEquals(rect.area() * 4f, transformed.area());
@@ -62,7 +62,7 @@ public class RectangleTests {
 
     @Test
     public void rectNonLinearTransformedProperly() {
-        Rectangle transformed = rect.scale(new Vec2(3, 4));
+        Rectangle transformed = rect.scale(new Vec2(3, 4), true);
         assertEquals(rect.center(), transformed.center());
         assertEquals(rect.area() * 12, transformed.area());
     }

@@ -6,7 +6,6 @@ import slavsquatsuperstar.math.MathUtils.toDegrees
 import slavsquatsuperstar.math.MathUtils.toRadians
 import slavsquatsuperstar.math.Vec2
 import slavsquatsuperstar.mayonez.Component
-import slavsquatsuperstar.mayonez.physics2d.colliders.BoundingBoxCollider2D
 import slavsquatsuperstar.mayonez.physics2d.colliders.Collider2D
 
 /**
@@ -61,11 +60,6 @@ class Rigidbody2D(mass: Float, drag: Float, angDrag: Float) : Component() {
 
     // Game Loop Methods
 
-    override fun start() {
-        collider = parent.getComponent(Collider2D::class.java)
-        if (collider is BoundingBoxCollider2D) fixedRotation = true
-    }
-
     /**
      * Integrate force and torque to solve for velocity and angular velocity
      */
@@ -92,22 +86,22 @@ class Rigidbody2D(mass: Float, drag: Float, angDrag: Float) : Component() {
      * Integrate velocity and angular velocity to solve for position and rotation
      */
     fun integrateVelocity(dt: Float) {
-        transform?.move(velocity * dt)
-        if (!fixedRotation) transform?.rotate(toDegrees(angVelocity) * dt)
+        transform.move(velocity * dt)
+        if (!fixedRotation) transform.rotate(toDegrees(angVelocity) * dt)
     }
 
     // Motion Properties
 
     var position: Vec2
-        get() = transform?.position ?: Vec2()
+        get() = transform.position
         set(position) {
-            transform?.position = position
+            transform.position = position
         }
 
     var rotation: Float
-        get() = transform?.rotation ?: 0f
+        get() = transform.rotation
         set(rotation) {
-            transform?.rotation = rotation
+            transform.rotation = rotation
         }
 
     val speed: Float

@@ -27,7 +27,7 @@ public class PolygonTests {
         assertEquals(poly.area(), tri.area(), EPSILON);
         assertEquals(poly.perimeter(), tri.perimeter(), EPSILON);
         assertEquals(poly.center(), tri.center());
-        assertEquals(poly.angMass(5), tri.angMass(5), EPSILON);
+        assertEquals(poly.angularMass(5), tri.angularMass(5), EPSILON);
 
         Vec2 p1 = new Vec2(1, 1);
         assertTrue(poly.contains(p1) && tri.contains(p1));
@@ -41,7 +41,7 @@ public class PolygonTests {
         assertEquals(poly.area(), rect.area(), EPSILON);
         assertEquals(poly.perimeter(), rect.perimeter(), EPSILON);
         assertEquals(poly.center(), rect.center());
-        assertEquals(poly.angMass(5), rect.angMass(5), EPSILON);
+        assertEquals(poly.angularMass(5), rect.angularMass(5), EPSILON);
 
         Vec2 p1 = new Vec2(1, 1);
         assertTrue(poly.contains(p1) && rect.contains(p1));
@@ -55,7 +55,7 @@ public class PolygonTests {
         assertEquals(poly.area(), square.area(), EPSILON);
         assertEquals(poly.perimeter(), square.perimeter(), EPSILON);
         assertEquals(poly.center(), square.center());
-        assertEquals(poly.angMass(5), square.angMass(5), EPSILON);
+        assertEquals(poly.angularMass(5), square.angularMass(5), EPSILON);
     }
 
 }

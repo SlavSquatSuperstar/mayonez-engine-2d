@@ -32,12 +32,19 @@ abstract class Shape {
     // Phyiscal Properties
 
     /**
-     * The angular mass, (moment of inertia/rotational inertia) of the shape around its centroid, assuming a uniform
+     * The mass (translational inertia) of the shape, assuming a uniform density throughout the shape.
+     *
+     * @param density the area density (mass per area) of the shape
+     */
+    fun mass(density: Float): Float = density * area()
+
+    /**
+     * The angular mass (rotational inertia/ 2D moment of inertia) of the shape around its centroid, assuming a uniform
      * density throughout the shape.
      *
      * @param mass the mass of the shape
      */
-    abstract fun angMass(mass: Float): Float
+    abstract fun angularMass(mass: Float): Float
 
     // Geometric Transformations
 
@@ -51,35 +58,26 @@ abstract class Shape {
     abstract fun translate(direction: Vec2): Shape
 
     /**
-     * Rotates every point on this shape around the center of mass by the same angle.
+     * Rotates every point on this shape around the given origin by the same angle.
      * This is a rigid transformation and preserves the area and perimeter.
      *
      * @param angle the counterclockwise angle
+     * @param origin The point to rotate around. Pass in null to rotate around the center of mass.
      * @return the rotated shape
      */
-    abstract fun rotate(angle: Float): Shape
+    abstract fun rotate(angle: Float, origin: Vec2? = null): Shape
 
     /**
-     * Stretches the dimensions of this shape by a given scale vector.
-     * This is a non-linear (anisotropic) transformation and may alter the overall form and area.
+     * Stretches the dimensions of this shape by a given scale vector. This is a non-rigid and non-linear (anisotropic)
+     * transformation and may alter the overall form and area. Some shapes may only be transformed linearly,
+     * where both dimensions will be scaled by a single scale factor and the overall form is maintained.
      *
      * @param factor how much to scale the dimensions by
+     * @param centered whether to scale the shape from its center and not the origin (0, 0)
      * @return the scaled shape
      */
-    open fun scale(factor: Vec2): Shape {
-        throw UnsupportedOperationException("Must be a non-regular shape")
-    }
-
-    /**
-     * Stretches both dimensions of this shape by the same scale factor.
-     * This is a linear but not rigid transformation and maintains the overall form but not the area.
-     *
-     * @param factor how much to scale the shape by
-     * @return the scaled shape
-     */
-    open fun scale(factor: Float): Shape {
-        throw UnsupportedOperationException("Must be a regular shape")
-    }
+    // TODO need scale origin
+    abstract fun scale(factor: Vec2, centered: Boolean = true): Shape
 
     // Overrides
 

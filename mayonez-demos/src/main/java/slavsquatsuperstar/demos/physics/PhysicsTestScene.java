@@ -9,9 +9,8 @@ import slavsquatsuperstar.mayonez.graphics.DebugDraw;
 import slavsquatsuperstar.mayonez.input.KeyInput;
 import slavsquatsuperstar.mayonez.physics2d.PhysicsMaterial;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
-import slavsquatsuperstar.mayonez.physics2d.colliders.BoundingBoxCollider2D;
 import slavsquatsuperstar.mayonez.physics2d.colliders.BoxCollider2D;
-import slavsquatsuperstar.mayonez.physics2d.colliders.CircleCollider;
+import slavsquatsuperstar.mayonez.physics2d.colliders.CircleCollider2D;
 import slavsquatsuperstar.mayonez.physics2d.colliders.Collider2D;
 import slavsquatsuperstar.mayonez.scripts.DragAndDrop;
 import slavsquatsuperstar.mayonez.scripts.KeepInScene;
@@ -25,6 +24,7 @@ public abstract class PhysicsTestScene extends Scene {
     static final PhysicsMaterial NORMAL_MATERIAL = new PhysicsMaterial(0.4f, 0.4f, 0.3f);
     static final PhysicsMaterial BOUNCY_MATERIAL = new PhysicsMaterial(0f, 0f, 1f);
     static final PhysicsMaterial STICKY_MATERIAL = new PhysicsMaterial(1f, 1f, 0f);
+    final float DENSITY = 1f;
     final int NUM_SHAPES;
 
     public PhysicsTestScene(String name, int numShapes) {
@@ -60,8 +60,9 @@ public abstract class PhysicsTestScene extends Scene {
         return new GameObject("Circle", position) {
             @Override
             protected void init() {
-                addComponent(new CircleCollider(radius).setMaterial(material).setDrawColor(Colors.BLUE));
-                addComponent(new Rigidbody2D(radius));
+                Collider2D circle = new CircleCollider2D(radius).setMaterial(material).setDrawColor(Colors.BLUE);
+                addComponent(circle);
+                addComponent(new Rigidbody2D(circle.getMass(DENSITY)));
                 addComponent(new KeepInScene(getScene(), KeepInScene.Mode.BOUNCE));
                 addComponent(new DragAndDrop("left mouse"));
                 addComponent(new MouseFlick(MoveMode.VELOCITY, "right mouse", 15, false));
@@ -73,8 +74,9 @@ public abstract class PhysicsTestScene extends Scene {
         return new GameObject("AABB Rectangle", position) {
             @Override
             protected void init() {
-                addComponent(new BoundingBoxCollider2D(new Vec2(width, height)).setMaterial(material).setDrawColor(Colors.LIGHT_GREEN));
-                addComponent(new Rigidbody2D(width * height / 4f));
+                Collider2D box = new BoxCollider2D(new Vec2(width, height)).setMaterial(material).setDrawColor(Colors.LIGHT_GREEN);
+                addComponent(box);
+                addComponent(new Rigidbody2D(box.getMass(DENSITY)).setFixedRotation(true));
                 addComponent(new KeepInScene(getScene(), KeepInScene.Mode.BOUNCE));
                 addComponent(new DragAndDrop("left mouse"));
                 addComponent(new MouseFlick(MoveMode.VELOCITY, "right mouse", 15, false));
@@ -86,9 +88,9 @@ public abstract class PhysicsTestScene extends Scene {
         return new GameObject("OBB Rectangle", position) {
             @Override
             protected void init() {
-                transform.rotate(rotation);
-                addComponent(new BoxCollider2D(new Vec2(width, height)).setMaterial(material).setDrawColor(Colors.ORANGE));
-                addComponent(new Rigidbody2D(width * height / 4f));
+                Collider2D box = new BoxCollider2D(new Vec2(width, height)).setMaterial(material).setDrawColor(Colors.ORANGE);
+                addComponent(box);
+                addComponent(new Rigidbody2D(box.getMass(DENSITY)));
                 addComponent(new KeepInScene(getScene(), KeepInScene.Mode.BOUNCE));
                 addComponent(new DragAndDrop("left mouse"));
                 addComponent(new MouseFlick(MoveMode.VELOCITY, "right mouse", 15, false));

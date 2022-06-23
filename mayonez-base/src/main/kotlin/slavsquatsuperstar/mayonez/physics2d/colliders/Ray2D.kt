@@ -2,18 +2,49 @@ package slavsquatsuperstar.mayonez.physics2d.colliders
 
 import slavsquatsuperstar.math.MathUtils
 import slavsquatsuperstar.math.Vec2
+import slavsquatsuperstar.mayonez.Transform
 import kotlin.math.abs
 
 /**
  * An object in space that with an origin that extends infinitely in one direction.
+ * Represents a ray or line in the 2D plane with the parameterized vector equation r(t) = r0 + vt.
+ *
+ * @constructor Constructs a ray from the given origin and direction, with the option to normalize the ray's direction.
  *
  * @author SlavSquatSuperstar
  */
-class Ray2D(val origin: Vec2, direction: Vec2) {
 
-    val direction: Vec2 = direction.unit()
+// TODO maybe make direction not unit, so allow ray to be transformed
+class Ray2D(
+    /**
+     * The starting point of the ray, r0.
+     */
+    val origin: Vec2,
 
-    constructor(edge: Edge2D) : this(edge.start, edge.toVector())
+    /**
+     * The direction of the ray, v. The direction also determines the "length" of the ray, or how
+     * far along the ray each step travels.
+     */
+    val direction: Vec2,
+
+    /**
+     * Whether the direction of the ray should be normalized, meaning each step along the ray travels one unit in the world.
+     */
+    normalized: Boolean
+) {
+    init {
+        if (normalized) direction.set(direction.unit())
+    }
+
+    /**
+     * Constructs a normalized ray from the given origin and direction.
+     */
+    constructor(origin: Vec2, direction: Vec2) : this(origin, direction, true)
+
+    /**
+     * Constructs a ray from an [Edge2D] object, using the starting point as the origin and normalizing the segment's direction.
+     */
+    constructor(edge: Edge2D) : this(edge.start, edge.toVector(), true)
 
     /**
      * Returns a point along this ray at the specified distance.
@@ -73,10 +104,18 @@ class Ray2D(val origin: Vec2, direction: Vec2) {
         // rotate left or right depending on which side ray started form
     }
 
+    fun transform(transform: Transform, scale: Boolean = false): Ray2D {
+        val scaleFactor = if (scale) transform.scale else Vec2(1f)
+        // Completely transform origin, but don't translate direction
+        val newDir = (direction / scaleFactor).rotate(-transform.rotation)
+        return Ray2D(transform.toLocal(origin), newDir, false)
+    }
+
     // TODO Get length from distance along axis
     // S = √(1 + (dy/dx)^2)
     override fun toString(): String {
-        return String.format("Origin: %s, Direction, %s", origin, direction)
+        return "Origin: $origin, Direction, $direction"
+//        return "$origin + ${direction}t"
     }
 
 }

@@ -19,6 +19,7 @@ module mayonez.base {
     requires org.json;
     requires org.apache.commons.lang3;
     requires org.apache.commons.io;
+    requires org.reflections;
 
     // Public API
     exports slavsquatsuperstar.math;

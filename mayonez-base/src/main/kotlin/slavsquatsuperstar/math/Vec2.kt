@@ -2,7 +2,6 @@ package slavsquatsuperstar.math
 
 import org.joml.Vector2f
 import slavsquatsuperstar.math.MathUtils.equals
-import slavsquatsuperstar.mayonez.Logger
 import kotlin.math.*
 
 /**
@@ -12,7 +11,7 @@ import kotlin.math.*
  * @param x the new x-component
  * @param y the new y-component
  *
- * @constructor Initialize this vector from an x and y value.
+ * @constructor Initialize this vector from an x and y value, as (x, y).
  *
  * @author SlavSquatSuperstar
  */
@@ -35,23 +34,23 @@ class Vec2 constructor(
     constructor() : this(0f)
 
     /**
-     * Initialize this vector to have the same x and y components.
+     * Initialize this vector to have the same x and y components, as (a, a).
      *
      * @param num the value for both x and y
      */
     constructor(num: Float) : this(num, num)
 
     /**
-     * Initialize this vector to copy another vector's x and y values.
+     * Initialize this vector to copy another vector's x and y values, as (vx, vy)
      *
      * @param v the vector to copy
      */
     constructor(v: Vec2) : this(v.x, v.y)
 
     /**
-     * Initialize this vector with the x and y values from a JOML [Vector2f].
+     * Initialize this vector with the x and y values from a JOML [Vector2f] object, as (vx, vy).
      *
-     * @param v the vector to copy
+     * @param v the JOML vector to copy
      */
     constructor(v: Vector2f) : this(v.x, v.y)
 
@@ -65,7 +64,7 @@ class Vec2 constructor(
      * Negates this vector.
      * @return a new vector with this vector's components times -1
      */
-    operator fun unaryMinus() = this * -1f
+    operator fun unaryMinus() = Vec2(-x, -y)
 
     // Mutators
 
@@ -131,13 +130,8 @@ class Vec2 constructor(
      * @param scalar a non-zero number
      * @return the divided vector
      */
-    operator fun div(scalar: Float): Vec2 {
-        if (scalar == 0f) {
-            Logger.warn("Vector2: Attempted division by 0")
-            return Vec2()
-        }
-        return this * (1f / scalar)
-    }
+    operator fun div(scalar: Float): Vec2 = Vec2(x.safeDivide(scalar), y.safeDivide(scalar))
+//        = if (scalar == 0f) Vec2() else this * (1f / scalar)
 
     /**
      * Divides the components of this vector by the corresponding components of another vector.
@@ -145,7 +139,12 @@ class Vec2 constructor(
      * @param v another vector with non-zero components
      * @return the divided vector
      */
-    operator fun div(v: Vec2): Vec2 = Vec2(this.x / v.x, this.y / v.y)
+    operator fun div(v: Vec2): Vec2 = Vec2(this.x.safeDivide(v.x), this.y.safeDivide(v.y))
+
+    /**
+     * Divides two numbers and returns zero if the divisor (denominator) is zero.
+     */
+    private fun Float.safeDivide(f: Float): Float = if (equals(f, 0f)) 0f else this / f
 
     // Special Vector Operations
 
@@ -230,7 +229,7 @@ class Vec2 constructor(
     // Angle Methods
 
     /**
-     * Calculates the angle in degrees between this vector and the x-axis (1, 0).
+     * Calculates the angle in degrees between this vector and the positive x-axis (1, 0).
      *
      * @return this vector's angle in the x-y plane
      */
@@ -245,15 +244,22 @@ class Vec2 constructor(
     fun angle(v: Vec2): Float = MathUtils.toDegrees(acos((this.dot(v) / this.len() / v.len())))
 
     /**
-     * Rotates this vector by an angle around some origin.
+     * Rotates this vector by an angle around the origin (0, 0).
+     *
+     * @param degrees the angle, in degrees clockwise
+     * @return the rotated vector
+     */
+    fun rotate(degrees: Float): Vec2 = rotate(degrees, Vec2())
+
+    /**
+     * Rotates this vector by an angle around the given origin point.
      *
      * @param degrees the angle, in degrees clockwise
      * @param origin  the point to rotate around
      * @return the rotated vector
      */
-    @JvmOverloads
-    fun rotate(degrees: Float, origin: Vec2 = Vec2()): Vec2 {
-        if (equals(degrees % 360, 0f)) return +this
+    fun rotate(degrees: Float, origin: Vec2): Vec2 {
+        if (this == origin || equals(degrees % 360, 0f)) return +this // Trivial
         val localPos = this - origin // Translate the vector space to the origin
         val rot = Mat22(degrees) // Rotate the point around the new origin
         return (rot * localPos) + origin // Revert the vector space to the old point
@@ -286,8 +292,7 @@ class Vec2 constructor(
      * @return the clamped vector
      */
     fun clampLength(length: Float): Vec2 {
-        return if (lenSq() > length * length)
-            this * (length / len())
+        return if (lenSq() > length * length) this * (length / len())
         else +this
     }
 
@@ -321,6 +326,11 @@ class Vec2 constructor(
      */
     fun toJOML(): Vector2f = Vector2f(x, y)
 
+    /**
+     * Returns a vector whose components are the reciprocals of this vector, equal to (1/x, 1/y).
+     */
+    fun reciprocal(): Vec2 = Vec2(1f) / this
+
     // Overrides
 
     operator fun component1() = x
@@ -334,14 +344,7 @@ class Vec2 constructor(
         }
     }
 
-    override fun hashCode(): Int = 31 * x.hashCode() + y.hashCode()
-
-//    override fun hashCode(): Int = 31 * x.hashCode() + y.hashCode()
-//
-//    override fun equals(other: Any?): Boolean {
-//        return if (other is Vec2) equals(x, other.x) && equals(y, other.y)
-//        else false
-//    }
+    override fun hashCode(): Int = (31 * x.hashCode()) + y.hashCode()
 
     override fun toString(): String = String.format("(%.4f, %.4f)", x, y)
 

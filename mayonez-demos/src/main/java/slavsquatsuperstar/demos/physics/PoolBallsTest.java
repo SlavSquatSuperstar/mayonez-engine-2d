@@ -7,7 +7,7 @@ import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Mayonez;
 import slavsquatsuperstar.mayonez.physics2d.PhysicsMaterial;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
-import slavsquatsuperstar.mayonez.physics2d.colliders.CircleCollider;
+import slavsquatsuperstar.mayonez.physics2d.colliders.CircleCollider2D;
 import slavsquatsuperstar.mayonez.scripts.DragAndDrop;
 import slavsquatsuperstar.mayonez.scripts.KeepInScene;
 import slavsquatsuperstar.mayonez.scripts.MouseFlick;
@@ -53,7 +53,7 @@ public class PoolBallsTest extends PhysicsTestScene {
         return new GameObject(name, position) {
             @Override
             protected void init() {
-                addComponent(new CircleCollider(BALL_RADIUS).setMaterial(POOL_BALL_MAT).setDrawColor(Colors.BLUE));
+                addComponent(new CircleCollider2D(BALL_RADIUS).setMaterial(POOL_BALL_MAT).setDrawColor(Colors.BLUE));
                 addComponent(new Rigidbody2D(BALL_MASS));
                 addComponent(new KeepInScene(getScene(), KeepInScene.Mode.BOUNCE));
                 addComponent(new DragAndDrop("left mouse"));

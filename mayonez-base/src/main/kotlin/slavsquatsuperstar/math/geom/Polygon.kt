@@ -8,6 +8,8 @@ import slavsquatsuperstar.math.Vec2
  * A shape made up of a finite number of vertices connected by straight edges.
  * This class is designed to model convex polygons, meaning all internal angles are less than 180 degrees,
  * and any line between two vertices is in the shape's interior or boundary.
+ *
+ * @author SlavSquatSuperstar
  */
 // TODO correct self-intersecting
 open class Polygon(vararg vertices: Vec2) : Shape() {
@@ -122,7 +124,7 @@ open class Polygon(vararg vertices: Vec2) : Shape() {
      * Calculates the centroidal moment of inertia of this polygon,
      * equal to sum of the moment of inertia of each sub-triangle around this shape's centroid.
      */
-    override fun angMass(mass: Float): Float {
+    override fun angularMass(mass: Float): Float {
         var angMass = 0f
         for (tri in getTriangles()) {
             /*
@@ -132,7 +134,7 @@ open class Polygon(vararg vertices: Vec2) : Shape() {
              * m_i = m_p/A_p * A_i
              * I_p = m_p/A_p * ∑(A_i*(kr^2 + d_i^2))
              */
-            val triI = tri.angMass(1f)
+            val triI = tri.angularMass(1f)
             val distSq = tri.center().distanceSq(this.center())
             val newI = tri.area() * (triI + distSq)
             angMass += newI
@@ -145,9 +147,11 @@ open class Polygon(vararg vertices: Vec2) : Shape() {
 
     override fun translate(direction: Vec2): Polygon = Polygon(*vertices.translate(direction))
 
-    override fun rotate(angle: Float): Polygon = Polygon(*vertices.rotate(angle, center()))
+    override fun rotate(angle: Float, origin: Vec2?): Polygon =
+        Polygon(*vertices.rotate(angle, origin ?: this.center()))
 
-    override fun scale(factor: Vec2): Polygon = Polygon(*vertices.scale(factor, center()))
+    override fun scale(factor: Vec2, centered: Boolean): Polygon =
+        Polygon(*vertices.scale(factor, if (centered) center() else Vec2()))
 
     // Overrides
 

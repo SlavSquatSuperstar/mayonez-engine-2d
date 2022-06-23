@@ -61,10 +61,10 @@ public class RigidbodyTests {
         rb.addVelocity(new Vec2(1, 0));
         rb.addAngularVelocity(360 / MathUtils.PI);
         physicsUpdate(rb, 1);
-        assertEquals(new Vec2(1, 2), rb.getPointVelocity(new Vec2(1, 0)));
-        assertEquals(new Vec2(1, -2), rb.getPointVelocity(new Vec2(-1, 0)));
+        assertEquals(new Vec2(1, 2), rb.getPointVelocity(rb.getPosition().add(new Vec2(1, 0))));
+        assertEquals(new Vec2(1, -2), rb.getPointVelocity(rb.getPosition().add(new Vec2(-1, 0))));
     }
-    
+
     static void physicsUpdate(Rigidbody2D rb, float dt) {
         rb.integrateForce(dt);
         rb.integrateVelocity(dt);

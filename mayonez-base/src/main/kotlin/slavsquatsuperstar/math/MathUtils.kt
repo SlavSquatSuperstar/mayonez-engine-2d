@@ -43,6 +43,15 @@ object MathUtils {
     fun sqrt(value: Float): Float = sqrt(value.toDouble()).toFloat()
 
     /**
+     * Calculates the length of the diagonal of an n-dimensional figure with perpendicular edges (rectangle, cuboid, hyper-cuboid, etc.).
+     *
+     * @param sides the lengths of the figure's sides
+     * @return the hypotenuse (pythagorean theorem) in n-dimensions
+     */
+    @JvmStatic
+    fun hypot(vararg sides: Float): Float = sqrt(hypotSq(*sides))
+
+    /**
      * Calculates the length squared of the diagonal of an n-dimensional figure with perpendicular edges (rectangle, cuboid, hyper-cuboid, etc.).
      *
      * @param sides the lengths of the figure's sides
@@ -53,14 +62,15 @@ object MathUtils {
         return sum(*FloatArray(sides.size) { sides[it] * sides[it] })
     }
 
-    /**
-     * Calculates the length of the diagonal of an n-dimensional figure with perpendicular edges (rectangle, cuboid, hyper-cuboid, etc.).
-     *
-     * @param sides the lengths of the figure's sides
-     * @return the hypotenuse (pythagorean theorem) in n-dimensions
-     */
     @JvmStatic
-    fun hypot(vararg sides: Float): Float = sqrt(hypotSq(*sides))
+    fun invHypot(hypot: Float, vararg legs: Float): Float {
+        return sqrt(invHypotSq(hypot, *legs))
+    }
+
+    @JvmStatic
+    fun invHypotSq(hypot: Float, vararg legs: Float): Float {
+        return (hypot * hypot) - sum(*FloatArray(legs.size) { legs[it] * legs[it] })
+    }
 
     // Accumulator Methods
 

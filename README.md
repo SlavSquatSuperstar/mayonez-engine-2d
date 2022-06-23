@@ -6,23 +6,26 @@ The 2D Java game engine to fit your Slavic needs!*†
 
 - Download the latest Java version: [JRE 17](https://jdk.java.net/17/)
 - To check if Java is installed, enter 'java --version' inside a command line window.
-- Download the repository, drag 'run.sh' (Mac/Linux) or 'run.bat' (Windows) from the extracted folder to a command line window,
+- Download the repository, drag 'run.sh' (Mac/Linux) or 'run.bat' (Windows) from the extracted folder to a command line
+  window,
   and press enter.
 
 ### Instructions for Developers:
 
 Note: this project was developed using macOS Big Sur (Intel).
 
-- Java Version: [Oracle JDK 17](https://jdk.java.net/17/) or [OpenJDK 17](https://adoptium.net/)
-- Recommended IDE: [Intellij IDEA](https://www.jetbrains.com/idea/download/)
-- Build System: [Gradle](https://gradle.org/releases/)
+- Java Version: [Oracle JDK 17](https://jdk.java.net/17/) or [Adoptium OpenJDK 17](https://adoptium.net/)
+- Kotlin Version: [1.7.0](https://github.com/JetBrains/kotlin/releases/tag/v1.7.0)
+- Recommended IDE: [Intellij IDEA 2022.1+](https://www.jetbrains.com/idea/download/)
+- Build System: [Gradle 7.4+](https://gradle.org/install/)
 - Dependencies (bundled in JAR)
-    - [LWJGL (OS Specific)](https://www.lwjgl.org/customize)
+    - [LWJGL (user OS specific) with JOML](https://www.lwjgl.org/customize)
     - [Kotlin Standard Library](https://kotlinlang.org/docs/getting-started.html)
     - [JSON in Java (org.json)](https://github.com/stleary/JSON-java)
     - [Apache Commons Lang](https://commons.apache.org/proper/commons-lang/)
     - [Apache Commons IO](https://commons.apache.org/proper/commons-io/)
     - [Java Reflections](https://github.com/ronmamo/reflections)
+    - [SLF4J Simple Binding](https://www.slf4j.org/)
 
 ### Disclaimers:
 
@@ -32,21 +35,25 @@ Note: this project was developed using macOS Big Sur (Intel).
 - †The developer is not responsible for any addictions, trauma, injuries, or deaths caused by excessive drinking or
   incorrect squatting position.
 
-### Credits
+### Acknowledgements
 
-A huge thanks to the following people and resources for inspiration and guidance:
+A massive, heartfelt thanks goes out to the following people and resources for inspiration and guidance:
 
-- [GamesWithGabe](https://youtube.com/c/GamesWithGabe): For keeping me inspired to work on my engine every day.
-- [The Cherno](https://youtube.com/c/TheChernoProject): For teaching me the theoretical side of designing game engines.
-- [javidx9/OneLoneCoder](https://www.youtube.com/c/javidx9): For explaining all the hard math concepts behind video
-  games.
+- [GamesWithGabe](https://youtube.com/c/GamesWithGabe): For continuously keeping me motivated to work on my engine, no
+  matter how much frustration debugging causes me.
+- [The Cherno](https://youtube.com/c/TheChernoProject): For teaching me the theoretical side of designing a proper game
+  engine.
 - [CodeNMore](https://www.youtube.com/playlist?list=PLah6faXAgguMnTBs3JnEJY0shAc18XYQZ): For creating first game engine
-  tutorial I ever followed and starting me on this journey.
-- [Life of Boris](https://www.youtube.com/c/LifeofBoris/featured): For showing me the Slav way in my time of need.
-  🥔🤘🥃
+  tutorial I ever followed and starting me on this crazy journey.
+- [javidx9 (OneLoneCoder)](https://www.youtube.com/c/javidx9): For explaining the hard math concepts behind video
+  games in a simple manner.
+- [Michel Van Bizen](https://www.youtube.com/c/MichelvanBiezen): For working through the difficult mathematical proofs
+  in comprehensive detail.
 - [Unity Technologies](https://docs.unity3d.com/ScriptReference/): ~~Who I'm ripping off~~ For making game dev
   accessible for everybody and providing excellent documentation.
 - [Greenfoot Developers](https://www.greenfoot.org/files/javadoc/): For proving you **can** use Java for game dev and
   showing the beauty of simplicity.
+- [Life of Boris](https://www.youtube.com/c/LifeofBoris/featured): For showing me the Slav way in my time of need.
+  🥔🤘🥃
 - Stack Overflow/Reddit: For answering questions I never knew I had.
 - …And many more!

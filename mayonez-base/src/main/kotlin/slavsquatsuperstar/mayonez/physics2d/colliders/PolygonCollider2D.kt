@@ -9,6 +9,8 @@ import slavsquatsuperstar.math.MathUtils.min
 import slavsquatsuperstar.math.MathUtils.minIndex
 import slavsquatsuperstar.math.Range
 import slavsquatsuperstar.math.Vec2
+import slavsquatsuperstar.math.geom.Polygon
+import slavsquatsuperstar.math.geom.Rectangle
 import slavsquatsuperstar.mayonez.physics2d.collision.Manifold
 import slavsquatsuperstar.mayonez.physics2d.collision.RaycastResult
 import kotlin.math.abs
@@ -16,13 +18,21 @@ import kotlin.math.abs
 /**
  * A convex polygon with an arbitrary number of vertices connected by straight edges.
  *
+ * @constructor Constructs a polygon from a [Polygon] object
+ * @param shapeData the shape object that stores the vertices and the shape's properties
+ *
  * @author SlavSquatSuperstar
- *
- * @constructor Constructs a convex polygon from an array of vertices in clockwise order.
- *
- * @param vertices the vertices in clockwise order
  */
-open class PolygonCollider2D(vararg vertices: Vec2) : Collider2D() {
+open class PolygonCollider2D protected constructor(shapeData: Polygon) :
+    Collider2D(shapeData.translate(-shapeData.center())) {
+
+    /**
+     * Constructs a convex polygon from an array of vertices in clockwise order. The vertices will then
+     * be translated so that the geometric center becomes the object's position.
+     *
+     * @param vertices the vertices in clockwise order
+     */
+    constructor(vararg vertices: Vec2) : this(Polygon(*vertices))
 
     /**
      * Constructs a regular polygon with the specified number of and radius.
@@ -30,52 +40,45 @@ open class PolygonCollider2D(vararg vertices: Vec2) : Collider2D() {
      * @param sides the number of sides/vertices
      * @param radius the distance from the center to each vertex
      */
-    constructor(sides: Int, radius: Float) : this(sides, Vec2(radius, 0f), 360f / sides)
+    constructor(sides: Int, radius: Float) : this(Polygon(Vec2(), sides, radius))
 
-    private constructor(sides: Int, start: Vec2, angle: Float) : this(*Array(sides) { start.rotate(angle * (it - 1)) })
+    // Shape Data
 
-    // Shape Properties
+    // points in local space, relative to center
+    private val vertexData: Array<Vec2> = shapeData.vertices
 
-    // points in local space (relative to center)
-    private val vertices: Array<Vec2> = arrayOf(*vertices)
+    val numVertices: Int
+        get() = vertexData.size
 
-    // rotated in world
-    open fun getVertices(): Array<Vec2> = Array(vertices.size) { toWorld(vertices[it]) }
+    // vertices transformed to world space
+    open fun getVertices(): Array<Vec2> = (transformToWorld() as Polygon).vertices
 
-    open fun countVertices(): Int = vertices.size
-
-    open fun getRotation(): Float = transform?.rotation ?: 0f
-
-    override fun getMinBounds(): BoundingBoxCollider2D { // TODO Support function
+    override fun getMinBounds(): Rectangle { // TODO Support function
         val vertices = getVertices()
         // Get the min and max coordinates of any point on the box
-        val verticesX = FloatArray(vertices.size) { vertices[it].x }
-        val verticesY = FloatArray(vertices.size) { vertices[it].y }
+        val verticesX = FloatArray(numVertices) { vertices[it].x }
+        val verticesY = FloatArray(numVertices) { vertices[it].y }
 
         val newMin = Vec2(min(*verticesX), min(*verticesY))
         val newMax = Vec2(max(*verticesX), max(*verticesY))
         val aabbSize = (newMax - newMin) / (transform!!.scale)
-        return BoundingBoxCollider2D(aabbSize).setTransform<Collider2D>(transform).setRigidbody(rb)
+        return Rectangle(center(), aabbSize, 0f)
     }
 
     // Intersection Helper Methods
 
     open fun getEdges(): Array<Edge2D> { // in world
         val vertices = getVertices()
-        return Array(vertices.size) { Edge2D(vertices[it], vertices[(it + 1) % vertices.size]) }
+        return Array(numVertices) { Edge2D(vertices[it], vertices[(it + 1) % numVertices]) }
     }
 
     open fun getNormals(): Array<Vec2> { // in world
-        val edges = getEdges()
+        // TODO need to save a copy of array before iterating?
         val rot = Mat22(0f, 1f, -1f, 0f) // Rotate 90 degrees counterclockwise to point outward
-        return Array(countVertices()) { (rot * edges[it].toVector()).unit() }
+        return Array(numVertices) { (rot * getEdges()[it].toVector()).unit() }
     }
 
-    open fun getDiagonals(): Array<Edge2D> {
-        val center = center()
-        val vertices = getVertices()
-        return Array(vertices.size) { Edge2D(vertices[it], center) }
-    }
+    open fun getDiagonals(): Array<Edge2D> = Array(numVertices) { Edge2D(getVertices()[it], center()) }
 
     // Separating-Axis Theorem Methods
 
@@ -86,7 +89,7 @@ open class PolygonCollider2D(vararg vertices: Vec2) : Collider2D() {
      */
     private fun getIntervalOnAxis(axis: Vec2): Range {
         val vertices = getVertices()
-        val projections = FloatArray(vertices.size) { vertices[it].dot(axis) }
+        val projections = FloatArray(numVertices) { vertices[it].dot(axis) }
         return Range(min(*projections), max(*projections))
     }
 
@@ -169,14 +172,14 @@ open class PolygonCollider2D(vararg vertices: Vec2) : Collider2D() {
 
     override fun getCollisionInfo(collider: Collider2D?): Manifold? {
         return when (collider) {
-            is CircleCollider -> getCollisionInfo(collider)
+            is CircleCollider2D -> getCollisionInfo(collider)
             is PolygonCollider2D -> getCollisionInfo(collider)
             else -> null
         }
     }
 
     // Polygon vs Circle: 1 contact point
-    private fun getCollisionInfo(circle: CircleCollider): Manifold? {
+    private fun getCollisionInfo(circle: CircleCollider2D): Manifold? {
         val closestToCircle = nearestPoint(circle.center())
         if (closestToCircle!! !in circle) return null
 

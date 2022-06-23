@@ -1,10 +1,10 @@
 package slavsquatsuperstar.mayonez.physics2d.colliders
 
 import slavsquatsuperstar.math.Vec2
+import slavsquatsuperstar.math.geom.Rectangle
+import slavsquatsuperstar.math.geom.Shape
 import slavsquatsuperstar.mayonez.Component
 import slavsquatsuperstar.mayonez.GameObject
-import slavsquatsuperstar.mayonez.Logger
-import slavsquatsuperstar.mayonez.Transform
 import slavsquatsuperstar.mayonez.graphics.DebugDraw
 import slavsquatsuperstar.mayonez.physics2d.PhysicsMaterial
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D
@@ -20,28 +20,18 @@ import java.awt.Graphics2D
  * @author SlavSquatSuperstar
  */
 @Suppress("UNCHECKED_CAST")
-abstract class Collider2D : Component() {
-
-    /**
-     * If the collision in [onCollision] should not be resolved by the physics engine.
-     */
-    var ignoreCurrentCollision = false
+abstract class Collider2D(private val shapeData: Shape) : Component() {
 
     // Object References
 
-    fun <T : Collider2D?> setTransform(transform: Transform?): T {
-        this.transform = transform
-        return this as T
-    }
-
     /**
-     * A reference to the parent object's [Rigidbody2D]
+     * A reference to the parent object's [Rigidbody2D]. A collider should have a rigidbody to react to collisions.
      */
     @JvmField
     protected var rb: Rigidbody2D? = null
 
     /**
-     * Returns the parent object's [Rigidbody2D]. A collider should have rigidbody to react to collisions.
+     * Returns the parent object's [Rigidbody2D].
      *
      * @return the attached rigidbody
      */
@@ -52,7 +42,7 @@ abstract class Collider2D : Component() {
         return this as T
     }
 
-    // Physics Properties
+    // Physics Engine Properties
 
     var material: PhysicsMaterial = PhysicsMaterial.DEFAULT_MATERIAL
         private set
@@ -65,6 +55,8 @@ abstract class Collider2D : Component() {
     var isTrigger = false
         /**
          * Returns whether this collider is non-physical and should not react to collisions.
+         *
+         * @return if this collider is a trigger
          */
         @JvmName("isTrigger") get
         private set
@@ -74,7 +66,16 @@ abstract class Collider2D : Component() {
         return this
     }
 
-    // Debug Properties
+    /**
+     * If this frame's collision in [onCollision] should not be resolved by the physics engine.
+     */
+    var ignoreCurrentCollision = false
+
+    // Debug Draw Properties
+
+    /**
+     * What color this collider should appear on the screen as. Set to null to disable drawing.
+     */
     var drawColor: Color? = null
         private set
 
@@ -92,7 +93,6 @@ abstract class Collider2D : Component() {
 
     override fun start() {
         rb = parent.getComponent(Rigidbody2D::class.java)
-        if (rb == null) Logger.log("%s needs a rigidbody to function properly!", this)
     }
 
     override fun render(g2: Graphics2D?) {
@@ -101,11 +101,38 @@ abstract class Collider2D : Component() {
 
     // Shape Properties
 
-    fun center(): Vec2 = transform?.position ?: Vec2()
+    // TODO convert to property
+    fun center(): Vec2 = transform!!.position
 
-    abstract fun getMinBounds(): BoundingBoxCollider2D
+    open fun getRotation(): Float = transform!!.rotation
 
-    open fun getAngMass(mass: Float): Float = mass
+    abstract fun getMinBounds(): Rectangle
+
+    open fun getMass(density: Float): Float = shapeData.scale(transform!!.scale).mass(density)
+
+    open fun getAngMass(mass: Float): Float = shapeData.scale(transform!!.scale).angularMass(mass)
+
+    // Transform Methods
+
+    /**
+     * Transforms this shape into world space.
+     */
+    protected open fun transformToWorld(): Shape {
+        return shapeData.rotate(getRotation()).scale(transform!!.scale).translate(center())
+    }
+
+    // inverse scale, rotate about our center
+    /**
+     * Transforms another shape to this shape's local space.
+     */
+    protected open fun transformToLocal(world: Shape): Shape {
+        return world.translate(-center()).scale(transform!!.scale.reciprocal(), centered = false)
+            .rotate(-getRotation())
+    }
+
+//    open fun toLocal(world: Vec2): Vec2 = transform?.toLocal(world) ?: world
+
+//    open fun toWorld(local: Vec2): Vec2 = transform?.toWorld(local) ?: local
 
     // Shape vs Point Collisions
     /**
@@ -147,7 +174,7 @@ abstract class Collider2D : Component() {
      */
     abstract fun raycast(ray: Ray2D, limit: Float): RaycastResult?
 
-    // Shape vs Shape Collisions
+// Shape vs Shape Collisions
 
     /**
      * Detects whether this collider is touching or overlapping another.
@@ -165,13 +192,7 @@ abstract class Collider2D : Component() {
      */
     abstract fun getCollisionInfo(collider: Collider2D?): Manifold?
 
-    // Transform Methods
-
-    open fun toLocal(world: Vec2): Vec2 = transform?.toLocal(world) ?: world
-
-    open fun toWorld(local: Vec2): Vec2 = transform?.toWorld(local) ?: local
-
-    // Field Getters and Setters
+// Field Getters and Setters
 
     /**
      * Whether this collider has a null or infinite-mass rigidbody, and does not respond to collisions.
@@ -180,7 +201,7 @@ abstract class Collider2D : Component() {
      */
     fun isStatic(): Boolean = rb?.hasInfiniteMass() ?: true
 
-    // Callback Methods
+// Callback Methods
 
     /**
      * A callback event broadcasted when two solid objects collide with each other.

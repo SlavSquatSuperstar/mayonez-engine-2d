@@ -33,22 +33,21 @@ object Logger {
             // Count number of log files with the same date
             val today = LocalDate.now()
             var logCount = 0
+
             for (f in logsDirectory.listFiles()!!)
                 if (f.name.startsWith(today.toString())) logCount++
 
-            logFilename = "${logsDirectory.path}/$today-${++logCount}.log"
             logFile = TextFile(logFilename)
         }
     }
 
     private fun logInternal(msg: Any?, vararg args: Any?, level: LogLevel) {
+        // Format the message and add timestamp
         val time = Mayonez.time
         val output = StringBuilder("[%02d:%2.4f] ".format((time / 60).toInt(), time % 60)) // Time stamp
         try {
             output.append(msg.toString().format(*args)) // Level prefix
             if (saveLogs) logFile.append(output.toString()) // Always save to log regardless of level
-        } catch (e: IllegalFormatException) {
-            output.append("Logger: Could not format message \"$msg\"")
         } finally {
             if (level.level >= this.logLevel) { // Print to console if high enough level
                 if (level == LogLevel.WARNING) System.err.println(output.toString())
@@ -89,6 +88,10 @@ object Logger {
         if (saveLogs) log("Logger: Saved log to file \"%s\"", logFilename)
     }
 
+    override fun toString(): String {
+        return "Logger ($logFilename)"
+    }
+
     private enum class LogLevel(val level: Int) {
         /**
          * A low priority debug message.
@@ -96,7 +99,7 @@ object Logger {
         TRACE(0),
 
         /**
-         * A normal priority infomational message.
+         * A normal priority informational message.
          */
         NORMAL(1),
 

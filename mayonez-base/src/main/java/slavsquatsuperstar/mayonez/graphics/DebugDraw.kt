@@ -2,12 +2,14 @@ package slavsquatsuperstar.mayonez.graphics
 
 import slavsquatsuperstar.math.Vec2
 import slavsquatsuperstar.mayonez.Mayonez
-import slavsquatsuperstar.mayonez.physics2d.colliders.*
 import slavsquatsuperstar.mayonez.graphics.renderer.Renderable
+import slavsquatsuperstar.mayonez.physics2d.colliders.CircleCollider2D
+import slavsquatsuperstar.mayonez.physics2d.colliders.Collider2D
+import slavsquatsuperstar.mayonez.physics2d.colliders.Edge2D
+import slavsquatsuperstar.mayonez.physics2d.colliders.PolygonCollider2D
 import java.awt.*
 import java.awt.geom.Ellipse2D
 import java.awt.geom.Line2D
-import java.awt.geom.Rectangle2D
 import kotlin.math.roundToInt
 
 /**
@@ -103,26 +105,17 @@ object DebugDraw {
     @JvmStatic
     fun drawShape(shape: Collider2D?, color: Color) {
         when (shape) {
-            is CircleCollider -> drawCircle(shape, color)
-            is BoundingBoxCollider2D -> drawAABB(shape, color)
+            is CircleCollider2D -> drawCircle(shape, color)
             is PolygonCollider2D -> drawPolygon(shape, color)
         }
     }
 
-    private fun drawCircle(circle: CircleCollider, color: Color) {
+    private fun drawCircle(circle: CircleCollider2D, color: Color) {
         val minPx = (circle.center() - Vec2(circle.radius, circle.radius)).toScreen()
         val diameterPx = (circle.radius * 2).toScreen()
         shapes.add(ShapeDrawer(DrawPriority.SHAPE) { g2: Graphics2D ->
             g2.color = color
             g2.draw(Ellipse2D.Float(minPx.x, minPx.y, diameterPx, diameterPx))
-        })
-    }
-
-    private fun drawAABB(aabb: BoundingBoxCollider2D, color: Color) {
-        val minPx = aabb.min().toScreen()
-        shapes.add(ShapeDrawer(DrawPriority.SHAPE) { g2: Graphics2D ->
-            g2.color = color
-            g2.draw(Rectangle2D.Float(minPx.x, minPx.y, aabb.width.toScreen(), aabb.height.toScreen()))
         })
     }
 
@@ -149,26 +142,17 @@ object DebugDraw {
     @JvmStatic
     fun fillShape(shape: Collider2D?, color: Color) {
         when (shape) {
-            is CircleCollider -> fillCircle(shape, color)
-            is BoundingBoxCollider2D -> fillAABB(shape, color)
+            is CircleCollider2D -> fillCircle(shape, color)
             is PolygonCollider2D -> fillPolygon(shape, color)
         }
     }
 
-    private fun fillCircle(circle: CircleCollider, color: Color) {
+    private fun fillCircle(circle: CircleCollider2D, color: Color) {
         val minPx = (circle.center() - Vec2(circle.radius, circle.radius)).toScreen()
         val diameterPx = (circle.radius * 2).toScreen()
         shapes.add(ShapeDrawer(DrawPriority.SHAPE) { g2: Graphics2D ->
             g2.color = color
             g2.fill(Ellipse2D.Float(minPx.x, minPx.y, diameterPx, diameterPx))
-        })
-    }
-
-    private fun fillAABB(aabb: BoundingBoxCollider2D, color: Color) {
-        val minPx = aabb.min().toScreen()
-        shapes.add(ShapeDrawer(DrawPriority.SHAPE) { g2: Graphics2D ->
-            g2.color = color
-            g2.fill(Rectangle2D.Float(minPx.x, minPx.y, aabb.width.toScreen(), aabb.height.toScreen()))
         })
     }
 

@@ -11,18 +11,18 @@ import slavsquatsuperstar.mayonez.physics2d.colliders.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit tests for {@link CircleCollider} class.
+ * Unit tests for {@link CircleCollider2D} class.
  *
  * @author SlavSquatSuperstar
  */
 public class CircleTests {
 
-    static CircleCollider c;
+    static CircleCollider2D c;
 
     // Create a circle centered at (0, 0) with a radius of 1 and scale it by 2x
     @BeforeAll
     public static void getCircle() {
-        c = new CircleCollider(1).setTransform(new Transform().resize(new Vec2(2, 2)));
+        c = new CircleCollider2D(1).setTransform(new Transform().resize(new Vec2(2, 2)));
     }
 
     // Contains Point
@@ -133,16 +133,9 @@ public class CircleTests {
 
     @Test
     public void circleIntersectsCircle() {
-        CircleCollider other = new CircleCollider(4);
+        CircleCollider2D other = new CircleCollider2D(4);
         other.setTransform(new Transform(new Vec2(2, 2)));
         assertTrue(c.detectCollision(other));
-    }
-
-    @Test
-    public void circleIntersectsAABB() {
-        BoundingBoxCollider2D aabb = new BoundingBoxCollider2D(new Vec2(4, 4));
-        aabb.setTransform(new Transform(new Vec2(1, 0)));
-        assertTrue(c.detectCollision(aabb));
     }
 
     @Test

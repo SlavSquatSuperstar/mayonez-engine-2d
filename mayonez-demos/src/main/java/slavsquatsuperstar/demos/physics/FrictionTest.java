@@ -7,9 +7,9 @@ import slavsquatsuperstar.mayonez.Mayonez;
 import slavsquatsuperstar.mayonez.Script;
 import slavsquatsuperstar.mayonez.input.KeyInput;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
-import slavsquatsuperstar.mayonez.physics2d.colliders.BoundingBoxCollider2D;
 import slavsquatsuperstar.mayonez.physics2d.colliders.BoxCollider2D;
-import slavsquatsuperstar.mayonez.physics2d.colliders.CircleCollider;
+import slavsquatsuperstar.mayonez.physics2d.colliders.CircleCollider2D;
+import slavsquatsuperstar.mayonez.physics2d.colliders.Collider2D;
 import slavsquatsuperstar.mayonez.scripts.DragAndDrop;
 import slavsquatsuperstar.mayonez.scripts.KeepInScene;
 import slavsquatsuperstar.mayonez.scripts.MouseFlick;
@@ -26,8 +26,8 @@ public class FrictionTest extends PhysicsTestScene {
         addObject(new GameObject("Ground", new Vec2(getWidth() / 2f, 1)) {
             @Override
             protected void init() {
-                addComponent(new Rigidbody2D(0));
-                addComponent(new BoundingBoxCollider2D(new Vec2(getWidth(), 2)).setDrawColor(Colors.BLACK));
+                addComponent(new Rigidbody2D(0).setFixedRotation(true));
+                addComponent(new BoxCollider2D(new Vec2(getWidth(), 2)).setDrawColor(Colors.BLACK));
             }
         });
 
@@ -46,9 +46,10 @@ public class FrictionTest extends PhysicsTestScene {
             @Override
             protected void init() {
                 float speed = 2f;
-//                addComponent(new AlignedBoxCollider2D(new Vec2(6, 6)));
-                addComponent(new CircleCollider(3f).setDrawColor(Colors.BLUE));
-                addComponent(new Rigidbody2D(10f));
+//                Collider2D collider = new BoxCollider2D(new Vec2(6, 6));
+                Collider2D collider = new CircleCollider2D(3f).setDrawColor(Colors.BLUE);
+                addComponent(collider);
+                addComponent(new Rigidbody2D(collider.getMass(DENSITY)));
                 addComponent(new MouseFlick(MoveMode.VELOCITY, "right mouse", 15, false));
                 addComponent(new DragAndDrop("left mouse"));
                 addComponent(new KeepInScene(getScene(), KeepInScene.Mode.BOUNCE));

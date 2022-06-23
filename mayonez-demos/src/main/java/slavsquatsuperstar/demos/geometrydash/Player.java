@@ -7,7 +7,7 @@ import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.graphics.JSprite;
 import slavsquatsuperstar.mayonez.graphics.JSpriteSheet;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
-import slavsquatsuperstar.mayonez.physics2d.colliders.BoundingBoxCollider2D;
+import slavsquatsuperstar.mayonez.physics2d.colliders.BoxCollider2D;
 import slavsquatsuperstar.mayonez.scripts.KeepInScene;
 import slavsquatsuperstar.mayonez.scripts.KeyMovement;
 import slavsquatsuperstar.mayonez.scripts.MoveMode;
@@ -49,8 +49,8 @@ public class Player extends GameObject {
 
         // Add player scripts
         float thrustForce = 10f;
-        addComponent(new BoundingBoxCollider2D(new Vec2(1, 1)));
-        addComponent(new Rigidbody2D(1f));
+        addComponent(new BoxCollider2D(new Vec2(1, 1)));
+        addComponent(new Rigidbody2D(1f).setFixedRotation(true));
         addComponent(new KeyMovement(MoveMode.POSITION, thrustForce).setTopSpeed(5f));
         addComponent(new KeepInScene(new Vec2(), getScene().getSize(), KeepInScene.Mode.STOP));
         addComponent(new PlayerController(thrustForce));

@@ -64,7 +64,7 @@ object Mayonez {
      * Instantiate singleton objects in the correct order to avoid ExceptionInInitializer errors from circular dependencies.
      */
     @JvmStatic
-    fun init() {
+    fun init() { // TODO internal
         // Set up Assets system
         if (!INIT_ASSETS) {
             INIT_ASSETS = true
@@ -72,6 +72,7 @@ object Mayonez {
         }
         // Read Preferences
         if (!INIT_PREFERENCES) {
+            trace("Engine: Loaded settings from preferences.json")
             INIT_PREFERENCES = true
 //            val prefs = Preferences
         }

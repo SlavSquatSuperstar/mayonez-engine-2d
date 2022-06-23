@@ -32,7 +32,7 @@ public class SquareTests {
         assertEquals(rect.area(), square.area(), EPSILON);
         assertEquals(rect.perimeter(), square.perimeter(), EPSILON);
         assertEquals(rect.center(), square.center());
-        assertEquals(rect.angMass(5), square.angMass(5), EPSILON);
+        assertEquals(rect.angularMass(5), square.angularMass(5), EPSILON);
     }
 
     @Test
@@ -49,7 +49,7 @@ public class SquareTests {
 
     @Test
     public void squareTransformedProperly() {
-        Square transformed = square.scale(2f).translate(new Vec2(-1, -1)).rotate(45);
+        Square transformed = square.scale(new Vec2(2f), true).translate(new Vec2(-1, -1)).rotate(45, null);
         assertEquals(transformed.center(), new Vec2(0, 0));
         assertEquals(square.perimeter() * 2f, transformed.perimeter());
         assertEquals(square.area() * 4f, transformed.area());

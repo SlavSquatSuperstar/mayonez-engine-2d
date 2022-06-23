@@ -35,4 +35,20 @@ public class RayTests {
         assertNull(r1.getIntersection(r2));
     }
 
+    @Test
+    public void normalizedRaysHaveUnitLength() {
+        Ray2D r = new Ray2D(new Vec2(), new Vec2(2, 0), true);
+        assertEquals(r.getPoint(1), new Vec2(1, 0));
+        assertEquals(r.getPoint(5), new Vec2(5, 0));
+        assertEquals(r.getPoint(-2), new Vec2(-2, 0));
+    }
+
+    @Test
+    public void nonNormalizedRaysHaveLength() {
+        Ray2D r = new Ray2D(new Vec2(), new Vec2(2, 0), false);
+        assertEquals(r.getPoint(1), new Vec2(2, 0));
+        assertEquals(r.getPoint(5), new Vec2(10, 0));
+        assertEquals(r.getPoint(-2), new Vec2(-4, 0));
+    }
+
 }

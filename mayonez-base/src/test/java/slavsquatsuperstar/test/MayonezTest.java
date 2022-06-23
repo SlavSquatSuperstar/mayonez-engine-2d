@@ -1,9 +1,5 @@
 package slavsquatsuperstar.test;
 
-import slavsquatsuperstar.math.Vec2;
-import slavsquatsuperstar.math.geom.Polygon;
-import slavsquatsuperstar.math.geom.Triangle;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,18 +9,6 @@ import java.util.List;
 public class MayonezTest {
 
     public static void main(String[] args) throws Exception {
-        Polygon poly = new Polygon(new Vec2(0, 0), new Vec2(2, 0), new Vec2(2, 3), new Vec2(0, 3));
-//        Polygon poly = new Polygon(new Vec2(), 5, 4f);
-        System.out.println(poly.area());
-        System.out.println(poly.angMass(1));
-        System.out.println();
-
-        for (Triangle t : poly.getTriangles()) {
-            System.out.println(t.area());
-            System.out.println(t.angMass(1));
-            System.out.println();
-        }
-
 //        EventListener myListener1 = event -> Logger.log("Listener 1: %s", event);
 //        EventListener myListener2 = event -> Logger.log("Listener 2 reports: %s", event);
 //        EventGenerator myGenerator = new EventGenerator();

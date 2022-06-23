@@ -43,10 +43,8 @@ public class JSONTests {
         assertTrue(json.getBool("uses_dependencies"));
         assertEquals("Java", json.getArray("languages").get(0));
         assertEquals(0, json.getInt("version"));
-
         assertEquals("Mayonez Engine", json.getStr("name"));
         assertTrue(json.getBool("in_progress"));
-        assertEquals(0.6f, json.getFloat("version"), 0.0f);
         assertNull(json.getObj(null));
     }
 

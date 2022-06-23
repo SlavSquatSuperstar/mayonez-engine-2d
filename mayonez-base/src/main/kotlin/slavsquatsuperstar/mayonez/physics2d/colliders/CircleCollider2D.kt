@@ -1,40 +1,34 @@
 package slavsquatsuperstar.mayonez.physics2d.colliders
 
-import slavsquatsuperstar.math.MathUtils
 import slavsquatsuperstar.math.Vec2
+import slavsquatsuperstar.math.geom.Circle
+import slavsquatsuperstar.math.geom.Rectangle
 import slavsquatsuperstar.mayonez.physics2d.collision.Manifold
 import slavsquatsuperstar.mayonez.physics2d.collision.RaycastResult
 import kotlin.math.abs
-import kotlin.math.max
 import kotlin.math.sqrt
 
 /**
- * A circle with a center and radius.
+ * A circle with a radius, centered at the object's position.
  *
  * @author SlavSquatSuperstar
  */
-class CircleCollider(radius: Float) : Collider2D() {
+class CircleCollider2D(radius: Float) : Collider2D(Circle(Vec2(), radius)) {
 
-    val radius = radius
-        /**
-         * Calculates the radius of this circle factoring in the object's scale.
-         *
-         * @return the radius in world space
-         */
-        @JvmName("radius")
-        get() = field * max(transform!!.scale.x, transform!!.scale.y)
+    /**
+     * Calculates the radius of this circle factoring in the object's scale.
+     *
+     * @return the radius in world space
+     */
+    val radius: Float
+        get() = (transformToWorld() as Circle).radius
 
     // Properties
-    override fun getMinBounds(): BoundingBoxCollider2D {
-        return BoundingBoxCollider2D(Vec2(radius * 2, radius * 2))
-            .setTransform<Collider2D>(transform).setRigidbody(rb)
-    }
+    override fun getMinBounds(): Rectangle = Rectangle(center(), Vec2(radius * 2f), 0f)
 
-    override fun toLocal(world: Vec2): Vec2 = (world - center()) / radius
+//    override fun toLocal(world: Vec2): Vec2 = (world - center()) / radius
 
-    override fun toWorld(local: Vec2): Vec2 = (local * radius) + center()
-
-    override fun getAngMass(mass: Float): Float = MathUtils.PI * 0.5f * radius * radius
+//    override fun toWorld(local: Vec2): Vec2 = (local * radius) + center()
 
     // Circle vs Point
 
@@ -93,14 +87,14 @@ class CircleCollider(radius: Float) : Collider2D() {
 
     override fun getCollisionInfo(collider: Collider2D?): Manifold? {
         return when (collider) {
-            is CircleCollider -> getCollisionInfo(collider)
+            is CircleCollider2D -> getCollisionInfo(collider)
             is PolygonCollider2D -> getCollisionInfo(collider)
             else -> null
         }
     }
 
     // Circle vs Circle: 1 contact point
-    private fun getCollisionInfo(circle: CircleCollider): Manifold? {
+    private fun getCollisionInfo(circle: CircleCollider2D): Manifold? {
         val sumRadii = this.radius + circle.radius
         val distance = circle.center() - this.center()
         if (distance.lenSq() >= sumRadii * sumRadii) // Circles too far away
