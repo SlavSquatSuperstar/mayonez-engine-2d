@@ -1,27 +1,29 @@
-# MayonezEngine
+# Mayonez Engine
 
 The 2D Java game engine to fit your Slavic needs!*†
 
+This project was developed using macOS 12.x Monterey (Intel). This app has not been tested on any other systems.
+
 ### Instructions for End-Users:
 
-- Download the latest Java version: [JRE 17](https://jdk.java.net/17/)
+- Download the latest Java version: [JRE 17+](https://www.oracle.com/java/technologies/downloads/)
 - To check if Java is installed, enter 'java --version' inside a command line window.
 - Download the repository, drag 'run.sh' (Mac/Linux) or 'run.bat' (Windows) from the extracted folder to a command line
-  window,
-  and press enter.
+  window, and press enter.
 
 ### Instructions for Developers:
 
-Note: this project was developed using macOS Big Sur (Intel).
-
-- Java Version: [Oracle JDK 17](https://jdk.java.net/17/) or [Adoptium OpenJDK 17](https://adoptium.net/)
+- Java Version: [Oracle OpenJDK 17+](https://jdk.java.net/) or [Eclipse Temurin 17+](https://adoptium.net/)
 - Kotlin Version: [1.7.0](https://github.com/JetBrains/kotlin/releases/tag/v1.7.0)
-- Recommended IDE: [Intellij IDEA 2022.1+](https://www.jetbrains.com/idea/download/)
-- Build System: [Gradle 7.4+](https://gradle.org/install/)
+- Recommended IDE: [Intellij IDEA 2022.1.x+](https://www.jetbrains.com/idea/download/)
+- Build System: [Gradle 7.4.x+](https://gradle.org/install/)
+    - Utilizes [Gradle Shadow Plugin](https://github.com/johnrengelman/shadow)
 - Dependencies (bundled in JAR)
-    - [LWJGL (user OS specific) with JOML](https://www.lwjgl.org/customize)
+    - [LWJGL](https://www.lwjgl.org/customize) (user OS & architecture specific)
+      with [JOML](https://joml-ci.github.io/JOML/)
+      - Libraries: GLFW, OpenGL, STB
     - [Kotlin Standard Library](https://kotlinlang.org/docs/getting-started.html)
-    - [JSON in Java (org.json)](https://github.com/stleary/JSON-java)
+    - [JSON in Java](https://github.com/stleary/JSON-java) (org.json)
     - [Apache Commons Lang](https://commons.apache.org/proper/commons-lang/)
     - [Apache Commons IO](https://commons.apache.org/proper/commons-io/)
     - [Java Reflections](https://github.com/ronmamo/reflections)

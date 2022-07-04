@@ -11,53 +11,57 @@ import java.awt.event.KeyEvent
  * @author SlavSquatSuperstar
  */
 // TODO game loop / callback methods shouldn't be accessible from API (called statically)
-// isKeyPressed() works in window begin frame, but not game update -> query too slow?
 object KeyInput : KeyAdapter() {
 
     // Key Fields
-    private val keys = BooleanArray(350) // tapped once
-    private val keysLast = BooleanArray(350) // continuously held
+    private val keys = HashMap<Int, InputState>()
 
     // Game Loop Methods
-
     @JvmStatic
     fun endFrame() {
-        keysLast.fill(false)
+//        keysHeld.fill(false)
     }
 
-    // Keyboard Callbacks
+    /* Keyboard Callbacks */
 
     @JvmStatic
     @Suppress("unused")
     fun keyCallback(window: Long, key: Int, scancode: Int, action: Int, mods: Int) {
-        when (action) {
-            GLFW_PRESS -> setKey(key, true)
-            GLFW_RELEASE -> setKey(key, false);
+        if (action == GLFW_PRESS) {
+            if (isKeyReleased(key)) setKey(key, InputState.PRESSED)
+            else setKey(key, InputState.HELD)
+        } else if (action == GLFW_RELEASE) {
+            setKey(key, InputState.RELEASED)
         }
     }
 
-    override fun keyPressed(e: KeyEvent) {
-        if (!keyDown(e.keyCode)) setKey(e.keyCode, true) // only register press if not down
+    override fun keyPressed(e: KeyEvent) { // Activates when ever a key is down
+        val key = e.keyCode
+        if (isKeyReleased(key)) setKey(key, InputState.PRESSED) // New key press -> set as pressed
+        else setKey(key, InputState.HELD) // Continuous key press -> set as held
     }
 
     override fun keyReleased(e: KeyEvent) {
-        setKey(e.keyCode, false)
+        setKey(e.keyCode, InputState.RELEASED) // Set as released
     }
 
-    private fun setKey(keyCode: Int, isDown: Boolean) {
-        if (keyCode < keys.size) {
-            keysLast[keyCode] = isDown
-            keys[keyCode] = isDown
-        }
+    private fun setKey(keyCode: Int, state: InputState) {
+        keys[keyCode] = state
     }
 
-    // Keyboard Getters
+    /* Keyboard Getters */
+
+    private fun isKeyReleased(keyCode: Int): Boolean = (keys[keyCode] == InputState.RELEASED || keys[keyCode] == null)
+
+    private fun isKeyPressed(keyCode: Int): Boolean = keys[keyCode] == InputState.PRESSED
+
+    private fun isKeyHeld(keyCode: Int): Boolean = keys[keyCode] == InputState.HELD
 
     @JvmStatic
-    fun keyDown(keyCode: Int): Boolean = keys[keyCode]
+    fun keyDown(keyCode: Int): Boolean = isKeyHeld(keyCode) || isKeyPressed(keyCode)
 
     @JvmStatic
-    fun keyPressed(keyCode: Int): Boolean = keysLast[keyCode]
+    fun keyPressed(keyCode: Int): Boolean = isKeyPressed(keyCode) && !isKeyHeld(keyCode)
 
     /**
      * Returns whether any of the keys associated with the specified [KeyMapping] is continuously held down.

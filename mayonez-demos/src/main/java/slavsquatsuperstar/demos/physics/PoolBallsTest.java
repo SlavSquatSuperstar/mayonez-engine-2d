@@ -17,7 +17,7 @@ import slavsquatsuperstar.mayonez.scripts.MoveMode;
  * Pool balls weigh ~160-170 g (0.165 kg) are ~57 mm (0.057 m) wide. Using an 80:1 scale, the in-game balls weigh 6.6 kg
  * and are 4.65 m wide
  * <p>
- * Source: https://en.wikipedia.org/wiki/Billiard_ball
+ * Source: <a href="https://en.wikipedia.org/wiki/Billiard_ball">Wikipedia</a>
  */
 public class PoolBallsTest extends PhysicsTestScene {
 

@@ -1,6 +1,7 @@
 package slavsquatsuperstar.mayonez.input
 
-import org.lwjgl.glfw.GLFW
+import org.lwjgl.glfw.GLFW.GLFW_PRESS
+import org.lwjgl.glfw.GLFW.GLFW_RELEASE
 import slavsquatsuperstar.math.Vec2
 import slavsquatsuperstar.mayonez.Mayonez
 import java.awt.event.MouseAdapter
@@ -25,8 +26,9 @@ object MouseInput : MouseAdapter() {
     private var scroll = Vec2()
 
     // Mouse Button Fields
-    private var buttons = BooleanArray(9)
-    private var buttonsLast = BooleanArray(9)
+    private val buttons = HashMap<Int, InputState>()
+//    private var buttons = BooleanArray(9)
+//    private var buttonsLast = BooleanArray(9)
 
     @JvmStatic
     // TODO isDragging() method
@@ -39,12 +41,11 @@ object MouseInput : MouseAdapter() {
         private set
 
     // Game Loop Methods
-
     @JvmStatic
     fun endFrame() {
         setMouseDisp(0, 0)
         setScrollPos(0, 0)
-        buttonsLast.fill(false)
+//        buttonsLast.fill(false)
     }
 
     /* Callback Methods */
@@ -53,36 +54,35 @@ object MouseInput : MouseAdapter() {
 
     @JvmStatic
     fun mouseButtonCallback(window: Long, button: Int, action: Int, mods: Int) {
-        if (action == GLFW.GLFW_PRESS) {
-            setButton(button, true)
-        } else if (action == GLFW.GLFW_RELEASE) {
-            setButton(button, false)
+        if (action == GLFW_PRESS) {
+            if (isButtonReleased(button)) setButton(button, InputState.PRESSED)
+            else setButton(button, InputState.HELD)
+        } else if (action == GLFW_RELEASE) {
+            setButton(button, InputState.RELEASED)
             pressed = false
         }
     }
 
     override fun mousePressed(e: MouseEvent) {
         val button = e.button
-        setButton(button, true)
+        if (isButtonReleased(button)) setButton(button, InputState.PRESSED) // New button press -> set as pressed
+        else setButton(button, InputState.HELD) // Continuous button press -> set as held
+        pressed = true
         clicks = e.clickCount
     }
 
     override fun mouseReleased(e: MouseEvent) {
         val button = e.button
-        setButton(button, false)
+        setButton(button, InputState.RELEASED)
         setMouseDisp(0, 0)
         clicks = 0
     }
 
-    private fun setButton(button: Int, isDown: Boolean) {
-        if (button < buttons.size) {
-            buttons[button] = isDown
-            buttonsLast[button] = isDown
-            pressed = isDown
-        }
+    private fun setButton(button: Int, state: InputState) {
+        buttons[button] = state
     }
 
-    // Mouse Movement Callbacks
+    /* Mouse Movement Callbacks */
 
     @JvmStatic
     fun mousePosCallback(window: Long, xPos: Double, yPos: Double) {
@@ -108,7 +108,7 @@ object MouseInput : MouseAdapter() {
         mouseDisp.set(dx.toFloat(), dy.toFloat())
     }
 
-    // Mouse Scroll Callbacks
+    /* Mouse Scroll Callbacks */
 
     @JvmStatic
     @SuppressWarnings("unused")
@@ -124,21 +124,26 @@ object MouseInput : MouseAdapter() {
         scroll.set(scrollX.toFloat(), scrollY.toFloat())
     }
 
-    /* Getter Methods */
+    /* Mouse Button Getters */
 
-    // Mouse Button Getters
+    private fun isButtonReleased(button: Int): Boolean =
+        (buttons[button] == InputState.RELEASED || buttons[button] == null)
+
+    private fun isButtonPressed(button: Int): Boolean = buttons[button] == InputState.PRESSED
+
+    private fun isButtonHeld(button: Int): Boolean = buttons[button] == InputState.HELD
 
     @JvmStatic
-    fun buttonDown(button: Int): Boolean = buttons[button]
+    fun buttonDown(button: Int): Boolean = isButtonHeld(button) || isButtonPressed(button)
 
     @JvmStatic
-    fun buttonPressed(button: Int): Boolean = buttonsLast[button]
+    fun buttonPressed(button: Int): Boolean = isButtonPressed(button)
 
     @JvmStatic
     fun buttonDown(buttonName: String): Boolean {
         for (b in MouseMapping.values())
             if (b.toString().equals(buttonName, ignoreCase = true))
-                return buttons[b.button]
+                return buttonDown(b.button)
         return false
     }
 
@@ -146,11 +151,11 @@ object MouseInput : MouseAdapter() {
     fun buttonPressed(buttonName: String): Boolean {
         for (b in MouseMapping.values())
             if (b.toString().equals(buttonName, ignoreCase = true))
-                return buttonsLast[b.button]
+                return buttonPressed(b.button)
         return false
     }
 
-    // Mouse Position Getters
+    /* Mouse Position Getters */
 
     @JvmStatic
     fun getScreenPos(): Vec2 = mousePos
@@ -173,7 +178,7 @@ object MouseInput : MouseAdapter() {
     @JvmStatic
     fun getWorldY(): Float = getWorldPos().y
 
-    // Mouse Displacement Getters
+    /* Mouse Displacement Getters */
 
     @JvmStatic
     fun getScreenDisp(): Vec2 = mouseDisp
