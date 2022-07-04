@@ -12,6 +12,8 @@ import slavsquatsuperstar.mayonez.fileio.GLTexture;
 import slavsquatsuperstar.mayonez.graphics.GLCamera;
 import slavsquatsuperstar.mayonez.graphics.GLSprite;
 import slavsquatsuperstar.mayonez.graphics.GLSpriteSheet;
+import slavsquatsuperstar.mayonez.input.KeyInput;
+import slavsquatsuperstar.mayonez.input.MouseInput;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
 import slavsquatsuperstar.mayonez.physics2d.colliders.BoxCollider2D;
 import slavsquatsuperstar.mayonez.scripts.DragAndDrop;
@@ -66,6 +68,19 @@ public class GLRendererTest extends Scene {
         }.setZIndex(1));
 
         for (int i = 0; i < 8; i++) addObject(createObject("Goomba", 14));
+    }
+
+    @Override
+    protected void onUserUpdate(float dt) {
+        if (KeyInput.keyPressed("space"))
+            System.out.println("pressed");
+        else if (KeyInput.keyDown("space"))
+            System.out.println("held");
+
+        if (MouseInput.buttonPressed("left mouse"))
+            System.out.println("pressed");
+        else if (MouseInput.buttonDown("left mouse"))
+            System.out.println("held");
     }
 
     private GameObject createObject(String name, int spriteIndex) {

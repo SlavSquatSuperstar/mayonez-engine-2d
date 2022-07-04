@@ -136,7 +136,7 @@ public final class GLWindow implements Window {
     }
 
     public void endFrame() {
-        KeyInput.endFrame();
+        KeyInput.endFrame(); // don't need, use key callback instead
         MouseInput.endFrame();
     }
 

@@ -1,6 +1,7 @@
 package slavsquatsuperstar.mayonez.input
 
-import org.lwjgl.glfw.GLFW.*
+import org.lwjgl.glfw.GLFW.GLFW_PRESS
+import org.lwjgl.glfw.GLFW.GLFW_RELEASE
 import slavsquatsuperstar.math.Vec2
 import slavsquatsuperstar.mayonez.Mayonez
 import java.awt.event.MouseAdapter
@@ -25,9 +26,9 @@ object MouseInput : MouseAdapter() {
     private var scroll = Vec2()
 
     // Mouse Button Fields
-    private val buttons = HashMap<Int, InputState>()
-//    private var buttons = BooleanArray(9)
-//    private var buttonsLast = BooleanArray(9)
+    private val buttonsDown = HashMap<Int, Boolean?>() // if mouse listener detects this button
+    private val buttonsPressed = HashMap<Int, Boolean?>() // if button is pressed this frame
+    private val buttonsHeld = HashMap<Int, Boolean?>() // if button is continuously held down
 
     @JvmStatic
     // TODO isDragging() method
@@ -42,11 +43,25 @@ object MouseInput : MouseAdapter() {
     // Game Loop Methods
     @JvmStatic
     fun endFrame() {
+        // Update mouse input
+        for (b in buttonsDown.keys) {
+            if (buttonsDown[b] == true) {
+                if (buttonsPressed[b] != true && buttonsHeld[b] != true) { // New button press
+                    buttonsPressed[b] = true
+                } else if (buttonsPressed[b] == true) { // Continued button press
+                    buttonsPressed[b] = false
+                    buttonsHeld[b] = true
+                }
+            } else { // Released button
+                buttonsPressed[b] = false
+                buttonsHeld[b] = false
+            }
+
+        }
+
+        /// Reset motion
         setMouseDisp(0, 0)
         setScrollPos(0, 0)
-//        for (b in buttons.keys) {
-//            if (buttons[b] == InputState.PRESSED) buttons[b] = InputState.HELD
-//        }
     }
 
     /* Mouse Button Callbacks */
@@ -54,30 +69,25 @@ object MouseInput : MouseAdapter() {
     @JvmStatic
     fun mouseButtonCallback(window: Long, button: Int, action: Int, mods: Int) {
         when (action) {
-            GLFW_PRESS -> setButton(button, InputState.PRESSED)
-            GLFW_REPEAT -> setButton(button, InputState.HELD)
-            GLFW_RELEASE -> setButton(button, InputState.RELEASED)
+            GLFW_PRESS -> buttonsDown[button] = true
+            GLFW_RELEASE -> buttonsDown[button] = false
         }
-        pressed = buttons[button] != InputState.RELEASED
+        pressed = buttonsDown[button] == true
     }
 
     override fun mousePressed(e: MouseEvent) {
-        val button = e.button
-        if (isButtonReleased(button)) setButton(button, InputState.PRESSED) // New button press -> set as pressed
-        else setButton(button, InputState.HELD) // Continuous button press -> set as held
+        println("pressed")
+        buttonsDown[e.button] = true
         pressed = true
         clicks = e.clickCount
     }
 
     override fun mouseReleased(e: MouseEvent) {
-        val button = e.button
-        setButton(button, InputState.RELEASED)
+        println("released")
+        buttonsDown[e.button] = false
         setMouseDisp(0, 0)
+        pressed = false
         clicks = 0
-    }
-
-    private fun setButton(button: Int, state: InputState) {
-        buttons[button] = state
     }
 
     /* Mouse Movement Callbacks */
@@ -124,18 +134,11 @@ object MouseInput : MouseAdapter() {
 
     /* Mouse Button Getters */
 
-    private fun isButtonReleased(button: Int): Boolean =
-        (buttons[button] == InputState.RELEASED || buttons[button] == null)
-
-    private fun isButtonPressed(button: Int): Boolean = buttons[button] == InputState.PRESSED
-
-    private fun isButtonHeld(button: Int): Boolean = buttons[button] == InputState.HELD
+    @JvmStatic
+    fun buttonDown(button: Int): Boolean = buttonsHeld[button] == true || buttonsPressed[button] == true
 
     @JvmStatic
-    fun buttonDown(button: Int): Boolean = isButtonHeld(button) || isButtonPressed(button)
-
-    @JvmStatic
-    fun buttonPressed(button: Int): Boolean = isButtonPressed(button)
+    fun buttonPressed(button: Int): Boolean = buttonsPressed[button] == true
 
     @JvmStatic
     fun buttonDown(buttonName: String): Boolean {

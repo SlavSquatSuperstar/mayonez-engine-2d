@@ -10,59 +10,73 @@ import java.awt.event.KeyEvent
  * @author SlavSquatSuperstar
  */
 // TODO game loop / callback methods shouldn't be accessible from API (called statically)
+@Suppress("unused")
 object KeyInput : KeyAdapter() {
 
     // Key Fields
-    private val keys = HashMap<Int, InputState>()
+    // represent a bit field with held, pressed, and down bits
+    private val keysDown = HashMap<Int, Boolean?>() // if key listener detects this key
+    private val keysPressed = HashMap<Int, Boolean?>() // if key was just pressed in this frame
+    private val keysHeld = HashMap<Int, Boolean?>() // if key is continuously held down
 
     // Game Loop Methods
     @JvmStatic
-    fun endFrame() {
-//        for (k in keys.keys)  {
-//            if (keys[k] == InputState.PRESSED) keys[k] = InputState.HELD
-//        }
+    fun endFrame() { // TODO rename method?
+        // Update key input
+        for (k in keysDown.keys) {
+            if (keysDown[k] == true) {
+                if (keysPressed[k] != true && keysHeld[k] != true) { // New key press
+                    keysPressed[k] = true
+                } else if (keysPressed[k] == true) { // Continued key press
+                    keysPressed[k] = false
+                    keysHeld[k] = true
+                }
+            } else { // Released key
+                keysPressed[k] = false
+                keysHeld[k] = false
+            }
+        }
     }
 
     /* Keyboard Callbacks */
 
     @JvmStatic
-    @Suppress("unused")
     fun keyCallback(window: Long, key: Int, scancode: Int, action: Int, mods: Int) {
         when (action) {
-            GLFW_PRESS -> setKey(key, InputState.PRESSED)
-            GLFW_REPEAT -> setKey(key, InputState.HELD)
-            GLFW_RELEASE -> setKey(key, InputState.RELEASED)
+            // TODO GL double pressing still occurs
+            GLFW_PRESS -> {
+                keysDown[key] = true
+//                keysPressed[key] = true
+//                keysHeld[key] = false
+            }
+            GLFW_REPEAT -> {
+                keysDown[key] = true
+//                keysPressed[key] = false
+//                keysHeld[key] = true
+            }
+            GLFW_RELEASE -> {
+                keysDown[key] = false
+//                keysPressed[key] = false
+//                keysHeld[key] = false
+            }
         }
     }
 
     override fun keyPressed(e: KeyEvent) { // Activates when ever a key is down
-        println("pressed")
-        val key = e.keyCode
-        if (isKeyReleased(key)) setKey(key, InputState.PRESSED) // New key press -> set as pressed
-        else setKey(key, InputState.HELD) // Continuous key press -> set as held
+        keysDown[e.keyCode] = true
     }
 
     override fun keyReleased(e: KeyEvent) {
-        setKey(e.keyCode, InputState.RELEASED) // Set as released
-    }
-
-    private fun setKey(keyCode: Int, state: InputState) {
-        keys[keyCode] = state
+        keysDown[e.keyCode] = false
     }
 
     /* Keyboard Getters */
 
-    private fun isKeyReleased(keyCode: Int): Boolean = (keys[keyCode] == InputState.RELEASED || keys[keyCode] == null)
-
-    private fun isKeyPressed(keyCode: Int): Boolean = keys[keyCode] == InputState.PRESSED
-
-    private fun isKeyHeld(keyCode: Int): Boolean = keys[keyCode] == InputState.HELD
+    @JvmStatic
+    fun keyDown(keyCode: Int): Boolean = keysHeld[keyCode] == true || keysPressed[keyCode] == true
 
     @JvmStatic
-    fun keyDown(keyCode: Int): Boolean = isKeyHeld(keyCode) || isKeyPressed(keyCode)
-
-    @JvmStatic
-    fun keyPressed(keyCode: Int): Boolean = isKeyPressed(keyCode) && !isKeyHeld(keyCode)
+    fun keyPressed(keyCode: Int): Boolean = keysPressed[keyCode] == true
 
     /**
      * Returns whether any of the keys associated with the specified [KeyMapping] is continuously held down.

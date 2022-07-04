@@ -7,6 +7,7 @@ import slavsquatsuperstar.mayonez.Preferences;
 import slavsquatsuperstar.mayonez.Scene;
 import slavsquatsuperstar.mayonez.graphics.DebugDraw;
 import slavsquatsuperstar.mayonez.input.KeyInput;
+import slavsquatsuperstar.mayonez.input.MouseInput;
 import slavsquatsuperstar.mayonez.physics2d.PhysicsMaterial;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
 import slavsquatsuperstar.mayonez.physics2d.colliders.BoxCollider2D;
@@ -26,6 +27,8 @@ public abstract class PhysicsTestScene extends Scene {
     static final PhysicsMaterial STICKY_MATERIAL = new PhysicsMaterial(1f, 1f, 0f);
     final float DENSITY = 1f;
     final int NUM_SHAPES;
+
+    private boolean enabledGravity = false;
 
     public PhysicsTestScene(String name, int numShapes) {
         super(name, Preferences.getScreenWidth(), Preferences.getScreenHeight(), 10);
@@ -52,8 +55,21 @@ public abstract class PhysicsTestScene extends Scene {
 
     @Override
     protected void onUserUpdate(float dt) {
-        if (KeyInput.keyDown("up")) setGravity(new Vec2());
-        else if (KeyInput.keyDown("down")) setGravity(new Vec2(0, -18));
+        if (KeyInput.keyPressed("space")) {
+//            System.out.println("pressed");
+            enabledGravity = !enabledGravity;
+        } else if (KeyInput.keyDown("space")) {
+//            System.out.println("held");
+        }
+
+        if (MouseInput.buttonPressed("left mouse")) {
+            System.out.println("pressed");
+        } else if (MouseInput.buttonDown("left mouse")) {
+            System.out.println("held");
+        }
+
+        if (enabledGravity) setGravity(new Vec2(0, -18));
+        else setGravity(new Vec2());
     }
 
     protected final GameObject createCircle(float radius, Vec2 position, PhysicsMaterial material) {
