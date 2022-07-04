@@ -22,7 +22,7 @@ public class JRendererTest extends Scene {
     private final JSpriteSheet sprites;
 
     public JRendererTest() {
-        super("Renderer Test Scene", Preferences.SCREEN_WIDTH, Preferences.SCREEN_HEIGHT, 32);
+        super("Renderer Test Scene", Preferences.getScreenWidth(), Preferences.getScreenHeight(), 32);
         sprites = new JSpriteSheet("assets/textures/spritesheet.png", 16, 16, 26, 0);
         setGravity(new Vec2());
     }

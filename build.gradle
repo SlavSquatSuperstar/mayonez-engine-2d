@@ -20,7 +20,7 @@ description = 'The root project for Mayonez Engine that contains all modules'
 
 allprojects {
     group 'slavsquatsuperstar'
-    version '0.7.3-pre7'
+    version '0.7.3-pre8'
 }
 
 // Custom Settings

@@ -6,6 +6,7 @@ import org.reflections.util.ClasspathHelper
 import org.reflections.util.ConfigurationBuilder
 import slavsquatsuperstar.mayonez.Logger.trace
 import slavsquatsuperstar.mayonez.Logger.warn
+import slavsquatsuperstar.mayonez.Mayonez
 import java.io.*
 import java.net.MalformedURLException
 import java.net.URL
@@ -22,6 +23,14 @@ object Assets {
 
     private val ASSETS = HashMap<String, Asset>()
 
+    init {
+        if (!Mayonez.INIT_ASSETS) Mayonez.init()
+    }
+
+    internal fun getCurrentDirectory() {
+        trace("Assets: Current directory at ${File("./").absolutePath}")
+    }
+
     /**
      * Recursively searches a resource directory inside the JAR and adds all assets.
      *
@@ -35,7 +44,7 @@ object Assets {
         )
         val resources = reflections.getResources(Pattern.compile(".*\\.*"))
         resources.forEach { createAsset(it, AssetType.CLASSPATH) } // Create an asset from each path
-        trace("Assets: Created ${resources.size} assets inside $directory")
+        trace("Assets: Created ${resources.size} resources inside \"$directory\"")
     }
 
     /**

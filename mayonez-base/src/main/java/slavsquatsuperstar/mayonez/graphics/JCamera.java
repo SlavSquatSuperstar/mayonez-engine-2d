@@ -22,7 +22,7 @@ public final class JCamera extends Script implements Camera {
     private Script keepInScene, dragAndDrop; // Reference to parent scripts
 
     public JCamera(Vec2 screenSize, float cellSize) {
-        size = new Vec2(Preferences.SCREEN_WIDTH, Preferences.SCREEN_HEIGHT).div(cellSize);
+        size = new Vec2(Preferences.getScreenWidth(), Preferences.getScreenHeight()).div(cellSize);
         minPos = new Vec2(); //minY = (int) (-28f / cellSize); // account for the bar on top of the window
         maxPos = screenSize;
     }

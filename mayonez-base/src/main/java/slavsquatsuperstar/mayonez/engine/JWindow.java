@@ -79,7 +79,7 @@ public final class JWindow extends JFrame implements Window {
     private void initGraphics() {
         if (!isVisible()) return;
         try {
-            createBufferStrategy(Preferences.BUFFER_COUNT);
+            createBufferStrategy(Preferences.getBufferCount());
             bs = getBufferStrategy();
         } catch (IllegalStateException e) {
             Logger.log("Engine: Error initializing window graphics; trying again next frame.");

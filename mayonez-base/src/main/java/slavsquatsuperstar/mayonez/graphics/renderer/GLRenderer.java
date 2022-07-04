@@ -17,7 +17,7 @@ import java.util.List;
  */
 public final class GLRenderer extends Renderer {
 
-    private final int MAX_BATCH_SIZE = Preferences.MAX_BATCH_SIZE;
+    private final int MAX_BATCH_SIZE = Preferences.getMaxBatchSize();
     private final List<RenderBatch> batches;
     private GLCamera camera;
     private boolean checkForDestroyed = false; // Remove sprites with deleted game objects

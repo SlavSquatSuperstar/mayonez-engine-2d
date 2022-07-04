@@ -29,7 +29,7 @@ public class Grid extends Component {
 
         // Which world coordinates are we at?
         Vec2 start = cam.mul(gridSize);
-        Vec2 end = start.add(new Vec2(Preferences.SCREEN_WIDTH, Preferences.SCREEN_HEIGHT)).add(gridSize);
+        Vec2 end = start.add(new Vec2(Preferences.getScreenWidth(), Preferences.getScreenHeight())).add(gridSize);
         // Either bottom of screen or top of ground
 
         // Vertical Lines

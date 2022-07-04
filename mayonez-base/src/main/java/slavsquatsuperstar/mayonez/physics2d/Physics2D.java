@@ -2,6 +2,7 @@ package slavsquatsuperstar.mayonez.physics2d;
 
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.GameObject;
+import slavsquatsuperstar.mayonez.Preferences;
 import slavsquatsuperstar.mayonez.Scene;
 import slavsquatsuperstar.mayonez.physics2d.colliders.Collider2D;
 import slavsquatsuperstar.mayonez.physics2d.collision.Manifold;
@@ -21,7 +22,7 @@ import java.util.List;
 public final class Physics2D {
 
     public final static float GRAVITY_CONSTANT = 9.8f;
-    public final static int IMPULSE_ITERATIONS = 1;
+    public final static int IMPULSE_ITERATIONS = Preferences.getImpulseIterations();
 
     // Collisions
     private final List<Rigidbody2D> bodies;

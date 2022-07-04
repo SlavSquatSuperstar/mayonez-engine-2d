@@ -10,57 +10,77 @@ import slavsquatsuperstar.mayonez.fileio.JSONFile
  * @author SlavSquatSuperstar
  */
 // TODO create default compile tile constants
-object Preferences {
-
-    private val PREFERENCES: JSONFile
+object Preferences : GameConfig() {
 
     init {
-        // Don't set preferences until after file has been read to prevent default values
-        if (!Mayonez.INIT_ASSETS) Mayonez.init()
-        PREFERENCES = Assets.createAsset("preferences.json", AssetType.CLASSPATH, JSONFile::class.java)!!
+        copyFrom(Defaults)
     }
 
-    // Window
-    @JvmField
-    val TITLE: String = PREFERENCES.getStr("title")
+    internal fun readPreferences() {
+        if (!Mayonez.INIT_ASSETS) Mayonez.init()
+        if (Mayonez.INIT_PREFERENCES) return
 
-    @JvmField
-    val VERSION: String = PREFERENCES.getStr("version")
+        // Don't set preferences until after file has been read to prevent default values and nulls
+        val preferenceFile = Assets.createAsset("preferences.json", AssetType.CLASSPATH, JSONFile::class.java)!!
 
-    @JvmField
-    val SCREEN_WIDTH: Int = PREFERENCES.getInt("width")
+        // Read preferences file and update game configuration
+        loadFrom(preferenceFile.json)
+    }
 
-    @JvmField
-    val SCREEN_HEIGHT: Int = PREFERENCES.getInt("height")
+    /* Window */
+    @JvmStatic
+    val title: String
+        get() = getString("title")
 
-    // Logging
-    @JvmField
-    val SAVE_LOGS: Boolean = PREFERENCES.getBool("save_logs")
+    @JvmStatic
+    val version: String
+        get() = getString("version")
 
-    @JvmField
-    val LOGS_DIRECTORY: String = PREFERENCES.getStr("logs_directory")
+    @JvmStatic
+    val screenWidth: Int
+        get() = getInt("screen_width")
 
-    @JvmField
-    val LOG_LEVEL: Int = PREFERENCES.getInt("log_level")
+    @JvmStatic
+    val screenHeight: Int
+        get() = getInt("screen_height")
 
-    // Renderer
-    @JvmField
-    val BUFFER_COUNT = PREFERENCES.getInt("buffers")
+    /* Logging */
+    @JvmStatic
+    val logLevel: Int
+        get() = getInt("log_level")
 
-    @JvmField
-    val FPS: Int = PREFERENCES.getInt("fps")
+    @JvmStatic
+    val saveLogs: Boolean
+        get() = getBoolean("save_logs")
 
-    @JvmField
-    val MAX_BATCH_SIZE: Int = PREFERENCES.getInt("max_batch_size")
+    @JvmStatic
+    val logDirectory: String
+        get() = getString("log_directory")
 
-    @JvmField
-    val MAX_TEXTURE_SLOTS: Int = PREFERENCES.getInt("max_texture_slots")
+    /* File I/O */
+    @JvmStatic
+    val fileCharset: String = getString("file_charset")
 
-    // Physics
-    @JvmField
-    val IMPULSE_ITERATIONS: Int = PREFERENCES.getInt("physics_iterations")
+    /* Renderer */
+    @JvmStatic
+    val bufferCount: Int
+        get() = getInt("buffers")
 
-    // File I/O
-    const val CHARSET: String = "UTF-8"
+    @JvmStatic
+    val FPS: Int
+        get() = getInt("fps")
+
+    @JvmStatic
+    val maxBatchSize: Int
+        get() = getInt("max_batch_size")
+
+    @JvmStatic
+    val maxTextureSlots: Int
+        get() = getInt("max_texture_slots")
+
+    /* Physics */
+    @JvmStatic
+    val impulseIterations: Int
+        get() = getInt("physics_iterations")
 
 }

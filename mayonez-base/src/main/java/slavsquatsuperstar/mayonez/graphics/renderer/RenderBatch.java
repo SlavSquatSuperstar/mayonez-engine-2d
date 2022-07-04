@@ -40,7 +40,7 @@ public class RenderBatch {
     // Sprite Renderer Fields
     private GLSprite[] sprites;
     private int numSprites = 0;
-    private int[] texSlots = new int[Preferences.MAX_TEXTURE_SLOTS]; // support multiple textures in batch
+    private int[] texSlots = new int[Preferences.getMaxTextureSlots()]; // support multiple textures in batch
 
     // Renderer Data
     private final List<GLTexture> textures;

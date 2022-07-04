@@ -15,7 +15,7 @@ import java.awt.*;
 public class LevelEditor extends Scene {
 
     public LevelEditor() {
-        super("Level Editor", Preferences.SCREEN_WIDTH, Preferences.SCREEN_HEIGHT, 42);
+        super("Level Editor", Preferences.getScreenWidth(), Preferences.getScreenHeight(), 42);
         setGravity(new Vec2());
     }
 

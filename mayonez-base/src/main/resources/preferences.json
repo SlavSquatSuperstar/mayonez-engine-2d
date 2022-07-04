@@ -1,14 +1,15 @@
 {
 	"title": "Mayonez Engine",
-	"version": "v0.7.3-pre7",
+	"version": "v0.7.3-pre8",
 	"width": 1080,
 	"height": 720,
+	"log_level": "1",
 	"save_logs": true,
 	"log_directory": "logs/",
-	"log_level": "1",
+	"file_charset": "utf-8",
 	"buffers": 2,
 	"fps": 60,
-	"physics_iterations": 8,
-	"max_batch_size": 1000,
-	"max_texture_slots": 8
+	"max_batch_size": 100,
+	"max_texture_slots": 8,
+	"physics_iterations": 4
 }

@@ -39,18 +39,20 @@ public class JSONTests {
 
     @Test
     public void getJSONPropertiesSuccess() {
-        assertTrue(json.getBool("in_progress"));
-        assertTrue(json.getBool("uses_dependencies"));
+        assertTrue(json.getBoolean("in_progress"));
+        assertTrue(json.getBoolean("uses_dependencies"));
+
         assertEquals("Java", json.getArray("languages").get(0));
-        assertEquals(0, json.getInt("version"));
-        assertEquals("Mayonez Engine", json.getStr("name"));
-        assertTrue(json.getBool("in_progress"));
-        assertNull(json.getObj(null));
+        assertEquals("Mayonez Engine", json.getString("name"));
+        assertEquals(0.6f, json.getFloat("version"), 0.0f);
+
     }
 
     @Test
-    public void getJSONPropertiesFail() {
-        assertNull(json.getStr("version"));
+    public void getJSONPropertiesDefaultValues() {
+        assertEquals(0, json.getInt("version"));
+        assertNull(json.getObject(null));
+        assertEquals(json.getString("version"), "");
     }
 
 }

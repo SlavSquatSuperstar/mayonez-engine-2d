@@ -28,7 +28,7 @@ public final class GLCamera implements Camera {
 
     public void adjustProjection() {
         projectionMatrix.identity();
-        projectionMatrix.ortho(0, Preferences.SCREEN_WIDTH, 0, Preferences.SCREEN_HEIGHT, nearPlane, farPlane);
+        projectionMatrix.ortho(0, Preferences.getScreenWidth(), 0, Preferences.getScreenHeight(), nearPlane, farPlane);
     }
 
     public Matrix4f getViewMatrix() {

@@ -28,7 +28,7 @@ public abstract class PhysicsTestScene extends Scene {
     final int NUM_SHAPES;
 
     public PhysicsTestScene(String name, int numShapes) {
-        super(name, Preferences.SCREEN_WIDTH, Preferences.SCREEN_HEIGHT, 10);
+        super(name, Preferences.getScreenWidth(), Preferences.getScreenHeight(), 10);
         setBackground(Colors.WHITE);
         NUM_SHAPES = numShapes;
         setGravity(new Vec2());

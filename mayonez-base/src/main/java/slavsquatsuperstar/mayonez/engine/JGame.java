@@ -20,12 +20,9 @@ public final class JGame extends GameEngine {
     private final IMGUI imgui;
 
     public JGame() {
-        // Read preferences and initialize logger
-        if (!Mayonez.INSTANCE.getINIT_PREFERENCES()) Mayonez.init();
-
         // Set up the window
-        window = new JWindow(Preferences.TITLE + " " + Preferences.VERSION,
-                Preferences.SCREEN_WIDTH, Preferences.SCREEN_HEIGHT);
+        window = new JWindow(Preferences.getTitle() + " " + Preferences.getVersion(),
+                Preferences.getScreenWidth(), Preferences.getScreenHeight());
 
         // Add input listeners
         window.setKeyInput(KeyInput.INSTANCE);

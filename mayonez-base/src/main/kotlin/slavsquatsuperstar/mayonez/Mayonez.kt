@@ -34,13 +34,6 @@ object Mayonez {
     val time: Float
         get() = (System.nanoTime() - TIME_STARTED) / 1.0E9f
 
-    // Initializer
-    var INIT_ASSETS = false
-        private set
-    var INIT_PREFERENCES = false
-        private set
-    private var INIT_RESOURCES = false
-
     // Game
     @JvmStatic
     var useGL: Boolean? = null
@@ -53,6 +46,16 @@ object Mayonez {
     private var game: GameEngine? = null // Engine config, either Java or GL
     private var started = false
 
+    // Initializer
+    private var INIT_ENGINE = false // Whether the engine and logger have been created
+    var INIT_ASSETS = false // Whether the asset system has been created
+        private set
+    var INIT_PREFERENCES = false // Whether the preferences file has been applied
+        private set
+    var INIT_LOGGER = false
+        private set
+    private var INIT_RESOURCES = false // Whether the core resources have been created
+
     init {
         init()
         TIME_STEP = 1.0f / Preferences.FPS
@@ -61,24 +64,35 @@ object Mayonez {
     // Init Methods
 
     /**
-     * Instantiate singleton objects in the correct order to avoid ExceptionInInitializer errors from circular dependencies.
+     * Instantiate singleton objects in the correct order to avoid initializer errors from circular dependencies.
      */
     @JvmStatic
-    fun init() { // TODO internal
+    internal fun init() { // TODO internal
+        // Create Logger object
+        if (!INIT_ENGINE) {
+            log("Engine: Initializing...")
+            INIT_ENGINE = true
+        }
         // Set up Assets system
         if (!INIT_ASSETS) {
+            Assets.getCurrentDirectory()
             INIT_ASSETS = true
-//            val assets = Assets
         }
-        // Read Preferences
+        // Read preferences file
         if (!INIT_PREFERENCES) {
+            Preferences.readPreferences()
             trace("Engine: Loaded settings from preferences.json")
             INIT_PREFERENCES = true
-//            val prefs = Preferences
         }
+        // Create log file
+        if (!INIT_LOGGER) {
+            Logger.createLogFile()
+            INIT_LOGGER = true
+        }
+        // Create Resources
         if (!INIT_RESOURCES) {
             INIT_RESOURCES = true
-            log("Engine: Starting %s %s", Preferences.TITLE, Preferences.VERSION)
+            log("Engine: Starting %s %s", Preferences.title, Preferences.version)
             trace("Engine: Loading assets")
             Assets.scanResources("assets") // Load all game assets
         }

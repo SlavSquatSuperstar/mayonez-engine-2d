@@ -37,7 +37,7 @@ public class TextFile extends Asset {
      */
     public String readText() {
         try (InputStream in = inputStream()) {
-            return IOUtils.toString(in, Preferences.CHARSET);
+            return IOUtils.toString(in, Preferences.getFileCharset());
         } catch (FileNotFoundException e) {
             Logger.warn("TextFile: File \"%s\" not found");
         } catch (IOException e) {

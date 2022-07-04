@@ -12,7 +12,7 @@ import java.awt.*;
 public class LevelScene extends Scene {
 
     public LevelScene() {
-        super("Level", (int) (Preferences.SCREEN_WIDTH * 1.5), (int) (Preferences.SCREEN_WIDTH * 1.0), 42);
+        super("Level", (int) (Preferences.getScreenWidth() * 1.5), (int) (Preferences.getScreenHeight() * 1.0), 42);
         setBackground(Colors.LIGHT_GRAY);
     }
 
