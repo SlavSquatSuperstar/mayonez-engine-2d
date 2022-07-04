@@ -9,7 +9,7 @@ import slavsquatsuperstar.mayonez.graphics.renderer.Renderable;
  *
  * @author SlavSquatSuperstar
  */
-public sealed interface Window permits JWindow, GLWindow{
+public sealed interface Window permits JWindow, GLWindow {
 
     // Property Getters
 
@@ -18,7 +18,7 @@ public sealed interface Window permits JWindow, GLWindow{
     int getWidth();
 
     int getHeight();
-    
+
     // Resource Management Methods
 
     /**
@@ -33,6 +33,11 @@ public sealed interface Window permits JWindow, GLWindow{
 
     // Game Loop Methods
 
+    /**
+     * Whether the window is still open or has been closed (x-ed out) by the user.
+     *
+     * @return if the window is not closed
+     */
     boolean notClosedByUser();
 
     /**
@@ -53,6 +58,7 @@ public sealed interface Window permits JWindow, GLWindow{
     void endFrame();
 
     // Input Methods
+
     /**
      * Set the keyboard listener for this window.
      *

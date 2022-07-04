@@ -1,5 +1,7 @@
 package slavsquatsuperstar.test;
 
+import slavsquatsuperstar.mayonez.Logger;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,12 +11,12 @@ import java.util.List;
 public class MayonezTest {
 
     public static void main(String[] args) throws Exception {
-//        EventListener myListener1 = event -> Logger.log("Listener 1: %s", event);
-//        EventListener myListener2 = event -> Logger.log("Listener 2 reports: %s", event);
-//        EventGenerator myGenerator = new EventGenerator();
-//        myGenerator.addListener(myListener1);
-//        myGenerator.addListener(myListener2);
-//        myGenerator.createEvent(new Event("Clankers inbound!"));
+        EventListener myListener1 = event -> Logger.log("Listener 1 reports: %s", event);
+        EventListener myListener2 = event -> Logger.log("Listener 2 reports: %s", event);
+        EventGenerator myGenerator = new EventGenerator();
+        myGenerator.addListener(myListener1);
+        myGenerator.addListener(myListener2);
+        myGenerator.createEvent(new Event("Clankers inbound!"));
     }
 
     interface EventListener {
@@ -22,7 +24,7 @@ public class MayonezTest {
     }
 
     static class Event {
-        private String msg;
+        private final String msg;
 
         public Event(String msg) {
             this.msg = msg;
@@ -30,12 +32,12 @@ public class MayonezTest {
 
         @Override
         public String toString() {
-            return msg;
+            return String.format("Event (%s)", msg);
         }
     }
 
     static class EventGenerator {
-        private List<EventListener> listeners = new ArrayList<>();
+        private final List<EventListener> listeners = new ArrayList<>();
 
         public void addListener(EventListener e) {
             listeners.add(e);

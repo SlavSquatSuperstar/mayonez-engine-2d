@@ -1,7 +1,6 @@
 package slavsquatsuperstar.mayonez.input
 
-import org.lwjgl.glfw.GLFW.GLFW_PRESS
-import org.lwjgl.glfw.GLFW.GLFW_RELEASE
+import org.lwjgl.glfw.GLFW.*
 import slavsquatsuperstar.math.Vec2
 import slavsquatsuperstar.mayonez.Mayonez
 import java.awt.event.MouseAdapter
@@ -45,22 +44,21 @@ object MouseInput : MouseAdapter() {
     fun endFrame() {
         setMouseDisp(0, 0)
         setScrollPos(0, 0)
-//        buttonsLast.fill(false)
+//        for (b in buttons.keys) {
+//            if (buttons[b] == InputState.PRESSED) buttons[b] = InputState.HELD
+//        }
     }
 
-    /* Callback Methods */
-
-    // Mouse Button Callbacks
+    /* Mouse Button Callbacks */
 
     @JvmStatic
     fun mouseButtonCallback(window: Long, button: Int, action: Int, mods: Int) {
-        if (action == GLFW_PRESS) {
-            if (isButtonReleased(button)) setButton(button, InputState.PRESSED)
-            else setButton(button, InputState.HELD)
-        } else if (action == GLFW_RELEASE) {
-            setButton(button, InputState.RELEASED)
-            pressed = false
+        when (action) {
+            GLFW_PRESS -> setButton(button, InputState.PRESSED)
+            GLFW_REPEAT -> setButton(button, InputState.HELD)
+            GLFW_RELEASE -> setButton(button, InputState.RELEASED)
         }
+        pressed = buttons[button] != InputState.RELEASED
     }
 
     override fun mousePressed(e: MouseEvent) {

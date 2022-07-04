@@ -65,8 +65,7 @@ public final class JWindow extends JFrame implements Window {
 
     @Override
     public void beginFrame() {
-        if (KeyInput.keyDown("exit"))
-            closedbyUser = true;
+        if (KeyInput.keyDown("exit")) closedbyUser = true;
     }
 
     @Override
@@ -82,7 +81,7 @@ public final class JWindow extends JFrame implements Window {
             createBufferStrategy(Preferences.getBufferCount());
             bs = getBufferStrategy();
         } catch (IllegalStateException e) {
-            Logger.log("Engine: Error initializing window graphics; trying again next frame.");
+            Logger.log("Engine: Error initializing window graphics; retrying next frame.");
         }
     }
 
@@ -110,7 +109,7 @@ public final class JWindow extends JFrame implements Window {
                 bs.show();
             } while (bs.contentsLost());
         } catch (IllegalStateException e) {
-            Logger.trace("Engine: Error rendering current frame; trying again");
+            Logger.trace("Window: Error rendering current frame; retrying next frame.");
         }
     }
 

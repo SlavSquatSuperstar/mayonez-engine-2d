@@ -1,7 +1,6 @@
 package slavsquatsuperstar.mayonez.input
 
-import org.lwjgl.glfw.GLFW.GLFW_PRESS
-import org.lwjgl.glfw.GLFW.GLFW_RELEASE
+import org.lwjgl.glfw.GLFW.*
 import java.awt.event.KeyAdapter
 import java.awt.event.KeyEvent
 
@@ -19,7 +18,9 @@ object KeyInput : KeyAdapter() {
     // Game Loop Methods
     @JvmStatic
     fun endFrame() {
-//        keysHeld.fill(false)
+//        for (k in keys.keys)  {
+//            if (keys[k] == InputState.PRESSED) keys[k] = InputState.HELD
+//        }
     }
 
     /* Keyboard Callbacks */
@@ -27,15 +28,15 @@ object KeyInput : KeyAdapter() {
     @JvmStatic
     @Suppress("unused")
     fun keyCallback(window: Long, key: Int, scancode: Int, action: Int, mods: Int) {
-        if (action == GLFW_PRESS) {
-            if (isKeyReleased(key)) setKey(key, InputState.PRESSED)
-            else setKey(key, InputState.HELD)
-        } else if (action == GLFW_RELEASE) {
-            setKey(key, InputState.RELEASED)
+        when (action) {
+            GLFW_PRESS -> setKey(key, InputState.PRESSED)
+            GLFW_REPEAT -> setKey(key, InputState.HELD)
+            GLFW_RELEASE -> setKey(key, InputState.RELEASED)
         }
     }
 
     override fun keyPressed(e: KeyEvent) { // Activates when ever a key is down
+        println("pressed")
         val key = e.keyCode
         if (isKeyReleased(key)) setKey(key, InputState.PRESSED) // New key press -> set as pressed
         else setKey(key, InputState.HELD) // Continuous key press -> set as held
