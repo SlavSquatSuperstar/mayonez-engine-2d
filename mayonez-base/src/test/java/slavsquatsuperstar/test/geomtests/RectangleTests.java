@@ -25,12 +25,12 @@ public class RectangleTests {
 
     @Test
     public void areaCorrect() {
-        assertEquals(rect.area(), rect.getWidth() * rect.getHeight(), EPSILON);
+        assertEquals(rect.area(), rect.width * rect.height, EPSILON);
     }
 
     @Test
     public void perimeterCorrect() {
-        assertEquals(rect.perimeter(), 2 * (rect.getWidth() + rect.getHeight()), EPSILON);
+        assertEquals(rect.perimeter(), 2 * (rect.width + rect.height), EPSILON);
     }
 
     @Test

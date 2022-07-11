@@ -12,19 +12,19 @@ import slavsquatsuperstar.math.Vec2
  */
 class Circle(private val center: Vec2, val radius: Float) : Shape() {
 
+    // Circle Properties
+
     /**
      * The square of the circle's radius, equal to r^2.
      */
-    private val radiusSq: Float
-        get() = radius * radius
-
-    // Circle Properties
+    @JvmField
+    val radiusSq: Float = radius * radius
 
     /**
      * The diameter, or width of the circle, equal to 2r.
      */
-    val diameter: Float
-        get() = 2f * radius
+    @JvmField
+    val diameter: Float = 2f * radius
 
     /**
      * The area of a circle, equal to πr^2.
@@ -53,6 +53,24 @@ class Circle(private val center: Vec2, val radius: Float) : Shape() {
      */
     override fun angularMass(mass: Float): Float = 0.5f * mass * radiusSq
 
+    // Collision Properties
+
+    override fun boundingCircle(): Circle = Circle(center, radius)
+
+    override fun supportPoint(direction: Vec2): Vec2 = center + direction.unit() * radius
+
+    /**
+     * Performs a simple circle vs. circle intersection test by comparing the distances their centers and the sum of their radii.
+     *
+     * @param circle another circle
+     * @return if the two circles intersect or touch
+     */
+    fun intersects(circle: Circle): Boolean {
+        val distSq = this.center.distanceSq(circle.center)
+        val sumRadiiSq = (this.radius + circle.radius) * (this.radius + circle.radius)
+        return distSq <= sumRadiiSq
+    }
+
     // Transformations
 
     override fun translate(direction: Vec2): Circle = Circle(center + direction, radius)
@@ -74,8 +92,9 @@ class Circle(private val center: Vec2, val radius: Float) : Shape() {
      * @return the scaled circle
      */
     // To scale a circle non-uniformly, use the Ellipse class.
-    override fun scale(factor: Vec2, centered: Boolean): Circle =
-        Circle(if (centered) center else center * factor, radius * factor.x)
+    override fun scale(factor: Vec2, centered: Boolean): Circle {
+        return Circle(if (centered) center else (center * factor), radius * factor.x)
+    }
 
     // Overrides
 

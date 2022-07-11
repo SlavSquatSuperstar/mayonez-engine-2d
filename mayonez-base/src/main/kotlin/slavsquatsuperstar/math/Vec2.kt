@@ -319,7 +319,7 @@ class Vec2 constructor(
      * @param v a 2D vector
      * @return the midpoint
      */
-    fun midpoint(v: Vec2): Vec2 = (this + v) / 2f
+    fun midpoint(v: Vec2): Vec2 = (this + v) * 0.5f
 
     /**
      * Convert this vector to a JOML [Vector2f] with the same x and y values

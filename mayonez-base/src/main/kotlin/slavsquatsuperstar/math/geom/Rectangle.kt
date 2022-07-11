@@ -28,14 +28,14 @@ open class Rectangle(protected val center: Vec2, val size: Vec2, protected val a
     /**
      * The rectangle's width (base), b.
      */
-    val width: Float
-        get() = size.x
+    @JvmField
+    val width: Float = size.x
 
     /**
      * The rectangle's height, h.
      */
-    val height: Float
-        get() = size.y
+    @JvmField
+    val height: Float = size.y
 
     /**
      * The rectangle's area, equal to b*h
@@ -73,25 +73,28 @@ open class Rectangle(protected val center: Vec2, val size: Vec2, protected val a
      *
      * Second moment of area: I_z = 1/12*(hb^3 + bh^3) = 1/12*bh(b^2 + h^2) = 1/12*A(b^2 + h^2)
      */
-    override fun angularMass(mass: Float): Float = (1 / 12f) * mass * MathUtils.hypotSq(width, height)
+    override fun angularMass(mass: Float): Float = mass / 12f * MathUtils.hypotSq(width, height)
 
     // Transformations
 
     override fun translate(direction: Vec2): Rectangle = Rectangle(center + direction, size, angle)
 
-    override fun rotate(angle: Float, origin: Vec2?): Rectangle =
-        Rectangle(center.rotate(angle, origin ?: center), size, this.angle + angle)
+    override fun rotate(angle: Float, origin: Vec2?): Rectangle {
+        return Rectangle(center.rotate(angle, origin ?: center), size, this.angle + angle)
+    }
 
-    override fun scale(factor: Vec2, centered: Boolean): Rectangle =
-        Rectangle(if (centered) center else center * factor, size * factor, angle)
+    override fun scale(factor: Vec2, centered: Boolean): Rectangle {
+        return Rectangle(if (centered) center else center * factor, size * factor, angle)
+    }
 
     // Overrides
 
     /**
      * Whether a point is inside the rectangle, meaning it lies within all four corners
      */
-    override fun contains(point: Vec2): Boolean =
-        point.rotate(-angle, center).inRange(center - size * 0.5f, center + size * 0.5f)
+    override fun contains(point: Vec2): Boolean {
+        return point.rotate(-angle, center).inRange(center - size * 0.5f, center + size * 0.5f)
+    }
 
     override fun equals(other: Any?): Boolean {
         return (other is Rectangle) && (this.center == other.center) && (this.size == other.size)

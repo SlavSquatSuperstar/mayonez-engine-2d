@@ -27,9 +27,23 @@ abstract class Shape {
      * The centroid, or geometric center of the shape, calculated by averaging all the points in the shape.
      * The centroid is also the center of mass for a shape of uniform density.
      */
+    // TODO make field
     abstract fun center(): Vec2
 
-    // Phyiscal Properties
+    // Collision Properties
+
+    /**
+     * The bounding circle of a shape is the smallest circle that contains all points in the shape and shares the same centroid.
+     * Used in broad-phase collision detection since circle collision checks are simpler.
+     */
+    abstract fun boundingCircle(): Circle
+
+    /**
+     * The support point in any direction is the furthest point on a shape towards that direction. Used by the GJK collision algorithm.
+     */
+    abstract fun supportPoint(direction: Vec2): Vec2
+
+    // Physical Properties
 
     /**
      * The mass (translational inertia) of the shape, assuming a uniform density throughout the shape.
@@ -94,12 +108,6 @@ abstract class Shape {
      * Whether this shape is equivalent to another shape before applying any rigid transformations.
      */
     abstract override operator fun equals(other: Any?): Boolean
-
-//    /**
-//     * Whether this shape is geometrically congruent to another shape, or can be perfectly superimposed onto the other
-//     * using translation, rotation, and reflection.
-//     */
-//    abstract fun congruent(other: Shape?): Boolean
 
     /**
      * A string representation of the shape.

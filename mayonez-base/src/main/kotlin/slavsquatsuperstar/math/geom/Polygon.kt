@@ -22,46 +22,7 @@ open class Polygon(vararg vertices: Vec2) : Shape() {
      */
     constructor(center: Vec2, sides: Int, radius: Float) : this(*regularPolygonVertices(center, sides, radius))
 
-    companion object {
-        /**
-         * Rotates an array of vertices around a center.
-         *
-         * @param direction the direction of translation
-         * @return the translated vertex array
-         */
-        internal fun Array<Vec2>.translate(direction: Vec2): Array<Vec2> {
-            return Array(size) { this[it] + direction }
-        }
-
-        /**
-         * Rotates an array of vertices around a center.
-         *
-         * @param angle the counterclockwise angle
-         * @param center the center of rotation
-         * @return the rotated vertex array
-         */
-        internal fun Array<Vec2>.rotate(angle: Float, center: Vec2): Array<Vec2> {
-            val rot = Mat22(angle) // save rotation matrix
-            return Array(size) { (rot * (this[it] - center)) + center }
-        }
-
-        /**
-         * Rotates an array of vertices around a center.
-         *
-         * @param factor the scale factor
-         * @param center the center for scaling
-         * @return the scaled vertex array
-         */
-        internal fun Array<Vec2>.scale(factor: Vec2, center: Vec2): Array<Vec2> {
-            return Array(size) { (factor * (this[it] - center)) + center }
-        }
-
-        private fun regularPolygonVertices(center: Vec2, sides: Int, radius: Float): Array<Vec2> {
-            val start = Vec2(radius, 0f)
-            val angle = 360f / sides
-            return Array(sides) { center + start.rotate(angle * it) }
-        }
-    }
+    // Polygon Vertices
 
     /**
      * The points that define the edges of this polygon.
@@ -69,17 +30,17 @@ open class Polygon(vararg vertices: Vec2) : Shape() {
     val vertices: Array<Vec2> = arrayOf(*vertices)
 
     /**
+     * The number of vertices and edges of this polygon, n.
+     */
+    @JvmField
+    val numVertices: Int = vertices.size
+
+    /**
      * The edges that connect the vertices of this polygon.
      */
     protected val edges: Array<Vec2> = Array(numVertices) { vertices[(it + 1) % numVertices] - vertices[it] }
 
     // Polygon Properties
-
-    /**
-     * The number of vertices and edges of this polygon, n.
-     */
-    private val numVertices: Int
-        get() = vertices.size
 
     /**
      * The least number of triangles this polygon can be divided into, equal to n–2.
@@ -143,6 +104,18 @@ open class Polygon(vararg vertices: Vec2) : Shape() {
 //        return angMass
     }
 
+    // Collision Properties
+
+    override fun boundingCircle(): Circle {
+        val distsSq = FloatArray(numVertices) { vertices[it].distanceSq(center()) }
+        return Circle(center(), MathUtils.max(*distsSq))
+    }
+
+    override fun supportPoint(direction: Vec2): Vec2 {
+        val dotProds = FloatArray(numVertices) { vertices[it].dot(direction) }
+        return vertices[MathUtils.maxIndex(*dotProds)]
+    }
+
     // Transformations
 
     override fun translate(direction: Vec2): Polygon = Polygon(*vertices.translate(direction))
@@ -174,4 +147,45 @@ open class Polygon(vararg vertices: Vec2) : Shape() {
      * A description of the polygon in the form Polygon (x, y) vertices=[v1, v2, ..., vn]
      */
     override fun toString(): String = "Polygon ${center()} vertices=${vertices.contentToString()})"
+
+    companion object {
+        /**
+         * Rotates an array of vertices around a center.
+         *
+         * @param direction the direction of translation
+         * @return the translated vertex array
+         */
+        internal fun Array<Vec2>.translate(direction: Vec2): Array<Vec2> {
+            return Array(size) { this[it] + direction }
+        }
+
+        /**
+         * Rotates an array of vertices around a center.
+         *
+         * @param angle the counterclockwise angle
+         * @param center the center of rotation
+         * @return the rotated vertex array
+         */
+        internal fun Array<Vec2>.rotate(angle: Float, center: Vec2): Array<Vec2> {
+            val rot = Mat22(angle) // save rotation matrix
+            return Array(size) { (rot * (this[it] - center)) + center }
+        }
+
+        /**
+         * Rotates an array of vertices around a center.
+         *
+         * @param factor the scale factor
+         * @param center the center for scaling
+         * @return the scaled vertex array
+         */
+        internal fun Array<Vec2>.scale(factor: Vec2, center: Vec2): Array<Vec2> {
+            return Array(size) { (factor * (this[it] - center)) + center }
+        }
+
+        private fun regularPolygonVertices(center: Vec2, sides: Int, radius: Float): Array<Vec2> {
+            val start = Vec2(radius, 0f)
+            val angle = 360f / sides
+            return Array(sides) { center + start.rotate(angle * it) }
+        }
+    }
 }

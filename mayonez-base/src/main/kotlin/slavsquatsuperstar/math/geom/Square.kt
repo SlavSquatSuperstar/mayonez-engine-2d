@@ -7,10 +7,14 @@ import slavsquatsuperstar.math.Vec2
  * A rectangle whose base and height have the same length.
  *
  * @author SlavSquatSuperstar
- *
- * @param length the side length of the square, s
  */
-class Square(center: Vec2, val length: Float, angle: Float) : Rectangle(center, Vec2(length), angle) {
+class Square(
+    center: Vec2,
+    /**
+     * The side length of the square, s
+     */
+    @JvmField val length: Float, angle: Float
+) : Rectangle(center, Vec2(length), angle) {
 
     // Square Properties
 

@@ -8,7 +8,6 @@ import slavsquatsuperstar.math.Vec2
  *
  * @author SlavSquatSuperstar
  */
-// TODO extend component?
 class Transform(
     /**
      * Where the object is located in the scene.
@@ -17,7 +16,7 @@ class Transform(
     var position: Vec2,
 
     /**
-     * The angle in degrees the object is oriented.
+     * The angle the object is oriented, in degrees.
      */
     @JvmField
     var rotation: Float,
@@ -31,6 +30,9 @@ class Transform(
     constructor() : this(Vec2(), 0f, Vec2(1f, 1f))
     constructor(position: Vec2) : this(position, 0f, Vec2(1f, 1f))
     constructor(position: Vec2, scale: Vec2) : this(position, 0f, scale)
+
+    val rotationRadians: Float
+        get() = MathUtils.toRadians(rotation)
 
     // Property Mutator Methods
     /**

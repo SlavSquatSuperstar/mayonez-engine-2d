@@ -49,7 +49,7 @@ class Triangle(v1: Vec2, v2: Vec2, v3: Vec2) : Polygon(v1, v2, v3) {
         val base = base()
         val height = height()
         val offset = base - sqrt(edges[2].lenSq() - height * height)
-        return 1 / 18f * mass * (MathUtils.hypotSq(base, height) + offset * offset - offset * base)
+        return mass / 18f * (MathUtils.hypotSq(base, height) + offset * offset - offset * base)
     }
 
     // Transformations

@@ -7,7 +7,6 @@ import slavsquatsuperstar.mayonez.Logger;
 import slavsquatsuperstar.mayonez.Scene;
 import slavsquatsuperstar.mayonez.Script;
 import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
-import slavsquatsuperstar.mayonez.physics2d.colliders.BoxCollider2D;
 import slavsquatsuperstar.mayonez.physics2d.colliders.Collider2D;
 
 /**
@@ -55,7 +54,7 @@ public class KeepInScene extends Script {
 
         // Edge Checking for x
         // Skip checking if still in scene bounds
-        if (!MathUtils.inRange(boxMin.x, minPos.x, maxPos.x - boundingBox.getWidth())) {
+        if (!MathUtils.inRange(boxMin.x, minPos.x, maxPos.x - boundingBox.height)) {
             // Detect if colliding with edge
             if (boxMin.x < minPos.x)
                 onReachLeft();
@@ -70,7 +69,7 @@ public class KeepInScene extends Script {
         }
 
         // Edge Checking for y
-        if (!MathUtils.inRange(boxMin.y, minPos.y, maxPos.y - boundingBox.getHeight())) {
+        if (!MathUtils.inRange(boxMin.y, minPos.y, maxPos.y - boundingBox.height)) {
             if (boxMin.y < minPos.y)
                 onReachTop();
             else if (boxMax.y > maxPos.y)
@@ -96,7 +95,7 @@ public class KeepInScene extends Script {
             default: // Stop if neither
                 return;
         }
-        setX(minPos.x + boundingBox.getWidth() * 0.5f); // Align with edge of screen for both
+        setX(minPos.x + boundingBox.width * 0.5f); // Align with edge of screen for both
     }
 
     public void onReachRight() {
@@ -110,7 +109,7 @@ public class KeepInScene extends Script {
             default:
                 return;
         }
-        setX(maxPos.x - boundingBox.getWidth() * 0.5f);
+        setX(maxPos.x - boundingBox.width * 0.5f);
     }
 
     public void onReachTop() {
@@ -124,7 +123,7 @@ public class KeepInScene extends Script {
             default:
                 return;
         }
-        setY(minPos.y + boundingBox.getHeight() * 0.5f);
+        setY(minPos.y + boundingBox.height * 0.5f);
 
     }
 
@@ -139,33 +138,33 @@ public class KeepInScene extends Script {
             default:
                 return;
         }
-        setY(maxPos.y - boundingBox.getHeight() * 0.5f);
+        setY(maxPos.y - boundingBox.height * 0.5f);
     }
 
     public void onPassLeft() {
         switch (mode) {
-            case WRAP -> setX(maxPos.x + boundingBox.getWidth() * 0.5f);
+            case WRAP -> setX(maxPos.x + boundingBox.width * 0.5f);
             case DELETE -> parent.destroy();
         }
     }
 
     public void onPassRight() {
         switch (mode) {
-            case WRAP -> setX(minPos.x - boundingBox.getWidth() * 0.5f);
+            case WRAP -> setX(minPos.x - boundingBox.width * 0.5f);
             case DELETE -> parent.destroy();
         }
     }
 
     public void onPassTop() {
         switch (mode) {
-            case WRAP -> setY(maxPos.y + boundingBox.getHeight() * 0.5f);
+            case WRAP -> setY(maxPos.y + boundingBox.height * 0.5f);
             case DELETE -> parent.destroy();
         }
     }
 
     public void onPassBottom() {
         switch (mode) {
-            case WRAP -> setY(minPos.y - boundingBox.getHeight() * 0.5f);
+            case WRAP -> setY(minPos.y - boundingBox.height * 0.5f);
             case DELETE -> parent.destroy();
         }
     }

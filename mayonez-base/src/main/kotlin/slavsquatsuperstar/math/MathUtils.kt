@@ -99,9 +99,8 @@ object MathUtils {
     @JvmStatic
     fun min(vararg values: Float): Float {
         if (values.isEmpty()) return 0f
-        var min = values[0]
-        for (i in 1 until values.size)
-            if (values[i] < min) min = values[i]
+        var min = Float.POSITIVE_INFINITY
+        for (n in values) if (n < min) min = n
         return min
     }
 
@@ -115,29 +114,10 @@ object MathUtils {
     }
 
     @JvmStatic
-    fun min(vararg values: Int): Int {
-        if (values.isEmpty()) return 0
-        var min = values[0]
-        for (i in 1 until values.size)
-            if (values[i] < min) min = values[i]
-        return min
-    }
-
-    @JvmStatic
     fun max(vararg values: Float): Float {
         if (values.isEmpty()) return 0f
-        var max = values[0]
-        for (i in 1 until values.size)
-            if (values[i] > max) max = values[i]
-        return max
-    }
-
-    @JvmStatic
-    fun max(vararg values: Int): Int {
-        if (values.isEmpty()) return 0
-        var max = values[0]
-        for (i in 1 until values.size)
-            if (values[i] > max) max = values[i]
+        var max = Float.NEGATIVE_INFINITY
+        for (n in values) if (n > max) max = n
         return max
     }
 
@@ -165,17 +145,6 @@ object MathUtils {
         val range = Range(min, max)
         return range.min.coerceAtLeast(value).coerceAtMost(range.max)
     }
-
-    /**
-     * Restricts an integer's value within a provided range.
-     *
-     * @param value any real number
-     * @param min   the lower bound, inclusive
-     * @param max   the upper bound, inclusive
-     * @return a number within the bounds
-     */
-    @JvmStatic
-    fun clamp(value: Int, min: Int, max: Int): Int = clamp(value.toFloat(), min.toFloat(), max.toFloat()).toInt()
 
     /**
      * Checks whether a number is within a provided range, including the bounds.
