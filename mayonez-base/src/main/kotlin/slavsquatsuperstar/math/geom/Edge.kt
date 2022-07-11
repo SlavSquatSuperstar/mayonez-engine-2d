@@ -1,6 +1,7 @@
 package slavsquatsuperstar.math.geom
 
 import slavsquatsuperstar.math.Vec2
+import kotlin.math.abs
 
 /**
  * A one-dimensional "shape" defined by two points. The Edge class models a line segment. To be merged with [Edge2D].
@@ -49,6 +50,8 @@ class Edge(val v1: Vec2, val v2: Vec2) : Shape() {
     // Collision Properties
 
     override fun boundingCircle(): Circle = Circle(center(), length * 0.5f)
+
+    override fun boundingRectangle(): Rectangle = Rectangle(center(), Vec2(abs(v2.x - v1.x), abs(v2.y - v1.y)))
 
     override fun supportPoint(direction: Vec2): Vec2 = if (v1.dot(direction) > v2.dot(direction)) v1 else v2
 

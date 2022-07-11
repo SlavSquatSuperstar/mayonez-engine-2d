@@ -19,7 +19,7 @@ public class RectangleTests {
 
     @BeforeAll
     public static void getRect() {
-        rect = new Rectangle(new Vec2(3, 1.5f), new Vec2(4, 3), 0); // center (3, 1.5f), size(4, 3), no rotation
+        rect = new Rectangle(new Vec2(3, 1.5f), new Vec2(4, 3)); // center (3, 1.5f), size(4, 3), no rotation
         // vertices (1, 1), (5, 1), (1, 3), (5, 3)
     }
 

@@ -23,8 +23,8 @@ public class SquareTests {
     @BeforeAll
     public static void getShapes() {
         // min: (-1, -1), max: (3, 3)
-        rect = new Rectangle(new Vec2(1, 1), 4, 4, 0);
-        square = new Square(new Vec2(1, 1), 4, 0);
+        rect = new Rectangle(new Vec2(1, 1), new Vec2(4, 4));
+        square = new Square(new Vec2(1, 1), 4);
     }
 
     @Test

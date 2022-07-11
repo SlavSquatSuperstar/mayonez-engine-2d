@@ -16,6 +16,8 @@ class Square(
     @JvmField val length: Float, angle: Float
 ) : Rectangle(center, Vec2(length), angle) {
 
+    constructor(center: Vec2, length: Float) : this(center, length, 0f)
+
     // Square Properties
 
     override fun perimeter(): Float = 4f * length

@@ -10,7 +10,13 @@ import slavsquatsuperstar.math.Vec2
  *
  * @author SlavSquatSuperstar
  */
-class Circle(private val center: Vec2, val radius: Float) : Shape() {
+class Circle(
+    private val center: Vec2,
+    /**
+     * The circle's radius, r.
+     */
+    val radius: Float
+) : Shape() {
 
     // Circle Properties
 
@@ -56,6 +62,8 @@ class Circle(private val center: Vec2, val radius: Float) : Shape() {
     // Collision Properties
 
     override fun boundingCircle(): Circle = Circle(center, radius)
+
+    override fun boundingRectangle(): Rectangle = Rectangle(center, Vec2(radius * 2f), 0f)
 
     override fun supportPoint(direction: Vec2): Vec2 = center + direction.unit() * radius
 

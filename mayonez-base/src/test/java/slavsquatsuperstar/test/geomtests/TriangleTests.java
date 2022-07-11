@@ -24,7 +24,9 @@ public class TriangleTests {
 
     @Test
     public void areaCorrect() {
-        assertEquals(tri.area(), 0.5 * tri.base() * tri.height(), MathUtils.EPSILON);
+        assertEquals(tri.area(), 0.5f * tri.base * tri.height, MathUtils.EPSILON);
+        Triangle tri2 = new Triangle(new Vec2(-1, 0), new Vec2(1, 4), new Vec2(5, -2));
+        assertEquals(tri2.area(), 0.5f * tri2.base * tri2.height, MathUtils.EPSILON);
     }
     
     @Test

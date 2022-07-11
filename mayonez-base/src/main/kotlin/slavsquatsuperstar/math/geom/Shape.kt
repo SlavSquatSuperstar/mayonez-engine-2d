@@ -27,16 +27,21 @@ abstract class Shape {
      * The centroid, or geometric center of the shape, calculated by averaging all the points in the shape.
      * The centroid is also the center of mass for a shape of uniform density.
      */
-    // TODO make field
     abstract fun center(): Vec2
 
     // Collision Properties
 
     /**
-     * The bounding circle of a shape is the smallest circle that contains all points in the shape and shares the same centroid.
-     * Used in broad-phase collision detection since circle collision checks are simpler.
+     * The bounding circle of a shape is the smallest circle that contains all points in the shape and shares the same
+     * centroid. Useful in broad-phase collision detection since circle collision checks are simpler.
      */
     abstract fun boundingCircle(): Circle
+
+    /**
+     * The axis-aligned minimum bounding rectangle (AABB) of a shape is the smallest rectangle that contains all points
+     * in the shape and is aligned with the cartesian axes. The rectangle may not share the shape's centroid.
+     */
+    abstract fun boundingRectangle(): Rectangle
 
     /**
      * The support point in any direction is the furthest point on a shape towards that direction. Used by the GJK collision algorithm.
@@ -53,8 +58,8 @@ abstract class Shape {
     fun mass(density: Float): Float = density * area()
 
     /**
-     * The angular mass (rotational inertia/ 2D moment of inertia) of the shape around its centroid, assuming a uniform
-     * density throughout the shape.
+     * The angular mass (rotational inertia) of the shape around its centroid, assuming a uniform
+     * density throughout the shape. This function specifically calculates the polar moment of area of a thin lamina.
      *
      * @param mass the mass of the shape
      */

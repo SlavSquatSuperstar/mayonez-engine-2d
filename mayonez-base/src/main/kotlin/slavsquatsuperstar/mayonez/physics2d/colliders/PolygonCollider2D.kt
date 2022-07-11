@@ -53,7 +53,7 @@ open class PolygonCollider2D protected constructor(shapeData: Polygon) :
     // vertices transformed to world space
     open fun getVertices(): Array<Vec2> = (transformToWorld() as Polygon).vertices
 
-    override fun getMinBounds(): Rectangle { // TODO Support function
+    override fun getMinBounds(): Rectangle {
         val vertices = getVertices()
         // Get the min and max coordinates of any point on the box
         val verticesX = FloatArray(numVertices) { vertices[it].x }

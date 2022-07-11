@@ -3,6 +3,7 @@ package slavsquatsuperstar.math.geom
 import slavsquatsuperstar.math.Mat22
 import slavsquatsuperstar.math.MathUtils
 import slavsquatsuperstar.math.Vec2
+import kotlin.math.abs
 
 /**
  * A shape made up of a finite number of vertices connected by straight edges.
@@ -64,27 +65,46 @@ open class Polygon(vararg vertices: Vec2) : Shape() {
     // Shape Methods
     // TODO use fields or methods?
 
-    override fun area(): Float = MathUtils.sum(*FloatArray(numVertices - 2) { getTriangles()[it].area() })
+    /**
+     * The area of the polygon, equal to the combined areas of all the subtriangles. This function specifically uses
+     * the shoelace formula (Gauss's area formula), a special case of Green's theorem.
+     */
+    override fun area(): Float {
+        val crosses = FloatArray(numVertices) { vertices[it].cross(vertices[it.next(numVertices)]) }
+        return 0.5f * abs(MathUtils.sum(*crosses))
+    }
 
     override fun perimeter(): Float = MathUtils.sum(*FloatArray(numVertices) { edges[it].len() })
 
+    private lateinit var centroid: Vec2
+
     /**
-     * Finds the center of this polygon, equal to the average of the sub-triangle's centroids weighted by their proportional areas.
+     * Finds the centroid of this polygon, assuming the vertices are in sorted order.
+     * equal to the average of the sub-triangle's centroids weighted by their proportional areas.
      *
-     * Center formula: C_p = ∑A_i*C_i / A_p
-     * Source: https://math.stackexchange.com/questions/90463/how-can-i-calculate-the-centroid-of-polygon
+     * Centroid formula: C = 1/6A*∑(v_i + v_i+1)(v_i × v_i+1), where A is the signed area using the shoelace formula.
+     * Source: https://en.wikipedia.org/wiki/Centroid#Of_a_polygon
      */
     override fun center(): Vec2 {
-        var center = Vec2()
-        for (tri in getTriangles())
-            center += tri.center() * tri.area()
-        return center / this.area()
+        if (!this::centroid.isInitialized) {
+            var signedArea = 0f
+            var center = Vec2()
+            for (i in vertices.indices) {
+                val next = i.next(numVertices)
+                val cross = vertices[i].cross(vertices[next])
+                signedArea += cross
+                center += (vertices[i] + vertices[next]) * cross
+            }
+            centroid = center / (3f * signedArea)
+        }
+        return centroid
     }
 
     /**
-     * Calculates the centroidal moment of inertia of this polygon,
-     * equal to sum of the moment of inertia of each sub-triangle around this shape's centroid.
+     * Calculates the centroidal moment of inertia of this polygon using geometric decomposition. The polygon's MOI is
+     * equal to the sum of the MOI of each sub-triangle around this shape's centroid.
      */
+    // TODO wrote unit tests
     override fun angularMass(mass: Float): Float {
         var angMass = 0f
         for (tri in getTriangles()) {
@@ -109,6 +129,16 @@ open class Polygon(vararg vertices: Vec2) : Shape() {
     override fun boundingCircle(): Circle {
         val distsSq = FloatArray(numVertices) { vertices[it].distanceSq(center()) }
         return Circle(center(), MathUtils.max(*distsSq))
+    }
+
+    override fun boundingRectangle(): Rectangle {
+        // TODO support function, or too expensive?
+        val verticesX = FloatArray(numVertices) { vertices[it].x }
+        val verticesY = FloatArray(numVertices) { vertices[it].y }
+
+        val boxMin = Vec2(MathUtils.min(*verticesX), MathUtils.min(*verticesY))
+        val boxMax = Vec2(MathUtils.max(*verticesX), MathUtils.max(*verticesY))
+        return Rectangle(boxMin.midpoint(boxMax), boxMax - boxMin)
     }
 
     override fun supportPoint(direction: Vec2): Vec2 {
@@ -147,6 +177,16 @@ open class Polygon(vararg vertices: Vec2) : Shape() {
      * A description of the polygon in the form Polygon (x, y) vertices=[v1, v2, ..., vn]
      */
     override fun toString(): String = "Polygon ${center()} vertices=${vertices.contentToString()})"
+
+    // Helper Methods
+
+    /**
+     * Finds the next index in an array, looping back to zero if the length is exceeded.
+     *
+     * @param length the length of the array
+     * @return the next index
+     */
+    private fun Int.next(length: Int): Int = if (this < length - 1) this + 1 else (this + 1) % length
 
     companion object {
         /**

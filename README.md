@@ -21,7 +21,7 @@ This project was developed using macOS 12.x Monterey (Intel). This app has not b
 - Dependencies (bundled in JAR)
     - [LWJGL](https://www.lwjgl.org/customize) (user OS & architecture specific)
       with [JOML](https://joml-ci.github.io/JOML/)
-      - Libraries: GLFW, OpenGL, STB
+        - Libraries: GLFW, OpenGL, STB
     - [Kotlin Standard Library](https://kotlinlang.org/docs/getting-started.html)
     - [JSON in Java](https://github.com/stleary/JSON-java) (org.json)
     - [Apache Commons Lang](https://commons.apache.org/proper/commons-lang/)
@@ -51,8 +51,10 @@ A massive, heartfelt thanks goes out to the following people and resources for i
   games in a simple manner.
 - [Michel Van Bizen](https://www.youtube.com/c/MichelvanBiezen): For working through the difficult mathematical proofs
   in comprehensive detail.
-- [Unity Technologies](https://docs.unity3d.com/ScriptReference/): ~~Who I'm ripping off~~ For making game dev
+- [Unity Engine](https://docs.unity3d.com/ScriptReference/): ~~Who I'm ripping off~~ For making game dev
   accessible for everybody and providing excellent documentation.
+- [Azurite Community](https://azurite-engine.github.io/): For showing that implementing LWJGL and physics from scratch
+  isn't as intimidating as it sounds.
 - [Greenfoot Developers](https://www.greenfoot.org/files/javadoc/): For proving you **can** use Java for game dev and
   showing the beauty of simplicity.
 - [Life of Boris](https://www.youtube.com/c/LifeofBoris/featured): For showing me the Slav way in my time of need.

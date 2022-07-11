@@ -10,8 +10,10 @@ import slavsquatsuperstar.math.Vec2
  * @author SlavSquatSuperstar
  */
 // TODO quad class
-open class Rectangle(protected val center: Vec2, val size: Vec2, protected val angle: Float) :
+open class Rectangle(protected val center: Vec2, protected val size: Vec2, protected val angle: Float) :
     Polygon(*getVertices(center, size, angle)) {
+
+    constructor(center: Vec2, size: Vec2) : this(center, size, 0f)
 
     constructor(center: Vec2, width: Float, height: Float, angle: Float) : this(center, Vec2(width, height), angle)
 
