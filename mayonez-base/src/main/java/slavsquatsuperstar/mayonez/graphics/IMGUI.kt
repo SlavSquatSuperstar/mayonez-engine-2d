@@ -12,7 +12,10 @@ import java.awt.geom.Rectangle2D
 
 /**
  * Draws all user interface components and overlays onto the screen. Note: all shape methods use position as the top-left.
+ *
+ * @author SlavSquatSuperstar
  */
+@Engine(EngineType.AWT)
 object IMGUI {
 
     private const val STROKE_SIZE = 4

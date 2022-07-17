@@ -11,6 +11,7 @@ import java.util.List;
  *
  * @author SlavSquatSuperstar
  */
+@Engine(EngineType.AWT)
 public class JSpriteSheet {
 
     private final List<JSprite> sprites; // store images in memory

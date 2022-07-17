@@ -6,6 +6,8 @@ import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
 import slavsquatsuperstar.mayonez.Logger;
 import slavsquatsuperstar.mayonez.Mayonez;
+import slavsquatsuperstar.mayonez.graphics.Engine;
+import slavsquatsuperstar.mayonez.graphics.EngineType;
 import slavsquatsuperstar.mayonez.graphics.renderer.Renderable;
 import slavsquatsuperstar.mayonez.input.KeyInput;
 import slavsquatsuperstar.mayonez.input.MouseInput;
@@ -18,6 +20,12 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
+/**
+ * The display component for the game.
+ *
+ * @author SlavSquatSuperstar
+ */
+@Engine(EngineType.GL)
 public final class GLWindow implements Window {
 
     private long window; // The window pointer

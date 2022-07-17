@@ -1,6 +1,7 @@
 package slavsquatsuperstar.mayonez.graphics
 
 import slavsquatsuperstar.math.Vec2
+import slavsquatsuperstar.math.geom.Ellipse
 import slavsquatsuperstar.mayonez.Mayonez
 import slavsquatsuperstar.mayonez.graphics.renderer.Renderable
 import slavsquatsuperstar.mayonez.physics2d.colliders.CircleCollider2D
@@ -8,6 +9,7 @@ import slavsquatsuperstar.mayonez.physics2d.colliders.Collider2D
 import slavsquatsuperstar.mayonez.physics2d.colliders.Edge2D
 import slavsquatsuperstar.mayonez.physics2d.colliders.PolygonCollider2D
 import java.awt.*
+import java.awt.geom.AffineTransform
 import java.awt.geom.Ellipse2D
 import java.awt.geom.Line2D
 import kotlin.math.roundToInt
@@ -15,7 +17,10 @@ import kotlin.math.roundToInt
 /**
  * Draws colliders and mathematical objects onto the screen. All methods use world coordinates, and shapes are centered
  * around the collider's position.
+ *
+ * @author SlavSquatSuperstar
  */
+@Engine(EngineType.AWT)
 object DebugDraw {
 
     private const val STROKE_SIZE = 2
@@ -116,6 +121,23 @@ object DebugDraw {
         shapes.add(ShapeDrawer(DrawPriority.SHAPE) { g2: Graphics2D ->
             g2.color = color
             g2.draw(Ellipse2D.Float(minPx.x, minPx.y, diameterPx, diameterPx))
+        })
+    }
+
+    // Temporary ellipse draw function
+    @JvmStatic
+    fun drawEllipse(ellipse: Ellipse, color: Color) {
+        val sizePx = ellipse.size.toScreen()
+        val centerPx = ellipse.center.toScreen()
+        val minPx = centerPx - (sizePx * 0.5f)
+        val rotXf = AffineTransform.getRotateInstance(
+            Math.toRadians(ellipse.angle.toDouble()),
+            centerPx.x.toDouble(),
+            centerPx.y.toDouble()
+        )
+        shapes.add(ShapeDrawer(DrawPriority.SHAPE) { g2: Graphics2D ->
+            g2.color = color
+            g2.draw(rotXf.createTransformedShape(Ellipse2D.Float(minPx.x, minPx.y, sizePx.x, sizePx.y)))
         })
     }
 

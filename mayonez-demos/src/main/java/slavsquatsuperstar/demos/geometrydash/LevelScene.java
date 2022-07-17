@@ -9,6 +9,7 @@ import slavsquatsuperstar.mayonez.physics2d.colliders.Collider2D;
 
 import java.awt.*;
 
+// TODO camera not following?
 public class LevelScene extends Scene {
 
     public LevelScene() {

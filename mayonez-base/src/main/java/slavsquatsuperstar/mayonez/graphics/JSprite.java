@@ -14,10 +14,11 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
 /**
- * A component that draws an image at a {@link GameObject}'s position.
+ * A component that draws an image at a {@link GameObject}'s position. For use the AWT engine.
  *
  * @author SlavSquatSuperstar
  */
+@Engine(EngineType.AWT)
 public final class JSprite extends Sprite {
 
     private BufferedImage image;

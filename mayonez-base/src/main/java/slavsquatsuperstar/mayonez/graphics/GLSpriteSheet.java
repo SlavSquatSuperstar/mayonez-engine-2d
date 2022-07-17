@@ -7,6 +7,12 @@ import slavsquatsuperstar.mayonez.fileio.GLTexture;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Creates multiple {@link GLSprite}s from a larger image.
+ *
+ * @author SlavSquatSuperstar
+ */
+@Engine(EngineType.GL)
 public class GLSpriteSheet {
 
     private final List<GLSprite> sprites;

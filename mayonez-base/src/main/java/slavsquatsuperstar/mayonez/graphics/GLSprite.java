@@ -2,10 +2,16 @@ package slavsquatsuperstar.mayonez.graphics;
 
 import org.joml.Vector2f;
 import org.joml.Vector4f;
+import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Transform;
 import slavsquatsuperstar.mayonez.fileio.GLTexture;
 
-// FIXME only rendering at initial position
+/**
+ * A component that draws an image at a {@link GameObject}'s position. For use the GL engine.
+ *
+ * @author SlavSquatSuperstar
+ */
+@Engine(EngineType.GL)
 public final class GLSprite extends Sprite { // = Gabe's SpriteRenderer
 
     private Vector4f color = new Vector4f(1, 1, 1, 1);

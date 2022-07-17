@@ -4,6 +4,8 @@ import org.joml.*;
 import org.lwjgl.BufferUtils;
 import slavsquatsuperstar.mayonez.Logger;
 import slavsquatsuperstar.mayonez.Mayonez;
+import slavsquatsuperstar.mayonez.graphics.Engine;
+import slavsquatsuperstar.mayonez.graphics.EngineType;
 
 import java.io.IOException;
 import java.nio.FloatBuffer;
@@ -11,6 +13,13 @@ import java.nio.FloatBuffer;
 import static org.lwjgl.opengl.GL11.GL_FALSE;
 import static org.lwjgl.opengl.GL20.*;
 
+/**
+ * A compiled GLSL program that determines how to draw an image, including the colors and brightness.
+ * Only available in the GL engine.
+ *
+ * @author SlavSquatSuperstar
+ */
+@Engine(EngineType.GL)
 public class Shader extends TextFile {
 
     private String filename;

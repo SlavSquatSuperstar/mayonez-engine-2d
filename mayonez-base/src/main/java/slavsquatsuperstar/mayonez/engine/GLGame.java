@@ -1,6 +1,8 @@
 package slavsquatsuperstar.mayonez.engine;
 
 import slavsquatsuperstar.mayonez.Preferences;
+import slavsquatsuperstar.mayonez.graphics.Engine;
+import slavsquatsuperstar.mayonez.graphics.EngineType;
 import slavsquatsuperstar.mayonez.graphics.renderer.GLRenderer;
 import slavsquatsuperstar.mayonez.input.KeyInput;
 import slavsquatsuperstar.mayonez.input.MouseInput;
@@ -9,14 +11,15 @@ import slavsquatsuperstar.mayonez.physics2d.Physics2D;
 import static org.lwjgl.glfw.GLFW.glfwGetTime;
 
 /**
- * The application that contains the engine's core loop.
+ * An instance of this game using OpenGL's GLFW and OpenGL libraries.
  *
  * @author SlavSquatSuperstar
  */
+@Engine(EngineType.GL)
 public final class GLGame extends GameEngine { // can't implement runnable otherwise GLFW will crash
 
     public GLGame() {
-        window = new GLWindow(String.format("%s %s (LWJGL)", Preferences.getTitle(), Preferences.getVersion()),
+        window = new GLWindow(String.format("%s %s (GL)", Preferences.getTitle(), Preferences.getVersion()),
                 Preferences.getScreenWidth(), Preferences.getScreenHeight());
         window.setKeyInput(KeyInput.INSTANCE);
         window.setMouseInput(MouseInput.INSTANCE);

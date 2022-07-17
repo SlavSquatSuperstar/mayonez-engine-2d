@@ -11,6 +11,7 @@ import slavsquatsuperstar.mayonez.Preferences;
  *
  * @author SlavSquatSuperstar
  */
+@Engine(EngineType.GL)
 public final class GLCamera implements Camera {
 
     private Matrix4f projectionMatrix, viewMatrix;

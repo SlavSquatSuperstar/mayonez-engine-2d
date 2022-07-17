@@ -15,6 +15,7 @@ import slavsquatsuperstar.mayonez.scripts.KeepInScene;
  *
  * @author SlavSquatSuperstar
  */
+@Engine(EngineType.AWT)
 public final class JCamera extends Script implements Camera {
 
     private final Vec2 size, minPos, maxPos;  // In world units

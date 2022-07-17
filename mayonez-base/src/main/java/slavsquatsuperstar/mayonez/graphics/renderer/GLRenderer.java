@@ -4,6 +4,8 @@ import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Preferences;
 import slavsquatsuperstar.mayonez.Scene;
 import slavsquatsuperstar.mayonez.fileio.GLTexture;
+import slavsquatsuperstar.mayonez.graphics.Engine;
+import slavsquatsuperstar.mayonez.graphics.EngineType;
 import slavsquatsuperstar.mayonez.graphics.GLCamera;
 import slavsquatsuperstar.mayonez.graphics.GLSprite;
 
@@ -14,7 +16,10 @@ import java.util.List;
 
 /**
  * Draws all in-game textures and shapes onto the screen using LWJGL's OpenGL library.
+ *
+ * @author SlavSquatSuperstar
  */
+@Engine(EngineType.GL)
 public final class GLRenderer extends Renderer {
 
     private final int MAX_BATCH_SIZE = Preferences.getMaxBatchSize();

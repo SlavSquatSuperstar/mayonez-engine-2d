@@ -2,6 +2,8 @@ package slavsquatsuperstar.mayonez.engine;
 
 import slavsquatsuperstar.mayonez.Mayonez;
 import slavsquatsuperstar.mayonez.Preferences;
+import slavsquatsuperstar.mayonez.graphics.Engine;
+import slavsquatsuperstar.mayonez.graphics.EngineType;
 import slavsquatsuperstar.mayonez.input.KeyInput;
 import slavsquatsuperstar.mayonez.input.MouseInput;
 import slavsquatsuperstar.mayonez.physics2d.Physics2D;
@@ -15,6 +17,7 @@ import java.awt.*;
  *
  * @author SlavSquatSuperstar
  */
+@Engine(EngineType.AWT)
 public final class JGame extends GameEngine {
 
     private final IMGUI imgui;

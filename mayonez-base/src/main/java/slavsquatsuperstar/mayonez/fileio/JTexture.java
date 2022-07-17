@@ -1,6 +1,8 @@
 package slavsquatsuperstar.mayonez.fileio;
 
 import slavsquatsuperstar.mayonez.Logger;
+import slavsquatsuperstar.mayonez.graphics.Engine;
+import slavsquatsuperstar.mayonez.graphics.EngineType;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -14,6 +16,7 @@ import java.util.Objects;
  *
  * @author SlavSquatSuperstar
  */
+@Engine(EngineType.AWT)
 public class JTexture extends Asset {
 
     private BufferedImage image;
