@@ -4,26 +4,26 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.Transform;
-import slavsquatsuperstar.mayonez.physics2d.colliders.BoxCollider2D;
-import slavsquatsuperstar.mayonez.physics2d.colliders.CircleCollider2D;
-import slavsquatsuperstar.mayonez.physics2d.colliders.Edge2D;
-import slavsquatsuperstar.mayonez.physics2d.colliders.Ray2D;
+import slavsquatsuperstar.mayonez.physics.colliders.BoxCollider;
+import slavsquatsuperstar.mayonez.physics.colliders.CircleCollider;
+import slavsquatsuperstar.mayonez.physics.colliders.Edge2D;
+import slavsquatsuperstar.mayonez.physics.colliders.Ray;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit tests for {@link BoxCollider2D} class.
+ * Unit tests for {@link BoxCollider} class.
  *
  * @author SlavSquatSuperstar
  */
 public class BoxTests {
 
-    static BoxCollider2D box;
+    static BoxCollider box;
 
     // Create box centered at (0, 0) with dimensions 4x4 with a rotation of 45 degrees clockwise
     @BeforeAll
     public static void getBox() {
-        box = new BoxCollider2D(new Vec2(2, 2)).setTransform(
+        box = new BoxCollider(new Vec2(2, 2)).setTransform(
                 new Transform().rotate(45).resize(new Vec2(2, 2)));
     }
 
@@ -70,26 +70,26 @@ public class BoxTests {
 
     @Test
     public void outsideRayHitsBox() {
-        assertNotNull(box.raycast(new Ray2D(new Vec2(-10, 0), new Vec2(1, 0)), 0));
-        assertNotNull(box.raycast(new Ray2D(new Vec2(-5, 5), new Vec2(1, -1)), 0));
+        assertNotNull(box.raycast(new Ray(new Vec2(-10, 0), new Vec2(1, 0)), 0));
+        assertNotNull(box.raycast(new Ray(new Vec2(-5, 5), new Vec2(1, -1)), 0));
     }
 
     @Test
     public void limitedOutsideRayHitsBox() {
-        assertNotNull(box.raycast(new Ray2D(new Vec2(-4, 0), new Vec2(1, 0)), 5));
-        assertNotNull(box.raycast(new Ray2D(new Vec2(-4, 4), new Vec2(1, -1)), 5));
+        assertNotNull(box.raycast(new Ray(new Vec2(-4, 0), new Vec2(1, 0)), 5));
+        assertNotNull(box.raycast(new Ray(new Vec2(-4, 4), new Vec2(1, -1)), 5));
     }
 
     @Test
     public void outsideRayMissesBox() {
-        assertNull(box.raycast(new Ray2D(new Vec2(-10, 0), new Vec2(-1, 0)), 0));
-        assertNull(box.raycast(new Ray2D(new Vec2(-5, 5), new Vec2(-1, 1)), 0));
+        assertNull(box.raycast(new Ray(new Vec2(-10, 0), new Vec2(-1, 0)), 0));
+        assertNull(box.raycast(new Ray(new Vec2(-5, 5), new Vec2(-1, 1)), 0));
     }
 
     @Test
     public void insideRayHitsBox() {
-        assertNotNull(box.raycast(new Ray2D(new Vec2(-2, 0), new Vec2(1, 0)), 0));
-        assertNotNull(box.raycast(new Ray2D(new Vec2(-1, 1), new Vec2(1, -1)), 0));
+        assertNotNull(box.raycast(new Ray(new Vec2(-2, 0), new Vec2(1, 0)), 0));
+        assertNotNull(box.raycast(new Ray(new Vec2(-1, 1), new Vec2(1, -1)), 0));
     }
 
     // Line Intersection
@@ -117,14 +117,14 @@ public class BoxTests {
 
     @Test
     public void BoxIntersectsCircle() {
-        CircleCollider2D c = new CircleCollider2D(4);
+        CircleCollider c = new CircleCollider(4);
         c.setTransform(new Transform(new Vec2(2, 2)));
         assertTrue(box.detectCollision(c));
     }
 
     @Test
     public void BoxIntersectsBox() {
-        BoxCollider2D box = new BoxCollider2D(new Vec2(4, 4));
+        BoxCollider box = new BoxCollider(new Vec2(4, 4));
         box.setTransform(new Transform(new Vec2(1.5f, 1.5f)).rotate(45));
         assertTrue(box.detectCollision(box));
     }

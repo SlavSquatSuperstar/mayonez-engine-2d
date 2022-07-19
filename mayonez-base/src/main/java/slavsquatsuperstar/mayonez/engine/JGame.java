@@ -2,11 +2,11 @@ package slavsquatsuperstar.mayonez.engine;
 
 import slavsquatsuperstar.mayonez.Mayonez;
 import slavsquatsuperstar.mayonez.Preferences;
-import slavsquatsuperstar.mayonez.graphics.Engine;
-import slavsquatsuperstar.mayonez.graphics.EngineType;
+import slavsquatsuperstar.mayonez.annotations.UsesEngine;
+import slavsquatsuperstar.mayonez.annotations.EngineType;
 import slavsquatsuperstar.mayonez.input.KeyInput;
 import slavsquatsuperstar.mayonez.input.MouseInput;
-import slavsquatsuperstar.mayonez.physics2d.Physics2D;
+import slavsquatsuperstar.mayonez.physics.Physics;
 import slavsquatsuperstar.mayonez.graphics.IMGUI;
 import slavsquatsuperstar.mayonez.graphics.renderer.JRenderer;
 
@@ -17,7 +17,7 @@ import java.awt.*;
  *
  * @author SlavSquatSuperstar
  */
-@Engine(EngineType.AWT)
+@UsesEngine(EngineType.AWT)
 public final class JGame extends GameEngine {
 
     private final IMGUI imgui;
@@ -32,7 +32,7 @@ public final class JGame extends GameEngine {
         window.setMouseInput(MouseInput.INSTANCE);
 
         renderer = new JRenderer();
-        physics = new Physics2D();
+        physics = new Physics();
         imgui = IMGUI.INSTANCE;
     }
 

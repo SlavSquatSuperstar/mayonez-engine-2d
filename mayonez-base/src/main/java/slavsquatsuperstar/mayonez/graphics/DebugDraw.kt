@@ -1,13 +1,16 @@
 package slavsquatsuperstar.mayonez.graphics
 
 import slavsquatsuperstar.math.Vec2
-import slavsquatsuperstar.math.geom.Ellipse
+import slavsquatsuperstar.mayonez.physics.shapes.Ellipse
+import slavsquatsuperstar.mayonez.annotations.ExperimentalFeature
 import slavsquatsuperstar.mayonez.Mayonez
 import slavsquatsuperstar.mayonez.graphics.renderer.Renderable
-import slavsquatsuperstar.mayonez.physics2d.colliders.CircleCollider2D
-import slavsquatsuperstar.mayonez.physics2d.colliders.Collider2D
-import slavsquatsuperstar.mayonez.physics2d.colliders.Edge2D
-import slavsquatsuperstar.mayonez.physics2d.colliders.PolygonCollider2D
+import slavsquatsuperstar.mayonez.annotations.EngineType
+import slavsquatsuperstar.mayonez.annotations.UsesEngine
+import slavsquatsuperstar.mayonez.physics.colliders.CircleCollider
+import slavsquatsuperstar.mayonez.physics.colliders.Collider
+import slavsquatsuperstar.mayonez.physics.colliders.Edge2D
+import slavsquatsuperstar.mayonez.physics.colliders.PolygonCollider
 import java.awt.*
 import java.awt.geom.AffineTransform
 import java.awt.geom.Ellipse2D
@@ -20,7 +23,7 @@ import kotlin.math.roundToInt
  *
  * @author SlavSquatSuperstar
  */
-@Engine(EngineType.AWT)
+@UsesEngine(EngineType.AWT)
 object DebugDraw {
 
     private const val STROKE_SIZE = 2
@@ -104,18 +107,18 @@ object DebugDraw {
     /**
      * Draws a shape onto the screen.
      *
-     * @param shape a [Collider2D] instance
+     * @param shape a [Collider] instance
      * @param color the color to use
      */
     @JvmStatic
-    fun drawShape(shape: Collider2D?, color: Color) {
+    fun drawShape(shape: Collider?, color: Color) {
         when (shape) {
-            is CircleCollider2D -> drawCircle(shape, color)
-            is PolygonCollider2D -> drawPolygon(shape, color)
+            is CircleCollider -> drawCircle(shape, color)
+            is PolygonCollider -> drawPolygon(shape, color)
         }
     }
 
-    private fun drawCircle(circle: CircleCollider2D, color: Color) {
+    private fun drawCircle(circle: CircleCollider, color: Color) {
         val minPx = (circle.center() - Vec2(circle.radius, circle.radius)).toScreen()
         val diameterPx = (circle.radius * 2).toScreen()
         shapes.add(ShapeDrawer(DrawPriority.SHAPE) { g2: Graphics2D ->
@@ -126,6 +129,7 @@ object DebugDraw {
 
     // Temporary ellipse draw function
     @JvmStatic
+    @ExperimentalFeature
     fun drawEllipse(ellipse: Ellipse, color: Color) {
         val sizePx = ellipse.size.toScreen()
         val centerPx = ellipse.center.toScreen()
@@ -141,7 +145,7 @@ object DebugDraw {
         })
     }
 
-    private fun drawPolygon(polygon: PolygonCollider2D, color: Color) {
+    private fun drawPolygon(polygon: PolygonCollider, color: Color) {
         val shape = Polygon()
         for (point in polygon.getVertices()) shape.addPoint(
             point.x.toScreen().roundToInt(),
@@ -158,18 +162,18 @@ object DebugDraw {
     /**
      * Fills in a shape onto the screen.
      *
-     * @param shape a [Collider2D] instance
+     * @param shape a [Collider] instance
      * @param color the color to use
      */
     @JvmStatic
-    fun fillShape(shape: Collider2D?, color: Color) {
+    fun fillShape(shape: Collider?, color: Color) {
         when (shape) {
-            is CircleCollider2D -> fillCircle(shape, color)
-            is PolygonCollider2D -> fillPolygon(shape, color)
+            is CircleCollider -> fillCircle(shape, color)
+            is PolygonCollider -> fillPolygon(shape, color)
         }
     }
 
-    private fun fillCircle(circle: CircleCollider2D, color: Color) {
+    private fun fillCircle(circle: CircleCollider, color: Color) {
         val minPx = (circle.center() - Vec2(circle.radius, circle.radius)).toScreen()
         val diameterPx = (circle.radius * 2).toScreen()
         shapes.add(ShapeDrawer(DrawPriority.SHAPE) { g2: Graphics2D ->
@@ -178,7 +182,7 @@ object DebugDraw {
         })
     }
 
-    private fun fillPolygon(box: PolygonCollider2D, color: Color) {
+    private fun fillPolygon(box: PolygonCollider, color: Color) {
         val shape = Polygon()
         for (point in box.getVertices())
             shape.addPoint(point.x.toScreen().roundToInt(), point.y.toScreen().roundToInt())

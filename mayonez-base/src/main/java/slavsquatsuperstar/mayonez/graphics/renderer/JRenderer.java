@@ -5,8 +5,8 @@ import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Mayonez;
 import slavsquatsuperstar.mayonez.Scene;
 import slavsquatsuperstar.mayonez.graphics.DebugDraw;
-import slavsquatsuperstar.mayonez.graphics.Engine;
-import slavsquatsuperstar.mayonez.graphics.EngineType;
+import slavsquatsuperstar.mayonez.annotations.UsesEngine;
+import slavsquatsuperstar.mayonez.annotations.EngineType;
 import slavsquatsuperstar.mayonez.graphics.JCamera;
 
 import java.awt.*;
@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * Draws all in-game textures and shapes onto the screen with Java's AWT and Swing libraries.
  */
-@Engine(EngineType.AWT)
+@UsesEngine(EngineType.AWT)
 public final class JRenderer extends Renderer {
 
     private final List<GameObject> objects; // TODO store sprites instead of objects?

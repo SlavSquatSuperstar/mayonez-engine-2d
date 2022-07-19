@@ -9,7 +9,7 @@ import slavsquatsuperstar.mayonez.engine.GameEngine
 import slavsquatsuperstar.mayonez.engine.JGame
 import slavsquatsuperstar.mayonez.fileio.Assets
 import slavsquatsuperstar.mayonez.graphics.renderer.Renderer
-import slavsquatsuperstar.mayonez.physics2d.Physics2D
+import slavsquatsuperstar.mayonez.physics.Physics
 import kotlin.system.exitProcess
 
 /**
@@ -134,7 +134,7 @@ object Mayonez {
     }
 
     @JvmStatic
-    val physics: Physics2D
+    val physics: Physics
         get() = game!!.physics
 
     @JvmStatic

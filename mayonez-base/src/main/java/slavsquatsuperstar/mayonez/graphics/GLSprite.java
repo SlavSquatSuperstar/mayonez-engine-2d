@@ -5,13 +5,15 @@ import org.joml.Vector4f;
 import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Transform;
 import slavsquatsuperstar.mayonez.fileio.GLTexture;
+import slavsquatsuperstar.mayonez.annotations.EngineType;
+import slavsquatsuperstar.mayonez.annotations.UsesEngine;
 
 /**
  * A component that draws an image at a {@link GameObject}'s position. For use the GL engine.
  *
  * @author SlavSquatSuperstar
  */
-@Engine(EngineType.GL)
+@UsesEngine(EngineType.GL)
 public final class GLSprite extends Sprite { // = Gabe's SpriteRenderer
 
     private Vector4f color = new Vector4f(1, 1, 1, 1);

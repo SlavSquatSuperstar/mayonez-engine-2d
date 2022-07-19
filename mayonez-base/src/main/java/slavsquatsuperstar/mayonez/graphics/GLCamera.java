@@ -5,13 +5,15 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.Preferences;
+import slavsquatsuperstar.mayonez.annotations.EngineType;
+import slavsquatsuperstar.mayonez.annotations.UsesEngine;
 
 /**
  * A scene camera for the GL engine.
  *
  * @author SlavSquatSuperstar
  */
-@Engine(EngineType.GL)
+@UsesEngine(EngineType.GL)
 public final class GLCamera implements Camera {
 
     private Matrix4f projectionMatrix, viewMatrix;

@@ -8,11 +8,11 @@ import slavsquatsuperstar.mayonez.Scene;
 import slavsquatsuperstar.mayonez.graphics.DebugDraw;
 import slavsquatsuperstar.mayonez.input.KeyInput;
 import slavsquatsuperstar.mayonez.input.MouseInput;
-import slavsquatsuperstar.mayonez.physics2d.PhysicsMaterial;
-import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
-import slavsquatsuperstar.mayonez.physics2d.colliders.BoxCollider2D;
-import slavsquatsuperstar.mayonez.physics2d.colliders.CircleCollider2D;
-import slavsquatsuperstar.mayonez.physics2d.colliders.Collider2D;
+import slavsquatsuperstar.mayonez.physics.PhysicsMaterial;
+import slavsquatsuperstar.mayonez.physics.Rigidbody;
+import slavsquatsuperstar.mayonez.physics.colliders.BoxCollider;
+import slavsquatsuperstar.mayonez.physics.colliders.CircleCollider;
+import slavsquatsuperstar.mayonez.physics.colliders.Collider;
 import slavsquatsuperstar.mayonez.scripts.DragAndDrop;
 import slavsquatsuperstar.mayonez.scripts.KeepInScene;
 import slavsquatsuperstar.mayonez.scripts.MouseFlick;
@@ -40,7 +40,7 @@ public abstract class PhysicsTestScene extends Scene {
     @Override
     public void onUserRender(Graphics2D g2) {
         for (GameObject o : objects) {
-            Collider2D col = o.getComponent(Collider2D.class);
+            Collider col = o.getComponent(Collider.class);
             if (col != null) {
                 Color color = col.getDrawColor();
                 // Draw velocity and direction vector
@@ -76,9 +76,9 @@ public abstract class PhysicsTestScene extends Scene {
         return new GameObject("Circle", position) {
             @Override
             protected void init() {
-                Collider2D circle = new CircleCollider2D(radius).setMaterial(material).setDrawColor(Colors.BLUE);
+                Collider circle = new CircleCollider(radius).setMaterial(material).setDrawColor(Colors.BLUE);
                 addComponent(circle);
-                addComponent(new Rigidbody2D(circle.getMass(DENSITY)));
+                addComponent(new Rigidbody(circle.getMass(DENSITY)));
                 addComponent(new KeepInScene(getScene(), KeepInScene.Mode.BOUNCE));
                 addComponent(new DragAndDrop("left mouse"));
                 addComponent(new MouseFlick(MoveMode.VELOCITY, "right mouse", 15, false));
@@ -90,9 +90,9 @@ public abstract class PhysicsTestScene extends Scene {
         return new GameObject("AABB Rectangle", position) {
             @Override
             protected void init() {
-                Collider2D box = new BoxCollider2D(new Vec2(width, height)).setMaterial(material).setDrawColor(Colors.LIGHT_GREEN);
+                Collider box = new BoxCollider(new Vec2(width, height)).setMaterial(material).setDrawColor(Colors.LIGHT_GREEN);
                 addComponent(box);
-                addComponent(new Rigidbody2D(box.getMass(DENSITY)).setFixedRotation(true));
+                addComponent(new Rigidbody(box.getMass(DENSITY)).setFixedRotation(true));
                 addComponent(new KeepInScene(getScene(), KeepInScene.Mode.BOUNCE));
                 addComponent(new DragAndDrop("left mouse"));
                 addComponent(new MouseFlick(MoveMode.VELOCITY, "right mouse", 15, false));
@@ -104,9 +104,9 @@ public abstract class PhysicsTestScene extends Scene {
         return new GameObject("OBB Rectangle", position) {
             @Override
             protected void init() {
-                Collider2D box = new BoxCollider2D(new Vec2(width, height)).setMaterial(material).setDrawColor(Colors.ORANGE);
+                Collider box = new BoxCollider(new Vec2(width, height)).setMaterial(material).setDrawColor(Colors.ORANGE);
                 addComponent(box);
-                addComponent(new Rigidbody2D(box.getMass(DENSITY)));
+                addComponent(new Rigidbody(box.getMass(DENSITY)));
                 addComponent(new KeepInScene(getScene(), KeepInScene.Mode.BOUNCE));
                 addComponent(new DragAndDrop("left mouse"));
                 addComponent(new MouseFlick(MoveMode.VELOCITY, "right mouse", 15, false));
@@ -119,8 +119,8 @@ public abstract class PhysicsTestScene extends Scene {
             @Override
             protected void init() {
                 transform.rotate(rotation);
-                addComponent(new Rigidbody2D(0f));
-                addComponent(new BoxCollider2D(size).setDrawColor(Colors.BLACK));
+                addComponent(new Rigidbody(0f));
+                addComponent(new BoxCollider(size).setDrawColor(Colors.BLACK));
             }
         };
     }

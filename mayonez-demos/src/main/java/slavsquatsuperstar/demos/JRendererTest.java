@@ -6,8 +6,8 @@ import slavsquatsuperstar.mayonez.*;
 import slavsquatsuperstar.mayonez.graphics.JCamera;
 import slavsquatsuperstar.mayonez.graphics.JSpriteSheet;
 import slavsquatsuperstar.mayonez.input.KeyInput;
-import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
-import slavsquatsuperstar.mayonez.physics2d.colliders.BoxCollider2D;
+import slavsquatsuperstar.mayonez.physics.Rigidbody;
+import slavsquatsuperstar.mayonez.physics.colliders.BoxCollider;
 import slavsquatsuperstar.mayonez.scripts.DragAndDrop;
 import slavsquatsuperstar.mayonez.scripts.KeyMovement;
 import slavsquatsuperstar.mayonez.scripts.MoveMode;
@@ -36,8 +36,8 @@ public class JRendererTest extends Scene {
                 cam.setSubject(this);
                 cam.enableKeepInScene(false);
                 addComponent(sprites.getSprite(0));
-                addComponent(new BoxCollider2D(new Vec2(0.8f, 1)));
-                addComponent(new Rigidbody2D(1f).setFixedRotation(true));
+                addComponent(new BoxCollider(new Vec2(0.8f, 1)));
+                addComponent(new Rigidbody(1f).setFixedRotation(true));
                 addComponent(new KeyMovement(MoveMode.POSITION, 20));
                 addComponent(new Script() {
                     @Override
@@ -59,8 +59,8 @@ public class JRendererTest extends Scene {
             @Override
             protected void init() {
                 addComponent(sprites.getSprite(spriteIndex));
-                addComponent(new BoxCollider2D(new Vec2(0.8f, 1)));
-                addComponent(new Rigidbody2D(1f).setFixedRotation(true));
+                addComponent(new BoxCollider(new Vec2(0.8f, 1)));
+                addComponent(new Rigidbody(1f).setFixedRotation(true));
                 addComponent(new DragAndDrop("left mouse"));
             }
 

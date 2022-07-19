@@ -4,8 +4,8 @@ import org.joml.*;
 import org.lwjgl.BufferUtils;
 import slavsquatsuperstar.mayonez.Logger;
 import slavsquatsuperstar.mayonez.Mayonez;
-import slavsquatsuperstar.mayonez.graphics.Engine;
-import slavsquatsuperstar.mayonez.graphics.EngineType;
+import slavsquatsuperstar.mayonez.annotations.UsesEngine;
+import slavsquatsuperstar.mayonez.annotations.EngineType;
 
 import java.io.IOException;
 import java.nio.FloatBuffer;
@@ -19,7 +19,7 @@ import static org.lwjgl.opengl.GL20.*;
  *
  * @author SlavSquatSuperstar
  */
-@Engine(EngineType.GL)
+@UsesEngine(EngineType.GL)
 public class Shader extends TextFile {
 
     private String filename;

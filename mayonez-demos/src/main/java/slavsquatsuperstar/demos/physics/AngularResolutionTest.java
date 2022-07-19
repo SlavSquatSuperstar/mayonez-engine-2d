@@ -6,9 +6,9 @@ import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Mayonez;
 import slavsquatsuperstar.mayonez.Script;
 import slavsquatsuperstar.mayonez.input.KeyInput;
-import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
-import slavsquatsuperstar.mayonez.physics2d.colliders.Collider2D;
-import slavsquatsuperstar.mayonez.physics2d.colliders.PolygonCollider2D;
+import slavsquatsuperstar.mayonez.physics.Rigidbody;
+import slavsquatsuperstar.mayonez.physics.colliders.Collider;
+import slavsquatsuperstar.mayonez.physics.colliders.PolygonCollider;
 import slavsquatsuperstar.mayonez.scripts.DragAndDrop;
 import slavsquatsuperstar.mayonez.scripts.KeepInScene;
 import slavsquatsuperstar.mayonez.scripts.MouseFlick;
@@ -37,9 +37,9 @@ public class AngularResolutionTest extends PhysicsTestScene {
         addObject(new GameObject("Triangle", new Vec2(40, 40)) {
             @Override
             protected void init() {
-                Collider2D poly = new PolygonCollider2D(3, 5).setDrawColor(Colors.BLACK);
+                Collider poly = new PolygonCollider(3, 5).setDrawColor(Colors.BLACK);
                 addComponent(poly);
-                addComponent(new Rigidbody2D(poly.getMass(DENSITY)));
+                addComponent(new Rigidbody(poly.getMass(DENSITY)));
                 addComponent(new KeepInScene(getScene(), KeepInScene.Mode.BOUNCE));
                 addComponent(new DragAndDrop("left mouse"));
                 addComponent(new MouseFlick(MoveMode.VELOCITY, "right mouse", 15, false));

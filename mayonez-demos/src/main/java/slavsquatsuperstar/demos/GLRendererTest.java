@@ -14,8 +14,8 @@ import slavsquatsuperstar.mayonez.graphics.GLSprite;
 import slavsquatsuperstar.mayonez.graphics.GLSpriteSheet;
 import slavsquatsuperstar.mayonez.input.KeyInput;
 import slavsquatsuperstar.mayonez.input.MouseInput;
-import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
-import slavsquatsuperstar.mayonez.physics2d.colliders.BoxCollider2D;
+import slavsquatsuperstar.mayonez.physics.Rigidbody;
+import slavsquatsuperstar.mayonez.physics.colliders.BoxCollider;
 import slavsquatsuperstar.mayonez.scripts.DragAndDrop;
 import slavsquatsuperstar.mayonez.scripts.KeyMovement;
 import slavsquatsuperstar.mayonez.scripts.MoveMode;
@@ -61,8 +61,8 @@ public class GLRendererTest extends Scene {
             @Override
             protected void init() {
                 addComponent(sprites.getSprite(0));
-                addComponent(new BoxCollider2D(new Vec2(0.8f, 1)));
-                addComponent(new Rigidbody2D(1f).setFixedRotation(true));
+                addComponent(new BoxCollider(new Vec2(0.8f, 1)));
+                addComponent(new Rigidbody(1f).setFixedRotation(true));
                 addComponent(new KeyMovement(MoveMode.POSITION, 20));
             }
         }.setZIndex(1));
@@ -88,8 +88,8 @@ public class GLRendererTest extends Scene {
             @Override
             protected void init() {
                 addComponent(sprites.getSprite(spriteIndex));
-                addComponent(new BoxCollider2D(new Vec2(0.8f, 1)));
-                addComponent(new Rigidbody2D(1f).setFixedRotation(true));
+                addComponent(new BoxCollider(new Vec2(0.8f, 1)));
+                addComponent(new Rigidbody(1f).setFixedRotation(true));
                 addComponent(new DragAndDrop("left mouse"));
             }
 

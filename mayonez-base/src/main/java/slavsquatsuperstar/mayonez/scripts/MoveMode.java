@@ -1,7 +1,7 @@
 package slavsquatsuperstar.mayonez.scripts;
 
 import slavsquatsuperstar.mayonez.Script;
-import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
+import slavsquatsuperstar.mayonez.physics.Rigidbody;
 
 /**
  * How a {@link Script} should affect the object's position or movement.
@@ -18,19 +18,19 @@ public enum MoveMode {
      */
     POSITION(false),
     /**
-     * Change the object's velocity (requires a {@link Rigidbody2D}).
+     * Change the object's velocity (requires a {@link Rigidbody}).
      */
     VELOCITY(true),
     /**
-     * Add an impulse to the object (requires a {@link Rigidbody2D}).
+     * Add an impulse to the object (requires a {@link Rigidbody}).
      */
     IMPULSE(true),
     /**
-     * Add an acceleration to the object (requires a {@link Rigidbody2D}).
+     * Add an acceleration to the object (requires a {@link Rigidbody}).
      */
     ACCELERATION(true),
     /**
-     * Add a force to the object (requires a {@link Rigidbody2D}).
+     * Add a force to the object (requires a {@link Rigidbody}).
      */
     FORCE(true);
 

@@ -6,10 +6,10 @@ import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Mayonez;
 import slavsquatsuperstar.mayonez.Script;
 import slavsquatsuperstar.mayonez.input.KeyInput;
-import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
-import slavsquatsuperstar.mayonez.physics2d.colliders.BoxCollider2D;
-import slavsquatsuperstar.mayonez.physics2d.colliders.CircleCollider2D;
-import slavsquatsuperstar.mayonez.physics2d.colliders.Collider2D;
+import slavsquatsuperstar.mayonez.physics.Rigidbody;
+import slavsquatsuperstar.mayonez.physics.colliders.BoxCollider;
+import slavsquatsuperstar.mayonez.physics.colliders.CircleCollider;
+import slavsquatsuperstar.mayonez.physics.colliders.Collider;
 import slavsquatsuperstar.mayonez.scripts.DragAndDrop;
 import slavsquatsuperstar.mayonez.scripts.KeepInScene;
 import slavsquatsuperstar.mayonez.scripts.MouseFlick;
@@ -26,8 +26,8 @@ public class FrictionTest extends PhysicsTestScene {
         addObject(new GameObject("Ground", new Vec2(getWidth() / 2f, 1)) {
             @Override
             protected void init() {
-                addComponent(new Rigidbody2D(0).setFixedRotation(true));
-                addComponent(new BoxCollider2D(new Vec2(getWidth(), 2)).setDrawColor(Colors.BLACK));
+                addComponent(new Rigidbody(0).setFixedRotation(true));
+                addComponent(new BoxCollider(new Vec2(getWidth(), 2)).setDrawColor(Colors.BLACK));
             }
         });
 
@@ -35,8 +35,8 @@ public class FrictionTest extends PhysicsTestScene {
             @Override
             protected void init() {
                 transform.rotate(-25);
-                addComponent(new Rigidbody2D(0));
-                addComponent(new BoxCollider2D(new Vec2(40, 5)).setMaterial(NORMAL_MATERIAL).setDrawColor(Colors.BLACK));
+                addComponent(new Rigidbody(0));
+                addComponent(new BoxCollider(new Vec2(40, 5)).setMaterial(NORMAL_MATERIAL).setDrawColor(Colors.BLACK));
             }
         });
 
@@ -47,14 +47,14 @@ public class FrictionTest extends PhysicsTestScene {
             protected void init() {
                 float speed = 2f;
 //                Collider2D collider = new BoxCollider2D(new Vec2(6, 6));
-                Collider2D collider = new CircleCollider2D(3f).setDrawColor(Colors.BLUE);
+                Collider collider = new CircleCollider(3f).setDrawColor(Colors.BLUE);
                 addComponent(collider);
-                addComponent(new Rigidbody2D(collider.getMass(DENSITY)));
+                addComponent(new Rigidbody(collider.getMass(DENSITY)));
                 addComponent(new MouseFlick(MoveMode.VELOCITY, "right mouse", 15, false));
                 addComponent(new DragAndDrop("left mouse"));
                 addComponent(new KeepInScene(getScene(), KeepInScene.Mode.BOUNCE));
                 addComponent(new Script() {
-                    private Rigidbody2D rb;
+                    private Rigidbody rb;
 
                     @Override
                     public void start() {

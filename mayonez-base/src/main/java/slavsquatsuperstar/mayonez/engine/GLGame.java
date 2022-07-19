@@ -1,12 +1,12 @@
 package slavsquatsuperstar.mayonez.engine;
 
 import slavsquatsuperstar.mayonez.Preferences;
-import slavsquatsuperstar.mayonez.graphics.Engine;
-import slavsquatsuperstar.mayonez.graphics.EngineType;
+import slavsquatsuperstar.mayonez.annotations.UsesEngine;
+import slavsquatsuperstar.mayonez.annotations.EngineType;
 import slavsquatsuperstar.mayonez.graphics.renderer.GLRenderer;
 import slavsquatsuperstar.mayonez.input.KeyInput;
 import slavsquatsuperstar.mayonez.input.MouseInput;
-import slavsquatsuperstar.mayonez.physics2d.Physics2D;
+import slavsquatsuperstar.mayonez.physics.Physics;
 
 import static org.lwjgl.glfw.GLFW.glfwGetTime;
 
@@ -15,7 +15,7 @@ import static org.lwjgl.glfw.GLFW.glfwGetTime;
  *
  * @author SlavSquatSuperstar
  */
-@Engine(EngineType.GL)
+@UsesEngine(EngineType.GL)
 public final class GLGame extends GameEngine { // can't implement runnable otherwise GLFW will crash
 
     public GLGame() {
@@ -25,7 +25,7 @@ public final class GLGame extends GameEngine { // can't implement runnable other
         window.setMouseInput(MouseInput.INSTANCE);
 
         renderer = new GLRenderer();
-        physics = new Physics2D();
+        physics = new Physics();
     }
 
     // Game Loop Methods

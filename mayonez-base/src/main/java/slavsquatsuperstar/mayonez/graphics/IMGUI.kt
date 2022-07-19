@@ -2,6 +2,8 @@ package slavsquatsuperstar.mayonez.graphics
 
 import slavsquatsuperstar.math.Vec2
 import slavsquatsuperstar.mayonez.graphics.renderer.Renderable
+import slavsquatsuperstar.mayonez.annotations.EngineType
+import slavsquatsuperstar.mayonez.annotations.UsesEngine
 import java.awt.BasicStroke
 import java.awt.Color
 import java.awt.Graphics2D
@@ -15,7 +17,7 @@ import java.awt.geom.Rectangle2D
  *
  * @author SlavSquatSuperstar
  */
-@Engine(EngineType.AWT)
+@UsesEngine(EngineType.AWT)
 object IMGUI {
 
     private const val STROKE_SIZE = 4

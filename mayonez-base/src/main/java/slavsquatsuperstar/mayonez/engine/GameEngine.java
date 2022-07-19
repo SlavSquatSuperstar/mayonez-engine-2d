@@ -5,7 +5,7 @@ import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.mayonez.Logger;
 import slavsquatsuperstar.mayonez.Mayonez;
 import slavsquatsuperstar.mayonez.Scene;
-import slavsquatsuperstar.mayonez.physics2d.Physics2D;
+import slavsquatsuperstar.mayonez.physics.Physics;
 import slavsquatsuperstar.mayonez.graphics.renderer.Renderer;
 
 /**
@@ -20,7 +20,7 @@ public sealed abstract class GameEngine permits JGame, GLGame{
     private boolean running = false;
 
     // Game Layers
-    protected Physics2D physics;
+    protected Physics physics;
     protected Renderer renderer;
     protected Scene scene;
     protected Window window;
@@ -143,7 +143,7 @@ public sealed abstract class GameEngine permits JGame, GLGame{
         return renderer;
     }
 
-    public Physics2D getPhysics() {
+    public Physics getPhysics() {
         return physics;
     }
 

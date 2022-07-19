@@ -1,7 +1,7 @@
 package slavsquatsuperstar.mayonez;
 
-import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
-import slavsquatsuperstar.mayonez.physics2d.colliders.Collider2D;
+import slavsquatsuperstar.mayonez.physics.Rigidbody;
+import slavsquatsuperstar.mayonez.physics.colliders.Collider;
 
 import java.awt.*;
 
@@ -24,21 +24,21 @@ public abstract class Script extends Component {
     }
 
     /**
-     * Provides a reference to the parent object's {@link Collider2D} component.
+     * Provides a reference to the parent object's {@link Collider} component.
      *
      * @return the collider, if it exists
      */
-    public Collider2D getCollider() {
-        return parent.getComponent(Collider2D.class);
+    public Collider getCollider() {
+        return parent.getComponent(Collider.class);
     }
 
     /**
-     * Provides a reference to the parent object's {@link Rigidbody2D} component.
+     * Provides a reference to the parent object's {@link Rigidbody} component.
      *
      * @return the rigidbody, if it exists
      */
-    public Rigidbody2D getRigidbody() {
-        return parent.getComponent(Rigidbody2D.class);
+    public Rigidbody getRigidbody() {
+        return parent.getComponent(Rigidbody.class);
     }
 
     // Overrides

@@ -2,6 +2,8 @@ package slavsquatsuperstar.mayonez.graphics;
 
 import slavsquatsuperstar.mayonez.fileio.Assets;
 import slavsquatsuperstar.mayonez.fileio.JTexture;
+import slavsquatsuperstar.mayonez.annotations.EngineType;
+import slavsquatsuperstar.mayonez.annotations.UsesEngine;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +13,7 @@ import java.util.List;
  *
  * @author SlavSquatSuperstar
  */
-@Engine(EngineType.AWT)
+@UsesEngine(EngineType.AWT)
 public class JSpriteSheet {
 
     private final List<JSprite> sprites; // store images in memory

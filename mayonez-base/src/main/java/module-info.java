@@ -23,12 +23,13 @@ module mayonez.base {
 
     // Public API
     exports slavsquatsuperstar.math;
-    exports slavsquatsuperstar.math.geom;
     exports slavsquatsuperstar.mayonez;
+    exports slavsquatsuperstar.mayonez.annotations;
     exports slavsquatsuperstar.mayonez.fileio;
     exports slavsquatsuperstar.mayonez.graphics;
     exports slavsquatsuperstar.mayonez.input;
-    exports slavsquatsuperstar.mayonez.physics2d;
-    exports slavsquatsuperstar.mayonez.physics2d.colliders;
+    exports slavsquatsuperstar.mayonez.physics;
+    exports slavsquatsuperstar.mayonez.physics.colliders;
+    exports slavsquatsuperstar.mayonez.physics.shapes;
     exports slavsquatsuperstar.mayonez.scripts;
 }

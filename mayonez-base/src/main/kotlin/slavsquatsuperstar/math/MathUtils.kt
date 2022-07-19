@@ -31,7 +31,15 @@ object MathUtils {
     @JvmStatic
     fun equals(num1: Float, num2: Float): Boolean = abs(num1 - num2) <= EPSILON
 
-    // Pythagorean Theorem
+    // Exponents
+
+    /**
+     * Squares a value. Shorthand for x * x or x^2.
+     *
+     * @param value a real number
+     * @return the number squared
+     */
+    fun squared(value: Float): Float = value * value
 
     /**
      * Takes the principal square root of a number. Intended for Java files as an equivalent for Math.sqrt(double).
@@ -41,6 +49,8 @@ object MathUtils {
      */
     @JvmStatic
     fun sqrt(value: Float): Float = sqrt(value.toDouble()).toFloat()
+
+    // Pythagorean Theorem
 
     /**
      * Calculates the length of the diagonal of an n-dimensional figure with perpendicular edges (rectangle, cuboid, hyper-cuboid, etc.).
@@ -185,6 +195,16 @@ object MathUtils {
         return (Math.random() * (range.max - range.min + 1) + range.min).toInt()
     }
 
+    /**
+     * Generates a random event with a certain percent change of succeeding.
+     * @param percent the change of succeeding, from 0-1
+     * @return true a percentage of the time, otherwise false
+     */
+    @JvmStatic
+    fun randomPercent(percent: Float): Boolean {
+        return Math.random() < percent
+    }
+
     // Rounding Methods
 
     /**
@@ -217,6 +237,7 @@ object MathUtils {
 
     // Trig / Angle Methods
 
+    // TODO check precision on kotlin sin/cos and toRadians
     /**
      * Takes the sine of an angle.
      *

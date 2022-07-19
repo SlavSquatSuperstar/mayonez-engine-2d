@@ -8,6 +8,8 @@ import slavsquatsuperstar.mayonez.Logger;
 import slavsquatsuperstar.mayonez.Mayonez;
 import slavsquatsuperstar.mayonez.fileio.Assets;
 import slavsquatsuperstar.mayonez.fileio.JTexture;
+import slavsquatsuperstar.mayonez.annotations.EngineType;
+import slavsquatsuperstar.mayonez.annotations.UsesEngine;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -18,7 +20,7 @@ import java.awt.image.BufferedImage;
  *
  * @author SlavSquatSuperstar
  */
-@Engine(EngineType.AWT)
+@UsesEngine(EngineType.AWT)
 public final class JSprite extends Sprite {
 
     private BufferedImage image;

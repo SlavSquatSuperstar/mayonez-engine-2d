@@ -2,8 +2,8 @@ package slavsquatsuperstar.mayonez.fileio;
 
 import org.lwjgl.BufferUtils;
 import slavsquatsuperstar.mayonez.Logger;
-import slavsquatsuperstar.mayonez.graphics.Engine;
-import slavsquatsuperstar.mayonez.graphics.EngineType;
+import slavsquatsuperstar.mayonez.annotations.UsesEngine;
+import slavsquatsuperstar.mayonez.annotations.EngineType;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -25,7 +25,7 @@ import static org.lwjgl.system.MemoryUtil.memSlice;
  *
  * @author SlavSquatSuperstar
  */
-@Engine(EngineType.GL)
+@UsesEngine(EngineType.GL)
 public class GLTexture extends Asset {
 
     private ByteBuffer image;

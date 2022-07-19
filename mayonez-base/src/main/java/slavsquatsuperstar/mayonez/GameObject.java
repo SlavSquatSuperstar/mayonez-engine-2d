@@ -1,7 +1,7 @@
 package slavsquatsuperstar.mayonez;
 
 import slavsquatsuperstar.math.Vec2;
-import slavsquatsuperstar.mayonez.physics2d.colliders.Collider2D;
+import slavsquatsuperstar.mayonez.physics.colliders.Collider;
 
 import java.awt.*;
 import java.util.List;
@@ -195,7 +195,7 @@ public class GameObject {
      *
      * @param trigger the trigger collider
      */
-    public void onTrigger(Collider2D trigger) {}
+    public void onTrigger(Collider trigger) {}
 
     /**
      * Destroy this game object and remove it from the scene.

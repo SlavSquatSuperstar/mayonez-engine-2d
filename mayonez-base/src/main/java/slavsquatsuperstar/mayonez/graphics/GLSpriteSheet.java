@@ -3,6 +3,8 @@ package slavsquatsuperstar.mayonez.graphics;
 import org.joml.Vector2f;
 import slavsquatsuperstar.mayonez.fileio.Assets;
 import slavsquatsuperstar.mayonez.fileio.GLTexture;
+import slavsquatsuperstar.mayonez.annotations.EngineType;
+import slavsquatsuperstar.mayonez.annotations.UsesEngine;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +14,7 @@ import java.util.List;
  *
  * @author SlavSquatSuperstar
  */
-@Engine(EngineType.GL)
+@UsesEngine(EngineType.GL)
 public class GLSpriteSheet {
 
     private final List<GLSprite> sprites;

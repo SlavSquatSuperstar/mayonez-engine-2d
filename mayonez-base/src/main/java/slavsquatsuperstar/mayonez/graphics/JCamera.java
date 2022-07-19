@@ -6,7 +6,9 @@ import slavsquatsuperstar.mayonez.Logger;
 import slavsquatsuperstar.mayonez.Preferences;
 import slavsquatsuperstar.mayonez.Script;
 import slavsquatsuperstar.mayonez.input.MouseInput;
-import slavsquatsuperstar.mayonez.physics2d.colliders.BoxCollider2D;
+import slavsquatsuperstar.mayonez.annotations.EngineType;
+import slavsquatsuperstar.mayonez.annotations.UsesEngine;
+import slavsquatsuperstar.mayonez.physics.colliders.BoxCollider;
 import slavsquatsuperstar.mayonez.scripts.DragAndDrop;
 import slavsquatsuperstar.mayonez.scripts.KeepInScene;
 
@@ -15,7 +17,7 @@ import slavsquatsuperstar.mayonez.scripts.KeepInScene;
  *
  * @author SlavSquatSuperstar
  */
-@Engine(EngineType.AWT)
+@UsesEngine(EngineType.AWT)
 public final class JCamera extends Script implements Camera {
 
     private final Vec2 size, minPos, maxPos;  // In world units
@@ -51,7 +53,7 @@ public final class JCamera extends Script implements Camera {
                     }
                 }.setEnabled(false));
                 // Keep camera inside scene and add camera collider
-                addComponent(new BoxCollider2D(camera.size).setTrigger(true));
+                addComponent(new BoxCollider(camera.size).setTrigger(true));
                 addComponent(camera.keepInScene = new KeepInScene(camera.minPos, camera.maxPos, KeepInScene.Mode.STOP));
             }
 

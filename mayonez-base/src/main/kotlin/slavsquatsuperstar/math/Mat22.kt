@@ -1,5 +1,7 @@
 package slavsquatsuperstar.math
 
+import java.util.*
+
 /**
  * A Mat22 represents a table of numbers with 2 rows and 2 columns.
  */
@@ -30,7 +32,8 @@ class Mat22 {
     var m11: Float
 
     /**
-     * Initialize this matrix from four numbers, from left to right, then top to bottom.
+     * Initialize this matrix from four numbers, from left to right, then top to bottom. The resulting matrix looks like
+     * [[(m00, m01), (m10, m11)]].
      */
     constructor(m00: Float, m01: Float, m10: Float, m11: Float) {
         this.m00 = m00
@@ -63,11 +66,52 @@ class Mat22 {
         m11 = cos
     }
 
-    // Row/Column Vectors
-    fun row1(): Vec2 = Vec2(m00, m01)
-    fun row2(): Vec2 = Vec2(m10, m11)
-    fun col1(): Vec2 = Vec2(m00, m10)
-    fun col2(): Vec2 = Vec2(m01, m11)
+    // Matrix Elements
+
+    /**
+     * Returns the matrix element located at the given row and column. Note: Indices start from 0.
+     *
+     * @param row the vertical position of the element (top to bottom)
+     * @param col the horizontal position of the element (left to right)
+     * @return the element at (row, col)
+     */
+    fun get(row: Int, col: Int): Float {
+        return when {
+            row == 0 && col == 0 -> m00
+            row == 0 && col == 1 -> m01
+            row == 1 && col == 0 -> m10
+            row == 1 && col == 1 -> m11
+            else -> 0f
+        }
+    }
+
+    /**
+     * Returns the given row of the matrix as a horizontal vector.
+     *
+     * @param row which row of the matrix, zero-indexed
+     * @return the specified row
+     */
+    fun row(row: Int): Vec2 {
+        return when (row) {
+            0 -> Vec2(m00, m01)
+            1 -> Vec2(m10, m11)
+            else -> Vec2()
+        }
+    }
+
+    /**
+     * Returns the given column of the matrix as a vertical vector.
+     *
+     * @param col which row of the matrix, zero-indexed
+     * @return the specified column
+     */
+    fun col(col: Int): Vec2 {
+        return when (col) {
+            0 -> Vec2(m00, m10)
+            1 -> Vec2(m01, m11)
+            else -> Vec2()
+        }
+    }
 
     /**
      * Calculates the determinant of this matrix.
@@ -78,9 +122,15 @@ class Mat22 {
 
     // Arithmetic Operations
 
-    operator fun plus(m: Mat22): Mat22 = Mat22(this.col1() + m.col1(), this.col2() + m.col2())
+    operator fun plus(m: Mat22): Mat22 = Mat22(
+        this.m00 + m.m00, this.m01 + m.m01,
+        this.m10 + m.m10, this.m11 + m.m11,
+    )
 
-    operator fun minus(m: Mat22): Mat22 = Mat22(this.col1() - m.col1(), this.col2() - m.col2())
+    operator fun minus(m: Mat22): Mat22 = Mat22(
+        this.m00 - m.m00, this.m01 - m.m01,
+        this.m10 - m.m10, this.m11 - m.m11,
+    )
 
     /**
      * Multiplies each component of this matrix by the given scalar
@@ -88,7 +138,8 @@ class Mat22 {
      * @param scalar a real number
      * @return the scaled matrix
      */
-    operator fun times(scalar: Float): Mat22 = Mat22(m00 * scalar, m01 * scalar, m10 * scalar, m11 * scalar)
+    operator fun times(scalar: Float): Mat22 =
+        Mat22(m00 * scalar, m01 * scalar, m10 * scalar, m11 * scalar)
 
     // Matrix and Vector Multiplication
 
@@ -96,7 +147,7 @@ class Mat22 {
      * Applies this matrix to a vector as a linear transformation.
      *
      * @param v a 2D column vector
-     * @return the transformed vector
+     * @return the transformed vector as a column
      */
     operator fun times(v: Vec2): Vec2 = Vec2(m00 * v.x + m01 * v.y, m10 * v.x + m11 * v.y)
 
@@ -108,10 +159,10 @@ class Mat22 {
      * @return the matrix product
      */
     operator fun times(m: Mat22): Mat22 = Mat22(
-        this.row1().dot(m.col1()),
-        this.row1().dot(m.col2()),
-        this.row2().dot(m.col1()),
-        this.row2().dot(m.col2())
+        this.row(0).dot(m.col(0)),
+        this.row(0).dot(m.col(1)),
+        this.row(1).dot(m.col(0)),
+        this.row(1).dot(m.col(1))
     )
 
     /**
@@ -119,25 +170,22 @@ class Mat22 {
      *
      * @return this matrix's transpose.
      */
-    fun transpose(): Mat22 = Mat22(row1(), row2())
+    fun transpose(): Mat22 = Mat22(row(1), row(2))
 
     // Overrides
 
-    override fun hashCode(): Int {
-        var result = m00.hashCode()
-        result = 31 * result + m01.hashCode()
-        result = 31 * result + m10.hashCode()
-        result = 31 * result + m11.hashCode()
-        return result
-    }
+    override fun hashCode(): Int = Objects.hash(m00, m01, m10, m11)
 
     override fun equals(other: Any?): Boolean {
         return if (other is Mat22)
             MathUtils.equals(m00, other.m00) && MathUtils.equals(m01, other.m01)
                     && MathUtils.equals(m10, other.m10) && MathUtils.equals(m11, other.m11)
-        else super.equals(other)
+        else false
     }
 
-    override fun toString(): String = "[${row1()}, ${row2()}]"
+    /**
+     * A string representation of this matrix, in the form [[(m00, m01), (m10, m11)]]
+     */
+    override fun toString(): String = "[${row(1)}, ${row(2)}]"
 
 }

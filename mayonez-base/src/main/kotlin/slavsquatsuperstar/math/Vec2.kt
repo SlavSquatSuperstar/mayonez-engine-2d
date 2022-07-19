@@ -189,7 +189,6 @@ class Vec2 constructor(
      * @return this vector's magnitude
      */
     fun len(): Float = sqrt(lenSq())
-    fun mag(): Float = len()
 
     /**
      * Calculates the magnitude squared of this vector (less CPU expensive than square root).
@@ -197,7 +196,6 @@ class Vec2 constructor(
      * @return this vector's magnitude squared
      */
     fun lenSq(): Float = (x * x) + (y * y)
-    fun magSq(): Float = lenSq()
 
     /**
      * Calculates the distance between the tips of this vector and another.
@@ -241,7 +239,7 @@ class Vec2 constructor(
      * @param v another 2D vector
      * @return the angle between the two vectors
      */
-    fun angle(v: Vec2): Float = MathUtils.toDegrees(acos((this.dot(v) / this.len() / v.len())))
+    fun angle(v: Vec2): Float = MathUtils.toDegrees(acos(this.dot(v) / (this.len() * v.len())))
 
     /**
      * Rotates this vector by an angle around the origin (0, 0).
@@ -270,7 +268,7 @@ class Vec2 constructor(
      *
      * @return a perpendicular unit vector
      */
-    fun getNormal(): Vec2 = Vec2(-y, x).unit()
+    fun normal(): Vec2 = Vec2(-y, x).unit()
 
     // Math Utils Methods
 
@@ -333,6 +331,14 @@ class Vec2 constructor(
 
     // Overrides
 
+    operator fun get(i: Int): Float {
+        return when (i) {
+            0 -> x
+            1 -> y
+            else -> 0f
+        }
+    }
+
     operator fun component1() = x
     operator fun component2() = y
 
@@ -344,7 +350,7 @@ class Vec2 constructor(
         }
     }
 
-    override fun hashCode(): Int = (31 * x.hashCode()) + y.hashCode()
+    override fun hashCode(): Int = 31 * x.hashCode() + y.hashCode()
 
     override fun toString(): String = String.format("(%.4f, %.4f)", x, y)
 

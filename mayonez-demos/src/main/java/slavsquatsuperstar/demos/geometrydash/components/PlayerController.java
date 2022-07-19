@@ -6,13 +6,13 @@ import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.Script;
 import slavsquatsuperstar.mayonez.graphics.JCamera;
 import slavsquatsuperstar.mayonez.input.KeyInput;
-import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
+import slavsquatsuperstar.mayonez.physics.Rigidbody;
 
 @SuppressWarnings("unused")
 public class PlayerController extends Script {
 
     // Physics Fields
-    private Rigidbody2D rb;
+    private Rigidbody rb;
 
     // Movement Parameters
     private float speed;

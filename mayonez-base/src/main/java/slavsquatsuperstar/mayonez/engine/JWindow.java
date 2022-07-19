@@ -2,8 +2,8 @@ package slavsquatsuperstar.mayonez.engine;
 
 import slavsquatsuperstar.mayonez.Logger;
 import slavsquatsuperstar.mayonez.Preferences;
-import slavsquatsuperstar.mayonez.graphics.Engine;
-import slavsquatsuperstar.mayonez.graphics.EngineType;
+import slavsquatsuperstar.mayonez.annotations.UsesEngine;
+import slavsquatsuperstar.mayonez.annotations.EngineType;
 import slavsquatsuperstar.mayonez.input.KeyInput;
 import slavsquatsuperstar.mayonez.input.MouseInput;
 import slavsquatsuperstar.mayonez.graphics.renderer.Renderable;
@@ -20,7 +20,7 @@ import java.awt.image.BufferStrategy;
  *
  * @author SlavSquatSuperstar
  */
-@Engine(EngineType.AWT)
+@UsesEngine(EngineType.AWT)
 public final class JWindow extends JFrame implements Window {
 
     private final static AffineTransform FLIP_XF = AffineTransform.getScaleInstance(1.0, -1.0);

@@ -3,12 +3,12 @@ package slavsquatsuperstar.test.physicstests;
 import org.junit.jupiter.api.Test;
 import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
-import slavsquatsuperstar.mayonez.physics2d.Rigidbody2D;
+import slavsquatsuperstar.mayonez.physics.Rigidbody;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- * Unit tests for {@link Rigidbody2D} class.
+ * Unit tests for {@link Rigidbody} class.
  *
  * @author SlavSquatSuperstar
  */
@@ -16,7 +16,7 @@ public class RigidbodyTests {
 
     @Test
     public void appliedForceChangesVelocity() {
-        Rigidbody2D rb = new Rigidbody2D(2);
+        Rigidbody rb = new Rigidbody(2);
         rb.addForce(new Vec2(2, 0));
         physicsUpdate(rb, 1);
         assertEquals(new Vec2(1, 0), rb.getVelocity());
@@ -24,7 +24,7 @@ public class RigidbodyTests {
 
     @Test
     public void appliedTorqueChangesAngVelocity() {
-        Rigidbody2D rb = new Rigidbody2D(2);
+        Rigidbody rb = new Rigidbody(2);
         rb.addTorque(2);
         physicsUpdate(rb, 1);
         assertEquals(1, rb.getAngVelocity());
@@ -32,7 +32,7 @@ public class RigidbodyTests {
 
     @Test
     public void torqueScalesWithRadius() {
-        Rigidbody2D rb = new Rigidbody2D(2);
+        Rigidbody rb = new Rigidbody(2);
         rb.addForceAtPoint(new Vec2(2, 0), new Vec2(0, 2));
         physicsUpdate(rb, 1);
         assertEquals(-2, rb.getAngVelocity());
@@ -40,7 +40,7 @@ public class RigidbodyTests {
 
     @Test
     public void angularVelocityScalesWithRadius() {
-        Rigidbody2D rb = new Rigidbody2D(1, 0, 0);
+        Rigidbody rb = new Rigidbody(1, 0, 0);
         rb.addAngularVelocity(360 / MathUtils.PI);
         physicsUpdate(rb, 1);
         assertEquals(2, rb.getRelativePointVelocity(new Vec2(1, 0)).len(), MathUtils.EPSILON);
@@ -49,7 +49,7 @@ public class RigidbodyTests {
 
     @Test
     public void pointVelocityScalesWithRadius() {
-        Rigidbody2D rb = new Rigidbody2D(1, 0, 0);
+        Rigidbody rb = new Rigidbody(1, 0, 0);
         rb.addAngularVelocity(360 / MathUtils.PI);
         physicsUpdate(rb, 1);
         assertEquals(new Vec2(0, 2), rb.getRelativePointVelocity(new Vec2(1, 0)));
@@ -57,7 +57,7 @@ public class RigidbodyTests {
 
     @Test
     public void pointVelocityAddsWithBodyVelocity() {
-        Rigidbody2D rb = new Rigidbody2D(1, 0, 0);
+        Rigidbody rb = new Rigidbody(1, 0, 0);
         rb.addVelocity(new Vec2(1, 0));
         rb.addAngularVelocity(360 / MathUtils.PI);
         physicsUpdate(rb, 1);
@@ -65,7 +65,7 @@ public class RigidbodyTests {
         assertEquals(new Vec2(1, -2), rb.getPointVelocity(rb.getPosition().add(new Vec2(-1, 0))));
     }
 
-    static void physicsUpdate(Rigidbody2D rb, float dt) {
+    static void physicsUpdate(Rigidbody rb, float dt) {
         rb.integrateForce(dt);
         rb.integrateVelocity(dt);
     }

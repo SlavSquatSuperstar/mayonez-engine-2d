@@ -2,7 +2,7 @@ package slavsquatsuperstar.mayonez.scripts;
 
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.input.MouseInput;
-import slavsquatsuperstar.mayonez.physics2d.colliders.Collider2D;
+import slavsquatsuperstar.mayonez.physics.colliders.Collider;
 
 // TODO use mouse events and save states (held, released)
 
@@ -13,7 +13,7 @@ import slavsquatsuperstar.mayonez.physics2d.colliders.Collider2D;
  */
 public abstract class MouseScript extends MovementScript {
 
-    protected Collider2D collider; // Reference to object collider
+    protected Collider collider; // Reference to object collider
 
     // Script Info
     protected boolean inverted; // Moving the mouse will move the object in the opposite way
