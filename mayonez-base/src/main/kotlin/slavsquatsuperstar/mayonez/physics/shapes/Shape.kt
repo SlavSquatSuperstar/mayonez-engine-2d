@@ -90,7 +90,7 @@ abstract class Shape {
      * Rotates every point on this shape around the given origin by the same angle.
      * This is a rigid transformation and preserves the area and perimeter.
      *
-     * @param angle the counterclockwise angle
+     * @param angle  the counterclockwise angle
      * @param origin The point to rotate around. Pass in null to rotate around the centroid.
      * @return the rotated shape
      */
@@ -105,7 +105,6 @@ abstract class Shape {
      * @param origin The point to rotate around. Pass in null to rotate around the centroid.
      * @return the scaled shape
      */
-    // TODO change centered to origin
     abstract fun scale(factor: Vec2, origin: Vec2? = null): Shape
 
     // Overrides

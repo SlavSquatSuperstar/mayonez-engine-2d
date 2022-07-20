@@ -28,8 +28,13 @@ class Transform(
     var scale: Vec2,
 ) {
     constructor() : this(Vec2(), 0f, Vec2(1f, 1f))
+
     constructor(position: Vec2) : this(position, 0f, Vec2(1f, 1f))
+
+    constructor(position: Vec2, rotation: Float) : this(position, rotation, Vec2(1f, 1f))
+
     constructor(position: Vec2, scale: Vec2) : this(position, 0f, scale)
+
 
     val rotationRadians: Float
         get() = MathUtils.toRadians(rotation)

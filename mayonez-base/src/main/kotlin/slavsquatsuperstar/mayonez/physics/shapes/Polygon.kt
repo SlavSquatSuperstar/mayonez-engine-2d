@@ -6,19 +6,19 @@ import slavsquatsuperstar.math.Vec2
 import kotlin.math.abs
 
 /**
- * A shape made up of a finite number of vertices connected by straight edges.
- * This class is designed to model convex polygons, meaning all internal angles are less than 180 degrees,
- * and any line between two vertices is in the shape's interior or boundary.
+ * A shape made up of a finite number of vertices connected by straight edges. This class is designed to model convex
+ * polygons, meaning all internal angles are less than 180 degrees, and any line between two vertices is in the shape's
+ * interior or boundary.
  *
  * @author SlavSquatSuperstar
  */
-// TODO correct self-intersecting
+// TODO correct self-intersecting and set convex hull
 open class Polygon(vararg vertices: Vec2) : Shape() {
 
     /**
      * Constructs a regular polygon with the specified number of vertices and radius.
      *
-     * @param sides the number of sides/vertices
+     * @param sides  the number of sides/vertices
      * @param radius the distance from the center to each vertex
      */
     constructor(center: Vec2, sides: Int, radius: Float) : this(*regularPolygonVertices(center, sides, radius))
@@ -26,7 +26,7 @@ open class Polygon(vararg vertices: Vec2) : Shape() {
     // Polygon Vertices
 
     /**
-     * The points that define the edges of this polygon.
+     * The points that define the shape of this polygon.
      */
     val vertices: Array<Vec2> = arrayOf(*vertices)
 
@@ -206,7 +206,7 @@ open class Polygon(vararg vertices: Vec2) : Shape() {
         /**
          * Rotates an array of vertices around a center.
          *
-         * @param angle the counterclockwise angle
+         * @param angle  the counterclockwise angle
          * @param center the center of rotation
          * @return the rotated vertex array
          */
@@ -238,19 +238,21 @@ open class Polygon(vararg vertices: Vec2) : Shape() {
          * Constructs a polygon with the shape of a rotatable axis-aligned rectangle.
          *
          * @param center the rectangle's center
-         * @param size the rectangle's dimensions
+         * @param size   the rectangle's dimensions
          * @return the rectangle
          */
+        @JvmStatic
         fun rectangle(center: Vec2, size: Vec2): Polygon = rectangle(center, size, 0f)
 
         /**
          * Constructs a polygon with the shape of a rotated rectangle.
          *
          * @param center the rectangle's center
-         * @param size the rectangle's dimensions
-         * @param angle the rectangle's rotated
+         * @param size   the rectangle's dimensions
+         * @param angle  the rectangle's rotated
          * @return the rotated rectangle
          */
+        @JvmStatic
         fun rectangle(center: Vec2, size: Vec2, angle: Float): Polygon =
             Polygon(*BoundingRectangle.rectangleVertices(center, size, angle = angle))
     }

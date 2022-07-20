@@ -8,8 +8,8 @@ import kotlin.math.*
  * A Vec2 represents an object in 2D space that has magnitude and direction (arrow), the location of something in the
  * xy-plane (point), or even an ordered pair of two numbers (list).
  **
- * @param x the new x-component
- * @param y the new y-component
+ * @param x the vector's x-component
+ * @param y the vector's y-component
  *
  * @constructor Initialize this vector from an x and y value, as (x, y).
  *
@@ -264,11 +264,11 @@ class Vec2 constructor(
     }
 
     /**
-     * Calculates this vector's normal by rotating this vector by 90 degrees and normalizing the result.
+     * Creates a vector perpendicular (rotated 90 degrees counterclockwise)  to this one with a length of 1.
      *
-     * @return a perpendicular unit vector
+     * @return a perpendicular vector
      */
-    fun normal(): Vec2 = Vec2(-y, x).unit()
+    fun normal(): Vec2 = Vec2(-y, x)
 
     // Math Utils Methods
 

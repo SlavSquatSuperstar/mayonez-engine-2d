@@ -6,7 +6,7 @@ import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.physics.shapes.BoundingRectangle;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static slavsquatsuperstar.math.MathUtils.EPSILON;
+import static slavsquatsuperstar.test.TestUtils.assertFloatEquals;
 
 /**
  * Unit tests for {@link BoundingRectangle} class.
@@ -19,13 +19,14 @@ public class RectangleTests {
 
     @BeforeAll
     public static void getRect() {
-        rect = new BoundingRectangle(new Vec2(3, 1.5f), new Vec2(4, 3)); // center (3, 1.5f), size(4, 3), no rotation
+        // 4x3 rectangle, min corner at origin
+        rect = new BoundingRectangle(new Vec2(3, 1.5f), new Vec2(4, 3));
         // vertices (1, 1), (5, 1), (1, 3), (5, 3)
     }
 
     @Test
     public void areaCorrect() {
-        assertEquals(rect.area(), rect.width * rect.height, EPSILON);
+        assertFloatEquals(rect.area(), rect.width * rect.height);
     }
 
     @Test
@@ -47,18 +48,23 @@ public class RectangleTests {
         assertFalse(rect.contains(new Vec2(-1, 2)));
     }
 
-    @Test
-    public void rectTransformedProperly() {
-        BoundingRectangle transformed = rect.scale(new Vec2(2, 2), null).translate(new Vec2(-1, 0.5f)).rotate(45, null);
-        assertEquals(transformed.center(), new Vec2(2, 2));
-//        assertEquals(rect.area() * 4f, transformed.area()); // TODO doesn't do this anymore, use template
-    }
 
     @Test
-    public void rectNonLinearTransformedProperly() {
-        BoundingRectangle transformed = rect.scale(new Vec2(3, 4), null);
-        assertEquals(rect.center(), transformed.center());
-        assertEquals(rect.area() * 12, transformed.area());
+    public void rectScaledProperly() {
+        BoundingRectangle xf1 = rect.scale(new Vec2(2, 2), null).translate(new Vec2(-1, 0.5f));
+        assertEquals(xf1.center(), new Vec2(2, 2));
+        BoundingRectangle xf2 = rect.scale(new Vec2(3, 4), null);
+        assertEquals(rect.center(), xf2.center());
+        assertEquals(rect.area() * 12, xf2.area());
     }
+
+//    @Test
+//    public void rectRotatedProperly() {
+//        float angle = 45f;
+//        Polygon poly = Polygon.rectangle(new Vec2(3, 1.5f), new Vec2(4, 3)).rotate(angle, null);
+//        BoundingRectangle rot = rect.rotate(angle, null);
+//        assertEquals(rot.center(), poly.center());
+//        assertEquals(poly.boundingRectangle(), rot);
+//    }
 
 }

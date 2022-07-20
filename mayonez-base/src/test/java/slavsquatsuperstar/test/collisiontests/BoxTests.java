@@ -20,11 +20,10 @@ public class BoxTests {
 
     static BoxCollider box;
 
-    // Create box centered at (0, 0) with dimensions 4x4 with a rotation of 45 degrees clockwise
+    // 4x4 centered at (0, 0) rotated by 45 degrees
     @BeforeAll
     public static void getBox() {
-        box = new BoxCollider(new Vec2(2, 2)).setTransform(
-                new Transform().rotate(45).resize(new Vec2(2, 2)));
+        box = new BoxCollider(new Vec2(2, 2)).setTransform(new Transform(new Vec2(), 45, new Vec2(2, 2)));
     }
 
     // Contains Point
@@ -64,6 +63,7 @@ public class BoxTests {
     @Test
     public void nearestPointOutsideBox() {
         assertEquals(new Vec2(2, 0).rotate(45), box.nearestPoint(new Vec2(2, 2)));
+        assertEquals(new Vec2(2, 2).rotate(45), box.nearestPoint(new Vec2(3, 4).rotate(45)));
     }
 
     // Raycast
@@ -87,12 +87,29 @@ public class BoxTests {
     }
 
     @Test
+    public void limitedOutsideRayMissesBox() {
+        assertNull(box.raycast(new Ray(new Vec2(-10, 0), new Vec2(1, 0)), 2));
+        assertNull(box.raycast(new Ray(new Vec2(-10, 10), new Vec2(1, -1)), 2));
+    }
+
+    @Test
     public void insideRayHitsBox() {
-        assertNotNull(box.raycast(new Ray(new Vec2(-2, 0), new Vec2(1, 0)), 0));
+        assertNotNull(box.raycast(new Ray(new Vec2(-1.5f, 0), new Vec2(1, 0)), 0));
         assertNotNull(box.raycast(new Ray(new Vec2(-1, 1), new Vec2(1, -1)), 0));
     }
 
     // Line Intersection
+
+    @Test
+    public void interiorLineIsInBox() {
+        assertTrue(box.intersects(new Edge2D(new Vec2(1.5f, 1.5f), new Vec2(-1, -1))));
+    }
+
+    @Test
+    public void tangentLineIsInBox() {
+        assertTrue(box.intersects(new Edge2D(new Vec2(1, 3).rotate(45), new Vec2(3, 1).rotate(45))));
+        assertTrue(box.intersects(new Edge2D(new Vec2(-1, -3).rotate(45), new Vec2(-3, -1).rotate(45))));
+    }
 
     @Test
     public void secantLineIsInBox() {
@@ -104,6 +121,9 @@ public class BoxTests {
     public void bisectLineIsInBox() {
         assertTrue(box.intersects(new Edge2D(new Vec2(0, 4), new Vec2(0, -4))));
         assertTrue(box.intersects(new Edge2D(new Vec2(-4, 4), new Vec2(4, -4))));
+        assertTrue(box.intersects(new Edge2D(new Vec2(-3, -3), new Vec2(3, 3))));
+        assertTrue(box.intersects(new Edge2D(new Vec2(0, -3), new Vec2(0, 3))));
+        assertTrue(box.intersects(new Edge2D(new Vec2(-2, 0), new Vec2(2, 0))));
     }
 
     @Test
@@ -111,21 +131,46 @@ public class BoxTests {
         Edge2D[] edges = box.getEdges();
         for (Edge2D edge : edges)
             assertTrue(box.intersects(edge));
+
+//        assertTrue(aabb.intersects(new Edge2D(new Vec2(-2, -2), new Vec2(-2, 2))));
+//        assertTrue(aabb.intersects(new Edge2D(new Vec2(2, 3), new Vec2(2, -3))));
+//        assertTrue(aabb.intersects(new Edge2D(new Vec2(-2.1f, 2), new Vec2(1.9f, 2))));
     }
+
+//    @Test
+//    public void lineIsInAABB() {
+//        assertTrue(aabb.intersects(new Edge2D(new Vec2(0, 0), new Vec2(-2, -2))));
+//        assertTrue(aabb.intersects(new Edge2D(new Vec2(0, 0), new Vec2(2, 2))));
+//        assertTrue(aabb.intersects(new Edge2D(new Vec2(1, 2), new Vec2(-1, 2))));
+//        assertTrue(aabb.intersects(new Edge2D(new Vec2(1, 1), new Vec2(3, 3))));
+//        assertTrue(aabb.intersects(new Edge2D(new Vec2(2, 2), new Vec2(3, 3))));
+//        assertTrue(aabb.intersects(new Edge2D(new Vec2(2, 2), new Vec2(2, 3))));
+//        assertTrue(aabb.intersects(new Edge2D(new Vec2(2, 2), new Vec2(3, 1))));
+//        assertTrue(aabb.intersects(new Edge2D(new Vec2(-1, -1), new Vec2(-3, -3))));
+//        assertTrue(aabb.intersects(new Edge2D(new Vec2(3, 2), new Vec2(2, 2))));
+//    }
+//
+//    @Test
+//    public void lineNotInAABB() {
+//        assertFalse(aabb.intersects(new Edge2D(new Vec2(3, 3), new Vec2(4, 4))));
+//        assertFalse(aabb.intersects(new Edge2D(new Vec2(4, 4), new Vec2(3, 3))));
+//        assertFalse(aabb.intersects(new Edge2D(new Vec2(5, 2), new Vec2(4, 2))));
+//        assertFalse(aabb.intersects(new Edge2D(new Vec2(3, 1), new Vec2(3, -1))));
+//    }
 
     // Box vs Shape
 
     @Test
-    public void BoxIntersectsCircle() {
+    public void boxIntersectsCircle() {
         CircleCollider c = new CircleCollider(4);
         c.setTransform(new Transform(new Vec2(2, 2)));
         assertTrue(box.detectCollision(c));
     }
 
     @Test
-    public void BoxIntersectsBox() {
+    public void boxIntersectsBox() {
         BoxCollider box = new BoxCollider(new Vec2(4, 4));
-        box.setTransform(new Transform(new Vec2(1.5f, 1.5f)).rotate(45));
+        box.setTransform(new Transform(new Vec2(1.5f, 1.5f), 45f));
         assertTrue(box.detectCollision(box));
     }
 

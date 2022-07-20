@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import slavsquatsuperstar.math.MathUtils;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static slavsquatsuperstar.test.TestUtils.assertFloatEquals;
 
 /**
  * Unit tests for {@link MathUtils} class.
@@ -16,36 +17,29 @@ public class MathUtilTests {
     // Equality
 
     @Test
-    public void epsilonEqualsZero() {
-        assertEquals(0f, Float.MIN_VALUE, MathUtils.EPSILON);
+    public void floatEpsilonEqualsZero() {
+        assertFloatEquals(0f, Float.MIN_VALUE);
     }
 
     // Accumulator
 
     @Test
-    public void findAverageSuccess() {
+    public void findAverageAndSumSuccess() {
         assertEquals(MathUtils.avg(1, 2, 3, 4, 5), 3);
-        assertEquals(MathUtils.avg(1f, 2f, 3f, 4f), 2.5f, MathUtils.EPSILON);
+        assertFloatEquals(MathUtils.avg(1f, 2f, 3f, 4f), 2.5f);
 
-    }
-
-    @Test
-    public void findSumSuccess() {
         assertEquals(MathUtils.sum(1, 2, 3, 4), 10);
-        assertEquals(MathUtils.sum(0.5f, 1f, 1.5f, 2f, 2.5f), 7.5f, MathUtils.EPSILON);
+        assertFloatEquals(MathUtils.sum(0.5f, 1f, 1.5f, 2f, 2.5f), 7.5f);
     }
 
     // Find Extreme
     @Test
-    public void findMinSuccess() {
+    public void findMinAndMaxSuccess() {
         assertEquals(MathUtils.min(-6, 1, 2, 3, 5), -6);
-        assertEquals(MathUtils.min(-6.5f, 1, 2, 3, 5.5f), -6.5f, MathUtils.EPSILON);
-    }
+        assertFloatEquals(MathUtils.min(-6.5f, 1, 2, 3, 5.5f), -6.5f);
 
-    @Test
-    public void findMaxSuccess() {
         assertEquals(MathUtils.max(-6, 1, 2, 3, 5), 5);
-        assertEquals(MathUtils.max(-6.5f, 1, 2, 3, 5.5f), 5.5f, MathUtils.EPSILON);
+        assertFloatEquals(MathUtils.max(-6.5f, 1, 2, 3, 5.5f), 5.5f);
     }
 
     // Clamp / Range
@@ -53,21 +47,21 @@ public class MathUtilTests {
     @Test
     public void clampUpSuccess() {
         assertEquals(0, MathUtils.clamp(-1, 0, 5));
-        assertEquals(-5f, MathUtils.clamp(-6f, -5f, 0f), MathUtils.EPSILON);
-        assertEquals(2.5f, MathUtils.clamp(0f, 2.5f, 7.5f), MathUtils.EPSILON);
+        assertFloatEquals(-5f, MathUtils.clamp(-6f, -5f, 0f));
+        assertFloatEquals(2.5f, MathUtils.clamp(0f, 2.5f, 7.5f));
     }
 
     @Test
     public void clampDownSuccess() {
         assertEquals(5, MathUtils.clamp(6, 0, 5));
-        assertEquals(0f, MathUtils.clamp(1f, -5f, 0f), MathUtils.EPSILON);
-        assertEquals(7.5f, MathUtils.clamp(10f, 2.5f, 7.5f), MathUtils.EPSILON);
+        assertFloatEquals(0f, MathUtils.clamp(1f, -5f, 0f));
+        assertFloatEquals(7.5f, MathUtils.clamp(10f, 2.5f, 7.5f));
     }
 
     @Test
     public void clampNoneSuccess() {
         assertEquals(1, MathUtils.clamp(1, 0, 5));
-        assertEquals(-1f, MathUtils.clamp(-1f, -5f, 0f), MathUtils.EPSILON);
+        assertFloatEquals(-1f, MathUtils.clamp(-1f, -5f, 0f));
     }
 
     @Test
@@ -141,29 +135,29 @@ public class MathUtilTests {
 
     @Test
     public void roundUpSuccess() {
-        assertEquals(0.07f, MathUtils.round(0.069f, 2), MathUtils.EPSILON);
-        assertEquals(0.007f, MathUtils.round(0.0069f, 3), MathUtils.EPSILON);
+        assertFloatEquals(0.07f, MathUtils.round(0.069f, 2));
+        assertFloatEquals(0.007f, MathUtils.round(0.0069f, 3));
     }
 
     @Test
     public void roundDownSuccess() {
-        assertEquals(0.04f, MathUtils.round(0.0420f, 2), MathUtils.EPSILON);
-        assertEquals(0.004f, MathUtils.round(0.00420f, 3), MathUtils.EPSILON);
-        assertEquals(0.06f, MathUtils.truncate(0.069f, 2), MathUtils.EPSILON);
+        assertFloatEquals(0.04f, MathUtils.round(0.0420f, 2));
+        assertFloatEquals(0.004f, MathUtils.round(0.00420f, 3));
+        assertFloatEquals(0.06f, MathUtils.truncate(0.069f, 2));
     }
 
     // Trig
 
     @Test
     public void angleConversionSuccess() {
-        assertEquals(180, MathUtils.toDegrees(MathUtils.PI), MathUtils.EPSILON);
-        assertEquals(MathUtils.PI, MathUtils.toRadians(180), MathUtils.EPSILON);
+        assertFloatEquals(180, MathUtils.toDegrees(MathUtils.PI));
+        assertFloatEquals(MathUtils.PI, MathUtils.toRadians(180));
     }
 
     @Test
-    public void pythagoreanNDimensionsSuccess() {
-        assertEquals(10, MathUtils.hypot(6, 8), MathUtils.EPSILON);
-        assertEquals(13, MathUtils.hypot(3, 4, 12), MathUtils.EPSILON);
+    public void hypotenuseNDimensionsSuccess() {
+        assertFloatEquals(10, MathUtils.hypot(6, 8));
+        assertFloatEquals(13, MathUtils.hypot(3, 4, 12));
     }
 
 }

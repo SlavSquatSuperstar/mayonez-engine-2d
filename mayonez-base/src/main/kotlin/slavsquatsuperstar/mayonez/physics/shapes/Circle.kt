@@ -59,7 +59,7 @@ class Circle(
     /**
      * Rotates this circle around a point. If rotating around the center, returns a copy of this circle.
      *
-     * @param angle the counterclockwise angle
+     * @param angle  the counterclockwise angle
      * @param origin The point to rotate around. Pass in null to rotate around the center of mass.
      * @return a circle with the same center and radius
      */
@@ -69,7 +69,7 @@ class Circle(
      * Scales this circle uniformly using the given vector's x-component as the scale factor.
      *
      * @param factor how much to scale the radius by
-     * @param centered whether to scale the circle from its center and not the origin (0, 0)
+     * @param origin The point to rotate around. Pass in null to rotate around the centroid.
      * @return the scaled circle
      */
     // To scale a circle non-uniformly, use the Ellipse class.

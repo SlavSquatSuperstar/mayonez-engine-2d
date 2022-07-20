@@ -66,7 +66,7 @@ public class CircleTests {
     public void outsideRayHitsCircle() {
         RaycastResult rc = c.raycast(new Ray(new Vec2(-5, 0), new Vec2(1, 0)), 0);
         assertNotNull(rc);
-        assertEquals(3, rc.getDistance(), MathUtils.EPSILON);
+        assertEquals(3, rc.getDistance(), MathUtils.FLOAT_EPSILON);
         assertEquals(new Vec2(-2, 0), rc.getContact());
         assertNotNull(c.raycast(new Ray(new Vec2(5, 5), new Vec2(-1, -1.5f)), 0));
     }

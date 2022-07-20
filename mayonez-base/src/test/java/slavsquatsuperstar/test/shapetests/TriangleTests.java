@@ -2,11 +2,12 @@ package slavsquatsuperstar.test.shapetests;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.physics.shapes.Triangle;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static slavsquatsuperstar.test.TestUtils.assertFloatEquals;
 
 /**
  * Unit tests for {@link Triangle} class.
@@ -24,11 +25,11 @@ public class TriangleTests {
 
     @Test
     public void areaCorrect() {
-        assertEquals(tri.area(), 0.5f * tri.base * tri.height, MathUtils.EPSILON);
+        assertFloatEquals(tri.area(), 0.5f * tri.base * tri.height);
         Triangle tri2 = new Triangle(new Vec2(-1, 0), new Vec2(1, 4), new Vec2(5, -2));
-        assertEquals(tri2.area(), 0.5f * tri2.base * tri2.height, MathUtils.EPSILON);
+        assertFloatEquals(tri2.area(), 0.5f * tri2.base * tri2.height);
     }
-    
+
     @Test
     public void interiorPointInTri() {
         assertTrue(tri.contains(new Vec2(0, 0)));

@@ -70,11 +70,13 @@ class Triangle(v1: Vec2, v2: Vec2, v3: Vec2) : Polygon(v1, v2, v3) {
 
     // Transformations
     // TODO explicit
-    override fun translate(direction: Vec2): Triangle = super.translate(direction) as Triangle
+    override fun translate(direction: Vec2): Triangle = Triangle(*vertices.translate(direction))
 
-    override fun rotate(angle: Float, origin: Vec2?): Triangle = super.rotate(angle, origin) as Triangle
+    override fun rotate(angle: Float, origin: Vec2?): Triangle =
+        Triangle(*vertices.rotate(angle, origin ?: this.center()))
 
-    override fun scale(factor: Vec2, origin: Vec2?): Triangle = super.scale(factor, origin) as Triangle
+    override fun scale(factor: Vec2, origin: Vec2?): Triangle =
+        Triangle(*vertices.scale(factor, origin ?: this.center()))
 
     // Overrides
 
@@ -87,12 +89,10 @@ class Triangle(v1: Vec2, v2: Vec2, v3: Vec2) : Polygon(v1, v2, v3) {
         return MathUtils.sum(*areas) <= this.area()
     }
 
-    override fun equals(other: Any?): Boolean {
-        return (other is Triangle) && this.vertices.contentEquals(other.vertices)
-    }
+    override fun equals(other: Any?): Boolean = (other is Triangle) && this.vertices.contentEquals(other.vertices)
 
     /**
-     * A description of the triangle in the form Triangle (v1, v2, v3)
+     * A description of the triangle in the form Triangle (v1, v2, v3).
      */
     override fun toString(): String = "Triangle ${vertices[0]}, ${vertices[1]}, ${vertices[2]}"
 

@@ -2,9 +2,9 @@ package slavsquatsuperstar.test.mathtests;
 
 import org.junit.jupiter.api.Test;
 import slavsquatsuperstar.math.Vec2;
-import slavsquatsuperstar.math.MathUtils;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static slavsquatsuperstar.test.TestUtils.assertFloatEquals;
 
 /**
  * Unit tests for {@link Vec2} class.
@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author SlavSquatSuperstar
  */
 public class VectorTests {
-
+    
     @Test
     public void equivalentVectorEquals() {
         Vec2 v1 = new Vec2(5, 5);
@@ -43,8 +43,8 @@ public class VectorTests {
 
     @Test
     public void unitVectorLengthIsOne() {
-        assertEquals(1f, new Vec2(500, 500).unit().lenSq(), MathUtils.EPSILON);
-        assertEquals(1f, new Vec2(-500, -500).unit().lenSq(), MathUtils.EPSILON);
+        assertFloatEquals(1f, new Vec2(500, 500).unit().lenSq());
+        assertFloatEquals(1f, new Vec2(-500, -500).unit().lenSq());
     }
 
     @Test
@@ -65,7 +65,7 @@ public class VectorTests {
     public void parallelCrossProductIsZero() {
         Vec2 v1 = new Vec2(1, 0);
         Vec2 v2 = new Vec2(-1, 0);
-        assertEquals(v1.cross(v2), 0f, MathUtils.EPSILON);
+        assertFloatEquals(v1.cross(v2), 0f);
     }
 
     @Test
@@ -86,7 +86,7 @@ public class VectorTests {
     public void crossProductIsAntiCommutative() {
         Vec2 v1 = new Vec2(1, 0);
         Vec2 v2 = new Vec2(0, 1);
-        assertEquals(v1.cross(v2), -v2.cross(v1), MathUtils.EPSILON);
+        assertFloatEquals(v1.cross(v2), -v2.cross(v1));
     }
 
     // Dot Product
@@ -95,8 +95,8 @@ public class VectorTests {
     public void perpendicularDotProductIsZero() {
         Vec2 v1 = new Vec2(1, 0);
         Vec2 v2 = new Vec2(0, 1);
-        assertEquals(90f, v1.angle(v2), MathUtils.EPSILON);
-        assertEquals(0f, v1.dot(v2), MathUtils.EPSILON);
+        assertFloatEquals(90f, v1.angle(v2));
+        assertFloatEquals(0f, v1.dot(v2));
     }
 
     @Test
@@ -135,7 +135,7 @@ public class VectorTests {
     public void perpendicularProjectionIsZero() {
         Vec2 v1 = new Vec2(0, 1);
         Vec2 v2 = new Vec2(1, 0);
-        assertEquals(0f, v1.project(v2).len(), MathUtils.EPSILON);
+        assertFloatEquals(0f, v1.project(v2).len());
     }
 
     @Test
@@ -147,7 +147,7 @@ public class VectorTests {
 
     // Clamping
     @Test
-    public void clampVectorToBoundsSame() {
+    public void clampVectorSameSuccess() {
         Vec2 min = new Vec2(-2, -2);
         Vec2 max = new Vec2(4, 4);
         assertEquals(new Vec2(-2, 4), new Vec2(-2, 4).clampInbounds(min, max));
@@ -155,7 +155,7 @@ public class VectorTests {
     }
 
     @Test
-    public void clampVectorToBoundsSmaller() {
+    public void clampVectorDownSuccess() {
         Vec2 min = new Vec2(-2, -2);
         Vec2 max = new Vec2(4, 4);
         assertEquals(new Vec2(1, -2), new Vec2(1, -3).clampInbounds(min, max));
@@ -164,13 +164,13 @@ public class VectorTests {
     }
 
     @Test
-    public void clampVectorLengthSame() {
+    public void clampVectorLengthSameSuccess() {
         assertEquals(new Vec2(4, 0), new Vec2(4, 0).clampLength(5));
         assertEquals(new Vec2(-2, -2), new Vec2(-2, -2).clampLength(5));
     }
 
     @Test
-    public void clampVectorLengthShorter() {
+    public void clampVectorLengthDownSuccess() {
         assertEquals(new Vec2(5, 0), new Vec2(6, 0).clampLength(5));
         assertEquals(new Vec2(0, -5).rotate(-45), new Vec2(-5, -5).clampLength(5));
     }
@@ -189,8 +189,8 @@ public class VectorTests {
 
     @Test
     public void vectorAngleSuccess() {
-        assertEquals(new Vec2(0, 2).angle(), 90, MathUtils.EPSILON);
-        assertEquals(new Vec2(-2, 0).rotate(-30).angle(), 150, MathUtils.EPSILON);
+        assertFloatEquals(new Vec2(0, 2).angle(), 90);
+        assertFloatEquals(new Vec2(-2, 0).rotate(-30).angle(), 150);
     }
 
 }

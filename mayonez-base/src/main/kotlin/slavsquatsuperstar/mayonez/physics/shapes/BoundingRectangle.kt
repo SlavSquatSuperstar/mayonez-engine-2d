@@ -2,8 +2,6 @@ package slavsquatsuperstar.mayonez.physics.shapes
 
 import slavsquatsuperstar.math.MathUtils
 import slavsquatsuperstar.math.Vec2
-import kotlin.math.cos
-import kotlin.math.sin
 
 /**
  * A four-sided polygon defined by a width and height and is made of up four perpendicular edges. Represents a
@@ -22,17 +20,17 @@ open class BoundingRectangle(protected val center: Vec2, protected val size: Vec
             return arrayOf(Vec2(min), Vec2(max.x, min.y), Vec2(max), Vec2(min.x, max.y)).rotate(angle, center)
         }
 
-        /**
-         * Rotates an imaginary rectangle the same size as this rectangle, then resizes the bounding box to cover the
-         * new rectangle.
-         */
-        fun rotatedDimensions(size: Vec2, angle: Float): Vec2 {
-            // w' = w*cos(theta) + h*sin(theta)
-            // h' = w*sin(theta) + h*cos(theta)
-            val cos = cos(angle)
-            val sin = sin(angle)
-            return Vec2(size.dot(Vec2(cos, sin)), size.dot(Vec2(sin, cos)))
-        }
+//        /**
+//         * Rotates an imaginary rectangle the same size as this rectangle, then resizes the bounding box to cover the
+//         * new rectangle.
+//         */
+//        fun rotatedDimensions(size: Vec2, angle: Float): Vec2 {
+//            // w' = w*cos(theta) + h*sin(theta)
+//            // h' = w*sin(theta) + h*cos(theta)
+//            val cos = abs(cos(angle))
+//            val sin = abs(sin(angle))
+//            return Vec2(size.dot(Vec2(cos, sin)), size.dot(Vec2(sin, cos)))
+//        }
     }
 
     // Rectangle Properties
@@ -86,16 +84,19 @@ open class BoundingRectangle(protected val center: Vec2, protected val size: Vec
 
     override fun translate(direction: Vec2): BoundingRectangle = BoundingRectangle(center + direction, size)
 
-    /**
-     * Calculates the bounding box of a rectangle with the same size as this, rotated by the given angle.
-     *
-     * @param angle the counterclockwise angle
-     * @param origin The point to rotate around. Pass in null to rotate around the centroid.
-     * @return the rotated rectangle's bounding box
-     */
-    override fun rotate(angle: Float, origin: Vec2?): BoundingRectangle {
-        return BoundingRectangle(center.rotate(angle, origin ?: center), rotatedDimensions(size, angle))
-    }
+    override fun rotate(angle: Float, origin: Vec2?): Polygon =
+        throw UnsupportedOperationException("Bounding Rectangles cannot be rotated")
+
+//    /**
+//     * Calculates the bounding box of a rectangle with the same size as this, rotated by the given angle.
+//     *
+//     * @param angle  the counterclockwise angle
+//     * @param origin The point to rotate around. Pass in null to rotate around the centroid.
+//     * @return the rotated rectangle's bounding box
+//     */
+//    override fun rotate(angle: Float, origin: Vec2?): BoundingRectangle {
+//        return BoundingRectangle(center.rotate(angle, origin ?: center), rotatedDimensions(size, angle))
+//    }
 
     override fun scale(factor: Vec2, origin: Vec2?): BoundingRectangle {
         return BoundingRectangle(if (origin == null) center else center.scale(factor, origin), size * factor)

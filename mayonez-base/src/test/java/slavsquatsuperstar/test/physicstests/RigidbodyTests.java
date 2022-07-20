@@ -43,7 +43,7 @@ public class RigidbodyTests {
         Rigidbody rb = new Rigidbody(1, 0, 0);
         rb.addAngularVelocity(360 / MathUtils.PI);
         physicsUpdate(rb, 1);
-        assertEquals(2, rb.getRelativePointVelocity(new Vec2(1, 0)).len(), MathUtils.EPSILON);
+        assertEquals(2, rb.getRelativePointVelocity(new Vec2(1, 0)).len(), MathUtils.FLOAT_EPSILON);
         assertEquals(new Vec2(0, 2), rb.getRelativePointVelocity(new Vec2(1, 0)));
     }
 

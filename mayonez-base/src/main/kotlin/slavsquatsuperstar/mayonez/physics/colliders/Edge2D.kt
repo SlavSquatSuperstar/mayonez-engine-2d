@@ -118,7 +118,7 @@ class Edge2D(@JvmField val start: Vec2, @JvmField val end: Vec2) {
     }
 
     fun clipToSegment(segment: Edge2D): Edge2D {
-        val rayDir = segment.toVector().normal()
+        val rayDir = segment.toVector().normal().unit()
         return clipToPlanes(Ray(segment.start, rayDir), Ray(segment.end, rayDir))
     }
 

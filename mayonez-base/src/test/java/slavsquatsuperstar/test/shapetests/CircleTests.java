@@ -24,7 +24,7 @@ public class CircleTests {
 
     @Test
     public void areaCorrect() {
-        assertEquals(circle.area(), 4 * MathUtils.PI, MathUtils.EPSILON);
+        assertEquals(circle.area(), 4 * MathUtils.PI, MathUtils.FLOAT_EPSILON);
     }
 
     @Test
@@ -47,7 +47,7 @@ public class CircleTests {
 
     @Test
     public void circleTransformedProperly() {
-        Circle newCircle = circle.scale(new Vec2(2f), null).translate(new Vec2(1, 1));
+        Circle newCircle = circle.scale(new Vec2(2, 1), null).translate(new Vec2(1, 1));
         assertEquals(newCircle.center(), new Vec2(3, 3));
         assertEquals(circle.area() * 4f, newCircle.area());
     }
