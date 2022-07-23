@@ -7,7 +7,7 @@ import slavsquatsuperstar.mayonez.physics.shapes.Triangle;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static slavsquatsuperstar.test.TestUtils.assertFloatEquals;
+import static slavsquatsuperstar.test.TestUtils.assertFloatsEqual;
 
 /**
  * Unit tests for {@link Triangle} class.
@@ -25,9 +25,9 @@ public class TriangleTests {
 
     @Test
     public void areaCorrect() {
-        assertFloatEquals(tri.area(), 0.5f * tri.base * tri.height);
+        assertFloatsEqual(tri.area(), 0.5f * tri.base * tri.height);
         Triangle tri2 = new Triangle(new Vec2(-1, 0), new Vec2(1, 4), new Vec2(5, -2));
-        assertFloatEquals(tri2.area(), 0.5f * tri2.base * tri2.height);
+        assertFloatsEqual(tri2.area(), 0.5f * tri2.base * tri2.height);
     }
 
     @Test

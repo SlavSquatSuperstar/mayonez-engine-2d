@@ -10,7 +10,7 @@ import kotlin.math.abs
  */
 // TODO merge with Edge2D
 @ExperimentalFeature
-class Edge(val v1: Vec2, val v2: Vec2) : Shape() {
+class Edge(val start: Vec2, val end: Vec2) : Shape() {
 
     // Edge Properties
 
@@ -18,13 +18,18 @@ class Edge(val v1: Vec2, val v2: Vec2) : Shape() {
      * The length of the edge, l.
      */
     @JvmField
-    val length = v1.distance(v2)
+    val length = start.distance(end)
 
     /**
      * The square of the edge's length, equal to l^2.
      */
     @JvmField
     val lengthSq = length * length
+
+    /**
+     * A vector representation of this edge, equal to the end vertex minus the start vertex.
+     */
+    fun toVector(): Vec2 = end - start
 
     /**
      * The area of the edge, equal to 0 because it has only one dimension.
@@ -34,7 +39,7 @@ class Edge(val v1: Vec2, val v2: Vec2) : Shape() {
     /**
      * The center of the edge, or the midpoint of the two vertices.
      */
-    override fun center(): Vec2 = v1.midpoint(v2)
+    override fun center(): Vec2 = start.midpoint(end)
 
     // Physical Properties
 
@@ -49,38 +54,38 @@ class Edge(val v1: Vec2, val v2: Vec2) : Shape() {
 
     override fun boundingCircle(): Circle = Circle(center(), length * 0.5f)
 
-    override fun boundingRectangle(): BoundingRectangle = BoundingRectangle(center(), Vec2(abs(v2.x - v1.x), abs(v2.y - v1.y)))
+    override fun boundingRectangle(): BoundingRectangle = BoundingRectangle(center(), Vec2(abs(end.x - start.x), abs(end.y - start.y)))
 
-    override fun supportPoint(direction: Vec2): Vec2 = if (v1.dot(direction) > v2.dot(direction)) v1 else v2
+    override fun supportPoint(direction: Vec2): Vec2 = if (start.dot(direction) > end.dot(direction)) start else end
 
     // Geometric Transformations
 
-    override fun translate(direction: Vec2): Edge = Edge(v1 + direction, v2 + direction)
+    override fun translate(direction: Vec2): Edge = Edge(start + direction, end + direction)
 
     override fun rotate(angle: Float, origin: Vec2?): Edge {
-        return Edge(v1.rotate(angle, origin ?: center()), v2.rotate(angle, origin ?: center()))
+        return Edge(start.rotate(angle, origin ?: center()), end.rotate(angle, origin ?: center()))
     }
 
     override fun scale(factor: Vec2, origin: Vec2?): Edge {
-        return if (origin != null) Edge(v1 * factor, v2 * factor)
-        else Edge(v1.scale(factor, center()), v2.scale(factor, center()))
+        return if (origin != null) Edge(start * factor, end * factor)
+        else Edge(start.scale(factor, center()), end.scale(factor, center()))
     }
 
     // Overrides
 
     override fun contains(point: Vec2): Boolean {
-        if (point == v1 || point == v2) return true
-        val projLen = (point - v1).component(v2 - v1) // project v1->P onto v1->v2
+        if (point == start || point == end) return true // point is endpoint
+        val projLen = (point - start).component(end - start) // project v1->P onto v1->v2
         if (projLen < 0 || projLen > length) return false // point outside line
-        return point == v1 + (v2 - v1) * (projLen / length)
+        return point == start + (end - start) * (projLen / length)
     }
 
     override fun equals(other: Any?): Boolean {
-        return (other is Edge) && (this.v1 == other.v1 && this.v2 == other.v2)
+        return (other is Edge) && (this.start == other.start && this.end == other.end)
     }
 
     /**
      * A description of the edge in the form Edge (v1, v2)
      */
-    override fun toString(): String = "Edge ($v1, $v2)"
+    override fun toString(): String = "Edge ($start, $end)"
 }

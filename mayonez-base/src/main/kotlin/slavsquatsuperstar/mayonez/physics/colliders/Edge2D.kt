@@ -4,6 +4,7 @@ import slavsquatsuperstar.math.MathUtils
 import slavsquatsuperstar.math.Range
 import slavsquatsuperstar.math.Vec2
 import slavsquatsuperstar.mayonez.physics.collision.RaycastResult
+import slavsquatsuperstar.mayonez.physics.shapes.Ray
 import kotlin.math.sign
 
 /**
@@ -66,12 +67,12 @@ class Edge2D(@JvmField val start: Vec2, @JvmField val end: Vec2) {
 
     // Line vs Line
 
-    // SAT intersection test:  https://www.youtube.com/watch?v=RBya4M6SWwk
+    // SAT intersection test: https://www.youtube.com/watch?v=RBya4M6SWwk
     fun intersects(edge: Edge2D): Boolean {
         // If parallel, must be overlapping (co-linear)
         return if (MathUtils.equals(slope, edge.slope)) {
-            this.contains(edge.start) || this.contains(edge.end) ||
-                    edge.contains(start) || edge.contains(end)
+            edge.start in this || edge.end in this ||
+                    this.start in edge || this.end in edge
         } else raycast(Ray(edge), edge.length) != null
     }
 
@@ -87,8 +88,8 @@ class Edge2D(@JvmField val start: Vec2, @JvmField val end: Vec2) {
             return null // if parallel
 
         // Parametric lengths along rays
-        val dist1 = start2.sub(start1).cross(line2) / cross
-        val dist2 = start1.sub(start2).cross(line1) / -cross
+        val dist1 = (start2 - start1).cross(line2) / cross
+        val dist2 = (start1 - start2).cross(line1) / -cross
         if (!MathUtils.inRange(dist1, 0f, length)) // Contact point outside line
             return null
         if (dist2 < 0 || limit > 0 && dist2 > limit) // Contact point outside allowed ray
@@ -122,39 +123,10 @@ class Edge2D(@JvmField val start: Vec2, @JvmField val end: Vec2) {
         return clipToPlanes(Ray(segment.start, rayDir), Ray(segment.end, rayDir))
     }
 
-    /**
-     * Clips this edge to the bounds of the given [Collider].
-     *
-     * @param shape a 2D shape
-     * @return The clipped edge in most cases. Null if this edge is outside the shape, or only intersects the shape at a point.
-     */
-    fun clipToBounds(shape: Collider): Edge2D? {
-        val newStart: Vec2? =
-            if (start in shape) +start
-            else shape.raycast(Ray(this), length)?.contact
-
-        val newEnd: Vec2? =
-            if (end in shape) +end
-            else shape.raycast(Ray(Edge2D(end, start)), length)?.contact
-
-        return if (newStart == null || newEnd == null) null // Line outside of shape
-        else if (newStart == newEnd) null // Clipped to point
-        else Edge2D(newStart, newEnd)
-    }
-
     // Overrides
 
-    operator fun component1() = start
-    operator fun component2() = end
-
-    override fun hashCode(): Int = 31 * start.hashCode() + end.hashCode()
-
-    override fun equals(other: Any?): Boolean {
-        return if (other is Edge2D)
-            this.start == other.start && this.end == other.end
-        else super.equals(other)
-    }
-
+    override fun equals(other: Any?): Boolean =
+        (other is Edge2D) && (this.start == other.start) && (this.end == other.end)
 
     override fun toString(): String = String.format("Start: %s, End: %s", start, end)
 }

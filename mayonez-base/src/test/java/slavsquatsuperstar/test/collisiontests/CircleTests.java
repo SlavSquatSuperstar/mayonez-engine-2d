@@ -7,6 +7,7 @@ import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.Transform;
 import slavsquatsuperstar.mayonez.physics.collision.RaycastResult;
 import slavsquatsuperstar.mayonez.physics.colliders.*;
+import slavsquatsuperstar.mayonez.physics.shapes.Ray;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -23,28 +24,6 @@ public class CircleTests {
     @BeforeAll
     public static void getCircle() {
         c = new CircleCollider(1).setTransform(new Transform().resize(new Vec2(2, 2)));
-    }
-
-    // Contains Point
-
-    @Test
-    public void interiorPointIsInCircle() {
-        assertTrue(c.contains(c.center()));
-        assertTrue(c.contains(new Vec2(1, 1)));
-        assertTrue(c.contains(new Vec2(-1.9f, 0)));
-    }
-
-    @Test
-    public void edgePointIsInCircle() {
-        assertTrue(c.contains(new Vec2(0, 2)));
-        assertTrue(c.contains(new Vec2(2, 0).rotate(45)));
-    }
-
-    @Test
-    public void exteriorPointNotInCircle() {
-        assertFalse(c.contains(new Vec2(0, 3)));
-        assertFalse(c.contains(new Vec2(-2, -2)));
-        assertFalse(c.contains(new Vec2(2.1f, 0).rotate(45)));
     }
 
     // Nearest Point
@@ -93,56 +72,6 @@ public class CircleTests {
     public void insideRayHitsCircle() {
         assertNotNull(c.raycast(new Ray(new Vec2(-1, -1), new Vec2(1, 1.5f)), 0));
         assertNotNull(c.raycast(new Ray(new Vec2(1, 0), new Vec2(0, 1)), 0));
-    }
-
-    // Line Intersection
-
-    @Test
-    public void tangentLineIsInCircle() {
-        assertTrue(c.intersects(new Edge2D(new Vec2(-2, -2), new Vec2(0, -2))));
-        assertTrue(c.intersects(new Edge2D(new Vec2(-2, -2), new Vec2(-2, 0))));
-        assertTrue(c.intersects(new Edge2D(new Vec2(0, -2), new Vec2(0, 0))));
-        assertTrue(c.intersects(new Edge2D(new Vec2(-2, 0), new Vec2(0, 0))));
-    }
-
-    @Test
-    public void secantLineIsInCircle() {
-        assertTrue(c.intersects(new Edge2D(new Vec2(0, -2), new Vec2(0, 2))));
-        assertTrue(c.intersects(new Edge2D(new Vec2(-2, 0), new Vec2(2, 0))));
-        assertTrue(c.intersects(new Edge2D(new Vec2(-2, -2), new Vec2(2, 2))));
-        assertTrue(c.intersects(new Edge2D(new Vec2(-2, -2), new Vec2(2, 1))));
-    }
-
-    @Test
-    public void perpendicularLineIsInCircle() {
-        assertTrue(c.intersects(new Edge2D(new Vec2(1, 1), new Vec2(3, 3))));
-        assertTrue(c.intersects(new Edge2D(new Vec2(0, 1), new Vec2(0, 4))));
-    }
-
-    @Test
-    public void lineNotInCircle() {
-        assertFalse(c.intersects(new Edge2D(new Vec2(-2, 3), new Vec2(2, 3))));
-        assertFalse(c.intersects(new Edge2D(new Vec2(0, 4), new Vec2(4, 0))));
-        assertFalse(c.intersects(new Edge2D(new Vec2(0, 4), new Vec2(0, 3))));
-        assertFalse(c.intersects(new Edge2D(new Vec2(4, 0), new Vec2(3, 0))));
-        assertFalse(c.intersects(new Edge2D(new Vec2(0, 3), new Vec2(0, 4))));
-        assertFalse(c.intersects(new Edge2D(new Vec2(3, 0), new Vec2(4, 0))));
-    }
-
-    // Circle vs Primitive
-
-    @Test
-    public void circleIntersectsCircle() {
-        CircleCollider other = new CircleCollider(4);
-        other.setTransform(new Transform(new Vec2(2, 2)));
-        assertTrue(c.detectCollision(other));
-    }
-
-    @Test
-    public void circleIntersectsOBB() {
-        BoxCollider aabb = new BoxCollider(new Vec2(4, 4));
-        aabb.setTransform(new Transform(new Vec2(1, 0).rotate(45)));
-        assertTrue(c.detectCollision(aabb));
     }
 
 }

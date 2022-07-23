@@ -1,9 +1,9 @@
-package slavsquatsuperstar.test.collisiontests;
+package slavsquatsuperstar.test.shapetests;
 
 import org.junit.jupiter.api.Test;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.physics.colliders.Edge2D;
-import slavsquatsuperstar.mayonez.physics.colliders.Ray;
+import slavsquatsuperstar.mayonez.physics.shapes.Ray;
 
 import static org.junit.jupiter.api.Assertions.*;
 

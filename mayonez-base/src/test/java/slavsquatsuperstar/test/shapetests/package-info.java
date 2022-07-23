@@ -1,5 +1,5 @@
 /**
- * Unit tests for the {@link slavsquatsuperstar.math.geom} package.
+ * Unit tests for the {@link slavsquatsuperstar.mayonez.physics.shapes} package.
  *
  * @author SlavSquatSuperstar
  */

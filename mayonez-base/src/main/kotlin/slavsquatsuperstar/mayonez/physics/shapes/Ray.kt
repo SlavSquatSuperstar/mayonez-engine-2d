@@ -1,8 +1,9 @@
-package slavsquatsuperstar.mayonez.physics.colliders
+package slavsquatsuperstar.mayonez.physics.shapes
 
 import slavsquatsuperstar.math.MathUtils
 import slavsquatsuperstar.math.Vec2
 import slavsquatsuperstar.mayonez.Transform
+import slavsquatsuperstar.mayonez.physics.colliders.Edge2D
 import kotlin.math.abs
 
 /**

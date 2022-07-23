@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 import slavsquatsuperstar.math.Vec2;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static slavsquatsuperstar.test.TestUtils.assertFloatEquals;
+import static slavsquatsuperstar.test.TestUtils.assertFloatsEqual;
 
 /**
  * Unit tests for {@link Vec2} class.
@@ -43,8 +43,8 @@ public class VectorTests {
 
     @Test
     public void unitVectorLengthIsOne() {
-        assertFloatEquals(1f, new Vec2(500, 500).unit().lenSq());
-        assertFloatEquals(1f, new Vec2(-500, -500).unit().lenSq());
+        assertFloatsEqual(1f, new Vec2(500, 500).unit().lenSq());
+        assertFloatsEqual(1f, new Vec2(-500, -500).unit().lenSq());
     }
 
     @Test
@@ -65,7 +65,7 @@ public class VectorTests {
     public void parallelCrossProductIsZero() {
         Vec2 v1 = new Vec2(1, 0);
         Vec2 v2 = new Vec2(-1, 0);
-        assertFloatEquals(v1.cross(v2), 0f);
+        assertFloatsEqual(v1.cross(v2), 0f);
     }
 
     @Test
@@ -86,7 +86,7 @@ public class VectorTests {
     public void crossProductIsAntiCommutative() {
         Vec2 v1 = new Vec2(1, 0);
         Vec2 v2 = new Vec2(0, 1);
-        assertFloatEquals(v1.cross(v2), -v2.cross(v1));
+        assertFloatsEqual(v1.cross(v2), -v2.cross(v1));
     }
 
     // Dot Product
@@ -95,8 +95,8 @@ public class VectorTests {
     public void perpendicularDotProductIsZero() {
         Vec2 v1 = new Vec2(1, 0);
         Vec2 v2 = new Vec2(0, 1);
-        assertFloatEquals(90f, v1.angle(v2));
-        assertFloatEquals(0f, v1.dot(v2));
+        assertFloatsEqual(90f, v1.angle(v2));
+        assertFloatsEqual(0f, v1.dot(v2));
     }
 
     @Test
@@ -135,7 +135,7 @@ public class VectorTests {
     public void perpendicularProjectionIsZero() {
         Vec2 v1 = new Vec2(0, 1);
         Vec2 v2 = new Vec2(1, 0);
-        assertFloatEquals(0f, v1.project(v2).len());
+        assertFloatsEqual(0f, v1.project(v2).len());
     }
 
     @Test
@@ -189,8 +189,8 @@ public class VectorTests {
 
     @Test
     public void vectorAngleSuccess() {
-        assertFloatEquals(new Vec2(0, 2).angle(), 90);
-        assertFloatEquals(new Vec2(-2, 0).rotate(-30).angle(), 150);
+        assertFloatsEqual(new Vec2(0, 2).angle(), 90);
+        assertFloatsEqual(new Vec2(-2, 0).rotate(-30).angle(), 150);
     }
 
 }

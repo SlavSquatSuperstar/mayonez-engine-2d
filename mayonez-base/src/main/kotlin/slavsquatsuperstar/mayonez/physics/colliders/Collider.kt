@@ -10,6 +10,7 @@ import slavsquatsuperstar.mayonez.physics.PhysicsMaterial
 import slavsquatsuperstar.mayonez.physics.Rigidbody
 import slavsquatsuperstar.mayonez.physics.collision.CollisionInfo
 import slavsquatsuperstar.mayonez.physics.collision.RaycastResult
+import slavsquatsuperstar.mayonez.physics.shapes.Ray
 import java.awt.Color
 import java.awt.Graphics2D
 

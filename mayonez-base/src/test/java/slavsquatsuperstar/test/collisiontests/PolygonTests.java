@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.Transform;
 import slavsquatsuperstar.mayonez.physics.colliders.PolygonCollider;
-import slavsquatsuperstar.mayonez.physics.colliders.Ray;
+import slavsquatsuperstar.mayonez.physics.shapes.Ray;
 
 import java.util.Objects;
 
@@ -19,22 +19,7 @@ public class PolygonTests {
 
     static Vec2[] vertices = new Vec2[]{new Vec2(1, 1), new Vec2(-1, 1), new Vec2(-1, -1), new Vec2(1, -1)};
 
-    // Point
-
-    // Create 2x2 a box centered at (0, 0) and rotate it by 45 degrees
-    @Test
-    public void pointIsInPolygon() {
-        PolygonCollider shape = new PolygonCollider(vertices).setTransform(new Transform().rotate(45));
-        assertTrue(shape.contains(new Vec2(0, 1)));
-        assertTrue(shape.contains(new Vec2(1, 0)));
-    }
-
-    @Test
-    public void pointNotInPolygon() {
-        PolygonCollider shape = new PolygonCollider(vertices).setTransform(new Transform().rotate(45));
-        assertFalse(shape.contains(new Vec2(2, -2)));
-        assertFalse(shape.contains(new Vec2(0, -3)));
-    }
+    // Nearest Point
 
     @Test
     public void nearestPointInsidePolygon() {
@@ -109,7 +94,5 @@ public class PolygonTests {
         PolygonCollider p2 = new PolygonCollider(vertices).setTransform(new Transform(new Vec2(0.5f, 0.5f)));
         assertTrue(p1.detectCollision(p2));
     }
-
-    // Polygon vs Shape
 
 }

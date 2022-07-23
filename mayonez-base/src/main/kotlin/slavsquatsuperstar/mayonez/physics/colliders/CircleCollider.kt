@@ -5,6 +5,7 @@ import slavsquatsuperstar.mayonez.physics.collision.CollisionInfo
 import slavsquatsuperstar.mayonez.physics.collision.RaycastResult
 import slavsquatsuperstar.mayonez.physics.shapes.BoundingRectangle
 import slavsquatsuperstar.mayonez.physics.shapes.Circle
+import slavsquatsuperstar.mayonez.physics.shapes.Ray
 import kotlin.math.abs
 import kotlin.math.sqrt
 

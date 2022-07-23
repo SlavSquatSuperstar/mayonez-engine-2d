@@ -13,6 +13,7 @@ import slavsquatsuperstar.mayonez.physics.collision.CollisionInfo
 import slavsquatsuperstar.mayonez.physics.collision.RaycastResult
 import slavsquatsuperstar.mayonez.physics.shapes.BoundingRectangle
 import slavsquatsuperstar.mayonez.physics.shapes.Polygon
+import slavsquatsuperstar.mayonez.physics.shapes.Ray
 import kotlin.math.abs
 
 /**
@@ -239,34 +240,6 @@ open class PolygonCollider protected constructor(shapeData: Polygon) :
             if (pt.dot(colNormal) <= normalFace) collision.addContact(pt)
         return collision
     }
-
-    // Diagonals method, convex only
-//    private fun getCollisionInfo2(polygon: PolygonCollider2D): CollisionManifold? {
-//        val diagonals = arrayOf(getDiagonals(), polygon.getDiagonals())
-//        val edges = arrayOf(polygon.getEdges(), getEdges())
-//        var overlaps = FloatArray(this.countVertices() + polygon.countVertices())
-//
-//        var normalsAccum = Vec2()
-//        var rc: RaycastResult?
-//        // Raycast each shape's diagonals against other shape's edges
-//        for (i in diagonals.indices) {
-//            for (diag in diagonals[i]) {
-//                for (side in edges[i]) {
-//                    rc = side.raycast(Ray2D(diag), diag.length)
-//                    if (rc != null)
-//                        normalsAccum = normalsAccum.add(rc.normal * rc.distance)
-//                }
-//            }
-//        }
-//        if (normalsAccum.lenSquared() == 0f)
-//            return null
-//
-//        val depth = normalsAccum.len()
-//        val result = CollisionManifold(this, polygon, normalsAccum / depth, depth)
-//        result.addContact(this.center())
-//        result.addContact(polygon.center())
-//        return result
-//    }
 
     // SAT Helper Class
     private class SATPolygon(val collider: PolygonCollider, other: PolygonCollider) {

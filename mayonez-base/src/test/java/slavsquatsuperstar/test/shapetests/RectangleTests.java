@@ -6,7 +6,7 @@ import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.physics.shapes.BoundingRectangle;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static slavsquatsuperstar.test.TestUtils.assertFloatEquals;
+import static slavsquatsuperstar.test.TestUtils.assertFloatsEqual;
 
 /**
  * Unit tests for {@link BoundingRectangle} class.
@@ -26,7 +26,7 @@ public class RectangleTests {
 
     @Test
     public void areaCorrect() {
-        assertFloatEquals(rect.area(), rect.width * rect.height);
+        assertFloatsEqual(rect.area(), rect.width * rect.height);
     }
 
     @Test

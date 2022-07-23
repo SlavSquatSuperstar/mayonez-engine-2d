@@ -3,6 +3,7 @@ package slavsquatsuperstar.mayonez.physics.colliders
 import slavsquatsuperstar.math.MathUtils
 import slavsquatsuperstar.math.Vec2
 import slavsquatsuperstar.mayonez.physics.collision.RaycastResult
+import slavsquatsuperstar.mayonez.physics.shapes.Ray
 import kotlin.math.sign
 
 /**

@@ -58,16 +58,14 @@ open class BoundingRectangle(protected val center: Vec2, protected val size: Vec
     override fun center(): Vec2 = center
 
     /**
-     * The bottom left corner of the rectangle, which has the smallest (most negative) coordinates, assuming the rectangle
-     * is not rotated.
+     * The bottom left corner of the rectangle, which has the smallest (most negative) coordinates.
      *
      * @return the rectangle's min vertex
      */
     fun min(): Vec2 = center - size * 0.5f
 
     /**
-     * The top right corner of the rectangle, which has the largest (most positive) coordinates, assuming the rectangle
-     * is not rotated.
+     * The top right corner of the rectangle, which has the largest (most positive) coordinates.
      *
      * @return the rectangle's max vertex
      */
