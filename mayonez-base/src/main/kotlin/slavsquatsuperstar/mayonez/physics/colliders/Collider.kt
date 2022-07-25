@@ -1,8 +1,6 @@
 package slavsquatsuperstar.mayonez.physics.colliders
 
 import slavsquatsuperstar.math.Vec2
-import slavsquatsuperstar.mayonez.physics.shapes.BoundingRectangle
-import slavsquatsuperstar.mayonez.physics.shapes.Shape
 import slavsquatsuperstar.mayonez.Component
 import slavsquatsuperstar.mayonez.GameObject
 import slavsquatsuperstar.mayonez.graphics.DebugDraw
@@ -10,7 +8,9 @@ import slavsquatsuperstar.mayonez.physics.PhysicsMaterial
 import slavsquatsuperstar.mayonez.physics.Rigidbody
 import slavsquatsuperstar.mayonez.physics.collision.CollisionInfo
 import slavsquatsuperstar.mayonez.physics.collision.RaycastResult
+import slavsquatsuperstar.mayonez.physics.shapes.BoundingRectangle
 import slavsquatsuperstar.mayonez.physics.shapes.Ray
+import slavsquatsuperstar.mayonez.physics.shapes.Shape
 import java.awt.Color
 import java.awt.Graphics2D
 
@@ -162,7 +162,7 @@ abstract class Collider(private val shapeData: Shape) : Component() {
      */
     open fun intersects(edge: Edge2D): Boolean {
         return if (edge.start in this || edge.end in this) true
-        else raycast(Ray(edge), edge.length) != null
+        else raycast(Ray(edge), 1f) != null
     }
 
     /**

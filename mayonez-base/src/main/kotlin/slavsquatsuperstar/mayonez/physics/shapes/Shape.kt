@@ -79,7 +79,7 @@ abstract class Shape {
 
     /**
      * Translates every point on this shape along the same vector.
-     * This is a rigid transformation and preserves the area and perimeter.
+     * This is a rigid transformation and preserves the area.
      *
      * @param direction the direction to move
      * @return the translated shape
@@ -88,10 +88,10 @@ abstract class Shape {
 
     /**
      * Rotates every point on this shape around the given origin by the same angle.
-     * This is a rigid transformation and preserves the area and perimeter.
+     * This is a rigid transformation and preserves the area.
      *
-     * @param angle  the counterclockwise angle
-     * @param origin The point to rotate around. Pass in null to rotate around the centroid.
+     * @param angle  the counterclockwise angle in degrees
+     * @param origin the point to rotate around, or the shape's centroid if null
      * @return the rotated shape
      */
     abstract fun rotate(angle: Float, origin: Vec2? = null): Shape
@@ -101,8 +101,8 @@ abstract class Shape {
      * transformation and may alter the overall form and area. Some shapes may only be transformed linearly,
      * where both dimensions will be scaled by a single scale factor and the overall form is maintained.
      *
-     * @param factor how much to scale the dimensions by
-     * @param origin The point to rotate around. Pass in null to rotate around the centroid.
+     * @param factor how much to scale the shape along each axis
+     * @param origin the point to scale from, or the shape's centroid if null
      * @return the scaled shape
      */
     abstract fun scale(factor: Vec2, origin: Vec2? = null): Shape

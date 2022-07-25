@@ -37,7 +37,7 @@ public class RayTests {
 
     @Test
     public void normalizedRaysHaveUnitLength() {
-        Ray r = new Ray(new Vec2(), new Vec2(2, 0), true);
+        Ray r = new Ray(new Vec2(), new Vec2(2, 0), 1);
         assertEquals(r.getPoint(1), new Vec2(1, 0));
         assertEquals(r.getPoint(5), new Vec2(5, 0));
         assertEquals(r.getPoint(-2), new Vec2(-2, 0));
@@ -45,7 +45,7 @@ public class RayTests {
 
     @Test
     public void nonNormalizedRaysHaveLength() {
-        Ray r = new Ray(new Vec2(), new Vec2(2, 0), false);
+        Ray r = new Ray(new Vec2(), new Vec2(2, 0));
         assertEquals(r.getPoint(1), new Vec2(2, 0));
         assertEquals(r.getPoint(5), new Vec2(10, 0));
         assertEquals(r.getPoint(-2), new Vec2(-4, 0));

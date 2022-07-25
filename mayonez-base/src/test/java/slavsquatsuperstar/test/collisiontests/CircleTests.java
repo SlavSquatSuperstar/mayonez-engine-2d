@@ -2,14 +2,14 @@ package slavsquatsuperstar.test.collisiontests;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.Transform;
+import slavsquatsuperstar.mayonez.physics.colliders.CircleCollider;
 import slavsquatsuperstar.mayonez.physics.collision.RaycastResult;
-import slavsquatsuperstar.mayonez.physics.colliders.*;
 import slavsquatsuperstar.mayonez.physics.shapes.Ray;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static slavsquatsuperstar.test.TestUtils.assertFloatEquals;
 
 /**
  * Unit tests for {@link CircleCollider} class.
@@ -45,32 +45,32 @@ public class CircleTests {
     public void outsideRayHitsCircle() {
         RaycastResult rc = c.raycast(new Ray(new Vec2(-5, 0), new Vec2(1, 0)), 0);
         assertNotNull(rc);
-        assertEquals(3, rc.getDistance(), MathUtils.FLOAT_EPSILON);
+        assertFloatEquals(3, rc.getDistance());
         assertEquals(new Vec2(-2, 0), rc.getContact());
-        assertNotNull(c.raycast(new Ray(new Vec2(5, 5), new Vec2(-1, -1.5f)), 0));
+        assertNotNull(c.raycast(new Ray(new Vec2(5, 5), new Vec2(-1, -1.5f), 1), 0));
     }
 
     @Test
     public void outsideRayMissesCircle() {
         assertNull(c.raycast(new Ray(new Vec2(-5, 0), new Vec2(-1, 0)), 0));
-        assertNull(c.raycast(new Ray(new Vec2(5, 5), new Vec2(1, 1.5f)), 0));
+        assertNull(c.raycast(new Ray(new Vec2(5, 5), new Vec2(1, 1.5f), 1), 0));
     }
 
     @Test
     public void limitedOutsideRayHitsCircle() {
         assertNotNull(c.raycast(new Ray(new Vec2(-5, 0), new Vec2(1, 0)), 5));
-        assertNotNull(c.raycast(new Ray(new Vec2(3, 3), new Vec2(-1, -1.5f)), 5));
+        assertNotNull(c.raycast(new Ray(new Vec2(3, 3), new Vec2(-1, -1.5f), 1), 5));
     }
 
     @Test
     public void limitedOutsideRayMissesCircle() {
         assertNull(c.raycast(new Ray(new Vec2(-15, 0), new Vec2(1, 0)), 5));
-        assertNull(c.raycast(new Ray(new Vec2(10, 10), new Vec2(-1, -1.5f)), 5));
+        assertNull(c.raycast(new Ray(new Vec2(10, 10), new Vec2(-1, -1.5f), 1), 5));
     }
 
     @Test
     public void insideRayHitsCircle() {
-        assertNotNull(c.raycast(new Ray(new Vec2(-1, -1), new Vec2(1, 1.5f)), 0));
+        assertNotNull(c.raycast(new Ray(new Vec2(-1, -1), new Vec2(1, 1.5f), 1), 0));
         assertNotNull(c.raycast(new Ray(new Vec2(1, 0), new Vec2(0, 1)), 0));
     }
 

@@ -1,12 +1,13 @@
 package slavsquatsuperstar.test.collisiontests;
 
 import org.junit.jupiter.api.Test;
-import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.physics.colliders.Edge2D;
+import slavsquatsuperstar.mayonez.physics.collision.RaycastResult;
 import slavsquatsuperstar.mayonez.physics.shapes.Ray;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static slavsquatsuperstar.test.TestUtils.assertFloatEquals;
 
 /**
  * Unit tests for {@link Edge2D} class.
@@ -52,15 +53,17 @@ public class EdgeTests {
     public void lineIntersectionCorrectDistance() {
         Edge2D e1 = new Edge2D(new Vec2(-2, 0), new Vec2(2, 0));
         Edge2D e2 = new Edge2D(new Vec2(0, -2), new Vec2(0, 2));
-        assertEquals(2, e1.raycast(new Ray(e2), e2.length()).getDistance(), MathUtils.FLOAT_EPSILON);
+        RaycastResult rc = e1.raycast(new Ray(e2).normalize(), e2.length());
+        assertFloatEquals(2, rc.getDistance());
     }
 
     @Test
     public void lineIntersectionCorrectPoint() {
         Edge2D e1 = new Edge2D(new Vec2(-2, 0), new Vec2(2, 0));
         Edge2D e2 = new Edge2D(new Vec2(0, -2), new Vec2(0, 2));
-        Ray ray = new Ray(e2);
-        assertEquals(new Vec2(), ray.getPoint(e1.raycast(ray, e2.length()).getDistance()));
+        Ray ray = new Ray(e2).normalize();
+        RaycastResult rc = e1.raycast(ray, e2.length());
+        assertEquals(new Vec2(), ray.getPoint(rc.getDistance()));
     }
 
 }

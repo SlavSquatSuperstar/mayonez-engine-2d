@@ -2,7 +2,9 @@ package slavsquatsuperstar.mayonez.physics.collision
 
 import slavsquatsuperstar.math.MathUtils
 import slavsquatsuperstar.math.Vec2
+import slavsquatsuperstar.mayonez.Colors
 import slavsquatsuperstar.mayonez.annotations.ExperimentalFeature
+import slavsquatsuperstar.mayonez.graphics.DebugDraw
 import slavsquatsuperstar.mayonez.physics.shapes.BoundingRectangle
 import slavsquatsuperstar.mayonez.physics.shapes.Circle
 import slavsquatsuperstar.mayonez.physics.shapes.Edge
@@ -23,7 +25,7 @@ object Collisions {
             (shape1 is Circle) && (shape2 is Circle) -> circleVsCircle(shape1, shape2)
             (shape1 is BoundingRectangle) && (shape2 is BoundingRectangle) -> rectVsRect(shape1, shape2)
             (shape1 is Edge) && (shape2 is Edge) -> edgeVsEdge(shape1, shape2)
-            else -> detectCollisionGJK(shape1, shape2)
+            else -> detectCollisionGJK(shape1, shape2) != null
         }
     }
 
@@ -93,46 +95,63 @@ object Collisions {
         }
     }
 
+    /*
+     * Collision Algorithms
+     * - SAT (separating axis theorem): easier to visually understand, but needs to loop through and project on all
+     * normals of two shapes (slow on 3D) and requires separate tests for round shapes.
+     * - GJK (Gilbert-Johnson-Keerthi): relies only on support function (can handle round shapes), needs another
+     * function to find contacts, may be harder to understand
+     */
     /**
      * Executes the GJK collision algorithm between two shapes.
      *
+     * @param shape1 the first shape
+     * @param shape2 the second shape
+     * @return a simplex containing support points
+     *
      * Source: https://blog.winter.dev/2020/gjk-algorithm/ § GJK: Surrounding the origin
+     * Source: https://dyn4j.org/2010/04/gjk-gilbert-johnson-keerthi/ § Determining Collision
      */
-    private fun detectCollisionGJK(shape1: Shape, shape2: Shape): Boolean {
+    @ExperimentalFeature
+    private fun detectCollisionGJK(shape1: Shape, shape2: Shape): Simplex? {
         // Make first guess for simplex point
-        var startPoint = findMinkDiffExtreme(shape1, shape2, -shape1.center())
-        var searchDir = -startPoint // Point to origin
+        var startPoint = support(shape1, shape2, -shape1.center())
+        var searchDir = -startPoint // Point towards origin
 
-        val simplex = arrayOfNulls<Vec2>(3)
-        simplex[0] = startPoint
+        val simplex = Simplex(startPoint)
 
-        var numPoints = 1
         // TODO max loop
-        while (numPoints < 3) {
-            val nextPoint = findMinkDiffExtreme(shape1, shape2, searchDir) // Keep searching toward origin
+        // Find simplex that contains origin to show shapes overlap
+        while (simplex.size < 3) {
+            val nextPoint = support(shape1, shape2, searchDir) // Keep searching toward origin
             // TODO < or ≤?
-            if (nextPoint.dot(searchDir) < 0f) return false // If opposite direction, no collision
+            if (nextPoint.dot(searchDir) < 0f) return null // If opposite direction, no collision
 
-            // Find if simplex contains origin
             val toStart = startPoint - nextPoint // origin between two points in simplex
             val toOrigin = -nextPoint
 
             if (toStart.dot(toOrigin) > 0f) {
                 val perp = toStart.normal()
                 searchDir = if (perp.dot(toOrigin) > 0f) perp else -perp // make sure perp points to toOrigin
-                simplex[numPoints++] = nextPoint // update simplex
+                simplex.add(nextPoint)
             } else {
                 // Restart search
-                simplex[0] = nextPoint
+                simplex.reset(nextPoint)
                 startPoint = nextPoint
                 searchDir = toOrigin
-                numPoints = 1
             }
         }
 
         // 3 points, found intersection
 //        println("simplex=${simplex.contentToString()}")
-        return true // TODO return intersection points
+//        val newSimplex = arrayOf(simplex[0]!!, simplex[1]!!, simplex[2]!!)
+        val pt1 = simplex[0] + Vec2(20f)
+        val pt2 = simplex[1] + Vec2(20f)
+        val pt3 = simplex[2] + Vec2(20f)
+        DebugDraw.drawLine(pt1, pt2, Colors.BLACK)
+        DebugDraw.drawLine(pt2, pt3, Colors.BLACK)
+        DebugDraw.drawLine(pt3, pt1, Colors.BLACK)
+        return simplex
     }
 
     /**
@@ -140,10 +159,7 @@ object Collisions {
      *
      * Source: https://blog.winter.dev/2020/gjk-algorithm/ § Abstracting shapes into supporting points
      */
-    private fun findMinkDiffExtreme(shape1: Shape, shape2: Shape, dir: Vec2): Vec2 {
-        val pt1 = shape1.supportPoint(dir)
-        val pt2 = shape2.supportPoint(-dir)
-        return pt1 - pt2
-    }
+    private fun support(shape1: Shape, shape2: Shape, dir: Vec2): Vec2 =
+        shape1.supportPoint(dir) - shape2.supportPoint(-dir)
 
 }

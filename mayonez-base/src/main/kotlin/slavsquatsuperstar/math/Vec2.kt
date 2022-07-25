@@ -214,8 +214,8 @@ class Vec2 constructor(
     fun distanceSq(v: Vec2): Float = (v - this).lenSq()
 
     /**
-     * Calculates the vector with the same direction as this vector and a magnitude of 1. Returns (0, 0) if this vector
-     * is (0, 0).
+     * Creates a vector with the same direction as this but with a length (magnitude) of 1. Returns (0, 0) if this
+     * vector is (0, 0).
      *
      * @return the unit vector
      */
