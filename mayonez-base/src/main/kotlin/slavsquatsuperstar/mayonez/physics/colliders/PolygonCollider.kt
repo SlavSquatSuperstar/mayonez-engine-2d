@@ -10,11 +10,8 @@ import slavsquatsuperstar.math.MathUtils.minIndex
 import slavsquatsuperstar.math.Range
 import slavsquatsuperstar.math.Vec2
 import slavsquatsuperstar.mayonez.physics.collision.CollisionInfo
-import slavsquatsuperstar.mayonez.physics.collision.RaycastResult
-import slavsquatsuperstar.mayonez.physics.shapes.BoundingRectangle
+import slavsquatsuperstar.mayonez.physics.shapes.Rectangle
 import slavsquatsuperstar.mayonez.physics.shapes.Polygon
-import slavsquatsuperstar.mayonez.physics.shapes.Ray
-import kotlin.math.abs
 
 /**
  * A convex polygon with an arbitrary number of vertices connected by straight edges.
@@ -54,7 +51,7 @@ open class PolygonCollider protected constructor(shapeData: Polygon) :
     // vertices transformed to world space
     open fun getVertices(): Array<Vec2> = (transformToWorld() as Polygon).vertices
 
-    override fun getMinBounds(): BoundingRectangle {
+    override fun getMinBounds(): Rectangle {
         val vertices = getVertices()
         // Get the min and max coordinates of any point on the box
         val verticesX = FloatArray(numVertices) { vertices[it].x }
@@ -63,7 +60,7 @@ open class PolygonCollider protected constructor(shapeData: Polygon) :
         val newMin = Vec2(min(*verticesX), min(*verticesY))
         val newMax = Vec2(max(*verticesX), max(*verticesY))
         val aabbSize = (newMax - newMin) / (transform!!.scale)
-        return BoundingRectangle(center(), aabbSize)
+        return Rectangle(center(), aabbSize)
     }
 
     // Intersection Helper Methods
@@ -77,8 +74,6 @@ open class PolygonCollider protected constructor(shapeData: Polygon) :
         val rot = Mat22(0f, 1f, -1f, 0f) // Rotate 90 degrees counterclockwise to point outward
         return Array(numVertices) { (rot * getEdges()[it].toVector()).unit() }
     }
-
-    open fun getDiagonals(): Array<Edge2D> = Array(numVertices) { Edge2D(getVertices()[it], center()) }
 
     // Separating-Axis Theorem Methods
 
@@ -98,14 +93,6 @@ open class PolygonCollider protected constructor(shapeData: Polygon) :
         val thisInterval = this.getIntervalOnAxis(axis)
         val otherInterval = polygon.getIntervalOnAxis(axis)
         return (thisInterval.min <= otherInterval.max) && (otherInterval.min <= thisInterval.max)
-    }
-
-    // How much overlap on the axis
-    protected fun getOverlapOnAxis(polygon: PolygonCollider, axis: Vec2): Float {
-        val thisInterval = this.getIntervalOnAxis(axis)
-        val otherInterval = polygon.getIntervalOnAxis(axis)
-        if (!hasOverlapOnAxis(polygon, axis)) return 0f
-        return abs(thisInterval.min - otherInterval.max).coerceAtMost(abs(otherInterval.min - thisInterval.max))
     }
 
     // How much separation on the axis
@@ -135,24 +122,6 @@ open class PolygonCollider protected constructor(shapeData: Polygon) :
         val distances = FloatArray(edges.size) { edges[it].distance(position) }
         val nearestEdge = edges[minIndex(*distances)]
         return nearestEdge.nearestPoint(position)
-    }
-
-    // Polygon vs Line
-
-    override fun raycast(ray: Ray, limit: Float): RaycastResult? {
-        val edges = getEdges()
-        val distances = FloatArray(edges.size)
-        for (i in distances.indices) {
-            val rc = edges[i].raycast(ray, limit)
-            distances[i] = rc?.distance ?: Float.MAX_VALUE
-        }
-
-        val minIndex = minIndex(*distances)
-        val minDist = distances[minIndex]
-        if (minDist == Float.MAX_VALUE) return null // no successful raycasts
-
-        val normal = edges[minIndex].toVector().rotate(-90f).unit()
-        return RaycastResult(ray.getPoint(minDist), normal, minDist)
     }
 
     // Polygon vs Shape

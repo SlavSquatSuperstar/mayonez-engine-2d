@@ -48,7 +48,7 @@ class Circle(
 
     override fun boundingCircle(): Circle = Circle(center, radius)
 
-    override fun boundingRectangle(): BoundingRectangle = BoundingRectangle(center, Vec2(radius * 2f))
+    override fun boundingRectangle(): Rectangle = Rectangle(center, Vec2(radius * 2f))
 
     override fun supportPoint(direction: Vec2): Vec2 = center + direction.unit() * radius
 

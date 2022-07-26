@@ -39,12 +39,12 @@ open class Polygon(vararg vertices: Vec2) : Shape() {
     /**
      * The edges that connect the vertices of this polygon.
      */
-    protected val edges: Array<Vec2> = Array(numVertices) { vertices[(it + 1) % numVertices] - vertices[it] }
+    val edges: Array<Edge> = Array(numVertices) {Edge(vertices[it], vertices[it.next(numVertices)]) }
 
     /**
      * The faces, or unit normal vectors of each edge in this polygon.
      */
-    val normals: Array<Vec2> = Array(numVertices) { edges[it].normal().unit() }
+    val normals: Array<Vec2> = Array(numVertices) { edges[it].toVector().normal().unit() }
 
     // Polygon Properties
 
@@ -134,14 +134,14 @@ open class Polygon(vararg vertices: Vec2) : Shape() {
         return Circle(center(), MathUtils.max(*distsSq))
     }
 
-    override fun boundingRectangle(): BoundingRectangle {
+    override fun boundingRectangle(): Rectangle {
         // TODO support function, or too expensive?
         val verticesX = FloatArray(numVertices) { vertices[it].x }
         val verticesY = FloatArray(numVertices) { vertices[it].y }
 
         val boxMin = Vec2(MathUtils.min(*verticesX), MathUtils.min(*verticesY))
         val boxMax = Vec2(MathUtils.max(*verticesX), MathUtils.max(*verticesY))
-        return BoundingRectangle(boxMin.midpoint(boxMax), boxMax - boxMin)
+        return Rectangle(boxMin.midpoint(boxMax), boxMax - boxMin)
     }
 
     override fun supportPoint(direction: Vec2): Vec2 {
@@ -254,6 +254,6 @@ open class Polygon(vararg vertices: Vec2) : Shape() {
          */
         @JvmStatic
         fun rectangle(center: Vec2, size: Vec2, angle: Float): Polygon =
-            Polygon(*BoundingRectangle.rectangleVertices(center, size, angle = angle))
+            Polygon(*Rectangle.rectangleVertices(center, size, angle = angle))
     }
 }

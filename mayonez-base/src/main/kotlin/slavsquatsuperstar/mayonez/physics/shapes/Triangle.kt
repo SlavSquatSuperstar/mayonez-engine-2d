@@ -3,7 +3,6 @@ package slavsquatsuperstar.mayonez.physics.shapes
 import slavsquatsuperstar.math.MathUtils
 import slavsquatsuperstar.math.Vec2
 import kotlin.math.abs
-import kotlin.math.sqrt
 
 /**
  * A three-sided polygon capable of performing additional operations. A triangle is the simplest polygon, containing
@@ -21,13 +20,13 @@ class Triangle(v1: Vec2, v2: Vec2, v3: Vec2) : Polygon(v1, v2, v3) {
      * The base length of the triangle, b.
      */
     @JvmField
-    val base: Float = edges[0].len()
+    val base: Float = edges[0].length
 
     /**
      * The height of the triangle, h.
      */
     @JvmField
-    val height: Float = abs(edges[1].component(edges[0].normal().unit())) // get altitude length
+    val height: Float = abs(edges[1].toVector().component(edges[0].toVector().normal().unit())) // get altitude length
 
     /**
      * The area of the triangle using the shoelace formula, equal to 1/2*bh. The shoelace formula specifies the area as
@@ -62,7 +61,7 @@ class Triangle(v1: Vec2, v2: Vec2, v3: Vec2) : Polygon(v1, v2, v3) {
      */
     override fun angularMass(mass: Float): Float {
         if (polarMoment == null) {
-            val offset = base - sqrt(edges[2].lenSq() - height * height)
+            val offset = base - MathUtils.invHypot(edges[2].length, height)
             polarMoment = (MathUtils.hypotSq(base, height) + offset * (offset - base)) / 18f
         }
         return mass * polarMoment!!

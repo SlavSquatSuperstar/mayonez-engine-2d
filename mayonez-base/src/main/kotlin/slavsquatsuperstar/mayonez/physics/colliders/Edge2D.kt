@@ -3,7 +3,7 @@ package slavsquatsuperstar.mayonez.physics.colliders
 import slavsquatsuperstar.math.MathUtils
 import slavsquatsuperstar.math.Range
 import slavsquatsuperstar.math.Vec2
-import slavsquatsuperstar.mayonez.physics.collision.RaycastResult
+import slavsquatsuperstar.mayonez.physics.collision.Raycast
 import slavsquatsuperstar.mayonez.physics.shapes.Ray
 import kotlin.math.sign
 
@@ -67,7 +67,7 @@ class Edge2D(@JvmField val start: Vec2, @JvmField val end: Vec2) {
 
     // Line vs Line
 
-    fun raycast(ray: Ray, limit: Float): RaycastResult? {
+    fun raycast(ray: Ray, limit: Float): Raycast? {
         // Calculate point of intersection using cross product
         val line1 = this.toVector() / length
         val line2 = ray.direction.unit()
@@ -87,7 +87,7 @@ class Edge2D(@JvmField val start: Vec2, @JvmField val end: Vec2) {
         val contact = start1 + (line1 * dist1)
         // rotate left or right depending on which side ray started form
         val normal = line1.rotate(sign(pseudoDistance(start2)) * 90)
-        return RaycastResult(contact, normal, dist1)
+        return Raycast(contact, normal, dist1)
     }
 
     // Clip Line

@@ -2,7 +2,7 @@ package slavsquatsuperstar.test.shapetests;
 
 import org.junit.jupiter.api.Test;
 import slavsquatsuperstar.math.Vec2;
-import slavsquatsuperstar.mayonez.physics.shapes.BoundingRectangle;
+import slavsquatsuperstar.mayonez.physics.shapes.Rectangle;
 import slavsquatsuperstar.mayonez.physics.shapes.Polygon;
 import slavsquatsuperstar.mayonez.physics.shapes.Triangle;
 
@@ -35,7 +35,7 @@ public class PolygonTests {
     public void rectangleTemplateCorrect() {
         // 2x3 rectangle, min corner at origin
         Polygon poly = Polygon.rectangle(new Vec2(1, 1.5f), new Vec2(2, 3));
-        BoundingRectangle rect = new BoundingRectangle(new Vec2(1, 1.5f), new Vec2(2, 3));
+        Rectangle rect = new Rectangle(new Vec2(1, 1.5f), new Vec2(2, 3));
 
         assertFloatEquals(poly.area(), 6f);
         assertFloatEquals(poly.area(), rect.area());

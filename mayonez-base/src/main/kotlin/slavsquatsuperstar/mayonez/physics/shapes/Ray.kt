@@ -14,8 +14,6 @@ import slavsquatsuperstar.mayonez.physics.colliders.Edge2D
  * @author SlavSquatSuperstar
  */
 
-// TODO maybe make direction not unit, so allow ray to be transformed
-// TODO make default constructor not normalized
 class Ray(
     /**
      * The starting point of the ray, r0.
@@ -45,6 +43,10 @@ class Ray(
      * direction and length.
      */
     constructor(edge: Edge) : this(edge.start, edge.toVector())
+
+    // TODO should probably store length
+    val length: Float
+        get() = direction.len()
 
     /**
      * Returns a point along this ray at the specified distance.

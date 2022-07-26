@@ -339,9 +339,6 @@ class Vec2 constructor(
         }
     }
 
-    operator fun component1() = x
-    operator fun component2() = y
-
     override fun equals(other: Any?): Boolean {
         return when {
             this === other -> true // same object

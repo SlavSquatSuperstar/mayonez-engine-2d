@@ -77,7 +77,7 @@ class Ellipse(val center: Vec2, val size: Vec2, val angle: Float) : Shape() {
 
     override fun boundingCircle(): Circle = Circle(center, semiMajor)
 
-    override fun boundingRectangle(): BoundingRectangle {
+    override fun boundingRectangle(): Rectangle {
         TODO("Not yet implemented")
     }
 

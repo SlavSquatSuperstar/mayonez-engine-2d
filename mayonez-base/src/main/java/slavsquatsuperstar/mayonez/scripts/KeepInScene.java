@@ -2,7 +2,7 @@ package slavsquatsuperstar.mayonez.scripts;
 
 import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
-import slavsquatsuperstar.mayonez.physics.shapes.BoundingRectangle;
+import slavsquatsuperstar.mayonez.physics.shapes.Rectangle;
 import slavsquatsuperstar.mayonez.Logger;
 import slavsquatsuperstar.mayonez.Scene;
 import slavsquatsuperstar.mayonez.Script;
@@ -20,7 +20,7 @@ public class KeepInScene extends Script {
     private final Vec2 minPos, maxPos;
     private Mode mode;
     private Collider objectCollider = null;
-    private BoundingRectangle boundingBox;
+    private Rectangle boundingBox;
     private Rigidbody rb = null;
 
     public KeepInScene(Scene scene, Mode mode) { // Use scene bounds

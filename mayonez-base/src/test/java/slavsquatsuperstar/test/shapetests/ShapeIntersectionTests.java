@@ -3,7 +3,7 @@ package slavsquatsuperstar.test.shapetests;
 import org.junit.jupiter.api.Test;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.physics.collision.Collisions;
-import slavsquatsuperstar.mayonez.physics.shapes.BoundingRectangle;
+import slavsquatsuperstar.mayonez.physics.shapes.Rectangle;
 import slavsquatsuperstar.mayonez.physics.shapes.Circle;
 import slavsquatsuperstar.mayonez.physics.shapes.Polygon;
 import slavsquatsuperstar.mayonez.physics.shapes.Triangle;
@@ -45,18 +45,18 @@ public class ShapeIntersectionTests {
 
     @Test
     public void aabbVsAABBHit() {
-        BoundingRectangle r1 = new BoundingRectangle(new Vec2(0, 0), new Vec2(3, 3)); // 3x3 rect at (0, 0)
-        BoundingRectangle r2 = new BoundingRectangle(new Vec2(1, 1), new Vec2(3, 3)); // 3x3 rect at (1, 1)
+        Rectangle r1 = new Rectangle(new Vec2(0, 0), new Vec2(3, 3)); // 3x3 rect at (0, 0)
+        Rectangle r2 = new Rectangle(new Vec2(1, 1), new Vec2(3, 3)); // 3x3 rect at (1, 1)
         assertShapeCollision(r1, r2);
     }
 
     @Test
     public void aabbVsAABBMiss() {
-        BoundingRectangle r1 = new BoundingRectangle(new Vec2(0, 0), new Vec2(3, 3)); // 3x3 rect at (0, 0)
-        BoundingRectangle r2 = new BoundingRectangle(new Vec2(1, 4), new Vec2(3, 3)); // 3x3 rect at (1, 4)
+        Rectangle r1 = new Rectangle(new Vec2(0, 0), new Vec2(3, 3)); // 3x3 rect at (0, 0)
+        Rectangle r2 = new Rectangle(new Vec2(1, 4), new Vec2(3, 3)); // 3x3 rect at (1, 4)
         assertNoShapeCollision(r1, r2); // one axis
 
-        BoundingRectangle r3 = new BoundingRectangle(new Vec2(4, 4), new Vec2(3, 3)); // 3x3 rect at (4, 4)
+        Rectangle r3 = new Rectangle(new Vec2(4, 4), new Vec2(3, 3)); // 3x3 rect at (4, 4)
         assertNoShapeCollision(r1, r2); // both axes
     }
 

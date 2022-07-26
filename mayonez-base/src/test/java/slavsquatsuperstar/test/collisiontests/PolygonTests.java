@@ -4,11 +4,11 @@ import org.junit.jupiter.api.Test;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.Transform;
 import slavsquatsuperstar.mayonez.physics.colliders.PolygonCollider;
-import slavsquatsuperstar.mayonez.physics.shapes.Ray;
 
 import java.util.Objects;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Unit tests for {@link PolygonCollider} class.
@@ -18,22 +18,6 @@ import static org.junit.jupiter.api.Assertions.*;
 public class PolygonTests {
 
     static Vec2[] vertices = new Vec2[]{new Vec2(1, 1), new Vec2(-1, 1), new Vec2(-1, -1), new Vec2(1, -1)};
-
-    // Nearest Point
-
-    @Test
-    public void nearestPointInsidePolygon() {
-        PolygonCollider shape = new PolygonCollider(vertices);
-        assertEquals(new Vec2(1, 0), shape.nearestPoint(new Vec2(1, 0)));
-        assertEquals(new Vec2(0.5f, -0.5f), shape.nearestPoint(new Vec2(0.5f, -0.5f)));
-    }
-
-    @Test
-    public void nearestPointOutsidePolygon() {
-        PolygonCollider shape = new PolygonCollider(vertices);
-        assertEquals(new Vec2(1, 0), shape.nearestPoint(new Vec2(2, 0)));
-        assertEquals(new Vec2(1, -1), shape.nearestPoint(new Vec2(1.5f, -1.5f)));
-    }
 
     // Properties
 
@@ -76,23 +60,6 @@ public class PolygonTests {
         PolygonCollider shape = new PolygonCollider(vertices);
         Vec2[] normals = new Vec2[]{new Vec2(0, 1), new Vec2(-1, 0), new Vec2(0, -1), new Vec2(1, 0)};
         assertTrue(Objects.deepEquals(normals, shape.getNormals()));
-    }
-
-    // Raycast
-
-    @Test
-    public void outsideRayHitsPolygon() {
-        PolygonCollider shape = new PolygonCollider(vertices);
-        assertNotNull(shape.raycast(new Ray(new Vec2(0, 3), new Vec2(0, -1)), 0));
-    }
-
-    // SAT
-
-    @Test
-    public void getIntervalSuccess() {
-        PolygonCollider p1 = new PolygonCollider(vertices);
-        PolygonCollider p2 = new PolygonCollider(vertices).setTransform(new Transform(new Vec2(0.5f, 0.5f)));
-        assertTrue(p1.detectCollision(p2));
     }
 
 }

@@ -7,9 +7,7 @@ import slavsquatsuperstar.mayonez.graphics.DebugDraw
 import slavsquatsuperstar.mayonez.physics.PhysicsMaterial
 import slavsquatsuperstar.mayonez.physics.Rigidbody
 import slavsquatsuperstar.mayonez.physics.collision.CollisionInfo
-import slavsquatsuperstar.mayonez.physics.collision.RaycastResult
-import slavsquatsuperstar.mayonez.physics.shapes.BoundingRectangle
-import slavsquatsuperstar.mayonez.physics.shapes.Ray
+import slavsquatsuperstar.mayonez.physics.shapes.Rectangle
 import slavsquatsuperstar.mayonez.physics.shapes.Shape
 import java.awt.Color
 import java.awt.Graphics2D
@@ -107,7 +105,7 @@ abstract class Collider(private val shapeData: Shape) : Component() {
 
     open fun getRotation(): Float = transform!!.rotation
 
-    abstract fun getMinBounds(): BoundingRectangle
+    abstract fun getMinBounds(): Rectangle
 
     open fun getMass(density: Float): Float = shapeData.scale(transform!!.scale).mass(density)
 
@@ -152,30 +150,7 @@ abstract class Collider(private val shapeData: Shape) : Component() {
      */
     abstract fun nearestPoint(position: Vec2): Vec2?
 
-    // Shape vs Line Collisions
-
-    /**
-     * Calculates whether the given [Edge2D] touches or passes through this collider.
-     *
-     * @param edge a line segment
-     * @return if the edge intersects this shape
-     */
-    open fun intersects(edge: Edge2D): Boolean {
-        return if (edge.start in this || edge.end in this) true
-        else raycast(Ray(edge), 1f) != null
-    }
-
-    /**
-     * Casts a [Ray] onto this collider and calculates where the ray intersects the collider.
-     *
-     * @param ray    a 2D ray
-     * @param limit  The maximum distance the ray is allowed to travel before hitting an object. Set to 0 to allow the
-     * ray to travel infinitely. Should be positive otherwise.
-     * @return if the ray intersects this shape
-     */
-    abstract fun raycast(ray: Ray, limit: Float): RaycastResult?
-
-// Shape vs Shape Collisions
+    // Shape vs Shape Collisions
 
     /**
      * Detects whether this collider is touching or overlapping another.

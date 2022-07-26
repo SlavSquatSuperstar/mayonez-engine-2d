@@ -4,12 +4,12 @@ import slavsquatsuperstar.math.MathUtils
 import slavsquatsuperstar.math.Vec2
 
 /**
- * A four-sided polygon defined by a width and height and is made of up four perpendicular edges. Represents a
- * non-rotatable axis-oriented bounding box (AABB). Not to be used with a collider.
+ * A non-rotatable axis-oriented bounding box (AABB) with four edges and defined by a width and height. Not to be used
+ * with a collider. For rotatable rectangle, use the [Polygon.rectangle] method.
  *
  * @author SlavSquatSuperstar
  */
-open class BoundingRectangle(protected val center: Vec2, protected val size: Vec2) :
+open class Rectangle(private val center: Vec2, private val size: Vec2) :
     Polygon(*rectangleVertices(center, size)) {
     constructor(center: Vec2, width: Float, height: Float) : this(center, Vec2(width, height))
 
@@ -80,7 +80,7 @@ open class BoundingRectangle(protected val center: Vec2, protected val size: Vec
 
     // Transformations
 
-    override fun translate(direction: Vec2): BoundingRectangle = BoundingRectangle(center + direction, size)
+    override fun translate(direction: Vec2): Rectangle = Rectangle(center + direction, size)
 
     override fun rotate(angle: Float, origin: Vec2?): Polygon =
         throw UnsupportedOperationException("Bounding Rectangles cannot be rotated")
@@ -96,8 +96,8 @@ open class BoundingRectangle(protected val center: Vec2, protected val size: Vec
 //        return BoundingRectangle(center.rotate(angle, origin ?: center), rotatedDimensions(size, angle))
 //    }
 
-    override fun scale(factor: Vec2, origin: Vec2?): BoundingRectangle {
-        return BoundingRectangle(if (origin == null) center else center.scale(factor, origin), size * factor)
+    override fun scale(factor: Vec2, origin: Vec2?): Rectangle {
+        return Rectangle(if (origin == null) center else center.scale(factor, origin), size * factor)
     }
 
     // Overrides
@@ -105,7 +105,7 @@ open class BoundingRectangle(protected val center: Vec2, protected val size: Vec
     override fun contains(point: Vec2): Boolean = point.inRange(center - size * 0.5f, center + size * 0.5f)
 
     override fun equals(other: Any?): Boolean {
-        return (other is BoundingRectangle) && (this.center == other.center) && (this.size == other.size)
+        return (other is Rectangle) && (this.center == other.center) && (this.size == other.size)
     }
 
     /**

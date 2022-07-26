@@ -2,7 +2,7 @@ package slavsquatsuperstar.test;
 
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.physics.shapes.Polygon;
-import slavsquatsuperstar.mayonez.physics.shapes.BoundingRectangle;
+import slavsquatsuperstar.mayonez.physics.shapes.Rectangle;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +28,7 @@ public class MayonezTest {
         System.out.println(poly.scale(new Vec2(2, 2), new Vec2(0, 0))); // scale 2x from origin, area 4x
         System.out.println(poly.scale(new Vec2(2, 2), new Vec2(-1, -1))); // scale 2x from (-1, -1)), area 4x
 
-        BoundingRectangle rect = new BoundingRectangle(new Vec2(0.5f, 0.5f), new Vec2(1, 1));
+        Rectangle rect = new Rectangle(new Vec2(0.5f, 0.5f), new Vec2(1, 1));
         System.out.println(rect);
         System.out.println(rect.scale(new Vec2(2, 2), null)); // scale 2x from center, area 4x
         System.out.println(rect.scale(new Vec2(2, 2), new Vec2(0, 0))); // scale 2x from origin, area 4x

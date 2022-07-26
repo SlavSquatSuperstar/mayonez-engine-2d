@@ -18,7 +18,7 @@ public class DrawEllipseTest extends Scene {
 
     @Override
     protected void onUserUpdate(float dt) {
-        DebugDraw.drawEllipse(ellipse, Colors.BLUE);
+        DebugDraw.drawShape(ellipse, Colors.BLUE);
         Vec2 mouse = MouseInput.getWorldPos();
 
         if (ellipse.contains(mouse))

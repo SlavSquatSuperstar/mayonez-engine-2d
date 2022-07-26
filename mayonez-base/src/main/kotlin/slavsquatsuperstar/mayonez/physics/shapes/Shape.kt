@@ -47,7 +47,7 @@ abstract class Shape {
      * The axis-aligned minimum bounding rectangle (AABB) of a shape is the smallest rectangle that contains all points
      * in the shape and is aligned with the cartesian axes. The rectangle may not share the shape's centroid.
      */
-    abstract fun boundingRectangle(): BoundingRectangle
+    abstract fun boundingRectangle(): Rectangle
 
     /**
      * The support point in any direction is the furthest point on a shape towards that direction. Used by the GJK
