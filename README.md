@@ -4,14 +4,16 @@ The 2D Java game engine to fit your Slavic needs!*†
 
 This project was developed using macOS 12.x Monterey (Intel). This app has not been tested on any other systems.
 
-### Instructions for End-Users:
+## Quick Start Guide
+
+### Instructions for End-Users
 
 - Download the latest Java version: [JRE 17+](https://www.oracle.com/java/technologies/downloads/)
 - To check if Java is installed, enter 'java --version' inside a command line window.
 - Download the repository, drag 'run.sh' (Mac/Linux) or 'run.bat' (Windows) from the extracted folder to a command line
   window, and press enter.
 
-### Instructions for Developers:
+### Instructions for Developers
 
 - Java Version: [Oracle OpenJDK 17+](https://jdk.java.net/) or [Eclipse Temurin 17+](https://adoptium.net/)
 - Kotlin Version: [1.7.0](https://github.com/JetBrains/kotlin/releases/tag/v1.7.0)
@@ -29,13 +31,7 @@ This project was developed using macOS 12.x Monterey (Intel). This app has not b
     - [Java Reflections](https://github.com/ronmamo/reflections)
     - [SLF4J Simple Binding](https://www.slf4j.org/)
 
-### Disclaimers:
-
-- *This statement has not been evaluated by the International Council of Slavs. This software is not intended to
-  idealize, encourage, promote, or spread Communism.
-
-- †The developer is not responsible for any addictions, trauma, injuries, or deaths caused by excessive drinking or
-  incorrect squatting position.
+## Additional Info
 
 ### Acknowledgements
 
@@ -61,3 +57,18 @@ A massive, heartfelt thanks goes out to the following people and resources for i
   🥔🤘🥃
 - Stack Overflow/Reddit: For answering questions I never knew I had.
 - …And many more!
+
+### Disclaimers
+
+- *This statement has not been evaluated by the International Council of Slavs. This software is not intended to
+  idealize, encourage, promote, or spread Communism.
+
+- †The developer is not responsible for any addictions, trauma, injuries, or deaths caused by excessive drinking or
+  incorrect squatting position.
+
+## License
+
+This software is licensed under the GNU General Public License (GPL) v3 or any later version, which grants copyleft
+protections. In true communist fashion, the source code of this program is freely available to access, run, share,
+and modify. Any forks of this project must also be distributed under the same license and may not be made or used in any
+proprietary (monetized or closed-source). See [LICENSE.txt](LICENSE.txt) for more details.
