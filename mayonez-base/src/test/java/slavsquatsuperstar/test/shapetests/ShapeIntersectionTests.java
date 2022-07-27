@@ -3,13 +3,13 @@ package slavsquatsuperstar.test.shapetests;
 import org.junit.jupiter.api.Test;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.physics.collision.Collisions;
-import slavsquatsuperstar.mayonez.physics.shapes.Rectangle;
 import slavsquatsuperstar.mayonez.physics.shapes.Circle;
 import slavsquatsuperstar.mayonez.physics.shapes.Polygon;
+import slavsquatsuperstar.mayonez.physics.shapes.Rectangle;
 import slavsquatsuperstar.mayonez.physics.shapes.Triangle;
 
-import static slavsquatsuperstar.test.TestUtils.assertShapeCollision;
 import static slavsquatsuperstar.test.TestUtils.assertNoShapeCollision;
+import static slavsquatsuperstar.test.TestUtils.assertShapeCollision;
 
 /**
  * Unit tests for shape vs shape detection in {@link Collisions} class.
@@ -77,6 +77,13 @@ public class ShapeIntersectionTests {
 
         Polygon r3 = Polygon.rectangle(new Vec2(3, 3), new Vec2(2, 2)); // 2x2 rect at (3, 3)
         assertShapeCollision(r1, r3); // vertex
+    }
+
+    @Test
+    public void rectVsRectHitInside() {
+        Polygon r1 = Polygon.rectangle(new Vec2(0, 0), new Vec2(4, 4)); // 4x4 rect at (0, 0)
+        Polygon r2 = Polygon.rectangle(new Vec2(0, 0), new Vec2(2, 42)); // 2x2 rect at (0, 0)
+        assertShapeCollision(r1, r2);
     }
 
     @Test

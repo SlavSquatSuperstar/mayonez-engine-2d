@@ -54,4 +54,11 @@ public class PolygonTests {
         assertFloatEquals(16.5f, penta.area());
     }
 
+    @Test
+    public void polygonSupportPointSuccess() {
+        Polygon rect = Polygon.rectangle(new Vec2(2, 2), new Vec2(4, 4)); // 4x4 rectangle at (0, 0)
+        assertEquals(new Vec2(0, 0), rect.supportPoint(new Vec2(-1, -1)));
+        assertEquals(new Vec2(4, 4), rect.supportPoint(new Vec2(1, 2)));
+    }
+
 }

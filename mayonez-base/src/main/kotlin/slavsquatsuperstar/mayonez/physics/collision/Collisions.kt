@@ -2,9 +2,6 @@ package slavsquatsuperstar.mayonez.physics.collision
 
 import slavsquatsuperstar.math.MathUtils
 import slavsquatsuperstar.math.Vec2
-import slavsquatsuperstar.mayonez.Colors
-import slavsquatsuperstar.mayonez.annotations.ExperimentalFeature
-import slavsquatsuperstar.mayonez.graphics.DebugDraw
 import slavsquatsuperstar.mayonez.physics.shapes.*
 import kotlin.math.sign
 import kotlin.math.sqrt
@@ -227,57 +224,70 @@ object Collisions {
      * normals of two shapes (slow on 3D) and requires separate tests for round shapes.
      * - GJK (Gilbert-Johnson-Keerthi): relies only on support function (can handle round shapes), needs another
      * function to find contacts, may be harder to understand
+     *
+     * GJK Outline: Create a simplex from the Minkowski difference that surrounds the origin
      */
     /**
      * Executes the GJK collision algorithm between two shapes.
      *
      * @param shape1 the first shape
      * @param shape2 the second shape
-     * @return a simplex containing support points
+     * @return a simplex surrounding the origin if the shapes overlap, or otherwise null
      *
      * Source: https://blog.winter.dev/2020/gjk-algorithm/ § GJK: Surrounding the origin
      * Source: https://dyn4j.org/2010/04/gjk-gilbert-johnson-keerthi/ § Determining Collision
+     * Source: https://youtu.be/ajv46BSqcK4
      */
-    @ExperimentalFeature
+    // TODO cache recent support points
     private fun detectCollisionGJK(shape1: Shape, shape2: Shape): Simplex? {
-        // Make first guess for simplex point
-        var startPoint = support(shape1, shape2, -shape1.center())
-        var searchDir = -startPoint // Point towards origin
+        // Search in any initial direction
+        val startPt = support(shape1, shape2, shape2.center() - shape1.center())
+        var searchDir = -startPt // Search toward origin to surround it
+        val simplex = Simplex(startPt) // Create simplex with first point
 
-        val simplex = Simplex(startPoint)
+        val maxLoop = 10 // TODO calculate max loop
+        for (loop in 1..maxLoop) {
+            val ptA = support(shape1, shape2, searchDir) // Get new support point
+            if (ptA.dot(searchDir) < 0f) return null // Continue only if next point passes origin
 
-        // TODO max loop
-        // Find simplex that contains origin to show shapes overlap
-        while (simplex.size < 3) {
-            val nextPoint = support(shape1, shape2, searchDir) // Keep searching toward origin
-            // TODO < or ≤?
-            if (nextPoint.dot(searchDir) < 0f) return null // If opposite direction, no collision
+            simplex.add(ptA) // Add point to simplex
+            if (simplex.size == 2) { // Pick the normal of the line that points toward origin
+                // Line: B (start), A (next), d = tripleProduct(AB, AO, AB)
+                val vecAB = startPt - ptA
+                val vecAO = -ptA
+                searchDir = vecAB.tripleProduct(vecAO, vecAB)
+            } else { // Find if triangle contains origin
+                // Triangle: C (first), B (start), A (next)
+                val vecAC = simplex[0] - ptA
+                val vecAB = simplex[1] - ptA
+                val vecAO = -ptA
 
-            val toStart = startPoint - nextPoint // origin between two points in simplex
-            val toOrigin = -nextPoint
+                // Check reach region past line AB and AC for origin
+                val perpAB = vecAC.tripleProduct(vecAB, vecAB) // tripleProduct(AC, AB, AB)
+                val perpAC = vecAB.tripleProduct(vecAC, vecAC) // tripleProduct(AB, AC, AC)
 
-            if (toStart.dot(toOrigin) > 0f) {
-                val perp = toStart.normal()
-                searchDir = if (perp.dot(toOrigin) > 0f) perp else -perp // make sure perp points to toOrigin
-                simplex.add(nextPoint)
-            } else {
-                // Restart search
-                simplex.reset(nextPoint)
-                startPoint = nextPoint
-                searchDir = toOrigin
+                if (perpAB.dot(vecAO) > 0) {
+                    simplex.remove(0) // remove C
+                    searchDir = perpAB
+                } else if (perpAC.dot(vecAO) > 0) {
+                    simplex.remove(1) // remove B
+                    searchDir = perpAC
+                } else {
+                    return simplex // contains origin, found intersection
+                }
             }
         }
 
-        // 3 points, found intersection
 //        println("simplex=${simplex.contentToString()}")
 //        val newSimplex = arrayOf(simplex[0]!!, simplex[1]!!, simplex[2]!!)
-        val pt1 = simplex[0] + Vec2(20f)
-        val pt2 = simplex[1] + Vec2(20f)
-        val pt3 = simplex[2] + Vec2(20f)
-        DebugDraw.drawLine(pt1, pt2, Colors.BLACK)
-        DebugDraw.drawLine(pt2, pt3, Colors.BLACK)
-        DebugDraw.drawLine(pt3, pt1, Colors.BLACK)
-        return simplex
+//        val pt1 = simplex[0] + Vec2(20f)
+//        val pt2 = simplex[1] + Vec2(20f)
+//        val pt3 = simplex[2] + Vec2(20f)
+//        DebugDraw.drawLine(pt1, pt2, Colors.BLACK)
+//        DebugDraw.drawLine(pt2, pt3, Colors.BLACK)
+//        DebugDraw.drawLine(pt3, pt1, Colors.BLACK)
+
+        return null // Assume no collision if looped too many times
     }
 
     /**

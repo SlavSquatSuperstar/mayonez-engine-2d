@@ -3,9 +3,9 @@ package slavsquatsuperstar.mayonez.physics.shapes
 import slavsquatsuperstar.math.Vec2
 
 /**
- * A bounded, flat figure that exists in the 2D plane and has no intersecting edges.
- * Can also represent an infinitesimally thin cross-section of a solid (lamina).
- * Shape objects are immutable, meaning their component points and other characteristics cannot change.
+ * A bounded, flat figure that exists in the 2D plane and has no intersecting edges. Can also represent an
+ * infinitesimally thin cross-section of a solid (lamina). Shape objects are immutable, meaning their component points
+ * and other characteristics cannot change.
  *
  * @author SlavSquatSuperstar
  */
@@ -52,6 +52,8 @@ abstract class Shape {
     /**
      * The support point in any direction is the furthest point on a shape towards that direction. Used by the GJK
      * collision algorithm.
+     *
+     * @param direction the direction to search (does not have to be a unit vector)
      */
     abstract fun supportPoint(direction: Vec2): Vec2
 

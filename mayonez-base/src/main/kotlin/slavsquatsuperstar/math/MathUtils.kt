@@ -267,22 +267,40 @@ object MathUtils {
 
     // TODO check precision on kotlin sin/cos and toRadians
     /**
-     * Takes the sine of an angle.
+     * Takes the sine of an angle in degrees.
      *
      * @param degrees the measure of the angle, in degrees
      * @return the sine of the angle
      */
     @JvmStatic
-    fun sin(degrees: Float): Float = sin(Math.toRadians(degrees.toDouble())).toFloat()
+    fun sin(degrees: Float): Float = kotlin.math.sin(Math.toRadians(degrees.toDouble())).toFloat()
 
     /**
-     * Takes the cosine of an angle.
+     * Takes the sine of an angle in radians.
+     *
+     * @param radians the measure of the angle, in radians
+     * @return the sine of the angle
+     */
+    @JvmStatic
+    fun sinRadians(radians: Float): Float = kotlin.math.sin(radians)
+
+    /**
+     * Takes the cosine of an angle in degrees.
      *
      * @param degrees the measure of the angle, in degrees
      * @return the cosine of the angle
      */
     @JvmStatic
     fun cos(degrees: Float): Float = cos(Math.toRadians(degrees.toDouble())).toFloat()
+
+    /**
+     * Takes the cosine of an angle in radians.
+     *
+     * @param radians the measure of the angle, in radians
+     * @return the sine of the angle
+     */
+    @JvmStatic
+    fun cosRadians(radians: Float): Float = kotlin.math.cos(radians)
 
     /**
      * Converts an angle from radians to degrees.

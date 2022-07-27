@@ -157,13 +157,25 @@ class Vec2 constructor(
     fun dot(v: Vec2): Float = (this.x * v.x) + (this.y * v.y)
 
     /**
-     * Returns the z-component of the cross product between this vector and another,
-     * equal to the determinant of the matrix with this vector and the other as columns
+     * Returns the z-component of the cross product between this vector and another, equal to the determinant of the
+     * matrix with this vector and the other as columns.
      *
      * @param v another vector
      * @return the 2D cross product
      */
     fun cross(v: Vec2): Float = (this.x * v.y) - (v.x * this.y)
+
+    /**
+     * Calculates the vector triple product between this vector and two other vectors. The vector triple product is
+     * defined as (a × b) × c = b(a · c) - a(b · c), with this vector representing "a".
+     *
+     * @param v1 another vector
+     * @param v2 a third vector
+     * @return the vector triple product
+     */
+    fun tripleProduct(v1: Vec2, v2: Vec2): Vec2 {
+        return v1 * (this.dot(v2)) - this * (v1.dot(v2))
+    }
 
     /**
      * Projects this vector onto another vector, returning the components of this vector in the direction of another.

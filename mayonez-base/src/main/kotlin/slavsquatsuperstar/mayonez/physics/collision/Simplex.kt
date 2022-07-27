@@ -24,6 +24,16 @@ internal class Simplex(firstPoint: Vec2) {
         points[size++] = point
     }
 
+    fun remove(index: Int) {
+        if (index > size) return
+
+        // shift points to fill in empty
+        if (index < 1) points[0] = points[1]
+        if (index < 2) points[1] = points[2]
+        points[2] = Vec2()
+        size--
+    }
+
     operator fun get(index: Int): Vec2 {
         return when (index) {
             0 -> points[0]
@@ -31,17 +41,6 @@ internal class Simplex(firstPoint: Vec2) {
             2 -> points[2]
             else -> Vec2()
         }
-    }
-
-    operator fun set(index: Int, point: Vec2) {
-        if (index >= size) return
-        points[index] = point
-    }
-
-    fun reset(firstPoint: Vec2) {
-        points.fill(Vec2())
-        points[0] = firstPoint
-        size = 1
     }
 
 }
