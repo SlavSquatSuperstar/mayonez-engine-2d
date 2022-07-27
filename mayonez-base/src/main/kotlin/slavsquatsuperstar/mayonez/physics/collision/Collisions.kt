@@ -19,10 +19,10 @@ object Collisions {
     fun raycast(shape: Shape?, ray: Ray?, limit: Float): Raycast? {
         return when {
             (shape == null) || (ray == null) -> null
-            (shape is Circle) -> raycastCircle(shape, ray, limit)
             (shape is Edge) -> raycastEdge(shape, ray, limit)
-            (shape is Polygon) -> raycastPolygon(shape, ray, limit)
+            (shape is Circle) -> raycastCircle(shape, ray, limit)
             (shape is Rectangle) -> raycastRectangle(shape, ray, limit)
+            (shape is Polygon) -> raycastPolygon(shape, ray, limit)
             else -> null
         }
     }
@@ -132,7 +132,7 @@ object Collisions {
             normal = Vec2(0f, -sign(ray.direction.y))
 
         val contact = ray.getPoint(distToRect)
-        return Raycast(contact, normal, contact.distance(ray.origin))
+        return Raycast(contact, normal, contact.distance(ray.origin) / ray.length)
     }
 
     private fun Vec2.unsafeDivide(v: Vec2): Vec2 {
@@ -145,9 +145,9 @@ object Collisions {
     fun detectCollision(shape1: Shape?, shape2: Shape?): Boolean {
         return when {
             (shape1 == null) || (shape2 == null) -> false
-            (shape1 is Circle) && (shape2 is Circle) -> collisionCircles(shape1, shape2)
-            (shape1 is Edge) && (shape2 is Edge) -> collisionEdges(shape1, shape2)
-            (shape1 is Rectangle) && (shape2 is Rectangle) -> collisionRects(shape1, shape2)
+            (shape1 is Edge) && (shape2 is Edge) -> collideEdges(shape1, shape2)
+            (shape1 is Circle) && (shape2 is Circle) -> collideCircles(shape1, shape2)
+            (shape1 is Rectangle) && (shape2 is Rectangle) -> collideRects(shape1, shape2)
             else -> detectCollisionGJK(shape1, shape2) != null
         }
     }
@@ -161,7 +161,7 @@ object Collisions {
      *
      * @return if the two circles intersect or touch
      */
-    private fun collisionCircles(circle1: Circle, circle2: Circle): Boolean {
+    private fun collideCircles(circle1: Circle, circle2: Circle): Boolean {
         val distSq = circle1.center().distanceSq(circle2.center())
         val sumRadiiSq = MathUtils.squared(circle1.radius + circle2.radius)
         return distSq <= sumRadiiSq
@@ -176,7 +176,7 @@ object Collisions {
      * @return if the two edges intersect or touch
      */
     // TODO linear systems matrix
-    private fun collisionEdges(edge1: Edge, edge2: Edge): Boolean {
+    private fun collideEdges(edge1: Edge, edge2: Edge): Boolean {
         // Find line directions
         val dir1 = edge1.toVector() / edge1.length
         val dir2 = edge2.toVector() / edge2.length
@@ -206,7 +206,7 @@ object Collisions {
      *
      * @return if the two rectangles intersect or touch
      */
-    private fun collisionRects(rect1: Rectangle, rect2: Rectangle): Boolean {
+    private fun collideRects(rect1: Rectangle, rect2: Rectangle): Boolean {
         // Perform SAT on x-axis
         val min1 = rect1.min()
         val max1 = rect1.max()

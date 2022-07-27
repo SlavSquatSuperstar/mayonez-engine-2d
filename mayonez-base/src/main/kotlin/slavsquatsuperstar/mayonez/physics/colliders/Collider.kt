@@ -129,6 +129,7 @@ abstract class Collider(private val shapeData: Shape) : Component() {
             .rotate(-getRotation())
     }
 
+//
 //    open fun toLocal(world: Vec2): Vec2 = transform?.toLocal(world) ?: world
 
 //    open fun toWorld(local: Vec2): Vec2 = transform?.toWorld(local) ?: local
@@ -168,7 +169,7 @@ abstract class Collider(private val shapeData: Shape) : Component() {
      */
     abstract fun getCollisionInfo(collider: Collider?): CollisionInfo?
 
-// Field Getters and Setters
+    // Field Getters and Setters
 
     /**
      * Whether this collider has a null or infinite-mass rigidbody, and does not respond to collisions.
@@ -177,7 +178,7 @@ abstract class Collider(private val shapeData: Shape) : Component() {
      */
     fun isStatic(): Boolean = rb?.hasInfiniteMass() ?: true
 
-// Callback Methods
+    // Callback Methods
 
     /**
      * A callback event broadcasted when two solid objects collide with each other.

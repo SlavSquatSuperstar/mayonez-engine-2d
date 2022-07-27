@@ -15,12 +15,12 @@ plugins {
 // Project Info
 
 group 'slavsquatsuperstar'
-version '0.7.3-SNAPSHOT-6'
+version '0.7.4-SNAPSHOT-2'
 description = 'The root project for Mayonez Engine that contains all modules'
 
 allprojects {
     group 'slavsquatsuperstar'
-    version '0.7.4-pre1'
+    version '0.7.4-pre2'
 }
 
 // Custom Settings

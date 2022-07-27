@@ -1,11 +1,14 @@
 package slavsquatsuperstar.mayonez.event;
 
+import slavsquatsuperstar.mayonez.annotations.ExperimentalFeature;
+
 /**
  * An action or milestone that occurs in this program. Events are a form of communication between different objects
  * or systems of the application.
  *
  * @author SlavSquatSuperstar
  */
+@ExperimentalFeature
 public class Event {
 
     private final String message;

@@ -9,7 +9,7 @@ import java.awt.event.KeyEvent
  *
  * @author SlavSquatSuperstar
  */
-// TODO game loop / callback methods shouldn't be accessible from API (called statically)
+// TODO GLFW sticky keys?
 @Suppress("unused")
 object KeyInput : KeyAdapter() {
 
@@ -42,6 +42,7 @@ object KeyInput : KeyAdapter() {
 
     @JvmStatic
     fun keyCallback(window: Long, key: Int, scancode: Int, action: Int, mods: Int) {
+        println(glfwGetKeyName(GLFW_KEY_UNKNOWN, scancode))
         when (action) {
             // TODO GL double pressing still occurs
             GLFW_PRESS -> {
@@ -60,10 +61,12 @@ object KeyInput : KeyAdapter() {
 //                keysHeld[key] = false
             }
         }
+        endFrame()
     }
 
     override fun keyPressed(e: KeyEvent) { // Activates when ever a key is down
         keysDown[e.keyCode] = true
+//        println("${KeyEvent.getModifiersExText(e.modifiersEx)}${e.keyLocation}")
     }
 
     override fun keyReleased(e: KeyEvent) {

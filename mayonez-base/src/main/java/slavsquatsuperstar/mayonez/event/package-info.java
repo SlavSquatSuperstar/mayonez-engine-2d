@@ -4,7 +4,5 @@
  *
  * @author SlavSquatSuperstar
  */
-@ExperimentalFeature
 package slavsquatsuperstar.mayonez.event;
 
-import slavsquatsuperstar.mayonez.annotations.ExperimentalFeature;

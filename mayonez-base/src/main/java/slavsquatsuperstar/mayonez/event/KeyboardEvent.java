@@ -1,10 +1,13 @@
 package slavsquatsuperstar.mayonez.event;
 
+import slavsquatsuperstar.mayonez.annotations.ExperimentalFeature;
+
 import java.awt.event.KeyEvent;
 
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_UNKNOWN;
 import static org.lwjgl.glfw.GLFW.glfwGetKeyName;
 
+@ExperimentalFeature
 public class KeyboardEvent extends Event {
 
     private boolean keyDown;

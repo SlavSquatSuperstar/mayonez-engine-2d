@@ -4,7 +4,6 @@ import slavsquatsuperstar.math.Vec2
 import slavsquatsuperstar.mayonez.Colors
 import slavsquatsuperstar.mayonez.Mayonez
 import slavsquatsuperstar.mayonez.annotations.EngineType
-import slavsquatsuperstar.mayonez.annotations.ExperimentalFeature
 import slavsquatsuperstar.mayonez.annotations.UsesEngine
 import slavsquatsuperstar.mayonez.graphics.renderer.Renderable
 import slavsquatsuperstar.mayonez.physics.colliders.CircleCollider
@@ -142,14 +141,13 @@ object DebugDraw {
      * @param color the color to use
      */
     @JvmStatic
-    @ExperimentalFeature
     fun drawShape(shape: Shape?, color: Color?) {
         when (shape) {
+            is Edge -> drawLine(shape.start, shape.end, color ?: Colors.BLACK)
             is Circle -> drawCircle(shape, color ?: Colors.BLACK)
             is Ellipse -> drawEllipse(shape, color ?: Colors.BLACK)
-            is Edge -> drawLine(shape.start, shape.end, color ?: Colors.BLACK)
-            is Polygon -> drawPolygon(shape, color ?: Colors.BLACK)
             is Rectangle -> drawRectangle(shape, color ?: Colors.BLACK)
+            is Polygon -> drawPolygon(shape, color ?: Colors.BLACK)
         }
     }
 

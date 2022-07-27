@@ -26,9 +26,14 @@ object MouseInput : MouseAdapter() {
     private var scroll = Vec2()
 
     // Mouse Button Fields
-    private val buttonsDown = HashMap<Int, Boolean?>() // if mouse listener detects this button
-    private val buttonsPressed = HashMap<Int, Boolean?>() // if button is pressed this frame
-    private val buttonsHeld = HashMap<Int, Boolean?>() // if button is continuously held down
+    // Store mouse buttons here
+    private var lastButton: Int = -1
+    private var lastAction: Int = -1
+
+    // Don't need hashmaps because very few buttons, max 8 buttons used by GLFW
+    private val buttonsDown: Array<Boolean> = Array(8) { false } // if mouse listener detects this button
+    private val buttonsPressed: Array<Boolean> = Array(8) { false } // if button is pressed this frame
+    private val buttonsHeld: Array<Boolean> = Array(8) { false } // if button is continuously held down
 
     @JvmStatic
     // TODO isDragging() method
@@ -41,14 +46,12 @@ object MouseInput : MouseAdapter() {
         private set
 
     // Game Loop Methods
-    @JvmStatic
-    fun endFrame() {
-        // Update mouse input
-        for (b in buttonsDown.keys) {
-            if (buttonsDown[b] == true) {
-                if (buttonsPressed[b] != true && buttonsHeld[b] != true) { // New button press
+    private fun pollMouseButtons() {
+        for (b in buttonsDown.indices) {
+            if (buttonsDown[b]) {
+                if (!buttonsPressed[b] && !buttonsHeld[b]) { // New button press
                     buttonsPressed[b] = true
-                } else if (buttonsPressed[b] == true) { // Continued button press
+                } else if (buttonsPressed[b]) { // Continued button press
                     buttonsPressed[b] = false
                     buttonsHeld[b] = true
                 }
@@ -58,6 +61,12 @@ object MouseInput : MouseAdapter() {
             }
 
         }
+    }
+
+    @JvmStatic
+    fun endFrame() {
+        // Update mouse input
+        pollMouseButtons()
 
         /// Reset motion
         setMouseDisp(0, 0)
@@ -68,11 +77,14 @@ object MouseInput : MouseAdapter() {
 
     @JvmStatic
     fun mouseButtonCallback(window: Long, button: Int, action: Int, mods: Int) {
+        lastButton = button
+        lastAction = action
         when (action) {
             GLFW_PRESS -> buttonsDown[button] = true
             GLFW_RELEASE -> buttonsDown[button] = false
         }
         pressed = buttonsDown[button] == true
+        pollMouseButtons()
     }
 
     override fun mousePressed(e: MouseEvent) {
@@ -119,7 +131,6 @@ object MouseInput : MouseAdapter() {
     /* Mouse Scroll Callbacks */
 
     @JvmStatic
-    @SuppressWarnings("unused")
     fun mouseScrollCallback(window: Long, xOffset: Double, yOffset: Double) {
         setScrollPos(xOffset, yOffset)
     }
@@ -135,10 +146,10 @@ object MouseInput : MouseAdapter() {
     /* Mouse Button Getters */
 
     @JvmStatic
-    fun buttonDown(button: Int): Boolean = buttonsHeld[button] == true || buttonsPressed[button] == true
+    fun buttonDown(button: Int): Boolean = buttonsHeld[button] || buttonsPressed[button]
 
     @JvmStatic
-    fun buttonPressed(button: Int): Boolean = buttonsPressed[button] == true
+    fun buttonPressed(button: Int): Boolean = buttonsPressed[button]
 
     @JvmStatic
     fun buttonDown(buttonName: String): Boolean {
