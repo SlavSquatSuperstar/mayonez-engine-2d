@@ -8,17 +8,16 @@ import slavsquatsuperstar.mayonez.physics.shapes.Edge;
 import slavsquatsuperstar.mayonez.physics.shapes.Polygon;
 import slavsquatsuperstar.mayonez.physics.shapes.Triangle;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static slavsquatsuperstar.test.TestUtils.assertShapeCollision;
 import static slavsquatsuperstar.test.TestUtils.assertNoShapeCollision;
 
 /**
- * Unit tests for line vs line/shape detection in {@link Collisions} class.
+ * Unit tests {@link Edge} class and line vs line/shape detection in {@link Collisions} class.
  *
  * @author SlavSquatSuperstar
  */
-public class LineIntersectionTests {
+public class EdgeTests {
 
     // Point vs Line
 
@@ -45,6 +44,24 @@ public class LineIntersectionTests {
         Edge e = new Edge(new Vec2(0, 0), new Vec2(2, 2));
         assertFalse(e.contains(new Vec2(3, 3))); // outside
         assertFalse(e.contains(new Vec2(1, 0))); // above
+    }
+
+    // Unit Normals
+    @Test
+    public void unitNormalsCorrect() { // always to the left of line vector
+        Edge e1 = new Edge(new Vec2(0, 0), new Vec2(4, 0));
+        assertEquals(new Vec2(0, 1), e1.unitNormal());
+
+        Edge e2 = new Edge(new Vec2(4, 0), new Vec2(0, 0));
+        assertEquals(new Vec2(0, -1), e2.unitNormal());
+    }
+
+    @Test
+    public void unitNormalsDirectionalCorrect() { // always to the left of line vector
+        Edge e = new Edge(new Vec2(0, 0), new Vec2(4, 0));
+        assertEquals(new Vec2(0, 1), e.unitNormal(new Vec2(1, 1)));
+        assertEquals(new Vec2(0, -1), e.unitNormal(new Vec2(1, -1)));
+        assertEquals(new Vec2(0, 0), e.unitNormal(new Vec2(1, 0)));
     }
 
     // Line vs Line

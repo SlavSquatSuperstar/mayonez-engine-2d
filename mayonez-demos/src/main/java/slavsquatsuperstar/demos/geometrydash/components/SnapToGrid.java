@@ -36,7 +36,7 @@ public class SnapToGrid extends Component {
         counter.update(dt);
 
         // add 0.5 to x/y to center the block
-        Vec2 mousePos = MouseInput.getWorldPos().add(getScene().getCamera().getOffset()).floor().add(new Vec2(0.5f));
+        Vec2 mousePos = MouseInput.getPosition().add(getScene().getCamera().getOffset()).floor().add(new Vec2(0.5f));
         transform.position.set(mousePos);
         if (counter.isReady() && MouseInput.buttonDown("left mouse")) {
             counter.reset();

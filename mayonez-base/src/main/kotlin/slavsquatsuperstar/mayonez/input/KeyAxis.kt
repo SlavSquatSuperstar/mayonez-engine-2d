@@ -1,16 +1,13 @@
 package slavsquatsuperstar.mayonez.input
 
-import org.apache.commons.lang3.StringUtils
+import slavsquatsuperstar.util.StringUtils
 
 /**
  * Stores two keys intended to perform opposite actions.
  */
 // TODO store mappings?
-internal enum class KeyAxis(posKey: KeyMapping, negKey: KeyMapping) {
-    VERTICAL(KeyMapping.UP, KeyMapping.DOWN), HORIZONTAL(KeyMapping.RIGHT, KeyMapping.LEFT);
-
-    private val posKey: String = posKey.name
-    private val negKey: String = negKey.name
+internal enum class KeyAxis(private val posKey: Key, private val negKey: Key) {
+    VERTICAL(Key.W, Key.S), HORIZONTAL(Key.D, Key.A);
 
     /**
      * @return The value of this axis. 1 if the positive key is pressed. -1 if the negative key is pressed.
@@ -23,6 +20,6 @@ internal enum class KeyAxis(posKey: KeyMapping, negKey: KeyMapping) {
         return negVal + posVal
     }
 
-    override fun toString(): String = StringUtils.capitalize(name.lowercase())
+    override fun toString(): String = StringUtils.capitalizeFirst(name.lowercase())
 
 }

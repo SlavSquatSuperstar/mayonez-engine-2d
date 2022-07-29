@@ -7,7 +7,6 @@ import slavsquatsuperstar.mayonez.Preferences;
 import slavsquatsuperstar.mayonez.Scene;
 import slavsquatsuperstar.mayonez.graphics.DebugDraw;
 import slavsquatsuperstar.mayonez.input.KeyInput;
-import slavsquatsuperstar.mayonez.input.MouseInput;
 import slavsquatsuperstar.mayonez.physics.PhysicsMaterial;
 import slavsquatsuperstar.mayonez.physics.Rigidbody;
 import slavsquatsuperstar.mayonez.physics.colliders.BoxCollider;
@@ -62,11 +61,11 @@ public abstract class PhysicsTestScene extends Scene {
 //            System.out.println("held");
         }
 
-        if (MouseInput.buttonPressed("left mouse")) {
-            System.out.println("pressed");
-        } else if (MouseInput.buttonDown("left mouse")) {
-            System.out.println("held");
-        }
+//        if (MouseInput.buttonPressed("left mouse")) {
+//            System.out.println("pressed");
+//        } else if (MouseInput.buttonDown("left mouse")) {
+//            System.out.println("held");
+//        }
 
         if (enabledGravity) setGravity(new Vec2(0, -18));
         else setGravity(new Vec2());

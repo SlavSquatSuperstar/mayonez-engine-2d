@@ -31,6 +31,7 @@ object MouseInput : MouseAdapter() {
     private var lastAction: Int = -1
 
     // Don't need hashmaps because very few buttons, max 8 buttons used by GLFW
+    private const val NUM_BUTTONS: Int = 8
     private val buttonsDown: Array<Boolean> = Array(8) { false } // if mouse listener detects this button
     private val buttonsPressed: Array<Boolean> = Array(8) { false } // if button is pressed this frame
     private val buttonsHeld: Array<Boolean> = Array(8) { false } // if button is continuously held down
@@ -73,10 +74,11 @@ object MouseInput : MouseAdapter() {
         setScrollPos(0, 0)
     }
 
-    /* Mouse Button Callbacks */
+    // Mouse Button Callbacks
 
     @JvmStatic
     fun mouseButtonCallback(window: Long, button: Int, action: Int, mods: Int) {
+        if (button.isValid()) return
         lastButton = button
         lastAction = action
         when (action) {
@@ -88,21 +90,23 @@ object MouseInput : MouseAdapter() {
     }
 
     override fun mousePressed(e: MouseEvent) {
-        println("pressed")
+        if (!e.button.isValid()) return
+//        println("pressed")
         buttonsDown[e.button] = true
         pressed = true
         clicks = e.clickCount
     }
 
     override fun mouseReleased(e: MouseEvent) {
-        println("released")
+        if (!e.button.isValid()) return
+//        println("released")
         buttonsDown[e.button] = false
         setMouseDisp(0, 0)
         pressed = false
         clicks = 0
     }
 
-    /* Mouse Movement Callbacks */
+    // Mouse Movement Callbacks
 
     @JvmStatic
     fun mousePosCallback(window: Long, xPos: Double, yPos: Double) {
@@ -128,7 +132,7 @@ object MouseInput : MouseAdapter() {
         mouseDisp.set(dx.toFloat(), dy.toFloat())
     }
 
-    /* Mouse Scroll Callbacks */
+    // Mouse Scroll Callbacks
 
     @JvmStatic
     fun mouseScrollCallback(window: Long, xOffset: Double, yOffset: Double) {
@@ -143,77 +147,102 @@ object MouseInput : MouseAdapter() {
         scroll.set(scrollX.toFloat(), scrollY.toFloat())
     }
 
-    /* Mouse Button Getters */
+    // Mouse Button Getters
 
     @JvmStatic
-    fun buttonDown(button: Int): Boolean = buttonsHeld[button] || buttonsPressed[button]
+    fun buttonDown(button: Int): Boolean = button.isValid() && (buttonsHeld[button] || buttonsPressed[button])
 
     @JvmStatic
-    fun buttonPressed(button: Int): Boolean = buttonsPressed[button]
+    fun buttonPressed(button: Int): Boolean = button.isValid() && buttonsPressed[button]
+
+    @JvmStatic
+    fun buttonDown(button: Button): Boolean {
+        return if (Mayonez.useGL!!) buttonDown(button.glCode)
+        else buttonDown(button.awtCode)
+    }
+
+    @JvmStatic
+    fun buttonPressed(button: Button): Boolean {
+        return if (Mayonez.useGL!!) buttonPressed(button.glCode)
+        else buttonPressed(button.awtCode)
+    }
 
     @JvmStatic
     fun buttonDown(buttonName: String): Boolean {
-        for (b in MouseMapping.values())
-            if (b.toString().equals(buttonName, ignoreCase = true))
-                return buttonDown(b.button)
+        for (button in Button.values()) {
+            if (button.toString().equals(buttonName, ignoreCase = true))
+                return buttonDown(button)
+        }
         return false
     }
 
     @JvmStatic
     fun buttonPressed(buttonName: String): Boolean {
-        for (b in MouseMapping.values())
-            if (b.toString().equals(buttonName, ignoreCase = true))
-                return buttonPressed(b.button)
+        for (button in Button.values()) {
+            if (button.toString().equals(buttonName, ignoreCase = true))
+                return buttonPressed(button)
+        }
         return false
     }
 
-    /* Mouse Position Getters */
+    // Mouse Position Getters
 
     @JvmStatic
-    fun getScreenPos(): Vec2 = mousePos
+    val screenPos: Vec2
+        get() = mousePos
 
     @JvmStatic
-    fun getScreenX(): Float = mousePos.x
+    val screenX: Float
+        get() = mousePos.x
 
     @JvmStatic
-    fun getScreenY(): Float = mousePos.y
+    val screenY: Float
+        get() = mousePos.y
 
     @JvmStatic
-    fun getWorldPos(): Vec2 {
-        val flipped = Vec2(mousePos.x, Mayonez.windowHeight - mousePos.y) // Mirror y
-        return flipped.toWorld()
-    }
+    val position: Vec2
+        get() = Vec2(mousePos.x, Mayonez.windowHeight - mousePos.y).toWorld() // Mirror y
 
     @JvmStatic
-    fun getWorldX(): Float = getWorldPos().x
+    val x: Float
+        get() = position.x
 
     @JvmStatic
-    fun getWorldY(): Float = getWorldPos().y
+    val y: Float
+        get() = position.y
 
-    /* Mouse Displacement Getters */
-
-    @JvmStatic
-    fun getScreenDisp(): Vec2 = mouseDisp
+    // Mouse Displacement Getters
 
     @JvmStatic
-    fun getScreenDx(): Float = mouseDisp.x
+    val screenDisp: Vec2
+        get() = mouseDisp
 
     @JvmStatic
-    fun getScreenDy(): Float = mouseDisp.y
+    val screenDx: Float
+        get() = mouseDisp.x
 
     @JvmStatic
-    fun getWorldDisp(): Vec2 = (mouseDisp * Vec2(1f, -1f)).toWorld() // Invert y
+    val screenDy: Float
+        get() = mouseDisp.y
 
     @JvmStatic
-    fun getWorldDx(): Float = getWorldDisp().x
+    val displacement: Vec2
+        get() = (mouseDisp * Vec2(1f, -1f)).toWorld() // Invert y
 
     @JvmStatic
-    fun getWorldDy(): Float = getWorldDisp().y
+    val dx: Float
+        get() = displacement.x
+
+    @JvmStatic
+    val dy: Float
+        get() = displacement.y
 
     // Helper Methods
 
-    private fun Vec2.toWorld(): Vec2 {
-        return this / Mayonez.scene.cellSize
-    }
+    // Converts screen pixels to world units
+    private fun Vec2.toWorld(): Vec2 = this / Mayonez.scene.cellSize
+
+    // If a button is a valid index
+    private fun Int.isValid(): Boolean = this in 0 until NUM_BUTTONS
 
 }

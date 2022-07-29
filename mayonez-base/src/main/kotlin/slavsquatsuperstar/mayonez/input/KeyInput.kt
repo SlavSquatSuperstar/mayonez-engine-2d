@@ -1,6 +1,7 @@
 package slavsquatsuperstar.mayonez.input
 
 import org.lwjgl.glfw.GLFW.*
+import slavsquatsuperstar.mayonez.Mayonez
 import java.awt.event.KeyAdapter
 import java.awt.event.KeyEvent
 
@@ -21,7 +22,7 @@ object KeyInput : KeyAdapter() {
 
     // Game Loop Methods
     @JvmStatic
-    fun endFrame() { // TODO rename method?
+    fun endFrame() { // TODO rename to pollKeys?
         // Update key input
         for (k in keysDown.keys) {
             if (keysDown[k] == true) {
@@ -42,7 +43,7 @@ object KeyInput : KeyAdapter() {
 
     @JvmStatic
     fun keyCallback(window: Long, key: Int, scancode: Int, action: Int, mods: Int) {
-        println(glfwGetKeyName(GLFW_KEY_UNKNOWN, scancode))
+//        println(glfwGetKeyName(GLFW_KEY_UNKNOWN, scancode))
         when (action) {
             // TODO GL double pressing still occurs
             GLFW_PRESS -> {
@@ -50,11 +51,13 @@ object KeyInput : KeyAdapter() {
 //                keysPressed[key] = true
 //                keysHeld[key] = false
             }
+
             GLFW_REPEAT -> {
                 keysDown[key] = true
 //                keysPressed[key] = false
 //                keysHeld[key] = true
             }
+
             GLFW_RELEASE -> {
                 keysDown[key] = false
 //                keysPressed[key] = false
@@ -82,38 +85,65 @@ object KeyInput : KeyAdapter() {
     fun keyPressed(keyCode: Int): Boolean = keysPressed[keyCode] == true
 
     /**
-     * Returns whether any of the keys associated with the specified [KeyMapping] is continuously held down.
+     * Returns whether the specified [Key] is continuously held down.
      *
-     * @param keyName the name of the [KeyMapping]
+     * @param key a member of the [Key] enum
+     * @return if the specified key is down
+     */
+    @JvmStatic
+    fun keyDown(key: Key): Boolean {
+        return if (Mayonez.useGL!!) keyDown(key.glCode)
+        else keyDown(key.awtCode)
+    }
+
+    /**
+     * Returns whether the specified [Key] is pressed this frame.
+     *
+     * @param key a member of the [Key] enum
+     * @return if the specified key is pressed
+     */
+    @JvmStatic
+    fun keyPressed(key: Key): Boolean {
+        return if (Mayonez.useGL!!) keyPressed(key.glCode)
+        else keyPressed(key.awtCode)
+    }
+
+    /**
+     * Returns whether the specified [Key] is continuously held down.
+     *
+     * @param keyName the name of the [Key], with spaces separating words
      * @return if the specified key is down
      */
     @JvmStatic
     fun keyDown(keyName: String): Boolean {
-        for (m in KeyMapping.values())
-            if (m.name.equals(keyName, ignoreCase = true)) // if the desired mapping exists
-                for (code in m.keyCodes) if (keyDown(code)) return true
+        for (key in Key.values()) {
+            if (key.toString().equals(keyName, ignoreCase = true))
+                return (keyDown(key))
+        }
         return false
     }
 
     /**
-     * Returns whether any of the keys associated with the specified [KeyMapping] has been pressed.
+     * Returns whether the specified [Key] is pressed this frame.
      *
-     * @param keyName the name of the [KeyMapping]
-     * @return if the specified key was pressed
+     * @param keyName the name of the [Key], with spaces separating words
+     * @return if the specified key is pressed
      */
     @JvmStatic
     fun keyPressed(keyName: String): Boolean {
-        for (m in KeyMapping.values())
-            if (m.name.equals(keyName, ignoreCase = true))
-                for (code in m.keyCodes) if (keyPressed(code)) return true
+        for (key in Key.values()) {
+            if (key.toString().equals(keyName, ignoreCase = true))
+                return (keyPressed(key))
+        }
         return false
     }
 
     @JvmStatic
     fun getAxis(axisName: String): Int {
-        for (a in KeyAxis.values())
+        for (a in KeyAxis.values()) {
             if (a.toString().equals(axisName, ignoreCase = true))
                 return a.value()
+        }
         return 0
     }
 

@@ -1,5 +1,5 @@
 buildscript {
-    project.ext.kotlinVersion = '1.7.0'
+    project.ext.kotlinVersion = '1.7.10'
 }
 
 plugins {

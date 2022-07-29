@@ -54,7 +54,7 @@ public abstract class MouseScript extends MovementScript {
         }
 
         onMouseMove();
-        lastMouse = MouseInput.getWorldPos().add(MouseInput.getWorldDisp());
+        lastMouse = MouseInput.getPosition().add(MouseInput.getDisplacement());
     }
 
     // Input Helper Methods

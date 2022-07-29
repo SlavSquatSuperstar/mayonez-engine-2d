@@ -35,6 +35,7 @@ object Mayonez {
         get() = (System.nanoTime() - TIME_STARTED) / 1.0E9f
 
     // Game
+    // TODO make not null
     @JvmStatic
     var useGL: Boolean? = null
         @JvmName("shouldUseGL")

@@ -47,7 +47,7 @@ public class DragAndDrop extends MouseScript {
 
     @Override
     protected Vec2 getRawInput() {
-        return MouseInput.getWorldPos().sub(lastMouse).add(MouseInput.getWorldDisp()).mul(inverted ? -1 : 1);
+        return MouseInput.getPosition().sub(lastMouse).add(MouseInput.getDisplacement()).mul(inverted ? -1 : 1);
     }
 
     @Override

@@ -22,6 +22,7 @@ module mayonez.base {
     requires org.reflections;
 
     // Public API
+    exports slavsquatsuperstar.util;
     exports slavsquatsuperstar.math;
     exports slavsquatsuperstar.mayonez;
     exports slavsquatsuperstar.mayonez.annotations;
