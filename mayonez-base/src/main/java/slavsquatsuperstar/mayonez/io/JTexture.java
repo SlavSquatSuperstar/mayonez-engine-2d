@@ -1,4 +1,4 @@
-package slavsquatsuperstar.mayonez.fileio;
+package slavsquatsuperstar.mayonez.io;
 
 import slavsquatsuperstar.mayonez.Logger;
 import slavsquatsuperstar.mayonez.annotations.UsesEngine;
@@ -21,23 +21,19 @@ public class JTexture extends Asset {
 
     private BufferedImage image;
 
-    public JTexture(String filename, AssetType type) {
-        super(filename, type);
+    public JTexture(String filename) {
+        super(filename);
         Assets.setAsset(filename, this);
         readImage();
-    }
-
-    public JTexture(String filename) {
-        this(filename, AssetType.LOCAL);
     }
 
     public void readImage() {
         try (InputStream in = inputStream()) {
             image = ImageIO.read(new ByteArrayInputStream(Objects.requireNonNull(in).readAllBytes()));
         } catch (IOException e) {
-            Logger.warn("Could not read image \"%s\".", getFilename());
+            Logger.error("Could not read image \"%s\".", getFilename());
         } catch (NullPointerException e) {
-            Logger.warn("Texture file \"%s\" does not exist.", getFilename());
+            Logger.error("Texture file \"%s\" does not exist.", getFilename());
         }
     }
 

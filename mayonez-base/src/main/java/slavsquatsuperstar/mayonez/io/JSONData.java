@@ -1,4 +1,4 @@
-package slavsquatsuperstar.mayonez.fileio;
+package slavsquatsuperstar.mayonez.io;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -15,24 +15,27 @@ import java.util.Set;
  *
  * @author SlavSquatSuperstar
  */
-public class JSON {
+public class JSONData {
 
     private JSONObject json;
 
-    public JSON() {
+    /**
+     * Creates an empty object with no JSON data.
+     */
+    public JSONData() {
         this.json = new JSONObject();
     }
 
     /**
-     * Parses this object from a formatted JSON string.
+     * Parses this object from a formatted JSON string and overwrites any existing data.
      *
      * @param jsonText formatted JSON text
      */
-    public JSON(String jsonText) {
+    public JSONData(String jsonText) {
         try {
             json = new JSONObject(new JSONTokener(jsonText));
         } catch (JSONException e) {
-            Logger.warn("JSON: Could not parse JSON file");
+            Logger.error("JSON: Could not parse JSON file");
             json = new JSONObject();
         }
     }

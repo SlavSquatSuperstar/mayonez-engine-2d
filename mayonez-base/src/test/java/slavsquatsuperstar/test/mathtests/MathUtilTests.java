@@ -1,6 +1,5 @@
 package slavsquatsuperstar.test.mathtests;
 
-import org.apache.commons.lang3.math.NumberUtils;
 import org.junit.jupiter.api.Test;
 import slavsquatsuperstar.math.MathUtils;
 
@@ -94,8 +93,8 @@ public class MathUtilTests {
         int max = 20;
         for (int i = 0; i < nums.length; i++)
             nums[i] = MathUtils.random(min, max);
-        assertTrue(NumberUtils.min(nums) >= min);
-        assertTrue(NumberUtils.max(nums) <= max);
+        assertTrue(min(nums) >= min);
+        assertTrue(max(nums) <= max);
     }
 
     @Test
@@ -105,8 +104,8 @@ public class MathUtilTests {
         int max = 0;
         for (int i = 0; i < nums.length; i++)
             nums[i] = MathUtils.random(min, max);
-        assertTrue(NumberUtils.min(nums) >= min);
-        assertTrue(NumberUtils.max(nums) <= max);
+        assertTrue(min(nums) >= min);
+        assertTrue(max(nums) <= max);
     }
 
     @Test
@@ -116,8 +115,8 @@ public class MathUtilTests {
         int max = 10;
         for (int i = 0; i < nums.length; i++)
             nums[i] = MathUtils.random(min, max);
-        assertTrue(NumberUtils.min(nums) >= min);
-        assertTrue(NumberUtils.max(nums) <= max);
+        assertTrue(min(nums) >= min);
+        assertTrue(max(nums) <= max);
     }
 
     // Rounding
@@ -129,8 +128,9 @@ public class MathUtilTests {
         float max = 20f;
         for (int i = 0; i < nums.length; i++)
             nums[i] = MathUtils.random(min, max);
-        assertTrue(NumberUtils.min(nums) >= min);
-        assertTrue(NumberUtils.max(nums) <= max);
+
+        assertTrue(MathUtils.min(nums) >= min);
+        assertTrue(MathUtils.max(nums) <= max);
     }
 
     @Test
@@ -159,5 +159,20 @@ public class MathUtilTests {
         assertFloatEquals(10, MathUtils.hypot(6, 8));
         assertFloatEquals(13, MathUtils.hypot(3, 4, 12));
     }
+
+    private static int max(int[] nums) {
+        int max = nums[0];
+        for (int i = 1; i < nums.length; i++)
+            if (nums[i] > max) max = nums[i];
+        return max;
+    }
+
+    private static int min(int[] nums) {
+        int min = nums[0];
+        for (int i = 1; i < nums.length; i++)
+            if (nums[i] < min) min = nums[i];
+        return min;
+    }
+
 
 }

@@ -25,6 +25,11 @@ abstract class Shape {
     // Geometric Properties
 
     /**
+     * The number of vertices in this shape. Round shapes have zero.
+     */
+    abstract val numVertices: Int
+
+    /**
      * The area of the shape, or the amount of space it takes up in the 2D plane.
      */
     abstract fun area(): Float

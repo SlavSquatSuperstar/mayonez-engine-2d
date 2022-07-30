@@ -20,6 +20,8 @@ class Circle(
 
     // Circle Properties
 
+    override val numVertices: Int = 0
+
     /**
      * The square of the circle's radius, equal to r^2.
      */

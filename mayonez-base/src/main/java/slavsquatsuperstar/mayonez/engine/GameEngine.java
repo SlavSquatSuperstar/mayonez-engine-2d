@@ -1,12 +1,11 @@
 package slavsquatsuperstar.mayonez.engine;
 
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.mayonez.Logger;
 import slavsquatsuperstar.mayonez.Mayonez;
 import slavsquatsuperstar.mayonez.Scene;
-import slavsquatsuperstar.mayonez.physics.Physics;
 import slavsquatsuperstar.mayonez.graphics.renderer.Renderer;
+import slavsquatsuperstar.mayonez.physics.Physics;
 
 /**
  * The application that contains the engine's core loop.
@@ -79,7 +78,7 @@ public sealed abstract class GameEngine permits JGame, GLGame{
 
                 beginFrame();
                 // Update the game as many times as possible even if the screen freezes
-                while (frameTime > 0) { // Will update any left over sliver of time
+                while (frameTime > 0) { // Will update any leftover sliver of time
                     float deltaTime = MathUtils.min(frameTime, timeStep);
                     update(deltaTime);
                     frameTime -= deltaTime;
@@ -92,7 +91,7 @@ public sealed abstract class GameEngine permits JGame, GLGame{
                 }
                 // Print FPS count each second
                 if (timer >= 1) {
-                    Logger.trace("Frames per Second: %d", frames);
+                    Logger.debug("Frames per Second: %d", frames);
                     frames = 0;
                     timer = 0;
                 }
@@ -100,8 +99,7 @@ public sealed abstract class GameEngine permits JGame, GLGame{
                 endFrame();
             }
         } catch (Exception e) {
-            Logger.warn(ExceptionUtils.getStackTrace(e));
-            e.printStackTrace();
+            Logger.printStackTrace(e);
             Mayonez.stop(1);
         }
 
@@ -160,7 +158,7 @@ public sealed abstract class GameEngine permits JGame, GLGame{
             scene.start();
             physics.setScene(scene);
             renderer.setScene(scene);
-            Logger.trace("Game: Loaded scene \"%s\"", scene.getName());
+            Logger.debug("Game: Loaded scene \"%s\"", scene.getName());
         }
     }
 

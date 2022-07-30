@@ -9,31 +9,48 @@ import slavsquatsuperstar.math.MathUtils.random
  */
 object StringUtils {
 
+    // Array Methods
+    @JvmStatic
+    fun fromLines(lines: Array<String>): String {
+        val str = StringBuilder()
+        for (line in lines) str.append("$line\n")
+        return str.toString()
+    }
+
+    @JvmStatic
+    fun toLines(text: String): Array<String> = text.split("\n").toTypedArray()
+
+    // todo parse other types
+
+    // Case Conversion Methods
+
     /**
-     * Capitalizes the first letter of a string, ignoring all other letters.
+     * Converts a string to sentence case, capitalizing the first letter and making all other letters lowercase.
      *
      * @param text a string
-     * @return the capitalized string
+     * @return the string with the first word capitalized
      */
     @JvmStatic
-    fun capitalizeFirst(text: String): String {
-        val chars = text.toCharArray()
+    fun capitalize(text: String): String {
+        val chars = text.lowercase().toCharArray()
         chars[0] = chars[0].uppercaseChar()
         return String(chars)
     }
 
     /**
-     * Capitalizes the first letter of each word in a string, ignoring all other letters.
+     * Converts a string to title case, capitalizing the first letter of each word and making all other letters lowercase.
      *
      * @param text a string
-     * @return the capitalized string
+     * @return the string with each word capitalized
      */
     @JvmStatic
     fun capitalizeWords(text: String): String {
-        val words = text.split(" ").toTypedArray()
-        for (i in words.indices) words[i] = capitalizeFirst(words[i])
+        val words = toLines(text)
+        for (i in words.indices) words[i] = capitalize(words[i])
         return words.joinToString(" ")
     }
+
+    // Ordering Methods
 
     /**
      * Returns the string that comes first in alphabetical order, with uppercase letters coming before lowercase letters.
@@ -60,6 +77,8 @@ object StringUtils {
         else
             if (s1.compareTo(s2, true) < 0) s1 else s2
     }
+
+    // Random Methods
 
     /**
      * Generates a random uppercase letter (A-Z).

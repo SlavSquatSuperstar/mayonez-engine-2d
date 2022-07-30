@@ -100,7 +100,7 @@ public final class JCamera extends Script implements Camera {
         dragAndDrop.setEnabled(enabled);
         if (enabled && subject != null) {
             subject = null;
-            Logger.trace("Subject following for %s has been disabled because freecam was enabled.", this, dragAndDrop);
+            Logger.debug("Subject following for %s has been disabled because freecam was enabled.", this, dragAndDrop);
         }
         return this;
     }
@@ -128,7 +128,7 @@ public final class JCamera extends Script implements Camera {
 //            enableKeepInScene(subject.getComponent(KeepInScene.class) != null);
             if (dragAndDrop.isEnabled()) {
                 dragAndDrop.setEnabled(false);
-                Logger.trace("Freecam for %s has been disabled because a subject was set.", this, dragAndDrop);
+                Logger.debug("Freecam for %s has been disabled because a subject was set.", this, dragAndDrop);
             }
         }
         return this;

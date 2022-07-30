@@ -1,5 +1,5 @@
 /**
- * Unit tests for the {@link slavsquatsuperstar.mayonez.fileio} package.
+ * Unit tests for the {@link slavsquatsuperstar.mayonez.io} package.
  *
  * @author SlavSquatSuperstar
  */

@@ -5,6 +5,7 @@
  */
 module mayonez.base {
     // JVM
+    requires java.base;
     requires transitive java.desktop;
     requires transitive kotlin.stdlib;
 
@@ -17,8 +18,6 @@ module mayonez.base {
 
     // Other Dependencies
     requires org.json;
-    requires org.apache.commons.lang3;
-    requires org.apache.commons.io;
     requires org.reflections;
 
     // Public API
@@ -26,7 +25,7 @@ module mayonez.base {
     exports slavsquatsuperstar.math;
     exports slavsquatsuperstar.mayonez;
     exports slavsquatsuperstar.mayonez.annotations;
-    exports slavsquatsuperstar.mayonez.fileio;
+    exports slavsquatsuperstar.mayonez.io;
     exports slavsquatsuperstar.mayonez.graphics;
     exports slavsquatsuperstar.mayonez.input;
     exports slavsquatsuperstar.mayonez.physics;

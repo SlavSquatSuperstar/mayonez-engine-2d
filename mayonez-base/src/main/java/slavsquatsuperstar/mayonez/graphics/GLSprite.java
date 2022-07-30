@@ -4,7 +4,7 @@ import org.joml.Vector2f;
 import org.joml.Vector4f;
 import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Transform;
-import slavsquatsuperstar.mayonez.fileio.GLTexture;
+import slavsquatsuperstar.mayonez.io.GLTexture;
 import slavsquatsuperstar.mayonez.annotations.EngineType;
 import slavsquatsuperstar.mayonez.annotations.UsesEngine;
 

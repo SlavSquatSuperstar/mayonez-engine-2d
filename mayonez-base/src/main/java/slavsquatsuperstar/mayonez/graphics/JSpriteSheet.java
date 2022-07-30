@@ -1,7 +1,7 @@
 package slavsquatsuperstar.mayonez.graphics;
 
-import slavsquatsuperstar.mayonez.fileio.Assets;
-import slavsquatsuperstar.mayonez.fileio.JTexture;
+import slavsquatsuperstar.mayonez.io.Assets;
+import slavsquatsuperstar.mayonez.io.JTexture;
 import slavsquatsuperstar.mayonez.annotations.EngineType;
 import slavsquatsuperstar.mayonez.annotations.UsesEngine;
 

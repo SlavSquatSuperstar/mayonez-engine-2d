@@ -26,7 +26,7 @@ class Triangle(v1: Vec2, v2: Vec2, v3: Vec2) : Polygon(v1, v2, v3) {
      * The height of the triangle, h.
      */
     @JvmField
-    val height: Float = abs(edges[1].toVector().component(edges[0].toVector().normal().unit())) // get altitude length
+    val height: Float = abs(edges[1].toVector().component(edges[0].unitNormal())) // get altitude length
 
     /**
      * The area of the triangle using the shoelace formula, equal to 1/2*bh. The shoelace formula specifies the area as

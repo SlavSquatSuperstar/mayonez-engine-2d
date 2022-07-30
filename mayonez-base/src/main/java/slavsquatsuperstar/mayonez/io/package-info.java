@@ -4,4 +4,4 @@
  *
  * @author SlavSquatSuperstar
  */
-package slavsquatsuperstar.mayonez.fileio;
+package slavsquatsuperstar.mayonez.io;

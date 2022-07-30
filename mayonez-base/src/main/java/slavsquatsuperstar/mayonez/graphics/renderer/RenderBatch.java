@@ -7,9 +7,9 @@ import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.Logger;
 import slavsquatsuperstar.mayonez.Mayonez;
 import slavsquatsuperstar.mayonez.Preferences;
-import slavsquatsuperstar.mayonez.fileio.Assets;
-import slavsquatsuperstar.mayonez.fileio.GLTexture;
-import slavsquatsuperstar.mayonez.fileio.Shader;
+import slavsquatsuperstar.mayonez.io.Assets;
+import slavsquatsuperstar.mayonez.io.GLTexture;
+import slavsquatsuperstar.mayonez.io.Shader;
 import slavsquatsuperstar.mayonez.graphics.GLCamera;
 import slavsquatsuperstar.mayonez.graphics.GLSprite;
 
@@ -154,7 +154,7 @@ public class RenderBatch {
                 numDestroyed++;
             }
         }
-        if (numDestroyed > 0) Logger.log("Removed %d destroyed sprites", numDestroyed);
+        if (numDestroyed > 0) Logger.debug("Removed %d destroyed sprites", numDestroyed);
     }
 
     // Helper Methods

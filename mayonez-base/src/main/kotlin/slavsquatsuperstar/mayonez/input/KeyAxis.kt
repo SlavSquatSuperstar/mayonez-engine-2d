@@ -20,6 +20,6 @@ internal enum class KeyAxis(private val posKey: Key, private val negKey: Key) {
         return negVal + posVal
     }
 
-    override fun toString(): String = StringUtils.capitalizeFirst(name.lowercase())
+    override fun toString(): String = StringUtils.capitalize(name)
 
 }

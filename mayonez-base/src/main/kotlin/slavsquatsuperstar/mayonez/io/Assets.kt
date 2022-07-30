@@ -1,11 +1,10 @@
-package slavsquatsuperstar.mayonez.fileio
+package slavsquatsuperstar.mayonez.io
 
 import org.reflections.Reflections
 import org.reflections.scanners.Scanners
 import org.reflections.util.ClasspathHelper
 import org.reflections.util.ConfigurationBuilder
-import slavsquatsuperstar.mayonez.Logger.trace
-import slavsquatsuperstar.mayonez.Logger.warn
+import slavsquatsuperstar.mayonez.Logger
 import slavsquatsuperstar.mayonez.Mayonez
 import java.io.*
 import java.net.MalformedURLException
@@ -28,7 +27,7 @@ object Assets {
     }
 
     internal fun getCurrentDirectory() {
-        trace("Assets: Current directory at ${File("./").absolutePath}")
+        Logger.debug("Assets: Current launch directory at ${File("./").absolutePath}")
     }
 
     /**
@@ -43,8 +42,8 @@ object Assets {
                 .setUrls(ClasspathHelper.forPackage(directory)).setScanners(Scanners.Resources)
         )
         val resources = reflections.getResources(Pattern.compile(".*\\.*"))
-        resources.forEach { createAsset(it, AssetType.CLASSPATH) } // Create an asset from each path
-        trace("Assets: Created ${resources.size} resources inside \"$directory\"")
+        resources.forEach { createAsset(it) } // Create an asset from each path
+        Logger.debug("Assets: Created ${resources.size} resources inside \"$directory\"")
     }
 
     /**
@@ -55,8 +54,8 @@ object Assets {
     @JvmStatic
     fun scanFiles(directory: String) {
         val files = searchFiles(directory)
-        files.forEach { createAsset(it, AssetType.LOCAL) }
-        trace("Assets: Created ${files.size} files inside $directory")
+        files.forEach { createAsset(it) }
+        Logger.debug("Assets: Created ${files.size} files inside $directory")
     }
 
     @JvmStatic
@@ -80,7 +79,7 @@ object Assets {
     /**
      * Indicates whether the [Asset] stored under the given location exists.
      *
-     * @param filename    the location of the asset
+     * @param filename the location of the asset
      * @return if a file exists at the given path
      */
     @JvmStatic
@@ -97,8 +96,8 @@ object Assets {
     /**
      * Retrieves and replaces the [Asset] under the specified filename as in instance of any Asset subclass.
      *
-     * @param filename the asset location
-     * @param cls the asset subclass
+     * @param filename  the asset location
+     * @param cls       the asset subclass
      * @return a subclass instance with the same {@link AssetType}, if the asset is valid.
      */
     @JvmStatic
@@ -106,7 +105,7 @@ object Assets {
     fun <T : Asset> getAsset(filename: String, cls: Class<T>): T? {
         val asset = getAsset(filename)
         return if (asset != null && !cls.isInstance(asset))
-            createAsset(filename, asset.type, cls)
+            createAsset(filename, cls)
         else asset as? T
     }
 
@@ -114,29 +113,26 @@ object Assets {
      * Creates a new [Asset], if it does not exist already, and stores it for future use.
      *
      * @param filename  the location of the asset
-     * @param type      what kind of asset to create
      * @return the file, if successfully created
      */
     @JvmStatic
-    fun createAsset(filename: String, type: AssetType): Asset {
-        if (hasAsset(filename))
-            trace("Assets: Resource \"%s\" already exists", filename)
-        else
-            ASSETS[filename] = Asset(filename, type)
+    fun createAsset(filename: String): Asset {
+        if (hasAsset(filename)) Logger.debug("Assets: Resource \"%s\" already exists", filename)
+        else ASSETS[filename] = Asset(filename)
         return getAsset(filename)!!
     }
 
     @JvmStatic
-    fun <T : Asset> createAsset(filename: String, type: AssetType, cls: Class<T>): T? {
-        val ctor = cls.getDeclaredConstructor(String::class.java, AssetType::class.java)
-        return cls.cast(ctor.newInstance(filename, type))
+    fun <T : Asset> createAsset(filename: String, cls: Class<T>): T? {
+        val ctor = cls.getDeclaredConstructor(String::class.java)
+        return cls.cast(ctor.newInstance(filename))
     }
 
     /**
      * Replaces the generic asset stored under the specified filename with an [Asset] subclass.
      *
-     * @param filename the location of the asset
-     * @param asset the asset instance
+     * @param filename  the location of the asset
+     * @param asset     the asset instance
      */
     @JvmStatic
     @JvmName("setAsset")
@@ -191,7 +187,7 @@ object Assets {
         return try {
             File(filename).toURI().toURL()
         } catch (e: MalformedURLException) {
-            warn("Assets: Invalid file path \"%s\"", filename)
+            Logger.error("Assets: Invalid file path \"%s\"", filename)
             null
         }
     }

@@ -1,15 +1,14 @@
 package slavsquatsuperstar.mayonez.graphics;
 
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Logger;
 import slavsquatsuperstar.mayonez.Mayonez;
-import slavsquatsuperstar.mayonez.fileio.Assets;
-import slavsquatsuperstar.mayonez.fileio.JTexture;
 import slavsquatsuperstar.mayonez.annotations.EngineType;
 import slavsquatsuperstar.mayonez.annotations.UsesEngine;
+import slavsquatsuperstar.mayonez.io.Assets;
+import slavsquatsuperstar.mayonez.io.JTexture;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -29,8 +28,8 @@ public final class JSprite extends Sprite {
         try {
             image = Assets.getAsset(filename, JTexture.class).getImage();
         } catch (NullPointerException e) {
-            Logger.log(ExceptionUtils.getStackTrace(e));
-            Logger.log("Sprite: Error loading image \"%s\"", filename);
+            Logger.error("Sprite: Error loading image \"%s\"", filename);
+            Logger.printStackTrace(e);
             Mayonez.stop(-1);
         }
     }

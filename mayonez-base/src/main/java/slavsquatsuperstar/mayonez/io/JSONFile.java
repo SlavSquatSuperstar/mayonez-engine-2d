@@ -1,50 +1,45 @@
-package slavsquatsuperstar.mayonez.fileio;
+package slavsquatsuperstar.mayonez.io;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import slavsquatsuperstar.mayonez.Logger;
-import slavsquatsuperstar.mayonez.Preferences;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
 
 /**
- * Stores and manipulates a json from a .json file.
+ * Stores and manipulates data in JavaScript-Object Notation format from a .json file.
  *
  * @author SlavSquatSuperstar
  */
 public class JSONFile extends Asset {
 
-    private JSON json;
-
-    public JSONFile(String filename, AssetType type) {
-        super(filename, type);
-        read();
-        Assets.setAsset(filename, this);
-    }
+    private JSONData json;
 
     public JSONFile(String filename) {
-        this(filename, AssetType.LOCAL);
+        super(filename);
+        json = new JSONData();
+        Assets.setAsset(filename, this);
     }
 
     // File I/O Methods
 
     /**
-     * Parses the JSON object stored in this file. Called automatically upon object creation.
+     * Parses the JSON object stored in this file, overwriting any existing data.
+     * Should not be called if this file has not been created and is meant for output only.
      */
-    public void read() {
+    public JSONFile read() {
         try (InputStream in = inputStream()) {
-            json = new JSON(IOUtils.toString(in, Preferences.getFileCharset()));
+            json = new JSONData(IOUtils.readText(in));
         } catch (FileNotFoundException e) {
-            Logger.warn("JSONFile: File \"%s\" not found", path);
+            Logger.error("JSONFile: File \"%s\" not found", getFilename());
         } catch (IOException e) {
-            Logger.warn("TextFile: Could not read file");
+            Logger.error("JSONFile: Could not read file \"%s\"", getFilename());
+            Logger.printStackTrace(e);
         }
+        return this;
     }
 
     /**
@@ -52,18 +47,18 @@ public class JSONFile extends Asset {
      */
     public void save() {
         try (OutputStream out = outputStream(false)) {
-            IOUtils.write(json.toString().getBytes(StandardCharsets.UTF_8), out);
+            IOUtils.write(out, json.toString());
         } catch (FileNotFoundException e) {
-            Logger.warn("TextFile: File \"%s\" not found\n", path);
+            Logger.error("JSONFile: File \"%s\" not found\n", getFilename());
         } catch (IOException e) {
-            Logger.warn(ExceptionUtils.getStackTrace(e));
-            Logger.warn("TextFile: Could not save to file");
+            Logger.error("JSONFile: Could not save to file \"%s\"", getFilename());
+            Logger.printStackTrace(e);
         }
     }
 
     // JSON Getters and Setters
 
-    public JSON getJSON() {
+    public JSONData getJSON() {
         return json;
     }
 

@@ -85,7 +85,7 @@ public final class JWindow extends JFrame implements Window {
             createBufferStrategy(Preferences.getBufferCount());
             bs = getBufferStrategy();
         } catch (IllegalStateException e) {
-            Logger.log("Engine: Error initializing window graphics; retrying next frame.");
+            Logger.error("Engine: Error initializing window graphics; retrying next frame.");
         }
     }
 
@@ -113,7 +113,7 @@ public final class JWindow extends JFrame implements Window {
                 bs.show();
             } while (bs.contentsLost());
         } catch (IllegalStateException e) {
-            Logger.trace("Window: Error rendering current frame; retrying next frame.");
+            Logger.debug("Window: Error rendering current frame; retrying next frame.");
         }
     }
 

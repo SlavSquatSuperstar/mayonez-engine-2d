@@ -150,12 +150,13 @@ public class GameObject {
      */
     public <T extends Component> T getComponent(Class<T> cls) {
         try {
-            for (Component c : components)
+            for (Component c : components) {
                 if (cls.isAssignableFrom(c.getClass()))
                     return cls.cast(c);
+            }
         } catch (ClassCastException e) { // This shouldn't happen!
-            Logger.warn("GameObject: Error accessing %s component", cls.getSimpleName());
-            Logger.log(e.getStackTrace());
+            Logger.error("GameObject: Error accessing %s component", cls.getSimpleName());
+            Logger.printStackTrace(e);
         }
         return null;
     }

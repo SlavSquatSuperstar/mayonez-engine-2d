@@ -27,7 +27,7 @@ public abstract class MovementScript extends Script {
     public void start() {
         rb = getRigidbody();
         if (mode.requireRigidbody && rb == null) {
-            Logger.log("%s needs a rigidbody to function!", this);
+            Logger.warn("%s needs a rigidbody to function!", this);
             mode = MoveMode.POSITION;
         }
     }

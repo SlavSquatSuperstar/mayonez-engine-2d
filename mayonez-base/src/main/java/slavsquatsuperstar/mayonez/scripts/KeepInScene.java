@@ -37,7 +37,7 @@ public class KeepInScene extends Script {
     public void start() {
         objectCollider = getCollider();
         if (objectCollider == null) {
-            Logger.log("%s needs a collider to function!", this);
+            Logger.warn("%s needs a collider to function!", this);
             mode = Mode.STOP;
             setEnabled(false); // disable script if no collider
         }

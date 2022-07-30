@@ -28,8 +28,6 @@ This project was developed using macOS 12.x Monterey (Intel). This app has not b
         - Libraries: GLFW, OpenGL, STB
     - [Kotlin Standard Library](https://kotlinlang.org/docs/getting-started.html)
     - [JSON in Java](https://github.com/stleary/JSON-java) (org.json)
-    - [Apache Commons Lang](https://commons.apache.org/proper/commons-lang/)
-    - [Apache Commons IO](https://commons.apache.org/proper/commons-io/)
     - [Java Reflections](https://github.com/ronmamo/reflections)
     - [SLF4J Simple Binding](https://www.slf4j.org/)
 

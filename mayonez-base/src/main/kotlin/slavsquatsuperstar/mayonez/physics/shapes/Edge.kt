@@ -14,6 +14,8 @@ class Edge(val start: Vec2, val end: Vec2) : Shape() {
 
     // Edge Properties
 
+    override val numVertices: Int = 2
+
     /**
      * The length of the edge, l.
      */
@@ -30,6 +32,22 @@ class Edge(val start: Vec2, val end: Vec2) : Shape() {
      * A vector representation of this edge, equal to the end vertex minus the start vertex.
      */
     fun toVector(): Vec2 = end - start
+
+    /**
+     * The unit normal vector of this edge, a vector perpendicular to this edge with a length of 1. By default, points
+     * 90 degrees counterclockwise from the vector from the start to the end.
+     *
+     * @return the unit normal vector
+     */
+    fun unitNormal(): Vec2 = toVector().normal().unit()
+
+    /**
+     * The unit normal vector of this edge that points toward a certain direction.
+     *
+     * @param direction the direction the normal should point toward
+     * @return the unit normal vector towards given direction, or (0, 0) if the direction is parallel to this edge.
+     */
+    fun unitNormal(direction: Vec2): Vec2 = Vec2.tripleProduct(toVector(), direction, toVector()).unit()
 
     /**
      * The area of the edge, equal to 0 because it has only one dimension.

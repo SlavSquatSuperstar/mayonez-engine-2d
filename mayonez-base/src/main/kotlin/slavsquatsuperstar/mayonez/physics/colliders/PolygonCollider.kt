@@ -1,6 +1,5 @@
 package slavsquatsuperstar.mayonez.physics.colliders
 
-import org.apache.commons.lang3.ArrayUtils
 import slavsquatsuperstar.math.Mat22
 import slavsquatsuperstar.math.MathUtils.inRange
 import slavsquatsuperstar.math.MathUtils.max
@@ -10,8 +9,8 @@ import slavsquatsuperstar.math.MathUtils.minIndex
 import slavsquatsuperstar.math.Range
 import slavsquatsuperstar.math.Vec2
 import slavsquatsuperstar.mayonez.physics.collision.CollisionInfo
-import slavsquatsuperstar.mayonez.physics.shapes.Rectangle
 import slavsquatsuperstar.mayonez.physics.shapes.Polygon
+import slavsquatsuperstar.mayonez.physics.shapes.Rectangle
 
 /**
  * A convex polygon with an arbitrary number of vertices connected by straight edges.
@@ -134,7 +133,7 @@ open class PolygonCollider protected constructor(shapeData: Polygon) :
     // Separating-Axis Theorem
 
     private fun detectCollision(polygon: PolygonCollider): Boolean {
-        val axes = ArrayUtils.addAll(getNormals(), *polygon.getNormals())
+        val axes = getNormals().plus(polygon.getNormals())
         axes.forEach { axis -> if (!hasOverlapOnAxis(polygon, axis)) return false }
         return true
     }

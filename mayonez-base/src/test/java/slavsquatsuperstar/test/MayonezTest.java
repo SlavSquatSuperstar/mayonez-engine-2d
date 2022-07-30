@@ -1,7 +1,6 @@
 package slavsquatsuperstar.test;
 
-import slavsquatsuperstar.mayonez.input.Button;
-import slavsquatsuperstar.mayonez.input.Key;
+import slavsquatsuperstar.mayonez.io.JSONFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,13 +18,7 @@ public class MayonezTest {
 //        myGenerator.addListener(myListener2);
 //        myGenerator.createEvent(new Event("Clankers inbound!"));
 
-        System.out.println(Key.W);
-        System.out.println(Key.NUM_0);
-        System.out.println(Key.LEFT_SHIFT);
-
-        System.out.println(Button.MOUSE_1);
-        System.out.println(Button.LEFT_MOUSE);
-
+        JSONFile json = new JSONFile("blin").read();
     }
 
     interface EventListener {

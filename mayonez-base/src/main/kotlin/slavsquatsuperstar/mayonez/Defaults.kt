@@ -15,7 +15,7 @@ object Defaults : GameConfig() {
         this["screen_height"] = 720
 
         // Logging
-        this["log_level"] = 1
+        this["log_level"] = 2
         this["save_logs"] = true
         this["log_directory"] = "logs/"
 

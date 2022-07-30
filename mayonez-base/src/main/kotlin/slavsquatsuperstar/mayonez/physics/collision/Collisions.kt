@@ -2,6 +2,8 @@ package slavsquatsuperstar.mayonez.physics.collision
 
 import slavsquatsuperstar.math.MathUtils
 import slavsquatsuperstar.math.Vec2
+import slavsquatsuperstar.math.Vec2.Companion.tripleProduct
+import slavsquatsuperstar.mayonez.annotations.ExperimentalFeature
 import slavsquatsuperstar.mayonez.physics.shapes.*
 import kotlin.math.sign
 import kotlin.math.sqrt
@@ -15,6 +17,14 @@ object Collisions {
 
     // Raycasting
 
+    /**
+     * Casts a ray onto a shape and returns the contact information
+     *
+     * @param shape the shape to raycast
+     * @param ray   the ray to cast
+     * @param limit the max length the ray can travel
+     * @return data containing the distance, contact point, and surface normal, or null if the ray misses
+     */
     @JvmStatic
     fun raycast(shape: Shape?, ray: Ray?, limit: Float): Raycast? {
         return when {
@@ -74,9 +84,7 @@ object Collisions {
             return null
 
         val contact = edge.start + (dir1 * dist1)
-        val edgeNormal = edge.toVector().normal().unit()
-        val normal = if (dir1.dot(edgeNormal) < 0) edgeNormal else -edgeNormal
-        return Raycast(contact, normal, dist2 / ray.length)
+        return Raycast(contact, edge.unitNormal(dir1), dist2 / ray.length)
     }
 
     private fun raycastPolygon(poly: Polygon, ray: Ray, limit: Float): Raycast? {
@@ -92,7 +100,7 @@ object Collisions {
         val minDist = distances[minIndex]
         if (minDist == Float.POSITIVE_INFINITY) return null // no successful raycasts
 
-        val normal = edges[minIndex].toVector().normal().unit()
+        val normal = edges[minIndex].unitNormal()
         return Raycast(ray.getPoint(minDist), normal, minDist)
     }
 
@@ -145,7 +153,7 @@ object Collisions {
     fun detectCollision(shape1: Shape?, shape2: Shape?): Boolean {
         return when {
             (shape1 == null) || (shape2 == null) -> false
-            (shape1 is Edge) && (shape2 is Edge) -> collideEdges(shape1, shape2)
+            (shape1 is Edge) && (shape2 is Edge) -> intersectEdges(shape1, shape2)
             (shape1 is Circle) && (shape2 is Circle) -> collideCircles(shape1, shape2)
             (shape1 is Rectangle) && (shape2 is Rectangle) -> collideRects(shape1, shape2)
             else -> detectCollisionGJK(shape1, shape2) != null
@@ -165,36 +173,6 @@ object Collisions {
         val distSq = circle1.center().distanceSq(circle2.center())
         val sumRadiiSq = MathUtils.squared(circle1.radius + circle2.radius)
         return distSq <= sumRadiiSq
-    }
-
-    /**
-     * Performs a simple line segment intersection test.
-     *
-     * @param edge1 the first edge
-     * @param edge2 the second edge
-     *
-     * @return if the two edges intersect or touch
-     */
-    // TODO linear systems matrix
-    private fun collideEdges(edge1: Edge, edge2: Edge): Boolean {
-        // Find line directions
-        val dir1 = edge1.toVector() / edge1.length
-        val dir2 = edge2.toVector() / edge2.length
-        val cross = dir1.cross(dir2)
-
-        // If lines are parallel, then they must be overlapping
-        return if (MathUtils.equals(cross, 0f)) {
-            ((edge2.start in edge1 || edge2.end in edge1)
-                    || (edge1.start in edge2 || edge1.end in edge2))
-        } else {
-            // Calculate intersection point
-            val diffStarts = edge2.start - edge1.start
-            val dist1 = diffStarts.cross(dir2) / cross
-            val dist2 = diffStarts.cross(dir1) / cross
-
-            // Contact must be in both lines
-            MathUtils.inRange(dist1, 0f, edge1.length) && MathUtils.inRange(dist2, 0f, edge2.length)
-        }
     }
 
     /**
@@ -218,25 +196,50 @@ object Collisions {
         return satX && satY
     }
 
-    /*
-     * Collision Algorithms
-     * - SAT (separating axis theorem): easier to visually understand, but needs to loop through and project on all
-     * normals of two shapes (slow on 3D) and requires separate tests for round shapes.
-     * - GJK (Gilbert-Johnson-Keerthi): relies only on support function (can handle round shapes), needs another
-     * function to find contacts, may be harder to understand
-     *
-     * GJK Outline: Create a simplex from the Minkowski difference that surrounds the origin
-     */
     /**
-     * Executes the GJK collision algorithm between two shapes.
+     * Performs a simple line segment intersection test.
+     *
+     * @param edge1 the first edge
+     * @param edge2 the second edge
+     *
+     * @return if the two edges intersect or touch
+     */
+    // TODO linear systems matrix
+    private fun intersectEdges(edge1: Edge, edge2: Edge): Boolean {
+        // Find line directions
+        val dir1 = edge1.toVector() / edge1.length
+        val dir2 = edge2.toVector() / edge2.length
+        val cross = dir1.cross(dir2)
+
+        // If lines are parallel, then they must be overlapping
+        return if (MathUtils.equals(cross, 0f)) {
+            ((edge2.start in edge1 || edge2.end in edge1)
+                    || (edge1.start in edge2 || edge1.end in edge2))
+        } else {
+            // Calculate intersection point
+            val diffStarts = edge2.start - edge1.start
+            val dist1 = diffStarts.cross(dir2) / cross
+            val dist2 = diffStarts.cross(dir1) / cross
+
+            // Contact must be in both lines
+            MathUtils.inRange(dist1, 0f, edge1.length) && MathUtils.inRange(dist2, 0f, edge2.length)
+        }
+    }
+
+    /**
+     * Executes a modified GJK (Gilbert-Johnson-Keerthi) distance algorithm to determine whether two shapes overlap.
+     * This function searches for a simplex of support points surrounding the origin, but will not find contact points.
+     * Compared to the SAT (separating-axis theorem), GJK relies only on the support functions and the Minkowski
+     * difference. GJK does not need a separate algorithm to handle round shapes or loop through every normal.
+     *
+     * Sources:
+     * - https://blog.winter.dev/2020/gjk-algorithm/ § GJK: Surrounding the origin
+     * - https://dyn4j.org/2010/04/gjk-gilbert-johnson-keerthi/ § Determining Collision
+     * - https://youtu.be/ajv46BSqcK4
      *
      * @param shape1 the first shape
      * @param shape2 the second shape
-     * @return a simplex surrounding the origin if the shapes overlap, or otherwise null
-     *
-     * Source: https://blog.winter.dev/2020/gjk-algorithm/ § GJK: Surrounding the origin
-     * Source: https://dyn4j.org/2010/04/gjk-gilbert-johnson-keerthi/ § Determining Collision
-     * Source: https://youtu.be/ajv46BSqcK4
+     * @return the simplex if the overlap, otherwise null
      */
     // TODO cache recent support points
     private fun detectCollisionGJK(shape1: Shape, shape2: Shape): Simplex? {
@@ -245,7 +248,7 @@ object Collisions {
         var searchDir = -startPt // Search toward origin to surround it
         val simplex = Simplex(startPt) // Create simplex with first point
 
-        val maxLoop = 10 // TODO calculate max loop
+        val maxLoop = (shape1.numVertices + shape2.numVertices) * 2 // TODO more loops for round shapes
         for (loop in 1..maxLoop) {
             val ptA = support(shape1, shape2, searchDir) // Get new support point
             if (ptA.dot(searchDir) < 0f) return null // Continue only if next point passes origin
@@ -255,7 +258,7 @@ object Collisions {
                 // Line: B (start), A (next), d = tripleProduct(AB, AO, AB)
                 val vecAB = startPt - ptA
                 val vecAO = -ptA
-                searchDir = vecAB.tripleProduct(vecAO, vecAB)
+                searchDir = tripleProduct(vecAB, vecAO, vecAB)
             } else { // Find if triangle contains origin
                 // Triangle: C (first), B (start), A (next)
                 val vecAC = simplex[0] - ptA
@@ -263,8 +266,8 @@ object Collisions {
                 val vecAO = -ptA
 
                 // Check reach region past line AB and AC for origin
-                val perpAB = vecAC.tripleProduct(vecAB, vecAB) // tripleProduct(AC, AB, AB)
-                val perpAC = vecAB.tripleProduct(vecAC, vecAC) // tripleProduct(AB, AC, AC)
+                val perpAB = tripleProduct(vecAC, vecAB, vecAB) // tripleProduct(AC, AB, AB)
+                val perpAC = tripleProduct(vecAB, vecAC, vecAC) // tripleProduct(AB, AC, AC)
 
                 if (perpAB.dot(vecAO) > 0) {
                     simplex.remove(0) // remove C
@@ -289,6 +292,70 @@ object Collisions {
 
         return null // Assume no collision if looped too many times
     }
+
+    /**
+     * Performs the expanding polytope (polygon) algorithm on a GJK simplex to find the contact point between two
+     * shapes.
+     *
+     * Source: https://dyn4j.org/2010/05/epa-expanding-polytope-algorithm
+     */
+    @ExperimentalFeature
+    // See § Alternatives for optimizations
+    private fun collisionContactsEPA(shape1: Shape, shape2: Shape, simplex: Simplex): Vec2 {
+        val expandedSimplex = simplex.expand(shape1.numVertices + shape2.numVertices)
+        var normal: Vec2
+        var depth: Float
+
+        while (true) {
+            // Find closest edge
+            val edge = closestEdgeToOrigin(expandedSimplex)
+
+            val sup = support(shape1, shape2, edge.norm)
+            val dist = sup.dot(edge.norm)
+            if (MathUtils.equals(dist, edge.dist)) {
+                normal = edge.norm
+                depth = edge.dist
+            } else {
+                expandedSimplex[edge.index] = sup
+            }
+        }
+        return Vec2()
+
+        /*
+         * Loop while true
+         * Find closest edge
+         * Support point for edge normal
+         * Find component of point on normal (depth)
+         * If (depth) roughly equals edge length, success
+         * Else insert point into simplex
+         */
+    }
+
+    private fun closestEdgeToOrigin(simplex: Simplex): EPAEdge {
+        val edge = EPAEdge(Vec2(), Float.POSITIVE_INFINITY, 0)
+        for (i in 0 until simplex.size) {
+            val j = (i + 1) % simplex.size
+
+            val ptA = simplex[i]
+            val vecEdge = simplex[j] - ptA // vector AB
+            // don't use triple product for small penetrations
+            // point left for counterclockwise "winding"
+//            val norm = vecEdge.normal().unit()
+            val norm = tripleProduct(vecEdge, -ptA, vecEdge).unit() // unit normal of edge pointing to origin
+            val dist = norm.dot(ptA)
+
+            if (dist < edge.dist) {
+                edge.dist = dist
+                edge.norm = norm
+                edge.index = i
+            }
+        }
+        return edge
+    }
+
+    // Helper Functions
+
+    private class EPAEdge(var norm: Vec2, var dist: Float, var index: Int) {}
 
     /**
      * Finds the most extreme points from the Minkowski difference set between two shapes.

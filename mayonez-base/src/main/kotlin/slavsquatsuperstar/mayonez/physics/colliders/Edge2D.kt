@@ -1,11 +1,8 @@
 package slavsquatsuperstar.mayonez.physics.colliders
 
-import slavsquatsuperstar.math.MathUtils
 import slavsquatsuperstar.math.Range
 import slavsquatsuperstar.math.Vec2
-import slavsquatsuperstar.mayonez.physics.collision.Raycast
 import slavsquatsuperstar.mayonez.physics.shapes.Ray
-import kotlin.math.sign
 
 /**
  * A 2D line segment with start and end points.
@@ -15,13 +12,12 @@ import kotlin.math.sign
 class Edge2D(@JvmField val start: Vec2, @JvmField val end: Vec2) {
 
     // Properties
-    private val slope: Float
-        get() = (end.y - start.y) / (end.x - start.x)
-
     val length: Float
         @JvmName("length") get() = start.distance(end)
 
     fun toVector(): Vec2 = end - start
+
+    fun unitNormal(): Vec2 = toVector().normal().unit()
 
     // Line vs Point
 
@@ -54,46 +50,10 @@ class Edge2D(@JvmField val start: Vec2, @JvmField val end: Vec2) {
         return point.distance(nearestPoint(point))
     }
 
-    /**
-     * Returns the distance from a point to this line relative to that of other points, and which side the point is on.
-     *
-     * @param point a point
-     * @return A negative value if the point is to the right of this line, a positive value if the point is to the left
-     * of this line, and zero if the point is on the line (if extended infinitely).
-     */
-    private fun pseudoDistance(point: Vec2): Float {
-        return point.sub(start).dot(toVector().rotate(90f))
-    }
-
-    // Line vs Line
-
-    fun raycast(ray: Ray, limit: Float): Raycast? {
-        // Calculate point of intersection using cross product
-        val line1 = this.toVector() / length
-        val line2 = ray.direction.unit()
-        val cross = line1.cross(line2)
-        if (MathUtils.equals(cross, 0f)) return null // if parallel then no result
-
-        val start1 = this.start
-        val start2 = ray.origin
-
-        // Parametric lengths along rays
-        val dist1 = (start2 - start1).cross(line2) / cross
-        val dist2 = (start2 - start1).cross(line1) / cross
-        if (!MathUtils.inRange(dist1, 0f, length)) // Contact point outside line
-            return null
-        if (dist2 < 0 || dist2 > limit && limit > 0) // Contact point outside allowed ray
-            return null
-        val contact = start1 + (line1 * dist1)
-        // rotate left or right depending on which side ray started form
-        val normal = line1.rotate(sign(pseudoDistance(start2)) * 90)
-        return Raycast(contact, normal, dist1)
-    }
-
     // Clip Line
 
     // should both be parallel
-    fun clipToPlanes(plane1: Ray, plane2: Ray): Edge2D {
+    private fun clipToPlanes(plane1: Ray, plane2: Ray): Edge2D {
         val ray = Ray(this).normalize()
         val contact1 = ray.getIntersection(plane1)
         val contact2 = ray.getIntersection(plane2)
@@ -108,7 +68,7 @@ class Edge2D(@JvmField val start: Vec2, @JvmField val end: Vec2) {
     }
 
     fun clipToSegment(segment: Edge2D): Edge2D {
-        val rayDir = segment.toVector().normal().unit()
+        val rayDir = segment.unitNormal()
         return clipToPlanes(Ray(segment.start, rayDir), Ray(segment.end, rayDir))
     }
 

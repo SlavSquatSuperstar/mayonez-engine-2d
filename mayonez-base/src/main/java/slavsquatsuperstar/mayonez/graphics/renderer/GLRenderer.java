@@ -3,7 +3,7 @@ package slavsquatsuperstar.mayonez.graphics.renderer;
 import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Preferences;
 import slavsquatsuperstar.mayonez.Scene;
-import slavsquatsuperstar.mayonez.fileio.GLTexture;
+import slavsquatsuperstar.mayonez.io.GLTexture;
 import slavsquatsuperstar.mayonez.annotations.UsesEngine;
 import slavsquatsuperstar.mayonez.annotations.EngineType;
 import slavsquatsuperstar.mayonez.graphics.GLCamera;

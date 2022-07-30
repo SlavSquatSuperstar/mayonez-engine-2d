@@ -11,7 +11,7 @@ import java.awt.event.MouseEvent
  */
 enum class Button(internal val awtCode: Int, internal val glCode: Int) {
 
-    UNKNOWN(MouseEvent.NOBUTTON, -1), // TODO could cause IOB
+    UNKNOWN(MouseEvent.NOBUTTON, -1),
     MOUSE_1(MouseEvent.BUTTON1, GLFW.GLFW_MOUSE_BUTTON_1),
     MOUSE_2(MouseEvent.BUTTON3, GLFW.GLFW_MOUSE_BUTTON_2),
     MOUSE_3(MouseEvent.BUTTON2, GLFW.GLFW_MOUSE_BUTTON_3),
@@ -22,7 +22,7 @@ enum class Button(internal val awtCode: Int, internal val glCode: Int) {
 
     // Replace underscores with spaces and convert to title case
     override fun toString(): String {
-        return StringUtils.capitalizeWords(name.replace('_', ' ').lowercase())
+        return StringUtils.capitalizeWords(name.replace('_', ' '))
     }
 
 }

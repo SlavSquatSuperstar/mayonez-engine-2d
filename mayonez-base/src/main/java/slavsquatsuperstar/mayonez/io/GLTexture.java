@@ -1,4 +1,4 @@
-package slavsquatsuperstar.mayonez.fileio;
+package slavsquatsuperstar.mayonez.io;
 
 import org.lwjgl.BufferUtils;
 import slavsquatsuperstar.mayonez.Logger;
@@ -32,15 +32,11 @@ public class GLTexture extends Asset {
     private int width, height, channels;
     private int texID;
 
-    public GLTexture(String filename, AssetType type) {
-        super(filename, type);
+    public GLTexture(String filename) {
+        super(filename);
         Assets.setAsset(filename, this);
         readImage();
         createTexture();
-    }
-
-    public GLTexture(String filename) {
-        this(filename, AssetType.CLASSPATH);
     }
 
     private void readImage() {
@@ -56,14 +52,14 @@ public class GLTexture extends Asset {
             if (!stbi_info_from_memory(imageBuffer, w, h, comp))
                 throw new RuntimeException("Failed to read image information: " + stbi_failure_reason());
             else
-                Logger.log("Texture: Successfully loaded image \"%s\"", getFilename());
+                Logger.debug("Texture: Successfully loaded image \"%s\"", getFilename());
 
             // Decode the image
             stbi_set_flip_vertically_on_load(true); // GL uses (0,0) as bottom left, unlike AWT
             image = stbi_load_from_memory(imageBuffer, w, h, comp, 0);
             if (image == null) {
-                Logger.warn("Texture: Could not load image \"%s\"", getFilename());
-                Logger.warn("GL: " + stbi_failure_reason());
+                Logger.error("Texture: Could not load image \"%s\"", getFilename());
+                Logger.error("GL: " + stbi_failure_reason());
                 throw new RuntimeException("Failed to load image: " + stbi_failure_reason());
             }
 
@@ -71,7 +67,7 @@ public class GLTexture extends Asset {
             height = h.get(0);
             channels = comp.get(0);
         } catch (IOException | NullPointerException e) {
-            Logger.log("Could not read image \"%s\"", getFilename());
+            Logger.error("Could not read image \"%s\"", getFilename());
         }
     }
 
@@ -99,7 +95,7 @@ public class GLTexture extends Asset {
         }
 
         glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, image);
-        Logger.log("Texture: Loaded image \"%s\"", getFilename());
+        Logger.debug("Texture: Loaded image \"%s\"", getFilename());
         stbi_image_free(image);
     }
 

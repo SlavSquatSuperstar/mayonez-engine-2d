@@ -1,4 +1,4 @@
-package slavsquatsuperstar.mayonez.fileio;
+package slavsquatsuperstar.mayonez.io;
 
 import org.joml.*;
 import org.lwjgl.BufferUtils;
@@ -22,20 +22,15 @@ import static org.lwjgl.opengl.GL20.*;
 @UsesEngine(EngineType.GL)
 public class Shader extends TextFile {
 
-    private String filename;
     private int shaderProgramID;
     private boolean used = false;
     private String vertexSrc, fragmentSrc;
 
     // todo should maybe not provide constructors
-    public Shader(String filename, AssetType type) {
-        super(filename, type);
+    public Shader(String filename) {
+        super(filename);
         parseShader();
         compileShader();
-    }
-
-    public Shader(String filename) {
-        this(filename, AssetType.CLASSPATH);
     }
 
     private void parseShader() {
@@ -59,7 +54,7 @@ public class Shader extends TextFile {
                 }
             }
         } catch (Exception e) {
-            Logger.warn("Shader: Could not read file \"%s\"", filename);
+            Logger.error("Shader: Could not read file \"%s\"", getFilename());
         }
     }
 
@@ -72,11 +67,11 @@ public class Shader extends TextFile {
         // Check for compile errors
         int success = glGetShaderi(vertexID, GL_COMPILE_STATUS);
         if (success == GL_FALSE) {
-            Logger.warn("Error: Could not compile \"defaultshader.glsl\" vertex shader");
-            Logger.warn("GL: " + glGetShaderInfoLog(vertexID));
+            Logger.error("Shader: Could not compile \"defaultshader.glsl\" vertex shader");
+            Logger.error("OpenGL: " + glGetShaderInfoLog(vertexID));
             Mayonez.stop(1);
         }
-        Logger.trace("Successfully compiled \"defaultshader.glsl\" vertex shader");
+        Logger.debug("Successfully compiled \"defaultshader.glsl\" vertex shader");
 
         // Repeat for Fragment Shader
         int fragmentID = glCreateShader(GL_FRAGMENT_SHADER);
@@ -85,11 +80,11 @@ public class Shader extends TextFile {
 
         success = glGetShaderi(fragmentID, GL_COMPILE_STATUS);
         if (success == GL_FALSE) {
-            Logger.warn("Error: Could not compile \"defaultshader.glsl\" fragment shader");
-            Logger.warn("GL: " + glGetShaderInfoLog(fragmentID));
+            Logger.error("Shader: Could not compile \"defaultshader.glsl\" fragment shader");
+            Logger.error("OpenGL: " + glGetShaderInfoLog(fragmentID));
             Mayonez.stop(1);
         }
-        Logger.trace("Successfully compiled \"%s\" fragment shader", filename);
+        Logger.debug("Successfully compiled \"%s\" fragment shader", getFilename());
 
         // Link shaders
         shaderProgramID = glCreateProgram();
@@ -99,11 +94,11 @@ public class Shader extends TextFile {
 
         success = glGetProgrami(shaderProgramID, GL_LINK_STATUS);
         if (success == GL_FALSE) {
-            Logger.warn("Error: Could not link \"%s\" shaders", filename);
-            Logger.warn("GL: " + glGetProgramInfoLog(shaderProgramID));
+            Logger.error("Error: Could not link \"%s\" shaders", getFilename());
+            Logger.error("OpenGL: " + glGetProgramInfoLog(shaderProgramID));
             Mayonez.stop(1);
         }
-        Logger.trace("Successfully linked \"%s\" shaders", filename);
+        Logger.debug("Successfully linked \"%s\" shaders", getFilename());
     }
 
     public void bind() {

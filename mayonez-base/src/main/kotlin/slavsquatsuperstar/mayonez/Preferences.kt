@@ -1,15 +1,13 @@
 package slavsquatsuperstar.mayonez
 
-import slavsquatsuperstar.mayonez.fileio.AssetType
-import slavsquatsuperstar.mayonez.fileio.Assets
-import slavsquatsuperstar.mayonez.fileio.JSONFile
+import slavsquatsuperstar.mayonez.io.Assets
+import slavsquatsuperstar.mayonez.io.JSONFile
 
 /**
  * A storage class for game parameters and statistics.
  *
  * @author SlavSquatSuperstar
  */
-// TODO create default compile tile constants
 object Preferences : GameConfig() {
 
     init {
@@ -21,10 +19,10 @@ object Preferences : GameConfig() {
         if (Mayonez.INIT_PREFERENCES) return
 
         // Don't set preferences until after file has been read to prevent default values and nulls
-        val preferenceFile = Assets.createAsset("preferences.json", AssetType.CLASSPATH, JSONFile::class.java)!!
+        val prefsFile = Assets.createAsset("preferences.json", JSONFile::class.java)!!.read()
 
         // Read preferences file and update game configuration
-        loadFrom(preferenceFile.json)
+        loadFrom(prefsFile.json)
     }
 
     /* Window */

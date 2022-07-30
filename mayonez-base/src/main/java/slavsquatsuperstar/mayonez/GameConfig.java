@@ -1,6 +1,6 @@
 package slavsquatsuperstar.mayonez;
 
-import slavsquatsuperstar.mayonez.fileio.JSON;
+import slavsquatsuperstar.mayonez.io.JSONData;
 
 /**
  * A collection of settings for various parts of the game engine.
@@ -8,7 +8,7 @@ import slavsquatsuperstar.mayonez.fileio.JSON;
  * @author SlavSquatSuperstar
  */
 // TODO safety measures so we don't use wrong data type
-public abstract class GameConfig extends JSON {
+public abstract class GameConfig extends JSONData {
 
     /**
      * Erases the stored JSON data and replaces it with data from another config object,
@@ -16,7 +16,7 @@ public abstract class GameConfig extends JSON {
      *
      * @param json another JSON object
      */
-    protected void copyFrom(JSON json) {
+    protected void copyFrom(JSONData json) {
         this.clear(); // erase JSON object
         for (String key : json.keys()) // copy entire JSON object
             this.set(key, json.get(key));
@@ -27,7 +27,7 @@ public abstract class GameConfig extends JSON {
      *
      * @param json another JSON object
      */
-    protected void loadFrom(JSON json) {
+    protected void loadFrom(JSONData json) {
         for (String key : json.keys()) { // overwrite or create values if not null
             Object value = json.get(key);
             if (value != null) this.set(key, value);

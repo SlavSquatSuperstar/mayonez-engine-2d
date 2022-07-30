@@ -165,16 +165,20 @@ class Vec2 constructor(
      */
     fun cross(v: Vec2): Float = (this.x * v.y) - (v.x * this.y)
 
-    /**
-     * Calculates the vector triple product between this vector and two other vectors. The vector triple product is
-     * defined as (a × b) × c = b(a · c) - a(b · c), with this vector representing "a".
-     *
-     * @param v1 another vector
-     * @param v2 a third vector
-     * @return the vector triple product
-     */
-    fun tripleProduct(v1: Vec2, v2: Vec2): Vec2 {
-        return v1 * (this.dot(v2)) - this * (v1.dot(v2))
+    companion object {
+        /**
+         * Calculates the vector triple product between three vectors. The vector triple product is
+         * defined as (a × b) × c = b(a · c) - a(b · c).
+         *
+         * @param v1 the first vector, a
+         * @param v2 the second vector, b
+         * @param v3 the third vector, c
+         * @return the vector triple product
+         */
+        @JvmStatic
+        fun tripleProduct(v1: Vec2, v2: Vec2, v3: Vec2): Vec2 {
+            return v2 * (v1.dot(v3)) - v1 * (v2.dot(v3))
+        }
     }
 
     /**

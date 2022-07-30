@@ -32,7 +32,7 @@ project.ext {
 //    mainClass = 'slavsquatsuperstar.demos.geometrydash.LevelEditor'
     mainModule = 'mayonez.demos'
 }
-sourceCompatibility = javaVersion
+sourceCompatibility = targetCompatibility = javaVersion
 
 // Dependencies
 

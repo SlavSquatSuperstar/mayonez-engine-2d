@@ -28,6 +28,13 @@ public class KeyboardEvent extends Event {
         this.mods = mods;
     }
 
+    /**
+     * GL constructor for a KeyBoardEvent
+     *
+     * @param scancode which key was affected
+     * @param action   if the key is pressed, held, or released
+     * @param mods     which modifier keys are held down
+     */
     public KeyboardEvent(int scancode, int action, int mods) {
         super(String.format("code=%d, action=%d, mods=%s", scancode, action, mods));
         glfwGetKeyName(GLFW_KEY_UNKNOWN, scancode);

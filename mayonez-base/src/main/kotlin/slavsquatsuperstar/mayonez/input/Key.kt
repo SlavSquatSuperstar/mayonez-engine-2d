@@ -80,8 +80,7 @@ enum class Key(internal val awtCode: Int, internal val glCode: Int, private val 
      * Returns the key name in title case and replaces underscores with spaces.
      */
     override fun toString(): String {
-        if (keyName != null) return keyName
-        return StringUtils.capitalizeWords(name.replace('_', ' ').lowercase())
+        return keyName ?: StringUtils.capitalizeWords(name.replace('_', ' '))
     }
 
 }

@@ -62,7 +62,7 @@ public final class GLWindow implements Window {
         try {
             if (!glfwInit()) throw new IllegalStateException("Engine: Unable to initialize GLFW");
         } catch (IllegalStateException | ExceptionInInitializerError e) {
-            Logger.warn("Window: LWJGL must be run with \"-XstartOnFirstThread\" on macOS");
+            Logger.error("Window: LWJGL must be run with \"-XstartOnFirstThread\" on macOS");
             Mayonez.stop(1);
         }
 

@@ -33,8 +33,7 @@ open class Polygon(vararg vertices: Vec2) : Shape() {
     /**
      * The number of vertices and edges of this polygon, n.
      */
-    @JvmField
-    val numVertices: Int = vertices.size
+    final override val numVertices: Int = vertices.size
 
     /**
      * The edges that connect the vertices of this polygon.
@@ -44,7 +43,7 @@ open class Polygon(vararg vertices: Vec2) : Shape() {
     /**
      * The faces, or unit normal vectors of each edge in this polygon.
      */
-    val normals: Array<Vec2> = Array(numVertices) { edges[it].toVector().normal().unit() }
+    val normals: Array<Vec2> = Array(numVertices) { edges[it].unitNormal() }
 
     // Polygon Properties
 

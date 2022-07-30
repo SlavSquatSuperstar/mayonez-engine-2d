@@ -1,13 +1,9 @@
 package slavsquatsuperstar.mayonez
 
-import slavsquatsuperstar.mayonez.Logger.log
-import slavsquatsuperstar.mayonez.Logger.printExitMessage
-import slavsquatsuperstar.mayonez.Logger.trace
-import slavsquatsuperstar.mayonez.Logger.warn
 import slavsquatsuperstar.mayonez.engine.GLGame
 import slavsquatsuperstar.mayonez.engine.GameEngine
 import slavsquatsuperstar.mayonez.engine.JGame
-import slavsquatsuperstar.mayonez.fileio.Assets
+import slavsquatsuperstar.mayonez.io.Assets
 import slavsquatsuperstar.mayonez.graphics.renderer.Renderer
 import slavsquatsuperstar.mayonez.physics.Physics
 import kotlin.system.exitProcess
@@ -71,7 +67,7 @@ object Mayonez {
     internal fun init() { // TODO internal
         // Create Logger object
         if (!INIT_ENGINE) {
-            log("Engine: Initializing...")
+            Logger.log("Engine: Initializing...")
             INIT_ENGINE = true
         }
         // Set up Assets system
@@ -82,7 +78,7 @@ object Mayonez {
         // Read preferences file
         if (!INIT_PREFERENCES) {
             Preferences.readPreferences()
-            trace("Engine: Loaded settings from preferences.json")
+            Logger.debug("Engine: Loaded settings from preferences.json")
             INIT_PREFERENCES = true
         }
         // Create log file
@@ -93,8 +89,8 @@ object Mayonez {
         // Create Resources
         if (!INIT_RESOURCES) {
             INIT_RESOURCES = true
-            log("Engine: Starting %s %s", Preferences.title, Preferences.version)
-            trace("Engine: Loading assets")
+            Logger.log("Engine: Starting %s %s", Preferences.title, Preferences.version)
+            Logger.debug("Engine: Loading assets")
             Assets.scanResources("assets") // Load all game assets
         }
     }
@@ -113,12 +109,11 @@ object Mayonez {
         if (!started) return
         started = false
 
-        if (status == 0) log("Engine: Stopping with exit code %d", status)
-        else warn("Engine: Stopping with exit code %d", status)
+        if (status == 0) Logger.log("Engine: Exiting with exit code %d", status)
+        else Logger.error("Engine: Exiting with exit code %d", status)
 
         game?.stop()
         Assets.clearAssets()
-        printExitMessage()
         exitProcess(status)
     }
 
@@ -153,7 +148,7 @@ object Mayonez {
     // Helper Methods
 
     private fun exitIfNotConfigured() {
-        warn("Game Engine \"Use GL\" option has not been configured yet")
+        Logger.error("Game Engine \"Use GL\" option has not been configured yet")
         stop(1)
     }
 

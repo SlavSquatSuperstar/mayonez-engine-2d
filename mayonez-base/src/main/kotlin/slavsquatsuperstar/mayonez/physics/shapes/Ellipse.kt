@@ -16,11 +16,11 @@ class Ellipse(val center: Vec2, val size: Vec2, val angle: Float) : Shape() {
 
     // Ellipse Properties
 
+    override val numVertices: Int = 0
+
     private val halfWidth: Float = size.x * 0.5f
 
     private val halfHeight: Float = size.y * 0.5f
-
-    // The unit direction of the major axis.
 
     /**
      * The area of an ellipse, equal to πab, where a is half the width and b is half the height.
