@@ -20,7 +20,7 @@ import static org.lwjgl.opengl.GL20.*;
  * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.GL)
-public class Shader extends TextFile {
+public class Shader extends TextAsset {
 
     private int shaderProgramID;
     private boolean used = false;
@@ -36,7 +36,7 @@ public class Shader extends TextFile {
     private void parseShader() {
         try {
             // Read the shader file
-            String source = readText();
+            String source = super.read();
             String[] shaders = source.split("(#type)( )+"); // split into vertex and fragment
 
             // Parse the shader file

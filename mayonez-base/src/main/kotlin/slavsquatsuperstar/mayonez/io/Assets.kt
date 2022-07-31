@@ -6,7 +6,7 @@ import org.reflections.util.ClasspathHelper
 import org.reflections.util.ConfigurationBuilder
 import slavsquatsuperstar.mayonez.Logger
 import slavsquatsuperstar.mayonez.Mayonez
-import java.io.*
+import java.io.File
 import java.net.MalformedURLException
 import java.net.URL
 import java.nio.file.Path
@@ -21,6 +21,7 @@ import java.util.regex.Pattern
 object Assets {
 
     private val ASSETS = HashMap<String, Asset>()
+    private val ignore: Array<String> = arrayOf("META-INF", "kotlin", "javassist", "macos")
 
     init {
         if (!Mayonez.INIT_ASSETS) Mayonez.init()
@@ -28,6 +29,11 @@ object Assets {
 
     internal fun getCurrentDirectory() {
         Logger.debug("Assets: Current launch directory at ${File("./").absolutePath}")
+    }
+
+    private fun isIgnored(filename: String): Boolean {
+        for (str in ignore) if (filename.startsWith(str)) return true
+        return false
     }
 
     /**
@@ -42,8 +48,14 @@ object Assets {
                 .setUrls(ClasspathHelper.forPackage(directory)).setScanners(Scanners.Resources)
         )
         val resources = reflections.getResources(Pattern.compile(".*\\.*"))
-        resources.forEach { createAsset(it) } // Create an asset from each path
-        Logger.debug("Assets: Created ${resources.size} resources inside \"$directory\"")
+        var numAssets = 0
+        resources.forEach {
+            if (!isIgnored(it)) {
+                createAsset(it)
+                numAssets++
+            }
+        } // Create an asset from each path
+        Logger.debug("Assets: Created $numAssets resources inside \"$directory\"")
     }
 
     /**
@@ -110,34 +122,36 @@ object Assets {
     }
 
     /**
-     * Creates a new [Asset], if it does not exist already, and stores it for future use.
+     * Creates a new [Asset] if it does not exist already, and stores it for future use.
      *
-     * @param filename  the location of the asset
-     * @return the file, if successfully created
+     * @param filename the location of the asset
+     * @return the asset
      */
     @JvmStatic
     fun createAsset(filename: String): Asset {
-        if (hasAsset(filename)) Logger.debug("Assets: Resource \"%s\" already exists", filename)
-        else ASSETS[filename] = Asset(filename)
+        if (hasAsset(filename)) {
+            Logger.debug("Assets: Resource \"%s\" already exists", filename)
+        } else {
+            ASSETS[filename] = Asset(filename)
+            Logger.debug("Assets: Created resource at \"%s\"", filename)
+        }
         return getAsset(filename)!!
     }
 
-    @JvmStatic
-    fun <T : Asset> createAsset(filename: String, cls: Class<T>): T? {
-        val ctor = cls.getDeclaredConstructor(String::class.java)
-        return cls.cast(ctor.newInstance(filename))
-    }
-
     /**
-     * Replaces the generic asset stored under the specified filename with an [Asset] subclass.
+     * Instantiates an [Asset] under the given subclass and overwrites it in storage.
      *
-     * @param filename  the location of the asset
-     * @param asset     the asset instance
+     * @param filename   the location of the asset
+     * @param assetClass the subclass of the asset
+     * @return the asset as a subclass instance, if successfully created
      */
     @JvmStatic
-    @JvmName("setAsset")
-    internal fun setAsset(filename: String, asset: Asset) {
+    fun <T : Asset> createAsset(filename: String, assetClass: Class<T>): T? {
+        val ctor = assetClass.getDeclaredConstructor(String::class.java)
+        val asset = assetClass.cast(ctor.newInstance(filename)) ?: return null
         ASSETS[filename] = asset
+        Logger.debug("Assets: Set resource at \"%s\" as %s", filename, assetClass.simpleName)
+        return asset
     }
 
     /**
@@ -148,30 +162,13 @@ object Assets {
         ASSETS.clear()
     }
 
-    // I/O Stream Methods
-
-    @JvmStatic
-    @Throws(IOException::class)
-    fun openInputStream(filename: String): InputStream =
-        getAsset(filename)?.inputStream() ?: throw FileNotFoundException("Assets: File \"$filename\" not found")
-
-    @JvmStatic
-    @Throws(IOException::class)
-    fun openOutputStream(filename: String, append: Boolean): OutputStream =
-        getAsset(filename)?.outputStream(append) ?: throw FileNotFoundException("Assets: File \"$filename\" not found")
-
-
-    @JvmStatic
-    @Throws(IOException::class)
-    fun readContents(filename: String): ByteArray? = openInputStream(filename).readAllBytes()
-
     // Asset URL Methods
 
     /**
      * Accesses a classpath resource from within the .jar executable.
      *
-     * @param path The location of the file inside the root resource directory.
-     * @return The file's URL.
+     * @param path the location of the file inside the root resource directory
+     * @return the file's URL
      */
     @JvmStatic
     fun getClasspathURL(path: String): URL? = ClassLoader.getSystemResource(path)
@@ -190,6 +187,10 @@ object Assets {
             Logger.error("Assets: Invalid file path \"%s\"", filename)
             null
         }
+    }
+
+    override fun toString(): String {
+        return "Assets (${ASSETS.size} ${if (ASSETS.size == 1) "item" else "items"})"
     }
 
 }

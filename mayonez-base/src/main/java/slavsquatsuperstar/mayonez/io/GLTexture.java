@@ -34,14 +34,13 @@ public class GLTexture extends Asset {
 
     public GLTexture(String filename) {
         super(filename);
-        Assets.setAsset(filename, this);
         readImage();
         createTexture();
     }
 
     private void readImage() {
         try {
-            byte[] imageData = Assets.readContents(getFilename());
+            byte[] imageData = IOUtils.readBytes(inputStream());
             ByteBuffer imageBuffer = BufferUtils.createByteBuffer(imageData.length);
             imageBuffer = memSlice(imageBuffer.put(imageData).flip());
 
@@ -52,14 +51,14 @@ public class GLTexture extends Asset {
             if (!stbi_info_from_memory(imageBuffer, w, h, comp))
                 throw new RuntimeException("Failed to read image information: " + stbi_failure_reason());
             else
-                Logger.debug("Texture: Successfully loaded image \"%s\"", getFilename());
+                Logger.debug("I/O: Loaded image \"%s\"", getFilename());
 
             // Decode the image
             stbi_set_flip_vertically_on_load(true); // GL uses (0,0) as bottom left, unlike AWT
             image = stbi_load_from_memory(imageBuffer, w, h, comp, 0);
             if (image == null) {
-                Logger.error("Texture: Could not load image \"%s\"", getFilename());
-                Logger.error("GL: " + stbi_failure_reason());
+                Logger.error("I/O: Could not load image \"%s\"", getFilename());
+                Logger.error("OpenGL: " + stbi_failure_reason());
                 throw new RuntimeException("Failed to load image: " + stbi_failure_reason());
             }
 
@@ -67,7 +66,7 @@ public class GLTexture extends Asset {
             height = h.get(0);
             channels = comp.get(0);
         } catch (IOException | NullPointerException e) {
-            Logger.error("Could not read image \"%s\"", getFilename());
+            Logger.error("I/O: Could not read image \"%s\"", getFilename());
         }
     }
 

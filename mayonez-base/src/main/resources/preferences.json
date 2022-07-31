@@ -6,9 +6,9 @@
 	"log_level": 2,
 	"save_logs": true,
 	"log_directory": "logs/",
-	"file_charset": "utf-8",
-	"buffers": 2,
+	"text_charset": "utf-8",
 	"fps": 60,
+	"buffer_count": 2,
 	"max_batch_size": 100,
 	"max_texture_slots": 8,
 	"physics_iterations": 4

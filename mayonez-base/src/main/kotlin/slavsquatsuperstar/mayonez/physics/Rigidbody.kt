@@ -30,7 +30,7 @@ class Rigidbody(mass: Float, drag: Float, angDrag: Float) : Component() {
 
     // Physics Properties
     var mass: Float = mass
-        set(mass): Unit {
+        set(mass) {
             field = 0f.coerceAtLeast(mass)
         }
 

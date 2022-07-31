@@ -23,17 +23,17 @@ public class JTexture extends Asset {
 
     public JTexture(String filename) {
         super(filename);
-        Assets.setAsset(filename, this);
         readImage();
     }
 
     public void readImage() {
         try (InputStream in = inputStream()) {
             image = ImageIO.read(new ByteArrayInputStream(Objects.requireNonNull(in).readAllBytes()));
+            Logger.debug("I/O: Loaded image \"%s\"", getFilename());
         } catch (IOException e) {
-            Logger.error("Could not read image \"%s\".", getFilename());
+            Logger.error("I/O: Could not read image \"%s\"", getFilename());
         } catch (NullPointerException e) {
-            Logger.error("Texture file \"%s\" does not exist.", getFilename());
+            Logger.error("I/O: Texture file \"%s\" not found", getFilename());
         }
     }
 

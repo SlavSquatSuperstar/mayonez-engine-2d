@@ -1,7 +1,5 @@
 package slavsquatsuperstar.test;
 
-import slavsquatsuperstar.mayonez.io.JSONFile;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,8 +15,6 @@ public class MayonezTest {
 //        myGenerator.addListener(myListener1);
 //        myGenerator.addListener(myListener2);
 //        myGenerator.createEvent(new Event("Clankers inbound!"));
-
-        JSONFile json = new JSONFile("blin").read();
     }
 
     interface EventListener {
