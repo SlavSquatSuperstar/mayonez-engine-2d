@@ -7,13 +7,12 @@ import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Mayonez;
 import slavsquatsuperstar.mayonez.Scene;
 import slavsquatsuperstar.mayonez.Transform;
-import slavsquatsuperstar.mayonez.io.Assets;
-import slavsquatsuperstar.mayonez.io.GLTexture;
 import slavsquatsuperstar.mayonez.graphics.GLCamera;
 import slavsquatsuperstar.mayonez.graphics.GLSprite;
 import slavsquatsuperstar.mayonez.graphics.GLSpriteSheet;
 import slavsquatsuperstar.mayonez.input.KeyInput;
 import slavsquatsuperstar.mayonez.input.MouseInput;
+import slavsquatsuperstar.mayonez.io.Assets;
 import slavsquatsuperstar.mayonez.physics.Rigidbody;
 import slavsquatsuperstar.mayonez.physics.colliders.BoxCollider;
 import slavsquatsuperstar.mayonez.scripts.DragAndDrop;
@@ -41,14 +40,14 @@ public class GLRendererTest extends Scene {
         addObject(new GameObject("Red Square", new Transform(new Vec2(6, 6), new Vec2(4, 4)), -2) {
             @Override
             protected void init() {
-                addComponent(new GLSprite(Assets.getAsset("assets/textures/blend_red.png", GLTexture.class)));
+                addComponent(new GLSprite(Assets.getGLTexture("assets/textures/blend_red.png")));
             }
         });
 
         addObject(new GameObject("Green Square", new Transform(new Vec2(9, 6), new Vec2(4, 4)), 2) {
             @Override
             protected void init() {
-                addComponent(new GLSprite(Assets.getAsset("assets/textures/blend_green.png", GLTexture.class)));
+                addComponent(new GLSprite(Assets.getGLTexture("assets/textures/blend_green.png")));
             }
         });
 

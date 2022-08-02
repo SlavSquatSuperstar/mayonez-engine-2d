@@ -12,6 +12,7 @@ import slavsquatsuperstar.util.Record
 object Preferences : Record() {
 
     init {
+        // Start with defaults to prevent zero and null values
         copyFrom(Defaults)
     }
 
@@ -19,9 +20,8 @@ object Preferences : Record() {
         if (!Mayonez.INIT_ASSETS) Mayonez.init()
         if (Mayonez.INIT_PREFERENCES) return
 
-        // Don't set preferences until after file has been read to prevent default values and nulls
-        val prefsFile = Assets.createAsset("preferences.json", JSONFile::class.java)!!.readJSON()
-        loadFrom(prefsFile) // Read preferences file and update game configuration
+        // Read preferences file and update game configuration
+        loadFrom(Assets.createAsset("preferences.json", JSONFile::class.java)!!.readJSON())
     }
 
     /* Window */

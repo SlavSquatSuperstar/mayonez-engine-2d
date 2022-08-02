@@ -14,7 +14,7 @@ import java.util.List;
  * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.AWT)
-public class JSpriteSheet {
+public class JSpriteSheet extends SpriteSheet {
 
     private final List<JSprite> sprites; // store images in memory
 
@@ -29,7 +29,7 @@ public class JSpriteSheet {
      */
     public JSpriteSheet(String filename, int spriteWidth, int spriteHeight, int numSprites, int spacing) {
         sprites = new ArrayList<>();
-        JTexture texture = Assets.getAsset(filename, JTexture.class);
+        JTexture texture = Assets.getJTexture(filename);
         int width = texture.getImage().getWidth();
 //        int height = sheet.getImage().getHeight();
 
@@ -47,12 +47,9 @@ public class JSpriteSheet {
         }
     }
 
+    @Override
     public JSprite getSprite(int index) {
         return sprites.get(index).copy();
-    }
-
-    public int getNumSprites() {
-        return sprites.size();
     }
 
 }

@@ -3,8 +3,8 @@ package slavsquatsuperstar.mayonez
 import slavsquatsuperstar.mayonez.engine.GLGame
 import slavsquatsuperstar.mayonez.engine.GameEngine
 import slavsquatsuperstar.mayonez.engine.JGame
-import slavsquatsuperstar.mayonez.io.Assets
 import slavsquatsuperstar.mayonez.graphics.renderer.Renderer
+import slavsquatsuperstar.mayonez.io.Assets
 import slavsquatsuperstar.mayonez.physics.Physics
 import kotlin.system.exitProcess
 
@@ -78,7 +78,7 @@ object Mayonez {
         // Read preferences file
         if (!INIT_PREFERENCES) {
             Preferences.readPreferences()
-            Logger.debug("Engine: Loaded settings from preferences.json")
+            Logger.debug("Engine: Loaded settings from \"preferences.json\"")
             INIT_PREFERENCES = true
         }
         // Create log file
@@ -90,7 +90,7 @@ object Mayonez {
         if (!INIT_RESOURCES) {
             INIT_RESOURCES = true
             Logger.log("Engine: Starting %s %s", Preferences.title, Preferences.version)
-            Logger.debug("Engine: Loading assets")
+            Logger.debug("Engine: Loading resources in\"assets/\"")
             Assets.scanResources("assets") // Load all game assets
         }
     }

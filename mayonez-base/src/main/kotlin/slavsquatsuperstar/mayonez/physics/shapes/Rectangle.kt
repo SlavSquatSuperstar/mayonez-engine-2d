@@ -14,6 +14,7 @@ open class Rectangle(private val center: Vec2, private val size: Vec2) :
     constructor(center: Vec2, width: Float, height: Float) : this(center, Vec2(width, height))
 
     companion object {
+        // Angle only used in polygon template
         fun rectangleVertices(center: Vec2, size: Vec2, angle: Float = 0f): Array<Vec2> {
             val min = center - size * 0.5f
             val max = center + size * 0.5f

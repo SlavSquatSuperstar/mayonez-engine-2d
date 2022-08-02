@@ -118,7 +118,7 @@ public class AssetTests {
 
     @Test
     public void createAssetWithReflection() {
-        TextFile t = Assets.createAsset("testassets/properties.txt", TextFile.class);
+        TextFile t = Assets.getTextFile("testassets/properties.txt");
         assertEquals("testassets/properties.txt", t.getFilename());
     }
 

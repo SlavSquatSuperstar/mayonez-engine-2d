@@ -16,7 +16,9 @@ import static org.lwjgl.stb.STBImage.*;
 import static org.lwjgl.system.MemoryUtil.memSlice;
 
 /**
- * A LWJGL image file used by this program.<br> Sources:
+ * A image file used by the GL engine.
+ * <br>
+ * Sources:
  * <ul>
  *    <li>https://github.com/LWJGL/lwjgl3/blob/master/modules/samples/src/test/java/org/lwjgl/demo/stb/Image.java</li>
  *    <li>https://github.com/LWJGL/lwjgl3/blob/master/modules/samples/src/test/java/org/lwjgl/demo/util/IOUtil.java</li>
@@ -26,7 +28,7 @@ import static org.lwjgl.system.MemoryUtil.memSlice;
  * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.GL)
-public class GLTexture extends Asset {
+public class GLTexture extends Texture {
 
     private ByteBuffer image;
     private int width, height, channels;
@@ -34,11 +36,11 @@ public class GLTexture extends Asset {
 
     public GLTexture(String filename) {
         super(filename);
-        readImage();
         createTexture();
     }
 
-    private void readImage() {
+    @Override
+    protected void readImage() {
         try {
             byte[] imageData = IOUtils.readBytes(inputStream());
             ByteBuffer imageBuffer = BufferUtils.createByteBuffer(imageData.length);
@@ -48,25 +50,22 @@ public class GLTexture extends Asset {
             IntBuffer h = BufferUtils.createIntBuffer(1);
             IntBuffer comp = BufferUtils.createIntBuffer(1);
 
-            if (!stbi_info_from_memory(imageBuffer, w, h, comp))
-                throw new RuntimeException("Failed to read image information: " + stbi_failure_reason());
-            else
-                Logger.debug("I/O: Loaded image \"%s\"", getFilename());
+            if (!stbi_info_from_memory(imageBuffer, w, h, comp)) showFailureMessage();
+            else Logger.debug("OpenGL: Loaded image \"%s\"", getFilename());
 
             // Decode the image
             stbi_set_flip_vertically_on_load(true); // GL uses (0,0) as bottom left, unlike AWT
             image = stbi_load_from_memory(imageBuffer, w, h, comp, 0);
             if (image == null) {
-                Logger.error("I/O: Could not load image \"%s\"", getFilename());
-                Logger.error("OpenGL: " + stbi_failure_reason());
-                throw new RuntimeException("Failed to load image: " + stbi_failure_reason());
+                Logger.error("OpenGL: Could not load image file \"%s\"", getFilename());
+                showFailureMessage();
             }
 
             width = w.get(0);
             height = h.get(0);
             channels = comp.get(0);
         } catch (IOException | NullPointerException e) {
-            Logger.error("I/O: Could not read image \"%s\"", getFilename());
+            Logger.error("I/O: Could not read image file \"%s\"", getFilename());
         }
     }
 
@@ -94,7 +93,7 @@ public class GLTexture extends Asset {
         }
 
         glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, image);
-        Logger.debug("Texture: Loaded image \"%s\"", getFilename());
+        Logger.debug("OpenGL: Loaded image \"%s\"", getFilename());
         stbi_image_free(image);
     }
 
@@ -107,11 +106,20 @@ public class GLTexture extends Asset {
         glBindTexture(GL_TEXTURE_2D, 0);
     }
 
+    @Override
     public int getWidth() {
         return width;
     }
 
+    @Override
     public int getHeight() {
         return height;
     }
+
+    private static void showFailureMessage() throws RuntimeException {
+        Logger.error("Reason for failure: " + stbi_failure_reason());
+        throw new RuntimeException("Reason for failure: " + stbi_failure_reason());
+    }
+
 }
+

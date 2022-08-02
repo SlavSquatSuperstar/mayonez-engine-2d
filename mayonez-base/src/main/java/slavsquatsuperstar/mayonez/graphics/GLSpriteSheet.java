@@ -15,7 +15,7 @@ import java.util.List;
  * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.GL)
-public class GLSpriteSheet {
+public class GLSpriteSheet extends SpriteSheet {
 
     private final List<GLSprite> sprites;
 
@@ -29,7 +29,7 @@ public class GLSpriteSheet {
      * @param spacing      the padding in between sprites
      */
     public GLSpriteSheet(String filename, int spriteWidth, int spriteHeight, int numSprites, int spacing) {
-        GLTexture texture = Assets.getAsset(filename, GLTexture.class);
+        GLTexture texture = Assets.getGLTexture(filename);
         sprites = new ArrayList<>();
 
         int width = texture.getWidth();
@@ -62,6 +62,7 @@ public class GLSpriteSheet {
 
     }
 
+    @Override
     public GLSprite getSprite(int index) {
         return sprites.get(index).copy();
     }

@@ -30,9 +30,6 @@ object IOUtils {
         Assets.getAsset(filename)?.outputStream(append)
 
     // Read Methods
-    @JvmStatic
-    @Throws(IOException::class)
-    fun readBytes(input: InputStream?): ByteArray? = input?.readAllBytes()
 
     @JvmStatic
     @Throws(IOException::class, FileNotFoundException::class)
@@ -46,6 +43,10 @@ object IOUtils {
         val reader = BufferedReader(InputStreamReader(input, getCharset(textCharset)))
         return reader.readLines().toTypedArray()
     }
+
+    @JvmStatic
+    @Throws(IOException::class)
+    fun readBytes(input: InputStream?): ByteArray? = input?.readAllBytes()
 
     // Write Methods
 
@@ -68,6 +69,12 @@ object IOUtils {
             if (line != null) output.write(line.toString().toByteArray(getCharset(textCharset)))
             output.write(LINE_ENDING.toByteArray(getCharset(textCharset)))
         }
+    }
+
+    @JvmStatic
+    @Throws(IOException::class)
+    fun writeBytes(output: OutputStream?, bytes: ByteArray?) {
+        output?.write(bytes?: return)
     }
 
     private fun getCharset(charsetName: String?): Charset {

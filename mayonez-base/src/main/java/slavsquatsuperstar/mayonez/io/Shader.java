@@ -54,7 +54,7 @@ public class Shader extends TextAsset {
                 }
             }
         } catch (Exception e) {
-            Logger.error("Shader: Could not read file \"%s\"", getFilename());
+            Logger.error("I/O: Could not read file \"%s\"", getFilename());
         }
     }
 
@@ -67,11 +67,11 @@ public class Shader extends TextAsset {
         // Check for compile errors
         int success = glGetShaderi(vertexID, GL_COMPILE_STATUS);
         if (success == GL_FALSE) {
-            Logger.error("Shader: Could not compile \"defaultshader.glsl\" vertex shader");
+            Logger.error("OpenGL: Could not compile \"%s\" vertex shader", getFilename());
             Logger.error("OpenGL: " + glGetShaderInfoLog(vertexID));
             Mayonez.stop(1);
         }
-        Logger.debug("Successfully compiled \"defaultshader.glsl\" vertex shader");
+        Logger.debug("OpenGL: Compiled \"%s\" vertex shader", getFilename());
 
         // Repeat for Fragment Shader
         int fragmentID = glCreateShader(GL_FRAGMENT_SHADER);
@@ -80,11 +80,11 @@ public class Shader extends TextAsset {
 
         success = glGetShaderi(fragmentID, GL_COMPILE_STATUS);
         if (success == GL_FALSE) {
-            Logger.error("Shader: Could not compile \"defaultshader.glsl\" fragment shader");
+            Logger.error("OpenGL: Could not compile \"defaultshader.glsl\" fragment shader");
             Logger.error("OpenGL: " + glGetShaderInfoLog(fragmentID));
             Mayonez.stop(1);
         }
-        Logger.debug("Successfully compiled \"%s\" fragment shader", getFilename());
+        Logger.debug("OpenGL: Compiled \"%s\" fragment shader", getFilename());
 
         // Link shaders
         shaderProgramID = glCreateProgram();
@@ -94,11 +94,11 @@ public class Shader extends TextAsset {
 
         success = glGetProgrami(shaderProgramID, GL_LINK_STATUS);
         if (success == GL_FALSE) {
-            Logger.error("Error: Could not link \"%s\" shaders", getFilename());
+            Logger.error("OpenGL: Could not link shader file \"%s\"", getFilename());
             Logger.error("OpenGL: " + glGetProgramInfoLog(shaderProgramID));
             Mayonez.stop(1);
         }
-        Logger.debug("Successfully linked \"%s\" shaders", getFilename());
+        Logger.debug("OpenGL: Linked shader file \"%s\"", getFilename());
     }
 
     public void bind() {

@@ -8,7 +8,6 @@ import slavsquatsuperstar.mayonez.Mayonez;
 import slavsquatsuperstar.mayonez.annotations.EngineType;
 import slavsquatsuperstar.mayonez.annotations.UsesEngine;
 import slavsquatsuperstar.mayonez.io.Assets;
-import slavsquatsuperstar.mayonez.io.JTexture;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -26,10 +25,9 @@ public final class JSprite extends Sprite {
 
     public JSprite(String filename) {
         try {
-            image = Assets.getAsset(filename, JTexture.class).getImage();
+            image = Assets.getJTexture(filename).getImage();
         } catch (NullPointerException e) {
-            Logger.error("Sprite: Error loading image \"%s\"", filename);
-            Logger.printStackTrace(e);
+            Logger.error("I/O: Error loading image file \"%s\"", filename);
             Mayonez.stop(-1);
         }
     }

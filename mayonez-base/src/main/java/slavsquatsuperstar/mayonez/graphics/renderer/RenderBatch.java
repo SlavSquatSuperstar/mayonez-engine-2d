@@ -56,7 +56,7 @@ public class RenderBatch {
     public RenderBatch(int maxBatchSize, int zIndex, GLCamera camera) {
         sprites = new GLSprite[maxBatchSize]; // shader array capacity
         textures = new ArrayList<>();
-        shader = Assets.getAsset("assets/shaders/default.glsl", Shader.class);
+        shader = Assets.getShader("assets/shaders/default.glsl");
         vertices = new float[maxBatchSize * VERTICES_PER_SPRITE * VERTEX_SIZE];
         for (int i = 0; i < texSlots.length; i++) texSlots[i] = i; // ints 0-7
 
@@ -154,7 +154,7 @@ public class RenderBatch {
                 numDestroyed++;
             }
         }
-        if (numDestroyed > 0) Logger.debug("Removed %d destroyed sprites", numDestroyed);
+        if (numDestroyed > 0) Logger.debug("Renderer: Removed %d destroyed sprites", numDestroyed);
     }
 
     // Helper Methods

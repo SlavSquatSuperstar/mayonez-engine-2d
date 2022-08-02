@@ -23,7 +23,7 @@ open class Polygon(vararg vertices: Vec2) : Shape() {
      */
     constructor(center: Vec2, sides: Int, radius: Float) : this(*regularPolygonVertices(center, sides, radius))
 
-    // Polygon Vertices
+    // Polygon Components
 
     /**
      * The points that define the shape of this polygon.
@@ -45,25 +45,12 @@ open class Polygon(vararg vertices: Vec2) : Shape() {
      */
     val normals: Array<Vec2> = Array(numVertices) { edges[it].unitNormal() }
 
-    // Polygon Properties
-
-    /**
-     * The least number of triangles this polygon can be divided into, equal to n–2.
-     */
-    private val numTriangles: Int
-        get() = numVertices - 2
-
-    /**
-     * The sum of all the internal angles of this polygon, equal to (n-2)*180.
-     */
-    fun sumAngles(): Int = numTriangles * 180
-
     /**
      * Splits this polygon into n-2 triangular regions, which are guaranteed to be convex and non-overlapping.
      */
-    fun getTriangles(): Array<Triangle> {
+    private fun getTriangles(): Array<Triangle> {
         val start = vertices[0]
-        return Array(numTriangles) { Triangle(start, vertices[it + 1], vertices[it + 2]) }
+        return Array(numVertices - 2) { Triangle(start, vertices[it + 1], vertices[it + 2]) }
     }
 
     // Shape Methods

@@ -76,7 +76,7 @@ public final class GLWindow implements Window {
 
         // Create the window
         window = glfwCreateWindow(width, height, title, NULL, NULL);
-        if (window == NULL) throw new RuntimeException("Engine: Failed to create the GLFW window");
+        if (window == NULL) throw new RuntimeException("Engine: Could not create the GLFW window");
 
         // Add input listeners
 

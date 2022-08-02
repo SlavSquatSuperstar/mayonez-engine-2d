@@ -151,12 +151,12 @@ public abstract class Scene {
                     Mayonez.getRenderer().addObject(obj);
                     Mayonez.getPhysics().addObject(obj);
                 }
-                Logger.debug("Added object \"%s\" to scene \"%s\"", obj.name, this.name);
+                Logger.debug("Game: Added object \"%s\" to scene \"%s\"", obj.name, this.name);
             });
         } else { // Init add: add to scene, and add to layers on start
             objects.add(obj.setScene(this));
             obj.start(); // add object components so renderer and physics can access it
-            Logger.debug("Added object \"%s\" to scene \"%s\"", obj.name, this.name);
+            Logger.debug("Game: Added object \"%s\" to scene \"%s\"", obj.name, this.name);
         }
     }
 
@@ -171,7 +171,7 @@ public abstract class Scene {
             objects.remove(obj);
             Mayonez.getRenderer().removeObject(obj);
             Mayonez.getPhysics().removeObject(obj);
-            Logger.debug("Removed object \"%s\" from scene \"%s\"", obj.name, this.name);
+            Logger.debug("Game: Removed object \"%s\" from scene \"%s\"", obj.name, this.name);
         });
     }
 

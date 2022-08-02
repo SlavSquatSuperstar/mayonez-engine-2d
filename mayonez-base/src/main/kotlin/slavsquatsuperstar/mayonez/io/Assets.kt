@@ -2,8 +2,6 @@ package slavsquatsuperstar.mayonez.io
 
 import org.reflections.Reflections
 import org.reflections.scanners.Scanners
-import org.reflections.util.ClasspathHelper
-import org.reflections.util.ConfigurationBuilder
 import slavsquatsuperstar.mayonez.Logger
 import slavsquatsuperstar.mayonez.Mayonez
 import java.io.File
@@ -20,42 +18,36 @@ import java.util.regex.Pattern
 // TODO preload stage, map filetype to subclass
 object Assets {
 
-    private val ASSETS = HashMap<String, Asset>()
-    private val ignore: Array<String> = arrayOf("META-INF", "kotlin", "javassist", "macos")
+    private val assets = HashMap<String, Asset>()
 
     init {
         if (!Mayonez.INIT_ASSETS) Mayonez.init()
     }
 
+    // doesn't work for jar
     internal fun getCurrentDirectory() {
-        Logger.debug("Assets: Current launch directory at ${File("./").absolutePath}")
+        Logger.debug("Assets: Current launch directory at ${System.getProperty("user.dir")}")
     }
 
-    private fun isIgnored(filename: String): Boolean {
-        for (str in ignore) if (filename.startsWith(str)) return true
-        return false
-    }
+    // Search Folder Methods
 
     /**
      * Recursively searches a resource directory inside the JAR and adds all assets.
      *
      * @param directory a folder inside the jar
      */
+    /*
+     * Sources:
+     * - https://stackoverflow.com/questions/3923129/get-a-list-of-resources-from-classpath-directory
+     * - https://stackoverflow.com/questions/10910510/get-a-array-of-class-files-inside-a-package-in-java/30149061
+     * - https://stackoverflow.com/questions/520328/can-you-find-all-classes-in-a-package-using-reflection
+     * - https://www.logicbig.com/how-to/java/find-classpath-files-under-folder-and-sub-folder.html
+     */
     @JvmStatic
     fun scanResources(directory: String) {
-        val reflections = Reflections(
-            ConfigurationBuilder()
-                .setUrls(ClasspathHelper.forPackage(directory)).setScanners(Scanners.Resources)
-        )
-        val resources = reflections.getResources(Pattern.compile(".*\\.*"))
-        var numAssets = 0
-        resources.forEach {
-            if (!isIgnored(it)) {
-                createAsset(it)
-                numAssets++
-            }
-        } // Create an asset from each path
-        Logger.debug("Assets: Created $numAssets resources inside \"$directory\"")
+        val resources = Reflections(directory, Scanners.Resources).getResources(Pattern.compile(".*\\.*"))
+        resources.forEach { createAsset(it) } // Create an asset from each path
+        Logger.debug("Assets: Loaded ${resources.size} resources inside \"$directory\"")
     }
 
     /**
@@ -67,7 +59,7 @@ object Assets {
     fun scanFiles(directory: String) {
         val files = searchFiles(directory)
         files.forEach { createAsset(it) }
-        Logger.debug("Assets: Created ${files.size} files inside $directory")
+        Logger.debug("Assets: Loaded ${files.size} files inside $directory")
     }
 
     @JvmStatic
@@ -86,7 +78,7 @@ object Assets {
         return files
     }
 
-    // Asset Accessors / Mutators
+    // Asset Methods
 
     /**
      * Indicates whether the [Asset] stored under the given location exists.
@@ -95,31 +87,7 @@ object Assets {
      * @return if a file exists at the given path
      */
     @JvmStatic
-    fun hasAsset(filename: String): Boolean = filename in ASSETS
-
-    /**
-     * Retrieves the [Asset] at the given location, if it exists.
-     *
-     * @param filename the path to the file
-     */
-    @JvmStatic
-    fun getAsset(filename: String): Asset? = ASSETS[filename]
-
-    /**
-     * Retrieves and replaces the [Asset] under the specified filename as in instance of any Asset subclass.
-     *
-     * @param filename  the asset location
-     * @param cls       the asset subclass
-     * @return a subclass instance with the same {@link AssetType}, if the asset is valid.
-     */
-    @JvmStatic
-    @Suppress("UNCHECKED_CAST")
-    fun <T : Asset> getAsset(filename: String, cls: Class<T>): T? {
-        val asset = getAsset(filename)
-        return if (asset != null && !cls.isInstance(asset))
-            createAsset(filename, cls)
-        else asset as? T
-    }
+    fun hasAsset(filename: String): Boolean = filename in assets
 
     /**
      * Creates a new [Asset] if it does not exist already, and stores it for future use.
@@ -132,10 +100,10 @@ object Assets {
         if (hasAsset(filename)) {
             Logger.debug("Assets: Resource \"%s\" already exists", filename)
         } else {
-            ASSETS[filename] = Asset(filename)
-            Logger.debug("Assets: Created resource at \"%s\"", filename)
+            assets[filename] = Asset(filename)
+            Logger.debug("Assets: Loaded resource at \"%s\"", filename)
         }
-        return getAsset(filename)!!
+        return assets[filename]!!
     }
 
     /**
@@ -149,17 +117,89 @@ object Assets {
     fun <T : Asset> createAsset(filename: String, assetClass: Class<T>): T? {
         val ctor = assetClass.getDeclaredConstructor(String::class.java)
         val asset = assetClass.cast(ctor.newInstance(filename)) ?: return null
-        ASSETS[filename] = asset
-        Logger.debug("Assets: Set resource at \"%s\" as %s", filename, assetClass.simpleName)
+        assets[filename] = asset
+        Logger.debug("Assets: Loaded %s at \"%s\"", assetClass.simpleName, filename)
         return asset
     }
+
+    // Asset Getters
+
+    /**
+     * Retrieves the [Asset] at the given location.
+     *
+     * @param filename the path to the file
+     * @return the asset, if it exists.
+     */
+    @JvmStatic
+    fun getAsset(filename: String): Asset? = assets[filename]
+
+    /**
+     * Retrieves and replaces the [Asset] under the specified filename as in instance of any Asset subclass.
+     *
+     * @param filename the asset location
+     * @param cls      the asset subclass
+     * @return a subclass instance with the same {@link AssetType}, if the asset is valid.
+     */
+    @JvmStatic
+    @Suppress("UNCHECKED_CAST")
+    fun <T : Asset> getAsset(filename: String, cls: Class<T>): T? {
+        val asset = getAsset(filename)
+        return if (asset != null && !cls.isInstance(asset))
+            createAsset(filename, cls)
+        else asset as? T
+    }
+
+    /**
+     * Retrieves the asset at the given location as a [JSONFile].
+     *
+     * @param filename the path to the file
+     * @return the text file, if it exists
+     */
+    @JvmStatic
+    fun getJSONFile(filename: String): JSONFile? = getAsset(filename, JSONFile::class.java)
+
+    /**
+     * Retrieves the asset at the given location as a [TextFile].
+     *
+     * @param filename the path to the file
+     * @return the text file, if it exists
+     */
+    @JvmStatic
+    fun getTextFile(filename: String): TextFile? = getAsset(filename, TextFile::class.java)
+
+    /**
+     * Retrieves the asset at the given location as a [GLTexture].
+     *
+     * @param filename the path to the file
+     * @return the texture, if it exists
+     */
+    @JvmStatic
+    fun getGLTexture(filename: String): GLTexture? = getAsset(filename, GLTexture::class.java)
+
+    /**
+     * Retrieves the asset at the given location as a [JTexture].
+     *
+     * @param filename the path to the file
+     * @return the texture, if it exists
+     */
+    @JvmStatic
+    fun getJTexture(filename: String): JTexture? = getAsset(filename, JTexture::class.java)
+
+    /**
+     * Retrieves the asset at the given location as a [Shader].
+     *
+     * @param filename the path to the file
+     * @return the shader, if it exists
+     */
+    @JvmStatic
+    fun getShader(filename: String): Shader? = getAsset(filename, Shader::class.java)
 
     /**
      * Empties all Assets from the asset pool.
      */
     @JvmStatic
     fun clearAssets() {
-        ASSETS.clear()
+        assets.clear()
     }
 
     // Asset URL Methods
@@ -190,7 +230,7 @@ object Assets {
     }
 
     override fun toString(): String {
-        return "Assets (${ASSETS.size} ${if (ASSETS.size == 1) "item" else "items"})"
+        return "Assets (${assets.size} ${if (assets.size == 1) "item" else "items"})"
     }
 
 }
