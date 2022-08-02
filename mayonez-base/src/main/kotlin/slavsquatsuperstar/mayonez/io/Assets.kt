@@ -143,9 +143,8 @@ object Assets {
     @JvmStatic
     @Suppress("UNCHECKED_CAST")
     fun <T : Asset> getAsset(filename: String, cls: Class<T>): T? {
-        val asset = getAsset(filename)
-        return if (asset != null && !cls.isInstance(asset))
-            createAsset(filename, cls)
+        val asset = getAsset(filename) // check if asset exists and is same class
+        return if (asset == null || !cls.isInstance(asset)) createAsset(filename, cls)
         else asset as? T
     }
 

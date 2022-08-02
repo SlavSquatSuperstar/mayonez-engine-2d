@@ -150,7 +150,7 @@ public class RenderBatch {
         for (int i = 0; i < numSprites; i++) {
             if (sprites[i] != null && sprites[i].getParent().isDestroyed()) {
                 sprites[i] = null;
-                // reload
+                // TODO unload vertices
                 numDestroyed++;
             }
         }

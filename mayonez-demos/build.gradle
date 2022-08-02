@@ -1,22 +1,25 @@
 plugins {
-    id 'com.github.johnrengelman.shadow'
-
+    id 'idea'
     id 'java'
 //    id 'application'
+
+    id 'com.github.johnrengelman.shadow'
 }
 
-description = 'The testbed project for Mayonez Engine that contains all the demo scenes'
+description = 'The testbed project for Mayonez Engine that contains all the demo scenes.'
 project.ext.mainClass = 'slavsquatsuperstar.Main'
 
 // Tasks
+
+//application { // For 'run' task
+//    mainClass = project.mainClass
+//    mainModule = project.mainModule
+//}
+//
 //run {
-//    jvmArgs = ["-XstartOnFirstThread", "-Dorg.lwjgl.util.Debug=true"] // For LWJGL
+//    jvmArgs = ["-XstartOnFirstThread"] // For LWJGL
 //}
 
 dependencies {
     implementation project(':mayonez-base')
-}
-
-test {
-    useJUnitPlatform()
 }

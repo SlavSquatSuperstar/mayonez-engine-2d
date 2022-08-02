@@ -1,7 +1,6 @@
 package slavsquatsuperstar.mayonez
 
 import slavsquatsuperstar.mayonez.io.Assets
-import slavsquatsuperstar.mayonez.io.JSONFile
 import slavsquatsuperstar.util.Record
 
 /**
@@ -21,7 +20,7 @@ object Preferences : Record() {
         if (Mayonez.INIT_PREFERENCES) return
 
         // Read preferences file and update game configuration
-        loadFrom(Assets.createAsset("preferences.json", JSONFile::class.java)!!.readJSON())
+        loadFrom(Assets.getJSONFile("preferences.json")!!.readJSON())
     }
 
     /* Window */

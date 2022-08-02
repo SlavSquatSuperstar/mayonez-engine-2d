@@ -1,42 +1,34 @@
-buildscript {
-    project.ext.kotlinVersion = '1.7.10'
-}
-
 plugins {
-    id 'com.github.johnrengelman.shadow' version '7.1.2' // For making fat jars
-
-    id 'org.jetbrains.kotlin.jvm' version "$kotlinVersion"
-    id 'org.jetbrains.dokka' version '1.6.21' // For Kotlin documentation
-
+    id 'idea'
     id 'java'
     id 'application'
+
+    id 'org.jetbrains.kotlin.jvm' version '1.7.10'
+    id 'org.jetbrains.dokka' version '1.7.10' // For Kotlin documentation
+    id 'com.github.johnrengelman.shadow' version '7.1.2' // For making fat jars
 }
 
 // Project Info
 
-group 'slavsquatsuperstar'
-version '0.7.4-SNAPSHOT-2'
-description = 'The root project for Mayonez Engine that contains all modules'
-
-allprojects {
-    group 'slavsquatsuperstar'
-    version '0.7.4-pre2'
-}
+description = 'The root project for Mayonez Engine that contains all modules.'
 
 // Custom Settings
 project.ext {
     javaVersion = '17'
-    junitVersion = '5.8.2'
-    // TODO separate into GL/AWT modules
     mainClass = 'slavsquatsuperstar.demos.GLRendererTest'
 //    mainClass = 'slavsquatsuperstar.demos.geometrydash.LevelEditor'
     mainModule = 'mayonez.demos'
 }
-sourceCompatibility = targetCompatibility = javaVersion
-
-// Dependencies
 
 allprojects {
+    // Project Info
+    group 'slavsquatsuperstar'
+    version '0.7.4-pre3'
+
+    // Java Version
+    sourceCompatibility = targetCompatibility = javaVersion
+
+    // Dependencies
     repositories {
         mavenCentral()
     }
@@ -68,9 +60,4 @@ shadowJar {
     dependsOn jar
     archiveClassifier.set('')
     manifest.from jar.manifest
-    exclude 'META-INF/*.txt', // Extraneous readme and license files
-            'META-INF/*.SF',
-            'META-INF/*.DSA',
-            'META-INF/*.RSA',
-            'META-INF/*.LIST'
 }

@@ -1,14 +1,14 @@
 import org.gradle.internal.os.OperatingSystem
 
 plugins {
-    id 'com.github.johnrengelman.shadow'
+    id 'idea'
+    id 'java-library'
 
     id 'org.jetbrains.kotlin.jvm'
-    id 'java-library'
+    id 'com.github.johnrengelman.shadow'
 }
 
-description = 'The library project for Mayonez Engine that contains all the core classes and unit tests'
-project.ext.lwjglVersion = '3.3.1'
+description = 'The library project for Mayonez Engine that contains the core classes and unit tests.'
 
 // Configure LWJGL OS (source: https://github.com/azurite-engine/Azurite)
 def osArch = System.getProperty("os.arch")
@@ -31,13 +31,13 @@ switch (OperatingSystem.current()) {
 
 dependencies {
     // Code Dependencies
-    api "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+    api 'org.jetbrains.kotlin:kotlin-stdlib:1.7.10'
     implementation 'org.json:json:20220320'
     implementation 'org.reflections:reflections:0.10.2'
     implementation 'org.slf4j:slf4j-simple:1.7.36'
 
     // LWJGL Libraries
-    implementation platform("org.lwjgl:lwjgl-bom:$lwjglVersion")
+    implementation platform('org.lwjgl:lwjgl-bom:3.3.1')
 
     api 'org.joml:joml:1.10.4'
     implementation "org.lwjgl:lwjgl"
@@ -52,8 +52,8 @@ dependencies {
     runtimeOnly "org.lwjgl:lwjgl-stb::$lwjglNatives"
 
     // Test Libraries
-    testImplementation "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
-    testRuntimeOnly "org.junit.jupiter:junit-jupiter-api:$junitVersion"
+    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.9.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-api:5.9.0'
 }
 
 // Tasks
@@ -73,8 +73,4 @@ compileKotlin {
 
 test {
     useJUnitPlatform()
-}
-
-repositories {
-    mavenCentral()
 }

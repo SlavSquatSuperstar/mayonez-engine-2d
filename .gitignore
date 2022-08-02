@@ -18,6 +18,7 @@ logs
 hs_err_pid*
 
 # Test outputs
+mayonez-base/src/test/java/slavsquatsuperstar.test.MayonezTest.java
 mayonez-base/src/test/resources/testassets/out/
 
 # MacOS files

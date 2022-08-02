@@ -36,7 +36,10 @@ public final class GLRenderer extends Renderer {
     @Override
     public void render(Graphics2D g2) {
         batches.forEach(RenderBatch::render);
-        if (checkForDestroyed) batches.forEach(RenderBatch::removeDestroyedSprites);
+        if (checkForDestroyed) {
+            batches.forEach(RenderBatch::removeDestroyedSprites);
+            checkForDestroyed = false;
+        }
     }
 
     // Game Object Methods
@@ -75,7 +78,6 @@ public final class GLRenderer extends Renderer {
     @Override
     public void removeObject(GameObject o) {
         checkForDestroyed = true;
-        // tell renderer to look for sprites with null parent in next frame
     }
 
 }
