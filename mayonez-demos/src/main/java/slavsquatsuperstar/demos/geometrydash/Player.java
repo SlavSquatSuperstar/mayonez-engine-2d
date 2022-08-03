@@ -48,7 +48,7 @@ public class Player extends GameObject {
         for (JSprite s : layers) addComponent(s);
 
         // Add player scripts
-        float thrustForce = 10f;
+        float thrustForce = 5f;
         addComponent(new BoxCollider(new Vec2(1, 1)));
         addComponent(new Rigidbody(1f).setFixedRotation(true));
         addComponent(new KeyMovement(MoveMode.POSITION, thrustForce).setTopSpeed(5f));

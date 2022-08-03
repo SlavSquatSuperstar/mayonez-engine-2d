@@ -55,7 +55,8 @@ public class GameObject {
     /**
      * Add necessary components and provide user-defined initialization behavior.
      */
-    protected void init() {}
+    protected void init() {
+    }
 
     /**
      * Initializes all components.
@@ -83,7 +84,8 @@ public class GameObject {
      *
      * @param dt seconds since the last frame
      */
-    protected void onUserUpdate(float dt) {}
+    protected void onUserUpdate(float dt) {
+    }
 
     /**
      * Renders all components.
@@ -102,19 +104,26 @@ public class GameObject {
      *
      * @param g2 the window's graphics object
      */
-    protected void onUserRender(Graphics2D g2) {}
+    protected void onUserRender(Graphics2D g2) {
+    }
 
     // Component Methods
 
+    /**
+     * Adds a component to this game object.
+     *
+     * @param comp the {@link Component} object
+     */
     public final void addComponent(Component comp) {
         // maybe make annotation (multiple scripts should suppress warning)
 //		if (null != getComponent(comp.getClass()))
-//			Logger.log("GameObject: Adding multiple components of the same type is not recommended");
+//			Logger.warn("GameObject: Adding multiple components of the same type is not recommended");
         components.add(comp.setParent(this));
     }
 
     /**
-     * Remove the component of the specified class from this game object.
+     * Removes the component of the specified class from this game object.
+     *
      * @param cls the component class
      * @param <T> a subclass of {@link Component}
      * @return if the component was removed
@@ -189,14 +198,16 @@ public class GameObject {
      *
      * @param other the other object in the collision
      */
-    public void onCollision(GameObject other) {}
+    public void onCollision(GameObject other) {
+    }
 
     /**
      * What to do after passing through a trigger area.
      *
      * @param trigger the trigger collider
      */
-    public void onTrigger(Collider trigger) {}
+    public void onTrigger(Collider trigger) {
+    }
 
     /**
      * Destroy this game object and remove it from the scene.

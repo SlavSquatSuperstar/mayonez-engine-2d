@@ -6,7 +6,9 @@ import slavsquatsuperstar.mayonez.graphics.JCamera;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.stream.Collectors;
 
 /**
@@ -18,7 +20,8 @@ public abstract class Scene {
 
     // Object Fields
     protected final List<GameObject> objects;
-    private final List<SceneModifier> toModify; // Use a separate list to avoid concurrent exceptions
+    private final Queue<SceneModifier> sceneChanges; // Use a separate list to avoid concurrent exceptions
+
     private final JCamera camera;
 
     // Scene Information
@@ -52,7 +55,7 @@ public abstract class Scene {
         this.cellSize = cellSize;
 
         objects = new ArrayList<>();
-        toModify = new ArrayList<>();
+        sceneChanges = new LinkedList<>();
         camera = new JCamera(size, cellSize);
     }
 
@@ -91,9 +94,8 @@ public abstract class Scene {
             onUserUpdate(dt);
 
             // Remove destroyed objects or add new ones at the end of the frame
-            if (!toModify.isEmpty()) {
-                toModify.forEach(SceneModifier::modify);
-                toModify.clear();
+            while (!sceneChanges.isEmpty()) {
+                sceneChanges.poll().modify();
             }
         }
     }
@@ -134,6 +136,7 @@ public abstract class Scene {
      *
      * @param obj a {@link GameObject}
      */
+    // TODO use events
     public final void addObject(GameObject obj) {
         // Handle duplicate names
         int count = 0;
@@ -144,7 +147,7 @@ public abstract class Scene {
 
         // TODO use events
         if (started) { // Dynamic add: add to scene and layers
-            toModify.add(() -> {
+            sceneChanges.offer(() -> {
                 objects.add(obj.setScene(this));
                 obj.start(); // add object components so renderer and physics can access it
                 if (started) { // Dynamic add
@@ -167,7 +170,7 @@ public abstract class Scene {
      */
     public final void removeObject(GameObject obj) {
         obj.destroy();
-        toModify.add(() -> {
+        sceneChanges.offer(() -> {
             objects.remove(obj);
             Mayonez.getRenderer().removeObject(obj);
             Mayonez.getPhysics().removeObject(obj);

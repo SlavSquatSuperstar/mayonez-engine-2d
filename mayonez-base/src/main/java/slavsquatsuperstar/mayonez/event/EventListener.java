@@ -9,6 +9,7 @@ import slavsquatsuperstar.mayonez.annotations.ExperimentalFeature;
  */
 @ExperimentalFeature
 @FunctionalInterface
-public interface EventListener<T extends Event> {
-    void onEvent(T event);
+// TODO parameterize listener and nodes
+public interface EventListener {
+    void onEvent(Event event);
 }

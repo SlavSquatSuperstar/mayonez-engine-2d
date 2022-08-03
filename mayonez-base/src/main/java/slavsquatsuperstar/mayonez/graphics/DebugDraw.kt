@@ -27,6 +27,7 @@ import kotlin.math.roundToInt
  * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.AWT)
+// TODO need z-indexing to work with renderer
 object DebugDraw {
 
     private const val STROKE_SIZE = 2

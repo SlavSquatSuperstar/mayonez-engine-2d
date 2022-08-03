@@ -36,6 +36,7 @@ public class GLTexture extends Texture {
 
     public GLTexture(String filename) {
         super(filename);
+        readImage();
         createTexture();
     }
 

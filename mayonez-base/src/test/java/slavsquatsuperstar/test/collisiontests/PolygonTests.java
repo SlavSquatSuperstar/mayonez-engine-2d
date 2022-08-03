@@ -40,7 +40,7 @@ public class PolygonTests {
     // Create a 2x2 box centered at (0, 0) and scale it by 2x
     @Test
     public void scaledPolygonVerticesReturnsWorld() {
-        PolygonCollider shape = new PolygonCollider(vertices).setTransform(new Transform().resize(new Vec2(2, 2)));
+        PolygonCollider shape = new PolygonCollider(vertices).setTransform(new Transform().scale(new Vec2(2, 2)));
         Vec2[] worldVertices = new Vec2[]{new Vec2(2, 2), new Vec2(-2, 2), new Vec2(-2, -2), new Vec2(2, -2)};
         assertTrue(Objects.deepEquals(worldVertices, shape.getVertices()));
     }

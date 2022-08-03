@@ -38,14 +38,14 @@ public class JRendererTest extends Scene {
                 addComponent(sprites.getSprite(0));
                 addComponent(new BoxCollider(new Vec2(0.8f, 1)));
                 addComponent(new Rigidbody(1f).setFixedRotation(true));
-                addComponent(new KeyMovement(MoveMode.POSITION, 20));
+                addComponent(new KeyMovement(MoveMode.POSITION, 5));
                 addComponent(new Script() {
                     @Override
                     public void update(float dt) {
                         if (KeyInput.keyDown(KeyEvent.VK_Q))
-                            transform.rotate(2);
+                            transform.rotate(1);
                         if (KeyInput.keyDown(KeyEvent.VK_E))
-                            transform.rotate(-2);
+                            transform.rotate(-1);
                     }
                 });
             }

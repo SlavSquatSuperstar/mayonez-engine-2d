@@ -2,6 +2,7 @@ package slavsquatsuperstar.mayonez
 
 import slavsquatsuperstar.math.MathUtils
 import slavsquatsuperstar.math.Vec2
+import slavsquatsuperstar.mayonez.annotations.Mutating
 
 /**
  * Stores the position, rotation and scale of a GameObject and provides additional methods.
@@ -35,19 +36,26 @@ class Transform(
 
     constructor(position: Vec2, scale: Vec2) : this(position, 0f, scale)
 
+    companion object {
+        @JvmStatic
+        fun translateInstance(translation: Vec2) = Transform(translation, 0f, Vec2())
 
-    val rotationRadians: Float
-        get() = MathUtils.toRadians(rotation)
+        @JvmStatic
+        fun rotateInstance(rotation: Float) = Transform(Vec2(), rotation, Vec2())
+        @JvmStatic
+        fun scaleInstance(scale: Vec2) = Transform(Vec2(), 0f, scale)
+    }
 
     // Property Mutator Methods
     /**
      * Translates the parent object along the x and y axes.
      *
-     * @param displacement how much and which direction to move
+     * @param translation how much and which direction to move
      * @return this transform
      */
-    fun move(displacement: Vec2): Transform {
-        position += displacement
+    @Mutating
+    fun move(translation: Vec2): Transform {
+        position += translation
         return this
     }
 
@@ -57,6 +65,7 @@ class Transform(
      * @param degrees the counterclockwise angle
      * @return this transform
      */
+    @Mutating
     fun rotate(degrees: Float): Transform {
         rotation += degrees
         return this
@@ -65,12 +74,23 @@ class Transform(
     /**
      * Stretches the parent object and all its components by the given factors along the x and y axes.
      *
-     * @param scale the new x and y size compared to the current dimensions
+     * @param factor the new x and y size compared to the current dimensions
      * @return this transform
      */
-    fun resize(scale: Vec2): Transform {
-        this.scale *= scale
+    @Mutating
+    fun scale(factor: Vec2): Transform {
+        this.scale *= factor
         return this
+    }
+
+    /**
+     * Applies this transform to another transform, combining the position, rotation, and scale of both.
+     *
+     * @param other another transform
+     * @return the combined transformation
+     */
+    fun combine(other: Transform): Transform {
+        return Transform(this.position + other.position, this.rotation + other.rotation, this.scale * other.scale)
     }
 
     // Space Transform Methods
@@ -106,6 +126,7 @@ class Transform(
 
     fun copy() = Transform(position, rotation, scale)
 
+    @Mutating
     fun set(from: Transform) {
         this.position.set(from.position)
         this.rotation = from.rotation

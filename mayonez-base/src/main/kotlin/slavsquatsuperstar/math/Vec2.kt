@@ -2,6 +2,7 @@ package slavsquatsuperstar.math
 
 import org.joml.Vector2f
 import slavsquatsuperstar.math.MathUtils.equals
+import slavsquatsuperstar.mayonez.annotations.Mutating
 import kotlin.math.*
 
 /**
@@ -69,11 +70,12 @@ class Vec2 constructor(
     // Mutators
 
     /**
-     * Sets this vector's components to the provided x and y coordinates. Note: this method is a mutating method!
+     * Sets this vector's components to the provided x and y coordinates.
      *
      * @param x the new x-component
      * @param y the new y-component
      */
+    @Mutating
     fun set(x: Float, y: Float) {
         this.x = x
         this.y = y

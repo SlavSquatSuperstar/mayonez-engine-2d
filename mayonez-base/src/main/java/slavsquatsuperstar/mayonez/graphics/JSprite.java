@@ -1,16 +1,13 @@
 package slavsquatsuperstar.mayonez.graphics;
 
-import slavsquatsuperstar.math.MathUtils;
-import slavsquatsuperstar.math.Vec2;
-import slavsquatsuperstar.mayonez.GameObject;
-import slavsquatsuperstar.mayonez.Logger;
-import slavsquatsuperstar.mayonez.Mayonez;
+import slavsquatsuperstar.mayonez.*;
 import slavsquatsuperstar.mayonez.annotations.EngineType;
 import slavsquatsuperstar.mayonez.annotations.UsesEngine;
 import slavsquatsuperstar.mayonez.io.Assets;
+import slavsquatsuperstar.mayonez.io.JTexture;
+import slavsquatsuperstar.mayonez.physics.shapes.Rectangle;
 
 import java.awt.*;
-import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
 /**
@@ -21,49 +18,33 @@ import java.awt.image.BufferedImage;
 @UsesEngine(EngineType.AWT)
 public final class JSprite extends Sprite {
 
-    private BufferedImage image;
+    private final JTexture texture; // TODO missing texture image?
 
     public JSprite(String filename) {
-        try {
-            image = Assets.getJTexture(filename).getImage();
-        } catch (NullPointerException e) {
+        texture = Assets.getJTexture(filename);
+        if (texture == null) {
             Logger.error("I/O: Error loading image file \"%s\"", filename);
             Mayonez.stop(-1);
         }
     }
 
-    public JSprite(BufferedImage image) {
-        this.image = image;
+    public JSprite(JTexture texture) {
+        this.texture = texture;
     }
 
     @Override
     public void render(Graphics2D g2) {
-        // Measurements are in screen coordinates (pixels)
-        Vec2 parentCenter = transform.position.mul(getScene().getCellSize());
-        Vec2 parentSize = transform.scale.mul(getScene().getCellSize());
-        Vec2 parentHalfSize = parentSize.mul(0.5f);
-        Vec2 imageSize = new Vec2(image.getWidth(), image.getHeight());
-
-        // Draw sprite at parent center with parent rotation and scale
-        AffineTransform g2Xf = new AffineTransform(); // Identity
-        g2Xf.translate(parentCenter.x - parentHalfSize.x, parentCenter.y - parentHalfSize.y);
-        g2Xf.rotate(MathUtils.toRadians(transform.rotation), parentHalfSize.x, parentHalfSize.y);
-        g2Xf.scale(parentSize.x / imageSize.x, parentSize.y / imageSize.y);
-
-        // Flip image vertically like GL
-        g2Xf.scale(1, -1);
-        g2Xf.translate(0, -imageSize.y); // Move to correct position
-
-        g2.drawImage(image, g2Xf, null);
+        if (texture != null) texture.draw(g2, transform, new Transform(), getScene().getCellSize());
+        else DebugDraw.drawShape(new Rectangle(transform.position, transform.scale), Colors.MAGENTA);
     }
 
     public BufferedImage getImage() {
-        return image;
+        return texture.getImage();
     }
 
     @Override
     public JSprite copy() {
-        return new JSprite(image);
+        return new JSprite(texture);
     }
 
 }

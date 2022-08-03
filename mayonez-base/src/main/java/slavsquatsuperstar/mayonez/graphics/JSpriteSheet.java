@@ -1,9 +1,9 @@
 package slavsquatsuperstar.mayonez.graphics;
 
-import slavsquatsuperstar.mayonez.io.Assets;
-import slavsquatsuperstar.mayonez.io.JTexture;
 import slavsquatsuperstar.mayonez.annotations.EngineType;
 import slavsquatsuperstar.mayonez.annotations.UsesEngine;
+import slavsquatsuperstar.mayonez.io.Assets;
+import slavsquatsuperstar.mayonez.io.JTexture;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +16,7 @@ import java.util.List;
 @UsesEngine(EngineType.AWT)
 public class JSpriteSheet extends SpriteSheet {
 
-    private final List<JSprite> sprites; // store images in memory
+    private final List<JTexture> textures; // store images in memory
 
     /**
      * Creates a spritesheet from the given image file.
@@ -28,17 +28,16 @@ public class JSpriteSheet extends SpriteSheet {
      * @param spacing      the padding in between sprites
      */
     public JSpriteSheet(String filename, int spriteWidth, int spriteHeight, int numSprites, int spacing) {
-        sprites = new ArrayList<>();
+        textures = new ArrayList<>();
         JTexture texture = Assets.getJTexture(filename);
         int width = texture.getImage().getWidth();
-//        int height = sheet.getImage().getHeight();
 
         // Make sure there isn't extra space on the right/bottom
         // Assume spacing is less than tile size
         int imgX = 0;
         int imgY = 0;
         for (int count = 0; count < numSprites; count++) {
-            sprites.add(new JSprite(texture.getImage().getSubimage(imgX, imgY, spriteWidth, spriteHeight)));
+            textures.add(new JTexture(String.format("%s (Sprite %s)", filename, count), texture.getImage().getSubimage(imgX, imgY, spriteWidth, spriteHeight)));
             imgX += spriteWidth + spacing;
             if (imgX >= width) {
                 imgX = 0;
@@ -49,7 +48,17 @@ public class JSpriteSheet extends SpriteSheet {
 
     @Override
     public JSprite getSprite(int index) {
-        return sprites.get(index).copy();
+        return new JSprite(getTexture(index));
+    }
+
+    //    @Override
+    public JTexture getTexture(int index) {
+        return textures.get(index);
+    }
+
+    @Override
+    public int numSprites() {
+        return textures.size();
     }
 
 }

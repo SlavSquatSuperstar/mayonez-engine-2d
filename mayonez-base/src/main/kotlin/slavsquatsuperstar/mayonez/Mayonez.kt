@@ -43,7 +43,7 @@ object Mayonez {
     private var game: GameEngine? = null // Engine config, either Java or GL
     private var started = false
 
-    // Initializer
+    // Initialization
     private var INIT_ENGINE = false // Whether the engine and logger have been created
     var INIT_ASSETS = false // Whether the asset system has been created
         private set

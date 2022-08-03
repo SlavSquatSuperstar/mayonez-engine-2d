@@ -5,20 +5,37 @@ import java.util.List;
 
 /**
  * Driver code for new features in the engine.
+ *
+ * @author SlavSquatSuperstar
  */
 public class MayonezTest {
 
     public static void main(String[] args) throws Exception {
-//        EventListener myListener1 = event -> Logger.log("Listener 1 reports: %s", event);
-//        EventListener myListener2 = event -> Logger.log("Listener 2 reports: %s", event);
-//        EventGenerator myGenerator = new EventGenerator();
-//        myGenerator.addListener(myListener1);
-//        myGenerator.addListener(myListener2);
-//        myGenerator.createEvent(new Event("Clankers inbound!"));
+        EventListener l1 = e -> System.out.println("I can't believe that " + e.getMessage());
+        EventListener l2 = e -> System.out.println("I just heard that " + e.getMessage());
+        EventSystem.subscribe(l1);
+        EventSystem.subscribe(l2);
+        EventSystem.broadcast(new Event("you found 69,420 bugs in your code."));
+    }
+
+    static class EventSystem {
+
+        private final static List<EventListener> listeners = new ArrayList<>();
+
+        private EventSystem() {
+        }
+
+        public static void subscribe(EventListener l) {
+            listeners.add(l);
+        }
+
+        public static void broadcast(Event e) {
+            listeners.forEach(l -> l.onEvent(e));
+        }
     }
 
     interface EventListener {
-        void onReceiveEvent(Event event);
+        void onEvent(Event event);
     }
 
     static class Event {
@@ -28,6 +45,10 @@ public class MayonezTest {
             this.msg = msg;
         }
 
+        public String getMessage() {
+            return msg;
+        }
+
         @Override
         public String toString() {
             return String.format("%s (%s)",
@@ -35,20 +56,5 @@ public class MayonezTest {
         }
     }
 
-    static class EventGenerator {
-        private final List<EventListener> listeners = new ArrayList<>();
-
-        public void addListener(EventListener e) {
-            listeners.add(e);
-        }
-
-        public void removeListener(EventListener e) {
-            listeners.remove(e);
-        }
-
-        public void createEvent(Event event) {
-            listeners.forEach(l -> l.onReceiveEvent(event));
-        }
-    }
 
 }

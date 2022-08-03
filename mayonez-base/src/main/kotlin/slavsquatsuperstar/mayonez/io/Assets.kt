@@ -199,6 +199,7 @@ object Assets {
     @JvmStatic
     fun clearAssets() {
         assets.clear()
+        Logger.debug("Assets: Cleared all program resources")
     }
 
     // Asset URL Methods

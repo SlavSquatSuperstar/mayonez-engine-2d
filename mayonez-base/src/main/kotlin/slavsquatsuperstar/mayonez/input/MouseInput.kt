@@ -43,6 +43,11 @@ object MouseInput : MouseAdapter() {
         private set
 
     @JvmStatic
+    var released: Boolean = false
+        @JvmName("isReleased") get
+        private set
+
+    @JvmStatic
     var clicks: Int = 0 // doesn't work with GL yet
         private set
 
@@ -82,10 +87,18 @@ object MouseInput : MouseAdapter() {
         lastButton = button
         lastAction = action
         when (action) {
-            GLFW_PRESS -> buttonsDown[button] = true
-            GLFW_RELEASE -> buttonsDown[button] = false
+            GLFW_PRESS -> {
+                buttonsDown[button] = true
+                pressed = true
+                released = false
+            }
+
+            GLFW_RELEASE -> {
+                buttonsDown[button] = false
+                pressed = false
+                released = true
+            }
         }
-        pressed = buttonsDown[button] == true
         pollMouseButtons()
     }
 
@@ -94,6 +107,7 @@ object MouseInput : MouseAdapter() {
 //        println("pressed")
         buttonsDown[e.button] = true
         pressed = true
+        released = false
         clicks = e.clickCount
     }
 
@@ -103,6 +117,7 @@ object MouseInput : MouseAdapter() {
         buttonsDown[e.button] = false
         setMouseDisp(0, 0)
         pressed = false
+        released = true
         clicks = 0
     }
 
@@ -199,6 +214,7 @@ object MouseInput : MouseAdapter() {
     val screenY: Float
         get() = mousePos.y
 
+    // TODO add camera offset
     @JvmStatic
     val position: Vec2
         get() = Vec2(mousePos.x, Mayonez.windowHeight - mousePos.y).toWorld() // Mirror y

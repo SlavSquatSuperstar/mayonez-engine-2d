@@ -9,7 +9,6 @@ public abstract class Texture extends Asset {
 
     public Texture(String filename) {
         super(filename);
-        readImage();
     }
 
     /**

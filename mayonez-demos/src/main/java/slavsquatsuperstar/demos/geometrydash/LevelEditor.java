@@ -1,7 +1,7 @@
 package slavsquatsuperstar.demos.geometrydash;
 
 import slavsquatsuperstar.demos.geometrydash.components.Grid;
-import slavsquatsuperstar.demos.geometrydash.components.SnapToGrid;
+import slavsquatsuperstar.demos.geometrydash.ui.UICanvas;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.*;
 import slavsquatsuperstar.mayonez.graphics.DebugDraw;
@@ -21,7 +21,7 @@ public class LevelEditor extends Scene {
 
     @Override
     protected void init() {
-        JSpriteSheet blocks = new JSpriteSheet("assets/textures/blocks.png", 42, 42, 2, 12);
+        JSpriteSheet blocks = new JSpriteSheet("assets/textures/blocks.png", 42, 42, 12, 2);
 
         addObject(new GameObject("Ground", new Vec2(getWidth() * 0.5f, 0)) {
             @Override
@@ -36,6 +36,8 @@ public class LevelEditor extends Scene {
             }
         });
 
+        // TODO getting displaced too much when colliding with multiple boxes
+        // TODO check recently moved colliders
         addObject(new Player("Player", new Vec2(5, 5)));
 
         addObject(new GameObject("Grid") {
@@ -44,14 +46,14 @@ public class LevelEditor extends Scene {
                 addComponent(new Grid(new Vec2(getCellSize())));
             }
         });
+        addObject(new UICanvas("Canvas", new Transform(new Vec2(9.25f, 3.5f)), blocks));
 
-        addObject(new GameObject("Mouse Cursor") {
-            @Override
-            protected void init() {
-                addComponent(new SnapToGrid(new Vec2(getCellSize())));
-                addComponent(blocks.getSprite(0));
-            }
-        });
+//        addObject(new GameObject("Button", new Transform(new Vec2(10, 5))) {
+//            @Override
+//            protected void init() {
+//                addComponent(new UIButton(blocks.getTexture(0)));
+//            }
+//        });
     }
 
     public static void main(String[] args) {

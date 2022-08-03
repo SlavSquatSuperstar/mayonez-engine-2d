@@ -67,4 +67,8 @@ public class GLSpriteSheet extends SpriteSheet {
         return sprites.get(index).copy();
     }
 
+    @Override
+    public int numSprites() {
+        return sprites.size();
+    }
 }
