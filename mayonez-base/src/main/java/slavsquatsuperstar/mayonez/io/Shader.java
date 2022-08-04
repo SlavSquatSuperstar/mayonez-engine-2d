@@ -101,6 +101,9 @@ public class Shader extends TextAsset {
         Logger.debug("OpenGL: Linked shader file \"%s\"", getFilename());
     }
 
+    /**
+     * Bind this shader to the GPU.
+     */
     public void bind() {
         if (!used) {
             glUseProgram(shaderProgramID);
@@ -108,9 +111,14 @@ public class Shader extends TextAsset {
         }
     }
 
+    /**
+     * Unbind this shader from the GPU.
+     */
     public void unbind() {
-        glUseProgram(0);
-        used = false;
+        if (used) {
+            glUseProgram(0);
+            used = false;
+        }
     }
 
     public void uploadMat4(String varName, Matrix4f mat) {

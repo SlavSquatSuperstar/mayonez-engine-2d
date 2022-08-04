@@ -24,6 +24,7 @@ public final class EventSystem {
     }
 
     public static void broadcast(Event e) {
+//        System.out.println(e);
         listeners.forEach(l -> l.onEvent(e));
     }
 

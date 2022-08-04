@@ -144,28 +144,28 @@ public class KeepInScene extends Script {
     public void onPassLeft() {
         switch (mode) {
             case WRAP -> setX(maxPos.x + boundingBox.width * 0.5f);
-            case DELETE -> parent.destroy();
+            case DELETE -> parent.setDestroyed();
         }
     }
 
     public void onPassRight() {
         switch (mode) {
             case WRAP -> setX(minPos.x - boundingBox.width * 0.5f);
-            case DELETE -> parent.destroy();
+            case DELETE -> parent.setDestroyed();
         }
     }
 
     public void onPassTop() {
         switch (mode) {
             case WRAP -> setY(maxPos.y + boundingBox.height * 0.5f);
-            case DELETE -> parent.destroy();
+            case DELETE -> parent.setDestroyed();
         }
     }
 
     public void onPassBottom() {
         switch (mode) {
             case WRAP -> setY(minPos.y - boundingBox.height * 0.5f);
-            case DELETE -> parent.destroy();
+            case DELETE -> parent.setDestroyed();
         }
     }
 

@@ -30,4 +30,6 @@ public sealed abstract class Renderer permits JRenderer, GLRenderer {
 
     public abstract void setScene(Scene newScene);
 
+    public abstract void stop();
+
 }

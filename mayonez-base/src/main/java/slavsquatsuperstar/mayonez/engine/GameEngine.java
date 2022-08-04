@@ -46,6 +46,7 @@ public sealed abstract class GameEngine permits JGame, GLGame{
     public final void stop() {
         if (running) {
             running = false;
+            renderer.stop();
             window.stop();
         }
     }

@@ -66,7 +66,7 @@ public class JRendererTest extends Scene {
 
             @Override
             public void onCollision(GameObject other) {
-                destroy();
+                setDestroyed();
 //                if (collision.getOther().getParent().name.equals("Mario")) destroy();
 //                else collision.ignore();
             }

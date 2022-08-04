@@ -59,12 +59,12 @@ public final class JCamera extends Script implements Camera {
 
             // Don't want to get rid of the camera!
             @Override
-            public final void destroy() {}
-
-            @Override
-            public final boolean isDestroyed() {
+            public boolean isDestroyed() {
                 return false;
             }
+
+            @Override
+            public void setDestroyed() {}
         };
     }
 

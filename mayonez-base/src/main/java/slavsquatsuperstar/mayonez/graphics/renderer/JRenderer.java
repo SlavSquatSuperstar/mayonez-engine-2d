@@ -82,4 +82,8 @@ public final class JRenderer extends Renderer {
         objects.remove(obj);
     }
 
+    @Override
+    public void stop() {
+        objects.clear();
+    }
 }

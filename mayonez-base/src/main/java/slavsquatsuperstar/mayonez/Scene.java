@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
  *
  * @author SlavSquatSuperstar
  */
+// TODO current cursor object
 public abstract class Scene {
 
     // Object Fields
@@ -169,11 +170,11 @@ public abstract class Scene {
      * @param obj a {@link GameObject}
      */
     public final void removeObject(GameObject obj) {
-        obj.destroy();
         sceneChanges.offer(() -> {
             objects.remove(obj);
             Mayonez.getRenderer().removeObject(obj);
             Mayonez.getPhysics().removeObject(obj);
+            obj.onDestroy();
             Logger.debug("Game: Removed object \"%s\" from scene \"%s\"", obj.name, this.name);
         });
     }

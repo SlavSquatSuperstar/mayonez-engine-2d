@@ -94,7 +94,7 @@ public class GLRendererTest extends Scene {
 
             @Override
             public void onCollision(GameObject other) {
-                destroy();
+                setDestroyed();
             }
         };
     }

@@ -4,20 +4,17 @@ import slavsquatsuperstar.mayonez.annotations.ExperimentalFeature;
 
 import java.awt.event.KeyEvent;
 
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_UNKNOWN;
-import static org.lwjgl.glfw.GLFW.glfwGetKeyName;
-
 @ExperimentalFeature
 public class KeyboardEvent extends Event {
 
     private boolean keyDown;
     private int action;
-    private int keyCode, mods;
+    private int keyCode, scancode, mods;
 
     /**
-     * AWT constructor for a KeyBoardEvent
+     * AWT constructor for a KeyboardEvent.
      *
-     * @param keyCode which key was affected
+     * @param keyCode the AWT code of the affected key
      * @param keyDown if the key is pressed or released
      * @param mods    which modifier keys are held down
      */
@@ -29,16 +26,18 @@ public class KeyboardEvent extends Event {
     }
 
     /**
-     * GL constructor for a KeyBoardEvent
+     * GL constructor for a KeyboardEvent.
      *
-     * @param scancode which key was affected
+     * @param key      the GLFW code of the affected key
+     * @param scancode the platform-specific scancode
      * @param action   if the key is pressed, held, or released
      * @param mods     which modifier keys are held down
      */
-    public KeyboardEvent(int scancode, int action, int mods) {
-        super(String.format("code=%d, action=%d, mods=%s", scancode, action, mods));
-        glfwGetKeyName(GLFW_KEY_UNKNOWN, scancode);
-        this.keyCode = scancode;
+    public KeyboardEvent(int key, int scancode, int action, int mods) {
+        super(String.format("code=%d, action=%d, mods=%s", key, action, mods));
+//        glfwGetKeyName(key, scancode); // key name from key code
+        this.keyCode = key;
+        this.scancode = scancode;
         this.action = action;
         this.mods = mods;
     }

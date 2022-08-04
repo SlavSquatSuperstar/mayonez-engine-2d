@@ -2,6 +2,8 @@ package slavsquatsuperstar.mayonez.input
 
 import org.lwjgl.glfw.GLFW.*
 import slavsquatsuperstar.mayonez.Mayonez
+import slavsquatsuperstar.mayonez.event.EventSystem
+import slavsquatsuperstar.mayonez.event.KeyboardEvent
 import java.awt.event.KeyAdapter
 import java.awt.event.KeyEvent
 
@@ -64,16 +66,19 @@ object KeyInput : KeyAdapter() {
 //                keysHeld[key] = false
             }
         }
+        EventSystem.broadcast(KeyboardEvent(key, scancode, action, mods))
         endFrame()
     }
 
     override fun keyPressed(e: KeyEvent) { // Activates when ever a key is down
         keysDown[e.keyCode] = true
+        EventSystem.broadcast(KeyboardEvent(e.keyCode, true, e.modifiersEx))
 //        println("${KeyEvent.getModifiersExText(e.modifiersEx)}${e.keyLocation}")
     }
 
     override fun keyReleased(e: KeyEvent) {
         keysDown[e.keyCode] = false
+        EventSystem.broadcast(KeyboardEvent(e.keyCode, false, e.modifiersEx))
     }
 
     /* Keyboard Getters */

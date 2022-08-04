@@ -3,10 +3,9 @@ package slavsquatsuperstar.mayonez.graphics;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 import slavsquatsuperstar.mayonez.GameObject;
-import slavsquatsuperstar.mayonez.Transform;
-import slavsquatsuperstar.mayonez.io.GLTexture;
 import slavsquatsuperstar.mayonez.annotations.EngineType;
 import slavsquatsuperstar.mayonez.annotations.UsesEngine;
+import slavsquatsuperstar.mayonez.io.GLTexture;
 
 /**
  * A component that draws an image at a {@link GameObject}'s position. For use the GL engine.
@@ -18,9 +17,6 @@ public final class GLSprite extends Sprite { // = Gabe's SpriteRenderer
 
     private Vector4f color = new Vector4f(1, 1, 1, 1);
     private GLTexture texture = null; // Rendering just a color
-
-    private Transform lastTransform;
-    private boolean dirty = true; // "Dirty" flag, object state changed since last frame
 
     private Vector2f[] texCoords = new Vector2f[]{
             new Vector2f(1, 1),
@@ -42,21 +38,6 @@ public final class GLSprite extends Sprite { // = Gabe's SpriteRenderer
         this.texCoords = texCoords;
     }
 
-    // Game Loop Methods
-
-    @Override
-    public void start() {
-        lastTransform = parent.transform.copy();
-    }
-
-    @Override
-    public void update(float dt) { // Have we moved?
-        if (!lastTransform.equals(parent.transform)) {
-            lastTransform.set(parent.transform);
-            dirty = true;
-        }
-    }
-
     // Getters and Setters
 
     public Vector4f getColor() {
@@ -65,7 +46,6 @@ public final class GLSprite extends Sprite { // = Gabe's SpriteRenderer
 
     public void setColor(Vector4f color) {
         this.color = color;
-        dirty = true;
     }
 
     public GLTexture getTexture() {
@@ -74,7 +54,6 @@ public final class GLSprite extends Sprite { // = Gabe's SpriteRenderer
 
     public void setTexture(GLTexture texture) {
         this.texture = texture;
-        dirty = true;
     }
 
     public Vector2f[] getTexCoords() {
@@ -83,15 +62,6 @@ public final class GLSprite extends Sprite { // = Gabe's SpriteRenderer
 
     public void setTexCoords(Vector2f[] texCoords) {
         this.texCoords = texCoords;
-        dirty = true;
-    }
-
-    public boolean isDirty() {
-        return dirty;
-    }
-
-    public void setClean() {
-        dirty = false;
     }
 
     @Override

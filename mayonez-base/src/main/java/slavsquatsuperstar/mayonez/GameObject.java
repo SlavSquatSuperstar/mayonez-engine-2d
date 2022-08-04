@@ -212,14 +212,36 @@ public class GameObject {
     /**
      * Destroy this game object and remove it from the scene.
      */
-    public void destroy() {
-        destroyed = true;
+    void onDestroy() {
         components.forEach(Component::destroy);
         components.clear();
         scene = null;
     }
 
     // Getters and Setters
+
+    public Scene getScene() {
+        return scene;
+    }
+
+    public GameObject setScene(Scene scene) {
+        this.scene = scene;
+        return this;
+    }
+
+    /**
+     * Whether this object has been removed from the scene.
+     */
+    public boolean isDestroyed() {
+        return destroyed;
+    }
+
+    /**
+     * Mark this object to be removed from the scene.
+     */
+    public void setDestroyed() {
+        destroyed = true;
+    }
 
     public int getZIndex() {
         return zIndex;
@@ -237,19 +259,6 @@ public class GameObject {
     public GameObject addTag(String tag) {
         tags.add(tag);
         return this;
-    }
-
-    public Scene getScene() {
-        return scene;
-    }
-
-    public GameObject setScene(Scene scene) {
-        this.scene = scene;
-        return this;
-    }
-
-    public boolean isDestroyed() {
-        return destroyed;
     }
 
     @Override
