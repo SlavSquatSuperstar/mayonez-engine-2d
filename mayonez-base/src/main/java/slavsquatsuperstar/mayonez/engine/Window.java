@@ -1,8 +1,8 @@
 package slavsquatsuperstar.mayonez.engine;
 
+import slavsquatsuperstar.mayonez.event.Receivable;
 import slavsquatsuperstar.mayonez.input.KeyInput;
 import slavsquatsuperstar.mayonez.input.MouseInput;
-import slavsquatsuperstar.mayonez.graphics.renderer.Renderable;
 
 /**
  * An interface containing common functionality for all game windows.
@@ -50,7 +50,7 @@ public sealed interface Window permits JWindow, GLWindow {
      *
      * @param r a draw function
      */
-    void render(Renderable r);
+    void render(Receivable r);
 
     /**
      * Reset events and input listeners.

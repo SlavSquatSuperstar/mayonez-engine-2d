@@ -9,7 +9,8 @@ import slavsquatsuperstar.mayonez.Component
 import slavsquatsuperstar.mayonez.physics.colliders.Collider
 
 /**
- * A physical object with mass that responds to forces and collisions.
+ * A physical object with mass that responds to forces and collisions. Rigid bodies do not deform when forces are
+ * applied to them.
  *
  * @author SlavSquatSuperstar
  */

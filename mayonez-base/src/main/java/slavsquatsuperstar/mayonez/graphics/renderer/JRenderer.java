@@ -34,7 +34,7 @@ public final class JRenderer extends Renderer {
     }
 
     public void render(Graphics2D g2) {
-        assert g2 != null;
+        if (g2 == null) return;
 
         // Save a copy of the unmodified transform
         AffineTransform xf = g2.getTransform();
@@ -62,7 +62,7 @@ public final class JRenderer extends Renderer {
     public void setScene(Scene newScene) {
         camera = (JCamera) newScene.getCamera();
         objects.clear();
-        objects.addAll(newScene.getObjects(null));
+        objects.addAll(newScene.getObjects());
         objects.sort(Comparator.comparingInt(GameObject::getZIndex));
     }
 

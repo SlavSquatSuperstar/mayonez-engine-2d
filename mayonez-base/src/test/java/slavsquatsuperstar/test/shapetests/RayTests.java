@@ -2,7 +2,6 @@ package slavsquatsuperstar.test.shapetests;
 
 import org.junit.jupiter.api.Test;
 import slavsquatsuperstar.math.Vec2;
-import slavsquatsuperstar.mayonez.physics.colliders.Edge2D;
 import slavsquatsuperstar.mayonez.physics.collision.Collisions;
 import slavsquatsuperstar.mayonez.physics.collision.Raycast;
 import slavsquatsuperstar.mayonez.physics.shapes.*;
@@ -21,7 +20,7 @@ public class RayTests {
 
     @Test
     public void distanceToPointIndicatesDirection() {
-        Ray ray = new Ray(new Edge2D(new Vec2(-4, 1), new Vec2(4, 1)));
+        Ray ray = new Ray(new Edge(new Vec2(-4, 1), new Vec2(4, 1)));
         assertEquals(2, ray.distance(new Vec2(0, 3)));
         assertEquals(-2, ray.distance(new Vec2(0, -1)));
     }

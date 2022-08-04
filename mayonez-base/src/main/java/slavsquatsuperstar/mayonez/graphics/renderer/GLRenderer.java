@@ -13,6 +13,7 @@ import slavsquatsuperstar.mayonez.io.Shader;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -61,6 +62,7 @@ public final class GLRenderer extends Renderer {
             batch.pushSpriteData(sprite); // Push vertices to batch
         }
         batches.forEach(RenderBatch::upload); // Finalize Batches
+        batches.sort(Comparator.comparingInt(RenderBatch::getZIndex)); // Sort batches by z-index
     }
 
     @Override
@@ -74,7 +76,7 @@ public final class GLRenderer extends Renderer {
     public void setScene(Scene newScene) {
         camera = (GLCamera) newScene.getCamera();
         batches.clear();
-        newScene.getObjects(null).forEach(this::addObject);
+        newScene.getObjects().forEach(this::addObject);
     }
 
     public void addObject(GameObject object) {

@@ -26,18 +26,10 @@ abstract class Collider(private val shapeData: Shape) : Component() {
     /**
      * A reference to the parent object's [Rigidbody]. A collider should have a rigidbody to react to collisions.
      */
-    @JvmField
-    protected var rb: Rigidbody? = null
-
-    /**
-     * Returns the parent object's [Rigidbody].
-     *
-     * @return the attached rigidbody
-     */
-    fun getRigidbody(): Rigidbody? = rb
+    var rigidbody: Rigidbody? = null
 
     fun <T : Collider?> setRigidbody(rb: Rigidbody?): T {
-        this.rb = rb
+        this.rigidbody = rb
         return this as T
     }
 
@@ -78,24 +70,30 @@ abstract class Collider(private val shapeData: Shape) : Component() {
     var drawColor: Color? = null
         private set
 
+    var fillOption: Boolean = false
+        private set
+
     /**
-     * Set this shape' color for [DebugDraw], or disable debug drawing for this shape.
+     * Set this shape's color and fill option for [DebugDraw], or disable debug drawing for this shape.
      *
      * @param color the draw color (disables drawing if null)
      */
-    fun <T : Collider?> setDrawColor(color: Color?): T {
+    fun <T : Collider?> setDebugDraw(color: Color?, fill: Boolean): T {
         this.drawColor = color
+        this.fillOption = fill
         return this as T
     }
 
     // Game Loop Methods
 
     override fun start() {
-        rb = parent.getComponent(Rigidbody::class.java)
+        rigidbody = parent.getComponent(Rigidbody::class.java)
     }
 
     override fun render(g2: Graphics2D?) {
-        DebugDraw.drawShape(this, drawColor ?: return)
+        if (drawColor == null) return
+        if (fillOption) DebugDraw.fillShape(transformToWorld(), drawColor)
+        else DebugDraw.drawShape(transformToWorld(), drawColor)
     }
 
     // Shape Properties
@@ -176,7 +174,7 @@ abstract class Collider(private val shapeData: Shape) : Component() {
      *
      * @return if this collider is not affected by collisions.
      */
-    fun isStatic(): Boolean = rb?.hasInfiniteMass() ?: true
+    fun isStatic(): Boolean = rigidbody?.hasInfiniteMass() ?: true
 
     // Callback Methods
 

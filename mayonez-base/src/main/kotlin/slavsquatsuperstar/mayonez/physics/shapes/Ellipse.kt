@@ -32,15 +32,6 @@ class Ellipse(val center: Vec2, val size: Vec2, val angle: Float) : Shape() {
      */
     override fun center(): Vec2 = center
 
-    /**
-     * The ellipse's centroidal moment of inertia, equal to 1/4*m(a^2+b^2),  where a is half the width and b is half
-     * the height.
-     *
-     * Second moment of area: I_x = π/4*ab^3, I_y = π/4*ba^3
-     * Polar moment of area: I_z = π/4*(ba^3 + ab^3) = 1/4*πab*(a^2 + b^2) = 1/4*A(a^2+b^2)
-     */
-    override fun angularMass(mass: Float): Float = 0.25f * mass * MathUtils.hypotSq(halfWidth, halfHeight)
-
     override fun boundingCircle(): Circle = Circle(center, max(halfWidth, halfHeight))
 
     override fun boundingRectangle(): Rectangle {
@@ -74,6 +65,19 @@ class Ellipse(val center: Vec2, val size: Vec2, val angle: Float) : Shape() {
         val len = 1f / MathUtils.hypot(cos / halfWidth, sin / halfHeight)
         return center + Vec2(cos, sin).rotate(angle) * len // unit direction times length
     }
+
+    // Physical Properties
+
+    /**
+     * The ellipse's centroidal moment of inertia, equal to 1/4*m(a^2+b^2),  where a is half the width and b is half
+     * the height.
+     *
+     * Second moment of area: I_x = π/4*ab^3, I_y = π/4*ba^3
+     * Polar moment of area: I_z = π/4*(ba^3 + ab^3) = 1/4*πab*(a^2 + b^2) = 1/4*A(a^2+b^2)
+     */
+    override fun angularMass(mass: Float): Float = 0.25f * mass * MathUtils.hypotSq(halfWidth, halfHeight)
+
+    // Transformations
 
     override fun translate(direction: Vec2): Ellipse = Ellipse(center + direction, size, angle)
 

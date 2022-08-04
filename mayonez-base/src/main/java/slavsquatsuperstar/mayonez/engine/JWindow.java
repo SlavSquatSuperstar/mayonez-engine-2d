@@ -4,9 +4,9 @@ import slavsquatsuperstar.mayonez.Logger;
 import slavsquatsuperstar.mayonez.Preferences;
 import slavsquatsuperstar.mayonez.annotations.UsesEngine;
 import slavsquatsuperstar.mayonez.annotations.EngineType;
+import slavsquatsuperstar.mayonez.event.Receivable;
 import slavsquatsuperstar.mayonez.input.KeyInput;
 import slavsquatsuperstar.mayonez.input.MouseInput;
-import slavsquatsuperstar.mayonez.graphics.renderer.Renderable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -90,7 +90,7 @@ public final class JWindow extends JFrame implements Window {
     }
 
     @Override
-    public void render(Renderable r) {
+    public void render(Receivable r) {
         if (bs == null) {
             initGraphics();
             return;
@@ -108,7 +108,7 @@ public final class JWindow extends JFrame implements Window {
                 g2.transform(FLIP_XF);
                 g2.translate(0, -getHeight());
 
-                r.draw(g2); // Draw scene
+                r.onReceive(g2); // Draw scene
                 g2.dispose(); // Flush Resources
                 bs.show();
             } while (bs.contentsLost());

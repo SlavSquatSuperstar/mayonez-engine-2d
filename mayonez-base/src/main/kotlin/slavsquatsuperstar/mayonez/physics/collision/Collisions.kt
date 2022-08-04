@@ -3,8 +3,11 @@ package slavsquatsuperstar.mayonez.physics.collision
 import slavsquatsuperstar.math.MathUtils
 import slavsquatsuperstar.math.Vec2
 import slavsquatsuperstar.math.Vec2.Companion.tripleProduct
+import slavsquatsuperstar.mayonez.Colors
 import slavsquatsuperstar.mayonez.annotations.ExperimentalFeature
+import slavsquatsuperstar.mayonez.graphics.DebugDraw
 import slavsquatsuperstar.mayonez.physics.shapes.*
+import kotlin.math.abs
 import kotlin.math.sign
 import kotlin.math.sqrt
 
@@ -160,6 +163,16 @@ object Collisions {
         }
     }
 
+    @JvmStatic
+    fun getCollisionInfo(shape1: Shape?, shape2: Shape?) {
+        if (shape1 == null || shape2 == null) return
+        val simplex = detectCollisionGJK(shape1, shape2)?: return
+        val contact = collisionContactsEPA(shape1, shape2, simplex)?: return
+        println(contact.contact)
+        DebugDraw.drawPoint(contact.contact, Colors.RED)
+
+    }
+
     /**
      * Performs a simple circle vs. circle intersection test by comparing the distances their centers and the sum of
      * their radii.
@@ -281,15 +294,6 @@ object Collisions {
             }
         }
 
-//        println("simplex=${simplex.contentToString()}")
-//        val newSimplex = arrayOf(simplex[0]!!, simplex[1]!!, simplex[2]!!)
-//        val pt1 = simplex[0] + Vec2(20f)
-//        val pt2 = simplex[1] + Vec2(20f)
-//        val pt3 = simplex[2] + Vec2(20f)
-//        DebugDraw.drawLine(pt1, pt2, Colors.BLACK)
-//        DebugDraw.drawLine(pt2, pt3, Colors.BLACK)
-//        DebugDraw.drawLine(pt3, pt1, Colors.BLACK)
-
         return null // Assume no collision if looped too many times
     }
 
@@ -301,38 +305,32 @@ object Collisions {
      */
     @ExperimentalFeature
     // See § Alternatives for optimizations
-    private fun collisionContactsEPA(shape1: Shape, shape2: Shape, simplex: Simplex): Vec2 {
-        val expandedSimplex = simplex.expand(shape1.numVertices + shape2.numVertices)
-        var normal: Vec2
-        var depth: Float
-
-        while (true) {
-            // Find closest edge
-            val edge = closestEdgeToOrigin(expandedSimplex)
-
-            val sup = support(shape1, shape2, edge.norm)
-            val dist = sup.dot(edge.norm)
-            if (MathUtils.equals(dist, edge.dist)) {
-                normal = edge.norm
-                depth = edge.dist
-            } else {
-                expandedSimplex[edge.index] = sup
-            }
-        }
-        return Vec2()
+    private fun collisionContactsEPA(shape1: Shape, shape2: Shape, simplex: Simplex): Contact? {
+        val tolerance = 0.001f
+        val numFaces = shape1.numVertices + shape2.numVertices
+        val expandedSimplex = simplex.expand(numFaces)
 
         /*
-         * Loop while true
-         * Find closest edge
-         * Support point for edge normal
-         * Find component of point on normal (depth)
-         * If (depth) roughly equals edge length, success
-         * Else insert point into simplex
-         */
+        * Loop while true
+        * Find closest edge
+        * Support point for edge normal
+        * Find component of point on normal (depth)
+        * If (depth) roughly equals edge length, success
+        * Else insert point into simplex and retry
+        */
+        for (i in 0..numFaces + 1) {
+            val edge = closestEdgeToOrigin(expandedSimplex) // Find closest edge
+            val contact = support(shape1, shape2, edge.norm)
+            val dist = contact.dot(edge.norm) // distance along normal is depth
+            // cannot expand simplex any more
+            if (abs(dist - edge.dist) < tolerance) return Contact(contact, edge.norm, edge.dist)
+            else expandedSimplex[edge.index] = contact
+        }
+        return null
     }
 
-    private fun closestEdgeToOrigin(simplex: Simplex): EPAEdge {
-        val edge = EPAEdge(Vec2(), Float.POSITIVE_INFINITY, 0)
+    private fun closestEdgeToOrigin(simplex: Simplex): Face {
+        val face  = Face(Vec2(), Float.POSITIVE_INFINITY, 0)
         for (i in 0 until simplex.size) {
             val j = (i + 1) % simplex.size
 
@@ -344,18 +342,21 @@ object Collisions {
             val norm = tripleProduct(vecEdge, -ptA, vecEdge).unit() // unit normal of edge pointing to origin
             val dist = norm.dot(ptA)
 
-            if (dist < edge.dist) {
-                edge.dist = dist
-                edge.norm = norm
-                edge.index = i
+            if (dist < face.dist) {
+                face.dist = dist
+                face.norm = norm
+                face.index = i
             }
         }
-        return edge
+        return face
     }
 
     // Helper Functions
 
-    private class EPAEdge(var norm: Vec2, var dist: Float, var index: Int) {}
+    // norm: edge normal, dist: edge distance to origin, index: which edge
+    private class Face(var norm: Vec2, var dist: Float, var index: Int) {}
+
+    private class Contact(var contact: Vec2, var norm: Vec2, var depth: Float) {}
 
     /**
      * Finds the most extreme points from the Minkowski difference set between two shapes.

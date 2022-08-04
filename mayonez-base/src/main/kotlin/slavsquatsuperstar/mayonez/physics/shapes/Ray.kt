@@ -3,7 +3,6 @@ package slavsquatsuperstar.mayonez.physics.shapes
 import slavsquatsuperstar.math.MathUtils
 import slavsquatsuperstar.math.Vec2
 import slavsquatsuperstar.mayonez.Transform
-import slavsquatsuperstar.mayonez.physics.colliders.Edge2D
 
 /**
  * An object in space that with an origin that extends infinitely in one direction.
@@ -31,12 +30,6 @@ class Ray(
      * Constructs a ray from the given origin and direction and sets its length.
      */
     constructor(origin: Vec2, direction: Vec2, length: Float) : this(origin, direction.unit() * length)
-
-    /**
-     * Constructs a ray from an [Edge2D] object, using the starting point as the origin and keeping the segment's
-     * direction and length.
-     */
-    constructor(edge: Edge2D) : this(edge.start, edge.toVector())
 
     /**
      * Constructs a ray from an [Edge] object, using the starting point as the origin and keeping the segment's

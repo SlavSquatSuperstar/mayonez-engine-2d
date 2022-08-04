@@ -53,7 +53,7 @@ public class PoolBallsTest extends PhysicsTestScene {
         return new GameObject(name, position) {
             @Override
             protected void init() {
-                addComponent(new CircleCollider(BALL_RADIUS).setMaterial(POOL_BALL_MAT).setDrawColor(Colors.BLUE));
+                addComponent(new CircleCollider(BALL_RADIUS).setMaterial(POOL_BALL_MAT).setDebugDraw(Colors.BLUE, false));
                 addComponent(new Rigidbody(BALL_MASS));
                 addComponent(new KeepInScene(getScene(), KeepInScene.Mode.BOUNCE));
                 addComponent(new DragAndDrop("left mouse"));

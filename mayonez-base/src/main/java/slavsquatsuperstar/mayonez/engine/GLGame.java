@@ -38,8 +38,8 @@ public final class GLGame extends GameEngine { // can't implement runnable other
 
     @Override
     public void render() throws Exception {
-        window.render((_g2) -> {
-            if (scene != null) renderer.render(_g2); // don't pass a G2D object
+        window.render((_args) -> {
+            if (scene != null) renderer.render(null); // don't pass a G2D object
         });
     }
 

@@ -2,13 +2,12 @@ package slavsquatsuperstar.mayonez.engine;
 
 import slavsquatsuperstar.mayonez.Mayonez;
 import slavsquatsuperstar.mayonez.Preferences;
-import slavsquatsuperstar.mayonez.annotations.UsesEngine;
 import slavsquatsuperstar.mayonez.annotations.EngineType;
+import slavsquatsuperstar.mayonez.annotations.UsesEngine;
+import slavsquatsuperstar.mayonez.graphics.renderer.JRenderer;
 import slavsquatsuperstar.mayonez.input.KeyInput;
 import slavsquatsuperstar.mayonez.input.MouseInput;
 import slavsquatsuperstar.mayonez.physics.Physics;
-import slavsquatsuperstar.mayonez.graphics.IMGUI;
-import slavsquatsuperstar.mayonez.graphics.renderer.JRenderer;
 
 import java.awt.*;
 
@@ -19,8 +18,6 @@ import java.awt.*;
  */
 @UsesEngine(EngineType.AWT)
 public final class JGame extends GameEngine {
-
-    private final IMGUI imgui;
 
     public JGame() {
         // Set up the window
@@ -33,7 +30,6 @@ public final class JGame extends GameEngine {
 
         renderer = new JRenderer();
         physics = new Physics();
-        imgui = IMGUI.INSTANCE;
     }
 
     public boolean isFullScreen() {
@@ -48,16 +44,15 @@ public final class JGame extends GameEngine {
     public void update(float dt) throws Exception {
         // TODO Poll input events
         if (scene != null) scene.update(dt);
-        // TODO multithread physics, set time step higher than refresh rate for smoother results
         physics.physicsUpdate(dt);
     }
 
     @Override
     public void render() throws Exception {
-        window.render((g2) -> {
+        window.render((args) -> {
+            Graphics2D g2 = (Graphics2D) args[0];
             if (null != scene) scene.render(g2);
             renderer.render(g2);
-            imgui.render(g2);
         });
     }
 

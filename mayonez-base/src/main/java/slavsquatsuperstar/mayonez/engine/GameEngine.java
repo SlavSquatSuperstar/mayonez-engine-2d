@@ -12,8 +12,6 @@ import slavsquatsuperstar.mayonez.physics.Physics;
  *
  * @author SlavSquatSuperstar
  */
-// TODO probably better off with enums of companion objects
-// TODO sealed, core package
 public sealed abstract class GameEngine permits JGame, GLGame{
 
     private boolean running = false;
@@ -113,6 +111,7 @@ public sealed abstract class GameEngine permits JGame, GLGame{
      * @param dt seconds since the last frame
      */
     public abstract void update(float dt) throws Exception;
+    // TODO multithread physics, set time step higher than refresh rate for smoother results
 
     /**
      * Redraws all objects in the current scene.
@@ -159,6 +158,7 @@ public sealed abstract class GameEngine permits JGame, GLGame{
             scene.start();
             physics.setScene(scene);
             renderer.setScene(scene);
+            // add to debug renderer
             Logger.debug("Game: Loaded scene \"%s\"", scene.getName());
         }
     }

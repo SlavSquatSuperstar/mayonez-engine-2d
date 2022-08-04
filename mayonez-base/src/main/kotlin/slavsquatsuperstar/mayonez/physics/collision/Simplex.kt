@@ -3,9 +3,10 @@ package slavsquatsuperstar.mayonez.physics.collision
 import slavsquatsuperstar.math.Vec2
 
 /**
- * A basic data class that stores a limited number of support points between two overlapping shapes.
+ * A basic data class that stores a certain number of support points between two overlapping shapes.
  *
- * @param points any known points in the simplex
+ * @param points  any known points in the simplex
+ * @param maxSize the size of the simplex, by default 3
  *
  * @author SlavSquatSuperstar
  */
@@ -13,7 +14,8 @@ internal class Simplex(vararg points: Vec2, private val maxSize: Int = 3) {
 
     var size: Int = 0
         private set
-    private val points: Array<Vec2> = Array(maxSize) { Vec2() }
+
+    private val points: MutableList<Vec2> = ArrayList(maxSize)
 
     init {
         for (pt in points) {
@@ -30,17 +32,16 @@ internal class Simplex(vararg points: Vec2, private val maxSize: Int = 3) {
 
     fun add(point: Vec2) {
         if (size >= maxSize) return
-        points[size++] = point
+        points.add(point)
+        size++
     }
 
     fun remove(index: Int) {
-        if (index > size) return
-
-        // shift points down to fill in empty
-        for (i in index until size - 1) points[i] = points[i + 1]
-        points[--size] = Vec2() // delete last
+        if (index >= size || index < 0) return
+        points.removeAt(index)
+        size--
     }
 
-    fun expand(newSize: Int): Simplex = Simplex(*points, maxSize = newSize)
+    fun expand(newSize: Int): Simplex = Simplex(*points.toTypedArray(), maxSize = newSize)
 
 }

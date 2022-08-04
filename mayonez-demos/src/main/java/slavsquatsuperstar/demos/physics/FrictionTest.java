@@ -27,7 +27,7 @@ public class FrictionTest extends PhysicsTestScene {
             @Override
             protected void init() {
                 addComponent(new Rigidbody(0).setFixedRotation(true));
-                addComponent(new BoxCollider(new Vec2(getWidth(), 2)).setDrawColor(Colors.BLACK));
+                addComponent(new BoxCollider(new Vec2(getWidth(), 2)).setDebugDraw(Colors.BLACK, false));
             }
         });
 
@@ -36,7 +36,7 @@ public class FrictionTest extends PhysicsTestScene {
             protected void init() {
                 transform.rotate(-25);
                 addComponent(new Rigidbody(0));
-                addComponent(new BoxCollider(new Vec2(40, 5)).setMaterial(NORMAL_MATERIAL).setDrawColor(Colors.BLACK));
+                addComponent(new BoxCollider(new Vec2(40, 5)).setMaterial(NORMAL_MATERIAL).setDebugDraw(Colors.BLACK, false));
             }
         });
 
@@ -47,7 +47,7 @@ public class FrictionTest extends PhysicsTestScene {
             protected void init() {
                 float speed = 2f;
 //                Collider2D collider = new BoxCollider2D(new Vec2(6, 6));
-                Collider collider = new CircleCollider(3f).setDrawColor(Colors.BLUE);
+                Collider collider = new CircleCollider(3f).setDebugDraw(Colors.BLUE, false);
                 addComponent(collider);
                 addComponent(new Rigidbody(collider.getMass(DENSITY)));
                 addComponent(new MouseFlick(MoveMode.VELOCITY, "right mouse", 15, false));

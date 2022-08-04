@@ -9,6 +9,7 @@ import slavsquatsuperstar.math.MathUtils.minIndex
 import slavsquatsuperstar.math.Range
 import slavsquatsuperstar.math.Vec2
 import slavsquatsuperstar.mayonez.physics.collision.CollisionInfo
+import slavsquatsuperstar.mayonez.physics.shapes.Edge
 import slavsquatsuperstar.mayonez.physics.shapes.Polygon
 import slavsquatsuperstar.mayonez.physics.shapes.Rectangle
 
@@ -64,9 +65,9 @@ open class PolygonCollider protected constructor(shapeData: Polygon) :
 
     // Intersection Helper Methods
 
-    open fun getEdges(): Array<Edge2D> { // in world
+    open fun getEdges(): Array<Edge> { // in world
         val vertices = getVertices()
-        return Array(numVertices) { Edge2D(vertices[it], vertices[(it + 1) % numVertices]) }
+        return Array(numVertices) { Edge(vertices[it], vertices[(it + 1) % numVertices]) }
     }
 
     open fun getNormals(): Array<Vec2> { // in world

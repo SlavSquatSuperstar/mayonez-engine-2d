@@ -89,30 +89,6 @@ open class Polygon(vararg vertices: Vec2) : Shape() {
         return centroid
     }
 
-    /**
-     * Calculates the centroidal moment of inertia of this polygon using geometric decomposition. The polygon's MOI is
-     * equal to the sum of the MOI of each sub-triangle around this shape's centroid.
-     */
-    // TODO write unit tests
-    override fun angularMass(mass: Float): Float {
-        var angMass = 0f
-        for (tri in getTriangles()) {
-            /*
-             * Parallel axis theorem: I_new = I_cm + md^2
-             * I_p = ∑(I_i + m_i*d_i^2)
-             * I_i = m_i*kr^2
-             * m_i = m_p/A_p * A_i
-             * I_p = m_p/A_p * ∑(A_i*(kr^2 + d_i^2))
-             */
-            val triI = tri.angularMass(1f)
-            val distSq = tri.center().distanceSq(this.center())
-            val newI = tri.area() * (triI + distSq)
-            angMass += newI
-        }
-        return angMass * mass / this.area()
-//        return angMass
-    }
-
     // Collision Properties
 
     override fun boundingCircle(): Circle {
@@ -144,6 +120,32 @@ open class Polygon(vararg vertices: Vec2) : Shape() {
 
     override fun scale(factor: Vec2, origin: Vec2?): Polygon =
         Polygon(*vertices.scale(factor, origin ?: this.center()))
+
+    // Physical Properties
+
+    /**
+     * Calculates the centroidal moment of inertia of this polygon using geometric decomposition. The polygon's MOI is
+     * equal to the sum of the MOI of each sub-triangle around this shape's centroid.
+     */
+    // TODO write unit tests
+    override fun angularMass(mass: Float): Float {
+        var angMass = 0f
+        for (tri in getTriangles()) {
+            /*
+             * Parallel axis theorem: I_new = I_cm + md^2
+             * I_p = ∑(I_i + m_i*d_i^2)
+             * I_i = m_i*kr^2
+             * m_i = m_p/A_p * A_i
+             * I_p = m_p/A_p * ∑(A_i*(kr^2 + d_i^2))
+             */
+            val triI = tri.angularMass(1f)
+            val distSq = tri.center().distanceSq(this.center())
+            val newI = tri.area() * (triI + distSq)
+            angMass += newI
+        }
+        return angMass * mass / this.area()
+//        return angMass
+    }
 
     // Overrides
 

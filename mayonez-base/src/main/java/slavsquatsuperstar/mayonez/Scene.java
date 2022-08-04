@@ -1,6 +1,7 @@
 package slavsquatsuperstar.mayonez;
 
 import slavsquatsuperstar.math.Vec2;
+import slavsquatsuperstar.mayonez.event.Receivable;
 import slavsquatsuperstar.mayonez.graphics.Camera;
 import slavsquatsuperstar.mayonez.graphics.JCamera;
 
@@ -20,8 +21,8 @@ import java.util.stream.Collectors;
 public abstract class Scene {
 
     // Object Fields
-    protected final List<GameObject> objects;
-    private final Queue<SceneModifier> sceneChanges; // Use a separate list to avoid concurrent exceptions
+    private final List<GameObject> objects;
+    private final Queue<Receivable> changesToScene; // Use a separate list to avoid concurrent exceptions
 
     private final JCamera camera;
 
@@ -56,7 +57,7 @@ public abstract class Scene {
         this.cellSize = cellSize;
 
         objects = new ArrayList<>();
-        sceneChanges = new LinkedList<>();
+        changesToScene = new LinkedList<>();
         camera = new JCamera(size, cellSize);
     }
 
@@ -95,8 +96,8 @@ public abstract class Scene {
             onUserUpdate(dt);
 
             // Remove destroyed objects or add new ones at the end of the frame
-            while (!sceneChanges.isEmpty()) {
-                sceneChanges.poll().modify();
+            while (!changesToScene.isEmpty()) {
+                changesToScene.poll().onReceive();
             }
         }
     }
@@ -146,9 +147,8 @@ public abstract class Scene {
             fmtName = String.format("%s (%d)", obj.name, ++count);
         obj.name = fmtName;
 
-        // TODO use events
         if (started) { // Dynamic add: add to scene and layers
-            sceneChanges.offer(() -> {
+            changesToScene.offer((_args) -> {
                 objects.add(obj.setScene(this));
                 obj.start(); // add object components so renderer and physics can access it
                 if (started) { // Dynamic add
@@ -170,7 +170,7 @@ public abstract class Scene {
      * @param obj a {@link GameObject}
      */
     public final void removeObject(GameObject obj) {
-        sceneChanges.offer(() -> {
+        changesToScene.offer((_args) -> {
             objects.remove(obj);
             Mayonez.getRenderer().removeObject(obj);
             Mayonez.getPhysics().removeObject(obj);
@@ -193,21 +193,30 @@ public abstract class Scene {
     }
 
     /**
-     * Finds all objects with the specified class.
+     * Returns a copy of the all objects in this scene.
      *
-     * @param cls a {@link GameObject} subclass (use null to get all objects)
+     * @return the list of objects
+     */
+    public List<GameObject> getObjects() {
+        return new ArrayList<>(objects);
+    }
+
+    /**
+     * Finds all objects in the scene with the specified class.
+     *
+     * @param cls a {@link GameObject} subclass
      * @param <T> the object type
      * @return the list of objects
      */
     @SuppressWarnings({"unchecked"})
     public <T extends GameObject> List<T> getObjects(Class<T> cls) {
-        return objects.stream().filter(o -> cls == null || cls.isInstance(o)).map(o -> (T) o).collect(Collectors.toList());
+        return objects.stream().filter(o -> cls != null && cls.isInstance(o)).map(o -> (T) o).collect(Collectors.toList());
     }
 
     /**
      * Counts the number of objects in the scene.
      *
-     * @return the amount
+     * @return the amount of objects
      */
     public int countObjects() {
         return objects.size();
@@ -218,7 +227,7 @@ public abstract class Scene {
     /**
      * Returns the name of this scene.
      *
-     * @return the scene name.
+     * @return the scene name
      */
     public String getName() {
         return name;
@@ -273,11 +282,4 @@ public abstract class Scene {
                 "Scene" : getClass().getSimpleName());
     }
 
-    /**
-     * Flags a {@link GameObject} to be dynamically added or removed from the scene.
-     */
-    @FunctionalInterface
-    private interface SceneModifier {
-        void modify();
-    }
 }

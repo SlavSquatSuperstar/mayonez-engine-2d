@@ -4,7 +4,6 @@ import slavsquatsuperstar.demos.geometrydash.components.Grid;
 import slavsquatsuperstar.demos.geometrydash.ui.UICanvas;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.*;
-import slavsquatsuperstar.mayonez.graphics.DebugDraw;
 import slavsquatsuperstar.mayonez.graphics.JSpriteSheet;
 import slavsquatsuperstar.mayonez.physics.Rigidbody;
 import slavsquatsuperstar.mayonez.physics.colliders.BoxCollider;
@@ -32,7 +31,7 @@ public class LevelEditor extends Scene {
 
             @Override
             public void onUserRender(Graphics2D g2) {
-                DebugDraw.fillShape(getComponent(Collider.class), Colors.BLACK);
+                getComponent(Collider.class).setDebugDraw(Colors.BLACK, true);
             }
         });
 

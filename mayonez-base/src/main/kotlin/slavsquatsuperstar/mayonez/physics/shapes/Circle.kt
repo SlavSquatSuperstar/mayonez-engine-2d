@@ -38,14 +38,6 @@ class Circle(
      */
     override fun center(): Vec2 = center
 
-    /**
-     * The circle's centroidal moment of inertia, equal to 1/2*mr^2. This formula is specifically the
-     * second moment of area for a solid circle (disk).
-     *
-     * Polar moment of area: I_z = π/4*r^4 = 1/2*(πr^2)r^2 = 1/2*Ar^2
-     */
-    override fun angularMass(mass: Float): Float = 0.5f * mass * radiusSq
-
     // Collision Properties
 
     override fun boundingCircle(): Circle = Circle(center, radius)
@@ -53,6 +45,16 @@ class Circle(
     override fun boundingRectangle(): Rectangle = Rectangle(center, Vec2(radius * 2f))
 
     override fun supportPoint(direction: Vec2): Vec2 = center + direction.unit() * radius
+
+    // Physical Properties
+
+    /**
+     * The circle's centroidal moment of inertia, equal to 1/2*mr^2. This formula is specifically the
+     * second moment of area for a solid circle (disk).
+     *
+     * Polar moment of area: I_z = π/4*r^4 = 1/2*(πr^2)r^2 = 1/2*Ar^2
+     */
+    override fun angularMass(mass: Float): Float = 0.5f * mass * radiusSq
 
     // Transformations
 

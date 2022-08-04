@@ -16,11 +16,11 @@ import java.util.stream.Collectors;
 @SuppressWarnings({"unchecked", "rawtypes"})
 public class GameObject {
 
-    // Object Information
+    // GameObject Information
     public String name;
     public final Transform transform;
     private int zIndex;
-    private Set<String> tags;
+    private final Set<String> tags;
 
     // Scene Information
     private Scene scene;

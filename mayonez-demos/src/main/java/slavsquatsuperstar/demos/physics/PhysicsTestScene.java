@@ -38,12 +38,13 @@ public abstract class PhysicsTestScene extends Scene {
 
     @Override
     public void onUserRender(Graphics2D g2) {
-        for (GameObject o : objects) {
+        for (GameObject o : getObjects()) {
             Collider col = o.getComponent(Collider.class);
             if (col != null) {
                 Color color = col.getDrawColor();
                 // Draw velocity and direction vector
                 if (color != null && !col.isStatic()) {
+                    DebugDraw.drawPoint(col.center(), Colors.BLACK);
                     DebugDraw.drawVector(col.center(), col.getRigidbody().getVelocity().mul(0.1f), color);
                     DebugDraw.drawVector(col.getRigidbody().getPosition(), col.getRigidbody().getTransform().getDirection(), Colors.BLACK);
 //                    DebugDraw.drawShape(col, color); // Draw Shape
@@ -75,7 +76,7 @@ public abstract class PhysicsTestScene extends Scene {
         return new GameObject("Circle", position) {
             @Override
             protected void init() {
-                Collider circle = new CircleCollider(radius).setMaterial(material).setDrawColor(Colors.BLUE);
+                Collider circle = new CircleCollider(radius).setMaterial(material).setDebugDraw(Colors.BLUE, false);
                 addComponent(circle);
                 addComponent(new Rigidbody(circle.getMass(DENSITY)));
                 addComponent(new KeepInScene(getScene(), KeepInScene.Mode.BOUNCE));
@@ -89,7 +90,7 @@ public abstract class PhysicsTestScene extends Scene {
         return new GameObject("AABB Rectangle", position) {
             @Override
             protected void init() {
-                Collider box = new BoxCollider(new Vec2(width, height)).setMaterial(material).setDrawColor(Colors.LIGHT_GREEN);
+                Collider box = new BoxCollider(new Vec2(width, height)).setMaterial(material).setDebugDraw(Colors.LIGHT_GREEN, false);
                 addComponent(box);
                 addComponent(new Rigidbody(box.getMass(DENSITY)).setFixedRotation(true));
                 addComponent(new KeepInScene(getScene(), KeepInScene.Mode.BOUNCE));
@@ -103,7 +104,7 @@ public abstract class PhysicsTestScene extends Scene {
         return new GameObject("OBB Rectangle", position) {
             @Override
             protected void init() {
-                Collider box = new BoxCollider(new Vec2(width, height)).setMaterial(material).setDrawColor(Colors.ORANGE);
+                Collider box = new BoxCollider(new Vec2(width, height)).setMaterial(material).setDebugDraw(Colors.ORANGE, false);
                 addComponent(box);
                 addComponent(new Rigidbody(box.getMass(DENSITY)));
                 addComponent(new KeepInScene(getScene(), KeepInScene.Mode.BOUNCE));
@@ -119,7 +120,7 @@ public abstract class PhysicsTestScene extends Scene {
             protected void init() {
                 transform.rotate(rotation);
                 addComponent(new Rigidbody(0f));
-                addComponent(new BoxCollider(size).setDrawColor(Colors.BLACK));
+                addComponent(new BoxCollider(size).setDebugDraw(Colors.DARK_GRAY, true));
             }
         };
     }

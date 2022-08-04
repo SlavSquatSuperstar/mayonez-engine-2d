@@ -17,8 +17,8 @@ import kotlin.math.sign
 class Solver(private val man: CollisionInfo) {
     private val c1: Collider = man.self
     private val c2: Collider = man.other
-    private val r1: Rigidbody? = c1.getRigidbody()
-    private val r2: Rigidbody? = c2.getRigidbody()
+    private val r1: Rigidbody? = c1.rigidbody
+    private val r2: Rigidbody? = c2.rigidbody
 
     /*
      * Collider & Rigidbody (dynamic): Can move and push

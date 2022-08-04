@@ -72,6 +72,8 @@ open class Rectangle(private val center: Vec2, private val size: Vec2) :
      */
     fun max(): Vec2 = center + size * 0.5f
 
+    // Physical Properties
+
     /**
      * The rectangle's centroidal moment of inertia, equal to 1/12*m(b^2 + h^2).
      *

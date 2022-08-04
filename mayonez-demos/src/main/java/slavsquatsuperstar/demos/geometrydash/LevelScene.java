@@ -2,7 +2,6 @@ package slavsquatsuperstar.demos.geometrydash;
 
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.*;
-import slavsquatsuperstar.mayonez.graphics.DebugDraw;
 import slavsquatsuperstar.mayonez.physics.Rigidbody;
 import slavsquatsuperstar.mayonez.physics.colliders.BoxCollider;
 import slavsquatsuperstar.mayonez.physics.colliders.Collider;
@@ -28,7 +27,7 @@ public class LevelScene extends Scene {
 
             @Override
             public void onUserRender(Graphics2D g2) {
-                DebugDraw.fillShape(getComponent(Collider.class), Colors.BLACK);
+                getComponent(Collider.class).setDebugDraw(Colors.BLACK, true);
             }
         });
 

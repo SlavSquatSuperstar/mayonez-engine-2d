@@ -37,7 +37,7 @@ public class AngularResolutionTest extends PhysicsTestScene {
         addObject(new GameObject("Triangle", new Vec2(40, 40)) {
             @Override
             protected void init() {
-                Collider poly = new PolygonCollider(3, 5).setDrawColor(Colors.BLACK);
+                Collider poly = new PolygonCollider(3, 5).setDebugDraw(Colors.BLACK, false);
                 addComponent(poly);
                 addComponent(new Rigidbody(poly.getMass(DENSITY)));
                 addComponent(new KeepInScene(getScene(), KeepInScene.Mode.BOUNCE));

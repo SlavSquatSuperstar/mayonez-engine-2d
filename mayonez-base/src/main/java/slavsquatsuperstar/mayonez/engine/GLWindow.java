@@ -8,7 +8,7 @@ import slavsquatsuperstar.mayonez.Logger;
 import slavsquatsuperstar.mayonez.Mayonez;
 import slavsquatsuperstar.mayonez.annotations.UsesEngine;
 import slavsquatsuperstar.mayonez.annotations.EngineType;
-import slavsquatsuperstar.mayonez.graphics.renderer.Renderable;
+import slavsquatsuperstar.mayonez.event.Receivable;
 import slavsquatsuperstar.mayonez.input.KeyInput;
 import slavsquatsuperstar.mayonez.input.MouseInput;
 
@@ -136,10 +136,10 @@ public final class GLWindow implements Window {
             glfwSetWindowShouldClose(window, true); // Exit program by pressing escape
     }
 
-    public void render(Renderable r) {
+    public void render(Receivable r) {
         glClearColor(1f, 1f, 1f, 1f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear the screen
-        r.draw(null); // don't pass G2D
+        r.onReceive(); // don't pass G2D
         glfwSwapBuffers(window); // swap the color buffers
     }
 

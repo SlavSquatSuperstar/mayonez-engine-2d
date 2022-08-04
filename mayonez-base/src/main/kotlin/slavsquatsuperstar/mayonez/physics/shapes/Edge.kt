@@ -1,15 +1,15 @@
 package slavsquatsuperstar.mayonez.physics.shapes
 
+import slavsquatsuperstar.math.Range
 import slavsquatsuperstar.math.Vec2
-import slavsquatsuperstar.mayonez.annotations.ExperimentalFeature
 import kotlin.math.abs
 
 /**
- * A one-dimensional "shape", modeling a line segment defined by two endpoints. An edge is a one-dimensional simplex,
- * formed when two plane figures intersect.
+ * A 2D line segment defined by two endpoints. An edge is a one-dimensional simplex formed when two plane figures
+ * intersect.
+ *
+ * @author SlavSquatSuperstar
  */
-// TODO merge with Edge2D
-@ExperimentalFeature
 class Edge(val start: Vec2, val end: Vec2) : Shape() {
 
     // Edge Properties
@@ -59,14 +59,44 @@ class Edge(val start: Vec2, val end: Vec2) : Shape() {
      */
     override fun center(): Vec2 = start.midpoint(end)
 
-    // Physical Properties
+    // Edge2D Methods
+
+    fun nearestPoint(position: Vec2): Vec2 {
+        val projLength = position.sub(start).dot(toVector()) / length // find point shadow on line
+        if (projLength > length) // past line end
+            return end else if (projLength < 0) // behind line start
+            return start
+        return start.add(toVector().mul(projLength / length)) // inside line
+    }
 
     /**
-     * The edge's centroidal moment of inertia, equal to 1/12*ml^2. Equivalent to that of a very thin rectangle.
+     * Calculates the distance from a point to this line segment.
      *
-     * Second moment of area: I_z = 1/12*l^3 = 1/12*l*l^2
+     * @param point a point
+     * @return the absolute distance the point to this line
      */
-    override fun angularMass(mass: Float): Float = mass / 12f * lengthSq
+    fun distance(point: Vec2): Float {
+        return point.distance(nearestPoint(point))
+    }
+
+    private fun clipToPlanes(plane1: Ray, plane2: Ray): Edge {
+        val ray = Ray(this).normalize()
+        val contact1 = ray.getIntersection(plane1)
+        val contact2 = ray.getIntersection(plane2)
+
+        if (contact1 == null || contact2 == null) return Edge(start, end)
+        // get distances
+        val distances = Range((contact1 - start).dot(ray.direction), (contact2 - start).dot(ray.direction))
+        val min = 0f.coerceAtLeast(distances.min)
+        val max = length.coerceAtMost(distances.max)
+
+        return Edge(ray.getPoint(min), ray.getPoint(max))
+    }
+
+    fun clipToSegment(segment: Edge): Edge {
+        val rayDir = segment.unitNormal()
+        return clipToPlanes(Ray(segment.start, rayDir), Ray(segment.end, rayDir))
+    }
 
     // Collision Properties
 
@@ -76,7 +106,23 @@ class Edge(val start: Vec2, val end: Vec2) : Shape() {
 
     override fun supportPoint(direction: Vec2): Vec2 = if (start.dot(direction) > end.dot(direction)) start else end
 
-    // Geometric Transformations
+    override fun contains(point: Vec2): Boolean {
+        if (point == start || point == end) return true // point is endpoint
+        val projLen = (point - start).component(end - start) // project v1->P onto v1->v2
+        if (projLen < 0 || projLen > length) return false // point outside line
+        return point == start + (end - start) * (projLen / length)
+    }
+
+    // Physical Properties
+
+    /**
+     * The edge's centroidal moment of inertia, equal to 1/12*ml^2. Equivalent to that of a very thin rectangle.
+     *
+     * Second moment of area: I_z = 1/12*l^3 = 1/12*l*l^2
+     */
+    override fun angularMass(mass: Float): Float = mass / 12f * lengthSq
+
+    // Transformations
 
     override fun translate(direction: Vec2): Edge = Edge(start + direction, end + direction)
 
@@ -90,13 +136,6 @@ class Edge(val start: Vec2, val end: Vec2) : Shape() {
     }
 
     // Overrides
-
-    override fun contains(point: Vec2): Boolean {
-        if (point == start || point == end) return true // point is endpoint
-        val projLen = (point - start).component(end - start) // project v1->P onto v1->v2
-        if (projLen < 0 || projLen > length) return false // point outside line
-        return point == start + (end - start) * (projLen / length)
-    }
 
     override fun equals(other: Any?): Boolean {
         return (other is Edge) && (this.start == other.start && this.end == other.end)

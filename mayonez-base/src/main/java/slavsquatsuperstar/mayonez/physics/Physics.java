@@ -158,7 +158,7 @@ public final class Physics {
     public void setScene(Scene newScene) {
         bodies.clear();
         colliders.clear();
-        newScene.getObjects(null).forEach(this::addObject);
+        newScene.getObjects().forEach(this::addObject);
     }
 
     // Getters and Setters

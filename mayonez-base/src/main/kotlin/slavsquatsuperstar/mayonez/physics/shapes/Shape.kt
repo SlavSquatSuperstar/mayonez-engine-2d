@@ -38,7 +38,7 @@ abstract class Shape {
      * The centroid, or geometric center of the shape, calculated by averaging all the points in the shape.
      * The centroid is also the center of mass for a shape of uniform density.
      */
-    abstract fun center(): Vec2
+    abstract fun center(): Vec2 // TODO move to physical?
 
     // Collision Properties
 
@@ -61,6 +61,15 @@ abstract class Shape {
      * @param direction the direction to search (does not have to be a unit vector)
      */
     abstract fun supportPoint(direction: Vec2): Vec2
+
+    /**
+     * Whether the specified point lies on or within the boundary of the shape.
+     *
+     * @param point a vector in 2D space
+     * @return the scaled shape
+     */
+    // TODO boundary vs interior vs exterior
+    abstract operator fun contains(point: Vec2): Boolean
 
     // Physical Properties
 
@@ -115,15 +124,6 @@ abstract class Shape {
     abstract fun scale(factor: Vec2, origin: Vec2? = null): Shape
 
     // Overrides
-
-    /**
-     * Whether the specified point lies on or within the boundary of the shape.
-     *
-     * @param point a vector in 2D space
-     * @return the scaled shape
-     */
-    // TODO boundary vs interior vs exterior
-    abstract operator fun contains(point: Vec2): Boolean
 
     /**
      * Whether this shape is equivalent to another shape before applying any rigid transformations.
