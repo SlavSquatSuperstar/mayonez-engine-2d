@@ -5,7 +5,7 @@ import slavsquatsuperstar.mayonez.Logger;
 import slavsquatsuperstar.mayonez.Mayonez;
 import slavsquatsuperstar.mayonez.Scene;
 import slavsquatsuperstar.mayonez.graphics.renderer.Renderer;
-import slavsquatsuperstar.mayonez.physics.Physics;
+import slavsquatsuperstar.mayonez.physics.PhysicsWorld;
 
 /**
  * The application that contains the engine's core loop.
@@ -17,7 +17,7 @@ public sealed abstract class GameEngine permits JGame, GLGame{
     private boolean running = false;
 
     // Game Layers
-    protected Physics physics;
+    protected PhysicsWorld physics;
     protected Renderer renderer;
     protected Scene scene;
     protected Window window;
@@ -45,6 +45,7 @@ public sealed abstract class GameEngine permits JGame, GLGame{
         if (running) {
             running = false;
             renderer.stop();
+            physics.stop();
             window.stop();
         }
     }
@@ -141,7 +142,7 @@ public sealed abstract class GameEngine permits JGame, GLGame{
         return renderer;
     }
 
-    public Physics getPhysics() {
+    public PhysicsWorld getPhysics() {
         return physics;
     }
 

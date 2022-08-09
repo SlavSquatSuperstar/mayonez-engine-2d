@@ -17,8 +17,6 @@ object IOUtils {
     private val DEFAULT_CHARSET = StandardCharsets.UTF_8
     private const val LINE_ENDING = "\n"
 
-    // todo bytes
-
     // I/O Stream Methods
 
     @JvmStatic

@@ -342,11 +342,6 @@ class Vec2 constructor(
      */
     fun toJOML(): Vector2f = Vector2f(x, y)
 
-    /**
-     * Returns a vector whose components are the reciprocals of this vector, equal to (1/x, 1/y).
-     */
-    fun reciprocal(): Vec2 = Vec2(1f) / this
-
     // Overrides
 
     operator fun get(i: Int): Float {

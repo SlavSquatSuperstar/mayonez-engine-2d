@@ -18,9 +18,9 @@ This project was developed using macOS 12.x Monterey (Intel). This app has not b
 ### Instructions for Developers
 
 - Java Version: [Eclipse Temurin 17+](https://adoptium.net/) or [Oracle OpenJDK 17+](https://jdk.java.net/)
-- Kotlin Version: [1.7.0](https://github.com/JetBrains/kotlin/releases/tag/v1.7.0)
+- Kotlin Version: [1.7.10](https://github.com/JetBrains/kotlin/releases/tag/v1.7.0)
 - Recommended IDE: [Intellij IDEA CE 2022.2+](https://www.jetbrains.com/idea/download/)
-- Build System: [Gradle 7.5+](https://gradle.org/install/)
+- Build System: [Gradle 7.5.1+](https://gradle.org/install/)
     - Utilizes [Gradle Shadow Plugin](https://github.com/johnrengelman/shadow) for creating fat jars
 - Dependencies (bundled in JAR)
     - [LWJGL](https://www.lwjgl.org/customize) (user OS & architecture specific)
@@ -35,7 +35,7 @@ This project was developed using macOS 12.x Monterey (Intel). This app has not b
 
 ### Acknowledgements
 
-A massive, heartfelt thanks goes out to the following people and resources for inspiration and guidance:
+A massive, heartfelt thanks goes out to the following people, groups, and resources for inspiration and guidance.
 
 - [GamesWithGabe](https://youtube.com/c/GamesWithGabe): For continuously keeping me motivated to work on my engine, no
   matter how much frustration debugging causes me.
@@ -45,6 +45,8 @@ A massive, heartfelt thanks goes out to the following people and resources for i
   tutorial I ever followed and starting me on this crazy journey.
 - [Unity Engine](https://docs.unity3d.com/ScriptReference/): ~~Who I'm ripping off~~ For making game dev
   accessible for everybody and providing excellent documentation.
+- [Box2D](https://box2d.org/) and [dyn4j](https://dyn4j.org/): For unpacking the complexities of game physics into a
+  followable example.
 - [Azurite Community](https://azurite-engine.github.io/): For showing that implementing LWJGL and physics from scratch
   isn't as intimidating as it sounds.
 - [javidx9 (OneLoneCoder)](https://www.youtube.com/c/javidx9): For explaining the hard math concepts behind video

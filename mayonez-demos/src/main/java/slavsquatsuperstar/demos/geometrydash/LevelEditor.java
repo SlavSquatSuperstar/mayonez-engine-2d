@@ -35,8 +35,7 @@ public class LevelEditor extends Scene {
             }
         });
 
-        // TODO getting displaced too much when colliding with multiple boxes
-        // TODO check recently moved colliders
+        // TODO still getting stuck on corners
         addObject(new Player("Player", new Vec2(5, 5)));
 
         addObject(new GameObject("Grid") {

@@ -2,8 +2,8 @@ package slavsquatsuperstar.mayonez.physics.colliders
 
 import slavsquatsuperstar.math.Vec2
 import slavsquatsuperstar.mayonez.physics.collision.CollisionInfo
-import slavsquatsuperstar.mayonez.physics.shapes.Rectangle
 import slavsquatsuperstar.mayonez.physics.shapes.Circle
+import slavsquatsuperstar.mayonez.physics.shapes.Rectangle
 
 /**
  * A circle with a radius, centered at the object's position.
@@ -21,7 +21,7 @@ class CircleCollider(radius: Float) : Collider(Circle(Vec2(), radius)) {
         get() = (transformToWorld() as Circle).radius
 
     // Properties
-    override fun getMinBounds(): Rectangle = Rectangle(center(), Vec2(radius * 2f))
+    override fun getMinBounds(): Rectangle = transformToWorld().boundingRectangle()
 
 //    override fun toLocal(world: Vec2): Vec2 = (world - center()) / radius
 

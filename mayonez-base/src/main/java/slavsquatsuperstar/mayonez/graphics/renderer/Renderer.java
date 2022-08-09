@@ -30,6 +30,9 @@ public sealed abstract class Renderer permits JRenderer, GLRenderer {
 
     public abstract void setScene(Scene newScene);
 
+    /**
+     * Frees resources upon quitting the program.
+     */
     public abstract void stop();
 
 }

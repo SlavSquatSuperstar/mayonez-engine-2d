@@ -15,7 +15,8 @@ internal class Simplex(vararg points: Vec2, private val maxSize: Int = 3) {
     var size: Int = 0
         private set
 
-    private val points: MutableList<Vec2> = ArrayList(maxSize)
+    // TODO set to private after testing
+    internal val points: MutableList<Vec2> = ArrayList(maxSize)
 
     init {
         for (pt in points) {

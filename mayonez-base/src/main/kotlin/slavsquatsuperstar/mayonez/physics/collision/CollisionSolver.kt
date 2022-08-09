@@ -2,7 +2,7 @@ package slavsquatsuperstar.mayonez.physics.collision
 
 import slavsquatsuperstar.math.MathUtils
 import slavsquatsuperstar.math.Vec2
-import slavsquatsuperstar.mayonez.physics.Physics
+import slavsquatsuperstar.mayonez.physics.PhysicsWorld
 import slavsquatsuperstar.mayonez.physics.PhysicsMaterial
 import slavsquatsuperstar.mayonez.physics.Rigidbody
 import slavsquatsuperstar.mayonez.physics.colliders.Collider
@@ -10,13 +10,13 @@ import kotlin.math.abs
 import kotlin.math.sign
 
 /**
- * Resolves position and impulse of two bodies in a collision.
+ * Applies impulse to two bodies in a collision to resolve their position and rotation.
  *
  * @author SlavSquatSuperstar
  */
-class Solver(private val man: CollisionInfo) {
-    private val c1: Collider = man.self
-    private val c2: Collider = man.other
+class CollisionSolver(private var manifold: CollisionInfo) {
+    private val c1: Collider = manifold.self
+    private val c2: Collider = manifold.other
     private val r1: Rigidbody? = c1.rigidbody
     private val r2: Rigidbody? = c2.rigidbody
 
@@ -34,10 +34,24 @@ class Solver(private val man: CollisionInfo) {
      * Dynamic vs Dynamic
      */
     fun solve() {
+        if (!recheck()) return
         // Check masses once, cannot both be static
         if (c1.isStatic() && c2.isStatic()) return
         solveDynamic()
         solveStatic()
+        c1.collisionResolved = true
+        c2.collisionResolved = true
+    }
+
+    /**
+     * Check for collision again if either object has been modified.
+     *
+     * @return whether the colliders are still colliding
+     */
+    private fun recheck(): Boolean {
+        if (c1.collisionResolved || c2.collisionResolved)
+            manifold = c1.getCollisionInfo(c2) ?: return false
+        return true
     }
 
     /**
@@ -45,9 +59,9 @@ class Solver(private val man: CollisionInfo) {
      */
     private fun solveDynamic() {
         // Collision Information
-        val normal = man.normal // Collision direction
+        val normal = manifold.normal // Collision direction
         val tangent = normal.normal() // Collision plane
-        val numContacts = man.countContacts()
+        val numContacts = manifold.countContacts()
 
         // Physics Properties
         val sumInvMass = (r1?.invMass ?: 0f) + (r2?.invMass ?: 0f)
@@ -57,7 +71,7 @@ class Solver(private val man: CollisionInfo) {
         val sFric = PhysicsMaterial.combineStaticFriction(mat1, mat2) // combined static friction, mu_s
         val kFric = PhysicsMaterial.combineKineticFriction(mat1, mat2) // combined kinetic friction, mu_k
 
-        for (i in 0 until Physics.IMPULSE_ITERATIONS) {
+        for (i in 0 until PhysicsWorld.IMPULSE_ITERATIONS) {
             // Net impulse of collision
             var sumImp = Vec2()
             var sumAngImp1 = 0f
@@ -65,7 +79,7 @@ class Solver(private val man: CollisionInfo) {
 
             for (j in 0 until numContacts) {
                 // Radius from center of mass to contact
-                val contact = man.getContact(j)
+                val contact = manifold.getContact(j)
                 val rad1 = contact - r1!!.position
                 val rad2 = contact - r2!!.position
 
@@ -124,11 +138,11 @@ class Solver(private val man: CollisionInfo) {
 
         // Separate objects factoring in mass
         val massRatio = mass1 / (mass1 + mass2)
-        val depth1 = man.depth * massRatio
-        val depth2 = man.depth * (1 - massRatio)
+        val depth1 = manifold.depth * massRatio
+        val depth2 = manifold.depth * (1 - massRatio)
 
         // Displace bodies to correct position
-        c1.transform.move(man.normal * -depth1)
-        c2.transform.move(man.normal * depth2)
+        c1.transform.move(manifold.normal * -depth1)
+        c2.transform.move(manifold.normal * depth2)
     }
 }

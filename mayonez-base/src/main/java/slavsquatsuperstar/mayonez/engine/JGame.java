@@ -7,7 +7,7 @@ import slavsquatsuperstar.mayonez.annotations.UsesEngine;
 import slavsquatsuperstar.mayonez.graphics.renderer.JRenderer;
 import slavsquatsuperstar.mayonez.input.KeyInput;
 import slavsquatsuperstar.mayonez.input.MouseInput;
-import slavsquatsuperstar.mayonez.physics.Physics;
+import slavsquatsuperstar.mayonez.physics.PhysicsWorld;
 
 import java.awt.*;
 
@@ -29,7 +29,7 @@ public final class JGame extends GameEngine {
         window.setMouseInput(MouseInput.INSTANCE);
 
         renderer = new JRenderer();
-        physics = new Physics();
+        physics = new PhysicsWorld();
     }
 
     public boolean isFullScreen() {

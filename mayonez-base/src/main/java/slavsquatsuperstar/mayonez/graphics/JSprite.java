@@ -18,7 +18,7 @@ import java.awt.image.BufferedImage;
 @UsesEngine(EngineType.AWT)
 public final class JSprite extends Sprite {
 
-    private final JTexture texture; // TODO missing texture image?
+    private final JTexture texture; // TODO render "missing texture" image
 
     public JSprite(String filename) {
         texture = Assets.getJTexture(filename);

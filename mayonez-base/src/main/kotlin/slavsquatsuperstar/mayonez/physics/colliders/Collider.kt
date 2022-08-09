@@ -28,11 +28,6 @@ abstract class Collider(private val shapeData: Shape) : Component() {
      */
     var rigidbody: Rigidbody? = null
 
-    fun <T : Collider?> setRigidbody(rb: Rigidbody?): T {
-        this.rigidbody = rb
-        return this as T
-    }
-
     // Physics Engine Properties
 
     var material: PhysicsMaterial = PhysicsMaterial.DEFAULT_MATERIAL
@@ -61,6 +56,12 @@ abstract class Collider(private val shapeData: Shape) : Component() {
      * If this frame's collision in [onCollision] should not be resolved by the physics engine.
      */
     var ignoreCurrentCollision = false
+
+    /**
+     * Whether the position or velocity of this collider has been modified in this frame.
+     */
+    var collisionResolved: Boolean = false
+
 
     // Debug Draw Properties
 
@@ -114,6 +115,7 @@ abstract class Collider(private val shapeData: Shape) : Component() {
     /**
      * Transforms this shape into world space.
      */
+    // TODO save as mutatable field
     protected open fun transformToWorld(): Shape {
         return shapeData.rotate(getRotation()).scale(transform!!.scale).translate(center())
     }
@@ -123,7 +125,7 @@ abstract class Collider(private val shapeData: Shape) : Component() {
      * Transforms another shape to this shape's local space.
      */
     protected open fun transformToLocal(world: Shape): Shape {
-        return world.translate(-center()).scale(transform!!.scale.reciprocal(), origin = Vec2())
+        return world.translate(-center()).scale(Vec2(1f) / (transform!!.scale), origin = Vec2())
             .rotate(-getRotation())
     }
 

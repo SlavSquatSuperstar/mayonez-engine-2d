@@ -7,7 +7,6 @@ import slavsquatsuperstar.mayonez.Colors
 import slavsquatsuperstar.mayonez.annotations.ExperimentalFeature
 import slavsquatsuperstar.mayonez.graphics.DebugDraw
 import slavsquatsuperstar.mayonez.physics.shapes.*
-import kotlin.math.abs
 import kotlin.math.sign
 import kotlin.math.sqrt
 
@@ -17,6 +16,9 @@ import kotlin.math.sqrt
  * @author SlavSquatSuperstar
  */
 object Collisions {
+
+    const val maxGJKIterations: Int = 20
+    const val maxEPAIterations: Int = 40
 
     // Raycasting
 
@@ -159,18 +161,17 @@ object Collisions {
             (shape1 is Edge) && (shape2 is Edge) -> intersectEdges(shape1, shape2)
             (shape1 is Circle) && (shape2 is Circle) -> collideCircles(shape1, shape2)
             (shape1 is Rectangle) && (shape2 is Rectangle) -> collideRects(shape1, shape2)
-            else -> detectCollisionGJK(shape1, shape2) != null
+            else -> getGJKSimplex(shape1, shape2) != null
         }
     }
 
     @JvmStatic
     fun getCollisionInfo(shape1: Shape?, shape2: Shape?) {
         if (shape1 == null || shape2 == null) return
-        val simplex = detectCollisionGJK(shape1, shape2)?: return
-        val contact = collisionContactsEPA(shape1, shape2, simplex)?: return
-        println(contact.contact)
-        DebugDraw.drawPoint(contact.contact, Colors.RED)
-
+        val simplex = getGJKSimplex(shape1, shape2) ?: return
+        val contact = getEPAPenetration(shape1, shape2, simplex) ?: return
+//        println(contact.depth)
+//        DebugDraw.drawPoint(contact.contact, Colors.RED)
     }
 
     /**
@@ -255,14 +256,13 @@ object Collisions {
      * @return the simplex if the overlap, otherwise null
      */
     // TODO cache recent support points
-    private fun detectCollisionGJK(shape1: Shape, shape2: Shape): Simplex? {
+    private fun getGJKSimplex(shape1: Shape, shape2: Shape): Simplex? {
         // Search in any initial direction
         val startPt = support(shape1, shape2, shape2.center() - shape1.center())
         var searchDir = -startPt // Search toward origin to surround it
         val simplex = Simplex(startPt) // Create simplex with first point
 
-        val maxLoop = (shape1.numVertices + shape2.numVertices) * 2 // TODO more loops for round shapes
-        for (loop in 1..maxLoop) {
+        for (loop in 1..maxGJKIterations) {
             val ptA = support(shape1, shape2, searchDir) // Get new support point
             if (ptA.dot(searchDir) < 0f) return null // Continue only if next point passes origin
 
@@ -305,10 +305,11 @@ object Collisions {
      */
     @ExperimentalFeature
     // See § Alternatives for optimizations
-    private fun collisionContactsEPA(shape1: Shape, shape2: Shape, simplex: Simplex): Contact? {
-        val tolerance = 0.001f
-        val numFaces = shape1.numVertices + shape2.numVertices
-        val expandedSimplex = simplex.expand(numFaces)
+    private fun getEPAPenetration(shape1: Shape, shape2: Shape, simplex: Simplex): Penetration? {
+        val poly = Polygon(*simplex.points.toTypedArray())
+        DebugDraw.drawShape(poly.translate(Vec2(50f, 40f)), Colors.BLACK);
+
+        val expandedSimplex = simplex.expand(maxEPAIterations)
 
         /*
         * Loop while true
@@ -318,19 +319,19 @@ object Collisions {
         * If (depth) roughly equals edge length, success
         * Else insert point into simplex and retry
         */
-        for (i in 0..numFaces + 1) {
+        for (i in 0 until maxEPAIterations) {
             val edge = closestEdgeToOrigin(expandedSimplex) // Find closest edge
             val contact = support(shape1, shape2, edge.norm)
             val dist = contact.dot(edge.norm) // distance along normal is depth
             // cannot expand simplex any more
-            if (abs(dist - edge.dist) < tolerance) return Contact(contact, edge.norm, edge.dist)
+            if (MathUtils.equals(dist, edge.dist)) return Penetration(contact, edge.norm, edge.dist)
             else expandedSimplex[edge.index] = contact
         }
         return null
     }
 
     private fun closestEdgeToOrigin(simplex: Simplex): Face {
-        val face  = Face(Vec2(), Float.POSITIVE_INFINITY, 0)
+        val face = Face(Vec2(), Float.POSITIVE_INFINITY, 0)
         for (i in 0 until simplex.size) {
             val j = (i + 1) % simplex.size
 
@@ -356,7 +357,7 @@ object Collisions {
     // norm: edge normal, dist: edge distance to origin, index: which edge
     private class Face(var norm: Vec2, var dist: Float, var index: Int) {}
 
-    private class Contact(var contact: Vec2, var norm: Vec2, var depth: Float) {}
+    private class Penetration(var contact: Vec2, var norm: Vec2, var depth: Float) {}
 
     /**
      * Finds the most extreme points from the Minkowski difference set between two shapes.

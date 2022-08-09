@@ -2,18 +2,14 @@ package slavsquatsuperstar.mayonez.physics.colliders
 
 import slavsquatsuperstar.math.MathUtils
 import slavsquatsuperstar.math.Vec2
+import slavsquatsuperstar.mayonez.physics.shapes.Polygon
 
 /**
  * A rotatable rectangle with a width and height. The sides will align with the object's rotation angle.
  *
  * @author SlavSquatSuperstar
  */
-class BoxCollider private constructor(min: Vec2, max: Vec2) :
-    PolygonCollider(Vec2(min), Vec2(max.x, min.y), Vec2(max), Vec2(min.x, max.y)) {
-
-    private val size: Vec2 = max - min
-
-    constructor(size: Vec2) : this(size * -0.5f, size * 0.5f)
+class BoxCollider(private val size: Vec2) : PolygonCollider(Polygon.rectangle(Vec2(), size)) {
 
     // Shape Properties
 

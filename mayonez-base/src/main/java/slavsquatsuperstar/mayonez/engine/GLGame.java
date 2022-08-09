@@ -6,7 +6,7 @@ import slavsquatsuperstar.mayonez.annotations.EngineType;
 import slavsquatsuperstar.mayonez.graphics.renderer.GLRenderer;
 import slavsquatsuperstar.mayonez.input.KeyInput;
 import slavsquatsuperstar.mayonez.input.MouseInput;
-import slavsquatsuperstar.mayonez.physics.Physics;
+import slavsquatsuperstar.mayonez.physics.PhysicsWorld;
 
 import static org.lwjgl.glfw.GLFW.glfwGetTime;
 
@@ -25,7 +25,7 @@ public final class GLGame extends GameEngine { // can't implement runnable other
         window.setMouseInput(MouseInput.INSTANCE);
 
         renderer = new GLRenderer();
-        physics = new Physics();
+        physics = new PhysicsWorld();
     }
 
     // Game Loop Methods
