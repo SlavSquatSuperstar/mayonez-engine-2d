@@ -3,7 +3,7 @@ package slavsquatsuperstar.test.shapetests;
 import org.junit.jupiter.api.Test;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.physics.collision.Collisions;
-import slavsquatsuperstar.mayonez.physics.collision.Raycast;
+import slavsquatsuperstar.mayonez.physics.collision.RaycastInfo;
 import slavsquatsuperstar.mayonez.physics.shapes.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -58,7 +58,7 @@ public class RayTests {
     @Test
     public void rayVsCircleHit() {
         Circle c = new Circle(new Vec2(5, 0), 2);
-        Raycast rc = raycast(c, new Ray(new Vec2(0, 0), new Vec2(1, 0)), 3);
+        RaycastInfo rc = raycast(c, new Ray(new Vec2(0, 0), new Vec2(1, 0)), 3);
         assertFloatEquals(rc.distance, 3); // unit ray
 
         rc = raycast(c, new Ray(new Vec2(0, 0), new Vec2(3, 0)), 1);
@@ -78,7 +78,7 @@ public class RayTests {
     @Test
     public void rayVsEdgeHit() {
         Edge e = new Edge(new Vec2(0, -2), new Vec2(0, 2));
-        Raycast rc = raycast(e, new Ray(new Vec2(-2, 0), new Vec2(1, 0)), 0);
+        RaycastInfo rc = raycast(e, new Ray(new Vec2(-2, 0), new Vec2(1, 0)), 0);
         assertEquals(new Vec2(0, 0), rc.contact);
         assertFloatEquals(2, rc.distance); // unit ray
 
@@ -90,7 +90,7 @@ public class RayTests {
     @Test
     public void rayVsPolygonHit() {
         Polygon r = Polygon.rectangle(new Vec2(0, 0), new Vec2(4, 4));
-        Raycast rc = raycast(r, new Ray(new Vec2(-4, 0), new Vec2(1, 0)), 0);
+        RaycastInfo rc = raycast(r, new Ray(new Vec2(-4, 0), new Vec2(1, 0)), 0);
         assertEquals(2, rc.distance);
 
         rc = raycast(r, new Ray(new Vec2(-4, 0), new Vec2(2, 0)), 0);
@@ -101,7 +101,7 @@ public class RayTests {
     @Test
     public void rayVsRect() {
         Rectangle r = new Rectangle(new Vec2(0, 0), new Vec2(4, 4));
-        Raycast rc = raycast(r, new Ray(new Vec2(-4, 0), new Vec2(1, 0)), 0);
+        RaycastInfo rc = raycast(r, new Ray(new Vec2(-4, 0), new Vec2(1, 0)), 0);
         assertEquals(2, rc.distance);
 
         rc = raycast(r, new Ray(new Vec2(-4, 0), new Vec2(2, 0)), 0);

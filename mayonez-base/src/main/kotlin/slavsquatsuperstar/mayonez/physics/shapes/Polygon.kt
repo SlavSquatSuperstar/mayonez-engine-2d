@@ -38,7 +38,7 @@ open class Polygon(vararg vertices: Vec2) : Shape() {
     /**
      * The edges that connect the vertices of this polygon.
      */
-    val edges: Array<Edge> = Array(numVertices) {Edge(vertices[it], vertices[it.next(numVertices)]) }
+    val edges: Array<Edge> = Array(numVertices) { Edge(vertices[it.next(numVertices)], vertices[it]) }
 
     /**
      * The faces, or unit normal vectors of each edge in this polygon.
@@ -219,6 +219,14 @@ open class Polygon(vararg vertices: Vec2) : Shape() {
             val angle = 360f / sides
             return Array(sides) { center + start.rotate(angle * it) }
         }
+
+//        /**
+//         * Creates a convex hull ordered counterclockwise from an array of vertices. The convex
+//         * hull is the smallest polygon that contains all the vertices.
+//         */
+//        private fun orderedConvexHull(vertices: Array<Vec2>): Array<Vec2> {
+//
+//        }
 
         // Templates
 

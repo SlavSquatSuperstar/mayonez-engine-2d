@@ -79,23 +79,22 @@ class Edge(val start: Vec2, val end: Vec2) : Shape() {
         return point.distance(nearestPoint(point))
     }
 
-    private fun clipToPlanes(plane1: Ray, plane2: Ray): Edge {
-        val ray = Ray(this).normalize()
-        val contact1 = ray.getIntersection(plane1)
-        val contact2 = ray.getIntersection(plane2)
+    fun clipToSegment(segment: Edge): Edge {
+        val rayDir = segment.unitNormal()
+        val plane1 = Ray(segment.start, rayDir)
+        val plane2 = Ray(segment.end, rayDir)
+
+        val edge = Ray(this).normalize()
+        val contact1 = edge.getIntersection(plane1)
+        val contact2 = edge.getIntersection(plane2)
 
         if (contact1 == null || contact2 == null) return Edge(start, end)
         // get distances
-        val distances = Range((contact1 - start).dot(ray.direction), (contact2 - start).dot(ray.direction))
+        val distances = Range((contact1 - start).dot(edge.direction), (contact2 - start).dot(edge.direction))
         val min = 0f.coerceAtLeast(distances.min)
         val max = length.coerceAtMost(distances.max)
 
-        return Edge(ray.getPoint(min), ray.getPoint(max))
-    }
-
-    fun clipToSegment(segment: Edge): Edge {
-        val rayDir = segment.unitNormal()
-        return clipToPlanes(Ray(segment.start, rayDir), Ray(segment.end, rayDir))
+        return Edge(edge.getPoint(min), edge.getPoint(max))
     }
 
     // Collision Properties

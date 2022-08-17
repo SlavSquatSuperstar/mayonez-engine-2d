@@ -113,6 +113,7 @@ public final class PhysicsWorld {
             Collider c2 = pair.getRight();
 
             CollisionInfo collision = c1.getCollisionInfo(c2); // Get collision info
+
             if (collision == null) continue;
 
             // Send collision callbacks if both are not triggers
@@ -124,7 +125,7 @@ public final class PhysicsWorld {
                     c2.setIgnoreCurrentCollision(false);
                     continue; // Stop if either object has called ignore collision
                 }
-                collisions.add(new CollisionSolver(collision)); // Only solve if neither are triggers
+                collisions.add(new CollisionSolver(c1, c2, collision)); // Only solve if neither are triggers
             } else if (c1.isTrigger()) {
                 c2.onTrigger(c1);
             } else if (c2.isTrigger()) {

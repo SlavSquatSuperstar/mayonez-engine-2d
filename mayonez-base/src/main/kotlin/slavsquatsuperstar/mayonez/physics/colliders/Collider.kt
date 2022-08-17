@@ -7,6 +7,7 @@ import slavsquatsuperstar.mayonez.graphics.DebugDraw
 import slavsquatsuperstar.mayonez.physics.PhysicsMaterial
 import slavsquatsuperstar.mayonez.physics.Rigidbody
 import slavsquatsuperstar.mayonez.physics.collision.CollisionInfo
+import slavsquatsuperstar.mayonez.physics.collision.Collisions
 import slavsquatsuperstar.mayonez.physics.shapes.Rectangle
 import slavsquatsuperstar.mayonez.physics.shapes.Shape
 import java.awt.Color
@@ -129,12 +130,8 @@ abstract class Collider(private val shapeData: Shape) : Component() {
             .rotate(-getRotation())
     }
 
-//
-//    open fun toLocal(world: Vec2): Vec2 = transform?.toLocal(world) ?: world
-
-//    open fun toWorld(local: Vec2): Vec2 = transform?.toWorld(local) ?: local
-
     // Shape vs Point Collisions
+
     /**
      * Calculates whether the given point is on or inside this shape.
      *
@@ -154,20 +151,14 @@ abstract class Collider(private val shapeData: Shape) : Component() {
     // Shape vs Shape Collisions
 
     /**
-     * Detects whether this collider is touching or overlapping another.
-     *
-     * @param collider another collider
-     * @return if there is a collision
-     */
-    open fun detectCollision(collider: Collider?): Boolean = getCollisionInfo(collider) != null
-
-    /**
      * Calculates the contact points, normal, and overlap between this collider and another if they are intersecting.
      *
      * @param collider another collider
      * @return the collision info, or no if there is no intersection
      */
-    abstract fun getCollisionInfo(collider: Collider?): CollisionInfo?
+    fun getCollisionInfo(collider: Collider?): CollisionInfo? {
+        return Collisions.getCollisionInfo(this.transformToWorld(), collider?.transformToWorld())
+    }
 
     // Field Getters and Setters
 

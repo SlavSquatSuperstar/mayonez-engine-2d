@@ -9,7 +9,7 @@ import slavsquatsuperstar.math.Vec2
  */
 // TODO save all intersections?
 // TODO restricted constructor
-class Raycast(
+class RaycastInfo(
     @JvmField
     val contact: Vec2, // contact point
     normal: Vec2, // contact normal

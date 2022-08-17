@@ -1,4 +1,4 @@
-package slavsquatsuperstar.mayonez.physics.collision
+package slavsquatsuperstar.mayonez.physics.detection
 
 import slavsquatsuperstar.math.Vec2
 
@@ -10,7 +10,7 @@ import slavsquatsuperstar.math.Vec2
  *
  * @author SlavSquatSuperstar
  */
-internal class Simplex(vararg points: Vec2, private val maxSize: Int = 3) {
+class Simplex(vararg points: Vec2, private val maxSize: Int = 3) {
 
     var size: Int = 0
         private set
@@ -34,6 +34,12 @@ internal class Simplex(vararg points: Vec2, private val maxSize: Int = 3) {
     fun add(point: Vec2) {
         if (size >= maxSize) return
         points.add(point)
+        size++
+    }
+
+    fun insert(point: Vec2, index: Int) {
+        if (size >= maxSize || index !in points.indices) return
+        points.add(index, point)
         size++
     }
 

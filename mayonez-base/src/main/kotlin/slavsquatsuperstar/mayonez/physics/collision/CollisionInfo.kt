@@ -1,7 +1,7 @@
 package slavsquatsuperstar.mayonez.physics.collision
 
 import slavsquatsuperstar.math.Vec2
-import slavsquatsuperstar.mayonez.physics.colliders.Collider
+import slavsquatsuperstar.mayonez.physics.shapes.Shape
 
 /**
  * Stores information about a collision between two objects. Also referred to as a collision manifold.
@@ -9,8 +9,8 @@ import slavsquatsuperstar.mayonez.physics.colliders.Collider
  * @author SlavSquatSuperstar
  */
 class CollisionInfo(
-    val self: Collider,
-    val other: Collider,
+    val self: Shape,
+    val other: Shape,
     normal: Vec2,
     /**
      * How much the colliders are overlapping along the normal axis.
@@ -33,12 +33,16 @@ class CollisionInfo(
 
     // Contact Methods
 
-    fun countContacts(): Int = contacts.size
+    fun numContacts(): Int = contacts.size
 
     fun getContact(index: Int): Vec2 = contacts[index]
 
-    fun addContact(contactPoint: Vec2) { // Should be package-protected
-        contacts.add(contactPoint)
+    fun addContact(contactPoint: Vec2) = contacts.add(contactPoint)
+
+    fun flip(): CollisionInfo {
+        val col = CollisionInfo(other, self, -normal, depth)
+        for (i in 0 until numContacts()) col.addContact(getContact(i))
+        return col
     }
 
     override fun toString(): String = "Collision ($self and $other)"

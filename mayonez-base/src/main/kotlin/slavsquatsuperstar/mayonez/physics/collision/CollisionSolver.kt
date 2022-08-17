@@ -2,21 +2,19 @@ package slavsquatsuperstar.mayonez.physics.collision
 
 import slavsquatsuperstar.math.MathUtils
 import slavsquatsuperstar.math.Vec2
-import slavsquatsuperstar.mayonez.physics.PhysicsWorld
 import slavsquatsuperstar.mayonez.physics.PhysicsMaterial
+import slavsquatsuperstar.mayonez.physics.PhysicsWorld
 import slavsquatsuperstar.mayonez.physics.Rigidbody
 import slavsquatsuperstar.mayonez.physics.colliders.Collider
 import kotlin.math.abs
 import kotlin.math.sign
 
 /**
- * Applies impulse to two bodies in a collision to resolve their position and rotation.
+ * Applies linear and angular impulses to two intersecting bodies to resolve a collision.
  *
  * @author SlavSquatSuperstar
  */
-class CollisionSolver(private var manifold: CollisionInfo) {
-    private val c1: Collider = manifold.self
-    private val c2: Collider = manifold.other
+class CollisionSolver(private val c1: Collider, private val c2: Collider, private var manifold: CollisionInfo) {
     private val r1: Rigidbody? = c1.rigidbody
     private val r2: Rigidbody? = c2.rigidbody
 
@@ -61,7 +59,7 @@ class CollisionSolver(private var manifold: CollisionInfo) {
         // Collision Information
         val normal = manifold.normal // Collision direction
         val tangent = normal.normal() // Collision plane
-        val numContacts = manifold.countContacts()
+        val numContacts = manifold.numContacts()
 
         // Physics Properties
         val sumInvMass = (r1?.invMass ?: 0f) + (r2?.invMass ?: 0f)
