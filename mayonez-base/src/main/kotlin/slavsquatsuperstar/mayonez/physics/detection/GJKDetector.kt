@@ -6,7 +6,7 @@ import slavsquatsuperstar.mayonez.physics.collision.Collisions
 import slavsquatsuperstar.mayonez.physics.shapes.Shape
 
 /**
- * Detects if two shapes are colliding and finds their contacts using the GJK distance algorithm.
+ * Detects if two shapes are colliding and finds the Minkowski sum using the GJK distance algorithm.
  *
  * @author SlavSquatSuperstar
  */
@@ -26,7 +26,7 @@ class GJKDetector(private val shape1: Shape, private val shape2: Shape) {
      *
      * @param shape1 the first shape
      * @param shape2 the second shape
-     * @return the simplex if the overlap, otherwise null
+     * @return the simplex if they overlap, otherwise null
      */
     // TODO cache recent support points
     fun getSimplex(): Simplex? {

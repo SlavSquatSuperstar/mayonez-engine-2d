@@ -7,16 +7,27 @@ import slavsquatsuperstar.mayonez.physics.shapes.Rectangle
 import slavsquatsuperstar.mayonez.physics.shapes.Shape
 
 /**
- * Calculates whether two simple shapes are intersecting. For complex shapes, use the GJK algorithm.
+ * A class that detects whether shapes intersect. Uses simple tests when possible, otherwise performs the GJK algorithm
+ * for complex shapes.
+ *
+ * @author SlavSquatSuperstar
  */
-class IntersectionDetector(private val shape1: Shape?, private val shape2: Shape?) {
+object IntersectionDetector {
 
-    fun detect(): Boolean {
+    /**
+     * Determines whether two shapes are touching or overlapping.
+     *
+     * @param shape1 the first shape
+     * @param shape2 the second shape
+     * @return whether the shapes intersect
+     */
+    @JvmStatic
+    fun detect(shape1: Shape?, shape2: Shape?): Boolean {
         return when {
             (shape1 == null) || (shape2 == null) -> false
             (shape1 is Edge) && (shape2 is Edge) -> intersectEdges(shape1, shape2)
-            (shape1 is Circle) && (shape2 is Circle) -> collideCircles(shape1, shape2)
-            (shape1 is Rectangle) && (shape2 is Rectangle) -> collideRects(shape1, shape2)
+            (shape1 is Circle) && (shape2 is Circle) -> intersectCircles(shape1, shape2)
+            (shape1 is Rectangle) && (shape2 is Rectangle) -> intersectRectangles(shape1, shape2)
             else -> GJKDetector(shape1, shape2).getSimplex() != null // use GJK for complex shapes
         }
     }
@@ -28,42 +39,22 @@ class IntersectionDetector(private val shape1: Shape?, private val shape2: Shape
      * @param circle1 the first circle
      * @param circle2 the second circle
      *
-     * @return if the two circles intersect or touch
+     * @return if the two circles overlap or touch
      */
-    private fun collideCircles(circle1: Circle, circle2: Circle): Boolean {
+    private fun intersectCircles(circle1: Circle, circle2: Circle): Boolean {
         val distSq = circle1.center().distanceSq(circle2.center())
         val sumRadiiSq = MathUtils.squared(circle1.radius + circle2.radius)
         return distSq <= sumRadiiSq
     }
 
     /**
-     * Performs a simple rectangle vs. rectangle intersection test using the separating-axis theorem on their x- and
-     * y-axes.
-     *
-     * @param rect1 the first rectangle
-     * @param rect2 the second rectangle
-     *
-     * @return if the two rectangles intersect or touch
-     */
-    private fun collideRects(rect1: Rectangle, rect2: Rectangle): Boolean {
-        // Perform SAT on x-axis
-        val min1 = rect1.min()
-        val max1 = rect1.max()
-        val min2 = rect2.min()
-        val max2 = rect2.max()
-        // a.min <= b.max && a.max <= b.min
-        val satX = (min1.x <= max2.x) && (min2.x <= max1.x)
-        val satY = (min1.y <= max2.y) && (min2.y <= max1.y)
-        return satX && satY
-    }
-
-    /**
-     * Performs a simple line segment intersection test.
+     * Performs a simple line segment intersection test by calculating the contact point between two rays and ensuring
+     * it is within both segments.
      *
      * @param edge1 the first edge
      * @param edge2 the second edge
      *
-     * @return if the two edges intersect or touch
+     * @return if the two edges cross or touch
      */
     // TODO linear systems matrix
     private fun intersectEdges(edge1: Edge, edge2: Edge): Boolean {
@@ -85,6 +76,27 @@ class IntersectionDetector(private val shape1: Shape?, private val shape2: Shape
             // Contact must be in both lines
             MathUtils.inRange(dist1, 0f, edge1.length) && MathUtils.inRange(dist2, 0f, edge2.length)
         }
+    }
+
+    /**
+     * Performs a simple rectangle vs. rectangle intersection test using the separating-axis theorem on their x- and
+     * y-axes.
+     *
+     * @param rect1 the first rectangle
+     * @param rect2 the second rectangle
+     *
+     * @return if the two rectangles overlap or touch
+     */
+    private fun intersectRectangles(rect1: Rectangle, rect2: Rectangle): Boolean {
+        // Perform SAT on x-axis
+        val min1 = rect1.min()
+        val max1 = rect1.max()
+        val min2 = rect2.min()
+        val max2 = rect2.max()
+        // a.min <= b.max && a.max <= b.min
+        val satX = (min1.x <= max2.x) && (min2.x <= max1.x)
+        val satY = (min1.y <= max2.y) && (min2.y <= max1.y)
+        return satX && satY
     }
 
 }

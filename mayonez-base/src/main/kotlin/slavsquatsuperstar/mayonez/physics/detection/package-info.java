@@ -1,5 +1,5 @@
 /**
- * A package containing collision detection and ray casting methods for shapes.
+ * A package containing narrow-phase collision detection and raycast tests for shapes.
  *
  * @author SlavSquatSuperstar
  */

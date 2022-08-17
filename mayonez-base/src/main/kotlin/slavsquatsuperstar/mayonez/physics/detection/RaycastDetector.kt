@@ -12,9 +12,9 @@ import kotlin.math.sqrt
  *
  * @author SlavSquatSuperstar
  */
-class RaycastDetector(private val shape: Shape?, private val ray: Ray?, private val limit: Float) {
+object RaycastDetector {
 
-    fun detect(): RaycastInfo? {
+    fun raycast(shape: Shape?, ray: Ray?, limit: Float): RaycastInfo? {
         return when {
             (shape == null) || (ray == null) -> null
             (shape is Edge) -> raycastEdge(shape, ray, limit)

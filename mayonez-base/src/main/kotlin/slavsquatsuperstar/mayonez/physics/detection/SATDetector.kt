@@ -3,7 +3,6 @@ package slavsquatsuperstar.mayonez.physics.detection
 import slavsquatsuperstar.math.MathUtils
 import slavsquatsuperstar.math.Range
 import slavsquatsuperstar.math.Vec2
-import slavsquatsuperstar.mayonez.annotations.ExperimentalFeature
 import slavsquatsuperstar.mayonez.physics.collision.CollisionInfo
 import slavsquatsuperstar.mayonez.physics.shapes.*
 
@@ -12,11 +11,7 @@ import slavsquatsuperstar.mayonez.physics.shapes.*
  *
  * @author SlavSquatSuperstar
  */
-@ExperimentalFeature
-class SATDetector(
-    private val shape1: Shape,
-    private val shape2: Shape,
-) {
+class SATDetector(private val shape1: Shape, private val shape2: Shape) {
 
     private val type: CollisionType
 
@@ -33,24 +28,11 @@ class SATDetector(
     fun detect(): CollisionInfo? {
         return when (type) {
             CollisionType.INVALID -> null // cannot solve using SAT
-            CollisionType.CIRCLE_CIRCLE -> detectCircleCircle(shape1 as Circle, shape2 as Circle)
+            CollisionType.CIRCLE_CIRCLE -> CircleDetector.detect(shape1 as Circle, shape2 as Circle)
             CollisionType.CIRCLE_POLYGON -> detectCirclePolygon(shape1 as Circle, shape2 as Polygon)
             CollisionType.POLYGON_CIRCLE -> detectCirclePolygon(shape2 as Circle, shape1 as Polygon)?.flip()
             CollisionType.POLYGON_POLYGON -> detectPolygonPolygon(shape1 as Polygon, shape2 as Polygon)
         }
-    }
-
-    // Circle vs Circle: 1 contact point
-    private fun detectCircleCircle(circle1: Circle, circle2: Circle): CollisionInfo? {
-        val sumRadii = circle1.radius + circle2.radius
-        val distance = circle2.center() - circle1.center()
-        if (distance.lenSq() >= sumRadii * sumRadii) return null // Circles too far away
-
-        val depth = sumRadii - distance.len()
-        val normal = distance.unit()
-        val result = CollisionInfo(circle1, circle2, normal, depth)
-        result.addContact(circle1.center() + (normal * (circle1.radius - depth)))
-        return result
     }
 
     // Circle vs Polygon: 1 contact point
@@ -126,13 +108,6 @@ class SATDetector(
             val projections = FloatArray(this.numVertices) { this.vertices[it].dot(axis) }
             return Range(MathUtils.min(*projections), MathUtils.max(*projections))
         }
-
-        // Do the intervals intersect
-//        private fun Polygon.hasOverlapOnAxis(polygon: Polygon, axis: Vec2): Boolean {
-//            val thisInterval = this.getIntervalOnAxis(axis)
-//            val otherInterval = polygon.getIntervalOnAxis(axis)
-//            return (thisInterval.min <= otherInterval.max) && (otherInterval.min <= thisInterval.max)
-//        }
 
         // TODO combine separation and overlap into one function (differentiate with positive and negative)
         /*
