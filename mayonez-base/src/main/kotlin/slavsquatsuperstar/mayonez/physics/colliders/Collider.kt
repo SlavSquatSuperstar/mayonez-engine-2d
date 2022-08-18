@@ -14,8 +14,11 @@ import java.awt.Color
 import java.awt.Graphics2D
 
 /**
- * A shape that takes up space and can detect collisions. Requires a [Rigidbody] to respond to collisions
- * properly.
+ * A shape centered around the object's position that can detect collisions with other shapes. Requires a [Rigidbody]
+ * to respond to collisions properly.
+ *
+ * @constructor Constructs a collider from a [Shape] object
+ * @param shapeData the shape object that stores the vertices and the shape's properties
  *
  * @author SlavSquatSuperstar
  */
@@ -105,7 +108,7 @@ abstract class Collider(private val shapeData: Shape) : Component() {
 
     open fun getRotation(): Float = transform!!.rotation
 
-    abstract fun getMinBounds(): Rectangle
+    open fun getMinBounds(): Rectangle = transformToWorld().boundingRectangle()
 
     open fun getMass(density: Float): Float = shapeData.scale(transform!!.scale).mass(density)
 
@@ -138,15 +141,7 @@ abstract class Collider(private val shapeData: Shape) : Component() {
      * @param point a vector
      * @return if the shape contains the point
      */
-    abstract operator fun contains(point: Vec2): Boolean
-
-    /**
-     * Returns the point on or inside the collider nearest to the given position.
-     *
-     * @param position a 2D vector
-     * @return the point
-     */
-    abstract fun nearestPoint(position: Vec2): Vec2?
+    operator fun contains(point: Vec2): Boolean = (point in transformToWorld())
 
     // Shape vs Shape Collisions
 

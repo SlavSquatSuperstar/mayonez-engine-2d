@@ -14,6 +14,7 @@ import kotlin.math.sqrt
  */
 object RaycastDetector {
 
+    @JvmStatic
     fun raycast(shape: Shape?, ray: Ray?, limit: Float): RaycastInfo? {
         return when {
             (shape == null) || (ray == null) -> null

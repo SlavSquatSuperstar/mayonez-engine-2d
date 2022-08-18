@@ -1,13 +1,13 @@
 package slavsquatsuperstar.mayonez.graphics
 
 import slavsquatsuperstar.math.Vec2
-import slavsquatsuperstar.mayonez.Colors
 import slavsquatsuperstar.mayonez.Mayonez
 import slavsquatsuperstar.mayonez.annotations.EngineType
 import slavsquatsuperstar.mayonez.annotations.UsesEngine
 import slavsquatsuperstar.mayonez.event.Receivable
 import slavsquatsuperstar.mayonez.physics.colliders.Collider
 import slavsquatsuperstar.mayonez.physics.shapes.*
+import slavsquatsuperstar.util.Colors
 import java.awt.BasicStroke
 import java.awt.Color
 import java.awt.Graphics2D
@@ -132,7 +132,9 @@ object DebugDraw {
     }
 
     private fun drawEllipse(ellipse: Ellipse, color: Color, fill: Boolean) {
-        val centerPx = ellipse.center.toScreen()
+        if (ellipse.isCircle) return drawCircle(Circle(ellipse.center(), ellipse.size.x * 0.5f), color, fill)
+
+        val centerPx = ellipse.center().toScreen()
         val rotXf = AffineTransform.getRotateInstance(
             Math.toRadians(ellipse.angle.toDouble()),
             centerPx.x.toDouble(), centerPx.y.toDouble()
@@ -143,7 +145,7 @@ object DebugDraw {
 
     private fun drawPolygon(polygon: Polygon, color: Color, fill: Boolean) {
         val shape = java.awt.Polygon()
-        polygon.vertices.forEach { shape.addPoint(it.x.toScreen().roundToInt(), it.y.toScreen().roundToInt())}
+        polygon.vertices.forEach { shape.addPoint(it.x.toScreen().roundToInt(), it.y.toScreen().roundToInt()) }
         shapes.add(ShapeDrawer(DrawPriority.SHAPE, shape, color, fill))
     }
 

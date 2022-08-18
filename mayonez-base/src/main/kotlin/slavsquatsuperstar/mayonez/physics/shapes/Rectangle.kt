@@ -103,9 +103,15 @@ open class Rectangle(private val center: Vec2, private val size: Vec2) :
         return Rectangle(if (origin == null) center else center.scale(factor, origin), size * factor)
     }
 
-    // Overrides
+    // Rectangle vs Point
+
+    override fun nearestPoint(position: Vec2): Vec2 {
+        return if (position in this) position else position.clampInbounds(min(), max())
+    }
 
     override fun contains(point: Vec2): Boolean = point.inRange(center - size * 0.5f, center + size * 0.5f)
+
+    // Overrides
 
     override fun equals(other: Any?): Boolean {
         return (other is Rectangle) && (this.center == other.center) && (this.size == other.size)

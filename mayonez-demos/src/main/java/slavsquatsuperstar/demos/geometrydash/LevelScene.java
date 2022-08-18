@@ -5,6 +5,7 @@ import slavsquatsuperstar.mayonez.*;
 import slavsquatsuperstar.mayonez.physics.Rigidbody;
 import slavsquatsuperstar.mayonez.physics.colliders.BoxCollider;
 import slavsquatsuperstar.mayonez.physics.colliders.Collider;
+import slavsquatsuperstar.util.Colors;
 
 import java.awt.*;
 

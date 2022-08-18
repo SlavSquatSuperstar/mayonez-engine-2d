@@ -1,4 +1,4 @@
-package slavsquatsuperstar.mayonez
+package slavsquatsuperstar.util
 
 import java.awt.Color
 

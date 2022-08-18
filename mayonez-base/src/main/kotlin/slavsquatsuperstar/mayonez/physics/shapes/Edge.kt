@@ -3,6 +3,8 @@ package slavsquatsuperstar.mayonez.physics.shapes
 import slavsquatsuperstar.math.Range
 import slavsquatsuperstar.math.Vec2
 import kotlin.math.abs
+import kotlin.math.max
+import kotlin.math.min
 
 /**
  * A 2D line segment defined by two endpoints. An edge is a one-dimensional simplex formed when two plane figures
@@ -59,15 +61,67 @@ class Edge(val start: Vec2, val end: Vec2) : Shape() {
      */
     override fun center(): Vec2 = start.midpoint(end)
 
-    // Edge2D Methods
+    /**
+     * Clips an edge along a single plane and keeps one of the sub-segments.
+     *
+     * @param plane     a ray pointing towards this edge
+     * @param direction in which direction to keep the points
+     * @return the clipped edge
+     */
+//    fun clipToPlane(plane: Ray, direction: Vec2): Edge {
+//        // Find edge intersection with plane
+//        val edge = Ray(start, toVector() / length)
+//        val startDist = (plane.origin - this.start).dot(direction)
+//        val endDist = (plane.origin - this.end).dot(direction)
+//
+//        // plane behind or in front of edge
+//        if (startDist <= 0 && endDist <= 0) return Edge(start, end)
+//        else if (startDist >= 0 && endDist >= 0) return Edge(start, end)
+//
+//        val contact = edge.getPoint(abs(startDist))
+//        return if (startDist < 0) Edge(start, contact)
+//        else Edge(contact, end)
+//    }
 
-    fun nearestPoint(position: Vec2): Vec2 {
-        val projLength = position.sub(start).dot(toVector()) / length // find point shadow on line
-        if (projLength > length) // past line end
-            return end else if (projLength < 0) // behind line start
-            return start
-        return start.add(toVector().mul(projLength / length)) // inside line
+    // Clip Methods
+    fun clipToSegment(segment: Edge): Edge {
+        val planeDir = segment.unitNormal()
+        val plane1 = Ray(segment.start, planeDir)
+        val plane2 = Ray(segment.end, planeDir)
+
+        // Find edge intersections with planes
+        val edge = Ray(start, toVector() / length)
+        val contact1 = edge.getIntersection(plane1)
+        val contact2 = edge.getIntersection(plane2)
+
+        if (contact1 == null || contact2 == null) return Edge(start, end) // plane is parallel to line
+
+        // Clip edge to new endpoints
+        val distances = Range((contact1 - start).dot(edge.direction), (contact2 - start).dot(edge.direction))
+        val minDist = max(0f, distances.min)
+        val maxDist = min(length, distances.max)
+        return Edge(edge.getPoint(minDist), edge.getPoint(maxDist))
     }
+//    fun clipToSegment(segment: Edge): Edge {
+//        // Find edge intersections with planes
+//        val edge = Ray(start, toVector() / length)
+//        val planeDist1 = (segment.start - this.start).dot(edge.direction)
+//        val planeDist2 = (segment.end - this.start).dot(edge.direction)
+//
+//        // Clip edge to new endpoints
+//        val dists = Range(planeDist1, planeDist2)
+//        val minDist = max(dists.min, 0f)
+//        val maxDist = min(dists.max, length)
+//        return Edge(edge.getPoint(minDist), edge.getPoint(maxDist))
+//    }
+
+    // Bounds
+
+    override fun boundingCircle(): Circle = Circle(center(), length * 0.5f)
+
+    override fun boundingRectangle(): Rectangle = Rectangle(center(), Vec2(abs(end.x - start.x), abs(end.y - start.y)))
+
+    // Edge vs Point
 
     /**
      * Calculates the distance from a point to this line segment.
@@ -79,31 +133,15 @@ class Edge(val start: Vec2, val end: Vec2) : Shape() {
         return point.distance(nearestPoint(point))
     }
 
-    fun clipToSegment(segment: Edge): Edge {
-        val rayDir = segment.unitNormal()
-        val plane1 = Ray(segment.start, rayDir)
-        val plane2 = Ray(segment.end, rayDir)
-
-        val edge = Ray(this).normalize()
-        val contact1 = edge.getIntersection(plane1)
-        val contact2 = edge.getIntersection(plane2)
-
-        if (contact1 == null || contact2 == null) return Edge(start, end)
-        // get distances
-        val distances = Range((contact1 - start).dot(edge.direction), (contact2 - start).dot(edge.direction))
-        val min = 0f.coerceAtLeast(distances.min)
-        val max = length.coerceAtMost(distances.max)
-
-        return Edge(edge.getPoint(min), edge.getPoint(max))
-    }
-
-    // Collision Properties
-
-    override fun boundingCircle(): Circle = Circle(center(), length * 0.5f)
-
-    override fun boundingRectangle(): Rectangle = Rectangle(center(), Vec2(abs(end.x - start.x), abs(end.y - start.y)))
-
     override fun supportPoint(direction: Vec2): Vec2 = if (start.dot(direction) > end.dot(direction)) start else end
+
+    override fun nearestPoint(position: Vec2): Vec2 {
+        val projLength = position.sub(start).dot(toVector()) / length // find point shadow on line
+        if (projLength > length) // past line end
+            return end else if (projLength < 0) // behind line start
+            return start
+        return start.add(toVector().mul(projLength / length)) // inside line
+    }
 
     override fun contains(point: Vec2): Boolean {
         if (point == start || point == end) return true // point is endpoint

@@ -45,7 +45,7 @@ A massive, heartfelt thanks goes out to the following people, groups, and resour
   tutorial I ever followed and starting me on this crazy journey.
 - [Unity Engine](https://docs.unity3d.com/ScriptReference/): ~~Who I'm ripping off~~ For making game dev
   accessible for everybody and providing excellent documentation.
-- [Box2D](https://box2d.org/) and [dyn4j](https://dyn4j.org/): For unpacking the complexities of game physics into a
+- [Box2D](https://box2d.org/), [dyn4j](https://dyn4j.org/), and [Winter's Blog](https://blog.winter.dev/): For unpacking the complexities of game physics into a
   followable example.
 - [Azurite Community](https://azurite-engine.github.io/): For showing that implementing LWJGL and physics from scratch
   isn't as intimidating as it sounds.

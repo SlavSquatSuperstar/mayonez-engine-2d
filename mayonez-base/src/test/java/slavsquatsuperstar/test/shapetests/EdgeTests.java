@@ -19,6 +19,51 @@ import static slavsquatsuperstar.test.TestUtils.assertNoShapeCollision;
  */
 public class EdgeTests {
 
+    // Clip Edge
+    @Test
+    public void clipEdgeBothEnds() {
+        Edge edge = new Edge(new Vec2(1, 1), new Vec2(5, 1));
+        Edge segment = new Edge(new Vec2(2, 0), new Vec2(4, 0));
+        assertEquals(edge.clipToSegment(segment), new Edge(new Vec2(2, 1), new Vec2(4, 1)));
+    }
+
+    @Test
+    public void clipEdgeOneEnd() {
+        Edge edge = new Edge(new Vec2(1, 1), new Vec2(5, 1));
+        Edge seg1 = new Edge(new Vec2(0, 0), new Vec2(4, 0));
+        assertEquals(edge.clipToSegment(seg1), new Edge(new Vec2(1, 1), new Vec2(4, 1)));
+        Edge seg2 = new Edge(new Vec2(2, 0), new Vec2(6, 0));
+        assertEquals(edge.clipToSegment(seg2), new Edge(new Vec2(2, 1), new Vec2(5, 1)));
+    }
+
+    @Test
+    public void clipEdgeNoEnds() {
+        Edge edge = new Edge(new Vec2(1, 1), new Vec2(5, 1));
+        Edge segment = new Edge(new Vec2(0, 0), new Vec2(6, 0));
+        assertEquals(edge.clipToSegment(segment), edge);
+    }
+
+    @Test
+    public void clipEdgeAngledBothEnds() {
+        Edge edge = new Edge(new Vec2(0, 1), new Vec2(5, 1));
+        Edge segment = new Edge(new Vec2(4.5f, 0), new Vec2(2.1f, -1.2f));
+        assertEquals(edge.clipToSegment(segment), new Edge(new Vec2(1, 1), new Vec2(4, 1)));
+    }
+
+    @Test
+    public void clipEdgeAngledOneEnd() {
+        Edge edge = new Edge(new Vec2(0, 1), new Vec2(5, 1));
+        Edge segment = new Edge(new Vec2(4.5f, 0), new Vec2(0.5f, -2));
+        assertEquals(edge.clipToSegment(segment), new Edge(new Vec2(0, 1), new Vec2(4, 1)));
+    }
+
+    @Test
+    public void clipEdgeAngledNoEnds() {
+        Edge edge = new Edge(new Vec2(0, 1), new Vec2(5, 1));
+        Edge segment = new Edge(new Vec2(6.5f, 1), new Vec2(0.5f, -2));
+        assertEquals(edge.clipToSegment(segment), new Edge(new Vec2(0, 1), new Vec2(5, 1)));
+    }
+
     // Point vs Line
 
     @Test

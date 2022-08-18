@@ -1,7 +1,7 @@
 package slavsquatsuperstar.demos.physics;
 
 import slavsquatsuperstar.math.Vec2;
-import slavsquatsuperstar.mayonez.Colors;
+import slavsquatsuperstar.util.Colors;
 import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Mayonez;
 import slavsquatsuperstar.mayonez.Script;
@@ -22,7 +22,7 @@ public class AngularResolutionTest extends PhysicsTestScene {
 
     @Override
     protected void init() {
-        addObject(createStaticOBB("Floor", new Vec2(getWidth() / 2f, 1), new Vec2(getWidth(), 2), 0));
+        addObject(createStaticBox("Floor", new Vec2(getWidth() / 2f, 1), new Vec2(getWidth(), 2), 0));
 
 //        for (int i = 0; i < NUM_SHAPES; i++) {
 //            if (i % 3 == 0) {

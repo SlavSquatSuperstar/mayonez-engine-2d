@@ -2,9 +2,11 @@ package slavsquatsuperstar.test.shapetests;
 
 import org.junit.jupiter.api.Test;
 import slavsquatsuperstar.math.Vec2;
-import slavsquatsuperstar.mayonez.physics.shapes.Rectangle;
 import slavsquatsuperstar.mayonez.physics.shapes.Polygon;
+import slavsquatsuperstar.mayonez.physics.shapes.Rectangle;
 import slavsquatsuperstar.mayonez.physics.shapes.Triangle;
+
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -59,6 +61,13 @@ public class PolygonTests {
         Polygon rect = Polygon.rectangle(new Vec2(2, 2), new Vec2(4, 4)); // 4x4 rectangle at (0, 0)
         assertEquals(new Vec2(0, 0), rect.supportPoint(new Vec2(-1, -1)));
         assertEquals(new Vec2(4, 4), rect.supportPoint(new Vec2(1, 2)));
+    }
+
+    @Test
+    public void polygonNormalsPointOutward() {
+        Polygon rect = Polygon.rectangle(new Vec2(0, 0), new Vec2(2, 2));
+        Vec2[] normals = new Vec2[]{new Vec2(0, -1), new Vec2(1, 0), new Vec2(0, 1), new Vec2(-1, 0)};
+        assertTrue(Objects.deepEquals(normals, rect.getNormals()));
     }
 
 }

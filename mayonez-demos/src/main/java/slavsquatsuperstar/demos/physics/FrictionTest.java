@@ -1,14 +1,14 @@
 package slavsquatsuperstar.demos.physics;
 
 import slavsquatsuperstar.math.Vec2;
-import slavsquatsuperstar.mayonez.Colors;
+import slavsquatsuperstar.util.Colors;
 import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Mayonez;
 import slavsquatsuperstar.mayonez.Script;
 import slavsquatsuperstar.mayonez.input.KeyInput;
 import slavsquatsuperstar.mayonez.physics.Rigidbody;
 import slavsquatsuperstar.mayonez.physics.colliders.BoxCollider;
-import slavsquatsuperstar.mayonez.physics.colliders.CircleCollider;
+import slavsquatsuperstar.mayonez.physics.colliders.BallCollider;
 import slavsquatsuperstar.mayonez.physics.colliders.Collider;
 import slavsquatsuperstar.mayonez.scripts.DragAndDrop;
 import slavsquatsuperstar.mayonez.scripts.KeepInScene;
@@ -40,14 +40,14 @@ public class FrictionTest extends PhysicsTestScene {
             }
         });
 
-        addObject(createCircle(2, new Vec2(15, 65), NORMAL_MATERIAL));
+        addObject(createBall(new Vec2(2), new Vec2(15, 65), NORMAL_MATERIAL));
 
         addObject(new GameObject("Player Circle", new Vec2(25, 8)) {
             @Override
             protected void init() {
                 float speed = 2f;
 //                Collider2D collider = new BoxCollider2D(new Vec2(6, 6));
-                Collider collider = new CircleCollider(3f).setDebugDraw(Colors.BLUE, false);
+                Collider collider = new BallCollider(3f).setDebugDraw(Colors.BLUE, false);
                 addComponent(collider);
                 addComponent(new Rigidbody(collider.getMass(DENSITY)));
                 addComponent(new MouseFlick(MoveMode.VELOCITY, "right mouse", 15, false));

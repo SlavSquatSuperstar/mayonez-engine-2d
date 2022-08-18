@@ -40,7 +40,7 @@ abstract class Shape {
      */
     abstract fun center(): Vec2 // TODO move to physical?
 
-    // Collision Properties
+    // Min Bounds Methods
 
     /**
      * The bounding circle (sphere) of a shape is the smallest circle that contains all points in the shape and shares
@@ -54,6 +54,8 @@ abstract class Shape {
      */
     abstract fun boundingRectangle(): Rectangle
 
+    // Shape vs Point Methods
+
     /**
      * The support point in any direction is the furthest point on a shape towards that direction. Used by the GJK
      * collision algorithm.
@@ -63,9 +65,19 @@ abstract class Shape {
     abstract fun supportPoint(direction: Vec2): Vec2
 
     /**
+     * Returns the point on or inside the shape with the least distance to the given position.
+     *
+     * @param position the point to search
+     * @return the nearest point
+     */
+    open fun nearestPoint(position: Vec2): Vec2 {
+        return if (position in this) position else supportPoint(position - center())
+    }
+
+    /**
      * Whether the specified point lies on or within the boundary of the shape.
      *
-     * @param point a vector in 2D space
+     * @param point the point to check
      * @return the scaled shape
      */
     // TODO boundary vs interior vs exterior

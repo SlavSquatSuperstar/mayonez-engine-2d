@@ -7,7 +7,7 @@ import java.util.*
  * @param <L> the class of the left (first) object
  * @param <R> the class of the right (second) object
  */
-class Pair<L, R>(val left: L, val right: R) {
+open class Pair<L, R>(val left: L, val right: R) {
 
     operator fun contains(obj: Any?): Boolean = obj == left || obj == right
 
@@ -18,6 +18,9 @@ class Pair<L, R>(val left: L, val right: R) {
             else -> false
         }
     }
+
+    fun component1(): L = left
+    fun component2(): R = right
 
     override fun hashCode(): Int = Objects.hash(left, right) // 31 * L + R
 

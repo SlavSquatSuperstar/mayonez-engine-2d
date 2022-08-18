@@ -11,24 +11,14 @@ import slavsquatsuperstar.mayonez.physics.shapes.Shape
 class CollisionInfo(
     val self: Shape,
     val other: Shape,
-    normal: Vec2,
-    /**
-     * How much the colliders are overlapping along the normal axis.
-     *
-     * @return the penetration distance
-     */
-    val depth: Float
+    normal: Vec2, // collision normal facing out from the reference shape
+    val depth: Float // positive penetration (separation) distance along normal
 ) {
 
     private val contacts = ArrayList<Vec2>(2)
 
     // Properties
 
-    /**
-     * What direction the two colliders should be separated when resolving the collision.
-     *
-     * @return the direction of separation
-     */
     val normal: Vec2 = normal.unit()
 
     // Contact Methods

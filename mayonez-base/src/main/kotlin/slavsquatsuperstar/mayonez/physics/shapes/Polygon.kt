@@ -13,7 +13,7 @@ import kotlin.math.abs
  * @author SlavSquatSuperstar
  */
 // TODO correct self-intersecting and set convex hull
-open class Polygon(vararg vertices: Vec2) : Shape() {
+open class Polygon @JvmOverloads constructor(vararg vertices: Vec2, internal val isBox: Boolean = false) : Shape() {
 
     /**
      * Constructs a regular polygon with the specified number of vertices and radius.
@@ -21,7 +21,10 @@ open class Polygon(vararg vertices: Vec2) : Shape() {
      * @param sides  the number of sides/vertices
      * @param radius the distance from the center to each vertex
      */
-    constructor(center: Vec2, sides: Int, radius: Float) : this(*regularPolygonVertices(center, sides, radius))
+    constructor(center: Vec2, sides: Int, radius: Float) : this(
+        *regularPolygonVertices(center, sides, radius),
+        isBox = (sides == 4)
+    )
 
     // Polygon Components
 
@@ -89,7 +92,7 @@ open class Polygon(vararg vertices: Vec2) : Shape() {
         return centroid
     }
 
-    // Collision Properties
+    // Bounds
 
     override fun boundingCircle(): Circle {
         val distsSq = FloatArray(numVertices) { vertices[it].distanceSq(center()) }
@@ -106,20 +109,31 @@ open class Polygon(vararg vertices: Vec2) : Shape() {
         return Rectangle(boxMin.midpoint(boxMax), boxMax - boxMin)
     }
 
+    // Polygon vs Point
+
     override fun supportPoint(direction: Vec2): Vec2 {
         val dotProds = FloatArray(numVertices) { vertices[it].dot(direction) }
         return vertices[MathUtils.maxIndex(*dotProds)]
     }
 
+    override fun nearestPoint(position: Vec2): Vec2 {
+        if (position in this) return position
+        val distances = FloatArray(edges.size) { edges[it].distance(position) }
+        val nearestEdge = edges[MathUtils.minIndex(*distances)]
+        return nearestEdge.nearestPoint(position)
+    }
+
     // Transformations
 
-    override fun translate(direction: Vec2): Polygon = Polygon(*vertices.translate(direction))
+    override fun translate(direction: Vec2): Polygon = Polygon(*vertices.translate(direction), isBox = this.isBox)
 
-    override fun rotate(angle: Float, origin: Vec2?): Polygon =
-        Polygon(*vertices.rotate(angle, origin ?: this.center()))
+    override fun rotate(angle: Float, origin: Vec2?): Polygon {
+        return Polygon(*vertices.rotate(angle, origin ?: this.center()), isBox = this.isBox)
+    }
 
-    override fun scale(factor: Vec2, origin: Vec2?): Polygon =
-        Polygon(*vertices.scale(factor, origin ?: this.center()))
+    override fun scale(factor: Vec2, origin: Vec2?): Polygon {
+        return Polygon(*vertices.scale(factor, origin ?: this.center()), isBox = this.isBox)
+    }
 
     // Physical Properties
 
@@ -250,6 +264,6 @@ open class Polygon(vararg vertices: Vec2) : Shape() {
          */
         @JvmStatic
         fun rectangle(center: Vec2, size: Vec2, angle: Float): Polygon =
-            Polygon(*Rectangle.rectangleVertices(center, size, angle = angle))
+            Polygon(*Rectangle.rectangleVertices(center, size, angle = angle), isBox = true)
     }
 }

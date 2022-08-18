@@ -16,11 +16,9 @@ class Circle(
      * The circle's radius, r.
      */
     val radius: Float
-) : Shape() {
+) : Ellipse(center, Vec2(radius), 0f) {
 
     // Circle Properties
-
-    override val numVertices: Int = 0
 
     /**
      * The square of the circle's radius, equal to r^2.
@@ -28,15 +26,12 @@ class Circle(
     @JvmField
     val radiusSq: Float = radius * radius
 
+    override val isCircle: Boolean = true
+
     /**
      * The area of a circle, equal to πr^2.
      */
     override fun area(): Float = PI * radiusSq
-
-    /**
-     * The centroid of the circle, equal to its center position.
-     */
-    override fun center(): Vec2 = center
 
     // Collision Properties
 
@@ -81,12 +76,17 @@ class Circle(
         return Circle(if (origin == null) center else center.scale(factor, origin), radius * factor.x)
     }
 
-    // Overrides
+    // Circle vs Point
+    override fun nearestPoint(position: Vec2): Vec2 {
+        return if (position in this) position else center + (position - center).clampLength(radius)
+    }
 
     /**
      * Whether a point is inside the circle, meaning its distance form the center is less than the radius.
      */
     override fun contains(point: Vec2): Boolean = point.distanceSq(center) <= radiusSq
+
+    // Overrides
 
     override fun equals(other: Any?): Boolean {
         return (other is Circle) && (this.center == other.center) && MathUtils.equals(this.radius, other.radius)

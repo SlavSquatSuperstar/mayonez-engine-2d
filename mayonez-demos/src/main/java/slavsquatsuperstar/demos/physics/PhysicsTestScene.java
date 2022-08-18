@@ -1,7 +1,7 @@
 package slavsquatsuperstar.demos.physics;
 
 import slavsquatsuperstar.math.Vec2;
-import slavsquatsuperstar.mayonez.Colors;
+import slavsquatsuperstar.util.Colors;
 import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Preferences;
 import slavsquatsuperstar.mayonez.Scene;
@@ -10,7 +10,7 @@ import slavsquatsuperstar.mayonez.input.KeyInput;
 import slavsquatsuperstar.mayonez.physics.PhysicsMaterial;
 import slavsquatsuperstar.mayonez.physics.Rigidbody;
 import slavsquatsuperstar.mayonez.physics.colliders.BoxCollider;
-import slavsquatsuperstar.mayonez.physics.colliders.CircleCollider;
+import slavsquatsuperstar.mayonez.physics.colliders.BallCollider;
 import slavsquatsuperstar.mayonez.physics.colliders.Collider;
 import slavsquatsuperstar.mayonez.scripts.DragAndDrop;
 import slavsquatsuperstar.mayonez.scripts.KeepInScene;
@@ -72,11 +72,11 @@ public abstract class PhysicsTestScene extends Scene {
         else setGravity(new Vec2());
     }
 
-    protected final GameObject createCircle(float radius, Vec2 position, PhysicsMaterial material) {
-        return new GameObject("Circle", position) {
+    protected final GameObject createBall(Vec2 size, Vec2 position, PhysicsMaterial material) {
+        return new GameObject("Ball", position) {
             @Override
             protected void init() {
-                Collider circle = new CircleCollider(radius).setMaterial(material).setDebugDraw(Colors.BLUE, false);
+                Collider circle = new BallCollider(size).setMaterial(material).setDebugDraw(Colors.BLUE, false);
                 addComponent(circle);
                 addComponent(new Rigidbody(circle.getMass(DENSITY)));
                 addComponent(new KeepInScene(getScene(), KeepInScene.Mode.BOUNCE));
@@ -86,25 +86,12 @@ public abstract class PhysicsTestScene extends Scene {
         };
     }
 
-    protected final GameObject createAABB(float width, float height, Vec2 position, PhysicsMaterial material) {
-        return new GameObject("AABB Rectangle", position) {
+    protected final GameObject createBox(Vec2 size, Vec2 position, float rotation, PhysicsMaterial material) {
+        return new GameObject("Box", position) {
             @Override
             protected void init() {
-                Collider box = new BoxCollider(new Vec2(width, height)).setMaterial(material).setDebugDraw(Colors.LIGHT_GREEN, false);
-                addComponent(box);
-                addComponent(new Rigidbody(box.getMass(DENSITY)).setFixedRotation(true));
-                addComponent(new KeepInScene(getScene(), KeepInScene.Mode.BOUNCE));
-                addComponent(new DragAndDrop("left mouse"));
-                addComponent(new MouseFlick(MoveMode.VELOCITY, "right mouse", 15, false));
-            }
-        };
-    }
-
-    protected final GameObject createOBB(float width, float height, Vec2 position, float rotation, PhysicsMaterial material) {
-        return new GameObject("OBB Rectangle", position) {
-            @Override
-            protected void init() {
-                Collider box = new BoxCollider(new Vec2(width, height)).setMaterial(material).setDebugDraw(Colors.ORANGE, false);
+//                transform.rotate(rotation);
+                Collider box = new BoxCollider(size).setMaterial(material).setDebugDraw(Colors.ORANGE, false);
                 addComponent(box);
                 addComponent(new Rigidbody(box.getMass(DENSITY)));
                 addComponent(new KeepInScene(getScene(), KeepInScene.Mode.BOUNCE));
@@ -114,7 +101,7 @@ public abstract class PhysicsTestScene extends Scene {
         };
     }
 
-    protected final GameObject createStaticOBB(String name, Vec2 position, Vec2 size, float rotation) {
+    protected final GameObject createStaticBox(String name, Vec2 position, Vec2 size, float rotation) {
         return new GameObject(name, position) {
             @Override
             protected void init() {

@@ -4,6 +4,7 @@ import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.event.Receivable;
 import slavsquatsuperstar.mayonez.graphics.Camera;
 import slavsquatsuperstar.mayonez.graphics.JCamera;
+import slavsquatsuperstar.util.Colors;
 
 import java.awt.*;
 import java.util.ArrayList;

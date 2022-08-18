@@ -7,10 +7,10 @@ import slavsquatsuperstar.math.Vec2
 import kotlin.math.*
 
 /**
- * A round shape defined by two focal points. For each point on the ellipse's boundary curve, the sum of
- * the distances to the foci is constant.
+ * A round shape defined by a major and minor radius and containing two focal points. For each point on the ellipse's
+ * boundary curve, the sum of the distances to the foci is constant.
  */
-class Ellipse(val center: Vec2, val size: Vec2, val angle: Float) : Shape() {
+open class Ellipse(private val center: Vec2, val size: Vec2, val angle: Float) : Shape() {
 
     constructor(center: Vec2, size: Vec2) : this(center, size, 0f)
 
@@ -21,6 +21,8 @@ class Ellipse(val center: Vec2, val size: Vec2, val angle: Float) : Shape() {
     private val halfWidth: Float = size.x * 0.5f
 
     private val halfHeight: Float = size.y * 0.5f
+
+    open val isCircle: Boolean = MathUtils.equals(size.x, size.y)
 
     /**
      * The area of an ellipse, equal to πab, where a is half the width and b is half the height.
@@ -53,18 +55,18 @@ class Ellipse(val center: Vec2, val size: Vec2, val angle: Float) : Shape() {
         return center + point
     }
 
-    private fun pointInDirection(direction: Vec2): Vec2 {
-        // s, k = width, height
-        // m = sqrt( (cos(a)/k)^2 + (sin(a)/s)^2 )
-        // x = cos(a)/m
-        // y = sin(a)/m
-        // assume rotation is 0
-        val ang = direction.angle() - angle
-        val cos = MathUtils.cos(ang)
-        val sin = MathUtils.sin(ang)
-        val len = 1f / MathUtils.hypot(cos / halfWidth, sin / halfHeight)
-        return center + Vec2(cos, sin).rotate(angle) * len // unit direction times length
-    }
+//    private fun pointInDirection(direction: Vec2): Vec2 {
+//        // s, k = width, height
+//        // m = sqrt( (cos(a)/k)^2 + (sin(a)/s)^2 )
+//        // x = cos(a)/m
+//        // y = sin(a)/m
+//        // assume rotation is 0
+//        val ang = direction.angle() - angle
+//        val cos = MathUtils.cos(ang)
+//        val sin = MathUtils.sin(ang)
+//        val len = 1f / MathUtils.hypot(cos / halfWidth, sin / halfHeight)
+//        return center + Vec2(cos, sin).rotate(angle) * len // unit direction times length
+//    }
 
     // Physical Properties
 
@@ -99,14 +101,15 @@ class Ellipse(val center: Vec2, val size: Vec2, val angle: Float) : Shape() {
          * tan(t) = a/b * tan(theta)
          * t = atan(a/b * tan(theta))
          */
-        val centerToPoint = point - center
-        val pointAngleRad = toRadians(centerToPoint.angle() - angle) // angle with ellipse's x-axis
+        // Target Point: A, Point on Ellipse: B, Center: C
+        val vecCA = point - center // CA
+        val pointAngleRad = toRadians(vecCA.angle() - angle) // angle of CA with ellipse's x-axis
 
         val radius = Vec2(halfWidth, halfHeight)
-        val ellipseAngleRad = atan(radius.x / radius.y * tan(pointAngleRad)) // t parameter matching angle
-        val pointOnEllipse = Vec2(cos(ellipseAngleRad), sin(ellipseAngleRad)) * radius
+        val tEllipse = atan(radius.x / radius.y * tan(pointAngleRad)) // t parameter matching angle
+        val vecCB = Vec2(cos(tEllipse), sin(tEllipse)) * radius
 //        val pointOnEllipse = pointInDirection(centerToPoint)
-        return centerToPoint.lenSq() <= pointOnEllipse.lenSq()
+        return vecCA.lenSq() <= vecCB.lenSq()
     }
 
     override fun equals(other: Any?): Boolean {

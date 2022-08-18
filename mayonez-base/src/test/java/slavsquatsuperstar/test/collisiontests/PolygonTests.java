@@ -55,11 +55,4 @@ public class PolygonTests {
         assertTrue(Objects.deepEquals(worldVertices, shape.getVertices()));
     }
 
-    @Test
-    public void polygonNormalsPointOutward() {
-        PolygonCollider shape = new PolygonCollider(vertices);
-        Vec2[] normals = new Vec2[]{new Vec2(0, 1), new Vec2(-1, 0), new Vec2(0, -1), new Vec2(1, 0)};
-        assertTrue(Objects.deepEquals(normals, shape.getNormals()));
-    }
-
 }

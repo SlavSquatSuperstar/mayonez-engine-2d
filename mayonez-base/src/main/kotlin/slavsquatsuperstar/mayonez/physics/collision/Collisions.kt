@@ -1,7 +1,10 @@
 package slavsquatsuperstar.mayonez.physics.collision
 
 import slavsquatsuperstar.math.Vec2
-import slavsquatsuperstar.mayonez.physics.detection.*
+import slavsquatsuperstar.mayonez.physics.detection.CircleDetector
+import slavsquatsuperstar.mayonez.physics.detection.IntersectionDetector
+import slavsquatsuperstar.mayonez.physics.detection.RaycastDetector
+import slavsquatsuperstar.mayonez.physics.detection.SATDetector
 import slavsquatsuperstar.mayonez.physics.shapes.Circle
 import slavsquatsuperstar.mayonez.physics.shapes.Ray
 import slavsquatsuperstar.mayonez.physics.shapes.Shape
@@ -38,14 +41,15 @@ object Collisions {
     fun getCollisionInfo(shape1: Shape?, shape2: Shape?): CollisionInfo? {
         if (shape1 == null || shape2 == null) return null
         if (shape1 is Circle && shape2 is Circle) return CircleDetector.detect(shape1, shape2)
-        val simplex = GJKDetector(shape1, shape2).getSimplex() ?: return null
-        return SATDetector(shape1, shape2).detect()
-//        val contact = EPADetector(shape1, shape2, simplex).getPenetration() ?: return null
-//        println(contact.depth)
-//        return null
+        if (SATDetector.preferred(shape1) && SATDetector.preferred(shape2)) return SATDetector.detect(shape1, shape2)
+
+//        val simplex = GJKDetector(shape1, shape2).getSimplex() ?: return null
+//        val penetration = EPADetector(shape1, shape2, simplex).getPenetration() ?: return null
+//        println(penetration.depth)
+        return null
     }
 
-
+    // Helpers
 
     /**
      * Finds the most extreme points from the Minkowski difference set between two shapes.
@@ -53,7 +57,6 @@ object Collisions {
      * Source: https://blog.winter.dev/2020/gjk-algorithm/ § Abstracting shapes into supporting points
      */
     // TODO move to different class
-    fun support(shape1: Shape, shape2: Shape, dir: Vec2): Vec2 =
-        shape1.supportPoint(dir) - shape2.supportPoint(-dir)
+    fun support(shape1: Shape, shape2: Shape, dir: Vec2): Vec2 = shape1.supportPoint(dir) - shape2.supportPoint(-dir)
 
 }

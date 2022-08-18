@@ -6,6 +6,7 @@ import slavsquatsuperstar.mayonez.annotations.UsesEngine;
 import slavsquatsuperstar.mayonez.io.Assets;
 import slavsquatsuperstar.mayonez.io.JTexture;
 import slavsquatsuperstar.mayonez.physics.shapes.Rectangle;
+import slavsquatsuperstar.util.Colors;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

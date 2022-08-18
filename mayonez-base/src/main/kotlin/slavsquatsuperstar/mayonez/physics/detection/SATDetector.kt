@@ -5,33 +5,30 @@ import slavsquatsuperstar.math.Range
 import slavsquatsuperstar.math.Vec2
 import slavsquatsuperstar.mayonez.physics.collision.CollisionInfo
 import slavsquatsuperstar.mayonez.physics.shapes.*
+import kotlin.math.min
 
 /**
  * Detects if two shapes are colliding and finds their contacts using the separating-axis theorem.
  *
  * @author SlavSquatSuperstar
  */
-class SATDetector(private val shape1: Shape, private val shape2: Shape) {
+object SATDetector {
 
-    private val type: CollisionType
-
-    init {
-        type = when {
-            shape1 is Circle && shape2 is Circle -> CollisionType.CIRCLE_CIRCLE
-            shape1 is Circle && shape2 is Polygon -> CollisionType.CIRCLE_POLYGON
-            shape1 is Polygon && shape2 is Circle -> CollisionType.POLYGON_CIRCLE
-            shape1 is Polygon && shape2 is Polygon -> CollisionType.POLYGON_POLYGON
-            else -> CollisionType.INVALID
-        }
-    }
-
-    fun detect(): CollisionInfo? {
-        return when (type) {
-            CollisionType.INVALID -> null // cannot solve using SAT
-            CollisionType.CIRCLE_CIRCLE -> CircleDetector.detect(shape1 as Circle, shape2 as Circle)
-            CollisionType.CIRCLE_POLYGON -> detectCirclePolygon(shape1 as Circle, shape2 as Polygon)
-            CollisionType.POLYGON_CIRCLE -> detectCirclePolygon(shape2 as Circle, shape1 as Polygon)?.flip()
-            CollisionType.POLYGON_POLYGON -> detectPolygonPolygon(shape1 as Polygon, shape2 as Polygon)
+    /**
+     * Detects a collision between two shapes and calculates the contact and penetration.
+     *
+     * @param shape1 the first shape
+     * @param shape2 the second shape
+     * @return the collision information, or null if no collision
+     */
+    @JvmStatic
+    fun detect(shape1: Shape, shape2: Shape): CollisionInfo? {
+        return when {
+            shape1 is Circle && shape2 is Circle -> CircleDetector.detect(shape1, shape2)
+            shape1 is Circle && shape2 is Polygon -> detectCirclePolygon(shape1, shape2)
+            shape1 is Polygon && shape2 is Circle -> detectCirclePolygon(shape2, shape1)?.flip()
+            shape1 is Polygon && shape2 is Polygon -> detectPolygonPolygon(shape1, shape2)
+            else -> null // cannot solve using SAT
         }
     }
 
@@ -48,117 +45,57 @@ class SATDetector(private val shape1: Shape, private val shape2: Shape) {
 
     // Polygon vs Polygon: 1-2 contact points
     private fun detectPolygonPolygon(polygon1: Polygon, polygon2: Polygon): CollisionInfo? {
-        // 1. Store edges and normals in structs and calculate overlaps
-        val poly1 = SATPolygon(polygon1, polygon2)
-        val poly2 = SATPolygon(polygon2, polygon1)
+        // Track minimum penetration vector
+        var minOverlap = Float.MAX_VALUE
+        var minAxis = Vec2()
 
-        // 2. Test for a separating axis
-        if (poly1.minOverlap > 0 || poly2.minOverlap > 0) return null // positive separation = no intersection
+        // Project shapes onto axes and test for a separating axis
+        val axes = polygon1.normals + polygon2.normals
+        for (axis in axes) {
+            val range1 = polygon1.projectOnAxis(axis)
+            val range2 = polygon2.projectOnAxis(axis)
+            if (!range1.overlaps(range2)) return null // no overlap
 
-        // 3. Set the polygon with lesser overlap as reference frame
-        val reference: SATPolygon // the "stationary" shape
-        val incident: SATPolygon // the "incoming" shape
-        if (poly1.minOverlap >= poly2.minOverlap) {
-            reference = poly1
-            incident = poly2
-        } else {
-            incident = poly1
-            reference = poly2
+            val overlap = range1.getOverlap(range2)
+            if (overlap < minOverlap) {
+                minOverlap = overlap
+                minAxis = axis
+            }
         }
 
-        // 4. Calculate reference and incident edges
-        val minOverlapIdx = reference.minIdx
-        val overlap = reference.minOverlap
-        val colNormal = reference.normals[minOverlapIdx]
-        if (reference.poly === polygon2) colNormal.set(-colNormal) // flip normal if using normal of other shape
-        val refEdge = reference.edges[minOverlapIdx]
-
-        // Get most negative dot product = edge normal facing towards collision normal the most
-        val dotProds = FloatArray(incident.normals.size) { colNormal.dot(incident.normals[it]) }
-        val minDotIdx = MathUtils.minIndex(*dotProds)
-        val incEdge = incident.edges[minDotIdx]
-
-        // 5. Calculate contact points
-        val collision = CollisionInfo(reference.poly, incident.poly, colNormal, -overlap)
-        val clippedEdge = incEdge.clip(refEdge)
-        val normalFace = refEdge.start.dot(colNormal)
-
-        for (pt in arrayOf(clippedEdge.start, clippedEdge.end))
-            if (pt.dot(colNormal) <= normalFace) collision.addContact(pt)
-        return collision
+        return PenetrationSolver(polygon1, polygon2, minAxis, minOverlap).solve()
     }
 
     // SAT Helpers
 
-    companion object {
-
-        fun Polygon.nearestPoint(position: Vec2): Vec2 {
-            if (position in this) return position
-            val distances = FloatArray(edges.size) { edges[it].distance(position) }
-            val nearestEdge = edges[MathUtils.minIndex(*distances)]
-            return nearestEdge.nearestPoint(position)
+    /**
+     * Whether a collision involving the given shape can be efficiently detected. SAT detection works best with polygons
+     * with a small vertex count (boxes and triangles) and also supports circle-polygon collisions.
+     */
+    internal fun preferred(shape: Shape): Boolean { // use SAT for boxes, triangles, and circles
+        return when (shape) {
+            // Round
+            is Circle -> true
+            is Ellipse -> false
+            // Polygons
+            is Triangle -> true
+            is Rectangle -> true
+            is Polygon -> shape.isBox
+            // Other
+            is Edge -> false // TODO need to test edge colliders
+            else -> false
         }
-
-        /*
-         * Projected min and max
-         * Positive is in axis direction
-         * (-) ---> (+)
-         */
-        private fun Polygon.getIntervalOnAxis(axis: Vec2): Range {
-            val projections = FloatArray(this.numVertices) { this.vertices[it].dot(axis) }
-            return Range(MathUtils.min(*projections), MathUtils.max(*projections))
-        }
-
-        // TODO combine separation and overlap into one function (differentiate with positive and negative)
-        /*
-         * How much separation on the axis
-         * Positive means separation, and negative means overlap
-         */
-        private fun Polygon.getSeparationOnAxis(polygon: Polygon, axis: Vec2): Float {
-            val normalFace = this.getIntervalOnAxis(axis).max
-            val nearestVertex = polygon.getIntervalOnAxis(axis).min
-            return nearestVertex - normalFace
-        }
-
-        private fun Edge.clip(segment: Edge): Edge {
-            val rayDir = segment.unitNormal()
-            val plane1 = Ray(segment.start, rayDir)
-            val plane2 = Ray(segment.end, rayDir)
-
-            val edge = Ray(this).normalize()
-            val contact1 = edge.getIntersection(plane1)
-            val contact2 = edge.getIntersection(plane2)
-
-            if (contact1 == null || contact2 == null) return Edge(start, end)
-            // get distances
-            val distances = Range((contact1 - start).dot(edge.direction), (contact2 - start).dot(edge.direction))
-            val min = 0f.coerceAtLeast(distances.min)
-            val max = length.coerceAtMost(distances.max)
-
-            return Edge(edge.getPoint(min), edge.getPoint(max))
-        }
-
     }
 
-    private class SATPolygon(val poly: Polygon, other: Polygon) {
-        val edges = poly.edges
-        val normals = poly.normals
-
-        // Find axis with greatest separation (least negative overlap)
-        val overlaps = FloatArray(normals.size) { poly.getSeparationOnAxis(other, normals[it]) }
-        val minIdx = MathUtils.maxIndex(*overlaps)
-        val minOverlap = overlaps[minIdx]
+    private fun Polygon.projectOnAxis(axis: Vec2): Range { // positive is in axis direction
+        val projections = FloatArray(this.numVertices) { this.vertices[it].dot(axis) }
+        return Range(MathUtils.min(*projections), MathUtils.max(*projections))
     }
 
-    // Enum
+    private fun Range.overlaps(other: Range): Boolean = (this.min <= other.max) && (this.min <= other.max)
 
-    private enum class CollisionType {
-        CIRCLE_CIRCLE,
-        CIRCLE_POLYGON,
-        POLYGON_CIRCLE,
-        POLYGON_POLYGON,
-        INVALID
+    private fun Range.getOverlap(other: Range): Float {
+        return min(this.max - other.min, other.max - this.min)
     }
-
 
 }

@@ -1,13 +1,13 @@
 package slavsquatsuperstar.math
 
+import slavsquatsuperstar.util.Pair
+
 /**
  * Stores a pair of floats which represent the minimum and maximum values of an interval.
  *
  * @author SlavSquatSuperstar
  */
-class Range(
-    min: Float, max: Float
-) {
+class Range(min: Float, max: Float): Pair<Float, Float>(min, max) {
     @JvmField
     val min = min.coerceAtMost(max)
 
