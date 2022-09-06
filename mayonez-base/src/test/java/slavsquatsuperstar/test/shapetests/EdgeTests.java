@@ -3,14 +3,11 @@ package slavsquatsuperstar.test.shapetests;
 import org.junit.jupiter.api.Test;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.physics.collision.Collisions;
-import slavsquatsuperstar.mayonez.physics.shapes.Circle;
-import slavsquatsuperstar.mayonez.physics.shapes.Edge;
-import slavsquatsuperstar.mayonez.physics.shapes.Polygon;
-import slavsquatsuperstar.mayonez.physics.shapes.Triangle;
+import slavsquatsuperstar.mayonez.physics.shapes.*;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static slavsquatsuperstar.test.TestUtils.assertShapeCollision;
 import static slavsquatsuperstar.test.TestUtils.assertNoShapeCollision;
+import static slavsquatsuperstar.test.TestUtils.assertShapeCollision;
 
 /**
  * Unit tests {@link Edge} class and line vs line/shape detection in {@link Collisions} class.
@@ -147,7 +144,7 @@ public class EdgeTests {
 
     @Test
     public void boxVsLineHitBisect() {
-        Polygon rect = Polygon.rectangle(new Vec2(0, 0), new Vec2(4, 4)); // 4x4 rect at (0, 0)
+        Rectangle rect = new Rectangle(new Vec2(0, 0), new Vec2(4, 4)); // 4x4 rect at (0, 0)
         Edge e1 = new Edge(new Vec2(-1, 3), new Vec2(3, -1));
         assertShapeCollision(rect, e1); // adjacent edges
 
@@ -160,7 +157,7 @@ public class EdgeTests {
 
     @Test
     public void boxVsLineHitBoundary() {
-        Polygon rect = Polygon.rectangle(new Vec2(0, 0), new Vec2(4, 4)); // 4x4 rect at (0, 0)
+        Rectangle rect = new Rectangle(new Vec2(0, 0), new Vec2(4, 4)); // 4x4 rect at (0, 0)
         Edge e1 = new Edge(new Vec2(-1, 2), new Vec2(3, 2));
         assertShapeCollision(rect, e1); // parallel to edge
 
@@ -170,7 +167,7 @@ public class EdgeTests {
 
     @Test
     public void boxVsLineMiss() {
-        Polygon rect = Polygon.rectangle(new Vec2(0, 0), new Vec2(4, 4)); // 4x4 rect at (0, 0)
+        Rectangle rect = new Rectangle(new Vec2(0, 0), new Vec2(4, 4)); // 4x4 rect at (0, 0)
         Edge e = new Edge(new Vec2(1, 8), new Vec2(3, 1));
         assertNoShapeCollision(rect, e); // parallel to edge
     }

@@ -1,6 +1,7 @@
 package slavsquatsuperstar.demos.physics;
 
 import slavsquatsuperstar.math.Vec2;
+import slavsquatsuperstar.mayonez.physics.shapes.Rectangle;
 import slavsquatsuperstar.util.Colors;
 import slavsquatsuperstar.mayonez.Mayonez;
 import slavsquatsuperstar.mayonez.Preferences;
@@ -16,7 +17,7 @@ import java.awt.*;
 
 public class GJKIntersectionTest extends Scene {
 
-    private Polygon rect = Polygon.rectangle(new Vec2(80, 40), new Vec2(15, 15)).rotate(0, null);
+    private Polygon rect = new Rectangle(new Vec2(80, 40), new Vec2(15, 15), 0);
 //    private Triangle tri = new Triangle(new Vec2(0, 0), new Vec2(10, 15), new Vec2(20, 0)).translate(new Vec2(82, 42));
     private Triangle tri = new Triangle(new Vec2(0, 0), new Vec2(10, 15), new Vec2(20, 0));
 

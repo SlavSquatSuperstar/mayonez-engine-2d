@@ -26,7 +26,8 @@ class Circle(
     @JvmField
     val radiusSq: Float = radius * radius
 
-    override val isCircle: Boolean = true
+    override val isCircle: Boolean
+        get() = true
 
     /**
      * The area of a circle, equal to πr^2.
@@ -37,7 +38,7 @@ class Circle(
 
     override fun boundingCircle(): Circle = Circle(center, radius)
 
-    override fun boundingRectangle(): Rectangle = Rectangle(center, Vec2(radius * 2f))
+    override fun boundingRectangle(): BoundingBox = BoundingBox(center, Vec2(radius * 2f))
 
     override fun supportPoint(direction: Vec2): Vec2 = center + direction.unit() * radius
 

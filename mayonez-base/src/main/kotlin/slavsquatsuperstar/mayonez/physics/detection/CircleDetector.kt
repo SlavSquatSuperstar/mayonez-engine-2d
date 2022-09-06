@@ -10,6 +10,19 @@ import slavsquatsuperstar.mayonez.physics.shapes.Circle
  */
 object CircleDetector {
 
+    /**
+     * Checks whether two circles are intersecting.
+     *
+     * @param circle1 the first circle
+     * @param circle2 the second circle
+     * @return the collision information, or null if no collision
+     */
+    fun checkIntersection(circle1: Circle?, circle2: Circle?): Boolean {
+        if (circle1 == null || circle2 == null) return false
+        val sumRadii = circle1.radius + circle2.radius
+        return (circle2.center().distanceSq(circle1.center()) >= sumRadii * sumRadii)
+    }
+
     // Circle vs Circle: 1 contact point
     /**
      * Detects a collision between two circles and calculates the contact and penetration.

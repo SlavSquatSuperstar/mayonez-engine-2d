@@ -4,18 +4,19 @@ import slavsquatsuperstar.math.MathUtils
 import slavsquatsuperstar.math.Vec2
 
 /**
- * A non-rotatable axis-oriented bounding box (AABB) with four edges and defined by a width and height. Not to be used
- * with a collider. For rotatable rectangle, use the [Polygon.rectangle] method.
+ * A rotatable box shape (OBB) defined by a width and height. Rectangles are four-sided polygons
+ * with two pairs of parallel edges and containing all right angles
  *
  * @author SlavSquatSuperstar
  */
-open class Rectangle(private val center: Vec2, private val size: Vec2) :
-    Polygon(*rectangleVertices(center, size)) {
-    constructor(center: Vec2, width: Float, height: Float) : this(center, Vec2(width, height))
+open class Rectangle(private val center: Vec2, private val size: Vec2, val angle: Float) :
+    Polygon(*rectangleVertices(center, size, angle)) {
+
+    constructor(center: Vec2, size: Vec2) : this(center, size, 0f)
+    constructor(center: Vec2, width: Float, height: Float, angle: Float) : this(center, Vec2(width, height), angle)
 
     companion object {
-        // Angle only used in polygon template
-        fun rectangleVertices(center: Vec2, size: Vec2, angle: Float = 0f): Array<Vec2> {
+        protected fun rectangleVertices(center: Vec2, size: Vec2, angle: Float = 0f): Array<Vec2> {
             val min = center - size * 0.5f
             val max = center + size * 0.5f
             return arrayOf(Vec2(min), Vec2(max.x, min.y), Vec2(max), Vec2(min.x, max.y)).rotate(angle, center)
@@ -35,6 +36,12 @@ open class Rectangle(private val center: Vec2, private val size: Vec2) :
     }
 
     // Rectangle Properties
+
+    val isSquare: Boolean
+        get() = MathUtils.equals(width, height)
+
+    open val isAxisAligned: Boolean
+        get() = MathUtils.equals(angle % 360f, 0f)
 
     /**
      * The rectangle's width (base), b.
@@ -59,14 +66,16 @@ open class Rectangle(private val center: Vec2, private val size: Vec2) :
     override fun center(): Vec2 = center
 
     /**
-     * The bottom left corner of the rectangle, which has the smallest (most negative) coordinates.
+     * The bottom left corner of the rectangle, or the point with the smallest (most negative) coordinates, assumming
+     * the rectangle is axis-aligned.
      *
      * @return the rectangle's min vertex
      */
     fun min(): Vec2 = center - size * 0.5f
 
     /**
-     * The top right corner of the rectangle, which has the largest (most positive) coordinates.
+     * The top right corner of the rectangle, or the point with the largest (most positive) coordinates, assumming
+     * the rectangle is axis-aligned.
      *
      * @return the rectangle's max vertex
      */
@@ -83,43 +92,31 @@ open class Rectangle(private val center: Vec2, private val size: Vec2) :
 
     // Transformations
 
-    override fun translate(direction: Vec2): Rectangle = Rectangle(center + direction, size)
+    override fun translate(direction: Vec2): Rectangle = Rectangle(center + direction, size, angle)
 
-    override fun rotate(angle: Float, origin: Vec2?): Polygon =
-        throw UnsupportedOperationException("Bounding Rectangles cannot be rotated")
-
-//    /**
-//     * Calculates the bounding box of a rectangle with the same size as this, rotated by the given angle.
-//     *
-//     * @param angle  the counterclockwise angle
-//     * @param origin The point to rotate around. Pass in null to rotate around the centroid.
-//     * @return the rotated rectangle's bounding box
-//     */
-//    override fun rotate(angle: Float, origin: Vec2?): BoundingRectangle {
-//        return BoundingRectangle(center.rotate(angle, origin ?: center), rotatedDimensions(size, angle))
-//    }
+    override fun rotate(angle: Float, origin: Vec2?): Rectangle {
+        return Rectangle(center.rotate(angle, origin ?: center), size, this.angle + angle)
+    }
 
     override fun scale(factor: Vec2, origin: Vec2?): Rectangle {
-        return Rectangle(if (origin == null) center else center.scale(factor, origin), size * factor)
+        return Rectangle(if (origin == null) center else center.scale(factor, origin), size * factor, angle)
     }
 
     // Rectangle vs Point
 
-    override fun nearestPoint(position: Vec2): Vec2 {
-        return if (position in this) position else position.clampInbounds(min(), max())
-    }
-
-    override fun contains(point: Vec2): Boolean = point.inRange(center - size * 0.5f, center + size * 0.5f)
+    override fun contains(point: Vec2): Boolean =
+        point.rotate(-angle, center).inRange(center - size * 0.5f, center + size * 0.5f)
 
     // Overrides
 
     override fun equals(other: Any?): Boolean {
         return (other is Rectangle) && (this.center == other.center) && (this.size == other.size)
+                && (MathUtils.equals(this.angle, other.angle))
     }
 
     /**
-     * A description of the rectangle in the form "Rectangle (x, y), Size: (b, h)
+     * A description of the rectangle in the form "Rectangle (x, y), Size: (b, h), Rotation: theta
      */
-    override fun toString(): String = String.format("Rectangle $center, Size: $size")
+    override fun toString(): String = String.format("Ellipse $center, Size: $size, Rotation: %.2f°", angle)
 
 }

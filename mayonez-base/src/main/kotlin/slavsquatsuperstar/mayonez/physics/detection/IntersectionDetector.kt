@@ -28,7 +28,7 @@ object IntersectionDetector {
             (shape1 is Edge) && (shape2 is Edge) -> intersectEdges(shape1, shape2)
             (shape1 is Circle) && (shape2 is Circle) -> intersectCircles(shape1, shape2)
             (shape1 is Rectangle) && (shape2 is Rectangle) -> intersectRectangles(shape1, shape2)
-            else -> GJKDetector(shape1, shape2).getSimplex() != null // use GJK for complex shapes
+            else -> intersectGJK(shape1, shape2) // use GJK for complex shapes
         }
     }
 
@@ -88,15 +88,23 @@ object IntersectionDetector {
      * @return if the two rectangles overlap or touch
      */
     private fun intersectRectangles(rect1: Rectangle, rect2: Rectangle): Boolean {
-        // Perform SAT on x-axis
-        val min1 = rect1.min()
-        val max1 = rect1.max()
-        val min2 = rect2.min()
-        val max2 = rect2.max()
-        // a.min <= b.max && a.max <= b.min
-        val satX = (min1.x <= max2.x) && (min2.x <= max1.x)
-        val satY = (min1.y <= max2.y) && (min2.y <= max1.y)
-        return satX && satY
+        return if (rect1.isAxisAligned && rect2.isAxisAligned) {
+            // Perform SAT on x-axis
+            val min1 = rect1.min()
+            val max1 = rect1.max()
+            val min2 = rect2.min()
+            val max2 = rect2.max()
+            // a.min <= b.max && a.max <= b.min
+            val satX = (min1.x <= max2.x) && (min2.x <= max1.x)
+            val satY = (min1.y <= max2.y) && (min2.y <= max1.y)
+            return satX && satY
+        } else {
+            SATDetector(rect1, rect2).checkIntersection()
+        }
+    }
+
+    private fun intersectGJK(shape1: Shape, shape2: Shape): Boolean {
+        return GJKDetector(shape1, shape2).getSimplex() != null
     }
 
 }

@@ -8,7 +8,7 @@ import slavsquatsuperstar.mayonez.physics.PhysicsMaterial
 import slavsquatsuperstar.mayonez.physics.Rigidbody
 import slavsquatsuperstar.mayonez.physics.collision.CollisionInfo
 import slavsquatsuperstar.mayonez.physics.collision.Collisions
-import slavsquatsuperstar.mayonez.physics.shapes.Rectangle
+import slavsquatsuperstar.mayonez.physics.shapes.BoundingBox
 import slavsquatsuperstar.mayonez.physics.shapes.Shape
 import java.awt.Color
 import java.awt.Graphics2D
@@ -108,7 +108,7 @@ abstract class Collider(private val shapeData: Shape) : Component() {
 
     open fun getRotation(): Float = transform!!.rotation
 
-    open fun getMinBounds(): Rectangle = transformToWorld().boundingRectangle()
+    open fun getMinBounds(): BoundingBox = transformToWorld().boundingRectangle()
 
     open fun getMass(density: Float): Float = shapeData.scale(transform!!.scale).mass(density)
 

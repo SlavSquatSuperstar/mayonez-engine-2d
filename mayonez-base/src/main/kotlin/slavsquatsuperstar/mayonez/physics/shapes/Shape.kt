@@ -20,6 +20,14 @@ abstract class Shape {
          * @return the scaled vertex
          */
         internal fun Vec2.scale(factor: Vec2, center: Vec2): Vec2 = (factor * (this - center)) + center
+
+        /**
+         * Finds the most extreme points from the Minkowski difference set between two shapes.
+         *
+         * Source: https://blog.winter.dev/2020/gjk-algorithm/ § Abstracting shapes into supporting points
+         */
+        fun support(shape1: Shape, shape2: Shape, dir: Vec2): Vec2 =
+            shape1.supportPoint(dir) - shape2.supportPoint(-dir)
     }
 
     // Geometric Properties
@@ -52,7 +60,7 @@ abstract class Shape {
      * The axis-aligned minimum bounding rectangle (AABB) of a shape is the smallest rectangle that contains all points
      * in the shape and is aligned with the cartesian axes. The rectangle may not share the shape's centroid.
      */
-    abstract fun boundingRectangle(): Rectangle
+    abstract fun boundingRectangle(): BoundingBox
 
     // Shape vs Point Methods
 
@@ -146,4 +154,5 @@ abstract class Shape {
      * A string representation of the shape.
      */
     abstract override fun toString(): String
+
 }

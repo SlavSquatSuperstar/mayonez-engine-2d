@@ -13,7 +13,8 @@ import kotlin.math.abs
  * @author SlavSquatSuperstar
  */
 // TODO correct self-intersecting and set convex hull
-open class Polygon @JvmOverloads constructor(vararg vertices: Vec2, internal val isBox: Boolean = false) : Shape() {
+open class Polygon internal constructor(vararg vertices: Vec2) : Shape() {
+
 
     /**
      * Constructs a regular polygon with the specified number of vertices and radius.
@@ -23,7 +24,6 @@ open class Polygon @JvmOverloads constructor(vararg vertices: Vec2, internal val
      */
     constructor(center: Vec2, sides: Int, radius: Float) : this(
         *regularPolygonVertices(center, sides, radius),
-        isBox = (sides == 4)
     )
 
     // Polygon Components
@@ -99,14 +99,14 @@ open class Polygon @JvmOverloads constructor(vararg vertices: Vec2, internal val
         return Circle(center(), MathUtils.max(*distsSq))
     }
 
-    override fun boundingRectangle(): Rectangle {
+    override fun boundingRectangle(): BoundingBox {
         // TODO support function, or too expensive?
         val verticesX = FloatArray(numVertices) { vertices[it].x }
         val verticesY = FloatArray(numVertices) { vertices[it].y }
 
         val boxMin = Vec2(MathUtils.min(*verticesX), MathUtils.min(*verticesY))
         val boxMax = Vec2(MathUtils.max(*verticesX), MathUtils.max(*verticesY))
-        return Rectangle(boxMin.midpoint(boxMax), boxMax - boxMin)
+        return BoundingBox(boxMin.midpoint(boxMax), boxMax - boxMin)
     }
 
     // Polygon vs Point
@@ -125,14 +125,14 @@ open class Polygon @JvmOverloads constructor(vararg vertices: Vec2, internal val
 
     // Transformations
 
-    override fun translate(direction: Vec2): Polygon = Polygon(*vertices.translate(direction), isBox = this.isBox)
+    override fun translate(direction: Vec2): Polygon = Polygon(*vertices.translate(direction))
 
     override fun rotate(angle: Float, origin: Vec2?): Polygon {
-        return Polygon(*vertices.rotate(angle, origin ?: this.center()), isBox = this.isBox)
+        return Polygon(*vertices.rotate(angle, origin ?: this.center()))
     }
 
     override fun scale(factor: Vec2, origin: Vec2?): Polygon {
-        return Polygon(*vertices.scale(factor, origin ?: this.center()), isBox = this.isBox)
+        return Polygon(*vertices.scale(factor, origin ?: this.center()))
     }
 
     // Physical Properties
@@ -242,28 +242,5 @@ open class Polygon @JvmOverloads constructor(vararg vertices: Vec2, internal val
 //
 //        }
 
-        // Templates
-
-        /**
-         * Constructs a polygon with the shape of a rotatable axis-aligned rectangle.
-         *
-         * @param center the rectangle's center
-         * @param size   the rectangle's dimensions
-         * @return the rectangle
-         */
-        @JvmStatic
-        fun rectangle(center: Vec2, size: Vec2): Polygon = rectangle(center, size, 0f)
-
-        /**
-         * Constructs a polygon with the shape of a rotated rectangle.
-         *
-         * @param center the rectangle's center
-         * @param size   the rectangle's dimensions
-         * @param angle  the rectangle's rotated
-         * @return the rotated rectangle
-         */
-        @JvmStatic
-        fun rectangle(center: Vec2, size: Vec2, angle: Float): Polygon =
-            Polygon(*Rectangle.rectangleVertices(center, size, angle = angle), isBox = true)
     }
 }

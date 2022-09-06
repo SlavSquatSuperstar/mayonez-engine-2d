@@ -2,16 +2,21 @@ package slavsquatsuperstar.mayonez.physics.detection
 
 import slavsquatsuperstar.math.Vec2
 import slavsquatsuperstar.mayonez.annotations.ExperimentalFeature
+import slavsquatsuperstar.mayonez.physics.collision.CollisionInfo
 import slavsquatsuperstar.mayonez.physics.collision.Collisions
 import slavsquatsuperstar.mayonez.physics.shapes.Shape
 
 /**
- * Detects if two shapes are colliding and finds the Minkowski sum using the GJK distance algorithm.
+ * Detects if two shapes are colliding and finds the Minkowski sum using the GJK distance algorithm. Uses [EPASolver].
  *
  * @author SlavSquatSuperstar
  */
 @ExperimentalFeature
 class GJKDetector(private val shape1: Shape, private val shape2: Shape) {
+
+    fun detect(): CollisionInfo? {
+        return EPASolver(shape1, shape2, this.getSimplex() ?: return null).solve()
+    }
 
     /**
      * Executes a modified GJK (Gilbert-Johnson-Keerthi) distance algorithm to determine whether two shapes overlap.
@@ -24,19 +29,17 @@ class GJKDetector(private val shape1: Shape, private val shape2: Shape) {
      * - https://dyn4j.org/2010/04/gjk-gilbert-johnson-keerthi/ § Determining Collision
      * - https://youtu.be/ajv46BSqcK4
      *
-     * @param shape1 the first shape
-     * @param shape2 the second shape
      * @return the simplex if they overlap, otherwise null
      */
     // TODO cache recent support points
     fun getSimplex(): Simplex? {
         // Search in any initial direction
-        val startPt = Collisions.support(shape1, shape2, shape2.center() - shape1.center())
+        val startPt = Shape.support(shape1, shape2, shape2.center() - shape1.center())
         var searchDir = -startPt // Search toward origin to surround it
         val simplex = Simplex(startPt) // Create simplex with first point
 
         for (loop in 1..Collisions.MAX_GJK_ITERATIONS) {
-            val ptA = Collisions.support(shape1, shape2, searchDir) // Get new support point
+            val ptA = Shape.support(shape1, shape2, searchDir) // Get new support point
             if (ptA.dot(searchDir) < 0f) return null // Continue only if next point passes origin
 
             simplex.add(ptA) // Add point to simplex
@@ -62,6 +65,7 @@ class GJKDetector(private val shape1: Shape, private val shape2: Shape) {
                     simplex.remove(1) // remove B
                     searchDir = perpAC
                 } else {
+//                    DebugDraw.drawLine(shape1.center(), shape2.center(), Colors.BLACK)
                     return simplex // contains origin, found intersection
                 }
             }

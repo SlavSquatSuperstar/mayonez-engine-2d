@@ -1,5 +1,5 @@
 /**
- * Unit tests for the {@link slavsquatsuperstar.mayonez.physics.colliders} package.
+ * Unit tests for the collision detection in {@link slavsquatsuperstar.mayonez.physics.colliders} package.
  *
  * @author SlavSquatSuperstar
  */

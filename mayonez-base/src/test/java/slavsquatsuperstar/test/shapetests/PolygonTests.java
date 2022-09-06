@@ -36,7 +36,7 @@ public class PolygonTests {
     @Test
     public void rectangleTemplateCorrect() {
         // 2x3 rectangle, min corner at origin
-        Polygon poly = Polygon.rectangle(new Vec2(1, 1.5f), new Vec2(2, 3));
+        Rectangle poly = new Rectangle(new Vec2(1, 1.5f), new Vec2(2, 3));
         Rectangle rect = new Rectangle(new Vec2(1, 1.5f), new Vec2(2, 3));
 
         assertFloatEquals(poly.area(), 6f);
@@ -58,14 +58,14 @@ public class PolygonTests {
 
     @Test
     public void polygonSupportPointSuccess() {
-        Polygon rect = Polygon.rectangle(new Vec2(2, 2), new Vec2(4, 4)); // 4x4 rectangle at (0, 0)
+        Rectangle rect = new Rectangle(new Vec2(2, 2), new Vec2(4, 4)); // 4x4 rectangle at (0, 0)
         assertEquals(new Vec2(0, 0), rect.supportPoint(new Vec2(-1, -1)));
         assertEquals(new Vec2(4, 4), rect.supportPoint(new Vec2(1, 2)));
     }
 
     @Test
     public void polygonNormalsPointOutward() {
-        Polygon rect = Polygon.rectangle(new Vec2(0, 0), new Vec2(2, 2));
+        Rectangle rect = new Rectangle(new Vec2(0, 0), new Vec2(2, 2));
         Vec2[] normals = new Vec2[]{new Vec2(0, -1), new Vec2(1, 0), new Vec2(0, 1), new Vec2(-1, 0)};
         assertTrue(Objects.deepEquals(normals, rect.getNormals()));
     }

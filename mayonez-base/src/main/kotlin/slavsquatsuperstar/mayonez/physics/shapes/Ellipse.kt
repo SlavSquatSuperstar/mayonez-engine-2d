@@ -1,10 +1,9 @@
 package slavsquatsuperstar.mayonez.physics.shapes
 
+import slavsquatsuperstar.math.Mat22
 import slavsquatsuperstar.math.MathUtils
-import slavsquatsuperstar.math.MathUtils.PI
-import slavsquatsuperstar.math.MathUtils.toRadians
 import slavsquatsuperstar.math.Vec2
-import kotlin.math.*
+import kotlin.math.max
 
 /**
  * A round shape defined by a major and minor radius and containing two focal points. For each point on the ellipse's
@@ -14,7 +13,7 @@ open class Ellipse(private val center: Vec2, val size: Vec2, val angle: Float) :
 
     constructor(center: Vec2, size: Vec2) : this(center, size, 0f)
 
-    // Ellipse Properties
+    // Shape Properties
 
     override val numVertices: Int = 0
 
@@ -22,12 +21,18 @@ open class Ellipse(private val center: Vec2, val size: Vec2, val angle: Float) :
 
     private val halfHeight: Float = size.y * 0.5f
 
-    open val isCircle: Boolean = MathUtils.equals(size.x, size.y)
+    // Ellipse Properties
+
+    open val isCircle: Boolean
+        get() = MathUtils.equals(size.x, size.y)
+
+    val isAxisAligned: Boolean
+        get() = MathUtils.equals(angle % 360f, 0f)
 
     /**
      * The area of an ellipse, equal to πab, where a is half the width and b is half the height.
      */
-    override fun area(): Float = PI * halfWidth * halfHeight
+    override fun area(): Float = MathUtils.PI * halfWidth * halfHeight
 
     /**
      * The centroid of the ellipse, equal to its center position.
@@ -36,37 +41,51 @@ open class Ellipse(private val center: Vec2, val size: Vec2, val angle: Float) :
 
     override fun boundingCircle(): Circle = Circle(center, max(halfWidth, halfHeight))
 
-    override fun boundingRectangle(): Rectangle {
-        val supX = supportPoint(Vec2(1f, 0f))
-        val supY = supportPoint(Vec2(0f, 1f))
-        val rectSize = Vec2(supX.x - center.x, supY.y - center.y) * 2f
-        return Rectangle(center, rectSize)
+    // Source: https://iquilezles.org/articles/ellipses/
+    override fun boundingRectangle(): BoundingBox {
+        // r(t) = c + a*cos(t) + b*sin(t)
+        val rot = Mat22(angle)
+        val vecA = rot * Vec2(halfWidth, 0f) // ellipse's horizontal axis
+        val vecB = rot * Vec2(0f, halfHeight) // ellipse's vertical axis
+
+        val boxHalfWidth = MathUtils.hypot(vecA.x, vecB.x)
+        val boxHalfHeight = MathUtils.hypot(vecA.y, vecB.y)
+        return BoundingBox(center, Vec2(boxHalfWidth, boxHalfHeight) * 2f)
     }
 
-    // Source: https://www.youtube.com/watch?v=ajv46BSqcK4&lc=UgwuSOaT8lRug73ljUJ4AaABAg
+    /**
+     * The furthest point on the ellipse in any given direction. Due to the non-uniform curvature of an ellipse,
+     * the support point is not equivalent to the ellipse's radius vector in that direction (see [pointInDirection]).
+     *
+     * Source: org.dyn4j.geometry.Ellipse.getFarthestPointOnAlignedEllipse
+     */
     override fun supportPoint(direction: Vec2): Vec2 {
-        // Find point where tangent is 0
-        val angle = toRadians(-direction.angle() + this.angle)
-        val t = atan(-halfHeight / halfWidth * tan(angle))
-        var point = Vec2(halfWidth * cos(t), halfHeight * sin(t)).rotate(this.angle)
-        if (point.dot(direction) < 0) point = -point
-
-//        val point = Vec2(halfWidth, halfHeight) * direction.unit().rotate(-angle)
-        return center + point
+        var localDir = direction.rotate(-angle)
+        val halfSize = Vec2(halfWidth, halfHeight)
+        localDir = (localDir * halfSize).unit() * halfSize
+        localDir = localDir.rotate(angle)
+        return center + localDir
     }
 
-//    private fun pointInDirection(direction: Vec2): Vec2 {
-//        // s, k = width, height
-//        // m = sqrt( (cos(a)/k)^2 + (sin(a)/s)^2 )
-//        // x = cos(a)/m
-//        // y = sin(a)/m
-//        // assume rotation is 0
-//        val ang = direction.angle() - angle
-//        val cos = MathUtils.cos(ang)
-//        val sin = MathUtils.sin(ang)
-//        val len = 1f / MathUtils.hypot(cos / halfWidth, sin / halfHeight)
-//        return center + Vec2(cos, sin).rotate(angle) * len // unit direction times length
-//    }
+    /**
+     * Calculates the point on the ellipse in the given direction, or the ellipse's radius vector for that angle.
+     * Not equivalent to the support point function (see [supportPoint]).
+     *
+     * Source: https://en.wikipedia.org/wiki/Ellipse#Polar_form_relative_to_center
+     */
+    fun pointInDirection(direction: Vec2): Vec2 {
+        val theta = direction.angle() - this.angle // theta, angle of point from ellipse's x-axis
+        val cos = MathUtils.cos(theta)
+        val sin = MathUtils.sin(theta)
+
+        val a = halfWidth // half width, a
+        val b = halfHeight // half height, b
+        val eSq = 1 - MathUtils.squared(b / a) // eccentricity squared, e^2 = 1 - b^2/a^2
+
+        // radius, r(theta) = b / √[1 - e^2*cos(theta)^2]
+        val radius = b / MathUtils.sqrt(1 - (eSq * cos * cos))
+        return center + Vec2(cos, sin).rotate(this.angle) * radius // unit direction times length
+    }
 
     // Physical Properties
 
@@ -91,25 +110,17 @@ open class Ellipse(private val center: Vec2, val size: Vec2, val angle: Float) :
         return Ellipse(if (origin == null) center else center.scale(factor, origin), size * factor, angle)
     }
 
-    override fun contains(point: Vec2): Boolean {
-        /*
-         * Problem: When circle is stretched into ellipse, angle (theta) changes while parameter (t) does not
-         * Goal: Find t of point on ellipse for given angle
-         * Ellipse: x = a*cos(t), y = b*sin(t)
-         *
-         * tan(theta) = b/a * tan(t)
-         * tan(t) = a/b * tan(theta)
-         * t = atan(a/b * tan(theta))
-         */
-        // Target Point: A, Point on Ellipse: B, Center: C
-        val vecCA = point - center // CA
-        val pointAngleRad = toRadians(vecCA.angle() - angle) // angle of CA with ellipse's x-axis
+    // Ellipse vs Point
 
-        val radius = Vec2(halfWidth, halfHeight)
-        val tEllipse = atan(radius.x / radius.y * tan(pointAngleRad)) // t parameter matching angle
-        val vecCB = Vec2(cos(tEllipse), sin(tEllipse)) * radius
-//        val pointOnEllipse = pointInDirection(centerToPoint)
-        return vecCA.lenSq() <= vecCB.lenSq()
+    override fun nearestPoint(position: Vec2): Vec2 {
+        throw UnsupportedOperationException("Not yet implemented")
+    }
+
+    override fun contains(point: Vec2): Boolean {
+        // Perform a circle radius test against the support point
+        val ptToCenter = point - center
+        val ptToEllipse = pointInDirection(ptToCenter) - center
+        return ptToCenter.lenSq() <= ptToEllipse.lenSq()
     }
 
     override fun equals(other: Any?): Boolean {

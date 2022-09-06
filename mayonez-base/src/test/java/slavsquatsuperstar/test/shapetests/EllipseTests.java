@@ -5,8 +5,7 @@ import org.junit.jupiter.api.Test;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.physics.shapes.Ellipse;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Unit tests for {@link Ellipse} class.
@@ -38,6 +37,23 @@ public class EllipseTests {
     public void exteriorPointNotInEllipse() {
         assertFalse(ellipse.contains(new Vec2(0, 0)));
         assertFalse(ellipse.contains(new Vec2(4, 1)));
+    }
+
+    @Test
+    public void ellipseSupportPoints() {
+        assertEquals(new Vec2(4, 3), ellipse.supportPoint(new Vec2(1, 0)));
+        assertEquals(new Vec2(2, 6), ellipse.supportPoint(new Vec2(0, 1)));
+        assertEquals(new Vec2(3.6f, 4.8f), ellipse.supportPoint(new Vec2(2, 1)));
+    }
+
+    @Test
+    public void rotatedEllipseSupportPoints() {
+        Ellipse e = ellipse.rotate(45, null);
+        Vec2 center = e.center();
+        assertEquals(new Vec2(4, 3).rotate(45, center), e.supportPoint(new Vec2(1, 1)));
+        assertEquals(new Vec2(2, 6).rotate(45, center), e.supportPoint(new Vec2(-1, 1)));
+        assertEquals(new Vec2(3.6f, 4.8f).rotate(45, center),
+                e.supportPoint(new Vec2(2, 1).rotate(45)));
     }
 
 }

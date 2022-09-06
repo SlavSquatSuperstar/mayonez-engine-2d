@@ -2,12 +2,12 @@ package slavsquatsuperstar.mayonez.scripts;
 
 import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
-import slavsquatsuperstar.mayonez.physics.shapes.Rectangle;
 import slavsquatsuperstar.mayonez.Logger;
 import slavsquatsuperstar.mayonez.Scene;
 import slavsquatsuperstar.mayonez.Script;
 import slavsquatsuperstar.mayonez.physics.Rigidbody;
 import slavsquatsuperstar.mayonez.physics.colliders.Collider;
+import slavsquatsuperstar.mayonez.physics.shapes.BoundingBox;
 
 /**
  * Dictates what happens when an object reaches the edge of the scene.
@@ -20,7 +20,7 @@ public class KeepInScene extends Script {
     private final Vec2 minPos, maxPos;
     private Mode mode;
     private Collider objectCollider = null;
-    private Rectangle boundingBox;
+    private BoundingBox boundingBox;
     private Rigidbody rb = null;
 
     public KeepInScene(Scene scene, Mode mode) { // Use scene bounds

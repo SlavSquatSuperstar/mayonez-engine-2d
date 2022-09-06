@@ -26,8 +26,16 @@ public class MayonezTest {
 //        strings.add(null);
 //        strings.forEach(System.out::println);
 
-        String[] strings = new String[] {"hello", "there", null, "general", "kenobi", null};
-        for (String s : strings) System.out.println(s);
+        int size = 5;
+        int i = 3;
+        System.out.println("i = " + i);
+        int next = (i + 1) % size;
+        System.out.println("next = " + next);
+
+        i = 4;
+        System.out.println("i = " + i);
+        int prev = (i - 1 + size) % size;
+        System.out.println("prev = " +  prev);
     }
 
     static class EventSystem {

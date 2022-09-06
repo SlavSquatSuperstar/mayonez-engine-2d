@@ -95,9 +95,11 @@ object RaycastDetector {
 
     // Source: https://youtu.be/8JJ-4JgR7Dg
     private fun raycastRectangle(rect: Rectangle, ray: Ray, limit: Float): RaycastInfo? {
+        val localRay = if (rect.isAxisAligned) ray else ray.rotate(rect.angle, rect.center())
+
         // Parametric distance to min/max x and y axes of box
-        val tNear = (rect.min() - (ray.origin)).unsafeDivide(ray.direction)
-        val tFar = (rect.max() - (ray.origin)).unsafeDivide(ray.direction)
+        val tNear = (rect.min() - (localRay.origin)).unsafeDivide(localRay.direction)
+        val tFar = (rect.max() - (localRay.origin)).unsafeDivide(localRay.direction)
 
         // Swap near and far components if they're out of order
         if (tNear.x > tFar.x) {
@@ -124,11 +126,11 @@ object RaycastDetector {
         if (limit > 0 && distToRect > limit) return null
         var normal = Vec2() // Use (0, 0) for diagonal collision
         if (tNear.x > tNear.y) // Horizontal collision
-            normal = Vec2(-sign(ray.direction.x), 0f)
+            normal = Vec2(-sign(localRay.direction.x), 0f)
         else if (tNear.x < tNear.y) // Vertical collision
-            normal = Vec2(0f, -sign(ray.direction.y))
+            normal = Vec2(0f, -sign(localRay.direction.y))
 
-        val contact = ray.getPoint(distToRect)
+        val contact = localRay.getPoint(distToRect)
         return RaycastInfo(contact, normal, contact.distance(ray.origin) / ray.length)
     }
 

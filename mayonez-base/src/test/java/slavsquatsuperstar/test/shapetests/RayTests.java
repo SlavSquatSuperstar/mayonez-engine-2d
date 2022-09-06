@@ -89,7 +89,7 @@ public class RayTests {
 
     @Test
     public void rayVsPolygonHit() {
-        Polygon r = Polygon.rectangle(new Vec2(0, 0), new Vec2(4, 4));
+        Rectangle r = new Rectangle(new Vec2(0, 0), new Vec2(4, 4));
         RaycastInfo rc = raycast(r, new Ray(new Vec2(-4, 0), new Vec2(1, 0)), 0);
         assertEquals(2, rc.distance);
 

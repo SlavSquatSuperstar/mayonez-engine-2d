@@ -126,21 +126,16 @@ object DebugDraw {
     }
 
     private fun drawCircle(circle: Circle, color: Color, fill: Boolean) {
-//        val minPx = (circle.center() - Vec2(circle.radius)).toScreen()
         val diameterPx = Vec2(circle.radius * 2).toScreen()
         shapes.add(ShapeDrawer(DrawPriority.SHAPE, ellipse(circle.center().toScreen(), diameterPx), color, fill))
     }
 
     private fun drawEllipse(ellipse: Ellipse, color: Color, fill: Boolean) {
-        if (ellipse.isCircle) return drawCircle(Circle(ellipse.center(), ellipse.size.x * 0.5f), color, fill)
-
+        if (ellipse.isCircle) return drawCircle(ellipse.boundingCircle(), color, fill)
         val centerPx = ellipse.center().toScreen()
-        val rotXf = AffineTransform.getRotateInstance(
-            Math.toRadians(ellipse.angle.toDouble()),
-            centerPx.x.toDouble(), centerPx.y.toDouble()
-        )
-        val shape = rotXf.createTransformedShape(ellipse(centerPx, ellipse.size.toScreen()))
-        shapes.add(ShapeDrawer(DrawPriority.SHAPE, shape, color, fill))
+        val shape = ellipse(centerPx, ellipse.size.toScreen())
+        val rot = if (ellipse.isAxisAligned) shape else shape.rotate(centerPx, ellipse.angle)
+        shapes.add(ShapeDrawer(DrawPriority.SHAPE, rot, color, fill))
     }
 
     private fun drawPolygon(polygon: Polygon, color: Color, fill: Boolean) {
@@ -151,8 +146,10 @@ object DebugDraw {
 
     private fun drawRectangle(rect: Rectangle, color: Color, fill: Boolean) {
         val minPx = rect.min().toScreen()
+        val centerPx = rect.center().toScreen()
         val shape = Rectangle2D.Float(minPx.x, minPx.y, rect.width.toScreen(), rect.height.toScreen())
-        shapes.add(ShapeDrawer(DrawPriority.SHAPE, shape, color, fill))
+        val rot = if (rect.isAxisAligned) shape else shape.rotate(centerPx, rect.angle)
+        shapes.add(ShapeDrawer(DrawPriority.SHAPE, rot, color, fill))
     }
 
     // Helper Methods/Classes
@@ -160,6 +157,14 @@ object DebugDraw {
     private fun ellipse(center: Vec2, size: Vec2): Ellipse2D {
         val min = center - size * 0.5f
         return Ellipse2D.Float(min.x, min.y, size.x, size.y)
+    }
+
+    private fun java.awt.Shape.rotate(center: Vec2, angle: Float): java.awt.Shape {
+        val rotXf = AffineTransform.getRotateInstance(
+            Math.toRadians(angle.toDouble()),
+            center.x.toDouble(), center.y.toDouble()
+        )
+        return rotXf.createTransformedShape(this)
     }
 
     /**

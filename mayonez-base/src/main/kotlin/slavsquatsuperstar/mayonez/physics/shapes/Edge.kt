@@ -119,7 +119,7 @@ class Edge(val start: Vec2, val end: Vec2) : Shape() {
 
     override fun boundingCircle(): Circle = Circle(center(), length * 0.5f)
 
-    override fun boundingRectangle(): Rectangle = Rectangle(center(), Vec2(abs(end.x - start.x), abs(end.y - start.y)))
+    override fun boundingRectangle(): BoundingBox = BoundingBox(center(), Vec2(abs(end.x - start.x), abs(end.y - start.y)))
 
     // Edge vs Point
 
