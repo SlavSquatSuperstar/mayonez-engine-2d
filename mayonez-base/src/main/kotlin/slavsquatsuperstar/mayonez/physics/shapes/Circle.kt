@@ -40,7 +40,9 @@ class Circle(
 
     override fun boundingRectangle(): BoundingBox = BoundingBox(center, Vec2(radius * 2f))
 
-    override fun supportPoint(direction: Vec2): Vec2 = center + direction.unit() * radius
+    override fun supportPoint(direction: Vec2): Vec2 = center + getRadius(direction)
+
+    override fun getRadius(direction: Vec2): Vec2 = direction.unit() * radius
 
     // Physical Properties
 

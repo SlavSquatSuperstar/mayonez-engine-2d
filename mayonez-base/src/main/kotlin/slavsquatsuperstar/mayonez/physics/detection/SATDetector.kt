@@ -3,8 +3,9 @@ package slavsquatsuperstar.mayonez.physics.detection
 import slavsquatsuperstar.math.MathUtils
 import slavsquatsuperstar.math.Range
 import slavsquatsuperstar.math.Vec2
-import slavsquatsuperstar.mayonez.physics.collision.CollisionInfo
-import slavsquatsuperstar.mayonez.physics.shapes.*
+import slavsquatsuperstar.mayonez.physics.shapes.Circle
+import slavsquatsuperstar.mayonez.physics.shapes.Polygon
+import slavsquatsuperstar.mayonez.physics.shapes.Shape
 import kotlin.math.min
 
 /**
@@ -12,42 +13,16 @@ import kotlin.math.min
  *
  * @author SlavSquatSuperstar
  */
-class SATDetector(private val shape1: Shape, private val shape2: Shape) {
+class SATDetector : CollisionDetector {
 
-    fun checkIntersection(): Boolean {
+    override fun checkIntersection(shape1: Shape?, shape2: Shape?): Boolean {
         return when {
             shape1 is Circle && shape2 is Circle -> CircleDetector.checkIntersection(shape1, shape2)
-            shape1 is Circle && shape2 is Polygon -> detectCirclePolygon(shape1, shape2) != null
-            shape1 is Polygon && shape2 is Circle -> detectCirclePolygon(shape2, shape1) != null
+            shape1 is Circle && shape2 is Polygon -> detectCirclePolygon(shape1, shape2, false) != null
+            shape1 is Polygon && shape2 is Circle -> detectCirclePolygon(shape2, shape1, true) != null
             shape1 is Polygon && shape2 is Polygon -> checkPolygonPolygon(shape1, shape2)
             else -> false // cannot solve using SAT
         }
-    }
-
-    /**
-     * Detects a collision between two shapes and calculates the contact and penetration.
-     *
-     * @return the collision information, or null if no collision
-     */
-    fun detect(): CollisionInfo? {
-        return when {
-            shape1 is Circle && shape2 is Circle -> CircleDetector.detect(shape1, shape2)
-            shape1 is Circle && shape2 is Polygon -> detectCirclePolygon(shape1, shape2)
-            shape1 is Polygon && shape2 is Circle -> detectCirclePolygon(shape2, shape1)?.flip()
-            shape1 is Polygon && shape2 is Polygon -> detectPolygonPolygon(shape1, shape2)
-            else -> null // cannot solve using SAT
-        }
-    }
-
-    // Circle vs Polygon: 1 contact point
-    private fun detectCirclePolygon(circle: Circle, polygon: Polygon): CollisionInfo? {
-        val closestToCircle = polygon.nearestPoint(circle.center()) // Point from shape deepest in circle
-        if (closestToCircle !in circle) return null
-
-        val depth = circle.radius - closestToCircle.distance(circle.center())
-        val result = CollisionInfo(circle, polygon, closestToCircle - circle.center(), depth)
-        result.addContact(closestToCircle)
-        return result
     }
 
     private fun checkPolygonPolygon(polygon1: Polygon, polygon2: Polygon): Boolean {
@@ -61,8 +36,31 @@ class SATDetector(private val shape1: Shape, private val shape2: Shape) {
         return true
     }
 
+    // TODO write unit tests
+    override fun getPenetration(shape1: Shape?, shape2: Shape?): Penetration? {
+        return when {
+            shape1 is Circle && shape2 is Polygon -> detectCirclePolygon(shape1, shape2, false)
+            shape1 is Polygon && shape2 is Circle -> detectCirclePolygon(shape2, shape1, true)
+            shape1 is Polygon && shape2 is Polygon -> detectPolygonPolygon(shape1, shape2)
+            else -> null // cannot solve using SAT
+        }
+    }
+
+    // Circle vs Polygon: 1 contact point
+    private fun detectCirclePolygon(circle: Circle, polygon: Polygon, flip: Boolean): Penetration? {
+        val closestToCircle = polygon.nearestPoint(circle.center()) // Point from shape deepest in circle
+        if (closestToCircle !in circle) return null
+
+        val depth = circle.radius - closestToCircle.distance(circle.center())
+        val normal = (closestToCircle - circle.center()).unit()
+        return Penetration(if (flip) -normal else normal, depth)
+//        val result = CollisionInfo(circle, polygon, closestToCircle - circle.center(), depth)
+//        result.addContact(closestToCircle)
+//        return result
+    }
+
     // Polygon vs Polygon: 1-2 contact points
-    private fun detectPolygonPolygon(polygon1: Polygon, polygon2: Polygon): CollisionInfo? {
+    private fun detectPolygonPolygon(polygon1: Polygon, polygon2: Polygon): Penetration? {
         // Track minimum penetration vector
         var minOverlap = Float.MAX_VALUE
         var minAxis = Vec2()
@@ -80,27 +78,20 @@ class SATDetector(private val shape1: Shape, private val shape2: Shape) {
                 minAxis = axis
             }
         }
-        return PenetrationSolver(Penetration(shape1, shape2, minAxis, minOverlap)).solve()
+        return Penetration(minAxis, minOverlap)
     }
 
     // SAT Helpers
     companion object {
-
         /**
          * Whether a collision involving the given shape can be efficiently detected. SAT detection works best with polygons
          * with a small vertex count (boxes and triangles) and also supports circle-polygon collisions.
          */
         internal fun preferred(shape: Shape): Boolean { // use SAT for boxes, triangles, and circles
             return when (shape) {
-                // Round
                 is Circle -> true
-                is Ellipse -> false
-                // Polygons
-//                is Triangle -> true
-//                is Rectangle -> true
                 is Polygon -> shape.numVertices <= 4
-                // Other
-                is Edge -> false // TODO need to test edge colliders
+                // TODO need to test edge colliders
                 else -> false
             }
         }

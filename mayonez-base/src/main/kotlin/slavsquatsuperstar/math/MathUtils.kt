@@ -8,6 +8,7 @@ import kotlin.math.*
  *
  * @author SlavSquatSuperstar
  */
+// TODO use extensions for single-arg functions?
 object MathUtils {
 
     /**
@@ -40,6 +41,7 @@ object MathUtils {
      * @param value a real number
      * @return the number squared
      */
+    @JvmStatic
     fun squared(value: Float): Float = value * value
 
     /**
@@ -169,24 +171,22 @@ object MathUtils {
 
     // Clamp / Range Methods
 
+
     /**
-     * Restricts a float's value within a provided range.
+     * Restricts a number's value within a provided range.
      *
-     * @param value a real number
+     * @param value a number
      * @param min   the lower bound, inclusive
      * @param max   the upper bound, inclusive
      * @return a number within the bounds
      */
     @JvmStatic
-    fun clamp(value: Float, min: Float, max: Float): Float {
-        val range = Range(min, max)
-        return range.min.coerceAtLeast(value).coerceAtMost(range.max)
-    }
+    fun clamp(value: Float, min: Float, max: Float): Float = Range(min, max).clamp(value)
 
     /**
      * Checks whether a number is within a provided range, including the bounds.
      *
-     * @param value a real number
+     * @param value a number
      * @param min   the lower bound, inclusive
      * @param max   the upper bound, inclusive
      * @return if the value is within range
@@ -238,7 +238,7 @@ object MathUtils {
     /**
      * Rounds up the given number according to the specified precision.
      *
-     * @param value         a decimal number
+     * @param value         a floating-point number
      * @param decimalPlaces the number of decimal places to round
      *
      * @return the rounded number
@@ -252,7 +252,7 @@ object MathUtils {
     /**
      * Rounds down the given number according to the specified precision.
      *
-     * @param value         a decimal number
+     * @param value         a floating-point number
      * @param decimalPlaces the number of decimal places to round
      *
      * @return the truncated number
@@ -273,7 +273,7 @@ object MathUtils {
      * @return the sine of the angle
      */
     @JvmStatic
-    fun sin(degrees: Float): Float = kotlin.math.sin(Math.toRadians(degrees.toDouble())).toFloat()
+    fun sin(degrees: Float): Float = sin(Math.toRadians(degrees.toDouble())).toFloat()
 
     /**
      * Takes the sine of an angle in radians.

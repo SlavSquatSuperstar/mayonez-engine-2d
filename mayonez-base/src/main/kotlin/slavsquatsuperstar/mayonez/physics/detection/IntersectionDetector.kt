@@ -22,13 +22,13 @@ object IntersectionDetector {
      * @return whether the shapes intersect
      */
     @JvmStatic
-    fun detect(shape1: Shape?, shape2: Shape?): Boolean {
+    fun checkCollision(shape1: Shape?, shape2: Shape?): Boolean {
         return when {
             (shape1 == null) || (shape2 == null) -> false
             (shape1 is Edge) && (shape2 is Edge) -> intersectEdges(shape1, shape2)
             (shape1 is Circle) && (shape2 is Circle) -> intersectCircles(shape1, shape2)
             (shape1 is Rectangle) && (shape2 is Rectangle) -> intersectRectangles(shape1, shape2)
-            else -> intersectGJK(shape1, shape2) // use GJK for complex shapes
+            else -> return GJKDetector().getSimplex(shape1, shape2) != null // use GJK for complex shapes
         }
     }
 
@@ -99,12 +99,8 @@ object IntersectionDetector {
             val satY = (min1.y <= max2.y) && (min2.y <= max1.y)
             return satX && satY
         } else {
-            SATDetector(rect1, rect2).checkIntersection()
+            SATDetector().checkIntersection(rect1, rect2)
         }
-    }
-
-    private fun intersectGJK(shape1: Shape, shape2: Shape): Boolean {
-        return GJKDetector(shape1, shape2).getSimplex() != null
     }
 
 }

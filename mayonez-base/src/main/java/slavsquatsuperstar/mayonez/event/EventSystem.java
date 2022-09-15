@@ -12,6 +12,7 @@ import java.util.List;
  */
 @ExperimentalFeature
 // TODO multiple event nodes
+// TODO or subscribe to event types and filter onEvent
 public final class EventSystem {
 
     private final static List<EventListener> listeners = new ArrayList<>();

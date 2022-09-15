@@ -51,6 +51,7 @@ object DebugDraw {
      */
     @JvmStatic
     fun drawPoint(position: Vec2, color: Color?) {
+        if (!Mayonez.started) return
         // Fill a circle with radius "STROKE_SIZE" in pixels
         val diameterPx = Vec2(STROKE_SIZE.toFloat() * 2f)
         shapes.add(ShapeDrawer(DrawPriority.POINT, ellipse(position.toScreen(), diameterPx), color, true))
@@ -65,6 +66,7 @@ object DebugDraw {
      */
     @JvmStatic
     fun drawLine(start: Vec2, end: Vec2, color: Color?) {
+        if (!Mayonez.started) return
         val startPx = start.toScreen()
         val endPx = end.toScreen()
         shapes.add(ShapeDrawer(DrawPriority.LINE, Line2D.Float(startPx.x, startPx.y, endPx.x, endPx.y), color, false))
@@ -89,6 +91,7 @@ object DebugDraw {
      */
     @JvmStatic
     fun drawShape(shape: Shape?, color: Color?) {
+        if (!Mayonez.started) return
         val drawColor = color ?: Colors.BLACK
         when (shape) {
             is Edge -> drawLine(shape.start, shape.end, drawColor)
@@ -107,6 +110,7 @@ object DebugDraw {
      */
     @JvmStatic
     fun fillShape(shape: Shape?, color: Color?) {
+        if (!Mayonez.started) return
         val drawColor = color ?: Colors.BLACK
         when (shape) {
             is Edge -> drawLine(shape.start, shape.end, drawColor)

@@ -101,7 +101,7 @@ public final class PhysicsWorld {
                     continue;
                 if (c1.isStatic() && c2.isStatic()) continue; // Don't check for collision if both are static
 
-                if (Collisions.detectCollision(c1.getMinBounds(), c2.getMinBounds()))
+                if (Collisions.checkCollision(c1.getMinBounds(), c2.getMinBounds()))
                     broadphase.add(new Pair<>(c1, c2)); // Check for detailed collision later
             }
         }

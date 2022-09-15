@@ -1,21 +1,27 @@
 package slavsquatsuperstar.mayonez.physics.detection
 
 import slavsquatsuperstar.math.Vec2
-import slavsquatsuperstar.mayonez.annotations.ExperimentalFeature
-import slavsquatsuperstar.mayonez.physics.collision.CollisionInfo
-import slavsquatsuperstar.mayonez.physics.collision.Collisions
 import slavsquatsuperstar.mayonez.physics.shapes.Shape
 
 /**
- * Detects if two shapes are colliding and finds the Minkowski sum using the GJK distance algorithm. Uses [EPASolver].
+ * Detects if two shapes are colliding and finds the Minkowski sum using the GJK (Gilbert-Johnson-Keerthi) distance
+ * algorithm. This class will construct a simplex and check to see it contains the origin, and then use [EPASolver]
+ * to find the penetration.
  *
  * @author SlavSquatSuperstar
  */
-@ExperimentalFeature
-class GJKDetector(private val shape1: Shape, private val shape2: Shape) {
+class GJKDetector : CollisionDetector {
 
-    fun detect(): CollisionInfo? {
-        return EPASolver(shape1, shape2, this.getSimplex() ?: return null).solve()
+    companion object {
+        const val MAX_GJK_ITERATIONS: Int = 20
+    }
+
+    override fun checkIntersection(shape1: Shape?, shape2: Shape?): Boolean {
+        return getSimplex(shape1, shape2) != null
+    }
+
+    override fun getPenetration(shape1: Shape?, shape2: Shape?): Penetration? {
+        return EPASolver(shape1, shape2).getPenetration(getSimplex(shape1, shape2))
     }
 
     /**
@@ -32,13 +38,15 @@ class GJKDetector(private val shape1: Shape, private val shape2: Shape) {
      * @return the simplex if they overlap, otherwise null
      */
     // TODO cache recent support points
-    fun getSimplex(): Simplex? {
+    fun getSimplex(shape1: Shape?, shape2: Shape?): Simplex? {
+        if (shape1 == null || shape2 == null) return null
+
         // Search in any initial direction
         val startPt = Shape.support(shape1, shape2, shape2.center() - shape1.center())
         var searchDir = -startPt // Search toward origin to surround it
         val simplex = Simplex(startPt) // Create simplex with first point
 
-        for (loop in 1..Collisions.MAX_GJK_ITERATIONS) {
+        for (loop in 1..MAX_GJK_ITERATIONS) {
             val ptA = Shape.support(shape1, shape2, searchDir) // Get new support point
             if (ptA.dot(searchDir) < 0f) return null // Continue only if next point passes origin
 

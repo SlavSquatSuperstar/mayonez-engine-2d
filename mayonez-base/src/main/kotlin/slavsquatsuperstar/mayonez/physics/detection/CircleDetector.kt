@@ -15,7 +15,7 @@ object CircleDetector {
      *
      * @param circle1 the first circle
      * @param circle2 the second circle
-     * @return the collision information, or null if no collision
+     * @return if the two circles overlap
      */
     fun checkIntersection(circle1: Circle?, circle2: Circle?): Boolean {
         if (circle1 == null || circle2 == null) return false
@@ -45,12 +45,12 @@ object CircleDetector {
         return result
     }
 
-//    internal fun detect(ellipse1: Ellipse?, ellipse2: Ellipse?): CollisionInfo? {
-//        return if (ellipse1?.isCircle == true && ellipse2?.isCircle == true)
-//            detect(ellipse1.toCircle(), ellipse2.toCircle())
-//        else null
+//    /**
+//     * Calculates the magnitude of the radius pointing towards a certain point.
+//     */
+//    private fun Ellipse.radiusToPoint(point: Vec2): Float {
+//        return if (this is Circle) this.radius
+//        else this.getRadius(point - this.center()).len()
 //    }
-//
-//    private fun Ellipse.toCircle(): Circle = if (this is Circle) this else Circle(center(), size.x * 0.5f)
 
 }

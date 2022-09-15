@@ -15,7 +15,6 @@ import kotlin.math.abs
 // TODO correct self-intersecting and set convex hull
 open class Polygon internal constructor(vararg vertices: Vec2) : Shape() {
 
-
     /**
      * Constructs a regular polygon with the specified number of vertices and radius.
      *
@@ -100,10 +99,8 @@ open class Polygon internal constructor(vararg vertices: Vec2) : Shape() {
     }
 
     override fun boundingRectangle(): BoundingBox {
-        // TODO support function, or too expensive?
         val verticesX = FloatArray(numVertices) { vertices[it].x }
         val verticesY = FloatArray(numVertices) { vertices[it].y }
-
         val boxMin = Vec2(MathUtils.min(*verticesX), MathUtils.min(*verticesY))
         val boxMax = Vec2(MathUtils.max(*verticesX), MathUtils.max(*verticesY))
         return BoundingBox(boxMin.midpoint(boxMax), boxMax - boxMin)

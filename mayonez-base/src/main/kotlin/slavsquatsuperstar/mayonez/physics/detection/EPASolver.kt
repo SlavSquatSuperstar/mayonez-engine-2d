@@ -2,40 +2,40 @@ package slavsquatsuperstar.mayonez.physics.detection
 
 import slavsquatsuperstar.math.MathUtils
 import slavsquatsuperstar.math.Vec2
-import slavsquatsuperstar.mayonez.annotations.ExperimentalFeature
-import slavsquatsuperstar.mayonez.physics.collision.CollisionInfo
-import slavsquatsuperstar.mayonez.physics.collision.Collisions
 import slavsquatsuperstar.mayonez.physics.shapes.Shape
 import kotlin.math.abs
 
 /**
- * Takes a GJK simplex and calculates contact points between two shapes using EPA. Used by [GJKDetector].
+ * Calculates the penetration between two shapes from their Minkowski sum (simplex) by performing the expanding
+ * polytope/polygon algorithm. Used in conjunction with [GJKDetector].
+ *
+ * Sources
+ * - https://dyn4j.org/2010/05/epa-expanding-polytope-algorithm
+ * - https://blog.winter.dev/2020/epa-algorithm/ § 2D (JavaScript)
  *
  * @author SlavSquatSuperstar
  */
-class EPASolver(private val shape1: Shape, private val shape2: Shape, private val simplex: Simplex) {
+class EPASolver(private val shape1: Shape?, private val shape2: Shape?) {
+
+    companion object {
+        const val MAX_EPA_ITERATIONS: Int = 40
+    }
 
     /**
-     * Performs the expanding polytope (polygon) algorithm on a GJK simplex to find the contact point between two
-     * shapes.
+     * Calculate the penetration between the two shapes from their simplex.
      *
-     * Sources
-     * - https://dyn4j.org/2010/05/epa-expanding-polytope-algorithm
-     * - https://blog.winter.dev/2020/epa-algorithm/ § 2D (JavaScript)
+     * @param simplex the Minkowski sum of the two shapes
+     * @return the penetration, or null if the intersection is too small
      */
-    @ExperimentalFeature
     // TODO See § Alternatives for optimizations
-    fun solve(): CollisionInfo? { // need additional work for circles
-        /*
-         * Outline
-         * - Find the closest face in the simplex to the origin
-         * - Look for a point in the Minkowski sum in the direction of the face's normal
-         */
+    fun getPenetration(simplex: Simplex?): Penetration? {
+        if (shape1 == null || shape2 == null || simplex == null) return null
 
         val disp = Vec2(50f, 40f)
-        val expandedSimplex = simplex.expand(Collisions.MAX_EPA_ITERATIONS) // sort edges prior
+        val expandedSimplex = simplex.expand(MAX_EPA_ITERATIONS) // sort edges prior
 
-        for (i in 0 until Collisions.MAX_EPA_ITERATIONS) {
+        for (i in 0 until MAX_EPA_ITERATIONS) {
+            // 1. Find the closest face in the simplex to the origin
             val closest = closestEdgeToOrigin(expandedSimplex)
 
 //            val poly = expandedSimplex.toPolygon().translate(disp)
@@ -43,6 +43,7 @@ class EPASolver(private val shape1: Shape, private val shape2: Shape, private va
 //            DebugDraw.drawShape(cEdge, Colors.LIGHT_GREEN)
 //            DebugDraw.drawVector(cEdge.center(), closest.norm, Colors.LIGHT_GREEN)
 
+            // 2. Look for a point in the Minkowski sum in the direction of the face's normal
             val supp = Shape.support(shape1, shape2, closest.norm)
             val suppDist = supp.dot(closest.norm) // distance along normal is depth
             // support point already on closest edge; cannot expand simplex anymore
@@ -52,11 +53,7 @@ class EPASolver(private val shape1: Shape, private val shape2: Shape, private va
 //                val edge = poly.edges[closest.index]
 //                DebugDraw.drawShape(edge, Colors.GREEN)
 //                DebugDraw.drawVector(edge.center(), closest.norm, Colors.RED)
-                return PenetrationSolver(
-                    Penetration(
-                        shape1, shape2, closest.norm, suppDist + MathUtils.FLOAT_EPSILON
-                    )
-                ).solve()
+                return Penetration(closest.norm, suppDist + MathUtils.FLOAT_EPSILON)
             } else expandedSimplex.add(closest.index, supp)
         }
         return null

@@ -9,7 +9,7 @@ import slavsquatsuperstar.math.Vec2
  *
  * @author SlavSquatSuperstar
  */
-abstract class Shape {
+abstract class Shape : Transformable {
 
     companion object {
         /**
@@ -114,41 +114,38 @@ abstract class Shape {
     // Geometric Transformations
 
     /**
-     * Translates every point on this shape along the same vector.
-     * This is a rigid transformation and preserves the area.
+     * Moves every point on this shape along the same vector, preserving its area and perimeter.
      *
-     * @param direction the direction to move
+     * @param direction the vector to move along
      * @return the translated shape
      */
-    abstract fun translate(direction: Vec2): Shape
+    abstract override fun translate(direction: Vec2): Shape
 
     /**
-     * Rotates every point on this shape around the given origin by the same angle.
-     * This is a rigid transformation and preserves the area.
+     * Rotates every point on this shape around the given origin by the same angle, preserving its area and perimeter.
      *
      * @param angle  the counterclockwise angle in degrees
      * @param origin the point to rotate around, or the shape's centroid if null
      * @return the rotated shape
      */
-    abstract fun rotate(angle: Float, origin: Vec2? = null): Shape
+    abstract override fun rotate(angle: Float, origin: Vec2?): Shape
 
     /**
-     * Stretches the dimensions of this shape by a given scale vector. This is a non-rigid and non-linear (anisotropic)
-     * transformation and may alter the overall form and area. Some shapes may only be transformed linearly,
-     * where both dimensions will be scaled by a single scale factor and the overall form is maintained.
+     * Stretches the dimensions of this shape by a given scale vector, altering its area and parameter. Scaling also
+     * changes the overall form of the shape if the scale factor is non-uniform.
      *
      * @param factor how much to scale the shape along each axis
      * @param origin the point to scale from, or the shape's centroid if null
      * @return the scaled shape
      */
-    abstract fun scale(factor: Vec2, origin: Vec2? = null): Shape
+    abstract override fun scale(factor: Vec2, origin: Vec2?): Shape
 
     // Overrides
 
     /**
      * Whether this shape is equivalent to another shape before applying any rigid transformations.
      */
-    abstract override operator fun equals(other: Any?): Boolean
+    abstract override fun equals(other: Any?): Boolean
 
     /**
      * A string representation of the shape.

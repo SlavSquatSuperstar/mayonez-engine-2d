@@ -152,7 +152,7 @@ abstract class Collider(private val shapeData: Shape) : Component() {
      * @return the collision info, or no if there is no intersection
      */
     fun getCollisionInfo(collider: Collider?): CollisionInfo? {
-        return Collisions.getCollisionInfo(this.transformToWorld(), collider?.transformToWorld())
+        return Collisions.getContacts(this.transformToWorld(), collider?.transformToWorld())
     }
 
     // Field Getters and Setters

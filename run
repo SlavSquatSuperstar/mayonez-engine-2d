@@ -1,9 +1,12 @@
 #!/bin/sh
-# Build the application for macOS/Linux
+# Navigate to the project directory
 SCRIPT_DIR=$(dirname "$0")
 cd "$SCRIPT_DIR" || exit
+
+# Build the application for macOS/Linux
+echo "Building mayonez-engine..."
 ./gradlew clean build
 
-# Run the created jar file
+# Run the compiled jar file
 # LWJGL requires a special argument on macOS
 java -XstartOnFirstThread -jar build/libs/*.jar

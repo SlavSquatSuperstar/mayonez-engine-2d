@@ -14,6 +14,10 @@ class Range(min: Float, max: Float): Pair<Float, Float>(min, max) {
     @JvmField
     val max = min.coerceAtLeast(max)
 
+    fun clamp(value: Float): Float {
+        return min.coerceAtLeast(value).coerceAtMost(max)
+    }
+
     operator fun contains(value: Float): Boolean = (min <= value) && (value <= max)
 
     override fun equals(other: Any?): Boolean {

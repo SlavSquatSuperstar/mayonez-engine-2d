@@ -8,7 +8,7 @@ import kotlin.math.sign
 import kotlin.math.sqrt
 
 /**
- * Calculates a raycast and detects whether a ray hits a shape and where the contact is.
+ * A class that casts rays onto shapes and detects whether the ray hits a shape and where the contact is.
  *
  * @author SlavSquatSuperstar
  */
@@ -44,17 +44,17 @@ object RaycastDetector {
         val hitDist = if (ray.origin in circle) projLength + contactToNearest
         else projLength - contactToNearest
 
-        if (limit > 0f && hitDist > limit * ray.length) return null // Ray exceeds limit
+        if (limit > 0f && hitDist > limit) return null // Ray exceeds limit
         if (hitDist < 0f) return null // Contact point is behind ray
 
         val point = ray.getPoint(hitDist)
-        return RaycastInfo(point, point - circle.center(), hitDist / ray.length)
+        return RaycastInfo(point, point - circle.center(), hitDist)
     }
 
     private fun raycastEdge(edge: Edge, ray: Ray, limit: Float): RaycastInfo? {
         // Find line directions
         val dir1 = edge.toVector() / edge.length
-        val dir2 = ray.direction / ray.length
+        val dir2 = ray.direction
         val cross = dir1.cross(dir2)
 
         // If ray is parallel, then raycast is undefined
@@ -68,12 +68,21 @@ object RaycastDetector {
 
         // Contact must be inside edge and inside ray if limit is enabled
         if (!MathUtils.inRange(dist1, 0f, edge.length) || dist2 < 0
-            || (limit > 0 && dist2 > limit * ray.length)
-        )
-            return null
+            || (limit > 0 && dist2 > limit)
+        ) return null
 
         val contact = edge.start + (dir1 * dist1)
-        return RaycastInfo(contact, edge.unitNormal(dir1), dist2 / ray.length)
+        return RaycastInfo(contact, edge.unitNormal(dir1), dist2)
+    }
+
+    private fun raycastGJK(poly: Polygon, ray: Ray, limit: Float): RaycastInfo? {
+        val lambda = 0.0;
+        val vecA = Vec2()
+        val vecB = Vec2()
+
+        val start = ray.origin
+        val closest = start
+        return null
     }
 
     private fun raycastPolygon(poly: Polygon, ray: Ray, limit: Float): RaycastInfo? {
@@ -131,7 +140,7 @@ object RaycastDetector {
             normal = Vec2(0f, -sign(localRay.direction.y))
 
         val contact = localRay.getPoint(distToRect)
-        return RaycastInfo(contact, normal, contact.distance(ray.origin) / ray.length)
+        return RaycastInfo(contact, normal, contact.distance(ray.origin))
     }
 
     private fun Vec2.unsafeDivide(v: Vec2): Vec2 {

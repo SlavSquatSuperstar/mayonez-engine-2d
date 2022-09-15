@@ -28,10 +28,10 @@ public class GJKIntersectionTest extends Scene {
     @Override
     protected void onUserRender(Graphics2D g2) {
         Triangle newTri = tri.translate(MouseInput.getPosition());
-        boolean colliding = Collisions.detectCollision(rect, newTri);
+        boolean colliding = Collisions.checkCollision(rect, newTri);
         DebugDraw.drawShape(rect, colliding ? Colors.RED : Colors.BLUE);
         DebugDraw.drawShape(newTri, colliding ? Colors.RED : Colors.LIGHT_GREEN);
-        Collisions.getCollisionInfo(rect, newTri);
+        Collisions.getContacts(rect, newTri);
         DebugDraw.drawLine(new Vec2(50, 20), new Vec2(50, 60), Colors.BLACK);
         DebugDraw.drawLine(new Vec2(30, 40), new Vec2(70, 40), Colors.BLACK);
 //        Collisions.getCollisionInfo(rect, tri);

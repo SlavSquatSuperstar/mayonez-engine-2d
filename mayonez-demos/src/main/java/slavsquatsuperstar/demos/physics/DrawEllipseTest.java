@@ -28,7 +28,7 @@ public class DrawEllipseTest extends Scene {
         Vec2 mouse = MouseInput.getPosition();
         DebugDraw.drawPoint(mouse, Colors.BLUE);
         DebugDraw.drawLine(ellipse.center(), mouse, Colors.BLUE);
-        DebugDraw.drawPoint(ellipse.pointInDirection(mouse.sub(ellipse.center())), Colors.LIGHT_GREEN);
+        DebugDraw.drawPoint(ellipse.center().add(ellipse.getRadius(mouse.sub(ellipse.center()))), Colors.LIGHT_GREEN);
 
         if (ellipse.contains(mouse)) DebugDraw.drawShape(ellipse, Colors.RED);
         else DebugDraw.drawShape(ellipse, Colors.BLACK);

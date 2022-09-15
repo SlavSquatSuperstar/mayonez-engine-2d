@@ -41,7 +41,8 @@ object Mayonez {
             game = if (field!!) GLGame() else JGame()
         }
     private var game: GameEngine? = null // Engine config, either Java or GL
-    private var started = false
+    var started: Boolean = false
+        private set
 
     // Initialization
     private var INIT_ENGINE = false // Whether the engine and logger have been created

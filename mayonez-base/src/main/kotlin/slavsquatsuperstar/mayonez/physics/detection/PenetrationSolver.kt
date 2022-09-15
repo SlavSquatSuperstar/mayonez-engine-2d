@@ -11,22 +11,28 @@ import slavsquatsuperstar.util.Colors
 import kotlin.math.abs
 
 /**
- * Takes a penetration normal and distance between two shapes and calculates contact points. Used by [EPASolver] and
- * [SATDetector].
+ * Calculates the contact points (collision manifold) between two colliding shapes from their penetration vector by
+ * finding and clipping intersecting features. Solving for contacts is the third and final step in collision detection,
+ * and is performed after obtaining the penetration. Used by [CollisionDetector] implementations.
  *
  * @author SlavSquatSuperstar
  */
-class PenetrationSolver(private val penetration: Penetration) {
+class PenetrationSolver {
 
-    /*
+    /**
+     * Calculates the contact points between two shapes.
+     *
      * Sources
      * - https://dyn4j.org/2011/11/contact-points-using-clipping/
      * - https://github.com/erincatto/box2d-lite/tree/master/docs
+     *
+     * @param shape1      the first shape
+     * @param shape2      the second shape
+     * @param penetration the penetration
+     * @return the collision manifold, or null if no collision
      */
-    fun solve(): CollisionInfo? {
+    fun getContacts(shape1: Shape, shape2: Shape, penetration: Penetration): CollisionInfo? {
         val collision: CollisionInfo
-        val shape1 = penetration.shape1
-        val shape2 = penetration.shape2
         val depth = penetration.depth
 
         // 1. Get the right normal direction
