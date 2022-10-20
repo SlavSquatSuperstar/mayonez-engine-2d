@@ -15,9 +15,9 @@ class CollisionInfo(
     val depth: Float // positive penetration (separation) distance along normal
 ) {
 
-    private val contacts = ArrayList<Vec2>(2)
-
     // Properties
+
+    private val contacts = ArrayList<Vec2>(2)
 
     val normal: Vec2 = normal.unit()
 

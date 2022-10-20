@@ -12,7 +12,7 @@ public abstract class Component {
     /**
      * The {@link GameObject} this component belongs to.
      */
-    protected GameObject parent;
+    protected GameObject gameObject;
 
     /**
      * A reference to the parent object's {@link Transform}.
@@ -68,8 +68,13 @@ public abstract class Component {
         return (T) this;
     }
 
-    public GameObject getParent() {
-        return parent;
+    /**
+     * Returns the parent {@link GameObject} this Component is attached to.
+     *
+     * @return the game object
+     */
+    public GameObject getObject() {
+        return gameObject;
     }
 
     // should only be used by Scene class
@@ -77,12 +82,12 @@ public abstract class Component {
     /**
      * Adds this Component to a parent {@link GameObject}. Should only be used by the {@link Scene} class.
      *
-     * @param parent a game object
+     * @param gameObject a game object
      * @return this component
      */
-    final Component setParent(GameObject parent) {
-        this.parent = parent;
-        this.transform = parent.transform;
+    final Component setObject(GameObject gameObject) {
+        this.gameObject = gameObject;
+        this.transform = gameObject.transform;
         return this;
     }
 
@@ -92,7 +97,7 @@ public abstract class Component {
      * @return the parent scene
      */
     public Scene getScene() {
-        return parent.getScene();
+        return gameObject.getScene();
     }
 
     public boolean isInScene(Scene scene) {
@@ -114,7 +119,7 @@ public abstract class Component {
         return String.format(
                 "%s (%s)",
                 getClass().isAnonymousClass() ? "Component" : getClass().getSimpleName(),
-                parent == null ? "<No Parent>" : parent.name
+                gameObject == null ? "<No Parent>" : gameObject.name
         );
         // Use Component for class if anonymous instance
     }

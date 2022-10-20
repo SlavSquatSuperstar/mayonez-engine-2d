@@ -1,6 +1,7 @@
 package slavsquatsuperstar.demos.physics;
 
 import slavsquatsuperstar.math.Vec2;
+import slavsquatsuperstar.mayonez.scripts.*;
 import slavsquatsuperstar.util.Colors;
 import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Preferences;
@@ -12,10 +13,6 @@ import slavsquatsuperstar.mayonez.physics.Rigidbody;
 import slavsquatsuperstar.mayonez.physics.colliders.BoxCollider;
 import slavsquatsuperstar.mayonez.physics.colliders.BallCollider;
 import slavsquatsuperstar.mayonez.physics.colliders.Collider;
-import slavsquatsuperstar.mayonez.scripts.DragAndDrop;
-import slavsquatsuperstar.mayonez.scripts.KeepInScene;
-import slavsquatsuperstar.mayonez.scripts.MouseFlick;
-import slavsquatsuperstar.mayonez.scripts.MoveMode;
 
 import java.awt.*;
 
@@ -34,6 +31,7 @@ public abstract class PhysicsTestScene extends Scene {
         setBackground(Colors.WHITE);
         NUM_SHAPES = numShapes;
         setGravity(new Vec2());
+        getCamera().setPosition(getSize().mul(0.5f));
     }
 
     @Override
@@ -55,6 +53,8 @@ public abstract class PhysicsTestScene extends Scene {
 
     @Override
     protected void onUserUpdate(float dt) {
+        getCamera().setPosition(getSize().mul(0.5f));
+
         if (KeyInput.keyPressed("space")) {
 //            System.out.println("pressed");
             enabledGravity = !enabledGravity;
@@ -79,7 +79,7 @@ public abstract class PhysicsTestScene extends Scene {
                 Collider circle = new BallCollider(size).setMaterial(material).setDebugDraw(Colors.BLUE, false);
                 addComponent(circle);
                 addComponent(new Rigidbody(circle.getMass(DENSITY)));
-                addComponent(new KeepInScene(getScene(), KeepInScene.Mode.BOUNCE));
+                addComponent(new KeepInScene(new Vec2(), getScene().getSize(), KeepInScene.Mode.BOUNCE));
                 addComponent(new DragAndDrop("left mouse"));
                 addComponent(new MouseFlick(MoveMode.VELOCITY, "right mouse", 15, false));
             }
@@ -94,7 +94,7 @@ public abstract class PhysicsTestScene extends Scene {
                 Collider box = new BoxCollider(size).setMaterial(material).setDebugDraw(Colors.ORANGE, false);
                 addComponent(box);
                 addComponent(new Rigidbody(box.getMass(DENSITY)));
-                addComponent(new KeepInScene(getScene(), KeepInScene.Mode.BOUNCE));
+                addComponent(new KeepInScene(new Vec2(), getScene().getSize(), KeepInScene.Mode.BOUNCE));
                 addComponent(new DragAndDrop("left mouse"));
                 addComponent(new MouseFlick(MoveMode.VELOCITY, "right mouse", 15, false));
             }

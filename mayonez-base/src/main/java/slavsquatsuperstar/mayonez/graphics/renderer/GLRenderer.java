@@ -58,7 +58,7 @@ public final class GLRenderer extends Renderer {
     public void rebuffer() {
         batches.forEach(RenderBatch::clear); // Clear Batches
         for (GLSprite sprite : sprites) { // Rebuffer batches
-            RenderBatch batch = getAvailableBatch(sprite.getTexture(), sprite.getParent().getZIndex());
+            RenderBatch batch = getAvailableBatch(sprite.getTexture(), sprite.getObject().getZIndex());
             batch.pushSpriteData(sprite); // Push vertices to batch
         }
         batches.forEach(RenderBatch::upload); // Finalize Batches

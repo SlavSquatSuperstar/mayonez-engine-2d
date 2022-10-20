@@ -9,5 +9,5 @@ import slavsquatsuperstar.util.Pair
  *
  * @author SlavSquatSuperstar
  */
-class Penetration(internal val normal: Vec2, internal val depth: Float) : Pair<Vec2, Float>(normal, depth) {
+class Penetration(val normal: Vec2, val depth: Float) : Pair<Vec2, Float>(normal, depth) {
 }

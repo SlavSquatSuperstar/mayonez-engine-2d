@@ -92,7 +92,7 @@ abstract class Collider(private val shapeData: Shape) : Component() {
     // Game Loop Methods
 
     override fun start() {
-        rigidbody = parent.getComponent(Rigidbody::class.java)
+        rigidbody = gameObject.getComponent(Rigidbody::class.java)
     }
 
     override fun render(g2: Graphics2D?) {
@@ -171,14 +171,14 @@ abstract class Collider(private val shapeData: Shape) : Component() {
      *
      * @param other the other game object
      */
-    fun onCollision(other: GameObject) = parent.onCollision(other)
+    fun onCollision(other: GameObject) = gameObject.onCollision(other)
 
     /**
      * A callback event broadcasted when one solid object enters a trigger area.
      *
      * @param trigger the trigger
      */
-    fun onTrigger(trigger: Collider) = parent.onTrigger(trigger)
+    fun onTrigger(trigger: Collider) = gameObject.onTrigger(trigger)
 
     override fun destroy() {
         ignoreCurrentCollision = true

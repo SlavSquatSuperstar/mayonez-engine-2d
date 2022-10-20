@@ -1,6 +1,7 @@
 package slavsquatsuperstar.demos.physics;
 
 import slavsquatsuperstar.math.Vec2;
+import slavsquatsuperstar.mayonez.scripts.*;
 import slavsquatsuperstar.util.Colors;
 import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Mayonez;
@@ -10,10 +11,6 @@ import slavsquatsuperstar.mayonez.physics.Rigidbody;
 import slavsquatsuperstar.mayonez.physics.colliders.BoxCollider;
 import slavsquatsuperstar.mayonez.physics.colliders.BallCollider;
 import slavsquatsuperstar.mayonez.physics.colliders.Collider;
-import slavsquatsuperstar.mayonez.scripts.DragAndDrop;
-import slavsquatsuperstar.mayonez.scripts.KeepInScene;
-import slavsquatsuperstar.mayonez.scripts.MouseFlick;
-import slavsquatsuperstar.mayonez.scripts.MoveMode;
 
 public class FrictionTest extends PhysicsTestScene {
 
@@ -52,7 +49,7 @@ public class FrictionTest extends PhysicsTestScene {
                 addComponent(new Rigidbody(collider.getMass(DENSITY)));
                 addComponent(new MouseFlick(MoveMode.VELOCITY, "right mouse", 15, false));
                 addComponent(new DragAndDrop("left mouse"));
-                addComponent(new KeepInScene(getScene(), KeepInScene.Mode.BOUNCE));
+                addComponent(new KeepInScene(KeepInScene.Mode.BOUNCE));
                 addComponent(new Script() {
                     private Rigidbody rb;
 

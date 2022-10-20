@@ -169,6 +169,37 @@ class Vec2 constructor(
 
     companion object {
         /**
+         * The vector (1, 0), or the positive x-axis.
+         */
+        val right: Vec2
+            get() = Vec2(1f, 0f)
+        /**
+         * The vector (-1, 0), or the negative x-axis.
+         */
+        val left: Vec2
+            get() = Vec2(-1f, 0f)
+        /**
+         * The vector (0, 1), or the positive y-axis.
+         */
+        val up: Vec2
+            get() = Vec2(0f, 1f)
+        /**
+         * The vector (0, -1), or the negative y-axis.
+         */
+        val down: Vec2
+            get() = Vec2(0f, -1f)
+        /**
+         * The vector (1, 1), or the component-wise multiplicative identity.
+         */
+        val one: Vec2
+            get() = Vec2(1f, 1f)
+        /**
+         * The vector (0, 0), or the component-wise additive identity.
+         */
+        val zero: Vec2
+            get() = Vec2(0f, 0f)
+
+        /**
          * Calculates the vector triple product between three vectors. The vector triple product is
          * defined as (a × b) × c = b(a · c) - a(b · c).
          *

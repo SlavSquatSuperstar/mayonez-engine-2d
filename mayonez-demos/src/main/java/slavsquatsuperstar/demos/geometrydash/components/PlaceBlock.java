@@ -34,7 +34,7 @@ public class PlaceBlock extends Component {
 
         if (cursor == null) return;
         // add 0.5 to x/y to center the block
-        Vec2 mousePos = MouseInput.getPosition().add(getScene().getCamera().getOffset()).floor().add(new Vec2(0.5f));
+        Vec2 mousePos = MouseInput.getPosition().add(new Vec2(0.5f)).floor();
         transform.position.set(mousePos);
         if (counter.isReady() && MouseInput.buttonDown("left mouse")) {
             counter.reset();

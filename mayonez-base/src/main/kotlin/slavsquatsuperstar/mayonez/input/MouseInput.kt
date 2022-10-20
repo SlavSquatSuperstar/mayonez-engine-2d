@@ -217,7 +217,9 @@ object MouseInput : MouseAdapter() {
     // TODO add camera offset
     @JvmStatic
     val position: Vec2
-        get() = Vec2(mousePos.x, Mayonez.windowHeight - mousePos.y).toWorld() // Mirror y
+        get() { // Mirror y and add camera offset
+            return Vec2(mousePos.x, Mayonez.windowHeight - mousePos.y).toWorld() + Mayonez.scene.camera.offset
+        }
 
     @JvmStatic
     val x: Float

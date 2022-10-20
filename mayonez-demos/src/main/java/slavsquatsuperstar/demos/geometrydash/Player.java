@@ -52,7 +52,7 @@ public class Player extends GameObject {
         addComponent(new BoxCollider(new Vec2(1, 1)));
         addComponent(new Rigidbody(1f).setFixedRotation(true));
         addComponent(new KeyMovement(MoveMode.POSITION, thrustForce).setTopSpeed(5f));
-        addComponent(new KeepInScene(new Vec2(), getScene().getSize(), KeepInScene.Mode.STOP));
+        addComponent(new KeepInScene(KeepInScene.Mode.STOP));
         addComponent(new PlayerController(thrustForce));
     }
 

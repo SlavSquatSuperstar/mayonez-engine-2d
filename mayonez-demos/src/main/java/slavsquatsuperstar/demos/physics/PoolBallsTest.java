@@ -2,16 +2,13 @@ package slavsquatsuperstar.demos.physics;
 
 import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
+import slavsquatsuperstar.mayonez.scripts.*;
 import slavsquatsuperstar.util.Colors;
 import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Mayonez;
 import slavsquatsuperstar.mayonez.physics.PhysicsMaterial;
 import slavsquatsuperstar.mayonez.physics.Rigidbody;
 import slavsquatsuperstar.mayonez.physics.colliders.BallCollider;
-import slavsquatsuperstar.mayonez.scripts.DragAndDrop;
-import slavsquatsuperstar.mayonez.scripts.KeepInScene;
-import slavsquatsuperstar.mayonez.scripts.MouseFlick;
-import slavsquatsuperstar.mayonez.scripts.MoveMode;
 
 /**
  * Pool balls weigh ~160-170 g (0.165 kg) are ~57 mm (0.057 m) wide. Using an 80:1 scale, the in-game balls weigh 6.6 kg
@@ -55,7 +52,7 @@ public class PoolBallsTest extends PhysicsTestScene {
             protected void init() {
                 addComponent(new BallCollider(BALL_RADIUS).setMaterial(POOL_BALL_MAT).setDebugDraw(Colors.BLUE, false));
                 addComponent(new Rigidbody(BALL_MASS));
-                addComponent(new KeepInScene(getScene(), KeepInScene.Mode.BOUNCE));
+                addComponent(new KeepInScene(new Vec2(), getScene().getSize(), KeepInScene.Mode.BOUNCE));
                 addComponent(new DragAndDrop("left mouse"));
                 addComponent(new MouseFlick(MoveMode.IMPULSE, "right mouse", 80, false));
             }

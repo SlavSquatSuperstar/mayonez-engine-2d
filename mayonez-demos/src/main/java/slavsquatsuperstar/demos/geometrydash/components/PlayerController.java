@@ -4,6 +4,7 @@ import slavsquatsuperstar.demos.geometrydash.LevelEditor;
 import slavsquatsuperstar.demos.geometrydash.LevelScene;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.Script;
+import slavsquatsuperstar.mayonez.graphics.CameraMode;
 import slavsquatsuperstar.mayonez.graphics.JCamera;
 import slavsquatsuperstar.mayonez.input.KeyInput;
 import slavsquatsuperstar.mayonez.physics.Rigidbody;
@@ -27,9 +28,9 @@ public class PlayerController extends Script {
     public void start() {
         JCamera cam = (JCamera) getScene().getCamera();
         if (getScene() instanceof LevelEditor) {
-            cam.enableDragAndDrop(true).enableKeepInScene(false);
+            cam.setStayInBounds(false).setMode(CameraMode.FREE);
         } else if (getScene() instanceof LevelScene) {
-            cam.enableKeepInScene(true).setSubject(parent); // TODO pass camera in player c'tor?
+            cam.setMode(CameraMode.FOLLOW).setSubject(gameObject);
         }
         rb = getRigidbody();
         rb.setDrag(drag);
@@ -37,6 +38,8 @@ public class PlayerController extends Script {
 
     @Override
     public void update(float dt) {
+//        Logger.log("player = %s", transform.position);
+
         if (getScene() instanceof LevelScene) {
             // Jump if on ground
             if (KeyInput.keyDown("w"))

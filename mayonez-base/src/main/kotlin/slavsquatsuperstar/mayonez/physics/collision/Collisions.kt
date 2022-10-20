@@ -18,7 +18,7 @@ object Collisions {
     @JvmStatic
     fun getContacts(shape1: Shape?, shape2: Shape?): CollisionInfo? {
         if (shape1 == null || shape2 == null) return null
-        if (shape1 is Circle && shape2 is Circle) return CircleDetector.detect(shape1, shape2)
+        if (shape1 is Circle && shape2 is Circle) return CircleDetector.getContacts(shape1, shape2)
         val penetration = if (SATDetector.preferred(shape1) && SATDetector.preferred(shape2))
             SATDetector().getPenetration(shape1, shape2)
         else GJKDetector().getPenetration(shape1, shape2)

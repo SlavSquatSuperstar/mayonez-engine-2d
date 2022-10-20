@@ -20,7 +20,7 @@ public abstract class Script extends Component {
      * @return the component, if it exists
      */
     public <T extends Component> T getComponent(Class<T> cls) {
-        return parent.getComponent(cls);
+        return gameObject.getComponent(cls);
     }
 
     /**
@@ -29,7 +29,7 @@ public abstract class Script extends Component {
      * @return the collider, if it exists
      */
     public Collider getCollider() {
-        return parent.getComponent(Collider.class);
+        return gameObject.getComponent(Collider.class);
     }
 
     /**
@@ -38,7 +38,7 @@ public abstract class Script extends Component {
      * @return the rigidbody, if it exists
      */
     public Rigidbody getRigidbody() {
-        return parent.getComponent(Rigidbody.class);
+        return gameObject.getComponent(Rigidbody.class);
     }
 
     // Overrides
@@ -49,6 +49,6 @@ public abstract class Script extends Component {
     @Override
     public String toString() {
         return String.format("Script %s (%s)", getClass().isAnonymousClass() ?
-                "Script" : getClass().getSimpleName(), parent.name);
+                "Script" : getClass().getSimpleName(), gameObject.name);
     }
 }

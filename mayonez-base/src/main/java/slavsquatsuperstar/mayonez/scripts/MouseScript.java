@@ -17,18 +17,23 @@ public abstract class MouseScript extends MovementScript {
 
     // Script Info
     protected boolean inverted; // Moving the mouse will move the object in the opposite way
-    protected String button = "left mouse";
+    protected String button;
 
     // Internal Script
     protected Vec2 lastMouse = new Vec2();
     private boolean mouseHeld;
 
     public MouseScript() {
-        mode = MoveMode.FOLLOW_MOUSE;
+        this("left mouse", MoveMode.FOLLOW_MOUSE, 0);
     }
 
     public MouseScript(MoveMode mode, float speed) {
+        this("left mouse", mode, speed);
+    }
+
+    public MouseScript(String button, MoveMode mode, float speed) {
         super(mode, speed);
+        this.button = button;
     }
 
     @Override
@@ -62,7 +67,7 @@ public abstract class MouseScript extends MovementScript {
     // TODO Use MouseInput collision detection instead
     protected boolean isMouseOnObject() {
         // Using last mouse position is more reliable when mouse is moving fast
-        return collider == null || collider.contains(getScene().getCamera().getOffset().add(lastMouse));
+        return collider == null || collider.contains(lastMouse);
     }
 
     // Mouse Event Methods

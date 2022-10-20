@@ -15,23 +15,18 @@ import slavsquatsuperstar.mayonez.input.MouseInput;
 import slavsquatsuperstar.mayonez.io.Assets;
 import slavsquatsuperstar.mayonez.physics.Rigidbody;
 import slavsquatsuperstar.mayonez.physics.colliders.BoxCollider;
-import slavsquatsuperstar.mayonez.scripts.DragAndDrop;
-import slavsquatsuperstar.mayonez.scripts.KeyMovement;
-import slavsquatsuperstar.mayonez.scripts.MoveMode;
-
-import java.util.ArrayList;
-import java.util.List;
+import slavsquatsuperstar.mayonez.scripts.*;
 
 public class GLRendererTest extends Scene {
 
     private GLCamera camera;
     private GLSpriteSheet sprites;
-    private List<GameObject> enemies;
+//    private List<GameObject> enemies;
 
     public GLRendererTest() {
         super("LWJGL Test Scene", 1080, 720, 32);
         camera = new GLCamera(new Vector2f());
-        enemies = new ArrayList<>();
+//        enemies = new ArrayList<>();
         setGravity(new Vec2());
     }
 
@@ -63,6 +58,7 @@ public class GLRendererTest extends Scene {
                 addComponent(new BoxCollider(new Vec2(0.8f, 1)));
                 addComponent(new Rigidbody(1f).setFixedRotation(true));
                 addComponent(new KeyMovement(MoveMode.POSITION, 20));
+                addComponent(new KeepInScene(new Vec2(), getSize(), KeepInScene.Mode.STOP));
             }
         }.setZIndex(1));
 

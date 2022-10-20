@@ -68,10 +68,10 @@ class PenetrationSolver {
             // 3. Clip incident edge
             val clippedEdge = incFeature.clipToSegment(refFeature) // clip incident edge
 
-            DebugDraw.drawVector(refFeature.center(), normal, Colors.RED)
-//            DebugDraw.drawShape(refFeature, Colors.RED)
-            DebugDraw.drawVector(clippedEdge.center(), -normal, Colors.GREEN)
-//            DebugDraw.drawShape(clippedEdge, Colors.GREEN)
+//            DebugDraw.drawVector(refFeature.center(), normal, Colors.RED)
+////            DebugDraw.drawShape(refFeature, Colors.RED)
+//            DebugDraw.drawVector(clippedEdge.center(), -normal, Colors.GREEN)
+////            DebugDraw.drawShape(clippedEdge, Colors.GREEN)
 
             // 4. Calculate contact points
             val incEdgeLength = refFeature.start.dot(normal)
@@ -82,8 +82,8 @@ class PenetrationSolver {
         }
 
 //        for (i in 0 until collision.numContacts()) DebugDraw.drawPoint(collision.getContact(i), Colors.RED)
-//        return if (collision.numContacts() > 0) collision else null
-        return null
+        return if (collision.numContacts() > 0) collision else null
+//        return null
     }
 
     companion object {
@@ -93,7 +93,7 @@ class PenetrationSolver {
         }
 
         private fun Polygon.getFurthestEdge(direction: Vec2): Edge {
-            DebugDraw.drawPoint(supportPoint(direction), Colors.BLUE)
+//            DebugDraw.drawPoint(supportPoint(direction), Colors.BLUE)
 
 //            val dotProds = FloatArray(normals.size) { normals[it].dot(direction) }
 //            return this.edges[MathUtils.maxIndex(*dotProds)]
@@ -104,9 +104,9 @@ class PenetrationSolver {
                 if (iLeft > 0) iLeft - 1 else numVertices - 1 // equivalent: (index - 1 + numVertices) % numVertices]
             val nLeft = normals[iLeft]
             val nRight = normals[iRight]
-            DebugDraw.drawShape(edges[iLeft], Colors.LIGHT_BLUE)
-            DebugDraw.drawShape(edges[iRight], Colors.DARK_BLUE)
-            println("L=${nLeft.dot(direction)}, R=${nRight.dot(direction)}")
+//            DebugDraw.drawShape(edges[iLeft], Colors.LIGHT_BLUE)
+//            DebugDraw.drawShape(edges[iRight], Colors.DARK_BLUE)
+//            println("L=${nLeft.dot(direction)}, R=${nRight.dot(direction)}")
 
             return if (nLeft.dot(direction) > nRight.dot(direction)) edges[iLeft]
             else edges[iRight]

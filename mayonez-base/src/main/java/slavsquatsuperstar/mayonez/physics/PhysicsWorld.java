@@ -97,7 +97,7 @@ public final class PhysicsWorld {
                 Collider c2 = colliders.get(j);
                 c2.setCollisionResolved(false); // reset flag
 
-                if (c1.getParent().hasTag("Ignore Collisions") || c2.getParent().hasTag("Ignore Collisions"))
+                if (c1.getObject().hasTag("Ignore Collisions") || c2.getObject().hasTag("Ignore Collisions"))
                     continue;
                 if (c1.isStatic() && c2.isStatic()) continue; // Don't check for collision if both are static
 
@@ -118,8 +118,8 @@ public final class PhysicsWorld {
 
             // Send collision callbacks if both are not triggers
             if (!c1.isTrigger() && !c2.isTrigger()) {
-                c1.onCollision(c2.getParent());
-                c2.onCollision(c1.getParent());
+                c1.onCollision(c2.getObject());
+                c2.onCollision(c1.getObject());
                 if (c1.getIgnoreCurrentCollision() || c2.getIgnoreCurrentCollision()) {
                     c1.setIgnoreCurrentCollision(false);
                     c2.setIgnoreCurrentCollision(false);

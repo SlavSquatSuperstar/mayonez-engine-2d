@@ -23,7 +23,7 @@ public class LevelEditor extends Scene {
     protected void init() {
         JSpriteSheet blocks = new JSpriteSheet("assets/textures/blocks.png", 42, 42, 12, 2);
 
-        addObject(new GameObject("Ground", new Vec2(getWidth() * 0.5f, 0)) {
+        addObject(new GameObject("Ground", new Vec2(0, getHeight() * -0.5f)) {
             @Override
             protected void init() {
                 addComponent(new Rigidbody(0f).setFixedRotation(true));
@@ -37,7 +37,7 @@ public class LevelEditor extends Scene {
         });
 
         // TODO still getting stuck on corners
-        addObject(new Player("Player", new Vec2(5, 5)));
+        addObject(new Player("Player", new Vec2(0, 0)));
 
         addObject(new GameObject("Grid") {
             @Override
@@ -45,7 +45,7 @@ public class LevelEditor extends Scene {
                 addComponent(new Grid(new Vec2(getCellSize())));
             }
         });
-        addObject(new UICanvas("Canvas", new Transform(new Vec2(9.25f, 3.5f)), blocks));
+        addObject(new UICanvas("Canvas", new Transform(new Vec2(-5f, -5f)), blocks));
 
 //        addObject(new GameObject("Button", new Transform(new Vec2(10, 5))) {
 //            @Override

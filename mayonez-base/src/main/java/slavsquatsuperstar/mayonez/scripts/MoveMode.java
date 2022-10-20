@@ -10,7 +10,7 @@ import slavsquatsuperstar.mayonez.physics.Rigidbody;
  */
 public enum MoveMode {
     /**
-     * Follow the mouse pointer.
+     * Lock the object's position to the mouse pointer.
      */
     FOLLOW_MOUSE(false),
     /**

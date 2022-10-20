@@ -118,7 +118,7 @@ public class GameObject {
         // maybe make annotation (multiple scripts should suppress warning)
 //		if (null != getComponent(comp.getClass()))
 //			Logger.warn("GameObject: Adding multiple components of the same type is not recommended");
-        components.add(comp.setParent(this));
+        components.add(comp.setObject(this));
     }
 
     /**

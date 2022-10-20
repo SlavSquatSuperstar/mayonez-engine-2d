@@ -12,11 +12,9 @@ import slavsquatsuperstar.mayonez.physics.Rigidbody;
  */
 public abstract class MovementScript extends Script {
 
-    public float speed = 0, topSpeed = -1; // If parent has physics clamp rb velocity
-    protected MoveMode mode = MoveMode.POSITION; // How to move the parent object
+    public float speed, topSpeed = -1; // If parent has physics clamp rb velocity
+    protected MoveMode mode; // How to move the parent object
     protected Rigidbody rb = null; // Reference to object rigidbody
-
-    protected MovementScript() {}
 
     public MovementScript(MoveMode mode, float speed) {
         this.mode = mode;

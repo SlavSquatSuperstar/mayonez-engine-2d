@@ -31,10 +31,10 @@ switch (OperatingSystem.current()) {
 
 dependencies {
     // Code Dependencies
-    api 'org.jetbrains.kotlin:kotlin-stdlib:1.7.10'
-    implementation 'org.json:json:20220320'
+    api 'org.jetbrains.kotlin:kotlin-stdlib:1.7.20'
+    implementation 'org.json:json:20220924'
     implementation 'org.reflections:reflections:0.10.2'
-    implementation 'org.slf4j:slf4j-simple:2.0.0'
+    implementation 'org.slf4j:slf4j-simple:1.7.32' // don't update, required by reflections
 
     // LWJGL Libraries
     implementation platform('org.lwjgl:lwjgl-bom:3.3.1')

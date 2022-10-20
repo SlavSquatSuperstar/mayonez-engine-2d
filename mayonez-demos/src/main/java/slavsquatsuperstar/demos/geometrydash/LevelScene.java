@@ -9,17 +9,16 @@ import slavsquatsuperstar.util.Colors;
 
 import java.awt.*;
 
-// TODO camera not following?
 public class LevelScene extends Scene {
 
     public LevelScene() {
-        super("Level", (int) (Preferences.getScreenWidth() * 1.5), (int) (Preferences.getScreenHeight() * 1.0), 42);
+        super("Level", (int) (Preferences.getScreenWidth() * 1.5f), (int) (Preferences.getScreenHeight() * 1f), 42);
         setBackground(Colors.LIGHT_GRAY);
     }
 
     @Override
     protected void init() {
-        addObject(new GameObject("Ground", new Vec2(getWidth() * 0.5f, 0)) {
+        addObject(new GameObject("Ground", new Vec2(0, getHeight() * -0.5f)) {
             @Override
             protected void init() {
                 addComponent(new Rigidbody(0f).setFixedRotation(true));
@@ -32,7 +31,7 @@ public class LevelScene extends Scene {
             }
         });
 
-        addObject(new Player("Player", new Vec2(5, 5)));
+        addObject(new Player("Player", new Vec2(0, -5)));
     }
 
     public static void main(String[] args) {

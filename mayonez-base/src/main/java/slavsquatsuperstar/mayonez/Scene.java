@@ -30,27 +30,30 @@ public abstract class Scene {
     // Scene Information
     private final String name;
     /**
-     * How the dimensions of the scene is in world units.
-     */
-    private final Vec2 size;
-    /**
-     * How many pixels correspond to a world unit.
+     * The scale of the scene, or how many pixels correspond to a world unit.
      */
     private final float cellSize;
+    /**
+     * The size of the scene in world units, or zero if unbounded.
+     */
+    private final Vec2 size;
     private Color background = Colors.WHITE;
     private boolean started;
 
+    /**
+     * Creates an empty scene with size of 0x0 and a scale of 1.
+     */
     public Scene(String name) {
         this(name, 0, 0, 1);
     }
 
     /**
-     * Creates a new empty scene.
+     * Creates an empty scene and sets the bounds and cell size.
      *
      * @param name     the name of the scene
      * @param width    the width of the scene, in pixels
      * @param height   the height of the scene, in pixels
-     * @param cellSize the number of pixels corresponding to a world unit
+     * @param cellSize the scale of the scene
      */
     public Scene(String name, int width, int height, float cellSize) {
         this.name = name;
@@ -59,7 +62,7 @@ public abstract class Scene {
 
         objects = new ArrayList<>();
         changesToScene = new LinkedList<>();
-        camera = new JCamera(size, cellSize);
+        camera = new JCamera(new Vec2(Preferences.getScreenWidth(), Preferences.getScreenHeight()), cellSize);
     }
 
     // Game Loop Methods
@@ -75,7 +78,7 @@ public abstract class Scene {
      */
     public final void start() {
         if (!started) {
-            addObject(JCamera.createCameraObject(camera));
+            addObject(JCamera.createCameraObject(camera, this));
             init();
             started = true;
         }
@@ -93,7 +96,7 @@ public abstract class Scene {
                 o.update(dt);
                 if (o.isDestroyed()) removeObject(o);
             });
-            camera.parent.update(dt);
+            camera.gameObject.update(dt);
             onUserUpdate(dt);
 
             // Remove destroyed objects or add new ones at the end of the frame
