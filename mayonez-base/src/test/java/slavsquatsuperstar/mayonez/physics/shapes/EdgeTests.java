@@ -2,7 +2,7 @@ package slavsquatsuperstar.mayonez.physics.shapes;
 
 import org.junit.jupiter.api.Test;
 import slavsquatsuperstar.math.Vec2;
-import slavsquatsuperstar.mayonez.physics.TestUtils;
+import slavsquatsuperstar.test.TestUtils;
 import slavsquatsuperstar.mayonez.physics.collision.Collisions;
 
 import static org.junit.jupiter.api.Assertions.*;

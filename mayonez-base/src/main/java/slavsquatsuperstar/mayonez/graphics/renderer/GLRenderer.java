@@ -6,7 +6,7 @@ import slavsquatsuperstar.mayonez.Scene;
 import slavsquatsuperstar.mayonez.annotations.EngineType;
 import slavsquatsuperstar.mayonez.annotations.UsesEngine;
 import slavsquatsuperstar.mayonez.graphics.GLCamera;
-import slavsquatsuperstar.mayonez.graphics.GLSprite;
+import slavsquatsuperstar.mayonez.graphics.sprites.GLSprite;
 import slavsquatsuperstar.mayonez.io.Assets;
 import slavsquatsuperstar.mayonez.io.GLTexture;
 import slavsquatsuperstar.mayonez.io.Shader;

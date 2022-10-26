@@ -4,7 +4,7 @@ import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.Component;
 import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Transform;
-import slavsquatsuperstar.mayonez.graphics.JSprite;
+import slavsquatsuperstar.mayonez.graphics.sprites.JSprite;
 import slavsquatsuperstar.mayonez.input.MouseInput;
 import slavsquatsuperstar.mayonez.io.JTexture;
 import slavsquatsuperstar.mayonez.physics.Rigidbody;
@@ -54,7 +54,7 @@ public class PlaceBlock extends Component {
     public void render(Graphics2D g2) {
         if (cursor == null) return;
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f)); // make transparent
-        cursor.draw(g2, this.transform, new Transform(), getScene().getCellSize());
+        cursor.draw(g2, this.transform, new Transform(), getScene().getScale());
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f)); // reset alpha
     }
 

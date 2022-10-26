@@ -1,11 +1,12 @@
-package slavsquatsuperstar.mayonez.graphics;
+package slavsquatsuperstar.mayonez.graphics.sprites;
 
-import org.joml.Vector2f;
 import org.joml.Vector4f;
+import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.annotations.EngineType;
 import slavsquatsuperstar.mayonez.annotations.UsesEngine;
 import slavsquatsuperstar.mayonez.io.GLTexture;
+import slavsquatsuperstar.mayonez.physics.shapes.Rectangle;
 
 /**
  * A component that draws an image at a {@link GameObject}'s position. For use the GL engine.
@@ -15,15 +16,10 @@ import slavsquatsuperstar.mayonez.io.GLTexture;
 @UsesEngine(EngineType.GL)
 public final class GLSprite extends Sprite { // = Gabe's SpriteRenderer
 
-    private Vector4f color = new Vector4f(1, 1, 1, 1);
+    private Vector4f color = new Vector4f(1, 1, 1, 1); // opaque white
     private GLTexture texture = null; // Rendering just a color
 
-    private Vector2f[] texCoords = new Vector2f[]{
-            new Vector2f(1, 1),
-            new Vector2f(1, 0),
-            new Vector2f(0, 0),
-            new Vector2f(0, 1)
-    };
+    private Vec2[] texCoords = Rectangle.rectangleVertices(new Vec2(0.5f), new Vec2(1f), 0f);
 
     public GLSprite(Vector4f color) {
         this.color = color;
@@ -33,7 +29,7 @@ public final class GLSprite extends Sprite { // = Gabe's SpriteRenderer
         this.texture = texture;
     }
 
-    public GLSprite(GLTexture texture, Vector2f[] texCoords) {
+    public GLSprite(GLTexture texture, Vec2[] texCoords) {
         this.texture = texture;
         this.texCoords = texCoords;
     }
@@ -56,12 +52,8 @@ public final class GLSprite extends Sprite { // = Gabe's SpriteRenderer
         this.texture = texture;
     }
 
-    public Vector2f[] getTexCoords() {
+    public Vec2[] getTexCoords() {
         return texCoords;
-    }
-
-    public void setTexCoords(Vector2f[] texCoords) {
-        this.texCoords = texCoords;
     }
 
     @Override

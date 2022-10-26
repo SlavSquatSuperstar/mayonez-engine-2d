@@ -5,7 +5,7 @@ import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.*;
 import slavsquatsuperstar.mayonez.graphics.DebugDraw;
 import slavsquatsuperstar.mayonez.graphics.JCamera;
-import slavsquatsuperstar.mayonez.graphics.JSpriteSheet;
+import slavsquatsuperstar.mayonez.graphics.sprites.JSpriteSheet;
 import slavsquatsuperstar.mayonez.input.KeyInput;
 import slavsquatsuperstar.mayonez.input.MouseInput;
 import slavsquatsuperstar.mayonez.physics.Rigidbody;
@@ -35,7 +35,7 @@ public class JRendererTest extends Scene {
             @Override
             protected void init() {
                 JCamera cam = (JCamera) getScene().getCamera();
-                cam.setSubject(this);
+                cam.setSubject(this).setKeepInScene(true);
                 addComponent(sprites.getSprite(0));
                 addComponent(new BoxCollider(new Vec2(0.8f, 1)));
                 addComponent(new Rigidbody(1f).setFixedRotation(true));

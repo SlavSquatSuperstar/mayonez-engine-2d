@@ -4,7 +4,7 @@ import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Transform;
 import slavsquatsuperstar.mayonez.annotations.ExperimentalFeature;
-import slavsquatsuperstar.mayonez.graphics.JSpriteSheet;
+import slavsquatsuperstar.mayonez.graphics.sprites.JSpriteSheet;
 import slavsquatsuperstar.mayonez.input.MouseInput;
 import slavsquatsuperstar.mayonez.io.JTexture;
 import slavsquatsuperstar.mayonez.physics.colliders.BoxCollider;
@@ -76,9 +76,9 @@ public class UIButton extends GameObject {
     @Override
 //    public void render(Graphics2D g2) {
     public void onUserRender(Graphics2D g2) {
-        offButton.draw(g2, this.transform, new Transform(), getScene().getCellSize());
-        if (selected) onButton.draw(g2, this.transform, new Transform(), getScene().getCellSize());
-        icon.draw(g2, this.transform, Transform.scaleInstance(new Vec2(0.8f)), getScene().getCellSize());
+        offButton.draw(g2, this.transform, new Transform(), getScene().getScale());
+        if (selected) onButton.draw(g2, this.transform, new Transform(), getScene().getScale());
+        icon.draw(g2, this.transform, Transform.scaleInstance(new Vec2(0.8f)), getScene().getScale());
     }
 
     public void onSelect() {

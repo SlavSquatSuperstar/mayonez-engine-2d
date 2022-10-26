@@ -32,7 +32,7 @@ public abstract class Scene {
     /**
      * The scale of the scene, or how many pixels correspond to a world unit.
      */
-    private final float cellSize;
+    private final float scale;
     /**
      * The size of the scene in world units, or zero if unbounded.
      */
@@ -48,21 +48,21 @@ public abstract class Scene {
     }
 
     /**
-     * Creates an empty scene and sets the bounds and cell size.
+     * Creates an empty scene and sets the bounds and scale.
      *
      * @param name     the name of the scene
      * @param width    the width of the scene, in pixels
      * @param height   the height of the scene, in pixels
-     * @param cellSize the scale of the scene
+     * @param scale the scale of the scene
      */
-    public Scene(String name, int width, int height, float cellSize) {
+    public Scene(String name, int width, int height, float scale) {
         this.name = name;
-        this.size = new Vec2(width, height).div(cellSize);
-        this.cellSize = cellSize;
+        this.size = new Vec2(width, height).div(scale);
+        this.scale = scale;
 
         objects = new ArrayList<>();
         changesToScene = new LinkedList<>();
-        camera = new JCamera(new Vec2(Preferences.getScreenWidth(), Preferences.getScreenHeight()), cellSize);
+        camera = new JCamera(new Vec2(Preferences.getScreenWidth(), Preferences.getScreenHeight()), scale);
     }
 
     // Game Loop Methods
@@ -114,7 +114,7 @@ public abstract class Scene {
     public final void render(Graphics2D g2) {
         if (started) {
             g2.setColor(background);
-            g2.fillRect(0, 0, (int) ((size.x + 1) * cellSize), (int) ((size.y + 1) * cellSize));
+            g2.fillRect(0, 0, (int) ((size.x + 1) * scale), (int) ((size.y + 1) * scale));
             onUserRender(g2);
         }
     }
@@ -250,12 +250,12 @@ public abstract class Scene {
     }
 
     /**
-     * Returns the conversion between pixels on the screen and meters in the world. Defaults to a 1:1 scale.
+     * Returns the number pixels on the screen for every unit in the world. Defaults to a 1:1 scale.
      *
-     * @return how many pixels make up a meter
+     * @return the scene scale
      */
-    public float getCellSize() {
-        return cellSize;
+    public float getScale() {
+        return scale;
     }
 
     /**

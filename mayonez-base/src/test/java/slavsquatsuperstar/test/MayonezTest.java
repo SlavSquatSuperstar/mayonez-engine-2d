@@ -1,4 +1,4 @@
-package slavsquatsuperstar.tests;
+package slavsquatsuperstar.test;
 
 import java.io.BufferedReader;
 import java.io.InputStream;

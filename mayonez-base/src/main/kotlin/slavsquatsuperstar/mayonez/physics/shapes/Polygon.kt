@@ -12,25 +12,27 @@ import kotlin.math.abs
  *
  * @author SlavSquatSuperstar
  */
-// TODO correct self-intersecting and set convex hull
-open class Polygon internal constructor(vararg vertices: Vec2) : Shape() {
+open class Polygon(convex: Boolean, vararg vertices: Vec2) : Shape() {
+
+    constructor(vararg vertices: Vec2) : this(false, *vertices)
+
 
     /**
-     * Constructs a regular polygon with the specified number of vertices and radius.
+     * Constructs a regular polygon with the specified radius and number of sides.
      *
-     * @param sides  the number of sides/vertices
+     * @param center the center of the polygon
+     * @param sides  the number of sides and vertices
      * @param radius the distance from the center to each vertex
      */
-    constructor(center: Vec2, sides: Int, radius: Float) : this(
-        *regularPolygonVertices(center, sides, radius),
-    )
+    constructor(center: Vec2, sides: Int, radius: Float) :
+            this(false, *regularPolygonVertices(center, sides, radius))
 
     // Polygon Components
 
     /**
      * The points that define the shape of this polygon.
      */
-    val vertices: Array<Vec2> = arrayOf(*vertices)
+    val vertices: Array<Vec2> = if (convex) orderedConvexHull(arrayOf(*vertices)) else arrayOf(*vertices)
 
     /**
      * The number of vertices and edges of this polygon, n.
@@ -225,19 +227,60 @@ open class Polygon internal constructor(vararg vertices: Vec2) : Shape() {
             return Array(size) { this[it].scale(factor, center) }
         }
 
+        /**
+         * Generate an array of vertices for a regular polygon.
+         */
         private fun regularPolygonVertices(center: Vec2, sides: Int, radius: Float): Array<Vec2> {
             val start = Vec2(radius, 0f)
             val angle = 360f / sides
             return Array(sides) { center + start.rotate(angle * it) }
         }
 
-//        /**
-//         * Creates a convex hull ordered counterclockwise from an array of vertices. The convex
-//         * hull is the smallest polygon that contains all the vertices.
-//         */
-//        private fun orderedConvexHull(vertices: Array<Vec2>): Array<Vec2> {
-//
-//        }
+        /**
+         * Creates a convex hull ordered counterclockwise from an array of vertices. The convex
+         * hull is the smallest polygon that contains all the vertices.
+         */
+        private fun orderedConvexHull(vertices: Array<Vec2>): Array<Vec2> {
+            val size = vertices.size
+            if (vertices.size < 3) return vertices
+
+            val hull = ArrayList<Vec2>(size)
+
+            // Find leftmost point
+            val vLeft = MathUtils.minIndex(*FloatArray(size) { vertices[it].x })
+            hull.add(vertices[vLeft])
+
+            // Perform Jarvis march
+            var vStart = vLeft // find the most clockwise point from here
+            while (hull.size <= size) {
+                var vCurr = (vStart + 1) % size // current most clockwise point (next point in hull)
+                /*
+                 * To determine the orientation of three points A, B, C,
+                 * Find the cross product of AB and BC.
+                 * - If positive, then counterclockwise
+                 * - If negative, then clockwise
+                 * - If zero, then collinear
+                 */
+                for (i in vertices.indices) { // find the most clockwise point
+                    if (i == vStart || i == vCurr) continue
+                    val ptA = vertices[vStart]
+                    val ptB = vertices[vCurr]
+                    val ptC = vertices[i]
+
+                    val vecAB = ptB - ptA // current most clockwise
+                    val vecBC = ptC - ptB // compare this point
+                    val orientation = vecAB.cross(vecBC) // find the most clockwise point from current point
+                    if (orientation < 0) vCurr = i
+                    else if (MathUtils.equals(orientation)) { // or the farthest point if collinear
+                        if (ptA.distanceSq(ptB) < ptA.distanceSq(ptC)) vCurr = i
+                    }
+                }
+                vStart = vCurr
+                if (vStart == vLeft) break // loop until reaching leftmost point
+                hull.add(vertices[vCurr]) // add most clockwise point to hull
+            }
+            return hull.toTypedArray()
+        }
 
     }
 }

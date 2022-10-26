@@ -7,7 +7,7 @@ import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static slavsquatsuperstar.mayonez.physics.TestUtils.assertFloatEquals;
+import static slavsquatsuperstar.test.TestUtils.assertFloatEquals;
 
 /**
  * Unit tests for {@link Polygon} class to make sure its subclasses behave like it.
@@ -48,7 +48,7 @@ public class PolygonTests {
     // From https://en.wikipedia.org/wiki/Shoelace_formula#Example
     @Test
     public void polygonAreaCorrect() {
-        Polygon penta = new Polygon(new Vec2(1, 6), new Vec2(3, 1), new Vec2(7, 2),
+        Polygon penta = new Polygon(false, new Vec2(1, 6), new Vec2(3, 1), new Vec2(7, 2),
                 new Vec2(4, 4), new Vec2(8, 5));
         assertFloatEquals(16.5f, penta.area());
     }

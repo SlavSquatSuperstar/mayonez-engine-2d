@@ -1,14 +1,15 @@
 package slavsquatsuperstar.mayonez.graphics.renderer;
 
-import org.joml.Vector2f;
 import org.joml.Vector4f;
+import slavsquatsuperstar.math.Mat22;
 import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.Mayonez;
-import slavsquatsuperstar.mayonez.graphics.GLSprite;
+import slavsquatsuperstar.mayonez.graphics.sprites.GLSprite;
 import slavsquatsuperstar.mayonez.io.Assets;
 import slavsquatsuperstar.mayonez.io.GLTexture;
 import slavsquatsuperstar.mayonez.io.Shader;
+import slavsquatsuperstar.mayonez.physics.shapes.Rectangle;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,7 +69,7 @@ public class RenderBatch {
         this.maxBatchSize = maxBatchSize;
         this.maxTextureSlots = maxTextureSlots;
         this.zIndex = zIndex;
-        worldScale = Mayonez.getScene().getCellSize();
+        worldScale = Mayonez.getScene().getScale();
 
         shader = Assets.getShader("assets/shaders/default.glsl");
         textures = new ArrayList<>(maxTextureSlots);
@@ -141,19 +142,20 @@ public class RenderBatch {
 
         // Add sprite vertex data
         Vec2 objPos = spr.getTransform().position;
-        Vec2 objScale = spr.getTransform().scale;
-        Vector4f color = spr.getColor();
-        Vector2f[] texCoords = spr.getTexCoords();
+        Mat22 objRot = new Mat22(spr.getTransform().rotation);
+        Vec2 objScl = spr.getTransform().scale;
 
-        Vec2[] quadVertices = {
-                new Vec2(0.5f, 0.5f), new Vec2(0.5f, -0.5f), new Vec2(-0.5f, -0.5f), new Vec2(-0.5f, 0.5f)
-        }; // Render sprite at object center
+        Vector4f color = spr.getColor();
+        Vec2[] texCoords = spr.getTexCoords();
+
+        // Render sprite at object center
+        Vec2[] quadVertices = Rectangle.rectangleVertices(new Vec2(0), new Vec2(1), 0);
 
         for (int i = 0; i < quadVertices.length; i++) {
-            Vec2 vertPos = quadVertices[i];
+            Vec2 vertPos = objRot.times(quadVertices[i]); // Rotate according to object
 
             // sprite_pos = (obj_pos + vert_pos * obj_scale) * world_scale
-            Vec2 spritePos = objPos.add(vertPos.mul(objScale)).mul(worldScale);
+            Vec2 spritePos = objPos.add(vertPos.mul(objScl)).mul(worldScale);
             float[] attributes = {
                     spritePos.x, spritePos.y,
                     color.x, color.y, color.z, color.w,

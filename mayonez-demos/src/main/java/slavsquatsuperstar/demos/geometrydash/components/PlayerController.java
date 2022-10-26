@@ -28,7 +28,7 @@ public class PlayerController extends Script {
     public void start() {
         JCamera cam = (JCamera) getScene().getCamera();
         if (getScene() instanceof LevelEditor) {
-            cam.setStayInBounds(false).setMode(CameraMode.FREE);
+            cam.setKeepInScene(false).setMode(CameraMode.FREE);
         } else if (getScene() instanceof LevelScene) {
             cam.setMode(CameraMode.FOLLOW).setSubject(gameObject);
         }

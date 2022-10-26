@@ -8,7 +8,7 @@ import slavsquatsuperstar.mayonez.physics.shapes.Rectangle;
 import slavsquatsuperstar.mayonez.physics.shapes.Triangle;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static slavsquatsuperstar.mayonez.physics.TestUtils.assertFloatEquals;
+import static slavsquatsuperstar.test.TestUtils.assertFloatEquals;
 
 /**
  * Unit Tests for the {@link SATDetector} class.

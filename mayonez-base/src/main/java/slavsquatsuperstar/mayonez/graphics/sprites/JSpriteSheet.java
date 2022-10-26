@@ -1,4 +1,4 @@
-package slavsquatsuperstar.mayonez.graphics;
+package slavsquatsuperstar.mayonez.graphics.sprites;
 
 import slavsquatsuperstar.mayonez.annotations.EngineType;
 import slavsquatsuperstar.mayonez.annotations.UsesEngine;

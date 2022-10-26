@@ -258,7 +258,7 @@ object MouseInput : MouseAdapter() {
     // Helper Methods
 
     // Converts screen pixels to world units
-    private fun Vec2.toWorld(): Vec2 = this / Mayonez.scene.cellSize
+    private fun Vec2.toWorld(): Vec2 = this / Mayonez.scene.scale
 
     // If a button is a valid index
     private fun Int.isValid(): Boolean = this in 0 until NUM_BUTTONS

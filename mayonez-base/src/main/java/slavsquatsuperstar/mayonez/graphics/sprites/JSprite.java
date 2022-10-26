@@ -1,8 +1,9 @@
-package slavsquatsuperstar.mayonez.graphics;
+package slavsquatsuperstar.mayonez.graphics.sprites;
 
 import slavsquatsuperstar.mayonez.*;
 import slavsquatsuperstar.mayonez.annotations.EngineType;
 import slavsquatsuperstar.mayonez.annotations.UsesEngine;
+import slavsquatsuperstar.mayonez.graphics.DebugDraw;
 import slavsquatsuperstar.mayonez.io.Assets;
 import slavsquatsuperstar.mayonez.io.JTexture;
 import slavsquatsuperstar.mayonez.physics.shapes.Rectangle;
@@ -35,7 +36,7 @@ public final class JSprite extends Sprite {
 
     @Override
     public void render(Graphics2D g2) {
-        if (texture != null) texture.draw(g2, transform, new Transform(), getScene().getCellSize());
+        if (texture != null) texture.draw(g2, transform, new Transform(), getScene().getScale());
         else DebugDraw.drawShape(new Rectangle(transform.position, transform.scale), Colors.MAGENTA);
     }
 

@@ -4,8 +4,8 @@ import org.junit.jupiter.api.Test;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.physics.collision.Collisions;
 
-import static slavsquatsuperstar.mayonez.physics.TestUtils.assertNoShapeCollision;
-import static slavsquatsuperstar.mayonez.physics.TestUtils.assertShapeCollision;
+import static slavsquatsuperstar.test.TestUtils.assertNoShapeCollision;
+import static slavsquatsuperstar.test.TestUtils.assertShapeCollision;
 
 /**
  * Unit tests for shape vs shape detection in {@link Collisions} class.

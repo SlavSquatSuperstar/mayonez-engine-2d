@@ -2,11 +2,12 @@ package slavsquatsuperstar.mayonez.physics.detection;
 
 import org.junit.jupiter.api.Test;
 import slavsquatsuperstar.math.Vec2;
-import slavsquatsuperstar.mayonez.physics.TestUtils;
+import slavsquatsuperstar.test.TestUtils;
 import slavsquatsuperstar.mayonez.physics.shapes.*;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static slavsquatsuperstar.mayonez.physics.TestUtils.assertFloatEquals;
+import static slavsquatsuperstar.test.TestUtils.assertFloatEquals;
+import static slavsquatsuperstar.test.TestUtils.assertVerticesEqual;
 
 /**
  * Unit Tests for the {@link GJKDetector} class.
@@ -55,7 +56,7 @@ public class GJKTests {
         assertFloatEquals(0.937044f, new GJKDetector().getPenetration(p1, p2).getDepth());
 
         Polygon simplex = new GJKDetector().getSimplex(p1, p2).toPolygon();
-        assertArrayEquals(simplex.getVertices(), new Vec2[]{new Vec2(4, 2), new Vec2(-8, -2), new Vec2(-1, -2)});
+        assertVerticesEqual(simplex.getVertices(), new Vec2[]{new Vec2(4, 2), new Vec2(-8, -2), new Vec2(-1, -2)});
         assertTrue(simplex.contains(new Vec2(0, 0)));
     }
 

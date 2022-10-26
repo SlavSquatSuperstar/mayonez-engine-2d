@@ -4,10 +4,10 @@ import org.junit.jupiter.api.Test;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.Transform;
 
-import java.util.Objects;
+import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static slavsquatsuperstar.test.TestUtils.assertVerticesEqual;
 
 /**
  * Unit tests for {@link PolygonCollider} class.
@@ -25,15 +25,16 @@ public class PolygonTests {
     public void polygonVerticesReturnsWorld() {
         PolygonCollider shape = new PolygonCollider(vertices);
         assertEquals(4, shape.getNumVertices());
-        assertTrue(Objects.deepEquals(vertices, shape.getVertices()));
+        assertVerticesEqual(vertices, shape.getVertices());
     }
 
     // Create a 2x2 box centered at (0, 0) and translate it by (1, 1)
     @Test
     public void translatedPolygonVerticesReturnsWorld() {
         PolygonCollider shape = new PolygonCollider(vertices).setTransform(new Transform(new Vec2(1, 1)));
+        System.out.println(Arrays.toString(shape.getVertices()));
         Vec2[] worldVertices = new Vec2[]{new Vec2(2, 2), new Vec2(0, 2), new Vec2(0, 0), new Vec2(2, 0)};
-        assertTrue(Objects.deepEquals(worldVertices, shape.getVertices()));
+        assertVerticesEqual(worldVertices, shape.getVertices());
     }
 
     // Create a 2x2 box centered at (0, 0) and scale it by 2x
@@ -41,7 +42,7 @@ public class PolygonTests {
     public void scaledPolygonVerticesReturnsWorld() {
         PolygonCollider shape = new PolygonCollider(vertices).setTransform(new Transform().scale(new Vec2(2, 2)));
         Vec2[] worldVertices = new Vec2[]{new Vec2(2, 2), new Vec2(-2, 2), new Vec2(-2, -2), new Vec2(2, -2)};
-        assertTrue(Objects.deepEquals(worldVertices, shape.getVertices()));
+        assertVerticesEqual(worldVertices, shape.getVertices());
     }
 
     // Create a 2x2 box centered at (0, 0) and rotate it by 45 degrees
@@ -51,7 +52,7 @@ public class PolygonTests {
         Vec2[] worldVertices = new Vec2[vertices.length];
         for (int i = 0; i < worldVertices.length; i++)
             worldVertices[i] = vertices[i].rotate(45);
-        assertTrue(Objects.deepEquals(worldVertices, shape.getVertices()));
+        assertVerticesEqual(worldVertices, shape.getVertices());
     }
 
 }

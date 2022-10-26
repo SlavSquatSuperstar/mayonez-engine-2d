@@ -3,4 +3,4 @@
  *
  * @author SlavSquatSuperstar
  */
-package slavsquatsuperstar.tests.javatests;
+package slavsquatsuperstar.test.javatests;

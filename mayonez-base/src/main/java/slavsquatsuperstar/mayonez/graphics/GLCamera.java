@@ -5,7 +5,6 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.GameObject;
-import slavsquatsuperstar.mayonez.Preferences;
 import slavsquatsuperstar.mayonez.annotations.EngineType;
 import slavsquatsuperstar.mayonez.annotations.UsesEngine;
 
@@ -17,19 +16,26 @@ import slavsquatsuperstar.mayonez.annotations.UsesEngine;
 @UsesEngine(EngineType.GL)
 public final class GLCamera implements Camera {
 
-    // Renderer
+    // Camera Fields
+
+    private Vec2 position, screenSize;
+    private float sceneScale;
+
+    // Renderer Fields
+
     private Matrix4f projectionMatrix, viewMatrix;
-    private Vector2f position;
-    public float nearPlane = 0f;
-    public float farPlane = 100f;
-    public float zPosition = 0f;
+    private float nearPlane = 0f;
+    private float farPlane = 100f;
+    private float zPosition = 0f;
 
     // Camera Movement
     private CameraMode mode = CameraMode.FIXED;
     private GameObject subject = null;
 
-    public GLCamera(Vector2f position) {
+    public GLCamera(Vec2 position, Vec2 screenSize, float sceneScale) {
         this.position = position;
+        this.screenSize = screenSize;
+        this.sceneScale = sceneScale;
         projectionMatrix = new Matrix4f();
         viewMatrix = new Matrix4f();
         adjustProjection();
@@ -37,7 +43,7 @@ public final class GLCamera implements Camera {
 
     public void adjustProjection() {
         projectionMatrix.identity();
-        projectionMatrix.ortho(0, Preferences.getScreenWidth(), 0, Preferences.getScreenHeight(), nearPlane, farPlane);
+        projectionMatrix.ortho(0, screenSize.x, 0, screenSize.y, nearPlane, farPlane);
     }
 
     public Matrix4f getViewMatrix() {
@@ -59,17 +65,18 @@ public final class GLCamera implements Camera {
 
     @Override
     public Vec2 getPosition() {
+        if (mode == CameraMode.FOLLOW) return subject.transform.position;
         return new Vec2(position);
     }
 
     @Override
     public void setPosition(Vec2 position) {
-        this.position = position.toJOML();
+        this.position = position;
     }
 
     @Override
     public Vec2 getOffset() {
-        return new Vec2(position);
+        return getPosition().mul(sceneScale).sub(screenSize.mul(0.5f));
     }
 
     // Camera Mode Methods
@@ -93,7 +100,12 @@ public final class GLCamera implements Camera {
     @Override
     public GLCamera setSubject(GameObject subject) {
         this.subject = subject;
+        setMode(CameraMode.FOLLOW);
         return this;
     }
 
+    @Override
+    public String toString() {
+        return "GL Camera";
+    }
 }

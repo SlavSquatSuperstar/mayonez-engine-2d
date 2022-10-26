@@ -4,7 +4,7 @@ import slavsquatsuperstar.demos.geometrydash.components.Grid;
 import slavsquatsuperstar.demos.geometrydash.ui.UICanvas;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.*;
-import slavsquatsuperstar.mayonez.graphics.JSpriteSheet;
+import slavsquatsuperstar.mayonez.graphics.sprites.JSpriteSheet;
 import slavsquatsuperstar.mayonez.physics.Rigidbody;
 import slavsquatsuperstar.mayonez.physics.colliders.BoxCollider;
 import slavsquatsuperstar.mayonez.physics.colliders.Collider;
@@ -42,7 +42,7 @@ public class LevelEditor extends Scene {
         addObject(new GameObject("Grid") {
             @Override
             protected void init() {
-                addComponent(new Grid(new Vec2(getCellSize())));
+                addComponent(new Grid(new Vec2(getScale())));
             }
         });
         addObject(new UICanvas("Canvas", new Transform(new Vec2(-5f, -5f)), blocks));

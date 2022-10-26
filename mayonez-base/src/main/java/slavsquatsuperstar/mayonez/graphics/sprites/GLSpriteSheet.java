@@ -1,10 +1,11 @@
-package slavsquatsuperstar.mayonez.graphics;
+package slavsquatsuperstar.mayonez.graphics.sprites;
 
-import org.joml.Vector2f;
-import slavsquatsuperstar.mayonez.io.Assets;
-import slavsquatsuperstar.mayonez.io.GLTexture;
+import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.annotations.EngineType;
 import slavsquatsuperstar.mayonez.annotations.UsesEngine;
+import slavsquatsuperstar.mayonez.io.Assets;
+import slavsquatsuperstar.mayonez.io.GLTexture;
+import slavsquatsuperstar.mayonez.physics.shapes.Rectangle;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,31 +33,24 @@ public class GLSpriteSheet extends SpriteSheet {
         GLTexture texture = Assets.getGLTexture(filename);
         sprites = new ArrayList<>();
 
-        int width = texture.getWidth();
-        int height = texture.getHeight();
+        Vec2 texSize = new Vec2(texture.getWidth(), texture.getHeight());
+        Vec2 sprSize = new Vec2(spriteWidth, spriteHeight);
 
-        // Read sprite sheet from top left, but read image  from bottom left
-        // Image coordinates need to be normalized
-        int imgX = 0;
-        int imgY = width - spriteHeight;
+        // Read sprite sheet from top left, but read image from bottom left
+        Vec2 imgCoords = new Vec2(0, texSize.y - sprSize.y);
         for (int i = 0; i < numSprites; i++) {
-            float topY = (float) (imgY + spriteHeight) / height;
-            float rightX = (float) (imgX + spriteWidth) / width;
-            float leftX = (float) imgX / width;
-            float bottomY = (float) imgY / height;
+            // Image coordinates need to be normalized
+            Vec2 imgMin = imgCoords.div(texSize);
+            Vec2 imgMax = imgCoords.add(sprSize).div(texSize);
+            Vec2 imgSize = imgMax.sub(imgMin);
 
-            Vector2f[] texCoords = new Vector2f[]{
-                    new Vector2f(rightX, topY),
-                    new Vector2f(rightX, bottomY),
-                    new Vector2f(leftX, bottomY),
-                    new Vector2f(leftX, topY)
-            };
+            Vec2[] texCoords = Rectangle.rectangleVertices(imgMin.add(imgSize.mul(0.5f)), imgSize, 0);
             sprites.add(new GLSprite(texture, texCoords));
 
-            imgX += spriteWidth + spacing;
-            if (imgX >= width) {
-                imgX = 0;
-                imgY -= spriteHeight + spacing;
+            imgCoords.x += spriteWidth + spacing;
+            if (imgCoords.x >= texSize.x) {
+                imgCoords.x = 0;
+                imgCoords.y -= spriteHeight + spacing;
             }
         }
 

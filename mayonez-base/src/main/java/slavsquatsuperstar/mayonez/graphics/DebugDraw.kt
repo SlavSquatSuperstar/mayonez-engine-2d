@@ -176,14 +176,14 @@ object DebugDraw {
      *
      * @return the corresponding screen pixel
      */
-    private fun Float.toScreen(): Float = this * Mayonez.scene.cellSize
+    private fun Float.toScreen(): Float = this * Mayonez.scene.scale
 
     /**
      * Converts a pair of coordinates from world to screen units.
      *
      * @return the corresponding screen pixels
      */
-    private fun Vec2.toScreen(): Vec2 = this * Mayonez.scene.cellSize
+    private fun Vec2.toScreen(): Vec2 = this * Mayonez.scene.scale
 
     /**
      * The order an object should be drawn. Higher priority objects will be drawn later to be more visible.

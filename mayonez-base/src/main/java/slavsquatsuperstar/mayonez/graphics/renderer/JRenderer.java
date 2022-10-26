@@ -41,7 +41,7 @@ public final class JRenderer extends Renderer {
 
         // Move the screen and render everything at the offset position
         if (camera != null) {
-            Vec2 camOffset = camera.getOffset().mul(-Mayonez.getScene().getCellSize());
+            Vec2 camOffset = camera.getOffset().mul(-Mayonez.getScene().getScale());
             g2.translate(camOffset.x, camOffset.y);
         }
         objects.forEach(o -> o.render(g2));

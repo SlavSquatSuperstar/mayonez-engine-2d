@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import slavsquatsuperstar.math.Vec2;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static slavsquatsuperstar.mayonez.physics.TestUtils.assertFloatEquals;
+import static slavsquatsuperstar.test.TestUtils.assertFloatEquals;
 
 /**
  * Unit tests for {@link Rectangle} class.

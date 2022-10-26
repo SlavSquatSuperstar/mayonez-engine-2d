@@ -1,4 +1,4 @@
-package slavsquatsuperstar.mayonez.graphics;
+package slavsquatsuperstar.mayonez.graphics.sprites;
 
 /**
  * Stores multiple textures and creates multiple sprites from a larger image.

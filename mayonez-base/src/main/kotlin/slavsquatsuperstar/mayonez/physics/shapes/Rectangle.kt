@@ -16,7 +16,17 @@ open class Rectangle(private val center: Vec2, private val size: Vec2, val angle
     constructor(center: Vec2, width: Float, height: Float, angle: Float) : this(center, Vec2(width, height), angle)
 
     companion object {
-        protected fun rectangleVertices(center: Vec2, size: Vec2, angle: Float = 0f): Array<Vec2> {
+        @JvmStatic
+        /**
+         * Returns an array of counterclockwise rectangle vertices starting with the vertex with the
+         * most negative coordinates (before before rotation)
+         *
+         * @param center the rectangle center
+         * @param size   the rectangle dimensions
+         * @param angle  the rectangle rotation
+         * @return the vertex array
+         */
+        fun rectangleVertices(center: Vec2, size: Vec2, angle: Float = 0f): Array<Vec2> {
             val min = center - size * 0.5f
             val max = center + size * 0.5f
             return arrayOf(Vec2(min), Vec2(max.x, min.y), Vec2(max), Vec2(min.x, max.y)).rotate(angle, center)

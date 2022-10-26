@@ -1,21 +1,21 @@
 package slavsquatsuperstar.demos;
 
-import org.joml.Vector2f;
+import org.joml.Vector4f;
 import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
-import slavsquatsuperstar.mayonez.GameObject;
-import slavsquatsuperstar.mayonez.Mayonez;
-import slavsquatsuperstar.mayonez.Scene;
-import slavsquatsuperstar.mayonez.Transform;
+import slavsquatsuperstar.mayonez.*;
 import slavsquatsuperstar.mayonez.graphics.GLCamera;
-import slavsquatsuperstar.mayonez.graphics.GLSprite;
-import slavsquatsuperstar.mayonez.graphics.GLSpriteSheet;
+import slavsquatsuperstar.mayonez.graphics.sprites.GLSprite;
+import slavsquatsuperstar.mayonez.graphics.sprites.GLSpriteSheet;
 import slavsquatsuperstar.mayonez.input.KeyInput;
 import slavsquatsuperstar.mayonez.input.MouseInput;
 import slavsquatsuperstar.mayonez.io.Assets;
 import slavsquatsuperstar.mayonez.physics.Rigidbody;
 import slavsquatsuperstar.mayonez.physics.colliders.BoxCollider;
-import slavsquatsuperstar.mayonez.scripts.*;
+import slavsquatsuperstar.mayonez.scripts.DragAndDrop;
+import slavsquatsuperstar.mayonez.scripts.KeepInScene;
+import slavsquatsuperstar.mayonez.scripts.KeyMovement;
+import slavsquatsuperstar.mayonez.scripts.MoveMode;
 
 public class GLRendererTest extends Scene {
 
@@ -25,27 +25,13 @@ public class GLRendererTest extends Scene {
 
     public GLRendererTest() {
         super("LWJGL Test Scene", 1080, 720, 32);
-        camera = new GLCamera(new Vector2f());
+        camera = new GLCamera(new Vec2(0, 0), new Vec2(Preferences.getScreenWidth(), Preferences.getScreenHeight()), this.getScale());
 //        enemies = new ArrayList<>();
         setGravity(new Vec2());
     }
 
     @Override
     public void init() {
-        addObject(new GameObject("Red Square", new Transform(new Vec2(6, 6), new Vec2(4, 4)), -2) {
-            @Override
-            protected void init() {
-                addComponent(new GLSprite(Assets.getGLTexture("assets/textures/blend_red.png")));
-            }
-        });
-
-        addObject(new GameObject("Green Square", new Transform(new Vec2(9, 6), new Vec2(4, 4)), 2) {
-            @Override
-            protected void init() {
-                addComponent(new GLSprite(Assets.getGLTexture("assets/textures/blend_green.png")));
-            }
-        });
-
         // Load resources
         sprites = new GLSpriteSheet("assets/textures/spritesheet.png", 16, 16, 26, 0);
 
@@ -54,15 +40,47 @@ public class GLRendererTest extends Scene {
         )) {
             @Override
             protected void init() {
+                Logger.log(getScene().getCamera());
+                getScene().getCamera().setSubject(this);
                 addComponent(sprites.getSprite(0));
                 addComponent(new BoxCollider(new Vec2(0.8f, 1)));
                 addComponent(new Rigidbody(1f).setFixedRotation(true));
                 addComponent(new KeyMovement(MoveMode.POSITION, 20));
                 addComponent(new KeepInScene(new Vec2(), getSize(), KeepInScene.Mode.STOP));
+                addComponent(new Script() {
+                    @Override
+                    public void update(float dt) {
+                        if (KeyInput.keyDown("q"))
+                            transform.rotation += 2f;
+                        if (KeyInput.keyDown("e"))
+                            transform.rotation -= 2f;
+
+                        if (KeyInput.keyDown("+"))
+                            transform.scale(new Vec2(1.1f));
+                        if (KeyInput.keyDown("-"))
+                            transform.scale(new Vec2(0.9f));
+                    }
+                });
             }
         }.setZIndex(1));
 
-        for (int i = 0; i < 8; i++) addObject(createObject("Goomba", 14));
+        addObject(new GameObject("Red Square", new Transform(new Vec2(6, 6), new Vec2(4, 4)), -2) {
+            @Override
+            protected void init() {
+                addComponent(new GLSprite(Assets.getGLTexture("assets/textures/blend_red.png")));
+//                addComponent(new GLSprite(new Vector4f(169f / 255f, 0, 0, 0.596f)));
+            }
+        });
+
+        addObject(new GameObject("Green Square", new Transform(new Vec2(9, 6), new Vec2(4, 4)), 2) {
+            @Override
+            protected void init() {
+//                addComponent(new GLSprite(Assets.getGLTexture("assets/textures/blend_green.png")));
+                addComponent(new GLSprite(new Vector4f(67f / 255f, 169f / 255f, 0, 0.596f)));
+            }
+        });
+
+        for (int i = 0; i < 15; i++) addObject(createObject("Goomba", 14));
     }
 
     @Override

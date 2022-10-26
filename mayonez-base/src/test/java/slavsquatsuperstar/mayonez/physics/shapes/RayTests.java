@@ -7,7 +7,7 @@ import slavsquatsuperstar.mayonez.physics.collision.RaycastInfo;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static slavsquatsuperstar.mayonez.physics.TestUtils.assertFloatEquals;
+import static slavsquatsuperstar.test.TestUtils.assertFloatEquals;
 import static slavsquatsuperstar.mayonez.physics.collision.Collisions.raycast;
 
 /**

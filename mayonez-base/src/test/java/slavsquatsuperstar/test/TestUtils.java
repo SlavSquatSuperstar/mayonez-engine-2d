@@ -1,8 +1,12 @@
-package slavsquatsuperstar.mayonez.physics;
+package slavsquatsuperstar.test;
 
 import slavsquatsuperstar.math.MathUtils;
+import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.physics.collision.Collisions;
 import slavsquatsuperstar.mayonez.physics.shapes.Shape;
+
+import java.util.Arrays;
+import java.util.Comparator;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -13,8 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public final class TestUtils {
 
-    private TestUtils() {
-    }
+    private TestUtils() {}
 
     public static final float EPSILON = MathUtils.FLOAT_EPSILON;
 
@@ -26,6 +29,22 @@ public final class TestUtils {
      */
     public static void assertFloatEquals(float expected, float actual) {
         assertEquals(expected, actual, EPSILON);
+    }
+
+    /**
+     * Asserts that two sets of vertices are equivalent. Sometimes two arrays may store the same set of vertices
+     * but in a different order.
+     *
+     * @param verts1 the first set of vertices
+     * @param verts2 the second set of vertices
+     */
+    public static void assertVerticesEqual(Vec2[] verts1, Vec2[] verts2) {
+        // Sort vectors by x, then y
+        Arrays.sort(verts1, Comparator.comparing(v -> v.y));
+        Arrays.sort(verts1, Comparator.comparing(v -> v.x));
+        Arrays.sort(verts2, Comparator.comparing(v -> v.y));
+        Arrays.sort(verts2, Comparator.comparing(v -> v.x));
+        assertArrayEquals(verts1, verts2);
     }
 
     /**

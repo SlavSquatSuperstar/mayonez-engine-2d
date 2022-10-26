@@ -4,8 +4,8 @@ import slavsquatsuperstar.demos.geometrydash.components.PlayerController;
 import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.GameObject;
-import slavsquatsuperstar.mayonez.graphics.JSprite;
-import slavsquatsuperstar.mayonez.graphics.JSpriteSheet;
+import slavsquatsuperstar.mayonez.graphics.sprites.JSprite;
+import slavsquatsuperstar.mayonez.graphics.sprites.JSpriteSheet;
 import slavsquatsuperstar.mayonez.physics.Rigidbody;
 import slavsquatsuperstar.mayonez.physics.colliders.BoxCollider;
 import slavsquatsuperstar.mayonez.scripts.KeepInScene;
@@ -23,7 +23,7 @@ public class Player extends GameObject {
     @Override
     protected void init() {
         // Create player avatar
-        int tileSize = (int) getScene().getCellSize();
+        int tileSize = (int) getScene().getScale();
         JSpriteSheet layer1 = new JSpriteSheet("assets/textures/player/layer1.png", tileSize, tileSize, 13 * 5, 2);
         JSpriteSheet layer2 = new JSpriteSheet("assets/textures/player/layer2.png", tileSize, tileSize, 13 * 5, 2);
         JSpriteSheet layer3 = new JSpriteSheet("assets/textures/player/layer3.png", tileSize, tileSize, 13 * 5, 2);

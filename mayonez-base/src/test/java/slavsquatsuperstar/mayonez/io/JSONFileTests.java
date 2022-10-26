@@ -2,14 +2,13 @@ package slavsquatsuperstar.mayonez.io;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import slavsquatsuperstar.mayonez.io.JSONFile;
 import slavsquatsuperstar.util.Record;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static slavsquatsuperstar.mayonez.physics.TestUtils.assertFloatEquals;
+import static slavsquatsuperstar.test.TestUtils.assertFloatEquals;
 
 /**
  * Unit tests for {@link JSONFile} class.

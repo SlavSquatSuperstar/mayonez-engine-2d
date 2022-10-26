@@ -5,7 +5,7 @@ import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Transform;
 import slavsquatsuperstar.mayonez.annotations.ExperimentalFeature;
-import slavsquatsuperstar.mayonez.graphics.JSpriteSheet;
+import slavsquatsuperstar.mayonez.graphics.sprites.JSpriteSheet;
 
 import java.util.ArrayList;
 import java.util.List;

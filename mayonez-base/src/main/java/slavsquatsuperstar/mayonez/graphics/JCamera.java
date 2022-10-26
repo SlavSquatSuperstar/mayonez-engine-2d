@@ -28,8 +28,8 @@ public final class JCamera extends Script implements Camera {
     private GameObject subject = null;
     private Script keepInScene, dragAndDrop; // Reference to parent scripts
 
-    public JCamera(Vec2 screenSize, float cellSize) {
-        size = screenSize.div(cellSize);
+    public JCamera(Vec2 screenSize, float sceneScale) {
+        size = screenSize.div(sceneScale);
     }
 
     // Static (Factory) Methods
@@ -94,7 +94,7 @@ public final class JCamera extends Script implements Camera {
 
     @Override
     public Vec2 getOffset() {
-        return transform.position.sub(size.mul(0.5f));
+        return getPosition().sub(size.mul(0.5f));
     }
 
     // Camera Movement Methods
@@ -135,7 +135,7 @@ public final class JCamera extends Script implements Camera {
      * @param enabled keep the camera inside the scene
      * @return the camera
      */
-    public JCamera setStayInBounds(boolean enabled) {
+    public JCamera setKeepInScene(boolean enabled) {
         keepInScene.setEnabled(enabled);
         return this;
     }
