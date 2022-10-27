@@ -48,7 +48,7 @@ public final class GLRenderer extends Renderer {
         shader.uploadMat4("uProjection", camera.getProjectionMatrix());
         shader.uploadMat4("uView", camera.getViewMatrix());
 
-        rebuffer(); // Rebuffer
+        rebuffer(); // Rebuffer all sprites
 
         batches.forEach(RenderBatch::render); // Draw
 
@@ -56,12 +56,12 @@ public final class GLRenderer extends Renderer {
     }
 
     public void rebuffer() {
-        batches.forEach(RenderBatch::clear); // Clear Batches
+        batches.forEach(RenderBatch::clear); // Clear batches
         for (GLSprite sprite : sprites) { // Rebuffer batches
             RenderBatch batch = getAvailableBatch(sprite.getTexture(), sprite.getObject().getZIndex());
             batch.pushSpriteData(sprite); // Push vertices to batch
         }
-        batches.forEach(RenderBatch::upload); // Finalize Batches
+        batches.forEach(RenderBatch::upload); // Finalize batches
         batches.sort(Comparator.comparingInt(RenderBatch::getZIndex)); // Sort batches by z-index
     }
 

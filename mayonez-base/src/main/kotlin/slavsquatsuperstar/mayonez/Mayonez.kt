@@ -1,5 +1,8 @@
 package slavsquatsuperstar.mayonez
 
+import slavsquatsuperstar.math.Vec2
+import slavsquatsuperstar.mayonez.Preferences.screenHeight
+import slavsquatsuperstar.mayonez.Preferences.screenWidth
 import slavsquatsuperstar.mayonez.engine.GLGame
 import slavsquatsuperstar.mayonez.engine.GameEngine
 import slavsquatsuperstar.mayonez.engine.JGame
@@ -139,12 +142,8 @@ object Mayonez {
         get() = game!!.renderer
 
     @JvmStatic
-    val windowWidth: Int
-        get() = game!!.window.width
-
-    @JvmStatic
-    val windowHeight: Int
-        get() = game!!.window.height
+    val screenSize: Vec2
+        get() = Vec2(screenWidth.toFloat(), screenHeight.toFloat())
 
     // Helper Methods
 

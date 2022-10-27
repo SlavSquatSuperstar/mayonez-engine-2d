@@ -25,7 +25,7 @@ public abstract class Scene {
     private final List<GameObject> objects;
     private final Queue<Receivable> changesToScene; // Use a separate list to avoid concurrent exceptions
 
-    private final JCamera camera;
+    protected Camera camera;
 
     // Scene Information
     private final String name;
@@ -62,7 +62,7 @@ public abstract class Scene {
 
         objects = new ArrayList<>();
         changesToScene = new LinkedList<>();
-        camera = new JCamera(new Vec2(Preferences.getScreenWidth(), Preferences.getScreenHeight()), scale);
+        camera = new JCamera(Mayonez.getScreenSize(), scale);
     }
 
     // Game Loop Methods
@@ -78,7 +78,7 @@ public abstract class Scene {
      */
     public final void start() {
         if (!started) {
-            addObject(JCamera.createCameraObject(camera, this));
+            addObject(Camera.createCameraObject(camera));
             init();
             started = true;
         }

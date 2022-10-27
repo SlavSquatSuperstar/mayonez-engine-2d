@@ -4,8 +4,8 @@ import slavsquatsuperstar.demos.geometrydash.LevelEditor;
 import slavsquatsuperstar.demos.geometrydash.LevelScene;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.Script;
+import slavsquatsuperstar.mayonez.graphics.Camera;
 import slavsquatsuperstar.mayonez.graphics.CameraMode;
-import slavsquatsuperstar.mayonez.graphics.JCamera;
 import slavsquatsuperstar.mayonez.input.KeyInput;
 import slavsquatsuperstar.mayonez.physics.Rigidbody;
 
@@ -26,7 +26,7 @@ public class PlayerController extends Script {
 
     @Override
     public void start() {
-        JCamera cam = (JCamera) getScene().getCamera();
+        Camera cam = getScene().getCamera();
         if (getScene() instanceof LevelEditor) {
             cam.setKeepInScene(false).setMode(CameraMode.FREE);
         } else if (getScene() instanceof LevelScene) {

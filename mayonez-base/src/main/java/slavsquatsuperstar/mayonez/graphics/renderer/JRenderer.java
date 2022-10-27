@@ -2,11 +2,10 @@ package slavsquatsuperstar.mayonez.graphics.renderer;
 
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.GameObject;
-import slavsquatsuperstar.mayonez.Mayonez;
 import slavsquatsuperstar.mayonez.Scene;
-import slavsquatsuperstar.mayonez.graphics.DebugDraw;
-import slavsquatsuperstar.mayonez.annotations.UsesEngine;
 import slavsquatsuperstar.mayonez.annotations.EngineType;
+import slavsquatsuperstar.mayonez.annotations.UsesEngine;
+import slavsquatsuperstar.mayonez.graphics.DebugDraw;
 import slavsquatsuperstar.mayonez.graphics.JCamera;
 
 import java.awt.*;
@@ -41,8 +40,8 @@ public final class JRenderer extends Renderer {
 
         // Move the screen and render everything at the offset position
         if (camera != null) {
-            Vec2 camOffset = camera.getOffset().mul(-Mayonez.getScene().getScale());
-            g2.translate(camOffset.x, camOffset.y);
+            Vec2 camOffset = camera.getOffset();
+            g2.translate(-camOffset.x, -camOffset.y);
         }
         objects.forEach(o -> o.render(g2));
         debugDraw.render(g2);

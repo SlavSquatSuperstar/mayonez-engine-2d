@@ -1,9 +1,11 @@
 package slavsquatsuperstar.mayonez.input
 
+import org.joml.Vector4f
 import org.lwjgl.glfw.GLFW.GLFW_PRESS
 import org.lwjgl.glfw.GLFW.GLFW_RELEASE
 import slavsquatsuperstar.math.Vec2
 import slavsquatsuperstar.mayonez.Mayonez
+import slavsquatsuperstar.mayonez.graphics.GLCamera
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.awt.event.MouseWheelEvent
@@ -83,7 +85,7 @@ object MouseInput : MouseAdapter() {
 
     @JvmStatic
     fun mouseButtonCallback(window: Long, button: Int, action: Int, mods: Int) {
-        if (button.isValid()) return
+        if (!button.isValid()) return
         lastButton = button
         lastAction = action
         when (action) {
@@ -207,27 +209,19 @@ object MouseInput : MouseAdapter() {
         get() = mousePos
 
     @JvmStatic
-    val screenX: Float
-        get() = mousePos.x
-
-    @JvmStatic
-    val screenY: Float
-        get() = mousePos.y
-
-    // TODO add camera offset
-    @JvmStatic
     val position: Vec2
         get() { // Mirror y and add camera offset
-            return Vec2(mousePos.x, Mayonez.windowHeight - mousePos.y).toWorld() + Mayonez.scene.camera.offset
+            val flippedMouse = Vec2(mousePos.x, Mayonez.screenSize.y - mousePos.y)
+            return if (Mayonez.useGL!!) {
+                val camera = Mayonez.scene.camera as GLCamera
+                val worldPos = ((flippedMouse / Mayonez.screenSize * 2f) - Vec2(1f)).toWorld()
+                val temp = Vector4f(worldPos.x, worldPos.y, 0f, 0f)
+                temp.mul(camera.inverseProjection).mul(camera.inverseView)
+                Vec2(temp.x, temp.y) + camera.position
+            } else {
+                (flippedMouse + Mayonez.scene.camera.offset).toWorld()
+            }
         }
-
-    @JvmStatic
-    val x: Float
-        get() = position.x
-
-    @JvmStatic
-    val y: Float
-        get() = position.y
 
     // Mouse Displacement Getters
 
@@ -236,24 +230,9 @@ object MouseInput : MouseAdapter() {
         get() = mouseDisp
 
     @JvmStatic
-    val screenDx: Float
-        get() = mouseDisp.x
-
-    @JvmStatic
-    val screenDy: Float
-        get() = mouseDisp.y
-
-    @JvmStatic
     val displacement: Vec2
         get() = (mouseDisp * Vec2(1f, -1f)).toWorld() // Invert y
 
-    @JvmStatic
-    val dx: Float
-        get() = displacement.x
-
-    @JvmStatic
-    val dy: Float
-        get() = displacement.y
 
     // Helper Methods
 

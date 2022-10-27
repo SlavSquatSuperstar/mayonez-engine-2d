@@ -29,10 +29,8 @@ public class Grid extends Component {
 
         // Which world coordinates are we at?
         Vec2 start = cam.sub(sceneSize.mul(0.5f)).floor().sub(new Vec2(0.5f));
-        System.out.println(start);
         start = start.mul(gridSize);
         Vec2 end = cam.add(sceneSize.mul(0.5f)).ceiling().add(new Vec2(0.5f));
-        System.out.println(end);
         end = end.mul(gridSize);
         // Either bottom of screen or top of ground
 
