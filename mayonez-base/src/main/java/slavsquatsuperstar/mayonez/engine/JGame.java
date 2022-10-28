@@ -4,10 +4,8 @@ import slavsquatsuperstar.mayonez.Mayonez;
 import slavsquatsuperstar.mayonez.Preferences;
 import slavsquatsuperstar.mayonez.annotations.EngineType;
 import slavsquatsuperstar.mayonez.annotations.UsesEngine;
-import slavsquatsuperstar.mayonez.graphics.renderer.JRenderer;
 import slavsquatsuperstar.mayonez.input.KeyInput;
 import slavsquatsuperstar.mayonez.input.MouseInput;
-import slavsquatsuperstar.mayonez.physics.PhysicsWorld;
 
 import java.awt.*;
 
@@ -27,9 +25,6 @@ public final class JGame extends GameEngine {
         // Add input listeners
         window.setKeyInput(KeyInput.INSTANCE);
         window.setMouseInput(MouseInput.INSTANCE);
-
-        renderer = new JRenderer();
-        physics = new PhysicsWorld();
     }
 
     public boolean isFullScreen() {
@@ -42,17 +37,14 @@ public final class JGame extends GameEngine {
 
     @Override
     public void update(float dt) throws Exception {
-        // TODO Poll input events
         if (scene != null) scene.update(dt);
-        physics.physicsUpdate(dt);
     }
 
     @Override
     public void render() throws Exception {
         window.render((args) -> {
             Graphics2D g2 = (Graphics2D) args[0];
-            if (null != scene) scene.render(g2);
-            renderer.render(g2);
+            if (scene != null) scene.render(g2);
         });
     }
 

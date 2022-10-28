@@ -4,25 +4,20 @@ import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.mayonez.Logger;
 import slavsquatsuperstar.mayonez.Mayonez;
 import slavsquatsuperstar.mayonez.Scene;
-import slavsquatsuperstar.mayonez.graphics.renderer.Renderer;
-import slavsquatsuperstar.mayonez.physics.PhysicsWorld;
 
 /**
  * The application that contains the engine's core loop.
  *
  * @author SlavSquatSuperstar
  */
-public sealed abstract class GameEngine permits JGame, GLGame{
+public sealed abstract class GameEngine permits JGame, GLGame {
 
     private boolean running = false;
-
-    // Game Layers
-    protected PhysicsWorld physics;
-    protected Renderer renderer;
     protected Scene scene;
     protected Window window;
 
-    protected GameEngine() {}
+    protected GameEngine() {
+    }
 
     // Resource Management Methods
 
@@ -44,8 +39,7 @@ public sealed abstract class GameEngine permits JGame, GLGame{
     public final void stop() {
         if (running) {
             running = false;
-            renderer.stop();
-            physics.stop();
+            scene.stop();
             window.stop();
         }
     }
@@ -107,15 +101,16 @@ public sealed abstract class GameEngine permits JGame, GLGame{
     }
 
     /**
-     * Refreshes all objects in the current scene.
+     * Refreshes everything in the current scene, including physics, scripts, and UI.
      *
      * @param dt seconds since the last frame
      */
+    // TODO Multithread physics, set time step higher than refresh rate for smoother results
+    // TODO Poll input events
     public abstract void update(float dt) throws Exception;
-    // TODO multithread physics, set time step higher than refresh rate for smoother results
 
     /**
-     * Redraws all objects in the current scene.
+     * Redraws everything in the current scene, including sprites, backgrounds, and UI.
      */
     public abstract void render() throws Exception;
 
@@ -138,15 +133,6 @@ public sealed abstract class GameEngine permits JGame, GLGame{
         startScene();
     }
 
-    public Renderer getRenderer() {
-        return renderer;
-    }
-
-    public PhysicsWorld getPhysics() {
-        return physics;
-    }
-
-
     // Helper Methods
 
     public abstract float getCurrentTime();
@@ -157,9 +143,6 @@ public sealed abstract class GameEngine permits JGame, GLGame{
     private void startScene() {
         if (scene != null && running) {
             scene.start();
-            physics.setScene(scene);
-            renderer.setScene(scene);
-            // add to debug renderer
             Logger.debug("Game: Loaded scene \"%s\"", scene.getName());
         }
     }

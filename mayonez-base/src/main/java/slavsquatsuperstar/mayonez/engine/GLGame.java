@@ -1,12 +1,10 @@
 package slavsquatsuperstar.mayonez.engine;
 
 import slavsquatsuperstar.mayonez.Preferences;
-import slavsquatsuperstar.mayonez.annotations.UsesEngine;
 import slavsquatsuperstar.mayonez.annotations.EngineType;
-import slavsquatsuperstar.mayonez.graphics.renderer.GLRenderer;
+import slavsquatsuperstar.mayonez.annotations.UsesEngine;
 import slavsquatsuperstar.mayonez.input.KeyInput;
 import slavsquatsuperstar.mayonez.input.MouseInput;
-import slavsquatsuperstar.mayonez.physics.PhysicsWorld;
 
 import static org.lwjgl.glfw.GLFW.glfwGetTime;
 
@@ -23,9 +21,6 @@ public final class GLGame extends GameEngine { // can't implement runnable other
                 Preferences.getScreenWidth(), Preferences.getScreenHeight());
         window.setKeyInput(KeyInput.INSTANCE);
         window.setMouseInput(MouseInput.INSTANCE);
-
-        renderer = new GLRenderer();
-        physics = new PhysicsWorld();
     }
 
     // Game Loop Methods
@@ -33,13 +28,12 @@ public final class GLGame extends GameEngine { // can't implement runnable other
     @Override
     public void update(float dt) throws Exception {
         if (scene != null) scene.update(dt);
-        physics.physicsUpdate(dt);
     }
 
     @Override
     public void render() throws Exception {
         window.render((_args) -> {
-            if (scene != null) renderer.render(null); // don't pass a G2D object
+            if (scene != null) scene.render(null); // don't pass a G2D object
         });
     }
 

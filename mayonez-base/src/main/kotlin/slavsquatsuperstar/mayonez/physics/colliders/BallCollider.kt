@@ -1,7 +1,6 @@
 package slavsquatsuperstar.mayonez.physics.colliders
 
 import slavsquatsuperstar.math.Vec2
-import slavsquatsuperstar.mayonez.physics.shapes.Circle
 import slavsquatsuperstar.mayonez.physics.shapes.Ellipse
 import slavsquatsuperstar.mayonez.physics.shapes.Shape
 
@@ -21,7 +20,7 @@ class BallCollider(val size: Vec2) : Collider(Ellipse(Vec2(), size)) {
 
     override fun transformToWorld(): Shape { // use circle when possible
         val worldShape = super.transformToWorld()
-        return if (worldShape is Ellipse && worldShape.isCircle) Circle(worldShape.center(), worldShape.size.x * 0.5f)
+        return if (worldShape is Ellipse && worldShape.isCircle) worldShape.boundingCircle()
         else worldShape
     }
 

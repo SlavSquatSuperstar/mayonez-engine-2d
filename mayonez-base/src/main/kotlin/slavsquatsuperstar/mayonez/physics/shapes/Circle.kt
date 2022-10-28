@@ -11,12 +11,12 @@ import slavsquatsuperstar.math.Vec2
  * @author SlavSquatSuperstar
  */
 class Circle(
-    private val center: Vec2,
+    center: Vec2,
     /**
      * The circle's radius, r.
      */
     val radius: Float
-) : Ellipse(center, Vec2(radius), 0f) {
+) : Ellipse(center, Vec2(radius * 2f), 0f) {
 
     // Circle Properties
 

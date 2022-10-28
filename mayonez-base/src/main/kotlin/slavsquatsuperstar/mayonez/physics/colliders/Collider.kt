@@ -3,7 +3,7 @@ package slavsquatsuperstar.mayonez.physics.colliders
 import slavsquatsuperstar.math.Vec2
 import slavsquatsuperstar.mayonez.Component
 import slavsquatsuperstar.mayonez.GameObject
-import slavsquatsuperstar.mayonez.graphics.DebugDraw
+import slavsquatsuperstar.mayonez.DebugDraw
 import slavsquatsuperstar.mayonez.physics.PhysicsMaterial
 import slavsquatsuperstar.mayonez.physics.Rigidbody
 import slavsquatsuperstar.mayonez.physics.collision.CollisionInfo

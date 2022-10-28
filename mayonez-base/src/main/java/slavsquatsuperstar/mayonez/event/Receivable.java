@@ -1,7 +1,7 @@
 package slavsquatsuperstar.mayonez.event;
 
 /**
- * Maps an object to a function which can be stored and executed later.
+ * Maps an object to an anonymous function which can be stored and executed later.
  *
  * @author SlavSquatSuperstar
  */

@@ -4,6 +4,7 @@ import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
+import slavsquatsuperstar.mayonez.DebugDraw;
 import slavsquatsuperstar.mayonez.Logger;
 import slavsquatsuperstar.mayonez.Mayonez;
 import slavsquatsuperstar.mayonez.annotations.UsesEngine;
@@ -132,6 +133,7 @@ public final class GLWindow implements Window {
 
     public void beginFrame() {
         glfwPollEvents();
+        DebugDraw.beginFrame();
         if (KeyInput.keyDown(GLFW_KEY_ESCAPE))
             glfwSetWindowShouldClose(window, true); // Exit program by pressing escape
     }

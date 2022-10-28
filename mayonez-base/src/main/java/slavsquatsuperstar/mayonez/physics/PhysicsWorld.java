@@ -21,7 +21,7 @@ import java.util.List;
  *
  * @author SlavSquatSuperstar
  */
-public final class PhysicsWorld {
+public class PhysicsWorld {
 
     public final static float GRAVITY_CONSTANT = 9.8f;
     public final static int IMPULSE_ITERATIONS = Preferences.getImpulseIterations();

@@ -4,7 +4,6 @@ import org.joml.Vector4f;
 import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.*;
-import slavsquatsuperstar.mayonez.graphics.GLCamera;
 import slavsquatsuperstar.mayonez.graphics.sprites.GLSprite;
 import slavsquatsuperstar.mayonez.graphics.sprites.GLSpriteSheet;
 import slavsquatsuperstar.mayonez.input.KeyInput;
@@ -13,6 +12,7 @@ import slavsquatsuperstar.mayonez.io.Assets;
 import slavsquatsuperstar.mayonez.physics.Rigidbody;
 import slavsquatsuperstar.mayonez.physics.colliders.BoxCollider;
 import slavsquatsuperstar.mayonez.scripts.*;
+import slavsquatsuperstar.util.Colors;
 
 public class GLRendererTest extends Scene {
 
@@ -20,7 +20,6 @@ public class GLRendererTest extends Scene {
 
     public GLRendererTest() {
         super("LWJGL Test Scene", Preferences.getScreenWidth() * 2, Preferences.getScreenHeight() * 2, 32);
-        camera = new GLCamera(Mayonez.getScreenSize(), this.getScale());
         setGravity(new Vec2());
     }
 
@@ -95,6 +94,17 @@ public class GLRendererTest extends Scene {
 
     @Override
     protected void onUserUpdate(float dt) {
+        DebugDraw.drawLine(new Vec2(-4, -4), new Vec2(-4, 4), Colors.RED);
+        DebugDraw.drawLine(new Vec2(-4, 4), new Vec2(4, 4), Colors.GREEN);
+        DebugDraw.drawLine(new Vec2(4, 4), new Vec2(4, -4), Colors.BLUE);
+        DebugDraw.drawLine(new Vec2(4, -4), new Vec2(-4, -4), Colors.BLACK);
+
+//        Rectangle sceneBounds = new Rectangle(new Vec2(0, 0), new Vec2(this.getWidth(), this.getHeight()));
+//        DebugDraw.drawShape(sceneBounds.scale(new Vec2(0.8f), null), Colors.BLACK);
+//        DebugDraw.drawShape(sceneBounds.scale(new Vec2(0.6f), null), Colors.BLACK);
+//        DebugDraw.drawShape(sceneBounds.scale(new Vec2(0.4f), null), Colors.BLACK);
+//        DebugDraw.drawShape(sceneBounds.scale(new Vec2(0.2f), null), Colors.BLACK);
+
 //        if (KeyInput.keyPressed("space"))
 //            System.out.println("pressed");
 //        else if (KeyInput.keyDown("space"))

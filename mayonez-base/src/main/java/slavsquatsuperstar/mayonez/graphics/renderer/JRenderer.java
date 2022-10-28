@@ -5,8 +5,7 @@ import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Scene;
 import slavsquatsuperstar.mayonez.annotations.EngineType;
 import slavsquatsuperstar.mayonez.annotations.UsesEngine;
-import slavsquatsuperstar.mayonez.graphics.DebugDraw;
-import slavsquatsuperstar.mayonez.graphics.JCamera;
+import slavsquatsuperstar.mayonez.DebugDraw;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -16,73 +15,82 @@ import java.util.List;
 
 /**
  * Draws all in-game textures and shapes onto the screen with Java's AWT and Swing libraries.
+ *
+ * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.AWT)
 public final class JRenderer extends Renderer {
 
-    private final List<GameObject> objects; // TODO store sprites instead of objects?
+    private final List<GameObject> objects;
+//    private final List<JSprite> sprites; // if use sprites, then no custom render
     private final DebugDraw debugDraw; // put DebugDraw in Renderer to access camera offset
-    /**
-     * Reference to scene camera
-     */
-    private JCamera camera = null;
+    private boolean sort = false; // Re-sort sprites this frame
 
     public JRenderer() {
         objects = new ArrayList<>();
+//        sprites = new ArrayList<>();
         debugDraw = DebugDraw.INSTANCE;
-    }
-
-    public void render(Graphics2D g2) {
-        if (g2 == null) return;
-
-        // Save a copy of the unmodified transform
-        AffineTransform xf = g2.getTransform();
-
-        // Move the screen and render everything at the offset position
-        if (camera != null) {
-            Vec2 camOffset = camera.getOffset();
-            g2.translate(-camOffset.x, -camOffset.y);
-        }
-        objects.forEach(o -> o.render(g2));
-        debugDraw.render(g2);
-
-        // Reset the screen's transform to its unmodified state
-        g2.setTransform(xf);
     }
 
     // GameObject Methods
 
-    /**
-     * Removes all objects from this renderer and submits all {@link GameObject}s from the given scene for rendering.
-     *
-     * @param newScene a scene
-     */
     @Override
     public void setScene(Scene newScene) {
-        camera = (JCamera) newScene.getCamera();
         objects.clear();
         objects.addAll(newScene.getObjects());
-        objects.sort(Comparator.comparingInt(GameObject::getZIndex));
+//        sprites.clear();
+//        newScene.getObjects().forEach(this::addObject);
     }
 
-    /**
-     * Submit a {@link GameObject} for rendering.
-     *
-     * @param obj the game object
-     */
     @Override
     public void addObject(GameObject obj) {
         objects.add(obj);
-        objects.sort(Comparator.comparingInt(GameObject::getZIndex));
+        sort = true;
+//        JSprite sprite = obj.getComponent(JSprite.class);
+//        if (sprite != null) {
+//            sprites.add(sprite);
+//            sort = true;
+//        }
     }
 
     @Override
     public void removeObject(GameObject obj) {
         objects.remove(obj);
+//        JSprite sprite = obj.getComponent(JSprite.class);
+//        if (sprite != null) sprites.remove(sprite);
+    }
+
+    // Renderer Methods
+
+    @Override
+    public void render(Graphics2D g2) {
+        if (g2 == null) return;
+
+        if (sort) {
+            objects.sort(Comparator.comparingInt(GameObject::getZIndex));
+//            sprites.sort(Comparator.comparingInt(s -> s.getObject().getZIndex()));
+            sort = false;
+        }
+
+        // Save a copy of the unmodified transform
+        AffineTransform oldXf = g2.getTransform();
+
+        // Move the screen and render everything at the offset position
+        if (getCamera() != null) {
+            Vec2 camOffset = getCamera().getOffset();
+            g2.translate(-camOffset.x, -camOffset.y);
+        }
+        objects.forEach(o -> o.render(g2));
+//        sprites.forEach(s -> s.render(g2));
+//        debugDraw.render(g2);
+
+        // Reset the screen's transform to its unmodified state
+        g2.setTransform(oldXf);
     }
 
     @Override
     public void stop() {
         objects.clear();
+//        sprites.clear();
     }
 }

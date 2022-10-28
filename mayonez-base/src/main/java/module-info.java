@@ -27,11 +27,11 @@ module mayonez.base {
     exports slavsquatsuperstar.mayonez.annotations;
     exports slavsquatsuperstar.mayonez.io;
     exports slavsquatsuperstar.mayonez.graphics;
+    exports slavsquatsuperstar.mayonez.graphics.sprites;
     exports slavsquatsuperstar.mayonez.input;
     exports slavsquatsuperstar.mayonez.physics;
     exports slavsquatsuperstar.mayonez.physics.colliders;
     exports slavsquatsuperstar.mayonez.physics.collision;
     exports slavsquatsuperstar.mayonez.physics.shapes;
     exports slavsquatsuperstar.mayonez.scripts;
-    exports slavsquatsuperstar.mayonez.graphics.sprites;
 }

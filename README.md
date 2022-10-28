@@ -2,7 +2,7 @@
 
 The 2D Java game engine to fit your Slavic needs!*†
 
-This project was developed using macOS 12.x Monterey (Intel). This app has not been tested on any other systems.
+This project was developed using macOS 13.x Ventura (Intel). This app has not been tested on any other systems.
 
 ## Quick Start Guide
 
@@ -18,7 +18,7 @@ This project was developed using macOS 12.x Monterey (Intel). This app has not b
 ### Instructions for Developers
 
 - Java Version: [Eclipse Temurin 17+](https://adoptium.net/) or [Oracle OpenJDK 17+](https://jdk.java.net/)
-- Kotlin Version: [1.7.10](https://github.com/JetBrains/kotlin/releases/tag/v1.7.0)
+- Kotlin Version: [1.7.20](https://github.com/JetBrains/kotlin/releases/tag/v1.7.20)
 - Recommended IDE: [Intellij IDEA CE 2022.2+](https://www.jetbrains.com/idea/download/)
 - Build System: [Gradle 7.5.1+](https://gradle.org/install/)
     - Utilizes [Gradle Shadow Plugin](https://github.com/johnrengelman/shadow) for creating fat jars
@@ -29,7 +29,7 @@ This project was developed using macOS 12.x Monterey (Intel). This app has not b
     - [Kotlin Standard Library](https://kotlinlang.org/docs/getting-started.html)
     - [JSON in Java](https://github.com/stleary/JSON-java) (org.json)
     - [Java Reflections](https://github.com/ronmamo/reflections)
-    - [SLF4J Simple Binding](https://www.slf4j.org/)
+    - [SLF4J Simple Binding](https://www.slf4j.org/) (dependency for Reflections)
 
 ## Additional Info
 

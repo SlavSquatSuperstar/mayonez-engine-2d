@@ -3,7 +3,7 @@ package slavsquatsuperstar.mayonez.graphics.sprites;
 import slavsquatsuperstar.mayonez.*;
 import slavsquatsuperstar.mayonez.annotations.EngineType;
 import slavsquatsuperstar.mayonez.annotations.UsesEngine;
-import slavsquatsuperstar.mayonez.graphics.DebugDraw;
+import slavsquatsuperstar.mayonez.DebugDraw;
 import slavsquatsuperstar.mayonez.io.Assets;
 import slavsquatsuperstar.mayonez.io.JTexture;
 import slavsquatsuperstar.mayonez.physics.shapes.Rectangle;

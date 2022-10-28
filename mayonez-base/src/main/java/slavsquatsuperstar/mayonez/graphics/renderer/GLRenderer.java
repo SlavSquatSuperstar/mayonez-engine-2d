@@ -28,9 +28,7 @@ public final class GLRenderer extends Renderer {
     private final int MAX_TEXTURE_SLOTS = Preferences.getMaxTextureSlots();
     private final List<GLSprite> sprites;
     private final List<RenderBatch> batches;
-
     private final Shader shader;
-    private GLCamera camera;
     // Remove sprites with deleted game objects
 
     public GLRenderer() {
@@ -39,42 +37,10 @@ public final class GLRenderer extends Renderer {
         shader = Assets.getShader("assets/shaders/default.glsl");
     }
 
-    // Game Loop Methods
-
-    @Override
-    public void render(Graphics2D g2) {
-        // Bind shader and upload uniforms
-        shader.bind();
-        shader.uploadMat4("uProjection", camera.getProjectionMatrix());
-        shader.uploadMat4("uView", camera.getViewMatrix());
-
-        rebuffer(); // Rebuffer all sprites
-
-        batches.forEach(RenderBatch::render); // Draw
-
-        shader.unbind(); // Unbind everything
-    }
-
-    public void rebuffer() {
-        batches.forEach(RenderBatch::clear); // Clear batches
-        for (GLSprite sprite : sprites) { // Rebuffer batches
-            RenderBatch batch = getAvailableBatch(sprite.getTexture(), sprite.getObject().getZIndex());
-            batch.pushSpriteData(sprite); // Push vertices to batch
-        }
-        batches.forEach(RenderBatch::upload); // Finalize batches
-        batches.sort(Comparator.comparingInt(RenderBatch::getZIndex)); // Sort batches by z-index
-    }
-
-    @Override
-    public void stop() {
-        batches.forEach(RenderBatch::delete);
-    }
-
     // Game Object Methods
 
     @Override
     public void setScene(Scene newScene) {
-        camera = (GLCamera) newScene.getCamera();
         batches.clear();
         newScene.getObjects().forEach(this::addObject);
     }
@@ -90,7 +56,38 @@ public final class GLRenderer extends Renderer {
         if (sprite != null) sprites.remove(sprite);
     }
 
-    // Helper Methods
+    // Renderer Methods
+
+    @Override
+    public void render(Graphics2D g2) {
+        // Bind shader and upload uniforms
+        shader.bind();
+        GLCamera camera = (GLCamera) getCamera();
+        shader.uploadMat4("uProjection", camera.getProjectionMatrix());
+        shader.uploadMat4("uView", camera.getViewMatrix());
+
+        rebuffer(); // Rebuffer all sprites
+        batches.forEach(RenderBatch::render); // Draw
+
+        shader.unbind(); // Unbind everything
+    }
+
+    @Override
+    public void stop() {
+        batches.forEach(RenderBatch::delete);
+    }
+
+    // OpenGL Methods
+
+    private void rebuffer() {
+        batches.forEach(RenderBatch::clear); // Clear batches
+        for (GLSprite sprite : sprites) { // Rebuffer batches
+            RenderBatch batch = getAvailableBatch(sprite.getTexture(), sprite.getObject().getZIndex());
+            batch.pushSpriteData(sprite); // Push vertices to batch
+        }
+        batches.forEach(RenderBatch::upload); // Finalize batches
+        batches.sort(Comparator.comparingInt(RenderBatch::getZIndex)); // Sort batches by z-index
+    }
 
     private RenderBatch getAvailableBatch(GLTexture texture, int zIndex) {
         for (RenderBatch batch : batches) {

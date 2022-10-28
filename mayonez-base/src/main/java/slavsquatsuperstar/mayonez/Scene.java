@@ -3,7 +3,10 @@ package slavsquatsuperstar.mayonez;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.event.Receivable;
 import slavsquatsuperstar.mayonez.graphics.Camera;
+import slavsquatsuperstar.mayonez.graphics.GLCamera;
 import slavsquatsuperstar.mayonez.graphics.JCamera;
+import slavsquatsuperstar.mayonez.graphics.renderer.*;
+import slavsquatsuperstar.mayonez.physics.PhysicsWorld;
 import slavsquatsuperstar.util.Colors;
 
 import java.awt.*;
@@ -21,12 +24,6 @@ import java.util.stream.Collectors;
 // TODO current cursor object
 public abstract class Scene {
 
-    // Object Fields
-    private final List<GameObject> objects;
-    private final Queue<Receivable> changesToScene; // Use a separate list to avoid concurrent exceptions
-
-    protected Camera camera;
-
     // Scene Information
     private final String name;
     /**
@@ -38,6 +35,16 @@ public abstract class Scene {
      */
     private final Vec2 size;
     private Color background = Colors.WHITE;
+
+    // Scene Layers
+    private final List<GameObject> objects;
+    private final PhysicsWorld physics;
+    private final Renderer renderer;
+    private final DebugRenderer debugRenderer;
+    private final Camera camera;
+
+    // Scene State
+    private final Queue<Receivable> changesToScene; // Use a separate list to avoid concurrent exceptions
     private boolean started;
 
     /**
@@ -50,10 +57,10 @@ public abstract class Scene {
     /**
      * Creates an empty scene and sets the bounds and scale.
      *
-     * @param name     the name of the scene
-     * @param width    the width of the scene, in pixels
-     * @param height   the height of the scene, in pixels
-     * @param scale the scale of the scene
+     * @param name   the name of the scene
+     * @param width  the width of the scene, in pixels
+     * @param height the height of the scene, in pixels
+     * @param scale  the scale of the scene
      */
     public Scene(String name, int width, int height, float scale) {
         this.name = name;
@@ -61,8 +68,18 @@ public abstract class Scene {
         this.scale = scale;
 
         objects = new ArrayList<>();
+        physics = new PhysicsWorld();
+        if (Boolean.TRUE.equals(Mayonez.getUseGL())) {
+            renderer = new GLRenderer();
+            debugRenderer = new GLDebugRenderer();
+            camera = new GLCamera(Mayonez.getScreenSize(), this.getScale());
+        } else {
+            renderer = new JRenderer();
+            debugRenderer = new JDebugRenderer();
+            camera = new JCamera(Mayonez.getScreenSize(), this.getScale());
+        }
         changesToScene = new LinkedList<>();
-        camera = new JCamera(Mayonez.getScreenSize(), scale);
+        started = false;
     }
 
     // Game Loop Methods
@@ -80,6 +97,10 @@ public abstract class Scene {
         if (!started) {
             addObject(Camera.createCameraObject(camera));
             init();
+
+            renderer.setScene(this);
+            // start debugRenderer
+            physics.setScene(this);
             started = true;
         }
     }
@@ -91,7 +112,7 @@ public abstract class Scene {
      */
     public final void update(float dt) {
         if (started) {
-            // Update Objects and Camera
+            // Update objects and camera
             objects.forEach(o -> {
                 o.update(dt);
                 if (o.isDestroyed()) removeObject(o);
@@ -99,23 +120,31 @@ public abstract class Scene {
             camera.gameObject.update(dt);
             onUserUpdate(dt);
 
+            // Update physics
+            physics.physicsUpdate(dt);
+
             // Remove destroyed objects or add new ones at the end of the frame
-            while (!changesToScene.isEmpty()) {
-                changesToScene.poll().onReceive();
-            }
+            while (!changesToScene.isEmpty()) changesToScene.poll().onReceive();
         }
     }
 
     /**
-     * Draw the background image.
+     * Draw the background image and all the objects in the scene.
      *
      * @param g2 the window's graphics object
      */
     public final void render(Graphics2D g2) {
         if (started) {
-            g2.setColor(background);
-            g2.fillRect(0, 0, (int) ((size.x + 1) * scale), (int) ((size.y + 1) * scale));
-            onUserRender(g2);
+            // Render background
+            if (g2 != null) {
+                g2.setColor(background);
+                g2.fillRect(0, 0, (int) ((size.x + 1) * scale), (int) ((size.y + 1) * scale));
+                onUserRender(g2);
+            }
+
+            // Render objects
+            renderer.render(g2);
+            debugRenderer.render(g2);
         }
     }
 
@@ -133,6 +162,20 @@ public abstract class Scene {
      * @param g2 the window's graphics object
      */
     protected void onUserRender(Graphics2D g2) {
+    }
+
+    public final void stop() {
+        if (started) {
+            started = false;
+
+            objects.forEach(GameObject::onDestroy);
+            objects.clear();
+            camera.destroy();
+
+            renderer.stop();
+            debugRenderer.stop();
+            physics.stop();
+        }
     }
 
     // Object Methods
@@ -156,8 +199,8 @@ public abstract class Scene {
                 objects.add(obj.setScene(this));
                 obj.start(); // add object components so renderer and physics can access it
                 if (started) { // Dynamic add
-                    Mayonez.getRenderer().addObject(obj);
-                    Mayonez.getPhysics().addObject(obj);
+                    renderer.addObject(obj);
+                    physics.addObject(obj);
                 }
                 Logger.debug("Game: Added object \"%s\" to scene \"%s\"", obj.name, this.name);
             });
@@ -176,8 +219,8 @@ public abstract class Scene {
     public final void removeObject(GameObject obj) {
         changesToScene.offer((_args) -> {
             objects.remove(obj);
-            Mayonez.getRenderer().removeObject(obj);
-            Mayonez.getPhysics().removeObject(obj);
+            renderer.removeObject(obj);
+            physics.removeObject(obj);
             obj.onDestroy();
             Logger.debug("Game: Removed object \"%s\" from scene \"%s\"", obj.name, this.name);
         });
@@ -190,9 +233,9 @@ public abstract class Scene {
      * @return the object
      */
     public GameObject getObject(String name) {
-        for (GameObject o : objects)
-            if (o.name.equalsIgnoreCase(name))
-                return o;
+        for (GameObject o : objects) {
+            if (o.name.equalsIgnoreCase(name)) return o;
+        }
         return null;
     }
 
@@ -237,34 +280,16 @@ public abstract class Scene {
         return name;
     }
 
+    public Vec2 getSize() {
+        return size;
+    }
+
     public float getWidth() {
         return size.x;
     }
 
     public float getHeight() {
         return size.y;
-    }
-
-    public Vec2 getSize() {
-        return size;
-    }
-
-    /**
-     * Returns the number pixels on the screen for every unit in the world. Defaults to a 1:1 scale.
-     *
-     * @return the scene scale
-     */
-    public float getScale() {
-        return scale;
-    }
-
-    /**
-     * Sets the background color of this scene. Defaults to a very light gray.
-     *
-     * @param background an RGB color
-     */
-    public void setBackground(Color background) {
-        this.background = background;
     }
 
     /**
@@ -276,8 +301,30 @@ public abstract class Scene {
         return camera;
     }
 
+    /**
+     * Sets the background color of this scene. Defaults to a very light gray.
+     *
+     * @param background an RGB color
+     */
+    public void setBackground(Color background) {
+        this.background = background;
+    }
+
     public void setGravity(Vec2 gravity) {
-        Mayonez.getPhysics().setGravity(gravity);
+        physics.setGravity(gravity);
+    }
+
+    DebugRenderer getDebugRenderer() {
+        return debugRenderer;
+    }
+
+    /**
+     * Returns the number pixels on the screen for every unit in the world. Defaults to a 1:1 scale.
+     *
+     * @return the scene scale
+     */
+    public float getScale() {
+        return scale;
     }
 
     @Override

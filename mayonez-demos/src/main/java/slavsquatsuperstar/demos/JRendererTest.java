@@ -3,7 +3,7 @@ package slavsquatsuperstar.demos;
 import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.*;
-import slavsquatsuperstar.mayonez.graphics.DebugDraw;
+import slavsquatsuperstar.mayonez.DebugDraw;
 import slavsquatsuperstar.mayonez.graphics.sprites.JSpriteSheet;
 import slavsquatsuperstar.mayonez.input.KeyInput;
 import slavsquatsuperstar.mayonez.input.MouseInput;
@@ -79,6 +79,11 @@ public class JRendererTest extends Scene {
 
     @Override
     protected void onUserUpdate(float dt) {
+        DebugDraw.drawLine(new Vec2(-4, -4), new Vec2(-4, 4), Colors.RED);
+        DebugDraw.drawLine(new Vec2(-4, 4), new Vec2(4, 4), Colors.GREEN);
+        DebugDraw.drawLine(new Vec2(4, 4), new Vec2(4, -4), Colors.BLUE);
+        DebugDraw.drawLine(new Vec2(4, -4), new Vec2(-4, -4), Colors.BLACK);
+
         Rectangle sceneBounds = new Rectangle(new Vec2(0, 0), new Vec2(this.getWidth(), this.getHeight()));
         DebugDraw.drawShape(sceneBounds.scale(new Vec2(0.8f), null), Colors.BLACK);
         DebugDraw.drawShape(sceneBounds.scale(new Vec2(0.6f), null), Colors.BLACK);

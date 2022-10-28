@@ -19,7 +19,7 @@ public class GameObject {
     // GameObject Information
     public String name;
     public final Transform transform;
-    private int zIndex;
+    private int zIndex; // controls 3D "layering" of objects
     private final Set<String> tags;
 
     // Scene Information

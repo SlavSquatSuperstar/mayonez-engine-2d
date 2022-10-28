@@ -1,7 +1,9 @@
 package slavsquatsuperstar.mayonez.graphics.renderer;
 
 import slavsquatsuperstar.mayonez.GameObject;
+import slavsquatsuperstar.mayonez.Mayonez;
 import slavsquatsuperstar.mayonez.Scene;
+import slavsquatsuperstar.mayonez.graphics.Camera;
 
 import java.awt.*;
 
@@ -10,29 +12,49 @@ import java.awt.*;
  *
  * @author SlavSquatSuperstar
  */
-public sealed abstract class Renderer permits JRenderer, GLRenderer {
+public abstract class Renderer {
 
-    public abstract void render(Graphics2D g2);
+    // Object Methods
 
     /**
-     * Submit a {@link GameObject} for rendering.
+     * Submits a {@link GameObject} for rendering.
      *
      * @param o the game object
      */
     public abstract void addObject(GameObject o);
 
     /**
-     * Remove a {@link GameObject} from the renderer.
+     * Removes a {@link GameObject} from the renderer.
      *
      * @param o the game object
      */
     public abstract void removeObject(GameObject o);
 
+    /**
+     * Clears this renderer and submits all objects from the given {@link Scene} for rendering.
+     *
+     * @param newScene a scene
+     */
     public abstract void setScene(Scene newScene);
 
+    // Game Loop Methods
+
     /**
-     * Frees resources upon quitting the program.
+     * Draws all objects in the scene.
+     *
+     * @param g2 a {@link Graphics2D} object for the AWT engine/
+     */
+    public abstract void render(Graphics2D g2);
+
+    /**
+     * Removes all objects and frees resources upon quitting the program.
      */
     public abstract void stop();
+
+    // Helper Methods
+
+    public Camera getCamera() {
+        return Mayonez.getScene().getCamera();
+    }
 
 }

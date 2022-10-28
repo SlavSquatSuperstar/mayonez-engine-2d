@@ -6,7 +6,7 @@ import slavsquatsuperstar.util.Colors;
 import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Preferences;
 import slavsquatsuperstar.mayonez.Scene;
-import slavsquatsuperstar.mayonez.graphics.DebugDraw;
+import slavsquatsuperstar.mayonez.DebugDraw;
 import slavsquatsuperstar.mayonez.input.KeyInput;
 import slavsquatsuperstar.mayonez.physics.PhysicsMaterial;
 import slavsquatsuperstar.mayonez.physics.Rigidbody;

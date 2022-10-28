@@ -6,9 +6,7 @@ import slavsquatsuperstar.mayonez.Preferences.screenWidth
 import slavsquatsuperstar.mayonez.engine.GLGame
 import slavsquatsuperstar.mayonez.engine.GameEngine
 import slavsquatsuperstar.mayonez.engine.JGame
-import slavsquatsuperstar.mayonez.graphics.renderer.Renderer
 import slavsquatsuperstar.mayonez.io.Assets
-import slavsquatsuperstar.mayonez.physics.PhysicsWorld
 import kotlin.system.exitProcess
 
 /**
@@ -33,11 +31,10 @@ object Mayonez {
     val time: Float
         get() = (System.nanoTime() - TIME_STARTED) / 1.0E9f
 
-    // Game
+    // Game Fields
     // TODO make not null
     @JvmStatic
     var useGL: Boolean? = null
-        @JvmName("shouldUseGL")
         get() = field!!
         set(value) {
             field = value
@@ -132,14 +129,6 @@ object Mayonez {
         if (!started) init()
         game?.setScene(scene) ?: exitIfNotConfigured()
     }
-
-    @JvmStatic
-    val physics: PhysicsWorld
-        get() = game!!.physics
-
-    @JvmStatic
-    val renderer: Renderer
-        get() = game!!.renderer
 
     @JvmStatic
     val screenSize: Vec2
