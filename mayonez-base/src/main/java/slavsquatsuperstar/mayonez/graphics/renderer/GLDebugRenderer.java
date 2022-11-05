@@ -1,23 +1,22 @@
 package slavsquatsuperstar.mayonez.graphics.renderer;
 
-import org.joml.Vector2f;
-import org.joml.Vector3f;
+import org.joml.Vector4f;
+import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
+import slavsquatsuperstar.mayonez.DebugDraw;
 import slavsquatsuperstar.mayonez.annotations.EngineType;
 import slavsquatsuperstar.mayonez.annotations.UsesEngine;
 import slavsquatsuperstar.mayonez.graphics.GLCamera;
-import slavsquatsuperstar.mayonez.io.Assets;
-import slavsquatsuperstar.mayonez.io.Shader;
+import slavsquatsuperstar.mayonez.physics.shapes.Circle;
 import slavsquatsuperstar.mayonez.physics.shapes.Edge;
+import slavsquatsuperstar.mayonez.physics.shapes.Polygon;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
-import static org.lwjgl.opengl.GL15.*;
-import static org.lwjgl.opengl.GL20.*;
-import static org.lwjgl.opengl.GL30.*;
+import static org.lwjgl.opengl.GL11.*;
 
 /**
  * Draws debug information using OpenGL.
@@ -25,129 +24,95 @@ import static org.lwjgl.opengl.GL30.*;
  * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.GL)
-public final class GLDebugRenderer extends DebugRenderer {
+public final class GLDebugRenderer extends GLRenderer implements DebugRenderer {
 
     private final static int MAX_LINES = 500;
-    private final static int VERTEX_SIZE = 6;
-    private final List<LinePrimitive> lines;
-    private final float[] vertices; // Vertex = (r, g, b, x, y, z)
-
-    // GPU Fields
-    private final Shader shader;
-    private int vao, vbo;
-    private boolean started;
+    private final List<DebugLine> lines;
 
     public GLDebugRenderer() {
+        super("assets/shaders/line.glsl");
         lines = new ArrayList<>();
-        vertices = new float[MAX_LINES * VERTEX_SIZE * 2]; // 6 floats for 2 vertices in an edge
-        shader = Assets.getShader("assets/shaders/line.glsl");
-        started = false;
     }
+
+    // Debug Draw Methods
 
     @Override
     public void addShape(DebugShape shape) {
-        if (lines.size() >= MAX_LINES) return;
-
         if (shape.shape instanceof Edge edge) {
-            Vector3f color = new Vector3f(shape.color.getRed(), shape.color.getGreen(), shape.color.getBlue());
-            Vec2 norm = edge.unitNormal();
-            // Make line thicker and flush
-            float len = edge.length;
-            Edge stretched = edge.scale(new Vec2((len + 2) / len), null);
-            Edge[] edges = {stretched.translate(norm.mul(-0.5f)), stretched, stretched.translate(norm.mul(0.5f))};
-            for (Edge e : edges)
-                lines.add(new LinePrimitive(e.getStart().toJOML(), e.getEnd().toJOML(), color, 1));
+            addLine(edge, shape.color, shape.priority.ordinal());
+        } else if (shape.shape instanceof Polygon poly) {
+            for (Edge edge : poly.getEdges()) addLine(edge, shape.color, shape.priority.ordinal());
+        } else if (shape.shape instanceof Circle circle) {
+            int numEdges = (int) (circle.getRadius() * 2f * MathUtils.PI);
+            Polygon poly = new Polygon(circle.center(), numEdges, circle.getRadius());
+            for (Edge edge : poly.getEdges()) addLine(edge, shape.color, shape.priority.ordinal());
+        }
+    }
+
+    private void addLine(Edge edge, Color shapeColor, int zIndex) {
+        Vector4f color = new slavsquatsuperstar.util.Color(shapeColor).toGL();
+//        lines.add(new DebugLine(edge.getStart(), edge.getEnd(), color));
+        // Draw extra lines to simulate stroke size
+        float stroke = DebugDraw.STROKE_SIZE;
+        // Stretch lines to look flush
+        float len = edge.length;
+        Edge stretched = edge.scale(new Vec2((len + stroke - 1) / len), null);
+
+        // Add extra lines
+        Vec2 norm = edge.unitNormal();
+        float start = -(stroke - 1) / 2;
+        for (int i = 0; i < stroke; i++) {
+            Edge e = stretched.translate(norm.mul(start + i));
+            lines.add(new DebugLine(e.getStart(), e.getEnd(), color, zIndex));
         }
     }
 
     // Game Loop Methods
 
-    public void start() {
-        vao = glGenVertexArrays();
-        glBindVertexArray(vao);
-
-        vbo = glGenBuffers();
-        glBindBuffer(GL_ARRAY_BUFFER, vbo);
-        glBufferData(GL_ARRAY_BUFFER, (long) vertices.length * Float.BYTES, GL_DYNAMIC_DRAW);
-
-        // Enable the vertex array attributes for position
-        glVertexAttribPointer(0, VERTEX_SIZE / 2, GL_FLOAT, false, VERTEX_SIZE * Float.BYTES, 0);
-        glEnableVertexAttribArray(0);
-        // Vertex attributes for color
-        glVertexAttribPointer(1, VERTEX_SIZE / 2, GL_FLOAT, false, VERTEX_SIZE * Float.BYTES, VERTEX_SIZE / 2 * Float.BYTES);
-        glEnableVertexAttribArray(1);
-
-        started = true;
-    }
-
-    public void beginFrame() {
-        if (!started) start();
-
-        // Remove dead edges
-        for (int i = 0; i < lines.size(); i++) {
-            if (lines.get(i).beginFrame() < 0) lines.remove(i--);
-        }
-    }
-
     @Override
     public void render(Graphics2D g2) {
-        if (lines.isEmpty()) return;
-
-        // Upload vertex attributes
-        int index = 0;
-        for (LinePrimitive edge : lines) {
-            for (int i = 0; i < 2; i++) {
-                Vector2f position = i == 0 ? edge.getStart() : edge.getEnd();
-                Vector3f color = edge.getColor();
-
-                // Load position and color
-                float[] attributes = {
-                        position.x, position.y, -10f,
-                        color.x, color.y, color.z
-                };
-
-                System.arraycopy(attributes, 0, vertices, index, attributes.length);
-//                vertices[index] = position.x;
-//                vertices[index + 1] = position.y;
-//                vertices[index + 2] = -10.0f;
-//
-//                vertices[index + 3] = color.x;
-//                vertices[index + 4] = color.y;
-//                vertices[index + 5] = color.z;
-                index += VERTEX_SIZE;
-            }
-        }
-
-        glBindBuffer(GL_ARRAY_BUFFER, vbo);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, Arrays.copyOfRange(vertices, 0, lines.size() * VERTEX_SIZE * 2));
-
         // Bind
         shader.bind();
         GLCamera camera = (GLCamera) getCamera();
         shader.uploadMat4("uProjection", camera.getProjectionMatrix());
         shader.uploadMat4("uView", camera.getViewMatrix());
 
-        glBindVertexArray(vao);
-        glEnableVertexAttribArray(0);
-        glEnableVertexAttribArray(1);
-
         // Draw
+        rebuffer();
         glEnable(GL_LINE_SMOOTH);
-        glDisable(GL_BLEND); // overlapping lines causes a bit of blending
-        glLineWidth(5); // doesn't work on macOS
-        glDrawArrays(GL_LINES, 0, lines.size() * VERTEX_SIZE * 2);
+        glDisable(GL_BLEND);
+        glLineWidth(1);
+//        glLineWidth(DebugDraw.STROKE_SIZE); // doesn't work on macOS
+        batches.forEach(RenderBatch::render); // Draw
         glDisable(GL_LINE_SMOOTH);
         glEnable(GL_BLEND);
 
-        // Discard
-        glDisableVertexAttribArray(0);
-        glDisableVertexAttribArray(1);
-        glBindVertexArray(0);
         shader.unbind();
+        lines.clear(); // Clear lines after each frame
+    }
+
+    @Override
+    protected void rebuffer() {
+        batches.forEach(RenderBatch::clear); // Prepare batches
+        for (DebugLine line : lines) {
+            RenderBatch batch = getAvailableBatch(null, line.zIndex);
+            batch.pushVec2(line.start);
+            batch.pushVec4(line.color);
+            batch.pushVec2(line.end);
+            batch.pushVec4(line.color);
+        }
+        batches.forEach(RenderBatch::upload); // Finalize batches
+        batches.sort(Comparator.comparingInt(RenderBatch::getZIndex)); // Sort batches by z-index
+    }
+
+    @Override
+    protected RenderBatch createBatch(int zIndex) {
+        return new RenderBatch(MAX_LINES, zIndex, DrawPrimitive.LINE);
     }
 
     @Override
     public void stop() {
+        batches.forEach(RenderBatch::delete);
         lines.clear();
     }
 

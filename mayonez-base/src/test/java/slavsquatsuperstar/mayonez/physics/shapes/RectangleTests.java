@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static slavsquatsuperstar.test.TestUtils.assertFloatEquals;
 
 /**
- * Unit tests for {@link Rectangle} class.
+ * Unit tests for the {@link slavsquatsuperstar.mayonez.physics.shapes.Rectangle} class.
  *
  * @author SlavSquatSuperstar
  */

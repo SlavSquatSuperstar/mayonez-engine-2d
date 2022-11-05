@@ -11,7 +11,7 @@ import static slavsquatsuperstar.test.TestUtils.assertFloatEquals;
 import static slavsquatsuperstar.mayonez.physics.collision.Collisions.raycast;
 
 /**
- * Unit tests for {@link Ray} class.
+ * Unit tests for the {@link slavsquatsuperstar.mayonez.physics.shapes.Ray} class.
  *
  * @author SlavSquatSuperstar
  */

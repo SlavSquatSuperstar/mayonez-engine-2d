@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static slavsquatsuperstar.test.TestUtils.assertFloatEquals;
 
 /**
- * Unit tests for {@link Triangle} class.
+ * Unit tests for the {@link slavsquatsuperstar.mayonez.physics.shapes.Triangle} class.
  *
  * @author SlavSquatSuperstar
  */

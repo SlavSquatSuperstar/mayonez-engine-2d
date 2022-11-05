@@ -7,7 +7,9 @@ import slavsquatsuperstar.mayonez.Mayonez
 import java.io.File
 import java.net.MalformedURLException
 import java.net.URL
+import java.nio.file.Files
 import java.nio.file.Path
+import java.nio.file.Paths
 import java.util.regex.Pattern
 
 /**
@@ -44,10 +46,12 @@ object Assets {
      * - https://www.logicbig.com/how-to/java/find-classpath-files-under-folder-and-sub-folder.html
      */
     @JvmStatic
-    fun scanResources(directory: String) {
+    fun scanResources(directory: String): MutableList<String> {
         val resources = Reflections(directory, Scanners.Resources).getResources(Pattern.compile(".*\\.*"))
+//        val resources = searchDirectory(directory, AssetType.CLASSPATH)
         resources.forEach { createAsset(it) } // Create an asset from each path
         Logger.debug("Assets: Loaded ${resources.size} resources inside \"$directory\"")
+        return ArrayList(resources);
     }
 
     /**
@@ -56,26 +60,38 @@ object Assets {
      * @param directory a folder outside the jar
      */
     @JvmStatic
-    fun scanFiles(directory: String) {
-        val files = searchFiles(directory)
+    fun scanFiles(directory: String): MutableList<String> {
+        val files = searchDirectory(directory, AssetType.EXTERNAL)
         files.forEach { createAsset(it) }
         Logger.debug("Assets: Loaded ${files.size} files inside $directory")
+        return files
     }
 
-    @JvmStatic
-    private fun searchFiles(directory: String): MutableList<String> {
-        val folder = File(directory)
-        val files: MutableList<String> = ArrayList()
-        if (folder.listFiles() == null) return files // If file return empty list
-
-        for (f in folder.listFiles()!!) {
-            if (f.name == ".DS_Store") continue
-            val filename = Path.of(directory, f.name).toString()
-            if (f.isFile) files.add(filename) else {
-                files.addAll(searchFiles(filename))
+    private fun searchDirectory(directory: String, assetType: AssetType): MutableList<String> {
+        // Files.walk() is recursive, file.listFiles() is not
+        return try {
+            val pathname = if (assetType == AssetType.CLASSPATH) {
+                ClassLoader.getSystemResource(directory).path
+            } else {
+                if (!File(directory).isDirectory) return ArrayList() // If file return empty list
+                directory
             }
+            val path = Paths.get(pathname)
+            ArrayList(Files.walk(path).filter { file: Path -> Files.isRegularFile(file) }
+                .map { p: Path -> p.toAssetName(directory, assetType) }.toList())
+        } catch (e: Exception) {
+            ArrayList()
         }
-        return files
+    }
+
+    private fun Path.toAssetName(root: String, assetType: AssetType): String {
+        val fullPath = this.toString()
+        return if (assetType == AssetType.CLASSPATH) {
+            val index = fullPath.lastIndexOf(root)
+            fullPath.substring(index) // cut of path before root
+        } else {
+            fullPath
+        }
     }
 
     // Asset Methods

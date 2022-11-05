@@ -1,14 +1,12 @@
 package slavsquatsuperstar.math;
 
 import org.junit.jupiter.api.Test;
-import slavsquatsuperstar.math.Mat22;
-import slavsquatsuperstar.math.Vec2;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 /**
- * Unit tests for {@link Mat22} class.
+ * Unit tests for the {@link slavsquatsuperstar.math.Mat22} class.
  *
  * @author SlavSquatSuperstar
  */

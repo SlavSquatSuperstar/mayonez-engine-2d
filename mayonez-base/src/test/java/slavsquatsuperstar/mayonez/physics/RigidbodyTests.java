@@ -3,12 +3,11 @@ package slavsquatsuperstar.mayonez.physics;
 import org.junit.jupiter.api.Test;
 import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
-import slavsquatsuperstar.mayonez.physics.Rigidbody;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- * Unit tests for {@link Rigidbody} class.
+ * Unit tests for the {@link slavsquatsuperstar.mayonez.physics.Rigidbody} class.
  *
  * @author SlavSquatSuperstar
  */

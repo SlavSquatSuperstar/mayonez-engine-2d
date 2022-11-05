@@ -14,7 +14,7 @@ import slavsquatsuperstar.mayonez.physics.shapes.Rectangle;
  * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.GL)
-public final class GLSprite extends Sprite { // = Gabe's SpriteRenderer
+public final class GLSprite extends Sprite {
 
     private Vector4f color = new Vector4f(1, 1, 1, 1); // opaque white
     private GLTexture texture = null; // Rendering just a color

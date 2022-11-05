@@ -1,11 +1,13 @@
 package slavsquatsuperstar.mayonez.graphics.renderer
 
 import slavsquatsuperstar.math.Vec2
+import slavsquatsuperstar.mayonez.DebugDraw
 import slavsquatsuperstar.mayonez.annotations.EngineType
 import slavsquatsuperstar.mayonez.annotations.UsesEngine
 import slavsquatsuperstar.mayonez.event.Receivable
 import slavsquatsuperstar.mayonez.physics.shapes.*
 import slavsquatsuperstar.util.Colors
+import java.awt.BasicStroke
 import java.awt.Color
 import java.awt.Graphics2D
 import java.awt.geom.AffineTransform
@@ -14,12 +16,16 @@ import java.awt.geom.Line2D
 import java.awt.geom.Rectangle2D
 import kotlin.math.roundToInt
 
+typealias JShape = java.awt.Shape
+
 /**
  * Draws debug information using AWT.
  */
 @UsesEngine(EngineType.AWT)
-class JDebugRenderer : DebugRenderer() {
+class JDebugRenderer : DebugRenderer {
+
     private val shapes = ArrayList<JShapeDrawer>()
+    private val stroke = BasicStroke(DebugDraw.STROKE_SIZE)
 
     override fun addShape(shape: DebugShape) {
         shapes.add(JShapeDrawer(shape.shape.toAwt() ?: return, shape.color, shape.fill, shape.priority))
@@ -38,7 +44,7 @@ class JDebugRenderer : DebugRenderer() {
         // Draw shapes
         if (shapes.isNotEmpty()) {
             shapes.sortWith(Comparator.comparingInt { s: JShapeDrawer -> s.priority.ordinal })
-            g2.stroke = STROKE
+            g2.stroke = stroke
             shapes.forEach { s: JShapeDrawer -> s.draw(g2) }
             shapes.clear()
         }
@@ -51,7 +57,7 @@ class JDebugRenderer : DebugRenderer() {
 
     // Shape Helper Methods
 
-    private fun Shape.toAwt(): java.awt.Shape? {
+    private fun Shape.toAwt(): JShape? {
         return when (this) {
             is Edge -> Line2D.Float(start.x, start.y, end.x, end.y)
             is Ellipse -> {
@@ -77,7 +83,7 @@ class JDebugRenderer : DebugRenderer() {
         }
     }
 
-    private fun java.awt.Shape.rotate(center: Vec2, angle: Float): java.awt.Shape {
+    private fun JShape.rotate(center: Vec2, angle: Float): JShape {
         val rotXf = AffineTransform.getRotateInstance(
             Math.toRadians(angle.toDouble()),
             center.x.toDouble(), center.y.toDouble()
@@ -93,7 +99,7 @@ class JDebugRenderer : DebugRenderer() {
      * @author SlavSquatSuperstar
      */
     class JShapeDrawer(
-        private val shape: java.awt.Shape,
+        private val shape: JShape,
         private val color: Color?,
         private val fill: Boolean,
         val priority: DebugShape.Priority
@@ -107,4 +113,5 @@ class JDebugRenderer : DebugRenderer() {
             else g2.draw(shape)
         }
     }
+
 }

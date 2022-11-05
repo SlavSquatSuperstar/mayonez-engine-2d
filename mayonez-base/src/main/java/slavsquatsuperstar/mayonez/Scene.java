@@ -39,7 +39,7 @@ public abstract class Scene {
     // Scene Layers
     private final List<GameObject> objects;
     private final PhysicsWorld physics;
-    private final Renderer renderer;
+    private final SceneRenderer renderer;
     private final DebugRenderer debugRenderer;
     private final Camera camera;
 
@@ -70,11 +70,11 @@ public abstract class Scene {
         objects = new ArrayList<>();
         physics = new PhysicsWorld();
         if (Boolean.TRUE.equals(Mayonez.getUseGL())) {
-            renderer = new GLRenderer();
+            renderer = new GLSceneRenderer();
             debugRenderer = new GLDebugRenderer();
             camera = new GLCamera(Mayonez.getScreenSize(), this.getScale());
         } else {
-            renderer = new JRenderer();
+            renderer = new JSceneRenderer();
             debugRenderer = new JDebugRenderer();
             camera = new JCamera(Mayonez.getScreenSize(), this.getScale());
         }

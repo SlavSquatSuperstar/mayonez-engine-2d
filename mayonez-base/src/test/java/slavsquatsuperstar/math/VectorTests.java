@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static slavsquatsuperstar.test.TestUtils.assertFloatEquals;
 
 /**
- * Unit tests for {@link Vec2} class.
+ * Unit tests for the {@link slavsquatsuperstar.math.Vec2} class.
  *
  * @author SlavSquatSuperstar
  */

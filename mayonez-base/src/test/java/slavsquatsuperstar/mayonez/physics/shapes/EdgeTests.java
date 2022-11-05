@@ -3,12 +3,11 @@ package slavsquatsuperstar.mayonez.physics.shapes;
 import org.junit.jupiter.api.Test;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.test.TestUtils;
-import slavsquatsuperstar.mayonez.physics.collision.Collisions;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit tests {@link Edge} class and line vs line/shape detection in {@link Collisions} class.
+ * Unit tests for the {@link slavsquatsuperstar.mayonez.physics.shapes.Edge} class.
  *
  * @author SlavSquatSuperstar
  */

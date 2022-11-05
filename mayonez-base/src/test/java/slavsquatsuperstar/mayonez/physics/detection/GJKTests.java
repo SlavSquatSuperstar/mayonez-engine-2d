@@ -10,7 +10,7 @@ import static slavsquatsuperstar.test.TestUtils.assertFloatEquals;
 import static slavsquatsuperstar.test.TestUtils.assertVerticesEqual;
 
 /**
- * Unit Tests for the {@link GJKDetector} class.
+ * Unit Tests for the {@link slavsquatsuperstar.mayonez.physics.detection.GJKDetector} class.
  *
  * @author SlavSquatSuperstar
  */

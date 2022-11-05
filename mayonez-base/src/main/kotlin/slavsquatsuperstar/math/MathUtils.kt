@@ -171,11 +171,21 @@ object MathUtils {
 
     // Clamp / Range Methods
 
+    /**
+     * Restricts a integer's value within a provided range.
+     *
+     * @param value a integer
+     * @param min   the lower bound, inclusive
+     * @param max   the upper bound, inclusive
+     * @return a number within the bounds
+     */
+    @JvmStatic
+    fun clamp(value: Int, min: Int, max: Int): Int = Range(min.toFloat(), max.toFloat()).clamp(value.toFloat()).toInt()
 
     /**
-     * Restricts a number's value within a provided range.
+     * Restricts a float's value within a provided range.
      *
-     * @param value a number
+     * @param value a float
      * @param min   the lower bound, inclusive
      * @param max   the upper bound, inclusive
      * @return a number within the bounds

@@ -1,13 +1,12 @@
 package slavsquatsuperstar.math;
 
 import org.junit.jupiter.api.Test;
-import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.Transform;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit tests for {@link Transform} class.
+ * Unit tests for the {@link slavsquatsuperstar.mayonez.Transform} class.
  *
  * @author SlavSquatSuperstar
  */

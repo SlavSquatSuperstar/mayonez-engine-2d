@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static slavsquatsuperstar.test.TestUtils.assertFloatEquals;
 
 /**
- * Unit tests for {@link Polygon} class to make sure its subclasses behave like it.
+ * Unit tests for the {@link slavsquatsuperstar.mayonez.physics.shapes.Polygon} class to make sure its subclasses behave like it.
  *
  * @author SlavSquatSuperstar
  */

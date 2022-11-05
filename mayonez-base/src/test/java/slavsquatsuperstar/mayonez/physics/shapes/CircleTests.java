@@ -8,7 +8,7 @@ import slavsquatsuperstar.math.Vec2;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit tests for {@link Circle} class.
+ * Unit tests for the {@link slavsquatsuperstar.mayonez.physics.shapes.Circle} class.
  *
  * @author SlavSquatSuperstar
  */

@@ -1,16 +1,19 @@
 package slavsquatsuperstar.mayonez.graphics.renderer;
 
+import org.joml.Vector2f;
+import org.joml.Vector3f;
 import org.joml.Vector4f;
-import slavsquatsuperstar.math.Mat22;
-import slavsquatsuperstar.math.MathUtils;
+import org.lwjgl.BufferUtils;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.Mayonez;
+import slavsquatsuperstar.mayonez.Preferences;
+import slavsquatsuperstar.mayonez.Transform;
 import slavsquatsuperstar.mayonez.graphics.sprites.GLSprite;
-import slavsquatsuperstar.mayonez.io.Assets;
 import slavsquatsuperstar.mayonez.io.GLTexture;
-import slavsquatsuperstar.mayonez.io.Shader;
 import slavsquatsuperstar.mayonez.physics.shapes.Rectangle;
+import slavsquatsuperstar.util.StringUtils;
 
+import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,54 +31,38 @@ import static org.lwjgl.opengl.GL30.*;
 public class RenderBatch {
 
     // Vertex Parameters
-    /* Pos (2), Color (4), Tex Coords (2), Tex ID (1) */
-    private final int[] ATTRIB_SIZES = {2, 4, 2, 1}; // separate method for pushing attributes
-    private final int VERTEX_SIZE = MathUtils.sum(ATTRIB_SIZES); // floats inside one vertex
-    private final int VERTICES_PER_SPRITE = 4;
-    private final int VERTICES_PER_QUAD = 6;
-
-    // Renderer Fields
-    private final Shader shader;
-    private final int[] textureSlots; // support multiple texture IDs in batch
+    private final DrawPrimitive primitive;
+    private final int vertexCount;
+    private final int elementCount;
+    private final int vertexSize;
     private final List<GLTexture> textures;
-    private int numSprites = 0;
 
     // GPU Resources
-    /**
-     * The vertex array object (VAO) ID for this batch.
-     */
-    private int vao;
-    /**
-     * The vertex buffer object (VBO) ID for this batch.
-     */
-    private int vbo;
-    /**
-     * The element buffer object (EBO), or index buffer, ID for this batch.
-     */
-    private int ebo;
-    /**
-     * The vertex data for this batch, which describes position, colors, and texture (UV) coordinates.
-     */
-    private final float[] vertices; // quads
-    private int vertexOffset; // the current index of vertices
+    private int vao; // Vertex array object (VAO) ID for this batch
+    private int vbo; // Vertex buffer object (VBO) ID for this batch
+    private int ebo; // Element buffer object (EBO)/index buffer ID for this batch
+    private final float[] vertices; // Quad vertex data for this batch, containing position, colors, and texture (UV) coordinates
+    private int vertexOffset; // Current vertex index
 
     // Batch Characteristics
-    private final int maxBatchSize, maxTextureSlots;
-
+    private final int maxTextureSlots = Preferences.getMaxTextureSlots();
+    private final int maxBatchSize;
     private final int zIndex;
     private final float worldScale;
 
-    public RenderBatch(int maxBatchSize, int maxTextureSlots, int zIndex) {
+    public RenderBatch(int maxBatchSize, int zIndex, DrawPrimitive primitive) {
         this.maxBatchSize = maxBatchSize;
-        this.maxTextureSlots = maxTextureSlots;
         this.zIndex = zIndex;
         worldScale = Mayonez.getScene().getScale();
 
-        shader = Assets.getShader("assets/shaders/default.glsl");
+        this.primitive = primitive;
+        this.vertexCount = primitive.vertexCount;
+        this.elementCount = primitive.elementCount;
+        this.vertexSize = primitive.vertexSize;
+
+        // Renderer Fields
         textures = new ArrayList<>(maxTextureSlots);
-        this.textureSlots = new int[maxTextureSlots];
-        for (int i = 0; i < this.textureSlots.length; i++) this.textureSlots[i] = i; // ints 0-7
-        vertices = new float[maxBatchSize * VERTICES_PER_SPRITE * VERTEX_SIZE];
+        vertices = new float[maxBatchSize * vertexCount * vertexSize];
 
         create();
     }
@@ -102,74 +89,44 @@ public class RenderBatch {
 
         // Allocate vertex index buffer
         int offset = 0;
-        for (int i = 0; i < ATTRIB_SIZES.length; i++) {
-            glVertexAttribPointer(i, ATTRIB_SIZES[i], GL_FLOAT, false, VERTEX_SIZE * Float.BYTES, offset);
+        int[] attributeSizes = primitive.attributeSizes;
+        for (int i = 0; i < attributeSizes.length; i++) {
+            glVertexAttribPointer(i, attributeSizes[i], GL_FLOAT, false, vertexSize * Float.BYTES, offset);
             glEnableVertexAttribArray(i);
-            offset += ATTRIB_SIZES[i] * Float.BYTES;
+            offset += attributeSizes[i] * Float.BYTES;
         }
     }
 
-    private int[] generateIndices() {
-        int[] elements = new int[VERTICES_PER_QUAD * maxBatchSize]; // 6 vertices per quad
+    private IntBuffer generateIndices() {
+        IntBuffer elements = BufferUtils.createIntBuffer(primitive.elementCount * maxBatchSize);
         for (int i = 0; i < maxBatchSize; i++) {
-            // Load element indices and create triangles
-            int startIndex = VERTICES_PER_QUAD * i; // 6 vertices
-            int offset = VERTICES_PER_SPRITE * i; // Next quad is just last + 4
-            int[] triangleVertices = {3, 2, 0, 0, 2, 1}; // next would be 7, 6, 4, 4, 6, 5
-            for (int j = 0; j < triangleVertices.length; j++)
-                elements[startIndex + j] = triangleVertices[j] + offset;
+            int offset = vertexCount * i; // Next quad is just last + 4
+            if (primitive == DrawPrimitive.SPRITE) {
+                // Load element indices and create triangles
+                int[] triangleVertices = {3, 2, 0, 0, 2, 1}; // next would be 7, 6, 4, 4, 6, 5
+                for (int v : triangleVertices) elements.put(offset + v);
+            } else if (primitive == DrawPrimitive.LINE) {
+                int[] lineVertices = {0, 1};
+                for (int v : lineVertices) elements.put(offset + v);
+            }
         }
+        elements.flip(); // need to flip an int buffer
         return elements;
     }
 
     // Renderer Methods
 
     /**
-     * Empties all sprite vertices and textures from the batch.
+     * Empties all sprite vertices and textures from the batch and readies it for buffering.
      */
     public void clear() {
         // Pass VBO attribute pointers
         vertexOffset = 0;
-        numSprites = 0;
         textures.clear();
     }
 
-    public void pushSpriteData(GLSprite spr) {
-        // Get texture ID and add if necessary
-        GLTexture tex = spr.getTexture();
-        if (tex != null && !hasTexture(tex)) textures.add(tex);
-        int texID = (tex == null) ? 0 : textures.indexOf(tex) + 1; // ID of 0 means no texture (use color)
-
-        // Add sprite vertex data
-        Vec2 objPos = spr.getTransform().position;
-        Mat22 objRot = new Mat22(spr.getTransform().rotation);
-        Vec2 objScl = spr.getTransform().scale;
-
-        Vector4f color = spr.getColor();
-        Vec2[] texCoords = spr.getTexCoords();
-
-        // Render sprite at object center
-        Vec2[] quadVertices = Rectangle.rectangleVertices(new Vec2(0), new Vec2(1), 0);
-
-        for (int i = 0; i < quadVertices.length; i++) {
-            Vec2 vertPos = objRot.times(quadVertices[i]); // Rotate according to object
-
-            // sprite_pos = (obj_pos + vert_pos * obj_scale) * world_scale
-            Vec2 spritePos = objPos.add(vertPos.mul(objScl)).mul(worldScale);
-            float[] attributes = {
-                    spritePos.x, spritePos.y,
-                    color.x, color.y, color.z, color.w,
-                    texCoords[i].x, texCoords[i].y,
-                    texID
-            };
-            System.arraycopy(attributes, 0, vertices, vertexOffset, attributes.length); // Copy attributes to VAO
-            vertexOffset += VERTEX_SIZE;
-        }
-        numSprites++;
-    }
-
     /**
-     * Upload all vertex data to the GPU
+     * Upload all vertex data to the GPU after buffering.
      */
     public void upload() {
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -177,37 +134,121 @@ public class RenderBatch {
     }
 
     public void render() {
-        // Bind Texture
+//        System.out.println(this);
+        // Bind textures and vertices
         for (int i = 0; i < textures.size(); i++) textures.get(i).bind(i);
-        shader.uploadIntArray("uTextures", textureSlots); // need to bind textures before uploading
-
-        // Upload vertices and draw triangles
         glBindVertexArray(vao);
         glEnableVertexAttribArray(0);
         glEnableVertexAttribArray(1);
-        glDrawElements(GL_TRIANGLES, numSprites * VERTICES_PER_QUAD, GL_UNSIGNED_INT, 0);
 
-        // Unbind Textures
+        // Draw sprites
+        int numVertices = (vertexOffset * elementCount) / (vertexSize * vertexCount);
+        glDrawElements(primitive.primitiveType, numVertices, GL_UNSIGNED_INT, 0);
+
+        // Unbind vertices and textures
         glDisableVertexAttribArray(0);
         glDisableVertexAttribArray(1);
         glBindVertexArray(0);
         textures.forEach(GLTexture::unbind);
     }
 
+    /**
+     * Free GPU resources upon stopping scene.
+     */
     public void delete() {
         glDeleteBuffers(vbo);
         glDeleteBuffers(ebo);
         glDeleteVertexArrays(vao);
     }
 
-    // Getter Methods
-
-    boolean hasSpriteRoom() {
-        return numSprites < maxBatchSize;
+    // Helper Methods
+    /**
+     * Adds a texture to this render batch if the texture is not present and returns the texture ID.
+     *
+     * @param tex the texture
+     * @return the texture ID
+     */
+    public int addTexture(GLTexture tex) {
+        if (tex == null) return 0; // if color return 0
+        if (!hasTexture(tex)) textures.add(tex); // add if don't have texture
+        return textures.indexOf(tex) + 1; // return tex ID
     }
 
+    /**
+     * Adds a sprite to this render batch and pushes its vertex data and texture.
+     *
+     * @param spr the sprite
+     */
+    public void addSprite(GLSprite spr) {
+        // Add sprite vertex data
+        Transform objXf = spr.getTransform();
+        Vector4f color = spr.getColor();
+        Vec2[] texCoords = spr.getTexCoords();
+        int texID = addTexture(spr.getTexture());
+
+        // Render sprite at object center and rotate according to object
+        Vec2[] sprVertices = Rectangle.rectangleVertices(new Vec2(0), new Vec2(1), objXf.rotation);
+        for (int i = 0; i < sprVertices.length; i++) {
+            // sprite_pos = (obj_pos + vert_pos * obj_scale) * world_scale
+            Vec2 spritePos = objXf.position.add(sprVertices[i].mul(objXf.scale)).mul(worldScale);
+            pushVec2(spritePos);
+            pushVec4(color);
+            pushVec2(texCoords[i]);
+            pushInt(texID);
+        }
+    }
+
+    // Push Vertex Methods
+
+    public void pushInt(int i) {
+        vertices[vertexOffset++] = i;
+    }
+
+    public void pushFloat(float f) {
+        vertices[vertexOffset++] = f;
+    }
+
+    public void pushVec2(Vec2 v) {
+        pushFloat(v.x);
+        pushFloat(v.y);
+    }
+
+    public void pushVec2(Vector2f v) {
+        pushFloat(v.x);
+        pushFloat(v.y);
+    }
+
+    public void pushVec3(Vector3f v) {
+        pushFloat(v.x);
+        pushFloat(v.y);
+        pushFloat(v.z);
+    }
+
+    public void pushVec4(Vector4f v) {
+        pushFloat(v.x);
+        pushFloat(v.y);
+        pushFloat(v.z);
+        pushFloat(v.w);
+    }
+
+    // Getter Methods
+
+    /**
+     * If the render batch has capacity for another primitive object.
+     *
+     * @return if there are still unused vertices
+     */
+    boolean hasRoom() {
+        return vertexOffset < vertices.length;
+    }
+
+    /**
+     * If the render batch has capacity for another texture.
+     *
+     * @return if there are unused texture slots
+     */
     boolean hasTextureRoom() {
-        return textures.size() <= maxTextureSlots;
+        return textures.size() < maxTextureSlots;
     }
 
     boolean hasTexture(GLTexture tex) {
@@ -220,6 +261,7 @@ public class RenderBatch {
 
     @Override
     public String toString() {
-        return String.format("Render Batch (Capacity: %d/%d, Z-Index: %d)", numSprites, maxBatchSize, zIndex);
+//        return String.format("Render Batch (Capacity: %d/%d, Z-Index: %d)", vertexOffset / (vertexSize * vertexCount), maxBatchSize, zIndex);
+        return String.format("Render Batch (%s)", StringUtils.capitalize(primitive.name()));
     }
 }

@@ -5,7 +5,6 @@ import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Scene;
 import slavsquatsuperstar.mayonez.annotations.EngineType;
 import slavsquatsuperstar.mayonez.annotations.UsesEngine;
-import slavsquatsuperstar.mayonez.DebugDraw;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -19,17 +18,15 @@ import java.util.List;
  * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.AWT)
-public final class JRenderer extends Renderer {
+public final class JSceneRenderer implements SceneRenderer {
 
     private final List<GameObject> objects;
-//    private final List<JSprite> sprites; // if use sprites, then no custom render
-    private final DebugDraw debugDraw; // put DebugDraw in Renderer to access camera offset
     private boolean sort = false; // Re-sort sprites this frame
+//    private final List<JSprite> sprites; // if use sprites, then no custom render
 
-    public JRenderer() {
+    public JSceneRenderer() {
         objects = new ArrayList<>();
 //        sprites = new ArrayList<>();
-        debugDraw = DebugDraw.INSTANCE;
     }
 
     // GameObject Methods

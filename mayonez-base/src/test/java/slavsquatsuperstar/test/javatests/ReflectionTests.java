@@ -8,7 +8,7 @@ import java.lang.reflect.Constructor;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit tests for the java.lang.reflect package.
+ * Unit tests for the {@link java.lang.reflect} package.
  *
  * @author SlavSquatSuperstar
  */

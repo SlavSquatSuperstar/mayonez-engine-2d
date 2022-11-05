@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static slavsquatsuperstar.test.TestUtils.assertFloatEquals;
 
 /**
- * Unit tests for {@link JSONFile} class.
+ * Unit tests for the {@link slavsquatsuperstar.mayonez.io.JSONFile} class.
  *
  * @author SlavSquatSuperstar
  */

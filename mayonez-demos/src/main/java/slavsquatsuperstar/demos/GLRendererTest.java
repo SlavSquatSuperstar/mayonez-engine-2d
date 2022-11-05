@@ -11,6 +11,9 @@ import slavsquatsuperstar.mayonez.input.MouseInput;
 import slavsquatsuperstar.mayonez.io.Assets;
 import slavsquatsuperstar.mayonez.physics.Rigidbody;
 import slavsquatsuperstar.mayonez.physics.colliders.BoxCollider;
+import slavsquatsuperstar.mayonez.physics.shapes.Circle;
+import slavsquatsuperstar.mayonez.physics.shapes.Rectangle;
+import slavsquatsuperstar.mayonez.physics.shapes.Triangle;
 import slavsquatsuperstar.mayonez.scripts.*;
 import slavsquatsuperstar.util.Colors;
 
@@ -25,6 +28,9 @@ public class GLRendererTest extends Scene {
 
     @Override
     public void init() {
+//        Logger.log(Assets.scanFiles("mayonez-demos/src/main/resources/assets/textures"));
+//        Logger.log(Assets.scanResources("assets"));
+
         // Load resources
         sprites = new GLSpriteSheet("assets/textures/spritesheet.png", 16, 16, 26, 0);
 
@@ -99,11 +105,17 @@ public class GLRendererTest extends Scene {
         DebugDraw.drawLine(new Vec2(4, 4), new Vec2(4, -4), Colors.BLUE);
         DebugDraw.drawLine(new Vec2(4, -4), new Vec2(-4, -4), Colors.BLACK);
 
-//        Rectangle sceneBounds = new Rectangle(new Vec2(0, 0), new Vec2(this.getWidth(), this.getHeight()));
-//        DebugDraw.drawShape(sceneBounds.scale(new Vec2(0.8f), null), Colors.BLACK);
-//        DebugDraw.drawShape(sceneBounds.scale(new Vec2(0.6f), null), Colors.BLACK);
-//        DebugDraw.drawShape(sceneBounds.scale(new Vec2(0.4f), null), Colors.BLACK);
-//        DebugDraw.drawShape(sceneBounds.scale(new Vec2(0.2f), null), Colors.BLACK);
+        Rectangle sceneBounds = new Rectangle(new Vec2(0, 0), new Vec2(this.getWidth(), this.getHeight()));
+        DebugDraw.drawShape(sceneBounds.scale(new Vec2(0.8f), null), Colors.BLACK);
+        DebugDraw.drawShape(sceneBounds.scale(new Vec2(0.6f), null), Colors.BLACK);
+        DebugDraw.drawShape(sceneBounds.scale(new Vec2(0.4f), null), Colors.BLACK);
+        DebugDraw.drawShape(sceneBounds.scale(new Vec2(0.2f), null), Colors.BLACK);
+
+        Triangle tri = new Triangle(new Vec2(-1, 0), new Vec2(0, 2), new Vec2(1, 0));
+        DebugDraw.drawShape(tri, Colors.ORANGE);
+
+        Circle circle = new Circle(new Vec2(0, 5), 5);
+        DebugDraw.drawShape(circle, Colors.PURPLE);
 
 //        if (KeyInput.keyPressed("space"))
 //            System.out.println("pressed");

@@ -13,7 +13,7 @@ import slavsquatsuperstar.mayonez.physics.shapes.Circle;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit tests for the {@link Class} class.
+ * Unit tests for the {@link java.lang.Class} class.
  *
  * @author SlavSquatSuperstar
  */

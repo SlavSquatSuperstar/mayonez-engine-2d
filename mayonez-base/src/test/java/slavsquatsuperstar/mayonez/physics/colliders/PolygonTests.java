@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static slavsquatsuperstar.test.TestUtils.assertVerticesEqual;
 
 /**
- * Unit tests for {@link PolygonCollider} class.
+ * Unit tests for the {@link slavsquatsuperstar.mayonez.physics.colliders.PolygonCollider} class.
  *
  * @author SlavSquatSuperstar
  */

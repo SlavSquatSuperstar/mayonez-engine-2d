@@ -2,20 +2,18 @@ package slavsquatsuperstar.mayonez.io;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import slavsquatsuperstar.mayonez.io.Asset;
-import slavsquatsuperstar.mayonez.io.Assets;
-import slavsquatsuperstar.mayonez.io.TextFile;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit tests for {@link Asset} class.
+ * Unit tests for the {@link slavsquatsuperstar.mayonez.io.Asset} class.
  *
  * @author SlavSquatSuperstar
  */
@@ -44,6 +42,12 @@ public class AssetTests {
         assertFalse(Assets.hasAsset("src/test/resources/testassets/luigi.png"));
         assertTrue(Assets.hasAsset("src/test/resources/testassets/mario.png"));
         assertFalse(Assets.hasAsset("mario.png"));
+    }
+
+    @Test
+    public void scanFolderAddsNothing() {
+        List<String> files = Assets.scanFiles("src/test/resources/testassets/mario.png");
+        assertTrue(files.isEmpty());
     }
 
     @Test

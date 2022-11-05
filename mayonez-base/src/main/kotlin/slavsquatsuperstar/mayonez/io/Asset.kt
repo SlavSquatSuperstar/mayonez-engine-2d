@@ -49,6 +49,8 @@ open class Asset(val filename: String) {
     }
 
     // Helper Methods
+    val file: File
+        get() = File(filename)
 
     private val path: URL? =
         if (isClasspath) Assets.getClasspathURL(filename)
@@ -63,7 +65,7 @@ open class Asset(val filename: String) {
     fun isValid(): Boolean {
         return when (type) {
             AssetType.CLASSPATH -> path != null
-            AssetType.EXTERNAL -> File(path!!.path).isFile
+            AssetType.EXTERNAL -> file.isFile
         }
     }
 

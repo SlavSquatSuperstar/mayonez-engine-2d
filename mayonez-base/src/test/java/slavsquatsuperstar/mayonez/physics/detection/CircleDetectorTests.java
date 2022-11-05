@@ -8,7 +8,7 @@ import slavsquatsuperstar.mayonez.physics.shapes.Circle;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit Tests for the {@link CircleDetector} class.
+ * Unit Tests for the {@link slavsquatsuperstar.mayonez.physics.detection.CircleDetector} class.
  *
  * @author SlavSquatSuperstar
  */

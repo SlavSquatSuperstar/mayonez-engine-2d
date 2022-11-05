@@ -5,7 +5,6 @@ import slavsquatsuperstar.mayonez.annotations.EngineType
 import slavsquatsuperstar.mayonez.annotations.UsesEngine
 import slavsquatsuperstar.mayonez.graphics.renderer.DebugRenderer
 import slavsquatsuperstar.mayonez.graphics.renderer.DebugShape
-import slavsquatsuperstar.mayonez.graphics.renderer.GLDebugRenderer
 import slavsquatsuperstar.mayonez.physics.shapes.*
 import slavsquatsuperstar.util.Colors
 import java.awt.Color
@@ -17,19 +16,11 @@ import java.awt.Color
  * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.AWT)
-// TODO need z-indexing to work with renderer
 object DebugDraw {
 
-    private const val STROKE_SIZE = 2f
+    const val STROKE_SIZE = 2f
     private val debugRenderer: DebugRenderer
         get() = Mayonez.scene.debugRenderer
-
-    // Game Loop Methods
-    @JvmStatic
-    fun beginFrame() {
-        if (debugRenderer is GLDebugRenderer)
-            (debugRenderer as GLDebugRenderer).beginFrame()
-    }
 
     // Public Draw Methods
     /**

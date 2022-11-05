@@ -1,8 +1,6 @@
 package slavsquatsuperstar.mayonez.io;
 
 import org.junit.jupiter.api.Test;
-import slavsquatsuperstar.mayonez.io.Assets;
-import slavsquatsuperstar.mayonez.io.TextFile;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -11,7 +9,7 @@ import java.util.Arrays;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- * Unit tests for {@link TextFile} class.
+ * Unit tests for the {@link slavsquatsuperstar.mayonez.io.TextFile} class.
  *
  * @author SlavSquatSuperstar
  */

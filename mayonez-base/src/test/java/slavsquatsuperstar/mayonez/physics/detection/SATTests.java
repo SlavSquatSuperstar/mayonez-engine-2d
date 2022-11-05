@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static slavsquatsuperstar.test.TestUtils.assertFloatEquals;
 
 /**
- * Unit Tests for the {@link SATDetector} class.
+ * Unit Tests for the {@link slavsquatsuperstar.mayonez.physics.detection.SATDetector} class.
  *
  * @author SlavSquatSuperstar
  */

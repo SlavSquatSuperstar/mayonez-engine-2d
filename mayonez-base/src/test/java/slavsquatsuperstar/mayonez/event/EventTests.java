@@ -1,10 +1,12 @@
-package slavsquatsuperstar.mayonez.events;
+package slavsquatsuperstar.mayonez.event;
 
 import org.junit.jupiter.api.Test;
-import slavsquatsuperstar.mayonez.event.Event;
-import slavsquatsuperstar.mayonez.event.EventListener;
-import slavsquatsuperstar.mayonez.event.EventSystem;
 
+/**
+ * Unit tests for the {@link slavsquatsuperstar.mayonez.event} package.
+ *
+ * @author SlavSquatSuperstar
+ */
 public class EventTests {
 
     @Test

@@ -7,7 +7,7 @@ import slavsquatsuperstar.util.Pair
  *
  * @author SlavSquatSuperstar
  */
-class Range(min: Float, max: Float): Pair<Float, Float>(min, max) {
+class Range(min: Float, max: Float) : Pair<Float, Float>(min, max) {
     @JvmField
     val min = min.coerceAtMost(max)
 
@@ -21,7 +21,7 @@ class Range(min: Float, max: Float): Pair<Float, Float>(min, max) {
     operator fun contains(value: Float): Boolean = (min <= value) && (value <= max)
 
     override fun equals(other: Any?): Boolean {
-        return  (other is Range) && MathUtils.equals(this.min, other.min) && MathUtils.equals(this.max, other.max)
+        return (other is Range) && MathUtils.equals(this.min, other.min) && MathUtils.equals(this.max, other.max)
     }
 
     override fun hashCode(): Int = min.hashCode() * 31 + max.hashCode()
