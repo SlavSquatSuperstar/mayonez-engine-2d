@@ -111,8 +111,8 @@ public class GLRendererTest extends Scene {
         DebugDraw.drawShape(sceneBounds.scale(new Vec2(0.4f), null), Colors.BLACK);
         DebugDraw.drawShape(sceneBounds.scale(new Vec2(0.2f), null), Colors.BLACK);
 
-        Triangle tri = new Triangle(new Vec2(-1, 0), new Vec2(0, 2), new Vec2(1, 0));
-        DebugDraw.drawShape(tri, Colors.ORANGE);
+        Triangle tri = new Triangle(new Vec2(-2, -1), new Vec2(0, 3), new Vec2(2, -1));
+        DebugDraw.fillShape(tri, Colors.ORANGE);
 
         Circle circle = new Circle(new Vec2(0, 5), 5);
         DebugDraw.drawShape(circle, Colors.PURPLE);

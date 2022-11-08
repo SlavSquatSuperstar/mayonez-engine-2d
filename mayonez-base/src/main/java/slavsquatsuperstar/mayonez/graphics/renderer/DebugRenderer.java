@@ -1,7 +1,7 @@
 package slavsquatsuperstar.mayonez.graphics.renderer;
 
 /**
- * Draws debug information such as colliders and vectors into the screen.
+ * Draws debug information such as colliders and geometric objects into the screen.
  *
  * @author SlavSquatSuperstar
  */

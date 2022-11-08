@@ -52,10 +52,11 @@ open class Polygon(convex: Boolean, vararg vertices: Vec2) : Shape() {
     /**
      * Splits this polygon into n-2 triangular regions, which are guaranteed to be convex and non-overlapping.
      */
-    private fun getTriangles(): Array<Triangle> {
-        val start = vertices[0]
-        return Array(numVertices - 2) { Triangle(start, vertices[it + 1], vertices[it + 2]) }
-    }
+    val triangles: Array<Triangle>
+        get() {
+            val start = vertices[0]
+            return Array(numVertices - 2) { Triangle(start, vertices[it + 1], vertices[it + 2]) }
+        }
 
     // Shape Methods
     // TODO use fields or methods?
@@ -143,7 +144,7 @@ open class Polygon(convex: Boolean, vararg vertices: Vec2) : Shape() {
     // TODO write unit tests
     override fun angularMass(mass: Float): Float {
         var angMass = 0f
-        for (tri in getTriangles()) {
+        for (tri in triangles) {
             /*
              * Parallel axis theorem: I_new = I_cm + md^2
              * I_p = ∑(I_i + m_i*d_i^2)
@@ -168,7 +169,7 @@ open class Polygon(convex: Boolean, vararg vertices: Vec2) : Shape() {
     override fun contains(point: Vec2): Boolean {
         if (point in vertices) return true
         // Split polygon into triangles and test each
-        for (tri in getTriangles())
+        for (tri in triangles)
             if (tri.contains(point)) return true
         return false
     }

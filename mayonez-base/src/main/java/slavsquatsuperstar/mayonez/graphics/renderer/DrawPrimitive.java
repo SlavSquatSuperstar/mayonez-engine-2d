@@ -2,12 +2,45 @@ package slavsquatsuperstar.mayonez.graphics.renderer;
 
 import org.lwjgl.opengl.GL11;
 import slavsquatsuperstar.math.MathUtils;
+import slavsquatsuperstar.mayonez.annotations.EngineType;
+import slavsquatsuperstar.mayonez.annotations.UsesEngine;
 
+import java.nio.IntBuffer;
+
+@UsesEngine(EngineType.GL)
 public enum DrawPrimitive {
-    /* Pos (2), Color (4), Tex Coords (2), Tex ID (1) */
-    SPRITE(4, 6, GL11.GL_TRIANGLES, 2, 4, 2, 1),
-    /* Pos (3), Color (3) */
-    LINE(2, 2, GL11.GL_LINES, 2, 4);
+    /**
+     * An object with 2 vertices with attributes Pos (2), Color (4)
+     */
+    LINE(2, 2, GL11.GL_LINES, 2, 4) {
+        @Override
+        public void addIndices(IntBuffer elements, int index) {
+            int[] lineVertices = {0, 1};
+            for (int v : lineVertices) elements.put(vertexCount * index + v);
+        }
+    },
+    /**
+     * An object with 3 vertices with attributes Pos (2), Color (4)
+     */
+    TRIANGLE(3, 3, GL11.GL_TRIANGLES, 2, 4) {
+        @Override
+        public void addIndices(IntBuffer elements, int index) {
+            // Use counterclockwise winding
+            int[] triangleVertices = {0, 1, 2};
+            for (int v : triangleVertices) elements.put(vertexCount * index + v);
+        }
+    },
+    /**
+     * An object with 4 vertices with attributes Pos (2), Color (4), Tex Coords (2), Tex ID (1)
+     */
+    SPRITE(4, 6, GL11.GL_TRIANGLES, 2, 4, 2, 1) {
+        @Override
+        public void addIndices(IntBuffer elements, int index) {
+            // Split quad into two triangles
+            int[] triangleVertices = {0, 1, 2, 0, 2, 3}; // next would be 4, 5, 6, 4, 6, 7
+            for (int v : triangleVertices) elements.put(vertexCount * index + v);
+        }
+    };
 
     // Vertex Parameters
     final int vertexCount; // Vertices defined by primitive
@@ -23,5 +56,13 @@ public enum DrawPrimitive {
         this.attributeSizes = attributeSizes;
         vertexSize = MathUtils.sum(attributeSizes);
     }
+
+    /**
+     * Adds indices to an element buffer array (EBO).
+     *
+     * @param elements an int buffer
+     * @param index    the vertex index
+     */
+    public abstract void addIndices(IntBuffer elements, int index);
 
 }

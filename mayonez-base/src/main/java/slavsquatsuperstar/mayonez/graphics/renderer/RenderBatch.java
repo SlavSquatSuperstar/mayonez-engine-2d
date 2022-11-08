@@ -5,12 +5,10 @@ import org.joml.Vector3f;
 import org.joml.Vector4f;
 import org.lwjgl.BufferUtils;
 import slavsquatsuperstar.math.Vec2;
-import slavsquatsuperstar.mayonez.Mayonez;
 import slavsquatsuperstar.mayonez.Preferences;
-import slavsquatsuperstar.mayonez.Transform;
-import slavsquatsuperstar.mayonez.graphics.sprites.GLSprite;
+import slavsquatsuperstar.mayonez.annotations.EngineType;
+import slavsquatsuperstar.mayonez.annotations.UsesEngine;
 import slavsquatsuperstar.mayonez.io.GLTexture;
-import slavsquatsuperstar.mayonez.physics.shapes.Rectangle;
 import slavsquatsuperstar.util.StringUtils;
 
 import java.nio.IntBuffer;
@@ -23,12 +21,18 @@ import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.*;
 
 /**
- * A batch renderer stores vertex information to reduce the amount of GPU draw calls, combining many sprites into one
- * large mesh.
+ * A rendering batch that stores vertex information of many similar objects and combines them into one large mesh,
+ * allowing many sprites and shapes to be drawn in fewer GPU calls.
  *
  * @author SlavSquatSuperstar
  */
+@UsesEngine(EngineType.GL)
 public class RenderBatch {
+
+    // Batch Characteristics
+    private final int maxTextureSlots = Preferences.getMaxTextureSlots();
+    private final int maxBatchSize;
+    private final int zIndex;
 
     // Vertex Parameters
     private final DrawPrimitive primitive;
@@ -44,16 +48,9 @@ public class RenderBatch {
     private final float[] vertices; // Quad vertex data for this batch, containing position, colors, and texture (UV) coordinates
     private int vertexOffset; // Current vertex index
 
-    // Batch Characteristics
-    private final int maxTextureSlots = Preferences.getMaxTextureSlots();
-    private final int maxBatchSize;
-    private final int zIndex;
-    private final float worldScale;
-
     public RenderBatch(int maxBatchSize, int zIndex, DrawPrimitive primitive) {
         this.maxBatchSize = maxBatchSize;
         this.zIndex = zIndex;
-        worldScale = Mayonez.getScene().getScale();
 
         this.primitive = primitive;
         this.vertexCount = primitive.vertexCount;
@@ -97,19 +94,14 @@ public class RenderBatch {
         }
     }
 
+    /**
+     * Load element indices and define shapes for GL to draw.
+     *
+     * @return an index array (int buffer)
+     */
     private IntBuffer generateIndices() {
-        IntBuffer elements = BufferUtils.createIntBuffer(primitive.elementCount * maxBatchSize);
-        for (int i = 0; i < maxBatchSize; i++) {
-            int offset = vertexCount * i; // Next quad is just last + 4
-            if (primitive == DrawPrimitive.SPRITE) {
-                // Load element indices and create triangles
-                int[] triangleVertices = {3, 2, 0, 0, 2, 1}; // next would be 7, 6, 4, 4, 6, 5
-                for (int v : triangleVertices) elements.put(offset + v);
-            } else if (primitive == DrawPrimitive.LINE) {
-                int[] lineVertices = {0, 1};
-                for (int v : lineVertices) elements.put(offset + v);
-            }
-        }
+        IntBuffer elements = BufferUtils.createIntBuffer(elementCount * maxBatchSize);
+        for (int i = 0; i < maxBatchSize; i++) primitive.addIndices(elements, i);
         elements.flip(); // need to flip an int buffer
         return elements;
     }
@@ -162,6 +154,7 @@ public class RenderBatch {
     }
 
     // Helper Methods
+
     /**
      * Adds a texture to this render batch if the texture is not present and returns the texture ID.
      *
@@ -172,30 +165,6 @@ public class RenderBatch {
         if (tex == null) return 0; // if color return 0
         if (!hasTexture(tex)) textures.add(tex); // add if don't have texture
         return textures.indexOf(tex) + 1; // return tex ID
-    }
-
-    /**
-     * Adds a sprite to this render batch and pushes its vertex data and texture.
-     *
-     * @param spr the sprite
-     */
-    public void addSprite(GLSprite spr) {
-        // Add sprite vertex data
-        Transform objXf = spr.getTransform();
-        Vector4f color = spr.getColor();
-        Vec2[] texCoords = spr.getTexCoords();
-        int texID = addTexture(spr.getTexture());
-
-        // Render sprite at object center and rotate according to object
-        Vec2[] sprVertices = Rectangle.rectangleVertices(new Vec2(0), new Vec2(1), objXf.rotation);
-        for (int i = 0; i < sprVertices.length; i++) {
-            // sprite_pos = (obj_pos + vert_pos * obj_scale) * world_scale
-            Vec2 spritePos = objXf.position.add(sprVertices[i].mul(objXf.scale)).mul(worldScale);
-            pushVec2(spritePos);
-            pushVec4(color);
-            pushVec2(texCoords[i]);
-            pushInt(texID);
-        }
     }
 
     // Push Vertex Methods
@@ -233,6 +202,14 @@ public class RenderBatch {
 
     // Getter Methods
 
+    DrawPrimitive getPrimitive() {
+        return primitive;
+    }
+
+    int getZIndex() {
+        return zIndex;
+    }
+
     /**
      * If the render batch has capacity for another primitive object.
      *
@@ -243,20 +220,22 @@ public class RenderBatch {
     }
 
     /**
+     * If the render batch contains this texture (can always render colors)
+     *
+     * @param tex the texture, or null if drawing a color
+     * @return if this texture is used by the batch
+     */
+    boolean hasTexture(GLTexture tex) {
+        return tex == null || textures.contains(tex);
+    }
+
+    /**
      * If the render batch has capacity for another texture.
      *
      * @return if there are unused texture slots
      */
     boolean hasTextureRoom() {
         return textures.size() < maxTextureSlots;
-    }
-
-    boolean hasTexture(GLTexture tex) {
-        return textures.contains(tex);
-    }
-
-    int getZIndex() {
-        return zIndex;
     }
 
     @Override

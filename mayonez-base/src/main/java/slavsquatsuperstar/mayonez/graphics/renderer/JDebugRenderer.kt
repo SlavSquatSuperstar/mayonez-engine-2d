@@ -4,11 +4,8 @@ import slavsquatsuperstar.math.Vec2
 import slavsquatsuperstar.mayonez.DebugDraw
 import slavsquatsuperstar.mayonez.annotations.EngineType
 import slavsquatsuperstar.mayonez.annotations.UsesEngine
-import slavsquatsuperstar.mayonez.event.Receivable
 import slavsquatsuperstar.mayonez.physics.shapes.*
-import slavsquatsuperstar.util.Colors
 import java.awt.BasicStroke
-import java.awt.Color
 import java.awt.Graphics2D
 import java.awt.geom.AffineTransform
 import java.awt.geom.Ellipse2D
@@ -24,14 +21,16 @@ typealias JShape = java.awt.Shape
 @UsesEngine(EngineType.AWT)
 class JDebugRenderer : DebugRenderer {
 
-    private val shapes = ArrayList<JShapeDrawer>()
+    private val shapes = ArrayList<DebugShape>()
     private val stroke = BasicStroke(DebugDraw.STROKE_SIZE)
 
     override fun addShape(shape: DebugShape) {
-        shapes.add(JShapeDrawer(shape.shape.toAwt() ?: return, shape.color, shape.fill, shape.priority))
+        shapes.add(shape)
     }
 
     // Game Loop Methods
+
+    override fun start() = shapes.clear()
 
     override fun render(g2: Graphics2D?) {
         // Move screen to camera position
@@ -43,17 +42,19 @@ class JDebugRenderer : DebugRenderer {
 
         // Draw shapes
         if (shapes.isNotEmpty()) {
-            shapes.sortWith(Comparator.comparingInt { s: JShapeDrawer -> s.priority.ordinal })
+            shapes.sortWith(Comparator.comparingInt { s: DebugShape -> s.zIndex })
             g2.stroke = stroke
-            shapes.forEach { s: JShapeDrawer -> s.draw(g2) }
+            for (shape in shapes) {
+                g2.color = shape.color.toAWT()
+                val awtShape: JShape? = shape.shape.toAwt()
+                if (shape.fill) g2.fill(awtShape) else g2.draw(awtShape)
+            }
             shapes.clear()
         }
         g2.transform = oldXf
     }
 
-    override fun stop() {
-        shapes.clear()
-    }
+    override fun stop() = shapes.clear()
 
     // Shape Helper Methods
 
@@ -63,20 +64,20 @@ class JDebugRenderer : DebugRenderer {
             is Ellipse -> {
                 val min = this.center() - size * 0.5f
                 val ellipse = Ellipse2D.Float(min.x, min.y, size.x, size.y)
-                if (this is Circle || this.isAxisAligned) ellipse
+                return if (this is Circle || this.isAxisAligned) ellipse
                 else ellipse.rotate(this.center(), angle)
             }
 
             is Rectangle -> {
                 val min = this.min()
                 val rect = Rectangle2D.Float(min.x, min.y, this.width, this.height)
-                if (this.isAxisAligned) rect else rect.rotate(this.center(), this.angle)
+                return if (this.isAxisAligned) rect else rect.rotate(this.center(), this.angle)
             }
 
             is Polygon -> {
                 val poly = java.awt.Polygon()
                 this.vertices.forEach { poly.addPoint(it.x.roundToInt(), it.y.roundToInt()) }
-                poly
+                return poly
             }
 
             else -> null
@@ -89,29 +90,6 @@ class JDebugRenderer : DebugRenderer {
             center.x.toDouble(), center.y.toDouble()
         )
         return rotXf.createTransformedShape(this)
-    }
-
-    // Helper Class
-
-    /**
-     * Maps a shape to an AWT draw function.
-     *
-     * @author SlavSquatSuperstar
-     */
-    class JShapeDrawer(
-        private val shape: JShape,
-        private val color: Color?,
-        private val fill: Boolean,
-        val priority: DebugShape.Priority
-    ) : Receivable {
-        fun draw(g2: Graphics2D?) = onReceive(g2)
-
-        override fun onReceive(vararg args: Any?) {
-            val g2 = (args[0] as Graphics2D?) ?: return
-            g2.color = color ?: Colors.BLACK
-            if (fill) g2.fill(shape)
-            else g2.draw(shape)
-        }
     }
 
 }

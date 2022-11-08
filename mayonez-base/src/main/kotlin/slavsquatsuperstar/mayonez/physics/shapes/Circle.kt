@@ -1,8 +1,8 @@
 package slavsquatsuperstar.mayonez.physics.shapes
 
 import slavsquatsuperstar.math.MathUtils
-import slavsquatsuperstar.math.MathUtils.PI
 import slavsquatsuperstar.math.Vec2
+import kotlin.math.roundToInt
 
 /**
  * A round shape defined by a center and radius. The distance between every point on the circle's boundary curve
@@ -32,13 +32,21 @@ class Circle(
     /**
      * The area of a circle, equal to πr^2.
      */
-    override fun area(): Float = PI * radiusSq
+    override fun area(): Float = MathUtils.PI * radiusSq
 
     // Collision Properties
 
     override fun boundingCircle(): Circle = Circle(center, radius)
 
     override fun boundingRectangle(): BoundingBox = BoundingBox(center, Vec2(radius * 2f))
+
+    /**
+     * Returns a polygon approximation of this ellipse with 2πr vertices.
+     */
+    override fun toPolygon(): Polygon {
+        val numEdges: Int = (2f * MathUtils.PI * radius).roundToInt() // use 2πr for # edges
+        return Polygon(center, numEdges, radius)
+    }
 
     override fun supportPoint(direction: Vec2): Vec2 = center + getRadius(direction)
 

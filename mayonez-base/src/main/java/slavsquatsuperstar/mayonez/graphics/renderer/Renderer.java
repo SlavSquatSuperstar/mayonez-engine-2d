@@ -1,6 +1,7 @@
 package slavsquatsuperstar.mayonez.graphics.renderer;
 
 import slavsquatsuperstar.mayonez.Mayonez;
+import slavsquatsuperstar.mayonez.engine.GameLayer;
 import slavsquatsuperstar.mayonez.graphics.Camera;
 
 import java.awt.*;
@@ -10,14 +11,19 @@ import java.awt.*;
  *
  * @author SlavSquatSuperstar
  */
-public interface Renderer {
+public interface Renderer extends GameLayer {
 
     // Game Loop Methods
 
     /**
+     * Prepares the renderer for allocating data
+     */
+    void start();
+
+    /**
      * Redraws everything to the screen.
      *
-     * @param g2 a {@link Graphics2D} object for the AWT engine/
+     * @param g2 a {@link Graphics2D} object for the AWT engine
      */
     void render(Graphics2D g2);
 

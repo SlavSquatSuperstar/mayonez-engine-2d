@@ -1,6 +1,7 @@
 package slavsquatsuperstar.mayonez;
 
 import slavsquatsuperstar.math.Vec2;
+import slavsquatsuperstar.mayonez.engine.GameLayer;
 import slavsquatsuperstar.mayonez.event.Receivable;
 import slavsquatsuperstar.mayonez.graphics.Camera;
 import slavsquatsuperstar.mayonez.graphics.GLCamera;
@@ -22,7 +23,7 @@ import java.util.stream.Collectors;
  * @author SlavSquatSuperstar
  */
 // TODO current cursor object
-public abstract class Scene {
+public abstract class Scene implements GameLayer {
 
     // Scene Information
     private final String name;
@@ -93,13 +94,16 @@ public abstract class Scene {
     /**
      * Initialize all objects and begin updating the scene.
      */
+    @Override
     public final void start() {
         if (!started) {
             addObject(Camera.createCameraObject(camera));
             init();
 
+            renderer.start();
+            debugRenderer.start();
+
             renderer.setScene(this);
-            // start debugRenderer
             physics.setScene(this);
             started = true;
         }
@@ -164,6 +168,7 @@ public abstract class Scene {
     protected void onUserRender(Graphics2D g2) {
     }
 
+    @Override
     public final void stop() {
         if (started) {
             started = false;

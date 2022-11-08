@@ -6,12 +6,14 @@ import slavsquatsuperstar.mayonez.annotations.UsesEngine
 import slavsquatsuperstar.mayonez.graphics.renderer.DebugRenderer
 import slavsquatsuperstar.mayonez.graphics.renderer.DebugShape
 import slavsquatsuperstar.mayonez.physics.shapes.*
+import slavsquatsuperstar.util.Color
 import slavsquatsuperstar.util.Colors
-import java.awt.Color
+
+typealias JColor = java.awt.Color
 
 /**
- * Draws colliders and mathematical objects onto the screen. All methods use world coordinates, and shapes are centered
- * around the collider's position.
+ * Draws colliders and shapes onto the screen. All shapes are specified using world coordinates, and colliders are
+ * centered around an object's position.
  *
  * @author SlavSquatSuperstar
  */
@@ -30,7 +32,7 @@ object DebugDraw {
      * @param color    the color to use
      */
     @JvmStatic
-    fun drawPoint(position: Vec2, color: Color?) {
+    fun drawPoint(position: Vec2, color: JColor?) {
         if (!Mayonez.started) return
         // Fill a circle with radius "STROKE_SIZE" in pixels
         addShape(Circle(position.toScreen(), STROKE_SIZE), color, true, DebugShape.Priority.POINT)
@@ -44,7 +46,7 @@ object DebugDraw {
      * @param color the color to use
      */
     @JvmStatic
-    fun drawLine(start: Vec2, end: Vec2, color: Color?) {
+    fun drawLine(start: Vec2, end: Vec2, color: JColor?) {
         if (!Mayonez.started) return
         addShape(Edge(start.toScreen(), end.toScreen()), color, false, DebugShape.Priority.LINE)
     }
@@ -57,7 +59,7 @@ object DebugDraw {
      * @param color     the color to use
      */
     @JvmStatic
-    fun drawVector(origin: Vec2, direction: Vec2, color: Color?) = drawLine(origin, origin.add(direction), color)
+    fun drawVector(origin: Vec2, direction: Vec2, color: JColor?) = drawLine(origin, origin.add(direction), color)
 
     // Draw Shapes
     /**
@@ -67,7 +69,7 @@ object DebugDraw {
      * @param color the color to use
      */
     @JvmStatic
-    fun drawShape(shape: Shape?, color: Color?) {
+    fun drawShape(shape: Shape?, color: JColor?) {
         if (!Mayonez.started) return
         when (shape) {
             is Edge -> drawLine(shape.start, shape.end, color)
@@ -84,7 +86,7 @@ object DebugDraw {
      * @param color the color to use
      */
     @JvmStatic
-    fun fillShape(shape: Shape?, color: Color?) {
+    fun fillShape(shape: Shape?, color: JColor?) {
         if (!Mayonez.started) return
         val drawColor = color ?: Colors.BLACK
         when (shape) {
@@ -97,23 +99,23 @@ object DebugDraw {
 
     // Internal Draw methods
 
-    private fun drawCircle(circle: Circle, color: Color?, fill: Boolean) {
+    private fun drawCircle(circle: Circle, color: JColor?, fill: Boolean) {
         addShape(Circle(circle.center().toScreen(), circle.radius.toScreen()), color, fill, DebugShape.Priority.SHAPE)
     }
 
-    private fun drawEllipse(ellipse: Ellipse, color: Color?, fill: Boolean) {
+    private fun drawEllipse(ellipse: Ellipse, color: JColor?, fill: Boolean) {
         if (ellipse.isCircle) return drawCircle(ellipse.boundingCircle(), color, fill)
         addShape(Ellipse(ellipse.center().toScreen(), ellipse.size.toScreen()), color, fill, DebugShape.Priority.SHAPE)
     }
 
-    private fun drawPolygon(polygon: Polygon, color: Color?, fill: Boolean) {
-        addShape(polygon.toScreen(), color, fill, DebugShape.Priority.SHAPE)
+    private fun drawPolygon(polygon: Polygon, color: JColor?, fill: Boolean) {
+        addShape(polygon.toScreen(), color, fill, if (fill) DebugShape.Priority.FILL else DebugShape.Priority.SHAPE)
     }
 
     // Helper Methods/Classes
 
-    private fun addShape(shape: Shape, color: Color?, fill: Boolean, priority: DebugShape.Priority) {
-        debugRenderer.addShape(DebugShape(shape, color ?: Colors.BLACK, fill, priority))
+    private fun addShape(shape: Shape, color: JColor?, fill: Boolean, priority: DebugShape.Priority) {
+        debugRenderer.addShape(DebugShape(shape, Color(color ?: Colors.BLACK), fill, priority))
     }
 
     /**

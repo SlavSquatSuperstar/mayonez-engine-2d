@@ -4,6 +4,7 @@ import slavsquatsuperstar.math.Mat22
 import slavsquatsuperstar.math.MathUtils
 import slavsquatsuperstar.math.Vec2
 import kotlin.math.max
+import kotlin.math.roundToInt
 
 /**
  * A round shape defined by a major and minor radius and containing two focal points. For each point on the ellipse's
@@ -30,7 +31,8 @@ open class Ellipse(protected val center: Vec2, val size: Vec2, val angle: Float)
         get() = MathUtils.equals(angle % 360f, 0f)
 
     /**
-     * The area of an ellipse, equal to πab, where a is half the width and b is half the height.
+     * The area of an ellipse, equal to πab, where a is half the width (semi-major axis)
+     * and b is half the height (semi-minor axis).
      */
     override fun area(): Float = MathUtils.PI * halfWidth * halfHeight
 
@@ -53,6 +55,14 @@ open class Ellipse(protected val center: Vec2, val size: Vec2, val angle: Float)
         val boxHalfWidth = MathUtils.hypot(vecA.x, vecB.x)
         val boxHalfHeight = MathUtils.hypot(vecA.y, vecB.y)
         return BoundingBox(center, Vec2(boxHalfWidth, boxHalfHeight) * 2f)
+    }
+
+    /**
+     * Returns a polygon approximation of this ellipse with 2πa vertices.
+     */
+    open fun toPolygon(): Polygon {
+        val numEdges: Int = (2 * MathUtils.PI * halfWidth).roundToInt() // use πa for # edges
+        return Polygon(center, numEdges, 1f).scale(Vec2(halfWidth, halfHeight)) // scale unit circle polygon
     }
 
     // Physical Properties

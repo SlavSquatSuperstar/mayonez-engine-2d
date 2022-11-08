@@ -1,43 +1,106 @@
 package slavsquatsuperstar.mayonez.graphics.renderer;
 
 import slavsquatsuperstar.mayonez.Preferences;
+import slavsquatsuperstar.mayonez.annotations.EngineType;
+import slavsquatsuperstar.mayonez.annotations.UsesEngine;
+import slavsquatsuperstar.mayonez.graphics.GLCamera;
 import slavsquatsuperstar.mayonez.io.Assets;
 import slavsquatsuperstar.mayonez.io.GLTexture;
 import slavsquatsuperstar.mayonez.io.Shader;
 
+import java.awt.*;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
-public abstract class GLRenderer {
+/**
+ * Contains methods for uploading sprite and shape data to the GPU for renderers using OpenGL.
+ */
+@UsesEngine(EngineType.GL)
+public abstract class GLRenderer implements Renderer {
 
     // GPU Resources
-    protected final List<RenderBatch> batches;
+    private final List<RenderBatch> batches;
     protected final Shader shader;
     protected final int[] textureSlots; // support multiple texture IDs in batch
+    private final int maxBatchSize;
 
-    public GLRenderer(String shaderFile) {
+    public GLRenderer(String shaderFile, int maxBatchSize) {
         this.batches = new ArrayList<>();
         this.shader = Assets.getShader(shaderFile);
+        this.maxBatchSize = maxBatchSize;
         textureSlots = new int[Preferences.getMaxTextureSlots()];
         for (int i = 0; i < this.textureSlots.length; i++) this.textureSlots[i] = i; // ints 0-7
     }
 
-    protected abstract void rebuffer();
+    // Renderer Methods
 
-    protected final RenderBatch getAvailableBatch(GLTexture texture, int zIndex) {
+    public final void start() {
+        batches.clear();
+    }
+
+    @Override
+    public final void render(Graphics2D g2) {
+        bind();
+        rebuffer();
+        batches.forEach(RenderBatch::render); // Draw
+        unbind();
+    }
+
+    /**
+     * Upload resources to the GPU.
+     */
+    protected void bind() {
+        // Bind shader and upload uniforms
+        shader.bind();
+        GLCamera camera = (GLCamera) getCamera();
+        shader.uploadMat4("uProjection", camera.getProjectionMatrix());
+        shader.uploadMat4("uView", camera.getViewMatrix());
+    }
+
+    /**
+     * Push all image data into batches.
+     */
+    protected final void rebuffer() {
+        batches.forEach(RenderBatch::clear); // Prepare batches
+        pushDataToBatch();
+        batches.forEach(RenderBatch::upload); // Finalize batches
+        batches.sort(Comparator.comparingInt(RenderBatch::getZIndex)); // Sort batches by z-index
+    }
+
+    /**
+     * Clear resources form the GPU.
+     */
+    protected void unbind() {
+        shader.unbind(); // Unbind everything
+    }
+
+    @Override
+    public void stop() {
+        batches.forEach(RenderBatch::delete);
+    }
+
+    // OpenGL Helper Methods
+
+    /**
+     * How to add image data to render batches.
+     */
+    protected abstract void pushDataToBatch();
+
+    protected final RenderBatch getAvailableBatch(GLTexture texture, int zIndex, DrawPrimitive primitive) {
         for (RenderBatch batch : batches) {
-            if (batch.hasRoom() && batch.getZIndex() == zIndex) { // has room for sprite (vertices)
-                if (batch.hasTextureRoom() || batch.hasTexture(texture) || texture == null) // has room for texture or using color
-                    return batch;
+            if (batch.hasRoom() && batch.getZIndex() == zIndex) { // has room for more vertices and z-index matches
+                if (batch.hasTexture(texture) || batch.hasTextureRoom()) { // has room for texture
+                    if (batch.getPrimitive().equals(primitive)) // uses the same primitive
+                        return batch;
+                }
             }
         }
         // All batches full
-        RenderBatch batch = createBatch(zIndex);
+        RenderBatch batch = new RenderBatch(maxBatchSize, zIndex, primitive);
         batch.clear();
         batches.add(batch);
         return batch;
     }
-
-    protected abstract RenderBatch createBatch(int zIndex);
 
 }

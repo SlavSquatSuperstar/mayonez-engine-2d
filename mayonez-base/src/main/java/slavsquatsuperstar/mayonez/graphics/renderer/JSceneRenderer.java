@@ -33,10 +33,15 @@ public final class JSceneRenderer implements SceneRenderer {
 
     @Override
     public void setScene(Scene newScene) {
-        objects.clear();
         objects.addAll(newScene.getObjects());
-//        sprites.clear();
+        sort = true;
 //        newScene.getObjects().forEach(this::addObject);
+    }
+
+    @Override
+    public void start() {
+        objects.clear();
+//        sprites.clear();
     }
 
     @Override

@@ -1,16 +1,14 @@
 package slavsquatsuperstar.mayonez.graphics.renderer;
 
-import slavsquatsuperstar.mayonez.GameObject;
-import slavsquatsuperstar.mayonez.Preferences;
-import slavsquatsuperstar.mayonez.Scene;
+import org.joml.Vector4f;
+import slavsquatsuperstar.math.Vec2;
+import slavsquatsuperstar.mayonez.*;
 import slavsquatsuperstar.mayonez.annotations.EngineType;
 import slavsquatsuperstar.mayonez.annotations.UsesEngine;
-import slavsquatsuperstar.mayonez.graphics.GLCamera;
 import slavsquatsuperstar.mayonez.graphics.sprites.GLSprite;
+import slavsquatsuperstar.mayonez.physics.shapes.Rectangle;
 
-import java.awt.*;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -21,11 +19,11 @@ import java.util.List;
 @UsesEngine(EngineType.GL)
 public final class GLSceneRenderer extends GLRenderer implements SceneRenderer {
 
-    private final int MAX_BATCH_SIZE = Preferences.getMaxBatchSize();
+    private static final int MAX_BATCH_SIZE = Preferences.getMaxBatchSize();
     private final List<GLSprite> sprites;
 
     public GLSceneRenderer() {
-        super("assets/shaders/default.glsl");
+        super("assets/shaders/default.glsl", MAX_BATCH_SIZE);
         sprites = new ArrayList<>();
     }
 
@@ -33,7 +31,6 @@ public final class GLSceneRenderer extends GLRenderer implements SceneRenderer {
 
     @Override
     public void setScene(Scene newScene) {
-        batches.clear();
         newScene.getObjects().forEach(this::addObject);
     }
 
@@ -51,40 +48,49 @@ public final class GLSceneRenderer extends GLRenderer implements SceneRenderer {
 
     // Renderer Methods
 
+
     @Override
-    public void render(Graphics2D g2) {
-        // Bind shader and upload uniforms
-        shader.bind();
-        GLCamera camera = (GLCamera) getCamera();
-        shader.uploadMat4("uProjection", camera.getProjectionMatrix());
-        shader.uploadMat4("uView", camera.getViewMatrix());
+    protected void bind() {
+        super.bind();
         shader.uploadIntArray("uTextures", textureSlots);
-
-        rebuffer(); // Rebuffer all sprites
-        batches.forEach(RenderBatch::render); // Draw
-
-        shader.unbind(); // Unbind everything
     }
 
     @Override
-    protected void rebuffer() {
-        batches.forEach(RenderBatch::clear); // Prepare batches
-        for (GLSprite sprite : sprites) { // Rebuffer sprites into batches
-            RenderBatch batch = getAvailableBatch(sprite.getTexture(), sprite.getObject().getZIndex());
-            batch.addSprite(sprite); // Push vertices to batch
+    protected void pushDataToBatch() {
+        sprites.forEach(spr -> {
+            RenderBatch batch = getAvailableBatch(spr.getTexture(), spr.getObject().getZIndex(), DrawPrimitive.SPRITE);
+            addSprite(batch, spr); // Push vertices to batch
+        });
+    }
+
+    /**
+     * Adds a sprite to a render batch and pushes its vertex data and texture.
+     *
+     * @param batch the batch
+     * @param spr   the sprite
+     */
+    public void addSprite(RenderBatch batch, GLSprite spr) {
+        // Add sprite vertex data
+        Transform objXf = spr.getTransform();
+        Vector4f color = spr.getColor();
+        Vec2[] texCoords = spr.getTexCoords();
+        int texID = batch.addTexture(spr.getTexture());
+
+        // Render sprite at object center and rotate according to object
+        Vec2[] sprVertices = Rectangle.rectangleVertices(new Vec2(0), new Vec2(1), objXf.rotation);
+        for (int i = 0; i < sprVertices.length; i++) {
+            // sprite_pos = (obj_pos + vert_pos * obj_scale) * world_scale
+            Vec2 sprPos = objXf.position.add(sprVertices[i].mul(objXf.scale)).mul(Mayonez.getScene().getScale());
+            batch.pushVec2(sprPos);
+            batch.pushVec4(color);
+            batch.pushVec2(texCoords[i]);
+            batch.pushInt(texID);
         }
-        batches.forEach(RenderBatch::upload); // Finalize batches
-        batches.sort(Comparator.comparingInt(RenderBatch::getZIndex)); // Sort batches by z-index
-    }
-
-    @Override
-    protected RenderBatch createBatch(int zIndex) {
-        return new RenderBatch(MAX_BATCH_SIZE, zIndex, DrawPrimitive.SPRITE);
     }
 
     @Override
     public void stop() {
-        batches.forEach(RenderBatch::delete);
+        super.stop();
         sprites.clear();
     }
 

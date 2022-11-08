@@ -4,6 +4,7 @@ import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Preferences;
 import slavsquatsuperstar.mayonez.Scene;
+import slavsquatsuperstar.mayonez.engine.GameLayer;
 import slavsquatsuperstar.mayonez.physics.colliders.Collider;
 import slavsquatsuperstar.mayonez.physics.collision.CollisionInfo;
 import slavsquatsuperstar.mayonez.physics.collision.CollisionSolver;
@@ -21,7 +22,7 @@ import java.util.List;
  *
  * @author SlavSquatSuperstar
  */
-public class PhysicsWorld {
+public class PhysicsWorld implements GameLayer {
 
     public final static float GRAVITY_CONSTANT = 9.8f;
     public final static int IMPULSE_ITERATIONS = Preferences.getImpulseIterations();
@@ -45,7 +46,14 @@ public class PhysicsWorld {
 
         forceRegistry = new ArrayList<>();
         setGravity(new Vec2(0, -PhysicsWorld.GRAVITY_CONSTANT));
-        gravityForce = (rb, dt) -> rb.addForce(getGravity().mul(rb.getMass()));
+        gravityForce = (rb, dt) -> rb.addForce(gravity.mul(rb.getMass()));
+    }
+
+    @Override
+    public void start() {
+        bodies.clear();
+        colliders.clear();
+        collisions.clear();
     }
 
     /**
@@ -57,7 +65,7 @@ public class PhysicsWorld {
      * Pre-collision optimizations
      * Detect collisions x1
      * Resolve static collisions x1
-     * Send collisions events x2
+     * Send collision events x2
      * Resolve dynamic collisions x2
      *
      * Integrate forces and velocities
@@ -72,17 +80,10 @@ public class PhysicsWorld {
         detectBroadPhase();
         detectNarrowPhase();
 
-        // Update environmental forces
-        forceRegistry.forEach(fr -> fr.fg.applyForce(fr.rb, dt));
-
-        // Integrate force
-        bodies.forEach(rb -> rb.integrateForce(dt));
-
-        // Resolve collisions
-        collisions.forEach(CollisionSolver::solve);
-
-        // Integrate velocity
-        bodies.forEach(rb -> rb.integrateVelocity(dt));
+        forceRegistry.forEach(fr -> fr.fg.applyForce(fr.rb, dt)); // Update environmental forces
+        bodies.forEach(rb -> rb.integrateForce(dt)); // Integrate force
+        collisions.forEach(CollisionSolver::solve); // Resolve collisions
+        bodies.forEach(rb -> rb.integrateVelocity(dt)); // Integrate velocity
     }
 
     // Collision Helper Methods
@@ -164,6 +165,7 @@ public class PhysicsWorld {
         newScene.getObjects().forEach(this::addObject);
     }
 
+    @Override
     public void stop() {
         bodies.clear();
         colliders.clear();
@@ -171,10 +173,6 @@ public class PhysicsWorld {
     }
 
     // Getters and Setters
-
-    private Vec2 getGravity() {
-        return gravity;
-    }
 
     public void setGravity(Vec2 gravity) {
         this.gravity = gravity;

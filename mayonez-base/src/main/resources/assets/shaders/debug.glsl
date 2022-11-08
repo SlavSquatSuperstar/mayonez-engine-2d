@@ -2,12 +2,12 @@
 #version 330 core
 
 layout (location = 0) in vec3 aPos;
-layout (location = 1) in vec3 aColor;
-
-out vec3 fColor;
+layout (location = 1) in vec4 aColor;
 
 uniform mat4 uView;
 uniform mat4 uProjection;
+
+out vec4 fColor;
 
 void main()
 {
@@ -18,11 +18,11 @@ void main()
 #type fragment
 #version 330 core
 
-in vec3 fColor;
+in vec4 fColor;
 
 out vec4 color;
 
 void main()
 {
-    color = vec4(fColor, 1);
+    color = fColor;
 }

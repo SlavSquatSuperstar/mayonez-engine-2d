@@ -10,7 +10,7 @@ import slavsquatsuperstar.mayonez.Scene;
  *
  * @author SlavSquatSuperstar
  */
-public sealed abstract class GameEngine permits JGame, GLGame {
+public sealed abstract class GameEngine implements GameLayer permits JGame, GLGame{
 
     private boolean running = false;
     protected Scene scene;
@@ -22,8 +22,9 @@ public sealed abstract class GameEngine permits JGame, GLGame {
     // Resource Management Methods
 
     /**
-     * Set up system resources and initialize the application
+     * Set up system resources and initialize the application.
      */
+    @Override
     public final void start() {
         if (!running) {
             running = true;
@@ -36,6 +37,7 @@ public sealed abstract class GameEngine permits JGame, GLGame {
     /**
      * Free system resources and quit the application.
      */
+    @Override
     public final void stop() {
         if (running) {
             running = false;

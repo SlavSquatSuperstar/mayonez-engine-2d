@@ -13,8 +13,7 @@ out vec4 fColor;
 out vec2 fTexCoords;
 out float fTexID;
 
-void main()
-{
+void main() {
     fColor = aColor;
     fTexCoords = aTexCoords;
     fTexID = aTexID;
@@ -33,8 +32,7 @@ uniform sampler2D uTextures[8];
 
 out vec4 color;
 
-void main()
-{
+void main() {
     if (fTexID > 0) {
         color = fColor * texture(uTextures[int(fTexID)], fTexCoords);
     } else {
