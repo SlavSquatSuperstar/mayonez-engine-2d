@@ -1,7 +1,7 @@
 package slavsquatsuperstar.mayonez.physics.shapes
 
-import slavsquatsuperstar.math.MathUtils
-import slavsquatsuperstar.math.Vec2
+import slavsquatsuperstar.mayonez.math.MathUtils
+import slavsquatsuperstar.mayonez.math.Vec2
 
 /**
  * A rotatable box shape (OBB) defined by a width and height. Rectangles are four-sided polygons
@@ -127,6 +127,6 @@ open class Rectangle(private val center: Vec2, private val size: Vec2, val angle
     /**
      * A description of the rectangle in the form "Rectangle (x, y), Size: (b, h), Rotation: theta
      */
-    override fun toString(): String = String.format("Ellipse $center, Size: $size, Rotation: %.2f°", angle)
+    override fun toString(): String = String.format("Rectangle $center, Size: $size, Rotation: %.2f°", angle)
 
 }

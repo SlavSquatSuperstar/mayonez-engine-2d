@@ -1,12 +1,12 @@
 package slavsquatsuperstar.demos.physics;
 
-import slavsquatsuperstar.math.Vec2;
+import slavsquatsuperstar.mayonez.math.Vec2;
 import slavsquatsuperstar.mayonez.physics.shapes.Rectangle;
-import slavsquatsuperstar.util.Colors;
+import slavsquatsuperstar.mayonez.util.Colors;
 import slavsquatsuperstar.mayonez.Mayonez;
 import slavsquatsuperstar.mayonez.Preferences;
 import slavsquatsuperstar.mayonez.Scene;
-import slavsquatsuperstar.mayonez.DebugDraw;
+import slavsquatsuperstar.mayonez.util.DebugDraw;
 import slavsquatsuperstar.mayonez.input.MouseInput;
 import slavsquatsuperstar.mayonez.physics.collision.Collisions;
 import slavsquatsuperstar.mayonez.physics.shapes.Polygon;

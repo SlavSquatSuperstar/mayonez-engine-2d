@@ -2,7 +2,7 @@ package slavsquatsuperstar.mayonez.io;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import slavsquatsuperstar.util.Record;
+import slavsquatsuperstar.mayonez.util.Record;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

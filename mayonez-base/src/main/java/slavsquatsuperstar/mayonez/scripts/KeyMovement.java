@@ -1,6 +1,6 @@
 package slavsquatsuperstar.mayonez.scripts;
 
-import slavsquatsuperstar.math.Vec2;
+import slavsquatsuperstar.mayonez.math.Vec2;
 import slavsquatsuperstar.mayonez.Mayonez;
 import slavsquatsuperstar.mayonez.input.KeyInput;
 

@@ -1,6 +1,6 @@
 package slavsquatsuperstar.mayonez.io
 
-import slavsquatsuperstar.util.StringUtils.capitalize
+import slavsquatsuperstar.mayonez.util.StringUtils.capitalize
 
 /**
  * Where in the computer to look for an [Asset], what properties a file receives.

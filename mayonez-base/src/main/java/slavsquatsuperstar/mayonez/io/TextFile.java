@@ -1,6 +1,6 @@
 package slavsquatsuperstar.mayonez.io;
 
-import slavsquatsuperstar.util.StringUtils;
+import slavsquatsuperstar.mayonez.util.StringUtils;
 
 // TODO support .csv and .cfg files
 

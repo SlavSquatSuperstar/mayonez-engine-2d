@@ -1,6 +1,6 @@
 package slavsquatsuperstar.mayonez;
 
-import slavsquatsuperstar.math.Vec2;
+import slavsquatsuperstar.mayonez.math.Vec2;
 import slavsquatsuperstar.mayonez.engine.GameLayer;
 import slavsquatsuperstar.mayonez.event.Receivable;
 import slavsquatsuperstar.mayonez.graphics.Camera;
@@ -8,7 +8,8 @@ import slavsquatsuperstar.mayonez.graphics.GLCamera;
 import slavsquatsuperstar.mayonez.graphics.JCamera;
 import slavsquatsuperstar.mayonez.graphics.renderer.*;
 import slavsquatsuperstar.mayonez.physics.PhysicsWorld;
-import slavsquatsuperstar.util.Colors;
+import slavsquatsuperstar.mayonez.util.Colors;
+import slavsquatsuperstar.mayonez.util.Logger;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -175,7 +176,6 @@ public abstract class Scene implements GameLayer {
 
             objects.forEach(GameObject::onDestroy);
             objects.clear();
-            camera.destroy();
 
             renderer.stop();
             debugRenderer.stop();
@@ -319,7 +319,7 @@ public abstract class Scene implements GameLayer {
         physics.setGravity(gravity);
     }
 
-    DebugRenderer getDebugRenderer() {
+    public DebugRenderer getDebugRenderer() {
         return debugRenderer;
     }
 

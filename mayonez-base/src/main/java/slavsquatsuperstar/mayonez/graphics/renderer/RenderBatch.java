@@ -4,12 +4,12 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 import org.lwjgl.BufferUtils;
-import slavsquatsuperstar.math.Vec2;
+import slavsquatsuperstar.mayonez.math.Vec2;
 import slavsquatsuperstar.mayonez.Preferences;
 import slavsquatsuperstar.mayonez.annotations.EngineType;
 import slavsquatsuperstar.mayonez.annotations.UsesEngine;
 import slavsquatsuperstar.mayonez.io.GLTexture;
-import slavsquatsuperstar.util.StringUtils;
+import slavsquatsuperstar.mayonez.util.StringUtils;
 
 import java.nio.IntBuffer;
 import java.util.ArrayList;

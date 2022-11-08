@@ -1,6 +1,6 @@
 package slavsquatsuperstar.mayonez.io;
 
-import slavsquatsuperstar.mayonez.Logger;
+import slavsquatsuperstar.mayonez.util.Logger;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;

@@ -1,10 +1,11 @@
 package slavsquatsuperstar.demos.geometrydash.components;
 
-import slavsquatsuperstar.math.Vec2;
+import slavsquatsuperstar.mayonez.math.Vec2;
 import slavsquatsuperstar.mayonez.Component;
 import slavsquatsuperstar.mayonez.GameObject;
+import slavsquatsuperstar.mayonez.util.Logger;
 import slavsquatsuperstar.mayonez.Transform;
-import slavsquatsuperstar.mayonez.graphics.sprites.Sprite;
+import slavsquatsuperstar.mayonez.graphics.sprite.Sprite;
 import slavsquatsuperstar.mayonez.input.MouseInput;
 import slavsquatsuperstar.mayonez.io.JTexture;
 import slavsquatsuperstar.mayonez.physics.Rigidbody;
@@ -20,33 +21,32 @@ public class PlaceBlock extends Component {
     private JTexture cursor;
     private Counter counter;
 
-    private final float placeDelay = 0.2f;
-
-    @Override
-    public void start() {
-        counter = new Counter(0f, placeDelay, true).setInitialValue(0);
-        counter.start();
+    public PlaceBlock(Counter counter) {
+        this.counter = counter;
     }
 
     @Override
     public void update(float dt) {
         counter.update(dt);
 
-        if (cursor == null) return;
         // add 0.5 to x/y to center the block
         Vec2 mousePos = MouseInput.getPosition().add(new Vec2(0.5f)).floor();
         transform.position.set(mousePos);
+        // null locks are still being placed
         if (counter.isReady() && MouseInput.buttonDown("left mouse")) {
             counter.reset();
-            // shouldn't add if object already exists
-            getScene().addObject(new GameObject("Placed Block", mousePos) {
-                @Override
-                protected void init() {
-                    addComponent(Sprite.create(cursor));
-                    addComponent(new BoxCollider(new Vec2(1f)));
-                    addComponent(new Rigidbody(0f).setFixedRotation(true));
-                }
-            });
+            if (cursor != null) { // add only when selecting
+                // TODO shouldn't add if block already exists
+                getScene().addObject(new GameObject("Placed Block", mousePos) {
+                    @Override
+                    protected void init() {
+                        Logger.log("cursor: %s", cursor);
+                        addComponent(Sprite.create(cursor));
+                        addComponent(new BoxCollider(new Vec2(1f)));
+                        addComponent(new Rigidbody(0f).setFixedRotation(true));
+                    }
+                });
+            }
         }
     }
 

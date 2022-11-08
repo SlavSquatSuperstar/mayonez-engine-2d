@@ -1,7 +1,9 @@
 package slavsquatsuperstar.mayonez;
 
-import slavsquatsuperstar.math.Vec2;
+import slavsquatsuperstar.mayonez.graphics.sprite.Sprite;
+import slavsquatsuperstar.mayonez.math.Vec2;
 import slavsquatsuperstar.mayonez.physics.colliders.Collider;
+import slavsquatsuperstar.mayonez.scripts.MovementScript;
 
 import java.awt.*;
 import java.util.List;
@@ -16,19 +18,20 @@ import java.util.stream.Collectors;
 @SuppressWarnings({"unchecked", "rawtypes"})
 public class GameObject {
 
-    // GameObject Information
+    // Object Information
     public String name;
     public final Transform transform;
     private int zIndex; // controls 3D "layering" of objects
     private final Set<String> tags;
-
-    // Scene Information
     private Scene scene;
-    private boolean destroyed = false;
 
     // Component Fields
     private final List<Component> components;
-    private List<Class> updateOrder = null;
+    private List<Class> updateOrder;
+
+    // Object State
+//    private final Queue<Receivable> changesToObject; // Dynamic add/remove components
+    private boolean destroyed;
 
     public GameObject(String name) {
         this(name, new Vec2());
@@ -47,7 +50,12 @@ public class GameObject {
         this.transform = transform;
         this.zIndex = zIndex;
         tags = new HashSet<>(3);
+
         components = new ArrayList<>();
+        updateOrder = null;
+
+        destroyed = false;
+//        changesToObject = new LinkedList<>();
     }
 
     // Game Loop Methods
@@ -63,7 +71,7 @@ public class GameObject {
      */
     public final void start() {
         init();
-        setUpdateOrder(Component.class, Script.class);
+        setUpdateOrder(Component.class, MovementScript.class, Script.class, Sprite.class);
         components.forEach(Component::start);
     }
 
@@ -75,8 +83,11 @@ public class GameObject {
     public final void update(float dt) {
         components.forEach(c -> {
             if (c.isEnabled()) c.update(dt);
+            // TODO remove destroyed objects
+            // TODO dynamic component add
         });
         onUserUpdate(dt);
+//        while (!changesToObject.isEmpty()) changesToObject.poll().onReceive();
     }
 
     /**
@@ -141,61 +152,59 @@ public class GameObject {
     }
 
     /**
-     * Finds all components with the specified class.
-     *
-     * @param cls a {@link Component} subclass (use null to get all objects)
-     * @param <T> the components type
-     * @return the list of components
-     */
-    public <T extends Component> List<T> getComponents(Class<T> cls) {
-        return components.stream().filter(o -> cls == null || cls.isInstance(o)).map(o -> (T) o).collect(Collectors.toList());
-    }
-
-    /**
-     * Finds the first component of the specified class.
+     * Finds the first component of the specified class or its subclasses. For example, getComponent(Script.class)
+     * returns the first instance of Script, KeyMovement, etc., but not Collider.
      *
      * @param cls a {@link Component} subclass
      * @param <T> the component type
-     * @return the component
+     * @return the component, or null if not present
      */
     public <T extends Component> T getComponent(Class<T> cls) {
-        try {
-            for (Component c : components) {
-                if (cls.isAssignableFrom(c.getClass()))
-                    return cls.cast(c);
-            }
-        } catch (ClassCastException e) { // This shouldn't happen!
-            Logger.error("GameObject: Error accessing %s component", cls.getSimpleName());
-            Logger.printStackTrace(e);
+        for (Component c : components) {
+            if (cls.isAssignableFrom(c.getClass())) return cls.cast(c);
         }
         return null;
     }
 
     /**
-     * Sets the update order of this object's components. A subclass's order will override the order of its superclass.
+     * Finds all components with the specified class or its subclasses.
+     *
+     * @param cls a {@link Component} subclass, or null to get all components
+     * @param <T> the component type
+     * @return the list of components, or empty if none are present
+     */
+    public <T extends Component> List<T> getComponents(Class<T> cls) {
+        return components.stream().filter(c -> cls == null || cls.isInstance(c)).map(c -> (T) c).collect(Collectors.toList());
+    }
+
+    /**
+     * Sets the update order of this object's components from first to last. A subclass's order will override the order
+     * of its superclass.
      *
      * @param order an array of component subclasses
      */
     public void setUpdateOrder(Class... order) {
-        if (updateOrder == null) {
+        if (updateOrder == null) { // if not defined
             updateOrder = new ArrayList<>();
-            updateOrder.addAll(Arrays.asList(order));
+            updateOrder.addAll(Arrays.stream(order).filter(
+                    // Include non-nulls and Component subclasses only
+                    cls -> cls != null && Component.class.isAssignableFrom(cls)
+            ).toList());
         }
         components.sort(Comparator.comparingInt(c -> getUpdateOrder(c.getClass())));
     }
 
-    @SuppressWarnings("rawtypes")
     private int getUpdateOrder(Class componentCls) {
         int i = updateOrder.indexOf(componentCls);
-        if (i > -1) return i;
-        i = getUpdateOrder(componentCls.getSuperclass());
-        return (i > -1) ? i : updateOrder.size();
+        if (i > -1) return i; // present
+        i = getUpdateOrder(componentCls.getSuperclass()); // keep searching for super
+        return (i > -1) ? i : updateOrder.size(); // just update last
     }
 
     // Callback Methods
 
     /**
-     * What to do after making contact with another physical object.
+     * Custom user behavior after making contact with another physical object.
      *
      * @param other the other object in the collision
      */
@@ -203,7 +212,7 @@ public class GameObject {
     }
 
     /**
-     * What to do after passing through a trigger area.
+     * Custom user behavior after contacting a trigger area.
      *
      * @param trigger the trigger collider
      */
@@ -213,7 +222,7 @@ public class GameObject {
     /**
      * Destroy this game object and remove it from the scene.
      */
-    void onDestroy() {
+    final void onDestroy() {
         components.forEach(Component::destroy);
         components.clear();
         scene = null;
@@ -264,8 +273,10 @@ public class GameObject {
 
     @Override
     public String toString() {
-        return String.format("%s (%s)", name, getClass().isAnonymousClass() ?
-                "GameObject" : getClass().getSimpleName());
+        return String.format(
+                "%s (%s)", name,
+                getClass().isAnonymousClass() ? "GameObject" : getClass().getSimpleName()
+        );
     }
 
 }

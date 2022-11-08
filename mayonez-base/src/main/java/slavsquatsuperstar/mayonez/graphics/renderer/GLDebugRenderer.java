@@ -1,13 +1,10 @@
 package slavsquatsuperstar.mayonez.graphics.renderer;
 
-import slavsquatsuperstar.math.Vec2;
-import slavsquatsuperstar.mayonez.DebugDraw;
+import slavsquatsuperstar.mayonez.math.Vec2;
+import slavsquatsuperstar.mayonez.util.DebugDraw;
 import slavsquatsuperstar.mayonez.annotations.EngineType;
 import slavsquatsuperstar.mayonez.annotations.UsesEngine;
-import slavsquatsuperstar.mayonez.physics.shapes.Edge;
-import slavsquatsuperstar.mayonez.physics.shapes.Ellipse;
-import slavsquatsuperstar.mayonez.physics.shapes.Polygon;
-import slavsquatsuperstar.mayonez.physics.shapes.Triangle;
+import slavsquatsuperstar.mayonez.physics.shapes.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +20,7 @@ import static org.lwjgl.opengl.GL11.*;
 public final class GLDebugRenderer extends GLRenderer implements DebugRenderer {
 
     private final static int MAX_LINES = 500;
+    private final static LineStyle lineStyle = LineStyle.QUADS;
     private final List<DebugShape> shapes;
 
     public GLDebugRenderer() {
@@ -44,22 +42,27 @@ public final class GLDebugRenderer extends GLRenderer implements DebugRenderer {
     }
 
     private void addLine(Edge edge, DebugShape shape) {
-//        // If not adding extra lines
-//        shapes.add(shape);
-
-        // TODO draw quads instead
-        // Draw extra lines to simulate stroke size
         float stroke = DebugDraw.STROKE_SIZE;
-        // Stretch lines to look flush
-        float len = edge.length;
-        Edge stretched = edge.scale(new Vec2((len + stroke - 1) / len), null);
+        float len = edge.length; // Want to stretch lines to look flush
+        switch (lineStyle) {
+            case SINGLE -> shapes.add(shape);
 
-        // Add extra lines
-        Vec2 norm = edge.unitNormal();
-        float start = -(stroke - 1) / 2;
-        for (int i = 0; i < stroke; i++) {
-            Edge e = stretched.translate(norm.mul(start + i));
-            shapes.add(new DebugShape(e, shape));
+            case MULTIPLE -> {
+                Edge stretched = edge.scale(new Vec2((len + stroke - 1f) / len), null);
+
+                Vec2 norm = edge.unitNormal();
+                float start = (1 - stroke) * 0.5f; // -(stroke - 1) / 2
+                for (int i = 0; i < stroke; i++) {
+                    Edge e = stretched.translate(norm.mul(start + i));
+                    shapes.add(new DebugShape(e, shape));
+                }
+            }
+            case QUADS -> {
+                float stretchedLen = (len + stroke - 1f);
+                Rectangle rect = new Rectangle(edge.center(), new Vec2(stretchedLen, stroke), edge.toVector().angle());
+                for (Triangle tri : rect.getTriangles())
+                    shapes.add(new DebugShape(tri, shape.color, true, DebugShape.Priority.LINE));
+            }
         }
     }
 
@@ -79,8 +82,10 @@ public final class GLDebugRenderer extends GLRenderer implements DebugRenderer {
         // Prepare to draw
         glEnable(GL_LINE_SMOOTH);
         glDisable(GL_BLEND);
-        glLineWidth(1);
-//        glLineWidth(DebugDraw.STROKE_SIZE); // doesn't work on macOS
+        switch (lineStyle) {
+            case SINGLE -> glLineWidth(DebugDraw.STROKE_SIZE); // doesn't work on macOS
+            case MULTIPLE -> glLineWidth(1);
+        }
     }
 
     @Override
@@ -115,6 +120,21 @@ public final class GLDebugRenderer extends GLRenderer implements DebugRenderer {
     public void stop() {
         super.stop();
         shapes.clear();
+    }
+
+    private enum LineStyle {
+        /**
+         * Method 1. Draw a single line using glLineWidth() (may not work on all platforms)
+         */
+        SINGLE,
+        /**
+         * Method 2. Draw extra lines to simulate stroke size.
+         */
+        MULTIPLE,
+        /**
+         * Method 3. Draw lines using thin rectangles
+         */
+        QUADS
     }
 
 }

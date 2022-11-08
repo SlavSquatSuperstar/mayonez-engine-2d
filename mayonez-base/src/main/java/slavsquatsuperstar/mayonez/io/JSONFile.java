@@ -3,8 +3,8 @@ package slavsquatsuperstar.mayonez.io;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
-import slavsquatsuperstar.mayonez.Logger;
-import slavsquatsuperstar.util.Record;
+import slavsquatsuperstar.mayonez.util.Logger;
+import slavsquatsuperstar.mayonez.util.Record;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;

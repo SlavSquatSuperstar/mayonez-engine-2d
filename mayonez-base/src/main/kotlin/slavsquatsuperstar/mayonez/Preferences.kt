@@ -1,7 +1,7 @@
 package slavsquatsuperstar.mayonez
 
 import slavsquatsuperstar.mayonez.io.Assets
-import slavsquatsuperstar.util.Record
+import slavsquatsuperstar.mayonez.util.Record
 
 /**
  * A collection of settings and parameters for various parts of the game engine.

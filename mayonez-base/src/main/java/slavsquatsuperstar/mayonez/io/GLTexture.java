@@ -1,8 +1,8 @@
 package slavsquatsuperstar.mayonez.io;
 
 import org.lwjgl.BufferUtils;
-import slavsquatsuperstar.math.Vec2;
-import slavsquatsuperstar.mayonez.Logger;
+import slavsquatsuperstar.mayonez.math.Vec2;
+import slavsquatsuperstar.mayonez.util.Logger;
 import slavsquatsuperstar.mayonez.annotations.UsesEngine;
 import slavsquatsuperstar.mayonez.annotations.EngineType;
 import slavsquatsuperstar.mayonez.physics.shapes.Rectangle;
@@ -30,7 +30,7 @@ import static org.lwjgl.system.MemoryUtil.memSlice;
  * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.GL)
-public class GLTexture extends Texture {
+public final class GLTexture extends Texture {
 
     // Image Data Fields
     private ByteBuffer image;

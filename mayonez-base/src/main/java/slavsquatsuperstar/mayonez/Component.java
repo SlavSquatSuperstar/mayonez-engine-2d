@@ -48,7 +48,15 @@ public abstract class Component {
     /**
      * Destroy this component and free up system resources once the parent {@link GameObject} is destroyed.
      */
-    public void destroy() {
+    final void destroy() {
+        gameObject = null;
+        onDestroy();
+    }
+
+    /**
+     * Custom behavior for when this component is destroyed.
+     */
+    public void onDestroy() {
     }
 
     // Getters and Setters

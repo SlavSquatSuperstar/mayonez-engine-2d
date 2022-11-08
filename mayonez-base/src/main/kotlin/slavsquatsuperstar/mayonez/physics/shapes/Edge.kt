@@ -1,7 +1,7 @@
 package slavsquatsuperstar.mayonez.physics.shapes
 
-import slavsquatsuperstar.math.Range
-import slavsquatsuperstar.math.Vec2
+import slavsquatsuperstar.mayonez.math.Range
+import slavsquatsuperstar.mayonez.math.Vec2
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min

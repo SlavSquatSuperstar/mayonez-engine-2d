@@ -1,8 +1,8 @@
 package slavsquatsuperstar.mayonez.physics.detection
 
-import slavsquatsuperstar.math.MathUtils
-import slavsquatsuperstar.math.Range
-import slavsquatsuperstar.math.Vec2
+import slavsquatsuperstar.mayonez.math.MathUtils
+import slavsquatsuperstar.mayonez.math.Range
+import slavsquatsuperstar.mayonez.math.Vec2
 import slavsquatsuperstar.mayonez.physics.shapes.Circle
 import slavsquatsuperstar.mayonez.physics.shapes.Polygon
 import slavsquatsuperstar.mayonez.physics.shapes.Shape

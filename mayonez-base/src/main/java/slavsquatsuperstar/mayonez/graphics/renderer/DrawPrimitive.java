@@ -1,7 +1,7 @@
 package slavsquatsuperstar.mayonez.graphics.renderer;
 
 import org.lwjgl.opengl.GL11;
-import slavsquatsuperstar.math.MathUtils;
+import slavsquatsuperstar.mayonez.math.MathUtils;
 import slavsquatsuperstar.mayonez.annotations.EngineType;
 import slavsquatsuperstar.mayonez.annotations.UsesEngine;
 
@@ -15,8 +15,7 @@ public enum DrawPrimitive {
     LINE(2, 2, GL11.GL_LINES, 2, 4) {
         @Override
         public void addIndices(IntBuffer elements, int index) {
-            int[] lineVertices = {0, 1};
-            for (int v : lineVertices) elements.put(vertexCount * index + v);
+            for (int v = 0; v <= 1; v++) elements.put(vertexCount * index + v);
         }
     },
     /**
@@ -26,8 +25,7 @@ public enum DrawPrimitive {
         @Override
         public void addIndices(IntBuffer elements, int index) {
             // Use counterclockwise winding
-            int[] triangleVertices = {0, 1, 2};
-            for (int v : triangleVertices) elements.put(vertexCount * index + v);
+            for (int v = 0; v <= 2; v++) elements.put(vertexCount * index + v);
         }
     },
     /**
@@ -37,7 +35,7 @@ public enum DrawPrimitive {
         @Override
         public void addIndices(IntBuffer elements, int index) {
             // Split quad into two triangles
-            int[] triangleVertices = {0, 1, 2, 0, 2, 3}; // next would be 4, 5, 6, 4, 6, 7
+            int[] triangleVertices = {0, 1, 2, 0, 2, 3};
             for (int v : triangleVertices) elements.put(vertexCount * index + v);
         }
     };

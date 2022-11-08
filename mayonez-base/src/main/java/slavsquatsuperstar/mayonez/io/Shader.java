@@ -2,7 +2,7 @@ package slavsquatsuperstar.mayonez.io;
 
 import org.joml.*;
 import org.lwjgl.BufferUtils;
-import slavsquatsuperstar.mayonez.Logger;
+import slavsquatsuperstar.mayonez.util.Logger;
 import slavsquatsuperstar.mayonez.Mayonez;
 import slavsquatsuperstar.mayonez.annotations.UsesEngine;
 import slavsquatsuperstar.mayonez.annotations.EngineType;

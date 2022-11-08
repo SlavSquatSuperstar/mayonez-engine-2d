@@ -1,7 +1,7 @@
 package slavsquatsuperstar.mayonez.physics.colliders;
 
 import org.junit.jupiter.api.Test;
-import slavsquatsuperstar.math.Vec2;
+import slavsquatsuperstar.mayonez.math.Vec2;
 import slavsquatsuperstar.mayonez.Transform;
 
 import java.util.Arrays;

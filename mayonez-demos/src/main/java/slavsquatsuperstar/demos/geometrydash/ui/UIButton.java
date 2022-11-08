@@ -1,39 +1,35 @@
 package slavsquatsuperstar.demos.geometrydash.ui;
 
-import slavsquatsuperstar.math.Vec2;
+import slavsquatsuperstar.mayonez.math.Vec2;
 import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Transform;
 import slavsquatsuperstar.mayonez.annotations.ExperimentalFeature;
-import slavsquatsuperstar.mayonez.graphics.sprites.JSpriteSheet;
-import slavsquatsuperstar.mayonez.graphics.sprites.SpriteSheet;
+import slavsquatsuperstar.mayonez.graphics.sprite.Sprite;
+import slavsquatsuperstar.mayonez.graphics.sprite.SpriteSheet;
 import slavsquatsuperstar.mayonez.input.MouseInput;
 import slavsquatsuperstar.mayonez.io.JTexture;
+import slavsquatsuperstar.mayonez.io.Texture;
 import slavsquatsuperstar.mayonez.physics.colliders.BoxCollider;
 import slavsquatsuperstar.mayonez.scripts.MouseScript;
-
-import java.awt.*;
 
 @ExperimentalFeature
 public class UIButton extends GameObject {
 
-    private static final JSpriteSheet buttons;
-    private static final JTexture offButton, onButton;
-    private final JTexture icon;
+    private static final SpriteSheet buttons;
+    private static final Texture offButton, onButton;
 
     private UICanvas container;
     private boolean selected = false;
+    private final Texture icon;
+    private Sprite onSprite;
 
     static {
-        buttons = (JSpriteSheet) SpriteSheet.create("assets/textures/buttons.png", 60, 60, 2, 2);
+        buttons = SpriteSheet.create("assets/textures/buttons.png", 60, 60, 2, 2);
         offButton = buttons.getTexture(0);
         onButton = buttons.getTexture(1);
     }
 
-//    public UIButton(JTexture icon) {
-//        this.icon = icon;
-//    }
-
-    public UIButton(String name, Transform transform, JTexture icon) {
+    public UIButton(String name, Transform transform, Texture icon) {
         super(name, transform);
         this.icon = icon;
         setZIndex(2);
@@ -42,6 +38,9 @@ public class UIButton extends GameObject {
     @Override
     protected void init() {
         addComponent(new BoxCollider(new Vec2(1, 1)).setTrigger(true));
+        addComponent(Sprite.create(offButton));
+        addComponent(onSprite = Sprite.create(onButton).setEnabled(false));
+        addComponent(Sprite.create(icon).setSpriteTransform(Transform.scaleInstance(new Vec2(0.8f)))); // no way to scale though
         addComponent(new MouseScript() {
             @Override
             protected Vec2 getRawInput() {
@@ -57,19 +56,14 @@ public class UIButton extends GameObject {
         });
     }
 
-    @Override
-    public void onUserRender(Graphics2D g2) {
-        offButton.draw(g2, this.transform, new Transform(), getScene().getScale());
-        if (selected) onButton.draw(g2, this.transform, new Transform(), getScene().getScale());
-        icon.draw(g2, this.transform, Transform.scaleInstance(new Vec2(0.8f)), getScene().getScale());
-    }
-
     public void onSelect() {
         container.onElementSelected(this);
+        onSprite.setEnabled(selected);
     }
 
     public void onDeselect() {
         container.onElementDeselected(this);
+        onSprite.setEnabled(selected);
     }
 
     public boolean isSelected() {
@@ -86,6 +80,6 @@ public class UIButton extends GameObject {
     }
 
     public JTexture getIcon() {
-        return icon;
+        return (JTexture) icon;
     }
 }

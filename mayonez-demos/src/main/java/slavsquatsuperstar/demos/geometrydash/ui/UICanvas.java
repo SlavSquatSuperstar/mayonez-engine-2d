@@ -1,11 +1,12 @@
 package slavsquatsuperstar.demos.geometrydash.ui;
 
 import slavsquatsuperstar.demos.geometrydash.components.PlaceBlock;
-import slavsquatsuperstar.math.Vec2;
+import slavsquatsuperstar.mayonez.math.Vec2;
 import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Transform;
 import slavsquatsuperstar.mayonez.annotations.ExperimentalFeature;
-import slavsquatsuperstar.mayonez.graphics.sprites.JSpriteSheet;
+import slavsquatsuperstar.mayonez.graphics.sprite.SpriteSheet;
+import slavsquatsuperstar.mayonez.scripts.Counter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,10 +15,10 @@ import java.util.List;
 public class UICanvas extends GameObject {
 
     private final List<UIButton> elements;
-    private final JSpriteSheet icons;
+    private final SpriteSheet icons;
     private PlaceBlock placeBlock;
 
-    public UICanvas(String name, Transform transform, JSpriteSheet icons) {
+    public UICanvas(String name, Transform transform, SpriteSheet icons) {
         super(name, transform);
         elements = new ArrayList<>();
         this.icons = icons;
@@ -25,7 +26,9 @@ public class UICanvas extends GameObject {
 
     @Override
     protected void init() {
-        addComponent(placeBlock = new PlaceBlock());
+        Counter counter;
+        addComponent(counter = new Counter(0f, 0.2f, true).setInitialValue(0));
+        addComponent(placeBlock = new PlaceBlock(counter));
 
 //        int cols = 6;
         int rows = 2;
@@ -36,7 +39,7 @@ public class UICanvas extends GameObject {
             float x = 1.5f * (i / rows);
             float y = -1.5f * (i % rows);
             addElement(new UIButton(
-                    "Button " + (i + 1), new Transform(new Vec2(x, y), new Vec2(1.25f)), icons.getTexture(i)
+                    "Button " + (i + 1), new Transform(new Vec2(x, y), 0f, new Vec2(1.25f)), icons.getTexture(i)
             ));
         }
     }
@@ -47,9 +50,8 @@ public class UICanvas extends GameObject {
         getScene().addObject(elem);
     }
 
-    // TODO make into events
     public void onElementSelected(UIButton button) {
-        elements.forEach(btn -> {
+        elements.forEach(btn -> { // deselect other buttons
             if (!btn.equals(button)) btn.setSelected(false);
         });
         placeBlock.setCursor(button.getIcon());
@@ -58,5 +60,4 @@ public class UICanvas extends GameObject {
     public void onElementDeselected(UIButton button) {
         placeBlock.setCursor(null);
     }
-
 }

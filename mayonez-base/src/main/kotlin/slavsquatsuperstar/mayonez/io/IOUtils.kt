@@ -1,7 +1,7 @@
 package slavsquatsuperstar.mayonez.io
 
 import slavsquatsuperstar.mayonez.Preferences.textCharset
-import slavsquatsuperstar.util.StringUtils
+import slavsquatsuperstar.mayonez.util.StringUtils
 import java.io.*
 import java.nio.charset.Charset
 import java.nio.charset.StandardCharsets

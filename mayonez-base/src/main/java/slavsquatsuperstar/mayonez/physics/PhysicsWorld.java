@@ -1,6 +1,7 @@
 package slavsquatsuperstar.mayonez.physics;
 
-import slavsquatsuperstar.math.Vec2;
+import kotlin.Pair;
+import slavsquatsuperstar.mayonez.math.Vec2;
 import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Preferences;
 import slavsquatsuperstar.mayonez.Scene;
@@ -9,7 +10,6 @@ import slavsquatsuperstar.mayonez.physics.colliders.Collider;
 import slavsquatsuperstar.mayonez.physics.collision.CollisionInfo;
 import slavsquatsuperstar.mayonez.physics.collision.CollisionSolver;
 import slavsquatsuperstar.mayonez.physics.collision.Collisions;
-import slavsquatsuperstar.util.Pair;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -110,8 +110,8 @@ public class PhysicsWorld implements GameLayer {
 
     private void detectNarrowPhase() {
         for (Pair<Collider, Collider> pair : broadphase) {
-            Collider c1 = pair.getLeft();
-            Collider c2 = pair.getRight();
+            Collider c1 = pair.getFirst();
+            Collider c2 = pair.getSecond();
 
             CollisionInfo collision = c1.getCollisionInfo(c2); // Get collision info
 

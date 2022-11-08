@@ -1,7 +1,7 @@
 package slavsquatsuperstar.mayonez.scripts;
 
 import slavsquatsuperstar.mayonez.input.MouseInput;
-import slavsquatsuperstar.math.Vec2;
+import slavsquatsuperstar.mayonez.math.Vec2;
 
 /**
  * Moves an object with or towards the mouse pointer, depending on the mode.

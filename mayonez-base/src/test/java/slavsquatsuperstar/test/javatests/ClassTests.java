@@ -1,7 +1,7 @@
 package slavsquatsuperstar.test.javatests;
 
 import org.junit.jupiter.api.Test;
-import slavsquatsuperstar.math.Vec2;
+import slavsquatsuperstar.mayonez.math.Vec2;
 import slavsquatsuperstar.mayonez.Component;
 import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Mayonez;

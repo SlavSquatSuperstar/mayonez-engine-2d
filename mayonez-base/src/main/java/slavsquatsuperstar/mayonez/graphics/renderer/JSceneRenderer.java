@@ -1,6 +1,6 @@
 package slavsquatsuperstar.mayonez.graphics.renderer;
 
-import slavsquatsuperstar.math.Vec2;
+import slavsquatsuperstar.mayonez.math.Vec2;
 import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Scene;
 import slavsquatsuperstar.mayonez.annotations.EngineType;

@@ -1,11 +1,11 @@
 package slavsquatsuperstar.demos.geometrydash;
 
-import slavsquatsuperstar.math.Vec2;
+import slavsquatsuperstar.mayonez.math.Vec2;
 import slavsquatsuperstar.mayonez.*;
 import slavsquatsuperstar.mayonez.physics.Rigidbody;
 import slavsquatsuperstar.mayonez.physics.colliders.BoxCollider;
 import slavsquatsuperstar.mayonez.physics.colliders.Collider;
-import slavsquatsuperstar.util.Colors;
+import slavsquatsuperstar.mayonez.util.Colors;
 
 import java.awt.*;
 

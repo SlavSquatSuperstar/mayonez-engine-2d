@@ -1,6 +1,6 @@
 package slavsquatsuperstar.mayonez.scripts;
 
-import slavsquatsuperstar.math.Vec2;
+import slavsquatsuperstar.mayonez.math.Vec2;
 import slavsquatsuperstar.mayonez.input.MouseInput;
 
 /**
@@ -51,7 +51,7 @@ public class DragAndDrop extends MouseScript {
     }
 
     @Override
-    public void destroy() {
+    public void onDestroy() {
         onMouseUp(); // If parent destroyed while this instance is active, free up active instance
     }
 }

@@ -2,14 +2,14 @@ package slavsquatsuperstar.demos.geometrydash;
 
 import slavsquatsuperstar.demos.geometrydash.components.Grid;
 import slavsquatsuperstar.demos.geometrydash.ui.UICanvas;
-import slavsquatsuperstar.math.Vec2;
+import slavsquatsuperstar.mayonez.math.Vec2;
 import slavsquatsuperstar.mayonez.*;
-import slavsquatsuperstar.mayonez.graphics.sprites.JSpriteSheet;
-import slavsquatsuperstar.mayonez.graphics.sprites.SpriteSheet;
+import slavsquatsuperstar.mayonez.graphics.sprite.JSpriteSheet;
+import slavsquatsuperstar.mayonez.graphics.sprite.SpriteSheet;
 import slavsquatsuperstar.mayonez.physics.Rigidbody;
 import slavsquatsuperstar.mayonez.physics.colliders.BoxCollider;
 import slavsquatsuperstar.mayonez.physics.colliders.Collider;
-import slavsquatsuperstar.util.Colors;
+import slavsquatsuperstar.mayonez.util.Colors;
 
 import java.awt.*;
 
@@ -48,12 +48,6 @@ public class LevelEditor extends Scene {
         SpriteSheet blocks = SpriteSheet.create("assets/textures/blocks.png", 42, 42, 12, 2);
         addObject(new UICanvas("Canvas", new Transform(new Vec2(-5f, -5f)), (JSpriteSheet) blocks));
 
-//        addObject(new GameObject("Button", new Transform(new Vec2(10, 5))) {
-//            @Override
-//            protected void init() {
-//                addComponent(new UIButton(blocks.getTexture(0)));
-//            }
-//        });
     }
 
     public static void main(String[] args) {

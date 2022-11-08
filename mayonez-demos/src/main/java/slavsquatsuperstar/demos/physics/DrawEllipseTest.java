@@ -1,18 +1,18 @@
 package slavsquatsuperstar.demos.physics;
 
-import slavsquatsuperstar.math.Vec2;
+import slavsquatsuperstar.mayonez.math.Vec2;
 import slavsquatsuperstar.mayonez.Mayonez;
 import slavsquatsuperstar.mayonez.Preferences;
 import slavsquatsuperstar.mayonez.Scene;
-import slavsquatsuperstar.mayonez.DebugDraw;
+import slavsquatsuperstar.mayonez.util.DebugDraw;
 import slavsquatsuperstar.mayonez.input.KeyInput;
 import slavsquatsuperstar.mayonez.input.MouseInput;
 import slavsquatsuperstar.mayonez.physics.shapes.Ellipse;
-import slavsquatsuperstar.util.Colors;
+import slavsquatsuperstar.mayonez.util.Colors;
 
 public class DrawEllipseTest extends Scene {
 
-    private final Ellipse ellipse = new Ellipse(new Vec2(50, 35), new Vec2(30, 20), 45);
+    private final Ellipse ellipse = new Ellipse(new Vec2(0, 0), new Vec2(30, 20), 45);
     private float angle = 0;
 
     public DrawEllipseTest(String name) {

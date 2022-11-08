@@ -1,12 +1,12 @@
 package slavsquatsuperstar.demos;
 
-import slavsquatsuperstar.math.MathUtils;
-import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.*;
-import slavsquatsuperstar.mayonez.graphics.sprites.Sprite;
-import slavsquatsuperstar.mayonez.graphics.sprites.SpriteSheet;
+import slavsquatsuperstar.mayonez.graphics.sprite.Sprite;
+import slavsquatsuperstar.mayonez.graphics.sprite.SpriteSheet;
 import slavsquatsuperstar.mayonez.input.KeyInput;
 import slavsquatsuperstar.mayonez.input.MouseInput;
+import slavsquatsuperstar.mayonez.math.MathUtils;
+import slavsquatsuperstar.mayonez.math.Vec2;
 import slavsquatsuperstar.mayonez.physics.Rigidbody;
 import slavsquatsuperstar.mayonez.physics.colliders.BoxCollider;
 import slavsquatsuperstar.mayonez.physics.shapes.Circle;
@@ -14,8 +14,9 @@ import slavsquatsuperstar.mayonez.physics.shapes.Ellipse;
 import slavsquatsuperstar.mayonez.physics.shapes.Rectangle;
 import slavsquatsuperstar.mayonez.physics.shapes.Triangle;
 import slavsquatsuperstar.mayonez.scripts.*;
-import slavsquatsuperstar.util.Color;
-import slavsquatsuperstar.util.Colors;
+import slavsquatsuperstar.mayonez.util.Color;
+import slavsquatsuperstar.mayonez.util.Colors;
+import slavsquatsuperstar.mayonez.util.DebugDraw;
 
 /**
  * For testing renderer, camera, and world to screen coordinates.
@@ -38,7 +39,7 @@ public class RendererTest extends Scene {
 //        Logger.log(Assets.scanResources("assets"));
 
         addObject(new GameObject("Mario",
-                new Transform(new Vec2(0, 0), new Vec2(2))) {
+                Transform.scaleInstance(new Vec2(2))) {
             @Override
             protected void init() {
                 getScene().getCamera().setSubject(this).setKeepInScene(true);
@@ -105,7 +106,7 @@ public class RendererTest extends Scene {
         DebugDraw.drawLine(new Vec2(-4, -4), new Vec2(-4, 4), Colors.RED);
         DebugDraw.drawLine(new Vec2(-4, 4), new Vec2(4, 4), Colors.GREEN);
         DebugDraw.drawLine(new Vec2(4, 4), new Vec2(4, -4), Colors.BLUE);
-        DebugDraw.drawLine(new Vec2(4, -4), new Vec2(-4, -4), Colors.BLACK);
+        DebugDraw.drawLine(new Vec2(4, -4), new Vec2(-4, -4), Colors.YELLOW);
 
         Rectangle sceneBounds = new Rectangle(new Vec2(0, 0), new Vec2(this.getWidth(), this.getHeight()));
         DebugDraw.drawShape(sceneBounds.scale(new Vec2(0.8f), null), Colors.BLACK);
@@ -153,7 +154,7 @@ public class RendererTest extends Scene {
     }
 
     private GameObject createSquare(String name, Vec2 position, Sprite sprite) {
-        return new GameObject(name, new Transform(position, new Vec2(8)), 2) {
+        return new GameObject(name, new Transform(position, 0f, new Vec2(8f)), 2) {
             @Override
             protected void init() {
                 addComponent(sprite);

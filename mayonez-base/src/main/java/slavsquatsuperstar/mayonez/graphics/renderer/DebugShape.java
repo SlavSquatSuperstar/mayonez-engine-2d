@@ -1,7 +1,7 @@
 package slavsquatsuperstar.mayonez.graphics.renderer;
 
 import slavsquatsuperstar.mayonez.physics.shapes.Shape;
-import slavsquatsuperstar.util.Color;
+import slavsquatsuperstar.mayonez.util.Color;
 
 /**
  * Passes debug shape and color information to a {@link DebugRenderer}.

@@ -1,9 +1,9 @@
 package slavsquatsuperstar.demos.physics;
 
-import slavsquatsuperstar.math.MathUtils;
-import slavsquatsuperstar.math.Vec2;
+import slavsquatsuperstar.mayonez.math.MathUtils;
+import slavsquatsuperstar.mayonez.math.Vec2;
 import slavsquatsuperstar.mayonez.scripts.*;
-import slavsquatsuperstar.util.Colors;
+import slavsquatsuperstar.mayonez.util.Colors;
 import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Mayonez;
 import slavsquatsuperstar.mayonez.physics.PhysicsMaterial;

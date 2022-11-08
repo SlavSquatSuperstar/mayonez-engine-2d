@@ -7,6 +7,6 @@ package slavsquatsuperstar.mayonez.graphics.renderer;
  */
 public interface DebugRenderer extends Renderer {
 
-    // DebugDraw Methods
+    // Debug Draw Methods
     void addShape(DebugShape shape);
 }

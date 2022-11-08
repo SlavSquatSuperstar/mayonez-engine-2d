@@ -1,7 +1,7 @@
 package slavsquatsuperstar.mayonez.scripts;
 
-import slavsquatsuperstar.math.Vec2;
-import slavsquatsuperstar.mayonez.Logger;
+import slavsquatsuperstar.mayonez.math.Vec2;
+import slavsquatsuperstar.mayonez.util.Logger;
 import slavsquatsuperstar.mayonez.Script;
 import slavsquatsuperstar.mayonez.physics.Rigidbody;
 

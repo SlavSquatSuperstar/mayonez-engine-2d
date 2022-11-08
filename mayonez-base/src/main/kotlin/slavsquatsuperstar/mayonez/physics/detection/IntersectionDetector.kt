@@ -1,6 +1,6 @@
 package slavsquatsuperstar.mayonez.physics.detection
 
-import slavsquatsuperstar.math.MathUtils
+import slavsquatsuperstar.mayonez.math.MathUtils
 import slavsquatsuperstar.mayonez.physics.shapes.Circle
 import slavsquatsuperstar.mayonez.physics.shapes.Edge
 import slavsquatsuperstar.mayonez.physics.shapes.Rectangle

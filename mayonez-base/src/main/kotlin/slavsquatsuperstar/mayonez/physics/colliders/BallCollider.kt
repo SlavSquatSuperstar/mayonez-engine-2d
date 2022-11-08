@@ -1,6 +1,6 @@
 package slavsquatsuperstar.mayonez.physics.colliders
 
-import slavsquatsuperstar.math.Vec2
+import slavsquatsuperstar.mayonez.math.Vec2
 import slavsquatsuperstar.mayonez.physics.shapes.Ellipse
 import slavsquatsuperstar.mayonez.physics.shapes.Shape
 

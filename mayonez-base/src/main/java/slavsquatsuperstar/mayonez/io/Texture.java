@@ -5,7 +5,7 @@ package slavsquatsuperstar.mayonez.io;
  *
  * @author SlavSquatSuperstar
  */
-public abstract class Texture extends Asset {
+public abstract sealed class Texture extends Asset permits JTexture, GLTexture {
 
     public Texture(String filename) {
         super(filename);

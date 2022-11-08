@@ -1,7 +1,7 @@
 package slavsquatsuperstar.mayonez.physics.shapes
 
-import slavsquatsuperstar.math.MathUtils
-import slavsquatsuperstar.math.Vec2
+import slavsquatsuperstar.mayonez.math.MathUtils
+import slavsquatsuperstar.mayonez.math.Vec2
 
 /**
  * An object in space that with an origin that extends infinitely in one direction.

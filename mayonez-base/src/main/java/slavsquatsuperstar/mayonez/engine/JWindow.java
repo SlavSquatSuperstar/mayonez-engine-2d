@@ -1,6 +1,6 @@
 package slavsquatsuperstar.mayonez.engine;
 
-import slavsquatsuperstar.mayonez.Logger;
+import slavsquatsuperstar.mayonez.util.Logger;
 import slavsquatsuperstar.mayonez.Preferences;
 import slavsquatsuperstar.mayonez.annotations.UsesEngine;
 import slavsquatsuperstar.mayonez.annotations.EngineType;

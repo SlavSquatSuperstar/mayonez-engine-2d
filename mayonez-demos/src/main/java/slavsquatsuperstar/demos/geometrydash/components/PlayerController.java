@@ -2,7 +2,7 @@ package slavsquatsuperstar.demos.geometrydash.components;
 
 import slavsquatsuperstar.demos.geometrydash.LevelEditor;
 import slavsquatsuperstar.demos.geometrydash.LevelScene;
-import slavsquatsuperstar.math.Vec2;
+import slavsquatsuperstar.mayonez.math.Vec2;
 import slavsquatsuperstar.mayonez.Script;
 import slavsquatsuperstar.mayonez.graphics.Camera;
 import slavsquatsuperstar.mayonez.graphics.CameraMode;

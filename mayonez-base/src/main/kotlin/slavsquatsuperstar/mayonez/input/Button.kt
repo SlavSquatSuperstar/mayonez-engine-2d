@@ -1,7 +1,7 @@
 package slavsquatsuperstar.mayonez.input
 
 import org.lwjgl.glfw.GLFW
-import slavsquatsuperstar.util.StringUtils
+import slavsquatsuperstar.mayonez.util.StringUtils
 import java.awt.event.MouseEvent
 
 /**

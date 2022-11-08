@@ -1,6 +1,6 @@
 package slavsquatsuperstar.mayonez.physics.collision
 
-import slavsquatsuperstar.math.Vec2
+import slavsquatsuperstar.mayonez.math.Vec2
 
 /**
  * Provides additional information about a raycast against a shape.

@@ -9,4 +9,4 @@ echo "Building mayonez-engine..."
 
 # Run the compiled jar file
 # LWJGL requires a special argument on macOS
-java -XstartOnFirstThread -jar build/libs/*.jar
+java -XstartOnFirstThread -jar build/libs/*.jar "true"

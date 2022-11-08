@@ -44,11 +44,15 @@ public abstract class Script extends Component {
     // Overrides
 
     @Override
-    public final void render(Graphics2D g2) {} // Scripts shouldn't render any images
+    public final void render(Graphics2D g2) {
+    } // Scripts shouldn't render any images
 
     @Override
     public String toString() {
-        return String.format("Script %s (%s)", getClass().isAnonymousClass() ?
-                "Script" : getClass().getSimpleName(), gameObject.name);
+        return String.format(
+                "%s (%s)",
+                getClass().isAnonymousClass() ? "Script" : getClass().getSimpleName(),
+                gameObject == null ? "<No Parent>" : gameObject.name
+        );
     }
 }

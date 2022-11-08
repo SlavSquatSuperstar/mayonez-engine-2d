@@ -1,15 +1,15 @@
 package slavsquatsuperstar.mayonez.physics.colliders
 
-import slavsquatsuperstar.math.Vec2
 import slavsquatsuperstar.mayonez.Component
 import slavsquatsuperstar.mayonez.GameObject
-import slavsquatsuperstar.mayonez.DebugDraw
+import slavsquatsuperstar.mayonez.math.Vec2
 import slavsquatsuperstar.mayonez.physics.PhysicsMaterial
 import slavsquatsuperstar.mayonez.physics.Rigidbody
 import slavsquatsuperstar.mayonez.physics.collision.CollisionInfo
 import slavsquatsuperstar.mayonez.physics.collision.Collisions
 import slavsquatsuperstar.mayonez.physics.shapes.BoundingBox
 import slavsquatsuperstar.mayonez.physics.shapes.Shape
+import slavsquatsuperstar.mayonez.util.DebugDraw
 import java.awt.Color
 import java.awt.Graphics2D
 
@@ -180,7 +180,7 @@ abstract class Collider(private val shapeData: Shape) : Component() {
      */
     fun onTrigger(trigger: Collider) = gameObject.onTrigger(trigger)
 
-    override fun destroy() {
+    override fun onDestroy() {
         ignoreCurrentCollision = true
     }
 

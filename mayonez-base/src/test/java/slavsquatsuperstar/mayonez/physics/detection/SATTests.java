@@ -1,7 +1,7 @@
 package slavsquatsuperstar.mayonez.physics.detection;
 
 import org.junit.jupiter.api.Test;
-import slavsquatsuperstar.math.Vec2;
+import slavsquatsuperstar.mayonez.math.Vec2;
 import slavsquatsuperstar.mayonez.physics.collision.CollisionInfo;
 import slavsquatsuperstar.mayonez.physics.shapes.Polygon;
 import slavsquatsuperstar.mayonez.physics.shapes.Rectangle;

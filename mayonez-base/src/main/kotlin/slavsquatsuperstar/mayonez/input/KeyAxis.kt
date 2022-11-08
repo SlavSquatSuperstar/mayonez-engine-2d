@@ -1,6 +1,6 @@
 package slavsquatsuperstar.mayonez.input
 
-import slavsquatsuperstar.util.StringUtils
+import slavsquatsuperstar.mayonez.util.StringUtils
 
 /**
  * Stores two keys intended to perform opposite actions.

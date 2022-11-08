@@ -1,7 +1,7 @@
 package slavsquatsuperstar.test;
 
-import slavsquatsuperstar.math.MathUtils;
-import slavsquatsuperstar.math.Vec2;
+import slavsquatsuperstar.mayonez.math.MathUtils;
+import slavsquatsuperstar.mayonez.math.Vec2;
 import slavsquatsuperstar.mayonez.physics.collision.Collisions;
 import slavsquatsuperstar.mayonez.physics.shapes.Shape;
 

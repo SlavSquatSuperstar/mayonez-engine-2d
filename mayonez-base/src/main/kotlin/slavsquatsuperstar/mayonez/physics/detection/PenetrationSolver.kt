@@ -1,13 +1,13 @@
 package slavsquatsuperstar.mayonez.physics.detection
 
-import slavsquatsuperstar.math.MathUtils
-import slavsquatsuperstar.math.Vec2
-import slavsquatsuperstar.mayonez.DebugDraw
+import slavsquatsuperstar.mayonez.math.MathUtils
+import slavsquatsuperstar.mayonez.math.Vec2
+import slavsquatsuperstar.mayonez.util.DebugDraw
 import slavsquatsuperstar.mayonez.physics.collision.CollisionInfo
 import slavsquatsuperstar.mayonez.physics.shapes.Edge
 import slavsquatsuperstar.mayonez.physics.shapes.Polygon
 import slavsquatsuperstar.mayonez.physics.shapes.Shape
-import slavsquatsuperstar.util.Colors
+import slavsquatsuperstar.mayonez.util.Colors
 import kotlin.math.abs
 
 /**

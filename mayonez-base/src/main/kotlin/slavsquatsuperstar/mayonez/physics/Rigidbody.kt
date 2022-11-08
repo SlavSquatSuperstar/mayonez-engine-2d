@@ -1,10 +1,10 @@
 package slavsquatsuperstar.mayonez.physics
 
-import slavsquatsuperstar.math.MathUtils
-import slavsquatsuperstar.math.MathUtils.clamp
-import slavsquatsuperstar.math.MathUtils.toDegrees
-import slavsquatsuperstar.math.MathUtils.toRadians
-import slavsquatsuperstar.math.Vec2
+import slavsquatsuperstar.mayonez.math.MathUtils
+import slavsquatsuperstar.mayonez.math.MathUtils.clamp
+import slavsquatsuperstar.mayonez.math.MathUtils.toDegrees
+import slavsquatsuperstar.mayonez.math.MathUtils.toRadians
+import slavsquatsuperstar.mayonez.math.Vec2
 import slavsquatsuperstar.mayonez.Component
 import slavsquatsuperstar.mayonez.physics.colliders.Collider
 

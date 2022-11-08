@@ -1,7 +1,7 @@
 package slavsquatsuperstar.mayonez.physics.shapes;
 
 import org.junit.jupiter.api.Test;
-import slavsquatsuperstar.math.Vec2;
+import slavsquatsuperstar.mayonez.math.Vec2;
 import slavsquatsuperstar.test.TestUtils;
 
 import static org.junit.jupiter.api.Assertions.*;

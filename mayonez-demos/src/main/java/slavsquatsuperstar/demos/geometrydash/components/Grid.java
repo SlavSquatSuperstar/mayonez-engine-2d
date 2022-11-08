@@ -1,6 +1,6 @@
 package slavsquatsuperstar.demos.geometrydash.components;
 
-import slavsquatsuperstar.math.Vec2;
+import slavsquatsuperstar.mayonez.math.Vec2;
 import slavsquatsuperstar.mayonez.Component;
 
 import java.awt.*;

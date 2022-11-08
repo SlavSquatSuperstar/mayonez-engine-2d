@@ -1,8 +1,8 @@
 package slavsquatsuperstar.mayonez.physics.shapes
 
-import slavsquatsuperstar.math.Mat22
-import slavsquatsuperstar.math.MathUtils
-import slavsquatsuperstar.math.Vec2
+import slavsquatsuperstar.mayonez.math.Mat22
+import slavsquatsuperstar.mayonez.math.MathUtils
+import slavsquatsuperstar.mayonez.math.Vec2
 import kotlin.math.max
 import kotlin.math.roundToInt
 

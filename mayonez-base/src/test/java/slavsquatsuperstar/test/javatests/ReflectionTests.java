@@ -1,7 +1,7 @@
 package slavsquatsuperstar.test.javatests;
 
 import org.junit.jupiter.api.Test;
-import slavsquatsuperstar.mayonez.Logger;
+import slavsquatsuperstar.mayonez.util.Logger;
 
 import java.lang.reflect.Constructor;
 

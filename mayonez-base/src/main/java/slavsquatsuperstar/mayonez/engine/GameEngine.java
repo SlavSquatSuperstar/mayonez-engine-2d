@@ -1,7 +1,7 @@
 package slavsquatsuperstar.mayonez.engine;
 
-import slavsquatsuperstar.math.MathUtils;
-import slavsquatsuperstar.mayonez.Logger;
+import slavsquatsuperstar.mayonez.math.MathUtils;
+import slavsquatsuperstar.mayonez.util.Logger;
 import slavsquatsuperstar.mayonez.Mayonez;
 import slavsquatsuperstar.mayonez.Scene;
 
@@ -10,7 +10,7 @@ import slavsquatsuperstar.mayonez.Scene;
  *
  * @author SlavSquatSuperstar
  */
-public sealed abstract class GameEngine implements GameLayer permits JGame, GLGame{
+public abstract sealed class GameEngine implements GameLayer permits JGame, GLGame {
 
     private boolean running = false;
     protected Scene scene;

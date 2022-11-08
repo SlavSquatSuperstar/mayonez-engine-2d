@@ -1,6 +1,6 @@
 package slavsquatsuperstar.mayonez.physics.shapes
 
-import slavsquatsuperstar.math.Vec2
+import slavsquatsuperstar.mayonez.math.Vec2
 
 /**
  * A bounded, flat figure that exists in the 2D plane and has no intersecting edges. Can also represent an

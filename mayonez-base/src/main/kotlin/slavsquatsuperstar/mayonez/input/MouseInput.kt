@@ -3,7 +3,7 @@ package slavsquatsuperstar.mayonez.input
 import org.joml.Vector4f
 import org.lwjgl.glfw.GLFW.GLFW_PRESS
 import org.lwjgl.glfw.GLFW.GLFW_RELEASE
-import slavsquatsuperstar.math.Vec2
+import slavsquatsuperstar.mayonez.math.Vec2
 import slavsquatsuperstar.mayonez.Mayonez
 import slavsquatsuperstar.mayonez.graphics.GLCamera
 import java.awt.event.MouseAdapter

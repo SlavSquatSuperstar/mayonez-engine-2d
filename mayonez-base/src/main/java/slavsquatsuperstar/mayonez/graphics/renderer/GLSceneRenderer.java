@@ -1,11 +1,11 @@
 package slavsquatsuperstar.mayonez.graphics.renderer;
 
 import org.joml.Vector4f;
-import slavsquatsuperstar.math.Vec2;
+import slavsquatsuperstar.mayonez.math.Vec2;
 import slavsquatsuperstar.mayonez.*;
 import slavsquatsuperstar.mayonez.annotations.EngineType;
 import slavsquatsuperstar.mayonez.annotations.UsesEngine;
-import slavsquatsuperstar.mayonez.graphics.sprites.GLSprite;
+import slavsquatsuperstar.mayonez.graphics.sprite.GLSprite;
 import slavsquatsuperstar.mayonez.physics.shapes.Rectangle;
 
 import java.util.ArrayList;
@@ -58,6 +58,7 @@ public final class GLSceneRenderer extends GLRenderer implements SceneRenderer {
     @Override
     protected void pushDataToBatch() {
         sprites.forEach(spr -> {
+            if (!spr.isEnabled()) return;
             RenderBatch batch = getAvailableBatch(spr.getTexture(), spr.getObject().getZIndex(), DrawPrimitive.SPRITE);
             addSprite(batch, spr); // Push vertices to batch
         });
@@ -71,7 +72,7 @@ public final class GLSceneRenderer extends GLRenderer implements SceneRenderer {
      */
     public void addSprite(RenderBatch batch, GLSprite spr) {
         // Add sprite vertex data
-        Transform objXf = spr.getTransform();
+        Transform objXf = spr.getTransform().combine(spr.getSpriteTransform());
         Vector4f color = spr.getColor().toGL();
         Vec2[] texCoords = spr.getTexCoords();
         int texID = batch.addTexture(spr.getTexture());

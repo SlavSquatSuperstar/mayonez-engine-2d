@@ -1,6 +1,6 @@
 package slavsquatsuperstar.mayonez.scripts;
 
-import slavsquatsuperstar.math.Range;
+import slavsquatsuperstar.mayonez.math.Range;
 import slavsquatsuperstar.mayonez.Script;
 
 public class Counter extends Script {

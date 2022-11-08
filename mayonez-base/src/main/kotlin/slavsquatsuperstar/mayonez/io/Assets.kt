@@ -2,7 +2,7 @@ package slavsquatsuperstar.mayonez.io
 
 import org.reflections.Reflections
 import org.reflections.scanners.Scanners
-import slavsquatsuperstar.mayonez.Logger
+import slavsquatsuperstar.mayonez.util.Logger
 import slavsquatsuperstar.mayonez.Mayonez
 import java.io.File
 import java.net.MalformedURLException

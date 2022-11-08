@@ -1,8 +1,8 @@
 package slavsquatsuperstar.mayonez.io;
 
-import slavsquatsuperstar.math.MathUtils;
-import slavsquatsuperstar.math.Vec2;
-import slavsquatsuperstar.mayonez.Logger;
+import slavsquatsuperstar.mayonez.math.MathUtils;
+import slavsquatsuperstar.mayonez.math.Vec2;
+import slavsquatsuperstar.mayonez.util.Logger;
 import slavsquatsuperstar.mayonez.Transform;
 import slavsquatsuperstar.mayonez.annotations.UsesEngine;
 import slavsquatsuperstar.mayonez.annotations.EngineType;
@@ -22,7 +22,7 @@ import java.util.Objects;
  * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.AWT)
-public class JTexture extends Texture {
+public final class JTexture extends Texture {
 
     private BufferedImage image;
 
@@ -71,7 +71,7 @@ public class JTexture extends Texture {
      */
     public void draw(Graphics2D g2, Transform parentXf, Transform spriteXf, float cellSize) {
         // Measurements are in screen coordinates (pixels)
-        Transform newXf = (spriteXf == null) ? parentXf : parentXf.combine(spriteXf);
+        Transform newXf = parentXf.combine(spriteXf);
 
         Vec2 parentCenter = (newXf.position.mul(cellSize));
         Vec2 parentSize = (newXf.scale.mul(cellSize));

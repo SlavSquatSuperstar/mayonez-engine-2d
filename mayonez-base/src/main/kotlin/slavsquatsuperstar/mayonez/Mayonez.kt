@@ -1,12 +1,13 @@
 package slavsquatsuperstar.mayonez
 
-import slavsquatsuperstar.math.Vec2
+import slavsquatsuperstar.mayonez.math.Vec2
 import slavsquatsuperstar.mayonez.Preferences.screenHeight
 import slavsquatsuperstar.mayonez.Preferences.screenWidth
 import slavsquatsuperstar.mayonez.engine.GLGame
 import slavsquatsuperstar.mayonez.engine.GameEngine
 import slavsquatsuperstar.mayonez.engine.JGame
 import slavsquatsuperstar.mayonez.io.Assets
+import slavsquatsuperstar.mayonez.util.Logger
 import kotlin.system.exitProcess
 
 /**

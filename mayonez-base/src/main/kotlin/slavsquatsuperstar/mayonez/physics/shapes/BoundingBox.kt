@@ -1,6 +1,6 @@
 package slavsquatsuperstar.mayonez.physics.shapes
 
-import slavsquatsuperstar.math.Vec2
+import slavsquatsuperstar.mayonez.math.Vec2
 
 /**
  * A non-rotatable, axis-oriented bounding box (AABB) with four edges and defined by a width and height. Not to be used

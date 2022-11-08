@@ -1,6 +1,6 @@
 package slavsquatsuperstar.mayonez.physics.shapes
 
-import slavsquatsuperstar.math.Vec2
+import slavsquatsuperstar.mayonez.math.Vec2
 
 /**
  * Indicates a geometric object that supports three basic transformations: translation, rotation, and scaling.

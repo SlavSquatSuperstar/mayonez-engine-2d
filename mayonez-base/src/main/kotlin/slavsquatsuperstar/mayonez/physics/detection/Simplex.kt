@@ -1,6 +1,6 @@
 package slavsquatsuperstar.mayonez.physics.detection
 
-import slavsquatsuperstar.math.Vec2
+import slavsquatsuperstar.mayonez.math.Vec2
 import slavsquatsuperstar.mayonez.physics.shapes.Polygon
 
 /**

@@ -1,6 +1,6 @@
 package slavsquatsuperstar.mayonez
 
-import slavsquatsuperstar.util.Record
+import slavsquatsuperstar.mayonez.util.Record
 
 /**
  * The default, hardcoded settings for the game engine.

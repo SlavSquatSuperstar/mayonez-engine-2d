@@ -4,7 +4,7 @@ cd "$SCRIPT_DIR" || exit
 
 @rem Build the application for Windows
 echo "Building mayonez-engine..."
-./gradlew clean build
+.\gradlew clean build
 
 @rem Run the compiled jar file
-java -jar build\libs\*.jar
+java -jar build\libs\*.jar "true"
