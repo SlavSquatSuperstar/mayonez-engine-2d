@@ -15,7 +15,7 @@ description = 'The root project for Mayonez Engine that contains all modules.'
 // Custom Settings
 project.ext {
     javaVersion = '17'
-    mainClass = 'slavsquatsuperstar.demos.GLRendererTest'
+    mainClass = 'slavsquatsuperstar.demos.RendererTest'
 //    mainClass = 'slavsquatsuperstar.demos.geometrydash.LevelEditor'
     mainModule = 'mayonez.demos'
 }
@@ -49,6 +49,7 @@ application { // For 'run' task
 
 run {
     jvmArgs = ["-XstartOnFirstThread"] // For LWJGL
+    args = ["true"] // Set CLI args (Use GL true/false)
 }
 
 jar {

@@ -21,7 +21,7 @@ public class DebugShape {
         this.color = color;
         this.fill = fill;
         this.priority = priority;
-        zIndex = priority.ordinal();
+        zIndex = priority.zIndex;
     }
 
     DebugShape(Shape shape, DebugShape debugShape) {
@@ -35,19 +35,25 @@ public class DebugShape {
         /**
          * Solid shapes, drawn first.
          */
-        FILL,
+        FILL(0),
         /**
          * Shape boundaries, after solid shapes and before lines.
          */
-        SHAPE,
+        SHAPE(1),
         /**
          * Lines, drawn after shapes and before points.
          */
-        LINE,
+        LINE(2),
         /**
          * Single points, drawn last.
          */
-        POINT
+        POINT(3);
+
+        private final int zIndex;
+
+        Priority(int zIndex) {
+            this.zIndex = zIndex;
+        }
     }
 
 }

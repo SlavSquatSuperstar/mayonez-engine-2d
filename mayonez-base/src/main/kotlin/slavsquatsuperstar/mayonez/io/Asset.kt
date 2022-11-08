@@ -11,6 +11,7 @@ import java.nio.file.StandardOpenOption
 
 /**
  * Any resource or file used by this program. Stores a path and manages input and output to that location.
+ * Each asset must have a constructor with one string, since this is called using reflection by [Assets.createAsset]
  *
  * @author SlavSquatSuperstar
  */

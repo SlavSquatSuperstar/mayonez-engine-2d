@@ -16,12 +16,12 @@ import java.util.List;
  * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.GL)
-public class GLSpriteSheet extends SpriteSheet {
+public final class GLSpriteSheet extends SpriteSheet {
 
     private final List<GLSprite> sprites;
 
     /**
-     * Creates a spritesheet from the given texture.
+     * Creates a spritesheet from the given image file.
      *
      * @param filename     the name of the parent texture
      * @param spriteWidth  how wide each sprite is
@@ -29,7 +29,7 @@ public class GLSpriteSheet extends SpriteSheet {
      * @param numSprites   how many sprites to create
      * @param spacing      the padding in between sprites
      */
-    public GLSpriteSheet(String filename, int spriteWidth, int spriteHeight, int numSprites, int spacing) {
+    GLSpriteSheet(String filename, int spriteWidth, int spriteHeight, int numSprites, int spacing) {
         GLTexture texture = Assets.getGLTexture(filename);
         sprites = new ArrayList<>();
 
@@ -45,7 +45,7 @@ public class GLSpriteSheet extends SpriteSheet {
             Vec2 imgSize = imgMax.sub(imgMin);
 
             Vec2[] texCoords = Rectangle.rectangleVertices(imgMin.add(imgSize.mul(0.5f)), imgSize, 0);
-            sprites.add(new GLSprite(texture, texCoords));
+            sprites.add(new GLSprite(new GLTexture(texture, texCoords)));
 
             imgCoords.x += spriteWidth + spacing;
             if (imgCoords.x >= texSize.x) {
@@ -53,12 +53,17 @@ public class GLSpriteSheet extends SpriteSheet {
                 imgCoords.y -= spriteHeight + spacing;
             }
         }
-
     }
 
     @Override
     public GLSprite getSprite(int index) {
         return sprites.get(index).copy();
+    }
+
+    @Override
+    public GLTexture getTexture(int index) {
+        GLSprite subSprite = sprites.get(index);
+        return new GLTexture(subSprite.getTexture(), subSprite.getTexCoords());
     }
 
     @Override

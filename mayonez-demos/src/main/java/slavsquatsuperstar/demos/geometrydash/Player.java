@@ -6,6 +6,7 @@ import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.graphics.sprites.JSprite;
 import slavsquatsuperstar.mayonez.graphics.sprites.JSpriteSheet;
+import slavsquatsuperstar.mayonez.graphics.sprites.SpriteSheet;
 import slavsquatsuperstar.mayonez.physics.Rigidbody;
 import slavsquatsuperstar.mayonez.physics.colliders.BoxCollider;
 import slavsquatsuperstar.mayonez.scripts.KeepInScene;
@@ -24,9 +25,12 @@ public class Player extends GameObject {
     protected void init() {
         // Create player avatar
         int tileSize = (int) getScene().getScale();
-        JSpriteSheet layer1 = new JSpriteSheet("assets/textures/player/layer1.png", tileSize, tileSize, 13 * 5, 2);
-        JSpriteSheet layer2 = new JSpriteSheet("assets/textures/player/layer2.png", tileSize, tileSize, 13 * 5, 2);
-        JSpriteSheet layer3 = new JSpriteSheet("assets/textures/player/layer3.png", tileSize, tileSize, 13 * 5, 2);
+        JSpriteSheet layer1 = (JSpriteSheet) SpriteSheet.create("assets/textures/player/layer1.png",
+                tileSize, tileSize, 13 * 5, 2);
+        JSpriteSheet layer2 = (JSpriteSheet) SpriteSheet.create("assets/textures/player/layer2.png",
+                tileSize, tileSize, 13 * 5, 2);
+        JSpriteSheet layer3 = (JSpriteSheet) SpriteSheet.create("assets/textures/player/layer3.png",
+                tileSize, tileSize, 13 * 5, 2);
 
         int id = MathUtils.random(18, 20);
         int threshold = 200;

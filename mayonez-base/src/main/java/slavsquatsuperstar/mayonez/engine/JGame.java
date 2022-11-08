@@ -19,7 +19,7 @@ public final class JGame extends GameEngine {
 
     public JGame() {
         // Set up the window
-        window = new JWindow(Preferences.getTitle() + " " + Preferences.getVersion(),
+        window = new JWindow(String.format("%s %s (AWT)", Preferences.getTitle(), Preferences.getVersion()),
                 Preferences.getScreenWidth(), Preferences.getScreenHeight());
 
         // Add input listeners

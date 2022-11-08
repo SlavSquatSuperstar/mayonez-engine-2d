@@ -5,6 +5,7 @@ import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Transform;
 import slavsquatsuperstar.mayonez.annotations.ExperimentalFeature;
 import slavsquatsuperstar.mayonez.graphics.sprites.JSpriteSheet;
+import slavsquatsuperstar.mayonez.graphics.sprites.SpriteSheet;
 import slavsquatsuperstar.mayonez.input.MouseInput;
 import slavsquatsuperstar.mayonez.io.JTexture;
 import slavsquatsuperstar.mayonez.physics.colliders.BoxCollider;
@@ -23,7 +24,7 @@ public class UIButton extends GameObject {
     private boolean selected = false;
 
     static {
-        buttons = new JSpriteSheet("assets/textures/buttons.png", 60, 60, 2, 2);
+        buttons = (JSpriteSheet) SpriteSheet.create("assets/textures/buttons.png", 60, 60, 2, 2);
         offButton = buttons.getTexture(0);
         onButton = buttons.getTexture(1);
     }
@@ -56,25 +57,7 @@ public class UIButton extends GameObject {
         });
     }
 
-//    @Override
-//    public void start() {
-//        parent.addComponent(new BoxCollider(new Vec2(1, 1)).setTrigger(true));
-//        parent.addComponent(new MouseScript() {
-//            @Override
-//            protected Vec2 getRawInput() {
-//                return MouseInput.getPosition();
-//            }
-//
-//            @Override
-//            public void onMouseDown() {
-//                enabled = !enabled;
-//            }
-//        });
-//        parent.start();
-//    }
-
     @Override
-//    public void render(Graphics2D g2) {
     public void onUserRender(Graphics2D g2) {
         offButton.draw(g2, this.transform, new Transform(), getScene().getScale());
         if (selected) onButton.draw(g2, this.transform, new Transform(), getScene().getScale());

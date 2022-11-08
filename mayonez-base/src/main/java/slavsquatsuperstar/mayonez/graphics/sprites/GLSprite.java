@@ -6,59 +6,57 @@ import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.annotations.EngineType;
 import slavsquatsuperstar.mayonez.annotations.UsesEngine;
 import slavsquatsuperstar.mayonez.io.GLTexture;
-import slavsquatsuperstar.mayonez.physics.shapes.Rectangle;
+import slavsquatsuperstar.util.Color;
 
 /**
- * A component that draws an image at a {@link GameObject}'s position. For use the GL engine.
+ * A component that draws an image at a {@link GameObject}'s position using the GL engine.
  *
  * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.GL)
 public final class GLSprite extends Sprite {
 
-    private Vector4f color = new Vector4f(1, 1, 1, 1); // opaque white
-    private GLTexture texture = null; // Rendering just a color
+    private final GLTexture texture;
+    private final Color color;
 
-    private Vec2[] texCoords = Rectangle.rectangleVertices(new Vec2(0.5f), new Vec2(1f), 0f);
+    /**
+     * Create a new GLSprite that renders an entire texture.
+     *
+     * @param texture a texture
+     */
+    GLSprite(GLTexture texture) {
+        this.texture = texture;
+        color = new Color(new Vector4f(255f)); // Opaque white
+    }
 
-    public GLSprite(Vector4f color) {
+    /**
+     * Create a new GLSprite that only renders a color.
+     *
+     * @param color a color
+     */
+    GLSprite(Color color) {
         this.color = color;
-    }
-
-    public GLSprite(GLTexture texture) {
-        this.texture = texture;
-    }
-
-    public GLSprite(GLTexture texture, Vec2[] texCoords) {
-        this.texture = texture;
-        this.texCoords = texCoords;
+        texture = null;
     }
 
     // Getters and Setters
 
-    public Vector4f getColor() {
+    public Color getColor() {
         return this.color;
     }
 
-    public void setColor(Vector4f color) {
-        this.color = color;
-    }
-
+    @Override
     public GLTexture getTexture() {
         return texture;
     }
 
-    public void setTexture(GLTexture texture) {
-        this.texture = texture;
-    }
-
     public Vec2[] getTexCoords() {
-        return texCoords;
+        return (texture == null) ? GLTexture.DEFAULT_TEX_COORDS : texture.getTexCoords();
     }
 
     @Override
     public GLSprite copy() {
-        return new GLSprite(texture, texCoords);
+        return (texture == null) ? new GLSprite(color) : new GLSprite(texture);
     }
 
 }

@@ -26,11 +26,22 @@ public class JTexture extends Texture {
 
     private BufferedImage image;
 
+    /**
+     * Create a brand-new JTexture with the given filename.
+     *
+     * @param filename the file location
+     */
     public JTexture(String filename) {
         super(filename);
         readImage();
     }
 
+    /**
+     * Create a JTexture from a portion of another texture.
+     *
+     * @param filename the file location
+     * @param image    the sub-image
+     */
     public JTexture(String filename, BufferedImage image) {
         super(filename);
         this.image = image;
@@ -79,7 +90,7 @@ public class JTexture extends Texture {
         g2.drawImage(image, g2Xf, null);
     }
 
-    // Getters
+    // Image Getters
 
     public BufferedImage getImage() {
         return image;

@@ -72,7 +72,7 @@ public final class GLSceneRenderer extends GLRenderer implements SceneRenderer {
     public void addSprite(RenderBatch batch, GLSprite spr) {
         // Add sprite vertex data
         Transform objXf = spr.getTransform();
-        Vector4f color = spr.getColor();
+        Vector4f color = spr.getColor().toGL();
         Vec2[] texCoords = spr.getTexCoords();
         int texID = batch.addTexture(spr.getTexture());
 

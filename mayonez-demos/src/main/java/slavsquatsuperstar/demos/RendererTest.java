@@ -1,28 +1,34 @@
 package slavsquatsuperstar.demos;
 
-import org.joml.Vector4f;
 import slavsquatsuperstar.math.MathUtils;
 import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.*;
-import slavsquatsuperstar.mayonez.graphics.sprites.GLSprite;
-import slavsquatsuperstar.mayonez.graphics.sprites.GLSpriteSheet;
+import slavsquatsuperstar.mayonez.graphics.sprites.Sprite;
+import slavsquatsuperstar.mayonez.graphics.sprites.SpriteSheet;
 import slavsquatsuperstar.mayonez.input.KeyInput;
 import slavsquatsuperstar.mayonez.input.MouseInput;
-import slavsquatsuperstar.mayonez.io.Assets;
 import slavsquatsuperstar.mayonez.physics.Rigidbody;
 import slavsquatsuperstar.mayonez.physics.colliders.BoxCollider;
 import slavsquatsuperstar.mayonez.physics.shapes.Circle;
+import slavsquatsuperstar.mayonez.physics.shapes.Ellipse;
 import slavsquatsuperstar.mayonez.physics.shapes.Rectangle;
 import slavsquatsuperstar.mayonez.physics.shapes.Triangle;
 import slavsquatsuperstar.mayonez.scripts.*;
+import slavsquatsuperstar.util.Color;
 import slavsquatsuperstar.util.Colors;
 
-public class GLRendererTest extends Scene {
+/**
+ * For testing renderer, camera, and world to screen coordinates.
+ *
+ * @author SlavSquatSupertar
+ */
+public class RendererTest extends Scene {
 
-    private GLSpriteSheet sprites;
+    private final SpriteSheet sprites;
 
-    public GLRendererTest() {
-        super("LWJGL Test Scene", Preferences.getScreenWidth() * 2, Preferences.getScreenHeight() * 2, 32);
+    public RendererTest() {
+        super("Renderer Test Scene", Preferences.getScreenWidth() * 2, Preferences.getScreenHeight() * 2, 32);
+        sprites = SpriteSheet.create("assets/textures/spritesheet.png", 16, 16, 26, 0);
         setGravity(new Vec2());
     }
 
@@ -31,19 +37,14 @@ public class GLRendererTest extends Scene {
 //        Logger.log(Assets.scanFiles("mayonez-demos/src/main/resources/assets/textures"));
 //        Logger.log(Assets.scanResources("assets"));
 
-        // Load resources
-        sprites = new GLSpriteSheet("assets/textures/spritesheet.png", 16, 16, 26, 0);
-
-        addObject(new GameObject("Mario", new Transform(
-                new Vec2(0, 0), new Vec2(2)
-        )) {
+        addObject(new GameObject("Mario",
+                new Transform(new Vec2(0, 0), new Vec2(2))) {
             @Override
             protected void init() {
                 getScene().getCamera().setSubject(this).setKeepInScene(true);
                 addComponent(sprites.getSprite(0));
                 addComponent(new BoxCollider(new Vec2(0.8f, 1)));
                 addComponent(new Rigidbody(1f).setFixedRotation(true));
-                addComponent(new KeyMovement(MoveMode.POSITION, 20));
                 addComponent(new KeepInScene(KeepInScene.Mode.STOP));
                 addComponent(new MouseScript() {
                     @Override
@@ -56,13 +57,14 @@ public class GLRendererTest extends Scene {
                         System.out.println("It's a me, Mario!");
                     }
                 });
+                addComponent(new KeyMovement(MoveMode.POSITION, 15));
                 addComponent(new Script() {
                     @Override
                     public void update(float dt) {
                         if (KeyInput.keyDown("q"))
-                            transform.rotation += 2f;
+                            transform.rotation += 3f;
                         if (KeyInput.keyDown("e"))
-                            transform.rotation -= 2f;
+                            transform.rotation -= 3f;
 
                         if (KeyInput.keyDown("+"))
                             transform.scale(new Vec2(1.1f));
@@ -77,16 +79,16 @@ public class GLRendererTest extends Scene {
         float halfHeight = getHeight() / 2f;
 
         addObject(createSquare("Red Square", new Vec2(-halfWidth, halfHeight),
-                new GLSprite(Assets.getGLTexture("assets/textures/blend_red.png"))));
+                Sprite.create("assets/textures/blend_red.png")));
 
         addObject(createSquare("Green Square", new Vec2(halfWidth, halfHeight),
-                new GLSprite(Assets.getGLTexture("assets/textures/blend_green.png"))));
+                Sprite.create("assets/textures/blend_red.png")));
 
         addObject(createSquare("Blue Square", new Vec2(-halfWidth, -halfHeight),
-                new GLSprite(new Vector4f(0, 67f / 255f, 169f / 255f, 0.6f))));
+                Sprite.create(new Color(0, 67, 169, 153))));
 
         addObject(createSquare("Gray Square", new Vec2(halfWidth, -halfHeight),
-                new GLSprite(new Vector4f(31f / 255f, 31f / 255f, 31f / 255f, 0.6f))));
+                Sprite.create(new Color(31, 31, 31, 153))));
 
         for (int i = 0; i < 15; i++) {
             switch (i % 4) {
@@ -111,11 +113,14 @@ public class GLRendererTest extends Scene {
         DebugDraw.drawShape(sceneBounds.scale(new Vec2(0.4f), null), Colors.BLACK);
         DebugDraw.drawShape(sceneBounds.scale(new Vec2(0.2f), null), Colors.BLACK);
 
-        Triangle tri = new Triangle(new Vec2(-2, -1), new Vec2(0, 3), new Vec2(2, -1));
+        Triangle tri = new Triangle(new Vec2(-2, -5), new Vec2(0, -1), new Vec2(2, -5));
         DebugDraw.fillShape(tri, Colors.ORANGE);
 
         Circle circle = new Circle(new Vec2(0, 5), 5);
         DebugDraw.drawShape(circle, Colors.PURPLE);
+
+        Ellipse ellipse = new Ellipse(new Vec2(0, 5), new Vec2(9.5f, 8));
+        DebugDraw.drawShape(ellipse, Colors.BLUE);
 
 //        if (KeyInput.keyPressed("space"))
 //            System.out.println("pressed");
@@ -147,7 +152,7 @@ public class GLRendererTest extends Scene {
         };
     }
 
-    private GameObject createSquare(String name, Vec2 position, GLSprite sprite) {
+    private GameObject createSquare(String name, Vec2 position, Sprite sprite) {
         return new GameObject(name, new Transform(position, new Vec2(8)), 2) {
             @Override
             protected void init() {
@@ -157,8 +162,9 @@ public class GLRendererTest extends Scene {
     }
 
     public static void main(String[] args) {
-        Mayonez.setUseGL(true);
-        Mayonez.setScene(new GLRendererTest());
+        String arg0 = (args.length > 0) ? args[0] : "";
+        Mayonez.setUseGL(Boolean.valueOf(arg0)); // Automatically choose AWT/GL
+        Mayonez.setScene(new RendererTest());
         Mayonez.start();
     }
 

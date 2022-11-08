@@ -6,9 +6,14 @@ import java.util.*
 
 typealias JColor = java.awt.Color
 
+/**
+ * Stores a color used by the program and converts between [java.awt.Color] and [org.joml.Vector4f]
+ */
 class Color(red: Int, green: Int, blue: Int, alpha: Int) {
 
     constructor(color: JColor) : this(color.red, color.green, color.blue, color.alpha)
+
+    constructor(color: Vector4f) : this(color.x.toInt(), color.y.toInt(), color.z.toInt(), color.w.toInt())
 
     var red: Int = red
         set(red) {

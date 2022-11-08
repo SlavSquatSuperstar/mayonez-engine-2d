@@ -183,6 +183,18 @@ object Assets {
     fun getTextFile(filename: String): TextFile? = getAsset(filename, TextFile::class.java)
 
     /**
+     * Retrieves the asset at the given location as a [Texture].
+     *
+     * @param filename the path to the file
+     * @return the texture, if it exists
+     */
+    @JvmStatic
+    fun getTexture(filename: String): Texture? {
+        return if (Mayonez.useGL == true) getAsset(filename, GLTexture::class.java)
+        else getAsset(filename, JTexture::class.java)
+    }
+
+    /**
      * Retrieves the asset at the given location as a [GLTexture].
      *
      * @param filename the path to the file

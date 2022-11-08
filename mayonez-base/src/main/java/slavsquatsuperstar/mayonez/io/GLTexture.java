@@ -1,9 +1,11 @@
 package slavsquatsuperstar.mayonez.io;
 
 import org.lwjgl.BufferUtils;
+import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.Logger;
 import slavsquatsuperstar.mayonez.annotations.UsesEngine;
 import slavsquatsuperstar.mayonez.annotations.EngineType;
+import slavsquatsuperstar.mayonez.physics.shapes.Rectangle;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -20,9 +22,9 @@ import static org.lwjgl.system.MemoryUtil.memSlice;
  * <br>
  * Sources:
  * <ul>
- *    <li>https://github.com/LWJGL/lwjgl3/blob/master/modules/samples/src/test/java/org/lwjgl/demo/stb/Image.java</li>
- *    <li>https://github.com/LWJGL/lwjgl3/blob/master/modules/samples/src/test/java/org/lwjgl/demo/util/IOUtil.java</li>
- *    <li>https://github.com/LWJGL/lwjgl3/blob/master/modules/samples/src/test/java/org/lwjgl/demo/glfw/GLFWUtil.java</li>
+ *    <li><a href="https://github.com/LWJGL/lwjgl3/blob/master/modules/samples/src/test/java/org/lwjgl/demo/stb/Image.java">org.lwjgl.demo.stb.Image</a></li>
+ *    <li><a href = https://github.com/LWJGL/lwjgl3/blob/master/modules/samples/src/test/java/org/lwjgl/demo/util/IOUtil.java>org.lwjgl.demo.stb.IOUtil</a></li>
+ *    <li><a href = https://github.com/LWJGL/lwjgl3/blob/master/modules/samples/src/test/java/org/lwjgl/demo/glfw/GLFWUtil.java></a>org.lwjgl.demo.glfw.GLFWUtil</li>
  * </ul>
  *
  * @author SlavSquatSuperstar
@@ -30,15 +32,45 @@ import static org.lwjgl.system.MemoryUtil.memSlice;
 @UsesEngine(EngineType.GL)
 public class GLTexture extends Texture {
 
+    // Image Data Fields
     private ByteBuffer image;
     private int width, height, channels;
-    private int texID;
 
+    // GPU Fields
+    private int texID;
+    private final Vec2[] texCoords;
+    public static final Vec2[] DEFAULT_TEX_COORDS = Rectangle.rectangleVertices(new Vec2(0.5f), new Vec2(1f), 0f);
+
+    /**
+     * Create a brand-new GLTexture with the given filename.
+     *
+     * @param filename the file location
+     */
     public GLTexture(String filename) {
         super(filename);
+        texCoords = DEFAULT_TEX_COORDS;
         readImage();
         createTexture();
     }
+
+    /**
+     * Create a GLTexture from a portion of another texture.
+     *
+     * @param texture   another texture
+     * @param texCoords the image region
+     */
+    public GLTexture(GLTexture texture, Vec2[] texCoords) {
+        super(texture.getFilename());
+        this.texID = texture.texID;
+        this.texCoords = texCoords;
+
+        this.image = texture.image;
+        Vec2 size = texCoords[2].sub(texCoords[0]); // relative size
+        this.width = (int) (texture.width * size.x); // get new image size
+        this.height = (int) (texture.height * size.y);
+        this.channels = texture.channels;
+    }
+
 
     @Override
     protected void readImage() {
@@ -107,6 +139,8 @@ public class GLTexture extends Texture {
         glBindTexture(GL_TEXTURE_2D, 0);
     }
 
+    // Image Getters
+
     @Override
     public int getWidth() {
         return width;
@@ -116,6 +150,12 @@ public class GLTexture extends Texture {
     public int getHeight() {
         return height;
     }
+
+    public Vec2[] getTexCoords() {
+        return texCoords;
+    }
+
+    // Helper Methods
 
     private static void showFailureMessage() throws RuntimeException {
         Logger.error("Reason for failure: " + stbi_failure_reason());

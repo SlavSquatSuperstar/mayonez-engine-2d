@@ -4,7 +4,7 @@ import slavsquatsuperstar.math.Vec2;
 import slavsquatsuperstar.mayonez.Component;
 import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Transform;
-import slavsquatsuperstar.mayonez.graphics.sprites.JSprite;
+import slavsquatsuperstar.mayonez.graphics.sprites.Sprite;
 import slavsquatsuperstar.mayonez.input.MouseInput;
 import slavsquatsuperstar.mayonez.io.JTexture;
 import slavsquatsuperstar.mayonez.physics.Rigidbody;
@@ -42,7 +42,7 @@ public class PlaceBlock extends Component {
             getScene().addObject(new GameObject("Placed Block", mousePos) {
                 @Override
                 protected void init() {
-                    addComponent(new JSprite(cursor));
+                    addComponent(Sprite.create(cursor));
                     addComponent(new BoxCollider(new Vec2(1f)));
                     addComponent(new Rigidbody(0f).setFixedRotation(true));
                 }
