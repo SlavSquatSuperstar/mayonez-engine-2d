@@ -2,7 +2,7 @@ package slavsquatsuperstar.mayonez.physics.detection;
 
 import org.junit.jupiter.api.Test;
 import slavsquatsuperstar.mayonez.math.Vec2;
-import slavsquatsuperstar.mayonez.physics.collision.CollisionInfo;
+import slavsquatsuperstar.mayonez.physics.collision.Manifold;
 import slavsquatsuperstar.mayonez.physics.shapes.Polygon;
 import slavsquatsuperstar.mayonez.physics.shapes.Rectangle;
 import slavsquatsuperstar.mayonez.physics.shapes.Triangle;
@@ -29,7 +29,7 @@ public class SATTests {
         assertFloatEquals(pen.getDepth(), 0f);
         assertEquals(pen.getNormal(), new Vec2(1, 0));
 
-        CollisionInfo man = new PenetrationSolver().getContacts(r1, r2, pen);
+        Manifold man = pen.getContacts(r1, r2);
         Vec2[] pts1 = new Vec2[]{man.getContact(0), man.getContact(1)};
         Vec2[] pts2 = new Vec2[]{new Vec2(2, -1), new Vec2(2, 2)};
         assertArrayEquals(pts1, pts2);
@@ -43,7 +43,7 @@ public class SATTests {
         assertFloatEquals(pen.getDepth(), 0.1f);
         assertEquals(pen.getNormal(), new Vec2(1, 0));
 
-        CollisionInfo man = new PenetrationSolver().getContacts(r1, r2, pen);
+        Manifold man = pen.getContacts(r1, r2);
         Vec2[] pts1 = new Vec2[]{man.getContact(0), man.getContact(1)};
         Vec2[] pts2 = new Vec2[]{new Vec2(1.9f, -1.1f), new Vec2(1.9f, 2)};
         assertArrayEquals(pts1, pts2);
@@ -56,7 +56,7 @@ public class SATTests {
         Penetration pen = new SATDetector().getPenetration(r1, r2);
         assertEquals(pen.getNormal(), new Vec2(1, 0));
 
-        CollisionInfo man = new PenetrationSolver().getContacts(r1, r2, pen);
+        Manifold man = pen.getContacts(r1, r2);
         assertEquals(1, man.numContacts());
     }
 
@@ -67,7 +67,7 @@ public class SATTests {
         Penetration pen = new SATDetector().getPenetration(r1, r2);
         assertEquals(pen.getNormal(), new Vec2(1, 0));
 
-        CollisionInfo man = new PenetrationSolver().getContacts(r1, r2, pen);
+        Manifold man = pen.getContacts(r1, r2);
         assertEquals(2, man.numContacts());
     }
 

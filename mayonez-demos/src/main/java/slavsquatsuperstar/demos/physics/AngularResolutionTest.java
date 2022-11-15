@@ -1,15 +1,20 @@
 package slavsquatsuperstar.demos.physics;
 
-import slavsquatsuperstar.mayonez.math.Vec2;
-import slavsquatsuperstar.mayonez.scripts.*;
-import slavsquatsuperstar.mayonez.util.Colors;
 import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Mayonez;
 import slavsquatsuperstar.mayonez.Script;
 import slavsquatsuperstar.mayonez.input.KeyInput;
+import slavsquatsuperstar.mayonez.math.Vec2;
 import slavsquatsuperstar.mayonez.physics.Rigidbody;
+import slavsquatsuperstar.mayonez.physics.colliders.BallCollider;
+import slavsquatsuperstar.mayonez.physics.colliders.BoxCollider;
 import slavsquatsuperstar.mayonez.physics.colliders.Collider;
-import slavsquatsuperstar.mayonez.physics.colliders.PolygonCollider;
+import slavsquatsuperstar.mayonez.scripts.DragAndDrop;
+import slavsquatsuperstar.mayonez.scripts.KeepInScene;
+import slavsquatsuperstar.mayonez.scripts.MouseFlick;
+import slavsquatsuperstar.mayonez.scripts.MoveMode;
+import slavsquatsuperstar.mayonez.util.Colors;
+import slavsquatsuperstar.mayonez.util.Logger;
 
 public class AngularResolutionTest extends PhysicsTestScene {
 
@@ -31,24 +36,37 @@ public class AngularResolutionTest extends PhysicsTestScene {
 //            }
 //        }
 
-        addObject(new GameObject("Triangle", new Vec2(40, 40)) {
+        addObject(createShape(new Vec2(30, 50), new BallCollider(2.5f)));
+        addObject(createShape(new Vec2(50, 50), new BallCollider(5)));
+        addObject(createShape(new Vec2(70, 50), new BallCollider(7.5f)));
+
+        addObject(createShape(new Vec2(30, 30), new BoxCollider(new Vec2(5))));
+        addObject(createShape(new Vec2(50, 30), new BoxCollider(new Vec2(10))));
+        addObject(createShape(new Vec2(70, 30), new BoxCollider(new Vec2(15))));
+    }
+
+    private static GameObject createShape(Vec2 position, Collider col) {
+        return new GameObject("Shape", position) {
             @Override
             protected void init() {
-                Collider poly = new PolygonCollider(3, 5).setDebugDraw(Colors.BLACK, false);
-                addComponent(poly);
-                addComponent(new Rigidbody(poly.getMass(DENSITY)));
-                addComponent(new KeepInScene(KeepInScene.Mode.BOUNCE));
+                Rigidbody rb;
+                addComponent(col.setDebugDraw(Colors.BLUE, false));
+                addComponent(rb = new Rigidbody(col.getMass(5f)).setFollowsGravity(true));
+                addComponent(new KeepInScene(new Vec2(), getScene().getSize(), KeepInScene.Mode.STOP));
                 addComponent(new DragAndDrop("left mouse"));
                 addComponent(new MouseFlick(MoveMode.VELOCITY, "right mouse", 15, false));
                 addComponent(new Script() {
                     @Override
                     public void update(float dt) {
-                        transform.rotate(KeyInput.getAxis("horizontal"));
+//                        rb.addAngularImpulse(-KeyInput.getAxis("horizontal"));
+                        if (KeyInput.keyPressed("space")) {
+//                            rb.setAngVelocity(0f);
+                            Logger.log("%s: %.4f", col, rb.getAngMass());
+                        }
                     }
                 });
             }
-        });
-
+        };
     }
 
     public static void main(String[] args) {

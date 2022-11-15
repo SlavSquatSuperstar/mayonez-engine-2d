@@ -22,7 +22,7 @@ public class KeepInScene extends Script {
     private Rigidbody rb = null;
 
     /**
-     * Create a new KeepInScene script and use the scene bounds
+     * Create a new KeepInScene script and use the scene bounds.
      *
      * @param mode what to do when reaching boundaries
      */

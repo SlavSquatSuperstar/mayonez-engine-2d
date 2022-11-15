@@ -65,7 +65,7 @@ abstract class Shape : Transformable {
     // Shape vs Point Methods
 
     /**
-     * The support point in any direction is the furthest point on a shape towards that direction. Used by the GJK
+     * The support point in any direction is the farthest point on a shape towards that direction. Used by the GJK
      * collision algorithm.
      *
      * @param direction the direction to search (does not have to be a unit vector)
@@ -143,7 +143,12 @@ abstract class Shape : Transformable {
     // Overrides
 
     /**
-     * Whether this shape is equivalent to another shape before applying any rigid transformations.
+     * Whether this shape has the same form, position size, and orientation as another. For this program, equality
+     * is not the same as congruency, where translations, rotations, and reflections may be applied.
+     * Equivalent shapes have the same area and perimeter, and their constituent parts are also equal.
+     *
+     * @param other another shape
+     * @return if the two shapes are equal
      */
     abstract override fun equals(other: Any?): Boolean
 

@@ -14,8 +14,8 @@ import kotlin.math.abs
  */
 open class Polygon(convex: Boolean, vararg vertices: Vec2) : Shape() {
 
-    constructor(vararg vertices: Vec2) : this(false, *vertices)
-
+    // automatically sort the vertices
+    constructor(vararg vertices: Vec2) : this(true, *vertices)
 
     /**
      * Constructs a regular polygon with the specified radius and number of sides.
@@ -24,6 +24,7 @@ open class Polygon(convex: Boolean, vararg vertices: Vec2) : Shape() {
      * @param sides  the number of sides and vertices
      * @param radius the distance from the center to each vertex
      */
+    // don't sort the vertices
     constructor(center: Vec2, sides: Int, radius: Float) :
             this(false, *regularPolygonVertices(center, sides, radius))
 
@@ -42,12 +43,13 @@ open class Polygon(convex: Boolean, vararg vertices: Vec2) : Shape() {
     /**
      * The edges that connect the vertices of this polygon.
      */
-    val edges: Array<Edge> = Array(numVertices) { Edge(vertices[it.next(numVertices)], vertices[it]) }
+    val edges: Array<Edge> = Array(numVertices) { Edge(this.vertices[it.next(numVertices)], this.vertices[it]) }
 
     /**
      * The faces, or unit normal vectors of each edge in this polygon.
      */
-    val normals: Array<Vec2> = Array(numVertices) { edges[it].unitNormal() }
+    val normals: Array<Vec2>
+        get() = Array(numVertices) { edges[it].unitNormal() }
 
     /**
      * Splits this polygon into n-2 triangular regions, which are guaranteed to be convex and non-overlapping.
@@ -175,7 +177,8 @@ open class Polygon(convex: Boolean, vararg vertices: Vec2) : Shape() {
     }
 
     override fun equals(other: Any?): Boolean {
-        return (other is Polygon) && this.vertices.contentEquals(other.vertices)
+//        return (other is Polygon) && this.vertices.contentEquals(other.vertices) // only works if sorted
+        return (other is Polygon) && orderedConvexHull(this.vertices).contentEquals(orderedConvexHull(other.vertices))
     }
 
     /**

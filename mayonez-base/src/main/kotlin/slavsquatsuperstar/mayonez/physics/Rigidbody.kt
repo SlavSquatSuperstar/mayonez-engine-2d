@@ -1,11 +1,11 @@
 package slavsquatsuperstar.mayonez.physics
 
+import slavsquatsuperstar.mayonez.Component
 import slavsquatsuperstar.mayonez.math.MathUtils
 import slavsquatsuperstar.mayonez.math.MathUtils.clamp
 import slavsquatsuperstar.mayonez.math.MathUtils.toDegrees
 import slavsquatsuperstar.mayonez.math.MathUtils.toRadians
 import slavsquatsuperstar.mayonez.math.Vec2
-import slavsquatsuperstar.mayonez.Component
 import slavsquatsuperstar.mayonez.physics.colliders.Collider
 
 /**
@@ -61,6 +61,10 @@ class Rigidbody(mass: Float, drag: Float, angDrag: Float) : Component() {
 
     // Game Loop Methods
 
+    override fun start() {
+        collider = gameObject.getComponent(Collider::class.java)
+    }
+
     /**
      * Integrate force and torque to solve for velocity and angular velocity
      */
@@ -70,7 +74,6 @@ class Rigidbody(mass: Float, drag: Float, angDrag: Float) : Component() {
         if (!MathUtils.equals(velocity.lenSq(), 0f)) // Apply drag first
             addForce(velocity * -drag)
         velocity += netForce * (invMass * dt)
-
 
         if (!fixedRotation) {
             if (!MathUtils.equals(angVelocity, 0f))

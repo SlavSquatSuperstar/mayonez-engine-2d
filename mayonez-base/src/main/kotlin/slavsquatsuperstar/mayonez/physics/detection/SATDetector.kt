@@ -54,9 +54,6 @@ class SATDetector : CollisionDetector {
         val depth = circle.radius - closestToCircle.distance(circle.center())
         val normal = (closestToCircle - circle.center()).unit()
         return Penetration(if (flip) -normal else normal, depth)
-//        val result = CollisionInfo(circle, polygon, closestToCircle - circle.center(), depth)
-//        result.addContact(closestToCircle)
-//        return result
     }
 
     // Polygon vs Polygon: 1-2 contact points
@@ -101,10 +98,16 @@ class SATDetector : CollisionDetector {
             return Range(MathUtils.min(*projections), MathUtils.max(*projections))
         }
 
-        private fun Range.overlaps(other: Range): Boolean = (this.min <= other.max) && (this.min <= other.max)
+        /**
+         * If two intervals overlap each other.
+         */
+        private fun Range.overlaps(other: Range): Boolean = (this.min <= other.max) && (this.max >= other.min)
 
+        /**
+         * How much two intervals overlap each other. Non-negative result if they overlap and undefined if they do not.
+         */
         private fun Range.getOverlap(other: Range): Float {
-            return min(this.max - other.min, other.max - this.min)
+            return min(other.max - this.min, this.max - other.min)
         }
 
     }

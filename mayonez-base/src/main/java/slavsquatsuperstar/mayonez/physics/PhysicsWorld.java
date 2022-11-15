@@ -7,7 +7,7 @@ import slavsquatsuperstar.mayonez.Preferences;
 import slavsquatsuperstar.mayonez.Scene;
 import slavsquatsuperstar.mayonez.engine.GameLayer;
 import slavsquatsuperstar.mayonez.physics.colliders.Collider;
-import slavsquatsuperstar.mayonez.physics.collision.CollisionInfo;
+import slavsquatsuperstar.mayonez.physics.collision.Manifold;
 import slavsquatsuperstar.mayonez.physics.collision.CollisionSolver;
 import slavsquatsuperstar.mayonez.physics.collision.Collisions;
 
@@ -80,6 +80,7 @@ public class PhysicsWorld implements GameLayer {
         detectBroadPhase();
         detectNarrowPhase();
 
+        // Resolve Collisions and Update Bodies
         forceRegistry.forEach(fr -> fr.fg.applyForce(fr.rb, dt)); // Update environmental forces
         bodies.forEach(rb -> rb.integrateForce(dt)); // Integrate force
         collisions.forEach(CollisionSolver::solve); // Resolve collisions
@@ -88,6 +89,9 @@ public class PhysicsWorld implements GameLayer {
 
     // Collision Helper Methods
 
+    /**
+     * Detect potential collisions between bounding boxes while avoiding expensive contact calculations.
+     */
     private void detectBroadPhase() {
         for (int i = 0; i < colliders.size(); i++) {
             Collider c1 = colliders.get(i);
@@ -108,17 +112,20 @@ public class PhysicsWorld implements GameLayer {
         }
     }
 
+    /**
+     * Check broadphase pairs for collisions and calculate contact points.
+     */
     private void detectNarrowPhase() {
         for (Pair<Collider, Collider> pair : broadphase) {
             Collider c1 = pair.getFirst();
             Collider c2 = pair.getSecond();
 
-            CollisionInfo collision = c1.getCollisionInfo(c2); // Get collision info
-
+            Manifold collision = c1.getCollisionInfo(c2); // Get contacts
             if (collision == null) continue;
 
-            // Send collision callbacks if both are not triggers
+            // If neither are triggers
             if (!c1.isTrigger() && !c2.isTrigger()) {
+                // Send collision callbacks
                 c1.onCollision(c2.getObject());
                 c2.onCollision(c1.getObject());
                 if (c1.getIgnoreCurrentCollision() || c2.getIgnoreCurrentCollision()) {
@@ -126,7 +133,7 @@ public class PhysicsWorld implements GameLayer {
                     c2.setIgnoreCurrentCollision(false);
                     continue; // Stop if either object has called ignore collision
                 }
-                collisions.add(new CollisionSolver(c1, c2, collision)); // Only solve if neither are triggers
+                collisions.add(new CollisionSolver(c1, c2, collision)); // Solve collisions
             } else if (c1.isTrigger()) {
                 c2.onTrigger(c1);
             } else if (c2.isTrigger()) {

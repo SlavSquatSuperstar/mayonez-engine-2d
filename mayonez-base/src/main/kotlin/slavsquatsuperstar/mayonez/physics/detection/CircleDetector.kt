@@ -1,6 +1,6 @@
 package slavsquatsuperstar.mayonez.physics.detection
 
-import slavsquatsuperstar.mayonez.physics.collision.CollisionInfo
+import slavsquatsuperstar.mayonez.physics.collision.Manifold
 import slavsquatsuperstar.mayonez.physics.shapes.Circle
 
 /**
@@ -33,7 +33,7 @@ object CircleDetector {
      * @return the collision information, or null if no collision
      */
     @JvmStatic
-    fun getContacts(circle1: Circle?, circle2: Circle?): CollisionInfo? {
+    fun getContacts(circle1: Circle?, circle2: Circle?): Manifold? {
         if (circle1 == null || circle2 == null) return null
         val sumRadii = circle1.radius + circle2.radius
         val vecDist = circle2.center() - circle1.center() // Distance between centers
@@ -42,7 +42,7 @@ object CircleDetector {
         val dist = vecDist.len()
         val depth = sumRadii - dist // Penetration depth
         val normal = vecDist / dist
-        val result = CollisionInfo(circle1, circle2, normal, depth)
+        val result = Manifold(circle1, circle2, normal, depth)
         result.addContact(circle1.center() + (normal * (circle1.radius - depth)))
         return result
     }

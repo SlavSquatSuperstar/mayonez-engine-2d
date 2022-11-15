@@ -21,7 +21,7 @@ public abstract class PhysicsTestScene extends Scene {
     static final PhysicsMaterial NORMAL_MATERIAL = new PhysicsMaterial(0.4f, 0.4f, 0.3f);
     static final PhysicsMaterial BOUNCY_MATERIAL = new PhysicsMaterial(0f, 0f, 1f);
     static final PhysicsMaterial STICKY_MATERIAL = new PhysicsMaterial(1f, 1f, 0f);
-    final float DENSITY = 1f;
+    final float DENSITY = 2f;
     final int NUM_SHAPES;
 
     private boolean enabledGravity = false;

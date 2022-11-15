@@ -5,7 +5,7 @@ import slavsquatsuperstar.mayonez.GameObject
 import slavsquatsuperstar.mayonez.math.Vec2
 import slavsquatsuperstar.mayonez.physics.PhysicsMaterial
 import slavsquatsuperstar.mayonez.physics.Rigidbody
-import slavsquatsuperstar.mayonez.physics.collision.CollisionInfo
+import slavsquatsuperstar.mayonez.physics.collision.Manifold
 import slavsquatsuperstar.mayonez.physics.collision.Collisions
 import slavsquatsuperstar.mayonez.physics.shapes.BoundingBox
 import slavsquatsuperstar.mayonez.physics.shapes.Shape
@@ -151,7 +151,7 @@ abstract class Collider(private val shapeData: Shape) : Component() {
      * @param collider another collider
      * @return the collision info, or no if there is no intersection
      */
-    fun getCollisionInfo(collider: Collider?): CollisionInfo? {
+    fun getCollisionInfo(collider: Collider?): Manifold? {
         return Collisions.getContacts(this.transformToWorld(), collider?.transformToWorld())
     }
 

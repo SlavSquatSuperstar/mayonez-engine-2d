@@ -84,6 +84,10 @@ class Edge(val start: Vec2, val end: Vec2) : Shape() {
 //    }
 
     // Clip Methods
+    /**
+     * Clips this to segment to two planes extending perpendicular from another segment's endpoints. The resulting edge
+     * is this edge's projection on the other.
+     */
     fun clipToSegment(segment: Edge): Edge {
         val planeDir = segment.unitNormal()
         val plane1 = Ray(segment.start, planeDir)

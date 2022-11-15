@@ -91,7 +91,7 @@ open class Ellipse(protected val center: Vec2, val size: Vec2, val angle: Float)
     // Ellipse vs Point
 
     /**
-     * The furthest point on the ellipse in any given direction. Due to the non-uniform curvature of an ellipse,
+     * The farthest point on the ellipse in any given direction. Due to the non-uniform curvature of an ellipse,
      * the support point is not equivalent to the ellipse's radius vector in that direction (see [getRadius]).
      *
      * Source: org.dyn4j.geometry.Ellipse.getFarthestPointOnAlignedEllipse
@@ -135,9 +135,14 @@ open class Ellipse(protected val center: Vec2, val size: Vec2, val angle: Float)
         return ptToCenter.lenSq() <= ptToEllipse.lenSq()
     }
 
+    /**
+     * Checks whether two ellipses have the same center and raduis vector
+     */
     override fun equals(other: Any?): Boolean {
-        return (other is Ellipse) && (this.center == other.center) && (this.size == other.size)
-                && (MathUtils.equals(this.angle, other.angle))
+        return (other is Ellipse) && (this.center == other.center)
+                && (this.size.rotate(this.angle) == other.size.rotate(other.angle))
+//        return (other is Ellipse) && (this.center == other.center) && (this.size == other.size)
+//                && (MathUtils.equals(this.angle, other.angle))
     }
 
     /**

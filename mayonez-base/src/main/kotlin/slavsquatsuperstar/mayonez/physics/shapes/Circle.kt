@@ -99,6 +99,12 @@ class Circle(
 
     // Overrides
 
+    /**
+     * Checks whether two circles have the same center and radius.
+     *
+     * @param other another circle
+     * @return if the two circles are equal
+     */
     override fun equals(other: Any?): Boolean {
         return (other is Circle) && (this.center == other.center) && MathUtils.equals(this.radius, other.radius)
     }

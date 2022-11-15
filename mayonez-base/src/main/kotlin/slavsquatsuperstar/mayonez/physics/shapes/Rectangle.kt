@@ -17,15 +17,15 @@ open class Rectangle(private val center: Vec2, private val size: Vec2, val angle
 
     companion object {
         @JvmStatic
-        /**
-         * Returns an array of counterclockwise rectangle vertices starting with the vertex with the
-         * most negative coordinates (before before rotation)
-         *
-         * @param center the rectangle center
-         * @param size   the rectangle dimensions
-         * @param angle  the rectangle rotation
-         * @return the vertex array
-         */
+                /**
+                 * Returns an array of counterclockwise rectangle vertices starting with the vertex with the
+                 * most negative coordinates (before before rotation)
+                 *
+                 * @param center the rectangle center
+                 * @param size   the rectangle dimensions
+                 * @param angle  the rectangle rotation
+                 * @return the vertex array
+                 */
         fun rectangleVertices(center: Vec2, size: Vec2, angle: Float = 0f): Array<Vec2> {
             val min = center - size * 0.5f
             val max = center + size * 0.5f
@@ -120,7 +120,8 @@ open class Rectangle(private val center: Vec2, private val size: Vec2, val angle
     // Overrides
 
     override fun equals(other: Any?): Boolean {
-        return (other is Rectangle) && (this.center == other.center) && (this.size == other.size)
+        return (other is Rectangle) && (this.center == other.center)
+                && (this.size == other.size || this.size == other.size.normal())
                 && (MathUtils.equals(this.angle, other.angle))
     }
 
