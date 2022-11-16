@@ -32,8 +32,8 @@ public class FrictionTest extends PhysicsTestScene {
             @Override
             protected void init() {
                 transform.rotate(-25);
-                addComponent(new Rigidbody(0));
-                addComponent(new BoxCollider(new Vec2(40, 5)).setMaterial(NORMAL_MATERIAL).setDebugDraw(Colors.BLACK, false));
+                addComponent(new Rigidbody(0).setMaterial(NORMAL_MATERIAL));
+                addComponent(new BoxCollider(new Vec2(40, 5)).setDebugDraw(Colors.BLACK, false));
             }
         });
 
@@ -55,8 +55,7 @@ public class FrictionTest extends PhysicsTestScene {
 
                     @Override
                     public void start() {
-                        getCollider().setMaterial(PhysicsTestScene.NORMAL_MATERIAL);
-                        rb = getRigidbody();
+                        rb = getRigidbody().setMaterial(PhysicsTestScene.NORMAL_MATERIAL);
                     }
 
                     @Override

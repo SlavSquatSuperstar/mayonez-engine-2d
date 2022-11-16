@@ -3,7 +3,6 @@ package slavsquatsuperstar.mayonez.physics.collision
 import slavsquatsuperstar.mayonez.math.MathUtils
 import slavsquatsuperstar.mayonez.math.Vec2
 import slavsquatsuperstar.mayonez.physics.PhysicsMaterial
-import slavsquatsuperstar.mayonez.physics.PhysicsWorld
 import slavsquatsuperstar.mayonez.physics.Rigidbody
 import slavsquatsuperstar.mayonez.physics.colliders.Collider
 import kotlin.math.abs
@@ -15,8 +14,39 @@ import kotlin.math.sign
  * @author SlavSquatSuperstar
  */
 class CollisionSolver(private val c1: Collider, private val c2: Collider, private var manifold: Manifold) {
-    private val r1: Rigidbody? = c1.rigidbody
-    private val r2: Rigidbody? = c2.rigidbody
+
+    companion object {
+        // A Rigidbody that will give default values but is not modified
+        private val NULL_RB = Rigidbody(0f)
+
+        fun Rigidbody.safeAddImpulse(impulse: Vec2) {
+            if (this !== NULL_RB) this.addImpulse(impulse)
+        }
+
+        fun Rigidbody.safeAddAngImpulse(impulse: Float) {
+            if (this !== NULL_RB) this.addAngularImpulse(impulse)
+        }
+    }
+
+    private val r1: Rigidbody = c1.rigidbody ?: NULL_RB
+    private val r2: Rigidbody = c2.rigidbody ?: NULL_RB
+
+    // Collision Properties
+    private val normal = manifold.normal // Collision direction
+    private val tangent = normal.normal() // Collision plane
+    private val numContacts = manifold.numContacts()
+
+    // Body Properties
+    private val sumInvMass = r1.invMass + r2.invMass
+    private val invAngMass1 = r1.invAngMass
+    private val invAngMass2 = r2.invAngMass
+
+    // Physics Material Properties
+    private val mat1 = r1.material
+    private val mat2 = r2.material
+    private val cRest = PhysicsMaterial.combineBounce(mat1, mat2) // Coefficient of restitution, e
+    private val sFric = PhysicsMaterial.combineStaticFriction(mat1, mat2) // combined static friction, mu_s
+    private val kFric = PhysicsMaterial.combineKineticFriction(mat1, mat2) // combined kinetic friction, mu_k
 
     /*
      * Collider & Rigidbody (dynamic): Can move and push
@@ -34,8 +64,8 @@ class CollisionSolver(private val c1: Collider, private val c2: Collider, privat
     fun solve() {
         if (!recheck()) return
         if (c1.isStatic() && c2.isStatic()) return // Check masses once, cannot both be static
-        solveDynamic()
         solveStatic()
+        solveDynamicAngular()
         c1.collisionResolved = true
         c2.collisionResolved = true
     }
@@ -52,76 +82,121 @@ class CollisionSolver(private val c1: Collider, private val c2: Collider, privat
     }
 
     /**
+     * Only transfer linear momentum between objects.
+     */
+    private fun solveDynamicLinear() {
+        for (contact in manifold.getContacts()) {
+            // Relative velocity at contact point (linear + angular velocity)
+            val vel1 = r1.getPointVelocity(contact)
+            val vel2 = r2.getPointVelocity(contact)
+            val relVel = vel2 - vel1 // relative velocity, v_r
+
+            // Normal (separation) impulse
+            val normVel = relVel.dot(normal) // Velocity along collision normal
+            if (normVel > 0f) return // Stop if moving away or stationary
+            // Apply impulse at contact points evenly
+            val normImp = -(1f + cRest) * normVel / (sumInvMass)
+
+            val collisionImp = normal * normImp // impulse at this point
+            r1.safeAddImpulse(-collisionImp)
+            r2.safeAddImpulse(collisionImp)
+        }
+    }
+
+    /**
+     * Only transfer linear and angular momentum between objects.
+     */
+    private fun solveDynamicAngular() {
+        val impulses = ArrayList<Array<Vec2>>(2) // Store impulses/radii for each contact
+
+        // Calculate impulses
+        for (contact in manifold.getContacts()) {
+            // Relative velocity at contact point (linear + angular velocity)
+            val vel1 = r1.getPointVelocity(contact)
+            val vel2 = r2.getPointVelocity(contact)
+            val relVel = vel2 - vel1 // relative velocity, v_rel
+            val normVel = relVel.dot(normal) // Velocity along collision normal, v_n
+            if (normVel > 0f) continue // Skip this point if moving away or stationary
+
+            // Normal (separation) impulse
+            val rad1 = contact - r1.position
+            val rad2 = contact - r2.position
+            val dot1Sq = MathUtils.squared(normal.dot(rad1.normal()))
+            val dot2Sq = MathUtils.squared(normal.dot(rad2.normal()))
+            val denom = sumInvMass + invAngMass1 * dot1Sq + invAngMass2 * dot2Sq
+            val normImp = -(1f + cRest) * normVel / (denom * manifold.numContacts()) // Normal impulse, J_n
+
+            val contactImp = normal * normImp // Impulse at this point
+            impulses.add(arrayOf(contactImp, rad1, rad2))
+        }
+
+        // Apply impulses
+        for (i in impulses.indices) {
+            val arr = impulses[i]
+            val imp = arr[0]
+            val rad1 = arr[1]
+            val rad2 = arr[2]
+            r1.safeAddImpulse(-imp)
+            r1.safeAddAngImpulse(rad1.cross(-imp))
+            r2.safeAddImpulse(imp)
+            r2.safeAddAngImpulse(rad2.cross(imp))
+        }
+    }
+
+    /**
      * Transfer linear and angular momentum between objects and apply friction.
      */
     private fun solveDynamic() {
-        // Collision Information
-        val normal = manifold.normal // Collision direction
-        val tangent = normal.normal() // Collision plane
-        val numContacts = manifold.numContacts()
+        val impulses = ArrayList<Array<Vec2>>(2) // Store impulses/radii for each contact
 
-        // Physics Properties
-        val sumInvMass = (r1?.invMass ?: 0f) + (r2?.invMass ?: 0f)
-        val mat1 = c1.material
-        val mat2 = c2.material
-        val cRest = PhysicsMaterial.combineBounce(mat1, mat2) // coefficient of restitution, e
-        val sFric = PhysicsMaterial.combineStaticFriction(mat1, mat2) // combined static friction, mu_s
-        val kFric = PhysicsMaterial.combineKineticFriction(mat1, mat2) // combined kinetic friction, mu_k
+        // Calculate impulses
+        for (contact in manifold.getContacts()) {
+            // Relative velocity at contact point (linear + angular velocity)
+            val vel1 = r1.getPointVelocity(contact)
+            val vel2 = r2.getPointVelocity(contact)
+            val relVel = vel2 - vel1 // relative velocity, v_rel
 
-        for (i in 0 until PhysicsWorld.IMPULSE_ITERATIONS) {
-            // Net impulse of collision
-            var sumImp = Vec2()
-            var sumAngImp1 = 0f
-            var sumAngImp2 = 0f
+            val rad1 = contact - r1.position
+            val rad2 = contact - r2.position
+            val dot1Sq = MathUtils.squared(normal.dot(rad1.normal()))
+            val dot2Sq = MathUtils.squared(normal.dot(rad2.normal()))
 
-            for (contact in manifold.getContacts()) {
-                // Radius from center of mass to contact
-                val rad1 = contact - r1!!.position
-                val rad2 = contact - r2!!.position
+            // Normal (separation) impulse
+            val normVel = relVel.dot(normal) // Velocity along collision normal, v_n
+            if (normVel > 0f) continue // Skip this point if moving away or stationary
+            val denom = sumInvMass + invAngMass1 * dot1Sq + invAngMass2 * dot2Sq
+            val normImp = -(1f + cRest) * normVel / (denom * manifold.numContacts()) // Normal impulse, J_n
 
-                // Relative velocity at contact point (linear + angular velocity)
-                val vel1 = r1.getPointVelocity(contact)
-                val vel2 = r2.getPointVelocity(contact)
-                val relVel = vel1 - vel2 // relative velocity, v_r
+            // Tangential (friction) impulse
+            /*
+             * Coulomb's law (static/dynamic friction)
+             * F_f ≤ mu*F_n
+             * Clamp the friction magnitude to the normal magnitude
+             * Use dynamic friction if J_f ≥ mu*J_n
+             */
+            val tanVel = relVel.dot(tangent)
+            var tanImp = tanVel / (sumInvMass * numContacts)
+            if (MathUtils.equals(tanImp, 0f)) tanImp = 0f // Ignore tiny friction impulses
 
-                // Normal (separation) impulse
-                val normVel = relVel.dot(normal) // Velocity along collision normal
-                if (normVel < 0f) return  // Stop if moving away or stationary
-                // Apply impulse at contact points evenly
-                val normImp = -(1f + cRest) * normVel / (sumInvMass * numContacts)
+            // Coulomb's Law: use kinetic friction if overcome static friction
+            if (abs(tanImp) > abs(normImp * sFric)) tanImp =
+                -sign(tanImp) * normImp * kFric
+            tanImp = MathUtils.clamp(tanImp, -normImp * kFric, normImp * kFric)
 
-                // Transfer angular momentum
-                sumAngImp1 -= rad1.cross(normal * relVel)
-                sumAngImp2 += rad2.cross(normal * relVel)
+            val contactImp = normal * normImp + tangent * tanImp // Impulse at this point
+            impulses.add(arrayOf(contactImp, rad1, rad2))
+        }
 
-                // Tangential (friction) impulse
-                /*
-                 * Coulomb's law (static/dynamic friction)
-                 * F_f ≤ mu*F_n
-                 * Clamp the friction magnitude to the normal magnitude
-                 * Use dynamic friction if J_f ≥ mu*J_n
-                 */
-                val tanVel = relVel.dot(tangent)
-                var tanImp = -tanVel / (sumInvMass * numContacts)
-                if (MathUtils.equals(tanImp, 0f)) tanImp = 0f // Ignore tiny friction impulses
-
-                // Coulomb's Law: use kinetic friction if overcome static friction
-                if (abs(tanImp) > abs(normImp * sFric)) tanImp =
-                    -sign(tanImp) * normImp * kFric
-                tanImp = MathUtils.clamp(tanImp, -normImp * kFric, normImp * kFric)
-
-                // Calculate angular impulse from collision
-                val collisionImp = normal * normImp + tangent * tanImp // impulse at this point
-                sumImp += collisionImp
-                sumAngImp1 += rad1.cross(collisionImp)
-                sumAngImp2 -= rad2.cross(collisionImp)
-            }
-
-            // Transfer Momentum
-            r1?.addImpulse(sumImp)
-            r1?.addAngularImpulse(sumAngImp1)
-            r2?.addImpulse(-sumImp)
-            r2?.addAngularImpulse(sumAngImp2)
+        // Apply impulses
+        for (i in impulses.indices) {
+            val arr = impulses[i]
+            val imp = arr[0]
+            val rad1 = arr[1]
+            val rad2 = arr[2]
+            r1.safeAddImpulse(-imp)
+            r1.safeAddAngImpulse(rad1.cross(-imp))
+            r2.safeAddImpulse(imp)
+            r2.safeAddAngImpulse(rad2.cross(imp))
         }
     }
 
@@ -129,8 +204,8 @@ class CollisionSolver(private val c1: Collider, private val c2: Collider, privat
      * Correct positions of objects if one or neither collider has an infinite-mass rigidbody.
      */
     private fun solveStatic() {
-        val mass1: Float = r1?.mass ?: 0f
-        val mass2: Float = r2?.mass ?: 0f
+        val mass1: Float = r1.mass
+        val mass2: Float = r2.mass
 
         // Separate objects factoring in mass
         val massRatio = mass1 / (mass1 + mass2)

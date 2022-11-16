@@ -16,10 +16,9 @@ import slavsquatsuperstar.mayonez.physics.colliders.Collider
  */
 class Rigidbody(mass: Float, drag: Float, angDrag: Float) : Component() {
 
-    // Constructors
     constructor(mass: Float) : this(mass, 0.05f, 0.05f)
 
-    // Component Properties
+    // Component References
 
     /**
      * Returns the parent object's [Collider]. May be null.
@@ -35,6 +34,14 @@ class Rigidbody(mass: Float, drag: Float, angDrag: Float) : Component() {
             field = 0f.coerceAtLeast(mass)
         }
 
+    var material: PhysicsMaterial = PhysicsMaterial.DEFAULT_MATERIAL
+        private set
+
+    fun setMaterial(material: PhysicsMaterial): Rigidbody {
+        this.material = material
+        return this
+    }
+
     var followsGravity: Boolean = true
         @JvmName("isFollowsGravity") get
         private set
@@ -44,16 +51,22 @@ class Rigidbody(mass: Float, drag: Float, angDrag: Float) : Component() {
         private set
 
     // Linear Motion Fields
+
     private var netForce: Vec2 = Vec2()
+
     var velocity: Vec2 = Vec2()
+
     var drag: Float = drag
         set(drag) {
             field = clamp(drag, 0f, 1f)
         }
 
     // Angular Motion Fields
+
     private var netTorque: Float = 0f
+
     var angVelocity: Float = 0f
+
     var angDrag: Float = angDrag
         set(angDrag) {
             field = clamp(angDrag, 0f, 1f)
@@ -131,8 +144,8 @@ class Rigidbody(mass: Float, drag: Float, angDrag: Float) : Component() {
     val angMass: Float
         get() = collider?.getAngMass(mass) ?: mass
 
-    private val invAngMass: Float
-        get() = if (hasInfiniteMass()) invMass else 1f / angMass
+    val invAngMass: Float
+        get() = if (hasInfiniteMass()) 0f else 1f / angMass
 
     // Force Methods
 
@@ -179,14 +192,14 @@ class Rigidbody(mass: Float, drag: Float, angDrag: Float) : Component() {
         addTorque(point.sub(position).cross(force))
     }
 
-    fun addImpulseAtPoint(impulse: Vec2, point: Vec2) {
-        addImpulse(impulse)
-        addAngularImpulse(point.sub(position).cross(impulse))
-    }
+    /**
+     * Calculates the tangential velocity of a rotating point on this body using the relationship v_T = r_perp * w.
+     */
+    fun getRelativePointVelocity(point: Vec2): Vec2 = (point - position).normal() * toRadians(angVelocity)
 
-    // convert angular velocity to linear velocity
-    fun getRelativePointVelocity(point: Vec2): Vec2 = (point - position).rotate(90f) * toRadians(angVelocity)
-
+    /**
+     * Calculates the velocity of this body's center plus the relative velocity the given point.
+     */
     fun getPointVelocity(point: Vec2): Vec2 = velocity + getRelativePointVelocity(point)
 
     // Torque Methods

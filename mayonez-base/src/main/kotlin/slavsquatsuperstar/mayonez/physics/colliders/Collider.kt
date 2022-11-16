@@ -3,10 +3,9 @@ package slavsquatsuperstar.mayonez.physics.colliders
 import slavsquatsuperstar.mayonez.Component
 import slavsquatsuperstar.mayonez.GameObject
 import slavsquatsuperstar.mayonez.math.Vec2
-import slavsquatsuperstar.mayonez.physics.PhysicsMaterial
 import slavsquatsuperstar.mayonez.physics.Rigidbody
-import slavsquatsuperstar.mayonez.physics.collision.Manifold
 import slavsquatsuperstar.mayonez.physics.collision.Collisions
+import slavsquatsuperstar.mayonez.physics.collision.Manifold
 import slavsquatsuperstar.mayonez.physics.shapes.BoundingBox
 import slavsquatsuperstar.mayonez.physics.shapes.Shape
 import slavsquatsuperstar.mayonez.util.DebugDraw
@@ -33,14 +32,6 @@ abstract class Collider(private val shapeData: Shape) : Component() {
     var rigidbody: Rigidbody? = null
 
     // Physics Engine Properties
-
-    var material: PhysicsMaterial = PhysicsMaterial.DEFAULT_MATERIAL
-        private set
-
-    fun setMaterial(material: PhysicsMaterial): Collider {
-        this.material = material
-        return this
-    }
 
     var isTrigger = false
         /**

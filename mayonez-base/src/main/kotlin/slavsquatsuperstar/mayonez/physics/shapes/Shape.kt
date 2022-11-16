@@ -94,18 +94,18 @@ abstract class Shape : Transformable {
     // Physical Properties
 
     /**
-     * The mass (translational inertia) of the shape, assuming a uniform density throughout the shape.
+     * The mass of the shape, or its resistance to changes in linear motion, assuming a uniform density throughout the shape.
      *
      * @param density the area density (mass per area) of the shape
      */
     fun mass(density: Float): Float = density * area()
 
     /**
-     * The angular mass (rotational inertia) of the shape around its centroid, I_z, assuming a uniform density throughout
-     * the shape. This function specifically calculates the polar moment of area of a lamina (thin object equivalent
-     * to a 2D shape). While the second moment of area has units of L^4, multiplying it by area density (m/L^2) gives it
+     * The two-dimensional moment of inertia (angular mass) of the shape around its centroid, or its resistance to
+     * changes in rotation. This function specifically calculates the polar moment of area, I_z/J_z, of a lamina
+     * (thin object equivalent to a 2D shape) while assuming a uniform density throughout the shape.
+     * While the second moment of area has units of L^4, multiplying it by area density (m/L^2) gives it
      * the same units as moment of inertia (mL^2).
-     *
      *
      * @param mass the mass of the shape
      */

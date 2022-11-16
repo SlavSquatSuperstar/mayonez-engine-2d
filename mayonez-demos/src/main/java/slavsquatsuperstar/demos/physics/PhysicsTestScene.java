@@ -76,9 +76,9 @@ public abstract class PhysicsTestScene extends Scene {
         return new GameObject("Ball", position) {
             @Override
             protected void init() {
-                Collider circle = new BallCollider(size).setMaterial(material).setDebugDraw(Colors.BLUE, false);
+                Collider circle = new BallCollider(size).setDebugDraw(Colors.BLUE, false);
                 addComponent(circle);
-                addComponent(new Rigidbody(circle.getMass(DENSITY)));
+                addComponent(new Rigidbody(circle.getMass(DENSITY)).setMaterial(material));
                 addComponent(new KeepInScene(new Vec2(), getScene().getSize(), KeepInScene.Mode.BOUNCE));
                 addComponent(new DragAndDrop("left mouse"));
                 addComponent(new MouseFlick(MoveMode.VELOCITY, "right mouse", 15, false));
@@ -91,9 +91,9 @@ public abstract class PhysicsTestScene extends Scene {
             @Override
             protected void init() {
 //                transform.rotate(rotation);
-                Collider box = new BoxCollider(size).setMaterial(material).setDebugDraw(Colors.ORANGE, false);
+                Collider box = new BoxCollider(size).setDebugDraw(Colors.ORANGE, false);
                 addComponent(box);
-                addComponent(new Rigidbody(box.getMass(DENSITY)));
+                addComponent(new Rigidbody(box.getMass(DENSITY)).setMaterial(material));
                 addComponent(new KeepInScene(new Vec2(), getScene().getSize(), KeepInScene.Mode.BOUNCE));
                 addComponent(new DragAndDrop("left mouse"));
                 addComponent(new MouseFlick(MoveMode.VELOCITY, "right mouse", 15, false));

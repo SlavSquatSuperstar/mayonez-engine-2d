@@ -1,8 +1,8 @@
 package slavsquatsuperstar.mayonez.math
 
 import org.joml.Vector2f
-import slavsquatsuperstar.mayonez.math.MathUtils.equals
 import slavsquatsuperstar.mayonez.annotations.Mutating
+import slavsquatsuperstar.mayonez.math.MathUtils.equals
 import java.util.*
 import kotlin.math.*
 
@@ -314,7 +314,7 @@ class Vec2 constructor(
     }
 
     /**
-     * Creates a vector perpendicular (rotated 90 degrees counterclockwise)  to this one with a length of 1.
+     * Creates a vector perpendicular (rotated 90 degrees counterclockwise) to this one with a length of 1.
      *
      * @return a perpendicular vector
      */

@@ -20,6 +20,7 @@ public class KeepInScene extends Script {
     private Collider objectCollider = null;
     private BoundingBox objectBounds;
     private Rigidbody rb = null;
+    private float nBounce = 0f;
 
     /**
      * Create a new KeepInScene script and use the scene bounds.
@@ -57,9 +58,13 @@ public class KeepInScene extends Script {
         }
 
         rb = objectCollider.getRigidbody();
-        if (rb == null && mode == Mode.BOUNCE) {
-            Logger.warn("%s needs a collider to bounce!", this);
-            mode = Mode.STOP; // need rb to bounce
+        if (rb == null) {
+            if (mode == Mode.BOUNCE) {
+                Logger.warn("%s needs a rigidbody to bounce!", this);
+                mode = Mode.STOP; // need rb to bounce
+            }
+        } else {
+            nBounce = -rb.getMaterial().getBounce();
         }
     }
 
@@ -110,7 +115,7 @@ public class KeepInScene extends Script {
                         setX(minPos.x + objectBounds.width * 0.5f);
                         if (rb != null) rb.getVelocity().x = 0;
                     }
-                    case BOUNCE -> rb.getVelocity().x *= -objectCollider.getMaterial().getBounce();
+                    case BOUNCE -> rb.getVelocity().x *= nBounce;
                 }
             }
             case RIGHT -> {
@@ -119,7 +124,7 @@ public class KeepInScene extends Script {
                         setX(maxPos.x - objectBounds.width * 0.5f);
                         if (rb != null) rb.getVelocity().x = 0;
                     }
-                    case BOUNCE -> rb.getVelocity().x *= -objectCollider.getMaterial().getBounce();
+                    case BOUNCE -> rb.getVelocity().x *= nBounce;
                 }
             }
             case TOP -> {
@@ -128,7 +133,7 @@ public class KeepInScene extends Script {
                         setY(minPos.y + objectBounds.height * 0.5f);
                         if (rb != null) rb.getVelocity().y = 0;
                     }
-                    case BOUNCE -> rb.getVelocity().y *= -objectCollider.getMaterial().getBounce();
+                    case BOUNCE -> rb.getVelocity().y *= nBounce;
                 }
             }
             case BOTTOM -> {
@@ -137,7 +142,7 @@ public class KeepInScene extends Script {
                         setY(maxPos.y - objectBounds.height * 0.5f);
                         if (rb != null) rb.getVelocity().y = 0;
                     }
-                    case BOUNCE -> rb.getVelocity().y *= -objectCollider.getMaterial().getBounce();
+                    case BOUNCE -> rb.getVelocity().y *= nBounce;
                 }
             }
         }

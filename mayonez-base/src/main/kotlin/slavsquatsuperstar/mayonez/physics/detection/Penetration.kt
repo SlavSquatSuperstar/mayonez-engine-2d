@@ -6,8 +6,6 @@ import slavsquatsuperstar.mayonez.physics.collision.Manifold
 import slavsquatsuperstar.mayonez.physics.shapes.Edge
 import slavsquatsuperstar.mayonez.physics.shapes.Polygon
 import slavsquatsuperstar.mayonez.physics.shapes.Shape
-import slavsquatsuperstar.mayonez.util.Colors
-import slavsquatsuperstar.mayonez.util.DebugDraw
 import kotlin.math.abs
 
 /**
@@ -55,19 +53,12 @@ class Penetration(val normal: Vec2, val depth: Float) {
             val refEdge = if (flip) feature2 else feature1
             val incEdge = if (flip) feature1 else feature2
 
-//            if (flip) normal.set(-normal)
             val colNormal = if (flip) -normal else normal
             collision = if (flip) Manifold(shape2, shape1, -colNormal, depth)
             else Manifold(shape1, shape2, colNormal, depth)
 
             // 3. Clip incident edge
-            val clippedEdge = incEdge.clipToSegment(refEdge) // clip incident edge
-
-            DebugDraw.drawShape(refEdge, Colors.RED)
-//            DebugDraw.drawVector(refEdge.center(), normal, Colors.GREEN)
-//            DebugDraw.drawShape(incEdge, Colors.BLUE)
-            DebugDraw.drawShape(clippedEdge, Colors.BLUE)
-//            DebugDraw.drawVector(clippedEdge.center(), -normal, Colors.GREEN)
+            val clippedEdge = incEdge.clipToSegment(refEdge)
 
             // 4. Calculate contact points
             val incEdgeLength = refEdge.start.dot(colNormal)
