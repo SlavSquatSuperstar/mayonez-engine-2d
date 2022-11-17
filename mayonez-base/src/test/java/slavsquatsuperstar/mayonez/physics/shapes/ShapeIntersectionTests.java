@@ -2,12 +2,13 @@ package slavsquatsuperstar.mayonez.physics.shapes;
 
 import org.junit.jupiter.api.Test;
 import slavsquatsuperstar.mayonez.math.Vec2;
+import slavsquatsuperstar.mayonez.physics.Collisions;
 
 import static slavsquatsuperstar.test.TestUtils.assertNoShapeCollision;
 import static slavsquatsuperstar.test.TestUtils.assertShapeCollision;
 
 /**
- * Unit tests for the {@link slavsquatsuperstar.mayonez.physics.collision.Collisions} class.
+ * Unit tests for the {@link Collisions} class.
  *
  * @author SlavSquatSuperstar
  */

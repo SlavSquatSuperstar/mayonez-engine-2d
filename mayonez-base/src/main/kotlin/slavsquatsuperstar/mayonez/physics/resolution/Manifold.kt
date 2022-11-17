@@ -1,4 +1,4 @@
-package slavsquatsuperstar.mayonez.physics.collision
+package slavsquatsuperstar.mayonez.physics.resolution
 
 import slavsquatsuperstar.mayonez.math.Vec2
 import slavsquatsuperstar.mayonez.physics.shapes.Shape

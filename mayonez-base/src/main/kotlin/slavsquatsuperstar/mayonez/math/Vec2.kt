@@ -60,13 +60,13 @@ class Vec2 constructor(
      * Copies this vector.
      * @return a new vector with the same components
      */
-    operator fun unaryPlus() = Vec2(this)
+    operator fun unaryPlus(): Vec2 = Vec2(this)
 
     /**
      * Negates this vector.
      * @return a new vector with this vector's components times -1
      */
-    operator fun unaryMinus() = Vec2(-x, -y)
+    operator fun unaryMinus(): Vec2 = Vec2(-x, -y)
 
     // Mutators
 
@@ -87,6 +87,7 @@ class Vec2 constructor(
      *
      * @param v another 2D vector
      */
+    @Mutating
     fun set(v: Vec2) = set(v.x, v.y)
 
     // Arithmetic Operations
@@ -98,7 +99,7 @@ class Vec2 constructor(
      * @return the vector sum
      */
     fun add(v: Vec2): Vec2 = this + v
-    operator fun plus(v: Vec2) = Vec2(this.x + v.x, this.y + v.y)
+    operator fun plus(v: Vec2): Vec2 = Vec2(this.x + v.x, this.y + v.y)
 
     /**
      * Subtracts another vector from this vector.
@@ -107,7 +108,7 @@ class Vec2 constructor(
      * @return the vector difference
      */
     fun sub(v: Vec2): Vec2 = this - v
-    operator fun minus(v: Vec2) = Vec2(this.x - v.x, this.y - v.y)
+    operator fun minus(v: Vec2): Vec2 = Vec2(this.x - v.x, this.y - v.y)
 
     /**
      * Multiplies both components vector by a number.
@@ -116,7 +117,7 @@ class Vec2 constructor(
      * @return the multiplied vector
      */
     fun mul(scalar: Float): Vec2 = this * scalar
-    operator fun times(scalar: Float) = Vec2(this.x * scalar, this.y * scalar)
+    operator fun times(scalar: Float): Vec2 = Vec2(this.x * scalar, this.y * scalar)
 
     /**
      * Multiplies the components of this vector by the corresponding components of another vector.
@@ -128,16 +129,16 @@ class Vec2 constructor(
     operator fun times(v: Vec2) = Vec2(this.x * v.x, this.y * v.y)
 
     /**
-     * Divides both components vector by a number.
+     * Divides both components vector by a number, or returns (0, 0) if the number is 0.
      *
      * @param scalar a non-zero number
      * @return the divided vector
      */
-    operator fun div(scalar: Float): Vec2 = Vec2(x.safeDivide(scalar), y.safeDivide(scalar))
-//        = if (scalar == 0f) Vec2() else this * (1f / scalar)
+    operator fun div(scalar: Float): Vec2 = if (scalar == 0f) Vec2() else this * (1f / scalar)
 
     /**
-     * Divides the components of this vector by the corresponding components of another vector.
+     * Divides the components of this vector by the corresponding components of another vector. If any components in
+     * the second vector is 0, the corresponding quotient component is 0.
      *
      * @param v another vector with non-zero components
      * @return the divided vector
@@ -160,45 +161,67 @@ class Vec2 constructor(
     fun dot(v: Vec2): Float = (this.x * v.x) + (this.y * v.y)
 
     /**
-     * Returns the z-component of the cross product between this vector and another, equal to the determinant of the
-     * matrix with this vector and the other as columns.
+     * Calculates the z-component of the cross product between this vector and another. The resulting z-component
+     * equals a.x * b.y - b.x * a.y, or the determinant of the matrix with this vector and the other as columns.
      *
      * @param v another vector
-     * @return the 2D cross product
+     * @return the cross product z-component
      */
     fun cross(v: Vec2): Float = (this.x * v.y) - (v.x * this.y)
 
+    /**
+     * Returns the 2D vector of the cross product between this vector and z-component. The resulting vector equals
+     * (y*z, -x*z), or this vector's clockwise normal scaled by the given z-component.
+     *
+     * @param z a vector's z-component
+     * @return the 2D cross product vector
+     */
+    fun cross(z: Float): Vec2 = Vec2(this.y * z, -this.x * z)
+
     companion object {
+        // Pre-Defined Vectors
+
         /**
          * The vector (1, 0), or the positive x-axis.
          */
         val right: Vec2
             get() = Vec2(1f, 0f)
+
         /**
          * The vector (-1, 0), or the negative x-axis.
          */
         val left: Vec2
             get() = Vec2(-1f, 0f)
+
         /**
          * The vector (0, 1), or the positive y-axis.
          */
         val up: Vec2
             get() = Vec2(0f, 1f)
+
         /**
          * The vector (0, -1), or the negative y-axis.
          */
         val down: Vec2
             get() = Vec2(0f, -1f)
+
         /**
          * The vector (1, 1), or the component-wise multiplicative identity.
          */
         val one: Vec2
             get() = Vec2(1f, 1f)
+
         /**
          * The vector (0, 0), or the component-wise additive identity.
          */
         val zero: Vec2
             get() = Vec2(0f, 0f)
+
+        // Float Operations
+        operator fun Float.times(v: Vec2): Vec2 = Vec2(this * v.x, this * v.y)
+        fun Float.cross(v: Vec2): Vec2 = Vec2(-v.y * this, v.x * this)
+
+        // Static Vector Methods
 
         /**
          * Calculates the vector triple product between three vectors. The vector triple product is

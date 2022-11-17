@@ -2,7 +2,7 @@ package slavsquatsuperstar.mayonez.physics.detection
 
 import slavsquatsuperstar.mayonez.math.MathUtils
 import slavsquatsuperstar.mayonez.math.Vec2
-import slavsquatsuperstar.mayonez.physics.collision.Manifold
+import slavsquatsuperstar.mayonez.physics.resolution.Manifold
 import slavsquatsuperstar.mayonez.physics.shapes.Edge
 import slavsquatsuperstar.mayonez.physics.shapes.Polygon
 import slavsquatsuperstar.mayonez.physics.shapes.Shape

@@ -25,9 +25,9 @@ public class KeyMovement extends MovementScript {
         switch (mode) {
             case POSITION -> transform.move(input.mul(Mayonez.TIME_STEP));
             case VELOCITY -> rb.addVelocity(input);
-            case ACCELERATION -> rb.addAcceleration(input);
-            case IMPULSE -> rb.addImpulse(input);
-            case FORCE -> rb.addForce(input);
+            case ACCELERATION -> rb.applyAcceleration(input);
+            case IMPULSE -> rb.applyImpulse(input);
+            case FORCE -> rb.applyForce(input);
         }
         // Limit Top Speed
         if (rb != null && topSpeed > -1 && rb.getSpeed() > topSpeed)

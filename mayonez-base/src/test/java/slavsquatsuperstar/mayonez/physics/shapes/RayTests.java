@@ -2,13 +2,13 @@ package slavsquatsuperstar.mayonez.physics.shapes;
 
 import org.junit.jupiter.api.Test;
 import slavsquatsuperstar.mayonez.math.Vec2;
-import slavsquatsuperstar.mayonez.physics.collision.Collisions;
-import slavsquatsuperstar.mayonez.physics.collision.RaycastInfo;
+import slavsquatsuperstar.mayonez.physics.Collisions;
+import slavsquatsuperstar.mayonez.physics.resolution.RaycastInfo;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static slavsquatsuperstar.test.TestUtils.assertFloatEquals;
-import static slavsquatsuperstar.mayonez.physics.collision.Collisions.raycast;
+import static slavsquatsuperstar.mayonez.physics.Collisions.raycast;
 
 /**
  * Unit tests for the {@link slavsquatsuperstar.mayonez.physics.shapes.Ray} class.

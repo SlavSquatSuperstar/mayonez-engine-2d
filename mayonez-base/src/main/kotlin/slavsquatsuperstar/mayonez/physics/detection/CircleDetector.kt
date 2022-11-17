@@ -1,6 +1,6 @@
 package slavsquatsuperstar.mayonez.physics.detection
 
-import slavsquatsuperstar.mayonez.physics.collision.Manifold
+import slavsquatsuperstar.mayonez.physics.resolution.Manifold
 import slavsquatsuperstar.mayonez.physics.shapes.Circle
 
 /**

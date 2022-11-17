@@ -44,11 +44,11 @@ public class PlayerController extends Script {
             // Jump if on ground
             if (KeyInput.keyDown("w"))
                 // Impulse must be big enough to not get stuck on ground next frame
-                rb.addImpulse(new Vec2(0, speed));
+                rb.applyImpulse(new Vec2(0, speed));
 
             // Ground Pound if in air
             if (KeyInput.keyDown("s"))
-                rb.addImpulse(new Vec2(0, -speed));
+                rb.applyImpulse(new Vec2(0, -speed));
         }
     }
 

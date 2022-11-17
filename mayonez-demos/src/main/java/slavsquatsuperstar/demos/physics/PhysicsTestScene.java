@@ -68,7 +68,7 @@ public abstract class PhysicsTestScene extends Scene {
 //            System.out.println("held");
 //        }
 
-        if (enabledGravity) setGravity(new Vec2(0, -18));
+        if (enabledGravity) setGravity(new Vec2(0, -9.8f));
         else setGravity(new Vec2());
     }
 

@@ -1,6 +1,8 @@
-package slavsquatsuperstar.mayonez.physics.collision
+package slavsquatsuperstar.mayonez.physics
 
 import slavsquatsuperstar.mayonez.physics.detection.*
+import slavsquatsuperstar.mayonez.physics.resolution.Manifold
+import slavsquatsuperstar.mayonez.physics.resolution.RaycastInfo
 import slavsquatsuperstar.mayonez.physics.shapes.Circle
 import slavsquatsuperstar.mayonez.physics.shapes.Ray
 import slavsquatsuperstar.mayonez.physics.shapes.Shape

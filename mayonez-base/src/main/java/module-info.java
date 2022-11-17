@@ -30,7 +30,7 @@ module mayonez.base {
     exports slavsquatsuperstar.mayonez.math;
     exports slavsquatsuperstar.mayonez.physics;
     exports slavsquatsuperstar.mayonez.physics.colliders;
-    exports slavsquatsuperstar.mayonez.physics.collision;
+    exports slavsquatsuperstar.mayonez.physics.resolution;
     exports slavsquatsuperstar.mayonez.physics.shapes;
     exports slavsquatsuperstar.mayonez.scripts;
     exports slavsquatsuperstar.mayonez.util;

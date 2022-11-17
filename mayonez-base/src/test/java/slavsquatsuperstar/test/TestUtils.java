@@ -2,7 +2,7 @@ package slavsquatsuperstar.test;
 
 import slavsquatsuperstar.mayonez.math.MathUtils;
 import slavsquatsuperstar.mayonez.math.Vec2;
-import slavsquatsuperstar.mayonez.physics.collision.Collisions;
+import slavsquatsuperstar.mayonez.physics.Collisions;
 import slavsquatsuperstar.mayonez.physics.shapes.Shape;
 
 import java.util.Arrays;

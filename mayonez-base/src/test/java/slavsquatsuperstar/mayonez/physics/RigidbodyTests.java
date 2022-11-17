@@ -16,7 +16,7 @@ public class RigidbodyTests {
     @Test
     public void appliedForceChangesVelocity() {
         Rigidbody rb = new Rigidbody(2);
-        rb.addForce(new Vec2(2, 0));
+        rb.applyForce(new Vec2(2, 0));
         physicsUpdate(rb, 1);
         assertEquals(new Vec2(1, 0), rb.getVelocity());
     }
@@ -24,7 +24,7 @@ public class RigidbodyTests {
     @Test
     public void appliedTorqueChangesAngVelocity() {
         Rigidbody rb = new Rigidbody(2);
-        rb.addTorque(2);
+        rb.applyTorque(2f);
         physicsUpdate(rb, 1);
         assertEquals(1, rb.getAngVelocity());
     }
@@ -32,7 +32,10 @@ public class RigidbodyTests {
     @Test
     public void torqueScalesWithRadius() {
         Rigidbody rb = new Rigidbody(2);
-        rb.addForceAtPoint(new Vec2(2, 0), new Vec2(0, 2));
+        Vec2 force = new Vec2(2, 0);
+        rb.applyForce(force);
+        Vec2 radius = new Vec2(0, 2).sub(rb.getPosition());
+        rb.applyTorque(radius.cross(force));
         physicsUpdate(rb, 1);
         assertEquals(-2, rb.getAngVelocity());
     }
@@ -42,8 +45,8 @@ public class RigidbodyTests {
         Rigidbody rb = new Rigidbody(1, 0, 0);
         rb.addAngularVelocity(360 / MathUtils.PI);
         physicsUpdate(rb, 1);
-        assertEquals(2, rb.getRelativePointVelocity(new Vec2(1, 0)).len(), MathUtils.FLOAT_EPSILON);
-        assertEquals(new Vec2(0, 2), rb.getRelativePointVelocity(new Vec2(1, 0)));
+        assertEquals(2, rb.getPointVelocity(new Vec2(1, 0)).len(), MathUtils.FLOAT_EPSILON);
+        assertEquals(new Vec2(0, 2), rb.getPointVelocity(new Vec2(1, 0)));
     }
 
     @Test
@@ -51,7 +54,7 @@ public class RigidbodyTests {
         Rigidbody rb = new Rigidbody(1, 0, 0);
         rb.addAngularVelocity(360 / MathUtils.PI);
         physicsUpdate(rb, 1);
-        assertEquals(new Vec2(0, 2), rb.getRelativePointVelocity(new Vec2(1, 0)));
+        assertEquals(new Vec2(0, 2), rb.getPointVelocity(new Vec2(1, 0)));
     }
 
     @Test

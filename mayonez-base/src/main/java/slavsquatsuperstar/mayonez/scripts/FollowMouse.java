@@ -21,9 +21,9 @@ public class FollowMouse extends MouseScript {
             case FOLLOW_MOUSE -> transform.position.set(MouseInput.getPosition());
             case POSITION -> transform.move(mouseDirection);
             case VELOCITY -> rb.addVelocity(mouseDirection);
-            case IMPULSE -> rb.addImpulse(mouseDirection);
-            case ACCELERATION -> rb.addAcceleration(mouseDirection);
-            case FORCE -> rb.addForce(mouseDirection);
+            case IMPULSE -> rb.applyImpulse(mouseDirection);
+            case ACCELERATION -> rb.applyAcceleration(mouseDirection);
+            case FORCE -> rb.applyForce(mouseDirection);
         }
     }
 

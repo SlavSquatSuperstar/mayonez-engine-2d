@@ -3,5 +3,4 @@
  *
  * @author SlavSquatSuperstar
  */
-// TODO make solvers static?
-package slavsquatsuperstar.mayonez.physics.collision;
+package slavsquatsuperstar.mayonez.physics.resolution;

@@ -12,7 +12,7 @@ import kotlin.math.*
 object MathUtils {
 
     /**
-     * The maximum difference two floats can have to still be considered equal by the engine (equal to 10^-6).
+     * The maximum difference two floats can have to still be considered equal by the engine (equal to 0.000001).
      */
     const val FLOAT_EPSILON = 1e-6f
 
@@ -28,10 +28,21 @@ object MathUtils {
      *
      * @param num1 a number
      * @param num2 another number
-     * @return if they are equal
+     * @return if they are roughly equal
      */
     @JvmStatic
-    fun equals(num1: Float, num2: Float): Boolean = abs(num1 - num2) <= FLOAT_EPSILON
+    fun equals(num1: Float, num2: Float): Boolean = equals(num1, num2, FLOAT_EPSILON)
+
+    /**
+     * Determines whether two floats are approximately equal within a given error.
+     *
+     * @param num1  a number
+     * @param num2  another number
+     * @param error the max difference between the two numbers
+     * @return if they are equal within error
+     */
+    @JvmStatic
+    fun equals(num1: Float, num2: Float, error: Float): Boolean = abs(num1 - num2) <= abs(error)
 
     // Exponents
 

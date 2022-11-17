@@ -7,9 +7,8 @@ import slavsquatsuperstar.mayonez.Preferences;
 import slavsquatsuperstar.mayonez.Scene;
 import slavsquatsuperstar.mayonez.engine.GameLayer;
 import slavsquatsuperstar.mayonez.physics.colliders.Collider;
-import slavsquatsuperstar.mayonez.physics.collision.Manifold;
-import slavsquatsuperstar.mayonez.physics.collision.CollisionSolver;
-import slavsquatsuperstar.mayonez.physics.collision.Collisions;
+import slavsquatsuperstar.mayonez.physics.resolution.Manifold;
+import slavsquatsuperstar.mayonez.physics.resolution.CollisionSolver;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,15 +26,15 @@ public class PhysicsWorld implements GameLayer {
     public final static float GRAVITY_CONSTANT = 9.8f;
     public final static int IMPULSE_ITERATIONS = Preferences.getImpulseIterations();
 
-    // Collisions
+    // Bodies and Collisions
     private final List<Rigidbody> bodies; // physical objects in the world
     private final List<Collider> colliders; // shapes in the world
     private final List<Pair<Collider, Collider>> broadphase; // possible broad phase collisions
     private final List<CollisionSolver> collisions; // narrow phase collisions
 
-    // Forces
-    private final List<ForceRegistration> forceRegistry;
-    private final ForceGenerator gravityForce;
+    // Physics Properties
+//    private final List<ForceRegistration> forceRegistry;
+//    private final ForceGenerator gravityForce;
     private Vec2 gravity; // acceleration due to gravity
 
     public PhysicsWorld() {
@@ -44,9 +43,7 @@ public class PhysicsWorld implements GameLayer {
         broadphase = new ArrayList<>();
         collisions = new ArrayList<>();
 
-        forceRegistry = new ArrayList<>();
         setGravity(new Vec2(0, -PhysicsWorld.GRAVITY_CONSTANT));
-        gravityForce = (rb, dt) -> rb.addForce(gravity.mul(rb.getMass()));
     }
 
     @Override
@@ -81,8 +78,10 @@ public class PhysicsWorld implements GameLayer {
         detectNarrowPhase();
 
         // Resolve Collisions and Update Bodies
-        forceRegistry.forEach(fr -> fr.fg.applyForce(fr.rb, dt)); // Update environmental forces
-        bodies.forEach(rb -> rb.integrateForce(dt)); // Integrate force
+        bodies.forEach(rb -> {
+            if (rb.isFollowsGravity()) rb.applyForce(gravity.mul(rb.getMass()));
+            rb.integrateForce(dt);
+        }); // Apply gravity and integrate force
         collisions.forEach(CollisionSolver::solve); // Resolve collisions
         bodies.forEach(rb -> rb.integrateVelocity(dt)); // Integrate velocity
     }
@@ -150,11 +149,7 @@ public class PhysicsWorld implements GameLayer {
         // TODO rules for registration (e.g. if object is static, ignore)
         // TODO or just apply forces based on tags
 
-        if (rb != null) {
-            bodies.add(rb);
-            if (rb.isFollowsGravity())
-                forceRegistry.add(new ForceRegistration(gravityForce, rb));
-        }
+        if (rb != null) bodies.add(rb);
 
         Collider c = o.getComponent(Collider.class);
         if (c != null) colliders.add(c);

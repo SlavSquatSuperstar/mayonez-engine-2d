@@ -4,8 +4,8 @@ import slavsquatsuperstar.mayonez.Component
 import slavsquatsuperstar.mayonez.GameObject
 import slavsquatsuperstar.mayonez.math.Vec2
 import slavsquatsuperstar.mayonez.physics.Rigidbody
-import slavsquatsuperstar.mayonez.physics.collision.Collisions
-import slavsquatsuperstar.mayonez.physics.collision.Manifold
+import slavsquatsuperstar.mayonez.physics.Collisions
+import slavsquatsuperstar.mayonez.physics.resolution.Manifold
 import slavsquatsuperstar.mayonez.physics.shapes.BoundingBox
 import slavsquatsuperstar.mayonez.physics.shapes.Shape
 import slavsquatsuperstar.mayonez.util.DebugDraw
@@ -153,7 +153,7 @@ abstract class Collider(private val shapeData: Shape) : Component() {
      *
      * @return if this collider is not affected by collisions.
      */
-    fun isStatic(): Boolean = rigidbody?.hasInfiniteMass() ?: true
+    fun isStatic(): Boolean = rigidbody?.infiniteMass ?: true
 
     // Callback Methods
 

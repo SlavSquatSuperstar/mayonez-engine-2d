@@ -61,11 +61,11 @@ public class FrictionTest extends PhysicsTestScene {
                     @Override
                     public void update(float dt) {
                         if (KeyInput.keyDown("q"))
-                            rb.addAngularImpulse(speed);
+                            rb.applyAngularImpulse(speed);
                         else if (KeyInput.keyDown("e"))
-                            rb.addAngularImpulse(-speed);
+                            rb.applyAngularImpulse(-speed);
 
-                        rb.addImpulse(new Vec2(KeyInput.getAxis("horizontal") * speed,
+                        rb.applyImpulse(new Vec2(KeyInput.getAxis("horizontal") * speed,
                                 KeyInput.getAxis("vertical") * speed));
                     }
                 });

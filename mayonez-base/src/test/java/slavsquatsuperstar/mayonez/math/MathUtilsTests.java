@@ -13,6 +13,20 @@ import static slavsquatsuperstar.test.TestUtils.assertFloatEquals;
 public class MathUtilsTests {
 
     // Equality
+    @Test
+    public void floatEqualsSuccess() {
+        assertTrue(MathUtils.equals(0.0000010f, 0.0000019f));
+        assertTrue(MathUtils.equals(-0.0000005f, 0.0000005f));
+        assertTrue(MathUtils.equals(0.0000010f, 0.0000020f));
+        assertTrue(MathUtils.equals(0.0001f, 0.0002f, 0.0001f));
+    }
+
+    @Test
+    public void floatEqualsFail() {
+        assertFalse(MathUtils.equals(0.0000010f, 0.0000021f));
+        assertFalse(MathUtils.equals(-0.0000005f, 0.0000006f));
+        assertFalse(MathUtils.equals(0.0001f, 0.0002f, 0.00005f));
+    }
 
     @Test
     public void floatEpsilonEqualsZero() {

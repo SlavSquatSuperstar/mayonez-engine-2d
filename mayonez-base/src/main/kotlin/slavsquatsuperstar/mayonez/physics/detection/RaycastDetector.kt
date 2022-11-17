@@ -2,7 +2,7 @@ package slavsquatsuperstar.mayonez.physics.detection
 
 import slavsquatsuperstar.mayonez.math.MathUtils
 import slavsquatsuperstar.mayonez.math.Vec2
-import slavsquatsuperstar.mayonez.physics.collision.RaycastInfo
+import slavsquatsuperstar.mayonez.physics.resolution.RaycastInfo
 import slavsquatsuperstar.mayonez.physics.shapes.*
 import kotlin.math.sign
 import kotlin.math.sqrt

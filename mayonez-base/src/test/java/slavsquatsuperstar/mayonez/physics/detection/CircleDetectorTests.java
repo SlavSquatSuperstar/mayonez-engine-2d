@@ -2,7 +2,7 @@ package slavsquatsuperstar.mayonez.physics.detection;
 
 import org.junit.jupiter.api.Test;
 import slavsquatsuperstar.mayonez.math.Vec2;
-import slavsquatsuperstar.mayonez.physics.collision.Manifold;
+import slavsquatsuperstar.mayonez.physics.resolution.Manifold;
 import slavsquatsuperstar.mayonez.physics.shapes.Circle;
 
 import static org.junit.jupiter.api.Assertions.*;
