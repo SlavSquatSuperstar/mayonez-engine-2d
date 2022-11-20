@@ -7,7 +7,7 @@ import slavsquatsuperstar.mayonez.util.StringUtils
  */
 // TODO store mappings?
 internal enum class KeyAxis(private val posKey: Key, private val negKey: Key) {
-    VERTICAL(Key.W, Key.S), HORIZONTAL(Key.D, Key.A);
+    VERTICAL(Key.W, Key.S), HORIZONTAL(Key.D, Key.A), HORIZONTAL2(Key.Q, Key.E);
 
     /**
      * @return The value of this axis. 1 if the positive key is pressed. -1 if the negative key is pressed.

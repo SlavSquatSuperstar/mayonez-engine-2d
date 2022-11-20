@@ -8,8 +8,8 @@ import slavsquatsuperstar.mayonez.physics.Collisions
 import slavsquatsuperstar.mayonez.physics.resolution.Manifold
 import slavsquatsuperstar.mayonez.physics.shapes.BoundingBox
 import slavsquatsuperstar.mayonez.physics.shapes.Shape
+import slavsquatsuperstar.mayonez.util.Color
 import slavsquatsuperstar.mayonez.util.DebugDraw
-import java.awt.Color
 import java.awt.Graphics2D
 
 /**

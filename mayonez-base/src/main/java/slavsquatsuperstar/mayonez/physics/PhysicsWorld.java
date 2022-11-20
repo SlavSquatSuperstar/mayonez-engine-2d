@@ -71,19 +71,21 @@ public class PhysicsWorld implements GameLayer {
         broadphase.clear();
         collisions.clear();
 
+        // Apply Gravity and Update Bodies
+        bodies.forEach(rb -> {
+            if (rb.isFollowsGravity()) rb.applyForce(gravity.mul(rb.getMass()));
+            rb.integrateForce(dt);
+            rb.integrateVelocity(dt);
+        });
+
         // TODO Pre-collision optimizations and spatial partitioning
         // TODO Create collision events
         // Detect Collisions and Create Collision Events
         detectBroadPhase();
         detectNarrowPhase();
 
-        // Resolve Collisions and Update Bodies
-        bodies.forEach(rb -> {
-            if (rb.isFollowsGravity()) rb.applyForce(gravity.mul(rb.getMass()));
-            rb.integrateForce(dt);
-        }); // Apply gravity and integrate force
-        collisions.forEach(CollisionSolver::solve); // Resolve collisions
-        bodies.forEach(rb -> rb.integrateVelocity(dt)); // Integrate velocity
+        // Resolve Collisions
+        collisions.forEach(CollisionSolver::solve);
     }
 
     // Collision Helper Methods

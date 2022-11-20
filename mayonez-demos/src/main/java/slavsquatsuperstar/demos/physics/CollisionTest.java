@@ -11,6 +11,7 @@ public class CollisionTest extends PhysicsTestScene {
 
     @Override
     protected void init() {
+        super.init();
         addObject(createStaticBox("Ground", new Vec2(getWidth() / 2f, 1), new Vec2(getWidth(), 2), 0));
 
         addObject(createStaticBox("Left Ramp", new Vec2(20, 40), new Vec2(20, 4), -50));

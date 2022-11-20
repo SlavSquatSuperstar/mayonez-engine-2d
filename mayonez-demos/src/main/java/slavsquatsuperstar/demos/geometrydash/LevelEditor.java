@@ -45,7 +45,7 @@ public class LevelEditor extends Scene {
             }
         });
 
-        SpriteSheet blocks = SpriteSheet.create("assets/textures/blocks.png", 42, 42, 12, 2);
+        SpriteSheet blocks = SpriteSheet.create("assets/textures/geometrydash/blocks.png", 42, 42, 12, 2);
         addObject(new UICanvas("Canvas", new Transform(new Vec2(-5f, -5f)), (JSpriteSheet) blocks));
 
     }

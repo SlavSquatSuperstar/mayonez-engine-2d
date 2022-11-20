@@ -24,6 +24,7 @@ public class AngularResolutionTest extends PhysicsTestScene {
 
     @Override
     protected void init() {
+        super.init();
         addObject(createStaticBox("Floor", new Vec2(getWidth() / 2f, 1), new Vec2(getWidth(), 2), 0));
 
 //        for (int i = 0; i < NUM_SHAPES; i++) {
@@ -58,7 +59,7 @@ public class AngularResolutionTest extends PhysicsTestScene {
                 addComponent(new Script() {
                     @Override
                     public void update(float dt) {
-//                        rb.addAngularImpulse(-KeyInput.getAxis("horizontal"));
+                        rb.applyAngularImpulse(10f * -KeyInput.getAxis("horizontal"));
                         if (KeyInput.keyPressed("space")) {
 //                            rb.setAngVelocity(0f);
                             Logger.log("%s: %.4f", col, rb.getAngMass());
@@ -71,7 +72,7 @@ public class AngularResolutionTest extends PhysicsTestScene {
 
     public static void main(String[] args) {
         Mayonez.setUseGL(false);
-        Mayonez.setScene(new AngularResolutionTest("Angular Impulse Resolution Test"));
+        Mayonez.setScene(new AngularResolutionTest("Angular Resolution Test"));
         Mayonez.start();
     }
 

@@ -1,11 +1,10 @@
 package slavsquatsuperstar.demos.physics;
 
+import slavsquatsuperstar.mayonez.*;
 import slavsquatsuperstar.mayonez.math.Vec2;
 import slavsquatsuperstar.mayonez.scripts.*;
+import slavsquatsuperstar.mayonez.util.Color;
 import slavsquatsuperstar.mayonez.util.Colors;
-import slavsquatsuperstar.mayonez.GameObject;
-import slavsquatsuperstar.mayonez.Preferences;
-import slavsquatsuperstar.mayonez.Scene;
 import slavsquatsuperstar.mayonez.util.DebugDraw;
 import slavsquatsuperstar.mayonez.input.KeyInput;
 import slavsquatsuperstar.mayonez.physics.PhysicsMaterial;
@@ -24,7 +23,7 @@ public abstract class PhysicsTestScene extends Scene {
     final float DENSITY = 2f;
     final int NUM_SHAPES;
 
-    private boolean enabledGravity = false;
+    private boolean enabledGravity;
 
     public PhysicsTestScene(String name, int numShapes) {
         super(name, Preferences.getScreenWidth(), Preferences.getScreenHeight(), 10);
@@ -32,6 +31,11 @@ public abstract class PhysicsTestScene extends Scene {
         NUM_SHAPES = numShapes;
         setGravity(new Vec2());
         getCamera().setPosition(getSize().mul(0.5f));
+    }
+
+    @Override
+    protected void init() {
+        enabledGravity = false;
     }
 
     @Override
@@ -54,6 +58,13 @@ public abstract class PhysicsTestScene extends Scene {
     @Override
     protected void onUserUpdate(float dt) {
         getCamera().setPosition(getSize().mul(0.5f));
+
+        if (KeyInput.keyPressed("r")) SceneManager.reloadScene(); // reload scene
+        else if (KeyInput.keyPressed("1")) Mayonez.setScene(new CollisionTest("Collision Test Scene"));
+        else if (KeyInput.keyPressed("2")) Mayonez.setScene(new DetectionTest("Detection Test Scene"));
+        else if (KeyInput.keyPressed("3")) Mayonez.setScene(new FrictionTest("Friction Test Scene"));
+        else if (KeyInput.keyPressed("4")) Mayonez.setScene(new AngularResolutionTest("Angular Resolution Test"));
+        else if (KeyInput.keyPressed("5")) Mayonez.setScene(new PoolBallsTest("Pool Balls Test"));
 
         if (KeyInput.keyPressed("space")) {
 //            System.out.println("pressed");

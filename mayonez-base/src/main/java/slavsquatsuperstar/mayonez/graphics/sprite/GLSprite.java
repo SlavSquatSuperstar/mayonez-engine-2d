@@ -24,7 +24,7 @@ public final class GLSprite extends Sprite {
      * @param texture a texture
      */
     GLSprite(GLTexture texture) {
-        super(new Color(Colors.WHITE));
+        super(Colors.WHITE);
         this.texture = texture;
     }
 

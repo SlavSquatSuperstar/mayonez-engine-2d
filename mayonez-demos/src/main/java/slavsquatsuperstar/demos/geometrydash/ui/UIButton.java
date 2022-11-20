@@ -24,7 +24,7 @@ public class UIButton extends GameObject {
     private Sprite onSprite;
 
     static {
-        buttons = SpriteSheet.create("assets/textures/buttons.png", 60, 60, 2, 2);
+        buttons = SpriteSheet.create("assets/textures/geometrydash/buttons.png", 60, 60, 2, 2);
         offButton = buttons.getTexture(0);
         onButton = buttons.getTexture(1);
     }

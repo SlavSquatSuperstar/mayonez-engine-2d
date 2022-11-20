@@ -37,14 +37,14 @@ public final class JGame extends GameEngine {
 
     @Override
     public void update(float dt) throws Exception {
-        if (scene != null) scene.update(dt);
+        if (getScene() != null) getScene().update(dt);
     }
 
     @Override
     public void render() throws Exception {
         window.render((args) -> {
             Graphics2D g2 = (Graphics2D) args[0];
-            if (scene != null) scene.render(g2);
+            if (getScene() != null) getScene().render(g2);
         });
     }
 

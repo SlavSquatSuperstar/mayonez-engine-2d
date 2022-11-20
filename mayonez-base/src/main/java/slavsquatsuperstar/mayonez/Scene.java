@@ -8,6 +8,7 @@ import slavsquatsuperstar.mayonez.graphics.GLCamera;
 import slavsquatsuperstar.mayonez.graphics.JCamera;
 import slavsquatsuperstar.mayonez.graphics.renderer.*;
 import slavsquatsuperstar.mayonez.physics.PhysicsWorld;
+import slavsquatsuperstar.mayonez.util.Color;
 import slavsquatsuperstar.mayonez.util.Colors;
 import slavsquatsuperstar.mayonez.util.Logger;
 
@@ -142,7 +143,7 @@ public abstract class Scene implements GameLayer {
         if (started) {
             // Render background
             if (g2 != null) {
-                g2.setColor(background);
+                g2.setColor(background.toAWT());
                 g2.fillRect(0, 0, (int) ((size.x + 1) * scale), (int) ((size.y + 1) * scale));
                 onUserRender(g2);
             }

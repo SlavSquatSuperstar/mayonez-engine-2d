@@ -1,12 +1,12 @@
 package slavsquatsuperstar.mayonez
 
-import slavsquatsuperstar.mayonez.math.Vec2
 import slavsquatsuperstar.mayonez.Preferences.screenHeight
 import slavsquatsuperstar.mayonez.Preferences.screenWidth
 import slavsquatsuperstar.mayonez.engine.GLGame
 import slavsquatsuperstar.mayonez.engine.GameEngine
 import slavsquatsuperstar.mayonez.engine.JGame
 import slavsquatsuperstar.mayonez.io.Assets
+import slavsquatsuperstar.mayonez.math.Vec2
 import slavsquatsuperstar.mayonez.util.Logger
 import kotlin.system.exitProcess
 
@@ -66,7 +66,7 @@ object Mayonez {
      * Instantiate singleton objects in the correct order to avoid initializer errors from circular dependencies.
      */
     @JvmStatic
-    internal fun init() { // TODO internal
+    internal fun init() {
         // Create Logger object
         if (!INIT_ENGINE) {
             Logger.log("Engine: Initializing...")
@@ -122,14 +122,12 @@ object Mayonez {
     // Getters and Setters
 
     @JvmStatic
-    val scene: Scene
-        get() = game!!.scene
-
-    @JvmStatic
-    fun setScene(scene: Scene) {
-        if (!started) init()
-        game?.setScene(scene) ?: exitIfNotConfigured()
-    }
+    var scene: Scene
+        get() = SceneManager.currentScene
+        set(scene) {
+            if (!started) init()
+            SceneManager.setScene(scene)
+        }
 
     @JvmStatic
     val screenSize: Vec2

@@ -172,8 +172,8 @@ class Rigidbody(mass: Float, drag: Float, angDrag: Float) : Component() {
      *
      * @param impulse a scalar with units `deg/s`
      */
-    fun applyAngularImpulse(impulse: Float?) {
-        angVelocity += (impulse ?: return) * invAngMass // dw = T/I = I*dw/I
+    fun applyAngularImpulse(impulse: Float) {
+        angVelocity += impulse * invAngMass // dw = T/I = I*dw/I
     }
 
     /**
@@ -190,8 +190,8 @@ class Rigidbody(mass: Float, drag: Float, angDrag: Float) : Component() {
      *
      * @param angAcceleration a vector with the units `deg/s/s`
      */
-    fun applyAngularAcceleration(angAcceleration: Float?) {
-        netTorque += (angAcceleration ?: return) * invAngMass // dT = A/I
+    fun applyAngularAcceleration(angAcceleration: Float) {
+        netTorque += angAcceleration * invAngMass // dT = A/I
     }
 
     /**

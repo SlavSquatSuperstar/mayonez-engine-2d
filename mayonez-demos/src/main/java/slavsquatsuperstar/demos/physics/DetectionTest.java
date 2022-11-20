@@ -1,25 +1,22 @@
 package slavsquatsuperstar.demos.physics;
 
 import slavsquatsuperstar.mayonez.Mayonez;
-import slavsquatsuperstar.mayonez.Preferences;
-import slavsquatsuperstar.mayonez.Scene;
 import slavsquatsuperstar.mayonez.input.KeyInput;
 import slavsquatsuperstar.mayonez.input.MouseInput;
 import slavsquatsuperstar.mayonez.math.Vec2;
 import slavsquatsuperstar.mayonez.physics.Collisions;
 import slavsquatsuperstar.mayonez.physics.resolution.Manifold;
-import slavsquatsuperstar.mayonez.physics.shapes.Circle;
 import slavsquatsuperstar.mayonez.physics.shapes.Polygon;
 import slavsquatsuperstar.mayonez.physics.shapes.Rectangle;
 import slavsquatsuperstar.mayonez.physics.shapes.Shape;
-import slavsquatsuperstar.mayonez.physics.shapes.Triangle;
+import slavsquatsuperstar.mayonez.physics.shapes.*;
 import slavsquatsuperstar.mayonez.util.Colors;
 import slavsquatsuperstar.mayonez.util.DebugDraw;
 
 import java.awt.*;
 
 
-public class DetectionTest extends Scene {
+public class DetectionTest extends PhysicsTestScene {
 
     private final Polygon box = new Rectangle(new Vec2(0, 0), new Vec2(15, 18), 0);
     private final Polygon rect = new Rectangle(new Vec2(0, 0), new Vec2(12, 10), 0);
@@ -28,11 +25,12 @@ public class DetectionTest extends Scene {
     private float rot = 45f;
 
     public DetectionTest(String name) {
-        super(name, Preferences.getScreenWidth(), Preferences.getScreenHeight(), 10);
+        super(name, 0);
     }
 
     @Override
-    protected void onUserRender(Graphics2D g2) {
+    public void onUserRender(Graphics2D g2) {
+        getCamera().setPosition(new Vec2());
         DebugDraw.drawLine(new Vec2(0, -20), new Vec2(0, 20), Colors.DARK_GRAY);
         rot -= KeyInput.getAxis("horizontal");
         DebugDraw.drawLine(new Vec2(-20, 0), new Vec2(20, 0), Colors.DARK_GRAY);

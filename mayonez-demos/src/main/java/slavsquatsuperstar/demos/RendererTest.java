@@ -29,7 +29,7 @@ public class RendererTest extends Scene {
 
     public RendererTest() {
         super("Renderer Test Scene", Preferences.getScreenWidth() * 2, Preferences.getScreenHeight() * 2, 32);
-        sprites = SpriteSheet.create("assets/textures/spritesheet.png", 16, 16, 26, 0);
+        sprites = SpriteSheet.create("assets/textures/mario/spritesheet.png", 16, 16, 26, 0);
         setGravity(new Vec2());
     }
 
@@ -80,10 +80,10 @@ public class RendererTest extends Scene {
         float halfHeight = getHeight() / 2f;
 
         addObject(createSquare("Red Square", new Vec2(-halfWidth, halfHeight),
-                Sprite.create("assets/textures/blend_red.png")));
+                Sprite.create("assets/textures/mario/blend_red.png")));
 
         addObject(createSquare("Green Square", new Vec2(halfWidth, halfHeight),
-                Sprite.create("assets/textures/blend_red.png")));
+                Sprite.create("assets/textures/mario/blend_red.png")));
 
         addObject(createSquare("Blue Square", new Vec2(-halfWidth, -halfHeight),
                 Sprite.create(new Color(0, 67, 169, 153))));

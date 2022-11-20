@@ -21,7 +21,7 @@ public class KeyMovement extends MovementScript {
     @Override
     public void update(float dt) {
         // Don't want to move faster diagonally so normalize
-        Vec2 input = getRawInput().unit().mul(speed);
+        Vec2 input = getRawInput().unit().mul(speed).rotate(transform.rotation);
         switch (mode) {
             case POSITION -> transform.move(input.mul(Mayonez.TIME_STEP));
             case VELOCITY -> rb.addVelocity(input);
@@ -37,14 +37,6 @@ public class KeyMovement extends MovementScript {
     @Override
     protected Vec2 getRawInput() {
         return new Vec2(KeyInput.getAxis(xAxis), KeyInput.getAxis(yAxis));
-    }
-
-    public void setXAxis(String xAxis) {
-        this.xAxis = xAxis;
-    }
-
-    public void setYAxis(String yAxis) {
-        this.yAxis = yAxis;
     }
 
     public KeyMovement setTopSpeed(float topSpeed) {

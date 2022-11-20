@@ -27,13 +27,13 @@ public final class GLGame extends GameEngine { // can't implement runnable other
 
     @Override
     public void update(float dt) throws Exception {
-        if (scene != null) scene.update(dt);
+        if (getScene() != null) getScene().update(dt);
     }
 
     @Override
     public void render() throws Exception {
         window.render((_args) -> {
-            if (scene != null) scene.render(null); // don't pass a G2D object
+            if (getScene() != null) getScene().render(null); // don't pass a G2D object
         });
     }
 

@@ -29,7 +29,7 @@ object DebugDraw {
      * @param color    the color to use
      */
     @JvmStatic
-    fun drawPoint(position: Vec2, color: JColor?) {
+    fun drawPoint(position: Vec2, color: Color?) {
         if (!Mayonez.started) return
         // Fill a circle with radius "STROKE_SIZE" in pixels
         addShape(Circle(position.toScreen(), STROKE_SIZE), color, true, DebugShape.Priority.POINT)
@@ -43,7 +43,7 @@ object DebugDraw {
      * @param color the color to use
      */
     @JvmStatic
-    fun drawLine(start: Vec2, end: Vec2, color: JColor?) {
+    fun drawLine(start: Vec2, end: Vec2, color: Color?) {
         if (!Mayonez.started) return
         addShape(Edge(start.toScreen(), end.toScreen()), color, false, DebugShape.Priority.LINE)
     }
@@ -56,7 +56,7 @@ object DebugDraw {
      * @param color     the color to use
      */
     @JvmStatic
-    fun drawVector(origin: Vec2, direction: Vec2, color: JColor?) = drawLine(origin, origin.add(direction), color)
+    fun drawVector(origin: Vec2, direction: Vec2, color: Color?) = drawLine(origin, origin.add(direction), color)
 
     // Draw Shapes
     /**
@@ -66,7 +66,7 @@ object DebugDraw {
      * @param color the color to use
      */
     @JvmStatic
-    fun drawShape(shape: Shape?, color: JColor?) {
+    fun drawShape(shape: Shape?, color: Color?) {
         if (!Mayonez.started) return
         when (shape) {
             is Edge -> drawLine(shape.start, shape.end, color)
@@ -83,7 +83,7 @@ object DebugDraw {
      * @param color the color to use
      */
     @JvmStatic
-    fun fillShape(shape: Shape?, color: JColor?) {
+    fun fillShape(shape: Shape?, color: Color?) {
         if (!Mayonez.started) return
         val drawColor = color ?: Colors.BLACK
         when (shape) {
@@ -96,23 +96,23 @@ object DebugDraw {
 
     // Internal Draw methods
 
-    private fun drawCircle(circle: Circle, color: JColor?, fill: Boolean) {
+    private fun drawCircle(circle: Circle, color: Color?, fill: Boolean) {
         addShape(Circle(circle.center().toScreen(), circle.radius.toScreen()), color, fill, DebugShape.Priority.SHAPE)
     }
 
-    private fun drawEllipse(ellipse: Ellipse, color: JColor?, fill: Boolean) {
+    private fun drawEllipse(ellipse: Ellipse, color: Color?, fill: Boolean) {
         if (ellipse.isCircle) return drawCircle(ellipse.boundingCircle(), color, fill)
         addShape(ellipse.toScreen(), color, fill, DebugShape.Priority.SHAPE)
     }
 
-    private fun drawPolygon(polygon: Polygon, color: JColor?, fill: Boolean) {
+    private fun drawPolygon(polygon: Polygon, color: Color?, fill: Boolean) {
         addShape(polygon.toScreen(), color, fill, if (fill) DebugShape.Priority.FILL else DebugShape.Priority.SHAPE)
     }
 
     // Helper Methods/Classes
 
-    private fun addShape(shape: Shape, color: JColor?, fill: Boolean, priority: DebugShape.Priority) {
-        debugRenderer.addShape(DebugShape(shape, Color(color ?: Colors.BLACK), fill, priority))
+    private fun addShape(shape: Shape, color: Color?, fill: Boolean, priority: DebugShape.Priority) {
+        debugRenderer.addShape(DebugShape(shape, color ?: Colors.BLACK, fill, priority))
     }
 
     /**

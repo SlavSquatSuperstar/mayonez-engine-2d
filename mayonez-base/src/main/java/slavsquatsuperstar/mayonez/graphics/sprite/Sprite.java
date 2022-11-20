@@ -96,7 +96,7 @@ public abstract sealed class Sprite extends Component permits GLSprite, JSprite 
         } else if (texture instanceof JTexture jTexture) {
             return new JSprite(jTexture);
         }
-        return Sprite.create(new Color(Colors.WHITE));
+        return Sprite.create(Colors.WHITE);
     }
 
     /**

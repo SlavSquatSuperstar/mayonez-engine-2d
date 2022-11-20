@@ -28,6 +28,7 @@ public class PoolBallsTest extends PhysicsTestScene {
 
     @Override
     protected void init() {
+        super.init();
         addObject(createCircle("Cue Ball", new Vec2(10, getHeight() / 2f)));
 
         float xStart = 50;

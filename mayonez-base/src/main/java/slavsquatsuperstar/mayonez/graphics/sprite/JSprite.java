@@ -28,7 +28,7 @@ public final class JSprite extends Sprite {
      * @param texture a texture
      */
     JSprite(JTexture texture) {
-        super(new Color(Colors.WHITE));
+        super(Colors.WHITE);
         this.texture = texture;
     }
 
@@ -45,7 +45,7 @@ public final class JSprite extends Sprite {
     @Override
     public void render(Graphics2D g2) {
         if (texture != null) texture.draw(g2, transform, spriteXf, getScene().getScale());
-        else DebugDraw.drawShape(new Rectangle(transform.position, transform.scale), color.toAWT());
+        else DebugDraw.drawShape(new Rectangle(transform.position, transform.scale), color);
     }
 
     // Sprite Methods

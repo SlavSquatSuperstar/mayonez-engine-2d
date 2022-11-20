@@ -1,5 +1,7 @@
 package slavsquatsuperstar.test;
 
+import slavsquatsuperstar.mayonez.util.Color;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -14,14 +16,18 @@ import java.util.List;
 public class MayonezTest {
 
     public static void main(String[] args) throws Exception {
+        Color red = new Color(255, 0, 0, 0);
+        System.out.println(red);
+        System.out.println(red.hexCode(true));
+
 //        System.out.println(scanDirectory1("."));
 //        System.out.println(scanDirectory2("."));
 //
 //        System.out.println(scanDirectory1("slavsquatsuperstar"));
 //        System.out.println(scanDirectory2("slavsquatsuperstar"));
 
-        System.out.println(scanDirectory1("assets/shaders/default.glsl"));
-        System.out.println(scanDirectory2("assets/shaders/default.glsl"));
+//        System.out.println(scanDirectory1("assets/shaders/default.glsl"));
+//        System.out.println(scanDirectory2("assets/shaders/default.glsl"));
 
 //        System.out.println(scanDirectory1("testassets"));
 //        System.out.println(scanDirectory2("testassets"));

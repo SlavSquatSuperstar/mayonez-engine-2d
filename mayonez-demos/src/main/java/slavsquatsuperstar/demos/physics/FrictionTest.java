@@ -20,6 +20,7 @@ public class FrictionTest extends PhysicsTestScene {
 
     @Override
     protected void init() {
+        super.init();
         addObject(new GameObject("Ground", new Vec2(getWidth() / 2f, 1)) {
             @Override
             protected void init() {
@@ -49,7 +50,7 @@ public class FrictionTest extends PhysicsTestScene {
                 addComponent(new Rigidbody(collider.getMass(DENSITY)));
                 addComponent(new MouseFlick(MoveMode.VELOCITY, "right mouse", 15, false));
                 addComponent(new DragAndDrop("left mouse"));
-                addComponent(new KeepInScene(KeepInScene.Mode.BOUNCE));
+                addComponent(new KeepInScene(new Vec2(), new Vec2(getScene().getSize()), KeepInScene.Mode.BOUNCE));
                 addComponent(new Script() {
                     private Rigidbody rb;
 

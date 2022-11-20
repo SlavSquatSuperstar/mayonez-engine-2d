@@ -1,9 +1,10 @@
 package slavsquatsuperstar.mayonez.engine;
 
-import slavsquatsuperstar.mayonez.math.MathUtils;
-import slavsquatsuperstar.mayonez.util.Logger;
 import slavsquatsuperstar.mayonez.Mayonez;
 import slavsquatsuperstar.mayonez.Scene;
+import slavsquatsuperstar.mayonez.SceneManager;
+import slavsquatsuperstar.mayonez.math.MathUtils;
+import slavsquatsuperstar.mayonez.util.Logger;
 
 /**
  * The application that contains the engine's core loop.
@@ -13,7 +14,6 @@ import slavsquatsuperstar.mayonez.Scene;
 public abstract sealed class GameEngine implements GameLayer permits JGame, GLGame {
 
     private boolean running = false;
-    protected Scene scene;
     protected Window window;
 
     protected GameEngine() {
@@ -29,7 +29,7 @@ public abstract sealed class GameEngine implements GameLayer permits JGame, GLGa
         if (!running) {
             running = true;
             window.start();
-            startScene();
+            SceneManager.startScene();
             run();
         }
     }
@@ -41,7 +41,7 @@ public abstract sealed class GameEngine implements GameLayer permits JGame, GLGa
     public final void stop() {
         if (running) {
             running = false;
-            scene.stop();
+            SceneManager.stopScene();
             window.stop();
         }
     }
@@ -122,31 +122,20 @@ public abstract sealed class GameEngine implements GameLayer permits JGame, GLGa
 
     // Getters and Setters
 
+    protected Scene getScene() {
+        return SceneManager.getCurrentScene();
+    }
+
     public Window getWindow() {
         return window;
     }
 
-    public Scene getScene() {
-        return scene;
-    }
-
     public void setScene(Scene scene) {
-        this.scene = scene;
-        startScene();
+        SceneManager.setScene(scene);
     }
 
     // Helper Methods
 
     public abstract float getCurrentTime();
-
-    /**
-     * Starts the current scene, if not null
-     */
-    private void startScene() {
-        if (scene != null && running) {
-            scene.start();
-            Logger.debug("Game: Loaded scene \"%s\"", scene.getName());
-        }
-    }
 
 }
