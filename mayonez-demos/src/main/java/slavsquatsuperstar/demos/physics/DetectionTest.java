@@ -1,17 +1,17 @@
 package slavsquatsuperstar.demos.physics;
 
-import slavsquatsuperstar.mayonez.Mayonez;
-import slavsquatsuperstar.mayonez.input.KeyInput;
-import slavsquatsuperstar.mayonez.input.MouseInput;
-import slavsquatsuperstar.mayonez.math.Vec2;
-import slavsquatsuperstar.mayonez.physics.Collisions;
-import slavsquatsuperstar.mayonez.physics.resolution.Manifold;
-import slavsquatsuperstar.mayonez.physics.shapes.Polygon;
-import slavsquatsuperstar.mayonez.physics.shapes.Rectangle;
-import slavsquatsuperstar.mayonez.physics.shapes.Shape;
-import slavsquatsuperstar.mayonez.physics.shapes.*;
-import slavsquatsuperstar.mayonez.util.Colors;
-import slavsquatsuperstar.mayonez.DebugDraw;
+import mayonez.Mayonez;
+import mayonez.input.KeyInput;
+import mayonez.input.MouseInput;
+import mayonez.math.Vec2;
+import mayonez.physics.Collisions;
+import mayonez.physics.resolution.Manifold;
+import mayonez.physics.shapes.Polygon;
+import mayonez.physics.shapes.Rectangle;
+import mayonez.physics.shapes.Shape;
+import mayonez.physics.shapes.*;
+import mayonez.util.Colors;
+import mayonez.DebugDraw;
 
 import java.awt.*;
 

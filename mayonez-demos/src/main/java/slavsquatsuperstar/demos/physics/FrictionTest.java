@@ -1,16 +1,16 @@
 package slavsquatsuperstar.demos.physics;
 
-import slavsquatsuperstar.mayonez.math.Vec2;
-import slavsquatsuperstar.mayonez.scripts.*;
-import slavsquatsuperstar.mayonez.util.Colors;
-import slavsquatsuperstar.mayonez.GameObject;
-import slavsquatsuperstar.mayonez.Mayonez;
-import slavsquatsuperstar.mayonez.Script;
-import slavsquatsuperstar.mayonez.input.KeyInput;
-import slavsquatsuperstar.mayonez.physics.Rigidbody;
-import slavsquatsuperstar.mayonez.physics.colliders.BoxCollider;
-import slavsquatsuperstar.mayonez.physics.colliders.BallCollider;
-import slavsquatsuperstar.mayonez.physics.colliders.Collider;
+import mayonez.math.Vec2;
+import mayonez.scripts.*;
+import mayonez.util.Colors;
+import mayonez.GameObject;
+import mayonez.Mayonez;
+import mayonez.Script;
+import mayonez.input.KeyInput;
+import mayonez.physics.Rigidbody;
+import mayonez.physics.colliders.BoxCollider;
+import mayonez.physics.colliders.BallCollider;
+import mayonez.physics.colliders.Collider;
 
 public class FrictionTest extends PhysicsTestScene {
 

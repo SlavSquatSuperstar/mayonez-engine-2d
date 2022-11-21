@@ -1,16 +1,16 @@
 package slavsquatsuperstar.demos.geometrydash.ui;
 
-import slavsquatsuperstar.mayonez.math.Vec2;
-import slavsquatsuperstar.mayonez.GameObject;
-import slavsquatsuperstar.mayonez.Transform;
-import slavsquatsuperstar.mayonez.annotations.ExperimentalFeature;
-import slavsquatsuperstar.mayonez.graphics.sprite.Sprite;
-import slavsquatsuperstar.mayonez.graphics.sprite.SpriteSheet;
-import slavsquatsuperstar.mayonez.input.MouseInput;
-import slavsquatsuperstar.mayonez.io.image.JTexture;
-import slavsquatsuperstar.mayonez.io.image.Texture;
-import slavsquatsuperstar.mayonez.physics.colliders.BoxCollider;
-import slavsquatsuperstar.mayonez.scripts.MouseScript;
+import mayonez.math.Vec2;
+import mayonez.GameObject;
+import mayonez.Transform;
+import mayonez.annotations.ExperimentalFeature;
+import mayonez.graphics.sprite.Sprite;
+import mayonez.graphics.sprite.SpriteSheet;
+import mayonez.input.MouseInput;
+import mayonez.io.image.JTexture;
+import mayonez.io.image.Texture;
+import mayonez.physics.colliders.BoxCollider;
+import mayonez.scripts.MouseScript;
 
 @ExperimentalFeature
 public class UIButton extends GameObject {

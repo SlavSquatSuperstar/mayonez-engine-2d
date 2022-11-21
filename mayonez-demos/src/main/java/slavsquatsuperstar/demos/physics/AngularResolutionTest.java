@@ -1,20 +1,20 @@
 package slavsquatsuperstar.demos.physics;
 
-import slavsquatsuperstar.mayonez.GameObject;
-import slavsquatsuperstar.mayonez.Mayonez;
-import slavsquatsuperstar.mayonez.Script;
-import slavsquatsuperstar.mayonez.input.KeyInput;
-import slavsquatsuperstar.mayonez.math.Vec2;
-import slavsquatsuperstar.mayonez.physics.Rigidbody;
-import slavsquatsuperstar.mayonez.physics.colliders.BallCollider;
-import slavsquatsuperstar.mayonez.physics.colliders.BoxCollider;
-import slavsquatsuperstar.mayonez.physics.colliders.Collider;
-import slavsquatsuperstar.mayonez.scripts.DragAndDrop;
-import slavsquatsuperstar.mayonez.scripts.KeepInScene;
-import slavsquatsuperstar.mayonez.scripts.MouseFlick;
-import slavsquatsuperstar.mayonez.scripts.MoveMode;
-import slavsquatsuperstar.mayonez.util.Colors;
-import slavsquatsuperstar.mayonez.util.Logger;
+import mayonez.GameObject;
+import mayonez.Mayonez;
+import mayonez.Script;
+import mayonez.input.KeyInput;
+import mayonez.math.Vec2;
+import mayonez.physics.Rigidbody;
+import mayonez.physics.colliders.BallCollider;
+import mayonez.physics.colliders.BoxCollider;
+import mayonez.physics.colliders.Collider;
+import mayonez.scripts.DragAndDrop;
+import mayonez.scripts.KeepInScene;
+import mayonez.scripts.MouseFlick;
+import mayonez.scripts.MoveMode;
+import mayonez.util.Colors;
+import mayonez.util.Logger;
 
 public class AngularResolutionTest extends PhysicsTestScene {
 

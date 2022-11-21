@@ -1,16 +1,16 @@
 package slavsquatsuperstar.demos.geometrydash.components;
 
-import slavsquatsuperstar.mayonez.math.Vec2;
-import slavsquatsuperstar.mayonez.Component;
-import slavsquatsuperstar.mayonez.GameObject;
-import slavsquatsuperstar.mayonez.util.Logger;
-import slavsquatsuperstar.mayonez.Transform;
-import slavsquatsuperstar.mayonez.graphics.sprite.Sprite;
-import slavsquatsuperstar.mayonez.input.MouseInput;
-import slavsquatsuperstar.mayonez.io.image.JTexture;
-import slavsquatsuperstar.mayonez.physics.Rigidbody;
-import slavsquatsuperstar.mayonez.physics.colliders.BoxCollider;
-import slavsquatsuperstar.mayonez.scripts.Counter;
+import mayonez.math.Vec2;
+import mayonez.Component;
+import mayonez.GameObject;
+import mayonez.util.Logger;
+import mayonez.Transform;
+import mayonez.graphics.sprite.Sprite;
+import mayonez.input.MouseInput;
+import mayonez.io.image.JTexture;
+import mayonez.physics.Rigidbody;
+import mayonez.physics.colliders.BoxCollider;
+import mayonez.scripts.Counter;
 
 import java.awt.*;
 

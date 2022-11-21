@@ -22,22 +22,22 @@ module mayonez.base {
 
     /* Public API */
     // Core
-    exports slavsquatsuperstar.mayonez;
-    exports slavsquatsuperstar.mayonez.graphics;
-    exports slavsquatsuperstar.mayonez.graphics.sprite;
-    exports slavsquatsuperstar.mayonez.input;
-    exports slavsquatsuperstar.mayonez.math;
-    exports slavsquatsuperstar.mayonez.util;
+    exports mayonez;
+    exports mayonez.graphics;
+    exports mayonez.graphics.sprite;
+    exports mayonez.input;
+    exports mayonez.math;
+    exports mayonez.util;
     // I/O
-    exports slavsquatsuperstar.mayonez.io;
-    exports slavsquatsuperstar.mayonez.io.image;
-    exports slavsquatsuperstar.mayonez.io.text;
+    exports mayonez.io;
+    exports mayonez.io.image;
+    exports mayonez.io.text;
     // Physics
-    exports slavsquatsuperstar.mayonez.physics;
-    exports slavsquatsuperstar.mayonez.physics.colliders;
-    exports slavsquatsuperstar.mayonez.physics.resolution;
-    exports slavsquatsuperstar.mayonez.physics.shapes;
-    exports slavsquatsuperstar.mayonez.scripts;
+    exports mayonez.physics;
+    exports mayonez.physics.colliders;
+    exports mayonez.physics.resolution;
+    exports mayonez.physics.shapes;
+    exports mayonez.scripts;
     // Other
-    exports slavsquatsuperstar.mayonez.annotations;
+    exports mayonez.annotations;
 }

@@ -1,7 +1,7 @@
 package slavsquatsuperstar.demos.physics;
 
-import slavsquatsuperstar.mayonez.math.Vec2;
-import slavsquatsuperstar.mayonez.Mayonez;
+import mayonez.math.Vec2;
+import mayonez.Mayonez;
 
 public class CollisionTest extends PhysicsTestScene {
 

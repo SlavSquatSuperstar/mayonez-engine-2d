@@ -1,22 +1,21 @@
 package slavsquatsuperstar.demos;
 
-import slavsquatsuperstar.mayonez.*;
-import slavsquatsuperstar.mayonez.graphics.sprite.Sprite;
-import slavsquatsuperstar.mayonez.graphics.sprite.SpriteSheet;
-import slavsquatsuperstar.mayonez.input.KeyInput;
-import slavsquatsuperstar.mayonez.input.MouseInput;
-import slavsquatsuperstar.mayonez.math.MathUtils;
-import slavsquatsuperstar.mayonez.math.Vec2;
-import slavsquatsuperstar.mayonez.physics.Rigidbody;
-import slavsquatsuperstar.mayonez.physics.colliders.BoxCollider;
-import slavsquatsuperstar.mayonez.physics.shapes.Circle;
-import slavsquatsuperstar.mayonez.physics.shapes.Ellipse;
-import slavsquatsuperstar.mayonez.physics.shapes.Rectangle;
-import slavsquatsuperstar.mayonez.physics.shapes.Triangle;
-import slavsquatsuperstar.mayonez.scripts.*;
-import slavsquatsuperstar.mayonez.util.Color;
-import slavsquatsuperstar.mayonez.util.Colors;
-import slavsquatsuperstar.mayonez.DebugDraw;
+import mayonez.*;
+import mayonez.graphics.sprite.Sprite;
+import mayonez.graphics.sprite.SpriteSheet;
+import mayonez.input.KeyInput;
+import mayonez.input.MouseInput;
+import mayonez.math.MathUtils;
+import mayonez.math.Vec2;
+import mayonez.physics.Rigidbody;
+import mayonez.physics.colliders.BoxCollider;
+import mayonez.physics.shapes.Circle;
+import mayonez.physics.shapes.Ellipse;
+import mayonez.physics.shapes.Rectangle;
+import mayonez.physics.shapes.Triangle;
+import mayonez.scripts.*;
+import mayonez.util.Color;
+import mayonez.util.Colors;
 
 /**
  * For testing renderer, camera, and world to screen coordinates.

@@ -1,14 +1,14 @@
 package slavsquatsuperstar.demos.physics;
 
-import slavsquatsuperstar.mayonez.math.MathUtils;
-import slavsquatsuperstar.mayonez.math.Vec2;
-import slavsquatsuperstar.mayonez.scripts.*;
-import slavsquatsuperstar.mayonez.util.Colors;
-import slavsquatsuperstar.mayonez.GameObject;
-import slavsquatsuperstar.mayonez.Mayonez;
-import slavsquatsuperstar.mayonez.physics.PhysicsMaterial;
-import slavsquatsuperstar.mayonez.physics.Rigidbody;
-import slavsquatsuperstar.mayonez.physics.colliders.BallCollider;
+import mayonez.math.MathUtils;
+import mayonez.math.Vec2;
+import mayonez.scripts.*;
+import mayonez.util.Colors;
+import mayonez.GameObject;
+import mayonez.Mayonez;
+import mayonez.physics.PhysicsMaterial;
+import mayonez.physics.Rigidbody;
+import mayonez.physics.colliders.BallCollider;
 
 /**
  * Pool balls weigh ~160-170 g (0.165 kg) are ~57 mm (0.057 m) wide. Using an 80:1 scale, the in-game balls weigh 6.6 kg

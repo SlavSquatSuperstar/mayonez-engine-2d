@@ -1,12 +1,12 @@
 package slavsquatsuperstar.demos.geometrydash.ui;
 
 import slavsquatsuperstar.demos.geometrydash.components.PlaceBlock;
-import slavsquatsuperstar.mayonez.math.Vec2;
-import slavsquatsuperstar.mayonez.GameObject;
-import slavsquatsuperstar.mayonez.Transform;
-import slavsquatsuperstar.mayonez.annotations.ExperimentalFeature;
-import slavsquatsuperstar.mayonez.graphics.sprite.SpriteSheet;
-import slavsquatsuperstar.mayonez.scripts.Counter;
+import mayonez.math.Vec2;
+import mayonez.GameObject;
+import mayonez.Transform;
+import mayonez.annotations.ExperimentalFeature;
+import mayonez.graphics.sprite.SpriteSheet;
+import mayonez.scripts.Counter;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,7 +1,7 @@
 package slavsquatsuperstar.demos.geometrydash.components;
 
-import slavsquatsuperstar.mayonez.math.Vec2;
-import slavsquatsuperstar.mayonez.Component;
+import mayonez.math.Vec2;
+import mayonez.Component;
 
 import java.awt.*;
 import java.awt.geom.Line2D;

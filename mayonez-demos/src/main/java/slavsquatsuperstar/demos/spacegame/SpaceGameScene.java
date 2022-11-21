@@ -1,13 +1,13 @@
 package slavsquatsuperstar.demos.spacegame;
 
-import slavsquatsuperstar.mayonez.*;
-import slavsquatsuperstar.mayonez.graphics.sprite.Sprite;
-import slavsquatsuperstar.mayonez.input.KeyInput;
-import slavsquatsuperstar.mayonez.math.Vec2;
-import slavsquatsuperstar.mayonez.physics.Rigidbody;
-import slavsquatsuperstar.mayonez.scripts.KeyMovement;
-import slavsquatsuperstar.mayonez.scripts.MoveMode;
-import slavsquatsuperstar.mayonez.util.Colors;
+import mayonez.*;
+import mayonez.graphics.sprite.Sprite;
+import mayonez.input.KeyInput;
+import mayonez.math.Vec2;
+import mayonez.physics.Rigidbody;
+import mayonez.scripts.KeyMovement;
+import mayonez.scripts.MoveMode;
+import mayonez.util.Colors;
 
 public class SpaceGameScene extends Scene {
 

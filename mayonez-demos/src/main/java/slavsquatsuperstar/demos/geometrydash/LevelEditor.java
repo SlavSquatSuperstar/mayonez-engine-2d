@@ -1,15 +1,15 @@
 package slavsquatsuperstar.demos.geometrydash;
 
+import mayonez.*;
 import slavsquatsuperstar.demos.geometrydash.components.Grid;
 import slavsquatsuperstar.demos.geometrydash.ui.UICanvas;
-import slavsquatsuperstar.mayonez.math.Vec2;
-import slavsquatsuperstar.mayonez.*;
-import slavsquatsuperstar.mayonez.graphics.sprite.JSpriteSheet;
-import slavsquatsuperstar.mayonez.graphics.sprite.SpriteSheet;
-import slavsquatsuperstar.mayonez.physics.Rigidbody;
-import slavsquatsuperstar.mayonez.physics.colliders.BoxCollider;
-import slavsquatsuperstar.mayonez.physics.colliders.Collider;
-import slavsquatsuperstar.mayonez.util.Colors;
+import mayonez.math.Vec2;
+import mayonez.graphics.sprite.JSpriteSheet;
+import mayonez.graphics.sprite.SpriteSheet;
+import mayonez.physics.Rigidbody;
+import mayonez.physics.colliders.BoxCollider;
+import mayonez.physics.colliders.Collider;
+import mayonez.util.Colors;
 
 import java.awt.*;
 

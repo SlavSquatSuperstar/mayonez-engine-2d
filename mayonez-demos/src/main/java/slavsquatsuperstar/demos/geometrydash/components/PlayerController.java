@@ -2,12 +2,12 @@ package slavsquatsuperstar.demos.geometrydash.components;
 
 import slavsquatsuperstar.demos.geometrydash.LevelEditor;
 import slavsquatsuperstar.demos.geometrydash.LevelScene;
-import slavsquatsuperstar.mayonez.math.Vec2;
-import slavsquatsuperstar.mayonez.Script;
-import slavsquatsuperstar.mayonez.graphics.Camera;
-import slavsquatsuperstar.mayonez.graphics.CameraMode;
-import slavsquatsuperstar.mayonez.input.KeyInput;
-import slavsquatsuperstar.mayonez.physics.Rigidbody;
+import mayonez.math.Vec2;
+import mayonez.Script;
+import mayonez.graphics.Camera;
+import mayonez.graphics.CameraMode;
+import mayonez.input.KeyInput;
+import mayonez.physics.Rigidbody;
 
 @SuppressWarnings("unused")
 public class PlayerController extends Script {
