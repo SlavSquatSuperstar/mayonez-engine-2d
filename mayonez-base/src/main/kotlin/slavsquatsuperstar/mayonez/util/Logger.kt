@@ -2,7 +2,7 @@ package slavsquatsuperstar.mayonez.util
 
 import slavsquatsuperstar.mayonez.Mayonez
 import slavsquatsuperstar.mayonez.Preferences
-import slavsquatsuperstar.mayonez.io.TextFile
+import slavsquatsuperstar.mayonez.io.text.TextFile
 import java.io.File
 import java.time.LocalDate
 import java.util.*
@@ -62,9 +62,9 @@ object Logger {
      */
     private fun printMessage(msg: Any?, vararg args: Any?, level: LogLevel) {
         // Format the message and add timestamp
-        val time = Mayonez.time
-        val fmt = StringBuilder("[%02d:%02.3f] ".format((time / 60).toInt(), time % 60)) // Timestamp
-        fmt.append("[${level.name}] ")
+        val fmt = StringBuilder("[${Mayonez.seconds.toFmtString()}] ") // Timestamp
+        fmt.append("[${level.name}] ") // Log level
+        fmt.append("[${getSource()}] ") // Log source
         try {
             fmt.append(msg.toString().format(*args)) // Level prefix
         } catch (e: IllegalFormatException) {
@@ -121,7 +121,24 @@ object Logger {
     @JvmStatic
     fun error(msg: Any?, vararg args: Any?) = printMessage(msg, *args, level = LogLevel.ERROR)
 
-    // Helper Methods
+    // Stack/Format Helper Methods
+
+    /**
+     * Returns a timestamp in hh:mm:ss.SSSS format.
+     */
+    private fun Float.toFmtString(): String {
+        val min: Int = (this / 60).toInt()
+        return "%02d:%02d:%07.4f".format(min / 60, min, this % 60)
+    }
+
+    /**
+     * Returns the source class that called a log() function.
+     *
+     * Source: Azurite util.Log.source()
+     */
+    private fun getSource(): String {
+        return Thread.currentThread().stackTrace[4].className
+    }
 
     /**
      * Returns a String version of an [Exception]'s stack trace.

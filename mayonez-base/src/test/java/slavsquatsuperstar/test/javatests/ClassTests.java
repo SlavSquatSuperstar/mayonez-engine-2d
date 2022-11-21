@@ -1,11 +1,8 @@
 package slavsquatsuperstar.test.javatests;
 
 import org.junit.jupiter.api.Test;
+import slavsquatsuperstar.mayonez.*;
 import slavsquatsuperstar.mayonez.math.Vec2;
-import slavsquatsuperstar.mayonez.Component;
-import slavsquatsuperstar.mayonez.GameObject;
-import slavsquatsuperstar.mayonez.Mayonez;
-import slavsquatsuperstar.mayonez.Scene;
 import slavsquatsuperstar.mayonez.physics.colliders.BoxCollider;
 import slavsquatsuperstar.mayonez.physics.colliders.Collider;
 import slavsquatsuperstar.mayonez.physics.shapes.Circle;
@@ -78,7 +75,7 @@ public class ClassTests {
                 addObject(new TestObject("obj5", new Vec2()));
             }
         };
-        Mayonez.setScene(scene);
+        SceneManager.setScene(scene);
         scene.start();
         assertEquals(scene.getObject("Obj1").name, "obj1");
         assertEquals(scene.getObjects(GameObject.class).get(1).getClass(), GameObject.class);

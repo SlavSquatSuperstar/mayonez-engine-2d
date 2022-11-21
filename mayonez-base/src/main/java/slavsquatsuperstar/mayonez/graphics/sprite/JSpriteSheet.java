@@ -3,7 +3,7 @@ package slavsquatsuperstar.mayonez.graphics.sprite;
 import slavsquatsuperstar.mayonez.annotations.EngineType;
 import slavsquatsuperstar.mayonez.annotations.UsesEngine;
 import slavsquatsuperstar.mayonez.io.Assets;
-import slavsquatsuperstar.mayonez.io.JTexture;
+import slavsquatsuperstar.mayonez.io.image.JTexture;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;

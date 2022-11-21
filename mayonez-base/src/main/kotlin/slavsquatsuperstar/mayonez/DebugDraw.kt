@@ -1,12 +1,13 @@
-package slavsquatsuperstar.mayonez.util
+package slavsquatsuperstar.mayonez
 
-import slavsquatsuperstar.mayonez.Mayonez
 import slavsquatsuperstar.mayonez.annotations.EngineType
 import slavsquatsuperstar.mayonez.annotations.UsesEngine
-import slavsquatsuperstar.mayonez.graphics.renderer.DebugRenderer
-import slavsquatsuperstar.mayonez.graphics.renderer.DebugShape
+import slavsquatsuperstar.mayonez.graphics.renderer.debug.DebugRenderer
+import slavsquatsuperstar.mayonez.graphics.renderer.debug.DebugShape
 import slavsquatsuperstar.mayonez.math.Vec2
 import slavsquatsuperstar.mayonez.physics.shapes.*
+import slavsquatsuperstar.mayonez.util.Colors
+import slavsquatsuperstar.mayonez.util.MColor
 
 /**
  * Draws colliders and shapes onto the screen. All shapes are specified using world coordinates, and colliders are
@@ -18,8 +19,10 @@ import slavsquatsuperstar.mayonez.physics.shapes.*
 object DebugDraw {
 
     const val STROKE_SIZE = 2f
+    private val scale: Float
+        get() = SceneManager.currentScene.scale
     private val debugRenderer: DebugRenderer
-        get() = Mayonez.scene.debugRenderer
+        get() = SceneManager.currentScene.debugRenderer
 
     // Public Draw Methods
     /**
@@ -29,7 +32,7 @@ object DebugDraw {
      * @param color    the color to use
      */
     @JvmStatic
-    fun drawPoint(position: Vec2, color: Color?) {
+    fun drawPoint(position: Vec2, color: MColor?) {
         if (!Mayonez.started) return
         // Fill a circle with radius "STROKE_SIZE" in pixels
         addShape(Circle(position.toScreen(), STROKE_SIZE), color, true, DebugShape.Priority.POINT)
@@ -43,7 +46,7 @@ object DebugDraw {
      * @param color the color to use
      */
     @JvmStatic
-    fun drawLine(start: Vec2, end: Vec2, color: Color?) {
+    fun drawLine(start: Vec2, end: Vec2, color: MColor?) {
         if (!Mayonez.started) return
         addShape(Edge(start.toScreen(), end.toScreen()), color, false, DebugShape.Priority.LINE)
     }
@@ -56,7 +59,7 @@ object DebugDraw {
      * @param color     the color to use
      */
     @JvmStatic
-    fun drawVector(origin: Vec2, direction: Vec2, color: Color?) = drawLine(origin, origin.add(direction), color)
+    fun drawVector(origin: Vec2, direction: Vec2, color: MColor?) = drawLine(origin, origin.add(direction), color)
 
     // Draw Shapes
     /**
@@ -66,7 +69,7 @@ object DebugDraw {
      * @param color the color to use
      */
     @JvmStatic
-    fun drawShape(shape: Shape?, color: Color?) {
+    fun drawShape(shape: Shape?, color: MColor?) {
         if (!Mayonez.started) return
         when (shape) {
             is Edge -> drawLine(shape.start, shape.end, color)
@@ -83,7 +86,7 @@ object DebugDraw {
      * @param color the color to use
      */
     @JvmStatic
-    fun fillShape(shape: Shape?, color: Color?) {
+    fun fillShape(shape: Shape?, color: MColor?) {
         if (!Mayonez.started) return
         val drawColor = color ?: Colors.BLACK
         when (shape) {
@@ -96,23 +99,30 @@ object DebugDraw {
 
     // Internal Draw methods
 
-    private fun drawCircle(circle: Circle, color: Color?, fill: Boolean) {
+    private fun drawCircle(circle: Circle, color: MColor?, fill: Boolean) {
         addShape(Circle(circle.center().toScreen(), circle.radius.toScreen()), color, fill, DebugShape.Priority.SHAPE)
     }
 
-    private fun drawEllipse(ellipse: Ellipse, color: Color?, fill: Boolean) {
+    private fun drawEllipse(ellipse: Ellipse, color: MColor?, fill: Boolean) {
         if (ellipse.isCircle) return drawCircle(ellipse.boundingCircle(), color, fill)
         addShape(ellipse.toScreen(), color, fill, DebugShape.Priority.SHAPE)
     }
 
-    private fun drawPolygon(polygon: Polygon, color: Color?, fill: Boolean) {
+    private fun drawPolygon(polygon: Polygon, color: MColor?, fill: Boolean) {
         addShape(polygon.toScreen(), color, fill, if (fill) DebugShape.Priority.FILL else DebugShape.Priority.SHAPE)
     }
 
     // Helper Methods/Classes
 
-    private fun addShape(shape: Shape, color: Color?, fill: Boolean, priority: DebugShape.Priority) {
-        debugRenderer.addShape(DebugShape(shape, color ?: Colors.BLACK, fill, priority))
+    private fun addShape(shape: Shape, color: MColor?, fill: Boolean, priority: DebugShape.Priority) {
+        debugRenderer.addShape(
+            DebugShape(
+                shape,
+                color ?: Colors.BLACK,
+                fill,
+                priority
+            )
+        )
     }
 
     /**
@@ -120,20 +130,20 @@ object DebugDraw {
      *
      * @return the corresponding screen pixel
      */
-    private fun Float.toScreen(): Float = this * Mayonez.scene.scale
+    private fun Float.toScreen(): Float = this * scale
 
     /**
      * Converts a pair of coordinates from world to screen units.
      *
      * @return the corresponding screen pixels
      */
-    private fun Vec2.toScreen(): Vec2 = this * Mayonez.scene.scale
+    private fun Vec2.toScreen(): Vec2 = this * scale
 
     /**
      * Converts all points on a shape to screen units.
      *
      * @return the corresponding screen pixels
      */
-    private fun Shape.toScreen(): Shape = this.scale(Vec2(Mayonez.scene.scale), Vec2(0f))
+    private fun Shape.toScreen(): Shape = this.scale(Vec2(scale), Vec2(0f))
 
 }

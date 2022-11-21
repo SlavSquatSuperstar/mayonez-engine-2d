@@ -1,6 +1,7 @@
-package slavsquatsuperstar.mayonez.io;
+package slavsquatsuperstar.mayonez.io.text;
 
 import org.junit.jupiter.api.Test;
+import slavsquatsuperstar.mayonez.io.Assets;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -9,7 +10,7 @@ import java.util.Arrays;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- * Unit tests for the {@link slavsquatsuperstar.mayonez.io.TextFile} class.
+ * Unit tests for the {@link slavsquatsuperstar.mayonez.io.text.TextFile} class.
  *
  * @author SlavSquatSuperstar
  */
@@ -19,14 +20,14 @@ public class TextFileTests {
     public void readClasspathTextFile() {
         Assets.clearAssets();
         Assets.scanResources("testassets");
-        String[] properties = new TextFile("testassets/properties.txt").readLines();
+        String[] properties = new TextFile("testassets/text/properties.txt").readLines();
         System.out.println(Arrays.toString(properties));
         assertEquals("Mayonez Engine", properties[0].split("=")[1]);
     }
 
     @Test
     public void readLocalTextFile() {
-        String[] properties = new TextFile("src/test/resources/testassets/properties.txt").readLines();
+        String[] properties = new TextFile("src/test/resources/testassets/text/properties.txt").readLines();
         System.out.println(Arrays.toString(properties));
         assertEquals("Mayonez Engine", properties[0].split("=")[1]);
     }

@@ -76,7 +76,6 @@ public class FrictionTest extends PhysicsTestScene {
 
     public static void main(String[] args) {
         Mayonez.setUseGL(false);
-        Mayonez.setScene(new FrictionTest("Friction Test Scene"));
-        Mayonez.start();
+        Mayonez.start(new FrictionTest("Friction Test Scene"));
     }
 }

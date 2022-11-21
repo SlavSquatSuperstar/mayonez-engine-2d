@@ -1,5 +1,7 @@
-package slavsquatsuperstar.mayonez.io;
+package slavsquatsuperstar.mayonez.io.text;
 
+import slavsquatsuperstar.mayonez.io.Asset;
+import slavsquatsuperstar.mayonez.io.IOUtils;
 import slavsquatsuperstar.mayonez.util.Logger;
 
 import java.io.FileNotFoundException;
@@ -19,11 +21,12 @@ public abstract class TextAsset extends Asset {
     }
 
     /**
-     * Reads data from thus file. Should not be called if this file has not been created and is meant for output only.
+     * Reads data from this file as a single string. Should not be called if this file has not been created and is meant
+     * for output only.
      *
      * @return the text data as a string
      */
-    protected String read() {
+    protected final String read() {
         try (InputStream in = inputStream()) {
             return IOUtils.read(in);
         } catch (FileNotFoundException e) {
@@ -36,14 +39,32 @@ public abstract class TextAsset extends Asset {
     }
 
     /**
+     * Reads data from this file as a string array. Should not be called if this file has not been created and is meant
+     * for output only.
+     *
+     * @return the text data as an array
+     */
+    protected final String[] readArray() {
+        try (InputStream in = inputStream()) {
+            return IOUtils.readLines(in);
+        } catch (FileNotFoundException e) {
+            Logger.error("I/O: File \"%s\" not found", getFilename());
+        } catch (IOException e) {
+            Logger.error("I/O: Could not read file \"%s\"", getFilename());
+            Logger.printStackTrace(e);
+        }
+        return new String[]{};
+    }
+
+    /**
      * Saves data to this file. Will not work if this asset is a classpath resource.
      *
      * @param append whether to add data to the file instead of overwriting it
      * @param text   the text or lines of text to save
      */
-    protected void save(boolean append, String... text) {
+    protected final void save(boolean append, String... text) {
         try (OutputStream out = outputStream(append)) {
-            if (text.length == 1) IOUtils.write(out, text[0]);
+            if (text.length == 1) IOUtils.write(out, text[0]); // single line
             else IOUtils.writeLines(out, text);
         } catch (FileNotFoundException e) {
             Logger.error("I/O: File \"%s\" not found", getFilename());

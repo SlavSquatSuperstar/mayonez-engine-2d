@@ -5,7 +5,7 @@ import slavsquatsuperstar.mayonez.math.Vec2;
 import slavsquatsuperstar.mayonez.scripts.*;
 import slavsquatsuperstar.mayonez.util.Color;
 import slavsquatsuperstar.mayonez.util.Colors;
-import slavsquatsuperstar.mayonez.util.DebugDraw;
+import slavsquatsuperstar.mayonez.DebugDraw;
 import slavsquatsuperstar.mayonez.input.KeyInput;
 import slavsquatsuperstar.mayonez.physics.PhysicsMaterial;
 import slavsquatsuperstar.mayonez.physics.Rigidbody;
@@ -60,11 +60,11 @@ public abstract class PhysicsTestScene extends Scene {
         getCamera().setPosition(getSize().mul(0.5f));
 
         if (KeyInput.keyPressed("r")) SceneManager.reloadScene(); // reload scene
-        else if (KeyInput.keyPressed("1")) Mayonez.setScene(new CollisionTest("Collision Test Scene"));
-        else if (KeyInput.keyPressed("2")) Mayonez.setScene(new DetectionTest("Detection Test Scene"));
-        else if (KeyInput.keyPressed("3")) Mayonez.setScene(new FrictionTest("Friction Test Scene"));
-        else if (KeyInput.keyPressed("4")) Mayonez.setScene(new AngularResolutionTest("Angular Resolution Test"));
-        else if (KeyInput.keyPressed("5")) Mayonez.setScene(new PoolBallsTest("Pool Balls Test"));
+        else if (KeyInput.keyPressed("1")) SceneManager.setScene(new CollisionTest("Collision Test"));
+        else if (KeyInput.keyPressed("2")) SceneManager.setScene(new DetectionTest("Detection Test"));
+        else if (KeyInput.keyPressed("3")) SceneManager.setScene(new FrictionTest("Friction Test"));
+        else if (KeyInput.keyPressed("4")) SceneManager.setScene(new AngularResolutionTest("Angular Resolution Test"));
+        else if (KeyInput.keyPressed("5")) SceneManager.setScene(new PoolBallsTest("Pool Balls Test"));
 
         if (KeyInput.keyPressed("space")) {
 //            System.out.println("pressed");

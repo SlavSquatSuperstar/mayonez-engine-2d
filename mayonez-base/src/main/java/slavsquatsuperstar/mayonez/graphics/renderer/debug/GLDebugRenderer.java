@@ -1,9 +1,12 @@
-package slavsquatsuperstar.mayonez.graphics.renderer;
+package slavsquatsuperstar.mayonez.graphics.renderer.debug;
 
-import slavsquatsuperstar.mayonez.math.Vec2;
-import slavsquatsuperstar.mayonez.util.DebugDraw;
+import slavsquatsuperstar.mayonez.DebugDraw;
 import slavsquatsuperstar.mayonez.annotations.EngineType;
 import slavsquatsuperstar.mayonez.annotations.UsesEngine;
+import slavsquatsuperstar.mayonez.graphics.renderer.DrawPrimitive;
+import slavsquatsuperstar.mayonez.graphics.renderer.GLRenderer;
+import slavsquatsuperstar.mayonez.graphics.renderer.RenderBatch;
+import slavsquatsuperstar.mayonez.math.Vec2;
 import slavsquatsuperstar.mayonez.physics.shapes.*;
 
 import java.util.ArrayList;
@@ -29,6 +32,13 @@ public final class GLDebugRenderer extends GLRenderer implements DebugRenderer {
     }
 
     // Debug Draw Methods
+
+
+    @Override
+    public void start() {
+        super.start();
+        shapes.clear();
+    }
 
     @Override
     public void addShape(DebugShape shape) {

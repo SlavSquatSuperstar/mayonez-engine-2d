@@ -52,8 +52,7 @@ public class LevelEditor extends Scene {
 
     public static void main(String[] args) {
         Mayonez.setUseGL(false);
-        Mayonez.setScene(new LevelEditor());
-        Mayonez.start();
+        Mayonez.start(new LevelEditor());
     }
 
 }

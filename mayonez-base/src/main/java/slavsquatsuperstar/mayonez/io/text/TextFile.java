@@ -1,11 +1,9 @@
-package slavsquatsuperstar.mayonez.io;
+package slavsquatsuperstar.mayonez.io.text;
 
-import slavsquatsuperstar.mayonez.util.StringUtils;
-
-// TODO support .csv and .cfg files
+// TODO support .cfg files
 
 /**
- * Reading lines of text data and saves it to a plain text (usually .txt) file.
+ * Reads lines of text data and saves it to a plain text (usually .txt) file.
  *
  * @author SlavSquatSuperstar
  */
@@ -30,7 +28,7 @@ public class TextFile extends TextAsset {
      * @return the text as an array
      */
     public String[] readLines() {
-        return StringUtils.toLines(readText());
+        return super.readArray();
     }
 
     /**

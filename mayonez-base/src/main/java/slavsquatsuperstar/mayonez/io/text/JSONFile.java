@@ -1,14 +1,11 @@
-package slavsquatsuperstar.mayonez.io;
+package slavsquatsuperstar.mayonez.io.text;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 import slavsquatsuperstar.mayonez.util.Logger;
 import slavsquatsuperstar.mayonez.util.Record;
-
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.OutputStream;
+import slavsquatsuperstar.mayonez.util.StringUtils;
 
 /**
  * Reads data in JavaScript Object Notation (JSON) format and saves it to a .json file.
@@ -44,14 +41,7 @@ public class JSONFile extends TextAsset {
      * @param json a record object
      */
     public void saveJSON(Record json) {
-        try (OutputStream out = outputStream(false)) {
-            IOUtils.write(out, json.toJSONString());
-        } catch (FileNotFoundException e) {
-            Logger.error("JSONFile: File \"%s\" not found\n", getFilename());
-        } catch (IOException e) {
-            Logger.error("JSONFile: Could not save to file \"%s\"", getFilename());
-            Logger.printStackTrace(e);
-        }
+        super.save(false, StringUtils.split(json.toJSONString(), "\n"));
     }
 
 }

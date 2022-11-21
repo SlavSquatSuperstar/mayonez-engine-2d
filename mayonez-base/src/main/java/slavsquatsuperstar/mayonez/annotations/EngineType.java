@@ -1,7 +1,9 @@
 package slavsquatsuperstar.mayonez.annotations;
 
 /**
- * Which window and rendering framework a component is created for.
+ * Which window and rendering framework a class is created for.
+ *
+ * @author SlavsSquatSuperstar
  */
 public enum EngineType {
     /**

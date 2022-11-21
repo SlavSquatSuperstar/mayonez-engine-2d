@@ -5,8 +5,8 @@ import slavsquatsuperstar.mayonez.annotations.EngineType;
 import slavsquatsuperstar.mayonez.annotations.UsesEngine;
 import slavsquatsuperstar.mayonez.graphics.GLCamera;
 import slavsquatsuperstar.mayonez.io.Assets;
-import slavsquatsuperstar.mayonez.io.GLTexture;
-import slavsquatsuperstar.mayonez.io.Shader;
+import slavsquatsuperstar.mayonez.io.image.GLTexture;
+import slavsquatsuperstar.mayonez.io.image.Shader;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -35,7 +35,7 @@ public abstract class GLRenderer implements Renderer {
 
     // Renderer Methods
 
-    public final void start() {
+    public void start() {
         batches.clear();
     }
 
@@ -96,7 +96,7 @@ public abstract class GLRenderer implements Renderer {
                 }
             }
         }
-        // All batches full
+        // Create new if all batches full
         RenderBatch batch = new RenderBatch(maxBatchSize, zIndex, primitive);
         batch.clear();
         batches.add(batch);

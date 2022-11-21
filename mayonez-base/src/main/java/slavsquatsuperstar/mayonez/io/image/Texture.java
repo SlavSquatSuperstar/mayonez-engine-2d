@@ -1,4 +1,6 @@
-package slavsquatsuperstar.mayonez.io;
+package slavsquatsuperstar.mayonez.io.image;
+
+import slavsquatsuperstar.mayonez.io.Asset;
 
 /**
  * An image file used by this program.

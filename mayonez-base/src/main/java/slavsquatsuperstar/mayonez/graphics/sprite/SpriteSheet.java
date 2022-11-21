@@ -1,7 +1,7 @@
 package slavsquatsuperstar.mayonez.graphics.sprite;
 
 import slavsquatsuperstar.mayonez.Mayonez;
-import slavsquatsuperstar.mayonez.io.Texture;
+import slavsquatsuperstar.mayonez.io.image.Texture;
 
 /**
  * Stores multiple textures and creates multiple sprites from a larger image.

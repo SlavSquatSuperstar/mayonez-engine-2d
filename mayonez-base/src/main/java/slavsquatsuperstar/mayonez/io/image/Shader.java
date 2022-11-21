@@ -1,7 +1,8 @@
-package slavsquatsuperstar.mayonez.io;
+package slavsquatsuperstar.mayonez.io.image;
 
 import org.joml.*;
 import org.lwjgl.BufferUtils;
+import slavsquatsuperstar.mayonez.io.text.TextAsset;
 import slavsquatsuperstar.mayonez.util.Logger;
 import slavsquatsuperstar.mayonez.Mayonez;
 import slavsquatsuperstar.mayonez.annotations.UsesEngine;
@@ -22,7 +23,7 @@ import static org.lwjgl.opengl.GL20.*;
 @UsesEngine(EngineType.GL)
 public class Shader extends TextAsset {
 
-    private int shaderProgramID;
+    private int shaderID;
     private boolean used = false;
     private String vertexSrc, fragmentSrc;
 
@@ -87,15 +88,15 @@ public class Shader extends TextAsset {
         Logger.debug("OpenGL: Compiled \"%s\" fragment shader", getFilename());
 
         // Link shaders
-        shaderProgramID = glCreateProgram();
-        glAttachShader(shaderProgramID, vertexID);
-        glAttachShader(shaderProgramID, fragmentID);
-        glLinkProgram(shaderProgramID);
+        shaderID = glCreateProgram();
+        glAttachShader(shaderID, vertexID);
+        glAttachShader(shaderID, fragmentID);
+        glLinkProgram(shaderID);
 
-        success = glGetProgrami(shaderProgramID, GL_LINK_STATUS);
+        success = glGetProgrami(shaderID, GL_LINK_STATUS);
         if (success == GL_FALSE) {
             Logger.error("OpenGL: Could not link shader file \"%s\"", getFilename());
-            Logger.error("OpenGL: " + glGetProgramInfoLog(shaderProgramID));
+            Logger.error("OpenGL: " + glGetProgramInfoLog(shaderID));
             Mayonez.stop(1);
         }
         Logger.debug("OpenGL: Linked shader file \"%s\"", getFilename());
@@ -106,7 +107,7 @@ public class Shader extends TextAsset {
      */
     public void bind() {
         if (!used) {
-            glUseProgram(shaderProgramID);
+            glUseProgram(shaderID);
             used = true;
         }
     }
@@ -163,7 +164,7 @@ public class Shader extends TextAsset {
 
     private int uploadVariable(String varName) {
         bind();
-        return glGetUniformLocation(shaderProgramID, varName);
+        return glGetUniformLocation(shaderID, varName);
     }
 
 }

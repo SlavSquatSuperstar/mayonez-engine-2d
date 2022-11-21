@@ -2,8 +2,15 @@ package slavsquatsuperstar.mayonez.io
 
 import org.reflections.Reflections
 import org.reflections.scanners.Scanners
-import slavsquatsuperstar.mayonez.util.Logger
 import slavsquatsuperstar.mayonez.Mayonez
+import slavsquatsuperstar.mayonez.io.image.GLTexture
+import slavsquatsuperstar.mayonez.io.image.JTexture
+import slavsquatsuperstar.mayonez.io.image.Shader
+import slavsquatsuperstar.mayonez.io.image.Texture
+import slavsquatsuperstar.mayonez.io.text.CSVFile
+import slavsquatsuperstar.mayonez.io.text.JSONFile
+import slavsquatsuperstar.mayonez.io.text.TextFile
+import slavsquatsuperstar.mayonez.util.Logger
 import java.io.File
 import java.net.MalformedURLException
 import java.net.URL
@@ -165,10 +172,19 @@ object Assets {
     }
 
     /**
+     * Retrieves the asset at the given location as a [CSVFile].
+     *
+     * @param filename the path to the file
+     * @return the CSV file, if it exists
+     */
+    @JvmStatic
+    fun getCSVFile(filename: String): CSVFile? = getAsset(filename, CSVFile::class.java)
+
+    /**
      * Retrieves the asset at the given location as a [JSONFile].
      *
      * @param filename the path to the file
-     * @return the text file, if it exists
+     * @return the JSON file, if it exists
      */
     @JvmStatic
     fun getJSONFile(filename: String): JSONFile? = getAsset(filename, JSONFile::class.java)

@@ -20,7 +20,7 @@ public class FileTests {
 
     @Test
     public void checkExternalFile() {
-        File file = new File("src/test/resources/testassets/mario.png");
+        File file = new File("src/test/resources/testassets/images/mario.png");
         assertTrue(file.exists());
         assertTrue(file.isFile());
         assertNull(file.listFiles());
@@ -30,7 +30,7 @@ public class FileTests {
 
     @Test
     public void checkClasspathFile() throws URISyntaxException {
-        URI resource = ClassLoader.getSystemResource("testassets/mario.png").toURI();
+        URI resource = ClassLoader.getSystemResource("testassets/images/mario.png").toURI();
         File file = new File(resource);
         assertTrue(file.exists());
         assertTrue(file.isFile());

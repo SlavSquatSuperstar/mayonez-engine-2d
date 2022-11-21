@@ -41,4 +41,9 @@ public final class GLGame extends GameEngine { // can't implement runnable other
     public float getCurrentTime() {
         return (float) glfwGetTime();
     }
+
+    @Override
+    public String toString() {
+        return "GL Game";
+    }
 }

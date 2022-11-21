@@ -62,8 +62,7 @@ public class PoolBallsTest extends PhysicsTestScene {
 
     public static void main(String[] args) {
         Mayonez.setUseGL(false);
-        Mayonez.setScene(new PoolBallsTest("Pool Balls Test"));
-        Mayonez.start();
+        Mayonez.start(new PoolBallsTest("Pool Balls Test"));
     }
 
 }

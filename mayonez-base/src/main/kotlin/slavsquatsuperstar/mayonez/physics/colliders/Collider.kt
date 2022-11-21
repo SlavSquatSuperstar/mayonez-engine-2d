@@ -9,7 +9,7 @@ import slavsquatsuperstar.mayonez.physics.resolution.Manifold
 import slavsquatsuperstar.mayonez.physics.shapes.BoundingBox
 import slavsquatsuperstar.mayonez.physics.shapes.Shape
 import slavsquatsuperstar.mayonez.util.Color
-import slavsquatsuperstar.mayonez.util.DebugDraw
+import slavsquatsuperstar.mayonez.DebugDraw
 import java.awt.Graphics2D
 
 /**

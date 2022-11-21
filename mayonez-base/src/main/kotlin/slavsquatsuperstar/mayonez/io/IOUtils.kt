@@ -8,7 +8,7 @@ import java.nio.charset.StandardCharsets
 import java.nio.charset.UnsupportedCharsetException
 
 /**
- * Contains reusable methods from reading from and writing to assets.
+ * Contains reusable methods from reading from and writing to classpath or external assets.
  *
  * @author SlavSquatSuperstar
  */
@@ -31,9 +31,9 @@ object IOUtils {
 
     @JvmStatic
     @Throws(IOException::class, FileNotFoundException::class)
-    fun read(input: InputStream?): String = StringUtils.fromLines(readLines(input))
+    fun read(input: InputStream?): String = StringUtils.join(readLines(input), "\n")
 
-    // From Apache Commons IO > IOUtils > readLines(InputStream, Charset)
+    // From Apache Commons IO > IOUtils.readLines(InputStream, Charset)
     @JvmStatic
     @Throws(IOException::class, FileNotFoundException::class)
     fun readLines(input: InputStream?): Array<String> {
@@ -48,7 +48,7 @@ object IOUtils {
 
     // Write Methods
 
-    // From Apache Commons IO > IOUtils > write(String, OutputStream, Charset)
+    // From Apache Commons IO > IOUtils.write(String, OutputStream, Charset)
     @JvmStatic
     @Throws(IOException::class)
     fun write(output: OutputStream?, text: String?) {
@@ -57,7 +57,7 @@ object IOUtils {
         output.write(LINE_ENDING.toByteArray(getCharset(textCharset)))
     }
 
-    // From Apache Commons IO > IOUtils > write(Collection<?>, String, OutputStream, Charset)
+    // From Apache Commons IO > IOUtils.write(Collection<?>, String, OutputStream, Charset)
     @JvmStatic
     @Throws(IOException::class)
     fun writeLines(output: OutputStream?, lines: Array<String?>?) {

@@ -38,7 +38,6 @@ public class SpaceGameScene extends Scene {
 
     public static void main(String[] args) {
         Mayonez.setUseGL(false);
-        Mayonez.setScene(new SpaceGameScene());
-        Mayonez.start();
+        Mayonez.start(new SpaceGameScene());
     }
 }

@@ -81,7 +81,7 @@ public final class GLSceneRenderer extends GLRenderer implements SceneRenderer {
         Vec2[] sprVertices = Rectangle.rectangleVertices(new Vec2(0), new Vec2(1), objXf.rotation);
         for (int i = 0; i < sprVertices.length; i++) {
             // sprite_pos = (obj_pos + vert_pos * obj_scale) * world_scale
-            Vec2 sprPos = objXf.position.add(sprVertices[i].mul(objXf.scale)).mul(Mayonez.getScene().getScale());
+            Vec2 sprPos = objXf.position.add(sprVertices[i].mul(objXf.scale)).mul(SceneManager.getCurrentScene().getScale());
             batch.pushVec2(sprPos);
             batch.pushVec4(color);
             batch.pushVec2(texCoords[i]);

@@ -1,12 +1,15 @@
 package slavsquatsuperstar.mayonez;
 
-import slavsquatsuperstar.mayonez.math.Vec2;
 import slavsquatsuperstar.mayonez.engine.GameLayer;
 import slavsquatsuperstar.mayonez.event.Receivable;
 import slavsquatsuperstar.mayonez.graphics.Camera;
 import slavsquatsuperstar.mayonez.graphics.GLCamera;
 import slavsquatsuperstar.mayonez.graphics.JCamera;
 import slavsquatsuperstar.mayonez.graphics.renderer.*;
+import slavsquatsuperstar.mayonez.graphics.renderer.debug.DebugRenderer;
+import slavsquatsuperstar.mayonez.graphics.renderer.debug.GLDebugRenderer;
+import slavsquatsuperstar.mayonez.graphics.renderer.debug.JDebugRenderer;
+import slavsquatsuperstar.mayonez.math.Vec2;
 import slavsquatsuperstar.mayonez.physics.PhysicsWorld;
 import slavsquatsuperstar.mayonez.util.Color;
 import slavsquatsuperstar.mayonez.util.Colors;
@@ -25,6 +28,7 @@ import java.util.stream.Collectors;
  * @author SlavSquatSuperstar
  */
 // TODO current cursor object
+// TODO draw background image
 public abstract class Scene implements GameLayer {
 
     // Scene Information
@@ -37,14 +41,14 @@ public abstract class Scene implements GameLayer {
      * The size of the scene in world units, or zero if unbounded.
      */
     private final Vec2 size;
-    private Color background = Colors.WHITE;
+    protected Color background = Colors.WHITE;
 
     // Scene Layers
     private final List<GameObject> objects;
-    private final PhysicsWorld physics;
     private final SceneRenderer renderer;
     private final DebugRenderer debugRenderer;
-    private final Camera camera;
+    private final PhysicsWorld physics;
+    private final Camera camera; // TODO probably want to sort this to last
 
     // Scene State
     private final Queue<Receivable> changesToScene; // Use a separate list to avoid concurrent exceptions
@@ -71,7 +75,9 @@ public abstract class Scene implements GameLayer {
         this.scale = scale;
 
         objects = new ArrayList<>();
-        physics = new PhysicsWorld();
+        changesToScene = new LinkedList<>();
+        started = false;
+
         if (Boolean.TRUE.equals(Mayonez.getUseGL())) {
             renderer = new GLSceneRenderer();
             debugRenderer = new GLDebugRenderer();
@@ -81,14 +87,13 @@ public abstract class Scene implements GameLayer {
             debugRenderer = new JDebugRenderer();
             camera = new JCamera(Mayonez.getScreenSize(), this.getScale());
         }
-        changesToScene = new LinkedList<>();
-        started = false;
+        physics = new PhysicsWorld();
     }
 
     // Game Loop Methods
 
     /**
-     * Add necessary objects and provide user-defined initialization behavior.
+     * Provide user-defined initialization behavior, such as adding necessary game objects or setting gravity.
      */
     protected void init() {
     }
@@ -101,10 +106,11 @@ public abstract class Scene implements GameLayer {
         if (!started) {
             addObject(Camera.createCameraObject(camera));
             init();
-
+            // Start Layers
             renderer.start();
             debugRenderer.start();
-
+            physics.start();
+            // Add to Layers
             renderer.setScene(this);
             physics.setScene(this);
             started = true;
@@ -125,10 +131,7 @@ public abstract class Scene implements GameLayer {
             });
             camera.gameObject.update(dt);
             onUserUpdate(dt);
-
-            // Update physics
-            physics.physicsUpdate(dt);
-
+            physics.physicsUpdate(dt); // Update physics
             // Remove destroyed objects or add new ones at the end of the frame
             while (!changesToScene.isEmpty()) changesToScene.poll().onReceive();
         }
@@ -147,7 +150,6 @@ public abstract class Scene implements GameLayer {
                 g2.fillRect(0, 0, (int) ((size.x + 1) * scale), (int) ((size.y + 1) * scale));
                 onUserRender(g2);
             }
-
             // Render objects
             renderer.render(g2);
             debugRenderer.render(g2);
@@ -174,10 +176,10 @@ public abstract class Scene implements GameLayer {
     public final void stop() {
         if (started) {
             started = false;
-
+            // Destroy objects
             objects.forEach(GameObject::onDestroy);
             objects.clear();
-
+            // Clear layers
             renderer.stop();
             debugRenderer.stop();
             physics.stop();
@@ -308,7 +310,7 @@ public abstract class Scene implements GameLayer {
     }
 
     /**
-     * Sets the background color of this scene. Defaults to a very light gray.
+     * Sets the background color of this scene. Defaults to white.
      *
      * @param background an RGB color
      */
@@ -320,7 +322,7 @@ public abstract class Scene implements GameLayer {
         physics.setGravity(gravity);
     }
 
-    public DebugRenderer getDebugRenderer() {
+    final DebugRenderer getDebugRenderer() {
         return debugRenderer;
     }
 

@@ -57,11 +57,10 @@ public abstract sealed class GameEngine implements GameLayer permits JGame, GLGa
         // All time values are in seconds
         float timeStep = Mayonez.TIME_STEP;
         float lastTime = getCurrentTime(); // Last time the game loop iterated
-
         // For Debugging
         float timer = 0f;
         int frames = 0;
-
+        // Loop
         try {
             // Render to the screen until the user closes the window or presses the ESCAPE key
             while (running && window.notClosedByUser()) {
@@ -91,14 +90,12 @@ public abstract sealed class GameEngine implements GameLayer permits JGame, GLGa
                     frames = 0;
                     timer = 0;
                 }
-
                 endFrame();
             }
         } catch (Exception e) {
             Logger.printStackTrace(e);
             Mayonez.stop(1);
         }
-
         Mayonez.stop(0);
     }
 
@@ -128,10 +125,6 @@ public abstract sealed class GameEngine implements GameLayer permits JGame, GLGa
 
     public Window getWindow() {
         return window;
-    }
-
-    public void setScene(Scene scene) {
-        SceneManager.setScene(scene);
     }
 
     // Helper Methods

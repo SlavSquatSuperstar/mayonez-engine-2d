@@ -16,7 +16,7 @@ import slavsquatsuperstar.mayonez.physics.shapes.Triangle;
 import slavsquatsuperstar.mayonez.scripts.*;
 import slavsquatsuperstar.mayonez.util.Color;
 import slavsquatsuperstar.mayonez.util.Colors;
-import slavsquatsuperstar.mayonez.util.DebugDraw;
+import slavsquatsuperstar.mayonez.DebugDraw;
 
 /**
  * For testing renderer, camera, and world to screen coordinates.
@@ -83,7 +83,7 @@ public class RendererTest extends Scene {
                 Sprite.create("assets/textures/mario/blend_red.png")));
 
         addObject(createSquare("Green Square", new Vec2(halfWidth, halfHeight),
-                Sprite.create("assets/textures/mario/blend_red.png")));
+                Sprite.create("assets/textures/mario/blend_green.png")));
 
         addObject(createSquare("Blue Square", new Vec2(-halfWidth, -halfHeight),
                 Sprite.create(new Color(0, 67, 169, 153))));
@@ -148,7 +148,7 @@ public class RendererTest extends Scene {
 
             @Override
             public void onCollision(GameObject other) {
-                setDestroyed();
+                if (other.name.equals("Mario")) setDestroyed();
             }
         };
     }
@@ -163,10 +163,9 @@ public class RendererTest extends Scene {
     }
 
     public static void main(String[] args) {
-        String arg0 = (args.length > 0) ? args[0] : "";
-        Mayonez.setUseGL(Boolean.valueOf(arg0)); // Automatically choose AWT/GL
-        Mayonez.setScene(new RendererTest());
-        Mayonez.start();
+        String arg0 = (args.length > 0) ? args[0] : "false";
+        Mayonez.setUseGL(Boolean.valueOf(arg0)); // Automatically choose AWT/GL from CL args
+        Mayonez.start(new RendererTest());
     }
 
 }

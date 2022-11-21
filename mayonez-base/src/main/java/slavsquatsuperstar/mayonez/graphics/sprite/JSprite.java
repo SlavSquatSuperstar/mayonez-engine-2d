@@ -1,10 +1,10 @@
 package slavsquatsuperstar.mayonez.graphics.sprite;
 
-import slavsquatsuperstar.mayonez.util.DebugDraw;
+import slavsquatsuperstar.mayonez.DebugDraw;
 import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.annotations.EngineType;
 import slavsquatsuperstar.mayonez.annotations.UsesEngine;
-import slavsquatsuperstar.mayonez.io.JTexture;
+import slavsquatsuperstar.mayonez.io.image.JTexture;
 import slavsquatsuperstar.mayonez.physics.shapes.Rectangle;
 import slavsquatsuperstar.mayonez.util.Color;
 import slavsquatsuperstar.mayonez.util.Colors;

@@ -1,6 +1,7 @@
-package slavsquatsuperstar.mayonez.io;
+package slavsquatsuperstar.mayonez.io.image;
 
 import org.lwjgl.BufferUtils;
+import slavsquatsuperstar.mayonez.io.IOUtils;
 import slavsquatsuperstar.mayonez.math.Vec2;
 import slavsquatsuperstar.mayonez.util.Logger;
 import slavsquatsuperstar.mayonez.annotations.UsesEngine;

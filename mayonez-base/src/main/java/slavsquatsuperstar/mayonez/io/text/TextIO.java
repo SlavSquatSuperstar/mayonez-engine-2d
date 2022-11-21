@@ -1,4 +1,4 @@
-package slavsquatsuperstar.mayonez.io;
+package slavsquatsuperstar.mayonez.io.text;
 
 import java.io.*;
 

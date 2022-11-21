@@ -16,8 +16,10 @@ import kotlin.system.exitProcess
  */
 object Mayonez {
 
+    // TODO use LocalDateTime to track time
+
     @JvmField
-    val TIME_STARTED: Long = System.nanoTime()
+    val NANOS_STARTED: Long = System.nanoTime()
 
     @JvmField
     val TIME_STEP: Float
@@ -28,9 +30,8 @@ object Mayonez {
      * @return the duration of this program
      */
     @JvmStatic
-    // TODO use DateTime?
-    val time: Float
-        get() = (System.nanoTime() - TIME_STARTED) / 1.0E9f
+    val seconds: Float
+        get() = (System.nanoTime() - NANOS_STARTED) / 1.0E9f
 
     // Game Fields
     // TODO make not null
@@ -46,12 +47,12 @@ object Mayonez {
         private set
 
     // Initialization
-    private var INIT_ENGINE = false // Whether the engine and logger have been created
+    private var INIT_ENGINE = false // Whether the engine has been created
     var INIT_ASSETS = false // Whether the asset system has been created
         private set
     var INIT_PREFERENCES = false // Whether the preferences file has been applied
         private set
-    var INIT_LOGGER = false
+    var INIT_LOGGER = false // Whether the logger has been set up
         private set
     private var INIT_RESOURCES = false // Whether the core resources have been created
 
@@ -97,15 +98,27 @@ object Mayonez {
         }
     }
 
-    /* Game Loop */
+    // Game Loop
 
+    /**
+     * Start the game and load a scene.
+     *
+     * @param scene the starting scene
+     */
     @JvmStatic
-    fun start() { // TODO make setScene auto start
+    fun start(scene: Scene?) {
         if (started) return
         started = true
+        init()
+        SceneManager.setScene(scene)
         game?.start() ?: exitIfNotConfigured()
     }
 
+    /**
+     * Stop the game with an exit code.
+     *
+     * @param status an exit code (0 for no error, positive for error)
+     */
     @JvmStatic
     fun stop(status: Int) {
         if (!started) return
@@ -120,14 +133,6 @@ object Mayonez {
     }
 
     // Getters and Setters
-
-    @JvmStatic
-    var scene: Scene
-        get() = SceneManager.currentScene
-        set(scene) {
-            if (!started) init()
-            SceneManager.setScene(scene)
-        }
 
     @JvmStatic
     val screenSize: Vec2

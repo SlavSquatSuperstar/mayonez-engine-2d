@@ -2,6 +2,7 @@ package slavsquatsuperstar.mayonez.io;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import slavsquatsuperstar.mayonez.io.text.TextFile;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -27,9 +28,9 @@ public class AssetTests {
 
     @Test
     public void scanResourcesAddsToStorage() {
-        assertTrue(Assets.hasAsset("testassets/mario.png"));
+        assertTrue(Assets.hasAsset("testassets/images/mario.png"));
         assertFalse(Assets.hasAsset("testassets/luigi.png"));
-        assertTrue(Assets.hasAsset("testassets/mario.png"));
+        assertTrue(Assets.hasAsset("testassets/images/mario.png"));
         assertFalse(Assets.hasAsset("testassets/luigi.png"));
         assertFalse(Assets.hasAsset("mario.png"));
     }
@@ -38,9 +39,8 @@ public class AssetTests {
     public void scanFilesAddsToStorage() {
         Assets.clearAssets();
         Assets.scanFiles("src/test/resources/testassets");
-        assertTrue(Assets.hasAsset("src/test/resources/testassets/mario.png"));
-        assertFalse(Assets.hasAsset("src/test/resources/testassets/luigi.png"));
-        assertTrue(Assets.hasAsset("src/test/resources/testassets/mario.png"));
+        assertTrue(Assets.hasAsset("src/test/resources/testassets/images/mario.png"));
+        assertFalse(Assets.hasAsset("src/test/resources/testassets/images/luigi.png"));
         assertFalse(Assets.hasAsset("mario.png"));
     }
 
@@ -52,7 +52,7 @@ public class AssetTests {
 
     @Test
     public void classpathAssetExists() {
-        Asset a = Assets.createAsset("testassets/mario.png");
+        Asset a = Assets.createAsset("testassets/images/mario.png");
         assertTrue(a.isValid());
     }
 
@@ -64,19 +64,19 @@ public class AssetTests {
 
     @Test
     public void localAssetExists() {
-        Asset a = Assets.createAsset("src/test/resources/testassets/mario.png");
+        Asset a = Assets.createAsset("src/test/resources/testassets/images/mario.png");
         assertTrue(a.isValid());
     }
 
     @Test
     public void localAssetNotExists() {
-        Asset a = Assets.createAsset("src/test/resources/testassets/luigi.png");
+        Asset a = Assets.createAsset("src/test/resources/testassets/images/luigi.png");
         assertFalse(a.isValid());
     }
 
     @Test
     public void getValidAssetReturnsNull() {
-        assertNotNull(Assets.getAsset("testassets/mario.png"));
+        assertNotNull(Assets.getAsset("testassets/images/mario.png"));
     }
 
     @Test
@@ -86,7 +86,7 @@ public class AssetTests {
 
     @Test
     public void getResourceInputStreamSuccess() {
-        InputStream in = getFileFromResourceAsStream("testassets/properties.txt");
+        InputStream in = getFileFromResourceAsStream("testassets/text/properties.txt");
         assertNotNull(in);
         printInputStream(in);
     }
@@ -122,8 +122,8 @@ public class AssetTests {
 
     @Test
     public void createAssetWithReflection() {
-        TextFile t = Assets.getTextFile("testassets/properties.txt");
-        assertEquals("testassets/properties.txt", t.getFilename());
+        TextFile t = Assets.getTextFile("testassets/text/properties.txt");
+        assertEquals("testassets/text/properties.txt", t.getFilename());
     }
 
 }

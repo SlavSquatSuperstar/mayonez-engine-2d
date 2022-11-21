@@ -5,10 +5,8 @@ import org.joml.Vector4f
 import slavsquatsuperstar.mayonez.math.MathUtils
 import java.util.*
 
-typealias JColor = java.awt.Color
-
 /**
- * Stores a color used by the program and translates to and from [java.awt.Color] and [org.joml.Vector4f]
+ * Stores a color used by the program and translates to and from [java.awt.Color] and [org.joml.Vector4f].
  */
 class Color(red: Int, green: Int, blue: Int, alpha: Int) {
 

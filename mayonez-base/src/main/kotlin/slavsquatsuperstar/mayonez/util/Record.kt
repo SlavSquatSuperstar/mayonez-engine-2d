@@ -41,7 +41,7 @@ open class Record(private val map: MutableMap<String?, Any?>) {
             if (entry.value != null) this[entry.key] = entry.value
     }
 
-    // HashMap Methods
+    // Hash Map Methods
 
     /**
      * Retrieves the value stored under this key as a Java [Object], or null if it does not exist.
@@ -116,7 +116,7 @@ open class Record(private val map: MutableMap<String?, Any?>) {
     fun keys(): Set<String?> = map.keys
 
     /**
-     * Returns an iterable set of keys.
+     * Returns an iterable set of key-value pairs.
      *
      * @return the key set
      */
@@ -127,7 +127,7 @@ open class Record(private val map: MutableMap<String?, Any?>) {
      *
      * @return the JSON string
      */
-    fun toJSONString(): String = JSONObject(map).toString()
+    fun toJSONString(): String = JSONObject(map).toString(4)
 
     override fun toString(): String = map.toString()
 }

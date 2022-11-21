@@ -1,5 +1,6 @@
 package slavsquatsuperstar.mayonez
 
+import slavsquatsuperstar.mayonez.util.Colors
 import slavsquatsuperstar.mayonez.util.Logger.debug
 
 /**
@@ -7,10 +8,15 @@ import slavsquatsuperstar.mayonez.util.Logger.debug
  *
  * @author SlavSquatSuperstar
  */
-// TODO need some safeguard against null scenes
 object SceneManager {
+
+    // Scene Fields
     @JvmStatic
-    lateinit var currentScene: Scene
+    var currentScene: Scene = object : Scene("Default Scene") {
+        override fun init() {
+            setBackground(Colors.RED)
+        }
+    }
         private set
     private var sceneRunning: Boolean = false
 
@@ -39,9 +45,9 @@ object SceneManager {
      */
     @JvmStatic
     fun startScene() {
-        if (this::currentScene.isInitialized && !sceneRunning) {
-            sceneRunning = true
+        if (!sceneRunning) {
             currentScene.start()
+            sceneRunning = true
             debug("Scene Manager: Loaded scene \"%s\"", currentScene.name)
         }
     }
@@ -51,10 +57,11 @@ object SceneManager {
      */
     @JvmStatic
     fun stopScene() {
-        if (this::currentScene.isInitialized && sceneRunning) {
-            sceneRunning = false
+        if (sceneRunning) {
             currentScene.stop()
+            sceneRunning = false
             debug("Scene Manager: Unloaded scene \"%s\"", currentScene.name)
         }
     }
+
 }

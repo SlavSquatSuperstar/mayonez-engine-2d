@@ -1,4 +1,4 @@
-package slavsquatsuperstar.mayonez.io;
+package slavsquatsuperstar.mayonez.io.image;
 
 import slavsquatsuperstar.mayonez.math.MathUtils;
 import slavsquatsuperstar.mayonez.math.Vec2;

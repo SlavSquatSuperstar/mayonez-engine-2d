@@ -29,8 +29,7 @@ public class CollisionTest extends PhysicsTestScene {
 
     public static void main(String[] args) {
         Mayonez.setUseGL(false);
-        Mayonez.setScene(new CollisionTest("Collision Test Scene"));
-        Mayonez.start();
+        Mayonez.start(new CollisionTest("Collision Test"));
     }
 
 }

@@ -7,8 +7,8 @@ import slavsquatsuperstar.mayonez.annotations.ExperimentalFeature;
 import slavsquatsuperstar.mayonez.graphics.sprite.Sprite;
 import slavsquatsuperstar.mayonez.graphics.sprite.SpriteSheet;
 import slavsquatsuperstar.mayonez.input.MouseInput;
-import slavsquatsuperstar.mayonez.io.JTexture;
-import slavsquatsuperstar.mayonez.io.Texture;
+import slavsquatsuperstar.mayonez.io.image.JTexture;
+import slavsquatsuperstar.mayonez.io.image.Texture;
 import slavsquatsuperstar.mayonez.physics.colliders.BoxCollider;
 import slavsquatsuperstar.mayonez.scripts.MouseScript;
 

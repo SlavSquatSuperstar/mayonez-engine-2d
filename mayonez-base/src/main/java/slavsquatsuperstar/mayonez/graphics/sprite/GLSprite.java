@@ -4,7 +4,7 @@ import slavsquatsuperstar.mayonez.math.Vec2;
 import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.annotations.EngineType;
 import slavsquatsuperstar.mayonez.annotations.UsesEngine;
-import slavsquatsuperstar.mayonez.io.GLTexture;
+import slavsquatsuperstar.mayonez.io.image.GLTexture;
 import slavsquatsuperstar.mayonez.util.Color;
 import slavsquatsuperstar.mayonez.util.Colors;
 

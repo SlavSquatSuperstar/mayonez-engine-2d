@@ -149,4 +149,9 @@ public final class JWindow extends JFrame implements Window {
     public int getHeight() {
         return super.getHeight();
     }
+
+    @Override
+    public String toString() {
+        return String.format("AWT Window (%s, %dx%d)", getTitle(), getWidth(), getHeight());
+    }
 }

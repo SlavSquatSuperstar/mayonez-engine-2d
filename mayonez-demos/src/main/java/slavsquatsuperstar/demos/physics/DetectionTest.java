@@ -11,7 +11,7 @@ import slavsquatsuperstar.mayonez.physics.shapes.Rectangle;
 import slavsquatsuperstar.mayonez.physics.shapes.Shape;
 import slavsquatsuperstar.mayonez.physics.shapes.*;
 import slavsquatsuperstar.mayonez.util.Colors;
-import slavsquatsuperstar.mayonez.util.DebugDraw;
+import slavsquatsuperstar.mayonez.DebugDraw;
 
 import java.awt.*;
 
@@ -49,7 +49,6 @@ public class DetectionTest extends PhysicsTestScene {
 
     public static void main(String[] args) {
         Mayonez.setUseGL(false);
-        Mayonez.setScene(new DetectionTest("Detection Test Scene"));
-        Mayonez.start();
+        Mayonez.start(new DetectionTest("Detection Test Scene"));
     }
 }

@@ -72,8 +72,7 @@ public class AngularResolutionTest extends PhysicsTestScene {
 
     public static void main(String[] args) {
         Mayonez.setUseGL(false);
-        Mayonez.setScene(new AngularResolutionTest("Angular Resolution Test"));
-        Mayonez.start();
+        Mayonez.start(new AngularResolutionTest("Angular Resolution Test"));
     }
 
 }

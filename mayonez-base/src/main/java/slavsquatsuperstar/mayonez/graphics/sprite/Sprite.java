@@ -5,9 +5,9 @@ import slavsquatsuperstar.mayonez.GameObject;
 import slavsquatsuperstar.mayonez.Mayonez;
 import slavsquatsuperstar.mayonez.Transform;
 import slavsquatsuperstar.mayonez.io.Assets;
-import slavsquatsuperstar.mayonez.io.GLTexture;
-import slavsquatsuperstar.mayonez.io.JTexture;
-import slavsquatsuperstar.mayonez.io.Texture;
+import slavsquatsuperstar.mayonez.io.image.GLTexture;
+import slavsquatsuperstar.mayonez.io.image.JTexture;
+import slavsquatsuperstar.mayonez.io.image.Texture;
 import slavsquatsuperstar.mayonez.util.Color;
 import slavsquatsuperstar.mayonez.util.Colors;
 

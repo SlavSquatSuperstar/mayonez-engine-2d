@@ -7,7 +7,7 @@ import slavsquatsuperstar.mayonez.util.Logger;
 import slavsquatsuperstar.mayonez.Transform;
 import slavsquatsuperstar.mayonez.graphics.sprite.Sprite;
 import slavsquatsuperstar.mayonez.input.MouseInput;
-import slavsquatsuperstar.mayonez.io.JTexture;
+import slavsquatsuperstar.mayonez.io.image.JTexture;
 import slavsquatsuperstar.mayonez.physics.Rigidbody;
 import slavsquatsuperstar.mayonez.physics.colliders.BoxCollider;
 import slavsquatsuperstar.mayonez.scripts.Counter;

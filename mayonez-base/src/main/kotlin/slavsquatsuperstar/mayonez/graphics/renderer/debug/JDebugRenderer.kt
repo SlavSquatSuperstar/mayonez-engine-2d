@@ -1,10 +1,11 @@
-package slavsquatsuperstar.mayonez.graphics.renderer
+package slavsquatsuperstar.mayonez.graphics.renderer.debug
 
-import slavsquatsuperstar.mayonez.math.Vec2
-import slavsquatsuperstar.mayonez.util.DebugDraw
+import slavsquatsuperstar.mayonez.DebugDraw
 import slavsquatsuperstar.mayonez.annotations.EngineType
 import slavsquatsuperstar.mayonez.annotations.UsesEngine
+import slavsquatsuperstar.mayonez.math.Vec2
 import slavsquatsuperstar.mayonez.physics.shapes.*
+import slavsquatsuperstar.mayonez.util.JShape
 import java.awt.BasicStroke
 import java.awt.Graphics2D
 import java.awt.geom.AffineTransform
@@ -12,8 +13,6 @@ import java.awt.geom.Ellipse2D
 import java.awt.geom.Line2D
 import java.awt.geom.Rectangle2D
 import kotlin.math.roundToInt
-
-typealias JShape = java.awt.Shape
 
 /**
  * Draws debug information using AWT.

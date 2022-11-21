@@ -180,4 +180,9 @@ public final class GLWindow implements Window {
     public int getHeight() {
         return height;
     }
+
+    @Override
+    public String toString() {
+        return String.format("GL Window (%s, %dx%d)", getTitle(), getWidth(), getHeight());
+    }
 }

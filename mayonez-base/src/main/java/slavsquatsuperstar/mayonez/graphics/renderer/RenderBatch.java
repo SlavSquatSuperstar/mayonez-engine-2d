@@ -8,7 +8,7 @@ import slavsquatsuperstar.mayonez.math.Vec2;
 import slavsquatsuperstar.mayonez.Preferences;
 import slavsquatsuperstar.mayonez.annotations.EngineType;
 import slavsquatsuperstar.mayonez.annotations.UsesEngine;
-import slavsquatsuperstar.mayonez.io.GLTexture;
+import slavsquatsuperstar.mayonez.io.image.GLTexture;
 import slavsquatsuperstar.mayonez.util.StringUtils;
 
 import java.nio.IntBuffer;

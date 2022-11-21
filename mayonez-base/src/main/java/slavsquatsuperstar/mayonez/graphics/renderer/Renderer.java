@@ -1,6 +1,6 @@
 package slavsquatsuperstar.mayonez.graphics.renderer;
 
-import slavsquatsuperstar.mayonez.Mayonez;
+import slavsquatsuperstar.mayonez.SceneManager;
 import slavsquatsuperstar.mayonez.engine.GameLayer;
 import slavsquatsuperstar.mayonez.graphics.Camera;
 
@@ -16,7 +16,7 @@ public interface Renderer extends GameLayer {
     // Game Loop Methods
 
     /**
-     * Prepares the renderer for allocating data
+     * Prepares the renderer for allocating data.
      */
     void start();
 
@@ -40,7 +40,7 @@ public interface Renderer extends GameLayer {
      * @return the camera
      */
     default Camera getCamera() {
-        return Mayonez.getScene().getCamera();
+        return SceneManager.getCurrentScene().getCamera();
     }
 
 }

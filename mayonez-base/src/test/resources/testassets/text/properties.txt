@@ -1,6 +1,6 @@
 name=Mayonez Engine
-version=0.6
-author=Eric Weng
-birthday=05-26-2003
+version=0.7
+author=Slavic Superstar
+birthday=12-26-1991
 in_progress=true
 languages=Java,Kotlin

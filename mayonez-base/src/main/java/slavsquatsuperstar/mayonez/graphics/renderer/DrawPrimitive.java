@@ -7,6 +7,11 @@ import slavsquatsuperstar.mayonez.annotations.UsesEngine;
 
 import java.nio.IntBuffer;
 
+/**
+ * Types of primitive objects submitted to the GPU. Only supported by GL.
+ *
+ * @author SlavSquatSuperstar
+ */
 @UsesEngine(EngineType.GL)
 public enum DrawPrimitive {
     /**

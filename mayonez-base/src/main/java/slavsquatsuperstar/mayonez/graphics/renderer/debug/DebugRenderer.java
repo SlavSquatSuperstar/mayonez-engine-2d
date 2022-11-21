@@ -1,4 +1,6 @@
-package slavsquatsuperstar.mayonez.graphics.renderer;
+package slavsquatsuperstar.mayonez.graphics.renderer.debug;
+
+import slavsquatsuperstar.mayonez.graphics.renderer.Renderer;
 
 /**
  * Draws debug information such as colliders and geometric objects into the screen.
@@ -6,7 +8,6 @@ package slavsquatsuperstar.mayonez.graphics.renderer;
  * @author SlavSquatSuperstar
  */
 public interface DebugRenderer extends Renderer {
-
     // Debug Draw Methods
     void addShape(DebugShape shape);
 }

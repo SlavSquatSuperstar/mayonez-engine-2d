@@ -20,18 +20,24 @@ module mayonez.base {
     requires org.json;
     requires org.reflections;
 
-    // Public API
+    /* Public API */
+    // Core
     exports slavsquatsuperstar.mayonez;
-    exports slavsquatsuperstar.mayonez.annotations;
-    exports slavsquatsuperstar.mayonez.io;
     exports slavsquatsuperstar.mayonez.graphics;
     exports slavsquatsuperstar.mayonez.graphics.sprite;
     exports slavsquatsuperstar.mayonez.input;
     exports slavsquatsuperstar.mayonez.math;
+    exports slavsquatsuperstar.mayonez.util;
+    // I/O
+    exports slavsquatsuperstar.mayonez.io;
+    exports slavsquatsuperstar.mayonez.io.image;
+    exports slavsquatsuperstar.mayonez.io.text;
+    // Physics
     exports slavsquatsuperstar.mayonez.physics;
     exports slavsquatsuperstar.mayonez.physics.colliders;
     exports slavsquatsuperstar.mayonez.physics.resolution;
     exports slavsquatsuperstar.mayonez.physics.shapes;
     exports slavsquatsuperstar.mayonez.scripts;
-    exports slavsquatsuperstar.mayonez.util;
+    // Other
+    exports slavsquatsuperstar.mayonez.annotations;
 }

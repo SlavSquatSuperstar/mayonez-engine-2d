@@ -37,22 +37,20 @@ This project was developed using macOS 13.x Ventura (Intel). This app has not be
 
 A massive, heartfelt thanks goes out to the following people, groups, and resources for inspiration and guidance.
 
-- [GamesWithGabe](https://youtube.com/c/GamesWithGabe): For continuously keeping me motivated to work on my engine, no
-  matter how much frustration debugging causes me.
-- [The Cherno](https://youtube.com/c/TheChernoProject): For teaching me the theoretical side of designing a proper game
-  engine.
+- [GamesWithGabe](https://youtube.com/c/GamesWithGabe) and [The Cherno](https://youtube.com/c/TheChernoProject): For
+  keeping me motivated to work on my engine, no matter how much frustration debugging causes me.
 - [CodeNMore](https://www.youtube.com/playlist?list=PLah6faXAgguMnTBs3JnEJY0shAc18XYQZ): For creating first game engine
-  tutorial I ever followed and starting me on this crazy journey.
+  tutorial I ever followed and starting me on this crazy and amazing journey.
 - [Unity Engine](https://docs.unity3d.com/ScriptReference/): ~~Who I'm ripping off~~ For making game dev
   accessible for everybody and providing excellent documentation.
-- [Box2D](https://box2d.org/), [dyn4j](https://dyn4j.org/), and [Winter's Blog](https://blog.winter.dev/): For unpacking the complexities of game physics into a
-  followable example.
-- [Azurite Community](https://azurite-engine.github.io/): For showing that implementing LWJGL and physics from scratch
-  isn't as intimidating as it sounds.
-- [javidx9 (OneLoneCoder)](https://www.youtube.com/c/javidx9): For explaining the hard math concepts behind video
-  games in a simple manner.
-- [Michel Van Bizen](https://www.youtube.com/c/MichelvanBiezen): For working through the difficult mathematical proofs
-  in comprehensive detail.
+- [Box2D](https://box2d.org/), [dyn4j](https://dyn4j.org/), and [Iain Winter](https://github.com/IainWinter/IwEngine):
+  For demonstrating that implementing a complete physics engine from scratch isn't as intimidating as it sounds.
+- [Two-Bit Coding](https://www.youtube.com/@two-bitcoding8018),
+  [javidx9/OneLoneCoder](https://www.youtube.com/c/javidx9),
+  and [Michel Van Bizen](https://www.youtube.com/c/MichelvanBiezen): For working though the difficult math concepts
+  behind game physics in a simple manner.
+- [Azurite Community](https://azurite-engine.github.io/): For proving that LWJGL and computer graphics isn't black
+  magic and is learnable.
 - [Greenfoot Developers](https://www.greenfoot.org/files/javadoc/): For proving you **can** use Java for game dev and
   showing the beauty of simplicity.
 - [Life of Boris](https://www.youtube.com/c/LifeofBoris/featured): For showing me the Slav way in my time of need.

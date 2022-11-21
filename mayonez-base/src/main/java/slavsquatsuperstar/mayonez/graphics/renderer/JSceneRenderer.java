@@ -84,7 +84,6 @@ public final class JSceneRenderer implements SceneRenderer {
         }
         objects.forEach(o -> o.render(g2));
 //        sprites.forEach(s -> s.render(g2));
-//        debugDraw.render(g2);
 
         // Reset the screen's transform to its unmodified state
         g2.setTransform(oldXf);

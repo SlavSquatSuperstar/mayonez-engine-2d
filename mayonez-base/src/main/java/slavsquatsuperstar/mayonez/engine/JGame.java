@@ -50,6 +50,11 @@ public final class JGame extends GameEngine {
 
     @Override
     public float getCurrentTime() {
-        return Mayonez.getTime();
+        return Mayonez.getSeconds();
+    }
+
+    @Override
+    public String toString() {
+        return "AWT Game";
     }
 }

@@ -3,9 +3,10 @@ package slavsquatsuperstar.mayonez.input
 import org.joml.Vector4f
 import org.lwjgl.glfw.GLFW.GLFW_PRESS
 import org.lwjgl.glfw.GLFW.GLFW_RELEASE
-import slavsquatsuperstar.mayonez.math.Vec2
 import slavsquatsuperstar.mayonez.Mayonez
+import slavsquatsuperstar.mayonez.SceneManager
 import slavsquatsuperstar.mayonez.graphics.GLCamera
+import slavsquatsuperstar.mayonez.math.Vec2
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.awt.event.MouseWheelEvent
@@ -213,13 +214,13 @@ object MouseInput : MouseAdapter() {
         get() { // Mirror y and add camera offset
             val flippedMouse = Vec2(mousePos.x, Mayonez.screenSize.y - mousePos.y)
             return if (Mayonez.useGL!!) {
-                val camera = Mayonez.scene.camera as GLCamera
+                val camera = SceneManager.currentScene.camera as GLCamera
                 val worldPos = ((flippedMouse / Mayonez.screenSize * 2f) - Vec2(1f)).toWorld()
                 val temp = Vector4f(worldPos.x, worldPos.y, 0f, 0f)
                 temp.mul(camera.inverseProjection).mul(camera.inverseView)
                 Vec2(temp.x, temp.y) + camera.position
             } else {
-                (flippedMouse + Mayonez.scene.camera.offset).toWorld()
+                (flippedMouse + SceneManager.currentScene.camera.offset).toWorld()
             }
         }
 
@@ -237,7 +238,7 @@ object MouseInput : MouseAdapter() {
     // Helper Methods
 
     // Converts screen pixels to world units
-    private fun Vec2.toWorld(): Vec2 = this / Mayonez.scene.scale
+    private fun Vec2.toWorld(): Vec2 = this / SceneManager.currentScene.scale
 
     // If a button is a valid index
     private fun Int.isValid(): Boolean = this in 0 until NUM_BUTTONS

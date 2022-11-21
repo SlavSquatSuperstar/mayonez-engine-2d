@@ -39,7 +39,7 @@ dependencies {
     // LWJGL Libraries
     implementation platform('org.lwjgl:lwjgl-bom:3.3.1')
 
-    api 'org.joml:joml:1.10.4'
+    api 'org.joml:joml:1.10.5'
     implementation "org.lwjgl:lwjgl"
     implementation "org.lwjgl:lwjgl-glfw"
     implementation "org.lwjgl:lwjgl-openal"
@@ -52,8 +52,8 @@ dependencies {
     runtimeOnly "org.lwjgl:lwjgl-stb::$lwjglNatives"
 
     // Test Libraries
-    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.9.0'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-api:5.9.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.9.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-api:5.9.1'
 }
 
 // Tasks
