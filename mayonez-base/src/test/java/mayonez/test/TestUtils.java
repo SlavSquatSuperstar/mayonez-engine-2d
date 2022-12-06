@@ -1,6 +1,6 @@
 package mayonez.test;
 
-import mayonez.math.MathUtils;
+import mayonez.math.FloatMath;
 import mayonez.math.Vec2;
 import mayonez.physics.Collisions;
 import mayonez.physics.shapes.Shape;
@@ -19,7 +19,7 @@ public final class TestUtils {
 
     private TestUtils() {}
 
-    public static final float EPSILON = MathUtils.FLOAT_EPSILON;
+    public static final float EPSILON = FloatMath.FLOAT_EPSILON;
 
     /**
      * Asserts that two floats are roughly equivalent.

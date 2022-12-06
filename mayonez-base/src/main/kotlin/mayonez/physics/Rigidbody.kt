@@ -1,10 +1,7 @@
 package mayonez.physics
 
 import mayonez.Component
-import mayonez.math.MathUtils
-import mayonez.math.MathUtils.clamp
-import mayonez.math.MathUtils.toDegrees
-import mayonez.math.MathUtils.toRadians
+import mayonez.math.FloatMath
 import mayonez.math.Vec2
 import mayonez.physics.colliders.Collider
 
@@ -34,7 +31,7 @@ class Rigidbody(mass: Float, drag: Float, angDrag: Float) : Component() {
             field = 0f.coerceAtLeast(mass)
         }
     val infiniteMass: Boolean
-        get() = MathUtils.equals(mass, 0f)
+        get() = FloatMath.equals(mass, 0f)
     val invMass: Float
         get() = if (infiniteMass) 0f else 1f / mass
 
@@ -56,9 +53,15 @@ class Rigidbody(mass: Float, drag: Float, angDrag: Float) : Component() {
             transform.rotation = rotation
         }
 
+    /**
+     * The linear (translational) velocity of the body, v, in world units.
+     */
     var velocity: Vec2 = Vec2()
     val speed: Float
         get() = velocity.len()
+    /**
+     * The angular (rotational) velocity of the body, ω, in degrees counterclockwise.
+     */
     var angVelocity: Float = 0f
 
     // Dynamics Properties (Force, Drag)
@@ -68,11 +71,11 @@ class Rigidbody(mass: Float, drag: Float, angDrag: Float) : Component() {
 
     var drag: Float = drag
         set(drag) {
-            field = clamp(drag, 0f, 1f)
+            field = FloatMath.clamp(drag, 0f, 1f)
         }
     var angDrag: Float = angDrag
         set(angDrag) {
-            field = clamp(angDrag, 0f, 1f)
+            field = FloatMath.clamp(angDrag, 0f, 1f)
         }
 
     // Physics Engine Properties
@@ -115,14 +118,14 @@ class Rigidbody(mass: Float, drag: Float, angDrag: Float) : Component() {
     fun integrateForce(dt: Float) {
         if (infiniteMass) return
 
-        if (!MathUtils.equals(velocity.lenSq(), 0f)) // Apply drag first
+        if (!FloatMath.equals(velocity.lenSq(), 0f)) // Apply drag first
             applyForce(velocity * -drag)
         velocity += netForce * (invMass * dt)
 
         if (!fixedRotation) {
-            if (!MathUtils.equals(angVelocity, 0f))
-                applyTorque(angVelocity * -angDrag)
-            angVelocity += netTorque * invAngMass * dt
+            if (!FloatMath.equals(angVelocity, 0f))
+                applyTorque(FloatMath.toRadians(angVelocity) * -angDrag)
+            angVelocity += FloatMath.toDegrees(netTorque) * invAngMass * dt
         }
 
         // Reset accumulated forces/torques
@@ -135,7 +138,7 @@ class Rigidbody(mass: Float, drag: Float, angDrag: Float) : Component() {
      */
     fun integrateVelocity(dt: Float) {
         transform.move(velocity * dt)
-        if (!fixedRotation) transform.rotate(toDegrees(angVelocity) * dt)
+        if (!fixedRotation) transform.rotate(angVelocity * dt)
     }
 
     // Apply Force/Torque Methods
@@ -143,7 +146,7 @@ class Rigidbody(mass: Float, drag: Float, angDrag: Float) : Component() {
     /**
      * Applies a force to this body's center of mass.
      *
-     * @param force a vector with the units `kg•m/s/s`
+     * @param force a vector with the units `kg•m/s/s (F)`
      */
     fun applyForce(force: Vec2?) {
         netForce += force ?: return
@@ -152,7 +155,7 @@ class Rigidbody(mass: Float, drag: Float, angDrag: Float) : Component() {
     /**
      * Applies a torque to this body's center of mass in the clockwise direction.
      *
-     * @param torque a scalar with units `kg•m•m/s/s`
+     * @param torque a scalar with units `kg•m•m/s/s (τ = F•d)`
      */
     fun applyTorque(torque: Float?) {
         netTorque += torque ?: return
@@ -161,7 +164,7 @@ class Rigidbody(mass: Float, drag: Float, angDrag: Float) : Component() {
     /**
      * Applies an impulse to the body's center of mass.
      *
-     * @param impulse a vector with the units `kg•m/s`
+     * @param impulse a vector with the units `kg•m/s (F•t)`
      */
     fun applyImpulse(impulse: Vec2?) {
         velocity += (impulse ?: return) * invMass // dv = J/m = m*dv/m
@@ -170,46 +173,37 @@ class Rigidbody(mass: Float, drag: Float, angDrag: Float) : Component() {
     /**
      * Applies an angular impulse to this body in the clockwise direction.
      *
-     * @param impulse a scalar with units `deg/s`
+     * @param angImpulse a scalar with units `kg•m•m•rad/s (τ•t = I•ω)`
      */
-    fun applyAngularImpulse(impulse: Float) {
-        angVelocity += impulse * invAngMass // dw = T/I = I*dw/I
+    fun applyAngularImpulse(angImpulse: Float) {
+        angVelocity += FloatMath.toDegrees(angImpulse) * invAngMass // dw = L/I = I*dw/I
     }
 
     /**
      * Accelerates this body in the given direction.
      *
-     * @param acceleration a vector with the units `m/s/s`
+     * @param acceleration a vector with the units `m/s/s (a)`
      */
     fun applyAcceleration(acceleration: Vec2?) {
         netForce += (acceleration ?: return) * invMass // dF = a/m
     }
 
     /**
-     * Accelerates this body rotationally in the given direction.
-     *
-     * @param angAcceleration a vector with the units `deg/s/s`
-     */
-    fun applyAngularAcceleration(angAcceleration: Float) {
-        netTorque += angAcceleration * invAngMass // dT = A/I
-    }
-
-    /**
      * Adds a velocity to this body in the given direction.
      *
-     * @param velocityChange a vector with the units `m/s`
+     * @param velocity a vector with the units `m/s (v)`
      */
-    fun addVelocity(velocityChange: Vec2?) {
-        velocity += velocityChange ?: return
+    fun addVelocity(velocity: Vec2?) {
+        this.velocity += velocity ?: return
     }
 
     /**
      * Adds an angular velocity to this body in the clockwise direction.
      *
-     * @param angVelocityChange a scalar with units `deg/s`
+     * @param angVelocity a scalar with units `deg/s (ω)`
      */
-    fun addAngularVelocity(angVelocityChange: Float?) {
-        angVelocity += angVelocityChange ?: return
+    fun addAngularVelocity(angVelocity: Float?) {
+        this.angVelocity += angVelocity ?: return
     }
 
     // Velocity at Point Methods
@@ -222,6 +216,6 @@ class Rigidbody(mass: Float, drag: Float, angDrag: Float) : Component() {
      * @return the point's total velocity
      */
 //    fun getPointVelocity(point: Vec2): Vec2 = velocity + (point - position).normal() * toRadians(angVelocity)
-    fun getPointVelocity(point: Vec2): Vec2 = velocity + (point - position).cross(toRadians(-angVelocity))
+    fun getPointVelocity(point: Vec2): Vec2 = velocity + (point - position).cross(FloatMath.toRadians(-angVelocity))
 
 }

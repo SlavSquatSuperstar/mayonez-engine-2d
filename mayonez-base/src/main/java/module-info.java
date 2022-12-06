@@ -27,17 +27,17 @@ module mayonez.base {
     exports mayonez.graphics.sprite;
     exports mayonez.input;
     exports mayonez.math;
-    exports mayonez.util;
-    // I/O
-    exports mayonez.io;
-    exports mayonez.io.image;
-    exports mayonez.io.text;
     // Physics
     exports mayonez.physics;
     exports mayonez.physics.colliders;
     exports mayonez.physics.resolution;
     exports mayonez.physics.shapes;
     exports mayonez.scripts;
+    // I/O
+    exports mayonez.io;
+    exports mayonez.io.image;
+    exports mayonez.io.text;
     // Other
     exports mayonez.annotations;
+    exports mayonez.util;
 }

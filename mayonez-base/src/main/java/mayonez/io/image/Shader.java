@@ -3,7 +3,7 @@ package mayonez.io.image;
 import org.joml.*;
 import org.lwjgl.BufferUtils;
 import mayonez.io.text.TextAsset;
-import mayonez.util.Logger;
+import mayonez.Logger;
 import mayonez.Mayonez;
 import mayonez.annotations.UsesEngine;
 import mayonez.annotations.EngineType;

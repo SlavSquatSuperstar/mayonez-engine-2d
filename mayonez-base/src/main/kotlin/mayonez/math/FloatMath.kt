@@ -4,12 +4,11 @@ import kotlin.math.*
 
 /**
  * A library of common math operations designed to work with float values but to avoid float imprecision.
- * An alternative to the methods found in [java.lang.Math].
+ * A supplement and alternative to the methods found in [java.lang.Math].
  *
  * @author SlavSquatSuperstar
  */
-// TODO use extensions for single-arg functions?
-object MathUtils {
+object FloatMath {
 
     /**
      * The maximum difference two floats can have to still be considered equal by the engine (equal to 0.000001).
@@ -26,8 +25,8 @@ object MathUtils {
     /**
      * Determines whether two floats are approximately equal within 6 decimal places.
      *
-     * @param num1 a number
-     * @param num2 another number
+     * @param num1 a floating-point number
+     * @param num2 another floating-point number
      * @return if they are roughly equal
      */
     @JvmStatic
@@ -36,8 +35,8 @@ object MathUtils {
     /**
      * Determines whether two floats are approximately equal within a given error.
      *
-     * @param num1  a number
-     * @param num2  another number
+     * @param num1  a floating-point
+     * @param num2  another floating-point number
      * @param error the max difference between the two numbers
      * @return if they are equal within error
      */
@@ -128,18 +127,8 @@ object MathUtils {
     fun avg(vararg values: Float): Float = sum(*values) / values.size
 
     @JvmStatic
-    fun avg(vararg values: Int): Int = sum(*values) / values.size
-
-    @JvmStatic
     fun sum(vararg values: Float): Float {
         var sum = 0f
-        for (v in values) sum += v
-        return sum
-    }
-
-    @JvmStatic
-    fun sum(vararg values: Int): Int {
-        var sum = 0
         for (v in values) sum += v
         return sum
     }
@@ -183,17 +172,6 @@ object MathUtils {
     // Clamp / Range Methods
 
     /**
-     * Restricts a integer's value within a provided range.
-     *
-     * @param value a integer
-     * @param min   the lower bound, inclusive
-     * @param max   the upper bound, inclusive
-     * @return a number within the bounds
-     */
-    @JvmStatic
-    fun clamp(value: Int, min: Int, max: Int): Int = Range(min.toFloat(), max.toFloat()).clamp(value.toFloat()).toInt()
-
-    /**
      * Restricts a float's value within a provided range.
      *
      * @param value a float
@@ -214,45 +192,6 @@ object MathUtils {
      */
     @JvmStatic
     fun inRange(value: Float, min: Float, max: Float): Boolean = value in Range(min, max)
-
-    // Random Number Methods
-
-    /**
-     * Generates a random integer between the two provided bounds.
-     *
-     * @param min the lower bound (inclusive)
-     * @param max the maximum bound (inclusive)
-     * @return the random float
-     */
-    @JvmStatic
-    fun random(min: Float, max: Float): Float {
-        val range = Range(min, max)
-        return (Math.random() * (range.max - range.min + Float.MIN_VALUE)).toFloat() + range.min
-    }
-
-    /**
-     * Generates a random integer between the two provided bounds.
-     *
-     * @param min the lower bound (inclusive)
-     * @param max the maximum bound (inclusive)
-     * @return The random integer.
-     */
-    @JvmStatic
-    fun random(min: Int, max: Int): Int {
-        val range = Range(min.toFloat(), max.toFloat())
-        return (Math.random() * (range.max - range.min + 1) + range.min).toInt()
-    }
-
-    /**
-     * Generates a random event with a certain percent change of succeeding.
-     *
-     * @param percent the change of succeeding, from 0-1
-     * @return true a percentage of the time, otherwise false
-     */
-    @JvmStatic
-    fun randomPercent(percent: Float): Boolean {
-        return Math.random() < percent
-    }
 
     // Rounding Methods
 
@@ -297,15 +236,6 @@ object MathUtils {
     fun sin(degrees: Float): Float = sin(Math.toRadians(degrees.toDouble())).toFloat()
 
     /**
-     * Takes the sine of an angle in radians.
-     *
-     * @param radians the measure of the angle, in radians
-     * @return the sine of the angle
-     */
-    @JvmStatic
-    fun sinRadians(radians: Float): Float = kotlin.math.sin(radians)
-
-    /**
      * Takes the cosine of an angle in degrees.
      *
      * @param degrees the measure of the angle, in degrees
@@ -313,15 +243,6 @@ object MathUtils {
      */
     @JvmStatic
     fun cos(degrees: Float): Float = cos(Math.toRadians(degrees.toDouble())).toFloat()
-
-    /**
-     * Takes the cosine of an angle in radians.
-     *
-     * @param radians the measure of the angle, in radians
-     * @return the sine of the angle
-     */
-    @JvmStatic
-    fun cosRadians(radians: Float): Float = kotlin.math.cos(radians)
 
     /**
      * Converts an angle from radians to degrees.

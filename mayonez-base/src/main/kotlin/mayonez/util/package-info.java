@@ -1,5 +1,5 @@
 /**
- * Common utility functions and classes to streamline software development and debugging with this engine.
+ * Contains utility functions and classes to streamline software development that are not associated with any other package.
  *
  * @author SlavSquatSuperstar
  */

@@ -2,7 +2,7 @@ package slavsquatsuperstar.demos.physics;
 
 import mayonez.math.Vec2;
 import mayonez.scripts.*;
-import mayonez.util.Colors;
+import mayonez.graphics.Colors;
 import mayonez.GameObject;
 import mayonez.Mayonez;
 import mayonez.Script;

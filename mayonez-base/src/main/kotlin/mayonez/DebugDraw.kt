@@ -6,7 +6,7 @@ import mayonez.graphics.renderer.debug.DebugRenderer
 import mayonez.graphics.renderer.debug.DebugShape
 import mayonez.math.Vec2
 import mayonez.physics.shapes.*
-import mayonez.util.Colors
+import mayonez.graphics.Colors
 import mayonez.util.MColor
 
 /**
@@ -115,14 +115,7 @@ object DebugDraw {
     // Helper Methods/Classes
 
     private fun addShape(shape: Shape, color: MColor?, fill: Boolean, priority: DebugShape.Priority) {
-        debugRenderer.addShape(
-            DebugShape(
-                shape,
-                color ?: Colors.BLACK,
-                fill,
-                priority
-            )
-        )
+        debugRenderer.addShape(DebugShape(shape, color ?: Colors.BLACK, fill, priority))
     }
 
     /**

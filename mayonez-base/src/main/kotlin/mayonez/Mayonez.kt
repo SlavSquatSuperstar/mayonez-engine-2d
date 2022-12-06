@@ -5,7 +5,6 @@ import mayonez.engine.GameEngine
 import mayonez.engine.JGame
 import mayonez.io.Assets
 import mayonez.math.Vec2
-import mayonez.util.Logger
 import kotlin.system.exitProcess
 
 /**

@@ -1,7 +1,7 @@
 package mayonez
 
 import mayonez.annotations.Mutating
-import mayonez.math.MathUtils
+import mayonez.math.FloatMath
 import mayonez.math.Vec2
 import java.util.*
 
@@ -139,7 +139,7 @@ class Transform(
         return when {
             this === other -> true
             other is Transform -> this.position == other.position &&
-                    MathUtils.equals(this.rotation, other.rotation) &&
+                    FloatMath.equals(this.rotation, other.rotation) &&
                     this.scale == other.scale
 
             else -> false

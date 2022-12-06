@@ -31,7 +31,7 @@ switch (OperatingSystem.current()) {
 
 dependencies {
     // Code Dependencies
-    api 'org.jetbrains.kotlin:kotlin-stdlib:1.7.20'
+    api 'org.jetbrains.kotlin:kotlin-stdlib:1.7.22'
     implementation 'org.json:json:20220924'
     implementation 'org.reflections:reflections:0.10.2'
     implementation 'org.slf4j:slf4j-simple:1.7.32' // don't update, required by reflections

@@ -1,6 +1,6 @@
 package mayonez.test;
 
-import mayonez.util.Color;
+import mayonez.graphics.Color;
 
 import java.io.BufferedReader;
 import java.io.InputStream;

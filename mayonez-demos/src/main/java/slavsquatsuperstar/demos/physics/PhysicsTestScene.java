@@ -3,8 +3,8 @@ package slavsquatsuperstar.demos.physics;
 import mayonez.*;
 import mayonez.math.Vec2;
 import mayonez.scripts.*;
-import mayonez.util.Color;
-import mayonez.util.Colors;
+import mayonez.graphics.Color;
+import mayonez.graphics.Colors;
 import mayonez.input.KeyInput;
 import mayonez.physics.PhysicsMaterial;
 import mayonez.physics.Rigidbody;
@@ -59,16 +59,16 @@ public abstract class PhysicsTestScene extends Scene {
         getCamera().setPosition(getSize().mul(0.5f));
 
         if (KeyInput.keyPressed("r")) SceneManager.reloadScene(); // reload scene
-        else if (KeyInput.keyPressed("1")) SceneManager.setScene(new CollisionTest("Collision Test"));
-        else if (KeyInput.keyPressed("2")) SceneManager.setScene(new DetectionTest("Detection Test"));
-        else if (KeyInput.keyPressed("3")) SceneManager.setScene(new FrictionTest("Friction Test"));
-        else if (KeyInput.keyPressed("4")) SceneManager.setScene(new AngularResolutionTest("Angular Resolution Test"));
-        else if (KeyInput.keyPressed("5")) SceneManager.setScene(new PoolBallsTest("Pool Balls Test"));
+        else if (KeyInput.keyPressed("1")) SceneManager.setScene("Collision Test");
+        else if (KeyInput.keyPressed("2")) SceneManager.setScene("Detection Test");
+        else if (KeyInput.keyPressed("3")) SceneManager.setScene("Pool Balls Test");
+        else if (KeyInput.keyPressed("3")) SceneManager.setScene("Friction Test");
+        else if (KeyInput.keyPressed("4")) SceneManager.setScene("Angular Resolution Test");
 
         if (KeyInput.keyPressed("space")) {
 //            System.out.println("pressed");
             enabledGravity = !enabledGravity;
-        } else if (KeyInput.keyDown("space")) {
+//        } else if (KeyInput.keyDown("space")) {
 //            System.out.println("held");
         }
 
@@ -120,5 +120,16 @@ public abstract class PhysicsTestScene extends Scene {
                 addComponent(new BoxCollider(size).setDebugDraw(Colors.DARK_GRAY, true));
             }
         };
+    }
+
+    public static void main(String[] args) {
+        Mayonez.setUseGL(false);
+//        SceneManager.addScene(new CollisionTest("Collision Test"));
+        SceneManager.addScene(new DetectionTest("Detection Test"));
+        SceneManager.addScene(new PoolBallsTest("Pool Balls Test"));
+        SceneManager.addScene(new FrictionTest("Friction Test"));
+        SceneManager.addScene(new AngularMotionTest("Angular Motion Test"));
+//        Mayonez.start(SceneManager.getScene("Collision Test"));
+        Mayonez.start(new CollisionTest("Collision Test"));
     }
 }

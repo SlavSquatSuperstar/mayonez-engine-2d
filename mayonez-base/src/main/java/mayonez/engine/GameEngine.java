@@ -3,8 +3,8 @@ package mayonez.engine;
 import mayonez.Mayonez;
 import mayonez.Scene;
 import mayonez.SceneManager;
-import mayonez.math.MathUtils;
-import mayonez.util.Logger;
+import mayonez.math.FloatMath;
+import mayonez.Logger;
 
 /**
  * The application that contains the engine's core loop.
@@ -74,7 +74,7 @@ public abstract sealed class GameEngine implements GameLayer permits JGame, GLGa
                 beginFrame();
                 // Update the game as many times as possible even if the screen freezes
                 while (frameTime > 0) { // Will update any leftover sliver of time
-                    float deltaTime = MathUtils.min(frameTime, timeStep);
+                    float deltaTime = FloatMath.min(frameTime, timeStep);
                     update(deltaTime);
                     frameTime -= deltaTime;
                     ticked = true;

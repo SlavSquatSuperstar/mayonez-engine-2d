@@ -2,7 +2,7 @@ package mayonez.physics.shapes;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import mayonez.math.MathUtils;
+import mayonez.math.FloatMath;
 import mayonez.math.Vec2;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -23,7 +23,7 @@ public class CircleTests {
 
     @Test
     public void areaCorrect() {
-        assertEquals(circle.area(), 4 * MathUtils.PI, MathUtils.FLOAT_EPSILON);
+        assertEquals(circle.area(), 4 * FloatMath.PI, FloatMath.FLOAT_EPSILON);
     }
 
     // Contains Point

@@ -1,17 +1,17 @@
 package slavsquatsuperstar.demos.geometrydash;
 
-import slavsquatsuperstar.demos.geometrydash.components.PlayerController;
-import mayonez.math.MathUtils;
-import mayonez.math.Vec2;
 import mayonez.GameObject;
 import mayonez.graphics.sprite.JSprite;
 import mayonez.graphics.sprite.JSpriteSheet;
 import mayonez.graphics.sprite.SpriteSheet;
+import mayonez.math.Random;
+import mayonez.math.Vec2;
 import mayonez.physics.Rigidbody;
 import mayonez.physics.colliders.BoxCollider;
 import mayonez.scripts.KeepInScene;
 import mayonez.scripts.KeyMovement;
 import mayonez.scripts.MoveMode;
+import slavsquatsuperstar.demos.geometrydash.components.PlayerController;
 
 import java.awt.*;
 
@@ -32,7 +32,7 @@ public class Player extends GameObject {
         JSpriteSheet layer3 = (JSpriteSheet) SpriteSheet.create("assets/textures/geometrydash/player/layer3.png",
                 tileSize, tileSize, 13 * 5, 2);
 
-        int id = MathUtils.random(18, 20);
+        int id = Random.randomInt(18, 20);
         int threshold = 200;
 
         JSprite[] layers = new JSprite[]{layer1.getSprite(id), layer2.getSprite(id), layer3.getSprite(id)};

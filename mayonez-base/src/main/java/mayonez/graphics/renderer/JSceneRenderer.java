@@ -1,5 +1,7 @@
 package mayonez.graphics.renderer;
 
+import mayonez.Transform;
+import mayonez.graphics.Camera;
 import mayonez.math.Vec2;
 import mayonez.GameObject;
 import mayonez.Scene;
@@ -78,10 +80,19 @@ public final class JSceneRenderer implements SceneRenderer {
         AffineTransform oldXf = g2.getTransform();
 
         // Move the screen and render everything at the offset position
-        if (getCamera() != null) {
-            Vec2 camOffset = getCamera().getOffset();
+        Camera cam = getCamera();
+        if (cam != null) {
+            Transform camXf = cam.getTransform();
+            Vec2 camOffset = cam.getOffset();
+            float camRot = cam.getTransform().rotation;
+            Vec2 camScl = cam.getTransform().scale;
             g2.translate(-camOffset.x, -camOffset.y);
+//            g2.rotate(Math.toRadians(-cam.getTransform().rotation));
+//            g2.scale(camScl.x, camScl.y);
+//            g2.setColor(Color.BLACK);
+//            g2.fillOval((int) (camOffset.x - 5), (int) (camOffset.y - 5), 10, 10);
         }
+
         objects.forEach(o -> o.render(g2));
 //        sprites.forEach(s -> s.render(g2));
 

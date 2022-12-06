@@ -1,6 +1,6 @@
 package mayonez.physics.detection
 
-import mayonez.math.MathUtils
+import mayonez.math.FloatMath
 import mayonez.math.Vec2
 import mayonez.physics.resolution.Manifold
 import mayonez.physics.shapes.Edge
@@ -82,7 +82,7 @@ class Penetration(val normal: Vec2, val depth: Float) {
 
         private fun Polygon.getFarthestEdge(direction: Vec2): Edge {
             // Find farthest vertex and check left and right edges
-            val farthest = MathUtils.maxIndex(*FloatArray(numVertices) { vertices[it].dot(direction) })
+            val farthest = FloatMath.maxIndex(*FloatArray(numVertices) { vertices[it].dot(direction) })
             val leftEdge = edges[farthest] // use this edge index
             val rightEdge = edges[if (farthest > 0) farthest - 1 else numVertices - 1]  // get previous edge index
 //            DebugDraw.drawShape(leftEdge, Colors.LIGHT_BLUE)

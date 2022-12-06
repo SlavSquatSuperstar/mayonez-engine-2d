@@ -2,18 +2,16 @@ package mayonez;
 
 import mayonez.engine.GameLayer;
 import mayonez.event.Receivable;
-import mayonez.graphics.Camera;
-import mayonez.graphics.GLCamera;
-import mayonez.graphics.JCamera;
-import mayonez.graphics.renderer.*;
+import mayonez.graphics.Color;
+import mayonez.graphics.*;
+import mayonez.graphics.renderer.GLSceneRenderer;
+import mayonez.graphics.renderer.JSceneRenderer;
+import mayonez.graphics.renderer.SceneRenderer;
 import mayonez.graphics.renderer.debug.DebugRenderer;
 import mayonez.graphics.renderer.debug.GLDebugRenderer;
 import mayonez.graphics.renderer.debug.JDebugRenderer;
 import mayonez.math.Vec2;
 import mayonez.physics.PhysicsWorld;
-import mayonez.util.Color;
-import mayonez.util.Colors;
-import mayonez.util.Logger;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -31,16 +29,13 @@ import java.util.stream.Collectors;
 // TODO draw background image
 public abstract class Scene implements GameLayer {
 
+//    private static int sceneCounter = 0; // total number of game objects created
+
     // Scene Information
+//    final int sceneID;
     private final String name;
-    /**
-     * The scale of the scene, or how many pixels correspond to a world unit.
-     */
-    private final float scale;
-    /**
-     * The size of the scene in world units, or zero if unbounded.
-     */
-    private final Vec2 size;
+    private final float scale; // scene scale, or how many pixels correspond to a world unit
+    private final Vec2 size; // scene size, or zero if unbounded
     protected Color background = Colors.WHITE;
 
     // Scene Layers
@@ -52,7 +47,8 @@ public abstract class Scene implements GameLayer {
 
     // Scene State
     private final Queue<Receivable> changesToScene; // Use a separate list to avoid concurrent exceptions
-    private boolean started;
+    private boolean started = false; // if initialized
+    private boolean loaded = false; // if currently active
 
     /**
      * Creates an empty scene with size of 0x0 and a scale of 1.
@@ -70,13 +66,13 @@ public abstract class Scene implements GameLayer {
      * @param scale  the scale of the scene
      */
     public Scene(String name, int width, int height, float scale) {
+//        sceneID = sceneCounter++;
         this.name = name;
         this.size = new Vec2(width, height).div(scale);
         this.scale = scale;
 
         objects = new ArrayList<>();
         changesToScene = new LinkedList<>();
-        started = false;
 
         if (Boolean.TRUE.equals(Mayonez.getUseGL())) {
             renderer = new GLSceneRenderer();
@@ -91,12 +87,6 @@ public abstract class Scene implements GameLayer {
     }
 
     // Game Loop Methods
-
-    /**
-     * Provide user-defined initialization behavior, such as adding necessary game objects or setting gravity.
-     */
-    protected void init() {
-    }
 
     /**
      * Initialize all objects and begin updating the scene.
@@ -114,7 +104,15 @@ public abstract class Scene implements GameLayer {
             renderer.setScene(this);
             physics.setScene(this);
             started = true;
+            loaded = true;
         }
+    }
+
+    /**
+     * Resumes the scene but does not reinitialize any objects.
+     */
+    final void load() {
+        if (!loaded) loaded = true;
     }
 
     /**
@@ -123,7 +121,7 @@ public abstract class Scene implements GameLayer {
      * @param dt seconds since the last frame
      */
     public final void update(float dt) {
-        if (started) {
+        if (started && loaded) {
             // Update objects and camera
             objects.forEach(o -> {
                 o.update(dt);
@@ -143,7 +141,7 @@ public abstract class Scene implements GameLayer {
      * @param g2 the window's graphics object
      */
     public final void render(Graphics2D g2) {
-        if (started) {
+        if (started && loaded) {
             // Render background
             if (g2 != null) {
                 g2.setColor(background.toAWT());
@@ -154,6 +152,36 @@ public abstract class Scene implements GameLayer {
             renderer.render(g2);
             debugRenderer.render(g2);
         }
+    }
+
+    /**
+     * Pauses the scene but does not destroy any objects.
+     */
+    final void unload() {
+        if (loaded) loaded = false;
+    }
+
+    @Override
+    public final void stop() {
+        if (started) {
+            // Destroy objects
+            objects.forEach(GameObject::onDestroy);
+            objects.clear();
+            // Clear layers
+            renderer.stop();
+            debugRenderer.stop();
+            physics.stop();
+            started = false;
+            loaded = false;
+        }
+    }
+
+    // User-Defined Methods
+
+    /**
+     * Provide user-defined initialization behavior, such as adding necessary game objects or setting gravity.
+     */
+    protected void init() {
     }
 
     /**
@@ -172,20 +200,6 @@ public abstract class Scene implements GameLayer {
     protected void onUserRender(Graphics2D g2) {
     }
 
-    @Override
-    public final void stop() {
-        if (started) {
-            started = false;
-            // Destroy objects
-            objects.forEach(GameObject::onDestroy);
-            objects.clear();
-            // Clear layers
-            renderer.stop();
-            debugRenderer.stop();
-            physics.stop();
-        }
-    }
-
     // Object Methods
 
     /**
@@ -197,12 +211,12 @@ public abstract class Scene implements GameLayer {
     public final void addObject(GameObject obj) {
         // Handle duplicate names
         int count = 0;
-        String fmtName = obj.name;
-        for (GameObject found = getObject(obj.name); found != null; found = getObject(fmtName))
-            fmtName = String.format("%s (%d)", obj.name, ++count);
-        obj.name = fmtName;
+        String fmtName = obj.getName();
+        for (GameObject found = getObject(obj.getName()); found != null; found = getObject(fmtName))
+            fmtName = String.format("%s (%d)", obj.getName(), ++count);
+        obj.setName(fmtName);
 
-        if (started) { // Dynamic add: add to scene and layers
+        if (started) { // Dynamic add: add to scene and layers in next frame
             changesToScene.offer((_args) -> {
                 objects.add(obj.setScene(this));
                 obj.start(); // add object components so renderer and physics can access it
@@ -210,12 +224,12 @@ public abstract class Scene implements GameLayer {
                     renderer.addObject(obj);
                     physics.addObject(obj);
                 }
-                Logger.debug("Game: Added object \"%s\" to scene \"%s\"", obj.name, this.name);
+                Logger.debug("Game: Added object \"%s\" to scene \"%s\"", obj.getName(), this.name);
             });
-        } else { // Init add: add to scene, and add to layers on start
+        } else { // Static add: add to scene, and add to layers on start
             objects.add(obj.setScene(this));
             obj.start(); // add object components so renderer and physics can access it
-            Logger.debug("Game: Added object \"%s\" to scene \"%s\"", obj.name, this.name);
+            Logger.debug("Game: Added object \"%s\" to scene \"%s\"", obj.getName(), this.name);
         }
     }
 
@@ -230,7 +244,7 @@ public abstract class Scene implements GameLayer {
             renderer.removeObject(obj);
             physics.removeObject(obj);
             obj.onDestroy();
-            Logger.debug("Game: Removed object \"%s\" from scene \"%s\"", obj.name, this.name);
+            Logger.debug("Game: Removed object \"%s\" from scene \"%s\"", obj.getName(), this.name);
         });
     }
 
@@ -242,7 +256,7 @@ public abstract class Scene implements GameLayer {
      */
     public GameObject getObject(String name) {
         for (GameObject o : objects) {
-            if (o.name.equalsIgnoreCase(name)) return o;
+            if (o.getName().equalsIgnoreCase(name)) return o;
         }
         return null;
     }

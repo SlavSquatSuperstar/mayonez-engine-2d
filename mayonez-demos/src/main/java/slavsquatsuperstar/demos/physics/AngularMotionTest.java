@@ -13,12 +13,11 @@ import mayonez.scripts.DragAndDrop;
 import mayonez.scripts.KeepInScene;
 import mayonez.scripts.MouseFlick;
 import mayonez.scripts.MoveMode;
-import mayonez.util.Colors;
-import mayonez.util.Logger;
+import mayonez.graphics.Colors;
 
-public class AngularResolutionTest extends PhysicsTestScene {
+public class AngularMotionTest extends PhysicsTestScene {
 
-    public AngularResolutionTest(String name) {
+    public AngularMotionTest(String name) {
         super(name, 8);
     }
 
@@ -52,18 +51,19 @@ public class AngularResolutionTest extends PhysicsTestScene {
             protected void init() {
                 Rigidbody rb;
                 addComponent(col.setDebugDraw(Colors.BLUE, false));
-                addComponent(rb = new Rigidbody(col.getMass(5f)).setFollowsGravity(true));
+                float mass = col.getMass(5f);
+                addComponent(rb = new Rigidbody(5).setFollowsGravity(true));
                 addComponent(new KeepInScene(new Vec2(), getScene().getSize(), KeepInScene.Mode.STOP));
                 addComponent(new DragAndDrop("left mouse"));
                 addComponent(new MouseFlick(MoveMode.VELOCITY, "right mouse", 15, false));
                 addComponent(new Script() {
                     @Override
                     public void update(float dt) {
-                        rb.applyAngularImpulse(10f * -KeyInput.getAxis("horizontal"));
-                        if (KeyInput.keyPressed("space")) {
+                        rb.applyAngularImpulse(10 * -KeyInput.getAxis("horizontal"));
+//                        if (KeyInput.keyPressed("space")) {
 //                            rb.setAngVelocity(0f);
-                            Logger.log("%s: %.4f", col, rb.getAngMass());
-                        }
+//                            Logger.log("%s: %.4f", col, rb.getAngMass());
+//                        }
                     }
                 });
             }
@@ -72,7 +72,7 @@ public class AngularResolutionTest extends PhysicsTestScene {
 
     public static void main(String[] args) {
         Mayonez.setUseGL(false);
-        Mayonez.start(new AngularResolutionTest("Angular Resolution Test"));
+        Mayonez.start(new AngularMotionTest("Angular Resolution Test"));
     }
 
 }

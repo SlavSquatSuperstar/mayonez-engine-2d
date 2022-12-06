@@ -10,7 +10,7 @@ import mayonez.io.image.Texture
 import mayonez.io.text.CSVFile
 import mayonez.io.text.JSONFile
 import mayonez.io.text.TextFile
-import mayonez.util.Logger
+import mayonez.Logger
 import java.io.File
 import java.net.MalformedURLException
 import java.net.URL

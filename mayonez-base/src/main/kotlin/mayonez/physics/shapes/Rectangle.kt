@@ -1,6 +1,6 @@
 package mayonez.physics.shapes
 
-import mayonez.math.MathUtils
+import mayonez.math.FloatMath
 import mayonez.math.Vec2
 
 /**
@@ -48,10 +48,10 @@ open class Rectangle(private val center: Vec2, private val size: Vec2, val angle
     // Rectangle Properties
 
     val isSquare: Boolean
-        get() = MathUtils.equals(width, height)
+        get() = FloatMath.equals(width, height)
 
     open val isAxisAligned: Boolean
-        get() = MathUtils.equals(angle % 360f, 0f)
+        get() = FloatMath.equals(angle % 360f, 0f)
 
     /**
      * The rectangle's width (base), b.
@@ -98,7 +98,7 @@ open class Rectangle(private val center: Vec2, private val size: Vec2, val angle
      *
      * Second moment of area: I_z = 1/12*(hb^3 + bh^3) = 1/12*bh(b^2 + h^2) = 1/12*A(b^2 + h^2)
      */
-    override fun angularMass(mass: Float): Float = mass / 12f * MathUtils.hypotSq(width, height)
+    override fun angularMass(mass: Float): Float = mass / 12f * FloatMath.hypotSq(width, height)
 
     // Transformations
 
@@ -122,7 +122,7 @@ open class Rectangle(private val center: Vec2, private val size: Vec2, val angle
     override fun equals(other: Any?): Boolean {
         return (other is Rectangle) && (this.center == other.center)
                 && (this.size == other.size || this.size == other.size.normal())
-                && (MathUtils.equals(this.angle, other.angle))
+                && (FloatMath.equals(this.angle, other.angle))
     }
 
     /**

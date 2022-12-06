@@ -1,11 +1,13 @@
 package slavsquatsuperstar.demos;
 
 import mayonez.*;
+import mayonez.graphics.Color;
+import mayonez.graphics.Colors;
 import mayonez.graphics.sprite.Sprite;
 import mayonez.graphics.sprite.SpriteSheet;
 import mayonez.input.KeyInput;
 import mayonez.input.MouseInput;
-import mayonez.math.MathUtils;
+import mayonez.math.Random;
 import mayonez.math.Vec2;
 import mayonez.physics.Rigidbody;
 import mayonez.physics.colliders.BoxCollider;
@@ -14,8 +16,6 @@ import mayonez.physics.shapes.Ellipse;
 import mayonez.physics.shapes.Rectangle;
 import mayonez.physics.shapes.Triangle;
 import mayonez.scripts.*;
-import mayonez.util.Color;
-import mayonez.util.Colors;
 
 /**
  * For testing renderer, camera, and world to screen coordinates.
@@ -41,7 +41,7 @@ public class RendererTest extends Scene {
                 Transform.scaleInstance(new Vec2(2))) {
             @Override
             protected void init() {
-                getScene().getCamera().setSubject(this).setKeepInScene(true);
+                getScene().getCamera().setSubject(this).setKeepInScene(false);
                 addComponent(sprites.getSprite(0));
                 addComponent(new BoxCollider(new Vec2(0.8f, 1)));
                 addComponent(new Rigidbody(1f).setFixedRotation(true));
@@ -122,6 +122,9 @@ public class RendererTest extends Scene {
         Ellipse ellipse = new Ellipse(new Vec2(0, 5), new Vec2(9.5f, 8));
         DebugDraw.drawShape(ellipse, Colors.BLUE);
 
+        getCamera().getTransform().rotate(-KeyInput.getAxis("arrows horizontal"));
+        getCamera().getTransform().scale(new Vec2(1 + 0.1f * KeyInput.getAxis("arrows vertical")));
+
 //        if (KeyInput.keyPressed("space"))
 //            System.out.println("pressed");
 //        else if (KeyInput.keyDown("space"))
@@ -134,8 +137,8 @@ public class RendererTest extends Scene {
     }
 
     private GameObject createEnemy(String name, int spriteIndex) {
-        float randomX = MathUtils.random(-getWidth() / 2f, getWidth() / 2f);
-        float randomY = MathUtils.random(-getHeight() / 2f, getHeight() / 2f);
+        float randomX = Random.randomFloat(-getWidth() / 2f, getWidth() / 2f);
+        float randomY = Random.randomFloat(-getHeight() / 2f, getHeight() / 2f);
         return new GameObject(name, new Vec2(randomX, randomY)) {
             @Override
             protected void init() {
@@ -147,7 +150,7 @@ public class RendererTest extends Scene {
 
             @Override
             public void onCollision(GameObject other) {
-                if (other.name.equals("Mario")) setDestroyed();
+                if (other.getName().equals("Mario")) setDestroyed();
             }
         };
     }

@@ -1,7 +1,7 @@
 package mayonez.physics.shapes
 
 import mayonez.math.Mat22
-import mayonez.math.MathUtils
+import mayonez.math.FloatMath
 import mayonez.math.Vec2
 import kotlin.math.abs
 
@@ -69,7 +69,7 @@ open class Polygon(convex: Boolean, vararg vertices: Vec2) : Shape() {
      */
     override fun area(): Float {
         val crosses = FloatArray(numVertices) { vertices[it].cross(vertices[it.next(numVertices)]) }
-        return 0.5f * abs(MathUtils.sum(*crosses))
+        return 0.5f * abs(FloatMath.sum(*crosses))
     }
 
     private lateinit var centroid: Vec2
@@ -100,14 +100,14 @@ open class Polygon(convex: Boolean, vararg vertices: Vec2) : Shape() {
 
     override fun boundingCircle(): Circle {
         val distsSq = FloatArray(numVertices) { vertices[it].distanceSq(center()) }
-        return Circle(center(), MathUtils.max(*distsSq))
+        return Circle(center(), FloatMath.max(*distsSq))
     }
 
     override fun boundingRectangle(): BoundingBox {
         val verticesX = FloatArray(numVertices) { vertices[it].x }
         val verticesY = FloatArray(numVertices) { vertices[it].y }
-        val boxMin = Vec2(MathUtils.min(*verticesX), MathUtils.min(*verticesY))
-        val boxMax = Vec2(MathUtils.max(*verticesX), MathUtils.max(*verticesY))
+        val boxMin = Vec2(FloatMath.min(*verticesX), FloatMath.min(*verticesY))
+        val boxMax = Vec2(FloatMath.max(*verticesX), FloatMath.max(*verticesY))
         return BoundingBox(boxMin.midpoint(boxMax), boxMax - boxMin)
     }
 
@@ -115,13 +115,13 @@ open class Polygon(convex: Boolean, vararg vertices: Vec2) : Shape() {
 
     override fun supportPoint(direction: Vec2): Vec2 {
         val dotProds = FloatArray(numVertices) { vertices[it].dot(direction) }
-        return vertices[MathUtils.maxIndex(*dotProds)]
+        return vertices[FloatMath.maxIndex(*dotProds)]
     }
 
     override fun nearestPoint(position: Vec2): Vec2 {
         if (position in this) return position
         val distances = FloatArray(edges.size) { edges[it].distance(position) }
-        val nearestEdge = edges[MathUtils.minIndex(*distances)]
+        val nearestEdge = edges[FloatMath.minIndex(*distances)]
         return nearestEdge.nearestPoint(position)
     }
 
@@ -251,7 +251,7 @@ open class Polygon(convex: Boolean, vararg vertices: Vec2) : Shape() {
             val hull = ArrayList<Vec2>(size)
 
             // Find leftmost point
-            val vLeft = MathUtils.minIndex(*FloatArray(size) { vertices[it].x })
+            val vLeft = FloatMath.minIndex(*FloatArray(size) { vertices[it].x })
             hull.add(vertices[vLeft])
 
             // Perform Jarvis march
@@ -275,7 +275,7 @@ open class Polygon(convex: Boolean, vararg vertices: Vec2) : Shape() {
                     val vecBC = ptC - ptB // compare this point
                     val orientation = vecAB.cross(vecBC) // find the most clockwise point from current point
                     if (orientation < 0) vCurr = i
-                    else if (MathUtils.equals(orientation)) { // or the farthest point if collinear
+                    else if (FloatMath.equals(orientation)) { // or the farthest point if collinear
                         if (ptA.distanceSq(ptB) < ptA.distanceSq(ptC)) vCurr = i
                     }
                 }

@@ -1,6 +1,6 @@
 package mayonez.physics.detection
 
-import mayonez.math.MathUtils
+import mayonez.math.FloatMath
 import mayonez.math.Range
 import mayonez.math.Vec2
 import mayonez.physics.shapes.Circle
@@ -95,7 +95,7 @@ class SATDetector : CollisionDetector {
 
         private fun Polygon.projectOnAxis(axis: Vec2): Range { // positive is in axis direction
             val projections = FloatArray(this.numVertices) { this.vertices[it].dot(axis) }
-            return Range(MathUtils.min(*projections), MathUtils.max(*projections))
+            return Range(FloatMath.min(*projections), FloatMath.max(*projections))
         }
 
         /**

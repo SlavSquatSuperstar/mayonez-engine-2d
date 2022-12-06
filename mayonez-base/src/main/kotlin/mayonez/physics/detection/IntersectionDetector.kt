@@ -1,6 +1,6 @@
 package mayonez.physics.detection
 
-import mayonez.math.MathUtils
+import mayonez.math.FloatMath
 import mayonez.physics.shapes.Circle
 import mayonez.physics.shapes.Edge
 import mayonez.physics.shapes.Rectangle
@@ -43,7 +43,7 @@ object IntersectionDetector {
      */
     private fun intersectCircles(circle1: Circle, circle2: Circle): Boolean {
         val distSq = circle1.center().distanceSq(circle2.center())
-        val sumRadiiSq = MathUtils.squared(circle1.radius + circle2.radius)
+        val sumRadiiSq = FloatMath.squared(circle1.radius + circle2.radius)
         return distSq <= sumRadiiSq
     }
 
@@ -64,7 +64,7 @@ object IntersectionDetector {
         val cross = dir1.cross(dir2)
 
         // If lines are parallel, then they must be overlapping
-        return if (MathUtils.equals(cross, 0f)) {
+        return if (FloatMath.equals(cross, 0f)) {
             ((edge2.start in edge1 || edge2.end in edge1)
                     || (edge1.start in edge2 || edge1.end in edge2))
         } else {
@@ -74,7 +74,7 @@ object IntersectionDetector {
             val dist2 = diffStarts.cross(dir1) / cross
 
             // Contact must be in both lines
-            MathUtils.inRange(dist1, 0f, edge1.length) && MathUtils.inRange(dist2, 0f, edge2.length)
+            FloatMath.inRange(dist1, 0f, edge1.length) && FloatMath.inRange(dist2, 0f, edge2.length)
         }
     }
 

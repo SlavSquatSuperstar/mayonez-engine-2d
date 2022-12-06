@@ -1,9 +1,9 @@
 package mayonez.graphics.renderer;
 
-import org.lwjgl.opengl.GL11;
-import mayonez.math.MathUtils;
 import mayonez.annotations.EngineType;
 import mayonez.annotations.UsesEngine;
+import mayonez.math.IntMath;
+import org.lwjgl.opengl.GL11;
 
 import java.nio.IntBuffer;
 
@@ -57,7 +57,7 @@ public enum DrawPrimitive {
         this.elementCount = elementCount;
         this.primitiveType = primitiveType;
         this.attributeSizes = attributeSizes;
-        vertexSize = MathUtils.sum(attributeSizes);
+        vertexSize = IntMath.sum(attributeSizes);
     }
 
     /**

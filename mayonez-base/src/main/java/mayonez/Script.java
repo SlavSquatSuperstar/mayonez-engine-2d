@@ -52,7 +52,7 @@ public abstract class Script extends Component {
         return String.format(
                 "%s (%s)",
                 getClass().isAnonymousClass() ? "Script" : getClass().getSimpleName(),
-                gameObject == null ? "<No Parent>" : gameObject.name
+                gameObject == null ? "<No Parent>" : gameObject.getName()
         );
     }
 }

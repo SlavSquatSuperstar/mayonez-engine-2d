@@ -7,7 +7,7 @@ import mayonez.math.Vec2;
 import mayonez.physics.Rigidbody;
 import mayonez.scripts.KeyMovement;
 import mayonez.scripts.MoveMode;
-import mayonez.util.Colors;
+import mayonez.graphics.Colors;
 
 public class SpaceGameScene extends Scene {
 
@@ -29,7 +29,7 @@ public class SpaceGameScene extends Scene {
                 addComponent(new Script() {
                     @Override
                     public void update(float dt) {
-                        getRigidbody().applyAngularImpulse(0.25f * KeyInput.getAxis("horizontal2"));
+                        getRigidbody().applyAngularImpulse(-0.25f * KeyInput.getAxis("horizontal2"));
                     }
                 });
             }

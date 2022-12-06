@@ -127,7 +127,7 @@ public abstract class Component {
         return String.format(
                 "%s (%s)",
                 getClass().isAnonymousClass() ? "Component" : getClass().getSimpleName(),
-                gameObject == null ? "<No Parent>" : gameObject.name
+                gameObject == null ? "<No Parent>" : gameObject.getName()
         );
         // Use Component for class if anonymous instance
     }

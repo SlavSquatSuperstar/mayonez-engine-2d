@@ -1,7 +1,5 @@
-package mayonez.util
+package mayonez
 
-import mayonez.Mayonez
-import mayonez.Preferences
 import mayonez.io.text.TextFile
 import java.io.File
 import java.time.LocalDate
@@ -64,12 +62,12 @@ object Logger {
         // Format the message and add timestamp
         val fmt = StringBuilder("[${Mayonez.seconds.toFmtString()}] ") // Timestamp
         fmt.append("[${level.name}] ") // Log level
-        fmt.append("[${getSource()}] ") // Log source
         try {
             fmt.append(msg.toString().format(*args)) // Level prefix
         } catch (e: IllegalFormatException) {
             fmt.append("Logger: Could not format message \"$msg\"")
         }
+        fmt.append(" [${getSource()}]") // Log source
         val output = fmt.toString()
 
         // Print message and write to file

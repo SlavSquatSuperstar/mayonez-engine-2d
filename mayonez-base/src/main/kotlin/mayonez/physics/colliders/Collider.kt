@@ -8,7 +8,7 @@ import mayonez.physics.Collisions
 import mayonez.physics.resolution.Manifold
 import mayonez.physics.shapes.BoundingBox
 import mayonez.physics.shapes.Shape
-import mayonez.util.Color
+import mayonez.graphics.Color
 import mayonez.DebugDraw
 import java.awt.Graphics2D
 

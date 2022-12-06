@@ -1,9 +1,9 @@
 package slavsquatsuperstar.demos.physics;
 
-import mayonez.math.MathUtils;
+import mayonez.math.FloatMath;
 import mayonez.math.Vec2;
 import mayonez.scripts.*;
-import mayonez.util.Colors;
+import mayonez.graphics.Colors;
 import mayonez.GameObject;
 import mayonez.Mayonez;
 import mayonez.physics.PhysicsMaterial;
@@ -37,7 +37,7 @@ public class PoolBallsTest extends PhysicsTestScene {
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j <= i; j++) {
                 // x = x0 + √3r * i
-                float x = xStart + (float) i * MathUtils.sqrt(3f) * BALL_RADIUS;
+                float x = xStart + (float) i * FloatMath.sqrt(3f) * BALL_RADIUS;
                 // y = y0 + 2r * i
                 float y = yStart + (float) j * 2 * BALL_RADIUS;
                 addObject(createCircle(String.format("Pool Ball #%d", ballCount++), new Vec2(x, y)));

@@ -2,7 +2,7 @@ package mayonez.math
 
 import org.joml.Vector2f
 import mayonez.annotations.Mutating
-import mayonez.math.MathUtils.equals
+import mayonez.math.FloatMath.equals
 import java.util.*
 import kotlin.math.*
 
@@ -312,7 +312,7 @@ class Vec2 constructor(
      * @param v another 2D vector
      * @return the angle between the two vectors
      */
-    fun angle(v: Vec2): Float = MathUtils.toDegrees(acos(this.dot(v) / (this.len() * v.len())))
+    fun angle(v: Vec2): Float = FloatMath.toDegrees(acos(this.dot(v) / (this.len() * v.len())))
 
     /**
      * Rotates this vector by an angle around the origin (0, 0).
@@ -353,7 +353,7 @@ class Vec2 constructor(
      * @return the clamped vector
      */
     fun clampInbounds(min: Vec2, max: Vec2): Vec2 =
-        Vec2(MathUtils.clamp(x, min.x, max.x), MathUtils.clamp(y, min.y, max.y))
+        Vec2(FloatMath.clamp(x, min.x, max.x), FloatMath.clamp(y, min.y, max.y))
 
     /**
      * Clamps the length of this vector if it exceeds the provided value, while keeping the same direction. Useful for
@@ -382,7 +382,7 @@ class Vec2 constructor(
     fun floor(): Vec2 = Vec2(floor(x), floor(y))
 
     fun inRange(min: Vec2, max: Vec2): Boolean =
-        MathUtils.inRange(this.x, min.x, max.x) && MathUtils.inRange(this.y, min.y, max.y)
+        FloatMath.inRange(this.x, min.x, max.x) && FloatMath.inRange(this.y, min.y, max.y)
 
     /**
      * Calculates the average position of this vector and another.

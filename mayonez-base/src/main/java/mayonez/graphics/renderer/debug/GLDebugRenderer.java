@@ -33,7 +33,6 @@ public final class GLDebugRenderer extends GLRenderer implements DebugRenderer {
 
     // Debug Draw Methods
 
-
     @Override
     public void start() {
         super.start();

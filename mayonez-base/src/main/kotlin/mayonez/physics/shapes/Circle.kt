@@ -1,6 +1,6 @@
 package mayonez.physics.shapes
 
-import mayonez.math.MathUtils
+import mayonez.math.FloatMath
 import mayonez.math.Vec2
 import kotlin.math.roundToInt
 
@@ -32,7 +32,7 @@ class Circle(
     /**
      * The area of a circle, equal to πr^2.
      */
-    override fun area(): Float = MathUtils.PI * radiusSq
+    override fun area(): Float = FloatMath.PI * radiusSq
 
     // Collision Properties
 
@@ -44,7 +44,7 @@ class Circle(
      * Returns a polygon approximation of this ellipse with 2πr vertices.
      */
     override fun toPolygon(): Polygon {
-        val numEdges: Int = (2f * MathUtils.PI * radius).roundToInt() // use 2πr for # edges
+        val numEdges: Int = (2f * FloatMath.PI * radius).roundToInt() // use 2πr for # edges
         return Polygon(center, numEdges, radius)
     }
 
@@ -106,7 +106,7 @@ class Circle(
      * @return if the two circles are equal
      */
     override fun equals(other: Any?): Boolean {
-        return (other is Circle) && (this.center == other.center) && MathUtils.equals(this.radius, other.radius)
+        return (other is Circle) && (this.center == other.center) && FloatMath.equals(this.radius, other.radius)
     }
 
     /**

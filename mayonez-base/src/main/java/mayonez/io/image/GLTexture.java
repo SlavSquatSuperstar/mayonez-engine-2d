@@ -3,7 +3,7 @@ package mayonez.io.image;
 import org.lwjgl.BufferUtils;
 import mayonez.io.IOUtils;
 import mayonez.math.Vec2;
-import mayonez.util.Logger;
+import mayonez.Logger;
 import mayonez.annotations.UsesEngine;
 import mayonez.annotations.EngineType;
 import mayonez.physics.shapes.Rectangle;

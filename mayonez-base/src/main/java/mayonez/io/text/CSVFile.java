@@ -1,6 +1,6 @@
 package mayonez.io.text;
 
-import mayonez.math.MathUtils;
+import mayonez.math.FloatMath;
 import mayonez.util.Record;
 import mayonez.util.StringUtils;
 
@@ -34,7 +34,7 @@ public class CSVFile extends TextAsset {
             for (int row = 1; row < lines.length; row++) {
                 String[] vals = lines[row].split(",");
                 Record rec = new Record();
-                for (int cols = 0; cols < MathUtils.min(headers.length, vals.length); cols++)
+                for (int cols = 0; cols < FloatMath.min(headers.length, vals.length); cols++)
                     rec.set(headers[cols], vals[cols]);
                 records.add(rec);
             }

@@ -18,20 +18,22 @@ import java.util.stream.Collectors;
 @SuppressWarnings({"unchecked", "rawtypes"})
 public class GameObject {
 
-    // Object Information
-    public String name;
+//    private static long objectCounter = 0L; // total number of game objects created
+
+    // Object Information and State
+    // TODO maybe use this to prevent duplicate object adding to scenes
+//    final long objectID; // UUID for this game object
+    private String name;
     public final Transform transform;
+    private Scene scene;
+    private boolean destroyed;
     private int zIndex; // controls 3D "layering" of objects
     private final Set<String> tags;
-    private Scene scene;
 
     // Component Fields
     private final List<Component> components;
     private List<Class> updateOrder;
 
-    // Object State
-//    private final Queue<Receivable> changesToObject; // Dynamic add/remove components
-    private boolean destroyed;
 
     public GameObject(String name) {
         this(name, new Vec2());
@@ -46,7 +48,8 @@ public class GameObject {
     }
 
     public GameObject(String name, Transform transform, int zIndex) {
-        this.name = name;
+//        objectID = objectCounter++;
+        this.name = name == null ? "GameObject" : name;
         this.transform = transform;
         this.zIndex = zIndex;
         tags = new HashSet<>(3);
@@ -230,11 +233,19 @@ public class GameObject {
 
     // Getters and Setters
 
-    public Scene getScene() {
+    public final String getName() {
+        return name;
+    }
+
+    final void setName(String name) {
+        this.name = name;
+    }
+
+    public final Scene getScene() {
         return scene;
     }
 
-    public GameObject setScene(Scene scene) {
+    final GameObject setScene(Scene scene) {
         this.scene = scene;
         return this;
     }
@@ -274,7 +285,7 @@ public class GameObject {
     @Override
     public String toString() {
         return String.format(
-                "%s (%s)", name,
+                "%s (%s)",name,
                 getClass().isAnonymousClass() ? "GameObject" : getClass().getSimpleName()
         );
     }

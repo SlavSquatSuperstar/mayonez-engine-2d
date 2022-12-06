@@ -1,6 +1,6 @@
 package mayonez.engine;
 
-import mayonez.util.Logger;
+import mayonez.Logger;
 import mayonez.Preferences;
 import mayonez.annotations.UsesEngine;
 import mayonez.annotations.EngineType;

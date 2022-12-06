@@ -3,7 +3,7 @@ package mayonez.io.text;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
-import mayonez.util.Logger;
+import mayonez.Logger;
 import mayonez.util.Record;
 import mayonez.util.StringUtils;
 

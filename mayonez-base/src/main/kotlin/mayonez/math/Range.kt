@@ -21,7 +21,7 @@ class Range(min: Float, max: Float) {
     operator fun contains(value: Float): Boolean = (min <= value) && (value <= max)
 
     override fun equals(other: Any?): Boolean {
-        return (other is Range) && MathUtils.equals(this.min, other.min) && MathUtils.equals(this.max, other.max)
+        return (other is Range) && FloatMath.equals(this.min, other.min) && FloatMath.equals(this.max, other.max)
     }
 
     override fun hashCode(): Int = Objects.hash(min, max)

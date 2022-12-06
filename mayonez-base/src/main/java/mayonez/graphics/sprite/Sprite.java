@@ -8,8 +8,8 @@ import mayonez.io.Assets;
 import mayonez.io.image.GLTexture;
 import mayonez.io.image.JTexture;
 import mayonez.io.image.Texture;
-import mayonez.util.Color;
-import mayonez.util.Colors;
+import mayonez.graphics.Color;
+import mayonez.graphics.Colors;
 
 /**
  * A visual representation of a GameObject.

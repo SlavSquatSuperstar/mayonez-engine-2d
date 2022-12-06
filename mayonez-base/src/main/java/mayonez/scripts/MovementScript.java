@@ -1,7 +1,7 @@
 package mayonez.scripts;
 
 import mayonez.math.Vec2;
-import mayonez.util.Logger;
+import mayonez.Logger;
 import mayonez.Script;
 import mayonez.physics.Rigidbody;
 

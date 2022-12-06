@@ -4,7 +4,7 @@ import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
-import mayonez.util.Logger;
+import mayonez.Logger;
 import mayonez.Mayonez;
 import mayonez.annotations.EngineType;
 import mayonez.annotations.UsesEngine;

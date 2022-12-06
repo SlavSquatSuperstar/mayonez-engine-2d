@@ -58,8 +58,8 @@ class Mat22 {
      * @degrees the angle measure in degrees
      */
     constructor(degrees: Float) {
-        val cos = MathUtils.cos(degrees)
-        val sin = MathUtils.sin(degrees)
+        val cos = FloatMath.cos(degrees)
+        val sin = FloatMath.sin(degrees)
         m00 = cos
         m01 = -sin
         m10 = sin
@@ -178,8 +178,8 @@ class Mat22 {
 
     override fun equals(other: Any?): Boolean {
         return if (other is Mat22)
-            MathUtils.equals(m00, other.m00) && MathUtils.equals(m01, other.m01)
-                    && MathUtils.equals(m10, other.m10) && MathUtils.equals(m11, other.m11)
+            FloatMath.equals(m00, other.m00) && FloatMath.equals(m01, other.m01)
+                    && FloatMath.equals(m10, other.m10) && FloatMath.equals(m11, other.m11)
         else false
     }
 

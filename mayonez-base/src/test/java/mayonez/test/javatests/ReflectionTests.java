@@ -1,7 +1,7 @@
 package mayonez.test.javatests;
 
 import org.junit.jupiter.api.Test;
-import mayonez.util.Logger;
+import mayonez.Logger;
 
 import java.lang.reflect.Constructor;
 

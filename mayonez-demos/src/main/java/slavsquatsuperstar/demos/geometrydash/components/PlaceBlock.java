@@ -3,7 +3,7 @@ package slavsquatsuperstar.demos.geometrydash.components;
 import mayonez.math.Vec2;
 import mayonez.Component;
 import mayonez.GameObject;
-import mayonez.util.Logger;
+import mayonez.Logger;
 import mayonez.Transform;
 import mayonez.graphics.sprite.Sprite;
 import mayonez.input.MouseInput;

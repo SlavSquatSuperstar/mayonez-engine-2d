@@ -1,6 +1,6 @@
 package mayonez.physics.resolution
 
-import mayonez.math.MathUtils
+import mayonez.math.FloatMath
 import mayonez.math.Vec2
 import mayonez.physics.Rigidbody
 
@@ -48,8 +48,8 @@ class Contact(private val pos: Vec2, r1Pos: Vec2, r2Pos: Vec2) {
      * https://www.chrishecker.com/images/e/e7/Gdmphys3.pdf.
      */
     fun getDenominator(direction: Vec2, sumInvM: Float, invI1: Float, invI2: Float): Float {
-        val dot1Sq = MathUtils.squared(direction.dot(rad1.normal()))
-        val dot2Sq = MathUtils.squared(direction.dot(rad2.normal()))
+        val dot1Sq = FloatMath.squared(direction.dot(rad1.normal()))
+        val dot2Sq = FloatMath.squared(direction.dot(rad2.normal()))
         return sumInvM + invI1 * dot1Sq + invI2 * dot2Sq
     }
 

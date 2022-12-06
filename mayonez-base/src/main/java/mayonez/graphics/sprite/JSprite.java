@@ -6,8 +6,8 @@ import mayonez.annotations.EngineType;
 import mayonez.annotations.UsesEngine;
 import mayonez.io.image.JTexture;
 import mayonez.physics.shapes.Rectangle;
-import mayonez.util.Color;
-import mayonez.util.Colors;
+import mayonez.graphics.Color;
+import mayonez.graphics.Colors;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -45,7 +45,7 @@ public final class JSprite extends Sprite {
     @Override
     public void render(Graphics2D g2) {
         if (texture != null) texture.draw(g2, transform, spriteXf, getScene().getScale());
-        else DebugDraw.drawShape(new Rectangle(transform.position, transform.scale), color);
+        else DebugDraw.fillShape(new Rectangle(transform.position, transform.scale), color);
     }
 
     // Sprite Methods

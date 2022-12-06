@@ -1,7 +1,5 @@
 package mayonez.util
 
-import mayonez.math.MathUtils.random
-
 /**
  * A collection of utility functions for manipulating text data.
  *
@@ -89,37 +87,6 @@ object StringUtils {
     fun sortStrings(s1: String, s2: String, ignoreCase: Boolean): String {
         return if (ignoreCase) if (s1 < s2) s1 else s2
         else if (s1.compareTo(s2, true) < 0) s1 else s2
-    }
-
-    // Random Methods
-
-    /**
-     * Generates a random uppercase letter (A-Z).
-     */
-    @JvmStatic
-    fun randomUppercase(): Char = random(65, 90).toChar()
-
-    /**
-     * Generates a random lowercase letter (a-z).
-     */
-    @JvmStatic
-    fun randomLowercase(): Char = random(97, 122).toChar()
-
-    /**
-     * Generates a random number character (0-9).
-     */
-    @JvmStatic
-    fun randomNumber(): Char = random(0, 9).toChar()
-
-    /**
-     * Returns a random alphanumeric character (A-Z, a-z, 0-9) .
-     */
-    @JvmStatic
-    fun randomAlphanumeric(): Char {
-        val rand = random(0, 30)
-        return if (rand < 13) randomUppercase() // 26/62 = 13/31 Uppercase
-        else if (rand < 26) randomLowercase() // 26/62 = 13/31 Lowercase
-        else randomNumber() // 10/62 = 5/31 Number
     }
 
 }

@@ -10,7 +10,7 @@ import mayonez.physics.shapes.Polygon;
 import mayonez.physics.shapes.Rectangle;
 import mayonez.physics.shapes.Shape;
 import mayonez.physics.shapes.*;
-import mayonez.util.Colors;
+import mayonez.graphics.Colors;
 import mayonez.DebugDraw;
 
 import java.awt.*;

@@ -1,6 +1,6 @@
 package mayonez.physics.detection
 
-import mayonez.math.MathUtils
+import mayonez.math.FloatMath
 import mayonez.math.Vec2
 import mayonez.physics.resolution.RaycastInfo
 import mayonez.physics.shapes.*
@@ -59,7 +59,7 @@ object RaycastDetector {
 
         // If ray is parallel, then raycast is undefined
         // Ray either misses or hits endpoint (no normal)
-        if (MathUtils.equals(cross, 0f)) return null
+        if (FloatMath.equals(cross, 0f)) return null
 
         // Calculate intersection point
         val startToOrigin = ray.origin - edge.start
@@ -67,7 +67,7 @@ object RaycastDetector {
         val dist2 = startToOrigin.cross(dir1) / cross
 
         // Contact must be inside edge and inside ray if limit is enabled
-        if (!MathUtils.inRange(dist1, 0f, edge.length) || dist2 < 0
+        if (!FloatMath.inRange(dist1, 0f, edge.length) || dist2 < 0
             || (limit > 0 && dist2 > limit)
         ) return null
 
@@ -94,7 +94,7 @@ object RaycastDetector {
             distances[i] = rc?.distance ?: Float.POSITIVE_INFINITY
         }
 
-        val minIndex = MathUtils.minIndex(*distances)
+        val minIndex = FloatMath.minIndex(*distances)
         val minDist = distances[minIndex]
         if (minDist == Float.POSITIVE_INFINITY) return null // no successful raycasts
 

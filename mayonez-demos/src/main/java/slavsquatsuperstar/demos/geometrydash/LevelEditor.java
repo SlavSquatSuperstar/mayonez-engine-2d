@@ -9,7 +9,7 @@ import mayonez.graphics.sprite.SpriteSheet;
 import mayonez.physics.Rigidbody;
 import mayonez.physics.colliders.BoxCollider;
 import mayonez.physics.colliders.Collider;
-import mayonez.util.Colors;
+import mayonez.graphics.Colors;
 
 import java.awt.*;
 

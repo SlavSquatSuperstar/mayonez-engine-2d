@@ -1,8 +1,8 @@
 package mayonez.scripts;
 
-import mayonez.math.MathUtils;
+import mayonez.math.FloatMath;
 import mayonez.math.Vec2;
-import mayonez.util.Logger;
+import mayonez.Logger;
 import mayonez.Script;
 import mayonez.physics.Rigidbody;
 import mayonez.physics.colliders.Collider;
@@ -75,7 +75,7 @@ public class KeepInScene extends Script {
         Vec2 boxMax = objectBounds.max();
 
         // Edge Checking for x
-        if (!MathUtils.inRange(boxMin.x, minPos.x, maxPos.x - objectBounds.width)) {
+        if (!FloatMath.inRange(boxMin.x, minPos.x, maxPos.x - objectBounds.width)) {
             // Detect if colliding with edge
             if (boxMin.x < minPos.x) onCrossBounds(Direction.LEFT);
             else if (boxMax.x > maxPos.x) onCrossBounds(Direction.RIGHT);
@@ -86,7 +86,7 @@ public class KeepInScene extends Script {
         }
 
         // Edge Checking for y
-        if (!MathUtils.inRange(boxMin.y, minPos.y, maxPos.y - objectBounds.height)) {
+        if (!FloatMath.inRange(boxMin.y, minPos.y, maxPos.y - objectBounds.height)) {
             if (boxMin.y < minPos.y) onCrossBounds(Direction.TOP);
             else if (boxMax.y > maxPos.y) onCrossBounds(Direction.BOTTOM);
 

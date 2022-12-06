@@ -1,6 +1,6 @@
 package mayonez.physics.shapes
 
-import mayonez.math.MathUtils
+import mayonez.math.FloatMath
 import mayonez.math.Vec2
 import kotlin.math.abs
 
@@ -61,8 +61,8 @@ class Triangle(v1: Vec2, v2: Vec2, v3: Vec2) : Polygon(v1, v2, v3) {
      */
     override fun angularMass(mass: Float): Float {
         if (polarMoment == null) {
-            val offset = base - MathUtils.invHypot(edges[2].length, height)
-            polarMoment = (MathUtils.hypotSq(base, height) + offset * (offset - base)) / 18f
+            val offset = base - FloatMath.invHypot(edges[2].length, height)
+            polarMoment = (FloatMath.hypotSq(base, height) + offset * (offset - base)) / 18f
         }
         return mass * polarMoment!!
     }
@@ -85,7 +85,7 @@ class Triangle(v1: Vec2, v2: Vec2, v3: Vec2) : Polygon(v1, v2, v3) {
         // divide triangle into three triangles
         // sum area and compare to original area
         val areas = FloatArray(3) { Triangle(vertices[it], vertices[(it + 1) % 3], point).area() }
-        return MathUtils.sum(*areas) <= this.area()
+        return FloatMath.sum(*areas) <= this.area()
     }
 
     override fun equals(other: Any?): Boolean = (other is Triangle) && this.vertices.contentEquals(other.vertices)

@@ -1,8 +1,9 @@
-package mayonez.util
+package mayonez.graphics
 
+import mayonez.math.IntMath
+import mayonez.util.JColor
 import org.joml.Vector3f
 import org.joml.Vector4f
-import mayonez.math.MathUtils
 import java.util.*
 
 /**
@@ -81,7 +82,7 @@ class Color(red: Int, green: Int, blue: Int, alpha: Int) {
 
     companion object {
         private const val inv: Float = 1 / 255f
-        private fun Int.clamp(): Int = MathUtils.clamp(this, 0, 255)
+        private fun Int.clamp(): Int = IntMath.clamp(this, 0, 255)
         private fun Int.norm(): Float = this * inv
     }
 

@@ -1,6 +1,6 @@
 package mayonez.physics.detection
 
-import mayonez.math.MathUtils
+import mayonez.math.FloatMath
 import mayonez.math.Vec2
 import mayonez.physics.shapes.Shape
 import kotlin.math.abs
@@ -47,13 +47,13 @@ class EPASolver(private val shape1: Shape?, private val shape2: Shape?) {
             val supp = Shape.support(shape1, shape2, closest.norm)
             val suppDist = supp.dot(closest.norm) // distance along normal is depth
             // support point already on closest edge; cannot expand simplex anymore
-            if (MathUtils.equals(suppDist, closest.dist)) {
+            if (FloatMath.equals(suppDist, closest.dist)) {
 //                DebugDraw.drawPoint(supp + disp, Colors.RED)
 //                DebugDraw.drawShape(poly, Colors.BLUE)
 //                val edge = poly.edges[closest.index]
 //                DebugDraw.drawShape(edge, Colors.GREEN)
 //                DebugDraw.drawVector(edge.center(), closest.norm, Colors.RED)
-                return Penetration(closest.norm, suppDist + MathUtils.FLOAT_EPSILON)
+                return Penetration(closest.norm, suppDist + FloatMath.FLOAT_EPSILON)
             } else expandedSimplex.add(closest.index, supp)
         }
         return null

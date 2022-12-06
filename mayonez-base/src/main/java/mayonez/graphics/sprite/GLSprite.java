@@ -5,8 +5,8 @@ import mayonez.GameObject;
 import mayonez.annotations.EngineType;
 import mayonez.annotations.UsesEngine;
 import mayonez.io.image.GLTexture;
-import mayonez.util.Color;
-import mayonez.util.Colors;
+import mayonez.graphics.Color;
+import mayonez.graphics.Colors;
 
 /**
  * A component that draws an image at a {@link GameObject}'s position using the GL engine.

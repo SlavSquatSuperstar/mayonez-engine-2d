@@ -77,7 +77,7 @@ public class ClassTests {
         };
         SceneManager.setScene(scene);
         scene.start();
-        assertEquals(scene.getObject("Obj1").name, "obj1");
+        assertEquals(scene.getObject("Obj1").getName(), "obj1");
         assertEquals(scene.getObjects(GameObject.class).get(1).getClass(), GameObject.class);
         assertEquals(scene.getObjects(TestObject.class).get(0).getClass(), TestObject.class);
         assertEquals(scene.getObjects().get(4).getClass(), TestObject.class);

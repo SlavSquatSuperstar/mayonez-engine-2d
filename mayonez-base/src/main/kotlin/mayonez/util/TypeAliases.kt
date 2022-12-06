@@ -14,10 +14,10 @@ typealias JShape = java.awt.Shape
 // Mayonez Engine Classes
 
 /**
- * The [slavsquatsuperstar.mayonez.util.Color] defined by Mayonez Engine.
+ * The [mayonez.graphics.Color] class defined by Mayonez Engine.
  */
-typealias MColor = Color
+typealias MColor = mayonez.graphics.Color
 /**
- * The [slavsquatsuperstar.mayonez.physics.shapes.Shape] class defined by Mayonez Engine.
+ * The [mayonez.physics.shapes.Shape] class defined by Mayonez Engine.
  */
 typealias MShape = mayonez.physics.shapes.Shape

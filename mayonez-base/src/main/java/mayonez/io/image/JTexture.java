@@ -1,8 +1,8 @@
 package mayonez.io.image;
 
-import mayonez.math.MathUtils;
+import mayonez.math.FloatMath;
 import mayonez.math.Vec2;
-import mayonez.util.Logger;
+import mayonez.Logger;
 import mayonez.Transform;
 import mayonez.annotations.UsesEngine;
 import mayonez.annotations.EngineType;
@@ -81,7 +81,7 @@ public final class JTexture extends Texture {
         // Draw sprite at parent center with parent rotation and scale
         AffineTransform g2Xf = new AffineTransform(); // Identity
         g2Xf.translate(parentCenter.x - parentHalfSize.x, parentCenter.y - parentHalfSize.y);
-        g2Xf.rotate(MathUtils.toRadians(newXf.rotation), parentHalfSize.x, parentHalfSize.y);
+        g2Xf.rotate(FloatMath.toRadians(newXf.rotation), parentHalfSize.x, parentHalfSize.y);
         g2Xf.scale(parentSize.x / imageSize.x, parentSize.y / imageSize.y);
 
         g2Xf.scale(1, -1); // Flip image vertically like GL
