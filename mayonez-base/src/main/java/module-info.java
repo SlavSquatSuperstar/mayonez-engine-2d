@@ -20,24 +20,21 @@ module mayonez.base {
     requires org.json;
     requires org.reflections;
 
-    /* Public API */
-    // Core
+    // Public API
     exports mayonez;
+    exports mayonez.annotations;
     exports mayonez.graphics;
     exports mayonez.graphics.sprite;
+    exports mayonez.io;
+    exports mayonez.io.image;
+    exports mayonez.io.text;
     exports mayonez.input;
     exports mayonez.math;
-    // Physics
     exports mayonez.physics;
     exports mayonez.physics.colliders;
     exports mayonez.physics.resolution;
     exports mayonez.physics.shapes;
     exports mayonez.scripts;
-    // I/O
-    exports mayonez.io;
-    exports mayonez.io.image;
-    exports mayonez.io.text;
-    // Other
-    exports mayonez.annotations;
     exports mayonez.util;
+    exports mayonez.scripts.movement;
 }

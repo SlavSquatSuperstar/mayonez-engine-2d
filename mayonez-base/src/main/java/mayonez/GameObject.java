@@ -3,7 +3,8 @@ package mayonez;
 import mayonez.graphics.sprite.Sprite;
 import mayonez.math.Vec2;
 import mayonez.physics.colliders.Collider;
-import mayonez.scripts.MovementScript;
+import mayonez.scripts.movement.MovementScript;
+import mayonez.util.StringUtils;
 
 import java.awt.*;
 import java.util.List;
@@ -11,19 +12,18 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * A collection of {@link Component}s representing an in-game entity.
+ * An object or entity in the game that can be given an appearance and behavior through {@link Component}s.
  *
  * @author SlavSquatSuperstar
  */
 @SuppressWarnings({"unchecked", "rawtypes"})
 public class GameObject {
 
-//    private static long objectCounter = 0L; // total number of game objects created
+    private static long objectCounter = 0L; // total number of game objects created across all scenes
 
     // Object Information and State
-    // TODO maybe use this to prevent duplicate object adding to scenes
-//    final long objectID; // UUID for this game object
-    private String name;
+    final long objectID; // UUID for this game object
+    public final String name; // object name, may be duplicate
     public final Transform transform;
     private Scene scene;
     private boolean destroyed;
@@ -33,7 +33,6 @@ public class GameObject {
     // Component Fields
     private final List<Component> components;
     private List<Class> updateOrder;
-
 
     public GameObject(String name) {
         this(name, new Vec2());
@@ -48,7 +47,7 @@ public class GameObject {
     }
 
     public GameObject(String name, Transform transform, int zIndex) {
-//        objectID = objectCounter++;
+        objectID = objectCounter++;
         this.name = name == null ? "GameObject" : name;
         this.transform = transform;
         this.zIndex = zIndex;
@@ -64,22 +63,16 @@ public class GameObject {
     // Game Loop Methods
 
     /**
-     * Add necessary components and provide user-defined initialization behavior.
-     */
-    protected void init() {
-    }
-
-    /**
-     * Initializes all components.
+     * Add and initializes all components.
      */
     public final void start() {
         init();
-        setUpdateOrder(Component.class, MovementScript.class, Script.class, Sprite.class);
+        setUpdateOrder(Component.class, MovementScript.class, Script.class, Collider.class, Sprite.class);
         components.forEach(Component::start);
     }
 
     /**
-     * Updates all components.
+     * Update all components.
      *
      * @param dt seconds since the last frame
      */
@@ -94,15 +87,7 @@ public class GameObject {
     }
 
     /**
-     * An overridable update method for custom update behavior.
-     *
-     * @param dt seconds since the last frame
-     */
-    protected void onUserUpdate(float dt) {
-    }
-
-    /**
-     * Renders all components.
+     * Draw all components.
      *
      * @param g2 the window's graphics object
      */
@@ -111,6 +96,22 @@ public class GameObject {
             if (c.isEnabled()) c.render(g2);
         });
         onUserRender(g2);
+    }
+
+    // User Defined Methods
+
+    /**
+     * Add all components and initialize fields after this object has been added to the scene.
+     */
+    protected void init() {
+    }
+
+    /**
+     * An overridable update method for custom update behavior.
+     *
+     * @param dt seconds since the last frame
+     */
+    protected void onUserUpdate(float dt) {
     }
 
     /**
@@ -130,10 +131,10 @@ public class GameObject {
      */
     public final void addComponent(Component comp) {
         if (comp == null) return;
-        // maybe make annotation (multiple scripts should suppress warning)
-//		if (null != getComponent(comp.getClass()))
-//			Logger.warn("GameObject: Adding multiple components of the same type is not recommended");
+        if (!comp.getClass().isAnonymousClass() && getComponent(comp.getClass()) != null)
+            Logger.log("GameObject %s [ID %d] Already has a %s", name, objectID, comp.getClass().getSimpleName());
         components.add(comp.setObject(this));
+        if (comp instanceof Script s) s.init();
     }
 
     /**
@@ -207,19 +208,51 @@ public class GameObject {
     // Callback Methods
 
     /**
-     * Custom user behavior after making contact with another physical object.
+     * Custom user behavior after starting contact with another physical object.
      *
      * @param other the other object in the collision
      */
-    public void onCollision(GameObject other) {
+    public void onCollisionEnter(GameObject other) {
     }
 
     /**
-     * Custom user behavior after contacting a trigger area.
+     * Custom user behavior after staying in contact with another physical object.
      *
-     * @param trigger the trigger collider
+     * @param other the other object in the collision
      */
-    public void onTrigger(Collider trigger) {
+    public void onCollisionStay(GameObject other) {
+    }
+
+    /**
+     * Custom user behavior after stopping contact with another physical object.
+     *
+     * @param other the other object in the collision
+     */
+    public void onCollisionExit(GameObject other) {
+    }
+
+    /**
+     * Custom user behavior after entering a trigger area.
+     *
+     * @param other the other game object
+     */
+    public void onTriggerEnter(GameObject other) {
+    }
+
+    /**
+     * Custom user behavior after staying with a trigger area.
+     *
+     * @param other the other game object
+     */
+    public void onTriggerStay(GameObject other) {
+    }
+
+    /**
+     * Custom user behavior after exiting a trigger area.
+     *
+     * @param other the other game object
+     */
+    public void onTriggerExit(GameObject other) {
     }
 
     /**
@@ -232,14 +265,6 @@ public class GameObject {
     }
 
     // Getters and Setters
-
-    public final String getName() {
-        return name;
-    }
-
-    final void setName(String name) {
-        this.name = name;
-    }
 
     public final Scene getScene() {
         return scene;
@@ -283,10 +308,22 @@ public class GameObject {
     }
 
     @Override
+    public boolean equals(Object obj) {
+        return obj == this;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(objectID, name, scene);
+    }
+
+    @Override
     public String toString() {
+        // Use GameObject for class name if anonymous instance
         return String.format(
-                "%s (%s)",name,
-                getClass().isAnonymousClass() ? "GameObject" : getClass().getSimpleName()
+                "%s [ID = %d] (%s)",
+                name, objectID,
+                StringUtils.getClassName(this, "GameObject")
         );
     }
 

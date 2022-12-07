@@ -1,4 +1,4 @@
-package mayonez.scripts;
+package mayonez.scripts.movement;
 
 import mayonez.math.Vec2;
 import mayonez.input.MouseInput;
@@ -33,7 +33,11 @@ public class MouseFlick extends MouseScript {
     @Override
     public void onMouseUp() {
         if (activeInstance == this) {
-            rb.addVelocity(getRawInput().clampLength(speed));
+            Vec2 input = getRawInput().clampLength(speed);
+            switch (mode) {
+                case VELOCITY -> rb.addVelocity(input);
+                case IMPULSE -> rb.applyImpulse(input);
+            }
             activeInstance = null;
         }
     }

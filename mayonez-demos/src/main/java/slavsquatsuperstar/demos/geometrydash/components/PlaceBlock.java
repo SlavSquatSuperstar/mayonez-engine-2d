@@ -1,40 +1,43 @@
 package slavsquatsuperstar.demos.geometrydash.components;
 
-import mayonez.math.Vec2;
-import mayonez.Component;
 import mayonez.GameObject;
 import mayonez.Logger;
+import mayonez.Script;
 import mayonez.Transform;
 import mayonez.graphics.sprite.Sprite;
 import mayonez.input.MouseInput;
 import mayonez.io.image.JTexture;
+import mayonez.math.Vec2;
 import mayonez.physics.Rigidbody;
 import mayonez.physics.colliders.BoxCollider;
-import mayonez.scripts.Counter;
+import mayonez.scripts.Timer;
 
 import java.awt.*;
 
 // TODO don't place duplicate blocks
 // TODO don't place blocks when selecting button
-public class PlaceBlock extends Component {
+public class PlaceBlock extends Script {
 
     private JTexture cursor;
-    private Counter counter;
+    private Timer timer;
 
-    public PlaceBlock(Counter counter) {
-        this.counter = counter;
+
+    @Override
+    public void init() {
+        timer = new Timer(0.2f);
+        gameObject.addComponent(timer);
     }
 
     @Override
     public void update(float dt) {
-        counter.update(dt);
+//        counter.update(dt);
 
         // add 0.5 to x/y to center the block
         Vec2 mousePos = MouseInput.getPosition().add(new Vec2(0.5f)).floor();
         transform.position.set(mousePos);
         // null locks are still being placed
-        if (counter.isReady() && MouseInput.buttonDown("left mouse")) {
-            counter.reset();
+        if (timer.isReady() && MouseInput.buttonDown("left mouse")) {
+            timer.reset();
             if (cursor != null) { // add only when selecting
                 // TODO shouldn't add if block already exists
                 getScene().addObject(new GameObject("Placed Block", mousePos) {

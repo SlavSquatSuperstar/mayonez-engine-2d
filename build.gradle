@@ -23,7 +23,7 @@ project.ext {
 allprojects {
     // Project Info
     group 'slavsquatsuperstar'
-    version '0.7.4'
+    version '0.7.5-pre1'
 
     // Java Version
     sourceCompatibility = targetCompatibility = javaVersion

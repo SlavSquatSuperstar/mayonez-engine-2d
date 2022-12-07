@@ -11,6 +11,9 @@ import mayonez.physics.Rigidbody;
 import mayonez.physics.colliders.BoxCollider;
 import mayonez.physics.colliders.BallCollider;
 import mayonez.physics.colliders.Collider;
+import mayonez.scripts.movement.DragAndDrop;
+import mayonez.scripts.movement.MouseFlick;
+import mayonez.scripts.movement.MoveMode;
 
 public class FrictionTest extends PhysicsTestScene {
 

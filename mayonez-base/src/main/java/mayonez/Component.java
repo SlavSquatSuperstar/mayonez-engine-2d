@@ -1,6 +1,9 @@
 package mayonez;
 
+import mayonez.util.StringUtils;
+
 import java.awt.*;
+import java.util.Objects;
 
 /**
  * A data structure representing traits and behaviors of a {@link GameObject}.
@@ -9,28 +12,37 @@ import java.awt.*;
  */
 public abstract class Component {
 
+    private static long componentCounter = 0L; // total number of components created across all scenes
+    final long componentID; // internal UUID for this component
+
     /**
-     * The {@link GameObject} this component belongs to.
+     * The parent {@link GameObject} this component belongs to.
      */
     protected GameObject gameObject;
 
     /**
      * A reference to the parent object's {@link Transform}.
      */
-    protected Transform transform = new Transform(); // use blank transform in case no parent
+    protected Transform transform; // use blank transform in case no parent
 
-    private boolean enabled = true;
+    private boolean enabled; // whether this component is being updated
+
+    protected Component() {
+        componentID = componentCounter++;
+        transform = new Transform();
+        enabled = true;
+    }
 
     // Game Loop Methods
 
     /**
-     * Initialize any fields needed for subclasses or scripts.
+     * Initialize fields after all components have been added to the object.
      */
     public void start() {
     }
 
     /**
-     * Refresh the component's game logic.
+     * Refresh the component's state and game logic.
      *
      * @param dt seconds since the last frame
      */
@@ -123,12 +135,22 @@ public abstract class Component {
     }
 
     @Override
+    public boolean equals(Object obj) {
+        return obj == this;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(componentID, gameObject);
+    }
+
+    @Override
     public String toString() {
+        // Use Component for class name if anonymous instance
         return String.format(
                 "%s (%s)",
-                getClass().isAnonymousClass() ? "Component" : getClass().getSimpleName(),
-                gameObject == null ? "<No Parent>" : gameObject.getName()
+                StringUtils.getClassName(this, "Component"),
+                gameObject == null ? "<No Parent>" : gameObject.name
         );
-        // Use Component for class if anonymous instance
     }
 }

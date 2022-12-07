@@ -1,15 +1,14 @@
 package mayonez.physics.colliders
 
 import mayonez.Component
-import mayonez.GameObject
+import mayonez.DebugDraw
+import mayonez.graphics.Color
 import mayonez.math.Vec2
-import mayonez.physics.Rigidbody
 import mayonez.physics.Collisions
+import mayonez.physics.Rigidbody
 import mayonez.physics.resolution.Manifold
 import mayonez.physics.shapes.BoundingBox
 import mayonez.physics.shapes.Shape
-import mayonez.graphics.Color
-import mayonez.DebugDraw
 import java.awt.Graphics2D
 
 /**
@@ -33,7 +32,7 @@ abstract class Collider(private val shapeData: Shape) : Component() {
 
     // Physics Engine Properties
 
-    var isTrigger = false
+    var trigger = false
         /**
          * Returns whether this collider is non-physical and should not react to collisions.
          *
@@ -43,20 +42,19 @@ abstract class Collider(private val shapeData: Shape) : Component() {
         private set
 
     fun setTrigger(trigger: Boolean): Collider {
-        isTrigger = trigger
+        this.trigger = trigger
         return this
     }
 
     /**
-     * If this frame's collision in [onCollision] should not be resolved by the physics engine.
+     * If this frame's collision in [startCollision] should not be resolved by the physics engine.
      */
-    var ignoreCurrentCollision = false
+    var ignoreCurrentCollision: Boolean = false
 
     /**
      * Whether the position or velocity of this collider has been modified in this frame.
      */
     var collisionResolved: Boolean = false
-
 
     // Debug Draw Properties
 
@@ -142,7 +140,7 @@ abstract class Collider(private val shapeData: Shape) : Component() {
      * @param collider another collider
      * @return the collision info, or no if there is no intersection
      */
-    fun getCollisionInfo(collider: Collider?): Manifold? {
+    fun getContacts(collider: Collider?): Manifold? {
         return Collisions.getContacts(this.transformToWorld(), collider?.transformToWorld())
     }
 
@@ -158,18 +156,37 @@ abstract class Collider(private val shapeData: Shape) : Component() {
     // Callback Methods
 
     /**
-     * A callback event broadcasted when two solid objects collide with each other.
+     * A callback event broadcasted when this object starts colliding with another object or enters a trigger area.
      *
-     * @param other the other game object
+     * @param other   the other collider
+     * @param trigger if the collision involves a trigger
      */
-    fun onCollision(other: GameObject) = gameObject.onCollision(other)
+    fun startCollision(other: Collider, trigger: Boolean) {
+        if (trigger) gameObject?.onTriggerEnter(other.gameObject ?: return)
+        else gameObject?.onCollisionEnter(other.gameObject ?: return)
+    }
 
     /**
-     * A callback event broadcasted when one solid object enters a trigger area.
+     * A callback event broadcasted when this object continues colliding with another object or stays in a trigger area.
      *
-     * @param trigger the trigger
+     * @param other   the other collider
+     * @param trigger if the collision involves a trigger
      */
-    fun onTrigger(trigger: Collider) = gameObject.onTrigger(trigger)
+    fun continueCollision(other: Collider, trigger: Boolean) {
+        if (trigger) gameObject?.onTriggerStay(other.gameObject ?: return)
+        else gameObject?.onCollisionStay(other.gameObject ?: return)
+    }
+
+    /**
+     * A callback event broadcasted when this object stops colliding with another object or exits a trigger area.
+     *
+     * @param other   the other collider
+     * * @param trigger if the collision involves a trigger
+     */
+    fun stopCollision(other: Collider, trigger: Boolean) {
+        if (trigger) gameObject?.onTriggerExit(other.gameObject ?: return)
+        else gameObject?.onCollisionExit(other.gameObject ?: return)
+    }
 
     override fun onDestroy() {
         ignoreCurrentCollision = true

@@ -2,9 +2,9 @@ package mayonez.io.image;
 
 import org.joml.*;
 import org.lwjgl.BufferUtils;
-import mayonez.io.text.TextAsset;
-import mayonez.Logger;
 import mayonez.Mayonez;
+import mayonez.Logger;
+import mayonez.io.text.TextAsset;
 import mayonez.annotations.UsesEngine;
 import mayonez.annotations.EngineType;
 

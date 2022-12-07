@@ -35,6 +35,7 @@ public abstract class GLRenderer implements Renderer {
 
     // Renderer Methods
 
+    @Override
     public void start() {
         batches.clear();
     }

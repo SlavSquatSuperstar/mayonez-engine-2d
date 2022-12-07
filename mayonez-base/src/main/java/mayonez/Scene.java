@@ -1,23 +1,25 @@
 package mayonez;
 
-import mayonez.engine.GameLayer;
 import mayonez.event.Receivable;
-import mayonez.graphics.Color;
-import mayonez.graphics.*;
+import mayonez.graphics.Camera;
+import mayonez.graphics.Colors;
+import mayonez.graphics.GLCamera;
+import mayonez.graphics.JCamera;
 import mayonez.graphics.renderer.GLSceneRenderer;
 import mayonez.graphics.renderer.JSceneRenderer;
 import mayonez.graphics.renderer.SceneRenderer;
 import mayonez.graphics.renderer.debug.DebugRenderer;
 import mayonez.graphics.renderer.debug.GLDebugRenderer;
 import mayonez.graphics.renderer.debug.JDebugRenderer;
+import mayonez.graphics.sprite.Sprite;
 import mayonez.math.Vec2;
 import mayonez.physics.PhysicsWorld;
+import mayonez.util.StringUtils;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -27,16 +29,16 @@ import java.util.stream.Collectors;
  */
 // TODO current cursor object
 // TODO draw background image
-public abstract class Scene implements GameLayer {
+public abstract class Scene {
 
-//    private static int sceneCounter = 0; // total number of game objects created
+    private static int sceneCounter = 0; // total number of game objects created
 
     // Scene Information
-//    final int sceneID;
+    final int sceneID; // UUID for this scene
     private final String name;
     private final float scale; // scene scale, or how many pixels correspond to a world unit
     private final Vec2 size; // scene size, or zero if unbounded
-    protected Color background = Colors.WHITE;
+    protected Sprite background;
 
     // Scene Layers
     private final List<GameObject> objects;
@@ -66,10 +68,11 @@ public abstract class Scene implements GameLayer {
      * @param scale  the scale of the scene
      */
     public Scene(String name, int width, int height, float scale) {
-//        sceneID = sceneCounter++;
+        sceneID = sceneCounter++;
         this.name = name;
         this.size = new Vec2(width, height).div(scale);
         this.scale = scale;
+        background = Sprite.create(Colors.WHITE);
 
         objects = new ArrayList<>();
         changesToScene = new LinkedList<>();
@@ -91,7 +94,6 @@ public abstract class Scene implements GameLayer {
     /**
      * Initialize all objects and begin updating the scene.
      */
-    @Override
     public final void start() {
         if (!started) {
             addObject(Camera.createCameraObject(camera));
@@ -144,7 +146,7 @@ public abstract class Scene implements GameLayer {
         if (started && loaded) {
             // Render background
             if (g2 != null) {
-                g2.setColor(background.toAWT());
+                g2.setColor(background.getColor().toAWT());
                 g2.fillRect(0, 0, (int) ((size.x + 1) * scale), (int) ((size.y + 1) * scale));
                 onUserRender(g2);
             }
@@ -161,7 +163,6 @@ public abstract class Scene implements GameLayer {
         if (loaded) loaded = false;
     }
 
-    @Override
     public final void stop() {
         if (started) {
             // Destroy objects
@@ -209,28 +210,18 @@ public abstract class Scene implements GameLayer {
      */
     // TODO use events
     public final void addObject(GameObject obj) {
-        // Handle duplicate names
-        int count = 0;
-        String fmtName = obj.getName();
-        for (GameObject found = getObject(obj.getName()); found != null; found = getObject(fmtName))
-            fmtName = String.format("%s (%d)", obj.getName(), ++count);
-        obj.setName(fmtName);
-
-        if (started) { // Dynamic add: add to scene and layers in next frame
-            changesToScene.offer((_args) -> {
-                objects.add(obj.setScene(this));
-                obj.start(); // add object components so renderer and physics can access it
-                if (started) { // Dynamic add
-                    renderer.addObject(obj);
-                    physics.addObject(obj);
-                }
-                Logger.debug("Game: Added object \"%s\" to scene \"%s\"", obj.getName(), this.name);
-            });
-        } else { // Static add: add to scene, and add to layers on start
+        if (obj == null) return;
+        Receivable addObject = (_args) -> {
             objects.add(obj.setScene(this));
             obj.start(); // add object components so renderer and physics can access it
-            Logger.debug("Game: Added object \"%s\" to scene \"%s\"", obj.getName(), this.name);
-        }
+            if (started) { // Dynamic add
+                renderer.addObject(obj);
+                physics.addObject(obj);
+            }
+            Logger.debug("Game: Added object \"%s [ID %d]\" to scene \"%s\"", obj.name, obj.objectID, this.name);
+        };
+        if (started) changesToScene.offer(addObject); // Dynamic add: add to scene and layers in next frame
+        else addObject.onReceive();
     }
 
     /**
@@ -239,24 +230,25 @@ public abstract class Scene implements GameLayer {
      * @param obj a {@link GameObject}
      */
     public final void removeObject(GameObject obj) {
+        if (obj == null) return;
         changesToScene.offer((_args) -> {
             objects.remove(obj);
             renderer.removeObject(obj);
             physics.removeObject(obj);
             obj.onDestroy();
-            Logger.debug("Game: Removed object \"%s\" from scene \"%s\"", obj.getName(), this.name);
+            Logger.debug("Game: Removed object \"%s [ID %d]\" from scene \"%s\"", obj.name, obj.objectID, this.name);
         });
     }
 
     /**
      * Finds the {@link GameObject} with the given name. For consistent results, avoid duplicate names.
      *
-     * @param name a unique object identifier
+     * @param name the object name
      * @return the object
      */
     public GameObject getObject(String name) {
         for (GameObject o : objects) {
-            if (o.getName().equalsIgnoreCase(name)) return o;
+            if (o.name.equalsIgnoreCase(name)) return o;
         }
         return null;
     }
@@ -328,7 +320,7 @@ public abstract class Scene implements GameLayer {
      *
      * @param background an RGB color
      */
-    public void setBackground(Color background) {
+    public void setBackground(Sprite background) {
         this.background = background;
     }
 
@@ -350,9 +342,24 @@ public abstract class Scene implements GameLayer {
     }
 
     @Override
+    public boolean equals(Object obj) {
+        return obj == this;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(sceneID, name);
+    }
+
+    @Override
     public String toString() {
-        return String.format("%s (%s)", name, getClass().isAnonymousClass() ?
-                "Scene" : getClass().getSimpleName());
+        // Use Scene for class name if anonymous instance
+        return String.format(
+                "%s [ID = %d] (%s)",
+                name, sceneID,
+                StringUtils.getClassName(this, "Scene")
+        );
+
     }
 
 }

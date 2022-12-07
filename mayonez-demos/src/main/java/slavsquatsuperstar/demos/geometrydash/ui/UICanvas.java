@@ -1,12 +1,11 @@
 package slavsquatsuperstar.demos.geometrydash.ui;
 
-import slavsquatsuperstar.demos.geometrydash.components.PlaceBlock;
-import mayonez.math.Vec2;
 import mayonez.GameObject;
 import mayonez.Transform;
 import mayonez.annotations.ExperimentalFeature;
 import mayonez.graphics.sprite.SpriteSheet;
-import mayonez.scripts.Counter;
+import mayonez.math.Vec2;
+import slavsquatsuperstar.demos.geometrydash.components.PlaceBlock;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,9 +25,7 @@ public class UICanvas extends GameObject {
 
     @Override
     protected void init() {
-        Counter counter;
-        addComponent(counter = new Counter(0f, 0.2f, true).setInitialValue(0));
-        addComponent(placeBlock = new PlaceBlock(counter));
+        addComponent(placeBlock = new PlaceBlock());
 
 //        int cols = 6;
         int rows = 2;

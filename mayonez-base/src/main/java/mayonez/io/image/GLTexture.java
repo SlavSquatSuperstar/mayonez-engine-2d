@@ -1,9 +1,9 @@
 package mayonez.io.image;
 
 import org.lwjgl.BufferUtils;
+import mayonez.Logger;
 import mayonez.io.IOUtils;
 import mayonez.math.Vec2;
-import mayonez.Logger;
 import mayonez.annotations.UsesEngine;
 import mayonez.annotations.EngineType;
 import mayonez.physics.shapes.Rectangle;

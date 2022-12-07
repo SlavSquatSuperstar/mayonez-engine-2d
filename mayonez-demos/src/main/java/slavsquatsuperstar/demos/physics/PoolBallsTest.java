@@ -9,6 +9,9 @@ import mayonez.Mayonez;
 import mayonez.physics.PhysicsMaterial;
 import mayonez.physics.Rigidbody;
 import mayonez.physics.colliders.BallCollider;
+import mayonez.scripts.movement.DragAndDrop;
+import mayonez.scripts.movement.MouseFlick;
+import mayonez.scripts.movement.MoveMode;
 
 /**
  * Pool balls weigh ~160-170 g (0.165 kg) are ~57 mm (0.057 m) wide. Using an 80:1 scale, the in-game balls weigh 6.6 kg

@@ -12,27 +12,41 @@ object Random {
     /**
      * Generates a random integer between the two provided bounds.
      *
-     * @param min the lower bound (inclusive)
-     * @param max the maximum bound (inclusive)
+     * @param min the lower bound
+     * @param max the upper bound
      * @return the random float
      */
     @JvmStatic
     fun randomFloat(min: Float, max: Float): Float {
         val range = Range(min, max)
-        return (Math.random() * (range.max - range.min + Float.MIN_VALUE)).toFloat() + range.min
+        return (Math.random() * (range.max - range.min)).toFloat() + range.min
     }
 
     /**
      * Generates a random integer between the two provided bounds.
      *
      * @param min the lower bound (inclusive)
-     * @param max the maximum bound (inclusive)
-     * @return The random integer.
+     * @param max the upper bound (inclusive)
+     * @return the random integer
      */
     @JvmStatic
     fun randomInt(min: Int, max: Int): Int {
         val range = Range(min.toFloat(), max.toFloat())
         return (Math.random() * (range.max - range.min + 1) + range.min).toInt()
+    }
+
+    /**
+     * Generates a random vector between the provided x and y bounds.
+     *
+     * @param minX the lower x bound
+     * @param maxX the upper x bound
+     * @param minY the lower y bound
+     * @param maxY the upper y bound
+     * @return the random vector
+     */
+    @JvmStatic
+    fun randomVector(minX: Float, maxX: Float, minY: Float, maxY: Float): Vec2 {
+        return Vec2(randomFloat(minX, maxX), randomFloat(minY, maxY))
     }
 
     /**

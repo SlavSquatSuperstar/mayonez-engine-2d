@@ -1,7 +1,6 @@
 package mayonez.graphics.renderer;
 
 import mayonez.SceneManager;
-import mayonez.engine.GameLayer;
 import mayonez.graphics.Camera;
 
 import java.awt.*;
@@ -11,7 +10,7 @@ import java.awt.*;
  *
  * @author SlavSquatSuperstar
  */
-public interface Renderer extends GameLayer {
+public interface Renderer {
 
     // Game Loop Methods
 

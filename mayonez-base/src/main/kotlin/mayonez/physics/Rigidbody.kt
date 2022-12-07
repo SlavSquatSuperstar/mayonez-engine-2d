@@ -2,8 +2,10 @@ package mayonez.physics
 
 import mayonez.Component
 import mayonez.math.FloatMath
+import mayonez.math.FloatMath.clamp
 import mayonez.math.Vec2
 import mayonez.physics.colliders.Collider
+import kotlin.math.abs
 
 /**
  * A physical object with mass that responds to forces and collisions. Rigid bodies do not deform when forces are
@@ -13,7 +15,7 @@ import mayonez.physics.colliders.Collider
  */
 class Rigidbody(mass: Float, drag: Float, angDrag: Float) : Component() {
 
-    constructor(mass: Float) : this(mass, 0.05f, 0.05f)
+    constructor(mass: Float) : this(mass, 0f, 0f)
 
     // Component References
 
@@ -59,24 +61,36 @@ class Rigidbody(mass: Float, drag: Float, angDrag: Float) : Component() {
     var velocity: Vec2 = Vec2()
     val speed: Float
         get() = velocity.len()
+
     /**
      * The angular (rotational) velocity of the body, ω, in degrees counterclockwise.
      */
     var angVelocity: Float = 0f
+    val angSpeed: Float
+        get() = abs(angVelocity)
 
     // Dynamics Properties (Force, Drag)
 
     private var netForce: Vec2 = Vec2()
     private var netTorque: Float = 0f
 
-    var drag: Float = drag
-        set(drag) {
-            field = FloatMath.clamp(drag, 0f, 1f)
-        }
-    var angDrag: Float = angDrag
-        set(angDrag) {
-            field = FloatMath.clamp(angDrag, 0f, 1f)
-        }
+    /**
+     * The body's drag, which represents a damping force proportional to its negative linear velocity. A drag of 0 means
+     * all velocity is conserved during motion and 1 means all velocity is quickly lost without acceleration.
+     */
+    var drag: Float = clamp(drag, 0f, 1f)
+//        set(drag) {
+//            field = clamp(drag, 0f, 1f)
+//        }
+
+    /**
+     * The body's angular drag, which represents a damping torque proportional to its negative angular velocity. A drag
+     * of 0 means all velocity is conserved during motion and 1 means all velocity is quickly lost without acceleration.
+     */
+    var angDrag: Float = clamp(angDrag, 0f, 1f)
+//        set(angDrag) {
+//            field = clamp(angDrag, 0f, 1f)
+//        }
 
     // Physics Engine Properties
 
@@ -118,13 +132,15 @@ class Rigidbody(mass: Float, drag: Float, angDrag: Float) : Component() {
     fun integrateForce(dt: Float) {
         if (infiniteMass) return
 
-        if (!FloatMath.equals(velocity.lenSq(), 0f)) // Apply drag first
-            applyForce(velocity * -drag)
+        // Apply drag first, setting velocity to 0 for small speeds
+
+        if (FloatMath.equals(velocity.lenSq(), 0f, 0.0005f)) velocity.set(Vec2(0f))
+        else netForce += -velocity * drag
         velocity += netForce * (invMass * dt)
 
         if (!fixedRotation) {
-            if (!FloatMath.equals(angVelocity, 0f))
-                applyTorque(FloatMath.toRadians(angVelocity) * -angDrag)
+            if (FloatMath.equals(angVelocity, 0f, 0.0005f)) angVelocity = 0f
+            else netTorque += -FloatMath.toRadians(angVelocity) * drag
             angVelocity += FloatMath.toDegrees(netTorque) * invAngMass * dt
         }
 
@@ -186,6 +202,15 @@ class Rigidbody(mass: Float, drag: Float, angDrag: Float) : Component() {
      */
     fun applyAcceleration(acceleration: Vec2?) {
         netForce += (acceleration ?: return) * invMass // dF = a/m
+    }
+
+    /**
+     * Accelerates this body in the given direction.
+     *
+     * @param angAcceleration a vector with the units `deg/s/s (α)`
+     */
+    fun applyAngularAcceleration(angAcceleration: Float) {
+        netTorque += angAcceleration * invAngMass // dT = A/I
     }
 
     /**

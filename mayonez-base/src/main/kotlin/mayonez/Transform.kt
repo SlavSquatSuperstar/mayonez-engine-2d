@@ -97,12 +97,20 @@ class Transform(
     // Space Transform Methods
 
     /**
-     * Returns the x-axis, or the vector (1, 0), in this transform's local space.
+     * Returns the positive x-axis, or the vector (1, 0), in this transform's local space.
      *
      * @return the local x-axis
      */
-    val direction: Vec2
+    val right: Vec2
         get() = Vec2(1f, 0f).rotate(rotation)
+
+    /**
+     * Returns the positive y-axis, or the vector (0, 1), in this transform's local space.
+     *
+     * @return the local y-axis
+     */
+    val up: Vec2
+        get() = Vec2(0f, 1f).rotate(rotation)
 
     /**
      * Transforms a point from world space to the object's local space, with this Transform's position serving as the

@@ -2,6 +2,7 @@ package mayonez.io
 
 import org.reflections.Reflections
 import org.reflections.scanners.Scanners
+import mayonez.Logger
 import mayonez.Mayonez
 import mayonez.io.image.GLTexture
 import mayonez.io.image.JTexture
@@ -10,7 +11,6 @@ import mayonez.io.image.Texture
 import mayonez.io.text.CSVFile
 import mayonez.io.text.JSONFile
 import mayonez.io.text.TextFile
-import mayonez.Logger
 import java.io.File
 import java.net.MalformedURLException
 import java.net.URL

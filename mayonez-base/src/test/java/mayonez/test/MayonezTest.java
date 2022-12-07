@@ -1,6 +1,10 @@
 package mayonez.test;
 
+import mayonez.GameObject;
+import mayonez.Script;
 import mayonez.graphics.Color;
+import mayonez.math.Vec2;
+import mayonez.physics.Rigidbody;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -16,6 +20,14 @@ import java.util.List;
 public class MayonezTest {
 
     public static void main(String[] args) throws Exception {
+        GameObject o = new GameObject("", new Vec2());
+        o.addComponent(new Script() {
+        });
+        o.addComponent(new Script() {
+        });
+        o.addComponent(new Rigidbody(0f));
+        o.addComponent(new Rigidbody(0f));
+
         Color red = new Color(255, 0, 0, 0);
         System.out.println(red);
         System.out.println(red.hexCode(true));

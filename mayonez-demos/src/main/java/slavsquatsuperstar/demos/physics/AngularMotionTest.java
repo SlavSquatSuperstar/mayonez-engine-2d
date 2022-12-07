@@ -9,10 +9,10 @@ import mayonez.physics.Rigidbody;
 import mayonez.physics.colliders.BallCollider;
 import mayonez.physics.colliders.BoxCollider;
 import mayonez.physics.colliders.Collider;
-import mayonez.scripts.DragAndDrop;
+import mayonez.scripts.movement.DragAndDrop;
 import mayonez.scripts.KeepInScene;
-import mayonez.scripts.MouseFlick;
-import mayonez.scripts.MoveMode;
+import mayonez.scripts.movement.MouseFlick;
+import mayonez.scripts.movement.MoveMode;
 import mayonez.graphics.Colors;
 
 public class AngularMotionTest extends PhysicsTestScene {

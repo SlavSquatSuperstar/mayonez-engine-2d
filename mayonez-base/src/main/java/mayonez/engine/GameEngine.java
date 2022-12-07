@@ -1,17 +1,17 @@
 package mayonez.engine;
 
+import mayonez.Logger;
 import mayonez.Mayonez;
 import mayonez.Scene;
 import mayonez.SceneManager;
 import mayonez.math.FloatMath;
-import mayonez.Logger;
 
 /**
  * The application that contains the engine's core loop.
  *
  * @author SlavSquatSuperstar
  */
-public abstract sealed class GameEngine implements GameLayer permits JGame, GLGame {
+public abstract sealed class GameEngine permits JGame, GLGame {
 
     private boolean running = false;
     protected Window window;
@@ -24,7 +24,6 @@ public abstract sealed class GameEngine implements GameLayer permits JGame, GLGa
     /**
      * Set up system resources and initialize the application.
      */
-    @Override
     public final void start() {
         if (!running) {
             running = true;
@@ -37,7 +36,6 @@ public abstract sealed class GameEngine implements GameLayer permits JGame, GLGa
     /**
      * Free system resources and quit the application.
      */
-    @Override
     public final void stop() {
         if (running) {
             running = false;

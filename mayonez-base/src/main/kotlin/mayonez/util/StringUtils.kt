@@ -33,8 +33,6 @@ object StringUtils {
         return string.split(delimiter).toTypedArray()
     }
 
-    // todo parse other types
-
     // Case Conversion Methods
 
     /**
@@ -87,6 +85,21 @@ object StringUtils {
     fun sortStrings(s1: String, s2: String, ignoreCase: Boolean): String {
         return if (ignoreCase) if (s1 < s2) s1 else s2
         else if (s1.compareTo(s2, true) < 0) s1 else s2
+    }
+
+    // To String Methods
+    /**
+     * Returns simple name of an object's class, without the package name.
+     *
+     * @param obj           an object
+     * @param anonymousName the name to return if the object is anonymous
+     * @return the object's class name, or "null" if the object is null
+     */
+    @JvmStatic
+    fun getClassName(obj: Any?, anonymousName: String): String {
+        return if (obj == null) "null"
+        else if (obj.javaClass.isAnonymousClass) anonymousName
+        else obj.javaClass.simpleName
     }
 
 }

@@ -9,8 +9,8 @@ import mayonez.math.Vec2;
 import mayonez.physics.Rigidbody;
 import mayonez.physics.colliders.BoxCollider;
 import mayonez.scripts.KeepInScene;
-import mayonez.scripts.KeyMovement;
-import mayonez.scripts.MoveMode;
+import mayonez.scripts.movement.KeyMovement;
+import mayonez.scripts.movement.MoveMode;
 import slavsquatsuperstar.demos.geometrydash.components.PlayerController;
 
 import java.awt.*;

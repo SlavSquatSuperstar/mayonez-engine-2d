@@ -1,8 +1,8 @@
 package mayonez.io.text;
 
+import mayonez.Logger;
 import mayonez.io.Asset;
 import mayonez.io.IOUtils;
-import mayonez.Logger;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;

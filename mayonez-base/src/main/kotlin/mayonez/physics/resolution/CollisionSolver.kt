@@ -1,5 +1,6 @@
 package mayonez.physics.resolution
 
+import mayonez.math.Vec2
 import mayonez.physics.PhysicsMaterial
 import mayonez.physics.Rigidbody
 import mayonez.physics.colliders.Collider
@@ -11,14 +12,14 @@ import kotlin.math.sign
  *
  * @author SlavSquatSuperstar
  */
-class CollisionSolver(private val c1: Collider, private val c2: Collider, private var manifold: Manifold) {
+internal class CollisionSolver(private val c1: Collider, private val c2: Collider, private var manifold: Manifold) {
 
     private val r1: Rigidbody = c1.rigidbody ?: Rigidbody(0f)
     private val r2: Rigidbody = c2.rigidbody ?: Rigidbody(0f)
 
     // Collision Properties
-    private val normal = manifold.normal // Collision direction
-    private val tangent = normal.normal() // Collision plane
+    private lateinit var normal: Vec2 // Collision direction
+    private lateinit var tangent: Vec2 // Collision plane
 
     /*
      * Types of Collisions
@@ -37,6 +38,8 @@ class CollisionSolver(private val c1: Collider, private val c2: Collider, privat
     fun solve() {
         if (c1.isStatic() && c2.isStatic()) return // Check masses once, cannot both be static
         if (!recheck()) return
+        normal = manifold.normal
+        tangent = normal.normal()
         solveStatic()
         solveDynamic()
         c1.collisionResolved = true
@@ -50,7 +53,7 @@ class CollisionSolver(private val c1: Collider, private val c2: Collider, privat
      */
     private fun recheck(): Boolean {
         if (c1.collisionResolved || c2.collisionResolved)
-            manifold = c1.getCollisionInfo(c2) ?: return false
+            manifold = c1.getContacts(c2) ?: return false
         return true
     }
 
@@ -83,7 +86,6 @@ class CollisionSolver(private val c1: Collider, private val c2: Collider, privat
             val denom = contact.getDenominator(normal, sumInvM, invI1, invI2)
             contact.normImp = -(1f + cRest) * normVel / (denom * manifold.numContacts())
         }
-        for (contact in contacts) contact.applyImpulse(r1, r2, normal * contact.normImp)
 
         // Calculate and apply tangent impulses
         for (contact in contacts) {
@@ -99,6 +101,7 @@ class CollisionSolver(private val c1: Collider, private val c2: Collider, privat
             if (abs(tanImp) > abs(normImp * sFric)) tanImp = sign(tanImp) * normImp * kFric
             contact.tanImp = tanImp
         }
+        for (contact in contacts) contact.applyImpulse(r1, r2, normal * contact.normImp)
         for (contact in contacts) contact.applyImpulse(r1, r2, tangent * contact.tanImp)
     }
 

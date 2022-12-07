@@ -9,7 +9,7 @@ import mayonez.input.MouseInput;
  *
  * @author SlavSquatSuperstar
  */
-public sealed interface Window extends GameLayer permits JWindow, GLWindow {
+public sealed interface Window permits JWindow, GLWindow {
 
     // Property Getters
 
@@ -24,13 +24,11 @@ public sealed interface Window extends GameLayer permits JWindow, GLWindow {
     /**
      * Initialize the window and setup system resources.
      */
-    @Override
     void start();
 
     /**
      * Destroy the window and free system resources.
      */
-    @Override
     void stop();
 
     // Game Loop Methods

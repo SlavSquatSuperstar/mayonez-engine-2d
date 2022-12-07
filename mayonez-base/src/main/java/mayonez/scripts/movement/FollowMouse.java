@@ -1,4 +1,4 @@
-package mayonez.scripts;
+package mayonez.scripts.movement;
 
 import mayonez.input.MouseInput;
 import mayonez.math.Vec2;

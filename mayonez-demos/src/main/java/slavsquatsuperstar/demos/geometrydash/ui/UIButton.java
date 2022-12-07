@@ -10,7 +10,7 @@ import mayonez.input.MouseInput;
 import mayonez.io.image.JTexture;
 import mayonez.io.image.Texture;
 import mayonez.physics.colliders.BoxCollider;
-import mayonez.scripts.MouseScript;
+import mayonez.scripts.movement.MouseScript;
 
 @ExperimentalFeature
 public class UIButton extends GameObject {

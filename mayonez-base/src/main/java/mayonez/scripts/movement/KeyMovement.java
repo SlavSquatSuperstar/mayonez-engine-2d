@@ -1,27 +1,36 @@
-package mayonez.scripts;
+package mayonez.scripts.movement;
 
 import mayonez.math.Vec2;
 import mayonez.Mayonez;
 import mayonez.input.KeyInput;
 
 /**
- * Allows objects to be moved with the WASD/arrow keys.
+ * Allows objects to be moved with keyboard controls.
  *
  * @author SlavSquatSuperstar
  */
 public class KeyMovement extends MovementScript {
 
-    private String xAxis = "horizontal";
-    private String yAxis = "vertical";
+    private final String xAxis, yAxis;
+    private boolean objectAligned; // Whether to align movement with object's rotation
 
     public KeyMovement(MoveMode mode, float speed) {
+        this(mode, speed, "horizontal", "vertical");
+    }
+
+    public KeyMovement(MoveMode mode, float speed, String xAxis, String yAxis) {
         super(mode, speed);
+        this.xAxis = xAxis;
+        this.yAxis = yAxis;
+        objectAligned = false;
     }
 
     @Override
     public void update(float dt) {
-        // Don't want to move faster diagonally so normalize
-        Vec2 input = getRawInput().unit().mul(speed).rotate(transform.rotation);
+
+        Vec2 input = getRawInput().unit().mul(speed); // Normalize so don't move faster diagonally
+        if (objectAligned) input = input.rotate(transform.rotation); // Align to object space if enabled
+
         switch (mode) {
             case POSITION -> transform.move(input.mul(Mayonez.TIME_STEP));
             case VELOCITY -> rb.addVelocity(input);
@@ -30,7 +39,7 @@ public class KeyMovement extends MovementScript {
             case FORCE -> rb.applyForce(input);
         }
         // Limit Top Speed
-        if (rb != null && topSpeed > -1 && rb.getSpeed() > topSpeed)
+        if (rb != null && topSpeed > 0 && rb.getSpeed() > topSpeed)
             rb.setVelocity(rb.getVelocity().mul(topSpeed / rb.getSpeed()));
     }
 
@@ -44,4 +53,8 @@ public class KeyMovement extends MovementScript {
         return this;
     }
 
+    public KeyMovement setObjectAligned(boolean objectAligned) {
+        this.objectAligned = objectAligned;
+        return this;
+    }
 }

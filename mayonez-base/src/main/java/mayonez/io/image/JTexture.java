@@ -1,9 +1,9 @@
 package mayonez.io.image;
 
-import mayonez.math.FloatMath;
-import mayonez.math.Vec2;
 import mayonez.Logger;
 import mayonez.Transform;
+import mayonez.math.FloatMath;
+import mayonez.math.Vec2;
 import mayonez.annotations.UsesEngine;
 import mayonez.annotations.EngineType;
 

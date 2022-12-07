@@ -16,6 +16,10 @@ import mayonez.physics.shapes.Ellipse;
 import mayonez.physics.shapes.Rectangle;
 import mayonez.physics.shapes.Triangle;
 import mayonez.scripts.*;
+import mayonez.scripts.movement.DragAndDrop;
+import mayonez.scripts.movement.KeyMovement;
+import mayonez.scripts.movement.MouseScript;
+import mayonez.scripts.movement.MoveMode;
 
 /**
  * For testing renderer, camera, and world to screen coordinates.
@@ -41,7 +45,7 @@ public class RendererTest extends Scene {
                 Transform.scaleInstance(new Vec2(2))) {
             @Override
             protected void init() {
-                getScene().getCamera().setSubject(this).setKeepInScene(false);
+                getScene().getCamera().setSubject(this).setKeepInScene(true);
                 addComponent(sprites.getSprite(0));
                 addComponent(new BoxCollider(new Vec2(0.8f, 1)));
                 addComponent(new Rigidbody(1f).setFixedRotation(true));
@@ -102,6 +106,8 @@ public class RendererTest extends Scene {
 
     @Override
     protected void onUserUpdate(float dt) {
+        if (KeyInput.keyPressed("r")) SceneManager.reloadScene(); // reload scene
+
         DebugDraw.drawLine(new Vec2(-4, -4), new Vec2(-4, 4), Colors.RED);
         DebugDraw.drawLine(new Vec2(-4, 4), new Vec2(4, 4), Colors.GREEN);
         DebugDraw.drawLine(new Vec2(4, 4), new Vec2(4, -4), Colors.BLUE);
@@ -137,9 +143,8 @@ public class RendererTest extends Scene {
     }
 
     private GameObject createEnemy(String name, int spriteIndex) {
-        float randomX = Random.randomFloat(-getWidth() / 2f, getWidth() / 2f);
-        float randomY = Random.randomFloat(-getHeight() / 2f, getHeight() / 2f);
-        return new GameObject(name, new Vec2(randomX, randomY)) {
+        Vec2 randomPos = Random.randomVector(-getWidth(), getWidth(), -getHeight(), getHeight()).mul(0.5f);
+        return new GameObject(name, randomPos) {
             @Override
             protected void init() {
                 addComponent(sprites.getSprite(spriteIndex));
@@ -149,8 +154,10 @@ public class RendererTest extends Scene {
             }
 
             @Override
-            public void onCollision(GameObject other) {
-                if (other.getName().equals("Mario")) setDestroyed();
+            public void onCollisionStay(GameObject other) {
+                if (other.name.equals("Mario")) {
+                    setDestroyed();
+                }
             }
         };
     }

@@ -1,99 +1,97 @@
 package mayonez.scripts;
 
-import mayonez.math.Range;
 import mayonez.Script;
+import mayonez.math.Range;
 
+/**
+ * A script that tracks a quantity, manually increments it, and can be reset.
+ *
+ * @author SlavSquatSuperstar
+ */
 public class Counter extends Script {
 
-    // Counter Status
-    private boolean started; // whether start counting
-    private boolean countDown; // the count direction
-
-    // Counter Parameters
-    private final Range interval;
-    private float increment = 0;
+    private Range interval; // min and max
     private float value; // current value
 
     /**
-     * Creates a counter that counts automatically in real time as the game updates.
+     * Create a counter with the given interval and set its starting value.
      *
-     * @param min       the minimum value the counter should reach
-     * @param max       the maximum value the counter should reach
-     * @param countDown whether to count down to 0 rather than up from 0
+     * @param min        the lowest value the counter should reach
+     * @param max        the highest value the counter should reach
+     * @param startValue where the counter should begin
      */
-    public Counter(float min, float max, boolean countDown) {
-        interval = new Range(min, max);
-        this.countDown = countDown;
-        reset();
-    }
-
-    /**
-     * Creates a counter that counts manually upon the user's input.
-     *
-     * @param min       the minimum value the counter should reach
-     * @param max       the maximum value the counter should reach
-     * @param increment how much to change the value each count
-     */
-    public Counter(float min, float max, boolean countdown, float increment) {
-        this(min, max, countdown);
-        this.increment = increment;
-    }
-
-    @Override
-    public void start() {
-        started = true;
-    }
-
-    @Override
-    public void update(float dt) {
-        if (started && increment == 0) { // auto count if increment not set
-            if (countDown) value -= dt;
-            else value += dt;
-        }
+    public Counter(float min, float max, float startValue) {
+        this.interval = new Range(min, max);
+        value = startValue;
     }
 
     // Getters and Setters
+
+    /**
+     * Counts up or down by the given value.
+     *
+     * @param step now much to count
+     */
+    public void count(float step) {
+        value += step;
+    }
+
+    public float getMin() {
+        return interval.min;
+    }
+
+    public float getMax() {
+        return interval.max;
+    }
 
     public float getValue() {
         return value;
     }
 
     /**
-     * Query whether the counter value has reached the target value. If counting up, returns true once value is greater
-     * than or equal to max. If * counting down, returns true once value is less than or equal to min.
+     * Whether the counter has count down to its min value.
      *
      * @return if the counter is ready
      */
-    public boolean isReady() {
-        return countDown ? value <= interval.min : value >= interval.max;
-    }
-
-    public Counter setInitialValue(float value) {
-        this.value = value;
-        return this;
+    public boolean isAtMin() {
+        return value <= interval.min;
     }
 
     /**
-     * Set the starting value of the counter, depending on the direction.
-     */
-    public void reset() {
-        value = countDown ? interval.max : interval.min;
-    }
-
-    /**
-     * Manually tick the counter by the defined increment.
-     */
-    public void count() {
-        value += increment;
-    }
-
-    /**
-     * Start or pause the counter.
+     * Whether the counter has count up to its max value.
      *
-     * @param started if the counter should continue counting
+     * @return if the counter is ready
      */
-    public void setStarted(boolean started) {
-        this.started = started;
+    public boolean isAtMax() {
+        return value >= interval.max;
     }
 
+    /**
+     * Reset the counter to its min value.
+     */
+    public void resetToMin() {
+        value = interval.min;
+    }
+
+    /**
+     * Reset the counter to its max value.
+     */
+    public void resetToMax() {
+        value = interval.max;
+    }
+
+    /**
+     * Set the counter's count interval.
+     *
+     * @param min the lower bound
+     * @param max the upper bound
+     */
+    public void setInterval(float min, float max) {
+        this.interval = new Range(min, max);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Counter (%.4f-%.4f, %.4f )", value, interval.min, interval.max);
+    }
 }

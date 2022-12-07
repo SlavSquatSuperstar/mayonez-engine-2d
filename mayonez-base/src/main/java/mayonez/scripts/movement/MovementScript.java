@@ -1,8 +1,8 @@
-package mayonez.scripts;
+package mayonez.scripts.movement;
 
-import mayonez.math.Vec2;
 import mayonez.Logger;
 import mayonez.Script;
+import mayonez.math.Vec2;
 import mayonez.physics.Rigidbody;
 
 /**
@@ -31,7 +31,7 @@ public abstract class MovementScript extends Script {
     }
 
     /**
-     * Detect the player's input.
+     * Detect the user's input.
      *
      * @return the input vector
      */

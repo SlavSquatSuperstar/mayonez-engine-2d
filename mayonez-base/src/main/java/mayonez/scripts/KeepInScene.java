@@ -1,9 +1,9 @@
 package mayonez.scripts;
 
-import mayonez.math.FloatMath;
-import mayonez.math.Vec2;
 import mayonez.Logger;
 import mayonez.Script;
+import mayonez.math.FloatMath;
+import mayonez.math.Vec2;
 import mayonez.physics.Rigidbody;
 import mayonez.physics.colliders.Collider;
 import mayonez.physics.shapes.BoundingBox;
@@ -57,7 +57,7 @@ public class KeepInScene extends Script {
             setEnabled(false); // disable script if no collider
         }
 
-        rb = objectCollider.getRigidbody();
+        rb = getRigidbody();
         if (rb == null) {
             if (mode == Mode.BOUNCE) {
                 Logger.warn("%s needs a rigidbody to bounce!", this);
@@ -159,25 +159,25 @@ public class KeepInScene extends Script {
             case LEFT -> {
                 switch (mode) {
                     case WRAP -> setX(maxPos.x + objectBounds.width * 0.5f);
-                    case DELETE -> gameObject.setDestroyed();
+                    case DESTROY -> gameObject.setDestroyed();
                 }
             }
             case RIGHT -> {
                 switch (mode) {
                     case WRAP -> setX(minPos.x - objectBounds.width * 0.5f);
-                    case DELETE -> gameObject.setDestroyed();
+                    case DESTROY -> gameObject.setDestroyed();
                 }
             }
             case TOP -> {
                 switch (mode) {
                     case WRAP -> setY(maxPos.y + objectBounds.height * 0.5f);
-                    case DELETE -> gameObject.setDestroyed();
+                    case DESTROY -> gameObject.setDestroyed();
                 }
             }
             case BOTTOM -> {
                 switch (mode) {
                     case WRAP -> setY(minPos.y - objectBounds.height * 0.5f);
-                    case DELETE -> gameObject.setDestroyed();
+                    case DESTROY -> gameObject.setDestroyed();
                 }
             }
         }
@@ -213,7 +213,7 @@ public class KeepInScene extends Script {
         /**
          * Remove an object from the scene when passing an edge.
          */
-        DELETE
+        DESTROY
     }
 
     protected enum Direction {

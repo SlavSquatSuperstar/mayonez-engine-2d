@@ -1,16 +1,19 @@
 package slavsquatsuperstar.demos.physics;
 
 import mayonez.*;
-import mayonez.math.Vec2;
-import mayonez.scripts.*;
 import mayonez.graphics.Color;
 import mayonez.graphics.Colors;
 import mayonez.input.KeyInput;
+import mayonez.math.Vec2;
 import mayonez.physics.PhysicsMaterial;
 import mayonez.physics.Rigidbody;
-import mayonez.physics.colliders.BoxCollider;
 import mayonez.physics.colliders.BallCollider;
+import mayonez.physics.colliders.BoxCollider;
 import mayonez.physics.colliders.Collider;
+import mayonez.scripts.movement.DragAndDrop;
+import mayonez.scripts.KeepInScene;
+import mayonez.scripts.movement.MouseFlick;
+import mayonez.scripts.movement.MoveMode;
 
 import java.awt.*;
 
@@ -26,7 +29,6 @@ public abstract class PhysicsTestScene extends Scene {
 
     public PhysicsTestScene(String name, int numShapes) {
         super(name, Preferences.getScreenWidth(), Preferences.getScreenHeight(), 10);
-        setBackground(Colors.WHITE);
         NUM_SHAPES = numShapes;
         setGravity(new Vec2());
         getCamera().setPosition(getSize().mul(0.5f));
@@ -47,7 +49,7 @@ public abstract class PhysicsTestScene extends Scene {
                 if (color != null && !col.isStatic()) {
                     DebugDraw.drawPoint(col.center(), Colors.BLACK);
                     DebugDraw.drawVector(col.center(), col.getRigidbody().getVelocity().mul(0.1f), color);
-                    DebugDraw.drawVector(col.getRigidbody().getPosition(), col.getRigidbody().getTransform().getDirection(), Colors.BLACK);
+                    DebugDraw.drawVector(col.getRigidbody().getPosition(), col.getRigidbody().getTransform().getRight(), Colors.BLACK);
 //                    DebugDraw.drawShape(col, color); // Draw Shape
                 }
             }
@@ -91,7 +93,7 @@ public abstract class PhysicsTestScene extends Scene {
                 addComponent(new Rigidbody(circle.getMass(DENSITY)).setMaterial(material));
                 addComponent(new KeepInScene(new Vec2(), getScene().getSize(), KeepInScene.Mode.BOUNCE));
                 addComponent(new DragAndDrop("left mouse"));
-                addComponent(new MouseFlick(MoveMode.VELOCITY, "right mouse", 15, false));
+                addComponent(new MouseFlick(MoveMode.VELOCITY, "right mouse", 25f, false));
             }
         };
     }
@@ -100,13 +102,13 @@ public abstract class PhysicsTestScene extends Scene {
         return new GameObject("Box", position) {
             @Override
             protected void init() {
-//                transform.rotate(rotation);
+                transform.rotate(rotation);
                 Collider box = new BoxCollider(size).setDebugDraw(Colors.ORANGE, false);
                 addComponent(box);
                 addComponent(new Rigidbody(box.getMass(DENSITY)).setMaterial(material));
                 addComponent(new KeepInScene(new Vec2(), getScene().getSize(), KeepInScene.Mode.BOUNCE));
                 addComponent(new DragAndDrop("left mouse"));
-                addComponent(new MouseFlick(MoveMode.VELOCITY, "right mouse", 15, false));
+                addComponent(new MouseFlick(MoveMode.VELOCITY, "right mouse", 25, false));
             }
         };
     }

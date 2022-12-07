@@ -1,6 +1,7 @@
 package mayonez
 
 import mayonez.graphics.Colors
+import mayonez.graphics.sprite.Sprite
 
 /**
  * Provides an interface to the user for reloading and switching scenes.
@@ -20,7 +21,7 @@ object SceneManager {
     @JvmStatic
     var currentScene: Scene = object : Scene("Default Scene") {
         override fun init() {
-            setBackground(Colors.RED)
+            setBackground(Sprite.create(Colors.RED))
         }
     }
         private set

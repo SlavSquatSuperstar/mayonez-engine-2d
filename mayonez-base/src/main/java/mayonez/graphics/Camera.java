@@ -5,7 +5,7 @@ import mayonez.GameObject;
 import mayonez.Script;
 import mayonez.input.MouseInput;
 import mayonez.physics.colliders.BoxCollider;
-import mayonez.scripts.DragAndDrop;
+import mayonez.scripts.movement.DragAndDrop;
 import mayonez.scripts.KeepInScene;
 
 /**

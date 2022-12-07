@@ -1,10 +1,10 @@
-package mayonez.scripts;
+package mayonez.scripts.movement;
 
 import mayonez.Script;
 import mayonez.physics.Rigidbody;
 
 /**
- * How a {@link Script} should affect the object's position or movement.
+ * How a {@link Script} should affect the object's position or movement. Not all scripts will make use of all of these.
  *
  * @author SlavSquatSuperstar
  */
@@ -14,7 +14,7 @@ public enum MoveMode {
      */
     FOLLOW_MOUSE(false),
     /**
-     * Change the object's transform position.
+     * Change the object's transform position or rotation.
      */
     POSITION(false),
     /**
@@ -22,15 +22,15 @@ public enum MoveMode {
      */
     VELOCITY(true),
     /**
-     * Add an impulse to the object (requires a {@link Rigidbody}).
-     */
-    IMPULSE(true),
-    /**
      * Add an acceleration to the object (requires a {@link Rigidbody}).
      */
     ACCELERATION(true),
     /**
-     * Add a force to the object (requires a {@link Rigidbody}).
+     * Apply an impulse to the object (requires a {@link Rigidbody}).
+     */
+    IMPULSE(true),
+    /**
+     * Apply a force or torque to the object (requires a {@link Rigidbody}).
      */
     FORCE(true);
 

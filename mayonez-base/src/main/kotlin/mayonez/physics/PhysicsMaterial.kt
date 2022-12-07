@@ -1,5 +1,6 @@
 package mayonez.physics
 
+import mayonez.math.FloatMath.clamp
 import kotlin.math.sqrt
 
 /**
@@ -7,25 +8,27 @@ import kotlin.math.sqrt
  *
  * @author SlavSquatSuperstar
  */
-class PhysicsMaterial(
-    /**
-     * How much this object resists applied forces and comes to rest while in motion.
-     * 0 indicates no opposition, and 1 indicates a very strong opposition.
-     */
-    val kineticFriction: Float,
+class PhysicsMaterial(kineticFriction: Float, staticFriction: Float, bounce: Float) {
 
     /**
-     * How much this object resists acceleration from a standstill.
-     * 0 indicates no opposition, and 1 indicates a very strong opposition.
+     * The kinetic (dynamic) coefficient of friction, µ_k, represents how much this object resists applied forces
+     * and decelerates when sliding against other object. 0 indicates no opposition, and large positive values indicates
+     * a very strong opposition.
      */
-    val staticFriction: Float,
+    val kineticFriction: Float = 0f.coerceAtLeast(kineticFriction)
 
     /**
-     * How much kinetic energy is conserved after a collision.
+     * The static coefficient of friction, µ_s, represents how much this object resists acceleration while resting
+     * on another object. 0 indicates no opposition, and large positive values indicates a very strong opposition.
+     */
+    val staticFriction: Float = 0f.coerceAtLeast(staticFriction)
+
+    /**
+     * The coefficient of restitution, e, represents how much kinetic energy is conserved after a collision.
      * 0 means all energy is lost, and 1 means energy is perfectly conserved.
      */
-    val bounce: Float
-) {
+    val bounce: Float = clamp(bounce, 0f, 1f)
+
     companion object {
         @JvmField
         val DEFAULT_MATERIAL = PhysicsMaterial(0.5f, 0.5f, 0f)
