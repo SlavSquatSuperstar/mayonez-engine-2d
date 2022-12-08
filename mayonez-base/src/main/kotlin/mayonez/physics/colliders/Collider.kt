@@ -4,6 +4,7 @@ import mayonez.Component
 import mayonez.DebugDraw
 import mayonez.graphics.Color
 import mayonez.math.Vec2
+import mayonez.physics.CollisionEventType
 import mayonez.physics.Collisions
 import mayonez.physics.Rigidbody
 import mayonez.physics.resolution.Manifold
@@ -47,7 +48,7 @@ abstract class Collider(private val shapeData: Shape) : Component() {
     }
 
     /**
-     * If this frame's collision in [startCollision] should not be resolved by the physics engine.
+     * If this frame's collision in [sendCollisionEvent] should not be resolved by the physics engine.
      */
     var ignoreCurrentCollision: Boolean = false
 
@@ -86,8 +87,8 @@ abstract class Collider(private val shapeData: Shape) : Component() {
 
     override fun render(g2: Graphics2D?) {
         if (drawColor == null) return
-        if (fillOption) DebugDraw.fillShape(transformToWorld(), drawColor)
-        else DebugDraw.drawShape(transformToWorld(), drawColor)
+        if (fillOption) DebugDraw.fillShape(transformToWorld(), drawColor, gameObject.zIndex)
+        else DebugDraw.drawShape(transformToWorld(), drawColor, gameObject.zIndex)
     }
 
     // Shape Properties
@@ -156,36 +157,14 @@ abstract class Collider(private val shapeData: Shape) : Component() {
     // Callback Methods
 
     /**
-     * A callback event broadcasted when this object starts colliding with another object or enters a trigger area.
+     * Broadcasts an event if a collision occurs between this object and another.
      *
-     * @param other   the other collider
-     * @param trigger if the collision involves a trigger
+     * @param other   the other object
+     * @param trigger if interacting with a trigger
+     * @param type    the type of the collision given by the listener
      */
-    fun startCollision(other: Collider, trigger: Boolean) {
-        if (trigger) gameObject?.onTriggerEnter(other.gameObject ?: return)
-        else gameObject?.onCollisionEnter(other.gameObject ?: return)
-    }
-
-    /**
-     * A callback event broadcasted when this object continues colliding with another object or stays in a trigger area.
-     *
-     * @param other   the other collider
-     * @param trigger if the collision involves a trigger
-     */
-    fun continueCollision(other: Collider, trigger: Boolean) {
-        if (trigger) gameObject?.onTriggerStay(other.gameObject ?: return)
-        else gameObject?.onCollisionStay(other.gameObject ?: return)
-    }
-
-    /**
-     * A callback event broadcasted when this object stops colliding with another object or exits a trigger area.
-     *
-     * @param other   the other collider
-     * * @param trigger if the collision involves a trigger
-     */
-    fun stopCollision(other: Collider, trigger: Boolean) {
-        if (trigger) gameObject?.onTriggerExit(other.gameObject ?: return)
-        else gameObject?.onCollisionExit(other.gameObject ?: return)
+    fun sendCollisionEvent(other: Collider, trigger: Boolean, type: CollisionEventType) {
+        gameObject?.onCollisionEvent(other.gameObject ?: return, trigger, type)
     }
 
     override fun onDestroy() {

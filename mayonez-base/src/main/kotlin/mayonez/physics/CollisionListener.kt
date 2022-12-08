@@ -36,27 +36,25 @@ internal class CollisionListener(
     private fun startCollision() {
         if (!colliding) {
             colliding = true
-            c1.startCollision(c2, trigger)
-            c2.startCollision(c1, trigger)
+            c1.sendCollisionEvent(c2, trigger, CollisionEventType.ENTER)
+            c2.sendCollisionEvent(c1, trigger, CollisionEventType.ENTER)
         }
     }
 
     private fun continueCollision() {
-        c1.continueCollision(c2, trigger)
-        c2.continueCollision(c1, trigger)
+        c1.sendCollisionEvent(c2, trigger, CollisionEventType.STAY)
+        c2.sendCollisionEvent(c1, trigger, CollisionEventType.STAY)
     }
 
     private fun stopCollision() {
         if (colliding) {
             colliding = false
-            c1.stopCollision(c2, trigger)
-            c2.stopCollision(c1, trigger)
+            c1.sendCollisionEvent(c2, trigger, CollisionEventType.EXIT)
+            c2.sendCollisionEvent(c1, trigger, CollisionEventType.EXIT)
         }
     }
 
-    fun match(col: Collider): Boolean {
-        return c1 == col || c2 == col
-    }
+    fun match(col: Collider): Boolean = c1 == col || c2 == col
 
     fun match(c1: Collider, c2: Collider): Boolean {
         return (this.c1 == c1 && this.c2 == c2) || (this.c1 == c2 && this.c2 == c1)

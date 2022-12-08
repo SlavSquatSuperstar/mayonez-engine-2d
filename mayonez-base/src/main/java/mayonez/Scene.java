@@ -5,12 +5,7 @@ import mayonez.graphics.Camera;
 import mayonez.graphics.Colors;
 import mayonez.graphics.GLCamera;
 import mayonez.graphics.JCamera;
-import mayonez.graphics.renderer.GLSceneRenderer;
-import mayonez.graphics.renderer.JSceneRenderer;
-import mayonez.graphics.renderer.SceneRenderer;
-import mayonez.graphics.renderer.debug.DebugRenderer;
-import mayonez.graphics.renderer.debug.GLDebugRenderer;
-import mayonez.graphics.renderer.debug.JDebugRenderer;
+import mayonez.graphics.renderer.*;
 import mayonez.graphics.sprite.Sprite;
 import mayonez.math.Vec2;
 import mayonez.physics.PhysicsWorld;
@@ -42,6 +37,7 @@ public abstract class Scene {
 
     // Scene Layers
     private final List<GameObject> objects;
+    private final boolean useGL;
     private final SceneRenderer renderer;
     private final DebugRenderer debugRenderer;
     private final PhysicsWorld physics;
@@ -77,13 +73,14 @@ public abstract class Scene {
         objects = new ArrayList<>();
         changesToScene = new LinkedList<>();
 
-        if (Boolean.TRUE.equals(Mayonez.getUseGL())) {
+        useGL = Boolean.TRUE.equals(Mayonez.getUseGL());
+        if (useGL) {
             renderer = new GLSceneRenderer();
             debugRenderer = new GLDebugRenderer();
             camera = new GLCamera(Mayonez.getScreenSize(), this.getScale());
         } else {
-            renderer = new JSceneRenderer();
-            debugRenderer = new JDebugRenderer();
+            renderer = new JDefaultRenderer();
+            debugRenderer = (DebugRenderer) renderer;
             camera = new JCamera(Mayonez.getScreenSize(), this.getScale());
         }
         physics = new PhysicsWorld();
@@ -100,7 +97,7 @@ public abstract class Scene {
             init();
             // Start Layers
             renderer.start();
-            debugRenderer.start();
+            if (useGL) debugRenderer.start();
             physics.start();
             // Add to Layers
             renderer.setScene(this);
@@ -152,7 +149,7 @@ public abstract class Scene {
             }
             // Render objects
             renderer.render(g2);
-            debugRenderer.render(g2);
+            if (useGL) debugRenderer.render(g2);
         }
     }
 
@@ -170,7 +167,7 @@ public abstract class Scene {
             objects.clear();
             // Clear layers
             renderer.stop();
-            debugRenderer.stop();
+            if (useGL) debugRenderer.stop();
             physics.stop();
             started = false;
             loaded = false;

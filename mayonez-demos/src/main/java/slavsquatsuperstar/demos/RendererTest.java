@@ -151,13 +151,12 @@ public class RendererTest extends Scene {
                 addComponent(new BoxCollider(new Vec2(0.8f, 1)));
                 addComponent(new Rigidbody(1f).setFixedRotation(true));
                 addComponent(new DragAndDrop("left mouse"));
-            }
-
-            @Override
-            public void onCollisionStay(GameObject other) {
-                if (other.name.equals("Mario")) {
-                    setDestroyed();
-                }
+                addComponent(new Script() {
+                    @Override
+                    public void onCollisionStay(GameObject other) {
+                        if (other.name.equals("Mario")) setDestroyed();
+                    }
+                });
             }
         };
     }

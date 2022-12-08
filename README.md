@@ -2,7 +2,22 @@
 
 The 2D Java game engine to fit your Slavic needs!*†
 
-This project was developed using macOS 13.x Ventura (Intel). This app has not been tested on any other systems.
+This project was developed using macOS 13.x Ventura (Intel) and Intellij IDEA. This progam has not been tested on any
+other systems.
+
+## Features
+
+This fully-operational game engine includes:
+
+- A physics system with dynamic movement, multiple collider shapes, linear and angular impulse resolution, and friction
+- A 2D renderer that can draw sprites with both Java AWT and LWJGL OpenGL libraries
+- An entity-component system that allows you to create modular, reusable game objects and components
+- An asset system that can read from classpath resources and read and write to local files
+- Keyboard and mouse input that supports key presses, mouse clicks and movement, and key axes
+- Scene management that allows you to load multiple scenes and save their states when switching
+- Logging with different message priorities and automatic log file generation
+- Debug rendering capabilities for drawing and filling shapes, lines, and points
+- Customizable game preferences that you can set yourself
 
 ## Quick Start Guide
 
@@ -12,24 +27,25 @@ This project was developed using macOS 13.x Ventura (Intel). This app has not be
   Package Type") or [Oracle JRE 17+](https://www.oracle.com/java/technologies/downloads/)
 - Extract and run the package, then check if Java is installed by entering "java --version" inside a command line
   window.
-- Download the repository, drag 'run.sh' (Mac/Linux) or 'run.bat' (Windows) from the extracted folder to a command line
+- Download the repository, drag 'run' (Mac/Linux) or 'run.bat' (Windows) from the extracted folder to a command line
   window, and press enter.
 
 ### Instructions for Developers
 
 - Java Version: [Eclipse Temurin 17+](https://adoptium.net/) or [Oracle OpenJDK 17+](https://jdk.java.net/)
-- Kotlin Version: [1.7.20](https://github.com/JetBrains/kotlin/releases/tag/v1.7.20)
+- Kotlin Version: [1.7.20+](https://github.com/JetBrains/kotlin/releases/tag/v1.7.20)
 - Recommended IDE: [Intellij IDEA CE 2022.2+](https://www.jetbrains.com/idea/download/)
-- Build System: [Gradle 7.5.1+](https://gradle.org/install/)
+- Build System: [Gradle 7.6+](https://gradle.org/install/)
     - Utilizes [Gradle Shadow Plugin](https://github.com/johnrengelman/shadow) for creating fat jars
 - Dependencies (bundled in JAR)
-    - [LWJGL](https://www.lwjgl.org/customize) (user OS & architecture specific)
+    - [LWJGL 3.3.1](https://www.lwjgl.org/customize) (user OS & architecture specific)
       with [JOML](https://joml-ci.github.io/JOML/)
         - Libraries: GLFW, OpenGL, STB
     - [Kotlin Standard Library](https://kotlinlang.org/docs/getting-started.html)
     - [JSON in Java](https://github.com/stleary/JSON-java) (org.json)
     - [Java Reflections](https://github.com/ronmamo/reflections)
     - [SLF4J Simple Binding](https://www.slf4j.org/) (dependency for Reflections)
+    - [JUnit 5](https://junit.org/junit5/docs/current/user-guide/) (not bundled, for testing only)
 
 ## Additional Info
 
@@ -69,6 +85,9 @@ A massive, heartfelt thanks goes out to the following people, groups, and resour
 ## License
 
 This software is licensed under the GNU General Public License (GPL) v3 or any later version, which grants copyleft
-protections. In true Communist fashion, the source code of this program is freely available to access, run, share,
-and modify. Any forks of this project must also be distributed under the same license and may not be made or used in any
-proprietary (closed-source) applications. See [LICENSE.txt](LICENSE.txt) for more details.
+protections.
+In true communist/socialist fashion, the source code of this program is freely available to access, run, share, and
+modify.
+Any forks of this project must also be distributed under the same license and may not be made or used in any proprietary
+(closed-source) applications. They may still be monetized, as long as the code is open.
+See [LICENSE.txt](LICENSE.txt) for more details.

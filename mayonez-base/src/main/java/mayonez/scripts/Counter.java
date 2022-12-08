@@ -30,10 +30,10 @@ public class Counter extends Script {
     /**
      * Counts up or down by the given value.
      *
-     * @param step now much to count
+     * @param increment now much to count
      */
-    public void count(float step) {
-        value += step;
+    public void count(float increment) {
+        value += increment;
     }
 
     public float getMin() {
@@ -46,6 +46,20 @@ public class Counter extends Script {
 
     public float getValue() {
         return value;
+    }
+
+    public void setValue(float value) {
+        this.value = value;
+    }
+
+    /**
+     * Set the counter's count interval.
+     *
+     * @param min the lower bound
+     * @param max the upper bound
+     */
+    public void setInterval(float min, float max) {
+        this.interval = new Range(min, max);
     }
 
     /**
@@ -78,16 +92,6 @@ public class Counter extends Script {
      */
     public void resetToMax() {
         value = interval.max;
-    }
-
-    /**
-     * Set the counter's count interval.
-     *
-     * @param min the lower bound
-     * @param max the upper bound
-     */
-    public void setInterval(float min, float max) {
-        this.interval = new Range(min, max);
     }
 
     @Override

@@ -2,6 +2,7 @@ package mayonez;
 
 import mayonez.graphics.sprite.Sprite;
 import mayonez.math.Vec2;
+import mayonez.physics.CollisionEventType;
 import mayonez.physics.colliders.Collider;
 import mayonez.scripts.movement.MovementScript;
 import mayonez.util.StringUtils;
@@ -132,7 +133,7 @@ public class GameObject {
     public final void addComponent(Component comp) {
         if (comp == null) return;
         if (!comp.getClass().isAnonymousClass() && getComponent(comp.getClass()) != null)
-            Logger.log("GameObject %s [ID %d] Already has a %s", name, objectID, comp.getClass().getSimpleName());
+            Logger.debug("GameObject %s [ID %d] Already has a %s", name, objectID, comp.getClass().getSimpleName());
         components.add(comp.setObject(this));
         if (comp instanceof Script s) s.init();
     }
@@ -208,60 +209,38 @@ public class GameObject {
     // Callback Methods
 
     /**
-     * Custom user behavior after starting contact with another physical object.
-     *
-     * @param other the other object in the collision
-     */
-    public void onCollisionEnter(GameObject other) {
-    }
-
-    /**
-     * Custom user behavior after staying in contact with another physical object.
-     *
-     * @param other the other object in the collision
-     */
-    public void onCollisionStay(GameObject other) {
-    }
-
-    /**
-     * Custom user behavior after stopping contact with another physical object.
-     *
-     * @param other the other object in the collision
-     */
-    public void onCollisionExit(GameObject other) {
-    }
-
-    /**
-     * Custom user behavior after entering a trigger area.
-     *
-     * @param other the other game object
-     */
-    public void onTriggerEnter(GameObject other) {
-    }
-
-    /**
-     * Custom user behavior after staying with a trigger area.
-     *
-     * @param other the other game object
-     */
-    public void onTriggerStay(GameObject other) {
-    }
-
-    /**
-     * Custom user behavior after exiting a trigger area.
-     *
-     * @param other the other game object
-     */
-    public void onTriggerExit(GameObject other) {
-    }
-
-    /**
      * Destroy this game object and remove it from the scene.
      */
     final void onDestroy() {
         components.forEach(Component::destroy);
         components.clear();
         scene = null;
+    }
+
+    /**
+     * Receives an event when a collision occurs between this object and another.
+     *
+     * @param other   the other object
+     * @param trigger if interacting with a trigger
+     * @param type    the type of the collision given by the listener
+     */
+    public final void onCollisionEvent(GameObject other, boolean trigger, CollisionEventType type) {
+        for (Script s : getComponents(Script.class)) {
+            switch (type) {
+                case ENTER -> {
+                    if (trigger) s.onTriggerEnter(other);
+                    else s.onCollisionEnter(other);
+                }
+                case STAY -> {
+                    if (trigger) s.onTriggerStay(other);
+                    else s.onCollisionStay(other);
+                }
+                case EXIT -> {
+                    if (trigger) s.onTriggerExit(other);
+                    else s.onCollisionExit(other);
+                }
+            }
+        }
     }
 
     // Getters and Setters

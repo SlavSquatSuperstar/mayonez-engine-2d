@@ -1,6 +1,7 @@
 package mayonez.physics.colliders
 
 import mayonez.math.Vec2
+import mayonez.physics.shapes.BoundingBox
 import mayonez.physics.shapes.Ellipse
 import mayonez.physics.shapes.Shape
 
@@ -17,6 +18,10 @@ class BallCollider(val size: Vec2) : Collider(Ellipse(Vec2(), size)) {
      * Constructs a circle with the given radius (not diameter)q
      */
     constructor(radius: Float) : this(Vec2(radius * 2f))
+
+    override fun getMinBounds(): BoundingBox {
+        return transformToWorld().boundingCircle().boundingRectangle() // max is quicker than trig
+    }
 
     override fun transformToWorld(): Shape { // use circle when possible
         val worldShape = super.transformToWorld()

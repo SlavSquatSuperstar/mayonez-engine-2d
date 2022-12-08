@@ -1,6 +1,4 @@
-package mayonez.graphics.renderer.debug;
-
-import mayonez.graphics.renderer.Renderer;
+package mayonez.graphics.renderer;
 
 /**
  * Draws debug information such as colliders and geometric objects into the screen.

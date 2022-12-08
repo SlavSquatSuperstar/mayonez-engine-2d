@@ -9,9 +9,13 @@ import mayonez.math.Vec2;
 import mayonez.physics.Rigidbody;
 import mayonez.physics.colliders.BallCollider;
 import mayonez.physics.colliders.BoxCollider;
+import mayonez.physics.shapes.Circle;
 import mayonez.scripts.Counter;
 import mayonez.scripts.KeepInScene;
 import mayonez.scripts.Timer;
+import slavsquatsuperstar.demos.spacegame.scripts.Damageable;
+
+import java.awt.*;
 
 public class SpaceGameScene extends Scene {
 
@@ -19,7 +23,7 @@ public class SpaceGameScene extends Scene {
     private Counter enemyCounter, obstacleCounter;
 
     public SpaceGameScene() {
-        super("Space Game", Preferences.getScreenWidth() * 2, Preferences.getScreenHeight() * 2, 32f);
+        super("Space Game", Preferences.getScreenWidth(), Preferences.getScreenHeight(), 32f);
         setBackground(Sprite.create(Colors.JET_BLACK));
         setGravity(new Vec2());
     }
@@ -33,7 +37,7 @@ public class SpaceGameScene extends Scene {
 
             @Override
             protected void init() {
-                enemyCounter = new Counter(0, 5, 0);
+                enemyCounter = new Counter(0, 3, 0);
                 while (!enemyCounter.isAtMax()) {
                     getScene().addObject(createEnemy("Enemy Spaceship", shipSprite));
                     enemyCounter.count(1);
@@ -73,30 +77,31 @@ public class SpaceGameScene extends Scene {
         if (KeyInput.keyPressed("r")) SceneManager.reloadScene();
     }
 
+    @Override
+    protected void onUserRender(Graphics2D g2) {
+        DebugDraw.fillShape(new Circle(new Vec2(-10, -8), 10), Colors.DARK_BLUE);
+        DebugDraw.fillShape(new Circle(new Vec2(12.5f, 7.5f), 2.5f), Colors.DARK_GRAY);
+    }
+
     private GameObject createEnemy(String name, String spriteName) {
         Vec2 randomPos = Random.randomVector(-getWidth(), getWidth(), -getHeight(), getHeight()).mul(0.5f);
         float randomRot = Random.randomFloat(0f, 360f);
         return new GameObject(name, new Transform(randomPos, randomRot, new Vec2(2f))) {
-            private int health = 4;
-
             @Override
             protected void init() {
+                addTag("Enemy");
                 addComponent(Sprite.create(spriteName));
                 addComponent(new BoxCollider(new Vec2(0.85f, 1f)));
                 Rigidbody rb;
                 addComponent(rb = new Rigidbody(1f, 0.01f, 0.5f));
                 rb.setVelocity(transform.getUp().mul(Random.randomFloat(2f, 10f)));
                 addComponent(new KeepInScene(KeepInScene.Mode.WRAP));
-            }
-
-            @Override
-            public void onTriggerEnter(GameObject other) {
-                if (other.name.equals("Laser") || other.name.equals("Plasma")) {
-                    if (--health <= 0) {
-                        setDestroyed();
+                addComponent(new Damageable(4) {
+                    @Override
+                    public void onDestroy() {
                         enemyCounter.count(-1);
                     }
-                }
+                });
             }
         };
     }
@@ -104,27 +109,21 @@ public class SpaceGameScene extends Scene {
     private GameObject createObstacle(String name) {
         Vec2 randomPos = Random.randomVector(-getWidth(), getWidth(), -getHeight(), getHeight()).mul(0.5f);
         float randomRot = Random.randomFloat(0f, 360f);
-        Vec2 randomScl = Random.randomVector(2f, 2f, 5f, 5f);
+        Vec2 randomScl = Random.randomVector(2f, 5f, 2f, 5f);
         return new GameObject(name, new Transform(randomPos, randomRot, randomScl)) {
-            private int health = 10;
-
             @Override
             protected void init() {
-                addComponent(new BallCollider(new Vec2(1f, 1f)).setDebugDraw(Colors.GRAY, true));
+                addComponent(new BallCollider(new Vec2(1f)).setDebugDraw(Colors.GRAY, true));
                 Rigidbody rb;
                 addComponent(rb = new Rigidbody(15f, 0.2f, 0.2f));
                 rb.setVelocity(transform.getUp().mul(Random.randomFloat(0f, 1f)));
                 addComponent(new KeepInScene(KeepInScene.Mode.WRAP));
-            }
-
-            @Override
-            public void onTriggerEnter(GameObject other) {
-                if (other.name.equals("Laser") || other.name.equals("Plasma")) {
-                    if (--health <= 0) {
-                        setDestroyed();
-                        enemyCounter.count(-1);
+                addComponent(new Damageable(Random.randomInt(8, 12)) {
+                    @Override
+                    public void onDestroy() {
+                        obstacleCounter.count(-1);
                     }
-                }
+                });
             }
         };
     }

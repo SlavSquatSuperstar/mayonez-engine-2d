@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Draws all in-game textures and shapes onto the screen using LWJGL's OpenGL library.
+ * Draws all in-game textures onto the screen using LWJGL's OpenGL library.
  *
  * @author SlavSquatSuperstar
  */

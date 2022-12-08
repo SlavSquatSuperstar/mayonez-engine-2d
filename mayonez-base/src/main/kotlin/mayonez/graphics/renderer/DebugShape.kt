@@ -1,4 +1,4 @@
-package mayonez.graphics.renderer.debug
+package mayonez.graphics.renderer
 
 import mayonez.util.MColor
 import mayonez.util.MShape
@@ -12,13 +12,16 @@ class DebugShape(
     @JvmField val shape: MShape,
     @JvmField val color: MColor,
     @JvmField val fill: Boolean,
-    private val priority: Priority
+    @JvmField val zIndex: Int
 ) {
-    @JvmField
-    val zIndex: Int = priority.zIndex
+    // Use preset priority
+    constructor(shape: MShape, color: MColor, fill: Boolean, priority: Priority) :
+            this(shape, color, fill, priority.zIndex)
 
     internal constructor(shape: MShape, debugShape: DebugShape) :
-            this(shape, debugShape.color, debugShape.fill, debugShape.priority)
+            this(shape, debugShape.color, debugShape.fill, debugShape.zIndex)
+
+    override fun toString(): String = "${shape.javaClass.simpleName} (fill = $fill, z = $zIndex)"
 
     /**
      * The order an object should be drawn. Higher priority objects will be drawn later to be more visible.
@@ -27,7 +30,7 @@ class DebugShape(
         /**
          * Solid shapes, drawn first.
          */
-        FILL(0),
+        FILL(-1),
 
         /**
          * Shape boundaries, after solid shapes and before lines.

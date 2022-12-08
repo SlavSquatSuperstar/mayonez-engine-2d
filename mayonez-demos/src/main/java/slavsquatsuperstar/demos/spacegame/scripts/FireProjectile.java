@@ -1,11 +1,12 @@
-package slavsquatsuperstar.demos.spacegame;
+package slavsquatsuperstar.demos.spacegame.scripts;
 
 import mayonez.GameObject;
 import mayonez.Script;
 import mayonez.scripts.Timer;
 
 /**
- * Allows objects to spawn many projectiles.
+ * Allows objects to spawn projectiles repeatedly. This script is abstract and any instances must define
+ * what projectiles to spawn and under what criteria.
  *
  * @author SlavSquatSuperstar
  */
@@ -33,12 +34,14 @@ public abstract class FireProjectile extends Script {
 
     /**
      * Additional conditions for firing the projectile, such as user input.
+     *
      * @return if ready to fire
      */
     protected abstract boolean readyToFire();
 
     /**
      * Instantiate the projectile to be fired.
+     *
      * @return the projectile game object
      */
     protected abstract GameObject spawnProjectile();

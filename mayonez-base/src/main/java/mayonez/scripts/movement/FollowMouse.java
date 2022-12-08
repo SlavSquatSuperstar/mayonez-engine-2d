@@ -10,13 +10,20 @@ import mayonez.math.Vec2;
  */
 public class FollowMouse extends MouseScript {
 
-    public FollowMouse(MoveMode mode, float speed) {
+    public boolean rotate;
+
+    public FollowMouse(MoveMode mode, float speed, boolean rotate) {
         super(mode, speed);
+        this.rotate = rotate;
     }
 
     @Override
     public void onMouseMove() {
         Vec2 mouseDirection = getRawInput().clampLength(speed);
+//        if (rotate) {
+//            float angle = transform.getUp().angle(mouseDirection);
+//            transform.rotate(angle);
+//        }
         switch (mode) {
             case FOLLOW_MOUSE -> transform.position.set(MouseInput.getPosition());
             case POSITION -> transform.move(mouseDirection);

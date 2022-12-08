@@ -3,7 +3,6 @@ package slavsquatsuperstar.demos.spacegame;
 import mayonez.GameObject;
 import mayonez.Script;
 import mayonez.Transform;
-import mayonez.graphics.Color;
 import mayonez.graphics.Colors;
 import mayonez.graphics.sprite.Sprite;
 import mayonez.input.KeyInput;
@@ -16,6 +15,8 @@ import mayonez.scripts.KeepInScene;
 import mayonez.scripts.movement.KeyMovement;
 import mayonez.scripts.movement.KeyRotation;
 import mayonez.scripts.movement.MoveMode;
+import slavsquatsuperstar.demos.spacegame.scripts.FireProjectile;
+import slavsquatsuperstar.demos.spacegame.scripts.Projectile;
 
 public class PlayerShip extends GameObject {
 
@@ -32,9 +33,10 @@ public class PlayerShip extends GameObject {
         addComponent(Sprite.create(shipSprite));
         addComponent(new Rigidbody(1f));
         addComponent(new BoxCollider(new Vec2(0.85f, 1f)));
-        addComponent(new KeepInScene(getScene().getSize().mul(-0.25f), getScene().getSize().mul(0.25f), KeepInScene.Mode.WRAP));
+        addComponent(new KeepInScene(getScene().getSize().mul(-0.5f), getScene().getSize().mul(0.5f), KeepInScene.Mode.WRAP));
         addComponent(new KeyMovement(MoveMode.FORCE, 10f, "horizontal2", "vertical").setObjectAligned(true));
-        addComponent(new KeyRotation(MoveMode.FORCE, 2.5f, "horizontal"));
+        addComponent(new KeyRotation(MoveMode.VELOCITY, 1f, "horizontal"));
+//        addComponent(new FollowMouse(MoveMode.POSITION, 1f, true));
         addComponent(new FireProjectile(0.2f) {
             private int weaponChoice = 1;
 
@@ -58,9 +60,17 @@ public class PlayerShip extends GameObject {
             @Override
             protected GameObject spawnProjectile() {
                 if (weaponChoice == 1) {
-                    return createProjectile(transform, "Laser", 0.2f, Colors.RED);
+                    return Projectile.createPrefab(
+                            new Projectile(gameObject, 1, 25f),
+                            "Laser", 0.2f,
+                            new BallCollider(new Vec2(1f)).setDebugDraw(Colors.RED, true).setTrigger(true)
+                    ).setZIndex(0);
                 } else if (weaponChoice == 2) {
-                    return createProjectile(transform, "Plasma", 0.3f, Colors.SKY_BLUE);
+                    return Projectile.createPrefab(
+                            new Projectile(gameObject, 1.5f, 20f),
+                            "Plasma", 0.3f,
+                            new BallCollider(new Vec2(1f)).setDebugDraw(Colors.SKY_BLUE, true).setTrigger(true)
+                    ).setZIndex(0);
                 } else return null;
             }
         });
@@ -77,30 +87,6 @@ public class PlayerShip extends GameObject {
                 }
             }
         });
-    }
-
-    private GameObject createProjectile(Transform transform, String name, float size, Color color) {
-        return new GameObject(name, new Transform(
-                transform.position.add(transform.getUp()), transform.rotation, new Vec2(size)
-        )) {
-            @Override
-            protected void init() {
-                addComponent(new Rigidbody(0.01f));
-                addComponent(new BallCollider(new Vec2(1f)).setDebugDraw(color, true).setTrigger(true));
-                addComponent(new KeepInScene(KeepInScene.Mode.DESTROY));
-                addComponent(new Script() {
-                    @Override
-                    public void start() {
-                        getRigidbody().setVelocity(transform.getUp().mul(20f));
-                    }
-                });
-            }
-
-            @Override
-            public void onTriggerEnter(GameObject other) {
-                setDestroyed();
-            }
-        };
     }
 
 }

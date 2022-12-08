@@ -1,11 +1,8 @@
-package mayonez.graphics.renderer.debug;
+package mayonez.graphics.renderer;
 
 import mayonez.DebugDraw;
 import mayonez.annotations.EngineType;
 import mayonez.annotations.UsesEngine;
-import mayonez.graphics.renderer.DrawPrimitive;
-import mayonez.graphics.renderer.GLRenderer;
-import mayonez.graphics.renderer.RenderBatch;
 import mayonez.math.Vec2;
 import mayonez.physics.shapes.*;
 

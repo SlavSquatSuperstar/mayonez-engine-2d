@@ -4,14 +4,11 @@ import mayonez.GameObject;
 import mayonez.Mayonez;
 import mayonez.Preferences;
 import mayonez.Scene;
+import mayonez.graphics.Colors;
 import mayonez.graphics.sprite.Sprite;
 import mayonez.math.Vec2;
 import mayonez.physics.Rigidbody;
 import mayonez.physics.colliders.BoxCollider;
-import mayonez.physics.colliders.Collider;
-import mayonez.graphics.Colors;
-
-import java.awt.*;
 
 public class LevelScene extends Scene {
 
@@ -26,12 +23,7 @@ public class LevelScene extends Scene {
             @Override
             protected void init() {
                 addComponent(new Rigidbody(0f).setFixedRotation(true));
-                addComponent(new BoxCollider(new Vec2(getWidth() + 2f, 2f)));
-            }
-
-            @Override
-            public void onUserRender(Graphics2D g2) {
-                getComponent(Collider.class).setDebugDraw(Colors.BLACK, true);
+                addComponent(new BoxCollider(new Vec2(getWidth() + 2f, 2f)).setDebugDraw(Colors.BLACK, true));
             }
         });
 

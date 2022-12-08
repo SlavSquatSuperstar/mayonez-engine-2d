@@ -2,11 +2,11 @@ package mayonez
 
 import mayonez.annotations.EngineType
 import mayonez.annotations.UsesEngine
-import mayonez.graphics.renderer.debug.DebugRenderer
-import mayonez.graphics.renderer.debug.DebugShape
+import mayonez.graphics.Colors
+import mayonez.graphics.renderer.DebugRenderer
+import mayonez.graphics.renderer.DebugShape
 import mayonez.math.Vec2
 import mayonez.physics.shapes.*
-import mayonez.graphics.Colors
 import mayonez.util.MColor
 
 /**
@@ -24,7 +24,7 @@ object DebugDraw {
     private val debugRenderer: DebugRenderer
         get() = SceneManager.currentScene.debugRenderer
 
-    // Public Draw Methods
+    // Draw Points/Lines
     /**
      * Draws a point onto the screen.
      *
@@ -69,15 +69,9 @@ object DebugDraw {
      * @param color the color to use
      */
     @JvmStatic
-    fun drawShape(shape: Shape?, color: MColor?) {
-        if (!Mayonez.started) return
-        when (shape) {
-            is Edge -> drawLine(shape.start, shape.end, color)
-            is Circle -> drawCircle(shape, color, false)
-            is Ellipse -> drawEllipse(shape, color, false)
-            is Polygon -> drawPolygon(shape, color, false)
-        }
-    }
+    fun drawShape(shape: Shape?, color: MColor?) = drawShape(shape, color, DebugShape.Priority.SHAPE.zIndex)
+
+    fun drawShape(shape: Shape?, color: MColor?, zIndex: Int) = debugDrawShape(shape, color, false, zIndex)
 
     /**
      * Draws a shape onto the screen and fills in the interior.
@@ -86,44 +80,37 @@ object DebugDraw {
      * @param color the color to use
      */
     @JvmStatic
-    fun fillShape(shape: Shape?, color: MColor?) {
-        if (!Mayonez.started) return
-        val drawColor = color ?: Colors.BLACK
-        when (shape) {
-            is Edge -> drawLine(shape.start, shape.end, drawColor)
-            is Circle -> drawCircle(shape, drawColor, true)
-            is Ellipse -> drawEllipse(shape, drawColor, true)
-            is Polygon -> drawPolygon(shape, drawColor, true)
-        }
-    }
+    fun fillShape(shape: Shape?, color: MColor?) = fillShape(shape, color, DebugShape.Priority.FILL.zIndex)
+
+    fun fillShape(shape: Shape?, color: MColor?, zIndex: Int) = debugDrawShape(shape, color, true, zIndex)
 
     // Internal Draw methods
 
-    private fun drawCircle(circle: Circle, color: MColor?, fill: Boolean) {
-        addShape(Circle(circle.center().toScreen(), circle.radius.toScreen()), color, fill, DebugShape.Priority.SHAPE)
+    private fun debugDrawShape(shape: Shape?, color: MColor?, fill: Boolean, zIndex: Int) {
+        // screen coordinates only
+        if (!Mayonez.started) return
+        when (shape) {
+            is Edge -> addShape(shape.toScreen(), color, false, DebugShape.Priority.LINE)
+            is Polygon -> addShape(shape.toScreen(), color, fill, zIndex)
+            is Circle -> addShape(shape.toScreen(), color, fill, zIndex)
+            is Ellipse -> {
+                if (shape.isCircle) addShape(shape.boundingCircle().toScreen(), color, fill, zIndex)
+                addShape(shape.toScreen(), color, fill, zIndex)
+            }
+        }
     }
-
-    private fun drawEllipse(ellipse: Ellipse, color: MColor?, fill: Boolean) {
-        if (ellipse.isCircle) return drawCircle(ellipse.boundingCircle(), color, fill)
-        addShape(ellipse.toScreen(), color, fill, DebugShape.Priority.SHAPE)
-    }
-
-    private fun drawPolygon(polygon: Polygon, color: MColor?, fill: Boolean) {
-        addShape(polygon.toScreen(), color, fill, if (fill) DebugShape.Priority.FILL else DebugShape.Priority.SHAPE)
-    }
-
-    // Helper Methods/Classes
 
     private fun addShape(shape: Shape, color: MColor?, fill: Boolean, priority: DebugShape.Priority) {
+        // handle null color here
         debugRenderer.addShape(DebugShape(shape, color ?: Colors.BLACK, fill, priority))
     }
 
-    /**
-     * Converts a coordinate from world to screen units.
-     *
-     * @return the corresponding screen pixel
-     */
-    private fun Float.toScreen(): Float = this * scale
+    private fun addShape(shape: Shape, color: MColor?, fill: Boolean, zIndex: Int) {
+        // handle null color here
+        debugRenderer.addShape(DebugShape(shape, color ?: Colors.BLACK, fill, zIndex))
+    }
+
+    // Helper Methods
 
     /**
      * Converts a pair of coordinates from world to screen units.
