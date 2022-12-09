@@ -1,10 +1,9 @@
 package mayonez.graphics.renderer
 
-import mayonez.DebugDraw
-import mayonez.GameObject
-import mayonez.Scene
+import mayonez.*
 import mayonez.annotations.EngineType
 import mayonez.annotations.UsesEngine
+import mayonez.graphics.Renderable
 import mayonez.math.Vec2
 import mayonez.physics.shapes.*
 import mayonez.util.JShape
@@ -27,102 +26,83 @@ import kotlin.math.roundToInt
 class JDefaultRenderer : SceneRenderer, DebugRenderer {
     private val stroke: Stroke = BasicStroke(DebugDraw.STROKE_SIZE)
 
-    //    private val toDraw: MutableList<Pair<Int, Any>>
-    private val objects: MutableList<GameObject>
-
-    //    private val sprites: MutableList<JSprite> // if use sprites, then no object onUserRender
+    private val objects: MutableList<Renderable>
     private val shapes: MutableList<DebugShape>
 
     init {
-//        toDraw = ArrayList()
         objects = ArrayList()
-//        sprites = new ArrayList<>()
         shapes = ArrayList()
     }
 
     // GameObject Methods
     override fun setScene(newScene: Scene) {
-        objects.addAll(newScene.objects)
-//        newScene.objects.forEach(this::addObject)
+        newScene.objects.forEach(this::addObject)
     }
 
     override fun start() {
-//        toDraw.clear()
         objects.clear()
-//        sprites.clear()
         shapes.clear()
     }
 
     override fun addObject(obj: GameObject) {
-        objects.add(obj)
-//        val sprite = obj.getComponent(JSprite::class.java)
-//        if (sprite != null) {
-//            sprites.add(sprite)
-//            sort = true
-//        }
+        obj.getComponents(Component::class.java).forEach { c: Component ->
+            if (c is Renderable) objects.add(c)
+        }
     }
 
     override fun removeObject(obj: GameObject) {
-        objects.remove(obj)
-//        val sprite = obj.getComponent(JSprite::class.java)
-//        if (sprite != null) sprites.remove(sprite)
+        obj.getComponents(Component::class.java).forEach { c: Component ->
+            if (c is Renderable) objects.remove(c)
+        }
     }
 
     override fun addShape(shape: DebugShape) {
-//        toDraw.add(Pair(shape.zIndex, shape))
         shapes.add(shape)
     }
 
     // Renderer Methods
     override fun render(g2: Graphics2D?) {
         val oldXf = g2?.transform ?: return // Save a copy of the unmodified transform
-
-        // Transform the screen and render everything at the new position
         val cam = camera
+
         if (cam != null) {
+            // Transform the screen and render everything at the new position
+            val rotRad = Math.toRadians(cam.rotation.toDouble())
+            val camZoom = cam.zoom.toDouble() // the zoom
             val camOffset = cam.offset
-//            val camXf = cam.transform
-//            val camRot = camXf.rotation
-//            val camScl = camXf.scale
-            g2.translate(-camOffset.x.toDouble(), -camOffset.y.toDouble())
-//            g2.rotate(Math.toRadians(-camRot.toDouble()))
-//            g2.scale(camScl.x.toDouble(), camScl.y.toDouble())
-//            g2.color = Color.BLACK
-//            g2.fillOval(((camOffset.x - 5).toInt()), ((camOffset.y - 5).toInt()), 10, 10)
+            val camCenter = camera.position * SceneManager.currentScene.scale
+
+            // Translate, scale, then rotate
+            g2.translate(-camOffset.x * camZoom, -camOffset.y * camZoom)
+            g2.scale(camZoom, camZoom)
+            g2.rotate(-rotRad, camCenter.x.toDouble(), camCenter.y.toDouble())
         }
 
         // "Batch" and draw objects and shapes
-        val toDraw = ArrayList<Pair<Int, Any>>()
-        objects.forEach { o: GameObject -> toDraw.add(Pair(o.zIndex, o)) }
-//        sprites.sortBy { s: Sprite -> s.getObject().getZIndex() }
-//        sprites.forEach {s : JSprite -> s.render(g2)}
-        if (shapes.isNotEmpty()) {
-            shapes.forEach { s: DebugShape -> toDraw.add(Pair(s.zIndex, s)) }
-            shapes.clear()
+        val batches = ArrayList<Pair<Int, Renderable>>()
+        objects.forEach { r: Renderable ->
+            if (r is Component) batches.add(Pair(r.gameObject.zIndex, r))
         }
-
-        toDraw.sortBy { p: Pair<Int, Any> -> p.first } // sort everything by zIndex
-        toDraw.forEach { p: Pair<Int, Any> ->
-            when (p.second) {
-                is GameObject -> (p.second as GameObject).render(g2)
-                is DebugShape -> {
-                    val s = p.second as DebugShape
+        if (shapes.isNotEmpty()) {
+            shapes.forEach { s: DebugShape ->
+                batches.add(Pair(s.zIndex, Renderable() {
                     g2.color = s.color.toAWT()
                     g2.stroke = stroke
                     val awtShape = s.shape.toAwt()
                     if (s.fill) g2.fill(awtShape) else g2.draw(awtShape)
-                }
+                }))
             }
+            shapes.clear()
         }
-        toDraw.clear()
 
-        g2.transform = oldXf // Reset the screen's transform to its unmodified state
+        batches.sortBy { p: Pair<Int, Renderable> -> p.first } // sort everything by zIndex
+        batches.forEach { p: Pair<Int, Renderable> -> p.second.render(g2) }
+        batches.clear()
+        g2.transform = oldXf // Reset the screen's transform to its previous state
     }
 
     override fun stop() {
-//        toDraw.clear()
         objects.clear()
-//        sprites.clear()
         shapes.clear()
     }
 

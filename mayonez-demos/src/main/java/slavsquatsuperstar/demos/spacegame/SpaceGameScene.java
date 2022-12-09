@@ -1,131 +1,100 @@
 package slavsquatsuperstar.demos.spacegame;
 
+import kotlin.Pair;
 import mayonez.*;
+import mayonez.graphics.Color;
 import mayonez.graphics.Colors;
 import mayonez.graphics.sprite.Sprite;
 import mayonez.input.KeyInput;
 import mayonez.math.Random;
 import mayonez.math.Vec2;
-import mayonez.physics.Rigidbody;
-import mayonez.physics.colliders.BallCollider;
-import mayonez.physics.colliders.BoxCollider;
 import mayonez.physics.shapes.Circle;
-import mayonez.scripts.Counter;
-import mayonez.scripts.KeepInScene;
-import mayonez.scripts.Timer;
-import slavsquatsuperstar.demos.spacegame.scripts.Damageable;
+import mayonez.physics.shapes.Shape;
+import slavsquatsuperstar.demos.spacegame.objects.Asteroid;
+import slavsquatsuperstar.demos.spacegame.objects.EnemyShip;
+import slavsquatsuperstar.demos.spacegame.objects.PlayerShip;
+import slavsquatsuperstar.demos.spacegame.scripts.SpawnManager;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 public class SpaceGameScene extends Scene {
 
-    private final String shipSprite = "assets/textures/spacegame/spaceship1.png";
-    private Counter enemyCounter, obstacleCounter;
+    private final ArrayList<Pair<Shape, Color>> backgroundObjects;
 
     public SpaceGameScene() {
-        super("Space Game", Preferences.getScreenWidth(), Preferences.getScreenHeight(), 32f);
+        super("Space Game", Preferences.getScreenWidth() * 2, Preferences.getScreenHeight() * 2, 32f);
         setBackground(Sprite.create(Colors.JET_BLACK));
-        setGravity(new Vec2());
+        backgroundObjects = new ArrayList<>();
     }
 
     @Override
     protected void init() {
+        setGravity(new Vec2());
+        backgroundObjects.clear();
+
+        String shipSprite = "assets/textures/spacegame/spaceship1.png";
         addObject(new PlayerShip("Player Space Ship", shipSprite));
 
-        addObject(new GameObject("Enemy Spawner") {
-            private Timer enemySpawnTimer, obstacleSpawnTimer;
+        // Spawn Stuff
+        addObject(new GameObject("Object Spawner") {
 
             @Override
             protected void init() {
-                enemyCounter = new Counter(0, 3, 0);
-                while (!enemyCounter.isAtMax()) {
-                    getScene().addObject(createEnemy("Enemy Spaceship", shipSprite));
-                    enemyCounter.count(1);
-                }
-                addComponent(enemySpawnTimer = new Timer(8));
-
-                obstacleCounter = new Counter(0, 2, 0);
-                while (!obstacleCounter.isAtMax()) {
-                    getScene().addObject(createObstacle("Asteroid"));
-                    obstacleCounter.count(1);
-                }
-                addComponent(obstacleSpawnTimer = new Timer(20));
-            }
-
-            @Override
-            protected void onUserUpdate(float dt) {
-                if (enemySpawnTimer.isReady()) {
-                    if (!enemyCounter.isAtMax()) {
-                        enemyCounter.count(1);
-                        addObject(createEnemy("Enemy Spaceship", shipSprite));
+                SpawnManager enemySpawner;
+                SpawnManager obstacleSpawner;
+                addComponent(enemySpawner = new SpawnManager(6, 5) {
+                    @Override
+                    public GameObject createSpawnedObject() {
+                        return new EnemyShip("Enemy Spaceship", "assets/textures/spacegame/spaceship1.png", this);
                     }
-                    enemySpawnTimer.reset();
-                }
-                if (obstacleSpawnTimer.isReady()) {
-                    if (!obstacleCounter.isAtMax()) {
-                        obstacleCounter.count(1);
-                        addObject(createEnemy("Enemy Spaceship", shipSprite));
+                });
+                addComponent(obstacleSpawner = new SpawnManager(3, 20) {
+                    @Override
+                    public GameObject createSpawnedObject() {
+                        return new Asteroid("Asteroid", this);
                     }
-                    obstacleSpawnTimer.reset();
-                }
+                });
+
+                // Populate world on start
+                enemySpawner.populateToMax();
+                obstacleSpawner.populateToMax();
             }
         });
+
+        // Draw planets and stars
+        // Background stars
+        for (int i = 0; i < 50; i++) {
+            Vec2 starPos = this.getRandomPosition();
+            float starSize = Random.randomFloat(1, 10);
+            float starDist = Random.randomFloat(5, 20) * 5f;
+            Color starColor = new Color(Random.randomInt(192, 255), Random.randomInt(192, 255), Random.randomInt(192, 255));
+            addBackgroundObject(new Circle(starPos, starSize / starDist), starColor); // Star
+        }
+
+        addBackgroundObject(new Circle(new Vec2(-10, -8), 10), Colors.DARK_BLUE); // Earth
+        addBackgroundObject(new Circle(new Vec2(12.5f, 7.5f), 2f), Colors.DARK_GRAY); // Moon
+        addBackgroundObject(new Circle(new Vec2(-12, 11), 1.5f), Colors.YELLOW); // Sun
     }
 
     @Override
     protected void onUserUpdate(float dt) {
         if (KeyInput.keyPressed("r")) SceneManager.reloadScene();
+
+        // camera controls
+        getCamera().rotate(KeyInput.getAxis("arrows horizontal"));
+        getCamera().zoom(1 + 0.01f * KeyInput.getAxis("arrows vertical"));
     }
 
     @Override
     protected void onUserRender(Graphics2D g2) {
-        DebugDraw.fillShape(new Circle(new Vec2(-10, -8), 10), Colors.DARK_BLUE);
-        DebugDraw.fillShape(new Circle(new Vec2(12.5f, 7.5f), 2.5f), Colors.DARK_GRAY);
+        for (Pair<Shape, Color> obj : backgroundObjects) {
+            DebugDraw.fillShape(obj.getFirst(), obj.getSecond());
+        }
     }
 
-    private GameObject createEnemy(String name, String spriteName) {
-        Vec2 randomPos = Random.randomVector(-getWidth(), getWidth(), -getHeight(), getHeight()).mul(0.5f);
-        float randomRot = Random.randomFloat(0f, 360f);
-        return new GameObject(name, new Transform(randomPos, randomRot, new Vec2(2f))) {
-            @Override
-            protected void init() {
-                addTag("Enemy");
-                addComponent(Sprite.create(spriteName));
-                addComponent(new BoxCollider(new Vec2(0.85f, 1f)));
-                Rigidbody rb;
-                addComponent(rb = new Rigidbody(1f, 0.01f, 0.5f));
-                rb.setVelocity(transform.getUp().mul(Random.randomFloat(2f, 10f)));
-                addComponent(new KeepInScene(KeepInScene.Mode.WRAP));
-                addComponent(new Damageable(4) {
-                    @Override
-                    public void onDestroy() {
-                        enemyCounter.count(-1);
-                    }
-                });
-            }
-        };
-    }
-
-    private GameObject createObstacle(String name) {
-        Vec2 randomPos = Random.randomVector(-getWidth(), getWidth(), -getHeight(), getHeight()).mul(0.5f);
-        float randomRot = Random.randomFloat(0f, 360f);
-        Vec2 randomScl = Random.randomVector(2f, 5f, 2f, 5f);
-        return new GameObject(name, new Transform(randomPos, randomRot, randomScl)) {
-            @Override
-            protected void init() {
-                addComponent(new BallCollider(new Vec2(1f)).setDebugDraw(Colors.GRAY, true));
-                Rigidbody rb;
-                addComponent(rb = new Rigidbody(15f, 0.2f, 0.2f));
-                rb.setVelocity(transform.getUp().mul(Random.randomFloat(0f, 1f)));
-                addComponent(new KeepInScene(KeepInScene.Mode.WRAP));
-                addComponent(new Damageable(Random.randomInt(8, 12)) {
-                    @Override
-                    public void onDestroy() {
-                        obstacleCounter.count(-1);
-                    }
-                });
-            }
-        };
+    private void addBackgroundObject(Shape objShape, Color objColor) {
+        backgroundObjects.add(new Pair<>(objShape, objColor));
     }
 
     public static void main(String[] args) {

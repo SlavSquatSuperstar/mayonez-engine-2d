@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static mayonez.test.TestUtils.assertFloatEquals;
 
 /**
- * Unit tests for the {@link mayonez.math.FloatMath} and {@link mayonez.math.IntMath} class.
+ * Unit tests for the {@link mayonez.math.FloatMath} and {@link mayonez.math.IntMath} classes.
  *
  * @author SlavSquatSuperstar
  */
@@ -78,49 +78,6 @@ public class FloatMathTests {
 
         assertEquals(IntMath.max(-6, 1, 2, 3, 5), 5);
         assertFloatEquals(FloatMath.max(-6.5f, 1, 2, 3, 5.5f), 5.5f);
-    }
-
-    // Clamp / Range
-
-    @Test
-    public void clampUpSuccess() {
-        assertEquals(0, FloatMath.clamp(-1, 0, 5));
-        assertFloatEquals(-5f, FloatMath.clamp(-6f, -5f, 0f));
-        assertFloatEquals(2.5f, FloatMath.clamp(0f, 2.5f, 7.5f));
-    }
-
-    @Test
-    public void clampDownSuccess() {
-        assertEquals(5, FloatMath.clamp(6, 0, 5));
-        assertFloatEquals(0f, FloatMath.clamp(1f, -5f, 0f));
-        assertFloatEquals(7.5f, FloatMath.clamp(10f, 2.5f, 7.5f));
-    }
-
-    @Test
-    public void clampNoneSuccess() {
-        assertEquals(1, FloatMath.clamp(1, 0, 5));
-        assertFloatEquals(-1f, FloatMath.clamp(-1f, -5f, 0f));
-    }
-
-    @Test
-    public void inRangeSuccess() {
-        assertTrue(FloatMath.inRange(5, 1, 10));
-        assertTrue(FloatMath.inRange(-5, -10, -1));
-        assertTrue(FloatMath.inRange(0, -5, 5));
-    }
-
-    @Test
-    public void inRangeFailTooLow() {
-        assertFalse(FloatMath.inRange(0, 1, 10));
-        assertFalse(FloatMath.inRange(-11, -10, -1));
-        assertFalse(FloatMath.inRange(-6, -5, 5));
-    }
-
-    @Test
-    public void inRangeFailTooHigh() {
-        assertFalse(FloatMath.inRange(11, 1, 10));
-        assertFalse(FloatMath.inRange(0, -10, -1));
-        assertFalse(FloatMath.inRange(6, -5, 5));
     }
 
     // Rounding

@@ -4,6 +4,12 @@ import mayonez.GameObject;
 import mayonez.Script;
 import mayonez.scripts.Counter;
 
+/**
+ * Gives a {@link GameObject} a health bar that can be damaged by other objects with a {@link Projectile} component.
+ * Once health is depleted, the object is destroyed.
+ *
+ * @author SlavSquatSuperstar
+ */
 public class Damageable extends Script {
 
     private final Counter healthPoints;

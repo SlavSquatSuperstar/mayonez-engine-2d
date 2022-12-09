@@ -59,7 +59,7 @@ public final class GLSceneRenderer extends GLRenderer implements SceneRenderer {
     protected void pushDataToBatch() {
         sprites.forEach(spr -> {
             if (!spr.isEnabled()) return;
-            RenderBatch batch = getAvailableBatch(spr.getTexture(), spr.getObject().getZIndex(), DrawPrimitive.SPRITE);
+            RenderBatch batch = getAvailableBatch(spr.getTexture(), spr.getGameObject().getZIndex(), DrawPrimitive.SPRITE);
             addSprite(batch, spr); // Push vertices to batch
         });
     }

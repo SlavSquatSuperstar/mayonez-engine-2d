@@ -8,6 +8,10 @@ import mayonez.physics.colliders.BallCollider;
 import mayonez.physics.colliders.Collider;
 import mayonez.scripts.KeepInScene;
 
+/**
+ * Allows a {@link GameObject} to be launched with an initial velocity from a source object, and
+ * allows it to damage other objects with a {@link Damageable} component.
+ */
 public class Projectile extends Script {
 
     private final GameObject source;
@@ -24,7 +28,7 @@ public class Projectile extends Script {
         gameObject.addTag("Projectile");
         if (getCollider() == null) Logger.debug("%s needs a collider to function!", this);
         if (getRigidbody() == null) Logger.debug("%s needs a rigidbody to function!", this);
-        else getRigidbody().setVelocity(transform.getUp().mul(speed));
+        else getRigidbody().addVelocity(transform.getUp().mul(speed));
     }
 
     public float getDamage() {
@@ -39,10 +43,21 @@ public class Projectile extends Script {
 //        if (other.hasTag("Damageable")) gameObject.setDestroyed();
     }
 
+    /**
+     * Creates a prefab projectile {@link GameObject} from a projectile script and gives it a collider and rigidbody if
+     * none are added.
+     *
+     * @param projectile the projectile script
+     * @param name       the object name
+     * @param size       the object radius
+     * @param components any components to be added
+     * @return the projectile object.
+     */
     public static GameObject createPrefab(Projectile projectile, String name, float size, Component... components) {
         Transform transform = projectile.source.transform;
+        Rigidbody sourceRb = projectile.source.getComponent(Rigidbody.class);
         return new GameObject(name, new Transform(
-                transform.position.add(transform.getUp()), transform.rotation, new Vec2(size)
+                transform.position.add(transform.getUp().mul(0.5f)), transform.rotation, new Vec2(size)
         )) {
             @Override
             protected void init() {
@@ -53,8 +68,13 @@ public class Projectile extends Script {
                     if (c instanceof Rigidbody) hasRb = true;
                     else if (c instanceof Collider) hasCol = true;
                 }
-                if (!hasRb) addComponent(new Rigidbody(0.01f));
-                if (!hasCol) addComponent(new BallCollider(new Vec2(1f)).setDebugDraw(Colors.WHITE, true).setTrigger(true));
+                if (!hasRb) { // set velocity relative to object
+                    Rigidbody rb;
+                    addComponent(rb = new Rigidbody(0.01f));
+                    if (sourceRb != null) rb.setVelocity(sourceRb.getVelocity());
+                }
+                if (!hasCol)
+                    addComponent(new BallCollider(new Vec2(1f)).setDebugDraw(Colors.WHITE, true).setTrigger(true));
                 addComponent(new KeepInScene(KeepInScene.Mode.DESTROY));
                 addComponent(projectile);
             }

@@ -2,7 +2,6 @@ package mayonez;
 
 import mayonez.util.StringUtils;
 
-import java.awt.*;
 import java.util.Objects;
 
 /**
@@ -50,14 +49,6 @@ public abstract class Component {
     }
 
     /**
-     * Draw the component on the screen.
-     *
-     * @param g2 the window's graphics object
-     */
-    public void render(Graphics2D g2) {
-    }
-
-    /**
      * Destroy this component and free up system resources once the parent {@link GameObject} is destroyed.
      */
     final void destroy() {
@@ -93,7 +84,7 @@ public abstract class Component {
      *
      * @return the game object
      */
-    public GameObject getObject() {
+    public GameObject getGameObject() {
         return gameObject;
     }
 
@@ -105,7 +96,7 @@ public abstract class Component {
      * @param gameObject a game object
      * @return this component
      */
-    final Component setObject(GameObject gameObject) {
+    final Component setGameObject(GameObject gameObject) {
         this.gameObject = gameObject;
         this.transform = gameObject.transform;
         return this;

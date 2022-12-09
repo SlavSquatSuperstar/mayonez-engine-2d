@@ -7,6 +7,7 @@ import mayonez.graphics.GLCamera;
 import mayonez.graphics.JCamera;
 import mayonez.graphics.renderer.*;
 import mayonez.graphics.sprite.Sprite;
+import mayonez.math.Random;
 import mayonez.math.Vec2;
 import mayonez.physics.PhysicsWorld;
 import mayonez.util.StringUtils;
@@ -304,6 +305,15 @@ public abstract class Scene {
     }
 
     /**
+     * Returns a random vector within the scene's bounds.
+     *
+     * @return a random position
+     */
+    public Vec2 getRandomPosition() {
+        return Random.randomVector(-getWidth(), getWidth(), -getHeight(), getHeight()).mul(0.5f);
+    }
+
+    /**
      * Returns the main camera of the scene.
      *
      * @return the {@link JCamera} instance
@@ -337,6 +347,8 @@ public abstract class Scene {
     public float getScale() {
         return scale;
     }
+
+    // Object Overrides
 
     @Override
     public boolean equals(Object obj) {

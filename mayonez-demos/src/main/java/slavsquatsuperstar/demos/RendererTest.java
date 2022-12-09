@@ -7,7 +7,6 @@ import mayonez.graphics.sprite.Sprite;
 import mayonez.graphics.sprite.SpriteSheet;
 import mayonez.input.KeyInput;
 import mayonez.input.MouseInput;
-import mayonez.math.Random;
 import mayonez.math.Vec2;
 import mayonez.physics.Rigidbody;
 import mayonez.physics.colliders.BoxCollider;
@@ -15,11 +14,8 @@ import mayonez.physics.shapes.Circle;
 import mayonez.physics.shapes.Ellipse;
 import mayonez.physics.shapes.Rectangle;
 import mayonez.physics.shapes.Triangle;
-import mayonez.scripts.*;
-import mayonez.scripts.movement.DragAndDrop;
-import mayonez.scripts.movement.KeyMovement;
-import mayonez.scripts.movement.MouseScript;
-import mayonez.scripts.movement.MoveMode;
+import mayonez.scripts.KeepInScene;
+import mayonez.scripts.movement.*;
 
 /**
  * For testing renderer, camera, and world to screen coordinates.
@@ -38,18 +34,14 @@ public class RendererTest extends Scene {
 
     @Override
     public void init() {
-//        Logger.log(Assets.scanFiles("mayonez-demos/src/main/resources/assets/textures"));
-//        Logger.log(Assets.scanResources("assets"));
-
-        addObject(new GameObject("Mario",
-                Transform.scaleInstance(new Vec2(2))) {
+        addObject(new GameObject("Mario", Transform.scaleInstance(new Vec2(2))) {
             @Override
             protected void init() {
                 getScene().getCamera().setSubject(this).setKeepInScene(true);
                 addComponent(sprites.getSprite(0));
                 addComponent(new BoxCollider(new Vec2(0.8f, 1)));
                 addComponent(new Rigidbody(1f).setFixedRotation(true));
-                addComponent(new KeepInScene(KeepInScene.Mode.STOP));
+                addComponent(new KeepInScene(KeepInScene.Mode.STOP).setEnabled(true));
                 addComponent(new MouseScript() {
                     @Override
                     protected Vec2 getRawInput() {
@@ -62,18 +54,11 @@ public class RendererTest extends Scene {
                     }
                 });
                 addComponent(new KeyMovement(MoveMode.POSITION, 15));
+                addComponent(new KeyRotation(MoveMode.POSITION, 180));
                 addComponent(new Script() {
                     @Override
                     public void update(float dt) {
-                        if (KeyInput.keyDown("q"))
-                            transform.rotation += 3f;
-                        if (KeyInput.keyDown("e"))
-                            transform.rotation -= 3f;
-
-                        if (KeyInput.keyDown("+"))
-                            transform.scale(new Vec2(1.1f));
-                        if (KeyInput.keyDown("-"))
-                            transform.scale(new Vec2(0.9f));
+                        transform.scale(new Vec2(1 + 0.05f * KeyInput.getAxis("plus minus")));
                     }
                 });
             }
@@ -114,6 +99,7 @@ public class RendererTest extends Scene {
         DebugDraw.drawLine(new Vec2(4, -4), new Vec2(-4, -4), Colors.YELLOW);
 
         Rectangle sceneBounds = new Rectangle(new Vec2(0, 0), new Vec2(this.getWidth(), this.getHeight()));
+        DebugDraw.drawShape(sceneBounds.scale(new Vec2(1.0f), null), Colors.BLACK);
         DebugDraw.drawShape(sceneBounds.scale(new Vec2(0.8f), null), Colors.BLACK);
         DebugDraw.drawShape(sceneBounds.scale(new Vec2(0.6f), null), Colors.BLACK);
         DebugDraw.drawShape(sceneBounds.scale(new Vec2(0.4f), null), Colors.BLACK);
@@ -128,8 +114,9 @@ public class RendererTest extends Scene {
         Ellipse ellipse = new Ellipse(new Vec2(0, 5), new Vec2(9.5f, 8));
         DebugDraw.drawShape(ellipse, Colors.BLUE);
 
-        getCamera().getTransform().rotate(-KeyInput.getAxis("arrows horizontal"));
-        getCamera().getTransform().scale(new Vec2(1 + 0.1f * KeyInput.getAxis("arrows vertical")));
+        // camera controls
+        getCamera().rotate(-KeyInput.getAxis("arrows horizontal"));
+        getCamera().zoom(1 + 0.01f * KeyInput.getAxis("arrows vertical"));
 
 //        if (KeyInput.keyPressed("space"))
 //            System.out.println("pressed");
@@ -143,8 +130,7 @@ public class RendererTest extends Scene {
     }
 
     private GameObject createEnemy(String name, int spriteIndex) {
-        Vec2 randomPos = Random.randomVector(-getWidth(), getWidth(), -getHeight(), getHeight()).mul(0.5f);
-        return new GameObject(name, randomPos) {
+        return new GameObject(name, getRandomPosition()) {
             @Override
             protected void init() {
                 addComponent(sprites.getSprite(spriteIndex));

@@ -1,3 +1,5 @@
+import org.gradle.internal.os.OperatingSystem
+
 plugins {
     id 'idea'
     id 'java'
@@ -23,7 +25,7 @@ project.ext {
 allprojects {
     // Project Info
     group 'slavsquatsuperstar'
-    version '0.7.5-pre1'
+    version '0.7.5-pre2'
 
     // Java Version
     sourceCompatibility = targetCompatibility = javaVersion
@@ -48,8 +50,12 @@ application { // For 'run' task
 }
 
 run {
-    jvmArgs = ["-XstartOnFirstThread"] // For LWJGL
-    args = ["true"] // Set CLI args (Use GL true/false)
+    if (OperatingSystem.current() == OperatingSystem.MAC_OS) {
+        jvmArgs = ["-XstartOnFirstThread"] // For LWJGL
+        args = ["true"] // Set CLI args (Use GL true/false)
+    } else {
+        args = ["false"]
+    }
 }
 
 jar {

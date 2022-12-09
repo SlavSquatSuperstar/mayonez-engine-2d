@@ -10,7 +10,8 @@ object Random {
     // Random Numbers
 
     /**
-     * Generates a random integer between the two provided bounds.
+     * Generates a uniform random float between the two provided bounds. All numbers in the range
+     * have an equal chance of occurring.
      *
      * @param min the lower bound
      * @param max the upper bound
@@ -23,7 +24,8 @@ object Random {
     }
 
     /**
-     * Generates a random integer between the two provided bounds.
+     * Generates a random uniform integer between the two provided bounds. All numbers in the range
+     * have an equal chance of occurring.
      *
      * @param min the lower bound (inclusive)
      * @param max the upper bound (inclusive)
@@ -52,7 +54,7 @@ object Random {
     /**
      * Generates a random event with a certain percent chance of succeeding.
      *
-     * @param percent the change of succeeding, from 0-1
+     * @param percent the chance of succeeding, from 0-1
      * @return true the given percentage of the time, otherwise false
      */
     @JvmStatic

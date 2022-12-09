@@ -3,6 +3,7 @@ package mayonez.physics.colliders
 import mayonez.Component
 import mayonez.DebugDraw
 import mayonez.graphics.Color
+import mayonez.graphics.Renderable
 import mayonez.math.Vec2
 import mayonez.physics.CollisionEventType
 import mayonez.physics.Collisions
@@ -22,7 +23,7 @@ import java.awt.Graphics2D
  * @author SlavSquatSuperstar
  */
 @Suppress("UNCHECKED_CAST")
-abstract class Collider(private val shapeData: Shape) : Component() {
+abstract class Collider(private val shapeData: Shape) : Component(), Renderable {
 
     // Object References
 

@@ -4,6 +4,7 @@ import mayonez.GameObject;
 import mayonez.Logger;
 import mayonez.Script;
 import mayonez.Transform;
+import mayonez.graphics.Renderable;
 import mayonez.graphics.sprite.Sprite;
 import mayonez.input.MouseInput;
 import mayonez.io.image.JTexture;
@@ -16,7 +17,7 @@ import java.awt.*;
 
 // TODO don't place duplicate blocks
 // TODO don't place blocks when selecting button
-public class PlaceBlock extends Script {
+public class PlaceBlock extends Script implements Renderable {
 
     private JTexture cursor;
     private Timer timer;

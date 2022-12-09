@@ -8,7 +8,7 @@ import mayonez.physics.colliders.Collider
 import kotlin.math.abs
 
 /**
- * A physical object with mass that responds to forces and collisions. Rigid bodies do not deform when forces are
+ * A solid, massive object that responds to forces and collisions. Rigid bodies do not deform when forces are
  * applied to them.
  *
  * @author SlavSquatSuperstar

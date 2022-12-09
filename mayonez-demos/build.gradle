@@ -17,7 +17,14 @@ project.ext.mainClass = 'slavsquatsuperstar.Main'
 //}
 //
 //run {
-//    jvmArgs = ["-XstartOnFirstThread"] // For LWJGL
+//    if (org.gradle.internal.os.OperatingSystem.current() == org.gradle.internal.os.OperatingSystem.MAC_OS) {
+//        jvmArgs = ["-XstartOnFirstThread"] // For LWJGL
+//        args = ["true"] // Set CLI args (Use GL true/false)
+//        println "mac"
+//    } else {
+//        args = ["false"]
+//        println "not mac"
+//    }
 //}
 
 dependencies {

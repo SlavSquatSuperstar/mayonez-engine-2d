@@ -4,6 +4,7 @@ import mayonez.DebugDraw;
 import mayonez.GameObject;
 import mayonez.annotations.EngineType;
 import mayonez.annotations.UsesEngine;
+import mayonez.graphics.Renderable;
 import mayonez.io.image.JTexture;
 import mayonez.physics.shapes.Rectangle;
 import mayonez.graphics.Color;
@@ -18,7 +19,7 @@ import java.awt.image.BufferedImage;
  * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.AWT)
-public final class JSprite extends Sprite {
+public final class JSprite extends Sprite implements Renderable {
 
     private final JTexture texture;
 

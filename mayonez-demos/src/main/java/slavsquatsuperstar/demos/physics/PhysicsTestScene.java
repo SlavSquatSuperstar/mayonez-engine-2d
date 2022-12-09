@@ -68,17 +68,8 @@ public abstract class PhysicsTestScene extends Scene {
         else if (KeyInput.keyPressed("4")) SceneManager.setScene("Angular Resolution Test");
 
         if (KeyInput.keyPressed("space")) {
-//            System.out.println("pressed");
             enabledGravity = !enabledGravity;
-//        } else if (KeyInput.keyDown("space")) {
-//            System.out.println("held");
         }
-
-//        if (MouseInput.buttonPressed("left mouse")) {
-//            System.out.println("pressed");
-//        } else if (MouseInput.buttonDown("left mouse")) {
-//            System.out.println("held");
-//        }
 
         if (enabledGravity) setGravity(new Vec2(0, -9.8f));
         else setGravity(new Vec2());

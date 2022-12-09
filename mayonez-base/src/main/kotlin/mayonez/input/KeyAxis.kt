@@ -8,16 +8,17 @@ import mayonez.util.StringUtils
 // TODO store mappings?
 internal enum class KeyAxis(
     /**
-     * The positive key of this axis (up, right, clockwise, etc.).
-     */
-    private val posKey: Key,
-    /**
      * The negative key of this axis (down, left, counterclockwise, etc.).
      */
-    private val negKey: Key
+    private val negKey: Key,
+    /**
+     * The positive key of this axis (up, right, clockwise, etc.).
+     */
+    private val posKey: Key
 ) {
-    VERTICAL(Key.W, Key.S), HORIZONTAL(Key.D, Key.A), HORIZONTAL2(Key.E, Key.Q),
-    ARROWS_VERTICAL(Key.UP, Key.DOWN), ARROWS_HORIZONTAL(Key.RIGHT, Key.LEFT);
+    VERTICAL(Key.S, Key.W), HORIZONTAL(Key.A, Key.D), HORIZONTAL2(Key.Q, Key.E),
+    ARROWS_VERTICAL(Key.DOWN, Key.UP), ARROWS_HORIZONTAL(Key.LEFT, Key.RIGHT),
+    BRACKETS(Key.LEFT_BRACKET, Key.RIGHT_BRACKET), PLUS_MINUS(Key.MINUS, Key.EQUALS);
 
     /**
      * @return The value of this axis. 1 if the positive key is pressed. -1 if the negative key is pressed.

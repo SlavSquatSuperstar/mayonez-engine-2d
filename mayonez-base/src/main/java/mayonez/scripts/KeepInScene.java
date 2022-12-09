@@ -2,7 +2,7 @@ package mayonez.scripts;
 
 import mayonez.Logger;
 import mayonez.Script;
-import mayonez.math.FloatMath;
+import mayonez.math.Range;
 import mayonez.math.Vec2;
 import mayonez.physics.Rigidbody;
 import mayonez.physics.colliders.Collider;
@@ -46,9 +46,9 @@ public class KeepInScene extends Script {
 
     @Override
     public void start() {
-        Vec2 sceneHalfSize = getScene().getSize().mul(0.5f); // fetch scene bounds
-        if (minPos == null) minPos = sceneHalfSize.mul(-1);
-        if (maxPos == null) maxPos = sceneHalfSize;
+        Vec2 sceneHalfSize = getScene().getSize(); // fetch scene bounds
+        if (minPos == null) minPos = sceneHalfSize.mul(-0.5f);
+        if (maxPos == null) maxPos = sceneHalfSize.mul(0.5f);
 
         objectCollider = getCollider();
         if (objectCollider == null) {
@@ -75,28 +75,31 @@ public class KeepInScene extends Script {
         Vec2 boxMax = objectBounds.max();
 
         // Edge Checking for x
-        if (!FloatMath.inRange(boxMin.x, minPos.x, maxPos.x - objectBounds.width)) {
-            // Detect if colliding with edge
-            if (boxMin.x < minPos.x) onCrossBounds(Direction.LEFT);
-            else if (boxMax.x > maxPos.x) onCrossBounds(Direction.RIGHT);
+        Range sceneBoundsX = new Range(minPos.x, maxPos.x);
+        if (!sceneBoundsX.contains(objectBounds.getXRange())) {
+            // Skip if too wide for scene
+            if (objectBounds.getXRange().difference() <= sceneBoundsX.difference()) {
+                // Detect if colliding with edge
+                if (boxMin.x < minPos.x) onCrossBounds(Direction.LEFT);
+                else if (boxMax.x > maxPos.x) onCrossBounds(Direction.RIGHT);
 
-            // Detect if moved completely past edge
-            if (boxMax.x < minPos.x) onExitBounds(Direction.LEFT);
-            else if (boxMin.x > maxPos.x) onExitBounds(Direction.RIGHT);
+                // Detect if moved completely past edge
+                if (boxMax.x < minPos.x) onExitBounds(Direction.LEFT);
+                else if (boxMin.x > maxPos.x) onExitBounds(Direction.RIGHT);
+            }
         }
 
         // Edge Checking for y
-        if (!FloatMath.inRange(boxMin.y, minPos.y, maxPos.y - objectBounds.height)) {
-            if (boxMin.y < minPos.y) onCrossBounds(Direction.TOP);
-            else if (boxMax.y > maxPos.y) onCrossBounds(Direction.BOTTOM);
+        Range sceneBoundsY = new Range(minPos.y, maxPos.y);
+        if (!sceneBoundsY.contains(objectBounds.getYRange())) {
+            if (objectBounds.getYRange().difference() <= sceneBoundsY.difference()) {
+                if (boxMin.y < minPos.y) onCrossBounds(Direction.TOP);
+                else if (boxMax.y > maxPos.y) onCrossBounds(Direction.BOTTOM);
 
-            if (boxMax.y < minPos.y) onExitBounds(Direction.TOP);
-            else if (boxMin.y > maxPos.y) onExitBounds(Direction.BOTTOM);
+                if (boxMax.y < minPos.y) onExitBounds(Direction.TOP);
+                else if (boxMin.y > maxPos.y) onExitBounds(Direction.BOTTOM);
+            }
         }
-
-//        if (gameObject.name.equals("Camera")) {
-//            System.out.println(transform.position);
-//        }
     }
 
     // Collision Event Methods

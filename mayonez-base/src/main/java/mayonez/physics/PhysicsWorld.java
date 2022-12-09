@@ -107,7 +107,7 @@ public class PhysicsWorld {
                 c1.setCollisionResolved(false); // reset flags
                 c2.setCollisionResolved(false);
 
-                if (c1.getObject().hasTag("Ignore Collisions") || c2.getObject().hasTag("Ignore Collisions")) continue;
+                if (c1.getGameObject().hasTag("Ignore Collisions") || c2.getGameObject().hasTag("Ignore Collisions")) continue;
                 if (c1.isStatic() && c2.isStatic()) continue; // Don't check for collision if both are static
 
                 CollisionListener lis = getListener(c1, c2);

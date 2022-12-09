@@ -7,8 +7,6 @@ import mayonez.physics.colliders.Collider;
 import mayonez.scripts.movement.MovementScript;
 import mayonez.util.StringUtils;
 
-import java.awt.*;
-import java.util.List;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -87,18 +85,6 @@ public class GameObject {
 //        while (!changesToObject.isEmpty()) changesToObject.poll().onReceive();
     }
 
-    /**
-     * Draw all components.
-     *
-     * @param g2 the window's graphics object
-     */
-    public final void render(Graphics2D g2) {
-        components.forEach(c -> {
-            if (c.isEnabled()) c.render(g2);
-        });
-        onUserRender(g2);
-    }
-
     // User Defined Methods
 
     /**
@@ -115,14 +101,6 @@ public class GameObject {
     protected void onUserUpdate(float dt) {
     }
 
-    /**
-     * An overridable draw method for custom render behavior.
-     *
-     * @param g2 the window's graphics object
-     */
-    protected void onUserRender(Graphics2D g2) {
-    }
-
     // Component Methods
 
     /**
@@ -134,7 +112,7 @@ public class GameObject {
         if (comp == null) return;
         if (!comp.getClass().isAnonymousClass() && getComponent(comp.getClass()) != null)
             Logger.debug("GameObject %s [ID %d] Already has a %s", name, objectID, comp.getClass().getSimpleName());
-        components.add(comp.setObject(this));
+        components.add(comp.setGameObject(this));
         if (comp instanceof Script s) s.init();
     }
 
