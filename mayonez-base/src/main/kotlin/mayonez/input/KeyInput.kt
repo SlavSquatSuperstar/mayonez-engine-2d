@@ -1,9 +1,9 @@
 package mayonez.input
 
-import org.lwjgl.glfw.GLFW.*
 import mayonez.Mayonez
 import mayonez.event.EventSystem
 import mayonez.event.KeyboardEvent
+import org.lwjgl.glfw.GLFW.*
 import java.awt.event.KeyAdapter
 import java.awt.event.KeyEvent
 
@@ -13,6 +13,7 @@ import java.awt.event.KeyEvent
  * @author SlavSquatSuperstar
  */
 // TODO GLFW sticky keys?
+// TODO concurrent modification sometimes happens
 @Suppress("unused")
 object KeyInput : KeyAdapter() {
 

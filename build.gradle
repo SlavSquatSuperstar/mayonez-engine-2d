@@ -17,8 +17,7 @@ description = 'The root project for Mayonez Engine that contains all modules.'
 // Custom Settings
 project.ext {
     javaVersion = '17'
-    mainClass = 'slavsquatsuperstar.demos.RendererTest'
-//    mainClass = 'slavsquatsuperstar.demos.geometrydash.LevelEditor'
+    mainClass = 'slavsquatsuperstar.demos.mario.RendererTest'
     mainModule = 'mayonez.demos'
 }
 

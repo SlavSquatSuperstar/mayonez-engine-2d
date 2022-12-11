@@ -42,16 +42,16 @@ public abstract class GLRenderer implements Renderer {
 
     @Override
     public final void render(Graphics2D g2) {
-        bind();
-        rebuffer();
-        batches.forEach(RenderBatch::render); // Draw
-        unbind();
+        preRender(); // Upload to GPU
+        rebuffer(); // Sort everything into batches
+        batches.forEach(RenderBatch::render); // Draw everything
+        postRender(); // Free from GPU
     }
 
     /**
      * Upload resources to the GPU.
      */
-    protected void bind() {
+    protected void preRender() {
         // Bind shader and upload uniforms
         shader.bind();
         GLCamera camera = (GLCamera) getCamera();
@@ -64,7 +64,7 @@ public abstract class GLRenderer implements Renderer {
      */
     protected final void rebuffer() {
         batches.forEach(RenderBatch::clear); // Prepare batches
-        pushDataToBatch();
+        createBatches();
         batches.forEach(RenderBatch::upload); // Finalize batches
         batches.sort(Comparator.comparingInt(RenderBatch::getZIndex)); // Sort batches by z-index
     }
@@ -72,7 +72,7 @@ public abstract class GLRenderer implements Renderer {
     /**
      * Clear resources form the GPU.
      */
-    protected void unbind() {
+    protected void postRender() {
         shader.unbind(); // Unbind everything
     }
 
@@ -81,12 +81,12 @@ public abstract class GLRenderer implements Renderer {
         batches.forEach(RenderBatch::delete);
     }
 
-    // OpenGL Helper Methods
+    // Batch Helper Methods
 
     /**
      * How to add image data to render batches.
      */
-    protected abstract void pushDataToBatch();
+    protected abstract void createBatches();
 
     protected final RenderBatch getAvailableBatch(GLTexture texture, int zIndex, DrawPrimitive primitive) {
         for (RenderBatch batch : batches) {

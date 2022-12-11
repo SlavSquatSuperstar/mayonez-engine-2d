@@ -23,7 +23,7 @@ public abstract sealed class Sprite extends Component permits GLSprite, JSprite 
     protected Transform spriteXf;
 
     public Sprite(Color color) {
-        this.color = color;
+        this.color = (color != null) ? color : Colors.WHITE;
     }
 
     /**

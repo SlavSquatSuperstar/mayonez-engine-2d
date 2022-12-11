@@ -1,15 +1,18 @@
 package mayonez.graphics.renderer;
 
 import mayonez.*;
-import org.joml.Vector4f;
-import mayonez.math.Vec2;
 import mayonez.annotations.EngineType;
 import mayonez.annotations.UsesEngine;
 import mayonez.graphics.sprite.GLSprite;
+import mayonez.graphics.sprite.Sprite;
+import mayonez.math.Vec2;
 import mayonez.physics.shapes.Rectangle;
+import org.joml.Vector4f;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.lwjgl.opengl.GL11.*;
 
 /**
  * Draws all in-game textures onto the screen using LWJGL's OpenGL library.
@@ -21,10 +24,13 @@ public final class GLSceneRenderer extends GLRenderer implements SceneRenderer {
 
     private static final int MAX_BATCH_SIZE = Preferences.getMaxBatchSize();
     private final List<GLSprite> sprites;
+    private final RenderBatch bgBatch;
+    private Sprite background;
 
     public GLSceneRenderer() {
         super("assets/shaders/default.glsl", MAX_BATCH_SIZE);
         sprites = new ArrayList<>();
+        bgBatch = new RenderBatch(1, 0, DrawPrimitive.SPRITE);
     }
 
     // Game Object Methods
@@ -32,6 +38,8 @@ public final class GLSceneRenderer extends GLRenderer implements SceneRenderer {
     @Override
     public void setScene(Scene newScene) {
         newScene.getObjects().forEach(this::addObject);
+        background = newScene.getBackground();
+        background.setTransform(Transform.scaleInstance(newScene.getSize()));
     }
 
     @Override
@@ -48,21 +56,50 @@ public final class GLSceneRenderer extends GLRenderer implements SceneRenderer {
 
     // Renderer Methods
 
-
     @Override
-    protected void bind() {
-        super.bind();
-        shader.uploadIntArray("uTextures", textureSlots);
+    public void start() {
+        super.start();
+        bgBatch.clear();
     }
 
     @Override
-    protected void pushDataToBatch() {
+    protected void preRender() {
+        super.preRender();
+        shader.uploadIntArray("uTextures", textureSlots);
+        drawBackground();
+    }
+
+    private void drawBackground() {
+        if (background.getTexture() == null) {
+            Vector4f bgColor = background.getColor().toGL();
+            glClearColor(bgColor.x, bgColor.y, bgColor.z, 1f);
+            glClear(GL_COLOR_BUFFER_BIT);
+        } else {
+            // Rebuffer and draw the background
+            bgBatch.clear();
+            addSprite(bgBatch, (GLSprite) background);
+            bgBatch.upload();
+            bgBatch.render();
+        }
+    }
+
+    @Override
+    protected void createBatches() {
         sprites.forEach(spr -> {
             if (!spr.isEnabled()) return;
             RenderBatch batch = getAvailableBatch(spr.getTexture(), spr.getGameObject().getZIndex(), DrawPrimitive.SPRITE);
             addSprite(batch, spr); // Push vertices to batch
         });
     }
+
+    @Override
+    public void stop() {
+        super.stop();
+        bgBatch.delete();
+        sprites.clear();
+    }
+
+    // Batch Helper Methods
 
     /**
      * Adds a sprite to a render batch and pushes its vertex data and texture.
@@ -87,12 +124,6 @@ public final class GLSceneRenderer extends GLRenderer implements SceneRenderer {
             batch.pushVec2(texCoords[i]);
             batch.pushInt(texID);
         }
-    }
-
-    @Override
-    public void stop() {
-        super.stop();
-        sprites.clear();
     }
 
 }

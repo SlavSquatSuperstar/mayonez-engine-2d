@@ -1,12 +1,11 @@
 package mayonez;
 
 import mayonez.event.Receivable;
-import mayonez.graphics.Camera;
-import mayonez.graphics.Colors;
-import mayonez.graphics.GLCamera;
-import mayonez.graphics.JCamera;
+import mayonez.graphics.Color;
+import mayonez.graphics.*;
 import mayonez.graphics.renderer.*;
 import mayonez.graphics.sprite.Sprite;
+import mayonez.io.image.Texture;
 import mayonez.math.Random;
 import mayonez.math.Vec2;
 import mayonez.physics.PhysicsWorld;
@@ -142,15 +141,9 @@ public abstract class Scene {
      */
     public final void render(Graphics2D g2) {
         if (started && loaded) {
-            // Render background
-            if (g2 != null) {
-                g2.setColor(background.getColor().toAWT());
-                g2.fillRect(0, 0, (int) ((size.x + 1) * scale), (int) ((size.y + 1) * scale));
-                onUserRender(g2);
-            }
-            // Render objects
             renderer.render(g2);
             if (useGL) debugRenderer.render(g2);
+            onUserRender(g2);
         }
     }
 
@@ -281,7 +274,7 @@ public abstract class Scene {
         return objects.size();
     }
 
-    // Getters and Setters
+    // Scene Properties
 
     /**
      * Returns the name of this scene.
@@ -314,6 +307,39 @@ public abstract class Scene {
     }
 
     /**
+     * Returns the number pixels on the screen for every unit in the world. Defaults to a 1:1 scale.
+     *
+     * @return the scene scale
+     */
+    public float getScale() {
+        return scale;
+    }
+
+    // Getters and Setters
+
+    public Sprite getBackground() {
+        return background;
+    }
+
+    /**
+     * Sets the background color of this scene. Defaults to white.
+     *
+     * @param background a color
+     */
+    public void setBackground(Color background) {
+        this.background = Sprite.create(background);
+    }
+
+    /**
+     * Sets the background image of this scene.
+     *
+     * @param background a texture
+     */
+    public void setBackground(Texture background) {
+        this.background = Sprite.create(background);
+    }
+
+    /**
      * Returns the main camera of the scene.
      *
      * @return the {@link JCamera} instance
@@ -322,30 +348,12 @@ public abstract class Scene {
         return camera;
     }
 
-    /**
-     * Sets the background color of this scene. Defaults to white.
-     *
-     * @param background an RGB color
-     */
-    public void setBackground(Sprite background) {
-        this.background = background;
-    }
-
-    public void setGravity(Vec2 gravity) {
-        physics.setGravity(gravity);
-    }
-
     final DebugRenderer getDebugRenderer() {
         return debugRenderer;
     }
 
-    /**
-     * Returns the number pixels on the screen for every unit in the world. Defaults to a 1:1 scale.
-     *
-     * @return the scene scale
-     */
-    public float getScale() {
-        return scale;
+    public void setGravity(Vec2 gravity) {
+        physics.setGravity(gravity);
     }
 
     // Object Overrides

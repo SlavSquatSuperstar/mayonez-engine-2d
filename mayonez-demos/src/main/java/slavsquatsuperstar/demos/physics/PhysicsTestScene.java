@@ -17,7 +17,7 @@ import mayonez.scripts.movement.MoveMode;
 
 import java.awt.*;
 
-public abstract class PhysicsTestScene extends Scene {
+abstract class PhysicsTestScene extends Scene {
 
     static final PhysicsMaterial NORMAL_MATERIAL = new PhysicsMaterial(0.4f, 0.4f, 0.3f);
     static final PhysicsMaterial BOUNCY_MATERIAL = new PhysicsMaterial(0f, 0f, 1f);
@@ -60,7 +60,7 @@ public abstract class PhysicsTestScene extends Scene {
     protected void onUserUpdate(float dt) {
         getCamera().setPosition(getSize().mul(0.5f));
 
-        if (KeyInput.keyPressed("r")) SceneManager.reloadScene(); // reload scene
+        if (KeyInput.keyPressed("r")) SceneManager.reloadScene();
         else if (KeyInput.keyPressed("1")) SceneManager.setScene("Collision Test");
         else if (KeyInput.keyPressed("2")) SceneManager.setScene("Detection Test");
         else if (KeyInput.keyPressed("3")) SceneManager.setScene("Pool Balls Test");

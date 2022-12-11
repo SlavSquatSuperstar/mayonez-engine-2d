@@ -1,15 +1,14 @@
 package mayonez.graphics.renderer;
 
-import org.joml.Vector2f;
-import org.joml.Vector3f;
-import org.joml.Vector4f;
-import org.lwjgl.BufferUtils;
-import mayonez.math.Vec2;
 import mayonez.Preferences;
 import mayonez.annotations.EngineType;
 import mayonez.annotations.UsesEngine;
 import mayonez.io.image.GLTexture;
-import mayonez.util.StringUtils;
+import mayonez.math.Vec2;
+import org.joml.Vector2f;
+import org.joml.Vector3f;
+import org.joml.Vector4f;
+import org.lwjgl.BufferUtils;
 
 import java.nio.IntBuffer;
 import java.util.ArrayList;
@@ -36,9 +35,9 @@ public class RenderBatch {
 
     // Vertex Parameters
     private final DrawPrimitive primitive;
-    private final int vertexCount;
-    private final int elementCount;
-    private final int vertexSize;
+    private final int vertexCount; // vertices per primitive
+    private final int elementCount; // element per primitive (if dividing into triangles)
+    private final int vertexSize; // attributes per vertex
     private final List<GLTexture> textures;
 
     // GPU Resources
@@ -126,7 +125,6 @@ public class RenderBatch {
     }
 
     public void render() {
-//        System.out.println(this);
         // Bind textures and vertices
         for (int i = 0; i < textures.size(); i++) textures.get(i).bind(i);
         glBindVertexArray(vao);
@@ -167,7 +165,7 @@ public class RenderBatch {
         return textures.indexOf(tex) + 1; // return tex ID
     }
 
-    // Push Vertex Methods
+    // Vertex Helper Methods
 
     public void pushInt(int i) {
         vertices[vertexOffset++] = i;
@@ -240,7 +238,7 @@ public class RenderBatch {
 
     @Override
     public String toString() {
-//        return String.format("Render Batch (Capacity: %d/%d, Z-Index: %d)", vertexOffset / (vertexSize * vertexCount), maxBatchSize, zIndex);
-        return String.format("Render Batch (%s)", StringUtils.capitalize(primitive.name()));
+        return String.format("Render Batch (Type: %s, Capacity: %d/%d, Z-Index: %d)",
+                primitive, vertexOffset / (vertexCount * vertexSize), maxBatchSize, zIndex);
     }
 }

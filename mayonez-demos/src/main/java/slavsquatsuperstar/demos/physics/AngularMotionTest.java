@@ -62,7 +62,6 @@ public class AngularMotionTest extends PhysicsTestScene {
                         rb.applyAngularImpulse(10 * -KeyInput.getAxis("horizontal"));
 //                        if (KeyInput.keyPressed("space")) {
 //                            rb.setAngVelocity(0f);
-//                            Logger.log("%s: %.4f", col, rb.getAngMass());
 //                        }
                     }
                 });

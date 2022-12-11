@@ -83,8 +83,8 @@ public final class GLDebugRenderer extends GLRenderer implements DebugRenderer {
     // Game Loop Methods
 
     @Override
-    protected void bind() {
-        super.bind();
+    protected void preRender() {
+        super.preRender();
         // Prepare to draw
         glEnable(GL_LINE_SMOOTH);
         glDisable(GL_BLEND);
@@ -95,7 +95,7 @@ public final class GLDebugRenderer extends GLRenderer implements DebugRenderer {
     }
 
     @Override
-    protected void pushDataToBatch() {
+    protected void createBatches() {
         shapes.forEach(shape -> { // Push shape vertices
             if (shape.shape instanceof Edge line) {
                 RenderBatch batch = getAvailableBatch(null, shape.zIndex, DrawPrimitive.LINE);
@@ -114,8 +114,8 @@ public final class GLDebugRenderer extends GLRenderer implements DebugRenderer {
     }
 
     @Override
-    protected void unbind() {
-        super.unbind();
+    protected void postRender() {
+        super.postRender();
         shapes.clear(); // Clear primitives after each frame
         // Finish drawing
         glDisable(GL_LINE_SMOOTH);

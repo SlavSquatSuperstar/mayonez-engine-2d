@@ -67,26 +67,24 @@ public final class JTexture extends Texture {
      * @param g2       the graphics object of the window
      * @param parentXf the transform of the parent object
      * @param spriteXf any additional transformations of the sprite
-     * @param cellSize the scale of the scene
+     * @param scale    the scale of the scene
      */
-    public void draw(Graphics2D g2, Transform parentXf, Transform spriteXf, float cellSize) {
+    public void draw(Graphics2D g2, Transform parentXf, Transform spriteXf, float scale) {
         // Measurements are in screen coordinates (pixels)
-        Transform newXf = parentXf.combine(spriteXf);
-
-        Vec2 parentCenter = (newXf.position.mul(cellSize));
-        Vec2 parentSize = (newXf.scale.mul(cellSize));
+        Transform texXf = parentXf.combine(spriteXf);
+        Vec2 parentCenter = texXf.position.mul(scale);
+        Vec2 parentSize = texXf.scale.mul(scale);
         Vec2 parentHalfSize = parentSize.mul(0.5f);
         Vec2 imageSize = new Vec2(image.getWidth(), image.getHeight());
 
         // Draw sprite at parent center with parent rotation and scale
         AffineTransform g2Xf = new AffineTransform(); // Identity
         g2Xf.translate(parentCenter.x - parentHalfSize.x, parentCenter.y - parentHalfSize.y);
-        g2Xf.rotate(FloatMath.toRadians(newXf.rotation), parentHalfSize.x, parentHalfSize.y);
+        g2Xf.rotate(FloatMath.toRadians(texXf.rotation), parentHalfSize.x, parentHalfSize.y);
         g2Xf.scale(parentSize.x / imageSize.x, parentSize.y / imageSize.y);
 
-        g2Xf.scale(1, -1); // Flip image vertically like GL
-        g2Xf.translate(0, -imageSize.y); // Move to correct position
-
+        g2Xf.scale(1.0, -1.0); // Flip image vertically like GL
+        g2Xf.translate(0.0, -imageSize.y); // Move to correct position
         g2.drawImage(image, g2Xf, null);
     }
 

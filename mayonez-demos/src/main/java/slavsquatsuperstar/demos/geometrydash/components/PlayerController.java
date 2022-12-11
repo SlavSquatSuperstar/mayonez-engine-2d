@@ -38,8 +38,6 @@ public class PlayerController extends Script {
 
     @Override
     public void update(float dt) {
-//        Logger.log("player = %s", transform.position);
-
         if (getScene() instanceof LevelScene) {
             // Jump if on ground
             if (KeyInput.keyDown("w"))

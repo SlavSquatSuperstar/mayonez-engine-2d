@@ -4,7 +4,6 @@ import kotlin.Pair;
 import mayonez.*;
 import mayonez.graphics.Color;
 import mayonez.graphics.Colors;
-import mayonez.graphics.sprite.Sprite;
 import mayonez.input.KeyInput;
 import mayonez.math.Random;
 import mayonez.math.Vec2;
@@ -24,7 +23,7 @@ public class SpaceGameScene extends Scene {
 
     public SpaceGameScene() {
         super("Space Game", Preferences.getScreenWidth() * 2, Preferences.getScreenHeight() * 2, 32f);
-        setBackground(Sprite.create(Colors.JET_BLACK));
+        setBackground(Colors.JET_BLACK);
         backgroundObjects = new ArrayList<>();
     }
 
@@ -62,16 +61,16 @@ public class SpaceGameScene extends Scene {
             }
         });
 
-        // Draw planets and stars
-        // Background stars
+        // Add background stars
         for (int i = 0; i < 50; i++) {
-            Vec2 starPos = this.getRandomPosition();
+            Vec2 starPos = this.getRandomPosition().mul(2);
             float starSize = Random.randomFloat(1, 10);
             float starDist = Random.randomFloat(5, 20) * 5f;
             Color starColor = new Color(Random.randomInt(192, 255), Random.randomInt(192, 255), Random.randomInt(192, 255));
             addBackgroundObject(new Circle(starPos, starSize / starDist), starColor); // Star
         }
 
+        // Add solar system
         addBackgroundObject(new Circle(new Vec2(-10, -8), 10), Colors.DARK_BLUE); // Earth
         addBackgroundObject(new Circle(new Vec2(12.5f, 7.5f), 2f), Colors.DARK_GRAY); // Moon
         addBackgroundObject(new Circle(new Vec2(-12, 11), 1.5f), Colors.YELLOW); // Sun
