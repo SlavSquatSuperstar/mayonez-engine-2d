@@ -3,6 +3,7 @@ package slavsquatsuperstar.demos.geometrydash;
 import mayonez.*;
 import mayonez.graphics.Colors;
 import mayonez.graphics.sprite.JSpriteSheet;
+import mayonez.graphics.sprite.ShapeSprite;
 import mayonez.graphics.sprite.SpriteSheet;
 import mayonez.math.Vec2;
 import mayonez.physics.Rigidbody;
@@ -23,7 +24,8 @@ public class LevelEditor extends Scene {
             @Override
             protected void init() {
                 addComponent(new Rigidbody(0f).setFixedRotation(true));
-                addComponent(new BoxCollider(new Vec2(getWidth() + 2f, 2f)).setDebugDraw(Colors.BLACK, true));
+                addComponent(new BoxCollider(new Vec2(getWidth() + 2f, 2f)));
+                addComponent(new ShapeSprite(Colors.BLACK, true));
             }
         });
 

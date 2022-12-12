@@ -52,8 +52,8 @@ public abstract class Component {
      * Destroy this component and free up system resources once the parent {@link GameObject} is destroyed.
      */
     final void destroy() {
-        gameObject = null;
         onDestroy();
+        gameObject = null;
     }
 
     /**

@@ -52,8 +52,8 @@ public final class JSprite extends Sprite implements Renderable {
     // Sprite Methods
 
     @Override
-    public JTexture getTexture() {
-        return texture;
+    public JSprite copy() {
+        return (texture == null) ? new JSprite(color) : new JSprite(texture);
     }
 
     public BufferedImage getImage() {
@@ -61,8 +61,14 @@ public final class JSprite extends Sprite implements Renderable {
     }
 
     @Override
-    public JSprite copy() {
-        return (texture == null) ? new JSprite(color) : new JSprite(texture);
+    public JTexture getTexture() {
+        return texture;
     }
+
+    @Override
+    public int getZIndex() {
+        return gameObject.getZIndex();
+    }
+
 
 }

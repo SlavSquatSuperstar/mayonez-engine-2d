@@ -22,7 +22,6 @@ public class PlaceBlock extends Script implements Renderable {
     private JTexture cursor;
     private Timer timer;
 
-
     @Override
     public void init() {
         timer = new Timer(0.2f);
@@ -66,4 +65,8 @@ public class PlaceBlock extends Script implements Renderable {
         this.cursor = cursor;
     }
 
+    @Override
+    public int getZIndex() {
+        return gameObject.getZIndex();
+    }
 }

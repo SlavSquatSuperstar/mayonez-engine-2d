@@ -14,7 +14,7 @@ import java.nio.IntBuffer;
  * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.GL)
-public enum DrawPrimitive {
+enum DrawPrimitive {
     /**
      * An object with 2 vertices with attributes Pos (2), Color (4)
      */

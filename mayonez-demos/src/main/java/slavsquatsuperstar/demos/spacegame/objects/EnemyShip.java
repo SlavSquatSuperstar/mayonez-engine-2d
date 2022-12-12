@@ -21,12 +21,14 @@ public class EnemyShip extends GameObject {
 
     private final String spriteName;
     private final SpawnManager enemySpawner;
+    private boolean isFiring;
+    private int shotsLeft;
 
     public EnemyShip(String name, String spriteName, SpawnManager enemySpawner) {
-        super(name, Transform.scaleInstance(new Vec2(2f)));
+        super(name, Transform.scaleInstance(new Vec2(2f)), 1);
         this.spriteName = spriteName;
         this.enemySpawner = enemySpawner;
-        this.setZIndex(1);
+        isFiring = false;
     }
 
     @Override
@@ -57,7 +59,15 @@ public class EnemyShip extends GameObject {
 
             @Override
             protected boolean readyToFire() {
-                return Random.randomPercent(0.05f);
+                if (isReloaded() && isFiring) {
+                    // Decide to stop shooting
+                    if (--shotsLeft > 0) isFiring = false;
+                } else {
+                    // Decide to start shooting
+                    isFiring = Random.randomPercent(0.01f);
+                    if (isFiring) shotsLeft = Random.randomInt(1, 5);
+                }
+                return isFiring;
             }
 
             @Override

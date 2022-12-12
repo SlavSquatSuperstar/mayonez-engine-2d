@@ -14,7 +14,7 @@ import java.awt.geom.Line2D;
  */
 public class Grid extends Component implements Renderable {
 
-    private Vec2 gridSize;
+    private final Vec2 gridSize;
 
     public Grid(Vec2 gridSize) {
         this.gridSize = gridSize;
@@ -44,5 +44,10 @@ public class Grid extends Component implements Renderable {
         for (float drawY = start.y; drawY <= end.y; drawY += gridSize.y)
 //            DebugDraw.drawLine(new Vec2(start.x, drawY), new Vec2(end.x, drawY), gridColor);
             g2.draw(new Line2D.Float(start.x, drawY, end.x, drawY));
+    }
+
+    @Override
+    public int getZIndex() {
+        return gameObject.getZIndex();
     }
 }

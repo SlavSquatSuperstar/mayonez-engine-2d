@@ -1,9 +1,6 @@
 package mayonez.physics.colliders
 
 import mayonez.Component
-import mayonez.DebugDraw
-import mayonez.graphics.Color
-import mayonez.graphics.Renderable
 import mayonez.math.Vec2
 import mayonez.physics.CollisionEventType
 import mayonez.physics.Collisions
@@ -11,7 +8,6 @@ import mayonez.physics.Rigidbody
 import mayonez.physics.resolution.Manifold
 import mayonez.physics.shapes.BoundingBox
 import mayonez.physics.shapes.Shape
-import java.awt.Graphics2D
 
 /**
  * A shape centered around the object's position that can detect collisions with other shapes. Requires a [Rigidbody]
@@ -22,8 +18,7 @@ import java.awt.Graphics2D
  *
  * @author SlavSquatSuperstar
  */
-@Suppress("UNCHECKED_CAST")
-abstract class Collider(private val shapeData: Shape) : Component(), Renderable {
+abstract class Collider(private val shapeData: Shape) : Component() {
 
     // Object References
 
@@ -31,6 +26,8 @@ abstract class Collider(private val shapeData: Shape) : Component(), Renderable 
      * A reference to the parent object's [Rigidbody]. A collider should have a rigidbody to react to collisions.
      */
     var rigidbody: Rigidbody? = null
+
+//    lateinit var shapeDrawer: ShapeDrawer
 
     // Physics Engine Properties
 
@@ -49,6 +46,13 @@ abstract class Collider(private val shapeData: Shape) : Component(), Renderable 
     }
 
     /**
+     * Whether this collider has a null or infinite-mass rigidbody, and does not respond to collisions.
+     *
+     * @return if this collider is not affected by collisions.
+     */
+    fun isStatic(): Boolean = rigidbody?.infiniteMass ?: true
+
+    /**
      * If this frame's collision in [sendCollisionEvent] should not be resolved by the physics engine.
      */
     var ignoreCurrentCollision: Boolean = false
@@ -58,38 +62,10 @@ abstract class Collider(private val shapeData: Shape) : Component(), Renderable 
      */
     var collisionResolved: Boolean = false
 
-    // Debug Draw Properties
-
-    /**
-     * What color this collider should appear on the screen as. Set to null to disable drawing.
-     */
-    var drawColor: Color? = null
-        private set
-
-    var fillOption: Boolean = false
-        private set
-
-    /**
-     * Set this shape's color and fill option for [DebugDraw], or disable debug drawing for this shape.
-     *
-     * @param color the draw color (disables drawing if null)
-     */
-    fun <T : Collider?> setDebugDraw(color: Color?, fill: Boolean): T {
-        this.drawColor = color
-        this.fillOption = fill
-        return this as T
-    }
-
     // Game Loop Methods
 
     override fun start() {
         rigidbody = gameObject.getComponent(Rigidbody::class.java)
-    }
-
-    override fun render(g2: Graphics2D?) {
-        if (drawColor == null) return
-        if (fillOption) DebugDraw.fillShape(transformToWorld(), drawColor, gameObject.zIndex)
-        else DebugDraw.drawShape(transformToWorld(), drawColor, gameObject.zIndex)
     }
 
     // Shape Properties
@@ -111,7 +87,7 @@ abstract class Collider(private val shapeData: Shape) : Component(), Renderable 
      * Transforms this shape into world space.
      */
     // TODO save as mutatable field
-    protected open fun transformToWorld(): Shape {
+    open fun transformToWorld(): Shape {
         return shapeData.rotate(getRotation()).scale(transform!!.scale).translate(center())
     }
 
@@ -145,15 +121,6 @@ abstract class Collider(private val shapeData: Shape) : Component(), Renderable 
     fun getContacts(collider: Collider?): Manifold? {
         return Collisions.getContacts(this.transformToWorld(), collider?.transformToWorld())
     }
-
-    // Field Getters and Setters
-
-    /**
-     * Whether this collider has a null or infinite-mass rigidbody, and does not respond to collisions.
-     *
-     * @return if this collider is not affected by collisions.
-     */
-    fun isStatic(): Boolean = rigidbody?.infiniteMass ?: true
 
     // Callback Methods
 

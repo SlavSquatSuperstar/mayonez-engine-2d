@@ -17,6 +17,7 @@ import mayonez.graphics.Colors;
  * @author SlavSquatSuperstar
  */
 // TODO set sprite scale
+// TODO change color and texture
 public abstract sealed class Sprite extends Component permits GLSprite, JSprite {
 
     protected final Color color;

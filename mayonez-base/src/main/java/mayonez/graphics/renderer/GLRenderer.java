@@ -89,6 +89,10 @@ public abstract class GLRenderer implements Renderer {
     protected abstract void createBatches();
 
     protected final RenderBatch getAvailableBatch(GLTexture texture, int zIndex, DrawPrimitive primitive) {
+        return getAvailableBatch(texture, zIndex, primitive, maxBatchSize);
+    }
+
+    protected final RenderBatch getAvailableBatch(GLTexture texture, int zIndex, DrawPrimitive primitive, int maxBatchSize) {
         for (RenderBatch batch : batches) {
             if (batch.hasRoom() && batch.getZIndex() == zIndex) { // has room for more vertices and z-index matches
                 if (batch.hasTexture(texture) || batch.hasTextureRoom()) { // has room for texture

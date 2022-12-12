@@ -1,12 +1,12 @@
 package mayonez.io.image;
 
+import mayonez.Logger;
+import mayonez.Mayonez;
+import mayonez.annotations.EngineType;
+import mayonez.annotations.UsesEngine;
+import mayonez.io.text.TextAsset;
 import org.joml.*;
 import org.lwjgl.BufferUtils;
-import mayonez.Mayonez;
-import mayonez.Logger;
-import mayonez.io.text.TextAsset;
-import mayonez.annotations.UsesEngine;
-import mayonez.annotations.EngineType;
 
 import java.io.IOException;
 import java.nio.FloatBuffer;
@@ -27,7 +27,6 @@ public class Shader extends TextAsset {
     private boolean used = false;
     private String vertexSrc, fragmentSrc;
 
-    // todo should maybe not provide constructors
     public Shader(String filename) {
         super(filename);
         parseShader();
@@ -102,6 +101,8 @@ public class Shader extends TextAsset {
         Logger.debug("OpenGL: Linked shader file \"%s\"", getFilename());
     }
 
+    // Renderer Methods
+
     /**
      * Bind this shader to the GPU.
      */
@@ -122,10 +123,30 @@ public class Shader extends TextAsset {
         }
     }
 
-    public void uploadMat4(String varName, Matrix4f mat) {
-        FloatBuffer matBuffer = BufferUtils.createFloatBuffer(16);
-        mat.get(matBuffer); // Compress matrix into 16x1 array
-        glUniformMatrix4fv(uploadVariable(varName), false, matBuffer);
+    // Upload Methods
+
+    public void uploadInt(String varName, int i) {
+        glUniform1i(uploadVariable(varName), i);
+    }
+
+    public void uploadIntArray(String varName, int[] arr) {
+        glUniform1iv(uploadVariable(varName), arr);
+    }
+
+    public void uploadFloat(String varName, float f) {
+        glUniform1f(uploadVariable(varName), f);
+    }
+
+    public void uploadVec2(String varName, Vector2f vec) {
+        glUniform2f(uploadVariable(varName), vec.x, vec.y);
+    }
+
+    public void uploadVec3(String varName, Vector3f vec) {
+        glUniform3f(uploadVariable(varName), vec.x, vec.y, vec.z);
+    }
+
+    public void uploadVec4(String varName, Vector4f vec) {
+        glUniform4f(uploadVariable(varName), vec.x, vec.y, vec.z, vec.w);
     }
 
     public void uploadMat3(String varName, Matrix3f mat) {
@@ -134,28 +155,10 @@ public class Shader extends TextAsset {
         glUniformMatrix4fv(uploadVariable(varName), false, matBuffer);
     }
 
-    public void uploadVec4(String varName, Vector4f vec) {
-        glUniform4f(uploadVariable(varName), vec.x, vec.y, vec.z, vec.w);
-    }
-
-    public void uploadVec3(String varName, Vector3f vec) {
-        glUniform3f(uploadVariable(varName), vec.x, vec.y, vec.z);
-    }
-
-    public void uploadVec2(String varName, Vector2f vec) {
-        glUniform2f(uploadVariable(varName), vec.x, vec.y);
-    }
-
-    public void uploadFloat(String varName, float f) {
-        glUniform1f(uploadVariable(varName), f);
-    }
-
-    public void uploadInt(String varName, int i) {
-        glUniform1i(uploadVariable(varName), i);
-    }
-
-    public void uploadIntArray(String varName, int[] arr) {
-        glUniform1iv(uploadVariable(varName), arr);
+    public void uploadMat4(String varName, Matrix4f mat) {
+        FloatBuffer matBuffer = BufferUtils.createFloatBuffer(16);
+        mat.get(matBuffer); // Compress matrix into 16x1 array
+        glUniformMatrix4fv(uploadVariable(varName), false, matBuffer);
     }
 
     public void uploadTexture(String varName, int slot) {

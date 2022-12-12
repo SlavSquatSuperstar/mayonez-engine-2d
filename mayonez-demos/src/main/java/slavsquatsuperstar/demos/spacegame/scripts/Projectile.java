@@ -2,6 +2,7 @@ package slavsquatsuperstar.demos.spacegame.scripts;
 
 import mayonez.*;
 import mayonez.graphics.Colors;
+import mayonez.graphics.sprite.ShapeSprite;
 import mayonez.math.Vec2;
 import mayonez.physics.Rigidbody;
 import mayonez.physics.colliders.BallCollider;
@@ -74,7 +75,8 @@ public class Projectile extends Script {
                     if (sourceRb != null) rb.setVelocity(sourceRb.getVelocity());
                 }
                 if (!hasCol)
-                    addComponent(new BallCollider(new Vec2(1f)).setDebugDraw(Colors.WHITE, true).setTrigger(true));
+                    addComponent(new BallCollider(new Vec2(1f)).setTrigger(true));
+                addComponent(new ShapeSprite(Colors.WHITE, true));
                 addComponent(new KeepInScene(KeepInScene.Mode.DESTROY));
                 addComponent(projectile);
             }

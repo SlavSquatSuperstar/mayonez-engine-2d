@@ -1,14 +1,14 @@
 package slavsquatsuperstar.demos.physics;
 
+import mayonez.GameObject;
+import mayonez.graphics.Colors;
+import mayonez.graphics.sprite.ShapeSprite;
 import mayonez.math.FloatMath;
 import mayonez.math.Vec2;
-import mayonez.scripts.*;
-import mayonez.graphics.Colors;
-import mayonez.GameObject;
-import mayonez.Mayonez;
 import mayonez.physics.PhysicsMaterial;
 import mayonez.physics.Rigidbody;
 import mayonez.physics.colliders.BallCollider;
+import mayonez.scripts.KeepInScene;
 import mayonez.scripts.movement.DragAndDrop;
 import mayonez.scripts.movement.MouseFlick;
 import mayonez.scripts.movement.MoveMode;
@@ -21,7 +21,7 @@ import mayonez.scripts.movement.MoveMode;
  */
 public class PoolBallsTest extends PhysicsTestScene {
 
-    private final PhysicsMaterial POOL_BALL_MAT = new PhysicsMaterial(0.0f, 0.0f, 1.0f);
+    private final PhysicsMaterial POOL_BALL_MAT = new PhysicsMaterial(0.05f, 0.05f, 0.95f);
     private final float BALL_RADIUS = 2.28f;
     private final float BALL_MASS = 13.2f;
 
@@ -54,18 +54,14 @@ public class PoolBallsTest extends PhysicsTestScene {
         return new GameObject(name, position) {
             @Override
             protected void init() {
-                addComponent(new BallCollider(BALL_RADIUS).setDebugDraw(Colors.BLUE, false));
+                addComponent(new BallCollider(BALL_RADIUS));
+                addComponent(new ShapeSprite(Colors.BLUE, false));
                 addComponent(new Rigidbody(BALL_MASS).setMaterial(POOL_BALL_MAT));
                 addComponent(new KeepInScene(new Vec2(), getScene().getSize(), KeepInScene.Mode.BOUNCE));
                 addComponent(new DragAndDrop("left mouse"));
-                addComponent(new MouseFlick(MoveMode.IMPULSE, "right mouse", 80, false));
+                addComponent(new MouseFlick(MoveMode.VELOCITY, "right mouse", 50, false));
             }
         };
-    }
-
-    public static void main(String[] args) {
-        Mayonez.setUseGL(false);
-        Mayonez.start(new PoolBallsTest("Pool Balls Test"));
     }
 
 }

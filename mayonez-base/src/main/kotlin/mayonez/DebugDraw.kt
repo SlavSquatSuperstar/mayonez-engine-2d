@@ -42,7 +42,7 @@ object DebugDraw {
      * Draws a line segment onto the screen.
      *
      * @param start the segment's starting point, in world coordinates
-     * @param end   the segment's ending point in, world coordinates
+     * @param end   the segment's ending point, in world coordinates
      * @param color the color to use
      */
     @JvmStatic
@@ -69,9 +69,7 @@ object DebugDraw {
      * @param color the color to use
      */
     @JvmStatic
-    fun drawShape(shape: Shape?, color: MColor?) = drawShape(shape, color, DebugShape.Priority.SHAPE.zIndex)
-
-    fun drawShape(shape: Shape?, color: MColor?, zIndex: Int) = debugDrawShape(shape, color, false, zIndex)
+    fun drawShape(shape: Shape?, color: MColor?) = debugDrawShape(shape, color, false, DebugShape.Priority.SHAPE)
 
     /**
      * Draws a shape onto the screen and fills in the interior.
@@ -80,34 +78,27 @@ object DebugDraw {
      * @param color the color to use
      */
     @JvmStatic
-    fun fillShape(shape: Shape?, color: MColor?) = fillShape(shape, color, DebugShape.Priority.FILL.zIndex)
-
-    fun fillShape(shape: Shape?, color: MColor?, zIndex: Int) = debugDrawShape(shape, color, true, zIndex)
+    fun fillShape(shape: Shape?, color: MColor?) = debugDrawShape(shape, color, true, DebugShape.Priority.FILL)
 
     // Internal Draw methods
 
-    private fun debugDrawShape(shape: Shape?, color: MColor?, fill: Boolean, zIndex: Int) {
+    private fun debugDrawShape(shape: Shape?, color: MColor?, fill: Boolean, priority: DebugShape.Priority) {
         // screen coordinates only
         if (!Mayonez.started) return
         when (shape) {
             is Edge -> addShape(shape.toScreen(), color, false, DebugShape.Priority.LINE)
-            is Polygon -> addShape(shape.toScreen(), color, fill, zIndex)
-            is Circle -> addShape(shape.toScreen(), color, fill, zIndex)
+            is Polygon -> addShape(shape.toScreen(), color, fill, priority)
+            is Circle -> addShape(shape.toScreen(), color, fill, priority)
             is Ellipse -> {
-                if (shape.isCircle) addShape(shape.boundingCircle().toScreen(), color, fill, zIndex)
-                addShape(shape.toScreen(), color, fill, zIndex)
+                if (shape.isCircle) addShape(shape.boundingCircle().toScreen(), color, fill, priority)
+                addShape(shape.toScreen(), color, fill, priority)
             }
         }
     }
 
     private fun addShape(shape: Shape, color: MColor?, fill: Boolean, priority: DebugShape.Priority) {
-        // handle null color here
+        // if color is null, draw black
         debugRenderer.addShape(DebugShape(shape, color ?: Colors.BLACK, fill, priority))
-    }
-
-    private fun addShape(shape: Shape, color: MColor?, fill: Boolean, zIndex: Int) {
-        // handle null color here
-        debugRenderer.addShape(DebugShape(shape, color ?: Colors.BLACK, fill, zIndex))
     }
 
     // Helper Methods

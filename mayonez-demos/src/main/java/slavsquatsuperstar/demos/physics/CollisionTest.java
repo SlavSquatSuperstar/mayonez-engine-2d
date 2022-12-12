@@ -1,7 +1,6 @@
 package slavsquatsuperstar.demos.physics;
 
 import mayonez.math.Vec2;
-import mayonez.Mayonez;
 
 public class CollisionTest extends PhysicsTestScene {
 
@@ -25,11 +24,6 @@ public class CollisionTest extends PhysicsTestScene {
         addObject(createBox(new Vec2(6, 6), new Vec2(20, 60), -30, PhysicsTestScene.NORMAL_MATERIAL));
         addObject(createBox(new Vec2(10, 6), new Vec2(70, 30), -45, PhysicsTestScene.STICKY_MATERIAL));
         addObject(createBox(new Vec2(4, 12), new Vec2(90, 20), 90, PhysicsTestScene.NORMAL_MATERIAL));
-    }
-
-    public static void main(String[] args) {
-        Mayonez.setUseGL(false);
-        Mayonez.start(new CollisionTest("Collision Test"));
     }
 
 }

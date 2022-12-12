@@ -37,7 +37,7 @@ public abstract class Scene {
 
     // Scene Layers
     private final List<GameObject> objects;
-    private final boolean useGL;
+    private final boolean separateDebugRenderer;
     private final SceneRenderer renderer;
     private final DebugRenderer debugRenderer;
     private final PhysicsWorld physics;
@@ -73,16 +73,17 @@ public abstract class Scene {
         objects = new ArrayList<>();
         changesToScene = new LinkedList<>();
 
-        useGL = Boolean.TRUE.equals(Mayonez.getUseGL());
-        if (useGL) {
-            renderer = new GLSceneRenderer();
-            debugRenderer = new GLDebugRenderer();
+        if (Boolean.TRUE.equals(Mayonez.getUseGL())) {
+            renderer = new GLDefaultRenderer();
+            debugRenderer = (DebugRenderer) renderer;
             camera = new GLCamera(Mayonez.getScreenSize(), this.getScale());
         } else {
             renderer = new JDefaultRenderer();
             debugRenderer = (DebugRenderer) renderer;
             camera = new JCamera(Mayonez.getScreenSize(), this.getScale());
         }
+        separateDebugRenderer = false;
+//        separateDebugRenderer = debugRenderer != renderer;
         physics = new PhysicsWorld();
     }
 
@@ -97,7 +98,7 @@ public abstract class Scene {
             init();
             // Start Layers
             renderer.start();
-            if (useGL) debugRenderer.start();
+            if (separateDebugRenderer) debugRenderer.start();
             physics.start();
             // Add to Layers
             renderer.setScene(this);
@@ -142,7 +143,7 @@ public abstract class Scene {
     public final void render(Graphics2D g2) {
         if (started && loaded) {
             renderer.render(g2);
-            if (useGL) debugRenderer.render(g2);
+            if (separateDebugRenderer) debugRenderer.render(g2);
             onUserRender(g2);
         }
     }
@@ -161,7 +162,7 @@ public abstract class Scene {
             objects.clear();
             // Clear layers
             renderer.stop();
-            if (useGL) debugRenderer.stop();
+            if (separateDebugRenderer) debugRenderer.stop();
             physics.stop();
             started = false;
             loaded = false;

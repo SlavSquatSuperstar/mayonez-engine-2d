@@ -20,11 +20,13 @@ import java.util.ArrayList;
 public class SpaceGameScene extends Scene {
 
     private final ArrayList<Pair<Shape, Color>> backgroundObjects;
+    private final int numStars;
 
     public SpaceGameScene() {
         super("Space Game", Preferences.getScreenWidth() * 2, Preferences.getScreenHeight() * 2, 32f);
         setBackground(Colors.JET_BLACK);
         backgroundObjects = new ArrayList<>();
+        numStars = 100;
     }
 
     @Override
@@ -62,7 +64,7 @@ public class SpaceGameScene extends Scene {
         });
 
         // Add background stars
-        for (int i = 0; i < 50; i++) {
+        for (int i = 0; i < numStars; i++) {
             Vec2 starPos = this.getRandomPosition().mul(2);
             float starSize = Random.randomFloat(1, 10);
             float starDist = Random.randomFloat(5, 20) * 5f;
@@ -97,7 +99,8 @@ public class SpaceGameScene extends Scene {
     }
 
     public static void main(String[] args) {
-        Mayonez.setUseGL(false);
+        String arg0 = (args.length > 0) ? args[0] : "false";
+        Mayonez.setUseGL(Boolean.valueOf(arg0)); // Automatically choose AWT/GL from CL args
         Mayonez.start(new SpaceGameScene());
     }
 }

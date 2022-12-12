@@ -1,6 +1,7 @@
 package slavsquatsuperstar.demos.physics;
 
-import mayonez.Mayonez;
+import mayonez.DebugDraw;
+import mayonez.graphics.Colors;
 import mayonez.input.KeyInput;
 import mayonez.input.MouseInput;
 import mayonez.math.Vec2;
@@ -10,15 +11,13 @@ import mayonez.physics.shapes.Polygon;
 import mayonez.physics.shapes.Rectangle;
 import mayonez.physics.shapes.Shape;
 import mayonez.physics.shapes.*;
-import mayonez.graphics.Colors;
-import mayonez.DebugDraw;
 
 import java.awt.*;
 
 
 public class DetectionTest extends PhysicsTestScene {
 
-    private final Polygon box = new Rectangle(new Vec2(0, 0), new Vec2(15, 18), 0);
+    private final Polygon box = new Rectangle(new Vec2(50, 35), new Vec2(15, 18), 0);
     private final Polygon rect = new Rectangle(new Vec2(0, 0), new Vec2(12, 10), 0);
     private final Triangle tri = new Triangle(new Vec2(-7.5f, -5), new Vec2(0, 8), new Vec2(7.5f, -4));
     private final Circle circ = new Circle(new Vec2(0, 0), 8);
@@ -30,7 +29,6 @@ public class DetectionTest extends PhysicsTestScene {
 
     @Override
     public void onUserRender(Graphics2D g2) {
-        getCamera().setPosition(new Vec2());
         DebugDraw.drawLine(new Vec2(0, -20), new Vec2(0, 20), Colors.DARK_GRAY);
         rot -= KeyInput.getAxis("horizontal");
         DebugDraw.drawLine(new Vec2(-20, 0), new Vec2(20, 0), Colors.DARK_GRAY);
@@ -47,8 +45,4 @@ public class DetectionTest extends PhysicsTestScene {
         }
     }
 
-    public static void main(String[] args) {
-        Mayonez.setUseGL(false);
-        Mayonez.start(new DetectionTest("Detection Test Scene"));
-    }
 }

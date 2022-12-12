@@ -26,10 +26,19 @@ public abstract class FireProjectile extends Script {
 
     @Override
     public void update(float dt) {
-        if (fireTimer.isReady() && readyToFire()) {
+        if (isReloaded() && readyToFire()) {
             getScene().addObject(spawnProjectile());
             fireTimer.reset();
         }
+    }
+
+    /**
+     * Whether the fire cooldown has reached zero.
+     *
+     * @return if able to fire
+     */
+    protected boolean isReloaded() {
+        return fireTimer.isReady();
     }
 
     /**

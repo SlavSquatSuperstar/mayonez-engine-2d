@@ -1,16 +1,16 @@
 package slavsquatsuperstar.demos.physics;
 
-import mayonez.math.Vec2;
-import mayonez.scripts.*;
-import mayonez.graphics.Colors;
 import mayonez.GameObject;
-import mayonez.Mayonez;
 import mayonez.Script;
+import mayonez.graphics.Colors;
+import mayonez.graphics.sprite.ShapeSprite;
 import mayonez.input.KeyInput;
+import mayonez.math.Vec2;
 import mayonez.physics.Rigidbody;
-import mayonez.physics.colliders.BoxCollider;
 import mayonez.physics.colliders.BallCollider;
+import mayonez.physics.colliders.BoxCollider;
 import mayonez.physics.colliders.Collider;
+import mayonez.scripts.KeepInScene;
 import mayonez.scripts.movement.DragAndDrop;
 import mayonez.scripts.movement.MouseFlick;
 import mayonez.scripts.movement.MoveMode;
@@ -28,7 +28,8 @@ public class FrictionTest extends PhysicsTestScene {
             @Override
             protected void init() {
                 addComponent(new Rigidbody(0).setFixedRotation(true));
-                addComponent(new BoxCollider(new Vec2(getWidth(), 2)).setDebugDraw(Colors.BLACK, false));
+                addComponent(new BoxCollider(new Vec2(getWidth(), 2)));
+                addComponent(new ShapeSprite(Colors.BLACK, false));
             }
         });
 
@@ -37,7 +38,8 @@ public class FrictionTest extends PhysicsTestScene {
             protected void init() {
                 transform.rotate(-25);
                 addComponent(new Rigidbody(0).setMaterial(NORMAL_MATERIAL));
-                addComponent(new BoxCollider(new Vec2(40, 5)).setDebugDraw(Colors.BLACK, false));
+                addComponent(new BoxCollider(new Vec2(40, 5)));
+                addComponent(new ShapeSprite(Colors.BLACK, false));
             }
         });
 
@@ -48,8 +50,9 @@ public class FrictionTest extends PhysicsTestScene {
             protected void init() {
                 float speed = 2f;
 //                Collider2D collider = new BoxCollider2D(new Vec2(6, 6));
-                Collider collider = new BallCollider(3f).setDebugDraw(Colors.BLUE, false);
+                Collider collider = new BallCollider(3f);
                 addComponent(collider);
+                addComponent(new ShapeSprite(Colors.BLUE, false));
                 addComponent(new Rigidbody(collider.getMass(DENSITY)));
                 addComponent(new MouseFlick(MoveMode.VELOCITY, "right mouse", 15, false));
                 addComponent(new DragAndDrop("left mouse"));
@@ -77,8 +80,4 @@ public class FrictionTest extends PhysicsTestScene {
         });
     }
 
-    public static void main(String[] args) {
-        Mayonez.setUseGL(false);
-        Mayonez.start(new FrictionTest("Friction Test Scene"));
-    }
 }

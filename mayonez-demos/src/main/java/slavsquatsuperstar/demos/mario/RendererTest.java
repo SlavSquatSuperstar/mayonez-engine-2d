@@ -1,5 +1,6 @@
 package slavsquatsuperstar.demos.mario;
 
+import mayonez.DebugDraw;
 import mayonez.Mayonez;
 import mayonez.Scene;
 import mayonez.SceneManager;
@@ -10,6 +11,10 @@ import mayonez.input.KeyInput;
 import mayonez.io.Assets;
 import mayonez.io.image.Texture;
 import mayonez.math.Vec2;
+import mayonez.physics.shapes.Circle;
+import mayonez.physics.shapes.Ellipse;
+import mayonez.physics.shapes.Rectangle;
+import mayonez.physics.shapes.Triangle;
 
 /**
  * For testing renderer, camera, and world to screen coordinates.
@@ -63,26 +68,26 @@ public class RendererTest extends Scene {
     protected void onUserUpdate(float dt) {
         if (KeyInput.keyPressed("r")) SceneManager.reloadScene();
 
-//        DebugDraw.drawLine(new Vec2(-4, -4), new Vec2(-4, 4), Colors.RED);
-//        DebugDraw.drawLine(new Vec2(-4, 4), new Vec2(4, 4), Colors.GREEN);
-//        DebugDraw.drawLine(new Vec2(4, 4), new Vec2(4, -4), Colors.BLUE);
-//        DebugDraw.drawLine(new Vec2(4, -4), new Vec2(-4, -4), Colors.YELLOW);
-//
-//        Rectangle sceneBounds = new Rectangle(new Vec2(0, 0), new Vec2(this.getWidth(), this.getHeight()));
-//        DebugDraw.drawShape(sceneBounds.scale(new Vec2(1.0f), null), Colors.BLACK);
-//        DebugDraw.drawShape(sceneBounds.scale(new Vec2(0.8f), null), Colors.BLACK);
-//        DebugDraw.drawShape(sceneBounds.scale(new Vec2(0.6f), null), Colors.BLACK);
-//        DebugDraw.drawShape(sceneBounds.scale(new Vec2(0.4f), null), Colors.BLACK);
-//        DebugDraw.drawShape(sceneBounds.scale(new Vec2(0.2f), null), Colors.BLACK);
-//
-//        Triangle tri = new Triangle(new Vec2(-2, -5), new Vec2(0, -1), new Vec2(2, -5));
-//        DebugDraw.fillShape(tri, Colors.ORANGE);
-//
-//        Circle circle = new Circle(new Vec2(0, 5), 5);
-//        DebugDraw.drawShape(circle, Colors.PURPLE);
-//
-//        Ellipse ellipse = new Ellipse(new Vec2(0, 5), new Vec2(9.5f, 8));
-//        DebugDraw.drawShape(ellipse, Colors.BLUE);
+        DebugDraw.drawLine(new Vec2(-4, -4), new Vec2(-4, 4), Colors.RED);
+        DebugDraw.drawLine(new Vec2(-4, 4), new Vec2(4, 4), Colors.GREEN);
+        DebugDraw.drawLine(new Vec2(4, 4), new Vec2(4, -4), Colors.BLUE);
+        DebugDraw.drawLine(new Vec2(4, -4), new Vec2(-4, -4), Colors.YELLOW);
+
+        Rectangle sceneBounds = new Rectangle(new Vec2(0, 0), new Vec2(this.getWidth(), this.getHeight()));
+        DebugDraw.drawShape(sceneBounds.scale(new Vec2(1.0f), null), Colors.BLACK);
+        DebugDraw.drawShape(sceneBounds.scale(new Vec2(0.8f), null), Colors.BLACK);
+        DebugDraw.drawShape(sceneBounds.scale(new Vec2(0.6f), null), Colors.BLACK);
+        DebugDraw.drawShape(sceneBounds.scale(new Vec2(0.4f), null), Colors.BLACK);
+        DebugDraw.drawShape(sceneBounds.scale(new Vec2(0.2f), null), Colors.BLACK);
+
+        Triangle tri = new Triangle(new Vec2(-2, -5), new Vec2(0, -1), new Vec2(2, -5));
+        DebugDraw.fillShape(tri, Colors.ORANGE);
+
+        Circle circle = new Circle(new Vec2(0, 5), 5);
+        DebugDraw.drawShape(circle, Colors.PURPLE);
+
+        Ellipse ellipse = new Ellipse(new Vec2(0, 5), new Vec2(9.5f, 8));
+        DebugDraw.fillShape(ellipse, Colors.BLUE);
 
         // camera controls
         getCamera().rotate(-KeyInput.getAxis("arrows horizontal"));

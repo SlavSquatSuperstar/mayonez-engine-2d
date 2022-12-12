@@ -16,7 +16,6 @@ public abstract class Script extends Component {
      * Add any necessary components to the game object before other components have been added.
      */
     public void init() {
-
     }
 
     // Callback Methods

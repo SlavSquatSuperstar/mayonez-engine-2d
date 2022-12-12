@@ -36,7 +36,7 @@ public class PlayerShip extends GameObject {
         addComponent(Sprite.create(spriteName));
         addComponent(new Rigidbody(1f));
         addComponent(new BoxCollider(new Vec2(0.85f, 1f)));
-        addComponent(new KeepInScene(getScene().getSize().mul(-0.5f), getScene().getSize().mul(0.5f), KeepInScene.Mode.STOP));
+        addComponent(new KeepInScene(KeepInScene.Mode.WRAP));
         addComponent(new KeyMovement(MoveMode.FORCE, 10f, "horizontal2", "vertical").setObjectAligned(true));
         addComponent(new KeyRotation(MoveMode.VELOCITY, 1f, "horizontal"));
 //        addComponent(new FollowMouse(MoveMode.POSITION, 1f, true));
