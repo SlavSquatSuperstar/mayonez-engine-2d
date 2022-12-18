@@ -1,7 +1,5 @@
 package mayonez.io
 
-import org.reflections.Reflections
-import org.reflections.scanners.Scanners
 import mayonez.Logger
 import mayonez.Mayonez
 import mayonez.io.image.GLTexture
@@ -11,6 +9,8 @@ import mayonez.io.image.Texture
 import mayonez.io.text.CSVFile
 import mayonez.io.text.JSONFile
 import mayonez.io.text.TextFile
+import org.reflections.Reflections
+import org.reflections.scanners.Scanners
 import java.io.File
 import java.net.MalformedURLException
 import java.net.URL
@@ -35,7 +35,7 @@ object Assets {
 
     // doesn't work for jar
     internal fun getCurrentDirectory() {
-        Logger.debug("Assets: Current launch directory at ${System.getProperty("user.dir")}")
+        Logger.debug("Current launch directory at ${System.getProperty("user.dir")}")
     }
 
     // Search Folder Methods
@@ -57,7 +57,7 @@ object Assets {
         val resources = Reflections(directory, Scanners.Resources).getResources(Pattern.compile(".*\\.*"))
 //        val resources = searchDirectory(directory, AssetType.CLASSPATH)
         resources.forEach { createAsset(it) } // Create an asset from each path
-        Logger.debug("Assets: Loaded ${resources.size} resources inside \"$directory\"")
+        Logger.debug("Loaded ${resources.size} resources inside \"$directory\"")
         return ArrayList(resources);
     }
 
@@ -70,7 +70,7 @@ object Assets {
     fun scanFiles(directory: String): MutableList<String> {
         val files = searchDirectory(directory, AssetType.EXTERNAL)
         files.forEach { createAsset(it) }
-        Logger.debug("Assets: Loaded ${files.size} files inside $directory")
+        Logger.debug("Loaded ${files.size} files inside $directory")
         return files
     }
 
@@ -121,10 +121,10 @@ object Assets {
     @JvmStatic
     fun createAsset(filename: String): Asset {
         if (hasAsset(filename)) {
-            Logger.debug("Assets: Resource \"%s\" already exists", filename)
+            Logger.debug("Resource \"%s\" already exists", filename)
         } else {
             assets[filename] = Asset(filename)
-            Logger.debug("Assets: Loaded resource at \"%s\"", filename)
+            Logger.debug("Loaded resource at \"%s\"", filename)
         }
         return assets[filename]!!
     }
@@ -141,7 +141,7 @@ object Assets {
         val ctor = assetClass.getDeclaredConstructor(String::class.java)
         val asset = assetClass.cast(ctor.newInstance(filename)) ?: return null
         assets[filename] = asset
-        Logger.debug("Assets: Loaded %s at \"%s\"", assetClass.simpleName, filename)
+        Logger.debug("Loaded %s at \"%s\"", assetClass.simpleName, filename)
         return asset
     }
 
@@ -206,7 +206,7 @@ object Assets {
      */
     @JvmStatic
     fun getTexture(filename: String): Texture? {
-        return if (Mayonez.useGL == true) getAsset(filename, GLTexture::class.java)
+        return if (Mayonez.useGL) getAsset(filename, GLTexture::class.java)
         else getAsset(filename, JTexture::class.java)
     }
 
@@ -243,7 +243,7 @@ object Assets {
     @JvmStatic
     fun clearAssets() {
         assets.clear()
-        Logger.debug("Assets: Cleared all program resources")
+        Logger.debug("Cleared all program resources")
     }
 
     // Asset URL Methods
@@ -268,7 +268,7 @@ object Assets {
         return try {
             File(filename).toURI().toURL()
         } catch (e: MalformedURLException) {
-            Logger.error("Assets: Invalid file path \"%s\"", filename)
+            Logger.error("Invalid file path \"%s\"", filename)
             null
         }
     }

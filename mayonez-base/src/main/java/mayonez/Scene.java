@@ -37,7 +37,6 @@ public abstract class Scene {
 
     // Scene Layers
     private final List<GameObject> objects;
-    private final boolean separateDebugRenderer;
     private final SceneRenderer renderer;
     private final DebugRenderer debugRenderer;
     private final PhysicsWorld physics;
@@ -73,17 +72,15 @@ public abstract class Scene {
         objects = new ArrayList<>();
         changesToScene = new LinkedList<>();
 
-        if (Boolean.TRUE.equals(Mayonez.getUseGL())) {
+        if (Mayonez.getUseGL()) {
             renderer = new GLDefaultRenderer();
-            debugRenderer = (DebugRenderer) renderer;
             camera = new GLCamera(Mayonez.getScreenSize(), this.getScale());
         } else {
             renderer = new JDefaultRenderer();
-            debugRenderer = (DebugRenderer) renderer;
             camera = new JCamera(Mayonez.getScreenSize(), this.getScale());
         }
-        separateDebugRenderer = false;
-//        separateDebugRenderer = debugRenderer != renderer;
+        debugRenderer = (DebugRenderer) renderer;
+
         physics = new PhysicsWorld();
     }
 
@@ -98,7 +95,7 @@ public abstract class Scene {
             init();
             // Start Layers
             renderer.start();
-            if (separateDebugRenderer) debugRenderer.start();
+            if (separateDebugRenderer()) debugRenderer.start();
             physics.start();
             // Add to Layers
             renderer.setScene(this);
@@ -143,7 +140,7 @@ public abstract class Scene {
     public final void render(Graphics2D g2) {
         if (started && loaded) {
             renderer.render(g2);
-            if (separateDebugRenderer) debugRenderer.render(g2);
+            if (separateDebugRenderer()) debugRenderer.render(g2);
             onUserRender(g2);
         }
     }
@@ -162,7 +159,7 @@ public abstract class Scene {
             objects.clear();
             // Clear layers
             renderer.stop();
-            if (separateDebugRenderer) debugRenderer.stop();
+            if (separateDebugRenderer()) debugRenderer.stop();
             physics.stop();
             started = false;
             loaded = false;
@@ -210,7 +207,7 @@ public abstract class Scene {
                 renderer.addObject(obj);
                 physics.addObject(obj);
             }
-            Logger.debug("Game: Added object \"%s [ID %d]\" to scene \"%s\"", obj.name, obj.objectID, this.name);
+            Logger.debug("Added object \"%s [ID %d]\" to scene \"%s\"", obj.name, obj.objectID, this.name);
         };
         if (started) changesToScene.offer(addObject); // Dynamic add: add to scene and layers in next frame
         else addObject.onReceive();
@@ -228,7 +225,7 @@ public abstract class Scene {
             renderer.removeObject(obj);
             physics.removeObject(obj);
             obj.onDestroy();
-            Logger.debug("Game: Removed object \"%s [ID %d]\" from scene \"%s\"", obj.name, obj.objectID, this.name);
+            Logger.debug("Removed object \"%s [ID %d]\" from scene \"%s\"", obj.name, obj.objectID, this.name);
         });
     }
 
@@ -343,7 +340,7 @@ public abstract class Scene {
     /**
      * Returns the main camera of the scene.
      *
-     * @return the {@link JCamera} instance
+     * @return the {@link GLCamera} instance
      */
     public Camera getCamera() {
         return camera;
@@ -351,6 +348,10 @@ public abstract class Scene {
 
     final DebugRenderer getDebugRenderer() {
         return debugRenderer;
+    }
+
+    public boolean separateDebugRenderer() { // if scene renderer is also debug renderer
+        return renderer != debugRenderer;
     }
 
     public void setGravity(Vec2 gravity) {

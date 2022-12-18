@@ -54,7 +54,7 @@ public class Shader extends TextAsset {
                 }
             }
         } catch (Exception e) {
-            Logger.error("I/O: Could not read file \"%s\"", getFilename());
+            Logger.error("Could not read file \"%s\"", getFilename());
         }
     }
 

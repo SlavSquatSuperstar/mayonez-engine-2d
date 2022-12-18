@@ -1,12 +1,10 @@
 package mayonez.input
 
-import org.joml.Vector4f
-import org.lwjgl.glfw.GLFW.GLFW_PRESS
-import org.lwjgl.glfw.GLFW.GLFW_RELEASE
 import mayonez.Mayonez
 import mayonez.SceneManager
-import mayonez.graphics.GLCamera
 import mayonez.math.Vec2
+import org.lwjgl.glfw.GLFW.GLFW_PRESS
+import org.lwjgl.glfw.GLFW.GLFW_RELEASE
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.awt.event.MouseWheelEvent
@@ -175,13 +173,13 @@ object MouseInput : MouseAdapter() {
 
     @JvmStatic
     fun buttonDown(button: Button): Boolean {
-        return if (Mayonez.useGL!!) buttonDown(button.glCode)
+        return if (Mayonez.useGL) buttonDown(button.glCode)
         else buttonDown(button.awtCode)
     }
 
     @JvmStatic
     fun buttonPressed(button: Button): Boolean {
-        return if (Mayonez.useGL!!) buttonPressed(button.glCode)
+        return if (Mayonez.useGL) buttonPressed(button.glCode)
         else buttonPressed(button.awtCode)
     }
 
@@ -211,18 +209,7 @@ object MouseInput : MouseAdapter() {
 
     @JvmStatic
     val position: Vec2
-        get() { // Mirror y and add camera offset
-            val flippedMouse = Vec2(mousePos.x, Mayonez.screenSize.y - mousePos.y)
-            return if (Mayonez.useGL!!) {
-                val camera = SceneManager.currentScene.camera as GLCamera
-                val worldPos = ((flippedMouse / Mayonez.screenSize * 2f) - Vec2(1f)).toWorld()
-                val temp = Vector4f(worldPos.x, worldPos.y, 0f, 0f)
-                temp.mul(camera.inverseProjection).mul(camera.inverseView)
-                Vec2(temp.x, temp.y) + camera.position
-            } else {
-                (flippedMouse + SceneManager.currentScene.camera.offset).toWorld()
-            }
-        }
+        get() = SceneManager.currentScene.camera.toWorld(mousePos)
 
     // Mouse Displacement Getters
 

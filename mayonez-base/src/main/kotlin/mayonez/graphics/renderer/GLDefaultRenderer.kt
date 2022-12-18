@@ -4,6 +4,7 @@ import mayonez.*
 import mayonez.SceneManager.currentScene
 import mayonez.Transform.Companion.scaleInstance
 import mayonez.graphics.sprite.GLSprite
+import mayonez.graphics.sprite.ShapeSprite
 import mayonez.graphics.sprite.Sprite
 import mayonez.math.Vec2
 import mayonez.physics.shapes.*
@@ -25,7 +26,7 @@ class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl", MAX_BATCH_SI
     }
 
     private val lineStyle = LineStyle.QUADS
-    private var sprites: MutableList<GLSprite> = ArrayList()
+    private var sprites: MutableList<Any> = ArrayList()
     private var shapes: MutableList<DebugShape> = ArrayList()
     private var bgBatch: RenderBatch = RenderBatch(1, 0, DrawPrimitive.SPRITE)
     private lateinit var background: Sprite
@@ -41,11 +42,15 @@ class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl", MAX_BATCH_SI
     override fun addObject(obj: GameObject) {
         val sprite = obj.getComponent(GLSprite::class.java)
         if (sprite != null) sprites.add(sprite)
+        val shape = obj.getComponent(ShapeSprite::class.java)
+        if (shape != null) sprites.add(shape)
     }
 
     override fun removeObject(obj: GameObject) {
         val sprite = obj.getComponent(GLSprite::class.java)
         if (sprite != null) sprites.remove(sprite)
+        val shape = obj.getComponent(ShapeSprite::class.java)
+        if (shape != null) sprites.remove(shape)
     }
 
     // Renderer Methods
@@ -77,19 +82,25 @@ class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl", MAX_BATCH_SI
         } else {
             // Rebuffer and draw the background
             bgBatch.clear()
-            addSprite(bgBatch, background as GLSprite)
+            pushSprite(bgBatch, background as GLSprite)
             bgBatch.upload()
             bgBatch.render()
         }
     }
 
     override fun createBatches() {
-        sprites.forEach { spr: GLSprite ->
-            if (!spr.isEnabled) return
-            val batch = getAvailableBatch(spr.texture, spr.gameObject.zIndex, DrawPrimitive.SPRITE)
-            addSprite(batch, spr) // Push vertices to batch
+        sprites.forEach { spr: Any ->
+            if (spr is GLSprite) {
+                if (!spr.isEnabled) return
+                val batch = getAvailableBatch(spr.texture, spr.gameObject.zIndex, DrawPrimitive.SPRITE)
+                pushSprite(batch, spr) // Push vertices to batch
+            } else if (spr is ShapeSprite) {
+                if (!spr.isEnabled) return
+                addShape(DebugShape(spr))
+//                shapes.add(DebugShape(spr))
+            }
         }
-        shapes.forEach { ds: DebugShape ->
+        shapes.forEach { ds: DebugShape -> // Push debug shape vertices to GPU
             when (val shape = ds.shape) {
                 is Edge -> {
                     val batch = getAvailableBatch(null, ds.zIndex, DrawPrimitive.LINE, MAX_LINES)
@@ -133,7 +144,7 @@ class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl", MAX_BATCH_SI
      * @param batch the batch
      * @param spr   the sprite
      */
-    private fun addSprite(batch: RenderBatch, spr: GLSprite) {
+    private fun pushSprite(batch: RenderBatch, spr: GLSprite) {
         // Add sprite vertex data
         val objXf = spr.transform.combine(spr.spriteTransform)
         val color = spr.color.toGL()
@@ -152,7 +163,7 @@ class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl", MAX_BATCH_SI
         }
     }
 
-    override fun addShape(shape: DebugShape) {
+    override fun addShape(shape: DebugShape) { // break down a shape into primitives and add to list
         when (val s = shape.shape) {
             is Edge -> addLine(s, shape)
             is Polygon -> addPolygon(s, shape)

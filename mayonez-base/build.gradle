@@ -34,7 +34,7 @@ dependencies {
     api 'org.jetbrains.kotlin:kotlin-stdlib:1.7.22'
     implementation 'org.json:json:20220924'
     implementation 'org.reflections:reflections:0.10.2'
-    implementation 'org.slf4j:slf4j-simple:1.7.32' // don't update, required by reflections
+    implementation 'org.slf4j:slf4j-simple:1.7.32' // Don't update, required by reflections
 
     // LWJGL Libraries
     implementation platform('org.lwjgl:lwjgl-bom:3.3.1')

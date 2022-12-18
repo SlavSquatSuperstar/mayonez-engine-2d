@@ -60,9 +60,9 @@ public final class GLWindow implements Window {
 
         // Initialize GLFW
         try {
-            if (!glfwInit()) throw new IllegalStateException("Engine: Unable to initialize GLFW");
+            if (!glfwInit()) throw new IllegalStateException("Unable to initialize GLFW");
         } catch (IllegalStateException | ExceptionInInitializerError e) {
-            Logger.error("Window: LWJGL must be run with \"-XstartOnFirstThread\" on macOS");
+            Logger.error("LWJGL must be run with \"-XstartOnFirstThread\" on macOS");
             Mayonez.stop(1);
         }
 
@@ -76,7 +76,7 @@ public final class GLWindow implements Window {
 
         // Create the window
         window = glfwCreateWindow(width, height, title, NULL, NULL);
-        if (window == NULL) throw new RuntimeException("Engine: Could not create the GLFW window");
+        if (window == NULL) throw new RuntimeException("Could not create the GLFW window");
 
         // Add input listeners
 

@@ -1,9 +1,7 @@
 package slavsquatsuperstar.demos.mario;
 
 import mayonez.DebugDraw;
-import mayonez.Mayonez;
 import mayonez.Scene;
-import mayonez.SceneManager;
 import mayonez.graphics.Color;
 import mayonez.graphics.Colors;
 import mayonez.graphics.sprite.SpriteSheet;
@@ -26,8 +24,8 @@ public class RendererTest extends Scene {
     private final SpriteSheet sprites;
     private final Texture background;
 
-    public RendererTest() {
-        super("Renderer Test Scene", 1920, 1080, 40);
+    public RendererTest(String name) {
+        super(name, 1920, 1080, 40);
         sprites = SpriteSheet.create("assets/textures/mario/spritesheet.png", 16, 16, 26, 0);
         background = Assets.getTexture("assets/textures/mario/background.png"); // 1920x1080 (16:9)
     }
@@ -66,8 +64,6 @@ public class RendererTest extends Scene {
 
     @Override
     protected void onUserUpdate(float dt) {
-        if (KeyInput.keyPressed("r")) SceneManager.reloadScene();
-
         DebugDraw.drawLine(new Vec2(-4, -4), new Vec2(-4, 4), Colors.RED);
         DebugDraw.drawLine(new Vec2(-4, 4), new Vec2(4, 4), Colors.GREEN);
         DebugDraw.drawLine(new Vec2(4, 4), new Vec2(4, -4), Colors.BLUE);
@@ -102,12 +98,6 @@ public class RendererTest extends Scene {
 //            System.out.println("pressed");
 //        else if (MouseInput.buttonDown("left mouse"))
 //            System.out.println("held");
-    }
-
-    public static void main(String[] args) {
-        String arg0 = (args.length > 0) ? args[0] : "false";
-        Mayonez.setUseGL(Boolean.valueOf(arg0)); // Automatically choose AWT/GL from CL args
-        Mayonez.start(new RendererTest());
     }
 
 }

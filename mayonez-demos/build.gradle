@@ -7,7 +7,7 @@ plugins {
 }
 
 description = 'The testbed project for Mayonez Engine that contains all the demo scenes.'
-project.ext.mainClass = 'slavsquatsuperstar.Main'
+//project.ext.mainClass = 'slavsquatsuperstar.demos.spacegame.SpaceGameScene'
 
 // Tasks
 

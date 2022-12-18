@@ -10,8 +10,8 @@ import mayonez.physics.shapes.*
 import mayonez.util.MColor
 
 /**
- * Draws colliders and shapes onto the screen. All shapes are specified using world coordinates, and colliders are
- * centered around an object's position.
+ * Allows colliders and shapes to be drawn onto the screen. All shapes are specified using world coordinates,
+ * and colliders are centered around an object's position.
  *
  * @author SlavSquatSuperstar
  */

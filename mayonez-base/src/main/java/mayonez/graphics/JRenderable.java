@@ -6,10 +6,12 @@ import mayonez.annotations.UsesEngine;
 import java.awt.*;
 
 /**
- * An object or component that can be drawn to the screen.
+ * An object or component that can be drawn to the screen using the AWT engine.
+ *
+ * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.AWT)
-public interface Renderable {
+public interface JRenderable {
     /**
      * Draw this object to the screen.
      *

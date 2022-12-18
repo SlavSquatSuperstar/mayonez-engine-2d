@@ -1,7 +1,10 @@
 package slavsquatsuperstar.demos.spacegame;
 
 import kotlin.Pair;
-import mayonez.*;
+import mayonez.DebugDraw;
+import mayonez.GameObject;
+import mayonez.Preferences;
+import mayonez.Scene;
 import mayonez.graphics.Color;
 import mayonez.graphics.Colors;
 import mayonez.input.KeyInput;
@@ -9,8 +12,6 @@ import mayonez.math.Random;
 import mayonez.math.Vec2;
 import mayonez.physics.shapes.Circle;
 import mayonez.physics.shapes.Shape;
-import slavsquatsuperstar.demos.spacegame.objects.Asteroid;
-import slavsquatsuperstar.demos.spacegame.objects.EnemyShip;
 import slavsquatsuperstar.demos.spacegame.objects.PlayerShip;
 import slavsquatsuperstar.demos.spacegame.scripts.SpawnManager;
 
@@ -22,8 +23,8 @@ public class SpaceGameScene extends Scene {
     private final ArrayList<Pair<Shape, Color>> backgroundObjects;
     private final int numStars;
 
-    public SpaceGameScene() {
-        super("Space Game", Preferences.getScreenWidth() * 2, Preferences.getScreenHeight() * 2, 32f);
+    public SpaceGameScene(String name) {
+        super(name, Preferences.getScreenWidth() * 2, Preferences.getScreenHeight() * 2, 32f);
         setBackground(Colors.JET_BLACK);
         backgroundObjects = new ArrayList<>();
         numStars = 100;
@@ -36,6 +37,8 @@ public class SpaceGameScene extends Scene {
 
         String shipSprite = "assets/textures/spacegame/spaceship1.png";
         addObject(new PlayerShip("Player Space Ship", shipSprite));
+        // TODO jittering in GL with velocity
+        // TODO jittering in AWT with high velocity
 
         // Spawn Stuff
         addObject(new GameObject("Object Spawner") {
@@ -44,22 +47,22 @@ public class SpaceGameScene extends Scene {
             protected void init() {
                 SpawnManager enemySpawner;
                 SpawnManager obstacleSpawner;
-                addComponent(enemySpawner = new SpawnManager(6, 5) {
-                    @Override
-                    public GameObject createSpawnedObject() {
-                        return new EnemyShip("Enemy Spaceship", "assets/textures/spacegame/spaceship1.png", this);
-                    }
-                });
-                addComponent(obstacleSpawner = new SpawnManager(3, 20) {
-                    @Override
-                    public GameObject createSpawnedObject() {
-                        return new Asteroid("Asteroid", this);
-                    }
-                });
+//                addComponent(enemySpawner = new SpawnManager(6, 5) {
+//                    @Override
+//                    public GameObject createSpawnedObject() {
+//                        return new EnemyShip("Enemy Spaceship", "assets/textures/spacegame/spaceship1.png", this);
+//                    }
+//                });
+//                addComponent(obstacleSpawner = new SpawnManager(3, 20) {
+//                    @Override
+//                    public GameObject createSpawnedObject() {
+//                        return new Asteroid("Asteroid", this);
+//                    }
+//                });
 
                 // Populate world on start
-                enemySpawner.populateToMax();
-                obstacleSpawner.populateToMax();
+//                enemySpawner.populateToMax();
+//                obstacleSpawner.populateToMax();
             }
         });
 
@@ -80,8 +83,6 @@ public class SpaceGameScene extends Scene {
 
     @Override
     protected void onUserUpdate(float dt) {
-        if (KeyInput.keyPressed("r")) SceneManager.reloadScene();
-
         // camera controls
         getCamera().rotate(KeyInput.getAxis("arrows horizontal"));
         getCamera().zoom(1 + 0.01f * KeyInput.getAxis("arrows vertical"));
@@ -98,9 +99,4 @@ public class SpaceGameScene extends Scene {
         backgroundObjects.add(new Pair<>(objShape, objColor));
     }
 
-    public static void main(String[] args) {
-        String arg0 = (args.length > 0) ? args[0] : "false";
-        Mayonez.setUseGL(Boolean.valueOf(arg0)); // Automatically choose AWT/GL from CL args
-        Mayonez.start(new SpaceGameScene());
-    }
 }

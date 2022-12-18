@@ -73,7 +73,7 @@ object SceneManager {
         if (!sceneRunning) {
             currentScene.start()
             sceneRunning = true
-            Logger.debug("Scene Manager: Started new scene \"%s\"", currentScene.name)
+            Logger.debug("Started new scene \"%s\"", currentScene.name)
         }
     }
 
@@ -85,7 +85,7 @@ object SceneManager {
         if (sceneRunning) {
             currentScene.stop()
             sceneRunning = false
-            Logger.debug("Scene Manager: Stopped scene \"%s\"", currentScene.name)
+            Logger.debug("Stopped scene \"%s\"", currentScene.name)
         }
     }
 
@@ -97,7 +97,7 @@ object SceneManager {
         if (!sceneRunning) {
             currentScene.load()
             sceneRunning = true
-            Logger.debug("Scene Manager: Loaded existing scene \"%s\"", currentScene.name)
+            Logger.debug("Loaded existing scene \"%s\"", currentScene.name)
         }
     }
 
@@ -109,7 +109,7 @@ object SceneManager {
         if (sceneRunning) {
             currentScene.unload()
             sceneRunning = false
-            Logger.debug("Scene Manager: Unloaded scene \"%s\"", currentScene.name)
+            Logger.debug("Unloaded scene \"%s\"", currentScene.name)
         }
     }
 

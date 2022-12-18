@@ -8,6 +8,7 @@ import mayonez.math.Vec2;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
+import org.joml.Vector4f;
 
 /**
  * A scene camera for the GL engine.
@@ -17,12 +18,12 @@ import org.joml.Vector3f;
 @UsesEngine(EngineType.GL)
 public final class GLCamera extends Camera {
 
-    // Renderer Fields
+    // GL Renderer Fields
     private Matrix4f projMatrix, invProjMatrix; // coordinates from camera's perspective
     private Matrix4f viewMatrix, invViewMatrix; // normalized device screen coordinates
     private float nearPlane = -100f; // closest object visible
     private float farPlane = 100f; // farthest object visible
-    private float zPosition = 0f;
+    private float zPosition = 0f; // how far forward/back the camera is
 
     public GLCamera(Vec2 screenSize, float sceneScale) {
         super(screenSize, sceneScale);
@@ -30,8 +31,19 @@ public final class GLCamera extends Camera {
         viewMatrix = new Matrix4f();
         invProjMatrix = new Matrix4f();
         invViewMatrix = new Matrix4f();
-        getProjectionMatrix();
     }
+
+    // Camera Methods
+
+    @Override
+    public Vec2 toWorld(Vec2 screen) {
+        Vec2 flippedPos = new Vec2(screen.x, screenSize.y - screen.y); // Mirror y
+        Vec2 worldPos = flippedPos.div(screenSize).mul(2f).sub(new Vec2(1f)).div(sceneScale);
+        Vector4f temp = new Vector4f(worldPos.x, worldPos.y, 0f, 0f);
+        temp.mul(getInverseProjection()).mul(getInverseView());
+        return new Vec2(temp.x, temp.y).add(getPosition());
+    }
+
 
     // Projection Matrix Methods
 

@@ -98,7 +98,7 @@ object KeyInput : KeyAdapter() {
      */
     @JvmStatic
     fun keyDown(key: Key): Boolean {
-        return if (Mayonez.useGL!!) keyDown(key.glCode)
+        return if (Mayonez.useGL) keyDown(key.glCode)
         else keyDown(key.awtCode)
     }
 
@@ -110,7 +110,7 @@ object KeyInput : KeyAdapter() {
      */
     @JvmStatic
     fun keyPressed(key: Key): Boolean {
-        return if (Mayonez.useGL!!) keyPressed(key.glCode)
+        return if (Mayonez.useGL) keyPressed(key.glCode)
         else keyPressed(key.awtCode)
     }
 

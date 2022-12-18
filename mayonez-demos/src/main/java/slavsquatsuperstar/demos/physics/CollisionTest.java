@@ -26,4 +26,9 @@ public class CollisionTest extends PhysicsTestScene {
         addObject(createBox(new Vec2(4, 12), new Vec2(90, 20), 90, PhysicsTestScene.NORMAL_MATERIAL));
     }
 
+    @Override
+    protected void onUserUpdate(float dt) {
+        super.onUserUpdate(dt);
+        getCamera().setPosition(getSize().mul(0.5f));
+    }
 }

@@ -84,7 +84,7 @@ public abstract sealed class GameEngine permits JGame, GLGame {
                 }
                 // Print FPS count each second
                 if (timer >= 1) {
-                    Logger.debug("Engine: Frames per Second: %d", frames);
+                    Logger.debug("Frames per Second: %d", frames);
                     frames = 0;
                     timer = 0;
                 }

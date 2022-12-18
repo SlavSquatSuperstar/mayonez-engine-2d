@@ -1,6 +1,7 @@
 package slavsquatsuperstar.demos.physics;
 
 import mayonez.GameObject;
+import mayonez.graphics.Color;
 import mayonez.graphics.Colors;
 import mayonez.graphics.sprite.ShapeSprite;
 import mayonez.math.FloatMath;
@@ -32,36 +33,51 @@ public class PoolBallsTest extends PhysicsTestScene {
     @Override
     protected void init() {
         super.init();
-        addObject(createCircle("Cue Ball", new Vec2(10, getHeight() / 2f)));
+        addObject(new PoolBall("Cue Ball", new Vec2(-40, 0), Colors.LIGHT_GRAY, true));
 
-        float xStart = 50;
-        float yStart = getHeight() / 2f;
-        int ballCount = 1;
-        for (int i = 0; i < 5; i++) {
-            for (int j = 0; j <= i; j++) {
+        float xStart = -5;
+        float yStart = 0;
+        int ballCount = 0;
+        Color[] colors = new Color[]{
+                Colors.YELLOW, Colors.BLUE, Colors.RED, Colors.PURPLE,
+                Colors.ORANGE, Colors.GREEN, Colors.BROWN, Colors.BLACK
+        };
+
+        for (int row = 0; row < 5; row++) {
+            for (int col = 0; col <= row; col++) {
                 // x = x0 + √3r * i
-                float x = xStart + (float) i * FloatMath.sqrt(3f) * BALL_RADIUS;
+                float x = xStart + (float) row * FloatMath.sqrt(3f) * BALL_RADIUS;
                 // y = y0 + 2r * i
-                float y = yStart + (float) j * 2 * BALL_RADIUS;
-                addObject(createCircle(String.format("Pool Ball #%d", ballCount++), new Vec2(x, y)));
+                float y = yStart + (float) col * 2 * BALL_RADIUS;
+                Color ballColor = colors[ballCount % 8]; // TODO put 8 ball in middle
+                addObject(new PoolBall(String.format("%d Ball", ballCount), new Vec2(x, y), ballColor, ballCount < 8));
+                ballCount++;
             }
             // y0 = h/2 - r * i
             yStart -= BALL_RADIUS;
         }
     }
 
-    private GameObject createCircle(String name, Vec2 position) {
-        return new GameObject(name, position) {
-            @Override
-            protected void init() {
-                addComponent(new BallCollider(BALL_RADIUS));
-                addComponent(new ShapeSprite(Colors.BLUE, false));
-                addComponent(new Rigidbody(BALL_MASS).setMaterial(POOL_BALL_MAT));
-                addComponent(new KeepInScene(new Vec2(), getScene().getSize(), KeepInScene.Mode.BOUNCE));
-                addComponent(new DragAndDrop("left mouse"));
-                addComponent(new MouseFlick(MoveMode.VELOCITY, "right mouse", 50, false));
-            }
-        };
+    private class PoolBall extends GameObject {
+
+        private final Color color;
+        private final boolean fill;
+
+        public PoolBall(String name, Vec2 position, Color color, boolean fill) {
+            super(name, position);
+            this.color = color;
+            this.fill = fill;
+        }
+
+        @Override
+        protected void init() {
+            addComponent(new BallCollider(BALL_RADIUS));
+            addComponent(new ShapeSprite(color, fill));
+            addComponent(new Rigidbody(BALL_MASS).setMaterial(POOL_BALL_MAT));
+            addComponent(new KeepInScene(KeepInScene.Mode.BOUNCE));
+            addComponent(new DragAndDrop("left mouse"));
+            addComponent(new MouseFlick(MoveMode.VELOCITY, "right mouse", 50, false));
+        }
     }
 
 }

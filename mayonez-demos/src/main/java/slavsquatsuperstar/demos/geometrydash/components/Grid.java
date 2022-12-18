@@ -1,7 +1,7 @@
 package slavsquatsuperstar.demos.geometrydash.components;
 
 import mayonez.Component;
-import mayonez.graphics.Renderable;
+import mayonez.graphics.JRenderable;
 import mayonez.math.Vec2;
 
 import java.awt.*;
@@ -12,7 +12,7 @@ import java.awt.geom.Line2D;
  *
  * @author SlavSquatSuperstar
  */
-public class Grid extends Component implements Renderable {
+public class Grid extends Component implements JRenderable {
 
     private final Vec2 gridSize;
 

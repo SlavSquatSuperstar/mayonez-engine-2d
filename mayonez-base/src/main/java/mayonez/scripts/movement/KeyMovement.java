@@ -1,8 +1,7 @@
 package mayonez.scripts.movement;
 
-import mayonez.math.Vec2;
-import mayonez.Mayonez;
 import mayonez.input.KeyInput;
+import mayonez.math.Vec2;
 
 /**
  * Allows objects to be moved with keyboard controls.
@@ -27,17 +26,17 @@ public class KeyMovement extends MovementScript {
 
     @Override
     public void update(float dt) {
-
         Vec2 input = getRawInput().unit().mul(speed); // Normalize so don't move faster diagonally
         if (objectAligned) input = input.rotate(transform.rotation); // Align to object space if enabled
 
         switch (mode) {
-            case POSITION -> transform.move(input.mul(Mayonez.TIME_STEP));
+            case POSITION -> transform.move(input.mul(dt));
             case VELOCITY -> rb.addVelocity(input);
             case ACCELERATION -> rb.applyAcceleration(input);
             case IMPULSE -> rb.applyImpulse(input);
             case FORCE -> rb.applyForce(input);
         }
+
         // Limit Top Speed
         if (rb != null && topSpeed > 0 && rb.getSpeed() > topSpeed)
             rb.setVelocity(rb.getVelocity().mul(topSpeed / rb.getSpeed()));

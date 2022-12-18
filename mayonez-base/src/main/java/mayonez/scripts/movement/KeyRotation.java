@@ -1,6 +1,5 @@
 package mayonez.scripts.movement;
 
-import mayonez.Mayonez;
 import mayonez.input.KeyInput;
 import mayonez.math.Vec2;
 
@@ -26,7 +25,7 @@ public class KeyRotation extends MovementScript {
     public void update(float dt) {
         float input = -getRawInput().x * speed; // Normalize so don't move faster diagonally
         switch (mode) {
-            case POSITION -> transform.rotate(input * Mayonez.TIME_STEP);
+            case POSITION -> transform.rotate(input * dt);
             case VELOCITY -> rb.addAngularVelocity(input);
             case ACCELERATION -> rb.applyAngularAcceleration(input);
             case IMPULSE -> rb.applyAngularImpulse(input);

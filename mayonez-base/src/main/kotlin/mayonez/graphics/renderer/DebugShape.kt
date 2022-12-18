@@ -1,6 +1,7 @@
 package mayonez.graphics.renderer
 
-import mayonez.graphics.Renderable
+import mayonez.graphics.JRenderable
+import mayonez.graphics.sprite.ShapeSprite
 import mayonez.math.Vec2
 import mayonez.physics.shapes.*
 import mayonez.util.JShape
@@ -23,13 +24,16 @@ class DebugShape(
     @JvmField internal val color: MColor,
     @JvmField internal val fill: Boolean,
     @JvmField internal val zIndex: Int
-) : Renderable {
+) : JRenderable {
 
     constructor(shape: MShape, color: MColor, fill: Boolean, priority: Priority) :
             this(shape, color, fill, priority.zIndex)
 
     internal constructor(shape: MShape, debugShape: DebugShape) : // copy from another shape
             this(shape, debugShape.color, debugShape.fill, debugShape.zIndex)
+
+    constructor(sprite: ShapeSprite) : // create from shape sprite
+            this(sprite.shape, sprite.color, sprite.fill, sprite.zIndex)
 
     override fun render(g2: Graphics2D?) {
         if (g2 == null) return

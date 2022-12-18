@@ -5,7 +5,7 @@ import mayonez.annotations.UsesEngine;
 import mayonez.math.Vec2;
 
 /**
- * A scene camera for the Java engine.
+ * A scene camera for the AWT engine.
  *
  * @author SlavSquatSuperstar
  */
@@ -14,6 +14,13 @@ public final class JCamera extends Camera {
 
     public JCamera(Vec2 screenSize, float sceneScale) {
         super(screenSize, sceneScale);
+    }
+
+    @Override
+    public Vec2 toWorld(Vec2 screen) {
+        Vec2 flippedPos = new Vec2(screen.x, screenSize.y - screen.y); // Mirror y
+        Vec2 worldPos = flippedPos.add(getOffset());
+        return worldPos.div(sceneScale);
     }
 
 }

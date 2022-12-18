@@ -27,7 +27,7 @@ public abstract sealed class SpriteSheet permits JSpriteSheet, GLSpriteSheet {
      * @return a sprite sheet
      */
     public static SpriteSheet create(String filename, int spriteWidth, int spriteHeight, int numSprites, int spacing) {
-        if (Boolean.TRUE.equals(Mayonez.getUseGL())) {
+        if (Mayonez.getUseGL()) {
             return new GLSpriteSheet(filename, spriteWidth, spriteHeight, numSprites, spacing);
         } else {
             return new JSpriteSheet(filename, spriteWidth, spriteHeight, numSprites, spacing);

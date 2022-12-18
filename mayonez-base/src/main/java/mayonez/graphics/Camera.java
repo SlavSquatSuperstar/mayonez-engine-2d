@@ -124,6 +124,14 @@ public abstract class Camera extends Script {
         return getPosition().mul(sceneScale).sub(screenSize.mul(0.5f).div(getZoom()));
     }
 
+    /**
+     * Transform screen coordinates into world coordinates.
+     *
+     * @param screen a pixel on the screen
+     * @return the world position of the pixel
+     */
+    public abstract Vec2 toWorld(Vec2 screen);
+
     // Camera Effects
 
     /**

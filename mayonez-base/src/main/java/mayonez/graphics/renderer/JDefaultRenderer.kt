@@ -3,7 +3,7 @@ package mayonez.graphics.renderer
 import mayonez.*
 import mayonez.annotations.EngineType
 import mayonez.annotations.UsesEngine
-import mayonez.graphics.Renderable
+import mayonez.graphics.JRenderable
 import mayonez.graphics.sprite.Sprite
 import mayonez.io.image.JTexture
 import mayonez.math.Vec2
@@ -22,9 +22,9 @@ import kotlin.math.roundToInt
 class JDefaultRenderer : SceneRenderer, DebugRenderer {
 
     // Render Data
-    private val batches: MutableList<Renderable>
-    private val objects: MutableList<Renderable>
-    private val shapes: MutableList<DebugShape>
+    private val batches: MutableList<JRenderable>
+    private val objects: MutableList<JRenderable> // permanent components
+    private val shapes: MutableList<DebugShape> // temporary shapes
     private val stroke: Stroke = BasicStroke(DebugDraw.STROKE_SIZE)
 
     // Scene Information
@@ -56,13 +56,13 @@ class JDefaultRenderer : SceneRenderer, DebugRenderer {
 
     override fun addObject(obj: GameObject) {
         obj.getComponents(Component::class.java).forEach { c: Component ->
-            if (c is Renderable) objects.add(c)
+            if (c is JRenderable) objects.add(c)
         }
     }
 
     override fun removeObject(obj: GameObject) {
         obj.getComponents(Component::class.java).forEach { c: Component ->
-            if (c is Renderable) objects.remove(c)
+            if (c is JRenderable) objects.remove(c)
         }
     }
 
@@ -81,7 +81,7 @@ class JDefaultRenderer : SceneRenderer, DebugRenderer {
         drawBackgroundImage(g2)
         createBatches()
         g2.stroke = stroke
-        batches.forEach { r: Renderable -> r.render(g2) } // Draw everything
+        batches.forEach { r: JRenderable -> r.render(g2) } // Draw everything
 
         g2.transform = oldXf // Reset the transform to its previous state
     }
@@ -117,14 +117,14 @@ class JDefaultRenderer : SceneRenderer, DebugRenderer {
     private fun createBatches() {
         // "Batch" and draw objects and shapes
         batches.clear()
-        objects.forEach { r: Renderable -> // Add shapes
+        objects.forEach { r: JRenderable -> // Add shapes
             if (r is Component && r.isEnabled) batches.add(r)
         }
         if (shapes.isNotEmpty()) { // Add objects
             shapes.forEach { s: DebugShape -> batches.add(s) }
             shapes.clear()
         }
-        batches.sortBy { r: Renderable -> r.zIndex } // Sort everything by zIndex
+        batches.sortBy { r: JRenderable -> r.zIndex } // Sort everything by zIndex
     }
 
     override fun stop() {

@@ -99,7 +99,7 @@ public final class GLTexture extends Texture {
             height = h.get(0);
             channels = comp.get(0);
         } catch (IOException | NullPointerException e) {
-            Logger.error("I/O: Could not read image file \"%s\"", getFilename());
+            Logger.error("Could not read image file \"%s\"", getFilename());
         }
     }
 

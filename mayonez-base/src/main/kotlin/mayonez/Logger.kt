@@ -62,12 +62,12 @@ object Logger {
         // Format the message and add timestamp
         val fmt = StringBuilder("[${Mayonez.seconds.toFmtString()}] ") // Timestamp
         fmt.append("[${level.name}] ") // Log level
+        fmt.append("[${getStackSource()}] ") // Log source
         try {
             fmt.append(msg.toString().format(*args)) // Level prefix
         } catch (e: IllegalFormatException) {
             fmt.append("Logger: Could not format message \"$msg\"")
         }
-        fmt.append(" [${getSource()}]") // Log source
         val output = fmt.toString()
 
         // Print message and write to file
@@ -134,7 +134,7 @@ object Logger {
      *
      * Source: Azurite util.Log.source()
      */
-    private fun getSource(): String {
+    private fun getStackSource(): String {
         return Thread.currentThread().stackTrace[4].className
     }
 

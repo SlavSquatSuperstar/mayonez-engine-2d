@@ -74,9 +74,10 @@ public class Projectile extends Script {
                     addComponent(rb = new Rigidbody(0.01f));
                     if (sourceRb != null) rb.setVelocity(sourceRb.getVelocity());
                 }
-                if (!hasCol)
+                if (!hasCol) {
                     addComponent(new BallCollider(new Vec2(1f)).setTrigger(true));
-                addComponent(new ShapeSprite(Colors.WHITE, true));
+                    addComponent(new ShapeSprite(Colors.WHITE, true));
+                }
                 addComponent(new KeepInScene(KeepInScene.Mode.DESTROY));
                 addComponent(projectile);
             }

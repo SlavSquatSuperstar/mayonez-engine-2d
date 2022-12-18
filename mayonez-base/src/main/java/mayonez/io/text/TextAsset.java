@@ -30,9 +30,9 @@ public abstract class TextAsset extends Asset {
         try (InputStream in = inputStream()) {
             return IOUtils.read(in);
         } catch (FileNotFoundException e) {
-            Logger.error("I/O: File \"%s\" not found", getFilename());
+            Logger.error("File \"%s\" not found", getFilename());
         } catch (IOException e) {
-            Logger.error("I/O: Could not read file \"%s\"", getFilename());
+            Logger.error("Could not read file \"%s\"", getFilename());
             Logger.printStackTrace(e);
         }
         return "";
@@ -48,9 +48,9 @@ public abstract class TextAsset extends Asset {
         try (InputStream in = inputStream()) {
             return IOUtils.readLines(in);
         } catch (FileNotFoundException e) {
-            Logger.error("I/O: File \"%s\" not found", getFilename());
+            Logger.error("File \"%s\" not found", getFilename());
         } catch (IOException e) {
-            Logger.error("I/O: Could not read file \"%s\"", getFilename());
+            Logger.error("Could not read file \"%s\"", getFilename());
             Logger.printStackTrace(e);
         }
         return new String[]{};
@@ -67,9 +67,9 @@ public abstract class TextAsset extends Asset {
             if (text.length == 1) IOUtils.write(out, text[0]); // single line
             else IOUtils.writeLines(out, text);
         } catch (FileNotFoundException e) {
-            Logger.error("I/O: File \"%s\" not found", getFilename());
+            Logger.error("File \"%s\" not found", getFilename());
         } catch (IOException e) {
-            Logger.error("I/O: Could not save to file \"%s\"", getFilename());
+            Logger.error("Could not save to file \"%s\"", getFilename());
             Logger.printStackTrace(e);
         }
     }

@@ -17,14 +17,14 @@ description = 'The root project for Mayonez Engine that contains all modules.'
 // Custom Settings
 project.ext {
     javaVersion = '17'
-    mainClass = 'slavsquatsuperstar.demos.mario.RendererTest'
+    mainClass = 'slavsquatsuperstar.demos.DemosLauncher'
     mainModule = 'mayonez.demos'
 }
 
 allprojects {
     // Project Info
     group 'slavsquatsuperstar'
-    version '0.7.5-pre3'
+    version '0.7.5-pre4-snapshot'
 
     // Java Version
     sourceCompatibility = targetCompatibility = javaVersion

@@ -78,7 +78,7 @@ public abstract sealed class Sprite extends Component permits GLSprite, JSprite 
      * @return a sprite
      */
     public static Sprite create(String filename) {
-        if (Boolean.TRUE.equals(Mayonez.getUseGL())) {
+        if (Mayonez.getUseGL()) {
             return new GLSprite(Assets.getGLTexture(filename));
         } else {
             return new JSprite(Assets.getJTexture(filename));
@@ -107,7 +107,7 @@ public abstract sealed class Sprite extends Component permits GLSprite, JSprite 
      * @return a sprite
      */
     public static Sprite create(Color color) {
-        if (Boolean.TRUE.equals(Mayonez.getUseGL())) {
+        if (Mayonez.getUseGL()) {
             return new GLSprite(color);
         } else {
             return new JSprite(color);

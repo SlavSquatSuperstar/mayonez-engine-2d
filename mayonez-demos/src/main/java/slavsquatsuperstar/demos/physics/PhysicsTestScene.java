@@ -18,6 +18,11 @@ import mayonez.scripts.movement.MoveMode;
 
 import java.awt.*;
 
+/**
+ * A scene that can be used to test physics engine and draw colliders.
+ *
+ * @author SlavSquatSuperstar
+ */
 abstract class PhysicsTestScene extends Scene {
 
     static final PhysicsMaterial NORMAL_MATERIAL = new PhysicsMaterial(0.4f, 0.4f, 0.3f);
@@ -58,8 +63,6 @@ abstract class PhysicsTestScene extends Scene {
 
     @Override
     protected void onUserUpdate(float dt) {
-        getCamera().setPosition(getSize().mul(0.5f));
-
         if (KeyInput.keyPressed("r")) SceneManager.reloadScene();
         else if (KeyInput.keyPressed("1")) SceneManager.setScene("Collision Test");
         else if (KeyInput.keyPressed("2")) SceneManager.setScene("Pool Balls Test");

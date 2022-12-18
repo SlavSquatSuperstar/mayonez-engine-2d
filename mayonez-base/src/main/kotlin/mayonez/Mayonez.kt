@@ -33,11 +33,11 @@ object Mayonez {
     // Game Fields
     // TODO make not null
     @JvmStatic
-    var useGL: Boolean? = null
-        get() = field!!
+    var useGL: Boolean = false
         set(value) {
             field = value
-            game = if (field!!) GLGame() else JGame()
+            game = if (field) GLGame() else JGame()
+            Logger.debug("Using engine \"%s\"", if (field) "GL" else "AWT")
         }
     private var game: GameEngine? = null // Engine config, either Java or GL
     var started: Boolean = false
@@ -67,7 +67,7 @@ object Mayonez {
     internal fun init() {
         // Create Logger object
         if (!INIT_ENGINE) {
-            Logger.log("Engine: Initializing...")
+            Logger.log("Initializing...")
             INIT_ENGINE = true
         }
         // Set up Assets system
@@ -78,7 +78,7 @@ object Mayonez {
         // Read preferences file
         if (!INIT_PREFERENCES) {
             Preferences.readPreferences()
-            Logger.debug("Engine: Loaded settings from \"preferences.json\"")
+            Logger.debug("Loaded settings from \"preferences.json\"")
             INIT_PREFERENCES = true
         }
         // Create log file
@@ -89,8 +89,8 @@ object Mayonez {
         // Create Resources
         if (!INIT_RESOURCES) {
             INIT_RESOURCES = true
-            Logger.log("Engine: Starting %s %s", Preferences.title, Preferences.version)
-            Logger.debug("Engine: Loading resources in\"assets/\"")
+            Logger.log("Starting %s %s", Preferences.title, Preferences.version)
+            Logger.debug("Loading resources in \"assets/\"")
             Assets.scanResources("assets") // Load all game assets
         }
     }
@@ -121,8 +121,8 @@ object Mayonez {
         if (!started) return
         started = false
 
-        if (status == 0) Logger.log("Engine: Exiting with exit code %d", status)
-        else Logger.error("Engine: Exiting with exit code %d", status)
+        if (status == 0) Logger.log("Exiting with exit code %d", status)
+        else Logger.error("Exiting with exit code %d", status)
 
         game?.stop()
         Assets.clearAssets()
