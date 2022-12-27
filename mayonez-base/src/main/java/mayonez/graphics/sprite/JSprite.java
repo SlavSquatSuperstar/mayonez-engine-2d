@@ -4,7 +4,7 @@ import mayonez.DebugDraw;
 import mayonez.GameObject;
 import mayonez.annotations.EngineType;
 import mayonez.annotations.UsesEngine;
-import mayonez.graphics.JRenderable;
+import mayonez.graphics.renderable.JRenderable;
 import mayonez.io.image.JTexture;
 import mayonez.physics.shapes.Rectangle;
 import mayonez.graphics.Color;

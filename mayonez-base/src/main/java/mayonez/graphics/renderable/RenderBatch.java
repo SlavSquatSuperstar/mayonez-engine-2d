@@ -1,8 +1,9 @@
-package mayonez.graphics.renderer;
+package mayonez.graphics.renderable;
 
 import mayonez.Preferences;
 import mayonez.annotations.EngineType;
 import mayonez.annotations.UsesEngine;
+import mayonez.graphics.renderer.DrawPrimitive;
 import mayonez.io.image.GLTexture;
 import mayonez.math.Vec2;
 import org.joml.Vector2f;
@@ -20,13 +21,14 @@ import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.*;
 
 /**
- * A rendering batch that stores vertex information of many similar objects and combines them into one large mesh,
- * allowing many sprites and shapes to be drawn in fewer GPU calls.
+ * A structure containing vertex information of many similar objects and combining them into one large mesh,
+ * allowing many sprites and shapes to be drawn in fewer GPU calls. Roughly analog to the {@link java.awt.Graphics2D}
+ * from the AWT engine.
  *
  * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.GL)
-public class RenderBatch {
+public final class RenderBatch {
 
     // Batch Characteristics
     private final int maxTextureSlots = Preferences.getMaxTextureSlots();
@@ -200,11 +202,11 @@ public class RenderBatch {
 
     // Getter Methods
 
-    DrawPrimitive getPrimitive() {
+    public DrawPrimitive getPrimitive() {
         return primitive;
     }
 
-    int getZIndex() {
+    public int getZIndex() {
         return zIndex;
     }
 
@@ -213,7 +215,7 @@ public class RenderBatch {
      *
      * @return if there are still unused vertices
      */
-    boolean hasRoom() {
+    public boolean hasRoom() {
         return vertexOffset < vertices.length;
     }
 
@@ -223,7 +225,7 @@ public class RenderBatch {
      * @param tex the texture, or null if drawing a color
      * @return if this texture is used by the batch
      */
-    boolean hasTexture(GLTexture tex) {
+    public boolean hasTexture(GLTexture tex) {
         return tex == null || textures.contains(tex);
     }
 
@@ -232,7 +234,7 @@ public class RenderBatch {
      *
      * @return if there are unused texture slots
      */
-    boolean hasTextureRoom() {
+    public boolean hasTextureRoom() {
         return textures.size() < maxTextureSlots;
     }
 

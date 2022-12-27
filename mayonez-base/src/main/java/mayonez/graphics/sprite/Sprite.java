@@ -37,16 +37,16 @@ public abstract sealed class Sprite extends Component permits GLSprite, JSprite 
     /**
      * Returns the color this sprite holds.
      *
-     * @return the color, or white is drawing a texture
+     * @return the color, or white if drawing a texture
      */
     public final Color getColor() {
         return this.color;
     }
 
     /**
-     * Returns the transform that describe how the sprite is drawn in relation to the game object.
+     * The sprite's transform in the parent object's local space.
      *
-     * @return the transform
+     * @return the sprite transform
      */
     public final Transform getSpriteTransform() {
         return spriteXf;

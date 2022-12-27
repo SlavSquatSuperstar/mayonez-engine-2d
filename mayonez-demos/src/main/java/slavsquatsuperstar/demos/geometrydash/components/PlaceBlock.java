@@ -4,7 +4,7 @@ import mayonez.GameObject;
 import mayonez.Logger;
 import mayonez.Script;
 import mayonez.Transform;
-import mayonez.graphics.JRenderable;
+import mayonez.graphics.renderable.JRenderable;
 import mayonez.graphics.sprite.Sprite;
 import mayonez.input.MouseInput;
 import mayonez.io.image.JTexture;

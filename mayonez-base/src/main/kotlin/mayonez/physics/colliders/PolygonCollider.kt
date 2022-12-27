@@ -8,7 +8,7 @@ import mayonez.physics.shapes.Polygon
  *
  * @author SlavSquatSuperstar
  */
-open class PolygonCollider protected constructor(shapeData: Polygon) :
+open class PolygonCollider constructor(shapeData: Polygon) :
     Collider(shapeData.translate(-shapeData.center())) {
 
     /**

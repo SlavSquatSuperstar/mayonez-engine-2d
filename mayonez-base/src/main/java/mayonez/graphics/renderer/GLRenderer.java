@@ -4,6 +4,7 @@ import mayonez.Preferences;
 import mayonez.annotations.EngineType;
 import mayonez.annotations.UsesEngine;
 import mayonez.graphics.GLCamera;
+import mayonez.graphics.renderable.RenderBatch;
 import mayonez.io.Assets;
 import mayonez.io.image.GLTexture;
 import mayonez.io.image.Shader;
@@ -84,7 +85,7 @@ public abstract class GLRenderer implements Renderer {
     // Batch Helper Methods
 
     /**
-     * How to add image data to render batches.
+     * Sort image data into render batches.
      */
     protected abstract void createBatches();
 

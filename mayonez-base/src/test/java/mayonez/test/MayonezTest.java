@@ -1,15 +1,16 @@
 package mayonez.test;
 
-import mayonez.GameObject;
-import mayonez.Script;
 import mayonez.graphics.Color;
 import mayonez.math.Vec2;
-import mayonez.physics.Rigidbody;
+import mayonez.physics.shapes.Circle;
+import mayonez.physics.shapes.Ellipse;
+import mayonez.physics.shapes.Polygon;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -20,13 +21,20 @@ import java.util.List;
 public class MayonezTest {
 
     public static void main(String[] args) throws Exception {
-        GameObject o = new GameObject("", new Vec2());
-        o.addComponent(new Script() {
-        });
-        o.addComponent(new Script() {
-        });
-        o.addComponent(new Rigidbody(0f));
-        o.addComponent(new Rigidbody(0f));
+        Circle c = new Circle(new Vec2(1, 1), 2);
+        Ellipse e = new Ellipse(new Vec2(1f, 1), new Vec2(4.1f, 4));
+        Polygon pc = c.toPolygon();
+        Polygon pe = e.toPolygon();
+        System.out.println(pc.center());
+        System.out.println(pe.center());
+        System.out.println(pc.getNumVertices());
+        System.out.println(pe.getNumVertices());
+        System.out.println(pc.area());
+        System.out.println(pe.area());
+        System.out.println(pc.angularMass(1f));
+        System.out.println(pe.angularMass(1f));
+        System.out.println(Arrays.toString(pc.getVertices()));
+        System.out.println(Arrays.toString(pe.getVertices()));
 
         Color red = new Color(255, 0, 0, 0);
         System.out.println(red);

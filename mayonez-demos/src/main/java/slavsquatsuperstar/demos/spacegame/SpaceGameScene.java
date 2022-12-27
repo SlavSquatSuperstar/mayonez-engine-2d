@@ -27,7 +27,7 @@ public class SpaceGameScene extends Scene {
         super(name, Preferences.getScreenWidth() * 2, Preferences.getScreenHeight() * 2, 32f);
         setBackground(Colors.JET_BLACK);
         backgroundObjects = new ArrayList<>();
-        numStars = 100;
+        numStars = 500;
     }
 
     @Override
@@ -36,13 +36,12 @@ public class SpaceGameScene extends Scene {
         backgroundObjects.clear();
 
         String shipSprite = "assets/textures/spacegame/spaceship1.png";
-        addObject(new PlayerShip("Player Space Ship", shipSprite));
-        // TODO jittering in GL with velocity
-        // TODO jittering in AWT with high velocity
+        addObject(new PlayerShip("Player Spaceship", shipSprite));
+        // TODO jittering with high velocity
+        // disabling camera following fixes jittering
 
         // Spawn Stuff
         addObject(new GameObject("Object Spawner") {
-
             @Override
             protected void init() {
                 SpawnManager enemySpawner;
@@ -69,7 +68,12 @@ public class SpaceGameScene extends Scene {
         // Add background stars
         for (int i = 0; i < numStars; i++) {
             Vec2 starPos = this.getRandomPosition().mul(2);
-            float starSize = Random.randomFloat(1, 10);
+            float starSize;
+            if (Random.randomPercent(2f / 3f)) {
+                starSize = Random.randomFloat(1, 4); // dwarf
+            } else {
+                starSize = Random.randomFloat(4, 10); // giant
+            }
             float starDist = Random.randomFloat(5, 20) * 5f;
             Color starColor = new Color(Random.randomInt(192, 255), Random.randomInt(192, 255), Random.randomInt(192, 255));
             addBackgroundObject(new Circle(starPos, starSize / starDist), starColor); // Star

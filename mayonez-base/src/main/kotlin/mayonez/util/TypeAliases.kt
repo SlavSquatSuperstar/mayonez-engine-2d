@@ -1,5 +1,6 @@
 package mayonez.util
 
+
 // Java AWT Classes
 
 /**
@@ -10,6 +11,13 @@ typealias JColor = java.awt.Color
  * The [java.awt.Shape] class defined by the JDK.
  */
 typealias JShape = java.awt.Shape
+
+// LWJGL OpenGL Classes
+
+/**
+ * The [org.joml.Vector4f] class defined by JOML.
+ */
+typealias GLColor = org.joml.Vector4f
 
 // Mayonez Engine Classes
 

@@ -25,6 +25,8 @@ module mayonez.base {
     exports mayonez.annotations;
     exports mayonez.graphics;
     exports mayonez.graphics.sprite;
+    exports mayonez.graphics.renderable;
+    exports mayonez.graphics.renderer;
     exports mayonez.io;
     exports mayonez.io.image;
     exports mayonez.io.text;
@@ -35,6 +37,6 @@ module mayonez.base {
     exports mayonez.physics.resolution;
     exports mayonez.physics.shapes;
     exports mayonez.scripts;
-    exports mayonez.util;
     exports mayonez.scripts.movement;
+    exports mayonez.util;
 }

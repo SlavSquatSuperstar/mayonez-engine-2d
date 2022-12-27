@@ -207,7 +207,7 @@ public abstract class Scene {
                 renderer.addObject(obj);
                 physics.addObject(obj);
             }
-            Logger.debug("Added object \"%s [ID %d]\" to scene \"%s\"", obj.name, obj.objectID, this.name);
+            Logger.debug("Added object \"%s\" to scene \"%s\"", obj.getNameAndID(), this.name);
         };
         if (started) changesToScene.offer(addObject); // Dynamic add: add to scene and layers in next frame
         else addObject.onReceive();
@@ -225,12 +225,12 @@ public abstract class Scene {
             renderer.removeObject(obj);
             physics.removeObject(obj);
             obj.onDestroy();
-            Logger.debug("Removed object \"%s [ID %d]\" from scene \"%s\"", obj.name, obj.objectID, this.name);
+            Logger.debug("Removed object \"%s\" from scene \"%s\"", obj.getNameAndID(), this.name);
         });
     }
 
     /**
-     * Finds the {@link GameObject} with the given name. For consistent results, avoid duplicate names.
+     * Finds the {@link GameObject} with the given name (case-insensitive). For consistent results, avoid duplicate names.
      *
      * @param name the object name
      * @return the object

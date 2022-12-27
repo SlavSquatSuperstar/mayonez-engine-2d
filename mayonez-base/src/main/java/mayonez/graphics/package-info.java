@@ -1,5 +1,5 @@
 /**
- * Provides users with classes to draw game objects onto the screen or manipulate view of the screen.
+ * Provides developers with classes to draw game objects onto the screen or manipulate the view of the screen.
  *
  * @author SlavSquatSuperstar
  */

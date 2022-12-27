@@ -141,7 +141,7 @@ public abstract class Component {
         return String.format(
                 "%s (%s)",
                 StringUtils.getClassName(this, "Component"),
-                gameObject == null ? "<No Parent>" : gameObject.name
+                gameObject == null ? "<No Parent>" : gameObject.getNameAndID()
         );
     }
 }

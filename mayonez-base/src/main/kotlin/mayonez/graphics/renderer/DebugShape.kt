@@ -1,6 +1,6 @@
 package mayonez.graphics.renderer
 
-import mayonez.graphics.JRenderable
+import mayonez.graphics.renderable.JRenderable
 import mayonez.graphics.sprite.ShapeSprite
 import mayonez.math.Vec2
 import mayonez.physics.shapes.*
@@ -26,7 +26,7 @@ class DebugShape(
     @JvmField internal val zIndex: Int
 ) : JRenderable {
 
-    constructor(shape: MShape, color: MColor, fill: Boolean, priority: Priority) :
+    constructor(shape: MShape, color: MColor, fill: Boolean, priority: DrawPriority) :
             this(shape, color, fill, priority.zIndex)
 
     internal constructor(shape: MShape, debugShape: DebugShape) : // copy from another shape
@@ -89,7 +89,7 @@ class DebugShape(
     /**
      * The order an object should be drawn. Higher priority objects will be drawn later to be more visible.
      */
-    enum class Priority(val zIndex: Int) {
+    enum class DrawPriority(val zIndex: Int) {
         /**
          * Solid shapes, drawn first.
          */

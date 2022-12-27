@@ -1,7 +1,7 @@
 package mayonez.physics.shapes
 
-import mayonez.math.Mat22
 import mayonez.math.FloatMath
+import mayonez.math.Mat22
 import mayonez.math.Vec2
 import kotlin.math.abs
 
@@ -38,7 +38,7 @@ open class Polygon(convex: Boolean, vararg vertices: Vec2) : Shape() {
     /**
      * The number of vertices and edges of this polygon, n.
      */
-    final override val numVertices: Int = vertices.size
+    final override val numVertices: Int = this.vertices.size
 
     /**
      * The edges that connect the vertices of this polygon.

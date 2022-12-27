@@ -35,7 +35,7 @@ object DebugDraw {
     fun drawPoint(position: Vec2, color: MColor?) {
         if (!Mayonez.started) return
         // Fill a circle with radius "STROKE_SIZE" in pixels
-        addShape(Circle(position.toScreen(), STROKE_SIZE), color, true, DebugShape.Priority.POINT)
+        addShape(Circle(position.toScreen(), STROKE_SIZE), color, true, DebugShape.DrawPriority.POINT)
     }
 
     /**
@@ -48,7 +48,7 @@ object DebugDraw {
     @JvmStatic
     fun drawLine(start: Vec2, end: Vec2, color: MColor?) {
         if (!Mayonez.started) return
-        addShape(Edge(start.toScreen(), end.toScreen()), color, false, DebugShape.Priority.LINE)
+        addShape(Edge(start.toScreen(), end.toScreen()), color, false, DebugShape.DrawPriority.LINE)
     }
 
     /**
@@ -69,7 +69,7 @@ object DebugDraw {
      * @param color the color to use
      */
     @JvmStatic
-    fun drawShape(shape: Shape?, color: MColor?) = debugDrawShape(shape, color, false, DebugShape.Priority.SHAPE)
+    fun drawShape(shape: Shape?, color: MColor?) = debugDrawShape(shape, color, false, DebugShape.DrawPriority.SHAPE)
 
     /**
      * Draws a shape onto the screen and fills in the interior.
@@ -78,15 +78,15 @@ object DebugDraw {
      * @param color the color to use
      */
     @JvmStatic
-    fun fillShape(shape: Shape?, color: MColor?) = debugDrawShape(shape, color, true, DebugShape.Priority.FILL)
+    fun fillShape(shape: Shape?, color: MColor?) = debugDrawShape(shape, color, true, DebugShape.DrawPriority.FILL)
 
     // Internal Draw methods
 
-    private fun debugDrawShape(shape: Shape?, color: MColor?, fill: Boolean, priority: DebugShape.Priority) {
+    private fun debugDrawShape(shape: Shape?, color: MColor?, fill: Boolean, priority: DebugShape.DrawPriority) {
         // screen coordinates only
         if (!Mayonez.started) return
         when (shape) {
-            is Edge -> addShape(shape.toScreen(), color, false, DebugShape.Priority.LINE)
+            is Edge -> addShape(shape.toScreen(), color, false, DebugShape.DrawPriority.LINE)
             is Polygon -> addShape(shape.toScreen(), color, fill, priority)
             is Circle -> addShape(shape.toScreen(), color, fill, priority)
             is Ellipse -> {
@@ -96,7 +96,7 @@ object DebugDraw {
         }
     }
 
-    private fun addShape(shape: Shape, color: MColor?, fill: Boolean, priority: DebugShape.Priority) {
+    private fun addShape(shape: Shape, color: MColor?, fill: Boolean, priority: DebugShape.DrawPriority) {
         // if color is null, draw black
         debugRenderer.addShape(DebugShape(shape, color ?: Colors.BLACK, fill, priority))
     }

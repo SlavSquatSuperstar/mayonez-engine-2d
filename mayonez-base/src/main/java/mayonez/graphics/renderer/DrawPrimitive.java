@@ -14,7 +14,7 @@ import java.nio.IntBuffer;
  * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.GL)
-enum DrawPrimitive {
+public enum DrawPrimitive {
     /**
      * An object with 2 vertices with attributes Pos (2), Color (4)
      */
@@ -47,11 +47,11 @@ enum DrawPrimitive {
     };
 
     // Vertex Parameters
-    final int vertexCount; // Vertices defined by primitive
-    final int elementCount; // Elements needed by GL (i.e. split quad into 2 triangles)
-    final int primitiveType; // Primitive ID used by OpenGL
-    final int[] attributeSizes; // Floats inside each attribute
-    final int vertexSize; // Floats inside one vertex
+    public final int vertexCount; // Vertices defined by primitive
+    public final int elementCount; // Elements needed by GL (i.e. split quad into 2 triangles)
+    public final int primitiveType; // Primitive ID used by OpenGL
+    public final int[] attributeSizes; // Floats inside each attribute
+    public final int vertexSize; // Floats inside one vertex
 
     DrawPrimitive(int vertexCount, int elementCount, int primitiveType, int... attributeSizes) {
         this.vertexCount = vertexCount;

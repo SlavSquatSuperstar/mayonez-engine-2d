@@ -111,7 +111,7 @@ public class GameObject {
     public final void addComponent(Component comp) {
         if (comp == null) return;
         if (!comp.getClass().isAnonymousClass() && getComponent(comp.getClass()) != null)
-            Logger.debug("GameObject %s [ID %d] Already has a %s", name, objectID, comp.getClass().getSimpleName());
+            Logger.debug("GameObject %s already has a %s", getNameAndID(), comp.getClass().getSimpleName());
         components.add(comp.setGameObject(this));
         if (comp instanceof Script s) s.init();
     }
@@ -272,6 +272,15 @@ public class GameObject {
     @Override
     public int hashCode() {
         return Objects.hash(objectID, name, scene);
+    }
+
+    /**
+     * Returns this object's name and ID as a single string.
+     *
+     * @return the name and ID
+     */
+    public String getNameAndID() {
+        return String.format("%s [ID %d]", name, objectID);
     }
 
     @Override

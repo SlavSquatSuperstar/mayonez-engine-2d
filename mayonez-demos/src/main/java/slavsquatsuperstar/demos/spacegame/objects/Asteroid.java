@@ -50,13 +50,13 @@ public class Asteroid extends GameObject {
         addComponent(new ShapeSprite(Colors.GRAY, true));
         Rigidbody rb;
         addComponent(rb = new Rigidbody(15f, 0.2f, 0.2f));
-        rb.setVelocity(transform.getUp().mul(Random.randomFloat(0f, 1f)));
+        rb.setVelocity(transform.getUp().mul(Random.randomFloat(0f, 2f)));
         addComponent(new KeepInScene(KeepInScene.Mode.WRAP));
         addComponent(new Damageable(startingHealth) {
             @Override
             public void onDestroy() {
                 if (obstacleSpawner != null) obstacleSpawner.markObjectDestroyed();
-                // TODO need to set position manually
+                // TODO need to set start position manually
 //                if (!isFragment) {
 //                    int fragmentCount = Random.randomInt(0, 4);
 //                    if (fragmentCount <= 0) return;

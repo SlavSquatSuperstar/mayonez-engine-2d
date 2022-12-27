@@ -1,7 +1,7 @@
 package mayonez.physics.shapes
 
-import mayonez.math.Mat22
 import mayonez.math.FloatMath
+import mayonez.math.Mat22
 import mayonez.math.Vec2
 import kotlin.math.max
 import kotlin.math.roundToInt
@@ -62,7 +62,7 @@ open class Ellipse(protected val center: Vec2, val size: Vec2, val angle: Float)
      */
     open fun toPolygon(): Polygon {
         val numEdges: Int = (2 * FloatMath.PI * halfWidth).roundToInt() // use πa for # edges
-        return Polygon(center, numEdges, 1f).scale(Vec2(halfWidth, halfHeight)) // scale unit circle polygon
+        return Polygon(center, numEdges, 1f).scale(Vec2(halfWidth, halfHeight), center) // scale unit circle polygon
     }
 
     // Physical Properties

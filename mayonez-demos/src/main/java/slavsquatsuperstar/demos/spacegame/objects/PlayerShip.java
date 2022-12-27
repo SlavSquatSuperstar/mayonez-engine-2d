@@ -9,7 +9,6 @@ import mayonez.input.MouseInput;
 import mayonez.math.Vec2;
 import mayonez.physics.Rigidbody;
 import mayonez.physics.colliders.BoxCollider;
-import mayonez.scripts.KeepInScene;
 import mayonez.scripts.movement.KeyMovement;
 import mayonez.scripts.movement.KeyRotation;
 import mayonez.scripts.movement.MoveMode;
@@ -34,9 +33,12 @@ public class PlayerShip extends GameObject {
     protected void init() {
         getScene().getCamera().setSubject(this).setFollowAngle(false);
         addComponent(Sprite.create(spriteName));
-        addComponent(new Rigidbody(1f));
+        Rigidbody rb;
+        addComponent(rb = new Rigidbody(1f));
+//        rb.setVelocity(new Vec2(0f, 20f));
         addComponent(new BoxCollider(new Vec2(0.85f, 1f)));
-        addComponent(new KeepInScene(KeepInScene.Mode.WRAP));
+//        addComponent(new ShapeSprite(Colors.LIGHT_GRAY, false));
+//        addComponent(new KeepInScene(KeepInScene.Mode.WRAP));
         addComponent(new KeyMovement(MoveMode.FORCE, 10f, "horizontal2", "vertical").setObjectAligned(true));
         addComponent(new KeyRotation(MoveMode.VELOCITY, 1f, "horizontal"));
 //        addComponent(new FollowMouse(MoveMode.POSITION, 1f, true));

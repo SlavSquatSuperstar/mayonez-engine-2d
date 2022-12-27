@@ -3,7 +3,7 @@ package mayonez.graphics.renderer
 import mayonez.*
 import mayonez.annotations.EngineType
 import mayonez.annotations.UsesEngine
-import mayonez.graphics.JRenderable
+import mayonez.graphics.renderable.JRenderable
 import mayonez.graphics.sprite.Sprite
 import mayonez.io.image.JTexture
 import mayonez.math.Vec2
@@ -86,6 +86,9 @@ class JDefaultRenderer : SceneRenderer, DebugRenderer {
         g2.transform = oldXf // Reset the transform to its previous state
     }
 
+    /**
+     * Clear the screen and fill it with a background color.
+     */
     private fun drawBackgroundColor(g2: Graphics2D) {
         if (background.texture == null) { // Only if no image set
             g2.color = background.color.toAWT()
@@ -93,6 +96,9 @@ class JDefaultRenderer : SceneRenderer, DebugRenderer {
         }
     }
 
+    /**
+     * Render the background image, if the scene has one.
+     */
     private fun drawBackgroundImage(g2: Graphics2D) {
         if (background.texture != null) { // Only if image set
             val tex = background.texture as JTexture
@@ -100,8 +106,10 @@ class JDefaultRenderer : SceneRenderer, DebugRenderer {
         }
     }
 
+    /**
+     * Transform the screen and render everything at the new position.
+     */
     private fun transformScreen(g2: Graphics2D) {
-        // Transform the screen and render everything at the new position
         val cam = this.camera ?: return
         val rotRad = Math.toRadians(cam.rotation.toDouble())
         val camZoom = cam.zoom.toDouble() // the zoom
@@ -114,8 +122,10 @@ class JDefaultRenderer : SceneRenderer, DebugRenderer {
         g2.rotate(-rotRad, camCenter.x.toDouble(), camCenter.y.toDouble())
     }
 
+    /**
+     * Sort drawable objects into render "batches".
+     */
     private fun createBatches() {
-        // "Batch" and draw objects and shapes
         batches.clear()
         objects.forEach { r: JRenderable -> // Add shapes
             if (r is Component && r.isEnabled) batches.add(r)
