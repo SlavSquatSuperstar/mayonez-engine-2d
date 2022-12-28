@@ -68,8 +68,16 @@ object Preferences : Record() {
         get() = getInt("buffer_count")
 
     @JvmStatic
-    val maxBatchSize: Int
-        get() = getInt("max_batch_size")
+    val maxBatchSprites: Int
+        get() = getInt("max_batch_sprites")
+
+    @JvmStatic
+    val maxBatchLines: Int
+        get() = getInt("max_batch_lines")
+
+    @JvmStatic
+    val maxBatchTriangles: Int
+        get() = getInt("max_batch_triangles")
 
     @JvmStatic
     val maxTextureSlots: Int

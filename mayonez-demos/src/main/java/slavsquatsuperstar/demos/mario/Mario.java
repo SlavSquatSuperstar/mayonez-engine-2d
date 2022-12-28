@@ -3,7 +3,7 @@ package slavsquatsuperstar.demos.mario;
 import mayonez.GameObject;
 import mayonez.Script;
 import mayonez.Transform;
-import mayonez.graphics.sprite.Sprite;
+import mayonez.graphics.sprites.Sprite;
 import mayonez.input.KeyInput;
 import mayonez.math.Vec2;
 import mayonez.physics.Rigidbody;

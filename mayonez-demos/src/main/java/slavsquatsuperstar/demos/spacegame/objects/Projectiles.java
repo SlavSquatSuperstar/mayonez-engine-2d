@@ -2,7 +2,7 @@ package slavsquatsuperstar.demos.spacegame.objects;
 
 import mayonez.GameObject;
 import mayonez.graphics.Colors;
-import mayonez.graphics.sprite.ShapeSprite;
+import mayonez.graphics.sprites.ShapeSprite;
 import mayonez.math.Vec2;
 import mayonez.physics.colliders.BallCollider;
 import slavsquatsuperstar.demos.spacegame.scripts.Projectile;

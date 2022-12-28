@@ -1,9 +1,8 @@
-package mayonez.graphics.renderable;
+package mayonez.graphics;
 
 import mayonez.Preferences;
 import mayonez.annotations.EngineType;
 import mayonez.annotations.UsesEngine;
-import mayonez.graphics.renderer.DrawPrimitive;
 import mayonez.io.image.GLTexture;
 import mayonez.math.Vec2;
 import org.joml.Vector2f;
@@ -29,6 +28,11 @@ import static org.lwjgl.opengl.GL30.*;
  */
 @UsesEngine(EngineType.GL)
 public final class RenderBatch {
+
+    // Batch Constants
+    public static final int MAX_SPRITES = Preferences.getMaxBatchSprites();
+    public static final int MAX_LINES = Preferences.getMaxBatchLines();
+    public static final int MAX_TRIANGLES = Preferences.getMaxBatchTriangles();
 
     // Batch Characteristics
     private final int maxTextureSlots = Preferences.getMaxTextureSlots();

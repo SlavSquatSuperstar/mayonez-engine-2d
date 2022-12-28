@@ -1,4 +1,4 @@
-package mayonez.graphics.sprite;
+package mayonez.graphics.sprites;
 
 import mayonez.annotations.EngineType;
 import mayonez.annotations.UsesEngine;
@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Creates multiple {@link JSprite}s from a larger image.
+ * Creates multiple {@link JSprite} instances from a larger image.
  *
  * @author SlavSquatSuperstar
  */

@@ -5,7 +5,7 @@ import mayonez.Script;
 import mayonez.scripts.Counter;
 
 /**
- * Gives a {@link GameObject} a health bar that can be damaged by other objects with a {@link Projectile} component.
+ * Gives a {@link mayonez.GameObject} a health bar that can be damaged by other objects with a {@link Projectile} component.
  * Once health is depleted, the object is destroyed.
  *
  * @author SlavSquatSuperstar
@@ -31,7 +31,7 @@ public class Damageable extends Script {
     @Override
     public void onTriggerEnter(GameObject other) {
         if (other.hasTag("Projectile")) {
-            Projectile p = other.getComponent(Projectile.class);
+            Projectile p = gameObject.getComponent(Projectile.class);
             if (p != null) damage(p.getDamage());
         }
     }

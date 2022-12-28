@@ -2,7 +2,7 @@ package slavsquatsuperstar.demos.spacegame.objects;
 
 import mayonez.GameObject;
 import mayonez.Transform;
-import mayonez.graphics.sprite.Sprite;
+import mayonez.graphics.sprites.Sprite;
 import mayonez.math.Random;
 import mayonez.math.Vec2;
 import mayonez.physics.Rigidbody;

@@ -1,9 +1,9 @@
 package slavsquatsuperstar.demos.geometrydash;
 
 import mayonez.GameObject;
-import mayonez.graphics.sprite.JSprite;
-import mayonez.graphics.sprite.JSpriteSheet;
-import mayonez.graphics.sprite.SpriteSheet;
+import mayonez.graphics.sprites.JSprite;
+import mayonez.graphics.sprites.JSpriteSheet;
+import mayonez.graphics.sprites.SpriteSheet;
 import mayonez.math.Random;
 import mayonez.math.Vec2;
 import mayonez.physics.Rigidbody;

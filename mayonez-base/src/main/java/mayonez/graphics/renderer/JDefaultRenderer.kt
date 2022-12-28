@@ -3,8 +3,9 @@ package mayonez.graphics.renderer
 import mayonez.*
 import mayonez.annotations.EngineType
 import mayonez.annotations.UsesEngine
-import mayonez.graphics.renderable.JRenderable
-import mayonez.graphics.sprite.Sprite
+import mayonez.graphics.DebugShape
+import mayonez.graphics.JRenderable
+import mayonez.graphics.sprites.Sprite
 import mayonez.io.image.JTexture
 import mayonez.math.Vec2
 import mayonez.physics.shapes.*
@@ -128,7 +129,7 @@ class JDefaultRenderer : SceneRenderer, DebugRenderer {
     private fun createBatches() {
         batches.clear()
         objects.forEach { r: JRenderable -> // Add shapes
-            if (r is Component && r.isEnabled) batches.add(r)
+            if (r.isEnabled) batches.add(r)
         }
         if (shapes.isNotEmpty()) { // Add objects
             shapes.forEach { s: DebugShape -> batches.add(s) }

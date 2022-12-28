@@ -1,7 +1,7 @@
 package slavsquatsuperstar.demos.geometrydash.components;
 
 import mayonez.Component;
-import mayonez.graphics.renderable.JRenderable;
+import mayonez.graphics.JRenderable;
 import mayonez.math.Vec2;
 
 import java.awt.*;

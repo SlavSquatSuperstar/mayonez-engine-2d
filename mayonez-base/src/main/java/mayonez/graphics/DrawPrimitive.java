@@ -1,4 +1,4 @@
-package mayonez.graphics.renderer;
+package mayonez.graphics;
 
 import mayonez.annotations.EngineType;
 import mayonez.annotations.UsesEngine;

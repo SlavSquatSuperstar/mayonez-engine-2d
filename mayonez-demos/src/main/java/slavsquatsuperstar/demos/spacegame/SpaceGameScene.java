@@ -12,6 +12,7 @@ import mayonez.math.Random;
 import mayonez.math.Vec2;
 import mayonez.physics.shapes.Circle;
 import mayonez.physics.shapes.Shape;
+import slavsquatsuperstar.demos.spacegame.objects.Asteroid;
 import slavsquatsuperstar.demos.spacegame.objects.PlayerShip;
 import slavsquatsuperstar.demos.spacegame.scripts.SpawnManager;
 
@@ -27,7 +28,7 @@ public class SpaceGameScene extends Scene {
         super(name, Preferences.getScreenWidth() * 2, Preferences.getScreenHeight() * 2, 32f);
         setBackground(Colors.JET_BLACK);
         backgroundObjects = new ArrayList<>();
-        numStars = 500;
+        numStars = 750;
     }
 
     @Override
@@ -52,16 +53,16 @@ public class SpaceGameScene extends Scene {
 //                        return new EnemyShip("Enemy Spaceship", "assets/textures/spacegame/spaceship1.png", this);
 //                    }
 //                });
-//                addComponent(obstacleSpawner = new SpawnManager(3, 20) {
-//                    @Override
-//                    public GameObject createSpawnedObject() {
-//                        return new Asteroid("Asteroid", this);
-//                    }
-//                });
+                addComponent(obstacleSpawner = new SpawnManager(3, 20) {
+                    @Override
+                    public GameObject createSpawnedObject() {
+                        return new Asteroid("Asteroid", this);
+                    }
+                });
 
                 // Populate world on start
 //                enemySpawner.populateToMax();
-//                obstacleSpawner.populateToMax();
+                obstacleSpawner.populateToMax();
             }
         });
 

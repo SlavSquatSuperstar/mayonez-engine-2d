@@ -19,7 +19,7 @@ public class JSONFile extends TextAsset {
     }
 
     /**
-     * Parses the JSON data in this file and returns a {@link Record} object.
+     * Parses the JSON data in this file and returns a {@link mayonez.util.Record} object.
      *
      * @return the record, blank if the file does not exist
      */

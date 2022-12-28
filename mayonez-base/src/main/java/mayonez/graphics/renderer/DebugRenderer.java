@@ -1,5 +1,7 @@
 package mayonez.graphics.renderer;
 
+import mayonez.graphics.DebugShape;
+
 /**
  * Draws debug information such as colliders and geometric objects into the screen.
  *

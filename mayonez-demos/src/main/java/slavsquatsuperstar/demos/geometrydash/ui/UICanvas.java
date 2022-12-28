@@ -3,7 +3,7 @@ package slavsquatsuperstar.demos.geometrydash.ui;
 import mayonez.GameObject;
 import mayonez.Transform;
 import mayonez.annotations.ExperimentalFeature;
-import mayonez.graphics.sprite.SpriteSheet;
+import mayonez.graphics.sprites.SpriteSheet;
 import mayonez.math.Vec2;
 import slavsquatsuperstar.demos.geometrydash.components.PlaceBlock;
 

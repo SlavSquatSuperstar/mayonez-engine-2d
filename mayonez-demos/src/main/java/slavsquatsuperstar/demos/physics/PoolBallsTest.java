@@ -3,7 +3,7 @@ package slavsquatsuperstar.demos.physics;
 import mayonez.GameObject;
 import mayonez.graphics.Color;
 import mayonez.graphics.Colors;
-import mayonez.graphics.sprite.ShapeSprite;
+import mayonez.graphics.sprites.ShapeSprite;
 import mayonez.math.FloatMath;
 import mayonez.math.Vec2;
 import mayonez.physics.PhysicsMaterial;

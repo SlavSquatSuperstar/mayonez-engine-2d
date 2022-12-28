@@ -6,7 +6,7 @@ import mayonez.Transform;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit tests for the {@link Transform} class.
+ * Unit tests for the {@link mayonez.Transform} class.
  *
  * @author SlavSquatSuperstar
  */

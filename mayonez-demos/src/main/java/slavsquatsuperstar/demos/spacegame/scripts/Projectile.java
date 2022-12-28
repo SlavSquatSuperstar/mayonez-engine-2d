@@ -2,7 +2,7 @@ package slavsquatsuperstar.demos.spacegame.scripts;
 
 import mayonez.*;
 import mayonez.graphics.Colors;
-import mayonez.graphics.sprite.ShapeSprite;
+import mayonez.graphics.sprites.ShapeSprite;
 import mayonez.math.Vec2;
 import mayonez.physics.Rigidbody;
 import mayonez.physics.colliders.BallCollider;
@@ -10,7 +10,7 @@ import mayonez.physics.colliders.Collider;
 import mayonez.scripts.KeepInScene;
 
 /**
- * Allows a {@link GameObject} to be launched with an initial velocity from a source object, and
+ * Allows a {@link mayonez.GameObject} to be launched with an initial velocity from a source object, and
  * allows it to damage other objects with a {@link Damageable} component.
  */
 public class Projectile extends Script {
@@ -45,7 +45,7 @@ public class Projectile extends Script {
     }
 
     /**
-     * Creates a prefab projectile {@link GameObject} from a projectile script and gives it a collider and rigidbody if
+     * Creates a prefab projectile {@link mayonez.GameObject} from a projectile script and gives it a collider and rigidbody if
      * none are added.
      *
      * @param projectile the projectile script

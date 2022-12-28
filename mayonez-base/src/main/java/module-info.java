@@ -24,8 +24,7 @@ module mayonez.base {
     exports mayonez;
     exports mayonez.annotations;
     exports mayonez.graphics;
-    exports mayonez.graphics.sprite;
-    exports mayonez.graphics.renderable;
+    exports mayonez.graphics.sprites;
     exports mayonez.graphics.renderer;
     exports mayonez.io;
     exports mayonez.io.image;

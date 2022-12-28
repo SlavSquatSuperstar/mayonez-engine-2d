@@ -35,7 +35,7 @@ public abstract class SpawnManager extends Script {
     }
 
     /**
-     * Instantiate a prefab {@link GameObject} to be spawned. To be defined by the subclass.
+     * Instantiate a prefab {@link mayonez.GameObject} to be spawned. To be defined by the subclass.
      *
      * @return the new object
      */

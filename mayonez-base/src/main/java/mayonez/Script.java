@@ -18,6 +18,26 @@ public abstract class Script extends Component {
     public void init() {
     }
 
+    // Component Getters
+
+    /**
+     * Provides a reference to the parent object's {@link Collider} component.
+     *
+     * @return the collider, if it exists
+     */
+    public Collider getCollider() {
+        return gameObject.getComponent(Collider.class);
+    }
+
+    /**
+     * Provides a reference to the parent object's {@link Rigidbody} component.
+     *
+     * @return the rigidbody, if it exists
+     */
+    public Rigidbody getRigidbody() {
+        return gameObject.getComponent(Rigidbody.class);
+    }
+
     // Callback Methods
 
     /**
@@ -66,36 +86,6 @@ public abstract class Script extends Component {
      * @param other the other game object
      */
     public void onTriggerExit(GameObject other) {
-    }
-
-    // Component Getters
-
-    /**
-     * Provides a reference to the parent object's component of the given type.
-     * @param cls the component class
-     *
-     * @return the component, if it exists
-     */
-    public <T extends Component> T getComponent(Class<T> cls) {
-        return gameObject.getComponent(cls);
-    }
-
-    /**
-     * Provides a reference to the parent object's {@link Collider} component.
-     *
-     * @return the collider, if it exists
-     */
-    public Collider getCollider() {
-        return gameObject.getComponent(Collider.class);
-    }
-
-    /**
-     * Provides a reference to the parent object's {@link Rigidbody} component.
-     *
-     * @return the rigidbody, if it exists
-     */
-    public Rigidbody getRigidbody() {
-        return gameObject.getComponent(Rigidbody.class);
     }
 
     @Override

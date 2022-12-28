@@ -62,14 +62,14 @@ public sealed interface Window permits JWindow, GLWindow {
     /**
      * Set the keyboard listener for this window.
      *
-     * @param keyboard a {@link KeyInput} instance
+     * @param keyboard a {@link mayonez.input.KeyInput} instance
      */
     void setKeyInput(KeyInput keyboard);
 
     /**
      * Set the mouse listener for this window.
      *
-     * @param mouse a {@link MouseInput} instance
+     * @param mouse a {@link mayonez.input.MouseInput} instance
      */
     void setMouseInput(MouseInput mouse);
 

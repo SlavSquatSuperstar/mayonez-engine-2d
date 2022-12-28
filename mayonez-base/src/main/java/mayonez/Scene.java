@@ -4,7 +4,7 @@ import mayonez.event.Receivable;
 import mayonez.graphics.Color;
 import mayonez.graphics.*;
 import mayonez.graphics.renderer.*;
-import mayonez.graphics.sprite.Sprite;
+import mayonez.graphics.sprites.Sprite;
 import mayonez.io.image.Texture;
 import mayonez.math.Random;
 import mayonez.math.Vec2;

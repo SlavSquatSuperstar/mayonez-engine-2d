@@ -1,16 +1,21 @@
 package mayonez.graphics.renderer
 
-import mayonez.*
-import mayonez.SceneManager.currentScene
+import mayonez.Component
+import mayonez.DebugDraw
+import mayonez.GameObject
+import mayonez.Scene
 import mayonez.Transform.Companion.scaleInstance
-import mayonez.graphics.renderable.RenderBatch
-import mayonez.graphics.sprite.GLSprite
-import mayonez.graphics.sprite.ShapeSprite
-import mayonez.graphics.sprite.Sprite
+import mayonez.graphics.DebugShape
+import mayonez.graphics.DrawPrimitive
+import mayonez.graphics.GLRenderable
+import mayonez.graphics.RenderBatch
+import mayonez.graphics.sprites.GLSprite
+import mayonez.graphics.sprites.ShapeSprite
+import mayonez.graphics.sprites.Sprite
 import mayonez.math.Vec2
-import mayonez.physics.shapes.*
-import mayonez.physics.shapes.Rectangle.Companion.rectangleVertices
-import mayonez.util.GLColor
+import mayonez.physics.shapes.Edge
+import mayonez.physics.shapes.Rectangle
+import mayonez.physics.shapes.Triangle
 import org.lwjgl.opengl.GL11.*
 import kotlin.math.roundToInt
 
@@ -19,16 +24,11 @@ import kotlin.math.roundToInt
  *
  * @author SlavSquatSuperstar
  */
-class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl", MAX_BATCH_SIZE), SceneRenderer, DebugRenderer {
-
-    companion object {
-        private val MAX_BATCH_SIZE = Preferences.maxBatchSize
-        private const val MAX_LINES = 500
-        private const val MAX_TRIANGLES = 1000
-    }
+class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"), SceneRenderer,
+    DebugRenderer {
 
     private val lineStyle = LineStyle.QUADS
-    private var objects: MutableList<Any> = ArrayList() // drawable objects
+    private var objects: MutableList<GLRenderable> = ArrayList() // drawable objects
     private var shapes: MutableList<DebugShape> = ArrayList() // temporary shapes
     private var bgBatch: RenderBatch =
         RenderBatch(1, 0, DrawPrimitive.SPRITE)
@@ -43,17 +43,24 @@ class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl", MAX_BATCH_SI
     }
 
     override fun addObject(obj: GameObject) {
-        val sprite = obj.getComponent(GLSprite::class.java)
-        if (sprite != null) objects.add(sprite)
-        val shape = obj.getComponent(ShapeSprite::class.java)
-        if (shape != null) objects.add(shape)
+        obj.getComponents(Component::class.java).forEach { c: Component ->
+            if (c is GLRenderable) objects.add(c)
+        }
     }
 
     override fun removeObject(obj: GameObject) {
-        val sprite = obj.getComponent(GLSprite::class.java)
-        if (sprite != null) objects.remove(sprite)
-        val shape = obj.getComponent(ShapeSprite::class.java)
-        if (shape != null) objects.remove(shape)
+        obj.getComponents(Component::class.java).forEach { c: Component ->
+            if (c is GLRenderable) objects.remove(c)
+        }
+    }
+
+    // Debug Renderer Methods
+
+    override fun addShape(shape: DebugShape) {
+        for (s in shape.simplify()) {
+            if (s is Edge) addLine(s, shape)
+            else if (s is Triangle) shapes.add(DebugShape(s, shape))
+        }
     }
 
     // Renderer Methods
@@ -89,35 +96,26 @@ class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl", MAX_BATCH_SI
         } else {
             // Rebuffer and draw the background
             bgBatch.clear()
-            pushSprite(bgBatch, background as GLSprite)
+            (background as GLSprite).pushToBatch(bgBatch)
             bgBatch.upload()
             bgBatch.render()
         }
     }
 
     override fun createBatches() {
-        objects.forEach { spr: Any ->
-            if (spr is GLSprite) {
-                if (!spr.isEnabled) return
-                val batch = getAvailableBatch(spr.texture, spr.gameObject.zIndex, DrawPrimitive.SPRITE)
-                pushSprite(batch, spr) // Push vertices to batch
-            } else if (spr is ShapeSprite) {
-                if (!spr.isEnabled) return
-                addShape(DebugShape(spr)) // Break down shape into primitives then add them later
+        objects.forEach { obj: GLRenderable ->
+            if (obj.isEnabled) {
+                if (obj is ShapeSprite) {
+                    addShape(DebugShape(obj)) // Break down shape into primitives then add them later
+                } else {
+                    val batch = getAvailableBatch(obj.texture, obj.zIndex, obj.primitive, obj.batchSize)
+                    obj.pushToBatch(batch) // Push vertices to batch
+                }
             }
         }
-        shapes.forEach { ds: DebugShape -> // Push debug shape vertices to GPU
-            when (val shape = ds.shape) {
-                is Edge -> {
-                    val batch = getAvailableBatch(null, ds.zIndex, DrawPrimitive.LINE, MAX_LINES)
-                    pushLine(batch, shape, ds.color.toGL())
-                }
-
-                is Triangle -> {
-                    val batch = getAvailableBatch(null, ds.zIndex, DrawPrimitive.TRIANGLE, MAX_TRIANGLES)
-                    pushTriangle(batch, shape, ds.color.toGL())
-                }
-            }
+        shapes.forEach { shape: DebugShape -> // Push debug shape vertices to GPU
+            val batch = getAvailableBatch(shape.texture, shape.zIndex, shape.primitive, shape.batchSize)
+            shape.pushToBatch(batch)
         }
     }
 
@@ -138,67 +136,6 @@ class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl", MAX_BATCH_SI
 
     // Batch Helper Methods
 
-    /**
-     * Pushes a sprite's vertices and texture  to a render batch.
-     *
-     * @param batch the batch
-     * @param spr   the sprite
-     */
-    private fun pushSprite(batch: RenderBatch, spr: GLSprite) {
-        // Add sprite vertex data
-        val objXf = spr.transform.combine(spr.spriteTransform)
-        val color = spr.color.toGL()
-        val texCoords = spr.texCoords
-        val texID = batch.addTexture(spr.texture)
-
-        // Render sprite at object center and rotate according to object
-        val sprVertices = rectangleVertices(Vec2(0f), Vec2(1f), objXf.rotation)
-        for (i in sprVertices.indices) {
-            // sprite_pos = (obj_pos + vert_pos * obj_scale) * world_scale
-            val sprPos = (objXf.position + (sprVertices[i] * objXf.scale)) * currentScene.scale
-            batch.pushVec2(sprPos)
-            batch.pushVec4(color)
-            batch.pushVec2(texCoords[i])
-            batch.pushInt(texID)
-        }
-    }
-
-    /**
-     * Pushes a line's vertices and texture to a render batch.
-     *
-     * @param batch the batch
-     * @param line  the line
-     * @param color the color
-     */
-    private fun pushLine(batch: RenderBatch, line: Edge, color: GLColor) {
-        batch.pushVec2(line.start)
-        batch.pushVec4(color)
-        batch.pushVec2(line.end)
-        batch.pushVec4(color)
-    }
-
-    /**
-     * Pushes a triangle's vertices and texture to a render batch.
-     *
-     * @param batch the batch
-     * @param tri   the triangle
-     * @param color the color
-     */
-    private fun pushTriangle(batch: RenderBatch, tri: Triangle, color: GLColor) {
-        for (v in tri.vertices) {
-            batch.pushVec2(v)
-            batch.pushVec4(color)
-        }
-    }
-
-    override fun addShape(shape: DebugShape) {
-        when (val s = shape.shape) {
-            is Edge -> addLine(s, shape) // add line directly
-            is Polygon -> addPolygon(s, shape) // break down and add components
-            is Ellipse -> addPolygon(s.toPolygon(), shape) // break down and add components
-        }
-    }
-
     private fun addLine(edge: Edge, shape: DebugShape) {
         val stroke = DebugDraw.STROKE_SIZE
         val len = edge.length // Want to stretch lines to look flush
@@ -209,7 +146,7 @@ class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl", MAX_BATCH_SI
                 val norm = edge.unitNormal()
                 val start = (1 - stroke) * 0.5f // -(stroke - 1) / 2
                 for (i in 0 until stroke.roundToInt()) {
-                    val line = stretched.translate(norm.mul(start + i))
+                    val line = stretched.translate(norm * (start + i))
                     shapes.add(DebugShape(line, shape))
                 }
             }
@@ -217,14 +154,9 @@ class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl", MAX_BATCH_SI
             LineStyle.QUADS -> {
                 val stretchedLen = len + stroke - 1f
                 val rect = Rectangle(edge.center(), Vec2(stretchedLen, stroke), edge.toVector().angle())
-                for (tri in rect.triangles) shapes.add(DebugShape(tri, shape.color, true, DebugShape.DrawPriority.LINE))
+                for (tri in rect.triangles) shapes.add(DebugShape(tri, shape.color, true, DrawPriority.LINE))
             }
         }
-    }
-
-    private fun addPolygon(poly: Polygon, shape: DebugShape) {
-        if (shape.fill) for (tri in poly.triangles) shapes.add(DebugShape(tri, shape)) // Create a triangle fan
-        else for (edge in poly.edges) addLine(edge, shape) // Create a wireframe
     }
 
     // Helper Enum

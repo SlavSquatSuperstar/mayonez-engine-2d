@@ -1,4 +1,4 @@
-package mayonez.graphics.renderable;
+package mayonez.graphics;
 
 import mayonez.annotations.EngineType;
 import mayonez.annotations.UsesEngine;
@@ -12,6 +12,9 @@ import java.awt.*;
  */
 @UsesEngine(EngineType.AWT)
 public interface JRenderable {
+
+    // Renderer Methods
+
     /**
      * Draw this object to the screen.
      *
@@ -19,5 +22,9 @@ public interface JRenderable {
      */
     void render(Graphics2D g2);
 
+    // Getters
+
     int getZIndex();
+
+    boolean isEnabled();
 }

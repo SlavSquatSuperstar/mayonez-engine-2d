@@ -4,7 +4,7 @@ import mayonez.DebugDraw;
 import mayonez.Scene;
 import mayonez.graphics.Color;
 import mayonez.graphics.Colors;
-import mayonez.graphics.sprite.SpriteSheet;
+import mayonez.graphics.sprites.SpriteSheet;
 import mayonez.input.KeyInput;
 import mayonez.io.Assets;
 import mayonez.io.image.Texture;

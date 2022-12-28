@@ -1,6 +1,6 @@
 package mayonez;
 
-import mayonez.graphics.sprite.Sprite;
+import mayonez.graphics.sprites.Sprite;
 import mayonez.math.Vec2;
 import mayonez.physics.CollisionEventType;
 import mayonez.physics.colliders.Collider;

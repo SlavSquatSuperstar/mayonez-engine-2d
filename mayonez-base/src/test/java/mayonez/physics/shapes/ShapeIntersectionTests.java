@@ -1,14 +1,13 @@
 package mayonez.physics.shapes;
 
-import org.junit.jupiter.api.Test;
 import mayonez.math.Vec2;
-import mayonez.physics.Collisions;
+import org.junit.jupiter.api.Test;
 
 import static mayonez.test.TestUtils.assertNoShapeCollision;
 import static mayonez.test.TestUtils.assertShapeCollision;
 
 /**
- * Unit tests for the {@link Collisions} class.
+ * Unit tests for the {@link mayonez.physics.Collisions} class.
  *
  * @author SlavSquatSuperstar
  */

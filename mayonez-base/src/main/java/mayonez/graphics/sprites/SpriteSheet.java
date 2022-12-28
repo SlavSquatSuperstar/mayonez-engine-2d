@@ -1,4 +1,4 @@
-package mayonez.graphics.sprite;
+package mayonez.graphics.sprites;
 
 import mayonez.Mayonez;
 import mayonez.io.image.Texture;
@@ -10,11 +10,21 @@ import mayonez.io.image.Texture;
  */
 public abstract sealed class SpriteSheet permits JSpriteSheet, GLSpriteSheet {
 
+    // Sprite Methods
+
     public abstract Sprite getSprite(int index);
 
     public abstract Texture getTexture(int index);
 
     public abstract int numSprites();
+
+    public Sprite[] toSpriteArray() {
+        Sprite[] sprites = new Sprite[numSprites()];
+        for (int i = 0; i < sprites.length; i++) sprites[i] = getSprite(i);
+        return sprites;
+    }
+
+    // Factory Methods
 
     /**
      * Automatically creates a AWT or GL sprite sheet depending on the current engine instance.

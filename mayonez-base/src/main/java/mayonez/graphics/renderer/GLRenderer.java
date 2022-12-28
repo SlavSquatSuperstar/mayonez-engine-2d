@@ -4,7 +4,8 @@ import mayonez.Preferences;
 import mayonez.annotations.EngineType;
 import mayonez.annotations.UsesEngine;
 import mayonez.graphics.GLCamera;
-import mayonez.graphics.renderable.RenderBatch;
+import mayonez.graphics.DrawPrimitive;
+import mayonez.graphics.RenderBatch;
 import mayonez.io.Assets;
 import mayonez.io.image.GLTexture;
 import mayonez.io.image.Shader;
@@ -24,12 +25,10 @@ public abstract class GLRenderer implements Renderer {
     private final List<RenderBatch> batches;
     protected final Shader shader;
     protected final int[] textureSlots; // support multiple texture IDs in batch
-    private final int maxBatchSize;
 
-    public GLRenderer(String shaderFile, int maxBatchSize) {
+    public GLRenderer(String shaderFile) {
         this.batches = new ArrayList<>();
         this.shader = Assets.getShader(shaderFile);
-        this.maxBatchSize = maxBatchSize;
         textureSlots = new int[Preferences.getMaxTextureSlots()];
         for (int i = 0; i < this.textureSlots.length; i++) this.textureSlots[i] = i; // ints 0-7
     }
@@ -89,18 +88,13 @@ public abstract class GLRenderer implements Renderer {
      */
     protected abstract void createBatches();
 
-    protected final RenderBatch getAvailableBatch(GLTexture texture, int zIndex, DrawPrimitive primitive) {
-        return getAvailableBatch(texture, zIndex, primitive, maxBatchSize);
-    }
-
     protected final RenderBatch getAvailableBatch(GLTexture texture, int zIndex, DrawPrimitive primitive, int maxBatchSize) {
         for (RenderBatch batch : batches) {
-            if (batch.hasRoom() && batch.getZIndex() == zIndex) { // has room for more vertices and z-index matches
-                if (batch.hasTexture(texture) || batch.hasTextureRoom()) { // has room for texture
-                    if (batch.getPrimitive().equals(primitive)) // uses the same primitive
-                        return batch;
-                }
-            }
+            boolean samePrimitive = batch.getPrimitive() == primitive;
+            boolean sameZIndex = batch.getZIndex() == zIndex;
+            boolean fitsTexture = batch.hasTexture(texture) || batch.hasTextureRoom();
+            boolean fitsVertices = batch.hasRoom();
+            if (samePrimitive && sameZIndex && fitsTexture && fitsVertices) return batch;
         }
         // Create new if all batches full
         RenderBatch batch = new RenderBatch(maxBatchSize, zIndex, primitive);

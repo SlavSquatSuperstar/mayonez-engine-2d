@@ -1,10 +1,10 @@
-package mayonez.graphics.sprite;
+package mayonez.graphics.sprites;
 
 import mayonez.DebugDraw;
 import mayonez.GameObject;
 import mayonez.annotations.EngineType;
 import mayonez.annotations.UsesEngine;
-import mayonez.graphics.renderable.JRenderable;
+import mayonez.graphics.JRenderable;
 import mayonez.io.image.JTexture;
 import mayonez.physics.shapes.Rectangle;
 import mayonez.graphics.Color;
@@ -43,6 +43,8 @@ public final class JSprite extends Sprite implements JRenderable {
         texture = null;
     }
 
+    // Sprite Methods
+
     @Override
     public void render(Graphics2D g2) {
         if (texture != null) texture.draw(g2, transform, spriteXf, getScene().getScale());
@@ -50,11 +52,6 @@ public final class JSprite extends Sprite implements JRenderable {
     }
 
     // Sprite Methods
-
-    @Override
-    public JSprite copy() {
-        return (texture == null) ? new JSprite(color) : new JSprite(texture);
-    }
 
     public BufferedImage getImage() {
         return texture.getImage();
@@ -70,5 +67,9 @@ public final class JSprite extends Sprite implements JRenderable {
         return gameObject.getZIndex();
     }
 
+    @Override
+    public JSprite copy() {
+        return (texture == null) ? new JSprite(color) : new JSprite(texture);
+    }
 
 }

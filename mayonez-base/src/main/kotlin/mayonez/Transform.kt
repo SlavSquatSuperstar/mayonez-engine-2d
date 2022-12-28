@@ -91,7 +91,10 @@ class Transform(
      */
     fun combine(other: Transform?): Transform {
         return if (other == null) copy()
-        else Transform(this.position + other.position, this.rotation + other.rotation, this.scale * other.scale)
+        else Transform(
+            this.position + (other.position * this.scale).rotate(this.rotation),
+            this.rotation + other.rotation, this.scale * other.scale
+        )
     }
 
     // Space Transform Methods

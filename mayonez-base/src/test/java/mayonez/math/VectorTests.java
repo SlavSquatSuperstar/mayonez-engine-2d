@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static mayonez.test.TestUtils.assertFloatEquals;
 
 /**
- * Unit tests for the {@link Vec2} class.
+ * Unit tests for the {@link mayonez.math.Vec2} class.
  *
  * @author SlavSquatSuperstar
  */

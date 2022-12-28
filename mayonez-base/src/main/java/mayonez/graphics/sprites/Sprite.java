@@ -1,24 +1,22 @@
-package mayonez.graphics.sprite;
+package mayonez.graphics.sprites;
 
 import mayonez.Component;
-import mayonez.GameObject;
 import mayonez.Mayonez;
 import mayonez.Transform;
+import mayonez.graphics.Color;
+import mayonez.graphics.Colors;
 import mayonez.io.Assets;
 import mayonez.io.image.GLTexture;
 import mayonez.io.image.JTexture;
 import mayonez.io.image.Texture;
-import mayonez.graphics.Color;
-import mayonez.graphics.Colors;
 
 /**
  * A visual representation of a GameObject.
  *
  * @author SlavSquatSuperstar
  */
-// TODO set sprite scale
-// TODO change color and texture
-public abstract sealed class Sprite extends Component permits GLSprite, JSprite {
+// TODO make color and texture changeable
+public abstract class Sprite extends Component {
 
     protected final Color color;
     protected Transform spriteXf;
@@ -63,7 +61,7 @@ public abstract sealed class Sprite extends Component permits GLSprite, JSprite 
     }
 
     /**
-     * Returns a new sprite with the same image but not attached to any {@link GameObject}.
+     * Returns a new sprite with the same image but not attached to any {@link mayonez.GameObject}.
      *
      * @return a copy of this image
      */

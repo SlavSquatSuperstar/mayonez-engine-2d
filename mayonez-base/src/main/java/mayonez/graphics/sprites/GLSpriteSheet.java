@@ -1,4 +1,4 @@
-package mayonez.graphics.sprite;
+package mayonez.graphics.sprites;
 
 import mayonez.math.Vec2;
 import mayonez.annotations.EngineType;

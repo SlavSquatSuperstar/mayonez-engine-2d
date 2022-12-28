@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 /**
- * Unit tests for the {@link Mat22} class.
+ * Unit tests for the {@link mayonez.math.Mat22} class.
  *
  * @author SlavSquatSuperstar
  */

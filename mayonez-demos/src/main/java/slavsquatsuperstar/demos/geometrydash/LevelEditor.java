@@ -2,9 +2,9 @@ package slavsquatsuperstar.demos.geometrydash;
 
 import mayonez.*;
 import mayonez.graphics.Colors;
-import mayonez.graphics.sprite.JSpriteSheet;
-import mayonez.graphics.sprite.ShapeSprite;
-import mayonez.graphics.sprite.SpriteSheet;
+import mayonez.graphics.sprites.JSpriteSheet;
+import mayonez.graphics.sprites.ShapeSprite;
+import mayonez.graphics.sprites.SpriteSheet;
 import mayonez.math.Vec2;
 import mayonez.physics.Rigidbody;
 import mayonez.physics.colliders.BoxCollider;

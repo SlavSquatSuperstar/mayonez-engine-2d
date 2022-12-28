@@ -22,7 +22,7 @@ public interface Renderer {
     /**
      * Redraws everything to the screen.
      *
-     * @param g2 a {@link Graphics2D} object for the AWT engine
+     * @param g2 a {@link java.awt.Graphics2D} object for the AWT engine
      */
     void render(Graphics2D g2);
 

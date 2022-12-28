@@ -59,7 +59,7 @@ public abstract class Camera extends Script {
     // Factory Method
 
     /**
-     * Creates a container {@link GameObject} to hold a scene's Camera script.
+     * Creates a container {@link mayonez.GameObject} to hold a scene's Camera script.
      *
      * @param camera the camera instance
      * @return the camera object
@@ -250,7 +250,7 @@ public abstract class Camera extends Script {
      * Tell this camera to start following a subject, or disables subject following. If the camera mode
      * is changed, the camera will remember the last subject.
      *
-     * @param subject a {@link GameObject} in the scene
+     * @param subject a {@link mayonez.GameObject} in the scene
      * @return this object
      */
     public final Camera setSubject(GameObject subject) {

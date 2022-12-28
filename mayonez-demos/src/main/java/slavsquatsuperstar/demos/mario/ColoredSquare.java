@@ -3,7 +3,7 @@ package slavsquatsuperstar.demos.mario;
 import mayonez.GameObject;
 import mayonez.Transform;
 import mayonez.graphics.Color;
-import mayonez.graphics.sprite.Sprite;
+import mayonez.graphics.sprites.Sprite;
 import mayonez.math.Vec2;
 
 /**

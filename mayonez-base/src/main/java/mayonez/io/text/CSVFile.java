@@ -21,7 +21,7 @@ public class CSVFile extends TextAsset {
     }
 
     /**
-     * Parses the CSV data in this file and returns a list of {@link Record} objects.
+     * Parses the CSV data in this file and returns a list of {@link mayonez.util.Record} objects.
      *
      * @return the records, empty if the file does not exist
      */

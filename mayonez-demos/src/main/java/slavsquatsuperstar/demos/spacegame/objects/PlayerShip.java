@@ -3,7 +3,8 @@ package slavsquatsuperstar.demos.spacegame.objects;
 import mayonez.GameObject;
 import mayonez.Script;
 import mayonez.Transform;
-import mayonez.graphics.sprite.Sprite;
+import mayonez.graphics.sprites.Sprite;
+import mayonez.graphics.sprites.SpriteSheet;
 import mayonez.input.KeyInput;
 import mayonez.input.MouseInput;
 import mayonez.math.Vec2;
@@ -31,13 +32,22 @@ public class PlayerShip extends GameObject {
 
     @Override
     protected void init() {
+        SpriteSheet exhaust = SpriteSheet.create("assets/textures/spacegame/exhaust.png", 16, 16, 3, 0);
         getScene().getCamera().setSubject(this).setFollowAngle(false);
-        addComponent(Sprite.create(spriteName));
+
+        // Physics
         Rigidbody rb;
         addComponent(rb = new Rigidbody(1f));
 //        rb.setVelocity(new Vec2(0f, 20f));
         addComponent(new BoxCollider(new Vec2(0.85f, 1f)));
+
+        // Visuals
+        addComponent(Sprite.create(spriteName));
 //        addComponent(new ShapeSprite(Colors.LIGHT_GRAY, false));
+        getScene().addObject(new Exhaust("Left Exhaust", this.transform, new Transform(new Vec2(-0.1f, -0.6f), 0f, new Vec2(0.3f, 0.3f))));
+        getScene().addObject(new Exhaust("Right Exhaust", this.transform, new Transform(new Vec2(0.1f, -0.6f), 0f, new Vec2(0.3f, 0.3f))));
+
+        // Scripts
 //        addComponent(new KeepInScene(KeepInScene.Mode.WRAP));
         addComponent(new KeyMovement(MoveMode.FORCE, 10f, "horizontal2", "vertical").setObjectAligned(true));
         addComponent(new KeyRotation(MoveMode.VELOCITY, 1f, "horizontal"));

@@ -5,7 +5,7 @@ import mayonez.Mayonez;
 import mayonez.Preferences;
 import mayonez.Scene;
 import mayonez.graphics.Colors;
-import mayonez.graphics.sprite.ShapeSprite;
+import mayonez.graphics.sprites.ShapeSprite;
 import mayonez.math.Vec2;
 import mayonez.physics.Rigidbody;
 import mayonez.physics.colliders.BoxCollider;
