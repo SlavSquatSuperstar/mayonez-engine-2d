@@ -17,6 +17,7 @@ public class Projectile extends Script {
 
     private final GameObject source;
     private final float damage, speed;
+    // TODO add lifetime
 
     public Projectile(GameObject source, float damage, float speed) {
         this.source = source;

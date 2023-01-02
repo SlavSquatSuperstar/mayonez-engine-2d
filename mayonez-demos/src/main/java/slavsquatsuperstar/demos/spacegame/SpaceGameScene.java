@@ -13,6 +13,7 @@ import mayonez.math.Vec2;
 import mayonez.physics.shapes.Circle;
 import mayonez.physics.shapes.Shape;
 import slavsquatsuperstar.demos.spacegame.objects.Asteroid;
+import slavsquatsuperstar.demos.spacegame.objects.EnemyShip;
 import slavsquatsuperstar.demos.spacegame.objects.PlayerShip;
 import slavsquatsuperstar.demos.spacegame.scripts.SpawnManager;
 
@@ -36,10 +37,7 @@ public class SpaceGameScene extends Scene {
         setGravity(new Vec2());
         backgroundObjects.clear();
 
-        String shipSprite = "assets/textures/spacegame/spaceship1.png";
-        addObject(new PlayerShip("Player Spaceship", shipSprite));
-        // TODO jittering with high velocity
-        // disabling camera following fixes jittering
+        addObject(new PlayerShip("Player Spaceship", "assets/textures/spacegame/spaceship1.png"));
 
         // Spawn Stuff
         addObject(new GameObject("Object Spawner") {
@@ -47,12 +45,12 @@ public class SpaceGameScene extends Scene {
             protected void init() {
                 SpawnManager enemySpawner;
                 SpawnManager obstacleSpawner;
-//                addComponent(enemySpawner = new SpawnManager(6, 5) {
-//                    @Override
-//                    public GameObject createSpawnedObject() {
-//                        return new EnemyShip("Enemy Spaceship", "assets/textures/spacegame/spaceship1.png", this);
-//                    }
-//                });
+                addComponent(enemySpawner = new SpawnManager(6, 5) {
+                    @Override
+                    public GameObject createSpawnedObject() {
+                        return new EnemyShip("Enemy Spaceship", "assets/textures/spacegame/spaceship2.png", this);
+                    }
+                });
                 addComponent(obstacleSpawner = new SpawnManager(3, 20) {
                     @Override
                     public GameObject createSpawnedObject() {
@@ -61,7 +59,7 @@ public class SpaceGameScene extends Scene {
                 });
 
                 // Populate world on start
-//                enemySpawner.populateToMax();
+                enemySpawner.populateToMax();
                 obstacleSpawner.populateToMax();
             }
         });

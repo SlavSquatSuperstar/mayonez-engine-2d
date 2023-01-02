@@ -62,7 +62,7 @@ public class PhysicsWorld {
      *
      * Integrate forces and velocities
      */
-    public void physicsUpdate(float dt) {
+    public void step(float dt) {
         collisions.clear();
 
         // Apply Gravity and Update Bodies

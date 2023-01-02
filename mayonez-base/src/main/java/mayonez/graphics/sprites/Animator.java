@@ -1,8 +1,6 @@
-package slavsquatsuperstar.demos.spacegame.scripts;
+package mayonez.graphics.sprites;
 
 import mayonez.Script;
-import mayonez.graphics.sprites.Sprite;
-import mayonez.graphics.sprites.SpriteSheet;
 import mayonez.scripts.Timer;
 
 /**

@@ -1,5 +1,6 @@
 package mayonez.engine;
 
+import mayonez.Scene;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
@@ -8,7 +9,6 @@ import mayonez.Logger;
 import mayonez.Mayonez;
 import mayonez.annotations.EngineType;
 import mayonez.annotations.UsesEngine;
-import mayonez.event.Receivable;
 import mayonez.input.KeyInput;
 import mayonez.input.MouseInput;
 
@@ -31,9 +31,6 @@ public final class GLWindow implements Window {
     private long window; // The window pointer
     private final String title;
     private final int width, height;
-
-//    private KeyInput keyboard;
-//    private MouseInput mouse;
 
     public GLWindow(String title, int width, int height) {
         this.title = title;
@@ -136,15 +133,15 @@ public final class GLWindow implements Window {
             glfwSetWindowShouldClose(window, true); // Exit program by pressing escape
     }
 
-    public void render(Receivable r) {
+    public void render(Scene scene) {
         glClearColor(1f, 1f, 1f, 1f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear the screen
-        r.onReceive(); // don't pass G2D
-        glfwSwapBuffers(window); // swap the color buffers
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear screen
+        scene.render(null); // Don't pass G2D
+        glfwSwapBuffers(window); // Swap color buffers
     }
 
     public void endFrame() {
-        KeyInput.endFrame(); // don't need, use key callback instead
+        KeyInput.endFrame(); // Don't need, use key callback instead
         MouseInput.endFrame();
     }
 
@@ -152,16 +149,14 @@ public final class GLWindow implements Window {
 
     @Override
     public void setKeyInput(KeyInput keyboard) {
-//        this.keyboard = keyboard;
-        glfwSetKeyCallback(window, KeyInput::keyCallback);
+        glfwSetKeyCallback(window, keyboard::keyCallback);
     }
 
     @Override
     public void setMouseInput(MouseInput mouse) {
-//        this.mouse = mouse;
-        glfwSetMouseButtonCallback(window, MouseInput::mouseButtonCallback);
-        glfwSetCursorPosCallback(window, MouseInput::mousePosCallback);
-        glfwSetScrollCallback(window, MouseInput::mouseScrollCallback);
+        glfwSetMouseButtonCallback(window, mouse::mouseButtonCallback);
+        glfwSetCursorPosCallback(window, mouse::mousePosCallback);
+        glfwSetScrollCallback(window, mouse::mouseScrollCallback);
     }
 
     // Properties

@@ -1,6 +1,6 @@
 package mayonez.engine;
 
-import mayonez.event.Receivable;
+import mayonez.Scene;
 import mayonez.input.KeyInput;
 import mayonez.input.MouseInput;
 
@@ -48,9 +48,9 @@ public sealed interface Window permits JWindow, GLWindow {
     /**
      * Draw the game to the screen.
      *
-     * @param r a draw function
+     * @param scene the scene the draw
      */
-    void render(Receivable r);
+    void render(Scene scene);
 
     /**
      * Reset events and input listeners.

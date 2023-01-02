@@ -82,7 +82,6 @@ object MouseInput : MouseAdapter() {
 
     // Mouse Button Callbacks
 
-    @JvmStatic
     fun mouseButtonCallback(window: Long, button: Int, action: Int, mods: Int) {
         if (!button.isValid()) return
         lastButton = button
@@ -124,7 +123,6 @@ object MouseInput : MouseAdapter() {
 
     // Mouse Movement Callbacks
 
-    @JvmStatic
     fun mousePosCallback(window: Long, xPos: Double, yPos: Double) {
         if (pressed) setMouseDisp(xPos - mousePos.x, yPos - mousePos.y)
         setMousePos(xPos, yPos)
@@ -150,7 +148,6 @@ object MouseInput : MouseAdapter() {
 
     // Mouse Scroll Callbacks
 
-    @JvmStatic
     fun mouseScrollCallback(window: Long, xOffset: Double, yOffset: Double) {
         setScrollPos(xOffset, yOffset)
     }

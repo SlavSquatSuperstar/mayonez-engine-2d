@@ -49,6 +49,15 @@ This fully-operational game engine includes:
 
 ## Additional Info
 
+### Sprite Art
+
+The demo game textures were pulled from GamesWithGabe's GitHub repositories or created in the program Piskel.
+
+- [Geometry Dash Series](https://github.com/codingminecraft/GeometryDash): Repository by GamesWithGabe
+- [Mario LWJGL Series](https://github.com/codingminecraft/MarioYoutube): Repository by GamesWithGabe
+- [Piskel](https://www.piskelapp.com/): Online and desktop pixel art editor, with .piskel files included in
+  src/main/resources/sprites
+
 ### Acknowledgements
 
 A massive, heartfelt thanks goes out to the following people, groups, and resources for inspiration and guidance.

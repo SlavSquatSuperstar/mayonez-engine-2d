@@ -152,8 +152,6 @@ class Rigidbody(mass: Float, drag: Float, angDrag: Float) : Component() {
      * Integrate linear velocity and angular velocity to solve for position and rotation.
      */
     fun integrateVelocity(dt: Float) {
-//        println("vel ${velocity.y}")
-//        println("${position.y}, $dt")
         transform.move(velocity * dt)
         if (!fixedRotation) transform.rotate(angVelocity * dt)
     }

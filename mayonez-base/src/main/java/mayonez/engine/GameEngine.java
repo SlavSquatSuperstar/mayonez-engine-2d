@@ -4,6 +4,8 @@ import mayonez.Logger;
 import mayonez.Mayonez;
 import mayonez.Scene;
 import mayonez.SceneManager;
+import mayonez.input.KeyInput;
+import mayonez.input.MouseInput;
 import mayonez.math.FloatMath;
 
 /**
@@ -13,10 +15,15 @@ import mayonez.math.FloatMath;
  */
 public abstract sealed class GameEngine permits JGame, GLGame {
 
-    private boolean running = false;
-    protected Window window;
+    private final Window window;
+    private boolean running;
 
-    protected GameEngine() {
+    protected GameEngine(Window window) {
+        this.window = window; // Set up window
+        running = false;
+        // Add input listeners
+        window.setKeyInput(KeyInput.INSTANCE);
+        window.setMouseInput(MouseInput.INSTANCE);
     }
 
     // Resource Management Methods
@@ -44,11 +51,7 @@ public abstract sealed class GameEngine permits JGame, GLGame {
         }
     }
 
-    // Game Loop Methods
-
-    public void beginFrame() {
-        window.beginFrame();
-    }
+    // Main Game Loop
 
     // Semi-fixed time-step: https://gafferongames.com/post/fix_your_timestep/
     public final void run() {
@@ -97,6 +100,12 @@ public abstract sealed class GameEngine permits JGame, GLGame {
         Mayonez.stop(0);
     }
 
+    // Game Loop Methods
+
+    public final void beginFrame() {
+        window.beginFrame();
+    }
+
     /**
      * Refreshes everything in the current scene, including physics, scripts, and UI.
      *
@@ -104,29 +113,35 @@ public abstract sealed class GameEngine permits JGame, GLGame {
      */
     // TODO Multithread physics, set time step higher than refresh rate for smoother results
     // TODO Poll input events
-    public abstract void update(float dt) throws Exception;
+    public final void update(float dt) throws Exception {
+        getScene().update(dt);
+    }
 
     /**
      * Redraws everything in the current scene, including sprites, backgrounds, and UI.
      */
-    public abstract void render() throws Exception;
+    public final void render() throws Exception {
+        window.render(getScene());
+    }
 
-    public void endFrame() {
+    public final void endFrame() {
         window.endFrame();
     }
 
     // Getters and Setters
 
-    protected Scene getScene() {
+    public abstract float getCurrentTime();
+
+    private Scene getScene() {
         return SceneManager.getCurrentScene();
+    }
+
+    protected String getRunningString() {
+        return running ? "running" : "not running";
     }
 
     public Window getWindow() {
         return window;
     }
-
-    // Helper Methods
-
-    public abstract float getCurrentTime();
 
 }

@@ -44,7 +44,6 @@ object KeyInput : KeyAdapter() {
 
     /* Keyboard Callbacks */
 
-    @JvmStatic
     fun keyCallback(window: Long, key: Int, scancode: Int, action: Int, mods: Int) {
 //        println(glfwGetKeyName(GLFW_KEY_UNKNOWN, scancode))
         when (action) {

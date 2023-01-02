@@ -2,9 +2,9 @@ package mayonez.engine;
 
 import mayonez.Logger;
 import mayonez.Preferences;
-import mayonez.annotations.UsesEngine;
+import mayonez.Scene;
 import mayonez.annotations.EngineType;
-import mayonez.event.Receivable;
+import mayonez.annotations.UsesEngine;
 import mayonez.input.KeyInput;
 import mayonez.input.MouseInput;
 
@@ -26,10 +26,7 @@ public final class JWindow extends JFrame implements Window {
     private final static AffineTransform FLIP_XF = AffineTransform.getScaleInstance(1.0, -1.0);
     private BufferStrategy bs;
     private Graphics2D g2;
-
-    private boolean closedbyUser;
-//    private KeyInput keyboard;
-//    private MouseInput mouse;
+    private boolean closedByUser;
 
     public JWindow(String title, int width, int height) {
         super(title);
@@ -38,7 +35,7 @@ public final class JWindow extends JFrame implements Window {
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                closedbyUser = true; // 'x' button will notify game to exit
+                closedByUser = true; // red '(x' button will notify game to exit
             }
         });
     }
@@ -63,12 +60,12 @@ public final class JWindow extends JFrame implements Window {
 
     @Override
     public boolean notClosedByUser() {
-        return !closedbyUser;
+        return !closedByUser;
     }
 
     @Override
     public void beginFrame() {
-        if (KeyInput.keyDown("escape")) closedbyUser = true;
+        if (KeyInput.keyDown("escape")) closedByUser = true;
     }
 
     @Override
@@ -90,26 +87,26 @@ public final class JWindow extends JFrame implements Window {
     }
 
     @Override
-    public void render(Receivable r) {
+    public void render(Scene scene) {
         if (bs == null) {
             initGraphics();
             return;
         }
-
         try {
             // Use a do-while loop to avoid losing buffer frames
             // Source: https://stackoverflow.com/questions/13590002/understand-bufferstrategy
             do {
+                // Clear screen
                 g2 = (Graphics2D) bs.getDrawGraphics();
                 g2.clipRect(0, 0, getWidth(), getHeight()); // Render things only in the screen
-                g2.clearRect(0, 0, getWidth(), getHeight()); // Clear the screen
-
+                g2.clearRect(0, 0, getWidth(), getHeight());
                 // Flip screen upside down
                 g2.transform(FLIP_XF);
                 g2.translate(0, -getHeight());
-
-                r.onReceive(g2); // Draw scene
-                g2.dispose(); // Flush Resources
+                // Draw scene
+                scene.render(g2);
+                // Flush resources
+                g2.dispose();
                 bs.show();
             } while (bs.contentsLost());
         } catch (IllegalStateException e) {
@@ -121,13 +118,11 @@ public final class JWindow extends JFrame implements Window {
 
     @Override
     public void setKeyInput(KeyInput keyboard) {
-//        this.keyboard = keyboard;
         addKeyListener(keyboard);
     }
 
     @Override
     public void setMouseInput(MouseInput mouse) {
-//        this.mouse = mouse;
         addMouseListener(mouse);
         addMouseMotionListener(mouse);
         addMouseWheelListener(mouse);

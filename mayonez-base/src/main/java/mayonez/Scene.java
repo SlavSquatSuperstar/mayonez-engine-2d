@@ -1,9 +1,11 @@
 package mayonez;
 
-import mayonez.event.Receivable;
 import mayonez.graphics.Color;
 import mayonez.graphics.*;
-import mayonez.graphics.renderer.*;
+import mayonez.graphics.renderer.DebugRenderer;
+import mayonez.graphics.renderer.GLDefaultRenderer;
+import mayonez.graphics.renderer.JDefaultRenderer;
+import mayonez.graphics.renderer.SceneRenderer;
 import mayonez.graphics.sprites.Sprite;
 import mayonez.io.image.Texture;
 import mayonez.math.Random;
@@ -15,6 +17,7 @@ import java.awt.*;
 import java.util.List;
 import java.util.Queue;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
@@ -43,7 +46,8 @@ public abstract class Scene {
     private final Camera camera; // TODO probably want to sort this to last
 
     // Scene State
-    private final Queue<Receivable> changesToScene; // Use a separate list to avoid concurrent exceptions
+//    private final Consumer<GameObject> addObject, removeObject;
+    private final Queue<SceneChange> changesToScene; // Use a separate list to avoid concurrent exceptions
     private boolean started = false; // if initialized
     private boolean loaded = false; // if currently active
 
@@ -69,9 +73,8 @@ public abstract class Scene {
         this.scale = scale;
         background = Sprite.create(Colors.WHITE);
 
+        // Initialize layers
         objects = new ArrayList<>();
-        changesToScene = new LinkedList<>();
-
         if (Mayonez.getUseGL()) {
             renderer = new GLDefaultRenderer();
             camera = new GLCamera(Mayonez.getScreenSize(), this.getScale());
@@ -80,8 +83,26 @@ public abstract class Scene {
             camera = new JCamera(Mayonez.getScreenSize(), this.getScale());
         }
         debugRenderer = (DebugRenderer) renderer;
-
         physics = new PhysicsWorld();
+
+        // Scene changes
+        changesToScene = new LinkedList<>();
+//        addObject = (obj) -> {
+//            objects.add(obj.setScene(this));
+//            obj.start(); // add components first so renderer and physics can access it
+//            if (started) {
+//                renderer.addObject(obj);
+//                physics.addObject(obj);
+//            }
+//            Logger.debug("Added object \"%s\" to scene \"%s\"", obj.getNameAndID(), this.name);
+//        };
+//        removeObject = (obj) -> {
+//            objects.remove(obj);
+//            renderer.removeObject(obj);
+//            physics.removeObject(obj);
+//            obj.onDestroy();
+//            Logger.debug("Removed object \"%s\" from scene \"%s\"", obj.getNameAndID(), this.name);
+//        };
     }
 
     // Game Loop Methods
@@ -119,16 +140,16 @@ public abstract class Scene {
      */
     public final void update(float dt) {
         if (started && loaded) {
-            // Update objects and camera
+            // Update scene and objects
             objects.forEach(o -> {
                 o.update(dt);
                 if (o.isDestroyed()) removeObject(o);
             });
-            camera.gameObject.update(dt);
             onUserUpdate(dt);
-            physics.physicsUpdate(dt); // Update physics
-            // Remove destroyed objects or add new ones at the end of the frame
-            while (!changesToScene.isEmpty()) changesToScene.poll().onReceive();
+            physics.step(dt); // Update physics
+            camera.gameObject.update(dt); // Update camera last
+            // Remove destroyed objects or add new
+            while (!changesToScene.isEmpty()) changesToScene.poll().change();
         }
     }
 
@@ -197,20 +218,19 @@ public abstract class Scene {
      *
      * @param obj a {@link GameObject}
      */
-    // TODO use events
     public final void addObject(GameObject obj) {
         if (obj == null) return;
-        Receivable addObject = (_args) -> {
-            objects.add(obj.setScene(this));
-            obj.start(); // add object components so renderer and physics can access it
-            if (started) { // Dynamic add
-                renderer.addObject(obj);
-                physics.addObject(obj);
+        SceneChange addObject = new SceneChange(obj, o -> {
+            objects.add(o.setScene(this));
+            o.start(); // add components first so renderer and physics can access it
+            if (started) { // dynamic add
+                renderer.addObject(o);
+                physics.addObject(o);
             }
-            Logger.debug("Added object \"%s\" to scene \"%s\"", obj.getNameAndID(), this.name);
-        };
+            Logger.debug("Added object \"%s\" to scene \"%s\"", o.getNameAndID(), this.name);
+        });
         if (started) changesToScene.offer(addObject); // Dynamic add: add to scene and layers in next frame
-        else addObject.onReceive();
+        else addObject.change();
     }
 
     /**
@@ -220,13 +240,14 @@ public abstract class Scene {
      */
     public final void removeObject(GameObject obj) {
         if (obj == null) return;
-        changesToScene.offer((_args) -> {
-            objects.remove(obj);
-            renderer.removeObject(obj);
-            physics.removeObject(obj);
-            obj.onDestroy();
-            Logger.debug("Removed object \"%s\" from scene \"%s\"", obj.getNameAndID(), this.name);
+        SceneChange removeObject = new SceneChange(obj, o -> {
+            objects.remove(o);
+            renderer.removeObject(o);
+            physics.removeObject(o);
+            o.onDestroy();
+            Logger.debug("Removed object \"%s\" from scene \"%s\"", o.getNameAndID(), this.name);
         });
+        changesToScene.offer(removeObject);
     }
 
     /**
@@ -268,7 +289,7 @@ public abstract class Scene {
      *
      * @return the amount of objects
      */
-    public int countObjects() {
+    public int numObjects() {
         return objects.size();
     }
 
@@ -378,7 +399,20 @@ public abstract class Scene {
                 name, sceneID,
                 StringUtils.getClassName(this, "Scene")
         );
+    }
 
+    // Helper Interface
+
+    /**
+     * Allows objects to be dynamically added and removed from the scene.
+     *
+     * @author SlavSquatSuperstar
+     */
+    private record SceneChange(GameObject obj, Consumer<GameObject> func) {
+
+        public void change() {
+            func.accept(obj);
+        }
     }
 
 }
