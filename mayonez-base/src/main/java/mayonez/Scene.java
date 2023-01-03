@@ -176,7 +176,7 @@ public abstract class Scene {
     public final void stop() {
         if (started) {
             // Destroy objects
-            objects.forEach(GameObject::onDestroy);
+            objects.forEach(GameObject::destroy);
             objects.clear();
             // Clear layers
             renderer.stop();
@@ -244,21 +244,21 @@ public abstract class Scene {
             objects.remove(o);
             renderer.removeObject(o);
             physics.removeObject(o);
-            o.onDestroy();
+            o.destroy();
             Logger.debug("Removed object \"%s\" from scene \"%s\"", o.getNameAndID(), this.name);
         });
         changesToScene.offer(removeObject);
     }
 
     /**
-     * Finds the {@link GameObject} with the given name (case-insensitive). For consistent results, avoid duplicate names.
+     * Finds the first {@link GameObject} with the given name, or null if none exists.
      *
      * @param name the object name
      * @return the object
      */
     public GameObject getObject(String name) {
         for (GameObject o : objects) {
-            if (o.name.equalsIgnoreCase(name)) return o;
+            if (o.name.equals(name)) return o;
         }
         return null;
     }

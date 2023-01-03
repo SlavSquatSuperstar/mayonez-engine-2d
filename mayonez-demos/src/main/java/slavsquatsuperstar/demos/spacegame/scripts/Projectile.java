@@ -59,7 +59,7 @@ public class Projectile extends Script {
         Transform transform = projectile.source.transform;
         Rigidbody sourceRb = projectile.source.getComponent(Rigidbody.class);
         return new GameObject(name, new Transform(
-                transform.position.add(transform.getUp().mul(0.5f)), transform.rotation, new Vec2(size)
+                transform.getPosition().add(transform.getUp().mul(0.5f)), transform.getRotation(), new Vec2(size)
         )) {
             @Override
             protected void init() {

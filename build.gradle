@@ -5,7 +5,7 @@ plugins {
     id 'java'
     id 'application'
 
-    id 'org.jetbrains.kotlin.jvm' version '1.7.22'
+    id 'org.jetbrains.kotlin.jvm' version '1.8.0'
     id 'org.jetbrains.dokka' version '1.7.20' // For Kotlin documentation
     id 'com.github.johnrengelman.shadow' version '7.1.2' // For making fat jars
 }
@@ -14,17 +14,17 @@ plugins {
 
 description = 'The root project for Mayonez Engine that contains all modules.'
 
-// Custom Settings
 project.ext {
+    // Custom Settings
     javaVersion = '17'
     mainClass = 'slavsquatsuperstar.demos.DemosLauncher'
     mainModule = 'mayonez.demos'
 }
 
 allprojects {
-    // Project Info
+    // Name
     group 'slavsquatsuperstar'
-    version '0.7.5-pre4'
+    version '0.7.5-pre5-snapshot'
 
     // Java Version
     sourceCompatibility = targetCompatibility = javaVersion

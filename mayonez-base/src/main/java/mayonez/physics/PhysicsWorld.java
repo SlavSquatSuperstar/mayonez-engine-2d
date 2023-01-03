@@ -49,7 +49,7 @@ public class PhysicsWorld {
     }
 
     /**
-     * Updates all  objects in the physics simulation.
+     * Updates all objects in the physics simulation by the given time step.
      *
      * @param dt seconds since the last frame
      */
@@ -90,8 +90,9 @@ public class PhysicsWorld {
      * @return an existing listener or a new listener
      */
     private CollisionListener getListener(Collider c1, Collider c2) {
-        for (CollisionListener lis : listeners)
+        for (CollisionListener lis : listeners) {
             if (lis.match(c1, c2)) return lis;
+        }
         return new CollisionListener(c1, c2);
     }
 
@@ -107,14 +108,13 @@ public class PhysicsWorld {
                 c1.setCollisionResolved(false); // reset flags
                 c2.setCollisionResolved(false);
 
-                if (c1.getGameObject().hasTag("Ignore Collisions") || c2.getGameObject().hasTag("Ignore Collisions")) continue;
+                if (!c1.isEnabled() || !c2.isEnabled()) continue;
+                if (c1.getGameObject().hasTag("Ignore Collisions")
+                        || c2.getGameObject().hasTag("Ignore Collisions")) continue;
                 if (c1.isStatic() && c2.isStatic()) continue; // Don't check for collision if both are static
 
                 CollisionListener lis = getListener(c1, c2);
-                if (lis.checkBroadphase()) // TODO only add if broadphase checks out
-                    listeners.add(lis);
-//                if (Collisions.checkCollision(c1.getMinBounds(), c2.getMinBounds()))
-//                    listeners.add(new CollisionListener(c1, c2)); // Check for detailed collision later
+                if (lis.checkBroadphase()) listeners.add(lis);
             }
         }
     }
@@ -129,12 +129,9 @@ public class PhysicsWorld {
             Collider c1 = lis.c1;
             Collider c2 = lis.c2;
 
-//            if (c1.isTrigger() && c2.isTrigger()) continue; // Ignore if both are triggers
-//            // Send collision callbacks
-//            c1.onCollision(c2);
-//            c2.onCollision(c1);
             // Don't resolve if either object called ignore collision
-            if (c1.getIgnoreCurrentCollision() || c2.getIgnoreCurrentCollision()) {
+            if (c1.getIgnoreCurrentCollision() || c1.isDestroyed()
+                    || c2.getIgnoreCurrentCollision() || c2.isDestroyed()) {
                 c1.setIgnoreCurrentCollision(false);
                 c2.setIgnoreCurrentCollision(false);
                 continue;

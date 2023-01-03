@@ -43,8 +43,8 @@ public class Asteroid extends GameObject {
 
     @Override
     protected void init() {
-        transform.position = getScene().getRandomPosition();
-        transform.rotation = Random.randomFloat(0f, 360f);
+        transform.setPosition(getScene().getRandomPosition());
+        transform.setRotation(Random.randomFloat(0f, 360f));
 
         addComponent(new BallCollider(new Vec2(1f)));
         addComponent(new ShapeSprite(Colors.GRAY, true));

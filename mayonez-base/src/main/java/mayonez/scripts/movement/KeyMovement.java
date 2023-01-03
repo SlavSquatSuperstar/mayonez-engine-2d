@@ -27,11 +27,11 @@ public class KeyMovement extends MovementScript {
     @Override
     public void update(float dt) {
         Vec2 input = getRawInput().unit().mul(speed); // Normalize so don't move faster diagonally
-        if (objectAligned) input = input.rotate(transform.rotation); // Align to object space if enabled
+        if (objectAligned) input = input.rotate(transform.getRotation()); // Align to object space if enabled
 
         switch (mode) {
             case POSITION -> transform.move(input.mul(dt));
-            case VELOCITY -> rb.addVelocity(input);
+            case VELOCITY -> rb.addVelocity(input.mul(dt));
             case ACCELERATION -> rb.applyAcceleration(input);
             case IMPULSE -> rb.applyImpulse(input);
             case FORCE -> rb.applyForce(input);
@@ -43,7 +43,7 @@ public class KeyMovement extends MovementScript {
     }
 
     @Override
-    protected Vec2 getRawInput() {
+    public Vec2 getRawInput() {
         return new Vec2(KeyInput.getAxis(xAxis), KeyInput.getAxis(yAxis));
     }
 

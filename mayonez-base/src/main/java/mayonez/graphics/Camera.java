@@ -51,8 +51,8 @@ public abstract class Camera extends Script {
     @Override
     public void update(float dt) {
         if (getSubject() != null) {
-            transform.position.set(getSubject().transform.position);
-            if (followAngle) rotation = getSubject().transform.rotation;
+            transform.setPosition(getSubject().transform.getPosition());
+            if (followAngle) rotation = getSubject().transform.getRotation();
         }
     }
 
@@ -103,7 +103,7 @@ public abstract class Camera extends Script {
      * @return the position
      */
     public final Vec2 getPosition() {
-        return new Vec2(transform.position);
+        return new Vec2(transform.getPosition());
     }
 
     /**
@@ -112,7 +112,7 @@ public abstract class Camera extends Script {
      * @param position the position
      */
     public final void setPosition(Vec2 position) {
-        transform.position = position;
+        transform.setPosition(position);
     }
 
     /**
@@ -161,7 +161,7 @@ public abstract class Camera extends Script {
      */
     public void resetZoom() {
         zoom = 1f;
-        transform.scale = new Vec2(1f);
+        transform.setScale(new Vec2(1f));
     }
 
     /**

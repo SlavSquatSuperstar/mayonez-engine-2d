@@ -4,7 +4,8 @@ import mayonez.physics.Rigidbody;
 import mayonez.physics.colliders.Collider;
 
 /**
- * A controllable and reusable behavior for a {@link GameObject}.
+ * A controllable and reusable behavior for a {@link GameObject} which provides many callback functions
+ * for the user to override.
  *
  * @author SlavSquatSuperstar
  */
@@ -18,27 +19,52 @@ public abstract class Script extends Component {
     public void init() {
     }
 
-    // Component Getters
+    // Component Methods
 
-    /**
-     * Provides a reference to the parent object's {@link Collider} component.
-     *
-     * @return the collider, if it exists
-     */
-    public Collider getCollider() {
-        return gameObject.getComponent(Collider.class);
+    @Override
+    final Component setGameObject(GameObject gameObject) {
+        super.setGameObject(gameObject);
+        init();
+        return this;
+    }
+
+    @SuppressWarnings({"unchecked"})
+    public final <T extends Component> T setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        if (enabled) onEnable();
+        else onDisable();
+        return (T) this;
     }
 
     /**
-     * Provides a reference to the parent object's {@link Rigidbody} component.
-     *
-     * @return the rigidbody, if it exists
+     * Destroy this component and free up system resources once the parent {@link GameObject} is destroyed.
      */
-    public Rigidbody getRigidbody() {
-        return gameObject.getComponent(Rigidbody.class);
+    final void destroy() {
+        destroyed = true;
+        onDestroy();
+        gameObject = null;
     }
 
-    // Callback Methods
+    // Scene Callbacks
+    /**
+     * Custom user behavior for when this script or its game object is enabled.
+     */
+    public void onEnable() {
+    }
+
+    /**
+     * Custom user behavior for when this script or its game object is disabled.
+     */
+    public void onDisable() {
+    }
+
+    /**
+     * Custom behavior for when this script or its game object is destroyed.
+     */
+    public void onDestroy() {
+    }
+
+    // Collision Callbacks
 
     /**
      * Custom user behavior after starting contact with another physical object.
@@ -88,12 +114,32 @@ public abstract class Script extends Component {
     public void onTriggerExit(GameObject other) {
     }
 
+    // Component Getters
+
+    /**
+     * Provides a reference to the parent object's {@link Collider} component.
+     *
+     * @return the collider, if it exists
+     */
+    public Collider getCollider() {
+        return gameObject.getComponent(Collider.class);
+    }
+
+    /**
+     * Provides a reference to the parent object's {@link Rigidbody} component.
+     *
+     * @return the rigidbody, if it exists
+     */
+    public Rigidbody getRigidbody() {
+        return gameObject.getComponent(Rigidbody.class);
+    }
+
     @Override
     public String toString() {
         return String.format(
                 "%s (%s)",
                 getClass().isAnonymousClass() ? "Script" : getClass().getSimpleName(),
-                gameObject == null ? "<No Parent>" : gameObject.name
+                gameObject == null ? "<No GameObject>" : gameObject.getNameAndID()
         );
     }
 }

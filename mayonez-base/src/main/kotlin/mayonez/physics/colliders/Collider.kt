@@ -135,8 +135,4 @@ abstract class Collider(private val shapeData: Shape) : Component() {
         gameObject?.onCollisionEvent(other.gameObject ?: return, trigger, type)
     }
 
-    override fun onDestroy() {
-        ignoreCurrentCollision = true
-    }
-
 }

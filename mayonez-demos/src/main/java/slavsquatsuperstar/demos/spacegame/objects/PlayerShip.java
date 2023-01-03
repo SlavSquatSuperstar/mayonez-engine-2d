@@ -3,8 +3,8 @@ package slavsquatsuperstar.demos.spacegame.objects;
 import mayonez.GameObject;
 import mayonez.Script;
 import mayonez.Transform;
+import mayonez.graphics.sprites.Animator;
 import mayonez.graphics.sprites.Sprite;
-import mayonez.graphics.sprites.SpriteSheet;
 import mayonez.input.KeyInput;
 import mayonez.input.MouseInput;
 import mayonez.math.Vec2;
@@ -33,7 +33,6 @@ public class PlayerShip extends GameObject {
 
     @Override
     protected void init() {
-        SpriteSheet exhaust = SpriteSheet.create("assets/textures/spacegame/exhaust.png", 16, 16, 3, 0);
         getScene().getCamera().setSubject(this).setFollowAngle(false);
 
         // Physics
@@ -42,13 +41,23 @@ public class PlayerShip extends GameObject {
 
         // Visuals
         addComponent(Sprite.create(spriteName));
-        getScene().addObject(new Exhaust("Left Exhaust", this.transform, new Transform(new Vec2(-0.1f, -0.6f), 0f, new Vec2(0.3f, 0.3f))));
-        getScene().addObject(new Exhaust("Right Exhaust", this.transform, new Transform(new Vec2(0.1f, -0.6f), 0f, new Vec2(0.3f, 0.3f))));
+
+        GameObject lExhaust, rExhaust; // main (rear) engines
+        getScene().addObject(lExhaust = new Exhaust("Left Exhaust", this.transform,
+                new Transform(new Vec2(-0.1f, -0.6f), 0f, new Vec2(0.3f))));
+        getScene().addObject(rExhaust = new Exhaust("Right Exhaust", this.transform,
+                new Transform(new Vec2(0.1f, -0.6f), 0f, new Vec2(0.3f))));
+
+        GameObject lExhaust2, rExhaust2; // RCS (front) engines
+        getScene().addObject(lExhaust2 = new Exhaust("Left Exhaust", this.transform,
+                new Transform(new Vec2(-0.1f, 0.45f), 225f, new Vec2(0.1f))));
+        getScene().addObject(rExhaust2 = new Exhaust("Right Exhaust", this.transform,
+                new Transform(new Vec2(0.1f, 0.45f), 135f, new Vec2(0.1f))));
 
         // Scripts
         addComponent(new KeepInScene(KeepInScene.Mode.WRAP));
         addComponent(new KeyMovement(MoveMode.FORCE, 10f, "horizontal2", "vertical").setObjectAligned(true));
-        addComponent(new KeyRotation(MoveMode.VELOCITY, 1f, "horizontal"));
+        addComponent(new KeyRotation(MoveMode.VELOCITY, 120f, "horizontal"));
 //        addComponent(new FollowMouse(MoveMode.POSITION, 1f, true));
         addComponent(new FireProjectile(0.2f) {
             private int weaponChoice = 1;
@@ -80,15 +89,43 @@ public class PlayerShip extends GameObject {
             }
         });
         addComponent(new Script() {
+            Animator lExhaustAnim, rExhaustAnim, lExhaustAnim2, rExhaustAnim2;
+            KeyMovement keyMovement;
+            KeyRotation keyRotation;
+
+            @Override
+            public void start() {
+                keyMovement = gameObject.getComponent(KeyMovement.class);
+                keyRotation = gameObject.getComponent(KeyRotation.class);
+
+                lExhaustAnim = lExhaust.getComponent(Animator.class);
+                rExhaustAnim = rExhaust.getComponent(Animator.class);
+                lExhaustAnim2 = lExhaust2.getComponent(Animator.class);
+                rExhaustAnim2 = rExhaust2.getComponent(Animator.class);
+            }
+
             @Override
             public void update(float dt) {
-                // Break
-                if (KeyInput.keyDown("space")) {
+                // Brake
+                boolean brake = KeyInput.keyDown("space");
+                if (brake) {
                     getRigidbody().setDrag(2f);
                     getRigidbody().setAngDrag(2f);
                 } else {
                     getRigidbody().setDrag(0f);
                     getRigidbody().setAngDrag(0f);
+                }
+
+                // Enable/Disable Exhaust
+                if (keyMovement != null) {
+                    boolean forward = keyMovement.getRawInput().dot(new Vec2(0, 1)) > 0;
+                    boolean back = keyMovement.getRawInput().dot(new Vec2(0, 1)) < 0;
+                    boolean left = keyRotation.getRawInput().x < 0;
+                    boolean right = keyRotation.getRawInput().x > 0;
+                    if (lExhaustAnim != null) lExhaustAnim.setEnabled(forward || left);
+                    if (rExhaustAnim != null) rExhaustAnim.setEnabled(forward || right);
+                    if (lExhaustAnim2 != null) lExhaustAnim2.setEnabled(back || left);
+                    if (rExhaustAnim2 != null) rExhaustAnim2.setEnabled(back || right);
                 }
             }
         });

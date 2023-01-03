@@ -40,7 +40,7 @@ public class PolygonTests {
     // Create a 2x2 box centered at (0, 0) and scale it by 2x
     @Test
     public void scaledPolygonVerticesReturnsWorld() {
-        PolygonCollider shape = new PolygonCollider(vertices).setTransform(new Transform().scale(new Vec2(2, 2)));
+        PolygonCollider shape = new PolygonCollider(vertices).setTransform(Transform.scaleInstance(new Vec2(2)));
         Vec2[] worldVertices = new Vec2[]{new Vec2(2, 2), new Vec2(-2, 2), new Vec2(-2, -2), new Vec2(2, -2)};
         assertVerticesEqual(worldVertices, shape.getVertices());
     }
@@ -48,7 +48,7 @@ public class PolygonTests {
     // Create a 2x2 box centered at (0, 0) and rotate it by 45 degrees
     @Test
     public void rotatedPolygonVerticesReturnsWorld() {
-        PolygonCollider shape = new PolygonCollider(vertices).setTransform(new Transform().rotate(45));
+        PolygonCollider shape = new PolygonCollider(vertices).setTransform(Transform.rotateInstance(45));
         Vec2[] worldVertices = new Vec2[vertices.length];
         for (int i = 0; i < worldVertices.length; i++)
             worldVertices[i] = vertices[i].rotate(45);

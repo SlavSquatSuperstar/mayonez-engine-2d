@@ -61,7 +61,7 @@ open class Ellipse(protected val center: Vec2, val size: Vec2, val angle: Float)
      * Returns a polygon approximation of this ellipse with 2πa vertices.
      */
     open fun toPolygon(): Polygon {
-        val numEdges: Int = (2 * FloatMath.PI * halfWidth).roundToInt() // use πa for # edges
+        val numEdges: Int = (2f * FloatMath.PI * halfWidth).roundToInt() // use πa for # edges
         return Polygon(center, numEdges, 1f).scale(Vec2(halfWidth, halfHeight), center) // scale unit circle polygon
     }
 

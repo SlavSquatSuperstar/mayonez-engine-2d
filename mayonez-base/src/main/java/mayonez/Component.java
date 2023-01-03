@@ -25,11 +25,14 @@ public abstract class Component {
     protected Transform transform; // use blank transform in case no parent
 
     private boolean enabled; // whether this component is being updated
+    boolean destroyed; // if this component has been destroyed
+    // TODO replace with gameObject == null?
 
     protected Component() {
         componentID = componentCounter++;
         transform = new Transform();
         enabled = true;
+        destroyed = false;
     }
 
     // Game Loop Methods
@@ -51,26 +54,24 @@ public abstract class Component {
     /**
      * Destroy this component and free up system resources once the parent {@link GameObject} is destroyed.
      */
-    final void destroy() {
-        onDestroy();
+    void destroy() {
+        destroyed = true;
         gameObject = null;
-    }
-
-    /**
-     * Custom behavior for when this component is destroyed.
-     */
-    public void onDestroy() {
     }
 
     // Getters and Setters
 
+    public boolean isDestroyed() {
+        return destroyed;
+    }
+
     /**
      * Whether this component should be updated.
      *
-     * @return if this component is enabled
+     * @return if this component is enabled and not destroyed
      */
-    public boolean isEnabled() {
-        return enabled;
+    public final boolean isEnabled() {
+        return enabled && !destroyed;
     }
 
     @SuppressWarnings({"unchecked"})
@@ -96,7 +97,7 @@ public abstract class Component {
      * @param gameObject a game object
      * @return this component
      */
-    final Component setGameObject(GameObject gameObject) {
+    Component setGameObject(GameObject gameObject) {
         this.gameObject = gameObject;
         this.transform = gameObject.transform;
         return this;
@@ -141,7 +142,7 @@ public abstract class Component {
         return String.format(
                 "%s (%s)",
                 StringUtils.getClassName(this, "Component"),
-                gameObject == null ? "<No Parent>" : gameObject.getNameAndID()
+                gameObject == null ? "<No GameObject>" : gameObject.getNameAndID()
         );
     }
 }

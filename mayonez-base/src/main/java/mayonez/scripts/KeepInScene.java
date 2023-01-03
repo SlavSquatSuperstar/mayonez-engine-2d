@@ -187,11 +187,11 @@ public class KeepInScene extends Script {
     }
 
     private void setX(float x) {
-        transform.position.x = x;
+        transform.getPosition().x = x;
     }
 
     private void setY(float y) {
-        transform.position.y = y;
+        transform.getPosition().y = y;
     }
 
     // Enums

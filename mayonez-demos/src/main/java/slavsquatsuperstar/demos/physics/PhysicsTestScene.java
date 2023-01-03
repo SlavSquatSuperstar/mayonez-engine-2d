@@ -63,12 +63,6 @@ abstract class PhysicsTestScene extends Scene {
 
     @Override
     protected void onUserUpdate(float dt) {
-        if (KeyInput.keyPressed("r")) SceneManager.reloadScene();
-        else if (KeyInput.keyPressed("1")) SceneManager.setScene("Collision Test");
-        else if (KeyInput.keyPressed("2")) SceneManager.setScene("Pool Balls Test");
-        else if (KeyInput.keyPressed("3")) SceneManager.setScene("Friction Test");
-        else if (KeyInput.keyPressed("4")) SceneManager.setScene("Detection Test");
-
         if (KeyInput.keyPressed("space")) enabledGravity = !enabledGravity;
         if (enabledGravity) setGravity(new Vec2(0, -9.8f));
         else setGravity(new Vec2());
@@ -117,13 +111,4 @@ abstract class PhysicsTestScene extends Scene {
         };
     }
 
-    // Load all the physics demos into the scenes
-    public static void main(String[] args) {
-        Mayonez.setUseGL(false);
-        SceneManager.addScene(new CollisionTest("Collision Test"));
-        SceneManager.addScene(new PoolBallsTest("Pool Balls Test"));
-        SceneManager.addScene(new FrictionTest("Friction Test"));
-        SceneManager.addScene(new DetectionTest("Detection Test"));
-        Mayonez.start(SceneManager.getScene("Collision Test"));
-    }
 }

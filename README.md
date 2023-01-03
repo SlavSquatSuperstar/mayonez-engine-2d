@@ -9,8 +9,8 @@ other systems.
 
 This fully-operational game engine includes:
 
-- A physics system with dynamic movement, multiple collider shapes, linear and angular impulse resolution, and friction
-- A 2D renderer that can draw sprites with both Java AWT and LWJGL OpenGL libraries
+- A physics system with force-based movement, multiple collider shapes, linear and angular impulse resolution, and friction
+- A 2D renderer that can draw sprites and shapes with both Java AWT and LWJGL OpenGL libraries
 - An entity-component system that allows you to create modular, reusable game objects and components
 - An asset system that can read from classpath resources and read and write to local files
 - Keyboard and mouse input that supports key presses, mouse clicks and movement, and key axes
@@ -33,7 +33,7 @@ This fully-operational game engine includes:
 ### Instructions for Developers
 
 - Java Version: [Eclipse Temurin 17+](https://adoptium.net/) or [Oracle OpenJDK 17+](https://jdk.java.net/)
-- Kotlin Version: [1.7.20+](https://github.com/JetBrains/kotlin/releases/tag/v1.7.20)
+- Kotlin Version: [1.8.0+](https://kotlinlang.org/docs/whatsnew18.html)
 - Recommended IDE: [Intellij IDEA CE 2022.2+](https://www.jetbrains.com/idea/download/)
 - Build System: [Gradle 7.6+](https://gradle.org/install/)
     - Utilizes [Gradle Shadow Plugin](https://github.com/johnrengelman/shadow) for creating fat jars
@@ -56,7 +56,7 @@ The demo game textures were pulled from GamesWithGabe's GitHub repositories or c
 - [Geometry Dash Series](https://github.com/codingminecraft/GeometryDash): Repository by GamesWithGabe
 - [Mario LWJGL Series](https://github.com/codingminecraft/MarioYoutube): Repository by GamesWithGabe
 - [Piskel](https://www.piskelapp.com/): Online and desktop pixel art editor, with .piskel files included in
-  src/main/resources/sprites
+  the [pixelart](pixelart) folder.
 
 ### Acknowledgements
 

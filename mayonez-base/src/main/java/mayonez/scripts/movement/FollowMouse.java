@@ -25,7 +25,7 @@ public class FollowMouse extends MouseScript {
 //            transform.rotate(angle);
 //        }
         switch (mode) {
-            case FOLLOW_MOUSE -> transform.position.set(MouseInput.getPosition());
+            case FOLLOW_MOUSE -> transform.setPosition(MouseInput.getPosition());
             case POSITION -> transform.move(mouseDirection);
             case VELOCITY -> rb.addVelocity(mouseDirection);
             case IMPULSE -> rb.applyImpulse(mouseDirection);
@@ -36,6 +36,6 @@ public class FollowMouse extends MouseScript {
 
     @Override
     protected Vec2 getRawInput() {
-        return MouseInput.getPosition().sub(transform.position);
+        return MouseInput.getPosition().sub(transform.getPosition());
     }
 }

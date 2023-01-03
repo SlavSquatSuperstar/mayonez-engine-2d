@@ -41,11 +41,38 @@ public class Animator extends Script {
     @Override
     public void update(float dt) {
         if (animTimer.isReady()) {
-            hideFrame(currentFrame); // hide last farme
-            currentFrame = (currentFrame + 1) % numFrames; // update frame count
-            showFrame(currentFrame); // show new frame
+            setFrame((currentFrame + 1) % numFrames); // update frame count
             animTimer.reset();
         }
+    }
+
+    // Frame Visibility Methods
+
+    /**
+     * Hide all frames and show the current one.
+     *
+     * @param frame the frame number to show
+     */
+    public void setFrame(int frame) {
+        if (frame >= 0 && frame < numFrames) {
+            hideFrame(currentFrame); // hide last frame
+            currentFrame = frame;
+            showFrame(currentFrame); // show next frame
+        } else {
+            hideFrame(currentFrame); // hide all frames
+        }
+    }
+
+    @Override
+    public void onEnable() {
+        showFrame(currentFrame);
+        animTimer.setEnabled(true);
+    }
+
+    @Override
+    public void onDisable() {
+        hideFrame(currentFrame);
+        animTimer.setEnabled(false);
     }
 
     private void hideFrame(int frame) {

@@ -72,15 +72,15 @@ public final class JTexture extends Texture {
     public void draw(Graphics2D g2, Transform parentXf, Transform spriteXf, float scale) {
         // Measurements are in screen coordinates (pixels)
         Transform texXf = parentXf.combine(spriteXf);
-        Vec2 parentCenter = texXf.position.mul(scale);
-        Vec2 parentSize = texXf.scale.mul(scale);
+        Vec2 parentCenter = texXf.getPosition().mul(scale);
+        Vec2 parentSize = texXf.getScale().mul(scale);
         Vec2 parentHalfSize = parentSize.mul(0.5f);
         Vec2 imageSize = new Vec2(image.getWidth(), image.getHeight());
 
         // Draw sprite at parent center with parent rotation and scale
         AffineTransform g2Xf = AffineTransform.getTranslateInstance(
                 parentCenter.x - parentHalfSize.x, parentCenter.y - parentHalfSize.y); // Parent min
-        g2Xf.rotate(FloatMath.toRadians(texXf.rotation), parentHalfSize.x, parentHalfSize.y);
+        g2Xf.rotate(FloatMath.toRadians(texXf.getRotation()), parentHalfSize.x, parentHalfSize.y);
         g2Xf.scale(parentSize.x / imageSize.x, -parentSize.y / imageSize.y); // Flip image vertically like GL
 
         g2Xf.translate(0.0, -imageSize.y); // Move to correct position

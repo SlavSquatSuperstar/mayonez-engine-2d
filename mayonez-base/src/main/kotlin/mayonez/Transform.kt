@@ -1,6 +1,7 @@
 package mayonez
 
 import mayonez.annotations.Mutating
+import mayonez.math.Angle
 import mayonez.math.FloatMath
 import mayonez.math.Vec2
 import java.util.*
@@ -11,24 +12,15 @@ import java.util.*
  * @author SlavSquatSuperstar
  */
 class Transform(
-    /**
-     * Where the object is located in the scene.
-     */
-    @JvmField
-    var position: Vec2,
+    position: Vec2,
 
-    /**
-     * The angle the object is oriented, in degrees.
-     */
-    @JvmField
-    var rotation: Float,
+    rotation: Float,
 
-    /**
-     * How much the object is being stretched along its axes.
-     */
-    @JvmField
-    var scale: Vec2,
+    scale: Vec2
 ) {
+
+    // Constructors
+
     constructor() : this(Vec2(), 0f, Vec2(1f))
 
     constructor(position: Vec2) : this(position, 0f, Vec2(1f))
@@ -46,41 +38,76 @@ class Transform(
         fun scaleInstance(scale: Vec2) = Transform(Vec2(), 0f, scale)
     }
 
+    // Transform Properties
+
+    /**
+     * Where the object is located in the scene.
+     */
+    var position: Vec2 = position
+        set(position) {
+            field.set(position)
+        }
+
+    // Internal field
+    private var angle: Angle = Angle.createDegrees(rotation)
+
+    /**
+     * The angle the object is oriented, in degrees.
+     */
+    var rotation: Float
+        get() = angle.degrees
+        set(rotation) {
+            angle = Angle.createDegrees(rotation)
+        }
+
+    /**
+     * How large the object is along each of its axes.
+     */
+    var scale: Vec2 = scale
+        set(scale) {
+            field.set(scale)
+        }
+
     // Property Mutator Methods
+
     /**
      * Translates the parent object along the x and y axes.
      *
      * @param translation how much and which direction to move
-     * @return this transform
      */
     @Mutating
-    fun move(translation: Vec2): Transform {
+    fun move(translation: Vec2) {
         position += translation
-        return this
     }
 
     /**
      * Rotates the parent object around its center.
      *
      * @param degrees the counterclockwise angle
-     * @return this transform
      */
     @Mutating
-    fun rotate(degrees: Float): Transform {
-        rotation += degrees
-        return this
+    fun rotate(degrees: Float) {
+        angle.rotateDegrees(degrees)
+    }
+
+    /**
+     * Rotates the parent object around its center.
+     *
+     * @param angle the counterclockwise angle
+     */
+    @Mutating
+    fun rotate(angle: Angle) {
+        this.angle += angle
     }
 
     /**
      * Stretches the parent object and all its components by the given factors along the x and y axes.
      *
      * @param factor the new x and y size compared to the current dimensions
-     * @return this transform
      */
     @Mutating
-    fun scale(factor: Vec2): Transform {
+    fun scale(factor: Vec2) {
         this.scale *= factor
-        return this
     }
 
     /**
@@ -105,7 +132,7 @@ class Transform(
      * @return the local x-axis
      */
     val right: Vec2
-        get() = Vec2(1f, 0f).rotate(rotation)
+        get() = angle.rotation * Vec2(1f, 0f)
 
     /**
      * Returns the positive y-axis, or the vector (0, 1), in this transform's local space.
@@ -113,7 +140,7 @@ class Transform(
      * @return the local y-axis
      */
     val up: Vec2
-        get() = Vec2(0f, 1f).rotate(rotation)
+        get() = angle.rotation * Vec2(0f, 1f)
 
     /**
      * Transforms a point from world space to the object's local space, with this Transform's position serving as the

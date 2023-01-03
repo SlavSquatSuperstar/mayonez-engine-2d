@@ -50,12 +50,11 @@ public class GameObject {
         this.name = name == null ? "GameObject" : name;
         this.transform = transform;
         this.zIndex = zIndex;
+        destroyed = false;
         tags = new HashSet<>(3);
 
         components = new ArrayList<>();
         updateOrder = null;
-
-        destroyed = false;
 //        changesToObject = new LinkedList<>();
     }
 
@@ -78,8 +77,7 @@ public class GameObject {
     public final void update(float dt) {
         components.forEach(c -> {
             if (c.isEnabled()) c.update(dt);
-            // TODO remove destroyed objects
-            // TODO dynamic component add
+            // TODO dynamic component add/remove?
         });
         onUserUpdate(dt);
 //        while (!changesToObject.isEmpty()) changesToObject.poll().onReceive();
@@ -113,30 +111,26 @@ public class GameObject {
         if (!comp.getClass().isAnonymousClass() && getComponent(comp.getClass()) != null)
             Logger.debug("GameObject %s already has a %s", getNameAndID(), comp.getClass().getSimpleName());
         components.add(comp.setGameObject(this));
-        if (comp instanceof Script s) s.init();
     }
 
-    /**
-     * Removes the component of the specified class from this game object.
-     *
-     * @param cls the component class
-     * @param <T> a subclass of {@link Component}
-     * @return if the component was removed
-     */
-    public <T extends Component> boolean removeComponent(Class<T> cls) {
-        for (Component c : components) {
-            if (cls.isInstance(c)) {
-                c.destroy();
-                components.remove(c);
-                return true;
-            }
-        }
-        return false;
-    }
+//    /**
+//     * Removes the component of the specified class from this game object.
+//     *
+//     * @param cls the component class
+//     * @param <T> a subclass of {@link Component}
+//     */
+//    public <T extends Component> void removeComponent(Class<T> cls) {
+//        for (Component c : components) {
+//            if (cls.isInstance(c)) {
+//                c.destroy();
+//                components.remove(c); // will cause concurrent exception
+//                return;
+//            }
+//        }
+//    }
 
     /**
-     * Finds the first component of the specified class or its subclasses. For example, getComponent(Script.class)
-     * returns the first instance of Script, KeyMovement, etc., but not Collider.
+     * Finds the first component of the specified class or any of its subclasses, or null if none exists.
      *
      * @param cls a {@link Component} subclass
      * @param <T> the component type
@@ -189,7 +183,7 @@ public class GameObject {
     /**
      * Destroy this game object and remove it from the scene.
      */
-    final void onDestroy() {
+    final void destroy() {
         components.forEach(Component::destroy);
         components.clear();
         scene = null;
@@ -221,16 +215,7 @@ public class GameObject {
         }
     }
 
-    // Getters and Setters
-
-    public final Scene getScene() {
-        return scene;
-    }
-
-    final GameObject setScene(Scene scene) {
-        this.scene = scene;
-        return this;
-    }
+    // Property Getters and Setters
 
     /**
      * Whether this object has been removed from the scene.
@@ -246,6 +231,32 @@ public class GameObject {
         destroyed = true;
     }
 
+    public GameObject getParent() {
+        return parent;
+    }
+
+    public GameObject setParent(GameObject parent) {
+        this.parent = parent;
+        return this;
+    }
+
+    public final Scene getScene() {
+        return scene;
+    }
+
+    final GameObject setScene(Scene scene) {
+        this.scene = scene;
+        return this;
+    }
+
+    public boolean hasTag(String tag) {
+        return tags.contains(tag);
+    }
+
+    public void addTag(String tag) {
+        tags.add(tag);
+    }
+
     public int getZIndex() {
         return zIndex;
     }
@@ -255,14 +266,7 @@ public class GameObject {
         return this;
     }
 
-    public boolean hasTag(String tag) {
-        return tags.contains(tag);
-    }
-
-    public GameObject addTag(String tag) {
-        tags.add(tag);
-        return this;
-    }
+    // Object Overrides
 
     @Override
     public boolean equals(Object obj) {
@@ -287,9 +291,8 @@ public class GameObject {
     public String toString() {
         // Use GameObject for class name if anonymous instance
         return String.format(
-                "%s [ID = %d] (%s)",
-                name, objectID,
-                StringUtils.getClassName(this, "GameObject")
+                "%s (%s)",
+                getNameAndID(), StringUtils.getClassName(this, "GameObject")
         );
     }
 

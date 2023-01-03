@@ -33,8 +33,8 @@ public class EnemyShip extends GameObject {
 
     @Override
     protected void init() {
-        transform.position = getScene().getRandomPosition();
-        transform.rotation = Random.randomFloat(0f, 360f);
+        transform.setPosition(getScene().getRandomPosition());
+        transform.setRotation(Random.randomFloat(0f, 360f));
 
         addTag("Enemy");
         addComponent(Sprite.create(spriteName));

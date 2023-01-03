@@ -2,8 +2,8 @@ package slavsquatsuperstar.demos.spacegame.objects;
 
 import mayonez.GameObject;
 import mayonez.Transform;
-import mayonez.graphics.sprites.SpriteSheet;
 import mayonez.graphics.sprites.Animator;
+import mayonez.graphics.sprites.SpriteSheet;
 
 /**
  * Exhaust plumes from a spaceship's engines.
