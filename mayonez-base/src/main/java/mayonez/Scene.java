@@ -43,7 +43,7 @@ public abstract class Scene {
     private final SceneRenderer renderer;
     private final DebugRenderer debugRenderer;
     private final PhysicsWorld physics;
-    private final Camera camera; // TODO probably want to sort this to last
+    private Camera camera;
 
     // Scene State
 //    private final Consumer<GameObject> addObject, removeObject;
@@ -75,34 +75,12 @@ public abstract class Scene {
 
         // Initialize layers
         objects = new ArrayList<>();
-        if (Mayonez.getUseGL()) {
-            renderer = new GLDefaultRenderer();
-            camera = new GLCamera(Mayonez.getScreenSize(), this.getScale());
-        } else {
-            renderer = new JDefaultRenderer();
-            camera = new JCamera(Mayonez.getScreenSize(), this.getScale());
-        }
+        renderer = Mayonez.getUseGL() ? new GLDefaultRenderer() : new JDefaultRenderer();
         debugRenderer = (DebugRenderer) renderer;
         physics = new PhysicsWorld();
 
         // Scene changes
         changesToScene = new LinkedList<>();
-//        addObject = (obj) -> {
-//            objects.add(obj.setScene(this));
-//            obj.start(); // add components first so renderer and physics can access it
-//            if (started) {
-//                renderer.addObject(obj);
-//                physics.addObject(obj);
-//            }
-//            Logger.debug("Added object \"%s\" to scene \"%s\"", obj.getNameAndID(), this.name);
-//        };
-//        removeObject = (obj) -> {
-//            objects.remove(obj);
-//            renderer.removeObject(obj);
-//            physics.removeObject(obj);
-//            obj.onDestroy();
-//            Logger.debug("Removed object \"%s\" from scene \"%s\"", obj.getNameAndID(), this.name);
-//        };
     }
 
     // Game Loop Methods
@@ -112,7 +90,7 @@ public abstract class Scene {
      */
     public final void start() {
         if (!started) {
-            addObject(Camera.createCameraObject(camera));
+            addObject(Camera.createCameraObject(camera = createCamera()));
             init();
             // Start Layers
             renderer.start();
@@ -177,6 +155,7 @@ public abstract class Scene {
         if (started) {
             // Destroy objects
             objects.forEach(GameObject::destroy);
+//            camera.setSubject(null);
             objects.clear();
             // Clear layers
             renderer.stop();
@@ -322,7 +301,7 @@ public abstract class Scene {
      * @return a random position
      */
     public Vec2 getRandomPosition() {
-        return Random.randomVector(-getWidth(), getWidth(), -getHeight(), getHeight()).mul(0.5f);
+        return Random.randomVector(getSize().mul(-1f), getSize()).mul(0.5f);
     }
 
     /**
@@ -361,10 +340,15 @@ public abstract class Scene {
     /**
      * Returns the main camera of the scene.
      *
-     * @return the {@link GLCamera} instance
+     * @return the {@link Camera} instance
      */
     public Camera getCamera() {
         return camera;
+    }
+
+    private Camera createCamera() {
+        if (Mayonez.getUseGL()) return new GLCamera(Mayonez.getScreenSize(), scale);
+        else return new JCamera(Mayonez.getScreenSize(), scale);
     }
 
     final DebugRenderer getDebugRenderer() {

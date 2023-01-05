@@ -1,6 +1,8 @@
 package slavsquatsuperstar.demos.physics;
 
 import mayonez.DebugDraw;
+import mayonez.Preferences;
+import mayonez.Scene;
 import mayonez.graphics.Colors;
 import mayonez.input.KeyInput;
 import mayonez.input.MouseInput;
@@ -16,7 +18,7 @@ import mayonez.physics.shapes.Triangle;
 import java.awt.*;
 
 
-public class DetectionTest extends PhysicsTestScene {
+public class DetectionTestScene extends Scene {
 
     private final Polygon box = new Rectangle(new Vec2(0, 0), new Vec2(15, 18), 0);
     private final Polygon rect = new Rectangle(new Vec2(0, 0), new Vec2(12, 10), 0);
@@ -24,8 +26,8 @@ public class DetectionTest extends PhysicsTestScene {
     private final Circle circ = new Circle(new Vec2(0, 0), 8);
     private float rot = 45f;
 
-    public DetectionTest(String name) {
-        super(name, 0);
+    public DetectionTestScene(String name) {
+        super(name, Preferences.getScreenWidth(), Preferences.getScreenHeight(), 10);
     }
 
     @Override

@@ -9,7 +9,7 @@ import mayonez.math.Vec2;
 import mayonez.physics.Rigidbody;
 import mayonez.physics.colliders.BallCollider;
 import mayonez.scripts.KeepInScene;
-import slavsquatsuperstar.demos.spacegame.scripts.Damageable;
+import slavsquatsuperstar.demos.spacegame.scripts.combat.Damageable;
 import slavsquatsuperstar.demos.spacegame.scripts.SpawnManager;
 
 /**
@@ -25,7 +25,7 @@ public class Asteroid extends GameObject {
     private final boolean isFragment;
 
     private Asteroid(String name, Vec2 size, int startingHealth, boolean isFragment, SpawnManager obstacleSpawner) {
-        super(name, Transform.scaleInstance(size), 1);
+        super(name, Transform.scaleInstance(size), ZIndex.ASTEROID.zIndex);
         this.size = size;
         this.startingHealth = startingHealth;
         this.isFragment = isFragment;

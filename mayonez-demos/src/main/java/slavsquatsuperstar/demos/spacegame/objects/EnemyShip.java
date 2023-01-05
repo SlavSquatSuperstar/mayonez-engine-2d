@@ -8,8 +8,8 @@ import mayonez.math.Vec2;
 import mayonez.physics.Rigidbody;
 import mayonez.physics.colliders.BoxCollider;
 import mayonez.scripts.KeepInScene;
-import slavsquatsuperstar.demos.spacegame.scripts.Damageable;
-import slavsquatsuperstar.demos.spacegame.scripts.FireProjectile;
+import slavsquatsuperstar.demos.spacegame.scripts.combat.Damageable;
+import slavsquatsuperstar.demos.spacegame.scripts.combat.FireProjectile;
 import slavsquatsuperstar.demos.spacegame.scripts.SpawnManager;
 
 /**
@@ -25,7 +25,7 @@ public class EnemyShip extends GameObject {
     private int shotsLeft;
 
     public EnemyShip(String name, String spriteName, SpawnManager enemySpawner) {
-        super(name, Transform.scaleInstance(new Vec2(2f)), 1);
+        super(name, Transform.scaleInstance(new Vec2(2f)), ZIndex.SPACESHIP.zIndex);
         this.spriteName = spriteName;
         this.enemySpawner = enemySpawner;
         isFiring = false;

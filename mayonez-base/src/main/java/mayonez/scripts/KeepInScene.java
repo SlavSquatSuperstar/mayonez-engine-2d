@@ -20,7 +20,7 @@ public class KeepInScene extends Script {
     private Collider objectCollider = null;
     private BoundingBox objectBounds;
     private Rigidbody rb = null;
-    private float nBounce = 0f;
+    private float bounce = 0f;
 
     /**
      * Create a new KeepInScene script and use the scene bounds.
@@ -64,7 +64,7 @@ public class KeepInScene extends Script {
                 mode = Mode.STOP; // need rb to bounce
             }
         } else {
-            nBounce = -rb.getMaterial().getBounce();
+            bounce = -rb.getMaterial().getBounce();
         }
     }
 
@@ -102,87 +102,78 @@ public class KeepInScene extends Script {
         }
     }
 
+    /**
+     * Check and object's edges against the scene bounds.
+     *
+     * @param sceneBds  the area the object is allowed to go
+     * @param objectBds the object bounding box
+     * @param minDir    the minimum (lesser) direction
+     * @param maxDir    the maximum (greater) direction
+     */
+    private void checkEdges(Range sceneBds, Range objectBds, Direction minDir, Direction maxDir) {
+        if (sceneBds.contains(objectBds)) return; // Skip if still in scene
+        if (objectBds.difference() > sceneBds.difference()) return;  // Skip if too wide for scene
+
+        // Detect if colliding with edge
+        if (objectBds.min < sceneBds.min) onCrossBounds(minDir);
+        else if (objectBds.max > sceneBds.max) onCrossBounds(maxDir);
+
+        // Detect if moved completely past edge
+        if (objectBds.min < sceneBds.min) onExitBounds(minDir);
+        else if (objectBds.max > sceneBds.max) onExitBounds(maxDir);
+    }
+
     // Collision Event Methods
 
     /**
-     * A function called when the object has reached or crossed its bounds but not exited completely. Can be overridden
-     * to provide custom behavior.
+     * A function called when the object has reached or crossed its bounds but not exited completely.
+     * Can be overridden to provide custom behavior.
      *
      * @param direction which edge the object has crossed
      */
     protected void onCrossBounds(Direction direction) {
-        switch (direction) {
-            case LEFT -> {
-                switch (mode) {
-                    case STOP -> { // Align with edge of screen
-                        setX(minPos.x + objectBounds.width * 0.5f);
-                        if (rb != null) rb.getVelocity().x = 0;
-                    }
-                    case BOUNCE -> rb.getVelocity().x *= nBounce;
-                }
+        switch (mode) {
+            case STOP -> {
+                alignInside(direction);
+                stop(direction);
             }
-            case RIGHT -> {
-                switch (mode) {
-                    case STOP -> {
-                        setX(maxPos.x - objectBounds.width * 0.5f);
-                        if (rb != null) rb.getVelocity().x = 0;
-                    }
-                    case BOUNCE -> rb.getVelocity().x *= nBounce;
-                }
-            }
-            case TOP -> {
-                switch (mode) {
-                    case STOP -> {
-                        setY(minPos.y + objectBounds.height * 0.5f);
-                        if (rb != null) rb.getVelocity().y = 0;
-                    }
-                    case BOUNCE -> rb.getVelocity().y *= nBounce;
-                }
-            }
-            case BOTTOM -> {
-                switch (mode) {
-                    case STOP -> {
-                        setY(maxPos.y - objectBounds.height * 0.5f);
-                        if (rb != null) rb.getVelocity().y = 0;
-                    }
-                    case BOUNCE -> rb.getVelocity().y *= nBounce;
-                }
+            case BOUNCE -> {
+                alignInside(direction);
+                bounce(direction);
             }
         }
     }
 
     /**
-     * A function called when the object has moved outside its bounds and exited completely. Can be overridden
-     * to provide custom behavior.
+     * A function called when the object has moved outside its bounds and exited completely.
+     * Can be overridden to provide custom behavior.
      *
      * @param direction which edge the object has crossed
      */
     protected void onExitBounds(Direction direction) {
-        switch (direction) {
-            case LEFT -> {
-                switch (mode) {
-                    case WRAP -> setX(maxPos.x + objectBounds.width * 0.5f);
-                    case DESTROY -> gameObject.setDestroyed();
-                }
-            }
-            case RIGHT -> {
-                switch (mode) {
-                    case WRAP -> setX(minPos.x - objectBounds.width * 0.5f);
-                    case DESTROY -> gameObject.setDestroyed();
-                }
-            }
-            case TOP -> {
-                switch (mode) {
-                    case WRAP -> setY(maxPos.y + objectBounds.height * 0.5f);
-                    case DESTROY -> gameObject.setDestroyed();
-                }
-            }
-            case BOTTOM -> {
-                switch (mode) {
-                    case WRAP -> setY(minPos.y - objectBounds.height * 0.5f);
-                    case DESTROY -> gameObject.setDestroyed();
-                }
-            }
+        switch (mode) {
+            case WRAP -> alignOutside(direction);
+            case DESTROY -> gameObject.setDestroyed();
+        }
+    }
+
+    // Position/Velocity Setters
+
+    private void alignInside(Direction dir) { // Align object to inside of bounds
+        switch (dir) {
+            case LEFT -> setX(minPos.x + objectBounds.width * 0.5f);
+            case RIGHT -> setX(maxPos.x - objectBounds.width * 0.5f);
+            case TOP -> setY(minPos.y + objectBounds.height * 0.5f);
+            case BOTTOM -> setY(maxPos.y - objectBounds.height * 0.5f);
+        }
+    }
+
+    private void alignOutside(Direction dir) { // Align object to outside of bounds
+        switch (dir) {
+            case LEFT -> setX(maxPos.x + objectBounds.width * 0.5f);
+            case RIGHT -> setX(minPos.x - objectBounds.width * 0.5f);
+            case TOP -> setY(maxPos.y + objectBounds.height * 0.5f);
+            case BOTTOM -> setY(minPos.y - objectBounds.height * 0.5f);
         }
     }
 
@@ -194,12 +185,27 @@ public class KeepInScene extends Script {
         transform.getPosition().y = y;
     }
 
+    private void stop(Direction dir) {
+        if (rb == null) return;
+        switch (dir) {
+            case LEFT, RIGHT -> rb.getVelocity().x = 0f;
+            case TOP, BOTTOM -> rb.getVelocity().y = 0f;
+        }
+    }
+
+    private void bounce(Direction dir) {
+        if (rb == null) return;
+        switch (dir) {
+            case LEFT, RIGHT -> rb.getVelocity().x *= bounce;
+            case TOP, BOTTOM -> rb.getVelocity().y *= bounce;
+        }
+    }
+
     // Enums
 
     /**
      * How to treat an object once it has exited its bounds.
      */
-    // TODO move to top level?
     public enum Mode {
         /**
          * Clamp an object's position to the scene when touching an edge and set speed to 0 if a rigidbody is present.
@@ -219,6 +225,9 @@ public class KeepInScene extends Script {
         DESTROY
     }
 
+    /**
+     * In what direction an object has gone out of bounds.
+     */
     protected enum Direction {
         /**
          * The left edge of the scene.

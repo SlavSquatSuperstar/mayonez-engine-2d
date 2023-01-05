@@ -1,5 +1,7 @@
 package mayonez.math
 
+import mayonez.util.MColor
+
 /**
  * A class with methods dedicated to generating random numbers and primitive types.
  *
@@ -38,7 +40,21 @@ object Random {
     }
 
     /**
-     * Generates a random vector between the provided x and y bounds.
+     * Generates a random [Vec2] between the provided min and max vectors. All vectors in the rectangular
+     * region have an equal chance of occurring.
+     *
+     * @param min the lower bound vector
+     * @param max the upper bound vector
+     * @return the random vector
+     */
+    @JvmStatic
+    fun randomVector(min: Vec2, max: Vec2): Vec2 {
+        return Vec2(randomFloat(min.x, max.x), randomFloat(min.y, max.y))
+    }
+
+    /**
+     * Generates a random [Vec2] between the provided x and y bounds. All vectors in the rectangular
+     * region have an equal chance of occurring.
      *
      * @param minX the lower x bound
      * @param maxX the upper x bound
@@ -51,8 +67,10 @@ object Random {
         return Vec2(randomFloat(minX, maxX), randomFloat(minY, maxY))
     }
 
+    // Random Experiments
+
     /**
-     * Generates a random event with a certain percent chance of succeeding.
+     * Generates a random event with a certain percent chance of succeeding, equal to a biased coin flip.
      *
      * @param percent the chance of succeeding, from 0-1
      * @return true the given percentage of the time, otherwise false
@@ -71,25 +89,33 @@ object Random {
     // Random Text Methods
 
     /**
-     * Generates a random uppercase letter (A-Z).
+     * Generates a random uppercase letter.
+     *
+     * @return a random character A-Z
      */
     @JvmStatic
     fun randomUppercase(): Char = randomInt(65, 90).toChar()
 
     /**
-     * Generates a random lowercase letter (a-z).
+     * Generates a random lowercase letter.
+     *
+     * @return a random character a-z
      */
     @JvmStatic
     fun randomLowercase(): Char = randomInt(97, 122).toChar()
 
     /**
-     * Generates a random digit (0-9).
+     * Generates a random digit.
+     *
+     * @return a random character 0-9
      */
     @JvmStatic
     fun randomDigit(): Char = randomInt(48, 57).toChar()
 
     /**
-     * Returns a random alphanumeric character (A-Z, a-z, 0-9) .
+     * Returns a random alphanumeric character.
+     *
+     * @return a random character A-Z, a-z, or 0-9.
      */
     @JvmStatic
     fun randomAlphanumeric(): Char {
@@ -98,5 +124,15 @@ object Random {
         else if (rand < 26) randomLowercase() // 26/62 = 13/31 Lowercase
         else randomDigit() // 10/62 = 5/31 Number
     }
+
+    // Random Color Methods
+
+    /**
+     * Generates a random opaque RGB color.
+     *
+     * @return a color with random RGB values 0-255
+     */
+    @JvmStatic
+    fun randomColor(): MColor = MColor(randomInt(0, 255), randomInt(0, 255), randomInt(0, 255))
 
 }

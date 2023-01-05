@@ -4,10 +4,9 @@ import mayonez.Mayonez;
 import mayonez.SceneManager;
 import mayonez.input.KeyInput;
 import slavsquatsuperstar.demos.mario.RendererTest;
-import slavsquatsuperstar.demos.physics.CollisionTest;
-import slavsquatsuperstar.demos.physics.DetectionTest;
-import slavsquatsuperstar.demos.physics.FrictionTest;
-import slavsquatsuperstar.demos.physics.PoolBallsTest;
+import slavsquatsuperstar.demos.physics.PhysicsTestScene;
+import slavsquatsuperstar.demos.physics.DetectionTestScene;
+import slavsquatsuperstar.demos.physics.PoolBallsScene;
 import slavsquatsuperstar.demos.spacegame.SpaceGameScene;
 
 /**
@@ -19,7 +18,7 @@ public class DemosLauncher {
 
     private final static String[] scenes = {
             "Space Game", "Mario Scene", "Collisions Test",
-            "Pool Balls Test", "Friction Test", "Detection Test"
+            "Pool Balls Test", "Detection Test"
     };
 
     public static void main(String[] args) {
@@ -41,28 +40,21 @@ public class DemosLauncher {
                 pollSceneControls();
             }
         });
-        SceneManager.addScene(new CollisionTest(scenes[2]) {
+        SceneManager.addScene(new PhysicsTestScene(scenes[2]) {
             @Override
             protected void onUserUpdate(float dt) {
                 super.onUserUpdate(dt);
                 pollSceneControls();
             }
         });
-        SceneManager.addScene(new PoolBallsTest(scenes[3]) {
+        SceneManager.addScene(new PoolBallsScene(scenes[3]) {
             @Override
             protected void onUserUpdate(float dt) {
                 super.onUserUpdate(dt);
                 pollSceneControls();
             }
         });
-        SceneManager.addScene(new FrictionTest(scenes[4]) {
-            @Override
-            protected void onUserUpdate(float dt) {
-                super.onUserUpdate(dt);
-                pollSceneControls();
-            }
-        });
-        SceneManager.addScene(new DetectionTest(scenes[5]) {
+        SceneManager.addScene(new DetectionTestScene(scenes[4]) {
             @Override
             protected void onUserUpdate(float dt) {
                 super.onUserUpdate(dt);

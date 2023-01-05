@@ -23,7 +23,7 @@ public class GameObject {
     // Object Information and State
     final long objectID; // UUID for this game object
     public final String name; // object name, may be duplicate
-    public final Transform transform;
+    public final Transform transform; // TODO combine transform and z-index
     private Scene scene;
     private boolean destroyed;
     private int zIndex; // controls 3D "layering" of objects
@@ -33,6 +33,8 @@ public class GameObject {
     private final List<Component> components;
     private List<Class> updateOrder;
 
+    // Connected Objects
+    private GameObject parent; // parent object
     public GameObject(String name) {
         this(name, new Vec2());
     }
@@ -56,6 +58,7 @@ public class GameObject {
         components = new ArrayList<>();
         updateOrder = null;
 //        changesToObject = new LinkedList<>();
+        parent = null;
     }
 
     // Game Loop Methods
@@ -77,7 +80,6 @@ public class GameObject {
     public final void update(float dt) {
         components.forEach(c -> {
             if (c.isEnabled()) c.update(dt);
-            // TODO dynamic component add/remove?
         });
         onUserUpdate(dt);
 //        while (!changesToObject.isEmpty()) changesToObject.poll().onReceive();
@@ -225,7 +227,7 @@ public class GameObject {
     }
 
     /**
-     * Mark this object to be removed from the scene.
+     * Remove this object from the scene and destroy all its components and children.
      */
     public void setDestroyed() {
         destroyed = true;
@@ -235,7 +237,7 @@ public class GameObject {
         return parent;
     }
 
-    public GameObject setParent(GameObject parent) {
+    final GameObject setParent(GameObject parent) {
         this.parent = parent;
         return this;
     }
@@ -258,7 +260,8 @@ public class GameObject {
     }
 
     public int getZIndex() {
-        return zIndex;
+        if (parent != null) return parent.getZIndex() + this.zIndex;
+        else return zIndex;
     }
 
     public GameObject setZIndex(int zIndex) { // can't change while scene is running in GL yet

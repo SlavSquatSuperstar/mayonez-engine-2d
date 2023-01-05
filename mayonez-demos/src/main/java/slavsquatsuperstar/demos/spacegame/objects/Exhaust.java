@@ -12,18 +12,19 @@ import mayonez.graphics.sprites.SpriteSheet;
  */
 public class Exhaust extends GameObject {
 
-    private Transform parentXf, offsetXf;
+    private static final SpriteSheet sprites = SpriteSheet.create("assets/textures/spacegame/exhaust.png",
+            16, 16, 3, 0);
+    private Transform parentXf, offsetXf; // todo move to game object
 
     public Exhaust(String name, Transform parentXf, Transform offsetXf) {
         super(name);
         this.parentXf = parentXf;
         this.offsetXf = offsetXf;
+        setZIndex(ZIndex.EXHAUST.zIndex);
     }
 
     @Override
     protected void init() {
-        SpriteSheet sprites = SpriteSheet.create("assets/textures/spacegame/exhaust.png",
-                16, 16, 3, 0);
         addComponent(new Animator(sprites, 0.25f));
     }
 
@@ -31,4 +32,5 @@ public class Exhaust extends GameObject {
     protected void onUserUpdate(float dt) {
         transform.set(parentXf.combine(offsetXf));
     }
+
 }

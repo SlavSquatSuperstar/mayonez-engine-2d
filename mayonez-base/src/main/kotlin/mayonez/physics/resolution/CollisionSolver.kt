@@ -14,6 +14,10 @@ import kotlin.math.sign
  */
 internal class CollisionSolver(private val c1: Collider, private val c2: Collider, private var manifold: Manifold) {
 
+//    companion object {
+//        val IMPULSE_ITERATIONS = Preferences.impulseIterations
+//    }
+
     private val r1: Rigidbody = c1.rigidbody ?: Rigidbody(0f)
     private val r2: Rigidbody = c2.rigidbody ?: Rigidbody(0f)
 

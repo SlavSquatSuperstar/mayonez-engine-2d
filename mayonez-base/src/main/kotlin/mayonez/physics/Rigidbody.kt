@@ -59,6 +59,9 @@ class Rigidbody(mass: Float, drag: Float, angDrag: Float) : Component() {
      * The linear (translational) velocity of the body, v, in world units.
      */
     var velocity: Vec2 = Vec2()
+        set(velocity) {
+            field.set(velocity)
+        }
     val speed: Float
         get() = velocity.len()
 
@@ -78,19 +81,23 @@ class Rigidbody(mass: Float, drag: Float, angDrag: Float) : Component() {
      * The body's drag, which represents a damping force proportional to its negative linear velocity. A drag of 0 means
      * all velocity is conserved during motion and 1 means all velocity is quickly lost without acceleration.
      */
-    var drag: Float = clamp(drag, 0f, 1f)
-//        set(drag) {
-//            field = clamp(drag, 0f, 1f)
-//        }
+    private var drag: Float = clamp(drag, 0f, 1f)
+
+    fun setDrag(drag: Float): Rigidbody {
+        this.drag = clamp(drag, 0f, 1f)
+        return this
+    }
 
     /**
      * The body's angular drag, which represents a damping torque proportional to its negative angular velocity. A drag
      * of 0 means all velocity is conserved during motion and 1 means all velocity is quickly lost without acceleration.
      */
-    var angDrag: Float = clamp(angDrag, 0f, 1f)
-//        set(angDrag) {
-//            field = clamp(angDrag, 0f, 1f)
-//        }
+    private var angDrag: Float = clamp(angDrag, 0f, 1f)
+
+    fun setAngDrag(angDrag: Float): Rigidbody {
+        this.angDrag = clamp(angDrag, 0f, 1f)
+        return this
+    }
 
     // Physics Engine Properties
 

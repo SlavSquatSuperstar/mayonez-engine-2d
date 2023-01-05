@@ -34,7 +34,7 @@ class Mario extends GameObject {
         addComponent(new BoxCollider(new Vec2(0.8f, 1)));
         addComponent(new Rigidbody(1f).setFixedRotation(true));
         addComponent(new KeepInScene(KeepInScene.Mode.STOP).setEnabled(true));
-        addComponent(new KeyMovement(MoveMode.POSITION, 10).setObjectAligned(false));
+        addComponent(new KeyMovement(MoveMode.POSITION, 15).setObjectAligned(false));
         addComponent(new KeyRotation(MoveMode.POSITION, 360));
         addComponent(new Script() {
             @Override

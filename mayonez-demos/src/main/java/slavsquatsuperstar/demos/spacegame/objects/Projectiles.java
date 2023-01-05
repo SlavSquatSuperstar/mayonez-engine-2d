@@ -5,7 +5,7 @@ import mayonez.graphics.Colors;
 import mayonez.graphics.sprites.ShapeSprite;
 import mayonez.math.Vec2;
 import mayonez.physics.colliders.BallCollider;
-import slavsquatsuperstar.demos.spacegame.scripts.Projectile;
+import slavsquatsuperstar.demos.spacegame.scripts.combat.Projectile;
 
 /**
  * Different prefab projectiles that spaceships can fire.
@@ -23,7 +23,7 @@ public class Projectiles {
                 "Laser", 0.2f,
                 new BallCollider(new Vec2(1f)).setTrigger(true),
                 new ShapeSprite(Colors.RED, true)
-        ).setZIndex(0);
+        ).setZIndex(ZIndex.PROJECTILE.zIndex);
     }
 
     public static GameObject createPlasma(GameObject source) {
@@ -32,7 +32,7 @@ public class Projectiles {
                 "Plasma", 0.3f,
                 new BallCollider(new Vec2(1f)).setTrigger(true),
                 new ShapeSprite(Colors.SKY_BLUE, true)
-        ).setZIndex(0);
+        ).setZIndex(ZIndex.PROJECTILE.zIndex);
     }
 
 }

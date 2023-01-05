@@ -1,9 +1,7 @@
 package slavsquatsuperstar.demos.spacegame.objects;
 
 import mayonez.GameObject;
-import mayonez.Script;
 import mayonez.Transform;
-import mayonez.graphics.sprites.Animator;
 import mayonez.graphics.sprites.Sprite;
 import mayonez.input.KeyInput;
 import mayonez.input.MouseInput;
@@ -14,7 +12,10 @@ import mayonez.scripts.KeepInScene;
 import mayonez.scripts.movement.KeyMovement;
 import mayonez.scripts.movement.KeyRotation;
 import mayonez.scripts.movement.MoveMode;
-import slavsquatsuperstar.demos.spacegame.scripts.FireProjectile;
+import slavsquatsuperstar.demos.spacegame.scripts.movement.ThrustDirection;
+import slavsquatsuperstar.demos.spacegame.scripts.combat.FireProjectile;
+import slavsquatsuperstar.demos.spacegame.scripts.movement.ThrustController;
+import slavsquatsuperstar.demos.spacegame.scripts.movement.Thruster;
 
 /**
  * A player-controlled spaceship that can fire projectiles.
@@ -26,9 +27,8 @@ public class PlayerShip extends GameObject {
     private final String spriteName;
 
     public PlayerShip(String name, String spriteName) {
-        super(name, Transform.scaleInstance(new Vec2(2, 2)));
+        super(name, Transform.scaleInstance(new Vec2(2, 2)), ZIndex.SPACESHIP.zIndex);
         this.spriteName = spriteName;
-        this.setZIndex(1);
     }
 
     @Override
@@ -41,18 +41,6 @@ public class PlayerShip extends GameObject {
 
         // Visuals
         addComponent(Sprite.create(spriteName));
-
-        GameObject lExhaust, rExhaust; // main (rear) engines
-        getScene().addObject(lExhaust = new Exhaust("Left Exhaust", this.transform,
-                new Transform(new Vec2(-0.1f, -0.6f), 0f, new Vec2(0.3f))));
-        getScene().addObject(rExhaust = new Exhaust("Right Exhaust", this.transform,
-                new Transform(new Vec2(0.1f, -0.6f), 0f, new Vec2(0.3f))));
-
-        GameObject lExhaust2, rExhaust2; // RCS (front) engines
-        getScene().addObject(lExhaust2 = new Exhaust("Left Exhaust", this.transform,
-                new Transform(new Vec2(-0.1f, 0.45f), 225f, new Vec2(0.1f))));
-        getScene().addObject(rExhaust2 = new Exhaust("Right Exhaust", this.transform,
-                new Transform(new Vec2(0.1f, 0.45f), 135f, new Vec2(0.1f))));
 
         // Scripts
         addComponent(new KeepInScene(KeepInScene.Mode.WRAP));
@@ -88,47 +76,42 @@ public class PlayerShip extends GameObject {
                 } else return null;
             }
         });
-        addComponent(new Script() {
-            Animator lExhaustAnim, rExhaustAnim, lExhaustAnim2, rExhaustAnim2;
-            KeyMovement keyMovement;
-            KeyRotation keyRotation;
 
-            @Override
-            public void start() {
-                keyMovement = gameObject.getComponent(KeyMovement.class);
-                keyRotation = gameObject.getComponent(KeyRotation.class);
+        // Sub-Objects
+        Thruster lBack = new Thruster(ThrustDirection.FORWARD);
+        Thruster rBack = new Thruster(ThrustDirection.FORWARD);
+        Thruster lFront = new Thruster(ThrustDirection.BACKWARD);
+        Thruster rFront = new Thruster(ThrustDirection.BACKWARD);
+        Thruster fLeft = new Thruster(ThrustDirection.RIGHT, ThrustDirection.TURN_RIGHT);
+        Thruster bLeft = new Thruster(ThrustDirection.RIGHT, ThrustDirection.TURN_LEFT);
+        Thruster fRight = new Thruster(ThrustDirection.LEFT, ThrustDirection.TURN_LEFT);
+        Thruster bRight = new Thruster(ThrustDirection.LEFT, ThrustDirection.TURN_RIGHT);
 
-                lExhaustAnim = lExhaust.getComponent(Animator.class);
-                rExhaustAnim = rExhaust.getComponent(Animator.class);
-                lExhaustAnim2 = lExhaust2.getComponent(Animator.class);
-                rExhaustAnim2 = rExhaust2.getComponent(Animator.class);
-            }
+        // aft thrusters
+        getScene().addObject(Thruster.createObject(lBack, "Left Rear Thruster", this.transform,
+                new Transform(new Vec2(-0.1f, -0.6f), 0f, new Vec2(0.3f))));
+        getScene().addObject(Thruster.createObject(rBack, "Right Rear Thruster", this.transform,
+                new Transform(new Vec2(0.1f, -0.6f), 0f, new Vec2(0.3f))));
 
-            @Override
-            public void update(float dt) {
-                // Brake
-                boolean brake = KeyInput.keyDown("space");
-                if (brake) {
-                    getRigidbody().setDrag(2f);
-                    getRigidbody().setAngDrag(2f);
-                } else {
-                    getRigidbody().setDrag(0f);
-                    getRigidbody().setAngDrag(0f);
-                }
+        // front thrusters
+        getScene().addObject(Thruster.createObject(lFront, "Left Front Thruster", this.transform,
+                new Transform(new Vec2(-0.075f, 0.46f), 180f, new Vec2(0.1f))));
+        getScene().addObject(Thruster.createObject(rFront, "Right Front Thruster", this.transform,
+                new Transform(new Vec2(0.075f, 0.46f), 180f, new Vec2(0.1f))));
 
-                // Enable/Disable Exhaust
-                if (keyMovement != null) {
-                    boolean forward = keyMovement.getRawInput().dot(new Vec2(0, 1)) > 0;
-                    boolean back = keyMovement.getRawInput().dot(new Vec2(0, 1)) < 0;
-                    boolean left = keyRotation.getRawInput().x < 0;
-                    boolean right = keyRotation.getRawInput().x > 0;
-                    if (lExhaustAnim != null) lExhaustAnim.setEnabled(forward || left);
-                    if (rExhaustAnim != null) rExhaustAnim.setEnabled(forward || right);
-                    if (lExhaustAnim2 != null) lExhaustAnim2.setEnabled(back || left);
-                    if (rExhaustAnim2 != null) rExhaustAnim2.setEnabled(back || right);
-                }
-            }
-        });
+        // port thrusters
+        getScene().addObject(Thruster.createObject(fLeft, "Front Left Thruster", this.transform,
+                new Transform(new Vec2(-0.14f, 0.39f), -90, new Vec2(0.08f))));
+        getScene().addObject(Thruster.createObject(bLeft, "Rear Left Thruster", this.transform,
+                new Transform(new Vec2(-0.2f, -0.36f), -90, new Vec2(0.08f))));
+
+        // starboard thrusters
+        getScene().addObject(Thruster.createObject(fRight, "Front Right Thruster", this.transform,
+                new Transform(new Vec2(0.14f, 0.39f), 90, new Vec2(0.08f))));
+        getScene().addObject(Thruster.createObject(bRight, "Rear Right Thruster", this.transform,
+                new Transform(new Vec2(0.2f, -0.36f), 90, new Vec2(0.08f))));
+
+        addComponent(new ThrustController(lBack, rBack, lFront, rFront, fLeft, bLeft, fRight, bRight));
     }
 
 }

@@ -23,7 +23,7 @@ public class KeyRotation extends MovementScript {
 
     @Override
     public void update(float dt) {
-        float input = getRawInput().x * speed;
+        float input = -getRawInput().x * speed;
         switch (mode) {
             case POSITION -> transform.rotate(input * dt);
             case VELOCITY -> rb.addAngularVelocity(input * dt);
@@ -38,7 +38,7 @@ public class KeyRotation extends MovementScript {
 
     @Override
     public Vec2 getRawInput() {
-        return new Vec2(-KeyInput.getAxis(axis), 0);
+        return new Vec2(KeyInput.getAxis(axis), 0);
     }
 
     public KeyRotation setTopSpeed(float topSpeed) {
