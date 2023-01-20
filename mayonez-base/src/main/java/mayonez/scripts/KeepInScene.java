@@ -2,7 +2,7 @@ package mayonez.scripts;
 
 import mayonez.Logger;
 import mayonez.Script;
-import mayonez.math.Range;
+import mayonez.math.Interval;
 import mayonez.math.Vec2;
 import mayonez.physics.Rigidbody;
 import mayonez.physics.colliders.Collider;
@@ -75,10 +75,10 @@ public class KeepInScene extends Script {
         Vec2 boxMax = objectBounds.max();
 
         // Edge Checking for x
-        Range sceneBoundsX = new Range(minPos.x, maxPos.x);
-        if (!sceneBoundsX.contains(objectBounds.getXRange())) {
+        Interval sceneBoundsX = new Interval(minPos.x, maxPos.x);
+        if (!sceneBoundsX.contains(objectBounds.getXInterval())) {
             // Skip if too wide for scene
-            if (objectBounds.getXRange().difference() <= sceneBoundsX.difference()) {
+            if (objectBounds.getXInterval().difference() <= sceneBoundsX.difference()) {
                 // Detect if colliding with edge
                 if (boxMin.x < minPos.x) onCrossBounds(Direction.LEFT);
                 else if (boxMax.x > maxPos.x) onCrossBounds(Direction.RIGHT);
@@ -90,9 +90,9 @@ public class KeepInScene extends Script {
         }
 
         // Edge Checking for y
-        Range sceneBoundsY = new Range(minPos.y, maxPos.y);
-        if (!sceneBoundsY.contains(objectBounds.getYRange())) {
-            if (objectBounds.getYRange().difference() <= sceneBoundsY.difference()) {
+        Interval sceneBoundsY = new Interval(minPos.y, maxPos.y);
+        if (!sceneBoundsY.contains(objectBounds.getYInterval())) {
+            if (objectBounds.getYInterval().difference() <= sceneBoundsY.difference()) {
                 if (boxMin.y < minPos.y) onCrossBounds(Direction.TOP);
                 else if (boxMax.y > maxPos.y) onCrossBounds(Direction.BOTTOM);
 
@@ -110,7 +110,7 @@ public class KeepInScene extends Script {
      * @param minDir    the minimum (lesser) direction
      * @param maxDir    the maximum (greater) direction
      */
-    private void checkEdges(Range sceneBds, Range objectBds, Direction minDir, Direction maxDir) {
+    private void checkEdges(Interval sceneBds, Interval objectBds, Direction minDir, Direction maxDir) {
         if (sceneBds.contains(objectBds)) return; // Skip if still in scene
         if (objectBds.difference() > sceneBds.difference()) return;  // Skip if too wide for scene
 

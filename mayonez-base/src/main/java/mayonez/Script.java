@@ -40,12 +40,12 @@ public abstract class Script extends Component {
      * Destroy this component and free up system resources once the parent {@link GameObject} is destroyed.
      */
     final void destroy() {
-        destroyed = true;
         onDestroy();
-        gameObject = null;
+        super.destroy();
     }
 
     // Scene Callbacks
+
     /**
      * Custom user behavior for when this script or its game object is enabled.
      */

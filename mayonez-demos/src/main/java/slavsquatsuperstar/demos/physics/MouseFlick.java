@@ -1,10 +1,12 @@
-package mayonez.scripts.movement;
+package slavsquatsuperstar.demos.physics;
 
 import mayonez.math.Vec2;
-import mayonez.input.MouseInput;
+import mayonez.scripts.movement.MouseScript;
+import mayonez.scripts.movement.MoveMode;
 
 /**
- * Allows objects to be pushed around using the mouse.
+ * Allows objects to be given a velocity or impulse using the mouse. Holding the mouse on an object
+ * and dragging it sets the direction and strength of the flick.
  *
  * @author SlavSquatSuperstar
  */
@@ -26,14 +28,14 @@ public class MouseFlick extends MouseScript {
     public void onMouseDown() {
         if (activeInstance == null) {
             activeInstance = this;
-            lastMouse = MouseInput.getPosition();
+            lastMouse = getMousePos();
         }
     }
 
     @Override
     public void onMouseUp() {
         if (activeInstance == this) {
-            Vec2 input = getRawInput().clampLength(speed);
+            Vec2 input = getUserInput().clampLength(speed);
             switch (mode) {
                 case VELOCITY -> rb.addVelocity(input);
                 case IMPULSE -> rb.applyImpulse(input);
@@ -43,8 +45,8 @@ public class MouseFlick extends MouseScript {
     }
 
     @Override
-    protected Vec2 getRawInput() {
-        Vec2 dragDisplacement = MouseInput.getPosition().sub(lastMouse);
+    protected Vec2 getUserInput() {
+        Vec2 dragDisplacement = getMousePos().sub(lastMouse);
         return dragDisplacement.mul(inverted ? -1 : 1);
     }
 

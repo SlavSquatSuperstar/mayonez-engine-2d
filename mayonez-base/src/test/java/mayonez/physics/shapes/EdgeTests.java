@@ -1,8 +1,8 @@
 package mayonez.physics.shapes;
 
-import org.junit.jupiter.api.Test;
 import mayonez.math.Vec2;
 import mayonez.test.TestUtils;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -56,6 +56,24 @@ public class EdgeTests {
         Edge edge = new Edge(new Vec2(0, 1), new Vec2(5, 1));
         Edge segment = new Edge(new Vec2(6.5f, 1), new Vec2(0.5f, -2));
         assertEquals(edge.clipToSegment(segment), new Edge(new Vec2(0, 1), new Vec2(5, 1)));
+    }
+
+    // Lerp Methods
+
+    @Test
+    public void lerpSuccess() {
+        Edge edge = new Edge(new Vec2(0, 1), new Vec2(5, 1));
+        assertEquals(new Vec2(2, 1), edge.lerp(0.4f)); // middle
+        assertEquals(new Vec2(6, 1), edge.lerp(1.2f)); // past end
+        assertEquals(new Vec2(-5, 1), edge.lerp(-1)); // negative
+    }
+
+    @Test
+    public void invLerpSuccess() {
+        Edge edge = new Edge(new Vec2(0, 1), new Vec2(5, 1));
+        assertEquals(0.4f, edge.invLerp(new Vec2(2, 2))); // middle
+        assertEquals(1.2f, edge.invLerp(new Vec2(6, 1))); // past end
+        assertEquals(-1, edge.invLerp(new Vec2(-5, 1))); // negative
     }
 
     // Point vs Line

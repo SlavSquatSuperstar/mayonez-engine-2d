@@ -53,17 +53,17 @@ public class ThrustController extends Script {
 
         // Activate thrusters
         if (keyMovement != null) {
-            Vec2 input = keyMovement.getRawInput();
+            Vec2 input = keyMovement.getUserInput();
             for (Thruster t : thrusters) {
                 boolean shouldBrake = t.moveDir.faces(brakeDir) && rb.getSpeed() > 1e-3f; // Don't fire when moving very slow
                 t.setMoveEnabled(t.moveDir.faces(input) || shouldBrake);
             }
         }
         if (keyRotation != null) {
-            float input = keyRotation.getRawInput().x;
+            float turnInput = keyRotation.getUserInput().x;
             for (Thruster t : thrusters) {
-                boolean shouldBrake = t.moveDir.faces(brakeDir) && rb.getAngSpeed() > 1e-3f;
-                t.setTurnEnabled(t.turnDir.faces(input) || shouldBrake);
+                boolean shouldBrake = t.turnDir.faces(angBrakeDir) && rb.getAngSpeed() > 1e-3f;
+                t.setTurnEnabled(t.turnDir.faces(turnInput) || shouldBrake);
             }
         }
 

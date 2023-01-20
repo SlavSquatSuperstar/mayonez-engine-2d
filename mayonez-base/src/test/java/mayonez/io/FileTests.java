@@ -3,7 +3,6 @@ package mayonez.io;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -67,7 +66,7 @@ public class FileTests {
     }
 
     @Test
-    public void scanClasspathFolder() throws URISyntaxException, IOException {
+    public void scanClasspathFolder() {
         List<String> resources = Assets.scanResources("testassets");
         assertTrue(resources.size() > 0);
     }

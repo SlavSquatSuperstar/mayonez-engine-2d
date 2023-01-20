@@ -1,7 +1,6 @@
 package mayonez.scripts.movement;
 
 import mayonez.math.Vec2;
-import mayonez.input.MouseInput;
 
 /**
  * Allows objects to be picked up and moved using the mouse.
@@ -36,7 +35,7 @@ public class DragAndDrop extends MouseScript {
                 rb.setVelocity(new Vec2()); // Stop the object
                 rb.setAngVelocity(0);
             }
-            transform.move(getRawInput());
+            transform.move(getUserInput());
         }
     }
 
@@ -46,8 +45,8 @@ public class DragAndDrop extends MouseScript {
     }
 
     @Override
-    protected Vec2 getRawInput() {
-        return MouseInput.getPosition().sub(lastMouse).add(MouseInput.getDisplacement()).mul(inverted ? -1 : 1);
+    protected Vec2 getUserInput() {
+        return getMousePos().sub(lastMouse).add(getMouseDisp()).mul(inverted ? -1 : 1);
     }
 
     @Override

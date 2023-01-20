@@ -21,8 +21,8 @@ object Random {
      */
     @JvmStatic
     fun randomFloat(min: Float, max: Float): Float {
-        val range = Range(min, max)
-        return (Math.random() * (range.max - range.min)).toFloat() + range.min
+        val interval = Interval(min, max)
+        return (Math.random() * (interval.max - interval.min)).toFloat() + interval.min
     }
 
     /**
@@ -35,8 +35,8 @@ object Random {
      */
     @JvmStatic
     fun randomInt(min: Int, max: Int): Int {
-        val range = Range(min.toFloat(), max.toFloat())
-        return (Math.random() * (range.max - range.min + 1) + range.min).toInt()
+        val interval = Interval(min.toFloat(), max.toFloat())
+        return (Math.random() * (interval.max - interval.min + 1) + interval.min).toInt()
     }
 
     /**

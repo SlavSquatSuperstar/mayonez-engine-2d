@@ -35,6 +35,6 @@ public abstract class MovementScript extends Script {
      *
      * @return the input vector
      */
-    protected abstract Vec2 getRawInput();
+    protected abstract Vec2 getUserInput();
 
 }

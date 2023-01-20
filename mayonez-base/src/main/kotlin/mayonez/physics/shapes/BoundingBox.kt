@@ -1,6 +1,6 @@
 package mayonez.physics.shapes
 
-import mayonez.math.Range
+import mayonez.math.Interval
 import mayonez.math.Vec2
 
 /**
@@ -31,11 +31,11 @@ open class BoundingBox(private val center: Vec2, private val size: Vec2) :
     override val isAxisAligned: Boolean
         get() = true
 
-    val xRange: Range
-        get() = Range(min().x, max().x)
+    val xInterval: Interval
+        get() = Interval(min().x, max().x)
 
-    val yRange: Range
-        get() = Range(min().y, max().y)
+    val yInterval: Interval
+        get() = Interval(min().y, max().y)
 
     // Transformations
 

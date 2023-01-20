@@ -1,6 +1,6 @@
 package mayonez.physics.shapes
 
-import mayonez.math.Range
+import mayonez.math.Interval
 import mayonez.math.Vec2
 import kotlin.math.abs
 import kotlin.math.max
@@ -61,13 +61,13 @@ class Edge(val start: Vec2, val end: Vec2) : Shape() {
      */
     override fun center(): Vec2 = start.midpoint(end)
 
-    /**
-     * Clips an edge along a single plane and keeps one of the sub-segments.
-     *
-     * @param plane     a ray pointing towards this edge
-     * @param direction in which direction to keep the points
-     * @return the clipped edge
-     */
+//    /**
+//     * Clips an edge along a single plane and keeps one of the sub-segments.
+//     *
+//     * @param plane     a ray pointing towards this edge
+//     * @param direction in which direction to keep the points
+//     * @return the clipped edge
+//     */
 //    fun clipToPlane(plane: Ray, direction: Vec2): Edge {
 //        // Find edge intersection with plane
 //        val edge = Ray(start, toVector() / length)
@@ -101,7 +101,7 @@ class Edge(val start: Vec2, val end: Vec2) : Shape() {
         if (contact1 == null || contact2 == null) return Edge(start, end) // plane is parallel to line
 
         // Clip edge to new endpoints
-        val distances = Range((contact1 - start).dot(edge.direction), (contact2 - start).dot(edge.direction))
+        val distances = Interval((contact1 - start).dot(edge.direction), (contact2 - start).dot(edge.direction))
         val minDist = max(0f, distances.min)
         val maxDist = min(length, distances.max)
         return Edge(edge.getPoint(minDist), edge.getPoint(maxDist))
@@ -119,11 +119,31 @@ class Edge(val start: Vec2, val end: Vec2) : Shape() {
 //        return Edge(edge.getPoint(minDist), edge.getPoint(maxDist))
 //    }
 
+    // Lerp
+
+    /**
+     * Linearly interpolates (lerps) between the two endpoints, or finds the point on this line
+     * that is the given percentage of the distance between the start to the end.
+     *
+     * @param distance what percent to travel from the start
+     * @return the interpolated point
+     */
+    fun lerp(distance: Float): Vec2 = start + toVector() * distance
+
+    /**
+     * Takes a point on this line and calculates its percent distance along this line. If the point is
+     * not on this, its projection is used instead.
+     *
+     * @param point a point along this line
+     * @return the percent distance along the line
+     */
+    fun invLerp(point: Vec2): Float = (point - start).component(toVector()) / length
     // Bounds
 
     override fun boundingCircle(): Circle = Circle(center(), length * 0.5f)
 
-    override fun boundingRectangle(): BoundingBox = BoundingBox(center(), Vec2(abs(end.x - start.x), abs(end.y - start.y)))
+    override fun boundingRectangle(): BoundingBox =
+        BoundingBox(center(), Vec2(abs(end.x - start.x), abs(end.y - start.y)))
 
     // Edge vs Point
 

@@ -50,7 +50,7 @@ class Triangle(v1: Vec2, v2: Vec2, v3: Vec2) : Polygon(v1, v2, v3) {
     override fun center(): Vec2 = (vertices[0] + vertices[1] + vertices[2]) / 3f
 
     // Backing field for angular mass function
-    var polarMoment: Float? = null
+    private var polarMoment: Float? = null
 
     /**
      * The centroidal moment of inertia of the triangle, equal to 1/18*m(b^2 + h^2 + a(a - b)).

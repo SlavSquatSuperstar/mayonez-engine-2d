@@ -23,7 +23,8 @@ public class GameObject {
     // Object Information and State
     final long objectID; // UUID for this game object
     public final String name; // object name, may be duplicate
-    public final Transform transform; // TODO combine transform and z-index
+    public final Transform transform; // transform in world
+    final Transform localTransform; // transform offset from parent
     private Scene scene;
     private boolean destroyed;
     private int zIndex; // controls 3D "layering" of objects
@@ -35,6 +36,8 @@ public class GameObject {
 
     // Connected Objects
     private GameObject parent; // parent object
+    private final List<GameObject> children; // child (nested) objects
+
     public GameObject(String name) {
         this(name, new Vec2());
     }
@@ -51,6 +54,7 @@ public class GameObject {
         objectID = objectCounter++;
         this.name = name == null ? "GameObject" : name;
         this.transform = transform;
+        localTransform = new Transform();
         this.zIndex = zIndex;
         destroyed = false;
         tags = new HashSet<>(3);
@@ -59,6 +63,7 @@ public class GameObject {
         updateOrder = null;
 //        changesToObject = new LinkedList<>();
         parent = null;
+        children = new LinkedList<>();
     }
 
     // Game Loop Methods
@@ -68,6 +73,7 @@ public class GameObject {
      */
     public final void start() {
         init();
+        children.forEach(getScene()::addObject);
         setUpdateOrder(Component.class, MovementScript.class, Script.class, Collider.class, Sprite.class);
         components.forEach(Component::start);
     }
@@ -78,11 +84,16 @@ public class GameObject {
      * @param dt seconds since the last frame
      */
     public final void update(float dt) {
+        // Combine with parent transform
+//        Transform oldXf = transform.copy();
+//        if (parent != null) transform.set(parent.transform.combine(localTransform));
+        // Update
         components.forEach(c -> {
             if (c.isEnabled()) c.update(dt);
         });
         onUserUpdate(dt);
 //        while (!changesToObject.isEmpty()) changesToObject.poll().onReceive();
+//        transform.set(oldXf); // Reset transform
     }
 
     // User Defined Methods
@@ -180,6 +191,48 @@ public class GameObject {
         return (i > -1) ? i : updateOrder.size(); // just update last
     }
 
+    // Child Object Methods
+
+    /**
+     * Adds a child GameObject, connecting its transform to this object's transform and setting its parent as this.
+     *
+     * @param child the child object
+     */
+    public void addChild(GameObject child) {
+        children.add(child.setParent(this));
+        if (scene != null) scene.addObject(child);
+    }
+
+//    public void removeChild(GameObject child) {
+//        children.remove(child.setParent(null));
+//        if (scene != null) scene.addObject(child);
+//    }
+
+    /**
+     * Finds the child GameObject at the given index, or null if the index is invalid.
+     * The index is the same as the order the child was added.
+     *
+     * @param index the child index
+     * @return the child object
+     */
+    public GameObject getChild(int index) {
+        if (index < 0 || index >= children.size()) return null;
+        else return children.get(index);
+    }
+
+    /**
+     * Finds the first child GameObject with the given name, or null if none exists.
+     *
+     * @param name the child name
+     * @return the child object
+     */
+    public GameObject getChild(String name) {
+        for (GameObject child : children) {
+            if (child.name.equals(name)) return child;
+        }
+        return null;
+    }
+
     // Callback Methods
 
     /**
@@ -239,6 +292,8 @@ public class GameObject {
 
     final GameObject setParent(GameObject parent) {
         this.parent = parent;
+        if (parent != null) localTransform.set(transform);
+        else localTransform.set(new Transform());
         return this;
     }
 
@@ -264,7 +319,7 @@ public class GameObject {
         else return zIndex;
     }
 
-    public GameObject setZIndex(int zIndex) { // can't change while scene is running in GL yet
+    public GameObject setZIndex(int zIndex) {
         this.zIndex = zIndex;
         return this;
     }

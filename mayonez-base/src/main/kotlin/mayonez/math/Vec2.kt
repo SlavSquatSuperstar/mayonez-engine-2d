@@ -1,8 +1,8 @@
 package mayonez.math
 
-import org.joml.Vector2f
 import mayonez.annotations.Mutating
 import mayonez.math.FloatMath.equals
+import org.joml.Vector2f
 import java.util.*
 import kotlin.math.*
 
@@ -61,6 +61,7 @@ class Vec2 constructor(
      * @return a new vector with the same components
      */
     operator fun unaryPlus(): Vec2 = Vec2(this)
+    fun copy(): Vec2 = Vec2(this)
 
     /**
      * Negates this vector.

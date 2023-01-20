@@ -8,8 +8,8 @@ import mayonez.math.Vec2;
 import mayonez.physics.Rigidbody;
 import mayonez.physics.colliders.BoxCollider;
 import mayonez.scripts.KeepInScene;
-import slavsquatsuperstar.demos.spacegame.scripts.combat.Damageable;
-import slavsquatsuperstar.demos.spacegame.scripts.combat.FireProjectile;
+import mayonez.scripts.combat.Damageable;
+import mayonez.scripts.combat.FireProjectile;
 import slavsquatsuperstar.demos.spacegame.scripts.SpawnManager;
 
 /**

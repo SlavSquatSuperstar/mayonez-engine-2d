@@ -48,6 +48,6 @@ object IntMath {
      * @return a number within the bounds
      */
     @JvmStatic
-    fun clamp(value: Int, min: Int, max: Int): Int = Range(min.toFloat(), max.toFloat()).clamp(value.toFloat()).toInt()
+    fun clamp(value: Int, min: Int, max: Int): Int = Interval(min.toFloat(), max.toFloat()).clamp(value.toFloat()).toInt()
 
 }

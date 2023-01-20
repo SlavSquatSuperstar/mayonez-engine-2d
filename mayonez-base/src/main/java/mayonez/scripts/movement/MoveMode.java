@@ -7,10 +7,6 @@ package mayonez.scripts.movement;
  */
 public enum MoveMode {
     /**
-     * Lock the object's position to the mouse pointer.
-     */
-    FOLLOW_MOUSE(false),
-    /**
      * Change the object's transform position or rotation.
      */
     POSITION(false),

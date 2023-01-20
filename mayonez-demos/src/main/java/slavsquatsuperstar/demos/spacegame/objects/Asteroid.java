@@ -9,7 +9,7 @@ import mayonez.math.Vec2;
 import mayonez.physics.Rigidbody;
 import mayonez.physics.colliders.BallCollider;
 import mayonez.scripts.KeepInScene;
-import slavsquatsuperstar.demos.spacegame.scripts.combat.Damageable;
+import mayonez.scripts.combat.Damageable;
 import slavsquatsuperstar.demos.spacegame.scripts.SpawnManager;
 
 /**

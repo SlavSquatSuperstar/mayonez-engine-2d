@@ -36,6 +36,7 @@ module mayonez.base {
     exports mayonez.physics.resolution;
     exports mayonez.physics.shapes;
     exports mayonez.scripts;
+    exports mayonez.scripts.combat;
     exports mayonez.scripts.movement;
     exports mayonez.util;
 }

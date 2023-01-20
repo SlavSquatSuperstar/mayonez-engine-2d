@@ -26,7 +26,7 @@ public class KeyMovement extends MovementScript {
 
     @Override
     public void update(float dt) {
-        Vec2 input = getRawInput().unit().mul(speed); // Normalize so don't move faster diagonally
+        Vec2 input = getUserInput().unit().mul(speed); // Normalize so don't move faster diagonally
         if (objectAligned) input = input.rotate(transform.getRotation()); // Align to object space if enabled
 
         switch (mode) {
@@ -43,7 +43,7 @@ public class KeyMovement extends MovementScript {
     }
 
     @Override
-    public Vec2 getRawInput() {
+    public Vec2 getUserInput() {
         return new Vec2(KeyInput.getAxis(xAxis), KeyInput.getAxis(yAxis));
     }
 

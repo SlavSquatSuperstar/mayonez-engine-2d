@@ -1,14 +1,13 @@
 package slavsquatsuperstar.demos.geometrydash.ui;
 
-import mayonez.math.Vec2;
 import mayonez.GameObject;
 import mayonez.Transform;
 import mayonez.annotations.ExperimentalFeature;
 import mayonez.graphics.sprites.Sprite;
 import mayonez.graphics.sprites.SpriteSheet;
-import mayonez.input.MouseInput;
 import mayonez.io.image.JTexture;
 import mayonez.io.image.Texture;
+import mayonez.math.Vec2;
 import mayonez.physics.colliders.BoxCollider;
 import mayonez.scripts.movement.MouseScript;
 
@@ -42,11 +41,6 @@ public class UIButton extends GameObject {
         addComponent(onSprite = Sprite.create(onButton).setEnabled(false));
         addComponent(Sprite.create(icon).setSpriteTransform(Transform.scaleInstance(new Vec2(0.8f)))); // no way to scale though
         addComponent(new MouseScript() {
-            @Override
-            protected Vec2 getRawInput() {
-                return MouseInput.getPosition();
-            }
-
             @Override
             public void onMouseDown() {
                 selected = !selected;

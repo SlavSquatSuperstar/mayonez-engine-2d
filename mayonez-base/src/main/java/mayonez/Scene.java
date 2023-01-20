@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Queue;
 import java.util.*;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 /**
  * A collection of {@link GameObject}s representing an in-game world.
@@ -252,18 +251,6 @@ public abstract class Scene {
     }
 
     /**
-     * Finds all objects in the scene with the specified class.
-     *
-     * @param cls a {@link GameObject} subclass
-     * @param <T> the object type
-     * @return the list of objects
-     */
-    @SuppressWarnings({"unchecked"})
-    public <T extends GameObject> List<T> getObjects(Class<T> cls) {
-        return objects.stream().filter(o -> cls != null && cls.isInstance(o)).map(o -> (T) o).collect(Collectors.toList());
-    }
-
-    /**
      * Counts the number of objects in the scene.
      *
      * @return the amount of objects
@@ -385,7 +372,7 @@ public abstract class Scene {
         );
     }
 
-    // Helper Interface
+    // Helper Class
 
     /**
      * Allows objects to be dynamically added and removed from the scene.

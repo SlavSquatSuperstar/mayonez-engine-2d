@@ -35,6 +35,9 @@ public class Timer extends Script {
 
     // Game Loop methods
 
+    /**
+     * Automatically start counting down once the scene is started.
+     */
     @Override
     public void start() {
         started = true;

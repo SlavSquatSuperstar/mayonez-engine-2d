@@ -23,12 +23,14 @@ import java.util.ArrayList;
 public class SpaceGameScene extends Scene {
 
     private final ArrayList<Pair<Shape, Color>> backgroundObjects;
-    private final int numStars;
+    private final int numEnemies, numObstacles, numStars;
 
     public SpaceGameScene(String name) {
         super(name, Preferences.getScreenWidth() * 2, Preferences.getScreenHeight() * 2, 32f);
         setBackground(Colors.JET_BLACK);
         backgroundObjects = new ArrayList<>();
+        numEnemies = 0;
+        numObstacles = 0;
         numStars = 750;
     }
 
@@ -45,13 +47,13 @@ public class SpaceGameScene extends Scene {
             protected void init() {
                 SpawnManager enemySpawner;
                 SpawnManager obstacleSpawner;
-                addComponent(enemySpawner = new SpawnManager(6, 5) {
+                addComponent(enemySpawner = new SpawnManager(numEnemies, 5) {
                     @Override
                     public GameObject createSpawnedObject() {
                         return new EnemyShip("Enemy Spaceship", "assets/textures/spacegame/spaceship2.png", this);
                     }
                 });
-                addComponent(obstacleSpawner = new SpawnManager(3, 20) {
+                addComponent(obstacleSpawner = new SpawnManager(numObstacles, 20) {
                     @Override
                     public GameObject createSpawnedObject() {
                         return new Asteroid("Asteroid", this);

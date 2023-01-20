@@ -25,14 +25,11 @@ public abstract class Component {
     protected Transform transform; // use blank transform in case no parent
 
     private boolean enabled; // whether this component is being updated
-    boolean destroyed; // if this component has been destroyed
-    // TODO replace with gameObject == null?
 
     protected Component() {
         componentID = componentCounter++;
         transform = new Transform();
         enabled = true;
-        destroyed = false;
     }
 
     // Game Loop Methods
@@ -55,15 +52,10 @@ public abstract class Component {
      * Destroy this component and free up system resources once the parent {@link GameObject} is destroyed.
      */
     void destroy() {
-        destroyed = true;
         gameObject = null;
     }
 
     // Getters and Setters
-
-    public boolean isDestroyed() {
-        return destroyed;
-    }
 
     /**
      * Whether this component should be updated.
@@ -71,7 +63,7 @@ public abstract class Component {
      * @return if this component is enabled and not destroyed
      */
     public final boolean isEnabled() {
-        return enabled && !destroyed;
+        return enabled && gameObject != null;
     }
 
     @SuppressWarnings({"unchecked"})

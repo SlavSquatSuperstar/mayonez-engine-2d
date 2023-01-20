@@ -16,7 +16,6 @@ import mayonez.physics.colliders.Collider;
 import mayonez.physics.colliders.PolygonCollider;
 import mayonez.scripts.KeepInScene;
 import mayonez.scripts.movement.DragAndDrop;
-import mayonez.scripts.movement.MouseFlick;
 import mayonez.scripts.movement.MoveMode;
 
 import java.awt.*;

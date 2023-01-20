@@ -1,7 +1,7 @@
 package mayonez.scripts;
 
 import mayonez.Script;
-import mayonez.math.Range;
+import mayonez.math.Interval;
 
 /**
  * A script that tracks a quantity, manually increments it, and can be reset.
@@ -10,7 +10,7 @@ import mayonez.math.Range;
  */
 public class Counter extends Script {
 
-    private Range interval; // min and max
+    private Interval interval; // min and max
     private float value; // current value
 
     /**
@@ -21,7 +21,7 @@ public class Counter extends Script {
      * @param startValue where the counter should begin
      */
     public Counter(float min, float max, float startValue) {
-        this.interval = new Range(min, max);
+        this.interval = new Interval(min, max);
         value = startValue;
     }
 
@@ -59,7 +59,7 @@ public class Counter extends Script {
      * @param max the upper bound
      */
     public void setInterval(float min, float max) {
-        this.interval = new Range(min, max);
+        this.interval = new Interval(min, max);
     }
 
     /**

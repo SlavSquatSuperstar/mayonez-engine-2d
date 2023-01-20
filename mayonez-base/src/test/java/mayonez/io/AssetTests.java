@@ -30,8 +30,6 @@ public class AssetTests {
     public void scanResourcesAddsToStorage() {
         assertTrue(Assets.hasAsset("testassets/images/mario.png"));
         assertFalse(Assets.hasAsset("testassets/luigi.png"));
-        assertTrue(Assets.hasAsset("testassets/images/mario.png"));
-        assertFalse(Assets.hasAsset("testassets/luigi.png"));
         assertFalse(Assets.hasAsset("mario.png"));
     }
 
@@ -75,12 +73,12 @@ public class AssetTests {
     }
 
     @Test
-    public void getValidAssetReturnsNull() {
+    public void validAssetNotNull() {
         assertNotNull(Assets.getAsset("testassets/images/mario.png"));
     }
 
     @Test
-    public void getInvalidAssetReturnsNull() {
+    public void invalidAssetNull() {
         assertNull(Assets.getAsset("testassets/luigi.png"));
     }
 
@@ -93,9 +91,7 @@ public class AssetTests {
 
     @Test
     public void getResourceInputStreamFail() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            getFileFromResourceAsStream("testassets/luigi.png");
-        });
+        assertThrows(IllegalArgumentException.class, () -> getFileFromResourceAsStream("testassets/luigi.png"));
     }
 
     private static InputStream getFileFromResourceAsStream(String fileName) {

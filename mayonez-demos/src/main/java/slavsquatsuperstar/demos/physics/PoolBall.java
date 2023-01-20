@@ -10,7 +10,6 @@ import mayonez.physics.Rigidbody;
 import mayonez.physics.colliders.BallCollider;
 import mayonez.scripts.KeepInScene;
 import mayonez.scripts.movement.DragAndDrop;
-import mayonez.scripts.movement.MouseFlick;
 import mayonez.scripts.movement.MoveMode;
 
 /**

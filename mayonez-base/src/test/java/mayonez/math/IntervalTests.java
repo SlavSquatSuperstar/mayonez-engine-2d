@@ -4,19 +4,18 @@ import org.junit.jupiter.api.Test;
 
 import static mayonez.test.TestUtils.assertFloatEquals;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 
 /**
- * Unit tests for the {@link mayonez.math.Range} class.
+ * Unit tests for the {@link mayonez.math.Interval} class.
  *
  * @author SlavSquatSuperstar
  */
-public class RangeTests {
+public class IntervalTests {
 
     @Test
     public void rangeCorrectMinMax() {
-        Range r1 = new Range(2, 8);
-        Range r2 = new Range(8, 2);
+        Interval r1 = new Interval(2, 8);
+        Interval r2 = new Interval(8, 2);
         assertFloatEquals(2f, r1.min);
         assertFloatEquals(8f, r1.max);
         assertFloatEquals(2f, r2.min);
@@ -25,18 +24,18 @@ public class RangeTests {
 
     @Test
     public void rangeEquals() {
-        Range r1 = new Range(-3, 4);
-        Range r2 = new Range(-3, 4);
-        Range r3 = new Range(-4, 3);
+        Interval r1 = new Interval(-3, 4);
+        Interval r2 = new Interval(-3, 4);
+        Interval r3 = new Interval(-4, 3);
         assertEquals(r1, r2);
         assertNotEquals(r1, r3);
     }
 
     @Test
     public void rangeContainsRange() {
-        Range r1 = new Range(0, 5);
-        Range r2 = new Range(-2, 7);
-        Range r3 = new Range(1, 6);
+        Interval r1 = new Interval(0, 5);
+        Interval r2 = new Interval(-2, 7);
+        Interval r3 = new Interval(1, 6);
         assertTrue(r2.contains(r1)); // contains
         assertFalse(r1.contains(r2)); // not contains
         assertFalse(r1.contains(r3)); // overlap
@@ -83,6 +82,24 @@ public class RangeTests {
         assertFalse(FloatMath.inRange(11, 1, 10));
         assertFalse(FloatMath.inRange(0, -10, -1));
         assertFalse(FloatMath.inRange(6, -5, 5));
+    }
+
+    // Lerp Methods
+
+    @Test
+    public void lerpSuccess() {
+        Interval range = new Interval(0, 5);
+        assertEquals(2, range.lerp(0.4f)); // middle
+        assertEquals(6, range.lerp(1.2f)); // past end
+        assertEquals(-4, range.lerp(-0.8f)); // negative
+    }
+
+    @Test
+    public void invLerpSuccess() {
+        Interval range = new Interval(0, 5);
+        assertEquals(0.4f, range.invLerp(2)); // middle
+        assertEquals(1.2f, range.invLerp(6)); // past end
+        assertEquals(-0.8f, range.invLerp(-4)); // negative
     }
 
 }

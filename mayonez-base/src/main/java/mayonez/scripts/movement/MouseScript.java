@@ -16,7 +16,7 @@ public abstract class MouseScript extends MovementScript {
     protected Collider collider; // Reference to object collider
 
     // Script Info
-    protected boolean inverted; // Moving the mouse will move the object in the opposite way
+    protected boolean inverted; // If moving the mouse should move the object in the opposite way
     protected String button;
 
     // Internal Script
@@ -24,7 +24,7 @@ public abstract class MouseScript extends MovementScript {
     private boolean mouseHeld;
 
     public MouseScript() {
-        this("left mouse", MoveMode.FOLLOW_MOUSE, 0);
+        this("left mouse", MoveMode.POSITION, 0);
     }
 
     public MouseScript(MoveMode mode, float speed) {
@@ -64,6 +64,29 @@ public abstract class MouseScript extends MovementScript {
 
     // Input Helper Methods
 
+    /**
+     * Query the mouse position.
+     *
+     * @return the mouse position
+     */
+    protected final Vec2 getMousePos() {
+        return MouseInput.getPosition();
+    }
+
+    /**
+     * Query the mouse displacement.
+     *
+     * @return the mouse displacement
+     */
+    protected final Vec2 getMouseDisp() {
+        return MouseInput.getDisplacement();
+    }
+
+    @Override
+    protected Vec2 getUserInput() {
+        return getMousePos();
+    }
+
     // TODO Use MouseInput collision detection instead
     protected boolean isMouseOnObject() {
         // Using last mouse position is more reliable when mouse is moving fast
@@ -75,17 +98,20 @@ public abstract class MouseScript extends MovementScript {
     /**
      * What to do when mouse pointer changes location.
      */
-    public void onMouseMove() {}
+    public void onMouseMove() {
+    }
 
     /**
      * What to do when the specified button is pressed on this object.
      */
-    public void onMouseDown() {}
+    public void onMouseDown() {
+    }
 
     /**
      * What to do when the specified button is released.
      */
-    public void onMouseUp() {}
+    public void onMouseUp() {
+    }
 
     /**
      * If the specified mouse button is held down.

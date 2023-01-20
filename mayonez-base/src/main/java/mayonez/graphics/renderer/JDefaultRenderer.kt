@@ -128,10 +128,10 @@ class JDefaultRenderer : SceneRenderer, DebugRenderer {
      */
     private fun createBatches() {
         batches.clear()
-        objects.forEach { r: JRenderable -> // Add shapes
+        objects.forEach { r: JRenderable -> // Add objects
             if (r.isEnabled) batches.add(r)
         }
-        if (shapes.isNotEmpty()) { // Add objects
+        if (shapes.isNotEmpty()) { // Add shapes
             shapes.forEach { s: DebugShape -> batches.add(s) }
             shapes.clear()
         }

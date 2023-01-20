@@ -180,7 +180,7 @@ object FloatMath {
      * @return a number within the bounds
      */
     @JvmStatic
-    fun clamp(value: Float, min: Float, max: Float): Float = Range(min, max).clamp(value)
+    fun clamp(value: Float, min: Float, max: Float): Float = Interval(min, max).clamp(value)
 
     /**
      * Checks whether a number is within a provided range, including the bounds.
@@ -191,7 +191,7 @@ object FloatMath {
      * @return if the value is within range
      */
     @JvmStatic
-    fun inRange(value: Float, min: Float, max: Float): Boolean = value in Range(min, max)
+    fun inRange(value: Float, min: Float, max: Float): Boolean = value in Interval(min, max)
 
     // Rounding Methods
 

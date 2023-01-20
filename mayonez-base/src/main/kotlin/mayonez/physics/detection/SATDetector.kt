@@ -1,7 +1,7 @@
 package mayonez.physics.detection
 
 import mayonez.math.FloatMath
-import mayonez.math.Range
+import mayonez.math.Interval
 import mayonez.math.Vec2
 import mayonez.physics.shapes.Circle
 import mayonez.physics.shapes.Polygon
@@ -93,20 +93,20 @@ class SATDetector : CollisionDetector {
             }
         }
 
-        private fun Polygon.projectOnAxis(axis: Vec2): Range { // positive is in axis direction
+        private fun Polygon.projectOnAxis(axis: Vec2): Interval { // positive is in axis direction
             val projections = FloatArray(this.numVertices) { this.vertices[it].dot(axis) }
-            return Range(FloatMath.min(*projections), FloatMath.max(*projections))
+            return Interval(FloatMath.min(*projections), FloatMath.max(*projections))
         }
 
         /**
          * If two intervals overlap each other.
          */
-        private fun Range.overlaps(other: Range): Boolean = (this.min <= other.max) && (this.max >= other.min)
+        private fun Interval.overlaps(other: Interval): Boolean = (this.min <= other.max) && (this.max >= other.min)
 
         /**
          * How much two intervals overlap each other. Non-negative result if they overlap and undefined if they do not.
          */
-        private fun Range.getOverlap(other: Range): Float {
+        private fun Interval.getOverlap(other: Interval): Float {
             return min(other.max - this.min, this.max - other.min)
         }
 

@@ -7,6 +7,9 @@ import mayonez.physics.colliders.BoxCollider;
 import mayonez.physics.colliders.Collider;
 import mayonez.physics.shapes.Circle;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -79,10 +82,15 @@ public class ClassTests {
         scene.start();
         assertNull(scene.getObject("Obj1"));
         assertEquals(scene.getObject("obj1").name, "obj1");
-        assertEquals(scene.getObjects(GameObject.class).get(1).getClass(), GameObject.class);
-        assertEquals(scene.getObjects(TestObject.class).get(0).getClass(), TestObject.class);
+        assertEquals(getObjects(scene, GameObject.class).get(1).getClass(), GameObject.class);
+        assertEquals(getObjects(scene, TestObject.class).get(0).getClass(), TestObject.class);
         assertEquals(scene.getObjects().get(4).getClass(), TestObject.class);
 
+    }
+
+    @SuppressWarnings({"unchecked"})
+    private static <T extends GameObject> List<T> getObjects(Scene scene, Class<T> cls) {
+        return scene.getObjects().stream().filter(o -> cls != null && cls.isInstance(o)).map(o -> (T) o).collect(Collectors.toList());
     }
     
     private static class TestObject extends GameObject {
