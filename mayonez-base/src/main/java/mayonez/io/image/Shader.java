@@ -9,7 +9,6 @@ import org.joml.*;
 import org.lwjgl.BufferUtils;
 
 import java.io.IOException;
-import java.nio.FloatBuffer;
 
 import static org.lwjgl.opengl.GL11.GL_FALSE;
 import static org.lwjgl.opengl.GL20.*;
@@ -36,15 +35,15 @@ public class Shader extends TextAsset {
     private void parseShader() {
         try {
             // Read the shader file
-            String source = super.read();
-            String[] shaders = source.split("(#type)( )+"); // split into vertex and fragment
+            var source = super.read();
+            var shaders = source.split("(#type)( )+"); // split into vertex and fragment
 
             // Parse the shader file
-            for (int i = 1; i < shaders.length; i++) {
+            for (var i = 1; i < shaders.length; i++) {
                 // Find the first pattern after #type 'pattern'
-                String shader = shaders[i];
-                int endLn = shader.indexOf("\n");
-                String pattern = shader.substring(0, endLn).trim();
+                var shader = shaders[i];
+                var endLn = shader.indexOf("\n");
+                var pattern = shader.substring(0, endLn).trim();
 
                 shader = shader.substring(endLn + 1);
                 switch (pattern) {
@@ -60,13 +59,12 @@ public class Shader extends TextAsset {
 
     private void compileShader() {
         // Compile Vertex Shader
-        int vertexID = glCreateShader(GL_VERTEX_SHADER);
+        var vertexID = glCreateShader(GL_VERTEX_SHADER);
         glShaderSource(vertexID, vertexSrc);
         glCompileShader(vertexID);
 
         // Check for compile errors
-        int success = glGetShaderi(vertexID, GL_COMPILE_STATUS);
-        if (success == GL_FALSE) {
+        if (glGetShaderi(vertexID, GL_COMPILE_STATUS) == GL_FALSE) {
             Logger.error("OpenGL: Could not compile \"%s\" vertex shader", getFilename());
             Logger.error("OpenGL: " + glGetShaderInfoLog(vertexID));
             Mayonez.stop(1);
@@ -74,12 +72,11 @@ public class Shader extends TextAsset {
         Logger.debug("OpenGL: Compiled \"%s\" vertex shader", getFilename());
 
         // Repeat for Fragment Shader
-        int fragmentID = glCreateShader(GL_FRAGMENT_SHADER);
+        var fragmentID = glCreateShader(GL_FRAGMENT_SHADER);
         glShaderSource(fragmentID, fragmentSrc);
         glCompileShader(fragmentID);
 
-        success = glGetShaderi(fragmentID, GL_COMPILE_STATUS);
-        if (success == GL_FALSE) {
+        if (glGetShaderi(fragmentID, GL_COMPILE_STATUS) == GL_FALSE) {
             Logger.error("OpenGL: Could not compile \"defaultshader.glsl\" fragment shader");
             Logger.error("OpenGL: " + glGetShaderInfoLog(fragmentID));
             Mayonez.stop(1);
@@ -92,8 +89,7 @@ public class Shader extends TextAsset {
         glAttachShader(shaderID, fragmentID);
         glLinkProgram(shaderID);
 
-        success = glGetProgrami(shaderID, GL_LINK_STATUS);
-        if (success == GL_FALSE) {
+        if (glGetProgrami(shaderID, GL_LINK_STATUS) == GL_FALSE) {
             Logger.error("OpenGL: Could not link shader file \"%s\"", getFilename());
             Logger.error("OpenGL: " + glGetProgramInfoLog(shaderID));
             Mayonez.stop(1);
@@ -150,13 +146,13 @@ public class Shader extends TextAsset {
     }
 
     public void uploadMat3(String varName, Matrix3f mat) {
-        FloatBuffer matBuffer = BufferUtils.createFloatBuffer(9);
+        var matBuffer = BufferUtils.createFloatBuffer(9);
         mat.get(matBuffer);
         glUniformMatrix4fv(uploadVariable(varName), false, matBuffer);
     }
 
     public void uploadMat4(String varName, Matrix4f mat) {
-        FloatBuffer matBuffer = BufferUtils.createFloatBuffer(16);
+        var matBuffer = BufferUtils.createFloatBuffer(16);
         mat.get(matBuffer); // Compress matrix into 16x1 array
         glUniformMatrix4fv(uploadVariable(varName), false, matBuffer);
     }

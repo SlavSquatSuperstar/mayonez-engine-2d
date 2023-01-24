@@ -198,7 +198,7 @@ public abstract class Scene {
      */
     public final void addObject(GameObject obj) {
         if (obj == null) return;
-        SceneChange addObject = new SceneChange(obj, o -> {
+        var addObject = new SceneChange(obj, o -> {
             objects.add(o.setScene(this));
             o.start(); // add components first so renderer and physics can access it
             if (started) { // dynamic add
@@ -218,7 +218,7 @@ public abstract class Scene {
      */
     public final void removeObject(GameObject obj) {
         if (obj == null) return;
-        SceneChange removeObject = new SceneChange(obj, o -> {
+        var removeObject = new SceneChange(obj, o -> {
             objects.remove(o);
             renderer.removeObject(o);
             physics.removeObject(o);
@@ -235,8 +235,8 @@ public abstract class Scene {
      * @return the object
      */
     public GameObject getObject(String name) {
-        for (GameObject o : objects) {
-            if (o.name.equals(name)) return o;
+        for (var obj : objects) {
+            if (obj.name.equals(name)) return obj;
         }
         return null;
     }

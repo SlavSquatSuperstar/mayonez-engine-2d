@@ -19,8 +19,8 @@ public abstract sealed class SpriteSheet permits JSpriteSheet, GLSpriteSheet {
     public abstract int numSprites();
 
     public Sprite[] toSpriteArray() {
-        Sprite[] sprites = new Sprite[numSprites()];
-        for (int i = 0; i < sprites.length; i++) sprites[i] = getSprite(i);
+        var sprites = new Sprite[numSprites()];
+        for (var i = 0; i < sprites.length; i++) sprites[i] = getSprite(i);
         return sprites;
     }
 
@@ -37,11 +37,8 @@ public abstract sealed class SpriteSheet permits JSpriteSheet, GLSpriteSheet {
      * @return a sprite sheet
      */
     public static SpriteSheet create(String filename, int spriteWidth, int spriteHeight, int numSprites, int spacing) {
-        if (Mayonez.getUseGL()) {
-            return new GLSpriteSheet(filename, spriteWidth, spriteHeight, numSprites, spacing);
-        } else {
-            return new JSpriteSheet(filename, spriteWidth, spriteHeight, numSprites, spacing);
-        }
+        if (Mayonez.getUseGL()) return new GLSpriteSheet(filename, spriteWidth, spriteHeight, numSprites, spacing);
+        else return new JSpriteSheet(filename, spriteWidth, spriteHeight, numSprites, spacing);
     }
 
 }

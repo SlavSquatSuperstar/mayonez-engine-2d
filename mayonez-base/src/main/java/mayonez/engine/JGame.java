@@ -19,8 +19,8 @@ public final class JGame extends GameEngine {
     }
 
 //    public boolean isFullScreen() {
-//        GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
-//        GraphicsDevice device = env.getDefaultScreenDevice();
+//        var env = GraphicsEnvironment.getLocalGraphicsEnvironment();
+//        var device = env.getDefaultScreenDevice();
 //        return device.getFullScreenWindow() != null;
 //    }
 

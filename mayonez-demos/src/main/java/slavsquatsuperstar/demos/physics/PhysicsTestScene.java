@@ -1,7 +1,6 @@
 package slavsquatsuperstar.demos.physics;
 
 import mayonez.*;
-import mayonez.graphics.Color;
 import mayonez.graphics.Colors;
 import mayonez.graphics.sprites.ShapeSprite;
 import mayonez.input.KeyInput;
@@ -72,11 +71,11 @@ public class PhysicsTestScene extends Scene {
     @Override
     public void onUserRender(Graphics2D g2) {
         // Draw center, velocity, direction vector
-        for (GameObject o : getObjects()) {
-            Collider col = o.getComponent(Collider.class);
-            ShapeSprite spr = o.getComponent(ShapeSprite.class);
+        for (var obj : getObjects()) {
+            var col = obj.getComponent(Collider.class);
+            var spr = obj.getComponent(ShapeSprite.class);
             if (col != null && spr != null) {
-                Color color = spr.color;
+                var color = spr.color;
                 if (color != null && !col.isStatic()) {
                     DebugDraw.drawPoint(col.center(), Colors.BLACK);
                     DebugDraw.drawVector(col.center(), col.getRigidbody().getVelocity().mul(0.1f), color);
@@ -87,12 +86,13 @@ public class PhysicsTestScene extends Scene {
     }
 
     // Helper Methods
+    // TODO make prefab class
 
     protected final GameObject createBall(Vec2 size, Vec2 position, PhysicsMaterial material) {
         return new GameObject("Ball", position) {
             @Override
             protected void init() {
-                Collider circle = new BallCollider(size);
+                var circle = new BallCollider(size);
                 addComponent(circle);
                 addComponent(new ShapeSprite(Colors.BLUE, false));
                 addComponent(new Rigidbody(circle.getMass(DENSITY)).setMaterial(material));
@@ -108,7 +108,7 @@ public class PhysicsTestScene extends Scene {
             @Override
             protected void init() {
                 transform.rotate(rotation);
-                Collider box = new BoxCollider(size);
+                var box = new BoxCollider(size);
                 addComponent(box);
                 addComponent(new ShapeSprite(Colors.ORANGE, false));
                 addComponent(new Rigidbody(box.getMass(DENSITY)).setMaterial(material));
@@ -158,7 +158,7 @@ public class PhysicsTestScene extends Scene {
                     private float lifetime;
                     @Override
                     public void start() {
-                        lifetime = Random.randomFloat(8f, 12f);
+                        lifetime = Random.randomFloat(15f, 20f);
                     }
 
                     @Override

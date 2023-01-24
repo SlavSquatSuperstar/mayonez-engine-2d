@@ -16,9 +16,9 @@ public class TextIO {
      * @return the text from the file
      */
     public static String readText(String path) {
-        try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
-            StringBuilder input = new StringBuilder();
-            for (String textLine = reader.readLine(); textLine != null; textLine = reader.readLine())
+        try (var reader = new BufferedReader(new FileReader(path))) {
+            var input = new StringBuilder();
+            for (var textLine = reader.readLine(); textLine != null; textLine = reader.readLine())
                 input.append(textLine).append("\n");
             System.out.println("Read successful");
             return input.toString();
@@ -39,8 +39,8 @@ public class TextIO {
      * @param text the text to save
      */
     public static void saveText(String path, String text) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(path))) {
-            for (String line : text.split("\n")) {
+        try (var writer = new BufferedWriter(new FileWriter(path))) {
+            for (var line : text.split("\n")) {
                 writer.write(line);
                 writer.newLine();
             }
@@ -61,8 +61,8 @@ public class TextIO {
      * @param text the text to save
      */
     public static void appendText(String path, String text) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(path))) {
-            for (String line : text.split("\n")) {
+        try (var writer = new BufferedWriter(new FileWriter(path))) {
+            for (var line : text.split("\n")) {
                 writer.append(line);
                 writer.newLine();
             }

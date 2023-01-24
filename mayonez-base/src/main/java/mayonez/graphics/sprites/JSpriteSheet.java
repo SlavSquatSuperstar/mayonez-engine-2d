@@ -5,7 +5,6 @@ import mayonez.annotations.UsesEngine;
 import mayonez.io.Assets;
 import mayonez.io.image.JTexture;
 
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,15 +29,15 @@ public final class JSpriteSheet extends SpriteSheet {
      */
     JSpriteSheet(String filename, int spriteWidth, int spriteHeight, int numSprites, int spacing) {
         textures = new ArrayList<>();
-        JTexture texture = Assets.getJTexture(filename);
-        int width = texture.getImage().getWidth();
+        var texture = Assets.getJTexture(filename);
+        var width = texture.getImage().getWidth();
 
         // Make sure there isn't extra space on the right/bottom
         // Assume spacing is less than tile size
-        int imgX = 0;
-        int imgY = 0;
-        for (int count = 0; count < numSprites; count++) {
-            BufferedImage subimage = texture.getImage().getSubimage(imgX, imgY, spriteWidth, spriteHeight);
+        var imgX = 0;
+        var imgY = 0;
+        for (var count = 0; count < numSprites; count++) {
+            var subimage = texture.getImage().getSubimage(imgX, imgY, spriteWidth, spriteHeight);
             textures.add(new JTexture(String.format("%s (Sprite %s)", filename, count), subimage));
             imgX += spriteWidth + spacing;
             if (imgX >= width) {

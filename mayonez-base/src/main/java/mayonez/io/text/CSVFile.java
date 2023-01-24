@@ -26,15 +26,15 @@ public class CSVFile extends TextAsset {
      * @return the records, empty if the file does not exist
      */
     public List<Record> readCSV() {
-        ArrayList<Record> records = new ArrayList<>();
-        String[] lines = super.readArray();
+        var records = new ArrayList<Record>();
+        var lines = super.readArray();
         if (lines.length > 2) {
             this.headers = lines[0].split(","); // Get headers
             // Create records from lines
-            for (int row = 1; row < lines.length; row++) {
-                String[] vals = lines[row].split(",");
-                Record rec = new Record();
-                for (int cols = 0; cols < FloatMath.min(headers.length, vals.length); cols++)
+            for (var row = 1; row < lines.length; row++) {
+                var rec = new Record();
+                var vals = lines[row].split(",");
+                for (var cols = 0; cols < FloatMath.min(headers.length, vals.length); cols++)
                     rec.set(headers[cols], vals[cols]);
                 records.add(rec);
             }
@@ -50,15 +50,14 @@ public class CSVFile extends TextAsset {
      */
     public void saveCSV(List<Record> records, String[] headers) {
         // add headers
-        String[] csvLines = new String[records.size() + 1];
+        var csvLines = new String[records.size() + 1];
         csvLines[0] = StringUtils.join(headers, ",");
         // convert records to strings
-        for (int row = 0; row < records.size(); row++) {
-            Record rec = records.get(row);
-            String[] vals = new String[headers.length];
-            for (int col = 0; col < headers.length; col++) {
+        for (var row = 0; row < records.size(); row++) {
+            var rec = records.get(row);
+            var vals = new String[headers.length];
+            for (var col = 0; col < headers.length; col++)
                 vals[col] = rec.getString(headers[col]);
-            }
             csvLines[row + 1] = StringUtils.join(vals, ",");
         }
         super.save(false, csvLines);

@@ -35,7 +35,7 @@ public final class JWindow extends JFrame implements Window {
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                closedByUser = true; // red '(x' button will notify game to exit
+                closedByUser = true; // red 'x' button will notify game to exit
             }
         });
     }

@@ -30,7 +30,7 @@ public abstract class GLRenderer implements Renderer {
         this.batches = new ArrayList<>();
         this.shader = Assets.getShader(shaderFile);
         textureSlots = new int[Preferences.getMaxTextureSlots()];
-        for (int i = 0; i < this.textureSlots.length; i++) this.textureSlots[i] = i; // ints 0-7
+        for (var i = 0; i < this.textureSlots.length; i++) this.textureSlots[i] = i; // ints 0-7
     }
 
     // Renderer Methods
@@ -54,7 +54,7 @@ public abstract class GLRenderer implements Renderer {
     protected void preRender() {
         // Bind shader and upload uniforms
         shader.bind();
-        GLCamera camera = (GLCamera) getCamera();
+        var camera = (GLCamera) getCamera();
         shader.uploadMat4("uProjection", camera.getProjectionMatrix());
         shader.uploadMat4("uView", camera.getViewMatrix());
     }
@@ -90,10 +90,10 @@ public abstract class GLRenderer implements Renderer {
 
     protected final RenderBatch getAvailableBatch(GLTexture texture, int zIndex, DrawPrimitive primitive, int maxBatchSize) {
         for (RenderBatch batch : batches) {
-            boolean samePrimitive = batch.getPrimitive() == primitive;
-            boolean sameZIndex = batch.getZIndex() == zIndex;
-            boolean fitsTexture = batch.hasTexture(texture) || batch.hasTextureRoom();
-            boolean fitsVertices = batch.hasRoom();
+            var samePrimitive = batch.getPrimitive() == primitive;
+            var sameZIndex = batch.getZIndex() == zIndex;
+            var fitsTexture = batch.hasTexture(texture) || batch.hasTextureRoom();
+            var fitsVertices = batch.hasRoom();
             if (samePrimitive && sameZIndex && fitsTexture && fitsVertices) return batch;
         }
         // Create new if all batches full

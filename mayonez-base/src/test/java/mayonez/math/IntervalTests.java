@@ -14,8 +14,8 @@ public class IntervalTests {
 
     @Test
     public void rangeCorrectMinMax() {
-        Interval r1 = new Interval(2, 8);
-        Interval r2 = new Interval(8, 2);
+        var r1 = new Interval(2, 8);
+        var r2 = new Interval(8, 2);
         assertFloatEquals(2f, r1.min);
         assertFloatEquals(8f, r1.max);
         assertFloatEquals(2f, r2.min);
@@ -24,18 +24,18 @@ public class IntervalTests {
 
     @Test
     public void rangeEquals() {
-        Interval r1 = new Interval(-3, 4);
-        Interval r2 = new Interval(-3, 4);
-        Interval r3 = new Interval(-4, 3);
+        var r1 = new Interval(-3, 4);
+        var r2 = new Interval(-3, 4);
+        var r3 = new Interval(-4, 3);
         assertEquals(r1, r2);
         assertNotEquals(r1, r3);
     }
 
     @Test
     public void rangeContainsRange() {
-        Interval r1 = new Interval(0, 5);
-        Interval r2 = new Interval(-2, 7);
-        Interval r3 = new Interval(1, 6);
+        var r1 = new Interval(0, 5);
+        var r2 = new Interval(-2, 7);
+        var r3 = new Interval(1, 6);
         assertTrue(r2.contains(r1)); // contains
         assertFalse(r1.contains(r2)); // not contains
         assertFalse(r1.contains(r3)); // overlap
@@ -88,7 +88,7 @@ public class IntervalTests {
 
     @Test
     public void lerpSuccess() {
-        Interval range = new Interval(0, 5);
+        var range = new Interval(0, 5);
         assertEquals(2, range.lerp(0.4f)); // middle
         assertEquals(6, range.lerp(1.2f)); // past end
         assertEquals(-4, range.lerp(-0.8f)); // negative
@@ -96,7 +96,7 @@ public class IntervalTests {
 
     @Test
     public void invLerpSuccess() {
-        Interval range = new Interval(0, 5);
+        var range = new Interval(0, 5);
         assertEquals(0.4f, range.invLerp(2)); // middle
         assertEquals(1.2f, range.invLerp(6)); // past end
         assertEquals(-0.8f, range.invLerp(-4)); // negative

@@ -37,7 +37,5 @@ enum class LogLevel(private val level: Int) {
      */
     NONE(5);
 
-    override fun toString(): String {
-        return "$name (Level $level)"
-    }
+    override fun toString(): String = "$name (Level $level)"
 }

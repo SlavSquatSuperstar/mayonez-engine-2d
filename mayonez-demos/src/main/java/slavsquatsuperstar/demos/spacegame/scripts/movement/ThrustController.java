@@ -36,14 +36,14 @@ public class ThrustController extends Script {
         if (rb == null) return;
 
         // Slow movement and turning
-        boolean brake = KeyInput.keyDown("space");
-        if (brake) rb.setDrag(2f).setAngDrag(2f);
+        var braking = KeyInput.keyDown("space");
+        if (braking) rb.setDrag(2f).setAngDrag(2f);
         else rb.setDrag(0f).setAngDrag(0f);
 
         // Calculate brake direction
         Vec2 brakeDir;
         float angBrakeDir;
-        if (brake) {
+        if (braking) {
             brakeDir = rb.getVelocity().mul(-1f);
             angBrakeDir = rb.getAngVelocity(); // Using right-handed coords here, so choose positive
         } else {
@@ -53,17 +53,17 @@ public class ThrustController extends Script {
 
         // Activate thrusters
         if (keyMovement != null) {
-            Vec2 input = keyMovement.getUserInput();
-            for (Thruster t : thrusters) {
-                boolean shouldBrake = t.moveDir.faces(brakeDir) && rb.getSpeed() > 1e-3f; // Don't fire when moving very slow
-                t.setMoveEnabled(t.moveDir.faces(input) || shouldBrake);
+            var input = keyMovement.getUserInput();
+            for (var thr : thrusters) {
+                var shouldBrake = thr.moveDir.faces(brakeDir) && rb.getSpeed() > 1e-3f; // Don't fire when moving very slow
+                thr.setMoveEnabled(thr.moveDir.faces(input) || shouldBrake);
             }
         }
         if (keyRotation != null) {
-            float turnInput = keyRotation.getUserInput().x;
-            for (Thruster t : thrusters) {
-                boolean shouldBrake = t.turnDir.faces(angBrakeDir) && rb.getAngSpeed() > 1e-3f;
-                t.setTurnEnabled(t.turnDir.faces(turnInput) || shouldBrake);
+            var turnInput = keyRotation.getUserInput().x;
+            for (var thr : thrusters) {
+                var shouldBrake = thr.turnDir.faces(angBrakeDir) && rb.getAngSpeed() > 1e-3f;
+                thr.setTurnEnabled(thr.turnDir.faces(turnInput) || shouldBrake);
             }
         }
 

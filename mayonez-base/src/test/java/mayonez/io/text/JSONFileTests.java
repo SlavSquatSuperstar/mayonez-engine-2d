@@ -18,20 +18,20 @@ public class JSONFileTests {
 
     @Test
     public void readLocalJSONFile() {
-        Record rec = new JSONFile("src/test/resources/testassets/text/properties.json").readJSON();
+        var rec = new JSONFile("src/test/resources/testassets/text/properties.json").readJSON();
         assertNotNull(rec);
     }
 
     @Test
     public void readClasspathJSONFile() {
-        Record rec = new JSONFile("testassets/text/properties.json").readJSON();
+        var rec = new JSONFile("testassets/text/properties.json").readJSON();
         assertNotNull(rec);
     }
 
     @Test
     public void saveToLocalJSONFile() {
-        JSONFile json = new JSONFile("src/test/resources/testassets/out/out.json");
-        Record rec = new Record();
+        var json = new JSONFile("src/test/resources/testassets/out/out.json");
+        var rec = new Record();
         rec.set("time", LocalTime.now());
         rec.set("date", LocalDate.now());
         json.saveJSON(rec);
@@ -39,7 +39,7 @@ public class JSONFileTests {
 
     @Test
     public void getJSONPropertiesSuccess() {
-        Record rec = new JSONFile("src/test/resources/testassets/text/properties.json").readJSON();
+        var rec = new JSONFile("src/test/resources/testassets/text/properties.json").readJSON();
         assertTrue(rec.getBoolean("in_progress")); // booleans
         assertTrue(rec.getBoolean("uses_dependencies"));
 
@@ -53,7 +53,7 @@ public class JSONFileTests {
 
     @Test
     public void getJSONPropertiesDefaultValues() {
-        Record rec = new JSONFile("src/test/resources/testassets/text/properties.json").readJSON();
+        var rec = new JSONFile("src/test/resources/testassets/text/properties.json").readJSON();
         assertEquals(0, rec.getInt("version")); // int default
         assertFloatEquals(0f, rec.getFloat("name")); // float default
         assertFalse(rec.getBoolean("languages")); // boolean default

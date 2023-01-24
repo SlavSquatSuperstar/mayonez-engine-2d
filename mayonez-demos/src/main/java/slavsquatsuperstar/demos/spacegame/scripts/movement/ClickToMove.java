@@ -53,8 +53,8 @@ public class ClickToMove extends MouseScript {
     // Move Methods
 
     private void moveToDestination(float dt) {
-        float moveProgress = new Edge(lastPos, destPos).invLerp(transform.getPosition());
-        System.out.println(moveProgress);
+        var moveProgress = new Edge(lastPos, destPos).invLerp(transform.getPosition());
+//        System.out.println(moveProgress);
 
         switch (mode) {
             case POSITION -> {
@@ -81,7 +81,7 @@ public class ClickToMove extends MouseScript {
     }
 
     private void turnToDestination(float dt) {
-        float turnProgress = new Interval(destAngle, lastAngle).invLerp(transform.getRotation()) * turnDir;
+        var turnProgress = new Interval(destAngle, lastAngle).invLerp(transform.getRotation()) * turnDir;
         if (turnDir < 0) turnProgress += 1f; // if decreasing
 
         switch (mode) {

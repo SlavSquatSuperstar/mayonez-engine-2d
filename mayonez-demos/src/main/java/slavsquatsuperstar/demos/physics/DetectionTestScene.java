@@ -8,11 +8,9 @@ import mayonez.input.KeyInput;
 import mayonez.input.MouseInput;
 import mayonez.math.Vec2;
 import mayonez.physics.Collisions;
-import mayonez.physics.resolution.Manifold;
 import mayonez.physics.shapes.Circle;
 import mayonez.physics.shapes.Polygon;
 import mayonez.physics.shapes.Rectangle;
-import mayonez.physics.shapes.Shape;
 import mayonez.physics.shapes.Triangle;
 
 import java.awt.*;
@@ -35,13 +33,13 @@ public class DetectionTestScene extends Scene {
         DebugDraw.drawLine(new Vec2(0, -20), new Vec2(0, 20), Colors.DARK_GRAY);
         rot -= KeyInput.getAxis("horizontal");
         DebugDraw.drawLine(new Vec2(-20, 0), new Vec2(20, 0), Colors.DARK_GRAY);
-        Shape userShape = tri.translate(MouseInput.getPosition().add(new Vec2(2))).rotate(rot, null);
+        var userShape = tri.translate(MouseInput.getPosition().add(new Vec2(2))).rotate(rot, null);
 
         DebugDraw.drawShape(box, Colors.GREEN);
         DebugDraw.drawShape(userShape, Colors.GREEN);
-        Manifold manifold = Collisions.getContacts(box, userShape);
+        var manifold = Collisions.getContacts(box, userShape);
         if (manifold != null) {
-            for (Vec2 contact : manifold.getContacts()) {
+            for (var contact : manifold.getContacts()) {
                 DebugDraw.drawPoint(contact, Colors.LIGHT_GREEN);
                 DebugDraw.drawVector(contact, manifold.getNormal(), Colors.LIGHT_GREEN);
             }

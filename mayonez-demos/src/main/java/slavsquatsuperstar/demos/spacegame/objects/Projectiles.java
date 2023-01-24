@@ -32,19 +32,19 @@ public class Projectiles {
      * @return the projectile object.
      */
     public static GameObject createPrefab(Projectile projectile, String name, float size, Component... components) {
-        Transform transform = projectile.getSource().transform;
-        Rigidbody sourceRb = projectile.getSource().getComponent(Rigidbody.class);
+        var sourceXf = projectile.getSource().transform;
+        var sourceRb = projectile.getSource().getComponent(Rigidbody.class);
         return new GameObject(name, new Transform(
-                transform.getPosition().add(transform.getUp().mul(0.5f)), transform.getRotation(), new Vec2(size)
+                sourceXf.getPosition().add(sourceXf.getUp().mul(0.5f)), sourceXf.getRotation(), new Vec2(size)
         )) {
             @Override
             protected void init() {
-                boolean hasRb = false;
-                boolean hasCol = false;
-                for (Component c : components) {
-                    addComponent(c);
-                    if (c instanceof Rigidbody) hasRb = true;
-                    else if (c instanceof Collider) hasCol = true;
+                var hasRb = false;
+                var hasCol = false;
+                for (var comp : components) {
+                    addComponent(comp);
+                    if (comp instanceof Rigidbody) hasRb = true;
+                    else if (comp instanceof Collider) hasCol = true;
                 }
                 if (!hasRb) { // set velocity relative to object
                     Rigidbody rb;

@@ -21,7 +21,7 @@ public enum DrawPrimitive {
     LINE(2, 2, GL11.GL_LINES, 2, 4) {
         @Override
         public void addIndices(IntBuffer elements, int index) {
-            for (int v = 0; v <= 1; v++) elements.put(vertexCount * index + v);
+            for (var v = 0; v <= 1; v++) elements.put(vertexCount * index + v);
         }
     },
     /**
@@ -31,7 +31,7 @@ public enum DrawPrimitive {
         @Override
         public void addIndices(IntBuffer elements, int index) {
             // Use counterclockwise winding
-            for (int v = 0; v <= 2; v++) elements.put(vertexCount * index + v);
+            for (var v = 0; v <= 2; v++) elements.put(vertexCount * index + v);
         }
     },
     /**
@@ -42,7 +42,7 @@ public enum DrawPrimitive {
         public void addIndices(IntBuffer elements, int index) {
             // Split quad into two triangles
             int[] triangleVertices = {0, 1, 2, 0, 2, 3};
-            for (int v : triangleVertices) elements.put(vertexCount * index + v);
+            for (var v : triangleVertices) elements.put(vertexCount * index + v);
         }
     };
 

@@ -1,16 +1,15 @@
 package mayonez.io.image;
 
-import org.lwjgl.BufferUtils;
 import mayonez.Logger;
+import mayonez.annotations.EngineType;
+import mayonez.annotations.UsesEngine;
 import mayonez.io.IOUtils;
 import mayonez.math.Vec2;
-import mayonez.annotations.UsesEngine;
-import mayonez.annotations.EngineType;
 import mayonez.physics.shapes.Rectangle;
+import org.lwjgl.BufferUtils;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
@@ -66,7 +65,7 @@ public final class GLTexture extends Texture {
         this.texCoords = texCoords;
 
         this.image = texture.image;
-        Vec2 size = texCoords[2].sub(texCoords[0]); // relative size
+        var size = texCoords[2].sub(texCoords[0]); // relative size
         this.width = (int) (texture.width * size.x); // get new image size
         this.height = (int) (texture.height * size.y);
         this.channels = texture.channels;
@@ -76,13 +75,13 @@ public final class GLTexture extends Texture {
     @Override
     protected void readImage() {
         try {
-            byte[] imageData = IOUtils.readBytes(inputStream());
-            ByteBuffer imageBuffer = BufferUtils.createByteBuffer(imageData.length);
+            var imageData = IOUtils.readBytes(inputStream());
+            var imageBuffer = BufferUtils.createByteBuffer(imageData.length);
             imageBuffer = memSlice(imageBuffer.put(imageData).flip());
 
-            IntBuffer w = BufferUtils.createIntBuffer(1);
-            IntBuffer h = BufferUtils.createIntBuffer(1);
-            IntBuffer comp = BufferUtils.createIntBuffer(1);
+            var w = BufferUtils.createIntBuffer(1);
+            var h = BufferUtils.createIntBuffer(1);
+            var comp = BufferUtils.createIntBuffer(1);
 
             if (!stbi_info_from_memory(imageBuffer, w, h, comp)) showFailureMessage();
             else Logger.debug("OpenGL: Loaded image \"%s\"", getFilename());

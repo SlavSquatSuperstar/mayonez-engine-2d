@@ -4,11 +4,7 @@ import mayonez.GameObject
 import mayonez.SceneManager
 import mayonez.annotations.EngineType
 import mayonez.annotations.UsesEngine
-import mayonez.graphics.Color
-import mayonez.graphics.Colors
-import mayonez.graphics.DrawPrimitive
-import mayonez.graphics.GLRenderable
-import mayonez.graphics.RenderBatch
+import mayonez.graphics.*
 import mayonez.io.image.GLTexture
 import mayonez.math.Vec2
 import mayonez.physics.shapes.Rectangle
@@ -27,7 +23,7 @@ class GLSprite private constructor(private val texture: GLTexture?, color: Color
      *
      * @param texture a texture
      */
-    internal constructor(texture: GLTexture) : this(texture, Colors.WHITE)
+    internal constructor(texture: GLTexture?) : this(texture, Colors.WHITE)
 
     /**
      * Create a new GLSprite that only renders a color.

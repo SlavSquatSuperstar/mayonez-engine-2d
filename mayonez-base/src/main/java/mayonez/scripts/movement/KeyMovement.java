@@ -26,7 +26,7 @@ public class KeyMovement extends MovementScript {
 
     @Override
     public void update(float dt) {
-        Vec2 input = getUserInput().unit().mul(speed); // Normalize so don't move faster diagonally
+        var input = getUserInput().unit().mul(speed); // Normalize so don't move faster diagonally
         if (objectAligned) input = input.rotate(transform.getRotation()); // Align to object space if enabled
 
         switch (mode) {

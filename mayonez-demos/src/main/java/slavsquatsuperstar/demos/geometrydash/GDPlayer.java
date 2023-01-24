@@ -15,41 +15,41 @@ import slavsquatsuperstar.demos.geometrydash.components.PlayerController;
 
 import java.awt.*;
 
-public class Player extends GameObject {
+public class GDPlayer extends GameObject {
 
-    public Player(String name, Vec2 position) {
+    public GDPlayer(String name, Vec2 position) {
         super(name, position);
     }
 
     @Override
     protected void init() {
         // Create player avatar
-        int tileSize = (int) getScene().getScale();
-        JSpriteSheet layer1 = (JSpriteSheet) SpriteSheet.create("assets/textures/geometrydash/player/layer1.png",
+        var tileSize = (int) getScene().getScale();
+        var layer1 = (JSpriteSheet) SpriteSheet.create("assets/textures/geometrydash/player/layer1.png",
                 tileSize, tileSize, 13 * 5, 2);
-        JSpriteSheet layer2 = (JSpriteSheet) SpriteSheet.create("assets/textures/geometrydash/player/layer2.png",
+        var layer2 = (JSpriteSheet) SpriteSheet.create("assets/textures/geometrydash/player/layer2.png",
                 tileSize, tileSize, 13 * 5, 2);
-        JSpriteSheet layer3 = (JSpriteSheet) SpriteSheet.create("assets/textures/geometrydash/player/layer3.png",
+        var layer3 = (JSpriteSheet) SpriteSheet.create("assets/textures/geometrydash/player/layer3.png",
                 tileSize, tileSize, 13 * 5, 2);
 
-        int id = Random.randomInt(18, 20);
-        int threshold = 200;
+        var id = Random.randomInt(18, 20);
+        var threshold = 200;
 
-        JSprite[] layers = new JSprite[]{layer1.getSprite(id), layer2.getSprite(id), layer3.getSprite(id)};
+        var layers = new JSprite[]{layer1.getSprite(id), layer2.getSprite(id), layer3.getSprite(id)};
         Color[] colors = {Color.RED, Color.GREEN};
 
         // Create sprite layers
-        for (int i = 0; i < colors.length; i++) {
-            JSprite l = layers[i];
-            for (int y = 0; y < l.getImage().getWidth(); y++) {
-                for (int x = 0; x < l.getImage().getHeight(); x++) {
-                    Color color = new Color(l.getImage().getRGB(x, y));
+        for (var i = 0; i < colors.length; i++) {
+            var l = layers[i];
+            for (var y = 0; y < l.getImage().getWidth(); y++) {
+                for (var x = 0; x < l.getImage().getHeight(); x++) {
+                    var color = new Color(l.getImage().getRGB(x, y));
                     if (color.getRed() > threshold && color.getGreen() > threshold && color.getBlue() > threshold)
                         l.getImage().setRGB(x, y, colors[i].getRGB());
                 }
             }
         }
-        for (JSprite s : layers) addComponent(s);
+        for (var spr : layers) addComponent(spr);
 
         // Add player scripts
         float thrustForce = 5f;

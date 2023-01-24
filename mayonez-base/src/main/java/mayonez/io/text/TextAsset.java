@@ -6,8 +6,6 @@ import mayonez.io.IOUtils;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 
 /**
  * A superclass for all text-based files used in this program.
@@ -27,7 +25,7 @@ public abstract class TextAsset extends Asset {
      * @return the text data as a string
      */
     protected final String read() {
-        try (InputStream in = inputStream()) {
+        try (var in = inputStream()) {
             return IOUtils.read(in);
         } catch (FileNotFoundException e) {
             Logger.error("File \"%s\" not found", getFilename());
@@ -45,7 +43,7 @@ public abstract class TextAsset extends Asset {
      * @return the text data as an array
      */
     protected final String[] readArray() {
-        try (InputStream in = inputStream()) {
+        try (var in = inputStream()) {
             return IOUtils.readLines(in);
         } catch (FileNotFoundException e) {
             Logger.error("File \"%s\" not found", getFilename());
@@ -63,7 +61,7 @@ public abstract class TextAsset extends Asset {
      * @param text   the text or lines of text to save
      */
     protected final void save(boolean append, String... text) {
-        try (OutputStream out = outputStream(append)) {
+        try (var out = outputStream(append)) {
             if (text.length == 1) IOUtils.write(out, text[0]); // single line
             else IOUtils.writeLines(out, text);
         } catch (FileNotFoundException e) {
@@ -73,6 +71,5 @@ public abstract class TextAsset extends Asset {
             Logger.printStackTrace(e);
         }
     }
-
 
 }

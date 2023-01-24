@@ -19,20 +19,20 @@ public class PoolBallsScene extends Scene {
         setGravity(new Vec2());
         addObject(new PoolBall(new Vec2(-40, 0)));
 
-        float xStart = -5;
-        float yStart = 0;
-        int ballCount = 0;
-        int[] ballNums = randomizeBalls();
+        var xStart = -5;
+        var yStart = 0;
+        var ballCount = 0;
+        var ballNums = randomizeBalls();
 
-        for (int row = 0; row < 5; row++) {
-            float radius = PoolBall.BALL_RADIUS;
-            for (int col = 0; col <= row; col++) {
+        for (var row = 0; row < 5; row++) {
+            var radius = PoolBall.BALL_RADIUS;
+            for (var col = 0; col <= row; col++) {
                 // x = x0 + √3r * i
-                float x = xStart + (float) row * FloatMath.sqrt(3f) * radius;
+                var x = xStart + (float) row * FloatMath.sqrt(3f) * radius;
                 // y = y0 + 2r * i
-                float y = yStart + (float) col * 2 * radius;
+                var y = yStart + (float) col * 2 * radius;
 
-                int ballNum = ballNums[ballCount];
+                var ballNum = ballNums[ballCount];
                 addObject(new PoolBall(new Vec2(x, y), ballNum));
                 ballCount++;
             }
@@ -44,14 +44,14 @@ public class PoolBallsScene extends Scene {
     // Helper Methods
 
     private int[] randomizeBalls() {
-        int[] ballNums = new int[15];
-        LinkedList<Integer> nums = new LinkedList<>();
-        for (int i = 1; i <= 7; i++) nums.add(i);
-        for (int i = 9; i <= 15; i++) nums.add(i);
-        for (int i = 0; i < ballNums.length; i++) {
+        var ballNums = new int[15];
+        var nums = new LinkedList<Integer>();
+        for (var i = 1; i <= 7; i++) nums.add(i);
+        for (var i = 9; i <= 15; i++) nums.add(i);
+        for (var i = 0; i < ballNums.length; i++) {
             if (i == 4) ballNums[i] = 8; // always put 8-ball in middle
             else {
-                int index = Random.randomInt(0, nums.size() - 1);
+                var index = Random.randomInt(0, nums.size() - 1);
                 ballNums[i] = nums.remove(index);
             }
         }

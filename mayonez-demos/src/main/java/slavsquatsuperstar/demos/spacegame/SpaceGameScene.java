@@ -15,7 +15,7 @@ import mayonez.physics.shapes.Shape;
 import slavsquatsuperstar.demos.spacegame.objects.Asteroid;
 import slavsquatsuperstar.demos.spacegame.objects.EnemyShip;
 import slavsquatsuperstar.demos.spacegame.objects.PlayerShip;
-import slavsquatsuperstar.demos.spacegame.scripts.SpawnManager;
+import mayonez.scripts.SpawnManager;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -29,8 +29,8 @@ public class SpaceGameScene extends Scene {
         super(name, Preferences.getScreenWidth() * 2, Preferences.getScreenHeight() * 2, 32f);
         setBackground(Colors.JET_BLACK);
         backgroundObjects = new ArrayList<>();
-        numEnemies = 0;
-        numObstacles = 0;
+        numEnemies = 6;
+        numObstacles = 3;
         numStars = 750;
     }
 
@@ -67,16 +67,15 @@ public class SpaceGameScene extends Scene {
         });
 
         // Add background stars
-        for (int i = 0; i < numStars; i++) {
-            Vec2 starPos = this.getRandomPosition().mul(2);
+        for (var i = 0; i < numStars; i++) {
+            var starPos = this.getRandomPosition().mul(2);
+
             float starSize;
-            if (Random.randomPercent(2f / 3f)) {
-                starSize = Random.randomFloat(1, 4); // dwarf
-            } else {
-                starSize = Random.randomFloat(4, 10); // giant
-            }
-            float starDist = Random.randomFloat(5, 20) * 5f;
-            Color starColor = new Color(Random.randomInt(192, 255), Random.randomInt(192, 255), Random.randomInt(192, 255));
+            if (Random.randomPercent(2f / 3f)) starSize = Random.randomFloat(1, 4); // dwarf
+            else starSize = Random.randomFloat(4, 10); // giant
+
+            var starDist = Random.randomFloat(5, 20) * 5f;
+            var starColor = new Color(Random.randomInt(192, 255), Random.randomInt(192, 255), Random.randomInt(192, 255));
             addBackgroundObject(new Circle(starPos, starSize / starDist), starColor); // Star
         }
 
@@ -95,7 +94,7 @@ public class SpaceGameScene extends Scene {
 
     @Override
     protected void onUserRender(Graphics2D g2) {
-        for (Pair<Shape, Color> obj : backgroundObjects) {
+        for (var obj : backgroundObjects) {
             DebugDraw.fillShape(obj.getFirst(), obj.getSecond());
         }
     }

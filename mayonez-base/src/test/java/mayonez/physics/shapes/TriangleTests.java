@@ -25,7 +25,7 @@ public class TriangleTests {
     @Test
     public void areaCorrect() {
         assertFloatEquals(tri.area(), 0.5f * tri.base * tri.height);
-        Triangle tri2 = new Triangle(new Vec2(-1, 0), new Vec2(1, 4), new Vec2(5, -2));
+        var tri2 = new Triangle(new Vec2(-1, 0), new Vec2(1, 4), new Vec2(5, -2));
         assertFloatEquals(tri2.area(), 0.5f * tri2.base * tri2.height);
     }
 

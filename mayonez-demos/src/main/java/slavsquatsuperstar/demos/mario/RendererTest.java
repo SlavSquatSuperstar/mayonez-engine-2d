@@ -39,8 +39,8 @@ public class RendererTest extends Scene {
         addObject(new Mario(sprites.getSprite(0)));
 
         // Add squares
-        float halfWidth = getWidth() * 0.5f - 2;
-        float halfHeight = getHeight() * 0.5f - 2;
+        var halfWidth = getWidth() * 0.5f - 2f;
+        var halfHeight = getHeight() * 0.5f - 2f;
 
         addObject(new ColoredSquare("Red Square", new Vec2(-halfWidth, halfHeight),
                 new Color(169, 0, 0, 153), 0));
@@ -52,7 +52,7 @@ public class RendererTest extends Scene {
                 new Color(31, 31, 31, 153), 2));
 
         // Add enemies
-        for (int i = 0; i < 16; i++) {
+        for (var i = 0; i < 16; i++) {
             switch (i % 4) {
                 case 0 -> addObject(new Goomba("Goomba", sprites.getSprite(14), getRandomPosition()));
                 case 1 -> addObject(new Goomba("Cool Goomba", sprites.getSprite(17), getRandomPosition()));
@@ -69,20 +69,20 @@ public class RendererTest extends Scene {
         DebugDraw.drawLine(new Vec2(4, 4), new Vec2(4, -4), Colors.BLUE);
         DebugDraw.drawLine(new Vec2(4, -4), new Vec2(-4, -4), Colors.YELLOW);
 
-        Rectangle sceneBounds = new Rectangle(new Vec2(0, 0), new Vec2(this.getWidth(), this.getHeight()));
+        var sceneBounds = new Rectangle(new Vec2(0, 0), new Vec2(this.getWidth(), this.getHeight()));
         DebugDraw.drawShape(sceneBounds.scale(new Vec2(1.0f), null), Colors.BLACK);
         DebugDraw.drawShape(sceneBounds.scale(new Vec2(0.8f), null), Colors.BLACK);
         DebugDraw.drawShape(sceneBounds.scale(new Vec2(0.6f), null), Colors.BLACK);
         DebugDraw.drawShape(sceneBounds.scale(new Vec2(0.4f), null), Colors.BLACK);
         DebugDraw.drawShape(sceneBounds.scale(new Vec2(0.2f), null), Colors.BLACK);
 
-        Triangle tri = new Triangle(new Vec2(-2, -5), new Vec2(0, -1), new Vec2(2, -5));
+        var tri = new Triangle(new Vec2(-2, -5), new Vec2(0, -1), new Vec2(2, -5));
         DebugDraw.fillShape(tri, Colors.ORANGE);
 
-        Circle circle = new Circle(new Vec2(0, 5), 5);
+        var circle = new Circle(new Vec2(0, 5), 5);
         DebugDraw.drawShape(circle, Colors.PURPLE);
 
-        Ellipse ellipse = new Ellipse(new Vec2(0, 5), new Vec2(9.5f, 8));
+        var ellipse = new Ellipse(new Vec2(0, 5), new Vec2(9.5f, 8));
         DebugDraw.fillShape(ellipse, Colors.BLUE);
 
         // camera controls

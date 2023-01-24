@@ -46,7 +46,7 @@ public class KeepInScene extends Script {
 
     @Override
     public void start() {
-        Vec2 sceneHalfSize = getScene().getSize(); // fetch scene bounds
+        var sceneHalfSize = getScene().getSize(); // fetch scene bounds
         if (minPos == null) minPos = sceneHalfSize.mul(-0.5f);
         if (maxPos == null) maxPos = sceneHalfSize.mul(0.5f);
 
@@ -71,35 +71,16 @@ public class KeepInScene extends Script {
     @Override
     public void update(float dt) {
         objectBounds = objectCollider.getMinBounds();
-        Vec2 boxMin = objectBounds.min();
-        Vec2 boxMax = objectBounds.max();
+        var boxMin = objectBounds.min();
+        var boxMax = objectBounds.max();
 
         // Edge Checking for x
-        Interval sceneBoundsX = new Interval(minPos.x, maxPos.x);
-        if (!sceneBoundsX.contains(objectBounds.getXInterval())) {
-            // Skip if too wide for scene
-            if (objectBounds.getXInterval().difference() <= sceneBoundsX.difference()) {
-                // Detect if colliding with edge
-                if (boxMin.x < minPos.x) onCrossBounds(Direction.LEFT);
-                else if (boxMax.x > maxPos.x) onCrossBounds(Direction.RIGHT);
-
-                // Detect if moved completely past edge
-                if (boxMax.x < minPos.x) onExitBounds(Direction.LEFT);
-                else if (boxMin.x > maxPos.x) onExitBounds(Direction.RIGHT);
-            }
-        }
+        var sceneBoundsX = new Interval(minPos.x, maxPos.x);
+        checkEdges(sceneBoundsX, objectBounds.getXInterval(), Direction.LEFT, Direction.RIGHT);
 
         // Edge Checking for y
-        Interval sceneBoundsY = new Interval(minPos.y, maxPos.y);
-        if (!sceneBoundsY.contains(objectBounds.getYInterval())) {
-            if (objectBounds.getYInterval().difference() <= sceneBoundsY.difference()) {
-                if (boxMin.y < minPos.y) onCrossBounds(Direction.TOP);
-                else if (boxMax.y > maxPos.y) onCrossBounds(Direction.BOTTOM);
-
-                if (boxMax.y < minPos.y) onExitBounds(Direction.TOP);
-                else if (boxMin.y > maxPos.y) onExitBounds(Direction.BOTTOM);
-            }
-        }
+        var sceneBoundsY = new Interval(minPos.y, maxPos.y);
+        checkEdges(sceneBoundsY, objectBounds.getYInterval(), Direction.TOP, Direction.BOTTOM);
     }
 
     /**
@@ -119,8 +100,8 @@ public class KeepInScene extends Script {
         else if (objectBds.max > sceneBds.max) onCrossBounds(maxDir);
 
         // Detect if moved completely past edge
-        if (objectBds.min < sceneBds.min) onExitBounds(minDir);
-        else if (objectBds.max > sceneBds.max) onExitBounds(maxDir);
+        if (objectBds.max < sceneBds.min) onExitBounds(minDir);
+        else if (objectBds.min > sceneBds.max) onExitBounds(maxDir);
     }
 
     // Collision Event Methods

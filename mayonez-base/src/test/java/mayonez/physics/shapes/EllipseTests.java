@@ -47,8 +47,8 @@ public class EllipseTests {
 
     @Test
     public void rotatedEllipseSupportPoints() {
-        Ellipse e = ellipse.rotate(45, null);
-        Vec2 center = e.center();
+        var e = ellipse.rotate(45, null);
+        var center = e.center();
         assertEquals(new Vec2(4, 3).rotate(45, center), e.supportPoint(new Vec2(1, 1)));
         assertEquals(new Vec2(2, 6).rotate(45, center), e.supportPoint(new Vec2(-1, 1)));
         assertEquals(new Vec2(3.6f, 4.8f).rotate(45, center),

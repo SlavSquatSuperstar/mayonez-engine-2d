@@ -30,10 +30,8 @@ public class PlaceBlock extends Script implements JRenderable {
 
     @Override
     public void update(float dt) {
-//        counter.update(dt);
-
         // add 0.5 to x/y to center the block
-        Vec2 mousePos = MouseInput.getPosition().add(new Vec2(0.5f)).floor();
+        var mousePos = MouseInput.getPosition().add(new Vec2(0.5f)).floor();
         transform.setPosition(mousePos);
         // null locks are still being placed
         if (timer.isReady() && MouseInput.buttonDown("left mouse")) {

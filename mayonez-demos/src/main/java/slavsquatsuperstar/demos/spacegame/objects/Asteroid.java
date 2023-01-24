@@ -10,7 +10,7 @@ import mayonez.physics.Rigidbody;
 import mayonez.physics.colliders.BallCollider;
 import mayonez.scripts.KeepInScene;
 import mayonez.scripts.combat.Damageable;
-import slavsquatsuperstar.demos.spacegame.scripts.SpawnManager;
+import mayonez.scripts.SpawnManager;
 
 /**
  * An asteroid in space that can be destroyed.
@@ -58,9 +58,9 @@ public class Asteroid extends GameObject {
                 if (obstacleSpawner != null) obstacleSpawner.markObjectDestroyed();
                 // TODO need to set start position manually
 //                if (!isFragment) {
-//                    int fragmentCount = Random.randomInt(0, 4);
+//                    var fragmentCount = Random.randomInt(0, 4);
 //                    if (fragmentCount <= 0) return;
-//                    for (int i = 0; i < 2; i++) {
+//                    for (var i = 0; i < 2; i++) {
 //                        getScene().addObject(new Asteroid("Asteroid Fragment",
 //                                size.div(2), startingHealth / 2));
 //                    }

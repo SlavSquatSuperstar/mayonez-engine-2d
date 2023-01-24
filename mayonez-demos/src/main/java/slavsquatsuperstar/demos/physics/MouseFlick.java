@@ -35,7 +35,7 @@ public class MouseFlick extends MouseScript {
     @Override
     public void onMouseUp() {
         if (activeInstance == this) {
-            Vec2 input = getUserInput().clampLength(speed);
+            var input = getUserInput().clampLength(speed);
             switch (mode) {
                 case VELOCITY -> rb.addVelocity(input);
                 case IMPULSE -> rb.applyImpulse(input);
@@ -46,7 +46,7 @@ public class MouseFlick extends MouseScript {
 
     @Override
     protected Vec2 getUserInput() {
-        Vec2 dragDisplacement = getMousePos().sub(lastMouse);
+        var dragDisplacement = getMousePos().sub(lastMouse);
         return dragDisplacement.mul(inverted ? -1 : 1);
     }
 

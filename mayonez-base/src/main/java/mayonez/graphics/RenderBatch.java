@@ -90,9 +90,9 @@ public final class RenderBatch {
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, generateIndices(), GL_STATIC_DRAW);
 
         // Allocate vertex index buffer
-        int offset = 0;
-        int[] attributeSizes = primitive.attributeSizes;
-        for (int i = 0; i < attributeSizes.length; i++) {
+        var offset = 0;
+        var attributeSizes = primitive.attributeSizes;
+        for (var i = 0; i < attributeSizes.length; i++) {
             glVertexAttribPointer(i, attributeSizes[i], GL_FLOAT, false, vertexSize * Float.BYTES, offset);
             glEnableVertexAttribArray(i);
             offset += attributeSizes[i] * Float.BYTES;
@@ -105,8 +105,8 @@ public final class RenderBatch {
      * @return an index array (int buffer)
      */
     private IntBuffer generateIndices() {
-        IntBuffer elements = BufferUtils.createIntBuffer(elementCount * maxBatchSize);
-        for (int i = 0; i < maxBatchSize; i++) primitive.addIndices(elements, i);
+        var elements = BufferUtils.createIntBuffer(elementCount * maxBatchSize);
+        for (var i = 0; i < maxBatchSize; i++) primitive.addIndices(elements, i);
         elements.flip(); // need to flip an int buffer
         return elements;
     }
@@ -117,7 +117,6 @@ public final class RenderBatch {
      * Empties all sprite vertices and textures from the batch and readies it for buffering.
      */
     public void clear() {
-        // Pass VBO attribute pointers
         vertexOffset = 0;
         textures.clear();
     }
@@ -132,13 +131,13 @@ public final class RenderBatch {
 
     public void render() {
         // Bind textures and vertices
-        for (int i = 0; i < textures.size(); i++) textures.get(i).bind(i);
+        for (var i = 0; i < textures.size(); i++) textures.get(i).bind(i);
         glBindVertexArray(vao);
         glEnableVertexAttribArray(0);
         glEnableVertexAttribArray(1);
 
         // Draw sprites
-        int numVertices = (vertexOffset * elementCount) / (vertexSize * vertexCount);
+        var numVertices = (vertexOffset * elementCount) / (vertexSize * vertexCount);
         glDrawElements(primitive.primitiveType, numVertices, GL_UNSIGNED_INT, 0);
 
         // Unbind vertices and textures

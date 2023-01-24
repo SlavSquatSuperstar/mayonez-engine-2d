@@ -68,7 +68,7 @@ public class ClassTests {
     public void getObjectsInSceneGeneric() {
         // TODO needs decoupling
         Mayonez.setUseGL(false);
-        Scene scene = new Scene("ClassTests Scene") {
+        var scene = new Scene("ClassTests Scene") {
             @Override
             protected void init() {
                 addObject(new GameObject("obj1", new Vec2()));

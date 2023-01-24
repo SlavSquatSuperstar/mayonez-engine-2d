@@ -76,11 +76,8 @@ public abstract class Sprite extends Component {
      * @return a sprite
      */
     public static Sprite create(String filename) {
-        if (Mayonez.getUseGL()) {
-            return new GLSprite(Assets.getGLTexture(filename));
-        } else {
-            return new JSprite(Assets.getJTexture(filename));
-        }
+        if (Mayonez.getUseGL()) return new GLSprite(Assets.getGLTexture(filename));
+        else return new JSprite(Assets.getJTexture(filename));
     }
 
     /**
@@ -90,12 +87,9 @@ public abstract class Sprite extends Component {
      * @return a sprite
      */
     public static Sprite create(Texture texture) {
-        if (texture instanceof GLTexture glTexture) {
-            return new GLSprite(glTexture);
-        } else if (texture instanceof JTexture jTexture) {
-            return new JSprite(jTexture);
-        }
-        return Sprite.create(Colors.WHITE);
+        if (texture instanceof GLTexture glTexture) return new GLSprite(glTexture);
+        else if (texture instanceof JTexture jTexture) return new JSprite(jTexture);
+        else return Sprite.create(Colors.WHITE);
     }
 
     /**
@@ -105,11 +99,8 @@ public abstract class Sprite extends Component {
      * @return a sprite
      */
     public static Sprite create(Color color) {
-        if (Mayonez.getUseGL()) {
-            return new GLSprite(color);
-        } else {
-            return new JSprite(color);
-        }
+        if (Mayonez.getUseGL()) return new GLSprite(color);
+        else return new JSprite(color);
     }
 
 }

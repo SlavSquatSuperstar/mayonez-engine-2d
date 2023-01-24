@@ -133,10 +133,10 @@ public class GameObject {
 //     * @param <T> a subclass of {@link Component}
 //     */
 //    public <T extends Component> void removeComponent(Class<T> cls) {
-//        for (Component c : components) {
-//            if (cls.isInstance(c)) {
-//                c.destroy();
-//                components.remove(c); // will cause concurrent exception
+//        for (var comp : components) {
+//            if (cls.isInstance(comp)) {
+//                comp.destroy();
+//                components.remove(comp); // will cause concurrent exception
 //                return;
 //            }
 //        }
@@ -150,8 +150,8 @@ public class GameObject {
      * @return the component, or null if not present
      */
     public <T extends Component> T getComponent(Class<T> cls) {
-        for (Component c : components) {
-            if (cls.isAssignableFrom(c.getClass())) return cls.cast(c);
+        for (var comp : components) {
+            if (cls.isAssignableFrom(comp.getClass())) return cls.cast(comp);
         }
         return null;
     }
@@ -185,7 +185,7 @@ public class GameObject {
     }
 
     private int getUpdateOrder(Class componentCls) {
-        int i = updateOrder.indexOf(componentCls);
+        var i = updateOrder.indexOf(componentCls);
         if (i > -1) return i; // present
         i = getUpdateOrder(componentCls.getSuperclass()); // keep searching for super
         return (i > -1) ? i : updateOrder.size(); // just update last
@@ -227,7 +227,7 @@ public class GameObject {
      * @return the child object
      */
     public GameObject getChild(String name) {
-        for (GameObject child : children) {
+        for (var child : children) {
             if (child.name.equals(name)) return child;
         }
         return null;
@@ -252,19 +252,19 @@ public class GameObject {
      * @param type    the type of the collision given by the listener
      */
     public final void onCollisionEvent(GameObject other, boolean trigger, CollisionEventType type) {
-        for (Script s : getComponents(Script.class)) {
+        for (var scr : getComponents(Script.class)) {
             switch (type) {
                 case ENTER -> {
-                    if (trigger) s.onTriggerEnter(other);
-                    else s.onCollisionEnter(other);
+                    if (trigger) scr.onTriggerEnter(other);
+                    else scr.onCollisionEnter(other);
                 }
                 case STAY -> {
-                    if (trigger) s.onTriggerStay(other);
-                    else s.onCollisionStay(other);
+                    if (trigger) scr.onTriggerStay(other);
+                    else scr.onCollisionStay(other);
                 }
                 case EXIT -> {
-                    if (trigger) s.onTriggerExit(other);
-                    else s.onCollisionExit(other);
+                    if (trigger) scr.onTriggerExit(other);
+                    else scr.onCollisionExit(other);
                 }
             }
         }

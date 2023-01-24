@@ -9,9 +9,10 @@ import mayonez.math.Vec2;
 import mayonez.physics.Rigidbody;
 import mayonez.physics.colliders.BoxCollider;
 import mayonez.scripts.KeepInScene;
-import slavsquatsuperstar.demos.spacegame.scripts.movement.ClickToMove;
-import mayonez.scripts.movement.MoveMode;
 import mayonez.scripts.combat.FireProjectile;
+import mayonez.scripts.movement.KeyMovement;
+import mayonez.scripts.movement.KeyRotation;
+import mayonez.scripts.movement.MoveMode;
 import slavsquatsuperstar.demos.spacegame.scripts.movement.ThrustController;
 import slavsquatsuperstar.demos.spacegame.scripts.movement.ThrustDirection;
 import slavsquatsuperstar.demos.spacegame.scripts.movement.Thruster;
@@ -42,10 +43,10 @@ public class PlayerShip extends GameObject {
         addComponent(Sprite.create(spriteName));
 
         // Scripts
-        addComponent(new KeepInScene(KeepInScene.Mode.STOP));
-//        addComponent(new KeyMovement(MoveMode.FORCE, 10f, "horizontal2", "vertical").setObjectAligned(true));
-//        addComponent(new KeyRotation(MoveMode.VELOCITY, 120f, "horizontal"));
-        addComponent(new ClickToMove(MoveMode.VELOCITY, 10f, true));
+        addComponent(new KeepInScene(KeepInScene.Mode.WRAP));
+        addComponent(new KeyMovement(MoveMode.FORCE, 10f, "horizontal2", "vertical").setObjectAligned(true));
+        addComponent(new KeyRotation(MoveMode.VELOCITY, 120f, "horizontal"));
+//        addComponent(new ClickToMove(MoveMode.VELOCITY, 10f, true));
         addComponent(new FireProjectile(0.2f) {
             private int weaponChoice = 1;
 
@@ -74,17 +75,17 @@ public class PlayerShip extends GameObject {
                     return Projectiles.createPlasma(gameObject);
                 } else return null;
             }
-        }.setEnabled(false));
+        }.setEnabled(true));
 
         // Sub-Objects
-        Thruster lBack = new Thruster(ThrustDirection.FORWARD);
-        Thruster rBack = new Thruster(ThrustDirection.FORWARD);
-        Thruster lFront = new Thruster(ThrustDirection.BACKWARD);
-        Thruster rFront = new Thruster(ThrustDirection.BACKWARD);
-        Thruster fLeft = new Thruster(ThrustDirection.RIGHT, ThrustDirection.TURN_RIGHT);
-        Thruster bLeft = new Thruster(ThrustDirection.RIGHT, ThrustDirection.TURN_LEFT);
-        Thruster fRight = new Thruster(ThrustDirection.LEFT, ThrustDirection.TURN_LEFT);
-        Thruster bRight = new Thruster(ThrustDirection.LEFT, ThrustDirection.TURN_RIGHT);
+        var lBack = new Thruster(ThrustDirection.FORWARD);
+        var rBack = new Thruster(ThrustDirection.FORWARD);
+        var lFront = new Thruster(ThrustDirection.BACKWARD);
+        var rFront = new Thruster(ThrustDirection.BACKWARD);
+        var fLeft = new Thruster(ThrustDirection.RIGHT, ThrustDirection.TURN_RIGHT);
+        var bLeft = new Thruster(ThrustDirection.RIGHT, ThrustDirection.TURN_LEFT);
+        var fRight = new Thruster(ThrustDirection.LEFT, ThrustDirection.TURN_LEFT);
+        var bRight = new Thruster(ThrustDirection.LEFT, ThrustDirection.TURN_RIGHT);
 
         // aft thrusters
         getScene().addObject(Thruster.createObject(lBack, "Left Rear Thruster", this,

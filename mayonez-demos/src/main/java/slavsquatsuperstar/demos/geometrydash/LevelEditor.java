@@ -30,7 +30,7 @@ public class LevelEditor extends Scene {
         });
 
         // TODO still getting stuck on corners
-        addObject(new Player("Player", new Vec2(0, 0)));
+        addObject(new GDPlayer("Player", new Vec2(0, 0)));
 
         addObject(new GameObject("Grid") {
             @Override
@@ -39,7 +39,7 @@ public class LevelEditor extends Scene {
             }
         });
 
-        SpriteSheet blocks = SpriteSheet.create("assets/textures/geometrydash/blocks.png", 42, 42, 12, 2);
+        var blocks = SpriteSheet.create("assets/textures/geometrydash/blocks.png", 42, 42, 12, 2);
         addObject(new UICanvas("Canvas", new Transform(new Vec2(-5f, -5f)), (JSpriteSheet) blocks));
 
     }

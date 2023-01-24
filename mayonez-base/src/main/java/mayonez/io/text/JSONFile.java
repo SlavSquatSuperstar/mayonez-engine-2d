@@ -24,7 +24,7 @@ public class JSONFile extends TextAsset {
      * @return the record, blank if the file does not exist
      */
     public Record readJSON() {
-        String text = super.read();
+        var text = super.read();
         if (!text.equals("")) {
             try {
                 return new Record(new JSONObject(new JSONTokener(text)).toMap());

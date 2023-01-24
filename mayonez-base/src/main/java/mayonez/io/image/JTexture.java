@@ -2,10 +2,10 @@ package mayonez.io.image;
 
 import mayonez.Logger;
 import mayonez.Transform;
+import mayonez.annotations.EngineType;
+import mayonez.annotations.UsesEngine;
 import mayonez.math.FloatMath;
 import mayonez.math.Vec2;
-import mayonez.annotations.UsesEngine;
-import mayonez.annotations.EngineType;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -13,7 +13,6 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Objects;
 
 /**
@@ -51,7 +50,7 @@ public final class JTexture extends Texture {
 
     @Override
     protected void readImage() {
-        try (InputStream in = inputStream()) {
+        try (var in = inputStream()) {
             image = ImageIO.read(new ByteArrayInputStream(Objects.requireNonNull(in).readAllBytes()));
             Logger.debug("Loaded image \"%s\"", getFilename());
         } catch (IOException e) {
@@ -71,14 +70,14 @@ public final class JTexture extends Texture {
      */
     public void draw(Graphics2D g2, Transform parentXf, Transform spriteXf, float scale) {
         // Measurements are in screen coordinates (pixels)
-        Transform texXf = parentXf.combine(spriteXf);
-        Vec2 parentCenter = texXf.getPosition().mul(scale);
-        Vec2 parentSize = texXf.getScale().mul(scale);
-        Vec2 parentHalfSize = parentSize.mul(0.5f);
-        Vec2 imageSize = new Vec2(image.getWidth(), image.getHeight());
+        var texXf = parentXf.combine(spriteXf);
+        var parentCenter = texXf.getPosition().mul(scale);
+        var parentSize = texXf.getScale().mul(scale);
+        var parentHalfSize = parentSize.mul(0.5f);
+        var imageSize = new Vec2(image.getWidth(), image.getHeight());
 
         // Draw sprite at parent center with parent rotation and scale
-        AffineTransform g2Xf = AffineTransform.getTranslateInstance(
+        var g2Xf = AffineTransform.getTranslateInstance(
                 parentCenter.x - parentHalfSize.x, parentCenter.y - parentHalfSize.y); // Parent min
         g2Xf.rotate(FloatMath.toRadians(texXf.getRotation()), parentHalfSize.x, parentHalfSize.y);
         g2Xf.scale(parentSize.x / imageSize.x, -parentSize.y / imageSize.y); // Flip image vertically like GL

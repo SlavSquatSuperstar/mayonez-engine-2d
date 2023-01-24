@@ -10,7 +10,7 @@ import mayonez.physics.colliders.BoxCollider;
 import mayonez.scripts.KeepInScene;
 import mayonez.scripts.combat.Damageable;
 import mayonez.scripts.combat.FireProjectile;
-import slavsquatsuperstar.demos.spacegame.scripts.SpawnManager;
+import mayonez.scripts.SpawnManager;
 
 /**
  * An enemy spaceship that can be destroyed.

@@ -63,7 +63,7 @@ public class Thruster extends Script {
             @Override
             protected void init() {
                 setZIndex(ZIndex.EXHAUST.zIndex);
-                System.out.println(getParent());
+//                System.out.println(getParent());
                 addComponent(thruster);
                 addComponent(new Animator(sprites, 0.25f));
             }

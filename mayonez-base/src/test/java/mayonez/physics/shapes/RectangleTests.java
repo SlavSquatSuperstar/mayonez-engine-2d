@@ -50,18 +50,18 @@ public class RectangleTests {
 
     @Test
     public void rectScaledProperly() {
-        Rectangle xf1 = rect.scale(new Vec2(2, 2), null).translate(new Vec2(-1, 0.5f));
+        var xf1 = rect.scale(new Vec2(2, 2), null).translate(new Vec2(-1, 0.5f));
         assertEquals(xf1.center(), new Vec2(2, 2));
-        Rectangle xf2 = rect.scale(new Vec2(3, 4), null);
+        var xf2 = rect.scale(new Vec2(3, 4), null);
         assertEquals(rect.center(), xf2.center());
         assertEquals(rect.area() * 12, xf2.area());
     }
 
 //    @Test
 //    public void rectRotatedProperly() {
-//        float angle = 45f;
-//        Polygon poly = Polygon.rectangle(new Vec2(3, 1.5f), new Vec2(4, 3)).rotate(angle, null);
-//        BoundingRectangle rot = rect.rotate(angle, null);
+//        var angle = 45f;
+//        var poly = new Rectangle(new Vec2(3, 1.5f), new Vec2(4, 3)).rotate(angle, null);
+//        var rot = rect.rotate(angle, null);
 //        assertEquals(rot.center(), poly.center());
 //        assertEquals(poly.boundingRectangle(), rot);
 //    }

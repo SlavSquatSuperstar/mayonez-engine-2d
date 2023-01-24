@@ -14,7 +14,7 @@ import static mayonez.test.TestUtils.assertVerticesEqual;
  *
  * @author SlavSquatSuperstar
  */
-public class PolygonTests {
+public class PolygonColliderTests {
 
     static Vec2[] vertices = new Vec2[]{new Vec2(1, 1), new Vec2(-1, 1), new Vec2(-1, -1), new Vec2(1, -1)};
 
@@ -23,7 +23,7 @@ public class PolygonTests {
     // Create 2x2 a box centered at (0, 0)
     @Test
     public void polygonVerticesReturnsWorld() {
-        PolygonCollider shape = new PolygonCollider(vertices);
+        var shape = new PolygonCollider(vertices);
         assertEquals(4, shape.getNumVertices());
         assertVerticesEqual(vertices, shape.getVertices());
     }
@@ -50,7 +50,7 @@ public class PolygonTests {
     public void rotatedPolygonVerticesReturnsWorld() {
         PolygonCollider shape = new PolygonCollider(vertices).setTransform(Transform.rotateInstance(45));
         Vec2[] worldVertices = new Vec2[vertices.length];
-        for (int i = 0; i < worldVertices.length; i++)
+        for (var i = 0; i < worldVertices.length; i++)
             worldVertices[i] = vertices[i].rotate(45);
         assertVerticesEqual(worldVertices, shape.getVertices());
     }

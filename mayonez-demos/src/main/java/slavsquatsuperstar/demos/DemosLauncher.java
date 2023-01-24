@@ -22,7 +22,7 @@ public class DemosLauncher {
     };
 
     public static void main(String[] args) {
-        String arg0 = (args.length > 0) ? args[0] : "false";
+        var arg0 = (args.length > 0) ? args[0] : "false";
         Mayonez.setUseGL(Boolean.parseBoolean(arg0)); // Automatically choose AWT/GL from CL args
 
         // Load scenes and allow scene switching
@@ -70,7 +70,7 @@ public class DemosLauncher {
         if (KeyInput.keyPressed("r")) {
             SceneManager.reloadScene();
         } else if (KeyInput.keyDown("left shift")) {
-            for (int i = 0; i < scenes.length; i++) {
+            for (var i = 0; i < scenes.length; i++) {
                 if (KeyInput.keyPressed(String.valueOf(i + 1))) SceneManager.setScene(scenes[i]);
             }
         }

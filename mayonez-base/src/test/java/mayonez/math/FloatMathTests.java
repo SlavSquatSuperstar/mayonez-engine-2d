@@ -109,19 +109,5 @@ public class FloatMathTests {
         assertFloatEquals(13, FloatMath.hypot(3, 4, 12));
     }
 
-    private static int max(int[] nums) {
-        int max = nums[0];
-        for (int i = 1; i < nums.length; i++)
-            if (nums[i] > max) max = nums[i];
-        return max;
-    }
-
-    private static int min(int[] nums) {
-        int min = nums[0];
-        for (int i = 1; i < nums.length; i++)
-            if (nums[i] < min) min = nums[i];
-        return min;
-    }
-
 
 }

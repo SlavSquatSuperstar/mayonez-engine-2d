@@ -28,7 +28,6 @@ public abstract class Camera extends Script {
     private CameraMode mode;
     private GameObject subject;
 
-
     // Camera Effects
     private float zoom, rotation; // magnification of objects
 

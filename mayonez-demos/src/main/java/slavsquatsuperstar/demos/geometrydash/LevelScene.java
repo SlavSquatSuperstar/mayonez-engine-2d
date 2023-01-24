@@ -28,7 +28,7 @@ public class LevelScene extends Scene {
             }
         });
 
-        addObject(new Player("Player", new Vec2(0, -5)));
+        addObject(new GDPlayer("Player", new Vec2(0, -5)));
     }
 
     public static void main(String[] args) {

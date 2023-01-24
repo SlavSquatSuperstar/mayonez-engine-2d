@@ -28,7 +28,7 @@ public class Animator extends Script {
 
     @Override
     public void init() {
-        for (Sprite spr : sprites) gameObject.addComponent(spr.setEnabled(false));
+        for (var spr : sprites) gameObject.addComponent(spr.setEnabled(false));
         gameObject.addComponent(animTimer);
     }
 

@@ -30,11 +30,11 @@ public class UICanvas extends GameObject {
 //        int cols = 6;
         int rows = 2;
 
-        for (int i = 0; i < icons.numSprites(); i++) {
+        for (var i = 0; i < icons.numSprites(); i++) {
             // 1 3 5 7  9 11
             // 2 4 6 8 10 12
-            float x = 1.5f * (i / rows);
-            float y = -1.5f * (i % rows);
+            var x = 1.5f * (i / rows);
+            var y = -1.5f * (i % rows);
             addElement(new UIButton(
                     "Button " + (i + 1), new Transform(new Vec2(x, y), 0f, new Vec2(1.25f)), icons.getTexture(i)
             ));

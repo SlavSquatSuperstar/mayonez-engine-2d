@@ -2,14 +2,12 @@ package mayonez.io;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import mayonez.io.text.TextFile;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -44,31 +42,31 @@ public class AssetTests {
 
     @Test
     public void scanFolderAddsNothing() {
-        List<String> files = Assets.scanFiles("src/test/resources/testassets/mario.png");
+        var files = Assets.scanFiles("src/test/resources/testassets/mario.png");
         assertTrue(files.isEmpty());
     }
 
     @Test
     public void classpathAssetExists() {
-        Asset a = Assets.createAsset("testassets/images/mario.png");
+        var a = Assets.createAsset("testassets/images/mario.png");
         assertTrue(a.isValid());
     }
 
     @Test
     public void classpathAssetNotExists() {
-        Asset a = Assets.createAsset("testassets/luigi.png");
+        var a = Assets.createAsset("testassets/luigi.png");
         assertFalse(a.isValid());
     }
 
     @Test
     public void localAssetExists() {
-        Asset a = Assets.createAsset("src/test/resources/testassets/images/mario.png");
+        var a = Assets.createAsset("src/test/resources/testassets/images/mario.png");
         assertTrue(a.isValid());
     }
 
     @Test
     public void localAssetNotExists() {
-        Asset a = Assets.createAsset("src/test/resources/testassets/images/luigi.png");
+        var a = Assets.createAsset("src/test/resources/testassets/images/luigi.png");
         assertFalse(a.isValid());
     }
 
@@ -84,7 +82,7 @@ public class AssetTests {
 
     @Test
     public void getResourceInputStreamSuccess() {
-        InputStream in = getFileFromResourceAsStream("testassets/text/properties.txt");
+        var in = getFileFromResourceAsStream("testassets/text/properties.txt");
         assertNotNull(in);
         printInputStream(in);
     }
@@ -95,7 +93,7 @@ public class AssetTests {
     }
 
     private static InputStream getFileFromResourceAsStream(String fileName) {
-        InputStream inputStream = ClassLoader.getSystemResourceAsStream(fileName);
+        var inputStream = ClassLoader.getSystemResourceAsStream(fileName);
         // The stream holding the file content
         if (inputStream == null) {
             throw new IllegalArgumentException("file not found: " + fileName);
@@ -105,8 +103,8 @@ public class AssetTests {
     }
 
     private static void printInputStream(InputStream is) {
-        try (InputStreamReader streamReader = new InputStreamReader(is, StandardCharsets.UTF_8);
-             BufferedReader reader = new BufferedReader(streamReader)) {
+        try (var streamReader = new InputStreamReader(is, StandardCharsets.UTF_8);
+             var reader = new BufferedReader(streamReader)) {
             String line;
             while ((line = reader.readLine()) != null) {
                 System.out.println(line);
@@ -118,7 +116,7 @@ public class AssetTests {
 
     @Test
     public void createAssetWithReflection() {
-        TextFile t = Assets.getTextFile("testassets/text/properties.txt");
+        var t = Assets.getTextFile("testassets/text/properties.txt");
         assertEquals("testassets/text/properties.txt", t.getFilename());
     }
 

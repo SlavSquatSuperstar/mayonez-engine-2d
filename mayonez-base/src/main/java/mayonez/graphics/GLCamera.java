@@ -37,9 +37,9 @@ public final class GLCamera extends Camera {
 
     @Override
     public Vec2 toWorld(Vec2 screen) {
-        Vec2 flippedPos = new Vec2(screen.x, screenSize.y - screen.y); // Mirror y
-        Vec2 worldPos = flippedPos.div(screenSize).mul(2f).sub(new Vec2(1f)).div(sceneScale);
-        Vector4f temp = new Vector4f(worldPos.x, worldPos.y, 0f, 0f);
+        var flippedPos = new Vec2(screen.x, screenSize.y - screen.y); // Mirror y
+        var worldPos = flippedPos.div(screenSize).mul(2f).sub(new Vec2(1f)).div(sceneScale);
+        var temp = new Vector4f(worldPos.x, worldPos.y, 0f, 0f);
         temp.mul(getInverseProjection()).mul(getInverseView());
         return new Vec2(temp.x, temp.y).add(getPosition());
     }
@@ -48,7 +48,7 @@ public final class GLCamera extends Camera {
     // Projection Matrix Methods
 
     public Matrix4f getProjectionMatrix() {
-        Vec2 projSize = screenSize.div(getZoom());
+        var projSize = screenSize.div(getZoom());
         projMatrix.setOrtho(0, projSize.x, 0, projSize.y, nearPlane, farPlane);
         projMatrix.invert(invProjMatrix);
         return projMatrix;
@@ -62,15 +62,15 @@ public final class GLCamera extends Camera {
 
     public Matrix4f getViewMatrix() {
         // Translate view matrix
-        Vector3f cameraFront = new Vector3f(0, 0, -1);
-        Vector3f cameraUp = new Vector3f(0, 1, 0);
-        Vec2 offset = getOffset();
-        viewMatrix.setLookAt(new Vector3f(offset.x, offset.y, zPosition), cameraFront.add(offset.x, offset.y, 0), cameraUp);
+        var cameraFront = new Vector3f(0, 0, -1);
+        var cameraUp = new Vector3f(0, 1, 0);
+        var offset = getOffset();
+        viewMatrix.setLookAt(new Vector3f(offset.x, offset.y, zPosition), cameraFront.add(offset.x, offset.y, 0f), cameraUp);
 
         // Rotate view matrix
-        Vec2 cameraPos = getPosition().mul(SceneManager.getCurrentScene().getScale());
-        Quaternionf rotation = new Quaternionf();
-        rotation.rotationAxis(FloatMath.toRadians(-getRotation()), new Vector3f(0, 0, 1));
+        var cameraPos = getPosition().mul(SceneManager.getCurrentScene().getScale());
+        var rotation = new Quaternionf();
+        rotation.rotationAxis(FloatMath.toRadians(-getRotation()), 0, 0, 1);
         viewMatrix.rotateAround(rotation, cameraPos.x, cameraPos.y, 0);
 
         viewMatrix.invert(invViewMatrix);
