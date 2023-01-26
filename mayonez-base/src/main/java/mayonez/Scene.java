@@ -139,7 +139,7 @@ public abstract class Scene {
         if (started && loaded) {
             renderer.render(g2);
             if (separateDebugRenderer()) debugRenderer.render(g2);
-            onUserRender(g2);
+            onUserRender();
         }
     }
 
@@ -183,10 +183,8 @@ public abstract class Scene {
 
     /**
      * Provide user-defined draw behavior for this scene.
-     *
-     * @param g2 the window's graphics object
      */
-    protected void onUserRender(Graphics2D g2) {
+    protected void onUserRender() {
     }
 
     // Object Methods

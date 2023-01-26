@@ -12,12 +12,11 @@ import mayonez.math.Random;
 import mayonez.math.Vec2;
 import mayonez.physics.shapes.Circle;
 import mayonez.physics.shapes.Shape;
+import mayonez.scripts.SpawnManager;
 import slavsquatsuperstar.demos.spacegame.objects.Asteroid;
 import slavsquatsuperstar.demos.spacegame.objects.EnemyShip;
 import slavsquatsuperstar.demos.spacegame.objects.PlayerShip;
-import mayonez.scripts.SpawnManager;
 
-import java.awt.*;
 import java.util.ArrayList;
 
 public class SpaceGameScene extends Scene {
@@ -93,7 +92,7 @@ public class SpaceGameScene extends Scene {
     }
 
     @Override
-    protected void onUserRender(Graphics2D g2) {
+    protected void onUserRender() {
         for (var obj : backgroundObjects) {
             DebugDraw.fillShape(obj.getFirst(), obj.getSecond());
         }

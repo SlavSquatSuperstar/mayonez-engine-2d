@@ -3,11 +3,39 @@
 SCRIPT_DIR=$(dirname "$0")
 cd "$SCRIPT_DIR" || exit
 
-# Build the application for macOS/Linux
+MAC_OS=false
+
+# Check operating system
+if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+  echo "Detecting GNU/Linux."
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+  echo "Detecting macOS."
+  MAC_OS=true
+else
+  echo "Unknown operating system detected."
+fi
+
+# Check if Java is installed
+if [ "$(java --version)" ]; then
+  echo "Java is installed."
+else
+  echo "Please install Java."
+  exit 1
+fi
+
+# Build the application for Unix systems (macOS/Linux)
 echo "Building mayonez-engine..."
-./gradlew clean build
+if [ "$(./gradlew clean build)" ]; then
+  echo "Successfully built mayonez-engine."
+else
+  echo "Error building mayonez-engine."
+  exit 1
+fi
 
-# Run the compiled jar file
-# LWJGL requires a special argument on macOS
-java -XstartOnFirstThread -jar build/libs/*.jar "true"
-
+# Run the compiled .jar file
+if "$MAC_OS"; then
+  # LWJGL requires a special argument on macOS
+  java -XstartOnFirstThread -jar build/libs/*.jar "true"
+else
+  java -jar build/libs/*.jar "true"
+fi

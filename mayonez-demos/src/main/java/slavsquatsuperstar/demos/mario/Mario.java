@@ -22,8 +22,8 @@ class Mario extends GameObject {
 
     private final Sprite sprite;
 
-    public Mario(Sprite sprite) {
-        super("Mario", Transform.scaleInstance(new Vec2(2)), 1);
+    public Mario(Vec2 position, Sprite sprite) {
+        super("Mario", new Transform(position, 0f, new Vec2(2f)), 1);
         this.sprite = sprite;
     }
 

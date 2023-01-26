@@ -9,7 +9,8 @@ other systems.
 
 This fully-operational game engine includes:
 
-- A physics system with force-based movement, multiple collider shapes, linear and angular impulse resolution, and friction
+- A physics system with force-based movement, multiple collider shapes, linear and angular impulse resolution, and
+  friction
 - A 2D renderer that can draw sprites and shapes with both Java AWT and LWJGL OpenGL libraries
 - An entity-component system that allows you to create modular, reusable game objects and components
 - An asset system that can read from classpath resources and read and write to local files
@@ -25,10 +26,10 @@ This fully-operational game engine includes:
 
 - Download the latest Java version: [Eclipse Temurin 17+](https://adoptium.net/temurin/releases) (select "JRE" under "
   Package Type") or [Oracle JRE 17+](https://www.oracle.com/java/technologies/downloads/)
-- Extract and run the package, then check if Java is installed by entering "java --version" inside a command line
-  window.
-- Download the repository, drag 'run' (Mac/Linux) or 'run.bat' (Windows) from the extracted folder to a command line
-  window, and press enter.
+- Extract and run the installer, then check if Java is installed by entering "java --version" inside a command
+  line/terminal window.
+- Download the repository, drag 'run' (Mac/Linux) or 'run.bat' (Windows) from the extracted folder into your command
+  line/terminal, and press enter.
 
 ### Instructions for Developers
 
@@ -39,13 +40,44 @@ This fully-operational game engine includes:
     - Utilizes [Gradle Shadow Plugin](https://github.com/johnrengelman/shadow) for creating fat jars
 - Dependencies (bundled in JAR)
     - [LWJGL 3.3.1](https://www.lwjgl.org/customize) (user OS & architecture specific)
-      with [JOML](https://joml-ci.github.io/JOML/)
-        - Libraries: GLFW, OpenGL, STB
+      - Libraries: [JOML](https://joml-ci.github.io/JOML/), GLFW, OpenGL, and STB
     - [Kotlin Standard Library](https://kotlinlang.org/docs/getting-started.html)
     - [JSON in Java](https://github.com/stleary/JSON-java) (org.json)
     - [Java Reflections](https://github.com/ronmamo/reflections)
     - [SLF4J Simple Binding](https://www.slf4j.org/) (dependency for Reflections)
     - [JUnit 5](https://junit.org/junit5/docs/current/user-guide/) (not bundled, for testing only)
+
+## Demo Scenes
+
+The current demo includes 4 scenes: a Space Shooter scene, a Mario scene, a Physics Sandbox scene,
+and a Pool Balls scene.
+
+### Demo Key Binds
+
+- All scenes:
+    - **R** to reload current scene
+    - **Shift** + **1**/**2**/**3**/**4**/**5** to switch scenes
+    - **Esc** to exit the demos
+- Space Shooter:
+    - **W**/**S** to fly forward/backwards
+    - **A**/**D** to turn left/right
+    - **Q**/**E** to strafe left/right
+    - **Space**: brake
+    - **Left mouse** to fire weapons
+    - **1**/**2**: switch ammo types
+    - **Arrow keys** to zoom camera in/out and rotate camera left/right
+- Mario:
+    - **WASD** to move
+    - **Q/E** to spin
+    - **+**/**-** to grow/shrink
+- Physics Sandbox:
+    - **Left mouse** on objects to drag them around
+    - **Right mouse**, *drag*, and *release* on objects to flick them
+    - **1**/**2**/**3** to spawn shapes
+    - **Space** to toggle gravity
+- Pool Balls
+    - **Left mouse** and *drag* on objects to move them
+    - **Right mouse**, *drag*, and *release* on objects to flick them
 
 ## Additional Info
 

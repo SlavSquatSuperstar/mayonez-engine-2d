@@ -11,9 +11,9 @@ import mayonez.physics.colliders.BoxCollider;
 import slavsquatsuperstar.demos.geometrydash.components.Grid;
 import slavsquatsuperstar.demos.geometrydash.ui.UICanvas;
 
-public class LevelEditor extends Scene {
+public class GDEditor extends Scene {
 
-    public LevelEditor() {
+    public GDEditor() {
         super("Level Editor", Preferences.getScreenWidth(), Preferences.getScreenHeight(), 42);
         setGravity(new Vec2());
     }
@@ -46,7 +46,7 @@ public class LevelEditor extends Scene {
 
     public static void main(String[] args) {
         Mayonez.setUseGL(false);
-        Mayonez.start(new LevelEditor());
+        Mayonez.start(new GDEditor());
     }
 
 }

@@ -3,9 +3,8 @@ package slavsquatsuperstar.demos;
 import mayonez.Mayonez;
 import mayonez.SceneManager;
 import mayonez.input.KeyInput;
-import slavsquatsuperstar.demos.mario.RendererTest;
-import slavsquatsuperstar.demos.physics.PhysicsTestScene;
-import slavsquatsuperstar.demos.physics.DetectionTestScene;
+import slavsquatsuperstar.demos.mario.MarioScene;
+import slavsquatsuperstar.demos.physics.SandboxScene;
 import slavsquatsuperstar.demos.physics.PoolBallsScene;
 import slavsquatsuperstar.demos.spacegame.SpaceGameScene;
 
@@ -17,8 +16,7 @@ import slavsquatsuperstar.demos.spacegame.SpaceGameScene;
 public class DemosLauncher {
 
     private final static String[] scenes = {
-            "Space Game", "Mario Scene", "Collisions Test",
-            "Pool Balls Test", "Detection Test"
+            "Space Game", "Mario Scene", "Collisions Test", "Pool Balls Test"
     };
 
     public static void main(String[] args) {
@@ -33,14 +31,14 @@ public class DemosLauncher {
                 pollSceneControls();
             }
         });
-        SceneManager.addScene(new RendererTest(scenes[1]) {
+        SceneManager.addScene(new MarioScene(scenes[1]) {
             @Override
             protected void onUserUpdate(float dt) {
                 super.onUserUpdate(dt);
                 pollSceneControls();
             }
         });
-        SceneManager.addScene(new PhysicsTestScene(scenes[2]) {
+        SceneManager.addScene(new SandboxScene(scenes[2]) {
             @Override
             protected void onUserUpdate(float dt) {
                 super.onUserUpdate(dt);
@@ -54,13 +52,13 @@ public class DemosLauncher {
                 pollSceneControls();
             }
         });
-        SceneManager.addScene(new DetectionTestScene(scenes[4]) {
-            @Override
-            protected void onUserUpdate(float dt) {
-                super.onUserUpdate(dt);
-                pollSceneControls();
-            }
-        });
+//        SceneManager.addScene(new DetectionTestScene(scenes[4]) {
+//            @Override
+//            protected void onUserUpdate(float dt) {
+//                super.onUserUpdate(dt);
+//                pollSceneControls();
+//            }
+//        });
 
         // Start Game
         Mayonez.start(SceneManager.getScene(scenes[0]));

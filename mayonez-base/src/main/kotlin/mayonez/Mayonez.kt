@@ -31,7 +31,6 @@ object Mayonez {
         get() = (System.nanoTime() - NANOS_STARTED) / 1.0E9f
 
     // Game Fields
-    // TODO make not null
     @JvmStatic
     var useGL: Boolean = false
         set(value) {

@@ -8,6 +8,11 @@ import mayonez.math.Vec2;
 
 import java.util.LinkedList;
 
+/**
+ * For testing the physics engine with simulated pool balls.
+ *
+ * @author SlavSquatSuperstar
+ */
 public class PoolBallsScene extends Scene {
 
     public PoolBallsScene(String name) {

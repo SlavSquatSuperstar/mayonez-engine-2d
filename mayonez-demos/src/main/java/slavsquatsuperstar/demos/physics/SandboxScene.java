@@ -19,7 +19,12 @@ import mayonez.scripts.movement.MoveMode;
 
 import java.awt.*;
 
-public class PhysicsTestScene extends Scene {
+/**
+ * For testing dynamic movement and collision resolution.
+ *
+ * @author SlavSquatSupertar
+ */
+public class SandboxScene extends Scene {
 
     private static final PhysicsMaterial NORMAL_MATERIAL = new PhysicsMaterial(0.4f, 0.4f, 0.3f);
     private static final PhysicsMaterial BOUNCY_MATERIAL = new PhysicsMaterial(0f, 0f, 1f);
@@ -28,7 +33,7 @@ public class PhysicsTestScene extends Scene {
 
     private boolean enabledGravity;
 
-    public PhysicsTestScene(String name) {
+    public SandboxScene(String name) {
         super(name, Preferences.getScreenWidth(), Preferences.getScreenHeight(), 10);
     }
 
@@ -69,7 +74,7 @@ public class PhysicsTestScene extends Scene {
     }
 
     @Override
-    public void onUserRender(Graphics2D g2) {
+    public void onUserRender() {
         // Draw center, velocity, direction vector
         for (var obj : getObjects()) {
             var col = obj.getComponent(Collider.class);

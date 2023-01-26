@@ -5,8 +5,8 @@ import mayonez.graphics.CameraMode;
 import mayonez.input.KeyInput;
 import mayonez.math.Vec2;
 import mayonez.physics.Rigidbody;
-import slavsquatsuperstar.demos.geometrydash.LevelEditor;
-import slavsquatsuperstar.demos.geometrydash.LevelScene;
+import slavsquatsuperstar.demos.geometrydash.GDEditor;
+import slavsquatsuperstar.demos.geometrydash.GDLevel;
 
 @SuppressWarnings("unused")
 public class PlayerController extends Script {
@@ -26,9 +26,9 @@ public class PlayerController extends Script {
     @Override
     public void start() {
         var cam = getScene().getCamera();
-        if (getScene() instanceof LevelEditor) {
+        if (getScene() instanceof GDEditor) {
             cam.setKeepInScene(false).setMode(CameraMode.FREE);
-        } else if (getScene() instanceof LevelScene) {
+        } else if (getScene() instanceof GDLevel) {
             cam.setMode(CameraMode.FOLLOW).setSubject(gameObject);
         }
         rb = getRigidbody();
@@ -37,7 +37,7 @@ public class PlayerController extends Script {
 
     @Override
     public void update(float dt) {
-        if (getScene() instanceof LevelScene) {
+        if (getScene() instanceof GDLevel) {
             // Jump if on ground
             if (KeyInput.keyDown("w")) {
                 // Impulse must be big enough to not get stuck on ground next frame

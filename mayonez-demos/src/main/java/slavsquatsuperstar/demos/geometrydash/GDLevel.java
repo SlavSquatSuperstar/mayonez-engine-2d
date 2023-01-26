@@ -10,9 +10,9 @@ import mayonez.math.Vec2;
 import mayonez.physics.Rigidbody;
 import mayonez.physics.colliders.BoxCollider;
 
-public class LevelScene extends Scene {
+public class GDLevel extends Scene {
 
-    public LevelScene() {
+    public GDLevel() {
         super("Level", (int) (Preferences.getScreenWidth() * 1.5f), (int) (Preferences.getScreenHeight() * 1f), 42);
         setBackground(Colors.LIGHT_GRAY);
     }
@@ -33,7 +33,7 @@ public class LevelScene extends Scene {
 
     public static void main(String[] args) {
         Mayonez.setUseGL(false);
-        Mayonez.start(new LevelScene());
+        Mayonez.start(new GDLevel());
     }
 
 }
