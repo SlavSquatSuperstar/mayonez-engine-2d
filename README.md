@@ -7,6 +7,8 @@ other systems.
 
 ## Features
 
+The latest stable version of Mayonez Engine is 0.7.5.
+
 This fully-operational game engine includes:
 
 - A physics system with force-based movement, multiple collider shapes, linear and angular impulse resolution, and
@@ -26,12 +28,19 @@ This fully-operational game engine includes:
 
 - Download the latest Java version: [Eclipse Temurin 17+](https://adoptium.net/temurin/releases) (select "JRE" under "
   Package Type") or [Oracle JRE 17+](https://www.oracle.com/java/technologies/downloads/)
-- Extract and run the installer, then check if Java is installed by entering "java --version" inside a command
+- Extract and run the installer, then check if Java is installed by entering `java --version` inside a command
   line/terminal window.
-- Download the repository, drag 'run' (Mac/Linux) or 'run.bat' (Windows) from the extracted folder into your command
+- Download the repository, drag `run` (Mac/Linux) or `run.bat` (Windows) from the extracted folder into your command
   line/terminal, and press enter.
 
 ### Instructions for Developers
+
+To download this repository, run `git clone https://github.com/SlavSquatSuperstar/mayonez-engine-2d.git`.
+Then, in an IDE, create a new project from existing sources and import a Gradle project.
+You can also create a new project from version control using the link above if your editor supports it.
+There are several Gradle tasks (compile, test, run, export) included to help in your development.
+
+Below are the tools and library used in the development of this project.
 
 - Java Version: [Eclipse Temurin 17+](https://adoptium.net/) or [Oracle OpenJDK 17+](https://jdk.java.net/)
 - Kotlin Version: [1.8.0+](https://kotlinlang.org/docs/whatsnew18.html)
@@ -40,7 +49,7 @@ This fully-operational game engine includes:
     - Utilizes [Gradle Shadow Plugin](https://github.com/johnrengelman/shadow) for creating fat jars
 - Dependencies (bundled in JAR)
     - [LWJGL 3.3.1](https://www.lwjgl.org/customize) (user OS & architecture specific)
-      - Libraries: [JOML](https://joml-ci.github.io/JOML/), GLFW, OpenGL, and STB
+        - Libraries: [JOML](https://joml-ci.github.io/JOML/), GLFW, OpenGL, and STB
     - [Kotlin Standard Library](https://kotlinlang.org/docs/getting-started.html)
     - [JSON in Java](https://github.com/stleary/JSON-java) (org.json)
     - [Java Reflections](https://github.com/ronmamo/reflections)
@@ -54,7 +63,7 @@ and a Pool Balls scene.
 
 ### Demo Key Binds
 
-- All scenes:
+- All Scenes:
     - **R** to reload current scene
     - **Shift** + **1**/**2**/**3**/**4**/**5** to switch scenes
     - **Esc** to exit the demos
@@ -75,7 +84,7 @@ and a Pool Balls scene.
     - **Right mouse**, *drag*, and *release* on objects to flick them
     - **1**/**2**/**3** to spawn shapes
     - **Space** to toggle gravity
-- Pool Balls
+- Pool Balls:
     - **Left mouse** and *drag* on objects to move them
     - **Right mouse**, *drag*, and *release* on objects to flick them
 
@@ -132,3 +141,5 @@ modify.
 Any forks of this project must also be distributed under the same license and may not be made or used in any proprietary
 (closed-source) applications. They may still be monetized, as long as the code is open.
 See [LICENSE.txt](LICENSE.txt) for more details.
+
+Copyright © 2023 GPL License
