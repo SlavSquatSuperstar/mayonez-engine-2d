@@ -1,0 +1,56 @@
+import org.gradle.internal.os.OperatingSystem
+
+// Configure LWJGL OS (source: https://github.com/azurite-engine/Azurite)
+def os = OperatingSystem.current()
+def osArch = System.getProperty("os.arch")
+
+project.ext.macOS = false
+switch (os) {
+    case OperatingSystem.LINUX:
+        project.ext.lwjglNatives = osArch.startsWith("arm") || osArch.startsWith("aarch64")
+                ? "natives-linux-${osArch.contains("64") || osArch.startsWith("armv8") ? "arm64" : "arm32"}"
+                : "natives-linux"
+        break
+    case OperatingSystem.MAC_OS:
+        project.ext.mac_os = true
+        project.ext.lwjglNatives = osArch.contains("arm") ? "natives-macos-arm64" :
+                "natives-macos"
+        break
+    case OperatingSystem.WINDOWS:
+        project.ext.lwjglNatives = osArch.contains("64")
+                ? "natives-windows${osArch.startsWith("aarch64") ? "-arm64" : ""}"
+                : "natives-windows-x86"
+        break
+}
+
+// List dependencies and versions
+// Source: https://dzone.com/articles/multi-project-builds-with-gradle-and-fat-jars-with
+ext {
+    javaVersion = '17'
+    kotlinVersion = '1.8.10'
+    lwjglVersion = '3.3.1'
+    junitVersion = '5.9.2'
+
+    libs = [
+            // Languages
+            kotlin     : "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion",
+
+            // Dependencies
+            json       : 'org.json:json:20220924',
+            reflections: 'org.reflections:reflections:0.10.2',
+            slf4j      : 'org.slf4j:slf4j-simple:1.7.32', // Don't update, required by reflections
+
+            // LWJGL Modules
+            lwjglBom   : "org.lwjgl:lwjgl-bom:$lwjglVersion", // set version for all libs
+            lwjgl      : 'org.lwjgl:lwjgl',
+            lwjglGlfw  : 'org.lwjgl:lwjgl-glfw',
+            lwjglOpenal: 'org.lwjgl:lwjgl-openal',
+            lwjglOpengl: 'org.lwjgl:lwjgl-opengl',
+            lwjglStb   : 'org.lwjgl:lwjgl-stb',
+            joml       : 'org.joml:joml:1.10.5',
+
+            // Testing
+            junitEngine: "org.junit.jupiter:junit-jupiter-engine:$junitVersion",
+            junitApi   : "org.junit.jupiter:junit-jupiter-api:$junitVersion",
+    ]
+}

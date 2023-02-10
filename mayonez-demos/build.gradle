@@ -1,29 +1,8 @@
 plugins {
-    id 'idea'
-    id 'java'
-//    id 'application'
-
     id 'com.github.johnrengelman.shadow'
 }
 
 description = 'The testbed project for Mayonez Engine that contains all the demo scenes.'
-//project.ext.mainClass = 'slavsquatsuperstar.demos.spacegame.SpaceGameScene'
-
-// Tasks
-
-//application { // For 'run' task
-//    mainClass = project.mainClass
-//    mainModule = project.mainModule
-//}
-//
-//run {
-//    if (org.gradle.internal.os.OperatingSystem.current() == org.gradle.internal.os.OperatingSystem.MAC_OS) {
-//        jvmArgs = ["-XstartOnFirstThread"] // For LWJGL
-//        args = ["true"] // Set CLI args (Use GL true/false)
-//    } else {
-//        args = ["false"]
-//    }
-//}
 
 dependencies {
     implementation project(':mayonez-base')

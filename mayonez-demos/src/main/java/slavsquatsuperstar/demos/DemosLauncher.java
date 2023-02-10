@@ -69,7 +69,6 @@ public class DemosLauncher {
             SceneManager.restartScene();
         } else if (KeyInput.keyPressed("p")) {
             SceneManager.toggleScenePaused();
-            System.out.println("pause");
         } else if (KeyInput.keyDown("left shift")) {
             for (var i = 0; i < scenes.length; i++) {
                 if (KeyInput.keyPressed(String.valueOf(i + 1))) SceneManager.loadScene(scenes[i]);

@@ -1,7 +1,4 @@
-import org.gradle.internal.os.OperatingSystem
-
 plugins {
-    id 'idea'
     id 'java-library'
 
     id 'org.jetbrains.kotlin.jvm'
@@ -10,67 +7,51 @@ plugins {
 
 description = 'The library project for Mayonez Engine that contains the core classes and unit tests.'
 
-// Configure LWJGL OS (source: https://github.com/azurite-engine/Azurite)
-def osArch = System.getProperty("os.arch")
-switch (OperatingSystem.current()) {
-    case OperatingSystem.WINDOWS:
-        project.ext.lwjglNatives = osArch.contains("64")
-                ? "natives-windows${osArch.startsWith("aarch64") ? "-arm64" : ""}"
-                : "natives-windows-x86"
-        break
-    case OperatingSystem.MAC_OS:
-        project.ext.lwjglNatives = osArch.contains("arm") ? "natives-macos-arm64" :
-                "natives-macos"
-        break
-    case OperatingSystem.LINUX:
-        project.ext.lwjglNatives = osArch.startsWith("arm") || osArch.startsWith("aarch64")
-                ? "natives-linux-${osArch.contains("64") || osArch.startsWith("armv8") ? "arm64" : "arm32"}"
-                : "natives-linux"
-        break
-}
-
 dependencies {
     // Code Dependencies
-    api 'org.jetbrains.kotlin:kotlin-stdlib:1.8.0'
-    implementation 'org.json:json:20220924'
-    implementation 'org.reflections:reflections:0.10.2'
-    implementation 'org.slf4j:slf4j-simple:1.7.32' // Don't update, required by reflections
+    api "$libs.kotlin"
+    implementation "$libs.json"
+    implementation "$libs.reflections"
+    implementation "$libs.slf4j"
 
-    // LWJGL Libraries
-    implementation platform('org.lwjgl:lwjgl-bom:3.3.1')
+    // LWJGL Modules
+    implementation platform("$libs.lwjglBom")
 
-    api 'org.joml:joml:1.10.5'
-    implementation "org.lwjgl:lwjgl"
-    implementation "org.lwjgl:lwjgl-glfw"
-    implementation "org.lwjgl:lwjgl-openal"
-    implementation "org.lwjgl:lwjgl-opengl"
-    implementation "org.lwjgl:lwjgl-stb"
-    runtimeOnly "org.lwjgl:lwjgl::$lwjglNatives"
-    runtimeOnly "org.lwjgl:lwjgl-glfw::$lwjglNatives"
-    runtimeOnly "org.lwjgl:lwjgl-openal::$lwjglNatives"
-    runtimeOnly "org.lwjgl:lwjgl-opengl::$lwjglNatives"
-    runtimeOnly "org.lwjgl:lwjgl-stb::$lwjglNatives"
+    implementation "$libs.lwjgl"
+    implementation "$libs.lwjglGlfw"
+    implementation "$libs.lwjglOpenal"
+    implementation "$libs.lwjglOpengl"
+    implementation "$libs.lwjglStb"
+
+    runtimeOnly "$libs.lwjgl::$lwjglNatives"
+    runtimeOnly "$libs.lwjglGlfw::$lwjglNatives"
+    runtimeOnly "$libs.lwjglOpenal::$lwjglNatives"
+    runtimeOnly "$libs.lwjglOpengl::$lwjglNatives"
+    runtimeOnly "$libs.lwjglStb::$lwjglNatives"
+
+    api "$libs.joml"
 
     // Test Libraries
-    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.9.2'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-api:5.9.2'
+    testImplementation "$libs.junitEngine"
+    testRuntimeOnly "$libs.junitApi"
 }
 
 // Tasks
 
 compileJava {
     dependsOn compileKotlin
-    sourceCompatibility = targetCompatibility = project.javaVersion
+    sourceCompatibility = project.javaVersion
+    targetCompatibility = project.javaVersion
 }
 
 compileKotlin {
     kotlinOptions {
+//    compilerOptions {
         jvmTarget = javaVersion
         suppressWarnings = true
         destinationDirectory = compileJava.destinationDirectory
     }
+
 }
 
-test {
-    useJUnitPlatform()
-}
+test { useJUnitPlatform() }

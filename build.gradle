@@ -1,11 +1,7 @@
-import org.gradle.internal.os.OperatingSystem
-
 plugins {
-    id 'idea'
-    id 'java'
     id 'application'
 
-    id 'org.jetbrains.kotlin.jvm' version '1.8.0'
+    id 'org.jetbrains.kotlin.jvm' version '1.8.10'
     id 'org.jetbrains.dokka' version '1.7.20' // For Kotlin documentation
     id 'com.github.johnrengelman.shadow' version '7.1.2' // For making fat jars
 }
@@ -14,25 +10,23 @@ plugins {
 
 description = 'The root project for Mayonez Engine that contains all modules.'
 
-project.ext {
-    // Custom Settings
-    javaVersion = '17'
-    mainClass = 'slavsquatsuperstar.demos.DemosLauncher'
-    mainModule = 'mayonez.demos'
-}
+apply from: 'gradle/dependencies.gradle'
 
+// Custom Settings
 allprojects {
+    apply plugin: 'idea'
+    apply plugin: 'java'
+
     // Name
     group 'slavsquatsuperstar'
     version '0.7.6-snapshot'
 
     // Java Version
-    sourceCompatibility = targetCompatibility = javaVersion
+    sourceCompatibility = javaVersion
+    targetCompatibility = javaVersion
 
     // Dependencies
-    repositories {
-        mavenCentral()
-    }
+    repositories { mavenCentral() }
 }
 
 dependencies {
@@ -43,23 +37,24 @@ dependencies {
 
 // Tasks and Plugins
 
+ext {
+    mainClass = 'slavsquatsuperstar.demos.DemosLauncher'
+    mainModule = 'mayonez.demos'
+}
+
 application { // For 'run' task
     mainClass = project.ext.mainClass
     mainModule = project.ext.mainModule
 }
 
 run {
-    if (OperatingSystem.current() == OperatingSystem.MAC_OS) {
-        jvmArgs = ["-XstartOnFirstThread"] // For LWJGL
-        args = ["true"] // Set CLI args (Use GL true/false)
-    } else {
-        args = ["false"]
-    }
+    if (macOS) jvmArgs = ["-XstartOnFirstThread"] // For LWJGL on macOS
+    args = ["true"] // Set CL args (use GL true/false)
 }
 
 jar {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-    manifest.attributes('Main-Class': project.ext.mainClass)
+    manifest { attributes 'Main-Class': project.ext.mainClass }
     // 'Class-Path': configurations.runtimeClasspath.files.collect { it.getName() }.join(' ')
 }
 
