@@ -8,7 +8,7 @@ import mayonez.util.Record;
 import mayonez.util.StringUtils;
 
 /**
- * Reads data in JavaScript Object Notation (JSON) format and saves it to a .json file.
+ * A JavaScript Object Notation (.json) file that stores an object record.
  *
  * @author SlavSquatSuperstar
  */
@@ -24,7 +24,7 @@ public class JSONFile extends TextAsset {
      * @return the record, blank if the file does not exist
      */
     public Record readJSON() {
-        var text = super.read();
+        var text = super.readText();
         if (!text.equals("")) {
             try {
                 return new Record(new JSONObject(new JSONTokener(text)).toMap());

@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Reads data in Comma-Separated Value (CSV) format and saves it to a .csv file.
+ * A comma-separated value (.csv) file that stores tabular data.
  *
  * @author SlavSquatSuperstar
  */
@@ -27,7 +27,7 @@ public class CSVFile extends TextAsset {
      */
     public List<Record> readCSV() {
         var records = new ArrayList<Record>();
-        var lines = super.readArray();
+        var lines = super.readLines();
         if (lines.length > 2) {
             this.headers = lines[0].split(","); // Get headers
             // Create records from lines

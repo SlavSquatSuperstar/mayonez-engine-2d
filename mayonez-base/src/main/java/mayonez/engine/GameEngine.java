@@ -77,6 +77,7 @@ public abstract sealed class GameEngine permits JGame, GLGame {
                 while (frameTime > 0) { // Will update any leftover sliver of time
                     float deltaTime = FloatMath.min(frameTime, timeStep);
                     update(deltaTime);
+//                    update(deltaTime * Mayonez.getTimeScale());
                     frameTime -= deltaTime;
                     ticked = true;
                 }
@@ -102,29 +103,21 @@ public abstract sealed class GameEngine permits JGame, GLGame {
 
     // Game Loop Methods
 
-    public final void beginFrame() {
+    final void beginFrame() {
         window.beginFrame();
     }
 
-    /**
-     * Refreshes everything in the current scene, including physics, scripts, and UI.
-     *
-     * @param dt seconds since the last frame
-     */
-    // TODO Multithread physics, set time step higher than refresh rate for smoother results
+    // TODO Multi-thread physics, set time step higher than refresh rate for smoother results
     // TODO Poll input events
-    public final void update(float dt) throws Exception {
+    final void update(float dt) {
         getScene().update(dt);
     }
 
-    /**
-     * Redraws everything in the current scene, including sprites, backgrounds, and UI.
-     */
-    public final void render() throws Exception {
+    final void render() {
         window.render(getScene());
     }
 
-    public final void endFrame() {
+    final void endFrame() {
         window.endFrame();
     }
 

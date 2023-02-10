@@ -14,8 +14,8 @@ import static org.lwjgl.opengl.GL11.GL_FALSE;
 import static org.lwjgl.opengl.GL20.*;
 
 /**
- * A compiled GLSL program that determines how to draw an image, including the colors and brightness.
- * Only available in the GL engine.
+ * A compiled OpenGL Shader program (.glsl) that tells the GPU how to draw an image, specifying the colors, brightness,
+ * and texture. Only available in the GL engine.
  *
  * @author SlavSquatSuperstar
  */
@@ -35,7 +35,7 @@ public class Shader extends TextAsset {
     private void parseShader() {
         try {
             // Read the shader file
-            var source = super.read();
+            var source = super.readText();
             var shaders = source.split("(#type)( )+"); // split into vertex and fragment
 
             // Parse the shader file

@@ -25,7 +25,6 @@ import java.util.function.Consumer;
  * @author SlavSquatSuperstar
  */
 // TODO current cursor object
-// TODO draw background image
 public abstract class Scene {
 
     private static int sceneCounter = 0; // total number of game objects created
@@ -47,8 +46,7 @@ public abstract class Scene {
     // Scene State
 //    private final Consumer<GameObject> addObject, removeObject;
     private final Queue<SceneChange> changesToScene; // Use a separate list to avoid concurrent exceptions
-    private boolean started = false; // if initialized
-    private boolean loaded = false; // if currently active
+    private SceneState state; // if paused or running
 
     /**
      * Creates an empty scene with size of 0x0 and a scale of 1.
@@ -72,6 +70,9 @@ public abstract class Scene {
         this.scale = scale;
         background = Sprite.create(Colors.WHITE);
 
+        // Scene state
+        state = SceneState.STOPPED;
+
         // Initialize layers
         objects = new ArrayList<>();
         renderer = Mayonez.getUseGL() ? new GLDefaultRenderer() : new JDefaultRenderer();
@@ -84,85 +85,87 @@ public abstract class Scene {
 
     // Game Loop Methods
 
+    final void load() {
+
+    }
+
     /**
      * Initialize all objects and begin updating the scene.
      */
-    public final void start() {
-        if (!started) {
-            addObject(Camera.createCameraObject(camera = createCamera()));
-            init();
-            // Start Layers
-            renderer.start();
-            if (separateDebugRenderer()) debugRenderer.start();
-            physics.start();
-            // Add to Layers
-            renderer.setScene(this);
-            physics.setScene(this);
-            started = true;
-            loaded = true;
-        }
+    final void start() {
+        addObject(Camera.createCameraObject(camera = createCamera()));
+        init();
+        // Start Layers
+        renderer.start();
+        if (separateDebugRenderer()) debugRenderer.start();
+        physics.start();
+        // Add to Layers
+        renderer.setScene(this);
+        physics.setScene(this);
+        state = SceneState.RUNNING;
     }
 
     /**
-     * Resumes the scene but does not reinitialize any objects.
-     */
-    final void load() {
-        if (!loaded) loaded = true;
-    }
-
-    /**
-     * Refresh the internal states of all objects in the scene.
+     * Moves everything in the scene forward in time by a small increment, including physics, scripts, and UI.
      *
      * @param dt seconds since the last frame
      */
     public final void update(float dt) {
-        if (started && loaded) {
+        if (state == SceneState.RUNNING) {
             // Update scene and objects
             objects.forEach(o -> {
                 o.update(dt);
                 if (o.isDestroyed()) removeObject(o);
             });
-            onUserUpdate(dt);
             physics.step(dt); // Update physics
             camera.gameObject.update(dt); // Update camera last
-            // Remove destroyed objects or add new
-            while (!changesToScene.isEmpty()) changesToScene.poll().change();
         }
+
+        onUserUpdate(dt);
+        // Remove destroyed objects or add new
+        while (!changesToScene.isEmpty()) changesToScene.poll().change();
     }
 
     /**
-     * Draw the background image and all the objects in the scene.
+     * Redraws everything in the current scene, including backgrounds, sprites, and UI.
      *
      * @param g2 the window's graphics object
      */
     public final void render(Graphics2D g2) {
-        if (started && loaded) {
-            renderer.render(g2);
-            if (separateDebugRenderer()) debugRenderer.render(g2);
-            onUserRender();
-        }
+        renderer.render(g2);
+        if (separateDebugRenderer()) debugRenderer.render(g2);
+        onUserRender();
     }
 
     /**
-     * Pauses the scene but does not destroy any objects.
+     * Destroy all updates and stop updating the scene.
      */
-    final void unload() {
-        if (loaded) loaded = false;
+    final void stop() {
+        // Destroy objects
+        objects.forEach(GameObject::destroy);
+//        camera.setSubject(null);
+        objects.clear();
+
+        // Clear layers
+        renderer.stop();
+        if (separateDebugRenderer()) debugRenderer.stop();
+        physics.stop();
+        state = SceneState.STOPPED;
     }
 
-    public final void stop() {
-        if (started) {
-            // Destroy objects
-            objects.forEach(GameObject::destroy);
-//            camera.setSubject(null);
-            objects.clear();
-            // Clear layers
-            renderer.stop();
-            if (separateDebugRenderer()) debugRenderer.stop();
-            physics.stop();
-            started = false;
-            loaded = false;
-        }
+    /**
+     * Pauses the scene but does not destroy any game objects. While paused,
+     * objects do not move or update but key inputs can still be polled through onUserUpdate().
+     */
+    final void pause() {
+        state = SceneState.PAUSED;
+    }
+
+    /**
+     * Resumes the scene but does not reinitialize any game objects.
+     */
+    final void resume() {
+        state = SceneState.RUNNING;
     }
 
     // User-Defined Methods
@@ -199,13 +202,14 @@ public abstract class Scene {
         var addObject = new SceneChange(obj, o -> {
             objects.add(o.setScene(this));
             o.start(); // add components first so renderer and physics can access it
-            if (started) { // dynamic add
+            if (state == SceneState.RUNNING) { // dynamic add
                 renderer.addObject(o);
                 physics.addObject(o);
             }
             Logger.debug("Added object \"%s\" to scene \"%s\"", o.getNameAndID(), this.name);
         });
-        if (started) changesToScene.offer(addObject); // Dynamic add: add to scene and layers in next frame
+        if (state == SceneState.RUNNING)
+            changesToScene.offer(addObject); // Dynamic add: add to scene and layers in next frame
         else addObject.change();
     }
 
@@ -348,6 +352,10 @@ public abstract class Scene {
         physics.setGravity(gravity);
     }
 
+    SceneState getState() {
+        return state;
+    }
+
     // Object Overrides
 
     @Override
@@ -378,7 +386,6 @@ public abstract class Scene {
      * @author SlavSquatSuperstar
      */
     private record SceneChange(GameObject obj, Consumer<GameObject> func) {
-
         public void change() {
             func.accept(obj);
         }

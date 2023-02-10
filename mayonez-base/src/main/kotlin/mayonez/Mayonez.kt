@@ -8,8 +8,13 @@ import mayonez.math.Vec2
 import kotlin.system.exitProcess
 
 /**
- * The entry point into any game. Loads application resources, configures the engine instance,
- * and sets the scene to be played.
+ * The entry point into any game. Loads application resources, configures
+ * the engine instance, and sets the scene to be played.
+ *
+ * To start an instance of Mayonez Engine, set the "Use GL" property
+ * through Mayonez.setUseGL(). Then load any number of scenes through
+ * SceneManager.addScene(). Finally, start the game with a scene with
+ * Mayonez.start().
  */
 object Mayonez {
 
@@ -29,6 +34,16 @@ object Mayonez {
     @JvmStatic
     val seconds: Float
         get() = (System.nanoTime() - NANOS_STARTED) / 1.0E9f
+
+//    /**
+//     * How sped up or slowed down the in-game time passes. A scale of 1.0 (100%
+//     * speed) means the game runs in real time.
+//     */
+//    @JvmStatic
+//    var timeScale: Float = 1f
+//        set(value) {
+//            field = max(value, 0f) // non-negative only
+//        }
 
     // Game Fields
     @JvmStatic
@@ -60,7 +75,8 @@ object Mayonez {
     // Init Methods
 
     /**
-     * Instantiate singleton objects in the correct order to avoid initializer errors from circular dependencies.
+     * Instantiate singleton objects in the correct order to avoid initializer
+     * errors from circular dependencies.
      */
     @JvmStatic
     internal fun init() {

@@ -24,7 +24,7 @@ project.ext {
 allprojects {
     // Name
     group 'slavsquatsuperstar'
-    version '0.7.5'
+    version '0.7.6-snapshot'
 
     // Java Version
     sourceCompatibility = targetCompatibility = javaVersion
@@ -58,6 +58,7 @@ run {
 }
 
 jar {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     manifest.attributes('Main-Class': project.ext.mainClass)
     // 'Class-Path': configurations.runtimeClasspath.files.collect { it.getName() }.join(' ')
 }

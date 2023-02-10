@@ -64,12 +64,15 @@ public class DemosLauncher {
         Mayonez.start(SceneManager.getScene(scenes[0]));
     }
 
-    private static void pollSceneControls() { // TODO add pause button
+    private static void pollSceneControls() {
         if (KeyInput.keyPressed("r")) {
-            SceneManager.reloadScene();
+            SceneManager.restartScene();
+        } else if (KeyInput.keyPressed("p")) {
+            SceneManager.toggleScenePaused();
+            System.out.println("pause");
         } else if (KeyInput.keyDown("left shift")) {
             for (var i = 0; i < scenes.length; i++) {
-                if (KeyInput.keyPressed(String.valueOf(i + 1))) SceneManager.setScene(scenes[i]);
+                if (KeyInput.keyPressed(String.valueOf(i + 1))) SceneManager.loadScene(scenes[i]);
             }
         }
     }

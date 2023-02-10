@@ -19,14 +19,13 @@ public abstract class TextAsset extends Asset {
     }
 
     /**
-     * Reads data from this file as a single string. Should not be called if this file has not been created and is meant
-     * for output only.
+     * Reads text from this file as a single string. Will return nothing if the file does not exist.
      *
      * @return the text data as a string
      */
-    protected final String read() {
+    protected String readText() {
         try (var in = inputStream()) {
-            return IOUtils.read(in);
+            return IOUtils.readString(in);
         } catch (FileNotFoundException e) {
             Logger.error("File \"%s\" not found", getFilename());
         } catch (IOException e) {
@@ -37,12 +36,11 @@ public abstract class TextAsset extends Asset {
     }
 
     /**
-     * Reads data from this file as a string array. Should not be called if this file has not been created and is meant
-     * for output only.
+     * Reads text from this file line by line. Will return nothing if the file does not exist.
      *
      * @return the text data as an array
      */
-    protected final String[] readArray() {
+    protected String[] readLines() {
         try (var in = inputStream()) {
             return IOUtils.readLines(in);
         } catch (FileNotFoundException e) {
@@ -55,14 +53,14 @@ public abstract class TextAsset extends Asset {
     }
 
     /**
-     * Saves data to this file. Will not work if this asset is a classpath resource.
+     * Saves text to this file. Classpath resources cannot be written to.
      *
      * @param append whether to add data to the file instead of overwriting it
      * @param text   the text or lines of text to save
      */
-    protected final void save(boolean append, String... text) {
+    protected void save(boolean append, String... text) {
         try (var out = outputStream(append)) {
-            if (text.length == 1) IOUtils.write(out, text[0]); // single line
+            if (text.length == 1) IOUtils.writeString(out, text[0]); // single line
             else IOUtils.writeLines(out, text);
         } catch (FileNotFoundException e) {
             Logger.error("File \"%s\" not found", getFilename());

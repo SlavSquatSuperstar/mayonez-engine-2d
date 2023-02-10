@@ -6,8 +6,8 @@ import java.time.LocalDate
 import java.util.*
 
 /**
- * Prints messages to the console that can be formatted and assigned a priority level. All log messages are saved to a
- * log file.
+ * Prints messages to the console that can be formatted and assigned a
+ * priority level. All log messages are saved to a log file.
  *
  * @author SlavSquatSuperstar
  */
@@ -24,7 +24,7 @@ object Logger {
     private val printQueue: Queue<String> = LinkedList() // Save log messages in case log file isn't created
 
     internal fun createLogFile() {
-        if (!Mayonez.INIT_ASSETS || !Mayonez.INIT_PREFERENCES) Mayonez.init() // should prevent file from not being read
+        if (!Mayonez.INIT_ASSETS || !Mayonez.INIT_PREFERENCES) Mayonez.init() // Should prevent file from not being read
 
         logLevel = Preferences.logLevel
         saveLogs = Preferences.saveLogs
@@ -51,11 +51,12 @@ object Logger {
     // Log Methods
 
     /**
-     * Formats a message and adds a timestamp, prints it to the console if the priority is over the log level, and saves
-     * it to a log file if the settings allow.
+     * Formats a message and adds a timestamp, prints it to the console if
+     * the priority is over the log level, and saves it to a log file if the
+     * settings allow.
      *
-     * @param msg   the message as a Java format string
-     * @param args  (optional) the format arguments
+     * @param msg the message as a Java format string
+     * @param args (optional) the format arguments
      * @param level the log priority level
      */
     private fun printMessage(msg: Any?, vararg args: Any?, level: LogLevel) {
@@ -80,13 +81,12 @@ object Logger {
             if (Mayonez.INIT_LOGGER) logFile.append(output) // log file has been created
             else printQueue.offer(output) // save to buffer
         }
-
     }
 
     /**
      * Prints a normal-priority informational message to the console.
      *
-     * @param msg  an object or formatted string
+     * @param msg an object or formatted string
      * @param args (optional) string format arguments
      */
     @JvmStatic
@@ -95,7 +95,7 @@ object Logger {
     /**
      * Prints a low-priority debug message to the console.
      *
-     * @param msg  an object or formatted string
+     * @param msg an object or formatted string
      * @param args (optional) string format arguments
      */
     @JvmStatic
@@ -104,7 +104,7 @@ object Logger {
     /**
      * Prints a high-priority warning to the console.
      *
-     * @param msg  an object or formatted string
+     * @param msg an object or formatted string
      * @param args (optional) string format arguments
      */
     @JvmStatic
@@ -113,7 +113,7 @@ object Logger {
     /**
      * Prints a severe-priority error to the console.
      *
-     * @param msg  an object or formatted string
+     * @param msg an object or formatted string
      * @param args (optional) string format arguments
      */
     @JvmStatic
@@ -121,9 +121,7 @@ object Logger {
 
     // Stack/Format Helper Methods
 
-    /**
-     * Returns a timestamp in hh:mm:ss.SSSS format.
-     */
+    /** Returns a timestamp in hh:mm:ss.SSSS format. */
     private fun Float.toFmtString(): String {
         val min: Int = (this / 60).toInt()
         return "%02d:%02d:%07.4f".format(min / 60, min, this % 60)
@@ -139,7 +137,7 @@ object Logger {
     }
 
     /**
-     * Returns a String version of an [Exception]'s stack trace.
+     * Returns a String version of an [java.lang.Exception]'s stack trace.
      *
      * @param throwable a throwable object, i.e. an Exception
      * @return the stack trace
@@ -147,14 +145,10 @@ object Logger {
     @JvmStatic
     fun getStackTrace(throwable: Throwable): String = throwable.stackTraceToString()
 
-    /**
-     * Logs the stack trace of an exception with an "Error" priority level.
-     */
+    /** Logs the stack trace of an exception with an "Error" priority level. */
     @JvmStatic
     fun printStackTrace(throwable: Throwable) = error(getStackTrace(throwable))
 
-    override fun toString(): String {
-        return "Logger ($logFilename)"
-    }
+    override fun toString(): String = "Logger ($logFilename)"
 
 }

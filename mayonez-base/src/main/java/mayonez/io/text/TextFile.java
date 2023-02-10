@@ -1,9 +1,7 @@
 package mayonez.io.text;
 
-// TODO support .cfg files
-
 /**
- * Reads lines of text data and saves it to a plain text (usually .txt) file.
+ * A plain-text file (usually .txt) that can be read from and written to.
  *
  * @author SlavSquatSuperstar
  */
@@ -18,8 +16,9 @@ public class TextFile extends TextAsset {
      *
      * @return the text as a string
      */
+    @Override
     public String readText() {
-        return super.read();
+        return super.readText();
     }
 
     /**
@@ -27,8 +26,9 @@ public class TextFile extends TextAsset {
      *
      * @return the text as an array
      */
+    @Override
     public String[] readLines() {
-        return super.readArray();
+        return super.readLines();
     }
 
     /**

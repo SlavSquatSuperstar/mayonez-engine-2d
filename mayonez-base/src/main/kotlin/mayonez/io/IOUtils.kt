@@ -1,7 +1,6 @@
 package mayonez.io
 
 import mayonez.Preferences.textCharset
-import mayonez.util.StringUtils
 import java.io.*
 import java.nio.charset.Charset
 import java.nio.charset.StandardCharsets
@@ -29,11 +28,33 @@ object IOUtils {
 
     // Read Methods
 
+    /**
+     * Reads a single block of text from a [java.io.InputStream].
+     *
+     * Referenced from Apache Commons IO > IOUtils.readLines(InputStream, Charset).
+     *
+     * @throws FileNotFoundException if the file does not exist
+     * @throws IOException if the file cannot be read
+     * @param input a file's input stream
+     * @return a text string
+     */
     @JvmStatic
     @Throws(IOException::class, FileNotFoundException::class)
-    fun read(input: InputStream?): String = StringUtils.join(readLines(input), "\n")
+    fun readString(input: InputStream?): String {
+        if (input == null) throw FileNotFoundException("Input stream is null")
+        val reader = BufferedReader(InputStreamReader(input, getCharset(textCharset)))
+        return reader.readText()
+    }
 
-    // From Apache Commons IO > IOUtils.readLines(InputStream, Charset)
+    /**
+     * Reads multiple lines of text from a [java.io.InputStream].
+     *
+     * @throws FileNotFoundException if the file does not exist
+     * @throws IOException if the file cannot be read
+     *
+     * @param input a file's input stream
+     * @return an array of strings
+     */
     @JvmStatic
     @Throws(IOException::class, FileNotFoundException::class)
     fun readLines(input: InputStream?): Array<String> {
@@ -42,22 +63,45 @@ object IOUtils {
         return reader.readLines().toTypedArray()
     }
 
+    /**
+     * Reads a sequence of bytes from a [java.io.InputStream].
+     *
+     * @throws IOException if the file cannot be read
+     * @param input a file's input stream
+     * @return an array of bytes
+     */
     @JvmStatic
     @Throws(IOException::class)
     fun readBytes(input: InputStream?): ByteArray? = input?.readAllBytes()
 
     // Write Methods
 
-    // From Apache Commons IO > IOUtils.write(String, OutputStream, Charset)
+    /**
+     * Saves a single block of text from a [java.io.OutputStream].
+     *
+     * Referenced from Apache Commons IO > IOUtils.write(String, OutputStream, Charset)
+     *
+     * @throws IOException if the file cannot be written to
+     * @param output a file's output stream, set to write or append
+     * @param text   a text string
+     */
     @JvmStatic
     @Throws(IOException::class)
-    fun write(output: OutputStream?, text: String?) {
+    fun writeString(output: OutputStream?, text: String?) {
         if (output == null) throw FileNotFoundException("Output stream is null")
         if (text != null) output.write(text.toByteArray(getCharset(textCharset)))
         output.write(LINE_ENDING.toByteArray(getCharset(textCharset)))
     }
 
-    // From Apache Commons IO > IOUtils.write(Collection<?>, String, OutputStream, Charset)
+    /**
+     * Saves multiple lines of text to a [java.io.OutputStream].
+     *
+     * Referenced from Apache Commons IO > IOUtils.write(Collection<?>, String, OutputStream, Charset)
+     *
+     * @throws IOException if the file cannot be written to
+     * @param output a file's output stream, set to write or append
+     * @param lines  an array of strings
+     */
     @JvmStatic
     @Throws(IOException::class)
     fun writeLines(output: OutputStream?, lines: Array<String?>?) {
@@ -69,10 +113,17 @@ object IOUtils {
         }
     }
 
+    /**
+     * Saves a sequence of bytes to a [java.io.OutputStream].
+     *
+     * @throws IOException if the file cannot be written to
+     * @param output a file's output stream, set to write or append
+     * @param bytes  an array of bytes
+     */
     @JvmStatic
     @Throws(IOException::class)
     fun writeBytes(output: OutputStream?, bytes: ByteArray?) {
-        output?.write(bytes?: return)
+        output?.write(bytes ?: return)
     }
 
     private fun getCharset(charsetName: String?): Charset {
