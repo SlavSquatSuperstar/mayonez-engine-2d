@@ -20,7 +20,7 @@ public class DemosLauncher {
     };
 
     public static void main(String[] args) {
-        var arg0 = (args.length > 0) ? args[0] : "false";
+        var arg0 = (args.length > 0) ? args[0] : "true";
         Mayonez.setUseGL(Boolean.parseBoolean(arg0)); // Automatically choose AWT/GL from CL args
 
         // Load scenes and allow scene switching

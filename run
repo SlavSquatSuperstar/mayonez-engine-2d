@@ -3,14 +3,25 @@
 SCRIPT_DIR=$(dirname "$0")
 cd "$SCRIPT_DIR" || exit
 
-MAC_OS=false
+# Read arguments
+if [[ "$1" = "false"* ]]; then
+  USE_GL=false
+else
+  USE_GL=true
+fi
 
 # Check operating system
-if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+MAC_OS=false
+
+if [[ "$OSTYPE" = "linux-gnu"* ]]; then
   echo "Detecting GNU/Linux."
-elif [[ "$OSTYPE" == "darwin"* ]]; then
+elif [[ "$OSTYPE" = "darwin"* ]]; then
   echo "Detecting macOS."
   MAC_OS=true
+elif [[ "$OSTYPE" = "cygwin"* || "$OSTYPE" = "mingw"* || "$OSTYPE" = *"msys" ]]; then
+  echo "Detecting Windows."
+  echo "Please use 'run.bat' insead."
+  exit 1
 else
   echo "Unknown operating system detected."
 fi
@@ -33,9 +44,13 @@ else
 fi
 
 # Run the compiled .jar file
-if "$MAC_OS"; then
-  # LWJGL requires a special argument on macOS
-  java -XstartOnFirstThread -jar build/libs/*.jar "true"
+if $MAC_OS; then
+  if $USE_GL; then
+    # LWJGL requires a special argument on macOS
+    java -XstartOnFirstThread -jar build/libs/*.jar "$USE_GL"
+  else
+    java -jar build/libs/*.jar "$USE_GL"
+  fi
 else
-  java -jar build/libs/*.jar "true"
+  java -jar build/libs/*.jar "$USE_GL"
 fi
