@@ -8,7 +8,8 @@ import kotlin.math.sign
 import kotlin.math.sqrt
 
 /**
- * A class that casts rays onto shapes and detects whether the ray hits a shape and where the contact is.
+ * A class that casts rays onto shapes and detects whether the ray hits a
+ * shape and where the contact is.
  *
  * @author SlavSquatSuperstar
  */

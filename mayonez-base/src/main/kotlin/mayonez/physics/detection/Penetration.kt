@@ -9,9 +9,11 @@ import mayonez.physics.shapes.Shape
 import kotlin.math.abs
 
 /**
- * Describes how far and in which direction two colliding shapes are overlapping and calculates the contact points
- * (collision manifold) between them finding and clipping intersecting features. Solving for contacts is the third
- * and final step in collision detection, and is performed after obtaining the penetration. Used by [CollisionDetector].
+ * Describes how far and in which direction two colliding shapes are
+ * overlapping and calculates the contact points (collision manifold)
+ * between them finding and clipping intersecting features. Solving for
+ * contacts is the third and final step in collision detection, and is
+ * performed after obtaining the penetration. Used by [CollisionDetector].
  *
  * @author SlavSquatSuperstar
  */
@@ -34,8 +36,6 @@ class Penetration(val normal: Vec2, val depth: Float) {
         // 1. Point the normla in the correct direction
         val vecAB = shape2.center() - shape1.center()
         if (normal.dot(vecAB) < 0f) normal.set(-normal)
-//        DebugDraw.drawVector(shape1.center(), normal * 2f, Colors.GREEN)
-//        DebugDraw.drawVector(shape2.center(), -normal * 2f, Colors.GREEN)
 
         // 2 Find the farthest features along normals
         val feature1 = shape1.getFarthestFeature(normal)
@@ -64,7 +64,7 @@ class Penetration(val normal: Vec2, val depth: Float) {
             val incEdgeLength = refEdge.start.dot(colNormal)
             val incShape = if (flip) shape2 else shape1
             for (pt in arrayOf(clippedEdge.start, clippedEdge.end))
-                // Clipping points inside shape
+            // Clipping points inside shape
                 if (pt.dot(colNormal) <= incEdgeLength && pt in incShape) collision.addContact(pt)
         } else {
             return null
@@ -85,8 +85,7 @@ class Penetration(val normal: Vec2, val depth: Float) {
             val farthest = FloatMath.maxIndex(*FloatArray(numVertices) { vertices[it].dot(direction) })
             val leftEdge = edges[farthest] // use this edge index
             val rightEdge = edges[if (farthest > 0) farthest - 1 else numVertices - 1]  // get previous edge index
-//            DebugDraw.drawShape(leftEdge, Colors.LIGHT_BLUE)
-//            DebugDraw.drawShape(rightEdge, Colors.LIGHT_BLUE)
+
             // Check which normal is more perpendicular
             return if (leftEdge.unitNormal().dot(direction) > rightEdge.unitNormal().dot(direction))
                 leftEdge else rightEdge

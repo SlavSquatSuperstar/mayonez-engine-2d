@@ -12,7 +12,7 @@ dependencies {
     api "$libs.kotlin"
     implementation "$libs.json"
     implementation "$libs.reflections"
-    implementation "$libs.slf4j"
+    runtimeOnly "$libs.slf4j"
 
     // LWJGL Modules
     implementation platform("$libs.lwjglBom")
@@ -45,8 +45,7 @@ compileJava {
 }
 
 compileKotlin {
-    kotlinOptions {
-//    compilerOptions {
+    kotlinOptions { // deprecated, Kotlin doesn't support latest gradle
         jvmTarget = javaVersion
         suppressWarnings = true
         destinationDirectory = compileJava.destinationDirectory

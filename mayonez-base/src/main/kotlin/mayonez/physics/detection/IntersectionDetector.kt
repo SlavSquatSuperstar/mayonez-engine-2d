@@ -7,8 +7,8 @@ import mayonez.physics.shapes.Rectangle
 import mayonez.physics.shapes.Shape
 
 /**
- * A class that detects whether shapes intersect. Uses simple tests when possible, otherwise performs the GJK algorithm
- * for complex shapes.
+ * A class that detects whether shapes intersect. Uses simple tests when
+ * possible, otherwise performs the GJK algorithm for complex shapes.
  *
  * @author SlavSquatSuperstar
  */
@@ -33,12 +33,11 @@ object IntersectionDetector {
     }
 
     /**
-     * Performs a simple circle vs. circle intersection test by comparing the distances their centers and the sum of
-     * their radii.
+     * Performs a simple circle vs. circle intersection test by comparing the
+     * distances their centers and the sum of their radii.
      *
      * @param circle1 the first circle
      * @param circle2 the second circle
-     *
      * @return if the two circles overlap or touch
      */
     private fun intersectCircles(circle1: Circle, circle2: Circle): Boolean {
@@ -48,12 +47,11 @@ object IntersectionDetector {
     }
 
     /**
-     * Performs a simple line segment intersection test by calculating the contact point between two rays and ensuring
-     * it is within both segments.
+     * Performs a simple line segment intersection test by calculating the
+     * contact point between two rays and ensuring it is within both segments.
      *
      * @param edge1 the first edge
      * @param edge2 the second edge
-     *
      * @return if the two edges cross or touch
      */
     // TODO linear systems matrix
@@ -79,12 +77,11 @@ object IntersectionDetector {
     }
 
     /**
-     * Performs a simple rectangle vs. rectangle intersection test using the separating-axis theorem on their x- and
-     * y-axes.
+     * Performs a simple rectangle vs. rectangle intersection test using the
+     * separating-axis theorem on their x- and y-axes.
      *
      * @param rect1 the first rectangle
      * @param rect2 the second rectangle
-     *
      * @return if the two rectangles overlap or touch
      */
     private fun intersectRectangles(rect1: Rectangle, rect2: Rectangle): Boolean {

@@ -141,18 +141,18 @@ class PhysicsWorld {
     fun addObject(obj: GameObject) {
         val rb = obj.getComponent(Rigidbody::class.java)
         if (rb != null) bodies.add(rb)
-        val c = obj.getComponent(Collider::class.java)
-        if (c != null) colliders.add(c)
+        val comp = obj.getComponent(Collider::class.java)
+        if (comp != null) colliders.add(comp)
     }
 
     fun removeObject(obj: GameObject) {
         bodies.remove(obj.getComponent(Rigidbody::class.java))
-        val c = obj.getComponent(Collider::class.java)
-        colliders.remove(c)
+        val comp = obj.getComponent(Collider::class.java)
+        colliders.remove(comp)
         // remove all listeners with this collider
 //        listeners.stream().filter { lis: CollisionListener -> lis.match(c) }.toList()
 //            .forEach { lis2: CollisionListener -> listeners.remove(lis2) }
-        listeners.stream().filter { lis: CollisionListener -> lis.match(c) }.toList().forEach(listeners::remove)
+        listeners.stream().filter { lis: CollisionListener -> lis.match(comp) }.toList().forEach(listeners::remove)
     }
 
     fun setScene(newScene: Scene) {

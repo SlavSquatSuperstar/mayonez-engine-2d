@@ -4,11 +4,11 @@ import mayonez.math.Vec2
 import mayonez.physics.shapes.Polygon
 
 /**
- * A basic data class that stores a certain number of support points between two overlapping shapes.
+ * A basic data class that stores a certain number of support points
+ * between two overlapping shapes.
  *
- * @param points  any known points in the simplex
+ * @param points any known points in the simplex
  * @param maxSize the size of the simplex, by default 3
- *
  * @author SlavSquatSuperstar
  */
 class Simplex(vararg points: Vec2, private val maxSize: Int = 3) {
@@ -45,8 +45,8 @@ class Simplex(vararg points: Vec2, private val maxSize: Int = 3) {
     /**
      * Inserts a point in the middle of this simplex.
      *
-     * @param point a support point
      * @param index the index to insert the point before
+     * @param point a support point
      */
     fun add(index: Int, point: Vec2) {
         if (size >= maxSize || index !in points.indices) return

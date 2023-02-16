@@ -26,7 +26,8 @@ object CircleDetector {
 
     // Circle vs Circle: 1 contact point
     /**
-     * Detects a collision between two circles and calculates the contact and penetration.
+     * Detects a collision between two circles and calculates the contact and
+     * penetration.
      *
      * @param circle1 the first circle
      * @param circle2 the second circle

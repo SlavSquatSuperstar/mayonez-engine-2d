@@ -8,8 +8,8 @@ import mayonez.physics.colliders.Collider
 import kotlin.math.abs
 
 /**
- * A solid, massive object that responds to forces and collisions. Rigid bodies do not deform when forces are
- * applied to them.
+ * A solid, massive object that responds to forces and collisions. Rigid
+ * bodies do not deform when forces are applied to them.
  *
  * @author SlavSquatSuperstar
  */
@@ -55,9 +55,7 @@ class Rigidbody(mass: Float, drag: Float, angDrag: Float) : Component() {
             transform.rotation = rotation
         }
 
-    /**
-     * The linear (translational) velocity of the body, v, in world units.
-     */
+    /** The linear (translational) velocity of the body, v, in world units. */
     var velocity: Vec2 = Vec2()
         set(velocity) {
             field.set(velocity)
@@ -66,7 +64,8 @@ class Rigidbody(mass: Float, drag: Float, angDrag: Float) : Component() {
         get() = velocity.len()
 
     /**
-     * The angular (rotational) velocity of the body, ω, in degrees counterclockwise.
+     * The angular (rotational) velocity of the body, ω, in degrees
+     * counterclockwise.
      */
     var angVelocity: Float = 0f
     val angSpeed: Float
@@ -78,8 +77,10 @@ class Rigidbody(mass: Float, drag: Float, angDrag: Float) : Component() {
     private var netTorque: Float = 0f
 
     /**
-     * The body's drag, which represents a damping force proportional to its negative linear velocity. A drag of 0 means
-     * all velocity is conserved during motion and 1 means all velocity is quickly lost without acceleration.
+     * The body's drag, which represents a damping force proportional to its
+     * negative linear velocity. A drag of 0 means all velocity is conserved
+     * during motion and 1 means all velocity is quickly lost without
+     * acceleration.
      */
     private var drag: Float = clamp(drag, 0f, 1f)
 
@@ -89,8 +90,10 @@ class Rigidbody(mass: Float, drag: Float, angDrag: Float) : Component() {
     }
 
     /**
-     * The body's angular drag, which represents a damping torque proportional to its negative angular velocity. A drag
-     * of 0 means all velocity is conserved during motion and 1 means all velocity is quickly lost without acceleration.
+     * The body's angular drag, which represents a damping torque proportional
+     * to its negative angular velocity. A drag of 0 means all velocity is
+     * conserved during motion and 1 means all velocity is quickly lost without
+     * acceleration.
      */
     private var angDrag: Float = clamp(angDrag, 0f, 1f)
 
@@ -134,7 +137,8 @@ class Rigidbody(mass: Float, drag: Float, angDrag: Float) : Component() {
     }
 
     /**
-     * Integrate net force and torque to solve for velocity and angular velocity.
+     * Integrate net force and torque to solve for velocity and angular
+     * velocity.
      */
     fun integrateForce(dt: Float) {
         if (infiniteMass) return
@@ -156,7 +160,8 @@ class Rigidbody(mass: Float, drag: Float, angDrag: Float) : Component() {
     }
 
     /**
-     * Integrate linear velocity and angular velocity to solve for position and rotation.
+     * Integrate linear velocity and angular velocity to solve for position and
+     * rotation.
      */
     fun integrateVelocity(dt: Float) {
         transform.move(velocity * dt)
@@ -175,7 +180,8 @@ class Rigidbody(mass: Float, drag: Float, angDrag: Float) : Component() {
     }
 
     /**
-     * Applies a torque to this body's center of mass in the clockwise direction.
+     * Applies a torque to this body's center of mass in the clockwise
+     * direction.
      *
      * @param torque a scalar with units `kg•m•m/s/s (τ = F•d)`
      */
@@ -240,13 +246,13 @@ class Rigidbody(mass: Float, drag: Float, angDrag: Float) : Component() {
     // Velocity at Point Methods
 
     /**
-     * Calculates the linear velocity of this body's center plus the tangential velocity the given point using the
-     * relationship v_t = r_perp * w or v_t = w x r.
+     * Calculates the linear velocity of this body's center plus the tangential
+     * velocity the given point using the relationship v_t = r_perp * w or v_t
+     * = w x r.
      *
      * @param point a point on this body
      * @return the point's total velocity
      */
-//    fun getPointVelocity(point: Vec2): Vec2 = velocity + (point - position).normal() * toRadians(angVelocity)
     fun getPointVelocity(point: Vec2): Vec2 = velocity + (point - position).cross(FloatMath.toRadians(-angVelocity))
 
 }

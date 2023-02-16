@@ -47,11 +47,6 @@ application { // For 'run' task
     mainModule = project.ext.mainModule
 }
 
-run {
-    if (macOS) jvmArgs = ["-XstartOnFirstThread"] // For LWJGL on macOS
-    args = ["true"] // Set CL args (use GL true/false)
-}
-
 jar {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     manifest { attributes 'Main-Class': project.ext.mainClass }
@@ -63,3 +58,15 @@ shadowJar {
     archiveClassifier.set('')
     manifest.from jar.manifest
 }
+
+run {
+    dependsOn shadowJar
+    if (macOS) jvmArgs = ["-XstartOnFirstThread"] // For LWJGL on macOS
+    args = ["true"] // Set CL args (use GL true/false)
+}
+
+// Shadow Jar Dependencies
+
+distTar { dependsOn shadowJar }
+distZip { dependsOn shadowJar }
+startScripts { dependsOn shadowJar }

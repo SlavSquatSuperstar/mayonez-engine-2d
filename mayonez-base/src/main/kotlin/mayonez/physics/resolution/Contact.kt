@@ -5,7 +5,8 @@ import mayonez.math.Vec2
 import mayonez.physics.Rigidbody
 
 /**
- * Describes contact point between two colliding shapes and stores additional information such as radius and impulse.
+ * Describes contact point between two colliding shapes and stores
+ * additional information such as radius and impulse.
  *
  * Sources
  * - https://www.chrishecker.com/Rigid_Body_Dynamics
@@ -13,30 +14,20 @@ import mayonez.physics.Rigidbody
  *
  * @author SlavSquatSuperstar
  */
-class Contact(private val pos: Vec2, r1Pos: Vec2, r2Pos: Vec2) {
-    /**
-     * Distance to first body center, r1.
-     */
+internal class Contact(private val pos: Vec2, r1Pos: Vec2, r2Pos: Vec2) {
+    /** Distance to first body center, r1. */
     private val rad1: Vec2 = pos - r1Pos
 
-    /**
-     * Distance to second body center r2.
-     */
+    /** Distance to second body center r2. */
     private val rad2: Vec2 = pos - r2Pos
 
-    /**
-     * Normal impulse magnitude, J_n.
-     */
+    /** Normal impulse magnitude, J_n. */
     var normImp: Float = 0f
 
-    /**
-     * Tangent impulse magnitude, J_t.
-     */
+    /** Tangent impulse magnitude, J_t. */
     var tanImp: Float = 0f
 
-    /**
-     * Calculate the relative velocity of two bodies at this contact point.
-     */
+    /** Calculate the relative velocity of two bodies at this contact point. */
     fun getRelativeVelocity(r1: Rigidbody?, r2: Rigidbody?): Vec2 {
         val vel1 = r1?.getPointVelocity(pos) ?: Vec2()
         val vel2 = r2?.getPointVelocity(pos) ?: Vec2()
@@ -44,17 +35,18 @@ class Contact(private val pos: Vec2, r1Pos: Vec2, r2Pos: Vec2) {
     }
 
     /**
-     * Calculate the denominator of the impulse equation, following the derivation from
-     * https://www.chrishecker.com/images/e/e7/Gdmphys3.pdf.
+     * Calculate the denominator of the impulse equation, following the
+     * derivation from https://www.chrishecker.com/images/e/e7/Gdmphys3.pdf.
      */
-    fun getDenominator(direction: Vec2, sumInvM: Float, invI1: Float, invI2: Float): Float {
+    fun getDenominator(direction: Vec2, massData: MassData): Float {
         val dot1Sq = FloatMath.squared(direction.dot(rad1.normal()))
         val dot2Sq = FloatMath.squared(direction.dot(rad2.normal()))
-        return sumInvM + invI1 * dot1Sq + invI2 * dot2Sq
+        return massData.sumInv + (massData.invAng1 * dot1Sq) + (massData.invAng2 * dot2Sq)
     }
 
     /**
-     * Apply an impulse to two bodies at this contact point to resolve a collision.
+     * Apply an impulse to two bodies at this contact point to resolve a
+     * collision.
      */
     fun applyImpulse(r1: Rigidbody?, r2: Rigidbody?, impulse: Vec2) {
         r1?.applyImpulse(-impulse)

@@ -4,7 +4,8 @@ import mayonez.math.Vec2
 import mayonez.physics.shapes.Shape
 
 /**
- * Stores information about a collision between two objects, including contacts and penetration.
+ * Stores information about a collision between two objects, including
+ * contacts and penetration.
  *
  * @author SlavSquatSuperstar
  */
