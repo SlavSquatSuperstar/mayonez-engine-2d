@@ -1,10 +1,10 @@
 package mayonez.physics.detection
 
 import mayonez.math.FloatMath
-import mayonez.physics.shapes.Circle
-import mayonez.physics.shapes.Edge
-import mayonez.physics.shapes.Rectangle
-import mayonez.physics.shapes.Shape
+import mayonez.math.shapes.Circle
+import mayonez.math.shapes.Edge
+import mayonez.math.shapes.Rectangle
+import mayonez.math.shapes.Shape
 
 /**
  * A class that detects whether shapes intersect. Uses simple tests when

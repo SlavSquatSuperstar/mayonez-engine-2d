@@ -31,10 +31,10 @@ module mayonez.base {
     exports mayonez.io.text;
     exports mayonez.input;
     exports mayonez.math;
+    exports mayonez.math.shapes;
     exports mayonez.physics;
     exports mayonez.physics.colliders;
     exports mayonez.physics.resolution;
-    exports mayonez.physics.shapes;
     exports mayonez.scripts;
     exports mayonez.scripts.combat;
     exports mayonez.scripts.movement;

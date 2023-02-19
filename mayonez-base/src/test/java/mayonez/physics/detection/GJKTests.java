@@ -3,7 +3,7 @@ package mayonez.physics.detection;
 import org.junit.jupiter.api.Test;
 import mayonez.math.Vec2;
 import mayonez.test.TestUtils;
-import mayonez.physics.shapes.*;
+import mayonez.math.shapes.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static mayonez.test.TestUtils.assertFloatEquals;

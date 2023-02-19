@@ -3,7 +3,7 @@ package mayonez.physics.detection
 import mayonez.math.FloatMath
 import mayonez.math.Vec2
 import mayonez.physics.resolution.RaycastInfo
-import mayonez.physics.shapes.*
+import mayonez.math.shapes.*
 import kotlin.math.sign
 import kotlin.math.sqrt
 

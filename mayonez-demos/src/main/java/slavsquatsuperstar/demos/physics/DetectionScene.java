@@ -8,10 +8,10 @@ import mayonez.input.KeyInput;
 import mayonez.input.MouseInput;
 import mayonez.math.Vec2;
 import mayonez.physics.Collisions;
-import mayonez.physics.shapes.Circle;
-import mayonez.physics.shapes.Polygon;
-import mayonez.physics.shapes.Rectangle;
-import mayonez.physics.shapes.Triangle;
+import mayonez.math.shapes.Circle;
+import mayonez.math.shapes.Polygon;
+import mayonez.math.shapes.Rectangle;
+import mayonez.math.shapes.Triangle;
 
 /**
  * For testing collision detection algorithms.

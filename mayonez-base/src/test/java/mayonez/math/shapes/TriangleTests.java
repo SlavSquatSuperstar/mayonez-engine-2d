@@ -1,4 +1,4 @@
-package mayonez.physics.shapes;
+package mayonez.math.shapes;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- * Unit tests for the {@link mayonez.physics.shapes.Triangle} class.
+ * Unit tests for the {@link mayonez.math.shapes.Triangle} class.
  *
  * @author SlavSquatSuperstar
  */

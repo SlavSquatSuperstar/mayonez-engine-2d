@@ -5,7 +5,7 @@ import mayonez.annotations.UsesEngine;
 import mayonez.io.Assets;
 import mayonez.io.image.GLTexture;
 import mayonez.math.Vec2;
-import mayonez.physics.shapes.Rectangle;
+import mayonez.math.shapes.Rectangle;
 
 import java.util.ArrayList;
 import java.util.List;

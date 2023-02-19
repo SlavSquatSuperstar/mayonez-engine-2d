@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import mayonez.math.Vec2;
 import mayonez.physics.colliders.BoxCollider;
 import mayonez.physics.colliders.Collider;
-import mayonez.physics.shapes.Circle;
+import mayonez.math.shapes.Circle;
 
 import java.util.List;
 import java.util.stream.Collectors;

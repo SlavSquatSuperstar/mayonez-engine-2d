@@ -6,8 +6,8 @@ import mayonez.graphics.*;
 import mayonez.graphics.Color;
 import mayonez.math.Vec2;
 import mayonez.physics.colliders.Collider;
-import mayonez.physics.shapes.Rectangle;
-import mayonez.physics.shapes.Shape;
+import mayonez.math.shapes.Rectangle;
+import mayonez.math.shapes.Shape;
 
 import java.awt.*;
 

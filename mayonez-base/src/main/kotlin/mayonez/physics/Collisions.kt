@@ -1,14 +1,15 @@
 package mayonez.physics
 
+import mayonez.math.shapes.Circle
+import mayonez.math.shapes.Ray
+import mayonez.math.shapes.Shape
 import mayonez.physics.detection.*
 import mayonez.physics.resolution.Manifold
 import mayonez.physics.resolution.RaycastInfo
-import mayonez.physics.shapes.Circle
-import mayonez.physics.shapes.Ray
-import mayonez.physics.shapes.Shape
 
 /**
- * Implements collision detection algorithms using primitive shapes for the physics engine.
+ * Implements collision detection algorithms using primitive shapes for the
+ * physics engine.
  *
  * @author SlavSquatSuperstar
  */
@@ -28,10 +29,11 @@ object Collisions {
     }
 
     /**
-     * Casts a ray onto a shape and calculates the contact point, distance, and normal.
+     * Casts a ray onto a shape and calculates the contact point, distance, and
+     * normal.
      *
      * @param shape the shape to raycast
-     * @param ray   the ray to cast
+     * @param ray the ray to cast
      * @param limit the max length the ray can travel
      * @return the contact information, or null if the ray misses
      */

@@ -4,4 +4,4 @@
  *
  * @author SlavSquatSuperstar
  */
-package mayonez.physics.shapes;
+package mayonez.math.shapes;

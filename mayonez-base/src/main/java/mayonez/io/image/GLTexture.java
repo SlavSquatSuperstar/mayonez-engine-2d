@@ -5,7 +5,7 @@ import mayonez.annotations.EngineType;
 import mayonez.annotations.UsesEngine;
 import mayonez.io.IOUtils;
 import mayonez.math.Vec2;
-import mayonez.physics.shapes.Rectangle;
+import mayonez.math.shapes.Rectangle;
 import org.lwjgl.BufferUtils;
 
 import java.io.IOException;

@@ -1,4 +1,4 @@
-package mayonez.physics.shapes;
+package mayonez.math.shapes;
 
 import mayonez.math.Vec2;
 import org.junit.jupiter.api.Test;

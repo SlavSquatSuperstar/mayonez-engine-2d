@@ -1,4 +1,4 @@
-package mayonez.physics.shapes
+package mayonez.math.shapes
 
 import mayonez.math.Interval
 import mayonez.math.Vec2

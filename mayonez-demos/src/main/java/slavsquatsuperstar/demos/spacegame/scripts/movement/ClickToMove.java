@@ -3,7 +3,7 @@ package slavsquatsuperstar.demos.spacegame.scripts.movement;
 import mayonez.input.MouseInput;
 import mayonez.math.Interval;
 import mayonez.math.Vec2;
-import mayonez.physics.shapes.Edge;
+import mayonez.math.shapes.Edge;
 import mayonez.scripts.movement.MouseScript;
 import mayonez.scripts.movement.MoveMode;
 

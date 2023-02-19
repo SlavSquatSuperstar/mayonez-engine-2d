@@ -13,9 +13,9 @@ import mayonez.graphics.sprites.GLSprite
 import mayonez.graphics.sprites.ShapeSprite
 import mayonez.graphics.sprites.Sprite
 import mayonez.math.Vec2
-import mayonez.physics.shapes.Edge
-import mayonez.physics.shapes.Rectangle
-import mayonez.physics.shapes.Triangle
+import mayonez.math.shapes.Edge
+import mayonez.math.shapes.Rectangle
+import mayonez.math.shapes.Triangle
 import org.lwjgl.opengl.GL11.*
 import kotlin.math.roundToInt
 

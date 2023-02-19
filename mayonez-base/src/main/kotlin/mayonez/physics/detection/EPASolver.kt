@@ -2,7 +2,7 @@ package mayonez.physics.detection
 
 import mayonez.math.FloatMath
 import mayonez.math.Vec2
-import mayonez.physics.shapes.Shape
+import mayonez.math.shapes.Shape
 import kotlin.math.abs
 
 /**

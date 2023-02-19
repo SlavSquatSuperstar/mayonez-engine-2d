@@ -3,7 +3,7 @@ package mayonez.graphics
 import mayonez.graphics.renderer.DrawPriority
 import mayonez.graphics.sprites.ShapeSprite
 import mayonez.math.Vec2
-import mayonez.physics.shapes.*
+import mayonez.math.shapes.*
 import mayonez.util.JShape
 import mayonez.util.MColor
 import mayonez.util.MShape

@@ -3,7 +3,7 @@ package mayonez.test;
 import mayonez.math.FloatMath;
 import mayonez.math.Vec2;
 import mayonez.physics.Collisions;
-import mayonez.physics.shapes.Shape;
+import mayonez.math.shapes.Shape;
 
 import java.util.Arrays;
 import java.util.Comparator;

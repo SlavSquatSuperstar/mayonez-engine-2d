@@ -1,4 +1,4 @@
-package mayonez.physics.shapes;
+package mayonez.math.shapes;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static mayonez.test.TestUtils.assertFloatEquals;
 
 /**
- * Unit tests for the {@link mayonez.physics.shapes.Rectangle} class.
+ * Unit tests for the {@link mayonez.math.shapes.Rectangle} class.
  *
  * @author SlavSquatSuperstar
  */

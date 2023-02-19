@@ -1,7 +1,7 @@
 package mayonez.test;
 
 import mayonez.math.Vec2;
-import mayonez.physics.shapes.Triangle;
+import mayonez.math.shapes.Triangle;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

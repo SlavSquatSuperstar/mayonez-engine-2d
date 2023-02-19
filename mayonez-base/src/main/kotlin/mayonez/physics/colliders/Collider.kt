@@ -2,20 +2,21 @@ package mayonez.physics.colliders
 
 import mayonez.Component
 import mayonez.math.Vec2
+import mayonez.math.shapes.BoundingBox
+import mayonez.math.shapes.Shape
 import mayonez.physics.CollisionEventType
 import mayonez.physics.Collisions
 import mayonez.physics.Rigidbody
 import mayonez.physics.resolution.Manifold
-import mayonez.physics.shapes.BoundingBox
-import mayonez.physics.shapes.Shape
 
 /**
- * A shape centered around the object's position that can detect collisions with other shapes. Requires a [Rigidbody]
- * to respond to collisions properly.
+ * A shape centered around the object's position that can detect collisions
+ * with other shapes. Requires a [Rigidbody] to respond to collisions
+ * properly.
  *
+ * @param shapeData the shape object that stores the vertices and the
+ *     shape's properties
  * @constructor Constructs a collider from a [Shape] object
- * @param shapeData the shape object that stores the vertices and the shape's properties
- *
  * @author SlavSquatSuperstar
  */
 abstract class Collider(private val shapeData: Shape) : Component() {
@@ -23,7 +24,8 @@ abstract class Collider(private val shapeData: Shape) : Component() {
     // Object References
 
     /**
-     * A reference to the parent object's [Rigidbody]. A collider should have a rigidbody to react to collisions.
+     * A reference to the parent object's [Rigidbody]. A collider should have a
+     * rigidbody to react to collisions.
      */
     var rigidbody: Rigidbody? = null
 
@@ -33,7 +35,8 @@ abstract class Collider(private val shapeData: Shape) : Component() {
 
     var trigger = false
         /**
-         * Returns whether this collider is non-physical and should not react to collisions.
+         * Returns whether this collider is non-physical and should not react to
+         * collisions.
          *
          * @return if this collider is a trigger
          */
@@ -46,19 +49,22 @@ abstract class Collider(private val shapeData: Shape) : Component() {
     }
 
     /**
-     * Whether this collider has a null or infinite-mass rigidbody, and does not respond to collisions.
+     * Whether this collider has a null or infinite-mass rigidbody, and does
+     * not respond to collisions.
      *
      * @return if this collider is not affected by collisions.
      */
     fun isStatic(): Boolean = rigidbody?.infiniteMass ?: true
 
     /**
-     * If this frame's collision in [sendCollisionEvent] should not be resolved by the physics engine.
+     * If this frame's collision in [sendCollisionEvent] should not be resolved
+     * by the physics engine.
      */
     var ignoreCurrentCollision: Boolean = false
 
     /**
-     * Whether the position or velocity of this collider has been modified in this frame.
+     * Whether the position or velocity of this collider has been modified in
+     * this frame.
      */
     var collisionResolved: Boolean = false
 
@@ -83,18 +89,14 @@ abstract class Collider(private val shapeData: Shape) : Component() {
 
     // Transform Methods
 
-    /**
-     * Transforms this shape into world space.
-     */
+    /** Transforms this shape into world space. */
     // TODO save as mutatable field
     open fun transformToWorld(): Shape {
         return shapeData.rotate(getRotation()).scale(transform!!.scale).translate(center())
     }
 
     // inverse scale, rotate about our center
-    /**
-     * Transforms another shape to this shape's local space.
-     */
+    /** Transforms another shape to this shape's local space. */
     protected open fun transformToLocal(world: Shape): Shape {
         return world.translate(-center()).scale(Vec2(1f) / (transform!!.scale), origin = Vec2())
             .rotate(-getRotation())
@@ -113,7 +115,8 @@ abstract class Collider(private val shapeData: Shape) : Component() {
     // Shape vs Shape Collisions
 
     /**
-     * Calculates the contact points, normal, and overlap between this collider and another if they are intersecting.
+     * Calculates the contact points, normal, and overlap between this collider
+     * and another if they are intersecting.
      *
      * @param collider another collider
      * @return the collision info, or no if there is no intersection
@@ -125,11 +128,12 @@ abstract class Collider(private val shapeData: Shape) : Component() {
     // Callback Methods
 
     /**
-     * Broadcasts an event if a collision occurs between this object and another.
+     * Broadcasts an event if a collision occurs between this object and
+     * another.
      *
-     * @param other   the other object
+     * @param other the other object
      * @param trigger if interacting with a trigger
-     * @param type    the type of the collision given by the listener
+     * @param type the type of the collision given by the listener
      */
     fun sendCollisionEvent(other: Collider, trigger: Boolean, type: CollisionEventType) {
         gameObject?.onCollisionEvent(other.gameObject ?: return, trigger, type)

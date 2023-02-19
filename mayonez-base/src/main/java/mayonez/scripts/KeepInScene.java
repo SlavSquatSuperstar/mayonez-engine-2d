@@ -6,7 +6,7 @@ import mayonez.math.Interval;
 import mayonez.math.Vec2;
 import mayonez.physics.Rigidbody;
 import mayonez.physics.colliders.Collider;
-import mayonez.physics.shapes.BoundingBox;
+import mayonez.math.shapes.BoundingBox;
 
 /**
  * Dictates what happens when an object reaches the edge of the scene.

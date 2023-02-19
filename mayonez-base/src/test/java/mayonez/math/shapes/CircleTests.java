@@ -1,4 +1,4 @@
-package mayonez.physics.shapes;
+package mayonez.math.shapes;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -8,7 +8,7 @@ import mayonez.math.Vec2;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit tests for the {@link mayonez.physics.shapes.Circle} class.
+ * Unit tests for the {@link mayonez.math.shapes.Circle} class.
  *
  * @author SlavSquatSuperstar
  */

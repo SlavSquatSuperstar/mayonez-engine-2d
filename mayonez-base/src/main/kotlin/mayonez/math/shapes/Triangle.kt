@@ -1,8 +1,8 @@
-package mayonez.physics.shapes
+package mayonez.math.shapes
 
 import mayonez.math.FloatMath
 import mayonez.math.Vec2
-import mayonez.physics.shapes.PolygonVertices.orderedVertices
+import mayonez.math.shapes.PolygonVertices.orderedVertices
 import kotlin.math.abs
 
 /**

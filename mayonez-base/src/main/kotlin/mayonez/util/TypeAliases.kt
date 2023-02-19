@@ -28,4 +28,4 @@ typealias MColor = mayonez.graphics.Color
 /**
  * The [mayonez.physics.shapes.Shape] class defined by Mayonez Engine.
  */
-typealias MShape = mayonez.physics.shapes.Shape
+typealias MShape = mayonez.math.shapes.Shape

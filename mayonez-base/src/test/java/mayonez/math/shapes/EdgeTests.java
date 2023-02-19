@@ -1,4 +1,4 @@
-package mayonez.physics.shapes;
+package mayonez.math.shapes;
 
 import mayonez.math.Vec2;
 import mayonez.test.TestUtils;
@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit tests for the {@link mayonez.physics.shapes.Edge} class.
+ * Unit tests for the {@link mayonez.math.shapes.Edge} class.
  *
  * @author SlavSquatSuperstar
  */

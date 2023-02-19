@@ -1,4 +1,4 @@
-package mayonez.physics.shapes;
+package mayonez.math.shapes;
 
 import mayonez.math.Vec2;
 import mayonez.physics.Collisions;
@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
- * Unit tests for the {@link mayonez.physics.shapes.Ray} class.
+ * Unit tests for the {@link mayonez.math.shapes.Ray} class.
  *
  * @author SlavSquatSuperstar
  */

@@ -7,7 +7,7 @@ import mayonez.graphics.DebugShape
 import mayonez.graphics.renderer.DebugRenderer
 import mayonez.graphics.renderer.DrawPriority
 import mayonez.math.Vec2
-import mayonez.physics.shapes.*
+import mayonez.math.shapes.*
 import mayonez.util.MColor
 
 /**

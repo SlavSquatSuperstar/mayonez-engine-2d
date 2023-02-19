@@ -8,7 +8,7 @@ import mayonez.graphics.JRenderable
 import mayonez.graphics.sprites.Sprite
 import mayonez.io.image.JTexture
 import mayonez.math.Vec2
-import mayonez.physics.shapes.*
+import mayonez.math.shapes.*
 import java.awt.BasicStroke
 import java.awt.Graphics2D
 import java.awt.Stroke

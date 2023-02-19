@@ -1,4 +1,4 @@
-package mayonez.physics.shapes;
+package mayonez.math.shapes;
 
 import mayonez.math.Vec2;
 import org.junit.jupiter.api.Test;
@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * Unit tests for the {@link mayonez.physics.shapes.Polygon} class to make sure its subclasses behave like it.
+ * Unit tests for the {@link mayonez.math.shapes.Polygon} class to make sure its subclasses behave like it.
  *
  * @author SlavSquatSuperstar
  */

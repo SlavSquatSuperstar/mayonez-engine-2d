@@ -7,7 +7,7 @@ import mayonez.annotations.UsesEngine
 import mayonez.graphics.*
 import mayonez.io.image.GLTexture
 import mayonez.math.Vec2
-import mayonez.physics.shapes.Rectangle
+import mayonez.math.shapes.Rectangle
 
 /**
  * A component that draws an image at a [GameObject]'s position using the

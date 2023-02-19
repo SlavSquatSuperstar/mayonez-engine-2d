@@ -6,7 +6,7 @@ import mayonez.annotations.EngineType;
 import mayonez.annotations.UsesEngine;
 import mayonez.graphics.JRenderable;
 import mayonez.io.image.JTexture;
-import mayonez.physics.shapes.Rectangle;
+import mayonez.math.shapes.Rectangle;
 import mayonez.graphics.Color;
 import mayonez.graphics.Colors;
 

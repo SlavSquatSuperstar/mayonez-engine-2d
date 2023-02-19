@@ -1,9 +1,9 @@
 package mayonez.physics.detection;
 
 import mayonez.math.Vec2;
-import mayonez.physics.shapes.Polygon;
-import mayonez.physics.shapes.Rectangle;
-import mayonez.physics.shapes.Triangle;
+import mayonez.math.shapes.Polygon;
+import mayonez.math.shapes.Rectangle;
+import mayonez.math.shapes.Triangle;
 import org.junit.jupiter.api.Test;
 
 import static mayonez.test.TestUtils.assertFloatEquals;
