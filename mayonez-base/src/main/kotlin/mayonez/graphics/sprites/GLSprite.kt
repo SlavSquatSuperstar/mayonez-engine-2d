@@ -10,7 +10,8 @@ import mayonez.math.Vec2
 import mayonez.physics.shapes.Rectangle
 
 /**
- * A component that draws an image at a [GameObject]'s position using the GL engine.
+ * A component that draws an image at a [GameObject]'s position using the
+ * GL engine.
  *
  * @author SlavSquatSuperstar
  */

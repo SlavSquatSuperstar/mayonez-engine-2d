@@ -1,13 +1,13 @@
 package mayonez.physics.shapes;
 
-import org.junit.jupiter.api.Test;
 import mayonez.math.Vec2;
+import org.junit.jupiter.api.Test;
 
 import java.util.Objects;
 
+import static mayonez.test.TestUtils.assertFloatEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static mayonez.test.TestUtils.assertFloatEquals;
 
 /**
  * Unit tests for the {@link mayonez.physics.shapes.Polygon} class to make sure its subclasses behave like it.
@@ -15,12 +15,15 @@ import static mayonez.test.TestUtils.assertFloatEquals;
  * @author SlavSquatSuperstar
  */
 public class PolygonTests {
+
+    // Subclasses
+
     @Test
     public void triangleVsPolygon() {
         // 2x3 triangle, min corner at origin
         Vec2[] vertices = {new Vec2(0, 0), new Vec2(2, 3), new Vec2(3, 0)};
         var poly = new Polygon(vertices);
-        var tri = new Triangle(vertices);
+        var tri = new Triangle(vertices[0], vertices[1], vertices[2]);
 
         assertFloatEquals(poly.area(), tri.area());
         assertEquals(poly.center(), tri.center());
@@ -31,9 +34,10 @@ public class PolygonTests {
     }
 
     @Test
-    public void rectangleTemplateCorrect() {
+    public void rectangleVsPolygon() {
         // 2x3 rectangle, min corner at origin
-        var poly = new Rectangle(new Vec2(1, 1.5f), new Vec2(2, 3));
+        Vec2[] vertices = {new Vec2(0, 0), new Vec2(2, 0), new Vec2(2, 3), new Vec2(0, 3)};
+        var poly = new Polygon(vertices);
         var rect = new Rectangle(new Vec2(1, 1.5f), new Vec2(2, 3));
 
         assertFloatEquals(poly.area(), 6f);
@@ -44,6 +48,8 @@ public class PolygonTests {
         var p1 = new Vec2(1, 1);
         assertTrue(poly.contains(p1) && rect.contains(p1));
     }
+
+    // Properties
 
     // From https://en.wikipedia.org/wiki/Shoelace_formula#Example
     @Test

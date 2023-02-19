@@ -82,7 +82,7 @@ and a Pool Balls scene.
 - Physics Sandbox:
     - **Left mouse** on objects to drag them around
     - **Right mouse**, *drag*, and *release* on objects to flick them
-    - **1**/**2**/**3** to spawn shapes
+    - **1**/**2**/**3**/**4** to spawn shapes
     - **Space** to toggle gravity
 - Pool Balls:
     - **Left mouse** and *drag* on objects to move them

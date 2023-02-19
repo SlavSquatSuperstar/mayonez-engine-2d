@@ -7,32 +7,26 @@ import java.util.*
 import kotlin.math.*
 
 /**
- * A Vec2 represents an object in 2D space that has magnitude and direction (arrow), the location of something in the
- * xy-plane (point), or even an ordered pair of two numbers (list).
- **
+ * A Vec2 represents an object in 2D space that has magnitude and direction
+ * (arrow), the location of something in the xy-plane (point), or even an
+ * ordered pair of two numbers (list).
+ * *
+ *
  * @param x the vector's x-component
  * @param y the vector's y-component
- *
  * @constructor Initialize this vector from an x and y value, as (x, y).
- *
  * @author SlavSquatSuperstar
  */
 class Vec2 constructor(
-    /**
-     * The vector's x component.
-     */
+    /** The vector's x component. */
     @JvmField var x: Float,
-    /**
-     * The vector's y component.
-     */
+    /** The vector's y component. */
     @JvmField var y: Float
 ) {
 
     // Convenience Constructors
 
-    /**
-     * Initialize this vector to (0, 0).
-     */
+    /** Initialize this vector to (0, 0). */
     constructor() : this(0f)
 
     /**
@@ -43,28 +37,24 @@ class Vec2 constructor(
     constructor(num: Float) : this(num, num)
 
     /**
-     * Initialize this vector to copy another vector's x and y values, as (vx, vy)
+     * Initialize this vector to copy another vector's x and y values, as (vx,
+     * vy)
      *
      * @param v the vector to copy
      */
     constructor(v: Vec2) : this(v.x, v.y)
 
     /**
-     * Initialize this vector with the x and y values from a JOML [Vector2f] object, as (vx, vy).
+     * Initialize this vector with the x and y values from a JOML [Vector2f]
+     * object, as (vx, vy).
      *
      * @param v the JOML vector to copy
      */
     constructor(v: Vector2f) : this(v.x, v.y)
 
     /**
-     * Copies this vector.
-     * @return a new vector with the same components
-     */
-    operator fun unaryPlus(): Vec2 = Vec2(this)
-    fun copy(): Vec2 = Vec2(this)
-
-    /**
      * Negates this vector.
+     *
      * @return a new vector with this vector's components times -1
      */
     operator fun unaryMinus(): Vec2 = Vec2(-x, -y)
@@ -84,7 +74,8 @@ class Vec2 constructor(
     }
 
     /**
-     * Sets this vector's components to the given vector's components. Note: this method is a mutating method!
+     * Sets this vector's components to the given vector's components. Note:
+     * this method is a mutating method!
      *
      * @param v another 2D vector
      */
@@ -121,7 +112,8 @@ class Vec2 constructor(
     operator fun times(scalar: Float): Vec2 = Vec2(this.x * scalar, this.y * scalar)
 
     /**
-     * Multiplies the components of this vector by the corresponding components of another vector.
+     * Multiplies the components of this vector by the corresponding components
+     * of another vector.
      *
      * @param v another vector
      * @return the multiplied vector
@@ -130,7 +122,8 @@ class Vec2 constructor(
     operator fun times(v: Vec2) = Vec2(this.x * v.x, this.y * v.y)
 
     /**
-     * Divides both components vector by a number, or returns (0, 0) if the number is 0.
+     * Divides both components vector by a number, or returns (0, 0) if the
+     * number is 0.
      *
      * @param scalar a non-zero number
      * @return the divided vector
@@ -138,8 +131,9 @@ class Vec2 constructor(
     operator fun div(scalar: Float): Vec2 = if (scalar == 0f) Vec2() else this * (1f / scalar)
 
     /**
-     * Divides the components of this vector by the corresponding components of another vector. If any components in
-     * the second vector is 0, the corresponding quotient component is 0.
+     * Divides the components of this vector by the corresponding components
+     * of another vector. If any components in the second vector is 0, the
+     * corresponding quotient component is 0.
      *
      * @param v another vector with non-zero components
      * @return the divided vector
@@ -147,14 +141,16 @@ class Vec2 constructor(
     operator fun div(v: Vec2): Vec2 = Vec2(this.x.safeDivide(v.x), this.y.safeDivide(v.y))
 
     /**
-     * Divides two numbers and returns zero if the divisor (denominator) is zero.
+     * Divides two numbers and returns zero if the divisor (denominator) is
+     * zero.
      */
     private fun Float.safeDivide(f: Float): Float = if (equals(f, 0f)) 0f else this / f
 
     // Special Vector Operations
 
     /**
-     * Multiplies the corresponding components of this vector and another vector.
+     * Multiplies the corresponding components of this vector and another
+     * vector.
      *
      * @param v another vector
      * @return the dot product
@@ -162,8 +158,9 @@ class Vec2 constructor(
     fun dot(v: Vec2): Float = (this.x * v.x) + (this.y * v.y)
 
     /**
-     * Calculates the z-component of the cross product between this vector and another. The resulting z-component
-     * equals a.x * b.y - b.x * a.y, or the determinant of the matrix with this vector and the other as columns.
+     * Calculates the z-component of the cross product between this vector and
+     * another. The resulting z-component equals a.x * b.y - b.x * a.y, or the
+     * determinant of the matrix with this vector and the other as columns.
      *
      * @param v another vector
      * @return the cross product z-component
@@ -171,8 +168,9 @@ class Vec2 constructor(
     fun cross(v: Vec2): Float = (this.x * v.y) - (v.x * this.y)
 
     /**
-     * Returns the 2D vector of the cross product between this vector and z-component. The resulting vector equals
-     * (y*z, -x*z), or this vector's clockwise normal scaled by the given z-component.
+     * Returns the 2D vector of the cross product between this vector and
+     * z-component. The resulting vector equals (y*z, -x*z), or this vector's
+     * clockwise normal scaled by the given z-component.
      *
      * @param z a vector's z-component
      * @return the 2D cross product vector
@@ -182,39 +180,27 @@ class Vec2 constructor(
     companion object {
         // Pre-Defined Vectors
 
-        /**
-         * The vector (1, 0), or the positive x-axis.
-         */
+        /** The vector (1, 0), or the positive x-axis. */
         val right: Vec2
             get() = Vec2(1f, 0f)
 
-        /**
-         * The vector (-1, 0), or the negative x-axis.
-         */
+        /** The vector (-1, 0), or the negative x-axis. */
         val left: Vec2
             get() = Vec2(-1f, 0f)
 
-        /**
-         * The vector (0, 1), or the positive y-axis.
-         */
+        /** The vector (0, 1), or the positive y-axis. */
         val up: Vec2
             get() = Vec2(0f, 1f)
 
-        /**
-         * The vector (0, -1), or the negative y-axis.
-         */
+        /** The vector (0, -1), or the negative y-axis. */
         val down: Vec2
             get() = Vec2(0f, -1f)
 
-        /**
-         * The vector (1, 1), or the component-wise multiplicative identity.
-         */
+        /** The vector (1, 1), or the component-wise multiplicative identity. */
         val one: Vec2
             get() = Vec2(1f, 1f)
 
-        /**
-         * The vector (0, 0), or the component-wise additive identity.
-         */
+        /** The vector (0, 0), or the component-wise additive identity. */
         val zero: Vec2
             get() = Vec2(0f, 0f)
 
@@ -225,8 +211,8 @@ class Vec2 constructor(
         // Static Vector Methods
 
         /**
-         * Calculates the vector triple product between three vectors. The vector triple product is
-         * defined as (a × b) × c = b(a · c) - a(b · c).
+         * Calculates the vector triple product between three vectors. The vector
+         * triple product is defined as (a × b) × c = b(a · c) - a(b · c).
          *
          * @param v1 the first vector, a
          * @param v2 the second vector, b
@@ -240,7 +226,8 @@ class Vec2 constructor(
     }
 
     /**
-     * Projects this vector onto another vector, returning the components of this vector in the direction of another.
+     * Projects this vector onto another vector, returning the components of
+     * this vector in the direction of another.
      *
      * @param vOnto another vector
      * @return the vector projection
@@ -248,7 +235,8 @@ class Vec2 constructor(
     fun project(vOnto: Vec2): Vec2 = vOnto * (this.dot(vOnto) / vOnto.lenSq())
 
     /**
-     * Calculates the project length, or component, of this vector onto another vector.
+     * Calculates the project length, or component, of this vector onto another
+     * vector.
      *
      * @param vOnto another vector
      * @return the scalar projection
@@ -265,7 +253,8 @@ class Vec2 constructor(
     fun len(): Float = sqrt(lenSq())
 
     /**
-     * Calculates the magnitude squared of this vector (less CPU expensive than square root).
+     * Calculates the magnitude squared of this vector (less CPU expensive than
+     * square root).
      *
      * @return this vector's magnitude squared
      */
@@ -280,7 +269,8 @@ class Vec2 constructor(
     fun distance(v: Vec2): Float = sqrt(distanceSq(v))
 
     /**
-     * Calculates the distance squared between the tips of this vector and another.
+     * Calculates the distance squared between the tips of this vector and
+     * another.
      *
      * @param v a 2D vector
      * @return the distance squared
@@ -288,32 +278,62 @@ class Vec2 constructor(
     fun distanceSq(v: Vec2): Float = (v - this).lenSq()
 
     /**
-     * Creates a vector with the same direction as this but with a length (magnitude) of 1. Returns (0, 0) if this
-     * vector is (0, 0).
+     * Creates a vector with the same direction as this but with a length
+     * (magnitude) of 1. Returns (0, 0) if this vector is (0, 0).
      *
      * @return the unit vector
      */
     fun unit(): Vec2 {
-        return if (equals(lenSq(), 1f) || equals(lenSq(), 0f)) +this
+        return if (equals(lenSq(), 1f) || equals(lenSq(), 0f)) Vec2(this)
         else this / len()
     }
 
     // Angle Methods
 
     /**
-     * Calculates the angle in degrees between this vector and the positive x-axis (1, 0).
+     * Calculates the signed angle in degrees between this vector and the
+     * positive x-axis (1, 0), between -180 and 180.
      *
-     * @return this vector's angle in the x-y plane
+     * @return this vector's polar angle
      */
     fun angle(): Float = Math.toDegrees(atan2(y.toDouble(), x.toDouble())).toFloat()
 
     /**
-     * Calculates the angle in degrees between this vector and another.
+     * Calculates the unsigned (positive) counterclockwise angle in degrees
+     * between this vector and the positive x-axis (1, 0), between 0 and 360.
      *
-     * @param v another 2D vector
+     * @return this vector's polar angle
+     */
+    fun posAngle(): Float {
+        val angle = this.angle()
+        return if (angle < 0f) angle + 360f else angle
+    }
+
+    /**
+     * Calculates the smallest positive angle in degrees between this vector
+     * and another, between 0 and 180 degrees.
+     *
+     * @param v another vector
      * @return the angle between the two vectors
      */
-    fun angle(v: Vec2): Float = FloatMath.toDegrees(acos(this.dot(v) / (this.len() * v.len())))
+    fun angle(v: Vec2): Float {
+        val cos = this.dot(v) / (this.len() * v.len())
+        return if (cos > 1f) 0f
+        else if (cos < -1f) 180f
+        else FloatMath.toDegrees(acos(cos))
+    }
+
+    /**
+     * Calculates the positive counterclockwise angle in degrees between this
+     * vector and another, between 0 and 360 degrees.
+     *
+     * @param v another vector
+     * @return the angle between the two vectors
+     */
+    fun posAngle(v: Vec2): Float {
+        val ang = this.posAngle() - v.posAngle()
+        return if (ang < 0f) ang + 360f else ang
+    }
 
     /**
      * Rotates this vector by an angle around the origin (0, 0).
@@ -327,18 +347,19 @@ class Vec2 constructor(
      * Rotates this vector by an angle around the given origin point.
      *
      * @param degrees the angle, in degrees clockwise
-     * @param origin  the point to rotate around
+     * @param origin the point to rotate around
      * @return the rotated vector
      */
     fun rotate(degrees: Float, origin: Vec2): Vec2 {
-        if (this == origin || equals(degrees % 360, 0f)) return +this // Trivial
+        if (this == origin || equals(degrees % 360, 0f)) return Vec2(this) // Trivial
         val localPos = this - origin // Translate the vector space to the origin
         val rot = Mat22(degrees) // Rotate the point around the new origin
         return (rot * localPos) + origin // Revert the vector space to the old point
     }
 
     /**
-     * Creates a vector perpendicular (rotated 90 degrees counterclockwise) to this one with a length of 1.
+     * Creates a vector perpendicular (rotated 90 degrees counterclockwise) to
+     * this one with a length of 1.
      *
      * @return a perpendicular vector
      */
@@ -347,43 +368,48 @@ class Vec2 constructor(
     // Math Utils Methods
 
     /**
-     * Clamps the components of this vector within the bounding box created by the given vectors.
+     * Clamps the components of this vector within the bounding box created by
+     * the given vectors.
      *
      * @param min the minimum value for each of the components
      * @param max the maximum value for each of the components
      * @return the clamped vector
      */
-    fun clampInbounds(min: Vec2, max: Vec2): Vec2 =
-        Vec2(FloatMath.clamp(x, min.x, max.x), FloatMath.clamp(y, min.y, max.y))
+    fun clampInbounds(min: Vec2, max: Vec2): Vec2 {
+        return Vec2(FloatMath.clamp(x, min.x, max.x), FloatMath.clamp(y, min.y, max.y))
+    }
 
     /**
-     * Clamps the length of this vector if it exceeds the provided value, while keeping the same direction. Useful for
-     * movement scripts.
+     * Clamps the length of this vector if it exceeds the provided value, while
+     * keeping the same direction. Useful for movement scripts.
      *
      * @param length any number
      * @return the clamped vector
      */
     fun clampLength(length: Float): Vec2 {
         return if (lenSq() > length * length) this * (length / len())
-        else +this
+        else Vec2(this)
     }
 
     /**
-     * Rounds the components of this vector up and returns them in a new vector.
+     * Rounds the components of this vector up and returns them in a new
+     * vector.
      *
      * @return the ceiling vector
      */
-    fun ceiling(): Vec2 = Vec2(ceil(x), ceil(y))
+    fun ceil(): Vec2 = Vec2(ceil(x), ceil(y))
 
     /**
-     * Rounds the components of this vector down and returns them in a new vector.
+     * Rounds the components of this vector down and returns them in a new
+     * vector.
      *
      * @return the floored vector
      */
     fun floor(): Vec2 = Vec2(floor(x), floor(y))
 
-    fun inRange(min: Vec2, max: Vec2): Boolean =
-        FloatMath.inRange(this.x, min.x, max.x) && FloatMath.inRange(this.y, min.y, max.y)
+    fun inRange(min: Vec2, max: Vec2): Boolean {
+        return FloatMath.inRange(this.x, min.x, max.x) && FloatMath.inRange(this.y, min.y, max.y)
+    }
 
     /**
      * Calculates the average position of this vector and another.
@@ -392,11 +418,6 @@ class Vec2 constructor(
      * @return the midpoint
      */
     fun midpoint(v: Vec2): Vec2 = (this + v) * 0.5f
-
-    /**
-     * Convert this vector to a JOML [Vector2f] with the same x and y values
-     */
-    fun toJOML(): Vector2f = Vector2f(x, y)
 
     // Overrides
 

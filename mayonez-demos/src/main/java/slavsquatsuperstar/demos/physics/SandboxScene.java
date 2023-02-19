@@ -17,8 +17,6 @@ import mayonez.scripts.KeepInScene;
 import mayonez.scripts.movement.DragAndDrop;
 import mayonez.scripts.movement.MoveMode;
 
-import java.awt.*;
-
 /**
  * For testing dynamic movement and collision resolution.
  *
@@ -69,6 +67,8 @@ public class SandboxScene extends Scene {
                 addObject(createRandomShape(MouseInput.getPosition(), 2));
             } else if (KeyInput.keyPressed("3")) {
                 addObject(createRandomShape(MouseInput.getPosition(), 3));
+            } else if (KeyInput.keyPressed("4")) {
+                addObject(createRandomShape(MouseInput.getPosition(), 4));
             }
         }
     }
@@ -141,17 +141,22 @@ public class SandboxScene extends Scene {
         if (type == 1) name = "Random Ball";
         else if (type == 2) name = "Random Box";
         else if (type == 3) name = "Random Triangle";
+        else if (type == 4) name = "Random Polygon";
         else return null;
 
         return new GameObject(name, position) {
             @Override
             protected void init() {
                 transform.setRotation(Random.randomFloat(0f, 360f));
+                // balls are not rendered correctly if rotated
 
                 Collider col;
-                if (type == 1) col = new BallCollider(new Vec2(Random.randomFloat(3f, 10f)));
-                else if (type == 2) col = new BoxCollider(Random.randomVector(new Vec2(4f), new Vec2(10f)));
-                else col = new PolygonCollider(3, Random.randomFloat(2f, 8f));
+                switch (type) {
+                    case 1 -> col = new BallCollider(Random.randomVector(new Vec2(4f), new Vec2(10f)));
+                    case 2 -> col = new BoxCollider(Random.randomVector(new Vec2(4f), new Vec2(10f)));
+                    case 3 -> col = new PolygonCollider(3, Random.randomFloat(3f, 6f));
+                    default -> col = new PolygonCollider(Random.randomInt(5, 8), Random.randomFloat(3f, 6f));
+                }
 
                 addComponent(col);
                 addComponent(new Rigidbody(col.getMass(DENSITY)).setMaterial(randomMaterial()));
@@ -161,6 +166,7 @@ public class SandboxScene extends Scene {
                 addComponent(new MouseFlick(MoveMode.VELOCITY, "right mouse", 25f, false));
                 addComponent(new Script() {
                     private float lifetime;
+
                     @Override
                     public void start() {
                         lifetime = Random.randomFloat(15f, 20f);

@@ -1,9 +1,7 @@
 package mayonez.test;
 
-import mayonez.graphics.Color;
 import mayonez.math.Vec2;
-import mayonez.physics.shapes.Circle;
-import mayonez.physics.shapes.Ellipse;
+import mayonez.physics.shapes.Triangle;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -19,24 +17,31 @@ import java.util.List;
 public class MayonezTest {
 
     public static void main(String[] args) throws Exception {
-        var c = new Circle(new Vec2(1, 1), 2);
-        var e = new Ellipse(new Vec2(1f, 1), new Vec2(4.1f, 4));
-        var pc = c.toPolygon();
-        var pe = e.toPolygon();
-        System.out.println(pc.center());
-        System.out.println(pe.center());
-        System.out.println(pc.getNumVertices());
-        System.out.println(pe.getNumVertices());
-        System.out.println(pc.area());
-        System.out.println(pe.area());
-        System.out.println(pc.angularMass(1f));
-        System.out.println(pe.angularMass(1f));
-        System.out.println(Arrays.toString(pc.getVertices()));
-        System.out.println(Arrays.toString(pe.getVertices()));
+        var a = new Vec2(0.83506536f, 9.860247f);
+        var b = new Vec2(7.5902224f, 15.747411f);
+        var c = new Vec2(2.7950883f, 14.430385f);
+        var pt = new Vec2(6.566416f, 15.466213f);
 
-        var red = new Color(255, 0, 0, 0);
-        System.out.println(red);
-        System.out.println(red.hexCode(true));
+//        var tri = new Triangle(a, b, c);
+//        System.out.println(Arrays.toString(tri.getVertices()));
+//        System.out.println();
+//        System.out.println(pt);
+//        System.out.println(tri.contains(pt));
+
+//        var tri1 = new Triangle(a, b, pt);
+//        System.out.println(Arrays.toString(tri1.getVertices()));
+//        System.out.println();
+
+        var tri2 = new Triangle(b, c, pt);
+        System.out.println(Arrays.toString(tri2.getVertices()));
+        System.out.println();
+
+//        var tri3 = new Triangle(c, a, pt);
+//        System.out.println(Arrays.toString(tri3.getVertices()));
+
+//        var red = new Color(255, 0, 0, 0);
+//        System.out.println(red);
+//        System.out.println(red.hexCode(true));
 
 //        System.out.println(scanDirectory1("."));
 //        System.out.println(scanDirectory2("."));

@@ -4,9 +4,9 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import mayonez.math.Vec2;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static mayonez.test.TestUtils.assertFloatEquals;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Unit tests for the {@link mayonez.physics.shapes.Triangle} class.
@@ -19,7 +19,17 @@ public class TriangleTests {
 
     @BeforeAll
     public static void getTri() {
-        tri = new Triangle(new Vec2(-1, -1), new Vec2(0, 4), new Vec2(5, -1)); // center (3, 1.5f), size(4, 3)
+        // center at (3, 1.5f), 4x3 size
+        tri = new Triangle(new Vec2(-1, -1), new Vec2(0, 4), new Vec2(5, -1));
+    }
+
+    @Test
+    public void verticesCorrect() {
+        var verts = tri.getVertices();
+        assertEquals(3, verts.length);
+        assertEquals(new Vec2(-1, -1), verts[0]);
+        assertEquals(new Vec2(5, -1), verts[1]);
+        assertEquals(new Vec2(0, 4), verts[2]);
     }
 
     @Test

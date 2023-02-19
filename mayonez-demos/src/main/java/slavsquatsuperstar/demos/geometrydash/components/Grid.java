@@ -30,7 +30,7 @@ public class Grid extends Component implements JRenderable {
 
         // Which world coordinates are we at?
         var start = camPos.sub(screneHalfSize).floor().sub(new Vec2(0.5f)).mul(gridSize);
-        var end = camPos.add(screneHalfSize).ceiling().add(new Vec2(0.5f)).mul(gridSize);
+        var end = camPos.add(screneHalfSize).ceil().add(new Vec2(0.5f)).mul(gridSize);
 
         // Either bottom of screen or top of ground
         // Vertical Lines

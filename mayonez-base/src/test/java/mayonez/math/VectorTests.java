@@ -11,7 +11,7 @@ import static mayonez.test.TestUtils.assertFloatEquals;
  * @author SlavSquatSuperstar
  */
 public class VectorTests {
-    
+
     @Test
     public void equivalentVectorEquals() {
         var v1 = new Vec2(5, 5);
@@ -42,8 +42,8 @@ public class VectorTests {
 
     @Test
     public void unitVectorLengthIsOne() {
-        assertFloatEquals(1f, new Vec2(500, 500).unit().lenSq());
-        assertFloatEquals(1f, new Vec2(-500, -500).unit().lenSq());
+        assertFloatEquals(1f, new Vec2(0.05f, 0.01f).unit().lenSq());
+        assertFloatEquals(1f, new Vec2(-100, -500).unit().lenSq());
     }
 
     @Test
@@ -187,9 +187,64 @@ public class VectorTests {
     }
 
     @Test
-    public void vectorAngleSuccess() {
-        assertFloatEquals(new Vec2(0, 2).angle(), 90);
-        assertFloatEquals(new Vec2(-2, 0).rotate(-30).angle(), 150);
+    public void vectorSignedAngleAxes() {
+        assertFloatEquals(0, new Vec2(1, 0).angle());
+        assertFloatEquals(90, new Vec2(0, 1).angle());
+        assertFloatEquals(180, new Vec2(-1, 0).angle());
+        assertFloatEquals(-90, new Vec2(0, -1).angle());
+    }
+
+    @Test
+    public void vectorSignedAngleQuadrants() {
+        var root3 = FloatMath.sqrt(3f);
+        assertFloatEquals(30, new Vec2(root3, 1).angle());
+        assertFloatEquals(150, new Vec2(-root3, 1).angle());
+        assertFloatEquals(-150, new Vec2(-root3, -1).angle());
+        assertFloatEquals(-30, new Vec2(root3, -1).angle());
+    }
+
+    @Test
+    public void vectorUnsignedAngleAxes() {
+        assertFloatEquals(0, new Vec2(1, 0).posAngle());
+        assertFloatEquals(90, new Vec2(0, 1).posAngle());
+        assertFloatEquals(180, new Vec2(-1, 0).posAngle());
+        assertFloatEquals(270, new Vec2(0, -1).posAngle());
+    }
+
+    @Test
+    public void vectorUnsignedAngleQuadrants() {
+        var root3 = FloatMath.sqrt(3f);
+        assertFloatEquals(30, new Vec2(root3, 1).posAngle());
+        assertFloatEquals(150, new Vec2(-root3, 1).posAngle());
+        assertFloatEquals(210, new Vec2(-root3, -1).posAngle());
+        assertFloatEquals(330, new Vec2(root3, -1).posAngle());
+    }
+
+    @Test
+    public void vectorSmallAngleWithOther() {
+        var tolerance = 1e-5f;
+        var v = new Vec2(2, 2); // 45º
+        var root3 = FloatMath.sqrt(3f); // √3
+        assertEquals(45, new Vec2(1, 0).angle(v), tolerance); // 0º
+        assertEquals(15, new Vec2(root3, 1).angle(v), tolerance); // 30º
+        assertEquals(0, new Vec2(1, 1).angle(v), tolerance); // 45º
+        assertEquals(15, new Vec2(1, root3).angle(v), tolerance); // 60º
+        assertEquals(180, new Vec2(-1, -1).angle(v), tolerance); // 225º
+        assertEquals(90, new Vec2(1, -1).angle(v), tolerance); // 315º
+    }
+
+    @Test
+    public void vectorPositiveAngleWithOther() {
+        var tolerance = 1e-5f;
+        var v = new Vec2(2, 2); // 45º
+        var root3 = FloatMath.sqrt(3f); // √3
+        assertEquals(0, new Vec2(1, 1).posAngle(v), tolerance); // 45º
+        assertEquals(15, new Vec2(1, root3).posAngle(v), tolerance); // 60º
+        assertEquals(75, new Vec2(-1, root3).posAngle(v), tolerance); // 120
+        assertEquals(180, new Vec2(-1, -1).posAngle(v), tolerance); // 225º
+        assertEquals(270, new Vec2(1, -1).posAngle(v), tolerance); // 315º
+        assertEquals(315, new Vec2(1, 0).posAngle(v), tolerance); // 0º
+        assertEquals(345, new Vec2(root3, 1).posAngle(v), tolerance); // 30º
     }
 
 }
