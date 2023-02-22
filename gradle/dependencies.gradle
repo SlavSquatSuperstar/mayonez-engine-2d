@@ -37,6 +37,7 @@ ext {
 
             // Dependencies
             json       : 'org.json:json:20220924',
+
             reflections: 'org.reflections:reflections:0.10.2',
             slf4j      : 'org.slf4j:slf4j-simple:1.7.32', // Don't update, required by reflections
 
@@ -50,7 +51,7 @@ ext {
             joml       : 'org.joml:joml:1.10.5',
 
             // Testing
-            junitEngine: "org.junit.jupiter:junit-jupiter-engine:$junitVersion",
             junitApi   : "org.junit.jupiter:junit-jupiter-api:$junitVersion",
+            junitEngine: "org.junit.jupiter:junit-jupiter-engine:$junitVersion",
     ]
 }

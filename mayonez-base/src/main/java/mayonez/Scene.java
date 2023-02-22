@@ -111,7 +111,7 @@ public abstract class Scene {
      * @param dt seconds since the last frame
      */
     public final void update(float dt) {
-        if (state == SceneState.RUNNING) {
+        if (isRunning()) {
             // Update scene and objects
             objects.forEach(o -> {
                 o.update(dt);
@@ -202,14 +202,13 @@ public abstract class Scene {
         var addObject = new SceneChange(obj, o -> {
             objects.add(o.setScene(this));
             o.start(); // add components first so renderer and physics can access it
-            if (state == SceneState.RUNNING) { // dynamic add
-                renderer.addObject(o);
-                physics.addObject(o);
-            }
+//            if (isRunning()) { // dynamic add
+            renderer.addObject(o);
+            physics.addObject(o);
+//            }
             Logger.debug("Added object \"%s\" to scene \"%s\"", o.getNameAndID(), this.name);
         });
-        if (state == SceneState.RUNNING)
-            changesToScene.offer(addObject); // Dynamic add: add to scene and layers in next frame
+        if (isRunning()) changesToScene.offer(addObject); // Dynamic add: add to scene and layers in next frame
         else addObject.change();
     }
 
@@ -354,6 +353,10 @@ public abstract class Scene {
 
     SceneState getState() {
         return state;
+    }
+
+    public boolean isRunning() {
+        return state == SceneState.RUNNING;
     }
 
     // Object Overrides

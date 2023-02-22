@@ -1,56 +1,68 @@
 package mayonez.scripts.movement;
 
+import mayonez.input.MouseInput;
 import mayonez.math.Vec2;
+import mayonez.physics.Rigidbody;
+import mayonez.scripts.input.MouseInputScript;
 
 /**
- * Allows objects to be picked up and moved using the mouse.
+ * Allows objects to be moved by clicking on them and dragging around the mouse.
  *
  * @author SlavSquatSuperstar
  */
-public class DragAndDrop extends MouseScript {
+public class DragAndDrop extends MouseInputScript {
 
     private static DragAndDrop activeInstance = null; // Make sure we only move one object at a time
-    private final boolean alwaysAllow; // Always enable drag and drop.
+
+    private final String button;
+    protected Rigidbody rb; // Reference to object rigidbody
 
     public DragAndDrop(String button) {
-        this(button, false, false);
+        this.button = button;
     }
 
-    public DragAndDrop(String button, boolean inverted, boolean alwaysAllow) {
-        super(MoveMode.POSITION, 0);
-        this.inverted = inverted;
-        this.button = button;
-        this.alwaysAllow = alwaysAllow;
+    @Override
+    public void start() {
+        super.start();
+        rb = getRigidbody();
     }
+
+    // Callback Methods
 
     @Override
     public void onMouseDown() {
-        if (activeInstance == null) activeInstance = this;
+        if (activeInstance == null && MouseInput.buttonPressed(button)) {
+            activeInstance = this;
+        }
     }
 
     @Override
-    public void onMouseMove() {
-        if ((activeInstance == this || alwaysAllow) && isMouseHeld()) {
+    public void onMouseHeld() {
+        if (activeInstance == this) {
+            // Stop the object's motion
             if (rb != null) {
-                rb.setVelocity(new Vec2()); // Stop the object
+                rb.setVelocity(new Vec2());
                 rb.setAngVelocity(0);
             }
-            transform.move(getUserInput());
+            transform.move(getMouseDisp());
         }
     }
 
     @Override
     public void onMouseUp() {
-        if (activeInstance == this) activeInstance = null;
-    }
-
-    @Override
-    protected Vec2 getUserInput() {
-        return getMousePos().sub(lastMouse).add(getMouseDisp()).mul(inverted ? -1 : 1);
+        if (activeInstance == this) {
+            activeInstance = null;
+        }
     }
 
     @Override
     public void onDestroy() {
-        onMouseUp(); // If parent destroyed while this instance is active, free up active instance
+        onMouseUp(); // If object destroyed while this instance is active, free up active instance
+    }
+
+    // Getters
+
+    protected String getButton() {
+        return button;
     }
 }

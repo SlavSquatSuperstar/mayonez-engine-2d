@@ -32,8 +32,8 @@ dependencies {
     api "$libs.joml"
 
     // Test Libraries
-    testImplementation "$libs.junitEngine"
-    testRuntimeOnly "$libs.junitApi"
+    testImplementation "$libs.junitApi"
+    testRuntimeOnly "$libs.junitEngine"
 }
 
 // Tasks

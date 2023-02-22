@@ -2,12 +2,10 @@ package mayonez.graphics;
 
 import mayonez.GameObject;
 import mayonez.Script;
-import mayonez.input.MouseInput;
 import mayonez.math.FloatMath;
 import mayonez.math.Vec2;
 import mayonez.physics.colliders.BoxCollider;
 import mayonez.scripts.KeepInScene;
-import mayonez.scripts.movement.DragAndDrop;
 
 /**
  * The viewport into the scene.
@@ -69,14 +67,7 @@ public abstract class Camera extends Script {
             protected void init() {
                 addTag("Ignore Collisions");
                 addComponent(camera);
-                // Allow camera to be moved with mouse
-                addComponent(camera.dragAndDrop = new DragAndDrop("right mouse", true, true) {
-                    // Reset camera position with double click
-                    @Override
-                    public void onMouseDown() {
-                        if (MouseInput.getClicks() == 2) camera.setPosition(new Vec2(0, 0));
-                    }
-                }.setEnabled(false));
+                addComponent(camera.dragAndDrop = new CameraDragAndDrop("right mouse").setEnabled(false));
                 // Keep camera inside scene and add camera collider (note does not work well with rotations)
                 addComponent(new BoxCollider(camera.screenSize.div(camera.sceneScale)).setTrigger(true));
                 addComponent(camera.keepInScene = new KeepInScene(KeepInScene.Mode.STOP).setEnabled(false));

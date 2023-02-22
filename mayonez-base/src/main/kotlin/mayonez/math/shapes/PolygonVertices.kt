@@ -51,11 +51,11 @@ object PolygonVertices {
         val hull = ArrayList<Vec2>(size)
 
         // Find leftmost point
-        val vLeft = getMinCoordsPointIdx(vertices)
-        hull.add(vertices[vLeft])
+        val vFirst = getMinCoordsPointIdx(vertices)
+        hull.add(vertices[vFirst])
 
         // Perform Jarvis march
-        var vStart = vLeft // find the most clockwise point from here
+        var vStart = vFirst // find the most clockwise point from here
         while (hull.size <= size) {
             var vCurr = (vStart + 1) % size // current most clockwise point (next point in hull)
             /*
@@ -67,21 +67,23 @@ object PolygonVertices {
              */
             for (i in vertices.indices) { // find the most clockwise point
                 if (i == vStart || i == vCurr) continue
+
                 val ptA = vertices[vStart]
                 val ptB = vertices[vCurr]
                 val ptC = vertices[i]
 
                 val vecAB = ptB - ptA // current most clockwise
                 val vecBC = ptC - ptB // compare this point
+
                 val orientation = vecAB.cross(vecBC) // find the most clockwise point from current point
-                if (orientation < 0) vCurr = i
-                // TODO this is not right
-                else if (FloatMath.equals(orientation)) { // or the farthest point if collinear
-                    if (ptA.distanceSq(ptB) < ptA.distanceSq(ptC)) vCurr = i
+                if (orientation < 0) { // counter-clockwise
+                    vCurr = i
+                } else if (FloatMath.equals(orientation, 0f)) { // or the farthest point if collinear
+                    if (ptA.distanceSq(ptC) > ptA.distanceSq(ptB)) vCurr = i
                 }
             }
             vStart = vCurr
-            if (vStart == vLeft) break // loop until reaching leftmost point
+            if (vStart == vFirst) break // loop until reaching leftmost point
             hull.add(vertices[vCurr]) // add most clockwise point to hull
         }
         return hull.toTypedArray()
