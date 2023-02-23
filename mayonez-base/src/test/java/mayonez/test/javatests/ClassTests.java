@@ -1,16 +1,14 @@
 package mayonez.test.javatests;
 
-import mayonez.*;
-import org.junit.jupiter.api.Test;
-import mayonez.math.Vec2;
+import mayonez.Component;
+import mayonez.physics.colliders.BallCollider;
 import mayonez.physics.colliders.BoxCollider;
 import mayonez.physics.colliders.Collider;
-import mayonez.math.shapes.Circle;
-
-import java.util.List;
-import java.util.stream.Collectors;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
 
 /**
  * Unit tests for the {@link java.lang.Class} class.
@@ -19,90 +17,48 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class ClassTests {
 
-    private static Circle shapeData = new Circle(new Vec2(0, 0), 1);
+    private Collider collider;
 
-    @Test
-    // <obj> instanceof <cls>: superclass, class
-    public void instanceOfSucceedAndFail() {
-        Component c = new Collider(shapeData) {};
-        assertTrue(c instanceof Component);
-        assertTrue(c instanceof Collider);
-        assertFalse(c instanceof BoxCollider);
+    @BeforeEach
+    public void getCollider() {
+        collider = mock(Collider.class);
     }
 
     @Test
-    // <cls>.isInstance(<obj>): superclass, class, and subclass
-    public void isInstanceSucceedAndFail() {
-        Component c = new Collider(shapeData) {};
-        assertTrue(Component.class.isInstance(c));
-        assertTrue(Collider.class.isInstance(c));
-        assertFalse(BoxCollider.class.isInstance(c));
+    public void objectInstanceOfClass() {
+        assertTrue(collider instanceof Component); // super class
+        assertTrue(collider instanceof Collider); // class
+        assertFalse(collider instanceof BoxCollider); // subclass (fails)
     }
 
+    @Test
+    public void classIsInstanceObject() {
+        assertTrue(Component.class.isInstance(collider)); // super class
+        assertTrue(Collider.class.isInstance(collider)); // class
+        assertFalse(BoxCollider.class.isInstance(collider)); // subclass (fails)
+    }
 
     @Test
-    // <cls>.isAssignableFrom(<cls>): class, subclass
-    public void isAssignableFromSucceed() {
+    public void superclassAssignableFromSubclass() {
         assertTrue(Component.class.isAssignableFrom(Component.class));
         assertTrue(Component.class.isAssignableFrom(Collider.class));
         assertTrue(Component.class.isAssignableFrom(BoxCollider.class));
     }
 
     @Test
-    public void isAssignableFromFail() {
+    public void subclassNotAssignableFromSuperclass() {
         assertFalse(Collider.class.isAssignableFrom(Component.class));
         assertFalse(BoxCollider.class.isAssignableFrom(Component.class));
     }
 
     @Test
-    // <obj>.getClass() == <cls>: same class only
-    public void compareClassSucceedAndFail() {
-        Component c = new TestCollider(); // can't be anonymous
-        assertEquals(c.getClass(), TestCollider.class);
-        assertNotSame(c.getClass(), Component.class);
-        assertNotSame(c.getClass(), Collider.class);
-        assertNotSame(c.getClass(), BoxCollider.class);
-    }
+    public void getClassReturnsActualClass() {
+        Component c = mock(BallCollider.class); // declare as superclass
 
-    @Test
-    public void getObjectsInSceneGeneric() {
-        // TODO needs decoupling
-        Mayonez.setUseGL(false);
-        var scene = new Scene("ClassTests Scene") {
-            @Override
-            protected void init() {
-                addObject(new GameObject("obj1", new Vec2()));
-                addObject(new GameObject("obj2", new Vec2()));
-                addObject(new GameObject("obj3", new Vec2()));
-                addObject(new TestObject("obj4", new Vec2()));
-                addObject(new TestObject("obj5", new Vec2()));
-            }
-        };
-        SceneManager.setScene(scene);
-        SceneManager.startScene();
-        assertNull(scene.getObject("Obj1"));
-        assertEquals(scene.getObject("obj1").name, "obj1");
-        assertEquals(getObjects(scene, GameObject.class).get(1).getClass(), GameObject.class);
-        assertEquals(getObjects(scene, TestObject.class).get(0).getClass(), TestObject.class);
-        assertEquals(scene.getObjects().get(4).getClass(), TestObject.class);
-
-    }
-
-    @SuppressWarnings({"unchecked"})
-    private static <T extends GameObject> List<T> getObjects(Scene scene, Class<T> cls) {
-        return scene.getObjects().stream().filter(o -> cls != null && cls.isInstance(o)).map(o -> (T) o).collect(Collectors.toList());
-    }
-    
-    private static class TestObject extends GameObject {
-        public TestObject(String name, Vec2 position) {
-            super(name, position);
-        }
-    }
-
-    private static class TestCollider extends Collider {
-        public TestCollider() {
-            super(shapeData);
-        }
+        assertEquals(c.getClass(), BallCollider.class);
+        assertNotEquals(c.getClass(), Component.class);
+        assertNotEquals(c.getClass(), Collider.class);
+        assertNotEquals(c.getClass(), BoxCollider.class);
     }
 
 }

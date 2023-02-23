@@ -2,6 +2,7 @@ package mayonez.physics.detection;
 
 import mayonez.math.Vec2;
 import mayonez.math.shapes.Circle;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -13,29 +14,42 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class CircleDetectorTests {
 
+    private Circle c1;
+
+    @BeforeEach
+    public void getCircle() {
+        c1 = new Circle(new Vec2(0, 0), 5);
+    }
+
     @Test
     public void circlesTouchOneContact() { // touch but don't intersect
-        var c1 = new Circle(new Vec2(0, 0), 5);
-        var c2 = new Circle(new Vec2(10, 0), 5);
+        var c2 = c1.translate(new Vec2(10, 0));
+
         assertTrue(CircleDetector.checkIntersection(c1, c2));
-        var contacts = CircleDetector.getContacts(c1, c2);
-        assertEquals(new Vec2(5, 0), contacts.getContact(0));
+        testCircleContact(c1, c2, new Vec2(5, 0));
     }
 
     @Test
     public void circlesOverlapOneContact() {
-        var c1 = new Circle(new Vec2(0, 0), 5);
-        var c2 = new Circle(new Vec2(9.9f, 0), 5);
+        var c2 = c1.translate(new Vec2(9.9f, 0));
+
         assertTrue(CircleDetector.checkIntersection(c1, c2));
-        var contacts = CircleDetector.getContacts(c1, c2);
-        assertEquals(new Vec2(4.9f, 0), contacts.getContact(0));
+        testCircleContact(c1, c2, new Vec2(4.9f, 0));
     }
 
     @Test
-    public void circlesNoIntersectNoContacts() {
-        var c1 = new Circle(new Vec2(0, 0), 5);
-        var c2 = new Circle(new Vec2(10.1f, 0), 5);
+    public void circlesSeparatedNoContacts() {
+        var c2 = c1.translate(new Vec2(10.1f, 0));
+
         assertFalse(CircleDetector.checkIntersection(c1, c2));
         assertNull(CircleDetector.getContacts(c1, c2));
     }
+
+    private void testCircleContact(Circle c1, Circle c2, Vec2 contact) {
+        var contacts = CircleDetector.getContacts(c1, c2);
+        assertNotNull(contacts);
+        assertEquals(1, contacts.numContacts());
+        assertEquals(contact, contacts.getContact(0));
+    }
+
 }

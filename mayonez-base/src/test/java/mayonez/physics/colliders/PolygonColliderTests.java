@@ -16,7 +16,7 @@ import static mayonez.test.TestUtils.assertVerticesEqual;
  */
 public class PolygonColliderTests {
 
-    static Vec2[] vertices = new Vec2[]{new Vec2(1, 1), new Vec2(-1, 1), new Vec2(-1, -1), new Vec2(1, -1)};
+    private static Vec2[] vertices = new Vec2[]{new Vec2(1, 1), new Vec2(-1, 1), new Vec2(-1, -1), new Vec2(1, -1)};
 
     // Properties
 

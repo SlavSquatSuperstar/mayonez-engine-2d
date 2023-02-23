@@ -20,7 +20,7 @@ open class Asset(val filename: String) {
 
     // Try to read from classpath first; if not, look to local
     private val type: AssetType = if (Assets.getClasspathURL(filename) != null) AssetType.CLASSPATH else AssetType.EXTERNAL
-    private val isClasspath: Boolean = (type == AssetType.CLASSPATH)
+    val isClasspath: Boolean = (type == AssetType.CLASSPATH)
 
     // I/O Methods
 

@@ -20,6 +20,7 @@ public class TextFileTests {
     public void readClasspathTextFile() {
         Assets.clearAssets();
         Assets.scanResources("testassets");
+
         var properties = new TextFile("testassets/text/properties.txt").readLines();
         System.out.println(Arrays.toString(properties));
         assertEquals("Mayonez Engine", properties[0].split("=")[1]);

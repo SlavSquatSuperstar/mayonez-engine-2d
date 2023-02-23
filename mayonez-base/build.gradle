@@ -15,6 +15,7 @@ dependencies {
     runtimeOnly "$libs.slf4j"
 
     // LWJGL Modules
+    api "$libs.joml"
     implementation platform("$libs.lwjglBom")
 
     implementation "$libs.lwjgl"
@@ -29,11 +30,10 @@ dependencies {
     runtimeOnly "$libs.lwjglOpengl::$lwjglNatives"
     runtimeOnly "$libs.lwjglStb::$lwjglNatives"
 
-    api "$libs.joml"
-
     // Test Libraries
     testImplementation "$libs.junitApi"
     testRuntimeOnly "$libs.junitEngine"
+    testImplementation "$libs.mockito"
 }
 
 // Tasks
