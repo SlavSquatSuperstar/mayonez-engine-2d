@@ -31,15 +31,17 @@ class JDefaultRenderer : SceneRenderer, DebugRenderer {
 
     // Scene Information
     private lateinit var background: Sprite
-    private var screenSize: Vec2 = Vec2()
-    private var sceneSize: Vec2 = Vec2()
-    private var sceneScale: Float = 1f
+    private var screenSize: Vec2
+    private var sceneSize: Vec2
+    private var sceneScale: Float
 
     init {
         batches = ArrayList()
         objects = ArrayList()
         shapes = ArrayList()
         screenSize = Mayonez.screenSize
+        sceneSize = Vec2(1f)
+        sceneScale = 1f
     }
 
     // Start Renderer Methods
@@ -107,7 +109,7 @@ class JDefaultRenderer : SceneRenderer, DebugRenderer {
     private fun transformScreen(g2: Graphics2D) {
         val cam = this.camera ?: return
 
-        val camOffset = cam.offset
+        val camOffset = cam.screenOffset
         val camZoom = cam.zoom.toDouble() // the zoom
         g2.translate(-camOffset.x * camZoom, -camOffset.y * camZoom)
         g2.scale(camZoom, camZoom)

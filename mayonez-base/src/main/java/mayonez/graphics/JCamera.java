@@ -19,8 +19,8 @@ public final class JCamera extends Camera {
     @Override
     public Vec2 toWorld(Vec2 screen) {
         var flippedPos = new Vec2(screen.x, screenSize.y - screen.y); // Mirror y
-        var worldPos = flippedPos.add(getOffset());
-        return worldPos.div(sceneScale);
+        var screenPos = flippedPos.add(getScreenOffset());
+        return screenPos.div(sceneScale);
     }
 
 }

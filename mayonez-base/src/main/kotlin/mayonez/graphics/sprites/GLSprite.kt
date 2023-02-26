@@ -8,6 +8,7 @@ import mayonez.graphics.*
 import mayonez.io.image.GLTexture
 import mayonez.math.Vec2
 import mayonez.math.shapes.Rectangle
+import mayonez.util.GLColor
 
 /**
  * A component that draws an image at a [GameObject]'s position using the
@@ -42,21 +43,26 @@ class GLSprite private constructor(private val texture: GLTexture?, color: Color
      */
     override fun pushToBatch(batch: RenderBatch) {
         // Add sprite vertex data
-        val objXf = this.transform.combine(this.spriteTransform)
+        val objXf = transform.combine(spriteTransform)
         val color = this.color.toGL()
-        val texCoords = this.getTexCoords()
-        val texID = batch.addTexture(this.texture)
+        val texCoords = getTexCoords()
+        val texID = batch.addTexture(texture)
 
         // Render sprite at object center and rotate according to object
         val sprVertices = Rectangle.rectangleVertices(Vec2(0f), Vec2(1f), objXf.rotation)
         for (i in sprVertices.indices) {
-            // sprite_pos = (obj_pos + vert_pos * obj_scale) * world_scale
-            val sprPos = (objXf.position + (sprVertices[i] * objXf.scale)) * SceneManager.currentScene.scale
-            batch.pushVec2(sprPos)
-            batch.pushVec4(color)
-            batch.pushVec2(texCoords[i])
-            batch.pushInt(texID)
+            // spr_pos = (obj_pos + vert_pos * obj_scale) * world_scale
+            // can't use this.scene.scale as it will return null
+            val vertex = (objXf.position + (sprVertices[i] * objXf.scale)) * SceneManager.currentScene.scale
+            batch.pushVertex(vertex, color, texCoords[i], texID)
         }
+    }
+
+    private fun RenderBatch.pushVertex(vertex: Vec2, color: GLColor, texPos: Vec2, texID: Int) {
+        pushVec2(vertex)
+        pushVec4(color)
+        pushVec2(texPos)
+        pushInt(texID)
     }
 
     // Sprite Methods
@@ -72,4 +78,5 @@ class GLSprite private constructor(private val texture: GLTexture?, color: Color
     override fun getZIndex(): Int = gameObject.zIndex
 
     override fun copy(): GLSprite = if (texture == null) GLSprite(color) else GLSprite(texture)
+
 }

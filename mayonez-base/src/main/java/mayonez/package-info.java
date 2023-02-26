@@ -1,5 +1,5 @@
 /**
- * Contains the basic classes required for the game engine to function.
+ * Contains the core classes used in developing games using this library.
  *
  * @author SlavSquatSuperstar
  */

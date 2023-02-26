@@ -110,7 +110,7 @@ public abstract class Camera extends Script {
      *
      * @return the camera's offset
      */
-    public final Vec2 getOffset() {
+    public final Vec2 getScreenOffset() {
         // (position * scene_scale) - (0.5 * screen_size / zoom)
         return getPosition().mul(sceneScale).sub(screenSize.mul(0.5f / getZoom()));
     }

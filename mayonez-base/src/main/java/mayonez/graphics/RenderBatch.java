@@ -56,9 +56,9 @@ public final class RenderBatch {
         this.zIndex = zIndex;
 
         this.primitive = primitive;
-        this.vertexCount = primitive.vertexCount;
-        this.elementCount = primitive.elementCount;
-        this.vertexSize = primitive.vertexSize;
+        this.vertexCount = primitive.getVertexCount();
+        this.elementCount = primitive.getElementCount();
+        this.vertexSize = primitive.getVertexSize();
 
         // Renderer Fields
         textures = new ArrayList<>(maxTextureSlots);
@@ -89,7 +89,7 @@ public final class RenderBatch {
 
         // Allocate vertex index buffer
         var offset = 0;
-        var attributeSizes = primitive.attributeSizes;
+        var attributeSizes = primitive.getAttributeSizes();
         for (var i = 0; i < attributeSizes.length; i++) {
             glVertexAttribPointer(i, attributeSizes[i], GL_FLOAT, false, vertexSize * Float.BYTES, offset);
             glEnableVertexAttribArray(i);
@@ -136,7 +136,7 @@ public final class RenderBatch {
 
         // Draw sprites
         var numVertices = (vertexOffset * elementCount) / (vertexSize * vertexCount);
-        glDrawElements(primitive.primitiveType, numVertices, GL_UNSIGNED_INT, 0);
+        glDrawElements(primitive.getPrimitiveType(), numVertices, GL_UNSIGNED_INT, 0);
 
         // Unbind vertices and textures
         glDisableVertexAttribArray(0);
@@ -205,7 +205,7 @@ public final class RenderBatch {
      *
      * @return if there are still unused vertices
      */
-    public boolean hasRoom() {
+    public boolean hasVertexRoom() {
         return vertexOffset < vertices.length;
     }
 
