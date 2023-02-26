@@ -4,6 +4,7 @@ import mayonez.graphics.renderer.DrawPriority
 import mayonez.graphics.sprites.ShapeSprite
 import mayonez.math.Vec2
 import mayonez.math.shapes.*
+import mayonez.util.GLColor
 import mayonez.util.JShape
 import mayonez.util.MColor
 import mayonez.util.MShape
@@ -15,7 +16,8 @@ import java.awt.geom.Rectangle2D
 import kotlin.math.roundToInt
 
 /**
- * Passes shape and color information to a [mayonez.graphics.renderer.DebugRenderer]..
+ * Passes shape and color information to a
+ * [mayonez.graphics.renderer.DebugRenderer]..
  *
  * @author SlavSquatSuperstar
  */
@@ -52,19 +54,22 @@ class DebugShape(
     override fun pushToBatch(batch: RenderBatch) {
         val color = color.toGL()
         when (val shape = this.shape) {
-            is Edge -> {
-                batch.pushVec2(shape.start)
-                batch.pushVec4(color)
-                batch.pushVec2(shape.end)
-                batch.pushVec4(color)
-            }
+            is Edge -> batch.pushLine(shape, color)
+            is Triangle -> batch.pushTriangle(shape, color)
+        }
+    }
 
-            is Triangle -> {
-                for (v in shape.vertices) {
-                    batch.pushVec2(v)
-                    batch.pushVec4(color)
-                }
-            }
+    private fun RenderBatch.pushLine(line: Edge, color: GLColor) {
+        pushVec2(line.start)
+        pushVec4(color)
+        pushVec2(line.end)
+        pushVec4(color)
+    }
+
+    private fun RenderBatch.pushTriangle(tri: Triangle, color: GLColor) {
+        for (v in tri.vertices) {
+            pushVec2(v)
+            pushVec4(color)
         }
     }
 
@@ -73,11 +78,11 @@ class DebugShape(
      *
      * @return an array of primitive shapes
      */
-    fun simplify(): Array<out MShape> {
+    fun splitIntoParts(): Array<out MShape> {
         return when (val shape = this.shape) {
             is Edge -> arrayOf(shape) // add line directly
-            is Polygon -> shape.simplify(fill) // else break into lines or triangles
-            is Ellipse -> shape.toPolygon().simplify(fill)
+            is Polygon -> shape.splitIntoParts(fill) // else break into lines or triangles
+            is Ellipse -> shape.toPolygon().splitIntoParts(fill)
             else -> emptyArray()
         }
     }
@@ -99,7 +104,10 @@ class DebugShape(
     companion object {
         private fun MShape.toAwt(): JShape? {
             return when (this) {
-                is Edge -> Line2D.Float(start.x, start.y, end.x, end.y)
+                is Edge -> {
+                    Line2D.Float(start.x, start.y, end.x, end.y)
+                }
+
                 is Ellipse -> {
                     val min = this.center() - (size * 0.5f)
                     val ellipse = Ellipse2D.Float(min.x, min.y, size.x, size.y)
@@ -131,7 +139,7 @@ class DebugShape(
             return rotXf.createTransformedShape(this)
         }
 
-        private fun Polygon.simplify(fill: Boolean): Array<out Shape> {
+        private fun Polygon.splitIntoParts(fill: Boolean): Array<out Shape> {
             return if (fill) this.triangles else this.edges
         }
     }

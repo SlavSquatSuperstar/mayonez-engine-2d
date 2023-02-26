@@ -1,4 +1,5 @@
 #!/bin/sh
+
 # Navigate to the project directory
 SCRIPT_DIR=$(dirname "$0")
 cd "$SCRIPT_DIR" || exit
@@ -35,22 +36,25 @@ else
 fi
 
 # Build the application for Unix systems (macOS/Linux)
-echo "Building mayonez-engine..."
+echo "Building Mayonez Engine..."
 if [ "$(./gradlew clean build)" ]; then
-  echo "Successfully built mayonez-engine."
+  echo "Successfully built Mayonez Engine."
 else
-  echo "Error building mayonez-engine."
+  echo "Error building Mayonez Engine."
   exit 1
 fi
 
 # Run the compiled .jar file
-if $MAC_OS; then
-  if $USE_GL; then
+if $USE_GL; then
+  echo "Launching with OpenGL Engine."
+
+  if $MAC_OS; then
     # LWJGL requires a special argument on macOS
     java -XstartOnFirstThread -jar build/libs/*.jar "$USE_GL"
   else
     java -jar build/libs/*.jar "$USE_GL"
   fi
 else
+  echo "Launching with AWT Engine."
   java -jar build/libs/*.jar "$USE_GL"
 fi

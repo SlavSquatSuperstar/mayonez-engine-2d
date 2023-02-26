@@ -4,10 +4,9 @@ import mayonez.Preferences;
 import mayonez.annotations.EngineType;
 import mayonez.annotations.UsesEngine;
 import mayonez.graphics.GLCamera;
-import mayonez.graphics.DrawPrimitive;
+import mayonez.graphics.GLRenderable;
 import mayonez.graphics.RenderBatch;
 import mayonez.io.Assets;
-import mayonez.io.image.GLTexture;
 import mayonez.io.image.Shader;
 
 import java.awt.*;
@@ -42,10 +41,10 @@ public abstract class GLRenderer implements Renderer {
 
     @Override
     public final void render(Graphics2D g2) {
-        preRender(); // Upload to GPU
-        rebuffer(); // Sort everything into batches
+        preRender();
+        rebuffer();
         batches.forEach(RenderBatch::render); // Draw everything
-        postRender(); // Free from GPU
+        postRender();
     }
 
     /**
@@ -60,7 +59,7 @@ public abstract class GLRenderer implements Renderer {
     }
 
     /**
-     * Push all image data into batches.
+     * Sort all image data into batches.
      */
     protected final void rebuffer() {
         batches.forEach(RenderBatch::clear); // Prepare batches
@@ -70,7 +69,7 @@ public abstract class GLRenderer implements Renderer {
     }
 
     /**
-     * Clear resources form the GPU.
+     * Free resources from the GPU.
      */
     protected void postRender() {
         shader.unbind(); // Unbind everything
@@ -88,16 +87,24 @@ public abstract class GLRenderer implements Renderer {
      */
     protected abstract void createBatches();
 
-    protected final RenderBatch getAvailableBatch(GLTexture texture, int zIndex, DrawPrimitive primitive, int maxBatchSize) {
+    protected final RenderBatch getAvailableBatch(GLRenderable object) {
         for (RenderBatch batch : batches) {
-            var samePrimitive = batch.getPrimitive() == primitive;
-            var sameZIndex = batch.getZIndex() == zIndex;
-            var fitsTexture = batch.hasTexture(texture) || batch.hasTextureRoom();
-            var fitsVertices = batch.hasRoom();
-            if (samePrimitive && sameZIndex && fitsTexture && fitsVertices) return batch;
+            if (doesBatchFit(batch, object)) return batch;
         }
-        // Create new if all batches full
-        RenderBatch batch = new RenderBatch(maxBatchSize, zIndex, primitive);
+        // If all batches full
+        return createNewBatch(object);
+    }
+
+    private boolean doesBatchFit(RenderBatch batch, GLRenderable object) {
+        var fitsVertices = batch.hasRoom();
+        var samePrimitive = batch.getPrimitive() == object.getPrimitive();
+        var sameZIndex = batch.getZIndex() == object.getZIndex();
+        var fitsTexture = batch.hasTexture(object.getTexture()) || batch.hasTextureRoom();
+        return fitsVertices && samePrimitive && sameZIndex && fitsTexture;
+    }
+
+    private RenderBatch createNewBatch(GLRenderable object) {
+        RenderBatch batch = new RenderBatch(object.getBatchSize(), object.getZIndex(), object.getPrimitive());
         batch.clear();
         batches.add(batch);
         return batch;

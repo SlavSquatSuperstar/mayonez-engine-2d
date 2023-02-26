@@ -58,9 +58,11 @@ class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"), SceneRender
     // Debug Renderer Methods
 
     override fun addShape(shape: DebugShape) {
-        for (s in shape.simplify()) {
-            if (s is Edge) addLine(s, shape)
-            else if (s is Triangle) shapes.add(DebugShape(s, shape))
+        for (shapePart in shape.splitIntoParts()) {
+            when (shapePart) {
+                is Edge -> addLine(shapePart, shape)
+                is Triangle -> shapes.add(DebugShape(shapePart, shape))
+            }
         }
     }
 
@@ -76,9 +78,12 @@ class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"), SceneRender
         super.preRender()
         shader.uploadIntArray("uTextures", textureSlots)
         drawBackground()
+        setGLProperties()
+    }
 
-        glEnable(GL_LINE_SMOOTH)
+    private fun setGLProperties() {
         glEnable(GL_BLEND)
+        glEnable(GL_LINE_SMOOTH)
         when (lineStyle) {
             LineStyle.SINGLE -> glLineWidth(DebugDraw.STROKE_SIZE)
             LineStyle.MULTIPLE -> glLineWidth(1f)
@@ -88,32 +93,45 @@ class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"), SceneRender
 
     /** Clear the screen and fill the background color or image. */
     private fun drawBackground() {
-        if (background.texture == null) {
-            val bgColor = background.color.toGL()
-            glClearColor(bgColor.x, bgColor.y, bgColor.z, 1f)
-            glClear(GL_COLOR_BUFFER_BIT)
-        } else {
-            // Rebuffer and draw the background
-            bgBatch.clear()
-            (background as GLSprite).pushToBatch(bgBatch)
-            bgBatch.upload()
-            bgBatch.render()
-        }
+        if (background.texture == null) drawBackgroundColor()
+        else drawBackgroundImage()
+    }
+
+    private fun drawBackgroundImage() {
+        glClearColor(1f, 1f, 1f, 1f);
+        bgBatch.clear()
+        (background as GLSprite).pushToBatch(bgBatch)
+        bgBatch.upload()
+        bgBatch.render()
+    }
+
+    private fun drawBackgroundColor() {
+        val bgColor = background.color.toGL()
+        glClearColor(bgColor.x, bgColor.y, bgColor.z, 1f)
+        glClear(GL_COLOR_BUFFER_BIT)
     }
 
     override fun createBatches() {
+        pushObjectsToBatches()
+        pushShapesToBatches()
+    }
+
+    private fun pushObjectsToBatches() {
         objects.forEach { obj: GLRenderable ->
             if (obj.isEnabled) {
                 if (obj is ShapeSprite) {
                     addShape(DebugShape(obj)) // Break down shape into primitives then add them later
                 } else {
-                    val batch = getAvailableBatch(obj.texture, obj.zIndex, obj.primitive, obj.batchSize)
+                    val batch = getAvailableBatch(obj)
                     obj.pushToBatch(batch) // Push vertices to batch
                 }
             }
         }
-        shapes.forEach { shape: DebugShape -> // Push debug shape vertices to GPU
-            val batch = getAvailableBatch(shape.texture, shape.zIndex, shape.primitive, shape.batchSize)
+    }
+
+    private fun pushShapesToBatches() {
+        shapes.forEach { shape: DebugShape ->
+            val batch = getAvailableBatch(shape)
             shape.pushToBatch(batch)
         }
     }
@@ -122,8 +140,8 @@ class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"), SceneRender
         super.postRender()
         shapes.clear() // Clear primitives after each frame
         // Finish drawing
-        glEnable(GL_LINE_SMOOTH)
-        glEnable(GL_BLEND)
+        glDisable(GL_LINE_SMOOTH)
+        glDisable(GL_BLEND)
     }
 
     override fun stop() {
@@ -136,25 +154,33 @@ class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"), SceneRender
     // Batch Helper Methods
 
     private fun addLine(edge: Edge, shape: DebugShape) {
-        val stroke = DebugDraw.STROKE_SIZE
-        val len = edge.length // Want to stretch lines to look flush
         when (lineStyle) {
             LineStyle.SINGLE -> shapes.add(shape)
-            LineStyle.MULTIPLE -> {
-                val stretched = edge.scale(Vec2((len + stroke - 1f) / len), null)
-                val norm = edge.unitNormal()
-                val start = (1 - stroke) * 0.5f // -(stroke - 1) / 2
-                for (i in 0 until stroke.roundToInt()) {
-                    val line = stretched.translate(norm * (start + i))
-                    shapes.add(DebugShape(line, shape))
-                }
-            }
+            LineStyle.MULTIPLE -> addLineAsMultiple(edge, shape)
+            LineStyle.QUADS -> addLineAsQuads(edge, shape)
+        }
+    }
 
-            LineStyle.QUADS -> {
-                val stretchedLen = len + stroke - 1f
-                val rect = Rectangle(edge.center(), Vec2(stretchedLen, stroke), edge.toVector().angle())
-                for (tri in rect.triangles) shapes.add(DebugShape(tri, shape.color, true, DrawPriority.LINE))
-            }
+    private fun addLineAsQuads(edge: Edge, shape: DebugShape) {
+        val len = edge.length
+        val stroke = DebugDraw.STROKE_SIZE
+
+        val stretchedLen = len + stroke - 1f
+        val rect = Rectangle(edge.center(), Vec2(stretchedLen, stroke), edge.toVector().angle())
+        for (tri in rect.triangles) shapes.add(DebugShape(tri, shape.color, true, DrawPriority.LINE))
+    }
+
+    private fun addLineAsMultiple(line: Edge, shape: DebugShape) {
+        val len = line.length
+        val stroke = DebugDraw.STROKE_SIZE
+        val stretched = line.scale(Vec2((len + stroke - 1f) / len), null)
+
+        val norm = line.unitNormal()
+        val start = (1 - stroke) * 0.5f // -(stroke - 1) / 2
+
+        for (i in 0 until stroke.roundToInt()) {
+            val lineElem = stretched.translate(norm * (start + i))
+            shapes.add(DebugShape(lineElem, shape))
         }
     }
 

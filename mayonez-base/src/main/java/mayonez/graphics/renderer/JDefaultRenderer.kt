@@ -15,7 +15,8 @@ import java.awt.Stroke
 import kotlin.math.roundToInt
 
 /**
- * Draws all sprites and debug information onto the screen with Java's AWT and Swing libraries.
+ * Draws all sprites and debug information onto the screen with Java's AWT
+ * and Swing libraries.
  *
  * @author SlavSquatSuperstar
  */
@@ -41,18 +42,18 @@ class JDefaultRenderer : SceneRenderer, DebugRenderer {
         screenSize = Mayonez.screenSize
     }
 
-    // GameObject Methods
+    // Start Renderer Methods
+    override fun start() {
+        batches.clear()
+        objects.clear()
+        shapes.clear()
+    }
+
     override fun setScene(newScene: Scene) {
         newScene.objects.forEach(this::addObject)
         background = newScene.background
         sceneSize = newScene.size
         sceneScale = newScene.scale
-    }
-
-    override fun start() {
-        batches.clear()
-        objects.clear()
-        shapes.clear()
     }
 
     override fun addObject(obj: GameObject) {
@@ -71,25 +72,22 @@ class JDefaultRenderer : SceneRenderer, DebugRenderer {
         shapes.add(shape)
     }
 
-    // Renderer Methods
-    override fun render(g2: Graphics2D?) {
-        if (g2 == null) return
+    // Render Loop Methods
 
-        val oldXf = g2.transform // Save a copy of the unmodified transform
+    override fun render(g2: Graphics2D?) {
+        val oldXf = g2?.transform ?: return // Save a copy of the unmodified transform
+
         drawBackgroundColor(g2)
         transformScreen(g2)
-
         drawBackgroundImage(g2)
+
         createBatches()
-        g2.stroke = stroke
-        batches.forEach { r: JRenderable -> r.render(g2) } // Draw everything
+        drawBatches(g2)
 
         g2.transform = oldXf // Reset the transform to its previous state
     }
 
-    /**
-     * Clear the screen and fill it with a background color.
-     */
+    /** Clear the screen and fill it with a background color. */
     private fun drawBackgroundColor(g2: Graphics2D) {
         if (background.texture == null) { // Only if no image set
             g2.color = background.color.toAWT()
@@ -97,9 +95,7 @@ class JDefaultRenderer : SceneRenderer, DebugRenderer {
         }
     }
 
-    /**
-     * Render the background image, if the scene has one.
-     */
+    /** Render the background image, if the scene has one. */
     private fun drawBackgroundImage(g2: Graphics2D) {
         if (background.texture != null) { // Only if image set
             val tex = background.texture as JTexture
@@ -107,25 +103,21 @@ class JDefaultRenderer : SceneRenderer, DebugRenderer {
         }
     }
 
-    /**
-     * Transform the screen and render everything at the new position.
-     */
+    /** Transform the screen and render everything at the new position. */
     private fun transformScreen(g2: Graphics2D) {
         val cam = this.camera ?: return
-        val rotRad = Math.toRadians(cam.rotation.toDouble())
-        val camZoom = cam.zoom.toDouble() // the zoom
-        val camOffset = cam.offset
-        val camCenter = cam.position * SceneManager.currentScene.scale
 
-        // Translate, scale, then rotate
+        val camOffset = cam.offset
+        val camZoom = cam.zoom.toDouble() // the zoom
         g2.translate(-camOffset.x * camZoom, -camOffset.y * camZoom)
         g2.scale(camZoom, camZoom)
-        g2.rotate(-rotRad, camCenter.x.toDouble(), camCenter.y.toDouble())
+
+        val camAngleRad = Math.toRadians(cam.rotation.toDouble())
+        val camCenter = cam.position * SceneManager.currentScene.scale
+        g2.rotate(-camAngleRad, camCenter.x.toDouble(), camCenter.y.toDouble())
     }
 
-    /**
-     * Sort drawable objects into render "batches".
-     */
+    /** Sort drawable objects into render "batches". */
     private fun createBatches() {
         batches.clear()
         objects.forEach { r: JRenderable -> // Add objects
@@ -137,6 +129,13 @@ class JDefaultRenderer : SceneRenderer, DebugRenderer {
         }
         batches.sortBy { r: JRenderable -> r.zIndex } // Sort everything by zIndex
     }
+
+    private fun drawBatches(g2: Graphics2D) {
+        g2.stroke = stroke
+        batches.forEach { r: JRenderable -> r.render(g2) } // Draw everything
+    }
+
+    // Stop Renderer Methods
 
     override fun stop() {
         batches.clear()

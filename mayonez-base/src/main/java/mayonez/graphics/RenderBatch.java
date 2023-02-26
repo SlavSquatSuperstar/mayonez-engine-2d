@@ -5,8 +5,6 @@ import mayonez.annotations.EngineType;
 import mayonez.annotations.UsesEngine;
 import mayonez.io.image.GLTexture;
 import mayonez.math.Vec2;
-import org.joml.Vector2f;
-import org.joml.Vector3f;
 import org.joml.Vector4f;
 import org.lwjgl.BufferUtils;
 
@@ -183,17 +181,6 @@ public final class RenderBatch {
     public void pushVec2(Vec2 v) {
         pushFloat(v.x);
         pushFloat(v.y);
-    }
-
-    public void pushVec2(Vector2f v) {
-        pushFloat(v.x);
-        pushFloat(v.y);
-    }
-
-    public void pushVec3(Vector3f v) {
-        pushFloat(v.x);
-        pushFloat(v.y);
-        pushFloat(v.z);
     }
 
     public void pushVec4(Vector4f v) {
