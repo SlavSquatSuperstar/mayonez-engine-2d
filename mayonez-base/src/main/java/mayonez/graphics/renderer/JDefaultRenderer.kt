@@ -56,13 +56,13 @@ class JDefaultRenderer : SceneRenderer, DebugRenderer {
     }
 
     override fun addObject(obj: GameObject) {
-        obj.getComponents(Component::class.java).forEach { c: Component ->
+        obj.components.forEach { c: Component ->
             if (c is JRenderable) objects.add(c)
         }
     }
 
     override fun removeObject(obj: GameObject) {
-        obj.getComponents(Component::class.java).forEach { c: Component ->
+        obj.components.forEach { c: Component ->
             if (c is JRenderable) objects.remove(c)
         }
     }

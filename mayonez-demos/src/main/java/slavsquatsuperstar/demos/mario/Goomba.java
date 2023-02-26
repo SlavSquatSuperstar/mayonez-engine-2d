@@ -32,7 +32,7 @@ class Goomba extends GameObject {
         addComponent(new Script() {
             @Override
             public void onCollisionStay(GameObject other) {
-                if (other.name.equals("Mario")) setDestroyed();
+                if (other.getName().equals("Mario")) setDestroyed();
             }
         });
     }

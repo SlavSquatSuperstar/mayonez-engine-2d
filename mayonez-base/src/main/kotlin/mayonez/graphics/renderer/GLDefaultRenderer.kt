@@ -20,7 +20,8 @@ import org.lwjgl.opengl.GL11.*
 import kotlin.math.roundToInt
 
 /**
- * Draws all sprites and debug information onto the screen using LWJGL's OpenGL library.
+ * Draws all sprites and debug information onto the screen using LWJGL's
+ * OpenGL library.
  *
  * @author SlavSquatSuperstar
  */
@@ -43,13 +44,13 @@ class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"), SceneRender
     }
 
     override fun addObject(obj: GameObject) {
-        obj.getComponents(Component::class.java).forEach { c: Component ->
+        obj.components.forEach { c: Component ->
             if (c is GLRenderable) objects.add(c)
         }
     }
 
     override fun removeObject(obj: GameObject) {
-        obj.getComponents(Component::class.java).forEach { c: Component ->
+        obj.components.forEach { c: Component ->
             if (c is GLRenderable) objects.remove(c)
         }
     }
@@ -85,9 +86,7 @@ class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"), SceneRender
         }
     }
 
-    /**
-     * Clear the screen and fill the background color or image.
-     */
+    /** Clear the screen and fill the background color or image. */
     private fun drawBackground() {
         if (background.texture == null) {
             val bgColor = background.color.toGL()
@@ -163,18 +162,15 @@ class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"), SceneRender
 
     private enum class LineStyle {
         /**
-         * Draw a single line and set the thickness using glLineWidth() (may not work on all platforms).
+         * Draw a single line and set the thickness using glLineWidth() (may not
+         * work on all platforms).
          */
         SINGLE,
 
-        /**
-         * Draw a line as multiple lines to simulate stroke size.
-         */
+        /** Draw a line as multiple lines to simulate stroke size. */
         MULTIPLE,
 
-        /**
-         * Draw lines using thin rectangles to simulate stroke size.
-         */
+        /** Draw lines using thin rectangles to simulate stroke size. */
         QUADS
     }
 

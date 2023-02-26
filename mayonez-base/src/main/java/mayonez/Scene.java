@@ -83,27 +83,42 @@ public abstract class Scene {
         changesToScene = new LinkedList<>();
     }
 
-    // Game Loop Methods
-
-    final void load() {
-
-    }
+    // Initialization Methods
 
     /**
      * Initialize all objects and begin updating the scene.
      */
     final void start() {
-        addObject(Camera.createCameraObject(camera = createCamera()));
+        addCameraToScene();
         init();
-        // Start Layers
+        startSceneLayers();
+        state = SceneState.RUNNING;
+        addObjectsToLayers();
+    }
+
+    private void addCameraToScene() {
+        camera = createCamera();
+        addObject(Camera.createCameraObject(camera));
+        Logger.log("Camera = %s", camera);
+    }
+
+    private Camera createCamera() {
+        if (Mayonez.getUseGL()) return new GLCamera(Mayonez.getScreenSize(), scale);
+        else return new JCamera(Mayonez.getScreenSize(), scale);
+    }
+
+    private void addObjectsToLayers() {
+        renderer.setScene(this);
+        physics.setScene(this);
+    }
+
+    private void startSceneLayers() {
         renderer.start();
         if (separateDebugRenderer()) debugRenderer.start();
         physics.start();
-        // Add to Layers
-        renderer.setScene(this);
-        physics.setScene(this);
-        state = SceneState.RUNNING;
     }
+
+    // Game Loop
 
     /**
      * Moves everything in the scene forward in time by a small increment, including physics, scripts, and UI.
@@ -111,17 +126,21 @@ public abstract class Scene {
      * @param dt seconds since the last frame
      */
     public final void update(float dt) {
-        if (isRunning()) {
-            // Update scene and objects
-            objects.forEach(o -> {
-                o.update(dt);
-                if (o.isDestroyed()) removeObject(o);
-            });
-            physics.step(dt); // Update physics
-            camera.gameObject.update(dt); // Update camera last
-        }
-
+        if (isRunning()) updateSceneObjects(dt);
         onUserUpdate(dt);
+        processSceneChanges();
+    }
+
+    private void updateSceneObjects(float dt) {
+        objects.forEach(o -> {
+            o.update(dt);
+            if (o.isDestroyed()) removeObject(o);
+        });
+        physics.step(dt);
+        camera.gameObject.update(dt); // Update camera last
+    }
+
+    private void processSceneChanges() {
         // Remove destroyed objects or add new
         while (!changesToScene.isEmpty()) changesToScene.poll().change();
     }
@@ -137,35 +156,27 @@ public abstract class Scene {
         onUserRender();
     }
 
+    // Stop Methods
+
     /**
      * Destroy all updates and stop updating the scene.
      */
     final void stop() {
-        // Destroy objects
-        objects.forEach(GameObject::destroy);
-//        camera.setSubject(null);
-        objects.clear();
+        destroySceneObjects();
+        clearSceneLayers();
+    }
 
-        // Clear layers
+    private void clearSceneLayers() {
         renderer.stop();
         if (separateDebugRenderer()) debugRenderer.stop();
         physics.stop();
         state = SceneState.STOPPED;
     }
 
-    /**
-     * Pauses the scene but does not destroy any game objects. While paused,
-     * objects do not move or update but key inputs can still be polled through onUserUpdate().
-     */
-    final void pause() {
-        state = SceneState.PAUSED;
-    }
-
-    /**
-     * Resumes the scene but does not reinitialize any game objects.
-     */
-    final void resume() {
-        state = SceneState.RUNNING;
+    private void destroySceneObjects() {
+        camera.setSubject(null);
+        objects.forEach(GameObject::destroy);
+        objects.clear();
     }
 
     // User-Defined Methods
@@ -199,17 +210,26 @@ public abstract class Scene {
      */
     public final void addObject(GameObject obj) {
         if (obj == null) return;
-        var addObject = new SceneChange(obj, o -> {
-            objects.add(o.setScene(this));
-            o.start(); // add components first so renderer and physics can access it
-//            if (isRunning()) { // dynamic add
-            renderer.addObject(o);
-            physics.addObject(o);
-//            }
-            Logger.debug("Added object \"%s\" to scene \"%s\"", o.getNameAndID(), this.name);
-        });
-        if (isRunning()) changesToScene.offer(addObject); // Dynamic add: add to scene and layers in next frame
-        else addObject.change();
+        if (isRunning()) {
+            var addObjectLater = new SceneChange(obj, this::addObjectToRunningScene);
+            changesToScene.offer(addObjectLater); // Dynamic add: add to scene and layers in next frame
+        } else {
+            addObjectToStoppedScene(obj);
+        }
+    }
+
+    private void addObjectToStoppedScene(GameObject o) {
+        objects.add(o.setScene(this));
+        o.start(); // add components first so renderer and physics can access it
+        Logger.debug("Added object \"%s\" to scene \"%s\"", o.getNameAndID(), this.name);
+    }
+
+    private void addObjectToRunningScene(GameObject o) {
+        objects.add(o.setScene(this));
+        o.start(); // add components first so renderer and physics can access it
+        renderer.addObject(o);
+        physics.addObject(o);
+        Logger.debug("Added object \"%s\" to scene \"%s\"", o.getNameAndID(), this.name);
     }
 
     /**
@@ -219,14 +239,16 @@ public abstract class Scene {
      */
     public final void removeObject(GameObject obj) {
         if (obj == null) return;
-        var removeObject = new SceneChange(obj, o -> {
-            objects.remove(o);
-            renderer.removeObject(o);
-            physics.removeObject(o);
-            o.destroy();
-            Logger.debug("Removed object \"%s\" from scene \"%s\"", o.getNameAndID(), this.name);
-        });
-        changesToScene.offer(removeObject);
+        var removeObjectLater = new SceneChange(obj, this::removeObjectFromScene);
+        changesToScene.offer(removeObjectLater);
+    }
+
+    private void removeObjectFromScene(GameObject o) {
+        objects.remove(o);
+        renderer.removeObject(o);
+        physics.removeObject(o);
+        o.destroy();
+        Logger.debug("Removed object \"%s\" from scene \"%s\"", o.getNameAndID(), this.name);
     }
 
     /**
@@ -237,7 +259,7 @@ public abstract class Scene {
      */
     public GameObject getObject(String name) {
         for (var obj : objects) {
-            if (obj.name.equals(name)) return obj;
+            if (obj.getName().equals(name)) return obj;
         }
         return null;
     }
@@ -289,7 +311,7 @@ public abstract class Scene {
      * @return a random position
      */
     public Vec2 getRandomPosition() {
-        return Random.randomVector(getSize().mul(-1f), getSize()).mul(0.5f);
+        return Random.randomVector(getSize().mul(-0.5f), getSize().mul(0.5f));
     }
 
     /**
@@ -334,11 +356,6 @@ public abstract class Scene {
         return camera;
     }
 
-    private Camera createCamera() {
-        if (Mayonez.getUseGL()) return new GLCamera(Mayonez.getScreenSize(), scale);
-        else return new JCamera(Mayonez.getScreenSize(), scale);
-    }
-
     final DebugRenderer getDebugRenderer() {
         return debugRenderer;
     }
@@ -357,6 +374,21 @@ public abstract class Scene {
 
     public boolean isRunning() {
         return state == SceneState.RUNNING;
+    }
+
+    /**
+     * Pauses the scene but does not destroy any game objects. While paused,
+     * objects do not move or update but key inputs can still be polled through onUserUpdate().
+     */
+    final void pause() {
+        state = SceneState.PAUSED;
+    }
+
+    /**
+     * Resumes the scene but does not reinitialize any game objects.
+     */
+    final void resume() {
+        state = SceneState.RUNNING;
     }
 
     // Object Overrides

@@ -15,14 +15,13 @@ import java.util.stream.Collectors;
  *
  * @author SlavSquatSuperstar
  */
-@SuppressWarnings({"unchecked", "rawtypes"})
 public class GameObject {
 
     private static long objectCounter = 0L; // total number of game objects created across all scenes
 
     // Object Information and State
     final long objectID; // UUID for this game object
-    public final String name; // object name, may be duplicate
+    private String name; // object name, does not have to be unique
     public final Transform transform; // transform in world
     final Transform localTransform; // transform offset from parent
     private Scene scene;
@@ -32,11 +31,11 @@ public class GameObject {
 
     // Component Fields
     private final List<Component> components;
-    private List<Class> updateOrder;
+    private List<Class<?>> updateOrder;
 
     // Connected Objects
-    private GameObject parent; // parent object
-    private final List<GameObject> children; // child (nested) objects
+//    private GameObject parent; // parent object
+//    private final List<GameObject> children; // child (nested) objects
 
     public GameObject(String name) {
         this(name, new Vec2());
@@ -52,18 +51,20 @@ public class GameObject {
 
     public GameObject(String name, Transform transform, int zIndex) {
         objectID = objectCounter++;
-        this.name = name == null ? "GameObject" : name;
+
+        this.name = (name == null) ? "GameObject" : name;
         this.transform = transform;
         localTransform = new Transform();
         this.zIndex = zIndex;
+
         destroyed = false;
         tags = new HashSet<>(3);
 
         components = new ArrayList<>();
         updateOrder = null;
 //        changesToObject = new LinkedList<>();
-        parent = null;
-        children = new LinkedList<>();
+//        parent = null;
+//        children = new LinkedList<>();
     }
 
     // Game Loop Methods
@@ -73,7 +74,7 @@ public class GameObject {
      */
     public final void start() {
         init();
-        children.forEach(getScene()::addObject);
+//        children.forEach(getScene()::addObject);
         setUpdateOrder(Component.class, MovementScript.class, Script.class, Collider.class, Sprite.class);
         components.forEach(Component::start);
     }
@@ -121,9 +122,16 @@ public class GameObject {
      */
     public final void addComponent(Component comp) {
         if (comp == null) return;
-        if (!comp.getClass().isAnonymousClass() && getComponent(comp.getClass()) != null)
-            Logger.debug("GameObject %s already has a %s", getNameAndID(), comp.getClass().getSimpleName());
+        checkForDuplicateComponentClass(comp);
         components.add(comp.setGameObject(this));
+    }
+
+    private void checkForDuplicateComponentClass(Component comp) {
+        var anonymous = comp.getClass().isAnonymousClass();
+        var hasComponentOfSameClass = getComponent(comp.getClass()) != null;
+        if (!anonymous && hasComponentOfSameClass) {
+            Logger.debug("GameObject %s already has a %s", getNameAndID(), comp.getClass().getSimpleName());
+        }
     }
 
 //    /**
@@ -143,6 +151,15 @@ public class GameObject {
 //    }
 
     /**
+     * Counts how many components this object has.
+     *
+     * @return the number of components
+     */
+    public int numComponents() {
+        return components.size();
+    }
+
+    /**
      * Finds the first component of the specified class or any of its subclasses, or null if none exists.
      *
      * @param cls a {@link Component} subclass
@@ -159,12 +176,22 @@ public class GameObject {
     /**
      * Finds all components with the specified class or its subclasses.
      *
-     * @param cls a {@link Component} subclass, or null to get all components
+     * @param cls a {@link Component} subclass
      * @param <T> the component type
      * @return the list of components, or empty if none are present
      */
+    @SuppressWarnings({"unchecked"})
     public <T extends Component> List<T> getComponents(Class<T> cls) {
-        return components.stream().filter(c -> cls == null || cls.isInstance(c)).map(c -> (T) c).collect(Collectors.toList());
+        return components.stream().filter(c -> cls != null && cls.isInstance(c)).map(c -> (T) c).collect(Collectors.toList());
+    }
+
+    /**
+     * Returns copy of the list of all this object's components.
+     *
+     * @return the list of all components
+     */
+    public List<Component> getComponents() {
+        return List.copyOf(components);
     }
 
     /**
@@ -173,65 +200,67 @@ public class GameObject {
      *
      * @param order an array of component subclasses
      */
-    public void setUpdateOrder(Class... order) {
+    public void setUpdateOrder(Class<?>... order) {
         if (updateOrder == null) { // if not defined
-            updateOrder = new ArrayList<>();
-            updateOrder.addAll(Arrays.stream(order).filter(
-                    // Include non-nulls and Component subclasses only
-                    cls -> cls != null && Component.class.isAssignableFrom(cls)
-            ).toList());
+            updateOrder = new ArrayList<>(filterComponentSubclasses(order));
         }
-        components.sort(Comparator.comparingInt(c -> getUpdateOrder(c.getClass())));
+        components.sort(Comparator.comparingInt(c -> getComponentUpdateOrder(c.getClass())));
     }
 
-    private int getUpdateOrder(Class componentCls) {
+    private static List<Class<?>> filterComponentSubclasses(Class<?>[] order) {
+        return Arrays.stream(order).filter(
+                cls -> (cls != null) && Component.class.isAssignableFrom(cls)
+        ).toList();
+    }
+
+    private int getComponentUpdateOrder(Class<?> componentCls) {
         var i = updateOrder.indexOf(componentCls);
-        if (i > -1) return i; // present
-        i = getUpdateOrder(componentCls.getSuperclass()); // keep searching for super
+        if (i > -1) return i; // class present
+        i = getComponentUpdateOrder(componentCls.getSuperclass()); // keep searching for super
         return (i > -1) ? i : updateOrder.size(); // just update last
     }
 
     // Child Object Methods
 
-    /**
-     * Adds a child GameObject, connecting its transform to this object's transform and setting its parent as this.
-     *
-     * @param child the child object
-     */
-    public void addChild(GameObject child) {
-        children.add(child.setParent(this));
-        if (scene != null) scene.addObject(child);
-    }
+//    /**
+//     * Adds a child GameObject, connecting its transform to this object's transform and setting its parent as this.
+//     *
+//     * @param child the child object
+//     */
+//    public void addChild(GameObject child) {
+//        children.add(child.setParent(this));
+//        if (scene != null) scene.addObject(child);
+//    }
 
 //    public void removeChild(GameObject child) {
 //        children.remove(child.setParent(null));
 //        if (scene != null) scene.addObject(child);
 //    }
 
-    /**
-     * Finds the child GameObject at the given index, or null if the index is invalid.
-     * The index is the same as the order the child was added.
-     *
-     * @param index the child index
-     * @return the child object
-     */
-    public GameObject getChild(int index) {
-        if (index < 0 || index >= children.size()) return null;
-        else return children.get(index);
-    }
+//    /**
+//     * Finds the child GameObject at the given index, or null if the index is invalid.
+//     * The index is the same as the order the child was added.
+//     *
+//     * @param index the child index
+//     * @return the child object
+//     */
+//    public GameObject getChild(int index) {
+//        if (index < 0 || index >= children.size()) return null;
+//        else return children.get(index);
+//    }
 
-    /**
-     * Finds the first child GameObject with the given name, or null if none exists.
-     *
-     * @param name the child name
-     * @return the child object
-     */
-    public GameObject getChild(String name) {
-        for (var child : children) {
-            if (child.name.equals(name)) return child;
-        }
-        return null;
-    }
+//    /**
+//     * Finds the first child GameObject with the given name, or null if none exists.
+//     *
+//     * @param name the child name
+//     * @return the child object
+//     */
+//    public GameObject getChild(String name) {
+//        for (var child : children) {
+//            if (child.name.equals(name)) return child;
+//        }
+//        return null;
+//    }
 
     // Callback Methods
 
@@ -272,6 +301,14 @@ public class GameObject {
 
     // Property Getters and Setters
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     /**
      * Whether this object has been removed from the scene.
      */
@@ -286,16 +323,20 @@ public class GameObject {
         destroyed = true;
     }
 
-    public GameObject getParent() {
-        return parent;
-    }
+//    public GameObject getParent() {
+//        return parent;
+//    }
 
-    final GameObject setParent(GameObject parent) {
-        this.parent = parent;
-        if (parent != null) localTransform.set(transform);
-        else localTransform.set(new Transform());
-        return this;
-    }
+//    final GameObject setParent(GameObject parent) {
+//        this.parent = parent;
+//        if (parent != null) localTransform.set(transform);
+//        else localTransform.set(new Transform());
+//        return this;
+//    }
+
+//    final boolean isChild() {
+//        return parent != null;
+//    }
 
     public final Scene getScene() {
         return scene;
@@ -315,8 +356,9 @@ public class GameObject {
     }
 
     public int getZIndex() {
-        if (parent != null) return parent.getZIndex() + this.zIndex;
-        else return zIndex;
+//        if (parent != null) return parent.getZIndex() + this.zIndex;
+//        else return zIndex;
+        return zIndex;
     }
 
     public GameObject setZIndex(int zIndex) {
