@@ -19,9 +19,9 @@ import org.joml.Vector4f
 class GLCamera(screenSize: Vec2?, sceneScale: Float) : Camera(screenSize, sceneScale) {
 
     // Matrix Fields
-    private val projMat: Matrix4f = Matrix4f() // coordinates from camera's perspective
+    private val projectionMatrix: Matrix4f = Matrix4f() // coordinates from camera's perspective
     private val inverseProjection: Matrix4f = Matrix4f()
-    private val viewMat: Matrix4f = Matrix4f() // normalized device screen coordinates
+    private val viewMatrix: Matrix4f = Matrix4f() // normalized device screen coordinates
     private val inverseView: Matrix4f = Matrix4f()
 
     // Plane Fields
@@ -48,39 +48,39 @@ class GLCamera(screenSize: Vec2?, sceneScale: Float) : Camera(screenSize, sceneS
     // Matrix Properties
 
     /**
-     * The projection matrix of the camera, which transforms objects from view space into normalized screen space.
+     * The projection matrix of the camera, which transforms objects from view
+     * space into normalized screen space.
      */
-    val projectionMatrix: Matrix4f
-        get() {
-            val projSize = screenSize.div(zoom)
-            projMat.setOrtho(0f, projSize.x, 0f, projSize.y, nearPlane, farPlane)
-            projMat.invert(inverseProjection)
-            return projMat
-        }
+    fun getProjectionMatrix(): Matrix4f {
+        val projSize = screenSize.div(zoom)
+        projectionMatrix.setOrtho(0f, projSize.x, 0f, projSize.y, nearPlane, farPlane)
+        projectionMatrix.invert(inverseProjection)
+        return projectionMatrix
+    }
 
     /**
-     * The view matrix of the camera, which transforms objects from world space into camera view space.
+     * The view matrix of the camera, which transforms objects from world space
+     * into camera view space.
      */
-    val viewMatrix: Matrix4f
-        get() {
-            translateViewMatrix()
-            rotateViewMatrix()
-            viewMat.invert(inverseView)
-            return viewMat
-        }
+    fun getViewMatrix(): Matrix4f {
+        translateViewMatrix()
+        rotateViewMatrix()
+        viewMatrix.invert(inverseView)
+        return viewMatrix
+    }
 
     private fun rotateViewMatrix() {
         val cameraPos = position.mul(currentScene.scale)
         val rotation = Quaternionf()
         rotation.rotationAxis(toRadians(-getRotation()), 0f, 0f, 1f)
-        viewMat.rotateAround(rotation, cameraPos.x, cameraPos.y, 0f)
+        viewMatrix.rotateAround(rotation, cameraPos.x, cameraPos.y, 0f)
     }
 
     private fun translateViewMatrix() {
         val cameraFront = Vector3f(0f, 0f, -1f)
         val cameraUp = Vector3f(0f, 1f, 0f)
         val offset = screenOffset
-        viewMat.setLookAt(Vector3f(offset.x, offset.y, zPosition), cameraFront.add(offset.x, offset.y, 0f), cameraUp)
+        viewMatrix.setLookAt(Vector3f(offset.x, offset.y, zPosition), cameraFront.add(offset.x, offset.y, 0f), cameraUp)
     }
 
 }

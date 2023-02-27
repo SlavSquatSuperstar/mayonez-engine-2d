@@ -3,6 +3,7 @@ package mayonez.graphics.renderer
 import mayonez.*
 import mayonez.annotations.EngineType
 import mayonez.annotations.UsesEngine
+import mayonez.graphics.Camera
 import mayonez.graphics.DebugShape
 import mayonez.graphics.JRenderable
 import mayonez.graphics.sprites.Sprite
@@ -89,6 +90,8 @@ class JDefaultRenderer : SceneRenderer, DebugRenderer {
         g2.transform = oldXf // Reset the transform to its previous state
     }
 
+    // Pre-Render Methods
+
     /** Clear the screen and fill it with a background color. */
     private fun drawBackgroundColor(g2: Graphics2D) {
         if (background.texture == null) { // Only if no image set
@@ -108,16 +111,24 @@ class JDefaultRenderer : SceneRenderer, DebugRenderer {
     /** Transform the screen and render everything at the new position. */
     private fun transformScreen(g2: Graphics2D) {
         val cam = this.camera ?: return
+        translateAndScaleScreen(cam, g2)
+        rotateScreen(cam, g2)
+    }
 
-        val camOffset = cam.screenOffset
-        val camZoom = cam.zoom.toDouble() // the zoom
-        g2.translate(-camOffset.x * camZoom, -camOffset.y * camZoom)
-        g2.scale(camZoom, camZoom)
-
+    private fun rotateScreen(cam: Camera, g2: Graphics2D) {
         val camAngleRad = Math.toRadians(cam.rotation.toDouble())
         val camCenter = cam.position * SceneManager.currentScene.scale
         g2.rotate(-camAngleRad, camCenter.x.toDouble(), camCenter.y.toDouble())
     }
+
+    private fun translateAndScaleScreen(cam: Camera, g2: Graphics2D) {
+        val camOffset = cam.screenOffset
+        val camZoom = cam.zoom.toDouble() // the zoom
+        g2.translate(-camOffset.x * camZoom, -camOffset.y * camZoom)
+        g2.scale(camZoom, camZoom)
+    }
+
+    // Batch Methods
 
     /** Sort drawable objects into render "batches". */
     private fun createBatches() {

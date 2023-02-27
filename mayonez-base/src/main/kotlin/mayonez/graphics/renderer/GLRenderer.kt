@@ -36,34 +36,31 @@ abstract class GLRenderer(shaderFile: String) : Renderer {
     override fun render(g2: Graphics2D?) {
         preRender()
         rebuffer()
-        batches.forEach { obj: RenderBatch -> obj.render() } // Draw everything
+        batches.forEach { batch: RenderBatch -> batch.drawBatch() }
         postRender()
     }
 
-    /** Upload resources to the GPU. */
+    /** Clear the screen and upload resources to the GPU. */
     protected open fun preRender() {
-        // Bind shader and upload uniforms
         shader.bind()
-        val camera = camera as GLCamera
-        shader.uploadMat4("uProjection", camera.projectionMatrix)
-        shader.uploadMat4("uView", camera.viewMatrix)
+        shader.uploadUniforms(camera as GLCamera)
     }
 
     /** Sort all image data into batches. */
     protected open fun rebuffer() {
         batches.forEach { obj: RenderBatch -> obj.clear() } // Prepare batches
         createBatches()
-        batches.forEach { obj: RenderBatch -> obj.upload() } // Finalize batches
+        batches.forEach { obj: RenderBatch -> obj.uploadVertices() } // Finalize batches
         batches.sortBy { obj: RenderBatch -> obj.zIndex } // Sort batches by z-index
     }
 
-    /** Free resources from the GPU. */
+    /** Finish drawing and free resources from the GPU. */
     protected open fun postRender() {
         shader.unbind() // Unbind everything
     }
 
     override fun stop() {
-        batches.forEach { obj: RenderBatch -> obj.delete() }
+        batches.forEach { obj: RenderBatch -> obj.deleteBatch() }
     }
 
     // Batch Helper Methods
@@ -71,25 +68,25 @@ abstract class GLRenderer(shaderFile: String) : Renderer {
     /** Sort image data into render batches. */
     protected abstract fun createBatches()
 
-    protected fun getAvailableBatch(obj: GLRenderable): RenderBatch {
+    protected fun GLRenderable.getAvailableBatch(): RenderBatch {
         for (batch in batches) {
-            if (doesBatchFit(batch, obj)) return batch
+            if (this.fitsInBatch(batch)) return batch
         }
-        // If all batches full
-        return createNewBatch(obj)
+        return this.createNewBatch() // If all batches full
     }
 
-    private fun doesBatchFit(batch: RenderBatch, obj: GLRenderable): Boolean {
-        val samePrimitive = batch.primitive === obj.primitive
-        val sameZIndex = batch.zIndex == obj.zIndex
-        val fitsTexture = batch.hasTexture(obj.texture) || batch.hasTextureRoom()
+    private fun GLRenderable.fitsInBatch(batch: RenderBatch): Boolean {
+        val samePrimitive = batch.primitive === this.primitive
+        val sameZIndex = batch.zIndex == this.zIndex
+        val fitsTexture = batch.hasTexture(this.texture) || batch.hasTextureRoom()
         return batch.hasVertexRoom() && samePrimitive && sameZIndex && fitsTexture
     }
 
-    private fun createNewBatch(obj: GLRenderable): RenderBatch {
-        val batch = RenderBatch(obj.batchSize, obj.zIndex, obj.primitive)
+    private fun GLRenderable.createNewBatch(): RenderBatch {
+        val batch = RenderBatch(batchSize, zIndex, primitive)
         batch.clear()
         batches.add(batch)
         return batch
     }
+
 }

@@ -2,6 +2,7 @@ package mayonez.graphics.sprites;
 
 import mayonez.Mayonez;
 import mayonez.io.image.Texture;
+import mayonez.math.Vec2;
 
 /**
  * Stores multiple textures and creates multiple sprites from a larger image.
@@ -10,7 +11,17 @@ import mayonez.io.image.Texture;
  */
 public abstract sealed class SpriteSheet permits JSpriteSheet, GLSpriteSheet {
 
-    // Sprite Methods
+    protected abstract void createSprites(Vec2 spriteSize, int numSprites, int spacing);
+
+    protected final void moveToNextSprite(Vec2 imgPos, Vec2 spriteSize, int spacing, Vec2 texSize) {
+        imgPos.x += spriteSize.x + spacing;
+        if (imgPos.x >= texSize.x) { // next row
+            imgPos.x = 0;
+            imgPos.y += spriteSize.y + spacing;
+        }
+    }
+
+    // Sprite/Texture Getters
 
     public abstract Sprite getSprite(int index);
 
@@ -37,8 +48,9 @@ public abstract sealed class SpriteSheet permits JSpriteSheet, GLSpriteSheet {
      * @return a sprite sheet
      */
     public static SpriteSheet create(String filename, int spriteWidth, int spriteHeight, int numSprites, int spacing) {
-        if (Mayonez.getUseGL()) return new GLSpriteSheet(filename, spriteWidth, spriteHeight, numSprites, spacing);
-        else return new JSpriteSheet(filename, spriteWidth, spriteHeight, numSprites, spacing);
+        if (Mayonez.getUseGL())
+            return new GLSpriteSheet(filename, new Vec2(spriteWidth, spriteHeight), numSprites, spacing);
+        else return new JSpriteSheet(filename, new Vec2(spriteWidth, spriteHeight), numSprites, spacing);
     }
 
 }

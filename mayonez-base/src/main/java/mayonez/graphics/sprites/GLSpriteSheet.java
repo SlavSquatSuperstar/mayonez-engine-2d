@@ -18,41 +18,48 @@ import java.util.List;
 @UsesEngine(EngineType.GL)
 public final class GLSpriteSheet extends SpriteSheet {
 
+    private final GLTexture sheetTexture;
     private final List<GLSprite> sprites;
 
     /**
      * Creates a spritesheet from the given image file.
      *
-     * @param filename     the name of the parent texture
-     * @param spriteWidth  how wide each sprite is
-     * @param spriteHeight how tall each sprite is
-     * @param numSprites   how many sprites to create
-     * @param spacing      the padding in between sprites
+     * @param filename   the name of the parent texture
+     * @param spriteSize how wide and tall each sprite is
+     * @param numSprites how many sprites to create
+     * @param spacing    the padding in between sprites
      */
-    GLSpriteSheet(String filename, int spriteWidth, int spriteHeight, int numSprites, int spacing) {
-        var texture = Assets.getGLTexture(filename);
+    GLSpriteSheet(String filename, Vec2 spriteSize, int numSprites, int spacing) {
+        sheetTexture = Assets.getGLTexture(filename);
         sprites = new ArrayList<>();
+        createSprites(spriteSize, numSprites, spacing);
+    }
 
-        var texSize = new Vec2(texture.getWidth(), texture.getHeight());
-        var sprSize = new Vec2(spriteWidth, spriteHeight);
+    @Override
+    protected void createSprites(Vec2 spriteSize, int numSprites, int spacing) {
+        var texSize = sheetTexture.getSize();
 
         // Read sprite sheet from top left, but read image from bottom left
-        var imgCoords = new Vec2(0, texSize.y - sprSize.y);
+        var imgPos = new Vec2(0, texSize.y - spriteSize.y);
         for (var i = 0; i < numSprites; i++) {
-            // Image coordinates need to be normalized
-            var imgMin = imgCoords.div(texSize);
-            var imgMax = imgCoords.add(sprSize).div(texSize);
-            var imgSize = imgMax.sub(imgMin);
-
-            var texCoords = Rectangle.rectangleVertices(imgMin.add(imgSize.mul(0.5f)), imgSize, 0);
-            sprites.add(new GLSprite(new GLTexture(texture, texCoords)));
-
-            imgCoords.x += spriteWidth + spacing;
-            if (imgCoords.x >= texSize.x) {
-                imgCoords.x = 0;
-                imgCoords.y -= spriteHeight + spacing;
-            }
+            createSprite(spriteSize, imgPos);
+            moveToNextSprite(imgPos, spriteSize, spacing, texSize);
         }
+    }
+
+    private void createSprite(Vec2 spriteSize, Vec2 imgPos) {
+        var texCoords = getSubImageSize(spriteSize, imgPos);
+        sprites.add(new GLSprite(new GLTexture(sheetTexture, texCoords)));
+    }
+
+    private Vec2[] getSubImageSize(Vec2 spriteSize, Vec2 imgPos) {
+        // Normalize image coordinates
+        var texSize = sheetTexture.getSize();
+        var imgMin = imgPos.div(texSize);
+        var imgMax = imgPos.add(spriteSize).div(texSize);
+        var imgSize = imgMax.sub(imgMin);
+
+        return Rectangle.rectangleVertices(imgMin.add(imgSize.mul(0.5f)), imgSize, 0);
     }
 
     @Override

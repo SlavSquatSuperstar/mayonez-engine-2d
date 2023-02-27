@@ -71,18 +71,27 @@ public final class JTexture extends Texture {
     public void draw(Graphics2D g2, Transform parentXf, Transform spriteXf, float scale) {
         // Measurements are in screen coordinates (pixels)
         var texXf = parentXf.combine(spriteXf);
-        var parentCenter = texXf.getPosition().mul(scale);
-        var parentSize = texXf.getScale().mul(scale);
-        var parentHalfSize = parentSize.mul(0.5f);
         var imageSize = new Vec2(image.getWidth(), image.getHeight());
 
         // Draw sprite at parent center with parent rotation and scale
+        AffineTransform g2Xf = rotateAndScaleTexture(texXf, imageSize, scale);
+        transformAndDrawTexture(g2, imageSize, g2Xf);
+    }
+
+    private static AffineTransform rotateAndScaleTexture(Transform texXf, Vec2 imageSize, float scale) {
+        var parentCenter = texXf.getPosition().mul(scale);
+        var parentSize = texXf.getScale().mul(scale);
+        var parentHalfSize = parentSize.mul(0.5f);
+
         var g2Xf = AffineTransform.getTranslateInstance(
                 parentCenter.x - parentHalfSize.x, parentCenter.y - parentHalfSize.y); // Parent min
         g2Xf.rotate(FloatMath.toRadians(texXf.getRotation()), parentHalfSize.x, parentHalfSize.y);
         g2Xf.scale(parentSize.x / imageSize.x, -parentSize.y / imageSize.y); // Flip image vertically like GL
+        return g2Xf;
+    }
 
-        g2Xf.translate(0.0, -imageSize.y); // Move to correct position
+    private void transformAndDrawTexture(Graphics2D g2, Vec2 imageSize, AffineTransform g2Xf) {
+        g2Xf.translate(0.0, -imageSize.y);
         g2.drawImage(image, g2Xf, null);
     }
 
@@ -101,4 +110,5 @@ public final class JTexture extends Texture {
     public int getHeight() {
         return image.getHeight();
     }
+
 }

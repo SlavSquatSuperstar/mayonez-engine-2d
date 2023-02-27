@@ -10,6 +10,7 @@ import org.lwjgl.BufferUtils;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
@@ -71,64 +72,97 @@ public final class GLTexture extends Texture {
         this.channels = texture.channels;
     }
 
+    // Read Image File Methods
 
     @Override
     protected void readImage() {
         try {
-            var imageData = IOUtils.readBytes(inputStream());
-            var imageBuffer = BufferUtils.createByteBuffer(imageData.length);
-            imageBuffer = memSlice(imageBuffer.put(imageData).flip());
+            ByteBuffer imageBuffer = readImageBuffer();
+            var width = BufferUtils.createIntBuffer(1);
+            var height = BufferUtils.createIntBuffer(1);
+            var channels = BufferUtils.createIntBuffer(1);
 
-            var w = BufferUtils.createIntBuffer(1);
-            var h = BufferUtils.createIntBuffer(1);
-            var comp = BufferUtils.createIntBuffer(1);
-
-            if (!stbi_info_from_memory(imageBuffer, w, h, comp)) showFailureMessage();
-            else Logger.debug("OpenGL: Loaded image \"%s\"", getFilename());
-
-            // Decode the image
-            stbi_set_flip_vertically_on_load(true); // GL uses (0,0) as bottom left, unlike AWT
-            image = stbi_load_from_memory(imageBuffer, w, h, comp, 0);
-            if (image == null) {
-                Logger.error("OpenGL: Could not load image file \"%s\"", getFilename());
-                showFailureMessage();
-            }
-
-            width = w.get(0);
-            height = h.get(0);
-            channels = comp.get(0);
-        } catch (IOException | NullPointerException e) {
+            getImageInfo(imageBuffer, width, height, channels);
+            loadImage(imageBuffer, width, height, channels);
+        } catch (IOException e) {
             Logger.error("Could not read image file \"%s\"", getFilename());
         }
     }
 
+    private ByteBuffer readImageBuffer() throws IOException {
+        var imageData = IOUtils.readBytes(inputStream());
+        if (imageData == null) {
+            throw new IOException("Image data is null");
+        }
+        var imageBuffer = BufferUtils.createByteBuffer(imageData.length);
+        imageBuffer = memSlice(imageBuffer.put(imageData).flip());
+        return imageBuffer;
+    }
+
+    private void getImageInfo(ByteBuffer imageBuffer, IntBuffer width, IntBuffer height, IntBuffer channels) throws IOException {
+        if (!stbi_info_from_memory(imageBuffer, width, height, channels)) throwExceptionOnFailure();
+        else Logger.debug("OpenGL: Loaded image \"%s\"", getFilename());
+
+        this.width = width.get(0);
+        this.height = height.get(0);
+        this.channels = channels.get(0);
+    }
+
+    private void loadImage(ByteBuffer imageBuffer, IntBuffer width, IntBuffer height, IntBuffer channels) throws IOException {
+        stbi_set_flip_vertically_on_load(true); // GL uses (0,0) as bottom left, unlike AWT
+        image = stbi_load_from_memory(imageBuffer, width, height, channels, 0);
+        if (image == null) {
+            Logger.error("OpenGL: Could not load image file \"%s\"", getFilename());
+            throwExceptionOnFailure();
+        }
+    }
+
+    private static void throwExceptionOnFailure() throws IOException {
+        String msg = "Reason for failure: " + stbi_failure_reason();
+        Logger.error(msg);
+        throw new IOException(msg);
+    }
+
+    // Create Texture Methods
+
     private void createTexture() {
-        // Generate texture on CPU
+        generateTexID();
+        setTextureParameters();
+        uploadImage();
+    }
+
+    private void generateTexID() {
         texID = glGenTextures();
         glBindTexture(GL_TEXTURE_2D, texID);
+    }
 
-        // Set texture parameters
+    private static void setTextureParameters() {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT); // wrap if too big
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST); // pixelate when stretching
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST); // pixelate when shrinking
+    }
 
-        // Upload image to GPU
-        int format;
-        if (channels == 3) { // jpg image, no transparency
-//            if ((width & 3) != 0)
-//                glPixelStorei(GL_UNPACK_ALIGNMENT, 2 - (width & 1));
-            format = GL_RGB;
-        } else { // png image, has transparency
-            glEnable(GL_BLEND);
-            glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-            format = GL_RGBA;
-        }
-
+    private void uploadImage() {
+        int format = getImageFormat();
         glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, image);
         Logger.debug("OpenGL: Loaded image \"%s\"", getFilename());
         stbi_image_free(image);
     }
+
+    private int getImageFormat() {
+        if (channels == 3) { // jpg image, no transparency
+//            if ((width & 3) != 0)
+//                glPixelStorei(GL_UNPACK_ALIGNMENT, 2 - (width & 1));
+            return GL_RGB;
+        } else { // png image, has transparency
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+            return GL_RGBA;
+        }
+    }
+
+    // Render Batch Methods
 
     public void bind(int texSlot) {
         glActiveTexture(GL_TEXTURE0 + texSlot + 1);
@@ -153,13 +187,6 @@ public final class GLTexture extends Texture {
 
     public Vec2[] getTexCoords() {
         return texCoords;
-    }
-
-    // Helper Methods
-
-    private static void showFailureMessage() throws RuntimeException {
-        Logger.error("Reason for failure: " + stbi_failure_reason());
-        throw new RuntimeException("Reason for failure: " + stbi_failure_reason());
     }
 
 }

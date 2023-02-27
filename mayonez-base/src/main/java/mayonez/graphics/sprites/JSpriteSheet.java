@@ -4,6 +4,7 @@ import mayonez.annotations.EngineType;
 import mayonez.annotations.UsesEngine;
 import mayonez.io.Assets;
 import mayonez.io.image.JTexture;
+import mayonez.math.Vec2;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,35 +17,40 @@ import java.util.List;
 @UsesEngine(EngineType.AWT)
 public final class JSpriteSheet extends SpriteSheet {
 
+    private final JTexture sheetTexture;
     private final List<JTexture> textures; // store images in memory
 
     /**
      * Creates a spritesheet from the given image file.
      *
-     * @param filename     the name of the parent texture
-     * @param spriteWidth  how wide each sprite is
-     * @param spriteHeight how tall each sprite is
-     * @param numSprites   how many sprites to create
-     * @param spacing      the padding in between sprites
+     * @param filename   the name of the parent texture
+     * @param spriteSize how wide and tall each sprite is
+     * @param numSprites how many sprites to create
+     * @param spacing    the padding in between sprites
      */
-    JSpriteSheet(String filename, int spriteWidth, int spriteHeight, int numSprites, int spacing) {
+    JSpriteSheet(String filename, Vec2 spriteSize, int numSprites, int spacing) {
+        sheetTexture = Assets.getJTexture(filename);
         textures = new ArrayList<>();
-        var texture = Assets.getJTexture(filename);
-        var width = texture.getImage().getWidth();
+        createSprites(spriteSize, numSprites, spacing);
+    }
+
+    @Override
+    protected void createSprites(Vec2 spriteSize, int numSprites, int spacing) {
+        var texSize = sheetTexture.getSize();
 
         // Make sure there isn't extra space on the right/bottom
         // Assume spacing is less than tile size
-        var imgX = 0;
-        var imgY = 0;
+        var imgPos = new Vec2();
         for (var count = 0; count < numSprites; count++) {
-            var subimage = texture.getImage().getSubimage(imgX, imgY, spriteWidth, spriteHeight);
-            textures.add(new JTexture(String.format("%s (Sprite %s)", filename, count), subimage));
-            imgX += spriteWidth + spacing;
-            if (imgX >= width) {
-                imgX = 0;
-                imgY += spriteHeight + spacing;
-            }
+            createSprite(sheetTexture.getFilename(), spriteSize, imgPos, count);
+            moveToNextSprite(imgPos, spriteSize, spacing, texSize);
         }
+    }
+
+    private void createSprite(String filename, Vec2 spriteSize, Vec2 imgPos, int count) {
+        var subimage = sheetTexture.getImage().getSubimage((int) imgPos.x, (int) imgPos.y,
+                (int) spriteSize.x, (int) spriteSize.y);
+        textures.add(new JTexture(String.format("%s (Sprite %s)", filename, count), subimage));
     }
 
     @Override

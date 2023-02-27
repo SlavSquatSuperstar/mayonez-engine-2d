@@ -10,6 +10,7 @@ import org.lwjgl.BufferUtils;
 
 import java.nio.IntBuffer;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.lwjgl.opengl.GL15.*;
@@ -64,30 +65,39 @@ public final class RenderBatch {
         textures = new ArrayList<>(maxTextureSlots);
         vertices = new float[maxBatchSize * vertexCount * vertexSize];
 
-        create();
+        createBatch();
     }
 
     // Initialization Methods
 
     /**
-     * Allocates GPU resources to this render batch. Generates the vertex array, vertex buffer, and index buffer.
+     * Allocates GPU resources to this batch and generates the vertex buffers upon starting the scene.
      */
-    private void create() {
-        // Generate and bind VAO
+    private void createBatch() {
+        generateVAOs();
+        generateVBOs();
+        generateEBOs();
+        generateVertexIndexBuffer();
+    }
+
+    private void generateVAOs() {
         vao = glGenVertexArrays();
         glBindVertexArray(vao);
+    }
 
-        // Allocate space for VBO
+    private void generateVBOs() {
         vbo = glGenBuffers();
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
         glBufferData(GL_ARRAY_BUFFER, (long) vertices.length * Float.BYTES, GL_DYNAMIC_DRAW);
+    }
 
-        // Only upload EBO vertices once
+    private void generateEBOs() {
         ebo = glGenBuffers();
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, generateIndices(), GL_STATIC_DRAW);
+    }
 
-        // Allocate vertex index buffer
+    private void generateVertexIndexBuffer() {
         var offset = 0;
         var attributeSizes = primitive.getAttributeSizes();
         for (var i = 0; i < attributeSizes.length; i++) {
@@ -98,7 +108,7 @@ public final class RenderBatch {
     }
 
     /**
-     * Load element indices and define shapes for GL to draw.
+     * Load element indices and define shapes for OpenGL to draw.
      *
      * @return an index array (int buffer)
      */
@@ -116,29 +126,37 @@ public final class RenderBatch {
      */
     public void clear() {
         vertexOffset = 0;
+        Arrays.fill(vertices, 0);
         textures.clear();
     }
 
     /**
      * Upload all vertex data to the GPU after buffering.
      */
-    public void upload() {
+    public void uploadVertices() {
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
         glBufferSubData(GL_ARRAY_BUFFER, 0, vertices);
     }
 
-    public void render() {
-        // Bind textures and vertices
+    public void drawBatch() {
+        bindVertices();
+        drawVertices();
+        unbindVertices();
+    }
+
+    private void bindVertices() {
         for (var i = 0; i < textures.size(); i++) textures.get(i).bind(i);
         glBindVertexArray(vao);
         glEnableVertexAttribArray(0);
         glEnableVertexAttribArray(1);
+    }
 
-        // Draw sprites
+    private void drawVertices() {
         var numVertices = (vertexOffset * elementCount) / (vertexSize * vertexCount);
         glDrawElements(primitive.getPrimitiveType(), numVertices, GL_UNSIGNED_INT, 0);
+    }
 
-        // Unbind vertices and textures
+    private void unbindVertices() {
         glDisableVertexAttribArray(0);
         glDisableVertexAttribArray(1);
         glBindVertexArray(0);
@@ -146,9 +164,9 @@ public final class RenderBatch {
     }
 
     /**
-     * Free GPU resources upon stopping scene.
+     * Free GPU resources upon stopping the scene.
      */
-    public void delete() {
+    public void deleteBatch() {
         glDeleteBuffers(vbo);
         glDeleteBuffers(ebo);
         glDeleteVertexArrays(vao);
@@ -165,10 +183,14 @@ public final class RenderBatch {
     public int addTexture(GLTexture tex) {
         if (tex == null) return 0; // if color return 0
         if (!hasTexture(tex)) textures.add(tex); // add if don't have texture
-        return textures.indexOf(tex) + 1; // return tex ID
+        return getTexID(tex);
     }
 
-    // Vertex Helper Methods
+    private int getTexID(GLTexture tex) {
+        return textures.indexOf(tex) + 1;
+    }
+
+    // Push Vertex Methods
 
     public void pushInt(int i) {
         vertices[vertexOffset++] = i;
@@ -201,15 +223,6 @@ public final class RenderBatch {
     }
 
     /**
-     * If the render batch has capacity for another primitive object.
-     *
-     * @return if there are still unused vertices
-     */
-    public boolean hasVertexRoom() {
-        return vertexOffset < vertices.length;
-    }
-
-    /**
      * If the render batch contains this texture (can always render colors)
      *
      * @param tex the texture, or null if drawing a color
@@ -226,6 +239,15 @@ public final class RenderBatch {
      */
     public boolean hasTextureRoom() {
         return textures.size() < maxTextureSlots;
+    }
+
+    /**
+     * If the render batch has capacity for another primitive object.
+     *
+     * @return if there are still unused vertices
+     */
+    public boolean hasVertexRoom() {
+        return vertexOffset < vertices.length;
     }
 
     @Override

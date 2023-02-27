@@ -99,7 +99,6 @@ public abstract class Scene {
     private void addCameraToScene() {
         camera = createCamera();
         addObject(Camera.createCameraObject(camera));
-        Logger.log("Camera = %s", camera);
     }
 
     private Camera createCamera() {

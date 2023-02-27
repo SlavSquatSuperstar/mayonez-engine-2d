@@ -101,8 +101,8 @@ class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"), SceneRender
         glClearColor(1f, 1f, 1f, 1f);
         bgBatch.clear()
         (background as GLSprite).pushToBatch(bgBatch)
-        bgBatch.upload()
-        bgBatch.render()
+        bgBatch.uploadVertices()
+        bgBatch.drawBatch()
     }
 
     private fun drawBackgroundColor() {
@@ -122,8 +122,7 @@ class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"), SceneRender
                 if (obj is ShapeSprite) {
                     addShape(DebugShape(obj)) // Break down shape into primitives then add them later
                 } else {
-                    val batch = getAvailableBatch(obj)
-                    obj.pushToBatch(batch) // Push vertices to batch
+                    obj.pushToBatch(obj.getAvailableBatch())
                 }
             }
         }
@@ -131,15 +130,13 @@ class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"), SceneRender
 
     private fun pushShapesToBatches() {
         shapes.forEach { shape: DebugShape ->
-            val batch = getAvailableBatch(shape)
-            shape.pushToBatch(batch)
+            shape.pushToBatch(shape.getAvailableBatch())
         }
     }
 
     override fun postRender() {
         super.postRender()
         shapes.clear() // Clear primitives after each frame
-        // Finish drawing
         glDisable(GL_LINE_SMOOTH)
         glDisable(GL_BLEND)
     }
@@ -148,7 +145,7 @@ class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"), SceneRender
         super.stop()
         objects.clear()
         shapes.clear()
-        bgBatch.delete()
+        bgBatch.deleteBatch()
     }
 
     // Batch Helper Methods
@@ -193,10 +190,10 @@ class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"), SceneRender
          */
         SINGLE,
 
-        /** Draw a line as multiple lines to simulate stroke size. */
+        /** Draw each line as multiple lines to simulate stroke size. */
         MULTIPLE,
 
-        /** Draw lines using thin rectangles to simulate stroke size. */
+        /** Draw each line using a thin quad (rectangle) to simulate stroke size. */
         QUADS
     }
 
