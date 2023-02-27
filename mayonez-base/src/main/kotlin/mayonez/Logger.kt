@@ -13,9 +13,10 @@ import java.util.*
  */
 object Logger {
 
-    // TODO eliminate variables or allow mutable
+    private const val STACK_TRACE_INDEX = 5 // number of times to jump up stack trace
+
     // Log Parameters
-    private var logLevel: Int = Preferences.logLevel // Minimum priority required to print messages to console
+    private var minLogLevel: Int = Preferences.logLevel // Minimum priority required to print messages to console
     private var saveLogs: Boolean = Preferences.saveLogs // Whether to save console messages to a log file
 
     // Log File Output
@@ -23,32 +24,41 @@ object Logger {
     private lateinit var logFile: TextFile
     private val printQueue: Queue<String> = LinkedList() // Save log messages in case log file isn't created
 
-    internal fun createLogFile() {
+    // Logger Init Methods
+
+    internal fun initLogger() {
         if (!Mayonez.INIT_ASSETS || !Mayonez.INIT_PREFERENCES) Mayonez.init() // Should prevent file from not being read
 
-        logLevel = Preferences.logLevel
+        minLogLevel = Preferences.logLevel
         saveLogs = Preferences.saveLogs
 
         if (saveLogs && !Mayonez.INIT_LOGGER) {
-            val logDirectory = File(Preferences.logDirectory)
-            if (!logDirectory.exists()) logDirectory.mkdir()
-
-            // Count number of log files with the same date
-            val today = LocalDate.now().toString()
-            var logCount = 0
-            for (f in logDirectory.listFiles()!!)
-                if (f.name.startsWith(today)) logCount++
-
-            // Set name of log file as YYYY-MM-DD_#
-            logFilename = "${logDirectory.path}/${today}_${++logCount}.log"
-            logFile = TextFile(logFilename)
-            log("Logger: Created log file \"%s\"", logFilename)
-
+            createLogFile()
             while (printQueue.isNotEmpty()) logFile.append(printQueue.poll()) // log everything in print queue
         }
     }
 
-    // Log Methods
+    private fun createLogFile() {
+        logFilename = getLogFilename()
+        logFile = TextFile(logFilename)
+        log("Logger: Created log file \"%s\"", logFilename)
+    }
+
+    private fun getLogFilename(): String {
+        val logDirectory = File(Preferences.logDirectory)
+        if (!logDirectory.exists()) logDirectory.mkdir()
+
+        // Count number of log files with the same date
+        val today = LocalDate.now().toString()
+        var logCount = 0
+        for (f in logDirectory.listFiles()!!)
+            if (f.name.startsWith(today)) logCount++
+
+        // Set name of log file as YYYY-MM-DD_#
+        return "${logDirectory.path}/${today}_${++logCount}.log"
+    }
+
+    // Private Log Methods
 
     /**
      * Formats a message and adds a timestamp, prints it to the console if
@@ -59,29 +69,41 @@ object Logger {
      * @param args (optional) the format arguments
      * @param level the log priority level
      */
-    private fun printMessage(msg: Any?, vararg args: Any?, level: LogLevel) {
-        // Format the message and add timestamp
+    private fun logMessage(msg: Any?, vararg args: Any?, level: LogLevel) {
+        val message = msg.formatMessage(args, level)
+        if (level.ordinal >= minLogLevel) message.printToConsole(level)
+        if (saveLogs) message.appendToFile()
+    }
+
+    private fun Any?.formatMessage(args: Array<out Any?>, level: LogLevel): String {
         val fmt = StringBuilder("[${Mayonez.seconds.toFmtString()}] ") // Timestamp
         fmt.append("[${level.name}] ") // Log level
         fmt.append("[${getStackSource()}] ") // Log source
         try {
-            fmt.append(msg.toString().format(*args)) // Level prefix
+            fmt.append(this.toString().format(*args)) // Level prefix
         } catch (e: IllegalFormatException) {
-            fmt.append("Logger: Could not format message \"$msg\"")
+            fmt.append("Logger: Could not format message \"$this\"")
         }
-        val output = fmt.toString()
-
-        // Print message and write to file
-        if (level.ordinal >= logLevel) { // Print to console if high enough level
-            if (level >= LogLevel.WARNING) System.err.println(output) // Red text for errors
-            else println(output)
-        }
-        // Always save to log regardless of level
-        if (saveLogs) {
-            if (Mayonez.INIT_LOGGER) logFile.append(output) // log file has been created
-            else printQueue.offer(output) // save to buffer
-        }
+        return fmt.toString()
     }
+
+    /** Returns a timestamp in hh:mm:ss.SSSS format. */
+    private fun Float.toFmtString(): String {
+        val min: Int = (this / 60).toInt()
+        return "%02d:%02d:%07.4f".format(min / 60, min, this % 60)
+    }
+
+    private fun String.printToConsole(level: LogLevel) {
+        if (level >= LogLevel.WARNING) System.err.println(this) // red text for errors
+        else println(this)
+    }
+
+    private fun String.appendToFile() {
+        if (Mayonez.INIT_LOGGER) logFile.append(this) // has log file been created
+        else printQueue.offer(this) // save to buffer
+    }
+
+    // Public Log Methods
 
     /**
      * Prints a normal-priority informational message to the console.
@@ -90,7 +112,7 @@ object Logger {
      * @param args (optional) string format arguments
      */
     @JvmStatic
-    fun log(msg: Any?, vararg args: Any?) = printMessage(msg, *args, level = LogLevel.INFO)
+    fun log(msg: Any?, vararg args: Any?) = logMessage(msg, *args, level = LogLevel.INFO)
 
     /**
      * Prints a low-priority debug message to the console.
@@ -99,7 +121,7 @@ object Logger {
      * @param args (optional) string format arguments
      */
     @JvmStatic
-    fun debug(msg: Any?, vararg args: Any?) = printMessage(msg, *args, level = LogLevel.DEBUG)
+    fun debug(msg: Any?, vararg args: Any?) = logMessage(msg, *args, level = LogLevel.DEBUG)
 
     /**
      * Prints a high-priority warning to the console.
@@ -108,7 +130,7 @@ object Logger {
      * @param args (optional) string format arguments
      */
     @JvmStatic
-    fun warn(msg: Any?, vararg args: Any?) = printMessage(msg, *args, level = LogLevel.WARNING)
+    fun warn(msg: Any?, vararg args: Any?) = logMessage(msg, *args, level = LogLevel.WARNING)
 
     /**
      * Prints a severe-priority error to the console.
@@ -117,15 +139,9 @@ object Logger {
      * @param args (optional) string format arguments
      */
     @JvmStatic
-    fun error(msg: Any?, vararg args: Any?) = printMessage(msg, *args, level = LogLevel.ERROR)
+    fun error(msg: Any?, vararg args: Any?) = logMessage(msg, *args, level = LogLevel.ERROR)
 
-    // Stack/Format Helper Methods
-
-    /** Returns a timestamp in hh:mm:ss.SSSS format. */
-    private fun Float.toFmtString(): String {
-        val min: Int = (this / 60).toInt()
-        return "%02d:%02d:%07.4f".format(min / 60, min, this % 60)
-    }
+    // Stack Helper Methods
 
     /**
      * Returns the source class that called a log() function.
@@ -133,7 +149,7 @@ object Logger {
      * Source: Azurite util.Log.source()
      */
     private fun getStackSource(): String {
-        return Thread.currentThread().stackTrace[4].className
+        return Thread.currentThread().stackTrace[STACK_TRACE_INDEX].className
     }
 
     /**

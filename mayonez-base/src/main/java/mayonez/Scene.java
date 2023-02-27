@@ -125,8 +125,8 @@ public abstract class Scene {
      * @param dt seconds since the last frame
      */
     public final void update(float dt) {
-        if (isRunning()) updateSceneObjects(dt);
         onUserUpdate(dt);
+        if (isRunning()) updateSceneObjects(dt);
         processSceneChanges();
     }
 
@@ -150,9 +150,9 @@ public abstract class Scene {
      * @param g2 the window's graphics object
      */
     public final void render(Graphics2D g2) {
+        onUserRender();
         renderer.render(g2);
         if (separateDebugRenderer()) debugRenderer.render(g2);
-        onUserRender();
     }
 
     // Stop Methods

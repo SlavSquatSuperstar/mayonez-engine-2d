@@ -65,7 +65,17 @@ public class SpaceGameScene extends Scene {
             }
         });
 
-        // Add background stars
+        addBackgroundStars();
+        addSolarSystem();
+    }
+
+    private void addSolarSystem() {
+        addBackgroundObject(new Circle(new Vec2(-10, -8), 10), Colors.DARK_BLUE); // Earth
+        addBackgroundObject(new Circle(new Vec2(12.5f, 7.5f), 2f), Colors.DARK_GRAY); // Moon
+        addBackgroundObject(new Circle(new Vec2(-12, 11), 1.5f), Colors.YELLOW); // Sun
+    }
+
+    private void addBackgroundStars() {
         for (var i = 0; i < numStars; i++) {
             var starPos = this.getRandomPosition().mul(2);
 
@@ -77,11 +87,6 @@ public class SpaceGameScene extends Scene {
             var starColor = new Color(Random.randomInt(192, 255), Random.randomInt(192, 255), Random.randomInt(192, 255));
             addBackgroundObject(new Circle(starPos, starSize / starDist), starColor); // Star
         }
-
-        // Add solar system
-        addBackgroundObject(new Circle(new Vec2(-10, -8), 10), Colors.DARK_BLUE); // Earth
-        addBackgroundObject(new Circle(new Vec2(12.5f, 7.5f), 2f), Colors.DARK_GRAY); // Moon
-        addBackgroundObject(new Circle(new Vec2(-12, 11), 1.5f), Colors.YELLOW); // Sun
     }
 
     @Override

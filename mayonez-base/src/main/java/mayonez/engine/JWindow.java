@@ -96,22 +96,30 @@ public final class JWindow extends JFrame implements Window {
             // Use a do-while loop to avoid losing buffer frames
             // Source: https://stackoverflow.com/questions/13590002/understand-bufferstrategy
             do {
-                // Clear screen
-                g2 = (Graphics2D) bs.getDrawGraphics();
-                g2.clipRect(0, 0, getWidth(), getHeight()); // Render things only in the screen
-                g2.clearRect(0, 0, getWidth(), getHeight());
-                // Flip screen upside down
-                g2.transform(FLIP_XF);
-                g2.translate(0, -getHeight());
-                // Draw scene
-                scene.render(g2);
-                // Flush resources
-                g2.dispose();
-                bs.show();
+                clearScreen();
+                flipScreenVertically();
+                scene.render(g2); // Draw scene
+                flushResources();
             } while (bs.contentsLost());
         } catch (IllegalStateException e) {
             Logger.debug("Error rendering current frame; retrying next frame.");
         }
+    }
+
+    private void clearScreen() {
+        g2 = (Graphics2D) bs.getDrawGraphics();
+        g2.clipRect(0, 0, getWidth(), getHeight()); // Render things only in the screen
+        g2.clearRect(0, 0, getWidth(), getHeight());
+    }
+
+    private void flipScreenVertically() {
+        g2.transform(FLIP_XF);
+        g2.translate(0, -getHeight());
+    }
+
+    private void flushResources() {
+        g2.dispose();
+        bs.show();
     }
 
     // Input Methods

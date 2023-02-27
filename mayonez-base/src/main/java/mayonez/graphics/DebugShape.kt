@@ -17,7 +17,7 @@ import kotlin.math.roundToInt
 
 /**
  * Passes shape and color information to a
- * [mayonez.graphics.renderer.DebugRenderer]..
+ * [mayonez.graphics.renderer.DebugRenderer].
  *
  * @author SlavSquatSuperstar
  */

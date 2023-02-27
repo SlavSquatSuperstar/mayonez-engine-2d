@@ -98,7 +98,7 @@ object Mayonez {
         }
         // Create log file
         if (!INIT_LOGGER) {
-            Logger.createLogFile()
+            Logger.initLogger()
             INIT_LOGGER = true
         }
         // Create Resources

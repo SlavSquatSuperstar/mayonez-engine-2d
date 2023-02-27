@@ -27,7 +27,7 @@ public final class JGame extends GameEngine {
     // Game Loop Methods
 
     @Override
-    public float getCurrentTime() {
+    public float getCurrentTimeSecs() {
         return Mayonez.getSeconds();
     }
 

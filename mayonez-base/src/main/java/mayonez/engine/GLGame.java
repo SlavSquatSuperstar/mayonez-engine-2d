@@ -22,7 +22,7 @@ public final class GLGame extends GameEngine { // can't implement runnable other
     // Game Loop Methods
 
     @Override
-    public float getCurrentTime() {
+    public float getCurrentTimeSecs() {
         return (float) glfwGetTime();
     }
 

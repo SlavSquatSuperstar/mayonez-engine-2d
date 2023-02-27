@@ -1,16 +1,16 @@
 package mayonez.engine;
 
-import mayonez.Scene;
-import org.lwjgl.glfw.GLFWErrorCallback;
-import org.lwjgl.glfw.GLFWVidMode;
-import org.lwjgl.opengl.GL;
-import org.lwjgl.system.MemoryStack;
 import mayonez.Logger;
 import mayonez.Mayonez;
+import mayonez.Scene;
 import mayonez.annotations.EngineType;
 import mayonez.annotations.UsesEngine;
 import mayonez.input.KeyInput;
 import mayonez.input.MouseInput;
+import org.lwjgl.glfw.GLFWErrorCallback;
+import org.lwjgl.glfw.GLFWVidMode;
+import org.lwjgl.opengl.GL;
+import org.lwjgl.system.MemoryStack;
 
 import java.nio.IntBuffer;
 
@@ -36,7 +36,7 @@ public final class GLWindow implements Window {
         this.title = title;
         this.width = width;
         this.height = height;
-        init();
+        initWindow();
     }
 
     // Engine methods
@@ -51,32 +51,49 @@ public final class GLWindow implements Window {
      * <br>
      * Source: https://www.lwjgl.org/guide
      */
-    private void init() {
-        // Setup an error callback
-        GLFWErrorCallback.createPrint(System.err).set();
+    private void initWindow() {
+        initGLFW();
+        createGLFWWindow();
+        setWindowProperties();
 
-        // Initialize GLFW
+        // This line is critical for LWJGL's interoperation with GLFW's
+        // OpenGL context, or any context that is managed externally.
+        // LWJGL detects the context that is current in the current thread,
+        // creates the GLCapabilities instance and makes the OpenGL
+        // bindings available for use.
+        GL.createCapabilities();
+
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    }
+
+    private static void initGLFW() {
+        GLFWErrorCallback.createPrint(System.err).set(); // Setup error callback
+
         try {
             if (!glfwInit()) throw new IllegalStateException("Unable to initialize GLFW");
         } catch (IllegalStateException | ExceptionInInitializerError e) {
             Logger.error("LWJGL must be run with \"-XstartOnFirstThread\" on macOS");
             Mayonez.stop(1);
         }
+    }
 
-        // Configure GLFW
+    private void createGLFWWindow() {
+        configureWindowSettings();
+        window = glfwCreateWindow(width, height, title, NULL, NULL);
+        if (window == NULL) throw new RuntimeException("Could not create the GLFW window");
+    }
+
+    private static void configureWindowSettings() {
         glfwDefaultWindowHints(); // window settings
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // the window will stay hidden after creation
         glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE); // the window will be resizable
-        // for mac
+        // For macOS
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+    }
 
-        // Create the window
-        window = glfwCreateWindow(width, height, title, NULL, NULL);
-        if (window == NULL) throw new RuntimeException("Could not create the GLFW window");
-
-        // Add input listeners
-
+    private void setWindowProperties() {
         // Get the thread stack and push a new frame
         try (MemoryStack stack = stackPush()) {
             IntBuffer pWidth = stack.mallocInt(1); // int*
@@ -98,16 +115,6 @@ public final class GLWindow implements Window {
 
         glfwMakeContextCurrent(window); // Make the OpenGL context current
         glfwSwapInterval(1); // Enable v-sync
-
-        // This line is critical for LWJGL's interoperation with GLFW's
-        // OpenGL context, or any context that is managed externally.
-        // LWJGL detects the context that is current in the current thread,
-        // creates the GLCapabilities instance and makes the OpenGL
-        // bindings available for use.
-        GL.createCapabilities();
-
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
 
     // Make the window visible
