@@ -1,4 +1,4 @@
-package mayonez.graphics;
+package mayonez.graphics.camera;
 
 /**
  * What restrictions should be placed on the scene {@link Camera}'s movement.

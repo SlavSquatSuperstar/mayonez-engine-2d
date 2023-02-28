@@ -1,8 +1,8 @@
 package mayonez.graphics.sprites;
 
-import mayonez.Mayonez;
-import mayonez.io.image.Texture;
-import mayonez.math.Vec2;
+import mayonez.*;
+import mayonez.io.image.*;
+import mayonez.math.*;
 
 /**
  * Stores multiple textures and creates multiple sprites from a larger image.

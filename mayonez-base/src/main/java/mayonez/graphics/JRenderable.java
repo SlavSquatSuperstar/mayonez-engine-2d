@@ -1,7 +1,6 @@
 package mayonez.graphics;
 
-import mayonez.annotations.EngineType;
-import mayonez.annotations.UsesEngine;
+import mayonez.annotations.*;
 
 import java.awt.*;
 

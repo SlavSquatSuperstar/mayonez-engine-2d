@@ -1,7 +1,7 @@
 package mayonez.physics.detection
 
-import mayonez.math.shapes.Circle
-import mayonez.physics.resolution.Manifold
+import mayonez.math.shapes.*
+import mayonez.physics.resolution.*
 
 /**
  * A class that detects collisions between circles.

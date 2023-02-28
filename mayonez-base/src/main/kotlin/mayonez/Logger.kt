@@ -1,6 +1,6 @@
 package mayonez
 
-import mayonez.io.text.TextFile
+import mayonez.io.text.*
 import java.io.File
 import java.time.LocalDate
 import java.util.*

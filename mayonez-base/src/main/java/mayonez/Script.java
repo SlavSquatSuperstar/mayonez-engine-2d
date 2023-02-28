@@ -1,7 +1,7 @@
 package mayonez;
 
-import mayonez.physics.Rigidbody;
-import mayonez.physics.colliders.Collider;
+import mayonez.physics.*;
+import mayonez.physics.colliders.*;
 
 /**
  * A controllable and reusable behavior for a {@link GameObject} which provides many callback functions

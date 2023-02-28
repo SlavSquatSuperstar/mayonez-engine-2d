@@ -1,7 +1,7 @@
 package mayonez.graphics.sprites;
 
-import mayonez.Script;
-import mayonez.scripts.Timer;
+import mayonez.*;
+import mayonez.scripts.*;
 
 /**
  * Animates a game object by swapping between different sprites.

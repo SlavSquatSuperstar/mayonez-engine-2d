@@ -1,12 +1,8 @@
 package mayonez.physics.detection
 
-import mayonez.math.FloatMath
-import mayonez.math.Interval
-import mayonez.math.Vec2
-import mayonez.math.shapes.Circle
-import mayonez.math.shapes.Polygon
-import mayonez.math.shapes.Shape
-import kotlin.math.min
+import mayonez.math.*
+import mayonez.math.shapes.*
+import kotlin.math.*
 
 /**
  * Detects if two shapes are colliding and finds their contacts using the

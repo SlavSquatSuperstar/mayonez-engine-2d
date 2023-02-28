@@ -1,8 +1,7 @@
 package mayonez.physics.resolution
 
-import mayonez.math.FloatMath
-import mayonez.math.Vec2
-import mayonez.physics.Rigidbody
+import mayonez.math.*
+import mayonez.physics.*
 
 /**
  * Describes contact point between two colliding shapes and stores

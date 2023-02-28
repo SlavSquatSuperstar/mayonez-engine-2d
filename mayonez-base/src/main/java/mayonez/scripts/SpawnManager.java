@@ -1,7 +1,6 @@
 package mayonez.scripts;
 
-import mayonez.GameObject;
-import mayonez.Script;
+import mayonez.*;
 
 /**
  * Sets conditions for spawning new objects and tracks the number of spawned objects in the scene.

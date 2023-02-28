@@ -1,37 +1,30 @@
 package mayonez.math.shapes
 
-import mayonez.math.FloatMath
-import mayonez.math.Vec2
-import kotlin.math.roundToInt
+import mayonez.math.*
+import kotlin.math.*
 
 /**
- * A round shape defined by a center and radius. The distance between every point on the circle's boundary curve
- * and the center equal to the radius.
+ * A round shape defined by a center and radius. The distance between every
+ * point on the circle's boundary curve and the center equal to the radius.
  *
  * @author SlavSquatSuperstar
  */
 class Circle(
     center: Vec2,
-    /**
-     * The circle's radius, r.
-     */
+    /** The circle's radius, r. */
     val radius: Float
 ) : Ellipse(center, Vec2(radius * 2f), 0f) {
 
     // Circle Properties
 
-    /**
-     * The square of the circle's radius, equal to r^2.
-     */
+    /** The square of the circle's radius, equal to r^2. */
     @JvmField
     val radiusSq: Float = radius * radius
 
     override val isCircle: Boolean
         get() = true
 
-    /**
-     * The area of a circle, equal to πr^2.
-     */
+    /** The area of a circle, equal to πr^2. */
     override fun area(): Float = FloatMath.PI * radiusSq
 
     // Collision Properties
@@ -40,9 +33,7 @@ class Circle(
 
     override fun boundingRectangle(): BoundingBox = BoundingBox(center, Vec2(radius * 2f))
 
-    /**
-     * Returns a polygon approximation of this ellipse with 2πr vertices.
-     */
+    /** Returns a polygon approximation of this ellipse with 2πr vertices. */
     override fun toPolygon(): Polygon {
         val numEdges: Int = (2f * FloatMath.PI * radius).roundToInt() // use 2πr for # edges
         return Polygon(center, numEdges, radius)
@@ -55,8 +46,9 @@ class Circle(
     // Physical Properties
 
     /**
-     * The circle's centroidal moment of inertia, equal to 1/2*mr^2. This formula is specifically the
-     * second moment of area for a solid circle (disk).
+     * The circle's centroidal moment of inertia, equal to 1/2*mr^2. This
+     * formula is specifically the second moment of area for a solid circle
+     * (disk).
      *
      * Polar moment of area: I_z = π/4*r^4 = 1/2*(πr^2)r^2 = 1/2*Ar^2
      */
@@ -67,19 +59,23 @@ class Circle(
     override fun translate(direction: Vec2): Circle = Circle(center + direction, radius)
 
     /**
-     * Rotates this circle around a point. If rotating around the center, returns a copy of this circle.
+     * Rotates this circle around a point. If rotating around the center,
+     * returns a copy of this circle.
      *
-     * @param angle  the counterclockwise angle
-     * @param origin The point to rotate around. Pass in null to rotate around the center of mass.
+     * @param angle the counterclockwise angle
+     * @param origin The point to rotate around. Pass in null to rotate around
+     *     the center of mass.
      * @return a circle with the same center and radius
      */
     override fun rotate(angle: Float, origin: Vec2?): Circle = Circle(center.rotate(angle, origin ?: center), radius)
 
     /**
-     * Scales this circle uniformly using the given vector's x-component as the scale factor.
+     * Scales this circle uniformly using the given vector's x-component as the
+     * scale factor.
      *
      * @param factor how much to scale the radius by
-     * @param origin The point to rotate around. Pass in null to rotate around the centroid.
+     * @param origin The point to rotate around. Pass in null to rotate around
+     *     the centroid.
      * @return the scaled circle
      */
     // To scale a circle non-uniformly, use the Ellipse class.
@@ -93,7 +89,8 @@ class Circle(
     }
 
     /**
-     * Whether a point is inside the circle, meaning its distance form the center is less than the radius.
+     * Whether a point is inside the circle, meaning its distance form the
+     * center is less than the radius.
      */
     override fun contains(point: Vec2): Boolean = point.distanceSq(center) <= radiusSq
 
@@ -109,9 +106,7 @@ class Circle(
         return (other is Circle) && (this.center == other.center) && FloatMath.equals(this.radius, other.radius)
     }
 
-    /**
-     * A description of the circle in the form Circle (x, y), r=radius.
-     */
+    /** A description of the circle in the form Circle (x, y), r=radius. */
     override fun toString(): String = String.format("Circle $center, r=%.4f", radius)
 
 }

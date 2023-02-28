@@ -1,8 +1,7 @@
 package mayonez.scripts.combat;
 
-import mayonez.GameObject;
-import mayonez.Script;
-import mayonez.scripts.Counter;
+import mayonez.*;
+import mayonez.scripts.*;
 
 /**
  * Gives a {@link mayonez.GameObject} a health bar that can be damaged by other objects with a {@link Projectile} component.

@@ -1,13 +1,13 @@
 package mayonez.physics;
 
-import mayonez.GameObject;
-import mayonez.annotations.ExperimentalFeature;
-import mayonez.event.Event;
+import mayonez.*;
+import mayonez.annotations.*;
+import mayonez.event.*;
 
 @ExperimentalFeature
 public class CollisionEvent extends Event {
 
-//    public final GameObject other;
+    //    public final GameObject other;
     public final CollisionEventType type;
     public final boolean trigger;
 

@@ -1,19 +1,14 @@
 package mayonez.engine;
 
-import mayonez.Logger;
-import mayonez.Preferences;
-import mayonez.Scene;
-import mayonez.annotations.EngineType;
-import mayonez.annotations.UsesEngine;
-import mayonez.input.KeyInput;
-import mayonez.input.MouseInput;
+import mayonez.*;
+import mayonez.annotations.*;
+import mayonez.input.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.geom.AffineTransform;
-import java.awt.image.BufferStrategy;
+import java.awt.event.*;
+import java.awt.geom.*;
+import java.awt.image.*;
 
 /**
  * The display component for the game.

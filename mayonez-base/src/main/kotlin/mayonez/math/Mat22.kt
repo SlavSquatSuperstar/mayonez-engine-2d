@@ -2,38 +2,28 @@ package mayonez.math
 
 import java.util.*
 
-/**
- * A Mat22 represents a table of numbers with 2 rows and 2 columns.
- */
+/** A Mat22 represents a table of numbers with 2 rows and 2 columns. */
 class Mat22 {
 
-    /**
-     * The element at the first row and first column of the matrix.
-     */
+    /** The element at the first row and first column of the matrix. */
     @JvmField
     var m00: Float
 
-    /**
-     * The element at the first row and second column of the matrix.
-     */
+    /** The element at the first row and second column of the matrix. */
     @JvmField
     var m01: Float
 
-    /**
-     * The element at the second row and first column of the matrix.
-     */
+    /** The element at the second row and first column of the matrix. */
     @JvmField
     var m10: Float
 
-    /**
-     * The element at the second row and second column of the matrix.
-     */
+    /** The element at the second row and second column of the matrix. */
     @JvmField
     var m11: Float
 
     /**
-     * Initialize this matrix from four numbers, from left to right, then top to bottom. The resulting matrix looks like
-     * [[(m00, m01), (m10, m11)]].
+     * Initialize this matrix from four numbers, from left to right, then top
+     * to bottom. The resulting matrix looks like [[(m00, m01), (m10, m11)]].
      */
     constructor(m00: Float, m01: Float, m10: Float, m11: Float) {
         this.m00 = m00
@@ -43,13 +33,12 @@ class Mat22 {
     }
 
     /**
-     * Initialize this matrix from two column vectors. Useful for storing linear transformations.
+     * Initialize this matrix from two column vectors. Useful for storing
+     * linear transformations.
      */
     constructor(col1: Vec2, col2: Vec2) : this(col1.x, col2.x, col1.y, col2.y)
 
-    /**
-     * Initialize this matrix to the identity matrix, [(1, 0), (0, 1)]
-     */
+    /** Initialize this matrix to the identity matrix, [(1, 0), (0, 1)] */
     constructor() : this(1f, 0f, 0f, 1f)
 
     /**
@@ -69,7 +58,8 @@ class Mat22 {
     // Matrix Elements
 
     /**
-     * Returns the matrix element located at the given row and column. Note: Indices start from 0.
+     * Returns the matrix element located at the given row and column. Note:
+     * Indices start from 0.
      *
      * @param row the vertical position of the element (top to bottom)
      * @param col the horizontal position of the element (left to right)
@@ -152,8 +142,9 @@ class Mat22 {
     operator fun times(v: Vec2): Vec2 = Vec2(m00 * v.x + m01 * v.y, m10 * v.x + m11 * v.y)
 
     /**
-     * Multiplies this matrix by another. The result is the same as applying the other matrix and then applying this one.
-     * Note: Matrix multiplication is generally not commutative.
+     * Multiplies this matrix by another. The result is the same as applying
+     * the other matrix and then applying this one. Note: Matrix multiplication
+     * is generally not commutative.
      *
      * @param m a 2x2 matrix
      * @return the matrix product
@@ -184,7 +175,8 @@ class Mat22 {
     }
 
     /**
-     * A string representation of this matrix, in the form [[(m00, m01), (m10, m11)]]
+     * A string representation of this matrix, in the form [[(m00, m01), (m10,
+     * m11)]]
      */
     override fun toString(): String = "[${row(1)}, ${row(2)}]"
 

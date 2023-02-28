@@ -2,22 +2,19 @@ package mayonez;
 
 import mayonez.graphics.Color;
 import mayonez.graphics.*;
-import mayonez.graphics.renderer.DebugRenderer;
-import mayonez.graphics.renderer.GLDefaultRenderer;
-import mayonez.graphics.renderer.JDefaultRenderer;
-import mayonez.graphics.renderer.SceneRenderer;
-import mayonez.graphics.sprites.Sprite;
-import mayonez.io.image.Texture;
+import mayonez.graphics.camera.*;
+import mayonez.graphics.renderer.*;
+import mayonez.graphics.sprites.*;
+import mayonez.io.image.*;
 import mayonez.math.Random;
-import mayonez.math.Vec2;
-import mayonez.physics.PhysicsWorld;
-import mayonez.util.StringUtils;
+import mayonez.math.*;
+import mayonez.physics.*;
+import mayonez.util.*;
 
 import java.awt.*;
 import java.util.List;
 import java.util.Queue;
 import java.util.*;
-import java.util.function.Consumer;
 
 /**
  * A collection of {@link GameObject}s representing an in-game world.
@@ -45,7 +42,7 @@ public abstract class Scene {
 
     // Scene State
 //    private final Consumer<GameObject> addObject, removeObject;
-    private final Queue<SceneChange> changesToScene; // Use a separate list to avoid concurrent exceptions
+    private final Queue<Runnable> changesToScene; // Use a separate list to avoid concurrent exceptions
     private SceneState state; // if paused or running
 
     /**
@@ -141,7 +138,7 @@ public abstract class Scene {
 
     private void processSceneChanges() {
         // Remove destroyed objects or add new
-        while (!changesToScene.isEmpty()) changesToScene.poll().change();
+        while (!changesToScene.isEmpty()) changesToScene.poll().run();
     }
 
     /**
@@ -210,8 +207,7 @@ public abstract class Scene {
     public final void addObject(GameObject obj) {
         if (obj == null) return;
         if (isRunning()) {
-            var addObjectLater = new SceneChange(obj, this::addObjectToRunningScene);
-            changesToScene.offer(addObjectLater); // Dynamic add: add to scene and layers in next frame
+            changesToScene.offer(() -> this.addObjectToRunningScene(obj)); // Dynamic add: add to scene and layers in next frame
         } else {
             addObjectToStoppedScene(obj);
         }
@@ -238,11 +234,10 @@ public abstract class Scene {
      */
     public final void removeObject(GameObject obj) {
         if (obj == null) return;
-        var removeObjectLater = new SceneChange(obj, this::removeObjectFromScene);
-        changesToScene.offer(removeObjectLater);
+        changesToScene.offer(() -> this.removeObjectFromSceneLayers(obj));
     }
 
-    private void removeObjectFromScene(GameObject o) {
+    private void removeObjectFromSceneLayers(GameObject o) {
         objects.remove(o);
         renderer.removeObject(o);
         physics.removeObject(o);
@@ -408,21 +403,8 @@ public abstract class Scene {
         return String.format(
                 "%s [ID = %d] (%s)",
                 name, sceneID,
-                StringUtils.getClassName(this, "Scene")
+                StringUtils.getObjectClassName(this)
         );
-    }
-
-    // Helper Class
-
-    /**
-     * Allows objects to be dynamically added and removed from the scene.
-     *
-     * @author SlavSquatSuperstar
-     */
-    private record SceneChange(GameObject obj, Consumer<GameObject> func) {
-        public void change() {
-            func.accept(obj);
-        }
     }
 
 }

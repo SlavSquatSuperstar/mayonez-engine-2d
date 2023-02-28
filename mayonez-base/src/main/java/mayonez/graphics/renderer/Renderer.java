@@ -1,7 +1,7 @@
 package mayonez.graphics.renderer;
 
-import mayonez.SceneManager;
-import mayonez.graphics.Camera;
+import mayonez.*;
+import mayonez.graphics.camera.*;
 
 import java.awt.*;
 

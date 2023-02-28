@@ -3,27 +3,28 @@ package mayonez.math
 import kotlin.math.*
 
 /**
- * A library of common math operations designed to work with float values but to avoid float imprecision.
- * A supplement and alternative to the methods found in [java.lang.Math].
+ * A library of common math operations designed to work with float values
+ * but to avoid float imprecision. A supplement and alternative to the
+ * methods found in [java.lang.Math].
  *
  * @author SlavSquatSuperstar
  */
 object FloatMath {
 
     /**
-     * The maximum difference two floats can have to still be considered equal by the engine (equal to 0.000001).
+     * The maximum difference two floats can have to still be considered equal
+     * by the engine (equal to 0.000001).
      */
     const val FLOAT_EPSILON = 1e-6f
 
-    /**
-     * The number π (pi) in float precision.
-     */
+    /** The number π (pi) in float precision. */
     const val PI = 3.1415927f
 
     // Comparison Methods
 
     /**
-     * Determines whether two floats are approximately equal within 6 decimal places.
+     * Determines whether two floats are approximately equal within 6 decimal
+     * places.
      *
      * @param num1 a floating-point number
      * @param num2 another floating-point number
@@ -33,10 +34,11 @@ object FloatMath {
     fun equals(num1: Float, num2: Float): Boolean = equals(num1, num2, FLOAT_EPSILON)
 
     /**
-     * Determines whether two floats are approximately equal within a given error.
+     * Determines whether two floats are approximately equal within a given
+     * error.
      *
-     * @param num1  a floating-point
-     * @param num2  another floating-point number
+     * @param num1 a floating-point
+     * @param num2 another floating-point number
      * @param error the max difference between the two numbers
      * @return if they are equal within error
      */
@@ -66,20 +68,20 @@ object FloatMath {
     // Pythagorean Theorem
 
     /**
-     * Calculates the length of the hypotenuse of a right triangle from two legs (or the diagonal of a rectangle from
-     * two sides), equal to √(a^2 + b^2).
+     * Calculates the length of the hypotenuse of a right triangle from two
+     * legs (or the diagonal of a rectangle from two sides), equal to √(a^2 +
+     * b^2).
      *
      * @param a the length of the first leg
      * @param b the length of the second leg
-     *
      * @return the length of the hypotenuse
      */
     @JvmStatic
     fun hypot(a: Float, b: Float): Float = sqrt(hypotSq(a, b))
 
     /**
-     * Calculates the length of the diagonal of an n-dimensional figure with perpendicular edges (rectangle, cuboid,
-     * hyper-cuboid, etc.).
+     * Calculates the length of the diagonal of an n-dimensional figure with
+     * perpendicular edges (rectangle, cuboid, hyper-cuboid, etc.).
      *
      * @param sides the lengths of the figure's sides
      * @return the hypotenuse (pythagorean theorem) in n-dimensions
@@ -88,20 +90,20 @@ object FloatMath {
     fun hypot(vararg sides: Float): Float = sqrt(hypotSq(*sides))
 
     /**
-     * Calculates the length squared of the hypotenuse of a right triangle from two legs (or the diagonal of a rectangle
-     * from two sides), equal to a^2 + b^2.
+     * Calculates the length squared of the hypotenuse of a right triangle from
+     * two legs (or the diagonal of a rectangle from two sides), equal to a^2 +
+     * b^2.
      *
      * @param a the length of the first leg
      * @param b the length of the second leg
-     *
      * @return the length of the hypotenuse squared
      */
     @JvmStatic
     fun hypotSq(a: Float, b: Float): Float = (a * a) + (b * b)
 
     /**
-     * Calculates the length squared of the diagonal of an n-dimensional figure with perpendicular edges (rectangle,
-     * cuboid, hyper-cuboid, etc.).
+     * Calculates the length squared of the diagonal of an n-dimensional figure
+     * with perpendicular edges (rectangle, cuboid, hyper-cuboid, etc.).
      *
      * @param sides the lengths of the figure's sides
      * @return the diagonal in n-dimensions, squared
@@ -112,10 +114,11 @@ object FloatMath {
     }
 
     /**
-     * Calculates the length of a leg of a right triangle from the hypoteneuse and the other leg.
+     * Calculates the length of a leg of a right triangle from the hypoteneuse
+     * and the other leg.
      *
      * @param hypot the length of the hypotenuse
-     * @param leg   the length of a leg
+     * @param leg the length of a leg
      * @return the length of the other leg
      */
     @JvmStatic
@@ -175,19 +178,20 @@ object FloatMath {
      * Restricts a float's value within a provided range.
      *
      * @param value a float
-     * @param min   the lower bound, inclusive
-     * @param max   the upper bound, inclusive
+     * @param min the lower bound, inclusive
+     * @param max the upper bound, inclusive
      * @return a number within the bounds
      */
     @JvmStatic
     fun clamp(value: Float, min: Float, max: Float): Float = Interval(min, max).clamp(value)
 
     /**
-     * Checks whether a number is within a provided range, including the bounds.
+     * Checks whether a number is within a provided range, including the
+     * bounds.
      *
      * @param value a number
-     * @param min   the lower bound, inclusive
-     * @param max   the upper bound, inclusive
+     * @param min the lower bound, inclusive
+     * @param max the upper bound, inclusive
      * @return if the value is within range
      */
     @JvmStatic
@@ -198,9 +202,8 @@ object FloatMath {
     /**
      * Rounds up the given number according to the specified precision.
      *
-     * @param value         a floating-point number
+     * @param value a floating-point number
      * @param decimalPlaces the number of decimal places to round
-     *
      * @return the rounded number
      */
     @JvmStatic
@@ -212,9 +215,8 @@ object FloatMath {
     /**
      * Rounds down the given number according to the specified precision.
      *
-     * @param value         a floating-point number
+     * @param value a floating-point number
      * @param decimalPlaces the number of decimal places to round
-     *
      * @return the truncated number
      */
     @JvmStatic

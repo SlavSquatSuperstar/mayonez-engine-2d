@@ -1,17 +1,14 @@
 package mayonez.graphics.sprites;
 
-import mayonez.DebugDraw;
-import mayonez.GameObject;
-import mayonez.annotations.EngineType;
-import mayonez.annotations.UsesEngine;
-import mayonez.graphics.JRenderable;
-import mayonez.io.image.JTexture;
-import mayonez.math.shapes.Rectangle;
+import mayonez.*;
+import mayonez.annotations.*;
 import mayonez.graphics.Color;
-import mayonez.graphics.Colors;
+import mayonez.graphics.*;
+import mayonez.io.image.*;
+import mayonez.math.shapes.Rectangle;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
+import java.awt.image.*;
 
 /**
  * A component that draws an image at a {@link GameObject}'s position using the AWT engine.

@@ -1,13 +1,12 @@
 package mayonez
 
-import mayonez.annotations.Mutating
-import mayonez.math.Angle
-import mayonez.math.FloatMath
-import mayonez.math.Vec2
+import mayonez.annotations.*
+import mayonez.math.*
 import java.util.*
 
 /**
- * Stores the position, rotation and scale of a GameObject and provides additional methods.
+ * Stores the position, rotation and scale of a GameObject and provides
+ * additional methods.
  *
  * @author SlavSquatSuperstar
  */
@@ -40,9 +39,7 @@ class Transform(
 
     // Transform Properties
 
-    /**
-     * Where the object is located in the scene.
-     */
+    /** Where the object is located in the scene. */
     var position: Vec2 = position
         set(position) {
             field.set(position)
@@ -51,18 +48,14 @@ class Transform(
     // Internal field
     private var angle: Angle = Angle.createDegrees(rotation)
 
-    /**
-     * The angle the object is oriented, in degrees.
-     */
+    /** The angle the object is oriented, in degrees. */
     var rotation: Float
         get() = angle.degrees
         set(rotation) {
             angle = Angle.createDegrees(rotation)
         }
 
-    /**
-     * How large the object is along each of its axes.
-     */
+    /** How large the object is along each of its axes. */
     var scale: Vec2 = scale
         set(scale) {
             field.set(scale)
@@ -101,7 +94,8 @@ class Transform(
     }
 
     /**
-     * Stretches the parent object and all its components by the given factors along the x and y axes.
+     * Stretches the parent object and all its components by the given factors
+     * along the x and y axes.
      *
      * @param factor the new x and y size compared to the current dimensions
      */
@@ -111,7 +105,8 @@ class Transform(
     }
 
     /**
-     * Applies this transform to another transform, combining the position, rotation, and scale of both.
+     * Applies this transform to another transform, combining the position,
+     * rotation, and scale of both.
      *
      * @param other another transform
      * @return the combined transformation, or copy if other is null
@@ -127,7 +122,8 @@ class Transform(
     // Space Transform Methods
 
     /**
-     * Returns the positive x-axis, or the vector (1, 0), in this transform's local space.
+     * Returns the positive x-axis, or the vector (1, 0), in this transform's
+     * local space.
      *
      * @return the local x-axis
      */
@@ -135,7 +131,8 @@ class Transform(
         get() = angle.rotation * Vec2(1f, 0f)
 
     /**
-     * Returns the positive y-axis, or the vector (0, 1), in this transform's local space.
+     * Returns the positive y-axis, or the vector (0, 1), in this transform's
+     * local space.
      *
      * @return the local y-axis
      */
@@ -143,8 +140,8 @@ class Transform(
         get() = angle.rotation * Vec2(0f, 1f)
 
     /**
-     * Transforms a point from world space to the object's local space, with this Transform's position serving as the
-     * origin.
+     * Transforms a point from world space to the object's local space, with
+     * this Transform's position serving as the origin.
      *
      * @param world a 2D point in the world
      * @return the localized point
@@ -152,8 +149,8 @@ class Transform(
     fun toLocal(world: Vec2): Vec2 = ((world - position) / scale).rotate(-rotation)
 
     /**
-     * Transforms a point from the object's local space to world space, with this Transform's position serving as the *
-     * origin.
+     * Transforms a point from the object's local space to world space, with
+     * this Transform's position serving as the * origin.
      *
      * @param local a localized 2D point
      * @return the point in the world
@@ -184,7 +181,7 @@ class Transform(
         }
     }
 
-    override fun hashCode(): Int = Objects.hash(position, rotation, scale);
+    override fun hashCode(): Int = Objects.hash(position, rotation, scale)
 
 //    override fun equals(other: Any?): Boolean {
 //        return if (other is Transform) {

@@ -1,7 +1,7 @@
 package mayonez.scripts.movement;
 
-import mayonez.input.KeyInput;
-import mayonez.math.Vec2;
+import mayonez.input.*;
+import mayonez.math.*;
 
 /**
  * Allows objects to be rotated with keyboard controls.

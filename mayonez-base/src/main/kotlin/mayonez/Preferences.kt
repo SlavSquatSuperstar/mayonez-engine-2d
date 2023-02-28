@@ -1,10 +1,11 @@
 package mayonez
 
-import mayonez.io.Assets
-import mayonez.util.Record
+import mayonez.io.*
+import mayonez.util.*
 
 /**
- * A collection of settings and parameters for various parts of the game engine.
+ * A collection of settings and parameters for various parts of the game
+ * engine.
  *
  * @author SlavSquatSuperstar
  */

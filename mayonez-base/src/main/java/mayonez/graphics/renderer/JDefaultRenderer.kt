@@ -3,7 +3,7 @@ package mayonez.graphics.renderer
 import mayonez.*
 import mayonez.annotations.EngineType
 import mayonez.annotations.UsesEngine
-import mayonez.graphics.Camera
+import mayonez.graphics.camera.Camera
 import mayonez.graphics.DebugShape
 import mayonez.graphics.JRenderable
 import mayonez.graphics.sprites.Sprite
@@ -60,14 +60,14 @@ class JDefaultRenderer : SceneRenderer, DebugRenderer {
     }
 
     override fun addObject(obj: GameObject) {
-        obj.components.forEach { c: Component ->
-            if (c is JRenderable) objects.add(c)
+        obj.components.forEach { comp ->
+            if (comp is JRenderable) objects.add(comp)
         }
     }
 
     override fun removeObject(obj: GameObject) {
-        obj.components.forEach { c: Component ->
-            if (c is JRenderable) objects.remove(c)
+        obj.components.forEach { comp ->
+            if (comp is JRenderable) objects.remove(comp)
         }
     }
 
@@ -133,19 +133,19 @@ class JDefaultRenderer : SceneRenderer, DebugRenderer {
     /** Sort drawable objects into render "batches". */
     private fun createBatches() {
         batches.clear()
-        objects.forEach { r: JRenderable -> // Add objects
-            if (r.isEnabled) batches.add(r)
+        objects.forEach { obj -> // Add objects
+            if (obj.isEnabled) batches.add(obj)
         }
         if (shapes.isNotEmpty()) { // Add shapes
-            shapes.forEach { s: DebugShape -> batches.add(s) }
+            shapes.forEach(batches::add)
             shapes.clear()
         }
-        batches.sortBy { r: JRenderable -> r.zIndex } // Sort everything by zIndex
+        batches.sortBy(JRenderable::getZIndex)
     }
 
     private fun drawBatches(g2: Graphics2D) {
         g2.stroke = stroke
-        batches.forEach { r: JRenderable -> r.render(g2) } // Draw everything
+        batches.forEach { obj -> obj.render(g2) }
     }
 
     // Stop Renderer Methods

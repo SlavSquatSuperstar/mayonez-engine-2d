@@ -1,14 +1,9 @@
-package mayonez.graphics
+package mayonez.graphics.camera
 
-import mayonez.SceneManager.currentScene
-import mayonez.annotations.EngineType
-import mayonez.annotations.UsesEngine
-import mayonez.math.FloatMath.toRadians
-import mayonez.math.Vec2
-import org.joml.Matrix4f
-import org.joml.Quaternionf
-import org.joml.Vector3f
-import org.joml.Vector4f
+import mayonez.*
+import mayonez.annotations.*
+import mayonez.math.*
+import org.joml.*
 
 /**
  * A scene camera for the GL engine.
@@ -70,9 +65,9 @@ class GLCamera(screenSize: Vec2?, sceneScale: Float) : Camera(screenSize, sceneS
     }
 
     private fun rotateViewMatrix() {
-        val cameraPos = position.mul(currentScene.scale)
+        val cameraPos = position.mul(SceneManager.currentScene.scale)
         val rotation = Quaternionf()
-        rotation.rotationAxis(toRadians(-getRotation()), 0f, 0f, 1f)
+        rotation.rotationAxis(FloatMath.toRadians(-getRotation()), 0f, 0f, 1f)
         viewMatrix.rotateAround(rotation, cameraPos.x, cameraPos.y, 0f)
     }
 

@@ -1,8 +1,7 @@
-package mayonez.graphics;
+package mayonez.graphics.camera;
 
-import mayonez.annotations.EngineType;
-import mayonez.annotations.UsesEngine;
-import mayonez.math.Vec2;
+import mayonez.annotations.*;
+import mayonez.math.*;
 
 /**
  * A scene camera for the AWT engine.

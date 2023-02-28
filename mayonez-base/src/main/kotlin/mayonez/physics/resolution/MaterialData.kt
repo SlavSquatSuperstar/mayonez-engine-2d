@@ -1,6 +1,6 @@
 package mayonez.physics.resolution
 
-import mayonez.physics.PhysicsMaterial
+import mayonez.physics.*
 
 /**
  * A data structure that stores the physics material properties of two

@@ -1,12 +1,8 @@
 package mayonez.engine;
 
-import mayonez.Logger;
-import mayonez.Mayonez;
-import mayonez.Scene;
-import mayonez.annotations.EngineType;
-import mayonez.annotations.UsesEngine;
-import mayonez.input.KeyInput;
-import mayonez.input.MouseInput;
+import mayonez.*;
+import mayonez.annotations.*;
+import mayonez.input.*;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;

@@ -1,8 +1,7 @@
 package mayonez.engine;
 
-import mayonez.Scene;
-import mayonez.input.KeyInput;
-import mayonez.input.MouseInput;
+import mayonez.*;
+import mayonez.input.*;
 
 /**
  * An interface containing common functionality for all game windows.

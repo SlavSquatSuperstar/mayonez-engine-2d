@@ -1,14 +1,14 @@
 package mayonez;
 
-import mayonez.graphics.sprites.Sprite;
-import mayonez.math.Vec2;
-import mayonez.physics.CollisionEventType;
-import mayonez.physics.colliders.Collider;
-import mayonez.scripts.movement.MovementScript;
-import mayonez.util.StringUtils;
+import mayonez.graphics.sprites.*;
+import mayonez.math.*;
+import mayonez.physics.*;
+import mayonez.physics.colliders.*;
+import mayonez.scripts.movement.*;
+import mayonez.util.*;
 
 import java.util.*;
-import java.util.stream.Collectors;
+import java.util.stream.*;
 
 /**
  * An object or entity in the game that can be given an appearance and behavior through {@link Component}s.
@@ -93,7 +93,7 @@ public class GameObject {
             if (c.isEnabled()) c.update(dt);
         });
         onUserUpdate(dt);
-//        while (!changesToObject.isEmpty()) changesToObject.poll().onReceive();
+//        while (!changesToObject.isEmpty()) changesToObject.poll().run();
 //        transform.set(oldXf); // Reset transform
     }
 
@@ -182,7 +182,10 @@ public class GameObject {
      */
     @SuppressWarnings({"unchecked"})
     public <T extends Component> List<T> getComponents(Class<T> cls) {
-        return components.stream().filter(c -> cls != null && cls.isInstance(c)).map(c -> (T) c).collect(Collectors.toList());
+        return components.stream()
+                .filter(c -> cls != null && cls.isInstance(c))
+                .map(c -> (T) c)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -208,9 +211,9 @@ public class GameObject {
     }
 
     private static List<Class<?>> filterComponentSubclasses(Class<?>[] order) {
-        return Arrays.stream(order).filter(
-                cls -> (cls != null) && Component.class.isAssignableFrom(cls)
-        ).toList();
+        return Arrays.stream(order)
+                .filter(cls -> (cls != null) && Component.class.isAssignableFrom(cls))
+                .toList();
     }
 
     private int getComponentUpdateOrder(Class<?> componentCls) {
@@ -392,7 +395,7 @@ public class GameObject {
         // Use GameObject for class name if anonymous instance
         return String.format(
                 "%s (%s)",
-                getNameAndID(), StringUtils.getClassName(this, "GameObject")
+                getNameAndID(), StringUtils.getObjectClassName(this)
         );
     }
 

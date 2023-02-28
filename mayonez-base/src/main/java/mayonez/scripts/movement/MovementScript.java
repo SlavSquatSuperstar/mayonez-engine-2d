@@ -1,9 +1,8 @@
 package mayonez.scripts.movement;
 
-import mayonez.Logger;
-import mayonez.Script;
-import mayonez.math.Vec2;
-import mayonez.physics.Rigidbody;
+import mayonez.*;
+import mayonez.math.*;
+import mayonez.physics.*;
 
 /**
  * A base class contains utility methods for scripts using the input devices.

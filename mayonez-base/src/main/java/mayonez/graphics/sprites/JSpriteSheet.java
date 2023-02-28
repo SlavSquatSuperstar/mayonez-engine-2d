@@ -1,13 +1,11 @@
 package mayonez.graphics.sprites;
 
-import mayonez.annotations.EngineType;
-import mayonez.annotations.UsesEngine;
-import mayonez.io.Assets;
-import mayonez.io.image.JTexture;
-import mayonez.math.Vec2;
+import mayonez.annotations.*;
+import mayonez.io.*;
+import mayonez.io.image.*;
+import mayonez.math.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Creates multiple {@link JSprite} instances from a larger image.

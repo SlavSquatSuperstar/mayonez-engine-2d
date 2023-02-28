@@ -1,8 +1,7 @@
 package mayonez.scripts.combat;
 
-import mayonez.GameObject;
-import mayonez.Script;
-import mayonez.scripts.Timer;
+import mayonez.*;
+import mayonez.scripts.*;
 
 /**
  * Allows objects to spawn projectiles repeatedly. This script is abstract and any instances must define

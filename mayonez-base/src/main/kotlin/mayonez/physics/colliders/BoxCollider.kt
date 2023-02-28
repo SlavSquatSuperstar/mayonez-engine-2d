@@ -1,7 +1,7 @@
 package mayonez.physics.colliders
 
-import mayonez.math.Vec2
-import mayonez.math.shapes.Rectangle
+import mayonez.math.*
+import mayonez.math.shapes.*
 
 /**
  * An oriented rectangle defined by a width and height centered around the
@@ -10,6 +10,4 @@ import mayonez.math.shapes.Rectangle
  * @constructor Constructs a box with the given dimensions
  * @author SlavSquatSuperstar
  */
-class BoxCollider(val size: Vec2) : PolygonCollider(Rectangle(Vec2(), size)) {
-
-}
+class BoxCollider(val size: Vec2) : PolygonCollider(Rectangle(Vec2(), size))

@@ -1,11 +1,10 @@
 package mayonez.io.image;
 
-import mayonez.Logger;
-import mayonez.annotations.EngineType;
-import mayonez.annotations.UsesEngine;
-import mayonez.io.IOUtils;
-import mayonez.math.Vec2;
-import mayonez.math.shapes.Rectangle;
+import mayonez.*;
+import mayonez.annotations.*;
+import mayonez.io.*;
+import mayonez.math.*;
+import mayonez.math.shapes.*;
 import org.lwjgl.BufferUtils;
 
 import java.io.IOException;

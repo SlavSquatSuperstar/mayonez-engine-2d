@@ -1,7 +1,7 @@
 package mayonez.physics.resolution
 
-import mayonez.math.Vec2
-import mayonez.math.shapes.Shape
+import mayonez.math.*
+import mayonez.math.shapes.*
 
 /**
  * Stores information about a collision between two objects, including

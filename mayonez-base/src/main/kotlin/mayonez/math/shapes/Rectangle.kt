@@ -1,7 +1,6 @@
 package mayonez.math.shapes
 
-import mayonez.math.FloatMath
-import mayonez.math.Vec2
+import mayonez.math.*
 
 /**
  * A rotatable box shape (OBB) defined by a width and height. Rectangles

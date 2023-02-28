@@ -1,14 +1,9 @@
 package mayonez.graphics.sprites;
 
-import mayonez.Component;
-import mayonez.Mayonez;
-import mayonez.Transform;
-import mayonez.graphics.Color;
-import mayonez.graphics.Colors;
-import mayonez.io.Assets;
-import mayonez.io.image.GLTexture;
-import mayonez.io.image.JTexture;
-import mayonez.io.image.Texture;
+import mayonez.*;
+import mayonez.graphics.*;
+import mayonez.io.*;
+import mayonez.io.image.*;
 
 /**
  * A visual representation of a GameObject.

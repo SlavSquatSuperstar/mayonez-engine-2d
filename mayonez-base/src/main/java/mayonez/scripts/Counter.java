@@ -1,7 +1,7 @@
 package mayonez.scripts;
 
-import mayonez.Script;
-import mayonez.math.Interval;
+import mayonez.*;
+import mayonez.math.*;
 
 /**
  * A script that tracks a quantity, manually increments it, and can be reset.

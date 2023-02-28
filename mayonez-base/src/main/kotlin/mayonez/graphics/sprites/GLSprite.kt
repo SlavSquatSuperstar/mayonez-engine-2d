@@ -1,14 +1,12 @@
 package mayonez.graphics.sprites
 
-import mayonez.GameObject
-import mayonez.SceneManager
-import mayonez.annotations.EngineType
-import mayonez.annotations.UsesEngine
+import mayonez.*
+import mayonez.annotations.*
 import mayonez.graphics.*
-import mayonez.io.image.GLTexture
-import mayonez.math.Vec2
-import mayonez.math.shapes.Rectangle
-import mayonez.util.GLColor
+import mayonez.io.image.*
+import mayonez.math.*
+import mayonez.math.shapes.*
+import mayonez.util.*
 
 /**
  * A component that draws an image at a [GameObject]'s position using the

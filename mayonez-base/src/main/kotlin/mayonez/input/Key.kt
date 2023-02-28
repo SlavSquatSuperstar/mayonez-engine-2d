@@ -1,8 +1,8 @@
 package mayonez.input
 
+import mayonez.util.*
 import org.lwjgl.glfw.GLFW
-import mayonez.util.StringUtils
-import java.awt.event.KeyEvent
+import java.awt.event.*
 
 /**
  * Stores keyboard codes commonly used in this program under a user-friendly key name.
@@ -83,7 +83,7 @@ enum class Key(internal val awtCode: Int, internal val glCode: Int, private val 
      * Returns the key name in title case and replaces underscores with spaces.
      */
     override fun toString(): String {
-        return keyName ?: StringUtils.capitalizeWords(name.replace('_', ' '))
+        return keyName ?: StringUtils.capitalizeAllWords(name.replace('_', ' '))
     }
 
 }

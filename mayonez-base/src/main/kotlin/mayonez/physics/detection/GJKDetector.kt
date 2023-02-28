@@ -1,7 +1,7 @@
 package mayonez.physics.detection
 
-import mayonez.math.Vec2
-import mayonez.math.shapes.Shape
+import mayonez.math.*
+import mayonez.math.shapes.*
 
 /**
  * Detects if two shapes are colliding and finds the Minkowski sum using

@@ -1,7 +1,7 @@
 package mayonez.io.image;
 
-import mayonez.io.Asset;
-import mayonez.math.Vec2;
+import mayonez.io.*;
+import mayonez.math.*;
 
 /**
  * An image file used by this program.

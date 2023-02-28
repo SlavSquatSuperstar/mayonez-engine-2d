@@ -1,15 +1,17 @@
 package mayonez.event;
 
-import mayonez.annotations.ExperimentalFeature;
+import mayonez.annotations.*;
 
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 
 @ExperimentalFeature
 public class KeyboardEvent extends Event {
 
     private boolean keyDown;
     private int action;
-    private int keyCode, scancode, mods;
+    private final int keyCode;
+    private int scancode;
+    private final int mods;
 
     /**
      * AWT constructor for a KeyboardEvent.

@@ -1,11 +1,10 @@
 package mayonez.io.text;
 
-import mayonez.math.FloatMath;
+import mayonez.math.*;
 import mayonez.util.Record;
-import mayonez.util.StringUtils;
+import mayonez.util.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * A comma-separated value (.csv) file that stores tabular data.

@@ -1,19 +1,16 @@
 package mayonez.io.image;
 
-import mayonez.Logger;
-import mayonez.Transform;
-import mayonez.annotations.EngineType;
-import mayonez.annotations.UsesEngine;
-import mayonez.math.FloatMath;
-import mayonez.math.Vec2;
+import mayonez.*;
+import mayonez.annotations.*;
+import mayonez.math.*;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.geom.AffineTransform;
-import java.awt.image.BufferedImage;
+import java.awt.geom.*;
+import java.awt.image.*;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * An image file used by the AWT engine.

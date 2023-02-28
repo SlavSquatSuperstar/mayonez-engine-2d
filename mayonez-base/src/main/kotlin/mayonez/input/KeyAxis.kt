@@ -1,6 +1,6 @@
 package mayonez.input
 
-import mayonez.util.StringUtils
+import mayonez.util.*
 
 /**
  * Stores two keys intended to perform opposite actions and produces a value based on which are pressed.
@@ -31,6 +31,6 @@ internal enum class KeyAxis(
         return negVal + posVal
     }
 
-    override fun toString(): String = StringUtils.capitalizeWords(name.replace('_', ' '))
+    override fun toString(): String = StringUtils.capitalizeAllWords(name.replace('_', ' '))
 
 }

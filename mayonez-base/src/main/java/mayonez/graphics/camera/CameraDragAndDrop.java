@@ -1,8 +1,8 @@
-package mayonez.graphics;
+package mayonez.graphics.camera;
 
-import mayonez.input.MouseInput;
-import mayonez.math.Vec2;
-import mayonez.scripts.movement.DragAndDrop;
+import mayonez.input.*;
+import mayonez.math.*;
+import mayonez.scripts.movement.*;
 
 /**
  * Allows the scene camera to be moved by dragging the mouse and

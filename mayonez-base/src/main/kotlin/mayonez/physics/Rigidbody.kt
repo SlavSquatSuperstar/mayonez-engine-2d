@@ -1,11 +1,10 @@
 package mayonez.physics
 
-import mayonez.Component
-import mayonez.math.FloatMath
+import mayonez.*
+import mayonez.math.*
 import mayonez.math.FloatMath.clamp
-import mayonez.math.Vec2
-import mayonez.physics.colliders.Collider
-import kotlin.math.abs
+import mayonez.physics.colliders.*
+import kotlin.math.*
 
 /**
  * A solid, massive object that responds to forces and collisions. Rigid

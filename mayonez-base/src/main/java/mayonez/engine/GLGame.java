@@ -1,8 +1,7 @@
 package mayonez.engine;
 
-import mayonez.Preferences;
-import mayonez.annotations.EngineType;
-import mayonez.annotations.UsesEngine;
+import mayonez.*;
+import mayonez.annotations.*;
 
 import static org.lwjgl.glfw.GLFW.glfwGetTime;
 

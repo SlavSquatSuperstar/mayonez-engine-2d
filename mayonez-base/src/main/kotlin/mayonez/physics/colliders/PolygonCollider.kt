@@ -1,7 +1,7 @@
 package mayonez.physics.colliders
 
-import mayonez.math.Vec2
-import mayonez.math.shapes.Polygon
+import mayonez.math.*
+import mayonez.math.shapes.*
 
 /**
  * A convex polygon made up of vertices connected by straight edges and

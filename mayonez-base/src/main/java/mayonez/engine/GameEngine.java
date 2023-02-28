@@ -1,12 +1,8 @@
 package mayonez.engine;
 
-import mayonez.Logger;
-import mayonez.Mayonez;
-import mayonez.Scene;
-import mayonez.SceneManager;
-import mayonez.input.KeyInput;
-import mayonez.input.MouseInput;
-import mayonez.math.FloatMath;
+import mayonez.*;
+import mayonez.input.*;
+import mayonez.math.*;
 
 /**
  * The application that contains the engine's core loop.

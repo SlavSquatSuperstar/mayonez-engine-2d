@@ -1,12 +1,9 @@
 package mayonez.physics.detection
 
-import mayonez.math.FloatMath
-import mayonez.math.Vec2
-import mayonez.physics.resolution.Manifold
-import mayonez.math.shapes.Edge
-import mayonez.math.shapes.Polygon
-import mayonez.math.shapes.Shape
-import kotlin.math.abs
+import mayonez.math.*
+import mayonez.math.shapes.*
+import mayonez.physics.resolution.*
+import kotlin.math.*
 
 /**
  * Describes how far and in which direction two colliding shapes are

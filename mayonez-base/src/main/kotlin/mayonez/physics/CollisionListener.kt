@@ -1,21 +1,18 @@
 package mayonez.physics
 
-import mayonez.physics.colliders.Collider
-import mayonez.physics.resolution.CollisionSolver
-import mayonez.physics.resolution.Manifold
+import mayonez.physics.colliders.*
+import mayonez.physics.resolution.*
 
 internal class CollisionListener(
     @JvmField val c1: Collider,
     @JvmField val c2: Collider
 ) {
-    lateinit var solver: CollisionSolver
-
     private var colliding: Boolean = false // was colliding last frame
     private var broadphase: Boolean = false // bounding boxes are colliding
-    private var trigger: Boolean = false;
+    private var trigger: Boolean = false
 
     fun checkBroadphase(): Boolean {
-        broadphase = Collisions.checkCollision(c1.getMinBounds(), c2.getMinBounds());
+        broadphase = Collisions.checkCollision(c1.getMinBounds(), c2.getMinBounds())
         if (!broadphase) stopCollision() // no longer colliding
         return broadphase
     }

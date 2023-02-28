@@ -1,9 +1,7 @@
 package mayonez.math.shapes
 
-import mayonez.math.FloatMath
-import mayonez.math.Vec2
-import mayonez.math.shapes.PolygonVertices.orderedVertices
-import kotlin.math.abs
+import mayonez.math.*
+import kotlin.math.*
 
 /**
  * A three-sided polygon capable of performing additional operations. A
@@ -106,7 +104,7 @@ class Triangle(v1: Vec2, v2: Vec2, v3: Vec2) :
 
     companion object {
         private fun triangleVertices(v1: Vec2, v2: Vec2, v3: Vec2): Array<Vec2> {
-            return orderedVertices(arrayOf(v1, v2, v3))
+            return PolygonVertices.orderedVertices(arrayOf(v1, v2, v3))
         }
     }
 

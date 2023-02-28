@@ -1,6 +1,6 @@
 package mayonez.physics.detection
 
-import mayonez.math.shapes.Shape
+import mayonez.math.shapes.*
 
 /**
  * Detects whether two shapes are intersecting and calculates the

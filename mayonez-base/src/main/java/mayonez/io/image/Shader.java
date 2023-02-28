@@ -1,11 +1,9 @@
 package mayonez.io.image;
 
-import mayonez.Logger;
-import mayonez.Mayonez;
-import mayonez.annotations.EngineType;
-import mayonez.annotations.UsesEngine;
-import mayonez.graphics.GLCamera;
-import mayonez.io.text.TextAsset;
+import mayonez.*;
+import mayonez.annotations.*;
+import mayonez.graphics.camera.*;
+import mayonez.io.text.*;
 import org.joml.*;
 import org.lwjgl.BufferUtils;
 
@@ -13,7 +11,6 @@ import java.io.IOException;
 
 import static org.lwjgl.opengl.GL11.GL_FALSE;
 import static org.lwjgl.opengl.GL20.*;
-import static org.lwjgl.opengl.GL20.glCreateShader;
 
 /**
  * A compiled OpenGL Shader program (.glsl) that tells the GPU how to draw an image, specifying the colors, brightness,

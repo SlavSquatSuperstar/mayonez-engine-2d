@@ -1,9 +1,7 @@
 package mayonez.physics.colliders
 
-import mayonez.math.Vec2
-import mayonez.math.shapes.BoundingBox
-import mayonez.math.shapes.Ellipse
-import mayonez.math.shapes.Shape
+import mayonez.math.*
+import mayonez.math.shapes.*
 
 /**
  * An oriented ellipse defined by a width and height, or a circle defined

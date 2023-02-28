@@ -3,8 +3,10 @@ package mayonez.util
 import org.json.JSONObject
 
 /**
- * A basic data structure storing information under key-value pairs, similar to objects in many programming languages
- * storing data in fields. Also serves as a wrapper around JSONObject classes from external libraries.
+ * A basic data structure storing information under key-value pairs,
+ * similar to objects in many programming languages storing data in fields.
+ * Also serves as a wrapper around JSONObject classes from external
+ * libraries.
  *
  * @author SlavSquatSuperstar
  */
@@ -12,16 +14,14 @@ import org.json.JSONObject
 // TODO json record subclass because this may be slow?
 open class Record(private val map: MutableMap<String?, Any?>) {
 
-    /**
-     * Creates an empty record with no data.
-     */
+    /** Creates an empty record with no data. */
     constructor() : this(HashMap())
 
     // Copy Methods
 
     /**
-     * Erases all stored data and replaces it with data from another config object, including key-value pairs with
-     * null elements.
+     * Erases all stored data and replaces it with data from another config
+     * object, including key-value pairs with null elements.
      *
      * @param record another record
      */
@@ -31,8 +31,8 @@ open class Record(private val map: MutableMap<String?, Any?>) {
     }
 
     /**
-     * Overwrites or appends key-value pairs with non-null values from another object while preserving other existing
-     * data in this record.
+     * Overwrites or appends key-value pairs with non-null values from another
+     * object while preserving other existing data in this record.
      *
      * @param record another record
      */
@@ -44,12 +44,14 @@ open class Record(private val map: MutableMap<String?, Any?>) {
     // Hash Map Methods
 
     /**
-     * Retrieves the value stored under this key as a Java [Object], or null if it does not exist.
+     * Retrieves the value stored under this key as a Java [Object], or null if
+     * it does not exist.
      */
     operator fun get(key: String?): Any? = map[key]
 
     /**
-     * Retrieves the value stored under this key as a [List], or null if it does not exist.
+     * Retrieves the value stored under this key as a [List], or null if it
+     * does not exist.
      */
     fun getArray(key: String?): List<Any?>? {
         val value = map[key]
@@ -57,19 +59,22 @@ open class Record(private val map: MutableMap<String?, Any?>) {
     }
 
     /**
-     * Retrieves the value stored under this key as a string, or an empty string if it does not exist.
+     * Retrieves the value stored under this key as a string, or an empty
+     * string if it does not exist.
      */
     fun getString(key: String?): String = map[key]?.toString() ?: ""
 
     /**
-     * Retrieves the value stored under this key as a boolean, or false if it does not exist.
+     * Retrieves the value stored under this key as a boolean, or false if it
+     * does not exist.
      */
     fun getBoolean(key: String?): Boolean {
         return getString(key).equals("true", ignoreCase = true) || getString(key).equals("yes", ignoreCase = true)
     }
 
     /**
-     * Retrieves the value stored under this key as an integer, or 0 if it does not exist.
+     * Retrieves the value stored under this key as an integer, or 0 if it does
+     * not exist.
      */
     fun getInt(key: String?): Int {
         val value = map[key] ?: return 0
@@ -82,7 +87,8 @@ open class Record(private val map: MutableMap<String?, Any?>) {
     }
 
     /**
-     * Retrieves the value stored under this key as a float, or 0 if it does not exist.
+     * Retrieves the value stored under this key as a float, or 0 if it does
+     * not exist.
      */
     fun getFloat(key: String?): Float {
         val value = map[key] ?: return 0f
@@ -94,18 +100,14 @@ open class Record(private val map: MutableMap<String?, Any?>) {
         }
     }
 
-    /**
-     * Stores a values under this key, or overwrites if it already exists.
-     */
+    /** Stores a values under this key, or overwrites if it already exists. */
     operator fun set(key: String?, value: Any?) {
         map[key] = value
     }
 
     // Helper Methods
 
-    /**
-     * Deletes all JSON key-value pairs.
-     */
+    /** Deletes all JSON key-value pairs. */
     fun clear() = map.clear()
 
     /**

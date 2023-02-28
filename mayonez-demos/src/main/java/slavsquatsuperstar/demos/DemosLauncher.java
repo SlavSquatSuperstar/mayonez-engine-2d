@@ -3,6 +3,7 @@ package slavsquatsuperstar.demos;
 import mayonez.Mayonez;
 import mayonez.SceneManager;
 import mayonez.input.KeyInput;
+import mayonez.util.OperatingSystem;
 import slavsquatsuperstar.demos.mario.MarioScene;
 import slavsquatsuperstar.demos.physics.SandboxScene;
 import slavsquatsuperstar.demos.physics.PoolBallsScene;
@@ -60,7 +61,11 @@ public class DemosLauncher {
 //            }
 //        });
 
-        // Start Game
+        System.out.println(System.getProperty("os.name"));
+        System.out.println(System.getProperty("file.separator"));
+        System.out.printf("'%s'\n", System.getProperty("line.separator"));
+        System.out.println(OperatingSystem.getCurrentOS());
+
         Mayonez.start(SceneManager.getScene(scenes[0]));
     }
 

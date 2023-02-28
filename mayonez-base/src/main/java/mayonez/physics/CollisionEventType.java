@@ -1,6 +1,6 @@
 package mayonez.physics;
 
-import mayonez.annotations.ExperimentalFeature;
+import mayonez.annotations.*;
 
 @ExperimentalFeature
 public enum CollisionEventType {

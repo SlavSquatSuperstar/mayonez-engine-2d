@@ -1,7 +1,8 @@
 package mayonez.math
 
 /**
- * A library of common math operations designed to work with integers. A supplement to the methods found in [java.lang.Math].
+ * A library of common math operations designed to work with integers. A
+ * supplement to the methods found in [java.lang.Math].
  *
  * @author SlavSquatSuperstar
  */
@@ -43,11 +44,12 @@ object IntMath {
      * Restricts a integer's value within a provided range.
      *
      * @param value a integer
-     * @param min   the lower bound, inclusive
-     * @param max   the upper bound, inclusive
+     * @param min the lower bound, inclusive
+     * @param max the upper bound, inclusive
      * @return a number within the bounds
      */
     @JvmStatic
-    fun clamp(value: Int, min: Int, max: Int): Int = Interval(min.toFloat(), max.toFloat()).clamp(value.toFloat()).toInt()
+    fun clamp(value: Int, min: Int, max: Int): Int =
+        Interval(min.toFloat(), max.toFloat()).clamp(value.toFloat()).toInt()
 
 }

@@ -1,8 +1,8 @@
 package mayonez.input
 
+import mayonez.util.*
 import org.lwjgl.glfw.GLFW
-import mayonez.util.StringUtils
-import java.awt.event.MouseEvent
+import java.awt.event.*
 
 /**
  * Stores mouse button codes commonly used in this program under a user-friendly button name.
@@ -22,7 +22,7 @@ enum class Button(internal val awtCode: Int, internal val glCode: Int) {
 
     // Replace underscores with spaces and convert to title case
     override fun toString(): String {
-        return StringUtils.capitalizeWords(name.replace('_', ' '))
+        return StringUtils.capitalizeAllWords(name.replace('_', ' '))
     }
 
 }

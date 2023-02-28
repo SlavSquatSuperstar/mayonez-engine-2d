@@ -1,6 +1,6 @@
 package mayonez
 
-import mayonez.util.Record
+import mayonez.util.*
 
 /**
  * The default, hardcoded settings for the game engine.

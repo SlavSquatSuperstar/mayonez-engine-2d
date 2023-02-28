@@ -1,14 +1,12 @@
 package mayonez.graphics.renderer
 
-import mayonez.Preferences.maxTextureSlots
-import mayonez.annotations.EngineType
-import mayonez.annotations.UsesEngine
-import mayonez.graphics.GLCamera
-import mayonez.graphics.GLRenderable
-import mayonez.graphics.RenderBatch
-import mayonez.io.Assets.getShader
-import mayonez.io.image.Shader
-import java.awt.Graphics2D
+import mayonez.*
+import mayonez.annotations.*
+import mayonez.graphics.*
+import mayonez.graphics.camera.*
+import mayonez.io.*
+import mayonez.io.image.*
+import java.awt.*
 
 /**
  * Contains methods for uploading sprite and shape data to the GPU for
@@ -24,8 +22,8 @@ abstract class GLRenderer(shaderFile: String) : Renderer {
 
     init {
         batches = ArrayList()
-        shader = getShader(shaderFile)!!
-        textureSlots = IntArray(maxTextureSlots) { it } // ints 0-7
+        shader = Assets.getShader(shaderFile)!!
+        textureSlots = IntArray(Preferences.maxTextureSlots) { it } // ints 0-7
     }
 
     // Renderer Methods
@@ -36,7 +34,7 @@ abstract class GLRenderer(shaderFile: String) : Renderer {
     override fun render(g2: Graphics2D?) {
         preRender()
         rebuffer()
-        batches.forEach { batch: RenderBatch -> batch.drawBatch() }
+        batches.forEach(RenderBatch::drawBatch)
         postRender()
     }
 
@@ -48,10 +46,10 @@ abstract class GLRenderer(shaderFile: String) : Renderer {
 
     /** Sort all image data into batches. */
     protected open fun rebuffer() {
-        batches.forEach { obj: RenderBatch -> obj.clear() } // Prepare batches
+        batches.forEach(RenderBatch::clearVertices) // Prepare batches
         createBatches()
-        batches.forEach { obj: RenderBatch -> obj.uploadVertices() } // Finalize batches
-        batches.sortBy { obj: RenderBatch -> obj.zIndex } // Sort batches by z-index
+        batches.forEach(RenderBatch::uploadVertices) // Finalize batches
+        batches.sortBy(RenderBatch::getZIndex) // Sort batches by z-index
     }
 
     /** Finish drawing and free resources from the GPU. */
@@ -60,7 +58,7 @@ abstract class GLRenderer(shaderFile: String) : Renderer {
     }
 
     override fun stop() {
-        batches.forEach { obj: RenderBatch -> obj.deleteBatch() }
+        batches.forEach(RenderBatch::deleteBatch)
     }
 
     // Batch Helper Methods
@@ -84,7 +82,7 @@ abstract class GLRenderer(shaderFile: String) : Renderer {
 
     private fun GLRenderable.createNewBatch(): RenderBatch {
         val batch = RenderBatch(batchSize, zIndex, primitive)
-        batch.clear()
+        batch.clearVertices()
         batches.add(batch)
         return batch
     }

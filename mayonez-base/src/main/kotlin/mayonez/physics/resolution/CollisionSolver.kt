@@ -1,10 +1,9 @@
 package mayonez.physics.resolution
 
-import mayonez.math.Vec2
-import mayonez.physics.Rigidbody
-import mayonez.physics.colliders.Collider
-import kotlin.math.abs
-import kotlin.math.sign
+import mayonez.math.*
+import mayonez.physics.*
+import mayonez.physics.colliders.*
+import kotlin.math.*
 
 /**
  * Applies linear and angular impulses to two intersecting bodies to
@@ -39,13 +38,16 @@ internal class CollisionSolver(private val c1: Collider, private val c2: Collide
      * Dynamic vs Static
      * Dynamic vs Dynamic
      */
-    fun solve() {
+    fun solveCollision() {
         if (c1.isStatic() && c2.isStatic()) return // Check masses once, cannot both be static
         if (!recheckCollision()) return
+
         normal = manifold.normal
         tangent = normal.normal()
+
         solveStatic()
         solveDynamic()
+
         c1.collisionResolved = true
         c2.collisionResolved = true
     }
@@ -60,6 +62,24 @@ internal class CollisionSolver(private val c1: Collider, private val c2: Collide
         if (c1.collisionResolved || c2.collisionResolved)
             manifold = c1.getContacts(c2) ?: return false
         return true
+    }
+
+    /**
+     * Correct positions of objects if one or neither collider has an
+     * infinite-mass rigidbody.
+     */
+    private fun solveStatic() {
+        val mass1: Float = r1.mass
+        val mass2: Float = r2.mass
+
+        // Separate objects factoring in mass
+        val massRatio = mass1 / (mass1 + mass2)
+        val depth1 = manifold.depth * massRatio
+        val depth2 = manifold.depth * (1f - massRatio)
+
+        // Displace bodies to correct position
+        c1.transform.move(normal * -depth1)
+        c2.transform.move(normal * depth2)
     }
 
     /** Transfer linear and angular momentum between objects and apply friction. */
@@ -105,24 +125,6 @@ internal class CollisionSolver(private val c1: Collider, private val c2: Collide
             if (abs(tanImp) > abs(normImp * matData.sFric)) tanImp = sign(tanImp) * normImp * matData.kFric
             contact.tanImp = tanImp
         }
-    }
-
-    /**
-     * Correct positions of objects if one or neither collider has an
-     * infinite-mass rigidbody.
-     */
-    private fun solveStatic() {
-        val mass1: Float = r1.mass
-        val mass2: Float = r2.mass
-
-        // Separate objects factoring in mass
-        val massRatio = mass1 / (mass1 + mass2)
-        val depth1 = manifold.depth * massRatio
-        val depth2 = manifold.depth * (1f - massRatio)
-
-        // Displace bodies to correct position
-        c1.transform.move(normal * -depth1)
-        c2.transform.move(normal * depth2)
     }
 
 }

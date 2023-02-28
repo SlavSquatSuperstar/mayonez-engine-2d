@@ -1,9 +1,9 @@
 package mayonez.scripts.movement;
 
-import mayonez.input.MouseInput;
-import mayonez.math.Vec2;
-import mayonez.physics.Rigidbody;
-import mayonez.scripts.input.MouseInputScript;
+import mayonez.input.*;
+import mayonez.math.*;
+import mayonez.physics.*;
+import mayonez.scripts.input.*;
 
 /**
  * Allows objects to be moved by clicking on them and dragging around the mouse.

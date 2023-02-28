@@ -1,6 +1,6 @@
 package mayonez.physics.resolution
 
-import mayonez.physics.Rigidbody
+import mayonez.physics.*
 
 /**
  * A data structure that stores the masses of two objects involved in a

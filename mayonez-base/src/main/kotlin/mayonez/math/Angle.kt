@@ -1,13 +1,11 @@
 package mayonez.math
 
-import mayonez.annotations.Mutating
-import java.lang.Math.toDegrees
-import java.lang.Math.toRadians
-import kotlin.math.cos
-import kotlin.math.sin
+import mayonez.annotations.*
+import kotlin.math.*
 
 /**
- * An object representing an angle or other rotational quantity, which can be converted between degrees and radians.
+ * An object representing an angle or other rotational quantity, which can
+ * be converted between degrees and radians.
  *
  * @author SlavSquatSuperstar
  */
@@ -30,39 +28,29 @@ class Angle private constructor(
         // Trig Helpers
 
         private fun Float.toRadiansDouble(): Double {
-            return toRadians(this.toDouble())
+            return Math.toRadians(this.toDouble())
         }
     }
 
     // Angle Properties
 
-    /**
-     * The radian value for this angle as a float.
-     */
+    /** The radian value for this angle as a float. */
     val radians: Float
         get() = radD.toFloat()
 
-    /**
-     * The degree value for this angle as a float.
-     */
+    /** The degree value for this angle as a float. */
     val degrees: Float
-        get() = toDegrees(radD).toFloat()
+        get() = Math.toDegrees(radD).toFloat()
 
-    /**
-     * The cosine value for this angle as a float.
-     */
+    /** The cosine value for this angle as a float. */
     val cos: Float
         get() = cosD.toFloat()
 
-    /**
-     * The sine value for this angle as a float.
-     */
+    /** The sine value for this angle as a float. */
     val sin: Float
         get() = sinD.toFloat()
 
-    /**
-     * The rotation matrix for this angle.
-     */
+    /** The rotation matrix for this angle. */
     val rotation: Mat22
         get() = Mat22(cos, -sin, sin, cos)
 

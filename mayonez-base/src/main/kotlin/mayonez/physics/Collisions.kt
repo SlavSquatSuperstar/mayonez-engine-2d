@@ -1,11 +1,8 @@
 package mayonez.physics
 
-import mayonez.math.shapes.Circle
-import mayonez.math.shapes.Ray
-import mayonez.math.shapes.Shape
+import mayonez.math.shapes.*
 import mayonez.physics.detection.*
-import mayonez.physics.resolution.Manifold
-import mayonez.physics.resolution.RaycastInfo
+import mayonez.physics.resolution.*
 
 /**
  * Implements collision detection algorithms using primitive shapes for the

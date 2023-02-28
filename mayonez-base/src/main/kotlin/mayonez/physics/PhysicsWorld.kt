@@ -1,16 +1,15 @@
 package mayonez.physics
 
-import mayonez.GameObject
-import mayonez.Scene
-import mayonez.math.Vec2
-import mayonez.physics.colliders.Collider
-import mayonez.physics.resolution.CollisionSolver
+import mayonez.*
+import mayonez.math.*
+import mayonez.physics.colliders.*
+import mayonez.physics.resolution.*
 
 /**
  * A simulation containing bodies that approximate real-world physics.
- * <br></br>
- * Thanks to GamesWithGabe's [ Coding a 2D
- * Physics Engine playlist](https://youtube.com/playlist?list=PLtrSb4XxIVbpZpV65kk73OoUcIrBzoSiO)for explaining the math and logic.
+ * <br></br> Thanks to GamesWithGabe's
+ * [ Coding a 2D Physics Engine playlist](https://youtube.com/playlist?list=PLtrSb4XxIVbpZpV65kk73OoUcIrBzoSiO)for
+ * explaining the math and logic.
  *
  * @author SlavSquatSuperstar
  */
@@ -61,23 +60,49 @@ class PhysicsWorld {
     fun step(dt: Float) {
         collisions.clear()
 
-        // Apply Gravity and Update Bodies
-        bodies.forEach { rb: Rigidbody ->
-            if (rb.followsGravity) rb.applyForce(gravity * rb.mass)
-            rb.integrateForce(dt)
-            rb.integrateVelocity(dt)
-        }
+        updateBodies(dt)
 
-        // Detect Collisions and Create Collision Events
         // TODO Pre-collision optimizations and spatial partitioning
         detectBroadPhase()
         detectNarrowPhase()
 
-        // Resolve Collisions
-        collisions.forEach { col: CollisionSolver -> col.solve() }
+        collisions.forEach(CollisionSolver::solveCollision)
     }
 
-    // Collision Helper Methods
+    private fun updateBodies(dt: Float) {
+        bodies.forEach { rb ->
+            // Apply gravity
+            if (rb.followsGravity) rb.applyForce(gravity * rb.mass)
+            rb.integrateForce(dt)
+            rb.integrateVelocity(dt)
+        }
+    }
+
+    // Collision Detection Methods
+
+    /**
+     * Detect potential collisions between bounding boxes while avoiding
+     * expensive contact calculations.
+     */
+    private fun detectBroadPhase() {
+        for (i in colliders.indices) {
+            // Avoid duplicate collisions between two objects and checking against self
+            for (j in i + 1 until colliders.size) {
+                val c1 = colliders[i]
+                val c2 = colliders[j]
+
+                // Reset collision flags
+                c1.collisionResolved = false
+                c2.collisionResolved = false
+
+                if (collidersCannotCollide(c1, c2)) continue
+
+                val lis = getListener(c1, c2)
+                if (lis.checkBroadphase()) listeners.add(lis)
+            }
+        }
+    }
+
     /**
      * Get the collision listener that matches the with two colliders
      *
@@ -92,35 +117,15 @@ class PhysicsWorld {
         return CollisionListener(c1, c2)
     }
 
-    /**
-     * Detect potential collisions between bounding boxes while avoiding expensive contact calculations.
-     */
-    private fun detectBroadPhase() {
-        for (i in colliders.indices) {
-            // Avoid duplicate collisions between two objects and checking against self
-            for (j in i + 1 until colliders.size) {
-                val c1 = colliders[i]
-                val c2 = colliders[j]
-
-                // Reset collision flags
-                c1.collisionResolved = false
-                c2.collisionResolved = false
-
-                // Check if collidable
-                val disabled = !(c1.isEnabled && c2.isEnabled)
-                val ignore = c1.gameObject.hasTag("Ignore Collisions") || c2.gameObject.hasTag("Ignore Collisions")
-                val static = c1.isStatic() && c2.isStatic() // Don't check for collision if both are static
-                if (disabled || ignore || static) continue
-
-                val lis = getListener(c1, c2)
-                if (lis.checkBroadphase()) listeners.add(lis)
-            }
-        }
+    private fun collidersCannotCollide(c1: Collider, c2: Collider): Boolean {
+        val disabled = !(c1.isEnabled && c2.isEnabled)
+        val ignore = c1.gameObject.hasTag("Ignore Collisions") || c2.gameObject.hasTag("Ignore Collisions")
+        val static = c1.isStatic() && c2.isStatic() // Don't check for collision if both are static
+        if (disabled || ignore || static) return true
+        return false
     }
 
-    /**
-     * Check broadphase pairs for collisions and calculate contact points.
-     */
+    /** Check broadphase pairs for collisions and calculate contact points. */
     private fun detectNarrowPhase() {
         for (lis in listeners) {
             val collision = lis.checkNarrowphase() ?: continue // Get contacts
@@ -138,27 +143,28 @@ class PhysicsWorld {
     }
 
     // Game Object Methods
+
     fun addObject(obj: GameObject) {
         val rb = obj.getComponent(Rigidbody::class.java)
         if (rb != null) bodies.add(rb)
-        val comp = obj.getComponent(Collider::class.java)
-        if (comp != null) colliders.add(comp)
+        val col = obj.getComponent(Collider::class.java)
+        if (col != null) colliders.add(col)
     }
 
     fun removeObject(obj: GameObject) {
         bodies.remove(obj.getComponent(Rigidbody::class.java))
-        val comp = obj.getComponent(Collider::class.java)
-        colliders.remove(comp)
-        // remove all listeners with this collider
-//        listeners.stream().filter { lis: CollisionListener -> lis.match(c) }.toList()
-//            .forEach { lis2: CollisionListener -> listeners.remove(lis2) }
-        listeners.stream().filter { lis: CollisionListener -> lis.match(comp) }.toList().forEach(listeners::remove)
+        val col = obj.getComponent(Collider::class.java)
+        colliders.remove(col)
+        listeners.stream()
+            .filter { lis -> lis.match(col) }
+            .toList()
+            .forEach(listeners::remove)
     }
 
     fun setScene(newScene: Scene) {
         bodies.clear()
         colliders.clear()
-        newScene.objects.forEach { o: GameObject -> addObject(o) }
+        newScene.objects.forEach(this::addObject)
     }
 
     fun stop() {

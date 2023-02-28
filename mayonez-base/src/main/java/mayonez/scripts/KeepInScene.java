@@ -1,12 +1,10 @@
 package mayonez.scripts;
 
-import mayonez.Logger;
-import mayonez.Script;
-import mayonez.math.Interval;
-import mayonez.math.Vec2;
-import mayonez.physics.Rigidbody;
-import mayonez.physics.colliders.Collider;
-import mayonez.math.shapes.BoundingBox;
+import mayonez.*;
+import mayonez.math.*;
+import mayonez.math.shapes.*;
+import mayonez.physics.*;
+import mayonez.physics.colliders.*;
 
 /**
  * Dictates what happens when an object reaches the edge of the scene.

@@ -1,14 +1,12 @@
 package mayonez.graphics.sprites;
 
-import mayonez.annotations.EngineType;
-import mayonez.annotations.UsesEngine;
-import mayonez.io.Assets;
-import mayonez.io.image.GLTexture;
-import mayonez.math.Vec2;
-import mayonez.math.shapes.Rectangle;
+import mayonez.annotations.*;
+import mayonez.io.*;
+import mayonez.io.image.*;
+import mayonez.math.*;
+import mayonez.math.shapes.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Creates multiple {@link GLSprite}s from a larger image.

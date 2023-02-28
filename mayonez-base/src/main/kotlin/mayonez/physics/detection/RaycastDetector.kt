@@ -1,11 +1,9 @@
 package mayonez.physics.detection
 
-import mayonez.math.FloatMath
-import mayonez.math.Vec2
-import mayonez.physics.resolution.RaycastInfo
+import mayonez.math.*
 import mayonez.math.shapes.*
-import kotlin.math.sign
-import kotlin.math.sqrt
+import mayonez.physics.resolution.*
+import kotlin.math.*
 
 /**
  * A class that casts rays onto shapes and detects whether the ray hits a
@@ -77,7 +75,7 @@ object RaycastDetector {
     }
 
     private fun raycastGJK(poly: Polygon, ray: Ray, limit: Float): RaycastInfo? {
-        val lambda = 0.0;
+        val lambda = 0.0
         val vecA = Vec2()
         val vecB = Vec2()
 

@@ -3,7 +3,8 @@ package mayonez.math
 import java.util.*
 
 /**
- * Stores an ordered pair of floats which represent the minimum and maximum values of an interval.
+ * Stores an ordered pair of floats which represent the minimum and maximum
+ * values of an interval.
  *
  * @author SlavSquatSuperstar
  */
@@ -26,8 +27,9 @@ class Interval(min: Float, max: Float) {
     fun difference(): Float = max - min
 
     /**
-     * Linearly interpolates (lerps) between two floats, or finds the number in this interval
-     * that is the given percentage of the distance between the start to the end.
+     * Linearly interpolates (lerps) between two floats, or finds the number in
+     * this interval that is the given percentage of the distance between the
+     * start to the end.
      *
      * @param distance what percent to travel from the start
      * @return the interpolated point
@@ -35,7 +37,8 @@ class Interval(min: Float, max: Float) {
     fun lerp(distance: Float): Float = min + difference() * distance
 
     /**
-     * Takes a number in this interval and calculates its percent distance along this interval.
+     * Takes a number in this interval and calculates its percent distance
+     * along this interval.
      *
      * @param amount a number
      * @return the percent distance along the interval

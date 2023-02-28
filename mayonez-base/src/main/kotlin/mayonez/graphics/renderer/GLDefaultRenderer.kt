@@ -1,23 +1,12 @@
 package mayonez.graphics.renderer
 
-import mayonez.Component
-import mayonez.DebugDraw
-import mayonez.GameObject
-import mayonez.Scene
-import mayonez.Transform.Companion.scaleInstance
-import mayonez.graphics.DebugShape
-import mayonez.graphics.DrawPrimitive
-import mayonez.graphics.GLRenderable
-import mayonez.graphics.RenderBatch
-import mayonez.graphics.sprites.GLSprite
-import mayonez.graphics.sprites.ShapeSprite
-import mayonez.graphics.sprites.Sprite
-import mayonez.math.Vec2
-import mayonez.math.shapes.Edge
-import mayonez.math.shapes.Rectangle
-import mayonez.math.shapes.Triangle
+import mayonez.*
+import mayonez.graphics.*
+import mayonez.graphics.sprites.*
+import mayonez.math.*
+import mayonez.math.shapes.*
 import org.lwjgl.opengl.GL11.*
-import kotlin.math.roundToInt
+import kotlin.math.*
 
 /**
  * Draws all sprites and debug information onto the screen using LWJGL's
@@ -38,20 +27,20 @@ class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"), SceneRender
     // Scene Renderer Methods
 
     override fun setScene(newScene: Scene) {
-        newScene.objects.forEach { obj: GameObject -> addObject(obj) }
+        newScene.objects.forEach(this::addObject)
         background = newScene.background
-        background.setTransform<Component>(scaleInstance(newScene.size))
+        background.setTransform<Component>(Transform.scaleInstance(newScene.size))
     }
 
     override fun addObject(obj: GameObject) {
-        obj.components.forEach { c: Component ->
-            if (c is GLRenderable) objects.add(c)
+        obj.components.forEach { comp ->
+            if (comp is GLRenderable) objects.add(comp)
         }
     }
 
     override fun removeObject(obj: GameObject) {
-        obj.components.forEach { c: Component ->
-            if (c is GLRenderable) objects.remove(c)
+        obj.components.forEach { comp ->
+            if (comp is GLRenderable) objects.remove(comp)
         }
     }
 
@@ -71,7 +60,7 @@ class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"), SceneRender
     override fun start() {
         super.start()
         shapes.clear()
-        bgBatch.clear()
+        bgBatch.clearVertices()
     }
 
     override fun preRender() {
@@ -98,8 +87,8 @@ class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"), SceneRender
     }
 
     private fun drawBackgroundImage() {
-        glClearColor(1f, 1f, 1f, 1f);
-        bgBatch.clear()
+        glClearColor(1f, 1f, 1f, 1f)
+        bgBatch.clearVertices()
         (background as GLSprite).pushToBatch(bgBatch)
         bgBatch.uploadVertices()
         bgBatch.drawBatch()
@@ -117,7 +106,7 @@ class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"), SceneRender
     }
 
     private fun pushObjectsToBatches() {
-        objects.forEach { obj: GLRenderable ->
+        objects.forEach { obj ->
             if (obj.isEnabled) {
                 if (obj is ShapeSprite) {
                     addShape(DebugShape(obj)) // Break down shape into primitives then add them later
@@ -129,7 +118,7 @@ class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"), SceneRender
     }
 
     private fun pushShapesToBatches() {
-        shapes.forEach { shape: DebugShape ->
+        shapes.forEach { shape ->
             shape.pushToBatch(shape.getAvailableBatch())
         }
     }

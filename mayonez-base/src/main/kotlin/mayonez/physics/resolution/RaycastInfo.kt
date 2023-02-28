@@ -1,6 +1,6 @@
 package mayonez.physics.resolution
 
-import mayonez.math.Vec2
+import mayonez.math.*
 
 /**
  * Provides additional information about a raycast against a shape.

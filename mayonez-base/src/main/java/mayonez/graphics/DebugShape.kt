@@ -1,19 +1,15 @@
 package mayonez.graphics
 
-import mayonez.graphics.renderer.DrawPriority
-import mayonez.graphics.sprites.ShapeSprite
-import mayonez.math.Vec2
+import mayonez.graphics.renderer.*
+import mayonez.graphics.sprites.*
+import mayonez.math.*
 import mayonez.math.shapes.*
-import mayonez.util.GLColor
-import mayonez.util.JShape
-import mayonez.util.MColor
-import mayonez.util.MShape
-import java.awt.Graphics2D
-import java.awt.geom.AffineTransform
-import java.awt.geom.Ellipse2D
-import java.awt.geom.Line2D
-import java.awt.geom.Rectangle2D
-import kotlin.math.roundToInt
+import mayonez.math.shapes.Polygon
+import mayonez.math.shapes.Rectangle
+import mayonez.util.*
+import java.awt.*
+import java.awt.geom.*
+import kotlin.math.*
 
 /**
  * Passes shape and color information to a
@@ -139,7 +135,7 @@ class DebugShape(
             return rotXf.createTransformedShape(this)
         }
 
-        private fun Polygon.splitIntoParts(fill: Boolean): Array<out Shape> {
+        private fun Polygon.splitIntoParts(fill: Boolean): Array<out MShape> {
             return if (fill) this.triangles else this.edges
         }
     }

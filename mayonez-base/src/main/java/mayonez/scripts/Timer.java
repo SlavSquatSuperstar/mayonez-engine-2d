@@ -1,6 +1,6 @@
 package mayonez.scripts;
 
-import mayonez.Script;
+import mayonez.*;
 
 /**
  * An script that automatically tracks time in real time as the game updates and can be reset.

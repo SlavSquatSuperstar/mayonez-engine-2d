@@ -1,13 +1,10 @@
 package mayonez.input
 
-import mayonez.Mayonez
-import mayonez.SceneManager
-import mayonez.math.Vec2
+import mayonez.*
+import mayonez.math.*
 import org.lwjgl.glfw.GLFW.GLFW_PRESS
 import org.lwjgl.glfw.GLFW.GLFW_RELEASE
-import java.awt.event.MouseAdapter
-import java.awt.event.MouseEvent
-import java.awt.event.MouseWheelEvent
+import java.awt.event.*
 
 /**
  * The receiver for all mouse-related input events.

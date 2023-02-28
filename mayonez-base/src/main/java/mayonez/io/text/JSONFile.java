@@ -1,11 +1,11 @@
 package mayonez.io.text;
 
+import mayonez.*;
+import mayonez.util.Record;
+import mayonez.util.*;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
-import mayonez.Logger;
-import mayonez.util.Record;
-import mayonez.util.StringUtils;
 
 /**
  * A JavaScript Object Notation (.json) file that stores an object record.

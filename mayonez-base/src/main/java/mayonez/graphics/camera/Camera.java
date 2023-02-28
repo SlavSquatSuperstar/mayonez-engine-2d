@@ -1,11 +1,9 @@
-package mayonez.graphics;
+package mayonez.graphics.camera;
 
-import mayonez.GameObject;
-import mayonez.Script;
-import mayonez.math.FloatMath;
-import mayonez.math.Vec2;
-import mayonez.physics.colliders.BoxCollider;
-import mayonez.scripts.KeepInScene;
+import mayonez.*;
+import mayonez.math.*;
+import mayonez.physics.colliders.*;
+import mayonez.scripts.*;
 
 /**
  * The viewport into the scene.

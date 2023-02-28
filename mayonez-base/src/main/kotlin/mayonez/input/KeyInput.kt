@@ -1,11 +1,9 @@
 package mayonez.input
 
-import mayonez.Mayonez
-import mayonez.event.EventSystem
-import mayonez.event.KeyboardEvent
+import mayonez.*
+import mayonez.event.*
 import org.lwjgl.glfw.GLFW.*
-import java.awt.event.KeyAdapter
-import java.awt.event.KeyEvent
+import java.awt.event.*
 
 /**
  * The receiver for all keyboard-related input events.

@@ -1,11 +1,11 @@
 package mayonez.math.shapes
 
-import mayonez.math.Interval
-import mayonez.math.Vec2
+import mayonez.math.*
 
 /**
- * A non-rotatable, axis-oriented bounding box (AABB) with four edges and defined by a width and height. Not to be used
- * with a collider. For rotatable rectangle, use the [Rectangle] class.
+ * A non-rotatable, axis-oriented bounding box (AABB) with four edges and
+ * defined by a width and height. Not to be used with a collider. For
+ * rotatable rectangle, use the [Rectangle] class.
  *
  * @author SlavSquatSuperstar
  */
@@ -74,7 +74,8 @@ open class BoundingBox(private val center: Vec2, private val size: Vec2) :
     }
 
     /**
-     * A description of the rectangle in the form "Bounding Box (x, y), Size: (b, h)
+     * A description of the rectangle in the form "Bounding Box (x, y), Size:
+     * (b, h)
      */
     override fun toString(): String = String.format("Bounding Box $center, Size: $size")
 

@@ -3,7 +3,8 @@ package mayonez.math
 import mayonez.util.MColor
 
 /**
- * A class with methods dedicated to generating random numbers and primitive types.
+ * A class with methods dedicated to generating random numbers and
+ * primitive types.
  *
  * @author SlavSquatSuperstar
  */
@@ -12,8 +13,8 @@ object Random {
     // Random Numbers
 
     /**
-     * Generates a uniform random float between the two provided bounds. All numbers in the range
-     * have an equal chance of occurring.
+     * Generates a uniform random float between the two provided bounds. All
+     * numbers in the range have an equal chance of occurring.
      *
      * @param min the lower bound
      * @param max the upper bound
@@ -26,8 +27,8 @@ object Random {
     }
 
     /**
-     * Generates a random uniform integer between the two provided bounds. All numbers in the range
-     * have an equal chance of occurring.
+     * Generates a random uniform integer between the two provided bounds. All
+     * numbers in the range have an equal chance of occurring.
      *
      * @param min the lower bound (inclusive)
      * @param max the upper bound (inclusive)
@@ -40,8 +41,8 @@ object Random {
     }
 
     /**
-     * Generates a random [Vec2] between the provided min and max vectors. All vectors in the rectangular
-     * region have an equal chance of occurring.
+     * Generates a random [Vec2] between the provided min and max vectors. All
+     * vectors in the rectangular region have an equal chance of occurring.
      *
      * @param min the lower bound vector
      * @param max the upper bound vector
@@ -53,8 +54,8 @@ object Random {
     }
 
     /**
-     * Generates a random [Vec2] between the provided x and y bounds. All vectors in the rectangular
-     * region have an equal chance of occurring.
+     * Generates a random [Vec2] between the provided x and y bounds. All
+     * vectors in the rectangular region have an equal chance of occurring.
      *
      * @param minX the lower x bound
      * @param maxX the upper x bound
@@ -70,7 +71,8 @@ object Random {
     // Random Experiments
 
     /**
-     * Generates a random event with a certain percent chance of succeeding, equal to a biased coin flip.
+     * Generates a random event with a certain percent chance of succeeding,
+     * equal to a biased coin flip.
      *
      * @param percent the chance of succeeding, from 0-1
      * @return true the given percentage of the time, otherwise false
@@ -79,7 +81,8 @@ object Random {
     fun randomPercent(percent: Float): Boolean = Math.random() < percent
 
     /**
-     * Generates a random event with a 50% chance of succeeding, equal to a fair coin flip.
+     * Generates a random event with a 50% chance of succeeding, equal to a
+     * fair coin flip.
      *
      * @return true half the time, otherwise false
      */

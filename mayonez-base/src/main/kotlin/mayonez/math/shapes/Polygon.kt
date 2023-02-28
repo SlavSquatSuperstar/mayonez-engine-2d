@@ -1,11 +1,7 @@
 package mayonez.math.shapes
 
-import mayonez.math.FloatMath
-import mayonez.math.Mat22
-import mayonez.math.Vec2
-import mayonez.math.shapes.PolygonVertices.orderedConvexHull
-import mayonez.math.shapes.PolygonVertices.orderedVertices
-import kotlin.math.abs
+import mayonez.math.*
+import kotlin.math.*
 
 /**
  * A shape made up of a finite number of vertices connected by straight
@@ -36,7 +32,8 @@ open class Polygon(sort: Boolean, vararg vertices: Vec2) : Shape() {
 
     /** The points that define the shape of this polygon. */
     val vertices: Array<Vec2> =
-        if (sort) orderedConvexHull(arrayOf(*vertices)) else arrayOf(*vertices)
+        if (sort) PolygonVertices.orderedConvexHull(arrayOf(*vertices))
+        else arrayOf(*vertices)
 
     /** The number of vertices and edges of this polygon, n. */
     final override val numVertices: Int = this.vertices.size
@@ -181,8 +178,9 @@ open class Polygon(sort: Boolean, vararg vertices: Vec2) : Shape() {
     }
 
     override fun equals(other: Any?): Boolean {
-        return (other is Polygon) && orderedVertices(this.vertices)
-            .contentEquals(orderedVertices(other.vertices))
+        return (other is Polygon)
+                && PolygonVertices.orderedVertices(this.vertices)
+            .contentEquals(PolygonVertices.orderedVertices(other.vertices))
     }
 
     /**

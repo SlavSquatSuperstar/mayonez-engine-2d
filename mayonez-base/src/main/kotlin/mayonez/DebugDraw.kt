@@ -1,18 +1,16 @@
 package mayonez
 
-import mayonez.annotations.EngineType
-import mayonez.annotations.UsesEngine
-import mayonez.graphics.Colors
-import mayonez.graphics.DebugShape
-import mayonez.graphics.renderer.DebugRenderer
-import mayonez.graphics.renderer.DrawPriority
-import mayonez.math.Vec2
+import mayonez.annotations.*
+import mayonez.graphics.*
+import mayonez.graphics.renderer.*
+import mayonez.math.*
 import mayonez.math.shapes.*
-import mayonez.util.MColor
+import mayonez.util.*
 
 /**
- * Allows colliders and shapes to be drawn onto the screen. All shapes are specified using world coordinates,
- * and colliders are centered around an object's position.
+ * Allows colliders and shapes to be drawn onto the screen. All shapes are
+ * specified using world coordinates, and colliders are centered around an
+ * object's position.
  *
  * @author SlavSquatSuperstar
  */
@@ -30,7 +28,7 @@ object DebugDraw {
      * Draws a point onto the screen.
      *
      * @param position where the point is located, in world coordinates
-     * @param color    the color to use
+     * @param color the color to use
      */
     @JvmStatic
     fun drawPoint(position: Vec2, color: MColor?) {
@@ -43,7 +41,7 @@ object DebugDraw {
      * Draws a line segment onto the screen.
      *
      * @param start the segment's starting point, in world coordinates
-     * @param end   the segment's ending point, in world coordinates
+     * @param end the segment's ending point, in world coordinates
      * @param color the color to use
      */
     @JvmStatic
@@ -55,9 +53,10 @@ object DebugDraw {
     /**
      * Draws a vector onto the screen.
      *
-     * @param origin    the vector's starting point, in world coordinates
-     * @param direction how far away the vector's end point is, in world coordinates
-     * @param color     the color to use
+     * @param origin the vector's starting point, in world coordinates
+     * @param direction how far away the vector's end point is, in world
+     *     coordinates
+     * @param color the color to use
      */
     @JvmStatic
     fun drawVector(origin: Vec2, direction: Vec2, color: MColor?) = drawLine(origin, origin.add(direction), color)

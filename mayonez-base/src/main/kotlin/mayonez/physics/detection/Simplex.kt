@@ -1,7 +1,7 @@
 package mayonez.physics.detection
 
-import mayonez.math.Vec2
-import mayonez.math.shapes.Polygon
+import mayonez.math.*
+import mayonez.math.shapes.*
 
 /**
  * A basic data class that stores a certain number of support points

@@ -1,13 +1,10 @@
 package mayonez.physics.colliders
 
-import mayonez.Component
-import mayonez.math.Vec2
-import mayonez.math.shapes.BoundingBox
-import mayonez.math.shapes.Shape
-import mayonez.physics.CollisionEventType
-import mayonez.physics.Collisions
-import mayonez.physics.Rigidbody
-import mayonez.physics.resolution.Manifold
+import mayonez.*
+import mayonez.math.*
+import mayonez.math.shapes.*
+import mayonez.physics.*
+import mayonez.physics.resolution.*
 
 /**
  * A shape centered around the object's position that can detect collisions

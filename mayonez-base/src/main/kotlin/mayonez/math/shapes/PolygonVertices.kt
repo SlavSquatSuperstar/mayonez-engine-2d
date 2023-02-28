@@ -1,9 +1,8 @@
 package mayonez.math.shapes
 
-import mayonez.math.FloatMath
-import mayonez.math.Vec2
+import mayonez.math.*
 import java.util.*
-import kotlin.math.abs
+import kotlin.math.*
 
 /**
  * Contains methods for generating and sorting polygon vertices.

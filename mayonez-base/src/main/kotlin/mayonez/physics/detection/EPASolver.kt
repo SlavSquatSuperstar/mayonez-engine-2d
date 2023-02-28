@@ -1,9 +1,8 @@
 package mayonez.physics.detection
 
-import mayonez.math.FloatMath
-import mayonez.math.Vec2
-import mayonez.math.shapes.Shape
-import kotlin.math.abs
+import mayonez.math.*
+import mayonez.math.shapes.*
+import kotlin.math.*
 
 /**
  * Calculates the penetration between two shapes from their Minkowski sum

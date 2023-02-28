@@ -1,17 +1,14 @@
 package mayonez.graphics;
 
-import mayonez.Preferences;
-import mayonez.annotations.EngineType;
-import mayonez.annotations.UsesEngine;
-import mayonez.io.image.GLTexture;
-import mayonez.math.Vec2;
-import org.joml.Vector4f;
+import mayonez.*;
+import mayonez.annotations.*;
+import mayonez.io.image.*;
+import mayonez.math.*;
+import org.joml.*;
 import org.lwjgl.BufferUtils;
 
 import java.nio.IntBuffer;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
@@ -124,7 +121,7 @@ public final class RenderBatch {
     /**
      * Empties all sprite vertices and textures from the batch and readies it for buffering.
      */
-    public void clear() {
+    public void clearVertices() {
         vertexOffset = 0;
         Arrays.fill(vertices, 0);
         textures.clear();

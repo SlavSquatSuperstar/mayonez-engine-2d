@@ -1,8 +1,9 @@
 package mayonez.math
 
-import mayonez.annotations.Mutating
+import mayonez.annotations.*
 import mayonez.math.FloatMath.equals
 import org.joml.Vector2f
+import java.lang.Math
 import java.util.*
 import kotlin.math.*
 

@@ -1,8 +1,8 @@
 package mayonez.scripts.movement;
 
-import mayonez.math.Vec2;
-import mayonez.input.MouseInput;
-import mayonez.physics.colliders.Collider;
+import mayonez.input.*;
+import mayonez.math.*;
+import mayonez.physics.colliders.*;
 
 // TODO use mouse events and save states (held, released)
 

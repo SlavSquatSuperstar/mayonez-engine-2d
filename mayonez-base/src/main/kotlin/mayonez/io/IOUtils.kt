@@ -7,7 +7,8 @@ import java.nio.charset.StandardCharsets
 import java.nio.charset.UnsupportedCharsetException
 
 /**
- * Contains reusable methods from reading from and writing to classpath or external assets.
+ * Contains reusable methods from reading from and writing to classpath or
+ * external assets.
  *
  * @author SlavSquatSuperstar
  */
@@ -31,12 +32,13 @@ object IOUtils {
     /**
      * Reads a single block of text from a [java.io.InputStream].
      *
-     * Referenced from Apache Commons IO > IOUtils.readLines(InputStream, Charset).
+     * Referenced from Apache Commons IO > IOUtils.readLines(InputStream,
+     * Charset).
      *
-     * @throws FileNotFoundException if the file does not exist
-     * @throws IOException if the file cannot be read
      * @param input a file's input stream
      * @return a text string
+     * @throws FileNotFoundException if the file does not exist
+     * @throws IOException if the file cannot be read
      */
     @JvmStatic
     @Throws(IOException::class, FileNotFoundException::class)
@@ -49,11 +51,10 @@ object IOUtils {
     /**
      * Reads multiple lines of text from a [java.io.InputStream].
      *
-     * @throws FileNotFoundException if the file does not exist
-     * @throws IOException if the file cannot be read
-     *
      * @param input a file's input stream
      * @return an array of strings
+     * @throws FileNotFoundException if the file does not exist
+     * @throws IOException if the file cannot be read
      */
     @JvmStatic
     @Throws(IOException::class, FileNotFoundException::class)
@@ -66,9 +67,9 @@ object IOUtils {
     /**
      * Reads a sequence of bytes from a [java.io.InputStream].
      *
-     * @throws IOException if the file cannot be read
      * @param input a file's input stream
      * @return an array of bytes
+     * @throws IOException if the file cannot be read
      */
     @JvmStatic
     @Throws(IOException::class)
@@ -79,11 +80,12 @@ object IOUtils {
     /**
      * Saves a single block of text from a [java.io.OutputStream].
      *
-     * Referenced from Apache Commons IO > IOUtils.write(String, OutputStream, Charset)
+     * Referenced from Apache Commons IO > IOUtils.write(String, OutputStream,
+     * Charset)
      *
-     * @throws IOException if the file cannot be written to
      * @param output a file's output stream, set to write or append
-     * @param text   a text string
+     * @param text a text string
+     * @throws IOException if the file cannot be written to
      */
     @JvmStatic
     @Throws(IOException::class)
@@ -96,11 +98,12 @@ object IOUtils {
     /**
      * Saves multiple lines of text to a [java.io.OutputStream].
      *
-     * Referenced from Apache Commons IO > IOUtils.write(Collection<?>, String, OutputStream, Charset)
+     * Referenced from Apache Commons IO > IOUtils.write(Collection<?>, String,
+     * OutputStream, Charset)
      *
-     * @throws IOException if the file cannot be written to
      * @param output a file's output stream, set to write or append
-     * @param lines  an array of strings
+     * @param lines an array of strings
+     * @throws IOException if the file cannot be written to
      */
     @JvmStatic
     @Throws(IOException::class)
@@ -116,9 +119,9 @@ object IOUtils {
     /**
      * Saves a sequence of bytes to a [java.io.OutputStream].
      *
-     * @throws IOException if the file cannot be written to
      * @param output a file's output stream, set to write or append
-     * @param bytes  an array of bytes
+     * @param bytes an array of bytes
+     * @throws IOException if the file cannot be written to
      */
     @JvmStatic
     @Throws(IOException::class)

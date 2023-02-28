@@ -1,10 +1,9 @@
 package mayonez
 
-import mayonez.engine.GLGame
-import mayonez.engine.GameEngine
-import mayonez.engine.JGame
-import mayonez.io.Assets
-import mayonez.math.Vec2
+import mayonez.engine.*
+import mayonez.io.*
+import mayonez.math.*
+import mayonez.util.*
 import kotlin.system.exitProcess
 
 /**
@@ -44,6 +43,11 @@ object Mayonez {
 //        set(value) {
 //            field = max(value, 0f) // non-negative only
 //        }
+
+    // System Info
+    /** The operating system of this current device running the JVM. */
+    @JvmStatic
+    val currentOperatingSystem: OperatingSystem = OperatingSystem.getCurrentOS()
 
     // Game Fields
     @JvmStatic

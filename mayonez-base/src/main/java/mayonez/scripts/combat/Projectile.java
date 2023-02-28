@@ -1,9 +1,7 @@
 package mayonez.scripts.combat;
 
-import mayonez.GameObject;
-import mayonez.Logger;
-import mayonez.Script;
-import mayonez.scripts.Timer;
+import mayonez.*;
+import mayonez.scripts.*;
 
 /**
  * Allows a {@link mayonez.GameObject} to be launched with an initial velocity from a source object, and

@@ -1,8 +1,8 @@
 package mayonez;
 
-import mayonez.util.StringUtils;
+import mayonez.util.*;
 
-import java.util.Objects;
+import java.util.*;
 
 /**
  * A data structure representing traits and behaviors of a {@link GameObject}.
@@ -133,7 +133,7 @@ public abstract class Component {
         // Use Component for class name if anonymous instance
         return String.format(
                 "%s (%s)",
-                StringUtils.getClassName(this, "Component"),
+                StringUtils.getObjectClassName(this),
                 gameObject == null ? "<No GameObject>" : gameObject.getNameAndID()
         );
     }

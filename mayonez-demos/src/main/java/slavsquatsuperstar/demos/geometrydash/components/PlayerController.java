@@ -1,7 +1,7 @@
 package slavsquatsuperstar.demos.geometrydash.components;
 
 import mayonez.Script;
-import mayonez.graphics.CameraMode;
+import mayonez.graphics.camera.CameraMode;
 import mayonez.input.KeyInput;
 import mayonez.math.Vec2;
 import mayonez.physics.Rigidbody;

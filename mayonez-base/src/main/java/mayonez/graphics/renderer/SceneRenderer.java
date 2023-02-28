@@ -1,7 +1,6 @@
 package mayonez.graphics.renderer;
 
-import mayonez.GameObject;
-import mayonez.Scene;
+import mayonez.*;
 
 /**
  * Draws game objects and sprites in a {@link mayonez.Scene} to the screen.

@@ -1,9 +1,9 @@
 package mayonez.scripts.input;
 
-import mayonez.Script;
-import mayonez.input.MouseInput;
-import mayonez.math.Vec2;
-import mayonez.physics.colliders.Collider;
+import mayonez.*;
+import mayonez.input.*;
+import mayonez.math.*;
+import mayonez.physics.colliders.*;
 
 public abstract class MouseInputScript extends Script {
 

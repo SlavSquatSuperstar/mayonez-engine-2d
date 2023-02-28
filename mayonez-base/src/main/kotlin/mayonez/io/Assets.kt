@@ -1,14 +1,8 @@
 package mayonez.io
 
-import mayonez.Logger
-import mayonez.Mayonez
-import mayonez.io.image.GLTexture
-import mayonez.io.image.JTexture
-import mayonez.io.image.Shader
-import mayonez.io.image.Texture
-import mayonez.io.text.CSVFile
-import mayonez.io.text.JSONFile
-import mayonez.io.text.TextFile
+import mayonez.*
+import mayonez.io.image.*
+import mayonez.io.text.*
 import org.reflections.Reflections
 import org.reflections.scanners.Scanners
 import java.io.File
@@ -20,7 +14,8 @@ import java.nio.file.Paths
 import java.util.regex.Pattern
 
 /**
- * The central asset pool for the application and a utility class for file I/O and managing the application's resources safely.
+ * The central asset pool for the application and a utility class for file
+ * I/O and managing the application's resources safely.
  *
  * @author SlavSquatSuperstar
  */
@@ -41,7 +36,8 @@ object Assets {
     // Search Folder Methods
 
     /**
-     * Recursively searches a resource directory inside the JAR and adds all assets.
+     * Recursively searches a resource directory inside the JAR and adds all
+     * assets.
      *
      * @param directory a folder inside the jar
      */
@@ -58,11 +54,12 @@ object Assets {
 //        val resources = searchDirectory(directory, AssetType.CLASSPATH)
         resources.forEach { createAsset(it) } // Create an asset from each path
         Logger.debug("Loaded ${resources.size} resources inside \"$directory\"")
-        return ArrayList(resources);
+        return ArrayList(resources)
     }
 
     /**
-     * Recursively searches a file directory outside the JAR and adds all assets.
+     * Recursively searches a file directory outside the JAR and adds all
+     * assets.
      *
      * @param directory a folder outside the jar
      */
@@ -113,7 +110,8 @@ object Assets {
     fun hasAsset(filename: String): Boolean = filename in assets
 
     /**
-     * Creates a new [Asset] if it does not exist already, and stores it for future use.
+     * Creates a new [Asset] if it does not exist already, and stores it for
+     * future use.
      *
      * @param filename the location of the asset
      * @return the asset
@@ -130,9 +128,10 @@ object Assets {
     }
 
     /**
-     * Instantiates an [Asset] under the given subclass and overwrites it in storage.
+     * Instantiates an [Asset] under the given subclass and overwrites it in
+     * storage.
      *
-     * @param filename   the location of the asset
+     * @param filename the location of the asset
      * @param assetClass the subclass of the asset
      * @return the asset as a subclass instance, if successfully created
      */
@@ -157,11 +156,13 @@ object Assets {
     fun getAsset(filename: String): Asset? = assets[filename]
 
     /**
-     * Retrieves and replaces the [Asset] under the specified filename as in instance of any Asset subclass.
+     * Retrieves and replaces the [Asset] under the specified filename as in
+     * instance of any Asset subclass.
      *
      * @param filename the asset location
-     * @param cls      the asset subclass
-     * @return a subclass instance with the same {@link AssetType}, if the asset is valid.
+     * @param cls the asset subclass
+     * @return a subclass instance with the same [AssetType], if the asset is
+     *     valid.
      */
     @JvmStatic
     @Suppress("UNCHECKED_CAST")
@@ -237,9 +238,7 @@ object Assets {
     @JvmStatic
     fun getShader(filename: String): Shader? = getAsset(filename, Shader::class.java)
 
-    /**
-     * Empties all Assets from the asset pool.
-     */
+    /** Empties all Assets from the asset pool. */
     @JvmStatic
     fun clearAssets() {
         assets.clear()
@@ -260,7 +259,8 @@ object Assets {
     /**
      * Accesses an external file from outside the .jar executable.
      *
-     * @param filename the location of the file inside the computer's local storage
+     * @param filename the location of the file inside the computer's local
+     *     storage
      * @return the file's URL
      */
     @JvmStatic
