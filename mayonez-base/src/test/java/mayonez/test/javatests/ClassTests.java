@@ -1,11 +1,8 @@
 package mayonez.test.javatests;
 
-import mayonez.Component;
-import mayonez.physics.colliders.BallCollider;
-import mayonez.physics.colliders.BoxCollider;
-import mayonez.physics.colliders.Collider;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import mayonez.*;
+import mayonez.physics.colliders.*;
+import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;

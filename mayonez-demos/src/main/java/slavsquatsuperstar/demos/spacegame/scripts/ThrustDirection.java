@@ -1,6 +1,6 @@
-package slavsquatsuperstar.demos.spacegame.scripts.movement;
+package slavsquatsuperstar.demos.spacegame.scripts;
 
-import mayonez.math.Vec2;
+import mayonez.math.*;
 
 /**
  * Which way a thruster propels a spaceship.
@@ -8,12 +8,15 @@ import mayonez.math.Vec2;
  * @author SlavSquatSuperstar
  */
 public enum ThrustDirection {
+
     FORWARD(new Vec2(0f, 1f), 0f),
     BACKWARD(new Vec2(0f, -1f), 0f),
     LEFT(new Vec2(-1f, 0f), 0f),
     RIGHT(new Vec2(1f, 0f), 0f),
+
     TURN_LEFT(new Vec2(), -1f), // counter-clockwise
     TURN_RIGHT(new Vec2(), 1f), // clockwise
+
     NONE(new Vec2(), 0f); // sentinel
 
     public final Vec2 moveDir;

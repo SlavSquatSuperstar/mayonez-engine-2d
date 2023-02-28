@@ -1,12 +1,10 @@
 package slavsquatsuperstar.demos.physics;
 
-import mayonez.Preferences;
-import mayonez.Scene;
-import mayonez.math.FloatMath;
+import mayonez.*;
 import mayonez.math.Random;
-import mayonez.math.Vec2;
+import mayonez.math.*;
 
-import java.util.LinkedList;
+import java.util.*;
 
 /**
  * For testing the physics engine with simulated pool balls.

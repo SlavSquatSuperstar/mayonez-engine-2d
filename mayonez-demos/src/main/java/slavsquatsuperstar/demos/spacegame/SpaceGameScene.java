@@ -1,23 +1,18 @@
 package slavsquatsuperstar.demos.spacegame;
 
 import kotlin.Pair;
-import mayonez.DebugDraw;
-import mayonez.GameObject;
-import mayonez.Preferences;
-import mayonez.Scene;
-import mayonez.graphics.Color;
-import mayonez.graphics.Colors;
-import mayonez.input.KeyInput;
+import mayonez.*;
+import mayonez.graphics.*;
+import mayonez.input.*;
 import mayonez.math.Random;
-import mayonez.math.Vec2;
-import mayonez.math.shapes.Circle;
-import mayonez.math.shapes.Shape;
-import mayonez.scripts.SpawnManager;
+import mayonez.math.*;
+import mayonez.math.shapes.*;
+import mayonez.scripts.*;
 import slavsquatsuperstar.demos.spacegame.objects.Asteroid;
 import slavsquatsuperstar.demos.spacegame.objects.EnemyShip;
 import slavsquatsuperstar.demos.spacegame.objects.PlayerShip;
 
-import java.util.ArrayList;
+import java.util.*;
 
 public class SpaceGameScene extends Scene {
 

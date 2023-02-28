@@ -1,12 +1,10 @@
 package mayonez.physics.detection;
 
-import mayonez.math.Vec2;
+import mayonez.math.*;
 import mayonez.math.shapes.*;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
-import static mayonez.test.TestUtils.assertFloatEquals;
-import static mayonez.test.TestUtils.assertVerticesEqual;
+import static mayonez.test.TestUtils.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**

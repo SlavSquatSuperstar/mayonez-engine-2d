@@ -1,13 +1,13 @@
 package mayonez.physics.colliders;
 
-import org.junit.jupiter.api.Test;
-import mayonez.math.Vec2;
-import mayonez.Transform;
+import mayonez.*;
+import mayonez.math.*;
+import org.junit.jupiter.api.*;
 
-import java.util.Arrays;
+import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static mayonez.test.TestUtils.assertVerticesEqual;
+import static mayonez.test.TestUtils.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Unit tests for the {@link mayonez.physics.colliders.PolygonCollider} class.

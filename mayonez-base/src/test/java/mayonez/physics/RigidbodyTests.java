@@ -1,10 +1,9 @@
 package mayonez.physics;
 
-import org.junit.jupiter.api.Test;
-import mayonez.math.FloatMath;
-import mayonez.math.Vec2;
+import mayonez.math.*;
+import org.junit.jupiter.api.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Unit tests for the {@link mayonez.physics.Rigidbody} class.

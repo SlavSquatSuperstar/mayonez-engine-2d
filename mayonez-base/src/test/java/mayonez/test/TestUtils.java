@@ -1,12 +1,10 @@
 package mayonez.test;
 
-import mayonez.math.FloatMath;
-import mayonez.math.Vec2;
-import mayonez.physics.Collisions;
-import mayonez.math.shapes.Shape;
+import mayonez.math.*;
+import mayonez.math.shapes.*;
+import mayonez.physics.*;
 
-import java.util.Arrays;
-import java.util.Comparator;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 

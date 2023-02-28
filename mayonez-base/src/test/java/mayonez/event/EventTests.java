@@ -1,6 +1,6 @@
 package mayonez.event;
 
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 /**
  * Unit tests for the {@link mayonez.event} package.

@@ -1,11 +1,11 @@
 package mayonez.io.text;
 
-import org.junit.jupiter.api.Test;
 import mayonez.util.Record;
+import org.junit.jupiter.api.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 

@@ -1,12 +1,11 @@
 package slavsquatsuperstar.demos;
 
-import mayonez.Mayonez;
-import mayonez.SceneManager;
-import mayonez.input.KeyInput;
-import mayonez.util.OperatingSystem;
+import mayonez.*;
+import mayonez.input.*;
+import mayonez.util.*;
 import slavsquatsuperstar.demos.mario.MarioScene;
-import slavsquatsuperstar.demos.physics.SandboxScene;
 import slavsquatsuperstar.demos.physics.PoolBallsScene;
+import slavsquatsuperstar.demos.physics.SandboxScene;
 import slavsquatsuperstar.demos.spacegame.SpaceGameScene;
 
 /**
@@ -53,13 +52,6 @@ public class DemosLauncher {
                 pollSceneControls();
             }
         });
-//        SceneManager.addScene(new DetectionTestScene(scenes[4]) {
-//            @Override
-//            protected void onUserUpdate(float dt) {
-//                super.onUserUpdate(dt);
-//                pollSceneControls();
-//            }
-//        });
 
         System.out.println(System.getProperty("os.name"));
         System.out.println(System.getProperty("file.separator"));

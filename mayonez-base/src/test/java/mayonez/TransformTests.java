@@ -1,7 +1,7 @@
-package mayonez.math;
+package mayonez;
 
-import org.junit.jupiter.api.Test;
-import mayonez.Transform;
+import mayonez.math.*;
+import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 

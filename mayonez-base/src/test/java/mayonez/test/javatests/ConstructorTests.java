@@ -1,8 +1,8 @@
 package mayonez.test.javatests;
 
-import mayonez.io.Asset;
-import mayonez.io.text.TextFile;
-import org.junit.jupiter.api.Test;
+import mayonez.io.*;
+import mayonez.io.text.*;
+import org.junit.jupiter.api.*;
 
 import java.lang.reflect.Constructor;
 

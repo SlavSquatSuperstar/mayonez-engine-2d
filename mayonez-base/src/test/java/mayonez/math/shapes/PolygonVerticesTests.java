@@ -1,12 +1,11 @@
 package mayonez.math.shapes;
 
-import mayonez.math.Vec2;
-import org.junit.jupiter.api.Test;
+import mayonez.math.*;
+import org.junit.jupiter.api.*;
 
-import java.util.Objects;
+import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Unit tests for the {@link PolygonVertices} class to make sure its subclasses behave like it.

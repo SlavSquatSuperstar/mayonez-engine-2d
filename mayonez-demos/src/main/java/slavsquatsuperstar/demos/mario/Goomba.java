@@ -1,13 +1,11 @@
 package slavsquatsuperstar.demos.mario;
 
-import mayonez.GameObject;
-import mayonez.Script;
-import mayonez.Transform;
-import mayonez.graphics.sprites.Sprite;
-import mayonez.math.Vec2;
-import mayonez.physics.Rigidbody;
-import mayonez.physics.colliders.BoxCollider;
-import mayonez.scripts.movement.DragAndDrop;
+import mayonez.*;
+import mayonez.graphics.sprites.*;
+import mayonez.math.*;
+import mayonez.physics.*;
+import mayonez.physics.colliders.*;
+import mayonez.scripts.movement.*;
 
 /**
  * A Goomba enemy that Mario can destroy.

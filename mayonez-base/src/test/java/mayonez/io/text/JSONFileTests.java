@@ -1,12 +1,12 @@
 package mayonez.io.text;
 
 import mayonez.util.Record;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-import static mayonez.test.TestUtils.assertFloatEquals;
+import static mayonez.test.TestUtils.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**

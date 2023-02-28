@@ -1,11 +1,10 @@
-package slavsquatsuperstar.demos.spacegame.scripts.movement;
+package slavsquatsuperstar.demos.spacegame.scripts;
 
-import mayonez.Script;
-import mayonez.input.KeyInput;
-import mayonez.math.Vec2;
-import mayonez.physics.Rigidbody;
-import mayonez.scripts.movement.KeyMovement;
-import mayonez.scripts.movement.KeyRotation;
+import mayonez.*;
+import mayonez.input.*;
+import mayonez.math.*;
+import mayonez.physics.*;
+import mayonez.scripts.movement.*;
 
 /**
  * A script that enables/disables the visibility of thruster exhaust plumes based on a spaceship's

@@ -1,9 +1,9 @@
 package mayonez.math;
 
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
+import static mayonez.test.TestUtils.*;
 import static org.junit.jupiter.api.Assertions.*;
-import static mayonez.test.TestUtils.assertFloatEquals;
 
 /**
  * Unit tests for the {@link mayonez.math.FloatMath} and {@link mayonez.math.IntMath} classes.

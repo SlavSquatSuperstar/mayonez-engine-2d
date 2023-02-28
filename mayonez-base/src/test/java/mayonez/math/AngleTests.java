@@ -1,8 +1,8 @@
 package mayonez.math;
 
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
-import static mayonez.test.TestUtils.assertFloatEquals;
+import static mayonez.test.TestUtils.*;
 
 /**
  * Unit tests for the {@link mayonez.math.Angle} class.

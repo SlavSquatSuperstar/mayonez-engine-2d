@@ -1,10 +1,7 @@
-package slavsquatsuperstar.demos.spacegame.scripts.movement;
+package slavsquatsuperstar.demos.spacegame.scripts;
 
-import mayonez.GameObject;
-import mayonez.Script;
-import mayonez.Transform;
-import mayonez.graphics.sprites.Animator;
-import mayonez.graphics.sprites.SpriteSheet;
+import mayonez.*;
+import mayonez.graphics.sprites.*;
 import slavsquatsuperstar.demos.spacegame.objects.ZIndex;
 
 /**

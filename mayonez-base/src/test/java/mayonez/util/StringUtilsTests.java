@@ -1,11 +1,9 @@
 package mayonez.util;
 
-import mayonez.GameObject;
-import mayonez.Scene;
-import org.junit.jupiter.api.Test;
+import mayonez.*;
+import org.junit.jupiter.api.*;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 
 /**

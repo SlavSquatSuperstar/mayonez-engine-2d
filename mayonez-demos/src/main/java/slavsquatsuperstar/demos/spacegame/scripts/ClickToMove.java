@@ -1,11 +1,9 @@
-package slavsquatsuperstar.demos.spacegame.scripts.movement;
+package slavsquatsuperstar.demos.spacegame.scripts;
 
-import mayonez.input.MouseInput;
-import mayonez.math.Interval;
-import mayonez.math.Vec2;
-import mayonez.math.shapes.Edge;
-import mayonez.scripts.movement.MouseScript;
-import mayonez.scripts.movement.MoveMode;
+import mayonez.input.*;
+import mayonez.math.*;
+import mayonez.math.shapes.*;
+import mayonez.scripts.movement.*;
 
 /**
  * Moves an object towards a location set by mouse pointer.

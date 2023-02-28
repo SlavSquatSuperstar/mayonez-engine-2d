@@ -1,13 +1,12 @@
 package mayonez.math.shapes;
 
-import mayonez.math.Vec2;
-import org.junit.jupiter.api.Test;
+import mayonez.math.*;
+import org.junit.jupiter.api.*;
 
-import java.util.Objects;
+import java.util.*;
 
-import static mayonez.test.TestUtils.assertFloatEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static mayonez.test.TestUtils.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Unit tests for the {@link mayonez.math.shapes.Polygon} class to make sure its subclasses behave like it.

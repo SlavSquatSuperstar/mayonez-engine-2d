@@ -1,8 +1,7 @@
 package slavsquatsuperstar.demos.physics;
 
-import mayonez.math.Vec2;
-import mayonez.scripts.movement.MouseScript;
-import mayonez.scripts.movement.MoveMode;
+import mayonez.math.*;
+import mayonez.scripts.movement.*;
 
 /**
  * Allows objects to be given a velocity or impulse using the mouse. Holding the mouse on an object

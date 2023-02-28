@@ -13,9 +13,9 @@ import mayonez.scripts.combat.FireProjectile;
 import mayonez.scripts.movement.KeyMovement;
 import mayonez.scripts.movement.KeyRotation;
 import mayonez.scripts.movement.MoveMode;
-import slavsquatsuperstar.demos.spacegame.scripts.movement.ThrustController;
-import slavsquatsuperstar.demos.spacegame.scripts.movement.ThrustDirection;
-import slavsquatsuperstar.demos.spacegame.scripts.movement.Thruster;
+import slavsquatsuperstar.demos.spacegame.scripts.ThrustController;
+import slavsquatsuperstar.demos.spacegame.scripts.ThrustDirection;
+import slavsquatsuperstar.demos.spacegame.scripts.Thruster;
 
 /**
  * A player-controlled spaceship that can fire projectiles.

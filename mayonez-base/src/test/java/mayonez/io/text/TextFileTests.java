@@ -1,13 +1,13 @@
 package mayonez.io.text;
 
-import org.junit.jupiter.api.Test;
-import mayonez.io.Assets;
+import mayonez.io.*;
+import org.junit.jupiter.api.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Arrays;
+import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Unit tests for the {@link mayonez.io.text.TextFile} class.

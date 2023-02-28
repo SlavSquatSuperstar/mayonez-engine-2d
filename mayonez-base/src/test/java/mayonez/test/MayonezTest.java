@@ -1,13 +1,11 @@
 package mayonez.test;
 
-import mayonez.math.Vec2;
-import mayonez.math.shapes.Triangle;
+import mayonez.math.*;
+import mayonez.math.shapes.*;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * Code sandbox for testing new features in the engine.

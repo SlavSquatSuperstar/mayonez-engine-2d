@@ -1,9 +1,7 @@
 package mayonez.math.shapes;
 
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import mayonez.math.FloatMath;
-import mayonez.math.Vec2;
+import mayonez.math.*;
+import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 

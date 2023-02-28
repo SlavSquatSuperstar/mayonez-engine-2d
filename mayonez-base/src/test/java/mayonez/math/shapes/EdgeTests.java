@@ -1,8 +1,8 @@
 package mayonez.math.shapes;
 
-import mayonez.math.Vec2;
-import mayonez.test.TestUtils;
-import org.junit.jupiter.api.Test;
+import mayonez.math.*;
+import mayonez.test.*;
+import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 

@@ -1,16 +1,13 @@
 package slavsquatsuperstar.demos.physics;
 
-import mayonez.GameObject;
-import mayonez.graphics.Color;
-import mayonez.graphics.Colors;
-import mayonez.graphics.sprites.ShapeSprite;
-import mayonez.math.Vec2;
-import mayonez.physics.PhysicsMaterial;
-import mayonez.physics.Rigidbody;
-import mayonez.physics.colliders.BallCollider;
-import mayonez.scripts.KeepInScene;
-import mayonez.scripts.movement.DragAndDrop;
-import mayonez.scripts.movement.MoveMode;
+import mayonez.*;
+import mayonez.graphics.*;
+import mayonez.graphics.sprites.*;
+import mayonez.math.*;
+import mayonez.physics.*;
+import mayonez.physics.colliders.*;
+import mayonez.scripts.*;
+import mayonez.scripts.movement.*;
 
 /**
  * A simulated  billiard (pool) ball.

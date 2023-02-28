@@ -1,17 +1,13 @@
 package slavsquatsuperstar.demos.mario;
 
-import mayonez.GameObject;
-import mayonez.Script;
-import mayonez.Transform;
-import mayonez.graphics.sprites.Sprite;
-import mayonez.input.KeyInput;
-import mayonez.math.Vec2;
-import mayonez.physics.Rigidbody;
-import mayonez.physics.colliders.BoxCollider;
-import mayonez.scripts.KeepInScene;
-import mayonez.scripts.movement.KeyMovement;
-import mayonez.scripts.movement.KeyRotation;
-import mayonez.scripts.movement.MoveMode;
+import mayonez.*;
+import mayonez.graphics.sprites.*;
+import mayonez.input.*;
+import mayonez.math.*;
+import mayonez.physics.*;
+import mayonez.physics.colliders.*;
+import mayonez.scripts.*;
+import mayonez.scripts.movement.*;
 
 /**
  * A controllable Mario character.

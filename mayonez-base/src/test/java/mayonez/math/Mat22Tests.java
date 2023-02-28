@@ -1,16 +1,15 @@
 package mayonez.math;
 
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Unit tests for the {@link mayonez.math.Mat22} class.
  *
  * @author SlavSquatSuperstar
  */
-public class MatrixTests {
+public class Mat22Tests {
 
     // Vector Transformation
 

@@ -1,12 +1,10 @@
 package mayonez;
 
-import mayonez.graphics.sprites.GLSprite;
-import mayonez.graphics.sprites.Sprite;
-import mayonez.physics.Rigidbody;
-import mayonez.physics.colliders.BoxCollider;
-import mayonez.physics.colliders.Collider;
-import mayonez.scripts.Counter;
-import org.junit.jupiter.api.Test;
+import mayonez.graphics.sprites.*;
+import mayonez.physics.*;
+import mayonez.physics.colliders.*;
+import mayonez.scripts.*;
+import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;

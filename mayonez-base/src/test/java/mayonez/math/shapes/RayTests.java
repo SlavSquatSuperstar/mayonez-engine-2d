@@ -1,13 +1,12 @@
 package mayonez.math.shapes;
 
-import mayonez.math.Vec2;
-import mayonez.physics.Collisions;
-import org.junit.jupiter.api.Test;
+import mayonez.math.*;
+import mayonez.physics.*;
+import org.junit.jupiter.api.*;
 
-import static mayonez.physics.Collisions.raycast;
-import static mayonez.test.TestUtils.assertFloatEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static mayonez.physics.Collisions.*;
+import static mayonez.test.TestUtils.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Unit tests for the {@link mayonez.math.shapes.Ray} class.

@@ -1,9 +1,8 @@
 package mayonez.physics.detection;
 
-import mayonez.math.Vec2;
-import mayonez.math.shapes.Circle;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import mayonez.math.*;
+import mayonez.math.shapes.*;
+import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
