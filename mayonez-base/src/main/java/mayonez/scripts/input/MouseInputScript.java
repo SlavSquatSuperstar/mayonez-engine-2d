@@ -5,6 +5,11 @@ import mayonez.input.*;
 import mayonez.math.*;
 import mayonez.physics.colliders.*;
 
+/**
+ * Provides custom behaviors for when the mouse is clicked or dragged on an object.
+ *
+ * @author SlavSquatSuperstar
+ */
 public abstract class MouseInputScript extends Script {
 
     // Mouse State
@@ -38,6 +43,7 @@ public abstract class MouseInputScript extends Script {
 
     protected boolean isMouseOnObject() {
         return collider != null && collider.contains(getMousePos());
+//        return collider != null && collider.contains(lastMouse);
     }
 
     /**

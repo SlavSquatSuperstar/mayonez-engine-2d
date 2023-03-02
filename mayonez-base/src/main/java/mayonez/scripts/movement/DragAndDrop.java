@@ -16,6 +16,7 @@ public class DragAndDrop extends MouseInputScript {
 
     private final String button;
     protected Rigidbody rb; // Reference to object rigidbody
+    private Vec2 lastMouse;
 
     public DragAndDrop(String button) {
         this.button = button;
@@ -24,7 +25,14 @@ public class DragAndDrop extends MouseInputScript {
     @Override
     public void start() {
         super.start();
+        lastMouse = new Vec2();
         rb = getRigidbody();
+    }
+
+    @Override
+    public void update(float dt) {
+        super.update(dt);
+        lastMouse = getMousePos().add(getMouseDisp());
     }
 
     // Callback Methods
@@ -44,7 +52,10 @@ public class DragAndDrop extends MouseInputScript {
                 rb.setVelocity(new Vec2());
                 rb.setAngVelocity(0);
             }
-            transform.move(getMouseDisp());
+//            transform.setPosition(getMousePos());
+            var move = getMousePos().sub(lastMouse).add(getMouseDisp());
+//            var move = getMouseDisp();
+            transform.move(move);
         }
     }
 
