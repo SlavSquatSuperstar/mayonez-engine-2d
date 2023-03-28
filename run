@@ -1,111 +1,135 @@
 #!/bin/sh
 
-# Default values
-engine="gl"
-log="on"
-
-# Functions
-show_help() {
-  echo "Usage: run [--help] [--nobuild/-n] [--engine/-e gl/awt] [--log/-l on/off]"
-}
-
-# run_jar() {
-#   java -jar build/libs/*.jar "$use_gl"
-# }
+#
+# This script builds and runs the project for Unix (macOS/Linux) users
+# or Windows users with Windows Subsystem for Linux installed.
+#
+# The user may also pass in command-line arguments to change how
+# the application runs.
+#
+# Written by SlavSquatSuperstar
+#
 
 # Navigate to the project directory
 SCRIPT_DIR=$(dirname "$0")
 cd "$SCRIPT_DIR" || exit
 
-# Check if Java is installed
-if [ "$(java --version)" ]; then
-  echo "Java is installed."
-else
-  echo "Please install Java."
-  exit 1
-fi
-
-# Check operating system
+# Set variable defaults
+skip_build=false
 is_mac_os=false
 
-if [[ "$OSTYPE" = "linux-gnu"* ]]; then
-  echo "Detecting GNU/Linux."
-elif [[ "$OSTYPE" = "darwin"* ]]; then
-  echo "Detecting macOS."
-  is_mac_os=true
-elif [[ "$OSTYPE" = "cygwin"* || "$OSTYPE" = "mingw"* || "$OSTYPE" = *"msys" ]]; then
-  echo "Detecting Windows."
-  echo "Please use 'run.bat' insead."
-  exit 1
-else
-  echo "Unknown operating system detected."
-fi
+engine="gl"
+log="on"
+
+# Functions
+
+show_help() {
+  # Show help and exit with a code
+  echo "Usage: run [--help] [--nobuild/-n] [--engine/-e gl/awt] [--log/-l on/off]"
+  exit "$1"
+}
+
+build_gradle_project() {
+  echo "Building Mayonez Engine..."
+  if [ "$(./gradlew clean build)" ]; then
+    echo "Successfully built Mayonez Engine."
+  else
+    echo "Error building Mayonez Engine."
+    exit 1
+  fi
+}
+
+run_jar() {
+  # Launch the jar with VM args
+  java "$1" -jar build/libs/*.jar "--engine" "$engine" "--log" "$log"
+}
 
 # Read arguments
 while :; do
   case $1 in
-    --help|-h)
-      show_help
-      exit 0
-      ;;
-    --nobuild|-n)
-      skip_build=true
-      ;;
-    --engine|-e)
-      if [ "$2" ]; then
-        engine="$2"
-        shift
-      else
-        echo 'Option "--engine" requires one argument'
-        exit 1
-      fi
-      ;;
-    --log|-l)
-      if [ "$2" ]; then
-        log="$2"
-        shift
-      else
-        echo 'Option "--log" requires one argument'
-        exit 1
-      fi
-      ;;
-    -*)
-      echo "Invalid option \"$1\""
-      exit 1
+  --help | -h)
+    show_help 0
     ;;
-    *)
-      break
+  --nobuild | -n)
+    skip_build=true
+    ;;
+  --engine | -e)
+    if [ "$2" ]; then
+      engine="$2"
+      shift
+    else
+      echo 'Option "--engine" requires one argument'
+      show_help 1
+    fi
+    ;;
+  --log | -l)
+    if [ "$2" ]; then
+      log="$2"
+      shift
+    else
+      echo 'Option "--log" requires one argument'
+      show_help 1
+    fi
+    ;;
+  -*)
+    echo "Invalid option \"$1\""
+    show_help 1
+    ;;
+  *)
+    break
+    ;;
   esac
   shift
 done
 
+# Check if Java is installed
+if [ "$(java --version)" ]; then
+  echo "Java is installed."
+else
+  echo "Please install Java to run this program."
+  exit 1
+fi
+
+# Check operating system
+case "$OSTYPE" in
+"linux-gnu"*)
+  echo "Detecting GNU/Linux."
+  ;;
+"darwin"*)
+  echo "Detecting macOS."
+  is_mac_os=true
+  ;;
+"cygwin"* | "mingw"* | *"msys")
+  echo "Detecting Windows Subsystem for Linux."
+  echo "You should use run.bat/run.ps1 if WSL is not installed."
+  ;;
+*)
+  echo "Unknown operating system detected."
+  ;;
+esac
+
+# Build the application for Unix systems
+if ! [ $skip_build ]; then
+  build_gradle_project
+fi
+
 # Check for GL
-if [[ "$engine" = "gl" ]]; then
+if [ "$engine" = "gl" ]; then
   use_gl=true
 else
   use_gl=false
 fi
 
-# Build the application for Unix systems (macOS/Linux)
-echo "Building Mayonez Engine..."
-if [ "$(./gradlew clean build)" ]; then
-  echo "Successfully built Mayonez Engine."
-else
-  echo "Error building Mayonez Engine."
-  exit 1
-fi
-
 # Run the compiled .jar file
 if $use_gl; then
   echo "Launching with OpenGL Engine."
-
   if $is_mac_os; then
     # LWJGL requires a special argument on macOS
-    java -XstartOnFirstThread -jar build/libs/*.jar "--engine" "$engine" "--log" "$log"
+    run_jar "-XstartOnFirstThread"
   else
-    java -jar build/libs/*.jar "--engine" "$engine" "--log" "$log"
+    run_jar
   fi
 else
   echo "Launching with AWT Engine."
-  java -jar build/libs/*.jar "--engine" "$engine" "--log" "$log"
+  run_jar
 fi
