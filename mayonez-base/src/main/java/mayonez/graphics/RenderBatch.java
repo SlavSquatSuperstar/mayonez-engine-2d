@@ -16,7 +16,7 @@ import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.*;
 
 /**
- * A structure containing vertex information of many similar objects and combining them into one large mesh,
+ * Stores vertex information for many similar drawable objects and combining them into one large mesh,
  * allowing many sprites and shapes to be drawn in fewer GPU calls. Roughly analog to the {@link java.awt.Graphics2D}
  * from the AWT engine.
  *
@@ -46,8 +46,7 @@ public final class RenderBatch {
     private int vao; // Vertex array object (VAO) ID for this batch
     private int vbo; // Vertex buffer object (VBO) ID for this batch
     private int ebo; // Element buffer object (EBO)/index buffer ID for this batch
-    private final float[] vertices; // Quad vertex data for this batch, containing position, colors, and texture (UV) coordinates
-    private int vertexOffset; // Current vertex index
+    private final VertexArray vertices;
 
     public RenderBatch(int maxBatchSize, int zIndex, DrawPrimitive primitive) {
         this.maxBatchSize = maxBatchSize;
@@ -60,7 +59,7 @@ public final class RenderBatch {
 
         // Renderer Fields
         textures = new ArrayList<>(maxTextureSlots);
-        vertices = new float[maxBatchSize * vertexCount * vertexSize];
+        vertices = new VertexArray(maxBatchSize * vertexCount * vertexSize);
 
         createBatch();
     }
@@ -85,7 +84,7 @@ public final class RenderBatch {
     private void generateVBOs() {
         vbo = glGenBuffers();
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
-        glBufferData(GL_ARRAY_BUFFER, (long) vertices.length * Float.BYTES, GL_DYNAMIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, (long) vertices.capacity() * Float.BYTES, GL_DYNAMIC_DRAW);
     }
 
     private void generateEBOs() {
@@ -122,8 +121,7 @@ public final class RenderBatch {
      * Empties all sprite vertices and textures from the batch and readies it for buffering.
      */
     public void clearVertices() {
-        vertexOffset = 0;
-        Arrays.fill(vertices, 0);
+        vertices.clear();
         textures.clear();
     }
 
@@ -132,7 +130,7 @@ public final class RenderBatch {
      */
     public void uploadVertices() {
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, vertices);
+        vertices.upload();
     }
 
     public void drawBatch() {
@@ -149,7 +147,7 @@ public final class RenderBatch {
     }
 
     private void drawVertices() {
-        var numVertices = (vertexOffset * elementCount) / (vertexSize * vertexCount);
+        var numVertices = (vertices.size() * elementCount) / (vertexSize * vertexCount);
         glDrawElements(primitive.getPrimitiveType(), numVertices, GL_UNSIGNED_INT, 0);
     }
 
@@ -190,23 +188,15 @@ public final class RenderBatch {
     // Push Vertex Methods
 
     public void pushInt(int i) {
-        vertices[vertexOffset++] = i;
-    }
-
-    public void pushFloat(float f) {
-        vertices[vertexOffset++] = f;
+        vertices.push((float) i);
     }
 
     public void pushVec2(Vec2 v) {
-        pushFloat(v.x);
-        pushFloat(v.y);
+        vertices.push(v.x, v.y);
     }
 
     public void pushVec4(Vector4f v) {
-        pushFloat(v.x);
-        pushFloat(v.y);
-        pushFloat(v.z);
-        pushFloat(v.w);
+        vertices.push(v.x, v.y, v.z, v.w);
     }
 
     // Getter Methods
@@ -244,12 +234,12 @@ public final class RenderBatch {
      * @return if there are still unused vertices
      */
     public boolean hasVertexRoom() {
-        return vertexOffset < vertices.length;
+        return vertices.hasRoom();
     }
 
     @Override
     public String toString() {
         return String.format("Render Batch (Type: %s, Capacity: %d/%d, Z-Index: %d)",
-                primitive, vertexOffset / (vertexCount * vertexSize), maxBatchSize, zIndex);
+                primitive, vertices.size() / (vertexCount * vertexSize), maxBatchSize, zIndex);
     }
 }
