@@ -30,9 +30,9 @@ open class Record(private val map: MutableMap<String?, Any?>) {
     }
 
     /**
-     * Adds all key-value pairs from another record, overwriting existing
-     * pairs with the same key or creating new ones, but does not erase any
-     * pre-existing data.
+     * Adds all key-value pairs from another record but does not erase any
+     * pre-existing data. If any new entries contain a key already in this
+     * record, their new values are used, as long as they are not null.
      *
      * @param record another record
      */

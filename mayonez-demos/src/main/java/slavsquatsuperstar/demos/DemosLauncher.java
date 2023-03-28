@@ -1,6 +1,7 @@
 package slavsquatsuperstar.demos;
 
 import mayonez.*;
+import mayonez.init.*;
 import mayonez.input.*;
 import mayonez.util.*;
 import slavsquatsuperstar.demos.mario.MarioScene;
@@ -20,8 +21,8 @@ public class DemosLauncher {
     };
 
     public static void main(String[] args) {
-        var arg0 = (args.length > 0) ? args[0] : "true";
-        Mayonez.setUseGL(Boolean.parseBoolean(arg0)); // Automatically choose AWT/GL from CL args
+        var launcher = new Launcher(args);
+        launcher.setRunConfig();
 
         // Load scenes and allow scene switching
         SceneManager.addScene(new SpaceGameScene(scenes[0]) {

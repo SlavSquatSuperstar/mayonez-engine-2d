@@ -40,4 +40,5 @@ module mayonez.base {
     exports mayonez.scripts.movement;
     exports mayonez.util;
     exports mayonez.graphics.camera;
+    exports mayonez.init;
 }

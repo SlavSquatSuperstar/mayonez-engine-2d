@@ -1,19 +1,25 @@
 #!/bin/sh
 
+# Functions
+
 show_help() {
-	echo "Usage: run [--help] [--engine gl/awt] [--log on/off]"
+	echo "Usage: run [--help] [--nobuild/-n] [--engine/-e gl/awt] [--log/-l on/off]"
 }
 
 engine="gl"
 log="on"
 
+# Read Arguments
 while :; do
 	case $1 in
-		-h|--help)
+		--help|-h)
 			show_help
 			exit 0
 			;;
-		-e|--engine)
+		--nobuild|-n)
+			nobuild=true
+			;;
+		--engine|-e)
 			if [ "$2" ]; then
      	   		engine="$2"
                 shift
@@ -22,7 +28,7 @@ while :; do
                 exit 1
          	fi
          	;;
-     	-l|--log)
+     	--log|-l)
 			if [ "$2" ]; then
      	   		log="$2"
                 shift

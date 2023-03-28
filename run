@@ -1,24 +1,38 @@
 #!/bin/sh
 
+# Default values
+engine="gl"
+log="on"
+
+# Functions
+show_help() {
+  echo "Usage: run [--help] [--nobuild/-n] [--engine/-e gl/awt] [--log/-l on/off]"
+}
+
+# run_jar() {
+#   java -jar build/libs/*.jar "$use_gl"
+# }
+
 # Navigate to the project directory
 SCRIPT_DIR=$(dirname "$0")
 cd "$SCRIPT_DIR" || exit
 
-# Read arguments
-if [[ "$1" = "false"* ]]; then
-  USE_GL=false
+# Check if Java is installed
+if [ "$(java --version)" ]; then
+  echo "Java is installed."
 else
-  USE_GL=true
+  echo "Please install Java."
+  exit 1
 fi
 
 # Check operating system
-MAC_OS=false
+is_mac_os=false
 
 if [[ "$OSTYPE" = "linux-gnu"* ]]; then
   echo "Detecting GNU/Linux."
 elif [[ "$OSTYPE" = "darwin"* ]]; then
   echo "Detecting macOS."
-  MAC_OS=true
+  is_mac_os=true
 elif [[ "$OSTYPE" = "cygwin"* || "$OSTYPE" = "mingw"* || "$OSTYPE" = *"msys" ]]; then
   echo "Detecting Windows."
   echo "Please use 'run.bat' insead."
@@ -27,12 +41,49 @@ else
   echo "Unknown operating system detected."
 fi
 
-# Check if Java is installed
-if [ "$(java --version)" ]; then
-  echo "Java is installed."
+# Read arguments
+while :; do
+  case $1 in
+    --help|-h)
+      show_help
+      exit 0
+      ;;
+    --nobuild|-n)
+      skip_build=true
+      ;;
+    --engine|-e)
+      if [ "$2" ]; then
+        engine="$2"
+        shift
+      else
+        echo 'Option "--engine" requires one argument'
+        exit 1
+      fi
+      ;;
+    --log|-l)
+      if [ "$2" ]; then
+        log="$2"
+        shift
+      else
+        echo 'Option "--log" requires one argument'
+        exit 1
+      fi
+      ;;
+    -*)
+      echo "Invalid option \"$1\""
+      exit 1
+    ;;
+    *)
+      break
+  esac
+  shift
+done
+
+# Check for GL
+if [[ "$engine" = "gl" ]]; then
+  use_gl=true
 else
-  echo "Please install Java."
-  exit 1
+  use_gl=false
 fi
 
 # Build the application for Unix systems (macOS/Linux)
@@ -45,16 +96,16 @@ else
 fi
 
 # Run the compiled .jar file
-if $USE_GL; then
+if $use_gl; then
   echo "Launching with OpenGL Engine."
 
-  if $MAC_OS; then
+  if $is_mac_os; then
     # LWJGL requires a special argument on macOS
-    java -XstartOnFirstThread -jar build/libs/*.jar "$USE_GL"
+    java -XstartOnFirstThread -jar build/libs/*.jar "--engine" "$engine" "--log" "$log"
   else
-    java -jar build/libs/*.jar "$USE_GL"
+    java -jar build/libs/*.jar "--engine" "$engine" "--log" "$log"
   fi
 else
   echo "Launching with AWT Engine."
-  java -jar build/libs/*.jar "$USE_GL"
+  java -jar build/libs/*.jar "--engine" "$engine" "--log" "$log"
 fi

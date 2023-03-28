@@ -1,13 +1,11 @@
-package mayonez;
+package mayonez.init;
 
 import org.junit.jupiter.api.*;
-
-import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit tests for the {@link mayonez.Launcher} class.
+ * Unit tests for the {@link mayonez.init.Launcher} class.
  *
  * @author SlavSquatSuperstar
  */
@@ -18,31 +16,6 @@ public class LauncherTests {
     @BeforeEach
     void createLauncher() {
         launcher = new Launcher();
-    }
-
-    // Parse Args Test
-
-    @Test
-    public void readArgsCorrect() {
-        String[] argsIn = {"--engine", "gl", "--log", "on"};
-        List<String> argsOut = List.of("--engine", "gl", "--log", "on");
-        assertEquals(argsOut, launcher.readProgramArgs(argsIn));
-    }
-
-    @Test
-    public void parseArgsCorrect() {
-        List<String> argsList = List.of("--engine", "gl", "--log", "on");
-        var argsMap = launcher.parseProgramArgs(argsList);
-        assertEquals("gl", argsMap.getString("engine"));
-        assertEquals("on", argsMap.getString("log"));
-    }
-
-    @Test
-    public void parseArgsMissingParamsCorrect() {
-        List<String> argsList = List.of("--engine", "--log", "on");
-        var argsMap = launcher.parseProgramArgs(argsList);
-        assertEquals("", argsMap.getString("engine"));
-        assertEquals("on", argsMap.getString("log"));
     }
 
     // Get Args Test
