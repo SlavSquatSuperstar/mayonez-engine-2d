@@ -11,7 +11,6 @@ import org.json.JSONObject
  * @author SlavSquatSuperstar
  */
 // TODO safety measures so we don't set the use wrong data type for something
-// TODO json record subclass because this may be slow?
 open class Record(private val map: MutableMap<String?, Any?>) {
 
     /** Creates an empty record with no data. */
@@ -20,8 +19,8 @@ open class Record(private val map: MutableMap<String?, Any?>) {
     // Copy Methods
 
     /**
-     * Erases all stored data and replaces it with data from another config
-     * object, including key-value pairs with null elements.
+     * Sets this record as a copy of another record, clearing all stored data
+     * and replacing it with data from the other object.
      *
      * @param record another record
      */
@@ -31,14 +30,16 @@ open class Record(private val map: MutableMap<String?, Any?>) {
     }
 
     /**
-     * Overwrites or appends key-value pairs with non-null values from another
-     * object while preserving other existing data in this record.
+     * Adds all key-value pairs from another record, overwriting existing
+     * pairs with the same key or creating new ones, but does not erase any
+     * pre-existing data.
      *
      * @param record another record
      */
-    protected fun loadFrom(record: Record) {
-        for (entry in record.entries()) // overwrite or create values if not null
-            if (entry.value != null) this[entry.key] = entry.value
+    protected fun addAll(record: Record) {
+        record.entries().forEach {
+            if (it.value != null) this[it.key] = it.value
+        }
     }
 
     // Hash Map Methods
@@ -69,7 +70,10 @@ open class Record(private val map: MutableMap<String?, Any?>) {
      * does not exist.
      */
     fun getBoolean(key: String?): Boolean {
-        return getString(key).equals("true", ignoreCase = true) || getString(key).equals("yes", ignoreCase = true)
+        val lower = getString(key).lowercase()
+        if (lower == "true" || lower == "yes") return true
+        val num = getInt(key)
+        return num != 0
     }
 
     /**
@@ -110,22 +114,21 @@ open class Record(private val map: MutableMap<String?, Any?>) {
     /** Deletes all JSON key-value pairs. */
     fun clear() = map.clear()
 
-    /**
-     * Returns an iterable set of keys.
-     *
-     * @return the key set
-     */
-    fun keys(): Set<String?> = map.keys
+    /** Whether any value is stored in the record under the given key. */
+    operator fun contains(key: String?): Boolean = map.containsKey(key)
+
+    /** The number of key-value pairs stored in this record. */
+    fun size(): Int = map.size
 
     /**
      * Returns an iterable set of key-value pairs.
      *
-     * @return the key set
+     * @return the entry set
      */
-    fun entries(): Set<Map.Entry<String?, Any?>> = map.entries
+    private fun entries(): Set<Map.Entry<String?, Any?>> = map.entries
 
     /**
-     * Returns this object as a formatted JSON string.
+     * Returns this record as a formatted JSON string.
      *
      * @return the JSON string
      */

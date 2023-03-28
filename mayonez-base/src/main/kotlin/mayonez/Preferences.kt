@@ -21,7 +21,7 @@ object Preferences : Record() {
         if (Mayonez.INIT_PREFERENCES) return
 
         // Read preferences file and update game configuration
-        loadFrom(Assets.getJSONFile("preferences.json")!!.readJSON())
+        addAll(Assets.getJSONFile("preferences.json")!!.readJSON())
     }
 
     /* Window */

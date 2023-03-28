@@ -1,6 +1,7 @@
 package mayonez;
 
 import mayonez.util.*;
+import mayonez.util.Record;
 
 import java.util.*;
 
@@ -10,11 +11,11 @@ public class Launcher {
     private static final boolean SAVE_LOGS_DEFAULT = true;
 
     private final List<String> argsList;
-    private final Map<String, String> config;
+    private final Record config;
 
     public Launcher() {
         argsList = new ArrayList<>();
-        config = new HashMap<>();
+        config = new mayonez.util.Record();
         // TODO set defaults
     }
 
@@ -41,16 +42,16 @@ public class Launcher {
         return Arrays.asList(args);
     }
 
-    public Map<String, String> parseProgramArgs(List<String> args) {
-        if (args.isEmpty()) return new HashMap<>();
+    public Record parseProgramArgs(List<String> args) {
+        if (args.isEmpty()) return new Record();
 
-        Map<String, String> argMap = new HashMap<>();
+        var argMap = new Record();
         for (var i = 0; i < args.size(); i++) {
             var arg = args.get(i);
             if (arg.startsWith("--")) { // is a flag
                 var nextArg = getArg(args, i + 1);
                 if (nextArg != null && nextArg.startsWith("--")) continue;
-                argMap.put(arg.substring(2), nextArg);
+                argMap.set(arg.substring(2), nextArg);
                 i += 1;
             }
             // ignore positional args
@@ -64,23 +65,27 @@ public class Launcher {
     }
 
     public boolean getUseGL() {
-        if (!config.containsKey("engine")) return USE_GL_DEFAULT;
+        if (!config.contains("engine")) return USE_GL_DEFAULT;
 
-        var glArg = config.get("engine");
-        if (glArg == null) throw new IllegalArgumentException("Missing value for option \"engine\"");
-        else if (glArg.equals("gl")) return true;
-        else if (glArg.equals("awt")) return false;
-        else throw new IllegalArgumentException("Invalid value for option \"engine\"");
+        var glArg = config.getString("engine");
+        return switch (glArg) {
+            case "" -> throw new IllegalArgumentException("Missing value for option \"engine\"");
+            case "gl" -> true;
+            case "awt" -> false;
+            default -> throw new IllegalArgumentException("Invalid value for option \"engine\"");
+        };
     }
 
     public boolean getSaveLogs() {
-        if (!config.containsKey("log")) return SAVE_LOGS_DEFAULT;
+        if (!config.contains("log")) return SAVE_LOGS_DEFAULT;
 
-        var logArg = config.get("log");
-        if (logArg == null) throw new IllegalArgumentException("Missing value for option \"log\"");
-        else if (logArg.equals("on")) return true;
-        else if (logArg.equals("off")) return false;
-        else throw new IllegalArgumentException("Invalid value for option \"log\"");
+        var logArg = config.getString("log");
+        return switch (logArg) {
+            case "" -> throw new IllegalArgumentException("Missing value for option \"log\"");
+            case "on" -> true;
+            case "off" -> false;
+            default -> throw new IllegalArgumentException("Invalid value for option \"log\"");
+        };
     }
 
     // Init engine components

@@ -32,17 +32,17 @@ public class LauncherTests {
     @Test
     public void parseArgsCorrect() {
         List<String> argsList = List.of("--engine", "gl", "--log", "on");
-        Map<String, String> argsMap = launcher.parseProgramArgs(argsList);
-        assertEquals("gl", argsMap.get("engine"));
-        assertEquals("on", argsMap.get("log"));
+        var argsMap = launcher.parseProgramArgs(argsList);
+        assertEquals("gl", argsMap.getString("engine"));
+        assertEquals("on", argsMap.getString("log"));
     }
 
     @Test
     public void parseArgsMissingParamsCorrect() {
         List<String> argsList = List.of("--engine", "--log", "on");
-        Map<String, String> argsMap = launcher.parseProgramArgs(argsList);
-        assertNull(argsMap.get("engine"));
-        assertEquals("on", argsMap.get("log"));
+        var argsMap = launcher.parseProgramArgs(argsList);
+        assertEquals("", argsMap.getString("engine"));
+        assertEquals("on", argsMap.getString("log"));
     }
 
     // Get Args Test

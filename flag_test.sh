@@ -31,6 +31,10 @@ while :; do
                 exit 1
          	fi
          	;;
+     	-*)
+			echo "Invalid option \"$1\""
+            exit 1
+			;;
      	*)
 			break
 	esac
