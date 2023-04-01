@@ -1,9 +1,15 @@
 # Mayonez Engine
 
-The 2D Java game engine to fit your Slavic needs!*†
+The ultimate made-from-scratch 2D Java game engine to fit your Slavic (and non-Slavic) needs!
 
 This project was developed using macOS 13.x Ventura (Intel) and Intellij IDEA. This progam has not been tested on any
 other systems.
+
+<img src="https://img.shields.io/badge/platform-macOS-lightgrey"></img>
+<img src="https://img.shields.io/badge/Made%20with-Java-red"></img>
+<img src="https://img.shields.io/badge/Made%20with-Kotlin-blueviolet"></img>
+<img src="https://img.shields.io/badge/Made%20with-LWJGL-blue"></img>
+<img src=https://img.shields.io/badge/License-GPL3-green></img>
 
 ## Features
 
@@ -123,14 +129,6 @@ A massive, heartfelt thanks goes out to the following people, groups, and resour
   🥔🤘🥃
 - Stack Overflow/Reddit: For answering questions I never knew I had.
 - …And many more!
-
-### Disclaimers
-
-- *This statement has not been evaluated by the International Council of Slavs. This software is not intended to
-  idealize, encourage, promote, or spread Communism.
-
-- †The developer is not responsible for any injuries, trauma, addictions, deaths caused by excessive drinking or
-  incorrect squatting position.
 
 ## License
 
