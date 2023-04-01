@@ -6,7 +6,6 @@ import mayonez.io.text.*
 import org.reflections.Reflections
 import org.reflections.scanners.Scanners
 import java.io.File
-import java.net.MalformedURLException
 import java.net.URL
 import java.nio.file.Files
 import java.nio.file.Path
@@ -243,34 +242,6 @@ object Assets {
     fun clearAssets() {
         assets.clear()
         Logger.debug("Cleared all program resources")
-    }
-
-    // Asset URL Methods
-
-    /**
-     * Accesses a classpath resource from within the .jar executable.
-     *
-     * @param path the location of the file inside the root resource directory
-     * @return the file's URL
-     */
-    @JvmStatic
-    fun getClasspathURL(path: String): URL? = ClassLoader.getSystemResource(path)
-
-    /**
-     * Accesses an external file from outside the .jar executable.
-     *
-     * @param filename the location of the file inside the computer's local
-     *     storage
-     * @return the file's URL
-     */
-    @JvmStatic
-    fun getFileURL(filename: String): URL? {
-        return try {
-            File(filename).toURI().toURL()
-        } catch (e: MalformedURLException) {
-            Logger.error("Invalid file path \"%s\"", filename)
-            null
-        }
     }
 
     override fun toString(): String {

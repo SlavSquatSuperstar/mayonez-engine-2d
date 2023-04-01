@@ -1,5 +1,6 @@
 package mayonez.io;
 
+import mayonez.util.*;
 import org.junit.jupiter.api.*;
 
 import java.io.*;
@@ -21,25 +22,26 @@ public class AssetTests {
     }
 
     @Test
-    public void scanResourcesAddsToStorage() {
-        assertTrue(Assets.hasAsset("testassets/images/mario.png"));
-        assertFalse(Assets.hasAsset("testassets/luigi.png"));
-        assertFalse(Assets.hasAsset("mario.png"));
+    public void assetTypeIsClasspath() {
+        var filename = "testassets/images/mario.png";
+        assertEquals(AssetType.CLASSPATH, Asset.getAssetType(filename));
     }
 
     @Test
-    public void scanFilesAddsToStorage() {
-        Assets.clearAssets();
-        Assets.scanFiles("src/test/resources/testassets");
-        assertTrue(Assets.hasAsset("src/test/resources/testassets/images/mario.png"));
-        assertFalse(Assets.hasAsset("src/test/resources/testassets/images/luigi.png"));
-        assertFalse(Assets.hasAsset("mario.png"));
+    public void assetTypeIsLocal() {
+        var filename = "src/test/resources/testassets/images/mario.png";
+        assertEquals(AssetType.EXTERNAL, Asset.getAssetType(filename));
     }
 
     @Test
-    public void scanFolderAddsNothing() {
-        var files = Assets.scanFiles("src/test/resources/testassets/mario.png");
-        assertTrue(files.isEmpty());
+    public void assetFileNameCorrect() {
+        var separator = OperatingSystem.getCurrentOS().getFileSeparator();
+        var filename = "testassets/images/mario.png";
+
+        if (separator.equals("/"))
+            assertEquals(filename, Asset.getOSFilename(filename));
+        else if (separator.equals("\\"))
+            assertEquals(filename.replace('/', '\\'), Asset.getOSFilename(filename));
     }
 
     @Test
@@ -74,6 +76,28 @@ public class AssetTests {
     @Test
     public void invalidAssetNull() {
         assertNull(Assets.getAsset("testassets/luigi.png"));
+    }
+
+    @Test
+    public void scanResourcesAddsToStorage() {
+        assertTrue(Assets.hasAsset("testassets/images/mario.png"));
+        assertFalse(Assets.hasAsset("testassets/luigi.png"));
+        assertFalse(Assets.hasAsset("mario.png"));
+    }
+
+    @Test
+    public void scanFilesAddsToStorage() {
+        Assets.clearAssets();
+        Assets.scanFiles("src/test/resources/testassets");
+        assertTrue(Assets.hasAsset("src/test/resources/testassets/images/mario.png"));
+        assertFalse(Assets.hasAsset("src/test/resources/testassets/images/luigi.png"));
+        assertFalse(Assets.hasAsset("mario.png"));
+    }
+
+    @Test
+    public void scanFolderAddsNothing() {
+        var files = Assets.scanFiles("src/test/resources/testassets/mario.png");
+        assertTrue(files.isEmpty());
     }
 
     @Test

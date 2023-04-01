@@ -9,15 +9,15 @@ import java.util.*;
  *
  * @author SlavSquatSuperstar
  */
-public class ArgumentParser {
+public class ArgumentsParser {
 
     private final mayonez.util.Record programArgs;
 
-    public ArgumentParser() {
+    public ArgumentsParser() {
         this(new String[0]);
     }
 
-    public ArgumentParser(String[] args) {
+    public ArgumentsParser(String[] args) {
         List<String> argsList = readProgramArgs(args);
         programArgs = parseProgramArgs(argsList);
     }

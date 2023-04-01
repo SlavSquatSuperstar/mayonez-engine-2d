@@ -14,7 +14,7 @@ public enum OperatingSystem {
     /**
      * The macOS or OS X family of operating systems.
      */
-    MACOS("Mac OS", "/", "\n", true),
+    MAC_OS("Mac OS", "/", "\n", true),
 
     /**
      * The Microsoft Windows family of operating systems.
@@ -70,7 +70,7 @@ public enum OperatingSystem {
         if (osName.contains("linux")) {
             return LINUX;
         } else if (osName.contains("mac")) {
-            return MACOS;
+            return MAC_OS;
         } else if (osName.contains("windows")) {
             return WINDOWS;
         } else {

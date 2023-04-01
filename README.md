@@ -43,9 +43,9 @@ There are several Gradle tasks (compile, test, run, export) included to help in 
 Below are the tools and library used in the development of this project.
 
 - Java Version: [Eclipse Temurin 17+](https://adoptium.net/) or [Oracle OpenJDK 17+](https://jdk.java.net/)
-- Kotlin Version: [1.8.0+](https://kotlinlang.org/docs/whatsnew18.html)
-- Recommended IDE: [Intellij IDEA CE 2022.2+](https://www.jetbrains.com/idea/download/)
-- Build System: [Gradle 7.6+](https://gradle.org/install/)
+- Kotlin Version: [1.8.10+](https://kotlinlang.org/docs/whatsnew18.html)
+- Recommended IDE: [Intellij IDEA CE 2023.1+](https://www.jetbrains.com/idea/download/)
+- Build System: [Gradle 8.0+](https://gradle.org/install/)
     - Utilizes [Gradle Shadow Plugin](https://github.com/johnrengelman/shadow) for creating fat jars
 - Dependencies (bundled in JAR)
     - [LWJGL 3.3.1](https://www.lwjgl.org/customize) (user OS & architecture specific)

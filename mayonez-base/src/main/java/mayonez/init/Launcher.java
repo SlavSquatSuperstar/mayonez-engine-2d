@@ -29,7 +29,7 @@ public class Launcher {
      * @param args a string array
      */
     public Launcher(String[] args) {
-        programArgs = new ArgumentParser(args).getProgramArgs();
+        programArgs = new ArgumentsParser(args).getProgramArgs();
         // TODO set run config
         // TODO init engine components
         // TODO read preferences

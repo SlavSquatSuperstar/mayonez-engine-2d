@@ -7,17 +7,17 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit tests for the {@link mayonez.init.ArgumentParser} class.
+ * Unit tests for the {@link ArgumentsParser} class.
  *
  * @author SlavSquatSuperstar
  */
 public class ArgumentParserTests {
 
-    private ArgumentParser parser;
+    private ArgumentsParser parser;
 
     @BeforeEach
     void createLauncher() {
-        parser = new ArgumentParser();
+        parser = new ArgumentsParser();
     }
 
     // Parse Args Test
