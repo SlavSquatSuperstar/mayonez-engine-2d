@@ -37,7 +37,8 @@ public class FileTests {
 
     @Test
     public void checkExternalFolder() {
-        var dir = new File("src/test/resources/testassets/out");
+        var path = Asset.getOSFilename("src/test/resources/testassets/out");
+        var dir = new File(path);
         assertTrue(dir.exists());
         assertTrue(dir.isDirectory());
         assertTrue(dir.listFiles().length > 0);
@@ -47,13 +48,12 @@ public class FileTests {
 
     @Test
     public void checkClasspathFolder() throws URISyntaxException {
-        var resource = ClassLoader.getSystemResource("testassets/out").toURI();
+        var resource = Asset.getClasspathURL("testassets/out").toURI();
         var dir = new File(resource);
         assertTrue(dir.exists());
         assertTrue(dir.isDirectory());
         assertTrue(dir.listFiles().length > 0);
         assertTrue(dir.canRead());
-//        assertTrue(dir.canWrite()); // not supported by engine
     }
 
     @Test

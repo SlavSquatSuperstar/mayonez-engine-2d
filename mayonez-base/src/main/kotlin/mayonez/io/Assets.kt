@@ -6,7 +6,6 @@ import mayonez.io.text.*
 import org.reflections.Reflections
 import org.reflections.scanners.Scanners
 import java.io.File
-import java.net.URL
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
@@ -49,10 +48,11 @@ object Assets {
      */
     @JvmStatic
     fun scanResources(directory: String): MutableList<String> {
-        val resources = Reflections(directory, Scanners.Resources).getResources(Pattern.compile(".*\\.*"))
+        val path = Asset.getOSFilename(directory)
+        val resources = Reflections(path, Scanners.Resources).getResources(Pattern.compile(".*\\.*"))
 //        val resources = searchDirectory(directory, AssetType.CLASSPATH)
         resources.forEach { createAsset(it) } // Create an asset from each path
-        Logger.debug("Loaded ${resources.size} resources inside \"$directory\"")
+        Logger.debug("Loaded ${resources.size} resources inside \"$path\"")
         return ArrayList(resources)
     }
 
@@ -64,9 +64,10 @@ object Assets {
      */
     @JvmStatic
     fun scanFiles(directory: String): MutableList<String> {
-        val files = searchDirectory(directory, AssetType.EXTERNAL)
+        val path = Asset.getOSFilename(directory)
+        val files = searchDirectory(path, AssetType.EXTERNAL)
         files.forEach { createAsset(it) }
-        Logger.debug("Loaded ${files.size} files inside $directory")
+        Logger.debug("Loaded ${files.size} files inside $path")
         return files
     }
 
