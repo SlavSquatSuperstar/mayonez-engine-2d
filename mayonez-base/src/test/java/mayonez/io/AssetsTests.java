@@ -1,9 +1,7 @@
 package mayonez.io;
 
+import mayonez.io.text.*;
 import org.junit.jupiter.api.*;
-
-import java.io.*;
-import java.nio.charset.StandardCharsets;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -14,32 +12,33 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class AssetsTests {
 
-    @BeforeEach
-    public void reloadAssets() {
+    private void reloadAssets() {
         Assets.clearAssets();
-        Assets.scanResources("testassets");
+        Assets.scanResources("testassets/");
     }
 
     @Test
     public void validAssetNotNull() {
+        reloadAssets();
         assertNotNull(Assets.getAsset("testassets/images/mario.png"));
     }
 
     @Test
     public void invalidAssetNull() {
+        reloadAssets();
         assertNull(Assets.getAsset("testassets/luigi.png"));
     }
 
     @Test
-    public void scanResourcesAddsToStorage() {
+    public void scanClasspathFolderAddsToStorage() {
+        reloadAssets();
         assertTrue(Assets.hasAsset("testassets/images/mario.png"));
         assertFalse(Assets.hasAsset("testassets/luigi.png"));
         assertFalse(Assets.hasAsset("mario.png"));
     }
 
     @Test
-    public void scanFilesAddsToStorage() {
-        Assets.clearAssets();
+    public void scanExternalFolderAddsToStorage() {
         Assets.scanFiles("src/test/resources/testassets");
         assertTrue(Assets.hasAsset("src/test/resources/testassets/images/mario.png"));
         assertFalse(Assets.hasAsset("src/test/resources/testassets/images/luigi.png"));
@@ -47,49 +46,24 @@ public class AssetsTests {
     }
 
     @Test
-    public void scanFolderAddsNothing() {
+    public void scanEmptyFolderReturnsNothing() {
         var files = Assets.scanFiles("src/test/resources/testassets/mario.png");
         assertTrue(files.isEmpty());
     }
 
     @Test
-    public void getResourceInputStreamSuccess() {
-        var in = getFileFromResourceAsStream("testassets/text/properties.txt");
-        assertNotNull(in);
-        printInputStream(in);
-    }
+    public void createAssetAsType() {
+        reloadAssets();
 
-    @Test
-    public void getResourceInputStreamFail() {
-        assertThrows(IllegalArgumentException.class, () -> getFileFromResourceAsStream("testassets/luigi.png"));
-    }
+        var filename = "testassets/text/properties.txt";
+        var asset = Assets.getAsset(filename);
+        assertInstanceOf(Asset.class, asset);
+        assertEquals(asset.getLocationType(), LocationType.CLASSPATH);
 
-    private static InputStream getFileFromResourceAsStream(String fileName) {
-        var inputStream = ClassLoader.getSystemResourceAsStream(fileName);
-        // The stream holding the file content
-        if (inputStream == null) {
-            throw new IllegalArgumentException("file not found: " + fileName);
-        } else {
-            return inputStream;
-        }
-    }
-
-    private static void printInputStream(InputStream is) {
-        try (var streamReader = new InputStreamReader(is, StandardCharsets.UTF_8);
-             var reader = new BufferedReader(streamReader)) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                System.out.println(line);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Test
-    public void createAssetWithReflection() {
-        var t = Assets.getTextFile("testassets/text/properties.txt");
-        assertEquals("testassets/text/properties.txt", t.getFilename());
+        var textFile = Assets.getTextFile(filename);
+        assertInstanceOf(TextFile.class, textFile);
+        assertEquals(asset.getLocationType(), LocationType.CLASSPATH);
+        assertEquals(filename, textFile.getFilename());
     }
 
 }

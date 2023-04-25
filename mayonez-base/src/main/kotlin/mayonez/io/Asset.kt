@@ -28,34 +28,60 @@ open class Asset(filename: String) {
     // I/O Methods
 
     /**
-     * Creates an [InputStream] from this file that allows data to be read.
+     * Creates an [InputStream] that allows data to be read from this file. The
+     * input stream should be closed after use.
      *
-     * @return ths input stream
+     * @return the input stream
      */
     @Throws(IOException::class)
-    fun inputStream(): InputStream? {
+    fun inputStream(): InputStream {
         if (!filePath.isReadable()) throw IOException("$locationType asset $filename is not readable")
         return when (locationType) {
-            LocationType.CLASSPATH -> ClassLoader.getSystemResourceAsStream(filename)
-            LocationType.EXTERNAL -> Files.newInputStream(path)
+            LocationType.CLASSPATH -> openClasspathInputStream()
+            LocationType.EXTERNAL -> openExternalInputStream()
+        }
+    }
+
+    @Throws(IOException::class)
+    private fun openClasspathInputStream(): InputStream {
+        return ClassLoader.getSystemResourceAsStream(filename)
+            ?: throw IOException("Classpath resource $filename could not be read")
+    }
+
+    @Throws(IOException::class)
+    private fun openExternalInputStream(): InputStream {
+        try {
+            return Files.newInputStream(path)
+        } catch (e: Exception) {
+            throw IOException("External file $filename could not be read")
         }
     }
 
     /**
-     * Creates an [OutputStream] to this file that allows data to be saved if
-     * the asset is an external file. If the file does not yet exist, then a
-     * new file is created.
+     * Creates an [OutputStream] that allows data to be saved to this file.
+     * If the file does not yet exist, then a new file is created. The input
+     * stream should be closed after use.
      *
      * @param append whether to add data to an existing file's contents instead
      *     of overwriting it
      * @return the output stream
      */
     @Throws(IOException::class)
-    fun outputStream(append: Boolean): OutputStream? {
+    fun outputStream(append: Boolean): OutputStream {
         if (!filePath.isWritable()) throw IOException("$locationType asset $filename is not writable")
-        return if (append) Files.newOutputStream(path, StandardOpenOption.CREATE, StandardOpenOption.APPEND)
-        else Files.newOutputStream(path, StandardOpenOption.CREATE)
+        return if (append) openOutputStream(StandardOpenOption.CREATE, StandardOpenOption.APPEND)
+        else openOutputStream(StandardOpenOption.CREATE)
     }
+
+    @Throws(IOException::class)
+    private fun openOutputStream(vararg options: StandardOpenOption): OutputStream {
+        try {
+            return Files.newOutputStream(path, *options)
+        } catch (e: Exception) {
+            throw IOException("External file $filename could not be saved")
+        }
+    }
+
 
     override fun toString(): String = "$locationType ${javaClass.simpleName} \"$filename\""
 

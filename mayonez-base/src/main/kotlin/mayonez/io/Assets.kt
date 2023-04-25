@@ -95,7 +95,7 @@ object Assets {
      * @return if a file exists at the given path
      */
     @JvmStatic
-    fun hasAsset(filename: String): Boolean = filename in assets
+    fun hasAsset(filename: String): Boolean = filename.toOS() in assets
 
     /**
      * Creates a new [Asset] if it does not exist already, and stores it for
@@ -106,13 +106,14 @@ object Assets {
      */
     @JvmStatic
     fun createAsset(filename: String): Asset {
-        if (hasAsset(filename)) {
-            Logger.debug("Resource \"%s\" already exists", filename)
+        val osFilename = filename.toOS()
+        if (hasAsset(osFilename)) {
+            Logger.debug("Resource \"%osFilename\" already exists")
         } else {
-            assets[filename] = Asset(filename)
-            Logger.debug("Loaded resource at \"%s\"", filename)
+            assets[osFilename] = Asset(osFilename)
+            Logger.debug("Loaded resource at \"%osFilename\"")
         }
-        return assets[filename]!!
+        return assets[osFilename]!!
     }
 
     /**
@@ -128,7 +129,7 @@ object Assets {
         val ctor = assetClass.getDeclaredConstructor(String::class.java)
         val asset = assetClass.cast(ctor.newInstance(filename)) ?: return null
         assets[filename] = asset
-        Logger.debug("Loaded %s at \"%s\"", assetClass.simpleName, filename)
+        Logger.debug("Loaded asset \"%s\" as %s", assetClass.simpleName, filename)
         return asset
     }
 
@@ -138,14 +139,14 @@ object Assets {
      * Retrieves the [Asset] at the given location.
      *
      * @param filename the path to the file
-     * @return the asset, if it exists.
+     * @return the asset if it exists, otherwise null
      */
     @JvmStatic
-    fun getAsset(filename: String): Asset? = assets[filename]
+    fun getAsset(filename: String): Asset? = assets[filename.toOS()]
 
     /**
-     * Retrieves and replaces the [Asset] under the specified filename as in
-     * instance of any Asset subclass.
+     * Retrieves the [Asset] under the specified filename] and re-instantiates
+     * it under the given Asset subclass.
      *
      * @param filename the asset location
      * @param cls the asset subclass
@@ -236,5 +237,7 @@ object Assets {
     override fun toString(): String {
         return "Assets (${assets.size} ${if (assets.size == 1) "item" else "items"})"
     }
+
+    private fun String.toOS() = FilePath.getOSFilename(this)
 
 }
