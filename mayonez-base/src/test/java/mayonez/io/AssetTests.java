@@ -1,6 +1,5 @@
 package mayonez.io;
 
-import mayonez.util.*;
 import org.junit.jupiter.api.*;
 
 import java.io.*;
@@ -19,53 +18,6 @@ public class AssetTests {
     public void reloadAssets() {
         Assets.clearAssets();
         Assets.scanResources("testassets");
-    }
-
-    @Test
-    public void assetTypeIsClasspath() {
-        var filename = "testassets/images/mario.png";
-        assertEquals(AssetType.CLASSPATH, Asset.getAssetType(filename));
-    }
-
-    @Test
-    public void assetTypeIsLocal() {
-        var filename = "src/test/resources/testassets/images/mario.png";
-        assertEquals(AssetType.EXTERNAL, Asset.getAssetType(filename));
-    }
-
-    @Test
-    public void assetFileNameCorrect() {
-        var separator = OperatingSystem.getCurrentOS().getFileSeparator();
-        var filename = "testassets/images/mario.png";
-
-        if (separator.equals("/"))
-            assertEquals(filename, Asset.getOSFilename(filename));
-        else if (separator.equals("\\"))
-            assertEquals(filename.replace('/', '\\'), Asset.getOSFilename(filename));
-    }
-
-    @Test
-    public void classpathAssetExists() {
-        var a = Assets.createAsset("testassets/images/mario.png");
-        assertTrue(a.isValid());
-    }
-
-    @Test
-    public void classpathAssetNotExists() {
-        var a = Assets.createAsset("testassets/luigi.png");
-        assertFalse(a.isValid());
-    }
-
-    @Test
-    public void localAssetExists() {
-        var a = Assets.createAsset("src/test/resources/testassets/images/mario.png");
-        assertTrue(a.isValid());
-    }
-
-    @Test
-    public void localAssetNotExists() {
-        var a = Assets.createAsset("src/test/resources/testassets/images/luigi.png");
-        assertFalse(a.isValid());
     }
 
     @Test

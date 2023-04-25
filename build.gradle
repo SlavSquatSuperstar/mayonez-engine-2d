@@ -62,7 +62,7 @@ shadowJar {
 run {
     dependsOn shadowJar
     if (macOS) jvmArgs = ["-XstartOnFirstThread"] // For LWJGL on macOS
-    args = ["true"] // Set CL args (use GL true/false)
+    args = ["--engine gl"] // Set CL args (use GL true/false)
 }
 
 // Shadow Jar Dependencies

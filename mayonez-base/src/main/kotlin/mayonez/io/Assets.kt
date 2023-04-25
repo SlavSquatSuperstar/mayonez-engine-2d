@@ -65,16 +65,16 @@ object Assets {
     @JvmStatic
     fun scanFiles(directory: String): MutableList<String> {
         val path = Asset.getOSFilename(directory)
-        val files = searchDirectory(path, AssetType.EXTERNAL)
+        val files = searchDirectory(path, AssetLocation.EXTERNAL)
         files.forEach { createAsset(it) }
         Logger.debug("Loaded ${files.size} files inside $path")
         return files
     }
 
-    private fun searchDirectory(directory: String, assetType: AssetType): MutableList<String> {
+    private fun searchDirectory(directory: String, assetLocation: AssetLocation): MutableList<String> {
         // Files.walk() is recursive, file.listFiles() is not
         return try {
-            val pathname = if (assetType == AssetType.CLASSPATH) {
+            val pathname = if (assetLocation == AssetLocation.CLASSPATH) {
                 ClassLoader.getSystemResource(directory).path
             } else {
                 if (!File(directory).isDirectory) return ArrayList() // If file return empty list
@@ -82,15 +82,15 @@ object Assets {
             }
             val path = Paths.get(pathname)
             ArrayList(Files.walk(path).filter { file: Path -> Files.isRegularFile(file) }
-                .map { p: Path -> p.toAssetName(directory, assetType) }.toList())
+                .map { p: Path -> p.toAssetName(directory, assetLocation) }.toList())
         } catch (e: Exception) {
             ArrayList()
         }
     }
 
-    private fun Path.toAssetName(root: String, assetType: AssetType): String {
+    private fun Path.toAssetName(root: String, assetLocation: AssetLocation): String {
         val fullPath = this.toString()
-        return if (assetType == AssetType.CLASSPATH) {
+        return if (assetLocation == AssetLocation.CLASSPATH) {
             val index = fullPath.lastIndexOf(root)
             fullPath.substring(index) // cut of path before root
         } else {
@@ -161,7 +161,7 @@ object Assets {
      *
      * @param filename the asset location
      * @param cls the asset subclass
-     * @return a subclass instance with the same [AssetType], if the asset is
+     * @return a subclass instance with the same [AssetLocation], if the asset is
      *     valid.
      */
     @JvmStatic

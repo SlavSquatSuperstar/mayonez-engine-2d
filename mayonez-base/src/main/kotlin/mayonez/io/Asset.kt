@@ -23,9 +23,9 @@ open class Asset(filename: String) {
     val filename: String = getOSFilename(filename)
 
     // Try to read from classpath first; if not, look to local
-    private val type: AssetType = getAssetType(this.filename)
+    private val location: AssetLocation = getAssetLocation(this.filename)
 
-    val isClasspath: Boolean = (type == AssetType.CLASSPATH)
+    val isClasspath: Boolean = (location == AssetLocation.CLASSPATH)
 
     // I/O Methods
 
@@ -72,13 +72,13 @@ open class Asset(filename: String) {
      *     file, and not a directory, currently exists at this path.
      */
     fun isValid(): Boolean {
-        return when (type) {
-            AssetType.CLASSPATH -> path != null
-            AssetType.EXTERNAL -> file.isFile
+        return when (location) {
+            AssetLocation.CLASSPATH -> path != null
+            AssetLocation.EXTERNAL -> file.isFile
         }
     }
 
-    override fun toString(): String = "$type ${javaClass.simpleName} \"$filename\""
+    override fun toString(): String = "$location ${javaClass.simpleName} \"$filename\""
 
     // Helper methods
     companion object {
@@ -122,17 +122,17 @@ open class Asset(filename: String) {
         }
 
         /**
-         * Returns the [AssetType] of the given asset filename. If no file
+         * Returns the [AssetLocation] of the given asset filename. If no file
          * can be found with that name, the return value will default to
-         * [AssetType.EXTERNAL].
+         * [AssetLocation.EXTERNAL].
          *
          * @param filename a filename
          * @return the file's asset type
          */
         @JvmStatic
-        fun getAssetType(filename: String): AssetType {
-            return if (getClasspathURL(filename) != null) AssetType.CLASSPATH
-            else AssetType.EXTERNAL
+        fun getAssetLocation(filename: String): AssetLocation {
+            return if (getClasspathURL(filename) != null) AssetLocation.CLASSPATH
+            else AssetLocation.EXTERNAL
         }
 
     }
