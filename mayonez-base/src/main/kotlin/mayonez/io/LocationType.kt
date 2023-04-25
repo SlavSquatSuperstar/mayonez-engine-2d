@@ -6,7 +6,7 @@ import mayonez.util.*
  * The location of an [Asset] in the computer, which defines its file
  * permissions.
  */
-enum class AssetLocation {
+enum class LocationType {
     /** A system resource inside the JAR that is read-only. */
     CLASSPATH,
 

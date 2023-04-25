@@ -2,30 +2,28 @@ package mayonez.io
 
 import mayonez.*
 import java.io.*
-import java.net.MalformedURLException
-import java.net.URL
-import java.nio.file.Files
-import java.nio.file.Paths
-import java.nio.file.StandardOpenOption
-import kotlin.io.path.pathString
+import java.nio.file.*
 
 /**
- * Any resource or file used by this program. Stores a path and
- * manages input and output to that location. Each asset must have a
- * constructor with one string, since this is called using reflection by
- * [Assets.createAsset]
+ * A resource or file used by this program. Stores a [mayonez.io.FilePath]
+ * and opens input and output streams to that location. Each asset
+ * must have a constructor with one string, since this is called using
+ * reflection by [Assets.createAsset]
  *
  * @author SlavSquatSuperstar
  */
-// TODO auto set asset class
 open class Asset(filename: String) {
 
-    val filename: String = getOSFilename(filename)
+    private val filePath: FilePath = FilePath(filename)
 
-    // Try to read from classpath first; if not, look to local
-    private val location: AssetLocation = getAssetLocation(this.filename)
+    val filename: String = filePath.filename
 
-    val isClasspath: Boolean = (location == AssetLocation.CLASSPATH)
+    val locationType: LocationType = this.filePath.locationType
+
+    // Conversion Methods
+
+    private val path: Path
+        get() = Paths.get(filename)
 
     // I/O Methods
 
@@ -36,8 +34,11 @@ open class Asset(filename: String) {
      */
     @Throws(IOException::class)
     fun inputStream(): InputStream? {
-        return if (isClasspath) ClassLoader.getSystemResourceAsStream(filename)
-        else Files.newInputStream(Paths.get(filename))
+        if (!filePath.isReadable()) throw IOException("$locationType asset $filename is not readable")
+        return when (locationType) {
+            LocationType.CLASSPATH -> ClassLoader.getSystemResourceAsStream(filename)
+            LocationType.EXTERNAL -> Files.newInputStream(path)
+        }
     }
 
     /**
@@ -51,90 +52,11 @@ open class Asset(filename: String) {
      */
     @Throws(IOException::class)
     fun outputStream(append: Boolean): OutputStream? {
-        return if (isClasspath) throw IOException("Cannot write to classpath resource $filename")
-        else if (!append) Files.newOutputStream(Paths.get(filename), StandardOpenOption.CREATE)
-        else Files.newOutputStream(Paths.get(filename), StandardOpenOption.CREATE, StandardOpenOption.APPEND)
+        if (!filePath.isWritable()) throw IOException("$locationType asset $filename is not writable")
+        return if (append) Files.newOutputStream(path, StandardOpenOption.CREATE, StandardOpenOption.APPEND)
+        else Files.newOutputStream(path, StandardOpenOption.CREATE)
     }
 
-    // Helper Methods
-    val file: File
-        get() = File(filename)
-
-    private val path: URL? =
-        if (isClasspath) getClasspathURL(filename)
-        else getFileURL(filename)
-
-    /**
-     * Whether this file exists and can be accessed.
-     *
-     * @return If the file exists. For classpath assets, returns true if a
-     *     resource exists at this path. For external assets, returns true if a
-     *     file, and not a directory, currently exists at this path.
-     */
-    fun isValid(): Boolean {
-        return when (location) {
-            AssetLocation.CLASSPATH -> path != null
-            AssetLocation.EXTERNAL -> file.isFile
-        }
-    }
-
-    override fun toString(): String = "$location ${javaClass.simpleName} \"$filename\""
-
-    // Helper methods
-    companion object {
-
-        /**
-         * Accesses a classpath resource from within the .jar executable.
-         *
-         * @param path the location of the file inside the root resource directory
-         * @return the file's URL
-         */
-        @JvmStatic
-        fun getClasspathURL(path: String): URL? = ClassLoader.getSystemResource(path)
-
-        /**
-         * Accesses an external file from outside the .jar executable.
-         *
-         * @param filename the location of the file inside the computer's local
-         *     storage
-         * @return the file's URL
-         */
-        @JvmStatic
-        fun getFileURL(filename: String): URL? {
-            return try {
-                File(filename).toURI().toURL()
-            } catch (e: MalformedURLException) {
-                Logger.error("Invalid file path \"%s\"", filename)
-                null
-            }
-        }
-
-        /**
-         * Returns an asset filename with the correct path separator for the user's
-         * OS.
-         *
-         * @param filename a filename
-         * @return the filename with the path separator
-         */
-        @JvmStatic
-        fun getOSFilename(filename: String): String {
-            return Paths.get(filename).pathString
-        }
-
-        /**
-         * Returns the [AssetLocation] of the given asset filename. If no file
-         * can be found with that name, the return value will default to
-         * [AssetLocation.EXTERNAL].
-         *
-         * @param filename a filename
-         * @return the file's asset type
-         */
-        @JvmStatic
-        fun getAssetLocation(filename: String): AssetLocation {
-            return if (getClasspathURL(filename) != null) AssetLocation.CLASSPATH
-            else AssetLocation.EXTERNAL
-        }
-
-    }
+    override fun toString(): String = "$locationType ${javaClass.simpleName} \"$filename\""
 
 }

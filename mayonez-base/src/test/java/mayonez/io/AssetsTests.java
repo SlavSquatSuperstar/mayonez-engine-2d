@@ -8,11 +8,11 @@ import java.nio.charset.StandardCharsets;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit tests for the {@link mayonez.io.Asset} class.
+ * Unit tests for the {@link mayonez.io.Assets} class.
  *
  * @author SlavSquatSuperstar
  */
-public class AssetTests {
+public class AssetsTests {
 
     @BeforeEach
     public void reloadAssets() {

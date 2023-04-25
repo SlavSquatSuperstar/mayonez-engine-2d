@@ -19,14 +19,14 @@ public class ConstructorTests {
     public void newSuperclassInstanceSuccess() throws Exception {
         Asset inst = instantiateAsset(Asset.class, "preferences.json");
         assertEquals("preferences.json", inst.getFilename());
-        assertTrue(inst.isClasspath());
+        assertEquals(inst.getLocationType(), LocationType.CLASSPATH);
     }
 
     @Test
     public void newSubclassInstanceSuccess() throws Exception {
         TextFile inst = instantiateAsset(TextFile.class, "preferences.json");
         assertEquals("preferences.json", inst.getFilename());
-        assertTrue(inst.isClasspath());
+        assertEquals(inst.getLocationType(), LocationType.CLASSPATH);
         assertNotEquals(0, inst.readLines().length);
     }
 
