@@ -1,5 +1,6 @@
 package mayonez.io
 
+import mayonez.util.*
 import java.io.File
 import java.net.MalformedURLException
 import java.net.URL
@@ -72,10 +73,21 @@ class FilePath(filename: String, val locationType: LocationType) {
     override fun toString(): String = filename
 
     companion object {
-        /** Gets the filename with the correct path separators for the current OS. */
+
+        /**
+         * Gets the filename with the correct path separators for the current OS.
+         * Note that '/' and '\' are valid filename characters in macOS, and may be
+         * incorrectly replaced.
+         *
+         * @param filename a path to a file
+         * @return the path formatted for the OS
+         */
         @JvmStatic
         fun getOSFilename(filename: String): String {
-            return Paths.get(filename).pathString
+            val pathString = Paths.get(filename).pathString // remove terminal '/' for folders
+            val sep = OperatingSystem.getCurrentOS().fileSeparator // correct any separators
+            val osName = pathString.split("/", "\\").joinToString(sep)
+            return osName
         }
 
         /**

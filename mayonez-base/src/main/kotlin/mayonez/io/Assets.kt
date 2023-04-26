@@ -49,7 +49,7 @@ object Assets {
      */
     @JvmStatic
     fun scanResources(directory: String): List<String> {
-        val pathName = FilePath.getOSFilename(directory)
+        val pathName = directory.toOS()
         val resources = Reflections(pathName, Scanners.Resources)
             .getResources(Pattern.compile(".*\\.*"))
         resources.forEach { createAsset(it) } // Create an asset from each path
@@ -65,7 +65,7 @@ object Assets {
      */
     @JvmStatic
     fun scanFiles(directory: String): List<String> {
-        val pathName = FilePath.getOSFilename(directory)
+        val pathName = directory.toOS()
         val files = searchDirectory(pathName)
         files.forEach { createAsset(it) }
         Logger.debug("Loaded ${files.size} files inside $pathName")
@@ -108,10 +108,10 @@ object Assets {
     fun createAsset(filename: String): Asset {
         val osFilename = filename.toOS()
         if (hasAsset(osFilename)) {
-            Logger.debug("Resource \"%osFilename\" already exists")
+            Logger.debug("Asset \"$osFilename\" already exists")
         } else {
             assets[osFilename] = Asset(osFilename)
-            Logger.debug("Loaded resource at \"%osFilename\"")
+            Logger.debug("Loaded asset \"$osFilename\"")
         }
         return assets[osFilename]!!
     }
@@ -235,7 +235,7 @@ object Assets {
     }
 
     override fun toString(): String {
-        return "Assets (${assets.size} ${if (assets.size == 1) "item" else "items"})"
+        return "Assets (Size = ${assets.size})"
     }
 
     private fun String.toOS() = FilePath.getOSFilename(this)
