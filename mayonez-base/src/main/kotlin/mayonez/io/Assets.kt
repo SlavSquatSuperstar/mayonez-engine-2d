@@ -108,10 +108,10 @@ object Assets {
     fun createAsset(filename: String): Asset {
         val osFilename = filename.toOS()
         if (hasAsset(osFilename)) {
-            Logger.debug("Resource \"%osFilename\" already exists")
+            Logger.debug("Asset \"$osFilename\" already exists")
         } else {
             assets[osFilename] = Asset(osFilename)
-            Logger.debug("Loaded resource at \"%osFilename\"")
+            Logger.debug("Loaded asset \"$osFilename\"")
         }
         return assets[osFilename]!!
     }
