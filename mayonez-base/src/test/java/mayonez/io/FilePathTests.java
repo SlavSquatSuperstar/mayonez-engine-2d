@@ -11,21 +11,15 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author SlavSquatSuperstar
  */
 public class FilePathTests {
-    
+
     private final String classpathMarioImg = "testassets/images/mario.png";
     private final String externalMarioImg = "src/test/resources/testassets/images/mario.png";
 
     @Test
-    public void FilePathIsCorrectForOS() {
+    public void classpathFilePathIsAlwaysSame() {
         var filename = classpathMarioImg;
-        var windowsFilename = filename.replace('/', '\\');
-        var separator = OperatingSystem.getCurrentOS().getFileSeparator();
-
-        var path = new FilePath(filename);
-        if (separator.equals("/"))
-            assertEquals(filename, path.getFilename());
-        else if (separator.equals("\\"))
-            assertEquals(windowsFilename, path.getFilename());
+        var path = new FilePath(filename, LocationType.CLASSPATH);
+        assertEquals(classpathMarioImg, path.getFilename());
     }
 
     @Test

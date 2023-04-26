@@ -57,13 +57,15 @@ public class AssetsTests {
 
         var filename = "testassets/text/properties.txt";
         var asset = Assets.getAsset(filename);
+        assertNotNull(asset);
         assertInstanceOf(Asset.class, asset);
         assertEquals(asset.getLocationType(), LocationType.CLASSPATH);
 
         var textFile = Assets.getTextFile(filename);
+        assertNotNull(textFile);
         assertInstanceOf(TextFile.class, textFile);
-        assertEquals(asset.getLocationType(), LocationType.CLASSPATH);
-        assertEquals(FilePath.getOSFilename(filename), textFile.getFilename());
+        assertEquals(textFile.getLocationType(), LocationType.CLASSPATH);
+        assertEquals(filename, textFile.getFilename());
     }
 
 }

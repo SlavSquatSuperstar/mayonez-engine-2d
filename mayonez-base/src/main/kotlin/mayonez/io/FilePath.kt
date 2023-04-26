@@ -4,20 +4,25 @@ import mayonez.util.*
 import java.io.File
 import java.net.MalformedURLException
 import java.net.URL
-import java.nio.file.Paths
-import kotlin.io.path.pathString
 
 /**
  * Represents the location of an [mayonez.io.Asset] on the computer's file
  * system and describes whether it is readable or writable.
  */
-class FilePath(filename: String, val locationType: LocationType) {
+class FilePath(filename: String) {
 
-    constructor(filename: String) : this(filename, getLocationType(filename))
+    /**
+     * The OS-independent filename separated by forward slashes ('/'), used to store
+     * files in the asset system.
+     */
+    val filename: String = getClasspathFilename(filename)
+    private val osFilename: String = getOSFilename(filename)
+    var locationType: LocationType = getLocationType(this.filename)
+        private set
 
-    val filename: String = getOSFilename(filename)
-//    val osFilename: String
-//    val locationType: LocationType
+    constructor(filename: String, locationType: LocationType) : this(filename) {
+        this.locationType = locationType
+    }
 
     // I/O Status Methods
 
@@ -63,16 +68,18 @@ class FilePath(filename: String, val locationType: LocationType) {
 
     // Conversion Methods
 
-    private fun getFile(): File = File(filename)
+    private fun getFile(): File = File(osFilename)
 
     private fun getURL(): URL? {
         return when (locationType) {
             LocationType.CLASSPATH -> getClasspathURL(filename)
-            LocationType.EXTERNAL -> getExternalURL(filename)
+            LocationType.EXTERNAL -> getExternalURL(osFilename)
         }
     }
 
     override fun toString(): String = filename
+
+    // Helper Methods
 
     companion object {
 
@@ -86,24 +93,27 @@ class FilePath(filename: String, val locationType: LocationType) {
          */
         @JvmStatic
         fun getOSFilename(filename: String): String {
-            val os = OperatingSystem.getCurrentOS()
-            return os.getOSFilename(filename)
+            val currOS = OperatingSystem.getCurrentOS()
+            return currOS.getOSFilename(filename)
+        }
+
+        private fun getClasspathFilename(filename: String): String {
+            return OperatingSystem.LINUX.getOSFilename(filename)
         }
 
         /**
-         * Automatically determines the filename's location type. Attempts to
+         * Automatically determines the file's location type. Attempts to
          * locate a classpath resource at this path, or otherwise defaults to an
          * external file.
          */
         private fun getLocationType(filename: String): LocationType {
-            val osFilename = getOSFilename(filename)
-            return if (getClasspathURL(osFilename) != null) LocationType.CLASSPATH
+            return if (getClasspathURL(filename) != null) LocationType.CLASSPATH
             else LocationType.EXTERNAL
         }
 
         /**
          * Attempts to locate a classpath resource from within the JAR executable.
-         * A classpath must always use '/' separators.
+         * A classpath must use '/' separators despite the operating system.
          *
          * @param filename the file's location inside the JAR's root, ot null if
          *     not present

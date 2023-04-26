@@ -3,8 +3,6 @@ package slavsquatsuperstar.demos;
 import mayonez.*;
 import mayonez.init.*;
 import mayonez.input.*;
-import mayonez.io.Assets;
-import mayonez.io.FilePath;
 import mayonez.util.*;
 import slavsquatsuperstar.demos.mario.MarioScene;
 import slavsquatsuperstar.demos.physics.PoolBallsScene;

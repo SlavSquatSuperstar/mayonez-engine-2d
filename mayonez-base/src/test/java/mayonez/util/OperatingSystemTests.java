@@ -12,11 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class OperatingSystemTests {
 
     private final String unixFile = "src/test/resources/testassets/out/info.txt";
-    private final String unixFolder = "src/test/resources/testassets/";
-    private final String unixFolderNormalized = "src/test/resources/testassets";
     private final String windowsFile = "src\\test\\resources\\testassets\\out\\info.txt";
-    private final String windowsFolder = "src\\test\\resources\\testassets\\";
-    private final String windowsFolderNormalized = "src\\test\\resources\\testassets";
 
     @Test
     public void unixToUnixFileCorrect() {
@@ -32,7 +28,9 @@ public class OperatingSystemTests {
 
     @Test
     public void unixToWindowsFolderCorrect() {
+        String unixFolder = "src/test/resources/testassets/";
         var filename = OperatingSystem.WINDOWS.getOSFilename(unixFolder);
+        String windowsFolderNormalized = "src\\test\\resources\\testassets";
         assertEquals(windowsFolderNormalized, filename);
     }
 
@@ -50,7 +48,9 @@ public class OperatingSystemTests {
 
     @Test
     public void windowsToUnixFolderCorrect() {
+        String windowsFolder = "src\\test\\resources\\testassets\\";
         var filename = OperatingSystem.LINUX.getOSFilename(windowsFolder);
+        String unixFolderNormalized = "src/test/resources/testassets";
         assertEquals(unixFolderNormalized, filename);
     }
 

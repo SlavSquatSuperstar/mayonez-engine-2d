@@ -39,7 +39,7 @@ enum class OperatingSystem(
         return pathString.split("/", "\\").joinToString(fileSeparator)
     }
 
-    override fun toString(): String = name
+    override fun toString(): String = osName
 
     companion object {
 
