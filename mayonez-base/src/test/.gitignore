@@ -1,0 +1,3 @@
+# Test outputs
+resources/testassets/out/*
+!resources/testassets/out/info.txt

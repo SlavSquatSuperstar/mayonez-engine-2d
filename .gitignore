@@ -1,24 +1,23 @@
-# Binary files
-bin
-build
+# Class files
 *.class
 
-# Gradle folders
-.gradle
+# Gradle files
+bin/
+build/
+.gradle/
 
-# IDE files
-.idea
+# IntelliJ files
+.idea/
+
+# Eclipse files
 .classpath
 .project
-.settings
+.settings/
 
 # Log files
 *.log
-logs
+logs/
 hs_err_pid*
-
-# Test outputs
-mayonez-base/src/test/resources/testassets/out/
 
 # MacOS files
 .DS_Store

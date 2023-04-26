@@ -19,13 +19,13 @@ public class AssetTests {
     @Test
     public void assetIsClasspath() {
         var asset = new Asset(classpathImg);
-        assertEquals(asset.getLocationType(), LocationType.CLASSPATH);
+        assertEquals(LocationType.CLASSPATH, asset.getLocationType());
     }
 
     @Test
     public void assetIsExternal() {
         var asset = new Asset(externalImg);
-        assertEquals(asset.getLocationType(), LocationType.EXTERNAL);
+        assertEquals(LocationType.EXTERNAL, asset.getLocationType());
     }
 
     @Test
@@ -58,6 +58,7 @@ public class AssetTests {
     public void nonExistingAssetIsWriteOnly() {
         var outputFilename = "src/test/resources/testassets/out/output.txt";
         var asset = new Asset(outputFilename);
+
         var file = new File(outputFilename);
         if (file.exists()) file.delete(); // Delete so the test works
 
@@ -65,7 +66,8 @@ public class AssetTests {
             InputStream in = asset.inputStream();
             in.close();
         });
-        assertDoesNotThrow(() -> {
+	    assertDoesNotThrow(() -> {
+            // Requires parent directory to exist but not file
             OutputStream out = asset.outputStream(true);
             out.close();
         });
