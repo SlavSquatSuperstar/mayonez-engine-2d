@@ -15,7 +15,9 @@ class FilePath(filename: String, val locationType: LocationType) {
 
     constructor(filename: String) : this(filename, getLocationType(filename))
 
-    val filename = getOSFilename(filename)
+    val filename: String = getOSFilename(filename)
+//    val osFilename: String
+//    val locationType: LocationType
 
     // I/O Status Methods
 
@@ -76,7 +78,7 @@ class FilePath(filename: String, val locationType: LocationType) {
 
         /**
          * Gets the filename with the correct path separators for the current OS.
-         * Note that '/' and '\' are valid filename characters in macOS, and may be
+         * Note that '/' and '\' are valid filename characters in Unix, and may be
          * incorrectly replaced.
          *
          * @param filename a path to a file
@@ -84,10 +86,8 @@ class FilePath(filename: String, val locationType: LocationType) {
          */
         @JvmStatic
         fun getOSFilename(filename: String): String {
-            val pathString = Paths.get(filename).pathString // remove terminal '/' for folders
-            val sep = OperatingSystem.getCurrentOS().fileSeparator // correct any separators
-            val osName = pathString.split("/", "\\").joinToString(sep)
-            return osName
+            val os = OperatingSystem.getCurrentOS()
+            return os.getOSFilename(filename)
         }
 
         /**
@@ -103,12 +103,17 @@ class FilePath(filename: String, val locationType: LocationType) {
 
         /**
          * Attempts to locate a classpath resource from within the JAR executable.
+         * A classpath must always use '/' separators.
          *
          * @param filename the file's location inside the JAR's root, ot null if
          *     not present
          * @return the resource's URL
          */
-        private fun getClasspathURL(filename: String): URL? = ClassLoader.getSystemResource(filename)
+        @JvmStatic
+        fun getClasspathURL(filename: String): URL? {
+            val resourcePath = OperatingSystem.LINUX.getOSFilename(filename)
+            return ClassLoader.getSystemResource(resourcePath)
+        }
 
         /**
          * Locates an external file from outside the JAR executable.
@@ -116,7 +121,8 @@ class FilePath(filename: String, val locationType: LocationType) {
          * @param filename the file's location inside the computer's local storage
          * @return the file's URL
          */
-        private fun getExternalURL(filename: String): URL? {
+        @JvmStatic
+        fun getExternalURL(filename: String): URL? {
             return try {
                 File(filename).toURI().toURL()
             } catch (e: MalformedURLException) {

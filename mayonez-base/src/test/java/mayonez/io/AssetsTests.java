@@ -63,7 +63,7 @@ public class AssetsTests {
         var textFile = Assets.getTextFile(filename);
         assertInstanceOf(TextFile.class, textFile);
         assertEquals(asset.getLocationType(), LocationType.CLASSPATH);
-        assertEquals(filename, textFile.getFilename());
+        assertEquals(FilePath.getOSFilename(filename), textFile.getFilename());
     }
 
 }

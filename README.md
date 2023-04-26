@@ -2,7 +2,8 @@
 
 The ultimate made-from-scratch 2D Java game engine to fit your Slavic (and non-Slavic) needs!
 
-This project was developed using macOS 13.x Ventura (Intel) and Intellij IDEA. This progam has not been tested on any
+This project was developed using macOS 13.x Ventura (Intel) and Intellij IDEA. 
+This program does not run on Windows 10. This program has not been tested on any
 other systems.
 
 <img src="https://img.shields.io/badge/platform-macOS-lightgrey"></img>

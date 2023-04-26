@@ -1,11 +1,19 @@
-package mayonez.util;
+package mayonez.util
+
+import java.nio.file.Paths
+import java.util.*
+import kotlin.io.path.pathString
 
 /**
  * An operating system of a computer running Java. Each operating system defines a file separator
  * and a line separator.
  */
-public enum OperatingSystem {
-
+enum class OperatingSystem(
+    private val osName: String,
+    val fileSeparator: String,
+    val lineSeparator: String,
+    val isUnix: Boolean
+) {
     /**
      * The GNU/Linux family of operating systems.
      */
@@ -26,56 +34,35 @@ public enum OperatingSystem {
      */
     UNKNOWN("Unknown", "/", "\n", true);
 
-    // Fields and Constructors
-
-    private final String name;
-    private final String fileSeparator, lineSeparator;
-    private final boolean isUnix;
-
-    OperatingSystem(String name, String fileSeparator, String lineSeparator, boolean isUnix) {
-        this.name = name;
-        this.fileSeparator = fileSeparator;
-        this.lineSeparator = lineSeparator;
-        this.isUnix = isUnix;
+    fun getOSFilename(filename: String): String {
+        val pathString = Paths.get(filename).pathString // remove terminal '/' for folders
+        return pathString.split("/", "\\").joinToString(fileSeparator)
     }
 
-    // Getter Methods
+    override fun toString(): String = name
 
-    public String getFileSeparator() {
-        return fileSeparator;
-    }
+    companion object {
 
-    public String getLineSeparator() {
-        return lineSeparator;
-    }
+        private val separators: Array<String> = arrayOf("/", "\\")
 
-    public boolean isUnix() {
-        return isUnix;
-    }
+        /**
+         * Gets the current operating system of this device running Java.
+         *
+         * @return the current OS.
+         */
+        @JvmStatic
+        fun getCurrentOS(): OperatingSystem {
+            val osName = System.getProperty("os.name").lowercase(Locale.getDefault())
 
-    @Override
-    public String toString() {
-        return name;
-    }
-
-    // Static Methods
-
-    /**
-     * Gets the current operating system of this device running Java.
-     *
-     * @return the current OS.
-     */
-    public static OperatingSystem getCurrentOS() {
-        var osName = System.getProperty("os.name").toLowerCase();
-        if (osName.contains("linux")) {
-            return LINUX;
-        } else if (osName.contains("mac")) {
-            return MAC_OS;
-        } else if (osName.contains("windows")) {
-            return WINDOWS;
-        } else {
-            return UNKNOWN;
+            return if (osName.contains("linux")) {
+                LINUX
+            } else if (osName.contains("mac")) {
+                MAC_OS
+            } else if (osName.contains("windows")) {
+                WINDOWS
+            } else {
+                UNKNOWN
+            }
         }
     }
-
 }
