@@ -36,7 +36,7 @@ enum class OperatingSystem(
 
     fun getOSFilename(filename: String): String {
         val pathString = Paths.get(filename).pathString // remove terminal '/' for folders
-        return pathString.split("/", "\\").joinToString(fileSeparator)
+        return pathString.split(*separators).joinToString(fileSeparator)
     }
 
     override fun toString(): String = osName

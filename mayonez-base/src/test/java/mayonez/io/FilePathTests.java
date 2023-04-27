@@ -1,6 +1,5 @@
 package mayonez.io;
 
-import mayonez.util.*;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -17,8 +16,7 @@ public class FilePathTests {
 
     @Test
     public void classpathFilePathIsAlwaysSame() {
-        var filename = classpathMarioImg;
-        var path = new FilePath(filename, LocationType.CLASSPATH);
+        var path = new FilePath(classpathMarioImg, LocationType.CLASSPATH);
         assertEquals(classpathMarioImg, path.getFilename());
     }
 

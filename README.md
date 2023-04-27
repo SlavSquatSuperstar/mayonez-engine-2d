@@ -2,19 +2,17 @@
 
 The ultimate made-from-scratch 2D Java game engine to fit your Slavic (and non-Slavic) needs!
 
-This project was developed using macOS 13.x Ventura (Intel) and Intellij IDEA. 
-This program does not run on Windows 10. This program has not been tested on any
-other systems.
-
 <img src="https://img.shields.io/badge/platform-macOS-lightgrey"></img>
+<img src="https://img.shields.io/badge/platform-Windows-lightgrey"></img>
+<img src="https://img.shields.io/badge/stable-v0.7.5-green"></img>
+<img src=https://img.shields.io/badge/build-passing-brightgreen></img>
+
 <img src="https://img.shields.io/badge/Made%20with-Java-red"></img>
-<img src="https://img.shields.io/badge/Made%20with-Kotlin-blueviolet"></img>
+<img src="https://img.shields.io/badge/Made%20with-Kotlin-red"></img>
 <img src="https://img.shields.io/badge/Made%20with-LWJGL-blue"></img>
-<img src=https://img.shields.io/badge/License-GPL3-green></img>
+<img src=https://img.shields.io/badge/license-GPL3-blue></img>
 
 ## Features
-
-The latest stable version of Mayonez Engine is 0.7.5.
 
 This fully-operational game engine includes:
 
@@ -29,7 +27,22 @@ This fully-operational game engine includes:
 - Debug rendering capabilities for drawing and filling shapes, lines, and points
 - Customizable game preferences that you can set yourself
 
+## Platforms
+
+| Operating System      |   Status   |
+|:----------------------|:----------:|
+| macOS (Intel)         | Supported  |
+| Windows               | Supported  | 
+| macOS (Apple silicon) | Not Tested |
+| GNU/Linux             | Not Tested |
+
 ## Quick Start Guide
+
+### System Requirements
+
+- 64-bit operating system
+- Graphics card supporting OpenGL 3.3
+- Java 17 (see further instructions)
 
 ### Instructions for End-Users
 
