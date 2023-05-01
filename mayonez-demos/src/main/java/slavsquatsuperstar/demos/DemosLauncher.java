@@ -3,7 +3,6 @@ package slavsquatsuperstar.demos;
 import mayonez.*;
 import mayonez.init.*;
 import mayonez.input.*;
-import mayonez.util.*;
 import slavsquatsuperstar.demos.mario.MarioScene;
 import slavsquatsuperstar.demos.physics.PoolBallsScene;
 import slavsquatsuperstar.demos.physics.SandboxScene;
@@ -53,11 +52,6 @@ public class DemosLauncher {
                 pollSceneControls();
             }
         });
-
-        System.out.println(System.getProperty("os.name"));
-        System.out.println(System.getProperty("file.separator"));
-        System.out.printf("'%s'\n", System.getProperty("line.separator"));
-        System.out.println(OperatingSystem.getCurrentOS());
 
         Mayonez.start(SceneManager.getScene(scenes[0]));
     }
