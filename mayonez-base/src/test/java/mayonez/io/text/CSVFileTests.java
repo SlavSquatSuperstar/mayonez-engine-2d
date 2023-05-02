@@ -41,11 +41,11 @@ public class CSVFileTests {
     public void saveToLocalJSONFile() {
         var rec1 = new Record();
         rec1.set("name", "time");
-        rec1.set("value", LocalTime.now());
+        rec1.set("value", LocalTime.now().toString());
 
         var rec2 = new Record();
         rec2.set("name", "date");
-        rec2.set("value", LocalDate.now());
+        rec2.set("value", LocalDate.now().toString());
 
         var recs = List.of(new Record[]{rec1, rec2});
         var csv = new CSVFile("src/test/resources/testassets/out/out.csv");

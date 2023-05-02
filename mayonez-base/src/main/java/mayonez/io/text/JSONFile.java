@@ -2,7 +2,6 @@ package mayonez.io.text;
 
 import mayonez.*;
 import mayonez.util.Record;
-import mayonez.util.*;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -19,18 +18,16 @@ public class JSONFile extends TextAsset {
     }
 
     /**
-     * Parses the JSON data in this file and returns a {@link mayonez.util.Record} object.
+     * Parses the JSON data in this file and returns a {@link mayonez.util.Record}.
      *
-     * @return the record, blank if the file does not exist
+     * @return a record, or blank if it does not exist
      */
     public Record readJSON() {
         var text = super.readText();
-        if (!text.equals("")) {
-            try {
-                return new Record(new JSONObject(new JSONTokener(text)).toMap());
-            } catch (JSONException e) {
-                Logger.error("JSON: Could not parse JSON file");
-            }
+        try {
+            return new Record(new JSONObject(new JSONTokener(text)).toMap());
+        } catch (JSONException e) {
+            Logger.error("JSON: Could not parse JSON file");
         }
         return new Record();
     }
@@ -41,7 +38,8 @@ public class JSONFile extends TextAsset {
      * @param json a record object
      */
     public void saveJSON(Record json) {
-        super.save(false, StringUtils.split(json.toJSONString(), "\n"));
+        var jsonString = new JSONObject(json.toMap()).toString(4);
+        super.save(false, jsonString);
     }
 
 }

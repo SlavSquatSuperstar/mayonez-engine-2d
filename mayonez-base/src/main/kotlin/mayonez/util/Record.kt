@@ -1,20 +1,19 @@
 package mayonez.util
 
-import org.json.JSONObject
-
 /**
- * A basic data structure storing information under key-value pairs,
- * similar to objects in many programming languages storing data in fields.
- * Also serves as a wrapper around JSONObject classes from external
- * libraries.
+ * A data structure that stores information under key-value pairs, similar
+ * to how objects store data in fields. A record stores simple data types,
+ * including numbers, texts, booleans, arrays, and other records, and may
+ * be converted to and from a JSONObject.
  *
  * @author SlavSquatSuperstar
  */
-// TODO safety measures so we don't set the use wrong data type for something
-open class Record(private val map: MutableMap<String?, Any?>) {
+open class Record(map: Map<String?, Any?>) {
 
     /** Creates an empty record with no data. */
     constructor() : this(HashMap())
+
+    private val map: MutableMap<String?, Any?> = HashMap(map)
 
     // Copy Methods
 
@@ -25,8 +24,10 @@ open class Record(private val map: MutableMap<String?, Any?>) {
      * @param record another record
      */
     protected fun copyFrom(record: Record) {
-        this.clear() // erase all data
-        for (entry in record.entries()) this[entry.key] = entry.value // copy all data
+        clear() // erase all data
+        record.map.entries.forEach {
+            map[it.key] = it.value // copy all data
+        }
     }
 
     /**
@@ -37,8 +38,8 @@ open class Record(private val map: MutableMap<String?, Any?>) {
      * @param record another record
      */
     protected fun addAll(record: Record) {
-        record.entries().forEach {
-            if (it.value != null) this[it.key] = it.value
+        record.map.entries.forEach {
+            if (it.value != null) map[it.key] = it.value
         }
     }
 
@@ -51,12 +52,25 @@ open class Record(private val map: MutableMap<String?, Any?>) {
     operator fun get(key: String?): Any? = map[key]
 
     /**
-     * Retrieves the value stored under this key as a [List], or null if it
+     * Retrieves the array stored under this key as a [List], or null if it
      * does not exist.
      */
     fun getArray(key: String?): List<Any?>? {
         val value = map[key]
         return if (value is List<*>) value else null
+    }
+
+    /**
+     * Retrieves the object stored under this key as a [Record], or null if it
+     * does not exist.
+     */
+    fun getObject(key: String?): Record? {
+        val value = map[key]
+        return if (value is Map<*, *>) {
+            val newMap = HashMap<String?, Any?>()
+            value.forEach { newMap[it.key?.toString()] = it.value }
+            Record(newMap)
+        } else null
     }
 
     /**
@@ -67,13 +81,16 @@ open class Record(private val map: MutableMap<String?, Any?>) {
 
     /**
      * Retrieves the value stored under this key as a boolean, or false if it
-     * does not exist.
+     * does not exist. If the value is "true", "yes", or not 0, then it will be
+     * returned as true.
      */
     fun getBoolean(key: String?): Boolean {
-        val lower = getString(key).lowercase()
-        if (lower == "true" || lower == "yes") return true
-        val num = getInt(key)
-        return num != 0
+        return when {
+            getString(key).equals("true", ignoreCase = true) -> true
+            getString(key).equals("yes", ignoreCase = true) -> true
+            getInt(key) != 0 -> true
+            else -> false
+        }
     }
 
     /**
@@ -81,12 +98,15 @@ open class Record(private val map: MutableMap<String?, Any?>) {
      * not exist.
      */
     fun getInt(key: String?): Int {
-        val value = map[key] ?: return 0
-        return if (value is Number) value.toInt()
-        else try {
-            value.toString().toInt()
-        } catch (e: NumberFormatException) {
-            0
+        return when (val value = map[key]) {
+            is Number -> value.toInt()
+            is String -> try {
+                value.toInt()
+            } catch (e: NumberFormatException) {
+                0
+            }
+
+            else -> 0
         }
     }
 
@@ -95,44 +115,77 @@ open class Record(private val map: MutableMap<String?, Any?>) {
      * not exist.
      */
     fun getFloat(key: String?): Float {
-        val value = map[key] ?: return 0f
-        return if (value is Number) value.toFloat()
-        else try {
-            value.toString().toFloat()
-        } catch (e: NumberFormatException) {
-            0f
+        return when (val value = map[key]) {
+            is Number -> value.toFloat()
+            is String -> try {
+                value.toFloat()
+            } catch (e: NumberFormatException) {
+                0f
+            }
+
+            else -> 0f
         }
     }
 
-    /** Stores a values under this key, or overwrites if it already exists. */
-    operator fun set(key: String?, value: Any?) {
+    /** Stores or updates an integer under this key. */
+    operator fun set(key: String?, value: Int?) {
         map[key] = value
     }
 
-    // Helper Methods
+    /** Stores or updates a float under this key. */
+    operator fun set(key: String?, value: Float?) {
+        map[key] = value
+    }
 
-    /** Deletes all JSON key-value pairs. */
-    fun clear() = map.clear()
+    /** Stores or updates a boolean under this key. */
+    operator fun set(key: String?, value: Boolean?) {
+        map[key] = value
+    }
 
-    /** Whether any value is stored in the record under the given key. */
-    operator fun contains(key: String?): Boolean = map.containsKey(key)
+    /** Stores or updates a string under this key. */
+    operator fun set(key: String?, value: String?) {
+        map[key] = value
+    }
+
+    /** Stores or updates a list under this key. */
+    operator fun set(key: String?, value: List<*>?) {
+        map[key] = value as List<Any?>
+    }
+
+    /** Stores or updates an array under this key. */
+    operator fun set(key: String?, value: Array<*>?) {
+        map[key] = value?.asList()
+    }
+
+    /** Stores or updates a record under this key. */
+    operator fun set(key: String?, value: Record?) {
+        map[key] = value?.map?.toMap()
+    }
+
+    /** Stores or updates a map under this key. */
+    operator fun set(key: String?, value: Map<*, *>?) {
+        map[key] = value?.toMap()
+    }
+
+    // Map Methods
 
     /** The number of key-value pairs stored in this record. */
     fun size(): Int = map.size
 
-    /**
-     * Returns an iterable set of key-value pairs.
-     *
-     * @return the entry set
-     */
-    private fun entries(): Set<Map.Entry<String?, Any?>> = map.entries
+    /** Deletes all key-value pairs from this record. */
+    fun clear() = map.clear()
 
     /**
-     * Returns this record as a formatted JSON string.
+     * Converts this record to an object-to-object map.
      *
-     * @return the JSON string
+     * @return a map
      */
-    fun toJSONString(): String = JSONObject(map).toString(4)
+    fun toMap(): Map<Any?, Any?> = map.toMap()
+
+    // Object Overrides
+
+    /** Whether any value is stored in the record under the given key. */
+    operator fun contains(key: String?): Boolean = map.containsKey(key)
 
     override fun toString(): String = map.toString()
 }

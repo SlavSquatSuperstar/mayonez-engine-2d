@@ -64,6 +64,37 @@ public class RecordTests {
         assertFalse(rec2.getBoolean("saveLogs"));
     }
 
+    @Test
+    public void getArrayCorrect() {
+        var list = List.of("One", '2', 3, 4.0);
+        var record = new Record();
+        record.set("nums", list);
+        var numsArray = record.getArray("nums");
+
+        assertEquals(4, numsArray.size());
+        assertEquals("One", numsArray.get(0));
+        assertEquals('2', numsArray.get(1));
+        assertEquals(3, numsArray.get(2));
+        assertEquals(4.0, numsArray.get(3));
+    }
+
+    @Test
+    public void getObjectCorrect() {
+        var profile = new HashMap<String, Object>();
+        profile.put("name", "Steve Jobs");
+        profile.put("age", 56);
+        profile.put("companies", List.of("Apple", "Pixar", "NeXT"));
+
+        var record = new Record();
+        record.set("id", 1955);
+        record.set("profile", profile);
+
+        var object = record.getObject("profile");
+        assertEquals("Steve Jobs", object.getString("name"));
+        assertEquals(56, object.getInt("age"));
+        assertEquals(List.of("Apple", "Pixar", "NeXT"), object.getArray("companies"));
+    }
+
     // Copy/Add Tests
 
     @Test

@@ -32,8 +32,8 @@ public class JSONFileTests {
     public void saveToLocalJSONFile() {
         var json = new JSONFile("src/test/resources/testassets/out/out.json");
         var rec = new Record();
-        rec.set("time", LocalTime.now());
-        rec.set("date", LocalDate.now());
+        rec.set("time", LocalTime.now().toString());
+        rec.set("date", LocalDate.now().toString());
         json.saveJSON(rec);
     }
 
