@@ -11,8 +11,8 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class OperatingSystemTests {
 
-    private final String unixFile = "src/test/resources/testassets/out/info.txt";
-    private final String windowsFile = "src\\test\\resources\\testassets\\out\\info.txt";
+    private final String unixFile = "src/test/resources/testassets/out/readme.txt";
+    private final String windowsFile = "src\\test\\resources\\testassets\\out\\readme.txt";
 
     @Test
     public void unixToUnixFileCorrect() {

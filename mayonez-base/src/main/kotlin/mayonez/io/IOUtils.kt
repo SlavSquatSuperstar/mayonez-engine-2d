@@ -12,20 +12,11 @@ import java.nio.charset.UnsupportedCharsetException
  *
  * @author SlavSquatSuperstar
  */
+// TODO streams need to be closed
 object IOUtils {
 
     private val DEFAULT_CHARSET = StandardCharsets.UTF_8
     private const val LINE_ENDING = "\n"
-
-    // I/O Stream Methods
-
-    @JvmStatic
-    fun openInputStream(filename: String): InputStream? =
-        Assets.getAsset(filename)?.inputStream()
-
-    @JvmStatic
-    fun openOutputStream(filename: String, append: Boolean): OutputStream? =
-        Assets.getAsset(filename)?.outputStream(append)
 
     // Read Methods
 

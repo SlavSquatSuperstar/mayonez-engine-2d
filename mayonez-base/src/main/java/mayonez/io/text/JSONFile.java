@@ -4,7 +4,6 @@ import mayonez.*;
 import mayonez.util.Record;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.JSONTokener;
 
 /**
  * A JavaScript Object Notation (.json) file that stores an object record.
@@ -25,7 +24,7 @@ public class JSONFile extends TextAsset {
     public Record readJSON() {
         var text = super.readText();
         try {
-            return new Record(new JSONObject(new JSONTokener(text)).toMap());
+            return new Record(new JSONObject(text).toMap());
         } catch (JSONException e) {
             Logger.error("JSON: Could not parse JSON file");
         }

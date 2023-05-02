@@ -1,5 +1,6 @@
 package mayonez
 
+import mayonez.init.*
 import mayonez.io.text.*
 import java.io.File
 import java.time.LocalDate
@@ -15,44 +16,44 @@ object Logger {
 
     private const val STACK_TRACE_INDEX = 5 // number of times to jump up stack trace
 
-    // Log Parameters
-    private var minLogLevel: Int = Preferences.logLevel // Minimum priority required to print messages to console
-    private var saveLogs: Boolean = Preferences.saveLogs // Whether to save console messages to a log file
+    // Logger Config
+    private var initialized: Boolean = false
+    private var config: LoggerConfig = LoggerConfig.DEFAULT_CONFIG
 
     // Log File Output
-    private var logFilename: String = "<No log file>"
     private lateinit var logFile: TextFile
     private val printQueue: Queue<String> = LinkedList() // Save log messages in case log file isn't created
 
     // Logger Init Methods
 
-    internal fun initLogger() {
-        if (!Mayonez.INIT_ASSETS || !Mayonez.INIT_PREFERENCES) Mayonez.init() // Should prevent file from not being read
+    internal fun setConfig(config: LoggerConfig) {
+        if (initialized) return
 
-        minLogLevel = Preferences.logLevel
-        saveLogs = Preferences.saveLogs
+        this.config = config
+        initialized = true
+        createLogFile()
+    }
 
-        if (saveLogs && !Mayonez.INIT_LOGGER) {
-            createLogFile()
+    private fun createLogFile() {
+//        if (!Mayonez.INIT_ASSETS) Mayonez.init() // Should prevent file from not being read
+        if (this::logFile.isInitialized) return
+
+        if (config.saveLogs) {
+            logFile = TextFile(getLogFilename())
             while (printQueue.isNotEmpty()) logFile.append(printQueue.poll()) // log everything in print queue
         }
     }
 
-    private fun createLogFile() {
-        logFilename = getLogFilename()
-        logFile = TextFile(logFilename)
-        log("Logger: Created log file \"%s\"", logFilename)
-    }
-
     private fun getLogFilename(): String {
-        val logDirectory = File(Preferences.logDirectory)
+        val logDirectory = File(config.logDirectory)
         if (!logDirectory.exists()) logDirectory.mkdir()
 
         // Count number of log files with the same date
         val today = LocalDate.now().toString()
         var logCount = 0
-        for (f in logDirectory.listFiles()!!)
-            if (f.name.startsWith(today)) logCount++
+        logDirectory.listFiles()!!.forEach { f ->
+            if (f.name.startsWith(today)) logCount += 1
+        }
 
         // Set name of log file as YYYY-MM-DD_#
         return "${logDirectory.path}/${today}_${++logCount}.log"
@@ -71,8 +72,8 @@ object Logger {
      */
     private fun logMessage(msg: Any?, vararg args: Any?, level: LogLevel) {
         val message = msg.formatMessage(args, level)
-        if (level.ordinal >= minLogLevel) message.printToConsole(level)
-        if (saveLogs) message.appendToFile()
+        if (level.ordinal >= config.logLevel) message.printToConsole(level)
+        if (config.saveLogs) message.appendToFile()
     }
 
     private fun Any?.formatMessage(args: Array<out Any?>, level: LogLevel): String {
@@ -99,7 +100,7 @@ object Logger {
     }
 
     private fun String.appendToFile() {
-        if (Mayonez.INIT_LOGGER) logFile.append(this) // has log file been created
+        if (initialized) logFile.append(this) // has log file been created
         else printQueue.offer(this) // save to buffer
     }
 
@@ -165,6 +166,8 @@ object Logger {
     @JvmStatic
     fun printStackTrace(throwable: Throwable) = error(getStackTrace(throwable))
 
-    override fun toString(): String = "Logger ($logFilename)"
+    override fun toString(): String {
+        return "Logger (Save Logs = ${config.saveLogs}, Log Level = ${config.logLevel})"
+    }
 
 }

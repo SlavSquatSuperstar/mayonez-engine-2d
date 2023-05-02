@@ -1,6 +1,7 @@
 package mayonez
 
 import mayonez.engine.*
+import mayonez.init.*
 import mayonez.io.*
 import mayonez.math.*
 import mayonez.util.*
@@ -50,6 +51,8 @@ object Mayonez {
     val currentOperatingSystem: OperatingSystem = OperatingSystem.getCurrentOS()
 
     // Game Fields
+
+
     @JvmStatic
     var useGL: Boolean = false
         set(value) {
@@ -67,8 +70,7 @@ object Mayonez {
         private set
     var INIT_PREFERENCES = false // Whether the preferences file has been applied
         private set
-    var INIT_LOGGER = false // Whether the logger has been set up
-        private set
+    private var INIT_LOGGER = false // Whether the logger has been set up
     private var INIT_RESOURCES = false // Whether the core resources have been created
 
     init {
@@ -102,7 +104,11 @@ object Mayonez {
         }
         // Create log file
         if (!INIT_LOGGER) {
-            Logger.initLogger()
+            Logger.setConfig(
+                LoggerConfig(
+                    Preferences.saveLogs, Preferences.logLevel, Preferences.logDirectory
+                )
+            )
             INIT_LOGGER = true
         }
         // Create Resources
