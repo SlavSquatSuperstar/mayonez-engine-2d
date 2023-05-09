@@ -4,7 +4,6 @@ import mayonez.engine.*
 import mayonez.init.*
 import mayonez.io.*
 import mayonez.math.*
-import mayonez.util.*
 import kotlin.system.exitProcess
 
 /**
@@ -45,21 +44,15 @@ object Mayonez {
 //            field = max(value, 0f) // non-negative only
 //        }
 
-    // System Info
-    /** The operating system of this current device running the JVM. */
-    @JvmStatic
-    val currentOperatingSystem: OperatingSystem = OperatingSystem.getCurrentOS()
+    // Run Config
+    private var initialized: Boolean = false
+    private var config: RunConfig = RunConfig.DEFAULT_CONFIG
 
     // Game Fields
-
-
     @JvmStatic
     var useGL: Boolean = false
-        set(value) {
-            field = value
-            game = if (field) GLGame() else JGame()
-            Logger.debug("Using engine \"%s\"", if (field) "GL" else "AWT")
-        }
+        private set
+
     private var game: GameEngine? = null // Engine config, either Java or GL
     var started: Boolean = false
         private set
@@ -79,6 +72,23 @@ object Mayonez {
     }
 
     // Init Methods
+    @JvmStatic
+    fun setConfig(config: RunConfig) {
+        if (initialized) return
+
+        this.config = config
+        setUseGL(config.useGL)
+        init()
+        initialized = true
+    }
+
+    private fun setUseGL(useGL: Boolean) {
+        if (initialized) return
+
+        this.useGL = useGL
+        game = if (this.useGL) GLGame() else JGame()
+        Logger.debug("Using engine \"%s\"", if (this.useGL) "GL" else "AWT")
+    }
 
     /**
      * Instantiate singleton objects in the correct order to avoid initializer
@@ -99,7 +109,7 @@ object Mayonez {
         // Read preferences file
         if (!INIT_PREFERENCES) {
             Preferences.readPreferences()
-            Logger.debug("Loaded settings from \"preferences.json\"")
+            Logger.debug("Loaded preferences")
             INIT_PREFERENCES = true
         }
         // Create log file

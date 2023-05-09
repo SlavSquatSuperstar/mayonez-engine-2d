@@ -15,35 +15,7 @@ open class Record(map: Map<String?, Any?>) {
 
     private val map: MutableMap<String?, Any?> = HashMap(map)
 
-    // Copy Methods
-
-    /**
-     * Sets this record as a copy of another record, clearing all stored data
-     * and replacing it with data from the other object.
-     *
-     * @param record another record
-     */
-    protected fun copyFrom(record: Record) {
-        clear() // erase all data
-        record.map.entries.forEach {
-            map[it.key] = it.value // copy all data
-        }
-    }
-
-    /**
-     * Adds all key-value pairs from another record but does not erase any
-     * pre-existing data. If any new entries contain a key already in this
-     * record, their new values are used, as long as they are not null.
-     *
-     * @param record another record
-     */
-    protected fun addAll(record: Record) {
-        record.map.entries.forEach {
-            if (it.value != null) map[it.key] = it.value
-        }
-    }
-
-    // Hash Map Methods
+    // Get Property Methods
 
     /**
      * Retrieves the value stored under this key as a Java [Object], or null if
@@ -127,6 +99,8 @@ open class Record(map: Map<String?, Any?>) {
         }
     }
 
+    // Set Property Methods
+
     /** Stores or updates an integer under this key. */
     operator fun set(key: String?, value: Int?) {
         map[key] = value
@@ -165,6 +139,41 @@ open class Record(map: Map<String?, Any?>) {
     /** Stores or updates a map under this key. */
     operator fun set(key: String?, value: Map<*, *>?) {
         map[key] = value?.toMap()
+    }
+
+    // Copy Methods
+
+    /**
+     * Create a copy of this record with all the same stored values.
+     *
+     * @return the copy
+     */
+    fun copy(): Record = Record(this.map)
+
+    /**
+     * Sets this record as a copy of another record, clearing all stored data
+     * and replacing it with data from the other object.
+     *
+     * @param record another record
+     */
+    fun copyFrom(record: Record) {
+        clear() // erase all data
+        record.map.entries.forEach {
+            map[it.key] = it.value // copy all data
+        }
+    }
+
+    /**
+     * Adds all key-value pairs from another record but does not erase any
+     * pre-existing data. If any new entries contain a key already in this
+     * record, their new values are used, as long as they are not null.
+     *
+     * @param record another record
+     */
+    fun addAll(record: Record) {
+        record.map.entries.forEach {
+            if (it.value != null) map[it.key] = it.value
+        }
     }
 
     // Map Methods

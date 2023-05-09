@@ -6,6 +6,7 @@ import mayonez.Preferences;
 import mayonez.Scene;
 import mayonez.graphics.Colors;
 import mayonez.graphics.sprites.ShapeSprite;
+import mayonez.init.*;
 import mayonez.math.Vec2;
 import mayonez.physics.Rigidbody;
 import mayonez.physics.colliders.BoxCollider;
@@ -32,7 +33,7 @@ public class GDLevel extends Scene {
     }
 
     public static void main(String[] args) {
-        Mayonez.setUseGL(false);
+        Mayonez.setConfig(new RunConfig(false, RunConfig.DEFAULT_SAVE_LOGS));
         Mayonez.start(new GDLevel());
     }
 

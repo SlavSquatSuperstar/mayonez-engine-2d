@@ -1,5 +1,10 @@
 package mayonez.init
 
+/**
+ * A set of parameters for the [mayonez.Logger] class.
+ *
+ * @author SlavSquatSuperstar
+ */
 class LoggerConfig(
     /** Whether to save logged messages to log files. */
     val saveLogs: Boolean,
@@ -9,9 +14,9 @@ class LoggerConfig(
     val logDirectory: String
 ) {
     companion object {
-        const val DEFAULT_SAVE_LOGS: Boolean = true
-        const val DEFAULT_LOG_LEVEL: Int = 2
-        const val DEFAULT_LOG_DIRECTORY: String = "logs"
+        private const val DEFAULT_SAVE_LOGS: Boolean = true
+        private const val DEFAULT_LOG_LEVEL: Int = 2
+        private const val DEFAULT_LOG_DIRECTORY: String = "logs/"
 
         val DEFAULT_CONFIG: LoggerConfig = LoggerConfig(
             DEFAULT_SAVE_LOGS, DEFAULT_LOG_LEVEL, DEFAULT_LOG_DIRECTORY

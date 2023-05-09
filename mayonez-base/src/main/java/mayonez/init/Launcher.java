@@ -1,7 +1,7 @@
 package mayonez.init;
 
 import mayonez.*;
-import mayonez.util.*;
+import mayonez.annotations.*;
 import mayonez.util.Record;
 
 /**
@@ -12,8 +12,6 @@ import mayonez.util.Record;
  */
 public class Launcher {
 
-    private static final boolean USE_GL_DEFAULT = true;
-    private static final boolean SAVE_LOGS_DEFAULT = true;
     private final Record programArgs;
 
     /**
@@ -38,14 +36,10 @@ public class Launcher {
 
     // System Info Methods
 
-    public OperatingSystem getCurrentOS() {
-        return OperatingSystem.getCurrentOS();
-    }
-
     // Run Config Methods
 
     boolean getUseGL() throws IllegalArgumentException {
-        if (!programArgs.contains("engine")) return USE_GL_DEFAULT;
+        if (!programArgs.contains("engine")) return RunConfig.DEFAULT_USE_GL;
 
         var glArg = programArgs.getString("engine");
         return switch (glArg) {
@@ -56,8 +50,22 @@ public class Launcher {
         };
     }
 
+    EngineType getEngineType() throws IllegalArgumentException {
+        if (!programArgs.contains("engine")) return RunConfig.DEFAULT_ENGINE_TYPE;
+
+        var engineArg = programArgs.getString("engine").toUpperCase();
+        if (engineArg.equals("")) {
+            throw new IllegalArgumentException("Missing value for option \"engine\"");
+        }
+        try {
+            return EngineType.valueOf(engineArg);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Invalid value for option \"engine\"");
+        }
+    }
+
     boolean getSaveLogs() throws IllegalArgumentException {
-        if (!programArgs.contains("log")) return SAVE_LOGS_DEFAULT;
+        if (!programArgs.contains("log")) return RunConfig.DEFAULT_SAVE_LOGS;
 
         var logArg = programArgs.getString("log");
         return switch (logArg) {
@@ -71,7 +79,8 @@ public class Launcher {
     // Run Config Methods
 
     public void setRunConfig() {
-        Mayonez.setUseGL(getUseGL());
+        var config = new RunConfig(getUseGL(), getSaveLogs());
+        Mayonez.setConfig(config);
     }
 
 }

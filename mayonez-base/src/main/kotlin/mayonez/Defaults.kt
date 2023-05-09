@@ -7,7 +7,7 @@ import mayonez.util.*
  *
  * @author SlavSquatSuperstar
  */
-object Defaults : Record() {
+object Defaults {
 
     /* Window */
     const val TITLE: String = "Mayonez Engine Application"
@@ -34,29 +34,32 @@ object Defaults : Record() {
     /* Physics */
     const val IMPULSE_ITERATIONS: Int = 4
 
+    @JvmStatic
+    val PREFERENCES: Record = Record()
+
     init {
         /* Window */
-        this["title"] = TITLE
-        this["version"] = VERSION
-        this["screen_width"] = SCREEN_WIDTH
-        this["screen_height"] = SCREEN_HEIGHT
+        PREFERENCES["title"] = TITLE
+        PREFERENCES["version"] = VERSION
+        PREFERENCES["screen_width"] = SCREEN_WIDTH
+        PREFERENCES["screen_height"] = SCREEN_HEIGHT
 
         /* Logging */
-        this["log_level"] = LOG_LEVEL
-        this["save_logs"] = SAVE_LOGS
-        this["log_directory"] = LOG_DIRECTORY
+        PREFERENCES["log_level"] = LOG_LEVEL
+        PREFERENCES["save_logs"] = SAVE_LOGS
+        PREFERENCES["log_directory"] = LOG_DIRECTORY
 
         /* File I/O */
-        this["text_charset"] = TEXT_CHARSET
+        PREFERENCES["text_charset"] = TEXT_CHARSET
 
         /* Rendering */
-        this["buffer_count"] = BUFFER_COUNT
-        this["fps"] = FPS
-        this["max_batch_size"] = MAX_BATCH_SIZE
-        this["max_texture_size"] = MAX_TEXTURE_SLOTS
+        PREFERENCES["buffer_count"] = BUFFER_COUNT
+        PREFERENCES["fps"] = FPS
+        PREFERENCES["max_batch_size"] = MAX_BATCH_SIZE
+        PREFERENCES["max_texture_size"] = MAX_TEXTURE_SLOTS
 
         /* Physics */
-        this["physics_iterations"] = IMPULSE_ITERATIONS
+        PREFERENCES["physics_iterations"] = IMPULSE_ITERATIONS
     }
 
 }

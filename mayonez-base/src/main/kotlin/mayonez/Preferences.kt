@@ -4,89 +4,86 @@ import mayonez.io.*
 import mayonez.util.*
 
 /**
- * A collection of settings and parameters for various parts of the game
- * engine.
+ * A collection of user-changeable application parameters.
  *
  * @author SlavSquatSuperstar
  */
-object Preferences : Record() {
+object Preferences {
 
-    init {
-        // Start with defaults to prevent zero and null values
-        copyFrom(Defaults)
-    }
-
+    private val preferences: Record = Defaults.PREFERENCES.copy()
+    
     internal fun readPreferences() {
         if (!Mayonez.INIT_ASSETS) Mayonez.init()
         if (Mayonez.INIT_PREFERENCES) return
 
         // Read preferences file and update game configuration
-        addAll(Assets.getJSONFile("preferences.json")!!.readJSON())
+        preferences.addAll(Assets.getJSONFile("preferences.json")!!.readJSON())
+//        addAll(JSONFile("preferences.json").readJSON())
     }
 
     /* Window */
     @JvmStatic
     val title: String
-        get() = getString("title")
+        get() = preferences.getString("title")
 
     @JvmStatic
     val version: String
-        get() = getString("version")
+        get() = preferences.getString("version")
 
     @JvmStatic
     val screenWidth: Int
-        get() = getInt("screen_width")
+        get() = preferences.getInt("screen_width")
 
     @JvmStatic
     val screenHeight: Int
-        get() = getInt("screen_height")
+        get() = preferences.getInt("screen_height")
 
     /* Logging */
     @JvmStatic
     val logLevel: Int
-        get() = getInt("log_level")
+        get() = preferences.getInt("log_level")
 
     @JvmStatic
     val saveLogs: Boolean
-        get() = getBoolean("save_logs")
+        get() = preferences.getBoolean("save_logs")
 
     @JvmStatic
     val logDirectory: String
-        get() = getString("log_directory")
+        get() = preferences.getString("log_directory")
 
     /* File I/O */
     @JvmStatic
     val textCharset: String
-        get() = getString("text_charset")
+        get() = preferences.getString("text_charset")
 
     /* Renderer */
     @JvmStatic
     val FPS: Int
-        get() = getInt("fps")
+        get() = preferences.getInt("fps")
 
     @JvmStatic
     val bufferCount: Int
-        get() = getInt("buffer_count")
+        get() = preferences.getInt("buffer_count")
 
     @JvmStatic
     val maxBatchSprites: Int
-        get() = getInt("max_batch_sprites")
+        get() = preferences.getInt("max_batch_sprites")
 
     @JvmStatic
     val maxBatchLines: Int
-        get() = getInt("max_batch_lines")
+        get() = preferences.getInt("max_batch_lines")
 
     @JvmStatic
     val maxBatchTriangles: Int
-        get() = getInt("max_batch_triangles")
+        get() = preferences.getInt("max_batch_triangles")
 
     @JvmStatic
     val maxTextureSlots: Int
-        get() = getInt("max_texture_slots")
+        get() = preferences.getInt("max_texture_slots")
 
     /* Physics */
     @JvmStatic
     val impulseIterations: Int
-        get() = getInt("physics_iterations")
+        get() = preferences.getInt("physics_iterations")
 
 }

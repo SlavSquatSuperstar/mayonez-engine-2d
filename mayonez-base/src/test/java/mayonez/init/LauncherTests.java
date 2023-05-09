@@ -1,5 +1,6 @@
 package mayonez.init;
 
+import mayonez.annotations.*;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -24,6 +25,7 @@ public class LauncherTests {
     public void getUseGLTrue() {
         launcher = new Launcher(new String[]{"--engine", "gl"});
         assertTrue(launcher.getUseGL());
+        assertEquals(launcher.getEngineType(), EngineType.GL);
     }
 
     @Test
