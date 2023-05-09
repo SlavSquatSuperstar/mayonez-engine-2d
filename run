@@ -40,8 +40,12 @@ build_gradle_project() {
 }
 
 run_jar() {
-  # Launch the jar with VM args
-  java "$1" -jar build/libs/*.jar "--engine" "$engine" "--log" "$log"
+  # Launch the jar with or without VM args
+  if [ "$1" ]; then
+    java "$1" -jar build/libs/*.jar "--engine" "$engine" "--log" "$log"
+  else
+    java -jar build/libs/*.jar "--engine" "$engine" "--log" "$log"
+  fi
 }
 
 # Read arguments
