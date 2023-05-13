@@ -11,19 +11,19 @@ import java.awt.geom.*;
 import java.awt.image.*;
 
 /**
- * The display component for the game.
+ * The display component for the game, using AWT.
  *
  * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.AWT)
-public final class JWindow extends JFrame implements Window {
+final class JWindow extends JFrame implements Window {
 
     private final static AffineTransform FLIP_XF = AffineTransform.getScaleInstance(1.0, -1.0);
     private BufferStrategy bs;
     private Graphics2D g2;
     private boolean closedByUser;
 
-    public JWindow(String title, int width, int height) {
+    JWindow(String title, int width, int height) {
         super(title);
         setSize(width, height);
         setResizable(false);

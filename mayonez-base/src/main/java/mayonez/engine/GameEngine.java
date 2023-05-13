@@ -9,7 +9,7 @@ import mayonez.math.*;
  *
  * @author SlavSquatSuperstar
  */
-public abstract sealed class GameEngine permits JGame, GLGame {
+public abstract sealed class GameEngine permits JGameEngine, GLGameEngine {
 
     private static final float TIME_STEP_SECS = Mayonez.TIME_STEP;
 

@@ -9,9 +9,9 @@ import mayonez.annotations.*;
  * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.AWT)
-public final class JGame extends GameEngine {
+final class JGameEngine extends GameEngine {
 
-    public JGame() {
+    JGameEngine() {
         super(new JWindow(String.format("%s %s (AWT)", Preferences.getTitle(), Preferences.getVersion()),
                 Preferences.getScreenWidth(), Preferences.getScreenHeight()));
     }

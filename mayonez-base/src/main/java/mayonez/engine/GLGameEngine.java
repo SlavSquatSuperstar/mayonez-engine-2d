@@ -11,9 +11,9 @@ import static org.lwjgl.glfw.GLFW.glfwGetTime;
  * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.GL)
-public final class GLGame extends GameEngine { // can't implement runnable otherwise GLFW will crash
+final class GLGameEngine extends GameEngine { // can't implement runnable otherwise GLFW will crash
 
-    public GLGame() {
+    GLGameEngine() {
         super(new GLWindow(String.format("%s %s (GL)", Preferences.getTitle(), Preferences.getVersion()),
                 Preferences.getScreenWidth(), Preferences.getScreenHeight()));
     }

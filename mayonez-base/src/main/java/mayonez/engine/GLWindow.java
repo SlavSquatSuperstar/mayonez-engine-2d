@@ -17,18 +17,18 @@ import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 /**
- * The display component for the game.
+ * The display component for the game, using LWJGL.
  *
  * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.GL)
-public final class GLWindow implements Window {
+final class GLWindow implements Window {
 
     private long window; // The window pointer
     private final String title;
     private final int width, height;
 
-    public GLWindow(String title, int width, int height) {
+    GLWindow(String title, int width, int height) {
         this.title = title;
         this.width = width;
         this.height = height;

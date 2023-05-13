@@ -53,7 +53,8 @@ object Mayonez {
     var useGL: Boolean = false
         private set
 
-    private var game: GameEngine? = null // Engine config, either Java or GL
+    // TODO need to make non-nullable and set default fps
+    private var game: GameEngine? = null
     var started: Boolean = false
         private set
 
@@ -86,7 +87,7 @@ object Mayonez {
         if (initialized) return
 
         this.useGL = useGL
-        game = if (this.useGL) GLGame() else JGame()
+        game = GameEngineFactory.createGameEngine(useGL)
         Logger.debug("Using engine \"%s\"", if (this.useGL) "GL" else "AWT")
     }
 
