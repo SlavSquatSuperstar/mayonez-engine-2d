@@ -11,25 +11,25 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * @author SlavSquatSuperstar
  */
-public class AssetTests {
+class AssetTests {
 
     private final String classpathImg = "testassets/images/mario.png";
     private final String externalImg = "src/test/resources/testassets/images/mario.png";
 
     @Test
-    public void assetIsClasspath() {
+    void assetIsClasspath() {
         var asset = new Asset(classpathImg);
         assertEquals(LocationType.CLASSPATH, asset.getLocationType());
     }
 
     @Test
-    public void assetIsExternal() {
+    void assetIsExternal() {
         var asset = new Asset(externalImg);
         assertEquals(LocationType.EXTERNAL, asset.getLocationType());
     }
 
     @Test
-    public void classpathAssetIsReadOnly() {
+    void classpathAssetIsReadOnly() {
         var asset = new Asset(classpathImg);
         assertDoesNotThrow(() -> {
             InputStream in = asset.inputStream();
@@ -42,7 +42,7 @@ public class AssetTests {
     }
 
     @Test
-    public void externalAssetCanReadAndWrite() {
+    void externalAssetCanReadAndWrite() {
         var asset = new Asset(externalImg);
         assertDoesNotThrow(() -> {
             InputStream in = asset.inputStream();
@@ -55,7 +55,7 @@ public class AssetTests {
     }
 
     @Test
-    public void nonExistingAssetIsWriteOnly() {
+    void nonExistingAssetIsWriteOnly() {
         var outputFilename = "src/test/resources/testassets/out/output.txt";
         var asset = new Asset(outputFilename);
 

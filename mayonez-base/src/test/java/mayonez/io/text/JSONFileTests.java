@@ -14,22 +14,22 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * @author SlavSquatSuperstar
  */
-public class JSONFileTests {
+class JSONFileTests {
 
     @Test
-    public void readLocalJSONFile() {
+    void readLocalJSONFile() {
         var rec = new JSONFile("src/test/resources/testassets/text/properties.json").readJSON();
         assertNotNull(rec);
     }
 
     @Test
-    public void readClasspathJSONFile() {
+    void readClasspathJSONFile() {
         var rec = new JSONFile("testassets/text/properties.json").readJSON();
         assertNotNull(rec);
     }
 
     @Test
-    public void saveToLocalJSONFile() {
+    void saveToLocalJSONFile() {
         var json = new JSONFile("src/test/resources/testassets/out/out.json");
         var rec = new Record();
         rec.set("time", LocalTime.now().toString());
@@ -38,7 +38,7 @@ public class JSONFileTests {
     }
 
     @Test
-    public void getJSONPropertiesSuccess() {
+    void getJSONPropertiesSuccess() {
         var rec = new JSONFile("src/test/resources/testassets/text/properties.json").readJSON();
 
         assertTrue(rec.getBoolean("in_progress")); // booleans
@@ -54,7 +54,7 @@ public class JSONFileTests {
     }
 
     @Test
-    public void getJSONPropertiesDefaultValues() {
+    void getJSONPropertiesDefaultValues() {
         var rec = new JSONFile("src/test/resources/testassets/text/properties.json").readJSON();
 
         assertEquals(0, rec.getInt("version")); // int default

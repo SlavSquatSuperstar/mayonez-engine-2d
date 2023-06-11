@@ -14,10 +14,10 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * @author SlavSquatSuperstar
  */
-public class CSVFileTests {
+class CSVFileTests {
 
     @Test
-    public void readLocalCSVFile() {
+    void readLocalCSVFile() {
         var file = new CSVFile("src/test/resources/testassets/text/properties.csv");
         var recs = file.readCSV();
         // Check headers
@@ -31,14 +31,14 @@ public class CSVFileTests {
     }
 
     @Test
-    public void readClasspathCSVFile() {
+    void readClasspathCSVFile() {
         var recs = new CSVFile("testassets/text/properties.csv").readCSV();
         assertNotNull(recs);
         assertFalse(recs.isEmpty());
     }
 
     @Test
-    public void saveToLocalJSONFile() {
+    void saveToLocalJSONFile() {
         var rec1 = new Record();
         rec1.set("name", "time");
         rec1.set("value", LocalTime.now().toString());

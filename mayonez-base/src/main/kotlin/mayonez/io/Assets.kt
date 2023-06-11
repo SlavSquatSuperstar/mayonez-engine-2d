@@ -2,15 +2,8 @@ package mayonez.io
 
 import mayonez.*
 import mayonez.io.image.*
+import mayonez.io.scanner.*
 import mayonez.io.text.*
-import org.reflections.Reflections
-import org.reflections.scanners.Scanners
-import java.io.File
-import java.io.IOError
-import java.nio.file.Files
-import java.nio.file.Path
-import java.nio.file.Paths
-import java.util.regex.Pattern
 
 /**
  * The central asset pool for the application and a utility class for file
@@ -35,55 +28,29 @@ object Assets {
     // Search Folder Methods
 
     /**
-     * Recursively searches a resource directory inside the JAR and adds all
-     * assets.
+     * Recursively adds all the resources inside a jar directory to the asset
+     * system.
      *
      * @param directory a folder inside the jar
      */
-    /*
-     * Sources:
-     * - https://stackoverflow.com/questions/3923129/get-a-list-of-resources-from-classpath-directory
-     * - https://stackoverflow.com/questions/10910510/get-a-array-of-class-files-inside-a-package-in-java/30149061
-     * - https://stackoverflow.com/questions/520328/can-you-find-all-classes-in-a-package-using-reflection
-     * - https://www.logicbig.com/how-to/java/find-classpath-files-under-folder-and-sub-folder.html
-     */
     @JvmStatic
-    fun scanResources(directory: String): List<String> {
-        val pathName = directory.toOS()
-        val resources = Reflections(pathName, Scanners.Resources)
-            .getResources(Pattern.compile(".*\\.*"))
+    fun scanResources(directory: String) {
+        val resources = ClasspathFolderScanner().getFiles(directory)
         resources.forEach { createAsset(it) } // Create an asset from each path
-        Logger.debug("Loaded ${resources.size} resources inside \"$pathName\"")
-        return ArrayList(resources)
+        Logger.debug("Loaded ${resources.size} resources inside \"$directory\"")
     }
 
     /**
-     * Recursively searches a file directory outside the JAR and adds all
-     * assets.
+     * Recursively adds all the files inside a local folder to the asset
+     * system.
      *
      * @param directory a folder outside the jar
      */
     @JvmStatic
-    fun scanFiles(directory: String): List<String> {
-        val pathName = directory.toOS()
-        val files = searchDirectory(pathName)
+    fun scanFiles(directory: String) {
+        val files = ExternalFolderScanner().getFiles(directory)
         files.forEach { createAsset(it) }
-        Logger.debug("Loaded ${files.size} files inside $pathName")
-        return files
-    }
-
-    private fun searchDirectory(directory: String): List<String> {
-        // Files.walk() is recursive, file.listFiles() is not
-        if (!File(directory).isDirectory) return emptyList() // If file return empty list
-        return try {
-            val path = Paths.get(directory)
-            Files.walk(path)
-                .filter { file: Path -> Files.isRegularFile(file) }
-                .map { p: Path -> p.toString() }
-                .toList()
-        } catch (e: IOError) {
-            emptyList()
-        }
+        Logger.debug("Loaded ${files.size} files inside \"$directory\"")
     }
 
     // Asset Methods

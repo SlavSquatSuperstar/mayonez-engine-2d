@@ -14,10 +14,10 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * @author SlavSquatSuperstar
  */
-public class TextFileTests {
+class TextFileTests {
 
     @Test
-    public void readClasspathTextFile() {
+    void readClasspathTextFile() {
         Assets.clearAssets();
         Assets.scanResources("testassets");
 
@@ -27,14 +27,14 @@ public class TextFileTests {
     }
 
     @Test
-    public void readLocalTextFile() {
+    void readLocalTextFile() {
         var properties = new TextFile("src/test/resources/testassets/text/properties.txt").readLines();
         System.out.println(Arrays.toString(properties));
         assertEquals("Mayonez Engine", properties[0].split("=")[1]);
     }
 
     @Test
-    public void saveToLocalTextFile() {
+    void saveToLocalTextFile() {
         var textFile = new TextFile("src/test/resources/testassets/out/out.txt");
         textFile.write("date=" + LocalDate.now(), "time=" + LocalTime.now());
     }
