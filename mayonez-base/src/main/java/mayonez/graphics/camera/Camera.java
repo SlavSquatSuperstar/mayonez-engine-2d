@@ -2,8 +2,6 @@ package mayonez.graphics.camera;
 
 import mayonez.*;
 import mayonez.math.*;
-import mayonez.physics.colliders.*;
-import mayonez.scripts.*;
 
 /**
  * The viewport into the scene.
@@ -52,36 +50,6 @@ public abstract class Camera extends Script {
     }
 
     // Factory Method
-
-    /**
-     * Creates a container {@link mayonez.GameObject} to hold a scene's Camera script.
-     *
-     * @param camera the camera instance
-     * @return the camera object
-     */
-    public static GameObject createCameraObject(Camera camera) {
-        return new GameObject("Camera") {
-            @Override
-            protected void init() {
-                addTag("Ignore Collisions");
-                addComponent(camera);
-                addComponent(camera.dragAndDrop = new CameraDragAndDrop("right mouse").setEnabled(false));
-                // Keep camera inside scene and add camera collider (note does not work well with rotations)
-                addComponent(new BoxCollider(camera.screenSize.div(camera.sceneScale)).setTrigger(true));
-                addComponent(camera.keepInScene = new KeepInScene(KeepInScene.Mode.STOP).setEnabled(false));
-            }
-
-            // Don't want to get rid of the camera!
-            @Override
-            public boolean isDestroyed() {
-                return false;
-            }
-
-            @Override
-            public void setDestroyed() {
-            }
-        };
-    }
 
     // Camera Location
 
@@ -143,7 +111,6 @@ public abstract class Camera extends Script {
         transform.scale(new Vec2(1f / zoom));
     }
 
-
     /**
      * Reset the camera's zoom back to 1x.
      */
@@ -176,7 +143,6 @@ public abstract class Camera extends Script {
      */
     public void resetRotation() {
         rotation = 0f;
-//        transform.rotation = 0;
     }
 
     // Camera Movement
@@ -246,6 +212,18 @@ public abstract class Camera extends Script {
         resetRotation();
         setMode(CameraMode.FOLLOW);
         return this;
+    }
+
+    // Script Setters
+
+    Script  setDragAndDropScript(Script dragAndDrop) {
+        this.dragAndDrop = dragAndDrop;
+        return dragAndDrop;
+    }
+
+    Script setKeepInSceneScript(Script keepInScene) {
+        this.keepInScene = keepInScene;
+        return keepInScene;
     }
 
 }

@@ -94,13 +94,8 @@ public abstract class Scene {
     }
 
     private void addCameraToScene() {
-        camera = createCamera();
-        addObject(Camera.createCameraObject(camera));
-    }
-
-    private Camera createCamera() {
-        if (Mayonez.getUseGL()) return new GLCamera(Mayonez.getScreenSize(), scale);
-        else return new JCamera(Mayonez.getScreenSize(), scale);
+        camera = CameraFactory.createCamera(scale);
+        addObject(CameraFactory.createCameraObject(camera));
     }
 
     private void addObjectsToLayers() {
