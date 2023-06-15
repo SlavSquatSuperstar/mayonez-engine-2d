@@ -74,9 +74,12 @@ class Color(red: Int, green: Int, blue: Int, alpha: Int) {
 
     // Helper Methods
 
-    fun hexCode(alpha: Boolean): String {
-        val hex = String.format("#%02x%02x%02x", r, b, g)
-        return if (alpha) hex + String.format("%02x", a) else hex
+    fun rgbHexCode(): String {
+        return String.format("#%02x%02x%02x", r, b, g)
+    }
+
+    fun rgbaHexCode(): String {
+        return String.format("#%02x%02x%02x%02x", r, b, g, a)
     }
 
     companion object {

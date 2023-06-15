@@ -64,4 +64,5 @@ public final class TestUtils {
     public static void assertNoShapeCollision(Shape shape1, Shape shape2) {
         assertFalse(Collisions.checkCollision(shape1, shape2));
     }
+
 }

@@ -24,8 +24,10 @@ module mayonez.base {
     exports mayonez;
     exports mayonez.annotations;
     exports mayonez.graphics;
+    exports mayonez.graphics.camera;
     exports mayonez.graphics.sprites;
     exports mayonez.graphics.textures;
+    exports mayonez.init;
     exports mayonez.io;
     exports mayonez.io.image;
     exports mayonez.io.text;
@@ -39,6 +41,4 @@ module mayonez.base {
     exports mayonez.scripts.combat;
     exports mayonez.scripts.movement;
     exports mayonez.util;
-    exports mayonez.graphics.camera;
-    exports mayonez.init;
 }
