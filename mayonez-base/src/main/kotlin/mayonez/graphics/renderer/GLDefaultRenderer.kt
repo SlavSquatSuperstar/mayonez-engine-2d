@@ -14,8 +14,8 @@ import kotlin.math.*
  *
  * @author SlavSquatSuperstar
  */
-class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"), SceneRenderer,
-    DebugRenderer {
+internal class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"),
+    SceneRenderer, DebugRenderer {
 
     private val lineStyle = LineStyle.QUADS
     private var objects: MutableList<GLRenderable> = ArrayList() // drawable objects
@@ -33,25 +33,23 @@ class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"), SceneRender
     }
 
     override fun addObject(obj: GameObject) {
-        obj.components.forEach { comp ->
-            if (comp is GLRenderable) objects.add(comp)
-        }
+        obj.components
+            .filterIsInstance(GLRenderable::class.java)
+            .forEach { objects.add(it) }
     }
 
     override fun removeObject(obj: GameObject) {
-        obj.components.forEach { comp ->
-            if (comp is GLRenderable) objects.remove(comp)
-        }
+        obj.components
+            .filterIsInstance(GLRenderable::class.java)
+            .forEach { objects.remove(it) }
     }
 
     // Debug Renderer Methods
 
     override fun addShape(shape: DebugShape) {
         for (shapePart in shape.splitIntoParts()) {
-            when (shapePart) {
-                is Edge -> addLine(shapePart, shape)
-                is Triangle -> shapes.add(DebugShape(shapePart, shape))
-            }
+            if (shapePart is Edge) addLine(shapePart, shape)
+            else if (shapePart is Triangle) shapes.add(DebugShape(shapePart, shape))
         }
     }
 
@@ -68,16 +66,6 @@ class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"), SceneRender
         shader.uploadIntArray("uTextures", textureSlots)
         drawBackground()
         setGLProperties()
-    }
-
-    private fun setGLProperties() {
-        glEnable(GL_BLEND)
-        glEnable(GL_LINE_SMOOTH)
-        when (lineStyle) {
-            LineStyle.SINGLE -> glLineWidth(DebugDraw.STROKE_SIZE)
-            LineStyle.MULTIPLE -> glLineWidth(1f)
-            else -> return
-        }
     }
 
     /** Clear the screen and fill the background color or image. */
@@ -100,27 +88,34 @@ class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"), SceneRender
         glClear(GL_COLOR_BUFFER_BIT)
     }
 
+    private fun setGLProperties() {
+        glEnable(GL_BLEND)
+        glEnable(GL_LINE_SMOOTH)
+        when (lineStyle) {
+            LineStyle.SINGLE -> glLineWidth(DebugDraw.STROKE_SIZE)
+            LineStyle.MULTIPLE -> glLineWidth(1f)
+            else -> return
+        }
+    }
+
     override fun createBatches() {
         pushObjectsToBatches()
         pushShapesToBatches()
     }
 
     private fun pushObjectsToBatches() {
-        objects.forEach { obj ->
-            if (obj.isEnabled) {
-                if (obj is ShapeSprite) {
-                    addShape(DebugShape(obj)) // Break down shape into primitives then add them later
+        objects.filter { it.isEnabled }
+            .forEach {
+                if (it is ShapeSprite) {
+                    addShape(DebugShape(it)) // Break down shape into primitives then add them later
                 } else {
-                    obj.pushToBatch(obj.getAvailableBatch())
+                    it.pushToBatch(it.getAvailableBatch())
                 }
             }
-        }
     }
 
     private fun pushShapesToBatches() {
-        shapes.forEach { shape ->
-            shape.pushToBatch(shape.getAvailableBatch())
-        }
+        shapes.forEach { it.pushToBatch(it.getAvailableBatch()) }
     }
 
     override fun postRender() {
@@ -153,7 +148,9 @@ class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"), SceneRender
 
         val stretchedLen = len + stroke - 1f
         val rect = Rectangle(edge.center(), Vec2(stretchedLen, stroke), edge.toVector().angle())
-        for (tri in rect.triangles) shapes.add(DebugShape(tri, shape.color, true, DrawPriority.LINE))
+        for (tri in rect.triangles) {
+            shapes.add(DebugShape(tri, shape.color, true, DrawPriority.LINE))
+        }
     }
 
     private fun addLineAsMultiple(line: Edge, shape: DebugShape) {

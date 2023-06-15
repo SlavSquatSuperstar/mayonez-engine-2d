@@ -1,7 +1,7 @@
 package mayonez.graphics.sprites;
 
 import mayonez.*;
-import mayonez.io.image.*;
+import mayonez.graphics.textures.*;
 import mayonez.math.*;
 
 /**

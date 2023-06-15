@@ -1,19 +1,16 @@
 package mayonez.graphics.renderer
 
 import mayonez.*
-import mayonez.annotations.EngineType
-import mayonez.annotations.UsesEngine
-import mayonez.graphics.camera.Camera
-import mayonez.graphics.DebugShape
-import mayonez.graphics.JRenderable
-import mayonez.graphics.sprites.Sprite
-import mayonez.io.image.JTexture
-import mayonez.math.Vec2
+import mayonez.annotations.*
+import mayonez.graphics.*
+import mayonez.graphics.textures.*
+import mayonez.graphics.camera.*
+import mayonez.graphics.sprites.*
+import mayonez.io.image.*
+import mayonez.math.*
 import mayonez.math.shapes.*
-import java.awt.BasicStroke
-import java.awt.Graphics2D
-import java.awt.Stroke
-import kotlin.math.roundToInt
+import java.awt.*
+import kotlin.math.*
 
 /**
  * Draws all sprites and debug information onto the screen with Java's AWT
@@ -22,7 +19,7 @@ import kotlin.math.roundToInt
  * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.AWT)
-class JDefaultRenderer : SceneRenderer, DebugRenderer {
+internal class JDefaultRenderer : SceneRenderer, DebugRenderer {
 
     // Render Data
     private val batches: MutableList<JRenderable>
@@ -45,12 +42,7 @@ class JDefaultRenderer : SceneRenderer, DebugRenderer {
         sceneScale = 1f
     }
 
-    // Start Renderer Methods
-    override fun start() {
-        batches.clear()
-        objects.clear()
-        shapes.clear()
-    }
+    // Scene Renderer Methods
 
     override fun setScene(newScene: Scene) {
         newScene.objects.forEach(this::addObject)
@@ -60,22 +52,30 @@ class JDefaultRenderer : SceneRenderer, DebugRenderer {
     }
 
     override fun addObject(obj: GameObject) {
-        obj.components.forEach { comp ->
-            if (comp is JRenderable) objects.add(comp)
-        }
+        obj.components
+            .filterIsInstance(JRenderable::class.java)
+            .forEach { objects.add(it) }
     }
 
     override fun removeObject(obj: GameObject) {
-        obj.components.forEach { comp ->
-            if (comp is JRenderable) objects.remove(comp)
-        }
+        obj.components
+            .filterIsInstance(JRenderable::class.java)
+            .forEach { objects.remove(it) }
     }
+
+    // Debug Renderer Methods
 
     override fun addShape(shape: DebugShape) {
         shapes.add(shape)
     }
 
-    // Render Loop Methods
+    // Renderer Methods
+
+    override fun start() {
+        batches.clear()
+        objects.clear()
+        shapes.clear()
+    }
 
     override fun render(g2: Graphics2D?) {
         val oldXf = g2?.transform ?: return // Save a copy of the unmodified transform
@@ -133,19 +133,26 @@ class JDefaultRenderer : SceneRenderer, DebugRenderer {
     /** Sort drawable objects into render "batches". */
     private fun createBatches() {
         batches.clear()
-        objects.forEach { obj -> // Add objects
-            if (obj.isEnabled) batches.add(obj)
-        }
-        if (shapes.isNotEmpty()) { // Add shapes
-            shapes.forEach(batches::add)
+        pushObjectsToBatches()
+        pushShapesToBatches()
+        batches.sortBy(JRenderable::getZIndex)
+    }
+
+    private fun pushObjectsToBatches() {
+        objects.filter { it.isEnabled }
+            .forEach { batches.add(it) }
+    }
+
+    private fun pushShapesToBatches() {
+        if (shapes.isNotEmpty()) {
+            batches.addAll(shapes)
             shapes.clear()
         }
-        batches.sortBy(JRenderable::getZIndex)
     }
 
     private fun drawBatches(g2: Graphics2D) {
         g2.stroke = stroke
-        batches.forEach { obj -> obj.render(g2) }
+        batches.forEach { it.render(g2) }
     }
 
     // Stop Renderer Methods

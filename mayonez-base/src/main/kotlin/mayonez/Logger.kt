@@ -50,10 +50,8 @@ object Logger {
 
         // Count number of log files with the same date
         val today = LocalDate.now().toString()
-        var logCount = 0
-        logDirectory.listFiles()!!.forEach { f ->
-            if (f.name.startsWith(today)) logCount += 1
-        }
+        var logCount = logDirectory.listFiles()!!
+            .count { f -> f.name.startsWith(today) }
 
         // Set name of log file as YYYY-MM-DD_#
         return "${logDirectory.path}/${today}_${++logCount}.log"

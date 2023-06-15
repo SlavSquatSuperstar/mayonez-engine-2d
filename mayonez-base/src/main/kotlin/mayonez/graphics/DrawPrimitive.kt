@@ -57,4 +57,5 @@ enum class DrawPrimitive(
      */
     abstract fun addIndices(elements: IntBuffer, index: Int)
     override fun toString(): String = StringUtils.capitalizeFirstWord(name)
+
 }

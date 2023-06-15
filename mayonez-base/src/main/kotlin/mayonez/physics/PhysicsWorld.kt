@@ -70,11 +70,11 @@ class PhysicsWorld {
     }
 
     private fun updateBodies(dt: Float) {
-        bodies.forEach { rb ->
+        bodies.forEach {
             // Apply gravity
-            if (rb.followsGravity) rb.applyForce(gravity * rb.mass)
-            rb.integrateForce(dt)
-            rb.integrateVelocity(dt)
+            if (it.followsGravity) it.applyForce(gravity * it.mass)
+            it.integrateForce(dt)
+            it.integrateVelocity(dt)
         }
     }
 

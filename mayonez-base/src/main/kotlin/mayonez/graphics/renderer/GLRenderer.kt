@@ -3,6 +3,7 @@ package mayonez.graphics.renderer
 import mayonez.*
 import mayonez.annotations.*
 import mayonez.graphics.*
+import mayonez.graphics.textures.*
 import mayonez.graphics.camera.*
 import mayonez.io.*
 import mayonez.io.image.*
@@ -22,7 +23,7 @@ abstract class GLRenderer(shaderFile: String) : Renderer {
 
     init {
         batches = ArrayList()
-        shader = Assets.getShader(shaderFile)!!
+        shader = Assets.getAsset(shaderFile, Shader::class.java)!!
         textureSlots = IntArray(Preferences.maxTextureSlots) { it } // ints 0-7
     }
 

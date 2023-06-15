@@ -2,7 +2,7 @@ package mayonez.graphics;
 
 import mayonez.*;
 import mayonez.annotations.*;
-import mayonez.io.image.*;
+import mayonez.graphics.textures.*;
 import mayonez.math.*;
 import org.joml.*;
 import org.lwjgl.BufferUtils;

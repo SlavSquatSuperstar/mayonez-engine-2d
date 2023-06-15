@@ -1,7 +1,7 @@
 package mayonez.graphics;
 
 import mayonez.annotations.*;
-import mayonez.io.image.*;
+import mayonez.graphics.textures.*;
 
 /**
  * An object or component that can be drawn to the screen using the GL engine.

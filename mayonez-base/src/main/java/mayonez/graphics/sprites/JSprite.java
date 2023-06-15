@@ -4,7 +4,7 @@ import mayonez.*;
 import mayonez.annotations.*;
 import mayonez.graphics.Color;
 import mayonez.graphics.*;
-import mayonez.io.image.*;
+import mayonez.graphics.textures.*;
 import mayonez.math.shapes.Rectangle;
 
 import java.awt.*;

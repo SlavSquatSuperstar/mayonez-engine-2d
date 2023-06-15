@@ -1,8 +1,8 @@
 package mayonez.graphics.sprites;
 
 import mayonez.annotations.*;
+import mayonez.graphics.textures.*;
 import mayonez.io.*;
-import mayonez.io.image.*;
 import mayonez.math.*;
 
 import java.util.*;

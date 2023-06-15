@@ -4,6 +4,12 @@ import mayonez.*;
 import mayonez.physics.colliders.*;
 import mayonez.scripts.*;
 
+/**
+ * A factory class that constructs {@link mayonez.graphics.camera.Camera} objects
+ * depending on the engine type.
+ *
+ * @author SlavSquatSuperstar
+ */
 public final class CameraFactory {
 
     private CameraFactory() {

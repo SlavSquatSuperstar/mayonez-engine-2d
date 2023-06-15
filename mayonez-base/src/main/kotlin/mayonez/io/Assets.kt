@@ -1,10 +1,8 @@
 package mayonez.io
 
 import mayonez.*
-import mayonez.graphics.renderer.*
-import mayonez.io.image.*
+import mayonez.graphics.textures.*
 import mayonez.io.scanner.*
-import mayonez.io.text.*
 
 /**
  * The central asset pool for the application and a utility class for file
@@ -113,48 +111,22 @@ object Assets {
     fun getAsset(filename: String): Asset? = assets[filename.toOS()]
 
     /**
-     * Retrieves the [Asset] under the specified filename] and re-instantiates
+     * Retrieves the [Asset] under the specified filename and re-instantiates
      * it under the given Asset subclass.
      *
      * @param filename the asset location
      * @param cls the asset subclass
-     * @return a subclass instance with the same [LocationType], if the asset
-     *     is valid.
+     * @return a subclass instance with the same filename, if the asset is
+     *     valid
      */
     @JvmStatic
     @Suppress("UNCHECKED_CAST")
     fun <T : Asset> getAsset(filename: String, cls: Class<T>): T? {
         val asset = getAsset(filename) // check if asset exists and is same class
-        return if (asset == null || !cls.isInstance(asset)) createAsset(filename, cls)
+        val notInitialized = (asset == null || !cls.isInstance(asset))
+        return if (notInitialized) createAsset(filename, cls)
         else asset as? T
     }
-
-    /**
-     * Retrieves the asset at the given location as a [CSVFile].
-     *
-     * @param filename the path to the file
-     * @return the CSV file, if it exists
-     */
-    @JvmStatic
-    fun getCSVFile(filename: String): CSVFile? = getAsset(filename, CSVFile::class.java)
-
-    /**
-     * Retrieves the asset at the given location as a [JSONFile].
-     *
-     * @param filename the path to the file
-     * @return the JSON file, if it exists
-     */
-    @JvmStatic
-    fun getJSONFile(filename: String): JSONFile? = getAsset(filename, JSONFile::class.java)
-
-    /**
-     * Retrieves the asset at the given location as a [TextFile].
-     *
-     * @param filename the path to the file
-     * @return the text file, if it exists
-     */
-    @JvmStatic
-    fun getTextFile(filename: String): TextFile? = getAsset(filename, TextFile::class.java)
 
     /**
      * Retrieves the asset at the given location as a [Texture].
@@ -185,15 +157,6 @@ object Assets {
      */
     @JvmStatic
     fun getJTexture(filename: String): JTexture? = getAsset(filename, JTexture::class.java)
-
-    /**
-     * Retrieves the asset at the given location as a [Shader].
-     *
-     * @param filename the path to the file
-     * @return the shader, if it exists
-     */
-    @JvmStatic
-    fun getShader(filename: String): Shader? = getAsset(filename, Shader::class.java)
 
     /** Empties all Assets from the asset pool. */
     @JvmStatic

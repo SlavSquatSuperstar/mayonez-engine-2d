@@ -2,9 +2,9 @@ package slavsquatsuperstar.demos.mario;
 
 import mayonez.*;
 import mayonez.graphics.*;
+import mayonez.graphics.textures.*;
 import mayonez.graphics.sprites.*;
 import mayonez.io.*;
-import mayonez.io.image.*;
 import mayonez.math.*;
 
 /**

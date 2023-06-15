@@ -65,7 +65,7 @@ public class TextFile extends Asset {
     private void saveText(String[] text, boolean append) {
         try {
             if (text.length == 1) {
-                new TextIOManager().write(openOutputStream(append), text[0]);
+                new TextIOManager().write(openOutputStream(append), text[0] + '\n');
             } else {
                 new LinesIOManager().write(openOutputStream(append), text);
             }

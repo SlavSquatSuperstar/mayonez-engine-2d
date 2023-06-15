@@ -1,7 +1,8 @@
-package mayonez.io.image;
+package mayonez.graphics.textures;
 
 import mayonez.*;
 import mayonez.annotations.*;
+import mayonez.io.image.*;
 import mayonez.math.*;
 import mayonez.math.shapes.*;
 import org.lwjgl.BufferUtils;
@@ -18,12 +19,12 @@ import static org.lwjgl.system.MemoryUtil.memSlice;
 
 /**
  * An image file used by the GL engine.
- * <br>
+ * <p>
  * Sources:
  * <ul>
  *    <li><a href="https://github.com/LWJGL/lwjgl3/blob/master/modules/samples/src/test/java/org/lwjgl/demo/stb/Image.java">org.lwjgl.demo.stb.Image</a></li>
- *    <li><a href = https://github.com/LWJGL/lwjgl3/blob/master/modules/samples/src/test/java/org/lwjgl/demo/util/IOUtil.java>org.lwjgl.demo.stb.IOUtil</a></li>
- *    <li><a href = https://github.com/LWJGL/lwjgl3/blob/master/modules/samples/src/test/java/org/lwjgl/demo/glfw/GLFWUtil.java></a>org.lwjgl.demo.glfw.GLFWUtil</li>
+ *    <li><a href="https://github.com/LWJGL/lwjgl3/blob/master/modules/samples/src/test/java/org/lwjgl/demo/util/IOUtil.java">org.lwjgl.demo.stb.IOUtil</a></li>
+ *    <li><a href="https://github.com/LWJGL/lwjgl3/blob/master/modules/samples/src/test/java/org/lwjgl/demo/glfw/GLFWUtil.java"></a>org.lwjgl.demo.glfw.GLFWUtil</li>
  * </ul>
  *
  * @author SlavSquatSuperstar

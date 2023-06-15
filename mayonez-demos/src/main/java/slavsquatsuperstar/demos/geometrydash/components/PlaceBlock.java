@@ -7,7 +7,7 @@ import mayonez.Transform;
 import mayonez.graphics.JRenderable;
 import mayonez.graphics.sprites.Sprite;
 import mayonez.input.MouseInput;
-import mayonez.io.image.JTexture;
+import mayonez.graphics.textures.JTexture;
 import mayonez.math.Vec2;
 import mayonez.physics.Rigidbody;
 import mayonez.physics.colliders.BoxCollider;

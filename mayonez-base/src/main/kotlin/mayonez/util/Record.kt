@@ -171,9 +171,9 @@ open class Record(map: Map<String?, Any?>) {
      * @param record another record
      */
     fun addAll(record: Record) {
-        record.map.entries.forEach {
-            if (it.value != null) map[it.key] = it.value
-        }
+        record.map.entries
+            .filter { it.value != null }
+            .forEach { map[it.key] = it.value }
     }
 
     // Map Methods

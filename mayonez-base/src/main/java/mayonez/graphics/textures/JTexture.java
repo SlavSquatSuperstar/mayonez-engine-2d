@@ -1,4 +1,4 @@
-package mayonez.io.image;
+package mayonez.graphics.textures;
 
 import mayonez.*;
 import mayonez.annotations.*;

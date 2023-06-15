@@ -1,6 +1,7 @@
 package mayonez
 
 import mayonez.io.*
+import mayonez.io.text.*
 import mayonez.util.*
 
 /**
@@ -11,14 +12,15 @@ import mayonez.util.*
 object Preferences {
 
     private val preferences: Record = Defaults.PREFERENCES.copy()
-    
+
     internal fun readPreferences() {
         if (!Mayonez.INIT_ASSETS) Mayonez.init()
         if (Mayonez.INIT_PREFERENCES) return
 
         // Read preferences file and update game configuration
-        preferences.addAll(Assets.getJSONFile("preferences.json")!!.readJSON())
-//        addAll(JSONFile("preferences.json").readJSON())
+        val prefsFile = Assets.getAsset("preferences.json", JSONFile::class.java)!!
+//        val prefsFile = JSONFile("preferences.json").readJSON()
+        preferences.addAll(prefsFile.readJSON())
     }
 
     /* Window */

@@ -3,6 +3,8 @@ package mayonez.engine;
 /**
  * A factory class that constructs {@link mayonez.engine.GameEngine} objects
  * depending on the run configuration.
+ *
+ * @author SlavSquatSuperstar
  */
 public final class GameEngineFactory {
 

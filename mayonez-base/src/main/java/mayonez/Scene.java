@@ -2,10 +2,10 @@ package mayonez;
 
 import mayonez.graphics.Color;
 import mayonez.graphics.*;
+import mayonez.graphics.textures.*;
 import mayonez.graphics.camera.*;
 import mayonez.graphics.renderer.*;
 import mayonez.graphics.sprites.*;
-import mayonez.io.image.*;
 import mayonez.math.Random;
 import mayonez.math.*;
 import mayonez.physics.*;
@@ -72,7 +72,7 @@ public abstract class Scene {
 
         // Initialize layers
         objects = new ArrayList<>();
-        renderer = Mayonez.getUseGL() ? new GLDefaultRenderer() : new JDefaultRenderer();
+        renderer = RendererFactory.createSceneRenderer();
         debugRenderer = (DebugRenderer) renderer;
         physics = new PhysicsWorld();
 

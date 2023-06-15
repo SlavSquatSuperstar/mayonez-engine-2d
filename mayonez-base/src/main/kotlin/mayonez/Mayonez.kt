@@ -157,11 +157,11 @@ object Mayonez {
         if (!started) return
         started = false
 
-        if (status == 0) Logger.log("Exiting with exit code %d", status)
-        else Logger.error("Exiting with exit code %d", status)
-
         game?.stop()
         Assets.clearAssets()
+
+        if (status == 0) Logger.log("Exiting program with code %d", status)
+        else Logger.error("Exiting program with code %d", status)
         exitProcess(status)
     }
 
