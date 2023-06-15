@@ -1,7 +1,7 @@
 plugins {
     id 'application'
 
-    id 'org.jetbrains.kotlin.jvm' version '1.8.10'
+    id 'org.jetbrains.kotlin.jvm' version '1.8.20'
     id 'org.jetbrains.dokka' version '1.7.20' // For Kotlin documentation
     id 'com.github.johnrengelman.shadow' version '7.1.2' // For making fat jars
 }
@@ -19,7 +19,7 @@ allprojects {
 
     // Name
     group 'slavsquatsuperstar'
-    version '0.7.6-pre3-snapshot'
+    version '0.7.6-pre3'
 
     // Java Version
     sourceCompatibility = javaVersion
