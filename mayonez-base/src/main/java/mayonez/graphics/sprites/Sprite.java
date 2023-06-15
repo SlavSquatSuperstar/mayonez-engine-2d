@@ -4,6 +4,7 @@ import mayonez.*;
 import mayonez.graphics.*;
 import mayonez.graphics.textures.*;
 import mayonez.io.*;
+import mayonez.util.*;
 
 /**
  * A visual representation of a GameObject.

@@ -1,6 +1,6 @@
 package mayonez
 
-import mayonez.graphics.*
+import mayonez.util.*
 
 /**
  * Provides an interface to the user for reloading and switching scenes.

@@ -3,9 +3,9 @@ package mayonez.graphics.renderer
 import mayonez.*
 import mayonez.annotations.*
 import mayonez.graphics.*
-import mayonez.graphics.textures.*
 import mayonez.graphics.camera.*
 import mayonez.graphics.sprites.*
+import mayonez.graphics.textures.*
 import mayonez.io.image.*
 import mayonez.math.*
 import mayonez.math.shapes.*
@@ -25,7 +25,7 @@ internal class JDefaultRenderer : SceneRenderer, DebugRenderer {
     private val batches: MutableList<JRenderable>
     private val objects: MutableList<JRenderable> // permanent components
     private val shapes: MutableList<DebugShape> // temporary shapes
-    private val stroke: Stroke = BasicStroke(DebugDraw.STROKE_SIZE)
+    private val stroke: Stroke = BasicStroke(DebugShape.STROKE_SIZE)
 
     // Scene Information
     private lateinit var background: Sprite

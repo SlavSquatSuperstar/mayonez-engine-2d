@@ -99,8 +99,11 @@ public final class GLTexture extends Texture {
     }
 
     private void getImageInfo(ByteBuffer imageBuffer, IntBuffer width, IntBuffer height, IntBuffer channels) throws IOException {
-        if (!stbi_info_from_memory(imageBuffer, width, height, channels)) throwExceptionOnFailure();
-        else Logger.debug("OpenGL: Loaded image \"%s\"", getFilename());
+        if (!stbi_info_from_memory(imageBuffer, width, height, channels)) {
+            throwExceptionOnFailure();
+        } else {
+            Logger.debug("OpenGL: Loaded image \"%s\"", getFilename());
+        }
 
         this.width = width.get(0);
         this.height = height.get(0);

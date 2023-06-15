@@ -92,7 +92,7 @@ internal class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"),
         glEnable(GL_BLEND)
         glEnable(GL_LINE_SMOOTH)
         when (lineStyle) {
-            LineStyle.SINGLE -> glLineWidth(DebugDraw.STROKE_SIZE)
+            LineStyle.SINGLE -> glLineWidth(DebugShape.STROKE_SIZE)
             LineStyle.MULTIPLE -> glLineWidth(1f)
             else -> return
         }
@@ -144,7 +144,7 @@ internal class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"),
 
     private fun addLineAsQuads(edge: Edge, shape: DebugShape) {
         val len = edge.length
-        val stroke = DebugDraw.STROKE_SIZE
+        val stroke = DebugShape.STROKE_SIZE
 
         val stretchedLen = len + stroke - 1f
         val rect = Rectangle(edge.center(), Vec2(stretchedLen, stroke), edge.toVector().angle())
@@ -155,7 +155,7 @@ internal class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"),
 
     private fun addLineAsMultiple(line: Edge, shape: DebugShape) {
         val len = line.length
-        val stroke = DebugDraw.STROKE_SIZE
+        val stroke = DebugShape.STROKE_SIZE
         val stretched = line.scale(Vec2((len + stroke - 1f) / len), null)
 
         val norm = line.unitNormal()

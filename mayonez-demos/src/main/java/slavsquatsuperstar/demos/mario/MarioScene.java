@@ -1,11 +1,11 @@
 package slavsquatsuperstar.demos.mario;
 
 import mayonez.*;
-import mayonez.graphics.*;
 import mayonez.graphics.textures.*;
 import mayonez.graphics.sprites.*;
 import mayonez.io.*;
 import mayonez.math.*;
+import mayonez.util.*;
 
 /**
  * For testing the renderer, camera, and coordinate conversions.

@@ -1,7 +1,6 @@
 package slavsquatsuperstar.demos.physics;
 
 import mayonez.*;
-import mayonez.graphics.*;
 import mayonez.graphics.sprites.*;
 import mayonez.input.*;
 import mayonez.math.*;
@@ -9,6 +8,7 @@ import mayonez.physics.*;
 import mayonez.physics.colliders.*;
 import mayonez.scripts.*;
 import mayonez.scripts.movement.*;
+import mayonez.util.*;
 
 /**
  * For testing dynamic movement and collision resolution.
@@ -30,6 +30,7 @@ public class SandboxScene extends Scene {
 
     @Override
     protected void init() {
+        setBackground(Colors.BROWN);
         setGravity(new Vec2());
         enabledGravity = false;
 
@@ -75,9 +76,9 @@ public class SandboxScene extends Scene {
             if (col != null && spr != null) {
                 var color = spr.color;
                 if (color != null && !col.isStatic()) {
-                    DebugDraw.drawPoint(col.center(), Colors.BLACK);
-                    DebugDraw.drawVector(col.center(), col.getRigidbody().getVelocity().mul(0.1f), color);
-                    DebugDraw.drawVector(col.getRigidbody().getPosition(), col.getRigidbody().getTransform().getRight(), Colors.BLACK);
+                    getDebugDraw().drawPoint(col.center(), Colors.BLACK);
+                    getDebugDraw().drawVector(col.center(), col.getRigidbody().getVelocity().mul(0.1f), color);
+                    getDebugDraw().drawVector(col.getRigidbody().getPosition(), col.getRigidbody().getTransform().getRight(), Colors.BLACK);
                 }
             }
         }

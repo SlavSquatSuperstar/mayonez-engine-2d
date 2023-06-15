@@ -1,15 +1,13 @@
 package slavsquatsuperstar.demos.spacegame.objects;
 
-import mayonez.Component;
-import mayonez.GameObject;
-import mayonez.Transform;
-import mayonez.graphics.Colors;
-import mayonez.graphics.sprites.ShapeSprite;
-import mayonez.math.Vec2;
-import mayonez.physics.Rigidbody;
-import mayonez.physics.colliders.BallCollider;
-import mayonez.physics.colliders.Collider;
-import mayonez.scripts.combat.Projectile;
+import mayonez.*;
+import mayonez.graphics.*;
+import mayonez.graphics.sprites.*;
+import mayonez.math.*;
+import mayonez.physics.*;
+import mayonez.physics.colliders.*;
+import mayonez.scripts.combat.*;
+import mayonez.util.*;
 
 /**
  * Different prefab projectiles that spaceships can fire.
@@ -75,7 +73,7 @@ public class Projectiles {
                 new Projectile(source, 1.5f, 20f, 5f),
                 "Plasma", 0.3f,
                 new BallCollider(new Vec2(1f)).setTrigger(true),
-                new ShapeSprite(Colors.SKY_BLUE, true)
+                new ShapeSprite(new Color(0, 191, 255), true) // HTML Deep Sky Blue, #00BFFF
         ).setZIndex(ZIndex.PROJECTILE.zIndex);
     }
 

@@ -4,7 +4,7 @@ import mayonez.GameObject;
 import mayonez.Mayonez;
 import mayonez.Preferences;
 import mayonez.Scene;
-import mayonez.graphics.Colors;
+import mayonez.util.Colors;
 import mayonez.graphics.sprites.ShapeSprite;
 import mayonez.init.*;
 import mayonez.math.Vec2;

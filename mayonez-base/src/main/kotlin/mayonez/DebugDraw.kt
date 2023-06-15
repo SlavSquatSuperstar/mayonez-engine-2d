@@ -1,6 +1,5 @@
 package mayonez
 
-import mayonez.annotations.*
 import mayonez.graphics.*
 import mayonez.graphics.renderer.*
 import mayonez.math.*
@@ -8,20 +7,13 @@ import mayonez.math.shapes.*
 import mayonez.util.*
 
 /**
- * Allows colliders and shapes to be drawn onto the screen. All shapes are
- * specified using world coordinates, and colliders are centered around an
- * object's position.
+ * Allows colliders and shapes to be manually drawn onto the screen through
+ * the scene's [DebugRenderer]. All shapes are specified using world
+ * coordinates, and colliders are centered around an object's position.
  *
  * @author SlavSquatSuperstar
  */
-@UsesEngine(EngineType.AWT)
-object DebugDraw {
-
-    const val STROKE_SIZE = 2f
-    private val scale: Float
-        get() = SceneManager.currentScene.scale
-    private val debugRenderer: DebugRenderer
-        get() = SceneManager.currentScene.debugRenderer
+class DebugDraw internal constructor(private val scale: Float, private val debugRenderer: DebugRenderer) {
 
     // Draw Points/Lines
     /**
@@ -30,11 +22,9 @@ object DebugDraw {
      * @param position where the point is located, in world coordinates
      * @param color the color to use
      */
-    @JvmStatic
     fun drawPoint(position: Vec2, color: MColor?) {
-        if (!Mayonez.started) return
         // Fill a circle with radius "STROKE_SIZE" in pixels
-        addShape(Circle(position.toScreen(), STROKE_SIZE), color, true, DrawPriority.POINT)
+        addShape(Circle(position.toScreen(), DebugShape.STROKE_SIZE), color, true, DrawPriority.POINT)
     }
 
     /**
@@ -44,9 +34,7 @@ object DebugDraw {
      * @param end the segment's ending point, in world coordinates
      * @param color the color to use
      */
-    @JvmStatic
     fun drawLine(start: Vec2, end: Vec2, color: MColor?) {
-        if (!Mayonez.started) return
         addShape(Edge(start.toScreen(), end.toScreen()), color, false, DrawPriority.LINE)
     }
 
@@ -58,7 +46,6 @@ object DebugDraw {
      *     coordinates
      * @param color the color to use
      */
-    @JvmStatic
     fun drawVector(origin: Vec2, direction: Vec2, color: MColor?) = drawLine(origin, origin.add(direction), color)
 
     // Draw Shapes
@@ -68,7 +55,6 @@ object DebugDraw {
      * @param shape a [Shape]
      * @param color the color to use
      */
-    @JvmStatic
     fun drawShape(shape: Shape?, color: MColor?) = debugDrawShape(shape, color, false, DrawPriority.SHAPE)
 
     /**
@@ -77,14 +63,12 @@ object DebugDraw {
      * @param shape a [Shape]
      * @param color the color to use
      */
-    @JvmStatic
     fun fillShape(shape: Shape?, color: MColor?) = debugDrawShape(shape, color, true, DrawPriority.FILL)
 
     // Internal Draw methods
 
     private fun debugDrawShape(shape: Shape?, color: MColor?, fill: Boolean, priority: DrawPriority) {
         // screen coordinates only
-        if (!Mayonez.started) return
         when (shape) {
             is Edge -> addShape(shape.toScreen(), color, false, DrawPriority.LINE)
             is Polygon -> addShape(shape.toScreen(), color, fill, priority)

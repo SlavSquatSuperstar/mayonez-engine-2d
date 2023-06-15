@@ -35,12 +35,12 @@ public class Grid extends Component implements JRenderable {
         // Either bottom of screen or top of ground
         // Vertical Lines
         for (var drawX = start.x; drawX <= end.x; drawX += gridSize.x)
-//            DebugDraw.drawLine(new Vec2(drawX, start.y), new Vec2(drawX, end.y), gridColor);
+//            getScene().getDebugDraw().drawLine(new Vec2(drawX, start.y), new Vec2(drawX, end.y), gridColor);
             g2.draw(new Line2D.Float(drawX, start.y, drawX, end.y));
 
         // Horizontal Lines
         for (var drawY = start.y; drawY <= end.y; drawY += gridSize.y)
-//            DebugDraw.drawLine(new Vec2(start.x, drawY), new Vec2(end.x, drawY), gridColor);
+//            getScene().getDebugDraw().drawLine(new Vec2(start.x, drawY), new Vec2(end.x, drawY), gridColor);
             g2.draw(new Line2D.Float(start.x, drawY, end.x, drawY));
     }
 

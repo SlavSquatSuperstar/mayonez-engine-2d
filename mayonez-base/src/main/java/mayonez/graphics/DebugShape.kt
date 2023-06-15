@@ -98,6 +98,9 @@ class DebugShape(
     // Helper Methods
 
     companion object {
+        /** How many pixels wide a shape should be drawn. */
+        const val STROKE_SIZE: Float = 2f
+
         private fun MShape.toAwt(): JShape? {
             return when (this) {
                 is Edge -> {

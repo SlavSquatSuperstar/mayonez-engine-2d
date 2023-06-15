@@ -6,6 +6,7 @@ import mayonez.graphics.Color;
 import mayonez.graphics.*;
 import mayonez.graphics.textures.*;
 import mayonez.math.shapes.Rectangle;
+import mayonez.util.*;
 
 import java.awt.*;
 import java.awt.image.*;
@@ -44,14 +45,17 @@ public final class JSprite extends Sprite implements JRenderable {
 
     @Override
     public void render(Graphics2D g2) {
-        if (texture != null) texture.draw(g2, transform, spriteXf, getScene().getScale());
-        else DebugDraw.fillShape(new Rectangle(transform.getPosition(), transform.getScale()), color);
+        if (texture != null) {
+            texture.draw(g2, transform, spriteXf, getScene().getScale());
+        } else {
+            getScene().getDebugDraw().fillShape(new Rectangle(transform.getPosition(), transform.getScale()), color);
+        }
     }
 
     // Sprite Methods
 
     public BufferedImage getImage() {
-        return texture.getImage();
+        return (texture == null) ? null : texture.getImage();
     }
 
     @Override

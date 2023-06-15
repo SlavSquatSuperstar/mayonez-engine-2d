@@ -8,6 +8,7 @@ import mayonez.physics.*;
 import mayonez.physics.colliders.*;
 import mayonez.scripts.*;
 import mayonez.scripts.movement.*;
+import mayonez.util.*;
 
 /**
  * A simulated  billiard (pool) ball.

@@ -1,7 +1,6 @@
 package mayonez;
 
 import mayonez.graphics.Color;
-import mayonez.graphics.*;
 import mayonez.graphics.textures.*;
 import mayonez.graphics.camera.*;
 import mayonez.graphics.renderer.*;
@@ -37,6 +36,7 @@ public abstract class Scene {
     private final List<GameObject> objects;
     private final SceneRenderer renderer;
     private final DebugRenderer debugRenderer;
+    private final DebugDraw debugDraw;
     private final PhysicsWorld physics;
     private Camera camera;
 
@@ -74,6 +74,7 @@ public abstract class Scene {
         objects = new ArrayList<>();
         renderer = RendererFactory.createSceneRenderer();
         debugRenderer = (DebugRenderer) renderer;
+        debugDraw = new DebugDraw(scale, debugRenderer);
         physics = new PhysicsWorld();
 
         // Scene changes
@@ -345,11 +346,15 @@ public abstract class Scene {
         return camera;
     }
 
+    public final DebugDraw getDebugDraw() {
+        return debugDraw;
+    }
+
     final DebugRenderer getDebugRenderer() {
         return debugRenderer;
     }
 
-    public boolean separateDebugRenderer() { // if scene renderer is also debug renderer
+    private boolean separateDebugRenderer() { // if scene renderer is also debug renderer
         return renderer != debugRenderer;
     }
 

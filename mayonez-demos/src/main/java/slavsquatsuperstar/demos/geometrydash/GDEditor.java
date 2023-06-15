@@ -1,7 +1,7 @@
 package slavsquatsuperstar.demos.geometrydash;
 
 import mayonez.*;
-import mayonez.graphics.Colors;
+import mayonez.util.Colors;
 import mayonez.graphics.sprites.JSpriteSheet;
 import mayonez.graphics.sprites.ShapeSprite;
 import mayonez.graphics.sprites.SpriteSheet;

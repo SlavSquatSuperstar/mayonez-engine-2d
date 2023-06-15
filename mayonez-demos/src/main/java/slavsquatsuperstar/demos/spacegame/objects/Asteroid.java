@@ -2,7 +2,7 @@ package slavsquatsuperstar.demos.spacegame.objects;
 
 import mayonez.GameObject;
 import mayonez.Transform;
-import mayonez.graphics.Colors;
+import mayonez.util.Colors;
 import mayonez.graphics.sprites.ShapeSprite;
 import mayonez.math.Random;
 import mayonez.math.Vec2;

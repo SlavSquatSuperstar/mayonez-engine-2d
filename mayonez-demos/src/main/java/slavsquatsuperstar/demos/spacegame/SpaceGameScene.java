@@ -8,6 +8,7 @@ import mayonez.math.Random;
 import mayonez.math.*;
 import mayonez.math.shapes.*;
 import mayonez.scripts.*;
+import mayonez.util.*;
 import slavsquatsuperstar.demos.spacegame.objects.Asteroid;
 import slavsquatsuperstar.demos.spacegame.objects.EnemyShip;
 import slavsquatsuperstar.demos.spacegame.objects.PlayerShip;
@@ -21,7 +22,7 @@ public class SpaceGameScene extends Scene {
 
     public SpaceGameScene(String name) {
         super(name, Preferences.getScreenWidth() * 2, Preferences.getScreenHeight() * 2, 32f);
-        setBackground(Colors.JET_BLACK);
+        setBackground(new Color(14, 14, 14));
         backgroundObjects = new ArrayList<>();
         numEnemies = 6;
         numObstacles = 3;
@@ -94,7 +95,7 @@ public class SpaceGameScene extends Scene {
     @Override
     protected void onUserRender() {
         for (var obj : backgroundObjects) {
-            DebugDraw.fillShape(obj.getFirst(), obj.getSecond());
+            getDebugDraw().fillShape(obj.getFirst(), obj.getSecond());
         }
     }
 

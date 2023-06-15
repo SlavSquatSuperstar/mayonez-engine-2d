@@ -41,8 +41,8 @@ public class ClickToMove extends MouseScript {
             moving = turning = true;
         }
 
-//        DebugDraw.drawLine(lastPos, destPos, Colors.RED);
-//        DebugDraw.drawVector(transform.getPosition(), transform.getUp(), Colors.LIGHT_GREEN);
+//        getScene().getDebugDraw().drawLine(lastPos, destPos, Colors.RED);
+//        getScene().getDebugDraw().drawVector(transform.getPosition(), transform.getUp(), Colors.LIGHT_GREEN);
 
         if (moving) moveToDestination(dt);
         if (turning) turnToDestination(dt);
