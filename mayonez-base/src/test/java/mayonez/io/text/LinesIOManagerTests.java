@@ -20,7 +20,7 @@ class LinesIOManagerTests {
     void readLinesFromFileSuccess() {
         var asset = new Asset("testassets/text/properties.txt");
         try {
-            var input = asset.inputStream();
+            var input = asset.openInputStream();
             var lines = new LinesIOManager().read(input);
             assertTrue(lines.length > 0);
             assertThrows(IOException.class, input::readAllBytes); // make sure stream closed
@@ -48,7 +48,7 @@ class LinesIOManagerTests {
                 Your move.
                 """.split("\n");
         try {
-            var output = asset.outputStream(false);
+            var output = asset.openOutputStream(false);
             new LinesIOManager().write(output, lines);
             // make sure stream closed
             assertThrows(IOException.class, () -> output.write(lines[0].getBytes(StandardCharsets.UTF_8)));

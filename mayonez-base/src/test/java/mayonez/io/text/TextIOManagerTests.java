@@ -20,7 +20,7 @@ class TextIOManagerTests {
     void readTextFromFileSuccess() {
         var asset = new Asset("testassets/text/properties.txt");
         try {
-            var input = asset.inputStream();
+            var input = asset.openInputStream();
             var text = new TextIOManager().read(input);
             assertTrue(text.length() > 0);
             assertThrows(IOException.class, input::readAllBytes); // make sure stream closed
@@ -48,7 +48,7 @@ class TextIOManagerTests {
                 Your move.
                 """;
         try {
-            var output = asset.outputStream(false);
+            var output = asset.openOutputStream(false);
             new TextIOManager().write(output, text);
             // make sure stream closed
             assertThrows(IOException.class, () -> output.write(text.getBytes(StandardCharsets.UTF_8)));

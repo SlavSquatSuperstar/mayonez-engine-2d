@@ -1,9 +1,12 @@
 package mayonez.io.text;
 
+import mayonez.*;
+import mayonez.io.*;
 import mayonez.math.*;
 import mayonez.util.Record;
 import mayonez.util.*;
 
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -11,7 +14,7 @@ import java.util.*;
  *
  * @author SlavSquatSuperstar
  */
-public class CSVFile extends TextAsset {
+public class CSVFile extends Asset {
 
     private String[] headers;
 
@@ -26,19 +29,27 @@ public class CSVFile extends TextAsset {
      */
     public List<Record> readCSV() {
         var records = new ArrayList<Record>();
-        var lines = super.readLines();
-        if (lines.length > 2) {
+        try {
+            var lines = new LinesIOManager().read(openInputStream());
             this.headers = lines[0].split(","); // Get headers
-            // Create records from lines
             for (var row = 1; row < lines.length; row++) {
-                var rec = new Record();
-                var vals = lines[row].split(",");
-                for (var cols = 0; cols < FloatMath.min(headers.length, vals.length); cols++)
-                    rec.set(headers[cols], vals[cols]);
-                records.add(rec);
+                records.add(addRecordFromLine(lines[row]));
             }
+            return records;
+        } catch (IOException e) {
+            Logger.error("Could not read file \"%s\"", getFilename());
+            return records;
         }
-        return records;
+    }
+
+    private Record addRecordFromLine(String line) {
+        var csvVals = line.split(",");
+        var numCols = FloatMath.min(headers.length, csvVals.length);
+        var rec = new Record();
+        for (var cols = 0; cols < numCols; cols++) {
+            rec.set(headers[cols], csvVals[cols]);
+        }
+        return rec;
     }
 
     /**
@@ -48,21 +59,30 @@ public class CSVFile extends TextAsset {
      * @param headers the table headers
      */
     public void saveCSV(List<Record> records, String[] headers) {
-        // add headers
         var csvLines = new String[records.size() + 1];
-        csvLines[0] = StringUtils.join(headers, ",");
-        // convert records to strings
+        csvLines[0] = StringUtils.join(headers, ","); // add headers
+
         for (var row = 0; row < records.size(); row++) {
-            var rec = records.get(row);
-            var vals = new String[headers.length];
-            for (var col = 0; col < headers.length; col++)
-                vals[col] = rec.getString(headers[col]);
-            csvLines[row + 1] = StringUtils.join(vals, ",");
+            csvLines[row + 1] = getCSVLineFromRecord(records, headers, row);
         }
-        super.save(false, csvLines);
+        try {
+            new LinesIOManager().write(openOutputStream(false), csvLines);
+        } catch (IOException e) {
+            Logger.error("Could not save to file \"%s\"", getFilename());
+        }
+    }
+
+    private String getCSVLineFromRecord(List<Record> records, String[] headers, int row) {
+        var rec = records.get(row);
+        var csvVals = new String[headers.length];
+        for (var col = 0; col < headers.length; col++) {
+            csvVals[col] = rec.getString(headers[col]);
+        }
+        return StringUtils.join(csvVals, ",");
     }
 
     public String[] getHeaders() {
         return headers;
     }
+
 }

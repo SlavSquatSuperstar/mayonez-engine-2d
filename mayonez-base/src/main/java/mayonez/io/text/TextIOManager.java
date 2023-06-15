@@ -32,7 +32,7 @@ public class TextIOManager implements AssetReader<String>, AssetWriter<String> {
 //            output.write(text.getBytes(StandardCharsets.UTF_8));
             writer.write(text);
         } catch (IOException e) {
-            throw new IOException("Error while saving file");
+            throw new IOException("Error while writing to file");
         }
     }
 

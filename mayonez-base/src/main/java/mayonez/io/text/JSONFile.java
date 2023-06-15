@@ -1,16 +1,19 @@
 package mayonez.io.text;
 
 import mayonez.*;
+import mayonez.io.*;
 import mayonez.util.Record;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.IOException;
 
 /**
  * A JavaScript Object Notation (.json) file that stores an object record.
  *
  * @author SlavSquatSuperstar
  */
-public class JSONFile extends TextAsset {
+public class JSONFile extends Asset {
 
     public JSONFile(String filename) {
         super(filename);
@@ -22,11 +25,13 @@ public class JSONFile extends TextAsset {
      * @return a record, or blank if it does not exist
      */
     public Record readJSON() {
-        var text = super.readText();
         try {
+            var text = new TextIOManager().read(openInputStream());
             return new Record(new JSONObject(text).toMap());
         } catch (JSONException e) {
-            Logger.error("JSON: Could not parse JSON file");
+            Logger.error("Could not parse JSON in file \"%s\"", getFilename());
+        } catch (IOException e) {
+            Logger.error("Could not read file \"%s\"", getFilename());
         }
         return new Record();
     }
@@ -37,8 +42,12 @@ public class JSONFile extends TextAsset {
      * @param json a record object
      */
     public void saveJSON(Record json) {
-        var jsonString = new JSONObject(json.toMap()).toString(4);
-        super.save(false, jsonString);
+        try {
+            var jsonString = new JSONObject(json.toMap()).toString(4);
+            new TextIOManager().write(openOutputStream(false), jsonString);
+        } catch (IOException e) {
+            Logger.error("Could not save to file \"%s\"", getFilename());
+        }
     }
 
 }

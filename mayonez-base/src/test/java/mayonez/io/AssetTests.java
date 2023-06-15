@@ -32,11 +32,11 @@ class AssetTests {
     void classpathAssetIsReadOnly() {
         var asset = new Asset(classpathImg);
         assertDoesNotThrow(() -> {
-            InputStream in = asset.inputStream();
+            InputStream in = asset.openInputStream();
             in.close();
         });
         assertThrows(IOException.class, () -> {
-            OutputStream out = asset.outputStream(true);
+            OutputStream out = asset.openOutputStream(true);
             out.close();
         });
     }
@@ -45,11 +45,11 @@ class AssetTests {
     void externalAssetCanReadAndWrite() {
         var asset = new Asset(externalImg);
         assertDoesNotThrow(() -> {
-            InputStream in = asset.inputStream();
+            InputStream in = asset.openInputStream();
             in.close();
         });
         assertDoesNotThrow(() -> {
-            OutputStream out = asset.outputStream(true);
+            OutputStream out = asset.openOutputStream(true);
             out.close();
         });
     }
@@ -63,12 +63,12 @@ class AssetTests {
         if (file.exists()) file.delete(); // Delete so the test works
 
         assertThrows(IOException.class, () -> {
-            InputStream in = asset.inputStream();
+            InputStream in = asset.openInputStream();
             in.close();
         });
 	    assertDoesNotThrow(() -> {
             // Requires parent directory to exist but not file
-            OutputStream out = asset.outputStream(true);
+            OutputStream out = asset.openOutputStream(true);
             out.close();
         });
 

@@ -3,6 +3,7 @@ package mayonez.io.image;
 import mayonez.*;
 import mayonez.annotations.*;
 import mayonez.graphics.camera.*;
+import mayonez.io.*;
 import mayonez.io.text.*;
 import org.joml.*;
 import org.lwjgl.BufferUtils;
@@ -19,7 +20,7 @@ import static org.lwjgl.opengl.GL20.*;
  * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.GL)
-public class Shader extends TextAsset {
+public class Shader extends Asset {
 
     private static final String VERTEX_SHADER_TYPE = "vertex";
     private static final String FRAGMENT_SHADER_TYPE = "fragment";
@@ -37,11 +38,12 @@ public class Shader extends TextAsset {
 
     private void readShaderFile() {
         try {
-            var source = super.readText();
+            var source = new TextIOManager().read(openInputStream());
             var shaders = source.split("(#type)( )+"); // shaders indicated by "#type '<shader_type>'"
             parseShaderFile(shaders);
         } catch (Exception e) {
-            Logger.error("Could not read file %s", getFilenameInQuotes());
+            Logger.error("Could not read shader %s", getFilenameInQuotes());
+            Mayonez.stop(1);
         }
     }
 

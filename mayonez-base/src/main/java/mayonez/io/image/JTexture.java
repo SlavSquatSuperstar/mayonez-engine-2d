@@ -47,7 +47,7 @@ public final class JTexture extends Texture {
 
     @Override
     protected void readImage() {
-        try (var in = inputStream()) {
+        try (var in = openInputStream()) {
             image = ImageIO.read(new ByteArrayInputStream(Objects.requireNonNull(in).readAllBytes()));
             Logger.debug("Loaded image \"%s\"", getFilename());
         } catch (IOException e) {

@@ -38,7 +38,7 @@ class CSVFileTests {
     }
 
     @Test
-    void saveToLocalJSONFile() {
+    void saveToLocalCSVFile() {
         var rec1 = new Record();
         rec1.set("name", "time");
         rec1.set("value", LocalTime.now().toString());

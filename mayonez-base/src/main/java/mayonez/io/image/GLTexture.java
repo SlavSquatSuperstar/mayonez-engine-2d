@@ -2,7 +2,6 @@ package mayonez.io.image;
 
 import mayonez.*;
 import mayonez.annotations.*;
-import mayonez.io.*;
 import mayonez.math.*;
 import mayonez.math.shapes.*;
 import org.lwjgl.BufferUtils;
@@ -89,7 +88,7 @@ public final class GLTexture extends Texture {
     }
 
     private ByteBuffer readImageBuffer() throws IOException {
-        var imageData = IOUtils.readBytes(inputStream());
+        var imageData = new ImageIOManager().read(openInputStream());
         if (imageData == null) {
             throw new IOException("Image data is null");
         }
