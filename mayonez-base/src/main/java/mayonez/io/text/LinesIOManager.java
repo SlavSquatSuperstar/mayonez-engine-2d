@@ -13,7 +13,7 @@ import java.nio.charset.StandardCharsets;
  */
 public class LinesIOManager implements AssetReader<String[]>, AssetWriter<String[]> {
 
-    private final char NEW_LINE = '\n';
+    private static final char NEW_LINE = '\n';
 
     @Override
     public String[] read(InputStream input) throws IOException {
@@ -25,7 +25,7 @@ public class LinesIOManager implements AssetReader<String[]>, AssetWriter<String
         }
     }
 
-    //Source: Apache Commons IO > IOUtils.write(Collection<?>, String, OutputStream, Charset)
+    // Source: Apache Commons IO > IOUtils.write(Collection<?>, String, OutputStream, Charset)
     @Override
     public void write(OutputStream output, String[] lines) throws IOException {
         if (output == null) throw new FileNotFoundException("File does not exist");

@@ -1,4 +1,4 @@
-package mayonez.io.image;
+package mayonez.graphics.renderer;
 
 import mayonez.*;
 import mayonez.annotations.*;
@@ -8,26 +8,23 @@ import mayonez.io.text.*;
 import org.joml.*;
 import org.lwjgl.BufferUtils;
 
-import java.io.IOException;
+import java.util.*;
 
 import static org.lwjgl.opengl.GL11.GL_FALSE;
 import static org.lwjgl.opengl.GL20.*;
 
 /**
- * A compiled OpenGL Shader program (.glsl) that tells the GPU how to draw an image, specifying the colors, brightness,
- * and texture. Only available in the GL engine.
+ * A compiled OpenGL Shader program (.glsl) used by the GL engine. A shader tells
+ * the GPU how to draw an image, specifying the colors, brightness, and texture.
  *
  * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.GL)
 public class Shader extends Asset {
 
-    private static final String VERTEX_SHADER_TYPE = "vertex";
-    private static final String FRAGMENT_SHADER_TYPE = "fragment";
-
     private int shaderID;
     private boolean isActive;
-    private String vertexSrc, fragmentSrc;
+    private List<ShaderProgram> programs;
 
     public Shader(String filename) {
         super(filename);
@@ -47,50 +44,45 @@ public class Shader extends Asset {
         }
     }
 
-    private void parseShaderFile(String[] shaders) throws IOException {
-        for (var shader : shaders) {
+    private void parseShaderFile(String[] subPrograms) throws IllegalArgumentException {
+        programs = new ArrayList<>();
+        for (var shader : subPrograms) {
             shader = shader.strip();
             if (shader.equals("")) continue;
 
-            var endLn = shader.indexOf("\n");
-            var pattern = shader.substring(0, endLn).trim();
-
-            shader = shader.substring(endLn + 1);
-            switch (pattern) {
-                case VERTEX_SHADER_TYPE -> vertexSrc = shader;
-                case FRAGMENT_SHADER_TYPE -> fragmentSrc = shader;
-                default -> throw new IOException("Unexpected shader type \"" + pattern + "\"");
-            }
+            programs.add(readNextProgram(shader));
         }
+    }
+
+    private static ShaderProgram readNextProgram(String shader) throws IllegalArgumentException {
+        var firstNewLine = shader.indexOf("\n");
+        var typeName = shader.substring(0, firstNewLine).trim();
+
+        var shaderSource = shader.substring(firstNewLine + 1);
+        var shaderType = ShaderType.getType(typeName);
+        return new ShaderProgram(shaderType, shaderSource);
     }
 
     private void compileShaderPrograms() {
-        int vertexID = compileShader(GL_VERTEX_SHADER, vertexSrc, VERTEX_SHADER_TYPE);
-        int fragmentID = compileShader(GL_FRAGMENT_SHADER, fragmentSrc, FRAGMENT_SHADER_TYPE);
-        linkShaderPrograms(vertexID, fragmentID);
+        programs.forEach(this::compileShader);
+        var programIDs = programs.stream().map(ShaderProgram::getID).toList();
+        linkShaderPrograms(programIDs);
     }
 
-    private int compileShader(int glShaderType, String shaderSrc, String shaderType) {
-        var shaderID = glCreateShader(glShaderType);
-        glShaderSource(shaderID, shaderSrc);
-        glCompileShader(shaderID);
-        checkCompileStatus(shaderID, shaderType);
-        return shaderID;
-    }
-
-    private void checkCompileStatus(int shaderID, String shaderType) {
-        if (glGetShaderi(shaderID, GL_COMPILE_STATUS) == GL_FALSE) {
-            Logger.error("OpenGL: Could not compile %s shader in  %s", shaderType, getFilenameInQuotes());
+    private void compileShader(ShaderProgram shader) {
+        try {
+            shader.compileSource();
+            Logger.debug("OpenGL: Compiled %s shader in %s", shader.getType(), getFilenameInQuotes());
+        } catch (RuntimeException e) {
+            Logger.error("OpenGL: Could not compile %s shader in  %s", shader.getType(), getFilenameInQuotes());
             Logger.error("OpenGL: " + glGetShaderInfoLog(shaderID));
             Mayonez.stop(1);
         }
-        Logger.debug("OpenGL: Compiled %s shader in  %s", shaderType, getFilenameInQuotes());
     }
 
-    private void linkShaderPrograms(int vertexID, int fragmentID) {
+    private void linkShaderPrograms(List<Integer> programIDs) {
         shaderID = glCreateProgram();
-        glAttachShader(shaderID, vertexID);
-        glAttachShader(shaderID, fragmentID);
+        programIDs.forEach(id -> glAttachShader(shaderID, id));
         glLinkProgram(shaderID);
         checkLinkStatus(shaderID);
     }

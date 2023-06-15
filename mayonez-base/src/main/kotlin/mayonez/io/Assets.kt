@@ -1,6 +1,7 @@
 package mayonez.io
 
 import mayonez.*
+import mayonez.graphics.renderer.*
 import mayonez.io.image.*
 import mayonez.io.scanner.*
 import mayonez.io.text.*
