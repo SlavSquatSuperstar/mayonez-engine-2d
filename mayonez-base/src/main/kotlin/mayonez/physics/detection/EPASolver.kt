@@ -18,7 +18,7 @@ import kotlin.math.*
 class EPASolver(private val shape1: Shape?, private val shape2: Shape?) {
 
     companion object {
-        const val MAX_EPA_ITERATIONS: Int = 40
+        private const val MAX_EPA_ITERATIONS: Int = 40
     }
 
     /**

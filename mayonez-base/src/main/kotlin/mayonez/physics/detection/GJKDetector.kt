@@ -14,7 +14,7 @@ import mayonez.math.shapes.*
 class GJKDetector : CollisionDetector {
 
     companion object {
-        const val MAX_GJK_ITERATIONS: Int = 20
+        private const val MAX_GJK_ITERATIONS: Int = 20
     }
 
     override fun checkIntersection(shape1: Shape?, shape2: Shape?): Boolean {

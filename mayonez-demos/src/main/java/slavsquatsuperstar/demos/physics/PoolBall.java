@@ -28,7 +28,7 @@ class PoolBall extends GameObject {
 
     private static final Color[] ballColors = new Color[]{
             Colors.YELLOW, Colors.BLUE, Colors.RED, Colors.PURPLE,
-            Colors.ORANGE, Colors.GREEN, Colors.BROWN, Colors.DARK_GRAY
+            Colors.ORANGE, Colors.GREEN, Colors.BROWN, new Color(12, 12, 12)
     };
 
     private final Color color;
@@ -46,7 +46,7 @@ class PoolBall extends GameObject {
 
     // Create the cue ball
     public PoolBall(Vec2 position) {
-        this("Cue Ball", position, Colors.LIGHT_GRAY, false, true);
+        this("Cue Ball", position, new Color(232, 232, 232), true, true);
     }
 
     // Create a numbered ball

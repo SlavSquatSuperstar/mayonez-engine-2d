@@ -350,10 +350,6 @@ public abstract class Scene {
         return debugDraw;
     }
 
-    final DebugRenderer getDebugRenderer() {
-        return debugRenderer;
-    }
-
     private boolean separateDebugRenderer() { // if scene renderer is also debug renderer
         return renderer != debugRenderer;
     }

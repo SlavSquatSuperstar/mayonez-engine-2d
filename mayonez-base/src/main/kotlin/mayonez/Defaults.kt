@@ -31,9 +31,6 @@ object Defaults {
     const val MAX_BATCH_SIZE: Int = 100
     const val MAX_TEXTURE_SLOTS: Int = 8
 
-    /* Physics */
-    const val IMPULSE_ITERATIONS: Int = 4
-
     @JvmStatic
     val PREFERENCES: Record = Record()
 
@@ -57,9 +54,6 @@ object Defaults {
         PREFERENCES["fps"] = FPS
         PREFERENCES["max_batch_size"] = MAX_BATCH_SIZE
         PREFERENCES["max_texture_size"] = MAX_TEXTURE_SLOTS
-
-        /* Physics */
-        PREFERENCES["physics_iterations"] = IMPULSE_ITERATIONS
     }
 
 }

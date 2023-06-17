@@ -83,9 +83,4 @@ object Preferences {
     val maxTextureSlots: Int
         get() = preferences.getInt("max_texture_slots")
 
-    /* Physics */
-    @JvmStatic
-    val impulseIterations: Int
-        get() = preferences.getInt("physics_iterations")
-
 }
