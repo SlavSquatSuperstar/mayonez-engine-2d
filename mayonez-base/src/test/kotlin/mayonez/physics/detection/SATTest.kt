@@ -5,8 +5,7 @@ import mayonez.math.shapes.*
 import mayonez.physics.manifold.*
 import mayonez.test.*
 import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.*
 
 /**
  * Unit Tests for the [mayonez.physics.detection.SATDetector] class.

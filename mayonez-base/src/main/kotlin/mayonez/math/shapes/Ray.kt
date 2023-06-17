@@ -14,7 +14,6 @@ import mayonez.math.*
 class Ray(
     /** The starting point of the ray, r0. */
     val origin: Vec2,
-
     direction: Vec2
 ) : Transformable {
 

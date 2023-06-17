@@ -46,7 +46,9 @@ class Edge(val start: Vec2, val end: Vec2) : Shape() {
      * @return the unit normal vector towards given direction, or (0, 0) if the
      *     direction is parallel to this edge.
      */
-    fun unitNormal(direction: Vec2): Vec2 = Vec2.tripleProduct(toVector(), direction, toVector()).unit()
+    fun unitNormal(direction: Vec2): Vec2 {
+        return Vec2.tripleProduct(toVector(), direction, toVector()).unit()
+    }
 
     /** The area of the edge, equal to 0 because it has only one dimension. */
     override fun area(): Float = 0f

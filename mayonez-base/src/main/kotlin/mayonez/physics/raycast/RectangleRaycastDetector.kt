@@ -14,7 +14,7 @@ import kotlin.math.*
 internal object RectangleRaycastDetector : RaycastDetector<Rectangle> {
 
     override fun raycast(rect: Rectangle, ray: Ray, limit: Float): RaycastInfo? {
-        val localRay = ray.transformToRectangle(rect)
+        val localRay = ray.transformToRectangle(rect, 1f)
 
         // Distance to min/max box axes
         val nearDist = localRay.getParametricDistance(rect.min())
@@ -31,14 +31,14 @@ internal object RectangleRaycastDetector : RaycastDetector<Rectangle> {
         // If ray starts inside shape, use far for contact
         val distToRect = if (nearHitDist < 0) farHitDist else nearHitDist
         if (isContactPastRayLimit(limit, distToRect)) return null
-        return calculateRaycastInfo(ray, localRay, distToRect, nearDist)
+        return calculateRaycastInfo(rect, localRay, distToRect, nearDist)
     }
 
-    // Raycast helper methods
+    // Raycast Helper Methods
 
-    private fun Ray.transformToRectangle(rect: Rectangle): Ray {
-        return if (rect.isAxisAligned) this
-        else this.rotate(rect.angle, rect.center())
+    private fun Ray.transformToRectangle(rect: Rectangle, direction: Float): Ray {
+        return if (rect.isAxisAligned) Ray(this.origin, this.direction)
+        else this.rotate(rect.angle * direction, rect.center())
     }
 
     private fun Ray.getParametricDistance(axes: Vec2): Vec2 {
@@ -75,11 +75,12 @@ internal object RectangleRaycastDetector : RaycastDetector<Rectangle> {
     }
 
     private fun calculateRaycastInfo(
-        ray: Ray, localRay: Ray, distToRect: Float, nearDist: Vec2,
+        rect: Rectangle, localRay: Ray, distToRect: Float, nearDist: Vec2,
     ): RaycastInfo {
-        val contact = localRay.getPoint(distToRect)
-        val normal = localRay.calculateHitNormal(nearDist)
-        return RaycastInfo(contact, normal, contact.distance(ray.origin))
+        val localContactNormRay =
+            Ray(localRay.getPoint(distToRect), localRay.calculateHitNormal(nearDist))
+        val contactNormRay = localContactNormRay.transformToRectangle(rect, -1f)
+        return RaycastInfo(contactNormRay.origin, contactNormRay.direction, distToRect)
     }
 
     private fun Ray.calculateHitNormal(nearDist: Vec2): Vec2 {
@@ -88,6 +89,11 @@ internal object RectangleRaycastDetector : RaycastDetector<Rectangle> {
             (nearDist.x < nearDist.y) -> Vec2(0f, -sign(direction.y)) // Vertical collision
             else -> Vec2() // Diagonal collision
         }
+    }
+
+    private fun Vec2.transformToWorld(rect: Rectangle): Vec2 {
+        return if (rect.isAxisAligned) Vec2(this)
+        else this.rotate(-rect.angle, rect.center())
     }
 
 }

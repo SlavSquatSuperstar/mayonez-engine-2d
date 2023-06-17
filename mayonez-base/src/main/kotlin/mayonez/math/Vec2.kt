@@ -18,7 +18,7 @@ import kotlin.math.*
  * @constructor Initialize this vector from an x and y value, as (x, y).
  * @author SlavSquatSuperstar
  */
-class Vec2 constructor(
+class Vec2(
     /** The vector's x component. */
     @JvmField var x: Float,
     /** The vector's y component. */
@@ -421,14 +421,6 @@ class Vec2 constructor(
     fun midpoint(v: Vec2): Vec2 = (this + v) * 0.5f
 
     // Overrides
-
-    operator fun get(i: Int): Float {
-        return when (i) {
-            0 -> x
-            1 -> y
-            else -> 0f
-        }
-    }
 
     override fun equals(other: Any?): Boolean {
         return when {

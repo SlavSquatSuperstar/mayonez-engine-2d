@@ -21,9 +21,9 @@ class Vec2Test {
 
     @Test
     void sameVectorEquals() {
-        var v = new Vec2(5, 5);
-        assertSame(v, v);
-        assertEquals(v, v);
+        var v1 = new Vec2(5, 5);
+        var v2 = new Vec2(5, 5);
+        assertEquals(v1, v2);
     }
 
     @Test
