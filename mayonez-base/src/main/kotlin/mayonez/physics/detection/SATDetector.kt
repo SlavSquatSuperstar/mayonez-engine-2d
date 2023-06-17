@@ -10,7 +10,7 @@ import kotlin.math.*
  *
  * @author SlavSquatSuperstar
  */
-internal class SATDetector : CollisionDetector, PenetrationSolver {
+internal class SATDetector : CollisionDetector<Shape>, PenetrationSolver {
 
     override fun checkIntersection(shape1: Shape?, shape2: Shape?): Boolean {
         return when {

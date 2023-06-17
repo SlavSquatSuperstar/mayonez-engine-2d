@@ -4,26 +4,26 @@ import mayonez.math.shapes.*
 import mayonez.physics.manifold.*
 
 /**
- * A class that detects collisions between circles.
+ * Performs collision checks between circles.
  *
  * @author SlavSquatSuperstar
  */
-internal object CircleDetector {
+internal object CircleDetector: CollisionDetector<Circle> {
 
     /**
-     * Checks whether two circles are intersecting.
+     * Checks whether two circles are touching or overlapping.
      *
      * @param circle1 the first circle
      * @param circle2 the second circle
-     * @return if the two circles overlap or touch
+     * @return if the two circles intersect
      */
-    internal fun checkIntersection(circle1: Circle?, circle2: Circle?): Boolean {
+    override fun checkIntersection(circle1: Circle?, circle2: Circle?): Boolean {
         if (circle1 == null || circle2 == null) return false
         val sumRadii = circle1.radius + circle2.radius
-        return circle2.center().distanceSq(circle1.center()) <= sumRadii * sumRadii
+        val distSq = circle2.center().distanceSq(circle1.center())
+        return distSq <= sumRadii * sumRadii
     }
 
-    // Circle vs Circle: 1 contact point
     /**
      * Detects a collision between two circles and calculates the contact and
      * penetration.
@@ -38,6 +38,7 @@ internal object CircleDetector {
         val vecDist = circle2.center() - circle1.center() // Distance between centers
         if (vecDist.lenSq() > sumRadii * sumRadii) return null // Circles too far away
 
+        // Calculate manifold
         val dist = vecDist.len()
         val depth = sumRadii - dist // Penetration depth
         val normal = vecDist / dist

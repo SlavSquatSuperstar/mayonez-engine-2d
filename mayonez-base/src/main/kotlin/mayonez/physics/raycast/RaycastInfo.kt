@@ -7,12 +7,21 @@ import mayonez.math.*
  *
  * @author SlavSquatSuperstar
  */
-// TODO save all intersections?
-// TODO restricted constructor
-class RaycastInfo(
-    val contact: Vec2, // contact point
-    normal: Vec2, // contact normal
-    val distance: Float // unit lengths along ray to intersection
+// TODO save all intersections
+data class RaycastInfo(
+    /** The intersection point of the raycast. */
+    val contact: Vec2,
+    /** The contact normal, facing out of the shape. */
+    val normal: Vec2,
+    /** The length along the ray to the contact. */
+    val distance: Float
 ) {
-    val normal = normal.unit()
+    companion object {
+        /** Creates a [RaycastInfo] object and normalizes the normal vector. */
+        fun createNormalized(
+            contact: Vec2, normal: Vec2, distance: Float
+        ): RaycastInfo {
+            return RaycastInfo(contact, normal.unit(), distance)
+        }
+    }
 }

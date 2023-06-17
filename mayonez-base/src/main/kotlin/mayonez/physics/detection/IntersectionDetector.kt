@@ -9,30 +9,16 @@ import mayonez.math.shapes.*
  *
  * @author SlavSquatSuperstar
  */
-internal object IntersectionDetector : CollisionDetector {
+internal object IntersectionDetector : CollisionDetector<Shape> {
 
     override fun checkIntersection(shape1: Shape?, shape2: Shape?): Boolean {
         return when {
             (shape1 == null) || (shape2 == null) -> false
             (shape1 is Edge) && (shape2 is Edge) -> intersectEdges(shape1, shape2)
-            (shape1 is Circle) && (shape2 is Circle) -> intersectCircles(shape1, shape2)
+            (shape1 is Circle) && (shape2 is Circle) -> CircleDetector.checkIntersection(shape1, shape2)
             (shape1 is Rectangle) && (shape2 is Rectangle) -> intersectRectangles(shape1, shape2)
             else -> return GJKDetector().getSimplex(shape1, shape2) != null // use GJK for complex shapes
         }
-    }
-
-    /**
-     * Performs a simple circle vs. circle intersection test by comparing the
-     * distances their centers and the sum of their radii.
-     *
-     * @param circle1 the first circle
-     * @param circle2 the second circle
-     * @return if the two circles overlap or touch
-     */
-    private fun intersectCircles(circle1: Circle, circle2: Circle): Boolean {
-        val distSq = circle1.center().distanceSq(circle2.center())
-        val sumRadiiSq = FloatMath.squared(circle1.radius + circle2.radius)
-        return distSq <= sumRadiiSq
     }
 
     /**
