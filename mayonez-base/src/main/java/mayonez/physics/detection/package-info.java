@@ -1,5 +1,6 @@
 /**
- * A package containing narrow-phase collision detection and raycast tests for shapes.
+ * Provides narrow-phase collision detection and penetration calculation for shapes.
+ * This package is not exported to the public API.
  *
  * @author SlavSquatSuperstar
  */

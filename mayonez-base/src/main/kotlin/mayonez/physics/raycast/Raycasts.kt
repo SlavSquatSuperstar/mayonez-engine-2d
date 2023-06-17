@@ -1,18 +1,26 @@
-package mayonez.physics.detection
+package mayonez.physics.raycast
 
+import mayonez.annotations.*
 import mayonez.math.*
 import mayonez.math.shapes.*
-import mayonez.physics.resolution.*
 import kotlin.math.*
 
 /**
- * A class that casts rays onto shapes and detects whether the ray hits a
- * shape and where the contact is.
+ * Performs raycasts for primitive shapes.
  *
  * @author SlavSquatSuperstar
  */
-object RaycastDetector {
+object Raycasts {
 
+    /**
+     * Casts a ray onto a shape and calculates the contact point, distance, and
+     * normal.
+     *
+     * @param shape the shape to raycast
+     * @param ray the ray to cast
+     * @param limit the max length the ray can travel
+     * @return the contact information, or null if the ray misses
+     */
     @JvmStatic
     fun raycast(shape: Shape?, ray: Ray?, limit: Float): RaycastInfo? {
         return when {
@@ -25,7 +33,6 @@ object RaycastDetector {
         }
     }
 
-    // Source: https://youtu.be/23kTf-36Fcw
     private fun raycastCircle(circle: Circle, ray: Ray, limit: Float): RaycastInfo? {
         // Trace the ray's origin to the circle's center
         val originToCenter = circle.center() - ray.origin
@@ -74,6 +81,7 @@ object RaycastDetector {
         return RaycastInfo(contact, edge.unitNormal(dir1), dist2)
     }
 
+    @ExperimentalFeature
     private fun raycastGJK(poly: Polygon, ray: Ray, limit: Float): RaycastInfo? {
         val lambda = 0.0
         val vecA = Vec2()
@@ -82,6 +90,7 @@ object RaycastDetector {
         val start = ray.origin
         val closest = start
         return null
+        // TODO finish me
     }
 
     private fun raycastPolygon(poly: Polygon, ray: Ray, limit: Float): RaycastInfo? {

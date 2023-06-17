@@ -4,7 +4,7 @@ import mayonez.*
 import mayonez.math.*
 import mayonez.math.shapes.*
 import mayonez.physics.*
-import mayonez.physics.resolution.*
+import mayonez.physics.manifold.*
 
 /**
  * A shape centered around the object's position that can detect collisions

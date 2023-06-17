@@ -1,7 +1,7 @@
 package mayonez.physics
 
 import mayonez.physics.colliders.*
-import mayonez.physics.resolution.*
+import mayonez.physics.manifold.*
 
 internal class CollisionListener(
     @JvmField val c1: Collider,

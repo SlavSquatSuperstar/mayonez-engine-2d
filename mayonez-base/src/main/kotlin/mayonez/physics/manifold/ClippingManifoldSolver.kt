@@ -1,8 +1,8 @@
-package mayonez.physics.detection
+package mayonez.physics.manifold
 
 import mayonez.math.*
 import mayonez.math.shapes.*
-import mayonez.physics.resolution.*
+import mayonez.physics.detection.*
 import kotlin.math.*
 
 /**
@@ -15,7 +15,7 @@ import kotlin.math.*
  *
  * @author SlavSquatSuperstar
  */
-class ClippingManifoldSolver : ContactSolver {
+internal class ClippingManifoldSolver : ContactSolver {
 
     override fun getContacts(shape1: Shape, shape2: Shape, penetration: Penetration?): Manifold? {
         // 1. Point the normal in the correct direction

@@ -8,13 +8,13 @@ import mayonez.math.shapes.*
  *
  * @author SlavSquatSuperstar
  */
-fun interface CollisionDetector {
+internal fun interface CollisionDetector {
     /**
-     * Checks whether two circles are intersecting (overlapping or touching).
+     * Determines whether two shapes are touching or overlapping.
      *
      * @param shape1 the first shape
      * @param shape2 the second shape
-     * @return if the two shapes collide
+     * @return if the two shapes intersect
      */
     fun checkIntersection(shape1: Shape?, shape2: Shape?): Boolean
 }

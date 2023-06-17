@@ -1,7 +1,7 @@
-package mayonez.physics.detection
+package mayonez.physics.manifold
 
 import mayonez.math.shapes.*
-import mayonez.physics.resolution.*
+import mayonez.physics.detection.*
 
 /**
  * Calculates the contact points (collision manifold) between two
@@ -11,7 +11,7 @@ import mayonez.physics.resolution.*
  *
  * @author SlavSquatSuperstar
  */
-fun interface ContactSolver {
+internal fun interface ContactSolver {
     /**
      * Calculates the contact points between two shapes.
      *

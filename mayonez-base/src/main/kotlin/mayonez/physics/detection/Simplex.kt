@@ -11,7 +11,7 @@ import mayonez.math.shapes.*
  * @param maxSize the size of the simplex, by default 3
  * @author SlavSquatSuperstar
  */
-class Simplex(vararg points: Vec2, private val maxSize: Int = 3) {
+internal class Simplex(vararg points: Vec2, private val maxSize: Int = 3) {
 
     var size: Int = 0
         private set
@@ -36,7 +36,7 @@ class Simplex(vararg points: Vec2, private val maxSize: Int = 3) {
      *
      * @param point a support point
      */
-    fun add(point: Vec2) {
+    internal fun add(point: Vec2) {
         if (size >= maxSize) return
         points.add(point)
         size++
@@ -48,7 +48,7 @@ class Simplex(vararg points: Vec2, private val maxSize: Int = 3) {
      * @param index the index to insert the point before
      * @param point a support point
      */
-    fun add(index: Int, point: Vec2) {
+    internal fun add(index: Int, point: Vec2) {
         if (size >= maxSize || index !in points.indices) return
         points.add(index, point)
         size++
@@ -59,7 +59,7 @@ class Simplex(vararg points: Vec2, private val maxSize: Int = 3) {
      *
      * @param index the index of the point to remove
      */
-    fun remove(index: Int) {
+    internal fun remove(index: Int) {
         if (index >= size || index < 0) return
         points.removeAt(index)
         size--
@@ -71,13 +71,13 @@ class Simplex(vararg points: Vec2, private val maxSize: Int = 3) {
      * @param newSize the size of the new simplex
      * @return the larger simplex
      */
-    fun expand(newSize: Int): Simplex = Simplex(*points.toTypedArray(), maxSize = newSize)
+    internal fun expand(newSize: Int): Simplex = Simplex(*points.toTypedArray(), maxSize = newSize)
 
     /**
      * Creates a polygon from the points in the simplex. Useful for debugging.
      *
      * @return a polygon
      */
-    fun toPolygon(): Polygon = Polygon(*this.points.toTypedArray())
+    internal fun toPolygon(): Polygon = Polygon(*this.points.toTypedArray())
 
 }

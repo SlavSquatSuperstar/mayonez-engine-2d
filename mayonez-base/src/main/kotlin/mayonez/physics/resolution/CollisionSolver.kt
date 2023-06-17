@@ -3,6 +3,7 @@ package mayonez.physics.resolution
 import mayonez.math.*
 import mayonez.physics.*
 import mayonez.physics.colliders.*
+import mayonez.physics.manifold.*
 import kotlin.math.*
 
 /**
@@ -88,7 +89,7 @@ internal class CollisionSolver(private val c1: Collider, private val c2: Collide
         val massData = MassData.getMassData(r1, r2)
         val matData = MaterialData.combineMaterials(r1.material, r2.material)
 
-        val contacts = Array(manifold.numContacts()) { Contact(manifold.getContact(it), r1.position, r2.position) }
+        val contacts = Array(manifold.numContacts()) { ContactPoint(manifold.getContact(it), r1.position, r2.position) }
         calculateNormalImpulse(contacts, massData, matData)
         calculateTangentImpulse(contacts, massData, matData)
 
@@ -98,7 +99,7 @@ internal class CollisionSolver(private val c1: Collider, private val c2: Collide
         }
     }
 
-    private fun calculateNormalImpulse(contacts: Array<Contact>, massData: MassData, matData: MaterialData) {
+    private fun calculateNormalImpulse(contacts: Array<ContactPoint>, massData: MassData, matData: MaterialData) {
         val cRest = matData.coeffRestitution
 
         for (contact in contacts) {
@@ -112,7 +113,7 @@ internal class CollisionSolver(private val c1: Collider, private val c2: Collide
         }
     }
 
-    private fun calculateTangentImpulse(contacts: Array<Contact>, massData: MassData, matData: MaterialData) {
+    private fun calculateTangentImpulse(contacts: Array<ContactPoint>, massData: MassData, matData: MaterialData) {
         val (_, sFric, kFric) = matData
 
         for (contact in contacts) {

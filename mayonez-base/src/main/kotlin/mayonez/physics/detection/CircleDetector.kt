@@ -1,14 +1,14 @@
 package mayonez.physics.detection
 
 import mayonez.math.shapes.*
-import mayonez.physics.resolution.*
+import mayonez.physics.manifold.*
 
 /**
  * A class that detects collisions between circles.
  *
  * @author SlavSquatSuperstar
  */
-object CircleDetector {
+internal object CircleDetector {
 
     /**
      * Checks whether two circles are intersecting.
@@ -17,8 +17,7 @@ object CircleDetector {
      * @param circle2 the second circle
      * @return if the two circles overlap or touch
      */
-    @JvmStatic
-    fun checkIntersection(circle1: Circle?, circle2: Circle?): Boolean {
+    internal fun checkIntersection(circle1: Circle?, circle2: Circle?): Boolean {
         if (circle1 == null || circle2 == null) return false
         val sumRadii = circle1.radius + circle2.radius
         return circle2.center().distanceSq(circle1.center()) <= sumRadii * sumRadii
@@ -33,8 +32,7 @@ object CircleDetector {
      * @param circle2 the second circle
      * @return the collision information, or null if no collision
      */
-    @JvmStatic
-    fun getContacts(circle1: Circle?, circle2: Circle?): Manifold? {
+    internal fun getContacts(circle1: Circle?, circle2: Circle?): Manifold? {
         if (circle1 == null || circle2 == null) return null
         val sumRadii = circle1.radius + circle2.radius
         val vecDist = circle2.center() - circle1.center() // Distance between centers

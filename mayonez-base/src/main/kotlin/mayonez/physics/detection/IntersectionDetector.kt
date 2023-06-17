@@ -9,17 +9,9 @@ import mayonez.math.shapes.*
  *
  * @author SlavSquatSuperstar
  */
-object IntersectionDetector {
+internal object IntersectionDetector : CollisionDetector {
 
-    /**
-     * Determines whether two shapes are touching or overlapping.
-     *
-     * @param shape1 the first shape
-     * @param shape2 the second shape
-     * @return whether the shapes intersect
-     */
-    @JvmStatic
-    fun checkCollision(shape1: Shape?, shape2: Shape?): Boolean {
+    override fun checkIntersection(shape1: Shape?, shape2: Shape?): Boolean {
         return when {
             (shape1 == null) || (shape2 == null) -> false
             (shape1 is Edge) && (shape2 is Edge) -> intersectEdges(shape1, shape2)

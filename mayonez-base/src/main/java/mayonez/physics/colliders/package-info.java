@@ -1,5 +1,5 @@
 /**
- * Defines primitive shapes and collision detection algorithms for the physics engine.
+ * Defines primitive collider components for the physics engine.
  *
  * @author SlavSquatSuperstar
  */

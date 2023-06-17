@@ -13,7 +13,7 @@ import mayonez.physics.*
  *
  * @author SlavSquatSuperstar
  */
-internal class Contact(private val contactPos: Vec2, r1Pos: Vec2, r2Pos: Vec2) {
+internal class ContactPoint(private val contactPos: Vec2, r1Pos: Vec2, r2Pos: Vec2) {
     /** Distance to first body center, r1. */
     private val rad1: Vec2 = contactPos - r1Pos
 

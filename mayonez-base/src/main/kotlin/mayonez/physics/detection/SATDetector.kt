@@ -5,12 +5,12 @@ import mayonez.math.shapes.*
 import kotlin.math.*
 
 /**
- * Detects if two shapes are colliding and finds their contacts using the
- * separating-axis theorem.
+ * Detects if two shapes are colliding and finds their penetration using the
+ * separating-axis theorem (SAT).
  *
  * @author SlavSquatSuperstar
  */
-class SATDetector : CollisionDetector, PenetrationSolver {
+internal class SATDetector : CollisionDetector, PenetrationSolver {
 
     override fun checkIntersection(shape1: Shape?, shape2: Shape?): Boolean {
         return when {

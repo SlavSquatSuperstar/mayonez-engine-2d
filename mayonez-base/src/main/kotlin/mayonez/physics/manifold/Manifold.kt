@@ -1,4 +1,4 @@
-package mayonez.physics.resolution
+package mayonez.physics.manifold
 
 import mayonez.math.*
 import mayonez.math.shapes.*

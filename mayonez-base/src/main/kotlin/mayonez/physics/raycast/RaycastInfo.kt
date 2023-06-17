@@ -1,4 +1,4 @@
-package mayonez.physics.resolution
+package mayonez.physics.raycast
 
 import mayonez.math.*
 

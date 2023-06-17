@@ -9,7 +9,7 @@ import mayonez.math.shapes.*
  *
  * @author SlavSquatSuperstar
  */
-fun interface PenetrationSolver {
+internal fun interface PenetrationSolver {
     /**
      * Calculates the minimum penetration direction and depth between two
      * shapes if they are colliding.

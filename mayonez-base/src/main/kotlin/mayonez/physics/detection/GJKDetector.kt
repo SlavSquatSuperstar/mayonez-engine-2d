@@ -5,13 +5,13 @@ import mayonez.math.shapes.*
 
 /**
  * Detects if two shapes are colliding and finds the Minkowski sum using
- * the GJK (Gilbert-Johnson-Keerthi) distance algorithm. This class will
- * construct a simplex and check to see it contains the origin, and then
- * use [EPASolver] to find the penetration.
+ * the GJK (Gilbert-Johnson-Keerthi) distance algorithm. This class
+ * constructs a simplex and checks whether it contains the origin, and then
+ * uses a [mayonez.physics.detection.EPASolver] to find the penetration.
  *
  * @author SlavSquatSuperstar
  */
-class GJKDetector : CollisionDetector, PenetrationSolver {
+internal class GJKDetector : CollisionDetector, PenetrationSolver {
 
     companion object {
         private const val MAX_GJK_ITERATIONS: Int = 20
@@ -35,11 +35,11 @@ class GJKDetector : CollisionDetector, PenetrationSolver {
      * through every normal.
      *
      * Sources:
-     * - https://blog.winter.dev/2020/gjk-algorithm/ § GJK: Surrounding the
-     *   origin
-     * - https://dyn4j.org/2010/04/gjk-gilbert-johnson-keerthi/ § Determining
-     *   Collision
-     * - https://youtu.be/ajv46BSqcK4
+     * - [Winter's Blog](https://blog.winter.dev/2020/gjk-algorithm/) § GJK:
+     *   Surrounding the origin
+     * - [dyn4j](https://dyn4j.org/2010/04/gjk-gilbert-johnson-keerthi/) §
+     *   Determining Collision
+     * - [YouTube](https://youtu.be/ajv46BSqcK4)
      *
      * @return the simplex if they overlap, otherwise null
      */
@@ -57,18 +57,17 @@ class GJKDetector : CollisionDetector, PenetrationSolver {
             if (ptA.dot(searchDir) < 0f) return null // Continue only if next point passes origin
             simplex.add(ptA) // Add point to simplex
 
-            if (simplex.size == 2) {
+            searchDir = if (simplex.size == 2) {
                 // Pick the normal of the line that points toward origin
                 // Line: B (start), A (next), d = tripleProduct(AB, AO, AB)
                 val vecAB = simplex[0] - ptA
                 val vecAO = -ptA
-                searchDir = Vec2.tripleProduct(vecAB, vecAO, vecAB)
+                Vec2.tripleProduct(vecAB, vecAO, vecAB)
             } else {
                 // Find if triangle contains origin
-                searchDir = simplex.getNextSearchDir(ptA) ?: return simplex
+                simplex.getNextSearchDir(ptA) ?: return simplex
             }
         }
-
         return null // Assume no collision if looped too many times
     }
 
