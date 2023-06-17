@@ -3,14 +3,8 @@
     "version": "v0.7.6-pre5-snapshot",
     "width": 1080,
     "height": 720,
+    "fps": 60,
     "log_level": 2,
     "save_logs": true,
-    "log_directory": "logs/",
-    "text_charset": "utf-8",
-    "fps": 60,
-    "buffer_count": 2,
-    "max_batch_sprites": 100,
-    "max_batch_lines": 500,
-    "max_batch_triangles": 1000,
-    "max_texture_slots": 8
+    "log_directory": "logs/"
 }

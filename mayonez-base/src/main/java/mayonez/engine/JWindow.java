@@ -18,7 +18,11 @@ import java.awt.image.*;
 @UsesEngine(EngineType.AWT)
 final class JWindow extends JFrame implements Window {
 
+    // Constants
+    private final static int BUFFER_COUNT = 2;
     private final static AffineTransform FLIP_XF = AffineTransform.getScaleInstance(1.0, -1.0);
+
+    // Window Fields
     private BufferStrategy bs;
     private Graphics2D g2;
     private boolean closedByUser;
@@ -74,7 +78,7 @@ final class JWindow extends JFrame implements Window {
     private void initGraphics() {
         if (!isVisible()) return;
         try {
-            createBufferStrategy(Preferences.getBufferCount());
+            createBufferStrategy(BUFFER_COUNT);
             bs = getBufferStrategy();
         } catch (IllegalStateException e) {
             Logger.error("Error initializing window graphics; retrying next frame.");
@@ -152,4 +156,5 @@ final class JWindow extends JFrame implements Window {
     public String toString() {
         return String.format("AWT Window (%s, %dx%d)", getTitle(), getWidth(), getHeight());
     }
+
 }

@@ -7,7 +7,8 @@ import mayonez.annotations.*
  *
  * @author SlavSquatSuperstar
  */
-class RunConfig(
+@JvmRecord
+data class RunConfig(
     /** Whether to use the LWJGL engine. */
     val useGL: Boolean,
     /** Whether to save log files. */

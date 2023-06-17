@@ -51,7 +51,8 @@ class TextIOManagerTest {
             var output = asset.openOutputStream(false);
             new TextIOManager().write(output, text);
             // make sure stream closed
-            assertThrows(IOException.class, () -> output.write(text.getBytes(StandardCharsets.UTF_8)));
+            assertThrows(IOException.class,
+                    () -> output.write(text.getBytes(StandardCharsets.UTF_8)));
         } catch (IOException e) {
             fail();
         }

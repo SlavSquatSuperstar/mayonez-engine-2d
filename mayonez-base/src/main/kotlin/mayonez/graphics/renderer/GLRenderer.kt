@@ -3,8 +3,8 @@ package mayonez.graphics.renderer
 import mayonez.*
 import mayonez.annotations.*
 import mayonez.graphics.*
-import mayonez.graphics.textures.*
 import mayonez.graphics.camera.*
+import mayonez.graphics.textures.*
 import mayonez.io.*
 import mayonez.io.image.*
 import java.awt.*
@@ -19,12 +19,13 @@ abstract class GLRenderer(shaderFile: String) : Renderer {
     // GPU Resources
     private val batches: MutableList<RenderBatch>
     protected val shader: Shader
+    // TODO does this do anything?
     protected val textureSlots: IntArray // support multiple texture IDs in batch
 
     init {
         batches = ArrayList()
         shader = Assets.getAsset(shaderFile, Shader::class.java)!!
-        textureSlots = IntArray(Preferences.maxTextureSlots) { it } // ints 0-7
+        textureSlots = IntArray(RenderBatch.MAX_TEXTURE_SLOTS) { it } // ints 0-7
     }
 
     // Renderer Methods

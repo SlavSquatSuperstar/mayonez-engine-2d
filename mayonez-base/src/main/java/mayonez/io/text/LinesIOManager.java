@@ -4,6 +4,7 @@ import kotlin.io.TextStreamsKt;
 import mayonez.io.*;
 
 import java.io.*;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 /**
@@ -14,6 +15,7 @@ import java.nio.charset.StandardCharsets;
 public class LinesIOManager implements AssetReader<String[]>, AssetWriter<String[]> {
 
     private static final char NEW_LINE = '\n';
+    private static final Charset TEXT_CHARSET = StandardCharsets.UTF_8;
 
     @Override
     public String[] read(InputStream input) throws IOException {
@@ -32,7 +34,7 @@ public class LinesIOManager implements AssetReader<String[]>, AssetWriter<String
         if (lines == null) return;
         try (output) {
             for (var line : lines) {
-                output.write(line.getBytes(StandardCharsets.UTF_8));
+                output.write(line.getBytes(TEXT_CHARSET));
                 output.write(NEW_LINE);
             }
         } catch (IOException e) {

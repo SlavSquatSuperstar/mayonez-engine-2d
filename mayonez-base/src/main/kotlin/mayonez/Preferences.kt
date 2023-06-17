@@ -40,6 +40,10 @@ object Preferences {
     val screenHeight: Int
         get() = preferences.getInt("screen_height")
 
+    @JvmStatic
+    val fps: Int
+        get() = preferences.getInt("fps")
+
     /* Logging */
     @JvmStatic
     val logLevel: Int
@@ -52,35 +56,5 @@ object Preferences {
     @JvmStatic
     val logDirectory: String
         get() = preferences.getString("log_directory")
-
-    /* File I/O */
-    @JvmStatic
-    val textCharset: String
-        get() = preferences.getString("text_charset")
-
-    /* Renderer */
-    @JvmStatic
-    val FPS: Int
-        get() = preferences.getInt("fps")
-
-    @JvmStatic
-    val bufferCount: Int
-        get() = preferences.getInt("buffer_count")
-
-    @JvmStatic
-    val maxBatchSprites: Int
-        get() = preferences.getInt("max_batch_sprites")
-
-    @JvmStatic
-    val maxBatchLines: Int
-        get() = preferences.getInt("max_batch_lines")
-
-    @JvmStatic
-    val maxBatchTriangles: Int
-        get() = preferences.getInt("max_batch_triangles")
-
-    @JvmStatic
-    val maxTextureSlots: Int
-        get() = preferences.getInt("max_texture_slots")
 
 }

@@ -5,10 +5,11 @@ package mayonez.init
  *
  * @author SlavSquatSuperstar
  */
-class LoggerConfig(
+@JvmRecord
+data class LoggerConfig(
     /** Whether to save logged messages to log files. */
     val saveLogs: Boolean,
-    /** The minimum priority required to print messages to console. */
+    /** The minimum priority required to print messages to the console. */
     val logLevel: Int,
     /** The folder to save logger output files. */
     val logDirectory: String

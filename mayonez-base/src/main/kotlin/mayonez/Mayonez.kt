@@ -22,6 +22,7 @@ object Mayonez {
     @JvmField
     val NANOS_STARTED: Long = System.nanoTime()
 
+    // Move somewhere else, maybe Time class
     @JvmField
     val TIME_STEP: Float
 
@@ -44,19 +45,24 @@ object Mayonez {
 //            field = max(value, 0f) // non-negative only
 //        }
 
+    // Properties
+    @JvmStatic
+    val screenSize: Vec2
+        get() = Vec2(Preferences.screenWidth.toFloat(), Preferences.screenHeight.toFloat())
+
+
     // Run Config
     private var initialized: Boolean = false
     private var config: RunConfig = RunConfig.DEFAULT_CONFIG
 
-    // Game Fields
     @JvmStatic
     var useGL: Boolean = false
         private set
 
-    // TODO need to make non-nullable and set default fps
-    private var game: GameEngine? = null
-    var started: Boolean = false
-        private set
+    // Game Fields
+    // TODO set default fps
+    private lateinit var game: GameEngine
+    private var started: Boolean = false
 
     // Initialization
     private var INIT_ENGINE = false // Whether the engine has been created
@@ -69,7 +75,7 @@ object Mayonez {
 
     init {
         init()
-        TIME_STEP = 1.0f / Preferences.FPS
+        TIME_STEP = 1.0f / Preferences.fps
     }
 
     // Init Methods
@@ -144,38 +150,41 @@ object Mayonez {
         started = true
         init()
         SceneManager.setScene(scene)
-        game?.start() ?: exitIfNotConfigured()
+        startGame()
     }
 
     /**
      * Stop the game with an exit code.
      *
-     * @param status an exit code (0 for no error, positive for error)
+     * @param status an exit code (zero for no error, non-zero for error)
      */
     @JvmStatic
     fun stop(status: Int) {
         if (!started) return
         started = false
 
-        game?.stop()
+        game.stop()
         Assets.clearAssets()
 
-        if (status == 0) Logger.log("Exiting program with code %d", status)
-        else Logger.error("Exiting program with code %d", status)
+        logExitMessage(status)
         exitProcess(status)
     }
 
-    // Getters and Setters
-
-    @JvmStatic
-    val screenSize: Vec2
-        get() = Vec2(Preferences.screenWidth.toFloat(), Preferences.screenHeight.toFloat())
-
     // Helper Methods
+
+    private fun startGame() {
+        if (this::game.isInitialized) game.start()
+        else exitIfNotConfigured()
+    }
 
     private fun exitIfNotConfigured() {
         Logger.error("Game Engine \"Use GL\" option has not been configured yet")
         stop(1)
+    }
+
+    private fun logExitMessage(status: Int) {
+        if (status == 0) Logger.log("Exiting program with code %d", status)
+        else Logger.error("Exiting program with code %d", status)
     }
 
 }

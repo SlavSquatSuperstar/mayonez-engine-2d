@@ -51,7 +51,8 @@ class LinesIOManagerTest {
             var output = asset.openOutputStream(false);
             new LinesIOManager().write(output, lines);
             // make sure stream closed
-            assertThrows(IOException.class, () -> output.write(lines[0].getBytes(StandardCharsets.UTF_8)));
+            assertThrows(IOException.class,
+                    () -> output.write(lines[0].getBytes(StandardCharsets.UTF_8)));
         } catch (IOException e) {
             fail();
         }

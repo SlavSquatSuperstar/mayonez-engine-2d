@@ -1,6 +1,5 @@
 package mayonez.graphics;
 
-import mayonez.*;
 import mayonez.annotations.*;
 import mayonez.graphics.textures.*;
 import mayonez.math.*;
@@ -26,12 +25,12 @@ import static org.lwjgl.opengl.GL30.*;
 public final class RenderBatch {
 
     // Batch Constants
-    public static final int MAX_SPRITES = Preferences.getMaxBatchSprites();
-    public static final int MAX_LINES = Preferences.getMaxBatchLines();
-    public static final int MAX_TRIANGLES = Preferences.getMaxBatchTriangles();
+    public static final int MAX_SPRITES = 100;
+    public static final int MAX_LINES = 500;
+    public static final int MAX_TRIANGLES = 1000;
+    public static final int MAX_TEXTURE_SLOTS = 8;
 
     // Batch Characteristics
-    private final int maxTextureSlots = Preferences.getMaxTextureSlots();
     private final int maxBatchSize;
     private final int zIndex;
 
@@ -58,7 +57,7 @@ public final class RenderBatch {
         this.vertexSize = primitive.getVertexSize();
 
         // Renderer Fields
-        textures = new ArrayList<>(maxTextureSlots);
+        textures = new ArrayList<>(MAX_TEXTURE_SLOTS);
         vertices = new VertexArray(maxBatchSize * vertexCount * vertexSize);
 
         createBatch();
@@ -225,7 +224,7 @@ public final class RenderBatch {
      * @return if there are unused texture slots
      */
     public boolean hasTextureRoom() {
-        return textures.size() < maxTextureSlots;
+        return textures.size() < MAX_TEXTURE_SLOTS;
     }
 
     /**
