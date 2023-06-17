@@ -9,33 +9,34 @@ import mayonez.util.*
  */
 object Defaults {
 
-    /* Window */
+    // Application
     const val TITLE: String = "Mayonez Engine Application"
     const val VERSION: String = "<Unknown Version>"
 
+    // Graphical
     const val SCREEN_WIDTH: Int = 1080
     const val SCREEN_HEIGHT: Int = 720
-
     const val FPS: Int = 60
 
-    /* Logging */
+    // Logging
     // TODO move elsewhere
     const val LOG_LEVEL: Int = 2
     const val SAVE_LOGS: Boolean = true
     const val LOG_DIRECTORY: String = "logs/"
 
-    @JvmStatic
     val PREFERENCES: Record = Record()
 
     init {
-        /* Window */
+        // Application
         PREFERENCES["title"] = TITLE
         PREFERENCES["version"] = VERSION
+
+        // Graphical
         PREFERENCES["screen_width"] = SCREEN_WIDTH
         PREFERENCES["screen_height"] = SCREEN_HEIGHT
         PREFERENCES["fps"] = FPS
 
-        /* Logging */
+        // Logging
         PREFERENCES["log_level"] = LOG_LEVEL
         PREFERENCES["save_logs"] = SAVE_LOGS
         PREFERENCES["log_directory"] = LOG_DIRECTORY

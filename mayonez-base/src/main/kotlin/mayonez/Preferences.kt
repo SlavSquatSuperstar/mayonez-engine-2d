@@ -23,7 +23,8 @@ object Preferences {
         preferences.addAll(prefsFile.readJSON())
     }
 
-    /* Window */
+    // Application
+
     @JvmStatic
     val title: String
         get() = preferences.getString("title")
@@ -31,6 +32,8 @@ object Preferences {
     @JvmStatic
     val version: String
         get() = preferences.getString("version")
+
+    // Graphical
 
     @JvmStatic
     val screenWidth: Int
@@ -44,7 +47,7 @@ object Preferences {
     val fps: Int
         get() = preferences.getInt("fps")
 
-    /* Logging */
+    // Logging
     @JvmStatic
     val logLevel: Int
         get() = preferences.getInt("log_level")
