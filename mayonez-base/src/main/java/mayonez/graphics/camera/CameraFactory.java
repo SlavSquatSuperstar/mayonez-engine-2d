@@ -16,8 +16,11 @@ public final class CameraFactory {
     }
 
     public static Camera createCamera(float sceneScale) {
-        if (Mayonez.getUseGL()) return new GLCamera(Mayonez.getScreenSize(), sceneScale);
-        else return new JCamera(Mayonez.getScreenSize(), sceneScale);
+        if (Mayonez.getUseGL()) {
+            return new GLCamera(Mayonez.getScreenSize(), sceneScale);
+        } else {
+            return new JCamera(Mayonez.getScreenSize(), sceneScale);
+        }
     }
 
     /**
@@ -32,11 +35,13 @@ public final class CameraFactory {
             protected void init() {
                 addTag("Ignore Collisions");
                 addComponent(camera);
-                addComponent(camera.setDragAndDropScript(new CameraDragAndDrop("right mouse").setEnabled(false)));
+                addComponent(camera.setDragAndDropScript(new CameraDragAndDrop("right mouse")
+                        .setEnabled(false)));
                 // Keep camera inside scene and add camera collider (does not work well with rotations)
-                addComponent(new BoxCollider(camera.screenSize.div(camera.sceneScale)).setTrigger(true));
-                addComponent(camera.setKeepInSceneScript(new KeepInScene(KeepInScene.Mode.STOP).setEnabled(false)));
-
+                addComponent(new BoxCollider(camera.screenSize.div(camera.sceneScale))
+                        .setTrigger(true));
+                addComponent(camera.setKeepInSceneScript(new KeepInScene(KeepInScene.Mode.STOP)
+                        .setEnabled(false)));
             }
 
             // Don't want to get rid of the camera!

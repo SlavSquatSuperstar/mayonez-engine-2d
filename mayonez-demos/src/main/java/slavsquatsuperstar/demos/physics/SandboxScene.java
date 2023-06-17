@@ -30,7 +30,7 @@ public class SandboxScene extends Scene {
 
     @Override
     protected void init() {
-        setBackground(Colors.BROWN);
+        setBackground(Colors.WHITE);
         setGravity(new Vec2());
         enabledGravity = false;
 

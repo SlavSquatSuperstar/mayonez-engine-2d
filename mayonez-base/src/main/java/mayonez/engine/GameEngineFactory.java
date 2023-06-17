@@ -18,8 +18,7 @@ public final class GameEngineFactory {
      * @return the game engine
      */
     public static GameEngine createGameEngine(boolean useGL) {
-        if (useGL) return new GLGameEngine();
-        else return new JGameEngine();
+        return useGL ? new GLGameEngine() : new JGameEngine();
     }
 
 }
