@@ -8,8 +8,21 @@ import mayonez.physics.*
  *
  * @author SlavSquatSuperstar
  */
-internal class MassData(r1: Rigidbody, r2: Rigidbody) {
-    internal val sumInv: Float = r1.invMass + r2.invMass // Sum of inverse masses, 1/m1 + 1/m2
-    internal val invAng1: Float = r1.invAngMass // Inverse angular mass 1, 1/I1
-    internal val invAng2: Float = r2.invAngMass // Inverse angular mass 2, 1/I2
+internal data class MassData(
+    /** The sum of both bodies' inverse masses, 1/m1 + 1/m2. */
+    internal val sumInverseMasses: Float,
+    /** The first body's inverse angular mass, 1/I1. */
+    internal val inverseAngMass1: Float,
+    /** The second body's inverse angular mass, 1/I2. */
+    internal val inverseAngMass2: Float
+) {
+    companion object {
+        internal fun getMassData(r1: Rigidbody, r2: Rigidbody): MassData {
+            return MassData(
+                r1.invMass + r2.invMass,
+                r1.invAngMass,
+                r2.invAngMass
+            )
+        }
+    }
 }

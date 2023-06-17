@@ -21,10 +21,10 @@ internal class Contact(private val contactPos: Vec2, r1Pos: Vec2, r2Pos: Vec2) {
     private val rad2: Vec2 = contactPos - r2Pos
 
     /** Normal impulse magnitude, J_n. */
-    var normImp: Float = 0f
+    internal var normImp: Float = 0f
 
     /** Tangent impulse magnitude, J_t. */
-    var tanImp: Float = 0f
+    internal var tanImp: Float = 0f
 
     /** Calculate the relative velocity of two bodies at this contact point. */
     fun getRelativeVelocity(r1: Rigidbody?, r2: Rigidbody?): Vec2 {
@@ -38,9 +38,10 @@ internal class Contact(private val contactPos: Vec2, r1Pos: Vec2, r2Pos: Vec2) {
      * derivation from https://www.chrishecker.com/images/e/e7/Gdmphys3.pdf.
      */
     fun getDenominator(direction: Vec2, massData: MassData): Float {
+        val (sumInv, invAng1, invAng2) = massData
         val dot1Sq = FloatMath.squared(direction.dot(rad1.normal()))
         val dot2Sq = FloatMath.squared(direction.dot(rad2.normal()))
-        return massData.sumInv + (massData.invAng1 * dot1Sq) + (massData.invAng2 * dot2Sq)
+        return sumInv + (invAng1 * dot1Sq) + (invAng2 * dot2Sq)
     }
 
     /**

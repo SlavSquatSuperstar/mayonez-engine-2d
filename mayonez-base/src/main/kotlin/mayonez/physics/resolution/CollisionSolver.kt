@@ -85,20 +85,22 @@ internal class CollisionSolver(private val c1: Collider, private val c2: Collide
     /** Transfer linear and angular momentum between objects and apply friction. */
     private fun solveDynamic() {
         // Physics Properties
-        val massData = MassData(r1, r2)
-        val matData = MaterialData(r1.material, r2.material)
+        val massData = MassData.getMassData(r1, r2)
+        val matData = MaterialData.combineMaterials(r1.material, r2.material)
 
         val contacts = Array(manifold.numContacts()) { Contact(manifold.getContact(it), r1.position, r2.position) }
         calculateNormalImpulse(contacts, massData, matData)
         calculateTangentImpulse(contacts, massData, matData)
 
         for (contact in contacts) {
-            contact.applyImpulse(r1, r2, normal * contact.normImp)
-            contact.applyImpulse(r1, r2, tangent * contact.tanImp)
+            val totalImpulse = (normal * contact.normImp) + (tangent * contact.tanImp)
+            contact.applyImpulse(r1, r2, totalImpulse)
         }
     }
 
     private fun calculateNormalImpulse(contacts: Array<Contact>, massData: MassData, matData: MaterialData) {
+        val (cRest, _, _) = matData
+
         for (contact in contacts) {
             val relVel = contact.getRelativeVelocity(r1, r2) // Relative velocity, v_rel
             val normVel = relVel.dot(normal) // Velocity along collision normal, v_n
@@ -106,11 +108,13 @@ internal class CollisionSolver(private val c1: Collider, private val c2: Collide
 
             // Normal (separation) impulse, J_n
             val denom = contact.getDenominator(normal, massData)
-            contact.normImp = -(1f + matData.cRest) * normVel / (denom * manifold.numContacts())
+            contact.normImp = -(1f + cRest) * normVel / (denom * manifold.numContacts())
         }
     }
 
     private fun calculateTangentImpulse(contacts: Array<Contact>, massData: MassData, matData: MaterialData) {
+        val (_, sFric, kFric) = matData
+
         for (contact in contacts) {
             val relVel = contact.getRelativeVelocity(r1, r2) // Relative velocity, v_rel (will have changed)
             val tanVel = relVel.dot(tangent) // Velocity along collision tangent, v_t
@@ -122,9 +126,15 @@ internal class CollisionSolver(private val c1: Collider, private val c2: Collide
 
             // Coulomb's Law: if exceed static friction, use kinetic friction
             val normImp = contact.normImp
-            if (abs(tanImp) > abs(normImp * matData.sFric)) tanImp = sign(tanImp) * normImp * matData.kFric
+            if (isStaticFrictionExceeded(tanImp, normImp, sFric)) {
+                tanImp = sign(tanImp) * normImp * kFric
+            }
             contact.tanImp = tanImp
         }
+    }
+
+    private fun isStaticFrictionExceeded(tanImp: Float, normImp: Float, sFric: Float): Boolean {
+        return abs(tanImp) > abs(normImp * sFric)
     }
 
 }

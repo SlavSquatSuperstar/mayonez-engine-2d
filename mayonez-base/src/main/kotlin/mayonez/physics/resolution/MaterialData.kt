@@ -9,24 +9,31 @@ import kotlin.math.*
  *
  * @author SlavSquatSuperstar
  */
-internal class MaterialData(mat1: PhysicsMaterial, mat2: PhysicsMaterial) {
-    val cRest: Float = combineBounce(mat1, mat2) // Coefficient of restitution, e
-    val sFric: Float = combineStaticFriction(mat1, mat2) // Combined static friction, mu_s
-    val kFric: Float = combineKineticFriction(mat1, mat2) // Combined kinetic friction, mu_k
-
+internal data class MaterialData(
+    /** The coefficient of restitution, or combined bounce, e. */
+    internal val coeffRestitution: Float,
+    /** The combined coefficient of static friction, mu_s. */
+    internal val staticFriction: Float,
+    /** The combined coefficient of kinetic friction, mu_k. */
+    internal val kineticFriction: Float
+) {
     companion object {
-        // Friction combine: Geometric average, but could also multiply instead
-        private fun combineKineticFriction(mat1: PhysicsMaterial, mat2: PhysicsMaterial): Float {
-            return sqrt(mat1.kineticFriction * mat2.kineticFriction)
+        internal fun combineMaterials(mat1: PhysicsMaterial, mat2: PhysicsMaterial): MaterialData {
+            return MaterialData(
+                geometricMean(mat1.kineticFriction, mat2.kineticFriction),
+                geometricMean(mat1.staticFriction, mat2.staticFriction),
+                average(mat1.bounce, mat2.bounce)
+            )
         }
 
-        private fun combineStaticFriction(mat1: PhysicsMaterial, mat2: PhysicsMaterial): Float {
-            return sqrt(mat1.staticFriction * mat2.staticFriction)
+        // Friction combine: Geometric average, but could also multiply instead
+        private fun geometricMean(num1: Float, num2: Float): Float {
+            return sqrt(num1 * num2)
         }
 
         // Bounce combine: Arithmetic average, but could also take min
-        private fun combineBounce(mat1: PhysicsMaterial, mat2: PhysicsMaterial): Float {
-            return 0.5f * (mat1.bounce + mat2.bounce)
+        private fun average(num1: Float, num2: Float): Float {
+            return 0.5f * (num1 + num2)
         }
     }
 }
