@@ -11,7 +11,7 @@ import mayonez.math.shapes.*
  *
  * @author SlavSquatSuperstar
  */
-class GJKDetector : CollisionDetector {
+class GJKDetector : CollisionDetector, PenetrationSolver {
 
     companion object {
         private const val MAX_GJK_ITERATIONS: Int = 20

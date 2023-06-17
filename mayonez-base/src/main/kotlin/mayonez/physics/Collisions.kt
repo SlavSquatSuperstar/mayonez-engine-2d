@@ -22,7 +22,7 @@ object Collisions {
         val pen = if (SATDetector.preferred(shape1) && SATDetector.preferred(shape2))
             SATDetector().getPenetration(shape1, shape2)
         else GJKDetector().getPenetration(shape1, shape2)
-        return pen?.getContacts(shape1, shape2)
+        return ClippingManifoldSolver().getContacts(shape1, shape2, pen)
     }
 
     /**

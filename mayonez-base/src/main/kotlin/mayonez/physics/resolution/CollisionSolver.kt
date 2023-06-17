@@ -99,7 +99,7 @@ internal class CollisionSolver(private val c1: Collider, private val c2: Collide
     }
 
     private fun calculateNormalImpulse(contacts: Array<Contact>, massData: MassData, matData: MaterialData) {
-        val (cRest, _, _) = matData
+        val cRest = matData.coeffRestitution
 
         for (contact in contacts) {
             val relVel = contact.getRelativeVelocity(r1, r2) // Relative velocity, v_rel
