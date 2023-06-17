@@ -17,11 +17,11 @@ import kotlin.math.*
  *
  * @author SlavSquatSuperstar
  */
-class DebugShape(
-    @JvmField internal var shape: MShape,
-    @JvmField internal val color: MColor,
+internal class DebugShape(
+    var shape: MShape,
+    internal val color: MColor,
     private val fill: Boolean,
-    @JvmField internal val zIndex: Int
+    private val zIndex: Int
 ) : JRenderable, GLRenderable {
 
     constructor(shape: MShape, color: MColor, fill: Boolean, priority: DrawPriority) :

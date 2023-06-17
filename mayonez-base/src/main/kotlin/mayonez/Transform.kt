@@ -10,29 +10,53 @@ import java.util.*
  *
  * @author SlavSquatSuperstar
  */
-class Transform(
-    position: Vec2,
-
-    rotation: Float,
-
-    scale: Vec2
-) {
+class Transform(position: Vec2, rotation: Float, scale: Vec2) {
 
     // Constructors
 
+    /**
+     * Creates an identity transform with position (0, 0), rotation 0, and
+     * scale (1, 1).
+     */
     constructor() : this(Vec2(), 0f, Vec2(1f))
 
+    /**
+     * Creates a transform with a given position and with rotation and scale
+     * set to identity.
+     *
+     * @param position the position
+     */
     constructor(position: Vec2) : this(position, 0f, Vec2(1f))
 
+    /**
+     * Creates a transform with a given position and rotation with scale set to
+     * identity.
+     *
+     * @param position the position
+     * @param rotation the rotation
+     */
     constructor(position: Vec2, rotation: Float) : this(position, rotation, Vec2(1f))
 
     companion object {
-        @JvmStatic
-        fun translateInstance(translation: Vec2) = Transform(translation, 0f, Vec2(1f))
+        // Factory Methods
 
+        /**
+         * Creates a transform that will rotate anything by given angle but
+         * preserve position and scale.
+         *
+         * @param rotation the rotation angle
+         * @return the rotation transform
+         */
         @JvmStatic
         fun rotateInstance(rotation: Float) = Transform(Vec2(), rotation, Vec2(1f))
 
+        /**
+         * Creates a transform that will scale anything by given factor but
+         * preserve position and rotation.
+         *
+         * @param scale the scale factor
+         * @return the scale transform
+         */
         @JvmStatic
         fun scaleInstance(scale: Vec2) = Transform(Vec2(), 0f, scale)
     }
@@ -109,13 +133,14 @@ class Transform(
      * rotation, and scale of both.
      *
      * @param other another transform
-     * @return the combined transformation, or copy if other is null
+     * @return the combined transformation, or a copy if other is null
      */
     fun combine(other: Transform?): Transform {
         return if (other == null) copy()
         else Transform(
             this.position + (other.position * this.scale).rotate(this.rotation),
-            this.rotation + other.rotation, this.scale * other.scale
+            this.rotation + other.rotation,
+            this.scale * other.scale
         )
     }
 

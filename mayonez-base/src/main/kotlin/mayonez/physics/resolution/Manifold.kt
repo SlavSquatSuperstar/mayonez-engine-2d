@@ -12,8 +12,8 @@ import mayonez.math.shapes.*
 class Manifold(
     private val shape1: Shape,
     private val shape2: Shape,
-    val normal: Vec2, // collision normal facing out from the first shape
-    val depth: Float // positive penetration (overlap) distance along normal
+    internal val normal: Vec2, // collision normal facing out from the first shape
+    internal val depth: Float // positive penetration (overlap) distance along normal
 ) {
 
     // Collision Fields

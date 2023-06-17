@@ -38,7 +38,7 @@ public class ShapeSprite extends Component implements JRenderable, GLRenderable 
 
     @Override
     public void update(float dt) {
-        shape.shape = getShape();
+        shape.setShape(getShape());
     }
 
     // Renderer Methods

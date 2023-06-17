@@ -8,17 +8,17 @@ import mayonez.physics.*
  * additional information such as radius and impulse.
  *
  * Sources
- * - https://www.chrishecker.com/Rigid_Body_Dynamics
- * - https://www.youtube.com/playlist?list=PLSlpr6o9vURwq3oxVZSimY8iC-cdd3kIs
+ * - [Chris Hecker](https://www.chrishecker.com/Rigid_Body_Dynamics)
+ * - [YouTube](https://www.youtube.com/playlist?list=PLSlpr6o9vURwq3oxVZSimY8iC-cdd3kIs)
  *
  * @author SlavSquatSuperstar
  */
-internal class Contact(private val pos: Vec2, r1Pos: Vec2, r2Pos: Vec2) {
+internal class Contact(private val contactPos: Vec2, r1Pos: Vec2, r2Pos: Vec2) {
     /** Distance to first body center, r1. */
-    private val rad1: Vec2 = pos - r1Pos
+    private val rad1: Vec2 = contactPos - r1Pos
 
-    /** Distance to second body center r2. */
-    private val rad2: Vec2 = pos - r2Pos
+    /** Distance to second body center, r2. */
+    private val rad2: Vec2 = contactPos - r2Pos
 
     /** Normal impulse magnitude, J_n. */
     var normImp: Float = 0f
@@ -28,8 +28,8 @@ internal class Contact(private val pos: Vec2, r1Pos: Vec2, r2Pos: Vec2) {
 
     /** Calculate the relative velocity of two bodies at this contact point. */
     fun getRelativeVelocity(r1: Rigidbody?, r2: Rigidbody?): Vec2 {
-        val vel1 = r1?.getPointVelocity(pos) ?: Vec2()
-        val vel2 = r2?.getPointVelocity(pos) ?: Vec2()
+        val vel1 = r1?.getPointVelocity(contactPos) ?: Vec2()
+        val vel2 = r2?.getPointVelocity(contactPos) ?: Vec2()
         return vel2 - vel1
     }
 
