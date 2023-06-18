@@ -19,7 +19,7 @@ allprojects {
 
     // Name
     group 'slavsquatsuperstar'
-    version '0.7.6-pre6-snapshot'
+    version '0.7.6'
 
     // Java Version
     sourceCompatibility = javaVersion
