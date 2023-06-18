@@ -52,16 +52,4 @@ class LauncherTest {
         assertThrows(IllegalArgumentException.class, launcher::getUseGL);
     }
 
-    @Test
-    void getSaveLogsTrue() {
-        launcher = new Launcher(new String[]{"--log", "on"});
-        assertTrue(launcher.getSaveLogs());
-    }
-
-    @Test
-    void getSaveLogsFalse() {
-        launcher = new Launcher(new String[]{"--log", "off"});
-        assertFalse(launcher.getSaveLogs());
-    }
-
 }

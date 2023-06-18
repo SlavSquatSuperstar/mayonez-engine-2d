@@ -22,7 +22,7 @@ object Defaults {
     // TODO move elsewhere
     const val LOG_LEVEL: Int = 2
     const val SAVE_LOGS: Boolean = true
-    const val LOG_DIRECTORY: String = "logs/"
+    const val LOG_DIRECTORY: String = "logs"
 
     val PREFERENCES: Record = Record()
 

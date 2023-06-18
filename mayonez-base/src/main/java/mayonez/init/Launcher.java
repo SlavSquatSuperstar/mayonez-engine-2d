@@ -64,22 +64,10 @@ public class Launcher {
         }
     }
 
-    boolean getSaveLogs() throws IllegalArgumentException {
-        if (!programArgs.contains("log")) return RunConfig.DEFAULT_SAVE_LOGS;
-
-        var logArg = programArgs.getString("log");
-        return switch (logArg) {
-            case "" -> throw new IllegalArgumentException("Missing value for option \"log\"");
-            case "on" -> true;
-            case "off" -> false;
-            default -> throw new IllegalArgumentException("Invalid value for option \"log\"");
-        };
-    }
-
     // Run Config Methods
 
     public void setRunConfig() {
-        var config = new RunConfig(getUseGL(), getSaveLogs());
+        var config = new RunConfig(getUseGL());
         Mayonez.setConfig(config);
     }
 

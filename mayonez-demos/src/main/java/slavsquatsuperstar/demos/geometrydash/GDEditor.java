@@ -46,7 +46,7 @@ public class GDEditor extends Scene {
     }
 
     public static void main(String[] args) {
-        Mayonez.setConfig(new RunConfig(false, RunConfig.DEFAULT_SAVE_LOGS));
+        Mayonez.setConfig(new RunConfig(false));
         Mayonez.start(new GDEditor());
     }
 
