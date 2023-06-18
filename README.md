@@ -1,10 +1,10 @@
 # Mayonez Engine
 
-The ultimate made-from-scratch 2D Java game engine to fit your Slavic (and non-Slavic) needs!
+The ultimate made-from-scratch and open-source 2D Java game engine to fit your Slavic (and non-Slavic) needs!
 
 <img src="https://img.shields.io/badge/platform-macOS-lightgrey"></img>
 <img src="https://img.shields.io/badge/platform-Windows-lightgrey"></img>
-<img src="https://img.shields.io/badge/stable-v0.7.5-green"></img>
+<img src="https://img.shields.io/badge/stable-v0.7.6-green"></img>
 <img src=https://img.shields.io/badge/build-passing-brightgreen></img>
 
 <img src="https://img.shields.io/badge/Made%20with-Java-red"></img>
@@ -62,17 +62,19 @@ There are several Gradle tasks (compile, test, run, export) included to help in 
 
 Below are the tools and library used in the development of this project.
 
-- Java Version: [Eclipse Temurin 17+](https://adoptium.net/) or [Oracle OpenJDK 17+](https://jdk.java.net/)
-- Kotlin Version: [1.8.10+](https://kotlinlang.org/docs/whatsnew18.html)
+- Java Version: [Eclipse Temurin 17+](https://adoptium.net/)
+  or [Oracle OpenJDK 17+](https://www.oracle.com/java/technologies/downloads/#java17)
+- Kotlin Version: [1.8.0+](https://kotlinlang.org/docs/whatsnew1820.html)
 - Recommended IDE: [Intellij IDEA CE 2023.1+](https://www.jetbrains.com/idea/download/)
-- Build System: [Gradle 8.0+](https://gradle.org/install/)
-    - Utilizes [Gradle Shadow Plugin](https://github.com/johnrengelman/shadow) for creating fat jars
+- Build System: [Gradle 8.1+](https://gradle.org/install/)
+    - Utilizes [Gradle Shadow Plugin](https://github.com/johnrengelman/shadow/releases) for creating fat jars
+
 - Dependencies (bundled in JAR)
     - [LWJGL 3.3.1](https://www.lwjgl.org/customize) (user OS & architecture specific)
         - Libraries: [JOML](https://joml-ci.github.io/JOML/), GLFW, OpenGL, and STB
     - [Kotlin Standard Library](https://kotlinlang.org/docs/getting-started.html)
     - [JSON in Java](https://github.com/stleary/JSON-java) (org.json)
-    - [Java Reflections](https://github.com/ronmamo/reflections)
+    - [Java Reflections](https://github.com/ronmamo/reflections) (org.reflections)
     - [SLF4J Simple Binding](https://www.slf4j.org/) (dependency for Reflections)
     - [JUnit 5](https://junit.org/junit5/docs/current/user-guide/) (not bundled, for testing only)
 
@@ -146,12 +148,20 @@ A massive, heartfelt thanks goes out to the following people, groups, and resour
 
 ## License
 
-This software is licensed under the GNU General Public License (GPL) v3 or any later version, which grants copyleft
+This software is licensed under the [GNU General Public License, version 3](https://www.gnu.org/licenses/#GPL) (GPLv3)  or any
+later version, which grants copyleft
 protections.
+
 In true communist/socialist fashion, the source code of this program is freely available to access, run, share, and
 modify.
-Any forks of this project must also be distributed under the same license and may not be made or used in any proprietary
-(closed-source) applications. They may still be monetized, as long as the code is open.
-See [LICENSE.txt](LICENSE.txt) for more details.
 
-Copyright © 2023 GPL License
+Any forks of this project must also be distributed under the same license and may not be made or used in any proprietary
+(closed-source) applications. They may still be monetized, as long as the code is open to the public.
+See [LICENSE.txt](LICENSE.txt) or read the [online version]((https://www.gnu.org/licenses/gpl-3.0.html)) for more
+details.
+
+This software should not be redistributed without the license file. If your download does not contain the GPL license,
+you should ask the distributor to include it. The [.txt version](https://www.gnu.org/licenses/gpl-3.0.txt) is available
+on the GNU website.
+
+Copyright © 2023 GPLv3 License
