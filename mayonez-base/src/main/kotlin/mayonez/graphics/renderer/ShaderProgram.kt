@@ -5,7 +5,7 @@ import org.lwjgl.opengl.GL11.GL_FALSE
 import org.lwjgl.opengl.GL20.*
 
 /**
- * An individual sub-program within a .glsl shader file.
+ * An individual sub-program within a .glsl [Shader] file.
  *
  * @author SlavSquatSuperstar
  */
@@ -24,12 +24,12 @@ internal class ShaderProgram(
     /** The type of the shader sub-program in OpenGL. */
     val type: String = type.shaderName
 
-    @Throws(RuntimeException::class)
+    @Throws(ShaderException::class)
     fun compileSource() {
         glShaderSource(id, source)
         glCompileShader(id)
         if (!checkCompiledCorrectly(id)) {
-            throw RuntimeException("Error compiling shader program")
+            throw ShaderException("Error compiling shader program")
         }
     }
 

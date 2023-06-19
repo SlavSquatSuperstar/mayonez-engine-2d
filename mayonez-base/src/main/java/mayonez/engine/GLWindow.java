@@ -3,6 +3,7 @@ package mayonez.engine;
 import mayonez.*;
 import mayonez.annotations.*;
 import mayonez.input.*;
+import mayonez.util.*;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
@@ -21,7 +22,6 @@ import static org.lwjgl.system.MemoryUtil.NULL;
  *
  * @author SlavSquatSuperstar
  */
-// TODO gl window exception
 @UsesEngine(EngineType.GL)
 final class GLWindow implements Window {
 
@@ -33,7 +33,12 @@ final class GLWindow implements Window {
         this.title = title;
         this.width = width;
         this.height = height;
-        initWindow();
+        try {
+            initWindow();
+        } catch (GLFWException e) {
+            Logger.printStackTrace(e);
+            Mayonez.stop(ExitCode.ERROR);
+        }
     }
 
     // Engine methods
@@ -48,42 +53,41 @@ final class GLWindow implements Window {
      * <p>
      * Source: <a href="https://www.lwjgl.org/guide">LWJGL starter guide</a>
      */
-    private void initWindow() {
-        try {
-            initGLFW();
-            createGLFWWindow();
-            setWindowProperties();
-        } catch (RuntimeException e) {
-            Logger.printStackTrace(e);
-            Mayonez.stop(ExitCode.ERROR);
-        }
+    private void initWindow() throws GLFWException {
+        initGLFW();
+        createGLFWWindow();
+        setWindowProperties();
 
-        // This line is critical for LWJGL's interoperation with GLFW's
-        // OpenGL context, or any context that is managed externally.
-        // LWJGL detects the context that is current in the current thread,
-        // creates the GLCapabilities instance and makes the OpenGL
-        // bindings available for use.
+        // Very important!
+        // Detect current context and integrate LWJGL with OpenGL bindings
         GL.createCapabilities();
 
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        setWindowSettings();
     }
 
-    private static void initGLFW() throws RuntimeException {
+    private static void initGLFW() throws GLFWException {
         GLFWErrorCallback.createPrint(System.err).set(); // Setup error callback
-        try {
-            if (!glfwInit()) throw new IllegalStateException("Unable to initialize GLFW");
-        } catch (IllegalStateException | ExceptionInInitializerError e) {
-            throw new RuntimeException(
-                    "Unable to initialize GLFW (make sure to run Java with \"-XstartOnFirstThread\" on macOS)");
+        if (!glfwInit()) {
+            if (OperatingSystem.getCurrentOS() == OperatingSystem.MAC_OS) {
+                Logger.error("GLFW must run with the \"-XstartOnFirstThread\" VM argument on macOS");
+            }
+            throw new GLFWException("Unable to initialize GLFW");
         }
+//        try {
+//            if (!glfwInit()) throw new IllegalStateException("Unable to initialize GLFW");
+//        } catch (IllegalStateException | ExceptionInInitializerError e) {
+//            if (OperatingSystem.getCurrentOS() == OperatingSystem.MAC_OS) {
+//                Logger.error("GLFW must run with the \"-XstartOnFirstThread\" VM argument on macOS");
+//            }
+//            throw new GLFWException("Unable to initialize GLFW");
+//        }
     }
 
-    private void createGLFWWindow() throws RuntimeException {
+    private void createGLFWWindow() throws GLFWException {
         configureWindowSettings();
         window = glfwCreateWindow(width, height, title, NULL, NULL);
         if (window == NULL) {
-            throw new RuntimeException("Could not create the GLFW window");
+            throw new GLFWException("Could not create the GLFW window");
         }
     }
 
@@ -115,6 +119,11 @@ final class GLWindow implements Window {
 
         glfwMakeContextCurrent(window); // Make the OpenGL context current
         glfwSwapInterval(1); // Enable v-sync
+    }
+
+    private static void setWindowSettings() {
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
 
     // Make the window visible
@@ -189,4 +198,5 @@ final class GLWindow implements Window {
     public String toString() {
         return String.format("GL Window (%s, %dx%d)", getTitle(), getWidth(), getHeight());
     }
+
 }

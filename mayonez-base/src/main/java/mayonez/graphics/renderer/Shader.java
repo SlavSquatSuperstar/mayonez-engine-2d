@@ -8,7 +8,6 @@ import mayonez.io.text.*;
 import org.joml.*;
 import org.lwjgl.BufferUtils;
 
-import java.io.IOException;
 import java.util.*;
 
 import static org.lwjgl.opengl.GL11.GL_FALSE;
@@ -20,7 +19,6 @@ import static org.lwjgl.opengl.GL20.*;
  *
  * @author SlavSquatSuperstar
  */
-// TODO shader exception
 @UsesEngine(EngineType.GL)
 public class Shader extends Asset {
 
@@ -34,7 +32,7 @@ public class Shader extends Asset {
         try {
             readShaderFile();
             compileShaderPrograms();
-        } catch (Exception e) {
+        } catch (ShaderException e) {
             Logger.printStackTrace(e);
             Mayonez.stop(ExitCode.ERROR);
         }
@@ -42,14 +40,14 @@ public class Shader extends Asset {
 
     // Read Shader Helper Methods
 
-    private void readShaderFile() throws IOException, RuntimeException {
+    private void readShaderFile() throws ShaderException {
         try {
             var source = new TextIOManager().read(openInputStream());
             var shaders = source.split("(#type)( )+"); // shaders indicated by "#type '<shader_type>'"
             parseShaderFile(shaders);
         } catch (Exception e) {
             Logger.error("Could not read shader %s", getFilenameInQuotes());
-            throw e;
+            throw new ShaderException(e);
         }
     }
 
@@ -73,35 +71,35 @@ public class Shader extends Asset {
 
     // Compile Shader Helper Methods
 
-    private void compileShaderPrograms() throws RuntimeException {
+    private void compileShaderPrograms() throws ShaderException {
         programs.forEach(this::compileShader);
         var programIDs = programs.stream().map(ShaderProgram::getID).toList();
         linkShaderPrograms(programIDs);
     }
 
-    private void compileShader(ShaderProgram shader) throws RuntimeException {
+    private void compileShader(ShaderProgram shader) throws ShaderException {
         try {
             shader.compileSource();
             Logger.debug("OpenGL: Compiled %s shader in %s", shader.getType(), getFilenameInQuotes());
-        } catch (RuntimeException e) {
+        } catch (ShaderException e) {
             Logger.error("OpenGL: Could not compile %s shader in  %s", shader.getType(), getFilenameInQuotes());
             Logger.error("OpenGL: " + glGetShaderInfoLog(shaderID));
             throw e;
         }
     }
 
-    private void linkShaderPrograms(List<Integer> programIDs) {
+    private void linkShaderPrograms(List<Integer> programIDs) throws ShaderException {
         shaderID = glCreateProgram();
         programIDs.forEach(id -> glAttachShader(shaderID, id));
         glLinkProgram(shaderID);
         checkLinkStatus(shaderID);
     }
 
-    private void checkLinkStatus(int shaderID) throws RuntimeException {
+    private void checkLinkStatus(int shaderID) throws ShaderException {
         if (glGetProgrami(shaderID, GL_LINK_STATUS) == GL_FALSE) {
             Logger.error("OpenGL: Could not link shader file %s", getFilenameInQuotes());
             Logger.error("OpenGL: " + glGetProgramInfoLog(shaderID));
-            throw new RuntimeException("Error linking shader file");
+            throw new ShaderException("Error linking shader file");
         }
         Logger.debug("OpenGL: Linked shader file %s", getFilenameInQuotes());
     }
@@ -150,7 +148,7 @@ public class Shader extends Asset {
         return glGetUniformLocation(shaderID, varName);
     }
 
-    // Helper Methods
+    // Helper Methods/Classes
 
     private String getFilenameInQuotes() {
         return String.format("\"%s\"", getFilename());

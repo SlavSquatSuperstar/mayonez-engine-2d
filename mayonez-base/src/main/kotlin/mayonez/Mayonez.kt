@@ -92,8 +92,8 @@ object Mayonez {
      * Instantiate singleton objects in the correct order to avoid initializer
      * errors from circular dependencies.
      */
-    @JvmStatic
-    internal fun init() {
+    private fun init() {
+        // TODO this is being called twice
         Logger.log("Starting program...")
         Preferences.readFromFile()
         Logger.setConfig(Preferences.getLoggerConfig())
