@@ -120,7 +120,7 @@ public abstract class Component {
 
     @Override
     public boolean equals(Object obj) {
-        return obj == this;
+        return (obj instanceof Component c) && (c.componentID == this.componentID);
     }
 
     @Override

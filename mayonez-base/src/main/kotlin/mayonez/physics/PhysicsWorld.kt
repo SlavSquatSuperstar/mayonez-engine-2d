@@ -158,7 +158,7 @@ class PhysicsWorld {
         colliders.remove(col)
         listeners.stream()
             .filter { lis -> lis.match(col) }
-            .toList()
+            .toList() // needed to avoid ConcurrentModificationException
             .forEach(listeners::remove)
     }
 

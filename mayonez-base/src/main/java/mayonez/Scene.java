@@ -23,7 +23,7 @@ import java.util.*;
 // TODO current cursor object
 public abstract class Scene {
 
-    private static int sceneCounter = 0; // total number of game objects created
+    private static int sceneCounter = 0; // total number of scenes created
 
     // Scene Information
     final int sceneID; // UUID for this scene
@@ -385,7 +385,7 @@ public abstract class Scene {
 
     @Override
     public boolean equals(Object obj) {
-        return obj == this;
+        return (obj instanceof Scene s) && (s.sceneID == this.sceneID);
     }
 
     @Override

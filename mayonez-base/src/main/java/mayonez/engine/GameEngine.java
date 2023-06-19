@@ -27,7 +27,7 @@ public abstract sealed class GameEngine permits JGameEngine, GLGameEngine {
 
     protected GameEngine(Window window) {
         this.window = window;
-        timeStepSecs = Time.getTimeStep();
+        timeStepSecs = Time.getTimeStepSecs();
         running = false;
         // Add input listeners
         window.setKeyInput(KeyInput.INSTANCE);

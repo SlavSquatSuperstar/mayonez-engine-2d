@@ -46,8 +46,8 @@ public class GDEditor extends Scene {
     }
 
     public static void main(String[] args) {
-        Mayonez.setConfig(new RunConfig(false));
-        Mayonez.start(new GDEditor());
+        Launcher launcher = new Launcher().setRunConfig(new RunConfig(false));
+        launcher.startGame(new GDEditor());
     }
 
 }

@@ -20,13 +20,6 @@ class TransformTest {
     }
 
     @Test
-    void sameTransformEquals() {
-        var t = new Transform(new Vec2(2, 2));
-        assertSame(t, t);
-        assertEquals(t, t);
-    }
-
-    @Test
     void differentTransformNotEquals() {
         var t1 = new Transform(new Vec2(2, 2));
         var t2 = new Transform(new Vec2(3, 4));

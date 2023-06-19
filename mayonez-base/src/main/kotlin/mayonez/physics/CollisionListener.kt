@@ -51,7 +51,7 @@ internal class CollisionListener(
         }
     }
 
-    fun match(col: Collider?): Boolean = c1 == col || c2 == col
+    fun match(col: Collider?): Boolean = (c1 == col) || (c2 == col)
 
     fun match(c1: Collider, c2: Collider): Boolean {
         return (this.c1 == c1 && this.c2 == c2) || (this.c1 == c2 && this.c2 == c1)

@@ -50,7 +50,7 @@ object SceneManager {
     fun setScene(scene: Scene?) {
         if (scene == null) return  // don't set a null scene
         stopScene()
-        if (!scenes.containsKey(currentScene.name)) addScene(currentScene) // save new scene
+        saveCurrentSceneToPool()
         currentScene = scene
         startScene()
     }
@@ -66,10 +66,9 @@ object SceneManager {
         val scene = getScene(name) ?: return // don't set a null scene
 
         pauseScene()
-        if (!scenes.containsKey(currentScene.name)) addScene(currentScene) // save new scene
+        saveCurrentSceneToPool()
         currentScene = scene
-
-        startScene() // start if needed
+        startScene()
         resumeScene()
     }
 
@@ -146,5 +145,9 @@ object SceneManager {
      */
     @JvmStatic
     fun getScene(name: String?): Scene? = scenes[name]
+
+    private fun saveCurrentSceneToPool() {
+        if (!scenes.containsKey(currentScene.name)) addScene(currentScene)
+    }
 
 }

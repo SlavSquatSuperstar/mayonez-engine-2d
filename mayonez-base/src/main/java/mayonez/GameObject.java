@@ -373,7 +373,7 @@ public class GameObject {
 
     @Override
     public boolean equals(Object obj) {
-        return obj == this;
+        return (obj instanceof GameObject o) && (o.objectID == this.objectID);
     }
 
     @Override

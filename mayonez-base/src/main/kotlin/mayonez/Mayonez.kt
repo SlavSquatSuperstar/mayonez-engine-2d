@@ -15,35 +15,48 @@ import kotlin.system.exitProcess
  * SceneManager.addScene(). Finally, start the game with a scene with
  * Mayonez.start().
  */
+// TODO hide setConfig/start
 object Mayonez {
+
+    // Run Fields
+    private var initialized: Boolean = false
+    private lateinit var game: GameEngine
+    private var started: Boolean = false
 
     // Properties
     @JvmStatic
     val screenSize: Vec2
         get() = Vec2(Preferences.screenWidth.toFloat(), Preferences.screenHeight.toFloat())
 
-    // Run Config
-    private var initialized: Boolean = false
-    private var config: RunConfig = RunConfig.DEFAULT_CONFIG
-
     @JvmStatic
-    var useGL: Boolean = false
+    var useGL: Boolean = false // crashes tests when set to true :\
         private set
-
-    // Game Fields
-    private lateinit var game: GameEngine
-    private var started: Boolean = false
 
     // Init Methods
     @JvmStatic
     fun setConfig(config: RunConfig) {
         if (!initialized) {
-            this.config = config
             this.useGL = config.useGL
-            init()
+            initializeSingletons()
             initializeGame()
             initialized = true
         }
+    }
+
+    /**
+     * Instantiate singleton objects and fields in the correct order to avoid
+     * initializer and null pointer errors.
+     */
+    private fun initializeSingletons() {
+        Logger.log("Starting program...")
+        Preferences.readFromFile()
+        Time.timeStepSecs = (1f / Preferences.fps)
+
+        Logger.setConfig(Preferences.getLoggerConfig())
+        Logger.log("Started %s %s", Preferences.title, Preferences.version)
+
+        Assets.initialize()
+        Assets.loadResources()
     }
 
     private fun initializeGame() {
@@ -51,22 +64,6 @@ object Mayonez {
             game = GameEngineFactory.createGameEngine(useGL)
             Logger.debug("Using engine \"%s\"", if (useGL) "GL" else "AWT")
         }
-    }
-
-    /**
-     * Instantiate singleton objects in the correct order to avoid initializer
-     * errors from circular dependencies.
-     */
-    private fun init() {
-        // TODO this is being called twice
-        Logger.log("Starting program...")
-        Preferences.readFromFile()
-        Time.setTimeStep(1f / Preferences.fps);
-        Logger.setConfig(Preferences.getLoggerConfig())
-
-        Logger.log("Started %s %s", Preferences.title, Preferences.version)
-        Assets.initialize() // Set up Assets System
-        Assets.loadResources()
     }
 
     // Game Loop
@@ -79,9 +76,9 @@ object Mayonez {
     @JvmStatic
     fun start(scene: Scene?) {
         if (!initialized) {
-            exitWithErrorMessage("Program config has not been set")
+            exitWithErrorMessage("Cannot start program without setting run configuration")
         } else if (scene == null) {
-            exitWithErrorMessage("Cannot start program without a scene")
+            exitWithErrorMessage("Cannot start program with a null scene")
         }
         if (!started) {
             started = true

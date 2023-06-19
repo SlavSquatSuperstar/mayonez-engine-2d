@@ -13,50 +13,50 @@ import slavsquatsuperstar.demos.spacegame.SpaceGameScene;
  *
  * @author SlavSquatSuperstar
  */
+// TODO maybe fix up other demos and include them
 public class DemosLauncher {
 
-    private final static String[] scenes = {
+    private final static String[] sceneNames = {
             "Space Game", "Mario Scene", "Collisions Test", "Pool Balls Test"
     };
 
     public static void main(String[] args) {
-        var launcher = new Launcher(args);
-        launcher.setRunConfig();
-
-        loadScenesToManager();
-        Mayonez.start(SceneManager.getScene(scenes[0]));
+        var launcher = new Launcher(args).setRunConfig();
+        launcher.loadScenesToManager(getScenesToLoad());
+        launcher.startGame(sceneNames[0]);
     }
 
-    private static void loadScenesToManager() {
-        // Load scenes and allow scene switching
-        SceneManager.addScene(new SpaceGameScene(scenes[0]) {
-            @Override
-            protected void onUserUpdate(float dt) {
-                super.onUserUpdate(dt);
-                pollSceneControls();
-            }
-        });
-        SceneManager.addScene(new MarioScene(scenes[1]) {
-            @Override
-            protected void onUserUpdate(float dt) {
-                super.onUserUpdate(dt);
-                pollSceneControls();
-            }
-        });
-        SceneManager.addScene(new SandboxScene(scenes[2]) {
-            @Override
-            protected void onUserUpdate(float dt) {
-                super.onUserUpdate(dt);
-                pollSceneControls();
-            }
-        });
-        SceneManager.addScene(new PoolBallsScene(scenes[3]) {
-            @Override
-            protected void onUserUpdate(float dt) {
-                super.onUserUpdate(dt);
-                pollSceneControls();
-            }
-        });
+    private static Scene[] getScenesToLoad() {
+        return new Scene[]{
+                new SpaceGameScene(sceneNames[0]) {
+                    @Override
+                    protected void onUserUpdate(float dt) {
+                        super.onUserUpdate(dt);
+                        pollSceneControls();
+                    }
+                },
+                new MarioScene(sceneNames[1]) {
+                    @Override
+                    protected void onUserUpdate(float dt) {
+                        super.onUserUpdate(dt);
+                        pollSceneControls();
+                    }
+                },
+                new SandboxScene(sceneNames[2]) {
+                    @Override
+                    protected void onUserUpdate(float dt) {
+                        super.onUserUpdate(dt);
+                        pollSceneControls();
+                    }
+                },
+                new PoolBallsScene(sceneNames[3]) {
+                    @Override
+                    protected void onUserUpdate(float dt) {
+                        super.onUserUpdate(dt);
+                        pollSceneControls();
+                    }
+                }
+        };
     }
 
     private static void pollSceneControls() {
@@ -65,8 +65,8 @@ public class DemosLauncher {
         } else if (KeyInput.keyPressed("p")) {
             SceneManager.toggleScenePaused(); // this is being run twice per frame in SpaceGameScene
         } else if (KeyInput.keyDown("left shift")) {
-            for (var i = 0; i < scenes.length; i++) {
-                if (KeyInput.keyPressed(String.valueOf(i + 1))) SceneManager.loadScene(scenes[i]);
+            for (var i = 0; i < sceneNames.length; i++) {
+                if (KeyInput.keyPressed(String.valueOf(i + 1))) SceneManager.loadScene(sceneNames[i]);
             }
         }
     }

@@ -1,15 +1,12 @@
 package slavsquatsuperstar.demos.geometrydash;
 
-import mayonez.GameObject;
-import mayonez.Mayonez;
-import mayonez.Preferences;
-import mayonez.Scene;
-import mayonez.util.Colors;
-import mayonez.graphics.sprites.ShapeSprite;
+import mayonez.*;
+import mayonez.graphics.sprites.*;
 import mayonez.init.*;
-import mayonez.math.Vec2;
-import mayonez.physics.Rigidbody;
-import mayonez.physics.colliders.BoxCollider;
+import mayonez.math.*;
+import mayonez.physics.*;
+import mayonez.physics.colliders.*;
+import mayonez.util.*;
 
 public class GDLevel extends Scene {
 
@@ -33,8 +30,8 @@ public class GDLevel extends Scene {
     }
 
     public static void main(String[] args) {
-        Mayonez.setConfig(new RunConfig(false));
-        Mayonez.start(new GDLevel());
+        Launcher launcher = new Launcher().setRunConfig(new RunConfig(false));
+        launcher.startGame(new GDLevel());
     }
 
 }
