@@ -17,6 +17,7 @@ object KeyInput : KeyAdapter() {
 
     // Key Fields
     // represent a bit field with held, pressed, and down bits
+    // TODO extract into class
     private val keysDown = HashMap<Int, Boolean?>() // if key listener detects this key
     private val keysPressed = HashMap<Int, Boolean?>() // if key was just pressed in this frame
     private val keysHeld = HashMap<Int, Boolean?>() // if key is continuously held down

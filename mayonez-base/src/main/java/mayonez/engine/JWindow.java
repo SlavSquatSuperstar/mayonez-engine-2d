@@ -81,7 +81,7 @@ final class JWindow extends JFrame implements Window {
             createBufferStrategy(BUFFER_COUNT);
             bs = getBufferStrategy();
         } catch (IllegalStateException e) {
-            Logger.error("Error initializing window graphics; retrying next frame.");
+            Logger.warn("Error initializing window graphics; retrying next frame.");
         }
     }
 
@@ -101,7 +101,7 @@ final class JWindow extends JFrame implements Window {
                 flushResources();
             } while (bs.contentsLost());
         } catch (IllegalStateException e) {
-            Logger.debug("Error rendering current frame; retrying next frame.");
+            Logger.warn("Error rendering current frame; retrying next frame.");
         }
     }
 
@@ -135,7 +135,7 @@ final class JWindow extends JFrame implements Window {
         addMouseWheelListener(mouse);
     }
 
-    // Properties
+    // Getters
 
     @Override
     public String getTitle() {
@@ -151,6 +151,12 @@ final class JWindow extends JFrame implements Window {
     public int getHeight() {
         return super.getHeight();
     }
+
+//    public boolean isFullScreen() {
+//        var env = GraphicsEnvironment.getLocalGraphicsEnvironment();
+//        var device = env.getDefaultScreenDevice();
+//        return device.getFullScreenWindow() != null;
+//    }
 
     @Override
     public String toString() {

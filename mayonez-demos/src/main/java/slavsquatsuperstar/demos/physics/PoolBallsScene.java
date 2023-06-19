@@ -37,7 +37,7 @@ public class PoolBallsScene extends Scene {
 
                 var ballNum = ballNums[ballCount];
                 addObject(new PoolBall(new Vec2(x, y), ballNum));
-                ballCount++;
+                ballCount += 1;
             }
             // y0 = h/2 - r * i
             yStart -= radius;

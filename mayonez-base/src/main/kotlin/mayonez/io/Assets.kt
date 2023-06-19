@@ -26,19 +26,19 @@ object Assets {
     }
 
     internal fun initialize() {
-        if (initialized) return
-        // Create the singleton object and the map
-        Logger.debug("Current launch directory at ${System.getProperty("user.dir")}")
-        initialized = true
+        if (!initialized) {
+            // Create the singleton object and the map
+            Logger.debug("Current launch directory at ${System.getProperty("user.dir")}")
+            initialized = true
+        }
     }
 
     internal fun loadResources() {
-        if (loadedResources) return
-
-        Logger.log("Starting %s %s", Preferences.title, Preferences.version)
-        Logger.debug("Loading program assets")
-        scanResources(ASSETS_ROOT_DIR)
-        loadedResources = true
+        if (!loadedResources) {
+            Logger.debug("Loading program assets...")
+            scanResources(ASSETS_ROOT_DIR)
+            loadedResources = true
+        }
     }
 
     // Search Folder Methods

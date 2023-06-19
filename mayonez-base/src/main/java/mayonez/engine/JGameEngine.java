@@ -12,17 +12,10 @@ import mayonez.annotations.*;
 final class JGameEngine extends GameEngine {
 
     JGameEngine() {
-        super(new JWindow(String.format("%s %s (AWT)", Preferences.getTitle(), Preferences.getVersion()),
-                Preferences.getScreenWidth(), Preferences.getScreenHeight()));
+        super(WindowFactory.createWindow(false));
     }
 
-//    public boolean isFullScreen() {
-//        var env = GraphicsEnvironment.getLocalGraphicsEnvironment();
-//        var device = env.getDefaultScreenDevice();
-//        return device.getFullScreenWindow() != null;
-//    }
-
-    // Game Loop Methods
+    // Game Engine Methods
 
     @Override
     public float getCurrentTimeSecs() {
@@ -33,4 +26,5 @@ final class JGameEngine extends GameEngine {
     public String toString() {
         return String.format("AWT Game (%s)", getRunningString());
     }
+
 }

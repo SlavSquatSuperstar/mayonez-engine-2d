@@ -62,7 +62,7 @@ internal class Simplex(vararg points: Vec2, private val maxSize: Int = 3) {
     internal fun remove(index: Int) {
         if (index >= size || index < 0) return
         points.removeAt(index)
-        size--
+        size -= 1
     }
 
     /**

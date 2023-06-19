@@ -13,18 +13,18 @@ public abstract sealed class GameEngine permits JGameEngine, GLGameEngine {
 
     private static final float TIME_STEP_SECS = Mayonez.TIME_STEP;
 
-    // Time Fields
-    private float lastTimeSecs; // Last time the game loop iterated
-    private float frameTimeSecs; // Time elapsed since last time
-    private boolean hasUpdated;
-
-    // Debugging Fields
-    float timerSecs = 0f;
-    int frames = 0;
-
     // Engine Fields
     private final Window window;
     private boolean running;
+
+    // Time Fields
+    private float lastLoopTimeSecs;
+    private float frameElapsedTimeSecs;
+    private boolean hasUpdatedThisFrame;
+
+    // Debug Info Fields
+    float debugTimerSecs;
+    int actualFramesPerSecond;
 
     protected GameEngine(Window window) {
         this.window = window; // Set up window
@@ -34,7 +34,7 @@ public abstract sealed class GameEngine permits JGameEngine, GLGameEngine {
         window.setMouseInput(MouseInput.INSTANCE);
     }
 
-    // Resource Management Methods
+    // Main Game Loop Methods
 
     /**
      * Set up system resources and initialize the application.
@@ -48,6 +48,20 @@ public abstract sealed class GameEngine permits JGameEngine, GLGameEngine {
         }
     }
 
+    // Semi-fixed time-step: https://gafferongames.com/post/fix_your_timestep/
+    public final void run() {
+        lastLoopTimeSecs = getCurrentTimeSecs();
+        debugTimerSecs = 0f;
+        actualFramesPerSecond = 0;
+
+        while (running && window.notClosedByUser()) {
+            calculateFrameTime();
+            executeFrame();
+            printFrameCount();
+        }
+        Mayonez.stop(ExitCode.SUCCESS);
+    }
+
     /**
      * Free system resources and quit the application.
      */
@@ -59,73 +73,58 @@ public abstract sealed class GameEngine permits JGameEngine, GLGameEngine {
         }
     }
 
-    // Main Game Loop
-
-    // Semi-fixed time-step: https://gafferongames.com/post/fix_your_timestep/
-    public final void run() {
-        lastTimeSecs = getCurrentTimeSecs();
-        timerSecs = 0f;
-        frames = 0;
-
-        // Render to the screen until the user closes the window or presses the ESCAPE key
-        while (running && window.notClosedByUser()) {
-            calculateFrameTime();
-
-            beginFrame();
-            updateTillFrameTimeZero();
-            renderIfUpdated();
-            endFrame();
-
-            printFrameCount();
-        }
-
-        Mayonez.stop(0);
-    }
+    // Game Loop Helper Methods
 
     private void calculateFrameTime() {
-        // Time of current frame
-        var newTimeSecs = getCurrentTimeSecs();
-        frameTimeSecs = newTimeSecs - lastTimeSecs;
-        timerSecs += frameTimeSecs;
-        lastTimeSecs = newTimeSecs;  // Reset last time
+        var currentLoopTimeSecs = getCurrentTimeSecs();
+        // Track time since last frame
+        frameElapsedTimeSecs = currentLoopTimeSecs - lastLoopTimeSecs;
+        debugTimerSecs += frameElapsedTimeSecs;
+        lastLoopTimeSecs = currentLoopTimeSecs;  // Reset last time
+    }
+
+    private void executeFrame() {
+        beginFrame();
+        updateTillFrameTimeZero();
+        renderIfUpdated();
+        endFrame();
     }
 
     private void updateTillFrameTimeZero() {
         // Update the game as many times as possible even if the screen freezes
-        while (frameTimeSecs > 0) { // Will update any leftover sliver of time
-            var deltaTime = FloatMath.min(frameTimeSecs, TIME_STEP_SECS);
+        while (frameElapsedTimeSecs > 0) { // Will update any leftover sliver of time
+            var deltaTime = FloatMath.min(frameElapsedTimeSecs, TIME_STEP_SECS);
             update(deltaTime);
 //            update(deltaTime * Mayonez.getTimeScale());
-            frameTimeSecs -= deltaTime;
-            hasUpdated = true;
-        }
-    }
-
-    private void printFrameCount() {
-        if (timerSecs >= 1f) {
-            Logger.debug("Frames per Second: %d", frames);
-            frames = 0;
-            timerSecs = 0f;
+            frameElapsedTimeSecs -= deltaTime;
+            hasUpdatedThisFrame = true;
         }
     }
 
     private void renderIfUpdated() {
-        if (hasUpdated) {
+        if (hasUpdatedThisFrame) {
             render();
-            frames++;
+            actualFramesPerSecond += 1;
         }
     }
 
-    // Game Loop Methods
+    private void printFrameCount() {
+        if (debugTimerSecs >= 1f) {
+            Logger.debug("Frames per Second: %d", actualFramesPerSecond);
+            actualFramesPerSecond = 0;
+            debugTimerSecs = 0f;
+        }
+    }
+
+    // Game Engine Overrides
 
     final void beginFrame() {
         // TODO poll input events
-        hasUpdated = false;
+        hasUpdatedThisFrame = false;
         window.beginFrame();
     }
 
     // TODO Multi-thread physics, set time step higher than refresh rate for smoother results
-
     final void update(float dt) {
         getScene().update(dt);
     }

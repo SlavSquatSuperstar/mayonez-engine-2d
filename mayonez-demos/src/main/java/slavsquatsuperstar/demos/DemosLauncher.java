@@ -23,6 +23,11 @@ public class DemosLauncher {
         var launcher = new Launcher(args);
         launcher.setRunConfig();
 
+        loadScenesToManager();
+        Mayonez.start(SceneManager.getScene(scenes[0]));
+    }
+
+    private static void loadScenesToManager() {
         // Load scenes and allow scene switching
         SceneManager.addScene(new SpaceGameScene(scenes[0]) {
             @Override
@@ -52,15 +57,13 @@ public class DemosLauncher {
                 pollSceneControls();
             }
         });
-
-        Mayonez.start(SceneManager.getScene(scenes[0]));
     }
 
     private static void pollSceneControls() {
         if (KeyInput.keyPressed("r")) {
             SceneManager.restartScene();
         } else if (KeyInput.keyPressed("p")) {
-            SceneManager.toggleScenePaused();
+            SceneManager.toggleScenePaused(); // this is being run twice per frame in SpaceGameScene
         } else if (KeyInput.keyDown("left shift")) {
             for (var i = 0; i < scenes.length; i++) {
                 if (KeyInput.keyPressed(String.valueOf(i + 1))) SceneManager.loadScene(scenes[i]);

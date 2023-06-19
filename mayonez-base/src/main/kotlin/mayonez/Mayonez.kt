@@ -63,7 +63,7 @@ object Mayonez {
     // TODO set default fps
     private lateinit var game: GameEngine
     private var started: Boolean = false
-    
+
     init {
         init()
         TIME_STEP = 1.0f / Preferences.fps
@@ -94,9 +94,11 @@ object Mayonez {
      */
     @JvmStatic
     internal fun init() {
-        Logger.log("Initializing Mayonez Engine...")
+        Logger.log("Starting program...")
         Preferences.readFromFile()
         Logger.setConfig(Preferences.getLoggerConfig())
+
+        Logger.log("Started %s %s", Preferences.title, Preferences.version)
         Assets.initialize() // Set up Assets System
         Assets.loadResources()
     }
@@ -110,46 +112,57 @@ object Mayonez {
      */
     @JvmStatic
     fun start(scene: Scene?) {
-        if (started) return
-        started = true
-        init()
-        SceneManager.setScene(scene)
-        startGame()
+        if (!started) {
+            started = true
+            if (scene == null) {
+                exitWithErrorMessage("Cannot start program without a scene")
+            }
+            init()
+            SceneManager.setScene(scene)
+            startGame()
+        }
     }
 
     /**
-     * Stop the game with an exit code.
+     * Stop the game with a custom exit code and terminate the application.
      *
-     * @param status an exit code (zero for no error, non-zero for error)
+     * @param status an exit code (zero for success, non-zero for error)
      */
     @JvmStatic
     fun stop(status: Int) {
-        if (!started) return
-        started = false
-
-        game.stop()
-        Assets.clearAssets()
-
-        logExitMessage(status)
-        exitProcess(status)
+        if (started) {
+            started = false
+            game.stop()
+            Assets.clearAssets()
+            Logger.logExitMessage(status)
+            exitProcess(status)
+        }
     }
+
+    /**
+     * Stop the game with a reserved exit code.
+     *
+     * @param status an exit code constant
+     */
+    @JvmStatic
+    fun stop(status: ExitCode) = this.stop(status.code)
 
     // Helper Methods
 
     private fun startGame() {
         if (this::game.isInitialized) game.start()
-        else exitIfNotConfigured()
+        else exitWithErrorMessage("Cannot start without configuring program \"Use GL\" option")
     }
 
-    // TODO make new method
-    private fun exitIfNotConfigured() {
-        Logger.error("Game Engine \"Use GL\" option has not been configured yet")
-        stop(1)
+    private fun exitWithErrorMessage(message: String) {
+        Logger.error(message)
+        stop(ExitCode.ERROR)
     }
 
-    private fun logExitMessage(status: Int) {
-        if (status == 0) Logger.log("Exiting program with code %d", status)
-        else Logger.error("Exiting program with code %d", status)
+    private fun Logger.logExitMessage(status: Int) {
+        val message = "Exited program with code $status"
+        if (status == 0) this.log("$message (Success)")
+        else this.error("$message (Error)")
     }
 
 }

@@ -1,6 +1,5 @@
 package mayonez.engine;
 
-import mayonez.*;
 import mayonez.annotations.*;
 
 import static org.lwjgl.glfw.GLFW.glfwGetTime;
@@ -14,11 +13,10 @@ import static org.lwjgl.glfw.GLFW.glfwGetTime;
 final class GLGameEngine extends GameEngine { // can't implement runnable otherwise GLFW will crash
 
     GLGameEngine() {
-        super(new GLWindow(String.format("%s %s (GL)", Preferences.getTitle(), Preferences.getVersion()),
-                Preferences.getScreenWidth(), Preferences.getScreenHeight()));
+        super(WindowFactory.createWindow(true));
     }
 
-    // Game Loop Methods
+    // Game Engine Methods
 
     @Override
     public float getCurrentTimeSecs() {
@@ -29,4 +27,5 @@ final class GLGameEngine extends GameEngine { // can't implement runnable otherw
     public String toString() {
         return String.format("GL Game (%s)", getRunningString());
     }
+
 }

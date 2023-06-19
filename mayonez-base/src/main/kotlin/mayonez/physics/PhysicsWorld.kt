@@ -7,12 +7,13 @@ import mayonez.physics.resolution.*
 
 /**
  * A simulation containing bodies that approximate real-world physics.
- * <br></br> Thanks to GamesWithGabe's
- * [ Coding a 2D Physics Engine playlist](https://youtube.com/playlist?list=PLtrSb4XxIVbpZpV65kk73OoUcIrBzoSiO)for
- * explaining the math and logic.
+ *
+ * Sources:
+ * - [GamesWithGabe Coding a 2D Physics Engine](https://youtube.com/playlist?list=PLtrSb4XxIVbpZpV65kk73OoUcIrBzoSiO)
  *
  * @author SlavSquatSuperstar
  */
+// todo add 2-bit coding
 class PhysicsWorld {
 
     companion object {

@@ -16,12 +16,12 @@ object Preferences {
     private var initialized = false
 
     internal fun readFromFile() {
-        if (initialized) return
-
-        val prefsFile = JSONFile(PREFS_FILENAME)
-        preferences.addAll(prefsFile.readJSON())
-        Logger.debug("Loaded preferences from $PREFS_FILENAME")
-        initialized = true
+        if (!initialized) {
+            val prefsFile = JSONFile(PREFS_FILENAME)
+            preferences.addAll(prefsFile.readJSON())
+            Logger.debug("Loaded preferences from $PREFS_FILENAME")
+            initialized = true
+        }
     }
 
     // Application

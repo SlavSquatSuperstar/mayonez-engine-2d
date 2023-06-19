@@ -28,11 +28,11 @@ object Logger {
     // Logger Init Methods
 
     internal fun setConfig(config: LoggerConfig) {
-        if (initialized) return
-
-        this.config = config
-        createLogFile()
-        initialized = true
+        if (!initialized) {
+            this.config = config
+            createLogFile()
+            initialized = true
+        }
     }
 
     private fun createLogFile() {
