@@ -13,15 +13,32 @@ import mayonez.io.scanner.*
 // TODO preload stage, map filetype to subclass
 object Assets {
 
-    private val assets = HashMap<String, Asset>()
+    // Initialization Fields
+    private const val ASSETS_ROOT_DIR = "assets"
+    private var initialized: Boolean = false
+    private var loadedResources: Boolean = false
+
+    // Asset Fields
+    private val assets: MutableMap<String, Asset> = HashMap()
 
     init {
-        if (!Mayonez.INIT_ASSETS) Mayonez.init()
+        initialize()
     }
 
-    // doesn't work for jar
-    internal fun getCurrentDirectory() {
+    internal fun initialize() {
+        if (initialized) return
+        // Create the singleton object and the map
         Logger.debug("Current launch directory at ${System.getProperty("user.dir")}")
+        initialized = true
+    }
+
+    internal fun loadResources() {
+        if (loadedResources) return
+
+        Logger.log("Starting %s %s", Preferences.title, Preferences.version)
+        Logger.debug("Loading program assets")
+        scanResources(ASSETS_ROOT_DIR)
+        loadedResources = true
     }
 
     // Search Folder Methods

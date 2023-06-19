@@ -27,6 +27,14 @@ This fully-operational game engine includes:
 - Debug rendering capabilities for drawing and filling shapes, lines, and points
 - Customizable game preferences that you can set yourself
 
+### Planned
+
+- A UI system with reusable components such as buttons and labels
+- An event system for keyboard and mouse inputs
+- Font rendering for displaying text on UI
+- Nestable game objects that will be fixed to the parent object's position
+- And much more to come later!
+
 ## Platforms
 
 | Operating System      |   Status   |
@@ -44,7 +52,7 @@ This fully-operational game engine includes:
 - Graphics card supporting OpenGL 3.3
 - Java 17 (see further instructions)
 
-### Instructions for End-Users
+### Instructions for Players
 
 - Download the latest Java version: [Eclipse Temurin 17+](https://adoptium.net/temurin/releases) (select "JRE" under "
   Package Type") or [Oracle JRE 17+](https://www.oracle.com/java/technologies/downloads/)
@@ -60,11 +68,11 @@ Then, in an IDE, create a new project from existing sources and import a Gradle 
 You can also create a new project from version control using the link above if your editor supports it.
 There are several Gradle tasks (compile, test, run, export) included to help in your development.
 
-Below are the tools and library used in the development of this project.
+Below are the tools and libraries used in the development of this project.
 
 - Java Version: [Eclipse Temurin 17+](https://adoptium.net/)
   or [Oracle OpenJDK 17+](https://www.oracle.com/java/technologies/downloads/#java17)
-- Kotlin Version: [1.8.0+](https://kotlinlang.org/docs/whatsnew1820.html)
+- Kotlin Version: [1.8+](https://kotlinlang.org/docs/whatsnew1820.html)
 - Recommended IDE: [Intellij IDEA CE 2023.1+](https://www.jetbrains.com/idea/download/)
 - Build System: [Gradle 8.1+](https://gradle.org/install/)
     - Utilizes [Gradle Shadow Plugin](https://github.com/johnrengelman/shadow/releases) for creating fat jars
@@ -86,16 +94,17 @@ and a Pool Balls scene.
 ### Demo Key Binds
 
 - All Scenes:
-    - **R** to reload current scene
-    - **Shift** + **1**/**2**/**3**/**4**/**5** to switch scenes
-    - **Esc** to exit the demos
+    - **R** to reload the current scene
+    - **P** to pause/unpause the scene
+    - **Shift** + **1**/**2**/**3**/**4** to switch scenes
+    - **Esc** to exit the program
 - Space Shooter:
     - **W**/**S** to fly forward/backwards
     - **A**/**D** to turn left/right
     - **Q**/**E** to strafe left/right
-    - **Space**: brake
+    - **Space** to brake
     - **Left mouse** to fire weapons
-    - **1**/**2**: switch ammo types
+    - **1**/**2** to switch ammo types
     - **Arrow keys** to zoom camera in/out and rotate camera left/right
 - Mario:
     - **WASD** to move
@@ -148,7 +157,8 @@ A massive, heartfelt thanks goes out to the following people, groups, and resour
 
 ## License
 
-This software is licensed under the [GNU General Public License, version 3](https://www.gnu.org/licenses/#GPL) (GPLv3)  or any
+This software is licensed under the [GNU General Public License, version 3](https://www.gnu.org/licenses/#GPL) (GPLv3)
+or any
 later version, which grants copyleft
 protections.
 

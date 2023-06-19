@@ -31,8 +31,8 @@ object Logger {
         if (initialized) return
 
         this.config = config
-        initialized = true
         createLogFile()
+        initialized = true
     }
 
     private fun createLogFile() {

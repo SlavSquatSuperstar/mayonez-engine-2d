@@ -63,16 +63,7 @@ object Mayonez {
     // TODO set default fps
     private lateinit var game: GameEngine
     private var started: Boolean = false
-
-    // Initialization
-    private var INIT_ENGINE = false // Whether the engine has been created
-    var INIT_ASSETS = false // Whether the asset system has been created
-        private set
-    var INIT_PREFERENCES = false // Whether the preferences file has been applied
-        private set
-    private var INIT_LOGGER = false // Whether the logger has been set up
-    private var INIT_RESOURCES = false // Whether the core resources have been created
-
+    
     init {
         init()
         TIME_STEP = 1.0f / Preferences.fps
@@ -103,38 +94,11 @@ object Mayonez {
      */
     @JvmStatic
     internal fun init() {
-        // Create Logger object
-        if (!INIT_ENGINE) {
-            Logger.log("Initializing...")
-            INIT_ENGINE = true
-        }
-        // Set up Assets system
-        if (!INIT_ASSETS) {
-            Assets.getCurrentDirectory()
-            INIT_ASSETS = true
-        }
-        // Read preferences file
-        if (!INIT_PREFERENCES) {
-            Preferences.readPreferences()
-            Logger.debug("Loaded preferences")
-            INIT_PREFERENCES = true
-        }
-        // Create log file
-        if (!INIT_LOGGER) {
-            Logger.setConfig(
-                LoggerConfig(
-                    Preferences.saveLogs, Preferences.logLevel, Preferences.logDirectory
-                )
-            )
-            INIT_LOGGER = true
-        }
-        // Create Resources
-        if (!INIT_RESOURCES) {
-            INIT_RESOURCES = true
-            Logger.log("Starting %s %s", Preferences.title, Preferences.version)
-            Logger.debug("Loading resources in \"assets/\"")
-            Assets.scanResources("assets") // Load all game assets
-        }
+        Logger.log("Initializing Mayonez Engine...")
+        Preferences.readFromFile()
+        Logger.setConfig(Preferences.getLoggerConfig())
+        Assets.initialize() // Set up Assets System
+        Assets.loadResources()
     }
 
     // Game Loop
@@ -177,6 +141,7 @@ object Mayonez {
         else exitIfNotConfigured()
     }
 
+    // TODO make new method
     private fun exitIfNotConfigured() {
         Logger.error("Game Engine \"Use GL\" option has not been configured yet")
         stop(1)

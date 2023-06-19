@@ -1,6 +1,6 @@
 package mayonez
 
-import mayonez.io.*
+import mayonez.init.*
 import mayonez.io.text.*
 import mayonez.util.*
 
@@ -11,16 +11,17 @@ import mayonez.util.*
  */
 object Preferences {
 
+    private const val PREFS_FILENAME = "preferences.json"
     private val preferences: Record = Defaults.PREFERENCES.copy()
+    private var initialized = false
 
-    internal fun readPreferences() {
-        if (!Mayonez.INIT_ASSETS) Mayonez.init()
-        if (Mayonez.INIT_PREFERENCES) return
+    internal fun readFromFile() {
+        if (initialized) return
 
-        // Read preferences file and update game configuration
-        val prefsFile = Assets.getAsset("preferences.json", JSONFile::class.java)!!
-//        val prefsFile = JSONFile("preferences.json").readJSON()
+        val prefsFile = JSONFile(PREFS_FILENAME)
         preferences.addAll(prefsFile.readJSON())
+        Logger.debug("Loaded preferences from $PREFS_FILENAME")
+        initialized = true
     }
 
     // Application
@@ -48,16 +49,12 @@ object Preferences {
         get() = preferences.getInt("fps")
 
     // Logging
-    @JvmStatic
-    val logLevel: Int
-        get() = preferences.getInt("log_level")
-
-    @JvmStatic
-    val saveLogs: Boolean
-        get() = preferences.getBoolean("save_logs")
-
-    @JvmStatic
-    val logDirectory: String
-        get() = preferences.getString("log_directory")
+    fun getLoggerConfig() : LoggerConfig {
+        return LoggerConfig(
+            preferences.getBoolean("save_logs"),
+            preferences.getInt("log_level"),
+            preferences.getString("log_directory")
+        )
+    }
 
 }
