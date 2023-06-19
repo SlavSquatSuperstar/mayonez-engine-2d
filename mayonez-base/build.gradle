@@ -1,8 +1,9 @@
 plugins {
     id 'java-library'
 
-    id 'org.jetbrains.kotlin.jvm'
     id 'com.github.johnrengelman.shadow'
+    id 'org.jetbrains.dokka'
+    id 'org.jetbrains.kotlin.jvm'
 }
 
 description = 'The library project for Mayonez Engine that contains the core classes and unit tests.'

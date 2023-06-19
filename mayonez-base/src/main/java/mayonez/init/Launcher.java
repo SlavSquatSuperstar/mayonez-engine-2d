@@ -5,11 +5,12 @@ import mayonez.annotations.*;
 import mayonez.util.Record;
 
 /**
- * Initializes all engine components, sets preferences through the main method program arguments,
- * and starts the application.
+ * Initializes all engine components, parses through the main method
+ * program arguments, and starts the application.
  *
  * @author SlavSquatSuperstar
  */
+@ExperimentalFeature
 public class Launcher {
 
     private final Record programArgs;
@@ -28,13 +29,8 @@ public class Launcher {
      */
     public Launcher(String[] args) {
         programArgs = new ArgumentsParser(args).getProgramArgs();
-        // TODO set run config
-        // TODO init engine components
-        // TODO read preferences
         // TODO load scenes
     }
-
-    // System Info Methods
 
     // Run Config Methods
 
@@ -49,22 +45,6 @@ public class Launcher {
             default -> throw new IllegalArgumentException("Invalid value for option \"engine\"");
         };
     }
-
-    EngineType getEngineType() throws IllegalArgumentException {
-        if (!programArgs.contains("engine")) return RunConfig.DEFAULT_ENGINE_TYPE;
-
-        var engineArg = programArgs.getString("engine").toUpperCase();
-        if (engineArg.equals("")) {
-            throw new IllegalArgumentException("Missing value for option \"engine\"");
-        }
-        try {
-            return EngineType.valueOf(engineArg);
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Invalid value for option \"engine\"");
-        }
-    }
-
-    // Run Config Methods
 
     public void setRunConfig() {
         var config = new RunConfig(getUseGL());

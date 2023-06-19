@@ -19,7 +19,7 @@ final class JGameEngine extends GameEngine {
 
     @Override
     public float getCurrentTimeSecs() {
-        return Mayonez.getSeconds();
+        return Time.getTotalProgramSeconds();
     }
 
     @Override

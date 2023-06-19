@@ -17,39 +17,10 @@ import kotlin.system.exitProcess
  */
 object Mayonez {
 
-    // TODO use LocalDateTime to track time
-
-    @JvmField
-    val NANOS_STARTED: Long = System.nanoTime()
-
-    // Move somewhere else, maybe Time class
-    @JvmField
-    val TIME_STEP: Float
-
-    /**
-     * Returns the time in seconds since the program started.
-     *
-     * @return the duration of this program
-     */
-    @JvmStatic
-    val seconds: Float
-        get() = (System.nanoTime() - NANOS_STARTED) / 1.0E9f
-
-//    /**
-//     * How sped up or slowed down the in-game time passes. A scale of 1.0 (100%
-//     * speed) means the game runs in real time.
-//     */
-//    @JvmStatic
-//    var timeScale: Float = 1f
-//        set(value) {
-//            field = max(value, 0f) // non-negative only
-//        }
-
     // Properties
     @JvmStatic
     val screenSize: Vec2
         get() = Vec2(Preferences.screenWidth.toFloat(), Preferences.screenHeight.toFloat())
-
 
     // Run Config
     private var initialized: Boolean = false
@@ -60,32 +31,26 @@ object Mayonez {
         private set
 
     // Game Fields
-    // TODO set default fps
     private lateinit var game: GameEngine
     private var started: Boolean = false
-
-    init {
-        init()
-        TIME_STEP = 1.0f / Preferences.fps
-    }
 
     // Init Methods
     @JvmStatic
     fun setConfig(config: RunConfig) {
-        if (initialized) return
-
-        this.config = config
-        setUseGL(config.useGL)
-        init()
-        initialized = true
+        if (!initialized) {
+            this.config = config
+            this.useGL = config.useGL
+            init()
+            initializeGame()
+            initialized = true
+        }
     }
 
-    private fun setUseGL(useGL: Boolean) {
-        if (initialized) return
-
-        this.useGL = useGL
-        game = GameEngineFactory.createGameEngine(useGL)
-        Logger.debug("Using engine \"%s\"", if (this.useGL) "GL" else "AWT")
+    private fun initializeGame() {
+        if (!this::game.isInitialized) {
+            game = GameEngineFactory.createGameEngine(useGL)
+            Logger.debug("Using engine \"%s\"", if (useGL) "GL" else "AWT")
+        }
     }
 
     /**
@@ -96,6 +61,7 @@ object Mayonez {
         // TODO this is being called twice
         Logger.log("Starting program...")
         Preferences.readFromFile()
+        Time.setTimeStep(1f / Preferences.fps);
         Logger.setConfig(Preferences.getLoggerConfig())
 
         Logger.log("Started %s %s", Preferences.title, Preferences.version)
@@ -112,19 +78,20 @@ object Mayonez {
      */
     @JvmStatic
     fun start(scene: Scene?) {
+        if (!initialized) {
+            exitWithErrorMessage("Program config has not been set")
+        } else if (scene == null) {
+            exitWithErrorMessage("Cannot start program without a scene")
+        }
         if (!started) {
             started = true
-            if (scene == null) {
-                exitWithErrorMessage("Cannot start program without a scene")
-            }
-            init()
             SceneManager.setScene(scene)
             startGame()
         }
     }
 
     /**
-     * Stop the game with a custom exit code and terminate the application.
+     * Stop the game with a exit code and terminate the application.
      *
      * @param status an exit code (zero for success, non-zero for error)
      */
@@ -134,8 +101,7 @@ object Mayonez {
             started = false
             game.stop()
             Assets.clearAssets()
-            Logger.logExitMessage(status)
-            exitProcess(status)
+            exitProgram(status)
         }
     }
 
@@ -156,7 +122,14 @@ object Mayonez {
 
     private fun exitWithErrorMessage(message: String) {
         Logger.error(message)
-        stop(ExitCode.ERROR)
+        val status = ExitCode.ERROR.code
+        exitProgram(status)
+    }
+
+    /** Print an exit message and immediately terminate the program. */
+    private fun exitProgram(status: Int): Nothing {
+        Logger.logExitMessage(status)
+        exitProcess(status)
     }
 
     private fun Logger.logExitMessage(status: Int) {

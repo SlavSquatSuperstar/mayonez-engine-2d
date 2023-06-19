@@ -1,9 +1,10 @@
 plugins {
     id 'application'
 
-    id 'org.jetbrains.kotlin.jvm' version '1.8.20'
-    id 'org.jetbrains.dokka' version '1.7.20' // For Kotlin documentation
     id 'com.github.johnrengelman.shadow' version '8.1.1' // For making fat jars
+    // this is broken
+    id 'org.jetbrains.dokka' version '1.8.20' // For Kotlin documentation
+    id 'org.jetbrains.kotlin.jvm' version '1.8.22' // For compiling Kotlin files
 }
 
 // Project Info

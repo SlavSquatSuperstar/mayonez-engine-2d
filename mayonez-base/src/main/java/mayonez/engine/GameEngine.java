@@ -11,13 +11,12 @@ import mayonez.math.*;
  */
 public abstract sealed class GameEngine permits JGameEngine, GLGameEngine {
 
-    private static final float TIME_STEP_SECS = Mayonez.TIME_STEP;
-
     // Engine Fields
     private final Window window;
     private boolean running;
 
     // Time Fields
+    private final float timeStepSecs;
     private float lastLoopTimeSecs;
     private float frameElapsedTimeSecs;
     private boolean hasUpdatedThisFrame;
@@ -27,7 +26,8 @@ public abstract sealed class GameEngine permits JGameEngine, GLGameEngine {
     int actualFramesPerSecond;
 
     protected GameEngine(Window window) {
-        this.window = window; // Set up window
+        this.window = window;
+        timeStepSecs = Time.getTimeStep();
         running = false;
         // Add input listeners
         window.setKeyInput(KeyInput.INSTANCE);
@@ -93,7 +93,7 @@ public abstract sealed class GameEngine permits JGameEngine, GLGameEngine {
     private void updateTillFrameTimeZero() {
         // Update the game as many times as possible even if the screen freezes
         while (frameElapsedTimeSecs > 0) { // Will update any leftover sliver of time
-            var deltaTime = FloatMath.min(frameElapsedTimeSecs, TIME_STEP_SECS);
+            var deltaTime = FloatMath.min(frameElapsedTimeSecs, timeStepSecs);
             update(deltaTime);
 //            update(deltaTime * Mayonez.getTimeScale());
             frameElapsedTimeSecs -= deltaTime;

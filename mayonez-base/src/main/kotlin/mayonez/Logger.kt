@@ -36,9 +36,7 @@ object Logger {
     }
 
     private fun createLogFile() {
-//        if (!Mayonez.INIT_ASSETS) Mayonez.init() // Should prevent file from not being read
         if (this::logFile.isInitialized) return
-
         if (config.saveLogs) {
             logFile = TextFile(getLogFilename())
             while (printQueue.isNotEmpty()) logFile.append(printQueue.poll()) // log everything in print queue
@@ -49,13 +47,12 @@ object Logger {
         val logDirectory = File(config.logDirectory)
         if (!logDirectory.exists()) logDirectory.mkdir()
 
-        // Count number of log files with the same date
         val today = LocalDate.now().toString()
-        var logCount = logDirectory.listFiles()!!
+        var logFilesCountToday = logDirectory.listFiles()!!
             .count { f -> f.name.startsWith(today) }
 
-        // Set name of log file as YYYY-MM-DD_#
-        return "${logDirectory.path}/${today}_${++logCount}.log"
+        // Set output filename as YYYY-MM-DD_#.log
+        return "${logDirectory.path}/${today}_${++logFilesCountToday}.log"
     }
 
     // Private Log Methods
@@ -76,7 +73,7 @@ object Logger {
     }
 
     private fun Any?.formatMessage(args: Array<out Any?>, level: LogLevel): String {
-        val fmt = StringBuilder("[${Mayonez.seconds.toFmtString()}] ") // Timestamp
+        val fmt = StringBuilder("[${Time.getTotalProgramSeconds().toFmtString()}] ") // Timestamp
         fmt.append("[${level.name}] ") // Log level
         fmt.append("[${getStackSource()}] ") // Log source
         try {
