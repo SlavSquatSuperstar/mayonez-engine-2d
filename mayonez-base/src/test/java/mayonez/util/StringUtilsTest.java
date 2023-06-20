@@ -1,6 +1,7 @@
 package mayonez.util;
 
 import mayonez.*;
+import mayonez.input.*;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -57,21 +58,41 @@ class StringUtilsTest {
     // Class Name Tests
 
     @Test
-    void getClassNameFromNull() {
+    void getClassNameFromNullIsNull() {
         assertEquals("null", StringUtils.getObjectClassName(null));
     }
 
     @Test
-    void getClassNameFromNonAnonymous() {
+    void getClassNameNonAnonymousIsClassName() {
         var obj = mock(GameObject.class);
         assertEquals("GameObject", StringUtils.getObjectClassName(obj));
     }
 
     @Test
-    void getClassNameFromAnonymous() {
+    void getClassNameFromAnonymousIsParent() {
         var scene = new Scene("scene") {
         };
         assertEquals("Scene", StringUtils.getObjectClassName(scene));
+    }
+
+    // Find Enum Tests
+
+    @Test
+    void findEnumConstantWithSpaceCorrect() {
+        var name = "left shift";
+        assertEquals(Key.LEFT_SHIFT, StringUtils.findConstantWithName(Key.values(), name));
+    }
+
+    @Test
+    void findEnumConstantNoSpacesCorrect() {
+        var name = "space";
+        assertEquals(Key.SPACE, StringUtils.findConstantWithName(Key.values(), name));
+    }
+
+    @Test
+    void findEnumConstantInvalidIsNull() {
+        var name = "joystick";
+        assertNull(StringUtils.findConstantWithName(Key.values(), name));
     }
 
 }

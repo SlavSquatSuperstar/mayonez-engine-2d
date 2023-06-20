@@ -88,8 +88,7 @@ enum class Key(internal val awtCode: Int, internal val glCode: Int, private val 
 
     companion object {
         internal fun findWithName(keyName: String): Key? {
-            return Key.values()
-                .find { it.toString().equals(keyName, ignoreCase = true) }
+            return StringUtils.findConstantWithName(Key.values(), keyName)
         }
     }
 

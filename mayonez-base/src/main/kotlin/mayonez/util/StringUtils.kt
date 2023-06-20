@@ -69,8 +69,8 @@ object StringUtils {
     // To String Methods
 
     /**
-     * Returns the simple name of an object's class, without the package name.
-     * If the object is anonymous, its superclass name will be returned.
+     * Returns the simple name of an object's [Class], without the package
+     * name. If the object is anonymous, its superclass name will be returned.
      *
      * @param obj an object
      * @return the object's class name, or "null" if the object is null
@@ -82,6 +82,18 @@ object StringUtils {
             obj.javaClass.isAnonymousClass -> obj.javaClass.superclass.simpleName
             else -> obj.javaClass.simpleName
         }
+    }
+
+    /**
+     * Finds the constant of an [Enum] class with the given name using the
+     * enum's [toString] implementation, case-insensitive.
+     *
+     * @return the enum with the name, or null of none is found
+     */
+    @JvmStatic
+    fun <T : Enum<T>> findConstantWithName(enumValues: Array<T>, name: String?): T? {
+        return enumValues
+            .find { it.toString().equals(name, ignoreCase = true) }
     }
 
 }

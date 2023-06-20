@@ -2,6 +2,7 @@ package mayonez.input
 
 import mayonez.*
 import mayonez.event.*
+import mayonez.util.*
 import org.lwjgl.glfw.GLFW.*
 import java.awt.event.*
 
@@ -129,9 +130,8 @@ object KeyInput : KeyAdapter() {
      */
     @JvmStatic
     fun getAxis(axisName: String): Int {
-        val axisWithName = KeyAxis.values()
-            .find { it.toString().equals(axisName, ignoreCase = true) }
-        return axisWithName?.value() ?: 0
+        return StringUtils.findConstantWithName(KeyAxis.values(), axisName)
+            ?.value() ?: 0
     }
 
     // Helper Methods
