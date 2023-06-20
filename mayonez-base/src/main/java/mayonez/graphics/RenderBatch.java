@@ -198,7 +198,7 @@ public final class RenderBatch {
         vertices.push(v.x, v.y, v.z, v.w);
     }
 
-    // Getter Methods
+    // Getters
 
     public DrawPrimitive getPrimitive() {
         return primitive;

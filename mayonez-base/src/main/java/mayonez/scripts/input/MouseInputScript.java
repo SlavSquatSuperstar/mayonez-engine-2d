@@ -94,7 +94,7 @@ public abstract class MouseInputScript extends Script {
     public void onMouseUp() {
     }
 
-    // Getter Methods
+    // Getters
 
     /**
      * Query the mouse position.

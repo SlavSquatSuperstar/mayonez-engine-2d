@@ -19,61 +19,33 @@ object KeyInput : KeyAdapter() {
     private val keys: MutableMap<Int, MappingStatus?> = HashMap()
 
     // Game Loop Methods
+    /** Update key inputs. */
     @JvmStatic
     fun endFrame() { // TODO rename to pollKeys?
-        // Update key inputs
         for (mapping in keys.values) {
             if (mapping == null) continue;
 
-            if (mapping.isDown) {
-                if (mapping.isReleased) {
+            if (mapping.down) {
+                if (mapping.released) {
                     mapping.setPressed()
-                } else if (mapping.isPressed) { // Continued key press
+                } else if (mapping.pressed) { // Continued key press
                     mapping.setHeld()
                 }
             } else {
                 mapping.setReleased()
             }
         }
-
-//        for (k in keysDown.keys) {
-//            if (keysDown[k] == true) {
-//                if (keysPressed[k] != true && keysHeld[k] != true) { // New key press
-//                    keysPressed[k] = true
-//                } else if (keysPressed[k] == true) { // Continued key press
-//                    keysPressed[k] = false
-//                    keysHeld[k] = true
-//                }
-//            } else { // Released key
-//                keysPressed[k] = false
-//                keysHeld[k] = false
-//            }
-//        }
     }
 
-    /* Keyboard Callbacks */
+    // Keyboard Callbacks
 
     fun keyCallback(window: Long, key: Int, scancode: Int, action: Int, mods: Int) {
 //        println(glfwGetKeyName(GLFW_KEY_UNKNOWN, scancode))
         when (action) {
             // TODO GL double pressing still occurs
-            GLFW_PRESS -> {
-                setKeyDown(key, true)
-//                keysPressed[key] = true
-//                keysHeld[key] = false
-            }
-
-            GLFW_REPEAT -> {
-                setKeyDown(key, true)
-//                keysPressed[key] = false
-//                keysHeld[key] = true
-            }
-
-            GLFW_RELEASE -> {
-                setKeyDown(key, false)
-//                keysPressed[key] = false
-//                keysHeld[key] = false
-            }
+            GLFW_PRESS -> setKeyDown(key, true)
+            GLFW_REPEAT -> setKeyDown(key, true)
+            GLFW_RELEASE -> setKeyDown(key, false)
         }
         EventSystem.broadcast(KeyboardEvent(key, scancode, action, mods))
         endFrame()
@@ -90,18 +62,16 @@ object KeyInput : KeyAdapter() {
         EventSystem.broadcast(KeyboardEvent(e.keyCode, false, e.modifiersEx))
     }
 
-    /* Keyboard Getters */
+    // Keyboard Getters
 
     @JvmStatic
     fun keyDown(keyCode: Int): Boolean {
-        return keys[keyCode]?.isHeld == true || keys[keyCode]?.isPressed == true
-//        return keysHeld[keyCode] == true || keysPressed[keyCode] == true
+        return keys[keyCode]?.pressed == true || keys[keyCode]?.held == true
     }
 
     @JvmStatic
     fun keyPressed(keyCode: Int): Boolean {
-        return keys[keyCode]?.isPressed == true
-//        return keysPressed[keyCode] == true
+        return keys[keyCode]?.pressed == true
     }
 
     /**
@@ -171,14 +141,12 @@ object KeyInput : KeyAdapter() {
 
     private fun setKeyDown(keyCode: Int, keyDown: Boolean) {
         val status = keys[keyCode]
-        if (status == null){
+        if (status == null) { // Track new key
             val newStatus = MappingStatus();
-            newStatus.isDown = keyDown
+            newStatus.down = keyDown
             keys[keyCode] = newStatus
-        }
-        else {
-            status.isDown = keyDown
-            keys[keyCode] = status
+        } else {
+            status.down = keyDown
         }
     }
 
