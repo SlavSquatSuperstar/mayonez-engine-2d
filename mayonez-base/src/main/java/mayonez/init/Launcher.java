@@ -1,7 +1,6 @@
 package mayonez.init;
 
 import mayonez.*;
-import mayonez.annotations.*;
 import mayonez.util.Record;
 
 /**
@@ -16,7 +15,6 @@ import mayonez.util.Record;
  *
  * @author SlavSquatSuperstar
  */
-@ExperimentalFeature
 public class Launcher {
 
     private final Record programArgs;
@@ -68,8 +66,8 @@ public class Launcher {
     boolean getUseGL() throws IllegalArgumentException {
         if (!programArgs.contains("engine")) return RunConfig.DEFAULT_USE_GL;
 
-        var glArg = programArgs.getString("engine");
-        return switch (glArg) {
+        var engineArg = programArgs.getString("engine");
+        return switch (engineArg) {
             case "" -> throw new IllegalArgumentException("Missing value for option \"engine\"");
             case "gl" -> true;
             case "awt" -> false;

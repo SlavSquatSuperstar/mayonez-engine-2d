@@ -16,29 +16,39 @@ import java.awt.event.*
 object KeyInput : KeyAdapter() {
 
     // Key Fields
-    // represent a bit field with held, pressed, and down bits
-    // TODO extract into class
-    private val keysDown = HashMap<Int, Boolean?>() // if key listener detects this key
-    private val keysPressed = HashMap<Int, Boolean?>() // if key was just pressed in this frame
-    private val keysHeld = HashMap<Int, Boolean?>() // if key is continuously held down
+    private val keys: MutableMap<Int, MappingStatus?> = HashMap()
 
     // Game Loop Methods
     @JvmStatic
     fun endFrame() { // TODO rename to pollKeys?
-        // Update key input
-        for (k in keysDown.keys) {
-            if (keysDown[k] == true) {
-                if (keysPressed[k] != true && keysHeld[k] != true) { // New key press
-                    keysPressed[k] = true
-                } else if (keysPressed[k] == true) { // Continued key press
-                    keysPressed[k] = false
-                    keysHeld[k] = true
+        // Update key inputs
+        for (mapping in keys.values) {
+            if (mapping == null) continue;
+
+            if (mapping.isDown) {
+                if (mapping.isReleased) {
+                    mapping.setPressed()
+                } else if (mapping.isPressed) { // Continued key press
+                    mapping.setHeld()
                 }
-            } else { // Released key
-                keysPressed[k] = false
-                keysHeld[k] = false
+            } else {
+                mapping.setReleased()
             }
         }
+
+//        for (k in keysDown.keys) {
+//            if (keysDown[k] == true) {
+//                if (keysPressed[k] != true && keysHeld[k] != true) { // New key press
+//                    keysPressed[k] = true
+//                } else if (keysPressed[k] == true) { // Continued key press
+//                    keysPressed[k] = false
+//                    keysHeld[k] = true
+//                }
+//            } else { // Released key
+//                keysPressed[k] = false
+//                keysHeld[k] = false
+//            }
+//        }
     }
 
     /* Keyboard Callbacks */
@@ -48,19 +58,19 @@ object KeyInput : KeyAdapter() {
         when (action) {
             // TODO GL double pressing still occurs
             GLFW_PRESS -> {
-                keysDown[key] = true
+                setKeyDown(key, true)
 //                keysPressed[key] = true
 //                keysHeld[key] = false
             }
 
             GLFW_REPEAT -> {
-                keysDown[key] = true
+                setKeyDown(key, true)
 //                keysPressed[key] = false
 //                keysHeld[key] = true
             }
 
             GLFW_RELEASE -> {
-                keysDown[key] = false
+                setKeyDown(key, false)
 //                keysPressed[key] = false
 //                keysHeld[key] = false
             }
@@ -70,23 +80,29 @@ object KeyInput : KeyAdapter() {
     }
 
     override fun keyPressed(e: KeyEvent) { // Activates when ever a key is down
-        keysDown[e.keyCode] = true
+        setKeyDown(e.keyCode, true)
         EventSystem.broadcast(KeyboardEvent(e.keyCode, true, e.modifiersEx))
 //        println("${KeyEvent.getModifiersExText(e.modifiersEx)}${e.keyLocation}")
     }
 
     override fun keyReleased(e: KeyEvent) {
-        keysDown[e.keyCode] = false
+        setKeyDown(e.keyCode, false)
         EventSystem.broadcast(KeyboardEvent(e.keyCode, false, e.modifiersEx))
     }
 
     /* Keyboard Getters */
 
     @JvmStatic
-    fun keyDown(keyCode: Int): Boolean = keysHeld[keyCode] == true || keysPressed[keyCode] == true
+    fun keyDown(keyCode: Int): Boolean {
+        return keys[keyCode]?.isHeld == true || keys[keyCode]?.isPressed == true
+//        return keysHeld[keyCode] == true || keysPressed[keyCode] == true
+    }
 
     @JvmStatic
-    fun keyPressed(keyCode: Int): Boolean = keysPressed[keyCode] == true
+    fun keyPressed(keyCode: Int): Boolean {
+        return keys[keyCode]?.isPressed == true
+//        return keysPressed[keyCode] == true
+    }
 
     /**
      * Returns whether the specified [Key] is continuously held down.
@@ -149,6 +165,21 @@ object KeyInput : KeyAdapter() {
                 return a.value()
         }
         return 0
+    }
+
+    // Helper Methods
+
+    private fun setKeyDown(keyCode: Int, keyDown: Boolean) {
+        val status = keys[keyCode]
+        if (status == null){
+            val newStatus = MappingStatus();
+            newStatus.isDown = keyDown
+            keys[keyCode] = newStatus
+        }
+        else {
+            status.isDown = keyDown
+            keys[keyCode] = status
+        }
     }
 
 }

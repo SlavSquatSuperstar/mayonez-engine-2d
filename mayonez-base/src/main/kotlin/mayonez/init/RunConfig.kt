@@ -8,7 +8,7 @@ package mayonez.init
 @JvmRecord
 data class RunConfig(
     /** Whether to use the LWJGL engine. */
-    val useGL: Boolean,
+    internal val useGL: Boolean,
 ) {
     companion object {
         const val DEFAULT_USE_GL: Boolean = true
