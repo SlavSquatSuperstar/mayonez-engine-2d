@@ -22,7 +22,7 @@ internal class ShaderProgram(
         get
 
     /** The type of the shader sub-program in OpenGL. */
-    val type: String = type.shaderName
+    val type: String = type.toString()
 
     @Throws(ShaderException::class)
     fun compileSource() {

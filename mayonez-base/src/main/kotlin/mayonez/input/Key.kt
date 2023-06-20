@@ -86,4 +86,11 @@ enum class Key(internal val awtCode: Int, internal val glCode: Int, private val 
         return keyName ?: StringUtils.capitalizeAllWords(name.replace('_', ' '))
     }
 
+    companion object {
+        internal fun findWithName(keyName: String): Key? {
+            return Key.values()
+                .find { it.toString().equals(keyName, ignoreCase = true) }
+        }
+    }
+
 }

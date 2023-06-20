@@ -7,27 +7,28 @@ import org.lwjgl.glfw.GLFW.GLFW_RELEASE
 import java.awt.event.*
 
 /**
- * The receiver for all mouse-related input events.
+ * Receives mouse input events.
  *
  * @author SlavSquatSuperstar
  */
 @Suppress("unused")
 object MouseInput : MouseAdapter() {
 
-    // Mouse Pointer Fields
+    // Mouse Button Fields
+    // Use arrays instead of hashmaps because very few buttons, GLFW uses max 8
+    private const val NUM_BUTTONS: Int = 8
+    private val buttons: Array<MappingStatus> = Array(NUM_BUTTONS) { MappingStatus() }
+    private var lastButton: Int = -1
+    private var lastAction: Int = -1
+
+    // Mouse Movement Fields
     private var mousePosPx = Vec2()
     private var mouseDispPx = Vec2() // drag displacement
 
     // Mouse Scroll Fields
     private var scroll = Vec2()
 
-    // Mouse Button Fields
-    private var lastButton: Int = -1
-    private var lastAction: Int = -1
-
-    // Use arrays instead of hashmaps because very few buttons, GLFW uses max 8
-    private const val NUM_BUTTONS: Int = 8
-    private val buttons: Array<MappingStatus> = Array(NUM_BUTTONS) { MappingStatus() }
+    // Mouse State Properties
 
     /** If any of the mouse buttons are pressed or held. */
     @JvmStatic
@@ -121,14 +122,6 @@ object MouseInput : MouseAdapter() {
         setMousePos(e.x, e.y)
     }
 
-    private fun setMousePos(x: Number, y: Number) {
-        mousePosPx.set(x.toFloat(), y.toFloat())
-    }
-
-    private fun setMouseDisp(dx: Number, dy: Number) {
-        mouseDispPx.set(dx.toFloat(), dy.toFloat())
-    }
-
     // Mouse Scroll Callbacks
 
     fun mouseScrollCallback(window: Long, xOffset: Double, yOffset: Double) {
@@ -139,19 +132,7 @@ object MouseInput : MouseAdapter() {
         setScrollPos(e.x, e.y)
     }
 
-    private fun setScrollPos(scrollX: Number, scrollY: Number) {
-        scroll.set(scrollX.toFloat(), scrollY.toFloat())
-    }
-
     // Mouse Button Getters
-
-    private fun buttonDown(button: Int): Boolean {
-        return button.isValidIndex() && !buttons[button].released
-    }
-
-    private fun buttonPressed(button: Int): Boolean {
-        return button.isValidIndex() && buttons[button].pressed
-    }
 
     @JvmStatic
     fun buttonDown(button: Button?): Boolean {
@@ -173,16 +154,12 @@ object MouseInput : MouseAdapter() {
 
     @JvmStatic
     fun buttonDown(buttonName: String): Boolean {
-        val buttonWithName = Button.values()
-            .find { it.toString().equals(buttonName, ignoreCase = true) }
-        return buttonDown(buttonWithName)
+        return buttonDown(Button.findWithName(buttonName))
     }
 
     @JvmStatic
     fun buttonPressed(buttonName: String): Boolean {
-        val buttonWithName = Button.values()
-            .find { it.toString().equals(buttonName, ignoreCase = true) }
-        return buttonPressed(buttonWithName)
+        return buttonPressed(Button.findWithName(buttonName))
     }
 
     // Mouse Position Getters
@@ -205,17 +182,40 @@ object MouseInput : MouseAdapter() {
     val displacement: Vec2
         get() = mouseDispPx.invertY().toWorld()
 
+    // Mouse Button Helper Methods
 
-    // Helper Methods
+    private fun buttonDown(button: Int): Boolean {
+        return button.isValidIndex() && !buttons[button].released
+    }
+
+    private fun buttonPressed(button: Int): Boolean {
+        return button.isValidIndex() && buttons[button].pressed
+    }
+
+    private fun setButtonDown(button: Int, down: Boolean) {
+        buttons[button].down = down
+    }
+
+    private fun Int.isValidIndex(): Boolean = this in 0 until NUM_BUTTONS
+
+    // Mouse Movement Helper Methods
+
+    private fun setMousePos(x: Number, y: Number) {
+        mousePosPx.set(x.toFloat(), y.toFloat())
+    }
+
+    private fun setMouseDisp(dx: Number, dy: Number) {
+        mouseDispPx.set(dx.toFloat(), dy.toFloat())
+    }
 
     private fun Vec2.invertY(): Vec2 = this * Vec2(1f, -1f)
 
     private fun Vec2.toWorld(): Vec2 = this / SceneManager.currentScene.scale
 
-    private fun Int.isValidIndex(): Boolean = this in 0 until NUM_BUTTONS
+    // Mouse Scroll Helper Methods
 
-    private fun setButtonDown(button: Int, down: Boolean) {
-        buttons[button].down = down
+    private fun setScrollPos(scrollX: Number, scrollY: Number) {
+        scroll.set(scrollX.toFloat(), scrollY.toFloat())
     }
 
 }

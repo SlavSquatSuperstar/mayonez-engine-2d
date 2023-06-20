@@ -65,7 +65,7 @@ public class Shader extends Asset {
         var typeName = shader.substring(0, firstNewLine).trim();
 
         var shaderSource = shader.substring(firstNewLine + 1);
-        var shaderType = ShaderType.getType(typeName);
+        var shaderType = ShaderType.findWithName(typeName);
         return new ShaderProgram(shaderType, shaderSource);
     }
 

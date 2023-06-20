@@ -15,7 +15,11 @@ import mayonez.util.*
  */
 class DebugDraw internal constructor(private val scale: Float, private val debugRenderer: DebugRenderer) {
 
-    // Draw Points/Lines
+    companion object {
+        private val DEFAULT_COLOR: MColor = Colors.BLACK
+    }
+
+    // Public Draw
     /**
      * Draws a point onto the screen.
      *
@@ -24,7 +28,9 @@ class DebugDraw internal constructor(private val scale: Float, private val debug
      */
     fun drawPoint(position: Vec2, color: MColor?) {
         // Fill a circle with radius "STROKE_SIZE" in pixels
-        addShape(Circle(position.toScreen(), DebugShape.STROKE_SIZE), color, true, DrawPriority.POINT)
+        addShapeToRenderer(
+            Circle(position.toScreen(scale), DebugShape.STROKE_SIZE), color, true, DrawPriority.POINT
+        )
     }
 
     /**
@@ -35,7 +41,9 @@ class DebugDraw internal constructor(private val scale: Float, private val debug
      * @param color the color to use
      */
     fun drawLine(start: Vec2, end: Vec2, color: MColor?) {
-        addShape(Edge(start.toScreen(), end.toScreen()), color, false, DrawPriority.LINE)
+        addShapeToRenderer(
+            Edge(start.toScreen(scale), end.toScreen(scale)), color, false, DrawPriority.LINE
+        )
     }
 
     /**
@@ -46,16 +54,19 @@ class DebugDraw internal constructor(private val scale: Float, private val debug
      *     coordinates
      * @param color the color to use
      */
-    fun drawVector(origin: Vec2, direction: Vec2, color: MColor?) = drawLine(origin, origin.add(direction), color)
+    fun drawVector(origin: Vec2, direction: Vec2, color: MColor?) {
+        drawLine(origin, origin.add(direction), color)
+    }
 
-    // Draw Shapes
     /**
      * Draws the outline of a shape onto the screen.
      *
      * @param shape a [Shape]
      * @param color the color to use
      */
-    fun drawShape(shape: Shape?, color: MColor?) = debugDrawShape(shape, color, false, DrawPriority.SHAPE)
+    fun drawShape(shape: Shape?, color: MColor?) {
+        debugDrawShape(shape, color, false, DrawPriority.SHAPE)
+    }
 
     /**
      * Draws a shape onto the screen and fills in the interior.
@@ -63,42 +74,45 @@ class DebugDraw internal constructor(private val scale: Float, private val debug
      * @param shape a [Shape]
      * @param color the color to use
      */
-    fun fillShape(shape: Shape?, color: MColor?) = debugDrawShape(shape, color, true, DrawPriority.FILL)
+    fun fillShape(shape: Shape?, color: MColor?) {
+        debugDrawShape(shape, color, true, DrawPriority.FILL)
+    }
 
-    // Internal Draw methods
+    // Private Draw methods
 
     private fun debugDrawShape(shape: Shape?, color: MColor?, fill: Boolean, priority: DrawPriority) {
         // screen coordinates only
         when (shape) {
-            is Edge -> addShape(shape.toScreen(), color, false, DrawPriority.LINE)
-            is Polygon -> addShape(shape.toScreen(), color, fill, priority)
-            is Circle -> addShape(shape.toScreen(), color, fill, priority)
+            is Edge -> addShapeToRenderer(shape.toScreen(scale), color, false, DrawPriority.LINE)
+            is Polygon -> addShapeToRenderer(shape.toScreen(scale), color, fill, priority)
+            is Circle -> addShapeToRenderer(shape.toScreen(scale), color, fill, priority)
             is Ellipse -> {
-                if (shape.isCircle) addShape(shape.boundingCircle().toScreen(), color, fill, priority)
-                addShape(shape.toScreen(), color, fill, priority)
+                if (shape.isCircle) {
+                    addShapeToRenderer(shape.boundingCircle().toScreen(scale), color, fill, priority)
+                }
+                addShapeToRenderer(shape.toScreen(scale), color, fill, priority)
             }
         }
     }
 
-    private fun addShape(shape: Shape, color: MColor?, fill: Boolean, priority: DrawPriority) {
-        // if color is null, draw black
-        debugRenderer.addShape(DebugShape(shape, color ?: Colors.BLACK, fill, priority))
+    private fun addShapeToRenderer(shape: Shape, color: MColor?, fill: Boolean, priority: DrawPriority) {
+        debugRenderer.addShape(DebugShape(shape, color ?: DEFAULT_COLOR, fill, priority))
     }
 
-    // Helper Methods
-
-    /**
-     * Converts a pair of coordinates from world to screen units.
-     *
-     * @return the corresponding screen pixels
-     */
-    private fun Vec2.toScreen(): Vec2 = this * scale
-
-    /**
-     * Converts all points on a shape to screen units.
-     *
-     * @return the corresponding screen pixels
-     */
-    private fun Shape.toScreen(): Shape = this.scale(Vec2(scale), Vec2(0f))
-
 }
+
+// Helper Methods
+
+/**
+ * Converts a pair of coordinates from world to screen units.
+ *
+ * @return the corresponding screen pixels
+ */
+private fun Vec2.toScreen(screenScale: Float): Vec2 = this * screenScale
+
+/**
+ * Converts all points on a shape to screen units.
+ *
+ * @return the corresponding screen pixels
+ */
+private fun Shape.toScreen(screenScale: Float): Shape = this.scale(Vec2(screenScale), Vec2(0f))

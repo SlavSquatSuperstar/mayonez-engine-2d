@@ -6,7 +6,7 @@ import org.lwjgl.glfw.GLFW.*
 import java.awt.event.*
 
 /**
- * The receiver for all keyboard-related input events.
+ * Receives keyboard input events.
  *
  * @author SlavSquatSuperstar
  */
@@ -19,7 +19,7 @@ object KeyInput : KeyAdapter() {
     private val keys: MutableMap<Int, MappingStatus?> = HashMap()
 
     // Game Loop Methods
-    /** Update key inputs. */
+    /** Poll key events from the window. */
     @JvmStatic
     fun endFrame() { // TODO rename to pollKeys?
         for (key in keys.values) {
@@ -33,6 +33,15 @@ object KeyInput : KeyAdapter() {
 
     // Keyboard Callbacks
 
+    /**
+     * The keyboard callback method for GLFW.
+     *
+     * @param window the window id
+     * @param key the GLFW key code
+     * @param scancode the platform-dependent key code
+     * @param action the event type
+     * @param mods any modifier keys
+     */
     fun keyCallback(window: Long, key: Int, scancode: Int, action: Int, mods: Int) {
         when (action) {
             // TODO GL double pressing still occurs
@@ -57,19 +66,11 @@ object KeyInput : KeyAdapter() {
 
     // Keyboard Getters
 
-    private fun keyDown(keyCode: Int): Boolean {
-        return keys[keyCode]?.pressed == true || keys[keyCode]?.held == true
-    }
-
-    private fun keyPressed(keyCode: Int): Boolean {
-        return keys[keyCode]?.pressed == true
-    }
-
     /**
-     * Returns whether the specified [Key] is continuously held down.
+     * Whether the user is continuously holding down the specified [Key].
      *
-     * @param key a [Key] enum constant
-     * @return if the specified key is down
+     * @param key a Key enum constant
+     * @return if the specified key is pressed
      */
     @JvmStatic
     fun keyDown(key: Key?): Boolean {
@@ -81,9 +82,9 @@ object KeyInput : KeyAdapter() {
     }
 
     /**
-     * Returns whether the specified [Key] is pressed this frame.
+     * Whether the user has started pressing the specified [Key] this frame.
      *
-     * @param key a [Key] enum constant
+     * @param key a Key enum constant
      * @return if the specified key is pressed
      */
     @JvmStatic
@@ -96,38 +97,41 @@ object KeyInput : KeyAdapter() {
     }
 
     /**
-     * Returns whether the specified [Key] is continuously held down.
+     * Whether the user has started pressing the [Key] with the specified name
+     * this frame.
      *
-     * @param keyName the name of the [Key], with spaces separating words
-     * @return if the specified key is down
+     * @param keyName the name of the key
+     * @return if the specified key is pressed
      */
     @JvmStatic
     fun keyDown(keyName: String): Boolean {
-        val keyWithName = Key.values()
-            .find { it.toString().equals(keyName, ignoreCase = true) }
-        return keyDown(keyWithName)
+        return keyDown(Key.findWithName(keyName))
     }
 
     /**
-     * Returns whether the specified [Key] is pressed this frame.
+     * Whether the user is continuously holding down the [Key] with the
+     * specified name.
      *
-     * @param keyName the name of the [Key], with spaces separating words
+     * @param keyName the name of the key
      * @return if the specified key is pressed
      */
     @JvmStatic
     fun keyPressed(keyName: String): Boolean {
-        val keyWithName = Key.values()
-            .find { it.toString().equals(keyName, ignoreCase = true) }
-        return keyPressed(keyWithName)
+        return keyPressed(Key.findWithName(keyName))
     }
 
+    /**
+     * Get the value of the [mayonez.input.KeyAxis] with the specified name, an
+     * integer between -1 and 1.
+     *
+     * @param axisName the name of the axis
+     * @return the axis value
+     */
     @JvmStatic
     fun getAxis(axisName: String): Int {
-        for (a in KeyAxis.values()) {
-            if (a.toString().equals(axisName, ignoreCase = true))
-                return a.value()
-        }
-        return 0
+        val axisWithName = KeyAxis.values()
+            .find { it.toString().equals(axisName, ignoreCase = true) }
+        return axisWithName?.value() ?: 0
     }
 
     // Helper Methods
@@ -141,6 +145,14 @@ object KeyInput : KeyAdapter() {
         } else {
             status.down = keyDown
         }
+    }
+
+    private fun keyDown(keyCode: Int): Boolean {
+        return keys[keyCode]?.pressed == true || keys[keyCode]?.held == true
+    }
+
+    private fun keyPressed(keyCode: Int): Boolean {
+        return keys[keyCode]?.pressed == true
     }
 
 }

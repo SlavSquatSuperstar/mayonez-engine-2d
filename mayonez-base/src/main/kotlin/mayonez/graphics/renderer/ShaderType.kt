@@ -1,6 +1,8 @@
 package mayonez.graphics.renderer
 
 import mayonez.annotations.*
+import mayonez.input.*
+import mayonez.util.*
 import org.lwjgl.opengl.GL20.GL_FRAGMENT_SHADER
 import org.lwjgl.opengl.GL20.GL_VERTEX_SHADER
 
@@ -12,19 +14,22 @@ import org.lwjgl.opengl.GL20.GL_VERTEX_SHADER
 @UsesEngine(EngineType.GL)
 internal enum class ShaderType(
     /** The shader ID in OpenGL. */
-    val glShaderType: Int,
-    /** The name of the shader type in GLSL. */
-    val shaderName: String
+    val glShaderType: Int
 ) {
 
     /** A vertex shader that calculates the scaling of an image. */
-    VERTEX(GL_VERTEX_SHADER, "vertex"),
+    VERTEX(GL_VERTEX_SHADER),
 
     /**
      * A fragment (pixel) shader that calculates the color and texture of each
      * individual pixel of an image.
      */
-    FRAGMENT(GL_FRAGMENT_SHADER, "fragment");
+    FRAGMENT(GL_FRAGMENT_SHADER);
+
+    /** The name of the shader type that GLSL uses. */
+    override fun toString(): String {
+        return StringUtils.capitalizeFirstWord(this.name)
+    }
 
     companion object {
         /**
@@ -37,14 +42,12 @@ internal enum class ShaderType(
          */
         @JvmStatic
         @Throws(IllegalArgumentException::class)
-        fun getType(shaderName: String?): ShaderType {
-            for (type in ShaderType.values()) {
-                if (type.name.equals(shaderName, ignoreCase = true)) {
-                    return type
-                }
-            }
-            throw IllegalArgumentException("Unexpected shader type \"$shaderName\"")
+        fun findWithName(shaderName: String?): ShaderType {
+            return values()
+                .find { it.toString().equals(shaderName, ignoreCase = true) }
+                ?: throw IllegalArgumentException("Unexpected shader type \"$shaderName\"")
         }
+
     }
 
 }

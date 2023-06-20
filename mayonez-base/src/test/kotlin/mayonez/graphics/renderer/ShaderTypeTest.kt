@@ -12,17 +12,17 @@ internal class ShaderTypeTest {
 
     @Test
     fun getVertexTypeSuccess() {
-        assertEquals(ShaderType.VERTEX, ShaderType.getType("vErTeX"))
+        assertEquals(ShaderType.VERTEX, ShaderType.findWithName("vErTeX"))
     }
 
     @Test
     fun getFragmentTypeSuccess() {
-        assertEquals(ShaderType.FRAGMENT, ShaderType.getType("FRagMEnt"))
+        assertEquals(ShaderType.FRAGMENT, ShaderType.findWithName("FRagMEnt"))
     }
 
     @Test
     fun getInvalidTypeFails() {
-        assertThrows(IllegalArgumentException::class.java) { ShaderType.getType("Geometry") }
+        assertThrows(IllegalArgumentException::class.java) { ShaderType.findWithName("Geometry") }
     }
 
 }

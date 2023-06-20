@@ -25,4 +25,11 @@ enum class Button(internal val awtCode: Int, internal val glCode: Int) {
         return StringUtils.capitalizeAllWords(name.replace('_', ' '))
     }
 
+    companion object {
+        internal fun findWithName(buttonName: String): Button? {
+            return Button.values()
+                .find { it.toString().equals(buttonName, ignoreCase = true) }
+        }
+    }
+
 }

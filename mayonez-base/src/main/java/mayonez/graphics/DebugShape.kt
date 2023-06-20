@@ -24,6 +24,11 @@ internal class DebugShape(
     private val zIndex: Int
 ) : JRenderable, GLRenderable {
 
+    companion object {
+        /** How many pixels wide a shape should be drawn. */
+        const val STROKE_SIZE: Float = 2f
+    }
+
     constructor(shape: MShape, color: MColor, fill: Boolean, priority: DrawPriority) :
             this(shape, color, fill, priority.zIndex)
 
@@ -95,52 +100,46 @@ internal class DebugShape(
 
     override fun toString(): String = "${shape.javaClass.simpleName} (fill = $fill, z = $zIndex)"
 
-    // Helper Methods
+}
 
-    companion object {
-        /** How many pixels wide a shape should be drawn. */
-        const val STROKE_SIZE: Float = 2f
-
-        private fun MShape.toAwt(): JShape? {
-            return when (this) {
-                is Edge -> {
-                    Line2D.Float(start.x, start.y, end.x, end.y)
-                }
-
-                is Ellipse -> {
-                    val min = this.center() - (size * 0.5f)
-                    val ellipse = Ellipse2D.Float(min.x, min.y, size.x, size.y)
-                    return if (this is Circle || this.isAxisAligned) ellipse
-                    else ellipse.rotate(this.center(), angle)
-                }
-
-                is Rectangle -> {
-                    val min = this.min()
-                    val rect = Rectangle2D.Float(min.x, min.y, this.width, this.height)
-                    return if (this.isAxisAligned) rect else rect.rotate(this.center(), this.angle)
-                }
-
-                is Polygon -> {
-                    val poly = java.awt.Polygon()
-                    this.vertices.forEach { poly.addPoint(it.x.roundToInt(), it.y.roundToInt()) }
-                    return poly
-                }
-
-                else -> null
-            }
+// Helper Methods
+private fun MShape.toAwt(): JShape? {
+    return when (this) {
+        is Edge -> {
+            Line2D.Float(start.x, start.y, end.x, end.y)
         }
 
-        private fun JShape.rotate(center: Vec2, angle: Float): JShape {
-            val rotXf = AffineTransform.getRotateInstance(
-                Math.toRadians(angle.toDouble()),
-                center.x.toDouble(), center.y.toDouble()
-            )
-            return rotXf.createTransformedShape(this)
+        is Ellipse -> {
+            val min = this.center() - (size * 0.5f)
+            val ellipse = Ellipse2D.Float(min.x, min.y, size.x, size.y)
+            return if (this is Circle || this.isAxisAligned) ellipse
+            else ellipse.rotate(this.center(), angle)
         }
 
-        private fun Polygon.splitIntoParts(fill: Boolean): Array<out MShape> {
-            return if (fill) this.triangles else this.edges
+        is Rectangle -> {
+            val min = this.min()
+            val rect = Rectangle2D.Float(min.x, min.y, this.width, this.height)
+            return if (this.isAxisAligned) rect else rect.rotate(this.center(), this.angle)
         }
+
+        is Polygon -> {
+            val poly = java.awt.Polygon()
+            this.vertices.forEach { poly.addPoint(it.x.roundToInt(), it.y.roundToInt()) }
+            return poly
+        }
+
+        else -> null
     }
+}
 
+private fun JShape.rotate(center: Vec2, angle: Float): JShape {
+    val rotXf = AffineTransform.getRotateInstance(
+        Math.toRadians(angle.toDouble()),
+        center.x.toDouble(), center.y.toDouble()
+    )
+    return rotXf.createTransformedShape(this)
+}
+
+private fun Polygon.splitIntoParts(fill: Boolean): Array<out MShape> {
+    return if (fill) this.triangles else this.edges
 }
