@@ -12,7 +12,8 @@ public final class GameEngineFactory {
     }
 
     /**
-     * Creates a new game engine object with the given engine type.
+     * Creates a new {@link mayonez.engine.GameEngine} object with the given
+     * engine type.
      *
      * @param useGL whether to use OpenGL instead of Java's AWT library
      * @return the game engine

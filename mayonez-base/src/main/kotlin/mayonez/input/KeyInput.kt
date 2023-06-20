@@ -2,7 +2,6 @@ package mayonez.input
 
 import mayonez.*
 import mayonez.event.*
-import mayonez.util.*
 import org.lwjgl.glfw.GLFW.*
 import java.awt.event.*
 
@@ -14,7 +13,7 @@ import java.awt.event.*
 // TODO GLFW sticky keys?
 // TODO concurrent modification sometimes happens
 @Suppress("unused")
-object KeyInput : KeyAdapter() {
+class KeyInput internal constructor() : KeyAdapter() {
 
     // Key Fields
     private val keys: MutableMap<Int, MappingStatus?> = HashMap()
@@ -94,49 +93,6 @@ object KeyInput : KeyAdapter() {
             Mayonez.useGL -> keyPressed(key.glCode)
             else -> keyPressed(key.awtCode)
         }
-    }
-
-    /**
-     * Whether the user has started pressing the [mayonez.input.Key] with the
-     * specified name this frame.
-     *
-     * @param keyName the name of the key
-     * @return if the specified key is pressed
-     */
-    internal fun keyDown(keyName: String): Boolean {
-        return keyDown(Key.findWithName(keyName))
-    }
-
-    /**
-     * Whether the user is continuously holding down the [mayonez.input.Key]
-     * with the specified name.
-     *
-     * @param keyName the name of the key
-     * @return if the specified key is pressed
-     */
-    internal fun keyPressed(keyName: String): Boolean {
-        return keyPressed(Key.findWithName(keyName))
-    }
-
-    /**
-     * Get the value of the specified [mayonez.input.KeyAxis].
-     *
-     * @param axis an axis enum constant
-     * @return the axis value, either -1, 0, or 1
-     */
-    internal fun getAxis(axis: KeyAxis?): Int {
-        return axis?.value() ?: 0
-    }
-
-    /**
-     * Get the value of the [mayonez.input.KeyAxis] with the specified name.
-     *
-     * @param axisName the name of the axis
-     * @return the axis value, either -1, 0, or 1
-     */
-    internal fun getAxis(axisName: String): Int {
-        return StringUtils.findConstantWithName(KeyAxis.values(), axisName)
-            ?.value() ?: 0
     }
 
     // Helper Methods

@@ -15,6 +15,13 @@ public final class CameraFactory {
     private CameraFactory() {
     }
 
+    /**
+     * Creates a new {@link mayonez.graphics.camera.Camera} object with the given
+     * scene scale.
+     *
+     * @param sceneScale many pixels correspond to one world unit in the scene
+     * @return the game engine
+     */
     public static Camera createCamera(float sceneScale) {
         if (Mayonez.getUseGL()) {
             return new GLCamera(Mayonez.getScreenSize(), sceneScale);

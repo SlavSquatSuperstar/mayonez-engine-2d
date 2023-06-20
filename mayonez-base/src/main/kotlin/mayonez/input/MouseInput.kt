@@ -6,17 +6,18 @@ import org.lwjgl.glfw.GLFW.GLFW_PRESS
 import org.lwjgl.glfw.GLFW.GLFW_RELEASE
 import java.awt.event.*
 
+private const val NUM_BUTTONS: Int = 8
+
 /**
  * Receives mouse input events.
  *
  * @author SlavSquatSuperstar
  */
 @Suppress("unused")
-object MouseInput : MouseAdapter() {
+class MouseInput internal constructor() : MouseAdapter() {
 
     // Mouse Button Fields
     // Use arrays instead of hashmaps because very few buttons, GLFW uses max 8
-    private const val NUM_BUTTONS: Int = 8
     private val buttons: Array<MappingStatus> = Array(NUM_BUTTONS) { MappingStatus() }
     private var lastButton: Int = -1
     private var lastAction: Int = -1
@@ -97,7 +98,9 @@ object MouseInput : MouseAdapter() {
     // Mouse Movement Callbacks
 
     fun mousePosCallback(window: Long, xPos: Double, yPos: Double) {
-        if (pressed) setMouseDisp(xPos - mousePosPx.x, yPos - mousePosPx.y)
+        if (pressed) {
+            setMouseDisp(xPos - mousePosPx.x, yPos - mousePosPx.y)
+        }
         setMousePos(xPos, yPos)
     }
 
@@ -123,6 +126,13 @@ object MouseInput : MouseAdapter() {
 
     // Mouse Button Getters
 
+    /**
+     * Whether the user is continuously holding down the specified
+     * [mayonez.input.Button].
+     *
+     * @param button a button enum constant
+     * @return if the specified button is pressed
+     */
     internal fun buttonDown(button: Button?): Boolean {
         return when {
             button == null -> false
@@ -131,6 +141,13 @@ object MouseInput : MouseAdapter() {
         }
     }
 
+    /**
+     * Whether the user has started pressing the specified
+     * [mayonez.input.Button] this frame.
+     *
+     * @param button a button enum constant
+     * @return if the specified button is pressed
+     */
     internal fun buttonPressed(button: Button?): Boolean {
         return when {
             button == null -> false
@@ -139,23 +156,15 @@ object MouseInput : MouseAdapter() {
         }
     }
 
-    internal fun buttonDown(buttonName: String): Boolean {
-        return buttonDown(Button.findWithName(buttonName))
-    }
-
-    internal fun buttonPressed(buttonName: String): Boolean {
-        return buttonPressed(Button.findWithName(buttonName))
-    }
-
     // Mouse Movement Getters
 
-    internal val screenPos: Vec2
+    internal val screenPosition: Vec2
         get() = mousePosPx
 
     internal val position: Vec2
         get() = SceneManager.currentScene.camera.toWorld(mousePosPx)
 
-    internal val screenDisp: Vec2
+    internal val screenDisplacement: Vec2
         get() = mouseDispPx
 
     internal val displacement: Vec2
@@ -175,8 +184,6 @@ object MouseInput : MouseAdapter() {
         buttons[button].down = down
     }
 
-    private fun Int.isValidIndex(): Boolean = this in 0 until NUM_BUTTONS
-
     // Mouse Movement Helper Methods
 
     private fun setMousePos(x: Number, y: Number) {
@@ -187,10 +194,6 @@ object MouseInput : MouseAdapter() {
         mouseDispPx.set(dx.toFloat(), dy.toFloat())
     }
 
-    private fun Vec2.invertY(): Vec2 = this * Vec2(1f, -1f)
-
-    private fun Vec2.toWorld(): Vec2 = this / SceneManager.currentScene.scale
-
     // Mouse Scroll Helper Methods
 
     private fun setScrollPos(scrollX: Number, scrollY: Number) {
@@ -198,3 +201,8 @@ object MouseInput : MouseAdapter() {
     }
 
 }
+
+// Helper Extensions
+private fun Vec2.invertY(): Vec2 = this * Vec2(1f, -1f)
+private fun Vec2.toWorld(): Vec2 = this / SceneManager.currentScene.scale
+private fun Int.isValidIndex(): Boolean = this in 0 until NUM_BUTTONS

@@ -6,7 +6,7 @@ import mayonez.util.*
  * Stores two keys intended to perform opposite actions and produces a value based on which are pressed.
  */
 // TODO store mappings?
-internal enum class KeyAxis(
+enum class KeyAxis(
     /**
      * The negative key of this axis (down, left, counterclockwise, etc.).
      */
