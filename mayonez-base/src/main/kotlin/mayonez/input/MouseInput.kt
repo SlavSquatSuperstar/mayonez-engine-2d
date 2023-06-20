@@ -14,56 +14,46 @@ import java.awt.event.*
 @Suppress("unused")
 object MouseInput : MouseAdapter() {
 
-    /* Fields and Properties */
-
-    // Mouse Pointer Fields (in pixels)
-    private var mousePos = Vec2()
-    private var mouseDisp = Vec2() // drag displacement
+    // Mouse Pointer Fields
+    private var mousePosPx = Vec2()
+    private var mouseDispPx = Vec2() // drag displacement
 
     // Mouse Scroll Fields
     private var scroll = Vec2()
 
     // Mouse Button Fields
-    // Store mouse buttons here
     private var lastButton: Int = -1
     private var lastAction: Int = -1
 
-    // Don't need hashmaps because very few buttons, max 8 buttons used by GLFW
+    // Use arrays instead of hashmaps because very few buttons, GLFW uses max 8
     private const val NUM_BUTTONS: Int = 8
-    private val buttonsDown: Array<Boolean> = Array(8) { false } // if mouse listener detects this button
-    private val buttonsPressed: Array<Boolean> = Array(8) { false } // if button is pressed this frame
-    private val buttonsHeld: Array<Boolean> = Array(8) { false } // if button is continuously held down
+    private val buttons: Array<MappingStatus> = Array(NUM_BUTTONS) { MappingStatus() }
 
+    /** If any of the mouse buttons are pressed or held. */
     @JvmStatic
     // TODO isDragging() method
-    var pressed: Boolean = false // assuming only one button clicked at a time
+    var pressed: Boolean = false
         @JvmName("isPressed") get
         private set
 
+    /** If none of the mouse buttons are pressed of held. */
     @JvmStatic
-    var released: Boolean = false
-        @JvmName("isReleased") get
-        private set
+    val released: Boolean
+        @JvmName("isReleased") get() = !pressed
 
     @JvmStatic
     var clicks: Int = 0 // doesn't work with GL yet
         private set
 
     // Game Loop Methods
-    private fun pollMouseButtons() {
-        for (b in buttonsDown.indices) {
-            if (buttonsDown[b]) {
-                if (!buttonsPressed[b] && !buttonsHeld[b]) { // New button press
-                    buttonsPressed[b] = true
-                } else if (buttonsPressed[b]) { // Continued button press
-                    buttonsPressed[b] = false
-                    buttonsHeld[b] = true
-                }
-            } else { // Released button
-                buttonsPressed[b] = false
-                buttonsHeld[b] = false
-            }
 
+    private fun pollMouseButtons() {
+        for (button in buttons) {
+            if (button.down) {
+                button.updateIfDown()
+            } else {
+                button.setReleased()
+            }
         }
     }
 
@@ -80,48 +70,44 @@ object MouseInput : MouseAdapter() {
     // Mouse Button Callbacks
 
     fun mouseButtonCallback(window: Long, button: Int, action: Int, mods: Int) {
-        if (!button.isValid()) return
+        if (!button.isValidIndex()) return
         lastButton = button
         lastAction = action
         when (action) {
             GLFW_PRESS -> {
-                buttonsDown[button] = true
+                setButtonDown(button, true)
                 pressed = true
-                released = false
             }
 
             GLFW_RELEASE -> {
-                buttonsDown[button] = false
+                setButtonDown(button, false)
                 pressed = false
-                released = true
             }
         }
         pollMouseButtons()
     }
 
     override fun mousePressed(e: MouseEvent) {
-        if (!e.button.isValid()) return
-//        println("pressed")
-        buttonsDown[e.button] = true
-        pressed = true
-        released = false
-        clicks = e.clickCount
+        if (e.button.isValidIndex()) {
+            setButtonDown(e.button, true)
+            pressed = true
+            clicks = e.clickCount
+        }
     }
 
     override fun mouseReleased(e: MouseEvent) {
-        if (!e.button.isValid()) return
-//        println("released")
-        buttonsDown[e.button] = false
-        setMouseDisp(0, 0)
-        pressed = false
-        released = true
-        clicks = 0
+        if (e.button.isValidIndex()) {
+            setButtonDown(e.button, false)
+            setMouseDisp(0, 0)
+            pressed = false
+            clicks = 0
+        }
     }
 
     // Mouse Movement Callbacks
 
     fun mousePosCallback(window: Long, xPos: Double, yPos: Double) {
-        if (pressed) setMouseDisp(xPos - mousePos.x, yPos - mousePos.y)
+        if (pressed) setMouseDisp(xPos - mousePosPx.x, yPos - mousePosPx.y)
         setMousePos(xPos, yPos)
     }
 
@@ -131,16 +117,16 @@ object MouseInput : MouseAdapter() {
 
     override fun mouseDragged(e: MouseEvent) {
         pressed = true
-        setMouseDisp(e.x - mousePos.x, e.y - mousePos.y)
+        setMouseDisp(e.x - mousePosPx.x, e.y - mousePosPx.y)
         setMousePos(e.x, e.y)
     }
 
     private fun setMousePos(x: Number, y: Number) {
-        mousePos.set(x.toFloat(), y.toFloat())
+        mousePosPx.set(x.toFloat(), y.toFloat())
     }
 
     private fun setMouseDisp(dx: Number, dy: Number) {
-        mouseDisp.set(dx.toFloat(), dy.toFloat())
+        mouseDispPx.set(dx.toFloat(), dy.toFloat())
     }
 
     // Mouse Scroll Callbacks
@@ -159,69 +145,77 @@ object MouseInput : MouseAdapter() {
 
     // Mouse Button Getters
 
-    @JvmStatic
-    fun buttonDown(button: Int): Boolean = button.isValid() && (buttonsHeld[button] || buttonsPressed[button])
+    private fun buttonDown(button: Int): Boolean {
+        return button.isValidIndex() && !buttons[button].released
+    }
 
-    @JvmStatic
-    fun buttonPressed(button: Int): Boolean = button.isValid() && buttonsPressed[button]
-
-    @JvmStatic
-    fun buttonDown(button: Button): Boolean {
-        return if (Mayonez.useGL) buttonDown(button.glCode)
-        else buttonDown(button.awtCode)
+    private fun buttonPressed(button: Int): Boolean {
+        return button.isValidIndex() && buttons[button].pressed
     }
 
     @JvmStatic
-    fun buttonPressed(button: Button): Boolean {
-        return if (Mayonez.useGL) buttonPressed(button.glCode)
-        else buttonPressed(button.awtCode)
+    fun buttonDown(button: Button?): Boolean {
+        return when {
+            button == null -> false
+            Mayonez.useGL -> buttonDown(button.glCode)
+            else -> buttonDown(button.awtCode)
+        }
+    }
+
+    @JvmStatic
+    fun buttonPressed(button: Button?): Boolean {
+        return when {
+            button == null -> false
+            Mayonez.useGL -> buttonPressed(button.glCode)
+            else -> buttonPressed(button.awtCode)
+        }
     }
 
     @JvmStatic
     fun buttonDown(buttonName: String): Boolean {
-        for (button in Button.values()) {
-            if (button.toString().equals(buttonName, ignoreCase = true))
-                return buttonDown(button)
-        }
-        return false
+        val buttonWithName = Button.values()
+            .find { it.toString().equals(buttonName, ignoreCase = true) }
+        return buttonDown(buttonWithName)
     }
 
     @JvmStatic
     fun buttonPressed(buttonName: String): Boolean {
-        for (button in Button.values()) {
-            if (button.toString().equals(buttonName, ignoreCase = true))
-                return buttonPressed(button)
-        }
-        return false
+        val buttonWithName = Button.values()
+            .find { it.toString().equals(buttonName, ignoreCase = true) }
+        return buttonPressed(buttonWithName)
     }
 
     // Mouse Position Getters
 
     @JvmStatic
     val screenPos: Vec2
-        get() = mousePos
+        get() = mousePosPx
 
     @JvmStatic
     val position: Vec2
-        get() = SceneManager.currentScene.camera.toWorld(mousePos)
+        get() = SceneManager.currentScene.camera.toWorld(mousePosPx)
 
     // Mouse Displacement Getters
 
     @JvmStatic
     val screenDisp: Vec2
-        get() = mouseDisp
+        get() = mouseDispPx
 
     @JvmStatic
     val displacement: Vec2
-        get() = (mouseDisp * Vec2(1f, -1f)).toWorld() // Invert y
+        get() = mouseDispPx.invertY().toWorld()
 
 
     // Helper Methods
 
-    // Converts screen pixels to world units
+    private fun Vec2.invertY(): Vec2 = this * Vec2(1f, -1f)
+
     private fun Vec2.toWorld(): Vec2 = this / SceneManager.currentScene.scale
 
-    // If a button is a valid index
-    private fun Int.isValid(): Boolean = this in 0 until NUM_BUTTONS
+    private fun Int.isValidIndex(): Boolean = this in 0 until NUM_BUTTONS
+
+    private fun setButtonDown(button: Int, down: Boolean) {
+        buttons[button].down = down
+    }
 
 }

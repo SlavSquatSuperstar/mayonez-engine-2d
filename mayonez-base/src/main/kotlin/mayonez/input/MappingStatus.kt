@@ -16,22 +16,22 @@ internal class MappingStatus {
     val pressed: Boolean
         get() = state == InputState.PRESSED
 
-    fun setPressed() {
-        state = InputState.PRESSED
-    }
-
     val held: Boolean
         get() = state == InputState.HELD
-
-    fun setHeld() {
-        state = InputState.HELD
-    }
 
     val released: Boolean
         get() = state == InputState.RELEASED
 
     fun setReleased() {
-        state = InputState.RELEASED
+        if (!released) state = InputState.RELEASED
+    }
+
+    fun updateIfDown() {
+        if (released) {
+            state = InputState.PRESSED
+        } else if (pressed) {
+            state = InputState.HELD
+        }
     }
 
 }

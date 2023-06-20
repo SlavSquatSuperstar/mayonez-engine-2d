@@ -146,7 +146,7 @@ final class GLWindow implements Window {
 
     public void beginFrame() {
         glfwPollEvents();
-        if (KeyInput.keyDown(GLFW_KEY_ESCAPE)) {
+        if (KeyInput.keyDown(Key.ESCAPE)) {
             glfwSetWindowShouldClose(window, true); // Exit program by pressing escape
         }
     }
