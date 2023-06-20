@@ -49,20 +49,20 @@ public class SandboxScene extends Scene {
     @Override
     protected void onUserUpdate(float dt) {
         // Toggle Gravity
-        if (KeyInput.keyPressed("space")) enabledGravity = !enabledGravity;
+        if (Input.keyPressed("space")) enabledGravity = !enabledGravity;
         if (enabledGravity) setGravity(new Vec2(0, -9.8f));
         else setGravity(new Vec2());
 
         // Create Random Shapes
-        if (!KeyInput.keyDown("left shift")) {
-            if (KeyInput.keyPressed("1")) {
-                addObject(createRandomShape(MouseInput.getPosition(), 1));
-            } else if (KeyInput.keyPressed("2")) {
-                addObject(createRandomShape(MouseInput.getPosition(), 2));
-            } else if (KeyInput.keyPressed("3")) {
-                addObject(createRandomShape(MouseInput.getPosition(), 3));
-            } else if (KeyInput.keyPressed("4")) {
-                addObject(createRandomShape(MouseInput.getPosition(), 4));
+        if (!Input.keyDown("left shift")) {
+            if (Input.keyPressed("1")) {
+                addObject(createRandomShape(Input.getMousePosition(), 1));
+            } else if (Input.keyPressed("2")) {
+                addObject(createRandomShape(Input.getMousePosition(), 2));
+            } else if (Input.keyPressed("3")) {
+                addObject(createRandomShape(Input.getMousePosition(), 3));
+            } else if (Input.keyPressed("4")) {
+                addObject(createRandomShape(Input.getMousePosition(), 4));
             }
         }
     }

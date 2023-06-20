@@ -27,6 +27,10 @@ final class JWindow extends JFrame implements Window {
     private Graphics2D g2;
     private boolean closedByUser;
 
+    // Input Fields
+    private KeyInput keyboard;
+    private MouseInput mouse;
+
     JWindow(String title, int width, int height) {
         super(title);
         setSize(width, height);
@@ -64,26 +68,16 @@ final class JWindow extends JFrame implements Window {
 
     @Override
     public void beginFrame() {
-        if (KeyInput.keyDown("escape")) closedByUser = true;
+        if (Input.keyDown("escape")) closedByUser = true;
     }
 
     @Override
     public void endFrame() {
-        KeyInput.endFrame();
-        MouseInput.endFrame();
+        keyboard.endFrame();
+        mouse.endFrame();
     }
 
     // Render Methods
-
-    private void initGraphics() {
-        if (!isVisible()) return;
-        try {
-            createBufferStrategy(BUFFER_COUNT);
-            bs = getBufferStrategy();
-        } catch (IllegalStateException e) {
-            Logger.warn("Error initializing window graphics; retrying next frame.");
-        }
-    }
 
     @Override
     public void render(Scene scene) {
@@ -102,6 +96,16 @@ final class JWindow extends JFrame implements Window {
             } while (bs.contentsLost());
         } catch (IllegalStateException e) {
             Logger.warn("Error rendering current frame; retrying next frame.");
+        }
+    }
+
+    private void initGraphics() {
+        if (!isVisible()) return;
+        try {
+            createBufferStrategy(BUFFER_COUNT);
+            bs = getBufferStrategy();
+        } catch (IllegalStateException e) {
+            Logger.warn("Error initializing window graphics; retrying next frame.");
         }
     }
 
@@ -125,11 +129,15 @@ final class JWindow extends JFrame implements Window {
 
     @Override
     public void setKeyInput(KeyInput keyboard) {
+        this.keyboard = keyboard;
+        Input.setKeyboardInstance(keyboard);
         addKeyListener(keyboard);
     }
 
     @Override
     public void setMouseInput(MouseInput mouse) {
+        this.mouse = mouse;
+        Input.setMouseInstance(mouse);
         addMouseListener(mouse);
         addMouseMotionListener(mouse);
         addMouseWheelListener(mouse);

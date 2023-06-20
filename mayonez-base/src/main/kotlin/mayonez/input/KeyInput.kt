@@ -21,7 +21,6 @@ object KeyInput : KeyAdapter() {
 
     // Game Loop Methods
     /** Poll key events from the window. */
-    @JvmStatic
     fun endFrame() { // TODO rename to pollKeys?
         for (key in keys.values) {
             when {
@@ -68,13 +67,13 @@ object KeyInput : KeyAdapter() {
     // Keyboard Getters
 
     /**
-     * Whether the user is continuously holding down the specified [Key].
+     * Whether the user is continuously holding down the specified
+     * [mayonez.input.Key].
      *
-     * @param key a Key enum constant
+     * @param key a key enum constant
      * @return if the specified key is pressed
      */
-    @JvmStatic
-    fun keyDown(key: Key?): Boolean {
+    internal fun keyDown(key: Key?): Boolean {
         return when {
             key == null -> false
             Mayonez.useGL -> keyDown(key.glCode)
@@ -83,13 +82,13 @@ object KeyInput : KeyAdapter() {
     }
 
     /**
-     * Whether the user has started pressing the specified [Key] this frame.
+     * Whether the user has started pressing the specified [mayonez.input.Key]
+     * this frame.
      *
-     * @param key a Key enum constant
+     * @param key a key enum constant
      * @return if the specified key is pressed
      */
-    @JvmStatic
-    fun keyPressed(key: Key?): Boolean {
+    internal fun keyPressed(key: Key?): Boolean {
         return when {
             key == null -> false
             Mayonez.useGL -> keyPressed(key.glCode)
@@ -98,38 +97,44 @@ object KeyInput : KeyAdapter() {
     }
 
     /**
-     * Whether the user has started pressing the [Key] with the specified name
-     * this frame.
+     * Whether the user has started pressing the [mayonez.input.Key] with the
+     * specified name this frame.
      *
      * @param keyName the name of the key
      * @return if the specified key is pressed
      */
-    @JvmStatic
-    fun keyDown(keyName: String): Boolean {
+    internal fun keyDown(keyName: String): Boolean {
         return keyDown(Key.findWithName(keyName))
     }
 
     /**
-     * Whether the user is continuously holding down the [Key] with the
-     * specified name.
+     * Whether the user is continuously holding down the [mayonez.input.Key]
+     * with the specified name.
      *
      * @param keyName the name of the key
      * @return if the specified key is pressed
      */
-    @JvmStatic
-    fun keyPressed(keyName: String): Boolean {
+    internal fun keyPressed(keyName: String): Boolean {
         return keyPressed(Key.findWithName(keyName))
     }
 
     /**
-     * Get the value of the [mayonez.input.KeyAxis] with the specified name, an
-     * integer between -1 and 1.
+     * Get the value of the specified [mayonez.input.KeyAxis].
+     *
+     * @param axis an axis enum constant
+     * @return the axis value, either -1, 0, or 1
+     */
+    internal fun getAxis(axis: KeyAxis?): Int {
+        return axis?.value() ?: 0
+    }
+
+    /**
+     * Get the value of the [mayonez.input.KeyAxis] with the specified name.
      *
      * @param axisName the name of the axis
-     * @return the axis value
+     * @return the axis value, either -1, 0, or 1
      */
-    @JvmStatic
-    fun getAxis(axisName: String): Int {
+    internal fun getAxis(axisName: String): Int {
         return StringUtils.findConstantWithName(KeyAxis.values(), axisName)
             ?.value() ?: 0
     }
@@ -139,7 +144,7 @@ object KeyInput : KeyAdapter() {
     private fun setKeyDown(keyCode: Int, keyDown: Boolean) {
         val status = keys[keyCode]
         if (status == null) { // Track new key
-            val newStatus = MappingStatus();
+            val newStatus = MappingStatus()
             newStatus.down = keyDown
             keys[keyCode] = newStatus
         } else {

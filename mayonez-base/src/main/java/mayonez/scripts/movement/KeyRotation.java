@@ -38,7 +38,7 @@ public class KeyRotation extends MovementScript {
 
     @Override
     public Vec2 getUserInput() {
-        return new Vec2(KeyInput.getAxis(axis), 0);
+        return new Vec2(Input.getAxis(axis), 0);
     }
 
     public KeyRotation setTopSpeed(float topSpeed) {

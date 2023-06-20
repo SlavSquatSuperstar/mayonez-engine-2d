@@ -1,18 +1,14 @@
 package slavsquatsuperstar.demos.spacegame.objects;
 
-import mayonez.GameObject;
-import mayonez.Transform;
-import mayonez.graphics.sprites.Sprite;
-import mayonez.input.KeyInput;
-import mayonez.input.MouseInput;
-import mayonez.math.Vec2;
-import mayonez.physics.Rigidbody;
-import mayonez.physics.colliders.BoxCollider;
-import mayonez.scripts.KeepInScene;
-import mayonez.scripts.combat.FireProjectile;
-import mayonez.scripts.movement.KeyMovement;
-import mayonez.scripts.movement.KeyRotation;
-import mayonez.scripts.movement.MoveMode;
+import mayonez.*;
+import mayonez.graphics.sprites.*;
+import mayonez.input.*;
+import mayonez.math.*;
+import mayonez.physics.*;
+import mayonez.physics.colliders.*;
+import mayonez.scripts.*;
+import mayonez.scripts.combat.*;
+import mayonez.scripts.movement.*;
 import slavsquatsuperstar.demos.spacegame.scripts.ThrustController;
 import slavsquatsuperstar.demos.spacegame.scripts.ThrustDirection;
 import slavsquatsuperstar.demos.spacegame.scripts.Thruster;
@@ -53,10 +49,10 @@ public class PlayerShip extends GameObject {
             @Override
             public void update(float dt) {
                 super.update(dt);
-                if (KeyInput.keyPressed("1")) {
+                if (Input.keyPressed("1")) {
                     weaponChoice = 1;
                     setCooldown(0.2f);
-                } else if (KeyInput.keyPressed("2")) {
+                } else if (Input.keyPressed("2")) {
                     weaponChoice = 2;
                     setCooldown(0.4f);
                 }
@@ -64,7 +60,7 @@ public class PlayerShip extends GameObject {
 
             @Override
             protected boolean readyToFire() {
-                return MouseInput.buttonDown("left mouse");
+                return Input.buttonDown("left mouse");
             }
 
             @Override

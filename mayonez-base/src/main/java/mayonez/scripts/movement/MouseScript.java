@@ -46,20 +46,20 @@ public abstract class MouseScript extends MovementScript {
     public void update(float dt) {
         if (!mouseHeld) {
             // If the mouse is up and then pressed on this object
-            if (isMouseOnObject() && MouseInput.buttonDown(button)) {
+            if (isMouseOnObject() && Input.buttonDown(button)) {
                 mouseHeld = true;
                 onMouseDown();
             }
         } else {
             // If the mouse is pressed and then released
-            if (!MouseInput.buttonDown(button)) {
+            if (!Input.buttonDown(button)) {
                 mouseHeld = false;
                 onMouseUp();
             }
         }
 
         onMouseMove();
-        lastMouse = MouseInput.getPosition().add(MouseInput.getDisplacement());
+        lastMouse = Input.getMousePosition().add(Input.getMouseDisplacement());
     }
 
     // Input Helper Methods
@@ -70,7 +70,7 @@ public abstract class MouseScript extends MovementScript {
      * @return the mouse position
      */
     protected final Vec2 getMousePos() {
-        return MouseInput.getPosition();
+        return Input.getMousePosition();
     }
 
     /**
@@ -79,7 +79,7 @@ public abstract class MouseScript extends MovementScript {
      * @return the mouse displacement
      */
     protected final Vec2 getMouseDisp() {
-        return MouseInput.getDisplacement();
+        return Input.getMouseDisplacement();
     }
 
     @Override

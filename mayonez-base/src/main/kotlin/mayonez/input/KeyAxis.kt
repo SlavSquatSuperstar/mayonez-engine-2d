@@ -26,8 +26,8 @@ internal enum class KeyAxis(
      */
     internal fun value(): Int {
         // add neg and pos keys to make sure pressing a new key doesn't override the other
-        val negVal = if (KeyInput.keyDown(negKey)) -1 else 0
-        val posVal = if (KeyInput.keyDown(posKey)) 1 else 0
+        val negVal = if (Input.keyDown(negKey)) -1 else 0
+        val posVal = if (Input.keyDown(posKey)) 1 else 0
         return negVal + posVal
     }
 

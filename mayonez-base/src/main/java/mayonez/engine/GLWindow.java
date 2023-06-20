@@ -25,9 +25,14 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 @UsesEngine(EngineType.GL)
 final class GLWindow implements Window {
 
+    // Window Fields
     private long window; // The window pointer
     private final String title;
     private final int width, height;
+
+    // Input Fields
+    private KeyInput keyboard;
+    private MouseInput mouse;
 
     GLWindow(String title, int width, int height) {
         this.title = title;
@@ -65,7 +70,7 @@ final class GLWindow implements Window {
         setWindowSettings();
     }
 
-    private static void initGLFW() throws GLFWException {
+    private void initGLFW() throws GLFWException {
         GLFWErrorCallback.createPrint(System.err).set(); // Setup error callback
         if (!glfwInit()) {
             if (OperatingSystem.getCurrentOS() == OperatingSystem.MAC_OS) {
@@ -91,7 +96,7 @@ final class GLWindow implements Window {
         }
     }
 
-    private static void configureWindowSettings() {
+    private void configureWindowSettings() {
         glfwDefaultWindowHints(); // Window settings
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // Don't stay hidden after creation
         glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE); // Don't allow resizing
@@ -121,19 +126,21 @@ final class GLWindow implements Window {
         glfwSwapInterval(1); // Enable v-sync
     }
 
-    private static void setWindowSettings() {
+    private void setWindowSettings() {
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
 
-    // Make the window visible
+    @Override
     public void start() {
         glfwShowWindow(window);
         glfwFocusWindow(window);
     }
 
-    // Free GLFW resources and destroy the window
+    @Override
     public void stop() {
+//        Input.setKeyboardInstance(null);
+//        Input.setMouseInstance(null);
         glfwFreeCallbacks(window);
 //        glfwSetWindowShouldClose(window, true);
         glfwDestroyWindow(window);
@@ -144,13 +151,15 @@ final class GLWindow implements Window {
 
     // Game Loop Methods
 
+    @Override
     public void beginFrame() {
         glfwPollEvents();
-        if (KeyInput.keyDown(Key.ESCAPE)) {
+        if (Input.keyDown(Key.ESCAPE)) {
             glfwSetWindowShouldClose(window, true); // Exit program by pressing escape
         }
     }
 
+    @Override
     public void render(Scene scene) {
         glClearColor(1f, 1f, 1f, 1f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear screen
@@ -158,20 +167,25 @@ final class GLWindow implements Window {
         glfwSwapBuffers(window); // Swap color buffers
     }
 
+    @Override
     public void endFrame() {
-        KeyInput.endFrame(); // Don't need, use key callback instead
-        MouseInput.endFrame();
+        keyboard.endFrame();
+        mouse.endFrame();
     }
 
     // Input Methods
 
     @Override
     public void setKeyInput(KeyInput keyboard) {
+        this.keyboard = keyboard;
+        Input.setKeyboardInstance(keyboard);
         glfwSetKeyCallback(window, keyboard::keyCallback);
     }
 
     @Override
     public void setMouseInput(MouseInput mouse) {
+        this.mouse = mouse;
+        Input.setMouseInstance(mouse);
         glfwSetMouseButtonCallback(window, mouse::mouseButtonCallback);
         glfwSetCursorPosCallback(window, mouse::mousePosCallback);
         glfwSetScrollCallback(window, mouse::mouseScrollCallback);

@@ -35,7 +35,7 @@ public class ThrustController extends Script {
         if (rb == null) return;
 
         // Slow movement and turning
-        var braking = KeyInput.keyDown("space");
+        var braking = Input.keyDown("space");
         if (braking) rb.setDrag(2f).setAngDrag(2f);
         else rb.setDrag(0f).setAngDrag(0f);
 

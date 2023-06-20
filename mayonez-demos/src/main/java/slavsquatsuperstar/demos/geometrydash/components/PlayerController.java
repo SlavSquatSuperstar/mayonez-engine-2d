@@ -1,10 +1,10 @@
 package slavsquatsuperstar.demos.geometrydash.components;
 
-import mayonez.Script;
-import mayonez.graphics.camera.CameraMode;
-import mayonez.input.KeyInput;
-import mayonez.math.Vec2;
-import mayonez.physics.Rigidbody;
+import mayonez.*;
+import mayonez.graphics.camera.*;
+import mayonez.input.*;
+import mayonez.math.*;
+import mayonez.physics.*;
 import slavsquatsuperstar.demos.geometrydash.GDEditor;
 import slavsquatsuperstar.demos.geometrydash.GDLevel;
 
@@ -39,12 +39,12 @@ public class PlayerController extends Script {
     public void update(float dt) {
         if (getScene() instanceof GDLevel) {
             // Jump if on ground
-            if (KeyInput.keyDown("w")) {
+            if (Input.keyDown("w")) {
                 // Impulse must be big enough to not get stuck on ground next frame
                 rb.applyImpulse(new Vec2(0, speed));
             }
             // Ground Pound if in air
-            if (KeyInput.keyDown("s")) {
+            if (Input.keyDown("s")) {
                 rb.applyImpulse(new Vec2(0, -speed));
             }
         }

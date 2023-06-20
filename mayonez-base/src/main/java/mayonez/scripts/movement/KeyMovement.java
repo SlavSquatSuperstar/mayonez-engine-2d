@@ -44,7 +44,7 @@ public class KeyMovement extends MovementScript {
 
     @Override
     public Vec2 getUserInput() {
-        return new Vec2(KeyInput.getAxis(xAxis), KeyInput.getAxis(yAxis));
+        return new Vec2(Input.getAxis(xAxis), Input.getAxis(yAxis));
     }
 
     public KeyMovement setTopSpeed(float topSpeed) {

@@ -30,20 +30,10 @@ object MouseInput : MouseAdapter() {
 
     // Mouse State Properties
 
-    /** If any of the mouse buttons are pressed or held. */
-    @JvmStatic
-    // TODO isDragging() method
-    var pressed: Boolean = false
-        @JvmName("isPressed") get
+    internal var pressed: Boolean = false
         private set
 
-    /** If none of the mouse buttons are pressed of held. */
-    @JvmStatic
-    val released: Boolean
-        @JvmName("isReleased") get() = !pressed
-
-    @JvmStatic
-    var clicks: Int = 0 // doesn't work with GL yet
+    internal var clicks: Int = 1 // doesn't work with GL yet
         private set
 
     // Game Loop Methods
@@ -58,7 +48,6 @@ object MouseInput : MouseAdapter() {
         }
     }
 
-    @JvmStatic
     fun endFrame() {
         // Update mouse input
         pollMouseButtons()
@@ -134,8 +123,7 @@ object MouseInput : MouseAdapter() {
 
     // Mouse Button Getters
 
-    @JvmStatic
-    fun buttonDown(button: Button?): Boolean {
+    internal fun buttonDown(button: Button?): Boolean {
         return when {
             button == null -> false
             Mayonez.useGL -> buttonDown(button.glCode)
@@ -143,8 +131,7 @@ object MouseInput : MouseAdapter() {
         }
     }
 
-    @JvmStatic
-    fun buttonPressed(button: Button?): Boolean {
+    internal fun buttonPressed(button: Button?): Boolean {
         return when {
             button == null -> false
             Mayonez.useGL -> buttonPressed(button.glCode)
@@ -152,34 +139,26 @@ object MouseInput : MouseAdapter() {
         }
     }
 
-    @JvmStatic
-    fun buttonDown(buttonName: String): Boolean {
+    internal fun buttonDown(buttonName: String): Boolean {
         return buttonDown(Button.findWithName(buttonName))
     }
 
-    @JvmStatic
-    fun buttonPressed(buttonName: String): Boolean {
+    internal fun buttonPressed(buttonName: String): Boolean {
         return buttonPressed(Button.findWithName(buttonName))
     }
 
-    // Mouse Position Getters
+    // Mouse Movement Getters
 
-    @JvmStatic
-    val screenPos: Vec2
+    internal val screenPos: Vec2
         get() = mousePosPx
 
-    @JvmStatic
-    val position: Vec2
+    internal val position: Vec2
         get() = SceneManager.currentScene.camera.toWorld(mousePosPx)
 
-    // Mouse Displacement Getters
-
-    @JvmStatic
-    val screenDisp: Vec2
+    internal val screenDisp: Vec2
         get() = mouseDispPx
 
-    @JvmStatic
-    val displacement: Vec2
+    internal val displacement: Vec2
         get() = mouseDispPx.invertY().toWorld()
 
     // Mouse Button Helper Methods

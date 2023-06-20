@@ -50,7 +50,7 @@ public abstract class MouseInputScript extends Script {
      * Check if the mouse gets pressed on this object.
      */
     private void checkMouseDown() {
-        if (MouseInput.isPressed() && isMouseOnObject()) {
+        if (Input.isMousePressed() && isMouseOnObject()) {
             mouseDown = true;
             onMouseDown();
         }
@@ -60,7 +60,7 @@ public abstract class MouseInputScript extends Script {
      * Check if the mouse gets released after being pressed.
      */
     private void checkMouseUp() {
-        if (!MouseInput.isPressed()) {
+        if (!Input.isMousePressed()) {
             mouseDown = false;
             onMouseUp();
         }
@@ -102,7 +102,7 @@ public abstract class MouseInputScript extends Script {
      * @return the mouse position
      */
     protected final Vec2 getMousePos() {
-        return MouseInput.getPosition();
+        return Input.getMousePosition();
     }
 
     /**
@@ -111,7 +111,7 @@ public abstract class MouseInputScript extends Script {
      * @return the mouse displacement
      */
     protected final Vec2 getMouseDisp() {
-        return MouseInput.getDisplacement();
+        return Input.getMouseDisplacement();
     }
 
 }

@@ -21,12 +21,12 @@ sealed interface Window permits JWindow, GLWindow {
     // Resource Management Methods
 
     /**
-     * Initialize the window and setup system resources.
+     * Setup system resources and show the window.
      */
     void start();
 
     /**
-     * Destroy the window and free system resources.
+     * Free system resources and destroy the window.
      */
     void stop();
 
@@ -59,14 +59,16 @@ sealed interface Window permits JWindow, GLWindow {
     // Input Methods
 
     /**
-     * Set the keyboard listener for this window.
+     * Set the keyboard listener for this window and mark it as the active
+     * instance for the input manager.
      *
      * @param keyboard a {@link mayonez.input.KeyInput} instance
      */
     void setKeyInput(KeyInput keyboard);
 
     /**
-     * Set the mouse listener for this window.
+     * Set the mouse listener for this window and mark it as the active
+     * instance for the input manager.
      *
      * @param mouse a {@link mayonez.input.MouseInput} instance
      */
