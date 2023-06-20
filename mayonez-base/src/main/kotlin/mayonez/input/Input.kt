@@ -12,16 +12,16 @@ import mayonez.util.*
 object Input {
 
     // TODO make nullable?
-    private lateinit var keyboardInstance: KeyInput
-    private lateinit var mouseInstance: MouseInput
+    private lateinit var keyboardInstance: KeyManager
+    private lateinit var mouseInstance: MouseManager
 
     @JvmStatic
-    fun setKeyboardInstance(keyboard: KeyInput) {
+    fun setKeyboardInstance(keyboard: KeyManager) {
         this.keyboardInstance = keyboard
     }
 
     @JvmStatic
-    fun setMouseInstance(mouse: MouseInput) {
+    fun setMouseInstance(mouse: MouseManager) {
         this.mouseInstance = mouse
     }
 

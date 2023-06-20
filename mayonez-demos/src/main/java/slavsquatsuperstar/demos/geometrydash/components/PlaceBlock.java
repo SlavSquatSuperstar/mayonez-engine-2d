@@ -1,17 +1,14 @@
 package slavsquatsuperstar.demos.geometrydash.components;
 
-import mayonez.GameObject;
-import mayonez.Logger;
-import mayonez.Script;
-import mayonez.Transform;
-import mayonez.graphics.JRenderable;
-import mayonez.graphics.sprites.Sprite;
-import mayonez.input.MouseInput;
-import mayonez.graphics.textures.JTexture;
-import mayonez.math.Vec2;
-import mayonez.physics.Rigidbody;
-import mayonez.physics.colliders.BoxCollider;
-import mayonez.scripts.Timer;
+import mayonez.*;
+import mayonez.graphics.*;
+import mayonez.graphics.sprites.*;
+import mayonez.graphics.textures.*;
+import mayonez.input.*;
+import mayonez.math.*;
+import mayonez.physics.*;
+import mayonez.physics.colliders.*;
+import mayonez.scripts.*;
 
 import java.awt.*;
 

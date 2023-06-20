@@ -1,8 +1,10 @@
 package mayonez.input;
 
+import mayonez.*;
+
 /**
- * A factory class that constructs {@link mayonez.input.KeyInput} and
- * {@link mayonez.input.MouseInput} objects depending on the run configuration.
+ * A factory class that constructs {@link mayonez.input.KeyManager} and
+ * {@link mayonez.input.MouseManager} objects depending on the run configuration.
  *
  * @author SlavSquatSuperstar
  */
@@ -12,21 +14,23 @@ public class InputManagerFactory {
     }
 
     /**
-     * Creates a new {@link mayonez.input.KeyInput} object.
+     * Creates a new {@link mayonez.input.KeyManager} object.
      *
      * @return the key input manager
      */
-    public static KeyInput createKeyInput() {
-        return new KeyInput();
+    public static KeyManager createKeyInput() {
+        if (Mayonez.getUseGL()) return new GLKeyManager();
+        else return new JKeyManager();
     }
 
     /**
-     * Creates a new {@link mayonez.input.MouseInput} object.
+     * Creates a new {@link mayonez.input.MouseManager} object.
      *
      * @return the mouse input manager
      */
-    public static MouseInput createMouseInput() {
-        return new MouseInput();
+    public static MouseManager createMouseInput() {
+        if (Mayonez.getUseGL()) return new GLMouseManager();
+        else return new JMouseManager();
     }
 
 }

@@ -31,8 +31,8 @@ final class GLWindow implements Window {
     private final int width, height;
 
     // Input Fields
-    private KeyInput keyboard;
-    private MouseInput mouse;
+    private KeyManager keyboard;
+    private MouseManager mouse;
 
     GLWindow(String title, int width, int height) {
         this.title = title;
@@ -176,14 +176,14 @@ final class GLWindow implements Window {
     // Input Methods
 
     @Override
-    public void setKeyInput(KeyInput keyboard) {
+    public void setKeyInput(KeyManager keyboard) {
         this.keyboard = keyboard;
         Input.setKeyboardInstance(keyboard);
         glfwSetKeyCallback(window, keyboard::keyCallback);
     }
 
     @Override
-    public void setMouseInput(MouseInput mouse) {
+    public void setMouseInput(MouseManager mouse) {
         this.mouse = mouse;
         Input.setMouseInstance(mouse);
         glfwSetMouseButtonCallback(window, mouse::mouseButtonCallback);

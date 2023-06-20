@@ -2,8 +2,6 @@ package mayonez.input
 
 import mayonez.*
 import mayonez.math.*
-import org.lwjgl.glfw.GLFW.GLFW_PRESS
-import org.lwjgl.glfw.GLFW.GLFW_RELEASE
 import java.awt.event.*
 
 private const val NUM_BUTTONS: Int = 8
@@ -14,16 +12,15 @@ private const val NUM_BUTTONS: Int = 8
  * @author SlavSquatSuperstar
  */
 @Suppress("unused")
-class MouseInput internal constructor() : MouseAdapter() {
+sealed class MouseManager : MouseAdapter() {
 
     // Mouse Button Fields
     // Use arrays instead of hashmaps because very few buttons, GLFW uses max 8
     private val buttons: Array<MappingStatus> = Array(NUM_BUTTONS) { MappingStatus() }
-    private var lastButton: Int = -1
-    private var lastAction: Int = -1
 
     // Mouse Movement Fields
-    private var mousePosPx = Vec2()
+    protected var mousePosPx = Vec2()
+        private set
     private var mouseDispPx = Vec2() // drag displacement
 
     // Mouse Scroll Fields
@@ -33,13 +30,12 @@ class MouseInput internal constructor() : MouseAdapter() {
 
     internal var pressed: Boolean = false
         private set
-
-    internal var clicks: Int = 1 // doesn't work with GL yet
+    internal var clicks: Int = 1
         private set
 
     // Game Loop Methods
 
-    private fun pollMouseButtons() {
+    protected fun pollMouseButtons() {
         for (button in buttons) {
             if (button.down) {
                 button.updateIfDown()
@@ -60,68 +56,32 @@ class MouseInput internal constructor() : MouseAdapter() {
 
     // Mouse Button Callbacks
 
-    fun mouseButtonCallback(window: Long, button: Int, action: Int, mods: Int) {
-        if (!button.isValidIndex()) return
-        lastButton = button
-        lastAction = action
-        when (action) {
-            GLFW_PRESS -> {
-                setButtonDown(button, true)
-                pressed = true
-            }
-
-            GLFW_RELEASE -> {
-                setButtonDown(button, false)
-                pressed = false
-            }
-        }
-        pollMouseButtons()
+    open fun mouseButtonCallback(window: Long, button: Int, action: Int, mods: Int) {
     }
 
     override fun mousePressed(e: MouseEvent) {
-        if (e.button.isValidIndex()) {
-            setButtonDown(e.button, true)
-            pressed = true
-            clicks = e.clickCount
-        }
     }
 
     override fun mouseReleased(e: MouseEvent) {
-        if (e.button.isValidIndex()) {
-            setButtonDown(e.button, false)
-            setMouseDisp(0, 0)
-            pressed = false
-            clicks = 0
-        }
     }
 
     // Mouse Movement Callbacks
 
-    fun mousePosCallback(window: Long, xPos: Double, yPos: Double) {
-        if (pressed) {
-            setMouseDisp(xPos - mousePosPx.x, yPos - mousePosPx.y)
-        }
-        setMousePos(xPos, yPos)
+    open fun mousePosCallback(window: Long, xPos: Double, yPos: Double) {
     }
 
     override fun mouseMoved(e: MouseEvent) {
-        setMousePos(e.x, e.y)
     }
 
     override fun mouseDragged(e: MouseEvent) {
-        pressed = true
-        setMouseDisp(e.x - mousePosPx.x, e.y - mousePosPx.y)
-        setMousePos(e.x, e.y)
     }
 
     // Mouse Scroll Callbacks
 
-    fun mouseScrollCallback(window: Long, xOffset: Double, yOffset: Double) {
-        setScrollPos(xOffset, yOffset)
+    open fun mouseScrollCallback(window: Long, xOffset: Double, yOffset: Double) {
     }
 
     override fun mouseWheelMoved(e: MouseWheelEvent) {
-        setScrollPos(e.x, e.y)
     }
 
     // Mouse Button Getters
@@ -180,29 +140,38 @@ class MouseInput internal constructor() : MouseAdapter() {
         return button.isValidIndex() && buttons[button].pressed
     }
 
-    private fun setButtonDown(button: Int, down: Boolean) {
+    protected fun setButtonDown(button: Int, down: Boolean) {
         buttons[button].down = down
+    }
+
+    protected fun setPressed(pressed: Boolean) {
+        this.pressed = pressed
+    }
+
+    protected fun setClicks(clicks: Int){
+        this.clicks = clicks
     }
 
     // Mouse Movement Helper Methods
 
-    private fun setMousePos(x: Number, y: Number) {
+    protected fun setMousePos(x: Number, y: Number) {
         mousePosPx.set(x.toFloat(), y.toFloat())
     }
 
-    private fun setMouseDisp(dx: Number, dy: Number) {
+    protected fun setMouseDisp(dx: Number, dy: Number) {
         mouseDispPx.set(dx.toFloat(), dy.toFloat())
     }
 
     // Mouse Scroll Helper Methods
 
-    private fun setScrollPos(scrollX: Number, scrollY: Number) {
+    protected fun setScrollPos(scrollX: Number, scrollY: Number) {
         scroll.set(scrollX.toFloat(), scrollY.toFloat())
     }
+
+    protected fun Int.isValidIndex(): Boolean = this in 0 until NUM_BUTTONS
 
 }
 
 // Helper Extensions
 private fun Vec2.invertY(): Vec2 = this * Vec2(1f, -1f)
 private fun Vec2.toWorld(): Vec2 = this / SceneManager.currentScene.scale
-private fun Int.isValidIndex(): Boolean = this in 0 until NUM_BUTTONS
