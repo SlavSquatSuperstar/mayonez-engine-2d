@@ -32,7 +32,7 @@ open class Polygon(sort: Boolean, vararg vertices: Vec2) : Shape() {
 
     /** The points that define the shape of this polygon. */
     val vertices: Array<Vec2> =
-        if (sort) PolygonVertices.orderedConvexHull(arrayOf(*vertices))
+        if (sort) ConvexHull.orderedConvexHull(arrayOf(*vertices))
         else arrayOf(*vertices)
 
     /** The number of vertices and edges of this polygon, n. */

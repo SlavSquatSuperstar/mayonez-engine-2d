@@ -9,8 +9,9 @@ import kotlin.math.*
  *
  * @author SlavSquatSuperstar
  */
-// TODO split into classes
 object PolygonVertices {
+
+    internal const val MIN_VERTICES: Int = 3
 
     /**
      * Orders a list of vertices in the counterclockwise direction. The output
@@ -18,30 +19,32 @@ object PolygonVertices {
      *
      * Source: [Baeldung](https://www.baeldung.com/cs/sort-points-clockwise)
      *
-     * @param vertices an array of vertices
-     * @return the ordered array of vertices
+     * @param vertices an array of vertices, may be concave
+     * @return the ordered array of vertices, or a copy if the input has 2 or
+     *     fewer points
      */
     fun orderedVertices(vertices: Array<Vec2>): Array<Vec2> {
-        if (vertices.size < 3) return vertices.copyOf()
+        if (vertices.size < MIN_VERTICES) return vertices.copyOf()
 
         val start = vertices[vertices.getMinCoordsPointIdx()]
-        val center = vertices.getCenterPoint()
+        val center = vertices.getAveragePoint()
 
         val sorted = vertices.copyOf()
-        Arrays.sort(sorted) { v1, v2 -> v1.compareOrder(v2, center, start) }
+        Arrays.sort(sorted) { v1, v2 -> v1.compareVertexOrder(v2, start, center) }
         return sorted
     }
 
-    private fun Array<Vec2>.getCenterPoint(): Vec2 {
+    private fun Array<Vec2>.getAveragePoint(): Vec2 {
         var center = Vec2()
         this.forEach { center += it }
         return center / this.size.toFloat()
     }
 
-    private fun Vec2.compareOrder(other: Vec2, center: Vec2, start: Vec2): Int {
+    private fun Vec2.compareVertexOrder(other: Vec2, start: Vec2, center: Vec2): Int {
         val startDir = start - center
         val dir1 = this - center
         val dir2 = other - center
+        // todo use orientation
         if (dir1.posAngle(startDir) < dir2.posAngle(startDir)) {
             // pick smaller angle
             return -1
@@ -52,85 +55,13 @@ object PolygonVertices {
         return 1
     }
 
-    /**
-     * Creates a convex hull ordered counterclockwise from an array of vertices
-     * using the Jarvis March algorithm. The convex hull is the smallest
-     * polygon that contains all the vertices.
-     *
-     * Source: [Baeldung](https://www.baeldung.com/cs/sort-points-clockwise)
-     */
-    fun orderedConvexHull(vertices: Array<Vec2>): Array<Vec2> {
-        val size = vertices.size
-        if (size < 3) return vertices.copyOf()
 
-        val hull = ArrayList<Vec2>(size)
-
-        val leftMost = vertices.getMinCoordsPointIdx()
-        hull.add(vertices[leftMost])
-
-        hull.addConvexHullPoints(leftMost, vertices)
-        return hull.toTypedArray()
-    }
-
-    private fun ArrayList<Vec2>.addConvexHullPoints(
-        vFirst: Int, vertices: Array<Vec2>
-    ) {
-        val numVertices = vertices.size
-        var vStart = vFirst
-        while (this.size <= numVertices) {
-            var vCurr = (vStart + 1) % numVertices // current most clockwise point (next point in hull)
-            for (i in vertices.indices) { // find the most clockwise point
-                if (i == vStart || i == vCurr) continue
-                // find the most clockwise point from current point
-                vCurr = vertices.findNextClockwisePoint(vStart, vCurr, i)
-            }
-            vStart = vCurr // update start point
-            if (vStart == vFirst) break // loop until reaching leftmost point
-            else this.add(vertices[vCurr]) // add most clockwise point to hull
-        }
-    }
-
-    private fun Array<Vec2>.findNextClockwisePoint(
-        vStart: Int, vCurr: Int, vNext: Int
-    ): Int {
-        val ptA = this[vStart]
-        val ptB = this[vCurr]
-        val ptC = this[vNext]
-
-        return when (getOrientation(ptA, ptB, ptC)) {
-            Orientation.COUNTERCLOCKWISE -> vNext
-            Orientation.CLOCKWISE -> vCurr
-            Orientation.COLLINEAR -> {
-                val nextPointIsFurther = ptA.distanceSq(ptC) > ptA.distanceSq(ptB)
-                if (nextPointIsFurther) vNext
-                else vCurr
-            }
-        }
-    }
-
-    private fun getOrientation(ptA: Vec2, ptB: Vec2, ptC: Vec2): Orientation {
-        /*
-         * To determine the orientation of three points A, B, C:
-         * Find the cross product of AB and BC.
-         * - If positive, then counterclockwise
-         * - If negative, then clockwise
-         * - If zero, then collinear
-         */
-        val vecAB = ptB - ptA
-        val vecBC = ptC - ptB
-        val orientation = vecAB.cross(vecBC)
-        return when {
-            orientation < 0f -> Orientation.COUNTERCLOCKWISE
-            orientation > 0f -> Orientation.CLOCKWISE
-            else -> Orientation.COLLINEAR
-        }
-    }
 
     /**
      * Get the leftmost point, or select the bottommost point if multiple
      * points are found.
      */
-    private fun Array<Vec2>.getMinCoordsPointIdx(): Int {
+    internal fun Array<Vec2>.getMinCoordsPointIdx(): Int {
         var minIdx = 0
         for (i in this.indices) {
             val min = this[minIdx]
@@ -171,10 +102,6 @@ object PolygonVertices {
         return FloatMath.equals(abs(this), abs(other))
     }
 
-    private enum class Orientation {
-        COUNTERCLOCKWISE,
-        CLOCKWISE,
-        COLLINEAR
-    }
+
 
 }
