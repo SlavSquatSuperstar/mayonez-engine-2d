@@ -28,7 +28,7 @@ final class JWindow extends JFrame implements Window {
     private boolean closedByUser;
 
     // Input Fields
-    private KeyManager keyboard;
+    private KeyInput keyboard;
     private MouseManager mouse;
 
     JWindow(String title, int width, int height) {
@@ -68,7 +68,7 @@ final class JWindow extends JFrame implements Window {
 
     @Override
     public void beginFrame() {
-        if (Input.keyDown("escape")) closedByUser = true;
+        if (KeyInput.keyDown("escape")) closedByUser = true;
     }
 
     @Override
@@ -128,9 +128,8 @@ final class JWindow extends JFrame implements Window {
     // Input Methods
 
     @Override
-    public void setKeyInput(KeyManager keyboard) {
+    public void setKeyInput(KeyInput keyboard) {
         this.keyboard = keyboard;
-        Input.setKeyboardInstance(keyboard);
         addKeyListener(keyboard);
     }
 

@@ -6,6 +6,8 @@ import mayonez.math.*
 import mayonez.math.shapes.*
 import mayonez.util.*
 
+private val DEFAULT_COLOR: MColor = Colors.BLACK
+
 /**
  * Allows colliders and shapes to be manually drawn onto the screen through
  * the scene's [DebugRenderer]. All shapes are specified using world
@@ -14,10 +16,6 @@ import mayonez.util.*
  * @author SlavSquatSuperstar
  */
 class DebugDraw internal constructor(private val scale: Float, private val debugRenderer: DebugRenderer) {
-
-    companion object {
-        private val DEFAULT_COLOR: MColor = Colors.BLACK
-    }
 
     // Public Draw
     /**

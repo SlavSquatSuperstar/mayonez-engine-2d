@@ -88,8 +88,8 @@ public class SpaceGameScene extends Scene {
     @Override
     protected void onUserUpdate(float dt) {
         // camera controls
-        getCamera().rotate(Input.getAxis("arrows horizontal"));
-        getCamera().zoom(1 + 0.01f * Input.getAxis("arrows vertical"));
+        getCamera().rotate(KeyInput.getAxis("arrows horizontal"));
+        getCamera().zoom(1 + 0.01f * KeyInput.getAxis("arrows vertical"));
     }
 
     @Override

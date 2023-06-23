@@ -35,7 +35,7 @@ class Mario extends GameObject {
         addComponent(new Script() {
             @Override
             public void update(float dt) {
-                transform.scale(new Vec2(1 + 0.05f * Input.getAxis("plus minus")));
+                transform.scale(new Vec2(1 + 0.05f * KeyInput.getAxis("plus minus")));
             }
         });
     }

@@ -1,7 +1,6 @@
 package mayonez.input
 
 import mayonez.math.*
-import mayonez.util.*
 
 /**
  * Allows the user to query input events from any class using the window's
@@ -11,78 +10,11 @@ import mayonez.util.*
  */
 object Input {
 
-    // TODO make nullable?
-    private lateinit var keyboardInstance: KeyManager
     private lateinit var mouseInstance: MouseManager
-
-    @JvmStatic
-    fun setKeyboardInstance(keyboard: KeyManager) {
-        this.keyboardInstance = keyboard
-    }
 
     @JvmStatic
     fun setMouseInstance(mouse: MouseManager) {
         this.mouseInstance = mouse
-    }
-
-    // Key Getters
-
-    @JvmStatic
-    fun keyDown(key: Key?): Boolean {
-        return keyboardInstance.keyDown(key)
-    }
-
-    @JvmStatic
-    fun keyPressed(key: Key?): Boolean {
-        return keyboardInstance.keyPressed(key)
-    }
-
-    /**
-     * Whether the user has started pressing the [mayonez.input.Key] with the
-     * specified name this frame.
-     *
-     * @param keyName the name of the key
-     * @return if the specified key is pressed
-     */
-    @JvmStatic
-    fun keyDown(keyName: String): Boolean {
-        return keyboardInstance.keyDown(Key.findWithName(keyName))
-    }
-
-    /**
-     * Whether the user is continuously holding down the [mayonez.input.Key]
-     * with the specified name.
-     *
-     * @param keyName the name of the key
-     * @return if the specified key is pressed
-     */
-    @JvmStatic
-    fun keyPressed(keyName: String): Boolean {
-        return keyboardInstance.keyPressed(Key.findWithName(keyName))
-    }
-
-    /**
-     * Get the value of the specified [mayonez.input.KeyAxis].
-     *
-     * @param axis an axis enum constant
-     * @return the axis value, either -1, 0, or 1
-     */
-    @JvmStatic
-    fun getAxis(axis: KeyAxis?): Int {
-        return axis?.value() ?: 0
-    }
-
-    /**
-     * Get the value of the [mayonez.input.KeyAxis] with the specified name.
-     *
-     * @param axisName the name of the axis
-     * @return the axis value, either -1, 0, or 1
-     */
-    @JvmStatic
-    fun getAxis(axisName: String): Int {
-        return getAxis(
-            StringUtils.findConstantWithName(KeyAxis.values(), axisName)
-        )
     }
 
     // Mouse State Getters

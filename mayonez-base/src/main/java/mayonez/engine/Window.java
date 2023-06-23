@@ -62,9 +62,9 @@ sealed interface Window permits JWindow, GLWindow {
      * Set the keyboard listener for this window and mark it as the active
      * instance for the input manager.
      *
-     * @param keyboard a {@link mayonez.input.KeyManager} instance
+     * @param keyboard a {@link mayonez.input.KeyInput} instance
      */
-    void setKeyInput(KeyManager keyboard);
+    void setKeyInput(KeyInput keyboard);
 
     /**
      * Set the mouse listener for this window and mark it as the active

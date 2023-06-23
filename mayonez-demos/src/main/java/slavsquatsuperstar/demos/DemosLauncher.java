@@ -60,13 +60,13 @@ public class DemosLauncher {
     }
 
     private static void pollSceneControls() {
-        if (Input.keyPressed("r")) {
+        if (KeyInput.keyPressed("r")) {
             SceneManager.restartScene();
-        } else if (Input.keyPressed("p")) {
+        } else if (KeyInput.keyPressed("p")) {
             SceneManager.toggleScenePaused(); // this is being run twice per frame in SpaceGameScene
-        } else if (Input.keyDown("left shift")) {
+        } else if (KeyInput.keyDown("left shift")) {
             for (var i = 0; i < sceneNames.length; i++) {
-                if (Input.keyPressed(String.valueOf(i + 1))) SceneManager.loadScene(sceneNames[i]);
+                if (KeyInput.keyPressed(String.valueOf(i + 1))) SceneManager.loadScene(sceneNames[i]);
             }
         }
     }

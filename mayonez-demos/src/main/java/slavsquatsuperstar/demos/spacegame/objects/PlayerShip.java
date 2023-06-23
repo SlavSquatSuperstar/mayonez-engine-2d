@@ -49,10 +49,10 @@ public class PlayerShip extends GameObject {
             @Override
             public void update(float dt) {
                 super.update(dt);
-                if (Input.keyPressed("1")) {
+                if (KeyInput.keyPressed("1")) {
                     weaponChoice = 1;
                     setCooldown(0.2f);
-                } else if (Input.keyPressed("2")) {
+                } else if (KeyInput.keyPressed("2")) {
                     weaponChoice = 2;
                     setCooldown(0.4f);
                 }

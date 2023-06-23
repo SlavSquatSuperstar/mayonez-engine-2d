@@ -39,12 +39,12 @@ public class PlayerController extends Script {
     public void update(float dt) {
         if (getScene() instanceof GDLevel) {
             // Jump if on ground
-            if (Input.keyDown("w")) {
+            if (KeyInput.keyDown("w")) {
                 // Impulse must be big enough to not get stuck on ground next frame
                 rb.applyImpulse(new Vec2(0, speed));
             }
             // Ground Pound if in air
-            if (Input.keyDown("s")) {
+            if (KeyInput.keyDown("s")) {
                 rb.applyImpulse(new Vec2(0, -speed));
             }
         }

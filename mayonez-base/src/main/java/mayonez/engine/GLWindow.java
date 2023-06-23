@@ -31,7 +31,7 @@ final class GLWindow implements Window {
     private final int width, height;
 
     // Input Fields
-    private KeyManager keyboard;
+    private KeyInput keyboard;
     private MouseManager mouse;
 
     GLWindow(String title, int width, int height) {
@@ -154,7 +154,7 @@ final class GLWindow implements Window {
     @Override
     public void beginFrame() {
         glfwPollEvents();
-        if (Input.keyDown(Key.ESCAPE)) {
+        if (KeyInput.keyDown(Key.ESCAPE)) {
             glfwSetWindowShouldClose(window, true); // Exit program by pressing escape
         }
     }
@@ -176,9 +176,8 @@ final class GLWindow implements Window {
     // Input Methods
 
     @Override
-    public void setKeyInput(KeyManager keyboard) {
+    public void setKeyInput(KeyInput keyboard) {
         this.keyboard = keyboard;
-        Input.setKeyboardInstance(keyboard);
         glfwSetKeyCallback(window, keyboard::keyCallback);
     }
 
