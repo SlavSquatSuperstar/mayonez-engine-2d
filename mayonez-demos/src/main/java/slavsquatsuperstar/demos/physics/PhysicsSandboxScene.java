@@ -15,7 +15,7 @@ import mayonez.util.*;
  *
  * @author SlavSquatSupertar
  */
-public class SandboxScene extends Scene {
+public class PhysicsSandboxScene extends Scene {
 
     private static final PhysicsMaterial NORMAL_MATERIAL = new PhysicsMaterial(0.4f, 0.4f, 0.3f);
     private static final PhysicsMaterial BOUNCY_MATERIAL = new PhysicsMaterial(0f, 0f, 1f);
@@ -24,15 +24,14 @@ public class SandboxScene extends Scene {
 
     private boolean enabledGravity;
 
-    public SandboxScene(String name) {
+    public PhysicsSandboxScene(String name) {
         super(name, Preferences.getScreenWidth(), Preferences.getScreenHeight(), 10);
     }
 
     @Override
     protected void init() {
         setBackground(Colors.WHITE);
-        setGravity(new Vec2());
-        enabledGravity = false;
+        setGravityEnabled(true);
 
         // Add Test Objects
         addObject(createStaticBox("Left Ramp", new Vec2(-25, 20), new Vec2(36, 4), -20));
@@ -49,9 +48,10 @@ public class SandboxScene extends Scene {
     @Override
     protected void onUserUpdate(float dt) {
         // Toggle Gravity
-        if (KeyInput.keyPressed("space")) enabledGravity = !enabledGravity;
-        if (enabledGravity) setGravity(new Vec2(0, -9.8f));
-        else setGravity(new Vec2());
+        if (KeyInput.keyPressed("space")) {
+            enabledGravity = !enabledGravity;
+            setGravityEnabled(enabledGravity);
+        }
 
         // Create Random Shapes
         if (!KeyInput.keyDown("left shift")) {
@@ -142,7 +142,6 @@ public class SandboxScene extends Scene {
             @Override
             protected void init() {
                 transform.setRotation(Random.randomFloat(0f, 360f));
-                // balls are not rendered correctly if rotated
 
                 Collider col;
                 switch (type) {
@@ -179,4 +178,10 @@ public class SandboxScene extends Scene {
     private PhysicsMaterial randomMaterial() {
         return new PhysicsMaterial(Random.randomFloat(0f, 1f), Random.randomFloat(0f, 1f), Random.randomFloat(0f, 1f));
     }
+
+    private void setGravityEnabled(boolean enabled) {
+        if (enabled) setGravity(new Vec2(-0, -9.8f));
+        else setGravity(new Vec2());
+    }
+
 }

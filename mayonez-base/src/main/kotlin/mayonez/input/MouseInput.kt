@@ -17,8 +17,12 @@ object MouseInput : MouseAdapter() {
     // Use arrays instead of hashmaps because very few buttons, GLFW uses max 8
     private const val NUM_BUTTONS: Int = 8
     private val buttons: Array<MappingStatus> = Array(NUM_BUTTONS) { MappingStatus() }
+
+    // Mouse State Fields
     private var lastButton: Int = -1
     private var lastAction: Int = -1
+    private var pressed: Boolean = false
+    private var clicks: Int = 1
 
     // Mouse Movement Fields
     private var mousePosPx = Vec2()
@@ -27,21 +31,6 @@ object MouseInput : MouseAdapter() {
 
     // Mouse Scroll Fields
     private var scroll = Vec2()
-
-    // Mouse State Properties
-
-    @JvmStatic
-    var pressed: Boolean = false
-        @JvmName("isPressed") get
-        private set
-
-    @JvmStatic
-    val released: Boolean
-        @JvmName("isReleased") get() = !pressed
-
-    @JvmStatic
-    var clicks: Int = 1
-        private set
 
     // Game Loop Methods
 
@@ -208,30 +197,50 @@ object MouseInput : MouseAdapter() {
 
     // Mouse Movement Getters
 
-    /** Get the position of the cursor in the screen, in pixels */
+    /**
+     * Get the position of the cursor on the screen, in pixels.
+     *
+     * @return the screen position
+     */
     @JvmStatic
-    val screenPosition: Vec2
-        get() = mousePosPx
+    fun getScreenPosition(): Vec2 = mousePosPx
 
-    /** Get the position of the cursor in the world, in world units. */
+    /**
+     * Get the position of the cursor in the scene, in world units.
+     *
+     * @return the world position
+     */
     @JvmStatic
-    val position: Vec2
-        get() = SceneManager.currentScene.camera.toWorld(mousePosPx)
+    fun getPosition(): Vec2 = SceneManager.currentScene.camera.toWorld(mousePosPx)
 
-    /** Get the drag displacement of the cursor in the world, in world units. */
+    /**
+     * Get the drag displacement of the cursor on the screen, in pixels.
+     *
+     * @return the screen displacement
+     */
     @JvmStatic
-    val screenDisplacement: Vec2
-        get() = mouseDispPx
+    fun getScreenDisplacement(): Vec2 = mouseDispPx
 
-    /** Get the drag displacement of the cursor in the screen, in pixels */
+    /**
+     * Get the drag displacement of the cursor in the scene, in world units.
+     *
+     * @return the world displacement
+     */
     @JvmStatic
-    val displacement: Vec2
-        get() = mouseDispPx.invertY().toWorld()
-
-    private fun Vec2.invertY(): Vec2 = this * Vec2(1f, -1f)
-    private fun Vec2.toWorld(): Vec2 = this / SceneManager.currentScene.scale
+    fun getDisplacement(): Vec2 = mouseDispPx.invertY().toWorld()
 
     // TODO Mouse Scroll Getters
+
+    // Mouse State Getters
+
+    @JvmStatic
+    fun isPressed(): Boolean = pressed
+
+    @JvmStatic
+    fun isReleased(): Boolean = !pressed
+
+    @JvmStatic
+    fun getClicks(): Int = clicks
 
     // Mouse Button Helper Methods
 
@@ -256,6 +265,10 @@ object MouseInput : MouseAdapter() {
     private fun setMouseDisp(dx: Number, dy: Number) {
         mouseDispPx.set(dx.toFloat(), dy.toFloat())
     }
+
+    private fun Vec2.invertY(): Vec2 = this * Vec2(1f, -1f)
+
+    private fun Vec2.toWorld(): Vec2 = this / SceneManager.currentScene.scale
 
     // Mouse Scroll Helper Methods
 

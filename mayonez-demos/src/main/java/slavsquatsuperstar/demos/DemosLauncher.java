@@ -5,7 +5,7 @@ import mayonez.init.*;
 import mayonez.input.*;
 import slavsquatsuperstar.demos.mario.MarioScene;
 import slavsquatsuperstar.demos.physics.PoolBallsScene;
-import slavsquatsuperstar.demos.physics.SandboxScene;
+import slavsquatsuperstar.demos.physics.PhysicsSandboxScene;
 import slavsquatsuperstar.demos.spacegame.SpaceGameScene;
 
 /**
@@ -42,7 +42,7 @@ public class DemosLauncher {
                         pollSceneControls();
                     }
                 },
-                new SandboxScene(sceneNames[2]) {
+                new PhysicsSandboxScene(sceneNames[2]) {
                     @Override
                     protected void onUserUpdate(float dt) {
                         super.onUserUpdate(dt);
