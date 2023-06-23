@@ -5,8 +5,8 @@ import mayonez.math.shapes.*
 import kotlin.math.*
 
 /**
- * Detects if two shapes are colliding and finds their penetration using the
- * separating-axis theorem (SAT).
+ * Detects if two shapes are colliding and finds their penetration using
+ * the separating-axis theorem (SAT).
  *
  * @author SlavSquatSuperstar
  */
@@ -70,46 +70,31 @@ internal class SATDetector : CollisionDetector<Shape>, PenetrationSolver {
     }
 
     // SAT Helpers
-    companion object {
-        /**
-         * Whether a collision involving the given shape can be efficiently
-         * detected. SAT detection works best with polygons with a small vertex
-         * count (boxes and triangles) and also supports circle-polygon collisions.
-         */
-        internal fun preferred(shape: Shape): Boolean { // use SAT for boxes, triangles, and circles
-            return when (shape) {
-                is Circle -> true
-                is Polygon -> shape.numVertices <= 4
-                // TODO need to test edge colliders
-                else -> false
-            }
-        }
 
-        private fun Polygon.projectOnAxis(axis: Vec2): Interval { // positive is in axis direction
-            val projections = FloatArray(this.numVertices) { this.vertices[it].dot(axis) }
-            return Interval(FloatMath.min(*projections), FloatMath.max(*projections))
-        }
-
-        /** Whether two intervals overlap each other on this axis. */
-        private fun Vec2.hasOverlap(poly1: Polygon, poly2: Polygon): Boolean {
-            val range1 = poly1.projectOnAxis(this)
-            val range2 = poly2.projectOnAxis(this)
-            return range1.overlaps(range2)
-        }
-
-        /**
-         * Calculate the overlap between two intervals on this axis, or return null
-         * if they do not overlap.
-         */
-        private fun Vec2.getOverlap(poly1: Polygon, poly2: Polygon): Float? {
-            val range1 = poly1.projectOnAxis(this)
-            val range2 = poly2.projectOnAxis(this)
-            if (!range1.overlaps(range2)) return null
-            return min(range2.max - range1.min, range1.max - range2.min)
-        }
-
-        /** Whether two intervals overlap each other. */
-        private fun Interval.overlaps(other: Interval): Boolean = (this.min <= other.max) && (this.max >= other.min)
-
+    /** Whether two intervals overlap each other on this axis. */
+    private fun Vec2.hasOverlap(poly1: Polygon, poly2: Polygon): Boolean {
+        val range1 = poly1.projectOnAxis(this)
+        val range2 = poly2.projectOnAxis(this)
+        return range1.overlaps(range2)
     }
+
+    /**
+     * Calculate the overlap between two intervals on this axis, or return null
+     * if they do not overlap.
+     */
+    private fun Vec2.getOverlap(poly1: Polygon, poly2: Polygon): Float? {
+        val range1 = poly1.projectOnAxis(this)
+        val range2 = poly2.projectOnAxis(this)
+        if (!range1.overlaps(range2)) return null
+        return min(range2.max - range1.min, range1.max - range2.min)
+    }
+
+    private fun Polygon.projectOnAxis(axis: Vec2): Interval { // positive is in axis direction
+        val projections = FloatArray(this.numVertices) { this.vertices[it].dot(axis) }
+        return Interval(FloatMath.min(*projections), FloatMath.max(*projections))
+    }
+
+    /** Whether two intervals overlap each other. */
+    private fun Interval.overlaps(other: Interval): Boolean = (this.min <= other.max) && (this.max >= other.min)
+
 }

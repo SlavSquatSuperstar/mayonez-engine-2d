@@ -36,10 +36,8 @@ internal object IntersectionDetector : CollisionDetector<Shape> {
         val dir2 = edge2.toVector() / edge2.length
         val cross = dir1.cross(dir2)
 
-        // If lines are parallel, then they must be overlapping
-        return if (FloatMath.equals(cross, 0f)) {
-            ((edge2.start in edge1 || edge2.end in edge1)
-                    || (edge1.start in edge2 || edge1.end in edge2))
+        return if (FloatMath.equals(cross, 0f)) { // Lines are parallel
+            doEdgesOverlap(edge1, edge2)
         } else {
             // Calculate intersection point
             val diffStarts = edge2.start - edge1.start
@@ -47,8 +45,17 @@ internal object IntersectionDetector : CollisionDetector<Shape> {
             val dist2 = diffStarts.cross(dir1) / cross
 
             // Contact must be in both lines
-            FloatMath.inRange(dist1, 0f, edge1.length) && FloatMath.inRange(dist2, 0f, edge2.length)
+            FloatMath.inRange(dist1, 0f, edge1.length) &&
+                    FloatMath.inRange(dist2, 0f, edge2.length)
         }
+    }
+
+    private fun doEdgesOverlap(edge1: Edge, edge2: Edge): Boolean {
+        return edge1.containsEndpoint(edge2) || edge2.containsEndpoint(edge1)
+    }
+
+    private fun Edge.containsEndpoint(other: Edge): Boolean {
+        return this.start in other || this.end in other
     }
 
     /**
@@ -61,18 +68,22 @@ internal object IntersectionDetector : CollisionDetector<Shape> {
      */
     private fun intersectRectangles(rect1: Rectangle, rect2: Rectangle): Boolean {
         return if (rect1.isAxisAligned && rect2.isAxisAligned) {
-            // Perform SAT on x-axis
-            val min1 = rect1.min()
-            val max1 = rect1.max()
-            val min2 = rect2.min()
-            val max2 = rect2.max()
-            // a.min <= b.max && a.max <= b.min
-            val satX = (min1.x <= max2.x) && (min2.x <= max1.x)
-            val satY = (min1.y <= max2.y) && (min2.y <= max1.y)
-            return satX && satY
+            return intersectAABBs(rect1, rect2)
         } else {
             SATDetector().checkIntersection(rect1, rect2)
         }
+    }
+
+    private fun intersectAABBs(rect1: Rectangle, rect2: Rectangle): Boolean {
+        // Perform SAT on x-axis
+        val min1 = rect1.min()
+        val max1 = rect1.max()
+        val min2 = rect2.min()
+        val max2 = rect2.max()
+        // a.min <= b.max && a.max <= b.min
+        val overlapsX = (min1.x <= max2.x) && (min2.x <= max1.x)
+        val overlapsY = (min1.y <= max2.y) && (min2.y <= max1.y)
+        return overlapsX && overlapsY
     }
 
 }

@@ -45,7 +45,8 @@ class PolygonTest {
         assertFloatEquals(poly.angularMass(5), rect.angularMass(5));
 
         var p1 = new Vec2(1, 1);
-        assertTrue(poly.contains(p1) && rect.contains(p1));
+        assertTrue(poly.contains(p1));
+        assertTrue(rect.contains(p1));
     }
 
     // Properties

@@ -69,8 +69,6 @@ public class KeepInScene extends Script {
     @Override
     public void update(float dt) {
         objectBounds = objectCollider.getMinBounds();
-        var boxMin = objectBounds.min();
-        var boxMax = objectBounds.max();
 
         // Edge Checking for x
         var sceneBoundsX = new Interval(minPos.x, maxPos.x);
