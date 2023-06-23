@@ -5,7 +5,7 @@ import mayonez.util.*;
 import java.util.*;
 
 /**
- * A data structure representing traits and behaviors of a {@link GameObject}.
+ * A data structure representing traits and behaviors of a {@link mayonez.GameObject}.
  *
  * @author SlavSquatSuperstar
  */
@@ -15,12 +15,12 @@ public abstract class Component {
     final long componentID; // internal UUID for this component
 
     /**
-     * The parent {@link GameObject} this component belongs to.
+     * The parent {@link mayonez.GameObject} this component belongs to.
      */
     protected GameObject gameObject;
 
     /**
-     * A reference to the parent object's {@link Transform}.
+     * A reference to the parent object's {@link mayonez.Transform}.
      */
     protected Transform transform; // use blank transform in case no parent
 
@@ -84,28 +84,22 @@ public abstract class Component {
     // should only be used by Scene class
 
     /**
-     * Adds this Component to a parent {@link GameObject}. Should only be used by the {@link Scene} class.
+     * Adds this Component to a parent {@link mayonez.GameObject}.
      *
      * @param gameObject a game object
-     * @return this component
      */
-    Component setGameObject(GameObject gameObject) {
+    void setGameObject(GameObject gameObject) {
         this.gameObject = gameObject;
         this.transform = gameObject.transform;
-        return this;
     }
 
     /**
-     * A reference to the {@link Scene} the parent object belongs to.
+     * A reference to the {@link mayonez.Scene} the parent object belongs to.
      *
      * @return the parent scene
      */
     public Scene getScene() {
         return gameObject.getScene();
-    }
-
-    public boolean isInScene(Scene scene) {
-        return scene != null && scene.equals(getScene()); // This could cause a NPE
     }
 
     public Transform getTransform() {

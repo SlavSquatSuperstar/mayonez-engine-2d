@@ -22,10 +22,9 @@ public abstract class Script extends Component {
     // Component Methods
 
     @Override
-    final Component setGameObject(GameObject gameObject) {
+    final void setGameObject(GameObject gameObject) {
         super.setGameObject(gameObject);
         init();
-        return this;
     }
 
     @SuppressWarnings({"unchecked"})

@@ -11,7 +11,8 @@ import java.util.*;
 import java.util.stream.*;
 
 /**
- * An object or entity in the game that can be given an appearance and behavior through {@link Component}s.
+ * An object or entity in the game that can be given an appearance and behavior through
+ * added {@link mayonez.Component} objects.
  *
  * @author SlavSquatSuperstar
  */
@@ -89,9 +90,9 @@ public class GameObject {
 //        Transform oldXf = transform.copy();
 //        if (parent != null) transform.set(parent.transform.combine(localTransform));
         // Update
-        components.forEach(c -> {
-            if (c.isEnabled()) c.update(dt);
-        });
+        components.stream()
+                .filter(Component::isEnabled)
+                .forEach(c -> c.update(dt));
         onUserUpdate(dt);
 //        while (!changesToObject.isEmpty()) changesToObject.poll().run();
 //        transform.set(oldXf); // Reset transform
@@ -118,12 +119,13 @@ public class GameObject {
     /**
      * Adds a component to this game object.
      *
-     * @param comp the {@link Component} object
+     * @param comp the {@link mayonez.Component} object
      */
     public final void addComponent(Component comp) {
         if (comp == null) return;
         checkForDuplicateComponentClass(comp);
-        components.add(comp.setGameObject(this));
+        comp.setGameObject(this);
+        components.add(comp);
     }
 
     private void checkForDuplicateComponentClass(Component comp) {
@@ -138,7 +140,7 @@ public class GameObject {
 //     * Removes the component of the specified class from this game object.
 //     *
 //     * @param cls the component class
-//     * @param <T> a subclass of {@link Component}
+//     * @param <T> a subclass of {@link mayonez.Component}
 //     */
 //    public <T extends Component> void removeComponent(Class<T> cls) {
 //        for (var comp : components) {
@@ -162,7 +164,7 @@ public class GameObject {
     /**
      * Finds the first component of the specified class or any of its subclasses, or null if none exists.
      *
-     * @param cls a {@link Component} subclass
+     * @param cls a {@link mayonez.Component} subclass
      * @param <T> the component type
      * @return the component, or null if not present
      */
@@ -176,7 +178,7 @@ public class GameObject {
     /**
      * Finds all components with the specified class or its subclasses.
      *
-     * @param cls a {@link Component} subclass
+     * @param cls a {@link mayonez.Component} subclass
      * @param <T> the component type
      * @return the list of components, or empty if none are present
      */
@@ -345,9 +347,13 @@ public class GameObject {
         return scene;
     }
 
-    final GameObject setScene(Scene scene) {
+    /**
+     * Adds this GameObject to a parent {@link mayonez.Scene}.
+     *
+     * @param scene a scene
+     */
+    final void setScene(Scene scene) {
         this.scene = scene;
-        return this;
     }
 
     public boolean hasTag(String tag) {

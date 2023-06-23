@@ -1,10 +1,10 @@
 package mayonez;
 
 import mayonez.graphics.Color;
-import mayonez.graphics.textures.*;
 import mayonez.graphics.camera.*;
 import mayonez.graphics.renderer.*;
 import mayonez.graphics.sprites.*;
+import mayonez.graphics.textures.*;
 import mayonez.math.Random;
 import mayonez.math.*;
 import mayonez.physics.*;
@@ -41,7 +41,6 @@ public abstract class Scene {
     private Camera camera;
 
     // Scene State
-//    private final Consumer<GameObject> addObject, removeObject;
     private final Queue<Runnable> changesToScene; // Use a separate list to avoid concurrent exceptions
     private SceneState state; // if paused or running
 
@@ -99,9 +98,10 @@ public abstract class Scene {
         addObject(CameraFactory.createCameraObject(camera));
     }
 
-    private void addObjectsToLayers() {
-        renderer.setScene(this);
-        physics.setScene(this);
+    /**
+     * Provide user-defined initialization behavior, such as adding necessary game objects or setting gravity.
+     */
+    protected void init() {
     }
 
     private void startSceneLayers() {
@@ -110,7 +110,12 @@ public abstract class Scene {
         physics.start();
     }
 
-    // Game Loop
+    private void addObjectsToLayers() {
+        renderer.setScene(this);
+        physics.setScene(this);
+    }
+
+    // Update Methods
 
     /**
      * Moves everything in the scene forward in time by a small increment, including physics, scripts, and UI.
@@ -119,8 +124,18 @@ public abstract class Scene {
      */
     public final void update(float dt) {
         onUserUpdate(dt);
-        if (isRunning()) updateSceneObjects(dt);
+        if (isRunning()) {
+            updateSceneObjects(dt);
+        }
         processSceneChanges();
+    }
+
+    /**
+     * Provide user-defined update behavior for this scene.
+     *
+     * @param dt seconds since the last frame
+     */
+    protected void onUserUpdate(float dt) {
     }
 
     private void updateSceneObjects(float dt) {
@@ -137,6 +152,8 @@ public abstract class Scene {
         while (!changesToScene.isEmpty()) changesToScene.poll().run();
     }
 
+    // Render Methods
+
     /**
      * Redraws everything in the current scene, including backgrounds, sprites, and UI.
      *
@@ -146,6 +163,12 @@ public abstract class Scene {
         onUserRender();
         renderer.render(g2);
         if (separateDebugRenderer()) debugRenderer.render(g2);
+    }
+
+    /**
+     * Provide user-defined draw behavior for this scene.
+     */
+    protected void onUserRender() {
     }
 
     // Stop Methods
@@ -171,28 +194,6 @@ public abstract class Scene {
         objects.clear();
     }
 
-    // User-Defined Methods
-
-    /**
-     * Provide user-defined initialization behavior, such as adding necessary game objects or setting gravity.
-     */
-    protected void init() {
-    }
-
-    /**
-     * Provide user-defined update behavior for this scene.
-     *
-     * @param dt seconds since the last frame
-     */
-    protected void onUserUpdate(float dt) {
-    }
-
-    /**
-     * Provide user-defined draw behavior for this scene.
-     */
-    protected void onUserRender() {
-    }
-
     // Object Methods
 
     /**
@@ -202,22 +203,29 @@ public abstract class Scene {
      */
     public final void addObject(GameObject obj) {
         if (obj == null) return;
-        if (isRunning()) {
-            changesToScene.offer(() -> this.addObjectToRunningScene(obj)); // Dynamic add: add to scene and layers in next frame
-        } else {
+        if (state == SceneState.STOPPED) {
+            // Static add: when not loaded
             addObjectToStoppedScene(obj);
+        } else {
+            // Dynamic add: when loaded (running or paused)
+            changesToScene.offer(() -> this.addObjectToRunningScene(obj));
         }
     }
 
-    private void addObjectToStoppedScene(GameObject o) {
-        objects.add(o.setScene(this));
+    private void addAndStartObject(GameObject o) {
+        o.setScene(this);
+        objects.add(o);
         o.start(); // add components first so renderer and physics can access it
+    }
+
+    private void addObjectToStoppedScene(GameObject o) {
+        addAndStartObject(o);
         Logger.debug("Added object \"%s\" to scene \"%s\"", o.getNameAndID(), this.name);
     }
 
     private void addObjectToRunningScene(GameObject o) {
-        objects.add(o.setScene(this));
-        o.start(); // add components first so renderer and physics can access it
+        ;
+        addAndStartObject(o);
         renderer.addObject(o);
         physics.addObject(o);
         Logger.debug("Added object \"%s\" to scene \"%s\"", o.getNameAndID(), this.name);
@@ -230,10 +238,10 @@ public abstract class Scene {
      */
     public final void removeObject(GameObject obj) {
         if (obj == null) return;
-        changesToScene.offer(() -> this.removeObjectFromSceneLayers(obj));
+        changesToScene.offer(() -> this.removeObjectFromLayers(obj));
     }
 
-    private void removeObjectFromSceneLayers(GameObject o) {
+    private void removeObjectFromLayers(GameObject o) {
         objects.remove(o);
         renderer.removeObject(o);
         physics.removeObject(o);
