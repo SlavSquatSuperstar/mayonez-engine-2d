@@ -29,7 +29,7 @@ final class JWindow extends JFrame implements Window {
 
     // Input Fields
     private KeyInput keyboard;
-    private MouseManager mouse;
+    private MouseInput mouse;
 
     JWindow(String title, int width, int height) {
         super(title);
@@ -134,9 +134,8 @@ final class JWindow extends JFrame implements Window {
     }
 
     @Override
-    public void setMouseInput(MouseManager mouse) {
+    public void setMouseInput(MouseInput mouse) {
         this.mouse = mouse;
-        Input.setMouseInstance(mouse);
         addMouseListener(mouse);
         addMouseMotionListener(mouse);
         addMouseWheelListener(mouse);

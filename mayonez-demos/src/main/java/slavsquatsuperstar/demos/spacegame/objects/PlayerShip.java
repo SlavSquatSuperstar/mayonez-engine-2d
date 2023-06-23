@@ -60,7 +60,7 @@ public class PlayerShip extends GameObject {
 
             @Override
             protected boolean readyToFire() {
-                return Input.buttonDown("left mouse");
+                return MouseInput.buttonDown("left mouse");
             }
 
             @Override

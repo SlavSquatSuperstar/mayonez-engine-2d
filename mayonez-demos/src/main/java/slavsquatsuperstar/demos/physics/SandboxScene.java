@@ -56,13 +56,13 @@ public class SandboxScene extends Scene {
         // Create Random Shapes
         if (!KeyInput.keyDown("left shift")) {
             if (KeyInput.keyPressed("1")) {
-                addObject(createRandomShape(Input.getMousePosition(), 1));
+                addObject(createRandomShape(MouseInput.getPosition(), 1));
             } else if (KeyInput.keyPressed("2")) {
-                addObject(createRandomShape(Input.getMousePosition(), 2));
+                addObject(createRandomShape(MouseInput.getPosition(), 2));
             } else if (KeyInput.keyPressed("3")) {
-                addObject(createRandomShape(Input.getMousePosition(), 3));
+                addObject(createRandomShape(MouseInput.getPosition(), 3));
             } else if (KeyInput.keyPressed("4")) {
-                addObject(createRandomShape(Input.getMousePosition(), 4));
+                addObject(createRandomShape(MouseInput.getPosition(), 4));
             }
         }
     }

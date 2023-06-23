@@ -35,7 +35,7 @@ public class ClickToMove extends MouseScript {
     // TODO will break if has velocity
     @Override
     public void update(float dt) {
-        if (Input.buttonPressed(button)) {
+        if (MouseInput.buttonPressed(button)) {
             updateLastPosition(); // Save old destination
             setDestination(getMousePos()); // Set new destination and calculate displacement
             moving = turning = true;

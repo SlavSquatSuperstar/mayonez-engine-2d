@@ -39,7 +39,7 @@ public class DragAndDrop extends MouseInputScript {
 
     @Override
     public void onMouseDown() {
-        if (activeInstance == null && Input.buttonPressed(button)) {
+        if (activeInstance == null && MouseInput.buttonPressed(button)) {
             activeInstance = this;
         }
     }

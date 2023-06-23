@@ -28,10 +28,10 @@ public class PlaceBlock extends Script implements JRenderable {
     @Override
     public void update(float dt) {
         // add 0.5 to x/y to center the block
-        var mousePos = Input.getMousePosition().add(new Vec2(0.5f)).floor();
+        var mousePos = MouseInput.getPosition().add(new Vec2(0.5f)).floor();
         transform.setPosition(mousePos);
         // null locks are still being placed
-        if (timer.isReady() && Input.buttonDown("left mouse")) {
+        if (timer.isReady() && MouseInput.buttonDown("left mouse")) {
             timer.reset();
             if (cursor != null) { // add only when selecting
                 // TODO shouldn't add if block already exists

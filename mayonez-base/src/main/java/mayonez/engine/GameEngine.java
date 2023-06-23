@@ -31,7 +31,7 @@ public abstract sealed class GameEngine permits JGameEngine, GLGameEngine {
         running = false;
         // Add input listeners
         window.setKeyInput(KeyInput.INSTANCE);
-        window.setMouseInput(InputManagerFactory.createMouseInput());
+        window.setMouseInput(MouseInput.INSTANCE);
     }
 
     // Main Game Loop Methods

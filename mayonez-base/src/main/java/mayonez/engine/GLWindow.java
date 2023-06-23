@@ -32,7 +32,7 @@ final class GLWindow implements Window {
 
     // Input Fields
     private KeyInput keyboard;
-    private MouseManager mouse;
+    private MouseInput mouse;
 
     GLWindow(String title, int width, int height) {
         this.title = title;
@@ -182,9 +182,8 @@ final class GLWindow implements Window {
     }
 
     @Override
-    public void setMouseInput(MouseManager mouse) {
+    public void setMouseInput(MouseInput mouse) {
         this.mouse = mouse;
-        Input.setMouseInstance(mouse);
         glfwSetMouseButtonCallback(window, mouse::mouseButtonCallback);
         glfwSetCursorPosCallback(window, mouse::mousePosCallback);
         glfwSetScrollCallback(window, mouse::mouseScrollCallback);

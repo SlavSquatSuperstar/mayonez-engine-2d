@@ -73,7 +73,7 @@ object KeyInput : KeyAdapter() {
      * [mayonez.input.Key].
      *
      * @param key a key enum constant
-     * @return if the specified key is pressed
+     * @return if the specified key is held
      */
     @JvmStatic
     fun keyDown(key: Key?): Boolean {
@@ -105,7 +105,7 @@ object KeyInput : KeyAdapter() {
      * specified name this frame.
      *
      * @param keyName the name of the key
-     * @return if the specified key is pressed
+     * @return if the specified key is held
      */
     @JvmStatic
     fun keyDown(keyName: String): Boolean {

@@ -70,8 +70,8 @@ sealed interface Window permits JWindow, GLWindow {
      * Set the mouse listener for this window and mark it as the active
      * instance for the input manager.
      *
-     * @param mouse a {@link mayonez.input.MouseManager} instance
+     * @param mouse a {@link mayonez.input.MouseInput} instance
      */
-    void setMouseInput(MouseManager mouse);
+    void setMouseInput(MouseInput mouse);
 
 }
