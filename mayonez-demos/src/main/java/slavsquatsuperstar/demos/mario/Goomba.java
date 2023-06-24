@@ -25,7 +25,7 @@ class Goomba extends GameObject {
     protected void init() {
         addComponent(sprite);
         addComponent(new BoxCollider(new Vec2(0.8f, 1)));
-        addComponent(new Rigidbody(1f).setFixedRotation(true));
+        addComponent(new Rigidbody(1f, 0.5f, 0f).setFixedRotation(true));
         addComponent(new DragAndDrop("left mouse"));
         addComponent(new Script() {
             @Override

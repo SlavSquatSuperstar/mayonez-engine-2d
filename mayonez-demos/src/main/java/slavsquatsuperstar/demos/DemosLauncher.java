@@ -23,7 +23,7 @@ public class DemosLauncher {
     public static void main(String[] args) {
         var launcher = new Launcher(args).setRunConfig();
         launcher.loadScenesToManager(getScenesToLoad());
-        launcher.startGame(sceneNames[0]);
+        launcher.startGame(sceneNames[1]);
     }
 
     private static Scene[] getScenesToLoad() {

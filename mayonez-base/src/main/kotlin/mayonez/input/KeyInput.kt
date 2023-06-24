@@ -101,8 +101,8 @@ object KeyInput : KeyAdapter() {
     }
 
     /**
-     * Whether the user has started pressing the [mayonez.input.Key] with the
-     * specified name this frame.
+     * Whether the user is continuously holding down the [mayonez.input.Key]
+     * with the specified name.
      *
      * @param keyName the name of the key
      * @return if the specified key is held
@@ -113,8 +113,8 @@ object KeyInput : KeyAdapter() {
     }
 
     /**
-     * Whether the user is continuously holding down the [mayonez.input.Key]
-     * with the specified name.
+     * Whether the user has started pressing the [mayonez.input.Key] with the
+     * specified name this frame.
      *
      * @param keyName the name of the key
      * @return if the specified key is pressed
