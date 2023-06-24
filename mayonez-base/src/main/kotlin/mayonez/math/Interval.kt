@@ -64,7 +64,8 @@ class Interval(min: Float, max: Float) {
     operator fun contains(interval: Interval): Boolean = (this.min <= interval.min) && (this.max >= interval.max)
 
     override fun equals(other: Any?): Boolean {
-        return (other is Interval) && FloatMath.equals(this.min, other.min) && FloatMath.equals(this.max, other.max)
+        return (other is Interval) && FloatMath.equals(this.min, other.min)
+                && FloatMath.equals(this.max, other.max)
     }
 
     override fun hashCode(): Int = Objects.hash(min, max)

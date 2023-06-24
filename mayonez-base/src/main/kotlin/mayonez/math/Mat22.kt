@@ -163,16 +163,18 @@ class Mat22 {
      */
     fun transpose(): Mat22 = Mat22(row(1), row(2))
 
-    // Overrides
-
-    override fun hashCode(): Int = Objects.hash(m00, m01, m10, m11)
+    // Object Overrides
 
     override fun equals(other: Any?): Boolean {
-        return if (other is Mat22)
-            FloatMath.equals(m00, other.m00) && FloatMath.equals(m01, other.m01)
-                    && FloatMath.equals(m10, other.m10) && FloatMath.equals(m11, other.m11)
-        else false
+        return (other is Mat22) && this.equalsMatrix(other)
     }
+
+    private fun equalsMatrix(other: Mat22): Boolean {
+        return FloatMath.equals(this.m00, other.m00) && FloatMath.equals(this.m01, other.m01)
+                && FloatMath.equals(this.m10, other.m10) && FloatMath.equals(this.m11, other.m11)
+    }
+
+    override fun hashCode(): Int = Objects.hash(m00, m01, m10, m11)
 
     /**
      * A string representation of this matrix, in the form [[(m00, m01), (m10,

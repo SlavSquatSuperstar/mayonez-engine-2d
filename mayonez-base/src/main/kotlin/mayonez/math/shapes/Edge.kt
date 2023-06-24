@@ -1,6 +1,7 @@
 package mayonez.math.shapes
 
 import mayonez.math.*
+import java.util.*
 import kotlin.math.*
 
 /**
@@ -85,35 +86,29 @@ class Edge(val start: Vec2, val end: Vec2) : Shape() {
      * other.
      */
     fun clipToSegment(segment: Edge): Edge {
-        val planeDir = segment.unitNormal()
-        val plane1 = Ray(segment.start, planeDir)
-        val plane2 = Ray(segment.end, planeDir)
-
-        // Find edge intersections with planes
         val edge = Ray(start, toVector() / length)
-        val contact1 = edge.getIntersection(plane1)
-        val contact2 = edge.getIntersection(plane2)
-
+        val (contact1, contact2) = edge.getIntersectionsWithPlanes(segment)
         if (contact1 == null || contact2 == null) return Edge(start, end) // plane is parallel to line
 
         // Clip edge to new endpoints
-        val distances = Interval((contact1 - start).dot(edge.direction), (contact2 - start).dot(edge.direction))
+        val distances = Interval(
+            (contact1 - start).dot(edge.direction),
+            (contact2 - start).dot(edge.direction)
+        )
         val minDist = max(0f, distances.min)
         val maxDist = min(length, distances.max)
         return Edge(edge.getPoint(minDist), edge.getPoint(maxDist))
     }
-//    fun clipToSegment(segment: Edge): Edge {
-//        // Find edge intersections with planes
-//        val edge = Ray(start, toVector() / length)
-//        val planeDist1 = (segment.start - this.start).dot(edge.direction)
-//        val planeDist2 = (segment.end - this.start).dot(edge.direction)
-//
-//        // Clip edge to new endpoints
-//        val dists = Range(planeDist1, planeDist2)
-//        val minDist = max(dists.min, 0f)
-//        val maxDist = min(dists.max, length)
-//        return Edge(edge.getPoint(minDist), edge.getPoint(maxDist))
-//    }
+
+    private fun Ray.getIntersectionsWithPlanes(segment: Edge): Pair<Vec2?, Vec2?> {
+        val planeDir = segment.unitNormal()
+        val plane1 = Ray(segment.start, planeDir)
+        val plane2 = Ray(segment.end, planeDir)
+
+        val contact1 = this.getIntersection(plane1)
+        val contact2 = this.getIntersection(plane2)
+        return Pair(contact1, contact2)
+    }
 
     // Lerp
 
@@ -135,12 +130,14 @@ class Edge(val start: Vec2, val end: Vec2) : Shape() {
      * @return the percent distance along the line
      */
     fun invLerp(point: Vec2): Float = (point - start).component(toVector()) / length
+
     // Bounds
 
     override fun boundingCircle(): Circle = Circle(center(), length * 0.5f)
 
-    override fun boundingRectangle(): BoundingBox =
-        BoundingBox(center(), Vec2(abs(end.x - start.x), abs(end.y - start.y)))
+    override fun boundingRectangle(): BoundingBox {
+        return BoundingBox(center(), Vec2(abs(end.x - start.x), abs(end.y - start.y)))
+    }
 
     // Edge vs Point
 
@@ -150,11 +147,11 @@ class Edge(val start: Vec2, val end: Vec2) : Shape() {
      * @param point a point
      * @return the absolute distance the point to this line
      */
-    fun distance(point: Vec2): Float {
-        return point.distance(nearestPoint(point))
-    }
+    fun distance(point: Vec2): Float = point.distance(nearestPoint(point))
 
-    override fun supportPoint(direction: Vec2): Vec2 = if (start.dot(direction) > end.dot(direction)) start else end
+    override fun supportPoint(direction: Vec2): Vec2 {
+        return if (start.dot(direction) > end.dot(direction)) start else end
+    }
 
     override fun nearestPoint(position: Vec2): Vec2 {
         val projLength = position.sub(start).dot(toVector()) / length // find point shadow on line
@@ -183,10 +180,15 @@ class Edge(val start: Vec2, val end: Vec2) : Shape() {
 
     // Transformations
 
-    override fun translate(direction: Vec2): Edge = Edge(start + direction, end + direction)
+    override fun translate(direction: Vec2): Edge {
+        return Edge(start + direction, end + direction)
+    }
 
     override fun rotate(angle: Float, origin: Vec2?): Edge {
-        return Edge(start.rotate(angle, origin ?: center()), end.rotate(angle, origin ?: center()))
+        return Edge(
+            start.rotate(angle, origin ?: center()),
+            end.rotate(angle, origin ?: center())
+        )
     }
 
     override fun scale(factor: Vec2, origin: Vec2?): Edge {
@@ -197,8 +199,11 @@ class Edge(val start: Vec2, val end: Vec2) : Shape() {
     // Overrides
 
     override fun equals(other: Any?): Boolean {
-        return (other is Edge) && (this.start == other.start && this.end == other.end)
+        return (other is Edge) && (this.start == other.start)
+                && (this.end == other.end)
     }
+
+    override fun hashCode(): Int = Objects.hash(start, end)
 
     /** A description of the edge in the form Edge (v1, v2) */
     override fun toString(): String = "Edge ($start, $end)"

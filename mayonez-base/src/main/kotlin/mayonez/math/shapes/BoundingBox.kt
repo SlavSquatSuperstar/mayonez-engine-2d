@@ -1,6 +1,7 @@
 package mayonez.math.shapes
 
 import mayonez.math.*
+import java.util.*
 
 /**
  * A non-rotatable, axis-oriented bounding box (AABB) with four edges and
@@ -39,10 +40,13 @@ open class BoundingBox(private val center: Vec2, private val size: Vec2) :
 
     // Transformations
 
-    override fun translate(direction: Vec2): BoundingBox = BoundingBox(center + direction, size)
+    override fun translate(direction: Vec2): BoundingBox {
+        return BoundingBox(center + direction, size)
+    }
 
-    override fun rotate(angle: Float, origin: Vec2?): BoundingBox =
+    override fun rotate(angle: Float, origin: Vec2?): BoundingBox {
         throw UnsupportedOperationException("Bounding boxes cannot be rotated")
+    }
 
 //    /**
 //     * Calculates the bounding box of a rectangle with the same size as this, rotated by the given angle.
@@ -56,26 +60,35 @@ open class BoundingBox(private val center: Vec2, private val size: Vec2) :
 //    }
 
     override fun scale(factor: Vec2, origin: Vec2?): BoundingBox {
-        return BoundingBox(if (origin == null) center else center.scale(factor, origin), size * factor)
+        return BoundingBox(
+            if (origin == null) center else center.scale(factor, origin),
+            size * factor
+        )
     }
 
     // Rectangle vs Point
 
     override fun nearestPoint(position: Vec2): Vec2 {
-        return if (position in this) position else position.clampInbounds(min(), max())
+        return if (position in this) position
+        else position.clampInbounds(min(), max())
     }
 
-    override fun contains(point: Vec2): Boolean = point.inRange(center - size * 0.5f, center + size * 0.5f)
+    override fun contains(point: Vec2): Boolean {
+        return point.inRange(center - size * 0.5f, center + size * 0.5f)
+    }
 
     // Overrides
 
     override fun equals(other: Any?): Boolean {
-        return (other is BoundingBox) && (this.center == other.center) && (this.size == other.size)
+        return (other is BoundingBox) && (this.center == other.center)
+                && (this.size == other.size)
     }
+
+    override fun hashCode(): Int = Objects.hash(center, size)
 
     /**
      * A description of the rectangle in the form "Bounding Box (x, y), Size:
-     * (b, h)
+     * (b, h)"
      */
     override fun toString(): String = String.format("Bounding Box $center, Size: $size")
 

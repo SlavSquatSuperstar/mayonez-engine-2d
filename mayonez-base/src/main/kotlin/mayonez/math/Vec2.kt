@@ -377,7 +377,10 @@ class Vec2(
      * @return the clamped vector
      */
     fun clampInbounds(min: Vec2, max: Vec2): Vec2 {
-        return Vec2(FloatMath.clamp(x, min.x, max.x), FloatMath.clamp(y, min.y, max.y))
+        return Vec2(
+            FloatMath.clamp(x, min.x, max.x),
+            FloatMath.clamp(y, min.y, max.y)
+        )
     }
 
     /**
@@ -409,7 +412,8 @@ class Vec2(
     fun floor(): Vec2 = Vec2(floor(x), floor(y))
 
     fun inRange(min: Vec2, max: Vec2): Boolean {
-        return FloatMath.inRange(this.x, min.x, max.x) && FloatMath.inRange(this.y, min.y, max.y)
+        return FloatMath.inRange(this.x, min.x, max.x)
+                && FloatMath.inRange(this.y, min.y, max.y)
     }
 
     /**
@@ -423,11 +427,7 @@ class Vec2(
     // Overrides
 
     override fun equals(other: Any?): Boolean {
-        return when {
-            this === other -> true // same object
-            other is Vec2 -> equals(x, other.x) && equals(y, other.y) // equivalent
-            else -> false // null or not a vector
-        }
+        return (other is Vec2) && equals(x, other.x) && equals(y, other.y)
     }
 
     override fun hashCode(): Int = Objects.hash(x, y)

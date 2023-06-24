@@ -1,11 +1,12 @@
 package mayonez.math.shapes
 
 import mayonez.math.*
+import mayonez.math.shapes.Shape.Companion.scale
 import java.util.*
 import kotlin.math.*
 
 /**
- * Contains methods for generating and sorting polygon vertices.
+ * Contains methods for sorting and transforming polygon vertices.
  *
  * @author SlavSquatSuperstar
  */
@@ -102,6 +103,40 @@ object PolygonVertices {
         return FloatMath.equals(abs(this), abs(other))
     }
 
+    // Transform Methods
+
+    /**
+     * Rotates an array of vertices around a center.
+     *
+     * @param direction the direction of translation
+     * @return the translated vertex array
+     */
+    internal fun Array<Vec2>.translate(direction: Vec2): Array<Vec2> {
+        return Array(size) { this[it] + direction }
+    }
+
+    /**
+     * Rotates an array of vertices around a center.
+     *
+     * @param angle the counterclockwise angle
+     * @param center the center of rotation
+     * @return the rotated vertex array
+     */
+    internal fun Array<Vec2>.rotate(angle: Float, center: Vec2): Array<Vec2> {
+        val rot = Mat22(angle) // save rotation matrix
+        return Array(size) { (rot * (this[it] - center)) + center }
+    }
+
+    /**
+     * Scales an array of vertices from a center.
+     *
+     * @param factor the scale factor
+     * @param center the center for scaling
+     * @return the scaled vertex array
+     */
+    internal fun Array<Vec2>.scale(factor: Vec2, center: Vec2): Array<Vec2> {
+        return Array(size) { this[it].scale(factor, center) }
+    }
 
 
 }

@@ -6,7 +6,8 @@ import org.joml.*
 import java.util.*
 
 /**
- * Stores a color used by the program and translates to and from [java.awt.Color] and [org.joml.Vector4f].
+ * Stores a color used by the program and translates to and from
+ * [java.awt.Color] and [org.joml.Vector4f].
  */
 class Color(red: Int, green: Int, blue: Int, alpha: Int) {
 
@@ -18,33 +19,25 @@ class Color(red: Int, green: Int, blue: Int, alpha: Int) {
 
     // Color Properties
 
-    /**
-     * Red component of this color, between 0-255.
-     */
+    /** Red component of this color, between 0-255. */
     var r: Int = red
         set(r) {
             field = r.clamp()
         }
 
-    /**
-     * Green component of this color, between 0-255.
-     */
+    /** Green component of this color, between 0-255. */
     var g: Int = green
         set(g) {
             field = g.clamp()
         }
 
-    /**
-     * Blue component of this color, between 0-255.
-     */
+    /** Blue component of this color, between 0-255. */
     var b: Int = blue
         set(b) {
             field = b.clamp()
         }
 
-    /**
-     * Alpha component of this color, between 0-255.
-     */
+    /** Alpha component of this color, between 0-255. */
     var a: Int = alpha
         set(a) {
             field = a.clamp()
@@ -53,19 +46,22 @@ class Color(red: Int, green: Int, blue: Int, alpha: Int) {
     // Conversion MEthods
 
     /**
-     * Converts this color to an instance of [java.awt.Color] to use in the AWT engine.
+     * Converts this color to an instance of [java.awt.Color] to use in the AWT
+     * engine.
      */
     fun toAWT(): JColor = JColor(r, g, b, a)
 
     /**
-     * Converts this color to an instance of [org.joml.Vector4f] to use in the GL engine, normalizing the values between 0-1.
+     * Converts this color to an instance of [org.joml.Vector4f] to use in the
+     * GL engine, normalizing the values between 0-1.
      */
     fun toGL(): Vector4f = Vector4f(r.norm(), g.norm(), b.norm(), a.norm())
 
     // Object Overrides
 
     override fun equals(other: Any?): Boolean {
-        return (other is Color) && (this.r == other.r) && (this.g == other.g) && (this.b == other.b) && (this.a == other.a)
+        return (other is Color) && (this.r == other.r) && (this.g == other.g)
+                && (this.b == other.b) && (this.a == other.a)
     }
 
     override fun hashCode(): Int = Objects.hash(r, g, b, a)

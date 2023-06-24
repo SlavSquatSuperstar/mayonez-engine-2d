@@ -1,14 +1,15 @@
 package mayonez.math.shapes
 
 import mayonez.math.*
+import java.util.*
 
 /**
  * An object in space that with an origin that extends infinitely in
  * one direction. Represents a ray or line in the 2D plane with the
  * parameterized vector equation r(t) = r0 + vt.
  *
- * @constructor Constructs a ray from the given origin and direction, with
- *     the option to normalize the ray's direction.
+ * @constructor Constructs a ray from the given origin and direction, which
+ *     is automatically normalized.
  * @author SlavSquatSuperstar
  */
 class Ray(
@@ -85,7 +86,9 @@ class Ray(
      * @param direction the direction to move
      * @return the translated ray
      */
-    override fun translate(direction: Vec2): Ray = Ray(origin + direction, this.direction)
+    override fun translate(direction: Vec2): Ray {
+        return Ray(origin + direction, this.direction)
+    }
 
     /**
      * Rotates this ray by the given angle around an origin while preserving
@@ -96,7 +99,10 @@ class Ray(
      * @return the rotated ray
      */
     override fun rotate(angle: Float, origin: Vec2?): Ray {
-        return Ray(this.origin.rotate(angle, origin ?: Vec2()), direction.rotate(angle))
+        return Ray(
+            this.origin.rotate(angle, origin ?: Vec2()),
+            direction.rotate(angle)
+        )
     }
 
     /**
@@ -108,17 +114,21 @@ class Ray(
      * @return the scaled ray
      */
     override fun scale(factor: Vec2, origin: Vec2?): Ray {
-        return Ray(if (origin == null) this.origin else this.origin * factor, this.direction)
+        return Ray(
+            if (origin == null) this.origin else this.origin * factor,
+            this.direction
+        )
     }
 
-    /**
-     * Scales this ray's direction vector by the given factor and returns the
-     * new length.
-     *
-     * @param factor how much to scale the direction along each axis
-     * @return the scaled length
-     */
-    fun scaledLength(factor: Vec2): Float = (direction * factor).len()
+    // Overrides
+
+    override fun equals(other: Any?): Boolean {
+        return (other is Ray) && (other.origin == this.origin)
+                && (other.direction == this.direction)
+    }
+
+    override fun hashCode(): Int = Objects.hash(origin, direction)
+
 
     /** A description of the ray in the form Origin: (x, y), Direction: (dx, dy) */
     override fun toString(): String = "Origin: $origin, Direction, $direction"

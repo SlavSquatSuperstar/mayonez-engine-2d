@@ -64,7 +64,7 @@ class Transform(position: Vec2, rotation: Float, scale: Vec2) {
     // Transform Properties
 
     /** Where the object is located in the scene. */
-    var position: Vec2 = position
+    var position: Vec2 = Vec2(position)
         set(position) {
             field.set(position)
         }
@@ -80,7 +80,7 @@ class Transform(position: Vec2, rotation: Float, scale: Vec2) {
         }
 
     /** How large the object is along each of its axes. */
-    var scale: Vec2 = scale
+    var scale: Vec2 = Vec2(scale)
         set(scale) {
             field.set(scale)
         }
@@ -193,28 +193,19 @@ class Transform(position: Vec2, rotation: Float, scale: Vec2) {
         this.scale.set(from.scale)
     }
 
-    // Overrides
+    // Object Overrides
 
     override fun equals(other: Any?): Boolean {
-        return when {
-            this === other -> true
-            other is Transform -> this.position == other.position &&
-                    FloatMath.equals(this.rotation, other.rotation) &&
-                    this.scale == other.scale
+        return (other is Transform) && this.equalsTransform(other)
+    }
 
-            else -> false
-        }
+    private fun equalsTransform(other: Transform): Boolean {
+        return (this.position == other.position)
+                && FloatMath.equals(this.rotation, other.rotation)
+                && (this.scale == other.scale)
     }
 
     override fun hashCode(): Int = Objects.hash(position, rotation, scale)
-
-//    override fun equals(other: Any?): Boolean {
-//        return if (other is Transform) {
-//            other.position == this.position &&
-//                    MathUtils.equals(other.rotation, this.rotation)
-//            other.scale == this.scale
-//        } else false
-//    }
 
     override fun toString() = String.format("Position: %s, Rotation: %.2f, Scale: %s", position, rotation, scale)
 }

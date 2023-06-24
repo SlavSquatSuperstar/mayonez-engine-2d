@@ -170,9 +170,10 @@ abstract class Shape : Transformable {
      */
     abstract override fun equals(other: Any?): Boolean
 
-    /**
-     * A string representation of the shape.
-     */
+    /** An integer hashcode function for this shape. */
+    abstract override fun hashCode(): Int
+
+    /** A string representation of the shape. */
     abstract override fun toString(): String
 
 }

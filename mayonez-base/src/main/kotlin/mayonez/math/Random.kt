@@ -1,6 +1,6 @@
 package mayonez.math
 
-import mayonez.util.MColor
+import mayonez.util.*
 
 /**
  * A class with methods dedicated to generating random numbers and
@@ -23,7 +23,7 @@ object Random {
     @JvmStatic
     fun randomFloat(min: Float, max: Float): Float {
         val interval = Interval(min, max)
-        return (Math.random() * (interval.max - interval.min)).toFloat() + interval.min
+        return (Math.random() * (interval.difference())).toFloat() + interval.min
     }
 
     /**
@@ -37,7 +37,7 @@ object Random {
     @JvmStatic
     fun randomInt(min: Int, max: Int): Int {
         val interval = Interval(min.toFloat(), max.toFloat())
-        return (Math.random() * (interval.max - interval.min + 1) + interval.min).toInt()
+        return (Math.random() * (interval.difference() + 1) + interval.min).toInt()
     }
 
     /**

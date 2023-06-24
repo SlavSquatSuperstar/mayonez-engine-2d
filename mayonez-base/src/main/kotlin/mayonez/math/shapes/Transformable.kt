@@ -3,7 +3,7 @@ package mayonez.math.shapes
 import mayonez.math.*
 
 /**
- * Indicates a geometric object that supports three basic transformations:
+ * A geometric object that supports three basic transformations:
  * translation, rotation, and scaling.
  *
  * @author SlavSquatSuperstar

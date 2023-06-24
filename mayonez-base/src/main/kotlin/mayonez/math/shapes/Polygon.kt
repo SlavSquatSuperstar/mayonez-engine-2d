@@ -1,6 +1,10 @@
 package mayonez.math.shapes
 
 import mayonez.math.*
+import mayonez.math.shapes.PolygonVertices.orderedVertices
+import mayonez.math.shapes.PolygonVertices.rotate
+import mayonez.math.shapes.PolygonVertices.scale
+import mayonez.math.shapes.PolygonVertices.translate
 import kotlin.math.*
 
 /**
@@ -125,7 +129,9 @@ open class Polygon(sort: Boolean, vararg vertices: Vec2) : Shape() {
 
     // Transformations
 
-    override fun translate(direction: Vec2): Polygon = Polygon(*vertices.translate(direction))
+    override fun translate(direction: Vec2): Polygon {
+        return Polygon(*vertices.translate(direction))
+    }
 
     override fun rotate(angle: Float, origin: Vec2?): Polygon {
         return Polygon(*vertices.rotate(angle, origin ?: this.center()))
@@ -178,10 +184,11 @@ open class Polygon(sort: Boolean, vararg vertices: Vec2) : Shape() {
     }
 
     override fun equals(other: Any?): Boolean {
-        return (other is Polygon)
-                && PolygonVertices.orderedVertices(this.vertices)
-            .contentEquals(PolygonVertices.orderedVertices(other.vertices))
+        return (other is Polygon) && orderedVertices(this.vertices)
+            .contentEquals(orderedVertices(other.vertices))
     }
+
+    override fun hashCode(): Int = vertices.contentDeepHashCode()
 
     /**
      * A description of the polygon in the form Polygon (x, y) Vertices:
@@ -192,41 +199,6 @@ open class Polygon(sort: Boolean, vararg vertices: Vec2) : Shape() {
     // Helper Methods
 
     companion object {
-
-        // Transform Methods
-
-        /**
-         * Rotates an array of vertices around a center.
-         *
-         * @param direction the direction of translation
-         * @return the translated vertex array
-         */
-        internal fun Array<Vec2>.translate(direction: Vec2): Array<Vec2> {
-            return Array(size) { this[it] + direction }
-        }
-
-        /**
-         * Rotates an array of vertices around a center.
-         *
-         * @param angle the counterclockwise angle
-         * @param center the center of rotation
-         * @return the rotated vertex array
-         */
-        internal fun Array<Vec2>.rotate(angle: Float, center: Vec2): Array<Vec2> {
-            val rot = Mat22(angle) // save rotation matrix
-            return Array(size) { (rot * (this[it] - center)) + center }
-        }
-
-        /**
-         * Scales an array of vertices from a center.
-         *
-         * @param factor the scale factor
-         * @param center the center for scaling
-         * @return the scaled vertex array
-         */
-        internal fun Array<Vec2>.scale(factor: Vec2, center: Vec2): Array<Vec2> {
-            return Array(size) { this[it].scale(factor, center) }
-        }
 
         // Vertices Methods
 

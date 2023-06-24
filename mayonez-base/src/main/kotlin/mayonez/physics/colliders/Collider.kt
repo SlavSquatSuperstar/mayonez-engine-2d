@@ -87,7 +87,7 @@ abstract class Collider(private val shapeData: Shape) : Component() {
     // Transform Methods
 
     /** Transforms this shape into world space. */
-    // TODO save as mutatable field
+    // TODO save as mutable field
     open fun transformToWorld(): Shape {
         return shapeData.rotate(getRotation()).scale(transform!!.scale).translate(center())
     }

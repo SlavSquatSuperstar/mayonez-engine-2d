@@ -1,6 +1,7 @@
 package mayonez.math.shapes
 
 import mayonez.math.*
+import java.util.*
 import kotlin.math.*
 
 /**
@@ -73,14 +74,22 @@ open class Ellipse(protected val center: Vec2, val size: Vec2, val angle: Float)
 
     // Transformations
 
-    override fun translate(direction: Vec2): Ellipse = Ellipse(center + direction, size, angle)
+    override fun translate(direction: Vec2): Ellipse {
+        return Ellipse(center + direction, size, angle)
+    }
 
     override fun rotate(angle: Float, origin: Vec2?): Ellipse {
-        return Ellipse(center.rotate(angle, origin ?: center), size, this.angle + angle)
+        return Ellipse(
+            center.rotate(angle, origin ?: center),
+            size, this.angle + angle
+        )
     }
 
     override fun scale(factor: Vec2, origin: Vec2?): Ellipse {
-        return Ellipse(if (origin == null) center else center.scale(factor, origin), size * factor, angle)
+        return Ellipse(
+            if (origin == null) center else center.scale(factor, origin),
+            size * factor, angle
+        )
     }
 
     // Ellipse vs Point
@@ -133,13 +142,15 @@ open class Ellipse(protected val center: Vec2, val size: Vec2, val angle: Float)
         return ptToCenter.lenSq() <= ptToEllipse.lenSq()
     }
 
-    /** Checks whether two ellipses have the same center and raduis vector */
+    // Overrides
+
     override fun equals(other: Any?): Boolean {
         return (other is Ellipse) && (this.center == other.center)
-                && (this.size.rotate(this.angle) == other.size.rotate(other.angle))
-//        return (other is Ellipse) && (this.center == other.center) && (this.size == other.size)
-//                && (MathUtils.equals(this.angle, other.angle))
+                && (this.size == other.size)
+                && (FloatMath.equals(this.angle, other.angle))
     }
+
+    override fun hashCode(): Int = Objects.hash(center, size, angle)
 
     /**
      * A description of the ellipse in the form "Ellipse (x, y), Size: (b, h),

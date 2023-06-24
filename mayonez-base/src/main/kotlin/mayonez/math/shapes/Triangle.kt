@@ -1,6 +1,10 @@
 package mayonez.math.shapes
 
 import mayonez.math.*
+import mayonez.math.shapes.PolygonVertices.rotate
+import mayonez.math.shapes.PolygonVertices.scale
+import mayonez.math.shapes.PolygonVertices.translate
+import java.util.*
 import kotlin.math.*
 
 /**
@@ -10,7 +14,7 @@ import kotlin.math.*
  *
  * @author SlavSquatSuperstar
  */
-class Triangle(v1: Vec2, v2: Vec2, v3: Vec2) :
+class Triangle(private val v1: Vec2, private val v2: Vec2, private val v3: Vec2) :
     Polygon(false, *triangleVertices(v1, v2, v3)) {
 
     private constructor(vararg vertices: Vec2) : this(vertices[0], vertices[1], vertices[2])
@@ -33,9 +37,6 @@ class Triangle(v1: Vec2, v2: Vec2, v3: Vec2) :
      */
     override fun area(): Float {
         try {
-            val v1 = vertices[0]
-            val v2 = vertices[1]
-            val v3 = vertices[2]
             // more efficient because fewer multiplications
             return 0.5f * abs((v1.x - v3.x) * (v2.y - v3.y) - (v2.x - v3.x) * (v1.y - v3.y))
 //        return 0.5f * abs(
@@ -52,7 +53,7 @@ class Triangle(v1: Vec2, v2: Vec2, v3: Vec2) :
      * The center of the triangle, equal to the average position of its
      * vertices, and two-thirds along any median.
      */
-    override fun center(): Vec2 = (vertices[0] + vertices[1] + vertices[2]) / 3f
+    override fun center(): Vec2 = (v1 + v2 + v3) / 3f
 
     // Backing field for angular mass function
     private var polarMoment: Float? = null
@@ -75,14 +76,17 @@ class Triangle(v1: Vec2, v2: Vec2, v3: Vec2) :
     }
 
     // Transformations
-    // TODO explicit
-    override fun translate(direction: Vec2): Triangle = Triangle(*vertices.translate(direction))
+    override fun translate(direction: Vec2): Triangle {
+        return Triangle(*vertices.translate(direction))
+    }
 
-    override fun rotate(angle: Float, origin: Vec2?): Triangle =
-        Triangle(*vertices.rotate(angle, origin ?: this.center()))
+    override fun rotate(angle: Float, origin: Vec2?): Triangle {
+        return Triangle(*vertices.rotate(angle, origin ?: this.center()))
+    }
 
-    override fun scale(factor: Vec2, origin: Vec2?): Triangle =
-        Triangle(*vertices.scale(factor, origin ?: this.center()))
+    override fun scale(factor: Vec2, origin: Vec2?): Triangle {
+        return Triangle(*vertices.scale(factor, origin ?: this.center()))
+    }
 
     // Overrides
 
@@ -91,21 +95,25 @@ class Triangle(v1: Vec2, v2: Vec2, v3: Vec2) :
 
         // divide triangle into three triangles
         // sum area and compare to original area
-        val areas = FloatArray(3) { Triangle(vertices[it], vertices[(it + 1) % 3], point).area() }
+        val areas = FloatArray(3) {
+            Triangle(vertices[it], vertices[(it + 1) % 3], point).area()
+        }
         return FloatMath.sum(*areas) <= this.area()
     }
 
-    override fun equals(other: Any?): Boolean = (other is Triangle) && this.vertices.contentEquals(other.vertices)
-
-    /** A description of the triangle in the form Triangle (v1, v2, v3). */
-    override fun toString(): String = "Triangle ${vertices[0]}, ${vertices[1]}, ${vertices[2]}"
-
-    // Helper Methods
-
-    companion object {
-        private fun triangleVertices(v1: Vec2, v2: Vec2, v3: Vec2): Array<Vec2> {
-            return PolygonVertices.orderedVertices(arrayOf(v1, v2, v3))
-        }
+    override fun equals(other: Any?): Boolean {
+        return (other is Triangle) && this.vertices.contentEquals(other.vertices)
     }
 
+    override fun hashCode(): Int = Objects.hash(v1, v2, v3)
+
+    /** A description of the triangle in the form Triangle (v1, v2, v3). */
+    override fun toString(): String = "Triangle ($v1, $v2, $v3)"
+
+}
+
+// Helper Methods
+
+private fun triangleVertices(v1: Vec2, v2: Vec2, v3: Vec2): Array<Vec2> {
+    return PolygonVertices.orderedVertices(arrayOf(v1, v2, v3))
 }

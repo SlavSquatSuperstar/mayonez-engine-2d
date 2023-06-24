@@ -1,6 +1,7 @@
 package mayonez.math.shapes
 
 import mayonez.math.*
+import java.util.*
 import kotlin.math.*
 
 /**
@@ -56,7 +57,9 @@ class Circle(
 
     // Transformations
 
-    override fun translate(direction: Vec2): Circle = Circle(center + direction, radius)
+    override fun translate(direction: Vec2): Circle {
+        return Circle(center + direction, radius)
+    }
 
     /**
      * Rotates this circle around a point. If rotating around the center,
@@ -67,7 +70,9 @@ class Circle(
      *     the center of mass.
      * @return a circle with the same center and radius
      */
-    override fun rotate(angle: Float, origin: Vec2?): Circle = Circle(center.rotate(angle, origin ?: center), radius)
+    override fun rotate(angle: Float, origin: Vec2?): Circle {
+        return Circle(center.rotate(angle, origin ?: center), radius)
+    }
 
     /**
      * Scales this circle uniformly using the given vector's x-component as the
@@ -80,16 +85,21 @@ class Circle(
      */
     // To scale a circle non-uniformly, use the Ellipse class.
     override fun scale(factor: Vec2, origin: Vec2?): Circle {
-        return Circle(if (origin == null) center else center.scale(factor, origin), radius * factor.x)
+        return Circle(
+            if (origin == null) center else center.scale(factor, origin),
+            radius * factor.x
+        )
     }
 
     // Circle vs Point
+
     override fun nearestPoint(position: Vec2): Vec2 {
-        return if (position in this) position else center + (position - center).clampLength(radius)
+        return if (position in this) position
+        else center + (position - center).clampLength(radius)
     }
 
     /**
-     * Whether a point is inside the circle, meaning its distance form the
+     * Whether a point is inside the circle, meaning its distance from the
      * center is less than the radius.
      */
     override fun contains(point: Vec2): Boolean = point.distanceSq(center) <= radiusSq
@@ -103,8 +113,11 @@ class Circle(
      * @return if the two circles are equal
      */
     override fun equals(other: Any?): Boolean {
-        return (other is Circle) && (this.center == other.center) && FloatMath.equals(this.radius, other.radius)
+        return (other is Circle) && (this.center == other.center)
+                && FloatMath.equals(this.radius, other.radius)
     }
+
+    override fun hashCode(): Int = Objects.hash(center, radius)
 
     /** A description of the circle in the form Circle (x, y), r=radius. */
     override fun toString(): String = String.format("Circle $center, r=%.4f", radius)

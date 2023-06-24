@@ -1,6 +1,8 @@
 package mayonez.math.shapes
 
 import mayonez.math.*
+import mayonez.math.shapes.PolygonVertices.rotate
+import java.util.*
 
 /**
  * A rotatable box shape (OBB) defined by a width and height. Rectangles
@@ -66,21 +68,31 @@ open class Rectangle(private val center: Vec2, private val size: Vec2, val angle
 
     // Transformations
 
-    override fun translate(direction: Vec2): Rectangle = Rectangle(center + direction, size, angle)
+    override fun translate(direction: Vec2): Rectangle {
+        return Rectangle(center + direction, size, angle)
+    }
 
     override fun rotate(angle: Float, origin: Vec2?): Rectangle {
-        return Rectangle(center.rotate(angle, origin ?: center), size, this.angle + angle)
+        return Rectangle(
+            center.rotate(angle, origin ?: center),
+            size, this.angle + angle
+        )
     }
 
     override fun scale(factor: Vec2, origin: Vec2?): Rectangle {
-        return Rectangle(if (origin == null) center else center.scale(factor, origin), size * factor, angle)
+        return Rectangle(
+            if (origin == null) center else center.scale(factor, origin),
+            size * factor, angle
+        )
     }
 
     // Rectangle vs Point
 
-    override fun contains(point: Vec2): Boolean =
-        point.rotate(-angle, center).inRange(center - size * 0.5f, center + size * 0.5f)
-
+    override fun contains(point: Vec2): Boolean {
+        return point.rotate(-angle, center)
+            .inRange(center - size * 0.5f, center + size * 0.5f)
+    }
+    
     // Overrides
 
     override fun equals(other: Any?): Boolean {
@@ -88,6 +100,8 @@ open class Rectangle(private val center: Vec2, private val size: Vec2, val angle
                 && (this.size == other.size || this.size == other.size.normal())
                 && (FloatMath.equals(this.angle, other.angle))
     }
+
+    override fun hashCode(): Int = Objects.hash(center, size, angle)
 
     /**
      * A description of the rectangle in the form "Rectangle (x, y), Size: (b,
