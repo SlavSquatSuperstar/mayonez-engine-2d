@@ -10,7 +10,7 @@ import mayonez.io.scanner.*
  *
  * @author SlavSquatSuperstar
  */
-// TODO preload stage, map filetype to subclass
+// TODO preload stage, map extensions to subclass
 object Assets {
 
     // Initialization Fields

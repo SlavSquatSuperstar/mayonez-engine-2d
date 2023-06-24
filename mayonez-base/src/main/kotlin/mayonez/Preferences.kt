@@ -49,7 +49,7 @@ object Preferences {
         get() = preferences.getInt("fps")
 
     // Logging
-    fun getLoggerConfig() : LoggerConfig {
+    internal fun getLoggerConfig() : LoggerConfig {
         return LoggerConfig(
             preferences.getBoolean("save_logs"),
             preferences.getInt("log_level"),

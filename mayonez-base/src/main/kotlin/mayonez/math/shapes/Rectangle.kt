@@ -41,7 +41,7 @@ open class Rectangle(private val center: Vec2, private val size: Vec2, val angle
 
     /**
      * The bottom left corner of the rectangle, or the point with the smallest
-     * (most negative) coordinates, assumming the rectangle is axis-aligned.
+     * (most negative) coordinates, assuming the rectangle is axis-aligned.
      *
      * @return the rectangle's min vertex
      */
@@ -49,7 +49,7 @@ open class Rectangle(private val center: Vec2, private val size: Vec2, val angle
 
     /**
      * The top right corner of the rectangle, or the point with the largest
-     * (most positive) coordinates, assumming the rectangle is axis-aligned.
+     * (most positive) coordinates, assuming the rectangle is axis-aligned.
      *
      * @return the rectangle's max vertex
      */
@@ -92,7 +92,7 @@ open class Rectangle(private val center: Vec2, private val size: Vec2, val angle
         return point.rotate(-angle, center)
             .inRange(center - size * 0.5f, center + size * 0.5f)
     }
-    
+
     // Overrides
 
     override fun equals(other: Any?): Boolean {

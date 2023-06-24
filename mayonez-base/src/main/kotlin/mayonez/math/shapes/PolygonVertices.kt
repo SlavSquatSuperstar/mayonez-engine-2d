@@ -10,6 +10,7 @@ import kotlin.math.*
  *
  * @author SlavSquatSuperstar
  */
+// TODO vertices equals method
 object PolygonVertices {
 
     internal const val MIN_VERTICES: Int = 3

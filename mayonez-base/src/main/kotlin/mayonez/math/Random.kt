@@ -8,6 +8,7 @@ import mayonez.util.*
  *
  * @author SlavSquatSuperstar
  */
+// TODO set seed
 object Random {
 
     // Random Numbers

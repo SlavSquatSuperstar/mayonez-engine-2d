@@ -17,6 +17,7 @@ import kotlin.math.*
  *
  * @author SlavSquatSuperstar
  */
+// TODO shape converter class
 internal class DebugShape(
     var shape: MShape,
     internal val color: MColor,
@@ -110,10 +111,10 @@ private fun MShape.toAwt(): JShape? {
         }
 
         is Ellipse -> {
-            val min = this.center() - (size * 0.5f)
+            val min = this.center() - (this.size * 0.5f)
             val ellipse = Ellipse2D.Float(min.x, min.y, size.x, size.y)
             return if (this is Circle || this.isAxisAligned) ellipse
-            else ellipse.rotate(this.center(), angle)
+            else ellipse.rotate(this.center(), this.angle)
         }
 
         is Rectangle -> {

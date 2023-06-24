@@ -18,12 +18,6 @@ object Defaults {
     const val SCREEN_HEIGHT: Int = 720
     const val FPS: Int = 60
 
-    // Logging
-    // TODO move elsewhere
-    const val LOG_LEVEL: Int = 2
-    const val SAVE_LOGS: Boolean = true
-    const val LOG_DIRECTORY: String = "logs"
-
     val PREFERENCES: Record = Record()
 
     init {
@@ -35,11 +29,6 @@ object Defaults {
         PREFERENCES["screen_width"] = SCREEN_WIDTH
         PREFERENCES["screen_height"] = SCREEN_HEIGHT
         PREFERENCES["fps"] = FPS
-
-        // Logging
-        PREFERENCES["log_level"] = LOG_LEVEL
-        PREFERENCES["save_logs"] = SAVE_LOGS
-        PREFERENCES["log_directory"] = LOG_DIRECTORY
     }
 
 }
