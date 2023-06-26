@@ -80,7 +80,7 @@ object KeyInput : KeyAdapter() {
         return when {
             key == null -> false
             Mayonez.useGL -> keyDown(key.glCode)
-            else -> keyDown(key.glCode)
+            else -> keyDown(key.awtCode)
         }
     }
 
@@ -96,7 +96,7 @@ object KeyInput : KeyAdapter() {
         return when {
             key == null -> false
             Mayonez.useGL -> keyPressed(key.glCode)
-            else -> keyPressed(key.glCode)
+            else -> keyPressed(key.awtCode)
         }
     }
 

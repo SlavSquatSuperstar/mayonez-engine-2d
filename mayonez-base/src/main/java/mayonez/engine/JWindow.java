@@ -68,7 +68,6 @@ final class JWindow extends JFrame implements Window {
 
     @Override
     public void beginFrame() {
-        if (KeyInput.keyDown("escape")) closedByUser = true;
     }
 
     @Override
