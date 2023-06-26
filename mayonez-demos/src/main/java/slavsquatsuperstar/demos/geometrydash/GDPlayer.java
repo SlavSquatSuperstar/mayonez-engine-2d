@@ -11,6 +11,11 @@ import mayonez.scripts.movement.*;
 
 import java.awt.*;
 
+/**
+ * The Geometry Dash player object.
+ *
+ * @author SlavSquatSuperstar
+ */
 public class GDPlayer extends GameObject {
 
     public GDPlayer(String name, Vec2 position) {

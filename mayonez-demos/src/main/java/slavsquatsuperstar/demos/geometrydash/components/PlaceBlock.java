@@ -1,6 +1,7 @@
 package slavsquatsuperstar.demos.geometrydash.components;
 
 import mayonez.*;
+import mayonez.annotations.*;
 import mayonez.graphics.*;
 import mayonez.graphics.sprites.*;
 import mayonez.graphics.textures.*;
@@ -12,8 +13,14 @@ import mayonez.scripts.*;
 
 import java.awt.*;
 
-// TODO don't place duplicate blocks
-// TODO don't place blocks when selecting button
+/**
+ * Places tiles in the world on grid spaces.
+ *
+ * @author SlavSquatSuperstar
+ */
+// TODO don't place blocks if already exists
+// TODO don't place blocks when clicking button
+@ExperimentalFeature
 public class PlaceBlock extends Script implements JRenderable {
 
     private JTexture cursor;
@@ -34,7 +41,6 @@ public class PlaceBlock extends Script implements JRenderable {
         if (timer.isReady() && MouseInput.buttonDown("left mouse")) {
             timer.reset();
             if (cursor != null) { // add only when selecting
-                // TODO shouldn't add if block already exists
                 getScene().addObject(new GameObject("Placed Block", mousePos) {
                     @Override
                     protected void init() {

@@ -10,6 +10,11 @@ import slavsquatsuperstar.demos.geometrydash.components.PlaceBlock;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A container for user interface elements.
+ *
+ * @author SlavSquatSuperstar
+ */
 @ExperimentalFeature
 public class UICanvas extends GameObject {
 

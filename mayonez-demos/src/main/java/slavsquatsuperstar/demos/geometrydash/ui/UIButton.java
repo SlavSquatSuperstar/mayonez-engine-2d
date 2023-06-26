@@ -11,6 +11,11 @@ import mayonez.math.Vec2;
 import mayonez.physics.colliders.BoxCollider;
 import mayonez.scripts.movement.MouseScript;
 
+/**
+ * A user interface button that perform an action when clicked.
+ *
+ * @author SlavSquatSuperstar
+ */
 @ExperimentalFeature
 public class UIButton extends GameObject {
 

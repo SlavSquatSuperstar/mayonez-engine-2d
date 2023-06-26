@@ -9,6 +9,11 @@ import mayonez.util.*;
 import slavsquatsuperstar.demos.geometrydash.components.Grid;
 import slavsquatsuperstar.demos.geometrydash.ui.UICanvas;
 
+/**
+ * The Geometry Dash level editor scene.
+ *
+ * @author SlavSquatSuperstar
+ */
 public class GDEditorScene extends Scene {
 
     public GDEditorScene(String name) {

@@ -1,5 +1,5 @@
 /**
- * Contains classes for recreating the game Geometry Dash.
+ * Contains classes for recreating Geometry Dash.
  *
  * @author SlavSquatSuperstar
  */
