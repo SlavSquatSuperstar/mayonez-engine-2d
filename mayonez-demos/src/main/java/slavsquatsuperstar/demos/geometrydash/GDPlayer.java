@@ -1,6 +1,6 @@
 package slavsquatsuperstar.demos.geometrydash;
 
-import mayonez.GameObject;
+import mayonez.*;
 import mayonez.graphics.sprites.JSprite;
 import mayonez.graphics.sprites.JSpriteSheet;
 import mayonez.graphics.sprites.SpriteSheet;
@@ -11,7 +11,7 @@ import mayonez.physics.colliders.BoxCollider;
 import mayonez.scripts.KeepInScene;
 import mayonez.scripts.movement.KeyMovement;
 import mayonez.scripts.movement.MoveMode;
-import slavsquatsuperstar.demos.geometrydash.components.PlayerController;
+import slavsquatsuperstar.demos.geometrydash.components.GDPlayerController;
 
 import java.awt.*;
 
@@ -23,6 +23,23 @@ public class GDPlayer extends GameObject {
 
     @Override
     protected void init() {
+        try {
+            createPlayerAvatar();
+        } catch (ClassCastException e) {
+            Logger.error("Geometry Dash scenes must be run with AWT engine");
+            Mayonez.stop(ExitCode.ERROR);
+        }
+
+        // Add player scripts
+        float thrustForce = 10f;
+        addComponent(new BoxCollider(new Vec2(1, 1)));
+        addComponent(new Rigidbody(1f).setFixedRotation(true));
+        addComponent(new KeyMovement(MoveMode.POSITION, thrustForce).setTopSpeed(thrustForce));
+        addComponent(new KeepInScene(KeepInScene.Mode.STOP));
+        addComponent(new GDPlayerController(thrustForce));
+    }
+
+    private void createPlayerAvatar() throws ClassCastException {
         // Create player avatar
         var tileSize = (int) getScene().getScale();
         var layer1 = (JSpriteSheet) SpriteSheet.create("assets/textures/geometrydash/player/layer1.png",
@@ -50,14 +67,6 @@ public class GDPlayer extends GameObject {
             }
         }
         for (var spr : layers) addComponent(spr);
-
-        // Add player scripts
-        float thrustForce = 5f;
-        addComponent(new BoxCollider(new Vec2(1, 1)));
-        addComponent(new Rigidbody(1f).setFixedRotation(true));
-        addComponent(new KeyMovement(MoveMode.POSITION, thrustForce).setTopSpeed(5f));
-        addComponent(new KeepInScene(KeepInScene.Mode.STOP));
-        addComponent(new PlayerController(thrustForce));
     }
 
 }

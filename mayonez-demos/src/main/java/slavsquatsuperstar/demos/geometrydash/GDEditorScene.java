@@ -1,21 +1,18 @@
 package slavsquatsuperstar.demos.geometrydash;
 
 import mayonez.*;
-import mayonez.util.Colors;
-import mayonez.graphics.sprites.JSpriteSheet;
-import mayonez.graphics.sprites.ShapeSprite;
-import mayonez.graphics.sprites.SpriteSheet;
-import mayonez.init.*;
-import mayonez.math.Vec2;
-import mayonez.physics.Rigidbody;
-import mayonez.physics.colliders.BoxCollider;
+import mayonez.graphics.sprites.*;
+import mayonez.math.*;
+import mayonez.physics.*;
+import mayonez.physics.colliders.*;
+import mayonez.util.*;
 import slavsquatsuperstar.demos.geometrydash.components.Grid;
 import slavsquatsuperstar.demos.geometrydash.ui.UICanvas;
 
-public class GDEditor extends Scene {
+public class GDEditorScene extends Scene {
 
-    public GDEditor() {
-        super("Level Editor", Preferences.getScreenWidth(), Preferences.getScreenHeight(), 42);
+    public GDEditorScene(String name) {
+        super(name, Preferences.getScreenWidth(), Preferences.getScreenHeight(), 42);
         setGravity(new Vec2());
     }
 
@@ -42,12 +39,6 @@ public class GDEditor extends Scene {
 
         var blocks = SpriteSheet.create("assets/textures/geometrydash/blocks.png", 42, 42, 12, 2);
         addObject(new UICanvas("Canvas", new Transform(new Vec2(-5f, -5f)), (JSpriteSheet) blocks));
-
-    }
-
-    public static void main(String[] args) {
-        Launcher launcher = new Launcher().setRunConfig(new RunConfig(false));
-        launcher.startGame(new GDEditor());
     }
 
 }

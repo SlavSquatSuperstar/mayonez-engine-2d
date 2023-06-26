@@ -5,11 +5,16 @@ import mayonez.graphics.camera.*;
 import mayonez.input.*;
 import mayonez.math.*;
 import mayonez.physics.*;
-import slavsquatsuperstar.demos.geometrydash.GDEditor;
-import slavsquatsuperstar.demos.geometrydash.GDLevel;
+import slavsquatsuperstar.demos.geometrydash.GDEditorScene;
+import slavsquatsuperstar.demos.geometrydash.GDLevelScene;
 
+/**
+ * A player controller script for the Geometry Dash scenes.
+ *
+ * @author SlavSquatSuperstar
+ */
 @SuppressWarnings("unused")
-public class PlayerController extends Script {
+public class GDPlayerController extends Script {
 
     // Physics Fields
     private Rigidbody rb;
@@ -19,16 +24,16 @@ public class PlayerController extends Script {
     private float brakeForce = 0.6f;
     private float drag = 0.4f;
 
-    public PlayerController(float speed) {
+    public GDPlayerController(float speed) {
         this.speed = speed;
     }
 
     @Override
     public void start() {
         var cam = getScene().getCamera();
-        if (getScene() instanceof GDEditor) {
+        if (getScene() instanceof GDEditorScene) {
             cam.setKeepInScene(false).setMode(CameraMode.FREE);
-        } else if (getScene() instanceof GDLevel) {
+        } else if (getScene() instanceof GDLevelScene) {
             cam.setMode(CameraMode.FOLLOW).setSubject(gameObject);
         }
         rb = getRigidbody();
@@ -37,7 +42,7 @@ public class PlayerController extends Script {
 
     @Override
     public void update(float dt) {
-        if (getScene() instanceof GDLevel) {
+        if (getScene() instanceof GDLevelScene) {
             // Jump if on ground
             if (KeyInput.keyDown("w")) {
                 // Impulse must be big enough to not get stuck on ground next frame
