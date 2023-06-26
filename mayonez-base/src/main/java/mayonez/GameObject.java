@@ -24,7 +24,7 @@ public class GameObject {
     final long objectID; // UUID for this game object
     private final String name;
     public final Transform transform; // transform in world
-//    final Transform localTransform; // transform offset from parent
+    //    final Transform localTransform; // transform offset from parent
     private Scene scene;
     private boolean destroyed;
     private int zIndex; // controls 3D "layering" of objects
@@ -283,12 +283,14 @@ public class GameObject {
      *
      * @param event the collision event
      */
+    // TODO move to script
+    // TODO generalize for all events
     public final void onCollisionEvent(CollisionEvent event) {
         for (var script : getComponents(Script.class)) {
             switch (event.type) {
                 case ENTER -> {
                     if (event.trigger) script.onTriggerEnter(event.other);
-                    else script.onCollisionEnter(event.other);
+                    else script.onCollisionEnter(event.other, event.direction);
                 }
                 case STAY -> {
                     if (event.trigger) script.onTriggerStay(event.other);

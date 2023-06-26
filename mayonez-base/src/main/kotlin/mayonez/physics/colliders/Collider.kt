@@ -127,7 +127,7 @@ abstract class Collider(private val shapeData: Shape) : Component() {
      *
      * @param event the collision event
      */
-    internal fun sendCollisionEvent(event: CollisionEvent) {
+    internal fun sendCollisionEventToObject(event: CollisionEvent) {
         this.gameObject!!.onCollisionEvent(event)
     }
 

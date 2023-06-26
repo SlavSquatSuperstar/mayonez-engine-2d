@@ -23,11 +23,13 @@ class Mario extends GameObject {
 
     @Override
     protected void init() {
-        getScene().getCamera().setSubject(this).setFollowAngle(false).setKeepInScene(true);
+        getScene().getCamera().setSubject(this).setKeepInScene(true);
         addComponent(sprite);
         addComponent(new BoxCollider(new Vec2(0.8f, 1)));
         addComponent(new Rigidbody(1f, 0.1f, 0f).setFixedRotation(true));
-        addComponent(new KeepInScene(KeepInScene.Mode.STOP));
+        var sceneMin = getScene().getSize().mul(-0.5f).add(new Vec2(0, 4));
+        var sceneMax = getScene().getSize().mul(0.5f);
+        addComponent(new KeepInScene(sceneMin, sceneMax, KeepInScene.Mode.STOP));
         addComponent(new MarioController());
     }
 }

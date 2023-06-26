@@ -107,16 +107,16 @@ and a Pool Balls scene.
     - **1**/**2** to switch ammo types
     - **Arrow keys** to zoom camera in/out and rotate camera left/right
 - Mario:
-    - **WASD** to move
-    - **Q/E** to spin
-    - **+**/**-** to grow/shrink
+    - **W** to jump
+    - **AD** to move side to side
+    - **S** to ground pound
 - Physics Sandbox:
-    - **Left mouse** on objects to drag them around
+    - **Left mouse** and *drag* on objects to move them around
     - **Right mouse**, *drag*, and *release* on objects to flick them
     - **1**/**2**/**3**/**4** to spawn shapes
     - **Space** to toggle gravity
 - Pool Balls:
-    - **Left mouse** and *drag* on objects to move them
+    - **Left mouse** and *drag* on objects to move them around
     - **Right mouse**, *drag*, and *release* on objects to flick them
 
 ## Additional Info

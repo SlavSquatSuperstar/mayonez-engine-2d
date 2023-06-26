@@ -5,6 +5,7 @@ import mayonez.graphics.sprites.*;
 import mayonez.math.*;
 import mayonez.physics.*;
 import mayonez.physics.colliders.*;
+import mayonez.scripts.*;
 
 /**
  * A Goomba enemy that Mario can destroy.
@@ -25,10 +26,14 @@ class Goomba extends GameObject {
         addComponent(sprite);
         addComponent(new BoxCollider(new Vec2(0.8f, 1)));
         addComponent(new Rigidbody(1f, 0.5f, 0f).setFixedRotation(true));
+        var sceneMin = getScene().getSize().mul(-0.5f).add(new Vec2(0, 4));
+        var sceneMax = getScene().getSize().mul(0.5f);
+        addComponent(new KeepInScene(sceneMin, sceneMax, KeepInScene.Mode.STOP));
         addComponent(new Script() {
             @Override
-            public void onCollisionStay(GameObject other) {
+            public void onCollisionEnter(GameObject other, Vec2 direction) {
                 if (other.getName().equals("Mario")) setDestroyed();
+                // TODO don't push Mario around
             }
         });
     }

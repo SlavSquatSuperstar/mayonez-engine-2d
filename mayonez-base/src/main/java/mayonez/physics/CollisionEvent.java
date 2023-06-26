@@ -2,6 +2,7 @@ package mayonez.physics;
 
 import mayonez.*;
 import mayonez.event.*;
+import mayonez.math.*;
 
 /**
  * Describes a collision or trigger interaction between two {@link mayonez.GameObject}s.
@@ -22,12 +23,17 @@ public class CollisionEvent extends Event {
      * The type of the collision given by the listener.
      */
     public final boolean trigger;
+    /**
+     * The direction of the collision from the object's center.
+     */
+    public final Vec2 direction;
 
-    public CollisionEvent(GameObject other, boolean trigger, CollisionEventType type) {
+    public CollisionEvent(GameObject other, boolean trigger, CollisionEventType type, Vec2 direction) {
         super(formatCollisionEventMessage(other, trigger, type));
         this.other = other;
         this.type = type;
         this.trigger = trigger;
+        this.direction = direction;
     }
 
     private static String formatCollisionEventMessage(GameObject other, boolean trigger, CollisionEventType type) {

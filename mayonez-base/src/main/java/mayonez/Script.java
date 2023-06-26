@@ -1,5 +1,6 @@
 package mayonez;
 
+import mayonez.math.*;
 import mayonez.physics.*;
 import mayonez.physics.colliders.*;
 
@@ -68,9 +69,10 @@ public abstract class Script extends Component {
     /**
      * Custom user behavior after starting contact with another physical object.
      *
-     * @param other the other object in the collision
+     * @param other     the other object in the collision
+     * @param direction the direction the collision is happening
      */
-    public void onCollisionEnter(GameObject other) {
+    public void onCollisionEnter(GameObject other, Vec2 direction) {
     }
 
     /**
@@ -92,7 +94,7 @@ public abstract class Script extends Component {
     /**
      * Custom user behavior after entering a trigger area.
      *
-     * @param other the other game object
+     * @param other     the other game object
      */
     public void onTriggerEnter(GameObject other) {
     }

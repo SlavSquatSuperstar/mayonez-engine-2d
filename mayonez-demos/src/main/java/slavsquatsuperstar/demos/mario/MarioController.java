@@ -12,9 +12,10 @@ import mayonez.physics.*;
  */
 public class MarioController extends Script {
 
-    private final float speed = 15;
-    private final float jumpSpeed = 20;
-    private final float jumpGravity = 15;
+    private final float moveSpeed = 15;
+    private final float jumpSpeed = 30;
+    private final float jumpGravity = 30;
+    private final float slamSpeed = 5;
     private boolean onGround;
     private Rigidbody rb;
 
@@ -28,7 +29,7 @@ public class MarioController extends Script {
     public void update(float dt) {
         // Move
         var xInput = KeyInput.getAxis("horizontal");
-        transform.move(new Vec2(xInput * speed * dt, 0));
+        transform.move(new Vec2(xInput * moveSpeed * dt, 0));
         rb.getVelocity().x = 0;
 
         // Jump
@@ -41,18 +42,21 @@ public class MarioController extends Script {
 
         // Ground pound
         if (KeyInput.keyDown("s") && !onGround) {
-            rb.applyImpulse(new Vec2(0, -jumpSpeed * 0.25f));
+            rb.applyImpulse(new Vec2(0, -slamSpeed));
         }
     }
 
-    // TODO only set grounded if touching top
-    // TODO get collision direction
     @Override
-    public void onCollisionEnter(GameObject other) {
-        if (other.hasTag("Ground")) {
+    public void onCollisionEnter(GameObject other, Vec2 direction) {
+        if (other.hasTag("Ground") && isDirectionDownward(direction)) {
             onGround = true;
             rb.getVelocity().y = 0;
+            Logger.log("touchdown");
         }
+    }
+
+    private static boolean isDirectionDownward(Vec2 direction) {
+        return direction.dot(new Vec2(0, -1)) > 0;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package mayonez.physics
 
+import mayonez.math.*
 import mayonez.physics.colliders.*
 import mayonez.physics.manifold.*
 
@@ -30,7 +31,7 @@ internal class CollisionListener(
         val manifold = c1.getContacts(c2)
         when {
             (manifold == null) -> stopCollision() // no longer colliding
-            !colliding -> startCollision() // has not collided before
+            !colliding -> startCollision(manifold.normal) // has not collided before
             else -> continueCollision() // has collided before
         }
 
@@ -38,10 +39,10 @@ internal class CollisionListener(
         return if (trigger) null else manifold
     }
 
-    private fun startCollision() {
+    private fun startCollision(direction: Vec2) {
         if (!colliding) {
             colliding = true
-            sendCollisionEvents(CollisionEventType.ENTER)
+            sendCollisionEvents(CollisionEventType.ENTER, direction = direction)
         }
     }
 
@@ -56,12 +57,12 @@ internal class CollisionListener(
         }
     }
 
-    private fun sendCollisionEvents(type: CollisionEventType) {
+    private fun sendCollisionEvents(type: CollisionEventType, direction: Vec2? = null) {
         // No collision if either object is missing
         if (c1.gameObject == null || c2.gameObject == null) return
 
-        c1.sendCollisionEvent(CollisionEvent(c2.gameObject, trigger, type))
-        c2.sendCollisionEvent(CollisionEvent(c1.gameObject, trigger, type))
+        c1.sendCollisionEventToObject(CollisionEvent(c2.gameObject, trigger, type, direction))
+        c2.sendCollisionEventToObject(CollisionEvent(c1.gameObject, trigger, type, direction))
     }
 
     fun match(col: Collider?): Boolean = (c1 == col) || (c2 == col)

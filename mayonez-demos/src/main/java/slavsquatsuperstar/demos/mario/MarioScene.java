@@ -21,7 +21,7 @@ public class MarioScene extends Scene {
     private static final int BACKGROUND_HEIGHT = 1024;
     private final SpriteSheet sprites;
     private final Texture background;
-    private final int sceneGravity = 25;
+    private final float sceneGravity = 20;
 
     public MarioScene(String name) {
         super(name, BACKGROUND_WIDTH, BACKGROUND_HEIGHT, 32);
@@ -63,7 +63,8 @@ public class MarioScene extends Scene {
     }
 
     private void addObstaclesToScene() {
-        // Randomly falling through ground :(
+        // Randomly tunneling through ground if scale too small and speed too fast
+        // Manually clamp position using KeepInScene
         addObject(createBoxObstacle("Ground", new Vec2(0, -14), new Vec2(60, 4)));
 
         addObject(createBoxObstacle("Mystery Box", new Vec2(-25, -5), new Vec2(2, 2)));
