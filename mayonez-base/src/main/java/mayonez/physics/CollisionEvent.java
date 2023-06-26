@@ -1,22 +1,38 @@
 package mayonez.physics;
 
 import mayonez.*;
-import mayonez.annotations.*;
 import mayonez.event.*;
 
-@ExperimentalFeature
+/**
+ * Describes a collision or trigger interaction between two {@link mayonez.GameObject}s.
+ *
+ * @author SlavSquatSuperstar
+ */
 public class CollisionEvent extends Event {
 
-    //    public final GameObject other;
+    /**
+     * The other object in the collision.
+     */
+    public final GameObject other;
+    /**
+     * If interacting with a trigger.
+     */
     public final CollisionEventType type;
+    /**
+     * The type of the collision given by the listener.
+     */
     public final boolean trigger;
 
-    public CollisionEvent(GameObject self, GameObject other, CollisionEventType type, boolean trigger) {
-        super(String.format("Collision between %s and %s (%s)",
-                self, other, trigger ? "Trigger" : "Collider"));
-//        this.other = other;
+    public CollisionEvent(GameObject other, boolean trigger, CollisionEventType type) {
+        super(formatCollisionEventMessage(other, trigger, type));
+        this.other = other;
         this.type = type;
         this.trigger = trigger;
+    }
+
+    private static String formatCollisionEventMessage(GameObject other, boolean trigger, CollisionEventType type) {
+        return "%s %s with %s"
+                .formatted(trigger ? "Trigger" : "Collision", type.name().toLowerCase(), other);
     }
 
 }

@@ -27,7 +27,7 @@ class Mario extends GameObject {
         addComponent(sprite);
         addComponent(new BoxCollider(new Vec2(0.8f, 1)));
         addComponent(new Rigidbody(1f, 0.1f, 0f).setFixedRotation(true));
-        addComponent(new KeepInScene(KeepInScene.Mode.STOP).setEnabled(true));
+        addComponent(new KeepInScene(KeepInScene.Mode.STOP));
         addComponent(new MarioController());
     }
 }

@@ -122,8 +122,7 @@ class PhysicsWorld {
         val disabled = !(c1.isEnabled && c2.isEnabled)
         val ignore = c1.gameObject.hasTag("Ignore Collisions") || c2.gameObject.hasTag("Ignore Collisions")
         val static = c1.isStatic() && c2.isStatic() // Don't check for collision if both are static
-        if (disabled || ignore || static) return true
-        return false
+        return (disabled || ignore || static)
     }
 
     /** Check broadphase pairs for collisions and calculate contact points. */
@@ -157,7 +156,7 @@ class PhysicsWorld {
         val col = obj.getComponent(Collider::class.java)
         colliders.remove(col)
         listeners.stream()
-            .filter { lis -> lis.match(col) }
+            .filter { it.match(col) }
             .toList() // needed to avoid ConcurrentModificationException
             .forEach(listeners::remove)
     }

@@ -46,6 +46,7 @@ public class MarioController extends Script {
     }
 
     // TODO only set grounded if touching top
+    // TODO get collision direction
     @Override
     public void onCollisionEnter(GameObject other) {
         if (other.hasTag("Ground")) {

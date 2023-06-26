@@ -63,6 +63,7 @@ public class MarioScene extends Scene {
     }
 
     private void addObstaclesToScene() {
+        // Randomly falling through ground :(
         addObject(createBoxObstacle("Ground", new Vec2(0, -14), new Vec2(60, 4)));
 
         addObject(createBoxObstacle("Mystery Box", new Vec2(-25, -5), new Vec2(2, 2)));

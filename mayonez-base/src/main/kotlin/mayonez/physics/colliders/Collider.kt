@@ -53,10 +53,7 @@ abstract class Collider(private val shapeData: Shape) : Component() {
      */
     fun isStatic(): Boolean = rigidbody?.infiniteMass ?: true
 
-    /**
-     * If this frame's collision in [sendCollisionEvent] should not be resolved
-     * by the physics engine.
-     */
+    /** If this frame's collision should not be resolved by the physics engine. */
     var ignoreCurrentCollision: Boolean = false
 
     /**
@@ -128,12 +125,10 @@ abstract class Collider(private val shapeData: Shape) : Component() {
      * Broadcasts an event if a collision occurs between this object and
      * another.
      *
-     * @param other the other object
-     * @param trigger if interacting with a trigger
-     * @param type the type of the collision given by the listener
+     * @param event the collision event
      */
-    fun sendCollisionEvent(other: Collider, trigger: Boolean, type: CollisionEventType) {
-        gameObject?.onCollisionEvent(other.gameObject ?: return, trigger, type)
+    internal fun sendCollisionEvent(event: CollisionEvent) {
+        this.gameObject!!.onCollisionEvent(event)
     }
 
 }

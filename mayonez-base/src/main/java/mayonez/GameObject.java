@@ -22,9 +22,9 @@ public class GameObject {
 
     // Object Information and State
     final long objectID; // UUID for this game object
-    private String name; // object name, does not have to be unique
+    private final String name;
     public final Transform transform; // transform in world
-    final Transform localTransform; // transform offset from parent
+//    final Transform localTransform; // transform offset from parent
     private Scene scene;
     private boolean destroyed;
     private int zIndex; // controls 3D "layering" of objects
@@ -55,7 +55,7 @@ public class GameObject {
 
         this.name = (name == null) ? "GameObject" : name;
         this.transform = transform;
-        localTransform = new Transform();
+//        localTransform = new Transform();
         this.zIndex = zIndex;
 
         destroyed = false;
@@ -279,26 +279,24 @@ public class GameObject {
     }
 
     /**
-     * Receives an event when a collision occurs between this object and another.
+     * Send an event to all components when a collision occurs between this object and another.
      *
-     * @param other   the other object
-     * @param trigger if interacting with a trigger
-     * @param type    the type of the collision given by the listener
+     * @param event the collision event
      */
-    public final void onCollisionEvent(GameObject other, boolean trigger, CollisionEventType type) {
-        for (var scr : getComponents(Script.class)) {
-            switch (type) {
+    public final void onCollisionEvent(CollisionEvent event) {
+        for (var script : getComponents(Script.class)) {
+            switch (event.type) {
                 case ENTER -> {
-                    if (trigger) scr.onTriggerEnter(other);
-                    else scr.onCollisionEnter(other);
+                    if (event.trigger) script.onTriggerEnter(event.other);
+                    else script.onCollisionEnter(event.other);
                 }
                 case STAY -> {
-                    if (trigger) scr.onTriggerStay(other);
-                    else scr.onCollisionStay(other);
+                    if (event.trigger) script.onTriggerStay(event.other);
+                    else script.onCollisionStay(event.other);
                 }
                 case EXIT -> {
-                    if (trigger) scr.onTriggerExit(other);
-                    else scr.onCollisionExit(other);
+                    if (event.trigger) script.onTriggerExit(event.other);
+                    else script.onCollisionExit(event.other);
                 }
             }
         }
@@ -306,16 +304,19 @@ public class GameObject {
 
     // Property Getters and Setters
 
+    /**
+     * The object's name, which does not have to be unique.
+     *
+     * @return the name
+     */
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     /**
      * Whether this object has been removed from the scene.
+     *
+     * @return if the object is destroyed
      */
     public boolean isDestroyed() {
         return destroyed;

@@ -1,8 +1,10 @@
 package mayonez.physics;
 
-import mayonez.annotations.*;
-
-@ExperimentalFeature
+/**
+ * What type of collision event is detected by a {@link mayonez.physics.CollisionListener}.
+ *
+ * @author SlavSquatSuperstar
+ */
 public enum CollisionEventType {
     /**
      * When an object starts colliding with another object or enters a trigger area.
