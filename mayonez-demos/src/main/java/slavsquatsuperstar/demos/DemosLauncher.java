@@ -4,10 +4,9 @@ import mayonez.*;
 import mayonez.init.*;
 import mayonez.input.*;
 import slavsquatsuperstar.demos.geometrydash.GDEditorScene;
-import slavsquatsuperstar.demos.geometrydash.GDLevelScene;
 import slavsquatsuperstar.demos.mario.MarioScene;
-import slavsquatsuperstar.demos.physics.PoolBallsScene;
 import slavsquatsuperstar.demos.physics.PhysicsSandboxScene;
+import slavsquatsuperstar.demos.physics.PoolBallsScene;
 import slavsquatsuperstar.demos.spacegame.SpaceGameScene;
 
 /**
@@ -21,7 +20,7 @@ public class DemosLauncher {
 
     private final static String[] sceneNames = {
             "Space Game", "Mario Scene", "Physics Sandbox",
-            "Pool Balls", "Geometry Dash Editor", "Geometry Dash Level"
+            "Pool Balls", "Geometry Dash Editor"
     };
 
     public static void main(String[] args) {
@@ -67,13 +66,6 @@ public class DemosLauncher {
                         pollSceneControls();
                     }
                 },
-                new GDLevelScene(sceneNames[5]) {
-                    @Override
-                    protected void onUserUpdate(float dt) {
-                        super.onUserUpdate(dt);
-                        pollSceneControls();
-                    }
-                }
         };
     }
 
