@@ -59,6 +59,16 @@ public final class JSprite extends Sprite implements JRenderable {
     }
 
     @Override
+    public int getImageWidth() {
+        return (getImage() == null) ? 0 : getImage().getWidth();
+    }
+
+    @Override
+    public int getImageHeight() {
+        return (getImage() == null) ? 0 : getImage().getHeight();
+    }
+
+    @Override
     public JTexture getTexture() {
         return texture;
     }

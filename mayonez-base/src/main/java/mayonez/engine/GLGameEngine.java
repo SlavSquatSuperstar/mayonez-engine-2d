@@ -13,7 +13,7 @@ import static org.lwjgl.glfw.GLFW.glfwGetTime;
 final class GLGameEngine extends GameEngine { // can't implement runnable otherwise GLFW will crash
 
     GLGameEngine() {
-        super(WindowFactory.createWindow(true));
+        super(EngineFactory.createWindow(true));
     }
 
     // Game Engine Methods

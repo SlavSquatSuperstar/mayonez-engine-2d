@@ -44,8 +44,8 @@ public class PlaceBlock extends Script implements JRenderable {
                 getScene().addObject(new GameObject("Placed Block", mousePos) {
                     @Override
                     protected void init() {
-                        Logger.log("cursor: %s", cursor);
-                        addComponent(Sprite.create(cursor));
+//                        Logger.log("cursor: %s", cursor);
+                        addComponent(SpritesFactory.createSprite(cursor));
                         addComponent(new BoxCollider(new Vec2(1f)));
                         addComponent(new Rigidbody(0f).setFixedRotation(true));
                     }

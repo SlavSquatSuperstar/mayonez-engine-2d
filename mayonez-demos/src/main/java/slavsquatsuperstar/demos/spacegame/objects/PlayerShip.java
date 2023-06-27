@@ -36,7 +36,7 @@ public class PlayerShip extends GameObject {
         addComponent(new BoxCollider(new Vec2(0.85f, 1f)));
 
         // Visuals
-        addComponent(Sprite.create(spriteName));
+        addComponent(SpritesFactory.createSprite(spriteName));
 
         // Scripts
         addComponent(new KeepInScene(KeepInScene.Mode.WRAP));

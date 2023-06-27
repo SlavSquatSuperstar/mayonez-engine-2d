@@ -61,7 +61,7 @@ object Mayonez {
 
     private fun initializeGame() {
         if (!this::game.isInitialized) {
-            game = GameEngineFactory.createGameEngine(useGL)
+            game = EngineFactory.createGameEngine(useGL)
             Logger.debug("Using engine \"%s\"", if (useGL) "GL" else "AWT")
         }
     }

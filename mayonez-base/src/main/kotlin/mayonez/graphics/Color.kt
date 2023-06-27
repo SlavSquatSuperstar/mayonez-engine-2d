@@ -9,6 +9,7 @@ import java.util.*
  * Stores a color used by the program and translates to and from
  * [java.awt.Color] and [org.joml.Vector4f].
  */
+// todo to/from rgb value
 class Color(red: Int, green: Int, blue: Int, alpha: Int) {
 
     constructor(red: Int, green: Int, blue: Int) : this(red, green, blue, 255)

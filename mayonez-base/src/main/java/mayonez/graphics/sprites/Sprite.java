@@ -3,7 +3,6 @@ package mayonez.graphics.sprites;
 import mayonez.*;
 import mayonez.graphics.*;
 import mayonez.graphics.textures.*;
-import mayonez.io.*;
 import mayonez.util.*;
 
 /**
@@ -21,12 +20,7 @@ public abstract class Sprite extends Component {
         this.color = (color != null) ? color : Colors.WHITE;
     }
 
-    /**
-     * Returns the texture this sprite holds.
-     *
-     * @return the texture, or null if drawing a color
-     */
-    public abstract Texture getTexture();
+    // Getters and Setters
 
     /**
      * Returns the color this sprite holds.
@@ -36,6 +30,20 @@ public abstract class Sprite extends Component {
     public final Color getColor() {
         return this.color;
     }
+
+    /**
+     * Get the width of this sprite's stored texture in pixels.
+     *
+     * @return the image width, or 0 if drawing a color
+     */
+    public abstract int getImageWidth();
+
+    /**
+     * Get the height of this sprite's stored texture in pixels.
+     *
+     * @return the image height, or 0 if drawing a color
+     */
+    public abstract int getImageHeight();
 
     /**
      * The sprite's transform in the parent object's local space.
@@ -57,46 +65,19 @@ public abstract class Sprite extends Component {
     }
 
     /**
+     * Returns the texture this sprite holds.
+     *
+     * @return the texture, or null if drawing a color
+     */
+    public abstract Texture getTexture();
+
+    // Copy Methods
+
+    /**
      * Returns a new sprite with the same image but not attached to any {@link mayonez.GameObject}.
      *
      * @return a copy of this image
      */
     public abstract Sprite copy();
-
-    // Factory Methods
-
-    /**
-     * Automatically creates a AWT or GL sprite with a given filename depending on the current engine instance.
-     *
-     * @param filename the texture location
-     * @return a sprite
-     */
-    public static Sprite create(String filename) {
-        if (Mayonez.getUseGL()) return new GLSprite(Assets.getGLTexture(filename));
-        else return new JSprite(Assets.getJTexture(filename));
-    }
-
-    /**
-     * Automatically creates a AWT or GL sprite with a given texture depending on the current engine instance.
-     *
-     * @param texture an existing texture
-     * @return a sprite
-     */
-    public static Sprite create(Texture texture) {
-        if (texture instanceof GLTexture glTexture) return new GLSprite(glTexture);
-        else if (texture instanceof JTexture jTexture) return new JSprite(jTexture);
-        else return Sprite.create(Colors.WHITE);
-    }
-
-    /**
-     * Automatically creates a AWT or GL sprite with a given colordepending on the current engine instance.
-     *
-     * @param color the color
-     * @return a sprite
-     */
-    public static Sprite create(Color color) {
-        if (Mayonez.getUseGL()) return new GLSprite(color);
-        else return new JSprite(color);
-    }
 
 }

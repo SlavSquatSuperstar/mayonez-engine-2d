@@ -51,7 +51,6 @@ public class MarioController extends Script {
         if (other.hasTag("Ground") && isDirectionDownward(direction)) {
             onGround = true;
             rb.getVelocity().y = 0;
-            Logger.log("touchdown");
         }
     }
 

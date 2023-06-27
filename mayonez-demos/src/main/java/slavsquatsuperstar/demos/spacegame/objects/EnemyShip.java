@@ -2,7 +2,7 @@ package slavsquatsuperstar.demos.spacegame.objects;
 
 import mayonez.GameObject;
 import mayonez.Transform;
-import mayonez.graphics.sprites.Sprite;
+import mayonez.graphics.sprites.*;
 import mayonez.math.Random;
 import mayonez.math.Vec2;
 import mayonez.physics.Rigidbody;
@@ -37,7 +37,7 @@ public class EnemyShip extends GameObject {
         transform.setRotation(Random.randomFloat(0f, 360f));
 
         addTag("Enemy");
-        addComponent(Sprite.create(spriteName));
+        addComponent(SpritesFactory.createSprite(spriteName));
         addComponent(new BoxCollider(new Vec2(0.85f, 1f)));
         Rigidbody rb;
         addComponent(rb = new Rigidbody(1f, 0.01f, 0.8f));

@@ -12,7 +12,7 @@ import mayonez.annotations.*;
 final class JGameEngine extends GameEngine {
 
     JGameEngine() {
-        super(WindowFactory.createWindow(false));
+        super(EngineFactory.createWindow(false));
     }
 
     // Game Engine Methods

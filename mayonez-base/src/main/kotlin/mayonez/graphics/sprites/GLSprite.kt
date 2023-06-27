@@ -67,14 +67,22 @@ class GLSprite private constructor(private val texture: GLTexture?, color: Color
 
     override fun getBatchSize(): Int = RenderBatch.MAX_SPRITES
 
+    override fun getImageHeight(): Int = texture?.height ?: 0
+
+    override fun getImageWidth(): Int = texture?.width ?: 0
+
     override fun getPrimitive(): DrawPrimitive = DrawPrimitive.SPRITE
 
-    fun getTexCoords(): Array<Vec2> = texture?.texCoords ?: GLTexture.DEFAULT_TEX_COORDS
+    fun getTexCoords(): Array<Vec2> {
+        return texture?.texCoords ?: GLTexture.DEFAULT_TEX_COORDS
+    }
 
     override fun getTexture(): GLTexture? = texture
 
     override fun getZIndex(): Int = gameObject.zIndex
 
-    override fun copy(): GLSprite = if (texture == null) GLSprite(color) else GLSprite(texture)
+    override fun copy(): GLSprite {
+        return if (texture == null) GLSprite(color) else GLSprite(texture)
+    }
 
 }

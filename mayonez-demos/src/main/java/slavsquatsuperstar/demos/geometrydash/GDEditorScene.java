@@ -42,7 +42,7 @@ public class GDEditorScene extends Scene {
             }
         });
 
-        var blocks = SpriteSheet.create("assets/textures/geometrydash/blocks.png", 42, 42, 12, 2);
+        var blocks = SpritesFactory.createSpriteSheet("assets/textures/geometrydash/blocks.png", 42, 42, 12, 2);
         addObject(new UICanvas("Canvas", new Transform(new Vec2(-5f, -5f)), (JSpriteSheet) blocks));
     }
 

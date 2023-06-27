@@ -12,7 +12,7 @@ import slavsquatsuperstar.demos.spacegame.objects.ZIndex;
 // TODO GL renderer lags child position more than AWT
 public class Thruster extends Script {
 
-    private static final SpriteSheet sprites = SpriteSheet.create("assets/textures/spacegame/exhaust.png",
+    private static final SpriteSheet sprites = SpritesFactory.createSpriteSheet("assets/textures/spacegame/exhaust.png",
             16, 16, 3, 0);
 
     public final ThrustDirection moveDir;
