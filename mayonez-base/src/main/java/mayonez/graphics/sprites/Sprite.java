@@ -46,6 +46,27 @@ public abstract class Sprite extends Component {
     public abstract int getImageHeight();
 
     /**
+     * Get the pixel's RBG color on this sprite's stored texture at the specific coordinates.
+     *
+     * @param x the pixel x-coordinate
+     * @param y the pixel y-coordinate
+     * @return the color, or white if drawing a texture
+     */
+    public Color getPixelColor(int x, int y) {
+        return null;
+    }
+
+    /**
+     * Set the pixel's RBG color on this sprite's stored texture at the specific coordinates.
+     *
+     * @param x     the pixel x-coordinate
+     * @param y     the pixel y-coordinate
+     * @param color the color to set
+     */
+    public void setPixelColor(int x, int y, Color color) {
+    }
+
+    /**
      * The sprite's transform in the parent object's local space.
      *
      * @return the sprite transform

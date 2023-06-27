@@ -21,62 +21,62 @@ class Color(red: Int, green: Int, blue: Int, alpha: Int) {
     // Color Properties
 
     /** Red component of this color, between 0-255. */
-    var r: Int = red
-        set(r) {
-            field = r.clamp()
+    var red: Int = red
+        set(red) {
+            field = red.clamp()
         }
 
     /** Green component of this color, between 0-255. */
-    var g: Int = green
-        set(g) {
-            field = g.clamp()
+    var green: Int = green
+        set(green) {
+            field = green.clamp()
         }
 
     /** Blue component of this color, between 0-255. */
-    var b: Int = blue
-        set(b) {
-            field = b.clamp()
+    var blue: Int = blue
+        set(blue) {
+            field = blue.clamp()
         }
 
     /** Alpha component of this color, between 0-255. */
-    var a: Int = alpha
-        set(a) {
-            field = a.clamp()
+    var alpha: Int = alpha
+        set(alpha) {
+            field = alpha.clamp()
         }
 
-    // Conversion MEthods
+    // Conversion Methods
 
     /**
      * Converts this color to an instance of [java.awt.Color] to use in the AWT
      * engine.
      */
-    fun toAWT(): JColor = JColor(r, g, b, a)
+    fun toAWT(): JColor = JColor(red, green, blue, alpha)
 
     /**
      * Converts this color to an instance of [org.joml.Vector4f] to use in the
      * GL engine, normalizing the values between 0-1.
      */
-    fun toGL(): Vector4f = Vector4f(r.norm(), g.norm(), b.norm(), a.norm())
+    fun toGL(): Vector4f = Vector4f(red.norm(), green.norm(), blue.norm(), alpha.norm())
 
     // Object Overrides
 
     override fun equals(other: Any?): Boolean {
-        return (other is Color) && (this.r == other.r) && (this.g == other.g)
-                && (this.b == other.b) && (this.a == other.a)
+        return (other is Color) && (this.red == other.red) && (this.green == other.green)
+                && (this.blue == other.blue) && (this.alpha == other.alpha)
     }
 
-    override fun hashCode(): Int = Objects.hash(r, g, b, a)
+    override fun hashCode(): Int = Objects.hash(red, green, blue, alpha)
 
-    override fun toString(): String = "Color($r, $g, $b, $a)"
+    override fun toString(): String = "Color($red, $green, $blue, $alpha)"
 
     // Helper Methods
 
     fun rgbHexCode(): String {
-        return String.format("#%02x%02x%02x", r, b, g)
+        return String.format("#%02x%02x%02x", red, blue, green)
     }
 
     fun rgbaHexCode(): String {
-        return String.format("#%02x%02x%02x%02x", r, b, g, a)
+        return String.format("#%02x%02x%02x%02x", red, blue, green, alpha)
     }
 
     companion object {

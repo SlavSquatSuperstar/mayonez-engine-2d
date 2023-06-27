@@ -55,16 +55,16 @@ public class GDPlayer extends GameObject {
         var threshold = 200;
 
         var layers = new Sprite[]{layer1.getSprite(id), layer2.getSprite(id), layer3.getSprite(id)};
-        Color[] colors = {Color.RED, Color.GREEN};
+        mayonez.graphics.Color[] colors = {new mayonez.graphics.Color(Color.RED), new mayonez.graphics.Color(Color.GREEN)};
 
         // Create sprite layers
         for (var i = 0; i < colors.length; i++) {
-            var layer = (JSprite) layers[i];
+            var layer = layers[i];
             for (var y = 0; y < layer.getImageWidth(); y++) {
                 for (var x = 0; x < layer.getImageHeight(); x++) {
-                    var color = new Color(layer.getImage().getRGB(x, y));
+                    var color = layer.getPixelColor(x, y);
                     if (color.getRed() > threshold && color.getGreen() > threshold && color.getBlue() > threshold)
-                        layer.getImage().setRGB(x, y, colors[i].getRGB());
+                        layer.setPixelColor(x, y, colors[i]);
                 }
             }
         }
