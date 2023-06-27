@@ -71,13 +71,13 @@ final class JSprite extends Sprite implements JRenderable {
     @Override
     public Color getPixelColor(int x, int y) {
         if (getImage() == null) return Colors.WHITE;
-        else return new Color(new java.awt.Color(getImage().getRGB(x, y)));
+        else return new Color(getImage().getRGB(x, y));
     }
 
     @Override
     public void setPixelColor(int x, int y, Color color) {
         if (getImage() == null) return;
-        getImage().setRGB(x, y, color.toAWT().getRGB());
+        getImage().setRGB(x, y, color.getRGBAValue());
     }
 
     @Override
