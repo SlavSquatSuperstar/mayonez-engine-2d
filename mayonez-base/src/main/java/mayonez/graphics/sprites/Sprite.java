@@ -52,9 +52,7 @@ public abstract class Sprite extends Component {
      * @param y the pixel y-coordinate
      * @return the color, or white if drawing a texture
      */
-    public Color getPixelColor(int x, int y) {
-        return null;
-    }
+    public abstract Color getPixelColor(int x, int y);
 
     /**
      * Set the pixel's RBG color on this sprite's stored texture at the specific coordinates.
@@ -63,8 +61,7 @@ public abstract class Sprite extends Component {
      * @param y     the pixel y-coordinate
      * @param color the color to set
      */
-    public void setPixelColor(int x, int y, Color color) {
-    }
+    public abstract void setPixelColor(int x, int y, Color color);
 
     /**
      * The sprite's transform in the parent object's local space.

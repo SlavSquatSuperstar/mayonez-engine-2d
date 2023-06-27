@@ -2,6 +2,7 @@ package mayonez.graphics.textures;
 
 import mayonez.*;
 import mayonez.annotations.*;
+import mayonez.graphics.*;
 import mayonez.io.image.*;
 import mayonez.math.*;
 import mayonez.math.shapes.*;
@@ -24,7 +25,7 @@ import static org.lwjgl.system.MemoryUtil.memSlice;
  * <ul>
  *    <li><a href="https://github.com/LWJGL/lwjgl3/blob/master/modules/samples/src/test/java/org/lwjgl/demo/stb/Image.java">org.lwjgl.demo.stb.Image</a></li>
  *    <li><a href="https://github.com/LWJGL/lwjgl3/blob/master/modules/samples/src/test/java/org/lwjgl/demo/util/IOUtil.java">org.lwjgl.demo.stb.IOUtil</a></li>
- *    <li><a href="https://github.com/LWJGL/lwjgl3/blob/master/modules/samples/src/test/java/org/lwjgl/demo/glfw/GLFWUtil.java"></a>org.lwjgl.demo.glfw.GLFWUtil</li>
+ *    <li><a href="https://github.com/LWJGL/lwjgl3/blob/master/modules/samples/src/test/java/org/lwjgl/demo/glfw/GLFWUtil.java">org.lwjgl.demo.glfw.GLFWUtil</a></li>
  * </ul>
  *
  * @author SlavSquatSuperstar
@@ -173,6 +174,16 @@ public final class GLTexture extends Texture {
 
     public void unbind() {
         glBindTexture(GL_TEXTURE_2D, 0);
+    }
+
+    // Image Data Methods
+
+    public Color getPixelColor(int x, int y) {
+        return new Color(image.get(y * width + x));
+    }
+
+    public void setPixelColor(int x, int y, Color color) {
+        // TODO recolor texture
     }
 
     // Image Getters

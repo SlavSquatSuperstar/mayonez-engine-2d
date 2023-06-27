@@ -52,7 +52,7 @@ final class JSprite extends Sprite implements JRenderable {
         }
     }
 
-    // Sprite Methods
+    // Sprite/Renderable Methods
 
     public BufferedImage getImage() {
         return (texture == null) ? null : texture.getImage();

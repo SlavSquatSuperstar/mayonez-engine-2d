@@ -1,6 +1,7 @@
 package slavsquatsuperstar.demos.geometrydash;
 
 import mayonez.*;
+import mayonez.graphics.*;
 import mayonez.graphics.camera.*;
 import mayonez.graphics.sprites.*;
 import mayonez.math.*;
@@ -8,8 +9,6 @@ import mayonez.physics.*;
 import mayonez.physics.colliders.*;
 import mayonez.scripts.*;
 import mayonez.scripts.movement.*;
-
-import java.awt.*;
 
 /**
  * The Geometry Dash player object.
@@ -43,19 +42,26 @@ public class GDPlayer extends GameObject {
 
     private void createPlayerAvatar() throws ClassCastException {
         // Create player avatar
+        var numLayers = 2;
         var tileSize = (int) getScene().getScale();
-        var layer1 = SpritesFactory.createSpriteSheet("assets/textures/geometrydash/player/layer1.png",
-                tileSize, tileSize, 13 * 5, 2);
-        var layer2 = SpritesFactory.createSpriteSheet("assets/textures/geometrydash/player/layer2.png",
-                tileSize, tileSize, 13 * 5, 2);
-        var layer3 = SpritesFactory.createSpriteSheet("assets/textures/geometrydash/player/layer3.png",
-                tileSize, tileSize, 13 * 5, 2);
+        var numSprites = 12 * 4;
 
-        var id = Random.randomInt(18, 20);
+        var spriteSheets = new SpriteSheet[numLayers];
+        for (int i = 0; i < spriteSheets.length; i++) {
+            spriteSheets[i] = SpritesFactory.createSpriteSheet(
+                    "assets/textures/geometrydash/player/layer%d.png".formatted(i),
+                    tileSize, tileSize, numSprites, 2);
+        }
+
+
+        var id = Random.randomInt(0, numSprites - 1);
         var threshold = 200;
 
-        var layers = new Sprite[]{layer1.getSprite(id), layer2.getSprite(id), layer3.getSprite(id)};
-        mayonez.graphics.Color[] colors = {new mayonez.graphics.Color(Color.RED), new mayonez.graphics.Color(Color.GREEN)};
+        var layers = new Sprite[numLayers];
+        for (int i = 0; i < layers.length; i++) {
+            layers[i] = spriteSheets[i].getSprite(id);
+        }
+        Color[] colors = {new Color(255, 0, 0), new Color(0, 255, 0)};
 
         // Create sprite layers
         for (var i = 0; i < colors.length; i++) {
@@ -63,8 +69,11 @@ public class GDPlayer extends GameObject {
             for (var y = 0; y < layer.getImageWidth(); y++) {
                 for (var x = 0; x < layer.getImageHeight(); x++) {
                     var color = layer.getPixelColor(x, y);
-                    if (color.getRed() > threshold && color.getGreen() > threshold && color.getBlue() > threshold)
+                    if (color.getRed() > threshold
+                            && color.getGreen() > threshold
+                            && color.getBlue() > threshold) {
                         layer.setPixelColor(x, y, colors[i]);
+                    }
                 }
             }
         }

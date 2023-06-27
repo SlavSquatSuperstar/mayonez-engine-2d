@@ -63,13 +63,21 @@ class GLSprite private constructor(private val texture: GLTexture?, color: Color
         pushInt(texID)
     }
 
-    // Sprite Methods
+    // Sprite/Renderable Methods
 
     override fun getBatchSize(): Int = RenderBatch.MAX_SPRITES
 
+    override fun getImageWidth(): Int = texture?.width ?: 0
+
     override fun getImageHeight(): Int = texture?.height ?: 0
 
-    override fun getImageWidth(): Int = texture?.width ?: 0
+    override fun getPixelColor(x: Int, y: Int): Color {
+        return texture?.getPixelColor(x, y) ?: Colors.WHITE
+    }
+
+    override fun setPixelColor(x: Int, y: Int, color: Color?) {
+        texture?.setPixelColor(x, y, color ?: Colors.WHITE)
+    }
 
     override fun getPrimitive(): DrawPrimitive = DrawPrimitive.SPRITE
 
