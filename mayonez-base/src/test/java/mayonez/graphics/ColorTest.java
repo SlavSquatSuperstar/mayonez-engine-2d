@@ -43,4 +43,12 @@ class ColorTest {
         assertEquals(2014458966, color.getRGBAValue());
     }
 
+    @Test
+    void combineColorsSuccess() {
+        var color1 = new Color(63, 63, 63, 255);
+        var color2 = new Color(255, 0, 127, 255);
+        var result = new Color(63, 0, 31, 255);
+        assertEquals(result, color1.combine(color2));
+    }
+
 }

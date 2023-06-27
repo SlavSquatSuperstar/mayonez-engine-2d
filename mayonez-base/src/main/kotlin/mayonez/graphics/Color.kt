@@ -67,6 +67,20 @@ class Color(red: Int, green: Int, blue: Int, alpha: Int) {
     // Conversion Methods
 
     /**
+     * Converts this color to an instance of [java.awt.Color] to use in the AWT
+     * engine.
+     */
+    fun toAWT(): JColor = JColor(red, green, blue, alpha)
+
+    /**
+     * Converts this color to an instance of [org.joml.Vector4f] to use in the
+     * GL engine, normalizing the values between 0-1.
+     */
+    fun toGL(): Vector4f = Vector4f(red.norm(), green.norm(), blue.norm(), alpha.norm())
+
+    // Color Value Methods
+
+    /**
      * Get the combined RGBA value as an integer, with each component taking up
      * 8 bits. From most to least significant, the order is alpha, red, green,
      * and blue.
@@ -83,16 +97,30 @@ class Color(red: Int, green: Int, blue: Int, alpha: Int) {
     }
 
     /**
-     * Converts this color to an instance of [java.awt.Color] to use in the AWT
-     * engine.
+     * Combine this color with another, multiplying the values for all
+     * components.
+     *
+     * @param color the other color
+     * @return the combined color
      */
-    fun toAWT(): JColor = JColor(red, green, blue, alpha)
+    fun combine(color: MColor): MColor {
+        return MColor(
+            this.red.combine(color.red),
+            this.green.combine(color.green),
+            this.blue.combine(color.blue),
+            this.alpha.combine(color.alpha)
+        )
+    }
 
-    /**
-     * Converts this color to an instance of [org.joml.Vector4f] to use in the
-     * GL engine, normalizing the values between 0-1.
-     */
-    fun toGL(): Vector4f = Vector4f(red.norm(), green.norm(), blue.norm(), alpha.norm())
+    // Color Code Methods
+
+    fun rgbHexCode(): String {
+        return String.format("#%02x%02x%02x", red, green, blue)
+    }
+
+    fun rgbaHexCode(): String {
+        return String.format("#%02x%02x%02x%02x", red, green, blue, alpha)
+    }
 
     // Object Overrides
 
@@ -105,19 +133,13 @@ class Color(red: Int, green: Int, blue: Int, alpha: Int) {
 
     override fun toString(): String = "Color($red, $green, $blue, $alpha)"
 
-    // Helper Methods
-
-    fun rgbHexCode(): String {
-        return String.format("#%02x%02x%02x", red, green, blue)
-    }
-
-    fun rgbaHexCode(): String {
-        return String.format("#%02x%02x%02x%02x", red, green, blue, alpha)
-    }
-
 }
 
+// Shift Helper Methods
 private fun Int.getSelectedBits(bits: Int) = (this shr bits) and SELECT_8_BITS
 private fun Int.shiftBitsToCombine(shiftAmount: Int) = (this and SELECT_8_BITS) shl shiftAmount
+
+// Multiplication Methods
 private fun Int.clamp(): Int = IntMath.clamp(this, 0, 255)
 private fun Int.norm(): Float = this * NORMALIZE
+private fun Int.combine(other: Int): Int = (this * other * NORMALIZE).toInt()

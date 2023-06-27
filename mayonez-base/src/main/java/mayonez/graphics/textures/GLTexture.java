@@ -2,7 +2,6 @@ package mayonez.graphics.textures;
 
 import mayonez.*;
 import mayonez.annotations.*;
-import mayonez.graphics.*;
 import mayonez.io.image.*;
 import mayonez.math.*;
 import mayonez.math.shapes.*;
@@ -177,14 +176,7 @@ public final class GLTexture extends Texture {
     }
 
     // Image Data Methods
-
-    public Color getPixelColor(int x, int y) {
-        return new Color(image.get(y * width + x));
-    }
-
-    public void setPixelColor(int x, int y, Color color) {
-        // TODO recolor texture
-    }
+    // TODO recolor texture
 
     // Image Getters
 

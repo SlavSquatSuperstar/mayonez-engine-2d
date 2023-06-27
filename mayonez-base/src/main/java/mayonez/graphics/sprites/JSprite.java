@@ -20,6 +20,7 @@ import java.awt.image.*;
 final class JSprite extends Sprite implements JRenderable {
 
     private final JTexture texture;
+    private Color color;
 
     /**
      * Creates a new JSprite that renders an entire texture.
@@ -27,7 +28,7 @@ final class JSprite extends Sprite implements JRenderable {
      * @param texture a texture
      */
     JSprite(JTexture texture) {
-        super(Colors.WHITE);
+        this.color = Colors.WHITE;
         this.texture = texture;
     }
 
@@ -37,8 +38,8 @@ final class JSprite extends Sprite implements JRenderable {
      * @param color a color
      */
     JSprite(Color color) {
-        super(color);
-        texture = null;
+        this.color = (color != null) ? color : Colors.WHITE;
+        this.texture = null;
     }
 
     // Sprite Methods
@@ -54,7 +55,28 @@ final class JSprite extends Sprite implements JRenderable {
 
     // Sprite/Renderable Methods
 
-    public BufferedImage getImage() {
+    @Override
+    public Color getColor() {
+        return color;
+    }
+
+    @Override
+    public void setColor(Color color) {
+        this.color = (color != null) ? color : Colors.WHITE;
+        recolorImage(color);
+    }
+
+    private void recolorImage(Color color) {
+        for (var y = 0; y < getImageWidth(); y++) {
+            for (var x = 0; x < getImageHeight(); x++) {
+                var pixelColor = getPixelColor(x, y);
+                var combinedColor = pixelColor.combine(color);
+                setPixelColor(x, y, combinedColor);
+            }
+        }
+    }
+
+    private BufferedImage getImage() {
         return (texture == null) ? null : texture.getImage();
     }
 
@@ -68,13 +90,25 @@ final class JSprite extends Sprite implements JRenderable {
         return (getImage() == null) ? 0 : getImage().getHeight();
     }
 
-    @Override
+    /**
+     * Get the pixel's RBG color on this sprite's stored texture at the specific coordinates.
+     *
+     * @param x the pixel x-coordinate
+     * @param y the pixel y-coordinate
+     * @return the color, or white if drawing a texture
+     */
     public Color getPixelColor(int x, int y) {
         if (getImage() == null) return Colors.WHITE;
         else return new Color(getImage().getRGB(x, y));
     }
 
-    @Override
+    /**
+     * Set the pixel's RBG color on this sprite's stored texture at the specific coordinates.
+     *
+     * @param x     the pixel x-coordinate
+     * @param y     the pixel y-coordinate
+     * @param color the color to set
+     */
     public void setPixelColor(int x, int y, Color color) {
         if (getImage() == null) return;
         getImage().setRGB(x, y, color.getRGBAValue());

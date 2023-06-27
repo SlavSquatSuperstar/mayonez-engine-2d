@@ -1,14 +1,12 @@
 package slavsquatsuperstar.demos.geometrydash.ui;
 
-import mayonez.GameObject;
-import mayonez.Transform;
-import mayonez.annotations.ExperimentalFeature;
+import mayonez.*;
+import mayonez.annotations.*;
 import mayonez.graphics.sprites.*;
-import mayonez.graphics.textures.JTexture;
-import mayonez.graphics.textures.Texture;
-import mayonez.math.Vec2;
-import mayonez.physics.colliders.BoxCollider;
-import mayonez.scripts.movement.MouseScript;
+import mayonez.graphics.textures.*;
+import mayonez.math.*;
+import mayonez.physics.colliders.*;
+import mayonez.scripts.movement.*;
 
 /**
  * A user interface button that perform an action when clicked.
@@ -77,7 +75,7 @@ public class UIButton extends GameObject {
         return this;
     }
 
-    public JTexture getIcon() {
-        return (JTexture) icon;
+    public Texture getIcon() {
+        return icon;
     }
 }

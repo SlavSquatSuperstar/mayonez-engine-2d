@@ -53,9 +53,7 @@ public class GDPlayer extends GameObject {
                     tileSize, tileSize, numSprites, 2);
         }
 
-
         var id = Random.randomInt(0, numSprites - 1);
-        var threshold = 200;
 
         var layers = new Sprite[numLayers];
         for (int i = 0; i < layers.length; i++) {
@@ -64,20 +62,10 @@ public class GDPlayer extends GameObject {
         Color[] colors = {new Color(255, 0, 0), new Color(0, 255, 0)};
 
         // Create sprite layers
-        for (var i = 0; i < colors.length; i++) {
-            var layer = layers[i];
-            for (var y = 0; y < layer.getImageWidth(); y++) {
-                for (var x = 0; x < layer.getImageHeight(); x++) {
-                    var color = layer.getPixelColor(x, y);
-                    if (color.getRed() > threshold
-                            && color.getGreen() > threshold
-                            && color.getBlue() > threshold) {
-                        layer.setPixelColor(x, y, colors[i]);
-                    }
-                }
-            }
+        for (var i = 0; i < layers.length; i++) {
+            layers[i].setColor(colors[i]);
+            addComponent(layers[i]);
         }
-        for (var spr : layers) addComponent(spr);
     }
 
 }

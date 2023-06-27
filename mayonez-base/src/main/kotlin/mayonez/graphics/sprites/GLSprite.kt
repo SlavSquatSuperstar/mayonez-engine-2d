@@ -15,8 +15,10 @@ import mayonez.util.*
  * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.GL)
-class GLSprite private constructor(private val texture: GLTexture?, color: Color?) : Sprite(color),
+class GLSprite private constructor(private val texture: GLTexture?, color: Color?) : Sprite(),
     GLRenderable {
+
+    private var color: Color = color ?: Colors.WHITE
 
     /**
      * Create a new GLSprite that renders an entire texture.
@@ -67,17 +69,15 @@ class GLSprite private constructor(private val texture: GLTexture?, color: Color
 
     override fun getBatchSize(): Int = RenderBatch.MAX_SPRITES
 
+    override fun getColor(): Color = color
+
+    override fun setColor(color: Color?) {
+        TODO("Not yet implemented")
+    }
+
     override fun getImageWidth(): Int = texture?.width ?: 0
 
     override fun getImageHeight(): Int = texture?.height ?: 0
-
-    override fun getPixelColor(x: Int, y: Int): Color {
-        return texture?.getPixelColor(x, y) ?: Colors.WHITE
-    }
-
-    override fun setPixelColor(x: Int, y: Int, color: Color?) {
-        texture?.setPixelColor(x, y, color ?: Colors.WHITE)
-    }
 
     override fun getPrimitive(): DrawPrimitive = DrawPrimitive.SPRITE
 

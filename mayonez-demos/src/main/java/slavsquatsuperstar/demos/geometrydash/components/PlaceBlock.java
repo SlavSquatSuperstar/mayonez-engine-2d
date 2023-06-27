@@ -23,7 +23,7 @@ import java.awt.*;
 @ExperimentalFeature
 public class PlaceBlock extends Script implements JRenderable {
 
-    private JTexture cursor;
+    private Texture cursor;
     private Timer timer;
 
     @Override
@@ -57,12 +57,14 @@ public class PlaceBlock extends Script implements JRenderable {
     @Override
     public void render(Graphics2D g2) {
         if (cursor == null) return;
-        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f)); // make transparent
-        cursor.draw(g2, this.transform, new Transform(), getScene().getScale());
-        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f)); // reset alpha
+        if (cursor instanceof JTexture jTexture) {
+            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f)); // make cursor transparent
+            jTexture.draw(g2, this.transform, new Transform(), getScene().getScale());
+            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f)); // reset alpha
+        }
     }
 
-    public void setCursor(JTexture cursor) {
+    public void setCursor(Texture cursor) {
         this.cursor = cursor;
     }
 

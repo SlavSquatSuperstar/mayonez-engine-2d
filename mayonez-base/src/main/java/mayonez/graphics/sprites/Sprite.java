@@ -3,7 +3,6 @@ package mayonez.graphics.sprites;
 import mayonez.*;
 import mayonez.graphics.*;
 import mayonez.graphics.textures.*;
-import mayonez.util.*;
 
 /**
  * A visual representation of a GameObject.
@@ -13,23 +12,23 @@ import mayonez.util.*;
 // TODO make color and texture changeable
 public abstract class Sprite extends Component {
 
-    protected final Color color;
     protected Transform spriteXf;
-
-    public Sprite(Color color) {
-        this.color = (color != null) ? color : Colors.WHITE;
-    }
 
     // Getters and Setters
 
     /**
-     * Returns the color this sprite holds.
+     * Returns the color of this sprite, white by default if drawing a texture.
      *
-     * @return the color, or white if drawing a texture
+     * @return the color
      */
-    public final Color getColor() {
-        return this.color;
-    }
+    public abstract Color getColor();
+
+    /**
+     * Set the color of this sprite, or "dye" the texture if drawing one.
+     *
+     * @param color the color
+     */
+    public abstract void setColor(Color color);
 
     /**
      * Get the width of this sprite's stored texture in pixels.
@@ -44,24 +43,6 @@ public abstract class Sprite extends Component {
      * @return the image height, or 0 if drawing a color
      */
     public abstract int getImageHeight();
-
-    /**
-     * Get the pixel's RBG color on this sprite's stored texture at the specific coordinates.
-     *
-     * @param x the pixel x-coordinate
-     * @param y the pixel y-coordinate
-     * @return the color, or white if drawing a texture
-     */
-    public abstract Color getPixelColor(int x, int y);
-
-    /**
-     * Set the pixel's RBG color on this sprite's stored texture at the specific coordinates.
-     *
-     * @param x     the pixel x-coordinate
-     * @param y     the pixel y-coordinate
-     * @param color the color to set
-     */
-    public abstract void setPixelColor(int x, int y, Color color);
 
     /**
      * The sprite's transform in the parent object's local space.
