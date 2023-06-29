@@ -1,5 +1,6 @@
 package mayonez.graphics.sprites;
 
+import mayonez.*;
 import mayonez.annotations.*;
 import mayonez.graphics.textures.*;
 import mayonez.io.*;
@@ -18,30 +19,32 @@ public final class GLSpriteSheet extends SpriteSheet {
 
     private final GLTexture sheetTexture;
     private final List<GLSprite> sprites;
+    private final Vec2 spriteSize;
 
     /**
-     * Creates a spritesheet from the given image file.
+     * Creates a sprite sheet from the given image file.
      *
      * @param filename   the name of the parent texture
-     * @param spriteSize how wide and tall each sprite is
+     * @param spriteSize the dimensions of each sprite, in pixels
      * @param numSprites how many sprites to create
      * @param spacing    the padding in between sprites
      */
     GLSpriteSheet(String filename, Vec2 spriteSize, int numSprites, int spacing) {
         sheetTexture = Assets.getGLTexture(filename);
         sprites = new ArrayList<>();
-        createSprites(spriteSize, numSprites, spacing);
+        this.spriteSize = spriteSize;
+        createSprites(numSprites, spacing);
     }
 
     @Override
-    protected void createSprites(Vec2 spriteSize, int numSprites, int spacing) {
-        var texSize = sheetTexture.getSize();
+    protected void createSprites(int numSprites, int spacing) {
+        var sheetSize = sheetTexture.getSize();
 
         // Read sprite sheet from top left, but read image from bottom left
-        var imgPos = new Vec2(0, texSize.y - spriteSize.y);
+        var imgPos = new Vec2(0, sheetSize.y - spriteSize.y);
         for (var i = 0; i < numSprites; i++) {
             createSprite(spriteSize, imgPos);
-            moveToNextSprite(imgPos, spriteSize, spacing, texSize);
+            moveToNextSprite(imgPos, spacing, sheetSize);
         }
     }
 
@@ -61,7 +64,17 @@ public final class GLSpriteSheet extends SpriteSheet {
     }
 
     @Override
-    public GLSprite getSprite(int index) {
+    protected void moveToNextSprite(Vec2 imgPos, int spacing, Vec2 sheetSize) {
+        imgPos.x += spriteSize.x + spacing;
+        if (imgPos.x >= sheetSize.x) { // next row
+            imgPos.x = 0;
+            imgPos.y += spriteSize.y + spacing;
+        }
+        Logger.log("pos = %s", imgPos);
+    }
+
+    @Override
+    public Sprite getSprite(int index) {
         return sprites.get(index).copy();
     }
 

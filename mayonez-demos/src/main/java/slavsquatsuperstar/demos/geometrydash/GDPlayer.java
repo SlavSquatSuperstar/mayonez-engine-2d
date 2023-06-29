@@ -9,6 +9,7 @@ import mayonez.physics.*;
 import mayonez.physics.colliders.*;
 import mayonez.scripts.*;
 import mayonez.scripts.movement.*;
+import mayonez.util.*;
 
 /**
  * The Geometry Dash player object.
@@ -17,19 +18,16 @@ import mayonez.scripts.movement.*;
  */
 public class GDPlayer extends GameObject {
 
+    private static final int NUM_SPRITES = 12 * 4;
+    private static int spriteIndex = -1;
+
     public GDPlayer(String name, Vec2 position) {
         super(name, position);
     }
 
     @Override
     protected void init() {
-        try {
-            createPlayerAvatar();
-        } catch (ClassCastException e) {
-            Logger.error("Geometry Dash scenes must be run with AWT engine");
-            Logger.printStackTrace(e);
-            Mayonez.stop(ExitCode.ERROR);
-        }
+        createPlayerAvatar();
 
         getScene().getCamera().setKeepInScene(false).setMode(CameraMode.FREE);
 
@@ -38,10 +36,15 @@ public class GDPlayer extends GameObject {
         addComponent(new Rigidbody(1f).setDrag(0.2f).setFixedRotation(true));
         addComponent(new KeyMovement(MoveMode.POSITION, thrustForce).setTopSpeed(thrustForce));
         addComponent(new KeepInScene(KeepInScene.Mode.STOP));
+        addComponent(new ShapeSprite(Colors.DARK_GRAY, false));
     }
 
-    private void createPlayerAvatar() throws ClassCastException {
-        // Create player avatar
+    private void createPlayerAvatar() {
+        var spriteSheets = createSpriteSheets();
+        addSpriteLayers(spriteSheets);
+    }
+
+    private SpriteSheet[] createSpriteSheets() {
         var numLayers = 2;
         var tileSize = (int) getScene().getScale();
         var numSprites = 12 * 4;
@@ -52,16 +55,20 @@ public class GDPlayer extends GameObject {
                     "assets/textures/geometrydash/player/layer%d.png".formatted(i),
                     tileSize, tileSize, numSprites, 2);
         }
+        return spriteSheets;
+    }
 
-        var id = Random.randomInt(0, numSprites - 1);
+    private void addSpriteLayers(SpriteSheet[] spriteSheets) {
+//        var spriteIndex = Random.randomInt(0, NUM_SPRITES - 1);
+        spriteIndex = (spriteIndex + 1) % NUM_SPRITES;
+        Logger.log("sprite = %d", spriteIndex);
 
-        var layers = new Sprite[numLayers];
+        var layers = new Sprite[spriteSheets.length];
         for (int i = 0; i < layers.length; i++) {
-            layers[i] = spriteSheets[i].getSprite(id);
+            layers[i] = spriteSheets[i].getSprite(spriteIndex);
         }
-        Color[] colors = {new Color(255, 0, 0), new Color(0, 255, 0)};
 
-        // Create sprite layers
+        Color[] colors = {new Color(255, 0, 0), new Color(0, 255, 0)};
         for (var i = 0; i < layers.length; i++) {
             layers[i].setColor(colors[i]);
             addComponent(layers[i]);

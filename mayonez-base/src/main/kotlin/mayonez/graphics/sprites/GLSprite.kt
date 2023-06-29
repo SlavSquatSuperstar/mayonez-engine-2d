@@ -8,6 +8,8 @@ import mayonez.math.*
 import mayonez.math.shapes.*
 import mayonez.util.*
 
+private val DEFAULT_COLOR: Color = Colors.WHITE
+
 /**
  * A component that draws an image at a [GameObject]'s position using the
  * GL engine.
@@ -15,17 +17,15 @@ import mayonez.util.*
  * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.GL)
-class GLSprite private constructor(private val texture: GLTexture?, color: Color?) : Sprite(),
+class GLSprite private constructor(private val texture: GLTexture?, private var color: Color?) : Sprite(),
     GLRenderable {
-
-    private var color: Color = color ?: Colors.WHITE
 
     /**
      * Create a new GLSprite that renders an entire texture.
      *
      * @param texture a texture
      */
-    internal constructor(texture: GLTexture?) : this(texture, Colors.WHITE)
+    internal constructor(texture: GLTexture?) : this(texture, DEFAULT_COLOR)
 
     /**
      * Create a new GLSprite that only renders a color.
@@ -44,7 +44,7 @@ class GLSprite private constructor(private val texture: GLTexture?, color: Color
     override fun pushToBatch(batch: RenderBatch) {
         // Add sprite vertex data
         val objXf = transform.combine(spriteTransform)
-        val color = this.color.toGL()
+        val color = (this.color ?: DEFAULT_COLOR).toGL()
         val texCoords = getTexCoords()
         val texID = batch.addTexture(texture)
 
@@ -69,10 +69,10 @@ class GLSprite private constructor(private val texture: GLTexture?, color: Color
 
     override fun getBatchSize(): Int = RenderBatch.MAX_SPRITES
 
-    override fun getColor(): Color = color
+    override fun getColor(): Color = color ?: DEFAULT_COLOR
 
     override fun setColor(color: Color?) {
-        TODO("Not yet implemented")
+        this.color = color
     }
 
     override fun getImageWidth(): Int = texture?.width ?: 0

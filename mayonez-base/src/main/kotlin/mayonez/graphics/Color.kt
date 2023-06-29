@@ -13,7 +13,7 @@ private const val BLUE_SHIFT_BITS: Int = 0
 private const val SELECT_8_BITS: Int = 0xFF
 
 /**
- * Stores a color used by the program and translates to and from
+ * Stores an immutable color used by the program and translates to and from
  * [java.awt.Color] and [org.joml.Vector4f].
  */
 // todo to/from rgb value
@@ -41,28 +41,16 @@ class Color(red: Int, green: Int, blue: Int, alpha: Int) {
     // Color Properties
 
     /** Red component of this color, between 0-255. */
-    var red: Int = red
-        set(red) {
-            field = red.clamp()
-        }
+    val red: Int = red.clamp()
 
     /** Green component of this color, between 0-255. */
-    var green: Int = green
-        set(green) {
-            field = green.clamp()
-        }
+    val green: Int = green.clamp()
 
     /** Blue component of this color, between 0-255. */
-    var blue: Int = blue
-        set(blue) {
-            field = blue.clamp()
-        }
+    val blue: Int = blue.clamp()
 
     /** Alpha component of this color, between 0-255. */
-    var alpha: Int = alpha
-        set(alpha) {
-            field = alpha.clamp()
-        }
+    val alpha: Int = alpha.clamp()
 
     // Conversion Methods
 

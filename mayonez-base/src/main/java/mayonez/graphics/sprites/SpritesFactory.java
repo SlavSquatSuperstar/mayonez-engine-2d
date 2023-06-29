@@ -68,9 +68,11 @@ public final class SpritesFactory {
      * @return a sprite sheet
      */
     public static SpriteSheet createSpriteSheet(String filename, int spriteWidth, int spriteHeight, int numSprites, int spacing) {
-        if (Mayonez.getUseGL())
+        if (Mayonez.getUseGL()) {
             return new GLSpriteSheet(filename, new Vec2(spriteWidth, spriteHeight), numSprites, spacing);
-        else return new JSpriteSheet(filename, new Vec2(spriteWidth, spriteHeight), numSprites, spacing);
+        } else {
+            return new JSpriteSheet(filename, new Vec2(spriteWidth, spriteHeight), numSprites, spacing);
+        }
     }
 
 }
