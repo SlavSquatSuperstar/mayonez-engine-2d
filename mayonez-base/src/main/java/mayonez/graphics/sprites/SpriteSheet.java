@@ -10,6 +10,8 @@ import mayonez.math.*;
  */
 public abstract sealed class SpriteSheet permits JSpriteSheet, GLSpriteSheet {
 
+    // Create Sprite Methods
+
     /**
      * Create individual sprites from the sprite sheet, reading from left to right
      * then top to bottom.
@@ -22,11 +24,19 @@ public abstract sealed class SpriteSheet permits JSpriteSheet, GLSpriteSheet {
     /**
      * Move to the next sprite on the sprite sheet.
      *
-     * @param imgPos    the position of the image on the sprite sheet in pixels
+     * @param imgOrigin the origin of the current sprite on the sprite sheet in pixels
      * @param spacing   the space between each sprite in pixels
-     * @param sheetSize the size of the sprite sheet texture in pixels
      */
-    protected abstract void moveToNextSprite(Vec2 imgPos, int spacing, Vec2 sheetSize);
+    protected abstract void moveToNextSprite(Vec2 imgOrigin, int spacing);
+
+    // Sprite Sheet Getters
+
+    /**
+     * The size of the sprite sheet texture in pixels.
+     *
+     * @return the sheet size
+     */
+    protected abstract Vec2 getSheetSize();
 
     // Sprite/Texture Getters
 

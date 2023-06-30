@@ -9,7 +9,6 @@ import mayonez.physics.*;
 import mayonez.physics.colliders.*;
 import mayonez.scripts.*;
 import mayonez.scripts.movement.*;
-import mayonez.util.*;
 
 /**
  * The Geometry Dash player object.
@@ -36,7 +35,7 @@ public class GDPlayer extends GameObject {
         addComponent(new Rigidbody(1f).setDrag(0.2f).setFixedRotation(true));
         addComponent(new KeyMovement(MoveMode.POSITION, thrustForce).setTopSpeed(thrustForce));
         addComponent(new KeepInScene(KeepInScene.Mode.STOP));
-        addComponent(new ShapeSprite(Colors.DARK_GRAY, false));
+//        addComponent(new ShapeSprite(Colors.DARK_GRAY, false));
     }
 
     private void createPlayerAvatar() {
@@ -46,7 +45,7 @@ public class GDPlayer extends GameObject {
 
     private SpriteSheet[] createSpriteSheets() {
         var numLayers = 2;
-        var tileSize = (int) getScene().getScale();
+        var tileSize = GDEditorScene.TILE_SIZE;
         var numSprites = 12 * 4;
 
         var spriteSheets = new SpriteSheet[numLayers];
@@ -61,7 +60,7 @@ public class GDPlayer extends GameObject {
     private void addSpriteLayers(SpriteSheet[] spriteSheets) {
 //        var spriteIndex = Random.randomInt(0, NUM_SPRITES - 1);
         spriteIndex = (spriteIndex + 1) % NUM_SPRITES;
-        Logger.log("sprite = %d", spriteIndex);
+//        Logger.log("sprite = %d", spriteIndex);
 
         var layers = new Sprite[spriteSheets.length];
         for (int i = 0; i < layers.length; i++) {

@@ -112,7 +112,7 @@ object Assets {
         val ctor = assetClass.getDeclaredConstructor(String::class.java)
         val asset = assetClass.cast(ctor.newInstance(filename)) ?: return null
         assets[filename] = asset
-        Logger.debug("Loaded asset \"%s\" as %s", assetClass.simpleName, filename)
+        Logger.debug("Loaded asset \"%s\" as %s", filename, assetClass.simpleName)
         return asset
     }
 

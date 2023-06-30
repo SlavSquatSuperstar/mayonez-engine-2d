@@ -16,8 +16,10 @@ import slavsquatsuperstar.demos.geometrydash.ui.UICanvas;
  */
 public class GDEditorScene extends Scene {
 
+    final static int TILE_SIZE = 42;
+
     public GDEditorScene(String name) {
-        super(name, Preferences.getScreenWidth(), Preferences.getScreenHeight(), 42);
+        super(name, Preferences.getScreenWidth(), Preferences.getScreenHeight(), TILE_SIZE);
         setGravity(new Vec2());
     }
 

@@ -1,6 +1,5 @@
 package mayonez.graphics.sprites;
 
-import mayonez.*;
 import mayonez.annotations.*;
 import mayonez.graphics.textures.*;
 import mayonez.io.*;
@@ -36,41 +35,60 @@ public final class GLSpriteSheet extends SpriteSheet {
         createSprites(numSprites, spacing);
     }
 
+    // Create Sprite Methods
+
     @Override
     protected void createSprites(int numSprites, int spacing) {
-        var sheetSize = sheetTexture.getSize();
+        // GL uses bottom left as image origin
+        Vec2 spriteTopLeft = getSpriteTopLeft();
+//        Logger.log("pos = %s", spriteTopLeft);
 
-        // Read sprite sheet from top left, but read image from bottom left
-        var imgPos = new Vec2(0, sheetSize.y - spriteSize.y);
+        // Read sprites from top left of sheet
         for (var i = 0; i < numSprites; i++) {
-            createSprite(spriteSize, imgPos);
-            moveToNextSprite(imgPos, spacing, sheetSize);
+            addCurrentSprite(spriteTopLeft);
+            moveToNextSprite(spriteTopLeft, spacing);
         }
     }
 
-    private void createSprite(Vec2 spriteSize, Vec2 imgPos) {
-        var texCoords = getSubImageSize(spriteSize, imgPos);
+    private Vec2 getSpriteTopLeft() {
+        var sheetSize = getSheetSize();
+        var sheetTopLeft = new Vec2(0, sheetSize.y);
+        return sheetTopLeft.sub(new Vec2(0, spriteSize.y));
+    }
+
+    private void addCurrentSprite(Vec2 spriteBottomLeft) {
+        var texCoords = getSubimageCoords(spriteBottomLeft);
         sprites.add(new GLSprite(new GLTexture(sheetTexture, texCoords)));
     }
 
-    private Vec2[] getSubImageSize(Vec2 spriteSize, Vec2 imgPos) {
-        // Normalize image coordinates
+    private Vec2[] getSubimageCoords(Vec2 spriteBottomLeft) {
+        // Normalize image coordinates to between 0-1
         var texSize = sheetTexture.getSize();
-        var imgMin = imgPos.div(texSize);
-        var imgMax = imgPos.add(spriteSize).div(texSize);
+        var imgMin = spriteBottomLeft.div(texSize);
+        var imgMax = spriteBottomLeft.add(spriteSize).div(texSize);
         var imgSize = imgMax.sub(imgMin);
-
-        return Rectangle.rectangleVertices(imgMin.add(imgSize.mul(0.5f)), imgSize, 0);
+        return Rectangle.rectangleVertices(imgMin.midpoint(imgMax), imgSize, 0);
     }
 
     @Override
-    protected void moveToNextSprite(Vec2 imgPos, int spacing, Vec2 sheetSize) {
-        imgPos.x += spriteSize.x + spacing;
-        if (imgPos.x >= sheetSize.x) { // next row
-            imgPos.x = 0;
-            imgPos.y += spriteSize.y + spacing;
+    protected void moveToNextSprite(Vec2 imgOrigin, int spacing) {
+        var sheetSize = getSheetSize();
+
+        // Origin at bottom left
+        imgOrigin.x += spriteSize.x + spacing;
+        if (imgOrigin.x >= sheetSize.x) {
+            // If at end of row, go to next row
+            imgOrigin.x = 0;
+            imgOrigin.y -= spriteSize.y + spacing;
         }
-        Logger.log("pos = %s", imgPos);
+//        Logger.log("pos = %s", imgOrigin);
+    }
+
+    // Getters
+
+    @Override
+    protected Vec2 getSheetSize() {
+        return sheetTexture.getSize();
     }
 
     @Override

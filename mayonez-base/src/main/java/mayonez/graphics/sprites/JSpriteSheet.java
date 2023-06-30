@@ -1,6 +1,5 @@
 package mayonez.graphics.sprites;
 
-import mayonez.*;
 import mayonez.annotations.*;
 import mayonez.graphics.textures.*;
 import mayonez.io.*;
@@ -35,33 +34,49 @@ public final class JSpriteSheet extends SpriteSheet {
         createSprites(numSprites, spacing);
     }
 
+    // Create Sprite Methods
+
     @Override
     protected void createSprites(int numSprites, int spacing) {
-        var sheetSize = sheetTexture.getSize();
+        // AWT uses top left as image origin
+        var spriteTopLeft = new Vec2(0, 0);
+//        Logger.log("pos = %s", spriteTopLeft);
 
-        // Make sure there isn't extra space on the right/bottom
-        // Assume spacing is less than tile size
-        var imgPos = new Vec2();
+        // Read sprites from top left of sheet
         for (var count = 0; count < numSprites; count++) {
-            createSprite(sheetTexture.getFilename(), imgPos, count);
-            moveToNextSprite(imgPos, spacing, sheetSize);
+            addCurrentSprite(sheetTexture.getFilename(), spriteTopLeft, count);
+            moveToNextSprite(spriteTopLeft, spacing);
         }
     }
 
-    private void createSprite(String filename, Vec2 imgPos, int count) {
-        var subimage = sheetTexture.getImage().getSubimage((int) imgPos.x, (int) imgPos.y,
-                (int) spriteSize.x, (int) spriteSize.y);
-        textures.add(new JTexture(String.format("%s (Sprite %s)", filename, count), subimage));
+    private void addCurrentSprite(String filename, Vec2 spriteTopLeft, int count) {
+        var subimage = sheetTexture.getImage().getSubimage(
+                (int) spriteTopLeft.x, (int) spriteTopLeft.y,
+                (int) spriteSize.x, (int) spriteSize.y
+        );
+        textures.add(new JTexture("%s (Sprite %s)".formatted(filename, count), subimage));
     }
 
     @Override
-    protected void moveToNextSprite(Vec2 imgPos, int spacing, Vec2 sheetSize) {
-        imgPos.x += spriteSize.x + spacing;
-        if (imgPos.x >= sheetSize.x) { // next row
-            imgPos.x = 0;
-            imgPos.y += spriteSize.y + spacing;
+    protected void moveToNextSprite(Vec2 imgOrigin, int spacing) {
+        var sheetSize = getSheetSize();
+
+        // Origin at top left
+        imgOrigin.x += spriteSize.x + spacing;
+        if (imgOrigin.x >= sheetSize.x) {
+            // If at end of row, go to next row
+            imgOrigin.x = 0;
+            imgOrigin.y += spriteSize.y + spacing;
         }
-        Logger.log("pos = %s", imgPos);
+//        Logger.log("pos = %s", imgOrigin);
+    }
+
+    // Getters
+
+
+    @Override
+    protected Vec2 getSheetSize() {
+        return sheetTexture.getSize();
     }
 
     @Override
