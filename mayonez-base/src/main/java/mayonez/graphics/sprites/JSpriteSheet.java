@@ -40,7 +40,6 @@ public final class JSpriteSheet extends SpriteSheet {
     protected void createSprites(int numSprites, int spacing) {
         // AWT uses top left as image origin
         var spriteTopLeft = new Vec2(0, 0);
-//        Logger.log("pos = %s", spriteTopLeft);
 
         // Read sprites from top left of sheet
         for (var count = 0; count < numSprites; count++) {
@@ -68,7 +67,6 @@ public final class JSpriteSheet extends SpriteSheet {
             imgOrigin.x = 0;
             imgOrigin.y += spriteSize.y + spacing;
         }
-//        Logger.log("pos = %s", imgOrigin);
     }
 
     // Getters

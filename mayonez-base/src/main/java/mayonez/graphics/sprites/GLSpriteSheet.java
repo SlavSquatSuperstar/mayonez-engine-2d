@@ -41,7 +41,6 @@ public final class GLSpriteSheet extends SpriteSheet {
     protected void createSprites(int numSprites, int spacing) {
         // GL uses bottom left as image origin
         Vec2 spriteTopLeft = getSpriteTopLeft();
-//        Logger.log("pos = %s", spriteTopLeft);
 
         // Read sprites from top left of sheet
         for (var i = 0; i < numSprites; i++) {
@@ -81,7 +80,6 @@ public final class GLSpriteSheet extends SpriteSheet {
             imgOrigin.x = 0;
             imgOrigin.y -= spriteSize.y + spacing;
         }
-//        Logger.log("pos = %s", imgOrigin);
     }
 
     // Getters

@@ -78,7 +78,7 @@ Below are the tools and libraries used in the development of this project.
     - Utilizes [Gradle Shadow Plugin](https://github.com/johnrengelman/shadow/releases) for creating fat jars
 
 - Dependencies (bundled in JAR)
-    - [LWJGL 3.3.1](https://www.lwjgl.org/customize) (user OS & architecture specific)
+    - [LWJGL 3.3.2](https://www.lwjgl.org/customize) (user OS & architecture specific)
         - Libraries: [JOML](https://joml-ci.github.io/JOML/), GLFW, OpenGL, and STB
     - [Kotlin Standard Library](https://kotlinlang.org/docs/getting-started.html)
     - [JSON in Java](https://github.com/stleary/JSON-java) (org.json)

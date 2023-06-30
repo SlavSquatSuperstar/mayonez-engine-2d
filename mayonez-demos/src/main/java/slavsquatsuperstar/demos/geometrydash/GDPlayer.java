@@ -18,7 +18,6 @@ import mayonez.scripts.movement.*;
 public class GDPlayer extends GameObject {
 
     private static final int NUM_SPRITES = 12 * 4;
-    private static int spriteIndex = -1;
 
     public GDPlayer(String name, Vec2 position) {
         super(name, position);
@@ -58,9 +57,7 @@ public class GDPlayer extends GameObject {
     }
 
     private void addSpriteLayers(SpriteSheet[] spriteSheets) {
-//        var spriteIndex = Random.randomInt(0, NUM_SPRITES - 1);
-        spriteIndex = (spriteIndex + 1) % NUM_SPRITES;
-//        Logger.log("sprite = %d", spriteIndex);
+        var spriteIndex = Random.randomInt(0, NUM_SPRITES - 1);
 
         var layers = new Sprite[spriteSheets.length];
         for (int i = 0; i < layers.length; i++) {
