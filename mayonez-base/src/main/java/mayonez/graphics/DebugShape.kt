@@ -2,7 +2,6 @@ package mayonez.graphics
 
 import mayonez.graphics.renderer.*
 import mayonez.math.shapes.*
-import mayonez.math.shapes.Polygon
 import mayonez.util.*
 import java.awt.*
 
@@ -15,7 +14,7 @@ import java.awt.*
 internal data class DebugShape(
     var shape: MShape,
     internal val color: MColor,
-    private val fill: Boolean,
+    internal val fill: Boolean,
     private val zIndex: Int
 ) : JRenderable, GLRenderable {
 
@@ -26,9 +25,6 @@ internal data class DebugShape(
 
     constructor(shape: MShape, color: MColor, fill: Boolean, priority: DrawPriority) :
             this(shape, color, fill, priority.zIndex)
-
-    internal constructor(shape: MShape, debugShape: DebugShape) : // copy from another shape
-            this(shape, debugShape.color, debugShape.fill, debugShape.zIndex)
 
     // Renderer Methods
 
@@ -67,20 +63,6 @@ internal data class DebugShape(
         }
     }
 
-    /**
-     * Break down this shape into its simplest components (lines or triangles).
-     *
-     * @return an array of primitive shapes
-     */
-    fun splitIntoParts(): Array<out MShape> {
-        return when (val shape = this.shape) {
-            is Edge -> arrayOf(shape) // add line directly
-            is Polygon -> shape.splitIntoParts(fill) // else break into lines or triangles
-            is Ellipse -> shape.toPolygon().splitIntoParts(fill)
-            else -> emptyArray()
-        }
-    }
-
     // Renderable Methods
 
     override fun getBatchSize(): Int = if (fill) RenderBatch.MAX_TRIANGLES else RenderBatch.MAX_LINES
@@ -93,8 +75,4 @@ internal data class DebugShape(
 
     override fun toString(): String = "${shape.javaClass.simpleName} (fill = $fill, z = $zIndex)"
 
-}
-
-private fun MPolygon.splitIntoParts(fill: Boolean): Array<out MShape> {
-    return if (fill) this.triangles else this.edges
 }

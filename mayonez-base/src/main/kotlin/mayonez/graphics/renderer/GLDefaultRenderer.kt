@@ -1,10 +1,12 @@
 package mayonez.graphics.renderer
 
 import mayonez.*
+import mayonez.annotations.*
 import mayonez.graphics.*
 import mayonez.graphics.sprites.*
 import mayonez.math.*
 import mayonez.math.shapes.*
+import mayonez.util.*
 import org.lwjgl.opengl.GL11.*
 import kotlin.math.*
 
@@ -14,6 +16,7 @@ import kotlin.math.*
  *
  * @author SlavSquatSuperstar
  */
+@UsesEngine(EngineType.GL)
 internal class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"),
     SceneRenderer, DebugRenderer {
 
@@ -48,8 +51,8 @@ internal class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"),
 
     override fun addShape(shape: DebugShape) {
         for (shapePart in shape.splitIntoParts()) {
-            if (shapePart is Edge) addLine(shapePart, shape)
-            else if (shapePart is Triangle) shapes.add(DebugShape(shapePart, shape))
+            if (shapePart is Edge) shapes.addLine(shapePart, shape, lineStyle)
+            else if (shapePart is Triangle) shapes.addShapeCopy(shapePart, shape)
         }
     }
 
@@ -118,10 +121,6 @@ internal class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"),
         shapes.forEach { it.pushToBatch(it.getAvailableBatch()) }
     }
 
-    private fun ShapeSprite.toDebugShape(): DebugShape {
-        return DebugShape(this.colliderShape, this.color, this.fill, this.zIndex)
-    }
-
     override fun postRender() {
         super.postRender()
         shapes.clear() // Clear primitives after each frame
@@ -136,55 +135,4 @@ internal class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"),
         bgBatch.deleteBatch()
     }
 
-    // Batch Helper Methods
-
-    private fun addLine(edge: Edge, shape: DebugShape) {
-        when (lineStyle) {
-            LineStyle.SINGLE -> shapes.add(shape)
-            LineStyle.MULTIPLE -> addLineAsMultiple(edge, shape)
-            LineStyle.QUADS -> addLineAsQuads(edge, shape)
-        }
-    }
-
-    private fun addLineAsQuads(edge: Edge, shape: DebugShape) {
-        val len = edge.length
-        val stroke = DebugShape.STROKE_SIZE
-
-        val stretchedLen = len + stroke - 1f
-        val rect = Rectangle(edge.center(), Vec2(stretchedLen, stroke), edge.toVector().angle())
-        for (tri in rect.triangles) {
-            shapes.add(DebugShape(tri, shape.color, true, DrawPriority.LINE))
-        }
-    }
-
-    private fun addLineAsMultiple(line: Edge, shape: DebugShape) {
-        val len = line.length
-        val stroke = DebugShape.STROKE_SIZE
-        val stretched = line.scale(Vec2((len + stroke - 1f) / len), null)
-
-        val norm = line.unitNormal()
-        val start = (1 - stroke) * 0.5f // -(stroke - 1) / 2
-
-        for (i in 0 until stroke.roundToInt()) {
-            val lineElem = stretched.translate(norm * (start + i))
-            shapes.add(DebugShape(lineElem, shape))
-        }
-    }
-
-}
-
-// Helper Enum
-
-private enum class LineStyle {
-    /**
-     * Draw a single line and set the thickness using glLineWidth() (may not
-     * work on all platforms).
-     */
-    SINGLE,
-
-    /** Draw each line as multiple lines to simulate stroke size. */
-    MULTIPLE,
-
-    /** Draw each line using a thin quad (rectangle) to simulate stroke size. */
-    QUADS
 }

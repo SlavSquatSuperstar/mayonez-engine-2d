@@ -23,7 +23,9 @@ enum class DrawPrimitive(
     /** An object with 2 vertices with attributes: Pos (2), Color (4) */
     LINE(2, 2, GL11.GL_LINES, 2, 4) {
         override fun addIndices(elements: IntBuffer, index: Int) {
-            for (v in 0 until elementCount) elements.put(vertexCount * index + v)
+            for (v in 0 until elementCount) {
+                elements.put(vertexCount * index + v)
+            }
         }
     },
 
@@ -31,7 +33,9 @@ enum class DrawPrimitive(
     TRIANGLE(3, 3, GL11.GL_TRIANGLES, 2, 4) {
         override fun addIndices(elements: IntBuffer, index: Int) {
             // Use counterclockwise winding
-            for (v in 0 until elementCount) elements.put(vertexCount * index + v)
+            for (v in 0 until elementCount) {
+                elements.put(vertexCount * index + v)
+            }
         }
     },
 
@@ -43,7 +47,9 @@ enum class DrawPrimitive(
         override fun addIndices(elements: IntBuffer, index: Int) {
             // Split quad into two triangles
             val triangleVertices = intArrayOf(0, 1, 2, 0, 2, 3)
-            for (v in triangleVertices) elements.put(vertexCount * index + v)
+            for (v in triangleVertices) {
+                elements.put(vertexCount * index + v)
+            }
         }
     };
 
@@ -56,6 +62,7 @@ enum class DrawPrimitive(
      * @param index the vertex index
      */
     abstract fun addIndices(elements: IntBuffer, index: Int)
+
     override fun toString(): String = StringUtils.capitalizeFirstWord(name)
 
 }

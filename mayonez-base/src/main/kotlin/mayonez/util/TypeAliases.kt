@@ -12,7 +12,7 @@ typealias JPolygon = java.awt.Polygon
 
 // LWJGL OpenGL Classes
 
-/** The [org.joml.Vector4f] class defined by [org.joml]. */
+/** The [org.joml.Vector4f] class defined by JOML. */
 typealias GLColor = org.joml.Vector4f
 
 // Mayonez Engine Classes
