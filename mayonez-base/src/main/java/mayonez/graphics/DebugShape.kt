@@ -1,15 +1,10 @@
 package mayonez.graphics
 
 import mayonez.graphics.renderer.*
-import mayonez.graphics.sprites.*
-import mayonez.math.*
 import mayonez.math.shapes.*
 import mayonez.math.shapes.Polygon
-import mayonez.math.shapes.Rectangle
 import mayonez.util.*
 import java.awt.*
-import java.awt.geom.*
-import kotlin.math.*
 
 /**
  * Passes shape and color information to a
@@ -17,8 +12,7 @@ import kotlin.math.*
  *
  * @author SlavSquatSuperstar
  */
-// TODO shape converter class
-internal class DebugShape(
+internal data class DebugShape(
     var shape: MShape,
     internal val color: MColor,
     private val fill: Boolean,
@@ -36,16 +30,14 @@ internal class DebugShape(
     internal constructor(shape: MShape, debugShape: DebugShape) : // copy from another shape
             this(shape, debugShape.color, debugShape.fill, debugShape.zIndex)
 
-    constructor(sprite: ShapeSprite) : // create from shape sprite
-            this(sprite.shape, sprite.color, sprite.fill, sprite.zIndex)
-
     // Renderer Methods
 
     override fun render(g2: Graphics2D?) {
-        if (g2 == null) return
-        g2.color = color.toAWT()
-        val awtShape = shape.toAwt()
-        if (fill) g2.fill(awtShape) else g2.draw(awtShape)
+        if (g2 != null) {
+            g2.color = color.toAWT()
+            val awtShape = shape.toAWTShape()
+            if (fill) g2.fill(awtShape) else g2.draw(awtShape)
+        }
     }
 
     /**
@@ -103,44 +95,6 @@ internal class DebugShape(
 
 }
 
-// Helper Methods
-private fun MShape.toAwt(): JShape? {
-    return when (this) {
-        is Edge -> {
-            Line2D.Float(start.x, start.y, end.x, end.y)
-        }
-
-        is Ellipse -> {
-            val min = this.center() - (this.size * 0.5f)
-            val ellipse = Ellipse2D.Float(min.x, min.y, size.x, size.y)
-            return if (this is Circle || this.isAxisAligned) ellipse
-            else ellipse.rotate(this.center(), this.angle)
-        }
-
-        is Rectangle -> {
-            val min = this.min()
-            val rect = Rectangle2D.Float(min.x, min.y, this.width, this.height)
-            return if (this.isAxisAligned) rect else rect.rotate(this.center(), this.angle)
-        }
-
-        is Polygon -> {
-            val poly = java.awt.Polygon()
-            this.vertices.forEach { poly.addPoint(it.x.roundToInt(), it.y.roundToInt()) }
-            return poly
-        }
-
-        else -> null
-    }
-}
-
-private fun JShape.rotate(center: Vec2, angle: Float): JShape {
-    val rotXf = AffineTransform.getRotateInstance(
-        Math.toRadians(angle.toDouble()),
-        center.x.toDouble(), center.y.toDouble()
-    )
-    return rotXf.createTransformedShape(this)
-}
-
-private fun Polygon.splitIntoParts(fill: Boolean): Array<out MShape> {
+private fun MPolygon.splitIntoParts(fill: Boolean): Array<out MShape> {
     return if (fill) this.triangles else this.edges
 }

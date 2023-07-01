@@ -11,7 +11,7 @@ import mayonez.scripts.*;
 import mayonez.scripts.movement.*;
 
 /**
- * The Geometry Dash player object.
+ * The Geometry Dash player character.
  *
  * @author SlavSquatSuperstar
  */

@@ -12,6 +12,7 @@ import java.awt.geom.Line2D;
  *
  * @author SlavSquatSuperstar
  */
+// TODO doesn't work in GL
 public class Grid extends Component implements JRenderable {
 
     private final Vec2 gridSize;

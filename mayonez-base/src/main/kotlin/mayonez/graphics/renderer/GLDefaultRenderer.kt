@@ -107,7 +107,7 @@ internal class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"),
         objects.filter { it.isEnabled }
             .forEach {
                 if (it is ShapeSprite) {
-                    addShape(DebugShape(it)) // Break down shape into primitives then add them later
+                    addShape(it.toDebugShape()) // Break down shape into primitives then add them later
                 } else {
                     it.pushToBatch(it.getAvailableBatch())
                 }
@@ -116,6 +116,10 @@ internal class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"),
 
     private fun pushShapesToBatches() {
         shapes.forEach { it.pushToBatch(it.getAvailableBatch()) }
+    }
+
+    private fun ShapeSprite.toDebugShape(): DebugShape {
+        return DebugShape(this.colliderShape, this.color, this.fill, this.zIndex)
     }
 
     override fun postRender() {
@@ -167,20 +171,20 @@ internal class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"),
         }
     }
 
-    // Helper Enum
+}
 
-    private enum class LineStyle {
-        /**
-         * Draw a single line and set the thickness using glLineWidth() (may not
-         * work on all platforms).
-         */
-        SINGLE,
+// Helper Enum
 
-        /** Draw each line as multiple lines to simulate stroke size. */
-        MULTIPLE,
+private enum class LineStyle {
+    /**
+     * Draw a single line and set the thickness using glLineWidth() (may not
+     * work on all platforms).
+     */
+    SINGLE,
 
-        /** Draw each line using a thin quad (rectangle) to simulate stroke size. */
-        QUADS
-    }
+    /** Draw each line as multiple lines to simulate stroke size. */
+    MULTIPLE,
 
+    /** Draw each line using a thin quad (rectangle) to simulate stroke size. */
+    QUADS
 }

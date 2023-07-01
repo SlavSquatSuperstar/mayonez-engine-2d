@@ -12,10 +12,10 @@ import mayonez.physics.*;
  */
 public class MarioController extends Script {
 
-    private final float moveSpeed = 15;
-    private final float jumpSpeed = 30;
-    private final float jumpGravity = 30;
-    private final float slamSpeed = 5;
+    private static final float MOVE_SPEED = 15;
+    private static final float JUMP_SPEED = 30;
+    private static final float JUMP_GRAVITY = 30;
+    private static final float SLAM_SPEED = 5;
     private boolean onGround;
     private Rigidbody rb;
 
@@ -29,20 +29,20 @@ public class MarioController extends Script {
     public void update(float dt) {
         // Move
         var xInput = KeyInput.getAxis("horizontal");
-        transform.move(new Vec2(xInput * moveSpeed * dt, 0));
+        transform.move(new Vec2(xInput * MOVE_SPEED * dt, 0));
         rb.getVelocity().x = 0;
 
         // Jump
         if (KeyInput.keyDown("w") && onGround) {
-            rb.applyImpulse(new Vec2(0, jumpSpeed));
+            rb.applyImpulse(new Vec2(0, JUMP_SPEED));
         }
         if (!onGround) { // Fall faster while jumping
-            rb.addVelocity(new Vec2(0, -jumpGravity * dt));
+            rb.addVelocity(new Vec2(0, -JUMP_GRAVITY * dt));
         }
 
         // Ground pound
         if (KeyInput.keyDown("s") && !onGround) {
-            rb.applyImpulse(new Vec2(0, -slamSpeed));
+            rb.applyImpulse(new Vec2(0, -SLAM_SPEED));
         }
     }
 

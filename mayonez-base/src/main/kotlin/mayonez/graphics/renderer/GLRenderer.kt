@@ -19,6 +19,7 @@ abstract class GLRenderer(shaderFile: String) : Renderer {
     // GPU Resources
     private val batches: MutableList<RenderBatch>
     protected val shader: Shader
+
     // TODO does this do anything?
     protected val textureSlots: IntArray // support multiple texture IDs in batch
 
@@ -69,17 +70,17 @@ abstract class GLRenderer(shaderFile: String) : Renderer {
     protected abstract fun createBatches()
 
     protected fun GLRenderable.getAvailableBatch(): RenderBatch {
-        for (batch in batches) {
-            if (this.fitsInBatch(batch)) return batch
-        }
-        return this.createNewBatch() // If all batches full
+        return batches.find { this.fitsInBatch(it) }
+            ?: this.createNewBatch() // If all batches full
     }
 
     private fun GLRenderable.fitsInBatch(batch: RenderBatch): Boolean {
-        val samePrimitive = batch.primitive === this.primitive
-        val sameZIndex = batch.zIndex == this.zIndex
-        val fitsTexture = batch.hasTexture(this.texture) || batch.hasTextureRoom()
-        return batch.hasVertexRoom() && samePrimitive && sameZIndex && fitsTexture
+        return batch.hasVertexRoom() && (batch.primitive == this.primitive)
+                && (batch.zIndex == this.zIndex) && batch.canFitTexture(this)
+    }
+
+    private fun RenderBatch.canFitTexture(renderable: GLRenderable): Boolean {
+        return this.hasTexture(renderable.texture) || this.hasTextureRoom()
     }
 
     private fun GLRenderable.createNewBatch(): RenderBatch {

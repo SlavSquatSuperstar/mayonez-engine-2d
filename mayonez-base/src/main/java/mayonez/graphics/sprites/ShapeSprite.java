@@ -33,12 +33,12 @@ public class ShapeSprite extends Component implements JRenderable, GLRenderable 
     public void start() {
         collider = gameObject.getComponent(Collider.class);
         if (collider == null) this.setEnabled(false);
-        shape = new DebugShape(getShape(), color, fill, getZIndex());
+        shape = new DebugShape(getColliderShape(), color, fill, getZIndex());
     }
 
     @Override
     public void update(float dt) {
-        shape.setShape(getShape());
+        shape.setShape(getColliderShape());
     }
 
     // Renderer Methods
@@ -72,7 +72,7 @@ public class ShapeSprite extends Component implements JRenderable, GLRenderable 
 
     // Shape Methods
 
-    public Shape getShape() { // convert collider to world then to pixels
+    public Shape getColliderShape() { // convert collider to world then to pixels
         if (collider == null) return new Rectangle(new Vec2(0f), new Vec2(1f));
         else return collider.transformToWorld().scale(new Vec2(getScene().getScale()), new Vec2(0f));
     }
