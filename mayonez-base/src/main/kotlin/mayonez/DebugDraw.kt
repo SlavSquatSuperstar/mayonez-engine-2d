@@ -15,7 +15,9 @@ private val DEFAULT_COLOR: MColor = Colors.BLACK
  *
  * @author SlavSquatSuperstar
  */
-class DebugDraw internal constructor(private val scale: Float, private val debugRenderer: DebugRenderer) {
+class DebugDraw internal constructor(
+    private val scale: Float, private val debugRenderer: DebugRenderer
+) {
 
     // Public Draw
     /**
@@ -27,7 +29,8 @@ class DebugDraw internal constructor(private val scale: Float, private val debug
     fun drawPoint(position: Vec2, color: MColor?) {
         // Fill a circle with radius "STROKE_SIZE" in pixels
         addShapeToRenderer(
-            Circle(position.toScreen(scale), DebugShape.STROKE_SIZE), color, true, DrawPriority.POINT
+            Circle(position.toScreen(scale), DebugShape.STROKE_SIZE),
+            color, true, DrawPriority.POINT
         )
     }
 
@@ -40,7 +43,8 @@ class DebugDraw internal constructor(private val scale: Float, private val debug
      */
     fun drawLine(start: Vec2, end: Vec2, color: MColor?) {
         addShapeToRenderer(
-            Edge(start.toScreen(scale), end.toScreen(scale)), color, false, DrawPriority.LINE
+            Edge(start.toScreen(scale), end.toScreen(scale)),
+            color, false, DrawPriority.LINE
         )
     }
 
@@ -63,7 +67,7 @@ class DebugDraw internal constructor(private val scale: Float, private val debug
      * @param color the color to use
      */
     fun drawShape(shape: Shape?, color: MColor?) {
-        debugDrawShape(shape, color, false, DrawPriority.SHAPE)
+        debugDrawShape(shape, color, false, DrawPriority.SHAPE_OUTLINE)
     }
 
     /**
@@ -73,13 +77,14 @@ class DebugDraw internal constructor(private val scale: Float, private val debug
      * @param color the color to use
      */
     fun fillShape(shape: Shape?, color: MColor?) {
-        debugDrawShape(shape, color, true, DrawPriority.FILL)
+        debugDrawShape(shape, color, true, DrawPriority.SOLID_SHAPE)
     }
 
     // Private Draw methods
 
-    private fun debugDrawShape(shape: Shape?, color: MColor?, fill: Boolean, priority: DrawPriority) {
-        // screen coordinates only
+    private fun debugDrawShape(
+        shape: Shape?, color: MColor?, fill: Boolean, priority: DrawPriority
+    ) {
         when (shape) {
             is Edge -> addShapeToRenderer(shape.toScreen(scale), color, false, DrawPriority.LINE)
             is Polygon -> addShapeToRenderer(shape.toScreen(scale), color, fill, priority)
@@ -87,13 +92,16 @@ class DebugDraw internal constructor(private val scale: Float, private val debug
             is Ellipse -> {
                 if (shape.isCircle) {
                     addShapeToRenderer(shape.boundingCircle().toScreen(scale), color, fill, priority)
+                } else {
+                    addShapeToRenderer(shape.toScreen(scale), color, fill, priority)
                 }
-                addShapeToRenderer(shape.toScreen(scale), color, fill, priority)
             }
         }
     }
 
-    private fun addShapeToRenderer(shape: Shape, color: MColor?, fill: Boolean, priority: DrawPriority) {
+    private fun addShapeToRenderer(
+        shape: Shape, color: MColor?, fill: Boolean, priority: DrawPriority
+    ) {
         debugRenderer.addShape(DebugShape(shape, color ?: DEFAULT_COLOR, fill, priority))
     }
 
@@ -113,4 +121,6 @@ private fun Vec2.toScreen(screenScale: Float): Vec2 = this * screenScale
  *
  * @return the corresponding screen pixels
  */
-private fun Shape.toScreen(screenScale: Float): Shape = this.scale(Vec2(screenScale), Vec2(0f))
+private fun Shape.toScreen(screenScale: Float): Shape {
+    return this.scale(Vec2(screenScale), Vec2(0f))
+}

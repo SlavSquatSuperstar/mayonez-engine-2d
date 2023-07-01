@@ -8,8 +8,8 @@ import mayonez.graphics.textures.*;
  *
  * @author SlavSquatSuperstar
  */
-@UsesEngine(EngineType.AWT)
-public interface GLRenderable {
+@UsesEngine(EngineType.GL)
+public interface GLRenderable extends Renderable {
 
     // Render Batch Methods
 
@@ -20,7 +20,7 @@ public interface GLRenderable {
      */
     void pushToBatch(RenderBatch batch);
 
-    // Getters
+    // GL Getters
 
     /**
      * The max number of objects of this type a {@link RenderBatch} can hold.
@@ -44,9 +44,5 @@ public interface GLRenderable {
     default GLTexture getTexture() {
         return null;
     }
-
-    int getZIndex();
-
-    boolean isEnabled();
 
 }

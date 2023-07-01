@@ -9,12 +9,11 @@ import mayonez.graphics.*;
  */
 public interface DebugRenderer extends Renderer {
 
-    // Debug Draw Methods
-
     /**
      * Submits a {@link DebugShape} for rendering.
      *
      * @param shape the shape
      */
     void addShape(DebugShape shape);
+
 }

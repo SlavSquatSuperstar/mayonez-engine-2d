@@ -10,7 +10,7 @@ import java.awt.*;
  * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.AWT)
-public interface JRenderable {
+public interface JRenderable extends Renderable {
 
     // Renderer Methods
 
@@ -21,9 +21,4 @@ public interface JRenderable {
      */
     void render(Graphics2D g2);
 
-    // Getters
-
-    int getZIndex();
-
-    boolean isEnabled();
 }

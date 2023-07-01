@@ -1,4 +1,4 @@
-package mayonez.graphics.renderer;
+package mayonez.graphics.shader;
 
 import mayonez.annotations.*;
 
