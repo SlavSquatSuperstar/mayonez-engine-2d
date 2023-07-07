@@ -95,7 +95,7 @@ internal class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"),
         glEnable(GL_BLEND)
         glEnable(GL_LINE_SMOOTH)
         when (lineStyle) {
-            LineStyle.SINGLE -> glLineWidth(DebugShape.STROKE_SIZE)
+            LineStyle.SINGLE -> glLineWidth(DebugDraw.DEFAULT_STROKE_SIZE)
             LineStyle.MULTIPLE -> glLineWidth(1f)
             else -> return
         }

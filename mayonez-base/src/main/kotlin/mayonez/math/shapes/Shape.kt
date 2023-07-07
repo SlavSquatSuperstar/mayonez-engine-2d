@@ -20,7 +20,9 @@ abstract class Shape : Transformable {
          * @param center the center for scaling
          * @return the scaled vertex
          */
-        internal fun Vec2.scale(factor: Vec2, center: Vec2): Vec2 = (factor * (this - center)) + center
+        internal fun Vec2.scale(factor: Vec2, center: Vec2): Vec2 {
+            return (factor * (this - center)) + center
+        }
 
         /**
          * Finds the most extreme points from the Minkowski difference set between
@@ -29,8 +31,9 @@ abstract class Shape : Transformable {
          * Source: https://blog.winter.dev/2020/gjk-algorithm/ § Abstracting shapes
          * into supporting points
          */
-        fun support(shape1: Shape, shape2: Shape, dir: Vec2): Vec2 =
-            shape1.supportPoint(dir) - shape2.supportPoint(-dir)
+        fun support(shape1: Shape, shape2: Shape, dir: Vec2): Vec2 {
+            return shape1.supportPoint(dir) - shape2.supportPoint(-dir)
+        }
     }
 
     // Geometric Properties

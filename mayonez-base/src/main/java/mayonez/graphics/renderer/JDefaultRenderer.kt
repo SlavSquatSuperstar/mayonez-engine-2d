@@ -25,7 +25,7 @@ internal class JDefaultRenderer : SceneRenderer, DebugRenderer {
     private val batches: MutableList<JRenderable>
     private val objects: MutableList<JRenderable> // permanent components
     private val shapes: MutableList<DebugShape> // temporary shapes
-    private val stroke: Stroke = BasicStroke(DebugShape.STROKE_SIZE)
+    private val stroke: Stroke = BasicStroke(DebugDraw.DEFAULT_STROKE_SIZE)
 
     // Scene Information
     private lateinit var background: Sprite

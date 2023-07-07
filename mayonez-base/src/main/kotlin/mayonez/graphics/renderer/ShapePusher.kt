@@ -1,5 +1,6 @@
 package mayonez.graphics.renderer
 
+import mayonez.*
 import mayonez.graphics.*
 import mayonez.graphics.sprites.*
 import mayonez.math.*
@@ -39,7 +40,7 @@ internal fun MutableList<DebugShape>.addLine(edge: Edge, shape: DebugShape, line
 
 private fun MutableList<DebugShape>.addLineAsMultiple(line: Edge, shape: DebugShape) {
     val len = line.length
-    val stroke = DebugShape.STROKE_SIZE
+    val stroke = DebugDraw.DEFAULT_STROKE_SIZE
     val stretched = line.scale(Vec2((len + stroke - 1f) / len), null)
 
     val norm = line.unitNormal()
@@ -53,12 +54,14 @@ private fun MutableList<DebugShape>.addLineAsMultiple(line: Edge, shape: DebugSh
 
 private fun MutableList<DebugShape>.addLineAsQuads(edge: Edge, shape: DebugShape) {
     val len = edge.length
-    val stroke = DebugShape.STROKE_SIZE
+    val stroke = DebugDraw.DEFAULT_STROKE_SIZE
 
     val stretchedLen = len + stroke - 1f
     val rect = Rectangle(edge.center(), Vec2(stretchedLen, stroke), edge.toVector().angle())
     for (tri in rect.triangles) {
-        this.add(DebugShape(tri, shape.color, true, DrawPriority.LINE))
+        // Set priority as "line" but fill to "true"
+        val brush = ShapeBrush(shape.color, true, DrawPriority.LINE)
+        this.add(DebugShape(tri, brush))
     }
 }
 

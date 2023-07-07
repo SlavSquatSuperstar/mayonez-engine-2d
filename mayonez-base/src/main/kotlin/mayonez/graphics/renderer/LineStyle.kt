@@ -6,19 +6,21 @@ package mayonez.graphics.renderer
  *
  * @author SlavSquatSuperstar
  */
-internal enum class LineStyle {
+internal enum class LineStyle(internal val fill: Boolean) {
+
     /**
      * Draw a single line and set the thickness using glLineWidth() (does not
      * work on all platforms).
      */
-    SINGLE,
+    SINGLE(false),
 
     /** Draw each line as multiple adjacent lines to simulate stroke size. */
-    MULTIPLE,
+    MULTIPLE(false),
 
     /**
      * Draw each line using a thin quad (rectangle), using the width to
      * simulate stroke size.
      */
-    QUADS
+    QUADS(true)
+
 }

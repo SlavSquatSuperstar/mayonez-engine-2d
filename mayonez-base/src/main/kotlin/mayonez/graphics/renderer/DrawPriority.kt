@@ -1,6 +1,11 @@
 package mayonez.graphics.renderer
 
-enum class DrawPriority(val zIndex: Int) {
+/**
+ * Defines which order to draw [mayonez.graphics.DebugShape]s.
+ *
+ * @author SlavSquatSuperstar
+ */
+internal enum class DrawPriority(internal val zIndex: Int) {
 
     /** Solid shapes, drawn first. */
     SOLID_SHAPE(-5),

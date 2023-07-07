@@ -19,7 +19,13 @@ class DebugDraw internal constructor(
     private val scale: Float, private val debugRenderer: DebugRenderer
 ) {
 
-    // Public Draw
+    companion object {
+        /** How many pixels wide a curve should be drawn. */
+        const val DEFAULT_STROKE_SIZE: Float = 2f
+    }
+
+    // Public Draw Methods
+
     /**
      * Draws a point onto the screen.
      *
@@ -29,7 +35,7 @@ class DebugDraw internal constructor(
     fun drawPoint(position: Vec2, color: MColor?) {
         // Fill a circle with radius "STROKE_SIZE" in pixels
         addShapeToRenderer(
-            Circle(position.toScreen(scale), DebugShape.STROKE_SIZE),
+            Circle(position.toScreen(scale), DEFAULT_STROKE_SIZE),
             color, true, DrawPriority.POINT
         )
     }
@@ -102,7 +108,8 @@ class DebugDraw internal constructor(
     private fun addShapeToRenderer(
         shape: Shape, color: MColor?, fill: Boolean, priority: DrawPriority
     ) {
-        debugRenderer.addShape(DebugShape(shape, color ?: DEFAULT_COLOR, fill, priority))
+        val brush = ShapeBrush(color ?: DEFAULT_COLOR, fill, priority)
+        debugRenderer.addShape(DebugShape(shape, brush))
     }
 
 }

@@ -11,20 +11,16 @@ import java.awt.*
  *
  * @author SlavSquatSuperstar
  */
-internal data class DebugShape(
+internal data class DebugShape constructor(
     var shape: MShape,
     internal val color: MColor,
     internal val fill: Boolean,
     private val zIndex: Int
+    // TODO add stroke size
 ) : JRenderable, GLRenderable {
 
-    companion object {
-        /** How many pixels wide a shape should be drawn. */
-        const val STROKE_SIZE: Float = 2f
-    }
-
-    constructor(shape: MShape, color: MColor, fill: Boolean, priority: DrawPriority) :
-            this(shape, color, fill, priority.zIndex)
+    constructor(shape: MShape, brush: ShapeBrush) :
+            this(shape, brush.color, brush.fill, brush.zIndex)
 
     // Renderer Methods
 

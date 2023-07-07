@@ -50,7 +50,7 @@ public class ShapeSprite extends Component implements JRenderable, GLRenderable 
 
     @Override
     public void pushToBatch(RenderBatch batch) {
-        shape.pushToBatch(batch); // doesn't work, need to split shape
+        shape.pushToBatch(batch); // TODO doesn't work, need to split shape first
     }
 
     // Renderable Methods
