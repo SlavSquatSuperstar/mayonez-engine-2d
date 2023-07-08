@@ -36,7 +36,7 @@ class DebugDraw internal constructor(
         // Fill a circle with radius "STROKE_SIZE" in pixels
         addShapeToRenderer(
             Circle(position.toScreen(scale), DEFAULT_STROKE_SIZE),
-            color, true, DrawPriority.POINT
+            color, DrawPriority.POINT
         )
     }
 
@@ -50,7 +50,7 @@ class DebugDraw internal constructor(
     fun drawLine(start: Vec2, end: Vec2, color: MColor?) {
         addShapeToRenderer(
             Edge(start.toScreen(scale), end.toScreen(scale)),
-            color, false, DrawPriority.LINE
+            color, DrawPriority.LINE
         )
     }
 
@@ -73,7 +73,10 @@ class DebugDraw internal constructor(
      * @param color the color to use
      */
     fun drawShape(shape: Shape?, color: MColor?) {
-        debugDrawShape(shape, color, false, DrawPriority.SHAPE_OUTLINE)
+        addShapeToRenderer(
+            shape?.toScreen(scale) ?: return,
+            color, DrawPriority.SHAPE_OUTLINE
+        )
     }
 
     /**
@@ -83,32 +86,18 @@ class DebugDraw internal constructor(
      * @param color the color to use
      */
     fun fillShape(shape: Shape?, color: MColor?) {
-        debugDrawShape(shape, color, true, DrawPriority.SOLID_SHAPE)
+        addShapeToRenderer(
+            shape?.toScreen(scale) ?: return,
+            color, DrawPriority.SOLID_SHAPE
+        )
     }
 
     // Private Draw methods
 
-    private fun debugDrawShape(
-        shape: Shape?, color: MColor?, fill: Boolean, priority: DrawPriority
-    ) {
-        when (shape) {
-            is Edge -> addShapeToRenderer(shape.toScreen(scale), color, false, DrawPriority.LINE)
-            is Polygon -> addShapeToRenderer(shape.toScreen(scale), color, fill, priority)
-            is Circle -> addShapeToRenderer(shape.toScreen(scale), color, fill, priority)
-            is Ellipse -> {
-                if (shape.isCircle) {
-                    addShapeToRenderer(shape.boundingCircle().toScreen(scale), color, fill, priority)
-                } else {
-                    addShapeToRenderer(shape.toScreen(scale), color, fill, priority)
-                }
-            }
-        }
-    }
-
     private fun addShapeToRenderer(
-        shape: Shape, color: MColor?, fill: Boolean, priority: DrawPriority
+        shape: Shape, color: MColor?, priority: DrawPriority
     ) {
-        val brush = ShapeBrush(color ?: DEFAULT_COLOR, fill, priority)
+        val brush = ShapeBrush(color ?: DEFAULT_COLOR, priority)
         debugRenderer.addShape(DebugShape(shape, brush))
     }
 

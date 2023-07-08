@@ -4,11 +4,13 @@ import mayonez.*;
 import mayonez.graphics.sprites.*;
 import mayonez.input.*;
 import mayonez.math.*;
+import mayonez.math.shapes.*;
 import mayonez.physics.*;
 import mayonez.physics.colliders.*;
 import mayonez.scripts.*;
 import mayonez.scripts.combat.*;
 import mayonez.scripts.movement.*;
+import mayonez.util.*;
 import slavsquatsuperstar.demos.spacegame.scripts.ThrustController;
 import slavsquatsuperstar.demos.spacegame.scripts.ThrustDirection;
 import slavsquatsuperstar.demos.spacegame.scripts.Thruster;
@@ -37,6 +39,14 @@ public class PlayerShip extends GameObject {
 
         // Visuals
         addComponent(SpritesFactory.createSprite(spriteName));
+        addComponent(new Script() { // For testing DebugRenderer refactoring
+            @Override
+            public void update(float dt) {
+                getScene().getDebugDraw().drawShape(new Circle(transform.getPosition(), 1.5f), Colors.CYAN);
+                getScene().getDebugDraw().drawVector(transform.getPosition(),
+                        getRigidbody().getVelocity().mul(0.1f), Colors.LIGHT_GREEN);
+            }
+        });
 
         // Scripts
         addComponent(new KeepInScene(KeepInScene.Mode.WRAP));
@@ -109,5 +119,4 @@ public class PlayerShip extends GameObject {
 
         addComponent(new ThrustController(lBack, rBack, lFront, rFront, fLeft, bLeft, fRight, bRight));
     }
-
 }

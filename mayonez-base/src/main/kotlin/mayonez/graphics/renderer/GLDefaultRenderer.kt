@@ -52,7 +52,7 @@ internal class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"),
     override fun addShape(shape: DebugShape) {
         for (shapePart in shape.splitIntoParts()) {
             if (shapePart is Edge) shapes.addLine(shapePart, shape, lineStyle)
-            else if (shapePart is Triangle) shapes.addShapeCopy(shapePart, shape)
+            else if (shapePart is Triangle) shapes.addShapeAndCopyBrush(shapePart, shape)
         }
     }
 

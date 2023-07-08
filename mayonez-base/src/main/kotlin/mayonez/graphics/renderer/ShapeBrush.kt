@@ -13,26 +13,34 @@ internal data class ShapeBrush(
     internal val color: MColor,
     internal val fill: Boolean,
     internal val zIndex: Int,
-    internal val strokeSize: Float
+    internal val strokeSize: Float = DebugDraw.DEFAULT_STROKE_SIZE
 ) {
 
-    constructor(color: MColor, fill: Boolean, priority: DrawPriority) :
-            this(color, fill, priority.zIndex, DebugDraw.DEFAULT_STROKE_SIZE)
+//    constructor(color: MColor, fill: Boolean, priority: DrawPriority) :
+//            this(color, fill, priority.zIndex)
 
-    companion object {
+    constructor(color: MColor, priority: DrawPriority) :
+            this(color, priority.fill, priority.zIndex)
 
-        internal fun createLineBrush(color: MColor, style: LineStyle): ShapeBrush {
-            return ShapeBrush(color, style.fill, DrawPriority.LINE)
-        }
+    constructor(color: MColor, style: LineStyle) :
+            this(color, style.fill, DrawPriority.LINE.zIndex)
 
-        internal fun createBoundaryBrush(color: MColor): ShapeBrush {
-            return ShapeBrush(color, true, DrawPriority.LINE)
-        }
-
-        internal fun createSolidBrush(color: MColor): ShapeBrush {
-            return ShapeBrush(color, true, DrawPriority.LINE)
-        }
-
-    }
+//    companion object {
+//
+//        // Factory Methods
+//
+//        internal fun createLineBrush(color: MColor, style: LineStyle): ShapeBrush {
+//            return ShapeBrush(color, style.fill, DrawPriority.LINE)
+//        }
+//
+//        internal fun createOutlineBrush(color: MColor): ShapeBrush {
+//            return ShapeBrush(color, false, DrawPriority.SHAPE_OUTLINE)
+//        }
+//
+//        internal fun createSolidBrush(color: MColor): ShapeBrush {
+//            return ShapeBrush(color, true, DrawPriority.SOLID_SHAPE)
+//        }
+//
+//    }
 
 }

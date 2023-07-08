@@ -8,34 +8,18 @@ import mayonez.math.shapes.*
 import mayonez.util.*
 import kotlin.math.*
 
-// GL Shape Conversion Methods
-
-/**
- * Break down this shape into its simplest components (lines or triangles).
- *
- * @return an array of primitive shapes
- */
-internal fun DebugShape.splitIntoParts(): Array<out MShape> {
-    return when (val shape = this.shape) {
-        is Edge -> arrayOf(shape) // add line directly
-        is Polygon -> shape.splitIntoParts(this.fill) // else break into lines or triangles
-        is Ellipse -> shape.toPolygon().splitIntoParts(this.fill)
-        else -> emptyArray()
-    }
-}
-
-private fun MPolygon.splitIntoParts(fill: Boolean): Array<out MShape> {
-    return if (fill) this.triangles else this.edges
-}
-
 // GL Add Shape Methods
 
 internal fun MutableList<DebugShape>.addLine(edge: Edge, shape: DebugShape, lineStyle: LineStyle) {
     when (lineStyle) {
-        LineStyle.SINGLE -> this.add(shape)
+        LineStyle.SINGLE -> this.addLineAsSingle(shape)
         LineStyle.MULTIPLE -> this.addLineAsMultiple(edge, shape)
         LineStyle.QUADS -> this.addLineAsQuads(edge, shape)
     }
+}
+
+private fun MutableList<DebugShape>.addLineAsSingle(shape: DebugShape) {
+    this.add(shape)
 }
 
 private fun MutableList<DebugShape>.addLineAsMultiple(line: Edge, shape: DebugShape) {
@@ -48,7 +32,7 @@ private fun MutableList<DebugShape>.addLineAsMultiple(line: Edge, shape: DebugSh
 
     for (i in 0 until stroke.roundToInt()) {
         val lineElem = stretched.translate(norm * (start + i))
-        this.addShapeCopy(lineElem, shape)
+        this.addShapeAndCopyBrush(lineElem, shape)
     }
 }
 
@@ -59,8 +43,8 @@ private fun MutableList<DebugShape>.addLineAsQuads(edge: Edge, shape: DebugShape
     val stretchedLen = len + stroke - 1f
     val rect = Rectangle(edge.center(), Vec2(stretchedLen, stroke), edge.toVector().angle())
     for (tri in rect.triangles) {
-        // Set priority as "line" but fill to "true"
-        val brush = ShapeBrush(shape.color, true, DrawPriority.LINE)
+        // Change brush fill to "true" since using quads
+        val brush = ShapeBrush(shape.color, LineStyle.QUADS)
         this.add(DebugShape(tri, brush))
     }
 }
@@ -68,9 +52,10 @@ private fun MutableList<DebugShape>.addLineAsQuads(edge: Edge, shape: DebugShape
 // Debug Shape Helper Methods
 
 /**
- * Add a [mayonez.graphics.DebugShape] copy but updates its shape property.
+ * Add a [mayonez.math.shapes.Shape] and copy the brush property of another
+ * [mayonez.graphics.DebugShape].
  */
-internal fun MutableList<DebugShape>.addShapeCopy(newShape: MShape, debugShape: DebugShape) {
+internal fun MutableList<DebugShape>.addShapeAndCopyBrush(newShape: MShape, debugShape: DebugShape) {
     val copy = DebugShape(newShape, debugShape.color, debugShape.fill, debugShape.zIndex)
     this.add(copy)
 }

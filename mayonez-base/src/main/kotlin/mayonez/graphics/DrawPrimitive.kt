@@ -7,7 +7,7 @@ import org.lwjgl.opengl.GL11
 import java.nio.IntBuffer
 
 /**
- * Types of primitive objects submitted to the GPU. Only supported by GL.
+ * Types of OpenGL primitive objects that can be submitted to the GPU.
  *
  * @author SlavSquatSuperstar
  */

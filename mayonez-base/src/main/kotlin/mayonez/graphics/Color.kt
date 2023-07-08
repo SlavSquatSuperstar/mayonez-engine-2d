@@ -62,7 +62,7 @@ class Color(red: Int, green: Int, blue: Int, alpha: Int) {
 
     /**
      * Converts this color to an instance of [org.joml.Vector4f] to use in the
-     * GL engine, normalizing the values between 0-1.
+     * GL engine, normalizing the values to between 0-1.
      */
     fun toGL(): Vector4f = Vector4f(red.norm(), green.norm(), blue.norm(), alpha.norm())
 
