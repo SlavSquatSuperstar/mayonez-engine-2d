@@ -1,6 +1,7 @@
 package slavsquatsuperstar.demos.spacegame.objects;
 
 import mayonez.*;
+import mayonez.graphics.*;
 import mayonez.graphics.sprites.*;
 import mayonez.input.*;
 import mayonez.math.*;
@@ -42,9 +43,13 @@ public class PlayerShip extends GameObject {
         addComponent(new Script() { // For testing DebugRenderer refactoring
             @Override
             public void debugRender() {
-                getScene().getDebugDraw().drawShape(new Circle(transform.getPosition(), 1.5f), Colors.CYAN);
+                getScene().getDebugDraw().setStrokeSize(8f);
+                getScene().getDebugDraw().drawShape(new Circle(transform.getPosition(), 1.6f),
+                        Colors.CYAN.combine(new Color(255, 255, 255, 127)));
+                getScene().getDebugDraw().setStrokeSize(2f);
                 getScene().getDebugDraw().drawVector(transform.getPosition(),
                         getRigidbody().getVelocity().mul(0.1f), Colors.LIGHT_GREEN);
+                getScene().getDebugDraw().resetStrokeSize();
             }
         });
 

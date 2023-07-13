@@ -41,7 +41,7 @@ public class GDEditorScene extends Scene {
         addObject(new GameObject("Grid") {
             @Override
             protected void init() {
-                addComponent(new Grid(new Vec2(getScale())));
+                addComponent(new Grid());
             }
         });
 

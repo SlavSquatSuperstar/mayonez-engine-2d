@@ -12,7 +12,7 @@ import java.awt.*
  *
  * @author SlavSquatSuperstar
  */
-internal data class DebugShape constructor(
+internal data class DebugShape(
     var shape: MShape,
     internal val color: MColor,
     internal val fill: Boolean,

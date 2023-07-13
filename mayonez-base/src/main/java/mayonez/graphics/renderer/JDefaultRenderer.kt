@@ -12,6 +12,8 @@ import mayonez.math.shapes.*
 import java.awt.*
 import kotlin.math.*
 
+private val DEFAULT_STROKE: Stroke = BasicStroke(DebugDraw.DEFAULT_STROKE_SIZE)
+
 /**
  * Draws all sprites and debug information onto the screen with Java's AWT
  * and Swing libraries.
@@ -25,7 +27,6 @@ internal class JDefaultRenderer : SceneRenderer, DebugRenderer {
     private val batches: MutableList<JRenderable>
     private val objects: MutableList<JRenderable> // permanent components
     private val shapes: MutableList<DebugShape> // temporary shapes
-    private val stroke: Stroke = BasicStroke(DebugDraw.DEFAULT_STROKE_SIZE)
 
     // Scene Information
     private lateinit var background: Sprite
@@ -37,6 +38,7 @@ internal class JDefaultRenderer : SceneRenderer, DebugRenderer {
         batches = ArrayList()
         objects = ArrayList()
         shapes = ArrayList()
+
         screenSize = Mayonez.screenSize
         sceneSize = Vec2(1f)
         sceneScale = 1f
@@ -151,7 +153,7 @@ internal class JDefaultRenderer : SceneRenderer, DebugRenderer {
     }
 
     private fun drawBatches(g2: Graphics2D) {
-        g2.stroke = stroke
+        g2.stroke = DEFAULT_STROKE
         batches.forEach { it.render(g2) }
     }
 

@@ -8,13 +8,12 @@ package mayonez.graphics.renderer
  */
 internal enum class LineStyle(internal val fill: Boolean) {
 
-    /**
-     * Draw a single line and set the thickness using glLineWidth() (does not
-     * work on all platforms).
-     */
+    /** Draw a single line and set the thickness using glLineWidth(). */
+    @Deprecated("Not supported on some platforms.")
     SINGLE(false),
 
     /** Draw each line as multiple adjacent lines to simulate stroke size. */
+    @Deprecated("Drawn lines are too transparent.")
     MULTIPLE(false),
 
     /**

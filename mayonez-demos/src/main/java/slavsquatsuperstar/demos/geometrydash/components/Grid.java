@@ -14,11 +14,6 @@ public class Grid extends Component {
 
     private static final float GRID_LINE_WIDTH = 1f;
     private static final Color GRID_COLOR = new Color(77, 77, 77, 127);
-    private final Vec2 sceneScale;
-
-    public Grid(Vec2 sceneScale) {
-        this.sceneScale = sceneScale;
-    }
 
     @Override
     public void debugRender() {
