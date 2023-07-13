@@ -64,11 +64,12 @@ public class Thruster extends Script {
 //                System.out.println(getParent());
                 addComponent(thruster);
                 addComponent(new Animator(sprites, 0.25f));
-            }
-
-            @Override
-            protected void onUserUpdate(float dt) {
-                transform.set(parentObj.transform.combine(offsetXf));
+                addComponent(new Script() {
+                    @Override
+                    public void update(float dt) {
+                        transform.set(parentObj.transform.combine(offsetXf));
+                    }
+                });
             }
         };
     }

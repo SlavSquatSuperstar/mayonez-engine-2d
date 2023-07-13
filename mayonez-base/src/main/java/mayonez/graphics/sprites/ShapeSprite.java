@@ -12,7 +12,7 @@ import mayonez.physics.colliders.*;
 import java.awt.*;
 
 /**
- * Draws a {@link mayonez.physics.colliders.Collider} to the screen.
+ * Draws an object's {@link mayonez.physics.colliders.Collider} to the screen.
  *
  * @author SlavSquatSuperstar
  */

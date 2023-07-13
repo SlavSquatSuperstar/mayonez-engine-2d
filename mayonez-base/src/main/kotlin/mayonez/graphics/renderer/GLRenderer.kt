@@ -86,7 +86,6 @@ abstract class GLRenderer(shaderFile: String) : Renderer {
 
     private fun GLRenderable.createNewBatch(): RenderBatch {
         val batch = RenderBatch(batchSize, zIndex, primitive)
-        batch.clearVertices()
         batches.add(batch)
         return batch
     }

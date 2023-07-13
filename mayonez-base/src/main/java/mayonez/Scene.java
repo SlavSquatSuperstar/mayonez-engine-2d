@@ -16,7 +16,8 @@ import java.util.Queue;
 import java.util.*;
 
 /**
- * A collection of {@link GameObject}s representing an in-game world.
+ * An in-game world or level that holds multiple {@link GameObject}s. Each scene can be
+ * given a background image or color.
  *
  * @author SlavSquatSuperstar
  */
@@ -124,9 +125,7 @@ public abstract class Scene {
      */
     public final void update(float dt) {
         onUserUpdate(dt);
-        if (isRunning()) {
-            updateSceneObjects(dt);
-        }
+        if (isRunning()) updateSceneObjects(dt);
         processSceneChanges();
     }
 
@@ -161,6 +160,7 @@ public abstract class Scene {
      */
     public final void render(Graphics2D g2) {
         onUserRender();
+        objects.forEach(GameObject::debugRender);
         renderer.render(g2);
         if (separateDebugRenderer()) debugRenderer.render(g2);
     }

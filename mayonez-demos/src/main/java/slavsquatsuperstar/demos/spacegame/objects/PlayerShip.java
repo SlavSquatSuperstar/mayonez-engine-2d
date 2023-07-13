@@ -41,7 +41,7 @@ public class PlayerShip extends GameObject {
         addComponent(SpritesFactory.createSprite(spriteName));
         addComponent(new Script() { // For testing DebugRenderer refactoring
             @Override
-            public void update(float dt) {
+            public void debugRender() {
                 getScene().getDebugDraw().drawShape(new Circle(transform.getPosition(), 1.5f), Colors.CYAN);
                 getScene().getDebugDraw().drawVector(transform.getPosition(),
                         getRigidbody().getVelocity().mul(0.1f), Colors.LIGHT_GREEN);

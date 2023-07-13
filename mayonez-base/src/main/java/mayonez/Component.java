@@ -5,7 +5,8 @@ import mayonez.util.*;
 import java.util.*;
 
 /**
- * A data structure representing traits and behaviors of a {@link mayonez.GameObject}.
+ * Defines traits and behaviors of a {@link mayonez.GameObject}. Each component can be
+ * enabled or disabled.
  *
  * @author SlavSquatSuperstar
  */
@@ -35,17 +36,24 @@ public abstract class Component {
     // Game Loop Methods
 
     /**
-     * Initialize fields after all components have been added to the object.
+     * Initialize fields after all components have been added to the parent object.
      */
     public void start() {
     }
 
     /**
-     * Refresh the component's state and game logic.
+     * Refresh the component's state and game logic. The update method is called each frame.
      *
      * @param dt seconds since the last frame
      */
     public void update(float dt) {
+    }
+
+    /**
+     * Draw debug information to the screen during this frame. Any {@link mayonez.DebugDraw}
+     * method calls should be made here for consistent visual results.
+     */
+    public void debugRender() {
     }
 
     /**

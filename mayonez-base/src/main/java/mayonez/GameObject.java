@@ -11,11 +11,12 @@ import java.util.*;
 import java.util.stream.*;
 
 /**
- * An object or entity in the game that can be given an appearance and behavior through
- * added {@link mayonez.Component} objects.
+ * An object or entity inside a scene whose appearance and behavior can be defined by adding
+ * {@link mayonez.Component}s. Each game object has a name and {@link mayonez.Transform}.
  *
  * @author SlavSquatSuperstar
  */
+// TODO enable/disable object
 public class GameObject {
 
     private static long objectCounter = 0L; // total number of game objects created across all scenes
@@ -71,9 +72,9 @@ public class GameObject {
     // Game Loop Methods
 
     /**
-     * Add and initializes all components.
+     * Adds all components and then initializes them.
      */
-    public final void start() {
+    final void start() {
         init();
 //        children.forEach(getScene()::addObject);
         setUpdateOrder(Component.class, MovementScript.class, Script.class, Collider.class, Sprite.class);
@@ -81,11 +82,11 @@ public class GameObject {
     }
 
     /**
-     * Update all components.
+     * Updates all components.
      *
      * @param dt seconds since the last frame
      */
-    public final void update(float dt) {
+    final void update(float dt) {
         // Combine with parent transform
 //        Transform oldXf = transform.copy();
 //        if (parent != null) transform.set(parent.transform.combine(localTransform));
@@ -93,25 +94,25 @@ public class GameObject {
         components.stream()
                 .filter(Component::isEnabled)
                 .forEach(c -> c.update(dt));
-        onUserUpdate(dt);
 //        while (!changesToObject.isEmpty()) changesToObject.poll().run();
 //        transform.set(oldXf); // Reset transform
+    }
+
+    /**
+     * Draws debug information for all components.
+     */
+    final void debugRender() {
+        components.stream()
+                .filter(Component::isEnabled)
+                .forEach(Component::debugRender);
     }
 
     // User Defined Methods
 
     /**
-     * Add all components and initialize fields after this object has been added to the scene.
+     * Adds all components and initializes fields after this object has been added to the scene.
      */
     protected void init() {
-    }
-
-    /**
-     * An overridable update method for custom update behavior.
-     *
-     * @param dt seconds since the last frame
-     */
-    protected void onUserUpdate(float dt) {
     }
 
     // Component Methods

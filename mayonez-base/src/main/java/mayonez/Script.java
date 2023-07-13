@@ -5,8 +5,8 @@ import mayonez.physics.*;
 import mayonez.physics.colliders.*;
 
 /**
- * A controllable and reusable behavior for a {@link GameObject} which provides many callback functions
- * for the user to override.
+ * A controllable and reusable behavior for a {@link GameObject} which provides additional
+ * callback functions that the user can override.
  *
  * @author SlavSquatSuperstar
  */
@@ -47,13 +47,13 @@ public abstract class Script extends Component {
     // Scene Callbacks
 
     /**
-     * Custom user behavior for when this script or its game object is enabled.
+     * Custom user behavior for when this script is enabled.
      */
     public void onEnable() {
     }
 
     /**
-     * Custom user behavior for when this script or its game object is disabled.
+     * Custom user behavior for when this script is disabled.
      */
     public void onDisable() {
     }
