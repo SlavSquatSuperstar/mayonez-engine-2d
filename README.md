@@ -74,7 +74,7 @@ Below are the tools and libraries used in the development of this project.
   or [Oracle OpenJDK 17+](https://www.oracle.com/java/technologies/downloads/#java17)
 - Kotlin Version: [1.8+](https://kotlinlang.org/docs/whatsnew1820.html)
 - Recommended IDE: [Intellij IDEA CE 2023.1+](https://www.jetbrains.com/idea/download/)
-- Build System: [Gradle 8.1+](https://gradle.org/install/)
+- Build System: [Gradle 8.2+](https://gradle.org/install/)
     - Utilizes [Gradle Shadow Plugin](https://github.com/johnrengelman/shadow/releases) for creating fat jars
 
 - Dependencies (bundled in JAR)
