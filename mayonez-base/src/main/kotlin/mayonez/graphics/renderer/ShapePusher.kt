@@ -2,7 +2,6 @@ package mayonez.graphics.renderer
 
 import mayonez.*
 import mayonez.graphics.*
-import mayonez.graphics.sprites.*
 import mayonez.math.*
 import mayonez.math.shapes.*
 import mayonez.util.*
@@ -58,8 +57,4 @@ private fun MutableList<DebugShape>.addLineAsQuads(edge: Edge, shape: DebugShape
 internal fun MutableList<DebugShape>.addShapeAndCopyBrush(newShape: MShape, debugShape: DebugShape) {
     val copy = DebugShape(newShape, debugShape.color, debugShape.fill, debugShape.zIndex)
     this.add(copy)
-}
-
-internal fun ShapeSprite.toDebugShape(): DebugShape {
-    return DebugShape(this.colliderShape, this.color, this.fill, this.zIndex)
 }

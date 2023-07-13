@@ -108,13 +108,7 @@ internal class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"),
 
     private fun pushObjectsToBatches() {
         objects.filter { it.isEnabled }
-            .forEach {
-                if (it is ShapeSprite) {
-                    addShape(it.toDebugShape()) // Break down shape into primitives then add them later
-                } else {
-                    it.pushToBatch(it.getAvailableBatch())
-                }
-            }
+            .forEach { it.pushToBatch(it.getAvailableBatch()) }
     }
 
     private fun pushShapesToBatches() {

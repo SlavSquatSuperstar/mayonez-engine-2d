@@ -1,25 +1,20 @@
 package mayonez.graphics.sprites;
 
 
-import mayonez.Component;
-import mayonez.graphics.Color;
+import mayonez.*;
 import mayonez.graphics.*;
-import mayonez.math.*;
-import mayonez.math.shapes.Rectangle;
-import mayonez.math.shapes.Shape;
+import mayonez.math.shapes.*;
 import mayonez.physics.colliders.*;
-
-import java.awt.*;
 
 /**
  * Draws an object's {@link mayonez.physics.colliders.Collider} to the screen.
  *
  * @author SlavSquatSuperstar
  */
-public class ShapeSprite extends Component implements JRenderable, GLRenderable {
+public class ShapeSprite extends Component {
 
     private Collider collider;
-    private DebugShape shape;
+    private Shape shape;
 
     public Color color;
     public boolean fill;
@@ -33,48 +28,31 @@ public class ShapeSprite extends Component implements JRenderable, GLRenderable 
     public void start() {
         collider = gameObject.getComponent(Collider.class);
         if (collider == null) this.setEnabled(false);
-        shape = new DebugShape(getColliderShape(), color, fill, getZIndex());
+        shape = getColliderShape();
+    }
+
+    @Override
+    public void debugRender() {
+        if (fill) {
+            getScene().getDebugDraw().fillShape(shape, color);
+        } else {
+            getScene().getDebugDraw().drawShape(shape, color);
+        }
     }
 
     @Override
     public void update(float dt) {
-        shape.setShape(getColliderShape());
-    }
-
-    // Renderer Methods
-
-    @Override
-    public void render(Graphics2D g2) {
-        if (g2 != null) shape.render(g2);
-    }
-
-    @Override
-    public void pushToBatch(RenderBatch batch) {
-        shape.pushToBatch(batch); // TODO doesn't work, need to split shape first
-    }
-
-    // Renderable Methods
-
-    @Override
-    public int getBatchSize() {
-        return fill ? RenderBatch.MAX_TRIANGLES : RenderBatch.MAX_LINES;
-    }
-
-    @Override
-    public DrawPrimitive getPrimitive() {
-        return fill ? DrawPrimitive.TRIANGLE : DrawPrimitive.LINE;
-    }
-
-    @Override
-    public int getZIndex() {
-        return gameObject.getZIndex();
+        shape = getColliderShape();
     }
 
     // Shape Methods
 
-    public Shape getColliderShape() { // convert collider to world then to pixels
-        if (collider == null) return new Rectangle(new Vec2(0f), new Vec2(1f));
-        else return collider.transformToWorld().scale(new Vec2(getScene().getScale()), new Vec2(0f));
+    public Shape getColliderShape() {
+        if (collider == null) {
+            return new Rectangle(transform.getPosition(), transform.getScale());
+        } else {
+            return collider.transformToWorld();
+        }
     }
 
 }

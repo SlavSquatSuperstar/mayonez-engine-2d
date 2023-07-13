@@ -15,6 +15,7 @@ private val DEFAULT_COLOR: MColor = Colors.BLACK
  *
  * @author SlavSquatSuperstar
  */
+// TODO draw with brush
 class DebugDraw internal constructor(
     private val scale: Float, private val debugRenderer: DebugRenderer
 ) {
