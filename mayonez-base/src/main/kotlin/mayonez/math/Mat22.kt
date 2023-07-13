@@ -2,103 +2,78 @@ package mayonez.math
 
 import java.util.*
 
-/** A Mat22 represents a table of numbers with 2 rows and 2 columns. */
-class Mat22 {
+//private const val NUM_ROWS: Int = 2
+//private const val NUM_COLS: Int = 2
+//private const val SIZE: Int = 4
 
+/**
+ * A matrix of floats with 2 rows and 2 columns that stores values from
+ * left to right, then rop to bottom..
+ *
+ * @param mA the element at the first row and first column
+ * @param mB the element at the first row and second column
+ * @param mC the element at the second row and first column
+ * @param mD the element at the second row and second column
+ * @constructor Create a matrix from four numbers, with the values
+ *     [(a, b), (c, d)].
+ */
+class Mat22(
     /** The element at the first row and first column of the matrix. */
-    @JvmField
-    var m00: Float
-
+    private var mA: Float,
     /** The element at the first row and second column of the matrix. */
-    @JvmField
-    var m01: Float
-
+    private var mB: Float,
     /** The element at the second row and first column of the matrix. */
-    @JvmField
-    var m10: Float
-
+    private var mC: Float,
     /** The element at the second row and second column of the matrix. */
-    @JvmField
-    var m11: Float
+    private var mD: Float
+) {
 
-    /**
-     * Initialize this matrix from four numbers, from left to right, then top
-     * to bottom. The resulting matrix looks like [[(m00, m01), (m10, m11)]].
-     */
-    constructor(m00: Float, m01: Float, m10: Float, m11: Float) {
-        this.m00 = m00
-        this.m01 = m01
-        this.m10 = m10
-        this.m11 = m11
-    }
+    /** Create an identity matrix from an array of four floats */
+    private constructor(values: FloatArray) : this(values[0], values[1], values[2], values[3])
 
-    /**
-     * Initialize this matrix from two column vectors. Useful for storing
-     * linear transformations.
-     */
-    constructor(col1: Vec2, col2: Vec2) : this(col1.x, col2.x, col1.y, col2.y)
-
-    /** Initialize this matrix to the identity matrix, [(1, 0), (0, 1)] */
+    /** Create an identity matrix with the values [(1, 0), (0, 1)] */
     constructor() : this(1f, 0f, 0f, 1f)
 
     /**
-     * Creates a rotation matrix from the given angle.
+     * Creates a rotation matrix from the given angle, with the values
+     * [[(cos, -sin), (sin, cos)]].
      *
      * @degrees the angle measure in degrees
      */
-    constructor(degrees: Float) {
-        val cos = FloatMath.cos(degrees)
-        val sin = FloatMath.sin(degrees)
-        m00 = cos
-        m01 = -sin
-        m10 = sin
-        m11 = cos
-    }
+    constructor(degrees: Float) : this(getRotationMatrix(degrees))
+
+    /**
+     * Create a matrix from two column (1x2) vectors, with the values [[(v1.x,
+     * v2.x), (v1.y, v2.y)]]. Useful for storing linear transformations.
+     */
+    constructor(col1: Vec2, col2: Vec2) : this(col1.x, col2.x, col1.y, col2.y)
 
     // Matrix Elements
 
     /**
-     * Returns the matrix element located at the given row and column. Note:
-     * Indices start from 0.
-     *
-     * @param row the vertical position of the element (top to bottom)
-     * @param col the horizontal position of the element (left to right)
-     * @return the element at (row, col)
-     */
-    fun get(row: Int, col: Int): Float {
-        return when {
-            row == 0 && col == 0 -> m00
-            row == 0 && col == 1 -> m01
-            row == 1 && col == 0 -> m10
-            row == 1 && col == 1 -> m11
-            else -> 0f
-        }
-    }
-
-    /**
-     * Returns the given row of the matrix as a horizontal vector.
+     * Returns the given row of the matrix as a vector.
      *
      * @param row which row of the matrix, zero-indexed
      * @return the specified row
      */
-    fun row(row: Int): Vec2 {
+    private fun row(row: Int): Vec2 {
         return when (row) {
-            0 -> Vec2(m00, m01)
-            1 -> Vec2(m10, m11)
+            0 -> Vec2(mA, mB)
+            1 -> Vec2(mC, mD)
             else -> Vec2()
         }
     }
 
     /**
-     * Returns the given column of the matrix as a vertical vector.
+     * Returns the given column of the matrix as a vector.
      *
-     * @param col which row of the matrix, zero-indexed
+     * @param col which column of the matrix, zero-indexed
      * @return the specified column
      */
-    fun col(col: Int): Vec2 {
+    private fun col(col: Int): Vec2 {
         return when (col) {
-            0 -> Vec2(m00, m10)
-            1 -> Vec2(m01, m11)
+            0 -> Vec2(mA, mC)
+            1 -> Vec2(mB, mD)
             else -> Vec2()
         }
     }
@@ -108,28 +83,27 @@ class Mat22 {
      *
      * @return the determinant
      */
-    fun determinant(): Float = (m00 * m11) - (m01 * m10)
+    fun determinant(): Float = (mA * mD) - (mB * mC)
 
     // Arithmetic Operations
 
-    operator fun plus(m: Mat22): Mat22 = Mat22(
-        this.m00 + m.m00, this.m01 + m.m01,
-        this.m10 + m.m10, this.m11 + m.m11,
-    )
+    operator fun plus(m: Mat22): Mat22 {
+        return Mat22(this.toArray().plusArray(m.toArray()))
+    }
 
-    operator fun minus(m: Mat22): Mat22 = Mat22(
-        this.m00 - m.m00, this.m01 - m.m01,
-        this.m10 - m.m10, this.m11 - m.m11,
-    )
+    operator fun minus(m: Mat22): Mat22 {
+        return Mat22(this.toArray().minusArray(m.toArray()))
+    }
 
     /**
-     * Multiplies each component of this matrix by the given scalar
+     * Multiplies each component of this matrix by the given scalar.
      *
      * @param scalar a real number
      * @return the scaled matrix
      */
-    operator fun times(scalar: Float): Mat22 =
-        Mat22(m00 * scalar, m01 * scalar, m10 * scalar, m11 * scalar)
+    operator fun times(scalar: Float): Mat22 {
+        return Mat22(this.toArray().timesFloat(scalar))
+    }
 
     // Matrix and Vector Multiplication
 
@@ -139,7 +113,9 @@ class Mat22 {
      * @param v a 2D column vector
      * @return the transformed vector as a column
      */
-    operator fun times(v: Vec2): Vec2 = Vec2(m00 * v.x + m01 * v.y, m10 * v.x + m11 * v.y)
+    operator fun times(v: Vec2): Vec2 {
+        return Vec2(row(0).dot(v), row(1).dot(v))
+    }
 
     /**
      * Multiplies this matrix by another. The result is the same as applying
@@ -149,19 +125,21 @@ class Mat22 {
      * @param m a 2x2 matrix
      * @return the matrix product
      */
-    operator fun times(m: Mat22): Mat22 = Mat22(
-        this.row(0).dot(m.col(0)),
-        this.row(0).dot(m.col(1)),
-        this.row(1).dot(m.col(0)),
-        this.row(1).dot(m.col(1))
-    )
-
-    /**
-     * Flips this matrix over its primary diagonal.
-     *
-     * @return this matrix's transpose.
-     */
-    fun transpose(): Mat22 = Mat22(row(1), row(2))
+    operator fun times(m: Mat22): Mat22 {
+//        val values = FloatArray(SIZE)
+//        for (r in 0 until NUM_ROWS) {
+//            for (c in 0 until NUM_COLS) {
+//                values[r * NUM_COLS + c] = this.row(r).dot(m.col(c))
+//            }
+//        }
+//        return Mat22(values)
+        return Mat22(
+            this.row(0).dot(m.col(0)),
+            this.row(0).dot(m.col(1)),
+            this.row(1).dot(m.col(0)),
+            this.row(1).dot(m.col(1))
+        )
+    }
 
     // Object Overrides
 
@@ -170,16 +148,23 @@ class Mat22 {
     }
 
     private fun equalsMatrix(other: Mat22): Boolean {
-        return FloatMath.equals(this.m00, other.m00) && FloatMath.equals(this.m01, other.m01)
-                && FloatMath.equals(this.m10, other.m10) && FloatMath.equals(this.m11, other.m11)
+        return this.toArray().equalsArray(other.toArray())
     }
 
-    override fun hashCode(): Int = Objects.hash(m00, m01, m10, m11)
+    private fun toArray(): FloatArray = floatArrayOf(mA, mB, mC, mD)
+
+    override fun hashCode(): Int = Objects.hash(toArray())
 
     /**
      * A string representation of this matrix, in the form [[(m00, m01), (m10,
-     * m11)]]
+     * m11)]].
      */
-    override fun toString(): String = "[${row(1)}, ${row(2)}]"
+    override fun toString(): String = "[${row(0)}, ${row(1)}]"
 
+}
+
+private fun getRotationMatrix(degrees: Float): FloatArray {
+    val cos = FloatMath.cos(degrees)
+    val sin = FloatMath.sin(degrees)
+    return floatArrayOf(cos, -sin, sin, cos)
 }

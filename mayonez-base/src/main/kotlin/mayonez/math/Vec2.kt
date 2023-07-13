@@ -8,21 +8,22 @@ import java.util.*
 import kotlin.math.*
 
 /**
- * A Vec2 represents an object in 2D space that has magnitude and direction
- * (arrow), the location of something in the xy-plane (point), or even an
- * ordered pair of two numbers (list).
- * *
+ * An ordered pair of two floats, x and y, that represents a point in the
+ * xy-plane or a 2D vector with magnitude and direction.
  *
- * @param x the vector's x-component
- * @param y the vector's y-component
- * @constructor Initialize this vector from an x and y value, as (x, y).
+ * @param x the x-component
+ * @param y the y-component
+ * @constructor Initialize this vector from an x and y value, to (x, y). *
  * @author SlavSquatSuperstar
  */
 class Vec2(
     /** The vector's x component. */
-    @JvmField var x: Float,
+    @JvmField
+    var x: Float,
+
     /** The vector's y component. */
-    @JvmField var y: Float
+    @JvmField
+    var y: Float
 ) {
 
     // Convenience Constructors
@@ -31,15 +32,15 @@ class Vec2(
     constructor() : this(0f)
 
     /**
-     * Initialize this vector to have the same x and y components, as (a, a).
+     * Initialize this vector to have the same x and y components, to (n, a).
      *
      * @param num the value for both x and y
      */
     constructor(num: Float) : this(num, num)
 
     /**
-     * Initialize this vector to copy another vector's x and y values, as (vx,
-     * vy)
+     * Initialize this vector to copy another vector's x and y values, as (v_x,
+     * v_y)
      *
      * @param v the vector to copy
      */
@@ -52,13 +53,6 @@ class Vec2(
      * @param v the JOML vector to copy
      */
     constructor(v: Vector2f) : this(v.x, v.y)
-
-    /**
-     * Negates this vector.
-     *
-     * @return a new vector with this vector's components times -1
-     */
-    operator fun unaryMinus(): Vec2 = Vec2(-x, -y)
 
     // Mutators
 
@@ -147,6 +141,13 @@ class Vec2(
      */
     private fun Float.safeDivide(f: Float): Float = if (equals(f, 0f)) 0f else this / f
 
+    /**
+     * Negates this vector.
+     *
+     * @return a new vector with this vector's components times -1
+     */
+    operator fun unaryMinus(): Vec2 = Vec2(-x, -y)
+
     // Special Vector Operations
 
     /**
@@ -179,31 +180,6 @@ class Vec2(
     fun cross(z: Float): Vec2 = Vec2(this.y * z, -this.x * z)
 
     companion object {
-        // Pre-Defined Vectors
-
-        /** The vector (1, 0), or the positive x-axis. */
-        val right: Vec2
-            get() = Vec2(1f, 0f)
-
-        /** The vector (-1, 0), or the negative x-axis. */
-        val left: Vec2
-            get() = Vec2(-1f, 0f)
-
-        /** The vector (0, 1), or the positive y-axis. */
-        val up: Vec2
-            get() = Vec2(0f, 1f)
-
-        /** The vector (0, -1), or the negative y-axis. */
-        val down: Vec2
-            get() = Vec2(0f, -1f)
-
-        /** The vector (1, 1), or the component-wise multiplicative identity. */
-        val one: Vec2
-            get() = Vec2(1f, 1f)
-
-        /** The vector (0, 0), or the component-wise additive identity. */
-        val zero: Vec2
-            get() = Vec2(0f, 0f)
 
         // Float Operations
         operator fun Float.times(v: Vec2): Vec2 = Vec2(this * v.x, this * v.y)

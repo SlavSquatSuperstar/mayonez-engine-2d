@@ -65,7 +65,7 @@ class GLCamera(screenSize: Vec2?, sceneScale: Float) : Camera(screenSize, sceneS
     }
 
     private fun rotateViewMatrix() {
-        val cameraPos = position.mul(SceneManager.currentScene.scale)
+        val cameraPos = position * SceneManager.currentScene.scale
         val rotation = Quaternionf()
         rotation.rotationAxis(FloatMath.toRadians(-getRotation()), 0f, 0f, 1f)
         viewMatrix.rotateAround(rotation, cameraPos.x, cameraPos.y, 0f)
