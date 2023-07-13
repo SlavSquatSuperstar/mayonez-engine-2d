@@ -15,7 +15,6 @@ private val DEFAULT_COLOR: MColor = Colors.BLACK
  *
  * @author SlavSquatSuperstar
  */
-// TODO draw with brush
 class DebugDraw internal constructor(
     private val scale: Float, private val debugRenderer: DebugRenderer
 ) {
@@ -25,7 +24,19 @@ class DebugDraw internal constructor(
         const val DEFAULT_STROKE_SIZE: Float = 2f
     }
 
+    // TODO draw with brush
+    private var currentZIndex: Int? = null
+
     // Public Draw Methods
+
+    /**
+     * Sets a custom z-index for the next draw call.
+     *
+     * @param zIndex the z-index
+     */
+    fun setNextZIndex(zIndex: Int) {
+        currentZIndex = zIndex
+    }
 
     /**
      * Draws a point onto the screen.
@@ -98,8 +109,11 @@ class DebugDraw internal constructor(
     private fun addShapeToRenderer(
         shape: Shape, color: MColor?, priority: DrawPriority
     ) {
-        val brush = ShapeBrush(color ?: DEFAULT_COLOR, priority)
+        val zIndex = currentZIndex ?: priority.zIndex
+        val brush = ShapeBrush(color ?: DEFAULT_COLOR, priority.fill, zIndex)
         debugRenderer.addShape(DebugShape(shape, brush))
+        // Reset brush
+        currentZIndex = null
     }
 
 }

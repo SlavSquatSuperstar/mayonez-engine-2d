@@ -20,11 +20,14 @@ allprojects {
 
     // Name
     group 'slavsquatsuperstar'
-    version '0.7.7-pre6'
+    version '0.7.7-pre7-snapshot'
 
     // Java Version
-    sourceCompatibility = javaVersion
-    targetCompatibility = javaVersion
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(javaVersion)
+        }
+    }
 
     // Dependencies
     repositories { mavenCentral() }
