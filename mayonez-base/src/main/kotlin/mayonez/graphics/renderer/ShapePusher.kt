@@ -55,6 +55,6 @@ private fun MutableList<DebugShape>.addLineAsQuads(edge: Edge, shape: DebugShape
  * [mayonez.graphics.DebugShape].
  */
 internal fun MutableList<DebugShape>.addShapeAndCopyBrush(newShape: MShape, debugShape: DebugShape) {
-    val copy = DebugShape(newShape, debugShape.color, debugShape.fill, debugShape.zIndex)
+    val copy = DebugShape(newShape, debugShape.color, debugShape.fill, debugShape.zIndex, debugShape.strokeSize)
     this.add(copy)
 }

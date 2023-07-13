@@ -14,6 +14,7 @@ import slavsquatsuperstar.demos.geometrydash.ui.UICanvas;
  *
  * @author SlavSquatSuperstar
  */
+// TODO object z-indexes
 public class GDEditorScene extends Scene {
 
     final static int TILE_SIZE = 42;

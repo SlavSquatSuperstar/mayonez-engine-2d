@@ -1,11 +1,8 @@
 package slavsquatsuperstar.demos.geometrydash.components;
 
-import mayonez.Component;
-import mayonez.graphics.JRenderable;
-import mayonez.math.Vec2;
-
-import java.awt.*;
-import java.awt.geom.Line2D;
+import mayonez.*;
+import mayonez.graphics.*;
+import mayonez.math.*;
 
 /**
  * Draws gridlines to indicate where the world coordinates are.
@@ -13,40 +10,39 @@ import java.awt.geom.Line2D;
  * @author SlavSquatSuperstar
  */
 // TODO doesn't work in GL
-public class Grid extends Component implements JRenderable {
+public class Grid extends Component {
 
-    private final Vec2 gridSize;
+    private static final float GRID_LINE_WIDTH = 1f;
+    private static final Color GRID_COLOR = new Color(77, 77, 77, 127);
+    private final Vec2 sceneScale;
 
-    public Grid(Vec2 gridSize) {
-        this.gridSize = gridSize;
+    public Grid(Vec2 sceneScale) {
+        this.sceneScale = sceneScale;
     }
 
     @Override
-    public void render(Graphics2D g2) {
-        g2.setStroke(new BasicStroke(1f));
-        g2.setColor(new Color(0.3f, 0.3f, 0.3f, 0.5f));
+    public void debugRender() {
+        var debugDraw = getScene().getDebugDraw();
+        debugDraw.setStrokeSize(GRID_LINE_WIDTH);
 
         var camPos = getScene().getCamera().getPosition();
-        var screneHalfSize = getScene().getSize().mul(0.5f);
+        var screenHalfSize = getScene().getSize().mul(0.5f);
 
         // Which world coordinates are we at?
-        var start = camPos.sub(screneHalfSize).floor().sub(new Vec2(0.5f)).mul(gridSize);
-        var end = camPos.add(screneHalfSize).ceil().add(new Vec2(0.5f)).mul(gridSize);
+        var start = camPos.sub(screenHalfSize).floor().sub(new Vec2(0.5f));
+        var end = camPos.add(screenHalfSize).ceil().add(new Vec2(0.5f));
 
         // Either bottom of screen or top of ground
         // Vertical Lines
-        for (var drawX = start.x; drawX <= end.x; drawX += gridSize.x)
-//            getScene().getDebugDraw().drawLine(new Vec2(drawX, start.y), new Vec2(drawX, end.y), gridColor);
-            g2.draw(new Line2D.Float(drawX, start.y, drawX, end.y));
-
+        for (var drawX = start.x; drawX <= end.x; drawX += 1) {
+            debugDraw.drawLine(new Vec2(drawX, start.y), new Vec2(drawX, end.y), GRID_COLOR);
+        }
         // Horizontal Lines
-        for (var drawY = start.y; drawY <= end.y; drawY += gridSize.y)
-//            getScene().getDebugDraw().drawLine(new Vec2(start.x, drawY), new Vec2(end.x, drawY), gridColor);
-            g2.draw(new Line2D.Float(start.x, drawY, end.x, drawY));
+        for (var drawY = start.y; drawY <= end.y; drawY += 1) {
+            debugDraw.drawLine(new Vec2(start.x, drawY), new Vec2(end.x, drawY), GRID_COLOR);
+        }
+
+        debugDraw.resetStrokeSize();
     }
 
-    @Override
-    public int getZIndex() {
-        return gameObject.getZIndex();
-    }
 }

@@ -9,21 +9,21 @@ import mayonez.util.*
  *
  * @author SlavSquatSuperstar
  */
-internal data class ShapeBrush(
+internal data class ShapeBrush constructor(
     internal val color: MColor,
     internal val fill: Boolean,
     internal val zIndex: Int,
-    internal val strokeSize: Float = DebugDraw.DEFAULT_STROKE_SIZE
+    internal val strokeSize: Float
 ) {
 
 //    constructor(color: MColor, fill: Boolean, priority: DrawPriority) :
 //            this(color, fill, priority.zIndex)
 
     constructor(color: MColor, priority: DrawPriority) :
-            this(color, priority.fill, priority.zIndex)
+            this(color, priority.fill, priority.zIndex, DebugDraw.DEFAULT_STROKE_SIZE)
 
     constructor(color: MColor, style: LineStyle) :
-            this(color, style.fill, DrawPriority.LINE.zIndex)
+            this(color, style.fill, DrawPriority.LINE.zIndex, DebugDraw.DEFAULT_STROKE_SIZE)
 
 //    companion object {
 //
@@ -33,7 +33,7 @@ internal data class ShapeBrush(
 //            return ShapeBrush(color, style.fill, DrawPriority.LINE)
 //        }
 //
-//        internal fun createOutlineBrush(color: MColor): ShapeBrush {
+//        internal fun createOutlineBrush(color: MColor, strokeSize: Float): ShapeBrush {
 //            return ShapeBrush(color, false, DrawPriority.SHAPE_OUTLINE)
 //        }
 //

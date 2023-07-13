@@ -25,21 +25,42 @@ class DebugDraw internal constructor(
     }
 
     // TODO draw with brush
-    private var currentZIndex: Int? = null
+//    private var brush: ShapeBrush? = null
+    private var zIndex: Int? = null
+    private var strokeSize: Float = DEFAULT_STROKE_SIZE
 
     // Public Draw Methods
 
     /**
-     * Sets a custom z-index for the next draw call.
+     * Sets a custom z-index for all subsequent shapes.
      *
      * @param zIndex the z-index
      */
-    fun setNextZIndex(zIndex: Int) {
-        currentZIndex = zIndex
+    fun setZIndex(zIndex: Int) {
+        this.zIndex = zIndex
+    }
+
+    /** Resets the z-index back to default. */
+    fun resetZIndex() {
+        zIndex = null
     }
 
     /**
-     * Draws a point onto the screen.
+     * Sets a custom stroke size for all subsequent shapes.
+     *
+     * @param strokeSize the stroke size
+     */
+    fun setStrokeSize(strokeSize: Float) {
+        this.strokeSize = strokeSize
+    }
+
+    /** Resets the stroke size back to default. */
+    fun resetStrokeSize() {
+        strokeSize = DEFAULT_STROKE_SIZE
+    }
+
+    /**
+     * Draws a point onto the screen and specifies the color.
      *
      * @param position where the point is located, in world coordinates
      * @param color the color to use
@@ -53,7 +74,7 @@ class DebugDraw internal constructor(
     }
 
     /**
-     * Draws a line segment onto the screen.
+     * Draws a line segment onto the screen and specifies the color.
      *
      * @param start the segment's starting point, in world coordinates
      * @param end the segment's ending point, in world coordinates
@@ -67,7 +88,7 @@ class DebugDraw internal constructor(
     }
 
     /**
-     * Draws a vector onto the screen.
+     * Draws a vector onto the screen and specifies the color.
      *
      * @param origin the vector's starting point, in world coordinates
      * @param direction how far away the vector's end point is, in world
@@ -79,7 +100,7 @@ class DebugDraw internal constructor(
     }
 
     /**
-     * Draws the outline of a shape onto the screen.
+     * Draws a shape outline onto the screen and specifies the color.
      *
      * @param shape a [Shape]
      * @param color the color to use
@@ -91,8 +112,12 @@ class DebugDraw internal constructor(
         )
     }
 
+//    fun drawShape(shape: Shape?, brush: ShapeBrush?) {
+//
+//    }
+
     /**
-     * Draws a shape onto the screen and fills in the interior.
+     * Draws a solid shape onto the screen and specifies the color.
      *
      * @param shape a [Shape]
      * @param color the color to use
@@ -109,11 +134,9 @@ class DebugDraw internal constructor(
     private fun addShapeToRenderer(
         shape: Shape, color: MColor?, priority: DrawPriority
     ) {
-        val zIndex = currentZIndex ?: priority.zIndex
-        val brush = ShapeBrush(color ?: DEFAULT_COLOR, priority.fill, zIndex)
+        val zIndex = zIndex ?: priority.zIndex
+        val brush = ShapeBrush(color ?: DEFAULT_COLOR, priority.fill, zIndex, strokeSize)
         debugRenderer.addShape(DebugShape(shape, brush))
-        // Reset brush
-        currentZIndex = null
     }
 
 }

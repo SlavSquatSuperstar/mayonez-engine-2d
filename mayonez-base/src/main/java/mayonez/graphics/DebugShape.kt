@@ -17,22 +17,32 @@ internal data class DebugShape constructor(
     internal val color: MColor,
     internal val fill: Boolean,
     private val zIndex: Int,
-//    private val strokeSize: Float = DebugDraw.DEFAULT_STROKE_SIZE
+    internal val strokeSize: Float
 ) : JRenderable, GLRenderable {
 
     constructor(shape: MShape, brush: ShapeBrush) :
-            this(shape, brush.color, brush.fill, brush.zIndex)
+            this(shape, brush.color, brush.fill, brush.zIndex, brush.strokeSize)
 
-    // Renderer Methods
+    // AWT Renderer Methods
 
     override fun render(g2: Graphics2D?) {
-        if (g2 != null) {
-            g2.color = color.toAWT()
-            val awtShape = shape.toAWTShape()
-            if (fill) g2.fill(awtShape)
-            else g2.draw(awtShape)
-        }
+        if (g2 == null) return
+        g2.setBrushProperties(color, strokeSize)
+        g2.drawShape(shape, fill)
     }
+
+    private fun Graphics2D.setBrushProperties(color: MColor, strokeSize: Float) {
+        this.color = color.toAWT()
+        this.stroke = BasicStroke(strokeSize)
+    }
+
+    private fun Graphics2D.drawShape(shape: MShape, fill: Boolean) {
+        val awtShape = shape.toAWTShape()
+        if (fill) fill(awtShape)
+        else draw(awtShape)
+    }
+
+    // GL Renderer Methods
 
     /**
      * Pushes a shape's vertices and texture to a render batch.
@@ -77,6 +87,10 @@ internal data class DebugShape constructor(
         }
     }
 
+    private fun MPolygon.splitIntoParts(fill: Boolean): Array<out MShape> {
+        return if (fill) this.triangles else this.edges
+    }
+
     // Renderable Methods
 
     override fun getBatchSize(): Int {
@@ -97,9 +111,4 @@ internal data class DebugShape constructor(
         return "${shape.javaClass.simpleName} (color = $color, fill = $fill, z = $zIndex)"
     }
 
-}
-
-// Helper Methods
-private fun MPolygon.splitIntoParts(fill: Boolean): Array<out MShape> {
-    return if (fill) this.triangles else this.edges
 }
