@@ -19,8 +19,13 @@ import java.awt.image.*;
 @UsesEngine(EngineType.AWT)
 final class JSprite extends Sprite implements JRenderable {
 
-    private final JTexture texture;
+    private JTexture texture;
     private Color color;
+
+    private JSprite(JTexture texture, Color color) {
+        this.texture = texture;
+        this.color = color;
+    }
 
     /**
      * Creates a new JSprite that renders an entire texture.
@@ -28,8 +33,7 @@ final class JSprite extends Sprite implements JRenderable {
      * @param texture a texture
      */
     JSprite(JTexture texture) {
-        this.color = Colors.WHITE;
-        this.texture = texture;
+        this(texture, Sprite.DEFAULT_COLOR);
     }
 
     /**
@@ -38,8 +42,7 @@ final class JSprite extends Sprite implements JRenderable {
      * @param color a color
      */
     JSprite(Color color) {
-        this.color = (color != null) ? color : Colors.WHITE;
-        this.texture = null;
+        this(null, (color != null) ? color : Sprite.DEFAULT_COLOR);
     }
 
     // Sprite Methods
@@ -49,11 +52,40 @@ final class JSprite extends Sprite implements JRenderable {
         if (texture != null) {
             texture.draw(g2, transform, spriteXf, getScene().getScale());
         } else {
-            getScene().getDebugDraw().fillShape(new Rectangle(transform.getPosition(), transform.getScale()), color);
+            getScene().getDebugDraw().fillShape(
+                    new Rectangle(transform.getPosition(), transform.getScale()), color);
         }
     }
 
-    // Sprite/Renderable Methods
+    // Color Helper Methods
+
+    private void recolorImage(Color color) {
+        for (var y = 0; y < getImageWidth(); y++) {
+            for (var x = 0; x < getImageHeight(); x++) {
+                var pixelColor = getPixelColor(x, y);
+                var combinedColor = pixelColor.combine(color);
+                setPixelColor(x, y, combinedColor);
+            }
+        }
+    }
+
+    /**
+     * Get the pixel's RBGA color on this sprite's stored texture at the specific coordinates.
+     */
+    private Color getPixelColor(int x, int y) {
+        if (getImage() == null) return Colors.WHITE;
+        else return new Color(getImage().getRGB(x, y));
+    }
+
+    /**
+     * Set the pixel's RBGA color on this sprite's stored texture at the specific coordinates.
+     */
+    private void setPixelColor(int x, int y, Color color) {
+        if (getImage() == null) return;
+        getImage().setRGB(x, y, color.getRGBAValue());
+    }
+
+    // Sprite/Renderable Getters
 
     @Override
     public Color getColor() {
@@ -66,20 +98,6 @@ final class JSprite extends Sprite implements JRenderable {
         recolorImage(color);
     }
 
-    private void recolorImage(Color color) {
-        for (var y = 0; y < getImageWidth(); y++) {
-            for (var x = 0; x < getImageHeight(); x++) {
-                var pixelColor = getPixelColor(x, y);
-                var combinedColor = pixelColor.combine(color);
-                setPixelColor(x, y, combinedColor);
-            }
-        }
-    }
-
-    private BufferedImage getImage() {
-        return (texture == null) ? null : texture.getImage();
-    }
-
     @Override
     public int getImageWidth() {
         return (getImage() == null) ? 0 : getImage().getWidth();
@@ -90,33 +108,20 @@ final class JSprite extends Sprite implements JRenderable {
         return (getImage() == null) ? 0 : getImage().getHeight();
     }
 
-    /**
-     * Get the pixel's RBG color on this sprite's stored texture at the specific coordinates.
-     *
-     * @param x the pixel x-coordinate
-     * @param y the pixel y-coordinate
-     * @return the color, or white if drawing a texture
-     */
-    public Color getPixelColor(int x, int y) {
-        if (getImage() == null) return Colors.WHITE;
-        else return new Color(getImage().getRGB(x, y));
-    }
-
-    /**
-     * Set the pixel's RBG color on this sprite's stored texture at the specific coordinates.
-     *
-     * @param x     the pixel x-coordinate
-     * @param y     the pixel y-coordinate
-     * @param color the color to set
-     */
-    public void setPixelColor(int x, int y, Color color) {
-        if (getImage() == null) return;
-        getImage().setRGB(x, y, color.getRGBAValue());
+    private BufferedImage getImage() {
+        return (texture == null) ? null : texture.getImage();
     }
 
     @Override
     public JTexture getTexture() {
         return texture;
+    }
+
+    @Override
+    public void setTexture(Texture texture) {
+        if (texture instanceof JTexture jTexture) {
+            this.texture = jTexture;
+        }
     }
 
     @Override
@@ -126,7 +131,7 @@ final class JSprite extends Sprite implements JRenderable {
 
     @Override
     public JSprite copy() {
-        return (texture == null) ? new JSprite(color) : new JSprite(texture);
+        return new JSprite(texture, color);
     }
 
 }

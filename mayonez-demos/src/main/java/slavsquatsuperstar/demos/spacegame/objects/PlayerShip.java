@@ -44,7 +44,7 @@ public class PlayerShip extends GameObject {
         addComponent(new Script() { // For testing DebugRenderer refactoring
             private final ShapeBrush shieldBrush = ShapeBrush
                     .createOutlineBrush(Colors.CYAN
-                            .combine(new Color(255, 255, 255, 127)))
+                            .combine(new Color(255, 255, 255, 192)))
                     .setStrokeSize(8f);
 
             private final ShapeBrush velocityBrush = ShapeBrush

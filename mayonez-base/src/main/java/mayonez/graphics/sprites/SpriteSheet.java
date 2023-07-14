@@ -32,7 +32,7 @@ public abstract sealed class SpriteSheet permits JSpriteSheet, GLSpriteSheet {
     // Sprite Sheet Getters
 
     /**
-     * The size of the sprite sheet texture in pixels.
+     * The dimensions of the sprite sheet texture in pixels.
      *
      * @return the sheet size
      */
@@ -46,10 +46,16 @@ public abstract sealed class SpriteSheet permits JSpriteSheet, GLSpriteSheet {
 
     public abstract int numSprites();
 
-    public Sprite[] toSpriteArray() {
+    public Sprite[] getSprites() {
         var sprites = new Sprite[numSprites()];
         for (var i = 0; i < sprites.length; i++) sprites[i] = getSprite(i);
         return sprites;
+    }
+
+    public Texture[] getTextures() {
+        var textures = new Texture[numSprites()];
+        for (var i = 0; i < textures.length; i++) textures[i] = getTexture(i);
+        return textures;
     }
 
 }

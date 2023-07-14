@@ -1,6 +1,7 @@
 package mayonez.graphics.sprites;
 
 import mayonez.*;
+import mayonez.graphics.textures.*;
 import mayonez.scripts.*;
 
 /**
@@ -10,32 +11,38 @@ import mayonez.scripts.*;
  */
 public class Animator extends Script {
 
-    private final Sprite[] sprites; // TODO swap textures instead
+    // Animation Fields
+    private final Texture[] textures;
     private final int numFrames;
     private int currentFrame;
+
+    // Components
+    private Sprite sprite;
     private final Timer animTimer;
 
-    public Animator(Sprite[] sprites, float animCooldown) {
-        this.sprites = sprites;
-        this.numFrames = sprites.length;
+    public Animator(Texture[] textures, float animCooldown) {
+        this.textures = textures;
+        this.numFrames = textures.length;
         currentFrame = 0;
         animTimer = new Timer(animCooldown);
     }
 
     public Animator(SpriteSheet sprites, float animCooldown) {
-        this(sprites.toSpriteArray(), animCooldown);
+        this(sprites.getTextures(), animCooldown);
     }
 
     @Override
     public void init() {
-        for (var spr : sprites) gameObject.addComponent(spr.setEnabled(false));
+        sprite = SpritesFactory.createSprite(textures[0]);
+        gameObject.addComponent(sprite.setEnabled(false));
         gameObject.addComponent(animTimer);
     }
 
     @Override
     public void start() {
+        animTimer.reset();
         animTimer.start();
-        showFrame(currentFrame);
+        setSpriteTexture(0);
     }
 
     @Override
@@ -46,41 +53,48 @@ public class Animator extends Script {
         }
     }
 
-    // Frame Visibility Methods
+    // Set Frame Methods
 
     /**
-     * Hide all frames and show the current one.
+     * Switches the animation to the given frame.
      *
-     * @param frame the frame number to show
+     * @param frame the frame index to show
      */
     public void setFrame(int frame) {
         if (frame >= 0 && frame < numFrames) {
-            hideFrame(currentFrame); // hide last frame
             currentFrame = frame;
-            showFrame(currentFrame); // show next frame
+            setSpriteTexture(currentFrame);
         } else {
-            hideFrame(currentFrame); // hide all frames
+            setSpriteVisible(false);
         }
     }
 
+    private void setSpriteTexture(int frame) {
+        sprite.setTexture(textures[frame]);
+        setSpriteVisible(true);
+    }
+
+    /**
+     * Sets the visibility of the sprite.
+     *
+     * @param visible if the sprite should be enabled
+     */
+    public void setSpriteVisible(boolean visible) {
+        sprite.setEnabled(visible);
+    }
+
+    // Callback Methods
+
     @Override
     public void onEnable() {
-        showFrame(currentFrame);
+        setSpriteVisible(true);
         animTimer.setEnabled(true);
     }
 
     @Override
     public void onDisable() {
-        hideFrame(currentFrame);
+        setSpriteVisible(false);
         animTimer.setEnabled(false);
-    }
-
-    private void hideFrame(int frame) {
-        sprites[frame].setEnabled(false);
-    }
-
-    private void showFrame(int frame) {
-        sprites[frame].setEnabled(true);
     }
 
 }

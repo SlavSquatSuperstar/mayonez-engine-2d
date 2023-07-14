@@ -89,11 +89,13 @@ internal class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"),
     private fun drawBackgroundColor() {
         val bgColor = background.color.toGL()
         glClearColor(bgColor.x, bgColor.y, bgColor.z, 1f)
-        glClear(GL_COLOR_BUFFER_BIT)
+        glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
     }
 
     private fun setGLProperties() {
+        // Note: complex transparent shapes don't work very well
         glEnable(GL_BLEND)
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
         glEnable(GL_LINE_SMOOTH)
         when (lineStyle) {
             LineStyle.SINGLE -> glLineWidth(DebugDraw.DEFAULT_STROKE_SIZE)

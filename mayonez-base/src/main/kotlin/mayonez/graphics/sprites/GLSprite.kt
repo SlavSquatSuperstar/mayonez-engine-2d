@@ -8,7 +8,6 @@ import mayonez.math.*
 import mayonez.math.shapes.*
 import mayonez.util.*
 
-private val DEFAULT_COLOR: Color = Colors.WHITE
 
 /**
  * A component that draws an image at a [GameObject]'s position using the
@@ -17,7 +16,7 @@ private val DEFAULT_COLOR: Color = Colors.WHITE
  * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.GL)
-class GLSprite private constructor(private val texture: GLTexture?, private var color: Color?) : Sprite(),
+class GLSprite private constructor(private var texture: GLTexture?, private var color: Color?) : Sprite(),
     GLRenderable {
 
     /**
@@ -87,10 +86,12 @@ class GLSprite private constructor(private val texture: GLTexture?, private var 
 
     override fun getTexture(): GLTexture? = texture
 
+    override fun setTexture(texture: Texture?) {
+        this.texture = texture as? GLTexture
+    }
+
     override fun getZIndex(): Int = gameObject.zIndex
 
-    override fun copy(): GLSprite {
-        return if (texture == null) GLSprite(color) else GLSprite(texture)
-    }
+    override fun copy(): GLSprite =  GLSprite(texture, color)
 
 }

@@ -3,15 +3,17 @@ package mayonez.graphics.sprites;
 import mayonez.*;
 import mayonez.graphics.*;
 import mayonez.graphics.textures.*;
+import mayonez.util.*;
 
 /**
  * A visual representation of a GameObject.
  *
  * @author SlavSquatSuperstar
  */
-// TODO make color and texture changeable
+// TODO make texture changeable
 public abstract class Sprite extends Component {
 
+    protected static Color DEFAULT_COLOR = Colors.WHITE;
     protected Transform spriteXf;
 
     // Getters and Setters
@@ -24,7 +26,7 @@ public abstract class Sprite extends Component {
     public abstract Color getColor();
 
     /**
-     * Set the color of this sprite, or "dye" the texture if drawing one.
+     * Set the color of this sprite, or recolors the current texture.
      *
      * @param color the color
      */
@@ -64,11 +66,18 @@ public abstract class Sprite extends Component {
     }
 
     /**
-     * Returns the texture this sprite holds.
+     * Returns the texture this sprite draws.
      *
      * @return the texture, or null if drawing a color
      */
     public abstract Texture getTexture();
+
+    /**
+     * Sets the texture this sprite draws.
+     *
+     * @param texture the new texture
+     */
+    public abstract void setTexture(Texture texture);
 
     // Copy Methods
 
