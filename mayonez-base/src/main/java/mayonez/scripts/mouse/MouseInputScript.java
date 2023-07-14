@@ -25,9 +25,9 @@ public abstract class MouseInputScript extends Script {
      * @param button the button name, or null for any
      */
     public MouseInputScript(String button) {
+        this.button = button;
         lastMouse = new Vec2();
         mouseDown = false;
-        this.button = button;
     }
 
     /**
@@ -58,7 +58,7 @@ public abstract class MouseInputScript extends Script {
      * Check if the mouse is pressed on this object this frame.
      */
     private void checkMouseDown() {
-        if (isMouseButtonPressed() && isMouseOnObject()) {
+        if (isMouseButtonDown() && isMouseOnObject()) {
             mouseDown = true;
             onMouseDown();
         }
@@ -68,7 +68,7 @@ public abstract class MouseInputScript extends Script {
      * Check if the mouse is released after being pressed.
      */
     private void checkMouseUp() {
-        if (!isMouseButtonPressed()) {
+        if (!isMouseButtonDown()) {
             mouseDown = false;
             onMouseUp();
         }
@@ -82,7 +82,7 @@ public abstract class MouseInputScript extends Script {
         lastMouse = getMousePos().add(getMouseDisp());
     }
 
-    protected boolean isMouseButtonPressed() {
+    protected boolean isMouseButtonDown() {
         if (button == null) {
             return MouseInput.isPressed();
         } else {

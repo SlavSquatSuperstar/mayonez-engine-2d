@@ -32,7 +32,7 @@ public class GDPlayer extends GameObject {
         float thrustForce = 10f;
         addComponent(new BoxCollider(new Vec2(1, 1)));
         addComponent(new Rigidbody(1f).setDrag(0.2f).setFixedRotation(true));
-        addComponent(new KeyMovement(MoveMode.POSITION, thrustForce).setTopSpeed(thrustForce));
+        addComponent(new KeyMovement(thrustForce, MoveMode.POSITION).setTopSpeed(thrustForce));
         addComponent(new KeepInScene(KeepInScene.Mode.STOP));
 //        addComponent(new ShapeSprite(Colors.DARK_GRAY, false));
     }

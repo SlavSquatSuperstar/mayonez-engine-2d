@@ -23,16 +23,12 @@ public abstract class MouseScript extends MovementScript {
     protected Vec2 lastMouse = new Vec2();
     private boolean mouseHeld;
 
-    public MouseScript() {
-        this("left mouse", MoveMode.POSITION, 0);
+    public MouseScript(float speed, MoveMode mode) {
+        this("left mouse", speed, mode);
     }
 
-    public MouseScript(MoveMode mode, float speed) {
-        this("left mouse", mode, speed);
-    }
-
-    public MouseScript(String button, MoveMode mode, float speed) {
-        super(mode, speed);
+    public MouseScript(String button, float speed, MoveMode mode) {
+        super(speed, mode);
         this.button = button;
     }
 
@@ -80,11 +76,6 @@ public abstract class MouseScript extends MovementScript {
      */
     protected final Vec2 getMouseDisp() {
         return MouseInput.getDisplacement();
-    }
-
-    @Override
-    protected Vec2 getUserInput() {
-        return getMousePos();
     }
 
     // TODO Use MouseInput collision detection instead

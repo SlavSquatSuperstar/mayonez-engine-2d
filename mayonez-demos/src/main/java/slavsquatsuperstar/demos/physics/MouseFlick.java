@@ -1,52 +1,81 @@
 package slavsquatsuperstar.demos.physics;
 
 import mayonez.math.*;
+import mayonez.physics.*;
+import mayonez.scripts.mouse.*;
 import mayonez.scripts.movement.*;
 
 /**
- * Allows objects to be given a velocity or impulse using the mouse. Holding the mouse on an object
- * and dragging it sets the direction and strength of the flick.
+ * Allows objects to be launched using the mouse. Holding the mouse on an object and dragging
+ * zit sets the direction and strength of the flick.
  *
  * @author SlavSquatSuperstar
  */
-public class MouseFlick extends MouseScript {
+public class MouseFlick extends MouseInputScript {
 
+    // Static Fields
     private static MouseFlick activeInstance = null; // only want to move one object
-    private Vec2 lastMouse = new Vec2();
 
-    public MouseFlick(MoveMode mode, String button, float speed, boolean inverted) {
-        this.mode = mode;
-        this.button = button;
-        this.inverted = inverted;
+    // Mouse Fields
+    private final boolean inverted;
+    private Vec2 mouseStart;
+
+    // Movement Fields
+    private final float speed;
+    private final MoveMode mode;
+    private Rigidbody rb;
+
+    public MouseFlick(String button, float speed, MoveMode mode, boolean inverted) {
+        super(button);
         this.speed = speed;
+        this.mode = mode;
+        this.inverted = inverted;
     }
 
     // Overrides
 
     @Override
+    public void start() {
+        super.start();
+        rb = getRigidbody();
+        mouseStart = new Vec2();
+    }
+
+    @Override
     public void onMouseDown() {
         if (activeInstance == null) {
             activeInstance = this;
-            lastMouse = getMousePos();
+            mouseStart = getMousePos();
         }
     }
 
     @Override
     public void onMouseUp() {
         if (activeInstance == this) {
-            var input = getUserInput().clampLength(speed);
-            switch (mode) {
-                case VELOCITY -> rb.addVelocity(input);
-                case IMPULSE -> rb.applyImpulse(input);
-            }
+            flickGameObject();
             activeInstance = null;
         }
     }
 
-    @Override
-    protected Vec2 getUserInput() {
-        var dragDisplacement = getMousePos().sub(lastMouse);
+    private void flickGameObject() {
+        if (rb == null) return;
+        var input = getDragDisplacement().clampLength(speed);
+        switch (mode) {
+            case VELOCITY -> rb.addVelocity(input);
+            case IMPULSE -> rb.applyImpulse(input);
+        }
+    }
+
+    private Vec2 getDragDisplacement() {
+        var dragDisplacement = getMousePos().sub(mouseStart);
         return dragDisplacement.mul(inverted ? -1 : 1);
+    }
+
+    @Override
+    public void onDestroy() {
+        if (activeInstance == this) {
+            activeInstance = null;
+        }
     }
 
 }

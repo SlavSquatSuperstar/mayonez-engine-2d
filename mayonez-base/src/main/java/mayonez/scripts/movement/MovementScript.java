@@ -11,11 +11,12 @@ import mayonez.physics.*;
  */
 public abstract class MovementScript extends Script {
 
-    public float speed, topSpeed = -1; // If parent has physics clamp rb velocity
+    public float speed;
+    public float topSpeed = -1; // If should clamp rb velocity
     protected MoveMode mode; // How to move the parent object
     protected Rigidbody rb = null; // Reference to object rigidbody
 
-    public MovementScript(MoveMode mode, float speed) {
+    public MovementScript(float speed, MoveMode mode) {
         this.mode = mode;
         this.speed = speed;
     }
@@ -29,11 +30,19 @@ public abstract class MovementScript extends Script {
         }
     }
 
+    @SuppressWarnings({"unchecked"})
+    public final <T extends MovementScript> T setTopSpeed(float topSpeed) {
+        this.topSpeed = topSpeed;
+        return (T) this;
+    }
+
     /**
      * Detect the user's input.
      *
-     * @return the input vector
+     * @return the input vector, default (0, 0)
      */
-    protected abstract Vec2 getUserInput();
+    public Vec2 getUserInput() {
+        return new Vec2();
+    }
 
 }

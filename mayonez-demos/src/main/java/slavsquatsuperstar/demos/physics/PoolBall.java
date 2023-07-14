@@ -69,7 +69,7 @@ class PoolBall extends GameObject {
         addComponent(new KeepInScene(KeepInScene.Mode.BOUNCE));
         addComponent(new DragAndDrop("left mouse"));
         if (isCue) {
-            addComponent(new MouseFlick(MoveMode.IMPULSE, "right mouse", 20, false));
+            addComponent(new MouseFlick("right mouse", 20, MoveMode.IMPULSE, false));
         }
     }
 

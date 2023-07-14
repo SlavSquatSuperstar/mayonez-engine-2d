@@ -19,8 +19,8 @@ public class ClickToMove extends MouseScript {
     private float destAngle, lastAngle, turnDir;
     private boolean moving, turning;
 
-    public ClickToMove(MoveMode mode, float speed, boolean rotate) {
-        super(mode, speed);
+    public ClickToMove(float speed, MoveMode mode, boolean rotate) {
+        super(speed, mode);
         this.rotate = rotate;
         lastPos = new Vec2();
         destPos = new Vec2();

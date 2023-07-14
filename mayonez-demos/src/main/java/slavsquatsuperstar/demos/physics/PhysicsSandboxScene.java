@@ -98,7 +98,7 @@ public class PhysicsSandboxScene extends Scene {
                 addComponent(new Rigidbody(circle.getMass(DENSITY)).setMaterial(material));
                 addComponent(new KeepInScene(KeepInScene.Mode.BOUNCE));
                 addComponent(new DragAndDrop("left mouse"));
-                addComponent(new MouseFlick(MoveMode.VELOCITY, "right mouse", 25f, false));
+                addComponent(new MouseFlick("right mouse", 25f, MoveMode.VELOCITY, false));
             }
         };
     }
@@ -114,7 +114,7 @@ public class PhysicsSandboxScene extends Scene {
                 addComponent(new Rigidbody(box.getMass(DENSITY)).setMaterial(material));
                 addComponent(new KeepInScene(KeepInScene.Mode.BOUNCE));
                 addComponent(new DragAndDrop("left mouse"));
-                addComponent(new MouseFlick(MoveMode.VELOCITY, "right mouse", 25, false));
+                addComponent(new MouseFlick("right mouse", 25, MoveMode.VELOCITY, false));
             }
         };
     }
@@ -157,7 +157,7 @@ public class PhysicsSandboxScene extends Scene {
                 addComponent(new ShapeSprite(Random.randomColor(), false));
                 addComponent(new KeepInScene(KeepInScene.Mode.BOUNCE));
                 addComponent(new DragAndDrop("left mouse"));
-                addComponent(new MouseFlick(MoveMode.VELOCITY, "right mouse", 25f, false));
+                addComponent(new MouseFlick("right mouse", 25f, MoveMode.VELOCITY, false));
                 addComponent(new Script() {
                     private float lifetime;
 

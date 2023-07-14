@@ -12,18 +12,24 @@ public class KeyRotation extends MovementScript {
 
     private final String axis;
 
-    public KeyRotation(MoveMode mode, float angSpeed) {
-        this(mode, angSpeed, "horizontal2");
+    public KeyRotation(float angSpeed, MoveMode mode) {
+        this(angSpeed, mode, "horizontal2");
     }
 
-    public KeyRotation(MoveMode mode, float angSpeed, String axis) {
-        super(mode, angSpeed);
+    public KeyRotation(float angSpeed, MoveMode mode, String axis) {
+        super(angSpeed, mode);
         this.axis = axis;
     }
 
     @Override
     public void update(float dt) {
         var input = -getUserInput().x * speed;
+
+        rotateGameObject(dt, input);
+        clampSpeed();
+    }
+
+    private void rotateGameObject(float dt, float input) {
         switch (mode) {
             case POSITION -> transform.rotate(input * dt);
             case VELOCITY -> rb.addAngularVelocity(input * dt);
@@ -31,19 +37,18 @@ public class KeyRotation extends MovementScript {
             case IMPULSE -> rb.applyAngularImpulse(input);
             case FORCE -> rb.applyTorque(input);
         }
-        // Limit Top Speed
-        if (rb != null && topSpeed > 0 && rb.getAngSpeed() > topSpeed)
+    }
+
+    private void clampSpeed() {
+        if (rb == null) return;
+        if ((topSpeed > 0) && (rb.getAngSpeed() > topSpeed)) {
             rb.setAngVelocity(topSpeed * Math.signum(rb.getAngVelocity()));
+        }
     }
 
     @Override
     public Vec2 getUserInput() {
         return new Vec2(KeyInput.getAxis(axis), 0);
-    }
-
-    public KeyRotation setTopSpeed(float topSpeed) {
-        this.topSpeed = topSpeed;
-        return this;
     }
 
 }
