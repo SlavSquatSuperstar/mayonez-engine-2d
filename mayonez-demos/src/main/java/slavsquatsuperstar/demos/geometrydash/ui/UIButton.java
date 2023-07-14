@@ -1,7 +1,6 @@
 package slavsquatsuperstar.demos.geometrydash.ui;
 
 import mayonez.*;
-import mayonez.annotations.*;
 import mayonez.graphics.sprites.*;
 import mayonez.graphics.textures.*;
 import mayonez.math.*;
@@ -13,7 +12,6 @@ import mayonez.scripts.movement.*;
  *
  * @author SlavSquatSuperstar
  */
-@ExperimentalFeature
 public class UIButton extends GameObject {
 
     private static final SpriteSheet buttons;
@@ -25,7 +23,7 @@ public class UIButton extends GameObject {
     private Sprite onSprite;
 
     static {
-        buttons = SpritesFactory.createSpriteSheet("assets/textures/geometrydash/buttons.png", 60, 60, 2, 2);
+        buttons = Sprites.createSpriteSheet("assets/textures/geometrydash/buttons.png", 60, 60, 2, 2);
         offButton = buttons.getTexture(0);
         onButton = buttons.getTexture(1);
     }
@@ -39,9 +37,9 @@ public class UIButton extends GameObject {
     @Override
     protected void init() {
         addComponent(new BoxCollider(new Vec2(1, 1)).setTrigger(true));
-        addComponent(SpritesFactory.createSprite(offButton));
-        addComponent(onSprite = SpritesFactory.createSprite(onButton).setEnabled(false));
-        addComponent(SpritesFactory.createSprite(icon).setSpriteTransform(Transform.scaleInstance(new Vec2(0.8f)))); // no way to scale though
+        addComponent(Sprites.createSprite(offButton));
+        addComponent(onSprite = Sprites.createSprite(onButton).setEnabled(false));
+        addComponent(Sprites.createSprite(icon).setSpriteTransform(Transform.scaleInstance(new Vec2(0.8f)))); // no way to scale though
         addComponent(new MouseScript() {
             @Override
             public void onMouseDown() {

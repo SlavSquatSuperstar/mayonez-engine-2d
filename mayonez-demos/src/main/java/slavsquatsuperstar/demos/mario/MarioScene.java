@@ -25,7 +25,7 @@ public class MarioScene extends Scene {
 
     public MarioScene(String name) {
         super(name, BACKGROUND_WIDTH, BACKGROUND_HEIGHT, 32);
-        sprites = SpritesFactory.createSpriteSheet("assets/textures/mario/spritesheet.png", 16, 16, 26, 0);
+        sprites = Sprites.createSpriteSheet("assets/textures/mario/spritesheet.png", 16, 16, 26, 0);
         background = Assets.getTexture("assets/textures/mario/background.png");
         // Size = 60 x 32
         // Resolution = 1920x1024 (15:8), cropped from 1920x1080 (16:9)

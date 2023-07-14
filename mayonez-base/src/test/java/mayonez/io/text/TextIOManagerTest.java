@@ -38,7 +38,7 @@ class TextIOManagerTest {
         try {
             if (!file.exists()) file.createNewFile();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            fail(e.getMessage());
         }
 
         var asset = new Asset(filename);

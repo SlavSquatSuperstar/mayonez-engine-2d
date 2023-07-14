@@ -10,7 +10,6 @@ import mayonez.math.*;
  *
  * @author SlavSquatSuperstar
  */
-// TODO doesn't work in GL
 public class Grid extends Component {
 
     private static final float GRID_LINE_WIDTH = 1f;

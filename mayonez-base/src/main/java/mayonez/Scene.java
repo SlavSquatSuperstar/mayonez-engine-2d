@@ -66,7 +66,7 @@ public abstract class Scene {
         this.name = name;
         this.size = new Vec2(width, height).div(scale);
         this.scale = scale;
-        background = SpritesFactory.createSprite(Colors.WHITE);
+        background = Sprites.createSprite(Colors.WHITE);
 
         // Scene state
         state = SceneState.STOPPED;
@@ -334,7 +334,7 @@ public abstract class Scene {
      * @param background a color
      */
     public void setBackground(Color background) {
-        this.background = SpritesFactory.createSprite(background);
+        this.background = Sprites.createSprite(background);
     }
 
     /**
@@ -343,7 +343,7 @@ public abstract class Scene {
      * @param background a texture
      */
     public void setBackground(Texture background) {
-        this.background = SpritesFactory.createSprite(background);
+        this.background = Sprites.createSprite(background);
     }
 
     /**

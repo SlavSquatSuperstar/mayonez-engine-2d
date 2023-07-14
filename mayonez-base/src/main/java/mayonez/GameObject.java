@@ -13,6 +13,10 @@ import java.util.stream.*;
 /**
  * An object or entity inside a scene whose appearance and behavior can be defined by adding
  * {@link mayonez.Component}s. Each game object has a name and {@link mayonez.Transform}.
+ * <p>
+ * Generally, with entity-component-system, the GameObject (entity) class should not be extended,
+ * as most of the functionality should be provided with Component and Script subclasses.
+ * However, the GameObject class may still be extended to provide reusable prefab objects.
  *
  * @author SlavSquatSuperstar
  */

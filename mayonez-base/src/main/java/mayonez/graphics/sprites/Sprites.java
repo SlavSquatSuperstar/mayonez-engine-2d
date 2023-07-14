@@ -14,9 +14,9 @@ import mayonez.util.*;
  *
  * @author SlavSquatSuperstar
  */
-public final class SpritesFactory {
+public final class Sprites {
 
-    private SpritesFactory() {
+    private Sprites() {
     }
 
     // Sprite Methods

@@ -46,7 +46,7 @@ public class GDEditorScene extends Scene {
             }
         });
 
-        var blocks = SpritesFactory.createSpriteSheet("assets/textures/geometrydash/blocks.png", 42, 42, 12, 2);
+        var blocks = Sprites.createSpriteSheet("assets/textures/geometrydash/blocks.png", 42, 42, 12, 2);
         addObject(new UICanvas("Canvas", new Transform(new Vec2(-3f, -5f)), blocks));
     }
 

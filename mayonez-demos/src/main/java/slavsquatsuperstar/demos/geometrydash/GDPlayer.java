@@ -49,7 +49,7 @@ public class GDPlayer extends GameObject {
 
         var spriteSheets = new SpriteSheet[numLayers];
         for (int i = 0; i < spriteSheets.length; i++) {
-            spriteSheets[i] = SpritesFactory.createSpriteSheet(
+            spriteSheets[i] = Sprites.createSpriteSheet(
                     "assets/textures/geometrydash/player/layer%d.png".formatted(i),
                     tileSize, tileSize, numSprites, 2);
         }

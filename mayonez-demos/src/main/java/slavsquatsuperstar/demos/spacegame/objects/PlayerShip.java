@@ -40,7 +40,7 @@ public class PlayerShip extends GameObject {
         addComponent(new BoxCollider(new Vec2(0.85f, 1f)));
 
         // Visuals
-        addComponent(SpritesFactory.createSprite(spriteName));
+        addComponent(Sprites.createSprite(spriteName));
         addComponent(new Script() { // For testing DebugRenderer refactoring
             private final ShapeBrush shieldBrush = ShapeBrush
                     .createOutlineBrush(Colors.CYAN

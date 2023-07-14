@@ -78,14 +78,6 @@ final class GLWindow implements Window {
             }
             throw new GLFWException("Unable to initialize GLFW");
         }
-//        try {
-//            if (!glfwInit()) throw new IllegalStateException("Unable to initialize GLFW");
-//        } catch (IllegalStateException | ExceptionInInitializerError e) {
-//            if (OperatingSystem.getCurrentOS() == OperatingSystem.MAC_OS) {
-//                Logger.error("GLFW must run with the \"-XstartOnFirstThread\" VM argument on macOS");
-//            }
-//            throw new GLFWException("Unable to initialize GLFW");
-//        }
     }
 
     private void createGLFWWindow() throws GLFWException {

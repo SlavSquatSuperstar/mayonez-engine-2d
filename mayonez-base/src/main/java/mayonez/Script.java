@@ -16,6 +16,7 @@ public abstract class Script extends Component {
 
     /**
      * Add any necessary components to the game object before other components have been added.
+     * This method is called before {@link mayonez.GameObject#init} and {@link mayonez.Component#start}.
      */
     public void init() {
     }
@@ -94,7 +95,7 @@ public abstract class Script extends Component {
     /**
      * Custom user behavior after entering a trigger area.
      *
-     * @param other     the other game object
+     * @param other the other game object
      */
     public void onTriggerEnter(GameObject other) {
     }

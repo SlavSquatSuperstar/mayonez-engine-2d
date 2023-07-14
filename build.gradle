@@ -20,7 +20,7 @@ allprojects {
 
     // Name
     group 'slavsquatsuperstar'
-    version '0.7.7-pre7'
+    version '0.7.7-pre8-snapshot'
 
     // Java Version
     java {

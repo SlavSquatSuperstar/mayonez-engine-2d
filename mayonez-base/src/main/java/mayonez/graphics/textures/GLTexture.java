@@ -83,22 +83,23 @@ public final class GLTexture extends Texture {
 
             getImageInfo(imageBuffer, width, height, channels);
             loadImage(imageBuffer, width, height, channels);
-        } catch (IOException e) {
+        } catch (Exception e) {
             Logger.error("Could not read image file \"%s\"", getFilename());
         }
     }
 
-    private ByteBuffer readImageBuffer() throws IOException {
+    private ByteBuffer readImageBuffer() throws TextureException, IOException {
         var imageData = new ImageIOManager().read(openInputStream());
         if (imageData == null) {
-            throw new IOException("Image data is null");
+            throw new TextureException("Image data is null");
         }
         var imageBuffer = BufferUtils.createByteBuffer(imageData.length);
         imageBuffer = memSlice(imageBuffer.put(imageData).flip());
         return imageBuffer;
     }
 
-    private void getImageInfo(ByteBuffer imageBuffer, IntBuffer width, IntBuffer height, IntBuffer channels) throws IOException {
+    private void getImageInfo(ByteBuffer imageBuffer, IntBuffer width, IntBuffer height, IntBuffer channels)
+            throws TextureException {
         if (!stbi_info_from_memory(imageBuffer, width, height, channels)) {
             throwExceptionOnFailure();
         } else {
@@ -110,7 +111,8 @@ public final class GLTexture extends Texture {
         this.channels = channels.get(0);
     }
 
-    private void loadImage(ByteBuffer imageBuffer, IntBuffer width, IntBuffer height, IntBuffer channels) throws IOException {
+    private void loadImage(ByteBuffer imageBuffer, IntBuffer width, IntBuffer height, IntBuffer channels)
+            throws TextureException {
         stbi_set_flip_vertically_on_load(true); // GL uses (0,0) as bottom left, unlike AWT
         image = stbi_load_from_memory(imageBuffer, width, height, channels, 0);
         if (image == null) {
@@ -119,10 +121,10 @@ public final class GLTexture extends Texture {
         }
     }
 
-    private static void throwExceptionOnFailure() throws IOException {
+    private static void throwExceptionOnFailure() throws TextureException {
         String msg = "Reason for failure: " + stbi_failure_reason();
         Logger.error(msg);
-        throw new IOException(msg);
+        throw new TextureException(msg);
     }
 
     // Create Texture Methods

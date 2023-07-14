@@ -19,7 +19,10 @@ public class LinesIOManager implements AssetReader<String[]>, AssetWriter<String
 
     @Override
     public String[] read(InputStream input) throws IOException {
-        if (input == null) throw new FileNotFoundException("File does not exist");
+        if (input == null) {
+            throw new FileNotFoundException("File does not exist");
+        }
+
         try (var reader = new BufferedReader(new InputStreamReader(input))) {
             return TextStreamsKt.readLines(reader).toArray(new String[0]);
         } catch (IOException e) {
@@ -30,8 +33,11 @@ public class LinesIOManager implements AssetReader<String[]>, AssetWriter<String
     // Source: Apache Commons IO > IOUtils.write(Collection<?>, String, OutputStream, Charset)
     @Override
     public void write(OutputStream output, String[] lines) throws IOException {
-        if (output == null) throw new FileNotFoundException("File does not exist");
+        if (output == null) {
+            throw new FileNotFoundException("File does not exist");
+        }
         if (lines == null) return;
+
         try (output) {
             for (var line : lines) {
                 output.write(line.getBytes(TEXT_CHARSET));

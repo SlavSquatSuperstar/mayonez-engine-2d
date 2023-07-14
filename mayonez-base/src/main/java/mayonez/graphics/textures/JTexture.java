@@ -50,10 +50,8 @@ public final class JTexture extends Texture {
         try (var in = openInputStream()) {
             image = ImageIO.read(new ByteArrayInputStream(Objects.requireNonNull(in).readAllBytes()));
             Logger.debug("Loaded image \"%s\"", getFilename());
-        } catch (IOException e) {
-            Logger.error("Error reading image \"%s\"", getFilename());
-        } catch (NullPointerException e) {
-            Logger.error("Image file \"%s\" not found", getFilename());
+        } catch (Exception e) {
+            Logger.error("Could not read image file \"%s\"", getFilename());
         }
     }
 
