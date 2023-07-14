@@ -3,7 +3,6 @@ package mayonez.graphics.debug;
 
 import mayonez.*;
 import mayonez.graphics.*;
-import mayonez.graphics.debug.*;
 import mayonez.math.shapes.*;
 import mayonez.physics.colliders.*;
 

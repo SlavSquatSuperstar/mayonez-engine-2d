@@ -1,6 +1,7 @@
 package mayonez.graphics.debug
 
 import mayonez.graphics.*
+import mayonez.graphics.renderer.*
 import mayonez.math.shapes.*
 import mayonez.math.shapes.Polygon
 import mayonez.util.*
@@ -12,16 +13,18 @@ import java.awt.*
  *
  * @author SlavSquatSuperstar
  */
-internal data class DebugShape(
-    var shape: MShape,
-    internal val color: MColor,
-    internal val fill: Boolean,
-    private val zIndex: Int,
-    internal val strokeSize: Float
-) : JRenderable, GLRenderable {
+internal data class DebugShape(var shape: MShape, private val brush: ShapeBrush) :
+    JRenderable, GLRenderable {
 
-    internal constructor(shape: MShape, brush: ShapeBrush) :
-            this(shape, brush.color, brush.fill, brush.zIndex, brush.strokeSize)
+    private val color: MColor = brush.color
+    private val fill: Boolean = brush.fill
+    internal val strokeSize: Float = brush.strokeSize
+
+    // Copy Methods
+
+    internal fun copyBrushToStyle(lineStyle: LineStyle): ShapeBrush {
+        return ShapeBrush(this.color, lineStyle.fill, this.zIndex, this.strokeSize)
+    }
 
     // AWT Renderer Methods
 
@@ -103,12 +106,12 @@ internal data class DebugShape(
         else DrawPrimitive.LINE
     }
 
-    override fun getZIndex(): Int = zIndex
+    override fun getZIndex(): Int = brush.zIndex
 
     override fun isEnabled(): Boolean = true
 
     override fun toString(): String {
-        return "${shape.javaClass.simpleName} (color = $color, fill = $fill, z = $zIndex)"
+        return "Debug ${shape.javaClass.simpleName}, $brush"
     }
 
 }

@@ -8,35 +8,28 @@ import mayonez.util.*
  *
  * @author SlavSquatSuperstar
  */
-class ShapeBrush internal constructor(
-    color: MColor?,
+data class ShapeBrush internal constructor(
+    internal val color: MColor,
     internal val fill: Boolean,
-    zIndex: Int,
-    strokeSize: Float
+    internal val zIndex: Int,
+    internal val strokeSize: Float
 ) {
 
     private constructor(color: MColor?, priority: DrawPriority) :
-            this(color, priority.fill, priority.zIndex, DebugDraw.DEFAULT_STROKE_SIZE)
+            this(color ?: DebugDraw.DEFAULT_COLOR, priority.fill, priority.zIndex, DebugDraw.DEFAULT_STROKE_SIZE)
 
-    // Properties
-    internal val color: MColor = color ?: DebugDraw.DEFAULT_COLOR
-
-    internal var zIndex: Int = zIndex
-        private set
-
-    internal var strokeSize: Float = strokeSize
-        private set
-
-    // Mutators
+    // Copy Methods
 
     fun setZIndex(zIndex: Int): ShapeBrush {
-        this.zIndex = zIndex
-        return this
+        return this.copy(zIndex = zIndex)
     }
 
     fun setStrokeSize(strokeSize: Float): ShapeBrush {
-        this.strokeSize = strokeSize
-        return this
+        return this.copy(strokeSize = strokeSize)
+    }
+
+    override fun toString(): String {
+        return "Brush (color = $color, fill = $fill, z-index = $zIndex, stroke size = $strokeSize)"
     }
 
     companion object {

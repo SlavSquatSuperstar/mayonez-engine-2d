@@ -1,8 +1,6 @@
 package mayonez.graphics.renderer
 
-import mayonez.graphics.*
 import mayonez.graphics.debug.*
-import mayonez.graphics.debug.DebugShape
 import mayonez.math.*
 import mayonez.math.shapes.*
 import mayonez.util.*
@@ -44,7 +42,7 @@ private fun MutableList<DebugShape>.addLineAsQuads(edge: Edge, shape: DebugShape
     val rect = Rectangle(edge.center(), Vec2(stretchedLen, stroke), edge.toVector().angle())
     for (tri in rect.triangles) {
         // Change brush fill to "true" since using quads
-        val brush = ShapeBrush(shape.color, LineStyle.QUADS.fill, shape.zIndex, shape.strokeSize)
+        val brush = shape.copyBrushToStyle(LineStyle.QUADS)
         this.add(DebugShape(tri, brush))
     }
 }
@@ -53,9 +51,9 @@ private fun MutableList<DebugShape>.addLineAsQuads(edge: Edge, shape: DebugShape
 
 /**
  * Add a [mayonez.math.shapes.Shape] and copy the brush property of another
- * [mayonez.graphics.DebugShape].
+ * [mayonez.graphics.debug.DebugShape].
  */
 internal fun MutableList<DebugShape>.addShapeAndCopyBrush(newShape: MShape, debugShape: DebugShape) {
-    val copy = DebugShape(newShape, debugShape.color, debugShape.fill, debugShape.zIndex, debugShape.strokeSize)
+    val copy = debugShape.copy(shape = newShape)
     this.add(copy)
 }

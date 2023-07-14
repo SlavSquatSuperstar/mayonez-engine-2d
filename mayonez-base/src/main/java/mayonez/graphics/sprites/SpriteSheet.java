@@ -48,13 +48,17 @@ public abstract sealed class SpriteSheet permits JSpriteSheet, GLSpriteSheet {
 
     public Sprite[] getSprites() {
         var sprites = new Sprite[numSprites()];
-        for (var i = 0; i < sprites.length; i++) sprites[i] = getSprite(i);
+        for (var i = 0; i < sprites.length; i++) {
+            sprites[i] = getSprite(i);
+        }
         return sprites;
     }
 
     public Texture[] getTextures() {
         var textures = new Texture[numSprites()];
-        for (var i = 0; i < textures.length; i++) textures[i] = getTexture(i);
+        for (var i = 0; i < textures.length; i++) {
+            textures[i] = getTexture(i);
+        }
         return textures;
     }
 

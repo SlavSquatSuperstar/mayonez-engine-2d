@@ -5,7 +5,7 @@ import mayonez.graphics.textures.*;
 import mayonez.scripts.*;
 
 /**
- * Animates a game object by swapping between different sprites.
+ * Animates a sprite by swapping between different textures.
  *
  * @author SlavSquatSuperstar
  */

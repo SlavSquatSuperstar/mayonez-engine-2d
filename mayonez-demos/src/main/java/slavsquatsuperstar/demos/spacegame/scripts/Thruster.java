@@ -40,7 +40,9 @@ public class Thruster extends Script {
 
     @Override
     public void update(float dt) {
-        if (exhaust != null) exhaust.setEnabled(moveEnabled || turnEnabled);
+        if (exhaust != null) {
+            exhaust.setEnabled(moveEnabled || turnEnabled);
+        }
     }
 
     public void setMoveEnabled(boolean moveEnabled) {
