@@ -7,7 +7,7 @@ import mayonez.graphics.textures.*;
 import mayonez.io.*;
 import mayonez.math.*;
 import mayonez.physics.colliders.*;
-import mayonez.scripts.movement.*;
+import mayonez.scripts.mouse.*;
 import mayonez.util.*;
 
 /**
@@ -50,7 +50,7 @@ public class UIButton extends GameObject {
         addComponent(baseSprite);
         addComponent(Sprites.createSprite(icon)
                 .setSpriteTransform(Transform.scaleInstance(new Vec2(0.8f))));
-        addComponent(new MouseScript() {
+        addComponent(new MouseInputScript() {
             @Override
             public void onMouseDown() {
                 setSelected(!selected);

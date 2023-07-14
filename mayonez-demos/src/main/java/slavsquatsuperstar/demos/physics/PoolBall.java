@@ -7,6 +7,7 @@ import mayonez.math.*;
 import mayonez.physics.*;
 import mayonez.physics.colliders.*;
 import mayonez.scripts.*;
+import mayonez.scripts.mouse.*;
 import mayonez.scripts.movement.*;
 import mayonez.util.*;
 

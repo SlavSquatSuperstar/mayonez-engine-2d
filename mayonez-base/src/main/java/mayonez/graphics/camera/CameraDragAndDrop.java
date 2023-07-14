@@ -2,7 +2,7 @@ package mayonez.graphics.camera;
 
 import mayonez.input.*;
 import mayonez.math.*;
-import mayonez.scripts.movement.*;
+import mayonez.scripts.mouse.*;
 
 /**
  * Allows the scene camera to be moved by dragging the mouse and
@@ -36,4 +36,5 @@ class CameraDragAndDrop extends DragAndDrop {
     @Override
     public void onMouseUp() {
     }
+
 }

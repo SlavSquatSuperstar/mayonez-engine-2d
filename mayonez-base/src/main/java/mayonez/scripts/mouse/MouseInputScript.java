@@ -1,4 +1,4 @@
-package mayonez.scripts.input;
+package mayonez.scripts.mouse;
 
 import mayonez.*;
 import mayonez.input.*;
@@ -15,12 +15,26 @@ public abstract class MouseInputScript extends Script {
     // Mouse State
     protected Vec2 lastMouse;
     private boolean mouseDown;
+    private final String button;
 
     protected Collider collider; // Reference to object collider
 
-    public MouseInputScript() {
+    /**
+     * Create a MouseInputScript, setting the button this script should check.
+     *
+     * @param button the button name, or null for any
+     */
+    public MouseInputScript(String button) {
         lastMouse = new Vec2();
         mouseDown = false;
+        this.button = button;
+    }
+
+    /**
+     * Create a MouseInputScript, with the button set to Left Mouse (Mouse 1).
+     */
+    public MouseInputScript() {
+        this(Button.LEFT_MOUSE.toString());
     }
 
     @Override
@@ -34,44 +48,51 @@ public abstract class MouseInputScript extends Script {
             checkMouseDown();
         } else {
             checkMouseUp();
-            // mouse still down?
             if (mouseDown) checkMouseHeld();
         }
     }
 
     // Mouse Input Methods
 
-    protected boolean isMouseOnObject() {
-        return collider != null && collider.contains(getMousePos());
-//        return collider != null && collider.contains(lastMouse);
-    }
-
     /**
-     * Check if the mouse gets pressed on this object.
+     * Check if the mouse is pressed on this object this frame.
      */
     private void checkMouseDown() {
-        if (MouseInput.isPressed() && isMouseOnObject()) {
+        if (isMouseButtonPressed() && isMouseOnObject()) {
             mouseDown = true;
             onMouseDown();
         }
     }
 
     /**
-     * Check if the mouse gets released after being pressed.
+     * Check if the mouse is released after being pressed.
      */
     private void checkMouseUp() {
-        if (!MouseInput.isPressed()) {
+        if (!isMouseButtonPressed()) {
             mouseDown = false;
             onMouseUp();
         }
     }
 
     /**
-     * Check if the mouse gets held while pressing this object.
+     * Check if the mouse is continuously held while after pressing on this object.
      */
     private void checkMouseHeld() {
         onMouseHeld();
         lastMouse = getMousePos().add(getMouseDisp());
+    }
+
+    protected boolean isMouseButtonPressed() {
+        if (button == null) {
+            return MouseInput.isPressed();
+        } else {
+            return MouseInput.buttonDown(button);
+        }
+    }
+
+    protected boolean isMouseOnObject() {
+        return collider != null && collider.contains(getMousePos());
+//        return collider != null && collider.contains(lastMouse);
     }
 
     // Callback Methods
@@ -83,7 +104,7 @@ public abstract class MouseInputScript extends Script {
     }
 
     /**
-     * Custom behavior for when the mouse is dragged on held after being pressed.
+     * Custom behavior for when the mouse is dragged after being pressed on this object.
      */
     public void onMouseHeld() {
     }
@@ -94,7 +115,16 @@ public abstract class MouseInputScript extends Script {
     public void onMouseUp() {
     }
 
-    // Getters
+    // Mouse Getters
+
+    /**
+     * Which mouse button this script should detect.
+     *
+     * @return the button name
+     */
+    protected final String getButton() {
+        return button;
+    }
 
     /**
      * Query the mouse position.

@@ -7,7 +7,7 @@ import mayonez.physics.colliders.*;
 // TODO use mouse events and save states (held, released)
 
 /**
- * Provides utility methods for scripts using mouse.
+ * Provides utility methods for scripts using the mouse.
  *
  * @author SlavSquatSuperstar
  */
@@ -59,7 +59,7 @@ public abstract class MouseScript extends MovementScript {
         }
 
         onMouseMove();
-        lastMouse = MouseInput.getPosition().add(MouseInput.getDisplacement());
+        lastMouse = getMousePos().add(getMouseDisp());
     }
 
     // Input Helper Methods

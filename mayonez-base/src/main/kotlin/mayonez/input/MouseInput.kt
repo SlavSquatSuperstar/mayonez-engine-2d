@@ -4,6 +4,7 @@ import mayonez.*
 import mayonez.math.*
 import org.lwjgl.glfw.GLFW
 import java.awt.event.*
+import kotlin.math.*
 
 /**
  * Receives mouse input events.
@@ -22,6 +23,7 @@ object MouseInput : MouseAdapter() {
     private var lastButton: Int = -1
     private var lastAction: Int = -1
     private var pressed: Boolean = false
+    private var buttonsPressed: Int = 0 // track number of buttons pressed
     private var clicks: Int = 1
 
     // Mouse Movement Fields
@@ -47,8 +49,10 @@ object MouseInput : MouseAdapter() {
         for (button in buttons) {
             if (button.down) {
                 button.updateIfDown()
+                if (button.released) buttonsPressed += 1 // notify pressed
             } else {
                 button.setReleased()
+                buttonsPressed = max(0, buttonsPressed - 1) // notify released
             }
         }
     }
@@ -234,10 +238,10 @@ object MouseInput : MouseAdapter() {
     // Mouse State Getters
 
     @JvmStatic
-    fun isPressed(): Boolean = pressed
+    fun isPressed(): Boolean = (buttonsPressed > 0)
 
     @JvmStatic
-    fun isReleased(): Boolean = !pressed
+    fun isReleased(): Boolean = (buttonsPressed == 0)
 
     @JvmStatic
     fun getClicks(): Int = clicks
