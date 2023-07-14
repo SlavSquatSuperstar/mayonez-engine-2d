@@ -1,9 +1,11 @@
 package slavsquatsuperstar.demos.spacegame.scripts;
 
+import mayonez.*;
 import mayonez.annotations.*;
 import mayonez.input.*;
 import mayonez.math.*;
 import mayonez.math.shapes.*;
+import mayonez.physics.*;
 import mayonez.scripts.movement.*;
 
 /**
@@ -12,16 +14,28 @@ import mayonez.scripts.movement.*;
  * @author SlavSquatSuperstar
  */
 @ExperimentalFeature
-public class ClickToMove extends MouseScript {
+public class ClickToMove extends Script {
 
-    public boolean rotate;
+    // Component Fields
+    private Rigidbody rb;
+
+    // Mouse Fields
+    private final String button;
+
+    // Movement Fields
+    private final boolean rotate;
+    private final float speed;
+    private final MoveMode mode;
     private Vec2 destPos, lastPos, moveDir;
     private float destAngle, lastAngle, turnDir;
     private boolean moving, turning;
 
     public ClickToMove(float speed, MoveMode mode, boolean rotate) {
-        super(speed, mode);
+        this.speed = speed;
+        this.mode = mode;
         this.rotate = rotate;
+        this.button = "left mouse";
+
         lastPos = new Vec2();
         destPos = new Vec2();
     }
@@ -33,13 +47,18 @@ public class ClickToMove extends MouseScript {
         moving = turning = false;
     }
 
+    @Override
+    public void start() {
+        rb = getRigidbody();
+    }
+
     // TODO will break with KeepInScene
     // TODO will break if has velocity
     @Override
     public void update(float dt) {
         if (MouseInput.buttonPressed(button)) {
             updateLastPosition(); // Save old destination
-            setDestination(getMousePos()); // Set new destination and calculate displacement
+            setDestination(MouseInput.getPosition()); // Set new destination and calculate displacement
             moving = turning = true;
         }
 

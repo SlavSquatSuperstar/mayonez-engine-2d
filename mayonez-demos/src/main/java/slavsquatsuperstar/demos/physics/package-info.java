@@ -1,5 +1,5 @@
 /**
- * Contains a few example scenes for testing the physics engine.
+ * Example scenes and prefab objects for testing the physics engine.
  *
  * @author SlavSquatSuperstar
  */

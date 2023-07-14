@@ -39,10 +39,8 @@ public abstract class MovementScript extends Script {
     /**
      * Detect the user's input.
      *
-     * @return the input vector, default (0, 0)
+     * @return the input vector
      */
-    public Vec2 getUserInput() {
-        return new Vec2();
-    }
+    public abstract Vec2 getUserInput();
 
 }

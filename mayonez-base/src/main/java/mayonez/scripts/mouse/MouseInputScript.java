@@ -77,6 +77,7 @@ public abstract class MouseInputScript extends Script {
     /**
      * Check if the mouse is continuously held while after pressing on this object.
      */
+    // TODO this could be useful elsewhere
     private void checkMouseHeld() {
         onMouseHeld();
         lastMouse = getMousePos().add(getMouseDisp());
@@ -90,9 +91,9 @@ public abstract class MouseInputScript extends Script {
         }
     }
 
+    // TODO Use MouseInput collision detection instead
     protected boolean isMouseOnObject() {
         return collider != null && collider.contains(getMousePos());
-//        return collider != null && collider.contains(lastMouse);
     }
 
     // Callback Methods

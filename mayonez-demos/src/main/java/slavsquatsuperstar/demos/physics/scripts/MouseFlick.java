@@ -1,4 +1,4 @@
-package slavsquatsuperstar.demos.physics;
+package slavsquatsuperstar.demos.physics.scripts;
 
 import mayonez.math.*;
 import mayonez.physics.*;

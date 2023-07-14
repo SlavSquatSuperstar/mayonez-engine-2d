@@ -54,7 +54,7 @@ class Rigidbody(mass: Float, drag: Float, angDrag: Float) : Component() {
             transform.rotation = rotation
         }
 
-    /** The linear (translational) velocity of the body, v, in world units. */
+    /** The linear (translational) velocity of the body, v, in world units per second. */
     var velocity: Vec2 = Vec2()
         set(velocity) {
             field.set(velocity)
@@ -63,7 +63,7 @@ class Rigidbody(mass: Float, drag: Float, angDrag: Float) : Component() {
         get() = velocity.len()
 
     /**
-     * The angular (rotational) velocity of the body, ω, in degrees
+     * The angular (rotational) velocity of the body, ω, in degrees per second
      * counterclockwise.
      */
     var angVelocity: Float = 0f
