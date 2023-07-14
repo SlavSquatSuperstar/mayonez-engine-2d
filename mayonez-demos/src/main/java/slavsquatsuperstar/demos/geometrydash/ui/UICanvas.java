@@ -14,30 +14,41 @@ import java.util.*;
  */
 public class UICanvas extends GameObject {
 
-    private final SpriteSheet buttonIcons;
+    // Constants
+    private static final SpriteSheet BUTTON_ICONS = Sprites.createSpriteSheet(
+            "assets/textures/geometrydash/blocks.png",
+            42, 42, 12, 2
+    );
+    private static final int NUM_ROWS = 2;
+    private static final float BUTTON_SPACING = 1.5f;
+
+    // Canvas Fields
     private final List<UIButton> elements;
     private PlaceBlock placeBlock;
 
-    public UICanvas(String name, Transform transform, SpriteSheet buttonIcons) {
+    public UICanvas(String name, Transform transform) {
         super(name, transform);
-        this.buttonIcons = buttonIcons;
         elements = new ArrayList<>();
     }
 
     @Override
     protected void init() {
         addComponent(placeBlock = new PlaceBlock());
-
-        final var rows = 2;
-        for (var i = 0; i < buttonIcons.numSprites(); i++) {
-            // 1 3 ... 11
-            // 2 4 ... 12
-            var x = 1.5f * (i / rows);
-            var y = -1.5f * (i % rows);
-            addElement(new UIButton(
-                    "Button " + (i + 1), new Transform(new Vec2(x, y), 0f, new Vec2(1.25f)), buttonIcons.getTexture(i)
-            ));
+        for (var i = 0; i < BUTTON_ICONS.numSprites(); i++) {
+            addButton(i);
         }
+    }
+
+    private void addButton(int i) {
+        // 1 3 ... 11
+        // 2 4 ... 12
+        var x = BUTTON_SPACING * (i / NUM_ROWS);
+        var y = -BUTTON_SPACING * (i % NUM_ROWS);
+        addElement(new UIButton(
+                "Button " + (i + 1),
+                new Transform(new Vec2(x, y), 0f, new Vec2(1.25f)),
+                BUTTON_ICONS.getTexture(i)
+        ));
     }
 
     public void addElement(UIButton elem) {
@@ -56,4 +67,5 @@ public class UICanvas extends GameObject {
     public void onElementDeselected(UIButton button) {
         placeBlock.setCursorTexture(null);
     }
+
 }

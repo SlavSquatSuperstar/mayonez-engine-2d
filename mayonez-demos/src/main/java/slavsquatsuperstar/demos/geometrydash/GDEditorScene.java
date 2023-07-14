@@ -2,7 +2,6 @@ package slavsquatsuperstar.demos.geometrydash;
 
 import mayonez.*;
 import mayonez.graphics.debug.*;
-import mayonez.graphics.sprites.*;
 import mayonez.math.*;
 import mayonez.physics.*;
 import mayonez.physics.colliders.*;
@@ -46,8 +45,7 @@ public class GDEditorScene extends Scene {
             }
         });
 
-        var blocks = Sprites.createSpriteSheet("assets/textures/geometrydash/blocks.png", 42, 42, 12, 2);
-        addObject(new UICanvas("Canvas", new Transform(new Vec2(-3f, -5f)), blocks));
+        addObject(new UICanvas("Canvas", new Transform(new Vec2(-3f, -5f))));
     }
 
 }

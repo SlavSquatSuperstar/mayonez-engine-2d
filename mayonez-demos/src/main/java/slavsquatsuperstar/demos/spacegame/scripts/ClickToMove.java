@@ -1,5 +1,6 @@
 package slavsquatsuperstar.demos.spacegame.scripts;
 
+import mayonez.annotations.*;
 import mayonez.input.*;
 import mayonez.math.*;
 import mayonez.math.shapes.*;
@@ -10,6 +11,7 @@ import mayonez.scripts.movement.*;
  *
  * @author SlavSquatSuperstar
  */
+@ExperimentalFeature
 public class ClickToMove extends MouseScript {
 
     public boolean rotate;

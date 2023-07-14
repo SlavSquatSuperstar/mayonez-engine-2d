@@ -1,11 +1,14 @@
 package slavsquatsuperstar.demos.geometrydash.ui;
 
 import mayonez.*;
+import mayonez.graphics.*;
 import mayonez.graphics.sprites.*;
 import mayonez.graphics.textures.*;
+import mayonez.io.*;
 import mayonez.math.*;
 import mayonez.physics.colliders.*;
 import mayonez.scripts.movement.*;
+import mayonez.util.*;
 
 /**
  * A user interface button that perform an action when clicked.
@@ -14,50 +17,55 @@ import mayonez.scripts.movement.*;
  */
 public class UIButton extends GameObject {
 
-    private static final SpriteSheet buttons;
-    private static final Texture offButton, onButton;
+    // Constants
+    private static final Texture BUTTON_BASE_TEXTURE;
+    private static final Color UNPRESSED_COLOR, PRESSED_COLOR;
 
-    private UICanvas container;
-    private boolean selected = false;
+    // Image Fields
+    private final Sprite baseSprite;
     private final Texture icon;
-    private Sprite onSprite;
+
+    // UI Fields
+    private UICanvas container;
+    private boolean selected;
 
     static {
-        buttons = Sprites.createSpriteSheet("assets/textures/geometrydash/buttons.png", 60, 60, 2, 2);
-        offButton = buttons.getTexture(0);
-        onButton = buttons.getTexture(1);
+        BUTTON_BASE_TEXTURE = Assets.getTexture("assets/textures/geometrydash/button_base.png");
+        UNPRESSED_COLOR = Colors.WHITE;
+        PRESSED_COLOR = new Color(111, 111, 111);
     }
 
     public UIButton(String name, Transform transform, Texture icon) {
         super(name, transform);
-        this.icon = icon;
         setZIndex(2);
+
+        this.icon = icon;
+        baseSprite = Sprites.createSprite(BUTTON_BASE_TEXTURE);
     }
 
     @Override
     protected void init() {
+        selected = false;
         addComponent(new BoxCollider(new Vec2(1, 1)).setTrigger(true));
-        addComponent(Sprites.createSprite(offButton));
-        addComponent(onSprite = Sprites.createSprite(onButton).setEnabled(false));
-        addComponent(Sprites.createSprite(icon).setSpriteTransform(Transform.scaleInstance(new Vec2(0.8f)))); // no way to scale though
+        addComponent(baseSprite);
+        addComponent(Sprites.createSprite(icon)
+                .setSpriteTransform(Transform.scaleInstance(new Vec2(0.8f))));
         addComponent(new MouseScript() {
             @Override
             public void onMouseDown() {
-                selected = !selected;
-                if (selected) onSelect();
-                else onDeselect();
+                setSelected(!selected);
             }
         });
     }
 
     public void onSelect() {
         container.onElementSelected(this);
-        onSprite.setEnabled(selected);
+        baseSprite.setColor(PRESSED_COLOR);
     }
 
     public void onDeselect() {
         container.onElementDeselected(this);
-        onSprite.setEnabled(selected);
+        baseSprite.setColor(UNPRESSED_COLOR);
     }
 
     public boolean isSelected() {
@@ -66,6 +74,8 @@ public class UIButton extends GameObject {
 
     public void setSelected(boolean selected) {
         this.selected = selected;
+        if (selected) onSelect();
+        else onDeselect();
     }
 
     public UIButton setContainer(UICanvas container) {
@@ -76,4 +86,5 @@ public class UIButton extends GameObject {
     public Texture getIcon() {
         return icon;
     }
+
 }
