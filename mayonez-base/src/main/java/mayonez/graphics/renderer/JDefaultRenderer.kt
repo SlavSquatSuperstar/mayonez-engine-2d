@@ -4,6 +4,8 @@ import mayonez.*
 import mayonez.annotations.*
 import mayonez.graphics.*
 import mayonez.graphics.camera.*
+import mayonez.graphics.debug.*
+import mayonez.graphics.debug.DebugShape
 import mayonez.graphics.sprites.*
 import mayonez.graphics.textures.*
 import mayonez.io.image.*

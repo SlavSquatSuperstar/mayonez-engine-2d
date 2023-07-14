@@ -3,6 +3,7 @@ package mayonez.graphics.renderer
 import mayonez.*
 import mayonez.annotations.*
 import mayonez.graphics.*
+import mayonez.graphics.debug.*
 import mayonez.graphics.sprites.*
 import mayonez.math.*
 import mayonez.math.shapes.*

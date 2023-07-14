@@ -1,5 +1,6 @@
-package mayonez.graphics
+package mayonez.graphics.debug
 
+import mayonez.graphics.*
 import mayonez.math.shapes.*
 import mayonez.math.shapes.Polygon
 import mayonez.util.*

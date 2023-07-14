@@ -2,6 +2,7 @@ package slavsquatsuperstar.demos.spacegame.objects;
 
 import mayonez.*;
 import mayonez.graphics.*;
+import mayonez.graphics.debug.*;
 import mayonez.graphics.sprites.*;
 import mayonez.input.*;
 import mayonez.math.*;

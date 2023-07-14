@@ -1,4 +1,4 @@
-package mayonez.graphics
+package mayonez.graphics.debug
 
 import mayonez.math.*
 import mayonez.math.shapes.*

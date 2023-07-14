@@ -2,6 +2,7 @@ package mayonez;
 
 import mayonez.graphics.Color;
 import mayonez.graphics.camera.*;
+import mayonez.graphics.debug.*;
 import mayonez.graphics.renderer.*;
 import mayonez.graphics.sprites.*;
 import mayonez.graphics.textures.*;

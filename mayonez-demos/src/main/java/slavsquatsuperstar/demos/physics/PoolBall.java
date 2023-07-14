@@ -2,7 +2,7 @@ package slavsquatsuperstar.demos.physics;
 
 import mayonez.*;
 import mayonez.graphics.*;
-import mayonez.graphics.sprites.*;
+import mayonez.graphics.debug.*;
 import mayonez.math.*;
 import mayonez.physics.*;
 import mayonez.physics.colliders.*;

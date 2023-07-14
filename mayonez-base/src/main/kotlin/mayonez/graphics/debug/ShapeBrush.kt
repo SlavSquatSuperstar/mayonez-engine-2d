@@ -1,12 +1,10 @@
-package mayonez.graphics
+package mayonez.graphics.debug
 
-import mayonez.*
-import mayonez.graphics.renderer.*
 import mayonez.util.*
 
 /**
  * Defines what parameters to use while drawing a
- * [mayonez.graphics.DebugShape].
+ * [mayonez.graphics.debug.DebugShape].
  *
  * @author SlavSquatSuperstar
  */

@@ -1,6 +1,6 @@
 package mayonez.graphics.renderer;
 
-import mayonez.graphics.*;
+import mayonez.graphics.debug.*;
 
 /**
  * Draws debug information such as colliders and geometric objects into the screen.
@@ -10,7 +10,7 @@ import mayonez.graphics.*;
 public interface DebugRenderer extends Renderer {
 
     /**
-     * Submits a {@link DebugShape} for rendering.
+     * Submits a {@link mayonez.graphics.debug.DebugShape} for rendering.
      *
      * @param shape the shape
      */

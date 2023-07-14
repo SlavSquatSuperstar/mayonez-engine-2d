@@ -50,7 +50,7 @@ public abstract class Component {
     }
 
     /**
-     * Draw debug information to the screen during this frame. Any {@link mayonez.DebugDraw}
+     * Draw debug information to the screen during this frame. Any {@link mayonez.graphics.debug.DebugDraw}
      * method calls should be made here for consistent visual results.
      */
     public void debugRender() {

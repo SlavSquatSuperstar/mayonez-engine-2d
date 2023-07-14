@@ -2,6 +2,7 @@ package slavsquatsuperstar.demos.geometrydash.components;
 
 import mayonez.*;
 import mayonez.graphics.*;
+import mayonez.graphics.debug.*;
 import mayonez.math.*;
 
 /**

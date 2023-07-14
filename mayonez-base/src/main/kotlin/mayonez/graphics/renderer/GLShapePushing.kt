@@ -1,6 +1,8 @@
 package mayonez.graphics.renderer
 
 import mayonez.graphics.*
+import mayonez.graphics.debug.*
+import mayonez.graphics.debug.DebugShape
 import mayonez.math.*
 import mayonez.math.shapes.*
 import mayonez.util.*

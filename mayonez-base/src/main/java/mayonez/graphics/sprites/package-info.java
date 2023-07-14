@@ -1,5 +1,6 @@
 /**
- * Contains classes for attaching drawable components to game objects.
+ * Allows objects to draw an image at their position through the
+ * {@link mayonez.graphics.sprites.Sprite} component.
  *
  * @author SlavSquatSuperstar
  */

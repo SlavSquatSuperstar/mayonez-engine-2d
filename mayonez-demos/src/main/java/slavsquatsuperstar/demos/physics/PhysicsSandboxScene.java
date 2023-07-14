@@ -1,7 +1,7 @@
 package slavsquatsuperstar.demos.physics;
 
 import mayonez.*;
-import mayonez.graphics.sprites.*;
+import mayonez.graphics.debug.*;
 import mayonez.input.*;
 import mayonez.math.*;
 import mayonez.physics.*;

@@ -1,4 +1,4 @@
-package mayonez.graphics.renderer
+package mayonez.graphics.debug
 
 /**
  * Defines what type of geometric object a [mayonez.graphics.DebugShape] represents
