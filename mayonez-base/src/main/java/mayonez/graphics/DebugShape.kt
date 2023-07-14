@@ -1,6 +1,5 @@
 package mayonez.graphics
 
-import mayonez.graphics.renderer.*
 import mayonez.math.shapes.*
 import mayonez.math.shapes.Polygon
 import mayonez.util.*
@@ -20,7 +19,7 @@ internal data class DebugShape(
     internal val strokeSize: Float
 ) : JRenderable, GLRenderable {
 
-    constructor(shape: MShape, brush: ShapeBrush) :
+    internal constructor(shape: MShape, brush: ShapeBrush) :
             this(shape, brush.color, brush.fill, brush.zIndex, brush.strokeSize)
 
     // AWT Renderer Methods

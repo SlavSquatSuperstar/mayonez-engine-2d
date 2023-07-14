@@ -33,13 +33,13 @@ public class ShapeSprite extends Component {
 
     @Override
     public void debugRender() {
-        getScene().getDebugDraw().setZIndex(gameObject.getZIndex());
         if (fill) {
-            getScene().getDebugDraw().fillShape(shape, color);
+            var shapeBrush = ShapeBrush.createSolidBrush(color).setZIndex(gameObject.getZIndex());
+            getScene().getDebugDraw().fillShape(shape, shapeBrush);
         } else {
-            getScene().getDebugDraw().drawShape(shape, color);
+            var shapeBrush = ShapeBrush.createOutlineBrush(color).setZIndex(gameObject.getZIndex());
+            getScene().getDebugDraw().drawShape(shape, shapeBrush);
         }
-        getScene().getDebugDraw().resetZIndex();
     }
 
     @Override

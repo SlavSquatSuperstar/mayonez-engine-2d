@@ -42,7 +42,7 @@ private fun MutableList<DebugShape>.addLineAsQuads(edge: Edge, shape: DebugShape
     val rect = Rectangle(edge.center(), Vec2(stretchedLen, stroke), edge.toVector().angle())
     for (tri in rect.triangles) {
         // Change brush fill to "true" since using quads
-        val brush = ShapeBrush(shape.color, LineStyle.QUADS)
+        val brush = ShapeBrush(shape.color, LineStyle.QUADS.fill, shape.zIndex, shape.strokeSize)
         this.add(DebugShape(tri, brush))
     }
 }

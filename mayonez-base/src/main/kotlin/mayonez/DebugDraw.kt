@@ -6,8 +6,6 @@ import mayonez.math.*
 import mayonez.math.shapes.*
 import mayonez.util.*
 
-private val DEFAULT_COLOR: MColor = Colors.BLACK
-
 /**
  * Allows colliders and shapes to be manually drawn onto the screen through
  * the scene's [DebugRenderer]. All shapes are specified using world
@@ -21,43 +19,11 @@ class DebugDraw internal constructor(
 
     companion object {
         /** How many pixels wide a curve should be drawn. */
-        const val DEFAULT_STROKE_SIZE: Float = 2f
+        internal const val DEFAULT_STROKE_SIZE: Float = 2f
+        internal val DEFAULT_COLOR: MColor = Colors.BLACK
     }
 
-    // TODO draw with brush
-//    private var brush: ShapeBrush? = null
-    private var zIndex: Int? = null
-    private var strokeSize: Float = DEFAULT_STROKE_SIZE
-
-    // Public Draw Methods
-
-    /**
-     * Sets a custom z-index for all subsequent shapes.
-     *
-     * @param zIndex the z-index
-     */
-    fun setZIndex(zIndex: Int) {
-        this.zIndex = zIndex
-    }
-
-    /** Resets the z-index back to default. */
-    fun resetZIndex() {
-        zIndex = null
-    }
-
-    /**
-     * Sets a custom stroke size for all subsequent shapes.
-     *
-     * @param strokeSize the stroke size
-     */
-    fun setStrokeSize(strokeSize: Float) {
-        this.strokeSize = strokeSize
-    }
-
-    /** Resets the stroke size back to default. */
-    fun resetStrokeSize() {
-        strokeSize = DEFAULT_STROKE_SIZE
-    }
+    // Draw Point Methods
 
     /**
      * Draws a point onto the screen and specifies the color.
@@ -69,9 +35,11 @@ class DebugDraw internal constructor(
         // Fill a circle with radius "STROKE_SIZE" in pixels
         addShapeToRenderer(
             Circle(position.toScreen(scale), DEFAULT_STROKE_SIZE),
-            color, DrawPriority.POINT
+            createPointBrush(color)
         )
     }
+
+    // Draw Line Methods
 
     /**
      * Draws a line segment onto the screen and specifies the color.
@@ -80,10 +48,22 @@ class DebugDraw internal constructor(
      * @param end the segment's ending point, in world coordinates
      * @param color the color to use
      */
-    fun drawLine(start: Vec2, end: Vec2, color: MColor?) {
+    fun drawLine(start: Vec2?, end: Vec2?, color: MColor?) {
+        drawLine(start, end, ShapeBrush.createLineBrush(color))
+    }
+
+    /**
+     * Draws a line segment onto the screen and specifies the brush.
+     *
+     * @param start the segment's starting point, in world coordinates
+     * @param end the segment's ending point, in world coordinates
+     * @param brush the brush to use
+     */
+    fun drawLine(start: Vec2?, end: Vec2?, brush: ShapeBrush?) {
+        if (start == null || end == null) return
         addShapeToRenderer(
             Edge(start.toScreen(scale), end.toScreen(scale)),
-            color, DrawPriority.LINE
+            brush ?: ShapeBrush.createLineBrush(DEFAULT_COLOR)
         )
     }
 
@@ -95,9 +75,25 @@ class DebugDraw internal constructor(
      *     coordinates
      * @param color the color to use
      */
-    fun drawVector(origin: Vec2, direction: Vec2, color: MColor?) {
+    fun drawVector(origin: Vec2?, direction: Vec2?, color: MColor?) {
+        if (origin == null || direction == null) return
         drawLine(origin, origin.add(direction), color)
     }
+
+    /**
+     * Draws a vector onto the screen and specifies the brush.
+     *
+     * @param origin the vector's starting point, in world coordinates
+     * @param direction how far away the vector's end point is, in world
+     *     coordinates
+     * @param brush the color to use
+     */
+    fun drawVector(origin: Vec2?, direction: Vec2?, brush: ShapeBrush?) {
+        if (origin == null || direction == null) return
+        drawLine(origin, origin.add(direction), brush)
+    }
+
+    // Draw Shape Methods
 
     /**
      * Draws a shape outline onto the screen and specifies the color.
@@ -106,15 +102,21 @@ class DebugDraw internal constructor(
      * @param color the color to use
      */
     fun drawShape(shape: Shape?, color: MColor?) {
-        addShapeToRenderer(
-            shape?.toScreen(scale) ?: return,
-            color, DrawPriority.SHAPE_OUTLINE
-        )
+        drawShape(shape, ShapeBrush.createOutlineBrush(color))
     }
 
-//    fun drawShape(shape: Shape?, brush: ShapeBrush?) {
-//
-//    }
+    /**
+     * Draws a shape outline onto the screen and specifies the brush.
+     *
+     * @param shape a [Shape]
+     * @param brush the brush to use
+     */
+    fun drawShape(shape: Shape?, brush: ShapeBrush?) {
+        addShapeToRenderer(
+            shape?.toScreen(scale) ?: return,
+            brush ?: ShapeBrush.createOutlineBrush(DEFAULT_COLOR)
+        )
+    }
 
     /**
      * Draws a solid shape onto the screen and specifies the color.
@@ -123,20 +125,30 @@ class DebugDraw internal constructor(
      * @param color the color to use
      */
     fun fillShape(shape: Shape?, color: MColor?) {
+        fillShape(shape, ShapeBrush.createSolidBrush(color))
+    }
+
+    /**
+     * Draws a solid shape onto the screen and specifies the brush.
+     *
+     * @param shape a [Shape]
+     * @param brush the brush to use
+     */
+    fun fillShape(shape: Shape?, brush: ShapeBrush?) {
         addShapeToRenderer(
             shape?.toScreen(scale) ?: return,
-            color, DrawPriority.SOLID_SHAPE
+            brush ?: ShapeBrush.createSolidBrush(DEFAULT_COLOR)
         )
     }
 
     // Private Draw methods
 
-    private fun addShapeToRenderer(
-        shape: Shape, color: MColor?, priority: DrawPriority
-    ) {
-        val zIndex = zIndex ?: priority.zIndex
-        val brush = ShapeBrush(color ?: DEFAULT_COLOR, priority.fill, zIndex, strokeSize)
+    private fun addShapeToRenderer(shape: Shape, brush: ShapeBrush) {
         debugRenderer.addShape(DebugShape(shape, brush))
+    }
+
+    private fun createPointBrush(color: MColor?): ShapeBrush {
+        return ShapeBrush.createSolidBrush(color).setZIndex(DrawPriority.POINT.zIndex)
     }
 
 }

@@ -41,15 +41,20 @@ public class PlayerShip extends GameObject {
         // Visuals
         addComponent(SpritesFactory.createSprite(spriteName));
         addComponent(new Script() { // For testing DebugRenderer refactoring
+            private final ShapeBrush shieldBrush = ShapeBrush
+                    .createOutlineBrush(Colors.CYAN
+                            .combine(new Color(255, 255, 255, 127)))
+                    .setStrokeSize(8f);
+
+            private final ShapeBrush velocityBrush = ShapeBrush
+                    .createLineBrush(Colors.LIGHT_GREEN)
+                    .setStrokeSize(2f);
+
             @Override
             public void debugRender() {
-                getScene().getDebugDraw().setStrokeSize(8f);
-                getScene().getDebugDraw().drawShape(new Circle(transform.getPosition(), 1.6f),
-                        Colors.CYAN.combine(new Color(255, 255, 255, 127)));
-                getScene().getDebugDraw().setStrokeSize(2f);
+                getScene().getDebugDraw().drawShape(new Circle(transform.getPosition(), 1.6f), shieldBrush);
                 getScene().getDebugDraw().drawVector(transform.getPosition(),
-                        getRigidbody().getVelocity().mul(0.1f), Colors.LIGHT_GREEN);
-                getScene().getDebugDraw().resetStrokeSize();
+                        getRigidbody().getVelocity().mul(0.1f), velocityBrush);
             }
         });
 
