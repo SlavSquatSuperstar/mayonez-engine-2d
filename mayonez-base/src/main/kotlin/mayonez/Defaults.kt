@@ -10,13 +10,13 @@ import mayonez.util.*
 object Defaults {
 
     // Application
-    const val TITLE: String = "Mayonez Engine Application"
-    const val VERSION: String = "<Unknown Version>"
+    private const val TITLE: String = "Mayonez Engine Application"
+    private const val VERSION: String = "<Unknown Version>"
 
     // Graphical
-    const val SCREEN_WIDTH: Int = 1080
-    const val SCREEN_HEIGHT: Int = 720
-    const val FPS: Int = 60
+    private const val SCREEN_WIDTH: Int = 1080
+    private const val SCREEN_HEIGHT: Int = 720
+    private const val FPS: Int = 60
 
     val PREFERENCES: Record = Record()
 

@@ -8,8 +8,8 @@ import mayonez.physics.manifold.*
 
 /**
  * A shape centered around the object's position that can detect collisions
- * with other shapes. Requires a [Rigidbody] to respond to collisions
- * properly.
+ * with other shapes. Requires a [mayonez.physics.Rigidbody] to respond to
+ * collisions properly.
  *
  * @param shapeData the shape object that stores the vertices and the
  *     shape's properties
@@ -21,12 +21,10 @@ abstract class Collider(private val shapeData: Shape) : Component() {
     // Object References
 
     /**
-     * A reference to the parent object's [Rigidbody]. A collider should have a
-     * rigidbody to react to collisions.
+     * A reference to the parent object's [mayonez.physics.Rigidbody]. A
+     * collider should have a rigidbody to react to collisions.
      */
     var rigidbody: Rigidbody? = null
-
-//    lateinit var shapeDrawer: ShapeDrawer
 
     // Physics Engine Properties
 

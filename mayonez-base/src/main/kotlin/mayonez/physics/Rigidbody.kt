@@ -36,9 +36,9 @@ class Rigidbody(mass: Float, drag: Float, angDrag: Float) : Component() {
     val invMass: Float
         get() = if (infiniteMass) 0f else 1f / mass
 
-    val angMass: Float
+    private val angMass: Float
         get() = collider?.getAngMass(mass) ?: mass
-    val invAngMass: Float
+    internal val invAngMass: Float
         get() = if (infiniteMass) 0f else 1f / angMass
 
     // Kinematics Properties (Position, Velocity)
@@ -121,7 +121,6 @@ class Rigidbody(mass: Float, drag: Float, angDrag: Float) : Component() {
     }
 
     var fixedRotation: Boolean = false
-        @JvmName("isFixedRotation") get
         private set
 
     fun setFixedRotation(fixedRotation: Boolean): Rigidbody {

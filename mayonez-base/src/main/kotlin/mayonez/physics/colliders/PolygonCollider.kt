@@ -9,7 +9,7 @@ import mayonez.math.shapes.*
  *
  * @author SlavSquatSuperstar
  */
-open class PolygonCollider constructor(shapeData: Polygon) :
+open class PolygonCollider(shapeData: Polygon) :
     Collider(shapeData.translate(-shapeData.center())) {
 
     /**

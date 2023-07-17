@@ -9,7 +9,6 @@ import java.awt.*;
 import java.awt.geom.*;
 import java.awt.image.*;
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.util.*;
 
 /**

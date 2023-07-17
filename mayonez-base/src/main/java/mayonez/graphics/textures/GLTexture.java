@@ -156,8 +156,6 @@ public final class GLTexture extends Texture {
 
     private int getImageFormat() {
         if (channels == 3) { // jpg image, no transparency
-//            if ((width & 3) != 0)
-//                glPixelStorei(GL_UNPACK_ALIGNMENT, 2 - (width & 1));
             return GL_RGB;
         } else { // png image, has transparency
             glEnable(GL_BLEND);

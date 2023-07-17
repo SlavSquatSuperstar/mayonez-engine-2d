@@ -88,7 +88,7 @@ object Mayonez {
     }
 
     /**
-     * Stop the game with a exit code and terminate the application.
+     * Stop the game with an exit code and terminate the application.
      *
      * @param status an exit code (zero for success, non-zero for error)
      */

@@ -54,8 +54,7 @@ internal class EPASolver(private val shape1: Shape?, private val shape2: Shape?)
             val ptA = this[i]
             val vecAB = this[j] - ptA // vector AB, the edge
             /*
-             * TODO check winding of vertices instead of triple product
-             * triple product is unreliable for small penetrations
+             * TODO check winding of vertices instead, triple product, unreliable for small penetrations
              * point right for counterclockwise winding and v.v.
              */
             val norm = vecAB.normal().unit() // outward unit normal of edge

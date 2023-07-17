@@ -11,7 +11,6 @@ import kotlin.math.*
  *
  * @author SlavSquatSuperstar
  */
-@Suppress("unused")
 object MouseInput : MouseAdapter() {
 
     // Mouse Button Fields
@@ -28,7 +27,6 @@ object MouseInput : MouseAdapter() {
 
     // Mouse Movement Fields
     private var mousePosPx = Vec2()
-        private set
     private var mouseDispPx = Vec2() // drag displacement
 
     // Mouse Scroll Fields

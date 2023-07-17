@@ -13,7 +13,6 @@ import java.awt.event.*
  */
 // TODO GLFW sticky keys?
 // TODO concurrent modification sometimes happens
-@Suppress("unused")
 object KeyInput : KeyAdapter() {
 
     // Key Fields

@@ -16,8 +16,8 @@ public class ShapeSprite extends Component {
     private Collider collider;
     private Shape shape;
 
-    public Color color;
-    public boolean fill;
+    private final Color color;
+    private final boolean fill;
 
     public ShapeSprite(Color color, boolean fill) {
         this.color = color;
@@ -47,7 +47,7 @@ public class ShapeSprite extends Component {
         shape = getColliderShape();
     }
 
-    // Shape Methods
+    // Getter Methods
 
     public Shape getColliderShape() {
         if (collider == null) {
@@ -55,6 +55,10 @@ public class ShapeSprite extends Component {
         } else {
             return collider.transformToWorld();
         }
+    }
+
+    public Color getColor() {
+        return color;
     }
 
 }

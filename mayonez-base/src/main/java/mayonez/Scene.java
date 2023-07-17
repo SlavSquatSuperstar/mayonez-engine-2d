@@ -225,7 +225,6 @@ public abstract class Scene {
     }
 
     private void addObjectToRunningScene(GameObject o) {
-        ;
         addAndStartObject(o);
         renderer.addObject(o);
         physics.addObject(o);

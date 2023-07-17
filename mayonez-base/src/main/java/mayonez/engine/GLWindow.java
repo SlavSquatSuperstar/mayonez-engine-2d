@@ -131,8 +131,6 @@ final class GLWindow implements Window {
 
     @Override
     public void stop() {
-//        Input.setKeyboardInstance(null);
-//        Input.setMouseInstance(null);
         glfwFreeCallbacks(window);
 //        glfwSetWindowShouldClose(window, true);
         glfwDestroyWindow(window);

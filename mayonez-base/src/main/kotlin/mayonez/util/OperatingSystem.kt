@@ -11,20 +11,20 @@ import kotlin.io.path.pathString
 enum class OperatingSystem(
     private val osName: String,
     private val fileSeparator: String,
-    private val lineSeparator: String,
-    private val isUnix: Boolean
+    private val lineSeparator: String
 ) {
+
     /** The GNU/Linux family of operating systems. */
-    LINUX("Linux", "/", "\n", true),
+    LINUX("Linux", "/", "\n"),
 
     /** The macOS or OS X family of operating systems. */
-    MAC_OS("Mac OS", "/", "\n", true),
+    MAC_OS("Mac OS", "/", "\n"),
 
     /** The Microsoft Windows family of operating systems. */
-    WINDOWS("Windows", "\\", "\r\n", false),
+    WINDOWS("Windows", "\\", "\r\n"),
 
     /** An unknown or undefined operating system. */
-    UNKNOWN("Unknown", "/", "\n", true);
+    UNKNOWN("Unknown", "/", "\n");
 
     fun getOSFilename(filename: String): String {
         val pathString = filename.replaceSeparators()
@@ -58,15 +58,14 @@ enum class OperatingSystem(
         fun getCurrentOS(): OperatingSystem {
             val osName = System.getProperty("os.name").lowercase(Locale.getDefault())
 
-            return if (osName.contains("linux")) {
-                LINUX
-            } else if (osName.contains("mac")) {
-                MAC_OS
-            } else if (osName.contains("windows")) {
-                WINDOWS
-            } else {
-                UNKNOWN
+            return when {
+                osName.contains("linux") -> LINUX
+                osName.contains("mac") -> MAC_OS
+                osName.contains("windows") -> WINDOWS
+                else -> UNKNOWN
             }
         }
+
     }
+
 }

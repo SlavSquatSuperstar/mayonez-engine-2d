@@ -41,7 +41,7 @@ object IntMath {
     // Range Functions
 
     /**
-     * Restricts a integer's value within a provided range.
+     * Restricts an integer's value within a provided range.
      *
      * @param value a integer
      * @param min the lower bound, inclusive

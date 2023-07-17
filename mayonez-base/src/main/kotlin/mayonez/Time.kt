@@ -9,7 +9,7 @@ package mayonez
 object Time {
 
     // Constants
-    val NANOS_STARTED: Long = System.nanoTime()
+    private val NANOS_STARTED: Long = System.nanoTime()
     private const val DEFAULT_TIME_STEP_SECS: Float = 1f / 60f
     private const val NANOS_TO_SECS: Float = 1e-9f
 

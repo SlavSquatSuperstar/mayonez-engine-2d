@@ -1,8 +1,9 @@
 package mayonez.graphics.debug
 
 /**
- * Defines what type of geometric object a [mayonez.graphics.DebugShape] represents
- * and which order to draw it.
+ * Defines what type of geometric object a
+ * [mayonez.graphics.debug.DebugShape] represents and which order to draw
+ * it.
  *
  * @author SlavSquatSuperstar
  */

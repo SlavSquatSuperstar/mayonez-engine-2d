@@ -25,7 +25,7 @@ public class DrawPhysicsInformation extends Script {
     @Override
     public void debugRender() {
         if (collider != null && sprite != null) {
-            drawDebugInformation(collider, sprite.color);
+            drawDebugInformation(collider, sprite.getColor());
         }
     }
 
