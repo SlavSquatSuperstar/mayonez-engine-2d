@@ -1,4 +1,4 @@
-package mayonez.graphics;
+package mayonez.graphics.renderer;
 
 /**
  * An object that can be drawn to the screen through a {@link mayonez.graphics.renderer.Renderer}.

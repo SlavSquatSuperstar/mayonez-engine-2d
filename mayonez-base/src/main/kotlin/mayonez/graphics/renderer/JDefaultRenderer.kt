@@ -2,15 +2,11 @@ package mayonez.graphics.renderer
 
 import mayonez.*
 import mayonez.annotations.*
-import mayonez.graphics.*
 import mayonez.graphics.camera.*
 import mayonez.graphics.debug.*
-import mayonez.graphics.debug.DebugShape
 import mayonez.graphics.sprites.*
 import mayonez.graphics.textures.*
-import mayonez.io.image.*
 import mayonez.math.*
-import mayonez.math.shapes.*
 import java.awt.*
 import kotlin.math.*
 
@@ -98,18 +94,21 @@ internal class JDefaultRenderer : SceneRenderer, DebugRenderer {
 
     /** Clear the screen and fill it with a background color. */
     private fun drawBackgroundColor(g2: Graphics2D) {
-        if (background.texture == null) { // Only if no image set
-            g2.color = background.color.toAWT()
+        if (background.getTexture() == null) { // Only if no image set
+            g2.color = background.getColor().toAWT()
             g2.fillRect(0, 0, screenSize.x.roundToInt(), screenSize.y.roundToInt())
         }
     }
 
     /** Render the background image, if the scene has one. */
     private fun drawBackgroundImage(g2: Graphics2D) {
-        if (background.texture != null) { // Only if image set
-            val tex = background.texture as JTexture
-            tex.draw(g2, Transform.scaleInstance(Vec2(sceneSize)), null, sceneScale)
-        }
+        val tex = background.getTexture() as? JTexture ?: return // Only if image set
+        tex.draw(g2, Transform.scaleInstance(Vec2(sceneSize)), null, sceneScale)
+
+//        if (background.getTexture() != null) {
+//            val tex = background.getTexture() as JTexture
+//            tex.draw(g2, Transform.scaleInstance(Vec2(sceneSize)), null, sceneScale)
+//        }
     }
 
     /** Transform the screen and render everything at the new position. */

@@ -14,7 +14,8 @@ import java.awt.*
  * @author SlavSquatSuperstar
  */
 internal data class DebugShape(var shape: MShape, private val brush: ShapeBrush) :
-    JRenderable, GLRenderable {
+    JRenderable,
+    GLRenderable {
 
     private val color: MColor = brush.color
     private val fill: Boolean = brush.fill

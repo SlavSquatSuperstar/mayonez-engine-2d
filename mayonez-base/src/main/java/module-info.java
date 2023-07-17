@@ -5,7 +5,6 @@
  */
 module mayonez.base {
     // JVM
-    requires java.base;
     requires transitive java.desktop;
     requires transitive kotlin.stdlib;
 

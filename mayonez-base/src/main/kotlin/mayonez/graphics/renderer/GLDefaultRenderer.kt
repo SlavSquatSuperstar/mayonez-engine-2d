@@ -74,7 +74,7 @@ internal class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"),
 
     /** Clear the screen and fill the background color or image. */
     private fun drawBackground() {
-        if (background.texture == null) drawBackgroundColor()
+        if (background.getTexture() == null) drawBackgroundColor()
         else drawBackgroundImage()
     }
 
@@ -87,7 +87,7 @@ internal class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"),
     }
 
     private fun drawBackgroundColor() {
-        val bgColor = background.color.toGL()
+        val bgColor = background.getColor().toGL()
         glClearColor(bgColor.x, bgColor.y, bgColor.z, 1f)
         glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
     }
