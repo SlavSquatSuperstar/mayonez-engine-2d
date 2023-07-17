@@ -49,9 +49,10 @@ object Mayonez {
      */
     private fun initializeSingletons() {
         Logger.log("Starting program...")
+        Time.debugCurrentDateTime()
+
         Preferences.readFromFile()
         Time.timeStepSecs = (1f / Preferences.fps)
-
         Logger.setConfig(Preferences.getLoggerConfig())
         Logger.log("Started %s %s", Preferences.title, Preferences.version)
 

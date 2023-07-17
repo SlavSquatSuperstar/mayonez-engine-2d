@@ -136,7 +136,9 @@ public final class RenderBatch {
     }
 
     private void bindVertices() {
-        for (var i = 0; i < textures.size(); i++) textures.get(i).bind(i);
+        for (var i = 0; i < textures.size(); i++) {
+            textures.get(i).bind(i);
+        }
         glBindVertexArray(vao);
         glEnableVertexAttribArray(0);
         glEnableVertexAttribArray(1);

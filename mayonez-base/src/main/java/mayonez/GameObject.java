@@ -187,7 +187,7 @@ public class GameObject {
      * @param <T> the component type
      * @return the list of components, or empty if none are present
      */
-    @SuppressWarnings({"unchecked"})
+    @SuppressWarnings("unchecked")
     public <T extends Component> List<T> getComponents(Class<T> cls) {
         return components.stream()
                 .filter(c -> cls != null && cls.isInstance(c))

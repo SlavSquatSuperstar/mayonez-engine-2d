@@ -8,10 +8,13 @@ import mayonez.math.*;
  *
  * @author SlavSquatSuperstar
  */
-public abstract sealed class Texture extends Asset permits JTexture, GLTexture {
+public abstract sealed class Texture extends Asset permits GLTexture, JTexture {
+
+    private int spriteSheetIndex;
 
     public Texture(String filename) {
         super(filename);
+        spriteSheetIndex = -1;
     }
 
     /**
@@ -40,6 +43,21 @@ public abstract sealed class Texture extends Asset permits JTexture, GLTexture {
      */
     public Vec2 getSize() {
         return new Vec2(getWidth(), getHeight());
+    }
+
+    @SuppressWarnings("unchecked")
+    public final <T extends Texture> T setSpriteSheetIndex(int spriteSheetIndex) {
+        this.spriteSheetIndex = spriteSheetIndex;
+        return (T) this;
+    }
+
+    @Override
+    public String toString() {
+        var str =  super.toString();
+        if (spriteSheetIndex >= 0) {
+            str += " (Sprite %d)".formatted(spriteSheetIndex);
+        }
+        return str;
     }
 
 }

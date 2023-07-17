@@ -15,7 +15,7 @@ import java.util.*;
 public class UICanvas extends GameObject {
 
     // Constants
-    private static final SpriteSheet BUTTON_ICONS = Sprites.createSpriteSheet(
+    private static final SpriteSheet BLOCK_ICONS = Sprites.createSpriteSheet(
             "assets/textures/geometrydash/blocks.png",
             42, 42, 12, 2
     );
@@ -34,7 +34,7 @@ public class UICanvas extends GameObject {
     @Override
     protected void init() {
         addComponent(placeBlock = new PlaceBlock());
-        for (var i = 0; i < BUTTON_ICONS.numSprites(); i++) {
+        for (var i = 0; i < BLOCK_ICONS.numSprites(); i++) {
             addButton(i);
         }
     }
@@ -47,7 +47,7 @@ public class UICanvas extends GameObject {
         addElement(new UIButton(
                 "Button " + (i + 1),
                 new Transform(new Vec2(x, y), 0f, new Vec2(1.25f)),
-                BUTTON_ICONS.getTexture(i)
+                BLOCK_ICONS.getTexture(i)
         ));
     }
 

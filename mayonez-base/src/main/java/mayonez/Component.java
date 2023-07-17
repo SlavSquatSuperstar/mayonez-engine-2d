@@ -74,7 +74,7 @@ public abstract class Component {
         return enabled && gameObject != null;
     }
 
-    @SuppressWarnings({"unchecked"})
+    @SuppressWarnings("unchecked")
     public <T extends Component> T setEnabled(boolean enabled) {
         this.enabled = enabled;
         return (T) this;
@@ -114,7 +114,7 @@ public abstract class Component {
         return transform;
     }
 
-    @SuppressWarnings({"unchecked"})
+    @SuppressWarnings("unchecked")
     public <T extends Component> T setTransform(Transform transform) {
         this.transform = (transform != null) ? transform : new Transform();
         return (T) this;

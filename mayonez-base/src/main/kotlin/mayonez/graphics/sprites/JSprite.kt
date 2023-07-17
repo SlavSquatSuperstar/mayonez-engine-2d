@@ -66,6 +66,7 @@ internal class JSprite private constructor(
     }
 
     private fun recolorImage(color: MColor) {
+        // TODO issue: this is modifying the actual buffered image
         for (y in 0 until imageWidth) {
             for (x in 0 until imageHeight) {
                 val pixelColor = getPixelColor(x, y)

@@ -83,7 +83,6 @@ open class Asset(filename: String) {
         }
     }
 
-
     override fun toString(): String = "$locationType ${javaClass.simpleName} \"$filename\""
 
 }

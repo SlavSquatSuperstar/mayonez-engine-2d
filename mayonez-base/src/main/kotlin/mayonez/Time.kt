@@ -1,5 +1,7 @@
 package mayonez
 
+import java.time.LocalDateTime
+
 /**
  * A class for managing time based variables.
  *
@@ -34,6 +36,13 @@ object Time {
 //        set(timeScale) {
 //            field = clamp(0.01f, timeScale, 100f)
 //        }
+
+    // Debug Methods
+
+    internal fun debugCurrentDateTime() {
+        val now = LocalDateTime.now()
+        Logger.debug("Currently it is %s", now)
+    }
 
     // Methods
 

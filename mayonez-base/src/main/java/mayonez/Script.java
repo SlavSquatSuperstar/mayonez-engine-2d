@@ -29,7 +29,7 @@ public abstract class Script extends Component {
         init();
     }
 
-    @SuppressWarnings({"unchecked"})
+    @SuppressWarnings("unchecked")
     public final <T extends Component> T setEnabled(boolean enabled) {
         super.setEnabled(enabled);
         if (enabled) onEnable();

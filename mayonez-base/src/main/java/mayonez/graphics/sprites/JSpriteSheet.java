@@ -48,12 +48,12 @@ public final class JSpriteSheet extends SpriteSheet {
         }
     }
 
-    private void addCurrentSprite(String filename, Vec2 spriteTopLeft, int count) {
+    private void addCurrentSprite(String filename, Vec2 spriteTopLeft, int index) {
         var subimage = sheetTexture.getImage().getSubimage(
                 (int) spriteTopLeft.x, (int) spriteTopLeft.y,
                 (int) spriteSize.x, (int) spriteSize.y
         );
-        textures.add(new JTexture("%s (Sprite %s)".formatted(filename, count), subimage));
+        textures.add(new JTexture(filename, subimage).setSpriteSheetIndex(index));
     }
 
     @Override

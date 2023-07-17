@@ -40,10 +40,27 @@ public abstract sealed class SpriteSheet permits JSpriteSheet, GLSpriteSheet {
 
     // Sprite/Texture Getters
 
+    /**
+     * Get the first image from this sprite sheet as a {@link mayonez.graphics.sprites.Sprite}.
+     *
+     * @param index the image index, from 0
+     * @return the sprite
+     */
     public abstract Sprite getSprite(int index);
 
+    /**
+     * Get the first image from this sprite sheet as a {@link mayonez.graphics.textures.Texture}.
+     *
+     * @param index the image index, from 0
+     * @return the texture
+     */
     public abstract Texture getTexture(int index);
 
+    /**
+     * Get the number of images in this sprite sheet.
+     *
+     * @return the sheet size
+     */
     public abstract int numSprites();
 
     public Sprite[] getSprites() {

@@ -22,15 +22,15 @@ import static org.lwjgl.opengl.GL20.*;
 public class Shader extends Asset {
 
     private int shaderID;
-    private boolean isActive;
-    private List<ShaderProgram> programs;
+    private boolean active;
 
     public Shader(String filename) {
         super(filename);
-        isActive = false;
+        active = false;
+
         try {
-            readShaderFile();
-            compileShaderPrograms();
+            List<ShaderProgram> programs = readShaderPrograms();
+            compileShaderPrograms(programs);
         } catch (ShaderException e) {
             Logger.printStackTrace(e);
             Mayonez.stop(ExitCode.ERROR);
@@ -39,24 +39,25 @@ public class Shader extends Asset {
 
     // Read Shader Helper Methods
 
-    private void readShaderFile() throws ShaderException {
+    private List<ShaderProgram> readShaderPrograms() throws ShaderException {
         try {
             var source = new TextIOManager().read(openInputStream());
             var shaders = source.split("(#type)( )+"); // shaders indicated by "#type '<shader_type>'"
-            parseShaderFile(shaders);
+            return parseShaderPrograms(shaders);
         } catch (Exception e) {
             Logger.error("Could not read shader %s", getFilenameInQuotes());
             throw new ShaderException(e);
         }
     }
 
-    private void parseShaderFile(String[] subPrograms) throws RuntimeException {
-        programs = new ArrayList<>();
+    private static ArrayList<ShaderProgram> parseShaderPrograms(String[] subPrograms) throws RuntimeException {
+        var programs = new ArrayList<ShaderProgram>();
         for (var shader : subPrograms) {
             shader = shader.strip();
             if (shader.equals("")) continue;
             programs.add(readNextProgram(shader));
         }
+        return programs;
     }
 
     private static ShaderProgram readNextProgram(String shader) throws RuntimeException {
@@ -70,7 +71,7 @@ public class Shader extends Asset {
 
     // Compile Shader Helper Methods
 
-    private void compileShaderPrograms() throws ShaderException {
+    private void compileShaderPrograms(List<ShaderProgram> programs) throws ShaderException {
         programs.forEach(this::compileShader);
         var programIDs = programs.stream().map(ShaderProgram::getID).toList();
         linkShaderPrograms(programIDs);
@@ -109,9 +110,9 @@ public class Shader extends Asset {
      * Bind this shader to the GPU.
      */
     public void bind() {
-        if (!isActive) {
+        if (!active) {
             glUseProgram(shaderID);
-            isActive = true;
+            active = true;
         }
     }
 
@@ -124,9 +125,9 @@ public class Shader extends Asset {
      * Unbind this shader from the GPU.
      */
     public void unbind() {
-        if (isActive) {
+        if (active) {
             glUseProgram(0);
-            isActive = false;
+            active = false;
         }
     }
 

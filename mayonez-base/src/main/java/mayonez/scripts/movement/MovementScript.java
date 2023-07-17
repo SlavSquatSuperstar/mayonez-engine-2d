@@ -30,7 +30,7 @@ public abstract class MovementScript extends Script {
         }
     }
 
-    @SuppressWarnings({"unchecked"})
+    @SuppressWarnings("unchecked")
     public final <T extends MovementScript> T setTopSpeed(float topSpeed) {
         this.topSpeed = topSpeed;
         return (T) this;

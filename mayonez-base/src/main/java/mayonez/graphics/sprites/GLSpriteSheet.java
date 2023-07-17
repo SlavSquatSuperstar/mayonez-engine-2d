@@ -50,8 +50,7 @@ public final class GLSpriteSheet extends SpriteSheet {
     }
 
     private Vec2 getSpriteTopLeft() {
-        var sheetSize = getSheetSize();
-        var sheetTopLeft = new Vec2(0, sheetSize.y);
+        var sheetTopLeft = new Vec2(0, getSheetSize().y);
         return sheetTopLeft.sub(new Vec2(0, spriteSize.y));
     }
 
@@ -71,11 +70,9 @@ public final class GLSpriteSheet extends SpriteSheet {
 
     @Override
     protected void moveToNextSprite(Vec2 imgOrigin, int spacing) {
-        var sheetSize = getSheetSize();
-
         // Origin at bottom left
         imgOrigin.x += spriteSize.x + spacing;
-        if (imgOrigin.x >= sheetSize.x) {
+        if (imgOrigin.x >= getSheetSize().x) {
             // If at end of row, go to next row
             imgOrigin.x = 0;
             imgOrigin.y -= spriteSize.y + spacing;
@@ -98,7 +95,8 @@ public final class GLSpriteSheet extends SpriteSheet {
     public GLTexture getTexture(int index) {
         var subSprite = sprites.get(index);
         if (subSprite == null) return null;
-        else return new GLTexture(subSprite.getTexture(), subSprite.getTexCoords());
+        else return new GLTexture(subSprite.getTexture(), subSprite.getTexCoords())
+                .setSpriteSheetIndex(index);
     }
 
     @Override
