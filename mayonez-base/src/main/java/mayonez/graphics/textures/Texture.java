@@ -18,7 +18,7 @@ public abstract sealed class Texture extends Asset permits GLTexture, JTexture {
     }
 
     /**
-     * Creates a texture from an image file. Called during creation.
+     * Creates a texture from an image file. Called during instantiation.
      */
     protected abstract void readImage();
 

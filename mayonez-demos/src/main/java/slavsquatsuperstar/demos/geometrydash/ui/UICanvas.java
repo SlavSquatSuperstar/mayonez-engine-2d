@@ -19,7 +19,7 @@ public class UICanvas extends GameObject {
             "assets/textures/geometrydash/blocks.png",
             42, 42, 12, 2
     );
-    private static final int NUM_ROWS = 2;
+    private static final int NUM_COLS = 6;
     private static final float BUTTON_SPACING = 1.5f;
 
     // Canvas Fields
@@ -40,10 +40,10 @@ public class UICanvas extends GameObject {
     }
 
     private void addButton(int i) {
-        // 1 3 ... 11
-        // 2 4 ... 12
-        var x = BUTTON_SPACING * (i / NUM_ROWS);
-        var y = -BUTTON_SPACING * (i % NUM_ROWS);
+        // 0 1 2 3  4 5
+        // 6 7 8 9 10 11
+        var x = BUTTON_SPACING * (i % NUM_COLS);
+        var y = -BUTTON_SPACING * (i / NUM_COLS);
         addElement(new UIButton(
                 "Button " + (i + 1),
                 new Transform(new Vec2(x, y), 0f, new Vec2(1.25f)),

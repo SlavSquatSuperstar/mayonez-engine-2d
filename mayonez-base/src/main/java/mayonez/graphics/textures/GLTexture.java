@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL12.GL_TEXTURE_WRAP_R;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.stb.STBImage.*;
@@ -31,6 +32,11 @@ import static org.lwjgl.system.MemoryUtil.memSlice;
 @UsesEngine(EngineType.GL)
 public final class GLTexture extends Texture {
 
+    // Constants
+    public static final Vec2[] DEFAULT_TEX_COORDS = Rectangle.rectangleVertices(new Vec2(0.5f), new Vec2(1f), 0f);
+    private static final int RGB_CHANNELS = 3;
+    private static final int RGBA_CHANNELS = 4;
+
     // Image Data Fields
     private ByteBuffer image;
     private int width, height, channels;
@@ -39,7 +45,6 @@ public final class GLTexture extends Texture {
     // GPU Fields
     private int texID;
     private final Vec2[] texCoords;
-    public static final Vec2[] DEFAULT_TEX_COORDS = Rectangle.rectangleVertices(new Vec2(0.5f), new Vec2(1f), 0f);
 
     private GLTexture(String filename, Vec2[] texCoords, ByteBuffer image) {
         super(filename);
@@ -54,9 +59,8 @@ public final class GLTexture extends Texture {
      * @param filename the file location
      */
     public GLTexture(String filename) {
-        this(filename, DEFAULT_TEX_COORDS, null);
+        this(filename, DEFAULT_TEX_COORDS, null, null);
         readImage();
-        createTexture();
     }
 
     /**
@@ -68,9 +72,7 @@ public final class GLTexture extends Texture {
     public GLTexture(GLTexture texture, Vec2[] texCoords) {
         this(texture.getFilename(), texCoords, texture.image);
         this.texID = texture.texID;
-
 //        readImage();  // this fixes wrong textures, but uses a lot of memory
-//        createTexture();
 
         var size = texCoords[2].sub(texCoords[0]); // relative size
         this.width = (int) (texture.width * size.x); // get new image size
@@ -78,17 +80,34 @@ public final class GLTexture extends Texture {
         this.channels = texture.channels;
     }
 
-    // Read Image File Methods
+    // Read Image Methods
 
     @Override
     protected void readImage() {
         try {
+            generateTexID();
+            setTextureParameters();
             var imageBuffer = readImageBytes();
-            var info = getImageInfo(imageBuffer);
-            image = loadImage(imageBuffer, info);
-        } catch (Exception e) {
+            image = loadImage(imageBuffer);
+            uploadImage(image);
+        } catch (TextureException | IOException e) {
             Logger.error("Could not read image file \"%s\"", getFilename());
         }
+    }
+
+    private void generateTexID() {
+        texID = glGenTextures();
+        glBindTexture(GL_TEXTURE_2D, texID);
+    }
+
+    private static void setTextureParameters() {
+        // wrap if too big
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        // pixelate when scaling
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     }
 
     private ByteBuffer readImageBytes() throws TextureException, IOException {
@@ -101,80 +120,54 @@ public final class GLTexture extends Texture {
         return memSlice(imageBuffer.put(imageBytes).flip());
     }
 
-    private ImageInfo getImageInfo(ByteBuffer imageBuffer)
-            throws TextureException {
+    private ByteBuffer loadImage(ByteBuffer imageBuffer) throws TextureException {
         var width = BufferUtils.createIntBuffer(1);
         var height = BufferUtils.createIntBuffer(1);
         var channels = BufferUtils.createIntBuffer(1);
 
-        if (!stbi_info_from_memory(imageBuffer, width, height, channels)) {
-            throwExceptionOnFailure();
-        } else {
-            Logger.debug("OpenGL: Loaded image \"%s\"", getFilename());
-        }
-
-        this.width = width.get(0);
-        this.height = height.get(0);
-        this.channels = channels.get(0);
-        return new ImageInfo(width, height, channels);
-    }
-
-    private ByteBuffer loadImage(ByteBuffer imageBuffer, ImageInfo info)
-            throws TextureException {
         stbi_set_flip_vertically_on_load(true); // GL uses (0,0) as bottom left, unlike AWT
-        var image = stbi_load_from_memory(imageBuffer,
-                info.width(), info.height(), info.channels(), 0);
+        var image = stbi_load_from_memory(imageBuffer, width, height, channels, 0);
 
         if (image == null) {
             Logger.error("OpenGL: Could not load image file \"%s\"", getFilename());
-            throwExceptionOnFailure();
+            throwExceptionOnSTBFailure();
         }
+
+        // set image info
+        this.width = width.get(0);
+        this.height = height.get(0);
+        this.channels = channels.get(0);
         return image;
     }
 
-    private static void throwExceptionOnFailure() throws TextureException {
+    private static void throwExceptionOnSTBFailure() throws TextureException {
         String msg = "Reason for failure: " + stbi_failure_reason();
         Logger.error(msg);
         throw new TextureException(msg);
     }
 
-    // Create Texture Methods
-
-    private void createTexture() {
-        generateTexID();
-        setTextureParameters();
-        uploadImage();
+    private void uploadImage(ByteBuffer image) {
+        int format = getImageFormat(channels);
+        glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, image);
+        freeImage(image);
     }
 
-    private void generateTexID() {
-        texID = glGenTextures();
-        glBindTexture(GL_TEXTURE_2D, texID);
-    }
-
-    private static void setTextureParameters() {
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT); // wrap if too big
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST); // pixelate when stretching
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST); // pixelate when shrinking
-    }
-
-    private void uploadImage() {
-        if (!imageFreed) {
-            int format = getImageFormat();
-            glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, image);
-            stbi_image_free(image); // free from memory
-            image = null;
+    private void freeImage(ByteBuffer image) throws TextureException {
+        if (!imageFreed) { // stop Java from crashing if memory freed
+            stbi_image_free(image);
             imageFreed = true;
         }
     }
 
-    private int getImageFormat() {
-        if (channels == 3) { // jpg image, no transparency
-            return GL_RGB;
-        } else { // png image, has transparency
-            glEnable(GL_BLEND);
-            glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-            return GL_RGBA;
+    private static int getImageFormat(int channels) throws TextureException {
+        switch (channels) {
+            case RGB_CHANNELS -> {
+                return GL_RGB;
+            }
+            case RGBA_CHANNELS -> {
+                return GL_RGBA;
+            }
+            default -> throw new TextureException("Unknown number of channels: " + channels);
         }
     }
 
@@ -205,5 +198,8 @@ public final class GLTexture extends Texture {
         return texCoords;
     }
 
+    public int getTexID() {
+        return texID;
+    }
 }
 
