@@ -39,7 +39,7 @@ enum class OperatingSystem(
     private fun String.removeTrailingSeparator(): String {
         return if (this.endsWith(fileSeparator)) {
             // remove trailing '/' or '\'; classloader will complain otherwise
-            this.substring(0 until this.length - 1)
+            this.substring(0..<this.length - 1)
         } else this
     }
 

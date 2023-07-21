@@ -127,8 +127,8 @@ class Mat22(
      */
     operator fun times(m: Mat22): Mat22 {
 //        val values = FloatArray(SIZE)
-//        for (r in 0 until NUM_ROWS) {
-//            for (c in 0 until NUM_COLS) {
+//        for (r in 0..<NUM_ROWS) {
+//            for (c in 0..<NUM_COLS) {
 //                values[r * NUM_COLS + c] = this.row(r).dot(m.col(c))
 //            }
 //        }

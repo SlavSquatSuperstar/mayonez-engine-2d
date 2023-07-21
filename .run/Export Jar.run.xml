@@ -12,7 +12,7 @@
         <list>
           <option value="clean" />
           <option value="jar" />
-          <option value="dokkaJavadoc" />
+          <option value="dokkaJavadocCollector" />
         </list>
       </option>
       <option name="vmOptions" />
@@ -20,6 +20,7 @@
     <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
     <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
     <DebugAllEnabled>false</DebugAllEnabled>
+    <ForceTestExec>false</ForceTestExec>
     <method v="2" />
   </configuration>
 </component>

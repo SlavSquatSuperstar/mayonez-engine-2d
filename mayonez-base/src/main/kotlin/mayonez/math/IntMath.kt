@@ -26,7 +26,9 @@ object IntMath {
     fun min(vararg values: Int): Int {
         if (values.isEmpty()) return 0
         var min = Int.MAX_VALUE
-        for (n in values) if (n < min) min = n
+        for (n in values) {
+            if (n < min) min = n
+        }
         return min
     }
 
@@ -34,7 +36,9 @@ object IntMath {
     fun max(vararg values: Int): Int {
         if (values.isEmpty()) return 0
         var max = Int.MIN_VALUE
-        for (n in values) if (n > max) max = n
+        for (n in values) {
+            if (n > max) max = n
+        }
         return max
     }
 
@@ -49,7 +53,9 @@ object IntMath {
      * @return a number within the bounds
      */
     @JvmStatic
-    fun clamp(value: Int, min: Int, max: Int): Int =
-        Interval(min.toFloat(), max.toFloat()).clamp(value.toFloat()).toInt()
+    fun clamp(value: Int, min: Int, max: Int): Int {
+        return Interval(min.toFloat(), max.toFloat()).clamp(value.toFloat()).toInt()
+    }
+
 
 }

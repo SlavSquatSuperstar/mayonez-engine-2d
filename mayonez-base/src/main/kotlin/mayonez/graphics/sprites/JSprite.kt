@@ -11,8 +11,8 @@ import java.awt.*
 import java.awt.image.*
 
 /**
- * A component that draws an image at a [mayonez.GameObject]'s position using the
- * AWT engine.
+ * A component that draws an image at a [mayonez.GameObject]'s position
+ * using the AWT engine.
  *
  * @author SlavSquatSuperstar
  */
@@ -67,8 +67,8 @@ internal class JSprite private constructor(
 
     private fun recolorImage(color: MColor) {
         // TODO issue: this is modifying the actual buffered image
-        for (y in 0 until imageWidth) {
-            for (x in 0 until imageHeight) {
+        for (y in 0..<imageWidth) {
+            for (x in 0..<imageHeight) {
                 val pixelColor = getPixelColor(x, y)
                 val combinedColor = pixelColor.combine(color)
                 setPixelColor(x, y, combinedColor)

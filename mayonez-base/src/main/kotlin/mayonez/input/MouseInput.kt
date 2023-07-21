@@ -278,6 +278,6 @@ object MouseInput : MouseAdapter() {
         scroll.set(scrollX.toFloat(), scrollY.toFloat())
     }
 
-    private fun Int.isValidIndex(): Boolean = this in 0 until NUM_BUTTONS
+    private fun Int.isValidIndex(): Boolean = this in 0..<NUM_BUTTONS
 
 }

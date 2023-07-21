@@ -33,7 +33,7 @@ internal class EPASolver(private val shape1: Shape?, private val shape2: Shape?)
         if (shape1 == null || shape2 == null || simplex == null) return null
         val expandedSimplex = simplex.expand(MAX_EPA_ITERATIONS) // sort edges prior
 
-        for (i in 0 until MAX_EPA_ITERATIONS) {
+        for (i in 0..<MAX_EPA_ITERATIONS) {
             // 1. Find the closest face in the simplex to the origin
             val closest = expandedSimplex.getClosestEdgeToOrigin()
 
@@ -48,7 +48,7 @@ internal class EPASolver(private val shape1: Shape?, private val shape2: Shape?)
     private fun Simplex.getClosestEdgeToOrigin(): Face {
         var face = Face(Vec2(), Float.POSITIVE_INFINITY, 0)
 
-        for (i in 0 until this.size) {
+        for (i in 0..<this.size) {
             val j = (i + 1) % this.size
 
             val ptA = this[i]

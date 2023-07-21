@@ -23,7 +23,7 @@ enum class DrawPrimitive(
     /** An object with 2 vertices with attributes: Pos (2), Color (4) */
     LINE(2, 2, GL11.GL_LINES, 2, 4) {
         override fun addIndices(elements: IntBuffer, index: Int) {
-            for (v in 0 until elementCount) {
+            for (v in 0..<elementCount) {
                 elements.put(vertexCount * index + v)
             }
         }
@@ -33,7 +33,7 @@ enum class DrawPrimitive(
     TRIANGLE(3, 3, GL11.GL_TRIANGLES, 2, 4) {
         override fun addIndices(elements: IntBuffer, index: Int) {
             // Use counterclockwise winding
-            for (v in 0 until elementCount) {
+            for (v in 0..<elementCount) {
                 elements.put(vertexCount * index + v)
             }
         }

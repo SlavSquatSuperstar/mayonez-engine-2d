@@ -9,7 +9,8 @@ import mayonez.physics.resolution.*
  * A simulation containing bodies that approximate real-world physics.
  *
  * Sources:
- * - [GamesWithGabe Coding a 2D Physics Engine](https://youtube.com/playlist?list=PLtrSb4XxIVbpZpV65kk73OoUcIrBzoSiO)
+ * - [GamesWithGabe Coding a 2D Physics
+ *   Engine](https://youtube.com/playlist?list=PLtrSb4XxIVbpZpV65kk73OoUcIrBzoSiO)
  *
  * @author SlavSquatSuperstar
  */
@@ -88,7 +89,7 @@ class PhysicsWorld {
     private fun detectBroadPhase() {
         for (i in colliders.indices) {
             // Avoid duplicate collisions between two objects and checking against self
-            for (j in i + 1 until colliders.size) {
+            for (j in i + 1..<colliders.size) {
                 val c1 = colliders[i]
                 val c2 = colliders[j]
 

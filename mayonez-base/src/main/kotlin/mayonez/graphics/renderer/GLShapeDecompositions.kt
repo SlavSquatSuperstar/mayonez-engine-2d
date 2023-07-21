@@ -28,7 +28,7 @@ private fun MutableList<DebugShape>.addLineAsMultiple(line: Edge, shape: DebugSh
     val norm = line.unitNormal()
     val start = (1 - stroke) * 0.5f // -(stroke - 1) / 2
 
-    for (i in 0 until stroke.roundToInt()) {
+    for (i in 0..<stroke.roundToInt()) {
         val lineElem = stretched.translate(norm * (start + i))
         this.addShapeAndCopyBrush(lineElem, shape)
     }

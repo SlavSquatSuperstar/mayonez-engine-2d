@@ -142,7 +142,9 @@ object FloatMath {
     fun min(vararg values: Float): Float {
         if (values.isEmpty()) return 0f
         var min = Float.POSITIVE_INFINITY
-        for (n in values) if (n < min) min = n
+        for (n in values) {
+            if (n < min) min = n
+        }
         return min
     }
 
@@ -150,8 +152,9 @@ object FloatMath {
     fun minIndex(vararg values: Float): Int {
         if (values.isEmpty()) return -1
         var minIndex = 0
-        for (i in 1 until values.size)
+        for (i in 1..<values.size) {
             if (values[i] < values[minIndex]) minIndex = i
+        }
         return minIndex
     }
 
@@ -159,7 +162,9 @@ object FloatMath {
     fun max(vararg values: Float): Float {
         if (values.isEmpty()) return 0f
         var max = Float.NEGATIVE_INFINITY
-        for (n in values) if (n > max) max = n
+        for (n in values) {
+            if (n > max) max = n
+        }
         return max
     }
 
@@ -167,8 +172,9 @@ object FloatMath {
     fun maxIndex(vararg values: Float): Int {
         if (values.isEmpty()) return -1
         var maxIndex = 0
-        for (i in 1 until values.size)
+        for (i in 1..<values.size) {
             if (values[i] > values[maxIndex]) maxIndex = i
+        }
         return maxIndex
     }
 
@@ -227,7 +233,6 @@ object FloatMath {
 
     // Trig / Angle Methods
 
-    // TODO check precision on kotlin sin/cos and toRadians
     /**
      * Takes the sine of an angle in degrees.
      *
