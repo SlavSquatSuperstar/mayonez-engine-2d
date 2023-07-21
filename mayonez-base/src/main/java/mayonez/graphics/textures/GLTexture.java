@@ -59,7 +59,7 @@ public final class GLTexture extends Texture {
      * @param filename the file location
      */
     public GLTexture(String filename) {
-        this(filename, DEFAULT_TEX_COORDS, null, null);
+        this(filename, DEFAULT_TEX_COORDS, null);
         readImage();
     }
 
