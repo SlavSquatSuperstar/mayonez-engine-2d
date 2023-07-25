@@ -178,4 +178,4 @@ This software should not be redistributed without the license file. If your down
 you should ask the distributor to include it. The [.txt version](https://www.gnu.org/licenses/gpl-3.0.txt) is available
 on the GNU website.
 
-Copyright © 2023 GPLv3 License
+Copyright © SlavSquatSuperstar 2023 GPLv3 License
