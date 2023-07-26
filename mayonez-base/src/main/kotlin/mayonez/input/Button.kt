@@ -27,7 +27,7 @@ enum class Button(internal val awtCode: Int, internal val glCode: Int) {
 
     companion object {
         internal fun findWithName(buttonName: String): Button? {
-            return StringUtils.findConstantWithName(Button.values(), buttonName)
+            return StringUtils.findConstantWithName(entries.toTypedArray(), buttonName)
         }
     }
 

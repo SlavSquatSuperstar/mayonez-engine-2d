@@ -16,18 +16,11 @@ import java.util.zip.*;
  */
 class JarInputDir implements VfsDir {
 
-    // Source: JDK-6916399, see https://bugs.openjdk.org/browse/JDK-6916399
-    private static final long BYTE_MINUS_ONE = 0xffffffffL;
-
     private final URL url;
     private JarInputStream jarInputStream;
-    private long cursor;
-    private long nextCursor;
 
     public JarInputDir(URL url) {
         this.url = url;
-        cursor = 0L;
-        nextCursor = 0;
     }
 
     public String getPath() {
@@ -65,12 +58,8 @@ class JarInputDir implements VfsDir {
                         if (entry == null) {
                             return null;
                         }
-
-                        long size = entry.getSize();
-                        if (size < 0) size += BYTE_MINUS_ONE;
-                        nextCursor += size;
                         if (!entry.isDirectory()) {
-                            return new JarInputFile(entry, JarInputDir.this, cursor, nextCursor);
+                            return new JarInputFile(entry);
                         }
                     } catch (IOException e) {
                         throw new RuntimeException("Could not get next zip entry", e);
@@ -87,18 +76,6 @@ class JarInputDir implements VfsDir {
             Logger.warn("Could not close InputStream");
             Logger.printStackTrace(e);
         }
-    }
-
-    // Getters and Setters
-
-    boolean isCursorBetween(long fromIndex, long endIndex) {
-        return (cursor >= fromIndex) && (cursor <= endIndex);
-    }
-
-    int read() throws IOException {
-        int read = jarInputStream.read();
-        cursor += 1;
-        return read;
     }
 
 }

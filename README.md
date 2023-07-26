@@ -82,9 +82,8 @@ Below are the tools and libraries used in the development of this project.
         - Libraries: [JOML](https://joml-ci.github.io/JOML/), GLFW, OpenGL, and STB
     - [Kotlin Standard Library](https://kotlinlang.org/docs/getting-started.html)
     - [JSON in Java](https://github.com/stleary/JSON-java) (org.json)
-    - [Java Reflections](https://github.com/ronmamo/reflections) (org.reflections)
-    - [SLF4J Simple Binding](https://www.slf4j.org/) (dependency for Reflections)
-    - [JUnit 5](https://junit.org/junit5/docs/current/user-guide/) (not bundled, for testing only)
+    - [Java Reflections](https://github.com/ronmamo/reflections) (org.reflections, custom implementation)
+    - [JUnit 5](https://junit.org/junit5/docs/current/user-guide/) (not bundled, for test code only)
 
 ## Demo Scenes
 
@@ -171,7 +170,7 @@ modify.
 
 Any forks of this project must also be distributed under the same license and may not be made or used in any proprietary
 (closed-source) applications. They may still be monetized, as long as the code is open to the public.
-See [LICENSE.txt](LICENSE.txt) or read the [online version]((https://www.gnu.org/licenses/gpl-3.0.html)) for more
+See [LICENSE.txt](LICENSE-GPLv3.txt) or read the [online version]((https://www.gnu.org/licenses/gpl-3.0.html)) for more
 details.
 
 This software should not be redistributed without the license file. If your download does not contain the GPL license,
@@ -179,3 +178,4 @@ you should ask the distributor to include it. The [.txt version](https://www.gnu
 on the GNU website.
 
 Copyright © SlavSquatSuperstar 2023 GPLv3 License
+Email: [slavsquatsuperstar@gmail.com](mailto:slavsquatsuperstar@gmail.com)

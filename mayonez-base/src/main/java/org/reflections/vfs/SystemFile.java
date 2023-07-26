@@ -30,14 +30,6 @@ class SystemFile implements VfsFile {
         return null; //should not get here
     }
 
-    public InputStream openInputStream() {
-        try {
-            return new FileInputStream(file);
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     @Override
     public String toString() {
         return file.toString();

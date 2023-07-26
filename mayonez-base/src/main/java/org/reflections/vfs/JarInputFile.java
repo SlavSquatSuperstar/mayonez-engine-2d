@@ -1,7 +1,5 @@
 package org.reflections.vfs;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.zip.*;
 
 /**
@@ -13,15 +11,9 @@ import java.util.zip.*;
 class JarInputFile implements VfsFile {
 
     private final ZipEntry entry;
-    private final JarInputDir jarInputDir;
-    private final long fromIndex;
-    private final long endIndex;
 
-    public JarInputFile(ZipEntry entry, JarInputDir jarInputDir, long cursor, long nextCursor) {
+    public JarInputFile(ZipEntry entry) {
         this.entry = entry;
-        this.jarInputDir = jarInputDir;
-        fromIndex = cursor;
-        endIndex = nextCursor;
     }
 
     public String getName() {
@@ -31,19 +23,6 @@ class JarInputFile implements VfsFile {
 
     public String getRelativePath() {
         return entry.getName();
-    }
-
-    public InputStream openInputStream() {
-        return new InputStream() {
-            @Override
-            public int read() throws IOException {
-                if (jarInputDir.isCursorBetween(fromIndex, endIndex)) {
-                    return jarInputDir.read();
-                } else {
-                    return -1;
-                }
-            }
-        };
     }
 
 }
