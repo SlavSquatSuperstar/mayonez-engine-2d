@@ -17,7 +17,6 @@ module mayonez.base {
 
     // Other Dependencies
     requires org.json;
-    requires org.reflections;
 
     // Public API
     exports mayonez;

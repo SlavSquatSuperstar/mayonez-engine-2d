@@ -12,8 +12,6 @@ dependencies {
     // Code Dependencies
     api "$libs.kotlin"
     implementation "$libs.json"
-    implementation "$libs.reflections"
-    runtimeOnly "$libs.slf4j"
 
     // LWJGL Modules
     api "$libs.joml"

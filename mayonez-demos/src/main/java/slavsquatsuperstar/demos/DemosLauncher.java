@@ -18,7 +18,7 @@ public class DemosLauncher {
 
     private final static int START_SCENE_INDEX = 4;
 
-    private final static String[] sceneNames = {
+    private final static String[] SCENE_NAMES = {
             "Space Game", "Mario Level", "Physics Sandbox",
             "Pool Balls", "Geometry Dash Editor"
     };
@@ -26,40 +26,40 @@ public class DemosLauncher {
     public static void main(String[] args) {
         var launcher = new Launcher(args).setRunConfig();
         launcher.loadScenesToManager(getScenesToLoad());
-        launcher.startGame(sceneNames[START_SCENE_INDEX]);
+        launcher.startGame(SCENE_NAMES[START_SCENE_INDEX]);
     }
 
     private static Scene[] getScenesToLoad() {
         return new Scene[]{
-                new SpaceGameScene(sceneNames[0]) {
+                new SpaceGameScene(SCENE_NAMES[0]) {
                     @Override
                     protected void onUserUpdate(float dt) {
                         super.onUserUpdate(dt);
                         pollSceneControls();
                     }
                 },
-                new MarioScene(sceneNames[1]) {
+                new MarioScene(SCENE_NAMES[1]) {
                     @Override
                     protected void onUserUpdate(float dt) {
                         super.onUserUpdate(dt);
                         pollSceneControls();
                     }
                 },
-                new PhysicsSandboxScene(sceneNames[2]) {
+                new PhysicsSandboxScene(SCENE_NAMES[2]) {
                     @Override
                     protected void onUserUpdate(float dt) {
                         super.onUserUpdate(dt);
                         pollSceneControls();
                     }
                 },
-                new PoolBallsScene(sceneNames[3]) {
+                new PoolBallsScene(SCENE_NAMES[3]) {
                     @Override
                     protected void onUserUpdate(float dt) {
                         super.onUserUpdate(dt);
                         pollSceneControls();
                     }
                 },
-                new GDEditorScene(sceneNames[4]) {
+                new GDEditorScene(SCENE_NAMES[4]) {
                     @Override
                     protected void onUserUpdate(float dt) {
                         super.onUserUpdate(dt);
@@ -77,9 +77,9 @@ public class DemosLauncher {
         } else if (KeyInput.keyPressed("p")) {
             SceneManager.toggleScenePaused(); // this is being run twice per frame in SpaceGameScene
         } else if (KeyInput.keyDown("left shift")) {
-            for (var i = 0; i < sceneNames.length; i++) {
+            for (var i = 0; i < SCENE_NAMES.length; i++) {
                 if (KeyInput.keyPressed(String.valueOf(i + 1))) {
-                    SceneManager.loadScene(sceneNames[i]);
+                    SceneManager.loadScene(SCENE_NAMES[i]);
                 }
             }
         }

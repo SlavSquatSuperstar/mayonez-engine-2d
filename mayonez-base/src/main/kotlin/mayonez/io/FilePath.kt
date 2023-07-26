@@ -113,7 +113,7 @@ class FilePath(filename: String) {
 
         /**
          * Attempts to locate a classpath resource from within the JAR executable.
-         * A classpath must use '/' separators despite the operating system.
+         * A classpath must use '/' separators regardless of the operating system.
          *
          * @param filename the file's location inside the JAR's root, ot null if
          *     not present

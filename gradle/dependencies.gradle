@@ -37,8 +37,6 @@ ext {
 
             // Dependencies
             json         : 'org.json:json:20230618',
-            reflections  : 'org.reflections:reflections:0.10.2',
-            slf4j        : 'org.slf4j:slf4j-simple:1.7.32', // Don't update, required by reflections
 
             // LWJGL Modules
             joml         : 'org.joml:joml:1.10.5',

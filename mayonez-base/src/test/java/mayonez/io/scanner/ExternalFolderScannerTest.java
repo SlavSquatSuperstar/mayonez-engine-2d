@@ -20,7 +20,12 @@ class ExternalFolderScannerTest {
 
     @Test
     void scanValidFolderIsNotEmpty() {
-        assertFalse(scanner.getFiles("src/test/resources/testassets").isEmpty());
+        var files = scanner.getFiles("src/test/resources/testassets");
+        assertFalse(files.isEmpty());
+        assertTrue(files.contains("src/test/resources/testassets/text/properties.txt"));
+        assertTrue(files.contains("src/test/resources/testassets/images/mario.png"));
+        assertFalse(files.contains("src/test/java/mayonez/io/AssetsTest.class"));
+        assertFalse(files.contains("src/test/resources/.DS_Store"));
     }
 
     @Test

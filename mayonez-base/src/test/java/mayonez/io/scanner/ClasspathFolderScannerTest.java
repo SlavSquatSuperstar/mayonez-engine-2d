@@ -20,7 +20,12 @@ class ClasspathFolderScannerTest {
 
     @Test
     void scanValidFolderIsNotEmpty() {
-        assertFalse(scanner.getFiles("testassets").isEmpty());
+        var files = scanner.getFiles("testassets");
+        assertFalse(files.isEmpty());
+        assertTrue(files.contains("testassets/text/properties.txt"));
+        assertTrue(files.contains("testassets/images/mario.png"));
+        assertFalse(files.contains("mayonez/io/AssetsTest.class"));
+        assertFalse(files.contains(".DS_Store"));
     }
 
     @Test
