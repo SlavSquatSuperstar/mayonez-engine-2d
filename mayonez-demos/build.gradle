@@ -1,10 +1,12 @@
 plugins {
-    id 'com.github.johnrengelman.shadow'
-    id 'org.jetbrains.dokka'
+    id("java")
+
+    id("com.github.johnrengelman.shadow")
+    id("org.jetbrains.dokka")
 }
 
-description = 'The testbed project for Mayonez Engine that contains all the demo scenes.'
+description = "The testbed project for Mayonez Engine that contains all the demo scenes."
 
 dependencies {
-    implementation project(':mayonez-base')
+    implementation(project(":mayonez-base"))
 }

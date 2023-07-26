@@ -1,30 +1,34 @@
 plugins {
-    id 'application'
+    id("application") // For creating runnable programs
+    id("idea") // For working with IntelliJ
 
-    id 'com.github.johnrengelman.shadow' version '8.1.1' // For making fat jars
-    id 'org.jetbrains.dokka' version '1.8.20' // For Kotlin documentation
-    id 'org.jetbrains.kotlin.jvm' version '1.9.0' // For compiling Kotlin files
+    id("com.github.johnrengelman.shadow") version "8.1.1" // For making fat jars
+    id("org.jetbrains.dokka") version "1.8.20" apply false // For Kotlin documentation
+    id("org.jetbrains.kotlin.jvm") version "1.9.0" apply false // For compiling Kotlin files
 }
 
 // Project Info
 
-description = 'The root project for Mayonez Engine that contains all modules.'
+description = "The root project for Mayonez Engine that contains all modules."
 
-apply from: 'gradle/dependencies.gradle'
+apply(from: "gradle/get_os.gradle")
+
+ext {
+    javaVersion = "17"
+    mainClass = "slavsquatsuperstar.demos.DemosLauncher"
+    mainModule = "mayonez.demos"
+}
 
 // Custom Settings
 allprojects {
-    apply plugin: 'idea'
-    apply plugin: 'java'
-
     // Name
-    group 'slavsquatsuperstar'
-    version '0.7.7-pre9-snapshot'
+    group = "slavsquatsuperstar"
+    version = "0.7.7-pre9-snapshot"
 
     // Java Version
     java {
         toolchain {
-            languageVersion = JavaLanguageVersion.of(javaVersion)
+            languageVersion = JavaLanguageVersion.of(project.javaVersion)
         }
     }
 
@@ -34,42 +38,37 @@ allprojects {
 
 dependencies {
     // Subprojects
-    implementation project(':mayonez-base')
-    implementation project(':mayonez-demos')
+    implementation(project(":mayonez-base"))
+    implementation(project(":mayonez-demos"))
 }
 
 // Tasks and Plugins
 
-ext {
-    mainClass = 'slavsquatsuperstar.demos.DemosLauncher'
-    mainModule = 'mayonez.demos'
-}
-
-application { // For 'run' task
+application { // For "run" task
     mainClass = project.ext.mainClass
     mainModule = project.ext.mainModule
 }
 
-jar {
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-    manifest { attributes 'Main-Class': project.ext.mainClass }
-    // 'Class-Path': configurations.runtimeClasspath.files.collect { it.getName() }.join(' ')
-}
-
-shadowJar {
-    dependsOn jar
-    archiveClassifier.set('')
-    manifest.from jar.manifest
-}
-
 run {
-    dependsOn shadowJar
+    dependsOn(shadowJar)
     if (macOS) jvmArgs = ["-XstartOnFirstThread"] // For LWJGL on macOS
     args = ["--engine gl"] // Set CL args (use GL true/false)
 }
 
+jar {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    manifest { attributes "Main-Class": project.ext.mainClass }
+    // "Class-Path": configurations.runtimeClasspath.files.collect { it.getName() }.join(" ")
+}
+
+shadowJar {
+    dependsOn(jar)
+    archiveClassifier.set("")
+    manifest.from jar.manifest
+}
+
 // Shadow Jar Dependencies
 
-distTar { dependsOn shadowJar }
-distZip { dependsOn shadowJar }
-startScripts { dependsOn shadowJar }
+distTar { dependsOn(shadowJar) }
+distZip { dependsOn(shadowJar) }
+startScripts { dependsOn(shadowJar) }

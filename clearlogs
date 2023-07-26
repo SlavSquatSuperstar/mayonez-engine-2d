@@ -4,7 +4,7 @@ SCRIPT_DIR=$(dirname "$0")
 cd "$SCRIPT_DIR" || exit
 
 # Delete log folder outputs
-rm -r logs/
-rm -r mayonez-base/logs/
-rm hs_err_pid*.log
+rm -r logs/ || echo "No log files to delete"
+#rm -r mayonez-base/logs/ || echo "No log files in mayonez-base to delete"
+rm hs_err_pid*.log || echo "No crash reports to delete"
 echo "Cleared all log files"

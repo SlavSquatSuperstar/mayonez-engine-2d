@@ -1,56 +1,60 @@
 plugins {
-    id 'java-library'
+    id("java-library")
 
-    id 'com.github.johnrengelman.shadow'
-    id 'org.jetbrains.dokka'
-    id 'org.jetbrains.kotlin.jvm'
+    id("com.github.johnrengelman.shadow")
+    id("org.jetbrains.dokka")
+    id("org.jetbrains.kotlin.jvm")
 }
 
-description = 'The library project for Mayonez Engine that contains the core classes and unit tests.'
+description = "The library project for Mayonez Engine that contains the core classes and unit tests."
+
+apply(from: "../gradle/dependencies.gradle")
 
 dependencies {
     // Code Dependencies
-    api "$libs.kotlin"
-    implementation "$libs.json"
+    api("$libs.kotlin")
+    implementation("$libs.json")
 
     // LWJGL Modules
-    api "$libs.joml"
-    implementation platform("$libs.lwjglBom")
+    api("$libs.joml")
+    implementation(platform("$libs.lwjglBom"))
 
-    implementation "$libs.lwjgl"
-    implementation "$libs.lwjglGlfw"
-    implementation "$libs.lwjglOpenal"
-    implementation "$libs.lwjglOpengl"
-    implementation "$libs.lwjglStb"
+    implementation("$libs.lwjgl")
+    implementation("$libs.lwjglGlfw")
+    implementation("$libs.lwjglOpenal")
+    implementation("$libs.lwjglOpengl")
+    implementation("$libs.lwjglStb")
 
-    runtimeOnly "$libs.lwjgl::$lwjglNatives"
-    runtimeOnly "$libs.lwjglGlfw::$lwjglNatives"
-    runtimeOnly "$libs.lwjglOpenal::$lwjglNatives"
-    runtimeOnly "$libs.lwjglOpengl::$lwjglNatives"
-    runtimeOnly "$libs.lwjglStb::$lwjglNatives"
+    runtimeOnly("$libs.lwjgl::$lwjglNatives")
+    runtimeOnly("$libs.lwjglGlfw::$lwjglNatives")
+    runtimeOnly("$libs.lwjglOpenal::$lwjglNatives")
+    runtimeOnly("$libs.lwjglOpengl::$lwjglNatives")
+    runtimeOnly("$libs.lwjglStb::$lwjglNatives")
 
     // Test Libraries
-    testImplementation "$libs.junitApi"
-    testRuntimeOnly "$libs.junitEngine"
-    testRuntimeOnly "$libs.junitPlatform"
-    testImplementation "$libs.mockito"
+    testImplementation("$libs.junitApi")
+    testRuntimeOnly("$libs.junitEngine")
+    testRuntimeOnly("$libs.junitPlatform")
+    testImplementation("$libs.mockito")
 }
 
 // Tasks
 
 compileJava {
-    dependsOn compileKotlin
-    sourceCompatibility = project.javaVersion
-    targetCompatibility = project.javaVersion
+    dependsOn(compileKotlin)
 }
 
 compileKotlin {
+//    compilerOptions {
+//        jvmTarget = javaVersion
+//        suppressWarnings = true
+//        destinationDirectory = compileJava.destinationDirectory
+//    }
     kotlinOptions { // deprecated, Kotlin doesn't support latest gradle
         jvmTarget = javaVersion
         suppressWarnings = true
         destinationDirectory = compileJava.destinationDirectory
     }
-
 }
 
 test { useJUnitPlatform() }
