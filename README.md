@@ -54,42 +54,59 @@ This fully-operational game engine includes:
 
 ### Instructions for Players
 
-- Download the latest Java version: [Eclipse Temurin 17+](https://adoptium.net/temurin/releases) (select "JRE" under "
-  Package Type") or [Oracle JRE 17+](https://www.oracle.com/java/technologies/downloads/)
+Installing Java
+
+- Download the latest Java LTS release: [Eclipse Temurin 17+](https://adoptium.net)
+  or [Oracle OpenJDK 17+](https://www.oracle.com/java/technologies/downloads/#java17)
+    - If you do not intend on writing code, then download the [JRE](https://adoptium.net/temurin/releases) instead.
+    - Make sure to select "JRE" under "Package Type" and the correct operating system and architecture for your
+      computer.
 - Extract and run the installer, then check if Java is installed by entering `java --version` inside a command
   line/terminal window.
-- Download the repository, drag `run` (Mac/Linux) or `run.bat` (Windows) from the extracted folder into your command
-  line/terminal, and press enter.
+    - On Mac/Linux, the terminal app is usually Terminal.
+    - On Windows, the terminal app is usually Command Prompt or PowerShell.
+
+Running the Program
+
+- Download this repository by pressing Code > Download ZIP on
+  the [GitHub website](https://github.com/SlavSquatSuperstar/mayonez-engine-2d).
+- Drag `run` (Mac/Linux) or `run.bat`/`run.psi` (Windows) from the extracted folder into a command line/terminal window
+  and press Enter.
 
 ### Instructions for Developers
 
-To download this repository, run `git clone https://github.com/SlavSquatSuperstar/mayonez-engine-2d.git`.
-Then, in an IDE, create a new project from existing sources and import a Gradle project.
-You can also create a new project from version control using the link above if your editor supports it.
-There are several preset Gradle tasks included to help in your development:
+Editing the Project
 
-- Run: Launches the program with the demo scenes using `runShadow`
-- Test: Runs unit tests using JUnit
-- Compile: Builds the .jar file using `shadowJar`
-- Export: Build the .jar and generates JavaDoc using `dokkaJavadocCollector`
+- Download this repository by running `git clone https://github.com/SlavSquatSuperstar/mayonez-engine-2d.git` in a
+  terminal.
+- In an IDE, open the extracted folder or create a new project from existing sources, then tell the IDE to import a
+  Gradle project if prompted.
+    - You can also create a new project from version control using the repository link above if your editor supports it.
+- There are several preset Gradle tasks included to help in your development:
+    - Run: Launches the program with the demo scenes using `runShadow`
+    - Test: Runs unit tests using JUnit
+    - Compile: Builds the .jar file using `shadowJar`
+    - Export: Build the .jar and generates JavaDoc using `dokkaJavadocCollector`
 
-Below are the tools and libraries used in the development of this project.
+Development Tools and Libraries
 
-- Java Version: [Eclipse Temurin 17+](https://adoptium.net/)
+- Java Version: [Eclipse Temurin 17+](https://adoptium.net)
   or [Oracle OpenJDK 17+](https://www.oracle.com/java/technologies/downloads/#java17)
-- Kotlin Version: [1.9+](https://kotlinlang.org/docs/whatsnew1820.html)
+- Kotlin Version: [1.9+](https://kotlinlang.org/docs/whatsnew19.html)
 - Recommended IDE: [Intellij IDEA CE 2023.2+](https://www.jetbrains.com/idea/download/)
-    - [Eclipse Java IDE](https://www.eclipse.org/downloads/) may also be used
+    - [Eclipse Java IDE](https://www.eclipse.org/downloads/) may also be used, but IntelliJ has better Kotlin and Gradle
+      integration
 - Build System: [Gradle 8.2+](https://gradle.org/install/)
     - Utilizes [Gradle Shadow Plugin](https://github.com/johnrengelman/shadow/releases) for creating fat jars
 
-- Dependencies (automatically downloaded by Gradle and bundled in JAR)
-    - [LWJGL 3.3.2](https://www.lwjgl.org/customize) (user OS & architecture specific)
-        - Libraries: [JOML](https://joml-ci.github.io/JOML/), GLFW, OpenGL, and STB
-    - [Kotlin Standard Library](https://kotlinlang.org/docs/getting-started.html)
-    - [JSON in Java](https://github.com/stleary/JSON-java) (org.json)
-    - [Java Reflections](https://github.com/ronmamo/reflections) (org.reflections, custom implementation)
-    - [JUnit 5](https://junit.org/junit5/docs/current/user-guide/) (not bundled, for test code only)
+Dependencies (automatically downloaded by Gradle and bundled in JAR)
+
+- [Kotlin Standard Library](https://kotlinlang.org/docs/getting-started.html)
+- [LWJGL 3.3.2](https://www.lwjgl.org/customize) (user OS & architecture specific)
+    - Libraries: [JOML](https://joml-ci.github.io/JOML/), GLFW, OpenGL, and STB
+- [JSON in Java](https://github.com/stleary/JSON-java) (org.json)
+- [Java Reflections](https://github.com/ronmamo/reflections) (org.reflections, custom implementation)
+- [JUnit 5](https://junit.org/junit5/docs/current/user-guide/) (not bundled, for test code only)
 
 ## Demo Scenes
 
@@ -132,7 +149,8 @@ and a Pool Balls scene.
 
 ### Sprite Art
 
-The demo game textures were pulled from GamesWithGabe's GitHub repositories or created in the program Piskel.
+The demo game textures were pulled from GamesWithGabe's GitHub repositories under the MIT license or created in the
+program Piskel.
 
 - [Geometry Dash Series](https://github.com/codingminecraft/GeometryDash): Repository by GamesWithGabe
 - [Mario LWJGL Series](https://github.com/codingminecraft/MarioYoutube): Repository by GamesWithGabe
@@ -166,22 +184,19 @@ A massive, heartfelt thanks goes out to the following people, groups, and resour
 
 ## License
 
-This software is licensed under the [GNU General Public License, version 3](https://www.gnu.org/licenses/#GPL) (GPLv3)
-or any
-later version, which grants copyleft
-protections.
+Mayonez Engine is licensed under the [GNU General Public License, version 3](https://www.gnu.org/licenses/#GPL) (GPLv3)
+or any later version, which grants copyleft protections. In true ~~communist~~ ~~socialist~~ FOSS fashion, the source
+code of this program is freely available to access, run, share, and modify forever.
 
-In true communist/socialist fashion, the source code of this program is freely available to access, run, share, and
-modify.
+Any forks of this project must also be distributed under the same license and may not be used in or made into any
+proprietary (closed-source) applications. Forks may still be monetized, as long as the code is open to the public.
+See [LICENSE-GPLv3.txt](LICENSE-GPLv3.txt) or read the [online version]((https://www.gnu.org/licenses/gpl-3.0.html)) for
+more details.
 
-Any forks of this project must also be distributed under the same license and may not be made or used in any proprietary
-(closed-source) applications. They may still be monetized, as long as the code is open to the public.
-See [LICENSE.txt](LICENSE-GPLv3.txt) or read the [online version]((https://www.gnu.org/licenses/gpl-3.0.html)) for more
-details.
-
-This software should not be redistributed without the license file. If your download does not contain the GPL license,
+This software may not be redistributed without the license file. If your download does not contain the GPLv3 license,
 you should ask the distributor to include it. The [.txt version](https://www.gnu.org/licenses/gpl-3.0.txt) is available
 on the GNU website.
 
 Copyright © SlavSquatSuperstar 2023 GPLv3 License
+
 Email: [slavsquatsuperstar@gmail.com](mailto:slavsquatsuperstar@gmail.com)
