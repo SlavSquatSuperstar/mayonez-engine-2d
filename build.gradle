@@ -1,6 +1,5 @@
 plugins {
     id("application") // For creating runnable programs
-    id("idea") // For working with IntelliJ
 
     id("com.github.johnrengelman.shadow") version "8.1.1" // For making fat jars
     id("org.jetbrains.dokka") version "1.8.20" apply false // For Kotlin documentation
@@ -19,7 +18,7 @@ ext {
     mainModule = "mayonez.demos"
 }
 
-// Custom Settings
+// Project Settings
 allprojects {
     // Name
     group = "slavsquatsuperstar"
@@ -34,6 +33,7 @@ allprojects {
 
     // Dependencies
     repositories { mavenCentral() }
+
 }
 
 dependencies {
@@ -44,31 +44,18 @@ dependencies {
 
 // Tasks and Plugins
 
-application { // For "run" task
-    mainClass = project.ext.mainClass
-    mainModule = project.ext.mainModule
+application { // For running project
+    mainClass = project.mainClass
+    mainModule = project.mainModule
+    if (macOS) applicationDefaultJvmArgs = ["-XstartOnFirstThread"] // For LWJGL on macOS
 }
 
-run {
-    dependsOn(shadowJar)
-    if (macOS) jvmArgs = ["-XstartOnFirstThread"] // For LWJGL on macOS
-    args = ["--engine gl"] // Set CL args (use GL true/false)
-}
+//runShadow {
+//    args = ["--engine gl"] // Set CL args (use GL true/false)
+//}
 
-jar {
+shadowJar { // For building jar
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-    manifest { attributes "Main-Class": project.ext.mainClass }
-    // "Class-Path": configurations.runtimeClasspath.files.collect { it.getName() }.join(" ")
+    archiveClassifier = ""
+    mainClass = project.ext.mainClass
 }
-
-shadowJar {
-    dependsOn(jar)
-    archiveClassifier.set("")
-    manifest.from jar.manifest
-}
-
-// Shadow Jar Dependencies
-
-distTar { dependsOn(shadowJar) }
-distZip { dependsOn(shadowJar) }
-startScripts { dependsOn(shadowJar) }

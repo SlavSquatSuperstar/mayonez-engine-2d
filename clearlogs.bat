@@ -6,5 +6,5 @@ cd %SCRIPT_DIR% || exit 1
 
 @rem Delete log folder outputs
 rm -r logs/
-rm -r mayonez-base/logs/
+rm hs_err_pid*.log
 echo Cleared all log files

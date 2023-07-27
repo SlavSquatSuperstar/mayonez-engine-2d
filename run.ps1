@@ -26,15 +26,16 @@ else
 
 # Build the application for Windows
 echo "Building mayonez-engine..."
-.\gradlew.bat clean build
+.\gradlew.bat clean shadowJar
 
 # Run the compiled jar file
 if ($USE_GL)
 {
     echo "Launching with OpenGL Engine."
+    java -jar build\libs\*.jar --engine gl
 }
 else
 {
     echo "Launching with AWT Engine."
+    java -jar build\libs\*.jar --engine awt
 }
-java -jar build\libs\*.jar "$USE_GL"

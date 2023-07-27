@@ -22,12 +22,13 @@ IF %ERRORLEVEL%==0 (
 
 @rem Build the application for Windows
 echo "Building mayonez-engine..."
-.\gradlew.bat clean build
+.\gradlew.bat clean shadowJar
 
 @rem Run the compiled jar file
 IF %USE_GL%=="true" (
     echo Launching with OpenGL Engine.
+    java -jar build\libs\*.jar --engine gl
 ) ELSE (
     echo Launching with AWT Engine.
+    java -jar build\libs\*.jar --engine awt
 )
-java -jar build\libs\*.jar "%USE_GL%"

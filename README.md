@@ -66,18 +66,24 @@ This fully-operational game engine includes:
 To download this repository, run `git clone https://github.com/SlavSquatSuperstar/mayonez-engine-2d.git`.
 Then, in an IDE, create a new project from existing sources and import a Gradle project.
 You can also create a new project from version control using the link above if your editor supports it.
-There are several Gradle tasks (compile, test, run, export) included to help in your development.
+There are several preset Gradle tasks included to help in your development:
+
+- Run: Launches the program with the demo scenes using `runShadow`
+- Test: Runs unit tests using JUnit
+- Compile: Builds the .jar file using `shadowJar`
+- Export: Build the .jar and generates JavaDoc using `dokkaJavadocCollector`
 
 Below are the tools and libraries used in the development of this project.
 
 - Java Version: [Eclipse Temurin 17+](https://adoptium.net/)
   or [Oracle OpenJDK 17+](https://www.oracle.com/java/technologies/downloads/#java17)
 - Kotlin Version: [1.9+](https://kotlinlang.org/docs/whatsnew1820.html)
-- Recommended IDE: [Intellij IDEA CE 2023.1+](https://www.jetbrains.com/idea/download/)
+- Recommended IDE: [Intellij IDEA CE 2023.2+](https://www.jetbrains.com/idea/download/)
+    - [Eclipse Java IDE](https://www.eclipse.org/downloads/) may also be used
 - Build System: [Gradle 8.2+](https://gradle.org/install/)
     - Utilizes [Gradle Shadow Plugin](https://github.com/johnrengelman/shadow/releases) for creating fat jars
 
-- Dependencies (bundled in JAR)
+- Dependencies (automatically downloaded by Gradle and bundled in JAR)
     - [LWJGL 3.3.2](https://www.lwjgl.org/customize) (user OS & architecture specific)
         - Libraries: [JOML](https://joml-ci.github.io/JOML/), GLFW, OpenGL, and STB
     - [Kotlin Standard Library](https://kotlinlang.org/docs/getting-started.html)
@@ -90,7 +96,7 @@ Below are the tools and libraries used in the development of this project.
 The current demo includes 4 scenes: a Space Shooter scene, a Mario scene, a Physics Sandbox scene,
 and a Pool Balls scene.
 
-### Demo Key Binds
+### Demo Controls
 
 - All Scenes:
     - **R** to reload the current scene

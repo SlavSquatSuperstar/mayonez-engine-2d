@@ -43,7 +43,7 @@ set_engine_type() {
 
 build_gradle_project() {
   echo "Building Mayonez Engine..."
-  if [ "$(./gradlew clean build)" ]; then
+  if [ "$(./gradlew clean shadowJar)" ]; then
     echo "Successfully built Mayonez Engine."
   else
     echo "Error building Mayonez Engine."
