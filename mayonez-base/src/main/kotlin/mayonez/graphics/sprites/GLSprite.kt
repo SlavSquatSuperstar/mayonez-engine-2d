@@ -3,6 +3,7 @@ package mayonez.graphics.sprites
 import mayonez.*
 import mayonez.annotations.*
 import mayonez.graphics.*
+import mayonez.graphics.batch.*
 import mayonez.graphics.renderer.*
 import mayonez.graphics.textures.*
 import mayonez.math.*
@@ -69,7 +70,7 @@ class GLSprite private constructor(
         val objXf = transform.combine(getSpriteTransform())
         val color = this.color.toGL()
         val texCoords = getTexCoords()
-        val texID = batch.addTexture(texture)
+        val texID = batch.addTextureAndGetID(texture)
 
         // Render sprite at object center and rotate according to object
         val sprVertices = Rectangle.rectangleVertices(Vec2(0f), Vec2(1f), objXf.rotation)

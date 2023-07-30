@@ -1,4 +1,4 @@
-package mayonez.graphics;
+package mayonez.graphics.batch;
 
 import mayonez.annotations.*;
 
@@ -8,8 +8,8 @@ import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
 import static org.lwjgl.opengl.GL15.glBufferSubData;
 
 /**
- * A float array storing vertex data for a {@link mayonez.graphics.RenderBatch}, such as
- * position, color, and texture (UV) coordinates.
+ * Stores vertex data, such as position, color, and texture (UV) coordinates, for a
+ * {@link RenderBatch} in float format.
  *
  * @author SlavSquatSuperstar
  */

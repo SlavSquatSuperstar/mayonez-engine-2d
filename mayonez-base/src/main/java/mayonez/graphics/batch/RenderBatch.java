@@ -1,6 +1,7 @@
-package mayonez.graphics;
+package mayonez.graphics.batch;
 
 import mayonez.annotations.*;
+import mayonez.graphics.*;
 import mayonez.graphics.textures.*;
 import mayonez.math.*;
 import org.joml.*;
@@ -11,9 +12,9 @@ import java.nio.IntBuffer;
 import static org.lwjgl.opengl.GL30.*;
 
 /**
- * Stores vertex information for many similar drawable objects and combining them into one large mesh,
+ * Stores vertex information for many similar drawable objects and combines them into one large mesh,
  * allowing many sprites and shapes to be drawn in fewer GPU calls. Roughly analog to the {@link java.awt.Graphics2D}
- * from the AWT engine.
+ * class from the AWT engine.
  *
  * @author SlavSquatSuperstar
  */
@@ -171,7 +172,7 @@ public final class RenderBatch {
      * @param tex the texture
      * @return the batch texture ID, 0 if color, otherwise 1-8
      */
-    public int addTexture(GLTexture tex) {
+    public int addTextureAndGetID(GLTexture tex) {
         if (!hasTexture(tex)) textures.addTexture(tex); // add if don't have texture
         return textures.getTextureID(tex);
     }

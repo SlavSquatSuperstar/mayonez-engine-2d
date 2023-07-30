@@ -28,7 +28,7 @@ public class Event {
     @Override
     public String toString() {
         String className = getClass().isAnonymousClass() ? "Event" : getClass().getSimpleName();
-        if (message.equals("")) return className;
+        if (message.isEmpty()) return className;
         else return String.format("%s (%s)", className, message);
     }
 

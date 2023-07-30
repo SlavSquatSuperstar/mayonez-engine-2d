@@ -54,7 +54,7 @@ public class Shader extends Asset {
         var programs = new ArrayList<ShaderProgram>();
         for (var shader : subPrograms) {
             shader = shader.strip();
-            if (shader.equals("")) continue;
+            if (shader.isEmpty()) continue;
             programs.add(readNextProgram(shader));
         }
         return programs;
@@ -110,10 +110,9 @@ public class Shader extends Asset {
      * Bind this shader to the GPU.
      */
     public void bind() {
-        if (!active) {
-            glUseProgram(shaderID);
-            active = true;
-        }
+        if (active) return;
+        glUseProgram(shaderID);
+        active = true;
     }
 
     public void uploadUniforms(GLCamera camera) {
@@ -125,10 +124,9 @@ public class Shader extends Asset {
      * Unbind this shader from the GPU.
      */
     public void unbind() {
-        if (active) {
-            glUseProgram(0);
-            active = false;
-        }
+        if (!active) return;
+        glUseProgram(0);
+        active = false;
     }
 
     // Upload Methods

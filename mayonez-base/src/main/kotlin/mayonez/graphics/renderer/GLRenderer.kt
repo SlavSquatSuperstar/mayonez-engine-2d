@@ -1,13 +1,10 @@
 package mayonez.graphics.renderer
 
-import mayonez.*
 import mayonez.annotations.*
-import mayonez.graphics.*
+import mayonez.graphics.batch.*
 import mayonez.graphics.camera.*
 import mayonez.graphics.shader.*
-import mayonez.graphics.textures.*
 import mayonez.io.*
-import mayonez.io.image.*
 import java.awt.*
 
 /**

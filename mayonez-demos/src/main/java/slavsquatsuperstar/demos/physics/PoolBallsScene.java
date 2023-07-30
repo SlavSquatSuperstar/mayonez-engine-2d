@@ -22,8 +22,8 @@ public class PoolBallsScene extends Scene {
         setGravity(new Vec2());
         addObject(new PoolBall(new Vec2(-40, 0)));
 
-        var xStart = -5;
-        var yStart = 0;
+        var xStart = -5f;
+        var yStart = 0f;
         var ballCount = 0;
         var ballNums = randomizeBalls();
 

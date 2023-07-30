@@ -1,4 +1,4 @@
-package mayonez.graphics;
+package mayonez.graphics.batch;
 
 import mayonez.annotations.*;
 import mayonez.graphics.textures.*;
@@ -11,8 +11,8 @@ import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 
 /**
- * An array storing {@link mayonez.graphics.textures.GLTexture} objects for a
- * {@link mayonez.graphics.RenderBatch}.
+ * Stores several {@link mayonez.graphics.textures.GLTexture} texture IDs  for a
+ * {@link RenderBatch}.
  *
  * @author SlavSquatSuperstar
  */
@@ -22,24 +22,23 @@ class TextureArray {
     private static final GLTexture COLOR_TEXTURE = null;
     private static final int NO_TEXTURE_ID = 0;
 
-    // TODO store texID instead of objects
-    private final GLTexture[] textures;
+    private final int[] texIDs;
     private int size; // Current number of textures
 
     TextureArray(int textureCapacity) {
-        this.textures = new GLTexture[textureCapacity];
+        this.texIDs = new int[textureCapacity];
         size = 0;
     }
 
     // Texture Methods
 
     void clear() {
-        Arrays.fill(textures, null);
+        Arrays.fill(texIDs, NO_TEXTURE_ID);
         size = 0;
     }
 
     void addTexture(GLTexture tex) {
-        if (size < capacity()) textures[size++] = tex;
+        if (size < capacity()) texIDs[size++] = tex.getTexID();
     }
 
     boolean containsTexture(GLTexture tex) {
@@ -54,7 +53,7 @@ class TextureArray {
 
     private int indexOfTexture(GLTexture tex) {
         for (var i = 0; i < size; i++) {
-            if (textures[i].equals(tex)) return i;
+            if (texIDs[i] == tex.getTexID()) return i;
         }
         return -1;
     }
@@ -64,7 +63,7 @@ class TextureArray {
     void bindTextures() {
         for (var i = 0; i < size; i++) {
             glActiveTexture(GL_TEXTURE0 + i + 1); // count from 1
-            glBindTexture(GL_TEXTURE_2D, textures[i].getTexID());
+            glBindTexture(GL_TEXTURE_2D, texIDs[i]);
         }
     }
 
@@ -75,11 +74,11 @@ class TextureArray {
     // Array Getters
 
     boolean hasRoom() {
-        return size < textures.length;
+        return size < texIDs.length;
     }
 
     int capacity() {
-        return textures.length;
+        return texIDs.length;
     }
 
 }
