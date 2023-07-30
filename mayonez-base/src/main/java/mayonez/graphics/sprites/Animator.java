@@ -20,15 +20,11 @@ public class Animator extends Script {
     private Sprite sprite;
     private final Timer animTimer;
 
-    public Animator(Texture[] textures, float animCooldown) {
-        this.textures = textures;
+    public Animator(SpriteSheet sprites, float animCooldown) {
+        this.textures = sprites.getTextures();
         this.numFrames = textures.length;
         currentFrame = 0;
         animTimer = new Timer(animCooldown);
-    }
-
-    public Animator(SpriteSheet sprites, float animCooldown) {
-        this(sprites.getTextures(), animCooldown);
     }
 
     @Override
@@ -47,7 +43,7 @@ public class Animator extends Script {
 
     @Override
     public void update(float dt) {
-        if (animTimer.isReady()) {
+        if (animTimer.isEnabled() && animTimer.isReady()) {
             setFrame((currentFrame + 1) % numFrames); // update frame count
             animTimer.reset();
         }
@@ -83,18 +79,27 @@ public class Animator extends Script {
         sprite.setEnabled(visible);
     }
 
+    /**
+     * Enables or disables the animation timer.
+     *
+     * @param enabled if the timer should be enabled
+     */
+    public void setTimerEnabled(boolean enabled) {
+        animTimer.setEnabled(enabled);
+    }
+
     // Callback Methods
 
     @Override
     public void onEnable() {
         setSpriteVisible(true);
-        animTimer.setEnabled(true);
+        setTimerEnabled(true);
     }
 
     @Override
     public void onDisable() {
         setSpriteVisible(false);
-        animTimer.setEnabled(false);
+        setTimerEnabled(false);
     }
 
 }

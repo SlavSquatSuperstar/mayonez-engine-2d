@@ -1,14 +1,11 @@
 package slavsquatsuperstar.demos.geometrydash.ui;
 
 import mayonez.*;
-import mayonez.graphics.*;
 import mayonez.graphics.sprites.*;
 import mayonez.graphics.textures.*;
-import mayonez.io.*;
 import mayonez.math.*;
 import mayonez.physics.colliders.*;
 import mayonez.scripts.mouse.*;
-import mayonez.util.*;
 import slavsquatsuperstar.demos.geometrydash.ZIndex;
 
 /**
@@ -19,11 +16,11 @@ import slavsquatsuperstar.demos.geometrydash.ZIndex;
 public class UIButton extends GameObject {
 
     // Constants
-    private static final Texture BUTTON_BASE_TEXTURE;
-    private static final Color UNPRESSED_COLOR, PRESSED_COLOR;
+    private static final SpriteSheet BUTTON_TEXTURES;
+    private static final int UNPRESSED_FRAME, PRESSED_FRAME;
 
     // Image Fields
-    private final Sprite baseSprite;
+    private final Animator baseSprite;
     private final Texture icon;
 
     // UI Fields
@@ -31,9 +28,12 @@ public class UIButton extends GameObject {
     private boolean selected;
 
     static {
-        BUTTON_BASE_TEXTURE = Assets.getTexture("assets/textures/geometrydash/button_base.png");
-        UNPRESSED_COLOR = Colors.WHITE;
-        PRESSED_COLOR = new Color(111, 111, 111);
+        BUTTON_TEXTURES = Sprites.createSpriteSheet(
+                "assets/textures/geometrydash/buttons.png",
+                60, 60, 2, 2
+        );
+        UNPRESSED_FRAME = 0;
+        PRESSED_FRAME = 1;
     }
 
     public UIButton(String name, Transform transform, Texture icon) {
@@ -41,7 +41,8 @@ public class UIButton extends GameObject {
         setZIndex(ZIndex.UI);
 
         this.icon = icon;
-        baseSprite = Sprites.createSprite(BUTTON_BASE_TEXTURE);
+        baseSprite = new Animator(BUTTON_TEXTURES, 0f);
+        baseSprite.setTimerEnabled(false);
     }
 
     @Override
@@ -61,12 +62,12 @@ public class UIButton extends GameObject {
 
     public void onSelect() {
         container.onElementSelected(this);
-        baseSprite.setColor(PRESSED_COLOR);
+        baseSprite.setFrame(PRESSED_FRAME);
     }
 
     public void onDeselect() {
         container.onElementDeselected(this);
-        baseSprite.setColor(UNPRESSED_COLOR);
+        baseSprite.setFrame(UNPRESSED_FRAME);
     }
 
     public boolean isSelected() {
