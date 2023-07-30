@@ -27,7 +27,7 @@ public class PlayerShip extends GameObject {
     private final String spriteName;
 
     public PlayerShip(String name, String spriteName) {
-        super(name, Transform.scaleInstance(new Vec2(2, 2)), ZIndex.SPACESHIP.zIndex);
+        super(name, Transform.scaleInstance(new Vec2(2, 2)), ZIndex.SPACESHIP);
         this.spriteName = spriteName;
     }
 

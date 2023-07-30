@@ -65,7 +65,7 @@ public class Projectiles {
                 "Laser", 0.2f,
                 new BallCollider(new Vec2(1f)).setTrigger(true),
                 new ShapeSprite(Colors.RED, true)
-        ).setZIndex(ZIndex.PROJECTILE.zIndex);
+        ).setZIndex(ZIndex.PROJECTILE);
     }
 
     public static GameObject createPlasma(GameObject source) {
@@ -74,7 +74,7 @@ public class Projectiles {
                 "Plasma", 0.3f,
                 new BallCollider(new Vec2(1f)).setTrigger(true),
                 new ShapeSprite(new Color(0, 191, 255), true) // HTML Deep Sky Blue, #00BFFF
-        ).setZIndex(ZIndex.PROJECTILE.zIndex);
+        ).setZIndex(ZIndex.PROJECTILE);
     }
 
 }

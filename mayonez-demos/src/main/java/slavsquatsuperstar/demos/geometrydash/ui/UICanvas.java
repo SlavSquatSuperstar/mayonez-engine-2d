@@ -3,7 +3,7 @@ package slavsquatsuperstar.demos.geometrydash.ui;
 import mayonez.*;
 import mayonez.graphics.sprites.*;
 import mayonez.math.*;
-import slavsquatsuperstar.demos.geometrydash.components.PlaceBlock;
+import slavsquatsuperstar.demos.geometrydash.ZIndex;
 
 import java.util.*;
 
@@ -28,6 +28,7 @@ public class UICanvas extends GameObject {
 
     public UICanvas(String name, Transform transform) {
         super(name, transform);
+        setZIndex(ZIndex.UI);
         elements = new ArrayList<>();
     }
 

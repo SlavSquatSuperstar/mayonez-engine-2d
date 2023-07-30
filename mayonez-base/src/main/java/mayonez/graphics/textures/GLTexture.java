@@ -70,7 +70,6 @@ public final class GLTexture extends Texture {
     public GLTexture(GLTexture texture, Vec2[] texCoords) {
         this(texture.getFilename(), texCoords, texture.image);
         this.texID = texture.texID;
-//        readImage();  // this fixes wrong textures, but uses a lot of memory
 
         var size = texCoords[2].sub(texCoords[0]); // relative size
         this.width = (int) (texture.width * size.x); // get new image size

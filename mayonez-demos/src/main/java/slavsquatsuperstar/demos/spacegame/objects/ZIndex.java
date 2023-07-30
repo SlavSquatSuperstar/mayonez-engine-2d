@@ -5,16 +5,15 @@ package slavsquatsuperstar.demos.spacegame.objects;
  *
  * @author SlavSquatSuperstar
  */
-public enum ZIndex {
-    BACKGROUND(-10),
-    PROJECTILE(-2),
-    SPACESHIP(0),
-    EXHAUST(1),
-    ASTEROID(2);
+public final class ZIndex {
 
-    public final int zIndex;
-
-    ZIndex(int zIndex) {
-        this.zIndex = zIndex;
+    private ZIndex() {
     }
+
+    public static final int BACKGROUND = -10;
+    public static final int PROJECTILE = -2;
+    public static final int SPACESHIP = 0;
+    public static final int EXHAUST = 1;
+    public static final int ASTEROID = 2;
+
 }

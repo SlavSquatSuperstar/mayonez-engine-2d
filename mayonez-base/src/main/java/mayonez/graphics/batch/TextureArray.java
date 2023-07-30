@@ -19,9 +19,11 @@ import static org.lwjgl.opengl.GL13.glActiveTexture;
 @UsesEngine(EngineType.GL)
 class TextureArray {
 
+    // Constants
     private static final GLTexture COLOR_TEXTURE = null;
     private static final int NO_TEXTURE_ID = 0;
 
+    // Array Fields
     private final int[] texIDs;
     private int size; // Current number of textures
 

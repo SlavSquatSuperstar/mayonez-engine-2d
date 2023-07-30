@@ -1,4 +1,4 @@
-package slavsquatsuperstar.demos.geometrydash.components;
+package slavsquatsuperstar.demos.geometrydash;
 
 import mayonez.*;
 import mayonez.graphics.*;
@@ -37,6 +37,16 @@ public class Grid extends Component {
         for (var drawY = start.y; drawY <= end.y; drawY += 1) {
             debugDraw.drawLine(new Vec2(start.x, drawY), new Vec2(end.x, drawY), GRID_BRUSH);
         }
+    }
+
+    public static GameObject createGridObject() {
+        return new GameObject("Grid") {
+            @Override
+            protected void init() {
+                setZIndex(ZIndex.GRID);
+                addComponent(new Grid());
+            }
+        };
     }
 
 }

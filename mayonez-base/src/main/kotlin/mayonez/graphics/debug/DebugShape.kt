@@ -56,6 +56,7 @@ internal data class DebugShape(var shape: MShape, private val brush: ShapeBrush)
      */
     override fun pushToBatch(batch: RenderBatch) {
         val color = color.toGL()
+        color.w = 1f // disable transparency
         when (val shape = this.shape) {
             is Edge -> batch.pushLine(shape, color)
             is Triangle -> batch.pushTriangle(shape, color)

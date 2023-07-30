@@ -1,13 +1,11 @@
-package slavsquatsuperstar.demos.geometrydash.components;
+package slavsquatsuperstar.demos.geometrydash.ui;
 
 import mayonez.*;
-import mayonez.graphics.sprites.*;
 import mayonez.graphics.textures.*;
 import mayonez.input.*;
 import mayonez.math.*;
-import mayonez.physics.*;
-import mayonez.physics.colliders.*;
 import mayonez.scripts.*;
+import slavsquatsuperstar.demos.geometrydash.Block;
 
 /**
  * Places tiles in the world on grid spaces.
@@ -49,14 +47,7 @@ public class PlaceBlock extends Script {
 
     private void placeBlock(Vec2 mousePos) {
         if (cursorTexture == null) return; // only add when selecting
-        getScene().addObject(new GameObject("Placed Block", mousePos) {
-            @Override
-            protected void init() {
-                addComponent(Sprites.createSprite(cursorTexture));
-                addComponent(new BoxCollider(new Vec2(1f)));
-                addComponent(new Rigidbody(0f).setFixedRotation(true));
-            }
-        });
+        getScene().addObject(new Block("Placed Block", mousePos, cursorTexture));
     }
 
     public void setCursorTexture(Texture cursorTexture) {

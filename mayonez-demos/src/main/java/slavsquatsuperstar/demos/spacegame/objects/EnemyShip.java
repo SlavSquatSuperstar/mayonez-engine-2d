@@ -25,7 +25,7 @@ public class EnemyShip extends GameObject {
     private int shotsLeft;
 
     public EnemyShip(String name, String spriteName, SpawnManager enemySpawner) {
-        super(name, Transform.scaleInstance(new Vec2(2f)), ZIndex.SPACESHIP.zIndex);
+        super(name, Transform.scaleInstance(new Vec2(2f)), ZIndex.SPACESHIP);
         this.spriteName = spriteName;
         this.enemySpawner = enemySpawner;
         isFiring = false;

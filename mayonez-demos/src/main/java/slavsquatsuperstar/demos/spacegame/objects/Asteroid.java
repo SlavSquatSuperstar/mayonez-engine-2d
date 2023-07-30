@@ -25,7 +25,7 @@ public class Asteroid extends GameObject {
     private final boolean isFragment;
 
     private Asteroid(String name, Vec2 size, int startingHealth, boolean isFragment, SpawnManager obstacleSpawner) {
-        super(name, Transform.scaleInstance(size), ZIndex.ASTEROID.zIndex);
+        super(name, Transform.scaleInstance(size), ZIndex.ASTEROID);
         this.size = size;
         this.startingHealth = startingHealth;
         this.isFragment = isFragment;

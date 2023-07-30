@@ -6,7 +6,6 @@ import mayonez.math.*;
 import mayonez.physics.*;
 import mayonez.physics.colliders.*;
 import mayonez.util.*;
-import slavsquatsuperstar.demos.geometrydash.components.Grid;
 import slavsquatsuperstar.demos.geometrydash.ui.UICanvas;
 
 /**
@@ -14,7 +13,6 @@ import slavsquatsuperstar.demos.geometrydash.ui.UICanvas;
  *
  * @author SlavSquatSuperstar
  */
-// TODO object z-indexes
 public class GDEditorScene extends Scene {
 
     final static int TILE_SIZE = 42;
@@ -29,6 +27,7 @@ public class GDEditorScene extends Scene {
         addObject(new GameObject("Ground", new Vec2(0, getHeight() * -0.5f)) {
             @Override
             protected void init() {
+                setZIndex(ZIndex.BLOCK);
                 addComponent(new Rigidbody(0f).setFixedRotation(true));
                 addComponent(new BoxCollider(new Vec2(getWidth() + 2f, 2f)));
                 addComponent(new ShapeSprite(Colors.BLACK, true));
@@ -38,12 +37,7 @@ public class GDEditorScene extends Scene {
         // TODO still getting stuck on corners
         addObject(new GDPlayer("Player", new Vec2(0, 0)));
 
-        addObject(new GameObject("Grid") {
-            @Override
-            protected void init() {
-                addComponent(new Grid());
-            }
-        });
+        addObject(Grid.createGridObject());
 
         addObject(new UICanvas("Canvas", new Transform(new Vec2(-3f, -5f))));
     }

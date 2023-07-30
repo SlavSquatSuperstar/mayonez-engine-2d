@@ -1,10 +1,11 @@
-package slavsquatsuperstar.demos.geometrydash.components;
+package slavsquatsuperstar.demos.geometrydash.ui;
 
 import mayonez.*;
 import mayonez.graphics.*;
 import mayonez.graphics.sprites.*;
 import mayonez.graphics.textures.*;
 import mayonez.math.*;
+import slavsquatsuperstar.demos.geometrydash.ZIndex;
 
 /**
  * A cursor that shows a preview for the tile to be placed.
@@ -18,6 +19,7 @@ public class PlaceBlockCursor extends GameObject {
 
     public PlaceBlockCursor(String name) {
         super(name);
+        setZIndex(ZIndex.CURSOR);
     }
 
     @Override

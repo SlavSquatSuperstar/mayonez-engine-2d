@@ -9,6 +9,7 @@ import mayonez.math.*;
 import mayonez.physics.colliders.*;
 import mayonez.scripts.mouse.*;
 import mayonez.util.*;
+import slavsquatsuperstar.demos.geometrydash.ZIndex;
 
 /**
  * A user interface button that perform an action when clicked.
@@ -37,7 +38,7 @@ public class UIButton extends GameObject {
 
     public UIButton(String name, Transform transform, Texture icon) {
         super(name, transform);
-        setZIndex(2);
+        setZIndex(ZIndex.UI);
 
         this.icon = icon;
         baseSprite = Sprites.createSprite(BUTTON_BASE_TEXTURE);

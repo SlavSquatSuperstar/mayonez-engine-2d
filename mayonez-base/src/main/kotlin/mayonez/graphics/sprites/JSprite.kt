@@ -58,13 +58,18 @@ internal class JSprite private constructor(
 
     override fun getColor(): MColor = color
 
+    /**
+     * Set the color of this sprite, or recolors the current texture. Caution: Due to the way
+     * AWT stores images, this permanently alters the texture!
+     *
+     * @param color the color
+     */
     override fun setColor(color: MColor?) {
         this.color = color ?: DEFAULT_COLOR
         recolorImage(this.color)
     }
 
     private fun recolorImage(color: MColor) {
-        // TODO issue: this is modifying the actual buffered image
         for (y in 0..<imageWidth) {
             for (x in 0..<imageHeight) {
                 val pixelColor = getPixelColor(x, y)

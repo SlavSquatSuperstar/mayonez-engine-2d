@@ -21,6 +21,7 @@ public class GDPlayer extends GameObject {
 
     public GDPlayer(String name, Vec2 position) {
         super(name, position);
+        setZIndex(ZIndex.PLAYER);
     }
 
     @Override
