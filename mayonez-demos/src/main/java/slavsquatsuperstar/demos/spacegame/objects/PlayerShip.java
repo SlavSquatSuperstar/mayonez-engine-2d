@@ -1,18 +1,14 @@
 package slavsquatsuperstar.demos.spacegame.objects;
 
 import mayonez.*;
-import mayonez.graphics.*;
-import mayonez.graphics.debug.*;
 import mayonez.graphics.sprites.*;
 import mayonez.input.*;
 import mayonez.math.*;
-import mayonez.math.shapes.*;
 import mayonez.physics.*;
 import mayonez.physics.colliders.*;
 import mayonez.scripts.*;
 import mayonez.scripts.combat.*;
 import mayonez.scripts.movement.*;
-import mayonez.util.*;
 import slavsquatsuperstar.demos.spacegame.scripts.ThrustController;
 import slavsquatsuperstar.demos.spacegame.scripts.ThrustDirection;
 import slavsquatsuperstar.demos.spacegame.scripts.Thruster;
@@ -41,23 +37,6 @@ public class PlayerShip extends GameObject {
 
         // Visuals
         addComponent(Sprites.createSprite(spriteName));
-        addComponent(new Script() { // For testing DebugRenderer refactoring
-            private final ShapeBrush shieldBrush = ShapeBrush
-                    .createOutlineBrush(Colors.CYAN
-                            .combine(new Color(255, 255, 255, 192)))
-                    .setStrokeSize(8f);
-
-            private final ShapeBrush velocityBrush = ShapeBrush
-                    .createLineBrush(Colors.LIGHT_GREEN)
-                    .setStrokeSize(2f);
-
-            @Override
-            public void debugRender() {
-                getScene().getDebugDraw().drawShape(new Circle(transform.getPosition(), 1.6f), shieldBrush);
-                getScene().getDebugDraw().drawVector(transform.getPosition(),
-                        getRigidbody().getVelocity().mul(0.1f), velocityBrush);
-            }
-        });
 
         // Scripts
         addComponent(new KeepInScene(KeepInScene.Mode.WRAP));

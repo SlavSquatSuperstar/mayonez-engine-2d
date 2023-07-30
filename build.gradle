@@ -2,7 +2,7 @@ plugins {
     id("application") // For creating runnable programs
 
     id("com.github.johnrengelman.shadow") version "8.1.1" // For making fat jars
-    id("org.jetbrains.dokka") version "1.8.20" apply false // For Kotlin documentation
+    id("org.jetbrains.dokka") version "1.8.20" // For Kotlin documentation, must apply individually
     id("org.jetbrains.kotlin.jvm") version "1.9.0" apply false // For compiling Kotlin files
 }
 
@@ -22,7 +22,7 @@ ext {
 allprojects {
     // Name
     group = "slavsquatsuperstar"
-    version = "0.7.7-pre9-snapshot"
+    version = "0.7.7"
 
     // Java Version
     java {
@@ -50,12 +50,8 @@ application { // For running project
     if (macOS) applicationDefaultJvmArgs = ["-XstartOnFirstThread"] // For LWJGL on macOS
 }
 
-//runShadow {
-//    args = ["--engine gl"] // Set CL args (use GL true/false)
-//}
-
 shadowJar { // For building jar
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     archiveClassifier = ""
-    mainClass = project.ext.mainClass
+    mainClass = project.mainClass
 }

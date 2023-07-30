@@ -23,7 +23,7 @@ engine="gl"
 
 show_help() {
   # Show help and exit with a code
-  echo "Usage: run [--help] [--nobuild/-n] [--engine/-e gl/awt]"
+  echo "Usage: run [-h/--help] [-n/--nobuild] [-e/--engine gl/awt]"
   exit "$1"
 }
 
