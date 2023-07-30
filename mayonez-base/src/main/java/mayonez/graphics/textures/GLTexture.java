@@ -167,19 +167,8 @@ public final class GLTexture extends Texture {
             case RGBA_CHANNELS -> {
                 return GL_RGBA;
             }
-            default -> throw new TextureException("Unknown number of channels: " + channels);
+            default -> throw new TextureException("Invalid number of channels: " + channels);
         }
-    }
-
-    // Render Batch Methods
-
-    public void bind(int texSlot) {
-        glActiveTexture(GL_TEXTURE0 + texSlot + 1); // count from 1
-        glBindTexture(GL_TEXTURE_2D, texID);
-    }
-
-    public void unbind() {
-        glBindTexture(GL_TEXTURE_2D, 0);
     }
 
     // Image Getters
@@ -198,6 +187,11 @@ public final class GLTexture extends Texture {
         return texCoords;
     }
 
+    /**
+     * A unique ID for this texture in OpenGL.
+     *
+     * @return the texture id
+     */
     public int getTexID() {
         return texID;
     }

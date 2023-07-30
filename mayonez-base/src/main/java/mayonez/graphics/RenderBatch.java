@@ -7,7 +7,6 @@ import org.joml.*;
 import org.lwjgl.BufferUtils;
 
 import java.nio.IntBuffer;
-import java.util.*;
 
 import static org.lwjgl.opengl.GL30.*;
 
@@ -36,13 +35,13 @@ public final class RenderBatch {
     private final int vertexCount; // vertices per primitive
     private final int elementCount; // element per primitive (if dividing into triangles)
     private final int vertexSize; // attributes per vertex
-    private final List<GLTexture> textures;
 
     // GPU Resources
     private int vao; // Vertex array object (VAO) ID for this batch
     private int vbo; // Vertex buffer object (VBO) ID for this batch
     private int ebo; // Element buffer object (EBO)/index buffer ID for this batch
     private final VertexArray vertices;
+    private final TextureArray textures;
 
     public RenderBatch(int maxBatchSize, int zIndex, DrawPrimitive primitive) {
         this.maxBatchSize = maxBatchSize;
@@ -54,7 +53,7 @@ public final class RenderBatch {
         this.vertexSize = primitive.getVertexSize();
 
         // Renderer Fields
-        textures = new ArrayList<>(MAX_TEXTURE_SLOTS);
+        textures = new TextureArray(MAX_TEXTURE_SLOTS);
         vertices = new VertexArray(maxBatchSize * vertexCount * vertexSize);
 
         createBatch();
@@ -136,12 +135,10 @@ public final class RenderBatch {
     }
 
     private void bindVertices() {
-        for (var i = 0; i < textures.size(); i++) {
-            textures.get(i).bind(i);
-        }
         glBindVertexArray(vao);
-        glEnableVertexAttribArray(0);
-        glEnableVertexAttribArray(1);
+//        glEnableVertexAttribArray(0);
+//        glEnableVertexAttribArray(1);
+        textures.bindTextures();
     }
 
     private void drawVertices() {
@@ -150,10 +147,10 @@ public final class RenderBatch {
     }
 
     private void unbindVertices() {
-        glDisableVertexAttribArray(0);
-        glDisableVertexAttribArray(1);
+//        glDisableVertexAttribArray(0);
+//        glDisableVertexAttribArray(1);
         glBindVertexArray(0);
-        textures.forEach(GLTexture::unbind);
+        textures.unbindTextures();
     }
 
     /**
@@ -168,19 +165,15 @@ public final class RenderBatch {
     // Helper Methods
 
     /**
-     * Adds a texture to this render batch if the texture is not present and returns the texture ID.
+     * Adds a texture to this render batch if the texture is not present and returns
+     * the texture ID within the batch, which is not necessarily the OpenGL texture ID.
      *
      * @param tex the texture
-     * @return the texture ID
+     * @return the batch texture ID, 0 if color, otherwise 1-8
      */
     public int addTexture(GLTexture tex) {
-        if (tex == null) return 0; // if color return 0
-        if (!hasTexture(tex)) textures.add(tex); // add if don't have texture
-        return getTexID(tex);
-    }
-
-    private int getTexID(GLTexture tex) {
-        return textures.indexOf(tex) + 1;
+        if (!hasTexture(tex)) textures.addTexture(tex); // add if don't have texture
+        return textures.getTextureID(tex);
     }
 
     // Push Vertex Methods
@@ -214,7 +207,7 @@ public final class RenderBatch {
      * @return if this texture is used by the batch
      */
     public boolean hasTexture(GLTexture tex) {
-        return tex == null || textures.contains(tex);
+        return textures.containsTexture(tex);
     }
 
     /**
@@ -223,7 +216,7 @@ public final class RenderBatch {
      * @return if there are unused texture slots
      */
     public boolean hasTextureRoom() {
-        return textures.size() < MAX_TEXTURE_SLOTS;
+        return textures.hasRoom();
     }
 
     /**
@@ -238,6 +231,6 @@ public final class RenderBatch {
     @Override
     public String toString() {
         return String.format("Render Batch (Type: %s, Capacity: %d/%d, Z-Index: %d)",
-                primitive, vertices.size() / (vertexCount * vertexSize), maxBatchSize, zIndex);
+                primitive, vertices.size() / (vertexSize), maxBatchSize, zIndex);
     }
 }

@@ -5,11 +5,8 @@ import mayonez.annotations.*
 import mayonez.graphics.*
 import mayonez.graphics.debug.*
 import mayonez.graphics.sprites.*
-import mayonez.math.*
 import mayonez.math.shapes.*
-import mayonez.util.*
 import org.lwjgl.opengl.GL11.*
-import kotlin.math.*
 
 /**
  * Draws all sprites and debug information onto the screen using LWJGL's
@@ -52,8 +49,11 @@ internal class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"),
 
     override fun addShape(shape: DebugShape) {
         for (shapePart in shape.splitIntoParts()) {
-            if (shapePart is Edge) shapes.addLine(shapePart, shape, lineStyle)
-            else if (shapePart is Triangle) shapes.addShapeAndCopyBrush(shapePart, shape)
+            if (shapePart is Edge) {
+                shapes.addLine(shapePart, shape, lineStyle)
+            } else if (shapePart is Triangle) {
+                shapes.addShapeAndCopyBrush(shapePart, shape)
+            }
         }
     }
 

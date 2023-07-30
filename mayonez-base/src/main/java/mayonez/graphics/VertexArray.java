@@ -1,15 +1,19 @@
 package mayonez.graphics;
 
+import mayonez.annotations.*;
+
 import java.util.*;
 
 import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
 import static org.lwjgl.opengl.GL15.glBufferSubData;
 
 /**
- * A float array storing vertex data for a {@link mayonez.graphics.RenderBatch}, such as position, color, and texture (UV) coordinates.
+ * A float array storing vertex data for a {@link mayonez.graphics.RenderBatch}, such as
+ * position, color, and texture (UV) coordinates.
  *
  * @author SlavSquatSuperstar
  */
+@UsesEngine(EngineType.GL)
 class VertexArray {
 
     private final float[] vertices;
