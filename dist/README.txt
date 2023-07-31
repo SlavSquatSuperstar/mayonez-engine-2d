@@ -11,7 +11,7 @@ Here are instructions to run the program:
    b) On Windows, the command line is usually Powershell or Command Prompt.
 3. Drag the run script to your terminal window and press enter.
    a) If you are on Mac or Linux, use "run".
-   b) If you are on Windows, use "run.ps1".
+   b) If you are on Windows, use "run.bat".
 
 This software is licensed under the GNU General Public License, version 3 (GPLv3).
 See LICENSE.txt for more information.

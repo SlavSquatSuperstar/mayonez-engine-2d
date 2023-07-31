@@ -1,0 +1,30 @@
+@echo off
+
+rem Script Name: package.bat
+rem Purpose:     Packages the Mayonez Engine program for release on GitHub.
+rem Usage:       .\package.bat
+rem Author:      SlavSquatSuperstar
+
+rem Navigate to the project directory
+set SCRIPT_DIR=%~dp0
+cd %SCRIPT_DIR% || exit /b 1
+
+rem Build the Gradle Project
+echo Building Mayonez Engine...
+call .\gradlew.bat clean shadowJar
+
+if %ERRORLEVEL% equ 0 (
+    echo Successfully built Mayonez Engine.
+) else (
+    echo Error building Mayonez Engine.
+    exit /b 1
+)
+
+rem Copy the compiled .jar file
+copy build\libs\mayonez*.jar dist\mayonez*.jar
+
+rem Copy the license file
+copy LICENSE-GPLv3.txt dist\LICENSE.txt
+
+rem Show success message
+echo Successfully packaged Mayonez Engine.

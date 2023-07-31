@@ -70,7 +70,7 @@ Running the Program
 
 - Download this repository by pressing Code > Download ZIP on
   the [GitHub website](https://github.com/SlavSquatSuperstar/mayonez-engine-2d).
-- Drag `run` (Mac/Linux) or `run.ps1`/`run.bat` (Windows) from the extracted folder into a command line/terminal window
+- Drag `run` (Mac/Linux) or `run.bat` (Windows) from the extracted folder into a command line/terminal window
   and press Enter.
 
 ### Instructions for Developers

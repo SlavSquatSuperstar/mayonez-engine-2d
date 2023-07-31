@@ -1,66 +1,54 @@
 #!/bin/sh
 
-#
-# Builds and runs the project for Unix (macOS/Linux) users
-# or Windows users with Windows Subsystem for Linux installed.
-#
-# The user may pass optional in command-line arguments to change how
-# the application runs.
-#
-# Written by SlavSquatSuperstar
-#
+# Script Name: run
+# Purpose:     Builds and runs the project for Unix (macOS/Linux) users
+#              or Windows users with Windows Subsystem for Linux installed.
+# Usage:       ./run [-h/--help] [-n/--nobuild] [-e/--engine gl/awt]"
+# Author:      SlavSquatSuperstar
 
 # Navigate to the project directory
 SCRIPT_DIR=$(dirname "$0")
 cd "$SCRIPT_DIR" || exit
 
-# Set variable defaults
+# Initialize variables
 skip_build=false
+use_gl=true
 is_mac_os=false
-engine="gl"
 
 # Functions
 
+# Show help and exit with a code
 show_help() {
-  # Show help and exit with a code
-  echo "Usage: run [-h/--help] [-n/--nobuild] [-e/--engine gl/awt]"
+  echo "Usage: ./run [-h/--help] [-n/--nobuild] [-e/--engine gl/awt]"
   exit "$1"
 }
 
+# Configure the program to run using GL/AWT
 set_engine_type() {
-  engine=$1
-  # Check for GL/AWT
   if [ "$1" = "gl" ]; then
-    echo "Launching with OpenGL Engine."
+    use_gl=true
   elif [ "$1" = "awt" ]; then
-    echo "Launching with AWT Engine."
-  else
-    echo "Unknown engine type \"$1\""
+    use_gl=false
+  elif [ "$1" = "" ]; then
+    'Option "--engine" requires one argument'
     show_help 1
-    exit 1
-  fi
-}
-
-build_gradle_project() {
-  echo "Building Mayonez Engine..."
-  if [ "$(./gradlew clean shadowJar)" ]; then
-    echo "Successfully built Mayonez Engine."
   else
-    echo "Error building Mayonez Engine."
-    exit 1
+    echo "Invalid engine type \"$1\"."
+    show_help 1
   fi
 }
 
+# Launch the jar with VM and CL args
 run_jar() {
-  # Launch the jar with or without VM args
-  if [ "$1" ]; then
-    java "$1" -jar build/libs/*.jar "--engine" "$engine"
+  if [ "$2" ]; then
+    java "$2" -jar build/libs/*.jar "--engine" "$1"
   else
-    java -jar build/libs/*.jar "--engine" "$engine"
+    java -jar build/libs/*.jar "--engine" "$1"
   fi
+  exit $?
 }
 
-# Read arguments
+# Parse user arguments
 while :; do
   case $1 in
   --help | -h)
@@ -74,16 +62,17 @@ while :; do
       set_engine_type "$2"
       shift
     else
-      echo 'Option "--engine" requires one argument'
+      echo 'Option "--engine" requires one argument'.
       show_help 1
     fi
     ;;
-  -*)
-    echo "Invalid option \"$1\""
-    show_help 1
+  "")
+    # End of arguments
+    break
     ;;
   *)
-    break
+    echo "Invalid option \"$1\"".
+    show_help 1
     ;;
   esac
   shift
@@ -116,23 +105,29 @@ case "$OSTYPE" in
   ;;
 esac
 
-# Build the application for Unix systems
+# Build the application for Unix
 if ! "$skip_build"; then
-  build_gradle_project
+  echo "Building Mayonez Engine..."
+  if [ "$(./gradlew clean shadowJar)" ]; then
+    echo "Successfully built Mayonez Engine."
+  else
+    echo "Error building Mayonez Engine."
+    exit 1
+  fi
 else
   echo "Skipping build."
 fi
 
 # Run the compiled .jar file
-if [ "$engine" = "gl" ]; then
+if $use_gl; then
   echo "Launching with OpenGL Engine."
   if $is_mac_os; then
     # LWJGL requires a special argument on macOS
-    run_jar "-XstartOnFirstThread"
+    run_jar "gl" "-XstartOnFirstThread"
   else
-    run_jar
+    run_jar "awt"
   fi
 else
   echo "Launching with AWT Engine."
-  run_jar
+  run_jar "awt"
 fi

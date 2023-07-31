@@ -1,45 +1,53 @@
 #!/bin/sh
 
+# Script Name: run
+# Purpose:     Runs the project for Unix (macOS/Linux) users or
+#              Windows users with Windows Subsystem for Linux installed.
+# Usage:       ./run [-h/--help] [-e/--engine gl/awt]"
+# Author:      SlavSquatSuperstar
+
 # Navigate to the project directory
 SCRIPT_DIR=$(dirname "$0")
 cd "$SCRIPT_DIR" || exit
 
-# Set variable defaults
+# Initialize variables
+use_gl=true
 is_mac_os=false
-engine="gl"
 
 # Functions
 
+# Show help and exit with a code
 show_help() {
-  # Show help and exit with a code
   echo "Usage: run [-h/--help] [-e/--engine gl/awt]"
   exit "$1"
 }
 
+# Configure the program to run using GL/AWT
 set_engine_type() {
-  engine=$1
-  # Check for GL/AWT
   if [ "$1" = "gl" ]; then
-    echo "Launching with OpenGL Engine."
+    use_gl=true
   elif [ "$1" = "awt" ]; then
-    echo "Launching with AWT Engine."
-  else
-    echo "Unknown engine type \"$1\""
+    use_gl=false
+  elif [ "$1" = "" ]; then
+    'Option "--engine" requires one argument'
     show_help 1
-    exit 1
-  fi
-}
-
-run_jar() {
-  # Launch the jar with or without VM args
-  if [ "$1" ]; then
-    java "$1" -jar *.jar "--engine" "$engine"
   else
-    java -jar *.jar "--engine" "$engine"
+    echo "Invalid engine type \"$1\"."
+    show_help 1
   fi
 }
 
-# Read arguments
+# Launch the jar with VM and CL args
+run_jar() {
+  if [ "$2" ]; then
+    java "$2" -jar build/libs/*.jar "--engine" "$1"
+  else
+    java -jar build/libs/*.jar "--engine" "$1"
+  fi
+  exit $?
+}
+
+# Parse user arguments
 while :; do
   case $1 in
   --help | -h)
@@ -54,12 +62,13 @@ while :; do
       show_help 1
     fi
     ;;
-  -*)
-    echo "Invalid option \"$1\""
-    show_help 1
+  "")
+    # End of arguments
+    break
     ;;
   *)
-    break
+    echo "Invalid option \"$1\"".
+    show_help 1
     ;;
   esac
   shift
@@ -93,15 +102,15 @@ case "$OSTYPE" in
 esac
 
 # Run the compiled .jar file
-if [ "$engine" = "gl" ]; then
+if $use_gl; then
   echo "Launching with OpenGL Engine."
   if $is_mac_os; then
     # LWJGL requires a special argument on macOS
-    run_jar "-XstartOnFirstThread"
+    run_jar "gl" "-XstartOnFirstThread"
   else
-    run_jar
+    run_jar "awt"
   fi
 else
   echo "Launching with AWT Engine."
-  run_jar
+  run_jar "awt"
 fi
