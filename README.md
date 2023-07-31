@@ -50,27 +50,27 @@ This fully-operational game engine includes:
 
 - 64-bit operating system
 - Graphics card supporting OpenGL 3.3
-- Java 17 (see further instructions)
+- Java 17 or above (see further instructions)
 
 ### Instructions for Players
 
 Installing Java
 
-- Download the latest Java LTS release: [Eclipse Temurin 17+](https://adoptium.net)
-  or [Oracle OpenJDK 17+](https://www.oracle.com/java/technologies/downloads/#java17)
-    - If you do not intend on writing code, then download the [JRE](https://adoptium.net/temurin/releases) instead.
-    - Make sure to select "JRE" under "Package Type" and the correct operating system and architecture for your
+- Download the latest [Java LTS release](https://adoptium.net/temurin/releases)
+    - Select "JRE" under "Package Type" and the correct operating system and architecture for your
       computer.
-- Extract and run the installer, then check if Java is installed by entering `java --version` inside a command
+    - Download the .pkg/.msi GUI installer if you do not know how to manually install Java, or else download the .zip
+      file.
+- Run or extract the installer, then check if Java is installed by running `java --version` inside a command
   line/terminal window.
     - On Mac/Linux, the terminal app is usually Terminal.
-    - On Windows, the terminal app is usually Command Prompt or PowerShell.
+    - On Windows, the terminal app is usually PowerShell or Command Prompt.
 
 Running the Program
 
 - Download this repository by pressing Code > Download ZIP on
   the [GitHub website](https://github.com/SlavSquatSuperstar/mayonez-engine-2d).
-- Drag `run` (Mac/Linux) or `run.bat`/`run.psi` (Windows) from the extracted folder into a command line/terminal window
+- Drag `run` (Mac/Linux) or `run.ps1`/`run.bat` (Windows) from the extracted folder into a command line/terminal window
   and press Enter.
 
 ### Instructions for Developers
@@ -85,7 +85,7 @@ Editing the Project
 - There are several preset Gradle tasks included to help in your development:
     - Run: Launches the program with the demo scenes using `runShadow`
     - Test: Runs unit tests using JUnit
-    - Compile: Builds the .jar file using `shadowJar`
+    - Build: Builds the fat .jar file with dependencies using `shadowJar`
     - Export: Build the .jar and generates JavaDoc using `dokkaJavadocCollector`
 
 Development Tools and Libraries

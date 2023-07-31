@@ -1,0 +1,29 @@
+#!/bin/sh
+
+#
+# Packages the program for release on GitHub.
+#
+# Written by SlavSquatSuperstar
+#
+
+# Navigate to the project directory
+SCRIPT_DIR=$(dirname "$0")
+cd "$SCRIPT_DIR" || exit
+
+# Build the gradle project
+echo "Building Mayonez Engine..."
+  if [ "$(./gradlew clean shadowJar)" ]; then
+    echo "Successfully built Mayonez Engine."
+  else
+    echo "Error building Mayonez Engine."
+    exit 1
+  fi
+
+# Move the compiled .jar file
+mv build/libs/*.jar dist/
+
+# Copy the license file
+cp LICENSE-GPLv3.txt dist/LICENSE.txt
+
+# Show success message
+echo "Successfully packaged Mayonez Engine."

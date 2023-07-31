@@ -1,0 +1,13 @@
+# Jar Files
+*.jar
+
+# Log files
+*.log
+logs/
+hs_err_pid*
+
+# MacOS files
+.DS_Store
+
+# License file (just a copy of LICENSE-GPLv3.txt)
+LICENSE*.txt
