@@ -17,6 +17,14 @@ import java.util.stream.*;
  * Generally, with entity-component-system, the GameObject (entity) class should not be extended,
  * as most of the functionality should be provided with Component and Script subclasses.
  * However, the GameObject class may still be extended to provide reusable prefab objects.
+ * <p>
+ * Usage: Create a game object by instantiating a subclass or anonymous instance of
+ * {@link mayonez.GameObject}. Add components to the object by calling {@link #addComponent}
+ * inside the {@link #init} method. The object's transform can be referenced through the field
+ * {@link #transform}. To remove the object from the scene, call {@link #destroy} from any
+ * of its components.
+ * <p>
+ * See {@link mayonez.Component} and {@link mayonez.Scene} for more information.
  *
  * @author SlavSquatSuperstar
  */

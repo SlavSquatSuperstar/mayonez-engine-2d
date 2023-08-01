@@ -6,7 +6,19 @@ import java.util.*;
 
 /**
  * Defines traits and behaviors of a {@link mayonez.GameObject}. Each component can be
- * enabled or disabled.
+ * enabled or disabled through {@link mayonez.Component#setEnabled}. Generally, most
+ * user-defined components will be a {@link mayonez.Script} subclass.
+ * <p>
+ * Usage: Create a component by instantiating a subclass of {@link mayonez.Component}.
+ * Any component fields through the constructor should be initialized through the
+ * {@link #start} method, which allows them to be restored when the scene is reloaded.
+ * Update component fields in {@link #update} or draw debug information in {@link #debugRender}.
+ * The component's parent scene can be accessed through the {@link #getScene()} method,
+ * and its {@link mayonez.GameObject} and transform can be accessed through the
+ * {@link #gameObject} and {@link #transform} fields. To remove the component from its
+ * object, call {@link #destroy}.
+ * <p>
+ * See {@link mayonez.GameObject} and {@link mayonez.Script} for more information.
  *
  * @author SlavSquatSuperstar
  */

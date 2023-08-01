@@ -1,5 +1,5 @@
-Thank you for downloading Mayonez Engine!
-The current version is v0.7.8. Find the latest release at https://github.com/SlavSquatSuperstar/mayonez-engine-2d.
+Thank you for downloading Mayonez Engine v0.7.8!
+Find the latest release at https://github.com/SlavSquatSuperstar/mayonez-engine-2d/releases.
 
 Running the Program
 1. Install the Java Runtime Environment (JRE) on your system.

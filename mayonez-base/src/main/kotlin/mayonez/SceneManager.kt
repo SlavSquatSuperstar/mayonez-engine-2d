@@ -1,11 +1,19 @@
 package mayonez
 
+import mayonez.init.*
 import mayonez.util.*
 
 /**
  * Provides an interface to the user for reloading and switching scenes.
  * Only one scene may be active at once.
  *
+ * Usage: Scenes can be preloaded into the SceneManager through the
+ * [Launcher.loadScenesToManager] method before the application starts running.
+ * Scenes can be added at any time with [SceneManager.addScene] and retrieved with
+ * [SceneManager.getScene]. To switch scenes, use the [SceneManager.setScene] method
+ * to set a new scene or the [SceneManager.loadScene] method to resume an existing scene.
+ *
+ * See [Launcher] and [Scene] for more information.
  * @author SlavSquatSuperstar
  */
 object SceneManager {
@@ -42,7 +50,8 @@ object SceneManager {
     }
 
     /**
-     * Loads a new scene and starts it.
+     * Switches the active scene to the given scene. If the scene is running, it will be
+     * restarted.
      *
      * @param scene a scene instance
      */
@@ -56,8 +65,8 @@ object SceneManager {
     }
 
     /**
-     * Loads an existing scene with the given name and resumes it. The scene
-     * will also be initialized if needed.
+     * Pauses the current scene, and then resumes or starts an existing scene with the
+     * given name.
      *
      * @param name the scene's name
      */
@@ -76,7 +85,8 @@ object SceneManager {
 
     /** Starts the current scene and initializes all its game objects. */
     @JvmStatic
-    fun startScene() {
+    @JvmName("startScene")
+    internal fun startScene() {
         if (sceneState == SceneState.STOPPED) {
             currentScene.start()
             Logger.debug("Started scene \"%s\"", currentScene.name)
@@ -85,7 +95,8 @@ object SceneManager {
 
     /** Stops the current scene and destroys all its game objects. */
     @JvmStatic
-    fun stopScene() {
+    @JvmName("stopScene")
+    internal fun stopScene() {
         if (sceneState != SceneState.STOPPED) {
             currentScene.stop()
             Logger.debug("Stopped scene \"%s\"", currentScene.name)
@@ -120,7 +131,7 @@ object SceneManager {
 
     /** Clears all stored scenes from the scene pool. */
     @JvmStatic
-    fun clear() = scenes.clear()
+    fun clearScenes() = scenes.clear()
 
     /**
      * Saves a scene to the scene pool without initializing it and allows it to

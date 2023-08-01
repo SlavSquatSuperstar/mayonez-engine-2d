@@ -17,8 +17,15 @@ import java.util.Queue;
 import java.util.*;
 
 /**
- * An in-game world or level that holds multiple {@link GameObject}s. Each scene can be
- * given a background image or color.
+ * An in-game world or level that holds multiple {@link mayonez.GameObject}s. Each scene
+ * can  be given a background image or color.
+ * <p>
+ * Usage: Create a scene by instantiating a subclass or anonymous instance of
+ * {@link mayonez.Scene}. Add objects to the scene by calling {@link #addObject}
+ * inside the {@link #init()} method. Scenes may also define custom game logic
+ * and graphics inside {@link #onUserUpdate} and {@link #onUserRender}.
+ * <p>
+ * See {@link mayonez.GameObject} and {@link mayonez.SceneManager} for more information.
  *
  * @author SlavSquatSuperstar
  */

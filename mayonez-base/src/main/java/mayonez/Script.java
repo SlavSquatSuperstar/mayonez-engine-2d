@@ -5,8 +5,15 @@ import mayonez.physics.*;
 import mayonez.physics.colliders.*;
 
 /**
- * A controllable and reusable behavior for a {@link GameObject} which provides additional
- * callback functions that the user can override.
+ * A controllable and reusable behavior for a {@link mayonez.GameObject} which provides
+ * additional callback functions that the user can override.
+ * <p>
+ * Usage: Scripts have an additional {@link #init} function, which allows them to add
+ * additional components to the game object before the scene starts. Scripts also receive
+ * callback functions, such as {@link #onEnable()} and {@link #onCollisionEnter}, which are
+ * called during game and collision events.
+ * <p>
+ * See {@link mayonez.GameObject} and {@link mayonez.Script} for more information.
  *
  * @author SlavSquatSuperstar
  */

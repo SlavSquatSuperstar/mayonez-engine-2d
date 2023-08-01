@@ -12,6 +12,8 @@ import mayonez.util.Record;
  * from the arguments or manually enter them through {@link #setRunConfig(RunConfig)}.
  * Then, preload in any number of scenes using {@link #loadScenesToManager(Scene...)}
  * and then start the game with {@link #startGame(Scene)} or {@link #startGame(String)}.
+ * <p>
+ * See {@link mayonez.SceneManager} for more information.
  *
  * @author SlavSquatSuperstar
  */

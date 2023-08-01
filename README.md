@@ -4,7 +4,7 @@ The ultimate made-from-scratch and open-source 2D Java game engine to fit your S
 
 <img src="https://img.shields.io/badge/platform-macOS-lightgrey"></img>
 <img src="https://img.shields.io/badge/platform-Windows-lightgrey"></img>
-<img src="https://img.shields.io/badge/stable-v0.7.7-green"></img>
+<img src="https://img.shields.io/badge/stable-v0.7.8-green"></img>
 <img src=https://img.shields.io/badge/build-passing-brightgreen></img>
 
 <img src="https://img.shields.io/badge/Made%20with-Java-red"></img>
@@ -68,8 +68,8 @@ Installing Java
 
 Running the Program
 
-- Download this repository by pressing Code > Download ZIP on
-  the [GitHub website](https://github.com/SlavSquatSuperstar/mayonez-engine-2d).
+- Download the .zip file for the latest release under the
+- [releases section](https://github.com/SlavSquatSuperstar/mayonez-engine-2d/releases) on the GitHub website.
 - Drag `run` (Mac/Linux) or `run.bat` (Windows) from the extracted folder into a command line/terminal window
   and press Enter.
 
