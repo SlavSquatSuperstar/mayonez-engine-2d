@@ -13,12 +13,20 @@ import mayonez.physics.colliders.*;
  */
 public class ShapeSprite extends Component {
 
+    // Component References
     private Collider collider;
-    private Shape shape;
 
+    // Shape Draw Fields
+    private Shape shape;
     private final Color color;
     private final boolean fill;
 
+    /**
+     * Create a new ShapeSprite that draws the object's collider.
+     *
+     * @param color the color to draw as
+     * @param fill  whether to fill the shape interior
+     */
     public ShapeSprite(Color color, boolean fill) {
         this.color = color;
         this.fill = fill;
@@ -33,6 +41,8 @@ public class ShapeSprite extends Component {
 
     @Override
     public void debugRender() {
+        shape = getColliderShape();
+
         if (fill) {
             var shapeBrush = ShapeBrush.createSolidBrush(color).setZIndex(gameObject.getZIndex());
             getScene().getDebugDraw().fillShape(shape, shapeBrush);
@@ -42,23 +52,18 @@ public class ShapeSprite extends Component {
         }
     }
 
-    @Override
-    public void update(float dt) {
-        shape = getColliderShape();
-    }
-
     // Getter Methods
 
-    public Shape getColliderShape() {
+    public Color getColor() {
+        return color;
+    }
+
+    private Shape getColliderShape() {
         if (collider == null) {
             return new Rectangle(transform.getPosition(), transform.getScale());
         } else {
             return collider.transformToWorld();
         }
-    }
-
-    public Color getColor() {
-        return color;
     }
 
 }

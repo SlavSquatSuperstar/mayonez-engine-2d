@@ -6,14 +6,14 @@
 module mayonez.base {
     // JVM
     requires transitive java.desktop;
-    requires transitive kotlin.stdlib;
+    requires kotlin.stdlib;
 
     // LWJGL
     requires org.lwjgl;
     requires org.lwjgl.glfw;
     requires org.lwjgl.opengl;
     requires org.lwjgl.stb;
-    requires transitive org.joml;
+    requires org.joml;
 
     // Other Dependencies
     requires org.json;

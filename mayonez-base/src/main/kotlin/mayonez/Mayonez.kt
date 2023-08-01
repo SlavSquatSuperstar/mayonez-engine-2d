@@ -15,7 +15,6 @@ import kotlin.system.exitProcess
  * SceneManager.addScene(). Finally, start the game with a scene with
  * Mayonez.start().
  */
-// TODO hide setConfig/start
 object Mayonez {
 
     // Run Fields
@@ -29,12 +28,14 @@ object Mayonez {
         get() = Vec2(Preferences.screenWidth.toFloat(), Preferences.screenHeight.toFloat())
 
     @JvmStatic
-    var useGL: Boolean = false // crashes tests when set to true :\
+    internal var useGL: Boolean = false // crashes tests when set to true :\
+        @JvmName("getUseGL") get
         private set
 
     // Init Methods
     @JvmStatic
-    fun setConfig(config: RunConfig) {
+    @JvmName("setConfig")
+    internal fun setConfig(config: RunConfig) {
         if (!initialized) {
             this.useGL = config.useGL
             initializeSingletons()
@@ -75,7 +76,8 @@ object Mayonez {
      * @param scene the starting scene
      */
     @JvmStatic
-    fun start(scene: Scene?) {
+    @JvmName("start")
+    internal fun start(scene: Scene?) {
         if (!initialized) {
             exitWithErrorMessage("Cannot start program without setting run configuration")
         } else if (scene == null) {

@@ -1,6 +1,5 @@
 package slavsquatsuperstar.demos.spacegame;
 
-import kotlin.Pair;
 import mayonez.*;
 import mayonez.graphics.*;
 import mayonez.input.*;
@@ -9,15 +8,13 @@ import mayonez.math.*;
 import mayonez.math.shapes.*;
 import mayonez.scripts.*;
 import mayonez.util.*;
-import slavsquatsuperstar.demos.spacegame.objects.Asteroid;
-import slavsquatsuperstar.demos.spacegame.objects.EnemyShip;
-import slavsquatsuperstar.demos.spacegame.objects.PlayerShip;
+import slavsquatsuperstar.demos.spacegame.objects.*;
 
 import java.util.*;
 
 public class SpaceGameScene extends Scene {
 
-    private final ArrayList<Pair<Shape, Color>> backgroundObjects;
+    private final List<BackgroundObject> backgroundObjects;
     private final int numEnemies, numObstacles, numStars;
 
     public SpaceGameScene(String name) {
@@ -66,9 +63,9 @@ public class SpaceGameScene extends Scene {
     }
 
     private void addSolarSystem() {
-        addBackgroundObject(new Circle(new Vec2(-10, -8), 10), Colors.DARK_BLUE); // Earth
-        addBackgroundObject(new Circle(new Vec2(12.5f, 7.5f), 2f), Colors.DARK_GRAY); // Moon
-        addBackgroundObject(new Circle(new Vec2(-12, 11), 1.5f), Colors.YELLOW); // Sun
+        addBackgroundObject("Earth", new Circle(new Vec2(-10, -8), 10), Colors.DARK_BLUE);
+        addBackgroundObject("Moon", new Circle(new Vec2(12.5f, 7.5f), 2f), Colors.DARK_GRAY);
+        addBackgroundObject("Sun", new Circle(new Vec2(-12, 11), 1.5f), Colors.YELLOW);
     }
 
     private void addBackgroundStars() {
@@ -81,7 +78,7 @@ public class SpaceGameScene extends Scene {
 
             var starDist = Random.randomFloat(5, 20) * 5f;
             var starColor = new Color(Random.randomInt(192, 255), Random.randomInt(192, 255), Random.randomInt(192, 255));
-            addBackgroundObject(new Circle(starPos, starSize / starDist), starColor); // Star
+            addBackgroundObject("Star", new Circle(starPos, starSize / starDist), starColor);
         }
     }
 
@@ -94,13 +91,11 @@ public class SpaceGameScene extends Scene {
 
     @Override
     protected void onUserRender() {
-        for (var obj : backgroundObjects) {
-            getDebugDraw().fillShape(obj.getFirst(), obj.getSecond());
-        }
+        backgroundObjects.forEach(obj -> obj.debugDraw(getDebugDraw()));
     }
 
-    private void addBackgroundObject(Shape objShape, Color objColor) {
-        backgroundObjects.add(new Pair<>(objShape, objColor));
+    private void addBackgroundObject(String name, Shape shape, Color color) {
+        backgroundObjects.add(new BackgroundObject(name, shape, color));
     }
 
 }

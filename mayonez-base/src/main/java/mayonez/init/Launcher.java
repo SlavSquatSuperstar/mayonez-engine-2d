@@ -8,10 +8,10 @@ import mayonez.util.Record;
  * and starts the application.
  * <p>
  * Usage: Construct a {@link mayonez.init.Launcher} object and optionally pass in
- * command-line arguments. First, call {@link #setRunConfig()} to parse the {@link mayonez.init.RunConfig}
- * from the arguments or manually enter them through {@link #setRunConfig(RunConfig)}.
- * Then, preload in any number of scenes using {@link #loadScenesToManager(Scene...)}
- * and then start the game with {@link #startGame(Scene)} or {@link #startGame(String)}.
+ * command-line arguments. First, call {@link #setRunConfig()} to parse the
+ * {@link mayonez.init.RunConfig} from the arguments. Then, preload in any number
+ * of scenes using {@link #loadScenesToManager(Scene...)} and then start the game with
+ * {@link #startGame(Scene)} or {@link #startGame(String)}.
  * <p>
  * See {@link mayonez.SceneManager} for more information.
  *
@@ -38,17 +38,6 @@ public class Launcher {
     }
 
     // Run Config Methods
-
-    /**
-     * Set the run config after constructing the launcher.
-     *
-     * @param config the config
-     * @return this object
-     */
-    public Launcher setRunConfig(RunConfig config) {
-        Mayonez.setConfig(config);
-        return this;
-    }
 
     /**
      * Automatically set the run config using the provided arguments
