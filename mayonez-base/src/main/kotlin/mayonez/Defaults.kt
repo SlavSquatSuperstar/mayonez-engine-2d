@@ -1,5 +1,6 @@
 package mayonez
 
+import mayonez.init.*
 import mayonez.util.*
 
 /**
@@ -10,7 +11,7 @@ import mayonez.util.*
 object Defaults {
 
     // Application
-    private const val TITLE: String = "Mayonez Engine"
+    private const val TITLE: String = "<No Title>"
     private const val VERSION: String = "<Unknown Version>"
 
     // Graphical
@@ -18,17 +19,22 @@ object Defaults {
     private const val SCREEN_HEIGHT: Int = 720
     private const val FPS: Int = 60
 
-    val PREFERENCES: Record = Record()
+    val preferences: Record = Record()
 
     init {
         // Application
-        PREFERENCES["title"] = TITLE
-        PREFERENCES["version"] = VERSION
+        preferences["title"] = TITLE
+        preferences["version"] = VERSION
 
         // Graphical
-        PREFERENCES["screen_width"] = SCREEN_WIDTH
-        PREFERENCES["screen_height"] = SCREEN_HEIGHT
-        PREFERENCES["fps"] = FPS
+        preferences["screen_width"] = SCREEN_WIDTH
+        preferences["screen_height"] = SCREEN_HEIGHT
+        preferences["fps"] = FPS
+
+        // Logging
+        preferences["log_level"] = LoggerConfig.DEFAULT_LOG_LEVEL
+        preferences["save_logs"] = LoggerConfig.DEFAULT_SAVE_LOGS
+        preferences["log_directory"] = LoggerConfig.DEFAULT_LOG_DIRECTORY
     }
 
 }

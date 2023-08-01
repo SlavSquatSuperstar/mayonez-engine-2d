@@ -40,9 +40,9 @@ set_engine_type() {
 # Launch the jar with VM and CL args
 run_jar() {
   if [ "$2" ]; then
-    java "$2" -jar build/libs/*.jar "--engine" "$1"
+    java "$2" -jar mayonez*.jar "--engine" "$1"
   else
-    java -jar build/libs/*.jar "--engine" "$1"
+    java -jar mayonez*.jar "--engine" "$1"
   fi
   exit $?
 }

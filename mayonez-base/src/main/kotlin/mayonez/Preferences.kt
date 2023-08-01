@@ -4,8 +4,6 @@ import mayonez.init.*
 import mayonez.io.text.*
 import mayonez.util.*
 
-// TODO need to validate preferences
-
 /**
  * A collection of user-changeable application parameters.
  *
@@ -14,16 +12,23 @@ import mayonez.util.*
 object Preferences {
 
     private const val PREFS_FILENAME = "preferences.json"
-    private val preferences: Record = Defaults.PREFERENCES.copy()
+    private val preferences: Record = Defaults.preferences.copy()
     private var initialized = false
 
-    internal fun readFromFile() {
+    // Read Preferences Methods
+
+    internal fun setPreferences() {
         if (!initialized) {
-            val prefsFile = JSONFile(PREFS_FILENAME)
-            preferences.addAll(prefsFile.readJSON())
+            preferences.setFromFile(PREFS_FILENAME)
             Logger.debug("Loaded preferences from $PREFS_FILENAME")
             initialized = true
         }
+    }
+
+    private fun Record.setFromFile(filename: String) {
+        val userPrefs = JSONFile(filename).readJSON()
+        userPrefs.validate(this)
+        this.setFrom(userPrefs)
     }
 
     // Application
@@ -46,6 +51,7 @@ object Preferences {
     val screenHeight: Int
         get() = preferences.getInt("screen_height")
 
+    // TODO effects timestep but doesn't limit render rate yet
     @JvmStatic
     val fps: Int
         get() = preferences.getInt("fps")
@@ -57,6 +63,15 @@ object Preferences {
             preferences.getInt("log_level"),
             preferences.getString("log_directory")
         )
+    }
+
+    // Validation Functions
+
+    private fun Record.validate(defaults: Record) {
+        StringValidator("title", "version", "log_directory").validate(this, defaults)
+        IntValidator(240, 3840, "screen_height", "screen_width").validate(this, defaults)
+        IntValidator(150, 240, "fps").validate(this, defaults)
+        IntValidator(0, 5, "log_level").validate(this, defaults)
     }
 
 }

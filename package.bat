@@ -23,8 +23,9 @@ if %ERRORLEVEL% equ 0 (
 rem Copy the compiled .jar file
 copy build\libs\mayonez*.jar dist\mayonez*.jar
 
-rem Copy the license file
+rem Copy resource files
 copy LICENSE-GPLv3.txt dist\LICENSE.txt
+copy preferences.json dist\preferences.json
 
 rem Show success message
 echo Successfully packaged Mayonez Engine.

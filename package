@@ -21,8 +21,9 @@ fi
 # Copy the compiled .jar file
 cp build/libs/mayonez*.jar dist/
 
-# Copy the license file
+# Copy resource files
 cp LICENSE-GPLv3.txt dist/LICENSE.txt
+cp preferences.json dist/
 
 # Show success message
 echo "Successfully packaged Mayonez Engine."

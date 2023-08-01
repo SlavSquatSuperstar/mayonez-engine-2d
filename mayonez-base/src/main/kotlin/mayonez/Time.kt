@@ -18,6 +18,11 @@ object Time {
     // Static Properties
     @JvmStatic
     var timeStepSecs = DEFAULT_TIME_STEP_SECS
+        internal set(timeStepSecs) {
+            if (timeStepSecs > 0 && timeStepSecs.isFinite()) {
+                field = timeStepSecs
+            }
+        }
 
 //    /**
 //     * How sped up or slowed down the in-game time passes. A scale of 1.0 (100%

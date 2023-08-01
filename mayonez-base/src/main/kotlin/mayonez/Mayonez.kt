@@ -51,7 +51,7 @@ object Mayonez {
         Logger.log("Starting program...")
         Time.debugCurrentDateTime()
 
-        Preferences.readFromFile()
+        Preferences.setPreferences()
         Time.timeStepSecs = (1f / Preferences.fps)
         Logger.setConfig(Preferences.getLoggerConfig())
         Logger.log("Started %s %s", Preferences.title, Preferences.version)

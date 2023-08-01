@@ -9,5 +9,6 @@ hs_err_pid*
 # MacOS files
 .DS_Store
 
-# License file (just a copy of LICENSE-GPLv3.txt)
+# Duplicate resource files
 LICENSE*.txt
+preferences.json

@@ -8,7 +8,7 @@ import mayonez.input.*;
  *
  * @author SlavSquatSuperstar
  */
-sealed interface Window permits JWindow, GLWindow {
+public sealed interface Window permits JWindow, GLWindow {
 
     // Property Getters
 
