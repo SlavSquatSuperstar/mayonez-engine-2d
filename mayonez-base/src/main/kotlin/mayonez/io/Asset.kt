@@ -35,7 +35,10 @@ open class Asset(filename: String) {
      */
     @Throws(IOException::class)
     fun openInputStream(): InputStream {
-        if (!filePath.isReadable()) throw IOException("$locationType asset $filename is not readable")
+        if (!filePath.isReadable()) {
+            throw IOException("$locationType asset $filename is not readable")
+        }
+
         return when (locationType) {
             LocationType.CLASSPATH -> openClasspathInputStream()
             LocationType.EXTERNAL -> openExternalInputStream()
@@ -68,9 +71,15 @@ open class Asset(filename: String) {
      */
     @Throws(IOException::class)
     fun openOutputStream(append: Boolean): OutputStream {
-        if (!filePath.isWritable()) throw IOException("$locationType asset $filename is not writable")
-        val options = if (append) arrayOf(StandardOpenOption.CREATE, StandardOpenOption.APPEND)
-        else arrayOf(StandardOpenOption.CREATE)
+        if (!filePath.isWritable()) {
+            throw IOException("$locationType asset $filename is not writable")
+        }
+
+        val options = if (append) {
+            arrayOf(StandardOpenOption.CREATE, StandardOpenOption.APPEND)
+        } else {
+            arrayOf(StandardOpenOption.CREATE)
+        }
         return openExternalOutputStream(*options)
     }
 

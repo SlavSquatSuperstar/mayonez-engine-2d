@@ -151,38 +151,36 @@ open class Record(map: Map<String?, Any?>) {
     fun copy(): Record = Record(this.map)
 
     /**
-     * Sets this record as a copy of another record, clearing all stored data
-     * and replacing it with data from the other object.
+     * Adds all key-value pairs from another record. Any keys that exist in both
+     * records are overwritten with the value from the other record, as long
+     * as that value is not null.
      *
      * @param record another record
      */
-    fun copyFrom(record: Record) {
-        clear() // erase all data
-        record.map.entries.forEach {
-            map[it.key] = it.value // copy all data
-        }
-    }
-
-    /**
-     * Adds all key-value pairs from another record but does not erase any
-     * pre-existing data. If any new entries contain a key already in this
-     * record, their new values are used, as long as they are not null.
-     *
-     * @param record another record
-     */
-    fun addAll(record: Record) {
+    fun setFrom(record: Record) {
         record.map.entries
             .filter { it.value != null }
             .forEach { map[it.key] = it.value }
     }
 
-    // Map Methods
+    /**
+     * Overwrites the entry stored in this record under the given key with the
+     * key-value pair from another record, as long as the value is not null.
+     *
+     * @param record another record
+     * @param key the key for the entry
+     */
+    fun setFrom(record: Record, key: String?) {
+        if (record[key] != null) this.map[key] = record[key]
+    }
 
-    /** The number of key-value pairs stored in this record. */
-    fun size(): Int = map.size
+    // Map Methods
 
     /** Deletes all key-value pairs from this record. */
     fun clear() = map.clear()
+
+    /** The number of key-value pairs stored in this record. */
+    fun size(): Int = map.size
 
     /**
      * Converts this record to an object-to-object map.

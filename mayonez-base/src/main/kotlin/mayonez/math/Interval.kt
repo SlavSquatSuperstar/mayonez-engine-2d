@@ -9,6 +9,9 @@ import java.util.*
  * @author SlavSquatSuperstar
  */
 class Interval(min: Float, max: Float) {
+
+    constructor(min: Int, max: Int): this(min.toFloat(), max.toFloat())
+
     @JvmField
     val min = min.coerceAtMost(max)
 
@@ -48,12 +51,20 @@ class Interval(min: Float, max: Float) {
     // Operator Overrides
 
     /**
-     * If the given number is within this range's bounds.
+     * If the given float is within this range's bounds.
      *
      * @param value a number
      * @return if the number is in this range
      */
     operator fun contains(value: Float): Boolean = (min <= value) && (value <= max)
+
+    /**
+     * If the given integer is within this range's bounds.
+     *
+     * @param value a number
+     * @return if the number is in this range
+     */
+    operator fun contains(value: Int): Boolean = (min <= value) && (value <= max)
 
     /**
      * If this range contains another range entirely.
@@ -71,4 +82,5 @@ class Interval(min: Float, max: Float) {
     override fun hashCode(): Int = Objects.hash(min, max)
 
     override fun toString(): String = "Range ($min, $max)"
+
 }

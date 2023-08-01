@@ -14,19 +14,21 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author SlavSquatSuperstar
  */
 class ConstructorTest {
+    
+    private static final String TEST_FILENAME = "src/test/resources/testassets/text/properties.txt";
 
     @Test
     void newSuperclassInstanceSuccess() throws Exception {
-        Asset inst = instantiateAsset(Asset.class, "preferences.json");
-        assertEquals("preferences.json", inst.getFilename());
-        assertEquals(inst.getLocationType(), LocationType.CLASSPATH);
+        Asset inst = instantiateAsset(Asset.class, TEST_FILENAME);
+        assertEquals(TEST_FILENAME, inst.getFilename());
+        assertEquals(inst.getLocationType(), LocationType.EXTERNAL);
     }
 
     @Test
     void newSubclassInstanceSuccess() throws Exception {
-        TextFile inst = instantiateAsset(TextFile.class, "preferences.json");
-        assertEquals("preferences.json", inst.getFilename());
-        assertEquals(inst.getLocationType(), LocationType.CLASSPATH);
+        TextFile inst = instantiateAsset(TextFile.class, TEST_FILENAME);
+        assertEquals(TEST_FILENAME, inst.getFilename());
+        assertEquals(inst.getLocationType(), LocationType.EXTERNAL);
         assertNotEquals(0, inst.readLines().length);
     }
 

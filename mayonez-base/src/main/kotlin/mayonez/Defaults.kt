@@ -10,7 +10,7 @@ import mayonez.util.*
 object Defaults {
 
     // Application
-    private const val TITLE: String = "Mayonez Engine Application"
+    private const val TITLE: String = "Mayonez Engine"
     private const val VERSION: String = "<Unknown Version>"
 
     // Graphical

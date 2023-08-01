@@ -4,6 +4,8 @@ import mayonez.init.*
 import mayonez.io.text.*
 import mayonez.util.*
 
+// TODO need to validate preferences
+
 /**
  * A collection of user-changeable application parameters.
  *
@@ -49,7 +51,7 @@ object Preferences {
         get() = preferences.getInt("fps")
 
     // Logging
-    internal fun getLoggerConfig() : LoggerConfig {
+    internal fun getLoggerConfig(): LoggerConfig {
         return LoggerConfig(
             preferences.getBoolean("save_logs"),
             preferences.getInt("log_level"),

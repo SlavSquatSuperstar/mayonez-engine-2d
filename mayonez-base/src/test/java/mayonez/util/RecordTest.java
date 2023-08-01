@@ -95,21 +95,11 @@ class RecordTest {
         assertEquals(List.of("Apple", "Pixar", "NeXT"), object.getArray("companies"));
     }
 
-    // Copy/Add Tests
-
-    @Test
-    void copyFromSuccess() {
-        rec1.copyFrom(rec2);
-        assertEquals(4, rec1.size());
-        assertEquals("James Gosling", rec1.getString("name"));
-        assertEquals(69, rec1.getInt("age"));
-        assertTrue(rec1.getBoolean("useGL"));
-        assertFalse(rec1.getBoolean("saveLogs"));
-    }
+    // Set From Tests
 
     @Test
     void addAllSuccess() {
-        rec1.addAll(rec2);
+        rec1.setFrom(rec2);
         assertEquals(6, rec1.size());
         assertEquals("James Gosling", rec1.getString("name"));
         assertEquals(69, rec1.getInt("age"));

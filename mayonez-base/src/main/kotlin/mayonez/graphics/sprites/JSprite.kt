@@ -60,7 +60,7 @@ internal class JSprite private constructor(
 
     /**
      * Set the color of this sprite, or recolors the current texture. Caution: Due to the way
-     * AWT stores images, this permanently alters the texture!
+     * AWT stores images, this permanently alters the texture until the program is closed!
      *
      * @param color the color
      */

@@ -26,5 +26,5 @@ enum class LogLevel(private val level: Int) {
     /** Denotes that no log messages should be printed to the console. */
     NONE(5);
 
-    override fun toString(): String = "$name (Level $level)"
+    override fun toString(): String = "LogLevel $name (Level $level)"
 }

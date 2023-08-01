@@ -54,7 +54,7 @@ object IntMath {
      */
     @JvmStatic
     fun clamp(value: Int, min: Int, max: Int): Int {
-        return Interval(min.toFloat(), max.toFloat()).clamp(value.toFloat()).toInt()
+        return Interval(min, max).clamp(value.toFloat()).toInt()
     }
 
 
