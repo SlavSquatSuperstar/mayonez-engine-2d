@@ -1,8 +1,8 @@
 package slavsquatsuperstar.demos.spacegame.objects;
 
 import mayonez.*;
-import mayonez.graphics.*;
 import mayonez.graphics.debug.*;
+import mayonez.graphics.sprites.*;
 import mayonez.math.*;
 import mayonez.physics.*;
 import mayonez.physics.colliders.*;
@@ -14,9 +14,13 @@ import mayonez.util.*;
  *
  * @author SlavSquatSuperstar
  */
-public class Projectiles {
+public final class ShipProjectiles {
 
-    private Projectiles() {
+    private static final SpriteSheet SPRITES =
+            Sprites.createSpriteSheet("assets/textures/spacegame/projectiles.png",
+                    16, 16, 2, 0);
+
+    private ShipProjectiles() {
     }
 
     /**
@@ -25,15 +29,16 @@ public class Projectiles {
      *
      * @param projectile the projectile script
      * @param name       the object name
-     * @param size       the object radius
+     * @param size       the object size
      * @param components any components to be added
      * @return the projectile object.
      */
-    public static GameObject createPrefab(Projectile projectile, String name, float size, Component... components) {
+    public static GameObject createPrefab(Projectile projectile, String name, Vec2 size, Component... components) {
         var sourceXf = projectile.getSource().transform;
         var sourceRb = projectile.getSource().getComponent(Rigidbody.class);
         return new GameObject(name, new Transform(
-                sourceXf.getPosition().add(sourceXf.getUp().mul(0.5f)), sourceXf.getRotation(), new Vec2(size)
+                sourceXf.getPosition().add(sourceXf.getUp().mul(0.5f)),
+                sourceXf.getRotation(), size
         )) {
             @Override
             protected void init() {
@@ -53,7 +58,6 @@ public class Projectiles {
                     addComponent(new BallCollider(new Vec2(1f)).setTrigger(true));
                     addComponent(new ShapeSprite(Colors.WHITE, true));
                 }
-//                addComponent(new KeepInScene(KeepInScene.Mode.DESTROY));
                 addComponent(projectile);
             }
         };
@@ -62,18 +66,18 @@ public class Projectiles {
     public static GameObject createLaser(GameObject source) {
         return createPrefab(
                 new Projectile(source, 1, 25f, 5f),
-                "Laser", 0.2f,
-                new BallCollider(new Vec2(1f)).setTrigger(true),
-                new ShapeSprite(Colors.RED, true)
+                "Laser", new Vec2(0.4f),
+                new BallCollider(new Vec2(3 / 8f, 1f)).setTrigger(true),
+                SPRITES.getSprite(0)
         ).setZIndex(ZIndex.PROJECTILE);
     }
 
     public static GameObject createPlasma(GameObject source) {
         return createPrefab(
                 new Projectile(source, 1.5f, 20f, 5f),
-                "Plasma", 0.3f,
+                "Plasma", new Vec2(0.3f),
                 new BallCollider(new Vec2(1f)).setTrigger(true),
-                new ShapeSprite(new Color(0, 191, 255), true) // HTML Deep Sky Blue, #00BFFF
+                SPRITES.getSprite(1)
         ).setZIndex(ZIndex.PROJECTILE);
     }
 

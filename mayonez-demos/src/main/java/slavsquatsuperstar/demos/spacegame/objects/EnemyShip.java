@@ -1,16 +1,13 @@
 package slavsquatsuperstar.demos.spacegame.objects;
 
-import mayonez.GameObject;
-import mayonez.Transform;
+import mayonez.*;
 import mayonez.graphics.sprites.*;
-import mayonez.math.Random;
-import mayonez.math.Vec2;
-import mayonez.physics.Rigidbody;
-import mayonez.physics.colliders.BoxCollider;
-import mayonez.scripts.KeepInScene;
-import mayonez.scripts.combat.Damageable;
-import mayonez.scripts.combat.FireProjectile;
-import mayonez.scripts.SpawnManager;
+import mayonez.math.*;
+import mayonez.physics.*;
+import mayonez.physics.colliders.*;
+import mayonez.scripts.*;
+import mayonez.scripts.combat.*;
+import slavsquatsuperstar.demos.spacegame.scripts.EnemyFireController;
 
 /**
  * An enemy spaceship that can be destroyed.
@@ -39,45 +36,18 @@ public class EnemyShip extends GameObject {
         addTag("Enemy");
         addComponent(Sprites.createSprite(spriteName));
         addComponent(new BoxCollider(new Vec2(0.85f, 1f)));
+
         Rigidbody rb;
         addComponent(rb = new Rigidbody(1f, 0.01f, 0.8f));
         rb.setVelocity(transform.getUp().mul(Random.randomFloat(2f, 10f)));
         addComponent(new KeepInScene(KeepInScene.Mode.WRAP));
+
         addComponent(new Damageable(4) {
             @Override
             public void onDestroy() {
                 enemySpawner.markObjectDestroyed();
             }
         });
-        addComponent(new FireProjectile(0.5f) {
-            private int weaponChoice;
-
-            @Override
-            public void start() {
-                weaponChoice = Random.randomBoolean() ? 2 : 1;
-            }
-
-            @Override
-            protected boolean readyToFire() {
-                if (isReloaded() && isFiring) {
-                    // Decide to stop shooting
-                    if (--shotsLeft > 0) isFiring = false;
-                } else {
-                    // Decide to start shooting
-                    isFiring = Random.randomPercent(0.01f);
-                    if (isFiring) shotsLeft = Random.randomInt(1, 5);
-                }
-                return isFiring;
-            }
-
-            @Override
-            protected GameObject spawnProjectile() {
-                if (weaponChoice == 1) {
-                    return Projectiles.createLaser(gameObject);
-                } else if (weaponChoice == 2) {
-                    return Projectiles.createPlasma(gameObject);
-                } else return null;
-            }
-        });
+        addComponent(new EnemyFireController(0.5f));
     }
 }
