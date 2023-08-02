@@ -9,24 +9,18 @@ import mayonez.math.shapes.*;
  *
  * @author SlavSquatSuperstar
  */
-public class BackgroundObject  {
+public class BackgroundObject {
 
-    private final String name;
     private final Shape shape;
-    private final Color color;
+    private final ShapeBrush brush;
 
-    public BackgroundObject(String name, Shape shape, Color color) {
-        this.name = name;
+    public BackgroundObject(Shape shape, Color color, int zIndex) {
         this.shape = shape;
-        this.color = color;
+        brush = ShapeBrush.createSolidBrush(color).setZIndex(zIndex);
     }
 
     public void debugDraw(DebugDraw debugDraw) {
-        debugDraw.fillShape(shape, color);
+        debugDraw.fillShape(shape, brush);
     }
 
-    @Override
-    public String toString() {
-        return "Backgorund %s".formatted(name);
-    }
 }

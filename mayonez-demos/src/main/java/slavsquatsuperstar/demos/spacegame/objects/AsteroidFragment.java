@@ -10,24 +10,23 @@ import mayonez.scripts.*;
 import mayonez.scripts.combat.*;
 
 /**
- * An asteroid in space that can be destroyed.
+ * A fragment of a destroyed asteroid.
  *
  * @author SlavSquatSuperstar
  */
-public class Asteroid extends GameObject {
+public class AsteroidFragment extends GameObject {
 
-    private final SpawnManager obstacleSpawner;
+    private final Vec2 position, size;
     private final int startingHealth;
     private final Color color;
 
-    public Asteroid(String name, SpawnManager obstacleSpawner) {
+    public AsteroidFragment(String name, Vec2 position, Vec2 size, Color color) {
         super(name);
         setZIndex(ZIndex.ASTEROID);
-        this.obstacleSpawner = obstacleSpawner;
-        this.startingHealth = Random.randomInt(8, 12);
-
-        var tint = Random.randomInt(96, 160);
-        color = new Color(tint, tint, tint);
+        this.position = position;
+        this.size = size;
+        startingHealth = 2;
+        this.color = color;
     }
 
     @Override
@@ -35,25 +34,13 @@ public class Asteroid extends GameObject {
         setRandomTransform();
         addAsteroidCollider();
         addAsteroidStartingVelocity();
-
-        addComponent(new Damageable(startingHealth) {
-            @Override
-            public void onDestroy() {
-                if (obstacleSpawner != null) obstacleSpawner.markObjectDestroyed();
-                var fragmentCount = Random.randomInt(0, 4);
-                for (var i = 0; i < fragmentCount; i++) {
-                    getScene().addObject(new AsteroidFragment(
-                            "Asteroid Fragment", transform.getPosition(),
-                            transform.getScale().div(fragmentCount + 1), color));
-                }
-            }
-        });
+        addComponent(new Damageable(startingHealth));
     }
 
     private void setRandomTransform() {
-        transform.setPosition(getScene().getRandomPosition());
+        transform.setPosition(position);
         transform.setRotation(Random.randomFloat(0f, 360f));
-        transform.setScale(Random.randomVector(2f, 4f, 2f, 4f));
+        transform.setScale(size);
     }
 
     private void addAsteroidCollider() {
@@ -67,5 +54,4 @@ public class Asteroid extends GameObject {
         addComponent(rb = new Rigidbody(startingHealth, 0.2f, 0.2f));
         rb.setVelocity(transform.getUp().mul(Random.randomFloat(0f, 3f)));
     }
-
 }
