@@ -1,4 +1,4 @@
-package slavsquatsuperstar.demos.physics.scripts;
+package mayonez.scripts;
 
 import mayonez.*;
 
@@ -9,10 +9,17 @@ import mayonez.*;
  */
 public class DestroyAfterDuration extends Script {
 
+    private final float maxLifetime;
     private float lifetime;
 
     public DestroyAfterDuration(float lifetime) {
-        this.lifetime = lifetime;
+        this.maxLifetime = lifetime;
+        this.lifetime = maxLifetime;
+    }
+
+    @Override
+    public void start() {
+        lifetime = maxLifetime;
     }
 
     @Override

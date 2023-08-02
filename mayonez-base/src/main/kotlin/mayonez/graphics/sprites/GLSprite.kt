@@ -18,7 +18,7 @@ import mayonez.util.*
  * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.GL)
-class GLSprite private constructor(
+internal class GLSprite private constructor(
     private var texture: GLTexture?, private var color: Color
 ) : Sprite(), GLRenderable {
 

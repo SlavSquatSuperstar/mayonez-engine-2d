@@ -63,15 +63,11 @@ class GameObjectTest {
         var comp1 = mock(BoxCollider.class);
         obj.addComponent(comp1);
 
-        var comp2 = mock(GLSprite.class);
+        var comp2 = mock(Counter.class);
         obj.addComponent(comp2);
 
-        var comp3 = mock(Counter.class);
-        obj.addComponent(comp3);
-
         assertSame(comp1, obj.getComponent(Collider.class));
-        assertSame(comp2, obj.getComponent(Sprite.class));
-        assertSame(comp3, obj.getComponent(Script.class));
+        assertSame(comp2, obj.getComponent(Script.class));
     }
 
 }

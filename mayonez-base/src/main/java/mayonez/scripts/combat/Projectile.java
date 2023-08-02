@@ -11,23 +11,22 @@ public class Projectile extends Script {
 
     private final GameObject source;
     private final float damage, speed;
-    private final Timer lifetime;
+    private final float lifetime;
 
     public Projectile(GameObject source, float damage, float speed, float lifetime) {
         this.source = source;
         this.damage = damage;
         this.speed = speed;
-        this.lifetime = new Timer(lifetime);
+        this.lifetime = lifetime;
     }
 
     @Override
     public void init() {
-        gameObject.addComponent(lifetime);
+        gameObject.addComponent(new DestroyAfterDuration(lifetime));
     }
 
     @Override
     public void start() {
-        lifetime.reset();
         gameObject.addTag("Projectile");
         if (getCollider() == null) Logger.debug("%s needs a collider to function!", this);
         if (getRigidbody() == null) Logger.debug("%s needs a rigidbody to function!", this);
@@ -35,13 +34,7 @@ public class Projectile extends Script {
     }
 
     @Override
-    public void update(float dt) {
-        if (lifetime.isReady()) gameObject.setDestroyed();
-    }
-
-    @Override
     public void onTriggerEnter(GameObject other) {
-        // TODO tell physics to ignore collision
         if (other == source) return; // don't collide with source
         gameObject.setDestroyed();
 //        if (other.hasTag("Damageable")) gameObject.setDestroyed();

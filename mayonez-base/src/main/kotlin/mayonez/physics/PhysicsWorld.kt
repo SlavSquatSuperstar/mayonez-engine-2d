@@ -178,7 +178,7 @@ class PhysicsWorld {
     // Getters and Setters
 
     fun setGravity(gravity: Vec2?) {
-        this.gravity = gravity ?: Vec2()
+        this.gravity.set(gravity ?: Vec2())
     }
 
 }

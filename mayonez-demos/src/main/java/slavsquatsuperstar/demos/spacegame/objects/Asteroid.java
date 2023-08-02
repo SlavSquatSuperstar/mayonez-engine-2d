@@ -40,11 +40,18 @@ public class Asteroid extends GameObject {
             @Override
             public void onDestroy() {
                 if (obstacleSpawner != null) obstacleSpawner.markObjectDestroyed();
-                var fragmentCount = Random.randomInt(0, 4);
+                if (Random.randomPercent(0.2f)) return; // don't spawn fragments
+
+                var fragmentCount = Random.randomInt(2, 4);
                 for (var i = 0; i < fragmentCount; i++) {
+                    var angle = 360f / fragmentCount;
+                    var velocity = getRigidbody().getVelocity().mul(Random.randomFloat(0.5f, 2f))
+                            .rotate(angle + Random.randomFloat(-30f, 30f));
+
                     getScene().addObject(new AsteroidFragment(
                             "Asteroid Fragment", transform.getPosition(),
-                            transform.getScale().div(fragmentCount + 1), color));
+                            transform.getScale().div(fragmentCount),
+                            velocity, color));
                 }
             }
         });

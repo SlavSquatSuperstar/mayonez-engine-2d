@@ -1,22 +1,13 @@
 package mayonez.graphics
 
-import mayonez.math.*
 import mayonez.util.*
 import org.joml.*
 import java.util.*
-
-private const val NORMALIZE: Float = 1 / 255f
-private const val ALPHA_SHIFT_BITS: Int = 24
-private const val RED_SHIFT_BITS: Int = 16
-private const val GREEN_SHIFT_BITS: Int = 8
-private const val BLUE_SHIFT_BITS: Int = 0
-private const val SELECT_8_BITS: Int = 0xFF
 
 /**
  * Stores an immutable color used by the program and translates to and from
  * [java.awt.Color] and [org.joml.Vector4f].
  */
-// todo to/from rgb value
 class Color(red: Int, green: Int, blue: Int, alpha: Int) {
 
     /** Construct a color from a red, green, and blue values. */
@@ -36,7 +27,7 @@ class Color(red: Int, green: Int, blue: Int, alpha: Int) {
 
     constructor(color: JColor) : this(color.red, color.green, color.blue, color.alpha)
 
-    constructor(v4: Vector4f) : this(v4.x.toInt(), v4.y.toInt(), v4.z.toInt(), v4.w.toInt())
+    constructor(vec4: Vector4f) : this(vec4.x.toInt(), vec4.y.toInt(), vec4.z.toInt(), vec4.w.toInt())
 
     // Color Properties
 
@@ -91,7 +82,7 @@ class Color(red: Int, green: Int, blue: Int, alpha: Int) {
      * @param color the other color
      * @return the combined color
      */
-    fun combine(color: MColor): MColor {
+    internal fun combine(color: MColor): MColor {
         return MColor(
             this.red.combine(color.red),
             this.green.combine(color.green),
@@ -122,12 +113,3 @@ class Color(red: Int, green: Int, blue: Int, alpha: Int) {
     override fun toString(): String = "Color($red, $green, $blue, $alpha)"
 
 }
-
-// Shift Helper Methods
-private fun Int.getSelectedBits(bits: Int) = (this shr bits) and SELECT_8_BITS
-private fun Int.shiftBitsToCombine(shiftAmount: Int) = (this and SELECT_8_BITS) shl shiftAmount
-
-// Multiplication Methods
-private fun Int.clamp(): Int = IntMath.clamp(this, 0, 255)
-private fun Int.norm(): Float = this * NORMALIZE
-private fun Int.combine(other: Int): Int = (this * other * NORMALIZE).toInt()

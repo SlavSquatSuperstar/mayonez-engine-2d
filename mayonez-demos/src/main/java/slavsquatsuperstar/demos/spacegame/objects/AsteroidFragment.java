@@ -16,15 +16,16 @@ import mayonez.scripts.combat.*;
  */
 public class AsteroidFragment extends GameObject {
 
-    private final Vec2 position, size;
+    private final Vec2 position, size, velocity;
     private final int startingHealth;
     private final Color color;
 
-    public AsteroidFragment(String name, Vec2 position, Vec2 size, Color color) {
+    public AsteroidFragment(String name, Vec2 position, Vec2 size, Vec2 velocity, Color color) {
         super(name);
         setZIndex(ZIndex.ASTEROID);
         this.position = position;
         this.size = size;
+        this.velocity = velocity;
         startingHealth = 2;
         this.color = color;
     }
@@ -35,6 +36,7 @@ public class AsteroidFragment extends GameObject {
         addAsteroidCollider();
         addAsteroidStartingVelocity();
         addComponent(new Damageable(startingHealth));
+        addComponent(new DestroyAfterDuration(Random.randomFloat(10, 15)));
     }
 
     private void setRandomTransform() {
@@ -52,6 +54,6 @@ public class AsteroidFragment extends GameObject {
     private void addAsteroidStartingVelocity() {
         Rigidbody rb;
         addComponent(rb = new Rigidbody(startingHealth, 0.2f, 0.2f));
-        rb.setVelocity(transform.getUp().mul(Random.randomFloat(0f, 3f)));
+        rb.setVelocity(velocity);
     }
 }
