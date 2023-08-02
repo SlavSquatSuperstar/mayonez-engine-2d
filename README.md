@@ -59,16 +59,15 @@ Installing Java
 - Download the latest [Java LTS release](https://adoptium.net/temurin/releases)
     - Select "JRE" under "Package Type" and the correct operating system and architecture for your
       computer.
-    - Download the .pkg/.msi GUI installer if you do not know how to manually install Java, or else download the .zip
-      file.
-- Run or extract the installer, then check if Java is installed by running `java --version` inside a command
-  line/terminal window.
+    - Download the .pkg/.msi GUI installer, or the .zip file if you know how to manually install Java.
+- Run the installer or extract the archive, then check if Java is installed by running `java --version` inside a
+  command line/terminal window.
     - On Mac/Linux, the terminal app is usually Terminal.
     - On Windows, the terminal app is usually PowerShell or Command Prompt.
 
 Running the Program
 
-- Download the .zip file for the latest release under the
+- Download the `mayonez-engine-<version>.zip` file for the latest release under the
 - [releases section](https://github.com/SlavSquatSuperstar/mayonez-engine-2d/releases) on the GitHub website.
 - Drag `run` (Mac/Linux) or `run.bat` (Windows) from the extracted folder into a command line/terminal window
   and press Enter.
@@ -78,15 +77,19 @@ Running the Program
 Editing the Project
 
 - Download this repository by running `git clone https://github.com/SlavSquatSuperstar/mayonez-engine-2d.git` in a
-  terminal.
+  terminal or cloning https://github.com/SlavSquatSuperstar/mayonez-engine-2d in GitHub desktop
 - In an IDE, open the extracted folder or create a new project from existing sources, then tell the IDE to import a
   Gradle project if prompted.
     - You can also create a new project from version control using the repository link above if your editor supports it.
-- There are several preset Gradle tasks included to help in your development:
-    - Run: Launches the program with the demo scenes using `runShadow`
-    - Test: Runs unit tests using JUnit
-    - Build: Builds the fat .jar file with dependencies using `shadowJar`
-    - Export: Build the .jar and generates JavaDoc using `dokkaJavadocCollector`
+- There are several preset Gradle run configurations to facilitate development:
+    - Run: Launches the program with the demo scenes
+    - Test: Runs the unit tests
+    - Build: Builds the fat .jar file with dependencies
+    - Export: Build the .jar and generates JavaDoc
+- There are also several scripts to help automate production:
+    - `run`: Builds and runs the project
+    - `package`: Packages the project into the `dist/` folder
+    - `dist/run`: Runs the packaged project inside `dist/`
 
 Development Tools and Libraries
 

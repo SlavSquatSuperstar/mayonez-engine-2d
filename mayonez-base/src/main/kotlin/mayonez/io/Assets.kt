@@ -3,10 +3,24 @@ package mayonez.io
 import mayonez.*
 import mayonez.graphics.textures.*
 import mayonez.io.scanner.*
+import mayonez.io.text.*
 
 /**
- * The central asset pool for the application and a utility class for file
- * I/O and managing the application's resources safely.
+ * Manages the application's resources and allows users to create and retrieve new [Asset] files.
+ *
+ * Usage: Upon startup, the program automatically scans the `assets/` folder under `src/main/resources`
+ * or inside the .jar and adds all files to the asset pool. The user can scan any classpath folders
+ * using [Assets.scanFiles] or external folders using [Assets.scanResources]. All resource paths
+ * start inside the jar, while all external paths are relative the folder containing the jar.
+ * To create an individual asset, the user may call [Assets.createAsset], and the asset system will
+ * first search for a classpath resource, and then an external file.
+ *
+ * To retrieve a created asset,
+ * call [Assets.getAsset]. The user may optionally supply a subclass of [Asset] with [Assets.getAsset],
+ * which will initialize that asset as an instance of that class. For example, calling
+ * `Assets.getAsset("info.txt", TextFile.class)` will return a [TextFile] with the name `info.txt`.
+ *
+ * See [Asset] for more details.
  *
  * @author SlavSquatSuperstar
  */
