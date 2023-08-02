@@ -11,42 +11,44 @@ import mayonez.util.*
 // TODO set seed
 object Random {
 
+    private val rand = java.util.Random()
+
     // Random Numbers
 
     /**
      * Generates a uniform random float between the two provided bounds. All
      * numbers in the range have an equal chance of occurring.
      *
-     * @param min the lower bound
-     * @param max the upper bound
+     * @param min the lower bound, inclusive
+     * @param max the upper bound, inclusive
      * @return the random float
      */
     @JvmStatic
     fun randomFloat(min: Float, max: Float): Float {
         val interval = Interval(min, max)
-        return (Math.random() * (interval.difference())).toFloat() + interval.min
+        return (rand.nextFloat() * (interval.difference())) + interval.min
     }
 
     /**
      * Generates a random uniform integer between the two provided bounds. All
      * numbers in the range have an equal chance of occurring.
      *
-     * @param min the lower bound (inclusive)
-     * @param max the upper bound (inclusive)
+     * @param min the lower bound (inclusive), inclusive
+     * @param max the upper bound (inclusive), inclusive
      * @return the random integer
      */
     @JvmStatic
     fun randomInt(min: Int, max: Int): Int {
         val interval = Interval(min.toFloat(), max.toFloat())
-        return (Math.random() * (interval.difference() + 1) + interval.min).toInt()
+        return (rand.nextFloat() * (interval.difference() + 1) + interval.min).toInt()
     }
 
     /**
      * Generates a random [Vec2] between the provided min and max vectors. All
-     * vectors in the rectangular region have an equal chance of occurring.
+     * points in the rectangular region have an equal chance of occurring.
      *
-     * @param min the lower bound vector
-     * @param max the upper bound vector
+     * @param min the lower bound vector, inclusive
+     * @param max the upper bound vector, inclusive
      * @return the random vector
      */
     @JvmStatic

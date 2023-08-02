@@ -69,10 +69,12 @@ public abstract class Component {
     }
 
     /**
-     * Destroy this component and free up system resources once the parent {@link GameObject} is destroyed.
+     * Destroy this component and remove it from its parent {@link GameObject}.
+     * The fields {@link #gameObject} and {@link #transform} will be set to null.
      */
     void destroy() {
         gameObject = null;
+        transform = null;
     }
 
     // Getters and Setters

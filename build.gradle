@@ -22,9 +22,9 @@ ext {
 allprojects {
     // Name
     group = "slavsquatsuperstar"
-    version = "0.7.9-snapshot"
+    version = "0.7.9-pre1"
 
-    // Set Java Version for All Tasks
+    // Java Version, set for all tasks
     java {
         toolchain {
             languageVersion = JavaLanguageVersion.of(project.javaVersion)

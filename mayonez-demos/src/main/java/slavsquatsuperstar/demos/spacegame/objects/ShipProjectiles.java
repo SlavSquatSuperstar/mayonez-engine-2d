@@ -16,9 +16,9 @@ import mayonez.util.*;
  */
 public final class ShipProjectiles {
 
-    private static final SpriteSheet SPRITES =
-            Sprites.createSpriteSheet("assets/textures/spacegame/projectiles.png",
-                    16, 16, 2, 0);
+    private static final SpriteSheet PROJECTILE_SPRITES = Sprites.createSpriteSheet(
+            "assets/textures/spacegame/projectiles.png",
+            16, 16, 2, 0);
 
     private ShipProjectiles() {
     }
@@ -68,7 +68,7 @@ public final class ShipProjectiles {
                 new Projectile(source, 1, 25f, 5f),
                 "Laser", new Vec2(0.4f),
                 new BallCollider(new Vec2(3 / 8f, 1f)).setTrigger(true),
-                SPRITES.getSprite(0)
+                PROJECTILE_SPRITES.getSprite(0)
         ).setZIndex(ZIndex.PROJECTILE);
     }
 
@@ -77,7 +77,7 @@ public final class ShipProjectiles {
                 new Projectile(source, 1.5f, 20f, 5f),
                 "Plasma", new Vec2(0.3f),
                 new BallCollider(new Vec2(1f)).setTrigger(true),
-                SPRITES.getSprite(1)
+                PROJECTILE_SPRITES.getSprite(1)
         ).setZIndex(ZIndex.PROJECTILE);
     }
 

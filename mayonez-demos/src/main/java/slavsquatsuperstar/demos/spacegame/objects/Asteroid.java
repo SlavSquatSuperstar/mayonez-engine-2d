@@ -3,6 +3,7 @@ package slavsquatsuperstar.demos.spacegame.objects;
 import mayonez.*;
 import mayonez.graphics.*;
 import mayonez.graphics.debug.*;
+import mayonez.graphics.sprites.*;
 import mayonez.math.*;
 import mayonez.physics.*;
 import mayonez.physics.colliders.*;
@@ -16,6 +17,10 @@ import mayonez.scripts.combat.*;
  */
 public class Asteroid extends GameObject {
 
+    private static final SpriteSheet ASTEROID_SPRITES = Sprites.createSpriteSheet(
+            "assets/textures/spacegame/asteroids.png",
+            32, 32, 2, 0
+    );
     private final SpawnManager obstacleSpawner;
     private final int startingHealth;
     private final Color color;
@@ -34,6 +39,7 @@ public class Asteroid extends GameObject {
     protected void init() {
         setRandomTransform();
         addAsteroidCollider();
+        addAsteroidSprite();
         addAsteroidStartingVelocity();
 
         addComponent(new Damageable(startingHealth) {
@@ -66,7 +72,17 @@ public class Asteroid extends GameObject {
     private void addAsteroidCollider() {
         addComponent(new BallCollider(new Vec2(1f)));
         addComponent(new KeepInScene(KeepInScene.Mode.WRAP));
-        addComponent(new ShapeSprite(color, true));
+    }
+
+    private void addAsteroidSprite() {
+        var rand = Random.randomInt(0, 2);
+        if (rand == 2) {
+            addComponent(new ShapeSprite(color, true));
+        } else {
+            var sprite = ASTEROID_SPRITES.getSprite(rand);
+            addComponent(sprite);
+            sprite.setColor(color);
+        }
     }
 
     private void addAsteroidStartingVelocity() {

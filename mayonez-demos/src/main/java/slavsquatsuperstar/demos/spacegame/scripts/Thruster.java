@@ -12,8 +12,9 @@ import slavsquatsuperstar.demos.spacegame.objects.ZIndex;
 // TODO GL renderer lags child position more than AWT
 public class Thruster extends Script {
 
-    private static final SpriteSheet sprites = Sprites.createSpriteSheet("assets/textures/spacegame/exhaust.png",
-            16, 16, 3, 0);
+    private static final SpriteSheet EXHAUST_TEXTURES = Sprites.createSpriteSheet(
+            "assets/textures/spacegame/exhaust.png",
+            16, 16, 4, 0);
 
     public final ThrustDirection moveDir;
     public final ThrustDirection turnDir;
@@ -58,17 +59,16 @@ public class Thruster extends Script {
     /**
      * Create a prefab representing exhaust plumes from a spaceship's engines.
      */
-    public static GameObject createObject(Thruster thruster, String name, GameObject parentObj, Transform offsetXf) {
+    public static GameObject createPrefab(Thruster thruster, String name, GameObject parentObj, Transform offsetXf) {
         return new GameObject(name) {
             @Override
             protected void init() {
                 setZIndex(ZIndex.EXHAUST);
-//                System.out.println(getParent());
                 addComponent(thruster);
-                addComponent(new Animator(sprites, 0.25f));
+                addComponent(new Animator(EXHAUST_TEXTURES, 0.15f));
                 addComponent(new Script() {
                     @Override
-                    public void update(float dt) {
+                    public void debugRender() {
                         transform.set(parentObj.transform.combine(offsetXf));
                     }
                 });

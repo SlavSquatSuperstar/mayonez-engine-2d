@@ -44,9 +44,6 @@ public abstract class Script extends Component {
         return (T) this;
     }
 
-    /**
-     * Destroy this component and free up system resources once the parent {@link GameObject} is destroyed.
-     */
     final void destroy() {
         onDestroy();
         super.destroy();
@@ -67,7 +64,8 @@ public abstract class Script extends Component {
     }
 
     /**
-     * Custom behavior for when this script or its game object is destroyed.
+     * Custom behavior for when this script or its game object is destroyed. The fields
+     * {@link #gameObject} and {@link #transform} will still be accessible.
      */
     public void onDestroy() {
     }

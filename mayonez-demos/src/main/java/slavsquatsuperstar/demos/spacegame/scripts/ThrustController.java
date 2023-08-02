@@ -14,7 +14,8 @@ import mayonez.scripts.movement.*;
  */
 public class ThrustController extends Script {
 
-    private Thruster[] thrusters;
+    private final static float BRAKE_THRESHOLD = 0.1f; // Don't fire when moving very slow
+    private final Thruster[] thrusters;
     private KeyMovement keyMovement;
     private KeyRotation keyRotation;
     private Rigidbody rb;
@@ -54,14 +55,14 @@ public class ThrustController extends Script {
         if (keyMovement != null) {
             var input = keyMovement.getUserInput();
             for (var thr : thrusters) {
-                var shouldBrake = thr.moveDir.faces(brakeDir) && rb.getSpeed() > 1e-3f; // Don't fire when moving very slow
+                var shouldBrake = thr.moveDir.faces(brakeDir) && rb.getSpeed() > BRAKE_THRESHOLD;
                 thr.setMoveEnabled(thr.moveDir.faces(input) || shouldBrake);
             }
         }
         if (keyRotation != null) {
             var turnInput = keyRotation.getUserInput().x;
             for (var thr : thrusters) {
-                var shouldBrake = thr.turnDir.faces(angBrakeDir) && rb.getAngSpeed() > 1e-3f;
+                var shouldBrake = thr.turnDir.faces(angBrakeDir) && rb.getAngSpeed() > BRAKE_THRESHOLD;
                 thr.setTurnEnabled(thr.turnDir.faces(turnInput) || shouldBrake);
             }
         }

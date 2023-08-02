@@ -56,29 +56,34 @@ public class PlayerShip extends GameObject {
         var bRight = new Thruster(ThrustDirection.LEFT, ThrustDirection.TURN_RIGHT);
 
         // Rear Thrusters
-        getScene().addObject(Thruster.createObject(lBack, "Left Rear Thruster", this,
-                new Transform(new Vec2(-0.1f, -0.6f), 0f, new Vec2(0.3f))));
-        getScene().addObject(Thruster.createObject(rBack, "Right Rear Thruster", this,
-                new Transform(new Vec2(0.1f, -0.6f), 0f, new Vec2(0.3f))));
+        addThrusterObject(lBack, "Left Rear Thruster",
+                new Vec2(-0.1f, -0.6f), 0f, new Vec2(0.3f));
+        addThrusterObject(rBack, "Right Rear Thruster",
+                new Vec2(0.1f, -0.6f), 0f, new Vec2(0.3f));
 
         // Front Thrusters
-        getScene().addObject(Thruster.createObject(lFront, "Left Front Thruster", this,
-                new Transform(new Vec2(-0.075f, 0.46f), 180f, new Vec2(0.1f))));
-        getScene().addObject(Thruster.createObject(rFront, "Right Front Thruster", this,
-                new Transform(new Vec2(0.075f, 0.46f), 180f, new Vec2(0.1f))));
+        addThrusterObject(lFront, "Left Front Thruster",
+                new Vec2(-0.075f, 0.46f), 180f, new Vec2(0.1f));
+        addThrusterObject(rFront, "Right Front Thruster",
+                new Vec2(0.075f, 0.46f), 180f, new Vec2(0.1f));
 
         // Left Thrusters
-        getScene().addObject(Thruster.createObject(fLeft, "Front Left Thruster", this,
-                new Transform(new Vec2(-0.14f, 0.39f), -90, new Vec2(0.08f))));
-        getScene().addObject(Thruster.createObject(bLeft, "Rear Left Thruster", this,
-                new Transform(new Vec2(-0.2f, -0.36f), -90, new Vec2(0.08f))));
+        addThrusterObject(fLeft, "Front Left Thruster",
+                new Vec2(-0.14f, 0.39f), -90, new Vec2(0.08f));
+        addThrusterObject(bLeft, "Rear Left Thruster",
+                new Vec2(-0.2f, -0.36f), -90, new Vec2(0.08f));
 
         // Right Thrusters
-        getScene().addObject(Thruster.createObject(fRight, "Front Right Thruster", this,
-                new Transform(new Vec2(0.14f, 0.39f), 90, new Vec2(0.08f))));
-        getScene().addObject(Thruster.createObject(bRight, "Rear Right Thruster", this,
-                new Transform(new Vec2(0.2f, -0.36f), 90, new Vec2(0.08f))));
+        addThrusterObject(fRight, "Front Right Thruster",
+                new Vec2(0.14f, 0.39f), 90, new Vec2(0.08f));
+        addThrusterObject(bRight, "Rear Right Thruster",
+                new Vec2(0.2f, -0.36f), 90, new Vec2(0.08f));
 
         addComponent(new ThrustController(lBack, rBack, lFront, rFront, fLeft, bLeft, fRight, bRight));
+    }
+
+    private void addThrusterObject(Thruster thruster, String name, Vec2 position, float rotation, Vec2 scale) {
+        getScene().addObject(Thruster.createPrefab(thruster, name, this,
+                new Transform(position, rotation, scale)));
     }
 }

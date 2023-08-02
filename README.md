@@ -32,6 +32,7 @@ This fully-operational game engine includes:
 - A UI system with reusable components such as buttons and labels
 - An event system for keyboard and mouse inputs
 - Font rendering for displaying text on UI
+- Playable in-game sound effects
 - Nestable game objects that will be fixed to the parent object's position
 - And much more to come later!
 
