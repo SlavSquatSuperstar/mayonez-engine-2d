@@ -10,17 +10,17 @@ import mayonez.scripts.combat.*;
 import mayonez.util.*;
 
 /**
- * Different prefab projectiles that spaceships can fire.
+ * Creates prefab projectiles that spaceships can fire.
  *
  * @author SlavSquatSuperstar
  */
-public final class ShipProjectiles {
+public final class ProjectilePrefabs {
 
     private static final SpriteSheet PROJECTILE_SPRITES = Sprites.createSpriteSheet(
             "assets/textures/spacegame/projectiles.png",
             16, 16, 2, 0);
 
-    private ShipProjectiles() {
+    private ProjectilePrefabs() {
     }
 
     /**

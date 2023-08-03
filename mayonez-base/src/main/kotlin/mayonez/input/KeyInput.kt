@@ -142,9 +142,7 @@ object KeyInput : KeyAdapter() {
      */
     @JvmStatic
     fun getAxis(axisName: String): Int {
-        return getAxis(
-            StringUtils.findConstantWithName(KeyAxis.entries.toTypedArray(), axisName)
-        )
+        return getAxis(StringUtils.findConstantWithName(KeyAxis.entries, axisName))
     }
 
     // Key Helper Methods

@@ -41,49 +41,8 @@ public class PlayerShip extends GameObject {
 //        addComponent(new ClickToMove(10f, MoveMode.VELOCITY, true));
         addComponent(new PlayerFireController(0.2f));
 
-        addThrusters();
+        var thrusters = ThrusterPrefabs.addThrustersToObject(this);
+        addComponent(new PlayerThrustController(thrusters));
     }
 
-    private void addThrusters() {
-        // Sub-Objects
-        var lBack = new Thruster(ThrustDirection.FORWARD);
-        var rBack = new Thruster(ThrustDirection.FORWARD);
-        var lFront = new Thruster(ThrustDirection.BACKWARD);
-        var rFront = new Thruster(ThrustDirection.BACKWARD);
-        var fLeft = new Thruster(ThrustDirection.RIGHT, ThrustDirection.TURN_RIGHT);
-        var bLeft = new Thruster(ThrustDirection.RIGHT, ThrustDirection.TURN_LEFT);
-        var fRight = new Thruster(ThrustDirection.LEFT, ThrustDirection.TURN_LEFT);
-        var bRight = new Thruster(ThrustDirection.LEFT, ThrustDirection.TURN_RIGHT);
-
-        // Rear Thrusters
-        addThrusterObject(lBack, "Left Rear Thruster",
-                new Vec2(-0.1f, -0.6f), 0f, new Vec2(0.3f));
-        addThrusterObject(rBack, "Right Rear Thruster",
-                new Vec2(0.1f, -0.6f), 0f, new Vec2(0.3f));
-
-        // Front Thrusters
-        addThrusterObject(lFront, "Left Front Thruster",
-                new Vec2(-0.075f, 0.46f), 180f, new Vec2(0.1f));
-        addThrusterObject(rFront, "Right Front Thruster",
-                new Vec2(0.075f, 0.46f), 180f, new Vec2(0.1f));
-
-        // Left Thrusters
-        addThrusterObject(fLeft, "Front Left Thruster",
-                new Vec2(-0.14f, 0.39f), -90, new Vec2(0.08f));
-        addThrusterObject(bLeft, "Rear Left Thruster",
-                new Vec2(-0.2f, -0.36f), -90, new Vec2(0.08f));
-
-        // Right Thrusters
-        addThrusterObject(fRight, "Front Right Thruster",
-                new Vec2(0.14f, 0.39f), 90, new Vec2(0.08f));
-        addThrusterObject(bRight, "Rear Right Thruster",
-                new Vec2(0.2f, -0.36f), 90, new Vec2(0.08f));
-
-        addComponent(new ThrustController(lBack, rBack, lFront, rFront, fLeft, bLeft, fRight, bRight));
-    }
-
-    private void addThrusterObject(Thruster thruster, String name, Vec2 position, float rotation, Vec2 scale) {
-        getScene().addObject(Thruster.createPrefab(thruster, name, this,
-                new Transform(position, rotation, scale)));
-    }
 }

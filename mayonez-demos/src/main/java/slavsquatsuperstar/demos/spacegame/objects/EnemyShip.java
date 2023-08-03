@@ -18,14 +18,11 @@ public class EnemyShip extends GameObject {
 
     private final String spriteName;
     private final SpawnManager enemySpawner;
-    private boolean isFiring;
-    private int shotsLeft;
 
     public EnemyShip(String name, String spriteName, SpawnManager enemySpawner) {
         super(name, Transform.scaleInstance(new Vec2(2f)), ZIndex.SPACESHIP);
         this.spriteName = spriteName;
         this.enemySpawner = enemySpawner;
-        isFiring = false;
     }
 
     @Override

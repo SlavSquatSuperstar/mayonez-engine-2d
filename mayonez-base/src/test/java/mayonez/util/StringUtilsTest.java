@@ -5,7 +5,6 @@ import mayonez.input.*;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
 
 /**
  * Unit tests for the {@link mayonez.util.StringUtils} class.
@@ -64,7 +63,7 @@ class StringUtilsTest {
 
     @Test
     void getClassNameNonAnonymousIsClassName() {
-        var obj = mock(GameObject.class);
+        var obj = new GameObject("");
         assertEquals("GameObject", StringUtils.getObjectClassName(obj));
     }
 
@@ -80,19 +79,19 @@ class StringUtilsTest {
     @Test
     void findEnumConstantWithSpaceCorrect() {
         var name = "left shift";
-        assertEquals(Key.LEFT_SHIFT, StringUtils.findConstantWithName(Key.values(), name));
+        assertEquals(Key.LEFT_SHIFT, StringUtils.findConstantWithName(Key.getEntries(), name));
     }
 
     @Test
     void findEnumConstantNoSpacesCorrect() {
         var name = "space";
-        assertEquals(Key.SPACE, StringUtils.findConstantWithName(Key.values(), name));
+        assertEquals(Key.SPACE, StringUtils.findConstantWithName(Key.getEntries(), name));
     }
 
     @Test
     void findEnumConstantInvalidIsNull() {
         var name = "joystick";
-        assertNull(StringUtils.findConstantWithName(Key.values(), name));
+        assertNull(StringUtils.findConstantWithName(Key.getEntries(), name));
     }
 
 }

@@ -31,7 +31,7 @@ public class Asteroid extends GameObject {
         this.obstacleSpawner = obstacleSpawner;
         this.startingHealth = Random.randomInt(8, 12);
 
-        var tint = Random.randomInt(96, 144);
+        var tint = Random.randomInt(96, 176);
         color = new Color(tint, tint, tint);
     }
 

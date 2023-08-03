@@ -1,5 +1,7 @@
 package mayonez.util
 
+import kotlin.enums.EnumEntries
+
 /**
  * A collection of utility functions for manipulating text data.
  *
@@ -91,8 +93,8 @@ object StringUtils {
      * @return the enum with the name, or null of none is found
      */
     @JvmStatic
-    fun <T : Enum<T>> findConstantWithName(enumValues: Array<T>, name: String?): T? {
-        return enumValues
+    fun <T : Enum<T>> findConstantWithName(entries: EnumEntries<T>, name: String?): T? {
+        return entries
             .find { it.toString().equals(name, ignoreCase = true) }
     }
 

@@ -3,7 +3,7 @@ package slavsquatsuperstar.demos.spacegame.scripts;
 import mayonez.*;
 import mayonez.math.*;
 import mayonez.scripts.combat.*;
-import slavsquatsuperstar.demos.spacegame.objects.ShipProjectiles;
+import slavsquatsuperstar.demos.spacegame.objects.ProjectilePrefabs;
 
 /**
  * Allows enemy ships to fire different weapons.
@@ -42,9 +42,9 @@ public class EnemyFireController extends FireProjectile {
     @Override
     protected GameObject spawnProjectile() {
         if (weaponChoice == 1) {
-            return ShipProjectiles.createLaser(gameObject);
+            return ProjectilePrefabs.createLaser(gameObject);
         } else if (weaponChoice == 2) {
-            return ShipProjectiles.createPlasma(gameObject);
+            return ProjectilePrefabs.createPlasma(gameObject);
         } else return null;
     }
 

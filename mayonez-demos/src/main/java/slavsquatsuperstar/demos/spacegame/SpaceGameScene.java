@@ -9,8 +9,6 @@ import mayonez.math.shapes.*;
 import mayonez.scripts.*;
 import mayonez.util.*;
 import slavsquatsuperstar.demos.spacegame.objects.*;
-import slavsquatsuperstar.demos.spacegame.objects.EnemyShip;
-import slavsquatsuperstar.demos.spacegame.objects.PlayerShip;
 
 import java.util.*;
 

@@ -12,23 +12,30 @@ import mayonez.util.*
 object Preferences {
 
     private const val PREFS_FILENAME = "preferences.json"
-    private val preferences: Record = Defaults.preferences.copy()
+    private val preferences: Record = Defaults.copyPreferences()
     private var initialized = false
 
     // Read Preferences Methods
 
     internal fun setPreferences() {
         if (!initialized) {
-            preferences.setFromFile(PREFS_FILENAME)
+            preferences.setFromFile()
             Logger.debug("Loaded preferences from $PREFS_FILENAME")
             initialized = true
         }
     }
 
-    private fun Record.setFromFile(filename: String) {
-        val userPrefs = JSONFile(filename).readJSON()
+    private fun Record.setFromFile() {
+        val userPrefs = JSONFile(PREFS_FILENAME).readJSON()
         userPrefs.validate(this)
         this.setFrom(userPrefs)
+    }
+
+    private fun Record.validate(defaults: Record) {
+        StringValidator("title", "version", "log_directory").validate(this, defaults)
+        IntValidator(240, 3840, "screen_height", "screen_width").validate(this, defaults)
+        IntValidator(150, 240, "fps").validate(this, defaults)
+        IntValidator(0, 5, "log_level").validate(this, defaults)
     }
 
     // Application
@@ -63,15 +70,6 @@ object Preferences {
             preferences.getInt("log_level"),
             preferences.getString("log_directory")
         )
-    }
-
-    // Validation Functions
-
-    private fun Record.validate(defaults: Record) {
-        StringValidator("title", "version", "log_directory").validate(this, defaults)
-        IntValidator(240, 3840, "screen_height", "screen_width").validate(this, defaults)
-        IntValidator(150, 240, "fps").validate(this, defaults)
-        IntValidator(0, 5, "log_level").validate(this, defaults)
     }
 
 }

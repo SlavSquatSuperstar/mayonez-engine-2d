@@ -42,7 +42,7 @@ public class UIButton extends GameObject {
 
         this.icon = icon;
         baseSprite = new Animator(BUTTON_TEXTURES, 0f);
-        baseSprite.setTimerEnabled(false);
+        baseSprite.setAnimationEnabled(false);
     }
 
     @Override
