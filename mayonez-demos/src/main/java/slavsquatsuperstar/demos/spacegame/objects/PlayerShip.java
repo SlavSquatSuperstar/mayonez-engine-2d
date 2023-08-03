@@ -37,7 +37,7 @@ public class PlayerShip extends GameObject {
         // Scripts
         addComponent(new KeepInScene(KeepInScene.Mode.WRAP));
         addComponent(new KeyMovement(10f, MoveMode.FORCE, "horizontal2", "vertical").setObjectAligned(true));
-        addComponent(new KeyRotation(120f, MoveMode.VELOCITY, "horizontal"));
+        addComponent(new KeyRotation(180f, MoveMode.VELOCITY, "horizontal"));
 //        addComponent(new ClickToMove(10f, MoveMode.VELOCITY, true));
         addComponent(new PlayerFireController(0.2f));
 

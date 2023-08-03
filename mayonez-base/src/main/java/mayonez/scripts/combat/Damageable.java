@@ -24,7 +24,7 @@ public class Damageable extends Script {
 
     @Override
     public void update(float dt) {
-        if (healthPoints.isAtMin()) gameObject.setDestroyed();
+        if (healthPoints.isAtMin()) gameObject.destroy();
     }
 
     @Override

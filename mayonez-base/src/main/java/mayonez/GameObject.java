@@ -282,10 +282,7 @@ public class GameObject {
 
     // Callback Methods
 
-    /**
-     * Destroy this game object and remove it from the scene.
-     */
-    final void destroy() {
+    final void onDestroy() {
         components.forEach(Component::destroy);
         components.clear();
         scene = null;
@@ -340,7 +337,7 @@ public class GameObject {
     /**
      * Remove this object from the scene and destroy all its components and children.
      */
-    public void setDestroyed() {
+    public void destroy() {
         destroyed = true;
     }
 

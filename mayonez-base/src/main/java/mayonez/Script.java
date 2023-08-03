@@ -44,7 +44,8 @@ public abstract class Script extends Component {
         return (T) this;
     }
 
-    final void destroy() {
+    public final void destroy() {
+        onDisable();
         onDestroy();
         super.destroy();
     }

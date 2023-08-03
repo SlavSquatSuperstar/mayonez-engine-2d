@@ -25,7 +25,7 @@ public class DestroyAfterDuration extends Script {
     @Override
     public void update(float dt) {
         lifetime -= dt;
-        if (lifetime <= 0) gameObject.setDestroyed();
+        if (lifetime <= 0) gameObject.destroy();
     }
 
 }

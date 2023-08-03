@@ -13,7 +13,7 @@ public abstract class ThrustController extends Script {
 
     private final static float BRAKE_THRESHOLD = 0.1f; // Don't fire when moving very slow
     private final Thruster[] thrusters;
-    private Rigidbody rb;
+    protected Rigidbody rb;
 
     public ThrustController(Thruster... thrusters) {
         this.thrusters = thrusters;
@@ -47,6 +47,8 @@ public abstract class ThrustController extends Script {
         activateTurnThrusters(angBrakeDir);
     }
 
+    // Movement Methods
+
     private void activateMoveThrusters(Vec2 brakeDir) {
         var moveInputDir = getMoveInputDirection();
         for (var thr : thrusters) {
@@ -63,10 +65,19 @@ public abstract class ThrustController extends Script {
         }
     }
 
+    protected abstract boolean isBraking();
+
     protected abstract Vec2 getMoveInputDirection();
 
     protected abstract float getTurnInputDirection();
 
-    protected abstract boolean isBraking();
+    // Callback Methods
 
+
+    @Override
+    public void onDestroy() {
+        for (var thruster : thrusters) {
+            thruster.getGameObject().destroy();
+        }
+    }
 }

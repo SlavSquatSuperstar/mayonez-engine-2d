@@ -72,7 +72,7 @@ public abstract class Component {
      * Destroy this component and remove it from its parent {@link GameObject}.
      * The fields {@link #gameObject} and {@link #transform} will be set to null.
      */
-    void destroy() {
+    public void destroy() {
         gameObject = null;
         transform = null;
     }

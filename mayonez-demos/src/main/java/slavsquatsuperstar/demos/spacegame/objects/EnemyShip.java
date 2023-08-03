@@ -8,6 +8,7 @@ import mayonez.physics.colliders.*;
 import mayonez.scripts.*;
 import mayonez.scripts.combat.*;
 import slavsquatsuperstar.demos.spacegame.scripts.EnemyFireController;
+import slavsquatsuperstar.demos.spacegame.scripts.EnemyThrustController;
 
 /**
  * An enemy spaceship that can be destroyed.
@@ -46,5 +47,8 @@ public class EnemyShip extends GameObject {
             }
         });
         addComponent(new EnemyFireController(0.5f));
+
+        var thrusters = ThrusterPrefabs.addThrustersToObject(this);
+        addComponent(new EnemyThrustController(thrusters));
     }
 }

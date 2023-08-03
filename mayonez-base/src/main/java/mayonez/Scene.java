@@ -198,7 +198,7 @@ public abstract class Scene {
 
     private void destroySceneObjects() {
         camera.setSubject(null);
-        objects.forEach(GameObject::destroy);
+        objects.forEach(GameObject::onDestroy);
         objects.clear();
     }
 
@@ -252,7 +252,7 @@ public abstract class Scene {
         objects.remove(o);
         renderer.removeObject(o);
         physics.removeObject(o);
-        o.destroy();
+        o.onDestroy();
         Logger.debug("Removed object \"%s\" from scene \"%s\"", o.getNameAndID(), this.name);
     }
 

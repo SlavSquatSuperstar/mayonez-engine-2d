@@ -130,7 +130,7 @@ public class KeepInScene extends Script {
     protected void onExitBounds(Direction direction) {
         switch (mode) {
             case WRAP -> alignOutside(direction);
-            case DESTROY -> gameObject.setDestroyed();
+            case DESTROY -> gameObject.destroy();
         }
     }
 

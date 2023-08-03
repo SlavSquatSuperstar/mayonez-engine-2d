@@ -32,7 +32,7 @@ class Goomba extends GameObject {
         addComponent(new Script() {
             @Override
             public void onCollisionEnter(GameObject other, Vec2 direction) {
-                if (other.getName().equals("Mario")) setDestroyed();
+                if (other.getName().equals("Mario")) gameObject.destroy();
                 // TODO don't push Mario around
             }
         });

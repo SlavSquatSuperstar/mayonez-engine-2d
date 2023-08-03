@@ -36,7 +36,7 @@ public class Projectile extends Script {
     @Override
     public void onTriggerEnter(GameObject other) {
         if (other == source) return; // don't collide with source
-        gameObject.setDestroyed();
+        gameObject.destroy();
 //        if (other.hasTag("Damageable")) gameObject.setDestroyed();
     }
 
