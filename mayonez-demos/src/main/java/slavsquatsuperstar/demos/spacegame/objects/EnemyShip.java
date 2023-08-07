@@ -34,15 +34,24 @@ public class EnemyShip extends GameObject {
         transform.setRotation(Random.randomFloat(0f, 360f));
 
         addTag("Enemy");
-        addComponent(Sprites.createSprite(spriteName));
+        Sprite mainSprite;
+        addComponent(mainSprite = Sprites.createSprite(spriteName));
+
         addComponent(new BoxCollider(new Vec2(0.85f, 1f)));
+        addComponent(new KeepInScene(KeepInScene.Mode.WRAP));
 
         Rigidbody rb;
         addComponent(rb = new Rigidbody(1f, 0.01f, 0.8f));
         rb.setVelocity(transform.getUp().mul(Random.randomFloat(2f, 10f)));
-        addComponent(new KeepInScene(KeepInScene.Mode.WRAP));
 
-        addComponent(new ShipDestruction(4) {
+        ShipDestruction shipDestruction;
+        addComponent(shipDestruction = new ShipDestruction(mainSprite));
+        addComponent(new Damageable(4) {
+            @Override
+            public void onHealthDepleted() {
+                shipDestruction.startDestructionSequence();
+            }
+
             @Override
             public void onDestroy() {
                 enemySpawner.markObjectDestroyed();

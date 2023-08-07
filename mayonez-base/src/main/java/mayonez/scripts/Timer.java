@@ -3,7 +3,7 @@ package mayonez.scripts;
 import mayonez.*;
 
 /**
- * A script that automatically tracks time in real time as the game updates and can be reset.
+ * Automatically counts down in real time as the game updates and can be reset.
  *
  * @author SlavSquatSuperstar
  */

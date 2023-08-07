@@ -4,7 +4,7 @@ import mayonez.*;
 import mayonez.math.*;
 
 /**
- * A script that tracks a quantity, manually increments it, and can be reset.
+ * Tracks a changeable quantity, defines a min and max, and can be reset.
  *
  * @author SlavSquatSuperstar
  */
@@ -53,7 +53,7 @@ public class Counter extends Script {
     }
 
     /**
-     * Set the counter's count interval.
+     * Set the counter's min and max interval.
      *
      * @param min the lower bound
      * @param max the upper bound
@@ -96,6 +96,8 @@ public class Counter extends Script {
 
     @Override
     public String toString() {
-        return String.format("Counter (%.4f-%.4f, %.4f )", value, interval.min, interval.max);
+        return String.format("Counter (%.4f-%.4f, %.4f)",
+                value, interval.min, interval.max);
     }
+
 }

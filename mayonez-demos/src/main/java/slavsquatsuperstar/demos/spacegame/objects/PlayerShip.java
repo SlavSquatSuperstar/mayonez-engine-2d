@@ -17,6 +17,8 @@ import slavsquatsuperstar.demos.spacegame.movement.ThrusterPrefabs;
  *
  * @author SlavSquatSuperstar
  */
+// TODO player death and respawn
+// TODO shields
 public class PlayerShip extends GameObject {
 
     private final String spriteName;
@@ -33,12 +35,12 @@ public class PlayerShip extends GameObject {
         // Physics
         addComponent(new Rigidbody(1f));
         addComponent(new BoxCollider(new Vec2(0.85f, 1f)));
+        addComponent(new KeepInScene(KeepInScene.Mode.WRAP));
 
         // Visuals
         addComponent(Sprites.createSprite(spriteName));
 
         // Scripts
-        addComponent(new KeepInScene(KeepInScene.Mode.WRAP));
         addComponent(new KeyMovement(10f, MoveMode.FORCE, "horizontal2", "vertical").setObjectAligned(true));
         addComponent(new KeyRotation(180f, MoveMode.VELOCITY, "horizontal"));
 //        addComponent(new ClickToMove(10f, MoveMode.VELOCITY, true));

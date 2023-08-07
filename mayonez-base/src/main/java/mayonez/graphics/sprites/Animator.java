@@ -21,7 +21,7 @@ public class Animator extends Script {
     private final Timer animTimer;
 
     /**
-     * Creates an animation from a spritesheet that will loop through all the sprites.
+     * Creates an animation from a sprite sheet that will loop through all the sprites.
      *
      * @param sprites         the frames of the animation
      * @param secondsPerFrame how much time to spend on each frame
@@ -71,6 +71,7 @@ public class Animator extends Script {
     }
 
     private void setSpriteTexture(int frame) {
+        if (sprite == null) return; // not initialized yet
         sprite.setTexture(textures[frame]);
         setSpriteVisible(true);
     }
@@ -81,6 +82,7 @@ public class Animator extends Script {
      * @param visible if the sprite should be enabled
      */
     public void setSpriteVisible(boolean visible) {
+        if (sprite == null) return; // not initialized yet
         sprite.setEnabled(visible);
     }
 

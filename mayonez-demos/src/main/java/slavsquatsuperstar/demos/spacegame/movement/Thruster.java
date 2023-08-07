@@ -15,7 +15,7 @@ public class Thruster extends Script {
             "assets/textures/spacegame/exhaust.png",
             16, 16, 4, 0);
 
-    private Animator exhaust;
+    private Animator exhaustAnim;
     final ThrustDirection moveDir, turnDir;
     private boolean moveEnabled, turnEnabled;
 
@@ -43,13 +43,13 @@ public class Thruster extends Script {
     public void start() {
         moveEnabled = false;
         turnEnabled = false;
-        exhaust = gameObject.getComponent(Animator.class);
-        if (exhaust == null) setEnabled(false);
+        exhaustAnim = gameObject.getComponent(Animator.class);
+        if (exhaustAnim == null) setEnabled(false);
     }
 
     @Override
     public void update(float dt) {
-        exhaust.setEnabled(moveEnabled || turnEnabled);
+        exhaustAnim.setEnabled(moveEnabled || turnEnabled);
     }
 
     public void setMoveEnabled(boolean moveEnabled) {
@@ -62,7 +62,7 @@ public class Thruster extends Script {
 
     @Override
     public void onDisable() {
-        exhaust.setEnabled(false);
+        exhaustAnim.setEnabled(false);
     }
 
     // Factory Method

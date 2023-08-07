@@ -7,7 +7,7 @@ import mayonez.util.*
 
 /**
  * A visual representation of a [mayonez.GameObject]. To instantiate a
- * sprite, use [Sprites.createSprite] or [Sprites.createSprite].
+ * sprite, use [Sprites.createSprite].
  *
  * @author SlavSquatSuperstar
  */

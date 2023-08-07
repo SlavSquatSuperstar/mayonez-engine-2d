@@ -3,7 +3,7 @@ package mayonez.scripts;
 import mayonez.*;
 
 /**
- * Remove this game object from the scene after some time as passed.
+ * Removes this game object from the scene after some time as passed.
  *
  * @author SlavSquatSuperstar
  */
