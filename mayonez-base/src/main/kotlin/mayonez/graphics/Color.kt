@@ -5,13 +5,15 @@ import org.joml.*
 import java.util.*
 
 /**
- * Stores an immutable color used by the program and translates to and from
- * [java.awt.Color] and [org.joml.Vector4f].
+ * Stores an immutable color used by the program and translates to and from [java.awt.Color]
+ * and [org.joml.Vector4f]. Colors have red, green, blue, and alpha components between 0-255.
  */
 class Color(red: Int, green: Int, blue: Int, alpha: Int) {
 
-    /** Construct a color from a red, green, and blue values. */
-    constructor(red: Int, green: Int, blue: Int) : this(red, green, blue, 255)
+    // Constructors
+
+    /** Construct a color from a red, green, and blue values, with alpha set t0 255. */
+    constructor(red: Int, green: Int, blue: Int) : this(red, green, blue, MAX_COMPONENT_VALUE)
 
     /**
      * Construct a color from a single combined RGBA value.
@@ -31,16 +33,16 @@ class Color(red: Int, green: Int, blue: Int, alpha: Int) {
 
     // Color Properties
 
-    /** Red component of this color, between 0-255. */
+    /** The red component of this color, between 0-255. */
     val red: Int = red.clamp()
 
-    /** Green component of this color, between 0-255. */
+    /** The green component of this color, between 0-255. */
     val green: Int = green.clamp()
 
-    /** Blue component of this color, between 0-255. */
+    /** The blue component of this color, between 0-255. */
     val blue: Int = blue.clamp()
 
-    /** Alpha component of this color, between 0-255. */
+    /** The alpha (transparency) component of this color, between 0-255. */
     val alpha: Int = alpha.clamp()
 
     // Conversion Methods

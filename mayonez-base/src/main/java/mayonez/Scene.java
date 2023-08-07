@@ -353,14 +353,20 @@ public abstract class Scene {
     }
 
     /**
-     * Returns the main camera of the scene.
+     * Get the scene's {@link Camera} instance. The Camera is initialized before
+     * {@link GameObject#start()} is called for all other objects.
      *
-     * @return the {@link Camera} instance
+     * @return the scene camera
      */
     public Camera getCamera() {
         return camera;
     }
 
+    /**
+     * Get the scene's {@link  mayonez.graphics.debug.DebugDraw} instance.
+     *
+     * @return the scene debug draw
+     */
     public final DebugDraw getDebugDraw() {
         return debugDraw;
     }

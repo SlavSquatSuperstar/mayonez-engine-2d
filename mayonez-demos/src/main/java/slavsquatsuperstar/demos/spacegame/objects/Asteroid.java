@@ -75,14 +75,11 @@ public class Asteroid extends GameObject {
     }
 
     private void addAsteroidSprite() {
-        var rand = Random.randomInt(0, 2);
-        if (rand == 2) {
-            addComponent(new ShapeSprite(color, true));
-        } else {
-            var sprite = ASTEROID_SPRITES.getSprite(rand);
-            addComponent(sprite);
-            sprite.setColor(color);
-        }
+        addComponent(new ShapeSprite(color, true));
+        // Disable textures until other objects receive one
+//        var sprite = ASTEROID_SPRITES.getSprite(Random.randomInt(0, 1));
+//        sprite.setColor(color);
+//        addComponent(sprite);
     }
 
     private void addAsteroidStartingVelocity() {

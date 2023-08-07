@@ -34,10 +34,10 @@ public class SpaceGameScene extends Scene {
         backgroundObjects.clear();
 
         addObject(new PlayerShip("Player Spaceship", "assets/textures/spacegame/spaceship1.png"));
-
         addSpawners();
+
         addSolarSystem();
-        addBackgroundStars();
+        addBackgroundStars(numStars);
     }
 
     private void addSpawners() {
@@ -72,17 +72,19 @@ public class SpaceGameScene extends Scene {
         addBackgroundObject(new Circle(new Vec2(-20, 16), 2), Colors.YELLOW, ZIndex.BACKGROUND); // Sun
     }
 
-    private void addBackgroundStars() {
+    private void addBackgroundStars(int numStars) {
+        // TODO parallax
         for (var i = 0; i < numStars; i++) {
             var starPos = this.getRandomPosition().mul(2);
 
             float starSize;
             boolean isDwarfStar = Random.randomPercent(2f / 3f);
-            if (isDwarfStar) starSize = Random.randomFloat(1, 4);
-            else starSize = Random.randomFloat(4, 10);
+            if (isDwarfStar) starSize = Random.randomGaussian(2.5f, 0.5f);
+            else starSize = Random.randomGaussian(7, 1);
+            if (starSize > 1) starSize = 1;
 
-            var starDist = Random.randomFloat(5, 20) * 5f;
-            var starColor = new Color(Random.randomInt(192, 255), Random.randomInt(192, 255), Random.randomInt(192, 255));
+            var starDist = Random.randomFloat(20, 60);
+            var starColor = Random.randomColor(192, 255);
             addBackgroundObject(new Circle(starPos, starSize / starDist), starColor, ZIndex.BACKGROUND_STAR);
         }
     }

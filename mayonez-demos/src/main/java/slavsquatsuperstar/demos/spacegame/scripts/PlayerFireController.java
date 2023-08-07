@@ -10,6 +10,8 @@ import slavsquatsuperstar.demos.spacegame.objects.ProjectilePrefabs;
  *
  * @author SlavSquatSuperstar
  */
+// TODO weapon spread
+// TODO click to target
 public class PlayerFireController extends FireProjectile {
 
     private int weaponChoice;
