@@ -1,7 +1,7 @@
 package slavsquatsuperstar.demos.spacegame.combat;
 
 import mayonez.*;
-import mayonez.graphics.sprites.*;
+import mayonez.math.*;
 import mayonez.scripts.*;
 import slavsquatsuperstar.demos.spacegame.movement.ThrustController;
 
@@ -13,61 +13,60 @@ import slavsquatsuperstar.demos.spacegame.movement.ThrustController;
 public class ShipDestruction extends Script {
 
     // Constants
-    private static final float ANIMATION_DURATION = 1.6f;
-    private static final int ANIMATION_SPRITES = 8;
-    private static final SpriteSheet EXPLOSION_TEXTURES = Sprites.createSpriteSheet(
-            "assets/textures/spacegame/explosion.png",
-            32, 32, ANIMATION_SPRITES, 0
-    );
+    private static final float EXPLOSION_DURATION = 1.2f;
+    private static final float DESTRUCTION_DURATION = 0.8f;
 
     // Timer Components
-    private boolean healthDepleted;
     private final Timer destructionTimer;
+    private boolean sequenceStarted;
 
-    // Component References
-    private final Sprite mainSprite;
-    private Animator explosionAnim;
+    // References
+    private GameObject explosion;
     private Component fireProjectile, thrustController;
 
-    public ShipDestruction(Sprite mainSprite) {
-        destructionTimer = new Timer(ANIMATION_DURATION);
-        this.mainSprite = mainSprite;
+    public ShipDestruction() {
+        destructionTimer = new Timer(DESTRUCTION_DURATION);
     }
 
     @Override
     public void init() {
         gameObject.addComponent(destructionTimer.setEnabled(false));
-        explosionAnim = new Animator(EXPLOSION_TEXTURES,
-                ANIMATION_DURATION / ANIMATION_SPRITES);
-        gameObject.addComponent(explosionAnim);
     }
 
     @Override
     public void start() {
-        healthDepleted = false;
+        sequenceStarted = false;
         fireProjectile = gameObject.getComponent(FireProjectile.class);
         thrustController = gameObject.getComponent(ThrustController.class);
-        explosionAnim.setEnabled(false);
+        explosion = null;
     }
 
     @Override
     public void update(float dt) {
-        if (!healthDepleted) super.update(dt);
-
+        if (explosion != null) {
+            // Have the explosion follow the ship until it is destroyed
+            explosion.transform.setPosition(transform.getPosition());
+        }
         if (destructionTimer.isReady()) {
             gameObject.destroy();
-        } else if (destructionTimer.getValue() <= ANIMATION_DURATION * 0.5f) {
-            mainSprite.setEnabled(false);
         }
     }
 
     public void startDestructionSequence() {
-        healthDepleted = true;
-        destructionTimer.setEnabled(true);
-        explosionAnim.setEnabled(true);
+        if (sequenceStarted) return;
 
+        sequenceStarted = true;
+        destructionTimer.setEnabled(true);
+
+        // Disable ship systems
         if (fireProjectile != null) fireProjectile.setEnabled(false);
         if (thrustController != null) thrustController.setEnabled(false);
+
+        getScene().addObject(explosion = Explosion.createPrefab(
+                "Ship Explosion",
+                new Transform(transform.getPosition(), Random.randomFloat(0f, 360f), new Vec2(2)),
+                EXPLOSION_DURATION)
+        );
     }
 
 }

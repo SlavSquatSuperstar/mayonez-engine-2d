@@ -34,8 +34,7 @@ public class EnemyShip extends GameObject {
         transform.setRotation(Random.randomFloat(0f, 360f));
 
         addTag("Enemy");
-        Sprite mainSprite;
-        addComponent(mainSprite = Sprites.createSprite(spriteName));
+        addComponent(Sprites.createSprite(spriteName));
 
         addComponent(new BoxCollider(new Vec2(0.85f, 1f)));
         addComponent(new KeepInScene(KeepInScene.Mode.WRAP));
@@ -45,7 +44,7 @@ public class EnemyShip extends GameObject {
         rb.setVelocity(transform.getUp().mul(Random.randomFloat(2f, 10f)));
 
         ShipDestruction shipDestruction;
-        addComponent(shipDestruction = new ShipDestruction(mainSprite));
+        addComponent(shipDestruction = new ShipDestruction());
         addComponent(new Damageable(4) {
             @Override
             public void onHealthDepleted() {

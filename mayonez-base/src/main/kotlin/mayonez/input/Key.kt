@@ -11,8 +11,11 @@ import java.awt.event.*
  */
 enum class Key(internal val awtCode: Int, internal val glCode: Int, private val keyName: String? = null) {
 
-    // Special Keys
     UNKNOWN(KeyEvent.VK_UNDEFINED, GLFW.GLFW_KEY_UNKNOWN),
+
+    // Special Keys
+    BACKSPACE(KeyEvent.VK_BACK_SPACE, GLFW.GLFW_KEY_BACKSPACE),
+    DELETE(KeyEvent.VK_DELETE, GLFW.GLFW_KEY_DELETE),
     ESCAPE(KeyEvent.VK_ESCAPE, GLFW.GLFW_KEY_ESCAPE),
     ENTER(KeyEvent.VK_ENTER, GLFW.GLFW_KEY_ENTER),
     SPACE(KeyEvent.VK_SPACE, GLFW.GLFW_KEY_SPACE),
@@ -23,16 +26,16 @@ enum class Key(internal val awtCode: Int, internal val glCode: Int, private val 
     RIGHT_SHIFT(KeyEvent.VK_SHIFT, GLFW.GLFW_KEY_RIGHT_SHIFT),
 
     // Numbers
-    NUM_0(KeyEvent.VK_0, GLFW.GLFW_KEY_0, keyName = "0"),
-    NUM_1(KeyEvent.VK_1, GLFW.GLFW_KEY_1, keyName = "1"),
-    NUM_2(KeyEvent.VK_2, GLFW.GLFW_KEY_2, keyName = "2"),
-    NUM_3(KeyEvent.VK_3, GLFW.GLFW_KEY_3, keyName = "3"),
-    NUM_4(KeyEvent.VK_4, GLFW.GLFW_KEY_4, keyName = "4"),
-    NUM_5(KeyEvent.VK_5, GLFW.GLFW_KEY_5, keyName = "5"),
-    NUM_6(KeyEvent.VK_6, GLFW.GLFW_KEY_6, keyName = "6"),
-    NUM_7(KeyEvent.VK_7, GLFW.GLFW_KEY_7, keyName = "7"),
-    NUM_8(KeyEvent.VK_8, GLFW.GLFW_KEY_8, keyName = "8"),
-    NUM_9(KeyEvent.VK_9, GLFW.GLFW_KEY_9, keyName = "9"),
+    KEY_0(KeyEvent.VK_0, GLFW.GLFW_KEY_0, keyName = "0"),
+    KEY_1(KeyEvent.VK_1, GLFW.GLFW_KEY_1, keyName = "1"),
+    KEY_2(KeyEvent.VK_2, GLFW.GLFW_KEY_2, keyName = "2"),
+    KEY_3(KeyEvent.VK_3, GLFW.GLFW_KEY_3, keyName = "3"),
+    KEY_4(KeyEvent.VK_4, GLFW.GLFW_KEY_4, keyName = "4"),
+    KEY_5(KeyEvent.VK_5, GLFW.GLFW_KEY_5, keyName = "5"),
+    KEY_6(KeyEvent.VK_6, GLFW.GLFW_KEY_6, keyName = "6"),
+    KEY_7(KeyEvent.VK_7, GLFW.GLFW_KEY_7, keyName = "7"),
+    KEY_8(KeyEvent.VK_8, GLFW.GLFW_KEY_8, keyName = "8"),
+    KEY_9(KeyEvent.VK_9, GLFW.GLFW_KEY_9, keyName = "9"),
 
     // Letters
     A(KeyEvent.VK_A, GLFW.GLFW_KEY_A),
@@ -71,6 +74,7 @@ enum class Key(internal val awtCode: Int, internal val glCode: Int, private val 
     PERIOD(KeyEvent.VK_PERIOD, GLFW.GLFW_KEY_PERIOD, "."),
     PLUS(KeyEvent.VK_EQUALS, GLFW.GLFW_KEY_EQUAL, "+"),
     RIGHT_BRACKET(KeyEvent.VK_CLOSE_BRACKET, GLFW.GLFW_KEY_RIGHT_BRACKET, "]"),
+    SEMICOLON(KeyEvent.VK_SEMICOLON, GLFW.GLFW_KEY_SEMICOLON, ";"),
     SLASH(KeyEvent.VK_SLASH, GLFW.GLFW_KEY_SLASH, "/"),
 
     // Cursor Keys

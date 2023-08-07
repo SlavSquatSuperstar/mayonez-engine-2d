@@ -49,7 +49,14 @@ public class Animator extends Script {
     @Override
     public void update(float dt) {
         if (animTimer.isEnabled() && animTimer.isReady()) {
-            setFrame((currentFrame + 1) % numFrames); // update frame count
+            // update frame count
+            if (currentFrame == numFrames - 1) {
+                currentFrame = 0;
+                onFinishAnimation();
+            } else {
+                currentFrame += 1;
+            }
+            setFrame(currentFrame);
             animTimer.reset();
         }
     }
@@ -107,6 +114,12 @@ public class Animator extends Script {
     public void onDisable() {
         setSpriteVisible(false);
         setAnimationEnabled(false);
+    }
+
+    /**
+     * Custom user behavior for when this animation finishes looping once.
+     */
+    public void onFinishAnimation() {
     }
 
 }
