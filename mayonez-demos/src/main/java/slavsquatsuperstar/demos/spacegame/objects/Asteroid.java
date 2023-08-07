@@ -3,12 +3,12 @@ package slavsquatsuperstar.demos.spacegame.objects;
 import mayonez.*;
 import mayonez.graphics.*;
 import mayonez.graphics.debug.*;
-import mayonez.graphics.sprites.*;
 import mayonez.math.*;
 import mayonez.physics.*;
 import mayonez.physics.colliders.*;
 import mayonez.scripts.*;
-import mayonez.scripts.combat.*;
+import slavsquatsuperstar.demos.spacegame.ZIndex;
+import slavsquatsuperstar.demos.spacegame.combat.Damageable;
 
 /**
  * An asteroid in space that can be destroyed.
@@ -17,10 +17,10 @@ import mayonez.scripts.combat.*;
  */
 public class Asteroid extends GameObject {
 
-    private static final SpriteSheet ASTEROID_SPRITES = Sprites.createSpriteSheet(
-            "assets/textures/spacegame/asteroids.png",
-            32, 32, 2, 0
-    );
+//    private static final SpriteSheet ASTEROID_SPRITES = Sprites.createSpriteSheet(
+//            "assets/textures/spacegame/asteroids.png",
+//            32, 32, 2, 0
+//    );
     private final SpawnManager obstacleSpawner;
     private final int startingHealth;
     private final Color color;

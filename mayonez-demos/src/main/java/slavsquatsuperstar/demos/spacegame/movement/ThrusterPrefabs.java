@@ -1,9 +1,9 @@
-package slavsquatsuperstar.demos.spacegame.objects;
+package slavsquatsuperstar.demos.spacegame.movement;
 
 import mayonez.*;
 import mayonez.math.*;
-import slavsquatsuperstar.demos.spacegame.scripts.ThrustDirection;
-import slavsquatsuperstar.demos.spacegame.scripts.Thruster;
+import slavsquatsuperstar.demos.spacegame.movement.ThrustDirection;
+import slavsquatsuperstar.demos.spacegame.movement.Thruster;
 
 /**
  * Creates prefab thrusts for spaceships.

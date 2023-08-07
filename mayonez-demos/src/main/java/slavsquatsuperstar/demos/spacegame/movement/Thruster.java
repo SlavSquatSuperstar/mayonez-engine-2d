@@ -1,8 +1,8 @@
-package slavsquatsuperstar.demos.spacegame.scripts;
+package slavsquatsuperstar.demos.spacegame.movement;
 
 import mayonez.*;
 import mayonez.graphics.sprites.*;
-import slavsquatsuperstar.demos.spacegame.objects.ZIndex;
+import slavsquatsuperstar.demos.spacegame.ZIndex;
 
 /**
  * A script representing a spaceship engine and assigns it a direction.

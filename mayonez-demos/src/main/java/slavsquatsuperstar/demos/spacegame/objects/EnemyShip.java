@@ -6,9 +6,11 @@ import mayonez.math.*;
 import mayonez.physics.*;
 import mayonez.physics.colliders.*;
 import mayonez.scripts.*;
-import mayonez.scripts.combat.*;
-import slavsquatsuperstar.demos.spacegame.scripts.EnemyFireController;
-import slavsquatsuperstar.demos.spacegame.scripts.EnemyThrustController;
+import slavsquatsuperstar.demos.spacegame.ZIndex;
+import slavsquatsuperstar.demos.spacegame.combat.*;
+import slavsquatsuperstar.demos.spacegame.combat.EnemyFireController;
+import slavsquatsuperstar.demos.spacegame.movement.EnemyThrustController;
+import slavsquatsuperstar.demos.spacegame.movement.ThrusterPrefabs;
 
 /**
  * An enemy spaceship that can be destroyed.

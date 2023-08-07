@@ -1,4 +1,4 @@
-package slavsquatsuperstar.demos.spacegame.objects;
+package slavsquatsuperstar.demos.spacegame.combat;
 
 import mayonez.*;
 import mayonez.graphics.debug.*;
@@ -6,8 +6,8 @@ import mayonez.graphics.sprites.*;
 import mayonez.math.*;
 import mayonez.physics.*;
 import mayonez.physics.colliders.*;
-import mayonez.scripts.combat.*;
 import mayonez.util.*;
+import slavsquatsuperstar.demos.spacegame.ZIndex;
 
 /**
  * Creates prefab projectiles that spaceships can fire.

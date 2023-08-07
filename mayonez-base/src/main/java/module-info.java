@@ -36,7 +36,6 @@ module mayonez.base {
     exports mayonez.physics;
     exports mayonez.physics.colliders;
     exports mayonez.scripts;
-    exports mayonez.scripts.combat;
     exports mayonez.scripts.mouse;
     exports mayonez.scripts.movement;
     exports mayonez.util;

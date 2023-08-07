@@ -7,7 +7,8 @@ import mayonez.math.*;
 import mayonez.physics.*;
 import mayonez.physics.colliders.*;
 import mayonez.scripts.*;
-import mayonez.scripts.combat.*;
+import slavsquatsuperstar.demos.spacegame.ZIndex;
+import slavsquatsuperstar.demos.spacegame.combat.*;
 
 /**
  * A fragment of a destroyed asteroid.

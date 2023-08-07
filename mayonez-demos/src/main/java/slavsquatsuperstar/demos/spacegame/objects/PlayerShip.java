@@ -7,7 +7,10 @@ import mayonez.physics.*;
 import mayonez.physics.colliders.*;
 import mayonez.scripts.*;
 import mayonez.scripts.movement.*;
-import slavsquatsuperstar.demos.spacegame.scripts.*;
+import slavsquatsuperstar.demos.spacegame.ZIndex;
+import slavsquatsuperstar.demos.spacegame.combat.PlayerFireController;
+import slavsquatsuperstar.demos.spacegame.movement.PlayerThrustController;
+import slavsquatsuperstar.demos.spacegame.movement.ThrusterPrefabs;
 
 /**
  * A player-controlled spaceship that can fire projectiles.
