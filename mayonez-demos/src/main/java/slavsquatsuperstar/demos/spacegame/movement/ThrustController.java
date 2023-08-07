@@ -73,6 +73,12 @@ public abstract class ThrustController extends Script {
 
     // Callback Methods
 
+    @Override
+    public void onDisable() {
+        for (var thruster : thrusters) {
+            thruster.setEnabled(false);
+        }
+    }
 
     @Override
     public void onDestroy() {

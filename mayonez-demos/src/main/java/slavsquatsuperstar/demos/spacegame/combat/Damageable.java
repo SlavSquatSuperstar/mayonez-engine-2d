@@ -24,7 +24,7 @@ public class Damageable extends Script {
 
     @Override
     public void update(float dt) {
-        if (healthPoints.isAtMin()) gameObject.destroy();
+        if (healthPoints.isAtMin()) onHealthDepleted();
     }
 
     @Override
@@ -37,6 +37,14 @@ public class Damageable extends Script {
 
     // Health Methods
 
+    public void damage(float damage) {
+        healthPoints.count(-damage);
+    }
+
+    public void heal(float healing) {
+        healthPoints.count(healing);
+    }
+
     public float getHealth() {
         return healthPoints.getValue();
     }
@@ -45,12 +53,8 @@ public class Damageable extends Script {
         healthPoints.setValue(health);
     }
 
-    public void damage(float damage) {
-        healthPoints.count(-damage);
-    }
-
-    public void heal(float healing) {
-        healthPoints.count(healing);
+    public void onHealthDepleted() {
+        gameObject.destroy();
     }
 
 }

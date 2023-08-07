@@ -45,7 +45,7 @@ public abstract class Script extends Component {
     }
 
     public final void destroy() {
-        onDisable();
+        setEnabled(false);
         onDestroy();
         super.destroy();
     }
@@ -53,20 +53,26 @@ public abstract class Script extends Component {
     // Scene Callbacks
 
     /**
-     * Custom user behavior for when this script is enabled.
+     * Custom user behavior for when this script is enabled. Calling {@code onEnable()}
+     * directly can lead to unpredictable behavior. It is better to call {@link #setEnabled}
+     * with {@code true} as the parameter instead.
      */
     public void onEnable() {
     }
 
     /**
-     * Custom user behavior for when this script is disabled.
+     * Custom user behavior for when this script is disabled. Calling {@code onDisable()}
+     * directly can lead to unpredictable behavior. It is better to call {@link #setEnabled}
+     * with {@code false} as the parameter instead.
      */
     public void onDisable() {
     }
 
     /**
      * Custom behavior for when this script or its game object is destroyed. The fields
-     * {@link #gameObject} and {@link #transform} will still be accessible.
+     * {@link #gameObject} and {@link #transform} will still be accessible. Calling
+     * {@code onDestroy()}  directly can lead to unpredictable behavior. It is better to
+     * call {@link #destroy} instead.
      */
     public void onDestroy() {
     }

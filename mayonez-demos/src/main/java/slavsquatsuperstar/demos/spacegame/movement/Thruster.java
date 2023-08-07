@@ -9,24 +9,31 @@ import slavsquatsuperstar.demos.spacegame.ZIndex;
  *
  * @author SlavSquatSuperstar
  */
-// TODO GL renderer lags child position more than AWT
 public class Thruster extends Script {
 
     private static final SpriteSheet EXHAUST_TEXTURES = Sprites.createSpriteSheet(
             "assets/textures/spacegame/exhaust.png",
             16, 16, 4, 0);
 
-    public final ThrustDirection moveDir;
-    public final ThrustDirection turnDir;
     private Animator exhaust;
+    final ThrustDirection moveDir, turnDir;
     private boolean moveEnabled, turnEnabled;
 
-    // Create a movement thruster
+    /**
+     * Create a movement thruster for straight movement.
+     *
+     * @param moveDir the movement direction
+     */
     public Thruster(ThrustDirection moveDir) {
         this(moveDir, ThrustDirection.NONE);
     }
 
-    // Create a maneuvering thruster
+    /**
+     * Create a maneuvering thruster for straight movement and turning.
+     *
+     * @param moveDir the movement direction
+     * @param turnDir the turning direction
+     */
     public Thruster(ThrustDirection moveDir, ThrustDirection turnDir) {
         this.moveDir = moveDir;
         this.turnDir = turnDir;
@@ -34,16 +41,15 @@ public class Thruster extends Script {
 
     @Override
     public void start() {
-        exhaust = gameObject.getComponent(Animator.class);
         moveEnabled = false;
         turnEnabled = false;
+        exhaust = gameObject.getComponent(Animator.class);
+        if (exhaust == null) setEnabled(false);
     }
 
     @Override
     public void update(float dt) {
-        if (exhaust != null) {
-            exhaust.setEnabled(moveEnabled || turnEnabled);
-        }
+        exhaust.setEnabled(moveEnabled || turnEnabled);
     }
 
     public void setMoveEnabled(boolean moveEnabled) {
@@ -52,6 +58,11 @@ public class Thruster extends Script {
 
     public void setTurnEnabled(boolean turnEnabled) {
         this.turnEnabled = turnEnabled;
+    }
+
+    @Override
+    public void onDisable() {
+        exhaust.setEnabled(false);
     }
 
     // Factory Method
@@ -75,4 +86,5 @@ public class Thruster extends Script {
             }
         };
     }
+
 }

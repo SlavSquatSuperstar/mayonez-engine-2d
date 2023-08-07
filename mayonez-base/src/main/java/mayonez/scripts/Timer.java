@@ -59,6 +59,11 @@ public class Timer extends Script {
         return duration;
     }
 
+    /**
+     * How long until the timer is ready.
+     *
+     * @return the remaining value
+     */
     public float getValue() {
         return value;
     }

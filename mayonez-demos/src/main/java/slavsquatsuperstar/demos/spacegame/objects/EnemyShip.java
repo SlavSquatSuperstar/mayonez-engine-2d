@@ -42,7 +42,7 @@ public class EnemyShip extends GameObject {
         rb.setVelocity(transform.getUp().mul(Random.randomFloat(2f, 10f)));
         addComponent(new KeepInScene(KeepInScene.Mode.WRAP));
 
-        addComponent(new Damageable(4) {
+        addComponent(new ShipDestruction(4) {
             @Override
             public void onDestroy() {
                 enemySpawner.markObjectDestroyed();

@@ -43,7 +43,6 @@ public class Animator extends Script {
     @Override
     public void start() {
         animTimer.reset();
-        animTimer.start();
         setSpriteTexture(0);
     }
 
