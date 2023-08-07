@@ -6,7 +6,6 @@ import mayonez.input.*;
 import mayonez.math.Random;
 import mayonez.math.*;
 import mayonez.math.shapes.*;
-import mayonez.scripts.*;
 import mayonez.util.*;
 import slavsquatsuperstar.demos.spacegame.objects.*;
 
@@ -14,18 +13,21 @@ import java.util.*;
 
 public class SpaceGameScene extends Scene {
 
+    // Constants
     private final static int SCENE_SIZE = 3;
+    private final static int NUM_PLAYERS = 1;
+    private final static int NUM_ENEMIES = 6;
+    private final static int NUM_OBSTACLES = 5;
+    private final static int NUM_STARS = 1200;
+
+    // Objects
     private final List<BackgroundObject> backgroundObjects;
-    private final int numEnemies, numObstacles, numStars;
 
     public SpaceGameScene(String name) {
         super(name, Preferences.getScreenWidth() * SCENE_SIZE,
                 Preferences.getScreenHeight() * SCENE_SIZE, 32f);
         setBackground(new Color(14, 14, 14));
         backgroundObjects = new ArrayList<>();
-        numEnemies = 6;
-        numObstacles = 5;
-        numStars = 1200;
     }
 
     @Override
@@ -33,26 +35,45 @@ public class SpaceGameScene extends Scene {
         setGravity(new Vec2());
         backgroundObjects.clear();
 
-        addObject(new PlayerShip("Player Spaceship", "assets/textures/spacegame/spaceship1.png"));
         addSpawners();
-
         addSolarSystem();
-        addBackgroundStars(numStars);
+        addBackgroundStars();
     }
+
+    @Override
+    protected void onUserRender() {
+        backgroundObjects.forEach(obj -> obj.debugDraw(getDebugDraw()));
+    }
+
+    @Override
+    protected void onUserUpdate(float dt) {
+        // camera controls
+        getCamera().rotate(KeyInput.getAxis("arrows horizontal"));
+        getCamera().zoom(1 + 0.01f * KeyInput.getAxis("arrows vertical"));
+    }
+
+    // Helper Methods
 
     private void addSpawners() {
         addObject(new GameObject("Object Spawner") {
             @Override
             protected void init() {
-                SpawnManager enemySpawner;
-                SpawnManager obstacleSpawner;
-                addComponent(enemySpawner = new SpawnManager(numEnemies, 5) {
+                SpawnManager playerSpawner, enemySpawner, obstacleSpawner;
+                addComponent(playerSpawner = new SpawnManager(NUM_PLAYERS, 2) {
                     @Override
                     public GameObject createSpawnedObject() {
-                        return new EnemyShip("Enemy Spaceship", "assets/textures/spacegame/spaceship2.png", this);
+                        return new PlayerShip("Player Spaceship",
+                                "assets/textures/spacegame/spaceship1.png", this);
                     }
                 });
-                addComponent(obstacleSpawner = new SpawnManager(numObstacles, 20) {
+                addComponent(enemySpawner = new SpawnManager(NUM_ENEMIES, 5) {
+                    @Override
+                    public GameObject createSpawnedObject() {
+                        return new EnemyShip("Enemy Spaceship",
+                                "assets/textures/spacegame/spaceship2.png", this);
+                    }
+                });
+                addComponent(obstacleSpawner = new SpawnManager(NUM_OBSTACLES, 20) {
                     @Override
                     public GameObject createSpawnedObject() {
                         return new Asteroid("Asteroid", this);
@@ -60,6 +81,7 @@ public class SpaceGameScene extends Scene {
                 });
 
                 // Populate world on start
+                playerSpawner.populateToMax();
                 enemySpawner.populateToMax();
                 obstacleSpawner.populateToMax();
             }
@@ -72,9 +94,9 @@ public class SpaceGameScene extends Scene {
         addBackgroundObject(new Circle(new Vec2(-20, 16), 2), Colors.YELLOW, ZIndex.BACKGROUND); // Sun
     }
 
-    private void addBackgroundStars(int numStars) {
+    private void addBackgroundStars() {
         // TODO parallax
-        for (var i = 0; i < numStars; i++) {
+        for (var i = 0; i < NUM_STARS; i++) {
             var starPos = this.getRandomPosition().mul(2);
 
             float starSize;
@@ -87,18 +109,6 @@ public class SpaceGameScene extends Scene {
             var starColor = Random.randomColor(192, 255);
             addBackgroundObject(new Circle(starPos, starSize / starDist), starColor, ZIndex.BACKGROUND_STAR);
         }
-    }
-
-    @Override
-    protected void onUserUpdate(float dt) {
-        // camera controls
-        getCamera().rotate(KeyInput.getAxis("arrows horizontal"));
-        getCamera().zoom(1 + 0.01f * KeyInput.getAxis("arrows vertical"));
-    }
-
-    @Override
-    protected void onUserRender() {
-        backgroundObjects.forEach(obj -> obj.debugDraw(getDebugDraw()));
     }
 
     private void addBackgroundObject(Shape shape, Color color, int zIndex) {

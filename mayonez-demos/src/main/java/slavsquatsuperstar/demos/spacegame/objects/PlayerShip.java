@@ -8,7 +8,9 @@ import mayonez.physics.colliders.*;
 import mayonez.scripts.*;
 import mayonez.scripts.movement.*;
 import slavsquatsuperstar.demos.spacegame.ZIndex;
+import slavsquatsuperstar.demos.spacegame.combat.Damageable;
 import slavsquatsuperstar.demos.spacegame.combat.PlayerFireController;
+import slavsquatsuperstar.demos.spacegame.combat.ShipDestruction;
 import slavsquatsuperstar.demos.spacegame.movement.PlayerThrustController;
 import slavsquatsuperstar.demos.spacegame.movement.ThrusterPrefabs;
 
@@ -17,15 +19,16 @@ import slavsquatsuperstar.demos.spacegame.movement.ThrusterPrefabs;
  *
  * @author SlavSquatSuperstar
  */
-// TODO player death and respawn
 // TODO shields
 public class PlayerShip extends GameObject {
 
     private final String spriteName;
+    private final SpawnManager playerSpawner;
 
-    public PlayerShip(String name, String spriteName) {
+    public PlayerShip(String name, String spriteName, SpawnManager playerSpawner) {
         super(name, Transform.scaleInstance(new Vec2(2, 2)), ZIndex.SPACESHIP);
         this.spriteName = spriteName;
+        this.playerSpawner = playerSpawner;
     }
 
     @Override
@@ -39,6 +42,20 @@ public class PlayerShip extends GameObject {
 
         // Visuals
         addComponent(Sprites.createSprite(spriteName));
+
+        ShipDestruction shipDestruction;
+        addComponent(shipDestruction = new ShipDestruction());
+        addComponent(new Damageable(8) {
+            @Override
+            public void onHealthDepleted() {
+                shipDestruction.startDestructionSequence();
+            }
+
+            @Override
+            public void onDestroy() {
+                playerSpawner.markObjectDestroyed();
+            }
+        });
 
         // Scripts
         addComponent(new KeyMovement(10f, MoveMode.FORCE, "horizontal2", "vertical").setObjectAligned(true));

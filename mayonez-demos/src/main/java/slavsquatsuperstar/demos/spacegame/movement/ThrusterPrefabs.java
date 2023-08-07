@@ -1,16 +1,20 @@
 package slavsquatsuperstar.demos.spacegame.movement;
 
 import mayonez.*;
+import mayonez.graphics.sprites.*;
 import mayonez.math.*;
-import slavsquatsuperstar.demos.spacegame.movement.ThrustDirection;
-import slavsquatsuperstar.demos.spacegame.movement.Thruster;
+import slavsquatsuperstar.demos.spacegame.ZIndex;
 
 /**
- * Creates prefab thrusts for spaceships.
+ * Creates prefab thrusters for spaceships.
  *
  * @author SlavSquatSuperstar
  */
 public final class ThrusterPrefabs {
+
+    private static final SpriteSheet EXHAUST_TEXTURES = Sprites.createSpriteSheet(
+            "assets/textures/spacegame/exhaust.png",
+            16, 16, 4, 0);
 
     private ThrusterPrefabs() {
     }
@@ -53,10 +57,31 @@ public final class ThrusterPrefabs {
         return new Thruster[]{lBack, rBack, lFront, rFront, fLeft, bLeft, fRight, bRight};
     }
 
-    private static void addThrusterObject(GameObject parent, Thruster thruster, String name, Vec2 position, float rotation, Vec2 scale) {
-        parent.getScene().addObject(
-                Thruster.createPrefab(thruster, name, parent,
-                        new Transform(position, rotation, scale))
-        );
+    private static void addThrusterObject(
+            GameObject parent, Thruster thruster, String name,
+            Vec2 position, float rotation, Vec2 scale
+    ) {
+        var offsetXf = new Transform(position, rotation, scale);
+        parent.getScene().addObject(createPrefab(thruster, name, parent, offsetXf));
     }
+
+    public static GameObject createPrefab(
+            Thruster thruster, String name, GameObject parentObj, Transform offsetXf
+    ) {
+        return new GameObject(name) {
+            @Override
+            protected void init() {
+                setZIndex(ZIndex.EXHAUST);
+                addComponent(thruster);
+                addComponent(new Animator(EXHAUST_TEXTURES, 0.15f));
+                addComponent(new Script() {
+                    @Override
+                    public void debugRender() {
+                        transform.set(parentObj.transform.combine(offsetXf));
+                    }
+                });
+            }
+        };
+    }
+
 }

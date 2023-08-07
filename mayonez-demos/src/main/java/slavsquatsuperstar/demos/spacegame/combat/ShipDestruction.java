@@ -43,12 +43,16 @@ public class ShipDestruction extends Script {
 
     @Override
     public void update(float dt) {
+        if (destructionTimer.isReady()) {
+            gameObject.destroy();
+        }
+    }
+
+    @Override
+    public void debugRender() {
         if (explosion != null) {
             // Have the explosion follow the ship until it is destroyed
             explosion.transform.setPosition(transform.getPosition());
-        }
-        if (destructionTimer.isReady()) {
-            gameObject.destroy();
         }
     }
 
