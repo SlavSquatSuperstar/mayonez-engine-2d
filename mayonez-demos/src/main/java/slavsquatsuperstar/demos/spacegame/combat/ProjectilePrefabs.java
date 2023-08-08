@@ -17,7 +17,7 @@ import slavsquatsuperstar.demos.spacegame.ZIndex;
 public final class ProjectilePrefabs {
 
     private static final SpriteSheet PROJECTILE_SPRITES = Sprites.createSpriteSheet(
-            "assets/textures/spacegame/projectiles.png",
+            "assets/spacegame/textures/projectiles.png",
             16, 16, 2, 0);
 
     private ProjectilePrefabs() {

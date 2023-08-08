@@ -13,7 +13,7 @@ public class Explosion {
     // Constants
     private static final int ANIMATION_SPRITES = 8;
     private static final SpriteSheet EXPLOSION_TEXTURES = Sprites.createSpriteSheet(
-            "assets/textures/spacegame/explosion.png",
+            "assets/spacegame/textures/explosion.png",
             32, 32, ANIMATION_SPRITES, 0
     );
 

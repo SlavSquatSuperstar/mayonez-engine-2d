@@ -63,14 +63,14 @@ public class SpaceGameScene extends Scene {
                     @Override
                     public GameObject createSpawnedObject() {
                         return new PlayerShip("Player Spaceship",
-                                "assets/textures/spacegame/spaceship1.png", this);
+                                "assets/spacegame/textures/spaceship1.png", this);
                     }
                 });
                 addComponent(enemySpawner = new SpawnManager(NUM_ENEMIES, 5) {
                     @Override
                     public GameObject createSpawnedObject() {
                         return new EnemyShip("Enemy Spaceship",
-                                "assets/textures/spacegame/spaceship2.png", this);
+                                "assets/spacegame/textures/spaceship2.png", this);
                     }
                 });
                 addComponent(obstacleSpawner = new SpawnManager(NUM_OBSTACLES, 20) {

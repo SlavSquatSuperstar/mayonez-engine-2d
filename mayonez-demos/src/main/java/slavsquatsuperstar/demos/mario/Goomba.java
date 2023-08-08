@@ -33,7 +33,6 @@ class Goomba extends GameObject {
             @Override
             public void onCollisionEnter(GameObject other, Vec2 direction) {
                 if (other.getName().equals("Mario")) gameObject.destroy();
-                // TODO don't push Mario around
             }
         });
     }

@@ -13,6 +13,7 @@ import mayonez.scripts.movement.*;
  *
  * @author SlavSquatSuperstar
  */
+@SuppressWarnings("ALL")
 @ExperimentalFeature
 public class ClickToMove extends Script {
 

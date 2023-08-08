@@ -20,10 +20,10 @@ public final class ThrusterPrefabs {
     // Constants
 
     private static final SpriteSheet EXHAUST_TEXTURES = Sprites.createSpriteSheet(
-            "assets/textures/spacegame/exhaust.png",
+            "assets/spacegame/textures/exhaust.png",
             16, 16, 4, 0);
     private static final CSVFile THRUSTER_DATA = Assets.getAsset(
-            "assets/data/spacegame/thrusters.csv", CSVFile.class);
+            "assets/spacegame/data/thrusters.csv", CSVFile.class);
 
     private ThrusterPrefabs() {
     }

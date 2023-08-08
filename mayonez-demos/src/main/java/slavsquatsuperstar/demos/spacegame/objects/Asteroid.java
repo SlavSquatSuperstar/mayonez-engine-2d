@@ -18,7 +18,7 @@ import slavsquatsuperstar.demos.spacegame.combat.Damageable;
 public class Asteroid extends GameObject {
 
 //    private static final SpriteSheet ASTEROID_SPRITES = Sprites.createSpriteSheet(
-//            "assets/textures/spacegame/asteroids.png",
+//            "assets/spacegame/textures/asteroids.png",
 //            32, 32, 2, 0
 //    );
     private final SpawnManager obstacleSpawner;

@@ -16,7 +16,7 @@ public class UICanvas extends GameObject {
 
     // Constants
     private static final SpriteSheet BLOCK_ICONS = Sprites.createSpriteSheet(
-            "assets/textures/geometrydash/blocks.png",
+            "assets/geometrydash/textures/blocks.png",
             42, 42, 12, 2
     );
     private static final int NUM_COLS = 6;
