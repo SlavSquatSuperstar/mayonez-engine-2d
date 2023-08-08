@@ -27,7 +27,9 @@ cp LICENSE-GPLv3.txt dist/LICENSE.txt
 cp preferences.json dist/
 
 # Zip the dist folder
-zip dist/mayonez-engine dist/mayonez*.jar dist/run* dist/preferences.json dist/*.txt
+cd dist || exit
+rm mayonez*.zip
+zip mayonez-engine.zip mayonez*.jar run* preferences.json *.txt
 
 # Show success message
 echo "Successfully packaged Mayonez Engine."
