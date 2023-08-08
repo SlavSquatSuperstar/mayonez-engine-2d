@@ -12,8 +12,8 @@ import mayonez.util.*
 
 
 /**
- * A component that draws an image at a [mayonez.GameObject]'s position using the
- * GL engine.
+ * Draws a [GLTexture] using the GL engine. This class should not be directly
+ * instantiated. Instead, call [Sprites.createSprite]. See [Sprite] for more information.
  *
  * @author SlavSquatSuperstar
  */

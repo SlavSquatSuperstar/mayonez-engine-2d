@@ -30,6 +30,7 @@ import java.util.*;
  * @author SlavSquatSuperstar
  */
 // TODO current cursor object
+// TODO maybe don't spam "add/remove object" in log
 public abstract class Scene {
 
     private static int sceneCounter = 0; // total number of scenes created
@@ -156,7 +157,9 @@ public abstract class Scene {
 
     private void processSceneChanges() {
         // Remove destroyed objects or add new
-        while (!changesToScene.isEmpty()) changesToScene.poll().run();
+        while (!changesToScene.isEmpty()) {
+            changesToScene.poll().run();
+        }
     }
 
     // Render Methods
@@ -228,14 +231,16 @@ public abstract class Scene {
 
     private void addObjectToStoppedScene(GameObject o) {
         addAndStartObject(o);
-        Logger.debug("Added object \"%s\" to scene \"%s\"", o.getNameAndID(), this.name);
+        Logger.debug("Added object \"%s\" to scene \"%s\"",
+                o.getNameAndID(), this.name);
     }
 
     private void addObjectToRunningScene(GameObject o) {
         addAndStartObject(o);
         renderer.addObject(o);
         physics.addObject(o);
-        Logger.debug("Added object \"%s\" to scene \"%s\"", o.getNameAndID(), this.name);
+        Logger.debug("Added object \"%s\" to scene \"%s\"",
+                o.getNameAndID(), this.name);
     }
 
     /**
@@ -253,7 +258,8 @@ public abstract class Scene {
         renderer.removeObject(o);
         physics.removeObject(o);
         o.onDestroy();
-        Logger.debug("Removed object \"%s\" from scene \"%s\"", o.getNameAndID(), this.name);
+        Logger.debug("Removed object \"%s\" from scene \"%s\"",
+                o.getNameAndID(), this.name);
     }
 
     /**

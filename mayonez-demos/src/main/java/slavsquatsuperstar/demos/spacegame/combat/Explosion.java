@@ -8,6 +8,7 @@ import mayonez.graphics.sprites.*;
  *
  * @author SlavSquatSuperstar
  */
+// TODO damage ships in radius
 public class Explosion {
 
     // Constants

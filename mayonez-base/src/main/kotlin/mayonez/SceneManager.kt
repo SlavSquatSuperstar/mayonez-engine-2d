@@ -89,7 +89,7 @@ object SceneManager {
     internal fun startScene() {
         if (sceneState == SceneState.STOPPED) {
             currentScene.start()
-            Logger.debug("Started scene \"%s\"", currentScene.name)
+            Logger.debug("Started scene \"${currentScene.name}\"")
         }
     }
 
@@ -99,7 +99,7 @@ object SceneManager {
     internal fun stopScene() {
         if (sceneState != SceneState.STOPPED) {
             currentScene.stop()
-            Logger.debug("Stopped scene \"%s\"", currentScene.name)
+            Logger.debug("Stopped scene \"${currentScene.name}\"")
         }
     }
 
@@ -111,7 +111,7 @@ object SceneManager {
     fun resumeScene() {
         if (sceneState == SceneState.PAUSED) {
             currentScene.resume()
-            Logger.debug("Loaded scene \"%s\"", currentScene.name)
+            Logger.debug("Loaded scene \"${currentScene.name}\"")
         }
     }
 
@@ -123,7 +123,7 @@ object SceneManager {
     fun pauseScene() {
         if (sceneState == SceneState.RUNNING) {
             currentScene.pause()
-            Logger.debug("Unloaded scene \"%s\"", currentScene.name)
+            Logger.debug("Unloaded scene \"${currentScene.name}\"")
         }
     }
 
@@ -144,7 +144,7 @@ object SceneManager {
     fun addScene(scene: Scene?) {
         if (scene != null) {
             scenes[scene.name] = scene
-            Logger.debug("Added scene \"%s\"", scene.name)
+            Logger.debug("Added scene \"${scene.name}\"")
         }
     }
 
@@ -158,7 +158,9 @@ object SceneManager {
     fun getScene(name: String?): Scene? = scenes[name]
 
     private fun saveCurrentSceneToPool() {
-        if (!scenes.containsKey(currentScene.name)) addScene(currentScene)
+        if (!scenes.containsKey(currentScene.name)) {
+            addScene(currentScene)
+        }
     }
 
 }

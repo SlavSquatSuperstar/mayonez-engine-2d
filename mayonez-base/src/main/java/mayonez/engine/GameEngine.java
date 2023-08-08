@@ -43,6 +43,7 @@ public abstract sealed class GameEngine permits JGameEngine, GLGameEngine {
         if (!running) {
             running = true;
             window.start();
+            Logger.debug("Started window");
             SceneManager.startScene();
             run();
         }
@@ -70,6 +71,7 @@ public abstract sealed class GameEngine permits JGameEngine, GLGameEngine {
             running = false;
             SceneManager.stopScene();
             window.stop();
+            Logger.debug("Closed window");
         }
     }
 
@@ -110,6 +112,7 @@ public abstract sealed class GameEngine permits JGameEngine, GLGameEngine {
 
     private void printFrameCount() {
         if (debugTimerSecs >= 1f) {
+            // TODO don't debug this, make into property
             Logger.debug("Frames per Second: %d", actualFramesPerSecond);
             actualFramesPerSecond = 0;
             debugTimerSecs = 0f;

@@ -33,6 +33,9 @@ object Mayonez {
         private set
 
     // Init Methods
+    /**
+     * Sets the run configuration for the program. Must be called before [start].
+     */
     @JvmStatic
     @JvmName("setConfig")
     internal fun setConfig(config: RunConfig) {
@@ -55,7 +58,7 @@ object Mayonez {
         Preferences.setPreferences()
         Time.timeStepSecs = (1f / Preferences.fps)
         Logger.setConfig(Preferences.getLoggerConfig())
-        Logger.log("Started %s %s", Preferences.title, Preferences.version)
+        Logger.log("Started ${Preferences.title} ${Preferences.version}")
 
         Assets.initialize()
         Assets.loadResources()
@@ -64,14 +67,14 @@ object Mayonez {
     private fun initializeGame() {
         if (!this::game.isInitialized) {
             game = EngineFactory.createGameEngine(useGL)
-            Logger.debug("Using engine \"%s\"", if (useGL) "GL" else "AWT")
+            Logger.debug("Using \"%s\" engine", if (useGL) "GL" else "AWT")
         }
     }
 
     // Game Loop
 
     /**
-     * Start the game and load a scene.
+     * Start the game and load a scene. Must be called after [setConfig].
      *
      * @param scene the starting scene
      */

@@ -36,9 +36,8 @@ public final class EngineFactory {
      * @return the game engine
      */
     static Window createWindow(boolean useGL) {
-        var title = String.format("%s %s (%s)",
-                (useGL ? "GL" : "AWT"),
-                Preferences.getTitle(), Preferences.getVersion()
+        var title = String.format("%s (%s) %s",
+                Preferences.getTitle(), (useGL ? "GL" : "AWT"), Preferences.getVersion()
         );
         var width = Preferences.getScreenWidth();
         var height = Preferences.getScreenHeight();

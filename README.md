@@ -121,7 +121,7 @@ and a Pool Balls scene.
 
 - All Scenes:
     - **R** to reload the current scene
-    - **P** to pause/unpause the scene
+    - **P** to pause/unpause the scene (may be buggy)
     - **Shift** + **1**-**5** to switch scenes
     - **Esc** to exit the program
 - Space Shooter:

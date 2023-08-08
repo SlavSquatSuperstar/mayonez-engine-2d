@@ -6,8 +6,8 @@ import mayonez.graphics.textures.*
 import mayonez.util.*
 
 /**
- * A visual representation of a [mayonez.GameObject]. To instantiate a
- * sprite, use [Sprites.createSprite].
+ * Draws a [Texture] at a [GameObject]'s position. To instantiate a sprite,
+ * use [Sprites.createSprite]. See [Texture] for more information.
  *
  * @author SlavSquatSuperstar
  */

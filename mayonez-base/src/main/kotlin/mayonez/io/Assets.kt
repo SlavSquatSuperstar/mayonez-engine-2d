@@ -178,7 +178,8 @@ object Assets {
      * @return the texture, if it exists
      */
     @JvmStatic
-    fun getGLTexture(filename: String): GLTexture? = getAsset(filename, GLTexture::class.java)
+    @JvmName("getGLTexture")
+    internal fun getGLTexture(filename: String): GLTexture? = getAsset(filename, GLTexture::class.java)
 
     /**
      * Retrieves the asset at the given location as a [JTexture].
@@ -187,13 +188,14 @@ object Assets {
      * @return the texture, if it exists
      */
     @JvmStatic
-    fun getJTexture(filename: String): JTexture? = getAsset(filename, JTexture::class.java)
+    @JvmName("getJTexture")
+    internal fun getJTexture(filename: String): JTexture? = getAsset(filename, JTexture::class.java)
 
     /** Empties all Assets from the asset pool. */
     @JvmStatic
     fun clearAssets() {
         assets.clear()
-        Logger.debug("Cleared all program resources")
+        Logger.debug("Cleared all assets")
     }
 
     override fun toString(): String {

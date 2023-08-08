@@ -9,8 +9,8 @@ import java.awt.*
 import java.awt.image.*
 
 /**
- * A component that draws an image at a [mayonez.GameObject]'s position
- * using the AWT engine.
+ * Draws a [JTexture] using the AWT engine. This class should not be directly
+ * instantiated. Instead, call [Sprites.createSprite]. See [Sprite] for more information.
  *
  * @author SlavSquatSuperstar
  */

@@ -14,31 +14,31 @@ Running the Program
    b) If you are on Windows, use "run.bat".
 
 Demo Scene Controls
-1. All Scenes:
+1. All Scenes
    - R to reload the current scene
    - P to pause/unpause the scene (may be buggy)
    - Shift + 1-5 to switch scenes
    - Esc to exit the program
-2. Space Shooter:
+2. Space Shooter
    - W/S to fly forward/backwards
    - A/D to turn left/right
    - Q/E to strafe left/right
    - Space to brake
    - Left Mouse to fire weapons
    - 1/2 to switch ammo types
-3. Mario:
+3. Mario
    - W to jump
    - A/D to move side to side
    - S to ground pound
-4. Physics Sandbox:
+4. Physics Sandbox
    - Left Mouse and drag on objects to move them around
    - Right Mouse, drag, and release on objects to flick them
    - 1-4 to spawn shapes at the mouse cursor
    - Space to toggle gravity
-5. Pool Balls:
+5. Pool Balls
    - Left Mouse and drag on objects to move them around
    - Right Mouse, drag, and release on objects to flick them
-6. Geometry Dash Editor:
+6. Geometry Dash Editor
    - WASD to move
    - Left Mouse on buttons to select a brush
    - Left Mouse on an empty space, with a brush selected, to place a block

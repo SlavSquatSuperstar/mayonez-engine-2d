@@ -2,12 +2,18 @@ package mayonez.input
 
 import mayonez.*
 import mayonez.event.*
+import mayonez.input.KeyInput.getAxis
+import mayonez.input.KeyInput.keyDown
+import mayonez.input.KeyInput.keyPressed
 import mayonez.util.*
 import org.lwjgl.glfw.GLFW
 import java.awt.event.*
 
 /**
  * Receives keyboard input events.
+ *
+ * Usage: To query if a key is held, call [keyDown]. To query if a key was just pressed
+ * this frame, call [keyPressed]. To query a key axis, call [getAxis].
  *
  * @author SlavSquatSuperstar
  */
@@ -43,7 +49,8 @@ object KeyInput : KeyAdapter() {
      * @param action the event type
      * @param mods any modifier keys
      */
-    fun keyCallback(window: Long, key: Int, scancode: Int, action: Int, mods: Int) {
+    @JvmName("keyCallback")
+    internal fun keyCallback(window: Long, key: Int, scancode: Int, action: Int, mods: Int) {
         when (action) {
             // TODO GL double pressing still occurs
             GLFW.GLFW_PRESS -> setKeyDown(key, true)

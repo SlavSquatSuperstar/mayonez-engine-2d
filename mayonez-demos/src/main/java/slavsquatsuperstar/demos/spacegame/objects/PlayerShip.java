@@ -26,6 +26,7 @@ public class PlayerShip extends Spaceship {
         getScene().getCamera().setSubject(this).setFollowAngle(false);
 
         // Movement
+        // TODO allow set controls in config
         addComponent(new Rigidbody(1f));
         addComponent(new KeyMovement(10f, MoveMode.FORCE, "horizontal2", "vertical").setObjectAligned(true));
         addComponent(new KeyRotation(180f, MoveMode.VELOCITY, "horizontal"));

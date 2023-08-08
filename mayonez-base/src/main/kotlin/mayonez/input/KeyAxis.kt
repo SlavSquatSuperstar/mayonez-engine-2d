@@ -5,7 +5,8 @@ import mayonez.util.*
 /**
  * Stores two keys intended to perform opposite actions and produces a value based on which are pressed.
  */
-// TODO store mappings?
+// TODO allow storing input mappings
+// TODO allow adding custom axes
 enum class KeyAxis(
     /**
      * The negative key of this axis (down, left, counterclockwise, etc.).
@@ -16,16 +17,26 @@ enum class KeyAxis(
      */
     private val posKey: Key
 ) {
-    VERTICAL(Key.S, Key.W), HORIZONTAL(Key.A, Key.D), HORIZONTAL2(Key.Q, Key.E),
-    ARROWS_VERTICAL(Key.DOWN, Key.UP), ARROWS_HORIZONTAL(Key.LEFT, Key.RIGHT),
-    BRACKETS(Key.LEFT_BRACKET, Key.RIGHT_BRACKET), PLUS_MINUS(Key.MINUS, Key.EQUALS);
+    // Letter Keys
+    VERTICAL(Key.S, Key.W),
+    HORIZONTAL(Key.A, Key.D),
+    HORIZONTAL2(Key.Q, Key.E),
+
+    // Arrow Keys
+    ARROWS_VERTICAL(Key.DOWN, Key.UP),
+    ARROWS_HORIZONTAL(Key.LEFT, Key.RIGHT),
+
+    // Symbols
+    BRACKETS(Key.LEFT_BRACKET, Key.RIGHT_BRACKET),
+    PLUS_MINUS(Key.MINUS, Key.EQUALS);
 
     /**
-     * @return The value of this axis. 1 if the positive key is pressed. -1 if the negative key is pressed.
-     * 0 if the both or neither key is pressed.
+     * Get the value of this axis, 1 of the positive key is pressed, -1 if the negative key is pressed,
+     * and 0 if both or neither key is pressed.
+     *
+     * @return the axis value, -1, 0, or 1
      */
     internal fun value(): Int {
-        // add neg and pos keys to make sure pressing a new key doesn't override the other
         val negVal = if (KeyInput.keyDown(negKey)) -1 else 0
         val posVal = if (KeyInput.keyDown(posKey)) 1 else 0
         return negVal + posVal
