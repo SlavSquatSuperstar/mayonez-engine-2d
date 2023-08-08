@@ -2,6 +2,8 @@ package slavsquatsuperstar.demos.spacegame.movement;
 
 import mayonez.math.*;
 
+import java.util.*;
+
 /**
  * Controls the visibility of an enemy's thruster exhaust plumes.
  *
@@ -11,7 +13,7 @@ public class EnemyThrustController extends ThrustController {
 
     private boolean brakesActive;
 
-    public EnemyThrustController(Thruster... thrusters) {
+    public EnemyThrustController(List<Thruster> thrusters) {
         super(thrusters);
     }
 

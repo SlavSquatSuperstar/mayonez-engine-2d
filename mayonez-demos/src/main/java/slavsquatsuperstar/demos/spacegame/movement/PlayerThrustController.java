@@ -4,6 +4,8 @@ import mayonez.input.*;
 import mayonez.math.*;
 import mayonez.scripts.movement.*;
 
+import java.util.*;
+
 /**
  * Controls the visibility of the player's thruster exhaust plumes.
  *
@@ -11,7 +13,7 @@ import mayonez.scripts.movement.*;
  */
 public class PlayerThrustController extends ThrustController {
 
-    public PlayerThrustController(Thruster... thrusters) {
+    public PlayerThrustController(List<Thruster> thrusters) {
         super(thrusters);
     }
 

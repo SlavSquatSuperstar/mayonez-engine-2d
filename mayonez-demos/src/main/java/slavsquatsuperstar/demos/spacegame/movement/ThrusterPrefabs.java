@@ -2,73 +2,84 @@ package slavsquatsuperstar.demos.spacegame.movement;
 
 import mayonez.*;
 import mayonez.graphics.sprites.*;
+import mayonez.io.*;
+import mayonez.io.text.*;
 import mayonez.math.*;
+import mayonez.util.Record;
 import slavsquatsuperstar.demos.spacegame.ZIndex;
 
+import java.util.*;
+
 /**
- * Creates prefab thrusters for spaceships.
+ * Creates prefab thruster objects for spaceships.
  *
  * @author SlavSquatSuperstar
  */
 public final class ThrusterPrefabs {
 
+    // Constants
+
     private static final SpriteSheet EXHAUST_TEXTURES = Sprites.createSpriteSheet(
             "assets/textures/spacegame/exhaust.png",
             16, 16, 4, 0);
+    private static final CSVFile THRUSTER_DATA = Assets.getAsset(
+            "assets/data/spacegame/thrusters.csv", CSVFile.class);
 
     private ThrusterPrefabs() {
     }
 
-    public static Thruster[] addThrustersToObject(GameObject parent) {
-        // Sub-Objects
-        var lBack = new Thruster(ThrustDirection.FORWARD);
-        var rBack = new Thruster(ThrustDirection.FORWARD);
-        var lFront = new Thruster(ThrustDirection.BACKWARD);
-        var rFront = new Thruster(ThrustDirection.BACKWARD);
-        var fLeft = new Thruster(ThrustDirection.RIGHT, ThrustDirection.TURN_RIGHT);
-        var bLeft = new Thruster(ThrustDirection.RIGHT, ThrustDirection.TURN_LEFT);
-        var fRight = new Thruster(ThrustDirection.LEFT, ThrustDirection.TURN_LEFT);
-        var bRight = new Thruster(ThrustDirection.LEFT, ThrustDirection.TURN_RIGHT);
+    // Factory Methods
 
-        // Rear Thrusters
-        addThrusterObject(parent, lBack, "Left Rear Thruster",
-                new Vec2(-0.1f, -0.6f), 0f, new Vec2(0.3f));
-        addThrusterObject(parent, rBack, "Right Rear Thruster",
-                new Vec2(0.1f, -0.6f), 0f, new Vec2(0.3f));
+    public static List<Thruster> addThrustersToObject(GameObject parent) {
+        List<Thruster> thrusters = new ArrayList<>();
+        if (THRUSTER_DATA == null) return thrusters;
 
-        // Front Thrusters
-        addThrusterObject(parent, lFront, "Left Front Thruster",
-                new Vec2(-0.075f, 0.46f), 180f, new Vec2(0.1f));
-        addThrusterObject(parent, rFront, "Right Front Thruster",
-                new Vec2(0.075f, 0.46f), 180f, new Vec2(0.1f));
+        for (var record : THRUSTER_DATA.readCSV()) {
+            Thruster thruster;
+            try {
+                thruster = getThruster(record);
+                thrusters.add(thruster);
+            } catch (IllegalArgumentException e) {
+                continue;
+            }
 
-        // Left Thrusters
-        addThrusterObject(parent, fLeft, "Front Left Thruster",
-                new Vec2(-0.14f, 0.39f), -90, new Vec2(0.08f));
-        addThrusterObject(parent, bLeft, "Rear Left Thruster",
-                new Vec2(-0.2f, -0.36f), -90, new Vec2(0.08f));
+            var objName = "%s Thruster".formatted(record.getString("name"));
+            addThrusterObject(parent, thruster, objName, getOffsetXf(record));
+        }
+        return thrusters;
+    }
 
-        // Right Thrusters
-        addThrusterObject(parent, fRight, "Front Right Thruster",
-                new Vec2(0.14f, 0.39f), 90, new Vec2(0.08f));
-        addThrusterObject(parent, bRight, "Rear Right Thruster",
-                new Vec2(0.2f, -0.36f), 90, new Vec2(0.08f));
+    private static Thruster getThruster(Record record) throws IllegalArgumentException {
+        var moveDir = ThrustDirection.valueOf(record.getString("moveDir").toUpperCase());
+        var turnDir = getTurnDir(record);
 
-        return new Thruster[]{lBack, rBack, lFront, rFront, fLeft, bLeft, fRight, bRight};
+        if (turnDir == null) {
+            return new Thruster(moveDir);
+        } else {
+            return new Thruster(moveDir, turnDir);
+        }
+    }
+
+    private static ThrustDirection getTurnDir(Record record) throws IllegalArgumentException {
+        var turnDirStr = record.getString("turnDir");
+        if (turnDirStr.equals("none")) {
+            return null;
+        } else {
+            return ThrustDirection.valueOf(turnDirStr.toUpperCase());
+        }
+    }
+
+    private static Transform getOffsetXf(Record record) {
+        var position = new Vec2(record.getFloat("posX"), record.getFloat("posY"));
+        var rotation = record.getFloat("rotation");
+        var scale = new Vec2(record.getFloat("scale"));
+        return new Transform(position, rotation, scale);
     }
 
     private static void addThrusterObject(
-            GameObject parent, Thruster thruster, String name,
-            Vec2 position, float rotation, Vec2 scale
+            GameObject parent, Thruster thruster, String name, Transform offsetXf
     ) {
-        var offsetXf = new Transform(position, rotation, scale);
-        parent.getScene().addObject(createPrefab(thruster, name, parent, offsetXf));
-    }
-
-    public static GameObject createPrefab(
-            Thruster thruster, String name, GameObject parentObj, Transform offsetXf
-    ) {
-        return new GameObject(name) {
+        parent.getScene().addObject(new GameObject(name) {
             @Override
             protected void init() {
                 setZIndex(ZIndex.EXHAUST);
@@ -77,11 +88,11 @@ public final class ThrusterPrefabs {
                 addComponent(new Script() {
                     @Override
                     public void debugRender() {
-                        transform.set(parentObj.transform.combine(offsetXf));
+                        transform.set(parent.transform.combine(offsetXf));
                     }
                 });
             }
-        };
+        });
     }
 
 }

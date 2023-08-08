@@ -4,6 +4,8 @@ import mayonez.*;
 import mayonez.math.*;
 import mayonez.physics.*;
 
+import java.util.*;
+
 /**
  * Controls the visibility of thruster exhaust plumes based on a spaceship's acceleration.
  *
@@ -12,10 +14,10 @@ import mayonez.physics.*;
 public abstract class ThrustController extends Script {
 
     private final static float BRAKE_THRESHOLD = 0.1f; // Don't fire when moving very slow
-    private final Thruster[] thrusters;
+    private final List<Thruster> thrusters;
     protected Rigidbody rb;
 
-    public ThrustController(Thruster... thrusters) {
+    public ThrustController(List<Thruster> thrusters) {
         this.thrusters = thrusters;
     }
 

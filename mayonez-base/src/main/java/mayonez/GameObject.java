@@ -285,6 +285,7 @@ public class GameObject {
     final void onDestroy() {
         components.forEach(Component::destroy);
         components.clear();
+        tags.clear();
         scene = null;
     }
 
@@ -336,6 +337,7 @@ public class GameObject {
 
     /**
      * Remove this object from the scene and destroy all its components and children.
+     * The {@link #scene} field will be set to null.
      */
     public void destroy() {
         destroyed = true;

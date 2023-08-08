@@ -59,7 +59,7 @@ public class SpaceGameScene extends Scene {
             @Override
             protected void init() {
                 SpawnManager playerSpawner, enemySpawner, obstacleSpawner;
-                addComponent(playerSpawner = new SpawnManager(NUM_PLAYERS, 2) {
+                addComponent(playerSpawner = new SpawnManager(NUM_PLAYERS, 1.5f) {
                     @Override
                     public GameObject createSpawnedObject() {
                         return new PlayerShip("Player Spaceship",
