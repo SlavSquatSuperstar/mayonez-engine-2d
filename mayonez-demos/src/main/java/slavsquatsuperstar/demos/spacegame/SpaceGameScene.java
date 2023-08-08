@@ -2,7 +2,6 @@ package slavsquatsuperstar.demos.spacegame;
 
 import mayonez.*;
 import mayonez.graphics.*;
-import mayonez.input.*;
 import mayonez.math.Random;
 import mayonez.math.*;
 import mayonez.math.shapes.*;
@@ -40,16 +39,16 @@ public class SpaceGameScene extends Scene {
         addBackgroundStars();
     }
 
+//    @Override
+//    protected void onUserUpdate(float dt) {
+//        // camera controls
+//        getCamera().rotate(KeyInput.getAxis("arrows horizontal"));
+//        getCamera().zoom(1 + 0.01f * KeyInput.getAxis("arrows vertical"));
+//    }
+
     @Override
     protected void onUserRender() {
         backgroundObjects.forEach(obj -> obj.debugDraw(getDebugDraw()));
-    }
-
-    @Override
-    protected void onUserUpdate(float dt) {
-        // camera controls
-        getCamera().rotate(KeyInput.getAxis("arrows horizontal"));
-        getCamera().zoom(1 + 0.01f * KeyInput.getAxis("arrows vertical"));
     }
 
     // Helper Methods

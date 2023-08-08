@@ -122,32 +122,31 @@ and a Pool Balls scene.
 - All Scenes:
     - **R** to reload the current scene
     - **P** to pause/unpause the scene
-    - **Shift** + **1**/**2**/**3**/**4**/**5** to switch scenes
+    - **Shift** + **1**-**5** to switch scenes
     - **Esc** to exit the program
 - Space Shooter:
     - **W**/**S** to fly forward/backwards
     - **A**/**D** to turn left/right
     - **Q**/**E** to strafe left/right
     - **Space** to brake
-    - **Left mouse** to fire weapons
+    - **Left Mouse** to fire weapons
     - **1**/**2** to switch ammo types
-    - **Arrow keys** to zoom camera in/out and rotate camera left/right
 - Mario:
     - **W** to jump
     - **A**/**D** to move side to side
     - **S** to ground pound
 - Physics Sandbox:
-    - **Left mouse** and *drag* on objects to move them around
-    - **Right mouse**, *drag*, and *release* on objects to flick them
-    - **1**/**2**/**3**/**4** to spawn shapes
+    - **Left Mouse** and *drag* on objects to move them around
+    - **Right Mouse**, *drag*, and *release* on objects to flick them
+    - **1**-**4** to spawn shapes at the moues cursor
     - **Space** to toggle gravity
 - Pool Balls:
-    - **Left mouse** and *drag* on objects to move them around
-    - **Right mouse**, *drag*, and *release* on objects to flick them
+    - **Left Mouse** and *drag* on objects to move them around
+    - **Right Mouse**, *drag*, and *release* on objects to flick them
 - Geometry Dash Editor:
     - **WASD** to move
-    - **Left mouse** on buttons to select a brush
-    - **Left mouse** on an empty space, with a brush selected, to place a block
+    - **Left Mouse** on _buttons_ to select a brush
+    - **Left Mouse** on an _empty space_, with a brush selected, to place a block
 
 ## Additional Info
 

@@ -294,8 +294,7 @@ public class GameObject {
      *
      * @param event the collision event
      */
-    // TODO move to script
-    // TODO generalize for all events
+    // TODO make into event callback
     public final void onCollisionEvent(CollisionEvent event) {
         for (var script : getComponents(Script.class)) {
             switch (event.type) {

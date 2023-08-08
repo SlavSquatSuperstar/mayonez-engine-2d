@@ -52,7 +52,7 @@ abstract class Shape : Transformable {
      * all the points in the shape. The centroid is also the center of mass for
      * a shape of uniform density.
      */
-    abstract fun center(): Vec2 // TODO move to physical?
+    abstract fun center(): Vec2 // TODO move to physics?
 
     // Min Bounds Methods
 
