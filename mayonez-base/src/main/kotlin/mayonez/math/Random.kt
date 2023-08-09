@@ -104,7 +104,7 @@ object Random {
      * @return true the given percentage of the time, otherwise false
      */
     @JvmStatic
-    fun randomPercent(percent: Float): Boolean = Math.random() < percent
+    fun randomPercent(percent: Float): Boolean = rand.nextFloat() < percent
 
     /**
      * Generates a random event with a 50% chance of succeeding, equal to a
@@ -113,7 +113,7 @@ object Random {
      * @return true half the time, otherwise false
      */
     @JvmStatic
-    fun randomBoolean(): Boolean = Math.random() < 0.5f
+    fun randomBoolean(): Boolean = rand.nextFloat() < 0.5f
 
     // Random Characters
 

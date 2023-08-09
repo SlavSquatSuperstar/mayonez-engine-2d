@@ -20,18 +20,21 @@ public class PlayerFireController extends FireProjectile {
 
     @Override
     public void start() {
-        weaponChoice = 1;
+        weaponChoice = 0;
     }
 
     @Override
     public void update(float dt) {
         super.update(dt);
-        if (KeyInput.keyPressed("1")) {
-            weaponChoice = 1;
-            setCooldown(0.2f);
-        } else if (KeyInput.keyPressed("2")) {
-            weaponChoice = 2;
-            setCooldown(0.4f);
+
+        for (var i = 0; i < ProjectilePrefabs.count(); i++) {
+            if (KeyInput.keyPressed(String.valueOf(i + 1))) {
+                var type = ProjectilePrefabs.getProjectileType(i);
+                if (type == null) continue;
+
+                weaponChoice = i;
+                setCooldown(type.getFireCooldown());
+            }
         }
     }
 
@@ -42,11 +45,7 @@ public class PlayerFireController extends FireProjectile {
 
     @Override
     protected GameObject spawnProjectile() {
-        if (weaponChoice == 1) {
-            return ProjectilePrefabs.createLaser(gameObject);
-        } else if (weaponChoice == 2) {
-            return ProjectilePrefabs.createPlasma(gameObject);
-        } else return null;
+        return ProjectilePrefabs.createPrefab(weaponChoice, gameObject);
     }
 
 }

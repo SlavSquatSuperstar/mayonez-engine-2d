@@ -20,8 +20,10 @@ public class EnemyFireController extends FireProjectile {
 
     @Override
     public void start() {
-        weaponChoice = Random.randomBoolean() ? 2 : 1;
         isFiring = false;
+        setRandomWeaponChoice();
+        var type = ProjectilePrefabs.getProjectileType(weaponChoice);
+        if (type != null) setCooldown(type.getFireCooldown());
     }
 
     @Override
@@ -33,17 +35,19 @@ public class EnemyFireController extends FireProjectile {
             // Decide to start shooting
             isFiring = Random.randomPercent(0.01f);
             if (isFiring) shotsLeft = Random.randomInt(1, 5);
+            // Switch weapon types
+            if (Random.randomBoolean()) setRandomWeaponChoice();
         }
         return isFiring;
     }
 
     @Override
     protected GameObject spawnProjectile() {
-        if (weaponChoice == 1) {
-            return ProjectilePrefabs.createLaser(gameObject);
-        } else if (weaponChoice == 2) {
-            return ProjectilePrefabs.createPlasma(gameObject);
-        } else return null;
+        return ProjectilePrefabs.createPrefab(weaponChoice, gameObject);
+    }
+
+    private void setRandomWeaponChoice() {
+        weaponChoice = Random.randomInt(0, ProjectilePrefabs.count() - 1);
     }
 
 }

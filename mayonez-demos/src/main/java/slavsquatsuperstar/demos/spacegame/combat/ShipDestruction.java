@@ -1,12 +1,17 @@
 package slavsquatsuperstar.demos.spacegame.combat;
 
 import mayonez.*;
+import mayonez.math.Random;
 import mayonez.math.*;
-import mayonez.scripts.*;
+import mayonez.scripts.Timer;
+import mayonez.scripts.movement.*;
 import slavsquatsuperstar.demos.spacegame.movement.ThrustController;
 
+import java.util.*;
+
 /**
- * Plays a destruction sequence after a spaceship's health is depleted.
+ * Plays a destruction sequence and disables all ship systems after a spaceship's health
+ * is depleted.
  *
  * @author SlavSquatSuperstar
  */
@@ -22,23 +27,28 @@ public class ShipDestruction extends Script {
 
     // References
     private GameObject explosion;
-    private Component fireProjectile, thrustController;
+    private final List<Component> shipSystems;
 
     public ShipDestruction() {
         destructionTimer = new Timer(DESTRUCTION_DURATION);
+        shipSystems = new LinkedList<>();
     }
 
     @Override
     public void init() {
+        shipSystems.clear();
         gameObject.addComponent(destructionTimer.setEnabled(false));
     }
 
     @Override
     public void start() {
         sequenceStarted = false;
-        fireProjectile = gameObject.getComponent(FireProjectile.class);
-        thrustController = gameObject.getComponent(ThrustController.class);
         explosion = null;
+
+        shipSystems.add(gameObject.getComponent(FireProjectile.class));
+        shipSystems.add(gameObject.getComponent(ThrustController.class));
+        shipSystems.add(gameObject.getComponent(KeyMovement.class));
+        shipSystems.add(gameObject.getComponent(KeyRotation.class));
     }
 
     @Override
@@ -63,8 +73,9 @@ public class ShipDestruction extends Script {
         destructionTimer.setEnabled(true);
 
         // Disable ship systems
-        if (fireProjectile != null) fireProjectile.setEnabled(false);
-        if (thrustController != null) thrustController.setEnabled(false);
+        for (var system : shipSystems) {
+            if (system != null) system.setEnabled(false);
+        }
 
         getScene().addObject(explosion = Explosion.createPrefab(
                 "Ship Explosion",
