@@ -1,9 +1,16 @@
 package mayonez.engine;
 
-import mayonez.*;
-import mayonez.annotations.*;
-import mayonez.input.*;
-import mayonez.util.*;
+import mayonez.ExitCode;
+import mayonez.Logger;
+import mayonez.Mayonez;
+import mayonez.Scene;
+import mayonez.annotations.EngineType;
+import mayonez.annotations.UsesEngine;
+import mayonez.input.KeyInput;
+import mayonez.input.MouseInput;
+import mayonez.math.Vec2;
+import mayonez.util.OperatingSystem;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
@@ -86,15 +93,29 @@ final class GLWindow implements Window {
         if (window == NULL) {
             throw new GLFWException("Could not create the GLFW window");
         }
+        setWindowScale();
     }
 
     private void configureWindowSettings() {
-        glfwDefaultWindowHints(); // Window settings
+        glfwDefaultWindowHints(); // Reset window settings
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // Don't stay hidden after creation
         glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE); // Don't allow resizing
-        // For macOS
+        // Set proper version for macOS
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+        // Scale properly for Windows
+        glfwWindowHint(GLFW_SCALE_TO_MONITOR, GLFW_TRUE);
+    }
+
+    private void setWindowScale() {
+        var xScaleBuff = BufferUtils.createFloatBuffer(1);
+        var yScaleBuff = BufferUtils.createFloatBuffer(2);
+        glfwGetWindowContentScale(window, xScaleBuff, yScaleBuff);
+
+        var xScale = xScaleBuff.get(0);
+        var yScale = yScaleBuff.get(0);
+        Mayonez.setWindowScale(new Vec2(xScale, yScale));
+        Logger.log("Window scaling is %.2fx%.2f", xScale, yScale);
     }
 
     private void setWindowProperties() {

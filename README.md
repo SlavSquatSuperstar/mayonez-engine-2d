@@ -129,7 +129,7 @@ and a Pool Balls scene.
     - **A**/**D** to turn left/right
     - **Q**/**E** to strafe left/right
     - **Space** to brake
-    - **Left Mouse** to fire weapons
+  - **Left Mouse** and _hold_ to fire weapons
     - **1**/**2** to switch ammo types
 - Mario:
     - **W** to jump

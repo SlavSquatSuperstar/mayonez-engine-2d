@@ -1,19 +1,26 @@
 package mayonez
 
-import mayonez.engine.*
-import mayonez.init.*
-import mayonez.io.*
-import mayonez.math.*
+import mayonez.engine.EngineFactory
+import mayonez.engine.GameEngine
+import mayonez.init.Launcher
+import mayonez.init.RunConfig
+import mayonez.io.Assets
+import mayonez.math.Vec2
 import kotlin.system.exitProcess
 
 /**
- * The entry point into any game. Loads application resources, configures
- * the engine instance, and sets the scene to be played.
+ * An instance of Mayonez Engine. Upon startup, the application loads resources,
+ * configures other engine components, and tells the scene manager to load a scene.
  *
- * To start an instance of Mayonez Engine, set the "Use GL" property
- * through Mayonez.setUseGL(). Then load any number of scenes through
- * SceneManager.addScene(). Finally, start the game with a scene with
- * Mayonez.start().
+ * Usage: To start an instance of Mayonez Engine, create a [Launcher] and set
+ * the "Use GL" property through [Launcher.setRunConfig]. Then, load any number
+ * of scenes through [Launcher.loadScenesToManager] or [SceneManager.addScene].
+ * Finally, start the game with a scene by calling [Launcher.startGame].
+ *
+ * To exit the program, call [Mayonez.stop] with an [ExitCode] (0 for success,
+ * anything else for failure).
+ *
+ * See [Launcher] for more information.
  */
 object Mayonez {
 
@@ -23,16 +30,35 @@ object Mayonez {
     private var started: Boolean = false
 
     // Properties
+
+    /**
+     * The size of the application window, in pixels.
+     */
     @JvmStatic
     val screenSize: Vec2
-        get() = Vec2(Preferences.screenWidth.toFloat(), Preferences.screenHeight.toFloat())
+        get() = Vec2(
+            Preferences.screenWidth.toFloat(),
+            Preferences.screenHeight.toFloat()
+        )
 
+    /**
+     * The content scaling of the application window, usually 1x1.
+     */
+    @JvmStatic
+    internal var windowScale: Vec2 = Vec2(1f)
+        @JvmName("getWindowScale") get
+        @JvmName("setWindowScale") set
+
+    /**
+     * Whether to use OpenGL for rendering instead of Java AWT.
+     */
     @JvmStatic
     internal var useGL: Boolean = false // crashes tests when set to true :\
         @JvmName("getUseGL") get
         private set
 
     // Init Methods
+
     /**
      * Sets the run configuration for the program. Must be called before [start].
      */
@@ -71,7 +97,7 @@ object Mayonez {
         }
     }
 
-    // Game Loop
+    // Game Loop Methods
 
     /**
      * Start the game and load a scene. Must be called after [setConfig].

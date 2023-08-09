@@ -24,7 +24,7 @@ Demo Scene Controls
    - A/D to turn left/right
    - Q/E to strafe left/right
    - Space to brake
-   - Left Mouse to fire weapons
+   - Left Mouse and hold to fire weapons
    - 1/2 to switch ammo types
 3. Mario
    - W to jump

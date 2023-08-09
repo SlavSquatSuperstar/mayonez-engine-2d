@@ -1,9 +1,10 @@
 package mayonez.scripts.mouse;
 
-import mayonez.*;
-import mayonez.input.*;
-import mayonez.math.*;
-import mayonez.physics.colliders.*;
+import mayonez.Script;
+import mayonez.input.Button;
+import mayonez.input.MouseInput;
+import mayonez.math.Vec2;
+import mayonez.physics.colliders.Collider;
 
 /**
  * Provides custom behaviors for when the mouse is clicked or dragged on an object.
@@ -138,9 +139,9 @@ public abstract class MouseInputScript extends Script {
     }
 
     /**
-     * Query the mouse displacement.
+     * Query the mouse drag displacement.
      *
-     * @return the mouse displacement
+     * @return the drag displacement
      */
     protected final Vec2 getMouseDisp() {
         return MouseInput.getDisplacement();

@@ -22,7 +22,7 @@ ext {
 allprojects {
     // Name
     group = "slavsquatsuperstar"
-    version = "0.7.9-release"
+    version = "0.7.9-release-fix1"
 
     // Java Version, set for all tasks
     java {
