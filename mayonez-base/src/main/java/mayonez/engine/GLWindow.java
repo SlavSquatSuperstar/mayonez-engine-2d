@@ -70,8 +70,7 @@ final class GLWindow implements Window {
         createGLFWWindow();
         setWindowProperties();
 
-        // Very important!
-        // Detect current context and integrate LWJGL with OpenGL bindings
+        // Important! Detect current context and integrate LWJGL with OpenGL bindings
         GL.createCapabilities();
 
         setWindowSettings();
@@ -103,19 +102,59 @@ final class GLWindow implements Window {
         // Set proper version for macOS
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
-        // Scale properly for Windows
+        // Scale screen properly for Windows
         glfwWindowHint(GLFW_SCALE_TO_MONITOR, GLFW_TRUE);
     }
 
     private void setWindowScale() {
-        var xScaleBuff = BufferUtils.createFloatBuffer(1);
-        var yScaleBuff = BufferUtils.createFloatBuffer(2);
-        glfwGetWindowContentScale(window, xScaleBuff, yScaleBuff);
+        // Source: https://github.com/glfw/glfw/issues/845
+        var contentScale = getWindowContentScaling();
+        var ratio = getWindowFramebufferRatio();
+        Mayonez.setWindowScale(contentScale.mul(ratio));
+        Logger.log("Window scale has been set to %s", Mayonez.getWindowScale());
+    }
 
-        var xScale = xScaleBuff.get(0);
-        var yScale = yScaleBuff.get(0);
-        Mayonez.setWindowScale(new Vec2(xScale, yScale));
-        Logger.log("Window scaling is %.2fx%.2f", xScale, yScale);
+    /**
+     * How much the display has been scaled by.
+     *
+     * @return the content scale
+     */
+    private Vec2 getWindowContentScaling() {
+        var xFloatBuff = BufferUtils.createFloatBuffer(1);
+        var yFloatBuff = BufferUtils.createFloatBuffer(2);
+
+        glfwGetWindowContentScale(window, xFloatBuff, yFloatBuff);
+        var xContentScale = xFloatBuff.get(0);
+        var yContentScale = yFloatBuff.get(0);
+        Logger.log("Window scaling is %.2fx%.2f", xContentScale, yContentScale);
+        return new Vec2(xContentScale, yContentScale);
+    }
+
+    /**
+     * The ratio between the window size and the framebuffer (rendered image) size.
+     * On Windows, the ratio should equal 1, and on Unix, the ratio should be
+     * the reciprocal of the content scale.
+     *
+     * @return the ratio
+     */
+    private Vec2 getWindowFramebufferRatio() {
+        var xIntBuff = BufferUtils.createIntBuffer(1);
+        var yIntBuff = BufferUtils.createIntBuffer(1);
+
+        // Size of the actual image in the display's apparent scale
+        glfwGetWindowSize(window, xIntBuff, yIntBuff);
+        var xWindowSize = xIntBuff.get(0);
+        var yWindowSize = yIntBuff.get(0);
+        Logger.log("Window size is %dx%d", xWindowSize, yWindowSize);
+
+        // Size of the rendered image in the display's native scale
+        glfwGetFramebufferSize(window, xIntBuff, yIntBuff);
+        var xFramebuffSize = xIntBuff.get(0);
+        var yFramebuffSize = yIntBuff.get(0);
+        Logger.log("Framebuffer size is %dx%d", xFramebuffSize, yFramebuffSize);
+
+        return new Vec2((float) xWindowSize / xFramebuffSize,
+                (float) yWindowSize / yFramebuffSize);
     }
 
     private void setWindowProperties() {

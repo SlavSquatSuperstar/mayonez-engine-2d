@@ -1,11 +1,9 @@
 package mayonez
 
-import mayonez.engine.EngineFactory
-import mayonez.engine.GameEngine
-import mayonez.init.Launcher
-import mayonez.init.RunConfig
-import mayonez.io.Assets
-import mayonez.math.Vec2
+import mayonez.engine.*
+import mayonez.init.*
+import mayonez.io.*
+import mayonez.math.*
 import kotlin.system.exitProcess
 
 /**
@@ -42,7 +40,12 @@ object Mayonez {
         )
 
     /**
-     * The content scaling of the application window, usually 1x1.
+     * The content scaling of the application window, usually 1x1 (100%). The value
+     * may be different if the current display has changed its screen scaling or
+     * resolution.
+     *
+     * For example, if the window scale is 2x2 (200%), then the window
+     * size will appear twice as large as the value stated in the user preferences.
      */
     @JvmStatic
     internal var windowScale: Vec2 = Vec2(1f)
