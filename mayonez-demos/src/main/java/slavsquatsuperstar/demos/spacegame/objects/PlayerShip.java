@@ -36,7 +36,7 @@ public class PlayerShip extends Spaceship {
         addComponent(new PlayerThrustController(thrusters));
 
         // Weapons
-        addComponent(new PlayerFireController(0.2f));
+        addComponent(new PlayerFireController());
     }
 
 }

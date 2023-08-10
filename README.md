@@ -137,20 +137,21 @@ and a Pool Balls scene.
     - **S** to ground pound
 - Physics Sandbox:
     - **Left Mouse** and *drag* on objects to move them around
-    - **Right Mouse**, *drag*, and *release* on objects to flick them
+    - **Right Mouse***, *drag*, and *release* on objects to flick them
     - **1**-**4** to spawn shapes at the moues cursor
     - **Space** to toggle gravity
 - Pool Balls:
     - **Left Mouse** and *drag* on objects to move them around
-    - **Right Mouse**, *drag*, and *release* on objects to flick them
+    - **Right Mouse***, *drag*, and *release* on objects to flick them
 - Geometry Dash Editor:
     - **WASD** to move
     - **Left Mouse** on _buttons_ to select a brush
     - **Left Mouse** on an _empty space_, with a brush selected, to place a block
+- *Note: Right mouse is known to not work with some trackpads.
 
 ## Additional Info
 
-### Sprite Art
+### Sprite Art Sources
 
 The demo game textures were pulled from GamesWithGabe's GitHub repositories under the MIT license or created in the
 program Piskel.

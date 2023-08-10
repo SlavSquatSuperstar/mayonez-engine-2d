@@ -37,7 +37,7 @@ public class EnemyShip extends Spaceship {
         addComponent(new EnemyThrustController(thrusters));
 
         // Weapons
-        addComponent(new EnemyFireController(0.5f));
+        addComponent(new EnemyFireController());
 
     }
 }

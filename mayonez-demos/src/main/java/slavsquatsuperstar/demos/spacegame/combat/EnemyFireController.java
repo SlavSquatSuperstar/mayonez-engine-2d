@@ -2,6 +2,7 @@ package slavsquatsuperstar.demos.spacegame.combat;
 
 import mayonez.*;
 import mayonez.math.*;
+import mayonez.scripts.*;
 
 /**
  * Allows enemy ships to fire different weapons.
@@ -10,45 +11,79 @@ import mayonez.math.*;
  */
 public class EnemyFireController extends FireProjectile {
 
-    private int weaponChoice;
-    private boolean isFiring;
-    private int shotsLeft;
+    private int weaponChoice, shotsLeft;
+    private FiringState state;
+    private final Timer waitTimer;
 
-    public EnemyFireController(float cooldown) {
-        super(cooldown);
+    public EnemyFireController() {
+        super();
+        waitTimer = new Timer(0);
+    }
+
+    @Override
+    public void init() {
+        super.init();
+        gameObject.addComponent(waitTimer);
     }
 
     @Override
     public void start() {
-        isFiring = false;
-        selectRandomWeapon();
+        state = FiringState.DECIDING;
     }
 
     @Override
-    protected boolean readyToFire() {
-        if (isReloaded() && isFiring) {
-            // Decide to stop shooting
-            if (--shotsLeft > 0) isFiring = false;
-        } else {
-            // Decide to start shooting
-            isFiring = Random.randomPercent(0.01f);
-            if (isFiring) shotsLeft = Random.randomInt(1, 5);
-            // Switch weapon types
-            selectRandomWeapon();
+    protected boolean shouldFire() {
+        switch (state) {
+            case FIRING -> {
+                // Stop shooting if out of ammo
+                if (shotsLeft <= 0) {
+                    waitTimer.setDuration(Random.randomFloat(2f, 4f));
+                    waitTimer.setStarted(true);
+                    state = FiringState.WAITING;
+                }
+            }
+            case WAITING -> {
+                // Wait until shooting again
+                if (waitTimer.isReady()) {
+                    waitTimer.setStarted(false);
+                    state = FiringState.DECIDING;
+                }
+            }
+            case DECIDING -> {
+                // Decide to start shooting
+                if (Random.randomBoolean()) {
+                    selectRandomWeapon();
+                    state = FiringState.FIRING;
+                }
+            }
         }
-        return isFiring;
+        return state == FiringState.FIRING;
     }
 
     @Override
     protected GameObject spawnProjectile() {
+        shotsLeft -= 1;
         return ProjectilePrefabs.createPrefab(weaponChoice, gameObject);
     }
 
     private void selectRandomWeapon() {
         weaponChoice = Random.randomInt(0, ProjectilePrefabs.count() - 1);
-        // Update fire cooldown
         var type = ProjectilePrefabs.getProjectileType(weaponChoice);
-        if (type != null) setCooldown(type.getFireCooldown());
+        if (type != null) {
+            setCooldown(type.getFireCooldown()); // Update fire cooldown
+            shotsLeft = Random.randomInt(1, 10);
+        }
+    }
+
+    /**
+     * What an enemy spaceship's weapons is currently doing.
+     *
+     * @author SlavSquatSuperstar
+     */
+    private enum FiringState {
+        FIRING,
+        WAITING,
+        DECIDING,
     }
 
 }

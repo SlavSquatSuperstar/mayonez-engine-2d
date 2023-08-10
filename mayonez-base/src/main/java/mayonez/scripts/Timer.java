@@ -3,7 +3,9 @@ package mayonez.scripts;
 import mayonez.*;
 
 /**
- * Automatically counts down in real time as the game updates and can be reset.
+ * Automatically counts down in real time as the game updates and can be reset. All timer
+ * components will start counting down once the scene is started. To pause the timer until
+ * later, call {@code setEnabled(false)} and re-enable the timer later.
  *
  * @author SlavSquatSuperstar
  */
@@ -35,9 +37,6 @@ public class Timer extends Script {
 
     // Game Loop methods
 
-    /**
-     * Automatically start counting down once the scene is started.
-     */
     @Override
     public void start() {
         started = true;
@@ -85,12 +84,13 @@ public class Timer extends Script {
     }
 
     /**
-     * Set the timer's count duration.
+     * Set the timer's count duration and reset its value.
      *
      * @param duration how long to count for
      */
     public void setDuration(float duration) {
         this.duration = duration;
+        reset();
     }
 
     /**

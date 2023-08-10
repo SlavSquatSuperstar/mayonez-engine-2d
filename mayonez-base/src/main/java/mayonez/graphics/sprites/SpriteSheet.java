@@ -44,7 +44,7 @@ public abstract sealed class SpriteSheet permits JSpriteSheet, GLSpriteSheet {
     /**
      * Get the first image from this sprite sheet as a {@link mayonez.graphics.sprites.Sprite}.
      *
-     * @param index the image index, from 0
+     * @param index the image index, from 0 to size()-1
      * @return the sprite
      */
     public abstract Sprite getSprite(int index);
@@ -52,20 +52,20 @@ public abstract sealed class SpriteSheet permits JSpriteSheet, GLSpriteSheet {
     /**
      * Get the first image from this sprite sheet as a {@link mayonez.graphics.textures.Texture}.
      *
-     * @param index the image index, from 0
+     * @param index the image index, from 0 to size()-1
      * @return the texture
      */
     public abstract Texture getTexture(int index);
 
     /**
-     * Get the number of images in this sprite sheet.
+     * Get the number of sprites/textures in this sprite sheet.
      *
      * @return the sheet size
      */
-    public abstract int numSprites();
+    public abstract int size();
 
     public Sprite[] getSprites() {
-        var sprites = new Sprite[numSprites()];
+        var sprites = new Sprite[size()];
         for (var i = 0; i < sprites.length; i++) {
             sprites[i] = getSprite(i);
         }
@@ -73,7 +73,7 @@ public abstract sealed class SpriteSheet permits JSpriteSheet, GLSpriteSheet {
     }
 
     public Texture[] getTextures() {
-        var textures = new Texture[numSprites()];
+        var textures = new Texture[size()];
         for (var i = 0; i < textures.length; i++) {
             textures[i] = getTexture(i);
         }

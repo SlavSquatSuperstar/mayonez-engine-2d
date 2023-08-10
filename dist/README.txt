@@ -32,16 +32,17 @@ Demo Scene Controls
    - S to ground pound
 4. Physics Sandbox
    - Left Mouse and drag on objects to move them around
-   - Right Mouse, drag, and release on objects to flick them
+   - Right Mouse*, drag, and release on objects to flick them
    - 1-4 to spawn shapes at the mouse cursor
    - Space to toggle gravity
 5. Pool Balls
    - Left Mouse and drag on objects to move them around
-   - Right Mouse, drag, and release on objects to flick them
+   - Right Mouse*, drag, and release on objects to flick them
 6. Geometry Dash Editor
    - WASD to move
    - Left Mouse on buttons to select a brush
    - Left Mouse on an empty space, with a brush selected, to place a block
+*Note: Right mouse is known to not work with some trackpads.
 
 Changing User Preferences
 1. Program settings are stored in "preferences.json" next to the .jar file.
