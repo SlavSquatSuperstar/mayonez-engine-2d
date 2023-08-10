@@ -48,29 +48,43 @@ public abstract class Component {
     // Game Loop Methods
 
     /**
-     * Initialize fields after all components have been added to the parent object.
+     * Initialize fields after all components have been added to the parent object, meaning
+     * {@link #gameObject}, {@link #transform}, and {@link mayonez.GameObject#getComponent}
+     * will be accessible. The start method will be called even if this component has been
+     * disabled through {@link #setEnabled}.
+     * <p>
+     * Usage: Subclasses may override this method and can also call {@code super.start()}.
+     * <p>
+     * Warning: Calling {@code start()} at any other point in time may lead to unintended errors
+     * and should be avoided!
      */
-    public void start() {
+    protected void start() {
     }
 
     /**
      * Refresh the component's state and game logic. The update method is called each frame.
+     * <p>
+     * Usage: Subclasses may override this method and can also call {@code super.update()}.
      *
      * @param dt seconds since the last frame
      */
-    public void update(float dt) {
+    protected void update(float dt) {
     }
 
     /**
      * Draw debug information to the screen during this frame. Any {@link mayonez.graphics.debug.DebugDraw}
-     * method calls should be made here for consistent visual results.
+     * method calls should be made here for consistent visual results.<p>
+     * <p>
+     * Usage: Subclasses may override this method and can also call {@code super.debugRender()}.
      */
-    public void debugRender() {
+    protected void debugRender() {
     }
 
     /**
      * Destroy this component, disabling it and removing it from its parent {@link GameObject}.
      * The fields {@link #gameObject} and {@link #transform} will be set to null.
+     * <p>
+     * Warning: Destroying a component is permanent and cannot be reversed!
      */
     public void destroy() {
         gameObject = null;
@@ -113,7 +127,7 @@ public abstract class Component {
     // should only be used by Scene class
 
     /**
-     * Adds this Component to a parent {@link mayonez.GameObject}.
+     * Adds this component to a parent {@link mayonez.GameObject}.
      *
      * @param gameObject a game object
      */
@@ -123,7 +137,7 @@ public abstract class Component {
     }
 
     /**
-     * A reference to the {@link mayonez.Scene} the parent object belongs to.
+     * Get a reference to the {@link mayonez.Scene} the parent object belongs to.
      *
      * @return the parent scene
      */
@@ -135,10 +149,8 @@ public abstract class Component {
         return transform;
     }
 
-    @SuppressWarnings("unchecked")
-    public <T extends Component> T setTransform(Transform transform) {
+    public void setTransform(Transform transform) {
         this.transform = (transform != null) ? transform : new Transform();
-        return (T) this;
     }
 
     @Override

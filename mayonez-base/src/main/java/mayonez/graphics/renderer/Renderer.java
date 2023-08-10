@@ -6,7 +6,7 @@ import mayonez.graphics.camera.*;
 import java.awt.*;
 
 /**
- * Draws objects or other information in the program to the screen.
+ * Draws objects or other program information to the screen.
  *
  * @author SlavSquatSuperstar
  */
@@ -20,7 +20,7 @@ public interface Renderer {
     void start();
 
     /**
-     * Redraws everything to the screen.
+     * Redraws all objects in the renderer.
      *
      * @param g2 a {@link java.awt.Graphics2D} object for the AWT engine
      */
@@ -34,7 +34,7 @@ public interface Renderer {
     // Helper Methods
 
     /**
-     * The current scene's camera.
+     * Get the current scene's camera.
      *
      * @return the camera
      */

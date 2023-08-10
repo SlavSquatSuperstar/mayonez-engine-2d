@@ -28,7 +28,8 @@ object KeyInput : KeyAdapter() {
     // Game Loop Methods
 
     /** Poll key events from the window. */
-    fun endFrame() { // TODO rename to pollKeys?
+    @JvmName("endFrame")
+    internal fun endFrame() { // TODO rename to pollKeys?
         for (key in keys.values) {
             when {
                 key == null -> continue

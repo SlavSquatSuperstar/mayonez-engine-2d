@@ -109,7 +109,13 @@ public abstract class Scene {
     }
 
     /**
-     * Provide user-defined initialization behavior, such as adding necessary game objects or setting gravity.
+     * Add game objects to this scene or initialize fields after this scene has been loaded.
+     * The method {@link #getCamera()} is accessible here.
+     * <p>
+     * Usage: Subclasses may override this method and can also call {@code super.init()}.
+     * <p>
+     * Warning: Calling {@code init()} at any other point in time may lead to unintended errors
+     * and should be avoided!
      */
     protected void init() {
     }
@@ -132,7 +138,8 @@ public abstract class Scene {
      *
      * @param dt seconds since the last frame
      */
-    public final void update(float dt) {
+    // TODO Make hidden and call from SceneManager
+    final void update(float dt) {
         onUserUpdate(dt);
         if (isRunning()) updateSceneObjects(dt);
         processSceneChanges();
@@ -169,7 +176,7 @@ public abstract class Scene {
      *
      * @param g2 the window's graphics object
      */
-    public final void render(Graphics2D g2) {
+    final void render(Graphics2D g2) {
         onUserRender();
         objects.forEach(GameObject::debugRender);
         renderer.render(g2);
@@ -185,7 +192,7 @@ public abstract class Scene {
     // Stop Methods
 
     /**
-     * Destroy all updates and stop updating the scene.
+     * Destroys all objects and stop updating the scene.
      */
     final void stop() {
         destroySceneObjects();
@@ -208,7 +215,8 @@ public abstract class Scene {
     // Object Methods
 
     /**
-     * Adds an object to this scene and initializes it. Also adds the object to the renderer and physics engine.
+     * Adds an object to this scene and all its layers and initializes the object if the
+     * scene is running.
      *
      * @param obj a {@link GameObject}
      */
@@ -244,7 +252,7 @@ public abstract class Scene {
     }
 
     /**
-     * Removes an object to this scene and destroys it. Also removes the object from the renderer and physics engine.
+     * Removes an object from this scene and its layers and destroys it.
      *
      * @param obj a {@link GameObject}
      */
@@ -359,7 +367,7 @@ public abstract class Scene {
     }
 
     /**
-     * Get the scene's {@link Camera} instance. The Camera is initialized before
+     * Get the scene's {@link Camera} instance. The camera is initialized before
      * {@link GameObject#start()} is called for all other objects.
      *
      * @return the scene camera

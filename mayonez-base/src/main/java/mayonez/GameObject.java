@@ -84,7 +84,7 @@ public class GameObject {
     // Game Loop Methods
 
     /**
-     * Adds all components and then initializes them.
+     * Adds all components to this object and then initializes them.
      */
     final void start() {
         init();
@@ -94,7 +94,7 @@ public class GameObject {
     }
 
     /**
-     * Updates all components.
+     * Updates all enabled components.
      *
      * @param dt seconds since the last frame
      */
@@ -111,7 +111,7 @@ public class GameObject {
     }
 
     /**
-     * Draws debug information for all components.
+     * Draws debug information for all enabled components.
      */
     final void debugRender() {
         components.stream()
@@ -122,7 +122,13 @@ public class GameObject {
     // User Defined Methods
 
     /**
-     * Adds all components and initializes fields after this object has been added to the scene.
+     * Add components and initializes fields after this object has been added to the scene.
+     * The {@link #transform} field and {@link #scene} method are accessible here.
+     * <p>
+     * Usage: Subclasses may override this method and can also call {@code super.init()}.
+     * <p>
+     * Warning: Calling {@code init()} at any other point in time may lead to unintended errors
+     * and should be avoided!
      */
     protected void init() {
     }
@@ -130,9 +136,9 @@ public class GameObject {
     // Component Methods
 
     /**
-     * Adds a component to this game object.
+     * Adds a component to this game object if the component is not null.
      *
-     * @param comp the {@link mayonez.Component} object
+     * @param comp the {@link mayonez.Component} instance
      */
     public final void addComponent(Component comp) {
         if (comp == null) return;
@@ -204,7 +210,7 @@ public class GameObject {
     }
 
     /**
-     * Returns copy of the list of all this object's components.
+     * Get a copy of the list of all this object's components.
      *
      * @return the list of all components
      */
@@ -317,7 +323,7 @@ public class GameObject {
     // Property Getters and Setters
 
     /**
-     * The object's name, which does not have to be unique.
+     * Get the object's name, which does not have to be unique.
      *
      * @return the name
      */
@@ -337,6 +343,8 @@ public class GameObject {
     /**
      * Remove this object from the scene and destroy all its components and children.
      * The {@link #scene} field will be set to null.
+     * <p>
+     * Warning: Destroying a game object is permanent and cannot be reversed!
      */
     public void destroy() {
         destroyed = true;
@@ -357,6 +365,11 @@ public class GameObject {
 //        return parent != null;
 //    }
 
+    /**
+     * Get the {@link mayonez.Scene} that contains this game object.
+     *
+     * @return the parent scene
+     */
     public final Scene getScene() {
         return scene;
     }
@@ -402,11 +415,11 @@ public class GameObject {
     }
 
     /**
-     * Returns this object's name and ID as a single string.
+     * Get this object's name and ID as a single string.
      *
      * @return the name and ID
      */
-    public String getNameAndID() {
+    String getNameAndID() {
         return String.format("%s [ID %d]", name, objectID);
     }
 

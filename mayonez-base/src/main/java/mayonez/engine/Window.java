@@ -1,6 +1,5 @@
 package mayonez.engine;
 
-import mayonez.*;
 import mayonez.input.*;
 
 /**
@@ -45,11 +44,9 @@ public sealed interface Window permits JWindow, GLWindow {
     void beginFrame();
 
     /**
-     * Draw the game to the screen.
-     *
-     * @param scene the scene the draw
+     * Redraw the game to the screen.
      */
-    void render(Scene scene);
+    void render();
 
     /**
      * Reset events and input listeners.
