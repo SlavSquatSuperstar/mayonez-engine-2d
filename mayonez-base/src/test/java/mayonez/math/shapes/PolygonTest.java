@@ -15,6 +15,24 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class PolygonTest {
 
+    // Vertices
+
+    @Test
+    void polygonVerticesMinimumCountIs3() {
+        for (var sides = -1; sides < 3; sides++) {
+            var vertices = Polygon.regularPolygonVertices(new Vec2(), sides, 1f);
+            assertEquals(3, vertices.length);
+        }
+    }
+
+    @Test
+    void polygonVerticesHasCorrectCount() {
+        for (var sides = 3; sides < 10; sides++) {
+            var vertices = Polygon.regularPolygonVertices(new Vec2(), sides, 1f);
+            assertEquals(sides, vertices.length);
+        }
+    }
+
     // Subclasses
 
     @Test

@@ -1,23 +1,41 @@
 package mayonez.math
 
-import mayonez.util.*
+import mayonez.util.MColor
 
 /**
- * A class with methods dedicated to generating random numbers and
- * primitive types.
+ * Generates random numbers and primitive types. Most methods will use a
+ * uniform distribution, where all valid values have an equal chance
+ * of occurring.
  *
  * @author SlavSquatSuperstar
  */
-// TODO set seed
 object Random {
 
     private val rand = java.util.Random()
+
+    // Seed Methods
+
+    /**
+     * Sets the initial state of the random number generator. By default,
+     * the seed is set from the computer's local time.
+     *
+     * A random generator will always produce the same sequence of results
+     * with a given seed. However, if only given any number, predicting
+     * the next output will still be difficult, meaning the results are still
+     * random in the long run.
+     *
+     * @param seed the random generator seed
+     */
+    @JvmStatic
+    fun setSeed(seed: Long) {
+        rand.setSeed(seed)
+    }
 
     // Random Numbers
 
     /**
      * Generates a uniform random float between the two provided bounds. All
-     * numbers in the range have an equal chance of occurring.
+     * numbers in the range have a roughly equal chance of occurring.
      *
      * Note: In reality, the upper bound is technically excluded and can never occur.
      * However, since the sample space (floats) is continuous, all elements individually
@@ -36,10 +54,10 @@ object Random {
 
     /**
      * Generates a random uniform integer between the two provided bounds. All
-     * numbers in the range have an equal chance of occurring.
+     * numbers in the range have a roughly equal chance of occurring.
      *
-     * @param min the lower bound (inclusive), inclusive
-     * @param max the upper bound (inclusive), inclusive
+     * @param min the lower bound, inclusive
+     * @param max the upper bound, inclusive
      * @return the random integer
      */
     @JvmStatic
@@ -51,9 +69,11 @@ object Random {
     /**
      * Generates a random float under a Gaussian (normal) distribution with the given
      * mean, µ, and standard deviation, σ. The mean and standard deviation define the center
-     * and spread of the distribution, respectively. Values closest to µ will be the most
-     * likely to occur, while values get progressively less common farther from µ.
-     * 99.5% values occur within µ ± 3σ, or three standard deviations from the mean.
+     * and spread of the distribution, respectively.
+     *
+     * Values closest to µ will be the most likely to occur, while values get
+     * progressively less common farther from µ. On average, 99.5% values occur
+     * within µ ± 3σ, or three standard deviations from the mean.
      *
      * @param mean the distribution mean, µ
      * @param stdev the distribution standard deviation, σ
@@ -64,11 +84,23 @@ object Random {
         return rand.nextGaussian(mean.toDouble(), stdev.toDouble()).toFloat()
     }
 
+    // TODO random Gaussian range
+
     // Random Points
 
     /**
+     * Generates a random angle between 0-360 degrees.
+     *
+     * @return the random angle
+     */
+    @JvmStatic
+    fun randomAngle(): Float {
+        return randomFloat(0f, 360f)
+    }
+
+    /**
      * Generates a random [Vec2] between the provided min and max vectors. All
-     * points in the rectangular region have an equal chance of occurring.
+     * points in the rectangular region have a roughly equal chance of occurring.
      *
      * @param min the lower bound vector, inclusive
      * @param max the upper bound vector, inclusive
@@ -81,7 +113,7 @@ object Random {
 
     /**
      * Generates a random [Vec2] between the provided x and y bounds. All
-     * vectors in the rectangular region have an equal chance of occurring.
+     * vectors in the rectangular region have a roughly equal chance of occurring.
      *
      * @param minX the lower x bound
      * @param maxX the upper x bound
@@ -97,18 +129,18 @@ object Random {
     // Random Experiments
 
     /**
-     * Generates a random event with a certain percent chance of succeeding,
-     * equal to a biased coin flip.
+     * Generates a random event with a specified average percent chance of
+     * succeeding, equal to a biased coin flip.
      *
-     * @param percent the chance of succeeding, from 0-1
+     * @param percent the chance of succeeding, between 0-1
      * @return true the given percentage of the time, otherwise false
      */
     @JvmStatic
     fun randomPercent(percent: Float): Boolean = rand.nextFloat() < percent
 
     /**
-     * Generates a random event with a 50% chance of succeeding, equal to a
-     * fair coin flip.
+     * Generates a random event with a 50% average chance of succeeding,
+     * equal to a fair coin flip.
      *
      * @return true half the time, otherwise false
      */
@@ -118,7 +150,7 @@ object Random {
     // Random Characters
 
     /**
-     * Generates a random uppercase letter.
+     * Generates a random uniform uppercase letter.
      *
      * @return a random character A-Z
      */
@@ -126,7 +158,7 @@ object Random {
     fun randomUppercase(): Char = randomInt(65, 90).toChar()
 
     /**
-     * Generates a random lowercase letter.
+     * Generates a random uniform lowercase letter.
      *
      * @return a random character a-z
      */
@@ -134,7 +166,7 @@ object Random {
     fun randomLowercase(): Char = randomInt(97, 122).toChar()
 
     /**
-     * Generates a random digit.
+     * Generates a random uniform digit.
      *
      * @return a random character 0-9
      */
@@ -142,7 +174,7 @@ object Random {
     fun randomDigit(): Char = randomInt(48, 57).toChar()
 
     /**
-     * Returns a random alphanumeric character.
+     * Returns a random uniform alphanumeric character.
      *
      * @return a random character A-Z, a-z, or 0-9.
      */
@@ -157,7 +189,7 @@ object Random {
     // Random Color Methods
 
     /**
-     * Generates a random color with alpha set to 255.
+     * Generates a random uniform color with alpha set to 255.
      *
      * @return a color with random RGB values 0-255
      */
@@ -165,8 +197,8 @@ object Random {
     fun randomColor(): MColor = randomColor(0, 255)
 
     /**
-     * Generates a random color with R, G, and B components between two values and with alpha
-     * set to 255.
+     * Generates a random uniform color with R, G, and B components between two
+     * values and with alpha set to 255.
      *
      * @param minComp the minimum value for RGB components
      * @param maxComp the maximum value for RGB components

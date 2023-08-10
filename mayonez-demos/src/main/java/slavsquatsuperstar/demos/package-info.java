@@ -1,5 +1,5 @@
 /**
- * Contains demo scenes meant to test the functionality of the game engine.
+ * Demo scenes for testing the functionality and capabilities of the game engine.
  *
  * @author SlavSquatSuperstar
  */

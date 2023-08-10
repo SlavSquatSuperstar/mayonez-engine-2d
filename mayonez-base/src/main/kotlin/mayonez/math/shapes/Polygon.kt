@@ -200,19 +200,25 @@ open class Polygon(sort: Boolean, vararg vertices: Vec2) : Shape() {
 
     companion object {
 
+        private const val MIN_VERTICES_COUNT: Int = 3
+
         // Vertices Methods
 
         /**
          * Generate an array of vertices for a regular polygon, ordered
-         * counterclockwise.
+         * counterclockwise. If the number of sides is insufficient (under 3),
+         * then it will be set to 3.
          *
          * @param center the center of the polygon
          * @param sides how many sides/vertices the polygon has
          * @param radius how far each vertex is from the center
-         * @return the array of vertices
+         * @return the array of vertices, at least 3
          */
         @JvmStatic
         fun regularPolygonVertices(center: Vec2, sides: Int, radius: Float): Array<Vec2> {
+            if (sides < MIN_VERTICES_COUNT) {
+                return regularPolygonVertices(center, MIN_VERTICES_COUNT, radius)
+            }
             val start = Vec2(radius, 0f)
             val angle = 360f / sides
             return Array(sides) { center + start.rotate(angle * it) }

@@ -1,5 +1,5 @@
 /**
- * Contains classes for recreating Super Mario.
+ * A barebones recreation of Super Mario.
  *
  * @author SlavSquatSuperstar
  */

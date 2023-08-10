@@ -1,12 +1,8 @@
 package slavsquatsuperstar.demos.spacegame.objects;
 
-import mayonez.*;
-import mayonez.graphics.*;
-import mayonez.graphics.debug.*;
-import mayonez.math.*;
-import mayonez.physics.*;
-import mayonez.physics.colliders.*;
-import mayonez.scripts.*;
+import mayonez.GameObject;
+import mayonez.graphics.Color;
+import mayonez.math.Random;
 import slavsquatsuperstar.demos.spacegame.ZIndex;
 import slavsquatsuperstar.demos.spacegame.combat.Damageable;
 
@@ -17,10 +13,6 @@ import slavsquatsuperstar.demos.spacegame.combat.Damageable;
  */
 public class Asteroid extends GameObject {
 
-//    private static final SpriteSheet ASTEROID_SPRITES = Sprites.createSpriteSheet(
-//            "assets/spacegame/textures/asteroids.png",
-//            32, 32, 2, 0
-//    );
     private final SpawnManager obstacleSpawner;
     private final int startingHealth;
     private final Color color;
@@ -37,11 +29,18 @@ public class Asteroid extends GameObject {
 
     @Override
     protected void init() {
-        setRandomTransform();
-        addAsteroidCollider();
-        addAsteroidSprite();
-        addAsteroidStartingVelocity();
+        transform.setPosition(getScene().getRandomPosition());
+        transform.setRotation(Random.randomAngle());
+        transform.setScale(Random.randomVector(2f, 4f, 2f, 4f));
 
+        AsteroidPrefabs.addCollider(this);
+        AsteroidPrefabs.addSprite(this, color);
+        AsteroidPrefabs.setStartingVelocity(this, startingHealth, transform.getUp().mul(Random.randomFloat(0f, 3f)));
+
+        addAsteroidDamageable();
+    }
+
+    private void addAsteroidDamageable() {
         addComponent(new Damageable(startingHealth) {
             @Override
             public void onDestroy() {
@@ -61,31 +60,6 @@ public class Asteroid extends GameObject {
                 }
             }
         });
-    }
-
-    private void setRandomTransform() {
-        transform.setPosition(getScene().getRandomPosition());
-        transform.setRotation(Random.randomFloat(0f, 360f));
-        transform.setScale(Random.randomVector(2f, 4f, 2f, 4f));
-    }
-
-    private void addAsteroidCollider() {
-        addComponent(new BallCollider(new Vec2(1f)));
-        addComponent(new KeepInScene(KeepInScene.Mode.WRAP));
-    }
-
-    private void addAsteroidSprite() {
-        addComponent(new ShapeSprite(color, true));
-        // Disable textures until other objects receive one
-//        var sprite = ASTEROID_SPRITES.getSprite(Random.randomInt(0, 1));
-//        sprite.setColor(color);
-//        addComponent(sprite);
-    }
-
-    private void addAsteroidStartingVelocity() {
-        Rigidbody rb;
-        addComponent(rb = new Rigidbody(startingHealth, 0.2f, 0.2f));
-        rb.setVelocity(transform.getUp().mul(Random.randomFloat(0f, 3f)));
     }
 
 }

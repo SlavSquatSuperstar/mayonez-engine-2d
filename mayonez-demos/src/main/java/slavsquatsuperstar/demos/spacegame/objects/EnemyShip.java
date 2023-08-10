@@ -26,7 +26,7 @@ public class EnemyShip extends Spaceship {
 
         // Position
         transform.setPosition(getScene().getRandomPosition());
-        transform.setRotation(Random.randomFloat(0f, 360f));
+        transform.setRotation(Random.randomAngle());
 
         // Movement
         Rigidbody rb;
