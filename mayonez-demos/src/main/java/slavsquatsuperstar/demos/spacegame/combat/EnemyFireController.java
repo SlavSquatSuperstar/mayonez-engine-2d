@@ -21,9 +21,7 @@ public class EnemyFireController extends FireProjectile {
     @Override
     public void start() {
         isFiring = false;
-        setRandomWeaponChoice();
-        var type = ProjectilePrefabs.getProjectileType(weaponChoice);
-        if (type != null) setCooldown(type.getFireCooldown());
+        selectRandomWeapon();
     }
 
     @Override
@@ -36,7 +34,7 @@ public class EnemyFireController extends FireProjectile {
             isFiring = Random.randomPercent(0.01f);
             if (isFiring) shotsLeft = Random.randomInt(1, 5);
             // Switch weapon types
-            if (Random.randomBoolean()) setRandomWeaponChoice();
+            selectRandomWeapon();
         }
         return isFiring;
     }
@@ -46,8 +44,11 @@ public class EnemyFireController extends FireProjectile {
         return ProjectilePrefabs.createPrefab(weaponChoice, gameObject);
     }
 
-    private void setRandomWeaponChoice() {
+    private void selectRandomWeapon() {
         weaponChoice = Random.randomInt(0, ProjectilePrefabs.count() - 1);
+        // Update fire cooldown
+        var type = ProjectilePrefabs.getProjectileType(weaponChoice);
+        if (type != null) setCooldown(type.getFireCooldown());
     }
 
 }

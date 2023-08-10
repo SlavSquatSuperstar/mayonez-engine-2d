@@ -48,6 +48,11 @@ Changing User Preferences
 2. Any changes to "preferences.json" will be applied upon restart.
 3. Removing a line will cause the program to load the defaults for that setting.
 
+Log Files
+1. Log files are automatically generated if the preference "save_logs" is set to true.
+2. Logs record application events used to debug the game if something goes wrong.
+3. Players may safely delete log files if no errors occur while running the program.
+
 This software is licensed under the GNU General Public License, version 3 (GPLv3).
 See LICENSE.txt for more information.
 

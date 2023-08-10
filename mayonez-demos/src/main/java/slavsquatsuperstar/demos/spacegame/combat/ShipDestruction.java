@@ -3,6 +3,7 @@ package slavsquatsuperstar.demos.spacegame.combat;
 import mayonez.*;
 import mayonez.math.Random;
 import mayonez.math.*;
+import mayonez.scripts.KeepInScene;
 import mayonez.scripts.Timer;
 import mayonez.scripts.movement.*;
 import slavsquatsuperstar.demos.spacegame.movement.ThrustController;
@@ -49,6 +50,7 @@ public class ShipDestruction extends Script {
         shipSystems.add(gameObject.getComponent(ThrustController.class));
         shipSystems.add(gameObject.getComponent(KeyMovement.class));
         shipSystems.add(gameObject.getComponent(KeyRotation.class));
+        shipSystems.add(gameObject.getComponent(KeepInScene.class));
     }
 
     @Override
@@ -76,6 +78,7 @@ public class ShipDestruction extends Script {
         for (var system : shipSystems) {
             if (system != null) system.setEnabled(false);
         }
+        shipSystems.clear();
 
         getScene().addObject(explosion = Explosion.createPrefab(
                 "Ship Explosion",

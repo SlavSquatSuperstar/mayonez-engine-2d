@@ -100,8 +100,8 @@ public class SpaceGameScene extends Scene {
 
             float starSize;
             boolean isDwarfStar = Random.randomPercent(2f / 3f);
-            if (isDwarfStar) starSize = Random.randomGaussian(2.5f, 0.5f);
-            else starSize = Random.randomGaussian(7, 1);
+            if (isDwarfStar) starSize = Random.randomGaussian(2.5f, 0.5f); // 1-4
+            else starSize = Random.randomGaussian(7, 1); // 4-10
             if (starSize > 1) starSize = 1;
 
             var starDist = Random.randomFloat(20, 60);
