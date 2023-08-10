@@ -12,13 +12,13 @@ import mayonez.util.*
 
 
 /**
- * A component that draws an image at a [mayonez.GameObject]'s position using the
- * GL engine.
+ * Draws a [GLTexture] using the GL engine. This class should not be directly
+ * instantiated. Instead, call [Sprites.createSprite]. See [Sprite] for more information.
  *
  * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.GL)
-class GLSprite private constructor(
+internal class GLSprite private constructor(
     private var texture: GLTexture?, private var color: Color
 ) : Sprite(), GLRenderable {
 
@@ -73,12 +73,10 @@ class GLSprite private constructor(
         val texID = batch.addTextureAndGetID(texture)
 
         // Render sprite at object center and rotate according to object
-        val sprVertices = Rectangle.rectangleVertices(Vec2(0f), Vec2(1f), objXf.rotation)
+        val sprRect = Rectangle(objXf.position.toWorld(), objXf.scale.toWorld(), objXf.rotation)
+        val sprVertices = sprRect.vertices
         for (i in sprVertices.indices) {
-            // spr_pos = (obj_pos + vert_pos * obj_scale) * world_scale
-            // can't use this.scene.scale as it will return null
-            val vertex = (objXf.position + (sprVertices[i] * objXf.scale)) * SceneManager.currentScene.scale
-            batch.pushVertex(vertex, color, texCoords[i], texID)
+            batch.pushVertex(sprVertices[i], color, texCoords[i], texID)
         }
     }
 
@@ -99,4 +97,9 @@ class GLSprite private constructor(
         return texture?.texCoords ?: GLTexture.DEFAULT_TEX_COORDS
     }
 
+}
+
+private fun Vec2.toWorld(): Vec2 {
+    // can't use this.scene.scale as it will return null
+    return this * SceneManager.currentScene.scale
 }

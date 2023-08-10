@@ -1,16 +1,14 @@
 package slavsquatsuperstar.demos.spacegame.objects;
 
-import mayonez.GameObject;
-import mayonez.Transform;
-import mayonez.util.Colors;
-import mayonez.graphics.debug.ShapeSprite;
-import mayonez.math.Random;
-import mayonez.math.Vec2;
-import mayonez.physics.Rigidbody;
-import mayonez.physics.colliders.BallCollider;
-import mayonez.scripts.KeepInScene;
-import mayonez.scripts.combat.Damageable;
-import mayonez.scripts.SpawnManager;
+import mayonez.*;
+import mayonez.graphics.*;
+import mayonez.graphics.debug.*;
+import mayonez.math.*;
+import mayonez.physics.*;
+import mayonez.physics.colliders.*;
+import mayonez.scripts.*;
+import slavsquatsuperstar.demos.spacegame.ZIndex;
+import slavsquatsuperstar.demos.spacegame.combat.Damageable;
 
 /**
  * An asteroid in space that can be destroyed.
@@ -19,53 +17,75 @@ import mayonez.scripts.SpawnManager;
  */
 public class Asteroid extends GameObject {
 
+//    private static final SpriteSheet ASTEROID_SPRITES = Sprites.createSpriteSheet(
+//            "assets/spacegame/textures/asteroids.png",
+//            32, 32, 2, 0
+//    );
     private final SpawnManager obstacleSpawner;
-    private final Vec2 size;
     private final int startingHealth;
-    private final boolean isFragment;
-
-    private Asteroid(String name, Vec2 size, int startingHealth, boolean isFragment, SpawnManager obstacleSpawner) {
-        super(name, Transform.scaleInstance(size), ZIndex.ASTEROID);
-        this.size = size;
-        this.startingHealth = startingHealth;
-        this.isFragment = isFragment;
-        this.obstacleSpawner = obstacleSpawner;
-    }
+    private final Color color;
 
     public Asteroid(String name, SpawnManager obstacleSpawner) {
-        this(name, Random.randomVector(2f, 5f, 2f, 5f),
-                Random.randomInt(8, 12), false, obstacleSpawner);
-    }
+        super(name);
+        setZIndex(ZIndex.ASTEROID);
+        this.obstacleSpawner = obstacleSpawner;
+        this.startingHealth = Random.randomInt(8, 12);
 
-    public Asteroid(String name, Vec2 size, int startingHealth) {
-        this(name, size, startingHealth, true, null);
+        var tint = Random.randomInt(96, 176);
+        color = new Color(tint, tint, tint);
     }
 
     @Override
     protected void init() {
-        transform.setPosition(getScene().getRandomPosition());
-        transform.setRotation(Random.randomFloat(0f, 360f));
+        setRandomTransform();
+        addAsteroidCollider();
+        addAsteroidSprite();
+        addAsteroidStartingVelocity();
 
-        addComponent(new BallCollider(new Vec2(1f)));
-        addComponent(new ShapeSprite(Colors.GRAY, true));
-        Rigidbody rb;
-        addComponent(rb = new Rigidbody(15f, 0.2f, 0.2f));
-        rb.setVelocity(transform.getUp().mul(Random.randomFloat(0f, 2f)));
-        addComponent(new KeepInScene(KeepInScene.Mode.WRAP));
         addComponent(new Damageable(startingHealth) {
             @Override
             public void onDestroy() {
                 if (obstacleSpawner != null) obstacleSpawner.markObjectDestroyed();
-                // TODO need to set start position manually
-//                if (!isFragment) {
-//                    var fragmentCount = Random.randomInt(0, 4);
-//                    if (fragmentCount <= 0) return;
-//                    for (var i = 0; i < 2; i++) {
-//                        getScene().addObject(new Asteroid("Asteroid Fragment",
-//                                size.div(2), startingHealth / 2));
-//                    }
-//                }
+                if (Random.randomPercent(0.2f)) return; // don't spawn fragments
+
+                var fragmentCount = Random.randomInt(2, 4);
+                for (var i = 0; i < fragmentCount; i++) {
+                    var angle = 360f / fragmentCount;
+                    var velocity = getRigidbody().getVelocity().mul(Random.randomFloat(0.5f, 2f))
+                            .rotate(angle + Random.randomFloat(-30f, 30f));
+
+                    getScene().addObject(new AsteroidFragment(
+                            "Asteroid Fragment", transform.getPosition(),
+                            transform.getScale().div(fragmentCount),
+                            velocity, color));
+                }
             }
         });
     }
+
+    private void setRandomTransform() {
+        transform.setPosition(getScene().getRandomPosition());
+        transform.setRotation(Random.randomFloat(0f, 360f));
+        transform.setScale(Random.randomVector(2f, 4f, 2f, 4f));
+    }
+
+    private void addAsteroidCollider() {
+        addComponent(new BallCollider(new Vec2(1f)));
+        addComponent(new KeepInScene(KeepInScene.Mode.WRAP));
+    }
+
+    private void addAsteroidSprite() {
+        addComponent(new ShapeSprite(color, true));
+        // Disable textures until other objects receive one
+//        var sprite = ASTEROID_SPRITES.getSprite(Random.randomInt(0, 1));
+//        sprite.setColor(color);
+//        addComponent(sprite);
+    }
+
+    private void addAsteroidStartingVelocity() {
+        Rigidbody rb;
+        addComponent(rb = new Rigidbody(startingHealth, 0.2f, 0.2f));
+        rb.setVelocity(transform.getUp().mul(Random.randomFloat(0f, 3f)));
+    }
+
 }

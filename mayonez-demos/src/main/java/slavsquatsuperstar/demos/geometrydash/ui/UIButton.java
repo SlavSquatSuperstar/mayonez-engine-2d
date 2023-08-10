@@ -29,7 +29,7 @@ public class UIButton extends GameObject {
 
     static {
         BUTTON_TEXTURES = Sprites.createSpriteSheet(
-                "assets/textures/geometrydash/buttons.png",
+                "assets/geometrydash/textures/buttons.png",
                 60, 60, 2, 2
         );
         UNPRESSED_FRAME = 0;
@@ -42,7 +42,7 @@ public class UIButton extends GameObject {
 
         this.icon = icon;
         baseSprite = new Animator(BUTTON_TEXTURES, 0f);
-        baseSprite.setTimerEnabled(false);
+        baseSprite.setAnimationEnabled(false);
     }
 
     @Override

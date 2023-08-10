@@ -22,9 +22,9 @@ ext {
 allprojects {
     // Name
     group = "slavsquatsuperstar"
-    version = "0.7.8-release"
+    version = "0.7.9-release-fix2"
 
-    // Java Version
+    // Java Version, set for all tasks
     java {
         toolchain {
             languageVersion = JavaLanguageVersion.of(project.javaVersion)
@@ -33,7 +33,6 @@ allprojects {
 
     // Dependencies
     repositories { mavenCentral() }
-
 }
 
 dependencies {
@@ -42,7 +41,7 @@ dependencies {
     implementation(project(":mayonez-demos"))
 }
 
-// Tasks and Plugins
+// Tasks
 
 application { // For running project
     mainClass = project.mainClass

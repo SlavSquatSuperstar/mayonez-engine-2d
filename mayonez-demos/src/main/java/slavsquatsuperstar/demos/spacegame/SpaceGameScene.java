@@ -1,32 +1,32 @@
 package slavsquatsuperstar.demos.spacegame;
 
-import kotlin.Pair;
 import mayonez.*;
 import mayonez.graphics.*;
-import mayonez.input.*;
 import mayonez.math.Random;
 import mayonez.math.*;
 import mayonez.math.shapes.*;
-import mayonez.scripts.*;
 import mayonez.util.*;
-import slavsquatsuperstar.demos.spacegame.objects.Asteroid;
-import slavsquatsuperstar.demos.spacegame.objects.EnemyShip;
-import slavsquatsuperstar.demos.spacegame.objects.PlayerShip;
+import slavsquatsuperstar.demos.spacegame.objects.*;
 
 import java.util.*;
 
 public class SpaceGameScene extends Scene {
 
-    private final ArrayList<Pair<Shape, Color>> backgroundObjects;
-    private final int numEnemies, numObstacles, numStars;
+    // Constants
+    private final static int SCENE_SIZE = 3;
+    private final static int NUM_PLAYERS = 1;
+    private final static int NUM_ENEMIES = 6;
+    private final static int NUM_OBSTACLES = 5;
+    private final static int NUM_STARS = 1200;
+
+    // Objects
+    private final List<BackgroundObject> backgroundObjects;
 
     public SpaceGameScene(String name) {
-        super(name, Preferences.getScreenWidth() * 2, Preferences.getScreenHeight() * 2, 32f);
+        super(name, Preferences.getScreenWidth() * SCENE_SIZE,
+                Preferences.getScreenHeight() * SCENE_SIZE, 32f);
         setBackground(new Color(14, 14, 14));
         backgroundObjects = new ArrayList<>();
-        numEnemies = 6;
-        numObstacles = 3;
-        numStars = 750;
     }
 
     @Override
@@ -34,21 +34,45 @@ public class SpaceGameScene extends Scene {
         setGravity(new Vec2());
         backgroundObjects.clear();
 
-        addObject(new PlayerShip("Player Spaceship", "assets/textures/spacegame/spaceship1.png"));
+        addSpawners();
+        addSolarSystem();
+        addBackgroundStars();
+    }
 
-        // Spawn Stuff
+//    @Override
+//    protected void onUserUpdate(float dt) {
+//        // camera controls
+//        getCamera().rotate(KeyInput.getAxis("arrows horizontal"));
+//        getCamera().zoom(1 + 0.01f * KeyInput.getAxis("arrows vertical"));
+//    }
+
+    @Override
+    protected void onUserRender() {
+        backgroundObjects.forEach(obj -> obj.debugDraw(getDebugDraw()));
+    }
+
+    // Helper Methods
+
+    private void addSpawners() {
         addObject(new GameObject("Object Spawner") {
             @Override
             protected void init() {
-                SpawnManager enemySpawner;
-                SpawnManager obstacleSpawner;
-                addComponent(enemySpawner = new SpawnManager(numEnemies, 5) {
+                SpawnManager playerSpawner, enemySpawner, obstacleSpawner;
+                addComponent(playerSpawner = new SpawnManager(NUM_PLAYERS, 1.5f) {
                     @Override
                     public GameObject createSpawnedObject() {
-                        return new EnemyShip("Enemy Spaceship", "assets/textures/spacegame/spaceship2.png", this);
+                        return new PlayerShip("Player Spaceship",
+                                "assets/spacegame/textures/spaceship1.png", this);
                     }
                 });
-                addComponent(obstacleSpawner = new SpawnManager(numObstacles, 20) {
+                addComponent(enemySpawner = new SpawnManager(NUM_ENEMIES, 5) {
+                    @Override
+                    public GameObject createSpawnedObject() {
+                        return new EnemyShip("Enemy Spaceship",
+                                "assets/spacegame/textures/spaceship2.png", this);
+                    }
+                });
+                addComponent(obstacleSpawner = new SpawnManager(NUM_OBSTACLES, 20) {
                     @Override
                     public GameObject createSpawnedObject() {
                         return new Asteroid("Asteroid", this);
@@ -56,51 +80,38 @@ public class SpaceGameScene extends Scene {
                 });
 
                 // Populate world on start
+                playerSpawner.populateToMax();
                 enemySpawner.populateToMax();
                 obstacleSpawner.populateToMax();
             }
         });
-
-        addBackgroundStars();
-        addSolarSystem();
     }
 
     private void addSolarSystem() {
-        addBackgroundObject(new Circle(new Vec2(-10, -8), 10), Colors.DARK_BLUE); // Earth
-        addBackgroundObject(new Circle(new Vec2(12.5f, 7.5f), 2f), Colors.DARK_GRAY); // Moon
-        addBackgroundObject(new Circle(new Vec2(-12, 11), 1.5f), Colors.YELLOW); // Sun
+        addBackgroundObject(new Circle(new Vec2(-10, -8), 12), Colors.DARK_BLUE, ZIndex.BACKGROUND); // Earth
+        addBackgroundObject(new Circle(new Vec2(12.5f, 7.5f), 2.5f), Colors.DARK_GRAY, ZIndex.BACKGROUND); // Moon
+        addBackgroundObject(new Circle(new Vec2(-20, 16), 2), Colors.YELLOW, ZIndex.BACKGROUND); // Sun
     }
 
     private void addBackgroundStars() {
-        for (var i = 0; i < numStars; i++) {
+        // TODO parallax
+        for (var i = 0; i < NUM_STARS; i++) {
             var starPos = this.getRandomPosition().mul(2);
 
             float starSize;
-            if (Random.randomPercent(2f / 3f)) starSize = Random.randomFloat(1, 4); // dwarf
-            else starSize = Random.randomFloat(4, 10); // giant
+            boolean isDwarfStar = Random.randomPercent(2f / 3f);
+            if (isDwarfStar) starSize = Random.randomGaussian(2.5f, 0.5f);
+            else starSize = Random.randomGaussian(7, 1);
+            if (starSize > 1) starSize = 1;
 
-            var starDist = Random.randomFloat(5, 20) * 5f;
-            var starColor = new Color(Random.randomInt(192, 255), Random.randomInt(192, 255), Random.randomInt(192, 255));
-            addBackgroundObject(new Circle(starPos, starSize / starDist), starColor); // Star
+            var starDist = Random.randomFloat(20, 60);
+            var starColor = Random.randomColor(192, 255);
+            addBackgroundObject(new Circle(starPos, starSize / starDist), starColor, ZIndex.BACKGROUND_STAR);
         }
     }
 
-    @Override
-    protected void onUserUpdate(float dt) {
-        // camera controls
-        getCamera().rotate(KeyInput.getAxis("arrows horizontal"));
-        getCamera().zoom(1 + 0.01f * KeyInput.getAxis("arrows vertical"));
-    }
-
-    @Override
-    protected void onUserRender() {
-        for (var obj : backgroundObjects) {
-            getDebugDraw().fillShape(obj.getFirst(), obj.getSecond());
-        }
-    }
-
-    private void addBackgroundObject(Shape objShape, Color objColor) {
-        backgroundObjects.add(new Pair<>(objShape, objColor));
+    private void addBackgroundObject(Shape shape, Color color, int zIndex) {
+        backgroundObjects.add(new BackgroundObject(shape, color, zIndex));
     }
 
 }

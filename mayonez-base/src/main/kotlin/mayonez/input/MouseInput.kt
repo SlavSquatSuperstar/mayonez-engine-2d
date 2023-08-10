@@ -65,7 +65,8 @@ object MouseInput : MouseAdapter() {
      * @param action the event type
      * @param mods any modifier keys
      */
-    fun mouseButtonCallback(window: Long, button: Int, action: Int, mods: Int) {
+    @JvmName("mouseButtonCallback")
+    internal fun mouseButtonCallback(window: Long, button: Int, action: Int, mods: Int) {
         if (!button.isValidIndex()) return
         lastButton = button
         lastAction = action
@@ -105,7 +106,8 @@ object MouseInput : MouseAdapter() {
      * @param xPos the x position of the cursor
      * @param yPos the y position of the cursor
      */
-    fun mousePosCallback(window: Long, xPos: Double, yPos: Double) {
+    @JvmName("mousePosCallback")
+    internal fun mousePosCallback(window: Long, xPos: Double, yPos: Double) {
         if (pressed) {
             setMouseDisp(xPos - mousePosPx.x, yPos - mousePosPx.y)
         }
@@ -131,7 +133,8 @@ object MouseInput : MouseAdapter() {
      * @param xOffset the x offset of the scroll wheel
      * @param yOffset the y offset of the scroll wheel
      */
-    fun mouseScrollCallback(window: Long, xOffset: Double, yOffset: Double) {
+    @JvmName("mouseScrollCallback")
+    internal fun mouseScrollCallback(window: Long, xOffset: Double, yOffset: Double) {
         setScrollPos(xOffset, yOffset)
     }
 

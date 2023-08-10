@@ -1,12 +1,13 @@
-package slavsquatsuperstar.demos.spacegame.scripts;
+package slavsquatsuperstar.demos.spacegame.movement;
 
 import mayonez.math.*;
 
 /**
- * Which way a thruster propels a spaceship.
+ * Which direction a thruster propels a spaceship.
  *
  * @author SlavSquatSuperstar
  */
+@SuppressWarnings("unused")
 public enum ThrustDirection {
 
     FORWARD(new Vec2(0f, 1f), 0f),

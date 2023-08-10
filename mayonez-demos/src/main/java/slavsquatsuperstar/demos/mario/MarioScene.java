@@ -19,14 +19,16 @@ public class MarioScene extends Scene {
 
     private static final int BACKGROUND_WIDTH = 1920;
     private static final int BACKGROUND_HEIGHT = 1024;
+    private static final float SCENE_GRAVITY = 20;
     private final SpriteSheet sprites;
     private final Texture background;
-    private final float sceneGravity = 20;
 
     public MarioScene(String name) {
         super(name, BACKGROUND_WIDTH, BACKGROUND_HEIGHT, 32);
-        sprites = Sprites.createSpriteSheet("assets/textures/mario/spritesheet.png", 16, 16, 26, 0);
-        background = Assets.getTexture("assets/textures/mario/background.png");
+        sprites = Sprites.createSpriteSheet(
+                "assets/mario/textures/spritesheet.png",
+                16, 16, 26, 0);
+        background = Assets.getTexture("assets/mario/textures/background.png");
         // Size = 60 x 32
         // Resolution = 1920x1024 (15:8), cropped from 1920x1080 (16:9)
     }
@@ -35,7 +37,7 @@ public class MarioScene extends Scene {
     public void init() {
         setBackground(Colors.LIGHT_GRAY);
         setBackground(background);
-        setGravity(new Vec2(0, -sceneGravity));
+        setGravity(new Vec2(0, -SCENE_GRAVITY));
         getCamera().zoom(0.8f);
 
         addObject(new Mario(new Vec2(-21f, -11f), sprites.getSprite(0)));

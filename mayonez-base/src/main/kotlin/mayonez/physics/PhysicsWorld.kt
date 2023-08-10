@@ -14,7 +14,7 @@ import mayonez.physics.resolution.*
  *
  * @author SlavSquatSuperstar
  */
-// todo add 2-bit coding
+// todo credit Two-Bit Coding
 class PhysicsWorld {
 
     companion object {
@@ -178,7 +178,7 @@ class PhysicsWorld {
     // Getters and Setters
 
     fun setGravity(gravity: Vec2?) {
-        this.gravity = gravity ?: Vec2()
+        this.gravity.set(gravity ?: Vec2())
     }
 
 }

@@ -1,14 +1,15 @@
-# Jar Files
+# Archive Files
 *.jar
+*.zip
 
 # Log files
-*.log
 logs/
+*.log
 hs_err_pid*
-
-# MacOS files
-.DS_Store
 
 # Duplicate resource files
 LICENSE*.txt
 preferences.json
+
+# MacOS files
+.DS_Store

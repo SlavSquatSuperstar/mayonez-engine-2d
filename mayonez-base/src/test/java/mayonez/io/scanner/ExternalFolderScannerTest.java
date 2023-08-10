@@ -1,8 +1,13 @@
 package mayonez.io.scanner;
 
-import org.junit.jupiter.api.*;
+import mayonez.io.FilePath;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Unit tests for the {@link mayonez.io.scanner.ExternalFolderScanner} class.
@@ -18,14 +23,18 @@ class ExternalFolderScannerTest {
         scanner = new ExternalFolderScanner();
     }
 
+    private static boolean doesFolderContain(List<String> files, String filename) {
+        return files.contains(FilePath.getOSFilename(filename));
+    }
+
     @Test
     void scanValidFolderIsNotEmpty() {
         var files = scanner.getFiles("src/test/resources/testassets");
         assertFalse(files.isEmpty());
-        assertTrue(files.contains("src/test/resources/testassets/text/properties.txt"));
-        assertTrue(files.contains("src/test/resources/testassets/images/mario.png"));
-        assertFalse(files.contains("src/test/java/mayonez/io/AssetsTest.class"));
-        assertFalse(files.contains("src/test/resources/.DS_Store"));
+        assertTrue(doesFolderContain(files, "src/test/resources/testassets/text/properties.txt"));
+        assertTrue(doesFolderContain(files, "src/test/resources/testassets/images/mario.png"));
+        assertFalse(doesFolderContain(files, "src/test/java/mayonez/io/AssetsTest.class"));
+        assertFalse(doesFolderContain(files, "src/test/resources/.DS_Store"));
     }
 
     @Test

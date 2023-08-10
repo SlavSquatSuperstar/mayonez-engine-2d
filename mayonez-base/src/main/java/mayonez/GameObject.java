@@ -282,12 +282,10 @@ public class GameObject {
 
     // Callback Methods
 
-    /**
-     * Destroy this game object and remove it from the scene.
-     */
-    final void destroy() {
+    final void onDestroy() {
         components.forEach(Component::destroy);
         components.clear();
+        tags.clear();
         scene = null;
     }
 
@@ -296,8 +294,7 @@ public class GameObject {
      *
      * @param event the collision event
      */
-    // TODO move to script
-    // TODO generalize for all events
+    // TODO make into event callback
     public final void onCollisionEvent(CollisionEvent event) {
         for (var script : getComponents(Script.class)) {
             switch (event.type) {
@@ -339,8 +336,9 @@ public class GameObject {
 
     /**
      * Remove this object from the scene and destroy all its components and children.
+     * The {@link #scene} field will be set to null.
      */
-    public void setDestroyed() {
+    public void destroy() {
         destroyed = true;
     }
 

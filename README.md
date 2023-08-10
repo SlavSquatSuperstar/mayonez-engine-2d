@@ -4,7 +4,7 @@ The ultimate made-from-scratch and open-source 2D Java game engine to fit your S
 
 <img src="https://img.shields.io/badge/platform-macOS-lightgrey"></img>
 <img src="https://img.shields.io/badge/platform-Windows-lightgrey"></img>
-<img src="https://img.shields.io/badge/stable-v0.7.8-green"></img>
+<img src="https://img.shields.io/badge/release-v0.7.9-brightgreen"></img>
 <img src=https://img.shields.io/badge/build-passing-brightgreen></img>
 
 <img src="https://img.shields.io/badge/Made%20with-Java-red"></img>
@@ -32,6 +32,7 @@ This fully-operational game engine includes:
 - A UI system with reusable components such as buttons and labels
 - An event system for keyboard and mouse inputs
 - Font rendering for displaying text on UI
+- Playable in-game sound effects
 - Nestable game objects that will be fixed to the parent object's position
 - And much more to come later!
 
@@ -59,16 +60,15 @@ Installing Java
 - Download the latest [Java LTS release](https://adoptium.net/temurin/releases)
     - Select "JRE" under "Package Type" and the correct operating system and architecture for your
       computer.
-    - Download the .pkg/.msi GUI installer if you do not know how to manually install Java, or else download the .zip
-      file.
-- Run or extract the installer, then check if Java is installed by running `java --version` inside a command
-  line/terminal window.
+    - Download the .pkg/.msi GUI installer, or the .zip file if you know how to manually install Java.
+- Run the installer or extract the archive, then check if Java is installed by running `java --version` inside a
+  command line/terminal window.
     - On Mac/Linux, the terminal app is usually Terminal.
     - On Windows, the terminal app is usually PowerShell or Command Prompt.
 
 Running the Program
 
-- Download the .zip file for the latest release under the
+- Download the `mayonez-engine-<version>.zip` file for the latest release under the
 - [releases section](https://github.com/SlavSquatSuperstar/mayonez-engine-2d/releases) on the GitHub website.
 - Drag `run` (Mac/Linux) or `run.bat` (Windows) from the extracted folder into a command line/terminal window
   and press Enter.
@@ -78,15 +78,19 @@ Running the Program
 Editing the Project
 
 - Download this repository by running `git clone https://github.com/SlavSquatSuperstar/mayonez-engine-2d.git` in a
-  terminal.
+  terminal or cloning https://github.com/SlavSquatSuperstar/mayonez-engine-2d in GitHub desktop
 - In an IDE, open the extracted folder or create a new project from existing sources, then tell the IDE to import a
   Gradle project if prompted.
     - You can also create a new project from version control using the repository link above if your editor supports it.
-- There are several preset Gradle tasks included to help in your development:
-    - Run: Launches the program with the demo scenes using `runShadow`
-    - Test: Runs unit tests using JUnit
-    - Build: Builds the fat .jar file with dependencies using `shadowJar`
-    - Export: Build the .jar and generates JavaDoc using `dokkaJavadocCollector`
+- There are several preset Gradle run configurations to facilitate development:
+    - Run: Launches the program with the demo scenes
+    - Test: Runs the unit tests
+    - Build: Builds the fat .jar file with dependencies
+    - Export: Build the .jar and generates JavaDoc
+- There are also several scripts to help automate production:
+    - `run`: Builds and runs the project
+    - `package`: Packages the project into the `dist/` folder
+    - `dist/run`: Runs the packaged project inside `dist/`
 
 Development Tools and Libraries
 
@@ -117,33 +121,32 @@ and a Pool Balls scene.
 
 - All Scenes:
     - **R** to reload the current scene
-    - **P** to pause/unpause the scene
-    - **Shift** + **1**/**2**/**3**/**4**/**5** to switch scenes
+    - **P** to pause/unpause the scene (may be buggy)
+    - **Shift** + **1**-**5** to switch scenes
     - **Esc** to exit the program
 - Space Shooter:
     - **W**/**S** to fly forward/backwards
     - **A**/**D** to turn left/right
     - **Q**/**E** to strafe left/right
     - **Space** to brake
-    - **Left mouse** to fire weapons
+  - **Left Mouse** and _hold_ to fire weapons
     - **1**/**2** to switch ammo types
-    - **Arrow keys** to zoom camera in/out and rotate camera left/right
 - Mario:
     - **W** to jump
     - **A**/**D** to move side to side
     - **S** to ground pound
 - Physics Sandbox:
-    - **Left mouse** and *drag* on objects to move them around
-    - **Right mouse**, *drag*, and *release* on objects to flick them
-    - **1**/**2**/**3**/**4** to spawn shapes
+    - **Left Mouse** and *drag* on objects to move them around
+    - **Right Mouse**, *drag*, and *release* on objects to flick them
+    - **1**-**4** to spawn shapes at the moues cursor
     - **Space** to toggle gravity
 - Pool Balls:
-    - **Left mouse** and *drag* on objects to move them around
-    - **Right mouse**, *drag*, and *release* on objects to flick them
+    - **Left Mouse** and *drag* on objects to move them around
+    - **Right Mouse**, *drag*, and *release* on objects to flick them
 - Geometry Dash Editor:
     - **WASD** to move
-    - **Left mouse** on buttons to select a brush
-    - **Left mouse** on an empty space, with a brush selected, to place a block
+    - **Left Mouse** on _buttons_ to select a brush
+    - **Left Mouse** on an _empty space_, with a brush selected, to place a block
 
 ## Additional Info
 

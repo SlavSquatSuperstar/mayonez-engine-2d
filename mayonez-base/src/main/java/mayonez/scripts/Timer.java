@@ -3,7 +3,7 @@ package mayonez.scripts;
 import mayonez.*;
 
 /**
- * A script that automatically tracks time in real time as the game updates and can be reset.
+ * Automatically counts down in real time as the game updates and can be reset.
  *
  * @author SlavSquatSuperstar
  */
@@ -59,6 +59,11 @@ public class Timer extends Script {
         return duration;
     }
 
+    /**
+     * How long until the timer is ready.
+     *
+     * @return the remaining value
+     */
     public float getValue() {
         return value;
     }

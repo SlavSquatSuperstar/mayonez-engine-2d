@@ -1,7 +1,6 @@
 package mayonez.graphics.renderer;
 
 import mayonez.annotations.*;
-import mayonez.graphics.*;
 import mayonez.graphics.batch.*;
 import mayonez.graphics.textures.*;
 

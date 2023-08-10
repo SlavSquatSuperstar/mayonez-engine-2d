@@ -5,6 +5,7 @@ import mayonez.math.*;
 
 /**
  * Stores multiple textures and creates multiple sprites from a larger image.
+ * To instantiate a sprite sheet, use {@link Sprites#createSpriteSheet}.
  *
  * @author SlavSquatSuperstar
  */

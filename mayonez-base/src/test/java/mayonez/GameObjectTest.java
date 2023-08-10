@@ -24,16 +24,16 @@ class GameObjectTest {
     }
 
     @Test
-    void addComponentChangesComponentCount() {
+    void addComponentChangesNumComponents() {
         var obj = new GameObject("Test Object");
         assertEquals(0, obj.numComponents());
 
-        var comp1 = mock(Collider.class);
+        var comp1 = mock(BoxCollider.class);
         obj.addComponent(comp1);
+        assertEquals(1, obj.numComponents());
 
         var comp2 = mock(Rigidbody.class);
         obj.addComponent(comp2);
-
         assertEquals(2, obj.numComponents());
     }
 
@@ -41,18 +41,18 @@ class GameObjectTest {
     void getComponentsSameClass() {
         var obj = new GameObject("Test Object");
 
-        var comp1 = mock(Collider.class);
+        var comp1 = mock(BoxCollider.class);
         obj.addComponent(comp1);
 
         var comp2 = mock(Rigidbody.class);
         obj.addComponent(comp2);
 
-        var comp3 = mock(Counter.class);
+        var comp3 = mock(Timer.class);
         obj.addComponent(comp3);
 
-        assertSame(comp1, obj.getComponent(Collider.class));
+        assertSame(comp1, obj.getComponent(BoxCollider.class));
         assertSame(comp2, obj.getComponent(Rigidbody.class));
-        assertSame(comp3, obj.getComponent(Counter.class));
+        assertSame(comp3, obj.getComponent(Timer.class));
         assertNull(obj.getComponent(Sprite.class));
     }
 
@@ -63,15 +63,11 @@ class GameObjectTest {
         var comp1 = mock(BoxCollider.class);
         obj.addComponent(comp1);
 
-        var comp2 = mock(GLSprite.class);
+        var comp2 = mock(Timer.class);
         obj.addComponent(comp2);
 
-        var comp3 = mock(Counter.class);
-        obj.addComponent(comp3);
-
         assertSame(comp1, obj.getComponent(Collider.class));
-        assertSame(comp2, obj.getComponent(Sprite.class));
-        assertSame(comp3, obj.getComponent(Script.class));
+        assertSame(comp2, obj.getComponent(Script.class));
     }
 
 }

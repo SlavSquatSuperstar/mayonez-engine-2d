@@ -1,9 +1,15 @@
 package mayonez.graphics.camera
 
-import mayonez.*
-import mayonez.annotations.*
-import mayonez.math.*
-import org.joml.*
+import mayonez.Mayonez
+import mayonez.SceneManager
+import mayonez.annotations.EngineType
+import mayonez.annotations.UsesEngine
+import mayonez.math.FloatMath
+import mayonez.math.Vec2
+import org.joml.Matrix4f
+import org.joml.Quaternionf
+import org.joml.Vector3f
+import org.joml.Vector4f
 
 /**
  * A scene camera for the GL engine.
@@ -26,7 +32,10 @@ class GLCamera(screenSize: Vec2?, sceneScale: Float) : Camera(screenSize, sceneS
 
     // Camera Methods
 
-    override fun toWorld(screen: Vec2): Vec2 = getViewPos(getClipPos(screen)) + position
+    override fun toWorld(screen: Vec2): Vec2 {
+        // Divide the raw screen coordinates by the window scaling
+        return getViewPos(getClipPos(screen / Mayonez.windowScale)) + position
+    }
 
     /** Normalize screen position into clip space. */
     private fun getClipPos(screen: Vec2): Vec2 {
@@ -36,7 +45,8 @@ class GLCamera(screenSize: Vec2?, sceneScale: Float) : Camera(screenSize, sceneS
 
     /** Transform clip position into camera view space. */
     private fun getViewPos(clip: Vec2): Vec2 {
-        val view = Vector4f(clip.x, clip.y, 0f, 0f).mul(inverseProjection).mul(inverseView)
+        val view = Vector4f(clip.x, clip.y, 0f, 0f)
+            .mul(inverseProjection).mul(inverseView)
         return Vec2(view.x, view.y)
     }
 

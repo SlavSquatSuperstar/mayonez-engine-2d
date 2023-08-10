@@ -10,6 +10,19 @@ import java.util.*
  * Prints messages to the console that can be formatted and assigned a
  * priority level, and saves them to a log file.
  *
+ * Usage: Call [Logger.log] anywhere to print an info message to the console.
+ * Log messages can also use format specifiers and arguments, similar to [String.format].
+ * Different log priorities are also available through [Logger.debug], [Logger.warn], and
+ * [Logger.error]. By default, log files are saved to the `logs/` folder, but the user can
+ * change the location or disable log output files in `preferences.json`.
+ *
+ * The log level controls which messages are visible to the console. For example, a log level
+ * of 3 ([LogLevel.WARNING]) indicates only messages with severity `WARNING` or above will be
+ * printed. Setting a priority to 0 ([LogLevel.ALL]) or 5 ([LogLevel.NONE]) will also allow
+ * all or none of the message to be displayed. All messages will be written to the output file
+ * regardless of priority. The default log level is also 2 (`INFO` or above), and is also
+ * changeable in the preferences. The See [LogLevel] for more information.
+ *
  * @author SlavSquatSuperstar
  */
 object Logger {
@@ -23,7 +36,6 @@ object Logger {
     // Log File Output
     private lateinit var logFile: TextFile
     private val printQueue: Queue<String> = LinkedList() // Save log messages in case log file isn't created
-
 
     // Logger Init Methods
 
@@ -39,7 +51,9 @@ object Logger {
         if (this::logFile.isInitialized) return
         if (config.saveLogs) {
             logFile = TextFile(getLogFilename())
-            while (printQueue.isNotEmpty()) logFile.append(printQueue.poll()) // log everything in print queue
+            while (printQueue.isNotEmpty()) {
+                logFile.append(printQueue.poll()) // log everything in print queue
+            }
         }
     }
 
@@ -58,9 +72,9 @@ object Logger {
     // Private Log Methods
 
     /**
-     * Formats a message and adds a timestamp, prints it to the console if
-     * the priority is over the log level, and saves it to a log file if the
-     * settings allow.
+     * Formats a message and adds a timestamp, and prints it to the console if
+     * the priority is over the log levels. If log output files are enabled, then
+     * the message will also be saved to a log file.
      *
      * @param msg the message as a Java format string
      * @param args (optional) the format arguments

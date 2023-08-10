@@ -3,7 +3,6 @@ package mayonez;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
 
 /**
  * Unit tests for the {@link mayonez.Scene} class.
@@ -26,10 +25,10 @@ class SceneTest {
         var scene = new Scene("Test Scene") {
         };
 
-        var obj1 = mock(GameObject.class);
+        var obj1 = new GameObject("");
         scene.addObject(obj1);
 
-        var obj2 = mock(GameObject.class);
+        var obj2 = new GameObject("");
         scene.addObject(obj2);
 
         assertEquals(2, scene.numObjects());

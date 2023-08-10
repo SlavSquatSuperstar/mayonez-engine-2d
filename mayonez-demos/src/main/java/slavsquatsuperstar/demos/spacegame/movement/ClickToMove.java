@@ -1,4 +1,4 @@
-package slavsquatsuperstar.demos.spacegame.scripts;
+package slavsquatsuperstar.demos.spacegame.movement;
 
 import mayonez.*;
 import mayonez.annotations.*;
@@ -13,6 +13,7 @@ import mayonez.scripts.movement.*;
  *
  * @author SlavSquatSuperstar
  */
+@SuppressWarnings("ALL")
 @ExperimentalFeature
 public class ClickToMove extends Script {
 

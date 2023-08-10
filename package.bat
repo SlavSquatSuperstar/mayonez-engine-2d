@@ -20,12 +20,16 @@ if %ERRORLEVEL% equ 0 (
     exit /b 1
 )
 
-rem Copy the compiled .jar file
+rem Replace the compiled .jar file
+del dist\mayonez*.jar
 copy build\libs\mayonez*.jar dist\mayonez*.jar
 
 rem Copy resource files
 copy LICENSE-GPLv3.txt dist\LICENSE.txt
 copy preferences.json dist\preferences.json
+
+rem Zip the dist folder
+rem (Not available for Batch >:C)
 
 rem Show success message
 echo Successfully packaged Mayonez Engine.

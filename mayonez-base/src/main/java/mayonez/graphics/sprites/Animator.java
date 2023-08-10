@@ -20,11 +20,17 @@ public class Animator extends Script {
     private Sprite sprite;
     private final Timer animTimer;
 
-    public Animator(SpriteSheet sprites, float animCooldown) {
+    /**
+     * Creates an animation from a sprite sheet that will loop through all the sprites.
+     *
+     * @param sprites         the frames of the animation
+     * @param secondsPerFrame how much time to spend on each frame
+     */
+    public Animator(SpriteSheet sprites, float secondsPerFrame) {
         this.textures = sprites.getTextures();
         this.numFrames = textures.length;
         currentFrame = 0;
-        animTimer = new Timer(animCooldown);
+        animTimer = new Timer(secondsPerFrame);
     }
 
     @Override
@@ -37,14 +43,20 @@ public class Animator extends Script {
     @Override
     public void start() {
         animTimer.reset();
-        animTimer.start();
         setSpriteTexture(0);
     }
 
     @Override
     public void update(float dt) {
         if (animTimer.isEnabled() && animTimer.isReady()) {
-            setFrame((currentFrame + 1) % numFrames); // update frame count
+            // update frame count
+            if (currentFrame == numFrames - 1) {
+                currentFrame = 0;
+                onFinishAnimation();
+            } else {
+                currentFrame += 1;
+            }
+            setFrame(currentFrame);
             animTimer.reset();
         }
     }
@@ -66,6 +78,7 @@ public class Animator extends Script {
     }
 
     private void setSpriteTexture(int frame) {
+        if (sprite == null) return; // not initialized yet
         sprite.setTexture(textures[frame]);
         setSpriteVisible(true);
     }
@@ -76,15 +89,16 @@ public class Animator extends Script {
      * @param visible if the sprite should be enabled
      */
     public void setSpriteVisible(boolean visible) {
+        if (sprite == null) return; // not initialized yet
         sprite.setEnabled(visible);
     }
 
     /**
-     * Enables or disables the animation timer.
+     * Resumes or pauses the animation.
      *
-     * @param enabled if the timer should be enabled
+     * @param enabled if the animation should play, true by default
      */
-    public void setTimerEnabled(boolean enabled) {
+    public void setAnimationEnabled(boolean enabled) {
         animTimer.setEnabled(enabled);
     }
 
@@ -93,13 +107,19 @@ public class Animator extends Script {
     @Override
     public void onEnable() {
         setSpriteVisible(true);
-        setTimerEnabled(true);
+        setAnimationEnabled(true);
     }
 
     @Override
     public void onDisable() {
         setSpriteVisible(false);
-        setTimerEnabled(false);
+        setAnimationEnabled(false);
+    }
+
+    /**
+     * Custom user behavior for when this animation finishes looping once.
+     */
+    public void onFinishAnimation() {
     }
 
 }

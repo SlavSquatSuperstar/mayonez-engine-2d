@@ -8,18 +8,22 @@ import mayonez.util.*
  *
  * @author SlavSquatSuperstar
  */
-object Defaults {
+internal object Defaults {
 
     // Application
     private const val TITLE: String = "<No Title>"
     private const val VERSION: String = "<Unknown Version>"
 
     // Graphical
-    private const val SCREEN_WIDTH: Int = 1080
-    private const val SCREEN_HEIGHT: Int = 720
+    private const val SCREEN_WIDTH: Int = 1200
+    private const val SCREEN_HEIGHT: Int = 800
     private const val FPS: Int = 60
 
-    val preferences: Record = Record()
+    private val preferences: Record = Record()
+
+    internal fun copyPreferences(): Record {
+        return preferences.copy()
+    }
 
     init {
         // Application

@@ -18,12 +18,18 @@ else
   exit 1
 fi
 
-# Copy the compiled .jar file
+# Replace the compiled .jar file
+rm dist/mayonez*.jar
 cp build/libs/mayonez*.jar dist/
 
 # Copy resource files
 cp LICENSE-GPLv3.txt dist/LICENSE.txt
 cp preferences.json dist/
+
+# Zip the dist folder
+cd dist || exit
+rm mayonez*.zip
+zip mayonez-engine.zip mayonez*.jar run* preferences.json *.txt
 
 # Show success message
 echo "Successfully packaged Mayonez Engine."

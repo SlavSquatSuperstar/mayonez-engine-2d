@@ -7,15 +7,19 @@ import mayonez.math.*
 import kotlin.system.exitProcess
 
 /**
- * The entry point into any game. Loads application resources, configures
- * the engine instance, and sets the scene to be played.
+ * An instance of Mayonez Engine. Upon startup, the application loads resources,
+ * configures other engine components, and tells the scene manager to load a scene.
  *
- * To start an instance of Mayonez Engine, set the "Use GL" property
- * through Mayonez.setUseGL(). Then load any number of scenes through
- * SceneManager.addScene(). Finally, start the game with a scene with
- * Mayonez.start().
+ * Usage: To start an instance of Mayonez Engine, create a [Launcher] and set
+ * the "Use GL" property through [Launcher.setRunConfig]. Then, load any number
+ * of scenes through [Launcher.loadScenesToManager] or [SceneManager.addScene].
+ * Finally, start the game with a scene by calling [Launcher.startGame].
+ *
+ * To exit the program, call [Mayonez.stop] with an [ExitCode] (0 for success,
+ * anything else for failure).
+ *
+ * See [Launcher] for more information.
  */
-// TODO hide setConfig/start
 object Mayonez {
 
     // Run Fields
@@ -24,17 +28,46 @@ object Mayonez {
     private var started: Boolean = false
 
     // Properties
+
+    /**
+     * The size of the application window, in pixels.
+     */
     @JvmStatic
     val screenSize: Vec2
-        get() = Vec2(Preferences.screenWidth.toFloat(), Preferences.screenHeight.toFloat())
+        get() = Vec2(
+            Preferences.screenWidth.toFloat(),
+            Preferences.screenHeight.toFloat()
+        )
 
+    /**
+     * The content scaling of the application window, usually 1x1 (100%). The value
+     * may be different if the current display has changed its screen scaling or
+     * resolution.
+     *
+     * For example, if the window scale is 2x2 (200%), then the window
+     * size will appear twice as large as the value stated in the user preferences.
+     */
     @JvmStatic
-    var useGL: Boolean = false // crashes tests when set to true :\
+    internal var windowScale: Vec2 = Vec2(1f)
+        @JvmName("getWindowScale") get
+        @JvmName("setWindowScale") set
+
+    /**
+     * Whether to use OpenGL for rendering instead of Java AWT.
+     */
+    @JvmStatic
+    internal var useGL: Boolean = false // crashes tests when set to true :\
+        @JvmName("getUseGL") get
         private set
 
     // Init Methods
+
+    /**
+     * Sets the run configuration for the program. Must be called before [start].
+     */
     @JvmStatic
-    fun setConfig(config: RunConfig) {
+    @JvmName("setConfig")
+    internal fun setConfig(config: RunConfig) {
         if (!initialized) {
             this.useGL = config.useGL
             initializeSingletons()
@@ -54,7 +87,7 @@ object Mayonez {
         Preferences.setPreferences()
         Time.timeStepSecs = (1f / Preferences.fps)
         Logger.setConfig(Preferences.getLoggerConfig())
-        Logger.log("Started %s %s", Preferences.title, Preferences.version)
+        Logger.log("Started ${Preferences.title} ${Preferences.version}")
 
         Assets.initialize()
         Assets.loadResources()
@@ -63,19 +96,20 @@ object Mayonez {
     private fun initializeGame() {
         if (!this::game.isInitialized) {
             game = EngineFactory.createGameEngine(useGL)
-            Logger.debug("Using engine \"%s\"", if (useGL) "GL" else "AWT")
+            Logger.debug("Using \"%s\" engine", if (useGL) "GL" else "AWT")
         }
     }
 
-    // Game Loop
+    // Game Loop Methods
 
     /**
-     * Start the game and load a scene.
+     * Start the game and load a scene. Must be called after [setConfig].
      *
      * @param scene the starting scene
      */
     @JvmStatic
-    fun start(scene: Scene?) {
+    @JvmName("start")
+    internal fun start(scene: Scene?) {
         if (!initialized) {
             exitWithErrorMessage("Cannot start program without setting run configuration")
         } else if (scene == null) {

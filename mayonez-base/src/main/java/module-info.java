@@ -6,14 +6,14 @@
 module mayonez.base {
     // JVM
     requires transitive java.desktop;
-    requires transitive kotlin.stdlib;
+    requires kotlin.stdlib;
 
     // LWJGL
     requires org.lwjgl;
     requires org.lwjgl.glfw;
     requires org.lwjgl.opengl;
     requires org.lwjgl.stb;
-    requires transitive org.joml;
+    requires org.joml;
 
     // Other Dependencies
     requires org.json;
@@ -36,7 +36,6 @@ module mayonez.base {
     exports mayonez.physics;
     exports mayonez.physics.colliders;
     exports mayonez.scripts;
-    exports mayonez.scripts.combat;
     exports mayonez.scripts.mouse;
     exports mayonez.scripts.movement;
     exports mayonez.util;

@@ -1,6 +1,7 @@
-package mayonez.scripts;
+package slavsquatsuperstar.demos.spacegame.objects;
 
 import mayonez.*;
+import mayonez.scripts.*;
 
 /**
  * Sets conditions for spawning new objects and tracks the number of spawned objects in the scene.
@@ -9,7 +10,6 @@ import mayonez.*;
  */
 public abstract class SpawnManager extends Script {
 
-    // TODO disable spawn limit
     private final Counter amountSpawned; // how many objects spawned
     private final Timer spawnTimer; // how long until spawning objects again
 

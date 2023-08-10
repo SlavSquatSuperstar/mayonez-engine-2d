@@ -69,10 +69,12 @@ public abstract class Component {
     }
 
     /**
-     * Destroy this component and free up system resources once the parent {@link GameObject} is destroyed.
+     * Destroy this component, disabling it and removing it from its parent {@link GameObject}.
+     * The fields {@link #gameObject} and {@link #transform} will be set to null.
      */
-    void destroy() {
+    public void destroy() {
         gameObject = null;
+        transform = null;
     }
 
     // Getters and Setters
@@ -86,6 +88,13 @@ public abstract class Component {
         return enabled && gameObject != null;
     }
 
+    /**
+     * Enable or disable whether this component should be updated.
+     *
+     * @param enabled if the component is enabled
+     * @param <T>     the component subclass type
+     * @return this component
+     */
     @SuppressWarnings("unchecked")
     public <T extends Component> T setEnabled(boolean enabled) {
         this.enabled = enabled;

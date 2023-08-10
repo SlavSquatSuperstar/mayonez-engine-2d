@@ -44,13 +44,7 @@ compileJava {
 }
 
 compileKotlin {
-//    compilerOptions {
-//        jvmTarget = javaVersion
-//        suppressWarnings = true
-//        destinationDirectory = compileJava.destinationDirectory
-//    }
-    kotlinOptions { // deprecated, Kotlin doesn't support latest gradle
-        jvmTarget = javaVersion
+    compilerOptions {
         suppressWarnings = true
         destinationDirectory = compileJava.destinationDirectory
     }

@@ -1,4 +1,4 @@
-package mayonez.graphics
+package mayonez.graphics.batch
 
 import mayonez.annotations.*
 import mayonez.math.*

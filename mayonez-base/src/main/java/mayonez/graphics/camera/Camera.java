@@ -1,10 +1,16 @@
 package mayonez.graphics.camera;
 
-import mayonez.*;
-import mayonez.math.*;
+import mayonez.GameObject;
+import mayonez.Script;
+import mayonez.math.FloatMath;
+import mayonez.math.Vec2;
 
 /**
- * The viewport into the scene.
+ * The viewport into the scene. The camera may be adjusted through scripts
+ * by accessing {@code Script.getScene().getCamera()}. This class should not be
+ * directly instantiated. Instead, call {@link CameraFactory#createCamera}.
+ * <p>
+ * See {@link CameraFactory} for more information.
  *
  * @author SlavSquatSuperstar
  */

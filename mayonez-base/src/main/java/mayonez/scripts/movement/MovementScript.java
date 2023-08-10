@@ -11,7 +11,7 @@ import mayonez.physics.*;
  */
 public abstract class MovementScript extends Script {
 
-    protected float speed;
+    protected final float speed;
     protected float topSpeed = -1; // If rb velocity should be clamped
     protected MoveMode mode; // How to move the parent object
     protected Rigidbody rb = null; // Reference to object rigidbody

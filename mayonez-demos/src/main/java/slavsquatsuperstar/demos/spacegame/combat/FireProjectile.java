@@ -1,11 +1,11 @@
-package mayonez.scripts.combat;
+package slavsquatsuperstar.demos.spacegame.combat;
 
 import mayonez.*;
 import mayonez.scripts.*;
 
 /**
- * Allows objects to spawn projectiles repeatedly. This script is abstract and any instances must define
- * what projectiles to spawn and under what criteria.
+ * Allows objects to spawn damaging projectiles repeatedly. This script is abstract and any
+ * instances must define what projectiles to spawn and under what criteria.
  *
  * @author SlavSquatSuperstar
  */

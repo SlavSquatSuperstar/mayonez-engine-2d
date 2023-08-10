@@ -12,6 +12,7 @@ import mayonez.math.shapes.*
  * @author SlavSquatSuperstar
  */
 @ExperimentalFeature
+@Suppress("ALL")
 class GJKRaycastDetector {
     private fun raycastGJK(shape: Shape, ray: Ray, limit: Float): RaycastInfo? {
         val lambda = 0.0

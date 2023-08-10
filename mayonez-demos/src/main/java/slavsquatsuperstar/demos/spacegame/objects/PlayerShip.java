@@ -1,112 +1,42 @@
 package slavsquatsuperstar.demos.spacegame.objects;
 
-import mayonez.*;
-import mayonez.graphics.sprites.*;
-import mayonez.input.*;
-import mayonez.math.*;
 import mayonez.physics.*;
-import mayonez.physics.colliders.*;
-import mayonez.scripts.*;
-import mayonez.scripts.combat.*;
 import mayonez.scripts.movement.*;
-import slavsquatsuperstar.demos.spacegame.scripts.ThrustController;
-import slavsquatsuperstar.demos.spacegame.scripts.ThrustDirection;
-import slavsquatsuperstar.demos.spacegame.scripts.Thruster;
+import slavsquatsuperstar.demos.spacegame.combat.PlayerFireController;
+import slavsquatsuperstar.demos.spacegame.movement.PlayerThrustController;
+import slavsquatsuperstar.demos.spacegame.movement.ThrusterPrefabs;
 
 /**
- * A player-controlled spaceship that can fire projectiles.
+ * A player-controlled spaceship.
  *
  * @author SlavSquatSuperstar
  */
-public class PlayerShip extends GameObject {
+public class PlayerShip extends Spaceship {
 
-    private final String spriteName;
+    private static final float PLAYER_HEALTH = 6f;
 
-    public PlayerShip(String name, String spriteName) {
-        super(name, Transform.scaleInstance(new Vec2(2, 2)), ZIndex.SPACESHIP);
-        this.spriteName = spriteName;
+    public PlayerShip(String name, String spriteName, SpawnManager playerSpawner) {
+        super(name, spriteName, PLAYER_HEALTH, playerSpawner);
     }
 
     @Override
     protected void init() {
+        super.init();
+
         getScene().getCamera().setSubject(this).setFollowAngle(false);
 
-        // Physics
+        // Movement
+        // TODO allow set controls in config
         addComponent(new Rigidbody(1f));
-        addComponent(new BoxCollider(new Vec2(0.85f, 1f)));
-
-        // Visuals
-        addComponent(Sprites.createSprite(spriteName));
-
-        // Scripts
-        addComponent(new KeepInScene(KeepInScene.Mode.WRAP));
         addComponent(new KeyMovement(10f, MoveMode.FORCE, "horizontal2", "vertical").setObjectAligned(true));
-        addComponent(new KeyRotation(120f, MoveMode.VELOCITY, "horizontal"));
+        addComponent(new KeyRotation(180f, MoveMode.VELOCITY, "horizontal"));
 //        addComponent(new ClickToMove(10f, MoveMode.VELOCITY, true));
-        addComponent(new FireProjectile(0.2f) {
-            private int weaponChoice = 1;
 
-            @Override
-            public void update(float dt) {
-                super.update(dt);
-                if (KeyInput.keyPressed("1")) {
-                    weaponChoice = 1;
-                    setCooldown(0.2f);
-                } else if (KeyInput.keyPressed("2")) {
-                    weaponChoice = 2;
-                    setCooldown(0.4f);
-                }
-            }
+        var thrusters = ThrusterPrefabs.addThrustersToObject(this);
+        addComponent(new PlayerThrustController(thrusters));
 
-            @Override
-            protected boolean readyToFire() {
-                return MouseInput.buttonDown("left mouse");
-            }
-
-            @Override
-            protected GameObject spawnProjectile() {
-                if (weaponChoice == 1) {
-                    return Projectiles.createLaser(gameObject);
-                } else if (weaponChoice == 2) {
-                    return Projectiles.createPlasma(gameObject);
-                } else return null;
-            }
-        }.setEnabled(true));
-
-        // Sub-Objects
-        var lBack = new Thruster(ThrustDirection.FORWARD);
-        var rBack = new Thruster(ThrustDirection.FORWARD);
-        var lFront = new Thruster(ThrustDirection.BACKWARD);
-        var rFront = new Thruster(ThrustDirection.BACKWARD);
-        var fLeft = new Thruster(ThrustDirection.RIGHT, ThrustDirection.TURN_RIGHT);
-        var bLeft = new Thruster(ThrustDirection.RIGHT, ThrustDirection.TURN_LEFT);
-        var fRight = new Thruster(ThrustDirection.LEFT, ThrustDirection.TURN_LEFT);
-        var bRight = new Thruster(ThrustDirection.LEFT, ThrustDirection.TURN_RIGHT);
-
-        // aft thrusters
-        getScene().addObject(Thruster.createObject(lBack, "Left Rear Thruster", this,
-                new Transform(new Vec2(-0.1f, -0.6f), 0f, new Vec2(0.3f))));
-        getScene().addObject(Thruster.createObject(rBack, "Right Rear Thruster", this,
-                new Transform(new Vec2(0.1f, -0.6f), 0f, new Vec2(0.3f))));
-
-        // front thrusters
-        getScene().addObject(Thruster.createObject(lFront, "Left Front Thruster", this,
-                new Transform(new Vec2(-0.075f, 0.46f), 180f, new Vec2(0.1f))));
-        getScene().addObject(Thruster.createObject(rFront, "Right Front Thruster", this,
-                new Transform(new Vec2(0.075f, 0.46f), 180f, new Vec2(0.1f))));
-
-        // port thrusters
-        getScene().addObject(Thruster.createObject(fLeft, "Front Left Thruster", this,
-                new Transform(new Vec2(-0.14f, 0.39f), -90, new Vec2(0.08f))));
-        getScene().addObject(Thruster.createObject(bLeft, "Rear Left Thruster", this,
-                new Transform(new Vec2(-0.2f, -0.36f), -90, new Vec2(0.08f))));
-
-        // starboard thrusters
-        getScene().addObject(Thruster.createObject(fRight, "Front Right Thruster", this,
-                new Transform(new Vec2(0.14f, 0.39f), 90, new Vec2(0.08f))));
-        getScene().addObject(Thruster.createObject(bRight, "Rear Right Thruster", this,
-                new Transform(new Vec2(0.2f, -0.36f), 90, new Vec2(0.08f))));
-
-        addComponent(new ThrustController(lBack, rBack, lFront, rFront, fLeft, bLeft, fRight, bRight));
+        // Weapons
+        addComponent(new PlayerFireController(0.2f));
     }
+
 }

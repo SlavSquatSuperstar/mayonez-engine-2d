@@ -10,7 +10,6 @@ import mayonez.scripts.*;
 import mayonez.scripts.mouse.*;
 import mayonez.scripts.movement.*;
 import mayonez.util.*;
-import slavsquatsuperstar.demos.physics.scripts.DestroyAfterDuration;
 import slavsquatsuperstar.demos.physics.scripts.DrawPhysicsInformation;
 import slavsquatsuperstar.demos.physics.scripts.MouseFlick;
 
