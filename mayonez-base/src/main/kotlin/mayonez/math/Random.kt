@@ -1,6 +1,6 @@
 package mayonez.math
 
-import mayonez.util.MColor
+import mayonez.util.*
 
 /**
  * Generates random numbers and primitive types. Most methods will use a
@@ -34,7 +34,7 @@ object Random {
     // Random Numbers
 
     /**
-     * Generates a uniform random float between the two provided bounds. All
+     * Generates a random uniform float between the two provided bounds. All
      * numbers in the range have a roughly equal chance of occurring.
      *
      * Note: In reality, the upper bound is technically excluded and can never occur.
@@ -89,7 +89,7 @@ object Random {
     // Random Points
 
     /**
-     * Generates a random angle between 0-360 degrees.
+     * Generates a random uniform angle between 0-360 degrees.
      *
      * @return the random angle
      */
@@ -99,11 +99,11 @@ object Random {
     }
 
     /**
-     * Generates a random [Vec2] between the provided min and max vectors. All
+     * Generates a random uniform [Vec2] between the provided min and max vectors. All
      * points in the rectangular region have a roughly equal chance of occurring.
      *
-     * @param min the lower bound vector, inclusive
-     * @param max the upper bound vector, inclusive
+     * @param min the bottom left corner, inclusive
+     * @param max the upper right corner, inclusive
      * @return the random vector
      */
     @JvmStatic
@@ -112,13 +112,13 @@ object Random {
     }
 
     /**
-     * Generates a random [Vec2] between the provided x and y bounds. All
+     * Generates a random uniform [Vec2] between the provided x and y bounds. All
      * vectors in the rectangular region have a roughly equal chance of occurring.
      *
-     * @param minX the lower x bound
-     * @param maxX the upper x bound
-     * @param minY the lower y bound
-     * @param maxY the upper y bound
+     * @param minX the lower x bound, inclusive
+     * @param maxX the upper x bound, inclusive
+     * @param minY the lower y bound, inclusive
+     * @param maxY the upper y bound, inclusive
      * @return the random vector
      */
     @JvmStatic

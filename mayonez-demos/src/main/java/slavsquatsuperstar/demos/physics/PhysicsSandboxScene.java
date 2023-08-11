@@ -89,7 +89,7 @@ public class PhysicsSandboxScene extends Scene {
 
     protected final GameObject createRandomShape(Vec2 position, int type) {
         var name = getNameFromType(type);
-        var rotation = Random.randomFloat(0f, 360f);
+        var rotation = Random.randomAngle();
         var col = getColliderFromType(type);
 
         return new SandboxObject(name, position, rotation)

@@ -2,14 +2,15 @@ package slavsquatsuperstar.demos.spacegame.combat;
 
 import mayonez.*;
 import mayonez.graphics.sprites.*;
+import slavsquatsuperstar.demos.spacegame.ZIndex;
 
 /**
- * An animated explosion.
+ * Creates animated explosion objects.
  *
  * @author SlavSquatSuperstar
  */
 // TODO damage ships in radius
-public class Explosion {
+public class ExplosionPrefabs {
 
     // Constants
     private static final int ANIMATION_SPRITES = 8;
@@ -21,7 +22,7 @@ public class Explosion {
     // Factory Methods
 
     public static GameObject createPrefab(String name, Transform transform, float duration) {
-        return new GameObject(name, transform) {
+        return new GameObject(name, transform, ZIndex.EXPLOSION) {
             @Override
             protected void init() {
                 addComponent(new Animator(EXPLOSION_TEXTURES,

@@ -13,7 +13,7 @@ import slavsquatsuperstar.demos.spacegame.movement.ThrusterPrefabs;
  */
 public class PlayerShip extends Spaceship {
 
-    private static final float PLAYER_HEALTH = 6f;
+    private static final float PLAYER_HEALTH = 8f;
 
     public PlayerShip(String name, String spriteName, SpawnManager playerSpawner) {
         super(name, spriteName, PLAYER_HEALTH, playerSpawner);

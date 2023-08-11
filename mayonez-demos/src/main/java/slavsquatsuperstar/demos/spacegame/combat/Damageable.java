@@ -31,7 +31,9 @@ public class Damageable extends Script {
     public void onTriggerEnter(GameObject other) {
         if (other.hasTag("Projectile")) {
             var p = other.getComponent(Projectile.class);
-            if (p != null) damage(p.getDamage());
+            if (p != null && !gameObject.equals(p.getSource())) {
+                damage(p.getDamage());
+            }
         }
     }
 
