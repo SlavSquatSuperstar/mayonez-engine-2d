@@ -38,10 +38,10 @@ public class AsteroidPrefabs {
         asteroid.addComponent(sprite);
     }
 
-    public static void setStartingVelocity(GameObject asteroid, float mass, Vec2 velocity) {
+    public static Rigidbody addRigidbody(GameObject asteroid, float mass) {
         Rigidbody rb;
         asteroid.addComponent(rb = new Rigidbody(mass, 0.2f, 0.2f));
-        rb.setVelocity(velocity);
+        return rb;
     }
 
 }

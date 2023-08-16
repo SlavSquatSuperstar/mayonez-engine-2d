@@ -44,19 +44,19 @@ public class AsteroidDestruction extends Script {
 
     private void spawnAsteroidFragments(float asteroidSize) {
         var fragmentCount = (int) Random.randomFloat(2, asteroidSize * 1.5f);
+        var angleSpacing = 360f / fragmentCount;
+        var offsetAngle = transform.getRotation();
+
         for (var i = 0; i < fragmentCount; i++) {
-            var angle = 360f / fragmentCount;
-            var angleError = Random.randomFloat(-angle * 0.1f, angle * 0.1f);
-            var speedMod = Random.randomFloat(0.5f, asteroidSize);
-            // todo apply impulse
-            // todo position offset
-            var velocity = getRigidbody().getVelocity().mul(speedMod)
-                    .rotate(angle + angleError);
+            var angleError = Random.randomFloat(-angleSpacing * 0.3f, angleSpacing * 0.3f);
+            offsetAngle += (angleSpacing + angleError);
 
             getScene().addObject(new AsteroidFragment(
-                    "Asteroid Fragment", transform.getPosition(),
+                    "Asteroid Fragment",
+                    transform.getPosition(),
                     transform.getScale().div(fragmentCount),
-                    velocity, color));
+                    new Vec2(1, 0).rotate(offsetAngle),
+                    color));
         }
     }
 

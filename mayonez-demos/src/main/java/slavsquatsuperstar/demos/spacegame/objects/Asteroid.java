@@ -35,7 +35,8 @@ public class Asteroid extends GameObject {
 
         AsteroidPrefabs.addCollider(this);
         AsteroidPrefabs.addSprite(this, color);
-        AsteroidPrefabs.setStartingVelocity(this, startingHealth, transform.getUp().mul(Random.randomFloat(0f, 3f)));
+        AsteroidPrefabs.addRigidbody(this, startingHealth)
+                .setVelocity(transform.getUp().mul(Random.randomFloat(0f, 3f)));
 
         addComponent(new Damageable(startingHealth));
         addComponent(new AsteroidDestruction(obstacleSpawner, color));

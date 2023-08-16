@@ -313,17 +313,17 @@ class Vec2(
     }
 
     /**
-     * Rotates this vector by an angle around the origin (0, 0).
+     * Rotates this vector counterclockwise by a given angle around the origin (0, 0).
      *
-     * @param degrees the angle, in degrees clockwise
+     * @param degrees the angle, in degrees counterclockwise
      * @return the rotated vector
      */
     fun rotate(degrees: Float): Vec2 = rotate(degrees, Vec2())
 
     /**
-     * Rotates this vector by an angle around the given origin point.
+     * Rotates this vector counterclockwise by a given angle around the given origin point.
      *
-     * @param degrees the angle, in degrees clockwise
+     * @param degrees the angle, in degrees counterclockwise
      * @param origin the point to rotate around
      * @return the rotated vector
      */
