@@ -1,10 +1,8 @@
 package slavsquatsuperstar.demos.spacegame.objects;
 
-import mayonez.GameObject;
-import mayonez.graphics.Color;
-import mayonez.math.Random;
-import mayonez.math.Vec2;
-import mayonez.scripts.DestroyAfterDuration;
+import mayonez.*;
+import mayonez.math.*;
+import mayonez.scripts.*;
 import slavsquatsuperstar.demos.spacegame.ZIndex;
 import slavsquatsuperstar.demos.spacegame.combat.Damageable;
 
@@ -15,28 +13,25 @@ import slavsquatsuperstar.demos.spacegame.combat.Damageable;
  */
 public class AsteroidFragment extends GameObject {
 
-    private final Vec2 position, size, offsetNormal;
-    private final int startingHealth;
-    private final Color color;
+    private final Vec2 offsetNormal;
+    private final AsteroidProperties properties;
 
-    public AsteroidFragment(String name, Vec2 position, Vec2 size, Vec2 offsetNormal, Color color) {
-        super(name);
+    public AsteroidFragment(String name, Vec2 position, Vec2 offsetNormal, AsteroidProperties properties) {
+        super(name, position);
         setZIndex(ZIndex.ASTEROID);
-        this.position = position;
-        this.size = size;
         this.offsetNormal = offsetNormal;
-        startingHealth = 2;
-        this.color = color;
+        this.properties = properties;
     }
 
     @Override
     protected void init() {
-        transform.setPosition(position);
+        var radius = properties.radius();
+        var startingHealth = Math.round(radius * 3f);
         transform.setRotation(Random.randomAngle());
-        transform.setScale(size);
+        transform.setScale(properties.getScale());
 
         AsteroidPrefabs.addCollider(this);
-        AsteroidPrefabs.addSprite(this, color);
+        AsteroidPrefabs.addSprite(this, properties.color());
         AsteroidPrefabs.addRigidbody(this, startingHealth)
                 .applyImpulse(offsetNormal.mul(6f));
 

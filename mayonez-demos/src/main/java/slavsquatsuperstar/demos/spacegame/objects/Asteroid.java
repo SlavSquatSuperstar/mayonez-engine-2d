@@ -14,24 +14,25 @@ import slavsquatsuperstar.demos.spacegame.combat.Damageable;
 public class Asteroid extends GameObject {
 
     private final SpawnManager obstacleSpawner;
-    private final int startingHealth;
-    private final Color color;
+    // TODO spawnable script: mark destroyed
 
     public Asteroid(String name, SpawnManager obstacleSpawner) {
         super(name);
         setZIndex(ZIndex.ASTEROID);
         this.obstacleSpawner = obstacleSpawner;
-        this.startingHealth = Random.randomInt(8, 12);
-
-        var tint = Random.randomInt(96, 176);
-        color = new Color(tint, tint, tint);
     }
 
     @Override
     protected void init() {
+        var radius = Random.randomFloat(1f, 4f);
+        var startingHealth = Math.round(radius * 3f);
+        var tint = Random.randomInt(96, 176);
+        var color = new Color(tint, tint, tint);
+        var properties = new AsteroidProperties(radius, color, 0);
+
         transform.setPosition(getScene().getRandomPosition());
         transform.setRotation(Random.randomAngle());
-        transform.setScale(Random.randomVector(new Vec2(2f), new Vec2(4f)));
+        transform.setScale(properties.getScale());
 
         AsteroidPrefabs.addCollider(this);
         AsteroidPrefabs.addSprite(this, color);
@@ -39,7 +40,7 @@ public class Asteroid extends GameObject {
                 .setVelocity(transform.getUp().mul(Random.randomFloat(0f, 3f)));
 
         addComponent(new Damageable(startingHealth));
-        addComponent(new AsteroidDestruction(obstacleSpawner, color));
+        addComponent(new AsteroidDestruction(obstacleSpawner, properties));
     }
 
 }

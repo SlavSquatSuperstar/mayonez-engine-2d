@@ -1,7 +1,6 @@
 package slavsquatsuperstar.demos.spacegame.objects;
 
 import mayonez.*;
-import mayonez.graphics.*;
 import mayonez.math.*;
 import slavsquatsuperstar.demos.spacegame.combat.ExplosionPrefabs;
 
@@ -17,46 +16,44 @@ public class AsteroidDestruction extends Script {
 
     // Component References
     private final SpawnManager obstacleSpawner;
-    private final Color color;
+    private final AsteroidProperties properties;
 
-    public AsteroidDestruction(SpawnManager obstacleSpawner, Color color) {
+    public AsteroidDestruction(SpawnManager obstacleSpawner, AsteroidProperties properties) {
         this.obstacleSpawner = obstacleSpawner;
-        this.color = color;
+        this.properties = properties;
     }
 
     @Override
     public void onDestroy() {
         if (obstacleSpawner != null) obstacleSpawner.markObjectDestroyed();
-        // Average scale x and y
-        var size = (transform.getScale().x + transform.getScale().y) * 0.5f;
-//        createExplosion(size);
-        spawnAsteroidFragments(size);
+//        createExplosion();
+        spawnAsteroidFragments();
     }
 
-    private void createExplosion(float asteroidSize) {
+    private void createExplosion() {
         getScene().addObject(ExplosionPrefabs.createPrefab(
                 "Asteroid Explosion",
                 new Transform(transform.getPosition(), Random.randomAngle(),
-                        new Vec2(asteroidSize * 0.75f)),
+                        new Vec2(properties.radius() * 0.75f)),
                 EXPLOSION_DURATION
         ));
     }
 
-    private void spawnAsteroidFragments(float asteroidSize) {
-        var fragmentCount = (int) Random.randomFloat(2, asteroidSize * 1.5f);
-        var angleSpacing = 360f / fragmentCount;
+    private void spawnAsteroidFragments() {
+        var radius = properties.radius();
+        var fragmentCount = (int) Random.randomFloat(2, radius * 1.5f);
+        var fragmentRadius = radius / fragmentCount;
+
+        var angle = 360f / fragmentCount;
         var offsetAngle = transform.getRotation();
 
         for (var i = 0; i < fragmentCount; i++) {
-            var angleError = Random.randomFloat(-angleSpacing * 0.3f, angleSpacing * 0.3f);
-            offsetAngle += (angleSpacing + angleError);
-
+            offsetAngle += AsteroidPrefabs.addRandomError(angle, 0.3f);
             getScene().addObject(new AsteroidFragment(
                     "Asteroid Fragment",
                     transform.getPosition(),
-                    transform.getScale().div(fragmentCount),
                     new Vec2(1, 0).rotate(offsetAngle),
-                    color));
+                    properties.setRadius(fragmentRadius)));
         }
     }
 
