@@ -1,9 +1,7 @@
 package slavsquatsuperstar.demos.spacegame.objects;
 
-import mayonez.*;
 import mayonez.math.*;
 import mayonez.scripts.*;
-import slavsquatsuperstar.demos.spacegame.ZIndex;
 import slavsquatsuperstar.demos.spacegame.combat.Damageable;
 
 /**
@@ -11,31 +9,23 @@ import slavsquatsuperstar.demos.spacegame.combat.Damageable;
  *
  * @author SlavSquatSuperstar
  */
-public class AsteroidFragment extends GameObject {
+public class AsteroidFragment extends BaseAsteroid {
 
     private final Vec2 offsetNormal;
-    private final AsteroidProperties properties;
 
-    public AsteroidFragment(String name, Vec2 position, Vec2 offsetNormal, AsteroidProperties properties) {
-        super(name, position);
-        setZIndex(ZIndex.ASTEROID);
-        this.offsetNormal = offsetNormal;
-        this.properties = properties;
+    public AsteroidFragment(String name, Vec2 position, AsteroidProperties properties, Vec2 offsetDirection) {
+        super(name, position, properties);
+        this.offsetNormal = offsetDirection;
     }
 
     @Override
     protected void init() {
-        var radius = properties.radius();
-        var startingHealth = Math.round(radius * 3f);
-        transform.setRotation(Random.randomAngle());
-        transform.setScale(properties.getScale());
+        super.init();
 
-        AsteroidPrefabs.addCollider(this);
-        AsteroidPrefabs.addSprite(this, properties.color());
-        AsteroidPrefabs.addRigidbody(this, startingHealth)
-                .applyImpulse(offsetNormal.mul(6f));
+        var startingHealth = Math.round(properties.radius() * 3f);
+        addRigidbody(startingHealth).applyImpulse(offsetNormal.mul(6f));
 
-        addComponent(new Damageable(startingHealth));
+        addComponent(new Damageable(startingHealth)); 
         addComponent(new DestroyAfterDuration(Random.randomFloat(10, 15)));
     }
 

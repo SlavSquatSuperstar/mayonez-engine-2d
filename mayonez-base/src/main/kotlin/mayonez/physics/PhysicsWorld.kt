@@ -11,10 +11,10 @@ import mayonez.physics.resolution.*
  * Sources:
  * - [GamesWithGabe Coding a 2D Physics
  *   Engine](https://youtube.com/playlist?list=PLtrSb4XxIVbpZpV65kk73OoUcIrBzoSiO)
+ * - [Two-Bit Coding Let's Make a Physics Engine](https://www.youtube.com/playlist?list=PLSlpr6o9vURwq3oxVZSimY8iC-cdd3kIs)
  *
  * @author SlavSquatSuperstar
  */
-// todo credit Two-Bit Coding
 class PhysicsWorld {
 
     companion object {

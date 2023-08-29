@@ -13,13 +13,17 @@ import mayonez.math.*;
 public record AsteroidProperties(float radius, Color color, int spriteIndex) {
 
     public Vec2 getScale() {
-        var width = AsteroidPrefabs.addRandomError(radius, 0.2f);
-        var height = AsteroidPrefabs.addRandomError(radius, 0.2f);
+        var width = addRandomError(radius, 0.2f);
+        var height = addRandomError(radius, 0.2f);
         return new Vec2(width, height);
     }
 
     public AsteroidProperties setRadius(float radius) {
         return new AsteroidProperties(radius, this.color, this.spriteIndex);
+    }
+
+    public static float addRandomError(float value, float percentError) {
+        return value + Random.randomFloat(-value * percentError, value * percentError);
     }
 
 }

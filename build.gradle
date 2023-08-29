@@ -43,6 +43,11 @@ dependencies {
 
 // Tasks
 
+wrapper {
+    gradleVersion = "8.3"
+    distributionType = Wrapper.DistributionType.BIN
+}
+
 application { // For running project
     mainClass = project.mainClass
     mainModule = project.mainModule

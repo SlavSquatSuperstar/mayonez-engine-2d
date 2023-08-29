@@ -14,18 +14,14 @@ public class AsteroidDestruction extends Script {
     // Constants
     private static final float EXPLOSION_DURATION = 0.5f;
 
-    // Component References
-    private final SpawnManager obstacleSpawner;
     private final AsteroidProperties properties;
 
-    public AsteroidDestruction(SpawnManager obstacleSpawner, AsteroidProperties properties) {
-        this.obstacleSpawner = obstacleSpawner;
+    public AsteroidDestruction(AsteroidProperties properties) {
         this.properties = properties;
     }
 
     @Override
     public void onDestroy() {
-        if (obstacleSpawner != null) obstacleSpawner.markObjectDestroyed();
 //        createExplosion();
         spawnAsteroidFragments();
     }
@@ -48,12 +44,13 @@ public class AsteroidDestruction extends Script {
         var offsetAngle = transform.getRotation();
 
         for (var i = 0; i < fragmentCount; i++) {
-            offsetAngle += AsteroidPrefabs.addRandomError(angle, 0.3f);
+            offsetAngle += AsteroidProperties.addRandomError(angle, 0.3f);
             getScene().addObject(new AsteroidFragment(
                     "Asteroid Fragment",
                     transform.getPosition(),
-                    new Vec2(1, 0).rotate(offsetAngle),
-                    properties.setRadius(fragmentRadius)));
+                    properties.setRadius(fragmentRadius),
+                    new Vec2(1, 0).rotate(offsetAngle)
+            ));
         }
     }
 
