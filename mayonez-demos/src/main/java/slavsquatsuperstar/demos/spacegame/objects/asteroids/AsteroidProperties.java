@@ -1,4 +1,4 @@
-package slavsquatsuperstar.demos.spacegame.objects;
+package slavsquatsuperstar.demos.spacegame.objects.asteroids;
 
 import mayonez.graphics.*;
 import mayonez.math.*;

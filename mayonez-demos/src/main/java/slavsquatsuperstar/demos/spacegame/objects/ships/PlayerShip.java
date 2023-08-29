@@ -1,16 +1,18 @@
-package slavsquatsuperstar.demos.spacegame.objects;
+package slavsquatsuperstar.demos.spacegame.objects.ships;
 
 import mayonez.physics.*;
 import mayonez.scripts.movement.*;
 import slavsquatsuperstar.demos.spacegame.combat.PlayerFireController;
 import slavsquatsuperstar.demos.spacegame.movement.PlayerThrustController;
 import slavsquatsuperstar.demos.spacegame.movement.ThrusterPrefabs;
+import slavsquatsuperstar.demos.spacegame.objects.SpawnManager;
 
 /**
  * A player-controlled spaceship.
  *
  * @author SlavSquatSuperstar
  */
+// TODO flashing spawn immunity
 public class PlayerShip extends Spaceship {
 
     private static final float PLAYER_HEALTH = 8f;

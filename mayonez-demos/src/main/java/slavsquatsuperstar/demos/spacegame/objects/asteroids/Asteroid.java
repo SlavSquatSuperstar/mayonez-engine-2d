@@ -1,8 +1,9 @@
-package slavsquatsuperstar.demos.spacegame.objects;
+package slavsquatsuperstar.demos.spacegame.objects.asteroids;
 
 import mayonez.graphics.*;
 import mayonez.math.*;
 import slavsquatsuperstar.demos.spacegame.combat.Damageable;
+import slavsquatsuperstar.demos.spacegame.objects.SpawnManager;
 
 /**
  * An asteroid in space that can be destroyed.

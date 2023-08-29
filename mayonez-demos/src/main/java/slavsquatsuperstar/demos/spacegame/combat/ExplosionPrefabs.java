@@ -2,7 +2,7 @@ package slavsquatsuperstar.demos.spacegame.combat;
 
 import mayonez.*;
 import mayonez.graphics.sprites.*;
-import slavsquatsuperstar.demos.spacegame.ZIndex;
+import slavsquatsuperstar.demos.spacegame.objects.ZIndex;
 
 /**
  * Creates animated explosion objects.

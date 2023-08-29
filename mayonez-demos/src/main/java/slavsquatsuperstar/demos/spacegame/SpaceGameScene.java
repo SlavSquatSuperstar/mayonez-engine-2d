@@ -6,7 +6,11 @@ import mayonez.math.Random;
 import mayonez.math.*;
 import mayonez.math.shapes.*;
 import mayonez.util.*;
-import slavsquatsuperstar.demos.spacegame.objects.*;
+import slavsquatsuperstar.demos.spacegame.objects.asteroids.Asteroid;
+import slavsquatsuperstar.demos.spacegame.objects.BackgroundObject;
+import slavsquatsuperstar.demos.spacegame.objects.SpawnManager;
+import slavsquatsuperstar.demos.spacegame.objects.ZIndex;
+import slavsquatsuperstar.demos.spacegame.objects.ships.*;
 
 import java.util.*;
 

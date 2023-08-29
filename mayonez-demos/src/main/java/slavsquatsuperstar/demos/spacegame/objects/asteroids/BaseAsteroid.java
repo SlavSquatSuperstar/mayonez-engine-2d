@@ -1,4 +1,4 @@
-package slavsquatsuperstar.demos.spacegame.objects;
+package slavsquatsuperstar.demos.spacegame.objects.asteroids;
 
 import mayonez.*;
 import mayonez.graphics.*;
@@ -8,7 +8,7 @@ import mayonez.math.*;
 import mayonez.physics.*;
 import mayonez.physics.colliders.*;
 import mayonez.scripts.*;
-import slavsquatsuperstar.demos.spacegame.ZIndex;
+import slavsquatsuperstar.demos.spacegame.objects.ZIndex;
 
 /**
  * A template for prefab asteroid objects to spawn in space.

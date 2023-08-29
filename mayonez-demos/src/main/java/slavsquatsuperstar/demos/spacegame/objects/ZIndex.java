@@ -1,4 +1,4 @@
-package slavsquatsuperstar.demos.spacegame;
+package slavsquatsuperstar.demos.spacegame.objects;
 
 /**
  * Z-indices used by GameObjects in {@link slavsquatsuperstar.demos.spacegame}.
