@@ -7,47 +7,55 @@ plugins {
 
 description = "The library project for Mayonez Engine that contains the core classes and unit tests."
 
-apply(from: "../gradle/dependencies.gradle")
+apply(from: "./get_natives.gradle.kts")
+
+def junitVersion = "5.10.0"
 
 dependencies {
     // Code Dependencies
-    api("$libs.kotlin")
-    implementation("$libs.json")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.0")
+    implementation("org.json:json:20230618")
 
     // LWJGL Modules
-    api("$libs.joml")
-    implementation(platform("$libs.lwjglBom"))
+    api("org.joml:joml:1.10.5") // todo make implementation
 
-    implementation("$libs.lwjgl")
-    implementation("$libs.lwjglGlfw")
-    implementation("$libs.lwjglOpenal")
-    implementation("$libs.lwjglOpengl")
-    implementation("$libs.lwjglStb")
+    implementation(platform("org.lwjgl:lwjgl-bom:3.3.2")) // Bill of materials: set version for all libs
+    implementation("org.lwjgl:lwjgl")
+    implementation("org.lwjgl:lwjgl-glfw")
+    implementation("org.lwjgl:lwjgl-opengl")
+    implementation("org.lwjgl:lwjgl-stb")
 
-    runtimeOnly("$libs.lwjgl::$lwjglNatives")
-    runtimeOnly("$libs.lwjglGlfw::$lwjglNatives")
-    runtimeOnly("$libs.lwjglOpenal::$lwjglNatives")
-    runtimeOnly("$libs.lwjglOpengl::$lwjglNatives")
-    runtimeOnly("$libs.lwjglStb::$lwjglNatives")
+    implementation("org.lwjgl:lwjgl::$lwjglNatives")
+    implementation("org.lwjgl:lwjgl-glfw::$lwjglNatives")
+    implementation("org.lwjgl:lwjgl-opengl::$lwjglNatives")
+    implementation("org.lwjgl:lwjgl-stb::$lwjglNatives")
 
     // Test Libraries
-    testImplementation("$libs.junitApi")
-    testRuntimeOnly("$libs.junitEngine")
-    testRuntimeOnly("$libs.junitPlatform")
-    testImplementation("$libs.mockito")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:$junitVersion")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    testImplementation("org.mockito:mockito-core:5.4.0")
 }
 
-// Tasks
+// Plugins and Tasks
 
-compileJava {
-    dependsOn(compileKotlin)
-}
-
-compileKotlin {
-    compilerOptions {
-        suppressWarnings = true
-        destinationDirectory = compileJava.destinationDirectory
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
     }
 }
 
-test { useJUnitPlatform() }
+tasks {
+    compileJava {
+        dependsOn(compileKotlin)
+    }
+
+    compileKotlin {
+        compilerOptions {
+            suppressWarnings = true
+            destinationDirectory = compileJava.destinationDirectory
+        }
+    }
+
+    test { useJUnitPlatform() }
+}
