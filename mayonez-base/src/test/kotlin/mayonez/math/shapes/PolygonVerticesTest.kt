@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Assertions.assertArrayEquals
 import org.junit.jupiter.api.Test
 
 /**
- * Unit tests for the [mayonez.math.shapes.PolygonVertices] class.
+ * Unit tests for the mayonez.math.shapes.PolygonVertices.kt file.
  *
  * @author SlavSquatSuperstar
  */
@@ -16,7 +16,7 @@ internal class PolygonVerticesTest {
     @Test
     fun oneVertexOrderedIsSame() {
         val verts = arrayOf(Vec2(2f, 2f))
-        val sorted = PolygonVertices.orderedVertices(verts)
+        val sorted = orderedVertices(verts)
 
         assertArrayEquals(verts, sorted)
     }
@@ -24,7 +24,7 @@ internal class PolygonVerticesTest {
     @Test
     fun twoVerticesOrderedIsSame() {
         val verts = arrayOf(Vec2(2f, 2f), Vec2(-1f, -1f))
-        val sorted = PolygonVertices.orderedVertices(verts)
+        val sorted = orderedVertices(verts)
 
         assertArrayEquals(verts, sorted)
     }
@@ -38,7 +38,7 @@ internal class PolygonVerticesTest {
             Vec2(-1f, 0f), Vec2(2f, 1f), Vec2(0f, 3f)
         )
 
-        val sorted = PolygonVertices.orderedVertices(verts)
+        val sorted = orderedVertices(verts)
         assertArrayEquals(expectedSorted, sorted)
     }
 
@@ -51,7 +51,7 @@ internal class PolygonVerticesTest {
             Vec2(-1f, -1f), Vec2(0f, 1f), Vec2(1f, 3f)
         )
 
-        val sorted = PolygonVertices.orderedVertices(verts)
+        val sorted = orderedVertices(verts)
         assertArrayEquals(expectedSorted, sorted)
     }
 
@@ -64,7 +64,7 @@ internal class PolygonVerticesTest {
             Vec2(-1f, -1f), Vec2(0f, 0f), Vec2(2f, 2f)
         )
 
-        val sorted = PolygonVertices.orderedVertices(verts)
+        val sorted = orderedVertices(verts)
         assertArrayEquals(expectedSorted, sorted)
     }
 
@@ -79,7 +79,7 @@ internal class PolygonVerticesTest {
             Vec2(2f, 3f), Vec2(0f, 4f)
         )
 
-        val sorted = PolygonVertices.orderedVertices(verts)
+        val sorted = orderedVertices(verts)
         assertArrayEquals(expectedSorted, sorted)
     }
 
@@ -94,7 +94,7 @@ internal class PolygonVerticesTest {
             Vec2(4f, 1f), Vec2(0f, 3f)
         )
 
-        val sorted = PolygonVertices.orderedVertices(verts)
+        val sorted = orderedVertices(verts)
         assertArrayEquals(expectedSorted, sorted)
     }
 
@@ -109,7 +109,7 @@ internal class PolygonVerticesTest {
             Vec2(0f, 3f), Vec2(-2f, 2f)
         )
 
-        val sorted = PolygonVertices.orderedVertices(verts)
+        val sorted = orderedVertices(verts)
         assertArrayEquals(expectedSorted, sorted)
     }
 
