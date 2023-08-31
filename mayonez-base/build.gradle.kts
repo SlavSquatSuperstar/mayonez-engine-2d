@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 plugins {
     id("java-library")
 
+    id("com.github.johnrengelman.shadow") version "8.1.1" // For making fat jars
     id("org.jetbrains.dokka")
     id("org.jetbrains.kotlin.jvm")
 }
@@ -49,6 +50,11 @@ java {
 }
 
 tasks {
+    shadowJar { // For building fat jar
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+        archiveClassifier = ""
+    }
+
     compileJava {
         dependsOn(compileKotlin)
     }
