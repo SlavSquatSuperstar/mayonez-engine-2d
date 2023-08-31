@@ -29,7 +29,7 @@ cp preferences.json dist/
 # Zip the dist folder
 cd dist || exit
 rm mayonez*.zip
-zip mayonez-engine.zip mayonez*.jar run* preferences.json *.txt
+zip mayonez-engine.zip -- mayonez*.jar run* preferences.json *.txt
 
 # Show success message
 echo "Successfully packaged Mayonez Engine."
