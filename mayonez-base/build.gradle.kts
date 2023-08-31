@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
+
 plugins {
     id("java-library")
 
@@ -7,9 +9,10 @@ plugins {
 
 description = "The library project for Mayonez Engine that contains the core classes and unit tests."
 
-apply(from: "./get_natives.gradle.kts")
+apply(from = "./get_natives.gradle.kts")
 
-def junitVersion = "5.10.0"
+private val lwjglNatives = extensions["lwjglNatives"] as String
+private val junitVersion = "5.10.0"
 
 dependencies {
     // Code Dependencies
@@ -53,8 +56,8 @@ tasks {
     compileKotlin {
         compilerOptions {
             suppressWarnings = true
+            destinationDirectory.set(file("build/classes/java/main"))
         }
-        destinationDirectory = compileJava.destinationDirectory
     }
 
     test { useJUnitPlatform() }

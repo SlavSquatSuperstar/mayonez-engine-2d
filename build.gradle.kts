@@ -1,5 +1,3 @@
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-
 plugins {
     id("application") // For creating runnable programs
 
@@ -9,12 +7,8 @@ plugins {
 }
 
 // Project Info
-
 description = "The root project for Mayonez Engine that contains all modules."
-
 extensions.add("javaVersion", 17)
-extensions.add("mainClass", "slavsquatsuperstar.demos.DemosLauncher")
-extensions.add("mainModule", "mayonez.demos")
 
 // Detect User OS
 private val osName = System.getProperty("os.name")
@@ -39,8 +33,8 @@ dependencies {
 // Plugins and Tasks
 
 application { // For running project
-    mainClass.set(project.extensions["mainClass"] as String)
-    mainModule.set(project.extensions["mainModule"] as String)
+    mainModule.set("mayonez.demos")
+    mainClass.set("slavsquatsuperstar.demos.DemosLauncher")
     if (macOS) {
         applicationDefaultJvmArgs = listOf("-XstartOnFirstThread") // For LWJGL on macOS
     }
@@ -52,7 +46,7 @@ tasks {
         distributionType = Wrapper.DistributionType.BIN
     }
 
-    named<ShadowJar>("shadowJar") { // For building fat jar
+    shadowJar { // For building fat jar
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
         archiveClassifier = ""
     }
