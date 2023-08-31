@@ -1,6 +1,6 @@
 plugins {
     id("application") // For creating runnable programs
-    id("com.github.johnrengelman.shadow") version "8.1.1" // For making fat jars
+    id("com.github.johnrengelman.shadow")
 
     id("org.jetbrains.dokka")
 }
@@ -11,22 +11,18 @@ dependencies {
     implementation(project(":mayonez-base"))
 }
 
-// Detect User OS
-private val osName = System.getProperty("os.name")
-private var macOS = osName.startsWith("Mac")
-
 // Plugins
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
+        languageVersion.set(JavaLanguageVersion.of(javaVersion))
     }
 }
 
 application { // For running project
     mainModule.set("mayonez.demos")
     mainClass.set("slavsquatsuperstar.demos.DemosLauncher")
-    if (macOS) {
+    if (isMacOS) {
         applicationDefaultJvmArgs = listOf("-XstartOnFirstThread") // For LWJGL on macOS
     }
 }
@@ -34,6 +30,6 @@ application { // For running project
 tasks {
     shadowJar { // For building fat jar
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-        archiveClassifier = ""
+        archiveClassifier.set("")
     }
 }

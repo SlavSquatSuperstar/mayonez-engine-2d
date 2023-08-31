@@ -1,18 +1,13 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
-
 plugins {
     id("java-library")
 
-    id("com.github.johnrengelman.shadow") version "8.1.1" // For making fat jars
+    id("com.github.johnrengelman.shadow")
     id("org.jetbrains.dokka")
     id("org.jetbrains.kotlin.jvm")
 }
 
 description = "The library project for Mayonez Engine that contains the core classes and unit tests."
 
-apply(from = "./get-natives.gradle.kts")
-
-private val lwjglNatives = extensions["lwjglNatives"] as String
 private val junitVersion = "5.10.0"
 
 dependencies {
@@ -22,8 +17,8 @@ dependencies {
 
     // LWJGL Modules
     implementation("org.joml:joml:1.10.5")
-
     implementation(platform("org.lwjgl:lwjgl-bom:3.3.2")) // Bill of materials: set version for all libs
+
     implementation("org.lwjgl:lwjgl")
     implementation("org.lwjgl:lwjgl-glfw")
     implementation("org.lwjgl:lwjgl-opengl")
@@ -45,14 +40,14 @@ dependencies {
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
+        languageVersion.set(JavaLanguageVersion.of(javaVersion))
     }
 }
 
 tasks {
     shadowJar { // For building fat jar
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-        archiveClassifier = ""
+        archiveClassifier.set("")
     }
 
     compileJava {

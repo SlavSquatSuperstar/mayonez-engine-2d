@@ -8,7 +8,6 @@ plugins {
 
 // Project Info
 description = "The root project for Mayonez Engine that contains all modules."
-extensions.add("javaVersion", 17)
 
 // Project Settings
 allprojects {
@@ -33,9 +32,4 @@ tasks {
         gradleVersion = "8.3"
         distributionType = Wrapper.DistributionType.BIN
     }
-
-//    shadowJar { // For building fat jar
-//        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-//        archiveClassifier = ""
-//    }
 }
