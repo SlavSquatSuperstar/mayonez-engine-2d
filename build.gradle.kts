@@ -18,7 +18,7 @@ private var macOS = osName.startsWith("Mac")
 allprojects {
     // Name
     group = "slavsquatsuperstar"
-    version = "0.7.10-pre2"
+    version = "0.7.10-pre3"
 
     // Dependencies
     repositories { mavenCentral() }
