@@ -9,7 +9,7 @@ plugins {
 
 description = "The library project for Mayonez Engine that contains the core classes and unit tests."
 
-apply(from = "./get_natives.gradle.kts")
+apply(from = "./get-natives.gradle.kts")
 
 private val lwjglNatives = extensions["lwjglNatives"] as String
 private val junitVersion = "5.10.0"
