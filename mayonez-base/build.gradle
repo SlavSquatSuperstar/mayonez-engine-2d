@@ -17,7 +17,7 @@ dependencies {
     implementation("org.json:json:20230618")
 
     // LWJGL Modules
-    api("org.joml:joml:1.10.5") // todo make implementation
+    implementation("org.joml:joml:1.10.5")
 
     implementation(platform("org.lwjgl:lwjgl-bom:3.3.2")) // Bill of materials: set version for all libs
     implementation("org.lwjgl:lwjgl")
@@ -53,8 +53,8 @@ tasks {
     compileKotlin {
         compilerOptions {
             suppressWarnings = true
-            destinationDirectory = compileJava.destinationDirectory
         }
+        destinationDirectory = compileJava.destinationDirectory
     }
 
     test { useJUnitPlatform() }

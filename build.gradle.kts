@@ -26,13 +26,6 @@ allprojects {
     group = "slavsquatsuperstar"
     version = "0.7.10-pre2-snapshot"
 
-    // Java Version, set for all tasks
-//    java {
-//        toolchain {
-//            languageVersion = JavaLanguageVersion.of(17)
-//        }
-//    }
-
     // Dependencies
     repositories { mavenCentral() }
 }

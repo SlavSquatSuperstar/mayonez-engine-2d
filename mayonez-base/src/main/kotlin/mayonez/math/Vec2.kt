@@ -2,7 +2,6 @@ package mayonez.math
 
 import mayonez.annotations.*
 import mayonez.math.FloatMath.equals
-import org.joml.Vector2f
 import java.lang.Math
 import java.util.*
 import kotlin.math.*
@@ -45,14 +44,6 @@ class Vec2(
      * @param v the vector to copy
      */
     constructor(v: Vec2) : this(v.x, v.y)
-
-    /**
-     * Initialize this vector with the x and y values from a JOML [Vector2f]
-     * object, as (vx, vy).
-     *
-     * @param v the JOML vector to copy
-     */
-    constructor(v: Vector2f) : this(v.x, v.y)
 
     // Mutators
 
