@@ -1,9 +1,9 @@
 plugins {
     id("mayonez.library")
 
-    id("com.github.johnrengelman.shadow")
-    id("org.jetbrains.dokka")
-    id("org.jetbrains.kotlin.jvm")
+    id(shadowPlugin)
+    id(dokkaPlugin)
+    id(kotlinPlugin)
 }
 
 description = "The library project for Mayonez Engine that contains the core classes and unit tests."
@@ -12,7 +12,7 @@ private val junitVersion = "5.10.0"
 
 dependencies {
     // Code Dependencies
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.0")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
     implementation("org.json:json:20230618")
 
     // LWJGL Modules
@@ -50,7 +50,7 @@ tasks {
 
     compileKotlin {
         compilerOptions {
-            suppressWarnings = true
+            suppressWarnings.set(true)
             destinationDirectory.set(file("build/classes/java/main"))
         }
     }

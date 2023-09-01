@@ -1,8 +1,8 @@
 plugins {
     id("mayonez.application")
 
-    id("com.github.johnrengelman.shadow")
-    id("org.jetbrains.dokka")
+    id(shadowPlugin)
+    id(dokkaPlugin)
 }
 
 description = "The testbed project for Mayonez Engine that contains all the demo scenes."

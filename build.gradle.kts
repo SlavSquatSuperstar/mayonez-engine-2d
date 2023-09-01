@@ -1,9 +1,9 @@
 plugins {
     id("java")
 
-    id("com.github.johnrengelman.shadow") version "8.1.1" apply false // For making fat jars
-    id("org.jetbrains.dokka") version "1.8.20" apply true // For Kotlin documentation, must apply individually
-    id("org.jetbrains.kotlin.jvm") version "1.9.0" apply false // For compiling Kotlin files
+    id(shadowPlugin) version "8.1.1" apply false
+    id(dokkaPlugin) version "1.8.20" apply true
+    id(kotlinPlugin) version kotlinVersion apply false
 }
 
 // Project Info

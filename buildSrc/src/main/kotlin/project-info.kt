@@ -1,6 +1,9 @@
 /** The default JDK version for the toolchain. */
 const val javaVersion: Int = 17
 
+/** The default Kotlin version for libraries and plugins. */
+const val kotlinVersion: String = "1.9.0"
+
 /** The main module for the .jar file. */
 const val mainModuleName: String = "mayonez.demos"
 
