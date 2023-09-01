@@ -1,5 +1,5 @@
 plugins {
-    id("java-library")
+    id("mayonez.library")
 
     id("com.github.johnrengelman.shadow")
     id("org.jetbrains.dokka")
@@ -37,12 +37,6 @@ dependencies {
 }
 
 // Plugins and Tasks
-
-java {
-    toolchain {
-        languageVersion.set(JavaLanguageVersion.of(javaVersion))
-    }
-}
 
 tasks {
     shadowJar { // For building fat jar

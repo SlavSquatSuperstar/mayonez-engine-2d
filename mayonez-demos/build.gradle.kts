@@ -1,7 +1,7 @@
 plugins {
-    id("application") // For creating runnable programs
-    id("com.github.johnrengelman.shadow")
+    id("mayonez.application")
 
+    id("com.github.johnrengelman.shadow")
     id("org.jetbrains.dokka")
 }
 
@@ -13,18 +13,9 @@ dependencies {
 
 // Plugins
 
-java {
-    toolchain {
-        languageVersion.set(JavaLanguageVersion.of(javaVersion))
-    }
-}
-
 application { // For running project
-    mainModule.set("mayonez.demos")
-    mainClass.set("slavsquatsuperstar.demos.DemosLauncher")
-    if (isMacOS) {
-        applicationDefaultJvmArgs = listOf("-XstartOnFirstThread") // For LWJGL on macOS
-    }
+    mainModule.set(mainModuleName)
+    mainClass.set(mainClassName)
 }
 
 tasks {

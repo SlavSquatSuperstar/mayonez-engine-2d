@@ -1,9 +1,4 @@
 /**
- * Whether the user is running macOS (for LWJGL VM args).
- */
-val isMacOS: Boolean = System.getProperty("os.name").startsWith("Mac")
-
-/**
  * Get the LWJGL natives for the user's OS and architecture.
  *
  * Source: [LWJGL](https://www.lwjgl.org/customize) -> download
