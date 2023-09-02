@@ -11,7 +11,7 @@ dependencies {
     implementation(project(":mayonez-base"))
 }
 
-// Plugins
+// Plugins and Tasks
 
 application {
     mainModule.set(mainModuleName)

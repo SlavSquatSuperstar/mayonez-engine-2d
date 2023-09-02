@@ -1,5 +1,5 @@
 plugins {
-    id("java")
+    id("mayonez.java")
 
     id(shadowPlugin) version "8.1.1" apply false
     id(dokkaPlugin) version "1.8.20" apply true
@@ -21,7 +21,6 @@ dependencies {
 }
 
 // Plugins and Tasks
-
 tasks {
     wrapper {
         gradleVersion = "8.3"
