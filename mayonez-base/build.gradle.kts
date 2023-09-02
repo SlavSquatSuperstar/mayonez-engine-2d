@@ -6,7 +6,7 @@ plugins {
     id(kotlinPlugin)
 }
 
-description = "The library project for Mayonez Engine that contains the core classes and unit tests."
+description = "The library project for Mayonez Engine that contains the core and API classes."
 
 private val junitVersion = "5.10.0"
 
@@ -39,7 +39,7 @@ dependencies {
 // Plugins and Tasks
 
 tasks {
-    shadowJar { // For building fat jar
+    shadowJar {
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
         archiveClassifier.set("")
     }
@@ -55,5 +55,7 @@ tasks {
         }
     }
 
-    test { useJUnitPlatform() }
+    test {
+        useJUnitPlatform()
+    }
 }

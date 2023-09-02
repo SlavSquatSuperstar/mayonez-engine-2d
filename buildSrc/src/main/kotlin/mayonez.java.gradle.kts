@@ -8,3 +8,7 @@ java {
         languageVersion.set(JavaLanguageVersion.of(javaVersion))
     }
 }
+
+repositories {
+    mavenCentral()
+}

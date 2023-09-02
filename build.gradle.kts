@@ -9,18 +9,13 @@ plugins {
 // Project Info
 description = "The root project for Mayonez Engine that contains all modules."
 
-// Project Settings
 allprojects {
-    // Name
     group = "slavsquatsuperstar"
     version = "0.7.10-pre3-snapshot"
-
-    // Dependencies
-    repositories { mavenCentral() }
 }
 
+// Subprojects
 dependencies {
-    // Subprojects
     implementation(project(":mayonez-base"))
     implementation(project(":mayonez-demos"))
 }

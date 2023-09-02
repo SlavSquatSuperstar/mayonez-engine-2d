@@ -13,7 +13,7 @@ dependencies {
 
 // Plugins
 
-application { // For running project
+application {
     mainModule.set(mainModuleName)
     mainClass.set(mainClassName)
 }
