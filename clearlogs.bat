@@ -10,7 +10,6 @@ set SCRIPT_DIR=%~dp0
 cd %SCRIPT_DIR% || exit /b 1
 
 rem Delete log folder outputs
-rmdir /S /Q logs\ || echo "No log files to delete."
-rmdir /S /Q dist\logs\ || echo "No log files to delete in dist."
-del hs_err_pid*.log || echo "No crash reports to delete."
+rmdir /s /q logs\ mayonez-demos\logs\
+del hs_err_pid*.log mayonez-demos\hs_err_pid*.log
 echo Cleared all log files.

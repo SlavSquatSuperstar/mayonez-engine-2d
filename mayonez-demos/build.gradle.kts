@@ -1,7 +1,8 @@
 plugins {
-    id("java")
+    id("mayonez.application")
 
-    id("org.jetbrains.dokka")
+    id(shadowPlugin)
+    id(dokkaPlugin)
 }
 
 description = "The testbed project for Mayonez Engine that contains all the demo scenes."
@@ -10,10 +11,16 @@ dependencies {
     implementation(project(":mayonez-base"))
 }
 
-// Plugins
+// Plugins and Tasks
 
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
+application {
+    mainModule.set(mainModuleName)
+    mainClass.set(mainClassName)
+}
+
+tasks {
+    shadowJar { // For building fat jar
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+        archiveClassifier.set("")
     }
 }
