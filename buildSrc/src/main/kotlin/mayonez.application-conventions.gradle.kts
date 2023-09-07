@@ -1,6 +1,6 @@
 // Plugin for creating runnable projects
 plugins {
-    id("mayonez.java")
+    id("mayonez.java-conventions")
 
     id("application")
 }

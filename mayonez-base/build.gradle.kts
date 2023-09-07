@@ -1,5 +1,6 @@
 plugins {
-    id("mayonez.library")
+    id("mayonez.library-conventions")
+    id("mayonez.testing-conventions")
 
     id(shadowPlugin)
     id(dokkaPlugin)
@@ -28,12 +29,6 @@ dependencies {
     implementation("org.lwjgl:lwjgl-glfw::$lwjglNatives")
     implementation("org.lwjgl:lwjgl-opengl::$lwjglNatives")
     implementation("org.lwjgl:lwjgl-stb::$lwjglNatives")
-
-    // Test Libraries
-    testImplementation("org.junit.jupiter:junit-jupiter-api:$junitVersion")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-    testImplementation("org.mockito:mockito-core:5.4.0")
 }
 
 // Plugins and Tasks
@@ -53,9 +48,5 @@ tasks {
             suppressWarnings.set(true)
             destinationDirectory.set(file("build/classes/java/main"))
         }
-    }
-
-    test {
-        useJUnitPlatform()
     }
 }

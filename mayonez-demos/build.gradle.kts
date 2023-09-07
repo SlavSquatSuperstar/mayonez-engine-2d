@@ -1,5 +1,5 @@
 plugins {
-    id("mayonez.application")
+    id("mayonez.application-conventions")
 
     id(shadowPlugin)
     id(dokkaPlugin)
