@@ -5,15 +5,15 @@ import mayonez.event.*
 import mayonez.input.KeyInput.getAxis
 import mayonez.input.KeyInput.keyDown
 import mayonez.input.KeyInput.keyPressed
-import mayonez.util.*
 import org.lwjgl.glfw.GLFW
 import java.awt.event.*
 
 /**
  * Receives keyboard input events.
  *
- * Usage: To query if a key is held, call [keyDown]. To query if a key was just pressed
- * this frame, call [keyPressed]. To query a key axis, call [getAxis].
+ * Usage: To query if a key is held, call [keyDown]. To query if a key was
+ * just pressed this frame, call [keyPressed]. To query a key axis, call
+ * [getAxis].
  *
  * @author SlavSquatSuperstar
  */
@@ -132,25 +132,26 @@ object KeyInput : KeyAdapter() {
     }
 
     /**
-     * Get the value of the specified [mayonez.input.KeyAxis].
+     * Get the value of the specified [mayonez.input.InputAxis].
      *
      * @param axis an axis enum constant
      * @return the axis value, either -1, 0, or 1
      */
     @JvmStatic
-    fun getAxis(axis: KeyAxis?): Int {
+    fun getAxis(axis: InputAxis?): Int {
         return axis?.value() ?: 0
     }
 
     /**
-     * Get the value of the [mayonez.input.KeyAxis] with the specified name.
+     * Get the value of the [mayonez.input.DefaultKeyAxis] with the specified
+     * name.
      *
      * @param axisName the name of the axis
      * @return the axis value, either -1, 0, or 1
      */
     @JvmStatic
     fun getAxis(axisName: String): Int {
-        return getAxis(StringUtils.findConstantWithName(KeyAxis.entries, axisName))
+        return getAxis(DefaultKeyAxis.findWithName(axisName))
     }
 
     // Key Helper Methods

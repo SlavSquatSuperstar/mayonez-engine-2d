@@ -10,7 +10,7 @@ import mayonez.math.*;
  */
 public class KeyMovement extends MovementScript {
 
-    private final String xAxis, yAxis;
+    private final InputAxis xAxis, yAxis;
     private boolean objectAligned; // Whether to align movement with object's rotation
 
     public KeyMovement(float speed, MoveMode mode) {
@@ -18,6 +18,11 @@ public class KeyMovement extends MovementScript {
     }
 
     public KeyMovement(float speed, MoveMode mode, String xAxis, String yAxis) {
+        this(speed, mode, DefaultKeyAxis.findWithName(xAxis),
+                DefaultKeyAxis.findWithName(yAxis));
+    }
+
+    public KeyMovement(float speed, MoveMode mode, InputAxis xAxis, InputAxis yAxis) {
         super(speed, mode);
         this.xAxis = xAxis;
         this.yAxis = yAxis;

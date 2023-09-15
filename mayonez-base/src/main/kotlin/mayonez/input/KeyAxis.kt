@@ -1,13 +1,13 @@
 package mayonez.input
 
-import mayonez.util.*
-
 /**
- * Stores two keys intended to perform opposite actions and produces a value based on which are pressed.
+ * Stores two keys that perform opposite actions and produces a value based on which are pressed.
+ *
+ * @author SlavSquatSuperstar
  */
 // TODO allow storing input mappings
 // TODO allow adding custom axes
-enum class KeyAxis(
+data class KeyAxis(
     /**
      * The negative key of this axis (down, left, counterclockwise, etc.).
      */
@@ -16,32 +16,20 @@ enum class KeyAxis(
      * The positive key of this axis (up, right, clockwise, etc.).
      */
     private val posKey: Key
-) {
-    // Letter Keys
-    VERTICAL(Key.S, Key.W),
-    HORIZONTAL(Key.A, Key.D),
-    HORIZONTAL2(Key.Q, Key.E),
-
-    // Arrow Keys
-    ARROWS_VERTICAL(Key.DOWN, Key.UP),
-    ARROWS_HORIZONTAL(Key.LEFT, Key.RIGHT),
-
-    // Symbols
-    BRACKETS(Key.LEFT_BRACKET, Key.RIGHT_BRACKET),
-    PLUS_MINUS(Key.MINUS, Key.EQUALS);
+): InputAxis {
 
     /**
-     * Get the value of this axis, 1 of the positive key is pressed, -1 if the negative key is pressed,
-     * and 0 if both or neither key is pressed.
+     * Get the value of this axis, 1 if the positive key is held, -1 if the
+     * negative key is held, and 0 if neither key is held.
      *
-     * @return the axis value, -1, 0, or 1
+     * @return the axis value, 1, -1, or 0
      */
-    internal fun value(): Int {
+    override fun value(): Int {
         val negVal = if (KeyInput.keyDown(negKey)) -1 else 0
         val posVal = if (KeyInput.keyDown(posKey)) 1 else 0
         return negVal + posVal
     }
 
-    override fun toString(): String = StringUtils.capitalizeAllWords(name.replace('_', ' '))
+    override fun toString(): String =  "KeyAxis ($negKey, $posKey)"
 
 }
