@@ -1,22 +1,30 @@
-package mayonez.init
+package mayonez.util
 
 import mayonez.*
 import mayonez.math.*
-import mayonez.util.*
 import java.util.function.Predicate
 
 /**
- * Defines allowed values for a game preference and corrects the preference if set to
- * something invalid.
+ * Defines allowed values for a game preference and corrects the preference
+ * if set to something invalid.
  *
+ * @param keys which preferences to check
+ * @param isValid the rules that define a valid preference
  * @author SlavSquatSuperstar
  */
-internal abstract class PreferenceValidator<T> protected constructor(
+abstract class PreferenceValidator<T> protected constructor(
     private vararg val keys: String?,
     private val isValid: Predicate<T>
 ) {
     protected abstract fun getValue(key: String?, preferences: Record): T
 
+    /**
+     * Validates all specified preferences and replaces invalid preferences
+     * with their default values.
+     *
+     * @param preferences the user preferences
+     * @param defaults the default preferences
+     */
     fun validate(preferences: Record, defaults: Record) {
         for (prefKey in keys) {
             val prefValue = getValue(prefKey, preferences)
@@ -33,7 +41,7 @@ internal abstract class PreferenceValidator<T> protected constructor(
  *
  * @author SlavSquatSuperstar
  */
-internal class StringValidator(vararg keys: String?) :
+class StringValidator(vararg keys: String?) :
     PreferenceValidator<String>(*keys, isValid = Predicate<String> { str -> str.isNotEmpty() }) {
 
     override fun getValue(key: String?, preferences: Record): String {
@@ -46,7 +54,7 @@ internal class StringValidator(vararg keys: String?) :
  *
  * @author SlavSquatSuperstar
  */
-internal class IntValidator(min: Int, max: Int, vararg keys: String) :
+class IntValidator(min: Int, max: Int, vararg keys: String) :
     PreferenceValidator<Int>(*keys, isValid = Predicate<Int> { n -> n in Interval(min, max) }) {
 
     override fun getValue(key: String?, preferences: Record): Int {

@@ -1,74 +1,68 @@
 package mayonez
 
 import mayonez.init.*
-import mayonez.io.text.*
 import mayonez.util.*
 
+private const val PREFS_FILENAME = "preferences.json"
+
 /**
- * A collection of user-changeable application parameters.
+ * A collection of user-settable application parameters.
  *
  * @author SlavSquatSuperstar
  */
-object Preferences {
+object Preferences : GameConfig(PREFS_FILENAME, Defaults.preferences) {
 
-    private const val PREFS_FILENAME = "preferences.json"
-    private val preferences: Record = Defaults.copyPreferences()
     private var initialized = false
 
     // Read Preferences Methods
 
     internal fun setPreferences() {
         if (!initialized) {
-            preferences.setFromFile()
+            config.setFrom(readUserPreferences())
+            validateUserPreferences(config, defaults)
             Logger.debug("Loaded preferences from $PREFS_FILENAME")
             initialized = true
         }
     }
 
-    private fun Record.setFromFile() {
-        val userPrefs = JSONFile(PREFS_FILENAME).readJSON()
-        userPrefs.validate(this)
-        this.setFrom(userPrefs)
-    }
-
-    private fun Record.validate(defaults: Record) {
-        StringValidator("title", "version", "log_directory").validate(this, defaults)
-        IntValidator(240, 3840, "screen_height", "screen_width").validate(this, defaults)
-        IntValidator(150, 240, "fps").validate(this, defaults)
-        IntValidator(0, 5, "log_level").validate(this, defaults)
+    override fun validateUserPreferences(userPrefs: Record, defaults: Record) {
+        StringValidator("title", "version", "log_directory").validate(userPrefs, defaults)
+        IntValidator(240, 3840, "screen_height", "screen_width").validate(userPrefs, defaults)
+        IntValidator(10, 250, "fps").validate(userPrefs, defaults)
+        IntValidator(0, 5, "log_level").validate(userPrefs, defaults)
     }
 
     // Application
 
     @JvmStatic
     val title: String
-        get() = preferences.getString("title")
+        get() = config.getString("title")
 
     @JvmStatic
     val version: String
-        get() = preferences.getString("version")
+        get() = config.getString("version")
 
     // Graphical
 
     @JvmStatic
     val screenWidth: Int
-        get() = preferences.getInt("screen_width")
+        get() = config.getInt("screen_width")
 
     @JvmStatic
     val screenHeight: Int
-        get() = preferences.getInt("screen_height")
+        get() = config.getInt("screen_height")
 
     // TODO effects timestep but doesn't limit render rate yet
     @JvmStatic
     val fps: Int
-        get() = preferences.getInt("fps")
+        get() = config.getInt("fps")
 
     // Logging
     internal fun getLoggerConfig(): LoggerConfig {
         return LoggerConfig(
-            preferences.getBoolean("save_logs"),
-            preferences.getInt("log_level"),
-            preferences.getString("log_directory")
+            config.getBoolean("save_logs"),
+            config.getInt("log_level"),
+            config.getString("log_directory")
         )
     }
 
