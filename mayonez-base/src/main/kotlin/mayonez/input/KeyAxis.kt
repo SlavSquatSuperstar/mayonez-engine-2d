@@ -11,11 +11,11 @@ data class KeyAxis(
     /**
      * The negative key of this axis (down, left, counterclockwise, etc.).
      */
-    private val negKey: Key,
+    private val negKey: Key?,
     /**
      * The positive key of this axis (up, right, clockwise, etc.).
      */
-    private val posKey: Key
+    private val posKey: Key?
 ): InputAxis {
 
     /**

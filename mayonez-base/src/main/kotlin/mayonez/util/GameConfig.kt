@@ -10,14 +10,15 @@ import mayonez.io.text.*
  * @author SlavSquatSuperstar
  */
 open class GameConfig(
-    private val filename: String, protected val defaults: Record
+    private val filename: String, private val defaults: Record
 ) {
 
     /** The configuration, stored as a record */
     protected val config: Record = defaults.copy()
 
     /**
-     * Reads user preferences from a file.
+     * Reads user preferences from a .json file. Override this to change the
+     * read behavior.
      *
      * @return the record
      */
@@ -29,10 +30,10 @@ open class GameConfig(
      * Checks user preferences and replaces and invalid values with the default
      * value.
      *
-     * @param userPrefs the user preferences
-     * @param defaults the default preferences
+     * @param rules any number of rules to apply
      */
-    protected open fun validateUserPreferences(userPrefs: Record, defaults: Record) {
+    protected fun validateUserPreferences(vararg rules: PreferenceValidator<*>) {
+        rules.forEach { rule -> rule.validate(config, defaults) }
     }
 
     override fun toString(): String {

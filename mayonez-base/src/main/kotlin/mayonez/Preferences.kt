@@ -19,17 +19,19 @@ object Preferences : GameConfig(PREFS_FILENAME, Defaults.preferences) {
     internal fun setPreferences() {
         if (!initialized) {
             config.setFrom(readUserPreferences())
-            validateUserPreferences(config, defaults)
+            validateUserPreferences(*getRules())
             Logger.debug("Loaded preferences from $PREFS_FILENAME")
             initialized = true
         }
     }
 
-    override fun validateUserPreferences(userPrefs: Record, defaults: Record) {
-        StringValidator("title", "version", "log_directory").validate(userPrefs, defaults)
-        IntValidator(240, 3840, "screen_height", "screen_width").validate(userPrefs, defaults)
-        IntValidator(10, 250, "fps").validate(userPrefs, defaults)
-        IntValidator(0, 5, "log_level").validate(userPrefs, defaults)
+    private fun getRules(): Array<PreferenceValidator<*>> {
+        return arrayOf(
+            StringValidator("title", "version", "log_directory"),
+            IntValidator(240, 3840, "screen_height", "screen_width"),
+            IntValidator(10, 250, "fps"),
+            IntValidator(0, 5, "log_level")
+        )
     }
 
     // Application

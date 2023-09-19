@@ -91,7 +91,8 @@ enum class Key(internal val awtCode: Int, internal val glCode: Int, private val 
     }
 
     companion object {
-        internal fun findWithName(keyName: String): Key? {
+        @JvmStatic
+        fun findWithName(keyName: String): Key? {
             return StringUtils.findConstantWithName(entries, keyName)
         }
     }
