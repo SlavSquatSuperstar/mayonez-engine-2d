@@ -18,7 +18,7 @@ object Preferences : GameConfig(PREFS_FILENAME, Defaults.preferences) {
 
     internal fun setPreferences() {
         if (!initialized) {
-            config.setFrom(readUserPreferences())
+            readFromFile()
             validateUserPreferences(*getRules())
             Logger.debug("Loaded preferences from $PREFS_FILENAME")
             initialized = true
@@ -38,33 +38,33 @@ object Preferences : GameConfig(PREFS_FILENAME, Defaults.preferences) {
 
     @JvmStatic
     val title: String
-        get() = config.getString("title")
+        get() = getString("title")
 
     @JvmStatic
     val version: String
-        get() = config.getString("version")
+        get() = getString("version")
 
     // Graphical
 
     @JvmStatic
     val screenWidth: Int
-        get() = config.getInt("screen_width")
+        get() = getInt("screen_width")
 
     @JvmStatic
     val screenHeight: Int
-        get() = config.getInt("screen_height")
+        get() = getInt("screen_height")
 
     // TODO effects timestep but doesn't limit render rate yet
     @JvmStatic
     val fps: Int
-        get() = config.getInt("fps")
+        get() = getInt("fps")
 
     // Logging
     internal fun getLoggerConfig(): LoggerConfig {
         return LoggerConfig(
-            config.getBoolean("save_logs"),
-            config.getInt("log_level"),
-            config.getString("log_directory")
+            getBoolean("save_logs"),
+            getInt("log_level"),
+            getString("log_directory")
         )
     }
 
