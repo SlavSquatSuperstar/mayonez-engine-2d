@@ -42,7 +42,7 @@ Remove-Item dist\mayonez*.jar
 Copy-Item mayonez-demos\build\libs\mayonez*.jar dist\
 
 # Copy resource files
-Copy-Item LICENSE-GPLv3.txt dist\LICENSE.txt
+Copy-Item LICENSE.txt dist\
 Copy-Item mayonez-demos\*.json dist\
 
 # Zip the dist folder

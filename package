@@ -23,7 +23,7 @@ rm dist/mayonez*.jar
 cp mayonez-demos/build/libs/mayonez*.jar dist/
 
 # Copy resource files
-cp LICENSE-GPLv3.txt dist/LICENSE.txt
+cp LICENSE.txt dist/
 cp  mayonez-demos/*.json dist/
 
 # Zip the dist folder

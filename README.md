@@ -196,7 +196,7 @@ code of this program is freely available to access, run, share, and modify forev
 
 Any forks of this project must also be distributed under the same license and may not be used in or made into any
 proprietary (closed-source) applications. Forks may still be monetized, as long as the code is open to the public.
-See [LICENSE-GPLv3.txt](LICENSE-GPLv3.txt) or read the [online version]((https://www.gnu.org/licenses/gpl-3.0.html)) for
+See [LICENSE.txt](LICENSE.txt) or read the [online version]((https://www.gnu.org/licenses/gpl-3.0.html)) for
 more details.
 
 This software may not be redistributed without the license file. If your download does not contain the GPLv3 license,

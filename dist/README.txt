@@ -60,4 +60,4 @@ This software is licensed under the GNU General Public License, version 3 (GPLv3
 See LICENSE.txt for more information.
 
 For email inquiries, contact slavsquatsuperstar@gmail.com.
-Copyright © SlavSquatSuperstar 2023 GPLv3 License
+Copyright SlavSquatSuperstar 2023 GPLv3 License

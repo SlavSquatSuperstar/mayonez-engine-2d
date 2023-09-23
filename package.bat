@@ -25,7 +25,7 @@ del dist\mayonez*.jar
 copy mayonez-demos\build\libs\mayonez*.jar dist\mayonez*.jar
 
 rem Copy resource files
-copy LICENSE-GPLv3.txt dist\LICENSE.txt
+copy LICENSE.txt dist\LICENSE.txt
 copy mayonez-demos\*.json dist\*.json
 
 rem Zip the dist folder
