@@ -1,3 +1,11 @@
+# Script Name: run
+# Purpose:     Runs the project for Windows users with PowerShell installed.
+# Usage:       .\run.ps1 [-h/--help] [-e/--engine gl/awt]"
+# Author:      SlavSquatSuperstar
+
+# Get the original calling directory
+$Location = (Get-Location).Path
+
 # Navigate to the project directory
 $SCRIPT_DIR = $PSSCRIPTROOT
 Set-Location $SCRIPT_DIR
@@ -6,10 +14,16 @@ if (-not$?)
     exit
 }
 
-# Initialize variables
-$USE_GL = $true
+## Functions ##
 
-# Functions
+# Exit and navigate to the previous directory
+function Exit-Script {
+    param (
+        $ExitCode
+    )
+    Set-Location $Location
+    exit $ExitCode
+}
 
 # Show help and exit with a code
 function Show-Help {
@@ -17,7 +31,7 @@ function Show-Help {
         $ExitCode
     )
     Write-Output "Usage: run [-h/--help] [-e/--engine gl/awt]"
-    exit $ExitCode
+    Exit-Script $ExitCode
 }
 
 # Configure the program to run using GL/AWT
@@ -44,6 +58,9 @@ function Set-Engine-Type {
     }
 }
 
+# Initialize variables
+$USE_GL = $true
+
 # Get user arguments
 for ($i = 0; $i -lt $args.Count; $i++) {
     $arg_i = $args[$i]
@@ -62,10 +79,6 @@ for ($i = 0; $i -lt $args.Count; $i++) {
             $USE_GL = Set-Engine-Type $args[$i + 1]
             $i++
         }
-        "" {
-            # End of arguments
-            break
-        }
         Default {
             Write-Output "Invalid option `"$arg_i`"."
             Show-Help 1
@@ -74,15 +87,14 @@ for ($i = 0; $i -lt $args.Count; $i++) {
 }
 
 # Check if Java is installed
-java --version
-if ($?)
+if (java --version)
 {
     Write-Output "Java is installed."
 }
 else
 {
     Write-Output "Java is not installed."
-    exit 1
+    Exit-Script 1
 }
 
 $JAR_FILE = ""
@@ -102,3 +114,5 @@ else
     Write-Output "Launching with AWT Engine."
     java -jar $JAR_FILE --engine awt
 }
+
+Exit-Script 0
