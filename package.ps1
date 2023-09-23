@@ -43,7 +43,7 @@ Copy-Item mayonez-demos\build\libs\mayonez*.jar dist\
 
 # Copy resource files
 Copy-Item LICENSE-GPLv3.txt dist\LICENSE.txt
-Copy-Item mayonez-demos\preferences.json dist\
+Copy-Item mayonez-demos\*.json dist\
 
 # Zip the dist folder
 Set-Location dist

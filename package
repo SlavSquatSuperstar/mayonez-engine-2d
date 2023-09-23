@@ -24,12 +24,12 @@ cp mayonez-demos/build/libs/mayonez*.jar dist/
 
 # Copy resource files
 cp LICENSE-GPLv3.txt dist/LICENSE.txt
-cp  mayonez-demos/preferences.json dist/
+cp  mayonez-demos/*.json dist/
 
 # Zip the dist folder
 cd dist || exit
 rm mayonez*.zip
-zip mayonez-engine.zip -- mayonez*.jar run* preferences.json *.txt
+zip mayonez-engine.zip -- mayonez*.jar run* *.json *.txt
 
 # Show success message
 echo "Successfully packaged Mayonez Engine."

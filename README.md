@@ -70,8 +70,10 @@ Running the Program
 
 - Download the `mayonez-engine-<version>.zip` file for the latest release under the
 - [releases section](https://github.com/SlavSquatSuperstar/mayonez-engine-2d/releases) on the GitHub website.
-- Drag `run` (Mac/Linux) or `run.bat` (Windows) from the extracted folder into a command line/terminal window
+- Drag `run` (Mac/Linux) or `run.bat`/`run.ps1` (Windows) from the extracted folder into a command line/terminal window
   and press Enter.
+- Before running PowerShell scripts, run `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` in PowerShell 
+  to allow running scripts.
 
 ### Instructions for Developers
 

@@ -14,7 +14,7 @@ cd "$SCRIPT_DIR" || exit
 use_gl=true
 is_mac_os=false
 
-# Functions
+## Functions ##
 
 # Show help and exit with a code
 show_help() {

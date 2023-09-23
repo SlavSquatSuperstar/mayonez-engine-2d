@@ -11,7 +11,9 @@ Running the Program
    b) On Windows, the command line is usually Powershell or Command Prompt.
 3. Drag the run script to your terminal window and press enter.
    a) If you are on Mac or Linux, use "run".
-   b) If you are on Windows, use "run.bat".
+   b) If you are on Windows, use "run.bat/run.ps1".
+   c) If you are blocked from running PowerShell scripts, then run
+      "Set-ExecutionPolicy -Scope CurrentUsed RemoteSigned" in PowerShell first.
 
 Demo Scene Controls
 1. All Scenes
