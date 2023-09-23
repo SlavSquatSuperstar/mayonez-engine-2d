@@ -20,6 +20,7 @@ public final class SpaceGameConfig extends GameConfig {
             config.set("move_right", "e");
             config.set("turn_left", "a");
             config.set("turn_right", "d");
+            config.set("break", "space");
         }
     }
 
@@ -35,9 +36,12 @@ public final class SpaceGameConfig extends GameConfig {
 
     private static PreferenceValidator<?>[] getRules() {
         return new PreferenceValidator<?>[]{
-                new StringValidator("move_forward", "move_backward",
+                new StringValidator(
+                        "move_forward", "move_backward",
                         "move_left", "move_right",
-                        "turn_left", "turn_right")
+                        "turn_left", "turn_right",
+                        "break"
+                )
         };
     }
 
@@ -60,6 +64,10 @@ public final class SpaceGameConfig extends GameConfig {
                 Key.findWithName(config.getString("turn_left")),
                 Key.findWithName(config.getString("turn_right"))
         );
+    }
+
+    public static Key getBreakKey() {
+        return Key.findWithName(config.getString("break"));
     }
 
 }

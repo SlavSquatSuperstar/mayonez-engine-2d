@@ -4,7 +4,7 @@ The ultimate made-from-scratch and open-source 2D Java game engine to fit your S
 
 <img src="https://img.shields.io/badge/platform-macOS-lightgrey"></img>
 <img src="https://img.shields.io/badge/platform-Windows-lightgrey"></img>
-<img src="https://img.shields.io/badge/release-v0.7.9-brightgreen"></img>
+<img src="https://img.shields.io/badge/release-v0.7.10-brightgreen"></img>
 <img src=https://img.shields.io/badge/build-passing-brightgreen></img>
 
 <img src="https://img.shields.io/badge/Made%20with-Java-red"></img>
@@ -72,7 +72,7 @@ Running the Program
 - [releases section](https://github.com/SlavSquatSuperstar/mayonez-engine-2d/releases) on the GitHub website.
 - Drag `run` (Mac/Linux) or `run.bat`/`run.ps1` (Windows) from the extracted folder into a command line/terminal window
   and press Enter.
-- Before running PowerShell scripts, run `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` in PowerShell 
+- Before running PowerShell scripts, run `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` in PowerShell
   to allow running scripts.
 
 ### Instructions for Developers
@@ -131,8 +131,9 @@ and a Pool Balls scene.
     - **A**/**D** to turn left/right
     - **Q**/**E** to strafe left/right
     - **Space** to brake
-  - **Left Mouse** and _hold_ to fire weapons
+    - **Left Mouse** and _hold_ to fire weapons
     - **1**/**2** to switch ammo types
+    - Controls can be set in user_config.json
 - Mario:
     - **W** to jump
     - **A**/**D** to move side to side

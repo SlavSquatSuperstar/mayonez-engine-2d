@@ -1,4 +1,4 @@
-Thank you for downloading Mayonez Engine v0.7.10-pre!
+Thank you for downloading Mayonez Engine v0.7.10!
 Find the latest release at https://github.com/SlavSquatSuperstar/mayonez-engine-2d/releases.
 
 Running the Program
@@ -28,6 +28,7 @@ Demo Scene Controls
    - Space to brake
    - Left Mouse and hold to fire weapons
    - 1/2 to switch ammo types
+   - Controls can be set in user_config.json
 3. Mario
    - W to jump
    - A/D to move side to side
