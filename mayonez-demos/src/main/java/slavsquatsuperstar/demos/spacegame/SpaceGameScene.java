@@ -31,6 +31,8 @@ public class SpaceGameScene extends Scene {
                 Preferences.getScreenHeight() * SCENE_SIZE, 32f);
         setBackground(new Color(14, 14, 14));
         backgroundObjects = new ArrayList<>();
+
+        SpaceGameConfig.readConfig();
     }
 
     @Override

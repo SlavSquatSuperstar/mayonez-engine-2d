@@ -6,6 +6,7 @@ package mayonez.scripts.movement;
  * @author SlavSquatSuperstar
  */
 public enum MoveMode {
+
     /**
      * Change the object's transform position or rotation.
      */
@@ -32,4 +33,5 @@ public enum MoveMode {
     MoveMode(boolean requireRigidbody) {
         this.requireRigidbody = requireRigidbody;
     }
+
 }

@@ -10,13 +10,16 @@ import mayonez.math.*;
  */
 public class KeyRotation extends MovementScript {
 
-    private final String axis;
+    private final InputAxis axis;
 
-    public KeyRotation(float angSpeed, MoveMode mode) {
-        this(angSpeed, mode, "horizontal2");
-    }
-
-    public KeyRotation(float angSpeed, MoveMode mode, String axis) {
+    /**
+     * Constructs a new KeyRotation script with the given input axis.
+     *
+     * @param angSpeed how fast to rotate the object
+     * @param mode     how to rotate the object
+     * @param axis     the input axis
+     */
+    public KeyRotation(float angSpeed, MoveMode mode, InputAxis axis) {
         super(angSpeed, mode);
         this.axis = axis;
     }

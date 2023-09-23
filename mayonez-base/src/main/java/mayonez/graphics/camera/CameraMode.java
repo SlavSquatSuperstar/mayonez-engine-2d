@@ -16,6 +16,6 @@ public enum CameraMode {
     /**
      * Allow the camera to move anywhere.
      */
-    FREE,
+    FREE
 
 }
