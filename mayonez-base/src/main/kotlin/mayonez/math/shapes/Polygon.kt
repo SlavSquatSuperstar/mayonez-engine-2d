@@ -1,10 +1,6 @@
 package mayonez.math.shapes
 
 import mayonez.math.*
-import mayonez.math.shapes.PolygonVertices.orderedVertices
-import mayonez.math.shapes.PolygonVertices.rotate
-import mayonez.math.shapes.PolygonVertices.scale
-import mayonez.math.shapes.PolygonVertices.translate
 import kotlin.math.*
 
 /**
@@ -36,14 +32,16 @@ open class Polygon(sort: Boolean, vararg vertices: Vec2) : Shape() {
 
     /** The points that define the shape of this polygon. */
     val vertices: Array<Vec2> =
-        if (sort) ConvexHull.orderedConvexHull(arrayOf(*vertices))
+        if (sort) orderedConvexHull(arrayOf(*vertices))
         else arrayOf(*vertices)
 
     /** The number of vertices and edges of this polygon, n. */
     final override val numVertices: Int = this.vertices.size
 
     /** The edges that connect the vertices of this polygon. */
-    val edges: Array<Edge> = Array(numVertices) { Edge(this.vertices[(it + 1) % numVertices], this.vertices[it]) }
+    val edges: Array<Edge> = Array(numVertices) {
+        Edge(this.vertices[(it + 1) % numVertices], this.vertices[it])
+    }
 
     /** The faces, or unit normal vectors of each edge in this polygon. */
     val normals: Array<Vec2>
@@ -56,7 +54,9 @@ open class Polygon(sort: Boolean, vararg vertices: Vec2) : Shape() {
     val triangles: Array<Triangle>
         get() {
             val start = vertices[0]
-            return Array(numVertices - 2) { Triangle(start, vertices[it + 1], vertices[it + 2]) }
+            return Array(numVertices - 2) {
+                Triangle(start, vertices[it + 1], vertices[it + 2])
+            }
         }
 
     // Shape Methods
@@ -68,7 +68,9 @@ open class Polygon(sort: Boolean, vararg vertices: Vec2) : Shape() {
      * formula (Gauss's area formula), a special case of Green's theorem.
      */
     override fun area(): Float {
-        val crosses = FloatArray(numVertices) { vertices[it].cross(vertices[(it + 1) % numVertices]) }
+        val crosses = FloatArray(numVertices) {
+            vertices[it].cross(vertices[(it + 1) % numVertices])
+        }
         return 0.5f * abs(FloatMath.sum(*crosses))
     }
 
@@ -204,19 +206,24 @@ open class Polygon(sort: Boolean, vararg vertices: Vec2) : Shape() {
 
         /**
          * Generate an array of vertices for a regular polygon, ordered
-         * counterclockwise.
+         * counterclockwise. If the number of sides is insufficient (under 3), then
+         * it will be set to 3.
          *
          * @param center the center of the polygon
          * @param sides how many sides/vertices the polygon has
          * @param radius how far each vertex is from the center
-         * @return the array of vertices
+         * @return the array of vertices, at least 3
          */
         @JvmStatic
         fun regularPolygonVertices(center: Vec2, sides: Int, radius: Float): Array<Vec2> {
+            if (sides < MIN_VERTICES_COUNT) {
+                return regularPolygonVertices(center, MIN_VERTICES_COUNT, radius)
+            }
             val start = Vec2(radius, 0f)
             val angle = 360f / sides
             return Array(sides) { center + start.rotate(angle * it) }
         }
 
     }
+
 }

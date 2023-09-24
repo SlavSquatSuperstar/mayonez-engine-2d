@@ -1,5 +1,5 @@
 /**
- * Contains classes for recreating Geometry Dash.
+ * A basic Geometry Dash level editor.
  *
  * @author SlavSquatSuperstar
  */

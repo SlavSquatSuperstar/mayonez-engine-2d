@@ -28,9 +28,10 @@ public class Projectile extends Script {
     @Override
     public void start() {
         gameObject.addTag("Projectile");
-        if (getCollider() == null) Logger.debug("%s needs a collider to function!", this);
-        if (getRigidbody() == null) Logger.debug("%s needs a rigidbody to function!", this);
-        else getRigidbody().addVelocity(transform.getUp().mul(speed));
+        if (getCollider() == null || getRigidbody() == null) {
+            this.setEnabled(false);
+        }
+        getRigidbody().addVelocity(transform.getUp().mul(speed));
     }
 
     @Override

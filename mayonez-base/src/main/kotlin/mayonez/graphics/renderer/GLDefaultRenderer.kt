@@ -30,7 +30,7 @@ internal class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"),
     override fun setScene(newScene: Scene) {
         newScene.objects.forEach(this::addObject)
         background = newScene.background
-        background.setTransform<Component>(Transform.scaleInstance(newScene.size))
+        background.setSpriteTransform(Transform.scaleInstance(newScene.size))
     }
 
     override fun addObject(obj: GameObject) {

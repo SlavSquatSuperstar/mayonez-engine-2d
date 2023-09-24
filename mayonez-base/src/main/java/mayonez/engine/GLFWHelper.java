@@ -92,14 +92,10 @@ final class GLFWHelper {
      * @return the content scale
      */
     private static Vec2 getWindowContentScaling(long windowID) {
-        var xScaleBuff = BufferUtils.createFloatBuffer(1);
-        var yScaleBuff = BufferUtils.createFloatBuffer(2);
-
-        glfwGetWindowContentScale(windowID, xScaleBuff, yScaleBuff);
-        var xContentScale = xScaleBuff.get(0);
-        var yContentScale = yScaleBuff.get(0);
-//        Logger.debug("Window scaling is %.2fx%.2f", xContentScale, yContentScale);
-        return new Vec2(xContentScale, yContentScale);
+        var xScale = BufferUtils.createFloatBuffer(1);
+        var yScale = BufferUtils.createFloatBuffer(2);
+        glfwGetWindowContentScale(windowID, xScale, yScale);
+        return new Vec2(xScale.get(0), yScale.get(0));
     }
 
     /**
@@ -118,13 +114,11 @@ final class GLFWHelper {
         glfwGetWindowSize(windowID, xIntBuff, yIntBuff);
         var xWindowSize = xIntBuff.get(0);
         var yWindowSize = yIntBuff.get(0);
-//        Logger.debug("Window size is %dx%d", xWindowSize, yWindowSize);
 
         // Size of the rendered image in the display's native scale
         glfwGetFramebufferSize(windowID, xIntBuff, yIntBuff);
         var xFramebuffSize = xIntBuff.get(0);
         var yFramebuffSize = yIntBuff.get(0);
-//        Logger.debug("Framebuffer size is %dx%d", xFramebuffSize, yFramebuffSize);
 
         return new Vec2((float) xWindowSize / xFramebuffSize,
                 (float) yWindowSize / yFramebuffSize);

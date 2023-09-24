@@ -6,7 +6,7 @@ import mayonez.io.*;
 import mayonez.io.text.*;
 import mayonez.math.*;
 import mayonez.util.Record;
-import slavsquatsuperstar.demos.spacegame.ZIndex;
+import slavsquatsuperstar.demos.spacegame.objects.ZIndex;
 
 import java.util.*;
 

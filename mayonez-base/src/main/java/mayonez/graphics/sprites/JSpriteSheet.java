@@ -88,7 +88,7 @@ public final class JSpriteSheet extends SpriteSheet {
     }
 
     @Override
-    public int numSprites() {
+    public int size() {
         return textures.size();
     }
 

@@ -34,7 +34,8 @@ object MouseInput : MouseAdapter() {
 
     // Game Loop Methods
 
-    fun endFrame() {
+    @JvmName("endFrame")
+    internal fun endFrame() {
         // Update mouse input
         pollMouseButtons()
 

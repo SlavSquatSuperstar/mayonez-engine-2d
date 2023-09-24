@@ -6,7 +6,11 @@ import mayonez.math.Random;
 import mayonez.math.*;
 import mayonez.math.shapes.*;
 import mayonez.util.*;
-import slavsquatsuperstar.demos.spacegame.objects.*;
+import slavsquatsuperstar.demos.spacegame.objects.asteroids.Asteroid;
+import slavsquatsuperstar.demos.spacegame.objects.BackgroundObject;
+import slavsquatsuperstar.demos.spacegame.objects.SpawnManager;
+import slavsquatsuperstar.demos.spacegame.objects.ZIndex;
+import slavsquatsuperstar.demos.spacegame.objects.ships.*;
 
 import java.util.*;
 
@@ -27,6 +31,8 @@ public class SpaceGameScene extends Scene {
                 Preferences.getScreenHeight() * SCENE_SIZE, 32f);
         setBackground(new Color(14, 14, 14));
         backgroundObjects = new ArrayList<>();
+
+        SpaceGameConfig.readConfig();
     }
 
     @Override
@@ -100,8 +106,8 @@ public class SpaceGameScene extends Scene {
 
             float starSize;
             boolean isDwarfStar = Random.randomPercent(2f / 3f);
-            if (isDwarfStar) starSize = Random.randomGaussian(2.5f, 0.5f);
-            else starSize = Random.randomGaussian(7, 1);
+            if (isDwarfStar) starSize = Random.randomGaussian(2.5f, 0.5f); // 1-4
+            else starSize = Random.randomGaussian(7, 1); // 4-10
             if (starSize > 1) starSize = 1;
 
             var starDist = Random.randomFloat(20, 60);

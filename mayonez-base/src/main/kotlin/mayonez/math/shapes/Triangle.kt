@@ -1,9 +1,6 @@
 package mayonez.math.shapes
 
 import mayonez.math.*
-import mayonez.math.shapes.PolygonVertices.rotate
-import mayonez.math.shapes.PolygonVertices.scale
-import mayonez.math.shapes.PolygonVertices.translate
 import java.util.*
 import kotlin.math.*
 
@@ -115,5 +112,5 @@ class Triangle(private val v1: Vec2, private val v2: Vec2, private val v3: Vec2)
 // Helper Methods
 
 private fun triangleVertices(v1: Vec2, v2: Vec2, v3: Vec2): Array<Vec2> {
-    return PolygonVertices.orderedVertices(arrayOf(v1, v2, v3))
+    return orderedVertices(arrayOf(v1, v2, v3))
 }

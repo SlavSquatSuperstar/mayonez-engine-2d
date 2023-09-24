@@ -8,6 +8,7 @@ import mayonez.scripts.*;
  *
  * @author SlavSquatSuperstar
  */
+// TODO auto mark spawned object destroyed?
 public abstract class SpawnManager extends Script {
 
     private final Counter amountSpawned; // how many objects spawned
@@ -60,7 +61,7 @@ public abstract class SpawnManager extends Script {
     public void markObjectDestroyed() {
         amountSpawned.count(-1);
         if (spawnTimer.isReady()) spawnTimer.reset();
-        // reset timer after spawning if needed, so things don't spawn immediately
+        // reset timer after destroying, so objects don't spawn immediately
     }
 
 }

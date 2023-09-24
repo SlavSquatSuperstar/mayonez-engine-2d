@@ -6,7 +6,7 @@ import mayonez.math.*;
 import mayonez.physics.*;
 import mayonez.physics.colliders.*;
 import mayonez.util.Record;
-import slavsquatsuperstar.demos.spacegame.ZIndex;
+import slavsquatsuperstar.demos.spacegame.objects.ZIndex;
 
 /**
  * A type of projectile fired from a spaceship weapon.

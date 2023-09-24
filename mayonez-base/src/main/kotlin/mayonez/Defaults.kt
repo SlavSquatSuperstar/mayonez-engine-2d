@@ -19,11 +19,7 @@ internal object Defaults {
     private const val SCREEN_HEIGHT: Int = 800
     private const val FPS: Int = 60
 
-    private val preferences: Record = Record()
-
-    internal fun copyPreferences(): Record {
-        return preferences.copy()
-    }
+    internal val preferences: Record = Record()
 
     init {
         // Application

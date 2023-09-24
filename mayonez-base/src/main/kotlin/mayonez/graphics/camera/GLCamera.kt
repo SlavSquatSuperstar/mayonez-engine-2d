@@ -1,15 +1,9 @@
 package mayonez.graphics.camera
 
-import mayonez.Mayonez
-import mayonez.SceneManager
-import mayonez.annotations.EngineType
-import mayonez.annotations.UsesEngine
-import mayonez.math.FloatMath
-import mayonez.math.Vec2
-import org.joml.Matrix4f
-import org.joml.Quaternionf
-import org.joml.Vector3f
-import org.joml.Vector4f
+import mayonez.*
+import mayonez.annotations.*
+import mayonez.math.*
+import org.joml.*
 
 /**
  * A scene camera for the GL engine.
@@ -85,7 +79,10 @@ class GLCamera(screenSize: Vec2?, sceneScale: Float) : Camera(screenSize, sceneS
         val cameraFront = Vector3f(0f, 0f, -1f)
         val cameraUp = Vector3f(0f, 1f, 0f)
         val offset = screenOffset
-        viewMatrix.setLookAt(Vector3f(offset.x, offset.y, zPosition), cameraFront.add(offset.x, offset.y, 0f), cameraUp)
+        viewMatrix.setLookAt(
+            Vector3f(offset.x, offset.y, zPosition),
+            cameraFront.add(offset.x, offset.y, 0f), cameraUp
+        )
     }
 
 }

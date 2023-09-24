@@ -36,7 +36,7 @@ internal class PolygonColliderTest {
     // Translate box by (1, 1)
     @Test
     fun translatedPolygonVerticesReturnsWorld() {
-        box.setTransform<Component>(Transform(Vec2(1f, 1f)))
+        box.transform = Transform(Vec2(1f, 1f))
         val worldVertices = Rectangle.rectangleVertices(Vec2(1f), Vec2(2f), 0f)
         TestUtils.assertVerticesEqual(worldVertices, box.getVertices())
     }
@@ -44,7 +44,7 @@ internal class PolygonColliderTest {
     // Scale box by 2x
     @Test
     fun scaledPolygonVerticesReturnsWorld() {
-        box.setTransform<Component>(Transform.scaleInstance(Vec2(2f)))
+        box.transform = Transform.scaleInstance(Vec2(2f))
         val worldVertices = Rectangle.rectangleVertices(Vec2(), Vec2(4f), 0f)
         TestUtils.assertVerticesEqual(worldVertices, box.getVertices())
     }
@@ -52,7 +52,7 @@ internal class PolygonColliderTest {
     // Rotate box by 45 degrees
     @Test
     fun rotatedPolygonVerticesReturnsWorld() {
-        box.setTransform<Component>(Transform.rotateInstance(45f))
+        box.transform = Transform.rotateInstance(45f)
         val worldVertices = Rectangle.rectangleVertices(Vec2(), Vec2(2f), 45f)
         TestUtils.assertVerticesEqual(worldVertices, box.getVertices())
     }
@@ -60,7 +60,7 @@ internal class PolygonColliderTest {
     // Apply all transforms
     @Test
     fun allTransformsPolygonVerticesReturnsWorld() {
-        box.setTransform<Component>(Transform(Vec2(1f), 45f, Vec2(2f)))
+        box.transform = Transform(Vec2(1f), 45f, Vec2(2f))
         val worldVertices = Rectangle.rectangleVertices(Vec2(1f), Vec2(4f), 45f)
         TestUtils.assertVerticesEqual(worldVertices, box.getVertices())
     }

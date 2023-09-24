@@ -24,6 +24,12 @@ public abstract class Script extends Component {
     /**
      * Add any necessary components to the game object before other components have been added.
      * This method is called before {@link mayonez.GameObject#init} and {@link mayonez.Component#start}.
+     * The fields {@link #gameObject} and {@link #transform} are accessible here.
+     * <p>
+     * Usage: Subclasses may override this method and can also call {@code super.init()}.
+     * <p>
+     * Warning: Calling {@code init()} at any other point in time may lead to unintended errors
+     * and should be avoided!
      */
     public void init() {
     }

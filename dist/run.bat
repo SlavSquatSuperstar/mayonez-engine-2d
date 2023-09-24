@@ -49,7 +49,7 @@ IF %ERRORLEVEL% EQU 0 (
 )
 
 rem Get jar file name
-rem Running "java -jar *.jar" doesn't work on Windows
+rem Can't run .jar with wildcard on Windows
 for %%i in (mayonez*.jar) do (
     set JAR_FILE=%%i
 )
@@ -84,6 +84,7 @@ if "%1"=="gl" (
     echo Option "--engine" requires one argument.
     exit /b 1
 ) else (
+    echo Invalid engine type "%1".
     exit /b 1
 )
 exit /b 0

@@ -2,8 +2,8 @@ package slavsquatsuperstar.demos.spacegame.combat;
 
 import mayonez.*;
 import mayonez.math.Random;
-import mayonez.math.*;
 import mayonez.scripts.Timer;
+import mayonez.scripts.*;
 import mayonez.scripts.movement.*;
 import slavsquatsuperstar.demos.spacegame.movement.ThrustController;
 
@@ -18,8 +18,8 @@ import java.util.*;
 public class ShipDestruction extends Script {
 
     // Constants
-    private static final float EXPLOSION_DURATION = 1.2f;
-    private static final float DESTRUCTION_DURATION = 0.8f;
+    private static final float EXPLOSION_DURATION = 1f;
+    private static final float DESTRUCTION_DURATION = 0.6f;
 
     // Timer Components
     private final Timer destructionTimer;
@@ -49,6 +49,7 @@ public class ShipDestruction extends Script {
         shipSystems.add(gameObject.getComponent(ThrustController.class));
         shipSystems.add(gameObject.getComponent(KeyMovement.class));
         shipSystems.add(gameObject.getComponent(KeyRotation.class));
+        shipSystems.add(gameObject.getComponent(KeepInScene.class));
     }
 
     @Override
@@ -66,6 +67,9 @@ public class ShipDestruction extends Script {
         }
     }
 
+    /**
+     * Begin the ship destruction sequence.
+     */
     public void startDestructionSequence() {
         if (sequenceStarted) return;
 
@@ -76,12 +80,13 @@ public class ShipDestruction extends Script {
         for (var system : shipSystems) {
             if (system != null) system.setEnabled(false);
         }
+        shipSystems.clear();
 
-        getScene().addObject(explosion = Explosion.createPrefab(
+        getScene().addObject(explosion = ExplosionPrefabs.createPrefab(
                 "Ship Explosion",
-                new Transform(transform.getPosition(), Random.randomFloat(0f, 360f), new Vec2(2)),
-                EXPLOSION_DURATION)
-        );
+                new Transform(transform.getPosition(), Random.randomAngle(), transform.getScale()),
+                EXPLOSION_DURATION
+        ));
     }
 
 }

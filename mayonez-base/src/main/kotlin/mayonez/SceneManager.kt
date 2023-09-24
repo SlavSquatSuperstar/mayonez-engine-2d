@@ -2,6 +2,7 @@ package mayonez
 
 import mayonez.init.*
 import mayonez.util.*
+import java.awt.*
 
 /**
  * Provides an interface to the user for reloading and switching scenes.
@@ -33,9 +34,22 @@ object SceneManager {
     private val sceneState: SceneState // The state of the current scene
         get() = currentScene.state
 
+    // Game Loop Methods
+    @JvmStatic
+    @JvmName("updateCurrentScene")
+    internal fun updateCurrentScene(dt: Float) {
+        currentScene.update(dt)
+    }
+
+    @JvmStatic
+    @JvmName("renderCurrentScene")
+    internal fun renderCurrentScene(g2: Graphics2D?) {
+        currentScene.render(g2)
+    }
+
     // Scene Control Methods
 
-    // rename methods
+    // TODO rename methods
     @JvmStatic
     fun toggleScenePaused() {
         if (sceneState == SceneState.PAUSED) currentScene.resume()

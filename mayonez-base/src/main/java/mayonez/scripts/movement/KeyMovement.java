@@ -10,14 +10,29 @@ import mayonez.math.*;
  */
 public class KeyMovement extends MovementScript {
 
-    private final String xAxis, yAxis;
+    private final InputAxis xAxis, yAxis;
     private boolean objectAligned; // Whether to align movement with object's rotation
 
+    /**
+     * Constructs a new KeyMovement script with the WASD keys.
+     *
+     * @param speed how fast to move the object
+     * @param mode  how to move the object
+     */
     public KeyMovement(float speed, MoveMode mode) {
-        this(speed, mode, "horizontal", "vertical");
+        this(speed, mode, DefaultKeyAxis.findWithName("horizontal"),
+                DefaultKeyAxis.findWithName("vertical"));
     }
 
-    public KeyMovement(float speed, MoveMode mode, String xAxis, String yAxis) {
+    /**
+     * Constructs a new KeyMovement script with the given input axes.
+     *
+     * @param speed how fast to move the object
+     * @param mode  how to move the object
+     * @param xAxis the horizontal input axis
+     * @param yAxis the vertical input axis
+     */
+    public KeyMovement(float speed, MoveMode mode, InputAxis xAxis, InputAxis yAxis) {
         super(speed, mode);
         this.xAxis = xAxis;
         this.yAxis = yAxis;

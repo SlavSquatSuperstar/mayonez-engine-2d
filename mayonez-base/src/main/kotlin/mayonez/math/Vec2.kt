@@ -2,7 +2,6 @@ package mayonez.math
 
 import mayonez.annotations.*
 import mayonez.math.FloatMath.equals
-import org.joml.Vector2f
 import java.lang.Math
 import java.util.*
 import kotlin.math.*
@@ -45,14 +44,6 @@ class Vec2(
      * @param v the vector to copy
      */
     constructor(v: Vec2) : this(v.x, v.y)
-
-    /**
-     * Initialize this vector with the x and y values from a JOML [Vector2f]
-     * object, as (vx, vy).
-     *
-     * @param v the JOML vector to copy
-     */
-    constructor(v: Vector2f) : this(v.x, v.y)
 
     // Mutators
 
@@ -313,17 +304,17 @@ class Vec2(
     }
 
     /**
-     * Rotates this vector by an angle around the origin (0, 0).
+     * Rotates this vector counterclockwise by a given angle around the origin (0, 0).
      *
-     * @param degrees the angle, in degrees clockwise
+     * @param degrees the angle, in degrees counterclockwise
      * @return the rotated vector
      */
     fun rotate(degrees: Float): Vec2 = rotate(degrees, Vec2())
 
     /**
-     * Rotates this vector by an angle around the given origin point.
+     * Rotates this vector counterclockwise by a given angle around the given origin point.
      *
-     * @param degrees the angle, in degrees clockwise
+     * @param degrees the angle, in degrees counterclockwise
      * @param origin the point to rotate around
      * @return the rotated vector
      */

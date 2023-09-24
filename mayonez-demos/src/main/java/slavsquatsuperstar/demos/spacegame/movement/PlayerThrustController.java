@@ -3,6 +3,7 @@ package slavsquatsuperstar.demos.spacegame.movement;
 import mayonez.input.*;
 import mayonez.math.*;
 import mayonez.scripts.movement.*;
+import slavsquatsuperstar.demos.spacegame.SpaceGameConfig;
 
 import java.util.*;
 
@@ -12,6 +13,8 @@ import java.util.*;
  * @author SlavSquatSuperstar
  */
 public class PlayerThrustController extends ThrustController {
+
+    private static final Key BRAKE_KEY = SpaceGameConfig.getBreakKey();
 
     public PlayerThrustController(List<Thruster> thrusters) {
         super(thrusters);
@@ -41,7 +44,7 @@ public class PlayerThrustController extends ThrustController {
 
     @Override
     protected boolean isBraking() {
-        return KeyInput.keyDown("space");
+        return KeyInput.keyDown(BRAKE_KEY);
     }
 
 

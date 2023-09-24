@@ -1,10 +1,11 @@
-package slavsquatsuperstar.demos.spacegame.objects;
+package slavsquatsuperstar.demos.spacegame.objects.ships;
 
 import mayonez.math.*;
 import mayonez.physics.*;
 import slavsquatsuperstar.demos.spacegame.combat.EnemyFireController;
 import slavsquatsuperstar.demos.spacegame.movement.EnemyThrustController;
 import slavsquatsuperstar.demos.spacegame.movement.ThrusterPrefabs;
+import slavsquatsuperstar.demos.spacegame.objects.SpawnManager;
 
 /**
  * An enemy spaceship.
@@ -13,7 +14,7 @@ import slavsquatsuperstar.demos.spacegame.movement.ThrusterPrefabs;
  */
 public class EnemyShip extends Spaceship {
 
-    private static final float ENEMY_HEALTH = 4f;
+    private static final float ENEMY_HEALTH = 5f;
 
     public EnemyShip(String name, String spriteName, SpawnManager enemySpawner) {
         super(name, spriteName, ENEMY_HEALTH, enemySpawner);
@@ -26,7 +27,7 @@ public class EnemyShip extends Spaceship {
 
         // Position
         transform.setPosition(getScene().getRandomPosition());
-        transform.setRotation(Random.randomFloat(0f, 360f));
+        transform.setRotation(Random.randomAngle());
 
         // Movement
         Rigidbody rb;
@@ -37,7 +38,7 @@ public class EnemyShip extends Spaceship {
         addComponent(new EnemyThrustController(thrusters));
 
         // Weapons
-        addComponent(new EnemyFireController(0.5f));
+        addComponent(new EnemyFireController());
 
     }
 }

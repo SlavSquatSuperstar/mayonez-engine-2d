@@ -5,7 +5,7 @@ import mayonez.test.TestUtils.*
 import org.junit.jupiter.api.Test
 
 /**
- * Unit tests for the [mayonez.math.shapes.ConvexHull] class.
+ * Unit tests for the mayonez.math.shapes.ConvexHull file.
  *
  * @author SlavSquatSuperstar
  */
@@ -23,7 +23,7 @@ internal class ConvexHullTest {
             Vec2(-1f, 0f), Vec2(2f, 1f), Vec2(0f, 3f)
         )
 
-        val hull = ConvexHull.orderedConvexHull(verts)
+        val hull = orderedConvexHull(verts)
         assertVerticesEqual(expectedHull, hull)
     }
 
@@ -39,7 +39,7 @@ internal class ConvexHullTest {
             Vec2(0f, 3f), Vec2(-2f, 2f)
         )
 
-        val hull = ConvexHull.orderedConvexHull(verts)
+        val hull = orderedConvexHull(verts)
         assertVerticesEqual(expectedHull, hull)
     }
 

@@ -11,7 +11,7 @@ cd %SCRIPT_DIR% || exit /b 1
 
 rem Build the Gradle Project
 echo Building Mayonez Engine...
-call .\gradlew.bat clean shadowJar
+call .\gradlew.bat clean installShadowDist
 
 if %ERRORLEVEL% equ 0 (
     echo Successfully built Mayonez Engine.
@@ -22,11 +22,11 @@ if %ERRORLEVEL% equ 0 (
 
 rem Replace the compiled .jar file
 del dist\mayonez*.jar
-copy build\libs\mayonez*.jar dist\mayonez*.jar
+copy mayonez-demos\build\libs\mayonez*.jar dist\mayonez*.jar
 
 rem Copy resource files
-copy LICENSE-GPLv3.txt dist\LICENSE.txt
-copy preferences.json dist\preferences.json
+copy LICENSE.txt dist\LICENSE.txt
+copy mayonez-demos\*.json dist\*.json
 
 rem Zip the dist folder
 rem (Not available for Batch >:C)

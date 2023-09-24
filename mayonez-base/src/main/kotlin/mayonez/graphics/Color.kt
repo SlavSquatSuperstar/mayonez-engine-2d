@@ -29,8 +29,6 @@ class Color(red: Int, green: Int, blue: Int, alpha: Int) {
 
     constructor(color: JColor) : this(color.red, color.green, color.blue, color.alpha)
 
-    constructor(vec4: Vector4f) : this(vec4.x.toInt(), vec4.y.toInt(), vec4.z.toInt(), vec4.w.toInt())
-
     // Color Properties
 
     /** The red component of this color, between 0-255. */
@@ -51,13 +49,13 @@ class Color(red: Int, green: Int, blue: Int, alpha: Int) {
      * Converts this color to an instance of [java.awt.Color] to use in the AWT
      * engine.
      */
-    fun toAWT(): JColor = JColor(red, green, blue, alpha)
+    internal fun toAWT(): JColor = JColor(red, green, blue, alpha)
 
     /**
      * Converts this color to an instance of [org.joml.Vector4f] to use in the
      * GL engine, normalizing the values to between 0-1.
      */
-    fun toGL(): Vector4f = Vector4f(red.norm(), green.norm(), blue.norm(), alpha.norm())
+    internal fun toGL(): Vector4f = Vector4f(red.norm(), green.norm(), blue.norm(), alpha.norm())
 
     // Color Value Methods
 

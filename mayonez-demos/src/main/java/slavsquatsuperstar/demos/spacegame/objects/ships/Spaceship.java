@@ -1,11 +1,12 @@
-package slavsquatsuperstar.demos.spacegame.objects;
+package slavsquatsuperstar.demos.spacegame.objects.ships;
 
 import mayonez.*;
 import mayonez.graphics.sprites.*;
 import mayonez.math.*;
 import mayonez.physics.colliders.*;
 import mayonez.scripts.*;
-import slavsquatsuperstar.demos.spacegame.ZIndex;
+import slavsquatsuperstar.demos.spacegame.objects.SpawnManager;
+import slavsquatsuperstar.demos.spacegame.objects.ZIndex;
 import slavsquatsuperstar.demos.spacegame.combat.Damageable;
 import slavsquatsuperstar.demos.spacegame.combat.ShipDestruction;
 

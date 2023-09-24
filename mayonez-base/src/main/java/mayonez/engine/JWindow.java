@@ -79,7 +79,7 @@ final class JWindow extends JFrame implements Window {
     // Render Methods
 
     @Override
-    public void render(Scene scene) {
+    public void render() {
         if (bs == null) {
             initGraphics();
             return;
@@ -90,7 +90,7 @@ final class JWindow extends JFrame implements Window {
             do {
                 clearScreen();
                 flipScreenVertically();
-                scene.render(g2); // Draw scene
+                SceneManager.renderCurrentScene(g2);
                 flushResources();
             } while (bs.contentsLost());
         } catch (IllegalStateException e) {

@@ -4,7 +4,7 @@ The ultimate made-from-scratch and open-source 2D Java game engine to fit your S
 
 <img src="https://img.shields.io/badge/platform-macOS-lightgrey"></img>
 <img src="https://img.shields.io/badge/platform-Windows-lightgrey"></img>
-<img src="https://img.shields.io/badge/release-v0.7.9-brightgreen"></img>
+<img src="https://img.shields.io/badge/release-v0.7.10-brightgreen"></img>
 <img src=https://img.shields.io/badge/build-passing-brightgreen></img>
 
 <img src="https://img.shields.io/badge/Made%20with-Java-red"></img>
@@ -70,8 +70,10 @@ Running the Program
 
 - Download the `mayonez-engine-<version>.zip` file for the latest release under the
 - [releases section](https://github.com/SlavSquatSuperstar/mayonez-engine-2d/releases) on the GitHub website.
-- Drag `run` (Mac/Linux) or `run.bat` (Windows) from the extracted folder into a command line/terminal window
+- Drag `run` (Mac/Linux) or `run.bat`/`run.ps1` (Windows) from the extracted folder into a command line/terminal window
   and press Enter.
+- Before running PowerShell scripts, run `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` in PowerShell
+  to allow running scripts.
 
 ### Instructions for Developers
 
@@ -129,28 +131,30 @@ and a Pool Balls scene.
     - **A**/**D** to turn left/right
     - **Q**/**E** to strafe left/right
     - **Space** to brake
-  - **Left Mouse** and _hold_ to fire weapons
+    - **Left Mouse** and _hold_ to fire weapons
     - **1**/**2** to switch ammo types
+    - Controls can be set in user_config.json
 - Mario:
     - **W** to jump
     - **A**/**D** to move side to side
     - **S** to ground pound
 - Physics Sandbox:
     - **Left Mouse** and *drag* on objects to move them around
-    - **Right Mouse**, *drag*, and *release* on objects to flick them
+    - **Right Mouse***, *drag*, and *release* on objects to flick them
     - **1**-**4** to spawn shapes at the moues cursor
     - **Space** to toggle gravity
 - Pool Balls:
     - **Left Mouse** and *drag* on objects to move them around
-    - **Right Mouse**, *drag*, and *release* on objects to flick them
+    - **Right Mouse***, *drag*, and *release* on objects to flick them
 - Geometry Dash Editor:
     - **WASD** to move
     - **Left Mouse** on _buttons_ to select a brush
     - **Left Mouse** on an _empty space_, with a brush selected, to place a block
+- *Note: Right mouse is known to not work with some trackpads.
 
 ## Additional Info
 
-### Sprite Art
+### Sprite Art Sources
 
 The demo game textures were pulled from GamesWithGabe's GitHub repositories under the MIT license or created in the
 program Piskel.
@@ -193,7 +197,7 @@ code of this program is freely available to access, run, share, and modify forev
 
 Any forks of this project must also be distributed under the same license and may not be used in or made into any
 proprietary (closed-source) applications. Forks may still be monetized, as long as the code is open to the public.
-See [LICENSE-GPLv3.txt](LICENSE-GPLv3.txt) or read the [online version]((https://www.gnu.org/licenses/gpl-3.0.html)) for
+See [LICENSE.txt](LICENSE.txt) or read the [online version]((https://www.gnu.org/licenses/gpl-3.0.html)) for
 more details.
 
 This software may not be redistributed without the license file. If your download does not contain the GPLv3 license,

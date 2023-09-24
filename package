@@ -11,7 +11,7 @@ cd "$SCRIPT_DIR" || exit
 
 # Build the Gradle project
 echo "Building Mayonez Engine..."
-if [ "$(./gradlew clean shadowJar)" ]; then
+if [ "$(./gradlew clean installShadowDist)" ]; then
   echo "Successfully built Mayonez Engine."
 else
   echo "Error building Mayonez Engine."
@@ -20,16 +20,16 @@ fi
 
 # Replace the compiled .jar file
 rm dist/mayonez*.jar
-cp build/libs/mayonez*.jar dist/
+cp mayonez-demos/build/libs/mayonez*.jar dist/
 
 # Copy resource files
-cp LICENSE-GPLv3.txt dist/LICENSE.txt
-cp preferences.json dist/
+cp LICENSE.txt dist/
+cp  mayonez-demos/*.json dist/
 
 # Zip the dist folder
 cd dist || exit
 rm mayonez*.zip
-zip mayonez-engine.zip mayonez*.jar run* preferences.json *.txt
+zip mayonez-engine.zip -- mayonez*.jar run* *.json *.txt
 
 # Show success message
 echo "Successfully packaged Mayonez Engine."

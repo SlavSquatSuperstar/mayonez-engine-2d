@@ -127,13 +127,13 @@ public abstract sealed class GameEngine permits JGameEngine, GLGameEngine {
         window.beginFrame();
     }
 
-    // TODO Multi-thread physics, set time step higher than refresh rate for smoother results
+    // TODO multi-thread physics, set time step shorter than refresh rate for smoother results
     final void update(float dt) {
-        getScene().update(dt);
+        SceneManager.updateCurrentScene(dt);
     }
 
     final void render() {
-        window.render(getScene());
+        window.render();
     }
 
     final void endFrame() {
@@ -144,16 +144,8 @@ public abstract sealed class GameEngine permits JGameEngine, GLGameEngine {
 
     public abstract float getCurrentTimeSecs();
 
-    private Scene getScene() {
-        return SceneManager.getCurrentScene();
-    }
-
     protected String getRunningString() {
         return running ? "running" : "not running";
-    }
-
-    public Window getWindow() {
-        return window;
     }
 
 }

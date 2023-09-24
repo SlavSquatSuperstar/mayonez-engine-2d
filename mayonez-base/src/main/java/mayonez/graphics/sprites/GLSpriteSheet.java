@@ -100,7 +100,7 @@ public final class GLSpriteSheet extends SpriteSheet {
     }
 
     @Override
-    public int numSprites() {
+    public int size() {
         return sprites.size();
     }
 }

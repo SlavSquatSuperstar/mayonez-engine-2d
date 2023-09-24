@@ -1,7 +1,6 @@
 package mayonez.math.shapes
 
 import mayonez.math.*
-import mayonez.math.shapes.PolygonVertices.rotate
 import java.util.*
 
 /**
@@ -18,9 +17,6 @@ open class Rectangle(private val center: Vec2, private val size: Vec2, val angle
     constructor(center: Vec2, width: Float, height: Float, angle: Float) : this(center, Vec2(width, height), angle)
 
     // Rectangle Properties
-
-    val isSquare: Boolean
-        get() = FloatMath.equals(width, height)
 
     open val isAxisAligned: Boolean
         get() = FloatMath.equals(angle % 360f, 0f)
