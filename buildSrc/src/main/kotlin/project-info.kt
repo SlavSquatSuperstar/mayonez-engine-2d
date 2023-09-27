@@ -1,9 +1,6 @@
 /** The default JDK version for the toolchain. */
 const val javaVersion: Int = 17
 
-/** The default Kotlin version for libraries and plugins. */
-const val kotlinVersion: String = "1.9.0"
-
 /** The main module for the .jar file. */
 const val mainModuleName: String = "mayonez.demos"
 
@@ -16,7 +13,6 @@ val jvmArgs: List<String>
         return if (isMacOS) listOf("-XstartOnFirstThread") // For LWJGL on macOS
         else emptyList()
     }
-
 
 /** Whether the user is running macOS (for LWJGL VM args). */
 private val isMacOS: Boolean

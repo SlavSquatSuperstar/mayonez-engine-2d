@@ -5,8 +5,6 @@ plugins {
     id("java")
 }
 
-private val junitVersion = "5.10.0"
-
 dependencies {
     // Add Test Libraries
     testImplementation("org.junit.jupiter:junit-jupiter-api:$junitVersion")

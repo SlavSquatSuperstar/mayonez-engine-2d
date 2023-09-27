@@ -9,8 +9,6 @@ plugins {
 
 description = "The library project for Mayonez Engine that contains the core and API classes."
 
-private val junitVersion = "5.10.0"
-
 dependencies {
     // Code Dependencies
     implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
@@ -18,7 +16,7 @@ dependencies {
 
     // LWJGL Modules
     implementation("org.joml:joml:1.10.5")
-    implementation(platform("org.lwjgl:lwjgl-bom:3.3.2")) // Bill of materials: set version for all libs
+    implementation(platform("org.lwjgl:lwjgl-bom:$lwjglVersion")) // Bill of materials: set version for all libs
 
     implementation("org.lwjgl:lwjgl")
     implementation("org.lwjgl:lwjgl-glfw")
