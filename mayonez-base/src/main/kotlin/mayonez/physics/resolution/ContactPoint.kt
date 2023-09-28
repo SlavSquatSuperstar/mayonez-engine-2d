@@ -4,7 +4,7 @@ import mayonez.math.*
 import mayonez.physics.*
 
 /**
- * Describes contact point between two colliding shapes and stores
+ * Describes a contact point between two colliding shapes and stores
  * additional information such as radius and impulse.
  *
  * Sources
@@ -27,9 +27,9 @@ internal class ContactPoint(private val contactPos: Vec2, r1Pos: Vec2, r2Pos: Ve
     internal var tanImp: Float = 0f
 
     /** Calculate the relative velocity of two bodies at this contact point. */
-    fun getRelativeVelocity(r1: Rigidbody?, r2: Rigidbody?): Vec2 {
-        val vel1 = r1?.getPointVelocity(contactPos) ?: Vec2()
-        val vel2 = r2?.getPointVelocity(contactPos) ?: Vec2()
+    fun getRelativeVelocity(b1: PhysicsBody?, b2: PhysicsBody?): Vec2 {
+        val vel1 = b1?.getPointVelocity(contactPos) ?: Vec2()
+        val vel2 = b2?.getPointVelocity(contactPos) ?: Vec2()
         return vel2 - vel1
     }
 
@@ -48,10 +48,10 @@ internal class ContactPoint(private val contactPos: Vec2, r1Pos: Vec2, r2Pos: Ve
      * Apply an impulse to two bodies at this contact point to resolve a
      * collision.
      */
-    fun applyImpulse(r1: Rigidbody?, r2: Rigidbody?, impulse: Vec2) {
-        r1?.applyImpulse(-impulse)
-        r1?.applyAngularImpulse(rad1.cross(-impulse))
-        r2?.applyImpulse(impulse)
-        r2?.applyAngularImpulse(rad2.cross(impulse))
+    fun applyImpulse(b1: PhysicsBody?, b2: PhysicsBody?, impulse: Vec2) {
+        b1?.applyImpulse(-impulse)
+        b1?.applyAngularImpulse(rad1.cross(-impulse))
+        b2?.applyImpulse(impulse)
+        b2?.applyAngularImpulse(rad2.cross(impulse))
     }
 }

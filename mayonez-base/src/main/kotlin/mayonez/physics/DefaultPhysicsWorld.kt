@@ -81,9 +81,7 @@ class DefaultPhysicsWorld : PhysicsWorld {
 
     private fun updateBodies(dt: Float) {
         bodies.forEach {
-            // Apply gravity
-            if (it.followsGravity) it.applyForce(gravity * it.mass)
-            it.integrateForce(dt)
+            it.integrateForce(dt, gravity)
             it.integrateVelocity(dt)
         }
     }

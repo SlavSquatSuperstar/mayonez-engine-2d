@@ -60,7 +60,7 @@ internal class RigidbodyTest {
     }
 
     private fun Rigidbody.physicsUpdateOneSecond() {
-        this.integrateForce(1f)
+        this.integrateForce(1f, Vec2())
         this.integrateVelocity(1f)
     }
 }

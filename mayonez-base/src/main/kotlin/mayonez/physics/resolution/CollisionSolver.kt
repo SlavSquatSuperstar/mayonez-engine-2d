@@ -6,6 +6,8 @@ import mayonez.physics.colliders.*
 import mayonez.physics.manifold.*
 import kotlin.math.*
 
+//private const val DEFAULT_IMPULSE_ITERATIONS = 4
+
 /**
  * Applies linear and angular impulses to two intersecting bodies to
  * resolve a collision.
@@ -14,12 +16,8 @@ import kotlin.math.*
  */
 internal class CollisionSolver(private val c1: Collider, private val c2: Collider, private var manifold: Manifold) {
 
-//    companion object {
-//        private val DEFAULT_IMPULSE_ITERATIONS = 4
-//    }
-
-    private val r1: Rigidbody = c1.rigidbody ?: Rigidbody(0f)
-    private val r2: Rigidbody = c2.rigidbody ?: Rigidbody(0f)
+    private val b1: PhysicsBody = c1.rigidbody ?: Rigidbody(0f)
+    private val b2: PhysicsBody = c2.rigidbody ?: Rigidbody(0f)
 
     // Collision Properties
     private lateinit var normal: Vec2 // Collision direction
@@ -70,8 +68,8 @@ internal class CollisionSolver(private val c1: Collider, private val c2: Collide
      * infinite-mass rigidbody.
      */
     private fun solveStatic() {
-        val mass1: Float = r1.mass
-        val mass2: Float = r2.mass
+        val mass1: Float = b1.mass
+        val mass2: Float = b2.mass
 
         // Separate objects factoring in mass
         val massRatio = mass1 / (mass1 + mass2)
@@ -86,16 +84,16 @@ internal class CollisionSolver(private val c1: Collider, private val c2: Collide
     /** Transfer linear and angular momentum between objects and apply friction. */
     private fun solveDynamic() {
         // Physics Properties
-        val massData = MassData.getMassData(r1, r2)
-        val matData = MaterialData.combineMaterials(r1.material, r2.material)
+        val massData = MassData.getFrom(b1, b2)
+        val matData = MaterialData.combine(b1.material, b2.material)
 
-        val contacts = Array(manifold.numContacts()) { ContactPoint(manifold.getContact(it), r1.position, r2.position) }
+        val contacts = Array(manifold.numContacts()) { ContactPoint(manifold.getContact(it), b1.position, b2.position) }
         calculateNormalImpulse(contacts, massData, matData)
         calculateTangentImpulse(contacts, massData, matData)
 
         for (contact in contacts) {
             val totalImpulse = (normal * contact.normImp) + (tangent * contact.tanImp)
-            contact.applyImpulse(r1, r2, totalImpulse)
+            contact.applyImpulse(b1, b2, totalImpulse)
         }
     }
 
@@ -103,7 +101,7 @@ internal class CollisionSolver(private val c1: Collider, private val c2: Collide
         val cRest = matData.coeffRestitution
 
         for (contact in contacts) {
-            val relVel = contact.getRelativeVelocity(r1, r2) // Relative velocity, v_rel
+            val relVel = contact.getRelativeVelocity(b1, b2) // Relative velocity, v_rel
             val normVel = relVel.dot(normal) // Velocity along collision normal, v_n
             if (normVel > 0f) continue // Skip this point if moving away or stationary
 
@@ -117,7 +115,7 @@ internal class CollisionSolver(private val c1: Collider, private val c2: Collide
         val (_, sFric, kFric) = matData
 
         for (contact in contacts) {
-            val relVel = contact.getRelativeVelocity(r1, r2) // Relative velocity, v_rel (will have changed)
+            val relVel = contact.getRelativeVelocity(b1, b2) // Relative velocity, v_rel (will have changed)
             val tanVel = relVel.dot(tangent) // Velocity along collision tangent, v_t
             if (abs(tanVel) < 0.00005f) continue // Ignore tiny friction impulses
 

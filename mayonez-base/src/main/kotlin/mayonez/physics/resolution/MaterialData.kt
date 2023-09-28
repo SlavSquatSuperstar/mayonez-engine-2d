@@ -18,7 +18,7 @@ internal data class MaterialData(
     internal val kineticFriction: Float
 ) {
     companion object {
-        internal fun combineMaterials(mat1: PhysicsMaterial, mat2: PhysicsMaterial): MaterialData {
+        internal fun combine(mat1: PhysicsMaterial, mat2: PhysicsMaterial): MaterialData {
             return MaterialData(
                 geometricMean(mat1.kineticFriction, mat2.kineticFriction),
                 geometricMean(mat1.staticFriction, mat2.staticFriction),

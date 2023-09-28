@@ -18,6 +18,8 @@ interface PhysicsWorld {
         const val GRAVITY_CONSTANT = 9.81f
     }
 
+    // Physics Properties
+
     /** The acceleration due to gravity, in m/s/s. */
     var gravity: Vec2
 
