@@ -45,7 +45,6 @@ internal class JDefaultRenderer : SceneRenderer, DebugRenderer {
     // Scene Renderer Methods
 
     override fun setScene(newScene: Scene) {
-        newScene.objects.forEach(this::addObject)
         background = newScene.background
         sceneSize = newScene.size
         sceneScale = newScene.scale

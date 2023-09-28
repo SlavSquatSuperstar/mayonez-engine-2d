@@ -24,9 +24,9 @@ public interface SceneRenderer extends Renderer {
     void removeObject(GameObject o);
 
     /**
-     * Clears this renderer and submits all objects from the given {@link mayonez.Scene} for rendering.
+     * Updates screen size and background to the new scene.
      *
-     * @param newScene a scene
+     * @param newScene the new scene
      */
     void setScene(Scene newScene);
 

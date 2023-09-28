@@ -84,7 +84,7 @@ public abstract class Scene {
         renderer = RendererFactory.createSceneRenderer();
         debugRenderer = (DebugRenderer) renderer;
         debugDraw = new DebugDraw(scale, debugRenderer);
-        physics = new PhysicsWorld();
+        physics = new DefaultPhysicsWorld();
 
         // Scene changes
         changesToScene = new LinkedList<>();
@@ -122,13 +122,16 @@ public abstract class Scene {
 
     private void startSceneLayers() {
         renderer.start();
+        renderer.setScene(this);
         if (separateDebugRenderer()) debugRenderer.start();
-        physics.start();
+        physics.clearObjects();
     }
 
     private void addObjectsToLayers() {
-        renderer.setScene(this);
-        physics.setScene(this);
+        objects.forEach(o -> {
+            renderer.addObject(o);
+            physics.addObject(o);
+        });
     }
 
     // Update Methods
@@ -202,7 +205,7 @@ public abstract class Scene {
     private void clearSceneLayers() {
         renderer.stop();
         if (separateDebugRenderer()) debugRenderer.stop();
-        physics.stop();
+        physics.clearObjects();
         state = SceneState.STOPPED;
     }
 
