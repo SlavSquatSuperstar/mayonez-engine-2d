@@ -12,7 +12,7 @@ import kotlin.math.*
  *
  * @author SlavSquatSuperstar
  */
-class Rigidbody(mass: Float, drag: Float, angDrag: Float) : Component() {
+class Rigidbody(mass: Float, drag: Float, angDrag: Float) : Component(), PhysicsBody {
 
     constructor(mass: Float) : this(mass, 0f, 0f)
 
@@ -27,47 +27,50 @@ class Rigidbody(mass: Float, drag: Float, angDrag: Float) : Component() {
 
     // Mass Properties
 
-    var mass: Float = 0f.coerceAtLeast(mass) // positive mass
-        set(mass) {
+    override var mass: Float = 0f.coerceAtLeast(mass) // positive mass
+        private set(mass) {
             field = 0f.coerceAtLeast(mass)
         }
-    val infiniteMass: Boolean
+    override val invMass: Float
+        get() = if (static) 0f else 1f / mass
+    override val static: Boolean
         get() = FloatMath.equals(mass, 0f)
-    val invMass: Float
-        get() = if (infiniteMass) 0f else 1f / mass
 
-    private val angMass: Float
+    override val angMass: Float
         get() = collider?.getAngMass(mass) ?: mass
-    internal val invAngMass: Float
-        get() = if (infiniteMass) 0f else 1f / angMass
+    override val invAngMass: Float
+        get() = if (static) 0f else 1f / angMass
 
     // Kinematics Properties (Position, Velocity)
 
-    var position: Vec2
+    override var position: Vec2
         get() = transform.position
         set(position) {
             transform.position = position
         }
-    var rotation: Float
+    override var rotation: Float
         get() = transform.rotation
         set(rotation) {
             transform.rotation = rotation
         }
 
-    /** The linear (translational) velocity of the body, v, in world units per second. */
-    var velocity: Vec2 = Vec2()
+    /**
+     * The linear (translational) velocity of the body, v, in world units per
+     * second.
+     */
+    override var velocity: Vec2 = Vec2()
         set(velocity) {
             field.set(velocity)
         }
-    val speed: Float
+    override val speed: Float
         get() = velocity.len()
 
     /**
      * The angular (rotational) velocity of the body, ω, in degrees per second
      * counterclockwise.
      */
-    var angVelocity: Float = 0f
-    val angSpeed: Float
+    override var angVelocity: Float = 0f
+    override val angSpeed: Float
         get() = abs(angVelocity)
 
     // Dynamics Properties (Force, Drag)
@@ -103,7 +106,7 @@ class Rigidbody(mass: Float, drag: Float, angDrag: Float) : Component() {
 
     // Physics Engine Properties
 
-    var material: PhysicsMaterial = PhysicsMaterial.DEFAULT_MATERIAL
+    override var material: PhysicsMaterial = PhysicsMaterial.DEFAULT_MATERIAL
         private set
 
     fun setMaterial(material: PhysicsMaterial): Rigidbody {
@@ -111,8 +114,7 @@ class Rigidbody(mass: Float, drag: Float, angDrag: Float) : Component() {
         return this
     }
 
-    var followsGravity: Boolean = true
-        @JvmName("isFollowsGravity") get
+    override var followsGravity: Boolean = true
         private set
 
     fun setFollowsGravity(followsGravity: Boolean): Rigidbody {
@@ -120,7 +122,7 @@ class Rigidbody(mass: Float, drag: Float, angDrag: Float) : Component() {
         return this
     }
 
-    var fixedRotation: Boolean = false
+    private var fixedRotation: Boolean = false
         private set
 
     fun setFixedRotation(fixedRotation: Boolean): Rigidbody {
@@ -138,8 +140,8 @@ class Rigidbody(mass: Float, drag: Float, angDrag: Float) : Component() {
      * Integrate net force and torque to solve for velocity and angular
      * velocity.
      */
-    fun integrateForce(dt: Float) {
-        if (infiniteMass) return
+    override fun integrateForce(dt: Float) {
+        if (static) return
 
         // Apply drag first, setting velocity to 0 for small speeds
         if (FloatMath.equals(velocity.lenSq(), 0f, 0.0005f)) velocity.set(Vec2(0f))
@@ -161,30 +163,20 @@ class Rigidbody(mass: Float, drag: Float, angDrag: Float) : Component() {
      * Integrate linear velocity and angular velocity to solve for position and
      * rotation.
      */
-    fun integrateVelocity(dt: Float) {
+    override fun integrateVelocity(dt: Float) {
         transform.move(velocity * dt)
         if (!fixedRotation) transform.rotate(angVelocity * dt)
     }
 
-    // Apply Force/Torque Methods
+    // Apply Force Methods
 
     /**
      * Applies a force to this body's center of mass.
      *
      * @param force a vector with the units `kg•m/s/s (F)`
      */
-    fun applyForce(force: Vec2?) {
+    override fun applyForce(force: Vec2?) {
         netForce += force ?: return
-    }
-
-    /**
-     * Applies a torque to this body's center of mass in the clockwise
-     * direction.
-     *
-     * @param torque a scalar with units `kg•m•m/s/s (τ = F•d)`
-     */
-    fun applyTorque(torque: Float?) {
-        netTorque += torque ?: return
     }
 
     /**
@@ -192,35 +184,8 @@ class Rigidbody(mass: Float, drag: Float, angDrag: Float) : Component() {
      *
      * @param impulse a vector with the units `kg•m/s (F•t)`
      */
-    fun applyImpulse(impulse: Vec2?) {
+    override fun applyImpulse(impulse: Vec2?) {
         velocity += (impulse ?: return) * invMass // dv = J/m = m*dv/m
-    }
-
-    /**
-     * Applies an angular impulse to this body in the clockwise direction.
-     *
-     * @param angImpulse a scalar with units `kg•m•m•rad/s (τ•t = I•ω)`
-     */
-    fun applyAngularImpulse(angImpulse: Float) {
-        angVelocity += FloatMath.toDegrees(angImpulse) * invAngMass // dw = L/I = I*dw/I
-    }
-
-    /**
-     * Accelerates this body in the given direction.
-     *
-     * @param acceleration a vector with the units `m/s/s (a)`
-     */
-    fun applyAcceleration(acceleration: Vec2?) {
-        netForce += (acceleration ?: return) * invMass // dF = a/m
-    }
-
-    /**
-     * Accelerates this body in the given direction.
-     *
-     * @param angAcceleration a vector with the units `deg/s/s (α)`
-     */
-    fun applyAngularAcceleration(angAcceleration: Float) {
-        netTorque += angAcceleration * invAngMass // dT = A/I
     }
 
     /**
@@ -228,8 +193,29 @@ class Rigidbody(mass: Float, drag: Float, angDrag: Float) : Component() {
      *
      * @param velocity a vector with the units `m/s (v)`
      */
-    fun addVelocity(velocity: Vec2?) {
+    override fun addVelocity(velocity: Vec2?) {
         this.velocity += velocity ?: return
+    }
+
+    // Apply Torque Methods
+
+    /**
+     * Applies a torque to this body's center of mass in the clockwise
+     * direction.
+     *
+     * @param torque a scalar with units `kg•m•m/s/s (τ = F•d)`
+     */
+    override fun applyTorque(torque: Float) {
+        netTorque += torque
+    }
+
+    /**
+     * Applies an angular impulse to this body in the clockwise direction.
+     *
+     * @param angImpulse a scalar with units `kg•m•m•rad/s (τ•t = I•ω)`
+     */
+    override fun applyAngularImpulse(angImpulse: Float) {
+        angVelocity += FloatMath.toDegrees(angImpulse) * invAngMass // dw = L/I = I*dw/I
     }
 
     /**
@@ -237,8 +223,8 @@ class Rigidbody(mass: Float, drag: Float, angDrag: Float) : Component() {
      *
      * @param angVelocity a scalar with units `deg/s (ω)`
      */
-    fun addAngularVelocity(angVelocity: Float?) {
-        this.angVelocity += angVelocity ?: return
+    override fun addAngularVelocity(angVelocity: Float) {
+        this.angVelocity += angVelocity
     }
 
     // Velocity at Point Methods
@@ -251,6 +237,6 @@ class Rigidbody(mass: Float, drag: Float, angDrag: Float) : Component() {
      * @param point a point on this body
      * @return the point's total velocity
      */
-    fun getPointVelocity(point: Vec2): Vec2 = velocity + (point - position).cross(FloatMath.toRadians(-angVelocity))
+    override fun getPointVelocity(point: Vec2): Vec2 = velocity + (point - position).cross(FloatMath.toRadians(-angVelocity))
 
 }

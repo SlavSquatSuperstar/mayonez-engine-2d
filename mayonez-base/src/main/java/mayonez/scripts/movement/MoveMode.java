@@ -16,10 +16,6 @@ public enum MoveMode {
      */
     VELOCITY(true),
     /**
-     * Add an acceleration to the object (requires a {@link mayonez.physics.Rigidbody}).
-     */
-    ACCELERATION(true),
-    /**
      * Apply an impulse to the object (requires a {@link mayonez.physics.Rigidbody}).
      */
     IMPULSE(true),

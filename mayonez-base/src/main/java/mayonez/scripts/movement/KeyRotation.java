@@ -36,7 +36,6 @@ public class KeyRotation extends MovementScript {
         switch (mode) {
             case POSITION -> transform.rotate(input * dt);
             case VELOCITY -> rb.addAngularVelocity(input * dt);
-            case ACCELERATION -> rb.applyAngularAcceleration(input);
             case IMPULSE -> rb.applyAngularImpulse(input);
             case FORCE -> rb.applyTorque(input);
         }

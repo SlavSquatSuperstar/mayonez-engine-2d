@@ -52,7 +52,6 @@ public class KeyMovement extends MovementScript {
         switch (mode) {
             case POSITION -> transform.move(input.mul(dt));
             case VELOCITY -> rb.addVelocity(input.mul(dt));
-            case ACCELERATION -> rb.applyAcceleration(input);
             case IMPULSE -> rb.applyImpulse(input);
             case FORCE -> rb.applyForce(input);
         }

@@ -49,7 +49,7 @@ abstract class Collider(private val shapeData: Shape) : Component() {
      *
      * @return if this collider is not affected by collisions.
      */
-    fun isStatic(): Boolean = rigidbody?.infiniteMass ?: true
+    fun isStatic(): Boolean = rigidbody?.static ?: true
 
     /** If this frame's collision should not be resolved by the physics engine. */
     var ignoreCurrentCollision: Boolean = false
