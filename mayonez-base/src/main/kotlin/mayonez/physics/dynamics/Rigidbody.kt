@@ -1,4 +1,4 @@
-package mayonez.physics
+package mayonez.physics.dynamics
 
 import mayonez.*
 import mayonez.math.*

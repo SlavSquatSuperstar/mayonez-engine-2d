@@ -1,7 +1,7 @@
 package slavsquatsuperstar.demos.physics.scripts;
 
 import mayonez.math.*;
-import mayonez.physics.*;
+import mayonez.physics.dynamics.*;
 import mayonez.scripts.mouse.*;
 import mayonez.scripts.movement.*;
 

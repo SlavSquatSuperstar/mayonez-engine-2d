@@ -3,7 +3,7 @@ package slavsquatsuperstar.demos.mario;
 import mayonez.*;
 import mayonez.input.*;
 import mayonez.math.*;
-import mayonez.physics.*;
+import mayonez.physics.dynamics.*;
 
 /**
  * Provides basic move, jump, and ground pound controls for Mario.

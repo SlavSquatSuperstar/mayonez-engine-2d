@@ -1,8 +1,8 @@
 package mayonez;
 
 import mayonez.graphics.sprites.*;
-import mayonez.physics.*;
 import mayonez.physics.colliders.*;
+import mayonez.physics.dynamics.*;
 import mayonez.scripts.*;
 import org.junit.jupiter.api.*;
 

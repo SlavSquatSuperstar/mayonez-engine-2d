@@ -3,8 +3,8 @@ package slavsquatsuperstar.demos.spacegame.combat;
 import mayonez.*;
 import mayonez.graphics.sprites.*;
 import mayonez.math.*;
-import mayonez.physics.*;
 import mayonez.physics.colliders.*;
+import mayonez.physics.dynamics.*;
 import mayonez.util.Record;
 import slavsquatsuperstar.demos.spacegame.objects.ZIndex;
 

@@ -2,7 +2,7 @@ package slavsquatsuperstar.demos.spacegame.movement;
 
 import mayonez.*;
 import mayonez.math.*;
-import mayonez.physics.*;
+import mayonez.physics.dynamics.*;
 
 import java.util.*;
 

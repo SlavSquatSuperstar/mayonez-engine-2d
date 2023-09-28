@@ -1,6 +1,6 @@
 package mayonez.physics.resolution
 
-import mayonez.physics.*
+import mayonez.physics.dynamics.*
 
 /**
  * Stores the masses of two bodies involved in a collision.

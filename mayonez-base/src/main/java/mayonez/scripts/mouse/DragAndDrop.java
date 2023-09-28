@@ -1,7 +1,7 @@
 package mayonez.scripts.mouse;
 
 import mayonez.math.*;
-import mayonez.physics.*;
+import mayonez.physics.dynamics.*;
 
 /**
  * Allows objects to be moved by clicking on them and dragging around the mouse.

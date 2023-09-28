@@ -1,7 +1,7 @@
 package mayonez.physics.resolution
 
 import mayonez.math.*
-import mayonez.physics.*
+import mayonez.physics.dynamics.*
 
 /**
  * Describes a contact point between two colliding shapes and stores

@@ -5,7 +5,7 @@ import mayonez.annotations.*;
 import mayonez.input.*;
 import mayonez.math.*;
 import mayonez.math.shapes.*;
-import mayonez.physics.*;
+import mayonez.physics.dynamics.*;
 import mayonez.scripts.movement.*;
 
 /**

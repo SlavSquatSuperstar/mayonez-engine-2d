@@ -12,15 +12,15 @@ public enum MoveMode {
      */
     POSITION(false),
     /**
-     * Change the object's velocity (requires a {@link mayonez.physics.Rigidbody}).
+     * Change the object's velocity (requires a {@link mayonez.physics.dynamics.Rigidbody}).
      */
     VELOCITY(true),
     /**
-     * Apply an impulse to the object (requires a {@link mayonez.physics.Rigidbody}).
+     * Apply an impulse to the object (requires a {@link mayonez.physics.dynamics.Rigidbody}).
      */
     IMPULSE(true),
     /**
-     * Apply a force or torque to the object (requires a {@link mayonez.physics.Rigidbody}).
+     * Apply a force or torque to the object (requires a {@link mayonez.physics.dynamics.Rigidbody}).
      */
     FORCE(true);
 

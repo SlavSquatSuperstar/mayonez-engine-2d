@@ -4,6 +4,7 @@ import mayonez.*
 import mayonez.math.*
 import mayonez.math.shapes.*
 import mayonez.physics.*
+import mayonez.physics.dynamics.*
 import mayonez.physics.manifold.*
 
 /**

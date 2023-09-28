@@ -3,6 +3,7 @@ package mayonez.physics
 import mayonez.math.*
 import mayonez.math.FloatMath.toDegrees
 import mayonez.math.FloatMath.toRadians
+import mayonez.physics.dynamics.*
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 

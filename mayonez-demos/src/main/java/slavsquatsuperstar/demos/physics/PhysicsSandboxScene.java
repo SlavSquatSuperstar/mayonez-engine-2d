@@ -5,6 +5,7 @@ import mayonez.input.*;
 import mayonez.math.*;
 import mayonez.physics.*;
 import mayonez.physics.colliders.*;
+import mayonez.physics.dynamics.*;
 import mayonez.util.*;
 
 /**

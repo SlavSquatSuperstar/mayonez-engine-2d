@@ -3,8 +3,8 @@ package mayonez.scripts;
 import mayonez.*;
 import mayonez.math.*;
 import mayonez.math.shapes.*;
-import mayonez.physics.*;
 import mayonez.physics.colliders.*;
+import mayonez.physics.dynamics.*;
 
 /**
  * Dictates what happens when an object reaches the edge of the scene.

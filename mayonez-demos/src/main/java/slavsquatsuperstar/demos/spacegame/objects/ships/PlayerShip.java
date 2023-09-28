@@ -1,7 +1,7 @@
 package slavsquatsuperstar.demos.spacegame.objects.ships;
 
 import mayonez.input.*;
-import mayonez.physics.*;
+import mayonez.physics.dynamics.*;
 import mayonez.scripts.movement.*;
 import slavsquatsuperstar.demos.spacegame.SpaceGameConfig;
 import slavsquatsuperstar.demos.spacegame.combat.PlayerFireController;

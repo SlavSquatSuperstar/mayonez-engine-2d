@@ -1,8 +1,8 @@
 package mayonez;
 
 import mayonez.math.*;
-import mayonez.physics.*;
 import mayonez.physics.colliders.*;
+import mayonez.physics.dynamics.*;
 
 /**
  * A controllable and reusable behavior for a {@link mayonez.GameObject} which provides
@@ -146,7 +146,7 @@ public abstract class Script extends Component {
     }
 
     /**
-     * Provides a reference to the parent object's {@link Rigidbody} component.
+     * Provides a reference to the parent object's {@link mayonez.physics.dynamics.Rigidbody} component.
      *
      * @return the rigidbody, if it exists
      */

@@ -1,8 +1,8 @@
 package mayonez.physics.resolution
 
 import mayonez.math.*
-import mayonez.physics.*
 import mayonez.physics.colliders.*
+import mayonez.physics.dynamics.*
 import mayonez.physics.manifold.*
 import kotlin.math.*
 

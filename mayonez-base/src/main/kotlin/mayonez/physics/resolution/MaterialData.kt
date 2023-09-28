@@ -1,6 +1,6 @@
 package mayonez.physics.resolution
 
-import mayonez.physics.*
+import mayonez.physics.dynamics.*
 import kotlin.math.*
 
 /**

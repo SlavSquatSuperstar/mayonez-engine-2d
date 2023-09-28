@@ -3,6 +3,7 @@ package mayonez.physics
 import mayonez.*
 import mayonez.math.*
 import mayonez.physics.colliders.*
+import mayonez.physics.dynamics.*
 import mayonez.physics.resolution.*
 
 /**

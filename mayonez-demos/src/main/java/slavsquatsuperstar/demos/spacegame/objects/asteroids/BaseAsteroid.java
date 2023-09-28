@@ -5,8 +5,8 @@ import mayonez.graphics.*;
 import mayonez.graphics.debug.*;
 import mayonez.graphics.sprites.*;
 import mayonez.math.*;
-import mayonez.physics.*;
 import mayonez.physics.colliders.*;
+import mayonez.physics.dynamics.*;
 import mayonez.scripts.*;
 import slavsquatsuperstar.demos.spacegame.objects.ZIndex;
 
