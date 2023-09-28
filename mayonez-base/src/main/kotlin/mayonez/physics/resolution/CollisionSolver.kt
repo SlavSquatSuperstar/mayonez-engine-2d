@@ -14,7 +14,9 @@ import kotlin.math.*
  *
  * @author SlavSquatSuperstar
  */
-internal class CollisionSolver(private val c1: Collider, private val c2: Collider, private var manifold: Manifold) {
+internal class CollisionSolver(
+    private val c1: CollisionBody, private val c2: CollisionBody, private var manifold: Manifold
+) {
 
     private val b1: PhysicsBody = c1.rigidbody ?: Rigidbody(0f)
     private val b2: PhysicsBody = c2.rigidbody ?: Rigidbody(0f)
@@ -38,7 +40,7 @@ internal class CollisionSolver(private val c1: Collider, private val c2: Collide
      * Dynamic vs Dynamic
      */
     fun solveCollision() {
-        if (c1.isStatic() && c2.isStatic()) return // Check masses once, cannot both be static
+        if (b1.static && b2.static) return // Check masses once, cannot both be static
         if (!recheckCollision()) return
 
         normal = manifold.normal
@@ -58,13 +60,14 @@ internal class CollisionSolver(private val c1: Collider, private val c2: Collide
      * @return whether the colliders are still colliding
      */
     private fun recheckCollision(): Boolean {
-        if (c1.collisionResolved || c2.collisionResolved)
+        if (c1.collisionResolved || c2.collisionResolved) {
             manifold = c1.getContacts(c2) ?: return false
+        }
         return true
     }
 
     /**
-     * Correct positions of objects if one or neither collider has an
+     * Correct positions of objects if one or zero colliders has an
      * infinite-mass rigidbody.
      */
     private fun solveStatic() {
@@ -77,8 +80,12 @@ internal class CollisionSolver(private val c1: Collider, private val c2: Collide
         val depth2 = manifold.depth * (1f - massRatio)
 
         // Displace bodies to correct position
-        c1.transform.move(normal * -depth1)
-        c2.transform.move(normal * depth2)
+        b1.move(normal * -depth1)
+        b2.move(normal * depth2)
+    }
+
+    private fun PhysicsBody.move(direction: Vec2) {
+        position.set(position + direction)
     }
 
     /** Transfer linear and angular momentum between objects and apply friction. */

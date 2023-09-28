@@ -35,6 +35,6 @@ open class PolygonCollider(shapeData: Polygon) :
     val numVertices: Int = shapeData.numVertices
 
     // vertices transformed to world space
-    open fun getVertices(): Array<Vec2> = (transformToWorld() as Polygon).vertices
+    open fun getVertices(): Array<Vec2> = (getShape() as Polygon).vertices
 
 }

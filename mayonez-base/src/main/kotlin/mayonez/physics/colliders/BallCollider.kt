@@ -16,11 +16,11 @@ class BallCollider(val size: Vec2) : Collider(Ellipse(Vec2(), size)) {
     constructor(radius: Float) : this(Vec2(radius * 2f))
 
     override fun getMinBounds(): BoundingBox {
-        return transformToWorld().boundingCircle().boundingRectangle() // max is quicker than trig
+        return getShape().boundingCircle().boundingRectangle() // max is quicker than trig
     }
 
-    override fun transformToWorld(): Shape { // use circle when possible
-        val worldShape = super.transformToWorld()
+    override fun getShape(): Shape { // use circle when possible
+        val worldShape = super.getShape()
         return if (worldShape is Ellipse && worldShape.isCircle) worldShape.boundingCircle()
         else worldShape
     }

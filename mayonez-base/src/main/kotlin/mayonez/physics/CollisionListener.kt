@@ -6,14 +6,11 @@ import mayonez.physics.manifold.*
 
 /**
  * Detects when collisions start and stop between two
- * [mayonez.physics.colliders.Collider] components.
+ * [mayonez.physics.colliders.CollisionBody] objects.
  *
  * @author SlavSquatSuperstar
  */
-internal class CollisionListener(
-    @JvmField val c1: Collider,
-    @JvmField val c2: Collider
-) {
+internal class CollisionListener(val c1: CollisionBody, val c2: CollisionBody) {
     private var colliding: Boolean = false // was colliding last frame
     private var broadphase: Boolean = false // bounding boxes are colliding
     private var trigger: Boolean = false
@@ -58,16 +55,13 @@ internal class CollisionListener(
     }
 
     private fun sendCollisionEvents(type: CollisionEventType, direction: Vec2? = null) {
-        // No collision if either object is missing
-        if (c1.gameObject == null || c2.gameObject == null) return
-
-        c1.sendCollisionEventToObject(CollisionEvent(c2.gameObject, trigger, type, direction))
-        c2.sendCollisionEventToObject(CollisionEvent(c1.gameObject, trigger, type, direction))
+        c1.sendCollisionEvent(c2, trigger, type, direction)
+        c2.sendCollisionEvent(c1, trigger, type, direction)
     }
 
-    fun match(col: Collider?): Boolean = (c1 == col) || (c2 == col)
+    fun match(col: CollisionBody?): Boolean = (c1 == col) || (c2 == col)
 
-    fun match(c1: Collider, c2: Collider): Boolean {
+    fun match(c1: CollisionBody, c2: CollisionBody): Boolean {
         return (this.c1 == c1 && this.c2 == c2) || (this.c1 == c2 && this.c2 == c1)
     }
 }

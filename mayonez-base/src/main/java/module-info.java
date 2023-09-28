@@ -5,7 +5,7 @@
  */
 module mayonez.base {
     // JVM
-    requires transitive java.desktop;
+    requires java.desktop;
     requires kotlin.stdlib;
 
     // LWJGL

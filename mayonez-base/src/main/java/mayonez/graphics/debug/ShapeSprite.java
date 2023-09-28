@@ -62,7 +62,7 @@ public class ShapeSprite extends Component {
         if (collider == null) {
             return new Rectangle(transform.getPosition(), transform.getScale());
         } else {
-            return collider.transformToWorld();
+            return collider.getShape();
         }
     }
 

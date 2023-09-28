@@ -24,8 +24,9 @@ class DefaultPhysicsWorld : PhysicsWorld {
 
     // Bodies and Collisions
     private val bodies: MutableList<PhysicsBody> // physical objects in the world
-    private val colliders: MutableList<Collider> // shapes in the world
+    private val colliders: MutableList<CollisionBody> // shapes in the world
     private val listeners: MutableSet<CollisionListener> // all collision listeners
+    // TODO use adjacency list
     private val collisions: MutableList<CollisionSolver> // confirmed narrowphase collisions
 
     init {
@@ -104,7 +105,7 @@ class DefaultPhysicsWorld : PhysicsWorld {
                 c1.collisionResolved = false
                 c2.collisionResolved = false
 
-                if (collidersCannotCollide(c1, c2)) continue
+                if (c1.doNotCollideWith(c2)) continue
 
                 val lis = getListener(c1, c2)
                 if (lis.checkBroadphase()) listeners.add(lis)
@@ -119,18 +120,8 @@ class DefaultPhysicsWorld : PhysicsWorld {
      * @param c2 the second collider
      * @return an existing listener or a new listener
      */
-    private fun getListener(c1: Collider, c2: Collider): CollisionListener {
-        for (lis in listeners) {
-            if (lis.match(c1, c2)) return lis
-        }
-        return CollisionListener(c1, c2)
-    }
-
-    private fun collidersCannotCollide(c1: Collider, c2: Collider): Boolean {
-        val disabled = !(c1.isEnabled && c2.isEnabled)
-        val ignore = c1.gameObject.hasTag("Ignore Collisions") || c2.gameObject.hasTag("Ignore Collisions")
-        val static = c1.isStatic() && c2.isStatic() // Don't check for collision if both are static
-        return (disabled || ignore || static)
+    private fun getListener(c1: CollisionBody, c2: CollisionBody): CollisionListener {
+        return listeners.find { it.match(c1, c2) } ?: CollisionListener(c1, c2)
     }
 
     /** Check broadphase pairs for collisions and calculate contact points. */

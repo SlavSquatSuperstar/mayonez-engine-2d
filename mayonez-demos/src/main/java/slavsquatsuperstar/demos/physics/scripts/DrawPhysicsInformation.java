@@ -30,11 +30,12 @@ public class DrawPhysicsInformation extends Script {
     }
 
     private void drawDebugInformation(Collider col, Color color) {
-        if (color != null && !col.isStatic()) {
+        var rb = col.getRigidbody();
+        if (color != null && rb != null) {
             // Draw center, velocity, direction vector
             getScene().getDebugDraw().drawPoint(col.center(), Colors.BLACK);
-            getScene().getDebugDraw().drawVector(col.center(), col.getRigidbody().getVelocity().mul(0.1f), color);
-            getScene().getDebugDraw().drawVector(col.getRigidbody().getPosition(), col.getRigidbody().getTransform().getRight(), Colors.BLACK);
+            getScene().getDebugDraw().drawVector(col.center(), rb.getVelocity().mul(0.1f), color);
+            getScene().getDebugDraw().drawVector(rb.getPosition(), transform.getRight(), Colors.BLACK);
         }
     }
 

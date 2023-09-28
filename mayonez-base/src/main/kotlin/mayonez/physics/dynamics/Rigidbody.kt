@@ -19,11 +19,11 @@ class Rigidbody(mass: Float, drag: Float, angDrag: Float) : Component(), Physics
     // Component References
 
     /**
-     * Returns the parent object's [Collider]. May be null.
+     * Returns the parent object's [CollisionBody]. May be null.
      *
      * @return the attached collider
      */
-    private var collider: Collider? = null
+    private var collider: CollisionBody? = null
 
     // Mass Properties
 
@@ -47,7 +47,7 @@ class Rigidbody(mass: Float, drag: Float, angDrag: Float) : Component(), Physics
     override var position: Vec2
         get() = transform.position
         set(position) {
-            transform.position = position
+            transform.position.set(position)
         }
     override var rotation: Float
         get() = transform.rotation
@@ -117,7 +117,6 @@ class Rigidbody(mass: Float, drag: Float, angDrag: Float) : Component(), Physics
     }
 
     private var fixedRotation: Boolean = false
-        private set
 
     fun setFixedRotation(fixedRotation: Boolean): Rigidbody {
         this.fixedRotation = fixedRotation

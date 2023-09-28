@@ -17,7 +17,7 @@ import mayonez.physics.manifold.*
  * @constructor Constructs a collider from a [Shape] object
  * @author SlavSquatSuperstar
  */
-abstract class Collider(private val shapeData: Shape) : Component() {
+abstract class Collider(private val shapeData: Shape) : Component(), CollisionBody {
 
     // Object References
 
@@ -25,18 +25,11 @@ abstract class Collider(private val shapeData: Shape) : Component() {
      * A reference to the parent object's [mayonez.physics.Rigidbody]. A
      * collider should have a rigidbody to react to collisions.
      */
-    var rigidbody: Rigidbody? = null
+    override var rigidbody: PhysicsBody? = null
 
     // Physics Engine Properties
 
-    var trigger = false
-        /**
-         * Returns whether this collider is non-physical and should not react to
-         * collisions.
-         *
-         * @return if this collider is a trigger
-         */
-        @JvmName("isTrigger") get
+    final override var trigger: Boolean = false
         private set
 
     fun setTrigger(trigger: Boolean): Collider {
@@ -44,22 +37,14 @@ abstract class Collider(private val shapeData: Shape) : Component() {
         return this
     }
 
-    /**
-     * Whether this collider has a null or infinite-mass rigidbody, and does
-     * not respond to collisions.
-     *
-     * @return if this collider is not affected by collisions.
-     */
-    fun isStatic(): Boolean = rigidbody?.static ?: true
-
     /** If this frame's collision should not be resolved by the physics engine. */
-    var ignoreCurrentCollision: Boolean = false
+    override var ignoreCurrentCollision: Boolean = false
 
     /**
      * Whether the position or velocity of this collider has been modified in
      * this frame.
      */
-    var collisionResolved: Boolean = false
+    override var collisionResolved: Boolean = false
 
     // Game Loop Methods
 
@@ -74,25 +59,23 @@ abstract class Collider(private val shapeData: Shape) : Component() {
 
     open fun getRotation(): Float = transform!!.rotation
 
-    open fun getMinBounds(): BoundingBox = transformToWorld().boundingRectangle()
+    override fun getMinBounds(): BoundingBox = getShape().boundingRectangle()
 
-    open fun getMass(density: Float): Float = shapeData.scale(transform!!.scale).mass(density)
+    override fun getMass(density: Float): Float {
+        return shapeData.scale(transform!!.scale).mass(density)
+    }
 
-    open fun getAngMass(mass: Float): Float = shapeData.scale(transform!!.scale).angularMass(mass)
+    override fun getAngMass(mass: Float): Float {
+        return shapeData.scale(transform!!.scale).angularMass(mass)
+    }
 
     // Transform Methods
 
-    /** Transforms this shape into world space. */
     // TODO save as mutable field
-    open fun transformToWorld(): Shape {
-        return shapeData.rotate(getRotation()).scale(transform!!.scale).translate(center())
-    }
-
-    // inverse scale, rotate about our center
-    /** Transforms another shape to this shape's local space. */
-    protected open fun transformToLocal(world: Shape): Shape {
-        return world.translate(-center()).scale(Vec2(1f) / (transform!!.scale), origin = Vec2())
-            .rotate(-getRotation())
+    override fun getShape(): Shape {
+        return shapeData.rotate(getRotation())
+            .scale(transform!!.scale)
+            .translate(center())
     }
 
     // Shape vs Point Collisions
@@ -103,31 +86,41 @@ abstract class Collider(private val shapeData: Shape) : Component() {
      * @param point a vector
      * @return if the shape contains the point
      */
-    operator fun contains(point: Vec2): Boolean = (point in transformToWorld())
+    operator fun contains(point: Vec2): Boolean = (point in getShape())
 
-    // Shape vs Shape Collisions
+    // Collision Methods
 
-    /**
-     * Calculates the contact points, normal, and overlap between this collider
-     * and another if they are intersecting.
-     *
-     * @param collider another collider
-     * @return the collision info, or no if there is no intersection
-     */
-    fun getContacts(collider: Collider?): Manifold? {
-        return Collisions.getContacts(this.transformToWorld(), collider?.transformToWorld())
+    override fun getContacts(collider: CollisionBody?): Manifold? {
+        return Collisions.getContacts(this.getShape(), collider?.getShape())
+    }
+
+    override fun doNotCollideWith(collider: CollisionBody): Boolean {
+        if (collider is Collider) {
+            val disabled = !(this.isEnabled && collider.isEnabled)
+            val ignore = this.gameObject.hasTag("Ignore Collisions") || collider.gameObject.hasTag("Ignore Collisions")
+            val static =
+                this.rigidbody == null && collider.rigidbody == null // Don't check for collision if both are static
+            return (disabled || ignore || static)
+        }
+        return false
     }
 
     // Callback Methods
 
-    /**
-     * Broadcasts an event if a collision occurs between this object and
-     * another.
-     *
-     * @param event the collision event
-     */
-    internal fun sendCollisionEventToObject(event: CollisionEvent) {
-        this.gameObject!!.onCollisionEvent(event)
+    override fun sendCollisionEvent(
+        other: CollisionBody, trigger: Boolean,
+        type: CollisionEventType, direction: Vec2?
+    ) {
+        if (gameObject == null) return
+        if (other is Collider) {
+            if (other.gameObject == null) return
+
+            this.gameObject.onCollisionEvent(
+                CollisionEvent(
+                    other.gameObject, trigger, type, direction
+                )
+            )
+        }
     }
 
 }
