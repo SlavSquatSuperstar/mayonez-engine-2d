@@ -21,6 +21,8 @@ internal object IntersectionDetector : CollisionDetector<Shape> {
         }
     }
 
+    // Intersection Helper Methods
+
     /**
      * Performs a simple line segment intersection test by calculating the
      * contact point between two rays and ensuring it is within both segments.
@@ -29,7 +31,6 @@ internal object IntersectionDetector : CollisionDetector<Shape> {
      * @param edge2 the second edge
      * @return if the two edges cross or touch
      */
-    // TODO linear systems matrix
     private fun intersectEdges(edge1: Edge, edge2: Edge): Boolean {
         // Find line directions
         val dir1 = edge1.toVector() / edge1.length

@@ -32,9 +32,9 @@ class TriangleTest {
 
     @Test
     void areaCorrect() {
-        assertFloatEquals(tri.area(), 0.5f * tri.base * tri.height);
+        assertFloatEquals(tri.area(), 0.5f * tri.getBase() * tri.getHeight());
         var tri2 = new Triangle(new Vec2(-1, 0), new Vec2(1, 4), new Vec2(5, -2));
-        assertFloatEquals(tri2.area(), 0.5f * tri2.base * tri2.height);
+        assertFloatEquals(tri2.area(), 0.5f * tri2.getBase() * tri2.getHeight());
     }
 
     @Test

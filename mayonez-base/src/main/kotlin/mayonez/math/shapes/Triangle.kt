@@ -19,11 +19,9 @@ class Triangle(private val v1: Vec2, private val v2: Vec2, private val v3: Vec2)
     // Triangle Properties
 
     /** The base length of the triangle, b. */
-    @JvmField
     val base: Float = edges[0].length
 
     /** The height of the triangle, h. */
-    @JvmField
     val height: Float = abs(edges[1].toVector().component(edges[0].unitNormal())) // get altitude length
 
     /**
@@ -95,7 +93,7 @@ class Triangle(private val v1: Vec2, private val v2: Vec2, private val v3: Vec2)
         val areas = FloatArray(3) {
             Triangle(vertices[it], vertices[(it + 1) % 3], point).area()
         }
-        return FloatMath.sum(*areas) <= this.area()
+        return areas.sum() <= this.area()
     }
 
     override fun equals(other: Any?): Boolean {

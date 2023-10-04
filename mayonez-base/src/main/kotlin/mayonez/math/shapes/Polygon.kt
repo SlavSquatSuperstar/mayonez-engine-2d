@@ -45,7 +45,7 @@ open class Polygon(sort: Boolean, vararg vertices: Vec2) : Shape() {
 
     /** The faces, or unit normal vectors of each edge in this polygon. */
     val normals: Array<Vec2>
-        get() = Array(numVertices) { edges[it].unitNormal() }
+        get() = edges.map { it.unitNormal() }.toTypedArray()
 
     /**
      * Splits this polygon into n-2 triangular regions, which are guaranteed to
@@ -71,7 +71,7 @@ open class Polygon(sort: Boolean, vararg vertices: Vec2) : Shape() {
         val crosses = FloatArray(numVertices) {
             vertices[it].cross(vertices[(it + 1) % numVertices])
         }
-        return 0.5f * abs(FloatMath.sum(*crosses))
+        return 0.5f * abs(crosses.sum())
     }
 
     private lateinit var centroid: Vec2
@@ -103,13 +103,13 @@ open class Polygon(sort: Boolean, vararg vertices: Vec2) : Shape() {
     // Bounds
 
     override fun boundingCircle(): Circle {
-        val distsSq = FloatArray(numVertices) { vertices[it].distanceSq(center()) }
+        val distsSq = vertices.map { it.distanceSq(centroid) }.toFloatArray()
         return Circle(center(), FloatMath.max(*distsSq))
     }
 
     override fun boundingRectangle(): BoundingBox {
-        val verticesX = FloatArray(numVertices) { vertices[it].x }
-        val verticesY = FloatArray(numVertices) { vertices[it].y }
+        val verticesX = vertices.map { it.x }.toFloatArray()
+        val verticesY = vertices.map { it.y }.toFloatArray()
         val boxMin = Vec2(FloatMath.min(*verticesX), FloatMath.min(*verticesY))
         val boxMax = Vec2(FloatMath.max(*verticesX), FloatMath.max(*verticesY))
         return BoundingBox(boxMin.midpoint(boxMax), boxMax - boxMin)
@@ -118,13 +118,14 @@ open class Polygon(sort: Boolean, vararg vertices: Vec2) : Shape() {
     // Polygon vs Point
 
     override fun supportPoint(direction: Vec2): Vec2 {
-        val dotProds = FloatArray(numVertices) { vertices[it].dot(direction) }
+        val dotProds = vertices.map { it.dot(direction) }.toFloatArray()
         return vertices[FloatMath.maxIndex(*dotProds)]
     }
 
     override fun nearestPoint(position: Vec2): Vec2 {
         if (position in this) return position
-        val distances = FloatArray(edges.size) { edges[it].distance(position) }
+
+        val distances = edges.map { it.distance(position) }.toFloatArray()
         val nearestEdge = edges[FloatMath.minIndex(*distances)]
         return nearestEdge.nearestPoint(position)
     }
