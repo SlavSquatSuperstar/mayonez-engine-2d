@@ -25,15 +25,15 @@ internal data class MaterialData(
                 average(mat1.bounce, mat2.bounce)
             )
         }
-
-        // Friction combine: Geometric average, but could also multiply instead
-        private fun geometricMean(num1: Float, num2: Float): Float {
-            return sqrt(num1 * num2)
-        }
-
-        // Bounce combine: Arithmetic average, but could also take min
-        private fun average(num1: Float, num2: Float): Float {
-            return 0.5f * (num1 + num2)
-        }
     }
+}
+
+// Friction combine: Geometric average, but could also multiply instead
+private fun geometricMean(num1: Float, num2: Float): Float {
+    return sqrt(num1 * num2)
+}
+
+// Bounce combine: Arithmetic average, but could also take min
+private fun average(num1: Float, num2: Float): Float {
+    return 0.5f * (num1 + num2)
 }

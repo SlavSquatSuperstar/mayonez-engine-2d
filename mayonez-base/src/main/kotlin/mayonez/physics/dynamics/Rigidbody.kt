@@ -195,7 +195,9 @@ class Rigidbody(mass: Float, drag: Float, angDrag: Float) : Component(), Physics
 
     // Velocity at Point Methods
 
-    override fun getPointVelocity(point: Vec2): Vec2 =
-        velocity + (point - position).cross(FloatMath.toRadians(-angVelocity))
+    override fun getPointVelocity(point: Vec2): Vec2 {
+        return velocity + (point - position).cross(FloatMath.toRadians(-angVelocity))
+    }
+
 
 }

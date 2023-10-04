@@ -16,7 +16,7 @@ interface CollisionBody {
     // Collider Properties
 
     /** The [PhysicsBody] attached to this shape. */
-    var rigidbody: PhysicsBody?
+    var physicsBody: PhysicsBody?
 
     /**
      * Whether this collider is non-physical and should not react to

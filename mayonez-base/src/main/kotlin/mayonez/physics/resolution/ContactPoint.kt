@@ -13,12 +13,12 @@ import mayonez.physics.dynamics.*
  *
  * @author SlavSquatSuperstar
  */
-internal class ContactPoint(private val contactPos: Vec2, r1Pos: Vec2, r2Pos: Vec2) {
+internal class ContactPoint(private val contactPos: Vec2, b1Pos: Vec2, b2Pos: Vec2) {
     /** Distance to first body center, r1. */
-    private val rad1: Vec2 = contactPos - r1Pos
+    private val rad1: Vec2 = contactPos - b1Pos
 
     /** Distance to second body center, r2. */
-    private val rad2: Vec2 = contactPos - r2Pos
+    private val rad2: Vec2 = contactPos - b2Pos
 
     /** Normal impulse magnitude, J_n. */
     internal var normImp: Float = 0f
@@ -28,8 +28,8 @@ internal class ContactPoint(private val contactPos: Vec2, r1Pos: Vec2, r2Pos: Ve
 
     /** Calculate the relative velocity of two bodies at this contact point. */
     fun getRelativeVelocity(b1: PhysicsBody?, b2: PhysicsBody?): Vec2 {
-        val vel1 = b1?.getPointVelocity(contactPos) ?: Vec2()
-        val vel2 = b2?.getPointVelocity(contactPos) ?: Vec2()
+        val vel1 = b1.getPointVelocity(contactPos)
+        val vel2 = b2.getPointVelocity(contactPos)
         return vel2 - vel1
     }
 

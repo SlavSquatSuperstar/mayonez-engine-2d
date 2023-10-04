@@ -15,11 +15,13 @@ import kotlin.math.*
  * @author SlavSquatSuperstar
  */
 internal class CollisionSolver(
-    private val c1: CollisionBody, private val c2: CollisionBody, private var manifold: Manifold
+    private val c1: CollisionBody,
+    private val c2: CollisionBody,
+    private var manifold: Manifold
 ) {
 
-    private val b1: PhysicsBody = c1.rigidbody ?: Rigidbody(0f)
-    private val b2: PhysicsBody = c2.rigidbody ?: Rigidbody(0f)
+    private val b1: PhysicsBody? = c1.physicsBody
+    private val b2: PhysicsBody? = c2.physicsBody
 
     // Collision Properties
     private lateinit var normal: Vec2 // Collision direction
@@ -80,8 +82,8 @@ internal class CollisionSolver(
         val depth2 = manifold.depth * (1f - massRatio)
 
         // Displace bodies to correct position
-        b1.move(normal * -depth1)
-        b2.move(normal * depth2)
+        b1?.move(normal * -depth1)
+        b2?.move(normal * depth2)
     }
 
     private fun PhysicsBody.move(direction: Vec2) {
@@ -139,8 +141,8 @@ internal class CollisionSolver(
         }
     }
 
-    private fun isStaticFrictionExceeded(tanImp: Float, normImp: Float, sFric: Float): Boolean {
-        return abs(tanImp) > abs(normImp * sFric)
-    }
+}
 
+private fun isStaticFrictionExceeded(tanImp: Float, normImp: Float, sFric: Float): Boolean {
+    return abs(tanImp) > abs(normImp * sFric)
 }

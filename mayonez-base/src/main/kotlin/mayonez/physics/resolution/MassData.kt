@@ -16,7 +16,7 @@ internal data class MassData(
     internal val inverseAngMass2: Float
 ) {
     companion object {
-        internal fun getFrom(b1: PhysicsBody, b2: PhysicsBody): MassData {
+        internal fun getFrom(b1: PhysicsBody?, b2: PhysicsBody?): MassData {
             return MassData(
                 b1.invMass + b2.invMass,
                 b1.invAngMass, b2.invAngMass

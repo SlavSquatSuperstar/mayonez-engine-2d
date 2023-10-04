@@ -31,7 +31,7 @@ public class DrawPhysicsInformation extends Script {
 
     private void drawDebugInformation(Collider col, Color color) {
         var rb = col.getRigidbody();
-        if (color != null && rb != null) {
+        if (color != null && rb != null && !rb.getStatic()) {
             // Draw center, velocity, direction vector
             getScene().getDebugDraw().drawPoint(col.center(), Colors.BLACK);
             getScene().getDebugDraw().drawVector(col.center(), rb.getVelocity().mul(0.1f), color);

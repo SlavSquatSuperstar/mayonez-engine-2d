@@ -19,13 +19,15 @@ import mayonez.physics.manifold.*
  */
 abstract class Collider(private val shapeData: Shape) : Component(), CollisionBody {
 
-    // Object References
+    // Component References
+
+    override var physicsBody: PhysicsBody? = null
 
     /**
      * A reference to the parent object's [mayonez.physics.Rigidbody]. A
      * collider should have a rigidbody to react to collisions.
      */
-    override var rigidbody: PhysicsBody? = null
+    fun getRigidbody(): Rigidbody? = physicsBody as Rigidbody?
 
     // Physics Engine Properties
 
@@ -49,7 +51,7 @@ abstract class Collider(private val shapeData: Shape) : Component(), CollisionBo
     // Game Loop Methods
 
     override fun start() {
-        rigidbody = gameObject.getComponent(Rigidbody::class.java)
+        physicsBody = gameObject.getComponent(Rigidbody::class.java)
     }
 
     // Shape Properties
@@ -99,7 +101,7 @@ abstract class Collider(private val shapeData: Shape) : Component(), CollisionBo
             val disabled = !(this.isEnabled && collider.isEnabled)
             val ignore = this.gameObject.hasTag("Ignore Collisions") || collider.gameObject.hasTag("Ignore Collisions")
             val static =
-                this.rigidbody == null && collider.rigidbody == null // Don't check for collision if both are static
+                this.physicsBody == null && collider.physicsBody == null // Don't check for collision if both are static
             return (disabled || ignore || static)
         }
         return false
