@@ -14,13 +14,13 @@ dependencies {
 // Plugins and Tasks
 
 application {
-    mainModule.set(mainModuleName)
-    mainClass.set(mainClassName)
+    mainModule = mainModuleName
+    mainClass = mainClassName
 }
 
 tasks {
     shadowJar { // For building fat jar
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-        archiveClassifier.set("")
+        archiveClassifier = ""
     }
 }

@@ -34,7 +34,7 @@ dependencies {
 tasks {
     shadowJar {
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-        archiveClassifier.set("")
+        archiveClassifier = ""
     }
 
     compileJava {
@@ -44,7 +44,7 @@ tasks {
     compileKotlin {
         compilerOptions {
             suppressWarnings.set(true)
-            destinationDirectory.set(file("build/classes/java/main"))
+            destinationDirectory = file("build/classes/java/main")
         }
     }
 }

@@ -5,7 +5,7 @@ plugins {
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(javaVersion))
+        languageVersion = JavaLanguageVersion.of(javaVersion)
     }
 }
 
