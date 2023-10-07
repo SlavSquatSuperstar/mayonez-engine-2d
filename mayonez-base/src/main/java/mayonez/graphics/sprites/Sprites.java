@@ -4,7 +4,6 @@ import mayonez.*;
 import mayonez.graphics.*;
 import mayonez.graphics.textures.*;
 import mayonez.math.*;
-import mayonez.util.*;
 
 /**
  * A factory class that constructs {@link mayonez.graphics.sprites.Sprite} and

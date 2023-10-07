@@ -2,9 +2,15 @@ package mayonez.graphics.debug
 
 import mayonez.math.*
 import mayonez.math.shapes.*
-import mayonez.util.*
 import java.awt.geom.*
 import kotlin.math.*
+
+// Java AWT Type Aliases
+
+/** The [java.awt.Shape] class defined by the JDK. */
+internal typealias JShape = java.awt.Shape
+/** The [java.awt.Polygon] class defined by the JDK. */
+internal typealias JPolygon = java.awt.Polygon
 
 // AWT Shape Conversion Methods
 

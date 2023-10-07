@@ -3,7 +3,6 @@ package mayonez.graphics.renderer
 import mayonez.graphics.debug.*
 import mayonez.math.*
 import mayonez.math.shapes.*
-import mayonez.util.*
 import kotlin.math.*
 
 // GL Add Shape Methods

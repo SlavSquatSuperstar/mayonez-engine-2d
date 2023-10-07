@@ -1,6 +1,6 @@
 package mayonez.graphics.debug
 
-import mayonez.util.*
+import mayonez.graphics.*
 
 /**
  * Defines what parameters to use while drawing a

@@ -1,9 +1,9 @@
 package mayonez.graphics.sprites
 
 import mayonez.*
+import mayonez.graphics.*
 import mayonez.graphics.renderer.*
 import mayonez.graphics.textures.*
-import mayonez.util.*
 
 /**
  * Draws a [Texture] at a [GameObject]'s position. To instantiate a sprite,

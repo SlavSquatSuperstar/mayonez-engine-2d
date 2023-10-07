@@ -1,6 +1,5 @@
 package mayonez.graphics
 
-import mayonez.util.*
 import org.joml.*
 import java.util.*
 

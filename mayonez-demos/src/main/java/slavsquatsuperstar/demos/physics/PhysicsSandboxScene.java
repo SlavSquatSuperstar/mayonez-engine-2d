@@ -1,12 +1,12 @@
 package slavsquatsuperstar.demos.physics;
 
 import mayonez.*;
+import mayonez.graphics.*;
 import mayonez.input.*;
 import mayonez.math.*;
 import mayonez.physics.*;
 import mayonez.physics.colliders.*;
 import mayonez.physics.dynamics.*;
-import mayonez.util.*;
 
 /**
  * For testing dynamic movement and collision resolution.

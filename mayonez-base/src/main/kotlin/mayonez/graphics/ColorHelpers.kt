@@ -2,6 +2,15 @@ package mayonez.graphics
 
 import mayonez.math.*
 
+// Type Aliases
+
+/** The [java.awt.Color] class defined by the JDK. */
+internal typealias JColor = java.awt.Color
+/** The [org.joml.Vector4f] class defined by JOML. */
+internal typealias GLColor = org.joml.Vector4f
+/** The [mayonez.graphics.Color] class defined by Mayonez Engine. */
+internal typealias MColor = Color
+
 // Normalize Constants
 internal const val MAX_COMPONENT_VALUE: Int = 255
 private const val NORMALIZE: Float = 1f / MAX_COMPONENT_VALUE

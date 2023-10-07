@@ -1,5 +1,6 @@
 package mayonez;
 
+import mayonez.graphics.*;
 import mayonez.graphics.Color;
 import mayonez.graphics.camera.*;
 import mayonez.graphics.debug.*;

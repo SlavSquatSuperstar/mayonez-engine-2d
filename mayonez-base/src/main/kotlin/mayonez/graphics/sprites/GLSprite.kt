@@ -8,7 +8,6 @@ import mayonez.graphics.renderer.*
 import mayonez.graphics.textures.*
 import mayonez.math.*
 import mayonez.math.shapes.*
-import mayonez.util.*
 
 
 /**

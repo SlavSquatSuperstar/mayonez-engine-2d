@@ -1,6 +1,4 @@
-package mayonez.util;
-
-import mayonez.graphics.*;
+package mayonez.graphics;
 
 /**
  * A library of common colors used to create games.

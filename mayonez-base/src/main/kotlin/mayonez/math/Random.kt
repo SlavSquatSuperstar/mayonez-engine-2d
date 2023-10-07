@@ -1,6 +1,6 @@
 package mayonez.math
 
-import mayonez.util.*
+import mayonez.graphics.*
 
 /**
  * Generates random numbers and primitive types. Most methods will use a

@@ -1,18 +1,20 @@
 package mayonez.graphics.debug
 
+import mayonez.graphics.*
 import mayonez.graphics.renderer.*
 import mayonez.math.*
 import mayonez.math.shapes.*
-import mayonez.util.*
 
 /**
  * Allows colliders and shapes to be manually drawn onto the screen through
- * the scene's [mayonez.graphics.renderer.DebugRenderer]. All shapes are specified using world
- * coordinates, and colliders are centered around an object's position.
+ * the scene's [mayonez.graphics.renderer.DebugRenderer]. All shapes are
+ * specified using world coordinates, and colliders are centered around an
+ * object's position.
  *
- * Note: Due to how shapes are drawn in OpenGL, transparency is disabled, and all
- * colors will have their alpha set to 255. To draw debug shapes in the GL engine,
- * use a [mayonez.graphics.sprites.Sprite] instead.
+ * Note: Due to how shapes are drawn in OpenGL, transparency is disabled,
+ * and all colors will have their alpha set to 255. To draw transparent
+ * shapes in the GL engine, use a [mayonez.graphics.sprites.Sprite]
+ * instead.
  *
  * @author SlavSquatSuperstar
  */

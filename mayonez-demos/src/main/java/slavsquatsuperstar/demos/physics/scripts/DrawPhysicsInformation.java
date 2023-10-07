@@ -4,7 +4,6 @@ import mayonez.*;
 import mayonez.graphics.*;
 import mayonez.graphics.debug.*;
 import mayonez.physics.colliders.*;
-import mayonez.util.*;
 
 /**
  * Debug draws a game object's physics information

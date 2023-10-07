@@ -1,7 +1,7 @@
 package mayonez
 
+import mayonez.graphics.*
 import mayonez.init.*
-import mayonez.util.*
 import java.awt.*
 
 /**

@@ -1,10 +1,10 @@
 package mayonez.graphics.sprites
 
 import mayonez.annotations.*
+import mayonez.graphics.*
 import mayonez.graphics.renderer.*
 import mayonez.graphics.textures.*
 import mayonez.math.shapes.Rectangle
-import mayonez.util.*
 import java.awt.*
 import java.awt.image.*
 

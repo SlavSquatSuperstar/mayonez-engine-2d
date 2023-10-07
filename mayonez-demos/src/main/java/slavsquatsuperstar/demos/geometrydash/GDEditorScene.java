@@ -1,11 +1,11 @@
 package slavsquatsuperstar.demos.geometrydash;
 
 import mayonez.*;
+import mayonez.graphics.*;
 import mayonez.graphics.debug.*;
 import mayonez.math.*;
 import mayonez.physics.colliders.*;
 import mayonez.physics.dynamics.*;
-import mayonez.util.*;
 import slavsquatsuperstar.demos.geometrydash.ui.UICanvas;
 
 /**

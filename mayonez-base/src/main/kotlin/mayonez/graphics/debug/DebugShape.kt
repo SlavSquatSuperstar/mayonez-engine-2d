@@ -1,10 +1,10 @@
 package mayonez.graphics.debug
 
+import mayonez.graphics.*
 import mayonez.graphics.batch.*
 import mayonez.graphics.renderer.*
 import mayonez.math.shapes.*
 import mayonez.math.shapes.Polygon
-import mayonez.util.*
 import java.awt.*
 
 /**
