@@ -2,18 +2,15 @@ package mayonez.input
 
 import mayonez.*
 import mayonez.event.*
-import mayonez.input.KeyInput.getAxis
-import mayonez.input.KeyInput.keyDown
-import mayonez.input.KeyInput.keyPressed
 import org.lwjgl.glfw.GLFW
 import java.awt.event.*
 
 /**
  * Receives keyboard input events.
  *
- * Usage: To query if a key is held, call [keyDown]. To query if a key was
- * just pressed this frame, call [keyPressed]. To query a key axis, call
- * [getAxis].
+ * Usage: To query if a key is held, call [KeyInput.keyDown]. To query if a key was
+ * just pressed this frame, call [KeyInput.keyPressed]. To query a key axis, call
+ * [KeyInput.getAxis].
  *
  * @author SlavSquatSuperstar
  */

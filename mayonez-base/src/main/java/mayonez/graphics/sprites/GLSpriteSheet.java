@@ -2,7 +2,6 @@ package mayonez.graphics.sprites;
 
 import mayonez.annotations.*;
 import mayonez.graphics.textures.*;
-import mayonez.io.*;
 import mayonez.math.*;
 import mayonez.math.shapes.*;
 
@@ -29,7 +28,7 @@ public final class GLSpriteSheet extends SpriteSheet {
      * @param spacing    the padding in between sprites
      */
     GLSpriteSheet(String filename, Vec2 spriteSize, int numSprites, int spacing) {
-        sheetTexture = Assets.getGLTexture(filename);
+        sheetTexture = Textures.getGLTexture(filename);
         sprites = new ArrayList<>();
         this.spriteSize = spriteSize;
         createSprites(numSprites, spacing);

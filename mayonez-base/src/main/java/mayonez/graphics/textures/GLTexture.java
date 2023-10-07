@@ -17,7 +17,7 @@ import static org.lwjgl.system.MemoryUtil.memSlice;
 
 /**
  * An image file used by the GL engine. This class should not be directly
- * instantiated. Instead, call {@link mayonez.io.Assets#getTexture}.
+ * instantiated. Instead, call {@link mayonez.graphics.textures.Textures#getTexture}.
  * See {@link mayonez.graphics.textures.Texture} for more information.
  * <p>
  * Sources:

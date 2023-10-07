@@ -2,7 +2,6 @@ package mayonez.graphics.sprites;
 
 import mayonez.annotations.*;
 import mayonez.graphics.textures.*;
-import mayonez.io.*;
 import mayonez.math.*;
 
 import java.util.*;
@@ -28,7 +27,7 @@ public final class JSpriteSheet extends SpriteSheet {
      * @param spacing    the padding in between sprites
      */
     JSpriteSheet(String filename, Vec2 spriteSize, int numSprites, int spacing) {
-        sheetTexture = Assets.getJTexture(filename);
+        sheetTexture = Textures.getJTexture(filename);
         textures = new ArrayList<>();
         this.spriteSize = spriteSize;
         createSprites(numSprites, spacing);

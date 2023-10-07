@@ -4,7 +4,6 @@ import mayonez.*;
 import mayonez.graphics.sprites.*;
 import mayonez.graphics.textures.*;
 import mayonez.input.*;
-import mayonez.io.*;
 import mayonez.math.*;
 import mayonez.physics.colliders.*;
 import mayonez.physics.dynamics.*;
@@ -28,7 +27,7 @@ public class MarioScene extends Scene {
         sprites = Sprites.createSpriteSheet(
                 "assets/mario/textures/spritesheet.png",
                 16, 16, 26, 0);
-        background = Assets.getTexture("assets/mario/textures/background.png");
+        background = Textures.getTexture("assets/mario/textures/background.png");
         // Size = 60 x 32
         // Resolution = 1920x1024 (15:8), cropped from 1920x1080 (16:9)
     }

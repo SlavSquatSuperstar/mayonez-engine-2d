@@ -3,7 +3,6 @@ package mayonez.graphics.sprites;
 import mayonez.*;
 import mayonez.graphics.*;
 import mayonez.graphics.textures.*;
-import mayonez.io.*;
 import mayonez.math.*;
 import mayonez.util.*;
 
@@ -22,18 +21,21 @@ public final class Sprites {
     // Sprite Methods
 
     /**
-     * Automatically creates an AWT or GL sprite with a given filename depending on the current engine instance.
+     * Automatically creates an AWT or GL sprite with a given filename based on the
+     * current engine instance.
      *
      * @param filename the texture location
      * @return a sprite
      */
     public static Sprite createSprite(String filename) {
-        if (Mayonez.getUseGL()) return new GLSprite(Assets.getGLTexture(filename));
-        else return new JSprite(Assets.getJTexture(filename));
+        return Mayonez.getUseGL()
+                ? new GLSprite(Textures.getGLTexture(filename))
+                : new JSprite(Textures.getJTexture(filename));
     }
 
     /**
-     * Automatically creates an AWT or GL sprite with a given texture depending on the current engine instance.
+     * Automatically creates an AWT or GL sprite with a given texture based on the
+     * current engine instance.
      *
      * @param texture an existing texture
      * @return a sprite
@@ -51,8 +53,7 @@ public final class Sprites {
      * @return a sprite
      */
     public static Sprite createSprite(Color color) {
-        if (Mayonez.getUseGL()) return new GLSprite(color);
-        else return new JSprite(color);
+        return Mayonez.getUseGL() ? new GLSprite(color) : new JSprite(color);
     }
 
     // Sprite Sheet Methods
@@ -67,11 +68,17 @@ public final class Sprites {
      * @param spacing      the padding in between sprites
      * @return a sprite sheet
      */
-    public static SpriteSheet createSpriteSheet(String filename, int spriteWidth, int spriteHeight, int numSprites, int spacing) {
+    public static SpriteSheet createSpriteSheet(
+            String filename, int spriteWidth, int spriteHeight, int numSprites, int spacing
+    ) {
         if (Mayonez.getUseGL()) {
-            return new GLSpriteSheet(filename, new Vec2(spriteWidth, spriteHeight), numSprites, spacing);
+            return new GLSpriteSheet(
+                    filename, new Vec2(spriteWidth, spriteHeight), numSprites, spacing
+            );
         } else {
-            return new JSpriteSheet(filename, new Vec2(spriteWidth, spriteHeight), numSprites, spacing);
+            return new JSpriteSheet(
+                    filename, new Vec2(spriteWidth, spriteHeight), numSprites, spacing
+            );
         }
     }
 

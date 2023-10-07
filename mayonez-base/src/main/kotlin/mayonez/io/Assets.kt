@@ -1,7 +1,6 @@
 package mayonez.io
 
 import mayonez.*
-import mayonez.graphics.textures.*
 import mayonez.io.scanner.*
 import mayonez.io.text.*
 
@@ -158,38 +157,6 @@ object Assets {
         return if (notInitialized) createAsset(filename, cls)
         else asset as? T
     }
-
-    /**
-     * Retrieves the asset at the given location as a [Texture].
-     *
-     * @param filename the path to the file
-     * @return the texture, if it exists
-     */
-    @JvmStatic
-    fun getTexture(filename: String): Texture? {
-        return if (Mayonez.useGL) getAsset(filename, GLTexture::class.java)
-        else getAsset(filename, JTexture::class.java)
-    }
-
-    /**
-     * Retrieves the asset at the given location as a [GLTexture].
-     *
-     * @param filename the path to the file
-     * @return the texture, if it exists
-     */
-    @JvmStatic
-    @JvmName("getGLTexture")
-    internal fun getGLTexture(filename: String): GLTexture? = getAsset(filename, GLTexture::class.java)
-
-    /**
-     * Retrieves the asset at the given location as a [JTexture].
-     *
-     * @param filename the path to the file
-     * @return the texture, if it exists
-     */
-    @JvmStatic
-    @JvmName("getJTexture")
-    internal fun getJTexture(filename: String): JTexture? = getAsset(filename, JTexture::class.java)
 
     /** Empties all Assets from the asset pool. */
     @JvmStatic

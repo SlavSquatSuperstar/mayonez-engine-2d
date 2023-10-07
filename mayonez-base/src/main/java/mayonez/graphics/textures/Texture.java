@@ -5,8 +5,8 @@ import mayonez.math.*;
 
 /**
  * An image file used by this program. To instantiate a texture, call
- * {@link mayonez.io.Assets#getTexture}. See {@link mayonez.graphics.sprites.Sprite}
- * for more information.
+ * {@link mayonez.graphics.textures.Textures#getTexture}. See
+ * {@link mayonez.graphics.sprites.Sprite} for more information.
  *
  * @author SlavSquatSuperstar
  */

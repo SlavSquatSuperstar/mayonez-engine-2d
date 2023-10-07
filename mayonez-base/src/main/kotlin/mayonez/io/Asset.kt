@@ -1,11 +1,10 @@
 package mayonez.io
 
-import mayonez.*
 import java.io.*
 import java.nio.file.*
 
 /**
- * A resource or file used by this program. Stores a [mayonez.io.FilePath]
+ * A resource or file used by this program. Stores a [FilePath]
  * and opens input and output streams to that location. Each asset
  * must have a constructor with one string, since this is called using
  * reflection by [Assets.createAsset]

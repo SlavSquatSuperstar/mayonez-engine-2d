@@ -12,7 +12,7 @@ import java.io.ByteArrayInputStream;
 
 /**
  * An image file used by the AWT engine. This class should not be directly
- * instantiated. Instead, call {@link mayonez.io.Assets#getTexture}.
+ * instantiated. Instead, call {@link mayonez.graphics.textures.Textures#getTexture}.
  * See {@link mayonez.graphics.textures.Texture} for more information.
  *
  * @author SlavSquatSuperstar
