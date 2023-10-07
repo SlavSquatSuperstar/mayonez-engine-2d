@@ -39,9 +39,7 @@ open class Polygon(sort: Boolean, vararg vertices: Vec2) : Shape() {
     final override val numVertices: Int = this.vertices.size
 
     /** The edges that connect the vertices of this polygon. */
-    val edges: Array<Edge> = Array(numVertices) {
-        Edge(this.vertices[(it + 1) % numVertices], this.vertices[it])
-    }
+    val edges: Array<Edge> = this.vertices.toEdges()
 
     /** The faces, or unit normal vectors of each edge in this polygon. */
     val normals: Array<Vec2>
@@ -182,11 +180,25 @@ open class Polygon(sort: Boolean, vararg vertices: Vec2) : Shape() {
      */
     override fun contains(point: Vec2): Boolean {
         if (point in vertices) return true
-        // Split polygon into triangles and test each
-        for (tri in triangles) {
-            if (tri.contains(point)) return true
+        // Check if point is "inside" or on each edge
+        for (edge in edges) {
+            // Note that edges point clockwise
+            val vecAB = edge.toVector() // Start to end
+            val vecAP = point - edge.start // Start to point
+            val side = vecAB.cross(vecAP)
+            if (side > 0) return false // Outside of edge
         }
-        return false
+//        for (i in vertices.indices) {
+//            val j = (i + 1) % numVertices
+//            val start = vertices[i]
+//            val end = vertices[j]
+//
+//            val vecAB = end - start // Start to end
+//            val vecAP = point - start // Start to point
+//            val side = vecAB.cross(vecAP)
+//            if (side < 0) return false // Outside of edge
+//        }
+        return true
     }
 
     override fun equals(other: Any?): Boolean {
@@ -226,6 +238,10 @@ open class Polygon(sort: Boolean, vararg vertices: Vec2) : Shape() {
             val start = Vec2(radius, 0f)
             val angle = 360f / sides
             return Array(sides) { center + start.rotate(angle * it) }
+        }
+
+        private fun Array<Vec2>.toEdges(): Array<Edge> {
+            return Array(size) { Edge(this[(it + 1) % size], this[it]) }
         }
 
     }

@@ -15,6 +15,14 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class PolygonTest {
 
+    private static Polygon penta;
+
+    @BeforeAll
+    static void createPolygon() {
+        penta = new Polygon(new Vec2(1, 5), new Vec2(3, 1),
+                new Vec2(7, 2), new Vec2(8, 5), new Vec2(4, 7));
+    }
+
     // Vertices
 
     @Test
@@ -67,13 +75,33 @@ class PolygonTest {
         assertTrue(rect.contains(p1));
     }
 
+    // Polygon vs Point
+    @Test
+    void polygonContainsInteriorPoints() {
+        assertTrue(penta.contains(new Vec2(2, 4)));
+        assertTrue(penta.contains(new Vec2(5,3)));
+    }
+
+    @Test
+    void polygonContainsBoundaryPoints() {
+        assertTrue(penta.contains(new Vec2(2.5f, 6)));
+        assertTrue(penta.contains(new Vec2(8, 5))); // vertex
+    }
+
+    @Test
+    void polygonDoesNotContainsExteriorPoints() {
+        assertFalse(penta.contains(new Vec2(2, 0)));
+        assertFalse(penta.contains(new Vec2(2, 6)));
+        assertFalse(penta.contains(new Vec2(0, 4.5f)));
+    }
+
     // Properties
 
     // From https://en.wikipedia.org/wiki/Shoelace_formula#Example
     @Test
     void polygonAreaCorrect() {
-        var penta = new Polygon(false, new Vec2(1, 6), new Vec2(3, 1), new Vec2(7, 2),
-                new Vec2(4, 4), new Vec2(8, 5));
+        var penta = new Polygon(false, new Vec2(1, 6), new Vec2(3, 1),
+                new Vec2(7, 2), new Vec2(4, 4), new Vec2(8, 5));
         assertFloatEquals(16.5f, penta.area());
     }
 

@@ -17,12 +17,10 @@ class Edge(val start: Vec2, val end: Vec2) : Shape() {
     override val numVertices: Int = 2
 
     /** The length of the edge, l. */
-    @JvmField
     val length = start.distance(end)
 
     /** The square of the edge's length, equal to l^2. */
-    @JvmField
-    val lengthSq = length * length
+    private val lengthSq = length * length
 
     /**
      * A vector representation of this edge, equal to the end vertex minus the
