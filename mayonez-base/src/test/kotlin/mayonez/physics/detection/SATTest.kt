@@ -5,7 +5,9 @@ import mayonez.math.shapes.*
 import mayonez.physics.manifold.*
 import mayonez.test.*
 import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.*
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import java.util.*
 
 /**
  * Unit Tests for the [mayonez.physics.detection.SATDetector] class.
@@ -68,6 +70,17 @@ internal class SATTest {
         val pen = testPenetration(r1, r2, Vec2(1f, 0f))
         testContacts(pen, r1, r2, 2)
     }
+
+    // Polygon Normals
+
+    @Test
+    fun polygonNormalsPointOutward() {
+        val rect = Rectangle(Vec2(0f, 0f), Vec2(2f, 2f))
+        val normals = arrayOf(Vec2(0f, -1f), Vec2(1f, 0f), Vec2(0f, 1f), Vec2(-1f, 0f))
+        assertTrue(Objects.deepEquals(normals, rect.normals))
+    }
+
+    // Helper Methods
 
     private fun testPenetration(shape1: Shape, shape2: Shape, normal: Vec2): Penetration? {
         val pen = sat.getPenetration(shape1, shape2)

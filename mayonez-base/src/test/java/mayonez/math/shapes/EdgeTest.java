@@ -105,12 +105,21 @@ class EdgeTest {
 
     // Unit Normals
     @Test
-    void unitNormalsCorrect() { // always to the left of line vector
+    void leftUnitNormalsCorrect() {
         var e1 = new Edge(new Vec2(0, 0), new Vec2(4, 0));
-        assertEquals(new Vec2(0, 1), e1.unitNormal());
+        assertEquals(new Vec2(0, 1), e1.unitNormalLeft());
 
         var e2 = new Edge(new Vec2(4, 0), new Vec2(0, 0));
-        assertEquals(new Vec2(0, -1), e2.unitNormal());
+        assertEquals(new Vec2(0, -1), e2.unitNormalLeft());
+    }
+
+    @Test
+    void rightUnitNormalsCorrect() {
+        var e1 = new Edge(new Vec2(0, 0), new Vec2(4, 0));
+        assertEquals(new Vec2(0, -1), e1.unitNormalRight());
+
+        var e2 = new Edge(new Vec2(4, 0), new Vec2(0, 0));
+        assertEquals(new Vec2(0, 1), e2.unitNormalRight());
     }
 
     @Test

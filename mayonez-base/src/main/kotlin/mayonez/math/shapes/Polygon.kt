@@ -41,10 +41,6 @@ open class Polygon(sort: Boolean, vararg vertices: Vec2) : Shape() {
     /** The edges that connect the vertices of this polygon. */
     val edges: Array<Edge> = this.vertices.toEdges()
 
-    /** The faces, or unit normal vectors of each edge in this polygon. */
-    val normals: Array<Vec2>
-        get() = edges.map { it.unitNormal() }.toTypedArray()
-
     /**
      * Splits this polygon into n-2 triangular regions, which are guaranteed to
      * be convex and non-overlapping.
@@ -182,22 +178,11 @@ open class Polygon(sort: Boolean, vararg vertices: Vec2) : Shape() {
         if (point in vertices) return true
         // Check if point is "inside" or on each edge
         for (edge in edges) {
-            // Note that edges point clockwise
             val vecAB = edge.toVector() // Start to end
             val vecAP = point - edge.start // Start to point
-            val side = vecAB.cross(vecAP)
-            if (side > 0) return false // Outside of edge
+            val side = vecAP.cross(vecAB)
+            if (side < 0) return false // Outside of edge
         }
-//        for (i in vertices.indices) {
-//            val j = (i + 1) % numVertices
-//            val start = vertices[i]
-//            val end = vertices[j]
-//
-//            val vecAB = end - start // Start to end
-//            val vecAP = point - start // Start to point
-//            val side = vecAB.cross(vecAP)
-//            if (side < 0) return false // Outside of edge
-//        }
         return true
     }
 
@@ -242,6 +227,7 @@ open class Polygon(sort: Boolean, vararg vertices: Vec2) : Shape() {
 
         private fun Array<Vec2>.toEdges(): Array<Edge> {
             return Array(size) { Edge(this[(it + 1) % size], this[it]) }
+//            return Array(size) { Edge(this[it], this[(it + 1) % size]) }
         }
 
     }

@@ -25,7 +25,7 @@ private fun MutableList<DebugShape>.addLineAsMultiple(line: Edge, shape: DebugSh
     val stroke = shape.strokeSize
     val stretched = line.scale(Vec2((len + stroke - 1f) / len), null)
 
-    val norm = line.unitNormal()
+    val norm = line.unitNormalLeft()
     val start = (1 - stroke) * 0.5f // -(stroke - 1) / 2
 
     for (i in 0..<stroke.roundToInt()) {

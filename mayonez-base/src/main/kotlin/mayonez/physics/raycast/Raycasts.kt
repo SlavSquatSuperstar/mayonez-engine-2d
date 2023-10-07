@@ -83,16 +83,16 @@ object Raycasts {
 
     private fun raycastPolygon(poly: Polygon, ray: Ray, limit: Float): RaycastInfo? {
         val edges = poly.edges
-        // Find raycast distance to closest edge
+        // Find raycast distance to the closest edge
         val distances = edges.map { raycastEdge(it, ray, limit) }
             .map { it?.distance ?: Float.POSITIVE_INFINITY }
             .toFloatArray()
 
         val minIndex = FloatMath.minIndex(*distances)
         val minDist = distances[minIndex]
-        if (minDist == Float.POSITIVE_INFINITY) return null // no successful raycasts
+        if (minDist == Float.POSITIVE_INFINITY) return null // No successful raycasts
 
-        return RaycastInfo(ray.getPoint(minDist), edges[minIndex].unitNormal(), minDist)
+        return RaycastInfo(ray.getPoint(minDist), edges[minIndex].unitNormalLeft(), minDist)
     }
 
 }

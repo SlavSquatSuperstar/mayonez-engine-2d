@@ -29,13 +29,22 @@ class Edge(val start: Vec2, val end: Vec2) : Shape() {
     fun toVector(): Vec2 = end - start
 
     /**
-     * The unit normal vector of this edge, a vector perpendicular to this edge
-     * with a length of 1. By default, points 90 degrees counterclockwise from
-     * the vector from the start to the end.
+     * The left unit normal vector of this edge, a vector perpendicular to this
+     * edge with a length of 1. By default, points 90 degrees counterclockwise
+     * from the vector from the start to the end.
      *
-     * @return the unit normal vector
+     * @return the left unit normal
      */
-    fun unitNormal(): Vec2 = toVector().normal().unit()
+    fun unitNormalLeft(): Vec2 = toVector().normal().unit()
+
+    /**
+     * The right unit normal vector of this edge, a vector perpendicular to
+     * this edge with a length of 1. By default, points 90 degrees clockwise
+     * from the vector from the start to the end.
+     *
+     * @return the right unit normal
+     */
+    fun unitNormalRight(): Vec2 = -toVector().normal().unit()
 
     /**
      * The unit normal vector of this edge that points toward a certain
@@ -99,7 +108,7 @@ class Edge(val start: Vec2, val end: Vec2) : Shape() {
     }
 
     private fun Ray.getIntersectionsWithPlanes(segment: Edge): Pair<Vec2?, Vec2?> {
-        val planeDir = segment.unitNormal()
+        val planeDir = segment.unitNormalLeft()
         val plane1 = Ray(segment.start, planeDir)
         val plane2 = Ray(segment.end, planeDir)
 

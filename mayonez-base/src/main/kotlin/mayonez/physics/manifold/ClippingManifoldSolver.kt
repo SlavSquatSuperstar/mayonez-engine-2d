@@ -64,7 +64,7 @@ private fun Polygon.getFurthestEdge(direction: Vec2): Edge {
 
     // Check which normal is more perpendicular
     return if (
-        leftEdge.unitNormal().dot(direction) > rightEdge.unitNormal().dot(direction)
+        leftEdge.unitNormalLeft().dot(direction) > rightEdge.unitNormalLeft().dot(direction)
     ) leftEdge else rightEdge
 }
 

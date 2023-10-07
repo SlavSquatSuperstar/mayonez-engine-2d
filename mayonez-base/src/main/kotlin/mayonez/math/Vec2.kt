@@ -2,7 +2,6 @@ package mayonez.math
 
 import mayonez.annotations.*
 import mayonez.math.FloatMath.equals
-import java.lang.Math
 import java.util.*
 import kotlin.math.*
 
@@ -189,7 +188,7 @@ class Vec2(
          */
         @JvmStatic
         fun tripleProduct(v1: Vec2, v2: Vec2, v3: Vec2): Vec2 {
-            return v2 * (v1.dot(v3)) - v1 * (v2.dot(v3))
+            return (v2 * v1.dot(v3)) - (v1 * v2.dot(v3))
         }
     }
 

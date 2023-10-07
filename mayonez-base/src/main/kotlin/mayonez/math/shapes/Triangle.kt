@@ -22,7 +22,7 @@ class Triangle(private val v1: Vec2, private val v2: Vec2, private val v3: Vec2)
     val base: Float = edges[0].length
 
     /** The height of the triangle, h. */
-    val height: Float = abs(edges[1].toVector().component(edges[0].unitNormal())) // get altitude length
+    val height: Float = abs(edges[1].toVector().component(edges[0].unitNormalLeft())) // get altitude length
 
     /**
      * The area of the triangle using the shoelace formula, also equal to
