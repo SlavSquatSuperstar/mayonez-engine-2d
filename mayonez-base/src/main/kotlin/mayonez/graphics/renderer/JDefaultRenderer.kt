@@ -21,45 +21,42 @@ private val DEFAULT_STROKE: Stroke = BasicStroke(DebugDraw.DEFAULT_STROKE_SIZE)
 @UsesEngine(EngineType.AWT)
 internal class JDefaultRenderer : SceneRenderer, DebugRenderer {
 
-    // Render Data
-    private val batches: MutableList<JRenderable>
+    // Renderer Objects
     private val objects: MutableList<JRenderable> // permanent components
     private val shapes: MutableList<DebugShape> // temporary shapes
+    private val batches: MutableList<JRenderable>
 
     // Scene Information
     private lateinit var background: Sprite
-    private var screenSize: Vec2
-    private var sceneSize: Vec2
+    private val windowSize: Vec2
     private var sceneScale: Float
 
     init {
-        batches = ArrayList()
         objects = ArrayList()
         shapes = ArrayList()
+        batches = ArrayList()
 
-        screenSize = Mayonez.screenSize
-        sceneSize = Vec2(1f)
+        windowSize = Mayonez.screenSize
         sceneScale = 1f
     }
 
     // Scene Renderer Methods
 
-    override fun setScene(newScene: Scene) {
-        background = newScene.background
-        sceneSize = newScene.size
-        sceneScale = newScene.scale
+    override fun setBackground(background: Sprite) {
+        this.background = background
     }
 
-    override fun addObject(obj: GameObject) {
-        obj.components
-            .filterIsInstance(JRenderable::class.java)
-            .forEach { objects.add(it) }
+    override fun setSceneSize(sceneSize: Vec2, sceneScale: Float) {
+        background.setSpriteTransform(Transform.scaleInstance(Vec2(sceneSize)))
+        this.sceneScale = sceneScale
     }
 
-    override fun removeObject(obj: GameObject) {
-        obj.components
-            .filterIsInstance(JRenderable::class.java)
-            .forEach { objects.remove(it) }
+    override fun addRenderable(r: Renderable?) {
+        if (r is JRenderable) objects.add(r)
+    }
+
+    override fun removeRenderable(r: Renderable?) {
+        if (r is JRenderable) objects.remove(r)
     }
 
     // Debug Renderer Methods
@@ -95,19 +92,14 @@ internal class JDefaultRenderer : SceneRenderer, DebugRenderer {
     private fun drawBackgroundColor(g2: Graphics2D) {
         if (background.getTexture() == null) { // Only if no image set
             g2.color = background.getColor().toAWT()
-            g2.fillRect(0, 0, screenSize.x.roundToInt(), screenSize.y.roundToInt())
+            g2.fillRect(0, 0, windowSize.x.roundToInt(), windowSize.y.roundToInt())
         }
     }
 
     /** Render the background image, if the scene has one. */
     private fun drawBackgroundImage(g2: Graphics2D) {
-        val tex = background.getTexture() as? JTexture ?: return // Only if image set
-        tex.draw(g2, Transform.scaleInstance(Vec2(sceneSize)), null, sceneScale)
-
-//        if (background.getTexture() != null) {
-//            val tex = background.getTexture() as JTexture
-//            tex.draw(g2, Transform.scaleInstance(Vec2(sceneSize)), null, sceneScale)
-//        }
+        val tex = background.getTexture() as? JTexture ?: return // Only if image is set
+        tex.draw(g2, background.getSpriteTransform(), null, sceneScale)
     }
 
     /** Transform the screen and render everything at the new position. */

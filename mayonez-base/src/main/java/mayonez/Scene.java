@@ -9,6 +9,8 @@ import mayonez.graphics.textures.*;
 import mayonez.math.Random;
 import mayonez.math.*;
 import mayonez.physics.*;
+import mayonez.physics.colliders.*;
+import mayonez.physics.dynamics.*;
 import mayonez.util.*;
 
 import java.awt.*;
@@ -100,7 +102,7 @@ public abstract class Scene {
         init();
         startSceneLayers();
         state = SceneState.RUNNING;
-        addObjectsToLayers();
+        objects.forEach(this::addObjectToLayers);
     }
 
     private void addCameraToScene() {
@@ -122,16 +124,10 @@ public abstract class Scene {
 
     private void startSceneLayers() {
         renderer.start();
-        renderer.setScene(this);
+        renderer.setBackground(background);
+        renderer.setSceneSize(size, scale);
         if (separateDebugRenderer()) debugRenderer.start();
-        physics.clearObjects();
-    }
-
-    private void addObjectsToLayers() {
-        objects.forEach(o -> {
-            renderer.addObject(o);
-            physics.addObject(o);
-        });
+        physics.clearBodies();
     }
 
     // Update Methods
@@ -205,7 +201,7 @@ public abstract class Scene {
     private void clearSceneLayers() {
         renderer.stop();
         if (separateDebugRenderer()) debugRenderer.stop();
-        physics.clearObjects();
+        physics.clearBodies();
         state = SceneState.STOPPED;
     }
 
@@ -234,12 +230,6 @@ public abstract class Scene {
         }
     }
 
-    private void addAndStartObject(GameObject o) {
-        o.setScene(this);
-        objects.add(o);
-        o.start(); // add components first so renderer and physics can access it
-    }
-
     private void addObjectToStoppedScene(GameObject o) {
         addAndStartObject(o);
         Logger.debug("Added object \"%s\" to scene \"%s\"",
@@ -248,10 +238,23 @@ public abstract class Scene {
 
     private void addObjectToRunningScene(GameObject o) {
         addAndStartObject(o);
-        renderer.addObject(o);
-        physics.addObject(o);
+        addObjectToLayers(o);
         Logger.debug("Added object \"%s\" to scene \"%s\"",
                 o.getNameAndID(), this.name);
+    }
+
+    private void addAndStartObject(GameObject o) {
+        objects.add(o);
+        o.setScene(this);
+        o.start(); // Add components first so renderer and physics can access it
+    }
+
+    private void addObjectToLayers(GameObject o) {
+        for (Component c : o.getComponents()) {
+            if (c instanceof Renderable r) renderer.addRenderable(r);
+            else if (c instanceof PhysicsBody b) physics.addPhysicsBody(b);
+            else if (c instanceof CollisionBody b) physics.addCollisionBody(b);
+        }
     }
 
     /**
@@ -266,8 +269,11 @@ public abstract class Scene {
 
     private void removeObjectFromLayers(GameObject o) {
         objects.remove(o);
-        renderer.removeObject(o);
-        physics.removeObject(o);
+        for (Component c : o.getComponents()) {
+            if (c instanceof Renderable r) renderer.removeRenderable(r);
+            else if (c instanceof PhysicsBody b) physics.removePhysicsBody(b);
+            else if (c instanceof CollisionBody b) physics.removeCollisionBody(b);
+        }
         o.onDestroy();
         Logger.debug("Removed object \"%s\" from scene \"%s\"",
                 o.getNameAndID(), this.name);
@@ -346,10 +352,6 @@ public abstract class Scene {
     }
 
     // Getters and Setters
-
-    public Sprite getBackground() {
-        return background;
-    }
 
     /**
      * Sets the background color of this scene. Defaults to white.

@@ -7,7 +7,8 @@ import mayonez.physics.dynamics.*
 import mayonez.physics.manifold.*
 
 /**
- * An object's physical shape in the world that responds to collision.
+ * An object's physical shape in the world that responds to collisions with
+ * other shapes.
  *
  * @author SlavSquatSuperstar
  */
@@ -35,14 +36,38 @@ interface CollisionBody {
 
     // Shape Properties
 
+    /**
+     * Get the axis-aligned bounding box (AABB) of this shape in world
+     * coordinates.
+     *
+     * @return the bounding box
+     */
     fun getMinBounds(): BoundingBox
 
+    /**
+     * Get the mass of this shape in world space given a density.
+     *
+     * @param density the density, equal to mass / area
+     * @return the mass
+     */
     fun getMass(density: Float): Float
 
+    /**
+     * Get the angular mass (moment of inertia) of this shape in world space
+     * given a mass.
+     *
+     * @param mass the mass
+     * @return the angular mass
+     */
     fun getAngMass(mass: Float): Float
 
-    /** Transforms this shape into world space. */
+    /**
+     * Transforms this shape into world space.
+     *
+     * @return the shape
+     */
     fun getShape(): Shape
+
 
     // Collision Methods
 
@@ -76,7 +101,7 @@ interface CollisionBody {
 
     // Object Overrides
 
-    override fun equals(other: Any?): Boolean;
+    override fun equals(other: Any?): Boolean
 
     override fun hashCode(): Int
 

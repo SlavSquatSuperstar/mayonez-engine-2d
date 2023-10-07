@@ -7,7 +7,7 @@ import mayonez.physics.colliders.*
 import kotlin.math.*
 
 /**
- * A solid, massive object that responds to forces and collisions. Rigid
+ * A solid object that moves and responds to forces and collisions. Rigid
  * bodies do not deform when forces are applied to them.
  *
  * @author SlavSquatSuperstar
@@ -108,9 +108,14 @@ class Rigidbody(mass: Float, drag: Float, angDrag: Float) : Component(), Physics
         return this
     }
 
-    /** Whether this object is affected by gravity. */
     private var followsGravity: Boolean = true
 
+    /**
+     * Set whether this object is affected by gravity.
+     *
+     * @param followsGravity if the body should follow gravity
+     * @return this rigidbody
+     */
     fun setFollowsGravity(followsGravity: Boolean): Rigidbody {
         this.followsGravity = followsGravity
         return this
@@ -118,6 +123,12 @@ class Rigidbody(mass: Float, drag: Float, angDrag: Float) : Component(), Physics
 
     private var fixedRotation: Boolean = false
 
+    /**
+     * Set whether this object should rotate.
+     *
+     * @param fixedRotation if the body should rotate
+     * @return this rigidbody
+     */
     fun setFixedRotation(fixedRotation: Boolean): Rigidbody {
         this.fixedRotation = fixedRotation
         return this
@@ -192,12 +203,5 @@ class Rigidbody(mass: Float, drag: Float, angDrag: Float) : Component(), Physics
     override fun addAngularVelocity(angVelocity: Float) {
         this.angVelocity += angVelocity
     }
-
-    // Velocity at Point Methods
-
-    override fun getPointVelocity(point: Vec2): Vec2 {
-        return velocity + (point - position).cross(FloatMath.toRadians(-angVelocity))
-    }
-
 
 }

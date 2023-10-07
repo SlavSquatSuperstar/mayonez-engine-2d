@@ -1,6 +1,5 @@
 package mayonez.physics
 
-import mayonez.*
 import mayonez.math.*
 import mayonez.physics.colliders.*
 import mayonez.physics.dynamics.*
@@ -26,39 +25,45 @@ class DefaultPhysicsWorld : PhysicsWorld {
     private val bodies: MutableList<PhysicsBody> // physical objects in the world
     private val colliders: MutableList<CollisionBody> // shapes in the world
     private val listeners: MutableSet<CollisionListener> // all collision listeners
-    // TODO use adjacency list
+    // TODO use adjacency list?
     private val collisions: MutableList<CollisionSolver> // confirmed narrowphase collisions
 
     init {
+        gravity = Vec2(0f, -PhysicsWorld.GRAVITY_CONSTANT)
         bodies = ArrayList()
         colliders = ArrayList()
         listeners = HashSet()
         collisions = ArrayList()
-        gravity = Vec2(0f, -PhysicsWorld.GRAVITY_CONSTANT)
     }
 
-    // Game Object Methods
+    // Body Methods
 
-    override fun addObject(obj: GameObject) {
-        val rb = obj.getComponent(Rigidbody::class.java)
-        if (rb != null) bodies.add(rb)
-        val col = obj.getComponent(Collider::class.java)
-        if (col != null) colliders.add(col)
+    // TODO make sure not adding duplicates
+    override fun addCollisionBody(body: CollisionBody?) {
+        colliders.add(body ?: return)
     }
 
-    override fun removeObject(obj: GameObject) {
-        bodies.remove(obj.getComponent(Rigidbody::class.java))
-        val col = obj.getComponent(Collider::class.java)
-        colliders.remove(col)
-        listeners.removeIf { it.match(col) }
+    override fun addPhysicsBody(body: PhysicsBody?) {
+        bodies.add(body ?: return)
     }
 
-    override fun clearObjects() {
+    override fun removeCollisionBody(body: CollisionBody?) {
+        colliders.remove(body ?: return)
+        listeners.removeIf { it.match(body) }
+    }
+
+    override fun removePhysicsBody(body: PhysicsBody?) {
+        bodies.remove(body ?: return)
+    }
+
+    override fun clearBodies() {
         bodies.clear()
         colliders.clear()
         listeners.clear()
         collisions.clear()
     }
+
+    // Game Object Methods
 
     /*
      * Pre-collision optimizations

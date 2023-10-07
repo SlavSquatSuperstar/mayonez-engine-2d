@@ -1,7 +1,8 @@
 package mayonez.physics
 
-import mayonez.*
 import mayonez.math.*
+import mayonez.physics.colliders.*
+import mayonez.physics.dynamics.*
 
 /**
  * A simulation containing bodies that approximate real-world physics.
@@ -26,22 +27,35 @@ interface PhysicsWorld {
     // Game Object Methods
 
     /**
-     * Add an object and its attached body and colliders to the simulation.
+     * Add a collision body to this simulation.
      *
-     * @param obj the game object to add
+     * @param body the collision body to add
      */
-    fun addObject(obj: GameObject)
+    fun addCollisionBody(body: CollisionBody?)
 
     /**
-     * Remove an object and its attached body and colliders from the
-     * simulation.
+     * Add a physics body to this simulation.
      *
-     * @param obj the game object to remove
+     * @param body the physics body to add
      */
-    fun removeObject(obj: GameObject)
+    fun addPhysicsBody(body: PhysicsBody?)
+
+    /**
+     * Removes a collision body to this simulation.
+     *
+     * @param body the collision body to remove
+     */
+    fun removeCollisionBody(body: CollisionBody?)
+
+    /**
+     * Removes a physics body to this simulation.
+     *
+     * @param body the physics body to remove
+     */
+    fun removePhysicsBody(body: PhysicsBody?)
 
     /** Removes all objects and frees any resources from the physics world. */
-    fun clearObjects()
+    fun clearBodies()
 
     // Physics Methods
 

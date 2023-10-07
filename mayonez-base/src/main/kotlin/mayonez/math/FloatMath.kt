@@ -114,7 +114,7 @@ object FloatMath {
     }
 
     /**
-     * Calculates the length of a leg of a right triangle from the hypoteneuse
+     * Calculates the length of a leg of a right triangle from the hypotenuse
      * and the other leg.
      *
      * @param hypot the length of the hypotenuse

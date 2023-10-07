@@ -1,6 +1,7 @@
 package mayonez.graphics.renderer;
 
-import mayonez.*;
+import mayonez.graphics.sprites.*;
+import mayonez.math.*;
 
 /**
  * Draws game objects and sprites in a {@link mayonez.Scene} to the screen.
@@ -10,24 +11,32 @@ import mayonez.*;
 public interface SceneRenderer extends Renderer {
 
     /**
-     * Submits a {@link mayonez.GameObject} for rendering.
+     * Sets the background color or image for the scene.
      *
-     * @param o the game object
+     * @param background the background sprite
      */
-    void addObject(GameObject o);
+    void setBackground(Sprite background);
 
     /**
-     * Removes a {@link mayonez.GameObject} from the renderer.
+     * Updates screen size and scale to the new scene.
      *
-     * @param o the game object
+     * @param sceneSize  the scene dimensions
+     * @param sceneScale the scene scale
      */
-    void removeObject(GameObject o);
+    void setSceneSize(Vec2 sceneSize, float sceneScale);
 
     /**
-     * Updates screen size and background to the new scene.
+     * Submits a drawable object for rendering.
      *
-     * @param newScene the new scene
+     * @param r the renderable
      */
-    void setScene(Scene newScene);
+    void addRenderable(Renderable r);
+
+    /**
+     * Removes a drawable object from the renderer.
+     *
+     * @param r the renderable
+     */
+    void removeRenderable(Renderable r);
 
 }

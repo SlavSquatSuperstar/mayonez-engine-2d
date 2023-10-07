@@ -3,13 +3,14 @@ package mayonez.physics.dynamics
 import mayonez.math.*
 
 /**
- * An object in the world that has position, mass, and motion.
+ * An object in the world that has position, mass, and velocity, and responds
+ * to forces.
  *
  * @author SlavSquatSuperstar
  */
 interface PhysicsBody {
 
-    // Mass
+    // Mass Properties
 
     /** The mass of the object, m, in kilograms. */
     val mass: Float
@@ -26,7 +27,7 @@ interface PhysicsBody {
     /** Whether the object is static and does not respond to forces. */
     val static: Boolean
 
-    // Position
+    // Position Properties
 
     /** The absolute position of the object in the world, in meters. */
     val position: Vec2
@@ -34,7 +35,7 @@ interface PhysicsBody {
     /** The absolute rotation of the object in the world, in degrees. */
     val rotation: Float
 
-    // Velocity
+    // Velocity Properties
 
     /**
      * The linear (translational) velocity of the body, v, in meters per
@@ -60,7 +61,7 @@ interface PhysicsBody {
      */
     val angSpeed: Float
 
-    // Physics Engine
+    // Physics Engine Properties
 
     /**
      * The [PhysicsMaterial] of this object, which defines its friction and
@@ -68,7 +69,7 @@ interface PhysicsBody {
      */
     val material: PhysicsMaterial
 
-    // Physics Loop
+    // Physics Loop Methods
 
     /**
      * Integrate net force and torque to solve for velocity and angular
@@ -144,6 +145,8 @@ interface PhysicsBody {
      * @param point a point on this body
      * @return the point's total velocity
      */
-    fun getPointVelocity(point: Vec2): Vec2
+    fun getPointVelocity(point: Vec2): Vec2 {
+        return velocity + (point - position).cross(FloatMath.toRadians(-angVelocity))
+    }
 
 }

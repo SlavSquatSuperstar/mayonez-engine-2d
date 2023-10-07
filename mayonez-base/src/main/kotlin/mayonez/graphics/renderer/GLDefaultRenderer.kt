@@ -5,6 +5,7 @@ import mayonez.annotations.*
 import mayonez.graphics.batch.*
 import mayonez.graphics.debug.*
 import mayonez.graphics.sprites.*
+import mayonez.math.*
 import mayonez.math.shapes.*
 import org.lwjgl.opengl.GL11.*
 
@@ -18,30 +19,39 @@ import org.lwjgl.opengl.GL11.*
 internal class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"),
     SceneRenderer, DebugRenderer {
 
-    private val lineStyle = LineStyle.QUADS
-    private var objects: MutableList<GLRenderable> = ArrayList() // drawable objects
-    private var shapes: MutableList<DebugShape> = ArrayList() // temporary shapes
-    private var bgBatch: RenderBatch =
-        RenderBatch(1, 0, DrawPrimitive.SPRITE)
+    // Renderer Parameters
+    private val lineStyle: LineStyle = LineStyle.QUADS
+
+    // Renderer Objects
+    private val objects: MutableList<GLRenderable>  // Drawable objects
+    private val shapes: MutableList<DebugShape> // Temporary shapes
+
+    // Scene Background
     private lateinit var background: Sprite
+    private val bgBatch: RenderBatch
+
+    init {
+        objects = ArrayList()
+        shapes = ArrayList()
+        bgBatch = RenderBatch(1, 0, DrawPrimitive.SPRITE)
+    }
 
     // Scene Renderer Methods
 
-    override fun setScene(newScene: Scene) {
-        background = newScene.background
-        background.setSpriteTransform(Transform.scaleInstance(newScene.size))
+    override fun setBackground(background: Sprite) {
+        this.background = background
     }
 
-    override fun addObject(obj: GameObject) {
-        obj.components
-            .filterIsInstance(GLRenderable::class.java)
-            .forEach { objects.add(it) }
+    override fun setSceneSize(sceneSize: Vec2, sceneScale: Float) {
+        background.setSpriteTransform(Transform.scaleInstance(sceneSize))
     }
 
-    override fun removeObject(obj: GameObject) {
-        obj.components
-            .filterIsInstance(GLRenderable::class.java)
-            .forEach { objects.remove(it) }
+    override fun addRenderable(r: Renderable?) {
+        if (r is GLRenderable) objects.add(r)
+    }
+
+    override fun removeRenderable(r: Renderable?) {
+        if (r is GLRenderable) objects.remove(r)
     }
 
     // Debug Renderer Methods

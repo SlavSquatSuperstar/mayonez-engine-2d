@@ -7,7 +7,6 @@ package mayonez
  *
  * @author SlavSquatSuperstar
  */
-@Suppress("unused")
 enum class LogLevel(private val level: Int) {
     /** Denotes that all log messages should be printed to the console. */
     ALL(0),

@@ -22,7 +22,7 @@ public final class Sprites {
     // Sprite Methods
 
     /**
-     * Automatically creates a AWT or GL sprite with a given filename depending on the current engine instance.
+     * Automatically creates an AWT or GL sprite with a given filename depending on the current engine instance.
      *
      * @param filename the texture location
      * @return a sprite
@@ -33,7 +33,7 @@ public final class Sprites {
     }
 
     /**
-     * Automatically creates a AWT or GL sprite with a given texture depending on the current engine instance.
+     * Automatically creates an AWT or GL sprite with a given texture depending on the current engine instance.
      *
      * @param texture an existing texture
      * @return a sprite
@@ -45,7 +45,7 @@ public final class Sprites {
     }
 
     /**
-     * Automatically creates a AWT or GL sprite with a given colordepending on the current engine instance.
+     * Automatically creates a AWT or GL sprite with a given color depending on the current engine instance.
      *
      * @param color the color
      * @return a sprite

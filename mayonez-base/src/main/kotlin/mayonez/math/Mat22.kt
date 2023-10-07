@@ -8,7 +8,7 @@ import java.util.*
 
 /**
  * A matrix of floats with 2 rows and 2 columns that stores values from
- * left to right, then rop to bottom..
+ * left to right, then top to bottom.
  *
  * @param mA the element at the first row and first column
  * @param mB the element at the first row and second column
