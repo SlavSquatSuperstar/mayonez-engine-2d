@@ -3,11 +3,11 @@ package mayonez.physics.detection
 import mayonez.math.*
 import mayonez.math.shapes.*
 import mayonez.physics.manifold.*
-import mayonez.test.*
-import org.junit.jupiter.api.Assertions.*
+import mayonez.test.TestUtils.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import java.util.*
 
 /**
  * Unit Tests for the [mayonez.physics.detection.SATDetector] class.
@@ -34,12 +34,12 @@ internal class SATTest {
         val r1 = Rectangle(Vec2(0f, 0f), Vec2(4f, 4f))
         val r2 = Rectangle(Vec2(4f, 1f), Vec2(4f, 4f))
         val pen = testPenetration(r1, r2, Vec2(1f, 0f))
-        TestUtils.assertFloatEquals(0f, pen!!.depth)
+        assertFloatEquals(0f, pen!!.depth)
 
         val man = testContacts(pen, r1, r2, 2)
         val pts1 = arrayOf(man!!.getContact(0), man.getContact(1))
         val pts2 = arrayOf(Vec2(2f, -1f), Vec2(2f, 2f))
-        assertArrayEquals(pts1, pts2)
+        assertVerticesEqual(pts1, pts2)
     }
 
     @Test
@@ -47,12 +47,12 @@ internal class SATTest {
         val r1 = Rectangle(Vec2(0f, 0f), Vec2(4f, 4f))
         val r2 = Rectangle(Vec2(3.9f, 0.9f), Vec2(4f, 4f))
         val pen = testPenetration(r1, r2, Vec2(1f, 0f))
-        TestUtils.assertFloatEquals(0.1f, pen!!.depth)
+        assertFloatEquals(0.1f, pen!!.depth)
 
         val man = testContacts(pen, r1, r2, 2)
         val pts1 = arrayOf(man!!.getContact(0), man.getContact(1))
         val pts2 = arrayOf(Vec2(1.9f, -1.1f), Vec2(1.9f, 2f))
-        assertArrayEquals(pts1, pts2)
+        assertVerticesEqual(pts1, pts2)
     }
 
     @Test
@@ -69,15 +69,6 @@ internal class SATTest {
         val r2 = Rectangle(Vec2(2.5f, 0f), Vec2(4f, 4f), 10f)
         val pen = testPenetration(r1, r2, Vec2(1f, 0f))
         testContacts(pen, r1, r2, 2)
-    }
-
-    // Polygon Normals
-
-    @Test
-    fun polygonNormalsPointOutward() {
-        val rect = Rectangle(Vec2(0f, 0f), Vec2(2f, 2f))
-        val normals = arrayOf(Vec2(0f, -1f), Vec2(1f, 0f), Vec2(0f, 1f), Vec2(-1f, 0f))
-        assertTrue(Objects.deepEquals(normals, rect.normals))
     }
 
     // Helper Methods

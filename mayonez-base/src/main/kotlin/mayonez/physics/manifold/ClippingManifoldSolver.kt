@@ -64,7 +64,7 @@ private fun Polygon.getFurthestEdge(direction: Vec2): Edge {
 
     // Check which normal is more perpendicular
     return if (
-        leftEdge.unitNormalLeft().dot(direction) > rightEdge.unitNormalLeft().dot(direction)
+        leftEdge.unitNormalRight().dot(direction) > rightEdge.unitNormalRight().dot(direction)
     ) leftEdge else rightEdge
 }
 
@@ -104,7 +104,8 @@ private fun createManifoldWithTwoPoints(
 
     // Clip incident edge
     val clippedEdge = incEdge.clipToSegment(refEdge)
-    manifold.addContactsFromEdges(refEdge, clippedEdge, colNormal, shape1, shape2, swapShapes)
+    val incShape = if (swapShapes) shape2 else shape1
+    manifold.addContactsFromEdges(incShape, refEdge, clippedEdge, colNormal)
     return manifold
 }
 
@@ -123,20 +124,18 @@ private fun createManifoldForTwoEdges(
 }
 
 private fun Manifold.addContactsFromEdges(
-    refEdge: Edge, clippedEdge: Edge, colNormal: Vec2,
-    shape1: Shape, shape2: Shape, swapShapes: Boolean
+    incShape: Shape, refEdge: Edge, clippedEdge: Edge, colNormal: Vec2
 ) {
     val incEdgeLength = refEdge.start.dot(colNormal)
-    val incShape = if (swapShapes) shape2 else shape1
     for (pt in arrayOf(clippedEdge.start, clippedEdge.end)) {
-        if (pt.isClippedInsideShape(colNormal, incEdgeLength, incShape)) {
+        if (pt.isClippedInsideShape(incShape, colNormal, incEdgeLength)) {
             this.addContact(pt)
         }
     }
 }
 
 private fun Vec2.isClippedInsideShape(
-    colNormal: Vec2, incEdgeLength: Float, incShape: Shape
+    incShape: Shape, colNormal: Vec2, incEdgeLength: Float
 ): Boolean {
     return (dot(colNormal) <= incEdgeLength) && (this in incShape)
 }

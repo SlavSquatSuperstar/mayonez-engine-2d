@@ -92,7 +92,7 @@ object Raycasts {
         val minDist = distances[minIndex]
         if (minDist == Float.POSITIVE_INFINITY) return null // No successful raycasts
 
-        return RaycastInfo(ray.getPoint(minDist), edges[minIndex].unitNormalLeft(), minDist)
+        return RaycastInfo(ray.getPoint(minDist), edges[minIndex].unitNormalRight(), minDist)
     }
 
 }

@@ -3,6 +3,8 @@ package mayonez.math.shapes;
 import mayonez.math.*;
 import org.junit.jupiter.api.*;
 
+import java.util.*;
+
 import static mayonez.test.TestUtils.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -108,6 +110,13 @@ class PolygonTest {
         var rect = new Rectangle(new Vec2(2, 2), new Vec2(4, 4)); // 4x4 var at (0, 0)
         assertEquals(new Vec2(0, 0), rect.supportPoint(new Vec2(-1, -1)));
         assertEquals(new Vec2(4, 4), rect.supportPoint(new Vec2(1, 2)));
+    }
+
+    @Test
+    void polygonNormalsPointOutward() {
+        var rect = new Rectangle(new Vec2(0, 0), new Vec2(2, 2));
+        var normals = new Vec2[]{new Vec2(0, -1), new Vec2(1, 0), new Vec2(0, 1), new Vec2(-1, 0)};
+        assertTrue(Objects.deepEquals(normals, rect.getNormals()));
     }
 
 }
