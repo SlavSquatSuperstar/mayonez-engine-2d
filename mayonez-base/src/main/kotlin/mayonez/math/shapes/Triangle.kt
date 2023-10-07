@@ -25,23 +25,14 @@ class Triangle(private val v1: Vec2, private val v2: Vec2, private val v3: Vec2)
     val height: Float = abs(edges[1].toVector().component(edges[0].unitNormal())) // get altitude length
 
     /**
-     * The area of the triangle using the shoelace formula, equal
-     * to 1/2*bh. The shoelace formula specifies the area as
-     * 1/2 * [(v1 × v2) + (v2 × v3) + (v3 × v1)]. Expansion and simplification
-     * gives the determinant as (x1 - x3)(y2 - y3) - (x2 - x3)(y1 - y3).
+     * The area of the triangle using the shoelace formula, also equal to
+     * 1/2*bh. Using the shoelace formula, the area can be calculated as half
+     * the absolute value of the cross product of any two edges.
      */
     override fun area(): Float {
-        try {
-            // more efficient because fewer multiplications
-            return 0.5f * abs((v1.x - v3.x) * (v2.y - v3.y) - (v2.x - v3.x) * (v1.y - v3.y))
-//        return 0.5f * abs(
-//            vertices[0].cross(vertices[1]) + vertices[1].cross(vertices[2]) +
-//                    vertices[2].cross(vertices[0])
-//        )
-        } catch (e: ArrayIndexOutOfBoundsException) {
-//            println(vertices.contentToString())
-            throw e
-        }
+        val vecAB = v2 - v1
+        val vecAC = v3 - v1
+        return 0.5f * abs(vecAB.cross(vecAC))
     }
 
     /**
@@ -64,6 +55,19 @@ class Triangle(private val v1: Vec2, private val v2: Vec2, private val v3: Vec2)
      */
     override fun angularMass(mass: Float): Float {
         if (polarMoment == null) {
+            val center = center()
+            polarMoment = 0f
+
+            for (i in 0..1) {
+                val ptA = vertices[i]
+                val ptB = vertices[i + 1]
+                val vecAC = center - ptA
+                val vecBC = center - ptB
+                val cross = vecAC.cross(vecBC)
+                polarMoment = polarMoment!! + cross
+            }
+//            polarMoment = polarMoment!! * area()
+
             val offset = base - FloatMath.invHypot(edges[2].length, height)
             polarMoment = (FloatMath.hypotSq(base, height) + offset * (offset - base)) / 18f
         }
@@ -85,15 +89,44 @@ class Triangle(private val v1: Vec2, private val v2: Vec2, private val v3: Vec2)
 
     // Overrides
 
+    /**
+     * Computes efficiently whether the point is inside the triangle.
+     *
+     * We can parameterize a point in relation to the origin and two axes as P
+     * = 0 + w1 * V1 + w2 * V2, where w1 and w2 are the distances along each
+     * axis.
+     *
+     * If we use the vertex A as the origin, and the edges AB and AC as axes,
+     * then we can establish P = A + w1 * AB + w2 * AC, or AP = w1 * AB + w2 *
+     * AC, where AP is the vector from A to P.
+     *
+     * We can solve for the weights by w1 = (AC x AP)/(AC x AB) and w2 = -(AB
+     * x AP)/(AC x AB). If both w1 ≥ 0 and w2 ≥ 0 and w1 + w2 ≤ 1, then P is
+     * inside the triangle.
+     *
+     * Sources:
+     * - [Sebastian Lague](https://www.youtube.com/watch?v=HYAgJN3x4GA)
+     * - org.dyn4j.geometry.Triangle#contains
+     *
+     * @param point the point to check
+     * @return the scaled shape
+     */
     override fun contains(point: Vec2): Boolean {
         if (point in vertices) return true
 
-        // divide triangle into three triangles
-        // sum area and compare to original area
-        val areas = FloatArray(3) {
-            Triangle(vertices[it], vertices[(it + 1) % 3], point).area()
-        }
-        return areas.sum() <= this.area()
+        val vecAB = v2 - v1
+        val vecAC = v3 - v1
+        val vecAP = point - v1
+
+        val denom = vecAC.cross(vecAB)
+        val invDenom = 1f / denom
+        val w1 = vecAC.cross(vecAP) * invDenom
+        if (w1 < 0f) return false // Fail early if w1 < 0
+
+        val w2 = -vecAB.cross(vecAP) * invDenom
+        if (w2 < 0f) return false // Fail early if w2 < 0
+
+        return w1 + w2 <= 1f
     }
 
     override fun equals(other: Any?): Boolean {

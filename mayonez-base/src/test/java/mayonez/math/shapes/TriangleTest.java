@@ -46,8 +46,9 @@ class TriangleTest {
 
     @Test
     void boundaryPointInTri() {
-        assertTrue(tri.contains(new Vec2(-1, -1)));
         assertTrue(tri.contains(new Vec2(3, -1)));
+        assertTrue(tri.contains(new Vec2(2, 2)));
+        assertTrue(tri.contains(new Vec2(-1, -1))); // vertex
     }
 
     @Test

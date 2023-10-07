@@ -174,8 +174,11 @@ open class Polygon(sort: Boolean, vararg vertices: Vec2) : Shape() {
     // Overrides
 
     /**
-     * Whether the point is inside the polygon. Results only guaranteed for
+     * Whether the point is inside the polygon. Results are only guaranteed for
      * convex polygons.
+     *
+     * @param point the point to check
+     * @return the scaled shape
      */
     override fun contains(point: Vec2): Boolean {
         if (point in vertices) return true

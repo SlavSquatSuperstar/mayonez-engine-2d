@@ -99,7 +99,7 @@ open class Ellipse(protected val center: Vec2, val size: Vec2, val angle: Float)
      * non-uniform curvature of an ellipse, the support point is not equivalent
      * to the ellipse's radius vector in that direction (see [getRadius]).
      *
-     * Source: org.dyn4j.geometry.Ellipse.getFarthestPointOnAlignedEllipse
+     * Source: org.dyn4j.geometry.Ellipse#getFarthestPointOnAlignedEllipse
      */
     override fun supportPoint(direction: Vec2): Vec2 {
         var localDir = direction.rotate(-angle)
