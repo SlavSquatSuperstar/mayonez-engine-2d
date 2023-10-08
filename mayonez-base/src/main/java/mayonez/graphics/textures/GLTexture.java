@@ -1,10 +1,10 @@
 package mayonez.graphics.textures;
 
-import mayonez.*;
 import mayonez.annotations.*;
 import mayonez.io.image.*;
 import mayonez.math.*;
 import mayonez.math.shapes.*;
+import mayonez.util.*;
 import org.lwjgl.BufferUtils;
 
 import java.io.IOException;

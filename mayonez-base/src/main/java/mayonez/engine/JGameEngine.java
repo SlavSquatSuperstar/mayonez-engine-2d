@@ -1,7 +1,7 @@
 package mayonez.engine;
 
-import mayonez.*;
 import mayonez.annotations.*;
+import mayonez.util.*;
 
 /**
  * An instance of this game using Java's AWT and Swing libraries.

@@ -1,9 +1,9 @@
-package mayonez
+package mayonez.util
 
 import java.time.LocalDateTime
 
 /**
- * A class for managing time based variables.
+ * Tracks the time since the application started.
  *
  * @author SlavSquatSuperstar
  */
@@ -18,7 +18,7 @@ object Time {
     // Static Properties
     @JvmStatic
     var timeStepSecs = DEFAULT_TIME_STEP_SECS
-        internal set(timeStepSecs) {
+        set(timeStepSecs) {
             if (timeStepSecs > 0 && timeStepSecs.isFinite()) {
                 field = timeStepSecs
             }
@@ -44,7 +44,7 @@ object Time {
 
     // Debug Methods
 
-    internal fun debugCurrentDateTime() {
+    fun debugCurrentDateTime() {
         val now = LocalDateTime.now()
         Logger.debug("Currently it is %s", now)
     }

@@ -1,7 +1,7 @@
 package mayonez.io.text;
 
-import mayonez.*;
 import mayonez.io.*;
+import mayonez.util.*;
 
 import java.io.IOException;
 

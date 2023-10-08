@@ -1,7 +1,7 @@
 package mayonez.config
 
 import mayonez.io.text.*
-import mayonez.util.*
+import mayonez.util.Record
 
 /**
  * Reads user preferences from a file into a [Record].
@@ -28,7 +28,7 @@ open class GameConfig(
      *
      * @param rules any number of rules to apply
      */
-    protected fun validateUserPreferences(vararg rules: PreferenceValidator<*>) {
+    protected fun validateUserPreferences(vararg rules: mayonez.config.PreferenceValidator<*>) {
         rules.forEach { rule -> rule.validate(this, defaults) }
     }
 

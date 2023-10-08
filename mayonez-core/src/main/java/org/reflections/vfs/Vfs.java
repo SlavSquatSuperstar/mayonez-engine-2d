@@ -1,6 +1,6 @@
 package org.reflections.vfs;
 
-import mayonez.*;
+import mayonez.util.*;
 
 import java.net.URL;
 

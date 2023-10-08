@@ -17,7 +17,6 @@ module mayonez.base {
 
     // Other Dependencies
     requires org.joml;
-    requires org.json;
 
     // Subprojects
     requires transitive mayonez.core;
@@ -26,10 +25,6 @@ module mayonez.base {
 
     // Base Module
     exports mayonez;
-    exports mayonez.config;
-    exports mayonez.io;
-    exports mayonez.io.image;
-    exports mayonez.io.text;
     exports mayonez.launcher;
 
     // Renderer

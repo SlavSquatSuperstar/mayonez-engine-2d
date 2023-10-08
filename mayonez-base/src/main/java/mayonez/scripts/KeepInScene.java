@@ -5,6 +5,7 @@ import mayonez.math.*;
 import mayonez.math.shapes.*;
 import mayonez.physics.colliders.*;
 import mayonez.physics.dynamics.*;
+import mayonez.util.*;
 
 /**
  * Dictates what happens when an object reaches the edge of the scene.

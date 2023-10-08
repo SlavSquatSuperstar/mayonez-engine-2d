@@ -1,6 +1,5 @@
 package mayonez.config
 
-import mayonez.*
 import mayonez.math.*
 import mayonez.util.*
 import java.util.function.Predicate

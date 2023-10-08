@@ -5,7 +5,7 @@ package mayonez.config
  *
  * @author SlavSquatSuperstar
  */
-internal data class LoggerConfig(
+data class LoggerConfig(
     /** Whether to save logged messages to log files. */
     val saveLogs: Boolean,
     /** The minimum priority required to print messages to the console. */

@@ -4,6 +4,7 @@ import mayonez.*;
 import mayonez.annotations.*;
 import mayonez.input.keyboard.*;
 import mayonez.input.mouse.*;
+import mayonez.util.*;
 
 import javax.swing.*;
 import java.awt.*;

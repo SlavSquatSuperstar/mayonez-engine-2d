@@ -1,4 +1,4 @@
-package mayonez
+package mayonez.util
 
 /**
  * Different logger priority levels to be used ƒor reporting different

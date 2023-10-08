@@ -7,7 +7,7 @@ import mayonez.util.*
  *
  * @author SlavSquatSuperstar
  */
-internal object Defaults {
+object Defaults {
 
     // Application
     private const val TITLE: String = "<No Title>"
@@ -18,7 +18,7 @@ internal object Defaults {
     private const val SCREEN_HEIGHT: Int = 800
     private const val FPS: Int = 60
 
-    internal val preferences: Record = Record()
+    val preferences: Record = Record()
 
     init {
         // Application

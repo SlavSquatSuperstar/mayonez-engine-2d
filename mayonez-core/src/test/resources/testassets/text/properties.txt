@@ -1,0 +1,6 @@
+name=Mayonez Engine
+version=0.7
+author=Slavic Superstar
+birthday=12-26-1991
+in_progress=true
+languages=Java,Kotlin

@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class ConstructorTest {
     
-    private static final String TEST_FILENAME = "src/test/resources/testassets/text/properties.txt";
+    private static final String TEST_FILENAME = "src/test/resources/mayonez/javatests/properties.txt";
 
     @Test
     void newSuperclassInstanceSuccess() throws Exception {

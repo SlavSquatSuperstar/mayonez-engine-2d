@@ -1,23 +1,27 @@
 package mayonez.io
 
-import mayonez.*
 import mayonez.io.scanner.*
 import mayonez.io.text.*
+import mayonez.util.*
 
 /**
- * Manages the application's resources and allows users to create and retrieve new [Asset] files.
+ * Manages the application's resources and allows users to create and
+ * retrieve new [Asset] files.
  *
- * Usage: Upon startup, the program automatically scans the `assets/` folder under `src/main/resources`
- * or inside the .jar and adds all files to the asset pool. The user can scan any classpath folders
- * using [Assets.scanFiles] or external folders using [Assets.scanResources]. All resource paths
- * start inside the jar, while all external paths are relative the folder containing the jar.
- * To create an individual asset, the user may call [Assets.createAsset], and the asset system will
- * first search for a classpath resource, and then an external file.
+ * Usage: Upon startup, the program automatically scans the `assets/`
+ * folder under `src/main/resources` or inside the .jar and adds all
+ * files to the asset pool. The user can scan any classpath folders using
+ * [Assets.scanFiles] or external folders using [Assets.scanResources].
+ * All resource paths start inside the jar, while all external paths
+ * are relative the folder containing the jar. To create an individual
+ * asset, the user may call [Assets.createAsset], and the asset system
+ * will first search for a classpath resource, and then an external file.
  *
- * To retrieve a created asset,
- * call [Assets.getAsset]. The user may optionally supply a subclass of [Asset] with [Assets.getAsset],
- * which will initialize that asset as an instance of that class. For example, calling
- * `Assets.getAsset("info.txt", TextFile.class)` will return a [TextFile] with the name `info.txt`.
+ * To retrieve a created asset, call [Assets.getAsset]. The user may
+ * optionally supply a subclass of [Asset] with [Assets.getAsset], which
+ * will initialize that asset as an instance of that class. For example,
+ * calling `Assets.getAsset("info.txt", TextFile.class)` will return a
+ * [TextFile] with the name `info.txt`.
  *
  * See [Asset] for more details.
  *
@@ -38,7 +42,7 @@ object Assets {
         initialize()
     }
 
-    internal fun initialize() {
+    fun initialize() {
         if (!initialized) {
             // Create the singleton object and the map
             Logger.debug("Current launch directory at ${System.getProperty("user.dir")}")
@@ -46,7 +50,7 @@ object Assets {
         }
     }
 
-    internal fun loadResources() {
+    fun loadResources() {
         if (!loadedResources) {
             Logger.debug("Loading program assets...")
             scanResources(ASSETS_ROOT_DIR)
