@@ -1,6 +1,7 @@
 package mayonez
 
 import mayonez.engine.*
+import mayonez.input.*
 import mayonez.io.*
 import mayonez.launcher.*
 import mayonez.math.*
@@ -95,6 +96,8 @@ object Mayonez {
     private fun initializeGame() {
         if (!this::game.isInitialized) {
             game = EngineFactory.createGameEngine(useGL)
+            KeyInput.setUseGL(useGL)
+            MouseInput.setUseGL(useGL)
             Logger.debug("Using \"%s\" engine", if (useGL) "GL" else "AWT")
         }
     }

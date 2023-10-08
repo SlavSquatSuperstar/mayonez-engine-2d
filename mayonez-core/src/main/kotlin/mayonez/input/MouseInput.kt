@@ -1,8 +1,6 @@
 package mayonez.input
 
-import mayonez.*
 import mayonez.math.*
-import org.lwjgl.glfw.GLFW
 import java.awt.event.*
 import kotlin.math.*
 
@@ -32,10 +30,29 @@ object MouseInput : MouseAdapter() {
     // Mouse Scroll Fields
     private var scroll = Vec2()
 
+    // Game Fields
+    private var useGL: Boolean = false
+    private var invSceneScale: Float = 1f
+    private var pointXf: PointTransformer? = null
+
+    // Game Methods
+
+    fun setUseGL(useGL: Boolean) {
+        this.useGL = useGL
+    }
+
+    fun setSceneScale(sceneScale: Float) {
+        this.invSceneScale = 1f / sceneScale
+    }
+
+    fun setPointTransformer(pointXf: PointTransformer) {
+        this.pointXf = pointXf
+    }
+
     // Game Loop Methods
 
-    @JvmName("endFrame")
-    internal fun endFrame() {
+    /** Poll mouse events from the window. */
+    fun endFrame() {
         // Update mouse input
         pollMouseButtons()
 
@@ -66,18 +83,17 @@ object MouseInput : MouseAdapter() {
      * @param action the event type
      * @param mods any modifier keys
      */
-    @JvmName("mouseButtonCallback")
-    internal fun mouseButtonCallback(window: Long, button: Int, action: Int, mods: Int) {
+    fun mouseButtonCallback(window: Long, button: Int, action: Int, mods: Int) {
         if (!button.isValidIndex()) return
         lastButton = button
         lastAction = action
         when (action) {
-            GLFW.GLFW_PRESS -> {
+            org.lwjgl.glfw.GLFW.GLFW_PRESS -> {
                 setButtonDown(button, true)
                 pressed = true
             }
 
-            GLFW.GLFW_RELEASE -> {
+            org.lwjgl.glfw.GLFW.GLFW_RELEASE -> {
                 setButtonDown(button, false)
                 pressed = false
             }
@@ -107,8 +123,7 @@ object MouseInput : MouseAdapter() {
      * @param xPos the x position of the cursor
      * @param yPos the y position of the cursor
      */
-    @JvmName("mousePosCallback")
-    internal fun mousePosCallback(window: Long, xPos: Double, yPos: Double) {
+    fun mousePosCallback(window: Long, xPos: Double, yPos: Double) {
         if (pressed) {
             setMouseDisp(xPos - mousePosPx.x, yPos - mousePosPx.y)
         }
@@ -134,8 +149,7 @@ object MouseInput : MouseAdapter() {
      * @param xOffset the x offset of the scroll wheel
      * @param yOffset the y offset of the scroll wheel
      */
-    @JvmName("mouseScrollCallback")
-    internal fun mouseScrollCallback(window: Long, xOffset: Double, yOffset: Double) {
+    fun mouseScrollCallback(window: Long, xOffset: Double, yOffset: Double) {
         setScrollPos(xOffset, yOffset)
     }
 
@@ -156,7 +170,7 @@ object MouseInput : MouseAdapter() {
     fun buttonDown(button: Button?): Boolean {
         return when {
             button == null -> false
-            Mayonez.useGL -> buttonDown(button.glCode)
+            useGL -> buttonDown(button.glCode)
             else -> buttonDown(button.awtCode)
         }
     }
@@ -172,7 +186,7 @@ object MouseInput : MouseAdapter() {
     fun buttonPressed(button: Button?): Boolean {
         return when {
             button == null -> false
-            Mayonez.useGL -> buttonPressed(button.glCode)
+            useGL -> buttonPressed(button.glCode)
             else -> buttonPressed(button.awtCode)
         }
     }
@@ -217,7 +231,7 @@ object MouseInput : MouseAdapter() {
      * @return the world position
      */
     @JvmStatic
-    fun getPosition(): Vec2 = SceneManager.currentScene.camera.toWorld(mousePosPx)
+    fun getPosition(): Vec2 = pointXf?.toWorld(mousePosPx) ?: Vec2()
 
     /**
      * Get the drag displacement of the cursor on the screen, in pixels.
@@ -274,7 +288,7 @@ object MouseInput : MouseAdapter() {
 
     private fun Vec2.invertY(): Vec2 = this * Vec2(1f, -1f)
 
-    private fun Vec2.toWorld(): Vec2 = this / SceneManager.currentScene.scale
+    private fun Vec2.toWorld(): Vec2 = this * invSceneScale
 
     // Mouse Scroll Helper Methods
 

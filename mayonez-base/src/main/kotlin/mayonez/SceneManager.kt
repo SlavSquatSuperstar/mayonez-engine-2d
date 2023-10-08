@@ -1,5 +1,6 @@
 package mayonez
 
+import mayonez.input.*
 import mayonez.launcher.*
 import java.awt.*
 
@@ -100,6 +101,8 @@ object SceneManager {
     internal fun startScene() {
         if (sceneState == SceneState.STOPPED) {
             currentScene.start()
+            MouseInput.setSceneScale(currentScene.scale)
+            MouseInput.setPointTransformer(currentScene.camera)
             Logger.debug("Started scene \"${currentScene.name}\"")
         }
     }

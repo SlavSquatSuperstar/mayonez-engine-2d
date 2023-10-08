@@ -1,8 +1,6 @@
 package mayonez.input
 
-import mayonez.*
 import mayonez.event.*
-import org.lwjgl.glfw.GLFW
 import java.awt.event.*
 
 /**
@@ -22,11 +20,18 @@ object KeyInput : KeyAdapter() {
     private const val INITIAL_NUM_KEYS = 64
     private val keys: MutableMap<Int, MappingStatus?> = HashMap(INITIAL_NUM_KEYS)
 
+    // Game Fields
+    private var useGL: Boolean = false
+
+    // Game Methods
+    fun setUseGL(useGL: Boolean) {
+        this.useGL = useGL
+    }
+
     // Game Loop Methods
 
     /** Poll key events from the window. */
-    @JvmName("endFrame")
-    internal fun endFrame() { // TODO rename to pollKeys?
+    fun endFrame() { // TODO rename to pollKeys?
         for (key in keys.values) {
             when {
                 key == null -> continue
@@ -47,13 +52,12 @@ object KeyInput : KeyAdapter() {
      * @param action the event type
      * @param mods any modifier keys
      */
-    @JvmName("keyCallback")
-    internal fun keyCallback(window: Long, key: Int, scancode: Int, action: Int, mods: Int) {
+    fun keyCallback(window: Long, key: Int, scancode: Int, action: Int, mods: Int) {
         when (action) {
             // TODO GL double pressing still occurs
-            GLFW.GLFW_PRESS -> setKeyDown(key, true)
-            GLFW.GLFW_REPEAT -> setKeyDown(key, true)
-            GLFW.GLFW_RELEASE -> setKeyDown(key, false)
+            org.lwjgl.glfw.GLFW.GLFW_PRESS -> setKeyDown(key, true)
+            org.lwjgl.glfw.GLFW.GLFW_REPEAT -> setKeyDown(key, true)
+            org.lwjgl.glfw.GLFW.GLFW_RELEASE -> setKeyDown(key, false)
         }
         EventSystem.broadcast(KeyboardEvent(key, scancode, action, mods))
         endFrame()
@@ -83,7 +87,7 @@ object KeyInput : KeyAdapter() {
     fun keyDown(key: Key?): Boolean {
         return when {
             key == null -> false
-            Mayonez.useGL -> keyDown(key.glCode)
+            useGL -> keyDown(key.glCode)
             else -> keyDown(key.awtCode)
         }
     }
@@ -99,7 +103,7 @@ object KeyInput : KeyAdapter() {
     fun keyPressed(key: Key?): Boolean {
         return when {
             key == null -> false
-            Mayonez.useGL -> keyPressed(key.glCode)
+            useGL -> keyPressed(key.glCode)
             else -> keyPressed(key.awtCode)
         }
     }

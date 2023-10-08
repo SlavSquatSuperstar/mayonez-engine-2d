@@ -3,4 +3,4 @@
  *
  * @author SlavSquatSuperstar
  */
-package mayonez.test.javatests;
+package mayonez.javatests;

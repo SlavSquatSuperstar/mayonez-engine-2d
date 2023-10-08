@@ -13,6 +13,11 @@ dependencies {
     // Code Dependencies
     implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
     implementation("org.json:json:20230618")
+
+    // LWJGL Modules
+    implementation(platform("org.lwjgl:lwjgl-bom:$lwjglVersion")) // Bill of materials: set version for all libs
+
+    implementation("org.lwjgl:lwjgl-glfw")
 }
 
 // Plugins and Tasks

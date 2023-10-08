@@ -27,7 +27,6 @@ module mayonez.base {
     // Base Module
     exports mayonez;
     exports mayonez.config;
-    exports mayonez.input;
     exports mayonez.io;
     exports mayonez.io.image;
     exports mayonez.io.text;

@@ -9,9 +9,13 @@ module mayonez.core {
     requires java.desktop;
     requires kotlin.stdlib;
 
+    // LWJGL
+    requires org.lwjgl.glfw;
+
     // Public API
     exports mayonez.annotations;
     exports mayonez.event;
+    exports mayonez.input;
     exports mayonez.math;
     exports mayonez.math.shapes;
     exports mayonez.util;

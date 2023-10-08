@@ -1,4 +1,4 @@
-package mayonez.test.javatests;
+package mayonez.javatests;
 
 import mayonez.*;
 import mayonez.physics.colliders.*;

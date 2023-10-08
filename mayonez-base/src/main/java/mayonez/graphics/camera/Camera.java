@@ -2,6 +2,7 @@ package mayonez.graphics.camera;
 
 import mayonez.GameObject;
 import mayonez.Script;
+import mayonez.input.*;
 import mayonez.math.FloatMath;
 import mayonez.math.Vec2;
 
@@ -16,7 +17,7 @@ import mayonez.math.Vec2;
  */
 // TODO elastic/smooth movement
 // TODO allow drag, but snap back to subject
-public abstract class Camera extends Script {
+public abstract class Camera extends Script implements PointTransformer {
 
     // Camera Fields
     public final Vec2 screenSize;
@@ -84,14 +85,6 @@ public abstract class Camera extends Script {
         // (position * scene_scale) - (0.5 * screen_size / zoom)
         return getPosition().mul(sceneScale).sub(screenSize.mul(0.5f / getZoom()));
     }
-
-    /**
-     * Transform screen coordinates into world coordinates.
-     *
-     * @param screen a pixel on the screen
-     * @return the world position of the pixel
-     */
-    public abstract Vec2 toWorld(Vec2 screen);
 
     // Camera Effects
 
