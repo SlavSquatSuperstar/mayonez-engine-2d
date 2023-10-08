@@ -1,6 +1,5 @@
 package mayonez.config;
 
-import mayonez.config.*;
 import mayonez.util.Record;
 import org.junit.jupiter.api.*;
 

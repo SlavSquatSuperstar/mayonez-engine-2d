@@ -6,7 +6,6 @@ import org.junit.jupiter.api.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-import static mayonez.test.TestUtils.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -48,7 +47,7 @@ class JSONFileTest {
         assertEquals("Mayonez Engine", rec.getString("name")); // string
 
         assertEquals("0.7", rec.getString("version")); // string
-        assertFloatEquals(0.7f, rec.getFloat("version")); // string to float
+        assertEquals(0.7f, rec.getFloat("version")); // string to float
         assertEquals(0, rec.getInt("version")); // string to int
 
     }
@@ -58,7 +57,7 @@ class JSONFileTest {
         var rec = new JSONFile("src/test/resources/testassets/text/properties.json").readJSON();
 
         assertEquals(0, rec.getInt("version")); // int default
-        assertFloatEquals(0f, rec.getFloat("name")); // float default
+        assertEquals(0f, rec.getFloat("name")); // float default
         assertFalse(rec.getBoolean("languages")); // boolean default
         assertEquals(rec.getString("date"), ""); // string default
         assertNull(rec.get(null)); // not a key

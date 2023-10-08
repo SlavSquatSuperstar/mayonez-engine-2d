@@ -1,10 +1,6 @@
 package mayonez.util;
 
-import mayonez.*;
-import mayonez.input.*;
 import org.junit.jupiter.api.*;
-
-import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -50,36 +46,58 @@ class StringUtilsTest {
 
     @Test
     void getClassNameNonAnonymousIsClassName() {
-        var obj = new GameObject("");
-        assertEquals("GameObject", StringUtils.getObjectClassName(obj));
+        var foobar = new FooBar();
+        assertEquals("FooBar", StringUtils.getObjectClassName(foobar));
     }
 
     @Test
     void getClassNameFromAnonymousIsParent() {
-        var scene = new Scene("scene") {
+        var baz = new Baz() {
         };
-        assertEquals("Scene", StringUtils.getObjectClassName(scene));
+        assertEquals("Baz", StringUtils.getObjectClassName(baz));
     }
 
     // Find With Name Tests
 
     @Test
     void findObjectWithSpaceCorrect() {
-        var keys = new Key[] {Key.LEFT_SHIFT, Key.RIGHT_SHIFT, Key.LEFT, Key.RIGHT, Key.SPACE};
-        var name = "left shift";
-        assertEquals(Key.LEFT_SHIFT, StringUtils.findWithName(Arrays.asList(keys), name));
+        var name = "new jersey";
+        assertEquals(State.NEW_JERSEY, StringUtils.findWithName(State.values(), name));
     }
 
     @Test
     void findObjectNoSpacesCorrect() {
-        var name = "space";
-        assertEquals(Key.SPACE, StringUtils.findWithName(Key.getEntries(), name));
+        var name = "virginia";
+        assertEquals(State.VIRGINIA, StringUtils.findWithName(State.values(), name));
     }
 
     @Test
     void findObjectInvalidIsNull() {
-        var name = "joystick";
-        assertNull(StringUtils.findWithName(Key.getEntries(), name));
+        var name = "alaska";
+        assertNull(StringUtils.findWithName(State.values(), name));
+    }
+
+    private enum State {
+        FLORIDA,
+        MASSACHUSETTS,
+        NEW_JERSEY,
+        NEW_YORK,
+        TEXAS,
+        VIRGINIA,
+        WASHINGTON;
+
+        @Override
+        public String toString() {
+            return StringUtils.capitalizeAllWords(
+                    name().replace("_", " ")
+            );
+        }
+    }
+
+    private static class FooBar {
+    }
+
+    private static class Baz extends FooBar {
     }
 
 }

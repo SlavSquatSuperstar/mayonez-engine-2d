@@ -1,7 +1,5 @@
 package mayonez.util
 
-import mayonez.util.StringUtils.toString
-
 /**
  * A collection of utility functions for manipulating text data.
  *
@@ -57,7 +55,20 @@ object StringUtils {
     }
 
     /**
-     * Finds the first object in the given collection with the given [toString]
+     * Finds the first object in an array with the given [toString]
+     * representation, case-insensitive.
+     *
+     * @param objects the collection to search
+     * @param name the object to find
+     * @return the object with the name, or null if none is found
+     */
+    @JvmStatic
+    fun <T> findWithName(objects: Array<T>, name: String?): T? {
+        return objects.find { it.toString().equals(name, ignoreCase = true) }
+    }
+
+    /**
+     * Finds the first object in a collection with the given [toString]
      * representation, case-insensitive.
      *
      * @param objects the collection to search

@@ -27,14 +27,13 @@ module mayonez.base {
     // Base Module
     exports mayonez;
     exports mayonez.config;
+    exports mayonez.input;
     exports mayonez.io;
     exports mayonez.io.image;
     exports mayonez.io.text;
-    exports mayonez.input;
     exports mayonez.launcher;
     exports mayonez.math;
     exports mayonez.math.shapes;
-    exports mayonez.util;
 
     // Renderer
     exports mayonez.graphics;
