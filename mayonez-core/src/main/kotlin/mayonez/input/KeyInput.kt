@@ -1,77 +1,27 @@
 package mayonez.input
 
-import mayonez.event.*
-import java.awt.event.*
+import mayonez.input.keyboard.*
 
 /**
  * Receives keyboard input events.
  *
- * Usage: To query if a key is held, call [KeyInput.keyDown]. To query if a key was
- * just pressed this frame, call [KeyInput.keyPressed]. To query a key axis, call
- * [KeyInput.getAxis].
+ * Usage: To query if a key is held, call [KeyInput.keyDown]. To query if a
+ * key was just pressed this frame, call [KeyInput.keyPressed]. To query a
+ * key axis, call [KeyInput.getAxis].
  *
  * @author SlavSquatSuperstar
  */
-// TODO GLFW sticky keys?
-// TODO concurrent modification sometimes happens
-object KeyInput : KeyAdapter() {
+object KeyInput {
 
     // Key Fields
-    private const val INITIAL_NUM_KEYS = 64
-    private val keys: MutableMap<Int, MappingStatus?> = HashMap(INITIAL_NUM_KEYS)
+    private lateinit var instance: KeyManager
 
-    // Game Fields
-    private var useGL: Boolean = false
+    @JvmStatic
+    fun getInstance(): KeyManager = instance
 
     // Game Methods
     fun setUseGL(useGL: Boolean) {
-        this.useGL = useGL
-    }
-
-    // Game Loop Methods
-
-    /** Poll key events from the window. */
-    fun endFrame() { // TODO rename to pollKeys?
-        for (key in keys.values) {
-            when {
-                key == null -> continue
-                key.down -> key.updateIfDown()
-                else -> key.setReleased()
-            }
-        }
-    }
-
-    // Key Callbacks
-
-    /**
-     * The keyboard callback method for GLFW.
-     *
-     * @param window the window id
-     * @param key the GLFW key code
-     * @param scancode the platform-dependent key code
-     * @param action the event type
-     * @param mods any modifier keys
-     */
-    fun keyCallback(window: Long, key: Int, scancode: Int, action: Int, mods: Int) {
-        when (action) {
-            // TODO GL double pressing still occurs
-            org.lwjgl.glfw.GLFW.GLFW_PRESS -> setKeyDown(key, true)
-            org.lwjgl.glfw.GLFW.GLFW_REPEAT -> setKeyDown(key, true)
-            org.lwjgl.glfw.GLFW.GLFW_RELEASE -> setKeyDown(key, false)
-        }
-        EventSystem.broadcast(KeyboardEvent(key, scancode, action, mods))
-        endFrame()
-    }
-
-    override fun keyPressed(e: KeyEvent) {
-        setKeyDown(e.keyCode, true)
-        EventSystem.broadcast(KeyboardEvent(e.keyCode, true, e.modifiersEx))
-//        println("${KeyEvent.getModifiersExText(e.modifiersEx)}${e.keyLocation}")
-    }
-
-    override fun keyReleased(e: KeyEvent) {
-        setKeyDown(e.keyCode, false)
-        EventSystem.broadcast(KeyboardEvent(e.keyCode, false, e.modifiersEx))
+        instance = if (useGL) GLKeyManager() else JKeyManager()
     }
 
     // Key Getters
@@ -84,13 +34,7 @@ object KeyInput : KeyAdapter() {
      * @return if the specified key is held
      */
     @JvmStatic
-    fun keyDown(key: Key?): Boolean {
-        return when {
-            key == null -> false
-            useGL -> keyDown(key.glCode)
-            else -> keyDown(key.awtCode)
-        }
-    }
+    fun keyDown(key: Key?): Boolean = instance.keyDown(key)
 
     /**
      * Whether the user has started pressing the specified [mayonez.input.Key]
@@ -100,13 +44,7 @@ object KeyInput : KeyAdapter() {
      * @return if the specified key is pressed
      */
     @JvmStatic
-    fun keyPressed(key: Key?): Boolean {
-        return when {
-            key == null -> false
-            useGL -> keyPressed(key.glCode)
-            else -> keyPressed(key.awtCode)
-        }
-    }
+    fun keyPressed(key: Key?): Boolean = instance.keyPressed(key)
 
     /**
      * Whether the user is continuously holding down the [mayonez.input.Key]
@@ -116,9 +54,7 @@ object KeyInput : KeyAdapter() {
      * @return if the specified key is held
      */
     @JvmStatic
-    fun keyDown(keyName: String): Boolean {
-        return keyDown(Key.findWithName(keyName))
-    }
+    fun keyDown(keyName: String): Boolean = keyDown(Key.findWithName(keyName))
 
     /**
      * Whether the user has started pressing the [mayonez.input.Key] with the
@@ -128,9 +64,7 @@ object KeyInput : KeyAdapter() {
      * @return if the specified key is pressed
      */
     @JvmStatic
-    fun keyPressed(keyName: String): Boolean {
-        return keyPressed(Key.findWithName(keyName))
-    }
+    fun keyPressed(keyName: String): Boolean = keyPressed(Key.findWithName(keyName))
 
     /**
      * Get the value of the specified [mayonez.input.InputAxis].
@@ -139,9 +73,7 @@ object KeyInput : KeyAdapter() {
      * @return the axis value, either -1, 0, or 1
      */
     @JvmStatic
-    fun getAxis(axis: InputAxis?): Int {
-        return axis?.value() ?: 0
-    }
+    fun getAxis(axis: InputAxis?): Int = axis?.value() ?: 0
 
     /**
      * Get the value of the [mayonez.input.DefaultKeyAxis] with the specified
@@ -151,29 +83,6 @@ object KeyInput : KeyAdapter() {
      * @return the axis value, either -1, 0, or 1
      */
     @JvmStatic
-    fun getAxis(axisName: String): Int {
-        return getAxis(DefaultKeyAxis.findWithName(axisName))
-    }
-
-    // Key Helper Methods
-
-    private fun setKeyDown(keyCode: Int, keyDown: Boolean) {
-        val status = keys[keyCode]
-        if (status == null) { // Track new key
-            val newStatus = MappingStatus()
-            newStatus.down = keyDown
-            keys[keyCode] = newStatus
-        } else {
-            status.down = keyDown
-        }
-    }
-
-    private fun keyDown(keyCode: Int): Boolean {
-        return keys[keyCode]?.pressed == true || keys[keyCode]?.held == true
-    }
-
-    private fun keyPressed(keyCode: Int): Boolean {
-        return keys[keyCode]?.pressed == true
-    }
+    fun getAxis(axisName: String): Int = getAxis(DefaultKeyAxis.findWithName(axisName))
 
 }

@@ -95,9 +95,9 @@ object Mayonez {
 
     private fun initializeGame() {
         if (!this::game.isInitialized) {
-            game = EngineFactory.createGameEngine(useGL)
             KeyInput.setUseGL(useGL)
             MouseInput.setUseGL(useGL)
+            game = EngineFactory.createGameEngine(useGL)
             Logger.debug("Using \"%s\" engine", if (useGL) "GL" else "AWT")
         }
     }

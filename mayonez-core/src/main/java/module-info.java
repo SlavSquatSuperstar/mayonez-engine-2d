@@ -16,6 +16,8 @@ module mayonez.core {
     exports mayonez.annotations;
     exports mayonez.event;
     exports mayonez.input;
+    exports mayonez.input.keyboard;
+    exports mayonez.input.mouse;
     exports mayonez.math;
     exports mayonez.math.shapes;
     exports mayonez.util;

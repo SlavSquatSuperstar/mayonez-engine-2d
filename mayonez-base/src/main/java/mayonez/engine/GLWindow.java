@@ -2,7 +2,8 @@ package mayonez.engine;
 
 import mayonez.*;
 import mayonez.annotations.*;
-import mayonez.input.*;
+import mayonez.input.keyboard.*;
+import mayonez.input.mouse.*;
 import org.lwjgl.opengl.GL;
 
 import static mayonez.engine.GLFWHelper.*;
@@ -24,8 +25,8 @@ final class GLWindow implements Window {
     private final int width, height;
 
     // Input Fields
-    private KeyInput keyboard;
-    private MouseInput mouse;
+    private KeyManager keyboard;
+    private MouseManager mouse;
 
     GLWindow(String title, int width, int height) {
         this.title = title;
@@ -98,20 +99,20 @@ final class GLWindow implements Window {
 
     @Override
     public void endFrame() {
-        keyboard.endFrame();
-        mouse.endFrame();
+        keyboard.updateKeys();
+        mouse.updateMouse();
     }
 
     // Input Methods
 
     @Override
-    public void setKeyInput(KeyInput keyboard) {
+    public void setKeyInput(KeyManager keyboard) {
         this.keyboard = keyboard;
         glfwSetKeyCallback(windowID, keyboard::keyCallback);
     }
 
     @Override
-    public void setMouseInput(MouseInput mouse) {
+    public void setMouseInput(MouseManager mouse) {
         this.mouse = mouse;
         glfwSetMouseButtonCallback(windowID, mouse::mouseButtonCallback);
         glfwSetCursorPosCallback(windowID, mouse::mousePosCallback);

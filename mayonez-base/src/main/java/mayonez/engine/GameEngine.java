@@ -30,8 +30,8 @@ public abstract sealed class GameEngine permits JGameEngine, GLGameEngine {
         timeStepSecs = Time.getTimeStepSecs();
         running = false;
         // Add input listeners
-        window.setKeyInput(KeyInput.INSTANCE);
-        window.setMouseInput(MouseInput.INSTANCE);
+        window.setKeyInput(KeyInput.getInstance());
+        window.setMouseInput(MouseInput.getInstance());
     }
 
     // Main Game Loop Methods

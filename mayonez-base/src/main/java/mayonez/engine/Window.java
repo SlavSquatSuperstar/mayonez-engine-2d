@@ -1,6 +1,7 @@
 package mayonez.engine;
 
-import mayonez.input.*;
+import mayonez.input.keyboard.*;
+import mayonez.input.mouse.*;
 
 /**
  * An interface containing common functionality for all game windows.
@@ -59,16 +60,16 @@ public sealed interface Window permits JWindow, GLWindow {
      * Set the keyboard listener for this window and mark it as the active
      * instance for the input manager.
      *
-     * @param keyboard a {@link mayonez.input.KeyInput} instance
+     * @param keyboard a {@link mayonez.input.keyboard.KeyManager} instance
      */
-    void setKeyInput(KeyInput keyboard);
+    void setKeyInput(KeyManager keyboard);
 
     /**
      * Set the mouse listener for this window and mark it as the active
      * instance for the input manager.
      *
-     * @param mouse a {@link mayonez.input.MouseInput} instance
+     * @param mouse a {@link mayonez.input.mouse.MouseManager} instance
      */
-    void setMouseInput(MouseInput mouse);
+    void setMouseInput(MouseManager mouse);
 
 }
