@@ -1,3 +1,5 @@
 rootProject.name = "mayonez-engine"
 
-include("mayonez-base", "mayonez-demos")
+include("mayonez-core")
+include("mayonez-base")
+include("mayonez-demos")

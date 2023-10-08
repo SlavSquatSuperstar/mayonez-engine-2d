@@ -16,6 +16,7 @@ allprojects {
 
 // Subprojects
 dependencies {
+    implementation(project(":mayonez-core"))
     implementation(project(":mayonez-base"))
     implementation(project(":mayonez-demos"))
 }

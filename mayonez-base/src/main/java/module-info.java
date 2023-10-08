@@ -1,6 +1,6 @@
 /**
- * The core library of MayonezEngine, which contains all the base classes needed to
- * create and run a game.
+ * The core library of Mayonez Engine, which contains all the base classes for developing
+ * a game.
  *
  * @author SlavSquatSuperstar
  */
@@ -14,20 +14,19 @@ module mayonez.base {
     requires org.lwjgl.glfw;
     requires org.lwjgl.opengl;
     requires org.lwjgl.stb;
-    requires org.joml;
 
     // Other Dependencies
+    requires org.joml;
     requires org.json;
 
+    // Subprojects
+    requires transitive mayonez.core;
+
     // Public API
+
+    // Base Module
     exports mayonez;
-    exports mayonez.annotations;
     exports mayonez.config;
-    exports mayonez.graphics;
-    exports mayonez.graphics.camera;
-    exports mayonez.graphics.debug;
-    exports mayonez.graphics.sprites;
-    exports mayonez.graphics.textures;
     exports mayonez.io;
     exports mayonez.io.image;
     exports mayonez.io.text;
@@ -35,11 +34,22 @@ module mayonez.base {
     exports mayonez.launcher;
     exports mayonez.math;
     exports mayonez.math.shapes;
+    exports mayonez.util;
+
+    // Renderer
+    exports mayonez.graphics;
+    exports mayonez.graphics.camera;
+    exports mayonez.graphics.debug;
+    exports mayonez.graphics.sprites;
+    exports mayonez.graphics.textures;
+
+    // Physics
     exports mayonez.physics;
     exports mayonez.physics.colliders;
     exports mayonez.physics.dynamics;
+
+    // API
     exports mayonez.scripts;
     exports mayonez.scripts.mouse;
     exports mayonez.scripts.movement;
-    exports mayonez.util;
 }
