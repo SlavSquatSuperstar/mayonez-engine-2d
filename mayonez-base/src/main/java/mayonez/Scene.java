@@ -1,7 +1,6 @@
 package mayonez;
 
 import mayonez.graphics.*;
-import mayonez.graphics.Color;
 import mayonez.graphics.camera.*;
 import mayonez.graphics.debug.*;
 import mayonez.graphics.renderer.*;
@@ -14,9 +13,7 @@ import mayonez.physics.colliders.*;
 import mayonez.physics.dynamics.*;
 import mayonez.util.*;
 
-import java.awt.*;
-import java.util.List;
-import java.util.Queue;
+import java.awt.Graphics2D;
 import java.util.*;
 
 /**
@@ -43,7 +40,7 @@ public abstract class Scene {
     private final String name;
     private final float scale; // scene scale, or how many pixels correspond to a world unit
     private final Vec2 size; // scene size, or zero if unbounded
-    protected Sprite background;
+    protected final Sprite background;
 
     // Scene Layers
     private final List<GameObject> objects;
@@ -125,8 +122,7 @@ public abstract class Scene {
 
     private void startSceneLayers() {
         renderer.start();
-        renderer.setBackground(background);
-        renderer.setSceneSize(size, scale);
+        renderer.setBackground(background, size, scale);
         if (separateDebugRenderer()) debugRenderer.start();
         physics.clearBodies();
     }
@@ -355,21 +351,23 @@ public abstract class Scene {
     // Getters and Setters
 
     /**
-     * Sets the background color of this scene. Defaults to white.
+     * Sets the background color of this scene, white by default.
      *
      * @param background a color
      */
     public void setBackground(Color background) {
-        this.background = Sprites.createSprite(background);
+        this.background.setColor(background);
+        this.background.setTexture(null);
     }
 
     /**
-     * Sets the background image of this scene.
+     * Sets the background image of this scene, none by default.
      *
      * @param background a texture
      */
     public void setBackground(Texture background) {
-        this.background = Sprites.createSprite(background);
+        this.background.setColor(null);
+        this.background.setTexture(background);
     }
 
     /**

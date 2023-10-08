@@ -19,8 +19,8 @@ import mayonez.math.Vec2;
 public abstract class Camera extends Script {
 
     // Camera Fields
-    final Vec2 screenSize;
-    final float sceneScale;
+    public final Vec2 screenSize;
+    public final float sceneScale;
 
     // Camera Movement
     private boolean followAngle;
@@ -55,9 +55,7 @@ public abstract class Camera extends Script {
         }
     }
 
-    // Factory Method
-
-    // Camera Location
+    // Camera Location Methods
 
     /**
      * The position of the camera's center in the scene in world units.

@@ -65,6 +65,7 @@ sealed class Sprite : Component(), Renderable {
      * Set additional position, rotation, and size modifiers for the sprite.
      *
      * @param spriteXf the transform
+     * @return this sprite
      */
     fun setSpriteTransform(spriteXf: Transform?): Sprite {
         this.spriteXf = spriteXf

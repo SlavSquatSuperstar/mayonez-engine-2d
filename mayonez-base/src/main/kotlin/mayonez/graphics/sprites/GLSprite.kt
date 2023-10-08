@@ -1,6 +1,5 @@
 package mayonez.graphics.sprites
 
-import mayonez.*
 import mayonez.annotations.*
 import mayonez.graphics.*
 import mayonez.graphics.batch.*
@@ -11,8 +10,9 @@ import mayonez.math.shapes.*
 
 
 /**
- * Draws a [GLTexture] using the GL engine. This class should not be directly
- * instantiated. Instead, call [Sprites.createSprite]. See [Sprite] for more information.
+ * Draws a [GLTexture] using the GL engine. This class should not be
+ * directly instantiated. Instead, call [Sprites.createSprite]. See
+ * [Sprite] for more information.
  *
  * @author SlavSquatSuperstar
  */
@@ -71,15 +71,22 @@ internal class GLSprite private constructor(
         val texCoords = getTexCoords()
         val texID = batch.addTextureAndGetID(texture)
 
+        // Background sprite will not have scale but will use spriteXf instead
+        val sceneScale = gameObject?.scene?.scale ?: 1f
+
         // Render sprite at object center and rotate according to object
-        val sprRect = Rectangle(objXf.position.toWorld(), objXf.scale.toWorld(), objXf.rotation)
+        val sprRect = Rectangle(
+            objXf.position * sceneScale, objXf.scale * sceneScale, objXf.rotation
+        )
         val sprVertices = sprRect.vertices
         for (i in sprVertices.indices) {
             batch.pushVertex(sprVertices[i], color, texCoords[i], texID)
         }
     }
 
-    private fun RenderBatch.pushVertex(vertex: Vec2, color: GLColor, texPos: Vec2, texID: Int) {
+    private fun RenderBatch.pushVertex(
+        vertex: Vec2, color: GLColor, texPos: Vec2, texID: Int
+    ) {
         pushVec2(vertex)
         pushVec4(color)
         pushVec2(texPos)
@@ -96,9 +103,4 @@ internal class GLSprite private constructor(
         return texture?.texCoords ?: GLTexture.DEFAULT_TEX_COORDS
     }
 
-}
-
-private fun Vec2.toWorld(): Vec2 {
-    // can't use this.scene.scale as it will return null
-    return this * SceneManager.currentScene.scale
 }

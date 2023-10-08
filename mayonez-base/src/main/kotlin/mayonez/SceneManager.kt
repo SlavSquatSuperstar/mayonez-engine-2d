@@ -1,6 +1,5 @@
 package mayonez
 
-import mayonez.graphics.*
 import mayonez.init.*
 import java.awt.*
 
@@ -9,12 +8,14 @@ import java.awt.*
  * Only one scene may be active at once.
  *
  * Usage: Scenes can be preloaded into the SceneManager through the
- * [Launcher.loadScenesToManager] method before the application starts running.
- * Scenes can be added at any time with [SceneManager.addScene] and retrieved with
- * [SceneManager.getScene]. To switch scenes, use the [SceneManager.setScene] method
- * to set a new scene or the [SceneManager.loadScene] method to resume an existing scene.
+ * [Launcher.loadScenesToManager] method before the application starts
+ * running. Scenes can be added at any time with [SceneManager.addScene]
+ * and retrieved with [SceneManager.getScene]. To switch scenes,
+ * use the [SceneManager.setScene] method to set a new scene or the
+ * [SceneManager.loadScene] method to resume an existing scene.
  *
  * See [Launcher] and [Scene] for more information.
+ *
  * @author SlavSquatSuperstar
  */
 object SceneManager {
@@ -23,14 +24,10 @@ object SceneManager {
 
     /** The scene that is currently loaded by the game. */
     @JvmStatic
-    var currentScene: Scene = object : Scene("Default Scene") {
-        override fun init() {
-            setBackground(Colors.WHITE)
-        }
-    }
+    var currentScene: Scene = object : Scene("Default Scene") {}
         private set
 
-    private val scenes = HashMap<String, Scene>() // The scene pool
+    private val scenes: MutableMap<String, Scene> = HashMap() // The scene pool
     private val sceneState: SceneState // The state of the current scene
         get() = currentScene.state
 
@@ -64,8 +61,8 @@ object SceneManager {
     }
 
     /**
-     * Switches the active scene to the given scene. If the scene is running, it will be
-     * restarted.
+     * Switches the active scene to the given scene. If the scene is running,
+     * it will be restarted.
      *
      * @param scene a scene instance
      */
@@ -79,8 +76,8 @@ object SceneManager {
     }
 
     /**
-     * Pauses the current scene, and then resumes or starts an existing scene with the
-     * given name.
+     * Pauses the current scene, and then resumes or starts an existing scene
+     * with the given name.
      *
      * @param name the scene's name
      */
@@ -172,7 +169,7 @@ object SceneManager {
     fun getScene(name: String?): Scene? = scenes[name]
 
     private fun saveCurrentSceneToPool() {
-        if (!scenes.containsKey(currentScene.name)) {
+        if (currentScene.name !in scenes) {
             addScene(currentScene)
         }
     }

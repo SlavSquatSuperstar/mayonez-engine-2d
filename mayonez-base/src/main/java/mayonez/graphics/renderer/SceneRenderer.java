@@ -11,19 +11,14 @@ import mayonez.math.*;
 public interface SceneRenderer extends Renderer {
 
     /**
-     * Sets the background color or image for the scene.
+     * Sets the background color or image, and sets the background
+     * size to match the new scene.
      *
      * @param background the background sprite
-     */
-    void setBackground(Sprite background);
-
-    /**
-     * Updates screen size and scale to the new scene.
-     *
      * @param sceneSize  the scene dimensions
      * @param sceneScale the scene scale
      */
-    void setSceneSize(Vec2 sceneSize, float sceneScale);
+    void setBackground(Sprite background, Vec2 sceneSize, float sceneScale);
 
     /**
      * Submits a drawable object for rendering.

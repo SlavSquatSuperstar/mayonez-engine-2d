@@ -42,12 +42,9 @@ internal class JDefaultRenderer : SceneRenderer, DebugRenderer {
 
     // Scene Renderer Methods
 
-    override fun setBackground(background: Sprite) {
+    override fun setBackground(background: Sprite, sceneSize: Vec2, sceneScale: Float) {
         this.background = background
-    }
-
-    override fun setSceneSize(sceneSize: Vec2, sceneScale: Float) {
-        background.setSpriteTransform(Transform.scaleInstance(Vec2(sceneSize)))
+            .setSpriteTransform(Transform.scaleInstance(Vec2(sceneSize)))
         this.sceneScale = sceneScale
     }
 
@@ -111,7 +108,7 @@ internal class JDefaultRenderer : SceneRenderer, DebugRenderer {
 
     private fun rotateScreen(cam: Camera, g2: Graphics2D) {
         val camAngleRad = Math.toRadians(cam.rotation.toDouble())
-        val camCenter = cam.position * SceneManager.currentScene.scale
+        val camCenter = cam.position * cam.sceneScale
         g2.rotate(-camAngleRad, camCenter.x.toDouble(), camCenter.y.toDouble())
     }
 

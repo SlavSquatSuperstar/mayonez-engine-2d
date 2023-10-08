@@ -38,12 +38,9 @@ internal class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"),
 
     // Scene Renderer Methods
 
-    override fun setBackground(background: Sprite) {
+    override fun setBackground(background: Sprite, sceneSize: Vec2, sceneScale: Float) {
         this.background = background
-    }
-
-    override fun setSceneSize(sceneSize: Vec2, sceneScale: Float) {
-        background.setSpriteTransform(Transform.scaleInstance(sceneSize))
+            .setSpriteTransform(Transform.scaleInstance(sceneSize * sceneScale))
     }
 
     override fun addRenderable(r: Renderable?) {
