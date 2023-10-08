@@ -1,7 +1,7 @@
-package mayonez.util
-
+package mayonez.config
 
 import mayonez.io.text.*
+import mayonez.util.*
 
 /**
  * Reads user preferences from a file into a [Record].

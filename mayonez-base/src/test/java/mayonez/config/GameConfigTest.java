@@ -1,11 +1,13 @@
-package mayonez.util;
+package mayonez.config;
 
+import mayonez.config.*;
+import mayonez.util.Record;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit tests for the {@link mayonez.util.GameConfig} class.
+ * Unit tests for the {@link mayonez.config.GameConfig} class.
  *
  * @author SlavSquatSuperstar
  */
@@ -14,7 +16,7 @@ class GameConfigTest {
     private static final String NAME = "Mayonez Engine";
     private static final String VERSION = "0.7.10";
 
-    private static Record defaults;
+    private static mayonez.util.Record defaults;
     private static PreferenceValidator<?>[] rules;
 
     @BeforeAll

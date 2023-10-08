@@ -1,5 +1,6 @@
 /**
- * The core library of MayonezEngine which contains all the base classes needed to create and run a game.
+ * The core library of MayonezEngine, which contains all the base classes needed to
+ * create and run a game.
  *
  * @author SlavSquatSuperstar
  */
@@ -21,6 +22,7 @@ module mayonez.base {
     // Public API
     exports mayonez;
     exports mayonez.annotations;
+    exports mayonez.config;
     exports mayonez.graphics;
     exports mayonez.graphics.camera;
     exports mayonez.graphics.debug;

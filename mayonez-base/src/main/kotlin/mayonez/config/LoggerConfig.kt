@@ -1,4 +1,4 @@
-package mayonez.init
+package mayonez.config
 
 /**
  * A set of parameters for the [mayonez.Logger] class.

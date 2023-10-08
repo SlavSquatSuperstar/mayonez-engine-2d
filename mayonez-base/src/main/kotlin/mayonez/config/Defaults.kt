@@ -1,6 +1,5 @@
-package mayonez
+package mayonez.config
 
-import mayonez.init.*
 import mayonez.util.*
 
 /**

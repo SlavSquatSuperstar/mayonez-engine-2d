@@ -1,7 +1,6 @@
 package mayonez
 
-import mayonez.init.*
-import mayonez.util.*
+import mayonez.config.*
 
 private const val PREFS_FILENAME = "preferences.json"
 

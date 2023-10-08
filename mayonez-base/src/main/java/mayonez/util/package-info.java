@@ -1,6 +1,5 @@
 /**
- * Contains utility functions and classes to streamline software development that are not
- * associated with any other package.
+ * Miscellaneous utility functions and classes to streamline game development.
  *
  * @author SlavSquatSuperstar
  */

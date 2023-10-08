@@ -9,9 +9,9 @@ import java.util.*;
  *
  * @author SlavSquatSuperstar
  */
-public class ArgumentsParser {
+class ArgumentsParser {
 
-    private final mayonez.util.Record programArgs;
+    private final Record programArgs;
 
     public ArgumentsParser() {
         this(new String[0]);

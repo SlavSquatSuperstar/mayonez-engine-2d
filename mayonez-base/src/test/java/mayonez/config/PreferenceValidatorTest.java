@@ -1,11 +1,13 @@
-package mayonez.util;
+package mayonez.config;
 
+import mayonez.config.*;
+import mayonez.util.Record;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit tests for the {@link mayonez.util.PreferenceValidator} class.
+ * Unit tests for the {@link mayonez.config.PreferenceValidator} class.
  *
  * @author SlavSquatSuperstar
  */
@@ -14,13 +16,13 @@ class PreferenceValidatorTest {
     private static final String NAME = "Mayonez Engine";
     private static final String VERSION = "0.7.10";
 
-    private static Record defaults;
+    private static mayonez.util.Record defaults;
 
-    private Record preferences;
+    private mayonez.util.Record preferences;
 
     @BeforeAll
     static void getDefaults() {
-        defaults = new Record();
+        defaults = new mayonez.util.Record();
         defaults.set("name", NAME);
         defaults.set("version", VERSION);
         defaults.set("width", 800);

@@ -1,8 +1,8 @@
 package slavsquatsuperstar.demos.spacegame;
 
+import mayonez.config.*;
 import mayonez.input.*;
 import mayonez.util.Record;
-import mayonez.util.*;
 
 public final class SpaceGameConfig extends GameConfig {
 
