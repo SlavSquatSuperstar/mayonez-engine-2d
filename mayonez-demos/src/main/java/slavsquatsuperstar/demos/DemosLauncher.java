@@ -1,7 +1,7 @@
 package slavsquatsuperstar.demos;
 
 import mayonez.*;
-import mayonez.init.*;
+import mayonez.launcher.*;
 import mayonez.input.*;
 import slavsquatsuperstar.demos.geometrydash.GDEditorScene;
 import slavsquatsuperstar.demos.mario.MarioScene;

@@ -1,4 +1,4 @@
-package mayonez.init
+package mayonez.launcher
 
 /**
  * A set of fixed runtime parameters for the application.

@@ -1,22 +1,24 @@
 package mayonez
 
 import mayonez.engine.*
-import mayonez.init.*
 import mayonez.io.*
+import mayonez.launcher.*
 import mayonez.math.*
 import kotlin.system.exitProcess
 
 /**
- * An instance of Mayonez Engine. Upon startup, the application loads resources,
- * configures other engine components, and tells the scene manager to load a scene.
+ * An instance of Mayonez Engine. Upon startup, the application loads
+ * resources, configures other engine components, and tells the scene
+ * manager to load a scene.
  *
- * Usage: To start an instance of Mayonez Engine, create a [Launcher] and set
- * the "Use GL" property through [Launcher.setRunConfig]. Then, load any number
- * of scenes through [Launcher.loadScenesToManager] or [SceneManager.addScene].
- * Finally, start the game with a scene by calling [Launcher.startGame].
+ * Usage: To start an instance of Mayonez Engine, create a [Launcher]
+ * and set the "Use GL" property through [Launcher.setRunConfig]. Then,
+ * load any number of scenes through [Launcher.loadScenesToManager] or
+ * [SceneManager.addScene]. Finally, start the game with a scene by calling
+ * [Launcher.startGame].
  *
- * To exit the program, call [Mayonez.stop] with an [ExitCode] (0 for success,
- * anything else for failure).
+ * To exit the program, call [Mayonez.stop] with an integer exit code (0
+ * for success, anything else for failure).
  *
  * See [Launcher] for more information.
  */
@@ -29,9 +31,7 @@ object Mayonez {
 
     // Properties
 
-    /**
-     * The size of the application window, in pixels.
-     */
+    /** The size of the application window, in pixels. */
     @JvmStatic
     val screenSize: Vec2
         get() = Vec2(
@@ -40,21 +40,19 @@ object Mayonez {
         )
 
     /**
-     * The content scaling of the application window, usually 1x1 (100%). The value
-     * may be different if the current display has changed its screen scaling or
-     * resolution.
+     * The content scaling of the application window, usually 1x1 (100%). The
+     * value may be different if the current display has changed its screen
+     * scaling or resolution.
      *
-     * For example, if the window scale is 2x2 (200%), then the window
-     * size will appear twice as large as the value stated in the user preferences.
+     * For example, if the window scale is 2x2 (200%), then the window size
+     * will appear twice as large as the value stated in the user preferences.
      */
     @JvmStatic
     internal var windowScale: Vec2 = Vec2(1f)
         @JvmName("getWindowScale") get
         @JvmName("setWindowScale") set
 
-    /**
-     * Whether to use OpenGL for rendering instead of Java AWT.
-     */
+    /** Whether to use OpenGL for rendering instead of Java AWT. */
     @JvmStatic
     internal var useGL: Boolean = false // crashes tests when set to true :\
         @JvmName("getUseGL") get
@@ -63,7 +61,8 @@ object Mayonez {
     // Init Methods
 
     /**
-     * Sets the run configuration for the program. Must be called before [start].
+     * Sets the run configuration for the program. Must be called before
+     * [start].
      */
     @JvmStatic
     @JvmName("setConfig")
@@ -123,7 +122,8 @@ object Mayonez {
     }
 
     /**
-     * Stop the game with an exit code and terminate the application.
+     * Stop the game with an exit code and terminate the application. See
+     * [ExitCode] for reserved codes.
      *
      * @param status an exit code (zero for success, non-zero for error)
      */
@@ -137,14 +137,6 @@ object Mayonez {
         }
     }
 
-    /**
-     * Stop the game with a reserved exit code.
-     *
-     * @param status an exit code constant
-     */
-    @JvmStatic
-    fun stop(status: ExitCode) = this.stop(status.code)
-
     // Helper Methods
 
     private fun startGame() {
@@ -154,7 +146,7 @@ object Mayonez {
 
     private fun exitWithErrorMessage(message: String) {
         Logger.error(message)
-        val status = ExitCode.ERROR.code
+        val status = ExitCode.ERROR
         exitProgram(status)
     }
 

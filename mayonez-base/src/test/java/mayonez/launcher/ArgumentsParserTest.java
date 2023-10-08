@@ -1,4 +1,4 @@
-package mayonez.init;
+package mayonez.launcher;
 
 import mayonez.util.Record;
 import org.junit.jupiter.api.*;

@@ -28,11 +28,11 @@ module mayonez.base {
     exports mayonez.graphics.debug;
     exports mayonez.graphics.sprites;
     exports mayonez.graphics.textures;
-    exports mayonez.init;
     exports mayonez.io;
     exports mayonez.io.image;
     exports mayonez.io.text;
     exports mayonez.input;
+    exports mayonez.launcher;
     exports mayonez.math;
     exports mayonez.math.shapes;
     exports mayonez.physics;

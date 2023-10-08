@@ -1,11 +1,11 @@
-package mayonez.init;
+package mayonez.launcher;
 
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit tests for the {@link mayonez.init.Launcher} class.
+ * Unit tests for the {@link mayonez.launcher.Launcher} class.
  *
  * @author SlavSquatSuperstar
  */
