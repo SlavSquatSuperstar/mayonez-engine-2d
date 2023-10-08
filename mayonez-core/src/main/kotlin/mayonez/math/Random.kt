@@ -1,11 +1,9 @@
 package mayonez.math
 
-import mayonez.graphics.*
-
 /**
- * Generates random numbers and primitive types. Most methods will use a
- * uniform distribution, where all valid values have an equal chance
- * of occurring.
+ * Generates random numbers, vectors, and characters. Most methods will use
+ * a uniform distribution, where all valid values have an equal chance of
+ * occurring.
  *
  * @author SlavSquatSuperstar
  */
@@ -16,13 +14,13 @@ object Random {
     // Seed Methods
 
     /**
-     * Sets the initial state of the random number generator. By default,
-     * the seed is set from the computer's local time.
+     * Sets the initial state of the random number generator. By default, the
+     * seed is set from the computer's local time.
      *
-     * A random generator will always produce the same sequence of results
-     * with a given seed. However, if only given any number, predicting
-     * the next output will still be difficult, meaning the results are still
-     * random in the long run.
+     * A random generator will always produce the same sequence of results with
+     * a given seed. However, if only given any number, predicting the next
+     * output will still be difficult, meaning the results are still random in
+     * the long run.
      *
      * @param seed the random generator seed
      */
@@ -37,10 +35,10 @@ object Random {
      * Generates a random uniform float between the two provided bounds. All
      * numbers in the range have a roughly equal chance of occurring.
      *
-     * Note: In reality, the upper bound is technically excluded and can never occur.
-     * However, since the sample space (floats) is continuous, all elements individually
-     * have a probability of 0. Therefore, ignoring the bound does not significantly
-     * affect the results.
+     * Note: In reality, the upper bound is technically excluded and can never
+     * occur. However, since the sample space (floats) is continuous, all
+     * elements individually have a probability of 0. Therefore, ignoring the
+     * bound does not significantly affect the results.
      *
      * @param min the lower bound, inclusive
      * @param max the upper bound, inclusive
@@ -67,13 +65,14 @@ object Random {
     }
 
     /**
-     * Generates a random float under a Gaussian (normal) distribution with the given
-     * mean, µ, and standard deviation, σ. The mean and standard deviation define the center
-     * and spread of the distribution, respectively.
+     * Generates a random float under a Gaussian (normal) distribution
+     * with the given mean, µ, and standard deviation, σ. The mean and
+     * standard deviation define the center and spread of the distribution,
+     * respectively.
      *
      * Values closest to µ will be the most likely to occur, while values get
-     * progressively less common farther from µ. On average, 99.5% values occur
-     * within µ ± 3σ, or three standard deviations from the mean.
+     * progressively less common farther from µ. On average, 99.5% values
+     * occur within µ ± 3σ, or three standard deviations from the mean.
      *
      * @param mean the distribution mean, µ
      * @param stdev the distribution standard deviation, σ
@@ -99,8 +98,9 @@ object Random {
     }
 
     /**
-     * Generates a random uniform [Vec2] between the provided min and max vectors. All
-     * points in the rectangular region have a roughly equal chance of occurring.
+     * Generates a random uniform [Vec2] between the provided min and max
+     * vectors. All points in the rectangular region have a roughly equal
+     * chance of occurring.
      *
      * @param min the bottom left corner, inclusive
      * @param max the upper right corner, inclusive
@@ -112,8 +112,9 @@ object Random {
     }
 
     /**
-     * Generates a random uniform [Vec2] between the provided x and y bounds. All
-     * vectors in the rectangular region have a roughly equal chance of occurring.
+     * Generates a random uniform [Vec2] between the provided x and y bounds.
+     * All vectors in the rectangular region have a roughly equal chance of
+     * occurring.
      *
      * @param minX the lower x bound, inclusive
      * @param maxX the upper x bound, inclusive
@@ -139,8 +140,8 @@ object Random {
     fun randomPercent(percent: Float): Boolean = rand.nextFloat() < percent
 
     /**
-     * Generates a random event with a 50% average chance of succeeding,
-     * equal to a fair coin flip.
+     * Generates a random event with a 50% average chance of succeeding, equal
+     * to a fair coin flip.
      *
      * @return true half the time, otherwise false
      */
@@ -184,29 +185,6 @@ object Random {
         return if (rand < 13) randomUppercase() // 26/62 = 13/31 Uppercase
         else if (rand < 26) randomLowercase() // 26/62 = 13/31 Lowercase
         else randomDigit() // 10/62 = 5/31 Number
-    }
-
-    // Random Color Methods
-
-    /**
-     * Generates a random uniform color with alpha set to 255.
-     *
-     * @return a color with random RGB values 0-255
-     */
-    @JvmStatic
-    fun randomColor(): MColor = randomColor(0, 255)
-
-    /**
-     * Generates a random uniform color with R, G, and B components between two
-     * values and with alpha set to 255.
-     *
-     * @param minComp the minimum value for RGB components
-     * @param maxComp the maximum value for RGB components
-     * @return a color with random RGB values min-max
-     */
-    @JvmStatic
-    fun randomColor(minComp: Int, maxComp: Int): MColor {
-        return MColor(randomInt(minComp, maxComp), randomInt(minComp, maxComp), randomInt(minComp, maxComp))
     }
 
 }

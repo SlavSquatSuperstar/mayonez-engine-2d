@@ -1,8 +1,7 @@
-package mayonez.test;
+package mayonez.physics;
 
 import mayonez.math.*;
 import mayonez.math.shapes.*;
-import mayonez.physics.*;
 
 import java.util.*;
 
@@ -13,11 +12,9 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * @author SlavSquatSuperstar
  */
-public final class TestUtils {
+public final class CollisionTestUtils {
 
-    private TestUtils() {}
-
-    public static final float EPSILON = FloatMath.FLOAT_EPSILON;
+    private CollisionTestUtils() {}
 
     /**
      * Asserts that two floats are roughly equivalent.
@@ -26,7 +23,7 @@ public final class TestUtils {
      * @param actual   the given float value
      */
     public static void assertFloatEquals(float expected, float actual) {
-        assertEquals(expected, actual, EPSILON);
+        assertEquals(expected, actual, FloatMath.FLOAT_EPSILON);
     }
 
     /**

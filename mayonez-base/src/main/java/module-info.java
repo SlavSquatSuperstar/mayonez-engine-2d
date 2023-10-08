@@ -32,8 +32,6 @@ module mayonez.base {
     exports mayonez.io.image;
     exports mayonez.io.text;
     exports mayonez.launcher;
-    exports mayonez.math;
-    exports mayonez.math.shapes;
 
     // Renderer
     exports mayonez.graphics;

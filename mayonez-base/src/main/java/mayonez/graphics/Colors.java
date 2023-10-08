@@ -1,7 +1,9 @@
 package mayonez.graphics;
 
+import mayonez.math.*;
+
 /**
- * A library of common colors used to create games.
+ * Stores common colors used to create games and generates random colors.
  * <p>
  * Sources:
  * <ul>
@@ -17,7 +19,8 @@ package mayonez.graphics;
  */
 public final class Colors {
 
-    private Colors() {}
+    private Colors() {
+    }
 
     // Warm Colors
     public static final Color DARK_RED = new Color(128, 0, 0); // HTML Maroon, #800000
@@ -70,5 +73,32 @@ public final class Colors {
     public static final Color DARK_GRAY = new Color(64, 64, 64); // Java Dark Gray, #404040
 
     public static final Color BLACK = new Color(0, 0, 0); // HTML/Java Black, #000000
+
+    // Color Methods
+
+    /**
+     * Generates a random color with alpha set to 255.
+     *
+     * @return a color with random RGB values 0-255
+     */
+    public static Color randomColor() {
+        return randomColor(0, 255);
+    }
+
+    /**
+     * Generates a color with R, G, and B components uniformly randomized between
+     * two values and with alpha set to 255.
+     *
+     * @param minComp the minimum value for RGB components
+     * @param maxComp the maximum value for RGB components
+     * @return a color with random RGB values min-max
+     */
+    public static Color randomColor(int minComp, int maxComp) {
+        return new Color(
+                Random.randomInt(minComp, maxComp),
+                Random.randomInt(minComp, maxComp),
+                Random.randomInt(minComp, maxComp)
+        );
+    }
 
 }

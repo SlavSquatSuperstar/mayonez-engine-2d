@@ -110,7 +110,7 @@ public class SpaceGameScene extends Scene {
             if (starSize > 1) starSize = 1;
 
             var starDist = Random.randomFloat(20, 60);
-            var starColor = Random.randomColor(192, 255);
+            var starColor = Colors.randomColor(192, 255);
             addBackgroundObject(new Circle(starPos, starSize / starDist), starColor, ZIndex.BACKGROUND_STAR);
         }
     }

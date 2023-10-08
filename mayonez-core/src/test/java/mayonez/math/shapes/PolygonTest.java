@@ -5,7 +5,7 @@ import org.junit.jupiter.api.*;
 
 import java.util.*;
 
-import static mayonez.test.TestUtils.*;
+import static mayonez.math.MathTestUtils.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**

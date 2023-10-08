@@ -1,10 +1,10 @@
 package mayonez.math
 
+import mayonez.math.equalsArray
+import mayonez.math.minusArray
+import mayonez.math.plusArray
+import mayonez.math.timesFloat
 import java.util.*
-
-//private const val NUM_ROWS: Int = 2
-//private const val NUM_COLS: Int = 2
-//private const val SIZE: Int = 4
 
 /**
  * A matrix of floats with 2 rows and 2 columns that stores values from

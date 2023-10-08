@@ -2,7 +2,7 @@ package mayonez.physics.raycast
 
 import mayonez.math.*
 import mayonez.math.shapes.*
-import mayonez.test.*
+import mayonez.physics.*
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
@@ -88,7 +88,7 @@ internal class RaycastsTest {
         Assertions.assertNotNull(rc)
         Assertions.assertEquals(contact, rc!!.contact)
         Assertions.assertEquals(normal, rc.normal)
-        TestUtils.assertFloatEquals(distance, rc.distance)
+        CollisionTestUtils.assertFloatEquals(distance, rc.distance)
     }
 
     private fun assertRaycastMiss(s: Shape, start: Vec2, direction: Vec2, limit: Float) {

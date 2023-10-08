@@ -12,5 +12,7 @@ module mayonez.core {
     // Public API
     exports mayonez.annotations;
     exports mayonez.event;
+    exports mayonez.math;
+    exports mayonez.math.shapes;
     exports mayonez.util;
 }

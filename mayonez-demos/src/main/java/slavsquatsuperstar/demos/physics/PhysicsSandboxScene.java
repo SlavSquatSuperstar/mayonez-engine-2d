@@ -94,7 +94,7 @@ public class PhysicsSandboxScene extends Scene {
         var col = getColliderFromType(type);
 
         return new SandboxObject(name, position, rotation)
-                .addPhysics(col, Random.randomColor(), false, randomMaterial())
+                .addPhysics(col, Colors.randomColor(), false, randomMaterial())
                 .addMouseMovement()
                 .setLifetime(Random.randomFloat(15f, 20f));
     }

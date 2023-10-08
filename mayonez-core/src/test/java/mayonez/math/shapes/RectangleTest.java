@@ -3,7 +3,7 @@ package mayonez.math.shapes;
 import mayonez.math.*;
 import org.junit.jupiter.api.*;
 
-import static mayonez.test.TestUtils.*;
+import static mayonez.math.MathTestUtils.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**

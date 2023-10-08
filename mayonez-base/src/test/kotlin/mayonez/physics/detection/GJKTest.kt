@@ -2,7 +2,7 @@ package mayonez.physics.detection
 
 import mayonez.math.*
 import mayonez.math.shapes.*
-import mayonez.test.TestUtils.*
+import mayonez.physics.CollisionTestUtils.*
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

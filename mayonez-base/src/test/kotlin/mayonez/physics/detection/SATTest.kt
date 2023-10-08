@@ -3,7 +3,7 @@ package mayonez.physics.detection
 import mayonez.math.*
 import mayonez.math.shapes.*
 import mayonez.physics.manifold.*
-import mayonez.test.TestUtils.*
+import mayonez.physics.CollisionTestUtils.*
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach

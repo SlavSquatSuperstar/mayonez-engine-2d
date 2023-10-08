@@ -2,7 +2,7 @@ package mayonez.math;
 
 import org.junit.jupiter.api.*;
 
-import static mayonez.test.TestUtils.*;
+import static mayonez.math.MathTestUtils.*;
 
 /**
  * Unit tests for the {@link mayonez.math.Angle} class.
