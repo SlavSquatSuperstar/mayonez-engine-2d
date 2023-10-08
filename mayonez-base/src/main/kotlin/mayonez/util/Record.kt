@@ -1,10 +1,10 @@
 package mayonez.util
 
 /**
- * A data structure that stores information under key-value pairs, similar
- * to how objects store data in fields. A record stores simple data types,
- * including numbers, texts, booleans, arrays, and other records, and may
- * be converted to and from a JSONObject.
+ * Stores information under key-value pairs, similar to how objects store
+ * data in fields. Records store simple data types, including numbers,
+ * texts, booleans, arrays, and other records, and may be converted to and
+ * from a JSONObject.
  *
  * @author SlavSquatSuperstar
  */
@@ -151,9 +151,9 @@ open class Record(map: Map<String?, Any?>) {
     fun copy(): Record = Record(this.map)
 
     /**
-     * Adds all key-value pairs from another record. Any keys that exist in both
-     * records are overwritten with the value from the other record, as long
-     * as that value is not null.
+     * Adds all key-value pairs from another record. Any keys that exist in
+     * both records are overwritten with the value from the other record, as
+     * long as that value is not null.
      *
      * @param record another record
      */
@@ -195,4 +195,5 @@ open class Record(map: Map<String?, Any?>) {
     operator fun contains(key: String?): Boolean = map.containsKey(key)
 
     override fun toString(): String = map.toString()
+
 }

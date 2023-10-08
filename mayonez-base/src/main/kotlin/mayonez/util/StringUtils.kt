@@ -1,6 +1,6 @@
 package mayonez.util
 
-import kotlin.enums.EnumEntries
+import mayonez.util.StringUtils.toString
 
 /**
  * A collection of utility functions for manipulating text data.
@@ -8,33 +8,6 @@ import kotlin.enums.EnumEntries
  * @author SlavSquatSuperstar
  */
 object StringUtils {
-
-    // Array Methods
-
-    /**
-     * Joins an array of strings into a single string using the given
-     * separator.
-     *
-     * @param strings the string array
-     * @param separator the string connecting each member
-     * @return a single text string
-     */
-    @JvmStatic
-    fun join(strings: Array<Any?>, separator: String): String {
-        return strings.joinToString(separator = separator)
-    }
-
-    /**
-     * Splits a single string into an array along the given separator.
-     *
-     * @param string the text string
-     * @param delimiter the string separating each member
-     * @return an array of strings
-     */
-    @JvmStatic
-    fun split(string: String, delimiter: String): Array<String> {
-        return string.split(delimiter).toTypedArray()
-    }
 
     // Case Conversion Methods
 
@@ -61,12 +34,9 @@ object StringUtils {
      */
     @JvmStatic
     fun capitalizeAllWords(text: String): String {
-        val words = split(text, " ")
-        for (i in words.indices) words[i] = capitalizeFirstWord(words[i])
-        return words.joinToString(" ")
+        return text.split(" ")
+            .joinToString(" ") { capitalizeFirstWord(it) }
     }
-
-    // Ordering Methods
 
     // To String Methods
 
@@ -87,15 +57,16 @@ object StringUtils {
     }
 
     /**
-     * Finds the constant of an [Enum] class with the given name using the
-     * enum's [toString] implementation, case-insensitive.
+     * Finds the first object in the given collection with the given [toString]
+     * representation, case-insensitive.
      *
-     * @return the enum with the name, or null of none is found
+     * @param objects the collection to search
+     * @param name the object to find
+     * @return the object with the name, or null if none is found
      */
     @JvmStatic
-    fun <T : Enum<T>> findConstantWithName(entries: EnumEntries<T>, name: String?): T? {
-        return entries
-            .find { it.toString().equals(name, ignoreCase = true) }
+    fun <T> findWithName(objects: Collection<T>, name: String?): T? {
+        return objects.find { it.toString().equals(name, ignoreCase = true) }
     }
 
 }

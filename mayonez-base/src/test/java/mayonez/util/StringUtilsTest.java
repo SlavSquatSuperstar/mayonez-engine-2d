@@ -4,6 +4,8 @@ import mayonez.*;
 import mayonez.input.*;
 import org.junit.jupiter.api.*;
 
+import java.util.*;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -12,21 +14,6 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author SlavSquatSuperstar
  */
 class StringUtilsTest {
-
-    // Array Methods
-    @Test
-    void joinArrayToStringSuccess() {
-        String[] arr = {"Water", "Earth", "Fire", "Air"};
-        var joined = "Water, Earth, Fire, Air";
-        assertEquals(joined, StringUtils.join(arr, ", "));
-    }
-
-    @Test
-    void splitStringToArraySuccess() {
-        var text = "Water, Earth, Fire, Air";
-        String[] split = {"Water", "Earth", "Fire", "Air"};
-        assertArrayEquals(split, StringUtils.split(text, ", "));
-    }
 
     // Capitalization Tests
 
@@ -74,24 +61,25 @@ class StringUtilsTest {
         assertEquals("Scene", StringUtils.getObjectClassName(scene));
     }
 
-    // Find Enum Tests
+    // Find With Name Tests
 
     @Test
-    void findEnumConstantWithSpaceCorrect() {
+    void findObjectWithSpaceCorrect() {
+        var keys = new Key[] {Key.LEFT_SHIFT, Key.RIGHT_SHIFT, Key.LEFT, Key.RIGHT, Key.SPACE};
         var name = "left shift";
-        assertEquals(Key.LEFT_SHIFT, StringUtils.findConstantWithName(Key.getEntries(), name));
+        assertEquals(Key.LEFT_SHIFT, StringUtils.findWithName(Arrays.asList(keys), name));
     }
 
     @Test
-    void findEnumConstantNoSpacesCorrect() {
+    void findObjectNoSpacesCorrect() {
         var name = "space";
-        assertEquals(Key.SPACE, StringUtils.findConstantWithName(Key.getEntries(), name));
+        assertEquals(Key.SPACE, StringUtils.findWithName(Key.getEntries(), name));
     }
 
     @Test
-    void findEnumConstantInvalidIsNull() {
+    void findObjectInvalidIsNull() {
         var name = "joystick";
-        assertNull(StringUtils.findConstantWithName(Key.getEntries(), name));
+        assertNull(StringUtils.findWithName(Key.getEntries(), name));
     }
 
 }

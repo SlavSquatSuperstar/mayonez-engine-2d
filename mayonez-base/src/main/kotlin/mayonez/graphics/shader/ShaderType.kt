@@ -41,7 +41,7 @@ internal enum class ShaderType(
         @JvmStatic
         @Throws(IllegalArgumentException::class)
         fun findWithName(shaderName: String?): ShaderType {
-            return StringUtils.findConstantWithName(entries, shaderName)
+            return StringUtils.findWithName(entries, shaderName)
                 ?: throw IllegalArgumentException("Unexpected shader type \"$shaderName\"")
         }
 

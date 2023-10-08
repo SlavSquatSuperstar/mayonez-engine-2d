@@ -1,12 +1,16 @@
-package mayonez.util
+package mayonez.io
 
 import java.nio.file.Paths
 import java.util.*
 import kotlin.io.path.pathString
 
+private val pathSeparators: Array<String> = arrayOf("/", "\\")
+
 /**
  * An operating system of a computer running Java. Each operating system
  * defines a file separator and a line separator.
+ *
+ * @author SlavSquatSuperstar
  */
 enum class OperatingSystem(
     private val osName: String,
@@ -24,16 +28,15 @@ enum class OperatingSystem(
     WINDOWS("Windows", "\\", "\r\n"),
 
     /** An unknown or undefined operating system. */
-    UNKNOWN("Unknown", "/", "\n");
+    UNKNOWN("Unknown OS", "/", "\n");
 
     fun getOSFilename(filename: String): String {
-        val pathString = filename.replaceSeparators()
-        return pathString.removeTrailingSeparator()
+        return filename.replaceSeparators().removeTrailingSeparator()
     }
 
     private fun String.replaceSeparators(): String {
         val normalized = Paths.get(this).normalize().pathString // remove extra '.' or '..'
-        return normalized.split(*separators).joinToString(fileSeparator)
+        return normalized.split(*pathSeparators).joinToString(fileSeparator)
     }
 
     private fun String.removeTrailingSeparator(): String {
@@ -46,8 +49,6 @@ enum class OperatingSystem(
     override fun toString(): String = osName
 
     companion object {
-
-        private val separators: Array<String> = arrayOf("/", "\\")
 
         /**
          * Gets the current operating system of this device running Java.

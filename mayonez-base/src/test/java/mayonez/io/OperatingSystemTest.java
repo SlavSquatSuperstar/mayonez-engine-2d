@@ -1,11 +1,11 @@
-package mayonez.util;
+package mayonez.io;
 
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit tests for the {@link mayonez.util.OperatingSystem} class.
+ * Unit tests for the {@link mayonez.io.OperatingSystem} class.
  *
  * @author SlavSquatSuperstar
  */

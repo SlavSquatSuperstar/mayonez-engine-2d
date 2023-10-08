@@ -4,7 +4,6 @@ import mayonez.*;
 import mayonez.io.*;
 import mayonez.math.*;
 import mayonez.util.Record;
-import mayonez.util.*;
 
 import java.io.IOException;
 import java.util.*;
@@ -60,7 +59,7 @@ public class CSVFile extends Asset {
      */
     public void saveCSV(List<Record> records, String[] headers) {
         var csvLines = new String[records.size() + 1];
-        csvLines[0] = StringUtils.join(headers, ","); // add headers
+        csvLines[0] = String.join(",", headers); // add headers
 
         for (var row = 0; row < records.size(); row++) {
             csvLines[row + 1] = getCSVLineFromRecord(records, headers, row);
@@ -78,7 +77,7 @@ public class CSVFile extends Asset {
         for (var col = 0; col < headers.length; col++) {
             csvVals[col] = rec.getString(headers[col]);
         }
-        return StringUtils.join(csvVals, ",");
+        return String.join(",", csvVals);
     }
 
     public String[] getHeaders() {

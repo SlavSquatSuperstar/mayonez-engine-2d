@@ -1,6 +1,6 @@
 /**
- * Manages the application's resources and provides classes for reading and writing files into formats recognizable by
- * the game or by humans.
+ * Manages the application's resources and reads and writes files into formats recognizable
+ * by the game or by humans.
  *
  * @author SlavSquatSuperstar
  */
