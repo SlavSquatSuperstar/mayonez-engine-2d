@@ -94,7 +94,7 @@ final class GLWindow implements Window {
     public void render() {
         glClearColor(1f, 1f, 1f, 1f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear screen
-        SceneManager.renderCurrentScene(null); // Don't pass G2D
+        SceneManager.renderScene(null); // Don't pass G2D
         glfwSwapBuffers(windowID);
     }
 

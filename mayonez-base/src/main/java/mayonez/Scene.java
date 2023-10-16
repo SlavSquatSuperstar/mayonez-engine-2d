@@ -1,5 +1,6 @@
 package mayonez;
 
+import mayonez.graphics.Color;
 import mayonez.graphics.*;
 import mayonez.graphics.camera.*;
 import mayonez.graphics.debug.*;
@@ -13,7 +14,8 @@ import mayonez.physics.colliders.*;
 import mayonez.physics.dynamics.*;
 import mayonez.util.*;
 
-import java.awt.Graphics2D;
+import java.awt.*;
+import java.util.List;
 import java.util.*;
 
 /**
@@ -218,7 +220,7 @@ public abstract class Scene {
      */
     public final void addObject(GameObject obj) {
         if (obj == null) return;
-        if (state == SceneState.STOPPED) {
+        if (isStopped()) {
             // Static add: when not loaded
             addObjectToStoppedScene(obj);
         } else {
@@ -397,12 +399,16 @@ public abstract class Scene {
         physics.setGravity(gravity);
     }
 
-    SceneState getState() {
-        return state;
+    boolean isRunning() {
+        return state == SceneState.RUNNING;
     }
 
-    public boolean isRunning() {
-        return state == SceneState.RUNNING;
+    boolean isPaused() {
+        return state == SceneState.PAUSED;
+    }
+
+    boolean isStopped() {
+        return state == SceneState.STOPPED;
     }
 
     /**

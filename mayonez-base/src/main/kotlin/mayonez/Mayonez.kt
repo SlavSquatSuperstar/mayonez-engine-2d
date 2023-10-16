@@ -137,6 +137,7 @@ object Mayonez {
             started = false
             game.stop()
             Assets.clearAssets()
+            SceneManager.clearScenes()
             exitProgram(status)
         }
     }

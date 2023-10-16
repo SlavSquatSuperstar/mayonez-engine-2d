@@ -23,8 +23,8 @@ public abstract sealed class GameEngine permits JGameEngine, GLGameEngine {
     private boolean hasUpdatedThisFrame;
 
     // Debug Info Fields
-    float debugTimerSecs;
-    int actualFramesPerSecond;
+    private float debugTimerSecs;
+    private int actualFramesPerSecond;
 
     protected GameEngine(Window window) {
         this.window = window;
@@ -130,7 +130,7 @@ public abstract sealed class GameEngine permits JGameEngine, GLGameEngine {
 
     // TODO multi-thread physics, set time step shorter than refresh rate for smoother results
     final void update(float dt) {
-        SceneManager.updateCurrentScene(dt);
+        SceneManager.updateScene(dt);
     }
 
     final void render() {

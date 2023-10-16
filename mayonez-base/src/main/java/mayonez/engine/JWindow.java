@@ -92,7 +92,7 @@ final class JWindow extends JFrame implements Window {
             do {
                 clearScreen();
                 flipScreenVertically();
-                SceneManager.renderCurrentScene(g2);
+                SceneManager.renderScene(g2);
                 flushResources();
             } while (bs.contentsLost());
         } catch (IllegalStateException e) {
