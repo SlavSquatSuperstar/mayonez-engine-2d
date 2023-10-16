@@ -18,7 +18,7 @@ class LinesIOManagerTest {
 
     @Test
     void readLinesFromFileSuccess() {
-        var filename = "testassets/text/properties.txt";
+        var filename = "testassets/text/foo.txt";
         try {
             var input = LocationType.CLASSPATH.openInputStream(filename);
             var lines = new LinesIOManager().read(input);

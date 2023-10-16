@@ -1,6 +1,5 @@
 package mayonez.assets.text;
 
-import mayonez.assets.text.*;
 import mayonez.util.Record;
 import org.junit.jupiter.api.*;
 
@@ -28,7 +27,7 @@ class CSVFileTest {
         assertNotNull(recs);
         var rec = recs.get(0);
         assertEquals("Mayonez Engine", rec.getString("name"));
-        assertEquals(0.7f, rec.getFloat("version"));
+        assertEquals(0.8f, rec.getFloat("version"));
     }
 
     @Test

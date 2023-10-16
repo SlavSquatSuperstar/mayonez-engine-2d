@@ -18,7 +18,7 @@ class TextIOManagerTest {
 
     @Test
     void readTextFromFileSuccess() {
-        var filename = "testassets/text/properties.txt";
+        var filename = "testassets/text/foo.txt";
         try {
             var input = LocationType.CLASSPATH.openInputStream(filename);
             var text = new TextIOManager().read(input);

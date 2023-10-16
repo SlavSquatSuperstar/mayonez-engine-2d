@@ -1,6 +1,5 @@
 package mayonez.assets.text;
 
-import mayonez.assets.text.*;
 import mayonez.util.Record;
 import org.junit.jupiter.api.*;
 
@@ -47,8 +46,8 @@ class JSONFileTest {
         assertEquals("Java", rec.getArray("languages").get(0)); // array
         assertEquals("Mayonez Engine", rec.getString("name")); // string
 
-        assertEquals("0.7", rec.getString("version")); // string
-        assertEquals(0.7f, rec.getFloat("version")); // string to float
+        assertEquals("0.8", rec.getString("version")); // string
+        assertEquals(0.8f, rec.getFloat("version")); // string to float
         assertEquals(0, rec.getInt("version")); // string to int
 
     }

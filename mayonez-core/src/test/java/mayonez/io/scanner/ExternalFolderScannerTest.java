@@ -29,8 +29,8 @@ class ExternalFolderScannerTest {
     void scanValidFolderIsNotEmpty() {
         var files = scanner.getFiles("src/test/resources/testassets");
         assertFalse(files.isEmpty());
-        assertTrue(doesFolderContain(files, "src/test/resources/testassets/text/properties.txt"));
-        assertTrue(doesFolderContain(files, "src/test/resources/testassets/images/mario.png"));
+        assertTrue(doesFolderContain(files, "src/test/resources/testassets/text/foo.txt"));
+        assertTrue(doesFolderContain(files, "src/test/resources/testassets/out/readme.txt"));
         assertFalse(doesFolderContain(files, "src/test/java/mayonez/io/AssetsTest.class"));
         assertFalse(doesFolderContain(files, "src/test/resources/.DS_Store"));
     }
