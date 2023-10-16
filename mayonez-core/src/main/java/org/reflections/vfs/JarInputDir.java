@@ -1,7 +1,5 @@
 package org.reflections.vfs;
 
-import mayonez.*;
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
@@ -69,12 +67,9 @@ class JarInputDir implements VfsDir {
         };
     }
 
-    public void close() {
-        try {
-            if (jarInputStream != null) jarInputStream.close();
-        } catch (IOException e) {
-            Logger.warn("Could not close InputStream");
-            Logger.printStackTrace(e);
+    public void close() throws IOException {
+        if (jarInputStream != null) {
+            jarInputStream.close();
         }
     }
 

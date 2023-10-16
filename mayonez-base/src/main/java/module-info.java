@@ -16,7 +16,6 @@ module mayonez.base {
     requires org.lwjgl.stb;
 
     // Other Dependencies
-    requires org.json;
     requires org.joml;
 
     // Subprojects
@@ -34,10 +33,6 @@ module mayonez.base {
 
     exports mayonez.assets;
     exports mayonez.assets.text;
-
-    exports mayonez.io;
-    exports mayonez.io.image;
-    exports mayonez.io.text;
 
     // Renderer
     exports mayonez.graphics;

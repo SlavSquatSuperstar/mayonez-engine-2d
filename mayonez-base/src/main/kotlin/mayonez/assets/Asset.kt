@@ -1,15 +1,16 @@
 package mayonez.assets
 
+import mayonez.io.*
 import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
 import java.nio.file.*
 
 /**
- * A resource or file used by this program. Stores a [FilePath]
- * and opens input and output streams to that location. Each asset
- * must have a constructor with one string, since this is called using
- * reflection by [Assets.createAsset]
+ * A resource or file used by this program. Stores a [FilePath] and opens
+ * input and output streams to that location. Each asset must have a
+ * constructor with one string, since this is called using reflection by
+ * [Assets.createAsset]
  *
  * @author SlavSquatSuperstar
  */
@@ -19,18 +20,13 @@ open class Asset(filename: String) {
 
     val filename: String = filePath.filename
 
-    val locationType: LocationType = this.filePath.locationType
-
-    // Conversion Methods
-
-    private val path: Path
-        get() = Paths.get(filename)
+    val locationType: LocationType = filePath.locationType
 
     // I/O Methods
 
     /**
-     * Creates an [InputStream] that allows data to be read from this file. The
-     * input stream should be closed after use.
+     * Creates an [InputStream] that allows data to be read from this asset.
+     * The input stream should be closed after use.
      *
      * @return the input stream
      */
@@ -39,31 +35,12 @@ open class Asset(filename: String) {
         if (!filePath.isReadable()) {
             throw IOException("$locationType asset $filename is not readable")
         }
-
-        return when (locationType) {
-            LocationType.CLASSPATH -> openClasspathInputStream()
-            LocationType.EXTERNAL -> openExternalInputStream()
-        }
-    }
-
-    @Throws(IOException::class)
-    private fun openClasspathInputStream(): InputStream {
-        return ClassLoader.getSystemResourceAsStream(filename)
-            ?: throw IOException("Classpath resource $filename could not be read")
-    }
-
-    @Throws(IOException::class)
-    private fun openExternalInputStream(): InputStream {
-        try {
-            return Files.newInputStream(path)
-        } catch (e: Exception) {
-            throw IOException("External file $filename could not be read")
-        }
+        return locationType.openInputStream(filename)
     }
 
     /**
-     * Creates an [OutputStream] that allows data to be saved to this file.
-     * If the file does not yet exist, then a new file is created. The input
+     * Creates an [OutputStream] that allows data to be saved to this asset,
+     * and creates the file on the computer if it doesn't exist. The output
      * stream should be closed after use.
      *
      * @param append whether to add data to an existing file's contents instead
@@ -75,22 +52,7 @@ open class Asset(filename: String) {
         if (!filePath.isWritable()) {
             throw IOException("$locationType asset $filename is not writable")
         }
-
-        val options = if (append) {
-            arrayOf(StandardOpenOption.CREATE, StandardOpenOption.APPEND)
-        } else {
-            arrayOf(StandardOpenOption.CREATE)
-        }
-        return openExternalOutputStream(*options)
-    }
-
-    @Throws(IOException::class)
-    private fun openExternalOutputStream(vararg options: StandardOpenOption): OutputStream {
-        try {
-            return Files.newOutputStream(path, *options)
-        } catch (e: Exception) {
-            throw IOException("External file $filename could not be saved")
-        }
+        return locationType.openOutputStream(filename, append)
     }
 
     override fun toString(): String = "$locationType ${javaClass.simpleName} \"$filename\""

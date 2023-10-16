@@ -12,7 +12,6 @@ description = "The library project for Mayonez Engine that contains the API clas
 dependencies {
     // Code Dependencies
     implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
-    implementation("org.json:json:20230618")
 
     // LWJGL Modules
     implementation("org.joml:joml:1.10.5")

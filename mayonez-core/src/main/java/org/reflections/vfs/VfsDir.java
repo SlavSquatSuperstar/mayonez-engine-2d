@@ -1,5 +1,7 @@
 package org.reflections.vfs;
 
+import java.io.IOException;
+
 /**
  * A directory (folder) on an arbitrary file system. Originally an inner class,
  * {@code Vfs.Dir}, in org.reflections.
@@ -12,7 +14,7 @@ public interface VfsDir extends AutoCloseable {
 
     Iterable<VfsFile> getFiles();
 
-    default void close() {
+    default void close() throws IOException {
     }
 
 }

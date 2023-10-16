@@ -2,6 +2,7 @@ package mayonez.javatests;
 
 import mayonez.assets.*;
 import mayonez.assets.text.*;
+import mayonez.io.*;
 import org.junit.jupiter.api.*;
 
 import java.lang.reflect.Constructor;

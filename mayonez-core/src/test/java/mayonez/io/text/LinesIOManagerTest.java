@@ -1,6 +1,6 @@
 package mayonez.io.text;
 
-import mayonez.assets.*;
+import mayonez.io.*;
 import org.junit.jupiter.api.*;
 
 import java.io.File;
@@ -18,9 +18,9 @@ class LinesIOManagerTest {
 
     @Test
     void readLinesFromFileSuccess() {
-        var asset = new Asset("testassets/text/properties.txt");
+        var filename = "testassets/text/properties.txt";
         try {
-            var input = asset.openInputStream();
+            var input = LocationType.CLASSPATH.openInputStream(filename);
             var lines = new LinesIOManager().read(input);
             assertTrue(lines.length > 0);
             assertThrows(IOException.class, input::readAllBytes); // make sure stream closed
@@ -41,14 +41,13 @@ class LinesIOManagerTest {
             throw new RuntimeException(e);
         }
 
-        var asset = new Asset(filename);
         String[] lines = """
                 Hello there!
                 General Kenobi, you are a bold one!
                 Your move.
                 """.split("\n");
         try {
-            var output = asset.openOutputStream(false);
+            var output = LocationType.EXTERNAL.openOutputStream(filename, false);
             new LinesIOManager().write(output, lines);
             // make sure stream closed
             assertThrows(IOException.class,

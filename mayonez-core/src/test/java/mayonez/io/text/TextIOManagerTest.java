@@ -1,6 +1,6 @@
 package mayonez.io.text;
 
-import mayonez.assets.*;
+import mayonez.io.*;
 import org.junit.jupiter.api.*;
 
 import java.io.File;
@@ -18,11 +18,11 @@ class TextIOManagerTest {
 
     @Test
     void readTextFromFileSuccess() {
-        var asset = new Asset("testassets/text/properties.txt");
+        var filename = "testassets/text/properties.txt";
         try {
-            var input = asset.openInputStream();
+            var input = LocationType.CLASSPATH.openInputStream(filename);
             var text = new TextIOManager().read(input);
-            assertTrue(text.length() > 0);
+            assertFalse(text.isEmpty());
             assertThrows(IOException.class, input::readAllBytes); // make sure stream closed
         } catch (IOException e) {
             fail();
@@ -41,14 +41,13 @@ class TextIOManagerTest {
             fail(e.getMessage());
         }
 
-        var asset = new Asset(filename);
         String text = """
                 Hello there!
                 General Kenobi, you are a bold one!
                 Your move.
                 """;
         try {
-            var output = asset.openOutputStream(false);
+            var output = LocationType.EXTERNAL.openOutputStream(filename, false);
             new TextIOManager().write(output, text);
             // make sure stream closed
             assertThrows(IOException.class,

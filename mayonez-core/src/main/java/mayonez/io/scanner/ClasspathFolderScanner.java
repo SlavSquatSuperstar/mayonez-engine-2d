@@ -1,6 +1,6 @@
 package mayonez.io.scanner;
 
-import mayonez.assets.*;
+import mayonez.io.*;
 import org.reflections.vfs.Vfs;
 
 import java.util.*;
@@ -28,7 +28,7 @@ public class ClasspathFolderScanner implements FolderScanner {
     public List<String> getFiles(String directoryName) {
         var resources = new ArrayList<String>();
 
-        var url = FilePath.getClasspathURL(directoryName);
+        var url = LocationType.CLASSPATH.getURL(directoryName);
         if (url == null) return resources;
 
         try (var dir = Vfs.fromURL(url)) {

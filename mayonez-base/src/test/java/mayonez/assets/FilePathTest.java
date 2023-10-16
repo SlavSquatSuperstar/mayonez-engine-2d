@@ -1,6 +1,6 @@
 package mayonez.assets;
 
-import mayonez.assets.*;
+import mayonez.io.*;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
