@@ -67,6 +67,19 @@ enum class OperatingSystem(
             }
         }
 
+        /**
+         * Gets the filename with the correct path separators for the current OS.
+         * Note that '/' and '\' are valid filename characters in Unix, and may be
+         * incorrectly replaced.
+         *
+         * @param filename a path to a file
+         * @return the path formatted for the OS
+         */
+        @JvmStatic
+        fun getCurrentOSFilename(filename: String): String {
+            return getCurrentOS().getOSFilename(filename)
+        }
+
     }
 
 }

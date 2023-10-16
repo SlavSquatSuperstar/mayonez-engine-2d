@@ -32,6 +32,9 @@ module mayonez.base {
     exports mayonez.input.keyboard;
     exports mayonez.input.mouse;
 
+    exports mayonez.assets;
+    exports mayonez.assets.text;
+
     exports mayonez.io;
     exports mayonez.io.image;
     exports mayonez.io.text;

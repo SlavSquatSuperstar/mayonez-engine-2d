@@ -1,7 +1,7 @@
 package mayonez.graphics.textures;
 
 import mayonez.*;
-import mayonez.io.*;
+import mayonez.assets.*;
 
 /**
  * A factory class that constructs {@link mayonez.graphics.textures.Texture} objects

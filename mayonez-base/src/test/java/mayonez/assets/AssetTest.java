@@ -1,5 +1,6 @@
-package mayonez.io;
+package mayonez.assets;
 
+import mayonez.assets.*;
 import org.junit.jupiter.api.*;
 
 import java.io.*;
@@ -7,7 +8,7 @@ import java.io.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit tests for the {@link mayonez.io.Asset} class.
+ * Unit tests for the {@link mayonez.assets.Asset} class.
  *
  * @author SlavSquatSuperstar
  */

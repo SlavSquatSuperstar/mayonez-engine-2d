@@ -1,7 +1,8 @@
-package mayonez.io.text;
+package mayonez.assets.text;
 
 import mayonez.*;
-import mayonez.io.*;
+import mayonez.assets.*;
+import mayonez.io.text.*;
 import mayonez.math.*;
 import mayonez.util.Record;
 

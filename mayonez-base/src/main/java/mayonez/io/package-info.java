@@ -1,6 +1,5 @@
 /**
- * Manages the application's resources and reads and writes files into formats recognizable
- * by the game or by humans.
+ * Performs basic read and write operations on different file types.
  *
  * @author SlavSquatSuperstar
  */

@@ -1,6 +1,7 @@
-package mayonez.io.text;
+package mayonez.assets.text;
 
-import mayonez.io.*;
+import mayonez.assets.*;
+import mayonez.assets.text.*;
 import org.junit.jupiter.api.*;
 
 import java.time.LocalDate;
@@ -10,7 +11,7 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit tests for the {@link mayonez.io.text.TextFile} class.
+ * Unit tests for the {@link mayonez.assets.text.TextFile} class.
  *
  * @author SlavSquatSuperstar
  */

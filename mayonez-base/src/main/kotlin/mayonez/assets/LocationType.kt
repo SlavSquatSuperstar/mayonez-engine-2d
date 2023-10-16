@@ -1,4 +1,4 @@
-package mayonez.io
+package mayonez.assets
 
 import mayonez.util.*
 

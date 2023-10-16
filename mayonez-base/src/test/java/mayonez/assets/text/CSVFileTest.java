@@ -1,5 +1,6 @@
-package mayonez.io.text;
+package mayonez.assets.text;
 
+import mayonez.assets.text.*;
 import mayonez.util.Record;
 import org.junit.jupiter.api.*;
 
@@ -10,7 +11,7 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit tests for the {@link mayonez.io.text.CSVFile} class.
+ * Unit tests for the {@link mayonez.assets.text.CSVFile} class.
  *
  * @author SlavSquatSuperstar
  */

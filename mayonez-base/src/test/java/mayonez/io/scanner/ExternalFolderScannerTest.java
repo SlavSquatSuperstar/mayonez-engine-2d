@@ -1,13 +1,11 @@
 package mayonez.io.scanner;
 
-import mayonez.io.FilePath;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import mayonez.io.*;
+import org.junit.jupiter.api.*;
 
-import java.util.List;
+import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Unit tests for the {@link mayonez.io.scanner.ExternalFolderScanner} class.
@@ -24,7 +22,7 @@ class ExternalFolderScannerTest {
     }
 
     private static boolean doesFolderContain(List<String> files, String filename) {
-        return files.contains(FilePath.getOSFilename(filename));
+        return files.contains(OperatingSystem.getCurrentOSFilename(filename));
     }
 
     @Test

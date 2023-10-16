@@ -1,8 +1,8 @@
 package slavsquatsuperstar.demos.spacegame.combat;
 
 import mayonez.*;
-import mayonez.io.*;
-import mayonez.io.text.*;
+import mayonez.assets.*;
+import mayonez.assets.text.*;
 
 import java.util.*;
 

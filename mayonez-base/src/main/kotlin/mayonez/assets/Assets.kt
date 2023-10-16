@@ -1,8 +1,8 @@
-package mayonez.io
+package mayonez.assets
 
 import mayonez.*
+import mayonez.io.*
 import mayonez.io.scanner.*
-import mayonez.io.text.*
 
 /**
  * Manages the application's resources and allows users to create and
@@ -173,6 +173,6 @@ object Assets {
         return "Assets (Size = ${assets.size})"
     }
 
-    private fun String.toOS() = FilePath.getOSFilename(this)
+    private fun String.toOS() = OperatingSystem.getCurrentOSFilename(this)
 
 }

@@ -1,7 +1,7 @@
 package mayonez
 
+import mayonez.assets.text.*
 import mayonez.config.*
-import mayonez.io.text.*
 import java.io.File
 import java.time.LocalDate
 import java.util.*

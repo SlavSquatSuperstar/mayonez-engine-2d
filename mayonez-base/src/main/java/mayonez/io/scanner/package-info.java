@@ -1,5 +1,5 @@
 /**
- * Scans files inside. This package is not exported to the public API.
+ * Scans files inside folders and JAR files.
  *
  * @author SlavSquatSuperstar
  */

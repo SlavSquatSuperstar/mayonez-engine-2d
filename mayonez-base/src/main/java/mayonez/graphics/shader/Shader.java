@@ -3,7 +3,7 @@ package mayonez.graphics.shader;
 import mayonez.*;
 import mayonez.annotations.*;
 import mayonez.graphics.camera.*;
-import mayonez.io.*;
+import mayonez.assets.*;
 import mayonez.io.text.*;
 import org.joml.*;
 import org.lwjgl.BufferUtils;

@@ -1,6 +1,6 @@
 package mayonez.graphics.textures;
 
-import mayonez.io.*;
+import mayonez.assets.*;
 import mayonez.math.*;
 
 /**

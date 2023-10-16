@@ -1,10 +1,9 @@
-package mayonez.io.text;
+package mayonez.assets.text;
 
 import mayonez.*;
-import mayonez.io.*;
+import mayonez.assets.*;
+import mayonez.io.text.*;
 import mayonez.util.Record;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 
@@ -26,14 +25,11 @@ public class JSONFile extends Asset {
      */
     public Record readJSON() {
         try {
-            var text = new TextIOManager().read(openInputStream());
-            return new Record(new JSONObject(text).toMap());
-        } catch (JSONException e) {
-            Logger.error("Could not parse JSON in file \"%s\"", getFilename());
+            return new JsonIOManager().read(openInputStream());
         } catch (IOException e) {
             Logger.error("Could not read file \"%s\"", getFilename());
+            return new Record();
         }
-        return new Record();
     }
 
     /**
@@ -43,8 +39,7 @@ public class JSONFile extends Asset {
      */
     public void saveJSON(Record json) {
         try {
-            var jsonString = new JSONObject(json.toMap()).toString(4);
-            new TextIOManager().write(openOutputStream(false), jsonString);
+            new JsonIOManager().write(openOutputStream(false), json);
         } catch (IOException e) {
             Logger.error("Could not save to file \"%s\"", getFilename());
         }

@@ -1,9 +1,9 @@
 package slavsquatsuperstar.demos.spacegame.movement;
 
 import mayonez.*;
+import mayonez.assets.*;
+import mayonez.assets.text.*;
 import mayonez.graphics.sprites.*;
-import mayonez.io.*;
-import mayonez.io.text.*;
 import mayonez.math.*;
 import mayonez.util.Record;
 import slavsquatsuperstar.demos.spacegame.objects.ZIndex;

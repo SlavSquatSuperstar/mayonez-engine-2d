@@ -4,7 +4,7 @@ import mayonez.annotations.*
 import mayonez.graphics.batch.*
 import mayonez.graphics.camera.*
 import mayonez.graphics.shader.*
-import mayonez.io.*
+import mayonez.assets.*
 import java.awt.*
 
 /**

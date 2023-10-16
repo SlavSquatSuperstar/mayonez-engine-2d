@@ -1,5 +1,5 @@
 /**
- * Manages image-based resources, such as textures or shaders.
+ * Handles IO operations for image-based resources, such as textures.
  *
  * @author SlavSquatSuperstar
  */

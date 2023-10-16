@@ -1,6 +1,6 @@
 package mayonez.io.text;
 
-import mayonez.io.*;
+import mayonez.assets.*;
 import org.junit.jupiter.api.*;
 
 import java.io.File;

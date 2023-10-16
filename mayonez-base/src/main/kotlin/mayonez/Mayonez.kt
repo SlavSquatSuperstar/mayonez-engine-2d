@@ -2,7 +2,7 @@ package mayonez
 
 import mayonez.engine.*
 import mayonez.input.*
-import mayonez.io.*
+import mayonez.assets.*
 import mayonez.launcher.*
 import mayonez.math.*
 import kotlin.system.exitProcess

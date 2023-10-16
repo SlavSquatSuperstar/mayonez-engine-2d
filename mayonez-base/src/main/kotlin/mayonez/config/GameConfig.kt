@@ -1,6 +1,6 @@
 package mayonez.config
 
-import mayonez.io.text.*
+import mayonez.assets.text.*
 import mayonez.util.Record
 
 /**

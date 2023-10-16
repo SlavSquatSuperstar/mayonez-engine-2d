@@ -1,5 +1,6 @@
-package mayonez.io
+package mayonez.assets
 
+import mayonez.io.*
 import java.io.File
 import java.net.MalformedURLException
 import java.net.URL
@@ -11,8 +12,8 @@ import java.net.URL
 class FilePath(filename: String) {
 
     /**
-     * The OS-independent filename separated by forward slashes ('/'), used to store
-     * files in the asset system.
+     * The OS-independent filename separated by forward slashes ('/'), used to
+     * store files in the asset system.
      */
     val filename: String = getClasspathFilename(filename)
     private val osFilename: String = getOSFilename(filename)
@@ -82,18 +83,8 @@ class FilePath(filename: String) {
 
     companion object {
 
-        /**
-         * Gets the filename with the correct path separators for the current OS.
-         * Note that '/' and '\' are valid filename characters in Unix, and may be
-         * incorrectly replaced.
-         *
-         * @param filename a path to a file
-         * @return the path formatted for the OS
-         */
-        @JvmStatic
-        fun getOSFilename(filename: String): String {
-            val currOS = OperatingSystem.getCurrentOS()
-            return currOS.getOSFilename(filename)
+        private fun getOSFilename(filename: String): String {
+            return OperatingSystem.getCurrentOSFilename(filename)
         }
 
         private fun getClasspathFilename(filename: String): String {
@@ -101,9 +92,9 @@ class FilePath(filename: String) {
         }
 
         /**
-         * Automatically determines the file's location type. Attempts to
-         * locate a classpath resource at this path, or otherwise defaults to an
-         * external file.
+         * Automatically determines the file's location type. Attempts to locate a
+         * classpath resource at this path, or otherwise defaults to an external
+         * file.
          */
         private fun getLocationType(filename: String): LocationType {
             return if (getClasspathURL(filename) != null) LocationType.CLASSPATH
