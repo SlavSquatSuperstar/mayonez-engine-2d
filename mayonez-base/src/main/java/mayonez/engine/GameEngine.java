@@ -3,7 +3,6 @@ package mayonez.engine;
 import mayonez.*;
 import mayonez.input.*;
 import mayonez.math.*;
-import mayonez.util.*;
 
 /**
  * The application that contains the engine's core loop.

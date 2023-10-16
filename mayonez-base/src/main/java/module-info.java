@@ -27,7 +27,6 @@ module mayonez.base {
     exports mayonez.config;
     exports mayonez.event;
     exports mayonez.launcher;
-    exports mayonez.util;
 
     exports mayonez.input;
     exports mayonez.input.keyboard;

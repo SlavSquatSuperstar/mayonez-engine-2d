@@ -4,7 +4,6 @@ import mayonez.*;
 import mayonez.annotations.*;
 import mayonez.io.*;
 import mayonez.math.*;
-import mayonez.util.*;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;

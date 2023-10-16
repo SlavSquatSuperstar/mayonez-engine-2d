@@ -2,7 +2,6 @@ package mayonez
 
 import mayonez.input.*
 import mayonez.launcher.*
-import mayonez.util.*
 import java.awt.*
 
 /**

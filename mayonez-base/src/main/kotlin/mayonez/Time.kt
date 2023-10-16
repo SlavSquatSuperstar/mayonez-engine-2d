@@ -1,4 +1,4 @@
-package mayonez.util
+package mayonez
 
 import java.time.LocalDateTime
 
@@ -18,7 +18,7 @@ object Time {
     // Static Properties
     @JvmStatic
     var timeStepSecs = DEFAULT_TIME_STEP_SECS
-        set(timeStepSecs) {
+        internal set(timeStepSecs) {
             if (timeStepSecs > 0 && timeStepSecs.isFinite()) {
                 field = timeStepSecs
             }
@@ -44,7 +44,7 @@ object Time {
 
     // Debug Methods
 
-    fun debugCurrentDateTime() {
+    internal fun debugCurrentDateTime() {
         val now = LocalDateTime.now()
         Logger.debug("Currently it is %s", now)
     }

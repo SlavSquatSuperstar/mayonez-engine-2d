@@ -1,6 +1,6 @@
 package org.reflections.vfs;
 
-import mayonez.util.*;
+import mayonez.*;
 
 import java.net.URL;
 
@@ -32,10 +32,8 @@ public final class Vfs {
             }
         }
 
-        String msg = ("Could not create VfsDir from url, no matching UrlType was found [%s]. " +
-                "Either use fromURL(final URL url, final List<UrlType> urlTypes) or " +
-                "use the static setDefaultURLTypes(final List<UrlType> urlTypes) or addDefaultURLTypes(UrlType urlType) " +
-                "with your specialized UrlType.").formatted(url.toExternalForm());
+        String msg = "Could not create VfsDir from URL \"%s\", no matching UrlType was found."
+                .formatted(url.toExternalForm());
         throw new RuntimeException(msg);
     }
 

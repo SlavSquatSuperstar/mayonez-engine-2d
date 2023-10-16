@@ -1,4 +1,4 @@
-package mayonez.util
+package mayonez
 
 /**
  * Different logger priority levels to be used ƒor reporting different
@@ -7,7 +7,8 @@ package mayonez.util
  *
  * @author SlavSquatSuperstar
  */
-enum class LogLevel(private val level: Int) {
+internal enum class LogLevel(private val level: Int) {
+
     /** Denotes that all log messages should be printed to the console. */
     ALL(0),
 
@@ -27,4 +28,5 @@ enum class LogLevel(private val level: Int) {
     NONE(5);
 
     override fun toString(): String = "LogLevel $name (Level $level)"
+
 }

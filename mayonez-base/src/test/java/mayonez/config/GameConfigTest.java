@@ -34,7 +34,7 @@ class GameConfigTest {
 
     @Test
     void configFileReadCorrectly() {
-        GameConfig config = new GameConfig("testassets/config/user_config1.json", defaults);
+        GameConfig config = new GameConfig("mayonez/config/user_config1.json", defaults);
         config.readFromFile();
 
         assertEquals("Mayonez Demos", config.getString("name"));
@@ -45,7 +45,7 @@ class GameConfigTest {
 
     @Test
     void allPreferencesAreValid() {
-        var config = getConfig("testassets/config/user_config1.json");
+        var config = getConfig("mayonez/config/user_config1.json");
 
         assertEquals("Mayonez Demos", config.getString("name"));
         assertEquals("0.0.1-alpha", config.getString("version"));
@@ -55,7 +55,7 @@ class GameConfigTest {
 
     @Test
     void somePreferencesAreValid() {
-        var config = getConfig("testassets/config/user_config2.json");
+        var config = getConfig("mayonez/config/user_config2.json");
 
         assertEquals("Mayonez Demos", config.getString("name"));
         assertEquals(VERSION, config.getString("version"));
@@ -65,7 +65,7 @@ class GameConfigTest {
 
     @Test
     void preferencesFileIsEmpty() {
-        var config = getConfig("testassets/config/user_config3.json");
+        var config = getConfig("mayonez/config/user_config3.json");
 
         assertEquals(NAME, config.getString("name"));
         assertEquals(VERSION, config.getString("version"));

@@ -3,7 +3,6 @@ package mayonez.scripts.movement;
 import mayonez.*;
 import mayonez.math.*;
 import mayonez.physics.dynamics.*;
-import mayonez.util.*;
 
 /**
  * A base class contains utility methods for scripts using the input devices.

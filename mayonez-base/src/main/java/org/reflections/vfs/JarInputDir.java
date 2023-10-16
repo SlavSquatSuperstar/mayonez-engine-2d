@@ -1,6 +1,6 @@
 package org.reflections.vfs;
 
-import mayonez.util.*;
+import mayonez.*;
 
 import java.io.IOException;
 import java.net.URL;

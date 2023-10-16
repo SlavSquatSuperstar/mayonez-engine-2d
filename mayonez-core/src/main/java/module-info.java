@@ -19,4 +19,5 @@ module mayonez.core {
     exports mayonez.annotations;
     exports mayonez.math;
     exports mayonez.math.shapes;
+    exports mayonez.util;
 }

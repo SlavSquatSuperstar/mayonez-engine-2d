@@ -1,4 +1,4 @@
-package mayonez.util
+package mayonez
 
 import mayonez.config.*
 import mayonez.io.text.*
@@ -39,7 +39,7 @@ object Logger {
 
     // Logger Init Methods
 
-    fun setConfig(config: LoggerConfig) {
+    internal fun setConfig(config: LoggerConfig) {
         if (!initialized) {
             Logger.config = config
             createLogFile()

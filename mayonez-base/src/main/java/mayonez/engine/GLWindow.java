@@ -4,7 +4,6 @@ import mayonez.*;
 import mayonez.annotations.*;
 import mayonez.input.keyboard.*;
 import mayonez.input.mouse.*;
-import mayonez.util.*;
 import org.lwjgl.opengl.GL;
 
 import static mayonez.engine.GLFWHelper.*;

@@ -3,7 +3,6 @@ package mayonez.graphics.textures;
 import mayonez.*;
 import mayonez.annotations.*;
 import mayonez.math.*;
-import mayonez.util.*;
 
 import javax.imageio.ImageIO;
 import java.awt.*;

@@ -1,8 +1,8 @@
 package mayonez.io
 
+import mayonez.*
 import mayonez.io.scanner.*
 import mayonez.io.text.*
-import mayonez.util.*
 
 /**
  * Manages the application's resources and allows users to create and

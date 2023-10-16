@@ -5,7 +5,6 @@ import mayonez.input.*
 import mayonez.io.*
 import mayonez.launcher.*
 import mayonez.math.*
-import mayonez.util.*
 import kotlin.system.exitProcess
 
 /**
