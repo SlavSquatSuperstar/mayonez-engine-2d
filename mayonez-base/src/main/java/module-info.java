@@ -1,6 +1,6 @@
 /**
- * The core library of Mayonez Engine, which contains all the base classes for developing
- * a game.
+ * The foundational module of Mayonez Engine, which contains all the base classes needed
+ * to run an application and develop a game.
  *
  * @author SlavSquatSuperstar
  */
@@ -19,7 +19,7 @@ module mayonez.base {
     requires org.joml;
 
     // Subprojects
-    requires transitive mayonez.core;
+    requires transitive mayonez.tools;
 
     // Base API
     exports mayonez;

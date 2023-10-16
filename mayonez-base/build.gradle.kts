@@ -7,7 +7,7 @@ plugins {
     id(kotlinPlugin)
 }
 
-description = "The library project for Mayonez Engine that contains the API classes."
+description = "The core library for Mayonez Engine that contains the API classes."
 
 dependencies {
     // Code Dependencies
@@ -28,7 +28,7 @@ dependencies {
     implementation("org.lwjgl:lwjgl-stb::$lwjglNatives")
 
     // Subprojects
-    api(project(":mayonez-core"))
+    api(project(":mayonez-tools"))
 }
 
 // Plugins and Tasks

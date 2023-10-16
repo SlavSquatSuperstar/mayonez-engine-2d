@@ -7,17 +7,12 @@ plugins {
     id(kotlinPlugin)
 }
 
-description = "The core project for Mayonez Engine that contains the base classes."
+description = "A helper library containing math and file I/O tools."
 
 dependencies {
     // Code Dependencies
     implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
     implementation("org.json:json:20230618")
-
-    // LWJGL Modules
-    implementation(platform("org.lwjgl:lwjgl-bom:$lwjglVersion")) // Bill of materials: set version for all libs
-
-    implementation("org.lwjgl:lwjgl-glfw")
 }
 
 // Plugins and Tasks
