@@ -1,4 +1,4 @@
-package mayonez.annotations;
+package mayonez.graphics;
 
 /**
  * Which window and rendering framework a class is created for.

@@ -1,6 +1,6 @@
 package mayonez.graphics.camera;
 
-import mayonez.annotations.*;
+import mayonez.graphics.*;
 import mayonez.math.*;
 
 /**

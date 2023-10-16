@@ -1,7 +1,7 @@
 package mayonez.input.keyboard
 
-import mayonez.annotations.*
 import mayonez.event.*
+import mayonez.graphics.*
 import mayonez.input.*
 import org.lwjgl.glfw.GLFW
 

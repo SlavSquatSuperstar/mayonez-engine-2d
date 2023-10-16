@@ -1,6 +1,6 @@
 package mayonez.graphics.batch;
 
-import mayonez.annotations.*;
+import mayonez.graphics.*;
 
 import java.util.*;
 

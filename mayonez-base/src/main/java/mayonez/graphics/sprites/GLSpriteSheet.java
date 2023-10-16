@@ -1,6 +1,6 @@
 package mayonez.graphics.sprites;
 
-import mayonez.annotations.*;
+import mayonez.graphics.*;
 import mayonez.graphics.textures.*;
 import mayonez.math.*;
 import mayonez.math.shapes.*;

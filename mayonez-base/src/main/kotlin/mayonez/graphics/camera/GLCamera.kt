@@ -1,7 +1,7 @@
 package mayonez.graphics.camera
 
 import mayonez.*
-import mayonez.annotations.*
+import mayonez.graphics.*
 import mayonez.math.*
 import org.joml.*
 

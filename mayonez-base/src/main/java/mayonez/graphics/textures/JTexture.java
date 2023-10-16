@@ -1,7 +1,7 @@
 package mayonez.graphics.textures;
 
 import mayonez.*;
-import mayonez.annotations.*;
+import mayonez.graphics.*;
 import mayonez.math.*;
 
 import javax.imageio.ImageIO;

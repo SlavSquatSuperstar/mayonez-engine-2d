@@ -1,7 +1,7 @@
 package mayonez.graphics.shader;
 
 import mayonez.*;
-import mayonez.annotations.*;
+import mayonez.graphics.*;
 import mayonez.graphics.camera.*;
 import mayonez.assets.*;
 import mayonez.io.text.*;

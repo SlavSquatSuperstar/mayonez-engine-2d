@@ -1,7 +1,7 @@
 package mayonez.engine;
 
 import mayonez.*;
-import mayonez.annotations.*;
+import mayonez.graphics.*;
 import mayonez.input.keyboard.*;
 import mayonez.input.mouse.*;
 

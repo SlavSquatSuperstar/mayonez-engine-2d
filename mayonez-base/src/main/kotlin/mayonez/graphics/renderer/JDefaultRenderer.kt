@@ -1,7 +1,7 @@
 package mayonez.graphics.renderer
 
 import mayonez.*
-import mayonez.annotations.*
+import mayonez.graphics.*
 import mayonez.graphics.camera.*
 import mayonez.graphics.debug.*
 import mayonez.graphics.sprites.*

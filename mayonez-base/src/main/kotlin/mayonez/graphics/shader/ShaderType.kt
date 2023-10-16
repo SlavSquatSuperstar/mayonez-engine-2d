@@ -1,6 +1,7 @@
 package mayonez.graphics.shader
 
 import mayonez.annotations.*
+import mayonez.graphics.*
 import mayonez.util.*
 import org.lwjgl.opengl.GL20
 

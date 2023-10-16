@@ -1,6 +1,5 @@
 package mayonez.graphics.sprites
 
-import mayonez.annotations.*
 import mayonez.graphics.*
 import mayonez.graphics.batch.*
 import mayonez.graphics.renderer.*

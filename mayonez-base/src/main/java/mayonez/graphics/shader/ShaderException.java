@@ -1,6 +1,6 @@
 package mayonez.graphics.shader;
 
-import mayonez.annotations.*;
+import mayonez.graphics.*;
 
 /**
  * An exception occurring when the program cannot successfully parse or

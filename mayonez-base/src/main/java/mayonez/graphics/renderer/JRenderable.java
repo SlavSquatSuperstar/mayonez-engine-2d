@@ -1,6 +1,6 @@
 package mayonez.graphics.renderer;
 
-import mayonez.annotations.*;
+import mayonez.graphics.*;
 
 import java.awt.*;
 

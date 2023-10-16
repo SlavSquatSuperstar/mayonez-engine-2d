@@ -1,6 +1,6 @@
 package mayonez.graphics.batch
 
-import mayonez.annotations.*
+import mayonez.graphics.*
 import mayonez.math.*
 import mayonez.util.*
 import org.lwjgl.opengl.GL11

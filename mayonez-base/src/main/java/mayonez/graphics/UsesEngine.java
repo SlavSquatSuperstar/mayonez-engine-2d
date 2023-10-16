@@ -1,4 +1,4 @@
-package mayonez.annotations;
+package mayonez.graphics;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;
