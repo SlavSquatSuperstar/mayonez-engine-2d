@@ -15,17 +15,8 @@ module mayonez.core {
     // Other Dependencies
     requires org.json;
 
-    // Public API
+    // Shared API
     exports mayonez.annotations;
-    exports mayonez.config;
-    exports mayonez.event;
-    exports mayonez.input;
-    exports mayonez.input.keyboard;
-    exports mayonez.input.mouse;
-    exports mayonez.io;
-    exports mayonez.io.image;
-    exports mayonez.io.text;
     exports mayonez.math;
     exports mayonez.math.shapes;
-    exports mayonez.util;
 }

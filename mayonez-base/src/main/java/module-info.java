@@ -16,16 +16,26 @@ module mayonez.base {
     requires org.lwjgl.stb;
 
     // Other Dependencies
+    requires org.json;
     requires org.joml;
 
     // Subprojects
     requires transitive mayonez.core;
 
-    // Public API
-
-    // Base Module
+    // Base API
     exports mayonez;
+    exports mayonez.config;
+    exports mayonez.event;
     exports mayonez.launcher;
+    exports mayonez.util;
+
+    exports mayonez.input;
+    exports mayonez.input.keyboard;
+    exports mayonez.input.mouse;
+
+    exports mayonez.io;
+    exports mayonez.io.image;
+    exports mayonez.io.text;
 
     // Renderer
     exports mayonez.graphics;
@@ -39,7 +49,7 @@ module mayonez.base {
     exports mayonez.physics.colliders;
     exports mayonez.physics.dynamics;
 
-    // API
+    // Addons
     exports mayonez.scripts;
     exports mayonez.scripts.mouse;
     exports mayonez.scripts.movement;
