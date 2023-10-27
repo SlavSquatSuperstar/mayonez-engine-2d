@@ -1,10 +1,7 @@
 package mayonez;
 
-import mayonez.graphics.sprites.*;
 import mayonez.math.*;
 import mayonez.physics.*;
-import mayonez.physics.colliders.*;
-import mayonez.scripts.movement.*;
 import mayonez.util.*;
 
 import java.util.*;
@@ -89,7 +86,7 @@ public class GameObject {
     final void start() {
         init();
 //        children.forEach(getScene()::addObject);
-        setUpdateOrder(Component.class, MovementScript.class, Script.class, Collider.class, Sprite.class);
+        components.sort(Comparator.comparingInt(Component::getUpdateOrder));
         components.forEach(Component::start);
     }
 
@@ -216,32 +213,6 @@ public class GameObject {
      */
     public List<Component> getComponents() {
         return List.copyOf(components);
-    }
-
-    /**
-     * Sets the update order of this object's components from first to last. A subclass's order will override the order
-     * of its superclass.
-     *
-     * @param order an array of component subclasses
-     */
-    public void setUpdateOrder(Class<?>... order) {
-        if (updateOrder == null) { // if not defined
-            updateOrder = new ArrayList<>(filterComponentSubclasses(order));
-        }
-        components.sort(Comparator.comparingInt(c -> getComponentUpdateOrder(c.getClass())));
-    }
-
-    private static List<Class<?>> filterComponentSubclasses(Class<?>[] order) {
-        return Arrays.stream(order)
-                .filter(cls -> (cls != null) && Component.class.isAssignableFrom(cls))
-                .toList();
-    }
-
-    private int getComponentUpdateOrder(Class<?> componentCls) {
-        var i = updateOrder.indexOf(componentCls);
-        if (i > -1) return i; // class present
-        i = getComponentUpdateOrder(componentCls.getSuperclass()); // keep searching for super
-        return (i > -1) ? i : updateOrder.size(); // just update last
     }
 
     // Child Object Methods

@@ -17,6 +17,7 @@ public abstract class MovementScript extends Script {
     protected Rigidbody rb = null; // Reference to object rigidbody
 
     public MovementScript(float speed, MoveMode mode) {
+        super(UpdateOrder.INPUT);
         this.mode = mode;
         this.speed = speed;
     }

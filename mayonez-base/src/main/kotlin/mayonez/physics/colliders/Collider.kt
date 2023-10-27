@@ -9,7 +9,7 @@ import mayonez.physics.manifold.*
 
 /**
  * A shape centered around the object's position that detects collisions.
- * Colliders require a [mayonez.physics.Rigidbody] to respond to collisions
+ * Colliders require a [mayonez.physics.dynamics.Rigidbody] to respond to collisions
  * properly.
  *
  * @param shapeData the shape object that stores the vertices and the
@@ -17,7 +17,8 @@ import mayonez.physics.manifold.*
  * @constructor Constructs a collider from a [Shape] object
  * @author SlavSquatSuperstar
  */
-abstract class Collider(private val shapeData: Shape) : Component(), CollisionBody {
+abstract class Collider(private val shapeData: Shape)
+    : Component(UpdateOrder.COLLISION), CollisionBody {
 
     // Component References
 

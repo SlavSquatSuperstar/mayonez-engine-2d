@@ -11,7 +11,7 @@ import mayonez.graphics.textures.*
  *
  * @author SlavSquatSuperstar
  */
-sealed class Sprite : Component(), Renderable {
+sealed class Sprite : Component(UpdateOrder.RENDER), Renderable {
 
     companion object {
         @JvmStatic

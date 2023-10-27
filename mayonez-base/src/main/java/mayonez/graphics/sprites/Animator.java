@@ -27,6 +27,7 @@ public class Animator extends Script {
      * @param secondsPerFrame how much time to spend on each frame
      */
     public Animator(SpriteSheet sprites, float secondsPerFrame) {
+        super(UpdateOrder.RENDER);
         this.textures = sprites.getTextures();
         this.numFrames = textures.length;
         currentFrame = 0;

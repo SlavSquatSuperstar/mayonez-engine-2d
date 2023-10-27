@@ -28,6 +28,7 @@ public class ShapeSprite extends Component {
      * @param fill  whether to fill the shape interior
      */
     public ShapeSprite(Color color, boolean fill) {
+        super(UpdateOrder.RENDER);
         this.color = color;
         this.fill = fill;
     }

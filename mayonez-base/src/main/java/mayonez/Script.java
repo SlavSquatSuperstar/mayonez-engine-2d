@@ -13,11 +13,22 @@ import mayonez.physics.dynamics.*;
  * callback functions, such as {@link #onEnable()} and {@link #onCollisionEnter}, which are
  * called during game and collision events.
  * <p>
+ * Scripts receive an order of {@link mayonez.UpdateOrder#SCRIPT} by default, but the order
+ * can be changed using {@link #Script(UpdateOrder)}.
+ * <p>
  * See {@link mayonez.GameObject} and {@link mayonez.Script} for more information.
  *
  * @author SlavSquatSuperstar
  */
 public abstract class Script extends Component {
+
+    public Script() {
+        super(UpdateOrder.SCRIPT);
+    }
+
+    public Script(UpdateOrder updateOrder) {
+        super(updateOrder);
+    }
 
     // Game Loop Methods
 

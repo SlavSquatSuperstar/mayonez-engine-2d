@@ -12,7 +12,8 @@ import kotlin.math.*
  *
  * @author SlavSquatSuperstar
  */
-class Rigidbody(mass: Float, drag: Float, angDrag: Float) : Component(), PhysicsBody {
+class Rigidbody(mass: Float, drag: Float, angDrag: Float)
+    : Component(UpdateOrder.PHYSICS), PhysicsBody {
 
     constructor(mass: Float) : this(mass, 0f, 0f)
 
