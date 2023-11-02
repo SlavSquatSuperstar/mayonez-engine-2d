@@ -143,7 +143,9 @@ class Edge(val start: Vec2, val end: Vec2) : Shape() {
     override fun boundingCircle(): Circle = Circle(center(), length * 0.5f)
 
     override fun boundingRectangle(): BoundingBox {
-        return BoundingBox(center(), Vec2(abs(end.x - start.x), abs(end.y - start.y)))
+        val width = abs(end.x - start.x).coerceAtLeast(FloatMath.FLOAT_EPSILON)
+        val height = abs(end.y - start.y).coerceAtLeast(FloatMath.FLOAT_EPSILON)
+        return BoundingBox(center(), Vec2(width, height))
     }
 
     // Edge vs Point
@@ -176,6 +178,13 @@ class Edge(val start: Vec2, val end: Vec2) : Shape() {
     }
 
     // Physical Properties
+
+    /**
+     * The mass of the edge, assuming a uniform density throughout the edge.
+     *
+     * @param density the linear density (mass per length) of the edge
+     */
+    override fun mass(density: Float): Float = density * length
 
     /**
      * The edge's centroidal moment of inertia, equal to 1/12*ml^2. Equivalent

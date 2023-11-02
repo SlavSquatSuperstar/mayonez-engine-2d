@@ -1,5 +1,5 @@
 /** The default Kotlin version for libraries and plugins. */
-const val kotlinVersion: String = "1.9.10"
+const val kotlinVersion: String = "1.9.20"
 
 /** The version for the JUnit testing libraries. */
 const val junitVersion = "5.10.0"

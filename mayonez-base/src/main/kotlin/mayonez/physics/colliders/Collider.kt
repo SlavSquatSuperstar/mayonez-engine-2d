@@ -12,12 +12,12 @@ import mayonez.physics.manifold.*
  * Colliders require a [mayonez.physics.dynamics.Rigidbody] to respond to collisions
  * properly.
  *
- * @param shapeData the shape object that stores the vertices and the
+ * @param shape the shape object that stores the vertices and the
  *     shape's properties
  * @constructor Constructs a collider from a [Shape] object
  * @author SlavSquatSuperstar
  */
-abstract class Collider(private val shapeData: Shape)
+abstract class Collider(private val shape: Shape)
     : Component(UpdateOrder.COLLISION), CollisionBody {
 
     // Component References
@@ -65,18 +65,18 @@ abstract class Collider(private val shapeData: Shape)
     override fun getMinBounds(): BoundingBox = getShape().boundingRectangle()
 
     override fun getMass(density: Float): Float {
-        return shapeData.scale(transform!!.scale).mass(density)
+        return shape.scale(transform!!.scale).mass(density)
     }
 
     override fun getAngMass(mass: Float): Float {
-        return shapeData.scale(transform!!.scale).angularMass(mass)
+        return shape.scale(transform!!.scale).angularMass(mass)
     }
 
     // Transform Methods
 
     // TODO save as mutable field
     override fun getShape(): Shape {
-        return shapeData.rotate(getRotation())
+        return shape.rotate(getRotation())
             .scale(transform!!.scale)
             .translate(center())
     }

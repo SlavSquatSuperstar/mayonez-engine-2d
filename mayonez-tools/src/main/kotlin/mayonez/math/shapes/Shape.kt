@@ -111,7 +111,7 @@ abstract class Shape : Transformable {
      *
      * @param density the area density (mass per area) of the shape
      */
-    fun mass(density: Float): Float = density * area()
+    open fun mass(density: Float): Float = density * area()
 
     /**
      * The two-dimensional moment of inertia (angular mass) of the shape around

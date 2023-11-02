@@ -52,14 +52,11 @@ public class PhysicsSandboxScene extends Scene {
 
         // Create Random Shapes
         if (!KeyInput.keyDown("left shift")) {
-            if (KeyInput.keyPressed("1")) {
-                addObject(createRandomShape(MouseInput.getPosition(), 1));
-            } else if (KeyInput.keyPressed("2")) {
-                addObject(createRandomShape(MouseInput.getPosition(), 2));
-            } else if (KeyInput.keyPressed("3")) {
-                addObject(createRandomShape(MouseInput.getPosition(), 3));
-            } else if (KeyInput.keyPressed("4")) {
-                addObject(createRandomShape(MouseInput.getPosition(), 4));
+            for (int i = 1; i <= 5; i++) {
+                if (KeyInput.keyPressed(String.valueOf(i))) {
+                    addObject(createRandomShape(MouseInput.getPosition(), i));
+                    return;
+                }
             }
         }
     }
@@ -102,10 +99,11 @@ public class PhysicsSandboxScene extends Scene {
     private static String getNameFromType(int type) {
         String name;
         switch (type) {
-            case 1 -> name = "Random Ball";
-            case 2 -> name = "Random Box";
+            case 1 -> name = "Random Box";
+            case 2 -> name = "Random Ball";
             case 3 -> name = "Random Triangle";
             case 4 -> name = "Random Polygon";
+            case 5 -> name = "Random Edge";
             default -> name = "Unknown Shape";
         }
         return name;
@@ -114,16 +112,17 @@ public class PhysicsSandboxScene extends Scene {
     private static Collider getColliderFromType(int type) {
         Collider col;
         switch (type) {
-            case 1 -> col = new BallCollider(Random.randomVector(new Vec2(4f), new Vec2(10f)));
-            case 2 -> col = new BoxCollider(Random.randomVector(new Vec2(4f), new Vec2(10f)));
+            case 1 -> col = new BoxCollider(Random.randomVector(new Vec2(4f), new Vec2(10f)));
+            case 2 -> col = new BallCollider(Random.randomVector(new Vec2(4f), new Vec2(10f)));
             case 3 -> col = new PolygonCollider(3, Random.randomFloat(3f, 6f));
             case 4 -> col = new PolygonCollider(Random.randomInt(5, 8), Random.randomFloat(3f, 6f));
+            case 5 -> col = new EdgeCollider(Random.randomInt(4, 12));
             default -> col = new BoxCollider(new Vec2(1f));
         }
         return col;
     }
 
-    private PhysicsMaterial randomMaterial() {
+    private static PhysicsMaterial randomMaterial() {
         return new PhysicsMaterial(Random.randomFloat(0f, 1f), Random.randomFloat(0f, 1f), Random.randomFloat(0f, 1f));
     }
 
