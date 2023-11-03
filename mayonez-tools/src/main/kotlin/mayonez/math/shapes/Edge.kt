@@ -64,59 +64,6 @@ class Edge(val start: Vec2, val end: Vec2) : Shape() {
     /** The center of the edge, or the midpoint of the two vertices. */
     override fun center(): Vec2 = start.midpoint(end)
 
-//    /**
-//     * Clips an edge along a single plane and keeps one of the sub-segments.
-//     *
-//     * @param plane     a ray pointing towards this edge
-//     * @param direction in which direction to keep the points
-//     * @return the clipped edge
-//     */
-//    fun clipToPlane(plane: Ray, direction: Vec2): Edge {
-//        // Find edge intersection with plane
-//        val edge = Ray(start, toVector() / length)
-//        val startDist = (plane.origin - this.start).dot(direction)
-//        val endDist = (plane.origin - this.end).dot(direction)
-//
-//        // plane behind or in front of edge
-//        if (startDist <= 0 && endDist <= 0) return Edge(start, end)
-//        else if (startDist >= 0 && endDist >= 0) return Edge(start, end)
-//
-//        val contact = edge.getPoint(abs(startDist))
-//        return if (startDist < 0) Edge(start, contact)
-//        else Edge(contact, end)
-//    }
-
-    // Clip Methods
-    /**
-     * Clips this to segment to two planes extending perpendicular from another
-     * segment's endpoints. The resulting edge is this edge's projection on the
-     * other.
-     */
-    fun clipToSegment(segment: Edge): Edge {
-        val edge = Ray(start, toVector() / length)
-        val (contact1, contact2) = edge.getIntersectionsWithPlanes(segment)
-        if (contact1 == null || contact2 == null) return Edge(start, end) // plane is parallel to line
-
-        // Clip edge to new endpoints
-        val distances = Interval(
-            (contact1 - start).dot(edge.direction),
-            (contact2 - start).dot(edge.direction)
-        )
-        val minDist = max(0f, distances.min)
-        val maxDist = min(length, distances.max)
-        return Edge(edge.getPoint(minDist), edge.getPoint(maxDist))
-    }
-
-    private fun Ray.getIntersectionsWithPlanes(segment: Edge): Pair<Vec2?, Vec2?> {
-        val planeDir = segment.unitNormalLeft()
-        val plane1 = Ray(segment.start, planeDir)
-        val plane2 = Ray(segment.end, planeDir)
-
-        val contact1 = this.getIntersection(plane1)
-        val contact2 = this.getIntersection(plane2)
-        return Pair(contact1, contact2)
-    }
-
     // Lerp
 
     /**

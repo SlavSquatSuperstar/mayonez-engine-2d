@@ -21,18 +21,16 @@ module mayonez.base {
     // Subprojects
     requires transitive mayonez.tools;
 
-    // Base API
+    // Base Application
     exports mayonez;
     exports mayonez.config;
     exports mayonez.event;
     exports mayonez.launcher;
 
-    exports mayonez.input;
-    exports mayonez.input.keyboard;
-    exports mayonez.input.mouse;
-
+    // I/O
     exports mayonez.assets;
     exports mayonez.assets.text;
+    exports mayonez.input;
 
     // Renderer
     exports mayonez.graphics;

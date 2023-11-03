@@ -12,51 +12,6 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class EdgeTest {
 
-    // Clip Edge
-    @Test
-    void clipEdgeBothEnds() {
-        var edge = new Edge(new Vec2(1, 1), new Vec2(5, 1));
-        var segment = new Edge(new Vec2(2, 0), new Vec2(4, 0));
-        assertEquals(edge.clipToSegment(segment), new Edge(new Vec2(2, 1), new Vec2(4, 1)));
-    }
-
-    @Test
-    void clipEdgeOneEnd() {
-        var edge = new Edge(new Vec2(1, 1), new Vec2(5, 1));
-        var seg1 = new Edge(new Vec2(0, 0), new Vec2(4, 0));
-        assertEquals(edge.clipToSegment(seg1), new Edge(new Vec2(1, 1), new Vec2(4, 1)));
-        var seg2 = new Edge(new Vec2(2, 0), new Vec2(6, 0));
-        assertEquals(edge.clipToSegment(seg2), new Edge(new Vec2(2, 1), new Vec2(5, 1)));
-    }
-
-    @Test
-    void clipEdgeNoEnds() {
-        var edge = new Edge(new Vec2(1, 1), new Vec2(5, 1));
-        var segment = new Edge(new Vec2(0, 0), new Vec2(6, 0));
-        assertEquals(edge.clipToSegment(segment), edge);
-    }
-
-    @Test
-    void clipEdgeAngledBothEnds() {
-        var edge = new Edge(new Vec2(0, 1), new Vec2(5, 1));
-        var segment = new Edge(new Vec2(4.5f, 0), new Vec2(2.1f, -1.2f));
-        assertEquals(edge.clipToSegment(segment), new Edge(new Vec2(1, 1), new Vec2(4, 1)));
-    }
-
-    @Test
-    void clipEdgeAngledOneEnd() {
-        var edge = new Edge(new Vec2(0, 1), new Vec2(5, 1));
-        var segment = new Edge(new Vec2(4.5f, 0), new Vec2(0.5f, -2));
-        assertEquals(edge.clipToSegment(segment), new Edge(new Vec2(0, 1), new Vec2(4, 1)));
-    }
-
-    @Test
-    void clipEdgeAngledNoEnds() {
-        var edge = new Edge(new Vec2(0, 1), new Vec2(5, 1));
-        var segment = new Edge(new Vec2(6.5f, 1), new Vec2(0.5f, -2));
-        assertEquals(edge.clipToSegment(segment), new Edge(new Vec2(0, 1), new Vec2(5, 1)));
-    }
-
     // Lerp Methods
 
     @Test
