@@ -33,7 +33,7 @@ internal class GLKeyManager : KeyManager() {
             GLFW.GLFW_REPEAT -> setKeyDown(key, true)
             GLFW.GLFW_RELEASE -> setKeyDown(key, false)
         }
-        EventSystem.broadcast(KeyboardEvent(key, scancode, action, mods))
+        Events.KEYBOARD_EVENTS.broadcast(KeyboardEvent(key, scancode, action, mods))
         updateKeys()
     }
 

@@ -6,6 +6,7 @@ package mayonez.physics;
  * @author SlavSquatSuperstar
  */
 public enum CollisionEventType {
+
     /**
      * When an object starts colliding with another object or enters a trigger area.
      */
@@ -18,4 +19,5 @@ public enum CollisionEventType {
      * When an object stops colliding with another object or exits a trigger area.
      */
     EXIT
+
 }
