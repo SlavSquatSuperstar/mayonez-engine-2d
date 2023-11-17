@@ -186,6 +186,7 @@ public class GameObject {
      */
     public <T extends Component> T getComponent(Class<T> cls) {
         for (var comp : components) {
+            // Component has same class or is subclass
             if (cls.isAssignableFrom(comp.getClass())) return cls.cast(comp);
         }
         return null;
@@ -398,8 +399,7 @@ public class GameObject {
     public String toString() {
         // Use GameObject for class name if anonymous instance
         return String.format(
-                "%s (%s)",
-                getNameAndID(), StringUtils.getObjectClassName(this)
+                "%s (%s)", getNameAndID(), StringUtils.getObjectClassName(this)
         );
     }
 

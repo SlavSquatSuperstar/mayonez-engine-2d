@@ -1,6 +1,5 @@
-package mayonez.javatests;
+package mayonez.assets;
 
-import mayonez.assets.*;
 import mayonez.assets.text.*;
 import mayonez.io.*;
 import org.junit.jupiter.api.*;
@@ -16,30 +15,32 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class ConstructorTest {
     
-    private static final String TEST_FILENAME = "src/test/resources/mayonez/javatests/properties.txt";
+    private static final String TEST_FILENAME = "src/test/resources/mayonez/assets/properties.txt";
 
     @Test
     void newSuperclassInstanceSuccess() throws Exception {
-        Asset inst = instantiateAsset(Asset.class, TEST_FILENAME);
+        var inst = instantiateAsset(Asset.class, TEST_FILENAME);
+        assertInstanceOf(Asset.class, inst);
         assertEquals(TEST_FILENAME, inst.getFilename());
         assertEquals(inst.getLocationType(), LocationType.EXTERNAL);
     }
 
     @Test
     void newSubclassInstanceSuccess() throws Exception {
-        TextFile inst = instantiateAsset(TextFile.class, TEST_FILENAME);
+        var inst = instantiateAsset(TextFile.class, TEST_FILENAME);
+        assertInstanceOf(TextFile.class, inst);
         assertEquals(TEST_FILENAME, inst.getFilename());
         assertEquals(inst.getLocationType(), LocationType.EXTERNAL);
         assertNotEquals(0, inst.readLines().length);
     }
 
     @Test
-    void newInstanceFail() {
+    void newInstanceFailWithWrongArgs() {
         assertThrows(Exception.class, () -> instantiateAsset(Asset.class));
         assertThrows(Exception.class, () -> instantiateAsset(Asset.class, "foo", "bar"));
     }
 
-    static <T> T instantiateAsset(Class<T> cls, Object... args) throws Exception {
+    private static <T> T instantiateAsset(Class<T> cls, Object... args) throws Exception {
         Constructor<?> ctor = cls.getDeclaredConstructor(String.class);
         return cls.cast(ctor.newInstance(args));
     }

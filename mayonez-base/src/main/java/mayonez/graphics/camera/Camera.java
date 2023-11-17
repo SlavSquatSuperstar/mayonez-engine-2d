@@ -1,7 +1,6 @@
 package mayonez.graphics.camera;
 
-import mayonez.GameObject;
-import mayonez.Script;
+import mayonez.*;
 import mayonez.input.*;
 import mayonez.math.FloatMath;
 import mayonez.math.Vec2;
@@ -33,6 +32,7 @@ public abstract class Camera extends Script implements PointTransformer {
     private float zoom, rotation; // magnification of objects
 
     public Camera(Vec2 screenSize, float sceneScale) {
+        super(UpdateOrder.RENDER);
         this.screenSize = screenSize;
         this.sceneScale = sceneScale;
         mode = CameraMode.FIXED;

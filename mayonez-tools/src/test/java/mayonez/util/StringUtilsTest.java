@@ -51,6 +51,13 @@ class StringUtilsTest {
     }
 
     @Test
+    void getClassNameGetsActualClass() {
+        Object foobar = new FooBar(); // declare as object
+        assertEquals("FooBar", StringUtils.getObjectClassName(foobar));
+        assertNotEquals("Object", StringUtils.getObjectClassName(foobar));
+    }
+
+    @Test
     void getClassNameFromAnonymousIsParent() {
         var baz = new Baz() {
         };

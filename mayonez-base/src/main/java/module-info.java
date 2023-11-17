@@ -25,12 +25,12 @@ module mayonez.base {
     exports mayonez;
     exports mayonez.config;
     exports mayonez.event;
+    exports mayonez.input;
     exports mayonez.launcher;
 
-    // I/O
+    // Assets
     exports mayonez.assets;
     exports mayonez.assets.text;
-    exports mayonez.input;
 
     // Renderer
     exports mayonez.graphics;

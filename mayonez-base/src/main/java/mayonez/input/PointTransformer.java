@@ -7,6 +7,7 @@ import mayonez.math.*;
  *
  * @author SlavSquatSuperstar
  */
+@FunctionalInterface
 public interface PointTransformer {
 
     /**
