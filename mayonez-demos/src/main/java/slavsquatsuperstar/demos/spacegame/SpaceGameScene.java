@@ -5,13 +5,13 @@ import mayonez.graphics.*;
 import mayonez.math.Random;
 import mayonez.math.*;
 import mayonez.math.shapes.*;
+import slavsquatsuperstar.demos.spacegame.objects.*;
 import slavsquatsuperstar.demos.spacegame.objects.asteroids.Asteroid;
-import slavsquatsuperstar.demos.spacegame.objects.BackgroundObject;
-import slavsquatsuperstar.demos.spacegame.objects.SpawnManager;
-import slavsquatsuperstar.demos.spacegame.objects.ZIndex;
 import slavsquatsuperstar.demos.spacegame.objects.ships.*;
 
 import java.util.*;
+
+import static slavsquatsuperstar.demos.spacegame.objects.SpaceGameLayer.*;
 
 public class SpaceGameScene extends Scene {
 
@@ -39,6 +39,7 @@ public class SpaceGameScene extends Scene {
         setGravity(new Vec2());
         backgroundObjects.clear();
 
+        setLayers();
         addSpawners();
         addSolarSystem();
         addBackgroundStars();
@@ -57,6 +58,18 @@ public class SpaceGameScene extends Scene {
     }
 
     // Helper Methods
+
+    private void setLayers() {
+        var shipLayer = getLayer(SHIPS);
+        shipLayer.setName("Ships");
+
+        var asteroidLayer = getLayer(ASTEROIDS);
+        asteroidLayer.setName("Asteroids");
+
+        var projectileLayer = getLayer(PROJECTILES);
+        projectileLayer.setName("Projectiles");
+        projectileLayer.setLayerInteract(PROJECTILES, false);
+    }
 
     private void addSpawners() {
         addObject(new GameObject("Object Spawner") {
@@ -93,9 +106,9 @@ public class SpaceGameScene extends Scene {
     }
 
     private void addSolarSystem() {
-        addBackgroundObject(new Circle(new Vec2(-10, -8), 12), Colors.DARK_BLUE, ZIndex.BACKGROUND); // Earth
-        addBackgroundObject(new Circle(new Vec2(12.5f, 7.5f), 2.5f), Colors.DARK_GRAY, ZIndex.BACKGROUND); // Moon
-        addBackgroundObject(new Circle(new Vec2(-20, 16), 2), Colors.YELLOW, ZIndex.BACKGROUND); // Sun
+        addBackgroundObject(new Circle(new Vec2(-10, -8), 12), Colors.DARK_BLUE, SpaceGameZIndex.BACKGROUND); // Earth
+        addBackgroundObject(new Circle(new Vec2(12.5f, 7.5f), 2.5f), Colors.DARK_GRAY, SpaceGameZIndex.BACKGROUND); // Moon
+        addBackgroundObject(new Circle(new Vec2(-20, 16), 2), Colors.YELLOW, SpaceGameZIndex.BACKGROUND); // Sun
     }
 
     private void addBackgroundStars() {
@@ -111,7 +124,7 @@ public class SpaceGameScene extends Scene {
 
             var starDist = Random.randomFloat(20, 60);
             var starColor = Colors.randomColor(192, 255);
-            addBackgroundObject(new Circle(starPos, starSize / starDist), starColor, ZIndex.BACKGROUND_STAR);
+            addBackgroundObject(new Circle(starPos, starSize / starDist), starColor, SpaceGameZIndex.BACKGROUND_STAR);
         }
     }
 

@@ -2,6 +2,7 @@ package slavsquatsuperstar.demos.spacegame.combat;
 
 import mayonez.*;
 import mayonez.scripts.*;
+import slavsquatsuperstar.demos.spacegame.objects.SpaceGameLayer;
 
 /**
  * Gives a {@link mayonez.GameObject} a health bar that can be damaged by other objects with a {@link Projectile} component.
@@ -18,18 +19,13 @@ public class Damageable extends Script {
     }
 
     @Override
-    public void start() {
-        gameObject.addTag("Damageable");
-    }
-
-    @Override
     public void update(float dt) {
         if (healthPoints.isAtMin()) onHealthDepleted();
     }
 
     @Override
     public void onTriggerEnter(GameObject other) {
-        if (other.hasTag("Projectile")) {
+        if (other.hasLayer(SpaceGameLayer.PROJECTILES)) {
             var p = other.getComponent(Projectile.class);
             if (p != null && !gameObject.equals(p.getSource())) {
                 damage(p.getDamage());

@@ -8,25 +8,24 @@ import mayonez.physics.dynamics.*
 import mayonez.physics.manifold.*
 
 /**
- * A shape centered around the object's position that detects collisions.
- * Colliders require a [mayonez.physics.dynamics.Rigidbody] to respond to collisions
- * properly.
+ * A shape centered around the object's position
+ * that detects collisions. Colliders require a
+ * [mayonez.physics.dynamics.Rigidbody] to respond to collisions properly.
  *
- * @param shape the shape object that stores the vertices and the
- *     shape's properties
+ * @param shape the shape object that stores the vertices and the shape's
+ *     properties
  * @constructor Constructs a collider from a [Shape] object
  * @author SlavSquatSuperstar
  */
-abstract class Collider(private val shape: Shape)
-    : Component(UpdateOrder.COLLISION), CollisionBody {
+abstract class Collider(private val shape: Shape) : Component(UpdateOrder.COLLISION), CollisionBody {
 
     // Component References
 
     override var physicsBody: PhysicsBody? = null
 
     /**
-     * A reference to the parent object's [mayonez.physics.Rigidbody]. A
-     * collider should have a rigidbody to react to collisions.
+     * A reference to the parent object's [mayonez.physics.dynamics.Rigidbody].
+     * A collider should have a rigidbody to react to collisions.
      */
     fun getRigidbody(): Rigidbody? = physicsBody as Rigidbody?
 
@@ -35,13 +34,11 @@ abstract class Collider(private val shape: Shape)
     final override var trigger: Boolean = false
         private set
 
+    /** Set this collider to be a non-physical trigger area. */
     fun setTrigger(trigger: Boolean): Collider {
         this.trigger = trigger
         return this
     }
-
-    /** If this frame's collision should not be resolved by the physics engine. */
-    override var ignoreCurrentCollision: Boolean = false
 
     /**
      * Whether the position or velocity of this collider has been modified in
@@ -97,15 +94,18 @@ abstract class Collider(private val shape: Shape)
         return Collisions.getContacts(this.getShape(), collider?.getShape())
     }
 
-    override fun doNotCollideWith(collider: CollisionBody): Boolean {
+    override fun canCollide(collider: CollisionBody): Boolean {
         if (collider is Collider) {
-            val disabled = !(this.isEnabled && collider.isEnabled)
-            val ignore = this.gameObject.hasTag("Ignore Collisions") || collider.gameObject.hasTag("Ignore Collisions")
-            val static =
-                this.physicsBody == null && collider.physicsBody == null // Don't check for collision if both are static
-            return (disabled || ignore || static)
+
+            return this.isEnabled && collider.isEnabled // Both enabled
+                    || this.gameObject.canInteract(collider.gameObject) // Layers interact
+                    || this.physicsBody != null || collider.physicsBody != null // At most one is static
         }
         return false
+    }
+
+    private fun GameObject.canInteract(other: GameObject): Boolean {
+        return (this.layer == null) || this.layer.canInteract(other.layer)
     }
 
     // Callback Methods

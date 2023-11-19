@@ -25,9 +25,6 @@ interface CollisionBody {
      */
     val trigger: Boolean
 
-    /** If this frame's collision should not be resolved by the physics engine. */
-    var ignoreCurrentCollision: Boolean
-
     /**
      * Whether the position or velocity of this collider has been modified in
      * this frame.
@@ -72,12 +69,12 @@ interface CollisionBody {
     // Collision Methods
 
     /**
-     * If this collision body should not be checked against another body.
+     * If this collision body should be checked against another body.
      *
      * @param collider another collider
      * @return if the two colliders should collide
      */
-    fun doNotCollideWith(collider: CollisionBody): Boolean
+    fun canCollide(collider: CollisionBody): Boolean
 
     /**
      * Calculates the contact points, normal, and overlap between this collider
@@ -91,8 +88,12 @@ interface CollisionBody {
     // Collision Event Methods
 
     /**
-     * Broadcasts an event if a collision occurs between this object and
-     * another.
+     * Sends an event if a collision occurs between this object and another.
+     *
+     * @param other the other object in the collision
+     * @param trigger if this interaction involved a trigger
+     * @param type the type of this interaction
+     * @param direction the direction the collision came from
      */
     fun sendCollisionEvent(
         other: CollisionBody, trigger: Boolean,

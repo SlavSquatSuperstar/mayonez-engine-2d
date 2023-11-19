@@ -40,13 +40,12 @@ public final class CameraFactory {
         return new GameObject("Camera") {
             @Override
             protected void init() {
-                addTag("Ignore Collisions");
                 addComponent(camera);
                 addComponent(camera.setDragAndDropScript(new CameraDragAndDrop("right mouse")
                         .setEnabled(false)));
                 // Keep camera inside scene and add camera collider (does not work well with rotations)
                 addComponent(new BoxCollider(camera.screenSize.div(camera.sceneScale))
-                        .setTrigger(true));
+                        .setTrigger(true).setEnabled(false));
                 addComponent(camera.setKeepInSceneScript(new KeepInScene(KeepInScene.Mode.STOP)
                         .setEnabled(false)));
             }

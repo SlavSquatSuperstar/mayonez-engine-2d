@@ -58,6 +58,18 @@ public class SceneLayer {
 
     // Mask Methods
 
+    /**
+     * Whether this layer should interact with another. Two layers interact if at least one
+     * has set the other to "true" in its layer mask, or if at least one is null.
+     *
+     * @param other the other layer
+     * @return if the layers interact
+     */
+    public boolean canInteract(SceneLayer other) {
+        if (other == null) return true;
+        return this.getLayerInteract(other.index) || other.getLayerInteract(this.index);
+    }
+
     public boolean getLayerInteract(int layer) {
         return mask.getBit(layer);
     }

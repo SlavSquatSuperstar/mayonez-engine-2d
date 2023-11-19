@@ -6,7 +6,8 @@ import mayonez.math.*;
 import mayonez.physics.colliders.*;
 import mayonez.physics.dynamics.*;
 import mayonez.util.Record;
-import slavsquatsuperstar.demos.spacegame.objects.ZIndex;
+import slavsquatsuperstar.demos.spacegame.objects.SpaceGameLayer;
+import slavsquatsuperstar.demos.spacegame.objects.SpaceGameZIndex;
 
 /**
  * A type of projectile fired from a spaceship weapon.
@@ -58,9 +59,10 @@ public class ProjectileType {
                 sourceXf.getRotation(), scale
         );
 
-        return new GameObject(name, projXf, ZIndex.PROJECTILE) {
+        return new GameObject(name, projXf, SpaceGameZIndex.PROJECTILE) {
             @Override
             protected void init() {
+                setLayer(getScene().getLayer(SpaceGameLayer.PROJECTILES));
                 addComponent(new Projectile(source, damage, speed, lifetime));
                 addComponent(new BallCollider(colliderSize).setTrigger(true));
                 addComponent(PROJECTILE_SPRITES.getSprite(spriteIndex));

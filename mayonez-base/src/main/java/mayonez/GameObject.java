@@ -39,6 +39,7 @@ public class GameObject {
     private boolean destroyed;
     private int zIndex; // controls 3D "layering" of objects
     private final Set<String> tags;
+    private SceneLayer layer;
 
     // Component Fields
     private final List<Component> components;
@@ -66,6 +67,7 @@ public class GameObject {
         this.transform = transform;
 //        localTransform = new Transform();
         this.zIndex = zIndex;
+        this.layer = null;
 
         destroyed = false;
         tags = new HashSet<>(3);
@@ -334,6 +336,49 @@ public class GameObject {
 //    final boolean isChild() {
 //        return parent != null;
 //    }
+
+
+    /**
+     * Get the game object's {@link mayonez.SceneLayer}, which specifies which objects
+     * it interacts with. If the layer is null, the object will interact with all other
+     * objects.
+     *
+     * @return the layer
+     */
+    public SceneLayer getLayer() {
+        return layer;
+    }
+
+    /**
+     * If game object has the layer with the given name.
+     *
+     * @param layerName the layer name
+     * @return if the layer matches the name
+     */
+    public boolean hasLayer(String layerName) {
+        return layer != null && layer.getName().equals(layerName);
+    }
+
+    /**
+     * If game object has the layer with the given index.
+     *
+     * @param layerIndex the layer index
+     * @return if the layer matches the index
+     */
+    public boolean hasLayer(int layerIndex) {
+        return layer != null && layer.getIndex() == layerIndex;
+    }
+
+    /**
+     * Set the game object's {@link mayonez.SceneLayer}, which specifies which objects
+     * it interacts with. If the layer is null, the object will interact with all other
+     * objects.
+     *
+     * @param layer the layer
+     */
+    public void setLayer(SceneLayer layer) {
+        this.layer = layer;
+    }
 
     /**
      * Get the {@link mayonez.Scene} that contains this game object.

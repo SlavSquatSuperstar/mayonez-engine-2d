@@ -8,7 +8,8 @@ import mayonez.math.*;
 import mayonez.physics.colliders.*;
 import mayonez.physics.dynamics.*;
 import mayonez.scripts.*;
-import slavsquatsuperstar.demos.spacegame.objects.ZIndex;
+import slavsquatsuperstar.demos.spacegame.objects.SpaceGameLayer;
+import slavsquatsuperstar.demos.spacegame.objects.SpaceGameZIndex;
 
 /**
  * A template for prefab asteroid objects to spawn in space.
@@ -26,13 +27,14 @@ public abstract class BaseAsteroid extends GameObject {
 
     public BaseAsteroid(String name, Vec2 position, AsteroidProperties properties) {
         super(name, position);
-        setZIndex(ZIndex.ASTEROID);
+        setZIndex(SpaceGameZIndex.ASTEROID);
         this.properties = properties;
     }
 
     @Override
     protected void init() {
-        setZIndex(ZIndex.ASTEROID);
+        setLayer(getScene().getLayer(SpaceGameLayer.ASTEROIDS));
+        setZIndex(SpaceGameZIndex.ASTEROID);
         setTransform(properties);
 
         addCollider();

@@ -213,7 +213,7 @@ public abstract class Camera extends Script implements PointTransformer {
 
     // Script Setters
 
-    Script  setDragAndDropScript(Script dragAndDrop) {
+    Script setDragAndDropScript(Script dragAndDrop) {
         this.dragAndDrop = dragAndDrop;
         return dragAndDrop;
     }

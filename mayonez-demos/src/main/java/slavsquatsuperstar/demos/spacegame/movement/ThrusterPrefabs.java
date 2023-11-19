@@ -6,7 +6,7 @@ import mayonez.assets.text.*;
 import mayonez.graphics.sprites.*;
 import mayonez.math.*;
 import mayonez.util.Record;
-import slavsquatsuperstar.demos.spacegame.objects.ZIndex;
+import slavsquatsuperstar.demos.spacegame.objects.SpaceGameZIndex;
 
 import java.util.*;
 
@@ -82,7 +82,7 @@ public final class ThrusterPrefabs {
         parent.getScene().addObject(new GameObject(name) {
             @Override
             protected void init() {
-                setZIndex(ZIndex.EXHAUST);
+                setZIndex(SpaceGameZIndex.EXHAUST);
                 addComponent(thruster);
                 addComponent(new Animator(EXHAUST_TEXTURES, 0.15f));
                 addComponent(new Script() {

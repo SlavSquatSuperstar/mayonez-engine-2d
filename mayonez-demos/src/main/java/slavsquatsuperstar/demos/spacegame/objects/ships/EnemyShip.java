@@ -18,7 +18,6 @@ public class EnemyShip extends Spaceship {
 
     public EnemyShip(String name, String spriteName, SpawnManager enemySpawner) {
         super(name, spriteName, ENEMY_HEALTH, enemySpawner);
-        addTag("Enemy");
     }
 
     @Override

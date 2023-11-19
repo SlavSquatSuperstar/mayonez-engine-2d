@@ -5,9 +5,9 @@ package slavsquatsuperstar.demos.spacegame.objects;
  *
  * @author SlavSquatSuperstar
  */
-public final class ZIndex {
+public final class SpaceGameZIndex {
 
-    private ZIndex() {
+    private SpaceGameZIndex() {
     }
 
     public static final int BACKGROUND_STAR = -15;

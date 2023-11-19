@@ -110,10 +110,10 @@ class DefaultPhysicsWorld : PhysicsWorld {
                 c1.collisionResolved = false
                 c2.collisionResolved = false
 
-                if (c1.doNotCollideWith(c2)) continue
-
-                val lis = getListener(c1, c2)
-                if (lis.checkBroadphase()) listeners.add(lis)
+                if (c1.canCollide(c2)) {
+                    val lis = getListener(c1, c2)
+                    if (lis.checkBroadphase()) listeners.add(lis)
+                }
             }
         }
     }
@@ -135,13 +135,6 @@ class DefaultPhysicsWorld : PhysicsWorld {
             val collision = lis.checkNarrowphase() ?: continue // Get contacts
             val c1 = lis.c1
             val c2 = lis.c2
-
-            // Don't resolve if either object called ignore collision
-            if (c1.ignoreCurrentCollision || c2.ignoreCurrentCollision) {
-                c1.ignoreCurrentCollision = false
-                c2.ignoreCurrentCollision = false
-                continue
-            }
             collisions.add(CollisionSolver(c1, c2, collision)) // Resolve collisions
         }
     }

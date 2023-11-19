@@ -5,10 +5,11 @@ import mayonez.graphics.sprites.*;
 import mayonez.math.*;
 import mayonez.physics.colliders.*;
 import mayonez.scripts.*;
-import slavsquatsuperstar.demos.spacegame.objects.SpawnManager;
-import slavsquatsuperstar.demos.spacegame.objects.ZIndex;
 import slavsquatsuperstar.demos.spacegame.combat.Damageable;
 import slavsquatsuperstar.demos.spacegame.combat.ShipDestruction;
+import slavsquatsuperstar.demos.spacegame.objects.SpaceGameLayer;
+import slavsquatsuperstar.demos.spacegame.objects.SpaceGameZIndex;
+import slavsquatsuperstar.demos.spacegame.objects.SpawnManager;
 
 /**
  * A spaceship that can move, fire projectiles, and be destroyed.
@@ -23,7 +24,7 @@ public abstract class Spaceship extends GameObject {
     private final SpawnManager shipSpawner;
 
     public Spaceship(String name, String spriteName, float maxHealth, SpawnManager shipSpawner) {
-        super(name, Transform.scaleInstance(new Vec2(2f)), ZIndex.SPACESHIP);
+        super(name, Transform.scaleInstance(new Vec2(2f)), SpaceGameZIndex.SPACESHIP);
         this.spriteName = spriteName;
         this.maxHealth = maxHealth;
         this.shipSpawner = shipSpawner;
@@ -31,6 +32,8 @@ public abstract class Spaceship extends GameObject {
 
     @Override
     protected void init() {
+        setLayer(getScene().getLayer(SpaceGameLayer.SHIPS));
+
         // Collision
         addComponent(new BoxCollider(new Vec2(0.85f, 1f)));
         addComponent(new KeepInScene(KeepInScene.Mode.WRAP));

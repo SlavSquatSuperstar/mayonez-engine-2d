@@ -27,7 +27,6 @@ public class Projectile extends Script {
 
     @Override
     public void start() {
-        gameObject.addTag("Projectile");
         if (getCollider() == null || getRigidbody() == null) {
             this.setEnabled(false);
         }
@@ -38,7 +37,6 @@ public class Projectile extends Script {
     public void onTriggerEnter(GameObject other) {
         if (other == source) return; // don't collide with source
         gameObject.destroy();
-//        if (other.hasTag("Damageable")) gameObject.setDestroyed();
     }
 
     public float getDamage() {
