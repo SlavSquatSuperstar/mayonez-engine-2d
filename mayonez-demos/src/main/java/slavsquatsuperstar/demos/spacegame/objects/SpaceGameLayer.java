@@ -10,9 +10,8 @@ public final class SpaceGameLayer {
     private SpaceGameLayer() {
     }
 
-    public static final int DEFAULT = 0;
-    public static final int SHIPS = 1;
-    public static final int ASTEROIDS = 2;
-    public static final int PROJECTILES = 3;
+    public static final int SHIPS = 0;
+    public static final int ASTEROIDS = 1;
+    public static final int PROJECTILES = 2;
 
 }

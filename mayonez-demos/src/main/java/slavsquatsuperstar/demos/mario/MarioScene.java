@@ -16,6 +16,9 @@ import mayonez.physics.dynamics.*;
  */
 public class MarioScene extends Scene {
 
+    public static final int CHARACTER_LAYER = 0;
+    public static final int GROUND_LAYER = 1;
+
     private static final int BACKGROUND_WIDTH = 1920;
     private static final int BACKGROUND_HEIGHT = 1024;
     private static final float SCENE_GRAVITY = 20;
@@ -38,6 +41,12 @@ public class MarioScene extends Scene {
         setBackground(background);
         setGravity(new Vec2(0, -SCENE_GRAVITY));
         getCamera().zoom(0.8f);
+
+        var charLayer = getLayer(CHARACTER_LAYER);
+        charLayer.setName("Characters");
+
+        var groundLayer = getLayer(GROUND_LAYER);
+        groundLayer.setName("Ground");
 
         addObject(new Mario(new Vec2(-21f, -11f), sprites.getSprite(0)));
 
@@ -84,7 +93,7 @@ public class MarioScene extends Scene {
         return new GameObject(name, position) {
             @Override
             protected void init() {
-                addTag("Ground");
+                setLayer(getScene().getLayer(MarioScene.GROUND_LAYER));
                 addComponent(new Rigidbody(0f));
                 addComponent(new BoxCollider(size));
 //                addComponent(new ShapeSprite(Colors.WHITE, false));

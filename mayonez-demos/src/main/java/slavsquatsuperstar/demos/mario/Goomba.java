@@ -23,6 +23,8 @@ class Goomba extends GameObject {
 
     @Override
     protected void init() {
+        setLayer(getScene().getLayer(MarioScene.CHARACTER_LAYER));
+
         addComponent(sprite);
         addComponent(new BoxCollider(new Vec2(0.8f, 1)));
         addComponent(new Rigidbody(1f, 0.5f, 0f).setFixedRotation(true));

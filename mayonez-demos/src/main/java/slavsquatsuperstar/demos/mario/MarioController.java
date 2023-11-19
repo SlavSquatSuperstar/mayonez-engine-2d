@@ -48,7 +48,7 @@ public class MarioController extends Script {
 
     @Override
     public void onCollisionEnter(GameObject other, Vec2 direction) {
-        if (other.hasTag("Ground") && isDirectionDownward(direction)) {
+        if (other.hasLayer(MarioScene.GROUND_LAYER) && isDirectionDownward(direction)) {
             onGround = true;
             rb.getVelocity().y = 0;
         }
@@ -60,7 +60,9 @@ public class MarioController extends Script {
 
     @Override
     public void onCollisionExit(GameObject other) {
-        if (other.hasTag("Ground")) onGround = false;
+        if (other.hasLayer(MarioScene.GROUND_LAYER)) {
+            onGround = false;
+        }
     }
 
 }

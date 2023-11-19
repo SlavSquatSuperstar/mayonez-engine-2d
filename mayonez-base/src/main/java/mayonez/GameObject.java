@@ -38,7 +38,6 @@ public class GameObject {
     private Scene scene;
     private boolean destroyed;
     private int zIndex; // controls 3D "layering" of objects
-    private final Set<String> tags;
     private SceneLayer layer;
 
     // Component Fields
@@ -70,7 +69,6 @@ public class GameObject {
         this.layer = null;
 
         destroyed = false;
-        tags = new HashSet<>(3);
 
         components = new ArrayList<>();
 //        changesToObject = new LinkedList<>();
@@ -263,7 +261,7 @@ public class GameObject {
     final void onDestroy() {
         components.forEach(Component::destroy);
         components.clear();
-        tags.clear();
+        layer = null;
         scene = null;
     }
 
@@ -396,14 +394,6 @@ public class GameObject {
      */
     final void setScene(Scene scene) {
         this.scene = scene;
-    }
-
-    public boolean hasTag(String tag) {
-        return tags.contains(tag);
-    }
-
-    public void addTag(String tag) {
-        tags.add(tag);
     }
 
     public int getZIndex() {

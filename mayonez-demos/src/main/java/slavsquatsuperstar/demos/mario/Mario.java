@@ -23,6 +23,8 @@ class Mario extends GameObject {
 
     @Override
     protected void init() {
+        setLayer(getScene().getLayer(MarioScene.CHARACTER_LAYER));
+
         getScene().getCamera().setSubject(this).setKeepInScene(true);
         addComponent(sprite);
         addComponent(new BoxCollider(new Vec2(0.8f, 1)));
