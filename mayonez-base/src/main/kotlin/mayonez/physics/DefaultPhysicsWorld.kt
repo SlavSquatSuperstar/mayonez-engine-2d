@@ -56,7 +56,7 @@ class DefaultPhysicsWorld : PhysicsWorld {
         bodies.remove(body ?: return)
     }
 
-    override fun clearBodies() {
+    override fun clear() {
         bodies.clear()
         colliders.clear()
         listeners.clear()

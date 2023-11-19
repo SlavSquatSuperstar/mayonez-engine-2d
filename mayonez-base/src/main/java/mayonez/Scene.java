@@ -46,6 +46,7 @@ public abstract class Scene {
 
     // Scene Layers
     private final List<GameObject> objects;
+    private final SceneLayer[] layers;
     private final SceneRenderer renderer;
     private final DebugRenderer debugRenderer;
     private final DebugDraw debugDraw;
@@ -83,6 +84,7 @@ public abstract class Scene {
 
         // Initialize layers
         objects = new ArrayList<>();
+        layers = new SceneLayer[SceneLayer.NUM_LAYERS];
         renderer = RendererFactory.createSceneRenderer();
         debugRenderer = (DebugRenderer) renderer;
         debugDraw = new DebugDraw(scale, debugRenderer);
@@ -98,6 +100,11 @@ public abstract class Scene {
      * Initialize all objects and begin updating the scene.
      */
     final void start() {
+        // Set up layers
+        for (int i = 0; i < layers.length; i++) {
+            layers[i] = new SceneLayer(i);
+        }
+
         addCameraToScene();
         init();
         startSceneLayers();
@@ -126,7 +133,7 @@ public abstract class Scene {
         renderer.start();
         renderer.setBackground(background, size, scale);
         if (separateDebugRenderer()) debugRenderer.start();
-        physics.clearBodies();
+        physics.clear();
     }
 
     // Update Methods
@@ -200,7 +207,7 @@ public abstract class Scene {
     private void clearSceneLayers() {
         renderer.stop();
         if (separateDebugRenderer()) debugRenderer.stop();
-        physics.clearBodies();
+        physics.clear();
         state = SceneState.STOPPED;
     }
 
@@ -307,6 +314,31 @@ public abstract class Scene {
      */
     public int numObjects() {
         return objects.size();
+    }
+
+    // Scene Layer Methods
+
+    /**
+     * Get the {@link mayonez.SceneLayer} by its numerical index.
+     *
+     * @param index the layer index
+     * @return the layer, or null if the index is invalid
+     */
+    public SceneLayer getLayer(int index) {
+        if (index >= 0 && index < layers.length) return layers[index];
+        else return null;
+    }
+
+    /**
+     * Get the {@link mayonez.SceneLayer} by its name.
+     *
+     * @param name the layer name
+     * @return the layer, or null if the name is invalid
+     */
+    public SceneLayer getLayer(String name) {
+        return Arrays.stream(layers)
+                .filter(layer -> layer.getName().equals(name))
+                .findFirst().orElse(null);
     }
 
     // Scene Properties

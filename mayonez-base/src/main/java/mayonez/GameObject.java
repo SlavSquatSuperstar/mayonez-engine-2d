@@ -42,7 +42,6 @@ public class GameObject {
 
     // Component Fields
     private final List<Component> components;
-    private List<Class<?>> updateOrder;
 
     // Connected Objects
 //    private GameObject parent; // parent object
@@ -72,7 +71,6 @@ public class GameObject {
         tags = new HashSet<>(3);
 
         components = new ArrayList<>();
-        updateOrder = null;
 //        changesToObject = new LinkedList<>();
 //        parent = null;
 //        children = new LinkedList<>();

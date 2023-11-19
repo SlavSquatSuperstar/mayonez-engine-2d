@@ -55,7 +55,7 @@ interface PhysicsWorld {
     fun removePhysicsBody(body: PhysicsBody?)
 
     /** Removes all objects and frees any resources from the physics world. */
-    fun clearBodies()
+    fun clear()
 
     // Physics Methods
 
