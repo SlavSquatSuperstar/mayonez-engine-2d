@@ -94,10 +94,11 @@ interface CollisionBody {
      * @param trigger if this interaction involved a trigger
      * @param type the type of this interaction
      * @param direction the direction the collision came from
+     * @param velocity the relative velocity of the objects
      */
     fun sendCollisionEvent(
-        other: CollisionBody, trigger: Boolean,
-        type: CollisionEventType, direction: Vec2?
+        other: CollisionBody, trigger: Boolean, type: CollisionEventType,
+        direction: Vec2?, velocity: Vec2?
     )
 
     // Object Overrides

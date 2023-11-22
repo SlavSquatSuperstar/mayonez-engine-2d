@@ -18,6 +18,10 @@ public enum CollisionEventType {
     /**
      * When an object stops colliding with another object or exits a trigger area.
      */
-    EXIT
+    EXIT;
 
+    @Override
+    public String toString() {
+        return name().toLowerCase();
+    }
 }

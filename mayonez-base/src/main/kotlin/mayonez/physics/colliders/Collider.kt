@@ -111,16 +111,14 @@ abstract class Collider(private val shape: Shape) : Component(UpdateOrder.COLLIS
     // Callback Methods
 
     override fun sendCollisionEvent(
-        other: CollisionBody, trigger: Boolean,
-        type: CollisionEventType, direction: Vec2?
+        other: CollisionBody, trigger: Boolean, type: CollisionEventType,
+        direction: Vec2?, velocity: Vec2?
     ) {
         if (gameObject == null) return
-        if (other is Collider) {
-            if (other.gameObject == null) return
-
+        if (other is Collider && other.gameObject != null) {
             this.gameObject.onCollisionEvent(
                 CollisionEvent(
-                    other.gameObject, trigger, type, direction
+                    other.gameObject, trigger, type, direction, velocity
                 )
             )
         }

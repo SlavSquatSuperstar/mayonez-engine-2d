@@ -276,7 +276,7 @@ public class GameObject {
             switch (event.type) {
                 case ENTER -> {
                     if (event.trigger) script.onTriggerEnter(event.other);
-                    else script.onCollisionEnter(event.other, event.direction);
+                    else script.onCollisionEnter(event.other, event.direction, event.velocity);
                 }
                 case STAY -> {
                     if (event.trigger) script.onTriggerStay(event.other);

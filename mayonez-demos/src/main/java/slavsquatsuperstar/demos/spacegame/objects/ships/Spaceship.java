@@ -5,6 +5,7 @@ import mayonez.graphics.sprites.*;
 import mayonez.math.*;
 import mayonez.physics.colliders.*;
 import mayonez.scripts.*;
+import slavsquatsuperstar.demos.spacegame.combat.CollisionDamage;
 import slavsquatsuperstar.demos.spacegame.combat.Damageable;
 import slavsquatsuperstar.demos.spacegame.combat.ShipDestruction;
 import slavsquatsuperstar.demos.spacegame.objects.SpaceGameLayer;
@@ -55,6 +56,7 @@ public abstract class Spaceship extends GameObject {
                 shipSpawner.markObjectDestroyed();
             }
         });
+        addComponent(new CollisionDamage());
     }
 
 }

@@ -20,6 +20,9 @@ internal val PhysicsBody?.static: Boolean
 internal val PhysicsBody?.position: Vec2
     get() = this?.position ?: Vec2()
 
+internal val PhysicsBody?.velocity: Vec2
+    get() = this?.velocity ?: Vec2()
+
 internal val PhysicsBody?.material: PhysicsMaterial
     get() = this?.material ?: PhysicsMaterial.DEFAULT_MATERIAL
 

@@ -101,12 +101,13 @@ public abstract class Script extends Component {
      *
      * @param other     the other object in the collision
      * @param direction the direction the collision is happening
+     * @param velocity  the relative velocity of the objects.
      */
-    public void onCollisionEnter(GameObject other, Vec2 direction) {
+    public void onCollisionEnter(GameObject other, Vec2 direction, Vec2 velocity) {
     }
 
     /**
-     * Custom user behavior after staying in contact with another physical object.
+     * Custom user behavior while staying in contact with another physical object.
      *
      * @param other the other object in the collision
      */
@@ -130,7 +131,7 @@ public abstract class Script extends Component {
     }
 
     /**
-     * Custom user behavior after staying with a trigger area.
+     * Custom user behavior while staying inside a trigger area.
      *
      * @param other the other game object
      */
