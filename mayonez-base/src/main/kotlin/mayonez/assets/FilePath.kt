@@ -10,11 +10,6 @@ import java.net.URL
  */
 class FilePath(filename: String) {
 
-    // Constructors
-    constructor(filename: String, locationType: LocationType) : this(filename) {
-        this.locationType = locationType
-    }
-
     // Filename Fields
 
     /**
@@ -25,6 +20,12 @@ class FilePath(filename: String) {
     private val osFilename: String = getOSFilename(filename)
     var locationType: LocationType = getLocationType(this.filename)
         private set
+
+
+    // Test Constructor
+    internal constructor(filename: String, locationType: LocationType) : this(filename) {
+        this.locationType = locationType
+    }
 
     // I/O Status Methods
 
@@ -96,5 +97,7 @@ private fun getClasspathFilename(filename: String): String {
 private fun getLocationType(filename: String): LocationType {
     return if (LocationType.CLASSPATH.getURL(filename) != null) {
         LocationType.CLASSPATH
-    } else LocationType.EXTERNAL
+    } else {
+        LocationType.EXTERNAL
+    }
 }

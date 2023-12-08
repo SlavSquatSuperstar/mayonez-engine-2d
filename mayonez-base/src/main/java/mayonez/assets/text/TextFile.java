@@ -26,7 +26,7 @@ public class TextFile extends Asset {
         try {
             return new TextIOManager().read(openInputStream());
         } catch (IOException e) {
-            Logger.error("Could not read file \"%s\"", getFilename());
+            Logger.error("Could not read file %s", getFilenameInQuotes());
             return "";
         }
     }
@@ -40,7 +40,7 @@ public class TextFile extends Asset {
         try {
             return new LinesIOManager().read(openInputStream());
         } catch (IOException e) {
-            Logger.error("Could not read file \"%s\"", getFilename());
+            Logger.error("Could not read file %s", getFilenameInQuotes());
             return new String[0];
         }
     }
@@ -71,7 +71,7 @@ public class TextFile extends Asset {
                 new LinesIOManager().write(openOutputStream(append), text);
             }
         } catch (IOException e) {
-            Logger.error("Could not save to file \"%s\"", getFilename());
+            Logger.error("Could not save to file %s", getFilenameInQuotes());
         }
     }
 

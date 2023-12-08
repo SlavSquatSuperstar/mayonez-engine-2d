@@ -55,6 +55,10 @@ open class Asset(filename: String) {
         return locationType.openOutputStream(filename, append)
     }
 
+    // Helper Methods/Classes
+
+    protected fun getFilenameInQuotes(): String = "\"$filename\""
+
     override fun toString(): String = "$locationType ${javaClass.simpleName} \"$filename\""
 
 }

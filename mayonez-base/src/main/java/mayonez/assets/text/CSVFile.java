@@ -37,7 +37,7 @@ public class CSVFile extends Asset {
             }
             return records;
         } catch (IOException e) {
-            Logger.error("Could not read file \"%s\"", getFilename());
+            Logger.error("Could not read file %s", getFilename());
             return records;
         }
     }
@@ -68,7 +68,7 @@ public class CSVFile extends Asset {
         try {
             new LinesIOManager().write(openOutputStream(false), csvLines);
         } catch (IOException e) {
-            Logger.error("Could not save to file \"%s\"", getFilename());
+            Logger.error("Could not save to file %s", getFilename());
         }
     }
 

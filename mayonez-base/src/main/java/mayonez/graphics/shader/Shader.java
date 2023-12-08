@@ -146,10 +146,4 @@ public class Shader extends Asset {
         return glGetUniformLocation(shaderID, varName);
     }
 
-    // Helper Methods/Classes
-
-    private String getFilenameInQuotes() {
-        return String.format("\"%s\"", getFilename());
-    }
-
 }

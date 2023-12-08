@@ -27,7 +27,7 @@ public class JSONFile extends Asset {
         try {
             return new JsonIOManager().read(openInputStream());
         } catch (IOException e) {
-            Logger.error("Could not read file \"%s\"", getFilename());
+            Logger.error("Could not read file %s", getFilename());
             return new Record();
         }
     }
@@ -41,7 +41,7 @@ public class JSONFile extends Asset {
         try {
             new JsonIOManager().write(openOutputStream(false), json);
         } catch (IOException e) {
-            Logger.error("Could not save to file \"%s\"", getFilename());
+            Logger.error("Could not save to file %s", getFilename());
         }
     }
 

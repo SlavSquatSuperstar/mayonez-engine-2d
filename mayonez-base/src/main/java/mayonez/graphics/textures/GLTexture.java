@@ -90,7 +90,7 @@ public final class GLTexture extends Texture {
             image = loadImage(imageBuffer);
             uploadImage(image);
         } catch (TextureException | IOException e) {
-            Logger.error("Could not read image file \"%s\"", getFilename());
+            Logger.error("Could not read image file %s", getFilename());
         }
     }
 
@@ -128,7 +128,7 @@ public final class GLTexture extends Texture {
         var image = stbi_load_from_memory(imageBuffer, width, height, channels, 0);
 
         if (image == null) {
-            Logger.error("OpenGL: Could not load image file \"%s\"", getFilename());
+            Logger.error("OpenGL: Could not load image file %s", getFilename());
             throwExceptionOnSTBFailure();
         }
 
