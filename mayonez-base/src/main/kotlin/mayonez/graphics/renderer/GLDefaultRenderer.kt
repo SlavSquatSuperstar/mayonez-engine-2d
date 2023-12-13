@@ -24,7 +24,7 @@ internal class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"),
     private val lineStyle: LineStyle = LineStyle.QUADS
 
     // Renderer Objects
-    private val objects: MutableList<GLRenderable> = ArrayList()  // Drawable objects
+    private val objects: MutableList<GLRenderable> = ArrayList() // Drawable objects
     private val shapes: MutableList<DebugShape> = ArrayList() // Temporary shapes
 
     // Scene Background

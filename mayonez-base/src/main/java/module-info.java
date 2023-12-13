@@ -38,6 +38,7 @@ module mayonez.base {
     exports mayonez.graphics.debug;
     exports mayonez.graphics.sprites;
     exports mayonez.graphics.textures;
+    exports mayonez.graphics.ui;
 
     // Physics
     exports mayonez.physics;

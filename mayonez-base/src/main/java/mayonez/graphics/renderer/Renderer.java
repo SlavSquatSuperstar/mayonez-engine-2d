@@ -14,6 +14,7 @@ public interface Renderer {
 
     // Game Loop Methods
 
+    // TODO single clear method
     /**
      * Prepares the renderer for allocating data.
      */

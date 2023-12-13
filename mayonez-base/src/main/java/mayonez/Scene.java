@@ -142,6 +142,7 @@ public abstract class Scene {
         renderer.start();
         renderer.setBackground(background, size, scale);
         if (separateDebugRenderer()) debugRenderer.start();
+        uiRenderer.start();
         physics.clear();
     }
 
@@ -193,8 +194,10 @@ public abstract class Scene {
     final void render(Graphics2D g2) {
         onUserRender();
         objects.forEach(GameObject::debugRender);
+        // todo renderer set class
         renderer.render(g2);
         if (separateDebugRenderer()) debugRenderer.render(g2);
+        uiRenderer.render(g2);
     }
 
     /**
@@ -266,8 +269,8 @@ public abstract class Scene {
 
     private void addObjectToLayers(GameObject o) {
         for (Component c : o.getComponents()) {
-            if (c instanceof Renderable r) renderer.addRenderable(r);
-            if (c instanceof UIElement r) uiRenderer.addUIElement(r);
+            if (c instanceof UIElement e) uiRenderer.addUIElement(e);
+            else if (c instanceof Renderable r) renderer.addRenderable(r);
             else if (c instanceof PhysicsBody b) physics.addPhysicsBody(b);
             else if (c instanceof CollisionBody b) physics.addCollisionBody(b);
         }
@@ -278,7 +281,7 @@ public abstract class Scene {
      *
      * @param obj a {@link GameObject}
      */
-    public final void removeObject(GameObject obj) {
+    final void removeObject(GameObject obj) {
         if (obj == null) return;
         changesToScene.offer(() -> this.removeObjectFromLayers(obj));
     }

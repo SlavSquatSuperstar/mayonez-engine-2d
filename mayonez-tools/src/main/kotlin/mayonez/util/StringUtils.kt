@@ -47,18 +47,16 @@ object StringUtils {
      */
     @JvmStatic
     fun getObjectClassName(obj: Any?): String {
-        return when {
-            obj == null -> "null"
-            obj.javaClass.isAnonymousClass -> obj.javaClass.superclass.simpleName
-            else -> obj.javaClass.simpleName
-        }
+        val cls = obj?.javaClass ?: return "null"
+        return if (cls.isAnonymousClass) cls.superclass.simpleName
+        else cls.simpleName
     }
 
     /**
      * Finds the first object in an array with the given [toString]
      * representation, case-insensitive.
      *
-     * @param objects the collection to search
+     * @param objects the array to search
      * @param name the object to find
      * @return the object with the name, or null if none is found
      */

@@ -3,6 +3,7 @@ package mayonez.graphics.renderer
 import mayonez.graphics.*
 import mayonez.graphics.camera.*
 import mayonez.graphics.debug.*
+import org.joml.*
 import org.lwjgl.opengl.GL11.*
 
 /**
@@ -19,7 +20,7 @@ internal class GLUIRenderer : GLRenderer("assets/shaders/default.glsl"),
     private val lineStyle: LineStyle = LineStyle.QUADS
 
     // Renderer Objects
-    private val objects: MutableList<GLRenderable> = ArrayList()  // Drawable objects
+    private val objects: MutableList<GLRenderable> = ArrayList() // Drawable objects
 
     // Scene Renderer Methods
 
@@ -41,6 +42,7 @@ internal class GLUIRenderer : GLRenderer("assets/shaders/default.glsl"),
     override fun preRender() {
         shader.bind()
         val cam = camera as GLCamera
+        shader.uploadMat4("uView", Matrix4f())
         shader.uploadMat4("uProjection", cam.getProjectionMatrix())
         shader.uploadIntArray("uTextures", textureSlots)
         setGLProperties()

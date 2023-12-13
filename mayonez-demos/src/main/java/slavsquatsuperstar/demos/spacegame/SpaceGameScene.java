@@ -2,14 +2,16 @@ package slavsquatsuperstar.demos.spacegame;
 
 import mayonez.*;
 import mayonez.graphics.*;
-import mayonez.graphics.debug.*;
+import mayonez.graphics.ui.*;
 import mayonez.math.Random;
 import mayonez.math.*;
 import mayonez.math.shapes.*;
-import mayonez.physics.colliders.*;
-import slavsquatsuperstar.demos.spacegame.objects.*;
+import slavsquatsuperstar.demos.spacegame.objects.BackgroundObject;
+import slavsquatsuperstar.demos.spacegame.objects.SpaceGameZIndex;
+import slavsquatsuperstar.demos.spacegame.objects.SpawnManager;
 import slavsquatsuperstar.demos.spacegame.objects.asteroids.Asteroid;
-import slavsquatsuperstar.demos.spacegame.objects.ships.*;
+import slavsquatsuperstar.demos.spacegame.objects.ships.EnemyShip;
+import slavsquatsuperstar.demos.spacegame.objects.ships.PlayerShip;
 
 import java.util.*;
 
@@ -52,9 +54,13 @@ public class SpaceGameScene extends Scene {
             @Override
             protected void init() {
                 setZIndex(SpaceGameZIndex.UI);
-                transform.setPosition(new Vec2(-16, 11.5f));
-                addComponent(new BoxCollider(new Vec2(5, 1)).setEnabled(false));
-                addComponent(new ShapeSprite(Colors.GREEN, true));
+                transform.setPosition(new Vec2(100, 770));
+                transform.setScale(new Vec2(180, 30));
+                addComponent(new UIBox(Colors.GREEN));
+
+//                transform.setPosition(new Vec2(-16, 11.5f));
+//                addComponent(new BoxCollider(new Vec2(5, 1)).setEnabled(false));
+//                addComponent(new ShapeSprite(Colors.GREEN, true));
             }
         });
     }
