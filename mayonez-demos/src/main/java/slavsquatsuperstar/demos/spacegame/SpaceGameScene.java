@@ -2,9 +2,11 @@ package slavsquatsuperstar.demos.spacegame;
 
 import mayonez.*;
 import mayonez.graphics.*;
+import mayonez.graphics.debug.*;
 import mayonez.math.Random;
 import mayonez.math.*;
 import mayonez.math.shapes.*;
+import mayonez.physics.colliders.*;
 import slavsquatsuperstar.demos.spacegame.objects.*;
 import slavsquatsuperstar.demos.spacegame.objects.asteroids.Asteroid;
 import slavsquatsuperstar.demos.spacegame.objects.ships.*;
@@ -16,11 +18,11 @@ import static slavsquatsuperstar.demos.spacegame.objects.SpaceGameLayer.*;
 public class SpaceGameScene extends Scene {
 
     // Constants
-    private final static int SCENE_SIZE = 3;
+    private final static int SCENE_SIZE = 4;
     private final static int NUM_PLAYERS = 1;
     private final static int NUM_ENEMIES = 6;
     private final static int NUM_OBSTACLES = 5;
-    private final static int NUM_STARS = 1200;
+    private final static int NUM_STARS = 2000;
 
     // Objects
     private final List<BackgroundObject> backgroundObjects;
@@ -37,12 +39,24 @@ public class SpaceGameScene extends Scene {
     @Override
     protected void init() {
         setGravity(new Vec2());
+        getCamera().setKeepInScene(true);
         backgroundObjects.clear();
 
         setLayers();
         addSpawners();
         addSolarSystem();
         addBackgroundStars();
+
+        // UI
+        addObject(new GameObject("Health Bar") {
+            @Override
+            protected void init() {
+                setZIndex(SpaceGameZIndex.UI);
+                transform.setPosition(new Vec2(-16, 11.5f));
+                addComponent(new BoxCollider(new Vec2(5, 1)).setEnabled(false));
+                addComponent(new ShapeSprite(Colors.GREEN, true));
+            }
+        });
     }
 
 //    @Override

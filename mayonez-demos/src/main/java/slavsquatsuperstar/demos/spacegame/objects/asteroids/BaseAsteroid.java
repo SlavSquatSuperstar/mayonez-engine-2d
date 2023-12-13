@@ -27,7 +27,6 @@ public abstract class BaseAsteroid extends GameObject {
 
     public BaseAsteroid(String name, Vec2 position, AsteroidProperties properties) {
         super(name, position);
-        setZIndex(SpaceGameZIndex.ASTEROID);
         this.properties = properties;
     }
 

@@ -1,31 +1,26 @@
 package mayonez.graphics.renderer
 
-import mayonez.graphics.batch.*
-import mayonez.graphics.camera.*
-import mayonez.graphics.shader.*
 import mayonez.assets.*
 import mayonez.graphics.*
+import mayonez.graphics.batch.*
+import mayonez.graphics.shader.*
 import java.awt.*
 
 /**
- * Contains methods for uploading sprite and shape data to the GPU for
- * renderers using OpenGL.
+ * A base renderer for OpenGL that uploads sprite and shape data to the
+ * GPU.
+ *
+ * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.GL)
 abstract class GLRenderer(shaderFile: String) : Renderer {
 
     // GPU Resources
-    private val batches: MutableList<RenderBatch>
-    protected val shader: Shader
+    private val batches: MutableList<RenderBatch> = ArrayList()
+    protected val shader: Shader = Assets.getAsset(shaderFile, Shader::class.java)!!
 
-    // TODO does this do anything?
-    protected val textureSlots: IntArray // support multiple texture IDs in batch
-
-    init {
-        batches = ArrayList()
-        shader = Assets.getAsset(shaderFile, Shader::class.java)!!
-        textureSlots = IntArray(RenderBatch.MAX_TEXTURE_SLOTS) { it } // ints 0-7
-    }
+    protected val textureSlots: IntArray = IntArray(RenderBatch.MAX_TEXTURE_SLOTS) { it }
+    // support multiple texture IDs in batch ints 0-7
 
     // Renderer Methods
     override fun start() {
@@ -42,7 +37,6 @@ abstract class GLRenderer(shaderFile: String) : Renderer {
     /** Clear the screen and upload resources to the GPU. */
     protected open fun preRender() {
         shader.bind()
-        shader.uploadUniforms(camera as GLCamera)
     }
 
     /** Sort all image data into batches. */

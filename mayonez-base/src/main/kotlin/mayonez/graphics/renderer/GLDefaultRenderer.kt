@@ -3,6 +3,7 @@ package mayonez.graphics.renderer
 import mayonez.*
 import mayonez.graphics.*
 import mayonez.graphics.batch.*
+import mayonez.graphics.camera.*
 import mayonez.graphics.debug.*
 import mayonez.graphics.sprites.*
 import mayonez.math.*
@@ -23,18 +24,13 @@ internal class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"),
     private val lineStyle: LineStyle = LineStyle.QUADS
 
     // Renderer Objects
-    private val objects: MutableList<GLRenderable>  // Drawable objects
-    private val shapes: MutableList<DebugShape> // Temporary shapes
+    private val objects: MutableList<GLRenderable> = ArrayList()  // Drawable objects
+    private val shapes: MutableList<DebugShape> = ArrayList() // Temporary shapes
 
     // Scene Background
     private lateinit var background: Sprite
-    private val bgBatch: RenderBatch
-
-    init {
-        objects = ArrayList()
-        shapes = ArrayList()
-        bgBatch = RenderBatch(1, 0, DrawPrimitive.SPRITE)
-    }
+    private val bgBatch: RenderBatch =
+        RenderBatch(1, 0, DrawPrimitive.SPRITE)
 
     // Scene Renderer Methods
 
@@ -67,12 +63,16 @@ internal class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"),
 
     override fun start() {
         super.start()
+        objects.clear()
         shapes.clear()
         bgBatch.clearVertices()
     }
 
     override fun preRender() {
         super.preRender()
+        val cam = camera as GLCamera
+        shader.uploadMat4("uView", cam.getViewMatrix())
+        shader.uploadMat4("uProjection", cam.getProjectionMatrix())
         shader.uploadIntArray("uTextures", textureSlots)
         drawBackground()
         setGLProperties()

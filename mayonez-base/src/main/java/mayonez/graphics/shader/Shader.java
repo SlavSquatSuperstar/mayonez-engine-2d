@@ -1,12 +1,12 @@
 package mayonez.graphics.shader;
 
 import mayonez.*;
-import mayonez.graphics.*;
-import mayonez.graphics.camera.*;
 import mayonez.assets.*;
+import mayonez.graphics.*;
 import mayonez.io.text.*;
 import org.joml.*;
 import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.GL20;
 
 import java.util.*;
 
@@ -21,8 +21,8 @@ import static org.lwjgl.opengl.GL20.*;
 @UsesEngine(EngineType.GL)
 public class Shader extends Asset {
 
-    private int shaderID;
     private boolean active;
+    private int shaderID;
 
     public Shader(String filename) {
         super(filename);
@@ -75,6 +75,7 @@ public class Shader extends Asset {
         programs.forEach(this::compileShader);
         var programIDs = programs.stream().map(ShaderProgram::getID).toList();
         linkShaderPrograms(programIDs);
+        programIDs.forEach(GL20::glDeleteShader);
     }
 
     private void compileShader(ShaderProgram shader) throws ShaderException {
@@ -113,11 +114,6 @@ public class Shader extends Asset {
         if (active) return;
         glUseProgram(shaderID);
         active = true;
-    }
-
-    public void uploadUniforms(GLCamera camera) {
-        uploadMat4("uProjection", camera.getProjectionMatrix());
-        uploadMat4("uView", camera.getViewMatrix());
     }
 
     /**

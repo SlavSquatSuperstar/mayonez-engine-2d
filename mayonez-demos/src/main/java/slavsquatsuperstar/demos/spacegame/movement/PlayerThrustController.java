@@ -16,12 +16,13 @@ public class PlayerThrustController extends ThrustController {
 
     private static final Key BRAKE_KEY = SpaceGameConfig.getBreakKey();
 
+    // Movement Scripts
+    private KeyMovement keyMovement;
+    private KeyRotation keyRotation;
+
     public PlayerThrustController(List<Thruster> thrusters) {
         super(thrusters);
     }
-
-    private KeyMovement keyMovement;
-    private KeyRotation keyRotation;
 
     @Override
     public void start() {

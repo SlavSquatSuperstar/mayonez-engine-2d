@@ -7,6 +7,7 @@ import mayonez.graphics.debug.*;
 import mayonez.graphics.renderer.*;
 import mayonez.graphics.sprites.*;
 import mayonez.graphics.textures.*;
+import mayonez.graphics.ui.*;
 import mayonez.math.Random;
 import mayonez.math.*;
 import mayonez.physics.*;
@@ -42,16 +43,21 @@ public abstract class Scene {
     private final String name;
     private final float scale; // scene scale, or how many pixels correspond to a world unit
     private final Vec2 size; // scene size, or zero if unbounded
-    protected final Sprite background;
 
-    // Scene Layers
+    // Scene Objects
     private final List<GameObject> objects;
     private final SceneLayer[] layers;
+
+    // Renderers
+    private Camera camera;
+    protected final Sprite background;
     private final SceneRenderer renderer;
     private final DebugRenderer debugRenderer;
+    private final UIRenderer uiRenderer;
     private final DebugDraw debugDraw;
+
+    // Physics
     private final PhysicsWorld physics;
-    private Camera camera;
 
     // Scene State
     private final Queue<Runnable> changesToScene; // Use a separate list to avoid concurrent exceptions
@@ -85,9 +91,12 @@ public abstract class Scene {
         // Initialize layers
         objects = new ArrayList<>();
         layers = new SceneLayer[SceneLayer.NUM_LAYERS];
+
         renderer = RendererFactory.createSceneRenderer();
         debugRenderer = (DebugRenderer) renderer;
+        uiRenderer = new GLUIRenderer();
         debugDraw = new DebugDraw(scale, debugRenderer);
+
         physics = new DefaultPhysicsWorld();
 
         // Scene changes
@@ -258,6 +267,7 @@ public abstract class Scene {
     private void addObjectToLayers(GameObject o) {
         for (Component c : o.getComponents()) {
             if (c instanceof Renderable r) renderer.addRenderable(r);
+            if (c instanceof UIElement r) uiRenderer.addUIElement(r);
             else if (c instanceof PhysicsBody b) physics.addPhysicsBody(b);
             else if (c instanceof CollisionBody b) physics.addCollisionBody(b);
         }
@@ -277,6 +287,7 @@ public abstract class Scene {
         objects.remove(o);
         for (Component c : o.getComponents()) {
             if (c instanceof Renderable r) renderer.removeRenderable(r);
+            if (c instanceof UIElement r) uiRenderer.removeUIElement(r);
             else if (c instanceof PhysicsBody b) physics.removePhysicsBody(b);
             else if (c instanceof CollisionBody b) physics.removeCollisionBody(b);
         }
