@@ -61,6 +61,8 @@ abstract class GLRenderer(shaderFile: String) : Renderer {
     /** Sort image data into render batches. */
     protected abstract fun createBatches()
 
+    // TODO may be better to sort by z-index, and put as many things in batches as possible
+    // TODO see Cherno renderer class
     protected fun GLRenderable.getAvailableBatch(): RenderBatch {
         return batches.find { this.fitsInBatch(it) }
             ?: this.createNewBatch() // If all batches full

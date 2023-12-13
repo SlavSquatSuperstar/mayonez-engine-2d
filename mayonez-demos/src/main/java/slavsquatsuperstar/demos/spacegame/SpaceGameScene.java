@@ -6,6 +6,7 @@ import mayonez.graphics.ui.*;
 import mayonez.math.Random;
 import mayonez.math.*;
 import mayonez.math.shapes.*;
+import slavsquatsuperstar.demos.spacegame.combat.Damageable;
 import slavsquatsuperstar.demos.spacegame.objects.BackgroundObject;
 import slavsquatsuperstar.demos.spacegame.objects.SpaceGameZIndex;
 import slavsquatsuperstar.demos.spacegame.objects.SpawnManager;
@@ -50,13 +51,40 @@ public class SpaceGameScene extends Scene {
         addBackgroundStars();
 
         // UI
-        addObject(new GameObject("Health Bar") {
+        var position = new Vec2(105, 770);
+        var size = new Vec2(180, 30);
+        addObject(new GameObject("Health Bar Red") {
             @Override
             protected void init() {
+                addComponent(new UIBox(Colors.RED));
                 setZIndex(SpaceGameZIndex.UI);
-                transform.setPosition(new Vec2(100, 770));
-                transform.setScale(new Vec2(180, 30));
+                transform.setPosition(position);
+                transform.setScale(size);
+            }
+        });
+        addObject(new GameObject("Health Bar Green") {
+            @Override
+            protected void init() {
+                // TODO health bar script
+                setZIndex(SpaceGameZIndex.UI + 1);
+                transform.setPosition(position);
+                transform.setScale(size);
                 addComponent(new UIBox(Colors.GREEN));
+                addComponent(new Script() {
+                    @Override
+                    protected void update(float dt) {
+                        var player = getScene().getObject("Player Spaceship");
+                        if (player == null) return;
+                        var playerHealth = player.getComponent(Damageable.class);
+                        if (playerHealth == null) return;
+
+                        var maxHealth = playerHealth.getMaxHealth();
+                        var health = playerHealth.getHealth();
+                        var healthPercent = health / maxHealth;
+                        transform.setScale(size.mul(new Vec2(healthPercent, 1f)));
+                        transform.setPosition(position.sub(position.mul(new Vec2(1f - healthPercent, 0f))));
+                    }
+                });
 
 //                transform.setPosition(new Vec2(-16, 11.5f));
 //                addComponent(new BoxCollider(new Vec2(5, 1)).setEnabled(false));

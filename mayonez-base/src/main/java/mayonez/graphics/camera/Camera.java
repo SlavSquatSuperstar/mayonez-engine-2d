@@ -6,7 +6,7 @@ import mayonez.math.FloatMath;
 import mayonez.math.Vec2;
 
 /**
- * The viewport into the scene. The camera may be adjusted through scripts
+ * The main viewport into the scene. The camera may be adjusted through scripts
  * by accessing {@code Script.getScene().getCamera()}. This class should not be
  * directly instantiated. Instead, call {@link CameraFactory#createCamera}.
  * <p>
@@ -16,7 +16,7 @@ import mayonez.math.Vec2;
  */
 // TODO elastic/smooth movement
 // TODO allow drag, but snap back to subject
-public abstract class Camera extends Script implements PointTransformer {
+public abstract class Camera extends Component implements PointTransformer {
 
     // Camera Fields
     public final Vec2 screenSize;

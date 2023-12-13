@@ -1,9 +1,5 @@
 package mayonez.math
 
-import mayonez.math.equalsArray
-import mayonez.math.minusArray
-import mayonez.math.plusArray
-import mayonez.math.timesFloat
 import java.util.*
 
 /**
@@ -14,8 +10,8 @@ import java.util.*
  * @param mB the element at the first row and second column
  * @param mC the element at the second row and first column
  * @param mD the element at the second row and second column
- * @constructor Create a matrix from four numbers, with the values
- *     [(a, b), (c, d)].
+ * @constructor Create a matrix from four numbers, with the values [[(a,
+ *     b), (c, d)]].
  */
 class Mat22(
     /** The element at the first row and first column of the matrix. */
@@ -28,15 +24,15 @@ class Mat22(
     private var mD: Float
 ) {
 
-    /** Create an identity matrix from an array of four floats */
+    /** Create a matrix from an array of four floats. */
     private constructor(values: FloatArray) : this(values[0], values[1], values[2], values[3])
 
-    /** Create an identity matrix with the values [(1, 0), (0, 1)] */
+    /** Create an identity matrix with the values [[(1, 0), (0, 1)]] */
     constructor() : this(1f, 0f, 0f, 1f)
 
     /**
-     * Creates a rotation matrix from the given angle, with the values
-     * [[(cos, -sin), (sin, cos)]].
+     * Creates a rotation matrix from the given angle, with the values [[(cos,
+     * -sin), (sin, cos)]].
      *
      * @degrees the angle measure in degrees
      */
@@ -79,7 +75,7 @@ class Mat22(
     }
 
     /**
-     * Calculates the determinant of this matrix.
+     * Calculates the determinant of this matrix, equal to ad - bc.
      *
      * @return the determinant
      */
@@ -126,13 +122,6 @@ class Mat22(
      * @return the matrix product
      */
     operator fun times(m: Mat22): Mat22 {
-//        val values = FloatArray(SIZE)
-//        for (r in 0..<NUM_ROWS) {
-//            for (c in 0..<NUM_COLS) {
-//                values[r * NUM_COLS + c] = this.row(r).dot(m.col(c))
-//            }
-//        }
-//        return Mat22(values)
         return Mat22(
             this.row(0).dot(m.col(0)),
             this.row(0).dot(m.col(1)),

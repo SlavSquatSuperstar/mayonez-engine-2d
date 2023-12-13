@@ -64,6 +64,7 @@ internal class GLSprite private constructor(
      * @param batch the batch
      */
     override fun pushToBatch(batch: RenderBatch) {
+        // TODO common push sprite function
         // Add sprite vertex data
         val objXf = transform.combine(getSpriteTransform())
         val color = this.color.toGL()

@@ -17,7 +17,8 @@ import mayonez.physics.manifold.*
  * @constructor Constructs a collider from a [Shape] object
  * @author SlavSquatSuperstar
  */
-abstract class Collider(private val shape: Shape) : Component(UpdateOrder.COLLISION), CollisionBody {
+abstract class Collider(private val shape: Shape) :
+    Component(UpdateOrder.COLLISION), CollisionBody {
 
     // Component References
 
@@ -97,9 +98,9 @@ abstract class Collider(private val shape: Shape) : Component(UpdateOrder.COLLIS
     override fun canCollide(collider: CollisionBody): Boolean {
         if (collider is Collider) {
 
-            return this.isEnabled && collider.isEnabled // Both enabled
-                    || this.gameObject.canInteract(collider.gameObject) // Layers interact
-                    || this.physicsBody != null || collider.physicsBody != null // At most one is static
+            return (this.isEnabled && collider.isEnabled) // Both enabled
+                    && this.gameObject.canInteract(collider.gameObject) // Layers interact
+                    && (this.physicsBody != null || collider.physicsBody != null) // At most one is static
         }
         return false
     }

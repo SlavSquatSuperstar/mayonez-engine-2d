@@ -18,7 +18,8 @@ class Angle private constructor(
     private constructor(radD: Double) : this(radD, cos(radD), sin(radD))
 
     companion object {
-        // Constructors
+        // Factory Methods
+
         @JvmStatic
         fun createDegrees(degrees: Float): Angle = Angle(degrees.toRadiansDouble())
 

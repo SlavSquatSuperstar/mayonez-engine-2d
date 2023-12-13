@@ -43,6 +43,10 @@ public class Damageable extends Script {
         healthPoints.count(healing);
     }
 
+    public float getMaxHealth() {
+        return healthPoints.getMax();
+    }
+
     public float getHealth() {
         return healthPoints.getValue();
     }

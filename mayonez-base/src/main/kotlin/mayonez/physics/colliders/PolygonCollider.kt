@@ -9,8 +9,7 @@ import mayonez.math.shapes.*
  *
  * @author SlavSquatSuperstar
  */
-open class PolygonCollider(shape: Polygon) :
-    Collider(shape.translate(-shape.center())) {
+open class PolygonCollider(shape: Polygon) : Collider(shape.translate(-shape.center())) {
 
     /**
      * Constructs a convex polygon from an array of vertices in clockwise
