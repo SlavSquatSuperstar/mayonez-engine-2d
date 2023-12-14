@@ -1,7 +1,6 @@
 package mayonez.graphics.renderer
 
 import mayonez.graphics.*
-import mayonez.graphics.camera.*
 import mayonez.graphics.debug.*
 import org.joml.*
 import org.lwjgl.opengl.GL11.*
@@ -41,9 +40,9 @@ internal class GLUIRenderer : GLRenderer("assets/shaders/default.glsl"),
 
     override fun preRender() {
         shader.bind()
-        val cam = camera as GLCamera
+        val cam = viewport
         shader.uploadMat4("uView", Matrix4f())
-        shader.uploadMat4("uProjection", cam.getProjectionMatrix())
+        shader.uploadMat4("uProjection", cam.projectionMatrix)
         shader.uploadIntArray("uTextures", textureSlots)
         setGLProperties()
     }

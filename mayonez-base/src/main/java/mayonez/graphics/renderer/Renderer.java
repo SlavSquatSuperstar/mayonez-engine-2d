@@ -3,7 +3,7 @@ package mayonez.graphics.renderer;
 import mayonez.*;
 import mayonez.graphics.camera.*;
 
-import java.awt.*;
+import java.awt.Graphics2D;
 
 /**
  * Draws objects or other program information to the screen.
@@ -33,7 +33,7 @@ public interface Renderer {
      *
      * @return the camera
      */
-    default Camera getCamera() {
+    default Viewport getViewport() {
         return SceneManager.getCurrentScene().getCamera();
     }
 

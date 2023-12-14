@@ -3,7 +3,6 @@ package mayonez.graphics.renderer
 import mayonez.*
 import mayonez.graphics.*
 import mayonez.graphics.batch.*
-import mayonez.graphics.camera.*
 import mayonez.graphics.debug.*
 import mayonez.graphics.sprites.*
 import mayonez.math.*
@@ -70,9 +69,9 @@ internal class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"),
 
     override fun preRender() {
         super.preRender()
-        val cam = camera as GLCamera
-        shader.uploadMat4("uView", cam.getViewMatrix())
-        shader.uploadMat4("uProjection", cam.getProjectionMatrix())
+        val cam = viewport
+        shader.uploadMat4("uView", cam.viewMatrix)
+        shader.uploadMat4("uProjection", cam.projectionMatrix)
         shader.uploadIntArray("uTextures", textureSlots)
         drawBackground()
         setGLProperties()

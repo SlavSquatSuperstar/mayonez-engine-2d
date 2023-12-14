@@ -40,7 +40,7 @@ class DebugDraw internal constructor(
         // Fill a circle with radius "STROKE_SIZE" in pixels
         addShapeToRenderer(
             Circle(position.toScreen(scale), DEFAULT_STROKE_SIZE),
-            createPointBrush(color)
+            color.createPointBrush()
         )
     }
 
@@ -152,13 +152,13 @@ class DebugDraw internal constructor(
         debugRenderer.addShape(DebugShape(shape, brush))
     }
 
-    private fun createPointBrush(color: MColor?): ShapeBrush {
-        return ShapeBrush.createSolidBrush(color).setZIndex(DrawPriority.POINT.zIndex)
-    }
-
 }
 
 // Helper Methods
+
+private fun MColor?.createPointBrush(): ShapeBrush {
+    return ShapeBrush.createSolidBrush(this).setZIndex(DrawPriority.POINT.zIndex)
+}
 
 /**
  * Converts a pair of coordinates from world to screen units.

@@ -2,6 +2,7 @@ package mayonez.graphics.camera;
 
 import mayonez.graphics.*;
 import mayonez.math.*;
+import org.joml.*;
 
 /**
  * A scene camera for the AWT engine.
@@ -9,13 +10,23 @@ import mayonez.math.*;
  * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.AWT)
-public final class JCamera extends Camera {
+final class JCamera extends Camera {
 
-    public JCamera(Vec2 screenSize, float sceneScale) {
+    JCamera(Vec2 screenSize, float sceneScale) {
         super(screenSize, sceneScale);
     }
 
-    // Screen to World Methods
+    // Camera Methods
+
+    @Override
+    public Matrix4f getViewMatrix() {
+        return new Matrix4f(); // unused
+    }
+
+    @Override
+    public Matrix4f getProjectionMatrix() {
+        return new Matrix4f(); // unused
+    }
 
     @Override
     public Vec2 toWorld(Vec2 screen) {

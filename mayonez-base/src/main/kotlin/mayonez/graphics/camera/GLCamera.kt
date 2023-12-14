@@ -14,9 +14,9 @@ import org.joml.*
 class GLCamera(screenSize: Vec2?, sceneScale: Float) : Camera(screenSize, sceneScale) {
 
     // Matrix Fields
-    private val viewMatrix: Matrix4f = Matrix4f() // coordinates from camera's perspective
+    private val viewMatrix: Matrix4f = Matrix4f()
     private val inverseView: Matrix4f = Matrix4f()
-    private val projectionMatrix: Matrix4f = Matrix4f() // normalized device screen coordinates
+    private val projectionMatrix: Matrix4f = Matrix4f()
     private val inverseProjection: Matrix4f = Matrix4f()
 
     // Plane Fields
@@ -30,7 +30,7 @@ class GLCamera(screenSize: Vec2?, sceneScale: Float) : Camera(screenSize, sceneS
      * The view matrix of the camera, which transforms objects from world space
      * into camera view space.
      */
-    fun getViewMatrix(): Matrix4f {
+    override fun getViewMatrix(): Matrix4f {
         translateViewMatrix(screenOffset)
         rotateViewMatrix(-rotation)
         viewMatrix.invert(inverseView)
@@ -38,7 +38,7 @@ class GLCamera(screenSize: Vec2?, sceneScale: Float) : Camera(screenSize, sceneS
     }
 
     private fun rotateViewMatrix(angle: Float) {
-        val cameraPos = position * sceneScale
+        val cameraPos = viewCenter
         val rotation = Quaternionf()
         rotation.rotationAxis(FloatMath.toRadians(angle), 0f, 0f, 1f)
         viewMatrix.rotateAround(rotation, cameraPos.x, cameraPos.y, 0f)
@@ -57,7 +57,7 @@ class GLCamera(screenSize: Vec2?, sceneScale: Float) : Camera(screenSize, sceneS
      * The projection matrix of the camera, which transforms objects from view
      * space into normalized screen space.
      */
-    fun getProjectionMatrix(): Matrix4f {
+    override fun getProjectionMatrix(): Matrix4f {
         val projSize = screenSize.div(zoom)
         projectionMatrix.setOrtho(0f, projSize.x, 0f, projSize.y, nearPlane, farPlane)
         projectionMatrix.invert(inverseProjection)

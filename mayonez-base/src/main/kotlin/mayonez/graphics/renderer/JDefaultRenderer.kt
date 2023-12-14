@@ -101,18 +101,18 @@ internal class JDefaultRenderer : SceneRenderer, DebugRenderer {
 
     /** Transform the screen and render everything at the new position. */
     private fun transformScreen(g2: Graphics2D) {
-        val cam = this.camera ?: return
+        val cam = this.viewport ?: return
         translateAndScaleScreen(cam, g2)
         rotateScreen(cam, g2)
     }
 
-    private fun rotateScreen(cam: Camera, g2: Graphics2D) {
+    private fun rotateScreen(cam: Viewport, g2: Graphics2D) {
         val camAngleRad = Math.toRadians(cam.rotation.toDouble())
-        val camCenter = cam.position * cam.sceneScale
+        val camCenter = cam.viewCenter
         g2.rotate(-camAngleRad, camCenter.x.toDouble(), camCenter.y.toDouble())
     }
 
-    private fun translateAndScaleScreen(cam: Camera, g2: Graphics2D) {
+    private fun translateAndScaleScreen(cam: Viewport, g2: Graphics2D) {
         val camOffset = cam.screenOffset
         val camZoom = cam.zoom.toDouble() // the zoom
         g2.translate(-camOffset.x * camZoom, -camOffset.y * camZoom)

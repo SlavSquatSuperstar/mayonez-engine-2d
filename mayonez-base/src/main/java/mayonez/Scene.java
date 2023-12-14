@@ -193,9 +193,9 @@ public abstract class Scene {
      * Destroys all objects and stop updating the scene.
      */
     final void stop() {
-        state = SceneState.STOPPED;
         destroySceneObjects();
         clearSceneLayers();
+        state = SceneState.STOPPED;
     }
 
     private void destroySceneObjects() {

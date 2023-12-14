@@ -1,9 +1,7 @@
 package mayonez.graphics.camera;
 
 import mayonez.*;
-import mayonez.input.*;
-import mayonez.math.FloatMath;
-import mayonez.math.Vec2;
+import mayonez.math.*;
 
 /**
  * The main viewport into the scene. The camera may be adjusted through scripts
@@ -16,11 +14,11 @@ import mayonez.math.Vec2;
  */
 // TODO elastic/smooth movement
 // TODO allow drag, but snap back to subject
-public abstract class Camera extends Component implements PointTransformer {
+public abstract class Camera extends Component implements Viewport {
 
     // Camera Fields
-    public final Vec2 screenSize;
-    public final float sceneScale;
+    protected final Vec2 screenSize;
+    protected final float sceneScale;
 
     // Camera Movement
     private boolean followAngle;
@@ -63,6 +61,7 @@ public abstract class Camera extends Component implements PointTransformer {
      *
      * @return the position
      */
+    @Override
     public final Vec2 getPosition() {
         return new Vec2(transform.getPosition());
     }
@@ -76,14 +75,28 @@ public abstract class Camera extends Component implements PointTransformer {
         transform.setPosition(position);
     }
 
+    // getPosition().mul(sceneScale) -> view center
+    // screenSize.mul(-0.5f / getZoom()) -> zoom offset
+
+    /**
+     * The position in pixels of the camera's center position.
+     *
+     * @return the camera's screen position
+     */
+    @Override
+    public final Vec2 getViewCenter() {
+        return getPosition().mul(sceneScale);
+    }
+
     /**
      * The position in screen units of the camera's bottom left corner (the canvas origin).
      *
      * @return the camera's offset
      */
-    public final Vec2 getScreenOffset() {
+    @Override
+    public final Vec2 getScreenOffset() { // view center
         // (position * scene_scale) - (0.5 * screen_size / zoom)
-        return getPosition().mul(sceneScale).sub(screenSize.mul(0.5f / getZoom()));
+        return getViewCenter().sub(screenSize.mul(0.5f / getZoom()));
     }
 
     // Camera Effects
@@ -93,6 +106,7 @@ public abstract class Camera extends Component implements PointTransformer {
      *
      * @return the zoom
      */
+    @Override
     public float getZoom() {
         return zoom;
     }
@@ -121,6 +135,7 @@ public abstract class Camera extends Component implements PointTransformer {
      *
      * @return the rotation
      */
+    @Override
     public float getRotation() {
         return rotation;
     }
@@ -142,7 +157,7 @@ public abstract class Camera extends Component implements PointTransformer {
         rotation = 0f;
     }
 
-    // Camera Movement
+    // Camera Movement Methods
 
     /**
      * Toggles whether the camera should rotate with the subject.
