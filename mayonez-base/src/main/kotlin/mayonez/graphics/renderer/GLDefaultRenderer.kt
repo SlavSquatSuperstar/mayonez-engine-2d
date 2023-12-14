@@ -61,8 +61,8 @@ internal class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"),
 
     // Renderer Methods
 
-    override fun start() {
-        super.start()
+    override fun clear() {
+        super.clear()
         objects.clear()
         shapes.clear()
         bgBatch.clearVertices()
@@ -129,13 +129,6 @@ internal class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"),
         shapes.clear() // Clear primitives after each frame
         glDisable(GL_LINE_SMOOTH)
         glDisable(GL_BLEND)
-    }
-
-    override fun stop() {
-        super.stop()
-        objects.clear()
-        shapes.clear()
-        bgBatch.deleteBatch()
     }
 
 }

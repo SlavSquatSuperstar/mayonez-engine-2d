@@ -23,7 +23,9 @@ abstract class GLRenderer(shaderFile: String) : Renderer {
     // support multiple texture IDs in batch ints 0-7
 
     // Renderer Methods
-    override fun start() {
+
+    override fun clear() {
+        batches.forEach(RenderBatch::deleteBatch)
         batches.clear()
     }
 
@@ -50,10 +52,6 @@ abstract class GLRenderer(shaderFile: String) : Renderer {
     /** Finish drawing and free resources from the GPU. */
     protected open fun postRender() {
         shader.unbind() // Unbind everything
-    }
-
-    override fun stop() {
-        batches.forEach(RenderBatch::deleteBatch)
     }
 
     // Batch Helper Methods

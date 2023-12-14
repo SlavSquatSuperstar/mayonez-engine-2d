@@ -34,8 +34,8 @@ internal class GLUIRenderer : GLRenderer("assets/shaders/default.glsl"),
 
     // Renderer Methods
 
-    override fun start() {
-        super.start()
+    override fun clear() {
+        super.clear()
         objects.clear()
     }
 
@@ -73,11 +73,6 @@ internal class GLUIRenderer : GLRenderer("assets/shaders/default.glsl"),
         super.postRender()
         glDisable(GL_LINE_SMOOTH)
         glDisable(GL_BLEND)
-    }
-
-    override fun stop() {
-        super.stop()
-        objects.clear()
     }
 
 }

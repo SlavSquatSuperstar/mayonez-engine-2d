@@ -14,11 +14,10 @@ public interface Renderer {
 
     // Game Loop Methods
 
-    // TODO single clear method
     /**
-     * Prepares the renderer for allocating data.
+     * Removes all objects from the renderer and clears all data.
      */
-    void start();
+    void clear();
 
     /**
      * Redraws all objects in the renderer.
@@ -26,11 +25,6 @@ public interface Renderer {
      * @param g2 a {@link java.awt.Graphics2D} object for the AWT engine
      */
     void render(Graphics2D g2);
-
-    /**
-     * Removes all objects and frees resources upon quitting the program.
-     */
-    void stop();
 
     // Helper Methods
 

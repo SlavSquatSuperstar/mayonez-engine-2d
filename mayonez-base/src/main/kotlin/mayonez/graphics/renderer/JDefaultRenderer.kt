@@ -64,7 +64,7 @@ internal class JDefaultRenderer : SceneRenderer, DebugRenderer {
 
     // Renderer Methods
 
-    override fun start() {
+    override fun clear() {
         batches.clear()
         objects.clear()
         shapes.clear()
@@ -144,14 +144,6 @@ internal class JDefaultRenderer : SceneRenderer, DebugRenderer {
     private fun drawBatches(g2: Graphics2D) {
         g2.stroke = DEFAULT_STROKE
         batches.forEach { it.render(g2) }
-    }
-
-    // Stop Renderer Methods
-
-    override fun stop() {
-        batches.clear()
-        objects.clear()
-        shapes.clear()
     }
 
 }

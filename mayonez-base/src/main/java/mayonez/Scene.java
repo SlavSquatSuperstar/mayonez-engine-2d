@@ -50,7 +50,7 @@ public abstract class Scene {
     // Renderers
     private Camera camera;
     protected final Sprite background;
-    private final RendererList renderers;
+    private final RenderLayer renderLayer;
 
     // Physics
     private final PhysicsWorld physics;
@@ -88,7 +88,7 @@ public abstract class Scene {
         objects = new ArrayList<>();
         layers = new SceneLayer[SceneLayer.NUM_LAYERS];
 
-        renderers = new RendererList(background, size, scale);
+        renderLayer = new RenderLayer(background, size, scale);
         physics = new DefaultPhysicsWorld();
 
         // Scene changes
@@ -178,7 +178,7 @@ public abstract class Scene {
     final void render(Graphics2D g2) {
         onUserRender();
         objects.forEach(GameObject::debugRender);
-        renderers.render(g2);
+        renderLayer.render(g2);
     }
 
     /**
@@ -205,7 +205,7 @@ public abstract class Scene {
     }
 
     private void clearSceneLayers() {
-        renderers.clear();
+        renderLayer.clear();
         physics.clear();
     }
 
@@ -250,7 +250,7 @@ public abstract class Scene {
     private void addObjectToLayers(GameObject o) {
         for (Component c : o.getComponents()) {
 //            if (c instanceof UIElement e) uiRenderer.addUIElement(e);
-            if (c instanceof Renderable r) renderers.addRenderable(r);
+            if (c instanceof Renderable r) renderLayer.addRenderable(r);
             if (c instanceof PhysicsBody b) physics.addPhysicsBody(b);
             if (c instanceof CollisionBody b) physics.addCollisionBody(b);
         }
@@ -269,7 +269,7 @@ public abstract class Scene {
     private void removeObjectFromLayers(GameObject o) {
         objects.remove(o);
         for (Component c : o.getComponents()) {
-            if (c instanceof Renderable r) renderers.removeRenderable(r);
+            if (c instanceof Renderable r) renderLayer.removeRenderable(r);
             if (c instanceof PhysicsBody b) physics.removePhysicsBody(b);
             if (c instanceof CollisionBody b) physics.removeCollisionBody(b);
         }
@@ -413,7 +413,7 @@ public abstract class Scene {
      * @return the scene debug draw
      */
     public final DebugDraw getDebugDraw() {
-        return renderers.getDebugDraw();
+        return renderLayer.getDebugDraw();
     }
 
     public void setGravity(Vec2 gravity) {

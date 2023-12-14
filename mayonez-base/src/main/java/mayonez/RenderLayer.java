@@ -15,7 +15,7 @@ import java.util.List;
  *
  * @author SlavSquatSuperstar
  */
-class RendererList {
+class RenderLayer {
 
     // Renderers
 
@@ -24,7 +24,7 @@ class RendererList {
     private final DebugDraw debugDraw;
     private final List<Renderer> renderers;
 
-    RendererList(Sprite background, Vec2 sceneSize, float sceneScale) {
+    RenderLayer(Sprite background, Vec2 sceneSize, float sceneScale) {
         // Scene
         sceneRenderer = RendererFactory.createSceneRenderer();
         sceneRenderer.setBackground(background, sceneSize, sceneScale);
@@ -55,7 +55,7 @@ class RendererList {
      * Clears all objects from all renderers.
      */
     void clear() {
-        for (var r : renderers) r.start();
+        for (var r : renderers) r.clear();
     }
 
     /**
