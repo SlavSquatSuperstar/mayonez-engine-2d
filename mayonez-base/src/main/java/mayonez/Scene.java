@@ -1,13 +1,11 @@
 package mayonez;
 
-import mayonez.graphics.Color;
 import mayonez.graphics.*;
 import mayonez.graphics.camera.*;
 import mayonez.graphics.debug.*;
 import mayonez.graphics.renderer.*;
 import mayonez.graphics.sprites.*;
 import mayonez.graphics.textures.*;
-import mayonez.graphics.ui.*;
 import mayonez.math.Random;
 import mayonez.math.*;
 import mayonez.physics.*;
@@ -15,8 +13,9 @@ import mayonez.physics.colliders.*;
 import mayonez.physics.dynamics.*;
 import mayonez.util.*;
 
-import java.awt.*;
+import java.awt.Graphics2D;
 import java.util.List;
+import java.util.Queue;
 import java.util.*;
 
 /**
@@ -51,10 +50,7 @@ public abstract class Scene {
     // Renderers
     private Camera camera;
     protected final Sprite background;
-    private final SceneRenderer renderer;
-    private final DebugRenderer debugRenderer;
-    private final UIRenderer uiRenderer;
-    private final DebugDraw debugDraw;
+    private final RendererList renderers;
 
     // Physics
     private final PhysicsWorld physics;
@@ -92,11 +88,7 @@ public abstract class Scene {
         objects = new ArrayList<>();
         layers = new SceneLayer[SceneLayer.NUM_LAYERS];
 
-        renderer = RendererFactory.createSceneRenderer();
-        debugRenderer = (DebugRenderer) renderer;
-        uiRenderer = new GLUIRenderer();
-        debugDraw = new DebugDraw(scale, debugRenderer);
-
+        renderers = new RendererList(background, size, scale);
         physics = new DefaultPhysicsWorld();
 
         // Scene changes
@@ -114,11 +106,11 @@ public abstract class Scene {
             layers[i] = new SceneLayer(i);
         }
 
+        clearSceneLayers();
         addCameraToScene();
         init();
-        startSceneLayers();
-        state = SceneState.RUNNING;
         objects.forEach(this::addObjectToLayers);
+        state = SceneState.RUNNING;
     }
 
     private void addCameraToScene() {
@@ -136,14 +128,6 @@ public abstract class Scene {
      * and should be avoided!
      */
     protected void init() {
-    }
-
-    private void startSceneLayers() {
-        renderer.start();
-        renderer.setBackground(background, size, scale);
-        if (separateDebugRenderer()) debugRenderer.start();
-        uiRenderer.start();
-        physics.clear();
     }
 
     // Update Methods
@@ -194,10 +178,7 @@ public abstract class Scene {
     final void render(Graphics2D g2) {
         onUserRender();
         objects.forEach(GameObject::debugRender);
-        // todo renderer set class
-        renderer.render(g2);
-        if (separateDebugRenderer()) debugRenderer.render(g2);
-        uiRenderer.render(g2);
+        renderers.render(g2);
     }
 
     /**
@@ -212,21 +193,20 @@ public abstract class Scene {
      * Destroys all objects and stop updating the scene.
      */
     final void stop() {
+        state = SceneState.STOPPED;
         destroySceneObjects();
         clearSceneLayers();
-    }
-
-    private void clearSceneLayers() {
-        renderer.stop();
-        if (separateDebugRenderer()) debugRenderer.stop();
-        physics.clear();
-        state = SceneState.STOPPED;
     }
 
     private void destroySceneObjects() {
         camera.setSubject(null);
         objects.forEach(GameObject::onDestroy);
         objects.clear();
+    }
+
+    private void clearSceneLayers() {
+        renderers.clear();
+        physics.clear();
     }
 
     // Object Methods
@@ -269,10 +249,10 @@ public abstract class Scene {
 
     private void addObjectToLayers(GameObject o) {
         for (Component c : o.getComponents()) {
-            if (c instanceof UIElement e) uiRenderer.addUIElement(e);
-            else if (c instanceof Renderable r) renderer.addRenderable(r);
-            else if (c instanceof PhysicsBody b) physics.addPhysicsBody(b);
-            else if (c instanceof CollisionBody b) physics.addCollisionBody(b);
+//            if (c instanceof UIElement e) uiRenderer.addUIElement(e);
+            if (c instanceof Renderable r) renderers.addRenderable(r);
+            if (c instanceof PhysicsBody b) physics.addPhysicsBody(b);
+            if (c instanceof CollisionBody b) physics.addCollisionBody(b);
         }
     }
 
@@ -289,10 +269,9 @@ public abstract class Scene {
     private void removeObjectFromLayers(GameObject o) {
         objects.remove(o);
         for (Component c : o.getComponents()) {
-            if (c instanceof Renderable r) renderer.removeRenderable(r);
-            if (c instanceof UIElement r) uiRenderer.removeUIElement(r);
-            else if (c instanceof PhysicsBody b) physics.removePhysicsBody(b);
-            else if (c instanceof CollisionBody b) physics.removeCollisionBody(b);
+            if (c instanceof Renderable r) renderers.removeRenderable(r);
+            if (c instanceof PhysicsBody b) physics.removePhysicsBody(b);
+            if (c instanceof CollisionBody b) physics.removeCollisionBody(b);
         }
         o.onDestroy();
         Logger.debug("Removed object \"%s\" from scene \"%s\"",
@@ -434,11 +413,7 @@ public abstract class Scene {
      * @return the scene debug draw
      */
     public final DebugDraw getDebugDraw() {
-        return debugDraw;
-    }
-
-    private boolean separateDebugRenderer() { // if scene renderer is also debug renderer
-        return renderer != debugRenderer;
+        return renderers.getDebugDraw();
     }
 
     public void setGravity(Vec2 gravity) {

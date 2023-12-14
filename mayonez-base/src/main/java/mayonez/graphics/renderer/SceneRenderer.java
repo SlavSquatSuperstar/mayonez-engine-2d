@@ -21,7 +21,7 @@ public interface SceneRenderer extends Renderer {
     void setBackground(Sprite background, Vec2 sceneSize, float sceneScale);
 
     /**
-     * Submits a drawable object for rendering.
+     * Adds a drawable object to the render.
      *
      * @param r the renderable
      */

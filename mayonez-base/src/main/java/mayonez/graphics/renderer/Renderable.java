@@ -6,7 +6,7 @@ package mayonez.graphics.renderer;
 public interface Renderable {
 
     /**
-     * Which order this object should be drawn in, or the vertical layering.
+     * The vertical layering of this object, or which order it should be drawn in.
      *
      * @return the z-index
      */

@@ -12,6 +12,8 @@ import mayonez.graphics.textures.*;
 @UsesEngine(EngineType.GL)
 public interface GLRenderable extends Renderable {
 
+    // TODO store shader
+
     // Render Batch Methods
 
     /**
