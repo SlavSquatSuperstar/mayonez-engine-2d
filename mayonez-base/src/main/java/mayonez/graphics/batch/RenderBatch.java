@@ -89,12 +89,12 @@ public final class RenderBatch {
     }
 
     private void generateVertexIndexBuffer() {
-        var offset = 0;
-        var attributeSizes = primitive.getAttributeSizes();
-        for (var i = 0; i < attributeSizes.length; i++) {
-            glVertexAttribPointer(i, attributeSizes[i], GL_FLOAT, false, vertexSize * Float.BYTES, offset);
-            glEnableVertexAttribArray(i);
-            offset += attributeSizes[i] * Float.BYTES;
+        var ptrOffset = 0;
+        var attributes = primitive.getAttributes();
+        for (var i = 0; i < attributes.length; i++) {
+            var attrib = attributes[i];
+            attrib.setVertexAttribute(i, vertexSize, ptrOffset);
+            ptrOffset += attrib.getTotalSize();
         }
     }
 
@@ -128,6 +128,9 @@ public final class RenderBatch {
         vertices.upload();
     }
 
+    /**
+     * Draw all vertices in the batch.
+     */
     public void drawBatch() {
         bindVertices();
         drawVertices();
@@ -136,8 +139,6 @@ public final class RenderBatch {
 
     private void bindVertices() {
         glBindVertexArray(vao);
-//        glEnableVertexAttribArray(0);
-//        glEnableVertexAttribArray(1);
         textures.bindTextures();
     }
 
@@ -147,8 +148,6 @@ public final class RenderBatch {
     }
 
     private void unbindVertices() {
-//        glDisableVertexAttribArray(0);
-//        glDisableVertexAttribArray(1);
         glBindVertexArray(0);
         textures.unbindTextures();
     }
@@ -157,8 +156,8 @@ public final class RenderBatch {
      * Free GPU resources upon stopping the scene.
      */
     public void deleteBatch() {
-        glDeleteBuffers(vbo);
         glDeleteBuffers(ebo);
+        glDeleteBuffers(vbo);
         glDeleteVertexArrays(vao);
     }
 

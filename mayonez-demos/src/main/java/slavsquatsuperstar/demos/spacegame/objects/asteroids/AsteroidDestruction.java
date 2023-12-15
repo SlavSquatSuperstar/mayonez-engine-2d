@@ -22,8 +22,7 @@ public class AsteroidDestruction extends Script {
 
     @Override
     public void onDestroy() {
-//        createExplosion();
-        // todo causing concurrent modification
+        // createExplosion();
         spawnAsteroidFragments();
     }
 
