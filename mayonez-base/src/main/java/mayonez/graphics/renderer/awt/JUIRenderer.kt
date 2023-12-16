@@ -1,12 +1,13 @@
-package mayonez.graphics.renderer
+package mayonez.graphics.renderer.awt
 
 import mayonez.annotations.*
 import mayonez.graphics.*
+import mayonez.graphics.renderer.*
 import java.awt.*
 
 /**
- * Draws all user interface elements onto the screen using Java's AWT and
- * Swing libraries.
+ * Draws all user interface elements onto the screen using Java's AWT
+ * library.
  *
  * This is currently a dummy implementation.
  *

@@ -1,4 +1,4 @@
-package mayonez.graphics.renderer
+package mayonez.graphics.renderer.gl
 
 /**
  * Defines how to draw an [mayonez.math.shapes.Edge] (line) in a

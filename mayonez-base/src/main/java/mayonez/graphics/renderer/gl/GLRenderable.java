@@ -1,7 +1,8 @@
-package mayonez.graphics.renderer;
+package mayonez.graphics.renderer.gl;
 
 import mayonez.graphics.*;
 import mayonez.graphics.batch.*;
+import mayonez.graphics.renderer.*;
 import mayonez.graphics.textures.*;
 
 /**

@@ -20,7 +20,7 @@ internal fun MShape.toAWTShape(): JShape? {
         is Edge -> Line2D.Float(start.x, start.y, end.x, end.y)
         is Ellipse -> this.toAWTEllipse()
         is Rectangle -> this.toAWTRectangle()
-        is Polygon -> toAWTPolygon()
+        is MPolygon -> toAWTPolygon()
         else -> null
     }
 }

@@ -1,10 +1,11 @@
-package mayonez.graphics.renderer
+package mayonez.graphics.renderer.gl
 
 import mayonez.assets.*
 import mayonez.graphics.*
 import mayonez.graphics.batch.*
+import mayonez.graphics.renderer.*
 import mayonez.graphics.shader.*
-import java.awt.*
+import java.awt.Graphics2D
 
 /**
  * A base renderer for OpenGL that uploads sprite and shape data to the

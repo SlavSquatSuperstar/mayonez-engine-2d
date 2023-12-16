@@ -2,7 +2,7 @@ package mayonez.graphics.ui;
 
 import mayonez.annotations.*;
 import mayonez.graphics.*;
-import mayonez.graphics.renderer.*;
+import mayonez.graphics.renderer.gl.*;
 
 /**
  * A basic user interface element.

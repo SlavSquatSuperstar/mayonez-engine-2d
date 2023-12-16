@@ -1,6 +1,8 @@
 package mayonez.graphics.renderer;
 
 import mayonez.*;
+import mayonez.graphics.renderer.awt.*;
+import mayonez.graphics.renderer.gl.*;
 
 /**
  * A factory class that constructs {@link mayonez.graphics.renderer.Renderer} objects

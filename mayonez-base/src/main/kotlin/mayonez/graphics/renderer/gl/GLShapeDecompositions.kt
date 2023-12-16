@@ -1,4 +1,4 @@
-package mayonez.graphics.renderer
+package mayonez.graphics.renderer.gl
 
 import mayonez.graphics.debug.*
 import mayonez.math.*

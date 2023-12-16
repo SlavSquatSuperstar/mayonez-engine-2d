@@ -2,9 +2,9 @@ package mayonez.graphics.debug
 
 import mayonez.graphics.*
 import mayonez.graphics.batch.*
-import mayonez.graphics.renderer.*
+import mayonez.graphics.renderer.awt.*
+import mayonez.graphics.renderer.gl.*
 import mayonez.math.shapes.*
-import mayonez.math.shapes.Polygon
 import java.awt.*
 
 /**
@@ -85,7 +85,7 @@ internal data class DebugShape(var shape: MShape, private val brush: ShapeBrush)
     fun splitIntoParts(): Array<out MShape> {
         return when (val shape = this.shape) {
             is Edge -> arrayOf(shape) // add line directly
-            is Polygon -> shape.splitIntoParts(this.fill) // else break into lines or triangles
+            is MPolygon -> shape.splitIntoParts(this.fill) // else break into lines or triangles
             is Ellipse -> shape.toPolygon().splitIntoParts(this.fill)
             else -> emptyArray()
         }

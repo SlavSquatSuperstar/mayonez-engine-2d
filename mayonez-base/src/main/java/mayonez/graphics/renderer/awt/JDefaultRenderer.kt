@@ -1,9 +1,10 @@
-package mayonez.graphics.renderer
+package mayonez.graphics.renderer.awt
 
 import mayonez.*
 import mayonez.graphics.*
 import mayonez.graphics.camera.*
 import mayonez.graphics.debug.*
+import mayonez.graphics.renderer.*
 import mayonez.graphics.sprites.*
 import mayonez.graphics.textures.*
 import mayonez.math.*
@@ -14,7 +15,7 @@ private val DEFAULT_STROKE: Stroke = BasicStroke(DebugDraw.DEFAULT_STROKE_SIZE)
 
 /**
  * Draws all sprites and debug information onto the screen with Java's AWT
- * and Swing libraries.
+ * library.
  *
  * @author SlavSquatSuperstar
  */

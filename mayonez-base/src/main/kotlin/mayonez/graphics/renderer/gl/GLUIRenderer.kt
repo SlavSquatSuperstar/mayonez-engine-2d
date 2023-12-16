@@ -1,7 +1,8 @@
-package mayonez.graphics.renderer
+package mayonez.graphics.renderer.gl
 
 import mayonez.graphics.*
 import mayonez.graphics.debug.*
+import mayonez.graphics.renderer.*
 import org.joml.*
 import org.lwjgl.opengl.GL11.*
 
