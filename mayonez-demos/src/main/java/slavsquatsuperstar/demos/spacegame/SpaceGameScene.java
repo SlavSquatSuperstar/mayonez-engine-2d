@@ -7,24 +7,21 @@ import mayonez.math.Random;
 import mayonez.math.*;
 import mayonez.math.shapes.*;
 import slavsquatsuperstar.demos.spacegame.combat.Damageable;
-import slavsquatsuperstar.demos.spacegame.objects.BackgroundObject;
-import slavsquatsuperstar.demos.spacegame.objects.SpaceGameZIndex;
-import slavsquatsuperstar.demos.spacegame.objects.SpawnManager;
-import slavsquatsuperstar.demos.spacegame.objects.asteroids.Asteroid;
-import slavsquatsuperstar.demos.spacegame.objects.ships.EnemyShip;
-import slavsquatsuperstar.demos.spacegame.objects.ships.PlayerShip;
+import slavsquatsuperstar.demos.spacegame.objects.*;
 
 import java.util.*;
 
 import static slavsquatsuperstar.demos.spacegame.objects.SpaceGameLayer.*;
 
+/**
+ * The main scene for the space game.
+ *
+ * @author SlavSquatSuperstar
+ */
 public class SpaceGameScene extends Scene {
 
     // Constants
     private final static int SCENE_SIZE = 4;
-    private final static int NUM_PLAYERS = 1;
-    private final static int NUM_ENEMIES = 6;
-    private final static int NUM_OBSTACLES = 5;
     private final static int NUM_STARS = 2000;
 
     // Objects
@@ -46,11 +43,11 @@ public class SpaceGameScene extends Scene {
         backgroundObjects.clear();
 
         setLayers();
-        addSpawners();
+        addObject(new SpaceObjectSpawner());
         addSolarSystem();
         addBackgroundStars();
 
-        // UI
+        // Health Bar
         var position = new Vec2(105, 770);
         var size = new Vec2(180, 30);
         addObject(new GameObject("Health Bar Red") {
@@ -117,40 +114,6 @@ public class SpaceGameScene extends Scene {
         var projectileLayer = getLayer(PROJECTILES);
         projectileLayer.setName("Projectiles");
         projectileLayer.setLayerInteract(PROJECTILES, false);
-    }
-
-    private void addSpawners() {
-        addObject(new GameObject("Object Spawner") {
-            @Override
-            protected void init() {
-                SpawnManager playerSpawner, enemySpawner, obstacleSpawner;
-                addComponent(playerSpawner = new SpawnManager(NUM_PLAYERS, 1.5f) {
-                    @Override
-                    public GameObject createSpawnedObject() {
-                        return new PlayerShip("Player Spaceship",
-                                "assets/spacegame/textures/spaceship1.png", this);
-                    }
-                });
-                addComponent(enemySpawner = new SpawnManager(NUM_ENEMIES, 5) {
-                    @Override
-                    public GameObject createSpawnedObject() {
-                        return new EnemyShip("Enemy Spaceship",
-                                "assets/spacegame/textures/spaceship2.png", this);
-                    }
-                });
-                addComponent(obstacleSpawner = new SpawnManager(NUM_OBSTACLES, 20) {
-                    @Override
-                    public GameObject createSpawnedObject() {
-                        return new Asteroid("Asteroid", this);
-                    }
-                });
-
-                // Populate world on start
-                playerSpawner.populateToMax();
-                enemySpawner.populateToMax();
-                obstacleSpawner.populateToMax();
-            }
-        });
     }
 
     private void addSolarSystem() {

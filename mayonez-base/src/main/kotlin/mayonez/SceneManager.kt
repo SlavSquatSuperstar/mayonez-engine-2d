@@ -2,7 +2,7 @@ package mayonez
 
 import mayonez.input.*
 import mayonez.launcher.*
-import java.awt.*
+import java.awt.Graphics2D
 
 /**
  * Provides an interface to the user for reloading and switching scenes.

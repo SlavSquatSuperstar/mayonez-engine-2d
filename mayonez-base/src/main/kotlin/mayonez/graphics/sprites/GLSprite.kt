@@ -2,10 +2,10 @@ package mayonez.graphics.sprites
 
 import mayonez.graphics.*
 import mayonez.graphics.batch.*
+import mayonez.graphics.batch.BatchPushHelper.pushTexture
 import mayonez.graphics.renderer.gl.*
 import mayonez.graphics.textures.*
 import mayonez.math.*
-import mayonez.math.shapes.*
 
 
 /**
@@ -64,33 +64,15 @@ internal class GLSprite private constructor(
      * @param batch the batch
      */
     override fun pushToBatch(batch: RenderBatch) {
-        // TODO common push sprite function
-        // Add sprite vertex data
         val objXf = transform.combine(getSpriteTransform())
-        val color = this.color.toGL()
         val texCoords = getTexCoords()
         val texID = batch.addTextureAndGetID(texture)
 
         // Background sprite will not have scale but will use spriteXf instead
+        // todo maybe handle scale in shader/camera transform
         val sceneScale = gameObject?.scene?.scale ?: 1f
 
-        // Render sprite at object center and rotate according to object
-        val sprRect = Rectangle(
-            objXf.position * sceneScale, objXf.scale * sceneScale, objXf.rotation
-        )
-        val sprVertices = sprRect.vertices
-        for (i in sprVertices.indices) {
-            batch.pushVertex(sprVertices[i], color, texCoords[i], texID)
-        }
-    }
-
-    private fun RenderBatch.pushVertex(
-        vertex: Vec2, color: GLColor, texPos: Vec2, texID: Int
-    ) {
-        pushVec2(vertex)
-        pushVec4(color)
-        pushVec2(texPos)
-        pushInt(texID)
+        batch.pushTexture(objXf, this.color, texCoords, texID, sceneScale)
     }
 
     // Renderable Methods
