@@ -64,34 +64,31 @@ class StringUtilsTest {
         assertEquals("Baz", StringUtils.getObjectClassName(baz));
     }
 
+
+    @Test
+    void findObjectNoSpacesCorrect() {
+        var name = "gODot";
+        assertEquals(Engine.GODOT, StringUtils.findWithName(Engine.values(), name));
+    }
     // Find With Name Tests
 
     @Test
     void findObjectWithSpaceCorrect() {
-        var name = "new jersey";
-        assertEquals(State.NEW_JERSEY, StringUtils.findWithName(State.values(), name));
-    }
-
-    @Test
-    void findObjectNoSpacesCorrect() {
-        var name = "virginia";
-        assertEquals(State.VIRGINIA, StringUtils.findWithName(State.values(), name));
+        var name = "maYonEz eNgiNe";
+        assertEquals(Engine.MAYONEZ_ENGINE, StringUtils.findWithName(Engine.values(), name));
     }
 
     @Test
     void findObjectInvalidIsNull() {
-        var name = "alaska";
-        assertNull(StringUtils.findWithName(State.values(), name));
+        var name = "gAMeMAkER";
+        assertNull(StringUtils.findWithName(Engine.values(), name));
     }
 
-    private enum State {
-        FLORIDA,
-        MASSACHUSETTS,
-        NEW_JERSEY,
-        NEW_YORK,
-        TEXAS,
-        VIRGINIA,
-        WASHINGTON;
+    private enum Engine {
+        GODOT,
+        MAYONEZ_ENGINE,
+        SCRATCH,
+        UNITY_ENGINE;
 
         @Override
         public String toString() {

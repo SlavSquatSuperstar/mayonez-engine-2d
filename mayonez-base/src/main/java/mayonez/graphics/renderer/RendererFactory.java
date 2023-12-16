@@ -17,4 +17,8 @@ public final class RendererFactory {
         return Mayonez.getUseGL() ? new GLDefaultRenderer() : new JDefaultRenderer();
     }
 
+    public static UIRenderer createUIRenderer() {
+        return Mayonez.getUseGL() ? new GLUIRenderer() : new JUIRenderer();
+    }
+
 }

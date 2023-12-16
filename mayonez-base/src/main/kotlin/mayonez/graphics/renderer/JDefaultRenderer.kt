@@ -22,23 +22,14 @@ private val DEFAULT_STROKE: Stroke = BasicStroke(DebugDraw.DEFAULT_STROKE_SIZE)
 internal class JDefaultRenderer : SceneRenderer, DebugRenderer {
 
     // Renderer Objects
-    private val objects: MutableList<JRenderable> // permanent components
-    private val shapes: MutableList<DebugShape> // temporary shapes
-    private val batches: MutableList<JRenderable>
+    private val objects: MutableList<JRenderable> = ArrayList() // permanent components
+    private val shapes: MutableList<DebugShape> = ArrayList() // temporary shapes
+    private val batches: MutableList<JRenderable> = ArrayList()
 
     // Scene Information
     private lateinit var background: Sprite
-    private val windowSize: Vec2
-    private var sceneScale: Float
-
-    init {
-        objects = ArrayList()
-        shapes = ArrayList()
-        batches = ArrayList()
-
-        windowSize = Mayonez.screenSize
-        sceneScale = 1f
-    }
+    private val windowSize: Vec2 = Mayonez.screenSize
+    private var sceneScale: Float = 1f
 
     // Scene Renderer Methods
 

@@ -1,6 +1,7 @@
 package mayonez.graphics.ui;
 
 import mayonez.*;
+import mayonez.annotations.*;
 import mayonez.graphics.*;
 import mayonez.graphics.batch.*;
 import mayonez.graphics.textures.*;
@@ -11,6 +12,8 @@ import mayonez.math.shapes.*;
  *
  * @author SlavSquatSuperstar
  */
+@UsesEngine(EngineType.GL)
+@ExperimentalFeature
 public class UIBox extends Component implements UIElement {
 
     private Color color;

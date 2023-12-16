@@ -34,7 +34,7 @@ class RenderLayer {
         debugDraw = new DebugDraw(sceneScale, debugRenderer);
 
         // UI
-        uiRenderer = new GLUIRenderer();
+        uiRenderer = RendererFactory.createUIRenderer();
 
         // List
         renderers = List.of(sceneRenderer, uiRenderer);
