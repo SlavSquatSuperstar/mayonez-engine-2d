@@ -1,9 +1,7 @@
 package mayonez.graphics.batch
 
-import mayonez.*
 import mayonez.graphics.*
 import mayonez.math.*
-import mayonez.math.shapes.*
 
 /**
  * Helps push textures to a render batch.
@@ -15,16 +13,10 @@ object BatchPushHelper {
     /** Adds a sprite's vertex data to a render batch. */
     @JvmStatic
     fun RenderBatch.pushTexture(
-        transform: Transform, color: MColor, texCoords: Array<Vec2>, texID: Int,
-        sceneScale: Float
+        sprVertices: Array<Vec2>, color: MColor, texCoords: Array<Vec2>, texID: Int
     ) {
-        val glColor = color.toGL()
-
         // Render sprite at object center and rotate according to object
-        val sprRect = Rectangle(
-            transform.position * sceneScale, transform.scale * sceneScale, transform.rotation
-        )
-        val sprVertices = sprRect.vertices
+        val glColor = color.toGL()
         for (i in sprVertices.indices) {
             this.pushVertex(sprVertices[i], glColor, texCoords[i], texID)
         }

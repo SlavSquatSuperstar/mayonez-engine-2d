@@ -6,8 +6,10 @@ import mayonez.graphics.ui.*;
 import mayonez.math.Random;
 import mayonez.math.*;
 import mayonez.math.shapes.*;
-import slavsquatsuperstar.demos.spacegame.combat.Damageable;
-import slavsquatsuperstar.demos.spacegame.objects.*;
+import slavsquatsuperstar.demos.spacegame.objects.BackgroundObject;
+import slavsquatsuperstar.demos.spacegame.objects.SpaceGameZIndex;
+import slavsquatsuperstar.demos.spacegame.objects.SpaceObjectSpawner;
+import slavsquatsuperstar.demos.spacegame.ui.PlayerHealthBar;
 
 import java.util.*;
 
@@ -48,44 +50,31 @@ public class SpaceGameScene extends Scene {
         addBackgroundStars();
 
         // Health Bar
-        var position = new Vec2(105, 770);
-        var size = new Vec2(180, 30);
-        addObject(new GameObject("Health Bar Red") {
+        addObject(new GameObject("Player UI") {
             @Override
             protected void init() {
-                addComponent(new UIBox(Colors.RED));
-                setZIndex(SpaceGameZIndex.UI);
-                transform.setPosition(position);
-                transform.setScale(size);
+                // TODO recharge health bar when respawning
+                var hpPosition = new Vec2(102, 773);
+                var hpSize = new Vec2(180, 30);
+                addComponent(new PlayerHealthBar(hpPosition, hpSize));
             }
         });
-        addObject(new GameObject("Health Bar Green") {
+
+        // Weapon Select
+        addObject(new GameObject("Weapon Select UI") {
             @Override
             protected void init() {
-                // TODO health bar script
-                setZIndex(SpaceGameZIndex.UI + 1);
-                transform.setPosition(position);
-                transform.setScale(size);
-                addComponent(new UIBox(Colors.GREEN));
-                addComponent(new Script() {
-                    @Override
-                    protected void update(float dt) {
-                        var player = getScene().getObject("Player Spaceship");
-                        if (player == null) return;
-                        var playerHealth = player.getComponent(Damageable.class);
-                        if (playerHealth == null) return;
+                // TODO show currently active
+                // TODO show fire cooldown
+                var wsPosition = new Vec2(30, 30);
+                var wsSize = new Vec2(30, 30);
 
-                        var maxHealth = playerHealth.getMaxHealth();
-                        var health = playerHealth.getHealth();
-                        var healthPercent = health / maxHealth;
-                        transform.setScale(size.mul(new Vec2(healthPercent, 1f)));
-                        transform.setPosition(position.sub(position.mul(new Vec2(1f - healthPercent, 0f))));
-                    }
-                });
+                setZIndex(SpaceGameZIndex.UI);
+                var box1 = new UIBox(wsPosition, wsSize, Colors.RED);
+                addComponent(box1);
 
-//                transform.setPosition(new Vec2(-16, 11.5f));
-//                addComponent(new BoxCollider(new Vec2(5, 1)).setEnabled(false));
-//                addComponent(new ShapeSprite(Colors.GREEN, true));
+                var box2 = new UIBox(wsPosition.add(new Vec2(50, 0)), wsSize, Colors.SKY_BLUE);
+                addComponent(box2);
             }
         });
     }

@@ -18,7 +18,7 @@ import java.util.*;
 public class ShipDestruction extends Script {
 
     // Constants
-    private static final float EXPLOSION_DURATION = 1f;
+    private static final float EXPLOSION_DURATION = 0.8f;
     private static final float DESTRUCTION_DURATION = 0.6f;
 
     // Timer Components

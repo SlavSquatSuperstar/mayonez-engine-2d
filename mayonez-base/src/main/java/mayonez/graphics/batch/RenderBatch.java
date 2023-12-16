@@ -170,7 +170,7 @@ public final class RenderBatch {
      * @param tex the texture
      * @return the batch texture ID, 0 if color, otherwise 1-8
      */
-    public int addTextureAndGetID(GLTexture tex) {
+    public int getIDForTexture(GLTexture tex) {
         if (!hasTexture(tex)) textures.addTexture(tex); // add if don't have texture
         return textures.getTextureID(tex);
     }

@@ -5,6 +5,8 @@ import mayonez.annotations.*;
 import mayonez.graphics.*;
 import mayonez.graphics.batch.*;
 import mayonez.graphics.textures.*;
+import mayonez.math.*;
+import mayonez.math.shapes.*;
 
 /**
  * Draws a colored box on the UI.
@@ -13,23 +15,38 @@ import mayonez.graphics.textures.*;
  */
 @UsesEngine(EngineType.GL)
 @ExperimentalFeature
-// TODO extend GLSprite
 public class UIBox extends Component implements UIElement {
 
+    private Vec2 position, size;
     private Color color;
 
-    // Todo keep separate UI transform
-    public UIBox(Color color) {
+    public UIBox(Vec2 position, Vec2 size, Color color) {
         super(UpdateOrder.RENDER);
+        this.position = position;
+        this.size = size;
+        this.color = color;
+    }
+
+    // UI Methods
+
+    public void setPosition(Vec2 position) {
+        this.position = position;
+    }
+
+    public void setSize(Vec2 size) {
+        this.size = size;
+    }
+
+    public void setColor(Color color) {
         this.color = color;
     }
 
     // Renderer Methods
     @Override
     public void pushToBatch(RenderBatch batch) {
-        var uiXf = this.transform;
         var texCoords = GLTexture.DEFAULT_TEX_COORDS;
-        BatchPushHelper.pushTexture(batch, uiXf, this.color, texCoords, 0, 1f);
+        var sprVertices = new BoundingBox(position, size).getVertices();
+        BatchPushHelper.pushTexture(batch, sprVertices, color, texCoords, 0);
     }
 
     @Override

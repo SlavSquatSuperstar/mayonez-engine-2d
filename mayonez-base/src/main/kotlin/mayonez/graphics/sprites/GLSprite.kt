@@ -6,6 +6,7 @@ import mayonez.graphics.batch.BatchPushHelper.pushTexture
 import mayonez.graphics.renderer.gl.*
 import mayonez.graphics.textures.*
 import mayonez.math.*
+import mayonez.math.shapes.*
 
 
 /**
@@ -65,14 +66,15 @@ internal class GLSprite private constructor(
      */
     override fun pushToBatch(batch: RenderBatch) {
         val objXf = transform.combine(getSpriteTransform())
-        val texCoords = getTexCoords()
-        val texID = batch.addTextureAndGetID(texture)
+        val texID = batch.getIDForTexture(texture)
 
         // Background sprite will not have scale but will use spriteXf instead
-        // todo maybe handle scale in shader/camera transform
         val sceneScale = gameObject?.scene?.scale ?: 1f
+        val sprVertices = Rectangle(
+            objXf.position * sceneScale, objXf.scale * sceneScale, objXf.rotation
+        ).vertices
 
-        batch.pushTexture(objXf, this.color, texCoords, texID, sceneScale)
+        batch.pushTexture(sprVertices, this.color, getTexCoords(), texID)
     }
 
     // Renderable Methods

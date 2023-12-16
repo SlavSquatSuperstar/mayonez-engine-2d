@@ -21,9 +21,14 @@ public abstract class SpawnManager extends Script {
 
     @Override
     public void init() {
+        gameObject.addComponent(spawnTimer);
+    }
+
+    @Override
+    protected void start() {
         amountSpawned.resetToMin();
         spawnTimer.reset();
-        gameObject.addComponent(spawnTimer);
+        populateToMax();
     }
 
     @Override

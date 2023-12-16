@@ -137,7 +137,7 @@ public class GameObject {
      */
     public final void addComponent(Component comp) {
         if (comp == null) return;
-        checkForDuplicateComponentClass(comp);
+//        checkForDuplicateComponentClass(comp);
         comp.setGameObject(this);
         components.add(comp);
     }
