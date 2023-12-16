@@ -9,6 +9,8 @@ layout (location=3) in float aTexID;
 uniform mat4 uView;
 uniform mat4 uProjection;
 
+// needed for lightmap
+// out vec2 fPos;
 out vec4 fColor;
 out vec2 fTexCoords;
 out float fTexID;
@@ -19,11 +21,13 @@ void main() {
     fTexID = aTexID;
 
     gl_Position = uProjection * uView * vec4(aPos, 1.0);
+    // fPos = gl_Position.xy;
 }
 
 #type fragment
 #version 330 core
 
+// in vec2 fPos;
 in vec4 fColor;
 in vec2 fTexCoords;
 in float fTexID;
@@ -33,6 +37,7 @@ uniform sampler2D uTextures[8];
 out vec4 color;
 
 void main() {
+    // Apply color to texture
     if (fTexID > 0) {
         color = fColor * texture(uTextures[int(fTexID)], fTexCoords);
     } else {

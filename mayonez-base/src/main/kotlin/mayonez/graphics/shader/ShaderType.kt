@@ -3,7 +3,8 @@ package mayonez.graphics.shader
 import mayonez.annotations.*
 import mayonez.graphics.*
 import mayonez.util.*
-import org.lwjgl.opengl.GL20
+import org.lwjgl.opengl.GL20.GL_FRAGMENT_SHADER
+import org.lwjgl.opengl.GL20.GL_VERTEX_SHADER
 
 /**
  * The type of shader used by the GPU.
@@ -17,18 +18,13 @@ internal enum class ShaderType(
 ) {
 
     /** A vertex shader that calculates the scaling of an image. */
-    VERTEX(GL20.GL_VERTEX_SHADER),
+    VERTEX(GL_VERTEX_SHADER),
 
     /**
      * A fragment (pixel) shader that calculates the color and texture of each
      * individual pixel of an image.
      */
-    FRAGMENT(GL20.GL_FRAGMENT_SHADER);
-
-    /** The name of the shader type that GLSL uses. */
-    override fun toString(): String {
-        return StringUtils.capitalizeFirstWord(this.name)
-    }
+    FRAGMENT(GL_FRAGMENT_SHADER);
 
     companion object {
         /**

@@ -4,11 +4,11 @@ import mayonez.*;
 import mayonez.graphics.*;
 import mayonez.input.keyboard.*;
 import mayonez.input.mouse.*;
-import org.lwjgl.opengl.GL;
 
 import static mayonez.engine.GLFWHelper.*;
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.opengl.GL.createCapabilities;
 import static org.lwjgl.opengl.GL11.*;
 
 /**
@@ -59,7 +59,7 @@ final class GLWindow implements Window {
         // Important! Detect current context and integrate LWJGL with OpenGL bindings
         glfwMakeContextCurrent(windowID); // Make the OpenGL context current
         glfwSwapInterval(1); // Enable v-sync
-        GL.createCapabilities();
+        createCapabilities();
 
         // Set renderer settings
         glEnable(GL_BLEND);

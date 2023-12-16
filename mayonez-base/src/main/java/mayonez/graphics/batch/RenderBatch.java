@@ -148,7 +148,7 @@ public final class RenderBatch {
     }
 
     private void unbindVertices() {
-        glBindVertexArray(0);
+        glBindVertexArray(GL_NONE);
         textures.unbindTextures();
     }
 

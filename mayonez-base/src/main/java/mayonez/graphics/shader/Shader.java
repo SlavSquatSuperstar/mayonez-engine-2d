@@ -121,7 +121,7 @@ public class Shader extends Asset {
      */
     public void unbind() {
         if (!active) return;
-        glUseProgram(0);
+        glUseProgram(GL_NONE);
         active = false;
     }
 

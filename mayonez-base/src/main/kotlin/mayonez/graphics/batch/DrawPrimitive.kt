@@ -1,7 +1,6 @@
 package mayonez.graphics.batch
 
 import mayonez.graphics.*
-import mayonez.util.*
 import org.lwjgl.opengl.GL11
 import java.nio.IntBuffer
 
@@ -69,7 +68,5 @@ enum class DrawPrimitive(
      * @param index the vertex index
      */
     abstract fun addIndices(elements: IntBuffer, index: Int)
-
-    override fun toString(): String = StringUtils.capitalizeFirstWord(name)
 
 }
