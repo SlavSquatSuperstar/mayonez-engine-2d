@@ -221,38 +221,27 @@ public abstract class Scene {
         if (obj == null) return;
         if (isStopped()) {
             // Static add: when not loaded
-            addObjectToStoppedScene(obj);
+            addObjectToScene(obj, false);
         } else {
             // Dynamic add: when loaded (running or paused)
-            changesToScene.offer(() -> this.addObjectToRunningScene(obj));
+            changesToScene.offer(() -> this.addObjectToScene(obj, true));
         }
     }
 
-    private void addObjectToStoppedScene(GameObject o) {
-        addAndStartObject(o);
+    private void addObjectToScene(GameObject obj, boolean dynamic) {
+        objects.add(obj);
+        obj.setScene(this);
+        obj.start(); // Add components first so renderer and physics can access it
+        if (dynamic) addObjectToLayers(obj);
         Logger.debug("Added object \"%s\" to scene \"%s\"",
-                o.getNameAndID(), this.name);
+                obj.getNameAndID(), this.name);
     }
 
-    private void addObjectToRunningScene(GameObject o) {
-        addAndStartObject(o);
-        addObjectToLayers(o);
-        Logger.debug("Added object \"%s\" to scene \"%s\"",
-                o.getNameAndID(), this.name);
-    }
-
-    private void addAndStartObject(GameObject o) {
-        objects.add(o);
-        o.setScene(this);
-        o.start(); // Add components first so renderer and physics can access it
-    }
-
-    private void addObjectToLayers(GameObject o) {
-        for (Component c : o.getComponents()) {
-//            if (c instanceof UIElement e) uiRenderer.addUIElement(e);
-            if (c instanceof Renderable r) renderLayer.addRenderable(r);
-            if (c instanceof PhysicsBody b) physics.addPhysicsBody(b);
-            if (c instanceof CollisionBody b) physics.addCollisionBody(b);
+    private void addObjectToLayers(GameObject obj) {
+        for (var comp : obj.getComponents()) {
+            if (comp instanceof Renderable r) renderLayer.addRenderable(r);
+            if (comp instanceof PhysicsBody b) physics.addPhysicsBody(b);
+            if (comp instanceof CollisionBody b) physics.addCollisionBody(b);
         }
     }
 
@@ -266,16 +255,16 @@ public abstract class Scene {
         changesToScene.offer(() -> this.removeObjectFromLayers(obj));
     }
 
-    private void removeObjectFromLayers(GameObject o) {
-        objects.remove(o);
-        for (Component c : o.getComponents()) {
-            if (c instanceof Renderable r) renderLayer.removeRenderable(r);
-            if (c instanceof PhysicsBody b) physics.removePhysicsBody(b);
-            if (c instanceof CollisionBody b) physics.removeCollisionBody(b);
+    private void removeObjectFromLayers(GameObject obj) {
+        objects.remove(obj);
+        for (var comp : obj.getComponents()) {
+            if (comp instanceof Renderable r) renderLayer.removeRenderable(r);
+            if (comp instanceof PhysicsBody b) physics.removePhysicsBody(b);
+            if (comp instanceof CollisionBody b) physics.removeCollisionBody(b);
         }
-        o.onDestroy();
+        obj.onDestroy();
         Logger.debug("Removed object \"%s\" from scene \"%s\"",
-                o.getNameAndID(), this.name);
+                obj.getNameAndID(), this.name);
     }
 
     /**

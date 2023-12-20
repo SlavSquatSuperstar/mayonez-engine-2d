@@ -9,7 +9,7 @@ import mayonez.math.shapes.*;
 import slavsquatsuperstar.demos.spacegame.objects.BackgroundObject;
 import slavsquatsuperstar.demos.spacegame.objects.SpaceGameZIndex;
 import slavsquatsuperstar.demos.spacegame.objects.SpaceObjectSpawner;
-import slavsquatsuperstar.demos.spacegame.ui.PlayerHealthBar;
+import slavsquatsuperstar.demos.spacegame.ui.HealthBar;
 
 import java.util.*;
 
@@ -41,7 +41,6 @@ public class SpaceGameScene extends Scene {
     @Override
     protected void init() {
         setGravity(new Vec2());
-        getCamera().setKeepInScene(true);
         backgroundObjects.clear();
 
         setLayers();
@@ -56,7 +55,7 @@ public class SpaceGameScene extends Scene {
                 // TODO recharge health bar when respawning
                 var hpPosition = new Vec2(102, 773);
                 var hpSize = new Vec2(180, 30);
-                addComponent(new PlayerHealthBar(hpPosition, hpSize));
+                addComponent(new HealthBar(hpPosition, hpSize));
             }
         });
 

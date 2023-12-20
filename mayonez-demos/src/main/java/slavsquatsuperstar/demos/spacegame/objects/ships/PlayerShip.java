@@ -1,13 +1,16 @@
 package slavsquatsuperstar.demos.spacegame.objects.ships;
 
+import mayonez.*;
 import mayonez.input.*;
 import mayonez.physics.dynamics.*;
 import mayonez.scripts.movement.*;
 import slavsquatsuperstar.demos.spacegame.SpaceGameConfig;
+import slavsquatsuperstar.demos.spacegame.combat.Damageable;
 import slavsquatsuperstar.demos.spacegame.combat.PlayerFireController;
 import slavsquatsuperstar.demos.spacegame.movement.PlayerThrustController;
 import slavsquatsuperstar.demos.spacegame.movement.ThrusterPrefabs;
 import slavsquatsuperstar.demos.spacegame.objects.SpawnManager;
+import slavsquatsuperstar.demos.spacegame.ui.HealthBar;
 
 /**
  * A player-controlled spaceship.
@@ -33,9 +36,7 @@ public class PlayerShip extends Spaceship {
         getScene().getCamera().setSubject(this).setFollowAngle(false);
 
         // Movement
-        // TODO allow set controls in config
         addComponent(new Rigidbody(1f));
-//        addComponent(new KeyMovement(10f, MoveMode.FORCE, "horizontal2", "vertical").setObjectAligned(true));
         addComponent(new KeyMovement(10f, MoveMode.FORCE, HORIZONTAL_MOVE_AXIS, VERTICAL_MOVE_AXIS)
                 .setObjectAligned(true));
         addComponent(new KeyRotation(180f, MoveMode.VELOCITY, TURN_AXIS));
@@ -46,6 +47,35 @@ public class PlayerShip extends Spaceship {
 
         // Weapons
         addComponent(new PlayerFireController());
+
+        // UI
+        addComponent(new Script() {
+            private Damageable damageable;
+            private HealthBar healthBar;
+
+            @Override
+            protected void start() {
+//                getScene().getCamera().setKeepInScene(true);
+                damageable = getComponent(Damageable.class);
+                if (damageable == null) setEnabled(false);
+
+                // TODO not available early enough
+                // TODO pass UI in c'tor?
+//                var ui = getScene().getObject("Player UI");
+//                if (ui != null) healthBar = ui.getComponent(PlayerHealthBar.class);
+//                if (healthBar == null) setEnabled(false);
+            }
+
+            @Override
+            protected void update(float dt) {
+                var ui = getScene().getObject("Player UI");
+                if (ui != null) healthBar = ui.getComponent(HealthBar.class);
+                if (healthBar == null) return;
+
+                var healthPercent = damageable.getHealth() / damageable.getMaxHealth();
+                healthBar.setValue(healthPercent);
+            }
+        });
     }
 
 }
