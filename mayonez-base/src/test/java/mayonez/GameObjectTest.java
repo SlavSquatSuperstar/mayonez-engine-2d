@@ -1,13 +1,13 @@
 package mayonez;
 
 import mayonez.graphics.sprites.*;
+import mayonez.math.*;
 import mayonez.physics.colliders.*;
 import mayonez.physics.dynamics.*;
 import mayonez.scripts.*;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
 
 /**
  * Unit tests for the {@link mayonez.GameObject} class.
@@ -28,11 +28,11 @@ class GameObjectTest {
         var obj = new GameObject("Test Object");
         assertEquals(0, obj.numComponents());
 
-        var comp1 = mock(BoxCollider.class);
+        var comp1 = new BoxCollider(new Vec2(1f));
         obj.addComponent(comp1);
         assertEquals(1, obj.numComponents());
 
-        var comp2 = mock(Rigidbody.class);
+        var comp2 = new Rigidbody(1f);
         obj.addComponent(comp2);
         assertEquals(2, obj.numComponents());
     }
@@ -41,13 +41,13 @@ class GameObjectTest {
     void getComponentsSameClass() {
         var obj = new GameObject("Test Object");
 
-        var comp1 = mock(BoxCollider.class);
+        var comp1 = new BoxCollider(new Vec2(1f));
         obj.addComponent(comp1);
 
-        var comp2 = mock(Rigidbody.class);
+        var comp2 = new Rigidbody(1f);
         obj.addComponent(comp2);
 
-        var comp3 = mock(Timer.class);
+        var comp3 = new Timer(1f);
         obj.addComponent(comp3);
 
         assertSame(comp1, obj.getComponent(BoxCollider.class));
@@ -60,10 +60,10 @@ class GameObjectTest {
     void getComponentsSuperclass() {
         var obj = new GameObject("Test Object");
 
-        var comp1 = mock(BoxCollider.class);
+        var comp1 = new BoxCollider(new Vec2(1f));
         obj.addComponent(comp1);
 
-        var comp2 = mock(Timer.class);
+        var comp2 = new Timer(1f);
         obj.addComponent(comp2);
 
         assertSame(comp1, obj.getComponent(Collider.class));
