@@ -56,7 +56,7 @@ public abstract class Scene {
     private final PhysicsWorld physics;
 
     // Scene State
-    private final Queue<Runnable> changesToScene; // Use a separate list to avoid concurrent exceptions
+    private final Queue<Runnable> changesToScene; // Use separate add/remove buffer to avoid concurrent exceptions
     private SceneState state; // if paused or running
 
     /**
@@ -98,7 +98,8 @@ public abstract class Scene {
     // Initialization Methods
 
     /**
-     * Initialize all objects and begin updating the scene.
+     * Initialize all objects and begin updating the scene. Calls {@link GameObject#start()}
+     * for all objects added on start.
      */
     final void start() {
         // Set up layers
@@ -108,9 +109,10 @@ public abstract class Scene {
 
         clearSceneLayers();
         addCameraToScene();
-        init();
-        objects.forEach(this::addObjectToLayers);
         state = SceneState.RUNNING;
+        init();
+        objects.forEach(obj -> changesToScene.offer(() -> this.startGameObject(obj) ));
+        processSceneChanges();
     }
 
     private void addCameraToScene() {
@@ -119,7 +121,8 @@ public abstract class Scene {
     }
 
     /**
-     * Add game objects to this scene or initialize fields after this scene has been loaded.
+     * Add game objects to this scene before the scene starts or initialize fields
+     * after this scene has been loaded.
      * The method {@link #getCamera()} is accessible here.
      * <p>
      * Usage: Subclasses may override this method and can also call {@code super.init()}.
@@ -153,9 +156,9 @@ public abstract class Scene {
     }
 
     private void updateSceneObjects(float dt) {
-        objects.forEach(o -> {
-            o.update(dt);
-            if (o.isDestroyed()) removeObject(o);
+        objects.forEach(obj -> {
+            obj.update(dt);
+            if (obj.isDestroyed()) removeObject(obj);
         });
         physics.step(dt);
         camera.gameObject.update(dt); // Update camera last
@@ -212,7 +215,7 @@ public abstract class Scene {
     // Object Methods
 
     /**
-     * Adds an object to this scene and all its layers and initializes the object if the
+     * Adds an object to this scene and initializes the object if the
      * scene is running.
      *
      * @param obj a {@link GameObject}
@@ -221,20 +224,24 @@ public abstract class Scene {
         if (obj == null) return;
         if (isStopped()) {
             // Static add: when not loaded
-            addObjectToScene(obj, false);
+            addObjectToScene(obj);
         } else {
             // Dynamic add: when loaded (running or paused)
-            changesToScene.offer(() -> this.addObjectToScene(obj, true));
+            changesToScene.offer(() -> this.addObjectToScene(obj));
         }
     }
 
-    private void addObjectToScene(GameObject obj, boolean dynamic) {
+    private void addObjectToScene(GameObject obj) {
         objects.add(obj);
         obj.setScene(this);
-        obj.start(); // Add components first so renderer and physics can access it
-        if (dynamic) addObjectToLayers(obj);
+        if (!isStopped()) startGameObject(obj);
         Logger.debug("Added object \"%s\" to scene \"%s\"",
                 obj.getNameAndID(), this.name);
+    }
+
+    private void startGameObject(GameObject obj) {
+        obj.start(); // Add components first so renderer and physics can access it
+        addObjectToLayers(obj);
     }
 
     private void addObjectToLayers(GameObject obj) {
@@ -246,16 +253,16 @@ public abstract class Scene {
     }
 
     /**
-     * Removes an object from this scene and its layers and destroys it.
+     * Removes an object from this scene and destroys it.
      *
      * @param obj a {@link GameObject}
      */
     final void removeObject(GameObject obj) {
         if (obj == null) return;
-        changesToScene.offer(() -> this.removeObjectFromLayers(obj));
+        changesToScene.offer(() -> this.removeObjectFromScene(obj));
     }
 
-    private void removeObjectFromLayers(GameObject obj) {
+    private void removeObjectFromScene(GameObject obj) {
         objects.remove(obj);
         for (var comp : obj.getComponents()) {
             if (comp instanceof Renderable r) renderLayer.removeRenderable(r);

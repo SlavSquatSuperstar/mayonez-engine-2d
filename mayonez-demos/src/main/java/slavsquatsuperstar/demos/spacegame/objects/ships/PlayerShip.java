@@ -55,23 +55,19 @@ public class PlayerShip extends Spaceship {
 
             @Override
             protected void start() {
-//                getScene().getCamera().setKeepInScene(true);
+                getScene().getCamera().setKeepInScene(true);
                 damageable = getComponent(Damageable.class);
                 if (damageable == null) setEnabled(false);
 
-                // TODO not available early enough
                 // TODO pass UI in c'tor?
-//                var ui = getScene().getObject("Player UI");
-//                if (ui != null) healthBar = ui.getComponent(PlayerHealthBar.class);
-//                if (healthBar == null) setEnabled(false);
+                var ui = getScene().getObject("Player UI");
+                System.out.println("ui is " + ui);
+                if (ui != null) healthBar = ui.getComponent(HealthBar.class);
+                if (healthBar == null) setEnabled(false);
             }
 
             @Override
             protected void update(float dt) {
-                var ui = getScene().getObject("Player UI");
-                if (ui != null) healthBar = ui.getComponent(HealthBar.class);
-                if (healthBar == null) return;
-
                 var healthPercent = damageable.getHealth() / damageable.getMaxHealth();
                 healthBar.setValue(healthPercent);
             }

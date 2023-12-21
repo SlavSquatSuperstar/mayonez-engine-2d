@@ -79,7 +79,9 @@ public class GameObject {
     // Game Loop Methods
 
     /**
-     * Adds all components to this object and then initializes them.
+     * Adds all components to this object and then initializes them. Calls
+     * {@link mayonez.Component#start()} for all components added on start.
+     * The method {@link mayonez.Scene#getObject} is accessible here.
      */
     final void start() {
         init();
