@@ -47,6 +47,7 @@ module mayonez.base {
 
     // Addons
     exports mayonez.scripts;
+    exports mayonez.scripts.camera;
     exports mayonez.scripts.mouse;
     exports mayonez.scripts.movement;
 }

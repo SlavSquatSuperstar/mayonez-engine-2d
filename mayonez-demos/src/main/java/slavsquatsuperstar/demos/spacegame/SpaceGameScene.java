@@ -50,7 +50,7 @@ public class SpaceGameScene extends Scene {
         addSolarSystem();
         addBackgroundStars();
 
-        // Health Bar
+        // UI
         addObject(new GameObject("Player UI") {
             @Override
             protected void init() {

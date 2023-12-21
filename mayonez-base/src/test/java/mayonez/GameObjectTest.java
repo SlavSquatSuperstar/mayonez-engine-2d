@@ -25,9 +25,8 @@ class GameObjectTest {
 
     @Test
     void objectIDsAreUnique() {
-        var obj1 = new GameObject("Test Object");
         var obj2 = new GameObject("Test Object");
-        assertNotEquals(obj1.objectID, obj2.objectID);
+        assertNotEquals(obj.objectID, obj2.objectID);
     }
 
     @Test
@@ -41,6 +40,28 @@ class GameObjectTest {
         var comp2 = new Rigidbody(1f);
         obj.addComponent(comp2);
         assertEquals(2, obj.numComponents());
+    }
+
+    @Test
+    void cannotAddObjectTwice() {
+        var comp = new Script() {
+        };
+        obj.addComponent(comp);
+        obj.addComponent(comp);
+
+        assertEquals(1, obj.numComponents());
+    }
+
+    @Test
+    void cannotAddComponentToDifferentObjects() {
+        var obj2 = new GameObject("Test Object");
+        var comp = new Script() {
+        };
+
+        obj2.addComponent(comp);
+        obj.addComponent(comp);
+
+        assertEquals(0, obj.numComponents());
     }
 
     @Test

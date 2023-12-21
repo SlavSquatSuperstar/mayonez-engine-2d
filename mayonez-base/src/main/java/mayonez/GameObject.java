@@ -34,7 +34,7 @@ public class GameObject {
     final long objectID; // UUID for this game object
     private final String name;
     public final Transform transform; // transform in world
-    //    final Transform localTransform; // transform offset from parent
+//    final Transform localTransform; // transform offset from parent
     private Scene scene;
     private boolean destroyed;
     private int zIndex; // controls 3D "layering" of objects
@@ -83,8 +83,10 @@ public class GameObject {
      * The method {@link mayonez.Scene#getObject} is accessible here.
      */
     final void start() {
+        // Add all components
         init();
 //        children.forEach(getScene()::addObject);
+        // Start all components
         components.sort(Comparator.comparingInt(Component::getUpdateOrder));
         components.forEach(Component::start);
     }
@@ -132,14 +134,15 @@ public class GameObject {
 
     /**
      * Adds a component to this game object if the component is not null.
+     * The component will not be added if it already has a parent object.
      * <p>
-     * Warning: Calling {@code addComponent()} while a scene is running is not supported
-     * and should be avoided!
+     * Warning: Calling {@code addComponent()} while a scene is running is not
+     * supported and should be avoided!
      *
      * @param comp the {@link mayonez.Component} instance
      */
     public final void addComponent(Component comp) {
-        if (comp == null) return;
+        if (comp == null || comp.getGameObject() != null) return;
         comp.setGameObject(this);
         components.add(comp);
     }

@@ -2,6 +2,7 @@ package mayonez.graphics.camera;
 
 import mayonez.*;
 import mayonez.math.*;
+import mayonez.math.shapes.*;
 
 /**
  * The main viewport into the scene. The camera may be adjusted through scripts
@@ -12,30 +13,30 @@ import mayonez.math.*;
  *
  * @author SlavSquatSuperstar
  */
-// TODO elastic/smooth movement
-// TODO allow drag, but snap back to subject
 public abstract class Camera extends Component implements Viewport {
 
-    // Camera Fields
+    // Size Fields
     protected final Vec2 screenSize;
     protected final float sceneScale;
 
     // Camera Movement
-    private CameraMode mode;
+    private CameraMode mode; // TODO remove
     private GameObject subject;
     private boolean followAngle;
-    Script keepInScene, dragAndDrop; // Reference to parent scripts
+    private Script keepInScene; // Reference to parent scripts
 
     // Camera Effects
     private float zoom, rotation;
 
-    public Camera(Vec2 screenSize, float sceneScale) {
-        super(UpdateOrder.RENDER);
+    protected Camera(Vec2 screenSize, float sceneScale) {
+        super(UpdateOrder.PHYSICS);
         this.screenSize = screenSize;
         this.sceneScale = sceneScale;
+
         mode = CameraMode.FIXED;
         subject = null;
         followAngle = false;
+
         zoom = 1f;
         rotation = 0f;
     }
@@ -48,8 +49,9 @@ public abstract class Camera extends Component implements Viewport {
 
     @Override
     public void update(float dt) {
-//        if (getSubject() != null && mode == CameraMode.FOLLOW) {
-        if (getSubject() != null) {
+        // Follow subject
+        // TODO smooth follow
+        if (getSubject() != null && mode == CameraMode.FOLLOW) {
             transform.setPosition(getSubject().transform.getPosition());
             if (followAngle) rotation = getSubject().transform.getRotation();
         }
@@ -120,7 +122,6 @@ public abstract class Camera extends Component implements Viewport {
     public void zoom(float zoom) {
         if (FloatMath.equals(zoom, 0f)) return; // don't set zoom to zero
         this.zoom *= zoom;
-        transform.scale(new Vec2(1f / zoom));
     }
 
     /**
@@ -128,7 +129,6 @@ public abstract class Camera extends Component implements Viewport {
      */
     public void resetZoom() {
         zoom = 1f;
-        transform.setScale(new Vec2(1f));
     }
 
     /**
@@ -148,7 +148,6 @@ public abstract class Camera extends Component implements Viewport {
      */
     public void rotate(float rotation) {
         this.rotation += rotation;
-//        transform.rotate(rotation);
     }
 
     /**
@@ -158,10 +157,21 @@ public abstract class Camera extends Component implements Viewport {
         rotation = 0f;
     }
 
+    // Camera Collision Methods
+
+    /**
+     * Gets the bounding box of the camera in the world.
+     *
+     * @return the camera bounds
+     */
+    public BoundingBox getBounds() {
+        return new BoundingBox(getPosition(), screenSize.div(sceneScale * zoom));
+    }
+
     // Camera Movement Methods
 
     /**
-     * Toggles whether the camera should rotate with the subject.
+     * Sets whether the camera should rotate with the subject.
      *
      * @param enabled rotate the camera with the subject
      * @return the camera
@@ -173,7 +183,7 @@ public abstract class Camera extends Component implements Viewport {
     }
 
     /**
-     * Toggles whether the camera should stay within the scene bounds.
+     * Sets whether the camera should stay within the scene bounds.
      *
      * @param enabled keep the camera inside the scene
      * @return the camera
@@ -200,7 +210,6 @@ public abstract class Camera extends Component implements Viewport {
      */
     public final Camera setMode(CameraMode mode) {
         this.mode = mode;
-        dragAndDrop.setEnabled(mode == CameraMode.FREE);
         return this;
     }
 
@@ -228,11 +237,6 @@ public abstract class Camera extends Component implements Viewport {
     }
 
     // Script Setters
-
-    Script setDragAndDropScript(Script dragAndDrop) {
-        this.dragAndDrop = dragAndDrop;
-        return dragAndDrop;
-    }
 
     Script setKeepInSceneScript(Script keepInScene) {
         this.keepInScene = keepInScene;

@@ -38,6 +38,7 @@ public class KeepInScene extends Script {
      * @param mode   what to do when reaching boundaries
      */
     public KeepInScene(Vec2 minPos, Vec2 maxPos, Mode mode) {
+        super(UpdateOrder.COLLISION);
         this.minPos = minPos;
         this.maxPos = maxPos;
         this.mode = mode;
@@ -45,9 +46,7 @@ public class KeepInScene extends Script {
 
     @Override
     public void start() {
-        var sceneHalfSize = getScene().getSize(); // fetch scene bounds
-        if (minPos == null) minPos = sceneHalfSize.mul(-0.5f);
-        if (maxPos == null) maxPos = sceneHalfSize.mul(0.5f);
+        setMoveBounds();
 
         objectCollider = getCollider();
         if (objectCollider == null) {
@@ -69,7 +68,7 @@ public class KeepInScene extends Script {
 
     @Override
     public void update(float dt) {
-        objectBounds = objectCollider.getMinBounds();
+        objectBounds = getObjectBounds();
 
         // Edge Checking for x
         var sceneBoundsX = new Interval(minPos.x, maxPos.x);
@@ -78,6 +77,18 @@ public class KeepInScene extends Script {
         // Edge Checking for y
         var sceneBoundsY = new Interval(minPos.y, maxPos.y);
         checkEdges(sceneBoundsY, objectBounds.getYInterval(), Direction.TOP, Direction.BOTTOM);
+    }
+
+    // Bounds Helper Methods
+
+    protected void setMoveBounds() {
+        var sceneHalfSize = getScene().getSize(); // Use scene bounds if any are null
+        if (minPos == null) minPos = sceneHalfSize.mul(-0.5f);
+        if (maxPos == null) maxPos = sceneHalfSize.mul(0.5f);
+    }
+
+    protected BoundingBox getObjectBounds() {
+        return objectCollider.getMinBounds();
     }
 
     /**
@@ -155,11 +166,11 @@ public class KeepInScene extends Script {
         }
     }
 
-    private void setX(float x) {
+    protected void setX(float x) {
         transform.getPosition().x = x;
     }
 
-    private void setY(float y) {
+    protected void setY(float y) {
         transform.getPosition().y = y;
     }
 

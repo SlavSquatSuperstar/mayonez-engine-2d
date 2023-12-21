@@ -6,6 +6,7 @@ import mayonez.graphics.debug.*;
 import mayonez.math.*;
 import mayonez.physics.colliders.*;
 import mayonez.physics.dynamics.*;
+import mayonez.scripts.camera.*;
 import slavsquatsuperstar.demos.geometrydash.ui.UICanvas;
 
 /**
@@ -24,6 +25,13 @@ public class GDEditorScene extends Scene {
 
     @Override
     protected void init() {
+        addObject(new GameObject("Camera Controls") {
+            @Override
+            protected void init() {
+                addComponent(new CameraDragAndDrop("right mouse"));
+            }
+        });
+
         addObject(new GameObject("Ground", new Vec2(0, getHeight() * -0.5f)) {
             @Override
             protected void init() {

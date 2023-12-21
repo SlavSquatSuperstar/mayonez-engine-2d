@@ -1,8 +1,7 @@
 package mayonez.graphics.camera;
 
 import mayonez.*;
-import mayonez.physics.colliders.*;
-import mayonez.scripts.*;
+import mayonez.scripts.camera.*;
 
 /**
  * A factory class that constructs {@link mayonez.graphics.camera.Camera} objects
@@ -37,19 +36,14 @@ public final class CameraFactory {
      * @return the camera object
      */
     public static GameObject createCameraObject(Camera camera) {
-        var keepInScene = camera.setKeepInSceneScript(new KeepInScene(KeepInScene.Mode.STOP)
-                .setEnabled(false));
-        var dragAndDrop = camera.setDragAndDropScript(new CameraDragAndDrop("right mouse")
+        var keepInScene = camera.setKeepInSceneScript(new CameraKeepInScene()
                 .setEnabled(false));
 
         return new GameObject("Camera") {
+            // TODO custom camera factory
             @Override
             protected void init() {
                 addComponent(camera);
-                addComponent(dragAndDrop);
-                // Add camera collider
-                addComponent(new BoxCollider(camera.screenSize.div(camera.sceneScale))
-                        .setTrigger(true).setEnabled(false));
                 addComponent(keepInScene);
             }
 

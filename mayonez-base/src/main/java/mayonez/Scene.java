@@ -95,18 +95,17 @@ public abstract class Scene {
         for (int i = 0; i < layers.length; i++) {
             layers[i] = new SceneLayer(i);
         }
-
         clearSceneLayers();
-        addCameraToScene();
+
+        // Add camera
+        camera = CameraFactory.createCamera(scale);
+        addObject(CameraFactory.createCameraObject(camera));
+
+        // Add remaining objects
         state = SceneState.RUNNING;
         init();
         objects.forEach(obj -> objects.add(obj, () -> this.startObject(obj)));
-        processSceneChanges();
-    }
-
-    private void addCameraToScene() {
-        camera = CameraFactory.createCamera(scale);
-        addObject(CameraFactory.createCameraObject(camera));
+        objects.processBuffer();
     }
 
     /**
@@ -133,7 +132,7 @@ public abstract class Scene {
     final void update(float dt) {
         onUserUpdate(dt);
         if (isRunning()) updateSceneObjects(dt);
-        processSceneChanges();
+        objects.processBuffer();
     }
 
     /**
@@ -151,11 +150,6 @@ public abstract class Scene {
         });
         physics.step(dt);
         camera.gameObject.update(dt); // Update camera last
-    }
-
-    private void processSceneChanges() {
-        // Remove destroyed objects or add new
-        objects.processBuffer();
     }
 
     // Render Methods
@@ -202,13 +196,13 @@ public abstract class Scene {
     // Object Methods
 
     /**
-     * Adds an object to this scene and initializes the object if the
-     * scene is running.
+     * Adds an object to this scene and initializes the object if the scene is
+     * running. The object will not be added if it already has a parent scene.
      *
      * @param obj a {@link GameObject}
      */
     public final void addObject(GameObject obj) {
-        if (obj == null) return;
+        if (obj == null || obj.getScene() != null) return;
         if (isStopped()) { // Static add: when not loaded
             objects.addUnbuffered(obj);
             addObjectToScene(obj);
