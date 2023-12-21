@@ -71,7 +71,6 @@ public class GameObject {
         destroyed = false;
 
         components = new ArrayList<>();
-//        changesToObject = new LinkedList<>();
 //        parent = null;
 //        children = new LinkedList<>();
     }
@@ -103,7 +102,6 @@ public class GameObject {
         components.stream()
                 .filter(Component::isEnabled)
                 .forEach(c -> c.update(dt));
-//        while (!changesToObject.isEmpty()) changesToObject.poll().run();
 //        transform.set(oldXf); // Reset transform
     }
 

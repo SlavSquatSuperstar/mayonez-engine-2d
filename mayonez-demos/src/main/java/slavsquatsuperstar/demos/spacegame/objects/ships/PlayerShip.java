@@ -61,7 +61,6 @@ public class PlayerShip extends Spaceship {
 
                 // TODO pass UI in c'tor?
                 var ui = getScene().getObject("Player UI");
-                System.out.println("ui is " + ui);
                 if (ui != null) healthBar = ui.getComponent(HealthBar.class);
                 if (healthBar == null) setEnabled(false);
             }

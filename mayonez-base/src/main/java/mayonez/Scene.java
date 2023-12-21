@@ -15,7 +15,6 @@ import mayonez.util.*;
 
 import java.awt.Graphics2D;
 import java.util.List;
-import java.util.Queue;
 import java.util.*;
 
 /**
@@ -32,7 +31,6 @@ import java.util.*;
  * @author SlavSquatSuperstar
  */
 // TODO current cursor object
-// TODO maybe don't spam "add/remove object" in log
 public abstract class Scene {
 
     private static int sceneCounter = 0; // total number of scenes created
@@ -42,9 +40,10 @@ public abstract class Scene {
     private final String name;
     private final float scale; // scene scale, or how many pixels correspond to a world unit
     private final Vec2 size; // scene size, or zero if unbounded
+    private SceneState state; // if paused or running
 
     // Scene Objects
-    private final List<GameObject> objects;
+    private final BufferedList<GameObject> objects;
     private final SceneLayer[] layers;
 
     // Renderers
@@ -54,10 +53,6 @@ public abstract class Scene {
 
     // Physics
     private final PhysicsWorld physics;
-
-    // Scene State
-    private final Queue<Runnable> changesToScene; // Use separate add/remove buffer to avoid concurrent exceptions
-    private SceneState state; // if paused or running
 
     /**
      * Creates an empty scene with size of 0x0 and a scale of 1.
@@ -79,20 +74,15 @@ public abstract class Scene {
         this.name = name;
         this.size = new Vec2(width, height).div(scale);
         this.scale = scale;
+        state = SceneState.STOPPED;
         background = Sprites.createSprite(Colors.WHITE);
 
-        // Scene state
-        state = SceneState.STOPPED;
-
         // Initialize layers
-        objects = new ArrayList<>();
+        objects = new BufferedList<>();
         layers = new SceneLayer[SceneLayer.NUM_LAYERS];
 
         renderLayer = new RenderLayer(background, size, scale);
         physics = new DefaultPhysicsWorld();
-
-        // Scene changes
-        changesToScene = new LinkedList<>();
     }
 
     // Initialization Methods
@@ -111,7 +101,7 @@ public abstract class Scene {
         addCameraToScene();
         state = SceneState.RUNNING;
         init();
-        objects.forEach(obj -> changesToScene.offer(() -> this.startGameObject(obj) ));
+        objects.forEach(obj -> objects.add(obj, () -> this.startObject(obj)));
         processSceneChanges();
     }
 
@@ -166,9 +156,7 @@ public abstract class Scene {
 
     private void processSceneChanges() {
         // Remove destroyed objects or add new
-        while (!changesToScene.isEmpty()) {
-            changesToScene.poll().run();
-        }
+        objects.processBuffer();
     }
 
     // Render Methods
@@ -222,29 +210,23 @@ public abstract class Scene {
      */
     public final void addObject(GameObject obj) {
         if (obj == null) return;
-        if (isStopped()) {
-            // Static add: when not loaded
+        if (isStopped()) { // Static add: when not loaded
+            objects.addUnbuffered(obj);
             addObjectToScene(obj);
-        } else {
-            // Dynamic add: when loaded (running or paused)
-            changesToScene.offer(() -> this.addObjectToScene(obj));
+        } else { // Dynamic add: when loaded (running or paused)
+            objects.add(obj, () -> this.addObjectToScene(obj));
         }
     }
 
     private void addObjectToScene(GameObject obj) {
-        objects.add(obj);
         obj.setScene(this);
-        if (!isStopped()) startGameObject(obj);
+        if (!isStopped()) startObject(obj);
         Logger.debug("Added object \"%s\" to scene \"%s\"",
                 obj.getNameAndID(), this.name);
     }
 
-    private void startGameObject(GameObject obj) {
+    private void startObject(GameObject obj) {
         obj.start(); // Add components first so renderer and physics can access it
-        addObjectToLayers(obj);
-    }
-
-    private void addObjectToLayers(GameObject obj) {
         for (var comp : obj.getComponents()) {
             if (comp instanceof Renderable r) renderLayer.addRenderable(r);
             if (comp instanceof PhysicsBody b) physics.addPhysicsBody(b);
@@ -259,11 +241,10 @@ public abstract class Scene {
      */
     final void removeObject(GameObject obj) {
         if (obj == null) return;
-        changesToScene.offer(() -> this.removeObjectFromScene(obj));
+        objects.remove(obj, () -> this.removeObjectFromScene(obj));
     }
 
     private void removeObjectFromScene(GameObject obj) {
-        objects.remove(obj);
         for (var comp : obj.getComponents()) {
             if (comp instanceof Renderable r) renderLayer.removeRenderable(r);
             if (comp instanceof PhysicsBody b) physics.removePhysicsBody(b);
@@ -281,10 +262,7 @@ public abstract class Scene {
      * @return the object
      */
     public GameObject getObject(String name) {
-        for (var obj : objects) {
-            if (obj.getName().equals(name)) return obj;
-        }
-        return null;
+        return objects.find(obj -> obj.getName().equals(name));
     }
 
     /**
@@ -293,7 +271,7 @@ public abstract class Scene {
      * @return the list of objects
      */
     public List<GameObject> getObjects() {
-        return new ArrayList<>(objects);
+        return objects.copy();
     }
 
     /**
