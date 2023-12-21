@@ -30,9 +30,7 @@ public class PlayerShip extends Spaceship {
     @Override
     protected void init() {
         super.init();
-        getScene().getCamera().setSubject(this)
-                .setFollowAngle(false)
-                .setKeepInScene(true);
+        getScene().getCamera().setSubject(this);
 
         // Movement
         addComponent(new Rigidbody(1f));

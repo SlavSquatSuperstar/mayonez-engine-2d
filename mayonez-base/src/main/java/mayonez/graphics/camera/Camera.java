@@ -21,13 +21,13 @@ public abstract class Camera extends Component implements Viewport {
     protected final float sceneScale;
 
     // Camera Movement
-    private boolean followAngle;
-    private Script keepInScene, dragAndDrop; // Reference to parent scripts
     private CameraMode mode;
     private GameObject subject;
+    private boolean followAngle;
+    Script keepInScene, dragAndDrop; // Reference to parent scripts
 
     // Camera Effects
-    private float zoom, rotation; // magnification of objects
+    private float zoom, rotation;
 
     public Camera(Vec2 screenSize, float sceneScale) {
         super(UpdateOrder.RENDER);
@@ -48,6 +48,7 @@ public abstract class Camera extends Component implements Viewport {
 
     @Override
     public void update(float dt) {
+//        if (getSubject() != null && mode == CameraMode.FOLLOW) {
         if (getSubject() != null) {
             transform.setPosition(getSubject().transform.getPosition());
             if (followAngle) rotation = getSubject().transform.getRotation();

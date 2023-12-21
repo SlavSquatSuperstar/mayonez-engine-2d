@@ -41,6 +41,8 @@ public class SpaceGameScene extends Scene {
     @Override
     protected void init() {
         setGravity(new Vec2());
+        getCamera().setKeepInScene(true);
+
         backgroundObjects.clear();
 
         setLayers();

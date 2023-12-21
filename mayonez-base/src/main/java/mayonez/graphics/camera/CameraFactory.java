@@ -31,23 +31,26 @@ public final class CameraFactory {
     }
 
     /**
-     * Creates a container {@link mayonez.GameObject} to hold a scene's Camera script.
+     * Creates a container {@link mayonez.GameObject} to hold a scene's main camera.
      *
      * @param camera the camera instance
      * @return the camera object
      */
     public static GameObject createCameraObject(Camera camera) {
+        var keepInScene = camera.setKeepInSceneScript(new KeepInScene(KeepInScene.Mode.STOP)
+                .setEnabled(false));
+        var dragAndDrop = camera.setDragAndDropScript(new CameraDragAndDrop("right mouse")
+                .setEnabled(false));
+
         return new GameObject("Camera") {
             @Override
             protected void init() {
                 addComponent(camera);
-                addComponent(camera.setDragAndDropScript(new CameraDragAndDrop("right mouse")
-                        .setEnabled(false)));
-                // Keep camera inside scene and add camera collider (does not work well with rotations)
+                addComponent(dragAndDrop);
+                // Add camera collider
                 addComponent(new BoxCollider(camera.screenSize.div(camera.sceneScale))
                         .setTrigger(true).setEnabled(false));
-                addComponent(camera.setKeepInSceneScript(new KeepInScene(KeepInScene.Mode.STOP)
-                        .setEnabled(false)));
+                addComponent(keepInScene);
             }
 
             // Don't want to get rid of the camera!

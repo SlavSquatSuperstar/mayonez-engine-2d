@@ -132,6 +132,9 @@ public class GameObject {
 
     /**
      * Adds a component to this game object if the component is not null.
+     * <p>
+     * Warning: Calling {@code addComponent()} while a scene is running is not supported
+     * and should be avoided!
      *
      * @param comp the {@link mayonez.Component} instance
      */

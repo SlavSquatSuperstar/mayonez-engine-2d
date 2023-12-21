@@ -7,7 +7,8 @@ import mayonez.physics.colliders.*;
 import mayonez.physics.dynamics.*;
 
 /**
- * Dictates what happens when an object reaches the edge of the scene.
+ * Detects when an object reaches the edge of or exits a given boundary
+ * and sets custom behavior.
  *
  * @author SlavSquatSuperstar
  */

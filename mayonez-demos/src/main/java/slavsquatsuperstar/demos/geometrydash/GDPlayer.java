@@ -2,7 +2,6 @@ package slavsquatsuperstar.demos.geometrydash;
 
 import mayonez.*;
 import mayonez.graphics.*;
-import mayonez.graphics.camera.*;
 import mayonez.graphics.sprites.*;
 import mayonez.math.*;
 import mayonez.physics.colliders.*;
@@ -21,14 +20,13 @@ public class GDPlayer extends GameObject {
 
     public GDPlayer(String name, Vec2 position) {
         super(name, position);
-        setZIndex(ZIndex.PLAYER);
+
     }
 
     @Override
     protected void init() {
+        setZIndex(ZIndex.PLAYER);
         createPlayerAvatar();
-
-        getScene().getCamera().setKeepInScene(false).setMode(CameraMode.FREE);
 
         float thrustForce = 10f;
         addComponent(new BoxCollider(new Vec2(1, 1)));

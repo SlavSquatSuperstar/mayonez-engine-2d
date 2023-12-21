@@ -3,7 +3,6 @@ package mayonez.graphics.renderer.gl
 import mayonez.graphics.*
 import mayonez.graphics.debug.*
 import mayonez.graphics.renderer.*
-import org.joml.*
 import org.lwjgl.opengl.GL11.*
 
 /**
@@ -13,7 +12,7 @@ import org.lwjgl.opengl.GL11.*
  * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.GL)
-internal class GLUIRenderer : GLRenderer("assets/shaders/default.glsl"),
+internal class GLUIRenderer : GLRenderer("assets/shaders/ui.glsl"),
     UIRenderer {
 
     // Renderer Parameters
@@ -42,7 +41,6 @@ internal class GLUIRenderer : GLRenderer("assets/shaders/default.glsl"),
     override fun preRender() {
         shader.bind()
         val cam = viewport
-        shader.uploadMat4("uView", Matrix4f())
         shader.uploadMat4("uProjection", cam.projectionMatrix)
         shader.uploadIntArray("uTextures", textureSlots)
         setGLProperties()
