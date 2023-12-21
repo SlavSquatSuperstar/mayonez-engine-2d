@@ -135,7 +135,7 @@ public abstract class Component {
 
     /**
      * Adds this component to a parent {@link mayonez.GameObject}. Should only
-     * be used by the {@link mayonez.Scene}.
+     * be used by the {@link mayonez.GameObject}.
      *
      * @param gameObject a game object
      */

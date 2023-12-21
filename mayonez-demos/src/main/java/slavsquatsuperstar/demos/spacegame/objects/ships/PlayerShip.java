@@ -1,16 +1,14 @@
 package slavsquatsuperstar.demos.spacegame.objects.ships;
 
-import mayonez.*;
 import mayonez.input.*;
 import mayonez.physics.dynamics.*;
 import mayonez.scripts.movement.*;
 import slavsquatsuperstar.demos.spacegame.SpaceGameConfig;
-import slavsquatsuperstar.demos.spacegame.combat.Damageable;
 import slavsquatsuperstar.demos.spacegame.combat.PlayerFireController;
 import slavsquatsuperstar.demos.spacegame.movement.PlayerThrustController;
 import slavsquatsuperstar.demos.spacegame.movement.ThrusterPrefabs;
 import slavsquatsuperstar.demos.spacegame.objects.SpawnManager;
-import slavsquatsuperstar.demos.spacegame.ui.HealthBar;
+import slavsquatsuperstar.demos.spacegame.ui.PlayerUI;
 
 /**
  * A player-controlled spaceship.
@@ -32,8 +30,9 @@ public class PlayerShip extends Spaceship {
     @Override
     protected void init() {
         super.init();
-
-        getScene().getCamera().setSubject(this).setFollowAngle(false);
+        getScene().getCamera().setSubject(this)
+                .setFollowAngle(false)
+                .setKeepInScene(true);
 
         // Movement
         addComponent(new Rigidbody(1f));
@@ -49,28 +48,7 @@ public class PlayerShip extends Spaceship {
         addComponent(new PlayerFireController());
 
         // UI
-        addComponent(new Script() {
-            private Damageable damageable;
-            private HealthBar healthBar;
-
-            @Override
-            protected void start() {
-                getScene().getCamera().setKeepInScene(true);
-                damageable = getComponent(Damageable.class);
-                if (damageable == null) setEnabled(false);
-
-                // TODO pass UI in c'tor?
-                var ui = getScene().getObject("Player UI");
-                if (ui != null) healthBar = ui.getComponent(HealthBar.class);
-                if (healthBar == null) setEnabled(false);
-            }
-
-            @Override
-            protected void update(float dt) {
-                var healthPercent = damageable.getHealth() / damageable.getMaxHealth();
-                healthBar.setValue(healthPercent);
-            }
-        });
+        addComponent(new PlayerUI());
     }
 
 }

@@ -16,6 +16,13 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class GameObjectTest {
 
+    private GameObject obj;
+
+    @BeforeEach
+    void getObject() {
+        obj = new GameObject("Test Object");
+    }
+
     @Test
     void objectIDsAreUnique() {
         var obj1 = new GameObject("Test Object");
@@ -25,7 +32,6 @@ class GameObjectTest {
 
     @Test
     void addComponentChangesNumComponents() {
-        var obj = new GameObject("Test Object");
         assertEquals(0, obj.numComponents());
 
         var comp1 = new BoxCollider(new Vec2(1f));
@@ -38,28 +44,42 @@ class GameObjectTest {
     }
 
     @Test
-    void getComponentsSameClass() {
-        var obj = new GameObject("Test Object");
-
+    void getOneComponentSameClass() {
         var comp1 = new BoxCollider(new Vec2(1f));
         obj.addComponent(comp1);
 
         var comp2 = new Rigidbody(1f);
         obj.addComponent(comp2);
 
-        var comp3 = new Timer(1f);
-        obj.addComponent(comp3);
-
         assertSame(comp1, obj.getComponent(BoxCollider.class));
         assertSame(comp2, obj.getComponent(Rigidbody.class));
-        assertSame(comp3, obj.getComponent(Timer.class));
+
         assertNull(obj.getComponent(Sprite.class));
     }
 
     @Test
-    void getComponentsSuperclass() {
-        var obj = new GameObject("Test Object");
+    void getAllComponentsSameClass() {
+        var comp1 = new Script() {
+        };
+        obj.addComponent(comp1);
 
+        var comp2 = new Script() {
+        };
+        obj.addComponent(comp2);
+
+        var comp3 = new Rigidbody(1f);
+        obj.addComponent(comp3);
+
+        var scripts = obj.getComponents(Script.class);
+        assertNotNull(scripts);
+
+        assertEquals(2, scripts.size());
+        assertTrue(scripts.contains(comp1));
+        assertTrue(scripts.contains(comp2));
+    }
+
+    @Test
+    void getOneComponentSuperclass() {
         var comp1 = new BoxCollider(new Vec2(1f));
         obj.addComponent(comp1);
 
@@ -68,6 +88,35 @@ class GameObjectTest {
 
         assertSame(comp1, obj.getComponent(Collider.class));
         assertSame(comp2, obj.getComponent(Script.class));
+    }
+
+    @Test
+    void getAllComponentsSuperClass() {
+        var comp1 = new BoxCollider(new Vec2(1f));
+        obj.addComponent(comp1);
+
+        var comp2 = new BallCollider(1f);
+        obj.addComponent(comp2);
+
+        var comp3 = new Rigidbody(1f);
+        obj.addComponent(comp3);
+
+        var colliders = obj.getComponents(Collider.class);
+        assertNotNull(colliders);
+
+        assertEquals(2, colliders.size());
+        assertTrue(colliders.contains(comp1));
+        assertTrue(colliders.contains(comp2));
+    }
+
+    @Test
+    void getComponentNullClassIsNull() {
+        obj.addComponent(new BoxCollider(new Vec2(1f)));
+        obj.addComponent(new Rigidbody(1f));
+        obj.addComponent(new Timer(1f));
+
+        assertNull(obj.getComponent(null));
+        assertNull(obj.getComponents(null));
     }
 
 }

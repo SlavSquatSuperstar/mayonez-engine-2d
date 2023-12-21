@@ -80,7 +80,6 @@ public abstract class Scene {
         // Initialize layers
         objects = new BufferedList<>();
         layers = new SceneLayer[SceneLayer.NUM_LAYERS];
-
         renderLayer = new RenderLayer(background, size, scale);
         physics = new DefaultPhysicsWorld();
     }

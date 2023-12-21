@@ -14,7 +14,7 @@ import slavsquatsuperstar.demos.spacegame.objects.SpaceGameZIndex;
 public class HealthBar extends Script {
 
     private final Vec2 position, size;
-    private UIBox redBox, greenBox;
+    private UIBox foregroundBox;
 
     public HealthBar(Vec2 position, Vec2 size) {
         this.position = position;
@@ -25,16 +25,25 @@ public class HealthBar extends Script {
     public void init() {
         gameObject.setZIndex(SpaceGameZIndex.UI);
 
-        redBox = new UIBox(position, size, Colors.RED);
-        gameObject.addComponent(redBox);
+        var borderWidth = 7.5f;
+        var outlineBox = new UIBox(position, size.add(new Vec2(borderWidth)), Colors.GRAY);
+        gameObject.addComponent(outlineBox);
 
-        greenBox = new UIBox(position, size, Colors.GREEN) {
+        var backgroundBox = new UIBox(position, size, Colors.RED) {
             @Override
             public int getZIndex() {
-                return super.getZIndex() + 1; // always display above red
+                return super.getZIndex() + 2; // display above outline
             }
         };
-        gameObject.addComponent(greenBox);
+        gameObject.addComponent(backgroundBox);
+
+        foregroundBox = new UIBox(position, size, Colors.GREEN) {
+            @Override
+            public int getZIndex() {
+                return super.getZIndex() + 2; // display above background
+            }
+        };
+        gameObject.addComponent(foregroundBox);
     }
 
     /**
@@ -45,8 +54,8 @@ public class HealthBar extends Script {
     public void setValue(float healthPercent) {
         // TODO UI set anchor
         var clamped = FloatMath.clamp(healthPercent, 0f, 1f);
-        greenBox.setSize(size.mul(new Vec2(clamped, 1f)));
-        greenBox.setPosition(position.sub(size.mul(new Vec2((1f - clamped) * 0.5f, 0f))));
+        foregroundBox.setSize(size.mul(new Vec2(clamped, 1f)));
+        foregroundBox.setPosition(position.sub(size.mul(new Vec2((1f - clamped) * 0.5f, 0f))));
     }
 
 }

@@ -44,6 +44,10 @@ public class PlayerFireController extends FireProjectile {
         return ProjectilePrefabs.createPrefab(weaponChoice, gameObject);
     }
 
+    public int getWeaponChoice() {
+        return weaponChoice;
+    }
+
     private void setWeaponChoice(int i) {
         var type = ProjectilePrefabs.getProjectileType(i);
         if (type == null) return;

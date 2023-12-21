@@ -137,17 +137,8 @@ public class GameObject {
      */
     public final void addComponent(Component comp) {
         if (comp == null) return;
-//        checkForDuplicateComponentClass(comp);
         comp.setGameObject(this);
         components.add(comp);
-    }
-
-    private void checkForDuplicateComponentClass(Component comp) {
-        var anonymous = comp.getClass().isAnonymousClass();
-        var hasComponentOfSameClass = getComponent(comp.getClass()) != null;
-        if (!anonymous && hasComponentOfSameClass) {
-            Logger.debug("GameObject %s already has a %s", getNameAndID(), comp.getClass().getSimpleName());
-        }
     }
 
 //    /**
@@ -176,13 +167,15 @@ public class GameObject {
     }
 
     /**
-     * Finds the first component of the specified class or any of its subclasses, or null if none exists.
+     * Finds the first component of the specified class or any of its subclasses,
+     * or null if none exists.
      *
      * @param cls a {@link mayonez.Component} subclass
      * @param <T> the component type
      * @return the component, or null if not present
      */
     public <T extends Component> T getComponent(Class<T> cls) {
+        if (cls == null) return null;
         for (var comp : components) {
             // Component has same class or is subclass
             if (cls.isAssignableFrom(comp.getClass())) return cls.cast(comp);
@@ -197,11 +190,11 @@ public class GameObject {
      * @param <T> the component type
      * @return the list of components, or empty if none are present
      */
-    @SuppressWarnings("unchecked")
     public <T extends Component> List<T> getComponents(Class<T> cls) {
+        if (cls == null) return null;
         return components.stream()
-                .filter(c -> cls != null && cls.isInstance(c))
-                .map(c -> (T) c)
+                .filter(cls::isInstance)
+                .map(cls::cast)
                 .collect(Collectors.toList());
     }
 

@@ -2,7 +2,6 @@ package slavsquatsuperstar.demos.spacegame;
 
 import mayonez.*;
 import mayonez.graphics.*;
-import mayonez.graphics.ui.*;
 import mayonez.math.Random;
 import mayonez.math.*;
 import mayonez.math.shapes.*;
@@ -10,6 +9,7 @@ import slavsquatsuperstar.demos.spacegame.objects.BackgroundObject;
 import slavsquatsuperstar.demos.spacegame.objects.SpaceGameZIndex;
 import slavsquatsuperstar.demos.spacegame.objects.SpaceObjectSpawner;
 import slavsquatsuperstar.demos.spacegame.ui.HealthBar;
+import slavsquatsuperstar.demos.spacegame.ui.WeaponSelectPanel;
 
 import java.util.*;
 
@@ -52,28 +52,19 @@ public class SpaceGameScene extends Scene {
         addObject(new GameObject("Player UI") {
             @Override
             protected void init() {
+                // Player Health
                 // TODO recharge health bar when respawning
-                var hpPosition = new Vec2(102, 773);
+                var hpPosition = new Vec2(105f, 770f);
                 var hpSize = new Vec2(180, 30);
                 addComponent(new HealthBar(hpPosition, hpSize));
-            }
-        });
 
-        // Weapon Select
-        addObject(new GameObject("Weapon Select UI") {
-            @Override
-            protected void init() {
+                // Weapon Select
                 // TODO show currently active
                 // TODO show fire cooldown
                 var wsPosition = new Vec2(30, 30);
                 var wsSize = new Vec2(30, 30);
-
-                setZIndex(SpaceGameZIndex.UI);
-                var box1 = new UIBox(wsPosition, wsSize, Colors.RED);
-                addComponent(box1);
-
-                var box2 = new UIBox(wsPosition.add(new Vec2(50, 0)), wsSize, Colors.SKY_BLUE);
-                addComponent(box2);
+                addComponent(new WeaponSelectPanel(wsPosition, wsSize,
+                        Colors.RED, Colors.SKY_BLUE));
             }
         });
     }

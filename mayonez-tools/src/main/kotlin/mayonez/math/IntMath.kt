@@ -57,5 +57,16 @@ object IntMath {
         return Interval(min, max).clamp(value.toFloat()).toInt()
     }
 
+    /**
+     * Checks whether a number is within a provided range, including the
+     * bounds.
+     *
+     * @param value a number
+     * @param min the lower bound, inclusive
+     * @param max the upper bound, inclusive
+     * @return if the value is within range
+     */
+    @JvmStatic
+    fun inRange(value: Int, min: Int, max: Int): Boolean = value in Interval(min, max)
 
 }
