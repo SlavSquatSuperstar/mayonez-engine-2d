@@ -4,9 +4,6 @@ import mayonez.graphics.*;
 import mayonez.graphics.textures.*;
 import mayonez.math.*;
 import org.joml.*;
-import org.lwjgl.BufferUtils;
-
-import java.nio.IntBuffer;
 
 import static org.lwjgl.opengl.GL30.*;
 
@@ -27,7 +24,7 @@ public final class RenderBatch {
     public static final int MAX_TEXTURE_SLOTS = 8;
 
     // Batch Characteristics
-    private final int maxBatchSize;
+    private final int maxBatchSize; // number of objects per batch
     private final int zIndex;
 
     // Vertex Parameters
@@ -42,13 +39,13 @@ public final class RenderBatch {
      */
     private int vao;
     /**
-     * The vertex buffer object (VBO) ID for this batch. A VBO is an array of data passed to the GPU for a draw call.
+     * The vertex buffer object (VBO) for this batch.
      */
-    private int vbo; // TODO put in vertex array
+    private final VertexBuffer vbo;
     /**
-     * The element buffer object (EBO)/index buffer ID for this batch
+     * The index/element buffer object (IBO/EBO) for this batch.
      */
-    private int ebo;
+    private final IndexBuffer ebo;
     private final VertexArray vertices;
     private final TextureArray textures;
 
@@ -59,12 +56,14 @@ public final class RenderBatch {
         this.primitive = primitive;
         this.vertexCount = primitive.getVertexCount();
         this.elementCount = primitive.getElementCount();
-        this.componentCount = primitive.getVertexComponentCount();
+        this.componentCount = primitive.getComponentCount();
 
         // Renderer Fields
         textures = new TextureArray(MAX_TEXTURE_SLOTS);
         vertices = new VertexArray(maxBatchSize * vertexCount * componentCount);
 
+        vbo = new VertexBuffer(primitive, vertices);
+        ebo = new IndexBuffer(primitive, maxBatchSize);
         createBatch();
     }
 
@@ -74,49 +73,10 @@ public final class RenderBatch {
      * Allocates GPU resources to this batch and generates the vertex buffers upon starting the scene.
      */
     private void createBatch() {
-        generateVAOs();
-        generateVBOs();
-        generateEBOs();
-        generateVertexIndexBuffer();
-    }
-
-    private void generateVAOs() {
         vao = glGenVertexArrays();
         glBindVertexArray(vao);
-    }
-
-    private void generateVBOs() {
-        vbo = glGenBuffers();
-        glBindBuffer(GL_ARRAY_BUFFER, vbo);
-        glBufferData(GL_ARRAY_BUFFER, (long) vertices.capacity() * Float.BYTES, GL_DYNAMIC_DRAW);
-    }
-
-    private void generateEBOs() {
-        ebo = glGenBuffers();
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, generateIndices(), GL_STATIC_DRAW);
-    }
-
-    /**
-     * Load element indices and define shapes for OpenGL to draw.
-     *
-     * @return an index array (int buffer)
-     */
-    private IntBuffer generateIndices() {
-        var elements = BufferUtils.createIntBuffer(elementCount * maxBatchSize);
-        for (var i = 0; i < maxBatchSize; i++) primitive.addIndices(elements, i);
-        elements.flip(); // need to flip an int buffer
-        return elements;
-    }
-
-    private void generateVertexIndexBuffer() {
-        var ptrOffset = 0;
-        var attributes = primitive.getAttributes();
-        for (var i = 0; i < attributes.length; i++) {
-            var attrib = attributes[i];
-            attrib.setVertexAttribute(i, componentCount, ptrOffset);
-            ptrOffset += attrib.getSizeBytes();
-        }
+        vbo.generate();
+        ebo.generate();
     }
 
     // Renderer Methods
@@ -133,8 +93,7 @@ public final class RenderBatch {
      * Upload all vertex data to the GPU after buffering.
      */
     public void uploadVertices() {
-        glBindBuffer(GL_ARRAY_BUFFER, vbo);
-        vertices.upload();
+        vbo.upload();
     }
 
     /**
@@ -152,8 +111,8 @@ public final class RenderBatch {
     }
 
     private void drawVertices() {
-        var numVertices = (vertices.size() * elementCount) / (componentCount * vertexCount);
-        glDrawElements(primitive.getPrimitiveType(), numVertices, GL_UNSIGNED_INT, 0);
+        var numIndices = (vertices.size() * elementCount) / (componentCount * vertexCount);
+        glDrawElements(primitive.getPrimitiveType(), numIndices, GL_UNSIGNED_INT, GL_NONE);
     }
 
     private void unbindVertices() {
@@ -165,9 +124,9 @@ public final class RenderBatch {
      * Free GPU resources upon stopping the scene.
      */
     public void deleteBatch() {
-        glDeleteBuffers(ebo);
-        glDeleteBuffers(vbo);
+        vbo.delete();
         glDeleteVertexArrays(vao);
+        ebo.delete();
     }
 
     // Helper Methods
@@ -241,4 +200,5 @@ public final class RenderBatch {
         return String.format("Render Batch (Type: %s, Capacity: %d/%d, Z-Index: %d)",
                 primitive, vertices.size() / (componentCount), maxBatchSize, zIndex);
     }
+
 }

@@ -46,12 +46,22 @@ class VertexArray {
         return size < vertices.length;
     }
 
-    int capacity() {
-        return vertices.length;
-    }
-
+    /**
+     * The current number of components in the array.
+     *
+     * @return the size
+     */
     int size() {
         return size;
+    }
+
+    /**
+     * Get the size of the vertex buffer in bytes.
+     *
+     * @return the capacity in bytes
+     */
+    long getBufferSizeBytes() {
+        return (long) vertices.length * Float.BYTES;
     }
 
 }
