@@ -6,7 +6,6 @@ import mayonez.graphics.*;
 import mayonez.io.text.*;
 import org.joml.*;
 import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GL20;
 
 import java.util.*;
 
@@ -21,17 +20,21 @@ import static org.lwjgl.opengl.GL20.*;
 @UsesEngine(EngineType.GL)
 public class Shader extends Asset {
 
+    private final int shaderID;
     private boolean active;
-    private int shaderID;
 
     public Shader(String filename) {
         super(filename);
+        shaderID = glCreateProgram();
         active = false;
 
         try {
             List<ShaderProgram> programs = readShaderPrograms();
-            compileShaderPrograms(programs);
+            programs.forEach(this::compileShader);
+            linkShaderPrograms(programs);
+            programs.forEach(ShaderProgram::delete); // Clean up intermediate programs
         } catch (ShaderException e) {
+            // TODO does not stop because still initializing assets
             Logger.printStackTrace(e);
             Mayonez.stop(ExitCode.ERROR);
         }
@@ -42,7 +45,7 @@ public class Shader extends Asset {
     private List<ShaderProgram> readShaderPrograms() throws ShaderException {
         try {
             var source = new TextIOManager().read(openInputStream());
-            var shaders = source.split("(#type)( )+"); // shaders indicated by "#type '<shader_type>'"
+            var shaders = source.split("(#type)( )+"); // shaders indicated by "#type <shader_type>"
             return parseShaderPrograms(shaders);
         } catch (Exception e) {
             Logger.error("Could not read shader %s", getFilenameInQuotes());
@@ -50,7 +53,7 @@ public class Shader extends Asset {
         }
     }
 
-    private static ArrayList<ShaderProgram> parseShaderPrograms(String[] subPrograms) throws RuntimeException {
+    private List<ShaderProgram> parseShaderPrograms(String[] subPrograms) throws RuntimeException {
         var programs = new ArrayList<ShaderProgram>();
         for (var shader : subPrograms) {
             shader = shader.strip();
@@ -60,39 +63,32 @@ public class Shader extends Asset {
         return programs;
     }
 
-    private static ShaderProgram readNextProgram(String shader) throws RuntimeException {
-        var firstNewLine = shader.indexOf("\n");
-        var typeName = shader.substring(0, firstNewLine).trim();
+    private ShaderProgram readNextProgram(String shaderSource) throws RuntimeException {
+        var firstNewLine = shaderSource.indexOf("\n");
+        var typeName = shaderSource.substring(0, firstNewLine).trim();
 
-        var shaderSource = shader.substring(firstNewLine + 1);
+        var programSource = shaderSource.substring(firstNewLine + 1);
         var shaderType = ShaderType.findWithName(typeName);
-        return new ShaderProgram(shaderType, shaderSource);
+        return new ShaderProgram(shaderType, programSource);
     }
 
     // Compile Shader Helper Methods
 
-    private void compileShaderPrograms(List<ShaderProgram> programs) throws ShaderException {
-        programs.forEach(this::compileShader);
-        var programIDs = programs.stream().map(ShaderProgram::getID).toList();
-        linkShaderPrograms(programIDs);
-        programIDs.forEach(GL20::glDeleteShader);
-    }
-
     private void compileShader(ShaderProgram shader) throws ShaderException {
         try {
             shader.compileSource();
-            Logger.debug("OpenGL: Compiled %s shader in %s", shader.getType(), getFilenameInQuotes());
+            Logger.debug("OpenGL: Compiled %s shader in %s", shader.getTypeName(), getFilenameInQuotes());
         } catch (ShaderException e) {
-            Logger.error("OpenGL: Could not compile %s shader in  %s", shader.getType(), getFilenameInQuotes());
+            Logger.error("OpenGL: Could not compile %s shader in %s", shader.getTypeName(), getFilenameInQuotes());
             Logger.error("OpenGL: " + glGetShaderInfoLog(shaderID));
             throw e;
         }
     }
 
-    private void linkShaderPrograms(List<Integer> programIDs) throws ShaderException {
-        shaderID = glCreateProgram();
-        programIDs.forEach(id -> glAttachShader(shaderID, id));
+    private void linkShaderPrograms(List<ShaderProgram> programs) throws ShaderException {
+        programs.forEach(p -> p.linkToProgram(shaderID));
         glLinkProgram(shaderID);
+        glValidateProgram(shaderID);
         checkLinkStatus(shaderID);
     }
 

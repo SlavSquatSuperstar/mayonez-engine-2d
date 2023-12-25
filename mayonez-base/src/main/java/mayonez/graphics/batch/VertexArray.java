@@ -19,8 +19,8 @@ class VertexArray {
     private final float[] vertices;
     private int size; // Current vertex index
 
-    VertexArray(int vertexCapacity) {
-        this.vertices = new float[vertexCapacity];
+    VertexArray(int capacity) { // Total number of attribute components
+        this.vertices = new float[capacity];
         size = 0;
     }
 
@@ -35,7 +35,7 @@ class VertexArray {
         glBufferSubData(GL_ARRAY_BUFFER, 0, vertices);
     }
 
-    void push(Float... floats) {
+    void push(float... floats) {
         // TODO check for over capacity?
         for (var f : floats) vertices[size++] = f;
     }

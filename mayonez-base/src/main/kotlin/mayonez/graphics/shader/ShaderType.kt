@@ -17,7 +17,7 @@ internal enum class ShaderType(
     val glShaderType: Int
 ) {
 
-    /** A vertex shader that calculates the scaling of an image. */
+    /** A vertex shader that transforms an image to its screen position. */
     VERTEX(GL_VERTEX_SHADER),
 
     /**

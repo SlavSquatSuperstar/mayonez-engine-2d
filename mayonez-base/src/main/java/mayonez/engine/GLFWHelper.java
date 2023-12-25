@@ -5,13 +5,13 @@ import mayonez.graphics.*;
 import mayonez.io.*;
 import mayonez.math.*;
 import org.lwjgl.BufferUtils;
-import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.system.MemoryStack;
 
 import java.nio.IntBuffer;
 
 import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.glfw.GLFWErrorCallback.createPrint;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
@@ -30,7 +30,7 @@ final class GLFWHelper {
      * Initializes the GLFW library.
      */
     static void initGLFW() throws GLFWException {
-        GLFWErrorCallback.createPrint(System.err).set(); // Setup error callback
+        createPrint(System.err).set(); // Setup error callback
         if (!glfwInit()) {
             if (OperatingSystem.getCurrentOS() == OperatingSystem.MAC_OS) {
                 Logger.error("GLFW must run with the \"-XstartOnFirstThread\" VM argument on macOS");

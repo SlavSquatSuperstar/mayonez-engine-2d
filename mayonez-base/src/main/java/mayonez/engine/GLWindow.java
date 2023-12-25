@@ -75,7 +75,7 @@ final class GLWindow implements Window {
     @Override
     public void stop() {
         glfwFreeCallbacks(windowID);
-//        glfwSetWindowShouldClose(window, true);
+        glfwSetWindowShouldClose(windowID, true);
         glfwDestroyWindow(windowID);
         glfwTerminate();
         var oldCbFun = glfwSetErrorCallback(null);

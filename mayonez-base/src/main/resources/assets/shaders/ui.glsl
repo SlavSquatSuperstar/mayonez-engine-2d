@@ -1,7 +1,7 @@
 #type vertex
 #version 330 core
 
-layout (location=0) in vec3 aPos;
+layout (location=0) in vec3 aPosition;
 layout (location=1) in vec4 aColor;
 layout (location=2) in vec2 aTexCoords;
 layout (location=3) in float aTexID;
@@ -17,7 +17,7 @@ void main() {
     fTexCoords = aTexCoords;
     fTexID = aTexID;
 
-    gl_Position = uProjection * vec4(aPos, 1.0);
+    gl_Position = uProjection * vec4(aPosition, 1.0);
 }
 
 #type fragment

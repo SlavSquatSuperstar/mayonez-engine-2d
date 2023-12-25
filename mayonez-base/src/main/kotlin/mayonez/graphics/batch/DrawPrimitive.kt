@@ -59,7 +59,8 @@ enum class DrawPrimitive(
         }
     };
 
-    val vertexSize: Int = attributes.sumOf { it.count } // Numbers per vertex
+    /** The number of components for all attributes per vertex. */
+    val vertexComponentCount: Int = attributes.sumOf { it.count }
 
     /**
      * Adds indices to an element buffer array (EBO).
