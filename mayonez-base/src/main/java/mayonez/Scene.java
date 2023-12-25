@@ -95,7 +95,6 @@ public abstract class Scene {
         for (int i = 0; i < layers.length; i++) {
             layers[i] = new SceneLayer(i);
         }
-        clearSceneLayers();
 
         // Add camera
         camera = CameraFactory.createCamera(scale);
@@ -177,20 +176,16 @@ public abstract class Scene {
      * Destroys all objects and stop updating the scene.
      */
     final void stop() {
-        destroySceneObjects();
-        clearSceneLayers();
-        state = SceneState.STOPPED;
-    }
-
-    private void destroySceneObjects() {
+        // Destroy all objects
         camera.setSubject(null);
         objects.forEach(GameObject::onDestroy);
-        objects.clear();
-    }
 
-    private void clearSceneLayers() {
+        // Clear all objects
+        objects.clear();
         renderLayer.clear();
         physics.clear();
+
+        state = SceneState.STOPPED;
     }
 
     // Object Methods

@@ -15,10 +15,10 @@ import static org.lwjgl.opengl.GL15.GL_DYNAMIC_DRAW;
  class VertexBuffer {
 
     private final DrawPrimitive primitive;
-    private final VertexArray vertices;
+    private final VertexBufferArray vertices;
     private int vboID;
 
-    VertexBuffer(DrawPrimitive primitive, VertexArray vertices) {
+    VertexBuffer(DrawPrimitive primitive, VertexBufferArray vertices) {
         this.primitive = primitive;
         this.vertices = vertices;
     }
@@ -44,11 +44,10 @@ import static org.lwjgl.opengl.GL15.GL_DYNAMIC_DRAW;
     }
 
     /**
-     * Uploads all vertices in the buffer to the GPU.
+     * Binds the buffer object to the GPU.
      */
-    void upload() {
+    void bind() {
         glBindBuffer(GL_ARRAY_BUFFER, vboID);
-        vertices.upload();
     }
 
     /**

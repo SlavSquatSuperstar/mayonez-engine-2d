@@ -24,43 +24,34 @@ public final class RenderBatch {
     public static final int MAX_TEXTURE_SLOTS = 8;
 
     // Batch Characteristics
-    private final int maxBatchSize; // number of objects per batch
+    private final int maxBatchSize; // Number of objects per batch
     private final int zIndex;
-
-    // Vertex Parameters
     private final DrawPrimitive primitive;
-    private final int vertexCount; // vertices per primitive
-    private final int elementCount; // element per primitive (if dividing into triangles)
-    private final int componentCount; // total components per vertex
 
     // GPU Resources
     /**
      * The vertex array object (VAO) ID for this batch.
      */
     private int vao;
+    private final TextureArray textures;
     /**
      * The vertex buffer object (VBO) for this batch.
      */
     private final VertexBuffer vbo;
+    private final VertexBufferArray vertices;
     /**
      * The index/element buffer object (IBO/EBO) for this batch.
      */
     private final IndexBuffer ebo;
-    private final VertexArray vertices;
-    private final TextureArray textures;
 
     public RenderBatch(int maxBatchSize, int zIndex, DrawPrimitive primitive) {
         this.maxBatchSize = maxBatchSize;
         this.zIndex = zIndex;
-
         this.primitive = primitive;
-        this.vertexCount = primitive.getVertexCount();
-        this.elementCount = primitive.getElementCount();
-        this.componentCount = primitive.getComponentCount();
 
         // Renderer Fields
         textures = new TextureArray(MAX_TEXTURE_SLOTS);
-        vertices = new VertexArray(maxBatchSize * vertexCount * componentCount);
+        vertices = new VertexBufferArray(primitive, maxBatchSize);
 
         vbo = new VertexBuffer(primitive, vertices);
         ebo = new IndexBuffer(primitive, maxBatchSize);
@@ -93,7 +84,8 @@ public final class RenderBatch {
      * Upload all vertex data to the GPU after buffering.
      */
     public void uploadVertices() {
-        vbo.upload();
+        vbo.bind();
+        vertices.upload();
     }
 
     /**
@@ -101,18 +93,13 @@ public final class RenderBatch {
      */
     public void drawBatch() {
         bindVertices();
-        drawVertices();
+        vertices.draw();
         unbindVertices();
     }
 
     private void bindVertices() {
         glBindVertexArray(vao);
         textures.bindTextures();
-    }
-
-    private void drawVertices() {
-        var numIndices = (vertices.size() * elementCount) / (componentCount * vertexCount);
-        glDrawElements(primitive.getPrimitiveType(), numIndices, GL_UNSIGNED_INT, GL_NONE);
     }
 
     private void unbindVertices() {
@@ -124,6 +111,7 @@ public final class RenderBatch {
      * Free GPU resources upon stopping the scene.
      */
     public void deleteBatch() {
+        clearVertices();
         vbo.delete();
         glDeleteVertexArrays(vao);
         ebo.delete();
@@ -198,7 +186,7 @@ public final class RenderBatch {
     @Override
     public String toString() {
         return String.format("Render Batch (Type: %s, Capacity: %d/%d, Z-Index: %d)",
-                primitive, vertices.size() / (componentCount), maxBatchSize, zIndex);
+                primitive, (vertices.size() / primitive.getComponentCount()), maxBatchSize, zIndex);
     }
 
 }

@@ -15,7 +15,7 @@ public interface Renderer {
     // Game Loop Methods
 
     /**
-     * Removes all objects from the renderer and clears all data.
+     * Removes all objects from the renderer and frees any memory resources.
      */
     void clear();
 
@@ -26,7 +26,7 @@ public interface Renderer {
      */
     void render(Graphics2D g2);
 
-    // Helper Methods
+    // Camera Methods
 
     /**
      * Get the current scene's camera.

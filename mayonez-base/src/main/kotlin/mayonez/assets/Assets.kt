@@ -165,6 +165,7 @@ object Assets {
     /** Empties all Assets from the asset pool. */
     @JvmStatic
     fun clearAssets() {
+        assets.values.forEach(Asset::free)
         assets.clear()
         Logger.debug("Cleared all assets")
     }

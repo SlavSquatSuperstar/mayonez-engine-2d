@@ -40,7 +40,9 @@ class TextureArray {
     }
 
     void addTexture(GLTexture tex) {
-        if (size < capacity()) texIDs[size++] = tex.getTexID();
+        if (size < capacity()) {
+            texIDs[size++] = tex.getTexID();
+        }
     }
 
     boolean containsTexture(GLTexture tex) {

@@ -55,6 +55,9 @@ open class Asset(filename: String) {
         return locationType.openOutputStream(filename, append)
     }
 
+    /** Frees any resources used by this asset after use. */
+    open fun free() {}
+
     // Helper Methods/Classes
 
     protected fun getFilenameInQuotes(): String = "\"$filename\""

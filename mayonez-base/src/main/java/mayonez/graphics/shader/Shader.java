@@ -121,6 +121,13 @@ public class Shader extends Asset {
         active = false;
     }
 
+    /**
+     * Deletes this shader program from the GPU.
+     */
+    public void delete() {
+        glDeleteProgram(shaderID);
+    }
+
     // Upload Methods
 
     public void uploadIntArray(String varName, int[] arr) {
@@ -136,6 +143,13 @@ public class Shader extends Asset {
     private int uploadVariable(String varName) {
         bind();
         return glGetUniformLocation(shaderID, varName);
+    }
+
+    // Asset Methods
+
+    @Override
+    public void free() {
+        delete();
     }
 
 }
