@@ -5,6 +5,8 @@ import mayonez.graphics.textures.*;
 import mayonez.math.*;
 import org.joml.*;
 
+import static org.lwjgl.opengl.GL11.*;
+
 /**
  * Stores vertex information for many similar drawable objects and combines them into one large mesh,
  * allowing many sprites and shapes to be drawn in fewer GPU calls. Roughly analog to the {@link java.awt.Graphics2D}
@@ -31,18 +33,9 @@ public final class RenderBatch {
     private final TextureArray textures;
 
     // GPU Resources
-    /**
-     * The vertex array object (VAO) for this batch.
-     */
-    private final VertexArray vao;
-    /**
-     * The vertex buffer object (VBO) for this batch.
-     */
-    private final VertexBuffer vbo;
-    /**
-     * The index/element buffer object (IBO/EBO) for this batch.
-     */
-    private final IndexBuffer ebo;
+    private final VertexArray vao; // VAO for this batch
+    private final VertexBuffer vbo; // VBO for this batch
+    private final IndexBuffer ebo; // EBO/IBO for this batch
 
     public RenderBatch(int maxBatchSize, int zIndex, DrawPrimitive primitive) {
         this.maxBatchSize = maxBatchSize;
@@ -90,7 +83,7 @@ public final class RenderBatch {
     }
 
     /**
-     * Draw all vertices in the batch.
+     * Sends a draw call to the GPU and draws all vertices in the batch.
      */
     public void drawBatch() {
         // Bind
@@ -98,9 +91,10 @@ public final class RenderBatch {
         textures.bindTextures();
 
         // Draw
-        vertices.draw();
+        glDrawElements(primitive.getPrimitiveType(), vertices.getNumIndices(), GL_UNSIGNED_INT, GL_NONE);
 
         // Unbind
+        vbo.unbind();
         vao.unbind();
         textures.unbindTextures();
     }
@@ -110,9 +104,9 @@ public final class RenderBatch {
      */
     public void deleteBatch() {
         clearVertices();
-        vao.delete();
-        vbo.delete();
         ebo.delete();
+        vbo.delete();
+        vao.delete();
     }
 
     // Helper Methods

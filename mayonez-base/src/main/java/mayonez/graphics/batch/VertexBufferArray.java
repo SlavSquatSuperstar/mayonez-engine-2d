@@ -4,7 +4,6 @@ import mayonez.graphics.*;
 
 import java.util.*;
 
-import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
 import static org.lwjgl.opengl.GL15.glBufferSubData;
 
@@ -14,7 +13,7 @@ import static org.lwjgl.opengl.GL15.glBufferSubData;
  *
  * @author SlavSquatSuperstar
  */
-// TODO merge with VertexBuffer
+// TODO merge with VertexBuffer?
 @UsesEngine(EngineType.GL)
 class VertexBufferArray {
 
@@ -31,7 +30,7 @@ class VertexBufferArray {
         totalComponentCount = primitive.getVertexCount() * primitive.getComponentCount();
 
         var capacity = maxBatchSize * totalComponentCount;
-        this.vertexData = new float[capacity];
+        vertexData = new float[capacity];
         size = 0;
     }
 
@@ -50,14 +49,6 @@ class VertexBufferArray {
      */
     void upload() {
         glBufferSubData(GL_ARRAY_BUFFER, 0, vertexData);
-    }
-
-    /**
-     * Sends a draw call to the GPU and draws all vertices in the buffer.
-     */
-    void draw() {
-        var numIndices = (size * primitive.getElementCount()) / totalComponentCount;
-        glDrawElements(primitive.getPrimitiveType(), numIndices, GL_UNSIGNED_INT, GL_NONE);
     }
 
     /**
@@ -90,8 +81,17 @@ class VertexBufferArray {
      *
      * @return the capacity in bytes
      */
-    long getBufferSizeBytes() {
+    long getSizeBytes() {
         return (long) vertexData.length * Float.BYTES;
+    }
+
+    /**
+     * Get the number of indices to draw.
+     *
+     * @return the number of indices
+     */
+    int getNumIndices() {
+        return (size * primitive.getElementCount()) / totalComponentCount;
     }
 
 }

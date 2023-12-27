@@ -24,12 +24,12 @@ class VertexBuffer {
     }
 
     /**
-     * Generates the vertex buffer on the GPU.
+     * Generates the vertex buffer on the GPU and binds it to the active VAO.
      */
     void generate() {
         vboID = glGenBuffers();
         glBindBuffer(GL_ARRAY_BUFFER, vboID);
-        glBufferData(GL_ARRAY_BUFFER, vertices.getBufferSizeBytes(), GL_DYNAMIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, vertices.getSizeBytes(), GL_DYNAMIC_DRAW);
         generateVertexIndexBuffer();
     }
 
@@ -48,6 +48,13 @@ class VertexBuffer {
      */
     void bind() {
         glBindBuffer(GL_ARRAY_BUFFER, vboID);
+    }
+
+    /**
+     * Unbinds the buffer object from the GPU.
+     */
+    void unbind() {
+        glBindBuffer(GL_ARRAY_BUFFER, GL_NONE);
     }
 
     /**

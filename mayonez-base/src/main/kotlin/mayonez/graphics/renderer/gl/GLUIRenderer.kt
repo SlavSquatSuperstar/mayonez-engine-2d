@@ -40,8 +40,7 @@ internal class GLUIRenderer : GLRenderer("assets/shaders/ui.glsl"),
 
     override fun preRender() {
         shader.bind()
-        val cam = viewport
-        shader.uploadMat4("uProjection", cam.projectionMatrix)
+        shader.uploadMat4("uProjection", viewport.projectionMatrix)
         shader.uploadIntArray("uTextures", textureSlots)
         setGLProperties()
     }
@@ -59,10 +58,7 @@ internal class GLUIRenderer : GLRenderer("assets/shaders/ui.glsl"),
     }
 
     override fun createBatches() {
-        pushObjectsToBatches()
-    }
-
-    private fun pushObjectsToBatches() {
+        objects.sortBy { it.zIndex }
         objects.filter { it.isEnabled }
             .forEach { it.pushToBatch(it.getAvailableBatch()) }
     }

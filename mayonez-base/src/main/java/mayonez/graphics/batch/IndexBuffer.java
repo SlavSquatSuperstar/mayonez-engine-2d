@@ -27,7 +27,7 @@ class IndexBuffer {
     }
 
     /**
-     * Generates the index buffer on the GPU.
+     * Generates the index buffer on the GPU and binds it to the active VAO.
      */
     void generate() {
         eboID = glGenBuffers();

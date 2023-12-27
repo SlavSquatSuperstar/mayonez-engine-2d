@@ -70,18 +70,17 @@ internal class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"),
 
     override fun preRender() {
         super.preRender()
+        // Upload uniforms
         val cam = viewport
         shader.uploadMat4("uView", cam.viewMatrix)
         shader.uploadMat4("uProjection", cam.projectionMatrix)
         shader.uploadIntArray("uTextures", textureSlots)
-        drawBackground()
-        setGLProperties()
-    }
 
-    /** Clear the screen and fill the background color or image. */
-    private fun drawBackground() {
+        // Draw background
         if (background.getTexture() == null) drawBackgroundColor()
         else drawBackgroundImage()
+
+        setGLProperties()
     }
 
     private fun drawBackgroundImage() {
@@ -111,16 +110,12 @@ internal class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"),
     }
 
     override fun createBatches() {
-        pushObjectsToBatches()
-        pushShapesToBatches()
-    }
-
-    private fun pushObjectsToBatches() {
+        // Push objects
+        objects.sortBy { it.zIndex }
         objects.filter { it.isEnabled }
             .forEach { it.pushToBatch(it.getAvailableBatch()) }
-    }
-
-    private fun pushShapesToBatches() {
+        // Push shapes
+        shapes.sortBy { it.zIndex }
         shapes.forEach { it.pushToBatch(it.getAvailableBatch()) }
     }
 

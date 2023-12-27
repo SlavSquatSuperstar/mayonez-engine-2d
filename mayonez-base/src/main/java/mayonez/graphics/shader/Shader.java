@@ -21,12 +21,10 @@ import static org.lwjgl.opengl.GL20.*;
 public class Shader extends Asset {
 
     private final int shaderID;
-    private boolean active;
 
     public Shader(String filename) {
         super(filename);
         shaderID = glCreateProgram();
-        active = false;
 
         try {
             List<ShaderProgram> programs = readShaderPrograms();
@@ -107,18 +105,14 @@ public class Shader extends Asset {
      * Bind this shader to the GPU.
      */
     public void bind() {
-        if (active) return;
         glUseProgram(shaderID);
-        active = true;
     }
 
     /**
      * Unbind this shader from the GPU.
      */
     public void unbind() {
-        if (!active) return;
         glUseProgram(GL_NONE);
-        active = false;
     }
 
     /**

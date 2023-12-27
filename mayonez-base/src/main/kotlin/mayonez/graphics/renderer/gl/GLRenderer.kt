@@ -5,7 +5,7 @@ import mayonez.graphics.*
 import mayonez.graphics.batch.*
 import mayonez.graphics.renderer.*
 import mayonez.graphics.shader.*
-import java.awt.Graphics2D
+import java.awt.*
 
 /**
  * A base renderer for OpenGL that uploads sprite and shape data to the
@@ -19,9 +19,7 @@ abstract class GLRenderer(shaderFile: String) : Renderer {
     // GPU Resources
     private val batches: MutableList<RenderBatch> = ArrayList()
     protected val shader: Shader = Assets.getAsset(shaderFile, Shader::class.java)!!
-
     protected val textureSlots: IntArray = IntArray(RenderBatch.MAX_TEXTURE_SLOTS) { it }
-    // support multiple texture IDs in batch ints 0-7
 
     // Renderer Methods
 
@@ -50,6 +48,9 @@ abstract class GLRenderer(shaderFile: String) : Renderer {
         batches.sortBy(RenderBatch::getZIndex) // Sort batches by z-index
     }
 
+    /** Sort image data into render batches. */
+    protected abstract fun createBatches()
+
     /** Finish drawing and free resources from the GPU. */
     protected open fun postRender() {
         shader.unbind() // Unbind everything
@@ -57,11 +58,9 @@ abstract class GLRenderer(shaderFile: String) : Renderer {
 
     // Batch Helper Methods
 
-    /** Sort image data into render batches. */
-    protected abstract fun createBatches()
-
     // TODO may be better to sort by z-index, and put as many things in batches as possible
     // TODO see Cherno renderer class
+    // TODO track current batch
     protected fun GLRenderable.getAvailableBatch(): RenderBatch {
         return batches.find { this.fitsInBatch(it) }
             ?: this.createNewBatch() // If all batches full
