@@ -1,6 +1,5 @@
 package mayonez.graphics.ui;
 
-import mayonez.annotations.*;
 import mayonez.graphics.*;
 import mayonez.graphics.renderer.gl.*;
 
@@ -9,7 +8,6 @@ import mayonez.graphics.renderer.gl.*;
  *
  * @author SlavSquatSuperstar
  */
-@ExperimentalFeature
 @UsesEngine(EngineType.GL)
 public interface UIElement extends GLRenderable {
 }

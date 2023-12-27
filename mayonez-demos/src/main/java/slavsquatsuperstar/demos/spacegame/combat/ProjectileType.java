@@ -16,9 +16,9 @@ import slavsquatsuperstar.demos.spacegame.objects.SpaceGameZIndex;
  */
 public class ProjectileType {
 
-    private static final SpriteSheet PROJECTILE_SPRITES = Sprites.createSpriteSheet(
+    public static final SpriteSheet PROJECTILE_SPRITES = Sprites.createSpriteSheet(
             "assets/spacegame/textures/projectiles.png",
-            16, 16, 2, 0);
+            16, 16, 3, 0);
 
     private final String name;
     private final float damage, speed, lifetime, fireCooldown;
