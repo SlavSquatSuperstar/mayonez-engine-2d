@@ -52,7 +52,7 @@ public class PhysicsSandboxScene extends Scene {
 
         // Create Random Shapes
         if (!KeyInput.keyDown("left shift")) {
-            for (int i = 1; i <= 5; i++) {
+            for (int i = 1; i <= 4; i++) {
                 if (KeyInput.keyPressed(String.valueOf(i))) {
                     addObject(createRandomShape(MouseInput.getPosition(), i));
                     return;

@@ -12,7 +12,7 @@ import static org.lwjgl.opengl.GL15.GL_DYNAMIC_DRAW;
  * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.GL)
- class VertexBuffer {
+class VertexBuffer {
 
     private final DrawPrimitive primitive;
     private final VertexBufferArray vertices;

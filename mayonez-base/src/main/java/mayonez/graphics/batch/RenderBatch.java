@@ -5,8 +5,6 @@ import mayonez.graphics.textures.*;
 import mayonez.math.*;
 import org.joml.*;
 
-import static org.lwjgl.opengl.GL30.*;
-
 /**
  * Stores vertex information for many similar drawable objects and combines them into one large mesh,
  * allowing many sprites and shapes to be drawn in fewer GPU calls. Roughly analog to the {@link java.awt.Graphics2D}
@@ -28,17 +26,19 @@ public final class RenderBatch {
     private final int zIndex;
     private final DrawPrimitive primitive;
 
+    // Renderer Data
+    private final VertexBufferArray vertices;
+    private final TextureArray textures;
+
     // GPU Resources
     /**
-     * The vertex array object (VAO) ID for this batch.
+     * The vertex array object (VAO) for this batch.
      */
-    private int vao;
-    private final TextureArray textures;
+    private final VertexArray vao;
     /**
      * The vertex buffer object (VBO) for this batch.
      */
     private final VertexBuffer vbo;
-    private final VertexBufferArray vertices;
     /**
      * The index/element buffer object (IBO/EBO) for this batch.
      */
@@ -53,6 +53,8 @@ public final class RenderBatch {
         textures = new TextureArray(MAX_TEXTURE_SLOTS);
         vertices = new VertexBufferArray(primitive, maxBatchSize);
 
+        // GPU Fields
+        vao = new VertexArray();
         vbo = new VertexBuffer(primitive, vertices);
         ebo = new IndexBuffer(primitive, maxBatchSize);
         createBatch();
@@ -64,8 +66,7 @@ public final class RenderBatch {
      * Allocates GPU resources to this batch and generates the vertex buffers upon starting the scene.
      */
     private void createBatch() {
-        vao = glGenVertexArrays();
-        glBindVertexArray(vao);
+        vao.generate();
         vbo.generate();
         ebo.generate();
     }
@@ -92,18 +93,15 @@ public final class RenderBatch {
      * Draw all vertices in the batch.
      */
     public void drawBatch() {
-        bindVertices();
-        vertices.draw();
-        unbindVertices();
-    }
-
-    private void bindVertices() {
-        glBindVertexArray(vao);
+        // Bind
+        vao.bind();
         textures.bindTextures();
-    }
 
-    private void unbindVertices() {
-        glBindVertexArray(GL_NONE);
+        // Draw
+        vertices.draw();
+
+        // Unbind
+        vao.unbind();
         textures.unbindTextures();
     }
 
@@ -112,8 +110,8 @@ public final class RenderBatch {
      */
     public void deleteBatch() {
         clearVertices();
+        vao.delete();
         vbo.delete();
-        glDeleteVertexArrays(vao);
         ebo.delete();
     }
 

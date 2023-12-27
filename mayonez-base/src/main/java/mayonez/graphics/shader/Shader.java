@@ -140,6 +140,12 @@ public class Shader extends Asset {
         glUniformMatrix4fv(uploadVariable(varName), false, matBuffer);
     }
 
+    /**
+     * Gets the ID for a uniform to be uploaded. A uniform is a variable that is set per draw call.
+     *
+     * @param varName the variable name in the shader
+     * @return the variable location
+     */
     private int uploadVariable(String varName) {
         bind();
         return glGetUniformLocation(shaderID, varName);

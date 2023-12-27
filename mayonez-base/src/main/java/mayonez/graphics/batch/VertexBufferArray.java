@@ -14,6 +14,7 @@ import static org.lwjgl.opengl.GL15.glBufferSubData;
  *
  * @author SlavSquatSuperstar
  */
+// TODO merge with VertexBuffer
 @UsesEngine(EngineType.GL)
 class VertexBufferArray {
 
@@ -44,16 +45,19 @@ class VertexBufferArray {
         size = 0;
     }
 
-    void draw() {
-        var numIndices = (size * primitive.getElementCount()) / totalComponentCount;
-        glDrawElements(primitive.getPrimitiveType(), numIndices, GL_UNSIGNED_INT, GL_NONE);
-    }
-
     /**
      * Uploads all vertices in the buffer to the GPU.
      */
     void upload() {
         glBufferSubData(GL_ARRAY_BUFFER, 0, vertexData);
+    }
+
+    /**
+     * Sends a draw call to the GPU and draws all vertices in the buffer.
+     */
+    void draw() {
+        var numIndices = (size * primitive.getElementCount()) / totalComponentCount;
+        glDrawElements(primitive.getPrimitiveType(), numIndices, GL_UNSIGNED_INT, GL_NONE);
     }
 
     /**

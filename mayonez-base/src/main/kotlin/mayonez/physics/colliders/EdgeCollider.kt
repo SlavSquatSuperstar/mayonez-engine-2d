@@ -11,6 +11,7 @@ import mayonez.math.shapes.*
  * @constructor Constructs an edge with the given dimensions
  * @author SlavSquatSuperstar
  */
+// TODO angular resolution is incorrect
 class EdgeCollider(val length: Float) : Collider(getEdge(length))
 
 private fun getEdge(length: Float): Edge {

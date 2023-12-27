@@ -11,7 +11,7 @@ import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 
 /**
- * Stores several {@link mayonez.graphics.textures.GLTexture} texture IDs  for a
+ * Stores several integer {@link mayonez.graphics.textures.GLTexture} texture IDs for a
  * {@link RenderBatch}.
  *
  * @author SlavSquatSuperstar
