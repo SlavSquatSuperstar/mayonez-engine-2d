@@ -56,15 +56,14 @@ public class SpaceGameScene extends Scene {
             protected void init() {
                 // Player Health
                 // TODO recharge health bar when respawning
-                var hpPosition = new Vec2(105f, 770f);
-                var hpSize = new Vec2(180, 30);
+                var hpPosition = new Vec2(105f, 775);
+                var hpSize = new Vec2(192, 32);
                 addComponent(new HealthBar(hpPosition, hpSize));
 
                 // Weapon Select
-                // TODO show currently active
                 // TODO show fire cooldown
-                var wsPosition = new Vec2(30, 30);
-                var wsSize = new Vec2(30, 30);
+                var wsPosition = new Vec2(32, 32);
+                var wsSize = new Vec2(32, 32);
                 addComponent(new WeaponSelectPanel(wsPosition, wsSize,
                         Colors.RED, Colors.SKY_BLUE));
             }

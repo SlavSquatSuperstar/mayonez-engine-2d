@@ -2,6 +2,7 @@ package slavsquatsuperstar.demos.spacegame.ui;
 
 import mayonez.*;
 import mayonez.graphics.*;
+import mayonez.graphics.textures.*;
 import mayonez.graphics.ui.*;
 import mayonez.math.*;
 import slavsquatsuperstar.demos.spacegame.objects.SpaceGameZIndex;
@@ -13,6 +14,8 @@ import slavsquatsuperstar.demos.spacegame.objects.SpaceGameZIndex;
  */
 public class HealthBar extends Script {
 
+    private static final Texture BORDER_TEXTURE = Textures.getTexture(
+            "assets/spacegame/textures/ui_border_light.png");
     private final Vec2 position, size;
     private UIBox foregroundBox;
 
@@ -25,14 +28,10 @@ public class HealthBar extends Script {
     public void init() {
         gameObject.setZIndex(SpaceGameZIndex.UI);
 
-        var borderWidth = 7.5f;
-        var outlineBox = new UIBox(position, size.add(new Vec2(borderWidth)), Colors.GRAY);
-        gameObject.addComponent(outlineBox);
-
         var backgroundBox = new UIBox(position, size, Colors.RED) {
             @Override
             public int getZIndex() {
-                return super.getZIndex() + 2; // display above outline
+                return super.getZIndex();
             }
         };
         gameObject.addComponent(backgroundBox);
@@ -40,10 +39,18 @@ public class HealthBar extends Script {
         foregroundBox = new UIBox(position, size, Colors.GREEN) {
             @Override
             public int getZIndex() {
-                return super.getZIndex() + 2; // display above background
+                return super.getZIndex() + 1; // display above background
             }
         };
         gameObject.addComponent(foregroundBox);
+
+        var outlineBox = new UIBox(position, size, BORDER_TEXTURE) {
+            @Override
+            public int getZIndex() {
+                return super.getZIndex() + 2; // display above foreground
+            }
+        };
+        gameObject.addComponent(outlineBox);
     }
 
     /**
