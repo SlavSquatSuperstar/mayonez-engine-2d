@@ -4,11 +4,11 @@ import mayonez.input.*;
 import mayonez.physics.dynamics.*;
 import mayonez.scripts.movement.*;
 import slavsquatsuperstar.demos.spacegame.SpaceGameConfig;
-import slavsquatsuperstar.demos.spacegame.combat.PlayerFireController;
+import slavsquatsuperstar.demos.spacegame.combat.projectiles.PlayerFireController;
 import slavsquatsuperstar.demos.spacegame.movement.PlayerThrustController;
 import slavsquatsuperstar.demos.spacegame.movement.ThrusterPrefabs;
 import slavsquatsuperstar.demos.spacegame.objects.SpawnManager;
-import slavsquatsuperstar.demos.spacegame.ui.PlayerUI;
+import slavsquatsuperstar.demos.spacegame.ui.PlayerUIController;
 
 /**
  * A player-controlled spaceship.
@@ -46,7 +46,7 @@ public class PlayerShip extends Spaceship {
         addComponent(new PlayerFireController());
 
         // UI
-        addComponent(new PlayerUI());
+        addComponent(new PlayerUIController());
     }
 
 }

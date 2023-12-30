@@ -1,7 +1,9 @@
-package slavsquatsuperstar.demos.spacegame.combat;
+package slavsquatsuperstar.demos.spacegame.combat.projectiles;
 
 import mayonez.*;
 import mayonez.input.*;
+import slavsquatsuperstar.demos.spacegame.combat.projectiles.FireProjectile;
+import slavsquatsuperstar.demos.spacegame.combat.projectiles.ProjectilePrefabs;
 
 /**
  * Allows the player's ship to fire different weapons.

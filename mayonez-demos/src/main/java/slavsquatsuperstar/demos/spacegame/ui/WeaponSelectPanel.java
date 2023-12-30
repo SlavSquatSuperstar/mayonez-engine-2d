@@ -5,7 +5,7 @@ import mayonez.graphics.*;
 import mayonez.graphics.textures.*;
 import mayonez.graphics.ui.*;
 import mayonez.math.*;
-import slavsquatsuperstar.demos.spacegame.combat.ProjectileType;
+import slavsquatsuperstar.demos.spacegame.combat.projectiles.ProjectileType;
 import slavsquatsuperstar.demos.spacegame.objects.SpaceGameZIndex;
 
 /**

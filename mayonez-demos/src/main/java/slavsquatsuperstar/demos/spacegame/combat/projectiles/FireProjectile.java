@@ -1,4 +1,4 @@
-package slavsquatsuperstar.demos.spacegame.combat;
+package slavsquatsuperstar.demos.spacegame.combat.projectiles;
 
 import mayonez.*;
 import mayonez.scripts.*;

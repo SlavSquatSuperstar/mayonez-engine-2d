@@ -2,14 +2,14 @@ package slavsquatsuperstar.demos.spacegame.ui;
 
 import mayonez.*;
 import slavsquatsuperstar.demos.spacegame.combat.Damageable;
-import slavsquatsuperstar.demos.spacegame.combat.PlayerFireController;
+import slavsquatsuperstar.demos.spacegame.combat.projectiles.PlayerFireController;
 
 /**
  * Manages the player's GUI elements.
  *
  * @author SlavSquatSuperstar
  */
-public class PlayerUI extends Script {
+public class PlayerUIController extends Script {
 
     // Ship Components
     private Damageable damageable;

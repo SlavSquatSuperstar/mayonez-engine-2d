@@ -6,6 +6,8 @@ import slavsquatsuperstar.demos.spacegame.objects.SpaceGameLayer;
 
 /**
  * Allows objects to take damage from collisions.
+ *
+ * @author SlavSquatSuperstar
  */
 public class CollisionDamage extends Script {
 

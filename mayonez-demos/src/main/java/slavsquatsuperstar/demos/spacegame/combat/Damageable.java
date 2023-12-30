@@ -2,10 +2,11 @@ package slavsquatsuperstar.demos.spacegame.combat;
 
 import mayonez.*;
 import mayonez.scripts.*;
+import slavsquatsuperstar.demos.spacegame.combat.projectiles.Projectile;
 import slavsquatsuperstar.demos.spacegame.objects.SpaceGameLayer;
 
 /**
- * Gives a {@link mayonez.GameObject} a health bar that can be damaged by other objects with a {@link Projectile} component.
+ * Gives a {@link mayonez.GameObject} a health bar that can be damaged by other objects with a {@link slavsquatsuperstar.demos.spacegame.combat.projectiles.Projectile} component.
  * Once health is depleted, the object is destroyed.
  *
  * @author SlavSquatSuperstar

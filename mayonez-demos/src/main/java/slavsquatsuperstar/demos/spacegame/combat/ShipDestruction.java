@@ -5,6 +5,7 @@ import mayonez.math.Random;
 import mayonez.scripts.Timer;
 import mayonez.scripts.*;
 import mayonez.scripts.movement.*;
+import slavsquatsuperstar.demos.spacegame.combat.projectiles.FireProjectile;
 import slavsquatsuperstar.demos.spacegame.movement.ThrustController;
 
 import java.util.*;

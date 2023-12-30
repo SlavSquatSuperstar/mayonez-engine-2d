@@ -1,11 +1,11 @@
-package slavsquatsuperstar.demos.spacegame.combat;
+package slavsquatsuperstar.demos.spacegame.combat.projectiles;
 
 import mayonez.*;
 import mayonez.scripts.*;
 
 /**
  * Allows a {@link mayonez.GameObject} to be launched with an initial velocity from a source object, and
- * allows it to damage other objects with a {@link Damageable} component.
+ * allows it to damage other objects with a {@link slavsquatsuperstar.demos.spacegame.combat.Damageable} component.
  */
 public class Projectile extends Script {
 
