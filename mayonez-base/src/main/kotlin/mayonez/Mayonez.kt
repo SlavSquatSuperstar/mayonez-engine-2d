@@ -55,7 +55,7 @@ object Mayonez {
 
     /** Whether to use OpenGL for rendering instead of Java AWT. */
     @JvmStatic
-    internal var useGL: Boolean = false // crashes tests when set to true :\
+    internal var useGL: Boolean = RunConfig.DEFAULT_USE_GL
         @JvmName("getUseGL") get
         private set
 
@@ -85,7 +85,7 @@ object Mayonez {
         Time.debugCurrentDateTime()
 
         Preferences.setPreferences()
-        Time.timeStepSecs = (1f / Preferences.fps)
+        Time.timeStepSecs = 1f / Preferences.fps
         Logger.setConfig(Preferences.getLoggerConfig())
         Logger.log("Started ${Preferences.title} ${Preferences.version}")
 

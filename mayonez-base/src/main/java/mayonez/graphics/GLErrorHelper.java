@@ -1,6 +1,7 @@
 package mayonez.graphics;
 
 import mayonez.*;
+import org.lwjgl.opengl.GL;
 
 import static org.lwjgl.opengl.GL11.GL_NO_ERROR;
 import static org.lwjgl.opengl.GL11.glGetError;
@@ -17,10 +18,24 @@ public final class GLErrorHelper {
     }
 
     /**
+     * Check if the OpenGL capabilities have been created in the current thread.
+     *
+     * @return if GL is initialized
+     */
+    public static boolean isGLInitialized() {
+        try {
+            var cap = GL.getCapabilities();
+            return true;
+        } catch (IllegalStateException e) {
+            return false; // GL not initialized
+        }
+    }
+
+    /**
      * Clears all accumulated OpenGL error codes.
      */
     public static void clearGLErrors() {
-        while (glGetError() != GL_NO_ERROR);
+        while (glGetError() != GL_NO_ERROR) ;
     }
 
     /**

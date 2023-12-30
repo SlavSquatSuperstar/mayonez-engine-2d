@@ -24,7 +24,13 @@ public class Shader extends Asset {
 
     public Shader(String filename) {
         super(filename);
-        shaderID = glCreateProgram();
+
+        if (GLErrorHelper.isGLInitialized()) {
+            shaderID = glCreateProgram();
+        } else {
+            shaderID = GL_NONE;
+            return;
+        }
 
         try {
             List<ShaderProgram> programs = readShaderPrograms();
@@ -116,10 +122,12 @@ public class Shader extends Asset {
     }
 
     /**
-     * Deletes this shader program from the GPU.
+     * Delete this shader program from the GPU.
      */
     public void delete() {
-        glDeleteProgram(shaderID);
+        if (GLErrorHelper.isGLInitialized()) {
+            glDeleteProgram(shaderID);
+        }
     }
 
     // Upload Methods

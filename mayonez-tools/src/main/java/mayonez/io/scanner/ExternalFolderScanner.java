@@ -35,6 +35,7 @@ public class ExternalFolderScanner implements FolderScanner {
         try (Stream<Path> files = Files.walk(path)) {
             return files.filter(Files::isRegularFile)
                     .map(Path::toString)
+                    .filter(n -> !n.contains(".DS_Store"))
                     .toList();
         } catch (IOException e) {
             return new ArrayList<>();

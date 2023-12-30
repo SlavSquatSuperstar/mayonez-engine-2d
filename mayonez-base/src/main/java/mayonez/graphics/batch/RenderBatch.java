@@ -59,6 +59,7 @@ public final class RenderBatch {
      * Allocates GPU resources to this batch and generates the vertex buffers upon starting the scene.
      */
     private void createBatch() {
+        if (!GLErrorHelper.isGLInitialized()) return;
         vao.generate();
         vbo.generate();
         ebo.generate();

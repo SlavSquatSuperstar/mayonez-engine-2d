@@ -5,7 +5,7 @@ import mayonez.input.*;
 import mayonez.math.*;
 
 /**
- * The application that contains the engine's core loop.
+ * An application that manages the window and input and continuously updates and renders the game.
  *
  * @author SlavSquatSuperstar
  */
