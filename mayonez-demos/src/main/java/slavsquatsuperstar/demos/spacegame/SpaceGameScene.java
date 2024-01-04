@@ -55,7 +55,6 @@ public class SpaceGameScene extends Scene {
             @Override
             protected void init() {
                 // Player Health
-                // TODO recharge health bar when respawning
                 var hpPosition = new Vec2(105f, 775);
                 var hpSize = new Vec2(192, 32);
                 addComponent(new HealthBar(hpPosition, hpSize));

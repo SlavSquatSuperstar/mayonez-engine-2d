@@ -85,6 +85,7 @@ public class GameObject {
     final void start() {
         // Add all components
         init();
+        // TODO Maybe separate init from start
 //        children.forEach(getScene()::addObject);
         // Start all components
         components.sort(Comparator.comparingInt(Component::getUpdateOrder));

@@ -100,10 +100,12 @@ public abstract class Scene {
         camera = CameraFactory.createCamera(scale);
         addObject(CameraFactory.createCameraObject(camera));
 
-        // Add remaining objects
-        state = SceneState.RUNNING;
+        // Add objects
         init();
-        objects.forEach(obj -> objects.add(obj, () -> this.startObject(obj)));
+
+        // Start objects
+        state = SceneState.RUNNING;
+        objects.forEach(this::startObject);
         objects.processBuffer();
     }
 
