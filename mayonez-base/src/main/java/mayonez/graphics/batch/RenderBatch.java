@@ -47,8 +47,8 @@ public final class RenderBatch {
         vertices = new VertexBufferArray(primitive, maxBatchSize);
 
         // GPU Fields
-        vao = new VertexArray();
-        vbo = new VertexBuffer(primitive, vertices);
+        vao = new VertexArray(primitive);
+        vbo = new VertexBuffer(vertices);
         ebo = new IndexBuffer(primitive, maxBatchSize);
         createBatch();
     }
@@ -63,6 +63,8 @@ public final class RenderBatch {
         vao.generate();
         vbo.generate();
         ebo.generate();
+
+        vao.setVertexLayout(vbo, primitive);
     }
 
     // Renderer Methods

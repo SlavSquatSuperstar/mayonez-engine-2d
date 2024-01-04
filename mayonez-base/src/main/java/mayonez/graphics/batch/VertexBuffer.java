@@ -3,7 +3,6 @@ package mayonez.graphics.batch;
 import mayonez.graphics.*;
 
 import static org.lwjgl.opengl.GL15.*;
-import static org.lwjgl.opengl.GL15.GL_DYNAMIC_DRAW;
 
 /**
  * A vertex buffer object (VBO) ID on the GPU. A VBO is an array of data passed
@@ -14,12 +13,10 @@ import static org.lwjgl.opengl.GL15.GL_DYNAMIC_DRAW;
 @UsesEngine(EngineType.GL)
 class VertexBuffer {
 
-    private final DrawPrimitive primitive;
     private final VertexBufferArray vertices;
     private int vboID;
 
-    VertexBuffer(DrawPrimitive primitive, VertexBufferArray vertices) {
-        this.primitive = primitive;
+    VertexBuffer(VertexBufferArray vertices) {
         this.vertices = vertices;
     }
 
@@ -30,17 +27,6 @@ class VertexBuffer {
         vboID = glGenBuffers();
         glBindBuffer(GL_ARRAY_BUFFER, vboID);
         glBufferData(GL_ARRAY_BUFFER, vertices.getSizeBytes(), GL_DYNAMIC_DRAW);
-        generateVertexIndexBuffer();
-    }
-
-    private void generateVertexIndexBuffer() {
-        var ptrOffset = 0;
-        var attributes = primitive.getAttributes();
-        for (var i = 0; i < attributes.length; i++) {
-            var attrib = attributes[i];
-            attrib.setVertexAttribute(i, primitive.getComponentCount(), ptrOffset);
-            ptrOffset += attrib.getSizeBytes();
-        }
     }
 
     /**

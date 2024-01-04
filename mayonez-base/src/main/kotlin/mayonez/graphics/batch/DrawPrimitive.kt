@@ -5,7 +5,8 @@ import org.lwjgl.opengl.GL11
 import java.nio.IntBuffer
 
 /**
- * Types of OpenGL primitive objects that can be submitted to the GPU.
+ * Types of OpenGL primitive objects that can be submitted to the GPU. Each
+ * object defines the attribute layout and count of vertices.
  *
  * @author SlavSquatSuperstar
  */

@@ -18,7 +18,7 @@ import static org.lwjgl.opengl.GL15.glBufferSubData;
 class VertexBufferArray {
 
     // Primitive Fields
-    private final DrawPrimitive primitive;
+    private final int elementCount;
     private final int totalComponentCount; // Components per primitive
 
     // Array Fields
@@ -26,10 +26,10 @@ class VertexBufferArray {
     private int size; // Current vertex index
 
     VertexBufferArray(DrawPrimitive primitive, int maxBatchSize) {
-        this.primitive = primitive;
+        elementCount = primitive.getElementCount();
         totalComponentCount = primitive.getVertexCount() * primitive.getComponentCount();
 
-        var capacity = maxBatchSize * totalComponentCount;
+        var capacity = totalComponentCount * maxBatchSize;
         vertexData = new float[capacity];
         size = 0;
     }
@@ -91,7 +91,7 @@ class VertexBufferArray {
      * @return the number of indices
      */
     int getNumIndices() {
-        return (size * primitive.getElementCount()) / totalComponentCount;
+        return (size * elementCount) / totalComponentCount;
     }
 
 }

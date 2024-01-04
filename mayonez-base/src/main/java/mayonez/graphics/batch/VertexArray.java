@@ -14,7 +14,12 @@ import static org.lwjgl.opengl.GL30.*;
 @UsesEngine(EngineType.GL)
 class VertexArray {
 
+    private final DrawPrimitive primitive;
     private int vaoID;
+
+    public VertexArray(DrawPrimitive primitive) {
+        this.primitive = primitive;
+    }
 
     /**
      * Generates the vertex array on the GPU.
@@ -22,6 +27,25 @@ class VertexArray {
     void generate() {
         vaoID = glGenVertexArrays();
         glBindVertexArray(vaoID);
+    }
+
+    /**
+     * Sets the layout of vertex attributes for the active VAO.
+     *
+     * @param vbo the VBO to use the layout with.
+     * @param primitive the primitive that defines the vertex count and layout
+     */
+    void setVertexLayout(VertexBuffer vbo, DrawPrimitive primitive) {
+        this.bind();
+        vbo.bind();
+
+        var ptrOffset = 0;
+        var attributes = primitive.getAttributes();
+        for (var i = 0; i < attributes.length; i++) {
+            var attrib = attributes[i];
+            attrib.setVertexAttribute(i, primitive.getComponentCount(), ptrOffset);
+            ptrOffset += attrib.getSizeBytes();
+        }
     }
 
     /**
