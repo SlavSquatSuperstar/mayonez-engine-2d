@@ -1,5 +1,7 @@
 package slavsquatsuperstar.demos.spacegame.objects.ships;
 
+import mayonez.*;
+import mayonez.event.*;
 import mayonez.input.*;
 import mayonez.physics.dynamics.*;
 import mayonez.scripts.movement.*;
@@ -7,15 +9,15 @@ import slavsquatsuperstar.demos.spacegame.SpaceGameConfig;
 import slavsquatsuperstar.demos.spacegame.combat.projectiles.PlayerFireController;
 import slavsquatsuperstar.demos.spacegame.movement.PlayerThrustController;
 import slavsquatsuperstar.demos.spacegame.movement.ThrusterPrefabs;
+import slavsquatsuperstar.demos.spacegame.objects.PlayerSpawner;
 import slavsquatsuperstar.demos.spacegame.objects.SpawnManager;
-import slavsquatsuperstar.demos.spacegame.ui.PlayerUIController;
 
 /**
  * A player-controlled spaceship.
  *
  * @author SlavSquatSuperstar
  */
-// TODO flashing spawn immunity
+// TODO flash spawn immunity
 public class PlayerShip extends Spaceship {
 
     private static final float PLAYER_HEALTH = 8f;
@@ -44,9 +46,17 @@ public class PlayerShip extends Spaceship {
 
         // Weapons
         addComponent(new PlayerFireController());
+        addComponent(new Script() {
+            @Override
+            protected void start() {
+                PlayerSpawner.getEventSystem().broadcast(new Event("Spawned player"));
+            }
 
-        // UI
-        addComponent(new PlayerUIController());
+            @Override
+            public void onDestroy() {
+                PlayerSpawner.getEventSystem().broadcast(new Event("Destroyed player"));
+            }
+        });
     }
 
 }

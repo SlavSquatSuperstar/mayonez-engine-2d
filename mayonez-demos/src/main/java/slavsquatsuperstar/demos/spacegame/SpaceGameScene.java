@@ -8,8 +8,7 @@ import mayonez.math.shapes.*;
 import slavsquatsuperstar.demos.spacegame.objects.BackgroundObject;
 import slavsquatsuperstar.demos.spacegame.objects.SpaceGameZIndex;
 import slavsquatsuperstar.demos.spacegame.objects.SpaceObjectSpawner;
-import slavsquatsuperstar.demos.spacegame.ui.HealthBar;
-import slavsquatsuperstar.demos.spacegame.ui.WeaponSelectPanel;
+import slavsquatsuperstar.demos.spacegame.ui.PlayerUI;
 
 import java.util.*;
 
@@ -42,31 +41,18 @@ public class SpaceGameScene extends Scene {
     protected void init() {
         setGravity(new Vec2());
         getCamera().setKeepInScene(true);
-
-        backgroundObjects.clear();
-
         setLayers();
-        addObject(new SpaceObjectSpawner());
+
+        // Background
+        backgroundObjects.clear();
         addSolarSystem();
         addBackgroundStars();
 
-        // UI
-        addObject(new GameObject("Player UI") {
-            @Override
-            protected void init() {
-                // Player Health
-                var hpPosition = new Vec2(105f, 775);
-                var hpSize = new Vec2(192, 32);
-                addComponent(new HealthBar(hpPosition, hpSize));
+        // Objects
+        addObject(new SpaceObjectSpawner("Object Spawner"));
 
-                // Weapon Select
-                // TODO show fire cooldown
-                var wsPosition = new Vec2(32, 32);
-                var wsSize = new Vec2(32, 32);
-                addComponent(new WeaponSelectPanel(wsPosition, wsSize,
-                        Colors.RED, Colors.SKY_BLUE));
-            }
-        });
+        // UI
+        addObject(new PlayerUI("Player UI"));
     }
 
 //    @Override

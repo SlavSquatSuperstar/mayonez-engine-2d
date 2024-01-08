@@ -1,50 +1,75 @@
 package slavsquatsuperstar.demos.spacegame.ui;
 
 import mayonez.*;
+import mayonez.event.*;
 import slavsquatsuperstar.demos.spacegame.combat.Damageable;
 import slavsquatsuperstar.demos.spacegame.combat.projectiles.PlayerFireController;
+import slavsquatsuperstar.demos.spacegame.objects.PlayerSpawner;
 
 /**
- * Manages the player's GUI elements.
+ * Updates GUI elements based on the player's actions and states.
  *
  * @author SlavSquatSuperstar
  */
-public class PlayerUIController extends Script {
-
-    // Ship Components
-    private Damageable damageable;
-    private PlayerFireController fireController;
+public class PlayerUIController extends Script implements EventListener<Event> {
 
     // UI Components
     private HealthBar healthBar;
     private WeaponSelectPanel weaponSelect;
 
+    // Ship Components
+    private Damageable damageable;
+    private PlayerFireController fireController;
+
+    // TODO recharge health bar here
+    // TODO show fire cooldown here
+
     @Override
     protected void start() {
-        var ui = getScene().getObject("Player UI");
-        if (ui == null) {
-            setEnabled(false);
-            return;
-        }
-
-        damageable = getGameObject().getComponent(Damageable.class);
-        fireController = getGameObject().getComponent(PlayerFireController.class);
-        if (damageable == null || fireController == null) setEnabled(false);
-
-        // TODO pass UI in c'tor?
-        healthBar = ui.getComponent(HealthBar.class);
-        weaponSelect = ui.getComponent(WeaponSelectPanel.class);
-        if (healthBar == null || weaponSelect == null) setEnabled(false);
+        PlayerSpawner.getEventSystem().subscribe(this);
+        setPlayer(null);
+        healthBar = gameObject.getComponent(HealthBar.class);
+        weaponSelect = gameObject.getComponent(WeaponSelectPanel.class);
     }
 
     @Override
     protected void update(float dt) {
         // Update health bar
-        var healthPercent = damageable.getHealth() / damageable.getMaxHealth();
-        healthBar.setValue(healthPercent);
+        if (healthBar != null && damageable != null) {
+            var healthPercent = damageable.getHealth() / damageable.getMaxHealth();
+            healthBar.setValue(healthPercent);
+        }
 
         // Update weapons selection
-        weaponSelect.setSelection(fireController.getWeaponChoice());
+        if (weaponSelect != null && fireController != null) {
+            weaponSelect.setSelection(fireController.getWeaponChoice());
+        }
+    }
+
+    public void setPlayer(GameObject player) {
+        if (player == null) {
+            damageable = null;
+            fireController = null;
+        } else {
+            damageable = player.getComponent(Damageable.class);
+            fireController = player.getComponent(PlayerFireController.class);
+        }
+    }
+
+    @Override
+    public void onEvent(Event event) {
+        System.out.println("Event: " + event.getMessage());
+
+        if (PlayerSpawner.isPlayerAlive()) {
+           setPlayer(PlayerSpawner.getPlayer());
+        } else {
+            setPlayer(null);
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        PlayerSpawner.getEventSystem().unsubscribe(this);
     }
 
 }

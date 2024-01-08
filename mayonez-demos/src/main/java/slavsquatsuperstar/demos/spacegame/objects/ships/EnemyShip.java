@@ -31,7 +31,7 @@ public class EnemyShip extends Spaceship {
         // Movement
         Rigidbody rb;
         addComponent(rb = new Rigidbody(1f, 0.01f, 0.8f));
-        rb.setVelocity(transform.getUp().mul(Random.randomFloat(2f, 10f)));
+        rb.setVelocity(transform.getUp().mul(Random.randomFloat(2f, 15f)));
 
         var thrusters = ThrusterPrefabs.addThrustersToObject(this);
         addComponent(new EnemyThrustController(thrusters));
