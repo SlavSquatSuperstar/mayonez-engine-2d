@@ -3,6 +3,8 @@ package mayonez.graphics.batch;
 import mayonez.graphics.*;
 
 import static org.lwjgl.opengl.GL15.*;
+import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
+import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
 
 /**
  * A vertex buffer object (VBO) ID on the GPU. A VBO is an array of data passed
@@ -13,20 +15,38 @@ import static org.lwjgl.opengl.GL15.*;
 @UsesEngine(EngineType.GL)
 class VertexBuffer {
 
+    private final DrawPrimitive primitive; // TODO only needed for set layout
     private final VertexBufferArray vertices;
     private int vboID;
 
-    VertexBuffer(VertexBufferArray vertices) {
+    VertexBuffer(DrawPrimitive primitive, VertexBufferArray vertices) {
+        this.primitive = primitive;
         this.vertices = vertices;
+        generate();
     }
 
     /**
      * Generates the vertex buffer on the GPU and binds it to the active VAO.
      */
-    void generate() {
+    private void generate() {
         vboID = glGenBuffers();
-        glBindBuffer(GL_ARRAY_BUFFER, vboID);
+    }
+
+    /**
+     * Sets the layout of vertex attributes for the active VAO.
+     */
+    void setVertexLayout() {
         glBufferData(GL_ARRAY_BUFFER, vertices.getSizeBytes(), GL_DYNAMIC_DRAW);
+
+        var ptrOffset = 0;
+        var attributes = primitive.getAttributes();
+        for (var i = 0; i < attributes.length; i++) {
+            var attrib = attributes[i];
+            glVertexAttribPointer(i, attrib.getCount(), attrib.getGlType(), false,
+                    primitive.getComponentCount() * attrib.getBytes(), ptrOffset);
+            glEnableVertexAttribArray(i);
+            ptrOffset += attrib.getSizeBytes();
+        }
     }
 
     /**
@@ -48,6 +68,7 @@ class VertexBuffer {
      */
     void delete() {
         glDeleteBuffers(vboID);
+        vboID = GL_NONE;
     }
 
 }

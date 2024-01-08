@@ -37,7 +37,7 @@ abstract class GLRenderer(shaderFile: String) : Renderer {
 
     /** Clear the screen and upload resources to the GPU. */
     protected open fun preRender() {
-        shader.bind()
+        shader.bind() // TODO may be better to bind shader for each object
     }
 
     /** Sort all image data into batches. */

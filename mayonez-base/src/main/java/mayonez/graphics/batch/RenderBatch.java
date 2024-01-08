@@ -24,9 +24,9 @@ public final class RenderBatch {
     public static final int MAX_TEXTURE_SLOTS = 8;
 
     // Batch Characteristics
-    private final int maxBatchSize; // Number of objects per batch
-    private final int zIndex;
+    private final int maxBatchObjects;
     private final DrawPrimitive primitive;
+    private final int zIndex;
 
     // Renderer Data
     private final VertexBufferArray vertices;
@@ -35,36 +35,33 @@ public final class RenderBatch {
     // GPU Resources
     private final VertexArray vao; // VAO for this batch
     private final VertexBuffer vbo; // VBO for this batch
-    private final IndexBuffer ebo; // EBO/IBO for this batch
+    private final IndexBuffer ibo; // EBO/IBO for this batch
 
-    public RenderBatch(int maxBatchSize, int zIndex, DrawPrimitive primitive) {
-        this.maxBatchSize = maxBatchSize;
+    public RenderBatch(int maxBatchObjects, int zIndex, DrawPrimitive primitive) {
+        this.maxBatchObjects = maxBatchObjects;
         this.zIndex = zIndex;
         this.primitive = primitive;
 
         // Renderer Fields
         textures = new TextureArray(MAX_TEXTURE_SLOTS);
-        vertices = new VertexBufferArray(primitive, maxBatchSize);
+        vertices = new VertexBufferArray(primitive, maxBatchObjects);
 
         // GPU Fields
-        vao = new VertexArray(primitive);
-        vbo = new VertexBuffer(vertices);
-        ebo = new IndexBuffer(primitive, maxBatchSize);
+        vao = new VertexArray();
+        vbo = new VertexBuffer(primitive, vertices);
+        ibo = new IndexBuffer(primitive, maxBatchObjects);
         createBatch();
     }
 
     // Initialization Methods
 
     /**
-     * Allocates GPU resources to this batch and generates the vertex buffers upon starting the scene.
+     * Allocates GPU resources to this batch and generates the arrays and buffers upon starting the scene.
      */
     private void createBatch() {
-        if (!GLErrorHelper.isGLInitialized()) return;
-        vao.generate();
-        vbo.generate();
-        ebo.generate();
-
-        vao.setVertexLayout(vbo, primitive);
+        if (!GLDebugHelper.isGLInitialized()) return;
+        vao.setVertexLayout(vbo);
+        vao.setElementLayout(ibo);
     }
 
     // Renderer Methods
@@ -89,17 +86,13 @@ public final class RenderBatch {
      * Sends a draw call to the GPU and draws all vertices in the batch.
      */
     public void drawBatch() {
-        // Bind
+        // Bind the VAO and textures
         vao.bind();
         textures.bindTextures();
 
         // Draw
         glDrawElements(primitive.getPrimitiveType(), vertices.getNumIndices(), GL_UNSIGNED_INT, GL_NONE);
-
-        // Unbind
-        vbo.unbind();
-        vao.unbind();
-        textures.unbindTextures();
+//        glDrawElements(primitive.getPrimitiveType(), ebo.getNumIndices(), GL_UNSIGNED_INT, GL_NONE);
     }
 
     /**
@@ -107,8 +100,16 @@ public final class RenderBatch {
      */
     public void deleteBatch() {
         clearVertices();
-        ebo.delete();
+
+        // Unbind everything
+        vbo.unbind();
+        ibo.unbind();
+        vao.unbind();
+        textures.unbindTextures();
+
+        // Delete everything
         vbo.delete();
+        ibo.delete();
         vao.delete();
     }
 
@@ -181,7 +182,8 @@ public final class RenderBatch {
     @Override
     public String toString() {
         return String.format("Render Batch (Type: %s, Capacity: %d/%d, Z-Index: %d)",
-                primitive, (vertices.size() / primitive.getComponentCount()), maxBatchSize, zIndex);
+                primitive, (vertices.size() / primitive.getComponentCount()), maxBatchObjects, zIndex);
+        // TODO this seems wrong
     }
 
 }

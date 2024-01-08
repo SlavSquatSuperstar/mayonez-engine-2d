@@ -25,7 +25,7 @@ public class Shader extends Asset {
     public Shader(String filename) {
         super(filename);
 
-        if (GLErrorHelper.isGLInitialized()) {
+        if (GLDebugHelper.isGLInitialized()) {
             shaderID = glCreateProgram();
         } else {
             shaderID = GL_NONE;
@@ -125,7 +125,7 @@ public class Shader extends Asset {
      * Delete this shader program from the GPU.
      */
     public void delete() {
-        if (GLErrorHelper.isGLInitialized()) {
+        if (GLDebugHelper.isGLInitialized()) {
             glDeleteProgram(shaderID);
         }
     }
@@ -133,23 +133,22 @@ public class Shader extends Asset {
     // Upload Methods
 
     public void uploadIntArray(String varName, int[] arr) {
-        glUniform1iv(uploadVariable(varName), arr);
+        glUniform1iv(getVariableLocation(varName), arr);
     }
 
     public void uploadMat4(String varName, Matrix4f mat) {
         var matBuffer = BufferUtils.createFloatBuffer(16);
         mat.get(matBuffer); // Compress matrix into 16x1 array
-        glUniformMatrix4fv(uploadVariable(varName), false, matBuffer);
+        glUniformMatrix4fv(getVariableLocation(varName), false, matBuffer);
     }
 
     /**
-     * Gets the ID for a uniform to be uploaded. A uniform is a variable that is set per draw call.
+     * Gets the ID for a uniform (variable) to be uploaded for the next draw call.
      *
      * @param varName the variable name in the shader
      * @return the variable location
      */
-    private int uploadVariable(String varName) {
-        bind();
+    private int getVariableLocation(String varName) {
         return glGetUniformLocation(shaderID, varName);
     }
 

@@ -7,14 +7,14 @@ import static org.lwjgl.opengl.GL11.GL_NO_ERROR;
 import static org.lwjgl.opengl.GL11.glGetError;
 
 /**
- * Performs error checking for OpenGL.
+ * Performs error checking and debugging for OpenGL.
  *
  * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.GL)
-public final class GLErrorHelper {
+public final class GLDebugHelper {
 
-    private GLErrorHelper() {
+    private GLDebugHelper() {
     }
 
     /**
@@ -24,7 +24,7 @@ public final class GLErrorHelper {
      */
     public static boolean isGLInitialized() {
         try {
-            var cap = GL.getCapabilities();
+            GL.getCapabilities();
             return true;
         } catch (IllegalStateException e) {
             return false; // GL not initialized

@@ -6,7 +6,6 @@ import org.lwjgl.BufferUtils;
 import java.nio.IntBuffer;
 
 import static org.lwjgl.opengl.GL15.*;
-import static org.lwjgl.opengl.GL15.GL_STATIC_DRAW;
 
 /**
  * An index/element buffer object (IBO/EBO) on the GPU. An IBO allows vertices
@@ -17,22 +16,21 @@ import static org.lwjgl.opengl.GL15.GL_STATIC_DRAW;
 @UsesEngine(EngineType.GL)
 class IndexBuffer {
 
-    private final DrawPrimitive primitive;
-    private final int maxBatchSize;
+    private final DrawPrimitive primitive; // TODO only needed for gen indices
+    private final int maxBatchSize; // TODO same
     private int eboID;
 
     IndexBuffer(DrawPrimitive primitive, int maxBatchSize) {
         this.primitive = primitive;
         this.maxBatchSize = maxBatchSize;
+        generate();
     }
 
     /**
-     * Generates the index buffer on the GPU and binds it to the active VAO.
+     * Generates the index buffer on the GPU.
      */
-    void generate() {
+    private void generate() {
         eboID = glGenBuffers();
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboID);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, generateIndices(), GL_STATIC_DRAW);
     }
 
     /**
@@ -40,11 +38,34 @@ class IndexBuffer {
      *
      * @return an index array (int buffer)
      */
-    private IntBuffer generateIndices() {
-        var bufferSize = primitive.getElementCount() * maxBatchSize;
-        var elements = BufferUtils.createIntBuffer(bufferSize);
+    IntBuffer getElementIndices() {
+        var numIndices = getNumIndices();
+        var elements = BufferUtils.createIntBuffer(numIndices);
         for (var i = 0; i < maxBatchSize; i++) primitive.addIndices(elements, i);
         return elements.flip(); // need to flip an int buffer
+    }
+
+    /**
+     * Get the number of indices used per draw call
+     *
+     * @return the index count
+     */
+    int getNumIndices() {
+        return primitive.getElementCount() * maxBatchSize;
+    }
+
+    /**
+     * Binds the index buffer to the GPU.
+     */
+    void bind() {
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboID);
+    }
+
+    /**
+     * Unbinds the index buffer from the GPU.
+     */
+    void unbind() {
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, GL_NONE);
     }
 
     /**
@@ -52,6 +73,7 @@ class IndexBuffer {
      */
     void delete() {
         glDeleteBuffers(eboID);
+        eboID = GL_NONE;
     }
 
 }

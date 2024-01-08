@@ -11,41 +11,45 @@ import static org.lwjgl.opengl.GL30.*;
  *
  * @author SlavSquatSuperstar
  */
+// TODO also create VBO and IBO
 @UsesEngine(EngineType.GL)
 class VertexArray {
 
-    private final DrawPrimitive primitive;
     private int vaoID;
 
-    public VertexArray(DrawPrimitive primitive) {
-        this.primitive = primitive;
+    VertexArray() {
+        generate();
     }
 
     /**
      * Generates the vertex array on the GPU.
      */
-    void generate() {
+    private void generate() {
         vaoID = glGenVertexArrays();
-        glBindVertexArray(vaoID);
     }
 
     /**
-     * Sets the layout of vertex attributes for the active VAO.
+     * Attaches a vertex buffer to this vertex array. The VBO will be enabled
+     * whenever this VAO is made active.
      *
      * @param vbo the VBO to use the layout with.
-     * @param primitive the primitive that defines the vertex count and layout
      */
-    void setVertexLayout(VertexBuffer vbo, DrawPrimitive primitive) {
+    void setVertexLayout(VertexBuffer vbo) {
         this.bind();
         vbo.bind();
+        vbo.setVertexLayout();
+    }
 
-        var ptrOffset = 0;
-        var attributes = primitive.getAttributes();
-        for (var i = 0; i < attributes.length; i++) {
-            var attrib = attributes[i];
-            attrib.setVertexAttribute(i, primitive.getComponentCount(), ptrOffset);
-            ptrOffset += attrib.getSizeBytes();
-        }
+    /**
+     * Attaches an index buffer to this vertex array. The IBO will be enabled
+     * whenever this VAO is made active.
+     *
+     * @param ibo the index buffer
+     */
+    void setElementLayout(IndexBuffer ibo) {
+        this.bind();
+        ibo.bind();
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, ibo.getElementIndices(), GL_STATIC_DRAW);
     }
 
     /**
@@ -67,6 +71,7 @@ class VertexArray {
      */
     void delete() {
         glDeleteVertexArrays(vaoID);
+        vaoID = GL_NONE;
     }
 
 }
