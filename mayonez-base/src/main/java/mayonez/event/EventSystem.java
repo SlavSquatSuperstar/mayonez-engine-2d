@@ -1,7 +1,5 @@
 package mayonez.event;
 
-import mayonez.annotations.*;
-
 import java.util.*;
 
 /**
@@ -10,7 +8,6 @@ import java.util.*;
  * @param <T> the type of event to send
  * @author SlavSquatSuperstar
  */
-@ExperimentalFeature
 // TODO multiple event nodes
 // TODO or subscribe to event types and filter onEvent
 public class EventSystem<T extends Event> {

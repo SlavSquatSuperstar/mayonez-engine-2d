@@ -4,7 +4,9 @@ import mayonez.*;
 import mayonez.event.*;
 import slavsquatsuperstar.demos.spacegame.combat.Damageable;
 import slavsquatsuperstar.demos.spacegame.combat.projectiles.PlayerFireController;
-import slavsquatsuperstar.demos.spacegame.objects.PlayerSpawner;
+import slavsquatsuperstar.demos.spacegame.events.PlayerDestroyedEvent;
+import slavsquatsuperstar.demos.spacegame.events.PlayerSpawnedEvent;
+import slavsquatsuperstar.demos.spacegame.events.SpaceGameEvents;
 
 /**
  * Updates GUI elements based on the player's actions and states.
@@ -21,17 +23,16 @@ public class PlayerUIController extends Script implements EventListener<Event> {
     private Damageable damageable;
     private PlayerFireController fireController;
 
-    // TODO recharge health bar here
-    // TODO show fire cooldown here
-
     @Override
     protected void start() {
-        PlayerSpawner.getEventSystem().subscribe(this);
+        SpaceGameEvents.getPlayerEventSystem().subscribe(this);
         setPlayer(null);
         healthBar = gameObject.getComponent(HealthBar.class);
         weaponSelect = gameObject.getComponent(WeaponSelectPanel.class);
     }
 
+    // TODO recharge health bar
+    // TODO show fire cooldown
     @Override
     protected void update(float dt) {
         // Update health bar
@@ -60,16 +61,16 @@ public class PlayerUIController extends Script implements EventListener<Event> {
     public void onEvent(Event event) {
         System.out.println("Event: " + event.getMessage());
 
-        if (PlayerSpawner.isPlayerAlive()) {
-           setPlayer(PlayerSpawner.getPlayer());
-        } else {
+        if (event instanceof PlayerSpawnedEvent e) {
+           setPlayer(e.getPlayer());
+        } else if (event instanceof PlayerDestroyedEvent) {
             setPlayer(null);
         }
     }
 
     @Override
     public void onDestroy() {
-        PlayerSpawner.getEventSystem().unsubscribe(this);
+        SpaceGameEvents.getPlayerEventSystem().unsubscribe(this);
     }
 
 }

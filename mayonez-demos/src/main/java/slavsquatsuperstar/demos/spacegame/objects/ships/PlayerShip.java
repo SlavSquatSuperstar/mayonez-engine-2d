@@ -1,15 +1,16 @@
 package slavsquatsuperstar.demos.spacegame.objects.ships;
 
 import mayonez.*;
-import mayonez.event.*;
 import mayonez.input.*;
 import mayonez.physics.dynamics.*;
 import mayonez.scripts.movement.*;
 import slavsquatsuperstar.demos.spacegame.SpaceGameConfig;
 import slavsquatsuperstar.demos.spacegame.combat.projectiles.PlayerFireController;
+import slavsquatsuperstar.demos.spacegame.events.PlayerDestroyedEvent;
+import slavsquatsuperstar.demos.spacegame.events.PlayerSpawnedEvent;
+import slavsquatsuperstar.demos.spacegame.events.SpaceGameEvents;
 import slavsquatsuperstar.demos.spacegame.movement.PlayerThrustController;
 import slavsquatsuperstar.demos.spacegame.movement.ThrusterPrefabs;
-import slavsquatsuperstar.demos.spacegame.objects.PlayerSpawner;
 import slavsquatsuperstar.demos.spacegame.objects.SpawnManager;
 
 /**
@@ -49,12 +50,14 @@ public class PlayerShip extends Spaceship {
         addComponent(new Script() {
             @Override
             protected void start() {
-                PlayerSpawner.getEventSystem().broadcast(new Event("Spawned player"));
+                SpaceGameEvents.getPlayerEventSystem()
+                        .broadcast(new PlayerSpawnedEvent(PlayerShip.this));
             }
 
             @Override
             public void onDestroy() {
-                PlayerSpawner.getEventSystem().broadcast(new Event("Destroyed player"));
+                SpaceGameEvents.getPlayerEventSystem()
+                        .broadcast(new PlayerDestroyedEvent(PlayerShip.this));
             }
         });
     }
