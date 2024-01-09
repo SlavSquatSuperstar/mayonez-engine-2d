@@ -41,11 +41,17 @@ public abstract class Spaceship extends GameObject {
 
         // Visuals
         addComponent(Sprites.createSprite(spriteName));
+    }
 
-        // Destruction
+    protected void addDestructionComponents(Runnable onStart, Runnable onDestroy) {
         ShipDestruction shipDestruction;
         addComponent(shipDestruction = new ShipDestruction());
         addComponent(new Damageable(maxHealth) {
+            @Override
+            protected void start() {
+                if (onStart != null) onStart.run();
+            }
+
             @Override
             public void onHealthDepleted() {
                 shipDestruction.startDestructionSequence();
@@ -53,6 +59,7 @@ public abstract class Spaceship extends GameObject {
 
             @Override
             public void onDestroy() {
+                if (onDestroy != null) onDestroy.run();
                 shipSpawner.markObjectDestroyed();
             }
         });

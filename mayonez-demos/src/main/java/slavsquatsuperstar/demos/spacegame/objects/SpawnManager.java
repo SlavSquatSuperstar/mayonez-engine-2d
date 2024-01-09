@@ -69,4 +69,8 @@ public abstract class SpawnManager extends Script {
         // reset timer after destroying, so objects don't spawn immediately
     }
 
+    protected Timer getSpawnTimer() {
+        return spawnTimer;
+    }
+
 }

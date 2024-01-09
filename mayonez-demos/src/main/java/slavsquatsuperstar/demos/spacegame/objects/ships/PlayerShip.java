@@ -1,6 +1,5 @@
 package slavsquatsuperstar.demos.spacegame.objects.ships;
 
-import mayonez.*;
 import mayonez.input.*;
 import mayonez.physics.dynamics.*;
 import mayonez.scripts.movement.*;
@@ -47,19 +46,14 @@ public class PlayerShip extends Spaceship {
 
         // Weapons
         addComponent(new PlayerFireController());
-        addComponent(new Script() {
-            @Override
-            protected void start() {
-                SpaceGameEvents.getPlayerEventSystem()
-                        .broadcast(new PlayerSpawnedEvent(PlayerShip.this));
-            }
 
-            @Override
-            public void onDestroy() {
-                SpaceGameEvents.getPlayerEventSystem()
-                        .broadcast(new PlayerDestroyedEvent(PlayerShip.this));
-            }
-        });
+        // Destruction
+        addDestructionComponents(
+                () -> SpaceGameEvents.getPlayerEventSystem()
+                        .broadcast(new PlayerSpawnedEvent(PlayerShip.this)),
+                () -> SpaceGameEvents.getPlayerEventSystem()
+                        .broadcast(new PlayerDestroyedEvent(PlayerShip.this))
+        );
     }
 
 }

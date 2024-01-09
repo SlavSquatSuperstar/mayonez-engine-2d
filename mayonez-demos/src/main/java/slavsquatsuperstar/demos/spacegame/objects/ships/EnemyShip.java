@@ -39,5 +39,7 @@ public class EnemyShip extends Spaceship {
         // Weapons
         addComponent(new EnemyFireController());
 
+        // Destruction
+        addDestructionComponents(null, null);
     }
 }
