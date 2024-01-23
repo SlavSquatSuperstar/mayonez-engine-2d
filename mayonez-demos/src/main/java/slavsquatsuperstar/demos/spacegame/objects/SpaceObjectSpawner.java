@@ -24,15 +24,15 @@ public class SpaceObjectSpawner extends GameObject {
 
     @Override
     protected void init() {
-        addComponent(new PlayerSpawner());
-        addComponent(new SpawnManager(NUM_ENEMIES, ENEMY_RESPAWN_COOLDOWN) {
+        addComponent(new PlayerSpawnManager());
+        addComponent(new MultiSpawnManager(NUM_ENEMIES, ENEMY_RESPAWN_COOLDOWN) {
             @Override
             public GameObject createSpawnedObject() {
                 return new EnemyShip("Enemy Spaceship",
                         "assets/spacegame/textures/spaceship2.png", this);
             }
         });
-        addComponent(new SpawnManager(NUM_OBSTACLES, OBSTACLE_RESPAWN_COOLDOWN) {
+        addComponent(new MultiSpawnManager(NUM_OBSTACLES, OBSTACLE_RESPAWN_COOLDOWN) {
             @Override
             public GameObject createSpawnedObject() {
                 return new Asteroid("Asteroid", this);

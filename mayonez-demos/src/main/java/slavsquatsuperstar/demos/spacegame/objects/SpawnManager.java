@@ -1,76 +1,37 @@
 package slavsquatsuperstar.demos.spacegame.objects;
 
 import mayonez.*;
-import mayonez.scripts.*;
 
 /**
- * Sets conditions for spawning new objects and tracks the number of spawned objects in the scene.
+ * Spawns prefab objects into the scene using the {@link #spawnObject()} method.
+ * Spawning behavior and conditions can be defined in subclasses.
  *
  * @author SlavSquatSuperstar
  */
 // TODO auto mark spawned object destroyed?
 public abstract class SpawnManager extends Script {
 
-    private final Counter amountSpawned; // how many objects spawned
-    private final Timer spawnTimer; // how long until spawning objects again
-
-    public SpawnManager(int maxSpawned, float spawnCooldown) {
-        amountSpawned = new Counter(0, maxSpawned, 0);
-        spawnTimer = new Timer(spawnCooldown);
-    }
-
-    @Override
-    public void init() {
-        gameObject.addComponent(spawnTimer);
-    }
-
-    @Override
-    protected void start() {
-        amountSpawned.resetToMin();
-        spawnTimer.reset();
-        populateToMax();
-    }
-
-    @Override
-    public void update(float dt) {
-        // Keep spawning if destroyed and has room
-        if (spawnTimer.isReady() && !amountSpawned.isAtMax()) spawnObject();
-    }
-
     /**
-     * Instantiate a prefab {@link mayonez.GameObject} to be spawned. To be defined by the subclass.
+     * Instantiate a prefab {@link mayonez.GameObject} to be spawned. To be defined
+     * by the subclass.
      *
-     * @return the new object
+     * @return the spawned object
      */
     public abstract GameObject createSpawnedObject();
 
     /**
-     * Add a spawned object into the scene.
+     * Spawns an object into the scene. Can be overridden to run additional
+     * user-defined behavior.
      */
     public void spawnObject() {
         getScene().addObject(createSpawnedObject());
-        amountSpawned.count(1);
-        spawnTimer.reset();
     }
 
     /**
-     * Spawn in as many objects as this script will allow.
-     */
-    public void populateToMax() {
-        while (!amountSpawned.isAtMax()) spawnObject();
-    }
-
-    /**
-     * Notify this script that a spawned object has been destroyed.
+     * Notify this script that a spawned object has been destroyed. Does
+     * nothing by default and can be overridden.
      */
     public void markObjectDestroyed() {
-        amountSpawned.count(-1);
-        if (spawnTimer.isReady()) spawnTimer.reset();
-        // reset timer after destroying, so objects don't spawn immediately
-    }
-
-    protected Timer getSpawnTimer() {
-        return spawnTimer;
     }
 
 }

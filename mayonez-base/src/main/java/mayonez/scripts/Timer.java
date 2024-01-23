@@ -96,7 +96,7 @@ public class Timer extends Script {
     /**
      * Start or pause the timer.
      *
-     * @param started if the time is counting
+     * @param started if the timer is counting
      */
     public void setStarted(boolean started) {
         this.started = started;

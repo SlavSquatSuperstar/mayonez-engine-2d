@@ -1,9 +1,11 @@
 package slavsquatsuperstar.demos.spacegame.objects.ships;
 
+import mayonez.*;
 import mayonez.input.*;
 import mayonez.physics.dynamics.*;
 import mayonez.scripts.movement.*;
 import slavsquatsuperstar.demos.spacegame.SpaceGameConfig;
+import slavsquatsuperstar.demos.spacegame.combat.Damageable;
 import slavsquatsuperstar.demos.spacegame.combat.projectiles.PlayerFireController;
 import slavsquatsuperstar.demos.spacegame.events.PlayerDestroyedEvent;
 import slavsquatsuperstar.demos.spacegame.events.PlayerSpawnedEvent;
@@ -54,6 +56,16 @@ public class PlayerShip extends Spaceship {
                 () -> SpaceGameEvents.getPlayerEventSystem()
                         .broadcast(new PlayerDestroyedEvent(PlayerShip.this))
         );
+
+        addComponent(new Script() {
+            @Override
+            protected void update(float dt) {
+                // Destroy the player (debug only)
+                if (KeyInput.keyDown("backspace")) {
+                    getComponent(Damageable.class).damage(100);
+                }
+            }
+        });
     }
 
 }

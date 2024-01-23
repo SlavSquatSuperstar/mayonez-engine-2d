@@ -44,4 +44,8 @@ public abstract class MovementScript extends Script {
      */
     public abstract Vec2 getUserInput();
 
+    public float getUserInputValue() {
+        return 0f;
+    }
+
 }

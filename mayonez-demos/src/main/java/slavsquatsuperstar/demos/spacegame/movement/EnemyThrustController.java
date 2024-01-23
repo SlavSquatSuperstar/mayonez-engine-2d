@@ -43,7 +43,7 @@ public class EnemyThrustController extends ThrustController {
                 brakesActive = true;
             }
         } else {
-            // Stop braking once slow enough
+            // Start firing thrusters once slow enough
             if (rb.getSpeed() < 5f && rb.getAngSpeed() < 45f) {
                 brakesActive = false;
             }
