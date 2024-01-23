@@ -3,7 +3,6 @@ package slavsquatsuperstar.demos.spacegame.objects.asteroids;
 import mayonez.graphics.*;
 import mayonez.math.*;
 import slavsquatsuperstar.demos.spacegame.combat.Damageable;
-import slavsquatsuperstar.demos.spacegame.objects.SpawnManager;
 
 /**
  * An asteroid in space that can be destroyed.
@@ -12,11 +11,8 @@ import slavsquatsuperstar.demos.spacegame.objects.SpawnManager;
  */
 public class Asteroid extends BaseAsteroid {
 
-    private final SpawnManager obstacleSpawner;
-
-    public Asteroid(String name, SpawnManager obstacleSpawner) {
+    public Asteroid(String name) {
         super(name, new Vec2(), getRandomProperties());
-        this.obstacleSpawner = obstacleSpawner;
     }
 
     @Override
@@ -30,14 +26,7 @@ public class Asteroid extends BaseAsteroid {
         addRigidbody(startingHealth)
                 .setVelocity(transform.getUp().mul(Random.randomFloat(0f, 3f)));
 
-        addComponent(new Damageable(startingHealth) {
-            @Override
-            public void onDestroy() {
-                if (obstacleSpawner != null) {
-                    obstacleSpawner.markObjectDestroyed();
-                }
-            }
-        });
+        addComponent(new Damageable(startingHealth));
         addComponent(new AsteroidDestruction(properties));
     }
 

@@ -5,10 +5,9 @@ import mayonez.physics.dynamics.*;
 import slavsquatsuperstar.demos.spacegame.combat.projectiles.EnemyFireController;
 import slavsquatsuperstar.demos.spacegame.movement.EnemyThrustController;
 import slavsquatsuperstar.demos.spacegame.movement.ThrusterPrefabs;
-import slavsquatsuperstar.demos.spacegame.objects.SpawnManager;
 
 /**
- * An enemy spaceship.
+ * A computer-controlled enemy spaceship.
  *
  * @author SlavSquatSuperstar
  */
@@ -16,8 +15,8 @@ public class EnemyShip extends Spaceship {
 
     private static final float ENEMY_HEALTH = 5f;
 
-    public EnemyShip(String name, String spriteName, SpawnManager enemySpawner) {
-        super(name, spriteName, ENEMY_HEALTH, enemySpawner);
+    public EnemyShip(String name, String spriteName) {
+        super(name, spriteName, ENEMY_HEALTH);
     }
 
     @Override
@@ -38,8 +37,6 @@ public class EnemyShip extends Spaceship {
 
         // Weapons
         addComponent(new EnemyFireController());
-
-        // Destruction
-        addDestructionComponents(null, null);
     }
+
 }

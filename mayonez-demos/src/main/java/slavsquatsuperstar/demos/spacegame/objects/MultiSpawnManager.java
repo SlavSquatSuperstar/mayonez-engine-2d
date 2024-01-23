@@ -1,5 +1,6 @@
 package slavsquatsuperstar.demos.spacegame.objects;
 
+import mayonez.*;
 import mayonez.scripts.*;
 
 /**
@@ -50,10 +51,8 @@ public abstract class MultiSpawnManager extends SpawnManager {
         while (!amountSpawned.isAtMax()) spawnObject();
     }
 
-    /**
-     * Notify this script that a spawned object has been destroyed.
-     */
-    public void markObjectDestroyed() {
+    @Override
+    public void markObjectDestroyed(GameObject object) {
         amountSpawned.count(-1);
         spawnTimer.reset(); //Reset so objects don't respawn immediately
     }

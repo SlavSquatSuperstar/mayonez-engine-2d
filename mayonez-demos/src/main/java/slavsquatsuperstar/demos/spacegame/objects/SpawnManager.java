@@ -8,7 +8,6 @@ import mayonez.*;
  *
  * @author SlavSquatSuperstar
  */
-// TODO auto mark spawned object destroyed?
 public abstract class SpawnManager extends Script {
 
     /**
@@ -30,8 +29,10 @@ public abstract class SpawnManager extends Script {
     /**
      * Notify this script that a spawned object has been destroyed. Does
      * nothing by default and can be overridden.
+     *
+     * @param object the spawned object
      */
-    public void markObjectDestroyed() {
+    public void markObjectDestroyed(GameObject object) {
     }
 
 }

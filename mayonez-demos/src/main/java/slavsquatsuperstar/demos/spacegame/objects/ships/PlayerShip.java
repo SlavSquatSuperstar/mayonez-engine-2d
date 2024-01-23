@@ -8,12 +8,8 @@ import mayonez.scripts.movement.*;
 import slavsquatsuperstar.demos.spacegame.SpaceGameConfig;
 import slavsquatsuperstar.demos.spacegame.combat.Damageable;
 import slavsquatsuperstar.demos.spacegame.combat.projectiles.PlayerFireController;
-import slavsquatsuperstar.demos.spacegame.events.PlayerDestroyedEvent;
-import slavsquatsuperstar.demos.spacegame.events.PlayerSpawnedEvent;
-import slavsquatsuperstar.demos.spacegame.events.SpaceGameEvents;
 import slavsquatsuperstar.demos.spacegame.movement.PlayerThrustController;
 import slavsquatsuperstar.demos.spacegame.movement.ThrusterPrefabs;
-import slavsquatsuperstar.demos.spacegame.objects.SpawnManager;
 
 /**
  * A player-controlled spaceship.
@@ -28,8 +24,8 @@ public class PlayerShip extends Spaceship {
     private static final InputAxis HORIZONTAL_MOVE_AXIS = SpaceGameConfig.getHorizontalMoveAxis();
     private static final InputAxis TURN_AXIS = SpaceGameConfig.getTurnAxis();
 
-    public PlayerShip(String name, String spriteName, SpawnManager playerSpawner) {
-        super(name, spriteName, PLAYER_HEALTH, playerSpawner);
+    public PlayerShip(String name, String spriteName) {
+        super(name, spriteName, PLAYER_HEALTH);
     }
 
     @Override
@@ -54,15 +50,6 @@ public class PlayerShip extends Spaceship {
 
         // Weapons
         addComponent(new PlayerFireController());
-
-        // Destruction
-        addDestructionComponents(
-                // TODO move to spawn manager?
-                () -> SpaceGameEvents.getPlayerEventSystem()
-                        .broadcast(new PlayerSpawnedEvent(PlayerShip.this)),
-                () -> SpaceGameEvents.getPlayerEventSystem()
-                        .broadcast(new PlayerDestroyedEvent(PlayerShip.this))
-        );
 
         addComponent(new Script() {
             @Override
