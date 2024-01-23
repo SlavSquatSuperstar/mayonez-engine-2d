@@ -28,12 +28,17 @@ public class GDPlayer extends GameObject {
         setZIndex(ZIndex.PLAYER);
         createPlayerAvatar();
 
-        float thrustForce = 10f;
+        float speed = 10f;
         addComponent(new BoxCollider(new Vec2(1, 1)));
         addComponent(new Rigidbody(1f).setDrag(0.2f).setFixedRotation(true));
-        addComponent(new KeyMovement(thrustForce, MoveMode.POSITION).setTopSpeed(thrustForce));
+//        addComponent(new KeyMovement(speed, MoveMode.POSITION).setTopSpeed(speed));
+        addComponent(new KeyMovement(speed, MoveMode.POSITION) {
+            @Override
+            public Vec2 getUserInput() {
+                return super.getUserInput().unit(); // Normalize so don't move faster diagonally
+            }
+        });
         addComponent(new KeepInScene(KeepInScene.Mode.STOP));
-//        addComponent(new ShapeSprite(Colors.DARK_GRAY, false));
     }
 
     private void createPlayerAvatar() {

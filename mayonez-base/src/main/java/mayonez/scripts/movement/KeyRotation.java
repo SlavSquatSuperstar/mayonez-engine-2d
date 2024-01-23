@@ -1,7 +1,6 @@
 package mayonez.scripts.movement;
 
 import mayonez.input.*;
-import mayonez.math.*;
 
 /**
  * Allows objects to be rotated with keyboard controls.
@@ -10,6 +9,8 @@ import mayonez.math.*;
  */
 public class KeyRotation extends MovementScript {
 
+    private final float angSpeed;
+    private final MoveMode mode;
     private final InputAxis axis;
 
     /**
@@ -20,37 +21,19 @@ public class KeyRotation extends MovementScript {
      * @param axis     the input axis
      */
     public KeyRotation(float angSpeed, MoveMode mode, InputAxis axis) {
-        super(angSpeed, mode);
+        this.angSpeed = angSpeed;
+        this.mode = mode;
         this.axis = axis;
     }
 
     @Override
     public void update(float dt) {
-        var input = -getUserInput().x * speed;
-
-        rotateGameObject(dt, input);
-        clampSpeed();
-    }
-
-    private void rotateGameObject(float dt, float input) {
-        switch (mode) {
-            case POSITION -> transform.rotate(input * dt);
-            case VELOCITY -> rb.addAngularVelocity(input * dt);
-            case IMPULSE -> rb.applyAngularImpulse(input);
-            case FORCE -> rb.applyTorque(input);
-        }
-    }
-
-    private void clampSpeed() {
-        if (rb == null) return;
-        if ((topSpeed > 0) && (rb.getAngSpeed() > topSpeed)) {
-            rb.setAngVelocity(topSpeed * Math.signum(rb.getAngVelocity()));
-        }
+        rotateObject(-getUserInputValue() * angSpeed, mode, dt);
     }
 
     @Override
-    public Vec2 getUserInput() {
-        return new Vec2(KeyInput.getAxis(axis), 0);
+    public float getUserInputValue() {
+        return KeyInput.getAxis(axis);
     }
 
 }

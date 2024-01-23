@@ -2,6 +2,7 @@ package slavsquatsuperstar.demos.spacegame.objects.ships;
 
 import mayonez.*;
 import mayonez.input.*;
+import mayonez.math.*;
 import mayonez.physics.dynamics.*;
 import mayonez.scripts.movement.*;
 import slavsquatsuperstar.demos.spacegame.SpaceGameConfig;
@@ -38,8 +39,13 @@ public class PlayerShip extends Spaceship {
 
         // Movement
         addComponent(new Rigidbody(1f));
-        addComponent(new KeyMovement(10f, MoveMode.FORCE, HORIZONTAL_MOVE_AXIS, VERTICAL_MOVE_AXIS)
-                .setObjectAligned(true));
+        addComponent(new KeyMovement(10f, MoveMode.FORCE, HORIZONTAL_MOVE_AXIS, VERTICAL_MOVE_AXIS) {
+            @Override
+            public Vec2 getUserInput() {
+                return super.getUserInput()
+                        .rotate(transform.getRotation()); // Align to object space
+            }
+        });
         addComponent(new KeyRotation(180f, MoveMode.VELOCITY, TURN_AXIS));
 //        addComponent(new ClickToMove(10f, MoveMode.VELOCITY, true));
 
@@ -51,6 +57,7 @@ public class PlayerShip extends Spaceship {
 
         // Destruction
         addDestructionComponents(
+                // TODO move to spawn manager?
                 () -> SpaceGameEvents.getPlayerEventSystem()
                         .broadcast(new PlayerSpawnedEvent(PlayerShip.this)),
                 () -> SpaceGameEvents.getPlayerEventSystem()

@@ -17,8 +17,7 @@ public class PlayerThrustController extends ThrustController {
     private static final Key BRAKE_KEY = SpaceGameConfig.getBreakKey();
 
     // Movement Scripts
-    private KeyMovement keyMovement;
-    private KeyRotation keyRotation;
+    private MovementScript keyMovement, keyRotation;
 
     public PlayerThrustController(List<Thruster> thrusters) {
         super(thrusters);
@@ -39,7 +38,7 @@ public class PlayerThrustController extends ThrustController {
 
     @Override
     protected float getTurnInputDirection() {
-        if (keyRotation != null) return keyRotation.getUserInput().x;
+        if (keyRotation != null) return keyRotation.getUserInputValue();
         else return 0f;
     }
 
@@ -47,6 +46,5 @@ public class PlayerThrustController extends ThrustController {
     protected boolean isBraking() {
         return KeyInput.keyDown(BRAKE_KEY);
     }
-
 
 }
