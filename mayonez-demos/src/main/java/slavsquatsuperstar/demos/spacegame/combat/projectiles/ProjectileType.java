@@ -16,9 +16,11 @@ import slavsquatsuperstar.demos.spacegame.objects.SpaceGameZIndex;
  */
 public class ProjectileType {
 
+    public static final int NUM_PROJECTILES = 4;
+
     public static final SpriteSheet PROJECTILE_SPRITES = Sprites.createSpriteSheet(
             "assets/spacegame/textures/projectiles.png",
-            16, 16, 3, 0);
+            16, 16, NUM_PROJECTILES, 0);
 
     private final String name;
     private final float damage, speed, lifetime, fireCooldown;
@@ -42,16 +44,14 @@ public class ProjectileType {
 
     // Getters
 
+    // TODO make weapon class
     public float getFireCooldown() {
         return fireCooldown;
     }
 
-    public int getSpriteIndex() {
-        return spriteIndex;
-    }
-
     // Factory Method
 
+    // TODO add spawn offset
     public GameObject createProjectileObject(GameObject source) {
         var sourceXf = source.transform;
         var projXf = new Transform(
@@ -64,14 +64,10 @@ public class ProjectileType {
             protected void init() {
                 setLayer(getScene().getLayer(SpaceGameLayer.PROJECTILES));
                 addComponent(new Projectile(source, damage, speed, lifetime));
-                addComponent(new BallCollider(colliderSize).setTrigger(true));
                 addComponent(PROJECTILE_SPRITES.getSprite(spriteIndex));
 
-                // Set initial velocity
-                Rigidbody rb;
-                addComponent(rb = new Rigidbody(0.01f));
-                var sourceRb = source.getComponent(Rigidbody.class);
-                if (sourceRb != null) rb.setVelocity(sourceRb.getVelocity());
+                addComponent(new BallCollider(colliderSize).setTrigger(true));
+                addComponent(new Rigidbody(0.001f));
             }
         };
     }

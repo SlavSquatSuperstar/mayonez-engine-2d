@@ -1,3 +1,5 @@
 name,damage,speed,lifetime,fireCooldown,scale,colliderSizeX,colliderSizeY,spriteIndex
-Laser,1,30,5,0.2,0.4,0.375,1,0
-Plasma,2,24,5,0.4,0.3,1,1,1
+Laser,1,30,6,0.2,0.4,0.375,1,0
+Plasma,2,24,5,0.4,0.3,0.75,1,1
+Ion,2,24,5,0.4,0.3,1,1,2
+Autocannon,0.5,40,4,0.1,0.2,0.375,1,3

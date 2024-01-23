@@ -1,8 +1,8 @@
 package slavsquatsuperstar.demos.spacegame.ui;
 
 import mayonez.*;
-import mayonez.graphics.*;
 import mayonez.math.*;
+import slavsquatsuperstar.demos.spacegame.combat.projectiles.ProjectileType;
 
 /**
  * Displays the player's GUI elements.
@@ -28,8 +28,7 @@ public class PlayerUI extends GameObject {
         // Weapon Select
         var wsPosition = new Vec2(32, 32);
         var wsSize = new Vec2(32, 32);
-        addComponent(new WeaponSelectPanel(wsPosition, wsSize,
-                Colors.RED, Colors.SKY_BLUE));
+        addComponent(new WeaponSelectPanel(wsPosition, wsSize, ProjectileType.NUM_PROJECTILES));
 
         addComponent(playerUI);
     }

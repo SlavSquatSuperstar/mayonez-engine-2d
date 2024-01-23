@@ -1,7 +1,6 @@
 package slavsquatsuperstar.demos.spacegame.ui;
 
 import mayonez.*;
-import mayonez.graphics.*;
 import mayonez.graphics.textures.*;
 import mayonez.graphics.ui.*;
 import mayonez.math.*;
@@ -26,15 +25,13 @@ public class WeaponSelectPanel extends Script {
 
     // Fields
     private final Vec2 position, size;
-    private final Color[] boxColors;
     private final UIBox[] backgrounds;
     private UIBox border;
 
-    public WeaponSelectPanel(Vec2 position, Vec2 size, Color... boxColors) {
+    public WeaponSelectPanel(Vec2 position, Vec2 size, int numWeapons) {
         this.position = position;
         this.size = size;
-        this.boxColors = boxColors;
-        backgrounds = new UIBox[boxColors.length];
+        backgrounds = new UIBox[numWeapons];
     }
 
     @Override
@@ -45,7 +42,7 @@ public class WeaponSelectPanel extends Script {
 
         var boxSpacing = new Vec2(50, 0);
 
-        for (int i = 0; i < boxColors.length; i++) {
+        for (int i = 0; i < backgrounds.length; i++) {
             var currPos = position.add(boxSpacing.mul(i));
             backgrounds[i] = new UIBox(currPos, size.add(new Vec2(BACKGROUND_MARGIN)), BACKGROUND_TEXTURE);
             gameObject.addComponent(backgrounds[i]);
@@ -75,7 +72,7 @@ public class WeaponSelectPanel extends Script {
      * @param index the index to select
      */
     public void setSelection(int index) {
-        if (!IntMath.inRange(index, 0, backgrounds.length)) return;
+        if (!IntMath.inRange(index, 0, backgrounds.length - 1)) return;
         // Move border
         border.setPosition(backgrounds[index].getPosition());
     }

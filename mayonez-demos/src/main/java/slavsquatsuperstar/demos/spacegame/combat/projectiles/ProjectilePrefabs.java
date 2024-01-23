@@ -27,7 +27,7 @@ public final class ProjectilePrefabs {
      * @return the count
      */
     public static int count() {
-        return PROJECTILE_TYPES.size();
+        return Math.min(ProjectileType.NUM_PROJECTILES, PROJECTILE_TYPES.size());
     }
 
     /**

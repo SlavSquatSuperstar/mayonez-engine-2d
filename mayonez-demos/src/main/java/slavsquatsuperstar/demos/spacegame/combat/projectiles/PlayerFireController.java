@@ -2,8 +2,6 @@ package slavsquatsuperstar.demos.spacegame.combat.projectiles;
 
 import mayonez.*;
 import mayonez.input.*;
-import slavsquatsuperstar.demos.spacegame.combat.projectiles.FireProjectile;
-import slavsquatsuperstar.demos.spacegame.combat.projectiles.ProjectilePrefabs;
 
 /**
  * Allows the player's ship to fire different weapons.
@@ -28,7 +26,6 @@ public class PlayerFireController extends FireProjectile {
     @Override
     public void update(float dt) {
         super.update(dt);
-
         for (var projIdx = 0; projIdx < ProjectilePrefabs.count(); projIdx++) {
             if (KeyInput.keyPressed(String.valueOf(projIdx + 1))) {
                 setWeaponChoice(projIdx);
