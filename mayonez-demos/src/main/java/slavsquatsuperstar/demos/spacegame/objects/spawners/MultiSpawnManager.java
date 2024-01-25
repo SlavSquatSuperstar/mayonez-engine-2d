@@ -31,7 +31,7 @@ public abstract class MultiSpawnManager extends SpawnManager {
     }
 
     @Override
-    public void update(float dt) {
+    protected void update(float dt) {
         // Keep spawning if destroyed and has room
         if (spawnTimer.isReady() && !amountSpawned.isAtMax()) {
             spawnObject();

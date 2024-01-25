@@ -31,7 +31,7 @@ public class PlayerSpawnManager extends SpawnManager {
     }
 
     @Override
-    public void update(float dt) {
+    protected void update(float dt) {
         if (!playerSpawned && spawnTimer.isReady()) spawnObject();
 
         // Send respawn update

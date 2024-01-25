@@ -20,7 +20,7 @@ public class Damageable extends Script {
     }
 
     @Override
-    public void update(float dt) {
+    protected void update(float dt) {
         if (healthPoints.isAtMin()) onHealthDepleted();
     }
 

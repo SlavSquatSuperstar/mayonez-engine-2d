@@ -20,13 +20,13 @@ public class MarioController extends Script {
     private Rigidbody rb;
 
     @Override
-    public void start() {
+    protected void start() {
         rb = getRigidbody();
         onGround = false;
     }
 
     @Override
-    public void update(float dt) {
+    protected void update(float dt) {
         // Move
         var xInput = KeyInput.getAxis("horizontal");
         transform.move(new Vec2(xInput * MOVE_SPEED * dt, 0));

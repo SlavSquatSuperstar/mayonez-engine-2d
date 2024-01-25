@@ -27,13 +27,13 @@ public class PlaceBlock extends Script {
     }
 
     @Override
-    public void start() {
+    protected void start() {
         cursor = new PlaceBlockCursor("Place Block Cursor");
         getScene().addObject(cursor);
     }
 
     @Override
-    public void update(float dt) {
+    protected void update(float dt) {
         // add 0.5 to x/y to center the block
         var mousePos = MouseInput.getPosition().add(new Vec2(0.5f)).floor();
         cursor.setPosition(mousePos);

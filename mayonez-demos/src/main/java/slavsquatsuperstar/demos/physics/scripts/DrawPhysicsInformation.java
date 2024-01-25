@@ -16,13 +16,13 @@ public class DrawPhysicsInformation extends Script {
     private ShapeSprite sprite;
 
     @Override
-    public void start() {
+    protected void start() {
         collider = getCollider();
         sprite = gameObject.getComponent(ShapeSprite.class);
     }
 
     @Override
-    public void debugRender() {
+    protected void debugRender() {
         if (collider != null && sprite != null) {
             drawDebugInformation(collider, sprite.getColor());
         }

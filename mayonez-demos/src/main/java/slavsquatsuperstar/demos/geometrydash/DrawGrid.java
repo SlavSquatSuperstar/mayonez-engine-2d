@@ -10,7 +10,7 @@ import mayonez.math.*;
  *
  * @author SlavSquatSuperstar
  */
-public class Grid extends Component {
+public class DrawGrid extends Component {
 
     private static final float GRID_LINE_WIDTH = 1f;
     private static final Color GRID_COLOR = new Color(77, 77, 77, 127);
@@ -18,7 +18,7 @@ public class Grid extends Component {
             .setStrokeSize(GRID_LINE_WIDTH);
 
     @Override
-    public void debugRender() {
+    protected void debugRender() {
         var debugDraw = getScene().getDebugDraw();
 
         var camPos = getScene().getCamera().getPosition();
@@ -44,7 +44,7 @@ public class Grid extends Component {
             @Override
             protected void init() {
                 setZIndex(ZIndex.GRID);
-                addComponent(new Grid());
+                addComponent(new DrawGrid());
             }
         };
     }

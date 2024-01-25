@@ -43,7 +43,7 @@ public class ShipDestruction extends Script {
     }
 
     @Override
-    public void start() {
+    protected void start() {
         sequenceStarted = false;
         explosion = null;
 
@@ -54,12 +54,12 @@ public class ShipDestruction extends Script {
     }
 
     @Override
-    public void update(float dt) {
+    protected void update(float dt) {
         if (destructionTimer.isReady()) gameObject.destroy();
     }
 
     @Override
-    public void debugRender() {
+    protected void debugRender() {
         if (explosion != null) {
             // Have the explosion follow the ship until it is destroyed
             explosion.transform.setPosition(transform.getPosition());

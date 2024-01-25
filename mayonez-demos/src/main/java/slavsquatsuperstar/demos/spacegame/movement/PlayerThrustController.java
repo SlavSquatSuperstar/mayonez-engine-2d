@@ -23,7 +23,7 @@ public class PlayerThrustController extends ThrustController {
     }
 
     @Override
-    public void start() {
+    protected void start() {
         super.start();
         playerMovement = gameObject.getComponent(MovementScript.class);
     }

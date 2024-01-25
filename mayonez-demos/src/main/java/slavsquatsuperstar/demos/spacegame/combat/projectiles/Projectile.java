@@ -27,7 +27,7 @@ public class Projectile extends Script {
     }
 
     @Override
-    public void start() {
+    protected void start() {
         var rb = getRigidbody();
         if (getCollider() == null || rb == null) {
             this.setEnabled(false);

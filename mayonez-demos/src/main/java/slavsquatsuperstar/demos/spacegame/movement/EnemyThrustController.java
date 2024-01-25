@@ -18,7 +18,7 @@ public class EnemyThrustController extends ThrustController {
     }
 
     @Override
-    public void start() {
+    protected void start() {
         super.start();
         brakesActive = false;
     }

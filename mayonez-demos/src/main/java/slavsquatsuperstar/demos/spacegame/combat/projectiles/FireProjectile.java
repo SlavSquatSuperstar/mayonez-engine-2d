@@ -24,7 +24,7 @@ public abstract class FireProjectile extends Script {
     }
 
     @Override
-    public void update(float dt) {
+    protected void update(float dt) {
         if (isReloaded() && shouldFire()) {
             getScene().addObject(spawnProjectile());
             fireTimer.reset();

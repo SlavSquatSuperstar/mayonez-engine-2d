@@ -174,4 +174,5 @@ public abstract class Script extends Component {
                 gameObject == null ? "<No GameObject>" : gameObject.getNameAndID()
         );
     }
+
 }

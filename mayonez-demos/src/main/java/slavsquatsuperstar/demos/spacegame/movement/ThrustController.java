@@ -28,13 +28,13 @@ public abstract class ThrustController extends Script {
     }
 
     @Override
-    public void start() {
+    protected void start() {
         rb = getRigidbody();
         if (rb == null) setEnabled(false);
     }
 
     @Override
-    public void update(float dt) {
+    protected void update(float dt) {
         // Get user input
         var moveInputDir = getMoveDirection()
                 .rotate(-transform.getRotation()); // Orient with ship

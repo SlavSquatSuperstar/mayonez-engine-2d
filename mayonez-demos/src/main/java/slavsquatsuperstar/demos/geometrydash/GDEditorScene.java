@@ -45,7 +45,13 @@ public class GDEditorScene extends Scene {
         // TODO still getting stuck on corners
         addObject(new GDPlayer("Player", new Vec2(0, 0)));
 
-        addObject(Grid.createGridObject());
+        addObject(new GameObject("Grid") {
+            @Override
+            protected void init() {
+                setZIndex(ZIndex.GRID);
+                addComponent(new DrawGrid());
+            }
+        });
 
         addObject(new UICanvas("Canvas", new Transform(new Vec2(-3f, -5f))));
     }

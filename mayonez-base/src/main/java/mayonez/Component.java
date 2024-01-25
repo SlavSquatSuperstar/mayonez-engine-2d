@@ -89,6 +89,8 @@ public abstract class Component {
     protected void debugRender() {
     }
 
+    // Scene Methods
+
     /**
      * Destroy this component, disabling it and removing it from its parent {@link GameObject}.
      * The fields {@link #gameObject} and {@link #transform} will be set to null.
@@ -99,8 +101,6 @@ public abstract class Component {
         gameObject = null;
         transform = null;
     }
-
-    // Getters and Setters
 
     /**
      * Whether this component should be updated.
@@ -123,6 +123,8 @@ public abstract class Component {
         this.enabled = enabled;
         return (T) this;
     }
+
+    // Getters and Setters
 
     /**
      * Returns the parent {@link GameObject} this Component is attached to.
@@ -164,6 +166,8 @@ public abstract class Component {
     int getUpdateOrder() {
         return updateOrder.order;
     }
+
+    // Object Overrides
 
     @Override
     public boolean equals(Object obj) {

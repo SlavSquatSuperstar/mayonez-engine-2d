@@ -27,7 +27,7 @@ public class EnemyFireController extends FireProjectile {
     }
 
     @Override
-    public void start() {
+    protected void start() {
         state = FiringState.DECIDING;
     }
 

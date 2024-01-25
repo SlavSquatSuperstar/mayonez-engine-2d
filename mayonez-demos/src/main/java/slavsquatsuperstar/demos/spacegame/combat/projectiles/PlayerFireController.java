@@ -19,12 +19,12 @@ public class PlayerFireController extends FireProjectile {
     }
 
     @Override
-    public void start() {
+    protected void start() {
         setWeaponChoice(0);
     }
 
     @Override
-    public void update(float dt) {
+    protected void update(float dt) {
         super.update(dt);
         for (var projIdx = 0; projIdx < ProjectilePrefabs.count(); projIdx++) {
             if (KeyInput.keyPressed(String.valueOf(projIdx + 1))) {
