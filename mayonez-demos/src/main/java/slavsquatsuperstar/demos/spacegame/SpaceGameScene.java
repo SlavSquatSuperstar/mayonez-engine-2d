@@ -8,7 +8,7 @@ import mayonez.math.*;
 import mayonez.math.shapes.*;
 import slavsquatsuperstar.demos.spacegame.objects.BackgroundObject;
 import slavsquatsuperstar.demos.spacegame.objects.SpaceGameZIndex;
-import slavsquatsuperstar.demos.spacegame.objects.SpaceObjectSpawner;
+import slavsquatsuperstar.demos.spacegame.objects.spawners.SpaceObjectSpawner;
 import slavsquatsuperstar.demos.spacegame.ui.PlayerUI;
 
 import java.util.*;

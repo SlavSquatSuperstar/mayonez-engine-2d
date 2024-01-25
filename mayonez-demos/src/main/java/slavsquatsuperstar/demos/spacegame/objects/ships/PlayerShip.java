@@ -4,7 +4,6 @@ import mayonez.*;
 import mayonez.input.*;
 import mayonez.physics.dynamics.*;
 import mayonez.scripts.movement.*;
-import slavsquatsuperstar.demos.spacegame.SpaceGameConfig;
 import slavsquatsuperstar.demos.spacegame.combat.Damageable;
 import slavsquatsuperstar.demos.spacegame.combat.projectiles.PlayerFireController;
 import slavsquatsuperstar.demos.spacegame.movement.PlayerKeyMovement;
@@ -20,9 +19,6 @@ import slavsquatsuperstar.demos.spacegame.movement.ThrusterPrefabs;
 public class PlayerShip extends Spaceship {
 
     private static final float PLAYER_HEALTH = 8f;
-    private static final InputAxis VERTICAL_MOVE_AXIS = SpaceGameConfig.getVerticalMoveAxis();
-    private static final InputAxis HORIZONTAL_MOVE_AXIS = SpaceGameConfig.getHorizontalMoveAxis();
-    private static final InputAxis TURN_AXIS = SpaceGameConfig.getTurnAxis();
 
     public PlayerShip(String name, String spriteName) {
         super(name, spriteName, PLAYER_HEALTH);
@@ -36,8 +32,7 @@ public class PlayerShip extends Spaceship {
         // Movement
         addComponent(new Rigidbody(1f));
         addComponent(new PlayerKeyMovement(
-                10f, MoveMode.FORCE, HORIZONTAL_MOVE_AXIS, VERTICAL_MOVE_AXIS,
-                180f, MoveMode.VELOCITY, TURN_AXIS
+                10f, MoveMode.FORCE, 180f, MoveMode.VELOCITY
         ));
 //        addComponent(new ClickToMove(10f, MoveMode.VELOCITY, true));
 

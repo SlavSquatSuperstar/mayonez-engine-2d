@@ -7,7 +7,6 @@ import mayonez.physics.colliders.*;
 import mayonez.scripts.*;
 import slavsquatsuperstar.demos.spacegame.combat.CollisionDamage;
 import slavsquatsuperstar.demos.spacegame.combat.Damageable;
-import slavsquatsuperstar.demos.spacegame.combat.ShipDestruction;
 import slavsquatsuperstar.demos.spacegame.objects.SpaceGameLayer;
 import slavsquatsuperstar.demos.spacegame.objects.SpaceGameZIndex;
 

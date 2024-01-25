@@ -1,4 +1,4 @@
-package slavsquatsuperstar.demos.spacegame.objects;
+package slavsquatsuperstar.demos.spacegame.objects.spawners;
 
 import mayonez.*;
 import slavsquatsuperstar.demos.spacegame.objects.asteroids.Asteroid;
@@ -40,7 +40,6 @@ public class SpaceObjectSpawner extends GameObject {
                         addComponent(new Script() {
                             @Override
                             public void onDestroy() {
-                                System.out.println("Enemy destroyed");
                                 markObjectDestroyed(gameObject);
                             }
                         });
@@ -60,7 +59,6 @@ public class SpaceObjectSpawner extends GameObject {
                         addComponent(new Script() {
                             @Override
                             public void onDestroy() {
-                                System.out.println("Asteroid destroyed");
                                 markObjectDestroyed(gameObject);
                             }
                         });

@@ -3,6 +3,7 @@ package slavsquatsuperstar.demos.spacegame.movement;
 import mayonez.input.*;
 import mayonez.math.*;
 import mayonez.scripts.movement.*;
+import slavsquatsuperstar.demos.spacegame.SpaceGameConfig;
 
 /**
  * Controls the player spaceship's movement using the keyboard.
@@ -11,22 +12,26 @@ import mayonez.scripts.movement.*;
  */
 public class PlayerKeyMovement extends MovementScript {
 
+    private static final InputAxis HORIZONTAL_MOVE_AXIS = SpaceGameConfig.getHorizontalMoveAxis();
+    private static final InputAxis VERTICAL_MOVE_AXIS = SpaceGameConfig.getVerticalMoveAxis();
+    private static final InputAxis TURN_AXIS = SpaceGameConfig.getTurnAxis();
+
     private final float moveSpeed, turnSpeed;
     private final MoveMode moveMove, turnMode;
     private final InputAxis xAxis, yAxis, turnAxis;
 
     public PlayerKeyMovement(
-            float moveSpeed, MoveMode moveMove, InputAxis xAxis, InputAxis yAxis,
-            float turnSpeed, MoveMode turnMode, InputAxis turnAxis
+            float moveSpeed, MoveMode moveMove,
+            float turnSpeed, MoveMode turnMode
     ) {
         this.moveSpeed = moveSpeed;
         this.moveMove = moveMove;
-        this.xAxis = xAxis;
-        this.yAxis = yAxis;
+        xAxis = HORIZONTAL_MOVE_AXIS;
+        yAxis = VERTICAL_MOVE_AXIS;
 
         this.turnSpeed = turnSpeed;
         this.turnMode = turnMode;
-        this.turnAxis = turnAxis;
+        turnAxis = TURN_AXIS;
     }
 
     @Override

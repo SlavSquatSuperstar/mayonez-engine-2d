@@ -1,4 +1,4 @@
-package slavsquatsuperstar.demos.spacegame.objects;
+package slavsquatsuperstar.demos.spacegame.objects.spawners;
 
 import mayonez.*;
 import mayonez.scripts.*;
@@ -75,7 +75,6 @@ public class PlayerSpawnManager extends SpawnManager {
 
     @Override
     public void markObjectDestroyed(GameObject object) {
-        System.out.println("Player destroyed");
         SpaceGameEvents.getPlayerEventSystem()
                 .broadcast(new PlayerDestroyedEvent(object));
 

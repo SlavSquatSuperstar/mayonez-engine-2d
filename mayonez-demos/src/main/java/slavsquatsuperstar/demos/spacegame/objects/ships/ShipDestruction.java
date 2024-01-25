@@ -1,10 +1,11 @@
-package slavsquatsuperstar.demos.spacegame.combat;
+package slavsquatsuperstar.demos.spacegame.objects.ships;
 
 import mayonez.*;
 import mayonez.math.Random;
 import mayonez.scripts.Timer;
 import mayonez.scripts.*;
 import mayonez.scripts.movement.*;
+import slavsquatsuperstar.demos.spacegame.combat.ExplosionPrefabs;
 import slavsquatsuperstar.demos.spacegame.combat.projectiles.FireProjectile;
 import slavsquatsuperstar.demos.spacegame.movement.ThrustController;
 
