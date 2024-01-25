@@ -7,16 +7,19 @@ import mayonez.physics.dynamics.*;
 import java.util.*;
 
 /**
- * Controls the visibility of thruster exhaust plumes based on a spaceship's acceleration.
+ * Controls the visibility of thruster exhaust plumes based on a spaceship's movement.
  *
  * @author SlavSquatSuperstar
  */
 public abstract class ThrustController extends Script {
 
-    private final static float BRAKE_THRESHOLD_SPEED = 0.1f; // Don't fire when moving very slow
+    // Constants
+    private final static float BRAKE_THRESHOLD_SPEED = 0.1f; // Don't burn when moving very slow
+    private final static float TURN_BRAKE_THRESHOLD_SPEED = 5f; // Don't burn when turning very slow
     private final static float MOVE_DRAG = 0f;
     private final static float BRAKE_DRAG = 0.2f;
 
+    // Movement Fields
     private final List<Thruster> thrusters;
     protected Rigidbody rb;
 
@@ -33,8 +36,9 @@ public abstract class ThrustController extends Script {
     @Override
     public void update(float dt) {
         // Get user input
-        var moveInputDir = getMoveInputDirection();
-        var turnInputDir = getTurnInputDirection();
+        var moveInputDir = getMoveDirection()
+                .rotate(-transform.getRotation()); // Orient with ship
+        var turnInputDir = getTurnDirection();
 
         // Calculate brake direction and slow motion
         Vec2 brakeDir;
@@ -43,7 +47,7 @@ public abstract class ThrustController extends Script {
         if (isBraking()) {
             rb.setDrag(BRAKE_DRAG).setAngDrag(BRAKE_DRAG);
             brakeDir = rb.getVelocity().mul(-1f)
-                    .rotate(-transform.getRotation());
+                    .rotate(-transform.getRotation()); // Orient with ship
             angBrakeDir = rb.getAngVelocity(); // Using right-handed coords here, so choose positive
         } else {
             rb.setDrag(MOVE_DRAG).setAngDrag(MOVE_DRAG);
@@ -51,14 +55,14 @@ public abstract class ThrustController extends Script {
             angBrakeDir = 0f;
         }
 
-        // Fire thrusters and move
+        // Fire thrusters
         activateMoveThrusters(moveInputDir, brakeDir);
         activateTurnThrusters(turnInputDir, angBrakeDir);
     }
 
     // Movement Methods
 
-    /**\
+    /**
      * Fire this spaceship's thrusters and move or brake in the specified direction.
      *
      * @param moveDir  the move direction, relative to the spaceship
@@ -80,16 +84,18 @@ public abstract class ThrustController extends Script {
      */
     protected void activateTurnThrusters(float turnDir, float angBrakeDir) {
         for (var thr : thrusters) {
-            var shouldBrake = thr.turnDir.faces(angBrakeDir) && rb.getAngSpeed() > BRAKE_THRESHOLD_SPEED;
+            var shouldBrake = thr.turnDir.faces(angBrakeDir) && rb.getAngSpeed() > TURN_BRAKE_THRESHOLD_SPEED;
             thr.setTurnEnabled(thr.turnDir.faces(turnDir) || shouldBrake);
         }
     }
 
+    // Input Methods
+
     protected abstract boolean isBraking();
 
-    protected abstract Vec2 getMoveInputDirection();
+    protected abstract Vec2 getMoveDirection();
 
-    protected abstract float getTurnInputDirection();
+    protected abstract float getTurnDirection();
 
     // Callback Methods
 

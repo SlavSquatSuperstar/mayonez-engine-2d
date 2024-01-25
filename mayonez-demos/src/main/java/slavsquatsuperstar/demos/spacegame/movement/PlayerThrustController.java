@@ -16,8 +16,7 @@ public class PlayerThrustController extends ThrustController {
 
     private static final Key BRAKE_KEY = SpaceGameConfig.getBreakKey();
 
-    // Movement Scripts
-    private MovementScript keyMovement, keyRotation;
+    private MovementScript playerMovement;
 
     public PlayerThrustController(List<Thruster> thrusters) {
         super(thrusters);
@@ -26,19 +25,18 @@ public class PlayerThrustController extends ThrustController {
     @Override
     public void start() {
         super.start();
-        keyMovement = gameObject.getComponent(KeyMovement.class);
-        keyRotation = gameObject.getComponent(KeyRotation.class);
+        playerMovement = gameObject.getComponent(MovementScript.class);
     }
 
     @Override
-    protected Vec2 getMoveInputDirection() {
-        if (keyMovement != null) return keyMovement.getUserInput();
+    protected Vec2 getMoveDirection() {
+        if (playerMovement != null) return playerMovement.getUserInput();
         else return new Vec2();
     }
 
     @Override
-    protected float getTurnInputDirection() {
-        if (keyRotation != null) return keyRotation.getUserInputValue();
+    protected float getTurnDirection() {
+        if (playerMovement != null) return playerMovement.getUserInputValue();
         else return 0f;
     }
 

@@ -48,16 +48,13 @@ public class ShipDestruction extends Script {
 
         shipSystems.add(gameObject.getComponent(FireProjectile.class));
         shipSystems.add(gameObject.getComponent(ThrustController.class));
-        shipSystems.add(gameObject.getComponent(KeyMovement.class));
-        shipSystems.add(gameObject.getComponent(KeyRotation.class));
+        shipSystems.add(gameObject.getComponent(MovementScript.class));
         shipSystems.add(gameObject.getComponent(KeepInScene.class));
     }
 
     @Override
     public void update(float dt) {
-        if (destructionTimer.isReady()) {
-            gameObject.destroy();
-        }
+        if (destructionTimer.isReady()) gameObject.destroy();
     }
 
     @Override

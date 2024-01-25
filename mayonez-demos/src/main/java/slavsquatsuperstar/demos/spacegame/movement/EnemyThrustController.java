@@ -24,13 +24,13 @@ public class EnemyThrustController extends ThrustController {
     }
 
     @Override
-    protected Vec2 getMoveInputDirection() {
+    protected Vec2 getMoveDirection() {
         if (isBraking()) return new Vec2();
         else return rb.getVelocity().rotate(-transform.getRotation());
     }
 
     @Override
-    protected float getTurnInputDirection() {
+    protected float getTurnDirection() {
         if (isBraking()) return 0;
         else return -rb.getAngVelocity();
     }

@@ -5,7 +5,7 @@ import mayonez.math.*;
 import mayonez.physics.dynamics.*;
 
 /**
- * A basic class with methods for moving game objects using input devices.
+ * Provides basic methods for moving game objects using input devices.
  *
  * @author SlavSquatSuperstar
  */
