@@ -4,7 +4,7 @@ import mayonez.*;
 import mayonez.graphics.textures.*;
 import mayonez.graphics.ui.*;
 import mayonez.math.*;
-import slavsquatsuperstar.demos.spacegame.combat.projectiles.ProjectileType;
+import slavsquatsuperstar.demos.spacegame.combat.projectiles.ProjectilePrefabs;
 import slavsquatsuperstar.demos.spacegame.objects.SpaceGameZIndex;
 
 /**
@@ -47,7 +47,7 @@ public class WeaponSelectPanel extends Script {
             backgrounds[i] = new UIBox(currPos, size.add(new Vec2(BACKGROUND_MARGIN)), BACKGROUND_TEXTURE);
             gameObject.addComponent(backgrounds[i]);
 
-            var icon = new UIBox(currPos, size, ProjectileType.PROJECTILE_SPRITES.getTexture(i)) {
+            var icon = new UIBox(currPos, size, ProjectilePrefabs.PROJECTILE_SPRITES.getTexture(i)) {
                 @Override
                 public int getZIndex() {
                     return super.getZIndex() + 1; // display above background

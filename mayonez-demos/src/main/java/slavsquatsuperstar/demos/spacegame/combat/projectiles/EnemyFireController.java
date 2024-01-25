@@ -3,8 +3,6 @@ package slavsquatsuperstar.demos.spacegame.combat.projectiles;
 import mayonez.*;
 import mayonez.math.*;
 import mayonez.scripts.*;
-import slavsquatsuperstar.demos.spacegame.combat.projectiles.FireProjectile;
-import slavsquatsuperstar.demos.spacegame.combat.projectiles.ProjectilePrefabs;
 
 /**
  * Allows enemy ships to fire different weapons.
@@ -72,7 +70,7 @@ public class EnemyFireController extends FireProjectile {
         weaponChoice = Random.randomInt(0, ProjectilePrefabs.count() - 1);
         var type = ProjectilePrefabs.getProjectileType(weaponChoice);
         if (type != null) {
-            setCooldown(type.getFireCooldown()); // Update fire cooldown
+            setCooldown(type.fireCooldown()); // Update fire cooldown
             shotsLeft = Random.randomInt(1, 10);
         }
     }

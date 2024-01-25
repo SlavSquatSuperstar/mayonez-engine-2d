@@ -8,8 +8,8 @@ import mayonez.input.*;
  *
  * @author SlavSquatSuperstar
  */
-// TODO weapon spread
 // TODO click to target
+// TODO save between deaths
 public class PlayerFireController extends FireProjectile {
 
     private int weaponChoice;
@@ -52,7 +52,7 @@ public class PlayerFireController extends FireProjectile {
         if (type == null) return;
 
         weaponChoice = i;
-        setCooldown(type.getFireCooldown());
+        setCooldown(type.fireCooldown());
     }
 
 }
