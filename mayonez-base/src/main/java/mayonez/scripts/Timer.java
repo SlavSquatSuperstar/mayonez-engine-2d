@@ -38,12 +38,12 @@ public class Timer extends Script {
     // Game Loop methods
 
     @Override
-    public void start() {
+    protected void start() {
         started = true;
     }
 
     @Override
-    public void update(float dt) {
+    protected void update(float dt) {
         if (started) value -= dt;
     }
 

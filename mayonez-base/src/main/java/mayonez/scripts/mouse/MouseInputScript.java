@@ -40,12 +40,12 @@ public abstract class MouseInputScript extends Script {
     }
 
     @Override
-    public void start() {
+    protected void start() {
         collider = getCollider();
     }
 
     @Override
-    public void update(float dt) {
+    protected void update(float dt) {
         if (!mouseDown) {
             checkMouseDown();
         } else {

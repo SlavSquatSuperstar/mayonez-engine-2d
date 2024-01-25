@@ -42,13 +42,13 @@ public class Animator extends Script {
     }
 
     @Override
-    public void start() {
+    protected void start() {
         animTimer.reset();
         setSpriteTexture(0);
     }
 
     @Override
-    public void update(float dt) {
+    protected void update(float dt) {
         if (animTimer.isEnabled() && animTimer.isReady()) {
             // update frame count
             if (currentFrame == numFrames - 1) {

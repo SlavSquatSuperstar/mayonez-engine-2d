@@ -27,7 +27,7 @@ public class KeyRotation extends MovementScript {
     }
 
     @Override
-    public void update(float dt) {
+    protected void update(float dt) {
         rotateObject(-getUserInputValue() * angSpeed, mode, dt);
     }
 

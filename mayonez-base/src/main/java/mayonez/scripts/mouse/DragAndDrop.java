@@ -20,14 +20,14 @@ public class DragAndDrop extends MouseInputScript {
     }
 
     @Override
-    public void start() {
+    protected void start() {
         super.start();
         lastMouse = new Vec2();
         rb = getRigidbody();
     }
 
     @Override
-    public void update(float dt) {
+    protected void update(float dt) {
         super.update(dt);
         lastMouse = getMousePos().add(getMouseDisp());
     }

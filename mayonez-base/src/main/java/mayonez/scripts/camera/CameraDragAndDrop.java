@@ -21,7 +21,7 @@ public class CameraDragAndDrop extends DragAndDrop {
     }
 
     @Override
-    public void start() {
+    protected void start() {
         super.start();
         camera = getScene().getCamera();
         if (camera == null) setEnabled(false);

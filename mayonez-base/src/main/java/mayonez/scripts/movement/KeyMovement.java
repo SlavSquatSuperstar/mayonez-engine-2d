@@ -41,7 +41,7 @@ public class KeyMovement extends MovementScript {
     }
 
     @Override
-    public void update(float dt) {
+    protected void update(float dt) {
         moveObject(getUserInput().mul(speed), mode, dt);
     }
 

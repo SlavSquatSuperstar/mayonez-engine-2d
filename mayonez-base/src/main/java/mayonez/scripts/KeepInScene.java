@@ -45,7 +45,7 @@ public class KeepInScene extends Script {
     }
 
     @Override
-    public void start() {
+    protected void start() {
         setMoveBounds();
 
         objectCollider = getCollider();
@@ -67,7 +67,7 @@ public class KeepInScene extends Script {
     }
 
     @Override
-    public void update(float dt) {
+    protected void update(float dt) {
         objectBounds = getObjectBounds();
 
         // Edge Checking for x

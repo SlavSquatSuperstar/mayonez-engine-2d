@@ -42,13 +42,13 @@ public abstract class Camera extends Component implements Viewport {
     }
 
     @Override
-    public void start() {
+    protected void start() {
         resetZoom();
         resetRotation();
     }
 
     @Override
-    public void update(float dt) {
+    protected void update(float dt) {
         // Follow subject
         // TODO smooth follow
         if (getSubject() != null && mode == CameraMode.FOLLOW) {

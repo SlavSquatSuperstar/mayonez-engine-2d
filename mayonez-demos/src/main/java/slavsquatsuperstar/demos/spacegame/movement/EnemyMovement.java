@@ -1,10 +1,13 @@
 package slavsquatsuperstar.demos.spacegame.movement;
 
 import mayonez.*;
+import mayonez.annotations.*;
 import mayonez.math.*;
 import mayonez.physics.dynamics.*;
+import mayonez.scripts.movement.*;
 
-public class EnemyMovement extends Script {
+@ExperimentalFeature
+public class EnemyMovement extends MovementScript {
 
     private final float speed;
     private Rigidbody rb;

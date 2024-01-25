@@ -34,14 +34,14 @@ public class ShapeSprite extends Component {
     }
 
     @Override
-    public void start() {
+    protected void start() {
         collider = gameObject.getComponent(Collider.class);
         if (collider == null) this.setEnabled(false);
         shape = getColliderShape();
     }
 
     @Override
-    public void debugRender() {
+    protected void debugRender() {
         shape = getColliderShape();
 
         if (fill) {

@@ -17,8 +17,12 @@ public abstract class MovementScript extends Script {
         super(UpdateOrder.INPUT);
     }
 
+    public MovementScript(UpdateOrder updateOrder) {
+        super(updateOrder);
+    }
+
     @Override
-    public void start() {
+    protected void start() {
         rb = getRigidbody();
         if (rb == null) {
             Logger.warn("%s has a null rigidbody", this);

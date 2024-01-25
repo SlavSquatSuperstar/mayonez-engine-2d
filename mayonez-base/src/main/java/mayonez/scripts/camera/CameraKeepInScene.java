@@ -18,7 +18,7 @@ public class CameraKeepInScene extends KeepInScene {
     }
 
     @Override
-    public void start() {
+    protected void start() {
         setMoveBounds();
         camera = getScene().getCamera();
         if (camera == null) setEnabled(false);
