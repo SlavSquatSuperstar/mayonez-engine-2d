@@ -21,7 +21,7 @@ public class AsteroidDestruction extends Script {
     }
 
     @Override
-    public void onDestroy() {
+    protected void onDestroy() {
         // createExplosion();
         spawnAsteroidFragments();
     }

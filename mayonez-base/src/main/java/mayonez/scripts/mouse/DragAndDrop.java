@@ -64,7 +64,7 @@ public class DragAndDrop extends MouseInputScript {
     }
 
     @Override
-    public void onDestroy() {
+    protected void onDestroy() {
         onMouseUp(); // If object destroyed while this instance is active, free up active instance
     }
 

@@ -72,7 +72,7 @@ public class MouseFlick extends MouseInputScript {
     }
 
     @Override
-    public void onDestroy() {
+    protected void onDestroy() {
         if (activeInstance == this) {
             activeInstance = null;
         }

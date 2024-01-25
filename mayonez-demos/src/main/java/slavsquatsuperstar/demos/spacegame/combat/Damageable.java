@@ -25,7 +25,7 @@ public class Damageable extends Script {
     }
 
     @Override
-    public void onTriggerEnter(GameObject other) {
+    protected void onTriggerEnter(GameObject other) {
         if (other.hasLayer(SpaceGameLayer.PROJECTILES)) {
             var p = other.getComponent(Projectile.class);
             if (p != null && !gameObject.equals(p.getSource())) {

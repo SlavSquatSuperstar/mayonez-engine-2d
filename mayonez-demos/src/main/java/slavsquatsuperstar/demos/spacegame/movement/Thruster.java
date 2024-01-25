@@ -56,7 +56,7 @@ public class Thruster extends Script {
     }
 
     @Override
-    public void onDisable() {
+    protected void onDisable() {
         exhaustAnim.setEnabled(false);
     }
 

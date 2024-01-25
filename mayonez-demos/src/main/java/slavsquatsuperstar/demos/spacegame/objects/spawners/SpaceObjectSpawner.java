@@ -39,7 +39,7 @@ public class SpaceObjectSpawner extends GameObject {
                         super.init();
                         addComponent(new Script() {
                             @Override
-                            public void onDestroy() {
+                            protected void onDestroy() {
                                 markObjectDestroyed(gameObject);
                             }
                         });
@@ -58,7 +58,7 @@ public class SpaceObjectSpawner extends GameObject {
                         super.init();
                         addComponent(new Script() {
                             @Override
-                            public void onDestroy() {
+                            protected void onDestroy() {
                                 markObjectDestroyed(gameObject);
                             }
                         });

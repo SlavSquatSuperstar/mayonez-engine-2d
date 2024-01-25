@@ -58,7 +58,7 @@ public class PlayerSpawnManager extends SpawnManager {
                     }
 
                     @Override
-                    public void onDestroy() {
+                    protected void onDestroy() {
                         markObjectDestroyed(gameObject);
                     }
                 });

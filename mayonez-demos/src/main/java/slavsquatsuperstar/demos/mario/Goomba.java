@@ -33,7 +33,7 @@ class Goomba extends GameObject {
         addComponent(new KeepInScene(sceneMin, sceneMax, KeepInScene.Mode.STOP));
         addComponent(new Script() {
             @Override
-            public void onCollisionEnter(GameObject other, Vec2 direction, Vec2 velocity) {
+            protected void onCollisionEnter(GameObject other, Vec2 direction, Vec2 velocity) {
                 if (other.getName().equals("Mario")) gameObject.destroy();
             }
         });

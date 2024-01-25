@@ -79,7 +79,7 @@ public class PlayerUIController extends Script implements EventListener<Event> {
     }
 
     @Override
-    public void onDestroy() {
+    protected void onDestroy() {
         SpaceGameEvents.getPlayerEventSystem().unsubscribe(this);
     }
 

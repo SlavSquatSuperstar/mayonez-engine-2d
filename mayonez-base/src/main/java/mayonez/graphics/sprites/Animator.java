@@ -106,13 +106,13 @@ public class Animator extends Script {
     // Callback Methods
 
     @Override
-    public void onEnable() {
+    protected void onEnable() {
         setSpriteVisible(true);
         setAnimationEnabled(true);
     }
 
     @Override
-    public void onDisable() {
+    protected void onDisable() {
         setSpriteVisible(false);
         setAnimationEnabled(false);
     }

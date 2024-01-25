@@ -33,7 +33,7 @@ public class CollisionDamage extends Script {
     }
 
     @Override
-    public void onCollisionEnter(GameObject other, Vec2 direction, Vec2 velocity) {
+    protected void onCollisionEnter(GameObject other, Vec2 direction, Vec2 velocity) {
         if (other.hasLayer(SpaceGameLayer.SHIPS) || other.hasLayer(SpaceGameLayer.ASTEROIDS)) {
             var speed = velocity.len();
             if (speed > speedThreshold) {

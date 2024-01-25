@@ -71,18 +71,18 @@ public abstract class Script extends Component {
 
     /**
      * Custom user behavior for when this script is enabled. Calling {@code onEnable()}
-     * directly can lead to unpredictable behavior. It is better to call {@link #setEnabled}
-     * with {@code true} as the parameter instead.
+     * directly can lead to unpredictable behavior. It is better to call
+     * {@link #setEnabled}({@code true}) instead.
      */
-    public void onEnable() {
+    protected void onEnable() {
     }
 
     /**
      * Custom user behavior for when this script is disabled. Calling {@code onDisable()}
-     * directly can lead to unpredictable behavior. It is better to call {@link #setEnabled}
-     * with {@code false} as the parameter instead.
+     * directly can lead to unpredictable behavior. It is better to call
+     * {@link #setEnabled}({@code false}) instead.
      */
-    public void onDisable() {
+    protected void onDisable() {
     }
 
     /**
@@ -91,7 +91,7 @@ public abstract class Script extends Component {
      * {@code onDestroy()}  directly can lead to unpredictable behavior. It is better to
      * call {@link #destroy} instead.
      */
-    public void onDestroy() {
+    protected void onDestroy() {
     }
 
     // Collision Callbacks
@@ -103,7 +103,7 @@ public abstract class Script extends Component {
      * @param direction the direction the collision is happening
      * @param velocity  the relative velocity of the objects.
      */
-    public void onCollisionEnter(GameObject other, Vec2 direction, Vec2 velocity) {
+    protected void onCollisionEnter(GameObject other, Vec2 direction, Vec2 velocity) {
     }
 
     /**
@@ -111,7 +111,7 @@ public abstract class Script extends Component {
      *
      * @param other the other object in the collision
      */
-    public void onCollisionStay(GameObject other) {
+    protected void onCollisionStay(GameObject other) {
     }
 
     /**
@@ -119,7 +119,7 @@ public abstract class Script extends Component {
      *
      * @param other the other object in the collision
      */
-    public void onCollisionExit(GameObject other) {
+    protected void onCollisionExit(GameObject other) {
     }
 
     /**
@@ -127,7 +127,7 @@ public abstract class Script extends Component {
      *
      * @param other the other game object
      */
-    public void onTriggerEnter(GameObject other) {
+    protected void onTriggerEnter(GameObject other) {
     }
 
     /**
@@ -135,7 +135,7 @@ public abstract class Script extends Component {
      *
      * @param other the other game object
      */
-    public void onTriggerStay(GameObject other) {
+    protected void onTriggerStay(GameObject other) {
     }
 
     /**
@@ -143,7 +143,7 @@ public abstract class Script extends Component {
      *
      * @param other the other game object
      */
-    public void onTriggerExit(GameObject other) {
+    protected void onTriggerExit(GameObject other) {
     }
 
     // Component Getters
