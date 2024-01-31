@@ -4,15 +4,18 @@ import mayonez.math.*;
 import mayonez.util.Record;
 
 /**
- * A type of projectile fired from a spaceship weapon possessing certain
- * characteristics.
+ * Defines characteristics for a type of projectile fired from a weapon.
  *
  * @author SlavSquatSuperstar
  */
 public record ProjectileType(
+        // Projectile Stats
         String name, float damage, float speed, float lifetime,
+        // Weapon Handling
         float fireCooldown, float weaponSpread,
+        // Projectile Size
         Vec2 scale, Vec2 colliderSize,
+        // Projectile Sprite
         int spriteIndex
 ) {
 
