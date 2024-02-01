@@ -1,14 +1,15 @@
 package mayonez.scripts;
 
-import mayonez.*;
 import mayonez.math.*;
 
 /**
- * Tracks a changeable quantity, defines a min and max, and can be reset.
+ * Manually tracks a changeable quantity. The counter can be given min and max
+ * bounds, and detects when it has counted past the bounds using {@link #isAtMin}
+ * or {@link #isAtMax}.
  *
  * @author SlavSquatSuperstar
  */
-public class Counter extends Script {
+public class Counter {
 
     private Interval interval; // min and max
     private float value; // current value

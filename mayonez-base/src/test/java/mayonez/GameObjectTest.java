@@ -104,7 +104,7 @@ class GameObjectTest {
         var comp1 = new BoxCollider(new Vec2(1f));
         obj.addComponent(comp1);
 
-        var comp2 = new Timer(1f);
+        var comp2 = new TimerScript(1f);
         obj.addComponent(comp2);
 
         assertSame(comp1, obj.getComponent(Collider.class));
@@ -134,7 +134,7 @@ class GameObjectTest {
     void getComponentNullClassIsNull() {
         obj.addComponent(new BoxCollider(new Vec2(1f)));
         obj.addComponent(new Rigidbody(1f));
-        obj.addComponent(new Timer(1f));
+        obj.addComponent(new TimerScript(1f));
 
         assertNull(obj.getComponent(null));
         assertNull(obj.getComponents(null));

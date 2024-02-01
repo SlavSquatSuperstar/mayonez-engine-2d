@@ -13,11 +13,11 @@ public class EnemyFireController extends FireProjectile {
 
     private int weaponChoice, shotsLeft;
     private FiringState state;
-    private final Timer waitTimer;
+    private final TimerScript waitTimer;
 
     public EnemyFireController() {
         super();
-        waitTimer = new Timer(0);
+        waitTimer = new TimerScript(0);
     }
 
     @Override

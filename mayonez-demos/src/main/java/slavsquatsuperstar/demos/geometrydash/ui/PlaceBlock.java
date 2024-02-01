@@ -18,11 +18,11 @@ public class PlaceBlock extends Script {
 
     private PlaceBlockCursor cursor;
     private Texture cursorTexture;
-    private Timer timer;
+    private TimerScript timer;
 
     @Override
     public void init() {
-        timer = new Timer(0.2f);
+        timer = new TimerScript(0.2f);
         gameObject.addComponent(timer);
     }
 

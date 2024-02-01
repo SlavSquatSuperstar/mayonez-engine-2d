@@ -11,10 +11,10 @@ import mayonez.scripts.*;
  */
 public abstract class FireProjectile extends Script {
 
-    private final Timer fireTimer;
+    private final TimerScript fireTimer;
 
     public FireProjectile() {
-        fireTimer = new Timer(0f);
+        fireTimer = new TimerScript(0f);
     }
 
     @Override

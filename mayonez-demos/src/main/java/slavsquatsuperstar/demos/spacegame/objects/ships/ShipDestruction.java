@@ -2,7 +2,6 @@ package slavsquatsuperstar.demos.spacegame.objects.ships;
 
 import mayonez.*;
 import mayonez.math.Random;
-import mayonez.scripts.Timer;
 import mayonez.scripts.*;
 import mayonez.scripts.movement.*;
 import slavsquatsuperstar.demos.spacegame.combat.ExplosionPrefabs;
@@ -24,7 +23,7 @@ public class ShipDestruction extends Script {
     private static final float DESTRUCTION_DURATION = 0.6f;
 
     // Timer Components
-    private final Timer destructionTimer;
+    private final TimerScript destructionTimer;
     private boolean sequenceStarted;
 
     // References
@@ -32,7 +31,7 @@ public class ShipDestruction extends Script {
     private final List<Component> shipSystems;
 
     public ShipDestruction() {
-        destructionTimer = new Timer(DESTRUCTION_DURATION);
+        destructionTimer = new TimerScript(DESTRUCTION_DURATION);
         shipSystems = new LinkedList<>();
     }
 

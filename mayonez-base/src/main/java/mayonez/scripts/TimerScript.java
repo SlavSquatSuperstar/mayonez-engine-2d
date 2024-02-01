@@ -1,24 +1,27 @@
 package mayonez.scripts;
 
+import mayonez.*;
+
 /**
- * Manually counts down in-game time and detects once the time has reached zero
- * with {@link #isReady}. The timer can be counted using {@link #countDown},
- * paused/resumed using {@link #setPaused}, and reset using {@link #reset}.
+ * Automatically counts down in real time as the game updates and detects once the
+ * time has reached zero with {@link #isReady}. The timer starts counting when the
+ * scene starts and can be reset with {@link #reset}. To pause/resume the timer, call
+ * {@link #setStarted}.
  *
  * @author SlavSquatSuperstar
  */
-public class Timer {
+public class TimerScript extends Script {
 
     private float duration; // max value
     private float value; // current value
-    private boolean paused; // if counting paused
+    private boolean started; // if started counting
 
     /**
      * Create a timer that counts down for the given duration.
      *
      * @param duration how long to count for until ready, in seconds
      */
-    public Timer(float duration) {
+    public TimerScript(float duration) {
         this(duration, duration);
     }
 
@@ -29,21 +32,22 @@ public class Timer {
      * @param duration   how long to count for until ready, in seconds
      * @param startValue where the timer should begin
      */
-    public Timer(float duration, float startValue) {
+    public TimerScript(float duration, float startValue) {
         this.duration = duration;
         value = startValue;
-        paused = false;
+        started = false;
     }
 
     // Game Loop methods
 
-    /**
-     * Count down the timer's value if it is not paused.
-     *
-     * @param time the amount of time that has passed
-     */
-    public void countDown(float time) {
-        if (!paused) value -= time;
+    @Override
+    protected void start() {
+        started = true;
+    }
+
+    @Override
+    protected void update(float dt) {
+        if (started) value -= dt;
     }
 
     // Getters and Setters
@@ -93,21 +97,21 @@ public class Timer {
     }
 
     /**
-     * Whether the timer is paused and should not count, false by default.
+     * Whether the timer is started and should count down, true by default.
      *
      * @return if the timer is paused
      */
-    public boolean isPaused() {
-        return paused;
+    public boolean isStarted() {
+        return started;
     }
 
     /**
-     * Control whether the timer is paused.
+     * Control whether the timer is should count down.
      *
-     * @param paused if the timer should pause
+     * @param started if the timer should count
      */
-    public void setPaused(boolean paused) {
-        this.paused = paused;
+    public void setStarted(boolean started) {
+        this.started = started;
     }
 
     @Override

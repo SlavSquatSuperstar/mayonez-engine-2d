@@ -13,11 +13,11 @@ import slavsquatsuperstar.demos.spacegame.objects.ships.PlayerShip;
  */
 public class PlayerSpawnManager extends SpawnManager {
 
-    private final Timer spawnTimer; // How long until player respawns
+    private final TimerScript spawnTimer; // How long until player respawns
     private boolean playerSpawned;
 
     public PlayerSpawnManager(float respawnCooldown) {
-        spawnTimer = new Timer(respawnCooldown);
+        spawnTimer = new TimerScript(respawnCooldown);
     }
 
     @Override

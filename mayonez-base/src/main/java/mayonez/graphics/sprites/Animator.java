@@ -18,7 +18,7 @@ public class Animator extends Script {
 
     // Components
     private Sprite sprite;
-    private final Timer animTimer;
+    private final TimerScript animTimer;
 
     /**
      * Creates an animation from a sprite sheet that will loop through all the sprites.
@@ -31,7 +31,7 @@ public class Animator extends Script {
         this.textures = sprites.getTextures();
         this.numFrames = textures.length;
         currentFrame = 0;
-        animTimer = new Timer(secondsPerFrame);
+        animTimer = new TimerScript(secondsPerFrame);
     }
 
     @Override

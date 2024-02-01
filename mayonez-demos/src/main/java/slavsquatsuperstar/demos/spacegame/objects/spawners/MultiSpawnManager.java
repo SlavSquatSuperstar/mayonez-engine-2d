@@ -11,11 +11,11 @@ import mayonez.scripts.*;
 public abstract class MultiSpawnManager extends SpawnManager {
 
     private final Counter amountSpawned; // How many objects are spawned
-    private final Timer spawnTimer; // How long until next object is spawned
+    private final TimerScript spawnTimer; // How long until next object is spawned
 
     public MultiSpawnManager(int maxSpawned, float spawnCooldown) {
         amountSpawned = new Counter(0, maxSpawned, 0);
-        spawnTimer = new Timer(spawnCooldown);
+        spawnTimer = new TimerScript(spawnCooldown);
     }
 
     @Override
