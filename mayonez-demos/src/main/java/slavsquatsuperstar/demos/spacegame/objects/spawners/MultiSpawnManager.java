@@ -11,16 +11,11 @@ import mayonez.scripts.*;
 public abstract class MultiSpawnManager extends SpawnManager {
 
     private final Counter amountSpawned; // How many objects are spawned
-    private final TimerScript spawnTimer; // How long until next object is spawned
+    private final Timer spawnTimer; // How long until next object is spawned
 
     public MultiSpawnManager(int maxSpawned, float spawnCooldown) {
         amountSpawned = new Counter(0, maxSpawned, 0);
-        spawnTimer = new TimerScript(spawnCooldown);
-    }
-
-    @Override
-    public void init() {
-        gameObject.addComponent(spawnTimer);
+        spawnTimer = new Timer(spawnCooldown);
     }
 
     @Override
@@ -32,6 +27,7 @@ public abstract class MultiSpawnManager extends SpawnManager {
 
     @Override
     protected void update(float dt) {
+        spawnTimer.countDown(dt);
         // Keep spawning if destroyed and has room
         if (spawnTimer.isReady() && !amountSpawned.isAtMax()) {
             spawnObject();

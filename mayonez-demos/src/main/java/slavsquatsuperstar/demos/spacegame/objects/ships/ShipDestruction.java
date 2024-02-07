@@ -16,34 +16,24 @@ import java.util.*;
  *
  * @author SlavSquatSuperstar
  */
-public class ShipDestruction extends Script {
+public class ShipDestruction extends TimerScript {
 
     // Constants
     private static final float EXPLOSION_DURATION = 0.8f;
     private static final float DESTRUCTION_DURATION = 0.6f;
 
-    // Timer Components
-    private final TimerScript destructionTimer;
-    private boolean sequenceStarted;
-
     // References
-    private GameObject explosion;
     private final List<Component> shipSystems;
+    private GameObject explosion;
 
     public ShipDestruction() {
-        destructionTimer = new TimerScript(DESTRUCTION_DURATION);
+        super(DESTRUCTION_DURATION);
         shipSystems = new LinkedList<>();
     }
 
     @Override
-    public void init() {
-        shipSystems.clear();
-        gameObject.addComponent(destructionTimer.setEnabled(false));
-    }
-
-    @Override
     protected void start() {
-        sequenceStarted = false;
+        shipSystems.clear();
         explosion = null;
 
         shipSystems.add(gameObject.getComponent(FireProjectile.class));
@@ -54,7 +44,8 @@ public class ShipDestruction extends Script {
 
     @Override
     protected void update(float dt) {
-        if (destructionTimer.isReady()) gameObject.destroy();
+        super.update(dt);
+        if (this.isReady()) gameObject.destroy();
     }
 
     @Override
@@ -69,10 +60,8 @@ public class ShipDestruction extends Script {
      * Begin the ship destruction sequence.
      */
     public void startDestructionSequence() {
-        if (sequenceStarted) return;
-
-        sequenceStarted = true;
-        destructionTimer.setEnabled(true);
+        if (this.isStarted()) return;
+        this.setStarted(true);
 
         // Disable ship systems
         for (var system : shipSystems) {

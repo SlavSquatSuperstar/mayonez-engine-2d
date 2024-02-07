@@ -13,25 +13,22 @@ import slavsquatsuperstar.demos.spacegame.objects.ships.PlayerShip;
  */
 public class PlayerSpawnManager extends SpawnManager {
 
-    private final TimerScript spawnTimer; // How long until player respawns
+    private final Timer spawnTimer; // How long until player respawns
     private boolean playerSpawned;
 
     public PlayerSpawnManager(float respawnCooldown) {
-        spawnTimer = new TimerScript(respawnCooldown);
-    }
-
-    @Override
-    public void init() {
-        gameObject.addComponent(spawnTimer);
+        spawnTimer = new Timer(respawnCooldown);
     }
 
     @Override
     protected void start() {
+        spawnTimer.reset();
         spawnObject();
     }
 
     @Override
     protected void update(float dt) {
+        spawnTimer.countDown(dt);
         if (!playerSpawned && spawnTimer.isReady()) spawnObject();
 
         // Send respawn update
@@ -43,6 +40,7 @@ public class PlayerSpawnManager extends SpawnManager {
 
     // Spawner Methods
 
+    @Override
     public GameObject createSpawnedObject() {
         return new PlayerShip("Player Spaceship",
                 "assets/spacegame/textures/spaceship1.png"
@@ -69,7 +67,7 @@ public class PlayerSpawnManager extends SpawnManager {
     @Override
     public void spawnObject() {
         super.spawnObject();
-        spawnTimer.setStarted(false);
+        spawnTimer.setPaused(true);
         playerSpawned = true;
     }
 
@@ -78,7 +76,7 @@ public class PlayerSpawnManager extends SpawnManager {
         SpaceGameEvents.getPlayerEventSystem()
                 .broadcast(new PlayerDestroyedEvent(object));
 
-        spawnTimer.setStarted(true);
+        spawnTimer.setPaused(false);
         spawnTimer.reset();
         playerSpawned = false;
     }

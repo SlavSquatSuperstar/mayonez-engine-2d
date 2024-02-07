@@ -18,7 +18,7 @@ public class Animator extends Script {
 
     // Components
     private Sprite sprite;
-    private final TimerScript animTimer;
+    private final Timer animTimer;
 
     /**
      * Creates an animation from a sprite sheet that will loop through all the sprites.
@@ -31,14 +31,13 @@ public class Animator extends Script {
         this.textures = sprites.getTextures();
         this.numFrames = textures.length;
         currentFrame = 0;
-        animTimer = new TimerScript(secondsPerFrame);
+        animTimer = new Timer(secondsPerFrame);
     }
 
     @Override
     public void init() {
         sprite = Sprites.createSprite(textures[0]);
         gameObject.addComponent(sprite.setEnabled(false));
-        gameObject.addComponent(animTimer);
     }
 
     @Override
@@ -49,7 +48,8 @@ public class Animator extends Script {
 
     @Override
     protected void update(float dt) {
-        if (animTimer.isEnabled() && animTimer.isReady()) {
+        animTimer.countDown(dt);
+        if (!animTimer.isPaused() && animTimer.isReady()) {
             // update frame count
             if (currentFrame == numFrames - 1) {
                 currentFrame = 0;
@@ -100,7 +100,7 @@ public class Animator extends Script {
      * @param enabled if the animation should play, true by default
      */
     public void setAnimationEnabled(boolean enabled) {
-        animTimer.setEnabled(enabled);
+        animTimer.setPaused(!enabled);
     }
 
     // Callback Methods

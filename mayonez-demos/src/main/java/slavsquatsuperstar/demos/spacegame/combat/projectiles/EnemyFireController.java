@@ -13,22 +13,23 @@ public class EnemyFireController extends FireProjectile {
 
     private int weaponChoice, shotsLeft;
     private FiringState state;
-    private final TimerScript waitTimer;
+    private final Timer waitTimer; // Time between shoot bursts
 
     public EnemyFireController() {
         super();
-        waitTimer = new TimerScript(0);
-    }
-
-    @Override
-    public void init() {
-        super.init();
-        gameObject.addComponent(waitTimer);
+        waitTimer = new Timer(0);
     }
 
     @Override
     protected void start() {
         state = FiringState.DECIDING;
+        waitTimer.reset();
+    }
+
+    @Override
+    protected void update(float dt) {
+        super.update(dt);
+        waitTimer.countDown(dt);
     }
 
     @Override
@@ -38,14 +39,14 @@ public class EnemyFireController extends FireProjectile {
                 // Stop shooting if out of ammo
                 if (shotsLeft <= 0) {
                     waitTimer.setDuration(Random.randomFloat(2f, 4f));
-                    waitTimer.setStarted(true);
+                    waitTimer.setPaused(false);
                     state = FiringState.WAITING;
                 }
             }
             case WAITING -> {
                 // Wait until shooting again
                 if (waitTimer.isReady()) {
-                    waitTimer.setStarted(false);
+                    waitTimer.setPaused(true);
                     state = FiringState.DECIDING;
                 }
             }

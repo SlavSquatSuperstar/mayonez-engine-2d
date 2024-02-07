@@ -11,20 +11,20 @@ import mayonez.scripts.*;
  */
 public abstract class FireProjectile extends Script {
 
-    private final TimerScript fireTimer;
+    private final Timer fireTimer;
 
     public FireProjectile() {
-        fireTimer = new TimerScript(0f);
+        fireTimer = new Timer(0f);
     }
 
     @Override
-    public void init() {
+    protected void start() {
         fireTimer.reset();
-        gameObject.addComponent(fireTimer);
     }
 
     @Override
     protected void update(float dt) {
+        fireTimer.countDown(dt);
         if (isReloaded() && shouldFire()) {
             getScene().addObject(spawnProjectile());
             fireTimer.reset();
