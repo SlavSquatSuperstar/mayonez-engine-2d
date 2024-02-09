@@ -91,6 +91,7 @@ public final class GLTexture extends Texture {
             uploadImage(image);
         } catch (TextureException | IOException e) {
             Logger.error("Could not read image file %s", getFilename());
+            texID = GL_NONE;
         }
     }
 
@@ -170,6 +171,14 @@ public final class GLTexture extends Texture {
         }
     }
 
+    // Asset Methods
+
+    @Override
+    public void free() {
+        glDeleteTextures(texID);
+    }
+
+
     // Image Getters
 
     @Override
@@ -194,5 +203,6 @@ public final class GLTexture extends Texture {
     public int getTexID() {
         return texID;
     }
+
 }
 

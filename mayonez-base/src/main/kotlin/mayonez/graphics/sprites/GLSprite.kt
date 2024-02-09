@@ -66,7 +66,7 @@ internal class GLSprite private constructor(
      */
     override fun pushToBatch(batch: RenderBatch) {
         val objXf = transform.combine(getSpriteTransform())
-        val texID = batch.getIDForTexture(texture)
+        val texID = batch.getTextureSlot(texture)
 
         // Background sprite will not have scale but will use spriteXf instead
         val sceneScale = gameObject?.scene?.scale ?: 1f

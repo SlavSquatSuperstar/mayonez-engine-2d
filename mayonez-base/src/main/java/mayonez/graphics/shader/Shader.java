@@ -38,9 +38,7 @@ public class Shader extends Asset {
             linkShaderPrograms(programs);
             programs.forEach(ShaderProgram::delete); // Clean up intermediate programs
         } catch (ShaderException e) {
-            // TODO does not stop because still initializing assets
             Logger.printStackTrace(e);
-            Mayonez.stop(ExitCode.ERROR);
         }
     }
 

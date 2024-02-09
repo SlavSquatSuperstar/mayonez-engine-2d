@@ -80,7 +80,7 @@ public class UIBox extends Component implements UIElement {
     // Renderer Methods
     @Override
     public void pushToBatch(RenderBatch batch) {
-        var texID = batch.getIDForTexture((GLTexture) texture);
+        var texID = batch.getTextureSlot((GLTexture) texture);
         var texCoords = (texture != null) ? ((GLTexture) texture).getTexCoords() : GLTexture.DEFAULT_TEX_COORDS;
         var sprVertices = new BoundingBox(position, size).getVertices();
         BatchPushHelper.pushTexture(batch, sprVertices, color, texCoords, texID);

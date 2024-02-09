@@ -55,11 +55,11 @@ public abstract sealed class Texture extends Asset permits GLTexture, JTexture {
 
     @Override
     public String toString() {
-        var str = super.toString();
         if (spriteSheetIndex >= 0) {
-            str += " (Sprite %d)".formatted(spriteSheetIndex);
+            return super.toString() + " (Sprite %d)".formatted(spriteSheetIndex);
+        } else {
+            return super.toString();
         }
-        return str;
     }
 
 }

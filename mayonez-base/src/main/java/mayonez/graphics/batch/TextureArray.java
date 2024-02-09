@@ -5,8 +5,7 @@ import mayonez.graphics.textures.*;
 
 import java.util.*;
 
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.glBindTexture;
+import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 
@@ -21,7 +20,7 @@ class TextureArray {
 
     // Constants
     private static final GLTexture COLOR_TEXTURE = null;
-    private static final int NO_TEXTURE_ID = 0;
+    private static final int NO_TEXTURE_ID = GL_NONE;
 
     // Array Fields
     private final int[] texIDs;
@@ -50,7 +49,7 @@ class TextureArray {
         else return indexOfTexture(tex) > -1;
     }
 
-    int getTextureID(GLTexture tex) {
+    int getTextureSlot(GLTexture tex) {
         if (tex == COLOR_TEXTURE) return NO_TEXTURE_ID;
         else return indexOfTexture(tex) + 1;
     }

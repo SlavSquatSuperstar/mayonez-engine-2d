@@ -117,14 +117,14 @@ public final class RenderBatch {
 
     /**
      * Adds a texture to this render batch if the texture is not present and returns
-     * the texture ID within the batch, which is not necessarily the OpenGL texture ID.
+     * the texture slot for the batche's shader, which is not necessarily the OpenGL texture ID.
      *
      * @param tex the texture
      * @return the batch texture ID, 0 if color, otherwise 1-8
      */
-    public int getIDForTexture(GLTexture tex) {
+    public int getTextureSlot(GLTexture tex) {
         if (!hasTexture(tex)) textures.addTexture(tex); // add if don't have texture
-        return textures.getTextureID(tex);
+        return textures.getTextureSlot(tex);
     }
 
     // Push Vertex Methods
