@@ -26,14 +26,14 @@ public abstract class BaseAsteroid extends GameObject {
         ASTEROID_TEXTURES = new Texture[NUM_TEXTURES];
         for (int i = 0; i < NUM_TEXTURES; i++) {
             ASTEROID_TEXTURES[i] = Textures.getTexture(
-                    "assets/spacegame/textures/asteroid%d.png"
+                    "assets/spacegame/textures/asteroids/asteroid%d.png"
                             .formatted(i + 1)
             );
         }
     }
 
 //    private static final SpriteSheet ASTEROID_SPRITES = Sprites.createSpriteSheet(
-//            "assets/spacegame/textures/asteroids.png",
+//            "assets/spacegame/textures/asteroids/asteroids.png",
 //            32, 32, 2, 0
 //    );
 

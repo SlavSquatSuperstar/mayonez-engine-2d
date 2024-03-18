@@ -16,9 +16,9 @@ public class WeaponSelectPanel extends Script {
 
     // Constants
     private static final Texture BACKGROUND_TEXTURE = Textures.getTexture(
-            "assets/spacegame/textures/hotbar_background.png");
+            "assets/spacegame/textures/ui/hotbar_background.png");
     private static final Texture BORDER_TEXTURE =  Textures.getTexture(
-            "assets/spacegame/textures/hotbar_border.png");
+            "assets/spacegame/textures/ui/hotbar_border.png");
 
     private static final float BACKGROUND_MARGIN = 5f;
     private static final float BORDER_MARGIN = 10f;

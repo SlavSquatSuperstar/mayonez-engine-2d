@@ -33,7 +33,7 @@ public class SpaceObjectSpawner extends GameObject {
             @Override
             public GameObject createSpawnedObject() {
                 return new EnemyShip("Enemy Spaceship",
-                        "assets/spacegame/textures/spaceship2.png") {
+                        "assets/spacegame/textures/ships/spaceship2.png") {
                     @Override
                     protected void init() {
                         super.init();

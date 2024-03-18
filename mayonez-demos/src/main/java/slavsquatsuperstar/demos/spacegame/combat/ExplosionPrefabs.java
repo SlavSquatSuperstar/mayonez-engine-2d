@@ -15,7 +15,7 @@ public class ExplosionPrefabs {
     // Constants
     private static final int ANIMATION_SPRITES = 8;
     private static final SpriteSheet EXPLOSION_TEXTURES = Sprites.createSpriteSheet(
-            "assets/spacegame/textures/explosion.png",
+            "assets/spacegame/textures/combat/explosion.png",
             32, 32, ANIMATION_SPRITES, 0
     );
 
