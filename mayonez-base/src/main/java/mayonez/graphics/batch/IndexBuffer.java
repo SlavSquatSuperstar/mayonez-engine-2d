@@ -23,13 +23,13 @@ class IndexBuffer {
     IndexBuffer(DrawPrimitive primitive, int maxBatchSize) {
         this.primitive = primitive;
         this.maxBatchSize = maxBatchSize;
-        generate();
+        eboID = GL_NONE;
     }
 
     /**
      * Generates the index buffer on the GPU.
      */
-    private void generate() {
+    void generate() {
         eboID = glGenBuffers();
     }
 

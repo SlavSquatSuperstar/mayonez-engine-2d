@@ -18,13 +18,13 @@ class VertexArray {
     private int vaoID;
 
     VertexArray() {
-        generate();
+        vaoID = GL_NONE;
     }
 
     /**
      * Generates the vertex array on the GPU.
      */
-    private void generate() {
+    void generate() {
         vaoID = glGenVertexArrays();
     }
 

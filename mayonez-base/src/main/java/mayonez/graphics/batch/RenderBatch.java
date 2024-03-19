@@ -60,6 +60,10 @@ public final class RenderBatch {
      */
     private void createBatch() {
         if (!GLDebugHelper.isGLInitialized()) return;
+        vao.generate();
+        vbo.generate();
+        ibo.generate();
+
         vao.setVertexLayout(vbo);
         vao.setElementLayout(ibo);
     }

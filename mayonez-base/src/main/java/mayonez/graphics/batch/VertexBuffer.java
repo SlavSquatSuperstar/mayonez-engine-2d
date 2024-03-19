@@ -22,13 +22,13 @@ class VertexBuffer {
     VertexBuffer(DrawPrimitive primitive, VertexBufferArray vertices) {
         this.primitive = primitive;
         this.vertices = vertices;
-        generate();
+        vboID = GL_NONE;
     }
 
     /**
      * Generates the vertex buffer on the GPU and binds it to the active VAO.
      */
-    private void generate() {
+    void generate() {
         vboID = glGenBuffers();
     }
 
