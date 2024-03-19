@@ -74,6 +74,7 @@ public class WeaponHotbar extends Script {
         gameObject.addComponent(selectedBorder);
 
         setSelection(0);
+        setCooldownPercent(0f);
     }
 
     // UI Methods

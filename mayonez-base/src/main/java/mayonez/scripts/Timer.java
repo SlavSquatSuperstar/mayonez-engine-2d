@@ -58,13 +58,12 @@ public class Timer {
     }
 
     /**
-     * Set the timer's count duration in seconds and reset its value.
+     * Set the timer's count duration in seconds.
      *
      * @param duration how long to count for
      */
     public void setDuration(float duration) {
         this.duration = duration;
-        reset();
     }
 
     /**

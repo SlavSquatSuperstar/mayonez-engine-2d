@@ -39,6 +39,7 @@ public class EnemyFireController extends FireProjectile {
                 // Stop shooting if out of ammo
                 if (shotsLeft <= 0) {
                     waitTimer.setDuration(Random.randomFloat(2f, 4f));
+                    waitTimer.reset();
                     waitTimer.setPaused(false);
                     state = FiringState.WAITING;
                 }

@@ -19,16 +19,20 @@ import java.util.*;
  */
 public final class ProjectilePrefabs {
 
-    public static final int NUM_PROJECTILES = 4;
-
-    public static final SpriteSheet PROJECTILE_SPRITES = Sprites.createSpriteSheet(
-            "assets/spacegame/textures/combat/projectiles.png",
-            16, 16, NUM_PROJECTILES, 0);
-
+    // Constants
     private static final CSVFile PROJECTILE_DATA = Assets.getAsset(
             "assets/spacegame/data/projectiles.csv", CSVFile.class);
+    private static final List<ProjectileType> PROJECTILE_TYPES;
+    public static final int NUM_PROJECTILES;
+    public static final SpriteSheet PROJECTILE_SPRITES;
 
-    private static final List<ProjectileType> PROJECTILE_TYPES = readProjectileTypes();
+    static {
+        PROJECTILE_TYPES = readProjectileTypes();
+        NUM_PROJECTILES = PROJECTILE_TYPES.size();
+        PROJECTILE_SPRITES = Sprites.createSpriteSheet(
+                "assets/spacegame/textures/combat/projectiles.png",
+                16, 16, NUM_PROJECTILES, 0);
+    }
 
     private ProjectilePrefabs() {
     }
@@ -51,7 +55,7 @@ public final class ProjectilePrefabs {
      * @return the projectile type, or null if the index is invalid
      */
     public static ProjectileType getProjectileType(int projectileIndex) {
-        if (projectileIndex < 0 || projectileIndex >= PROJECTILE_TYPES.size()) return null;
+        if (projectileIndex < 0 || projectileIndex >= NUM_PROJECTILES) return null;
         return PROJECTILE_TYPES.get(projectileIndex);
     }
 

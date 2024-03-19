@@ -61,6 +61,7 @@ public class PlayerFireController extends FireProjectile {
 
         weaponChoice = i;
         setCooldown(type.fireCooldown());
+        fireTimer.setValue(0f);
     }
 
 }
