@@ -15,57 +15,55 @@ public class PlayerUIController extends Script implements EventListener<Event> {
 
     // UI Components
     private HealthBar healthBar;
-    private WeaponSelectPanel weaponSelect;
+    private WeaponHotbar weaponHotbar;
 
     // Ship Components
     private Damageable damageable;
     private PlayerFireController fireController;
 
     // Player Status
-    private boolean playerAlive;
-    private float rechargePercent;
+    private float respawnPercent;
 
     @Override
     protected void start() {
         SpaceGameEvents.getPlayerEventSystem().subscribe(this);
         setPlayer(null);
-        rechargePercent = 1f;
+        respawnPercent = 1f;
 
         healthBar = gameObject.getComponent(HealthBar.class);
-        weaponSelect = gameObject.getComponent(WeaponSelectPanel.class);
-        if (healthBar == null || weaponSelect == null) setEnabled(false);
+        weaponHotbar = gameObject.getComponent(WeaponHotbar.class);
+        if (healthBar == null || weaponHotbar == null) setEnabled(false);
     }
 
-    // TODO recharge health bar
     // TODO show fire cooldown
     @Override
     protected void update(float dt) {
         if (damageable != null) {
             // Update health bar
             var healthPercent = damageable.getHealth() / damageable.getMaxHealth();
-            healthBar.setValue(healthPercent);
+            healthBar.setHealthPercent(healthPercent);
         } else {
             // Recharge health bar
-            healthBar.setValue(rechargePercent);
+            healthBar.setHealthPercent(respawnPercent);
         }
 
         // Update weapons selection
         if (fireController != null) {
-            weaponSelect.setSelection(fireController.getWeaponChoice());
+            weaponHotbar.setSelection(fireController.getWeaponChoice());
         }
     }
 
-    public void setPlayer(GameObject player) {
+    private void setPlayer(GameObject player) {
         if (player == null) {
             damageable = null;
             fireController = null;
-            playerAlive = false;
         } else {
             damageable = player.getComponent(Damageable.class);
             fireController = player.getComponent(PlayerFireController.class);
-            playerAlive = true;
         }
     }
+
+    // Script Callbacks
 
     @Override
     public void onEvent(Event event) {
@@ -74,7 +72,9 @@ public class PlayerUIController extends Script implements EventListener<Event> {
         } else if (event instanceof PlayerDestroyedEvent) {
             setPlayer(null);
         } else if (event instanceof PlayerRespawnUpdate u) {
-            rechargePercent = u.getRespawnPercent();
+            respawnPercent = u.getRespawnPercent();
+        } else if (event instanceof WeaponCooldownUpdate u) {
+            weaponHotbar.setCooldownPercent(u.getRechargePercent());
         }
     }
 

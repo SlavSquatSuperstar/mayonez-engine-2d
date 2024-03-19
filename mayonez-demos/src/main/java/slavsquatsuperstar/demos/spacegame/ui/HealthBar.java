@@ -58,8 +58,7 @@ public class HealthBar extends Script {
      *
      * @param healthPercent the percent health to display
      */
-    public void setValue(float healthPercent) {
-        // TODO UI set anchor
+    public void setHealthPercent(float healthPercent) {
         // Clamp percent between 0%-100%
         var clamped = FloatMath.clamp(healthPercent, 0f, 1f);
         // Anchor left

@@ -77,6 +77,15 @@ public class Timer {
     }
 
     /**
+     * Set the timer's remaining count value in seconds.
+     *
+     * @param value how much to set the value
+     */
+    public void setValue(float value) {
+        this.value = value;
+    }
+
+    /**
      * Whether the timer is paused and should not count, false by default.
      *
      * @return if the timer is paused

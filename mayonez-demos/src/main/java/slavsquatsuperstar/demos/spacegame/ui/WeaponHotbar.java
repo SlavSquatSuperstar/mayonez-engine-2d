@@ -1,22 +1,19 @@
 package slavsquatsuperstar.demos.spacegame.ui;
 
 import mayonez.*;
-import mayonez.event.*;
 import mayonez.graphics.*;
 import mayonez.graphics.textures.*;
 import mayonez.graphics.ui.*;
 import mayonez.math.*;
 import slavsquatsuperstar.demos.spacegame.combat.projectiles.ProjectilePrefabs;
-import slavsquatsuperstar.demos.spacegame.events.SpaceGameEvents;
-import slavsquatsuperstar.demos.spacegame.events.WeaponCooldownUpdate;
 import slavsquatsuperstar.demos.spacegame.objects.SpaceGameZIndex;
 
 /**
- * Displays all available weapons and highlights the currently selected weapon.
+ * Displays all weapons available to the player and highlights the currently selected weapon.
  *
  * @author SlavSquatSuperstar
  */
-public class WeaponSelectPanel extends Script implements EventListener<Event> {
+public class WeaponHotbar extends Script {
 
     // Constants
     private static final Texture BACKGROUND_TEXTURE = Textures.getTexture(
@@ -31,9 +28,9 @@ public class WeaponSelectPanel extends Script implements EventListener<Event> {
     private final Vec2 position, size;
     private final UIBox[] backgrounds;
     private UIBox selectedBorder, rechargeOverlay;
-    private float rechargePercent;
+    private int selectedIndex;
 
-    public WeaponSelectPanel(Vec2 position, Vec2 size, int numWeapons) {
+    public WeaponHotbar(Vec2 position, Vec2 size, int numWeapons) {
         this.position = position;
         this.size = size;
         backgrounds = new UIBox[numWeapons];
@@ -41,8 +38,9 @@ public class WeaponSelectPanel extends Script implements EventListener<Event> {
 
     @Override
     public void init() {
-        var boxSpacing = new Vec2(50, 0);
+        gameObject.setZIndex(SpaceGameZIndex.UI);
 
+        var boxSpacing = new Vec2(50, 0);
         for (int i = 0; i < backgrounds.length; i++) {
             var currPos = position.add(boxSpacing.mul(i));
             backgrounds[i] = new UIBox(currPos, size.add(new Vec2(BACKGROUND_MARGIN)), BACKGROUND_TEXTURE);
@@ -75,18 +73,7 @@ public class WeaponSelectPanel extends Script implements EventListener<Event> {
         };
         gameObject.addComponent(selectedBorder);
 
-
-
         setSelection(0);
-    }
-
-    @Override
-    protected void start() {
-        SpaceGameEvents.getPlayerEventSystem().subscribe(this);
-
-        // TODO show fire cooldown
-        gameObject.setZIndex(SpaceGameZIndex.UI);
-        rechargePercent = 0f;
     }
 
     // UI Methods
@@ -98,7 +85,9 @@ public class WeaponSelectPanel extends Script implements EventListener<Event> {
      */
     public void setSelection(int index) {
         if (!IntMath.inRange(index, 0, backgrounds.length - 1)) return;
-        // Move border
+        selectedIndex = index;
+
+        // Move border/overlay
         selectedBorder.setPosition(backgrounds[index].getPosition());
         rechargeOverlay.setPosition(backgrounds[index].getPosition());
     }
@@ -113,23 +102,7 @@ public class WeaponSelectPanel extends Script implements EventListener<Event> {
         var clamped = FloatMath.clamp(cooldownPercent, 0f, 1f);
         // Anchor bottom
         rechargeOverlay.setSize(size.mul(new Vec2(1f, clamped)));
-        // TODO not moving to correct hotbar slot
-        rechargeOverlay.setPosition(position.sub(size.mul(new Vec2(0f, (1f - clamped) * 0.5f))));
+        rechargeOverlay.setPosition(backgrounds[selectedIndex].getPosition().sub(size.mul(new Vec2(0f, (1f - clamped) * 0.5f))));
     }
 
-    // Script Callbacks
-
-    @Override
-    protected void onDestroy() {
-        SpaceGameEvents.getPlayerEventSystem().unsubscribe(this);
-    }
-
-    @Override
-    public void onEvent(Event event) {
-        if (event instanceof WeaponCooldownUpdate u) {
-            rechargePercent = u.getRechargePercent();
-            System.out.println("Recharging: " + rechargePercent);
-            setCooldownPercent(rechargePercent);
-        }
-    }
 }

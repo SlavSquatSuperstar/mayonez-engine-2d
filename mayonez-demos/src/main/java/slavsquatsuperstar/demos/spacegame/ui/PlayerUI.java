@@ -11,11 +11,11 @@ import slavsquatsuperstar.demos.spacegame.combat.projectiles.ProjectilePrefabs;
  */
 public class PlayerUI extends GameObject {
 
-    private final PlayerUIController playerUI;
+    private final PlayerUIController playerUIController;
 
     public PlayerUI(String name) {
         super(name);
-        playerUI = new PlayerUIController();
+        playerUIController = new PlayerUIController();
     }
 
     @Override
@@ -28,12 +28,9 @@ public class PlayerUI extends GameObject {
         // Weapon Select
         var wsPosition = new Vec2(32, 32);
         var wsSize = new Vec2(32, 32);
-        addComponent(new WeaponSelectPanel(wsPosition, wsSize, ProjectilePrefabs.NUM_PROJECTILES));
+        addComponent(new WeaponHotbar(wsPosition, wsSize, ProjectilePrefabs.NUM_PROJECTILES));
 
-        addComponent(playerUI);
+        addComponent(playerUIController);
     }
 
-    public PlayerUIController getPlayerUI() {
-        return playerUI;
-    }
 }
