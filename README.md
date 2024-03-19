@@ -155,12 +155,12 @@ and a Pool Balls scene.
 
 ### Sprite Art Sources
 
-The demo game textures were pulled from GamesWithGabe's GitHub repositories under the MIT license or created in the
-program Piskel.
+The demo game textures were pulled from GamesWithGabe's GitHub repositories under the MIT license or created in
+GIMP 2.10.
 
 - [Geometry Dash Series](https://github.com/codingminecraft/GeometryDash): Repository by GamesWithGabe
 - [Mario LWJGL Series](https://github.com/codingminecraft/MarioYoutube): Repository by GamesWithGabe
-- [Piskel](https://www.piskelapp.com/): Online and desktop pixel art editor, with .piskel files included in
+- [GIMP](https://www.gimp.org/): Cross-platform, open-source raster image editor, with .xcf files included in
   the [pixelart](pixelart) folder.
 
 ### Acknowledgements

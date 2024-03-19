@@ -15,7 +15,7 @@ import slavsquatsuperstar.demos.spacegame.objects.SpaceGameZIndex;
 public class HealthBar extends Script {
 
     private static final Texture BORDER_TEXTURE = Textures.getTexture(
-            "assets/spacegame/textures/health_bar_border.png");
+            "assets/spacegame/textures/ui/health_bar_border.png");
     private final Vec2 position, size;
     private UIBox foregroundBox;
 

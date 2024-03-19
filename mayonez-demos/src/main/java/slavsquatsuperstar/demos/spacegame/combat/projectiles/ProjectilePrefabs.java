@@ -22,7 +22,7 @@ public final class ProjectilePrefabs {
     public static final int NUM_PROJECTILES = 4;
 
     public static final SpriteSheet PROJECTILE_SPRITES = Sprites.createSpriteSheet(
-            "assets/spacegame/textures/projectiles.png",
+            "assets/spacegame/textures/combat/projectiles.png",
             16, 16, NUM_PROJECTILES, 0);
 
     private static final CSVFile PROJECTILE_DATA = Assets.getAsset(

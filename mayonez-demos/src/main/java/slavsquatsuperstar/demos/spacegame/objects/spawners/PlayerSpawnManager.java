@@ -43,7 +43,7 @@ public class PlayerSpawnManager extends SpawnManager {
     @Override
     public GameObject createSpawnedObject() {
         return new PlayerShip("Player Spaceship",
-                "assets/spacegame/textures/spaceship1.png"
+                "assets/spacegame/textures/ships/spaceship1.png"
         ) {
             @Override
             protected void init() {
