@@ -1,9 +1,8 @@
 plugins {
     id("mayonez.library-conventions")
 
-    id(shadowPlugin)
-    id(dokkaPlugin)
     id(kotlinPlugin)
+    id(dokkaPlugin)
 }
 
 description = "The core library for Mayonez Engine that contains the API classes."
@@ -33,11 +32,6 @@ dependencies {
 // Plugins and Tasks
 
 tasks {
-    shadowJar {
-        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-        archiveClassifier = ""
-    }
-
     compileJava {
         dependsOn(compileKotlin)
     }

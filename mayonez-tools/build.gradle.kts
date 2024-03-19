@@ -1,9 +1,8 @@
 plugins {
     id("mayonez.library-conventions")
 
-    id(shadowPlugin)
-    id(dokkaPlugin)
     id(kotlinPlugin)
+    id(dokkaPlugin)
 }
 
 description = "A helper library containing math and file I/O tools."
@@ -17,11 +16,6 @@ dependencies {
 // Plugins and Tasks
 
 tasks {
-    shadowJar {
-        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-        archiveClassifier = ""
-    }
-
     compileJava {
         dependsOn(compileKotlin)
     }
