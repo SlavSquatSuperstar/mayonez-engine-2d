@@ -11,7 +11,8 @@ import mayonez.scripts.*;
  */
 public abstract class FireProjectile extends Script {
 
-    private final Timer fireTimer;
+    // TODO store in subclass
+    protected final Timer fireTimer;
 
     public FireProjectile() {
         fireTimer = new Timer(0f);

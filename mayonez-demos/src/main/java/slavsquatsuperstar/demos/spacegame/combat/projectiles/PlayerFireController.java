@@ -2,6 +2,8 @@ package slavsquatsuperstar.demos.spacegame.combat.projectiles;
 
 import mayonez.*;
 import mayonez.input.*;
+import slavsquatsuperstar.demos.spacegame.events.SpaceGameEvents;
+import slavsquatsuperstar.demos.spacegame.events.WeaponCooldownUpdate;
 
 /**
  * Allows the player's ship to fire different weapons.
@@ -9,7 +11,8 @@ import mayonez.input.*;
  * @author SlavSquatSuperstar
  */
 // TODO click to target
-// TODO save between deaths
+// TODO save choice between deaths
+// TODO timer for each weapon
 public class PlayerFireController extends FireProjectile {
 
     private int weaponChoice;
@@ -30,6 +33,11 @@ public class PlayerFireController extends FireProjectile {
             if (KeyInput.keyPressed(String.valueOf(projIdx + 1))) {
                 setWeaponChoice(projIdx);
             }
+        }
+
+        if (fireTimer.getValue() > -dt) { // Don't let the timer count too negative
+            var timerRemainingPercent = fireTimer.getValue() / fireTimer.getDuration();
+            SpaceGameEvents.getPlayerEventSystem().broadcast(new WeaponCooldownUpdate(timerRemainingPercent));
         }
     }
 

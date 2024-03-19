@@ -1,10 +1,14 @@
 package slavsquatsuperstar.demos.spacegame.ui;
 
 import mayonez.*;
+import mayonez.event.*;
+import mayonez.graphics.*;
 import mayonez.graphics.textures.*;
 import mayonez.graphics.ui.*;
 import mayonez.math.*;
 import slavsquatsuperstar.demos.spacegame.combat.projectiles.ProjectilePrefabs;
+import slavsquatsuperstar.demos.spacegame.events.SpaceGameEvents;
+import slavsquatsuperstar.demos.spacegame.events.WeaponCooldownUpdate;
 import slavsquatsuperstar.demos.spacegame.objects.SpaceGameZIndex;
 
 /**
@@ -12,12 +16,12 @@ import slavsquatsuperstar.demos.spacegame.objects.SpaceGameZIndex;
  *
  * @author SlavSquatSuperstar
  */
-public class WeaponSelectPanel extends Script {
+public class WeaponSelectPanel extends Script implements EventListener<Event> {
 
     // Constants
     private static final Texture BACKGROUND_TEXTURE = Textures.getTexture(
             "assets/spacegame/textures/ui/hotbar_background.png");
-    private static final Texture BORDER_TEXTURE =  Textures.getTexture(
+    private static final Texture BORDER_TEXTURE = Textures.getTexture(
             "assets/spacegame/textures/ui/hotbar_border.png");
 
     private static final float BACKGROUND_MARGIN = 5f;
@@ -26,7 +30,8 @@ public class WeaponSelectPanel extends Script {
     // Fields
     private final Vec2 position, size;
     private final UIBox[] backgrounds;
-    private UIBox border;
+    private UIBox selectedBorder, rechargeOverlay;
+    private float rechargePercent;
 
     public WeaponSelectPanel(Vec2 position, Vec2 size, int numWeapons) {
         this.position = position;
@@ -36,10 +41,6 @@ public class WeaponSelectPanel extends Script {
 
     @Override
     public void init() {
-        // TODO show currently active
-        // TODO show fire cooldown
-        gameObject.setZIndex(SpaceGameZIndex.UI);
-
         var boxSpacing = new Vec2(50, 0);
 
         for (int i = 0; i < backgrounds.length; i++) {
@@ -55,16 +56,40 @@ public class WeaponSelectPanel extends Script {
             };
             gameObject.addComponent(icon);
         }
-        border = new UIBox(position, size.add(new Vec2(BORDER_MARGIN)), BORDER_TEXTURE) {
+
+        // Recharge overlay over selected hotbar element
+        rechargeOverlay = new UIBox(position, size.add(new Vec2(BACKGROUND_MARGIN)), new Color(76, 76, 76, 180)) {
             @Override
             public int getZIndex() {
                 return super.getZIndex() + 2; // display above icon
             }
         };
-        gameObject.addComponent(border);
+        gameObject.addComponent(rechargeOverlay);
+
+        // Border over selected hotbar element
+        selectedBorder = new UIBox(position, size.add(new Vec2(BORDER_MARGIN)), BORDER_TEXTURE) {
+            @Override
+            public int getZIndex() {
+                return super.getZIndex() + 3; // display above overlay
+            }
+        };
+        gameObject.addComponent(selectedBorder);
+
+
 
         setSelection(0);
     }
+
+    @Override
+    protected void start() {
+        SpaceGameEvents.getPlayerEventSystem().subscribe(this);
+
+        // TODO show fire cooldown
+        gameObject.setZIndex(SpaceGameZIndex.UI);
+        rechargePercent = 0f;
+    }
+
+    // UI Methods
 
     /**
      * Sets the selected element of the weapon panel and display it as highlighted.
@@ -74,7 +99,37 @@ public class WeaponSelectPanel extends Script {
     public void setSelection(int index) {
         if (!IntMath.inRange(index, 0, backgrounds.length - 1)) return;
         // Move border
-        border.setPosition(backgrounds[index].getPosition());
+        selectedBorder.setPosition(backgrounds[index].getPosition());
+        rechargeOverlay.setPosition(backgrounds[index].getPosition());
     }
 
+    /**
+     * Sets the fill value of the weapon recharge overlay, from bottom to top.
+     *
+     * @param cooldownPercent the percent cooldown to display
+     */
+    public void setCooldownPercent(float cooldownPercent) {
+        // Clamp percent between 0%-100%
+        var clamped = FloatMath.clamp(cooldownPercent, 0f, 1f);
+        // Anchor bottom
+        rechargeOverlay.setSize(size.mul(new Vec2(1f, clamped)));
+        // TODO not moving to correct hotbar slot
+        rechargeOverlay.setPosition(position.sub(size.mul(new Vec2(0f, (1f - clamped) * 0.5f))));
+    }
+
+    // Script Callbacks
+
+    @Override
+    protected void onDestroy() {
+        SpaceGameEvents.getPlayerEventSystem().unsubscribe(this);
+    }
+
+    @Override
+    public void onEvent(Event event) {
+        if (event instanceof WeaponCooldownUpdate u) {
+            rechargePercent = u.getRechargePercent();
+            System.out.println("Recharging: " + rechargePercent);
+            setCooldownPercent(rechargePercent);
+        }
+    }
 }
