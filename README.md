@@ -103,7 +103,6 @@ Development Tools and Libraries
     - [Eclipse Java IDE](https://www.eclipse.org/downloads/) may also be used, but IntelliJ has better Kotlin and Gradle
       integration
 - Build System: [Gradle 8.5+](https://gradle.org/install/)
-    - Utilizes [Gradle Shadow Plugin](https://github.com/johnrengelman/shadow/releases) for creating fat jars
 
 Dependencies (automatically downloaded by Gradle and bundled in JAR)
 
