@@ -60,7 +60,9 @@ public class HealthBar extends Script {
      */
     public void setValue(float healthPercent) {
         // TODO UI set anchor
+        // Clamp percent between 0%-100%
         var clamped = FloatMath.clamp(healthPercent, 0f, 1f);
+        // Anchor left
         foregroundBox.setSize(size.mul(new Vec2(clamped, 1f)));
         foregroundBox.setPosition(position.sub(size.mul(new Vec2((1f - clamped) * 0.5f, 0f))));
     }

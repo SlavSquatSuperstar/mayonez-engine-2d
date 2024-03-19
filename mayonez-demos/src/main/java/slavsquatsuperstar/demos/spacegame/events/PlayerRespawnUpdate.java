@@ -19,4 +19,5 @@ public class PlayerRespawnUpdate extends Event {
     public float getRespawnPercent() {
         return respawnPercent;
     }
+
 }

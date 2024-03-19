@@ -102,7 +102,7 @@ Development Tools and Libraries
 - Recommended IDE: [Intellij IDEA CE 2023.3+](https://www.jetbrains.com/idea/download/)
     - [Eclipse Java IDE](https://www.eclipse.org/downloads/) may also be used, but IntelliJ has better Kotlin and Gradle
       integration
-- Build System: [Gradle 8.5+](https://gradle.org/install/)
+- Build System: [Gradle 8.6+](https://gradle.org/install/)
 
 Dependencies (automatically downloaded by Gradle and bundled in JAR)
 

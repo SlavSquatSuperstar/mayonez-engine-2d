@@ -29,13 +29,17 @@ public class PlayerSpawnManager extends SpawnManager {
     @Override
     protected void update(float dt) {
         spawnTimer.countDown(dt);
-        if (!playerSpawned && spawnTimer.isReady()) spawnObject();
-
-        // Send respawn update
-        // 100% - (remaining cooldown / total cooldown)
-        var respawnPercent = 1f - (spawnTimer.getValue() / spawnTimer.getDuration());
-        SpaceGameEvents.getPlayerEventSystem()
-                .broadcast(new PlayerRespawnUpdate(respawnPercent));
+        if (!playerSpawned) {
+            if (spawnTimer.isReady()) {
+                spawnObject();
+            } else {
+                // Tell UI to recharge health bar when waiting to respawn
+                // 100% - (remaining cooldown / total cooldown)
+                var timerCompletePercent = 1f - (spawnTimer.getValue() / spawnTimer.getDuration());
+                SpaceGameEvents.getPlayerEventSystem()
+                        .broadcast(new PlayerRespawnUpdate(timerCompletePercent));
+            }
+        }
     }
 
     // Spawner Methods

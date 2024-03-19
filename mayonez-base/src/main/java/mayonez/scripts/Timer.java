@@ -49,31 +49,6 @@ public class Timer {
     // Getters and Setters
 
     /**
-     * How long in seconds until the timer is ready.
-     *
-     * @return the remaining value
-     */
-    public float getValue() {
-        return value;
-    }
-
-    /**
-     * Whether the timer has count down to zero.
-     *
-     * @return if the timer is ready
-     */
-    public boolean isReady() {
-        return value <= 0f;
-    }
-
-    /**
-     * Reset the timer to its starting value.
-     */
-    public void reset() {
-        value = duration;
-    }
-
-    /**
      * How long the timer counts in seconds until it is ready.
      *
      * @return the count duration
@@ -93,6 +68,15 @@ public class Timer {
     }
 
     /**
+     * How long in seconds until the timer is ready.
+     *
+     * @return the remaining value
+     */
+    public float getValue() {
+        return value;
+    }
+
+    /**
      * Whether the timer is paused and should not count, false by default.
      *
      * @return if the timer is paused
@@ -108,6 +92,22 @@ public class Timer {
      */
     public void setPaused(boolean paused) {
         this.paused = paused;
+    }
+
+    /**
+     * Whether the timer has count down to zero.
+     *
+     * @return if the timer is ready
+     */
+    public boolean isReady() {
+        return value <= 0f;
+    }
+
+    /**
+     * Reset the timer to its starting value.
+     */
+    public void reset() {
+        value = duration;
     }
 
     @Override
