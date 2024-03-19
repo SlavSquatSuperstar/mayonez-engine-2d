@@ -1,5 +1,6 @@
 plugins {
-    id("mayonez.application-conventions")
+    id("mayonez.java-conventions")
+    id("application") // Enable runnable JVM project
 
     id(shadowPlugin)
     id(dokkaPlugin)
@@ -16,6 +17,7 @@ dependencies {
 application {
     mainModule = mainModuleName
     mainClass = mainClassName
+    applicationDefaultJvmArgs = jvmArgs
 }
 
 tasks {

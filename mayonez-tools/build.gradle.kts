@@ -1,6 +1,5 @@
 plugins {
     id("mayonez.library-conventions")
-    id("mayonez.testing-conventions")
 
     id(shadowPlugin)
     id(dokkaPlugin)
