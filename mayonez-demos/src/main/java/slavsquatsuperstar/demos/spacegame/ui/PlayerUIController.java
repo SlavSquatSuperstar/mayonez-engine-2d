@@ -71,6 +71,9 @@ public class PlayerUIController extends Script implements EventListener<Event> {
             setPlayer(e.getPlayer());
         } else if (event instanceof PlayerDestroyedEvent) {
             setPlayer(null);
+            weaponHotbar.setCooldownPercent(0f);
+            // cooldown overlay is messed up when player is destroyed
+            // find after explosion animation is finished
         } else if (event instanceof PlayerRespawnUpdate u) {
             respawnPercent = u.getRespawnPercent();
         } else if (event instanceof WeaponCooldownUpdate u) {

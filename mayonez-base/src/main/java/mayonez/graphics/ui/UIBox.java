@@ -12,6 +12,7 @@ import mayonez.math.shapes.*;
  *
  * @author SlavSquatSuperstar
  */
+// TODO UI set anchor
 @UsesEngine(EngineType.GL)
 public class UIBox extends Component implements UIElement {
 
