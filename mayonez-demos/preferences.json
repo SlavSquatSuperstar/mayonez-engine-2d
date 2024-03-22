@@ -1,6 +1,6 @@
 {
     "title": "Mayonez Engine",
-    "version": "v0.8.0-pre5-snapshot",
+    "version": "v0.8.0-pre5",
     "screen_width": 1200,
     "screen_height": 800,
     "fps": 60,
