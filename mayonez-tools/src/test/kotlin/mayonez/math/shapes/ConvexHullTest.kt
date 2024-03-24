@@ -1,6 +1,7 @@
 package mayonez.math.shapes
 
 import mayonez.math.*
+import mayonez.math.MathTestUtils.*
 import org.junit.jupiter.api.Test
 
 /**
@@ -23,7 +24,7 @@ internal class ConvexHullTest {
         )
 
         val hull = orderedConvexHull(verts)
-        MathTestUtils.assertVerticesEqual(expectedHull, hull)
+        assertVerticesEqual(expectedHull, hull)
     }
 
     @Test
@@ -39,7 +40,7 @@ internal class ConvexHullTest {
         )
 
         val hull = orderedConvexHull(verts)
-        MathTestUtils.assertVerticesEqual(expectedHull, hull)
+        assertVerticesEqual(expectedHull, hull)
     }
 
 }

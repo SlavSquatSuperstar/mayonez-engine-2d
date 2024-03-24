@@ -1,7 +1,7 @@
 package mayonez.math.shapes
 
 import mayonez.math.*
-import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.assertArrayEquals
 import org.junit.jupiter.api.Test
 
 /**
@@ -18,7 +18,7 @@ internal class PolygonVerticesTest {
         val verts = arrayOf(Vec2(2f, 2f))
         val sorted = orderedVertices(verts)
 
-        Assertions.assertArrayEquals(verts, sorted)
+        assertArrayEquals(verts, sorted)
     }
 
     @Test
@@ -26,7 +26,7 @@ internal class PolygonVerticesTest {
         val verts = arrayOf(Vec2(2f, 2f), Vec2(-1f, -1f))
         val sorted = orderedVertices(verts)
 
-        Assertions.assertArrayEquals(verts, sorted)
+        assertArrayEquals(verts, sorted)
     }
 
     @Test
@@ -39,7 +39,7 @@ internal class PolygonVerticesTest {
         )
 
         val sorted = orderedVertices(verts)
-        Assertions.assertArrayEquals(expectedSorted, sorted)
+        assertArrayEquals(expectedSorted, sorted)
     }
 
     @Test
@@ -52,7 +52,7 @@ internal class PolygonVerticesTest {
         )
 
         val sorted = orderedVertices(verts)
-        Assertions.assertArrayEquals(expectedSorted, sorted)
+        assertArrayEquals(expectedSorted, sorted)
     }
 
     @Test
@@ -65,7 +65,7 @@ internal class PolygonVerticesTest {
         )
 
         val sorted = orderedVertices(verts)
-        Assertions.assertArrayEquals(expectedSorted, sorted)
+        assertArrayEquals(expectedSorted, sorted)
     }
 
     @Test
@@ -80,7 +80,7 @@ internal class PolygonVerticesTest {
         )
 
         val sorted = orderedVertices(verts)
-        Assertions.assertArrayEquals(expectedSorted, sorted)
+        assertArrayEquals(expectedSorted, sorted)
     }
 
     @Test
@@ -95,7 +95,7 @@ internal class PolygonVerticesTest {
         )
 
         val sorted = orderedVertices(verts)
-        Assertions.assertArrayEquals(expectedSorted, sorted)
+        assertArrayEquals(expectedSorted, sorted)
     }
 
     @Test
@@ -110,7 +110,7 @@ internal class PolygonVerticesTest {
         )
 
         val sorted = orderedVertices(verts)
-        Assertions.assertArrayEquals(expectedSorted, sorted)
+        assertArrayEquals(expectedSorted, sorted)
     }
 
 }

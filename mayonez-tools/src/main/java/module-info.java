@@ -4,10 +4,8 @@
  * @author SlavSquatSuperstar
  */
 module mayonez.tools {
-    // JVM
+    // Dependencies
     requires kotlin.stdlib;
-
-    // Other Dependencies
     requires org.json;
 
     // Shared API

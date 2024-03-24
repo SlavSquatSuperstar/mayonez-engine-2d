@@ -24,8 +24,7 @@ public final class MathTestUtils {
     }
 
     /**
-     * Asserts that two sets of vertices are equivalent. Sometimes two arrays may store the same set of vertices
-     * but in a different order.
+     * Asserts that two sets of vertices are equivalent after being sorted.
      *
      * @param verts1 the first set of vertices
      * @param verts2 the second set of vertices
