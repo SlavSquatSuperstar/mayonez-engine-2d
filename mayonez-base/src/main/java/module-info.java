@@ -7,16 +7,16 @@
 module mayonez.base {
     // JVM
     requires java.desktop;
+
+    // Other Dependencies
     requires kotlin.stdlib;
+    requires org.joml;
 
     // LWJGL
     requires org.lwjgl;
     requires org.lwjgl.glfw;
     requires org.lwjgl.opengl;
     requires org.lwjgl.stb;
-
-    // Other Dependencies
-    requires org.joml;
 
     // Subprojects
     requires transitive mayonez.tools;
