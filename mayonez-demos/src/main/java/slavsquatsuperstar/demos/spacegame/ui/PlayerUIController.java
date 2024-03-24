@@ -49,7 +49,7 @@ public class PlayerUIController extends Script implements EventListener<Event> {
 
         // Update weapons selection
         if (fireController != null) {
-            weaponHotbar.setSelection(fireController.getWeaponChoice());
+            weaponHotbar.setSelection(fireController.getSelectedWeapon());
         }
     }
 

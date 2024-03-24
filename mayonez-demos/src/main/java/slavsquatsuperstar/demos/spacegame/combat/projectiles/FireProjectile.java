@@ -1,7 +1,6 @@
 package slavsquatsuperstar.demos.spacegame.combat.projectiles;
 
 import mayonez.*;
-import mayonez.scripts.*;
 
 /**
  * Allows ships to fire damaging projectiles repeatedly and defines criteria for when
@@ -11,41 +10,28 @@ import mayonez.scripts.*;
  */
 public abstract class FireProjectile extends Script {
 
-    // TODO store in subclass
-    protected final Timer fireTimer;
-
-    public FireProjectile() {
-        fireTimer = new Timer(0f);
-    }
-
-    @Override
-    protected void start() {
-        fireTimer.reset();
-    }
-
     @Override
     protected void update(float dt) {
-        fireTimer.countDown(dt);
-        if (isReloaded() && shouldFire()) {
+        // Fire weapons
+        updateCooldowns(dt);
+        if (shouldFire()) {
             getScene().addObject(spawnProjectile());
-            fireTimer.reset();
+            onFire();
         }
     }
 
     /**
-     * Whether the fire cooldown has reached zero.
+     * Update weapon cooldowns.
      *
-     * @return if able to fire
+     * @param dt the time between the last frame
      */
-    protected boolean isReloaded() {
-        return fireTimer.isReady();
-    }
+    protected abstract void updateCooldowns(float dt);
 
     /**
-     * If additional conditions for firing the projectile, such as user input or AI,
-     * are met.
+     * Decide whether to fire the projectile if the weapon is reloaded and other
+     * conditions are met
      *
-     * @return if ready to fire
+     * @return if able and ready to fire
      */
     protected abstract boolean shouldFire();
 
@@ -57,12 +43,8 @@ public abstract class FireProjectile extends Script {
     protected abstract GameObject spawnProjectile();
 
     /**
-     * Set the fire cooldown between each projectile.
-     *
-     * @param cooldown the pause in seconds
+     * Update the weapon cooldown and other state variables after firing.
      */
-    public void setCooldown(float cooldown) {
-        fireTimer.setDuration(cooldown);
-    }
+    protected abstract void onFire();
 
 }

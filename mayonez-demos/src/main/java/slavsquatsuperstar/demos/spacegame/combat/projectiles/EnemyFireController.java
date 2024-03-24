@@ -13,27 +13,55 @@ public class EnemyFireController extends FireProjectile {
 
     private int weaponChoice, shotsLeft;
     private FiringState state;
+    private final Timer fireTimer;
     private final Timer waitTimer; // Time between shoot bursts
 
     public EnemyFireController() {
         super();
-        waitTimer = new Timer(0);
+        fireTimer = new Timer(0f);
+        waitTimer = new Timer(0f);
     }
 
     @Override
     protected void start() {
         state = FiringState.DECIDING;
+        fireTimer.reset();
         waitTimer.reset();
     }
 
     @Override
     protected void update(float dt) {
         super.update(dt);
+        updateFiringState();
         waitTimer.countDown(dt);
     }
 
     @Override
+    protected void updateCooldowns(float dt) {
+        fireTimer.countDown(dt);
+    }
+
+    @Override
     protected boolean shouldFire() {
+        return fireTimer.isReady()
+        && state == FiringState.FIRING;
+    }
+
+    @Override
+    protected GameObject spawnProjectile() {
+        return ProjectilePrefabs.createPrefab(weaponChoice, gameObject);
+    }
+
+    @Override
+    protected void onFire() {
+        fireTimer.reset();
+        shotsLeft -= 1;
+    }
+
+    // Helper Methods
+
+    private void updateFiringState() {
+        // Decide whether to keep firing or wait
         switch (state) {
             case FIRING -> {
                 // Stop shooting if out of ammo
@@ -59,13 +87,6 @@ public class EnemyFireController extends FireProjectile {
                 }
             }
         }
-        return state == FiringState.FIRING;
-    }
-
-    @Override
-    protected GameObject spawnProjectile() {
-        shotsLeft -= 1;
-        return ProjectilePrefabs.createPrefab(weaponChoice, gameObject);
     }
 
     private void selectRandomWeapon() {
@@ -76,6 +97,12 @@ public class EnemyFireController extends FireProjectile {
             shotsLeft = Random.randomInt(1, 10);
         }
     }
+
+    private void setCooldown(float cooldown) {
+        fireTimer.setDuration(cooldown);
+    }
+
+    // Helper Enum
 
     /**
      * What an enemy spaceship's weapons is currently doing.
