@@ -16,9 +16,29 @@ public enum Anchor {
     CENTER(new Vec2(0f, 0f)),
 
     /**
+     * Use the top left corner as the origin.
+     */
+    TOP_LEFT(new Vec2(-1f, 1f)),
+
+    /**
      * Use the center left point as the origin.
      */
     LEFT(new Vec2(-1f, 0f)),
+
+    /**
+     * Use the bottom left corner as the origin.
+     */
+    BOTTOM_LEFT(new Vec2(-1f, -1f)),
+
+    /**
+     * Use the bottom center point as the origin.
+     */
+    BOTTOM(new Vec2(0f, -1f)),
+
+    /**
+     * Use the bottom right point as the origin.
+     */
+    BOTTOM_RIGHT(new Vec2(1f, -1f)),
 
     /**
      * Use the center right point as the origin.
@@ -26,14 +46,14 @@ public enum Anchor {
     RIGHT(new Vec2(1f, 0f)),
 
     /**
-     * Use the top center point as the origin.
+     * Use the top right point as the origin.
      */
-    TOP(new Vec2(0f, 1f)),
+    TOP_RIGHT(new Vec2(1f, 1f)),
 
     /**
-     * Use the bottom center point as the origin.
+     * Use the top center point as the origin.
      */
-    BOTTOM(new Vec2(0f, -1f));
+    TOP(new Vec2(0f, 1f));
 
     private final Vec2 direction;
 

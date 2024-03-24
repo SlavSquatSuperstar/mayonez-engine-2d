@@ -25,10 +25,10 @@ public class PlayerUI extends GameObject {
         var hpSize = new Vec2(192, 32);
         addComponent(new HealthBar(hpPosition, hpSize));
 
-        // Weapon Select
-        var wsPosition = new Vec2(32, 32);
-        var wsSize = new Vec2(32, 32);
-        addComponent(new WeaponHotbar(wsPosition, wsSize, ProjectilePrefabs.NUM_PROJECTILES));
+        // Weapon Hotbar
+        var whPosition = new Vec2(32, 32);
+        var whSize = new Vec2(32, 32);
+        addComponent(new WeaponHotbar(whPosition, whSize, ProjectilePrefabs.NUM_PROJECTILES));
 
         addComponent(playerUIController);
     }

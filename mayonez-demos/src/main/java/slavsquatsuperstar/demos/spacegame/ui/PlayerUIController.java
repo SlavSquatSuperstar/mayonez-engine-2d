@@ -76,7 +76,7 @@ public class PlayerUIController extends Script implements EventListener<Event> {
         } else if (event instanceof PlayerRespawnUpdate u) {
             respawnPercent = u.getRespawnPercent();
         } else if (event instanceof WeaponCooldownUpdate u) {
-            weaponHotbar.setCooldownPercent(u.getWeaponIndex(), u.getRechargePercent());
+            weaponHotbar.setCooldownPercent(u.getWeaponIndex(), u.getCooldownPercent());
         }
     }
 

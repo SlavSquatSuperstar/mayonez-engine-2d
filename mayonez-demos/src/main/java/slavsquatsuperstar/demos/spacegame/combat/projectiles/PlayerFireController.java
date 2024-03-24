@@ -39,7 +39,6 @@ public class PlayerFireController extends FireProjectile {
                 setSelectedWeapon(projIdx);
             }
         }
-
         super.update(dt);
     }
 
