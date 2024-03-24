@@ -17,7 +17,7 @@ public class HealthBar extends Script {
     private static final Texture BORDER_TEXTURE = Textures.getTexture(
             "assets/spacegame/textures/ui/health_bar_border.png");
     private final Vec2 position, size;
-    private UIBox foregroundBox;
+    private UIBox sliderBox;
 
     public HealthBar(Vec2 position, Vec2 size) {
         this.position = position;
@@ -36,13 +36,15 @@ public class HealthBar extends Script {
         };
         gameObject.addComponent(backgroundBox);
 
-        foregroundBox = new UIBox(position, size, Colors.GREEN) {
+        sliderBox = new UIBox(position, size, Colors.GREEN) {
             @Override
             public int getZIndex() {
                 return super.getZIndex() + 1; // display above background
             }
         };
-        gameObject.addComponent(foregroundBox);
+        sliderBox.setAnchor(Anchor.LEFT);
+        sliderBox.translateToAnchorOrigin();
+        gameObject.addComponent(sliderBox);
 
         var outlineBox = new UIBox(position, size, BORDER_TEXTURE) {
             @Override
@@ -61,9 +63,7 @@ public class HealthBar extends Script {
     public void setHealthPercent(float healthPercent) {
         // Clamp percent between 0%-100%
         var clamped = FloatMath.clamp(healthPercent, 0f, 1f);
-        // Anchor left
-        foregroundBox.setSize(size.mul(new Vec2(clamped, 1f)));
-        foregroundBox.setPosition(position.sub(size.mul(new Vec2((1f - clamped) * 0.5f, 0f))));
+        sliderBox.setSize(size.mul(new Vec2(clamped, 1f)));
     }
 
 }

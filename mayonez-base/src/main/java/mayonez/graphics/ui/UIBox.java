@@ -8,7 +8,7 @@ import mayonez.math.*;
 import mayonez.math.shapes.*;
 
 /**
- * Draws a colored box on the UI.
+ * Draws a colored or textured box on the UI.
  *
  * @author SlavSquatSuperstar
  */
@@ -20,6 +20,7 @@ public class UIBox extends Component implements UIElement {
     private Vec2 position, size;
     private Texture texture;
     private Color color;
+    private Anchor anchor;
 
     private UIBox(Vec2 position, Vec2 size, Texture texture, Color color) {
         super(UpdateOrder.RENDER);
@@ -27,6 +28,7 @@ public class UIBox extends Component implements UIElement {
         this.size = size;
         this.texture = texture;
         this.color = color;
+        this.anchor = Anchor.CENTER;
     }
 
     public UIBox(Vec2 position, Vec2 size, Texture texture) {
@@ -78,12 +80,43 @@ public class UIBox extends Component implements UIElement {
         this.texture = texture;
     }
 
+    // Anchor Methods
+
+    @Override
+    public Anchor getAnchor() {
+        return anchor;
+    }
+
+    @Override
+    public void setAnchor(Anchor anchor) {
+        this.anchor = anchor;
+    }
+
+    /**
+     * Get the difference between the anchor point and this element's center.
+     *
+     * @return the anchor direction
+     */
+    public Vec2 getAnchorTranslateDirection() {
+        return size.mul(anchor.getDirection().mul(0.5f));
+    }
+
+    /**
+     * Moves this element so the anchored center equals the original center.
+     */
+    public void translateToAnchorOrigin() {
+        setPosition(position.add(getAnchorTranslateDirection()));
+    }
+
     // Renderer Methods
     @Override
     public void pushToBatch(RenderBatch batch) {
         var texID = batch.getTextureSlot((GLTexture) texture);
         var texCoords = (texture != null) ? ((GLTexture) texture).getTexCoords() : GLTexture.DEFAULT_TEX_COORDS;
-        var sprVertices = new BoundingBox(position, size).getVertices();
+        var sprBox = new BoundingBox(
+                position.sub(getAnchorTranslateDirection()), size
+        );
+        var sprVertices = sprBox.getVertices();
         BatchPushHelper.pushTexture(batch, sprVertices, color, texCoords, texID);
     }
 
