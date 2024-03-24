@@ -42,7 +42,7 @@ public abstract class Script extends Component {
      * Warning: Calling {@code init()} at any other point in time may lead to unintended errors
      * and should be avoided!
      */
-    public void init() {
+    protected void init() {
     }
 
     // Component Methods
@@ -61,7 +61,7 @@ public abstract class Script extends Component {
         return (T) this;
     }
 
-    public final void destroy() {
+    final void destroy() {
         setEnabled(false);
         onDestroy();
         super.destroy();
@@ -153,7 +153,7 @@ public abstract class Script extends Component {
      *
      * @return the collider, if it exists
      */
-    public Collider getCollider() {
+    protected Collider getCollider() {
         return gameObject.getComponent(Collider.class);
     }
 
@@ -162,7 +162,7 @@ public abstract class Script extends Component {
      *
      * @return the rigidbody, if it exists
      */
-    public Rigidbody getRigidbody() {
+    protected Rigidbody getRigidbody() {
         return gameObject.getComponent(Rigidbody.class);
     }
 

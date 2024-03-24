@@ -23,7 +23,7 @@ public class PlaceBlockCursor extends GameObject {
     }
 
     @Override
-    public void init() {
+    protected void init() {
         cursorSprite = Sprites.createSprite(CURSOR_COLOR);
         addComponent(cursorSprite.setEnabled(false));
     }

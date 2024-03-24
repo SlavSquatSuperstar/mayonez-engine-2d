@@ -34,7 +34,7 @@ public class WeaponHotbar extends Script {
     }
 
     @Override
-    public void init() {
+    protected void init() {
         gameObject.setZIndex(SpaceGameZIndex.UI);
 
         // Create hotbar slots

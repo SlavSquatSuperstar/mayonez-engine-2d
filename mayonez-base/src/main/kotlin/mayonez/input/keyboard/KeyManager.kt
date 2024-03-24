@@ -10,7 +10,6 @@ private const val INITIAL_NUM_KEYS = 64
  *
  * @author SlavSquatSuperstar
  */
-// TODO GLFW sticky keys?
 // TODO concurrent modification sometimes happens
 sealed class KeyManager : KeyAdapter() {
 

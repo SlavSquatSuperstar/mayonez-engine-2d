@@ -35,7 +35,7 @@ public class Animator extends Script {
     }
 
     @Override
-    public void init() {
+    protected void init() {
         sprite = Sprites.createSprite(textures[0]);
         gameObject.addComponent(sprite.setEnabled(false));
     }

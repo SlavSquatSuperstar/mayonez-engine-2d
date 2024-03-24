@@ -36,7 +36,7 @@ public class MarioScene extends Scene {
     }
 
     @Override
-    public void init() {
+    protected void init() {
         setBackground(Colors.LIGHT_GRAY);
         setBackground(background);
         setGravity(new Vec2(0, -SCENE_GRAVITY));

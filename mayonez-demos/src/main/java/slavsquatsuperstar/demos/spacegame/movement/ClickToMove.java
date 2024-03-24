@@ -42,7 +42,7 @@ public class ClickToMove extends Script {
     }
 
     @Override
-    public void init() {
+    protected void init() {
         lastPos.set(transform.getPosition());
         destPos.set(lastPos);
         moving = turning = false;

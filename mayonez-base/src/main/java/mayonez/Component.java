@@ -97,7 +97,7 @@ public abstract class Component {
      * <p>
      * Warning: Destroying a component is permanent and cannot be reversed!
      */
-    public void destroy() {
+    void destroy() {
         gameObject = null;
         transform = null;
     }

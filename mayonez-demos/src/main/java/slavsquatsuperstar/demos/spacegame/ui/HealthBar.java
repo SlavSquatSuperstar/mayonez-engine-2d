@@ -25,7 +25,7 @@ public class HealthBar extends Script {
     }
 
     @Override
-    public void init() {
+    protected void init() {
         gameObject.setZIndex(SpaceGameZIndex.UI);
 
         var backgroundBox = new UIBox(position, size, Colors.RED) {

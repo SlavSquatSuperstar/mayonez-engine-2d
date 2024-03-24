@@ -33,7 +33,7 @@ public class WeaponHotbarSlot extends Script {
     }
 
     @Override
-    public void init() {
+    protected void init() {
         gameObject.setZIndex(SpaceGameZIndex.UI);
 
         // Background element

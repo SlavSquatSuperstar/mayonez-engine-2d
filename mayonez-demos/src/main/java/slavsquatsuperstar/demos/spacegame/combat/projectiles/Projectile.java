@@ -22,7 +22,7 @@ public class Projectile extends Script {
     }
 
     @Override
-    public void init() {
+    protected void init() {
         gameObject.addComponent(new DestroyAfterDuration(lifetime));
     }
 

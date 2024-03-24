@@ -49,7 +49,7 @@ public class PlayerFireController extends FireProjectile {
         // Send cooldown updates
         for (int i = 0; i < numWeapons; i++) {
             var fireTimer = fireTimers[i];
-            if (fireTimer.getValue() > -dt) { // Don't let the timer count too negative
+            if (fireTimer.getValue() > -dt) { // Don't send event if timer is too negative
                 var timerRemainingPercent = fireTimer.getValue() / fireTimer.getDuration();
                 SpaceGameEvents.getPlayerEventSystem().broadcast(new WeaponCooldownUpdate(i, timerRemainingPercent));
             }

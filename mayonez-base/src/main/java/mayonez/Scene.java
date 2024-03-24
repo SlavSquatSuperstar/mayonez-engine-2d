@@ -129,7 +129,6 @@ public abstract class Scene {
      *
      * @param dt seconds since the last frame
      */
-    // TODO Make hidden and call from SceneManager
     final void update(float dt) {
         onUserUpdate(dt);
         if (isRunning()) updateSceneObjects(dt);

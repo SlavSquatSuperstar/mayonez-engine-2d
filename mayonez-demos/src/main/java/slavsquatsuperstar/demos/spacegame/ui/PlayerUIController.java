@@ -35,7 +35,6 @@ public class PlayerUIController extends Script implements EventListener<Event> {
         if (healthBar == null || weaponHotbar == null) setEnabled(false);
     }
 
-    // TODO show fire cooldown
     @Override
     protected void update(float dt) {
         if (damageable != null) {

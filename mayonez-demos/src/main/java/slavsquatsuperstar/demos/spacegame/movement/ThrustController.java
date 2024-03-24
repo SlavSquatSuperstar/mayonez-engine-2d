@@ -43,7 +43,6 @@ public abstract class ThrustController extends Script {
         // Calculate brake direction and slow motion
         Vec2 brakeDir;
         float angBrakeDir;
-        // TODO update dynamically and rotate with ship
         if (isBraking()) {
             rb.setDrag(BRAKE_DRAG).setAngDrag(BRAKE_DRAG);
             brakeDir = rb.getVelocity().mul(-1f)
