@@ -9,11 +9,17 @@ import mayonez.event.*;
  */
 public class WeaponCooldownUpdate extends Event {
 
+    private final int weaponIndex;
     private final float rechargePercent;
 
-    public WeaponCooldownUpdate(float rechargePercent) {
-        super("Recharge progress: %.2f%%".formatted(rechargePercent * 100f));
+    public WeaponCooldownUpdate(int weaponIndex, float rechargePercent) {
+        super("Recharge progress for slot %d: %.2f%%".formatted(weaponIndex, rechargePercent * 100f));
+        this.weaponIndex = weaponIndex;
         this.rechargePercent = rechargePercent;
+    }
+
+    public int getWeaponIndex() {
+        return weaponIndex;
     }
 
     public float getRechargePercent() {

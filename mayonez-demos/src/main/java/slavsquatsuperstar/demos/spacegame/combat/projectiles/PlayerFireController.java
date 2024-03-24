@@ -33,8 +33,6 @@ public class PlayerFireController extends FireProjectile {
 
     @Override
     protected void update(float dt) {
-        super.update(dt);
-
         // Select weapon from keyboard
         for (var projIdx = 0; projIdx < ProjectilePrefabs.count(); projIdx++) {
             if (KeyInput.keyPressed(String.valueOf(projIdx + 1))) {
@@ -42,19 +40,21 @@ public class PlayerFireController extends FireProjectile {
             }
         }
 
-        // Send cooldown updates
-//        for (int i = 0; i < numWeapons; i++) {
-        var fireTimer = fireTimers[selectedWeapon];
-        if (fireTimer.getValue() > -dt) { // Don't let the timer count too negative
-            var timerRemainingPercent = fireTimer.getValue() / fireTimer.getDuration();
-            SpaceGameEvents.getPlayerEventSystem().broadcast(new WeaponCooldownUpdate(timerRemainingPercent));
-        }
-//        }
+        super.update(dt);
     }
 
     @Override
     protected void updateCooldowns(float dt) {
         for (var timer : fireTimers) timer.countDown(dt);
+
+        // Send cooldown updates
+        for (int i = 0; i < numWeapons; i++) {
+            var fireTimer = fireTimers[i];
+            if (fireTimer.getValue() > -dt) { // Don't let the timer count too negative
+                var timerRemainingPercent = fireTimer.getValue() / fireTimer.getDuration();
+                SpaceGameEvents.getPlayerEventSystem().broadcast(new WeaponCooldownUpdate(i, timerRemainingPercent));
+            }
+        }
     }
 
     @Override
