@@ -99,16 +99,15 @@ Development Tools and Libraries
 - Java Version: [Eclipse Temurin 17+](https://adoptium.net)
   or [Oracle OpenJDK 17+](https://www.oracle.com/java/technologies/downloads/#java17)
 - Kotlin Version: [1.9+](https://kotlinlang.org/docs/whatsnew19.html)
-- Recommended IDE: [Intellij IDEA CE 2023.2+](https://www.jetbrains.com/idea/download/)
+- Recommended IDE: [Intellij IDEA CE 2023.3+](https://www.jetbrains.com/idea/download/)
     - [Eclipse Java IDE](https://www.eclipse.org/downloads/) may also be used, but IntelliJ has better Kotlin and Gradle
       integration
-- Build System: [Gradle 8.3+](https://gradle.org/install/)
-    - Utilizes [Gradle Shadow Plugin](https://github.com/johnrengelman/shadow/releases) for creating fat jars
+- Build System: [Gradle 8.6+](https://gradle.org/install/)
 
 Dependencies (automatically downloaded by Gradle and bundled in JAR)
 
 - [Kotlin Standard Library](https://kotlinlang.org/docs/getting-started.html)
-- [LWJGL 3.3.2](https://www.lwjgl.org/customize) (user OS & architecture specific)
+- [LWJGL 3.3.3](https://www.lwjgl.org/customize) (user OS & architecture specific)
     - Libraries: [JOML](https://joml-ci.github.io/JOML/), GLFW, OpenGL, and STB
 - [JSON in Java](https://github.com/stleary/JSON-java) (org.json)
 - [Java Reflections](https://github.com/ronmamo/reflections) (org.reflections, custom implementation)
