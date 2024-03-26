@@ -2,8 +2,8 @@ plugins {
     id("mayonez.java-conventions")
 
     id(shadowPlugin) version "8.1.1" apply false
-    id(dokkaPlugin) version "1.8.20" apply true
     id(kotlinPlugin) version kotlinVersion apply false
+    id(dokkaPlugin) version "1.8.20" apply true
 }
 
 // Project Info
@@ -23,7 +23,7 @@ dependencies {
 // Plugins and Tasks
 tasks {
     wrapper {
-        gradleVersion = "8.3"
+        gradleVersion = "8.6"
         distributionType = Wrapper.DistributionType.BIN
     }
 }
