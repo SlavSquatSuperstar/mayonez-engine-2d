@@ -11,7 +11,7 @@
       <option name="taskNames">
         <list>
           <option value="clean" />
-          <option value="installShadowDist" />
+          <option value="build" />
           <option value="dokkaJavadocCollector" />
         </list>
       </option>

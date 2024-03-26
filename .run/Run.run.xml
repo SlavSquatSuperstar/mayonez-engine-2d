@@ -10,8 +10,7 @@
       </option>
       <option name="taskNames">
         <list>
-          <option value="clean" />
-          <option value="runShadow" />
+          <option value="run" />
         </list>
       </option>
       <option name="vmOptions" value="" />

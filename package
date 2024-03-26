@@ -11,7 +11,7 @@ cd "$SCRIPT_DIR" || exit
 
 # Build the Gradle project
 echo "Building Mayonez Engine..."
-if [ "$(./gradlew clean installShadowDist)" ]; then
+if [ "$(./gradlew jar)" ]; then
   echo "Successfully built Mayonez Engine."
 else
   echo "Error building Mayonez Engine."

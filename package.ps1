@@ -27,7 +27,7 @@ function Exit-Script {
 
 # Build the Gradle project
 Write-Output "Building Mayonez Engine..."
-.\gradlew.bat clean installShadowDist
+.\gradlew.bat jar
 if (-not$?)
 {
   Write-Output "Error building Mayonez Engine."
