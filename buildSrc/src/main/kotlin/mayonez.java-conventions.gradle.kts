@@ -3,12 +3,14 @@ plugins {
     id("java")
 }
 
+// Set a common JDK version
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(javaVersion))
+        languageVersion = JavaLanguageVersion.of(javaVersion)
     }
 }
 
+// Enable Maven repository
 repositories {
     mavenCentral()
 }

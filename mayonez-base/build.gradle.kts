@@ -1,24 +1,22 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     id("mayonez.library-conventions")
-    id("mayonez.testing-conventions")
 
-    id(shadowPlugin)
-    id(dokkaPlugin)
     id(kotlinPlugin)
+    id(dokkaPlugin)
 }
 
 description = "The library project for Mayonez Engine that contains the core and API classes."
 
-private val junitVersion = "5.10.0"
-
 dependencies {
     // Code Dependencies
     implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
-    implementation("org.json:json:20230618")
+    implementation("org.json:json:20240303")
 
     // LWJGL Modules
     implementation("org.joml:joml:1.10.5")
-    implementation(platform("org.lwjgl:lwjgl-bom:3.3.2")) // Bill of materials: set version for all libs
+    implementation(platform("org.lwjgl:lwjgl-bom:$lwjglVersion")) // Bill of materials: set version for all libs
 
     implementation("org.lwjgl:lwjgl")
     implementation("org.lwjgl:lwjgl-glfw")
@@ -34,19 +32,24 @@ dependencies {
 // Plugins and Tasks
 
 tasks {
-    shadowJar {
-        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-        archiveClassifier.set("")
-    }
-
     compileJava {
-        dependsOn(compileKotlin)
+        dependsOn(copyKotlinClasses) // Compile Kotlin sources before Java sources
     }
 
-    compileKotlin {
+    withType<KotlinCompile> {
         compilerOptions {
             suppressWarnings.set(true)
-            destinationDirectory.set(file("build/classes/java/main"))
         }
+    }
+}
+
+// Copy outputs into java build folder
+val copyKotlinClasses = tasks.register<Copy>("copyKotlinClasses") {
+    dependsOn(tasks.compileKotlin) // Compile Kotlin sources before Java sources
+    from("build/classes/kotlin/main")
+    into("build/classes/java/main")
+    include("**/*.class", "**/*.kotlin_module")
+    doLast {
+        delete("build/classes/java/main/module-info.class")
     }
 }
