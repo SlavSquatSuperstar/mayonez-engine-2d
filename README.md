@@ -98,7 +98,7 @@ Development Tools and Libraries
 
 - Java Version: [Eclipse Temurin 17+](https://adoptium.net)
   or [Oracle OpenJDK 17+](https://www.oracle.com/java/technologies/downloads/#java17)
-- Kotlin Version: [1.9+](https://kotlinlang.org/docs/whatsnew19.html)
+- Kotlin Version: [1.9+](https://kotlinlang.org/docs/whatsnew1920.html)
 - Recommended IDE: [Intellij IDEA CE 2023.3+](https://www.jetbrains.com/idea/download/)
     - [Eclipse Java IDE](https://www.eclipse.org/downloads/) may also be used, but IntelliJ has better Kotlin and Gradle
       integration

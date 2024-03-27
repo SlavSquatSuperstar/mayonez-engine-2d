@@ -23,7 +23,12 @@ dependencies {
 // Plugins and Tasks
 tasks {
     wrapper {
-        gradleVersion = "8.6"
+        gradleVersion = "8.7"
         distributionType = Wrapper.DistributionType.BIN
+    }
+
+    jar {
+        // Build the runnable jar in demos instead
+        enabled = false
     }
 }
