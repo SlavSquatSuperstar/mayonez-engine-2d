@@ -20,4 +20,8 @@ tasks {
     test {
         useJUnitPlatform()
     }
+
+    jar {
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE // Don't copy Kotlin module
+    }
 }

@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     id("mayonez.library-conventions")
 
@@ -16,31 +18,21 @@ dependencies {
 // Plugins and Tasks
 
 tasks {
-    jar {
-        duplicatesStrategy = DuplicatesStrategy.EXCLUDE // Don't copy Kotlin module
-    }
-
-    testClasses {
-        dependsOn(classes) // Compile main sources before test sources
-    }
-
-    compileTestJava {
-        dependsOn(compileTestKotlin) // Compile Kotlin sources before Java sources
-    }
-
-    compileTestKotlin {
-        compilerOptions {
-            suppressWarnings.set(true)
-        }
-    }
-
     compileJava {
-        dependsOn(compileKotlin) // Compile Kotlin sources before Java sources
+        dependsOn(copyKotlinClasses) // Make sure Kotlin classes are in both folders
     }
 
-    compileKotlin {
+    withType<KotlinCompile> {
         compilerOptions {
             suppressWarnings.set(true)
         }
     }
+}
+
+// Copy outputs into java build folder
+val copyKotlinClasses = tasks.register<Copy>("copyKotlinClasses") {
+    dependsOn(tasks.compileKotlin) // Compile Kotlin sources before Java sources
+    from("build/classes/kotlin/main")
+    include("**/*.class", "**/*.kotlin_module")
+    into("build/classes/java/main")
 }
