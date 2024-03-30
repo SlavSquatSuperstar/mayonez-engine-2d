@@ -1,7 +1,7 @@
 plugins {
-    id("mayonez.application-conventions")
+    id("mayonez.java-conventions")
+    id("application") // Enable runnable JVM project
 
-    id(shadowPlugin)
     id(dokkaPlugin)
 }
 
@@ -14,13 +14,20 @@ dependencies {
 // Plugins and Tasks
 
 application {
-    mainModule.set(mainModuleName)
-    mainClass.set(mainClassName)
+//    mainModule = mainModuleName // Leave blank to prevent module ResolutionError
+    mainClass = mainClassName
+    applicationDefaultJvmArgs = jvmArgs
 }
 
 tasks {
-    shadowJar { // For building fat jar
+    jar {
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-        archiveClassifier.set("")
+        manifest {
+            attributes(mapOf("Main-Class" to mainClassName))
+        }
+
+        // Build a fatjar with all the dependencies
+        from(configurations.runtimeClasspath.get()
+            .map { if (it.isDirectory) it else zipTree(it) })
     }
 }

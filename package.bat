@@ -11,7 +11,7 @@ cd %SCRIPT_DIR% || exit /b 1
 
 rem Build the Gradle Project
 echo Building Mayonez Engine...
-call .\gradlew.bat clean installShadowDist
+call .\gradlew.bat jar
 
 if %ERRORLEVEL% equ 0 (
     echo Successfully built Mayonez Engine.
