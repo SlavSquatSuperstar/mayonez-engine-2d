@@ -98,11 +98,11 @@ Development Tools and Libraries
 
 - Java Version: [Eclipse Temurin 17+](https://adoptium.net)
   or [Oracle OpenJDK 17+](https://www.oracle.com/java/technologies/downloads/#java17)
-- Kotlin Version: [1.9+](https://kotlinlang.org/docs/whatsnew19.html)
+- Kotlin Version: [1.9+](https://kotlinlang.org/docs/whatsnew1920.html)
 - Recommended IDE: [Intellij IDEA CE 2023.3+](https://www.jetbrains.com/idea/download/)
     - [Eclipse Java IDE](https://www.eclipse.org/downloads/) may also be used, but IntelliJ has better Kotlin and Gradle
       integration
-- Build System: [Gradle 8.6+](https://gradle.org/install/)
+- Build System: [Gradle 8.7+](https://gradle.org/install/)
 
 Dependencies (automatically downloaded by Gradle and bundled in JAR)
 
@@ -203,6 +203,6 @@ This software may not be redistributed without the license file. If your downloa
 you should ask the distributor to include it. The [.txt version](https://www.gnu.org/licenses/gpl-3.0.txt) is available
 on the GNU website.
 
-Copyright © SlavSquatSuperstar 2023 GPLv3 License
+Copyright © 2020-2024 SlavSquatSuperstar GPLv3
 
 Email: [slavsquatsuperstar@gmail.com](mailto:slavsquatsuperstar@gmail.com)
