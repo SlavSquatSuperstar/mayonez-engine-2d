@@ -35,7 +35,7 @@ dependencies {
 
 tasks {
     compileJava {
-        dependsOn(copyKotlinClasses) // Compile Kotlin sources before Java sources
+        dependsOn("copyKotlinClasses") // Compile Kotlin sources before Java sources
     }
 
     withType<KotlinCompile> {
@@ -43,15 +43,15 @@ tasks {
             suppressWarnings.set(true)
         }
     }
-}
 
-// Copy outputs into java build folder
-val copyKotlinClasses = tasks.register<Copy>("copyKotlinClasses") {
-    dependsOn(tasks.compileKotlin) // Compile Kotlin sources before Java sources
-    from("build/classes/kotlin/main")
-    into("build/classes/java/main")
-    include("**/*.class", "**/*.kotlin_module")
-    doLast {
-        delete("build/classes/java/main/module-info.class")
+    // Copy outputs into java build folder
+    register<Copy>("copyKotlinClasses") {
+        dependsOn(compileKotlin) // Compile Kotlin sources before Java sources
+        from("build/classes/kotlin/main")
+        into("build/classes/java/main")
+        include("**/*.class", "**/*.kotlin_module")
+        doLast {
+            delete("build/classes/java/main/module-info.class")
+        }
     }
 }

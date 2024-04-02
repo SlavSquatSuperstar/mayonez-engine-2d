@@ -19,7 +19,7 @@ dependencies {
 
 tasks {
     compileJava {
-        dependsOn(copyKotlinClasses) // Make sure Kotlin classes are in both folders
+        dependsOn("copyKotlinClasses") // Make sure Kotlin classes are in both folders
     }
 
     withType<KotlinCompile> {
@@ -27,12 +27,12 @@ tasks {
             suppressWarnings.set(true)
         }
     }
-}
 
-// Copy outputs into java build folder
-val copyKotlinClasses = tasks.register<Copy>("copyKotlinClasses") {
-    dependsOn(tasks.compileKotlin) // Compile Kotlin sources before Java sources
-    from("build/classes/kotlin/main")
-    include("**/*.class", "**/*.kotlin_module")
-    into("build/classes/java/main")
+    // Copy outputs into java build folder
+    register<Copy>("copyKotlinClasses") {
+        dependsOn(compileKotlin) // Compile Kotlin sources before Java sources
+        from("build/classes/kotlin/main")
+        include("**/*.class", "**/*.kotlin_module")
+        into("build/classes/java/main")
+    }
 }

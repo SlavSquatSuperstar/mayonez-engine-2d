@@ -88,7 +88,7 @@ Editing the Project
     - Run: Launches the program with the demo scenes
     - Test: Runs the unit tests
     - Build: Builds the fat .jar file with dependencies
-    - Export: Build the .jar and generates JavaDoc
+    - Javadoc: Build the .jar and generates JavaDoc
 - There are also several scripts to help automate production:
     - `run`: Builds and runs the project
     - `package`: Packages the project into the `dist/` folder
