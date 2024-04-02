@@ -2,6 +2,7 @@ package slavsquatsuperstar.demos.spacegame.combat.projectiles;
 
 import mayonez.*;
 import mayonez.input.*;
+import mayonez.math.*;
 import mayonez.scripts.*;
 import slavsquatsuperstar.demos.spacegame.events.SpaceGameEvents;
 import slavsquatsuperstar.demos.spacegame.events.WeaponCooldownUpdate;
@@ -63,13 +64,13 @@ public class PlayerFireController extends FireProjectile {
     }
 
     @Override
-    protected GameObject spawnProjectile() {
-        return ProjectilePrefabs.createPrefab(selectedWeapon, gameObject);
     }
 
     @Override
     protected void onFire() {
         fireTimers[selectedWeapon].reset();
+    protected GameObject spawnProjectile() {
+        return ProjectilePrefabs.createPrefab(selectedWeapon, gameObject, new Vec2(0f, 0.4f), 0f);
     }
 
     // Helper Methods

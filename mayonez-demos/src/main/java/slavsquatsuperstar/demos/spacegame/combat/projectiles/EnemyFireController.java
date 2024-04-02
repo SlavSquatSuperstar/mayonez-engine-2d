@@ -48,9 +48,6 @@ public class EnemyFireController extends FireProjectile {
     }
 
     @Override
-    protected GameObject spawnProjectile() {
-        return ProjectilePrefabs.createPrefab(weaponChoice, gameObject);
-    }
 
     @Override
     protected void onFire() {
@@ -58,6 +55,9 @@ public class EnemyFireController extends FireProjectile {
         shotsLeft -= 1;
     }
 
+    protected GameObject spawnProjectile() {
+        return ProjectilePrefabs.createPrefab(weaponChoice, gameObject, new Vec2(0f, 0.4f), 0f);
+    }
     // Helper Methods
 
     private void updateFiringState() {

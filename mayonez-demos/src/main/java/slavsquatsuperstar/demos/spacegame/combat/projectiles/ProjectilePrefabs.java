@@ -4,6 +4,7 @@ import mayonez.*;
 import mayonez.assets.*;
 import mayonez.assets.text.*;
 import mayonez.graphics.sprites.*;
+import mayonez.math.*;
 import mayonez.math.Random;
 import mayonez.physics.colliders.*;
 import mayonez.physics.dynamics.*;
@@ -72,17 +73,32 @@ public final class ProjectilePrefabs {
      *
      * @param projectileIndex the index of the {@link ProjectileType}
      * @param source          the object that fired the projectile
+     * @param offsetPos       the projectile spawn position in relation to the source
+     * @param offsetAngle     the projectile spawn angle in relation to the source
      * @return the projectile object, or null if the index is invalid
      */
-    public static GameObject createPrefab(int projectileIndex, GameObject source) {
+    public static GameObject createPrefab(
+            int projectileIndex, GameObject source, Vec2 offsetPos, float offsetAngle
+    ) {
         var type = getProjectileType(projectileIndex);
         if (type == null) return null;
-        else return createProjectileObject(type, source);
+
+        var projXf = getProjectileTransform(type, source.transform, offsetPos, offsetAngle);
+        return createProjectileObject(type, source, projXf);
     }
 
-    // TODO add spawn offset
-    private static GameObject createProjectileObject(ProjectileType type, GameObject source) {
-        return new GameObject(type.name(), getProjectileTransform(type, source), SpaceGameZIndex.PROJECTILE) {
+    /**
+     * Create a projectile object to be fired.
+     *
+     * @param type   the projectile type
+     * @param source the object that fired the projectile
+     * @param projXf the projectile transform
+     * @return the projectile object
+     */
+    private static GameObject createProjectileObject(
+            ProjectileType type, GameObject source, Transform projXf
+    ) {
+        return new GameObject(type.name(), projXf, SpaceGameZIndex.PROJECTILE) {
             @Override
             protected void init() {
                 setLayer(getScene().getLayer(SpaceGameLayer.PROJECTILES));
@@ -95,11 +111,23 @@ public final class ProjectilePrefabs {
         };
     }
 
-    private static Transform getProjectileTransform(ProjectileType type, GameObject source) {
-        var sourceXf = source.transform;
+    /**
+     * Get the projectile transform in world space.
+     *
+     * @param type        the projectile type
+     * @param sourceXf    the transform of the source object
+     * @param offsetPos   the projectile spawn position in relation to the source
+     * @param offsetAngle the projectile spawn angle in relation to the source
+     * @return the projectile transform
+     */
+    private static Transform getProjectileTransform(
+            ProjectileType type, Transform sourceXf, Vec2 offsetPos, float offsetAngle
+    ) {
+        var weaponSpreadAngle = Random.randomFloat(-type.weaponSpread(), type.weaponSpread());
         return new Transform(
-                sourceXf.getPosition().add(sourceXf.getUp().mul(0.5f)),
-                sourceXf.getRotation() + Random.randomFloat(-type.weaponSpread(), type.weaponSpread()),
+//                sourceXf.getPosition().add(offsetPos.rotate(sourceXf.getRotation())),
+                sourceXf.toWorld(offsetPos),
+                sourceXf.getRotation() + offsetAngle + weaponSpreadAngle,
                 type.scale()
         );
     }
