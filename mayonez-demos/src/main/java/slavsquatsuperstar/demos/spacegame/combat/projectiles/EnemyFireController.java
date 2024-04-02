@@ -1,6 +1,5 @@
 package slavsquatsuperstar.demos.spacegame.combat.projectiles;
 
-import mayonez.*;
 import mayonez.math.*;
 import mayonez.scripts.*;
 
@@ -31,14 +30,10 @@ public class EnemyFireController extends FireProjectile {
 
     @Override
     protected void update(float dt) {
+        fireTimer.countDown(dt);
         super.update(dt);
         updateFiringState();
         waitTimer.countDown(dt);
-    }
-
-    @Override
-    protected void updateCooldowns(float dt) {
-        fireTimer.countDown(dt);
     }
 
     @Override
@@ -48,16 +43,13 @@ public class EnemyFireController extends FireProjectile {
     }
 
     @Override
+    protected void fireProjectiles() {
+        spawnPrefab(weaponChoice, new Vec2(0f, 0.4f), 0f);
 
-    @Override
-    protected void onFire() {
         fireTimer.reset();
         shotsLeft -= 1;
     }
 
-    protected GameObject spawnProjectile() {
-        return ProjectilePrefabs.createPrefab(weaponChoice, gameObject, new Vec2(0f, 0.4f), 0f);
-    }
     // Helper Methods
 
     private void updateFiringState() {

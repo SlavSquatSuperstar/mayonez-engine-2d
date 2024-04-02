@@ -1,6 +1,5 @@
 package slavsquatsuperstar.demos.spacegame.combat.projectiles;
 
-import mayonez.*;
 import mayonez.input.*;
 import mayonez.math.*;
 import mayonez.scripts.*;
@@ -40,11 +39,33 @@ public class PlayerFireController extends FireProjectile {
                 setSelectedWeapon(projIdx);
             }
         }
+        updateCooldowns(dt);
         super.update(dt);
     }
 
     @Override
-    protected void updateCooldowns(float dt) {
+    protected boolean shouldFire() {
+        return fireTimers[selectedWeapon].isReady()
+                && MouseInput.buttonDown("left mouse");
+    }
+
+    @Override
+    protected void fireProjectiles() {
+        Vec2[] offsetPositions = {
+                new Vec2(0, 0.4f),
+                new Vec2(-0.2f, 0.2f),
+                new Vec2(0.2f, 0.2f)
+        };
+        float offsetAngle = 0f;
+        for (var pos : offsetPositions) {
+            spawnPrefab(selectedWeapon, pos, offsetAngle);
+        }
+        fireTimers[selectedWeapon].reset();
+    }
+
+    // Helper Methods
+
+    private void updateCooldowns(float dt) {
         for (var timer : fireTimers) timer.countDown(dt);
 
         // Send cooldown updates
@@ -57,32 +78,6 @@ public class PlayerFireController extends FireProjectile {
         }
     }
 
-    @Override
-    protected boolean shouldFire() {
-        return fireTimers[selectedWeapon].isReady()
-                && MouseInput.buttonDown("left mouse");
-    }
-
-    @Override
-    }
-
-    @Override
-    protected void onFire() {
-        fireTimers[selectedWeapon].reset();
-    protected GameObject spawnProjectile() {
-        return ProjectilePrefabs.createPrefab(selectedWeapon, gameObject, new Vec2(0f, 0.4f), 0f);
-    }
-
-    // Helper Methods
-
-    public int getSelectedWeapon() {
-        return selectedWeapon;
-    }
-
-    private void setSelectedWeapon(int i) {
-        selectedWeapon = i;
-    }
-
     private Timer[] initializeFireTimers() {
         final Timer[] fireTimers = new Timer[numWeapons];
         for (int i = 0; i < numWeapons; i++) {
@@ -91,6 +86,14 @@ public class PlayerFireController extends FireProjectile {
             fireTimers[i] = new Timer(duration);
         }
         return fireTimers;
+    }
+
+    public int getSelectedWeapon() {
+        return selectedWeapon;
+    }
+
+    private void setSelectedWeapon(int i) {
+        selectedWeapon = i;
     }
 
 }

@@ -1,6 +1,7 @@
 package slavsquatsuperstar.demos.spacegame.combat.projectiles;
 
 import mayonez.*;
+import mayonez.math.*;
 
 /**
  * Allows ships to fire damaging projectiles repeatedly and defines criteria for when
@@ -8,24 +9,13 @@ import mayonez.*;
  *
  * @author SlavSquatSuperstar
  */
+// TODO fire multiple projectiles
 public abstract class FireProjectile extends Script {
 
     @Override
     protected void update(float dt) {
-        // Fire weapons
-        updateCooldowns(dt);
-        if (shouldFire()) {
-            getScene().addObject(spawnProjectile());
-            onFire();
-        }
+        if (shouldFire()) fireProjectiles();
     }
-
-    /**
-     * Update weapon cooldowns.
-     *
-     * @param dt the time between the last frame
-     */
-    protected abstract void updateCooldowns(float dt);
 
     /**
      * Decide whether to fire the projectile if the weapon is reloaded and other
@@ -36,15 +26,23 @@ public abstract class FireProjectile extends Script {
     protected abstract boolean shouldFire();
 
     /**
-     * Instantiate the projectile to be fired.
-     *
-     * @return the projectile game object
+     * Instantiate the projectile(s) to be fired and update the weapon cooldown
+     * and other state variables after firing.
      */
-    protected abstract GameObject spawnProjectile();
+    protected abstract void fireProjectiles();
 
     /**
-     * Update the weapon cooldown and other state variables after firing.
+     * Instantiates a projectile prefab object and spawns it in the world.
+     *
+     * @param projectileIndex the index of the {@link ProjectileType}
+     * @param offsetPos       the projectile spawn position in relation to the source
+     * @param offsetAngle     the projectile spawn angle in relation to the source
      */
-    protected abstract void onFire();
+    protected void spawnPrefab(int projectileIndex, Vec2 offsetPos, float offsetAngle) {
+        var prefabObject = ProjectilePrefabs.createPrefab(
+                projectileIndex, gameObject, offsetPos, offsetAngle
+        );
+        getScene().addObject(prefabObject);
+    }
 
 }
