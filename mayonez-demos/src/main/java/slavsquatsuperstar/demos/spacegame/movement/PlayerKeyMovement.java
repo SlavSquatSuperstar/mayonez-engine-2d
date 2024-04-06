@@ -41,14 +41,15 @@ public class PlayerKeyMovement extends SpaceshipMovement {
         super.update(dt);
 
         // Move player
-        moveObject(getUserInput().mul(moveSpeed), moveMove, dt);
+        var moveDirection = getUserInput().mul(moveSpeed)
+                .rotate(transform.getRotation()); // Align with object direction
+        moveObject(moveDirection, moveMove, dt);
         rotateObject(-getUserInputValue() * turnSpeed, turnMode, dt);
     }
 
     @Override
     public Vec2 getUserInput() {
-        return new Vec2(KeyInput.getAxis(xAxis), KeyInput.getAxis(yAxis))
-                .rotate(transform.getRotation()); // Align with object direction
+        return new Vec2(KeyInput.getAxis(xAxis), KeyInput.getAxis(yAxis));
     }
 
     @Override

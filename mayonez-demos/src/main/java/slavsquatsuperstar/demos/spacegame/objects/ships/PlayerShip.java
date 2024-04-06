@@ -34,9 +34,6 @@ public class PlayerShip extends Spaceship {
         ));
 //        addComponent(new ClickToMove(10f, MoveMode.VELOCITY, true));
 
-        var thrusters = ThrusterPrefabs.addThrustersToObject(this);
-        addComponent(new ThrustController(thrusters));
-
         // Weapons
         addComponent(new PlayerFireController());
 

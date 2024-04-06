@@ -41,8 +41,8 @@ public abstract class SpaceshipMovement extends MovementScript {
         }
 
         // Calculate brake direction and fire thrusters
-        thrustController.setMoveDirection(moveInput, getBrakeDir(braking));
-        thrustController.setTurnDirection(turnInput, getAngBrakeDir(braking));
+        thrustController.fireMoveThrusters(moveInput, getBrakeDir(braking));
+        thrustController.fireTurnThrusters(turnInput, getAngBrakeDir(braking));
     }
 
     // Brake Helper Methods

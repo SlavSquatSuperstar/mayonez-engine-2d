@@ -4,8 +4,6 @@ import mayonez.math.*;
 import mayonez.physics.dynamics.*;
 import slavsquatsuperstar.demos.spacegame.combat.projectiles.EnemyFireController;
 import slavsquatsuperstar.demos.spacegame.movement.EnemyMovement;
-import slavsquatsuperstar.demos.spacegame.movement.ThrustController;
-import slavsquatsuperstar.demos.spacegame.movement.ThrusterPrefabs;
 
 /**
  * A computer-controlled enemy spaceship.
@@ -33,9 +31,6 @@ public class EnemyShip extends Spaceship {
         addComponent(rb = new Rigidbody(1f, 0.01f, 0.8f));
         rb.setVelocity(transform.getUp().mul(Random.randomFloat(2f, 15f)));
         addComponent(new EnemyMovement());
-
-        var thrusters = ThrusterPrefabs.addThrustersToObject(this);
-        addComponent(new ThrustController(thrusters));
 
         // Weapons
         addComponent(new EnemyFireController());

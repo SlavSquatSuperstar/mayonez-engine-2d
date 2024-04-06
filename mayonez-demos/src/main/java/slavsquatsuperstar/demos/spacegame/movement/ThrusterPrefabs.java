@@ -49,6 +49,25 @@ public final class ThrusterPrefabs {
         return thrusters;
     }
 
+    private static void addThrusterObject(
+            GameObject parent, Thruster thruster, String name, Transform offsetXf
+    ) {
+        parent.getScene().addObject(new GameObject(name) {
+            @Override
+            protected void init() {
+                setZIndex(SpaceGameZIndex.EXHAUST);
+                addComponent(thruster);
+                addComponent(new Animator(EXHAUST_TEXTURES, 0.15f));
+                addComponent(new Script() {
+                    @Override
+                    protected void debugRender() {
+                        transform.set(parent.transform.combine(offsetXf));
+                    }
+                });
+            }
+        });
+    }
+
     private static Thruster getThruster(Record record) throws IllegalArgumentException {
         var moveDir = ThrustDirection.valueOf(record.getString("moveDir").toUpperCase());
         var turnDir = getTurnDir(record);
@@ -74,25 +93,6 @@ public final class ThrusterPrefabs {
         var rotation = record.getFloat("rotation");
         var scale = new Vec2(record.getFloat("scale"));
         return new Transform(position, rotation, scale);
-    }
-
-    private static void addThrusterObject(
-            GameObject parent, Thruster thruster, String name, Transform offsetXf
-    ) {
-        parent.getScene().addObject(new GameObject(name) {
-            @Override
-            protected void init() {
-                setZIndex(SpaceGameZIndex.EXHAUST);
-                addComponent(thruster);
-                addComponent(new Animator(EXHAUST_TEXTURES, 0.15f));
-                addComponent(new Script() {
-                    @Override
-                    protected void debugRender() {
-                        transform.set(parent.transform.combine(offsetXf));
-                    }
-                });
-            }
-        });
     }
 
 }
