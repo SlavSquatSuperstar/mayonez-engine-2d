@@ -43,6 +43,8 @@ public abstract class ThrustController extends Script {
         // Calculate brake direction and slow motion
         Vec2 brakeDir;
         float angBrakeDir;
+        // TODO slow speed in movement script
+        // TODO create spaceship move controller
         if (isBraking()) {
             rb.setDrag(BRAKE_DRAG).setAngDrag(BRAKE_DRAG);
             brakeDir = rb.getVelocity().mul(-1f)
@@ -62,7 +64,7 @@ public abstract class ThrustController extends Script {
     // Movement Methods
 
     /**
-     * Fire this spaceship's thrusters and move or brake in the specified direction.
+     * Fire this spaceship's thrusters to move or brake in the specified direction.
      *
      * @param moveDir  the move direction, relative to the spaceship
      * @param brakeDir the brake direction, relative to the world
@@ -75,7 +77,7 @@ public abstract class ThrustController extends Script {
     }
 
     /**
-     * Fire this spaceship's rotational thrusters and turn or brake in the specified
+     * Fire this spaceship's rotational thrusters to turn or brake in the specified
      * direction.
      *
      * @param turnDir     the turn rotation direction

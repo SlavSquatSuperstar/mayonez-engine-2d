@@ -6,9 +6,7 @@ import mayonez.physics.dynamics.*;
 import mayonez.scripts.movement.*;
 import slavsquatsuperstar.demos.spacegame.combat.Damageable;
 import slavsquatsuperstar.demos.spacegame.combat.projectiles.PlayerFireController;
-import slavsquatsuperstar.demos.spacegame.movement.PlayerKeyMovement;
-import slavsquatsuperstar.demos.spacegame.movement.PlayerThrustController;
-import slavsquatsuperstar.demos.spacegame.movement.ThrusterPrefabs;
+import slavsquatsuperstar.demos.spacegame.movement.*;
 
 /**
  * A player-controlled spaceship.
