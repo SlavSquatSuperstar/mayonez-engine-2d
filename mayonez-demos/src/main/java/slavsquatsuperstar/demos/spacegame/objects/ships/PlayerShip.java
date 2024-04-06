@@ -32,7 +32,7 @@ public class PlayerShip extends Spaceship {
         // Movement
         addComponent(new Rigidbody(1f));
         addComponent(new PlayerKeyMovement(
-                10f, MoveMode.FORCE, 180f, MoveMode.VELOCITY
+                12f, MoveMode.FORCE, 3f, MoveMode.FORCE
         ));
 //        addComponent(new ClickToMove(10f, MoveMode.VELOCITY, true));
 
