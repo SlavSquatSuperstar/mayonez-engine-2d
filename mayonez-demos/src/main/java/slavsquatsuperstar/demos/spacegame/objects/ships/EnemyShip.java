@@ -3,7 +3,8 @@ package slavsquatsuperstar.demos.spacegame.objects.ships;
 import mayonez.math.*;
 import mayonez.physics.dynamics.*;
 import slavsquatsuperstar.demos.spacegame.combat.projectiles.EnemyFireController;
-import slavsquatsuperstar.demos.spacegame.movement.EnemyThrustController;
+import slavsquatsuperstar.demos.spacegame.movement.EnemyMovement;
+import slavsquatsuperstar.demos.spacegame.movement.ThrustController;
 import slavsquatsuperstar.demos.spacegame.movement.ThrusterPrefabs;
 
 /**
@@ -31,9 +32,10 @@ public class EnemyShip extends Spaceship {
         Rigidbody rb;
         addComponent(rb = new Rigidbody(1f, 0.01f, 0.8f));
         rb.setVelocity(transform.getUp().mul(Random.randomFloat(2f, 15f)));
+        addComponent(new EnemyMovement());
 
         var thrusters = ThrusterPrefabs.addThrustersToObject(this);
-        addComponent(new EnemyThrustController(thrusters));
+        addComponent(new ThrustController(thrusters));
 
         // Weapons
         addComponent(new EnemyFireController());

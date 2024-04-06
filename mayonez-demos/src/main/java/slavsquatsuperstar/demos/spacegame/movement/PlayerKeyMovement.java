@@ -10,7 +10,7 @@ import slavsquatsuperstar.demos.spacegame.SpaceGameConfig;
  *
  * @author SlavSquatSuperstar
  */
-public class PlayerKeyMovement extends MovementScript {
+public class PlayerKeyMovement extends SpaceshipMovement {
 
     // Config
     private static final InputAxis HORIZONTAL_MOVE_AXIS = SpaceGameConfig.getHorizontalMoveAxis();
@@ -18,23 +18,13 @@ public class PlayerKeyMovement extends MovementScript {
     private static final InputAxis TURN_AXIS = SpaceGameConfig.getTurnAxis();
     private static final Key BRAKE_KEY = SpaceGameConfig.getBreakKey();
 
-    // Constants
-    private final static float BRAKE_THRESHOLD_SPEED = 0.1f;
-    private final static float TURN_BRAKE_THRESHOLD_SPEED = 5f;
-    private final static float MOVE_DRAG = 0f;
-    private final static float BRAKE_DRAG = 0.2f;
-
     // Movement Fields
     private final float moveSpeed, turnSpeed;
     private final MoveMode moveMove, turnMode;
     private final InputAxis xAxis, yAxis, turnAxis;
 
-    // Script References
-    private PlayerThrustController thrustController;
-
     public PlayerKeyMovement(
-            float moveSpeed, MoveMode moveMove,
-            float turnSpeed, MoveMode turnMode
+            float moveSpeed, MoveMode moveMove, float turnSpeed, MoveMode turnMode
     ) {
         this.moveSpeed = moveSpeed;
         this.moveMove = moveMove;
@@ -47,33 +37,12 @@ public class PlayerKeyMovement extends MovementScript {
     }
 
     @Override
-    protected void start() {
-        super.start();
-        thrustController = gameObject.getComponent(PlayerThrustController.class);
-    }
-
-    @Override
     protected void update(float dt) {
-        // Get user input
-        var moveInput = getUserInput();
-        var turnInput = -getUserInputValue();
+        super.update(dt);
 
-        moveObject(moveInput.mul(moveSpeed), moveMove, dt);
-        rotateObject(turnInput * turnSpeed, turnMode, dt);
-
-        // Calculate brake direction and slow motion
-        var braking = KeyInput.keyDown(BRAKE_KEY);
-        Vec2 brakeDir = getBrakeDir(braking);
-        float angBrakeDir = getAngBrakeDir(braking);
-        if (braking) {
-            rb.setDrag(BRAKE_DRAG).setAngDrag(BRAKE_DRAG);
-        } else {
-            rb.setDrag(MOVE_DRAG).setAngDrag(MOVE_DRAG);
-        }
-
-        // Fire thrusters
-        thrustController.setMoveDirection(moveInput, brakeDir);
-        thrustController.setTurnDirection(turnInput, angBrakeDir);
+        // Move player
+        moveObject(getUserInput().mul(moveSpeed), moveMove, dt);
+        rotateObject(-getUserInputValue() * turnSpeed, turnMode, dt);
     }
 
     @Override
@@ -87,23 +56,9 @@ public class PlayerKeyMovement extends MovementScript {
         return KeyInput.getAxis(turnAxis);
     }
 
-    // Helper Methods
-
-    private Vec2 getBrakeDir(boolean braking) {
-        // Don't burn when moving very slow
-        if (braking && rb.getSpeed() > BRAKE_THRESHOLD_SPEED) {
-            return rb.getVelocity().mul(-1f)
-                    .rotate(-transform.getRotation()); // Orient with ship
-        }
-        return new Vec2();
-    }
-
-    private float getAngBrakeDir(boolean braking) {
-        // Don't burn when turning very slow
-        if (braking && rb.getAngSpeed() > TURN_BRAKE_THRESHOLD_SPEED) {
-            return rb.getAngVelocity();
-        }
-        return 0f;
+    @Override
+    protected boolean isBraking() {
+        return KeyInput.keyDown(BRAKE_KEY);
     }
 
 }

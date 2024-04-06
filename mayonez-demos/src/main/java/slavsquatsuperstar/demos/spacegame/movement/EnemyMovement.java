@@ -1,31 +1,56 @@
 package slavsquatsuperstar.demos.spacegame.movement;
 
-import mayonez.*;
 import mayonez.annotations.*;
 import mayonez.math.*;
-import mayonez.physics.dynamics.*;
-import mayonez.scripts.movement.*;
 
+/**
+ * Controls an enemy spaceship's movement.
+ *
+ * @author SlavSquatSuperstar
+ */
 @ExperimentalFeature
-public class EnemyMovement extends MovementScript {
+public class EnemyMovement extends SpaceshipMovement {
 
-    private final float speed;
-    private Rigidbody rb;
-
-    public EnemyMovement(float speed) {
-        super(UpdateOrder.PHYSICS);
-        this.speed = speed;
-    }
+    // Movement Fields
+    private boolean brakesActive;
 
     @Override
     protected void start() {
-        rb = getRigidbody();
-        if (rb == null) setEnabled(false);
+        super.start();
+        brakesActive = false;
+    }
+
+    // TODO Move spaceship
+
+    // Movement Script Methods
+
+    @Override
+    public Vec2 getUserInput() {
+        if (isBraking()) return new Vec2();
+        else return rb.getVelocity().rotate(-transform.getRotation());
     }
 
     @Override
-    protected void update(float dt) {
-        rb.applyForce(new Vec2().mul(speed));
+    public float getUserInputValue() {
+        if (isBraking()) return 0;
+        else return -rb.getAngVelocity();
+    }
+
+    @Override
+    protected boolean isBraking() {
+        if (!brakesActive) {
+            // Start braking if too fast
+            if (rb.getSpeed() > 20f || rb.getAngSpeed() > 270f) {
+                brakesActive = true;
+            }
+        } else {
+            // Start firing thrusters once slow enough
+            if (rb.getSpeed() < 5f && rb.getAngSpeed() < 45f) {
+                brakesActive = false;
+            }
+        }
+        // Keep braking
+        return brakesActive;
     }
 
 }
