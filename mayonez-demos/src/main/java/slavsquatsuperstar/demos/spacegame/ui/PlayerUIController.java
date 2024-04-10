@@ -14,7 +14,7 @@ import slavsquatsuperstar.demos.spacegame.events.*;
 public class PlayerUIController extends Script implements EventListener<Event> {
 
     // UI Components
-    private final HealthBar healthBar, shieldBar;
+    private final SliderBar healthBar, shieldBar;
     private final WeaponHotbar weaponHotbar;
 
     // Ship Components
@@ -24,7 +24,7 @@ public class PlayerUIController extends Script implements EventListener<Event> {
     // Player Status
     private float respawnPercent;
 
-    public PlayerUIController(HealthBar healthBar, HealthBar shieldBar, WeaponHotbar weaponHotbar) {
+    public PlayerUIController(SliderBar healthBar, SliderBar shieldBar, WeaponHotbar weaponHotbar) {
         this.healthBar = healthBar;
         this.shieldBar = shieldBar;
         this.weaponHotbar = weaponHotbar;
@@ -44,14 +44,14 @@ public class PlayerUIController extends Script implements EventListener<Event> {
         if (damageable != null) {
             // Update health bar
             var healthPercent = damageable.getHealth() / damageable.getMaxHealth();
-            healthBar.setHealthPercent(healthPercent);
+            healthBar.setSliderValue(healthPercent);
 
             // Update shield bar
             var shieldPercent = damageable.getShield() / damageable.getMaxShield();
-            shieldBar.setHealthPercent(shieldPercent);
+            shieldBar.setSliderValue(shieldPercent);
         } else {
             // Recharge health bar
-            healthBar.setHealthPercent(respawnPercent);
+            healthBar.setSliderValue(respawnPercent);
         }
 
         // Update weapons selection
