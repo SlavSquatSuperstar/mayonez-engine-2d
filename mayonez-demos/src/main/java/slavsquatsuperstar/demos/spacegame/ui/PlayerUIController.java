@@ -2,7 +2,7 @@ package slavsquatsuperstar.demos.spacegame.ui;
 
 import mayonez.*;
 import mayonez.event.*;
-import slavsquatsuperstar.demos.spacegame.combat.Damageable;
+import slavsquatsuperstar.demos.spacegame.combat.ShieldedDamageable;
 import slavsquatsuperstar.demos.spacegame.combat.projectiles.PlayerFireController;
 import slavsquatsuperstar.demos.spacegame.events.*;
 
@@ -14,15 +14,21 @@ import slavsquatsuperstar.demos.spacegame.events.*;
 public class PlayerUIController extends Script implements EventListener<Event> {
 
     // UI Components
-    private HealthBar healthBar;
-    private WeaponHotbar weaponHotbar;
+    private final HealthBar healthBar, shieldBar;
+    private final WeaponHotbar weaponHotbar;
 
     // Ship Components
-    private Damageable damageable;
+    private ShieldedDamageable damageable;
     private PlayerFireController fireController;
 
     // Player Status
     private float respawnPercent;
+
+    public PlayerUIController(HealthBar healthBar, HealthBar shieldBar, WeaponHotbar weaponHotbar) {
+        this.healthBar = healthBar;
+        this.shieldBar = shieldBar;
+        this.weaponHotbar = weaponHotbar;
+    }
 
     @Override
     protected void start() {
@@ -30,9 +36,7 @@ public class PlayerUIController extends Script implements EventListener<Event> {
         setPlayer(null);
         respawnPercent = 1f;
 
-        healthBar = gameObject.getComponent(HealthBar.class);
-        weaponHotbar = gameObject.getComponent(WeaponHotbar.class);
-        if (healthBar == null || weaponHotbar == null) setEnabled(false);
+        if (healthBar == null || shieldBar == null || weaponHotbar == null) setEnabled(false);
     }
 
     @Override
@@ -41,6 +45,10 @@ public class PlayerUIController extends Script implements EventListener<Event> {
             // Update health bar
             var healthPercent = damageable.getHealth() / damageable.getMaxHealth();
             healthBar.setHealthPercent(healthPercent);
+
+            // Update shield bar
+            var shieldPercent = damageable.getShield() / damageable.getMaxShield();
+            shieldBar.setHealthPercent(shieldPercent);
         } else {
             // Recharge health bar
             healthBar.setHealthPercent(respawnPercent);
@@ -57,7 +65,7 @@ public class PlayerUIController extends Script implements EventListener<Event> {
             damageable = null;
             fireController = null;
         } else {
-            damageable = player.getComponent(Damageable.class);
+            damageable = player.getComponent(ShieldedDamageable.class);
             fireController = player.getComponent(PlayerFireController.class);
         }
     }

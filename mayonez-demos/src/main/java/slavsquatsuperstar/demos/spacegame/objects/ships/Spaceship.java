@@ -7,6 +7,7 @@ import mayonez.physics.colliders.*;
 import mayonez.scripts.*;
 import slavsquatsuperstar.demos.spacegame.combat.CollisionDamage;
 import slavsquatsuperstar.demos.spacegame.combat.Damageable;
+import slavsquatsuperstar.demos.spacegame.combat.ShieldedDamageable;
 import slavsquatsuperstar.demos.spacegame.movement.ThrustController;
 import slavsquatsuperstar.demos.spacegame.movement.ThrusterPrefabs;
 import slavsquatsuperstar.demos.spacegame.objects.SpaceGameLayer;
@@ -21,12 +22,13 @@ import slavsquatsuperstar.demos.spacegame.objects.SpaceGameZIndex;
 public abstract class Spaceship extends GameObject {
 
     private final String spriteName;
-    private final float maxHealth;
+    private final float maxHealth, shieldHealth;
 
-    public Spaceship(String name, String spriteName, float maxHealth) {
+    public Spaceship(String name, String spriteName, float maxHealth, float shieldHealth) {
         super(name, Transform.scaleInstance(new Vec2(2f)), SpaceGameZIndex.SPACESHIP);
         this.spriteName = spriteName;
         this.maxHealth = maxHealth;
+        this.shieldHealth = shieldHealth;
     }
 
     @Override
@@ -44,13 +46,23 @@ public abstract class Spaceship extends GameObject {
 
         // Combat
         addComponent(new ShipDestruction());
-        addComponent(new Damageable(maxHealth) {
-            @Override
-            public void onHealthDepleted() {
-                var shipDestruction = getComponent(ShipDestruction.class);
-                if (shipDestruction != null) shipDestruction.startDestructionSequence();
-            }
-        });
+        if (shieldHealth > 0f) {
+            addComponent(new ShieldedDamageable(maxHealth, maxHealth * 0.5f) {
+                @Override
+                public void onHealthDepleted() {
+                    var shipDestruction = getComponent(ShipDestruction.class);
+                    if (shipDestruction != null) shipDestruction.startDestructionSequence();
+                }
+            });
+        } else {
+            addComponent(new Damageable(maxHealth) {
+                @Override
+                public void onHealthDepleted() {
+                    var shipDestruction = getComponent(ShipDestruction.class);
+                    if (shipDestruction != null) shipDestruction.startDestructionSequence();
+                }
+            });
+        }
 
         // Visuals
         addComponent(Sprites.createSprite(spriteName));

@@ -19,7 +19,7 @@ public class PlayerShip extends Spaceship {
     private static final float PLAYER_HEALTH = 8f;
 
     public PlayerShip(String name, String spriteName) {
-        super(name, spriteName, PLAYER_HEALTH);
+        super(name, spriteName, PLAYER_HEALTH, PLAYER_HEALTH * 0.5f);
     }
 
     @Override
@@ -42,7 +42,7 @@ public class PlayerShip extends Spaceship {
             protected void update(float dt) {
                 // Destroy the player (debug only)
                 if (KeyInput.keyDown("backspace")) {
-                    getComponent(Damageable.class).damage(100);
+                    getComponent(Damageable.class).onObjectDamaged(100);
                 }
             }
         });

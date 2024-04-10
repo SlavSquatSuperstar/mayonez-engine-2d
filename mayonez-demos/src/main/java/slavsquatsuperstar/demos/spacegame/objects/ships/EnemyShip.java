@@ -15,7 +15,7 @@ public class EnemyShip extends Spaceship {
     private static final float ENEMY_HEALTH = 5f;
 
     public EnemyShip(String name, String spriteName) {
-        super(name, spriteName, ENEMY_HEALTH);
+        super(name, spriteName, ENEMY_HEALTH, 0f);
     }
 
     @Override

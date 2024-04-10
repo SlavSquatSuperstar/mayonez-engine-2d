@@ -38,7 +38,7 @@ public class CollisionDamage extends Script {
             var speed = velocity.len();
             if (speed > speedThreshold) {
                 var damage = speed / speedThreshold * collisionDamage;
-                damageable.damage(damage);
+                damageable.onObjectDamaged(damage);
             }
         }
     }
