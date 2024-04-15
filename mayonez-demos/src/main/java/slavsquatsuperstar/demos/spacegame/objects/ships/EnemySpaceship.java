@@ -10,12 +10,12 @@ import slavsquatsuperstar.demos.spacegame.movement.EnemyMovement;
  *
  * @author SlavSquatSuperstar
  */
-public class EnemyShip extends Spaceship {
+public class EnemySpaceship extends Spaceship {
 
     private static final float ENEMY_HEALTH = 5f;
 
-    public EnemyShip(String name, String spriteName) {
-        super(name, spriteName, ENEMY_HEALTH, 0f);
+    public EnemySpaceship(String name, String spriteName) {
+        super(name, new SpaceshipProperties(spriteName, ENEMY_HEALTH, 0f));
     }
 
     @Override

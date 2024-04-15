@@ -18,17 +18,13 @@ import slavsquatsuperstar.demos.spacegame.objects.SpaceGameZIndex;
  *
  * @author SlavSquatSuperstar
  */
-// TODO shields
 public abstract class Spaceship extends GameObject {
 
-    private final String spriteName;
-    private final float maxHealth, shieldHealth;
+    private final SpaceshipProperties properties;
 
-    public Spaceship(String name, String spriteName, float maxHealth, float shieldHealth) {
+    public Spaceship(String name, SpaceshipProperties properties) {
         super(name, Transform.scaleInstance(new Vec2(2f)), SpaceGameZIndex.SPACESHIP);
-        this.spriteName = spriteName;
-        this.maxHealth = maxHealth;
-        this.shieldHealth = shieldHealth;
+        this.properties = properties;
     }
 
     @Override
@@ -46,27 +42,31 @@ public abstract class Spaceship extends GameObject {
 
         // Combat
         addComponent(new ShipDestruction());
+        addComponent(getDamageable(properties.maxHealth(), properties.maxShieldHealth()));
+
+        // Visuals
+        addComponent(Sprites.createSprite(properties.spriteName()));
+    }
+
+    private static Component getDamageable(float maxHealth, float shieldHealth) {
         if (shieldHealth > 0f) {
-            addComponent(new ShieldedDamageable(maxHealth, maxHealth * 0.5f) {
+            return new ShieldedDamageable(maxHealth, shieldHealth) {
                 @Override
                 public void onHealthDepleted() {
                     super.onHealthDepleted();
-                    var shipDestruction = getComponent(ShipDestruction.class);
+                    var shipDestruction = gameObject.getComponent(ShipDestruction.class);
                     if (shipDestruction != null) shipDestruction.startDestructionSequence();
                 }
-            });
+            };
         } else {
-            addComponent(new Damageable(maxHealth) {
+            return new Damageable(maxHealth) {
                 @Override
                 public void onHealthDepleted() {
-                    var shipDestruction = getComponent(ShipDestruction.class);
+                    var shipDestruction = gameObject.getComponent(ShipDestruction.class);
                     if (shipDestruction != null) shipDestruction.startDestructionSequence();
                 }
-            });
+            };
         }
-
-        // Visuals
-        addComponent(Sprites.createSprite(spriteName));
     }
 
 }

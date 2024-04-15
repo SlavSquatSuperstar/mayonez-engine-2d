@@ -3,7 +3,7 @@ package slavsquatsuperstar.demos.spacegame.objects.spawners;
 import mayonez.*;
 import mayonez.scripts.*;
 import slavsquatsuperstar.demos.spacegame.events.*;
-import slavsquatsuperstar.demos.spacegame.objects.ships.PlayerShip;
+import slavsquatsuperstar.demos.spacegame.objects.ships.PlayerSpaceship;
 
 /**
  * Spawns the player's ship at the start of the game and respawns it when it is
@@ -46,7 +46,7 @@ public class PlayerSpawnManager extends SpawnManager {
 
     @Override
     public GameObject createSpawnedObject() {
-        return new PlayerShip("Player Spaceship",
+        return new PlayerSpaceship("Player Spaceship",
                 "assets/spacegame/textures/ships/spaceship1.png"
         ) {
             @Override

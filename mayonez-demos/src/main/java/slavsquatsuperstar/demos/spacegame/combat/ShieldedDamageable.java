@@ -13,20 +13,22 @@ import slavsquatsuperstar.demos.spacegame.objects.SpaceGameLayer;
 public class ShieldedDamageable extends Damageable {
 
     // Constants
-    private static final float SHIELD_REGEN_RATE = 0.5f;
+    private static final float SHIELD_REGEN_RATE = 0.75f;
+    private static final float SHIELD_WAIT_TIME = 1f;
 
     // Fields
     private final Counter shieldPoints;
-    private boolean regenShield;
+    private final Timer shieldWaitTimer; // Wait to recharge after getting hit
 
     public ShieldedDamageable(float maxHealth, float maxShield) {
         super(maxHealth);
         shieldPoints = new Counter(0, maxShield, maxShield);
+        shieldWaitTimer = new Timer(SHIELD_WAIT_TIME);
     }
 
     @Override
     protected void start() {
-        regenShield = true;
+        shieldWaitTimer.setValue(0f);
     }
 
     @Override
@@ -44,9 +46,11 @@ public class ShieldedDamageable extends Damageable {
         super.update(dt);
 
         // Regenerate shield
-        if (regenShield && !shieldPoints.isAtMax()) {
+        if (canRegenShield() && !shieldPoints.isAtMax()) {
             shieldPoints.count(SHIELD_REGEN_RATE * dt);
             shieldPoints.clampValue();
+        } else {
+            shieldWaitTimer.countDown(dt);
         }
     }
 
@@ -54,6 +58,8 @@ public class ShieldedDamageable extends Damageable {
 
     @Override
     public void onObjectDamaged(float damage) {
+        shieldWaitTimer.reset();
+
         if (isShieldDestroyed()) {
             // Shield is destroyed, health absorbs all damage
             super.onObjectDamaged(damage);
@@ -70,11 +76,6 @@ public class ShieldedDamageable extends Damageable {
         }
     }
 
-    @Override
-    public void onHealthDepleted() {
-        regenShield = false;
-    }
-
     // Shield Getter Methods
 
     public float getMaxShield() {
@@ -87,6 +88,10 @@ public class ShieldedDamageable extends Damageable {
 
     public boolean isShieldDestroyed() {
         return shieldPoints.isAtMin();
+    }
+
+    private boolean canRegenShield() {
+        return shieldWaitTimer.isReady();
     }
 
 }

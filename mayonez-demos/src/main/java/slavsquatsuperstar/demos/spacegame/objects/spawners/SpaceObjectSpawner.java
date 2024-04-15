@@ -2,7 +2,7 @@ package slavsquatsuperstar.demos.spacegame.objects.spawners;
 
 import mayonez.*;
 import slavsquatsuperstar.demos.spacegame.objects.asteroids.Asteroid;
-import slavsquatsuperstar.demos.spacegame.objects.ships.EnemyShip;
+import slavsquatsuperstar.demos.spacegame.objects.ships.EnemySpaceship;
 
 /**
  * Automatically populates the scene with prefabs and respawns them when they are
@@ -32,7 +32,7 @@ public class SpaceObjectSpawner extends GameObject {
         addComponent(new MultiSpawnManager(NUM_ENEMIES, ENEMY_RESPAWN_COOLDOWN) {
             @Override
             public GameObject createSpawnedObject() {
-                return new EnemyShip("Enemy Spaceship",
+                return new EnemySpaceship("Enemy Spaceship",
                         "assets/spacegame/textures/ships/spaceship2.png") {
                     @Override
                     protected void init() {

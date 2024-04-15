@@ -14,12 +14,12 @@ import slavsquatsuperstar.demos.spacegame.movement.*;
  * @author SlavSquatSuperstar
  */
 // TODO flash spawn immunity
-public class PlayerShip extends Spaceship {
+public class PlayerSpaceship extends Spaceship {
 
     private static final float PLAYER_HEALTH = 8f;
 
-    public PlayerShip(String name, String spriteName) {
-        super(name, spriteName, PLAYER_HEALTH, PLAYER_HEALTH * 0.5f);
+    public PlayerSpaceship(String name, String spriteName) {
+        super(name, new SpaceshipProperties(spriteName, PLAYER_HEALTH, PLAYER_HEALTH * 0.5f));
     }
 
     @Override
