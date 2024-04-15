@@ -14,7 +14,6 @@ import mayonez.physics.dynamics.*;
 import mayonez.util.*;
 
 import java.awt.Graphics2D;
-import java.util.List;
 import java.util.*;
 
 /**

@@ -9,6 +9,7 @@ module mayonez.base {
     requires java.desktop;
 
     // Other Dependencies
+    requires static org.jetbrains.annotations;
     requires kotlin.stdlib;
     requires org.joml;
 

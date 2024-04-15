@@ -15,6 +15,6 @@ import mayonez.math.shapes.*
 class EdgeCollider(val length: Float) : Collider(getEdge(length))
 
 private fun getEdge(length: Float): Edge {
-    val halfLen = length * 0.5f;
+    val halfLen = length * 0.5f
     return Edge(Vec2(-halfLen, 0f), Vec2(halfLen, 0f))
 }

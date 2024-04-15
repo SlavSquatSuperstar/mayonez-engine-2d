@@ -28,7 +28,7 @@ open class GameConfig(
      *
      * @param rules any number of rules to apply
      */
-    protected fun validateUserPreferences(vararg rules: mayonez.config.PreferenceValidator<*>) {
+    protected fun validateUserPreferences(vararg rules: PreferenceValidator<*>) {
         rules.forEach { rule -> rule.validate(this, defaults) }
     }
 

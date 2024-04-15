@@ -2,6 +2,7 @@ package mayonez.graphics.textures;
 
 import mayonez.assets.*;
 import mayonez.math.*;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * An image file used by this program. To instantiate a texture, call
@@ -53,6 +54,7 @@ public abstract sealed class Texture extends Asset permits GLTexture, JTexture {
         return (T) this;
     }
 
+    @NotNull
     @Override
     public String toString() {
         if (spriteSheetIndex >= 0) {

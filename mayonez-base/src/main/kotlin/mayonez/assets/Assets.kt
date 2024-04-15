@@ -21,7 +21,7 @@ import mayonez.io.scanner.*
  * optionally supply a subclass of [Asset] with [Assets.getAsset], which
  * will initialize that asset as an instance of that class. For example,
  * calling `Assets.getAsset("info.txt", TextFile.class)` will return a
- * [TextFile] with the name `info.txt`.
+ * [mayonez.assets.text.TextFile] with the name `info.txt`.
  *
  * See [Asset] for more details.
  *

@@ -11,7 +11,6 @@ import org.lwjgl.glfw.GLFW
  * @author SlavSquatSuperstar
  */
 // TODO GLFW sticky keys?
-@Suppress("unused")
 @UsesEngine(EngineType.GL)
 internal class GLKeyManager : KeyManager() {
 

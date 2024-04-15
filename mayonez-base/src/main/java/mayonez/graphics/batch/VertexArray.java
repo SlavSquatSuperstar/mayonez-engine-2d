@@ -2,7 +2,6 @@ package mayonez.graphics.batch;
 
 import mayonez.graphics.*;
 
-import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL30.*;
 
 /**
