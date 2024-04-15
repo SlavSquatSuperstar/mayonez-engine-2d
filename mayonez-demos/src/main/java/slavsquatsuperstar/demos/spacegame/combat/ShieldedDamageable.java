@@ -12,12 +12,21 @@ import slavsquatsuperstar.demos.spacegame.objects.SpaceGameLayer;
  */
 public class ShieldedDamageable extends Damageable {
 
+    // Constants
+    private static final float SHIELD_REGEN_RATE = 0.5f;
+
+    // Fields
     private final Counter shieldPoints;
-    // TODO recharge shield
+    private boolean regenShield;
 
     public ShieldedDamageable(float maxHealth, float maxShield) {
         super(maxHealth);
         shieldPoints = new Counter(0, maxShield, maxShield);
+    }
+
+    @Override
+    protected void start() {
+        regenShield = true;
     }
 
     @Override
@@ -30,15 +39,40 @@ public class ShieldedDamageable extends Damageable {
         }
     }
 
+    @Override
+    protected void update(float dt) {
+        super.update(dt);
+
+        // Regenerate shield
+        if (regenShield && !shieldPoints.isAtMax()) {
+            shieldPoints.count(SHIELD_REGEN_RATE * dt);
+            shieldPoints.clampValue();
+        }
+    }
+
     // Damage Callback Methods
 
     @Override
     public void onObjectDamaged(float damage) {
         if (isShieldDestroyed()) {
+            // Shield is destroyed, health absorbs all damage
             super.onObjectDamaged(damage);
         } else {
-            shieldPoints.count(-damage);
+            var shieldHealthLeft = shieldPoints.getValue();
+            if (damage < shieldHealthLeft) {
+                // Shield absorbs all damage
+                shieldPoints.count(-damage);
+            } else {
+                // Shield absorbs some damage; damage health for remaining
+                shieldPoints.setValue(0f);
+                super.onObjectDamaged(damage - shieldHealthLeft);
+            }
         }
+    }
+
+    @Override
+    public void onHealthDepleted() {
+        regenShield = false;
     }
 
     // Shield Getter Methods

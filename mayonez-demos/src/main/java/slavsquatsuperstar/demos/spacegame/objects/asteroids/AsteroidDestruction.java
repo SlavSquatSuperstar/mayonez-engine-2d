@@ -2,6 +2,7 @@ package slavsquatsuperstar.demos.spacegame.objects.asteroids;
 
 import mayonez.*;
 import mayonez.math.*;
+import slavsquatsuperstar.demos.spacegame.combat.Damageable;
 import slavsquatsuperstar.demos.spacegame.combat.ExplosionPrefabs;
 
 /**
@@ -9,14 +10,15 @@ import slavsquatsuperstar.demos.spacegame.combat.ExplosionPrefabs;
  *
  * @author SlavSquatSuperstar
  */
-public class AsteroidDestruction extends Script {
+public class AsteroidDestruction extends Damageable {
 
     // Constants
     private static final float EXPLOSION_DURATION = 0.5f;
 
     private final AsteroidProperties properties;
 
-    public AsteroidDestruction(AsteroidProperties properties) {
+    public AsteroidDestruction(float startingHealth, AsteroidProperties properties) {
+        super(startingHealth);
         this.properties = properties;
     }
 

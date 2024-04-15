@@ -50,6 +50,7 @@ public abstract class Spaceship extends GameObject {
             addComponent(new ShieldedDamageable(maxHealth, maxHealth * 0.5f) {
                 @Override
                 public void onHealthDepleted() {
+                    super.onHealthDepleted();
                     var shipDestruction = getComponent(ShipDestruction.class);
                     if (shipDestruction != null) shipDestruction.startDestructionSequence();
                 }

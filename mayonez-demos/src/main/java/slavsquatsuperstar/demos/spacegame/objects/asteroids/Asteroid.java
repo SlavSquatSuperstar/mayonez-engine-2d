@@ -2,7 +2,6 @@ package slavsquatsuperstar.demos.spacegame.objects.asteroids;
 
 import mayonez.graphics.*;
 import mayonez.math.*;
-import slavsquatsuperstar.demos.spacegame.combat.Damageable;
 
 /**
  * An asteroid in space that can be destroyed.
@@ -26,8 +25,7 @@ public class Asteroid extends BaseAsteroid {
         addRigidbody(startingHealth)
                 .setVelocity(transform.getUp().mul(Random.randomFloat(0f, 3f)));
 
-        addComponent(new Damageable(startingHealth));
-        addComponent(new AsteroidDestruction(properties));
+        addComponent(new AsteroidDestruction(startingHealth, properties));
     }
 
     private static AsteroidProperties getRandomProperties() {

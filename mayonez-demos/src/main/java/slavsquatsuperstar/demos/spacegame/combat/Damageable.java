@@ -46,7 +46,8 @@ public class Damageable extends Script {
     }
 
     /**
-     * Behavior for when this object's health reaches zero.
+     * Behavior for when this object's health reaches zero. Destroys the object
+     * by default.
      */
     public void onHealthDepleted() {
         gameObject.destroy();

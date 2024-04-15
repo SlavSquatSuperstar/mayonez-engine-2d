@@ -37,20 +37,47 @@ public class Counter {
         value += increment;
     }
 
+    /**
+     * Get the min value of the counter.
+     *
+     * @return the min value
+     */
     public float getMin() {
         return interval.min;
     }
 
+    /**
+     * Get the max value of the counter.
+     *
+     * @return the max value
+     */
     public float getMax() {
         return interval.max;
     }
 
+    /**
+     * Get the current value of the counter.
+     *
+     * @return the current value
+     */
     public float getValue() {
         return value;
     }
 
+    /**
+     * Set the current value of the counter.
+     *
+     * @param value the current value
+     */
     public void setValue(float value) {
         this.value = value;
+    }
+
+    /**
+     * Clamp the current value of counter between the min and max.
+     */
+    public void clampValue() {
+        value = interval.clamp(value);
     }
 
     /**
