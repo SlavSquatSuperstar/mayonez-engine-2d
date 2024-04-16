@@ -4,7 +4,7 @@ import mayonez.graphics.*;
 import mayonez.math.*;
 
 /**
- * An asteroid in space that can be destroyed.
+ * An asteroid in space that can be destroyed and spawn fragments.
  *
  * @author SlavSquatSuperstar
  */

@@ -46,11 +46,11 @@ public class AsteroidDestruction extends Damageable {
         var offsetAngle = transform.getRotation();
 
         for (var i = 0; i < fragmentCount; i++) {
-            offsetAngle += AsteroidProperties.addRandomError(angle, 0.3f);
+            offsetAngle += AsteroidProperties.getRandomError(angle, 0.3f);
             getScene().addObject(new AsteroidFragment(
                     "Asteroid Fragment",
                     transform.getPosition(),
-                    properties.setRadius(fragmentRadius),
+                    properties.copyWithRadius(fragmentRadius),
                     new Vec2(1, 0).rotate(offsetAngle)
             ));
         }
