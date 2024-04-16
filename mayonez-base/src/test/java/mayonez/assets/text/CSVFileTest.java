@@ -17,22 +17,47 @@ import static org.junit.jupiter.api.Assertions.*;
 class CSVFileTest {
 
     @Test
-    void readLocalCSVFile() {
-        var file = new CSVFile("src/test/resources/testassets/text/properties.csv");
+    void readLocalCSVFile1() {
+        var file = new CSVFile("src/test/resources/testassets/text/engines.csv");
         var recs = file.readCSV();
+
         // Check headers
         var headers = file.getHeaders();
         assertArrayEquals(headers, new String[]{"name", "version", "author"});
+
         // Check records
         assertNotNull(recs);
-        var rec = recs.get(0);
-        assertEquals("Mayonez Engine", rec.getString("name"));
-        assertEquals(0.8f, rec.getFloat("version"));
+        var rec1 = recs.get(0);
+        assertEquals("Mayonez Engine", rec1.getString("name"));
+        assertEquals(0.8f, rec1.getFloat("version"));
+        assertEquals("SlavSquatSuperstar", rec1.getString("author"));
+    }
+
+    @Test
+    void readLocalCSVFile2() {
+        var file = new CSVFile("src/test/resources/testassets/text/languages.csv");
+        var recs = file.readCSV();
+
+        // Check headers
+        var headers = file.getHeaders();
+        assertArrayEquals(headers, new String[]{"name", "type", "difficulty", "version", "extension"});
+
+        // Check records
+        assertNotNull(recs);
+        var rec1 = recs.get(0);
+        assertEquals("Java", rec1.getString("name"));
+        assertEquals(17, rec1.getInt("version"));
+        assertEquals(".java", rec1.getString("extension"));
+
+        var rec2 = recs.get(2);
+        assertEquals("C++", rec2.getString("name"));
+        assertEquals(20, rec2.getInt("version"));
+        assertEquals(".cpp/.h", rec2.getString("extension"));
     }
 
     @Test
     void readClasspathCSVFile() {
-        var recs = new CSVFile("testassets/text/properties.csv").readCSV();
+        var recs = new CSVFile("testassets/text/engines.csv").readCSV();
         assertNotNull(recs);
         assertFalse(recs.isEmpty());
     }

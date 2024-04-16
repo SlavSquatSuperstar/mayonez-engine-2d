@@ -1,7 +1,6 @@
 package mayonez.assets.text;
 
 import mayonez.assets.*;
-import mayonez.assets.text.*;
 import org.junit.jupiter.api.*;
 
 import java.time.LocalDate;
