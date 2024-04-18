@@ -37,6 +37,7 @@ module mayonez.base {
     exports mayonez.graphics;
     exports mayonez.graphics.camera;
     exports mayonez.graphics.debug;
+    exports mayonez.graphics.font;
     exports mayonez.graphics.sprites;
     exports mayonez.graphics.textures;
     exports mayonez.graphics.ui;

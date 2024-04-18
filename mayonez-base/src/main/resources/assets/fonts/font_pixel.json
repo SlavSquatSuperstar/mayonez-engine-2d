@@ -1,0 +1,9 @@
+{
+	"name": "Pixel Font",
+	"start_character": 32,
+	"end_character": 127,
+	"glyph_height": 8,
+	"glyph_ascent": 7,
+	"glyph_spacing": 1,
+	"space_width": 3
+}
