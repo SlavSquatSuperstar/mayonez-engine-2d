@@ -18,7 +18,7 @@ import java.io.ByteArrayInputStream;
  * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.AWT)
-public final class JTexture extends Texture {
+public sealed class JTexture extends Texture permits JSpriteSheetTexture {
 
     private BufferedImage image;
     private final Vec2 imageSize;
@@ -40,7 +40,7 @@ public final class JTexture extends Texture {
      * @param filename the file location
      * @param image    the sub-image
      */
-    public JTexture(String filename, BufferedImage image) {
+    protected JTexture(String filename, BufferedImage image) {
         super(filename);
         this.image = image;
         imageSize = new Vec2(image.getWidth(), image.getHeight());
@@ -72,8 +72,9 @@ public final class JTexture extends Texture {
 
         // Draw sprite at parent center with parent rotation and scale
         var texXf = parentXf.combine(spriteXf);
-        AffineTransform g2Xf = transformScreen(texXf, scale);
-        drawTexture(g2, g2Xf);
+        var g2Xf = transformScreen(texXf, scale);
+        g2Xf.translate(0.0, -imageSize.y); // Move to object center
+        g2.drawImage(image, g2Xf, null); // Draw buffered image
     }
 
     private AffineTransform transformScreen(Transform texXf, float scale) {
@@ -88,11 +89,6 @@ public final class JTexture extends Texture {
         g2Xf.rotate(FloatMath.toRadians(texXf.getRotation()), parentHalfSize.x, parentHalfSize.y);
         g2Xf.scale(parentSize.x / imageSize.x, -parentSize.y / imageSize.y); // Flip image vertically like GL
         return g2Xf;
-    }
-
-    private void drawTexture(Graphics2D g2, AffineTransform g2Xf) {
-        g2Xf.translate(0.0, -imageSize.y); // Move to object center
-        g2.drawImage(image, g2Xf, null);
     }
 
     // Image Getters

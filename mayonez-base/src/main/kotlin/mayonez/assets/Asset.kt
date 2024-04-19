@@ -17,9 +17,7 @@ import java.nio.file.*
 open class Asset(filename: String) {
 
     private val filePath: FilePath = FilePath(filename)
-
     val filename: String = filePath.filename
-
     val locationType: LocationType = filePath.locationType
 
     // I/O Methods

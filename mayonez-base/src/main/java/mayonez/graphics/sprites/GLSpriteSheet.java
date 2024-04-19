@@ -39,23 +39,19 @@ public final class GLSpriteSheet extends SpriteSheet {
     @Override
     protected void createSprites(int numSprites, int spacing) {
         // GL uses bottom left as image origin
-        Vec2 spriteTopLeft = getSpriteTopLeft();
+        var sheetTopLeft = new Vec2(0, getSheetSize().y);
+        var spriteTopLeft = sheetTopLeft.sub(new Vec2(0, spriteSize.y));
 
         // Read sprites from top left of sheet
         for (var i = 0; i < numSprites; i++) {
-            addCurrentSprite(spriteTopLeft);
+            addCurrentSprite(spriteTopLeft, i);
             moveToNextSprite(spriteTopLeft, spacing);
         }
     }
 
-    private Vec2 getSpriteTopLeft() {
-        var sheetTopLeft = new Vec2(0, getSheetSize().y);
-        return sheetTopLeft.sub(new Vec2(0, spriteSize.y));
-    }
-
-    private void addCurrentSprite(Vec2 spriteBottomLeft) {
+    private void addCurrentSprite(Vec2 spriteBottomLeft, int index) {
         var texCoords = getSubimageCoords(spriteBottomLeft);
-        sprites.add(new GLSprite(new GLTexture(sheetTexture, texCoords)));
+        sprites.add(new GLSprite(new GLSpriteSheetTexture(sheetTexture, index, texCoords)));
     }
 
     private Vec2[] getSubimageCoords(Vec2 spriteBottomLeft) {
@@ -94,12 +90,13 @@ public final class GLSpriteSheet extends SpriteSheet {
     public GLTexture getTexture(int index) {
         var subSprite = sprites.get(index);
         if (subSprite == null) return null;
-        else return new GLTexture(subSprite.getTexture(), subSprite.getTexCoords())
-                .setSpriteSheetIndex(index);
+        else if (subSprite.getTexture() == null) return null;
+        else return new GLSpriteSheetTexture(subSprite.getTexture(), index, subSprite.getTexCoords());
     }
 
     @Override
     public int size() {
         return sprites.size();
     }
+
 }

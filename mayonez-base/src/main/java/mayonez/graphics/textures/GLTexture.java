@@ -30,10 +30,11 @@ import static org.lwjgl.system.MemoryUtil.memSlice;
  * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.GL)
-public final class GLTexture extends Texture {
+public sealed class GLTexture extends Texture permits GLSpriteSheetTexture{
 
     // Constants
-    public static final Vec2[] DEFAULT_TEX_COORDS = Rectangle.rectangleVertices(new Vec2(0.5f), new Vec2(1f), 0f);
+    public static final Vec2[] DEFAULT_TEX_COORDS
+            = Rectangle.rectangleVertices(new Vec2(0.5f), new Vec2(1f), 0f);
     private static final int RGB_CHANNELS = 3;
     private static final int RGBA_CHANNELS = 4;
 
@@ -46,10 +47,9 @@ public final class GLTexture extends Texture {
     private int texID;
     private final Vec2[] texCoords;
 
-    private GLTexture(String filename, Vec2[] texCoords, ByteBuffer image) {
+    protected GLTexture(String filename, Vec2[] texCoords) {
         super(filename);
         this.texCoords = texCoords;
-        this.image = image;
         imageFreed = false;
     }
 
@@ -59,24 +59,8 @@ public final class GLTexture extends Texture {
      * @param filename the file location
      */
     public GLTexture(String filename) {
-        this(filename, DEFAULT_TEX_COORDS, null);
+        this(filename, DEFAULT_TEX_COORDS);
         readImage();
-    }
-
-    /**
-     * Create a GLTexture from a portion of another texture.
-     *
-     * @param texture   another texture
-     * @param texCoords the image coordinates, between 0-1
-     */
-    public GLTexture(GLTexture texture, Vec2[] texCoords) {
-        this(texture.getFilename(), texCoords, texture.image);
-        this.texID = texture.texID;
-
-        var size = texCoords[2].sub(texCoords[0]); // relative size
-        this.width = (int) (texture.width * size.x); // get new image size
-        this.height = (int) (texture.height * size.y);
-        this.channels = texture.channels;
     }
 
     // Read Image Methods
@@ -133,7 +117,7 @@ public final class GLTexture extends Texture {
             throwExceptionOnSTBFailure();
         }
 
-        // set image info
+        // Set image info
         this.width = width.get(0);
         this.height = height.get(0);
         this.channels = channels.get(0);
@@ -177,7 +161,6 @@ public final class GLTexture extends Texture {
     public void free() {
         glDeleteTextures(texID);
     }
-
 
     // Image Getters
 

@@ -2,7 +2,6 @@ package mayonez.graphics.textures;
 
 import mayonez.assets.*;
 import mayonez.math.*;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * An image file used by this program. To instantiate a texture, call
@@ -13,11 +12,8 @@ import org.jetbrains.annotations.NotNull;
  */
 public abstract sealed class Texture extends Asset permits GLTexture, JTexture {
 
-    private int spriteSheetIndex;
-
     public Texture(String filename) {
         super(filename);
-        spriteSheetIndex = -1;
     }
 
     /**
@@ -46,22 +42,6 @@ public abstract sealed class Texture extends Asset permits GLTexture, JTexture {
      */
     public Vec2 getSize() {
         return new Vec2(getWidth(), getHeight());
-    }
-
-    @SuppressWarnings("unchecked")
-    public final <T extends Texture> T setSpriteSheetIndex(int spriteSheetIndex) {
-        this.spriteSheetIndex = spriteSheetIndex;
-        return (T) this;
-    }
-
-    @NotNull
-    @Override
-    public String toString() {
-        if (spriteSheetIndex >= 0) {
-            return super.toString() + " (Sprite %d)".formatted(spriteSheetIndex);
-        } else {
-            return super.toString();
-        }
     }
 
 }
