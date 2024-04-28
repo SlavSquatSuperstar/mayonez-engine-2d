@@ -16,11 +16,12 @@ import slavsquatsuperstar.demos.spacegame.SpaceGameScene;
  */
 public class DemosLauncher {
 
-    private final static int START_SCENE_INDEX = 0;
+    private final static int START_SCENE_INDEX = 5;
 
     private final static String[] SCENE_NAMES = {
             "Space Game", "Mario Level", "Physics Sandbox",
-            "Pool Balls", "Geometry Dash Editor"
+            "Pool Balls", "Geometry Dash Editor",
+            "Font Test"
     };
 
     public static void main(String[] args) {
@@ -66,6 +67,13 @@ public class DemosLauncher {
                         pollSceneControls();
                     }
                 },
+                new FontTestScene(SCENE_NAMES[5]) {
+                    @Override
+                    protected void onUserUpdate(float dt) {
+                        super.onUserUpdate(dt);
+                        pollSceneControls();
+                    }
+                }
         };
     }
 
