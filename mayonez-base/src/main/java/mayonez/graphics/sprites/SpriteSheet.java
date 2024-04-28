@@ -37,7 +37,7 @@ public abstract sealed class SpriteSheet permits JSpriteSheet, GLSpriteSheet {
      *
      * @return the sheet size
      */
-    protected abstract Vec2 getSheetSize();
+    public abstract Vec2 getSheetSize();
 
     // Sprite/Texture Getters
 

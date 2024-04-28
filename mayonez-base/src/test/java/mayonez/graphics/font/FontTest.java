@@ -4,8 +4,6 @@ import mayonez.assets.text.*;
 import mayonez.util.Record;
 import org.junit.jupiter.api.*;
 
-import java.util.*;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -32,15 +30,6 @@ class FontTest {
     void widthsLengthAndNumCharactersAreSame() {
         var data = new FontMetadata(record);
         assertEquals(data.numCharacters(), widthsStr.length());
-    }
-
-    @Test
-    void readWidthsFromString() {
-        var widths = new int[widthsStr.length()];
-        for (int i = 0; i < widths.length; i++) {
-            widths[i] = Integer.parseInt(widthsStr, i, i + 1, 10);
-        }
-        System.out.println(Arrays.toString(widths));
     }
 
 }

@@ -77,7 +77,7 @@ public final class GLSpriteSheet extends SpriteSheet {
     // Getters
 
     @Override
-    protected Vec2 getSheetSize() {
+    public Vec2 getSheetSize() {
         return sheetTexture.getSize();
     }
 

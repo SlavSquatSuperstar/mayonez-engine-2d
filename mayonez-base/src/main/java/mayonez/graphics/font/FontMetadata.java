@@ -5,6 +5,14 @@ import mayonez.util.Record;
 /**
  * Contains characteristics about a font, including the name, characters, and dimensions.
  *
+ * @param name the name of the font
+ * @param startCharacter the start character code point
+ * @param endCharacter the end character code point
+ * @param glyphHeight the total height of a character glyph in pixels
+ * @param glyphAscent the height of a character glyph above the baseline in pixels
+ * @param glyphSpacing the space between adjacent glyphs in pixels
+ * @param spaceWidth the width of the space character in pixels
+ *
  * @author SlavSquatSuperstar
  */
 public record FontMetadata(
@@ -36,5 +44,13 @@ public record FontMetadata(
     public int numCharacters() {
         return endCharacter - startCharacter + 1;
     }
+
+//    public char startCharacterValue() {
+//        return (char) startCharacter;
+//    }
+//
+//    public char endCharacterValue() {
+//        return (char) endCharacter;
+//    }
 
 }
