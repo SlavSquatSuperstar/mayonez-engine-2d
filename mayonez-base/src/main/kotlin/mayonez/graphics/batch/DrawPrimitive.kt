@@ -43,6 +43,8 @@ enum class DrawPrimitive(
         }
     },
 
+    // TODO non-sprite quad
+
     /**
      * An object with 4 vertices with attributes position, color, tex coords,
      * and tex ID.

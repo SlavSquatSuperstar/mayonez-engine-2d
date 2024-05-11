@@ -33,54 +33,15 @@ public class FontTestScene extends Scene {
                 metadata.glyphHeight(), metadata.glyphHeight(), metadata.numCharacters(), 0
         );
 
+        // Text characteristics
+        var message = "ABCDEFGHIJKLM\nNOPQRSTUVWXYZ\nabcdefghijklm\nnopqrstuvwyxz";
         var font = new Font(spriteSheet, metadata, widths);
+        var color = Colors.BLACK;
 
-        var messages = new String[]{
-                "ABCDEFGHIJKLM", "NOPQRSTUVWXYZ", "abcdefghijklm", "nopqrstuvwyxz"
-        };
+        // Font style
         var fontSize = 6; // pt
         var lineSpacing = 2; // px
-        var startPos = new Vec2(-30, 20);
-//        var lineOffsetPos = new Vec2(0, (float) fontSize + (float) lineSpacing / fontSize);
-        var lineOffsetPos = new Vec2(0, (float) fontSize * (1 + (float) lineSpacing / metadata.glyphHeight()));
-
-        // TODO convert to screen units
-        for (int i = 0; i < messages.length; i++) {
-            addObject(createTextObject(
-                    messages[i], font, Colors.BLACK,
-                    startPos.sub(lineOffsetPos.mul(i)), fontSize
-            ));
-        }
-    }
-
-    private static GameObject createTextObject(String message, Font font, Color color, Vec2 position, int fontSize) {
-        return new GameObject("Text Object", position) {
-            @Override
-            protected void init() {
-                var metadata = font.getMetadata();
-
-                var lastCharPos = new Vec2();
-                for (int i = 0; i < message.length(); i++) {
-                    var charCode = message.charAt(i);
-                    var glyph = font.getGlyph(charCode);
-                    if (glyph == null) continue;
-
-                    var sprite = createTextSprite(glyph, color, fontSize, lastCharPos);
-                    addComponent(sprite);
-
-                    var worldWidth = (float) fontSize * (glyph.getWidth() + metadata.glyphSpacing()) / (float) glyph.getHeight();
-                    lastCharPos = lastCharPos.add(new Vec2(worldWidth, 0));
-                }
-            }
-        };
-    }
-
-    private static Sprite createTextSprite(Glyph glyph, Color color, int fontSize, Vec2 charPos) {
-        var tex = glyph.getTexture();
-        var sprite = Sprites.createSprite(tex);
-        sprite.setColor(color);
-        sprite.setSpriteTransform(new Transform(charPos, 0f, new Vec2(fontSize)));
-        return sprite;
+        addObject(new TextObject(message, new Vec2(-30, 20), font, color, fontSize, lineSpacing));
     }
 
 }

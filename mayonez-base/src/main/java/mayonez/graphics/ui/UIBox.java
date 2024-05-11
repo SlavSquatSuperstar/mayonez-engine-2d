@@ -8,11 +8,10 @@ import mayonez.math.*;
 import mayonez.math.shapes.*;
 
 /**
- * Draws a colored or textured box on the UI.
+ * Draws a colored or textured box to the UI.
  *
  * @author SlavSquatSuperstar
  */
-// TODO UI set anchor
 @UsesEngine(EngineType.GL)
 public class UIBox extends Component implements UIElement {
 
@@ -40,7 +39,6 @@ public class UIBox extends Component implements UIElement {
     }
 
     // UI Getters and Setters
-
 
     public Vec2 getPosition() {
         return position;
