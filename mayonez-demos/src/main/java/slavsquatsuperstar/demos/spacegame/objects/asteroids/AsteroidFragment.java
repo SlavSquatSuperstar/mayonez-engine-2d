@@ -26,7 +26,21 @@ public class AsteroidFragment extends BaseAsteroid {
         addRigidbody(startingHealth).applyImpulse(offsetNormal.mul(6f));
 
         addComponent(new Damageable(startingHealth)); 
-        addComponent(new DestroyAfterDuration(Random.randomFloat(10, 15)));
+        addComponent(new DestroyAfterDuration(Random.randomFloat(20, 30)) {
+            private Vec2 startScale;
+
+            @Override
+            protected void start() {
+                startScale = transform.getScale();
+            }
+
+            @Override
+            protected void update(float dt) {
+                super.update(dt);
+                // Shrink the fragment until it disappears
+                transform.setScale(startScale.mul(this.getLifetime() / this.getMaxLifetime()));
+            }
+        });
     }
 
 }

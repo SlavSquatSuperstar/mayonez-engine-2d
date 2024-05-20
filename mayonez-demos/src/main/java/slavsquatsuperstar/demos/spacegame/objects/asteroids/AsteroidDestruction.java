@@ -39,7 +39,7 @@ public class AsteroidDestruction extends Damageable {
 
     private void spawnAsteroidFragments() {
         var radius = properties.radius();
-        var fragmentCount = (int) Random.randomFloat(2, radius * 1.5f);
+        var fragmentCount = getFragmentCount(radius);
         var fragmentRadius = radius / fragmentCount;
 
         var angle = 360f / fragmentCount;
@@ -54,6 +54,11 @@ public class AsteroidDestruction extends Damageable {
                     new Vec2(1, 0).rotate(offsetAngle)
             ));
         }
+    }
+
+    private static int getFragmentCount(float radius) {
+        var fragmentCount = (int) Random.randomFloat(radius * 0.5f, radius * 1.5f);
+        return Math.max(fragmentCount, 2);
     }
 
 }

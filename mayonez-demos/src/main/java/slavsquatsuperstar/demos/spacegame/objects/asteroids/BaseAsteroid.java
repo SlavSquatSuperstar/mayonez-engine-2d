@@ -2,7 +2,6 @@ package slavsquatsuperstar.demos.spacegame.objects.asteroids;
 
 import mayonez.*;
 import mayonez.graphics.*;
-import mayonez.graphics.debug.*;
 import mayonez.graphics.sprites.*;
 import mayonez.graphics.textures.*;
 import mayonez.math.*;
@@ -32,11 +31,6 @@ public abstract class BaseAsteroid extends GameObject {
         }
     }
 
-//    private static final SpriteSheet ASTEROID_SPRITES = Sprites.createSpriteSheet(
-//            "assets/spacegame/textures/asteroids/asteroids.png",
-//            32, 32, 2, 0
-//    );
-
     protected final AsteroidProperties properties;
 
     public BaseAsteroid(String name, Vec2 position, AsteroidProperties properties) {
@@ -51,7 +45,6 @@ public abstract class BaseAsteroid extends GameObject {
         setTransform(properties);
 
         addCollider();
-//        addSprite(properties.color());
         addSprite(properties.color(), Random.randomInt(0, 1));
     }
 
@@ -65,12 +58,7 @@ public abstract class BaseAsteroid extends GameObject {
         addComponent(new KeepInScene(KeepInScene.Mode.WRAP));
     }
 
-    private void addSprite(Color color) {
-        addComponent(new ShapeSprite(color, true));
-    }
-
     private void addSprite(Color color, int spriteIndex) {
-//        var sprite = ASTEROID_SPRITES.getSprite(spriteIndex);
         var sprite = Sprites.createSprite(ASTEROID_TEXTURES[spriteIndex]);
         sprite.setColor(color);
         addComponent(sprite);

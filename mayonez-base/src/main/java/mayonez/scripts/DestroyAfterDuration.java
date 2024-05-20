@@ -28,4 +28,20 @@ public class DestroyAfterDuration extends Script {
         if (lifetime <= 0) gameObject.destroy();
     }
 
+    /**
+     * Get the remaining lifetime in seconds of this object.
+     * @return the lifetime
+     */
+    public float getLifetime() {
+        return lifetime;
+    }
+
+    /**
+     * Get the total lifetime in seconds of this object.
+     * @return the max lifetime
+     */
+    public float getMaxLifetime() {
+        return maxLifetime;
+    }
+
 }
