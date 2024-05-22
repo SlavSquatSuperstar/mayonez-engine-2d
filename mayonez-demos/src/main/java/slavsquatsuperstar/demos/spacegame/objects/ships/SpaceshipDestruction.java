@@ -16,7 +16,7 @@ import java.util.*;
  *
  * @author SlavSquatSuperstar
  */
-public class ShipDestruction extends TimerScript {
+public class SpaceshipDestruction extends TimerScript {
 
     // Constants
     private static final float EXPLOSION_DURATION = 0.8f;
@@ -26,7 +26,7 @@ public class ShipDestruction extends TimerScript {
     private final List<Component> shipSystems;
     private GameObject explosion;
 
-    public ShipDestruction() {
+    public SpaceshipDestruction() {
         super(DESTRUCTION_DURATION);
         shipSystems = new LinkedList<>();
     }

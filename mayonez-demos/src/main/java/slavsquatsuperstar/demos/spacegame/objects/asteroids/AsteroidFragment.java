@@ -8,7 +8,10 @@ import slavsquatsuperstar.demos.spacegame.combat.Damageable;
  *
  * @author SlavSquatSuperstar
  */
-public class AsteroidFragment extends BaseAsteroid {
+// TODO make sure we don't infinitely spawn fragments
+public class AsteroidFragment extends Asteroid {
+
+    private static final float MIN_SPAWN_FRAGMENTS_RADIUS = 1.25f;
 
     private final Vec2 startImpulse;
 
@@ -25,14 +28,15 @@ public class AsteroidFragment extends BaseAsteroid {
         addComponent(new Damageable(startingHealth));
 
         var radius = properties.radius();
-        System.out.println("frag radius = " + radius);
-        if (radius > 1.25f) {
+        if (radius > MIN_SPAWN_FRAGMENTS_RADIUS) {
             // Create more fragments
             addCollider();
             addComponent(new AsteroidDestruction(startingHealth, properties));
         } else {
             // Don't create any fragments
-            addComponent(new DespawnAsteroid(Random.randomFloat(radius * 3f, radius * 5f), properties.color()));
+            addComponent(new DespawnAsteroid(
+                    Random.randomFloat(radius * 3f, radius * 5f), properties.color()
+            ));
         }
     }
 

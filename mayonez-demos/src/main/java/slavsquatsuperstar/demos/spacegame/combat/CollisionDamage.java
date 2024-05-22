@@ -32,6 +32,7 @@ public class CollisionDamage extends Script {
         damageable = gameObject.getComponent(Damageable.class);
     }
 
+    // This is still called with triggers
     @Override
     protected void onCollisionEnter(GameObject other, Vec2 direction, Vec2 velocity) {
         if (other.hasLayer(SpaceGameLayer.SHIPS) || other.hasLayer(SpaceGameLayer.ASTEROIDS)) {

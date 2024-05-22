@@ -41,7 +41,7 @@ public abstract class Spaceship extends GameObject {
         addComponent(new ThrustController(thrusters));
 
         // Combat
-        addComponent(new ShipDestruction());
+        addComponent(new SpaceshipDestruction());
         addComponent(getDamageable(properties.maxHealth(), properties.maxShieldHealth()));
 
         // Visuals
@@ -53,7 +53,7 @@ public abstract class Spaceship extends GameObject {
             return new ShieldedDamageable(maxHealth, shieldHealth) {
                 @Override
                 public void onHealthDepleted() {
-                    var shipDestruction = gameObject.getComponent(ShipDestruction.class);
+                    var shipDestruction = gameObject.getComponent(SpaceshipDestruction.class);
                     if (shipDestruction != null) shipDestruction.startDestructionSequence();
                 }
             };
@@ -61,7 +61,7 @@ public abstract class Spaceship extends GameObject {
             return new Damageable(maxHealth) {
                 @Override
                 public void onHealthDepleted() {
-                    var shipDestruction = gameObject.getComponent(ShipDestruction.class);
+                    var shipDestruction = gameObject.getComponent(SpaceshipDestruction.class);
                     if (shipDestruction != null) shipDestruction.startDestructionSequence();
                 }
             };

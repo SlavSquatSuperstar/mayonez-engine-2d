@@ -1,7 +1,7 @@
 package slavsquatsuperstar.demos.spacegame.objects.spawners;
 
 import mayonez.*;
-import slavsquatsuperstar.demos.spacegame.objects.asteroids.Asteroid;
+import slavsquatsuperstar.demos.spacegame.objects.asteroids.RandomAsteroid;
 import slavsquatsuperstar.demos.spacegame.objects.ships.EnemySpaceship;
 
 /**
@@ -52,7 +52,7 @@ public class SpaceObjectSpawner extends GameObject {
         addComponent(new MultiSpawnManager(NUM_OBSTACLES, OBSTACLE_RESPAWN_COOLDOWN) {
             @Override
             public GameObject createSpawnedObject() {
-                return new Asteroid("Asteroid") {
+                return new RandomAsteroid("Asteroid") {
                     @Override
                     protected void init() {
                         super.init();

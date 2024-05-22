@@ -14,6 +14,7 @@ public class AsteroidDestruction extends Damageable {
 
     // Constants
     private static final float EXPLOSION_DURATION = 0.5f;
+    private static final float MIN_SPAWN_FRAGMENTS_RADIUS = 1.25f;
 
     private final AsteroidProperties properties;
 
@@ -26,23 +27,26 @@ public class AsteroidDestruction extends Damageable {
     protected void onDestroy() {
         // createExplosion();
         spawnAsteroidFragments();
-        // TODO large fragments spawn more fragments
     }
 
     private void createExplosion() {
         getScene().addObject(ExplosionPrefabs.createPrefab(
                 "Asteroid Explosion",
-                new Transform(transform.getPosition(), Random.randomAngle(),
-                        new Vec2(properties.radius() * 0.75f)),
+                new Transform(
+                        transform.getPosition(), Random.randomAngle(),
+                        new Vec2(properties.radius() * 0.75f)
+                ),
                 EXPLOSION_DURATION
         ));
     }
 
     private void spawnAsteroidFragments() {
         var radius = properties.radius();
-        if (radius < 1.25f) return; // Don't spawn fragments if too small
+        if (radius < MIN_SPAWN_FRAGMENTS_RADIUS) return; // Don't spawn fragments if too small
 
-        var fragmentCount = IntMath.clamp((int) Random.randomFloat(radius * 0.5f, radius * 1.5f), 2, 4);
+        var fragmentCount = IntMath.clamp(
+                (int) Random.randomFloat(radius * 0.5f, radius * 1.5f), 2, 4
+        );
         var fragmentRadius = radius / fragmentCount;
 
         var angle = 360f / fragmentCount;
