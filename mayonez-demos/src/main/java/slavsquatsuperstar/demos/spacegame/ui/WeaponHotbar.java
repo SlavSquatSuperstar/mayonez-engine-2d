@@ -24,7 +24,7 @@ public class WeaponHotbar extends Script {
 
     // UI Elements
     private final WeaponHotbarSlot[] hotbarSlots;
-    private UIBox selectedBorder;
+    private UISprite selectedBorder;
 
     public WeaponHotbar(Vec2 position, Vec2 size, int numWeapons) {
         this.position = position;
@@ -45,7 +45,7 @@ public class WeaponHotbar extends Script {
         }
 
         // Border over selected hotbar element
-        selectedBorder = new UIBox(position, size.add(new Vec2(BORDER_MARGIN)), BORDER_TEXTURE) {
+        selectedBorder = new UISprite(position, size.add(new Vec2(BORDER_MARGIN)), BORDER_TEXTURE) {
             @Override
             public int getZIndex() {
                 return super.getZIndex() + 3; // display above overlay

@@ -64,7 +64,7 @@ class RenderLayer {
      * @param r the renderable
      */
     void addRenderable(Renderable r) {
-        if (r instanceof UIElement e) uiRenderer.addUIElement(e);
+        if (r instanceof UIRenderableElement e) uiRenderer.addUIElement(e);
         else sceneRenderer.addRenderable(r);
     }
 

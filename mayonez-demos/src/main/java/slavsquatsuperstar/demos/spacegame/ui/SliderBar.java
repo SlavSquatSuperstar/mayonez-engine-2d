@@ -19,7 +19,7 @@ public class SliderBar extends Script {
     private final Vec2 position, size;
     private final Color backgroundColor, sliderColor;
 
-    private UIBox sliderBox;
+    private UISprite sliderSprite;
 
     public SliderBar(Vec2 position, Vec2 size, Color backgroundColor, Color sliderColor) {
         this.position = position;
@@ -32,31 +32,31 @@ public class SliderBar extends Script {
     protected void init() {
         gameObject.setZIndex(SpaceGameZIndex.UI);
 
-        var backgroundBox = new UIBox(position, size, backgroundColor) {
+        var backgroundSprite = new UISprite(position, size, backgroundColor) {
             @Override
             public int getZIndex() {
                 return super.getZIndex();
             }
         };
-        gameObject.addComponent(backgroundBox);
+        gameObject.addComponent(backgroundSprite);
 
-        sliderBox = new UIBox(position, size, sliderColor) {
+        sliderSprite = new UISprite(position, size, sliderColor) {
             @Override
             public int getZIndex() {
                 return super.getZIndex() + 1; // display above background
             }
         };
-        sliderBox.setAnchor(Anchor.LEFT);
-        sliderBox.translateToAnchorOrigin();
-        gameObject.addComponent(sliderBox);
+        sliderSprite.setAnchor(Anchor.LEFT);
+        sliderSprite.translateToAnchorOrigin();
+        gameObject.addComponent(sliderSprite);
 
-        var outlineBox = new UIBox(position, size, BORDER_TEXTURE) {
+        var outlineSprite = new UISprite(position, size, BORDER_TEXTURE) {
             @Override
             public int getZIndex() {
                 return super.getZIndex() + 2; // display above foreground
             }
         };
-        gameObject.addComponent(outlineBox);
+        gameObject.addComponent(outlineSprite);
     }
 
     /**
@@ -67,7 +67,7 @@ public class SliderBar extends Script {
     public void setSliderValue(float healthPercent) {
         // Clamp percent between 0%-100%
         var clamped = FloatMath.clamp(healthPercent, 0f, 1f);
-        sliderBox.setSize(size.mul(new Vec2(clamped, 1f)));
+        sliderSprite.setSize(size.mul(new Vec2(clamped, 1f)));
     }
 
 }

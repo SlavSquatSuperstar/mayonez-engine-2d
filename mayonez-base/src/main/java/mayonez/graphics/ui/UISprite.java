@@ -8,58 +8,69 @@ import mayonez.math.*;
 import mayonez.math.shapes.*;
 
 /**
- * Draws a colored or textured box to the UI.
+ * A rectangular sprite with a texture and color that is drawn to the UI.
  *
  * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.GL)
-public class UIBox extends Component implements UIElement {
+public class UISprite extends Component implements UIRenderableElement {
 
+    // Constants
     private static final Color DEFAULT_COLOR = Colors.WHITE;
+
+    // Instance Fields
     private Vec2 position, size;
+    private Anchor anchor;
     private Texture texture;
     private Color color;
-    private Anchor anchor;
 
-    private UIBox(Vec2 position, Vec2 size, Texture texture, Color color) {
+    private UISprite(Vec2 position, Vec2 size, Texture texture, Color color) {
         super(UpdateOrder.RENDER);
         this.position = position;
         this.size = size;
+        this.anchor = Anchor.CENTER;
         this.texture = texture;
         this.color = color;
-        this.anchor = Anchor.CENTER;
     }
 
-    public UIBox(Vec2 position, Vec2 size, Texture texture) {
+    public UISprite(Vec2 position, Vec2 size, Texture texture) {
         this(position, size, texture, DEFAULT_COLOR);
     }
 
-    public UIBox(Vec2 position, Vec2 size, Color color) {
+    public UISprite(Vec2 position, Vec2 size, Color color) {
         this(position, size, null, color);
     }
 
     // UI Getters and Setters
 
+    @Override
     public Vec2 getPosition() {
         return position;
     }
 
+    @Override
     public void setPosition(Vec2 position) {
         this.position = position;
     }
 
+    @Override
     public Vec2 getSize() {
         return size;
     }
 
+    @Override
     public void setSize(Vec2 size) {
         this.size = size;
     }
 
+    // UI Renderable Getters and Setters
+
+    @Override
     public Color getColor() {
         return color;
     }
 
+    @Override
     public void setColor(Color color) {
         this.color = color;
     }
@@ -74,6 +85,7 @@ public class UIBox extends Component implements UIElement {
         }
     }
 
+    // TODO move to interface
     public void setTexture(Texture texture) {
         this.texture = texture;
     }

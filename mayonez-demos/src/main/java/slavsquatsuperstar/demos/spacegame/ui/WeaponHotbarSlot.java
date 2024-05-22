@@ -22,7 +22,7 @@ public class WeaponHotbarSlot extends Script {
     private static final float BACKGROUND_MARGIN = 5f;
 
     // Fields
-    private UIBox cooldownOverlayBox;
+    private UISprite cooldownOverlaySprite;
     private final Vec2 position, size;
     private final int weaponIndex;
 
@@ -37,11 +37,11 @@ public class WeaponHotbarSlot extends Script {
         gameObject.setZIndex(SpaceGameZIndex.UI);
 
         // Background element
-        var backgroundBox = new UIBox(position, size.add(new Vec2(BACKGROUND_MARGIN)), BACKGROUND_TEXTURE);
-        gameObject.addComponent(backgroundBox);
+        var backgroundSprite = new UISprite(position, size.add(new Vec2(BACKGROUND_MARGIN)), BACKGROUND_TEXTURE);
+        gameObject.addComponent(backgroundSprite);
 
         // Weapon icon
-        var weaponIcon = new UIBox(position, size, ProjectilePrefabs.PROJECTILE_SPRITES.getTexture(weaponIndex)) {
+        var weaponIcon = new UISprite(position, size, ProjectilePrefabs.PROJECTILE_SPRITES.getTexture(weaponIndex)) {
             @Override
             public int getZIndex() {
                 return super.getZIndex() + 1; // display above background
@@ -50,7 +50,7 @@ public class WeaponHotbarSlot extends Script {
         gameObject.addComponent(weaponIcon);
 
         // Cooldown overlay
-        cooldownOverlayBox = new UIBox(
+        cooldownOverlaySprite = new UISprite(
                 position, size.add(new Vec2(BACKGROUND_MARGIN)), new Color(76, 76, 76, 180)
         ) {
             @Override
@@ -58,9 +58,9 @@ public class WeaponHotbarSlot extends Script {
                 return super.getZIndex() + 2; // display above icon
             }
         };
-        cooldownOverlayBox.setAnchor(Anchor.BOTTOM);
-        cooldownOverlayBox.translateToAnchorOrigin();
-        gameObject.addComponent(cooldownOverlayBox);
+        cooldownOverlaySprite.setAnchor(Anchor.BOTTOM);
+        cooldownOverlaySprite.translateToAnchorOrigin();
+        gameObject.addComponent(cooldownOverlaySprite);
 
         setCooldownPercent(0f);
     }
@@ -75,7 +75,7 @@ public class WeaponHotbarSlot extends Script {
     public void setCooldownPercent(float cooldownPercent) {
         // Clamp percent between 0%-100%
         var clamped = FloatMath.clamp(cooldownPercent, 0f, 1f);
-        cooldownOverlayBox.setSize(size.mul(new Vec2(1f, clamped)));
+        cooldownOverlaySprite.setSize(size.mul(new Vec2(1f, clamped)));
     }
 
     /**
