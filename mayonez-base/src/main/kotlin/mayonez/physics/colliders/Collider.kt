@@ -96,8 +96,8 @@ abstract class Collider(private val shape: Shape) :
     }
 
     override fun canCollide(collider: CollisionBody): Boolean {
+        // This assumes colliders aren't disabled during a collision
         if (collider is Collider) {
-
             return (this.isEnabled && collider.isEnabled) // Both enabled
                     && this.gameObject.canInteract(collider.gameObject) // Layers interact
                     && (this.physicsBody != null || collider.physicsBody != null) // At most one is static

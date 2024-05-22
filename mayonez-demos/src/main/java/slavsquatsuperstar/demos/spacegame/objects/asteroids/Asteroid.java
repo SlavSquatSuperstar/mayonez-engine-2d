@@ -17,14 +17,13 @@ public class Asteroid extends BaseAsteroid {
     @Override
     protected void init() {
         super.init();
-
-        var radius = properties.radius();
-        var startingHealth = Math.round(radius * 3f);
-
         transform.setPosition(getScene().getRandomPosition());
+
+        var startingHealth = properties.getHealth();
         addRigidbody(startingHealth)
                 .setVelocity(transform.getUp().mul(Random.randomFloat(0f, 3f)));
 
+        addCollider();
         addComponent(new AsteroidDestruction(startingHealth, properties));
     }
 

@@ -6,7 +6,7 @@ import slavsquatsuperstar.demos.spacegame.combat.Damageable;
 import slavsquatsuperstar.demos.spacegame.combat.ExplosionPrefabs;
 
 /**
- * Destroys an asteroid and spawns fragments after it is destroyed.
+ * Makes an asteroid destructible and spawns fragments after it is destroyed.
  *
  * @author SlavSquatSuperstar
  */
@@ -26,6 +26,7 @@ public class AsteroidDestruction extends Damageable {
     protected void onDestroy() {
         // createExplosion();
         spawnAsteroidFragments();
+        // TODO large fragments spawn more fragments
     }
 
     private void createExplosion() {
@@ -39,7 +40,9 @@ public class AsteroidDestruction extends Damageable {
 
     private void spawnAsteroidFragments() {
         var radius = properties.radius();
-        var fragmentCount = getFragmentCount(radius);
+        if (radius < 1.25f) return; // Don't spawn fragments if too small
+
+        var fragmentCount = IntMath.clamp((int) Random.randomFloat(radius * 0.5f, radius * 1.5f), 2, 4);
         var fragmentRadius = radius / fragmentCount;
 
         var angle = 360f / fragmentCount;
@@ -47,18 +50,14 @@ public class AsteroidDestruction extends Damageable {
 
         for (var i = 0; i < fragmentCount; i++) {
             offsetAngle += AsteroidProperties.getRandomError(angle, 0.3f);
+            var impulse = Random.randomFloat(fragmentRadius * 4f, fragmentRadius * 8f);
             getScene().addObject(new AsteroidFragment(
                     "Asteroid Fragment",
                     transform.getPosition(),
                     properties.copyWithRadius(fragmentRadius),
-                    new Vec2(1, 0).rotate(offsetAngle)
+                    new Vec2(impulse, 0).rotate(offsetAngle)
             ));
         }
-    }
-
-    private static int getFragmentCount(float radius) {
-        var fragmentCount = (int) Random.randomFloat(radius * 0.5f, radius * 1.5f);
-        return Math.max(fragmentCount, 2);
     }
 
 }

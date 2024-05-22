@@ -18,19 +18,11 @@ import slavsquatsuperstar.demos.spacegame.objects.SpaceGameZIndex;
  */
 public abstract class BaseAsteroid extends GameObject {
 
+    // Static Constants
     private static final int NUM_TEXTURES = 2;
-    private static final Texture[] ASTEROID_TEXTURES;
+    private static final Texture[] ASTEROID_TEXTURES = getAsteroidTextures();
 
-    static {
-        ASTEROID_TEXTURES = new Texture[NUM_TEXTURES];
-        for (int i = 0; i < NUM_TEXTURES; i++) {
-            ASTEROID_TEXTURES[i] = Textures.getTexture(
-                    "assets/spacegame/textures/asteroids/asteroid%d.png"
-                            .formatted(i + 1)
-            );
-        }
-    }
-
+    // Instance Fields
     protected final AsteroidProperties properties;
 
     public BaseAsteroid(String name, Vec2 position, AsteroidProperties properties) {
@@ -42,20 +34,11 @@ public abstract class BaseAsteroid extends GameObject {
     protected void init() {
         setLayer(getScene().getLayer(SpaceGameLayer.ASTEROIDS));
         setZIndex(SpaceGameZIndex.ASTEROID);
-        setTransform(properties);
 
-        addCollider();
-        addSprite(properties.color(), Random.randomInt(0, 1));
-    }
-
-    private void setTransform(AsteroidProperties properties) {
         transform.setRotation(Random.randomAngle());
         transform.setScale(properties.getScale());
-    }
 
-    private void addCollider() {
-        addComponent(new BallCollider(new Vec2(1f)));
-        addComponent(new KeepInScene(KeepInScene.Mode.WRAP));
+        addSprite(properties.color(), Random.randomInt(0, NUM_TEXTURES - 1));
     }
 
     private void addSprite(Color color, int spriteIndex) {
@@ -64,10 +47,28 @@ public abstract class BaseAsteroid extends GameObject {
         addComponent(sprite);
     }
 
+    protected void addCollider() {
+        addComponent(new BallCollider(new Vec2(1f)));
+        addComponent(new KeepInScene(KeepInScene.Mode.WRAP));
+    }
+
     protected Rigidbody addRigidbody(float mass) {
         Rigidbody rb;
         addComponent(rb = new Rigidbody(mass, 0.2f, 0.2f));
         return rb;
+    }
+
+    // Static Methods
+
+    private static Texture[] getAsteroidTextures() {
+        var asteroidTextures = new Texture[NUM_TEXTURES];
+        for (int i = 0; i < NUM_TEXTURES; i++) {
+            asteroidTextures[i] = Textures.getTexture(
+                    "assets/spacegame/textures/asteroids/asteroid%d.png"
+                            .formatted(i + 1)
+            );
+        }
+        return asteroidTextures;
     }
 
 }
