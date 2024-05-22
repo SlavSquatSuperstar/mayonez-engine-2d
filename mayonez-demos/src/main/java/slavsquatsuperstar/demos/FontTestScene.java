@@ -6,6 +6,8 @@ import mayonez.graphics.*;
 import mayonez.graphics.font.*;
 import mayonez.graphics.sprites.*;
 import mayonez.math.*;
+import slavsquatsuperstar.demos.font.SceneTextObject;
+import slavsquatsuperstar.demos.font.UITextObject;
 
 public class FontTestScene extends Scene {
 
@@ -34,14 +36,26 @@ public class FontTestScene extends Scene {
         );
 
         // Text characteristics
+        // TODO fix whitespace width
         var message = "ABCDEFGHIJKLM\nNOPQRSTUVWXYZ\nabcdefghijklm\nnopqrstuvwyxz";
         var font = new Font(spriteSheet, metadata, widths);
-        var color = Colors.BLACK;
 
-        // Font style
+
+        // Scene font
         var fontSize = 6; // pt
         var lineSpacing = 2; // px
-        addObject(new TextObject(message, new Vec2(-30, 20), font, color, fontSize, lineSpacing));
+        addObject(new SceneTextObject(
+                message, new Vec2(-30, 10), font,
+                Colors.BLACK, fontSize, lineSpacing)
+        );
+
+        // UI font
+        var uiFontSize = 30; // pt
+        var uiLineSpacing = 2; // px
+        addObject(new UITextObject(
+                message, new Vec2(25, 775), font,
+                Colors.RED, uiFontSize, uiLineSpacing)
+        );
     }
 
 }
