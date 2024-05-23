@@ -15,14 +15,14 @@ import slavsquatsuperstar.demos.spacegame.combat.projectiles.ProjectilePrefabs;
 public class PlayerUI extends GameObject {
 
     private static final Texture HEALTH_LABEL_TEXTURE = Textures.getTexture(
-            "assets/spacegame/textures/ui/health_bar_label.png");
+            "assets/spacegame/textures/ui/health_bar_icon.png");
     private static final Texture SHIELD_LABEL_TEXTURE = Textures.getTexture(
-            "assets/spacegame/textures/ui/shield_bar_label.png");
+            "assets/spacegame/textures/ui/shield_bar_icon.png");
 
     private static final Texture BACKGROUND_TEXTURE = Textures.getTexture(
-            "assets/spacegame/textures/ui/hotbar_background.png");
+            "assets/spacegame/textures/ui/gray_background.png");
     private static final Texture BORDER_TEXTURE = Textures.getTexture(
-            "assets/spacegame/textures/ui/label_border.png");
+            "assets/spacegame/textures/ui/gray_border.png");
 
     public PlayerUI(String name) {
         super(name);

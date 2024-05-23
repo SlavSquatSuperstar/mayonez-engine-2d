@@ -15,7 +15,7 @@ public class WeaponHotbar extends Script {
 
     // Constants
     private static final Texture BORDER_TEXTURE = Textures.getTexture(
-            "assets/spacegame/textures/ui/hotbar_border.png");
+            "assets/spacegame/textures/ui/black_border.png");
     private static final float BORDER_MARGIN = 10f;
 
     // Fields

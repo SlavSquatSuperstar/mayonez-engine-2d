@@ -15,7 +15,7 @@ import slavsquatsuperstar.demos.spacegame.objects.SpaceGameZIndex;
 public class SliderBar extends Script {
 
     private static final Texture BORDER_TEXTURE = Textures.getTexture(
-            "assets/spacegame/textures/ui/health_bar_border.png");
+            "assets/spacegame/textures/ui/gray_border_wide.png");
     private final Vec2 position, size;
     private final Color backgroundColor, sliderColor;
 

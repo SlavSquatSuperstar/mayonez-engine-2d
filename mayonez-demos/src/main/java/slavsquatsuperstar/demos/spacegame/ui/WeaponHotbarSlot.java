@@ -18,7 +18,7 @@ public class WeaponHotbarSlot extends Script {
 
     // Constants
     private static final Texture BACKGROUND_TEXTURE = Textures.getTexture(
-            "assets/spacegame/textures/ui/hotbar_background.png");
+            "assets/spacegame/textures/ui/gray_background.png");
     private static final float BACKGROUND_MARGIN = 5f;
 
     // Fields
