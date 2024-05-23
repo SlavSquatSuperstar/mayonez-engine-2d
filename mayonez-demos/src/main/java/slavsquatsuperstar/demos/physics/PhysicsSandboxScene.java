@@ -9,7 +9,7 @@ import mayonez.physics.colliders.*;
 import mayonez.physics.dynamics.*;
 
 /**
- * For testing dynamic movement and collision resolution.
+ * A scene for testing dynamic movement and collision resolution.
  *
  * @author SlavSquatSupertar
  */

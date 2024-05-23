@@ -9,6 +9,11 @@ import mayonez.math.*;
 import slavsquatsuperstar.demos.font.SceneTextObject;
 import slavsquatsuperstar.demos.font.UITextObject;
 
+/**
+ * A scene for testing font rendering in the UI and in the game.
+ *
+ * @author SlavSquatSuperstar
+ */
 public class FontTestScene extends Scene {
 
     public FontTestScene(String name) {

@@ -14,9 +14,9 @@ import slavsquatsuperstar.demos.spacegame.objects.SpaceGameZIndex;
 public class WeaponHotbar extends Script {
 
     // Constants
-    private static final Texture BORDER_TEXTURE = Textures.getTexture(
+    private static final Texture SELECTED_BORDER_TEXTURE = Textures.getTexture(
             "assets/spacegame/textures/ui/black_border.png");
-    private static final float BORDER_MARGIN = 10f;
+    private static final float BORDER_MARGIN = 8f;
 
     // Fields
     private final Vec2 position, size;
@@ -38,14 +38,14 @@ public class WeaponHotbar extends Script {
         gameObject.setZIndex(SpaceGameZIndex.UI);
 
         // Create hotbar slots
-        var boxSpacing = new Vec2(50, 0);
+        var boxSpacing = new Vec2(48, 0);
         for (int i = 0; i < numWeapons; i++) {
             hotbarSlots[i] = new WeaponHotbarSlot(position.add(boxSpacing.mul(i)), size, i);
             gameObject.addComponent(hotbarSlots[i]);
         }
 
         // Border over selected hotbar element
-        selectedBorder = new UISprite(position, size.add(new Vec2(BORDER_MARGIN)), BORDER_TEXTURE) {
+        selectedBorder = new UISprite(position, size.add(new Vec2(BORDER_MARGIN)), SELECTED_BORDER_TEXTURE) {
             @Override
             public int getZIndex() {
                 return super.getZIndex() + 3; // display above overlay

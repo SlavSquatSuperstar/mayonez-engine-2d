@@ -1,57 +1,49 @@
 package slavsquatsuperstar.demos.spacegame.ui;
 
-import mayonez.*;
 import mayonez.graphics.*;
 import mayonez.graphics.textures.*;
 import mayonez.graphics.ui.*;
 import mayonez.math.*;
 import slavsquatsuperstar.demos.spacegame.combat.projectiles.ProjectilePrefabs;
-import slavsquatsuperstar.demos.spacegame.objects.SpaceGameZIndex;
 
 /**
- * An individual weapon hotbar slot with background, icon, and cooldown
- * overlay elements.
+ * A label representing an individual weapon hotbar slot, with additional cooldown
+ * overlay.
  *
  * @author SlavSquatSuperstar
  */
-public class WeaponHotbarSlot extends Script {
+public class WeaponHotbarSlot extends ImageLabel {
 
     // Constants
     private static final Texture BACKGROUND_TEXTURE = Textures.getTexture(
             "assets/spacegame/textures/ui/gray_background.png");
-    private static final float BACKGROUND_MARGIN = 5f;
+    private static final Texture UNSELECTED_BORDER_TEXTURE = Textures.getTexture(
+            "assets/spacegame/textures/ui/gray_border.png");
+
+    private static final float BACKGROUND_MARGIN = 4f;
+    private static final float BORDER_MARGIN = 4f;
 
     // Fields
-    private UISprite cooldownOverlaySprite;
     private final Vec2 position, size;
-    private final int weaponIndex;
+    private UISprite cooldownOverlaySprite;
 
     public WeaponHotbarSlot(Vec2 position, Vec2 size, int weaponIndex) {
+        super(position, size,
+                ProjectilePrefabs.PROJECTILE_SPRITES.getTexture(weaponIndex),
+                BACKGROUND_TEXTURE, UNSELECTED_BORDER_TEXTURE);
         this.position = position;
         this.size = size;
-        this.weaponIndex = weaponIndex;
     }
 
     @Override
     protected void init() {
-        gameObject.setZIndex(SpaceGameZIndex.UI);
-
-        // Background element
-        var backgroundSprite = new UISprite(position, size.add(new Vec2(BACKGROUND_MARGIN)), BACKGROUND_TEXTURE);
-        gameObject.addComponent(backgroundSprite);
-
-        // Weapon icon
-        var weaponIcon = new UISprite(position, size, ProjectilePrefabs.PROJECTILE_SPRITES.getTexture(weaponIndex)) {
-            @Override
-            public int getZIndex() {
-                return super.getZIndex() + 1; // display above background
-            }
-        };
-        gameObject.addComponent(weaponIcon);
+        super.init();
+        setBackgroundPadding(BACKGROUND_MARGIN);
+        setBorderThickness(BORDER_MARGIN);
 
         // Cooldown overlay
         cooldownOverlaySprite = new UISprite(
-                position, size.add(new Vec2(BACKGROUND_MARGIN)), new Color(76, 76, 76, 180)
+                position, size.add(new Vec2(BORDER_MARGIN)), new Color(76, 76, 76, 180)
         ) {
             @Override
             public int getZIndex() {
@@ -61,7 +53,6 @@ public class WeaponHotbarSlot extends Script {
         cooldownOverlaySprite.setAnchor(Anchor.BOTTOM);
         cooldownOverlaySprite.translateToAnchorOrigin();
         gameObject.addComponent(cooldownOverlaySprite);
-
         setCooldownPercent(0f);
     }
 
