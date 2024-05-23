@@ -11,15 +11,14 @@ import mayonez.util.Record;
  * @param glyphHeight the total height of a character glyph in pixels
  * @param glyphAscent the height of a character glyph above the baseline in pixels
  * @param glyphSpacing the space between adjacent glyphs in pixels
- * @param spaceWidth the width of the space character in pixels
  *
  * @author SlavSquatSuperstar
  */
+// TODO specify characters (for non-contiguous)
+// TODO specify space characters
 public record FontMetadata(
-        String name,
-        int startCharacter, int endCharacter,
-        int glyphHeight, int glyphAscent, int glyphSpacing,
-        int spaceWidth
+        String name, int startCharacter, int endCharacter,
+        int glyphHeight, int glyphAscent, int glyphSpacing
 ) {
 
     // Constructors
@@ -29,8 +28,7 @@ public record FontMetadata(
                 record.getString("name"),
                 record.getInt("start_character"), record.getInt("end_character"),
                 record.getInt("glyph_height"), record.getInt("glyph_ascent"),
-                record.getInt("glyph_spacing"),
-                record.getInt("space_width")
+                record.getInt("glyph_spacing")
         );
     }
 

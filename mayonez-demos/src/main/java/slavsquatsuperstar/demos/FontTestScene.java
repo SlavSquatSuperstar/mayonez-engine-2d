@@ -36,26 +36,30 @@ public class FontTestScene extends Scene {
         );
 
         // Text characteristics
-        // TODO fix whitespace width
-        var message = "ABCDEFGHIJKLM\nNOPQRSTUVWXYZ\nabcdefghijklm\nnopqrstuvwyxz";
+        var message1 = "ABCDEFGHIJKLM\nNOPQRSTUVWXYZ\nabcdefghijklm\nnopqrstuvwyxz\n0123456789";
+        var message2 = "D\u0000\u007f\ufffd\u200cDDDDD\nD D D D\nD  D  D|\nDDDDDD";
         var font = new Font(spriteSheet, metadata, widths);
-
 
         // Scene font
         var fontSize = 6; // pt
         var lineSpacing = 2; // px
         addObject(new SceneTextObject(
-                message, new Vec2(-30, 10), font,
+                message1, new Vec2(-30, 0), font,
                 Colors.BLACK, fontSize, lineSpacing)
         );
+
+        addObject(new SceneTextObject(
+                message2, new Vec2(15, 30), font,
+                Colors.BLUE, fontSize, 0
+        ));
 
         // UI font
         var uiFontSize = 30; // pt
         var uiLineSpacing = 2; // px
         addObject(new UITextObject(
-                message, new Vec2(25, 775), font,
-                Colors.RED, uiFontSize, uiLineSpacing)
-        );
+                message1, new Vec2(25, 775), font,
+                Colors.RED, uiFontSize, uiLineSpacing
+        ));
     }
 
 }

@@ -11,6 +11,7 @@ import mayonez.math.*;
  *
  * @author SlavSquatSuperstar
  */
+// TODO scale with transform
 @UsesEngine(EngineType.GL)
 public abstract class TextObject extends GameObject {
 
@@ -37,7 +38,7 @@ public abstract class TextObject extends GameObject {
         var linePos = getInitialCharPosition();
         for (String line : lines) {
             addSpritesForLine(line, linePos, metadata);
-            linePos = linePos.sub(lineOffset);
+            linePos = linePos.sub(lineOffset); // Move to the next line
         }
     }
 
@@ -46,14 +47,25 @@ public abstract class TextObject extends GameObject {
         for (int i = 0; i < line.length(); i++) {
             var charCode = line.charAt(i);
             var glyph = font.getGlyph(charCode);
-            if (glyph == null) continue;
+            if (glyph == null) {
+                System.out.printf("char '%c' (%d) skipped\n", charCode, (int) charCode);
+                continue;
+            }
 
+            // Add the character glyph
             var charSprite = createTextSprite(glyph, color, fontSize, lastCharPos);
             addComponent(charSprite);
 
-            var charOffset = (float) fontSize * (glyph.getWidth() + metadata.glyphSpacing()) / (float) glyph.getHeight();
+            // Move to the next character's position
+            var charOffset = getCharOffset(metadata, glyph);
+            System.out.printf("char '%c' (%d) offset = %.2f\n", charCode, (int) charCode, charOffset);
             lastCharPos = lastCharPos.add(new Vec2(charOffset, 0));
         }
+    }
+
+    private float getCharOffset(FontMetadata metadata, Glyph glyph) {
+        if (glyph.getWidth() == 0) return 0;
+        return (float) fontSize * (glyph.getWidth() + metadata.glyphSpacing()) / glyph.getHeight();
     }
 
     // Abstract Methods
