@@ -13,8 +13,8 @@ import slavsquatsuperstar.demos.spacegame.objects.SpaceGameLayer;
 public class ShieldedDamageable extends Damageable {
 
     // Constants
-    private static final float SHIELD_REGEN_RATE = 0.75f;
-    private static final float SHIELD_WAIT_TIME = 1f;
+    private static final float SHIELD_REGEN_RATE = 0.6f;
+    private static final float SHIELD_WAIT_TIME = 1.2f;
 
     // Fields
     private final Counter shieldPoints;
