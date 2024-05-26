@@ -75,7 +75,7 @@ class GLCamera(screenSize: Vec2?, sceneScale: Float) : Camera(screenSize, sceneS
 
     private fun Matrix4f.rotateView(angle: Float, cameraPos: Vec2, cameraZ: Float): Matrix4f {
         val rotation = Quaternionf()
-        rotation.rotationAxis(FloatMath.toRadians(angle), 0f, 0f, 1f)
+        rotation.rotationAxis(MathUtils.toRadians(angle), 0f, 0f, 1f)
         return this.rotateAround(rotation, cameraPos.x, cameraPos.y, cameraZ)
     }
 

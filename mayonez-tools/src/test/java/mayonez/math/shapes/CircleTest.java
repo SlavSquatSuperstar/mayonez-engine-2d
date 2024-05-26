@@ -21,7 +21,7 @@ class CircleTest {
 
     @Test
     void areaCorrect() {
-        assertEquals(circle.area(), 4 * FloatMath.PI, FloatMath.FLOAT_EPSILON);
+        assertEquals(circle.area(), 4 * MathUtils.PI, MathUtils.FLOAT_EPSILON);
     }
 
     // Contains Point

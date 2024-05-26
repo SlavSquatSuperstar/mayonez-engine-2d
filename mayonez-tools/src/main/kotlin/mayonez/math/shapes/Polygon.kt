@@ -102,14 +102,14 @@ open class Polygon(sort: Boolean, vararg vertices: Vec2) : Shape() {
 
     override fun boundingCircle(): Circle {
         val distsSq = vertices.map { it.distanceSq(centroid) }.toFloatArray()
-        return Circle(center(), FloatMath.max(*distsSq))
+        return Circle(center(), MathUtils.max(*distsSq))
     }
 
     override fun boundingRectangle(): BoundingBox {
         val verticesX = vertices.map { it.x }.toFloatArray()
         val verticesY = vertices.map { it.y }.toFloatArray()
-        val boxMin = Vec2(FloatMath.min(*verticesX), FloatMath.min(*verticesY))
-        val boxMax = Vec2(FloatMath.max(*verticesX), FloatMath.max(*verticesY))
+        val boxMin = Vec2(MathUtils.min(*verticesX), MathUtils.min(*verticesY))
+        val boxMax = Vec2(MathUtils.max(*verticesX), MathUtils.max(*verticesY))
         return BoundingBox(boxMin.midpoint(boxMax), boxMax - boxMin)
     }
 
@@ -117,14 +117,14 @@ open class Polygon(sort: Boolean, vararg vertices: Vec2) : Shape() {
 
     override fun supportPoint(direction: Vec2): Vec2 {
         val dotProds = vertices.map { it.dot(direction) }.toFloatArray()
-        return vertices[FloatMath.maxIndex(*dotProds)]
+        return vertices[MathUtils.maxIndex(*dotProds)]
     }
 
     override fun nearestPoint(position: Vec2): Vec2 {
         if (position in this) return position
 
         val distances = edges.map { it.distance(position) }.toFloatArray()
-        val nearestEdge = edges[FloatMath.minIndex(*distances)]
+        val nearestEdge = edges[MathUtils.minIndex(*distances)]
         return nearestEdge.nearestPoint(position)
     }
 

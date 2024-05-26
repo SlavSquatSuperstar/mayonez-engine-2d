@@ -70,7 +70,7 @@ internal class EPASolver(private val shape1: Shape?, private val shape2: Shape?)
 
         return if (supportPointOnClosestEdge(suppDist, closest)) {
             // cannot expand simplex anymore
-            Penetration(closest.norm, suppDist + FloatMath.FLOAT_EPSILON)
+            Penetration(closest.norm, suppDist + MathUtils.FLOAT_EPSILON)
         } else {
             // keep looking
             this.add(closest.index, supp)
@@ -79,7 +79,7 @@ internal class EPASolver(private val shape1: Shape?, private val shape2: Shape?)
     }
 
     private fun supportPointOnClosestEdge(suppDist: Float, closest: Face): Boolean {
-        return FloatMath.equals(suppDist, closest.dist)
+        return MathUtils.equals(suppDist, closest.dist)
     }
 
     // Helper Class

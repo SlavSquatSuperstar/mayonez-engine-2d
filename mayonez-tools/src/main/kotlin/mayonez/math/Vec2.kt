@@ -1,7 +1,7 @@
 package mayonez.math
 
 import mayonez.annotations.*
-import mayonez.math.FloatMath.equals
+import mayonez.math.MathUtils.equals
 import java.util.*
 import kotlin.math.*
 
@@ -171,6 +171,9 @@ class Vec2(
 
     companion object {
 
+        // Constants
+        private const val MAX_ANGLE_DEGREES: Float = 360f
+
         // Float Operations
         operator fun Float.times(v: Vec2): Vec2 = Vec2(this * v.x, this * v.y)
         fun Float.cross(v: Vec2): Vec2 = Vec2(-v.y * this, v.x * this)
@@ -273,7 +276,7 @@ class Vec2(
      */
     fun posAngle(): Float {
         val angle = this.angle()
-        return if (angle < 0f) angle + 360f else angle
+        return if (angle < 0f) angle + MAX_ANGLE_DEGREES else angle
     }
 
     /**
@@ -287,7 +290,7 @@ class Vec2(
         val cos = this.dot(v) / (this.len() * v.len())
         return if (cos > 1f) 0f
         else if (cos < -1f) 180f
-        else FloatMath.toDegrees(acos(cos))
+        else MathUtils.toDegrees(acos(cos))
     }
 
     /**
@@ -299,7 +302,7 @@ class Vec2(
      */
     fun posAngle(v: Vec2): Float {
         val ang = this.posAngle() - v.posAngle()
-        return if (ang < 0f) ang + 360f else ang
+        return if (ang < 0f) ang + MAX_ANGLE_DEGREES else ang
     }
 
     /**
@@ -318,7 +321,7 @@ class Vec2(
      * @return the rotated vector
      */
     fun rotate(degrees: Float, origin: Vec2): Vec2 {
-        if (this == origin || equals(degrees % 360, 0f)) return Vec2(this) // Trivial
+        if (this == origin || equals(degrees % MAX_ANGLE_DEGREES, 0f)) return Vec2(this) // Trivial
         val localPos = this - origin // Translate the vector space to the origin
         val rot = Mat22(degrees) // Rotate the point around the new origin
         return (rot * localPos) + origin // Revert the vector space to the old point
@@ -344,8 +347,8 @@ class Vec2(
      */
     fun clampInbounds(min: Vec2, max: Vec2): Vec2 {
         return Vec2(
-            FloatMath.clamp(x, min.x, max.x),
-            FloatMath.clamp(y, min.y, max.y)
+            MathUtils.clamp(x, min.x, max.x),
+            MathUtils.clamp(y, min.y, max.y)
         )
     }
 
@@ -378,8 +381,8 @@ class Vec2(
     fun floor(): Vec2 = Vec2(floor(x), floor(y))
 
     fun inRange(min: Vec2, max: Vec2): Boolean {
-        return FloatMath.inRange(this.x, min.x, max.x)
-                && FloatMath.inRange(this.y, min.y, max.y)
+        return MathUtils.inRange(this.x, min.x, max.x)
+                && MathUtils.inRange(this.y, min.y, max.y)
     }
 
     /**

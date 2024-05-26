@@ -104,7 +104,7 @@ object Random {
         val mean = 0.5f * (interval.min + interval.max)
         val range = interval.max - interval.min
         val rand = randomGaussian(mean, range / 6f)
-        return FloatMath.clamp(rand, min, max)
+        return MathUtils.clamp(rand, min, max)
     }
 
     // Random Points

@@ -68,8 +68,8 @@ class Triangle(private val v1: Vec2, private val v2: Vec2, private val v3: Vec2)
             }
 //            polarMoment = polarMoment!! * area()
 
-            val offset = base - FloatMath.invHypot(edges[2].length, height)
-            polarMoment = (FloatMath.hypotSq(base, height) + offset * (offset - base)) / 18f
+            val offset = base - MathUtils.invHypot(edges[2].length, height)
+            polarMoment = (MathUtils.hypotSq(base, height) + offset * (offset - base)) / 18f
         }
         return mass * polarMoment!!
     }

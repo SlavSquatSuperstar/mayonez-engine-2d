@@ -39,8 +39,8 @@ internal class ContactPoint(private val contactPos: Vec2, b1Pos: Vec2, b2Pos: Ve
      */
     fun getDenominator(direction: Vec2, massData: MassData): Float {
         val (sumInv, invAng1, invAng2) = massData
-        val dot1Sq = FloatMath.squared(direction.dot(rad1.normal()))
-        val dot2Sq = FloatMath.squared(direction.dot(rad2.normal()))
+        val dot1Sq = MathUtils.squared(direction.dot(rad1.normal()))
+        val dot2Sq = MathUtils.squared(direction.dot(rad2.normal()))
         return sumInv + (invAng1 * dot1Sq) + (invAng2 * dot2Sq)
     }
 

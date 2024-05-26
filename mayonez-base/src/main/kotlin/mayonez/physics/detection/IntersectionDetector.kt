@@ -37,7 +37,7 @@ internal object IntersectionDetector : CollisionDetector<Shape> {
         val dir2 = edge2.toVector() / edge2.length
         val cross = dir1.cross(dir2)
 
-        return if (FloatMath.equals(cross, 0f)) { // Lines are parallel
+        return if (MathUtils.equals(cross, 0f)) { // Lines are parallel
             doEdgesOverlap(edge1, edge2)
         } else {
             // Calculate intersection point
@@ -46,8 +46,8 @@ internal object IntersectionDetector : CollisionDetector<Shape> {
             val dist2 = diffStarts.cross(dir1) / cross
 
             // Contact must be in both lines
-            FloatMath.inRange(dist1, 0f, edge1.length) &&
-                    FloatMath.inRange(dist2, 0f, edge2.length)
+            MathUtils.inRange(dist1, 0f, edge1.length) &&
+                    MathUtils.inRange(dist2, 0f, edge2.length)
         }
     }
 

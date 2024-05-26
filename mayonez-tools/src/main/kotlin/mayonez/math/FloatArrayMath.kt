@@ -14,7 +14,7 @@ fun FloatArray.timesFloat(num: Float): FloatArray {
 
 fun FloatArray.equalsArray(other: FloatArray): Boolean {
     for (i in this.indices) {
-        if (!FloatMath.equals(this[i], other[i])) {
+        if (!MathUtils.equals(this[i], other[i])) {
             return false
         }
     }

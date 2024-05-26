@@ -95,7 +95,7 @@ public abstract sealed class GameEngine permits JGameEngine, GLGameEngine {
     private void updateTillFrameTimeZero() {
         // Update the game as many times as possible even if the screen freezes
         while (frameElapsedTimeSecs > 0) { // Will update any leftover sliver of time
-            var deltaTime = FloatMath.min(frameElapsedTimeSecs, timeStepSecs);
+            var deltaTime = Math.min(frameElapsedTimeSecs, timeStepSecs);
             update(deltaTime);
 //            update(deltaTime * Mayonez.getTimeScale());
             frameElapsedTimeSecs -= deltaTime;

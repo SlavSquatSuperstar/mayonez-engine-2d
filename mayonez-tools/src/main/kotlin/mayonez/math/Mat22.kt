@@ -153,7 +153,7 @@ class Mat22(
 }
 
 private fun getRotationMatrix(degrees: Float): FloatArray {
-    val cos = FloatMath.cos(degrees)
-    val sin = FloatMath.sin(degrees)
+    val cos = MathUtils.cos(degrees)
+    val sin = MathUtils.sin(degrees)
     return floatArrayOf(cos, -sin, sin, cos)
 }

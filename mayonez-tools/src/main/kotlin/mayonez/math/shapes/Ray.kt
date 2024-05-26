@@ -68,7 +68,7 @@ class Ray(
         val line1 = this.direction
         val line2 = ray.direction
         val cross = line1.cross(line2)
-        if (FloatMath.equals(cross, 0f)) return null // if parallel
+        if (MathUtils.equals(cross, 0f)) return null // if parallel
 
         // Parametric lengths along rays
         val dist1 = (start2 - start1).cross(line2) / cross

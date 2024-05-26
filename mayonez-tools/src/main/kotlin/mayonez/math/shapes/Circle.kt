@@ -26,7 +26,7 @@ class Circle(
         get() = true
 
     /** The area of a circle, equal to πr^2. */
-    override fun area(): Float = FloatMath.PI * radiusSq
+    override fun area(): Float = MathUtils.PI * radiusSq
 
     // Collision Properties
 
@@ -36,7 +36,7 @@ class Circle(
 
     /** Returns a polygon approximation of this ellipse with 2πr vertices. */
     override fun toPolygon(): Polygon {
-        val numEdges: Int = (2f * FloatMath.PI * radius).roundToInt() // use 2πr for # edges
+        val numEdges: Int = (MathUtils.TWO_PI * radius).roundToInt() // use 2πr for # edges
         return Polygon(center, numEdges, radius)
     }
 
@@ -114,7 +114,7 @@ class Circle(
      */
     override fun equals(other: Any?): Boolean {
         return (other is Circle) && (this.center == other.center)
-                && FloatMath.equals(this.radius, other.radius)
+                && MathUtils.equals(this.radius, other.radius)
     }
 
     override fun hashCode(): Int = Objects.hash(center, radius)

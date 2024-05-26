@@ -65,7 +65,7 @@ public class WeaponHotbarSlot extends ImageLabel {
      */
     public void setCooldownPercent(float cooldownPercent) {
         // Clamp percent between 0%-100%
-        var clamped = FloatMath.clamp(cooldownPercent, 0f, 1f);
+        var clamped = MathUtils.clamp(cooldownPercent, 0f, 1f);
         cooldownOverlaySprite.setSize(size.mul(new Vec2(1f, clamped)));
     }
 

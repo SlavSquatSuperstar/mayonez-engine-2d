@@ -44,7 +44,7 @@ public class CSVFile extends Asset {
 
     private Record addRecordFromLine(String line) {
         var csvVals = line.split(",");
-        var numCols = FloatMath.min(headers.length, csvVals.length);
+        var numCols = Math.min(headers.length, csvVals.length);
         var rec = new Record();
         for (var cols = 0; cols < numCols; cols++) {
             rec.set(headers[cols], csvVals[cols]);

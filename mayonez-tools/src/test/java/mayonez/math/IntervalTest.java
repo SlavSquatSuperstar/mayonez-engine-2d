@@ -45,43 +45,43 @@ class IntervalTest {
 
     @Test
     void clampUpSuccess() {
-        assertEquals(0, FloatMath.clamp(-1, 0, 5));
-        assertFloatEquals(-5f, FloatMath.clamp(-6f, -5f, 0f));
-        assertFloatEquals(2.5f, FloatMath.clamp(0f, 2.5f, 7.5f));
+        assertEquals(0, MathUtils.clamp(-1, 0, 5));
+        assertFloatEquals(-5f, MathUtils.clamp(-6f, -5f, 0f));
+        assertFloatEquals(2.5f, MathUtils.clamp(0f, 2.5f, 7.5f));
     }
 
     @Test
     void clampDownSuccess() {
-        assertEquals(5, FloatMath.clamp(6, 0, 5));
-        assertFloatEquals(0f, FloatMath.clamp(1f, -5f, 0f));
-        assertFloatEquals(7.5f, FloatMath.clamp(10f, 2.5f, 7.5f));
+        assertEquals(5, MathUtils.clamp(6, 0, 5));
+        assertFloatEquals(0f, MathUtils.clamp(1f, -5f, 0f));
+        assertFloatEquals(7.5f, MathUtils.clamp(10f, 2.5f, 7.5f));
     }
 
     @Test
     void clampNoneSuccess() {
-        assertEquals(1, FloatMath.clamp(1, 0, 5));
-        assertFloatEquals(-1f, FloatMath.clamp(-1f, -5f, 0f));
+        assertEquals(1, MathUtils.clamp(1, 0, 5));
+        assertFloatEquals(-1f, MathUtils.clamp(-1f, -5f, 0f));
     }
 
     @Test
     void inRangeSuccess() {
-        assertTrue(FloatMath.inRange(5, 1, 10));
-        assertTrue(FloatMath.inRange(-5, -10, -1));
-        assertTrue(FloatMath.inRange(0, -5, 5));
+        assertTrue(MathUtils.inRange(5, 1, 10));
+        assertTrue(MathUtils.inRange(-5, -10, -1));
+        assertTrue(MathUtils.inRange(0, -5, 5));
     }
 
     @Test
     void inRangeFailTooLow() {
-        assertFalse(FloatMath.inRange(0, 1, 10));
-        assertFalse(FloatMath.inRange(-11, -10, -1));
-        assertFalse(FloatMath.inRange(-6, -5, 5));
+        assertFalse(MathUtils.inRange(0, 1, 10));
+        assertFalse(MathUtils.inRange(-11, -10, -1));
+        assertFalse(MathUtils.inRange(-6, -5, 5));
     }
 
     @Test
     void inRangeFailTooHigh() {
-        assertFalse(FloatMath.inRange(11, 1, 10));
-        assertFalse(FloatMath.inRange(0, -10, -1));
-        assertFalse(FloatMath.inRange(6, -5, 5));
+        assertFalse(MathUtils.inRange(11, 1, 10));
+        assertFalse(MathUtils.inRange(0, -10, -1));
+        assertFalse(MathUtils.inRange(6, -5, 5));
     }
 
     // Lerp Methods

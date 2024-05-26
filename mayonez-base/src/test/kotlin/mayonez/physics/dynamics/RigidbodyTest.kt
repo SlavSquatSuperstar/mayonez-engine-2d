@@ -21,7 +21,7 @@ internal class RigidbodyTest {
     @Test
     fun appliedTorqueChangesAngVelocity() {
         val rb = Rigidbody(2f)
-        rb.applyTorque(FloatMath.toRadians(2f)) // 2 N•m (rad) CCW
+        rb.applyTorque(MathUtils.toRadians(2f)) // 2 N•m (rad) CCW
         rb.physicsUpdateOneSecond()
         Assertions.assertEquals(1f, rb.angVelocity) // 1 deg/sec right
     }
@@ -31,7 +31,7 @@ internal class RigidbodyTest {
         val rb = Rigidbody(2f)
         val force = Vec2(2f, 0f) // 2 N right
         rb.applyForce(force)
-        val radius = Vec2(0f, FloatMath.toRadians(2f)) - rb.position
+        val radius = Vec2(0f, MathUtils.toRadians(2f)) - rb.position
         rb.applyTorque(radius.cross(force)) // 4 N•m CW
         rb.physicsUpdateOneSecond()
         Assertions.assertEquals(-2f, rb.angVelocity) // 2 deg/s CW
@@ -40,7 +40,7 @@ internal class RigidbodyTest {
     @Test
     fun pointVelocityScalesWithRadius() {
         val rb = Rigidbody(1f, 0f, 0f)
-        rb.addAngularVelocity(FloatMath.toDegrees(2f)) // 2 rad/sec
+        rb.addAngularVelocity(MathUtils.toDegrees(2f)) // 2 rad/sec
         rb.physicsUpdateOneSecond()
         Assertions.assertEquals(Vec2(0f, 2f), rb.getPointVelocity(Vec2(1f, 0f))) // 2 m/s up
     }
@@ -49,7 +49,7 @@ internal class RigidbodyTest {
     fun pointVelocityAddsWithLinearVelocity() {
         val rb = Rigidbody(1f, 0f, 0f)
         rb.addVelocity(Vec2(1f, 0f)) // 1 m/s right
-        rb.addAngularVelocity(FloatMath.toDegrees(2f)) // 2 rad/sec
+        rb.addAngularVelocity(MathUtils.toDegrees(2f)) // 2 rad/sec
         rb.physicsUpdateOneSecond()
         // 1 m/s right, 2 m/s up
         Assertions.assertEquals(Vec2(1f, 2f), rb.getPointVelocity(rb.position + Vec2(1f, 0f)))

@@ -90,7 +90,7 @@ public sealed class JTexture extends Texture permits JSpriteSheetTexture {
         var g2Xf = AffineTransform.getTranslateInstance(
                 parentCenter.x - parentHalfSize.x,
                 parentCenter.y - parentHalfSize.y); // Move to object min
-        g2Xf.rotate(FloatMath.toRadians(texXf.getRotation()), parentHalfSize.x, parentHalfSize.y);
+        g2Xf.rotate(MathUtils.toRadians(texXf.getRotation()), parentHalfSize.x, parentHalfSize.y);
         g2Xf.scale(parentSize.x / imageSize.x, -parentSize.y / imageSize.y); // Flip image vertically like GL
         g2Xf.translate(0.0, -imageSize.y); // Move to object center
         return g2Xf;

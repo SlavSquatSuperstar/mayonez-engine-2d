@@ -23,7 +23,7 @@ public final class CollisionTestUtils {
      * @param actual   the given float value
      */
     public static void assertFloatEquals(float expected, float actual) {
-        assertEquals(expected, actual, FloatMath.FLOAT_EPSILON);
+        assertEquals(expected, actual, MathUtils.FLOAT_EPSILON);
     }
 
     /**

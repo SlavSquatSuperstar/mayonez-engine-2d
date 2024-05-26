@@ -30,7 +30,7 @@ class PhysicsMaterial(kineticFriction: Float, staticFriction: Float, bounce: Flo
      * is conserved after a collision. 0 means all energy is lost, and 1 means
      * energy is perfectly conserved.
      */
-    val bounce: Float = FloatMath.clamp(bounce, 0f, 1f)
+    val bounce: Float = MathUtils.clamp(bounce, 0f, 1f)
 
     companion object {
         @JvmField

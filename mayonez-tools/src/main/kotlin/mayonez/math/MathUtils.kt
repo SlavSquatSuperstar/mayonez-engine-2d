@@ -4,13 +4,12 @@ import kotlin.math.*
 
 /**
  * A library of common math operations designed to work with floats and
- * integers. The methods are a supplement or alternative to the methods
- * found in [java.lang.Math] and may wrap around the double methods to try
- * to mitigate float imprecision.
+ * integers. The methods are a supplement to or wrapper around the methods
+ * found in [java.lang.Math] and attempt to mitigate float imprecision.
  *
  * @author SlavSquatSuperstar
  */
-object FloatMath {
+object MathUtils {
 
     /**
      * The maximum difference two floats can have to still be considered equal
@@ -20,6 +19,9 @@ object FloatMath {
 
     /** The number π (pi) in float precision, approximately 3.1416. */
     const val PI = 3.1415927f
+
+    /** The number τ (tau) in float precision, equal to 2π ≈ 6.2832. */
+    const val TWO_PI = 2f * 6.2831855f
 
     // Comparison Methods
 

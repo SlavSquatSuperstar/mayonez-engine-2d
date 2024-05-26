@@ -58,7 +58,7 @@ private fun Shape.getFurthestFeature(direction: Vec2): Any {
 private fun Polygon.getFurthestEdge(direction: Vec2): Edge {
     // Find the furthest vertex and check left and right edges
     val dots = vertices.map { it.dot(direction) }.toFloatArray()
-    val farthest = FloatMath.maxIndex(*dots)
+    val farthest = MathUtils.maxIndex(*dots)
     val leftEdge = edges[farthest] // use this edge index
     val rightEdge = edges[if (farthest > 0) farthest - 1 else numVertices - 1]  // get previous edge index
 

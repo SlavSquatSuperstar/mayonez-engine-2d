@@ -101,7 +101,7 @@ private fun Vec2.getOverlap(poly1: Polygon, poly2: Polygon): Float? {
 
 private fun Polygon.projectOnAxis(axis: Vec2): Interval { // positive is in axis direction
     val projections = this.vertices.map { it.dot(axis) }.toFloatArray()
-    return Interval(FloatMath.min(*projections), FloatMath.max(*projections))
+    return Interval(MathUtils.min(*projections), MathUtils.max(*projections))
 }
 
 /** Whether two intervals overlap each other. */

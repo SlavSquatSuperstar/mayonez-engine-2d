@@ -65,7 +65,7 @@ object Raycasts {
 
         // If ray is parallel, then raycast is undefined
         // Ray either misses or hits endpoint (no normal)
-        if (FloatMath.equals(cross, 0f)) return null
+        if (MathUtils.equals(cross, 0f)) return null
 
         // Calculate intersection point
         val startToOrigin = ray.origin - edge.start
@@ -73,7 +73,7 @@ object Raycasts {
         val dist2 = startToOrigin.cross(dir1) / cross
 
         // Contact must be inside edge and inside ray if limit is enabled
-        if (!FloatMath.inRange(dist1, 0f, edge.length) || dist2 < 0
+        if (!MathUtils.inRange(dist1, 0f, edge.length) || dist2 < 0
             || (limit > 0 && dist2 > limit)
         ) return null
 
@@ -88,7 +88,7 @@ object Raycasts {
             .map { it?.distance ?: Float.POSITIVE_INFINITY }
             .toFloatArray()
 
-        val minIndex = FloatMath.minIndex(*distances)
+        val minIndex = MathUtils.minIndex(*distances)
         val minDist = distances[minIndex]
         if (minDist == Float.POSITIVE_INFINITY) return null // No successful raycasts
 

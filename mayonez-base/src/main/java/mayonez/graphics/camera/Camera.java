@@ -114,7 +114,7 @@ public abstract class Camera extends Component implements Viewport {
      * @param zoom the magnification
      */
     public void zoom(float zoom) {
-        if (FloatMath.equals(zoom, 0f)) return; // don't set zoom to zero
+        if (MathUtils.equals(zoom, 0f)) return; // don't set zoom to zero
         this.zoom *= zoom;
     }
 

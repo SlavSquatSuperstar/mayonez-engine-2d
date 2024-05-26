@@ -146,7 +146,7 @@ interface PhysicsBody {
      * @return the point's total velocity
      */
     fun getPointVelocity(point: Vec2): Vec2 {
-        return velocity + (point - position).cross(FloatMath.toRadians(-angVelocity))
+        return velocity + (point - position).cross(MathUtils.toRadians(-angVelocity))
     }
 
 }

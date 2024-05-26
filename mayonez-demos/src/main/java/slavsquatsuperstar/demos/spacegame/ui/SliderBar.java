@@ -66,7 +66,7 @@ public class SliderBar extends Script {
      */
     public void setSliderValue(float healthPercent) {
         // Clamp percent between 0%-100%
-        var clamped = FloatMath.clamp(healthPercent, 0f, 1f);
+        var clamped = MathUtils.clamp(healthPercent, 0f, 1f);
         sliderSprite.setSize(size.mul(new Vec2(clamped, 1f)));
     }
 

@@ -2,7 +2,7 @@ package mayonez.physics.dynamics
 
 import mayonez.*
 import mayonez.math.*
-import mayonez.math.FloatMath.clamp
+import mayonez.math.MathUtils.clamp
 import mayonez.physics.colliders.*
 import kotlin.math.*
 
@@ -41,7 +41,7 @@ class Rigidbody(mass: Float, drag: Float, angDrag: Float)
         get() = if (static) 0f else 1f / angMass
 
     override val static: Boolean
-        get() = FloatMath.equals(mass, 0f)
+        get() = MathUtils.equals(mass, 0f)
 
     // Kinematics Properties (Position, Velocity)
 
@@ -146,7 +146,7 @@ class Rigidbody(mass: Float, drag: Float, angDrag: Float)
 
         if (followsGravity) applyForce(gravity * mass)
 
-        if (FloatMath.equals(velocity.lenSq(), 0f, 0.0005f)) {
+        if (MathUtils.equals(velocity.lenSq(), 0f, 0.0005f)) {
             // Zero out velocity for small speeds
             velocity.set(Vec2(0f))
         } else {
@@ -157,12 +157,12 @@ class Rigidbody(mass: Float, drag: Float, angDrag: Float)
         velocity += netForce * (invMass * dt)
 
         if (!fixedRotation) {
-            if (FloatMath.equals(angVelocity, 0f, 0.0005f)) {
+            if (MathUtils.equals(angVelocity, 0f, 0.0005f)) {
                 angVelocity = 0f
             } else {
-                netTorque -= FloatMath.toRadians(angVelocity) * drag
+                netTorque -= MathUtils.toRadians(angVelocity) * drag
             }
-            angVelocity += FloatMath.toDegrees(netTorque) * invAngMass * dt
+            angVelocity += MathUtils.toDegrees(netTorque) * invAngMass * dt
         }
 
         // Reset accumulated forces/torques
@@ -198,7 +198,7 @@ class Rigidbody(mass: Float, drag: Float, angDrag: Float)
     }
 
     override fun applyAngularImpulse(angImpulse: Float) {
-        angVelocity += FloatMath.toDegrees(angImpulse) * invAngMass // dw = L/I = I*dw/I
+        angVelocity += MathUtils.toDegrees(angImpulse) * invAngMass // dw = L/I = I*dw/I
     }
 
     override fun addAngularVelocity(angVelocity: Float) {

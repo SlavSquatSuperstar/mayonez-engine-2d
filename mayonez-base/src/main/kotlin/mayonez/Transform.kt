@@ -201,7 +201,7 @@ class Transform(position: Vec2, rotation: Float, scale: Vec2) {
 
     private fun equalsTransform(other: Transform): Boolean {
         return (this.position == other.position)
-                && FloatMath.equals(this.rotation, other.rotation)
+                && MathUtils.equals(this.rotation, other.rotation)
                 && (this.scale == other.scale)
     }
 

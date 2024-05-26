@@ -90,8 +90,8 @@ class Edge(val start: Vec2, val end: Vec2) : Shape() {
     override fun boundingCircle(): Circle = Circle(center(), length * 0.5f)
 
     override fun boundingRectangle(): BoundingBox {
-        val width = abs(end.x - start.x).coerceAtLeast(FloatMath.FLOAT_EPSILON)
-        val height = abs(end.y - start.y).coerceAtLeast(FloatMath.FLOAT_EPSILON)
+        val width = abs(end.x - start.x).coerceAtLeast(MathUtils.FLOAT_EPSILON)
+        val height = abs(end.y - start.y).coerceAtLeast(MathUtils.FLOAT_EPSILON)
         return BoundingBox(center(), Vec2(width, height))
     }
 

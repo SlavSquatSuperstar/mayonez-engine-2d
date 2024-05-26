@@ -52,14 +52,14 @@ class Interval(min: Float, max: Float) {
 
     /**
      * If the given float is within this range's bounds, with a leniency of
-     * [FloatMath.FLOAT_EPSILON].
+     * [MathUtils.FLOAT_EPSILON].
      *
      * @param value a number
      * @return if the number is in this range
      */
     operator fun contains(value: Float): Boolean {
-        return (min - value <= FloatMath.FLOAT_EPSILON)
-                && (value - max <= FloatMath.FLOAT_EPSILON)
+        return (min - value <= MathUtils.FLOAT_EPSILON)
+                && (value - max <= MathUtils.FLOAT_EPSILON)
     }
 
     /**
@@ -79,8 +79,8 @@ class Interval(min: Float, max: Float) {
     operator fun contains(interval: Interval): Boolean = (this.min <= interval.min) && (this.max >= interval.max)
 
     override fun equals(other: Any?): Boolean {
-        return (other is Interval) && FloatMath.equals(this.min, other.min)
-                && FloatMath.equals(this.max, other.max)
+        return (other is Interval) && MathUtils.equals(this.min, other.min)
+                && MathUtils.equals(this.max, other.max)
     }
 
     override fun hashCode(): Int = Objects.hash(min, max)

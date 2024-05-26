@@ -24,16 +24,16 @@ open class Ellipse(protected val center: Vec2, val size: Vec2, val angle: Float)
     // Ellipse Properties
 
     open val isCircle: Boolean
-        get() = FloatMath.equals(size.x, size.y)
+        get() = MathUtils.equals(size.x, size.y)
 
     val isAxisAligned: Boolean
-        get() = FloatMath.equals(angle % 360f, 0f)
+        get() = MathUtils.equals(angle % 360f, 0f)
 
     /**
      * The area of an ellipse, equal to πab, where a is half the width
      * (semi-major axis) and b is half the height (semi-minor axis).
      */
-    override fun area(): Float = FloatMath.PI * halfWidth * halfHeight
+    override fun area(): Float = MathUtils.PI * halfWidth * halfHeight
 
     /** The centroid of the ellipse, equal to its center position. */
     override fun center(): Vec2 = center
@@ -49,14 +49,14 @@ open class Ellipse(protected val center: Vec2, val size: Vec2, val angle: Float)
         val vecA = rot * Vec2(halfWidth, 0f) // ellipse's horizontal axis
         val vecB = rot * Vec2(0f, halfHeight) // ellipse's vertical axis
 
-        val boxHalfWidth = FloatMath.hypot(vecA.x, vecB.x)
-        val boxHalfHeight = FloatMath.hypot(vecA.y, vecB.y)
+        val boxHalfWidth = MathUtils.hypot(vecA.x, vecB.x)
+        val boxHalfHeight = MathUtils.hypot(vecA.y, vecB.y)
         return BoundingBox(center, Vec2(boxHalfWidth, boxHalfHeight) * 2f)
     }
 
     /** Returns a polygon approximation of this ellipse with 2πa vertices. */
     open fun toPolygon(): Polygon {
-        val numEdges: Int = (2f * FloatMath.PI * halfWidth).roundToInt() // use πa for # edges
+        val numEdges: Int = (MathUtils.TWO_PI * halfWidth).roundToInt() // use πa for # edges
         val unitCircle = Polygon(center, numEdges, 1f)
         return unitCircle.scale(Vec2(halfWidth, halfHeight), center).rotate(this.angle, center)
     }
@@ -70,7 +70,7 @@ open class Ellipse(protected val center: Vec2, val size: Vec2, val angle: Float)
      * Second moment of area: I_x = π/4*ab^3, I_y = π/4*ba^3 Polar moment of
      * area: I_z = π/4*(ba^3 + ab^3) = 1/4*πab*(a^2 + b^2) = 1/4*A(a^2+b^2)
      */
-    override fun angularMass(mass: Float): Float = 0.25f * mass * FloatMath.hypotSq(halfWidth, halfHeight)
+    override fun angularMass(mass: Float): Float = 0.25f * mass * MathUtils.hypotSq(halfWidth, halfHeight)
 
     // Transformations
 
@@ -119,15 +119,15 @@ open class Ellipse(protected val center: Vec2, val size: Vec2, val angle: Float)
      */
     open fun getRadius(direction: Vec2): Vec2 {
         val theta = direction.angle() - this.angle // theta, angle of point from ellipse's x-axis
-        val cos = FloatMath.cos(theta)
-        val sin = FloatMath.sin(theta)
+        val cos = MathUtils.cos(theta)
+        val sin = MathUtils.sin(theta)
 
         val a = halfWidth // half width, a
         val b = halfHeight // half height, b
-        val eSq = 1 - FloatMath.squared(b / a) // eccentricity squared, e^2 = 1 - b^2/a^2
+        val eSq = 1 - MathUtils.squared(b / a) // eccentricity squared, e^2 = 1 - b^2/a^2
 
         // radius, r(theta) = b / √[1 - e^2*cos(theta)^2]
-        val radius = b / FloatMath.sqrt(1 - (eSq * cos * cos))
+        val radius = b / sqrt(1 - (eSq * cos * cos))
         return Vec2(cos, sin).rotate(this.angle) * radius // unit direction times length
     }
 
@@ -147,7 +147,7 @@ open class Ellipse(protected val center: Vec2, val size: Vec2, val angle: Float)
     override fun equals(other: Any?): Boolean {
         return (other is Ellipse) && (this.center == other.center)
                 && (this.size == other.size)
-                && (FloatMath.equals(this.angle, other.angle))
+                && (MathUtils.equals(this.angle, other.angle))
     }
 
     override fun hashCode(): Int = Objects.hash(center, size, angle)

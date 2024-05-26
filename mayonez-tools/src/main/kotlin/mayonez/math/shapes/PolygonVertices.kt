@@ -42,7 +42,7 @@ private fun Vec2.compareVertexOrder(other: Vec2, start: Vec2, center: Vec2): Int
     if (dir1.posAngle(startDir) < dir2.posAngle(startDir)) {
         // pick smaller angle
         return -1
-    } else if (FloatMath.equals(dir1.posAngle(startDir), dir2.posAngle(startDir))) {
+    } else if (MathUtils.equals(dir1.posAngle(startDir), dir2.posAngle(startDir))) {
         // pick smaller coords if same angle
         if (dir1.lenSq() > dir2.lenSq()) return -1
     }
@@ -61,7 +61,7 @@ internal fun Array<Vec2>.getMinCoordsPointIdx(): Int {
 
         if (pt.x < min.x) { // look for leftmost
             minIdx = i
-        } else if (FloatMath.equals(pt.x, min.x)) { // use bottommost if same x
+        } else if (MathUtils.equals(pt.x, min.x)) { // use bottommost if same x
             if (pt.y < min.y) minIdx = i
         }
     }
@@ -91,7 +91,7 @@ private fun Float.isAbsSmaller(other: Float): Boolean {
 }
 
 private fun Float.isAbsEqual(other: Float): Boolean {
-    return FloatMath.equals(abs(this), abs(other))
+    return MathUtils.equals(abs(this), abs(other))
 }
 
 // Transform Methods
