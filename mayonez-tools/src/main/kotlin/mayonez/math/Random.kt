@@ -115,9 +115,7 @@ object Random {
      * @return the random angle
      */
     @JvmStatic
-    fun randomAngle(): Float {
-        return randomFloat(0f, 360f)
-    }
+    fun randomAngle(): Float = randomFloat(0f, 360f)
 
     /**
      * Generates a random uniform [Vec2] between the provided min and max

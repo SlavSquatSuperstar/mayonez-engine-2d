@@ -3,9 +3,10 @@ package mayonez.math
 import kotlin.math.*
 
 /**
- * A library of common math operations designed to work with float values
- * but to avoid float imprecision. A supplement and alternative to the
- * methods found in [java.lang.Math].
+ * A library of common math operations designed to work with floats and
+ * integers. The methods are a supplement or alternative to the methods
+ * found in [java.lang.Math] and may wrap around the double methods to try
+ * to mitigate float imprecision.
  *
  * @author SlavSquatSuperstar
  */
@@ -13,11 +14,11 @@ object FloatMath {
 
     /**
      * The maximum difference two floats can have to still be considered equal
-     * by the engine (equal to 0.000001).
+     * by the engine (equal to 0.000001 = 10^-6).
      */
     const val FLOAT_EPSILON = 1e-6f
 
-    /** The number π (pi) in float precision. */
+    /** The number π (pi) in float precision, approximately 3.1416. */
     const val PI = 3.1415927f
 
     // Comparison Methods
@@ -124,14 +125,24 @@ object FloatMath {
     @JvmStatic
     fun invHypot(hypot: Float, leg: Float): Float = sqrt(hypot * hypot - leg * leg)
 
-    // Accumulator Methods
+    // Average / Sum Methods
 
     @JvmStatic
     fun avg(vararg values: Float): Float = sum(*values) / values.size
 
     @JvmStatic
+    fun avg(vararg values: Int): Int = sum(*values) / values.size
+
+    @JvmStatic
     fun sum(vararg values: Float): Float {
         var sum = 0f
+        for (v in values) sum += v
+        return sum
+    }
+
+    @JvmStatic
+    fun sum(vararg values: Int): Int {
+        var sum = 0
         for (v in values) sum += v
         return sum
     }
@@ -142,6 +153,16 @@ object FloatMath {
     fun min(vararg values: Float): Float {
         if (values.isEmpty()) return 0f
         var min = Float.POSITIVE_INFINITY
+        for (n in values) {
+            if (n < min) min = n
+        }
+        return min
+    }
+
+    @JvmStatic
+    fun min(vararg values: Int): Int {
+        if (values.isEmpty()) return 0
+        var min = Int.MAX_VALUE
         for (n in values) {
             if (n < min) min = n
         }
@@ -162,6 +183,16 @@ object FloatMath {
     fun max(vararg values: Float): Float {
         if (values.isEmpty()) return 0f
         var max = Float.NEGATIVE_INFINITY
+        for (n in values) {
+            if (n > max) max = n
+        }
+        return max
+    }
+
+    @JvmStatic
+    fun max(vararg values: Int): Int {
+        if (values.isEmpty()) return 0
+        var max = Int.MIN_VALUE
         for (n in values) {
             if (n > max) max = n
         }
@@ -192,6 +223,17 @@ object FloatMath {
     fun clamp(value: Float, min: Float, max: Float): Float = Interval(min, max).clamp(value)
 
     /**
+     * Restricts an integer's value within a provided range.
+     *
+     * @param value a integer
+     * @param min the lower bound, inclusive
+     * @param max the upper bound, inclusive
+     * @return a number within the bounds
+     */
+    @JvmStatic
+    fun clamp(value: Int, min: Int, max: Int): Int = Interval(min, max).clamp(value.toFloat()).toInt()
+
+    /**
      * Checks whether a number is within a provided range, including the
      * bounds.
      *
@@ -202,6 +244,18 @@ object FloatMath {
      */
     @JvmStatic
     fun inRange(value: Float, min: Float, max: Float): Boolean = value in Interval(min, max)
+
+    /**
+     * Checks whether a number is within a provided range, including the
+     * bounds.
+     *
+     * @param value a number
+     * @param min the lower bound, inclusive
+     * @param max the upper bound, inclusive
+     * @return if the value is within range
+     */
+    @JvmStatic
+    fun inRange(value: Int, min: Int, max: Int): Boolean = value in Interval(min, max)
 
     // Rounding Methods
 

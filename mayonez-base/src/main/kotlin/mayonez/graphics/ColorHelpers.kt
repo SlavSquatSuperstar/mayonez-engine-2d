@@ -29,7 +29,7 @@ internal fun Int.getSelectedBits(bits: Int) = (this shr bits) and SELECT_8_BITS
 internal fun Int.shiftBitsToCombine(shiftAmount: Int) = (this and SELECT_8_BITS) shl shiftAmount
 
 // Int Helper Methods
-internal fun Int.clamp(): Int = IntMath.clamp(this, 0, MAX_COMPONENT_VALUE)
+internal fun Int.clamp(): Int = FloatMath.clamp(this, 0, MAX_COMPONENT_VALUE)
 internal fun Int.norm(): Float = this * NORMALIZE
 internal fun Int.combine(other: Int): Int = (this * other * NORMALIZE).toInt()
 

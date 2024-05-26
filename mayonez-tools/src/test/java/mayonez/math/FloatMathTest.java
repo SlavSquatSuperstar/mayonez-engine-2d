@@ -6,7 +6,7 @@ import static mayonez.math.MathTestUtils.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit tests for the {@link mayonez.math.FloatMath} and {@link mayonez.math.IntMath} classes.
+ * Unit tests for the {@link mayonez.math.FloatMath} and {@link mayonez.math.FloatMath} classes.
  *
  * @author SlavSquatSuperstar
  */
@@ -63,20 +63,20 @@ class FloatMathTest {
 
     @Test
     void findAverageAndSumSuccess() {
-        assertEquals(IntMath.avg(1, 2, 3, 4, 5), 3);
+        assertEquals(FloatMath.avg(1, 2, 3, 4, 5), 3);
         assertFloatEquals(FloatMath.avg(1f, 2f, 3f, 4f), 2.5f);
 
-        assertEquals(IntMath.sum(1, 2, 3, 4), 10);
+        assertEquals(FloatMath.sum(1, 2, 3, 4), 10);
         assertFloatEquals(FloatMath.sum(0.5f, 1f, 1.5f, 2f, 2.5f), 7.5f);
     }
 
     // Find Extreme
     @Test
     void findMinAndMaxSuccess() {
-        assertEquals(IntMath.min(-6, 1, 2, 3, 5), -6);
+        assertEquals(FloatMath.min(-6, 1, 2, 3, 5), -6);
         assertFloatEquals(FloatMath.min(-6.5f, 1, 2, 3, 5.5f), -6.5f);
 
-        assertEquals(IntMath.max(-6, 1, 2, 3, 5), 5);
+        assertEquals(FloatMath.max(-6, 1, 2, 3, 5), 5);
         assertFloatEquals(FloatMath.max(-6.5f, 1, 2, 3, 5.5f), 5.5f);
     }
 

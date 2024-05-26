@@ -64,7 +64,7 @@ public class WeaponHotbar extends Script {
      * @param index the index to select
      */
     public void setSelection(int index) {
-        if (!IntMath.inRange(index, 0, numWeapons - 1)) return;
+        if (!FloatMath.inRange(index, 0, numWeapons - 1)) return;
         // Move border to selected slot
         selectedBorder.setPosition(hotbarSlots[index].getPosition());
     }
@@ -76,7 +76,7 @@ public class WeaponHotbar extends Script {
      * @param cooldownPercent the percent cooldown to display
      */
     public void setCooldownPercent(int weaponIndex, float cooldownPercent) {
-        if (!IntMath.inRange(weaponIndex, 0, numWeapons - 1)) return;
+        if (!FloatMath.inRange(weaponIndex, 0, numWeapons - 1)) return;
         // Clamp percent between 0%-100%
         var clamped = FloatMath.clamp(cooldownPercent, 0f, 1f);
         hotbarSlots[weaponIndex].setCooldownPercent(clamped);

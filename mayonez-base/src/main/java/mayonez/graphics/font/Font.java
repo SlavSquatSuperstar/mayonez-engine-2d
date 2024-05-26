@@ -45,7 +45,7 @@ public class Font {
 
     public Glyph getGlyph(int charCode) {
         var index = charCode - metadata.startCharacter();
-        if (!IntMath.inRange(index, 0, metadata.numCharacters() - 1)) {
+        if (!FloatMath.inRange(index, 0, metadata.numCharacters() - 1)) {
             return null;
         } else {
             return glyphs[charCode - metadata.startCharacter()];

@@ -44,7 +44,7 @@ public class AsteroidDestruction extends Damageable {
         var radius = properties.radius();
         if (radius < MIN_SPAWN_FRAGMENTS_RADIUS) return; // Don't spawn fragments if too small
 
-        var fragmentCount = IntMath.clamp(
+        var fragmentCount = FloatMath.clamp(
                 (int) Random.randomFloat(radius * 0.5f, radius * 1.5f), 2, 4
         );
         var fragmentRadius = radius / fragmentCount;

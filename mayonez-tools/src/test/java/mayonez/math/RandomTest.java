@@ -19,8 +19,8 @@ class RandomTest {
         for (var i = 0; i < nums.length; i++) {
             nums[i] = Random.randomInt(min, max);
         }
-        assertTrue(IntMath.min(nums) >= min);
-        assertTrue(IntMath.max(nums) <= max);
+        assertTrue(FloatMath.min(nums) >= min);
+        assertTrue(FloatMath.max(nums) <= max);
     }
 
     @Test
@@ -31,8 +31,8 @@ class RandomTest {
         for (var i = 0; i < nums.length; i++) {
             nums[i] = Random.randomInt(min, max);
         }
-        assertTrue(IntMath.min(nums) >= min);
-        assertTrue(IntMath.max(nums) <= max);
+        assertTrue(FloatMath.min(nums) >= min);
+        assertTrue(FloatMath.max(nums) <= max);
     }
 
     @Test
@@ -43,8 +43,8 @@ class RandomTest {
         for (var i = 0; i < nums.length; i++) {
             nums[i] = Random.randomInt(min, max);
         }
-        assertTrue(IntMath.min(nums) >= min);
-        assertTrue(IntMath.max(nums) <= max);
+        assertTrue(FloatMath.min(nums) >= min);
+        assertTrue(FloatMath.max(nums) <= max);
     }
 
     @Test
