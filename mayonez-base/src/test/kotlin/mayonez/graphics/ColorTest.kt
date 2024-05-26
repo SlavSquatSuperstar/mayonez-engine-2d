@@ -11,17 +11,28 @@ import org.junit.jupiter.api.Test
 internal class ColorTest {
 
     @Test
-    fun rgbaHexCodeCorrect() {
-        // hex #12345678
-        val color = Color(18, 52, 86, 120)
-        assertEquals("#12345678", color.rgbaHexCode())
-    }
-
-    @Test
     fun rgbHexCodeCorrect() {
         // hex #abcdef
         val color = Color(171, 205, 239)
-        assertEquals("#abcdef", color.rgbHexCode())
+        assertEquals("abcdef", color.rgbHexCode())
+    }
+
+    @Test
+    fun rgbaHexCodeCorrect() {
+        // hex #12345678
+        val color = Color(18, 52, 86, 120)
+        assertEquals("12345678", color.rgbaHexCode())
+    }
+
+    @Test
+    fun floatValuesCorrect() {
+        // hex #1f3f7fff
+        val color = Color(32, 64, 128, 255)
+        val delta = 0.01f
+        assertEquals(0.125f, color.fRed, delta)
+        assertEquals(0.25f, color.fGreen, delta)
+        assertEquals(0.5f, color.fBlue, delta)
+        assertEquals(1f, color.fAlpha, delta)
     }
 
     @Test

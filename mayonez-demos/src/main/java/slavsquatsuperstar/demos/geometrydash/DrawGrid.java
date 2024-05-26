@@ -13,7 +13,7 @@ import mayonez.math.*;
 public class DrawGrid extends Component {
 
     private static final float GRID_LINE_WIDTH = 1f;
-    private static final Color GRID_COLOR = new Color(77, 77, 77, 127);
+    private static final Color GRID_COLOR = Color.grayscale(77, 127);
     private static final ShapeBrush GRID_BRUSH = ShapeBrush.createLineBrush(GRID_COLOR)
             .setStrokeSize(GRID_LINE_WIDTH);
 

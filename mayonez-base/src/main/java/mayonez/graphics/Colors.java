@@ -64,20 +64,20 @@ public final class Colors {
     public static final Color BROWN = new Color(139, 69, 19); // HTML Saddle Brown, #8b4513
 
     // Grayscale
-    public static final Color WHITE = new Color(255, 255, 255); // HTML/Java White, #FFFFFF
+    public static final Color WHITE = Color.grayscale(255); // HTML/Java White, #FFFFFF
 
-    public static final Color LIGHT_GRAY = new Color(192, 192, 192); // HTML Silver/Java Light Gray, #C0C0C0
+    public static final Color LIGHT_GRAY = Color.grayscale(192); // HTML Silver/Java Light Gray, #C0C0C0
 
-    public static final Color GRAY = new Color(128, 128, 128); // HTML/Java Gray, #808080
+    public static final Color GRAY = Color.grayscale(128); // HTML/Java Gray, #808080
 
-    public static final Color DARK_GRAY = new Color(64, 64, 64); // Java Dark Gray, #404040
+    public static final Color DARK_GRAY = Color.grayscale(64); // Java Dark Gray, #404040
 
-    public static final Color BLACK = new Color(0, 0, 0); // HTML/Java Black, #000000
+    public static final Color BLACK = Color.grayscale(0); // HTML/Java Black, #000000
 
-    // Color Methods
+    // Random Color Methods
 
     /**
-     * Generates a random color with alpha set to 255.
+     * Generates a random color with R, G, and B components between 0-255 and  alpha set to 255.
      *
      * @return a color with random RGB values 0-255
      */
@@ -86,7 +86,7 @@ public final class Colors {
     }
 
     /**
-     * Generates a color with R, G, and B components uniformly randomized between
+     * Generates a color with R, G, and B components between two given
      * two values and with alpha set to 255.
      *
      * @param minComp the minimum value for RGB components

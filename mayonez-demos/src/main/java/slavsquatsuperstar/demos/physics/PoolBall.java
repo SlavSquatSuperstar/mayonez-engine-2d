@@ -47,7 +47,7 @@ class PoolBall extends GameObject {
 
     // Create the cue ball
     public PoolBall(Vec2 position) {
-        this("Cue Ball", position, new Color(232, 232, 232), true, true);
+        this("Cue Ball", position, Color.grayscale(232), true, true);
     }
 
     // Create a numbered ball

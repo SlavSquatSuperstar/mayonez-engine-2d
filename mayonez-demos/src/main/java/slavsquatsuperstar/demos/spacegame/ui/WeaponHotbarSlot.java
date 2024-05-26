@@ -43,7 +43,7 @@ public class WeaponHotbarSlot extends ImageLabel {
 
         // Cooldown overlay
         cooldownOverlaySprite = new UISprite(
-                position, size.add(new Vec2(BORDER_MARGIN)), new Color(76, 76, 76, 180)
+                position, size.add(new Vec2(BORDER_MARGIN)), Color.grayscale(76, 180)
         ) {
             @Override
             public int getZIndex() {

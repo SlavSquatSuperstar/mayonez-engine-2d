@@ -5,6 +5,8 @@ package mayonez.math
  * a uniform distribution, where all valid values have an equal chance of
  * occurring.
  *
+ * To generate random colors, see [mayonez.graphics.Colors.randomColor]
+ *
  * @author SlavSquatSuperstar
  */
 object Random {
@@ -83,7 +85,27 @@ object Random {
         return rand.nextGaussian(mean.toDouble(), stdev.toDouble()).toFloat()
     }
 
-    // TODO random Gaussian range
+    /**
+     * Generates a random Gaussian float and ensures the output is between two
+     * given values (or within three standard deviations from the mean). The
+     * mean of the Gaussian variable is the average of the min and max, and the
+     * standard deviation is the range divided by 6.
+     *
+     * Since 99.5% of the random values occur within µ ± 3σ, this method is
+     * helpful for validating input while not significantly affecting the
+     * distribution.
+     *
+     * @param min the min value
+     * @param max the max value
+     */
+    @JvmStatic
+    fun randomGaussianRange(min: Float, max: Float): Float {
+        val interval = Interval(min, max)
+        val mean = 0.5f * (interval.min + interval.max)
+        val range = interval.max - interval.min
+        val rand = randomGaussian(mean, range / 6f)
+        return FloatMath.clamp(rand, min, max)
+    }
 
     // Random Points
 

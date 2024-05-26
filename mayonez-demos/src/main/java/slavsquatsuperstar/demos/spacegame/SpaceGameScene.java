@@ -33,7 +33,7 @@ public class SpaceGameScene extends Scene {
     public SpaceGameScene(String name) {
         super(name, Preferences.getScreenWidth() * SCENE_SIZE,
                 Preferences.getScreenHeight() * SCENE_SIZE, 32f);
-        setBackground(new Color(14, 14, 14));
+        setBackground(Color.grayscale(14));
         backgroundObjects = new ArrayList<>();
 
         SpaceGameConfig.readConfig();
@@ -97,8 +97,8 @@ public class SpaceGameScene extends Scene {
 
             float starSize;
             boolean isDwarfStar = Random.randomPercent(2f / 3f);
-            if (isDwarfStar) starSize = Random.randomGaussian(2.5f, 0.5f); // 1-4
-            else starSize = Random.randomGaussian(7, 1); // 4-10
+            if (isDwarfStar) starSize = Random.randomGaussianRange(1f, 4f); // 1-4
+            else starSize = Random.randomGaussianRange(4f, 10f);
             if (starSize > 1) starSize = 1;
 
             var starDist = Random.randomFloat(20, 60);

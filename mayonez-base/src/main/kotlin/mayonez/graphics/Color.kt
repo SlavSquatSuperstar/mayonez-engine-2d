@@ -1,21 +1,27 @@
 package mayonez.graphics
 
-import org.joml.*
 import java.util.*
 
 /**
- * Stores an immutable color used by the program and translates to and from [java.awt.Color]
- * and [org.joml.Vector4f]. Colors have red, green, blue, and alpha components between 0-255.
+ * Stores an immutable color used by the program and translates to and from
+ * [java.awt.Color] and [org.joml.Vector4f]. Colors have red, green, blue,
+ * and alpha components between 0-255.
+ *
+ * @constructor Construct a color from red, green, blue, and alpha values
+ *     between 0-255.
  */
 class Color(red: Int, green: Int, blue: Int, alpha: Int) {
 
     // Constructors
 
-    /** Construct a color from a red, green, and blue values, with alpha set t0 255. */
+    /**
+     * Construct a color from red, green, and blue values between 0-255, with
+     * alpha set to 255.
+     */
     constructor(red: Int, green: Int, blue: Int) : this(red, green, blue, MAX_COMPONENT_VALUE)
 
     /**
-     * Construct a color from a single combined RGBA value.
+     * Construct a color from a single combined RGBA value, between 0 - 2^32-1.
      *
      * Source: [java.awt.Color].getRed(), getGreen(), getBlue(), getAlpha()
      */
@@ -26,7 +32,27 @@ class Color(red: Int, green: Int, blue: Int, alpha: Int) {
         rgba.getSelectedBits(ALPHA_SHIFT_BITS)
     )
 
-    constructor(color: JColor) : this(color.red, color.green, color.blue, color.alpha)
+    companion object {
+        /**
+         * Construct a grayscale color from a single R/G/B value, between 0-255.
+         *
+         * @param value the grayscale value
+         * @return the grayscale color
+         */
+        @JvmStatic
+        fun grayscale(value: Int): Color = Color(value, value, value)
+
+        /**
+         * Construct a grayscale color from a single R/G/B value and an alpha
+         * value, between 0-255.
+         *
+         * @param value the grayscale value
+         * @param value the alpha value
+         * @return the grayscale color
+         */
+        @JvmStatic
+        fun grayscale(value: Int, alpha: Int): Color = Color(value, value, value, alpha)
+    }
 
     // Color Properties
 
@@ -42,19 +68,21 @@ class Color(red: Int, green: Int, blue: Int, alpha: Int) {
     /** The alpha (transparency) component of this color, between 0-255. */
     val alpha: Int = alpha.clamp()
 
-    // Conversion Methods
+    /** The normalized red component of this color, between 0.0-1.0. */
+    val fRed: Float
+        get() = this.red.norm()
 
-    /**
-     * Converts this color to an instance of [java.awt.Color] to use in the AWT
-     * engine.
-     */
-    internal fun toAWT(): JColor = JColor(red, green, blue, alpha)
+    /** The normalized green component of this color, between 0.0-1.0. */
+    val fGreen: Float
+        get() = this.green.norm()
 
-    /**
-     * Converts this color to an instance of [org.joml.Vector4f] to use in the
-     * GL engine, normalizing the values to between 0-1.
-     */
-    internal fun toGL(): Vector4f = Vector4f(red.norm(), green.norm(), blue.norm(), alpha.norm())
+    /** The normalized blue component of this color, between 0.0-1.0. */
+    val fBlue: Float
+        get() = this.blue.norm()
+
+    /** The normalized alpha component of this color, between 0.0-1.0. */
+    val fAlpha: Float
+        get() = this.alpha.norm()
 
     // Color Value Methods
 
@@ -65,7 +93,7 @@ class Color(red: Int, green: Int, blue: Int, alpha: Int) {
      *
      * Source: [java.awt.Color].Color(int r, int g, int b, int a)
      *
-     * @return the RGB value
+     * @return the RGBA value
      */
     fun getRGBAValue(): Int {
         return alpha.shiftBitsToCombine(ALPHA_SHIFT_BITS) or
@@ -92,12 +120,24 @@ class Color(red: Int, green: Int, blue: Int, alpha: Int) {
 
     // Color Code Methods
 
+    /**
+     * Return the 6-digit HTML hex code representing the RGB values without the
+     * number sign #.
+     *
+     * @return the hex code
+     */
     fun rgbHexCode(): String {
-        return String.format("#%02x%02x%02x", red, green, blue)
+        return String.format("%02x%02x%02x", red, green, blue)
     }
 
+    /**
+     * Return the 8-digit HTML hex code representing the RGBA values without
+     * the number sign.
+     *
+     * @return the hex code
+     */
     fun rgbaHexCode(): String {
-        return String.format("#%02x%02x%02x%02x", red, green, blue, alpha)
+        return String.format("%02x%02x%02x%02x", red, green, blue, alpha)
     }
 
     // Object Overrides

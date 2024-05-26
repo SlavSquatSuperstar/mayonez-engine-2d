@@ -101,7 +101,7 @@ public sealed class JTexture extends Texture permits JSpriteSheetTexture {
         if (color == null) return image;
 
         var recolor = new RescaleOp(
-                new float[]{color.getRedNorm(), color.getGreenNorm(), color.getBlueNorm(), color.getAlphaNorm()},
+                new float[]{color.getFRed(), color.getFGreen(), color.getFBlue(), color.getFAlpha()},
                 new float[4], null
         );
         return recolor.filter(image, null);
