@@ -18,7 +18,7 @@ import slavsquatsuperstar.demos.spacegame.objects.SpaceGameZIndex;
  */
 public abstract class Asteroid extends GameObject {
 
-    // Static Constants
+    // Constants
     private static final int NUM_TEXTURES = 2;
     private static final Texture[] ASTEROID_TEXTURES = getAsteroidTextures();
 

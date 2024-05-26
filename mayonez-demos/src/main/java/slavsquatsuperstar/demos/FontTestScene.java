@@ -5,7 +5,6 @@ import mayonez.assets.text.*;
 import mayonez.graphics.*;
 import mayonez.graphics.font.*;
 import mayonez.graphics.sprites.*;
-import mayonez.input.*;
 import mayonez.math.*;
 import slavsquatsuperstar.demos.font.SceneTextObject;
 import slavsquatsuperstar.demos.font.UITextObject;
@@ -69,12 +68,4 @@ public class FontTestScene extends Scene {
         ));
     }
 
-    @Override
-    protected void onUserUpdate(float dt) {
-        // Camera Controls
-        var moveInput = new Vec2(KeyInput.getAxis("horizontal"), KeyInput.getAxis("vertical"));
-        getCamera().getTransform().move(moveInput.unit());
-        getCamera().rotate(KeyInput.getAxis("arrows horizontal"));
-        getCamera().zoom(1 + 0.01f * KeyInput.getAxis("arrows vertical"));
-    }
 }

@@ -2,6 +2,7 @@ package mayonez.graphics.textures;
 
 import mayonez.*;
 import mayonez.graphics.*;
+import mayonez.graphics.Color;
 import mayonez.math.*;
 
 import javax.imageio.ImageIO;
@@ -64,17 +65,20 @@ public sealed class JTexture extends Texture permits JSpriteSheetTexture {
      *
      * @param g2       the graphics object of the window
      * @param parentXf the transform of the parent object
-     * @param spriteXf any additional transformations of the sprite
+     * @param spriteXf any additional transformations on the image
+     * @param color    any recoloring of the image
      * @param scale    the scale of the scene
      */
-    public void draw(Graphics2D g2, Transform parentXf, Transform spriteXf, float scale) {
+    public void draw(Graphics2D g2, Transform parentXf, Transform spriteXf, Color color, float scale) {
         if (image == null) return;
 
         // Draw sprite at parent center with parent rotation and scale
         var texXf = parentXf.combine(spriteXf);
         var g2Xf = transformScreen(texXf, scale);
-        g2Xf.translate(0.0, -imageSize.y); // Move to object center
-        g2.drawImage(image, g2Xf, null); // Draw buffered image
+
+        // Recolor the image
+        BufferedImage recoloredImage = getRecoloredImage(color);
+        g2.drawImage(recoloredImage, g2Xf, null); // Draw buffered image
     }
 
     private AffineTransform transformScreen(Transform texXf, float scale) {
@@ -88,7 +92,19 @@ public sealed class JTexture extends Texture permits JSpriteSheetTexture {
                 parentCenter.y - parentHalfSize.y); // Move to object min
         g2Xf.rotate(FloatMath.toRadians(texXf.getRotation()), parentHalfSize.x, parentHalfSize.y);
         g2Xf.scale(parentSize.x / imageSize.x, -parentSize.y / imageSize.y); // Flip image vertically like GL
+        g2Xf.translate(0.0, -imageSize.y); // Move to object center
         return g2Xf;
+    }
+
+    // Source: https://docs.oracle.com/en/java/javase/17/docs/api/java.desktop/java/awt/image/RescaleOp.html
+    private BufferedImage getRecoloredImage(Color color) {
+        if (color == null) return image;
+
+        var recolor = new RescaleOp(
+                new float[]{color.getRedNorm(), color.getGreenNorm(), color.getBlueNorm(), color.getAlphaNorm()},
+                new float[4], null
+        );
+        return recolor.filter(image, null);
     }
 
     // Image Getters

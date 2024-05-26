@@ -88,7 +88,7 @@ internal class JDefaultRenderer : SceneRenderer, DebugRenderer {
     /** Render the background image, if the scene has one. */
     private fun drawBackgroundImage(g2: Graphics2D) {
         val tex = background.getTexture() as? JTexture ?: return // Only if image is set
-        tex.draw(g2, background.getSpriteTransform(), null, sceneScale)
+        tex.draw(g2, background.getSpriteTransform(), null, null, sceneScale)
     }
 
     /** Transform the screen and render everything at the new position. */

@@ -57,9 +57,7 @@ sealed class Sprite : Component(UpdateOrder.RENDER), Renderable {
      *
      * @return the sprite transform
      */
-    fun getSpriteTransform(): Transform? {
-        return spriteXf
-    }
+    fun getSpriteTransform(): Transform? = spriteXf
 
     /**
      * Set additional position, rotation, and size modifiers for the sprite.

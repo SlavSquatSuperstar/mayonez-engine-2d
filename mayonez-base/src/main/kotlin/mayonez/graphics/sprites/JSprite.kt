@@ -4,12 +4,13 @@ import mayonez.graphics.*
 import mayonez.graphics.renderer.awt.*
 import mayonez.graphics.textures.*
 import mayonez.math.shapes.Rectangle
-import java.awt.Graphics2D
+import java.awt.*
 import java.awt.image.*
 
 /**
- * Draws a [JTexture] using the AWT engine. This class should not be directly
- * instantiated. Instead, call [Sprites.createSprite]. See [Sprite] for more information.
+ * Draws a [JTexture] using the AWT engine. This class should not be
+ * directly instantiated. Instead, call [Sprites.createSprite]. See
+ * [Sprite] for more information.
  *
  * @author SlavSquatSuperstar
  */
@@ -45,7 +46,7 @@ internal class JSprite private constructor(
 
     override fun render(g2: Graphics2D) {
         if (texture != null) {
-            texture!!.draw(g2, transform, getSpriteTransform(), scene.scale)
+            texture!!.draw(g2, transform, getSpriteTransform(), color, scene.scale)
         } else {
             scene.debugDraw.fillShape(
                 Rectangle(transform.position, transform.scale), color
@@ -58,22 +59,24 @@ internal class JSprite private constructor(
     override fun getColor(): MColor = color
 
     /**
-     * Set the color of this sprite, or recolors the current texture. Caution: Due to the way
-     * AWT stores images, this permanently alters the texture until the program is closed!
+     * Set the color of this sprite, or recolors the current texture. This
+     * method should be used sparingly, since it creates a new image in memory
+     * per draw call.
      *
      * @param color the color
      */
     override fun setColor(color: MColor?) {
         this.color = color ?: DEFAULT_COLOR
-        recolorImage(this.color)
     }
 
-    private fun recolorImage(color: MColor) {
-        for (y in 0..<imageWidth) {
-            for (x in 0..<imageHeight) {
-                val pixelColor = getPixelColor(x, y)
+    // Image Recolor Methods
+
+    private fun BufferedImage.recolor(color: MColor) {
+        for (y in 0..<this.width) {
+            for (x in 0..<this.height) {
+                val pixelColor = this.getPixelColor(x, y)
                 val combinedColor = pixelColor.combine(color)
-                setPixelColor(x, y, combinedColor)
+                this.setPixelColor(x, y, combinedColor)
             }
         }
     }
@@ -82,16 +85,16 @@ internal class JSprite private constructor(
      * Get the pixel's RBGA color on this sprite's stored texture at the
      * specific coordinates.
      */
-    private fun getPixelColor(x: Int, y: Int): MColor {
-        return if (image == null) Colors.WHITE else MColor(image!!.getRGB(x, y))
+    private fun BufferedImage.getPixelColor(x: Int, y: Int): MColor {
+        return MColor(this.getRGB(x, y))
     }
 
     /**
      * Set the pixel's RBGA color on this sprite's stored texture at the
      * specific coordinates.
      */
-    private fun setPixelColor(x: Int, y: Int, color: MColor) {
-        image?.setRGB(x, y, color.getRGBAValue())
+    private fun BufferedImage.setPixelColor(x: Int, y: Int, color: MColor) {
+        this.setRGB(x, y, color.getRGBAValue())
     }
 
     // Sprite Methods
