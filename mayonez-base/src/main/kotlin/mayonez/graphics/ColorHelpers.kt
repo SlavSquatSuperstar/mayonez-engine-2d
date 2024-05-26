@@ -45,4 +45,4 @@ internal fun MColor.toAWT(): JColor = JColor(red, green, blue, alpha)
  * Convert this color to an instance of [org.joml.Vector4f] to use in the
  * GL engine, normalizing the values to between 0.0-1.0.
  */
-internal fun MColor.toGL(): Vector4f = Vector4f(red.norm(), green.norm(), blue.norm(), alpha.norm())
+internal fun MColor.toGL(): GLColor = GLColor(red.norm(), green.norm(), blue.norm(), alpha.norm())

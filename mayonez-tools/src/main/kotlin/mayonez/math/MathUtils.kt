@@ -1,11 +1,14 @@
 package mayonez.math
 
 import kotlin.math.*
+import kotlin.math.hypot as kHypot
+import kotlin.math.sqrt as kSqrt
 
 /**
  * A library of common math operations designed to work with floats and
  * integers. The methods are a supplement to or wrapper around the methods
- * found in [java.lang.Math] and attempt to mitigate float imprecision.
+ * found in [java.lang.Math]. Some attempts have been made to mitigate
+ * float imprecision, although some error should still be expected.
  *
  * @author SlavSquatSuperstar
  */
@@ -23,15 +26,15 @@ object MathUtils {
     /** The number τ (tau) in float precision, equal to 2π ≈ 6.2832. */
     const val TWO_PI = 2f * 6.2831855f
 
-    // Comparison Methods
+    // Equality Methods
 
     /**
      * Determines whether two floats are approximately equal within 6 decimal
      * places.
      *
-     * @param num1 a floating-point number
-     * @param num2 another floating-point number
-     * @return if they are roughly equal
+     * @param num1 the first float
+     * @param num2 the second float
+     * @return if the floats are roughly equal
      */
     @JvmStatic
     fun equals(num1: Float, num2: Float): Boolean = equals(num1, num2, FLOAT_EPSILON)
@@ -40,10 +43,10 @@ object MathUtils {
      * Determines whether two floats are approximately equal within a given
      * error.
      *
-     * @param num1 a floating-point
-     * @param num2 another floating-point number
-     * @param error the max difference between the two numbers
-     * @return if they are equal within error
+     * @param num1 the first float
+     * @param num2 the second float
+     * @param error the max allowed difference between the two floats
+     * @return if the floats are equal within error
      */
     @JvmStatic
     fun equals(num1: Float, num2: Float, error: Float): Boolean = abs(num1 - num2) <= abs(error)
@@ -60,56 +63,59 @@ object MathUtils {
     fun squared(value: Float): Float = value * value
 
     /**
-     * Takes the principal (positive) square root of a number.
+     * Takes the positive (principal) square root of a number.
      *
      * @param value a non-negative number
      * @return the square root, in float precision.
      */
     @JvmStatic
-    fun sqrt(value: Float): Float = sqrt(value.toDouble()).toFloat()
+    fun sqrt(value: Float): Float = kSqrt(value)
 
-    // Pythagorean Theorem
+    // Hypotenuse
 
     /**
-     * Calculates the length of the hypotenuse of a right triangle from two
-     * legs (or the diagonal of a rectangle from two sides), equal to √(a^2 +
-     * b^2).
+     * Calculates √(a^2 + b^2) from the given a and b, equal to the hypotenuse
+     * length of a right triangle given the two legs (or the diagonal length of
+     * a rectangle given the length and width).
      *
-     * @param a the length of the first leg
-     * @param b the length of the second leg
+     * @param a the first length
+     * @param b the second length
      * @return the length of the hypotenuse
      */
     @JvmStatic
-    fun hypot(a: Float, b: Float): Float = sqrt(hypotSq(a, b))
+    fun hypot(a: Float, b: Float): Float = kHypot(a, b)
+    // Use JVM hypot() for better performance/accuracy
 
     /**
-     * Calculates the length of the diagonal of an n-dimensional figure with
-     * perpendicular edges (rectangle, cuboid, hyper-cuboid, etc.).
+     * Calculates √(a_1^2 + a_2^2 + … + a_n^2) from the given values, equal to
+     * the diagonal length of an n-dimensional figure with perpendicular edges
+     * (rectangle, cuboid, hyper-cuboid, etc.).
      *
-     * @param sides the lengths of the figure's sides
-     * @return the hypotenuse (pythagorean theorem) in n-dimensions
+     * @param sides the side lengths
+     * @return the length of the diagonal
      */
     @JvmStatic
-    fun hypot(vararg sides: Float): Float = sqrt(hypotSq(*sides))
+    fun hypot(vararg sides: Float): Float = kSqrt(hypotSq(*sides))
 
     /**
-     * Calculates the length squared of the hypotenuse of a right triangle from
-     * two legs (or the diagonal of a rectangle from two sides), equal to a^2 +
-     * b^2.
+     * Calculates a^2 + b^2 from the given a and b, equal to the hypotenuse
+     * length squared of a right triangle given the two legs (or the
+     * diagonal length squared of a rectangle given the length and width).
      *
-     * @param a the length of the first leg
-     * @param b the length of the second leg
-     * @return the length of the hypotenuse squared
+     * @param a the first length
+     * @param b the second length
+     * @return the length of the hypotenuse, squared
      */
     @JvmStatic
     fun hypotSq(a: Float, b: Float): Float = (a * a) + (b * b)
 
     /**
-     * Calculates the length squared of the diagonal of an n-dimensional figure
-     * with perpendicular edges (rectangle, cuboid, hyper-cuboid, etc.).
+     * Calculates a_1^2 + a_2^2 + … + a_n^2 from the given values, equal to the
+     * diagonal length squared of an n-dimensional figure with perpendicular
+     * edges (rectangle, cuboid, hyper-cuboid, etc.).
      *
-     * @param sides the lengths of the figure's sides
-     * @return the diagonal in n-dimensions, squared
+     * @param sides the side lengths
+     * @return the length of the diagonal, squared
      */
     @JvmStatic
     fun hypotSq(vararg sides: Float): Float {
@@ -117,24 +123,44 @@ object MathUtils {
     }
 
     /**
-     * Calculates the length of a leg of a right triangle from the hypotenuse
-     * and the other leg.
+     * Calculates √(x^2 - y^2) from the given x and y, equal to the length of
+     * one leg of a right triangle given the length of the hypotenuse and other
+     * the leg. To avoid taking the square root of a negative number, x ≥ y
+     * must be true.
      *
-     * @param hypot the length of the hypotenuse
-     * @param leg the length of a leg
-     * @return the length of the other leg
+     * @param x the length of the hypotenuse
+     * @param y the length of the first leg
+     * @return the length of the second leg
      */
     @JvmStatic
-    fun invHypot(hypot: Float, leg: Float): Float = sqrt(hypot * hypot - leg * leg)
+    fun invHypot(x: Float, y: Float): Float = kSqrt(x * x - y * y)
 
-    // Average / Sum Methods
+    // Average/Sum Methods
 
+    /**
+     * Averages (finds the arithmetic mean) any number of given float values.
+     *
+     * @param values the float array
+     * @return the average
+     */
     @JvmStatic
     fun avg(vararg values: Float): Float = sum(*values) / values.size
 
+    /**
+     * Averages (finds the arithmetic mean) any number of given int values.
+     *
+     * @param values the int array
+     * @return the average
+     */
     @JvmStatic
     fun avg(vararg values: Int): Int = sum(*values) / values.size
 
+    /**
+     * Sums any number of given float values.
+     *
+     * @param values the float array
+     * @return the sum
+     */
     @JvmStatic
     fun sum(vararg values: Float): Float {
         var sum = 0f
@@ -142,6 +168,12 @@ object MathUtils {
         return sum
     }
 
+    /**
+     * Sums any number of given int values.
+     *
+     * @param values the int array
+     * @return the sum
+     */
     @JvmStatic
     fun sum(vararg values: Int): Int {
         var sum = 0
@@ -149,8 +181,15 @@ object MathUtils {
         return sum
     }
 
-    // Find Extreme Methods
+    // Find Min/Max Methods
 
+    /**
+     * Finds the min of any number of given float values. Returns zero if the
+     * array is empty.
+     *
+     * @param values the float array
+     * @return the min
+     */
     @JvmStatic
     fun min(vararg values: Float): Float {
         if (values.isEmpty()) return 0f
@@ -161,6 +200,13 @@ object MathUtils {
         return min
     }
 
+    /**
+     * Finds the min of any number of given int values. Returns zero if the
+     * array is empty.
+     *
+     * @param values the int array
+     * @return the min
+     */
     @JvmStatic
     fun min(vararg values: Int): Int {
         if (values.isEmpty()) return 0
@@ -171,16 +217,30 @@ object MathUtils {
         return min
     }
 
+    /**
+     * Finds the index of the min value in an array of float values. Returns -1
+     * if the array is empty.
+     *
+     * @param values the float array
+     * @return the min index
+     */
     @JvmStatic
     fun minIndex(vararg values: Float): Int {
         if (values.isEmpty()) return -1
-        var minIndex = 0
+        var minIdx = 0
         for (i in 1..<values.size) {
-            if (values[i] < values[minIndex]) minIndex = i
+            if (values[i] < values[minIdx]) minIdx = i
         }
-        return minIndex
+        return minIdx
     }
 
+    /**
+     * Finds the max of any number of given float values. Returns zero if the
+     * array is empty.
+     *
+     * @param values the float array
+     * @return the max
+     */
     @JvmStatic
     fun max(vararg values: Float): Float {
         if (values.isEmpty()) return 0f
@@ -191,6 +251,13 @@ object MathUtils {
         return max
     }
 
+    /**
+     * Finds the max of any number of given int values. Returns zero if the
+     * array is empty.
+     *
+     * @param values the int array
+     * @return the max
+     */
     @JvmStatic
     fun max(vararg values: Int): Int {
         if (values.isEmpty()) return 0
@@ -201,14 +268,21 @@ object MathUtils {
         return max
     }
 
+    /**
+     * Finds the index of the max value in an array of float values. Returns -1
+     * if the array is empty.
+     *
+     * @param values the float array
+     * @return the max index
+     */
     @JvmStatic
     fun maxIndex(vararg values: Float): Int {
         if (values.isEmpty()) return -1
-        var maxIndex = 0
+        var maxIdx = 0
         for (i in 1..<values.size) {
-            if (values[i] > values[maxIndex]) maxIndex = i
+            if (values[i] > values[maxIdx]) maxIdx = i
         }
-        return maxIndex
+        return maxIdx
     }
 
     // Clamp / Range Methods
@@ -264,7 +338,7 @@ object MathUtils {
     /**
      * Rounds up the given number according to the specified precision.
      *
-     * @param value a floating-point number
+     * @param value a float
      * @param decimalPlaces the number of decimal places to round
      * @return the rounded number
      */
@@ -277,7 +351,7 @@ object MathUtils {
     /**
      * Rounds down the given number according to the specified precision.
      *
-     * @param value a floating-point number
+     * @param value a float
      * @param decimalPlaces the number of decimal places to round
      * @return the truncated number
      */
