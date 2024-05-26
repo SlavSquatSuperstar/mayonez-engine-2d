@@ -19,9 +19,9 @@ public class DemosLauncher {
     private final static int START_SCENE_INDEX = 0;
 
     private final static String[] SCENE_NAMES = {
-            "Space Game", "Mario Level", "Physics Sandbox",
-            "Pool Balls", "Geometry Dash Editor",
-            "Font Test"
+            "Space Game", "Font Test", "Physics Sandbox",
+            "Pool Balls", "Mario Level", "Geometry Dash Editor",
+
     };
 
     public static void main(String[] args) {
@@ -39,7 +39,7 @@ public class DemosLauncher {
                         pollSceneControls();
                     }
                 },
-                new MarioScene(SCENE_NAMES[1]) {
+                new FontTestScene(SCENE_NAMES[1]) {
                     @Override
                     protected void onUserUpdate(float dt) {
                         super.onUserUpdate(dt);
@@ -60,14 +60,14 @@ public class DemosLauncher {
                         pollSceneControls();
                     }
                 },
-                new GDEditorScene(SCENE_NAMES[4]) {
+                new MarioScene(SCENE_NAMES[4]) {
                     @Override
                     protected void onUserUpdate(float dt) {
                         super.onUserUpdate(dt);
                         pollSceneControls();
                     }
                 },
-                new FontTestScene(SCENE_NAMES[5]) {
+                new GDEditorScene(SCENE_NAMES[5]) {
                     @Override
                     protected void onUserUpdate(float dt) {
                         super.onUserUpdate(dt);

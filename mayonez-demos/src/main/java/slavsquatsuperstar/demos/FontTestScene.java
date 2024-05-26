@@ -5,6 +5,7 @@ import mayonez.assets.text.*;
 import mayonez.graphics.*;
 import mayonez.graphics.font.*;
 import mayonez.graphics.sprites.*;
+import mayonez.input.*;
 import mayonez.math.*;
 import slavsquatsuperstar.demos.font.SceneTextObject;
 import slavsquatsuperstar.demos.font.UITextObject;
@@ -35,15 +36,16 @@ public class FontTestScene extends Scene {
             widths[i] = Integer.parseInt(widthsStr, i, i + 1, 10);
         }
 
-        var spriteSheet = (GLSpriteSheet) Sprites.createSpriteSheet(
+        var spriteSheet = Sprites.createSpriteSheet(
                 "assets/fonts/font_pixel.png",
                 metadata.glyphHeight(), metadata.glyphHeight(), metadata.numCharacters(), 0
         );
+        if (!(spriteSheet instanceof GLSpriteSheet)) return;
 
         // Text characteristics
         var message1 = "ABCDEFGHIJKLM\nNOPQRSTUVWXYZ\nabcdefghijklm\nnopqrstuvwyxz\n0123456789";
         var message2 = "D\u0000\u007f\ufffd\u200cDDDDD\nD D D D\nD  D  D|\nDDDDDD";
-        var font = new Font(spriteSheet, metadata, widths);
+        var font = new Font((GLSpriteSheet) spriteSheet, metadata, widths);
 
         // Scene font
         var fontSize = 6; // pt
@@ -67,4 +69,12 @@ public class FontTestScene extends Scene {
         ));
     }
 
+    @Override
+    protected void onUserUpdate(float dt) {
+        // Camera Controls
+        var moveInput = new Vec2(KeyInput.getAxis("horizontal"), KeyInput.getAxis("vertical"));
+        getCamera().getTransform().move(moveInput.unit());
+        getCamera().rotate(KeyInput.getAxis("arrows horizontal"));
+        getCamera().zoom(1 + 0.01f * KeyInput.getAxis("arrows vertical"));
+    }
 }

@@ -78,9 +78,6 @@ public abstract class Camera extends Component implements Viewport {
         transform.setPosition(position);
     }
 
-    // getPosition().mul(sceneScale) -> view center
-    // screenSize.mul(-0.5f / getZoom()) -> zoom offset
-
     /**
      * The position in pixels of the camera's center position.
      *
@@ -97,10 +94,7 @@ public abstract class Camera extends Component implements Viewport {
      * @return the camera's offset
      */
     @Override
-    public final Vec2 getScreenOffset() { // view center
-        // (position * scene_scale) - (0.5 * screen_size / zoom)
-        return getViewCenter().sub(screenSize.mul(0.5f / getZoom()));
-    }
+    public abstract Vec2 getScreenOffset(); // zoom offset
 
     // Camera Effects
 

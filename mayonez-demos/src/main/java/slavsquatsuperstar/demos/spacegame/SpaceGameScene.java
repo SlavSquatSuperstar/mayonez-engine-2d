@@ -23,8 +23,8 @@ import static slavsquatsuperstar.demos.spacegame.objects.SpaceGameLayer.*;
 public class SpaceGameScene extends Scene {
 
     // Constants
-    private final static int SCENE_SIZE = 4;
-    private final static int NUM_STARS = 2000;
+    private static final int SCENE_SIZE = 4;
+    private static final int NUM_STARS = 2000;
     private static final boolean CAMERA_DEBUG_MODE = false;
 
     // Objects

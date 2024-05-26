@@ -19,6 +19,13 @@ final class JCamera extends Camera {
     // Camera Methods
 
     @Override
+    public Vec2 getScreenOffset() {
+        // view center - zoom offset
+        // (position * scene_scale) - (0.5 * screen_size / zoom)
+        return getViewCenter().sub(screenSize.mul(0.5f / getZoom()));
+    }
+
+    @Override
     public Matrix4f getViewMatrix() {
         return new Matrix4f(); // unused
     }

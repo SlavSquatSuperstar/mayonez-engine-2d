@@ -8,6 +8,12 @@ import org.joml.*
 /**
  * A scene camera for the GL engine.
  *
+ * Sources:
+ * - https://learnopengl.com/Getting-started/Camera
+ * - https://www.opengl-tutorial.org/beginners-tutorials/tutorial-3-matrices/
+ * - https://www.khronos.org/opengl/wiki/Viewing_and_Transformations
+ * - https://gamedevbeginner.com/how-to-zoom-a-camera-in-unity-3-methods-with-examples/
+ *
  * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.GL)
@@ -22,7 +28,11 @@ class GLCamera(screenSize: Vec2?, sceneScale: Float) : Camera(screenSize, sceneS
     // Plane Fields
     private val nearPlane = -100f // closest object visible
     private val farPlane = 100f // farthest object visible
-    private val zPosition = 0f // how far forward/back the camera is
+    private val cameraZ = 0f // how far forward/back the camera is
+
+    // Camera Methods
+
+    override fun getScreenOffset(): Vec2 = viewCenter - (screenSize * 0.5f)
 
     // Matrix Methods
 
@@ -31,37 +41,48 @@ class GLCamera(screenSize: Vec2?, sceneScale: Float) : Camera(screenSize, sceneS
      * into camera view space.
      */
     override fun getViewMatrix(): Matrix4f {
-        translateViewMatrix(screenOffset)
-        rotateViewMatrix(-rotation)
-        viewMatrix.invert(inverseView)
+        viewMatrix
+            .translateView(screenOffset, cameraZ)
+            .rotateView(-rotation, viewCenter, cameraZ)
+            .zoomView(zoom, viewCenter, cameraZ)
+            .invert(inverseView)
         return viewMatrix
-    }
-
-    private fun rotateViewMatrix(angle: Float) {
-        val cameraPos = viewCenter
-        val rotation = Quaternionf()
-        rotation.rotationAxis(FloatMath.toRadians(angle), 0f, 0f, 1f)
-        viewMatrix.rotateAround(rotation, cameraPos.x, cameraPos.y, 0f)
-    }
-
-    private fun translateViewMatrix(offset: Vec2) {
-        val cameraFront = Vector3f(0f, 0f, -1f)
-        val cameraUp = Vector3f(0f, 1f, 0f)
-        viewMatrix.setLookAt(
-            Vector3f(offset.x, offset.y, zPosition),
-            cameraFront.add(offset.x, offset.y, 0f), cameraUp
-        )
     }
 
     /**
      * The projection matrix of the camera, which transforms objects from view
      * space into normalized screen space.
      */
+    // TODO don't zoom UI with scene
     override fun getProjectionMatrix(): Matrix4f {
-        val projSize = screenSize.div(zoom)
-        projectionMatrix.setOrtho(0f, projSize.x, 0f, projSize.y, nearPlane, farPlane)
-        projectionMatrix.invert(inverseProjection)
+//        GL11.glViewport()
+        projectionMatrix
+            .setOrtho(0f, screenSize.x, 0f, screenSize.y, nearPlane, farPlane)
+            .invert(inverseProjection)
         return projectionMatrix
+    }
+
+    // Matrix Helper Methods
+
+    private fun Matrix4f.translateView(offset: Vec2, cameraZ: Float): Matrix4f {
+        val cameraFront = Vector3f(0f, 0f, -1f)
+        val cameraUp = Vector3f(0f, 1f, 0f)
+        return this.setLookAt(
+            Vector3f(offset.x, offset.y, cameraZ),
+            cameraFront.add(offset.x, offset.y, 0f), cameraUp
+        )
+    }
+
+    private fun Matrix4f.rotateView(angle: Float, cameraPos: Vec2, cameraZ: Float): Matrix4f {
+        val rotation = Quaternionf()
+        rotation.rotationAxis(FloatMath.toRadians(angle), 0f, 0f, 1f)
+        return this.rotateAround(rotation, cameraPos.x, cameraPos.y, cameraZ)
+    }
+
+    private fun Matrix4f.zoomView(zoom: Float, cameraPos: Vec2, cameraZ: Float): Matrix4f {
+        // Orthographic zoom
+        // TODO try perspective zoom
+        return this.scaleAround(zoom, zoom, 1f, cameraPos.x, cameraPos.y, cameraZ)
     }
 
     // Screen to World Methods

@@ -122,7 +122,9 @@ public class UISprite extends Component implements UIRenderableElement {
     @Override
     public void pushToBatch(RenderBatch batch) {
         var texID = batch.getTextureSlot((GLTexture) texture);
-        var texCoords = (texture != null) ? ((GLTexture) texture).getTexCoords() : GLTexture.DEFAULT_TEX_COORDS;
+        var texCoords = (texture != null)
+                ? ((GLTexture) texture).getTexCoords()
+                : GLTexture.DEFAULT_TEX_COORDS;
         var sprBox = new BoundingBox(
                 position.sub(getAnchorTranslateDirection()), size
         );
