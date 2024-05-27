@@ -1,8 +1,8 @@
 package mayonez.graphics.textures;
 
 /**
- * An exception occurring when the program cannot successfully read a
- * texture file.
+ * An exception occurring when the program cannot successfully create an
+ * OpenGL texture.
  *
  * @author SlavSquatSuperstar
  */

@@ -10,7 +10,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 /**
- * Stores the rasterized contents of an image file or resource.
+ * Stores the buffered image contents of an image file or resource using {@link java.awt.image}.
  *
  * @author SlavSquatSuperstar
  */
@@ -23,12 +23,12 @@ public class ImageData extends Asset {
         super(filename);
         try (var stream = openInputStream()) {
             image = ImageIO.read(new ByteArrayInputStream(stream.readAllBytes()));
-            alpha = image.getColorModel().hasAlpha();
-            // Can also check image.getAlphaRaster() != null
-            // Or image.getColorModel().getTransparency() == Transparency.TRANSLUCENT
         } catch (IOException e) {
             throw new IOException("Error reading buffered image");
         }
+        alpha = image.getColorModel().hasAlpha();
+        // Can also check image.getAlphaRaster() != null
+        // Or image.getColorModel().getTransparency() == Transparency.TRANSLUCENT
     }
 
     public ImageData(String filename, BufferedImage image) {

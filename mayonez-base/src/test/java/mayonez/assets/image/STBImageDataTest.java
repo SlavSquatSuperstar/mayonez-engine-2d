@@ -5,11 +5,11 @@ import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit tests for the {@link mayonez.assets.image.ImageData} class.
+ * Unit tests for the {@link mayonez.assets.image.STBImageData} class.
  *
  * @author SlavSquatSuperstar
  */
-class ImageDataTest {
+class STBImageDataTest {
 
     private static final int IMAGE_LENGTH = 32;
 
@@ -17,7 +17,7 @@ class ImageDataTest {
     void transparentPngHasAlpha() {
         var filename = "testassets/images/spaceship-transparent.png";
         try {
-            var image = new ImageData(filename);
+            var image = new STBImageData(filename);
             assertEquals(IMAGE_LENGTH, image.getWidth());
             assertEquals(IMAGE_LENGTH, image.getHeight());
             assertTrue(image.hasAlpha());
@@ -30,7 +30,7 @@ class ImageDataTest {
     void opaquePngHasNoAlpha() {
         var filename = "testassets/images/spaceship-opaque.png";
         try {
-            var image = new ImageData(filename);
+            var image = new STBImageData(filename);
             assertEquals(IMAGE_LENGTH, image.getWidth());
             assertEquals(IMAGE_LENGTH, image.getHeight());
             assertFalse(image.hasAlpha());
@@ -43,7 +43,7 @@ class ImageDataTest {
     void opaqueJpgHasNoAlpha() {
         var filename = "testassets/images/spaceship-opaque.jpg";
         try {
-            var image = new ImageData(filename);
+            var image = new STBImageData(filename);
             assertEquals(IMAGE_LENGTH, image.getWidth());
             assertEquals(IMAGE_LENGTH, image.getHeight());
             assertFalse(image.hasAlpha());
