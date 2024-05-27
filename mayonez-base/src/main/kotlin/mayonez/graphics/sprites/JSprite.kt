@@ -69,34 +69,6 @@ internal class JSprite private constructor(
         this.color = color ?: DEFAULT_COLOR
     }
 
-    // Image Recolor Methods
-
-    private fun BufferedImage.recolor(color: MColor) {
-        for (y in 0..<this.width) {
-            for (x in 0..<this.height) {
-                val pixelColor = this.getPixelColor(x, y)
-                val combinedColor = pixelColor.combine(color)
-                this.setPixelColor(x, y, combinedColor)
-            }
-        }
-    }
-
-    /**
-     * Get the pixel's RBGA color on this sprite's stored texture at the
-     * specific coordinates.
-     */
-    private fun BufferedImage.getPixelColor(x: Int, y: Int): MColor {
-        return MColor(this.getRGB(x, y))
-    }
-
-    /**
-     * Set the pixel's RBGA color on this sprite's stored texture at the
-     * specific coordinates.
-     */
-    private fun BufferedImage.setPixelColor(x: Int, y: Int, color: MColor) {
-        this.setRGB(x, y, color.getRGBAValue())
-    }
-
     // Sprite Methods
 
     override fun getTexture(): JTexture? {

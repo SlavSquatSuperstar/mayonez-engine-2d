@@ -31,6 +31,7 @@ module mayonez.base {
 
     // Assets
     exports mayonez.assets;
+    exports mayonez.assets.image;
     exports mayonez.assets.text;
 
     // Renderer

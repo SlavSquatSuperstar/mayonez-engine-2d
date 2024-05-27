@@ -30,7 +30,7 @@ import static org.lwjgl.system.MemoryUtil.memSlice;
  * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.GL)
-public sealed class GLTexture extends Texture permits GLSpriteSheetTexture{
+public sealed class GLTexture extends Texture permits GLSpriteSheetTexture {
 
     // Constants
     public static final Vec2[] DEFAULT_TEX_COORDS
@@ -47,12 +47,6 @@ public sealed class GLTexture extends Texture permits GLSpriteSheetTexture{
     private int texID;
     private final Vec2[] texCoords;
 
-    protected GLTexture(String filename, Vec2[] texCoords) {
-        super(filename);
-        this.texCoords = texCoords;
-        imageFreed = false;
-    }
-
     /**
      * Create a brand-new GLTexture with the given filename.
      *
@@ -61,6 +55,18 @@ public sealed class GLTexture extends Texture permits GLSpriteSheetTexture{
     public GLTexture(String filename) {
         this(filename, DEFAULT_TEX_COORDS);
         readImage();
+    }
+
+    /**
+     * Create a GLTexture from a portion of another texture.
+     *
+     * @param filename  the file location
+     * @param texCoords the sub-image coordinates
+     */
+    protected GLTexture(String filename, Vec2[] texCoords) {
+        super(filename);
+        this.texCoords = texCoords;
+        imageFreed = false;
     }
 
     // Read Image Methods

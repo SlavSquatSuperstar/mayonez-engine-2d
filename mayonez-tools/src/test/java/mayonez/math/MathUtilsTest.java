@@ -61,8 +61,8 @@ class MathUtilsTest {
 
     @Test
     void hypotVarargsIsCorrect() {
-        assertFloatEquals(10, MathUtils.hypot(6, 8));
-        assertFloatEquals(13, MathUtils.hypot(3, 4, 12));
+        assertFloatEquals(13, MathUtils.hypot(3, 4, 12)); // 5, 12, 13
+        assertFloatEquals(190, MathUtils.hypotSq(4, 5, 6, 7, 8));
     }
 
     @Test

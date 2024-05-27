@@ -109,7 +109,7 @@ class Color(red: Int, green: Int, blue: Int, alpha: Int) {
      * @param color the other color
      * @return the combined color
      */
-    internal fun combine(color: MColor): MColor {
+    fun combine(color: MColor): MColor {
         return MColor(
             this.red.combine(color.red),
             this.green.combine(color.green),
