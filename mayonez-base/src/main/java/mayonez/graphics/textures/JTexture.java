@@ -1,15 +1,14 @@
 package mayonez.graphics.textures;
 
 import mayonez.*;
+import mayonez.assets.image.*;
 import mayonez.graphics.*;
 import mayonez.graphics.Color;
 import mayonez.math.*;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.*;
 import java.awt.image.*;
-import java.io.ByteArrayInputStream;
 
 /**
  * An image file used by the AWT engine. This class should not be directly
@@ -21,7 +20,7 @@ import java.io.ByteArrayInputStream;
 @UsesEngine(EngineType.AWT)
 public sealed class JTexture extends Texture permits JSpriteSheetTexture {
 
-    private BufferedImage image;
+    private ImageData imageData;
     private final Vec2 imageSize;
 
     /**
@@ -38,27 +37,29 @@ public sealed class JTexture extends Texture permits JSpriteSheetTexture {
     /**
      * Create a JTexture from a portion of another texture.
      *
-     * @param filename the file location
-     * @param image    the sub-image
+     * @param filename  the file location
+     * @param imageData the sub-image
      */
-    protected JTexture(String filename, BufferedImage image) {
+    protected JTexture(String filename, ImageData imageData) {
         super(filename);
-        this.image = image;
-        imageSize = new Vec2(image.getWidth(), image.getHeight());
+        this.imageData = imageData;
+        imageSize = new Vec2(imageData.getWidth(), imageData.getHeight());
     }
 
     // Image Methods
 
     @Override
     protected void readImage() {
-        try (var in = openInputStream()) {
-            image = ImageIO.read(new ByteArrayInputStream(in.readAllBytes()));
-            imageSize.set(image.getWidth(), image.getHeight());
+        try {
+            imageData = new ImageData(getFilename());
+            imageSize.set(imageData.getWidth(), imageData.getHeight());
             Logger.debug("Loaded image %s", getFilename());
         } catch (Exception e) {
             Logger.error("Could not read image file %s", getFilename());
         }
     }
+
+    // Draw Methods
 
     /**
      * Draws a texture with the given position, rotation and scale qualities.
@@ -70,18 +71,18 @@ public sealed class JTexture extends Texture permits JSpriteSheetTexture {
      * @param scale    the scale of the scene
      */
     public void draw(Graphics2D g2, Transform parentXf, Transform spriteXf, Color color, float scale) {
-        if (image == null) return;
+        if (imageData == null) return;
 
         // Draw sprite at parent center with parent rotation and scale
         var texXf = parentXf.combine(spriteXf);
-        var g2Xf = transformScreen(texXf, scale);
+        var g2Xf = getImageTransform(texXf, scale);
 
-        // Recolor the image
-        BufferedImage recoloredImage = getRecoloredImage(color);
+        // Recolor the image (without modifying the original)
+        var recoloredImage = getRecoloredImage(color);
         g2.drawImage(recoloredImage, g2Xf, null); // Draw buffered image
     }
 
-    private AffineTransform transformScreen(Transform texXf, float scale) {
+    private AffineTransform getImageTransform(Transform texXf, float scale) {
         // Measurements are in screen coordinates (pixels)
         var parentCenter = texXf.getPosition().mul(scale);
         var parentSize = texXf.getScale().mul(scale);
@@ -98,19 +99,19 @@ public sealed class JTexture extends Texture permits JSpriteSheetTexture {
 
     // Source: https://docs.oracle.com/en/java/javase/17/docs/api/java.desktop/java/awt/image/RescaleOp.html
     private BufferedImage getRecoloredImage(Color color) {
-        if (color == null) return image;
+        if (color == null) return imageData.getImage();
 
         var recolor = new RescaleOp(
                 new float[]{color.getFRed(), color.getFGreen(), color.getFBlue(), color.getFAlpha()},
                 new float[4], null
         );
-        return recolor.filter(image, null);
+        return recolor.filter(imageData.getImage(), null);
     }
 
     // Image Getters
 
-    public BufferedImage getImage() {
-        return image;
+    public ImageData getImageData() {
+        return imageData;
     }
 
     @Override

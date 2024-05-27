@@ -2,6 +2,7 @@ package mayonez.assets.image;
 
 import mayonez.assets.*;
 import mayonez.graphics.*;
+import mayonez.math.*;
 
 import javax.imageio.ImageIO;
 import java.awt.image.*;
@@ -18,7 +19,7 @@ public class ImageData extends Asset {
     private final BufferedImage image;
     private final boolean alpha;
 
-    public ImageData(String filename) {
+    public ImageData(String filename) throws IOException {
         super(filename);
         try (var stream = openInputStream()) {
             image = ImageIO.read(new ByteArrayInputStream(stream.readAllBytes()));
@@ -26,11 +27,28 @@ public class ImageData extends Asset {
             // Can also check image.getAlphaRaster() != null
             // Or image.getColorModel().getTransparency() == Transparency.TRANSLUCENT
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new IOException("Error reading buffered image");
         }
     }
 
-    // Image Properties
+    public ImageData(String filename, BufferedImage image) {
+        super(filename);
+        this.image = image;
+        alpha = image.getColorModel().hasAlpha();
+    }
+
+    // BufferedImage Methods
+
+    // TODO make this private?
+    public BufferedImage getImage() {
+        return image;
+    }
+
+    public BufferedImage getSubImage(Vec2 topLeft, Vec2 size) {
+        return image.getSubimage((int) topLeft.x, (int) topLeft.y, (int) size.x, (int) size.y);
+    }
+
+    // Image Getters
 
     public int getWidth() {
         return image.getWidth();

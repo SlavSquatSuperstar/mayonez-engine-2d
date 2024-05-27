@@ -6,6 +6,10 @@ import mayonez.math.*;
 /**
  * Stores multiple textures and creates multiple sprites from a larger image.
  * To instantiate a sprite sheet, use {@link Sprites#createSpriteSheet}.
+ * <p>
+ * Sprite sheets (also known as texture atlases) are often used to
+ * store an animation or many frequently used textures in one file.
+ * This increases batch performance by requiring fewer textures per draw call.
  *
  * @author SlavSquatSuperstar
  */

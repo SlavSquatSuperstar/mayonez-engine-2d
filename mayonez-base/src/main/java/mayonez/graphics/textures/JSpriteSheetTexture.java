@@ -1,9 +1,8 @@
 package mayonez.graphics.textures;
 
+import mayonez.assets.image.*;
 import mayonez.graphics.*;
-import org.jetbrains.annotations.NotNull;
-
-import java.awt.image.*;
+import mayonez.math.*;
 
 /**
  * A GL texture created from a sprite sheet that represents a portion of another
@@ -15,12 +14,16 @@ import java.awt.image.*;
 public final class JSpriteSheetTexture extends JTexture {
 
     private final JTexture parentTexture;
-    private final int spriteSheetIndex;
+    // TODO uvCoords
 
-    public JSpriteSheetTexture(JTexture parentTexture, int spriteSheetIndex, BufferedImage image) {
-        super(parentTexture.getFilename(), image);
+    public JSpriteSheetTexture(JTexture parentTexture, int spriteSheetIndex, Vec2 spritePos, Vec2 spriteSize) {
+        this(getSubSpriteFilename(parentTexture.getFilename(), spriteSheetIndex),
+                parentTexture, spritePos, spriteSize);
+    }
+
+    private JSpriteSheetTexture(String filename, JTexture parentTexture, Vec2 spritePos, Vec2 spriteSize) {
+        super(filename, getSubImageData(filename, parentTexture.getImageData(), spritePos, spriteSize));
         this.parentTexture = parentTexture;
-        this.spriteSheetIndex = spriteSheetIndex;
     }
 
     // Asset Methods
@@ -29,7 +32,7 @@ public final class JSpriteSheetTexture extends JTexture {
     public void free() { // Don't do anything since we may need the parent texture
     }
 
-    // Image Getters
+    // Parent Texture Getters
 
     public JTexture getParentTexture() {
         return parentTexture;
@@ -43,10 +46,14 @@ public final class JSpriteSheetTexture extends JTexture {
         return parentTexture.getHeight();
     }
 
-    @NotNull
-    @Override
-    public String toString() {
-        return "%s (Sprite %d)".formatted(super.toString(), spriteSheetIndex);
+    // Helper Methods
+
+    private static String getSubSpriteFilename(String parentFilename, int spriteSheetIndex) {
+        return "%s (Sprite %d)".formatted(parentFilename, spriteSheetIndex);
+    }
+
+    private static ImageData getSubImageData(String filename, ImageData imageData, Vec2 spritePos, Vec2 spriteSize) {
+        return new ImageData(filename, imageData.getSubImage(spritePos, spriteSize));
     }
 
 }

@@ -41,18 +41,11 @@ public final class JSpriteSheet extends SpriteSheet {
         var spriteTopLeft = new Vec2(0, 0);
 
         // Read sprites from top left of sheet
-        for (var count = 0; count < numSprites; count++) {
-            addCurrentSprite(spriteTopLeft, count);
+        for (var spriteCount = 0; spriteCount < numSprites; spriteCount++) {
+            // Add current sprite
+            textures.add(new JSpriteSheetTexture(sheetTexture, spriteCount, spriteTopLeft, spriteSize));
             moveToNextSprite(spriteTopLeft, spacing);
         }
-    }
-
-    private void addCurrentSprite(Vec2 spriteTopLeft, int index) {
-        var subImage = sheetTexture.getImage().getSubimage(
-                (int) spriteTopLeft.x, (int) spriteTopLeft.y,
-                (int) spriteSize.x, (int) spriteSize.y
-        );
-        textures.add(new JSpriteSheetTexture(sheetTexture, index, subImage));
     }
 
     @Override

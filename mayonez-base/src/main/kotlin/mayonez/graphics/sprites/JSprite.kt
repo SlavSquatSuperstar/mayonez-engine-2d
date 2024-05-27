@@ -5,7 +5,6 @@ import mayonez.graphics.renderer.awt.*
 import mayonez.graphics.textures.*
 import mayonez.math.shapes.Rectangle
 import java.awt.*
-import java.awt.image.*
 
 /**
  * Draws a [JTexture] using the AWT engine. This class should not be
@@ -35,12 +34,9 @@ internal class JSprite private constructor(
 
     // Sprite Properties
 
-    private val image: BufferedImage?
-        get() = texture?.image
+    override val imageWidth: Int = texture?.imageData?.width ?: 0
 
-    override val imageWidth: Int = image?.width ?: 0
-
-    override val imageHeight: Int = image?.height ?: 0
+    override val imageHeight: Int = texture?.imageData?.height ?: 0
 
     // Sprite Methods
 

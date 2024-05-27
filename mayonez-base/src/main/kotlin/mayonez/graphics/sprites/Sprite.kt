@@ -46,7 +46,7 @@ sealed class Sprite : Component(UpdateOrder.RENDER), Renderable {
     abstract fun getColor(): MColor
 
     /**
-     * Set the color of this sprite, or recolors the current texture.
+     * Set the color of this sprite, or recolor the current texture.
      *
      * @param color the color
      */
@@ -71,14 +71,14 @@ sealed class Sprite : Component(UpdateOrder.RENDER), Renderable {
     }
 
     /**
-     * Returns the texture this sprite draws.
+     * Get the texture this sprite draws.
      *
      * @return the texture, or null if drawing a color
      */
     abstract fun getTexture(): Texture?
 
     /**
-     * Sets the texture this sprite draws.
+     * Set the texture this sprite draws.
      *
      * @param texture the new texture
      */
@@ -91,7 +91,7 @@ sealed class Sprite : Component(UpdateOrder.RENDER), Renderable {
     // Copy Methods
 
     /**
-     * Returns a new sprite with the same image but not attached to any
+     * Construct a new sprite with the same image but not attached to any
      * [mayonez.GameObject].
      *
      * @return a copy of this image
