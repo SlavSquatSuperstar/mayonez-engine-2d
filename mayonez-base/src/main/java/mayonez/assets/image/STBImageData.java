@@ -30,10 +30,24 @@ public class STBImageData extends BaseImageData {
     public STBImageData(String filename) throws IOException {
         super(filename);
         try {
-            var imageBuffer = readImageBytes();
-            buffer = loadImage(imageBuffer);
+            var fileBuffer = readImageBytes();
+            buffer = loadImage(fileBuffer);
         } catch (ImageReadException | IOException e) {
             throw new IOException("Error reading STB image");
+        }
+    }
+
+    public STBImageData(String filename, ByteBuffer buffer, int width, int height) throws IOException {
+        super(filename);
+        this.buffer = buffer;
+        this.width = width;
+        this.height = height;
+        try {
+            channels = buffer.capacity() / (width * height);
+            alpha = getAlphaFromChannels(channels);
+            imageFreed = false;
+        } catch (ImageReadException e) {
+            throw new IOException("Creating reading STB image");
         }
     }
 
@@ -49,13 +63,13 @@ public class STBImageData extends BaseImageData {
         return memSlice(imageBuffer.put(imageBytes).flip());
     }
 
-    private ByteBuffer loadImage(ByteBuffer imageBuffer) throws ImageReadException {
+    private ByteBuffer loadImage(ByteBuffer fileBuffer) throws ImageReadException {
         var widthBuff = BufferUtils.createIntBuffer(1);
         var heightBuff = BufferUtils.createIntBuffer(1);
         var channelsBuff = BufferUtils.createIntBuffer(1);
 
         stbi_set_flip_vertically_on_load(true); // GL uses (0,0) as bottom left, unlike AWT
-        var image = stbi_load_from_memory(imageBuffer, widthBuff, heightBuff, channelsBuff, 0);
+        var image = stbi_load_from_memory(fileBuffer, widthBuff, heightBuff, channelsBuff, 0);
         if (image == null) {
             Logger.error("OpenGL: Could not load image file %s", getFilename());
             String msg = "Reason for failure: " + stbi_failure_reason();
@@ -69,14 +83,20 @@ public class STBImageData extends BaseImageData {
 
         // Set image alpha
         channels = channelsBuff.get(0);
+        alpha = getAlphaFromChannels(channels);
+
+        imageFreed = false;
+        return image;
+    }
+
+    private static boolean getAlphaFromChannels(int channels) throws ImageReadException {
+        boolean alpha;
         switch (channels) {
             case RGB_CHANNELS -> alpha = false;
             case RGBA_CHANNELS -> alpha = true;
             default -> throw new ImageReadException("Unsupported number of channels: " + channels);
         }
-
-        imageFreed = false;
-        return image;
+        return alpha;
     }
 
     public void freeImage() {
@@ -113,14 +133,6 @@ public class STBImageData extends BaseImageData {
         return alpha;
     }
 
-    // ByteBuffer Methods
-
-    public ByteBuffer getBuffer() {
-        return buffer;
-    }
-
-    // TODO get sub image
-
     // Pixel Methods
 
     @Override
@@ -142,6 +154,45 @@ public class STBImageData extends BaseImageData {
         buffer.put(index + 1, (byte) color.getRed());
         buffer.put(index + 2, (byte) color.getBlue());
         if (alpha) buffer.put(index + 3, (byte) color.getAlpha());
+    }
+
+    // Sub-Image Methods
+
+    public ByteBuffer getBuffer() {
+        return buffer;
+    }
+
+    public ByteBuffer getSubBuffer(Vec2 topLeft, Vec2 size) {
+        var subImgX = (int) topLeft.x;
+        var subImgY = (int) topLeft.y;
+        var subImgWidth = (int) size.x;
+        var subImgHeight = (int) size.y;
+
+        var buffer = BufferUtils.createByteBuffer(subImgWidth * subImgHeight * channels);
+        for (var y = subImgY; y < subImgY + subImgHeight; y++) {
+            for (var x = subImgX; x < subImgX + subImgWidth; x++) {
+                var flippedY = (height - 1) - y;
+                var color = getPixelColor(x, flippedY);
+                buffer.put((byte) color.getRed());
+                buffer.put((byte) color.getGreen());
+                buffer.put((byte) color.getBlue());
+                if (alpha) buffer.put((byte) color.getAlpha());
+            }
+        }
+        return buffer;
+    }
+
+    @Override
+    public STBImageData getSubImageData(Vec2 topLeft, Vec2 size) {
+        try {
+            var filename = "%s Sub-Image (%s, %s)".formatted(getFilename(), topLeft, size);
+            return new STBImageData(filename, getSubBuffer(topLeft, size), (int) size.x, (int) size.y);
+        } catch (IOException e) {
+            Logger.error("Could not create sub-image from %s with position %s and size %s",
+                    toString(), topLeft, size);
+            return null;
+        }
+
     }
 
 }

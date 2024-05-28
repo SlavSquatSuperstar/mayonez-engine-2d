@@ -55,17 +55,6 @@ public class ImageData extends BaseImageData {
         // Or image.getColorModel().getTransparency() == Transparency.TRANSLUCENT
     }
 
-    // BufferedImage Methods
-
-    public BufferedImage getImage() {
-        return image;
-    }
-
-    // TODO make return buffer
-    public BufferedImage getSubImage(Vec2 topLeft, Vec2 size) {
-        return image.getSubimage((int) topLeft.x, (int) topLeft.y, (int) size.x, (int) size.y);
-    }
-
     // Pixel Methods
 
     public void recolor(Color color) {
@@ -97,6 +86,22 @@ public class ImageData extends BaseImageData {
 
     public void setPixels(int[] pixels) {
         image.setRGB(0, 0, getWidth(), getHeight(), pixels, 0, getWidth());
+    }
+
+    // Sub-Image Methods
+
+    public BufferedImage getImage() {
+        return image;
+    }
+
+    public BufferedImage getSubImage(Vec2 topLeft, Vec2 size) {
+        return image.getSubimage((int) topLeft.x, (int) topLeft.y, (int) size.x, (int) size.y);
+    }
+
+    @Override
+    public ImageData getSubImageData(Vec2 topLeft, Vec2 size) {
+        var filename = "%s Sub-Image (%s, %s)".formatted(getFilename(), topLeft, size);
+        return new ImageData(filename, getSubImage(topLeft, size));
     }
 
 }

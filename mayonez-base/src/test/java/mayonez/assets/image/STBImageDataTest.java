@@ -102,6 +102,22 @@ class STBImageDataTest {
         assertEquals(Colors.BLACK, image.getPixelColor(0, 0));
     }
 
+    // Sub-Image
+
+    @Test
+    void subImagePixelsCorrect() {
+        var length = 8;
+        var subImageCoords = new Vec2[]{
+                new Vec2(0, 0), new Vec2(length - 1, 0),
+                new Vec2(0, length - 1), new Vec2(length - 1, length - 1)
+        };
+
+        var image = getImage(TRANSPARENT_PNG);
+        var subImage = image.getSubImageData(new Vec2(4, 4), new Vec2(length, length));
+        assertNotNull(subImage);
+        testPixelColors(subImage, TEST_COLORS, subImageCoords, 128);
+    }
+
     private static STBImageData getImage(String filename) {
         try {
             return new STBImageData(filename);

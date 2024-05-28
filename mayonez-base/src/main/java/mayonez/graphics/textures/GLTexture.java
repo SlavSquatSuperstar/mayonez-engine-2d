@@ -108,7 +108,7 @@ public sealed class GLTexture extends Texture permits GLSpriteSheetTexture {
         var buffer = BufferUtils.createByteBuffer(getWidth() * getHeight() * imageData.getChannels());
         glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
         return buffer;
-        // TODO make image data
+        // TODO construct image data
         // TODO convert AWT and STB
     }
 
