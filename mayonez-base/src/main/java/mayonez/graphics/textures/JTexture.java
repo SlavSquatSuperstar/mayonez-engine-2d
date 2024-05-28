@@ -20,7 +20,7 @@ import java.awt.image.*;
 @UsesEngine(EngineType.AWT)
 public sealed class JTexture extends Texture permits JSpriteSheetTexture {
 
-    private ImageData imageData;
+    private AWTImageData imageData;
     private final Vec2 imageSize;
 
     /**
@@ -40,7 +40,7 @@ public sealed class JTexture extends Texture permits JSpriteSheetTexture {
      * @param filename  the file location
      * @param imageData the sub-image
      */
-    protected JTexture(String filename, ImageData imageData) {
+    protected JTexture(String filename, AWTImageData imageData) {
         super(filename);
         this.imageData = imageData;
         imageSize = new Vec2(imageData.getWidth(), imageData.getHeight());
@@ -51,7 +51,7 @@ public sealed class JTexture extends Texture permits JSpriteSheetTexture {
     @Override
     protected void readImage() {
         try {
-            imageData = new ImageData(getFilename());
+            imageData = new AWTImageData(getFilename());
             imageSize.set(imageData.getWidth(), imageData.getHeight());
             Logger.debug("Loaded image %s", getFilename());
         } catch (Exception e) {
@@ -110,7 +110,7 @@ public sealed class JTexture extends Texture permits JSpriteSheetTexture {
 
     // Image Getters
 
-    public ImageData getImageData() {
+    public AWTImageData getImageData() {
         return imageData;
     }
 

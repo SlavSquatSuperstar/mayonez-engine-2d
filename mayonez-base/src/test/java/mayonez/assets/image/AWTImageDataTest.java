@@ -4,16 +4,16 @@ import mayonez.graphics.*;
 import mayonez.math.*;
 import org.junit.jupiter.api.*;
 
-import static mayonez.assets.image.BaseImageData.*;
+import static mayonez.assets.image.ImageData.*;
 import static mayonez.assets.image.ImageTestUtils.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit tests for the {@link mayonez.assets.image.ImageData} class.
+ * Unit tests for the {@link AWTImageData} class.
  *
  * @author SlavSquatSuperstar
  */
-class ImageDataTest {
+class AWTImageDataTest {
 
     private static Color[] TEST_COLORS;
     private static Vec2[] TEST_COORDS;
@@ -118,9 +118,9 @@ class ImageDataTest {
 
     // Helper Methods
 
-    private static ImageData getImage(String filename) {
+    private static AWTImageData getImage(String filename) {
         try {
-            return new ImageData(filename);
+            return new AWTImageData(filename);
         } catch (Exception e) {
             return fail("Could not read image");
         }

@@ -17,7 +17,7 @@ import static org.lwjgl.system.MemoryUtil.memSlice;
  *
  * @author SlavSquatSuperstar
  */
-public class STBImageData extends BaseImageData {
+public class STBImageData extends ImageData {
 
     // Constants
     private static final int SELECT_8_BYTES = 0xFF;

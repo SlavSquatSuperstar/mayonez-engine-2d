@@ -52,8 +52,8 @@ public final class JSpriteSheetTexture extends JTexture {
         return "%s (Sprite %d)".formatted(parentFilename, spriteSheetIndex);
     }
 
-    private static ImageData getSubImageData(String filename, ImageData imageData, Vec2 spritePos, Vec2 spriteSize) {
-        return new ImageData(filename, imageData.getSubImage(spritePos, spriteSize));
+    private static AWTImageData getSubImageData(String filename, AWTImageData imageData, Vec2 spritePos, Vec2 spriteSize) {
+        return new AWTImageData(filename, imageData.getSubImage(spritePos, spriteSize));
     }
 
 }

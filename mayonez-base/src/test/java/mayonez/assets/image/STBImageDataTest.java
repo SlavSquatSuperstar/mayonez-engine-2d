@@ -4,7 +4,7 @@ import mayonez.graphics.*;
 import mayonez.math.*;
 import org.junit.jupiter.api.*;
 
-import static mayonez.assets.image.BaseImageData.*;
+import static mayonez.assets.image.ImageData.*;
 import static mayonez.assets.image.ImageTestUtils.*;
 import static org.junit.jupiter.api.Assertions.*;
 

@@ -1,107 +1,91 @@
 package mayonez.assets.image;
 
+import mayonez.assets.*;
 import mayonez.graphics.*;
 import mayonez.math.*;
 
-import javax.imageio.ImageIO;
-import java.awt.image.*;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-
 /**
- * Stores the buffered image contents of an image file or resource using {@link java.awt.image}.
+ * Stores the rasterized image contents of an image file used by the program.
  *
  * @author SlavSquatSuperstar
  */
-public class ImageData extends BaseImageData {
+// TODO convert AWT and STB
+public abstract class ImageData extends Asset {
 
-    private final BufferedImage image;
+    protected static final int RGB_CHANNELS = 3;
+    protected static final int RGBA_CHANNELS = 4;
 
-    public ImageData(String filename) throws IOException {
+    public ImageData(String filename) {
         super(filename);
-        try (var stream = openInputStream()) {
-            image = ImageIO.read(new ByteArrayInputStream(stream.readAllBytes()));
-        } catch (IOException e) {
-            throw new IOException("Error reading buffered image");
-        }
-    }
-
-    public ImageData(String filename, BufferedImage image) {
-        super(filename);
-        this.image = image;
     }
 
     // Image Getters
 
-    @Override
-    public int getWidth() {
-        return image.getWidth();
-    }
+    /**
+     * Get the width of the image in pixels.
+     *
+     * @return the width
+     */
+    public abstract int getWidth();
 
-    @Override
-    public int getHeight() {
-        return image.getHeight();
-    }
+    /**
+     * Get the height of the image in pixels.
+     *
+     * @return the height
+     */
+    public abstract int getHeight();
 
-    @Override
-    public int getChannels() {
-        return image.getColorModel().getNumComponents();
-    }
+    /**
+     * Get the number of channels (color components) in pixels, 3 for RGB and
+     * 4 for RGBA.
+     *
+     * @return the channel count
+     */
+    public abstract int getChannels();
 
-    @Override
-    public boolean hasAlpha() {
-        return image.getColorModel().hasAlpha();
-        // Can also check image.getAlphaRaster() != null
-        // Or image.getColorModel().getTransparency() == Transparency.TRANSLUCENT
-    }
+    /**
+     * Get whether the image supports alpha (transparency).
+     *
+     * @return if the image has alpha
+     */
+    public abstract boolean hasAlpha();
 
     // Pixel Methods
+    // TODO bounds checking
 
-    public void recolor(Color color) {
-        for (var y = 0; y < getHeight(); y++) {
-            for (var x = 0; x < getWidth(); x++) {
-                var pixelColor = getPixelColor(x, y);
-                var combinedColor = pixelColor.combine(color);
-                setPixelColor(x, y, combinedColor);
-            }
-        }
-    }
+    /**
+     * Get the pixel's RBG color on this sprite's stored texture at the
+     * specific coordinates.  If the image format supports transparency,
+     * then the alpha value will also be returned.
+     *
+     * @param x the pixel x's coordinate, from the top left, in pixels
+     * @param y the pixel's y coordinate, from the top left, in pixels
+     * @return the pixel color
+     */
+    public abstract Color getPixelColor(int x, int y);
 
-    @Override
-    public Color getPixelColor(int x, int y) {
-        return new Color(image.getRGB(x, y));
-    }
-
-    @Override
-    public void setPixelColor(int x, int y, Color color) {
-        image.setRGB(x, y, color.getRGBAValue());
-        // AWT already restricts setting alpha for non-transparent images
-    }
-
-    public int[] getPixels() {
-        int[] pixels = new int[getWidth() * getHeight()];
-        image.getRGB(0, 0, getWidth(), getHeight(), pixels, 0, getWidth());
-        return pixels;
-    }
-
-    public void setPixels(int[] pixels) {
-        image.setRGB(0, 0, getWidth(), getHeight(), pixels, 0, getWidth());
-    }
+    /**
+     * Set the pixel's RBG color on this sprite's stored texture at the
+     * specific coordinates. If the image format supports transparency,
+     * then the alpha value will also be set.
+     *
+     * @param x     the pixel x's coordinate, from the top left, in pixels
+     * @param y     the pixel's y coordinate, from the top left, in pixels
+     * @param color the pixel color to set
+     */
+    public abstract void setPixelColor(int x, int y, Color color);
 
     // Sub-Image Methods
 
-    public BufferedImage getImage() {
-        return image;
-    }
+    /**
+     * Create an image resource from a sub-region of this image.
+     *
+     * @param topLeft the sub-image top left corner, in pixels
+     * @param size    the sub-image dimensions, in pixels
+     * @return the sub-image
+     */
+    public abstract ImageData getSubImageData(Vec2 topLeft, Vec2 size);
 
-    public BufferedImage getSubImage(Vec2 topLeft, Vec2 size) {
-        return image.getSubimage((int) topLeft.x, (int) topLeft.y, (int) size.x, (int) size.y);
-    }
-
-    @Override
-    public ImageData getSubImageData(Vec2 topLeft, Vec2 size) {
-        var filename = "%s Sub-Image (%s, %s)".formatted(getFilename(), topLeft, size);
-        return new ImageData(filename, getSubImage(topLeft, size));
-    }
+    // TODO Copy Methods
 
 }
