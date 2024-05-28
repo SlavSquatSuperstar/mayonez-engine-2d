@@ -4,6 +4,7 @@ import mayonez.graphics.*;
 import mayonez.math.*;
 import org.junit.jupiter.api.*;
 
+import static mayonez.assets.image.BaseImageData.*;
 import static mayonez.assets.image.ImageTestUtils.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -108,13 +109,6 @@ class ImageDataTest {
             return new ImageData(filename);
         } catch (Exception e) {
             return fail("Could not read image");
-        }
-    }
-
-    private static void testPixelColors(ImageData image, Color[] colors, Vec2[] coords, int alpha) {
-        for (int i = 0; i < colors.length; i++) {
-            var coord = coords[i];
-            assertColorsRoughlyEqual(new Color(colors[i], alpha), image.getPixelColor((int) coord.x, (int) coord.y));
         }
     }
 

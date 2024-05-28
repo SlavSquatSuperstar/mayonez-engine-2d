@@ -1,6 +1,7 @@
 package mayonez.assets.image;
 
 import mayonez.graphics.*;
+import mayonez.math.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -13,8 +14,6 @@ final class ImageTestUtils {
 
     // Numbers
     static final int IMAGE_LENGTH = 16;
-    static final int RGB_CHANNELS = 3;
-    static final int RGBA_CHANNELS = 4;
 
     // Filenames
     static final String TRANSPARENT_PNG = "testassets/images/squares-transparent.png";
@@ -22,6 +21,13 @@ final class ImageTestUtils {
     static final String OPAQUE_JPG = "testassets/images/squares-opaque.jpg";
 
     private ImageTestUtils() {}
+
+    static void testPixelColors(BaseImageData image, Color[] colors, Vec2[] coords, int alpha) {
+        for (int i = 0; i < colors.length; i++) {
+            var coord = coords[i];
+            assertColorsRoughlyEqual(new Color(colors[i], alpha), image.getPixelColor((int) coord.x, (int) coord.y));
+        }
+    }
 
     static void assertColorsRoughlyEqual(Color expected, Color actual) {
         assertEquals(expected.getRed(), actual.getRed(), 1);

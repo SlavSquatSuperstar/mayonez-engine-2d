@@ -1,7 +1,6 @@
 package mayonez.assets.image;
 
 import mayonez.*;
-import mayonez.assets.*;
 import mayonez.graphics.*;
 import mayonez.io.image.*;
 import mayonez.math.*;
@@ -18,12 +17,9 @@ import static org.lwjgl.system.MemoryUtil.memSlice;
  *
  * @author SlavSquatSuperstar
  */
-// TODO superclass
-public class STBImageData extends Asset {
+public class STBImageData extends BaseImageData {
 
     // Constants
-    private static final int RGB_CHANNELS = 3;
-    private static final int RGBA_CHANNELS = 4;
     private static final int SELECT_8_BYTES = 0xFF;
 
     // Fields
@@ -97,18 +93,22 @@ public class STBImageData extends Asset {
 
     // Image Getters
 
+    @Override
     public int getWidth() {
         return width;
     }
 
+    @Override
     public int getHeight() {
         return height;
     }
 
+    @Override
     public int getChannels() {
         return channels;
     }
 
+    @Override
     public boolean hasAlpha() {
         return alpha;
     }
@@ -123,6 +123,7 @@ public class STBImageData extends Asset {
 
     // Pixel Methods
 
+    @Override
     public Color getPixelColor(int x, int y) {
         var flippedY = (height - 1) - y;
         var index = (x + flippedY * width) * channels;
@@ -133,6 +134,7 @@ public class STBImageData extends Asset {
         return new Color(r, g, b, a);
     }
 
+    @Override
     public void setPixelColor(int x, int y, Color color) {
         var flippedY = (height - 1) - y;
         var index = (x + flippedY * width) * channels;

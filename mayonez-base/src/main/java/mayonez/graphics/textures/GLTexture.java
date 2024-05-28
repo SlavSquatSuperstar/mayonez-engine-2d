@@ -74,7 +74,7 @@ public sealed class GLTexture extends Texture permits GLSpriteSheetTexture {
             generateTexID();
             setTextureParameters();
             uploadImageToTexture(imageData);
-        } catch (TextureException | IOException e) {
+        } catch (IOException e) {
             Logger.error("Could not read image file %s", getFilename());
             Logger.printStackTrace(e);
             texID = GL_NONE;

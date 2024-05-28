@@ -1,6 +1,5 @@
 package mayonez.assets.image;
 
-import mayonez.assets.*;
 import mayonez.graphics.*;
 import mayonez.math.*;
 
@@ -14,7 +13,7 @@ import java.io.IOException;
  *
  * @author SlavSquatSuperstar
  */
-public class ImageData extends Asset {
+public class ImageData extends BaseImageData {
 
     private final BufferedImage image;
 
@@ -34,18 +33,22 @@ public class ImageData extends Asset {
 
     // Image Getters
 
+    @Override
     public int getWidth() {
         return image.getWidth();
     }
 
+    @Override
     public int getHeight() {
         return image.getHeight();
     }
 
+    @Override
     public int getChannels() {
         return image.getColorModel().getNumComponents();
     }
 
+    @Override
     public boolean hasAlpha() {
         return image.getColorModel().hasAlpha();
         // Can also check image.getAlphaRaster() != null
@@ -54,11 +57,11 @@ public class ImageData extends Asset {
 
     // BufferedImage Methods
 
-    // TODO make this private?
     public BufferedImage getImage() {
         return image;
     }
 
+    // TODO make return buffer
     public BufferedImage getSubImage(Vec2 topLeft, Vec2 size) {
         return image.getSubimage((int) topLeft.x, (int) topLeft.y, (int) size.x, (int) size.y);
     }
@@ -75,28 +78,12 @@ public class ImageData extends Asset {
         }
     }
 
-    /**
-     * Get the pixel's RBG color on this sprite's stored texture at the
-     * specific coordinates.  If the image format supports transparency,
-     * then the alpha value will also be returned.
-     *
-     * @param x the pixel x's coordinate, from the top left, in pixels
-     * @param y the pixel's y coordinate, from the top left, in pixels
-     * @return the pixel color
-     */
+    @Override
     public Color getPixelColor(int x, int y) {
         return new Color(image.getRGB(x, y));
     }
 
-    /**
-     * Set the pixel's RBG color on this sprite's stored texture at the
-     * specific coordinates. If the image format supports transparency,
-     * then the alpha value will also be set.
-     *
-     * @param x the pixel x's coordinate, from the top left, in pixels
-     * @param y the pixel's y coordinate, from the top left, in pixels
-     * @param color the pixel color to set
-     */
+    @Override
     public void setPixelColor(int x, int y, Color color) {
         image.setRGB(x, y, color.getRGBAValue());
         // AWT already restricts setting alpha for non-transparent images
@@ -111,7 +98,5 @@ public class ImageData extends Asset {
     public void setPixels(int[] pixels) {
         image.setRGB(0, 0, getWidth(), getHeight(), pixels, 0, getWidth());
     }
-
-    // TODO copy methods
 
 }
