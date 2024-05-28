@@ -43,41 +43,51 @@ public abstract sealed class SpriteSheet permits JSpriteSheet, GLSpriteSheet {
      */
     public abstract Vec2 getSheetSize();
 
-    // Sprite/Texture Getters
-
-    /**
-     * Get the first image from this sprite sheet as a {@link mayonez.graphics.sprites.Sprite}.
-     *
-     * @param index the image index, from 0 to size()-1
-     * @return the sprite
-     */
-    public abstract Sprite getSprite(int index);
-
-    /**
-     * Get the first image from this sprite sheet as a {@link mayonez.graphics.textures.Texture}.
-     *
-     * @param index the image index, from 0 to size()-1
-     * @return the texture
-     */
-    public abstract Texture getTexture(int index);
-
     /**
      * Get the number of sprites/textures in this sprite sheet.
      *
      * @return the sheet size
      */
-    public abstract int size();
+    public abstract int numSprites();
 
+    // Sprite/Texture Getters
+
+    /**
+     * Get the image at the given index from this sprite sheet as a {@link mayonez.graphics.sprites.Sprite}.
+     *
+     * @param index the image index, from 0 to numSprites - 1
+     * @return the sprite
+     */
+    public abstract Sprite getSprite(int index);
+
+    /**
+     * Get all the sprites in this spritesheet as an array.
+     *
+     * @return the sprite array
+     */
     public Sprite[] getSprites() {
-        var sprites = new Sprite[size()];
+        var sprites = new Sprite[numSprites()];
         for (var i = 0; i < sprites.length; i++) {
             sprites[i] = getSprite(i);
         }
         return sprites;
     }
 
+    /**
+     * Get the image at the given index from this sprite sheet as a {@link mayonez.graphics.textures.Texture}.
+     *
+     * @param index the image index, from 0 to numSprites - 1
+     * @return the texture
+     */
+    public abstract Texture getTexture(int index);
+
+    /**
+     * Get all the textures in this spritesheet as an array.
+     *
+     * @return the texture array
+     */
     public Texture[] getTextures() {
-        var textures = new Texture[size()];
+        var textures = new Texture[numSprites()];
         for (var i = 0; i < textures.length; i++) {
             textures[i] = getTexture(i);
         }

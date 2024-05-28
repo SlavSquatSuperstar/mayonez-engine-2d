@@ -2,7 +2,7 @@ package mayonez.graphics.textures;
 
 import mayonez.graphics.*;
 import mayonez.math.*;
-import org.jetbrains.annotations.NotNull;
+import mayonez.math.shapes.*;
 
 /**
  * A GL texture created from a sprite sheet that represents a portion of another
@@ -14,7 +14,6 @@ import org.jetbrains.annotations.NotNull;
 public final class GLSpriteSheetTexture extends GLTexture {
 
     private final GLTexture parentTexture;
-    private final int spriteSheetIndex;
     private final int width, height;
 
     /**
@@ -22,16 +21,15 @@ public final class GLSpriteSheetTexture extends GLTexture {
      *
      * @param parentTexture    another texture
      * @param spriteSheetIndex the index of this texture on the atlas
-     * @param texCoords        the image coordinates, between 0-1
+     * @param spritePos        the bottom left corner of the sprite
+     * @param spriteSize       the dimensions of the sprite
      */
-    public GLSpriteSheetTexture(GLTexture parentTexture, int spriteSheetIndex, Vec2[] texCoords) {
-        super(parentTexture.getFilename(), texCoords);
+    public GLSpriteSheetTexture(GLTexture parentTexture, int spriteSheetIndex, Vec2 spritePos, Vec2 spriteSize) {
+        super(getSubSpriteFilename(parentTexture.getFilename(), spriteSheetIndex),
+                getSubImageCoords(parentTexture, spritePos, spriteSize));
         this.parentTexture = parentTexture;
-        this.spriteSheetIndex = spriteSheetIndex;
-
-        var size = texCoords[2].sub(texCoords[0]); // relative size
-        this.width = (int) (parentTexture.getWidth() * size.x); // get new image size
-        this.height = (int) (parentTexture.getHeight() * size.y);
+        this.width = (int) spriteSize.x; // get new image size in px
+        this.height = (int) spriteSize.y; // get new image size in px
     }
 
     // Asset Methods
@@ -69,10 +67,19 @@ public final class GLSpriteSheetTexture extends GLTexture {
         return parentTexture.getTexID();
     }
 
-    @NotNull
-    @Override
-    public String toString() {
-        return "%s (Sprite %d)".formatted(super.toString(), spriteSheetIndex);
+    // Helper Methods
+
+    private static String getSubSpriteFilename(String parentFilename, int spriteSheetIndex) {
+        return "%s (Sprite %d)".formatted(parentFilename, spriteSheetIndex);
+    }
+
+    private static Vec2[] getSubImageCoords(GLTexture sheetTexture, Vec2 spriteBottomLeft, Vec2 spriteSize) {
+        // Normalize image coordinates to between 0-1
+        var texSize = sheetTexture.getSize();
+        var subImgMin = spriteBottomLeft.div(texSize);
+        var subImgMax = spriteBottomLeft.add(spriteSize).div(texSize);
+        var subImgSize = subImgMax.sub(subImgMin);
+        return Rectangle.rectangleVertices(subImgMin.midpoint(subImgMax), subImgSize, 0);
     }
 
 }

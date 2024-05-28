@@ -15,21 +15,21 @@ import java.util.*;
 public final class JSpriteSheet extends SpriteSheet {
 
     private final JTexture sheetTexture;
-    private final List<JTexture> textures; // store images in memory
     private final Vec2 spriteSize;
+    private final List<JTexture> textures; // store images in memory
 
     /**
-     * Creates a sprite sheet from the given image file.
+     * Creates a sprite sheet from the given texture.
      *
-     * @param filename   the name of the parent texture
-     * @param spriteSize the dimensions of each sprite, in pixels
-     * @param numSprites how many sprites to create
-     * @param spacing    the padding in between sprites
+     * @param sheetTexture the parent texture
+     * @param spriteSize   the dimensions of each sprite, in pixels
+     * @param numSprites   how many sprites to create
+     * @param spacing      the padding between sprites, in pixels
      */
-    JSpriteSheet(String filename, Vec2 spriteSize, int numSprites, int spacing) {
-        sheetTexture = Textures.getJTexture(filename);
-        textures = new ArrayList<>();
+    JSpriteSheet(JTexture sheetTexture, Vec2 spriteSize, int numSprites, int spacing) {
+        this.sheetTexture = sheetTexture;
         this.spriteSize = spriteSize;
+        textures = new ArrayList<>(numSprites);
         createSprites(numSprites, spacing);
     }
 
@@ -41,31 +41,34 @@ public final class JSpriteSheet extends SpriteSheet {
         var spriteTopLeft = new Vec2(0, 0);
 
         // Read sprites from top left of sheet
-        for (var spriteCount = 0; spriteCount < numSprites; spriteCount++) {
+        for (var i = 0; i < numSprites; i++) {
             // Add current sprite
-            textures.add(new JSpriteSheetTexture(sheetTexture, spriteCount, spriteTopLeft, spriteSize));
+            textures.add(new JSpriteSheetTexture(sheetTexture, i, spriteTopLeft, spriteSize));
             moveToNextSprite(spriteTopLeft, spacing);
         }
     }
 
     @Override
     protected void moveToNextSprite(Vec2 imgOrigin, int spacing) {
-        var sheetSize = getSheetSize();
-
         // Origin at top left
         imgOrigin.x += spriteSize.x + spacing;
-        if (imgOrigin.x >= sheetSize.x) {
+        if (imgOrigin.x >= getSheetSize().x) {
             // If at end of row, go to next row
             imgOrigin.x = 0;
             imgOrigin.y += spriteSize.y + spacing;
         }
     }
 
-    // Getters
+    // Sheet Getters
 
     @Override
     public Vec2 getSheetSize() {
         return sheetTexture.getSize();
+    }
+
+    @Override
+    public int numSprites() {
+        return textures.size();
     }
 
     @Override
@@ -76,11 +79,6 @@ public final class JSpriteSheet extends SpriteSheet {
     @Override
     public JTexture getTexture(int index) {
         return textures.get(index);
-    }
-
-    @Override
-    public int size() {
-        return textures.size();
     }
 
 }

@@ -47,10 +47,7 @@ public abstract class TextObject extends GameObject {
         for (int i = 0; i < line.length(); i++) {
             var charCode = line.charAt(i);
             var glyph = font.getGlyph(charCode);
-            if (glyph == null) {
-                System.out.printf("char '%c' (%d) skipped\n", charCode, (int) charCode);
-                continue;
-            }
+            if (glyph == null) continue;
 
             // Add the character glyph
             var charSprite = createTextSprite(glyph, color, fontSize, lastCharPos);
@@ -58,7 +55,6 @@ public abstract class TextObject extends GameObject {
 
             // Move to the next character's position
             var charOffset = getCharOffset(metadata, glyph);
-            System.out.printf("char '%c' (%d) offset = %.2f\n", charCode, (int) charCode, charOffset);
             lastCharPos = lastCharPos.add(new Vec2(charOffset, 0));
         }
     }

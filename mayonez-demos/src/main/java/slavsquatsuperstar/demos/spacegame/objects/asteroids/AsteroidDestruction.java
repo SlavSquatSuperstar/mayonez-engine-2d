@@ -53,8 +53,8 @@ public class AsteroidDestruction extends Damageable {
         var offsetAngle = transform.getRotation();
 
         for (var i = 0; i < fragmentCount; i++) {
-            offsetAngle += AsteroidProperties.getRandomError(angle, 0.3f);
-            var impulse = Random.randomFloat(fragmentRadius * 4f, fragmentRadius * 8f);
+            offsetAngle += AsteroidProperties.getRandomError(angle, 0.5f);
+            var impulse = Random.randomFloat(fragmentRadius * 3f, fragmentRadius * 6f);
             getScene().addObject(new AsteroidFragment(
                     "Asteroid Fragment",
                     transform.getPosition(),

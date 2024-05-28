@@ -72,11 +72,11 @@ public final class Sprites {
     ) {
         if (Mayonez.getUseGL()) {
             return new GLSpriteSheet(
-                    filename, new Vec2(spriteWidth, spriteHeight), numSprites, spacing
+                    Textures.getGLTexture(filename), new Vec2(spriteWidth, spriteHeight), numSprites, spacing
             );
         } else {
             return new JSpriteSheet(
-                    filename, new Vec2(spriteWidth, spriteHeight), numSprites, spacing
+                    Textures.getJTexture(filename), new Vec2(spriteWidth, spriteHeight), numSprites, spacing
             );
         }
     }
