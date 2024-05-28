@@ -76,20 +76,30 @@ public class ImageData extends Asset {
     }
 
     /**
-     * Get the pixel's RBGA color on this sprite's stored texture at the
-     * specific coordinates.
+     * Get the pixel's RBG color on this sprite's stored texture at the
+     * specific coordinates.  If the image format supports transparency,
+     * then the alpha value will also be returned.
+     *
+     * @param x the pixel x's coordinate, from the top left, in pixels
+     * @param y the pixel's y coordinate, from the top left, in pixels
+     * @return the pixel color
      */
     public Color getPixelColor(int x, int y) {
         return new Color(image.getRGB(x, y));
     }
 
     /**
-     * Set the pixel's RBGA color on this sprite's stored texture at the
-     * specific coordinates.
+     * Set the pixel's RBG color on this sprite's stored texture at the
+     * specific coordinates. If the image format supports transparency,
+     * then the alpha value will also be set.
+     *
+     * @param x the pixel x's coordinate, from the top left, in pixels
+     * @param y the pixel's y coordinate, from the top left, in pixels
+     * @param color the pixel color to set
      */
     public void setPixelColor(int x, int y, Color color) {
         image.setRGB(x, y, color.getRGBAValue());
-        // TODO restrict opaque images from setting alpha?
+        // AWT already restricts setting alpha for non-transparent images
     }
 
     public int[] getPixels() {

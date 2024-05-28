@@ -41,7 +41,7 @@ public class DespawnAsteroid extends DestroyAfterDuration {
 
         if (sprite != null) {
             // Fade the fragment until it disappears
-            sprite.setColor(new Color(color.getRed(), color.getGreen(), color.getBlue(), (int) (255 * lifetimeRemaining)));
+            sprite.setColor(new Color(color, (int) (255 * lifetimeRemaining)));
         }
     }
 

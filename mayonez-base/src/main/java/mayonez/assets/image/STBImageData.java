@@ -4,6 +4,7 @@ import mayonez.*;
 import mayonez.assets.*;
 import mayonez.graphics.*;
 import mayonez.io.image.*;
+import mayonez.math.*;
 import org.lwjgl.BufferUtils;
 
 import java.io.IOException;
@@ -123,20 +124,22 @@ public class STBImageData extends Asset {
     // Pixel Methods
 
     public Color getPixelColor(int x, int y) {
-        var index = (x + y * width) * channels;
+        var flippedY = (height - 1) - y;
+        var index = (x + flippedY * width) * channels;
         int r = buffer.get(index) & SELECT_8_BYTES;
         int g = buffer.get(index + 1) & SELECT_8_BYTES;
         int b = buffer.get(index + 2) & SELECT_8_BYTES;
-        int a = buffer.get(index + 3) & SELECT_8_BYTES;
+        int a = alpha ? buffer.get(index + 3) & SELECT_8_BYTES : 255;
         return new Color(r, g, b, a);
     }
 
     public void setPixelColor(int x, int y, Color color) {
-        var index = (x + y * width) * channels;
+        var flippedY = (height - 1) - y;
+        var index = (x + flippedY * width) * channels;
         buffer.put(index, (byte) color.getRed());
         buffer.put(index + 1, (byte) color.getRed());
         buffer.put(index + 2, (byte) color.getBlue());
-        buffer.put(index + 3, (byte) color.getAlpha());
+        if (alpha) buffer.put(index + 3, (byte) color.getAlpha());
     }
 
 }

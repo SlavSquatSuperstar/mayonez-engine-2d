@@ -10,7 +10,7 @@ import java.util.*
  * @constructor Construct a color from red, green, blue, and alpha values
  *     between 0-255.
  */
-class Color(red: Int, green: Int, blue: Int, alpha: Int) {
+class Color constructor(red: Int, green: Int, blue: Int, alpha: Int) {
 
     // Constructors
 
@@ -19,6 +19,12 @@ class Color(red: Int, green: Int, blue: Int, alpha: Int) {
      * alpha set to 255.
      */
     constructor(red: Int, green: Int, blue: Int) : this(red, green, blue, MAX_COMPONENT_VALUE)
+
+    /**
+     * Construct a color with the same red, green, and blue values as another,
+     * with an alpha value between 0-255.
+     */
+    constructor(color: MColor, alpha: Int) : this(color.red, color.green, color.blue, alpha)
 
     /**
      * Construct a color from a single combined RGBA value, between 0 - 2^32-1.

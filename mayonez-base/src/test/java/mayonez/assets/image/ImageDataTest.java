@@ -1,9 +1,10 @@
 package mayonez.assets.image;
 
 import mayonez.graphics.*;
+import mayonez.math.*;
 import org.junit.jupiter.api.*;
 
-import static mayonez.assets.image.ImageTestConstants.*;
+import static mayonez.assets.image.ImageTestUtils.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -12,6 +13,23 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author SlavSquatSuperstar
  */
 class ImageDataTest {
+
+    private static Color[] TEST_COLORS;
+    private static Vec2[] TEST_COORDS;
+
+    @BeforeAll
+    static void setup() {
+        TEST_COLORS = new Color[]{
+                new Color(255, 0, 0), new Color(0, 255, 0),
+                new Color(0, 0, 255), Color.grayscale(255)
+        };
+        TEST_COORDS = new Vec2[]{
+                new Vec2(0, 0), new Vec2(IMAGE_LENGTH - 1, 0),
+                new Vec2(0, IMAGE_LENGTH - 1), new Vec2(IMAGE_LENGTH - 1, IMAGE_LENGTH - 1)
+        };
+    }
+
+    // Has Alpha
 
     @Test
     void transparentPngHasAlpha() {
@@ -40,32 +58,63 @@ class ImageDataTest {
         assertFalse(image.hasAlpha());
     }
 
+    // Get Pixel
+
     @Test
-    void transparentPngGetPixelsCorrect() {
+    void transparentPngGetPixelCorrect() {
         var image = getImage(TRANSPARENT_PNG);
-        assertEquals(new Color(255, 0, 0, 128),
-                image.getPixelColor(0, 0));
+        testPixelColors(image, TEST_COLORS, TEST_COORDS, 128);
     }
 
     @Test
-    void opaquePngGetPixelsCorrect() {
+    void opaquePngGetPixelCorrect() {
         var image = getImage(OPAQUE_PNG);
-        assertEquals(new Color(255, 0, 0, 255),
-                image.getPixelColor(0, 0));
+        testPixelColors(image, TEST_COLORS, TEST_COORDS, 255);
     }
 
     @Test
-    void opaqueJpgGetPixelsCorrect() {
+    void opaqueJpgGetPixelCorrect() {
         var image = getImage(OPAQUE_JPG);
-        assertEquals(new Color(254, 0, 0, 255),
-                image.getPixelColor(0, 0));
+        testPixelColors(image, TEST_COLORS, TEST_COORDS, 255);
     }
+
+    // Set Pixel
+
+    @Test
+    void transparentPngCanSetPixelAlpha() {
+        var image = getImage(TRANSPARENT_PNG);
+        image.setPixelColor(0, 0, Color.grayscale(0, 128));
+        assertColorsRoughlyEqual(Color.grayscale(0, 128), image.getPixelColor(0, 0));
+    }
+
+    @Test
+    void opaquePngCannotSetPixelAlpha() {
+        var image = getImage(OPAQUE_PNG);
+        image.setPixelColor(0, 0, Color.grayscale(0, 128));
+        assertColorsRoughlyEqual(Colors.BLACK, image.getPixelColor(0, 0));
+    }
+
+    @Test
+    void opaqueJpgCannotSetPixelAlpha() {
+        var image = getImage(OPAQUE_JPG);
+        image.setPixelColor(0, 0, Color.grayscale(0, 128));
+        assertColorsRoughlyEqual(Colors.BLACK, image.getPixelColor(0, 0));
+    }
+
+    // Helper Methods
 
     private static ImageData getImage(String filename) {
         try {
             return new ImageData(filename);
         } catch (Exception e) {
             return fail("Could not read image");
+        }
+    }
+
+    private static void testPixelColors(ImageData image, Color[] colors, Vec2[] coords, int alpha) {
+        for (int i = 0; i < colors.length; i++) {
+            var coord = coords[i];
+            assertColorsRoughlyEqual(new Color(colors[i], alpha), image.getPixelColor((int) coord.x, (int) coord.y));
         }
     }
 
