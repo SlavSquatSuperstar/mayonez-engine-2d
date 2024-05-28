@@ -2,6 +2,7 @@ package mayonez.assets.image;
 
 import mayonez.*;
 import mayonez.assets.*;
+import mayonez.graphics.*;
 import mayonez.io.image.*;
 import org.lwjgl.BufferUtils;
 
@@ -16,15 +17,17 @@ import static org.lwjgl.system.MemoryUtil.memSlice;
  *
  * @author SlavSquatSuperstar
  */
+// TODO superclass
 public class STBImageData extends Asset {
 
     // Constants
     private static final int RGB_CHANNELS = 3;
     private static final int RGBA_CHANNELS = 4;
+    private static final int SELECT_8_BYTES = 0xFF;
 
     // Fields
     private final ByteBuffer buffer;
-    private int width, height;
+    private int width, height, channels;
     private boolean alpha, imageFreed;
 
     public STBImageData(String filename) throws IOException {
@@ -68,7 +71,7 @@ public class STBImageData extends Asset {
         height = heightBuff.get(0);
 
         // Set image alpha
-        var channels = channelsBuff.get(0);
+        channels = channelsBuff.get(0);
         switch (channels) {
             case RGB_CHANNELS -> alpha = false;
             case RGBA_CHANNELS -> alpha = true;
@@ -86,11 +89,12 @@ public class STBImageData extends Asset {
         }
     }
 
-    // Image Getters
-
-    public ByteBuffer getBuffer() {
-        return buffer;
+    @Override
+    public void free() {
+        freeImage();
     }
+
+    // Image Getters
 
     public int getWidth() {
         return width;
@@ -100,10 +104,39 @@ public class STBImageData extends Asset {
         return height;
     }
 
+    public int getChannels() {
+        return channels;
+    }
+
     public boolean hasAlpha() {
         return alpha;
     }
 
-    // TODO Pixel Methods
+    // ByteBuffer Methods
+
+    public ByteBuffer getBuffer() {
+        return buffer;
+    }
+
+    // TODO get sub image
+
+    // Pixel Methods
+
+    public Color getPixelColor(int x, int y) {
+        var index = (x + y * width) * channels;
+        int r = buffer.get(index) & SELECT_8_BYTES;
+        int g = buffer.get(index + 1) & SELECT_8_BYTES;
+        int b = buffer.get(index + 2) & SELECT_8_BYTES;
+        int a = buffer.get(index + 3) & SELECT_8_BYTES;
+        return new Color(r, g, b, a);
+    }
+
+    public void setPixelColor(int x, int y, Color color) {
+        var index = (x + y * width) * channels;
+        buffer.put(index, (byte) color.getRed());
+        buffer.put(index + 1, (byte) color.getRed());
+        buffer.put(index + 2, (byte) color.getBlue());
+        buffer.put(index + 3, (byte) color.getAlpha());
+    }
 
 }

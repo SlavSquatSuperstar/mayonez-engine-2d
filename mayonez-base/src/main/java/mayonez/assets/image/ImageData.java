@@ -17,7 +17,6 @@ import java.io.IOException;
 public class ImageData extends Asset {
 
     private final BufferedImage image;
-    private final boolean alpha;
 
     public ImageData(String filename) throws IOException {
         super(filename);
@@ -26,26 +25,11 @@ public class ImageData extends Asset {
         } catch (IOException e) {
             throw new IOException("Error reading buffered image");
         }
-        alpha = image.getColorModel().hasAlpha();
-        // Can also check image.getAlphaRaster() != null
-        // Or image.getColorModel().getTransparency() == Transparency.TRANSLUCENT
     }
 
     public ImageData(String filename, BufferedImage image) {
         super(filename);
         this.image = image;
-        alpha = image.getColorModel().hasAlpha();
-    }
-
-    // BufferedImage Methods
-
-    // TODO make this private?
-    public BufferedImage getImage() {
-        return image;
-    }
-
-    public BufferedImage getSubImage(Vec2 topLeft, Vec2 size) {
-        return image.getSubimage((int) topLeft.x, (int) topLeft.y, (int) size.x, (int) size.y);
     }
 
     // Image Getters
@@ -58,8 +42,25 @@ public class ImageData extends Asset {
         return image.getHeight();
     }
 
+    public int getChannels() {
+        return image.getColorModel().getNumComponents();
+    }
+
     public boolean hasAlpha() {
-        return alpha;
+        return image.getColorModel().hasAlpha();
+        // Can also check image.getAlphaRaster() != null
+        // Or image.getColorModel().getTransparency() == Transparency.TRANSLUCENT
+    }
+
+    // BufferedImage Methods
+
+    // TODO make this private?
+    public BufferedImage getImage() {
+        return image;
+    }
+
+    public BufferedImage getSubImage(Vec2 topLeft, Vec2 size) {
+        return image.getSubimage((int) topLeft.x, (int) topLeft.y, (int) size.x, (int) size.y);
     }
 
     // Pixel Methods

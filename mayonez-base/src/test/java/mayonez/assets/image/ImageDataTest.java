@@ -1,7 +1,9 @@
 package mayonez.assets.image;
 
+import mayonez.graphics.*;
 import org.junit.jupiter.api.*;
 
+import static mayonez.assets.image.ImageTestConstants.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -11,44 +13,59 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class ImageDataTest {
 
-    private static final int IMAGE_LENGTH = 32;
-
     @Test
     void transparentPngHasAlpha() {
-        var filename = "testassets/images/spaceship-transparent.png";
-        try {
-            var image = new ImageData(filename);
-            assertEquals(IMAGE_LENGTH, image.getWidth());
-            assertEquals(IMAGE_LENGTH, image.getHeight());
-            assertTrue(image.hasAlpha());
-        } catch (Exception e) {
-            fail();
-        }
+        var image = getImage(TRANSPARENT_PNG);
+        assertEquals(IMAGE_LENGTH, image.getWidth());
+        assertEquals(IMAGE_LENGTH, image.getHeight());
+        assertEquals(RGBA_CHANNELS, image.getChannels());
+        assertTrue(image.hasAlpha());
     }
 
     @Test
     void opaquePngHasNoAlpha() {
-        var filename = "testassets/images/spaceship-opaque.png";
-        try {
-            var image = new ImageData(filename);
-            assertEquals(IMAGE_LENGTH, image.getWidth());
-            assertEquals(IMAGE_LENGTH, image.getHeight());
-            assertFalse(image.hasAlpha());
-        } catch (Exception e) {
-            fail();
-        }
+        var image = getImage(OPAQUE_PNG);
+        assertEquals(IMAGE_LENGTH, image.getWidth());
+        assertEquals(IMAGE_LENGTH, image.getHeight());
+        assertEquals(RGB_CHANNELS, image.getChannels());
+        assertFalse(image.hasAlpha());
     }
 
     @Test
     void opaqueJpgHasNoAlpha() {
-        var filename = "testassets/images/spaceship-opaque.jpg";
+        var image = getImage(OPAQUE_JPG);
+        assertEquals(IMAGE_LENGTH, image.getWidth());
+        assertEquals(IMAGE_LENGTH, image.getHeight());
+        assertEquals(RGB_CHANNELS, image.getChannels());
+        assertFalse(image.hasAlpha());
+    }
+
+    @Test
+    void transparentPngGetPixelsCorrect() {
+        var image = getImage(TRANSPARENT_PNG);
+        assertEquals(new Color(255, 0, 0, 128),
+                image.getPixelColor(0, 0));
+    }
+
+    @Test
+    void opaquePngGetPixelsCorrect() {
+        var image = getImage(OPAQUE_PNG);
+        assertEquals(new Color(255, 0, 0, 255),
+                image.getPixelColor(0, 0));
+    }
+
+    @Test
+    void opaqueJpgGetPixelsCorrect() {
+        var image = getImage(OPAQUE_JPG);
+        assertEquals(new Color(254, 0, 0, 255),
+                image.getPixelColor(0, 0));
+    }
+
+    private static ImageData getImage(String filename) {
         try {
-            var image = new ImageData(filename);
-            assertEquals(IMAGE_LENGTH, image.getWidth());
-            assertEquals(IMAGE_LENGTH, image.getHeight());
-            assertFalse(image.hasAlpha());
+            return new ImageData(filename);
         } catch (Exception e) {
-            fail();
+            return fail("Could not read image");
         }
     }
 

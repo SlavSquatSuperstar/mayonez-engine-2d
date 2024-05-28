@@ -5,8 +5,10 @@ import mayonez.assets.image.*;
 import mayonez.graphics.*;
 import mayonez.math.*;
 import mayonez.math.shapes.*;
+import org.lwjgl.BufferUtils;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL12.GL_TEXTURE_WRAP_R;
@@ -34,7 +36,6 @@ public sealed class GLTexture extends Texture permits GLSpriteSheetTexture {
 
     // Image Data Fields
     private STBImageData imageData;
-    private boolean imageFreed;
 
     // GPU Fields
     private int texID;
@@ -59,7 +60,6 @@ public sealed class GLTexture extends Texture permits GLSpriteSheetTexture {
     protected GLTexture(String filename, Vec2[] texCoords) {
         super(filename);
         this.texCoords = texCoords;
-        imageFreed = false;
     }
 
     // Read Image Methods
@@ -98,10 +98,19 @@ public sealed class GLTexture extends Texture permits GLSpriteSheetTexture {
 
     private void uploadImageToTexture(STBImageData imageData) {
         int format = imageData.hasAlpha() ? GL_RGBA : GL_RGB;
-        glTexImage2D(GL_TEXTURE_2D, 0, format, imageData.getWidth(), imageData.getHeight(), 0, format, GL_UNSIGNED_BYTE, imageData.getBuffer());
+        glTexImage2D(GL_TEXTURE_2D, 0, format, getWidth(), getHeight(),
+                0, format, GL_UNSIGNED_BYTE, imageData.getBuffer());
         imageData.freeImage();
     }
 
+    private ByteBuffer getImageFromTexture() {
+        glBindTexture(GL_TEXTURE_2D, texID);
+        var buffer = BufferUtils.createByteBuffer(getWidth() * getHeight() * imageData.getChannels());
+        glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
+        return buffer;
+        // TODO make image data
+        // TODO convert AWT and STB
+    }
 
     // Asset Methods
 
