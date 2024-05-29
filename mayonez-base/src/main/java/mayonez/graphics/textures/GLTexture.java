@@ -110,11 +110,12 @@ public sealed class GLTexture extends Texture permits GLSpriteSheetTexture {
         imageData.freeImage();
     }
 
-    private STBImageData getImageFromTexture() {
+    // TODO can't test without initializing GL
+    public STBImageData getImageFromTexture() {
         // Save texture into buffer
         glBindTexture(GL_TEXTURE_2D, texID);
         var buffer = BufferUtils.createByteBuffer(getWidth() * getHeight() * imageData.getChannels());
-        glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
+        glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer); // TODO check rgba or rgb
         try {
             // Create image data
             // Set dimensions in case we have tex coords
