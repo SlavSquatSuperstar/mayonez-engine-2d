@@ -1,6 +1,6 @@
 package mayonez.graphics.font;
 
-import mayonez.graphics.sprites.*;
+import mayonez.graphics.textures.*;
 import mayonez.math.*;
 
 /**
@@ -10,13 +10,13 @@ import mayonez.math.*;
  */
 public class Font {
 
-    private final GLSpriteSheet fontSpriteSheet;
+    private final GLTexture fontTexture;
     private final FontMetadata metadata;
-    private final int[] widths;
+    private int[] widths;
     private final Glyph[] glyphs;
 
-    public Font(GLSpriteSheet fontSpriteSheet, FontMetadata metadata, int[] widths) {
-        this.fontSpriteSheet = fontSpriteSheet;
+    public Font(GLTexture fontTexture, FontMetadata metadata, int[] widths) {
+        this.fontTexture = fontTexture;
         this.metadata = metadata;
         this.widths = widths;
         glyphs = createGlyphs();
@@ -24,13 +24,27 @@ public class Font {
 
     private Glyph[] createGlyphs() {
         var glyphs = new Glyph[metadata.numCharacters()];
-        var sheetSize = fontSpriteSheet.getSheetSize();
+        var texSize = fontTexture.getSize();
+        var glyphSize = metadata.glyphHeight();
 
+        // GL uses bottom left as image origin
+        var texTopLeft = new Vec2(0, texSize.y);
+        var glyphBottomLeft = texTopLeft.sub(new Vec2(0, glyphSize));
+
+        // Create glyph textures
         for (int i = 0; i < glyphs.length; i++) {
-            var tex = fontSpriteSheet.getTexture(i);
-            if (tex == null) continue;
-            var coords = tex.getTexCoords();
-            glyphs[i] = new Glyph(widths[i], metadata.glyphHeight(), tex, coords);
+            // TODO auto set width by counting pixels
+            var glyphTex = new GLSpriteSheetTexture(fontTexture, i, glyphBottomLeft, new Vec2(glyphSize));
+            glyphs[i] = new Glyph(widths[i], metadata.glyphHeight(), glyphTex);
+
+            // Move to next glyph
+            // Origin at bottom left
+            glyphBottomLeft.x += glyphSize;
+            if (glyphBottomLeft.x >= fontTexture.getWidth()) {
+                // If at end of row, go to next row
+                glyphBottomLeft.x = 0;
+                glyphBottomLeft.y -= glyphSize;
+            }
         }
         return glyphs;
     }

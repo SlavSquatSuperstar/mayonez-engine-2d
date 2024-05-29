@@ -8,7 +8,6 @@ import mayonez.math.shapes.*;
 import org.lwjgl.BufferUtils;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL12.GL_TEXTURE_WRAP_R;
@@ -34,10 +33,8 @@ public sealed class GLTexture extends Texture permits GLSpriteSheetTexture {
     public static final Vec2[] DEFAULT_TEX_COORDS
             = Rectangle.rectangleVertices(new Vec2(0.5f), new Vec2(1f), 0f);
 
-    // Image Data Fields
-    private STBImageData imageData;
-
-    // GPU Fields
+    // Image Fields
+    private final STBImageData imageData;
     private int texID;
     private final Vec2[] texCoords;
 
@@ -47,8 +44,10 @@ public sealed class GLTexture extends Texture permits GLSpriteSheetTexture {
      * @param filename the file location
      */
     public GLTexture(String filename) {
-        this(filename, DEFAULT_TEX_COORDS);
-        readImage();
+        super(filename);
+        texCoords = DEFAULT_TEX_COORDS;
+        imageData = readImage();
+        createTexture();
     }
 
     /**
@@ -57,33 +56,38 @@ public sealed class GLTexture extends Texture permits GLSpriteSheetTexture {
      * @param filename  the file location
      * @param texCoords the sub-image coordinates
      */
-    protected GLTexture(String filename, Vec2[] texCoords) {
+    protected GLTexture(String filename, GLTexture texture, Vec2[] texCoords) {
         super(filename);
+        this.imageData = texture.imageData; // todo crop image data
+        this.texID = texture.texID;
         this.texCoords = texCoords;
     }
 
     // Read Image Methods
 
     @Override
-    protected void readImage() {
+    protected STBImageData readImage() {
         try {
             // Read image from file
-            imageData = new STBImageData(getFilename());
-
-            // Create texture on GPU
-            generateTexID();
-            setTextureParameters();
-            uploadImageToTexture(imageData);
+            var imageData = new STBImageData(getFilename());;
+            Logger.debug("Loaded image %s", getFilename());
+            return imageData;
         } catch (IOException e) {
             Logger.error("Could not read image file %s", getFilename());
             Logger.printStackTrace(e);
-            texID = GL_NONE;
+            return null;
         }
     }
 
-    private void generateTexID() {
-        texID = glGenTextures();
-        glBindTexture(GL_TEXTURE_2D, texID);
+    private void createTexture() {
+        // Create Texture on GPU
+        if (imageData != null) {
+            texID = glGenTextures();
+            glBindTexture(GL_TEXTURE_2D, texID);
+            uploadImageToTexture(imageData, texID);
+        } else {
+            texID = GL_NONE;
+        }
     }
 
     private static void setTextureParameters() {
@@ -96,20 +100,29 @@ public sealed class GLTexture extends Texture permits GLSpriteSheetTexture {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     }
 
-    private void uploadImageToTexture(STBImageData imageData) {
+    private static void uploadImageToTexture(STBImageData imageData, int texID) {
+        setTextureParameters();
+        glBindTexture(GL_TEXTURE_2D, texID);
+
         int format = imageData.hasAlpha() ? GL_RGBA : GL_RGB;
-        glTexImage2D(GL_TEXTURE_2D, 0, format, getWidth(), getHeight(),
+        glTexImage2D(GL_TEXTURE_2D, 0, format, imageData.getWidth(), imageData.getHeight(),
                 0, format, GL_UNSIGNED_BYTE, imageData.getBuffer());
         imageData.freeImage();
     }
 
-    private ByteBuffer getImageFromTexture() {
+    private STBImageData getImageFromTexture() {
+        // Save texture into buffer
         glBindTexture(GL_TEXTURE_2D, texID);
         var buffer = BufferUtils.createByteBuffer(getWidth() * getHeight() * imageData.getChannels());
         glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
-        return buffer;
-        // TODO construct image data
-        // TODO convert AWT and STB
+        try {
+            // Create image data
+            // Set dimensions in case we have tex coords
+            return new STBImageData(getFilename(), buffer, getWidth(), getHeight());
+        } catch (IOException e) {
+            Logger.error("Could get image data from texture %s", toString());
+            return null;
+        }
     }
 
     // Asset Methods
@@ -117,9 +130,15 @@ public sealed class GLTexture extends Texture permits GLSpriteSheetTexture {
     @Override
     public void free() {
         glDeleteTextures(texID);
+        texID = GL_NONE;
     }
 
     // Image Getters
+
+    @Override
+    public STBImageData getImageData() {
+        return imageData;
+    }
 
     @Override
     public int getWidth() {

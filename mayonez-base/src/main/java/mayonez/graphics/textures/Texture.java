@@ -1,6 +1,7 @@
 package mayonez.graphics.textures;
 
 import mayonez.assets.*;
+import mayonez.assets.image.*;
 import mayonez.math.*;
 
 /**
@@ -17,9 +18,18 @@ public abstract sealed class Texture extends Asset permits GLTexture, JTexture {
     }
 
     /**
-     * Creates a texture from an image file. Called during instantiation.
+     * Create a texture from an image file. Called during instantiation.
+     *
+     * @return the image file data
      */
-    protected abstract void readImage();
+    protected abstract ImageData readImage();
+
+    /**
+     * Get the underlying image data associated with this texture.
+     *
+     * @return the image data
+     */
+    public abstract ImageData getImageData();
 
     /**
      * The width of the image in pixels.

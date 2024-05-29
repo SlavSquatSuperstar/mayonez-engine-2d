@@ -26,7 +26,7 @@ public final class GLSpriteSheetTexture extends GLTexture {
      */
     public GLSpriteSheetTexture(GLTexture parentTexture, int spriteSheetIndex, Vec2 spritePos, Vec2 spriteSize) {
         super(getSubSpriteFilename(parentTexture.getFilename(), spriteSheetIndex),
-                getSubImageCoords(parentTexture, spritePos, spriteSize));
+                parentTexture, getSubImageCoords(parentTexture, spritePos, spriteSize));
         this.parentTexture = parentTexture;
         this.width = (int) spriteSize.x; // get new image size in px
         this.height = (int) spriteSize.y; // get new image size in px
@@ -60,11 +60,6 @@ public final class GLSpriteSheetTexture extends GLTexture {
     @Override
     public int getHeight() {
         return height;
-    }
-
-    @Override
-    public int getTexID() {
-        return parentTexture.getTexID();
     }
 
     // Helper Methods

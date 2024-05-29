@@ -19,7 +19,7 @@ import slavsquatsuperstar.demos.spacegame.objects.SpaceGameZIndex;
 public abstract class Asteroid extends GameObject {
 
     // Constants
-    private static final int NUM_TEXTURES = 2;
+    static final int NUM_TEXTURES = 2;
     private static final Texture[] ASTEROID_TEXTURES = getAsteroidTextures();
 
     // Instance Fields
@@ -38,7 +38,7 @@ public abstract class Asteroid extends GameObject {
         transform.setRotation(Random.randomAngle());
         transform.setScale(properties.getScale());
 
-        addSprite(properties.color(), Random.randomInt(0, NUM_TEXTURES - 1));
+        addSprite(properties.color(), properties.spriteIndex());
     }
 
     private void addSprite(Color color, int spriteIndex) {

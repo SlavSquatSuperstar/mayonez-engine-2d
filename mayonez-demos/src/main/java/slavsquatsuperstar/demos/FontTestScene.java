@@ -4,7 +4,7 @@ import mayonez.*;
 import mayonez.assets.text.*;
 import mayonez.graphics.*;
 import mayonez.graphics.font.*;
-import mayonez.graphics.sprites.*;
+import mayonez.graphics.textures.*;
 import mayonez.math.*;
 import slavsquatsuperstar.demos.font.SceneTextObject;
 import slavsquatsuperstar.demos.font.UITextObject;
@@ -35,16 +35,13 @@ public class FontTestScene extends Scene {
             widths[i] = Integer.parseInt(widthsStr, i, i + 1, 10);
         }
 
-        var spriteSheet = Sprites.createSpriteSheet(
-                "assets/fonts/font_pixel.png",
-                metadata.glyphHeight(), metadata.glyphHeight(), metadata.numCharacters(), 0
-        );
-        if (!(spriteSheet instanceof GLSpriteSheet)) return;
+        var fontTexture = Textures.getTexture("assets/fonts/font_pixel.png");
+        if (!(fontTexture instanceof GLTexture)) return;
 
         // Text characteristics
         var message1 = "ABCDEFGHIJKLM\nNOPQRSTUVWXYZ\nabcdefghijklm\nnopqrstuvwyxz\n0123456789";
         var message2 = "D\u0000\u007f\ufffd\u200cDDDDD\nD D D D\nD  D  D|\nDDDDDD";
-        var font = new Font((GLSpriteSheet) spriteSheet, metadata, widths);
+        var font = new Font((GLTexture) fontTexture, metadata, widths);
 
         // Scene font
         var fontSize = 6; // pt

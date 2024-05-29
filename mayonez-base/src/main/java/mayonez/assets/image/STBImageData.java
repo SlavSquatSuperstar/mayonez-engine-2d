@@ -192,7 +192,6 @@ public class STBImageData extends ImageData {
                     toString(), topLeft, size);
             return null;
         }
-
     }
 
 }
