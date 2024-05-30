@@ -110,7 +110,7 @@ open class Polygon(sort: Boolean, vararg vertices: Vec2) : Shape() {
         val verticesY = vertices.map { it.y }.toFloatArray()
         val boxMin = Vec2(MathUtils.min(*verticesX), MathUtils.min(*verticesY))
         val boxMax = Vec2(MathUtils.max(*verticesX), MathUtils.max(*verticesY))
-        return BoundingBox(boxMin.midpoint(boxMax), boxMax - boxMin)
+        return BoundingBox.fromMinAndMax(boxMin, boxMax)
     }
 
     // Polygon vs Point

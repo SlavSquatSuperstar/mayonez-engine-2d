@@ -14,7 +14,6 @@ open class Rectangle(private val center: Vec2, private val size: Vec2, val angle
     Polygon(false, *rectangleVertices(center, size, angle)) {
 
     constructor(center: Vec2, size: Vec2) : this(center, size, 0f)
-    constructor(center: Vec2, width: Float, height: Float, angle: Float) : this(center, Vec2(width, height), angle)
 
     // Rectangle Properties
 
@@ -109,19 +108,49 @@ open class Rectangle(private val center: Vec2, private val size: Vec2, val angle
 
     companion object {
         /**
-         * Returns an array of counterclockwise rectangle vertices starting with
-         * the vertex with the most negative coordinates (before rotation)
+         * Returns an array of counterclockwise rectangle vertices from the center
+         * and size, starting with the vertex with the most negative coordinates
+         * (before rotation).
          *
          * @param center the rectangle center
          * @param size the rectangle dimensions
          * @param angle the rectangle rotation
          * @return the array of vertices
          */
+        @JvmOverloads
         @JvmStatic
         fun rectangleVertices(center: Vec2, size: Vec2, angle: Float = 0f): Array<Vec2> {
-            val min = center - size * 0.5f
-            val max = center + size * 0.5f
-            return arrayOf(Vec2(min), Vec2(max.x, min.y), Vec2(max), Vec2(min.x, max.y)).rotate(angle, center)
+            val halfSize = size * 0.5f
+            return rectangleVerticesMinMax(center - halfSize, center + halfSize, angle)
+        }
+
+        /**
+         * Returns an array of counterclockwise rectangle vertices from the min and
+         * max corners, starting with the min vertex.
+         *
+         * @param min the bottom left corner, before rotation
+         * @param max the top right corner, after rotation
+         * @param angle the rectangle rotation
+         * @return the array of vertices
+         */
+        @JvmOverloads
+        @JvmStatic
+        fun rectangleVerticesMinMax(min: Vec2, max: Vec2, angle: Float = 0f): Array<Vec2> {
+            return arrayOf(Vec2(min), Vec2(max.x, min.y), Vec2(max), Vec2(min.x, max.y)).rotate(angle, (min + max) * 0.5f)
+        }
+
+        /**
+         * Constructs a rectangle from the min and max corners.
+         *
+         * @param min the bottom left corner, before rotation
+         * @param max the top right corner, after rotation
+         * @param angle the rectangle rotation
+         * @return the rectangle
+         */
+        @JvmOverloads
+        @JvmStatic
+        fun fromMinAndMax(min: Vec2, max: Vec2, angle: Float = 0f): Rectangle {
+            return Rectangle((min + max) * 0.5f, max - min, angle)
         }
 
 //        /**

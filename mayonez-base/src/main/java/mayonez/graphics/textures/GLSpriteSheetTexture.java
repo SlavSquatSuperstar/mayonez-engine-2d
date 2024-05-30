@@ -73,8 +73,7 @@ public final class GLSpriteSheetTexture extends GLTexture {
         var texSize = sheetTexture.getSize();
         var subImgMin = spriteBottomLeft.div(texSize);
         var subImgMax = spriteBottomLeft.add(spriteSize).div(texSize);
-        var subImgSize = subImgMax.sub(subImgMin);
-        return Rectangle.rectangleVertices(subImgMin.midpoint(subImgMax), subImgSize, 0);
+        return Rectangle.rectangleVerticesMinMax(subImgMin, subImgMax);
     }
 
 }

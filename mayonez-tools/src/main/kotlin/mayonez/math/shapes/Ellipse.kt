@@ -8,6 +8,8 @@ import kotlin.math.*
  * A round shape defined by a major and minor radius and containing two
  * focal points. For each point on the ellipse's boundary curve, the sum of
  * the distances to the foci is constant.
+ *
+ * @author SlavSquatSuperstar
  */
 open class Ellipse(protected val center: Vec2, val size: Vec2, val angle: Float) : Shape() {
 

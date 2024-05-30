@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test
 internal class PolygonColliderTest {
 
     companion object {
-        private val vertices = Rectangle.rectangleVertices(Vec2(), Vec2(2f), 0f)
+        private val vertices = Rectangle.rectangleVertices(Vec2(0f), Vec2(2f), 0f)
     }
 
     private lateinit var box: PolygonCollider
@@ -45,7 +45,7 @@ internal class PolygonColliderTest {
     @Test
     fun scaledPolygonVerticesReturnsWorld() {
         box.transform = Transform.scaleInstance(Vec2(2f))
-        val worldVertices = Rectangle.rectangleVertices(Vec2(), Vec2(4f), 0f)
+        val worldVertices = Rectangle.rectangleVertices(Vec2(0f), Vec2(4f), 0f)
         CollisionTestUtils.assertVerticesEqual(worldVertices, box.getVertices())
     }
 
@@ -53,7 +53,7 @@ internal class PolygonColliderTest {
     @Test
     fun rotatedPolygonVerticesReturnsWorld() {
         box.transform = Transform.rotateInstance(45f)
-        val worldVertices = Rectangle.rectangleVertices(Vec2(), Vec2(2f), 45f)
+        val worldVertices = Rectangle.rectangleVertices(Vec2(0f), Vec2(2f), 45f)
         CollisionTestUtils.assertVerticesEqual(worldVertices, box.getVertices())
     }
 

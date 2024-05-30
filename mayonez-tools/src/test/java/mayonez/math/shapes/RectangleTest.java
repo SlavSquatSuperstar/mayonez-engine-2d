@@ -18,7 +18,7 @@ class RectangleTest {
     @BeforeAll
     static void getRect() {
         // 4x3 rectangle, min corner at origin
-        rect = new Rectangle(new Vec2(2, 1.5f), new Vec2(4, 3));
+        rect = Rectangle.fromMinAndMax(new Vec2(0, 0), new Vec2(4, 3));
     }
 
     @Test

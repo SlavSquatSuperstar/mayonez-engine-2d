@@ -13,20 +13,6 @@ import java.util.*
 open class BoundingBox(private val center: Vec2, private val size: Vec2) :
     Rectangle(center, size) {
 
-    companion object {
-//        /**
-//         * Rotates a copy of this rectangle, then resizes the bounding box to cover the
-//         * new rectangle.
-//         */
-//        private fun rotatedDimensions(size: Vec2, angle: Float): Vec2 {
-//            // w' = w*cos(theta) + h*sin(theta)
-//            // h' = w*sin(theta) + h*cos(theta)
-//            val cos = abs(cos(angle))
-//            val sin = abs(sin(angle))
-//            return Vec2(size.dot(Vec2(cos, sin)), size.dot(Vec2(sin, cos)))
-//        }
-    }
-
     // Box Properties
 
     override val isAxisAligned: Boolean
@@ -91,5 +77,31 @@ open class BoundingBox(private val center: Vec2, private val size: Vec2) :
      * (b, h)"
      */
     override fun toString(): String = String.format("Bounding Box $center, Size: $size")
+
+    companion object {
+        /**
+         * Constructs a bounding box from the min and max corners.
+         *
+         * @param min the bottom left corner, before rotation
+         * @param max the top right corner, after rotation
+         * @return the rectangle
+         */
+        @JvmStatic
+        fun fromMinAndMax(min: Vec2, max: Vec2): BoundingBox {
+            return BoundingBox((min + max) * 0.5f, max - min)
+        }
+
+//        /**
+//         * Rotates a copy of this rectangle, then resizes the bounding box to cover the
+//         * new rectangle.
+//         */
+//        private fun rotatedDimensions(size: Vec2, angle: Float): Vec2 {
+//            // w' = w*cos(theta) + h*sin(theta)
+//            // h' = w*sin(theta) + h*cos(theta)
+//            val cos = abs(cos(angle))
+//            val sin = abs(sin(angle))
+//            return Vec2(size.dot(Vec2(cos, sin)), size.dot(Vec2(sin, cos)))
+//        }
+    }
 
 }

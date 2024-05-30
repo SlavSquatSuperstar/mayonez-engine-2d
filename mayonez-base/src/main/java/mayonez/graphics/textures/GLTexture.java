@@ -31,7 +31,7 @@ public sealed class GLTexture extends Texture permits GLSpriteSheetTexture {
 
     // Constants
     public static final Vec2[] DEFAULT_TEX_COORDS
-            = Rectangle.rectangleVertices(new Vec2(0.5f), new Vec2(1f), 0f);
+            = Rectangle.rectangleVerticesMinMax(new Vec2(0f), new Vec2(1f));
 
     // Image Fields
     private final STBImageData imageData;

@@ -107,7 +107,7 @@ class PolygonTest {
 
     @Test
     void polygonSupportPointSuccess() {
-        var rect = new Rectangle(new Vec2(2, 2), new Vec2(4, 4)); // 4x4 var at (0, 0)
+        var rect = Rectangle.fromMinAndMax(new Vec2(0, 0), new Vec2(4, 4)); // 4x4 var at (0, 0)
         assertEquals(new Vec2(0, 0), rect.supportPoint(new Vec2(-1, -1)));
         assertEquals(new Vec2(4, 4), rect.supportPoint(new Vec2(1, 2)));
     }
