@@ -28,7 +28,12 @@ public class UITextObject extends TextObject {
     @Override
     protected Component createTextSprite(Glyph glyph, Color color, int fontSize, Vec2 charPos) {
         var tex = glyph.getTexture();
-        var sprite = new UISprite(charPos, new Vec2(fontSize), tex);
+        var percentWidth = (float) glyph.getWidth() / glyph.getHeight();
+
+        var spritePos = charPos.add(new Vec2(percentWidth * fontSize * 0.5f, 0f));
+        var spriteSize = new Vec2(fontSize * percentWidth, fontSize);
+        var sprite = new UISprite(spritePos, spriteSize, tex);
+
         sprite.setColor(color);
         return sprite;
     }

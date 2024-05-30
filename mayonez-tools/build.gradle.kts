@@ -12,7 +12,7 @@ description = "A helper library containing math and file I/O utilities."
 dependencies {
     // Code Dependencies
     implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
-    implementation("org.json:json:20231013")
+    implementation("org.json:json:20240303")
 }
 
 // Plugins and Tasks

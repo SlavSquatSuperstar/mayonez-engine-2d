@@ -11,6 +11,7 @@ import java.io.IOException;
  *
  * @author SlavSquatSuperstar
  */
+// TODO make asset
 public class Font {
 
     private final GLTexture fontTexture;
@@ -43,7 +44,7 @@ public class Font {
 
         // Create glyph textures
         for (int i = 0; i < glyphs.length; i++) {
-            var glyphTex = new GLSpriteSheetTexture(fontTexture, i, glyphBottomLeft, new Vec2(glyphSize)); // TODO fix tex coords width
+            var glyphTex = new GLSpriteSheetTexture(fontTexture, i, glyphBottomLeft, new Vec2(widths[i], glyphSize));
             glyphs[i] = new Glyph(widths[i], glyphSize, glyphTex);
 
             // Move to next glyph

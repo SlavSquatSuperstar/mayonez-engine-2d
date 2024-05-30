@@ -119,6 +119,7 @@ public class UISprite extends Component implements UIRenderableElement {
     }
 
     // Renderer Methods
+
     @Override
     public void pushToBatch(RenderBatch batch) {
         var texID = batch.getTextureSlot((GLTexture) texture);

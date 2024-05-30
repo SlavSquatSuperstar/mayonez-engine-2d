@@ -25,35 +25,11 @@ public class FontTestScene extends Scene {
 
     @Override
     protected void init() {
-        var json = new JSONFile("assets/fonts/font_pixel.json");
-        var record = json.readJSON();
-        var metadata = new FontMetadata(record);
+        var font = createFont();
+        if (font == null) return;
 
-        var text = new TextFile("assets/fonts/font_pixel_widths.txt");
-        var widthsLines = text.readLines();
-        var widthsStr = String.join("", widthsLines);
-
-        var widths = new int[widthsStr.length()];
-        for (int i = 0; i < widths.length; i++) {
-            widths[i] = Integer.parseInt(widthsStr, i, i + 1, 10);
-        }
-
-        var fontTexture = Textures.getTexture("assets/fonts/font_pixel.png");
-        if (!(fontTexture instanceof GLTexture)) return;
-
-        // Text characteristics
         var message1 = "ABCDEFGHIJKLM\nNOPQRSTUVWXYZ\nabcdefghijklm\nnopqrstuvwyxz\n0123456789";
         var message2 = "D\u0000\u007f\ufffd\u200cDDDDD\nD D D D\nD  D  D|\nDDDDDD";
-        var font = new Font((GLTexture) fontTexture, metadata);
-
-        // Check widths
-        for (int i = 0; i < widths.length; i++) {
-            if (widths[i] == font.getGlyphs()[i].getWidth()) {
-                System.out.println("widths match for char " + (char) (metadata.startCharacter() + i));
-            } else {
-                System.err.println("widths do not match for char " + (char) (metadata.startCharacter() + i));
-            }
-        }
 
         // Scene font
         var fontSize = 6; // pt
@@ -87,6 +63,45 @@ public class FontTestScene extends Scene {
             getCamera().rotate(KeyInput.getAxis("arrows horizontal"));
             getCamera().zoom(1 + 0.01f * KeyInput.getAxis("arrows vertical"));
         }
+    }
+
+    @Override
+    protected void onUserRender() {
+        getDebugDraw().drawPoint(new Vec2(-30, 0), Colors.GREEN);
+        getDebugDraw().drawPoint(new Vec2(15, 30), Colors.GREEN);
+    }
+
+    private Font createFont() {
+        // Font files
+        var json = new JSONFile("assets/fonts/font_pixel.json");
+        var record = json.readJSON();
+        var metadata = new FontMetadata(record);
+
+        // Create font
+        var fontTexture = Textures.getTexture("assets/fonts/font_pixel.png");
+        if (!(fontTexture instanceof GLTexture)) return null;
+        var font = new Font((GLTexture) fontTexture, metadata);
+
+        // Widths file
+        var widthsFile = new TextFile("assets/fonts/font_pixel_widths.txt");
+        var widthsLines = widthsFile.readLines();
+        var widthsStr = String.join("", widthsLines);
+
+        var widths = new int[widthsStr.length()];
+        for (int i = 0; i < widths.length; i++) {
+            widths[i] = Integer.parseInt(widthsStr, i, i + 1, 10);
+        }
+
+        // Check widths
+        for (int i = 0; i < widths.length; i++) {
+            if (widths[i] == font.getGlyphs()[i].getWidth()) {
+                System.out.println("widths match for char " + (char) (metadata.startCharacter() + i));
+            } else {
+                System.err.println("widths do not match for char " + (char) (metadata.startCharacter() + i));
+            }
+        }
+
+        return font;
     }
 
 }

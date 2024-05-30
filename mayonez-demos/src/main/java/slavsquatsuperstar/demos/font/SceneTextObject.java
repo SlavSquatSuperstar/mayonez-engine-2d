@@ -29,7 +29,12 @@ public class SceneTextObject extends TextObject {
     protected Component createTextSprite(Glyph glyph, Color color, int fontSize, Vec2 charPos) {
         var tex = glyph.getTexture();
         var sprite = Sprites.createSprite(tex);
-        sprite.setSpriteTransform(new Transform(charPos, 0f, new Vec2(fontSize)));
+
+        var percentWidth = (float) glyph.getWidth() / glyph.getHeight();
+        var spritePos = charPos.add(new Vec2(percentWidth * fontSize * 0.5f, 0f));
+        var spriteScale = new Vec2(fontSize * percentWidth, fontSize);
+        sprite.setSpriteTransform(new Transform(spritePos, 0f, spriteScale));
+
         sprite.setColor(color);
         return sprite;
     }
