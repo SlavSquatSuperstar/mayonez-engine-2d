@@ -13,15 +13,13 @@ public class RandomAsteroid extends Asteroid {
     private static final float MIN_RADIUS = 1f;
     private static final float MAX_RADIUS = 4f;
 
-    public RandomAsteroid(String name) {
-        super(name, new Vec2(), getRandomProperties());
+    public RandomAsteroid(String name, Vec2 position) {
+        super(name, position, getRandomProperties());
     }
 
     @Override
     protected void init() {
         super.init();
-        transform.setPosition(getScene().getRandomPosition());
-
         var startingHealth = properties.getHealth();
         addRigidbody(startingHealth)
                 .setVelocity(transform.getUp().mul(Random.randomFloat(0f, 3f)));

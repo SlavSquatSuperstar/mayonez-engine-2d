@@ -14,7 +14,7 @@ public class AsteroidDestruction extends Damageable {
 
     // Constants
     private static final float EXPLOSION_DURATION = 0.5f;
-    private static final float MIN_SPAWN_FRAGMENTS_RADIUS = 1.25f;
+    private static final float MIN_SPAWN_FRAGMENTS_RADIUS = 1f;
 
     private final AsteroidProperties properties;
 

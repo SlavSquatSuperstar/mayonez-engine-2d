@@ -35,7 +35,7 @@ public class AsteroidFragment extends Asteroid {
         } else {
             // Don't create any fragments
             addComponent(new DespawnAsteroid(
-                    Random.randomFloat(radius * 3f, radius * 5f), properties.color()
+                    Math.max(0.5f, Random.randomFloat(radius * 3f, radius * 5f)), properties.color()
             ));
         }
     }

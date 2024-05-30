@@ -54,7 +54,7 @@ public abstract class Asteroid extends GameObject {
 
     protected Rigidbody addRigidbody(float mass) {
         Rigidbody rb;
-        addComponent(rb = new Rigidbody(mass, 0.2f, 0.2f));
+        addComponent(rb = new Rigidbody(mass, 0.01f, 0.01f));
         return rb;
     }
 
