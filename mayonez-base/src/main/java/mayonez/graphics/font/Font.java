@@ -15,27 +15,24 @@ public class Font {
 
     private final GLTexture fontTexture;
     private final FontMetadata metadata;
-    private final int[] widths;
     private final Glyph[] glyphs;
 
     public Font(GLTexture fontTexture, FontMetadata metadata, int[] widths) {
         this.fontTexture = fontTexture;
         this.metadata = metadata;
-        this.widths = widths;
-        glyphs = createGlyphs();
+        glyphs = createGlyphs(widths);
     }
 
     public Font(GLTexture fontTexture, FontMetadata metadata) {
         this.fontTexture = fontTexture;
         this.metadata = metadata;
-        this.widths = new int[metadata.numCharacters()];
-        glyphs = createGlyphs3();
-        // TODO test widths
+        var widths = getGlyphWidths(); // TODO test widths
+        glyphs = createGlyphs(widths);
     }
 
     // Create Glyphs Methods
 
-    private Glyph[] createGlyphs() {
+    private Glyph[] createGlyphs(int[] widths) {
         var glyphs = new Glyph[metadata.numCharacters()];
         var texSize = fontTexture.getSize();
         var glyphSize = metadata.glyphHeight();
@@ -61,76 +58,29 @@ public class Font {
         return glyphs;
     }
 
-    private Glyph[] createGlyphs2() {
-        var glyphs = new Glyph[metadata.numCharacters()];
-        var glyphSize = metadata.glyphHeight();
+    // Glyph Widths Method
 
-        // GL uses bottom left as image origin
-        var texTopLeft = new Vec2(0, fontTexture.getHeight());
-        var glyphBottomLeft = texTopLeft.sub(new Vec2(0, glyphSize));
+    // Auto figure out glyph widths from image file
+    private int[] getGlyphWidths() {
+        var widths = new int[metadata.numCharacters()];
 
-        // Create glyph textures
-        var imgData = fontTexture.getImageData();
-        for (int i = 0; i < glyphs.length; i++) {
-            // GL uses bottom left as origin
-            // Change to top left
-
-            var flippedGlyphBottomLeft = new Vec2(glyphBottomLeft.x, imgData.getHeight() - glyphBottomLeft.y);
-            var glyphTopLeft = new Vec2(flippedGlyphBottomLeft.x, flippedGlyphBottomLeft.y - glyphSize);
-//            System.out.printf("corner = %s\n", glyphBottomLeft);
-//            System.out.printf("flipped = %s\n", flippedGlyphBottomLeft);
-            System.out.printf("flipped 2 = %s\n", glyphTopLeft);
-
-            widths[i] = getWidth(imgData, glyphTopLeft, glyphSize);
-            System.out.printf("width for %c = %d\n", (char) (metadata.startCharacter() + i), widths[i]);
-
-            var glyphTex = new GLSpriteSheetTexture(fontTexture, i, glyphBottomLeft, new Vec2(glyphSize)); // TODO fix tex coords width
-            glyphs[i] = new Glyph(widths[i], glyphSize, glyphTex);
-
-            // Move to next glyph
-            // Origin at bottom left
-            glyphBottomLeft.x += glyphSize;
-            if (glyphBottomLeft.x >= fontTexture.getWidth()) {
-                // If at end of row, go to next row
-                glyphBottomLeft.x = 0;
-                glyphBottomLeft.y -= glyphSize;
-            }
-        }
-        imgData.freeImage(); // Width keeps changing if image is freed
-        return glyphs;
-    }
-
-    private Glyph[] createGlyphs3() {
-        var glyphs = new Glyph[metadata.numCharacters()];
-        var glyphSize = metadata.glyphHeight();
-
-        // Use AWT image since no flipping or freeing
-        var glyphTopLeft = new Vec2(0, 0);
-
-        // Create glyph textures
+        // Look at AWT image since no flipping or freeing
         ImageData imgData;
         try {
             imgData = new AWTImageData(fontTexture.getFilename());
         } catch (IOException e) {
-            return glyphs;
+            return widths;
         }
 
-        for (int i = 0; i < glyphs.length; i++) {
-            if ((char) (metadata.startCharacter() + i) == ' ') {
-                widths[i] = 3; // TODO whitespace widths
+        var glyphSize = metadata.glyphHeight();
+        var glyphTopLeft = new Vec2(0, 0);
+
+        for (int i = 0; i < widths.length; i++) {
+            if (metadata.startCharacter() + i == metadata.whitespaceCharacter()) {
+                widths[i] = metadata.whitespaceWidth();
             } else {
-                widths[i] = getWidth(imgData, glyphTopLeft, glyphSize);
+                widths[i] = getGlyphWidth(imgData, glyphTopLeft, glyphSize);
             }
-            var awtGlyphBottomLeftY = glyphTopLeft.y + glyphSize;
-            var glGlyphBottomLeftY = fontTexture.getHeight() - awtGlyphBottomLeftY;
-
-            System.out.println("char = " + (char) (metadata.startCharacter() + i));
-            System.out.println("- width = " + widths[i]);
-            System.out.println("- top left = " + glyphTopLeft);
-            System.out.println("- bottom left = " + glGlyphBottomLeftY);
-
-            var glyphTex = new GLSpriteSheetTexture(fontTexture, i, new Vec2(glyphTopLeft.x, glGlyphBottomLeftY), new Vec2(glyphSize)); // TODO fix tex coords width
-            glyphs[i] = new Glyph(widths[i], glyphSize, glyphTex);
 
             // Move to next glyph
             // Origin at bottom left
@@ -141,11 +91,11 @@ public class Font {
                 glyphTopLeft.y += glyphSize;
             }
         }
-        return glyphs;
+        return widths;
     }
 
     // Auto set glyph width by finding the last filled column
-    private int getWidth(ImageData imageData, Vec2 glyphBottomLeft, int glyphSize) {
+    private int getGlyphWidth(ImageData imageData, Vec2 glyphBottomLeft, int glyphSize) {
         var startX = (int) glyphBottomLeft.x;
         var startY = (int) glyphBottomLeft.y;
 
@@ -167,14 +117,24 @@ public class Font {
         return true; // Found only blank pixels
     }
 
-    // Font Getters
+    // Metadata Getters
 
-    public FontMetadata getMetadata() {
-        return metadata;
+    public int getGlyphHeight() {
+        return metadata.glyphHeight();
     }
 
-    public int[] getWidths() {
-        return widths;
+    public int getGlyphSpacing() {
+        return metadata.glyphSpacing();
+    }
+
+    public int numGlyphs() {
+        return metadata.numCharacters();
+    }
+
+    // Glyph Getters
+
+    public Glyph[] getGlyphs() {
+        return glyphs;
     }
 
     public Glyph getGlyph(int charCode) {

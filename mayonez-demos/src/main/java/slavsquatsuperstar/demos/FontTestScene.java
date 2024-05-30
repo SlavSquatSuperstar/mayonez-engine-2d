@@ -48,7 +48,7 @@ public class FontTestScene extends Scene {
 
         // Check widths
         for (int i = 0; i < widths.length; i++) {
-            if (widths[i] == font.getWidths()[i]) {
+            if (widths[i] == font.getGlyphs()[i].getWidth()) {
                 System.out.println("widths match for char " + (char) (metadata.startCharacter() + i));
             } else {
                 System.err.println("widths do not match for char " + (char) (metadata.startCharacter() + i));

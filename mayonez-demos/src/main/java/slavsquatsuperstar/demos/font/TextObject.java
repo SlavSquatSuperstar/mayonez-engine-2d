@@ -31,18 +31,17 @@ public abstract class TextObject extends GameObject {
 
     @Override
     protected void init() {
-        var metadata = font.getMetadata();
-        var lineOffset = new Vec2(0, (float) fontSize * (1 + (float) lineSpacing / metadata.glyphHeight()));
+        var lineOffset = new Vec2(0, (float) fontSize * (1 + (float) lineSpacing / font.getGlyphHeight()));
         var lines = message.split("\n");
 
         var linePos = getInitialCharPosition();
         for (String line : lines) {
-            addSpritesForLine(line, linePos, metadata);
+            addSpritesForLine(line, linePos, font.getGlyphSpacing());
             linePos = linePos.sub(lineOffset); // Move to the next line
         }
     }
 
-    protected void addSpritesForLine(String line, Vec2 linePos, FontMetadata metadata) {
+    protected void addSpritesForLine(String line, Vec2 linePos, int glyphSpacing) {
         var lastCharPos = linePos;
         for (int i = 0; i < line.length(); i++) {
             var charCode = line.charAt(i);
@@ -54,14 +53,14 @@ public abstract class TextObject extends GameObject {
             addComponent(charSprite);
 
             // Move to the next character's position
-            var charOffset = getCharOffset(metadata, glyph);
+            var charOffset = getCharOffset(glyphSpacing, glyph);
             lastCharPos = lastCharPos.add(new Vec2(charOffset, 0));
         }
     }
 
-    private float getCharOffset(FontMetadata metadata, Glyph glyph) {
+    private float getCharOffset(int glyphSpacing, Glyph glyph) {
         if (glyph.getWidth() == 0) return 0;
-        return (float) fontSize * (glyph.getWidth() + metadata.glyphSpacing()) / glyph.getHeight();
+        return (float) fontSize * (glyph.getWidth() + glyphSpacing) / glyph.getHeight();
     }
 
     // Abstract Methods

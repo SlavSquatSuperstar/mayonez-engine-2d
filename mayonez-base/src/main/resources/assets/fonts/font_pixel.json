@@ -1,8 +1,10 @@
 {
-	"name": "Pixel Font",
+	"name": "Pixel",
 	"start_character": 32,
 	"end_character": 126,
 	"glyph_height": 8,
 	"glyph_ascent": 7,
-	"glyph_spacing": 1
+	"glyph_spacing": 1,
+	"whitespace_character": 32,
+	"whitespace_width": 3
 }
