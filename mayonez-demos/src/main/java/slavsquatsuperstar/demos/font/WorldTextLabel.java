@@ -7,14 +7,14 @@ import mayonez.graphics.sprites.*;
 import mayonez.math.*;
 
 /**
- * Draws text inside the scene using a font.
+ * Draws text inside the world using a font.
  *
  * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.GL)
-public class SceneTextObject extends TextObject {
+public class WorldTextLabel extends TextLabel {
 
-    public SceneTextObject(
+    public WorldTextLabel(
             String message, Vec2 position, Font font, Color color, int fontSize, int lineSpacing
     ) {
         super(message, position, font, color, fontSize, lineSpacing);
@@ -22,7 +22,7 @@ public class SceneTextObject extends TextObject {
 
     @Override
     protected Vec2 getInitialCharPosition() {
-        return new Vec2();
+        return position;
     }
 
     @Override
@@ -31,8 +31,8 @@ public class SceneTextObject extends TextObject {
         var sprite = Sprites.createSprite(tex);
 
         var percentWidth = (float) glyph.getWidth() / glyph.getHeight();
-        var spritePos = charPos.add(new Vec2(percentWidth * fontSize * 0.5f, 0f));
-        var spriteScale = new Vec2(fontSize * percentWidth, fontSize);
+        var spritePos = charPos.add(new Vec2(0.5f * percentWidth * fontSize, 0f));
+        var spriteScale = new Vec2(percentWidth * fontSize, fontSize);
         sprite.setSpriteTransform(new Transform(spritePos, 0f, spriteScale));
 
         sprite.setColor(color);

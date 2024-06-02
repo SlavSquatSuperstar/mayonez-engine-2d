@@ -12,9 +12,9 @@ import mayonez.math.*;
  * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.GL)
-public class UITextObject extends TextObject {
+public class UITextLabel extends TextLabel {
 
-    public UITextObject(
+    public UITextLabel(
             String message, Vec2 position, Font font, Color color, int fontSize, int lineSpacing
     ) {
         super(message, position, font, color, fontSize, lineSpacing);
@@ -22,7 +22,7 @@ public class UITextObject extends TextObject {
 
     @Override
     protected Vec2 getInitialCharPosition() {
-        return transform.getPosition();
+        return position;
     }
 
     @Override
@@ -30,8 +30,8 @@ public class UITextObject extends TextObject {
         var tex = glyph.getTexture();
         var percentWidth = (float) glyph.getWidth() / glyph.getHeight();
 
-        var spritePos = charPos.add(new Vec2(percentWidth * fontSize * 0.5f, 0f));
-        var spriteSize = new Vec2(fontSize * percentWidth, fontSize);
+        var spritePos = charPos.add(new Vec2(0.5f * percentWidth * fontSize, 0f));
+        var spriteSize = new Vec2(percentWidth * fontSize, fontSize);
         var sprite = new UISprite(spritePos, spriteSize, tex);
 
         sprite.setColor(color);

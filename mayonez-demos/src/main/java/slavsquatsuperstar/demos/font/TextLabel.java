@@ -5,28 +5,31 @@ import mayonez.graphics.*;
 import mayonez.graphics.font.*;
 import mayonez.math.*;
 
+import java.util.*;
+
 /**
- * Renders a string using a font. Use {@link SceneTextObject} to draw text at a game object's position, and
- * {@link UITextObject} to draw text in the UI.
+ * Renders a string using a font. Use {@link WorldTextLabel} to draw text inside the game world,
+ * and {@link UITextLabel} to draw text in the UI.
  *
  * @author SlavSquatSuperstar
  */
-// TODO scale with transform
-@UsesEngine(EngineType.GL)
-public abstract class TextObject extends GameObject {
+public abstract class TextLabel extends Script {
 
     protected final String message;
+    protected final Vec2 position;
     protected final Font font;
     protected final Color color;
     protected final int fontSize, lineSpacing;
+    private final List<Component> glyphSprites;
 
-    public TextObject(String message, Vec2 position, Font font, Color color, int fontSize, int lineSpacing) {
-        super("Text Object", position);
+    public TextLabel(String message, Vec2 position, Font font, Color color, int fontSize, int lineSpacing) {
         this.message = message;
+        this.position = position;
         this.font = font;
         this.color = color;
         this.fontSize = fontSize;
         this.lineSpacing = lineSpacing;
+        glyphSprites = new ArrayList<>();
     }
 
     @Override
@@ -50,7 +53,8 @@ public abstract class TextObject extends GameObject {
 
             // Add the character glyph
             var charSprite = createTextSprite(glyph, color, fontSize, lastCharPos);
-            addComponent(charSprite);
+            gameObject.addComponent(charSprite);
+            glyphSprites.add(charSprite);
 
             // Move to the next character's position
             var charOffset = getCharOffset(glyphSpacing, glyph);
@@ -69,5 +73,14 @@ public abstract class TextObject extends GameObject {
 
     protected abstract Component createTextSprite(Glyph glyph, Color color, int fontSize, Vec2 charPos);
 
-}
+    @Override
+    protected void onEnable() {
+        glyphSprites.forEach(c -> c.setEnabled(false));
+    }
 
+    @Override
+    protected void onDisable() {
+        glyphSprites.forEach(c -> c.setEnabled(true));
+    }
+
+}

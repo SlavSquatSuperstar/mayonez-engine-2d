@@ -108,7 +108,7 @@ public class UISprite extends Component implements UIRenderableElement {
      * @return the anchor direction
      */
     public Vec2 getAnchorTranslateDirection() {
-        return size.mul(anchor.getDirection().mul(0.5f));
+        return size.mul(anchor.getDirection());
     }
 
     /**
@@ -126,10 +126,9 @@ public class UISprite extends Component implements UIRenderableElement {
         var texCoords = (texture != null)
                 ? ((GLTexture) texture).getTexCoords()
                 : GLTexture.DEFAULT_TEX_COORDS;
-        var sprBox = new BoundingBox(
+        var sprVertices = new BoundingBox(
                 position.sub(getAnchorTranslateDirection()), size
-        );
-        var sprVertices = sprBox.getVertices();
+        ).getVertices();
         BatchPushHelper.pushTexture(batch, sprVertices, color, texCoords, texID);
     }
 
