@@ -14,14 +14,15 @@ import mayonez.math.*;
 public interface UIElement extends GLRenderable {
 
     /**
-     * Get the position of this UI element's top left corner.
+     * Get the position of this UI element's anchor point.
      *
      * @return the position
      */
     Vec2 getPosition();
 
     /**
-     * Set the position of this UI element's top left corner.
+     * Set the position of this UI element's anchor point while keeping
+     * the size the same.
      *
      * @param position the position
      */
@@ -35,14 +36,15 @@ public interface UIElement extends GLRenderable {
     Vec2 getSize();
 
     /**
-     * Set the dimensions of this UI element.
+     * Set the dimensions of this UI element while keeping the anchor point
+     * the same.
      *
      * @param size the size
      */
     void setSize(Vec2 size);
 
     /**
-     * Get the anchor point for this UI element.
+     * Get the anchor direction for this UI element.
      *
      * @return the anchor direction
      */
@@ -51,7 +53,8 @@ public interface UIElement extends GLRenderable {
     }
 
     /**
-     * Set the anchor point for this UI element.
+     * Set the anchor direction for this UI element and update the anchor point
+     * to reflect the new direction.
      *
      * @param anchor the direction to anchor
      */

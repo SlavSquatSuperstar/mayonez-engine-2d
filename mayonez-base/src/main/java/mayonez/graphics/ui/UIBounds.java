@@ -11,7 +11,8 @@ import mayonez.math.*;
 // TODO clamp positive only
 public class UIBounds {
 
-    private Vec2 center, size;
+    private Anchor anchorDir;
+    private Vec2 anchorPos, center, size;
 
     /**
      * Create a UIBounds from a center and size.
@@ -20,7 +21,9 @@ public class UIBounds {
      * @param size   the size of the UI component
      */
     public UIBounds(Vec2 center, Vec2 size) {
-        this.center = center;
+        this.anchorDir = Anchor.CENTER;
+        this.anchorPos = center;
+        this.center = anchorPos;
         this.size = size;
     }
 
@@ -31,14 +34,36 @@ public class UIBounds {
      *
      * @param position the position of the anchor point
      * @param size     the size of the UI component
-     * @param anchor   the direction anchor point
+     * @param anchor   the direction of the anchor point
      */
     public UIBounds(Vec2 position, Vec2 size, Anchor anchor) {
-        this.center = position.sub(size.mul(anchor.getDirection()));
+        this.anchorDir = anchor;
+        this.anchorPos = position;
         this.size = size;
+        this.center = anchorPos.sub(size.mul(anchorDir.getDirection()));
     }
 
-    // Center Getters
+    // Anchor Getters
+
+    public Anchor getAnchorDir() {
+        return anchorDir;
+    }
+
+    public void setAnchorDir(Anchor anchorDir) {
+        this.anchorDir = anchorDir;
+        setAnchorPos(getPosition(anchorDir)); // Update anchor point
+    }
+
+    public Vec2 getAnchorPos() {
+        return anchorPos;
+    }
+
+    public void setAnchorPos(Vec2 anchorPos) {
+        this.anchorPos = anchorPos;
+        recalculateCenter(anchorPos);
+    }
+
+    // Position Getters
 
     public Vec2 getCenter() {
         return center;
@@ -48,11 +73,15 @@ public class UIBounds {
         this.center = center;
     }
 
-    public Vec2 getPosition(Anchor anchor) {
+    private void recalculateCenter(Vec2 anchorPos) {
+        center = anchorPos.sub(size.mul(anchorDir.getDirection())); // Recalculate center
+    }
+
+    Vec2 getPosition(Anchor anchor) {
         return center.add(size.mul(anchor.getDirection()));
     }
 
-    public void setPosition(Vec2 position, Anchor anchor) {
+    void setPosition(Vec2 position, Anchor anchor) {
         center = position.sub(size.mul(anchor.getDirection()));
     }
 
@@ -64,6 +93,7 @@ public class UIBounds {
 
     public void setSize(Vec2 size) {
         this.size = size;
+        recalculateCenter(anchorPos);
     }
 
     public float getWidth() {

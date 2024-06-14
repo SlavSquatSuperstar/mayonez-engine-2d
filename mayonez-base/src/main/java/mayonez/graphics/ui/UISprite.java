@@ -20,14 +20,12 @@ public class UISprite extends Component implements UIRenderableElement {
 
     // Instance Fields
     private UIBounds bounds;
-    private Anchor anchor;
     private Texture texture;
     private Color color;
 
     private UISprite(Vec2 position, Vec2 size, Texture texture, Color color) {
         super(UpdateOrder.RENDER);
         bounds = new UIBounds(position, size);
-        anchor = Anchor.CENTER;
         this.texture = texture;
         this.color = color;
     }
@@ -44,12 +42,12 @@ public class UISprite extends Component implements UIRenderableElement {
 
     @Override
     public Vec2 getPosition() {
-        return bounds.getCenter();
+        return bounds.getAnchorPos();
     }
 
     @Override
     public void setPosition(Vec2 position) {
-        bounds.setCenter(position);
+        bounds.setAnchorPos(position);
     }
 
     @Override
@@ -101,28 +99,12 @@ public class UISprite extends Component implements UIRenderableElement {
 
     @Override
     public Anchor getAnchor() {
-        return anchor;
+        return bounds.getAnchorDir();
     }
 
     @Override
     public void setAnchor(Anchor anchor) {
-        this.anchor = anchor;
-    }
-
-    /**
-     * Get the difference between the anchor point and this element's center.
-     *
-     * @return the anchor direction
-     */
-    public Vec2 getAnchorTranslateDirection() {
-        return getSize().mul(anchor.getDirection());
-    }
-
-    /**
-     * Moves this element so the anchored center equals the original center.
-     */
-    public void translateToAnchorOrigin() {
-        bounds.setCenter(bounds.getCenter().add(getAnchorTranslateDirection()));
+        bounds.setAnchorDir(anchor);
     }
 
     // Renderer Methods
@@ -134,7 +116,7 @@ public class UISprite extends Component implements UIRenderableElement {
                 ? ((GLTexture) texture).getTexCoords()
                 : GLTexture.DEFAULT_TEX_COORDS;
         var sprVertices = new BoundingBox(
-                bounds.getCenter().sub(getAnchorTranslateDirection()), bounds.getSize()
+                bounds.getCenter(), bounds.getSize()
         ).getVertices();
         BatchPushHelper.pushTexture(batch, sprVertices, color, texCoords, texID);
     }

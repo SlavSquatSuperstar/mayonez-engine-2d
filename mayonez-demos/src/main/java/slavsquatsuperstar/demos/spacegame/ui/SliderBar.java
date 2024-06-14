@@ -47,7 +47,6 @@ public class SliderBar extends Script {
             }
         };
         sliderSprite.setAnchor(Anchor.LEFT);
-        sliderSprite.translateToAnchorOrigin();
         gameObject.addComponent(sliderSprite);
 
         var outlineSprite = new UISprite(position, size, BORDER_TEXTURE) {
