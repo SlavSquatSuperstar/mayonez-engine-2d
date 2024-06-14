@@ -3,24 +3,36 @@ package mayonez.graphics;
 import mayonez.*;
 import org.lwjgl.opengl.GL;
 
-import static org.lwjgl.opengl.GL11.GL_NO_ERROR;
-import static org.lwjgl.opengl.GL11.glGetError;
+import static org.lwjgl.opengl.GL.createCapabilities;
+import static org.lwjgl.opengl.GL.destroy;
+import static org.lwjgl.opengl.GL11.*;
 
 /**
- * Performs error checking and debugging for OpenGL.
+ * Manages OpenGL capabilities and performs error checking and debugging.
  *
  * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.GL)
-public final class GLDebugHelper {
+public final class GLHelper {
 
-    private GLDebugHelper() {
+    private GLHelper() {
+    }
+
+    // Capabilities
+
+    /**
+     * Loads the OpenGL library and creates the capabilities in the current thread.
+     */
+    public static void loadOpenGL() {
+        Logger.debug("Creating OpenGL Capabilities");
+        createCapabilities();
+        enableBlending();
     }
 
     /**
-     * Check if the OpenGL capabilities have been created in the current thread.
+     * Checks if the OpenGL capabilities have been created in the current thread.
      *
-     * @return if GL is initialized
+     * @return if the GL library is loaded
      */
     public static boolean isGLInitialized() {
         try {
@@ -30,6 +42,29 @@ public final class GLDebugHelper {
             return false; // GL not initialized
         }
     }
+
+    /**
+     * Unloads the OpenGL library and destroys the capabilities in the current thread.
+     */
+    public static void unloadOpenGL() {
+        Logger.debug("Destroying OpenGL Capabilities");
+        destroy();
+    }
+
+    // Draw Methods
+
+    public static void clearScreen(float red, float green, float blue, float alpha) {
+        glClearColor(red, green, blue, alpha);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear screen
+    }
+
+    public static void enableBlending() {
+        // Note: complex transparent shapes don't work well, better to use textures
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    }
+
+    // Debug Methods
 
     /**
      * Clears all accumulated OpenGL error codes.

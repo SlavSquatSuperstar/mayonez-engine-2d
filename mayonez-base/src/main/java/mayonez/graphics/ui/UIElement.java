@@ -1,7 +1,5 @@
 package mayonez.graphics.ui;
 
-import mayonez.graphics.*;
-import mayonez.graphics.renderer.gl.*;
 import mayonez.math.*;
 
 /**
@@ -10,8 +8,7 @@ import mayonez.math.*;
  *
  * @author SlavSquatSuperstar
  */
-@UsesEngine(EngineType.GL)
-public interface UIElement extends GLRenderable {
+public interface UIElement {
 
     /**
      * Get the position of this UI element's anchor point.
@@ -44,7 +41,7 @@ public interface UIElement extends GLRenderable {
     void setSize(Vec2 size);
 
     /**
-     * Get the anchor direction for this UI element.
+     * Get the anchor direction for this UI element. Defaults to center.
      *
      * @return the anchor direction
      */

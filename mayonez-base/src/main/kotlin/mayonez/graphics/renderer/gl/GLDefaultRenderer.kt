@@ -8,7 +8,7 @@ import mayonez.graphics.renderer.*
 import mayonez.graphics.sprites.*
 import mayonez.math.*
 import mayonez.math.shapes.*
-import org.lwjgl.opengl.GL11.*
+import org.lwjgl.opengl.GL11.glLineWidth
 
 /**
  * Draws all sprites and debug information onto the screen using LWJGL's
@@ -70,6 +70,7 @@ internal class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"),
 
     override fun preRender() {
         super.preRender()
+
         // Upload uniforms
         val cam = viewport
         shader.uploadMat4("uView", cam.viewMatrix)
@@ -80,11 +81,15 @@ internal class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"),
         if (background.getTexture() == null) drawBackgroundColor()
         else drawBackgroundImage()
 
-        setGLProperties()
+        // Set GL Properties
+        when (lineStyle) {
+            LineStyle.SINGLE -> glLineWidth(DebugDraw.DEFAULT_STROKE_SIZE)
+            LineStyle.MULTIPLE -> glLineWidth(1f)
+            else -> return
+        }
     }
 
     private fun drawBackgroundImage() {
-        glClearColor(1f, 1f, 1f, 1f)
         bgBatch.clearVertices()
         (background as GLSprite).pushToBatch(bgBatch)
         bgBatch.uploadVertices()
@@ -93,20 +98,7 @@ internal class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"),
 
     private fun drawBackgroundColor() {
         val bgColor = background.getColor().toGL()
-        glClearColor(bgColor.x, bgColor.y, bgColor.z, 1f)
-        glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
-    }
-
-    private fun setGLProperties() {
-        // Note: complex transparent shapes don't work very well
-        glEnable(GL_BLEND)
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
-        glEnable(GL_LINE_SMOOTH)
-        when (lineStyle) {
-            LineStyle.SINGLE -> glLineWidth(DebugDraw.DEFAULT_STROKE_SIZE)
-            LineStyle.MULTIPLE -> glLineWidth(1f)
-            else -> return
-        }
+        GLHelper.clearScreen(bgColor.x, bgColor.y, bgColor.z, 1f)
     }
 
     override fun createBatches() {
@@ -122,8 +114,6 @@ internal class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"),
     override fun postRender() {
         super.postRender()
         shapes.clear() // Clear primitives after each frame
-        glDisable(GL_LINE_SMOOTH)
-        glDisable(GL_BLEND)
     }
 
 }

@@ -59,7 +59,7 @@ public final class RenderBatch {
      * Allocates GPU resources to this batch and generates the arrays and buffers upon starting the scene.
      */
     private void createBatch() {
-        if (!GLDebugHelper.isGLInitialized()) return;
+        if (!GLHelper.isGLInitialized()) return;
         vao.generate();
         vbo.generate();
         ibo.generate();

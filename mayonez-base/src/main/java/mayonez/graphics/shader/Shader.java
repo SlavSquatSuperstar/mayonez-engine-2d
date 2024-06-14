@@ -25,7 +25,7 @@ public class Shader extends Asset {
     public Shader(String filename) {
         super(filename);
 
-        if (GLDebugHelper.isGLInitialized()) {
+        if (GLHelper.isGLInitialized()) {
             shaderID = glCreateProgram();
         } else {
             shaderID = GL_NONE;
@@ -123,7 +123,7 @@ public class Shader extends Asset {
      * Delete this shader program from the GPU.
      */
     public void delete() {
-        if (GLDebugHelper.isGLInitialized()) {
+        if (GLHelper.isGLInitialized()) {
             glDeleteProgram(shaderID);
         }
     }

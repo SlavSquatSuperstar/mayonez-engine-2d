@@ -4,7 +4,8 @@ import mayonez.input.keyboard.*;
 import mayonez.input.mouse.*;
 
 /**
- * An interface containing common functionality for all game windows.
+ * The main application window that renders the game to the screen and detects
+ * input events.
  *
  * @author SlavSquatSuperstar
  */

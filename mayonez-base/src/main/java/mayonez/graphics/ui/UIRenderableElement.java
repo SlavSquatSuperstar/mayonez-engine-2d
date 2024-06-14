@@ -2,10 +2,11 @@ package mayonez.graphics.ui;
 
 import mayonez.graphics.*;
 import mayonez.graphics.renderer.gl.*;
+import mayonez.graphics.textures.*;
 
 /**
- * A visible user interface element that contains a renderable component in addition
- * to position and size.
+ * A visible user interface element that contains a renderable component in
+ * addition to position and size.
  *
  * @author SlavSquatSuperstar
  */
@@ -25,5 +26,20 @@ public interface UIRenderableElement extends UIElement, GLRenderable {
      * @param color the color
      */
     void setColor(Color color);
+
+    /**
+     * Get the texture of this UI element.
+     *
+     * @return the texture
+     */
+    @Override
+    GLTexture getTexture();
+
+    /**
+     * Set the texture of this UI element.
+     *
+     * @param texture the texture
+     */
+    void setTexture(Texture texture);
 
 }

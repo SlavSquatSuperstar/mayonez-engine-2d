@@ -74,7 +74,7 @@ class RenderLayer {
      * @param r the renderable
      */
     void removeRenderable(Renderable r) {
-        if (r instanceof UIElement e) uiRenderer.removeUIElement(e);
+        if (r instanceof UIRenderableElement e) uiRenderer.removeUIElement(e);
         else sceneRenderer.removeRenderable(r);
     }
 

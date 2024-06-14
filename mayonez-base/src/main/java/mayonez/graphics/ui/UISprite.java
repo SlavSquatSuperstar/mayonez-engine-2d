@@ -38,7 +38,7 @@ public class UISprite extends Component implements UIRenderableElement {
         this(position, size, null, color);
     }
 
-    // UI Getters and Setters
+    // UI Bounds Getters and Setters
 
     @Override
     public Vec2 getPosition() {
@@ -58,6 +58,16 @@ public class UISprite extends Component implements UIRenderableElement {
     @Override
     public void setSize(Vec2 size) {
         bounds.setSize(size);
+    }
+
+    @Override
+    public Anchor getAnchor() {
+        return bounds.getAnchorDir();
+    }
+
+    @Override
+    public void setAnchor(Anchor anchor) {
+        bounds.setAnchorDir(anchor);
     }
 
     public UIBounds getBounds() {
@@ -90,21 +100,9 @@ public class UISprite extends Component implements UIRenderableElement {
         }
     }
 
-    // TODO move to interface
+    @Override
     public void setTexture(Texture texture) {
         this.texture = texture;
-    }
-
-    // Anchor Methods
-
-    @Override
-    public Anchor getAnchor() {
-        return bounds.getAnchorDir();
-    }
-
-    @Override
-    public void setAnchor(Anchor anchor) {
-        bounds.setAnchorDir(anchor);
     }
 
     // Renderer Methods
