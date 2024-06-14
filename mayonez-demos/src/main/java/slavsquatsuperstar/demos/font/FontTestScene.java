@@ -1,4 +1,4 @@
-package slavsquatsuperstar.demos;
+package slavsquatsuperstar.demos.font;
 
 import mayonez.*;
 import mayonez.assets.text.*;
@@ -7,9 +7,6 @@ import mayonez.graphics.font.*;
 import mayonez.graphics.textures.*;
 import mayonez.input.*;
 import mayonez.math.*;
-import slavsquatsuperstar.demos.font.WorldTextLabel;
-import slavsquatsuperstar.demos.font.TextLabel;
-import slavsquatsuperstar.demos.font.UITextLabel;
 
 /**
  * A scene for testing font rendering in the UI and in the game.
@@ -108,27 +105,29 @@ public class FontTestScene extends Scene {
         var fontTexture = Textures.getTexture("assets/fonts/font_pixel.png");
         if (!(fontTexture instanceof GLTexture)) return null;
         var font = new Font((GLTexture) fontTexture, metadata);
-
-        // Widths file
-//        var widthsFile = new TextFile("assets/fonts/font_pixel_widths.txt");
-//        var widthsLines = widthsFile.readLines();
-//        var widthsStr = String.join("", widthsLines);
-//
-//        var widths = new int[widthsStr.length()];
-//        for (int i = 0; i < widths.length; i++) {
-//            widths[i] = Integer.parseInt(widthsStr, i, i + 1, 10);
-//        }
-//
-//        // Check widths
-//        for (int i = 0; i < widths.length; i++) {
-//            if (widths[i] == font.getGlyphs()[i].getWidth()) {
-//                System.out.println("widths match for char " + (char) (metadata.startCharacter() + i));
-//            } else {
-//                System.err.println("widths do not match for char " + (char) (metadata.startCharacter() + i));
-//            }
-//        }
-
+//        checkWidths(font, metadata);
         return font;
+    }
+
+    private static void checkWidths(Font font, FontMetadata metadata) {
+        // Widths file
+        var widthsFile = new TextFile("assets/fonts/font_pixel_widths.txt");
+        var widthsLines = widthsFile.readLines();
+        var widthsStr = String.join("", widthsLines);
+
+        var widths = new int[widthsStr.length()];
+        for (int i = 0; i < widths.length; i++) {
+            widths[i] = Integer.parseInt(widthsStr, i, i + 1, 10);
+        }
+
+        // Check widths
+        for (int i = 0; i < widths.length; i++) {
+            if (widths[i] == font.getGlyphs()[i].getWidth()) {
+                System.out.println("widths match for char " + (char) (metadata.startCharacter() + i));
+            } else {
+                System.err.println("widths do not match for char " + (char) (metadata.startCharacter() + i));
+            }
+        }
     }
 
 }

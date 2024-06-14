@@ -19,16 +19,15 @@ public class UISprite extends Component implements UIRenderableElement {
     private static final Color DEFAULT_COLOR = Colors.WHITE;
 
     // Instance Fields
-    private Vec2 position, size;
+    private UIBounds bounds;
     private Anchor anchor;
     private Texture texture;
     private Color color;
 
     private UISprite(Vec2 position, Vec2 size, Texture texture, Color color) {
         super(UpdateOrder.RENDER);
-        this.position = position;
-        this.size = size;
-        this.anchor = Anchor.CENTER;
+        bounds = new UIBounds(position, size);
+        anchor = Anchor.CENTER;
         this.texture = texture;
         this.color = color;
     }
@@ -45,22 +44,30 @@ public class UISprite extends Component implements UIRenderableElement {
 
     @Override
     public Vec2 getPosition() {
-        return position;
+        return bounds.getCenter();
     }
 
     @Override
     public void setPosition(Vec2 position) {
-        this.position = position;
+        bounds.setCenter(position);
     }
 
     @Override
     public Vec2 getSize() {
-        return size;
+        return bounds.getSize();
     }
 
     @Override
     public void setSize(Vec2 size) {
-        this.size = size;
+        bounds.setSize(size);
+    }
+
+    public UIBounds getBounds() {
+        return bounds;
+    }
+
+    public void setBounds(UIBounds bounds) {
+        this.bounds = bounds;
     }
 
     // UI Renderable Getters and Setters
@@ -108,14 +115,14 @@ public class UISprite extends Component implements UIRenderableElement {
      * @return the anchor direction
      */
     public Vec2 getAnchorTranslateDirection() {
-        return size.mul(anchor.getDirection());
+        return getSize().mul(anchor.getDirection());
     }
 
     /**
      * Moves this element so the anchored center equals the original center.
      */
     public void translateToAnchorOrigin() {
-        setPosition(position.add(getAnchorTranslateDirection()));
+        bounds.setCenter(bounds.getCenter().add(getAnchorTranslateDirection()));
     }
 
     // Renderer Methods
@@ -127,7 +134,7 @@ public class UISprite extends Component implements UIRenderableElement {
                 ? ((GLTexture) texture).getTexCoords()
                 : GLTexture.DEFAULT_TEX_COORDS;
         var sprVertices = new BoundingBox(
-                position.sub(getAnchorTranslateDirection()), size
+                bounds.getCenter().sub(getAnchorTranslateDirection()), bounds.getSize()
         ).getVertices();
         BatchPushHelper.pushTexture(batch, sprVertices, color, texCoords, texID);
     }

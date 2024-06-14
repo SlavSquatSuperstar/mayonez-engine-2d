@@ -69,4 +69,5 @@ public enum Anchor {
     Vec2 getDirection() {
         return direction;
     }
+
 }

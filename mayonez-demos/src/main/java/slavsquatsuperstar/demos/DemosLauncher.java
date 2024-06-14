@@ -3,6 +3,7 @@ package slavsquatsuperstar.demos;
 import mayonez.*;
 import mayonez.launcher.*;
 import mayonez.input.*;
+import slavsquatsuperstar.demos.font.FontTestScene;
 import slavsquatsuperstar.demos.geometrydash.GDEditorScene;
 import slavsquatsuperstar.demos.mario.MarioScene;
 import slavsquatsuperstar.demos.physics.PhysicsSandboxScene;
@@ -16,7 +17,7 @@ import slavsquatsuperstar.demos.spacegame.SpaceGameScene;
  */
 public class DemosLauncher {
 
-    private final static int START_SCENE_INDEX = 1;
+    private final static int START_SCENE_INDEX = 0;
 
     private final static String[] SCENE_NAMES = {
             "Space Game", "Font Test", "Physics Sandbox",

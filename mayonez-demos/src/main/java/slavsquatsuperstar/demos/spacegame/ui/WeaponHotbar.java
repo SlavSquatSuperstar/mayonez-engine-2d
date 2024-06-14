@@ -38,7 +38,7 @@ public class WeaponHotbar extends Script {
         gameObject.setZIndex(SpaceGameZIndex.UI);
 
         // Create hotbar slots
-        var boxSpacing = new Vec2(48, 0);
+        var boxSpacing = new Vec2(size.x + 16, 0);
         for (int i = 0; i < numWeapons; i++) {
             hotbarSlots[i] = new WeaponHotbarSlot(position.add(boxSpacing.mul(i)), size, i);
             gameObject.addComponent(hotbarSlots[i]);
