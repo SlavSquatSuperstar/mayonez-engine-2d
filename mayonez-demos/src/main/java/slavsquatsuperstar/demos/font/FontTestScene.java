@@ -30,8 +30,24 @@ public class FontTestScene extends Scene {
         var font = createFont();
         if (font == null) return;
 
-        var message1 = "ABCDEFGHIJKLM\nNOPQRSTUVWXYZ\nabcdefghijklm\nnopqrstuvwyxz\n0123456789";
-        var message2 = "D\u0000\u007f\ufffd\u200cDDDDD\nD D D D\nD  D  D|\nDDDDDD";
+        var message1 = """
+                ABCDEFGHIJKLM
+                NOPQRSTUVWXYZ
+                abcdefghijklm
+                nopqrstuvwxyz
+                `1234567890-=
+                ~!@#$%^&*()_+
+                /|\\[]{}<>;',?:".
+                """;
+
+        var message2 = """
+                (ABC)[DEF]
+                {GHI}<JKL>
+                1+2-3=0
+                7*7=49
+                ~m,n;w_
+                ~M.N:W_
+                """;
 
         // Scene font
         var fontSize = 6; // pt
@@ -44,20 +60,20 @@ public class FontTestScene extends Scene {
         addObject(new GameObject("Text Holder") {
             @Override
             protected void init() {
-                TextLabel textObj1;
-                addComponent(textObj1 = new WorldTextLabel(
-                        message1, new Vec2(-30, 0), font,
-                        Colors.BLACK, fontSize, lineSpacing)
+                TextLabel worldText1;
+                addComponent(worldText1 = new WorldTextLabel(
+                        message1, new Vec2(-5, 30), font,
+                        Colors.BLUE, fontSize, lineSpacing)
                 );
 
-                TextLabel textObj2;
-                addComponent(textObj2 = new WorldTextLabel(
-                        message2, new Vec2(15, 30), font,
-                        Colors.BLUE, fontSize, 0
-                ));
+                TextLabel worldText2;
+                addComponent(worldText2 = new WorldTextLabel(
+                        message2, new Vec2(-55, 5), font,
+                        Colors.GREEN, fontSize, lineSpacing)
+                );
 
-                TextLabel textObj3;
-                addComponent(textObj3 = new UITextLabel(
+                TextLabel uiText;
+                addComponent(uiText = new UITextLabel(
                         message1, new Vec2(25, 775), font,
                         Colors.RED, uiFontSize, uiLineSpacing
                 ));
@@ -67,10 +83,15 @@ public class FontTestScene extends Scene {
                     protected void update(float dt) {
                         if (KeyInput.keyPressed("space")) {
                             textVisible = !textVisible;
-                            textObj1.setEnabled(textVisible);
-                            textObj2.setEnabled(textVisible);
-                            textObj3.setEnabled(textVisible);
+                            worldText1.setEnabled(textVisible);
+                            worldText2.setEnabled(textVisible);
+                            uiText.setEnabled(textVisible);
                         }
+                    }
+
+                    @Override
+                    protected void debugRender() {
+                        getScene().getDebugDraw().drawPoint(new Vec2(-5, 30), Colors.GREEN);
                     }
                 });
             }
@@ -89,12 +110,6 @@ public class FontTestScene extends Scene {
         }
     }
 
-//    @Override
-//    protected void onUserRender() {
-//        getDebugDraw().drawPoint(new Vec2(-30, 0), Colors.GREEN);
-//        getDebugDraw().drawPoint(new Vec2(15, 30), Colors.GREEN);
-//    }
-
     private Font createFont() {
         // Font files
         var json = new JSONFile("assets/fonts/font_pixel.json");
@@ -104,30 +119,7 @@ public class FontTestScene extends Scene {
         // Create font
         var fontTexture = Textures.getTexture("assets/fonts/font_pixel.png");
         if (!(fontTexture instanceof GLTexture)) return null;
-        var font = new Font((GLTexture) fontTexture, metadata);
-//        checkWidths(font, metadata);
-        return font;
-    }
-
-    private static void checkWidths(Font font, FontMetadata metadata) {
-        // Widths file
-        var widthsFile = new TextFile("assets/fonts/font_pixel_widths.txt");
-        var widthsLines = widthsFile.readLines();
-        var widthsStr = String.join("", widthsLines);
-
-        var widths = new int[widthsStr.length()];
-        for (int i = 0; i < widths.length; i++) {
-            widths[i] = Integer.parseInt(widthsStr, i, i + 1, 10);
-        }
-
-        // Check widths
-        for (int i = 0; i < widths.length; i++) {
-            if (widths[i] == font.getGlyphs()[i].getWidth()) {
-                System.out.println("widths match for char " + (char) (metadata.startCharacter() + i));
-            } else {
-                System.err.println("widths do not match for char " + (char) (metadata.startCharacter() + i));
-            }
-        }
+        return new Font((GLTexture) fontTexture, metadata);
     }
 
 }

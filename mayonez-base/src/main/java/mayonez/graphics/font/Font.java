@@ -27,7 +27,7 @@ public class Font {
     public Font(GLTexture fontTexture, FontMetadata metadata) {
         this.fontTexture = fontTexture;
         this.metadata = metadata;
-        var widths = getGlyphWidths(); // TODO test widths
+        var widths = getGlyphWidths(metadata, fontTexture); // TODO test widths
         glyphs = createGlyphs(widths);
     }
 
@@ -59,10 +59,10 @@ public class Font {
         return glyphs;
     }
 
-    // Glyph Widths Method
+    // Glyph Widths Methods
 
     // Auto figure out glyph widths from image file
-    private int[] getGlyphWidths() {
+    static int[] getGlyphWidths(FontMetadata metadata, Texture fontTexture) {
         var widths = new int[metadata.numCharacters()];
 
         // Look at AWT image since no flipping or freeing
@@ -96,7 +96,7 @@ public class Font {
     }
 
     // Auto set glyph width by finding the last filled column
-    private int getGlyphWidth(ImageData imageData, Vec2 glyphBottomLeft, int glyphSize) {
+    private static int getGlyphWidth(ImageData imageData, Vec2 glyphBottomLeft, int glyphSize) {
         var startX = (int) glyphBottomLeft.x;
         var startY = (int) glyphBottomLeft.y;
 
@@ -110,7 +110,7 @@ public class Font {
         return lastFilled + 1; // Get column after last filled
     }
 
-    private boolean isColumnBlank(ImageData imageData, int startX, int startY, int glyphHeight, int col) {
+    private static boolean isColumnBlank(ImageData imageData, int startX, int startY, int glyphHeight, int col) {
         for (var row = 0; row < glyphHeight; row++) {
             var pixAlpha = imageData.getPixelColor(startX + col, startY + row).getAlpha();
             if (pixAlpha > 0) return false; // Found a filled pixel
