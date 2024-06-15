@@ -1,9 +1,9 @@
 package mayonez.graphics.debug
 
 import mayonez.graphics.*
-import mayonez.graphics.batch.*
 import mayonez.math.shapes.*
 import mayonez.renderer.awt.*
+import mayonez.renderer.batch.*
 import mayonez.renderer.gl.*
 import java.awt.*
 

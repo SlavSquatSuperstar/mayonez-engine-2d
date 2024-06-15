@@ -1,11 +1,11 @@
 package mayonez.graphics.sprites
 
 import mayonez.graphics.*
-import mayonez.graphics.batch.*
-import mayonez.graphics.batch.BatchPushHelper.pushTexture
 import mayonez.graphics.textures.*
 import mayonez.math.*
 import mayonez.math.shapes.*
+import mayonez.renderer.batch.*
+import mayonez.renderer.batch.BatchPushHelper.pushTexture
 import mayonez.renderer.gl.*
 
 

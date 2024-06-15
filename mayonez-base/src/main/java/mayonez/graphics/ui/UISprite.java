@@ -2,10 +2,10 @@ package mayonez.graphics.ui;
 
 import mayonez.*;
 import mayonez.graphics.*;
-import mayonez.graphics.batch.*;
 import mayonez.graphics.textures.*;
 import mayonez.math.*;
 import mayonez.math.shapes.*;
+import mayonez.renderer.batch.*;
 
 /**
  * A rectangular sprite with a texture and color that is drawn to the UI.

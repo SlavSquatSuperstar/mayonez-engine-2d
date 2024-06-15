@@ -2,9 +2,9 @@ package mayonez.renderer.gl
 
 import mayonez.assets.*
 import mayonez.graphics.*
-import mayonez.graphics.batch.*
-import mayonez.graphics.shader.*
 import mayonez.renderer.*
+import mayonez.renderer.batch.*
+import mayonez.renderer.shader.*
 import java.awt.*
 
 /**

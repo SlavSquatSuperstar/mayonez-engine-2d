@@ -1,4 +1,4 @@
-package mayonez.graphics.shader;
+package mayonez.renderer.shader;
 
 import mayonez.*;
 import mayonez.assets.*;

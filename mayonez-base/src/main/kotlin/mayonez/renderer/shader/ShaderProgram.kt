@@ -1,10 +1,8 @@
-package mayonez.graphics.shader
+package mayonez.renderer.shader
 
-import mayonez.*
-import mayonez.annotations.*
 import mayonez.graphics.*
-import org.lwjgl.opengl.GL11.GL_FALSE
-import org.lwjgl.opengl.GL20.*
+import org.lwjgl.opengl.GL11
+import org.lwjgl.opengl.GL20
 
 /**
  * An individual sub-program within a .glsl [Shader] file.
@@ -19,7 +17,7 @@ internal class ShaderProgram(
 ) {
 
     /** The ID of the shader sub-program in OpenGL. */
-    private val programID: Int = glCreateShader(type.glShaderType)
+    private val programID: Int = GL20.glCreateShader(type.glShaderType)
 
     /** The type of the shader sub-program in OpenGL. */
     val typeName: String
@@ -32,15 +30,15 @@ internal class ShaderProgram(
      */
     @Throws(ShaderException::class)
     fun compileSource() {
-        glShaderSource(programID, source)
-        glCompileShader(programID)
+        GL20.glShaderSource(programID, source)
+        GL20.glCompileShader(programID)
         if (!checkCompiledCorrectly(programID)) {
             throw ShaderException("Error compiling shader program")
         }
     }
 
     private fun checkCompiledCorrectly(id: Int): Boolean {
-        return glGetShaderi(id, GL_COMPILE_STATUS) != GL_FALSE
+        return GL20.glGetShaderi(id, GL20.GL_COMPILE_STATUS) != GL11.GL_FALSE
     }
 
     /**
@@ -49,12 +47,12 @@ internal class ShaderProgram(
      * @param shaderID the parent shader ID
      */
     fun linkToProgram(shaderID: Int) {
-        glAttachShader(shaderID, programID)
+        GL20.glAttachShader(shaderID, programID)
     }
 
     /** Cleans up the object compiled from this shader sub-program. */
     fun delete() {
-        glDeleteShader(programID)
+        GL20.glDeleteShader(programID)
     }
 
 }

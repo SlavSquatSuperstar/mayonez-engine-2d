@@ -1,10 +1,8 @@
-package mayonez.graphics.shader
+package mayonez.renderer.shader
 
-import mayonez.annotations.*
 import mayonez.graphics.*
 import mayonez.util.*
-import org.lwjgl.opengl.GL20.GL_FRAGMENT_SHADER
-import org.lwjgl.opengl.GL20.GL_VERTEX_SHADER
+import org.lwjgl.opengl.GL20
 
 /**
  * The type of shader used by the GPU.
@@ -18,13 +16,13 @@ internal enum class ShaderType(
 ) {
 
     /** A vertex shader that transforms an image to its screen position. */
-    VERTEX(GL_VERTEX_SHADER),
+    VERTEX(GL20.GL_VERTEX_SHADER),
 
     /**
      * A fragment (pixel) shader that calculates the color and texture of each
      * individual pixel of an image.
      */
-    FRAGMENT(GL_FRAGMENT_SHADER);
+    FRAGMENT(GL20.GL_FRAGMENT_SHADER);
 
     companion object {
         /**

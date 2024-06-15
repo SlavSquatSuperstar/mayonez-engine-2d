@@ -1,4 +1,4 @@
-package mayonez.graphics.batch
+package mayonez.renderer.batch
 
 import mayonez.graphics.*
 import org.lwjgl.opengl.GL11.GL_FLOAT
