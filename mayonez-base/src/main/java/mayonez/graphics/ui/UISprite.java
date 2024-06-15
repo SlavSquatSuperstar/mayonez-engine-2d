@@ -109,14 +109,13 @@ public class UISprite extends Component implements UIRenderableElement {
 
     @Override
     public void pushToBatch(RenderBatch batch) {
-        var texID = batch.getTextureSlot((GLTexture) texture);
+        var sprVertices = new BoundingBox(bounds.getCenter(), bounds.getSize())
+                .getVertices();
         var texCoords = (texture != null)
                 ? ((GLTexture) texture).getTexCoords()
                 : GLTexture.DEFAULT_TEX_COORDS;
-        var sprVertices = new BoundingBox(
-                bounds.getCenter(), bounds.getSize()
-        ).getVertices();
-        BatchPushHelper.pushTexture(batch, sprVertices, color, texCoords, texID);
+        var texID = batch.getTextureSlot((GLTexture) texture);
+        BatchPushHelper.pushSprite(batch, sprVertices, color, texCoords, texID);
     }
 
     @Override

@@ -2,10 +2,9 @@ package mayonez.graphics.sprites
 
 import mayonez.graphics.*
 import mayonez.graphics.textures.*
-import mayonez.math.*
 import mayonez.math.shapes.*
 import mayonez.renderer.batch.*
-import mayonez.renderer.batch.BatchPushHelper.pushTexture
+import mayonez.renderer.batch.BatchPushHelper.pushSprite
 import mayonez.renderer.gl.*
 
 
@@ -65,16 +64,17 @@ internal class GLSprite private constructor(
      * @param batch the batch
      */
     override fun pushToBatch(batch: RenderBatch) {
-        val objXf = transform.combine(getSpriteTransform())
-        val texID = batch.getTextureSlot(texture)
-
+        // Render sprite at object center and rotate according to object
         // Background sprite will not have scale but will use spriteXf instead
+        val objXf = transform.combine(getSpriteTransform())
         val sceneScale = gameObject?.scene?.scale ?: 1f
         val sprVertices = Rectangle(
             objXf.position * sceneScale, objXf.scale * sceneScale, objXf.rotation
         ).vertices
 
-        batch.pushTexture(sprVertices, this.color, getTexCoords(), texID)
+        val texCoords = texture?.texCoords ?: GLTexture.DEFAULT_TEX_COORDS
+        val texID = batch.getTextureSlot(texture)
+        batch.pushSprite(sprVertices, this.color, texCoords, texID)
     }
 
     // Renderable Methods
@@ -82,9 +82,5 @@ internal class GLSprite private constructor(
     override fun getBatchSize(): Int = RenderBatch.MAX_SPRITES
 
     override fun getPrimitive(): DrawPrimitive = DrawPrimitive.SPRITE
-
-    fun getTexCoords(): Array<Vec2> {
-        return texture?.texCoords ?: GLTexture.DEFAULT_TEX_COORDS
-    }
 
 }

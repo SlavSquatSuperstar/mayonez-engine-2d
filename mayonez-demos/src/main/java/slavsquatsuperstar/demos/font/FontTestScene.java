@@ -1,12 +1,10 @@
 package slavsquatsuperstar.demos.font;
 
 import mayonez.*;
-import mayonez.assets.text.*;
 import mayonez.graphics.*;
-import mayonez.graphics.font.*;
-import mayonez.graphics.textures.*;
 import mayonez.input.*;
 import mayonez.math.*;
+import slavsquatsuperstar.demos.DemosAssets;
 
 /**
  * A scene for testing font rendering in the UI and in the game.
@@ -27,7 +25,7 @@ public class FontTestScene extends Scene {
     protected void init() {
         textVisible = true;
 
-        var font = createFont();
+        var font = DemosAssets.getFont();
         if (font == null) return;
 
         var message1 = """
@@ -108,18 +106,6 @@ public class FontTestScene extends Scene {
             getCamera().rotate(KeyInput.getAxis("arrows horizontal"));
             getCamera().zoom(1 + 0.01f * KeyInput.getAxis("arrows vertical"));
         }
-    }
-
-    private Font createFont() {
-        // Font files
-        var json = new JSONFile("assets/fonts/font_pixel.json");
-        var record = json.readJSON();
-        var metadata = new FontMetadata(record);
-
-        // Create font
-        var fontTexture = Textures.getTexture("assets/fonts/font_pixel.png");
-        if (!(fontTexture instanceof GLTexture)) return null;
-        return new Font((GLTexture) fontTexture, metadata);
     }
 
 }

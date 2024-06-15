@@ -11,7 +11,6 @@ description = "The core library for Mayonez Engine that contains the API classes
 
 dependencies {
     // Code Dependencies
-    compileOnly("org.jetbrains:annotations:24.1.0")
     implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
     implementation("org.joml:joml:1.10.5")
 

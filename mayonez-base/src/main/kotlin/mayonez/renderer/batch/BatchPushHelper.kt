@@ -4,7 +4,7 @@ import mayonez.graphics.*
 import mayonez.math.*
 
 /**
- * Helps push textures to a render batch.
+ * Helps push objects to a render batch.
  *
  * @author SlavSquatSuperstar
  */
@@ -12,13 +12,11 @@ object BatchPushHelper {
 
     /** Adds a sprite's vertex data to a render batch. */
     @JvmStatic
-    fun RenderBatch.pushTexture(
+    fun RenderBatch.pushSprite(
         sprVertices: Array<Vec2>, color: MColor, texCoords: Array<Vec2>, texID: Int
     ) {
-        // Render sprite at object center and rotate according to object
-        val glColor = color.toGL()
         for (i in sprVertices.indices) {
-            this.pushVertex(sprVertices[i], glColor, texCoords[i], texID)
+            this.pushVertex(sprVertices[i], color.toGL(), texCoords[i], texID)
         }
     }
 

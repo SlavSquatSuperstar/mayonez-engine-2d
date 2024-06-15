@@ -18,7 +18,6 @@ import java.util.List;
 class RenderLayer {
 
     // Renderers
-
     private final SceneRenderer sceneRenderer;
     private final UIRenderer uiRenderer;
     private final DebugDraw debugDraw;

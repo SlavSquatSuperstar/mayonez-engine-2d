@@ -75,12 +75,12 @@ public abstract class TextLabel extends Script {
 
     @Override
     protected void onEnable() {
-        glyphSprites.forEach(c -> c.setEnabled(false));
+        glyphSprites.forEach(c -> c.setEnabled(true));
     }
 
     @Override
     protected void onDisable() {
-        glyphSprites.forEach(c -> c.setEnabled(true));
+        glyphSprites.forEach(c -> c.setEnabled(false));
     }
 
 }

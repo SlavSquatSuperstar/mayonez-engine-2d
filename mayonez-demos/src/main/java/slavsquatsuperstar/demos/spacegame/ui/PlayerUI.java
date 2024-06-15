@@ -3,7 +3,11 @@ package slavsquatsuperstar.demos.spacegame.ui;
 import mayonez.*;
 import mayonez.graphics.*;
 import mayonez.graphics.textures.*;
+import mayonez.input.*;
 import mayonez.math.*;
+import slavsquatsuperstar.demos.DemosAssets;
+import slavsquatsuperstar.demos.font.TextLabel;
+import slavsquatsuperstar.demos.font.UITextLabel;
 import slavsquatsuperstar.demos.spacegame.combat.projectiles.ProjectilePrefabs;
 
 /**
@@ -22,6 +26,8 @@ public class PlayerUI extends GameObject {
             "assets/spacegame/textures/ui/gray_background.png");
     private static final Texture LABEL_BORDER_TEXTURE = Textures.getTexture(
             "assets/spacegame/textures/ui/gray_border.png");
+
+    private boolean hintsShown;
 
     public PlayerUI(String name) {
         super(name);
@@ -59,6 +65,38 @@ public class PlayerUI extends GameObject {
         addComponent(weaponHotbar);
 
         addComponent(new PlayerUIController(healthBar, shieldBar, weaponHotbar));
+
+        // Hints Text
+        TextLabel showHintsText;
+        addComponent(showHintsText = new UITextLabel(
+                "Show Hints (H)", new Vec2(1040, 25),
+                DemosAssets.getFont(), Colors.WHITE,
+                16, 2
+        ));
+
+        TextLabel hideHintsText;
+        addComponent(hideHintsText = new UITextLabel(
+                "Hide Hints (H)", new Vec2(1040, 25),
+                DemosAssets.getFont(), Colors.WHITE,
+                16, 2
+        ));
+
+        hintsShown = false;
+        addComponent(new Script() {
+            @Override
+            protected void start() {
+                hideHintsText.setEnabled(false);
+            }
+
+            @Override
+            protected void update(float dt) {
+                if (KeyInput.keyPressed("h")) {
+                    hintsShown = !hintsShown;
+                    showHintsText.setEnabled(!hintsShown);
+                    hideHintsText.setEnabled(hintsShown);
+                }
+            }
+        });
     }
 
 }
