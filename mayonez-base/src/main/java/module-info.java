@@ -34,7 +34,7 @@ module mayonez.base {
     exports mayonez.assets.image;
     exports mayonez.assets.text;
 
-    // Renderer
+    // Graphics
     exports mayonez.graphics;
     exports mayonez.graphics.camera;
     exports mayonez.graphics.debug;
@@ -42,6 +42,9 @@ module mayonez.base {
     exports mayonez.graphics.sprites;
     exports mayonez.graphics.textures;
     exports mayonez.graphics.ui;
+
+    // Renderer
+    exports mayonez.renderer.batch;
 
     // Physics
     exports mayonez.physics;

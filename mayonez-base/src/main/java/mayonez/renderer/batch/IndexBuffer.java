@@ -16,8 +16,8 @@ import static org.lwjgl.opengl.GL15.*;
 @UsesEngine(EngineType.GL)
 class IndexBuffer {
 
-    private final DrawPrimitive primitive; // TODO only needed for gen indices
-    private final int maxBatchSize; // TODO same
+    private final DrawPrimitive primitive; // TODO make fields method arguments
+    private final int maxBatchSize;
     private int eboID;
 
     IndexBuffer(DrawPrimitive primitive, int maxBatchSize) {
@@ -39,19 +39,10 @@ class IndexBuffer {
      * @return an index array (int buffer)
      */
     IntBuffer getElementIndices() {
-        var numIndices = getNumIndices();
+        var numIndices = primitive.getElementCount() * maxBatchSize;
         var elements = BufferUtils.createIntBuffer(numIndices);
         for (var i = 0; i < maxBatchSize; i++) primitive.addIndices(elements, i);
         return elements.flip(); // need to flip an int buffer
-    }
-
-    /**
-     * Get the number of indices used per draw call
-     *
-     * @return the index count
-     */
-    int getNumIndices() {
-        return primitive.getElementCount() * maxBatchSize;
     }
 
     /**

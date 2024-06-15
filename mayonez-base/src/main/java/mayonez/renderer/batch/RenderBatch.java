@@ -121,7 +121,7 @@ public final class RenderBatch {
 
     /**
      * Adds a texture to this render batch if the texture is not present and returns
-     * the texture slot for the batche's shader, which is not necessarily the OpenGL texture ID.
+     * the texture slot for the batch's shader, which is not necessarily the OpenGL texture ID.
      *
      * @param tex the texture
      * @return the batch texture ID, 0 if color, otherwise 1-8
@@ -186,7 +186,7 @@ public final class RenderBatch {
     @Override
     public String toString() {
         return String.format("Render Batch (Type: %s, Capacity: %d/%d, Z-Index: %d)",
-                primitive, (vertices.size() / primitive.getComponentCount()), maxBatchObjects, zIndex);
+                primitive, (vertices.size() / primitive.getTotalComponents()), maxBatchObjects, zIndex);
         // TODO this seems wrong
     }
 

@@ -33,6 +33,7 @@ public class Shader extends Asset {
         }
 
         try {
+            Logger.debug("Creating shader from file %s", getFilenameInQuotes());
             List<ShaderProgram> programs = readShaderPrograms();
             programs.forEach(this::compileShader);
             linkShaderPrograms(programs);
@@ -42,7 +43,7 @@ public class Shader extends Asset {
         }
     }
 
-    // Read Shader Helper Methods
+    // Read Shader Methods
 
     private List<ShaderProgram> readShaderPrograms() throws ShaderException {
         try {
@@ -50,38 +51,36 @@ public class Shader extends Asset {
             var shaders = source.split("(#type)( )+"); // shaders indicated by "#type <shader_type>"
             return parseShaderPrograms(shaders);
         } catch (Exception e) {
-            Logger.error("Could not read shader %s", getFilenameInQuotes());
+            Logger.error("Could not parse shader file %s", getFilenameInQuotes());
             throw new ShaderException(e);
         }
     }
 
-    private List<ShaderProgram> parseShaderPrograms(String[] subPrograms) throws RuntimeException {
+    private static List<ShaderProgram> parseShaderPrograms(String[] subPrograms) throws ShaderException {
         var programs = new ArrayList<ShaderProgram>();
         for (var shader : subPrograms) {
-            shader = shader.strip();
-            if (shader.isEmpty()) continue;
-            programs.add(readNextProgram(shader));
+            var src = shader.strip();
+            if (src.isEmpty()) continue;
+            programs.add(readShaderProgram(src));
         }
         return programs;
     }
 
-    private ShaderProgram readNextProgram(String shaderSource) throws RuntimeException {
+    private static ShaderProgram readShaderProgram(String shaderSource) throws ShaderException {
         var firstNewLine = shaderSource.indexOf("\n");
         var typeName = shaderSource.substring(0, firstNewLine).trim();
 
         var programSource = shaderSource.substring(firstNewLine + 1);
         var shaderType = ShaderType.findWithName(typeName);
-        return new ShaderProgram(shaderType, programSource);
+        return new ShaderProgram(programSource, shaderType);
     }
 
-    // Compile Shader Helper Methods
+    // Compile Shader Methods
 
     private void compileShader(ShaderProgram shader) throws ShaderException {
         try {
             shader.compileSource();
-            Logger.debug("OpenGL: Compiled %s shader in %s", shader.getTypeName(), getFilenameInQuotes());
         } catch (ShaderException e) {
-            Logger.error("OpenGL: Could not compile %s shader in %s", shader.getTypeName(), getFilenameInQuotes());
             Logger.error("OpenGL: " + glGetShaderInfoLog(shaderID));
             throw e;
         }
@@ -91,16 +90,19 @@ public class Shader extends Asset {
         programs.forEach(p -> p.linkToProgram(shaderID));
         glLinkProgram(shaderID);
         glValidateProgram(shaderID);
-        checkLinkStatus(shaderID);
-    }
 
-    private void checkLinkStatus(int shaderID) throws ShaderException {
-        if (glGetProgrami(shaderID, GL_LINK_STATUS) == GL_FALSE) {
+        // Check link status
+        if (shaderLinkedSuccessfully(shaderID)) {
+            Logger.debug("OpenGL: Finished linking shader file %s", getFilenameInQuotes());
+        } else {
             Logger.error("OpenGL: Could not link shader file %s", getFilenameInQuotes());
             Logger.error("OpenGL: " + glGetProgramInfoLog(shaderID));
             throw new ShaderException("Error linking shader file");
         }
-        Logger.debug("OpenGL: Linked shader file %s", getFilenameInQuotes());
+    }
+
+    private static boolean shaderLinkedSuccessfully(int shaderID) {
+        return glGetProgrami(shaderID, GL_LINK_STATUS) != GL_FALSE;
     }
 
     // Renderer Methods
@@ -128,7 +130,7 @@ public class Shader extends Asset {
         }
     }
 
-    // Upload Methods
+    // Uniform Methods
 
     public void uploadIntArray(String varName, int[] arr) {
         glUniform1iv(getVariableLocation(varName), arr);

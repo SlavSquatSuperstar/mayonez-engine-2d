@@ -4,6 +4,8 @@ import mayonez.graphics.*
 import org.lwjgl.opengl.GL11
 import java.nio.IntBuffer
 
+private val QUAD_ELEMENT_ORDER = intArrayOf(0, 1, 2, 0, 2, 3)
+
 /**
  * Types of OpenGL primitive objects that can be submitted to the GPU. Each
  * object defines the attribute layout and count of vertices.
@@ -24,8 +26,8 @@ enum class DrawPrimitive(
         VertexAttribute.POSITION, VertexAttribute.COLOR
     ) {
         override fun addIndices(elements: IntBuffer, index: Int) {
-            for (v in 0..<elementCount) {
-                elements.put(vertexCount * index + v)
+            for (e in 0..<elementCount) {
+                elements.put(vertexCount * index + e)
             }
         }
     },
@@ -37,13 +39,13 @@ enum class DrawPrimitive(
     ) {
         override fun addIndices(elements: IntBuffer, index: Int) {
             // Use counterclockwise winding
-            for (v in 0..<elementCount) {
-                elements.put(vertexCount * index + v)
+            for (e in 0..<elementCount) {
+                elements.put(vertexCount * index + e)
             }
         }
     },
 
-    // TODO non-sprite quad
+    // TODO no texture quad
 
     /**
      * An object with 4 vertices with attributes position, color, tex coords,
@@ -55,15 +57,14 @@ enum class DrawPrimitive(
     ) {
         override fun addIndices(elements: IntBuffer, index: Int) {
             // Split quad into two triangles so 6 vertices
-            val triangleVertices = intArrayOf(0, 1, 2, 0, 2, 3)
-            for (v in triangleVertices) {
-                elements.put(vertexCount * index + v)
+            for (e in QUAD_ELEMENT_ORDER) {
+                elements.put(vertexCount * index + e)
             }
         }
     };
 
     /** The number of components for all attributes per vertex. */
-    val componentCount: Int = attributes.sumOf { it.count }
+    val totalComponents: Int = attributes.sumOf { it.components }
 
     /**
      * Adds indices to an element buffer array (EBO).

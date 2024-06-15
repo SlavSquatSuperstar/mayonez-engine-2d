@@ -4,16 +4,17 @@ import mayonez.graphics.*
 import org.lwjgl.opengl.GL11.GL_FLOAT
 
 /**
- * Defines the datatype and length of an attribute of an individual vertex.
+ * A feature of an individual vertex, such as position or color, passed to the GPU.
+ * Each attribute defines a count and data type for its components.
  *
  * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.GL)
 enum class VertexAttribute(
     /** The number of components (floats or integers) in the attribute. */
-    val count: Int,
-    /** The size in bytes of the data type. */
-    val bytes: Int,
+    val components: Int,
+    /** The number of bytes per component. */
+    val componentBytes: Int,
     /** The data type used by OpenGL. */
     val glType: Int
 ) {
@@ -28,9 +29,10 @@ enum class VertexAttribute(
     TEX_COORD(2, Float.SIZE_BYTES, GL_FLOAT),
 
     /** The texture ID of a vertex, id. */
-    TEX_ID(1, Float.SIZE_BYTES, GL_FLOAT); // Better to use float since everything else is a float
+    TEX_ID(1, Float.SIZE_BYTES, GL_FLOAT);
 
     /** The total size in bytes of this attribute. */
-    val sizeBytes: Int = count * bytes
+    val totalBytes: Int
+        get() = components * componentBytes
 
 }

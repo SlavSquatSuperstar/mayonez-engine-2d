@@ -27,7 +27,7 @@ class VertexBufferArray {
 
     VertexBufferArray(DrawPrimitive primitive, int maxBatchObjects) {
         elementCount = primitive.getElementCount();
-        totalComponentCount = primitive.getVertexCount() * primitive.getComponentCount();
+        totalComponentCount = primitive.getVertexCount() * primitive.getTotalComponents();
 
         var capacity = totalComponentCount * maxBatchObjects;
         vertexData = new float[capacity];

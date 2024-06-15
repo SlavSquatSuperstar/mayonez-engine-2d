@@ -15,7 +15,7 @@ import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
 @UsesEngine(EngineType.GL)
 class VertexBuffer {
 
-    private final DrawPrimitive primitive; // TODO only needed for set layout
+    private final DrawPrimitive primitive; // TODO make fields method arguments
     private final VertexBufferArray vertices;
     private int vboID;
 
@@ -42,10 +42,10 @@ class VertexBuffer {
         var attributes = primitive.getAttributes();
         for (var i = 0; i < attributes.length; i++) {
             var attrib = attributes[i];
-            glVertexAttribPointer(i, attrib.getCount(), attrib.getGlType(), false,
-                    primitive.getComponentCount() * attrib.getBytes(), ptrOffset);
+            glVertexAttribPointer(i, attrib.getComponents(), attrib.getGlType(), false,
+                    primitive.getTotalComponents() * attrib.getComponentBytes(), ptrOffset);
             glEnableVertexAttribArray(i);
-            ptrOffset += attrib.getSizeBytes();
+            ptrOffset += attrib.getTotalBytes();
         }
     }
 
