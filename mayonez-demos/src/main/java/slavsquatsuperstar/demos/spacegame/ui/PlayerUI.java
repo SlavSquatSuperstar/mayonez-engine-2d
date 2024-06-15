@@ -66,6 +66,9 @@ public class PlayerUI extends GameObject {
 
         addComponent(new PlayerUIController(healthBar, shieldBar, weaponHotbar));
 
+        var font = DemosAssets.getFont();
+        if (font == null) return;
+
         // Hints Text
         TextLabel showHintsText;
         addComponent(showHintsText = new UITextLabel(

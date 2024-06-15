@@ -69,7 +69,7 @@ public sealed class GLTexture extends Texture permits GLSpriteSheetTexture {
     protected STBImageData readImage() {
         try {
             // Read image from file
-            var imageData = new STBImageData(getFilename());;
+            var imageData = new STBImageData(getFilename());
             Logger.debug("Loaded image %s", getFilename());
             return imageData;
         } catch (IOException e) {

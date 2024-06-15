@@ -3,7 +3,6 @@ package mayonez.assets.text;
 import mayonez.*;
 import mayonez.assets.*;
 import mayonez.io.text.*;
-import mayonez.math.*;
 import mayonez.util.Record;
 
 import java.io.IOException;

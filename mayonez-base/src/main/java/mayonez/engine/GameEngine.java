@@ -2,7 +2,6 @@ package mayonez.engine;
 
 import mayonez.*;
 import mayonez.input.*;
-import mayonez.math.*;
 
 /**
  * An application that manages the window and input and continuously updates and renders the game.
