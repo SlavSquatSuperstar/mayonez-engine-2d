@@ -1,10 +1,10 @@
 package mayonez;
 
 import mayonez.graphics.debug.*;
-import mayonez.graphics.renderer.*;
 import mayonez.graphics.sprites.*;
 import mayonez.graphics.ui.*;
 import mayonez.math.*;
+import mayonez.renderer.*;
 
 import java.awt.*;
 import java.util.List;

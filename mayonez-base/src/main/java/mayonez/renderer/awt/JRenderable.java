@@ -1,7 +1,7 @@
-package mayonez.graphics.renderer.awt;
+package mayonez.renderer.awt;
 
 import mayonez.graphics.*;
-import mayonez.graphics.renderer.*;
+import mayonez.renderer.*;
 
 import java.awt.*;
 

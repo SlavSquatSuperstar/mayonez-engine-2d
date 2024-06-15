@@ -3,7 +3,6 @@ package mayonez;
 import mayonez.graphics.*;
 import mayonez.graphics.camera.*;
 import mayonez.graphics.debug.*;
-import mayonez.graphics.renderer.*;
 import mayonez.graphics.sprites.*;
 import mayonez.graphics.textures.*;
 import mayonez.math.Random;
@@ -11,6 +10,7 @@ import mayonez.math.*;
 import mayonez.physics.*;
 import mayonez.physics.colliders.*;
 import mayonez.physics.dynamics.*;
+import mayonez.renderer.*;
 import mayonez.util.*;
 
 import java.awt.Graphics2D;

@@ -4,4 +4,4 @@
  *
  * @author SlavSquatSuperstar
  */
-package mayonez.graphics.renderer.gl;
+package mayonez.renderer.gl;

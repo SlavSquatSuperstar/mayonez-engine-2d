@@ -1,9 +1,9 @@
 package mayonez.graphics.sprites
 
 import mayonez.graphics.*
-import mayonez.graphics.renderer.awt.*
 import mayonez.graphics.textures.*
 import mayonez.math.shapes.Rectangle
+import mayonez.renderer.awt.*
 import java.awt.*
 
 /**

@@ -1,11 +1,11 @@
-package mayonez.graphics.renderer;
+package mayonez.renderer;
 
 import mayonez.*;
-import mayonez.graphics.renderer.awt.*;
-import mayonez.graphics.renderer.gl.*;
+import mayonez.renderer.awt.*;
+import mayonez.renderer.gl.*;
 
 /**
- * A factory class that constructs {@link mayonez.graphics.renderer.Renderer} objects
+ * A factory class that constructs {@link Renderer} objects
  * depending on the engine type.
  *
  * @author SlavSquatSuperstar

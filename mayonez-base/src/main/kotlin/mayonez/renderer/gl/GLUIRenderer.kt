@@ -1,8 +1,8 @@
-package mayonez.graphics.renderer.gl
+package mayonez.renderer.gl
 
 import mayonez.graphics.*
 import mayonez.graphics.debug.*
-import mayonez.graphics.renderer.*
+import mayonez.renderer.*
 import org.lwjgl.opengl.GL11.glLineWidth
 
 /**

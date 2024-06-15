@@ -1,4 +1,4 @@
-package mayonez.graphics.renderer;
+package mayonez.renderer;
 
 import mayonez.*;
 import mayonez.graphics.camera.*;

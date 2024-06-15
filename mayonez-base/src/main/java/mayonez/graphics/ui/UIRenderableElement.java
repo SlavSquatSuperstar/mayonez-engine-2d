@@ -1,8 +1,8 @@
 package mayonez.graphics.ui;
 
 import mayonez.graphics.*;
-import mayonez.graphics.renderer.gl.*;
 import mayonez.graphics.textures.*;
+import mayonez.renderer.gl.*;
 
 /**
  * A visible user interface element that contains a renderable component in

@@ -3,10 +3,10 @@ package mayonez.graphics.sprites
 import mayonez.graphics.*
 import mayonez.graphics.batch.*
 import mayonez.graphics.batch.BatchPushHelper.pushTexture
-import mayonez.graphics.renderer.gl.*
 import mayonez.graphics.textures.*
 import mayonez.math.*
 import mayonez.math.shapes.*
+import mayonez.renderer.gl.*
 
 
 /**

@@ -1,9 +1,9 @@
-package mayonez.graphics.renderer.gl;
+package mayonez.renderer.gl;
 
 import mayonez.graphics.*;
 import mayonez.graphics.batch.*;
-import mayonez.graphics.renderer.*;
 import mayonez.graphics.textures.*;
+import mayonez.renderer.*;
 
 /**
  * An object or component that can be drawn to the screen using the GL engine.

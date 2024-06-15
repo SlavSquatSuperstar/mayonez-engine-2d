@@ -1,4 +1,4 @@
-package mayonez.graphics.renderer;
+package mayonez.renderer;
 
 import mayonez.graphics.sprites.*;
 import mayonez.math.*;

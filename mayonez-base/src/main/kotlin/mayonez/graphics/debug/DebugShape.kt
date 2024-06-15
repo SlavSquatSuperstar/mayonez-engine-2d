@@ -2,14 +2,14 @@ package mayonez.graphics.debug
 
 import mayonez.graphics.*
 import mayonez.graphics.batch.*
-import mayonez.graphics.renderer.awt.*
-import mayonez.graphics.renderer.gl.*
 import mayonez.math.shapes.*
+import mayonez.renderer.awt.*
+import mayonez.renderer.gl.*
 import java.awt.*
 
 /**
  * Passes shape and color information to a
- * [mayonez.graphics.renderer.DebugRenderer].
+ * [mayonez.renderer.DebugRenderer].
  *
  * @author SlavSquatSuperstar
  */

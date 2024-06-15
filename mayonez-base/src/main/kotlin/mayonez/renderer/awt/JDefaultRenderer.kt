@@ -1,13 +1,14 @@
-package mayonez.graphics.renderer.awt
+package mayonez.renderer.awt
 
 import mayonez.*
 import mayonez.graphics.*
 import mayonez.graphics.camera.*
 import mayonez.graphics.debug.*
-import mayonez.graphics.renderer.*
+import mayonez.graphics.debug.DebugShape
 import mayonez.graphics.sprites.*
 import mayonez.graphics.textures.*
 import mayonez.math.*
+import mayonez.renderer.*
 import java.awt.*
 import kotlin.math.*
 
@@ -20,7 +21,8 @@ private val DEFAULT_STROKE: Stroke = BasicStroke(DebugDraw.DEFAULT_STROKE_SIZE)
  * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.AWT)
-internal class JDefaultRenderer : SceneRenderer, DebugRenderer {
+internal class JDefaultRenderer : SceneRenderer,
+    DebugRenderer {
 
     // Renderer Objects
     private val objects: MutableList<JRenderable> = ArrayList() // permanent components

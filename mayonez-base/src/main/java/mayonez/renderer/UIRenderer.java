@@ -1,4 +1,4 @@
-package mayonez.graphics.renderer;
+package mayonez.renderer;
 
 /**
  * Draws user interface elements to the scene.

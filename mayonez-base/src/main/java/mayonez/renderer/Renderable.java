@@ -1,7 +1,7 @@
-package mayonez.graphics.renderer;
+package mayonez.renderer;
 
 /**
- * An object that can be drawn to the screen through a {@link mayonez.graphics.renderer.Renderer}.
+ * An object that can be drawn to the screen through a {@link Renderer}.
  */
 public interface Renderable {
 

@@ -1,13 +1,13 @@
 package mayonez.graphics.debug
 
 import mayonez.graphics.*
-import mayonez.graphics.renderer.*
 import mayonez.math.*
 import mayonez.math.shapes.*
+import mayonez.renderer.*
 
 /**
  * Allows colliders and shapes to be manually drawn onto the screen through
- * the scene's [mayonez.graphics.renderer.DebugRenderer]. All shapes are
+ * the scene's [mayonez.renderer.DebugRenderer]. All shapes are
  * specified using world coordinates, and colliders are centered around an
  * object's position.
  *
