@@ -1,6 +1,6 @@
 package mayonez.graphics.camera
 
-import mayonez.*
+import mayonez.engine.*
 import mayonez.graphics.*
 import mayonez.math.*
 import org.joml.*
@@ -89,7 +89,7 @@ class GLCamera(screenSize: Vec2?, sceneScale: Float) : Camera(screenSize, sceneS
 
     override fun toWorld(screen: Vec2): Vec2 {
         // Divide the raw screen coordinates by the window scaling
-        return getViewPos(getClipPos(screen / Mayonez.windowScale)) + position
+        return getViewPos(getClipPos(screen / WindowProperties.getWindowScaling())) + position
     }
 
     /** Normalize screen position into clip space. */

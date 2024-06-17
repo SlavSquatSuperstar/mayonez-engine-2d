@@ -1,6 +1,7 @@
 package mayonez.graphics.camera;
 
 import mayonez.*;
+import mayonez.engine.*;
 import mayonez.scripts.camera.*;
 
 /**
@@ -23,9 +24,9 @@ public final class CameraFactory {
      */
     public static Camera createCamera(float sceneScale) {
         if (Mayonez.getUseGL()) {
-            return new GLCamera(Mayonez.getScreenSize(), sceneScale);
+            return new GLCamera(WindowProperties.getScreenSize(), sceneScale);
         } else {
-            return new JCamera(Mayonez.getScreenSize(), sceneScale);
+            return new JCamera(WindowProperties.getScreenSize(), sceneScale);
         }
     }
 

@@ -4,7 +4,6 @@ import mayonez.assets.*
 import mayonez.engine.*
 import mayonez.input.*
 import mayonez.launcher.*
-import mayonez.math.*
 import kotlin.system.exitProcess
 
 /**
@@ -23,6 +22,8 @@ import kotlin.system.exitProcess
  *
  * See [Launcher] for more information.
  */
+// TODO rename to application manager
+// TODO move to launcher pkg
 object Mayonez {
 
     // Run Fields
@@ -32,32 +33,26 @@ object Mayonez {
 
     // Properties
 
-    /** The size of the application window, in pixels. */
-    @JvmStatic
-    val screenSize: Vec2
-        get() = Vec2(
-            Preferences.screenWidth.toFloat(),
-            Preferences.screenHeight.toFloat()
-        )
-
     /**
-     * The content scaling of the application window, usually 1x1 (100%). The
-     * value may be different if the current display has changed its screen
-     * scaling or resolution.
-     *
-     * For example, if the window scale is 2x2 (200%), then the window size
-     * will appear twice as large as the value stated in the user preferences.
+     * Whether to use LWJGL for creating the window and rendering instead of
+     * Java AWT.
      */
-    @JvmStatic
-    internal var windowScale: Vec2 = Vec2(1f)
-        @JvmName("getWindowScale") get
-        @JvmName("setWindowScale") set
-
-    /** Whether to use OpenGL for rendering instead of Java AWT. */
     @JvmStatic
     internal var useGL: Boolean = RunConfig.DEFAULT_USE_GL
         @JvmName("getUseGL") get
         private set
+
+    @JvmStatic
+    val fps: Int
+        @JvmName("getFPS") get() {
+            return if (this::game.isInitialized) game.fps else 0
+        }
+
+    @JvmStatic
+    val averageFPS: Int
+        get() {
+            return if (this::game.isInitialized) game.averageFPS else 0
+        }
 
     // Init Methods
 
@@ -120,7 +115,9 @@ object Mayonez {
         if (!started) {
             started = true
             SceneManager.setScene(scene)
-            startGame()
+            // Start game
+            if (this::game.isInitialized) game.start()
+            else exitWithErrorMessage("Cannot start without configuring program \"Use GL\" option")
         }
     }
 
@@ -141,29 +138,25 @@ object Mayonez {
         }
     }
 
-    // Helper Methods
+    // Exit Helper Methods
 
-    private fun startGame() {
-        if (this::game.isInitialized) game.start()
-        else exitWithErrorMessage("Cannot start without configuring program \"Use GL\" option")
-    }
-
-    private fun exitWithErrorMessage(message: String) {
+    /**
+     * Terminate the program with the given error message with exit code 1.
+     */
+    private fun exitWithErrorMessage(message: String): Nothing {
         Logger.error(message)
-        val status = ExitCode.ERROR
-        exitProgram(status)
+        exitProgram(ExitCode.ERROR)
     }
 
-    /** Print an exit message and immediately terminate the program. */
+    /**
+     * Print an exit message and immediately terminate the program with the
+     * given status.
+     */
     private fun exitProgram(status: Int): Nothing {
-        Logger.logExitMessage(status)
-        exitProcess(status)
-    }
-
-    private fun Logger.logExitMessage(status: Int) {
         val message = "Exited program with code $status"
-        if (status == 0) this.log("$message (Success)")
-        else this.error("$message (Error)")
+        if (status == 0) Logger.log("$message (Success)")
+        else Logger.error("$message (Error)")
+        exitProcess(status)
     }
 
 }

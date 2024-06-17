@@ -4,13 +4,11 @@ import mayonez.*
 import mayonez.graphics.*
 import mayonez.graphics.camera.*
 import mayonez.graphics.debug.*
-import mayonez.graphics.debug.DebugShape
 import mayonez.graphics.sprites.*
 import mayonez.graphics.textures.*
 import mayonez.math.*
 import mayonez.renderer.*
 import java.awt.*
-import kotlin.math.*
 
 private val DEFAULT_STROKE: Stroke = BasicStroke(DebugDraw.DEFAULT_STROKE_SIZE)
 
@@ -31,7 +29,8 @@ internal class JDefaultRenderer : SceneRenderer,
 
     // Scene Information
     private lateinit var background: Sprite
-    private val windowSize: Vec2 = Mayonez.screenSize
+    private val windowWidth: Int = Preferences.screenWidth
+    private val windowHeight: Int = Preferences.screenHeight
     private var sceneScale: Float = 1f
 
     // Scene Renderer Methods
@@ -83,7 +82,7 @@ internal class JDefaultRenderer : SceneRenderer,
     private fun drawBackgroundColor(g2: Graphics2D) {
         if (background.getTexture() == null) { // Only if no image set
             g2.color = background.getColor().toAWT()
-            g2.fillRect(0, 0, windowSize.x.roundToInt(), windowSize.y.roundToInt())
+            g2.fillRect(0, 0, windowWidth, windowHeight)
         }
     }
 

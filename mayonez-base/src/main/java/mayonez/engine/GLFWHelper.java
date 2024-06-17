@@ -81,8 +81,8 @@ final class GLFWHelper {
         // Source: https://github.com/glfw/glfw/issues/845
         var contentScale = getWindowContentScaling(windowID);
         var ratio = getWindowFramebufferRatio(windowID);
-        Mayonez.setWindowScale(contentScale.mul(ratio));
-        Logger.debug("Window scale has been set to %s", Mayonez.getWindowScale());
+        WindowProperties.setWindowScaling(contentScale.mul(ratio));
+        Logger.debug("Window scale has been set to %s", WindowProperties.getWindowScaling());
     }
 
     /**
