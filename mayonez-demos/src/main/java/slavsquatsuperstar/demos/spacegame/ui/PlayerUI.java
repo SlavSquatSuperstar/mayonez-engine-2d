@@ -27,21 +27,20 @@ public class PlayerUI extends GameObject {
     private static final Texture LABEL_BORDER_TEXTURE = Textures.getTexture(
             "assets/spacegame/textures/ui/gray_border.png");
 
-    private boolean hintsShown;
-
     public PlayerUI(String name) {
         super(name);
     }
 
     @Override
     protected void init() {
+        // TODO UI containers
         var uiSpacingX = 12f;
-        var uiSpacingY = 16f;
+        var uiSpacingY = 12f;
         var labelSize = new Vec2(32, 32);
         var barSize = new Vec2(192, 32);
 
         // Player Health
-        var hpLabelPosition = new Vec2(25, 775);
+        var hpLabelPosition = new Vec2(32, Preferences.getScreenHeight() - 32);
         var hpLabel = new ImageLabel(hpLabelPosition, labelSize, HEALTH_ICON_TEXTURE, LABEL_BACKGROUND_TEXTURE, LABEL_BORDER_TEXTURE);
         addComponent(hpLabel);
 
@@ -54,14 +53,14 @@ public class PlayerUI extends GameObject {
         var shLabel = new ImageLabel(shLabelPosition, labelSize, SHIELD_ICON_TEXTURE, LABEL_BACKGROUND_TEXTURE, LABEL_BORDER_TEXTURE);
         addComponent(shLabel);
 
-        var shBarPosition = hpBarPosition.sub(new Vec2(0, barSize.y + uiSpacingY));
+        var shBarPosition = shLabelPosition.add(new Vec2(labelSize.x * 0.5f + uiSpacingX + barSize.x * 0.5f, 0));
         var shieldBar = new SliderBar(shBarPosition, barSize, new Color(96, 96, 96), Colors.LIGHT_BLUE);
         addComponent(shieldBar);
 
         // Weapon Hotbar
-        var whPosition = new Vec2(32, 32);
-        var whSize = new Vec2(32, 32);
-        var weaponHotbar = new WeaponHotbar(whPosition, whSize, ProjectilePrefabs.NUM_PROJECTILES);
+        var wpHbPosition = new Vec2(32, 32);
+        var wpHbSize = new Vec2(32, 32);
+        var weaponHotbar = new WeaponHotbar(wpHbPosition, wpHbSize, ProjectilePrefabs.NUM_PROJECTILES);
         addComponent(weaponHotbar);
 
         addComponent(new PlayerUIController(healthBar, shieldBar, weaponHotbar));
@@ -73,31 +72,47 @@ public class PlayerUI extends GameObject {
         TextLabel showHintsText;
         addComponent(showHintsText = new UITextLabel(
                 "Show Hints (H)", new Vec2(1040, 25),
-                DemosAssets.getFont(), Colors.WHITE,
+                font, Colors.WHITE,
                 16, 2
         ));
 
         TextLabel hideHintsText;
         addComponent(hideHintsText = new UITextLabel(
                 "Hide Hints (H)", new Vec2(1040, 25),
-                DemosAssets.getFont(), Colors.WHITE,
+                font, Colors.WHITE,
                 16, 2
         ));
 
-        hintsShown = false;
+        TextLabel hotbarText;
+        addComponent(hotbarText = new UITextLabel(
+                "(1)   (2)   (3)", new Vec2(20, 65),
+                font, Colors.WHITE,
+                16, 2
+        ));
+
+
         addComponent(new Script() {
+            private boolean hintsShown;
+
             @Override
             protected void start() {
-                hideHintsText.setEnabled(false);
+                toggleHints(false);
             }
 
             @Override
             protected void update(float dt) {
                 if (KeyInput.keyPressed("h")) {
-                    hintsShown = !hintsShown;
-                    showHintsText.setEnabled(!hintsShown);
-                    hideHintsText.setEnabled(hintsShown);
+                    toggleHints(!hintsShown);
                 }
+            }
+
+            private void toggleHints(boolean hintsShown) {
+                this.hintsShown = hintsShown;
+                // Hints hidden
+                showHintsText.setEnabled(!hintsShown);
+                // Hints shown
+                hideHintsText.setEnabled(hintsShown);
+                hotbarText.setEnabled(hintsShown);
             }
         });
     }

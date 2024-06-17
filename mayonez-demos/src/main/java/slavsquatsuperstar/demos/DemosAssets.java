@@ -31,8 +31,11 @@ public final class DemosAssets {
 
         // Create font
         var fontTexture = Textures.getTexture("assets/fonts/font_pixel.png");
-        if (!(fontTexture instanceof GLTexture)) return null;
-        return new Font((GLTexture) fontTexture, metadata);
+        if (fontTexture instanceof GLTexture glTexture) {
+            return new Font(glTexture, metadata);
+        } else {
+            return null;
+        }
     }
 
 }
