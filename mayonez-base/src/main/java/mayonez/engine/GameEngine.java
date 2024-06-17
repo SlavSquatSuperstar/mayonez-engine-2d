@@ -18,11 +18,12 @@ public abstract sealed class GameEngine permits JGameEngine, GLGameEngine {
     private final float timeStepSecs;
     private float lastLoopTimeSecs;
     private float frameElapsedTimeSecs;
+    private float deltaTimeSecs;
     private boolean hasUpdatedThisFrame;
 
     // Debug Info Fields
     private float debugTimerSecs;
-    private int actualFramesPerSecond;
+    private int framesPerSecond;
 
     protected GameEngine(Window window) {
         this.window = window;
@@ -48,16 +49,32 @@ public abstract sealed class GameEngine permits JGameEngine, GLGameEngine {
         }
     }
 
-    // Semi-fixed time-step: https://gafferongames.com/post/fix_your_timestep/
-    public final void run() {
+    private void run() {
         lastLoopTimeSecs = getCurrentTimeSecs();
+        deltaTimeSecs = 0f;
         debugTimerSecs = 0f;
-        actualFramesPerSecond = 0;
+        framesPerSecond = 0;
+        int frameCount = 0;
 
         while (running && window.notClosedByUser()) {
+            hasUpdatedThisFrame = false;
             calculateFrameTime();
-            executeFrame();
-            printFrameCount();
+            updateTillFrameTimeZero(); // TODO re-poll input every update
+
+            // Render if updated
+            if (hasUpdatedThisFrame) {
+                window.render();
+                frameCount += 1;
+            }
+
+            // Print frame count every second
+            if (debugTimerSecs >= 1f) {
+                framesPerSecond = frameCount;
+                // TODO don't spam this, make into getter
+                Logger.debug("Frames per Second: %d", framesPerSecond);
+                frameCount = 0;
+                debugTimerSecs = 0f;
+            }
         }
         Mayonez.stop(ExitCode.SUCCESS);
     }
@@ -84,56 +101,24 @@ public abstract sealed class GameEngine permits JGameEngine, GLGameEngine {
         lastLoopTimeSecs = currentLoopTimeSecs;  // Reset last time
     }
 
-    private void executeFrame() {
-        beginFrame();
-        updateTillFrameTimeZero();
-        renderIfUpdated();
-        endFrame();
-    }
-
+    // Semi-fixed time-step: https://gafferongames.com/post/fix_your_timestep/
     private void updateTillFrameTimeZero() {
         // Update the game as many times as possible even if the screen freezes
+        // TODO accumulate leftover slivers of time into next frame
         while (frameElapsedTimeSecs > 0) { // Will update any leftover sliver of time
-            var deltaTime = Math.min(frameElapsedTimeSecs, timeStepSecs);
-            update(deltaTime);
-//            update(deltaTime * Mayonez.getTimeScale());
-            frameElapsedTimeSecs -= deltaTime;
+            deltaTimeSecs = Math.min(frameElapsedTimeSecs, timeStepSecs);
+            window.beginFrame();
+
+            // TODO multi-thread physics with shorter time step for smoother results
+            SceneManager.updateScene(deltaTimeSecs);
+//            SceneManager.updateScene(deltaTimeSecs * Mayonez.getTimeScale());
+
+            window.endFrame();
+            frameElapsedTimeSecs -= deltaTimeSecs;
             hasUpdatedThisFrame = true;
         }
     }
 
-    private void renderIfUpdated() {
-        if (hasUpdatedThisFrame) {
-            render();
-            actualFramesPerSecond += 1;
-        }
-    }
-
-    private void printFrameCount() {
-        if (debugTimerSecs >= 1f) {
-            // TODO don't debug this, make into property
-            Logger.debug("Frames per Second: %d", actualFramesPerSecond);
-            actualFramesPerSecond = 0;
-            debugTimerSecs = 0f;
-        }
-    }
-
-    // Game Engine Overrides
-
-    final void beginFrame() {
-        // TODO poll input events
-        hasUpdatedThisFrame = false;
-        window.beginFrame();
-    }
-
-    // TODO multi-thread physics, set time step shorter than refresh rate for smoother results
-    final void update(float dt) {
-        SceneManager.updateScene(dt);
-    }
-
-    final void render() {
-        window.render();
-    }
 
     final void endFrame() {
         window.endFrame();
@@ -141,9 +126,15 @@ public abstract sealed class GameEngine permits JGameEngine, GLGameEngine {
 
     // Getters and Setters
 
-    public abstract float getCurrentTimeSecs();
+    /**
+     * Get the current time of the application. May or may not be relative to
+     * when the program started.
+     *
+     * @return the time in seconds
+     */
+    protected abstract float getCurrentTimeSecs();
 
-    protected String getRunningString() {
+    protected final String getRunningString() {
         return running ? "running" : "not running";
     }
 

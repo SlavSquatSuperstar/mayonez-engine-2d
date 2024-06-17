@@ -27,13 +27,11 @@ internal class GLKeyManager : KeyManager() {
      */
     override fun keyCallback(window: Long, key: Int, scancode: Int, action: Int, mods: Int) {
         when (action) {
-            // TODO GL double pressing still occurs
             GLFW.GLFW_PRESS -> setKeyDown(key, true)
             GLFW.GLFW_REPEAT -> setKeyDown(key, true)
             GLFW.GLFW_RELEASE -> setKeyDown(key, false)
         }
         Events.KEYBOARD_EVENTS.broadcast(KeyboardEvent(key, scancode, action, mods))
-        updateKeys()
     }
 
     // Key Getters

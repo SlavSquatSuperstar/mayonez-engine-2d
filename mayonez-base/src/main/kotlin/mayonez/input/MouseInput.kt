@@ -35,14 +35,6 @@ object MouseInput {
         this.pointXf = pointXf
     }
 
-    // Game Loop Methods
-
-    /** Poll mouse events from the window. */
-    fun updateMouse() {
-        instance.updateMouse()
-    }
-
-
     // Mouse Button Getters
 
     /**

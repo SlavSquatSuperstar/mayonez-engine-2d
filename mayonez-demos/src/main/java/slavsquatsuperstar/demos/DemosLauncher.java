@@ -83,7 +83,6 @@ public class DemosLauncher {
         } else if (KeyInput.keyPressed("r")) {
             SceneManager.restartScene();
         } else if (KeyInput.keyPressed("p")) {
-            // This is being run 2-3x per press in SpaceGameScene due to low FPS
             SceneManager.toggleScenePaused();
         } else if (KeyInput.keyDown("left shift")) {
             for (var i = 0; i < SCENE_NAMES.length; i++) {

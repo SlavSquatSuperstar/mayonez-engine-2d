@@ -46,8 +46,7 @@ public class PhysicsSandboxScene extends Scene {
     protected void onUserUpdate(float dt) {
         // Toggle Gravity
         if (KeyInput.keyPressed("space")) {
-            enabledGravity = !enabledGravity;
-            setGravityEnabled(enabledGravity);
+            setGravityEnabled(!enabledGravity);
         }
 
         // Create Random Shapes
@@ -62,7 +61,8 @@ public class PhysicsSandboxScene extends Scene {
     }
 
     private void setGravityEnabled(boolean enabled) {
-        if (enabled) setGravity(new Vec2(-0, -PhysicsWorld.GRAVITY_CONSTANT));
+        enabledGravity = enabled;
+        if (enabledGravity) setGravity(new Vec2(-0, -PhysicsWorld.GRAVITY_CONSTANT));
         else setGravity(new Vec2());
     }
 
