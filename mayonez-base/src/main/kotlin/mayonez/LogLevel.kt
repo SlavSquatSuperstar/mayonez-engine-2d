@@ -2,12 +2,13 @@ package mayonez
 
 /**
  * Different logger priority levels to be used ƒor reporting different
- * situations. Higher levels are more important, while lower level
- * messages can be filtered out by changing the log level preference.
+ * situations. Higher levels are more important, while lower levels are less
+ * important. The minimum log level can be set through preferences, allowing
+ * lower level messages to be filtered out.
  *
  * @author SlavSquatSuperstar
  */
-internal enum class LogLevel(private val level: Int) {
+enum class LogLevel(internal val level: Int) {
 
     /** Denotes that all log messages should be printed to the console. */
     ALL(0),
@@ -27,6 +28,6 @@ internal enum class LogLevel(private val level: Int) {
     /** Denotes that no log messages should be printed to the console. */
     NONE(5);
 
-    override fun toString(): String = "LogLevel $name (Level $level)"
+    override fun toString(): String = "$name (Level $level)"
 
 }

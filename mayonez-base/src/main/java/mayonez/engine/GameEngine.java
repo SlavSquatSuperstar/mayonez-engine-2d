@@ -11,12 +11,6 @@ import mayonez.input.*;
 public abstract sealed class GameEngine permits JGameEngine, GLGameEngine {
 
     // Constants
-    // TODO set as preference / window property
-    /**
-     * Update the game as many times as possible before rendering (fast),
-     * rather than rendering once per update (slow).
-     */
-    private static final boolean FRAME_SKIP = true;
     private static final float DEBUG_INTERVAL_SECS = 1f;
     private static final boolean LOG_FRAME_COUNTS = false;
 
@@ -25,6 +19,7 @@ public abstract sealed class GameEngine permits JGameEngine, GLGameEngine {
     private boolean running;
 
     // Time Fields (Seconds)
+    private final boolean frameSkip;
     private final float timeStepSecs; // Target delta time
     private final float halfTimeStepSecs;
     private float lastLoopTimeSecs; // Last update time
@@ -40,8 +35,10 @@ public abstract sealed class GameEngine permits JGameEngine, GLGameEngine {
 
     protected GameEngine(Window window) {
         this.window = window;
+        frameSkip = Preferences.getFrameSkip();
         timeStepSecs = Time.getTimeStepSecs();
         halfTimeStepSecs = timeStepSecs * 0.5f;
+
         running = false;
         // Add input listeners
         window.setKeyInput(KeyInput.getInstance());
@@ -138,7 +135,7 @@ public abstract sealed class GameEngine permits JGameEngine, GLGameEngine {
             unprocessedTime -= deltaTimeSecs;
             hasUpdatedThisFrame = true;
 
-            if (!FRAME_SKIP) break;
+            if (!frameSkip) break;
         }
     }
 
