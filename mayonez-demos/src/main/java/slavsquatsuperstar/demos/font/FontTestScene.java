@@ -2,6 +2,7 @@ package slavsquatsuperstar.demos.font;
 
 import mayonez.*;
 import mayonez.graphics.*;
+import mayonez.graphics.font.*;
 import mayonez.input.*;
 import mayonez.math.*;
 import slavsquatsuperstar.demos.DemosAssets;

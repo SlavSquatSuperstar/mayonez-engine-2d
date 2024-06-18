@@ -30,14 +30,12 @@ internal class JDefaultRenderer : SceneRenderer,
     private lateinit var background: Sprite
     private val windowWidth: Int = Preferences.screenWidth
     private val windowHeight: Int = Preferences.screenHeight
-    private var sceneScale: Float = 1f
 
     // Scene Renderer Methods
 
     override fun setBackground(background: Sprite, sceneSize: Vec2, sceneScale: Float) {
         this.background = background
-            .setSpriteTransform(Transform.scaleInstance(Vec2(sceneSize)))
-        this.sceneScale = sceneScale
+            .setSpriteTransform(Transform.scaleInstance(sceneSize * sceneScale))
     }
 
     override fun addRenderable(r: Renderable?) {
@@ -88,7 +86,10 @@ internal class JDefaultRenderer : SceneRenderer,
     /** Render the background image, if the scene has one. */
     private fun drawBackgroundImage(g2: Graphics2D) {
         val tex = background.getTexture() as? JTexture ?: return // Only if image is set
-        tex.draw(g2, background.getSpriteTransform(), null, null, sceneScale)
+        tex.draw(
+            g2, background.getSpriteTransform(), null,
+            background.getColor(), 1f
+        )
     }
 
     /** Transform the screen and render everything at the new position. */

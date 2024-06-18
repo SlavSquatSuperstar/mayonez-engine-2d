@@ -1,8 +1,7 @@
-package slavsquatsuperstar.demos.font;
+package mayonez.graphics.font;
 
 import mayonez.*;
 import mayonez.graphics.*;
-import mayonez.graphics.font.*;
 import mayonez.graphics.sprites.*;
 import mayonez.math.*;
 

@@ -9,7 +9,7 @@ private const val PREFS_FILENAME = "preferences.json"
  *
  * @author SlavSquatSuperstar
  */
-// TODO make editable
+// TODO make editable, need events
 object Preferences : GameConfig(PREFS_FILENAME, Defaults.preferences) {
 
     private var initialized = false

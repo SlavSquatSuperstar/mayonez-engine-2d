@@ -14,8 +14,8 @@ object Defaults {
     private const val VERSION: String = "<Unknown Version>"
 
     // Graphical
-    private const val SCREEN_WIDTH: Int = 1200
-    private const val SCREEN_HEIGHT: Int = 800
+    private const val SCREEN_WIDTH: Int = 800
+    private const val SCREEN_HEIGHT: Int = 600
     private const val FPS: Int = 60
     private const val FRAME_SKIP: Boolean = true
 

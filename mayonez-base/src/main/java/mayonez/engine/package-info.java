@@ -1,6 +1,6 @@
 /**
- * Contains internal classes required to run an application and display it in a window.
- * This package is not exported as part of the API.
+ * Runs the main loop of the application and displays it in a window.
+ * Not exported to the API.
  *
  * @author SlavSquatSuperstar
  */

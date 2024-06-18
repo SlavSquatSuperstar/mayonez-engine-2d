@@ -4,7 +4,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;
 
 /**
- * Indicates which engine type (AWT or GL) this a given feature supports.
+ * Indicates which engine type (GL or AWT) a given feature supports.
  *
  * @author SlavsSquatSuperstar
  */

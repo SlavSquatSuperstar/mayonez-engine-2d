@@ -2,12 +2,11 @@ package slavsquatsuperstar.demos.spacegame.ui;
 
 import mayonez.*;
 import mayonez.graphics.*;
+import mayonez.graphics.font.*;
 import mayonez.graphics.textures.*;
 import mayonez.input.*;
 import mayonez.math.*;
 import slavsquatsuperstar.demos.DemosAssets;
-import slavsquatsuperstar.demos.font.TextLabel;
-import slavsquatsuperstar.demos.font.UITextLabel;
 import slavsquatsuperstar.demos.spacegame.combat.projectiles.ProjectilePrefabs;
 
 /**
