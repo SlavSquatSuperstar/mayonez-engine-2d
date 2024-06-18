@@ -28,7 +28,7 @@ object Preferences : GameConfig(PREFS_FILENAME, Defaults.preferences) {
     private fun getRules(): Array<PreferenceValidator<*>> {
         return arrayOf(
             StringValidator("title", "version", "log_directory"),
-            StringValidator("save_logs", "frame_skip"),
+            BooleanValidator("save_logs", "frame_skip"),
             IntValidator(240, 3840, "screen_height", "screen_width"),
             IntValidator(10, 250, "fps"),
             IntValidator(0, 5, "log_level")

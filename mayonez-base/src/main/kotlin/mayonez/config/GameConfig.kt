@@ -1,10 +1,11 @@
 package mayonez.config
 
 import mayonez.assets.text.*
-import mayonez.util.Record
+import mayonez.util.*
 
 /**
- * Reads user preferences from a file into a [Record].
+ * Reads user preferences from a file into a [Record] and stores them for
+ * later use.
  *
  * @param filename the location of the preferences file
  * @param defaults the default preferences
@@ -12,7 +13,7 @@ import mayonez.util.Record
  */
 open class GameConfig(
     private val filename: String, private val defaults: Record
-): Record() {
+) : Record() {
 
     /**
      * Sets the configuration from a .json file. Override this to change the

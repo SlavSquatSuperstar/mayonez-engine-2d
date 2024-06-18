@@ -36,7 +36,7 @@ class RecordTest {
         assertEquals("no", rec2.getString("saveLogs"));
     }
 
-    // Get Value Tests
+    // Get Primitive Tests
 
     @Test
     void getIntCorrect() {
@@ -60,9 +60,12 @@ class RecordTest {
     void getBooleanCorrect() {
         assertFalse(rec1.getBoolean("name"));
         assertTrue(rec1.getBoolean("age"));
+        assertTrue(rec1.getBoolean("height"));
         assertTrue(rec2.getBoolean("useGL"));
         assertFalse(rec2.getBoolean("saveLogs"));
     }
+
+    // Get Compound Tests
 
     @Test
     void getArrayCorrect() {
@@ -71,11 +74,22 @@ class RecordTest {
         record.set("nums", list);
         var numsArray = record.getArray("nums");
 
+        assertNotNull(numsArray);
         assertEquals(4, numsArray.size());
         assertEquals("One", numsArray.get(0));
         assertEquals('2', numsArray.get(1));
         assertEquals(3, numsArray.get(2));
         assertEquals(4.0, numsArray.get(3));
+    }
+
+    @Test
+    void getArrayIncorrect() {
+        var record = new Record();
+        record.set("num", 1234);
+        record.set("str", "1, 2, 3, 4");
+
+        assertNull(record.getArray("num"));
+        assertNull(record.getArray("str"));
     }
 
     @Test
@@ -90,9 +104,22 @@ class RecordTest {
         record.set("profile", profile);
 
         var object = record.getObject("profile");
+        assertNotNull(object);
         assertEquals("Steve Jobs", object.getString("name"));
         assertEquals(56, object.getInt("age"));
         assertEquals(List.of("Apple", "Pixar", "NeXT"), object.getArray("companies"));
+    }
+
+    @Test
+    void getObjectIncorrect() {
+        var profile = new Record();
+        profile.set("name", "Steve Jobs");
+        profile.set("age", 56);
+        profile.set("companies", List.of("Apple", "Pixar", "NeXT"));
+
+        assertNull(profile.getObject("name"));
+        assertNull(profile.getObject("age"));
+        assertNull(profile.getObject("companies"));
     }
 
     // Set From Tests

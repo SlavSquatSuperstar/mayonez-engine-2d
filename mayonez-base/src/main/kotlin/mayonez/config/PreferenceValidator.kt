@@ -37,6 +37,8 @@ abstract class PreferenceValidator<T> protected constructor(
     }
 }
 
+// Subclass Definitions
+
 /**
  * Forces a string preference to not be empty.
  *
@@ -60,5 +62,38 @@ class IntValidator(min: Int, max: Int, vararg keys: String) :
 
     override fun getValue(key: String?, preferences: Record): Int {
         return preferences.getInt(key)
+    }
+}
+
+/**
+ * Forces a boolean value to be represented as a true/false string, yes/no string,
+ * or 1/0 integer.
+ *
+ * @author SlavSquatSuperstar
+ */
+class BooleanValidator(vararg keys: String) :
+    PreferenceValidator<String>(*keys, isValid = Predicate<String> {
+        str -> str.isBooleanString().or(str.isBitNumber())
+    }) {
+
+    override fun getValue(key: String?, preferences: Record): String {
+        return preferences.getString(key)
+    }
+}
+
+// Boolean Helpers
+
+private fun String.isBooleanString(): Boolean {
+    return when (this.lowercase()) {
+        "true", "false" -> true
+        "yes", "no" -> true
+        else -> false
+    }
+}
+
+private fun String.isBitNumber(): Boolean {
+    return when (this) {
+        "0", "1" -> true
+        else -> false
     }
 }

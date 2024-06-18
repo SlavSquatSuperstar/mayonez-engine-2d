@@ -28,8 +28,7 @@ open class Record(map: Map<String?, Any?>) {
      * does not exist.
      */
     fun getArray(key: String?): List<Any?>? {
-        val value = map[key]
-        return if (value is List<*>) value else null
+        return map[key] as? List<*>
     }
 
     /**
@@ -37,12 +36,16 @@ open class Record(map: Map<String?, Any?>) {
      * does not exist.
      */
     fun getObject(key: String?): Record? {
-        val value = map[key]
-        return if (value is Map<*, *>) {
-            val newMap = HashMap<String?, Any?>()
-            value.forEach { newMap[it.key?.toString()] = it.value }
-            Record(newMap)
-        } else null
+        when (val value = map[key]) {
+            is Record -> return value
+            is Map<*, *> -> {
+                val newMap = HashMap<String?, Any?>()
+                value.forEach { newMap[it.key?.toString()] = it.value }
+                return Record(newMap)
+            }
+
+            else -> return null
+        }
     }
 
     /**
@@ -53,21 +56,23 @@ open class Record(map: Map<String?, Any?>) {
 
     /**
      * Retrieves the value stored under this key as a boolean, or false if it
-     * does not exist. If the value is "true", "yes", or not 0, then it will be
-     * returned as true.
+     * does not exist. If the value is stored as "true", "yes", or a non-zero
+     * number, then it will also be considered true.
      */
     fun getBoolean(key: String?): Boolean {
-        return when {
-            getString(key).equals("true", ignoreCase = true) -> true
-            getString(key).equals("yes", ignoreCase = true) -> true
-            getInt(key) != 0 -> true
-            else -> false
-        }
+        return map[key] as? Boolean
+            ?: when {
+                getString(key).equals("true", ignoreCase = true) -> true
+                getString(key).equals("yes", ignoreCase = true) -> true
+                getInt(key) != 0 -> true
+                else -> false
+            }
     }
 
     /**
      * Retrieves the value stored under this key as an integer, or 0 if it does
-     * not exist.
+     * not exist. If the value is stored as a string or other number, then it
+     * will be converted and truncated into an integer.
      */
     fun getInt(key: String?): Int {
         return when (val value = map[key]) {
@@ -84,7 +89,8 @@ open class Record(map: Map<String?, Any?>) {
 
     /**
      * Retrieves the value stored under this key as a float, or 0 if it does
-     * not exist.
+     * not exist. If the number is stored as a string or other number, then
+     * it will be converted into a float.
      */
     fun getFloat(key: String?): Float {
         return when (val value = map[key]) {
