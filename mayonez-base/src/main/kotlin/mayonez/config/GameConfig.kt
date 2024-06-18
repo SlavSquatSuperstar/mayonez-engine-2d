@@ -4,8 +4,8 @@ import mayonez.assets.text.*
 import mayonez.util.*
 
 /**
- * Reads user preferences from a file into a [Record] and stores them for
- * later use.
+ * Stores user preferences and a set of default values as [Record] objects
+ * for later use and performs input validation.
  *
  * @param filename the location of the preferences file
  * @param defaults the default preferences
@@ -16,7 +16,7 @@ open class GameConfig(
 ) : Record() {
 
     /**
-     * Sets the configuration from a .json file. Override this to change the
+     * Sets the preferences from a .json file. Override this to change the
      * read behavior.
      */
     protected open fun readFromFile() {
@@ -24,8 +24,7 @@ open class GameConfig(
     }
 
     /**
-     * Checks user preferences and replaces and invalid values with the default
-     * value.
+     * Checks user-inputted preferences and replaces and invalid values with defaults.
      *
      * @param rules any number of rules to apply
      */
@@ -33,6 +32,6 @@ open class GameConfig(
         rules.forEach { rule -> rule.validate(this, defaults) }
     }
 
-    override fun toString(): String = "GameConfig ($filename)"
+    override fun toString(): String = "GameConfig ($filename) ${super.toString()}"
 
 }

@@ -1,11 +1,11 @@
-package mayonez.launcher;
+package mayonez.config;
 
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit tests for the {@link mayonez.launcher.Launcher} class.
+ * Unit tests for the {@link mayonez.config.Launcher} class.
  *
  * @author SlavSquatSuperstar
  */
@@ -13,12 +13,17 @@ class LauncherTest {
 
     private Launcher launcher;
 
-    @BeforeEach
-    void createLauncher() {
+    @Test
+    void noArgsReturnsDefault() {
         launcher = new Launcher();
+        assertTrue(launcher.getUseGL());
     }
 
-    // Get Args Test
+    @Test
+    void invalidArgsIgnored() {
+        launcher = new Launcher(new String[]{"--log", "on"});
+        assertTrue(launcher.getUseGL());
+    }
 
     @Test
     void getUseGLTrue() {
@@ -33,13 +38,7 @@ class LauncherTest {
     }
 
     @Test
-    void getUseGLDefaultTrue() {
-        launcher = new Launcher(new String[]{"--log", "on"});
-        assertTrue(launcher.getUseGL());
-    }
-
-    @Test
-    void getUseGLInvalidThrowsException() {
+    void invalidArgValueThrowsException() {
         launcher = new Launcher(new String[]{"--engine", "vk"});
         assertThrows(IllegalArgumentException.class, launcher::getUseGL);
     }

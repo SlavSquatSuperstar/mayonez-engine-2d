@@ -1,4 +1,4 @@
-package mayonez.launcher;
+package mayonez.config;
 
 import mayonez.util.Record;
 
@@ -13,11 +13,11 @@ class ArgumentsParser {
 
     private final Record programArgs;
 
-    public ArgumentsParser() {
+    ArgumentsParser() {
         this(new String[0]);
     }
 
-    public ArgumentsParser(String[] args) {
+    ArgumentsParser(String[] args) {
         List<String> argsList = readProgramArgs(args);
         programArgs = parseProgramArgs(argsList);
     }
@@ -28,7 +28,7 @@ class ArgumentsParser {
      * @param args a string array passed in main()
      * @return the arguments as a list
      */
-    public List<String> readProgramArgs(String[] args) {
+    List<String> readProgramArgs(String[] args) {
         return Arrays.asList(args);
     }
 
@@ -38,7 +38,7 @@ class ArgumentsParser {
      * @param args a string list
      * @return the flags and their values
      */
-    public Record parseProgramArgs(List<String> args) {
+    Record parseProgramArgs(List<String> args) {
         if (args.isEmpty()) return new Record();
 
         var argMap = new Record();
@@ -50,7 +50,7 @@ class ArgumentsParser {
                 argMap.set(arg.substring(2), nextArg);
                 i += 1;
             }
-            // ignore positional args
+            // Ignore positional args
         }
         return argMap;
     }
@@ -60,7 +60,7 @@ class ArgumentsParser {
         return args.get(index);
     }
 
-    public Record getProgramArgs() {
+    Record getProgramArgs() {
         return programArgs;
     }
 }

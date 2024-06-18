@@ -1,6 +1,6 @@
 /**
- * Classes that can be used to store and create configurations for different parts of the
- * application.
+ * Provides an entry point for applications using this library and properly
+ * configures important components of the engine before startup.
  *
  * @author SlavSquatSuperstar
  */

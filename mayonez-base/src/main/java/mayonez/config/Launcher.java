@@ -1,4 +1,4 @@
-package mayonez.launcher;
+package mayonez.config;
 
 import mayonez.*;
 import mayonez.util.Record;
@@ -7,9 +7,9 @@ import mayonez.util.Record;
  * Initializes all engine components, parses the main method program arguments,
  * and starts the application.
  * <p>
- * Usage: Construct a {@link mayonez.launcher.Launcher} object and optionally pass in
+ * Usage: Construct a {@link Launcher} object and optionally pass in
  * command-line arguments. First, call {@link #setRunConfig()} to parse the
- * {@link mayonez.launcher.RunConfig} from the arguments. Then, preload in any number
+ * {@link RunConfig} from the arguments. Then, preload in any number
  * of scenes using {@link #loadScenesToManager(Scene...)} and then start the game with
  * {@link #startGame(Scene)} or {@link #startGame(String)}.
  * <p>

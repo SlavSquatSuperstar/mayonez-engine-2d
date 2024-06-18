@@ -1,4 +1,4 @@
-package mayonez.launcher;
+package mayonez.config;
 
 import mayonez.util.Record;
 import org.junit.jupiter.api.*;
@@ -8,7 +8,7 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit tests for the {@link ArgumentsParser} class.
+ * Unit tests for the {@link mayonez.config.ArgumentsParser} class.
  *
  * @author SlavSquatSuperstar
  */

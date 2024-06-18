@@ -1,8 +1,8 @@
 package slavsquatsuperstar.demos;
 
 import mayonez.*;
+import mayonez.config.*;
 import mayonez.input.*;
-import mayonez.launcher.*;
 import slavsquatsuperstar.demos.font.FontTestScene;
 import slavsquatsuperstar.demos.geometrydash.GDEditorScene;
 import slavsquatsuperstar.demos.mario.MarioScene;

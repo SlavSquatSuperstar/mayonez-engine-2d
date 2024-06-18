@@ -1,7 +1,7 @@
 package mayonez
 
+import mayonez.config.*
 import mayonez.input.*
-import mayonez.launcher.*
 import java.awt.Graphics2D
 
 /**
