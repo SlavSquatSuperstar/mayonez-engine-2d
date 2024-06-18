@@ -2,7 +2,6 @@ package mayonez.renderer.awt
 
 import mayonez.*
 import mayonez.graphics.*
-import mayonez.graphics.camera.*
 import mayonez.graphics.debug.*
 import mayonez.graphics.sprites.*
 import mayonez.graphics.textures.*
@@ -112,7 +111,11 @@ internal class JDefaultRenderer : SceneRenderer,
         g2.scale(camZoom, camZoom)
     }
 
-    // Batch Methods
+    // Camera Methods
+
+    override fun getViewport(): Viewport = SceneManager.currentScene.camera
+
+    // Batch Helper Methods
 
     /** Sort drawable objects into render "batches". */
     private fun createBatches() {

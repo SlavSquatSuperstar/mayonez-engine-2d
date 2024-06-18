@@ -1,9 +1,6 @@
 package mayonez.renderer;
 
-import mayonez.*;
-import mayonez.graphics.camera.*;
-
-import java.awt.Graphics2D;
+import java.awt.*;
 
 /**
  * Draws objects or other program information to the screen.
@@ -29,12 +26,10 @@ public interface Renderer {
     // Camera Methods
 
     /**
-     * Get the current scene's camera.
+     * Get the current viewport into the window.
      *
-     * @return the camera
+     * @return the viewport
      */
-    default Viewport getViewport() {
-        return SceneManager.getCurrentScene().getCamera();
-    }
+    Viewport getViewport();
 
 }

@@ -7,9 +7,9 @@ import mayonez.launcher.*
 import kotlin.system.exitProcess
 
 /**
- * An instance of Mayonez Engine. Upon startup, the application loads
- * resources, configures other engine components, and tells the scene
- * manager to load a scene.
+ * Acts as the entry point into the Mayonez Engine and stores the instance
+ * of the game. Upon startup, the application loads resources, configures
+ * other engine components, and tells the scene manager to load a scene.
  *
  * Usage: To start an instance of Mayonez Engine, create a [Launcher]
  * and set the "Use GL" property through [Launcher.setRunConfig]. Then,
@@ -31,16 +31,16 @@ object Mayonez {
     private lateinit var game: GameEngine
     private var started: Boolean = false
 
-    // Run Properties
+    // Config Properties
+    private var config: RunConfig = RunConfig.DEFAULT_CONFIG
 
     /**
      * Whether to use LWJGL for creating the window and rendering instead of
      * Java AWT.
      */
     @JvmStatic
-    internal var useGL: Boolean = RunConfig.DEFAULT_USE_GL
-        @JvmName("getUseGL") get
-        private set
+    internal val useGL: Boolean
+        @JvmName("getUseGL") get() = config.useGL
 
     // Time Properties
     // TODO move to time
@@ -79,7 +79,7 @@ object Mayonez {
     @JvmName("setConfig")
     internal fun setConfig(config: RunConfig) {
         if (!initialized) {
-            this.useGL = config.useGL
+            this.config = config
             initializeSingletons()
             initializeGame()
             initialized = true

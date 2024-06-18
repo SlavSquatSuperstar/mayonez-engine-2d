@@ -1,5 +1,6 @@
 package mayonez.renderer.gl
 
+import mayonez.*
 import mayonez.assets.*
 import mayonez.graphics.*
 import mayonez.renderer.*
@@ -55,6 +56,10 @@ abstract class GLRenderer(shaderFile: String) : Renderer {
     protected open fun postRender() {
         shader.unbind() // Unbind everything
     }
+
+    // Camera Methods
+
+    override fun getViewport(): Viewport = SceneManager.currentScene.camera
 
     // Batch Helper Methods
 

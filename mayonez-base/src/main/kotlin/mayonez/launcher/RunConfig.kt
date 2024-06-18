@@ -12,5 +12,6 @@ data class RunConfig(
 ) {
     companion object {
         const val DEFAULT_USE_GL: Boolean = true
+        val DEFAULT_CONFIG: RunConfig = RunConfig(DEFAULT_USE_GL)
     }
 }

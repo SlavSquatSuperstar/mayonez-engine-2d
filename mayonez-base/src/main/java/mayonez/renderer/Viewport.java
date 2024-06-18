@@ -1,13 +1,15 @@
-package mayonez.graphics.camera;
+package mayonez.renderer;
 
 import mayonez.input.*;
 import mayonez.math.*;
 import org.joml.*;
 
 /**
- * Defines from what perspective to render the scene.
+ * Defines from what perspective to render the scene and what transformations
+ * to apply.
  * <br>
- * Source: <a href="https://learnopengl.com/Getting-started/Coordinate-Systems">Learn OpenGL</a>
+ * Source: <a href="https://learnopengl.com/Getting-started/Coordinate-Systems">
+ * Learn OpenGL</a>
  *
  * @author SlavSquatSuperstar
  */

@@ -1,8 +1,8 @@
 package slavsquatsuperstar.demos;
 
 import mayonez.*;
-import mayonez.launcher.*;
 import mayonez.input.*;
+import mayonez.launcher.*;
 import slavsquatsuperstar.demos.font.FontTestScene;
 import slavsquatsuperstar.demos.geometrydash.GDEditorScene;
 import slavsquatsuperstar.demos.mario.MarioScene;
@@ -93,7 +93,7 @@ public class DemosLauncher {
         }
 
         // Log FPS
-        Logger.log("FPS: %d", Mayonez.getFPS());
+        Logger.debug("FPS: %d", Mayonez.getFPS());
     }
 
 }

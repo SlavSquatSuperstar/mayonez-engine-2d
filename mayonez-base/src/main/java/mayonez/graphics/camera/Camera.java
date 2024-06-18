@@ -3,6 +3,7 @@ package mayonez.graphics.camera;
 import mayonez.*;
 import mayonez.math.*;
 import mayonez.math.shapes.*;
+import mayonez.renderer.*;
 
 /**
  * The main viewport into the scene. The camera may be adjusted through scripts
