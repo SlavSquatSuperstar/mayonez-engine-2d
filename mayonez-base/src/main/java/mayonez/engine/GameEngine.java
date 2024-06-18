@@ -10,8 +10,15 @@ import mayonez.input.*;
  */
 public abstract sealed class GameEngine permits JGameEngine, GLGameEngine {
 
-    // Static Fields
+    // Constants
+    // TODO set as preference / window property
+    /**
+     * Update the game as many times as possible before rendering (fast),
+     * rather than rendering once per update (slow).
+     */
+    private static final boolean FRAME_SKIP = true;
     private static final float DEBUG_INTERVAL_SECS = 1f;
+    private static final boolean LOG_FRAME_COUNTS = false;
 
     // Engine Fields
     private final Window window;
@@ -21,7 +28,6 @@ public abstract sealed class GameEngine permits JGameEngine, GLGameEngine {
     private final float timeStepSecs; // Target delta time
     private final float halfTimeStepSecs;
     private float lastLoopTimeSecs; // Last update time
-    private float frameElapsedTimeSecs; // Time since last update
     private float unprocessedTime;
     private float deltaTimeSecs; // Time processed this update
     private boolean hasUpdatedThisFrame; // If window should redraw
@@ -30,7 +36,6 @@ public abstract sealed class GameEngine permits JGameEngine, GLGameEngine {
     private float debugTimerSecs;
     private int updateCount;
     private int averageUPS;
-    private int frameCount;
     private int averageFPS;
 
     protected GameEngine(Window window) {
@@ -60,13 +65,12 @@ public abstract sealed class GameEngine permits JGameEngine, GLGameEngine {
 
     private void run() {
         lastLoopTimeSecs = getCurrentTimeSecs();
-        frameElapsedTimeSecs = 0f;
         unprocessedTime = 0f;
         deltaTimeSecs = 0f;
         debugTimerSecs = 0f;
         averageFPS = 0;
         updateCount = 0;
-        frameCount = 0;
+        int frameCount = 0;
 
         while (running && window.notClosedByUser()) {
             hasUpdatedThisFrame = false;
@@ -85,10 +89,10 @@ public abstract sealed class GameEngine permits JGameEngine, GLGameEngine {
                 updateCount = 0;
                 frameCount = 0;
 
-                // TODO don't spam this, make into getter
-                Logger.log("Updates per second: %d", averageUPS);
-                Logger.log("Frames per second: %d", averageFPS);
-
+                if (LOG_FRAME_COUNTS) {
+                    Logger.debug("Updates per second: %d", averageUPS);
+                    Logger.debug("Frames per second: %d", averageFPS);
+                }
                 debugTimerSecs -= DEBUG_INTERVAL_SECS;
             }
         }
@@ -117,14 +121,13 @@ public abstract sealed class GameEngine permits JGameEngine, GLGameEngine {
     private void updateGame() {
         // Calculate frame time
         var currentLoopTimeSecs = getCurrentTimeSecs();
-        frameElapsedTimeSecs = currentLoopTimeSecs - lastLoopTimeSecs;
+        var frameElapsedTimeSecs = currentLoopTimeSecs - lastLoopTimeSecs; // Time since last update
+        unprocessedTime += frameElapsedTimeSecs;
         debugTimerSecs += frameElapsedTimeSecs;
         lastLoopTimeSecs = currentLoopTimeSecs;  // Reset last time
 
-        // Update the game as many times as possible even if the screen freezes
-        while (frameElapsedTimeSecs > 0f) { // Will update any leftover sliver of time
-            deltaTimeSecs = Math.min(frameElapsedTimeSecs, timeStepSecs);
-            Logger.log("dt = %.4f", deltaTimeSecs);
+        while (unprocessedTime > halfTimeStepSecs) { // Carry small slivers of time to next frame
+            deltaTimeSecs = Math.min(unprocessedTime, timeStepSecs);
 
             // TODO multi-thread physics with shorter fixed time step
             window.beginFrame();
@@ -132,16 +135,18 @@ public abstract sealed class GameEngine permits JGameEngine, GLGameEngine {
             window.endFrame();
             updateCount += 1;
 
-            frameElapsedTimeSecs -= deltaTimeSecs;
+            unprocessedTime -= deltaTimeSecs;
             hasUpdatedThisFrame = true;
+
+            if (!FRAME_SKIP) break;
         }
     }
 
-    // Getters and Setters
+    // Engine Getters
 
     /**
-     * Get the current time of the application. May or may not be relative to
-     * when the program started.
+     * Get the current time of the application in seconds. The time relative to an
+     * arbitrary point, which is not guaranteed to be when the program started.
      *
      * @return the time in seconds
      */
@@ -152,7 +157,6 @@ public abstract sealed class GameEngine permits JGameEngine, GLGameEngine {
     }
 
     // Time Getters
-    // TODO move to time
 
     /**
      * Get the duration of the current frame in seconds, dt.

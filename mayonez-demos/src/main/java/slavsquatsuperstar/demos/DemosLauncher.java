@@ -91,6 +91,9 @@ public class DemosLauncher {
                 }
             }
         }
+
+        // Log FPS
+        Logger.log("FPS: %d", Mayonez.getFPS());
     }
 
 }

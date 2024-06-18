@@ -23,7 +23,7 @@ import kotlin.system.exitProcess
  * See [Launcher] for more information.
  */
 // TODO rename to application manager
-// TODO move to launcher pkg
+// TODO move to launcher/config pkg
 object Mayonez {
 
     // Run Fields
@@ -31,7 +31,7 @@ object Mayonez {
     private lateinit var game: GameEngine
     private var started: Boolean = false
 
-    // Properties
+    // Run Properties
 
     /**
      * Whether to use LWJGL for creating the window and rendering instead of
@@ -42,6 +42,15 @@ object Mayonez {
         @JvmName("getUseGL") get
         private set
 
+    // Time Properties
+    // TODO move to time
+
+    @JvmStatic
+    val deltaTime: Float
+        @JvmName("getDeltaTime") get() {
+            return if (this::game.isInitialized) game.deltaTime else 0f
+        }
+
     @JvmStatic
     val fps: Int
         @JvmName("getFPS") get() {
@@ -49,9 +58,15 @@ object Mayonez {
         }
 
     @JvmStatic
-    val averageFPS: Int
+    val updateFPS: Int
         get() {
-            return if (this::game.isInitialized) game.averageFPS else 0
+            return if (this::game.isInitialized) game.updateFPS else 0
+        }
+
+    @JvmStatic
+    val renderFPS: Int
+        get() {
+            return if (this::game.isInitialized) game.renderFPS else 0
         }
 
     // Init Methods
@@ -76,14 +91,19 @@ object Mayonez {
      * initializer and null pointer errors.
      */
     private fun initializeSingletons() {
-        Logger.log("Starting program...")
-        Time.debugCurrentDateTime()
+        // Start counting
+        Time.startTrackingTime()
+        Logger.debug("Starting program...")
+        val now = Time.getStartupDateTime()
+        Logger.debug("The current date time is %s %s", now.toLocalDate(), now.toLocalTime())
 
+        // Set preferences
         Preferences.setPreferences()
-        Time.timeStepSecs = 1f / Preferences.fps
+        Time.setTimeStepSecs(1f / Preferences.fps)
         Logger.setConfig(Preferences.getLoggerConfig())
         Logger.log("Started ${Preferences.title} ${Preferences.version}")
 
+        // load assets
         Assets.initialize()
         Assets.loadResources()
     }
