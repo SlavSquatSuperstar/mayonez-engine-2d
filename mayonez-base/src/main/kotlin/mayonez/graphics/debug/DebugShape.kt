@@ -8,17 +8,21 @@ import mayonez.renderer.gl.*
 import java.awt.*
 
 /**
- * Passes shape and color information to a
- * [mayonez.renderer.DebugRenderer].
+ * Passes shape and color information to a [mayonez.renderer.DebugRenderer].
  *
  * @author SlavSquatSuperstar
  */
-internal data class DebugShape(var shape: MShape, private val brush: ShapeBrush) :
+internal data class DebugShape(internal val shape: MShape, private val brush: ShapeBrush) :
     JRenderable, GLRenderable {
 
-    private val color: MColor = brush.color
-    private val fill: Boolean = brush.fill
-    internal val strokeSize: Float = brush.strokeSize
+    private val color: MColor
+        get() = brush.color
+
+    private val fill: Boolean
+        get() = brush.fill
+
+    internal val strokeSize: Float
+        get() = brush.strokeSize
 
     // Copy Methods
 
@@ -82,7 +86,7 @@ internal data class DebugShape(var shape: MShape, private val brush: ShapeBrush)
      *
      * @return an array of primitive shapes
      */
-    fun splitIntoParts(): Array<out MShape> {
+    internal fun splitIntoParts(): Array<out MShape> {
         return when (val shape = this.shape) {
             is Edge -> arrayOf(shape) // add line directly
             is MPolygon -> shape.splitIntoParts(this.fill) // else break into lines or triangles

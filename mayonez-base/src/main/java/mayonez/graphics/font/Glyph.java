@@ -18,14 +18,30 @@ public class Glyph {
         this.glyphTexture = glyphTexture;
     }
 
+    /**
+     * The width of the glyph, in pixels.
+     *
+     * @return the glyph width
+     */
     public int getWidth() {
         return width;
     }
 
+
+    /**
+     * The height of the glyph, in pixels.
+     *
+     * @return the glyph height
+     */
     public int getHeight() {
         return height;
     }
 
+    /**
+     * The sprite sheet texture used to draw the glyph.
+     *
+     * @return the glyph texture
+     */
     public GLTexture getTexture() {
         return glyphTexture;
     }

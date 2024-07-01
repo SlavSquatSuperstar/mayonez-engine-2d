@@ -20,19 +20,8 @@ public class UITextLabel extends TextLabel {
     }
 
     @Override
-    protected Vec2 getInitialCharPosition() {
-        return position;
-    }
-
-    @Override
-    protected Component createTextSprite(Glyph glyph, Color color, int fontSize, Vec2 charPos) {
-        var tex = glyph.getTexture();
-        var percentWidth = (float) glyph.getWidth() / glyph.getHeight();
-
-        var spritePos = charPos.add(new Vec2(0.5f * percentWidth * fontSize, 0f));
-        var spriteSize = new Vec2(percentWidth * fontSize, fontSize);
-        var sprite = new UISprite(spritePos, spriteSize, tex);
-
+    protected Component getRenderedGlyphSprite(GlyphSprite glyphSprite) {
+        var sprite = new UISprite(glyphSprite.position(), glyphSprite.size(), glyphSprite.texture());
         sprite.setColor(color);
         return sprite;
     }

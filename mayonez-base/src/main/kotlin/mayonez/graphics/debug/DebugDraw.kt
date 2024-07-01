@@ -38,9 +38,9 @@ class DebugDraw internal constructor(
      */
     fun drawPoint(position: Vec2, color: MColor?) {
         // Fill a circle with radius "STROKE_SIZE" in pixels
-        addShapeToRenderer(
+        debugRenderer.addShape(
             Circle(position.toScreen(scale), DEFAULT_STROKE_SIZE),
-            color.createPointBrush()
+            ShapeBrush.createSolidBrush(color).setZIndex(DrawPriority.POINT.zIndex)
         )
     }
 
@@ -66,7 +66,7 @@ class DebugDraw internal constructor(
      */
     fun drawLine(start: Vec2?, end: Vec2?, brush: ShapeBrush?) {
         if (start == null || end == null) return
-        addShapeToRenderer(
+        debugRenderer.addShape(
             Edge(start.toScreen(scale), end.toScreen(scale)),
             brush ?: ShapeBrush.createLineBrush(DEFAULT_COLOR)
         )
@@ -117,7 +117,7 @@ class DebugDraw internal constructor(
      * @param brush the brush to use
      */
     fun drawShape(shape: Shape?, brush: ShapeBrush?) {
-        addShapeToRenderer(
+        debugRenderer.addShape(
             shape?.toScreen(scale) ?: return,
             brush ?: ShapeBrush.createOutlineBrush(DEFAULT_COLOR)
         )
@@ -140,24 +140,18 @@ class DebugDraw internal constructor(
      * @param brush the brush to use
      */
     fun fillShape(shape: Shape?, brush: ShapeBrush?) {
-        addShapeToRenderer(
+        debugRenderer.addShape(
             shape?.toScreen(scale) ?: return,
             brush ?: ShapeBrush.createSolidBrush(DEFAULT_COLOR)
         )
-    }
-
-    // Private Draw methods
-
-    private fun addShapeToRenderer(shape: Shape, brush: ShapeBrush) {
-        debugRenderer.addShape(DebugShape(shape, brush))
     }
 
 }
 
 // Helper Methods
 
-private fun MColor?.createPointBrush(): ShapeBrush {
-    return ShapeBrush.createSolidBrush(this).setZIndex(DrawPriority.POINT.zIndex)
+private fun DebugRenderer.addShape(shape: Shape, brush: ShapeBrush) {
+    this.addShape(DebugShape(shape, brush))
 }
 
 /**

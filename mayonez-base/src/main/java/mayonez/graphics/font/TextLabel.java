@@ -19,7 +19,8 @@ public abstract class TextLabel extends Script {
     protected final Font font;
     protected final Color color;
     protected final int fontSize, lineSpacing;
-    private final List<Component> glyphSprites;
+    private final List<GlyphSprite> glyphSprites;
+    private final List<Component> renderedGlyphSprites;
 
     public TextLabel(String message, Vec2 position, Font font, Color color, int fontSize, int lineSpacing) {
         this.message = message;
@@ -29,6 +30,7 @@ public abstract class TextLabel extends Script {
         this.fontSize = fontSize;
         this.lineSpacing = lineSpacing;
         glyphSprites = new ArrayList<>();
+        renderedGlyphSprites = new ArrayList<>();
     }
 
     @Override
@@ -51,9 +53,11 @@ public abstract class TextLabel extends Script {
             if (glyph == null) continue;
 
             // Add the character glyph
-            var charSprite = createTextSprite(glyph, color, fontSize, lastCharPos);
-            gameObject.addComponent(charSprite);
-            glyphSprites.add(charSprite);
+            var glyphSprite = createGlyphSprite(glyph, fontSize, lastCharPos, color);
+            glyphSprites.add(glyphSprite);
+            var renderedSprite = getRenderedGlyphSprite(glyphSprite);
+            renderedGlyphSprites.add(renderedSprite);
+            gameObject.addComponent(renderedSprite);
 
             // Move to the next character's position
             var charOffset = getCharOffset(glyphSpacing, glyph);
@@ -68,18 +72,37 @@ public abstract class TextLabel extends Script {
 
     // Abstract Methods
 
-    protected abstract Vec2 getInitialCharPosition();
+    protected Vec2 getInitialCharPosition() {
+        return position;
+    }
 
-    protected abstract Component createTextSprite(Glyph glyph, Color color, int fontSize, Vec2 charPos);
+    protected GlyphSprite createGlyphSprite(Glyph glyph, int fontSize, Vec2 charPos, Color color) {
+        var percentWidth = (float) glyph.getWidth() / glyph.getHeight();
+        var spritePos = charPos.add(new Vec2(0.5f * percentWidth * fontSize, 0f));
+        var spriteScale = new Vec2(percentWidth * fontSize, fontSize);
+        return new GlyphSprite(spritePos, spriteScale, glyph.getTexture(), color);
+    }
+
+    protected abstract Component getRenderedGlyphSprite(GlyphSprite glyphSprite);
 
     @Override
     protected void onEnable() {
-        glyphSprites.forEach(c -> c.setEnabled(true));
+        renderedGlyphSprites.forEach(c -> c.setEnabled(true));
     }
 
     @Override
     protected void onDisable() {
-        glyphSprites.forEach(c -> c.setEnabled(false));
+        renderedGlyphSprites.forEach(c -> c.setEnabled(false));
+    }
+
+    // Text Methods
+
+    public String getMessage() {
+        return message;
+    }
+
+    public List<Component> getRenderedGlyphSprites() {
+        return renderedGlyphSprites;
     }
 
 }

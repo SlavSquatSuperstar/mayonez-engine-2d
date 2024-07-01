@@ -20,21 +20,11 @@ public class WorldTextLabel extends TextLabel {
     }
 
     @Override
-    protected Vec2 getInitialCharPosition() {
-        return position;
-    }
-
-    @Override
-    protected Component createTextSprite(Glyph glyph, Color color, int fontSize, Vec2 charPos) {
-        var tex = glyph.getTexture();
-        var sprite = Sprites.createSprite(tex);
-
-        var percentWidth = (float) glyph.getWidth() / glyph.getHeight();
-        var spritePos = charPos.add(new Vec2(0.5f * percentWidth * fontSize, 0f));
-        var spriteScale = new Vec2(percentWidth * fontSize, fontSize);
-        sprite.setSpriteTransform(new Transform(spritePos, 0f, spriteScale));
-
-        sprite.setColor(color);
+    protected Component getRenderedGlyphSprite(GlyphSprite glyphSprite) {
+        var sprite = Sprites.createSprite(glyphSprite.texture());
+        sprite.setColor(glyphSprite.color());
+        sprite.setSpriteTransform(new Transform(glyphSprite.position(),
+                0f, glyphSprite.size()));
         return sprite;
     }
 

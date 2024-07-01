@@ -18,16 +18,10 @@ public class Font {
     private final FontMetadata metadata;
     private final Glyph[] glyphs;
 
-    public Font(GLTexture fontTexture, FontMetadata metadata, int[] widths) {
-        this.fontTexture = fontTexture;
-        this.metadata = metadata;
-        glyphs = createGlyphs(widths);
-    }
-
     public Font(GLTexture fontTexture, FontMetadata metadata) {
         this.fontTexture = fontTexture;
         this.metadata = metadata;
-        var widths = getGlyphWidths(metadata, fontTexture); // TODO test widths
+        var widths = getGlyphWidths(metadata, fontTexture);
         glyphs = createGlyphs(widths);
     }
 
@@ -133,10 +127,6 @@ public class Font {
     }
 
     // Glyph Getters
-
-    public Glyph[] getGlyphs() {
-        return glyphs;
-    }
 
     public Glyph getGlyph(int charCode) {
         var index = charCode - metadata.startCharacter();
