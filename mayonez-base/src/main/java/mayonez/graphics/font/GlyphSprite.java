@@ -28,8 +28,8 @@ public record GlyphSprite(
     @Override
     public void pushToBatch(RenderBatch batch) {
         if (texture instanceof GLTexture glTex) {
-            var sceneScale = text.getScene().getScale();
-            var sprVertices = new Rectangle(position.mul(sceneScale), size.mul(sceneScale))
+            var sceneScale = isInUI() ? 1 : text.getScene().getScale();
+            var sprVertices = new BoundingBox(position.mul(sceneScale), size.mul(sceneScale))
                     .getVertices();
             var texCoords = glTex.getTexCoords();
             var texID = batch.getTextureSlot(glTex);
@@ -55,6 +55,11 @@ public record GlyphSprite(
     @Override
     public boolean isEnabled() {
         return text.isEnabled();
+    }
+
+    @Override
+    public boolean isInUI() {
+        return text.isInUI();
     }
 
 }

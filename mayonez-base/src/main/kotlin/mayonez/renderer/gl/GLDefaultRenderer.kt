@@ -111,9 +111,11 @@ internal class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"),
         objects.sortBy { it.zIndex }
         objects.filter { it.isEnabled }
             .forEach { it.pushToBatch(it.getAvailableBatch()) }
+
         // Push shapes
         shapes.sortBy { it.zIndex }
         shapes.forEach { it.pushToBatch(it.getAvailableBatch()) }
+
         // Push text
         textObjects.sortBy { it.zIndex }
         textObjects.filter { it.isEnabled }

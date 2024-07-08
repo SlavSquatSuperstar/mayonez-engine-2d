@@ -13,6 +13,8 @@ import mayonez.renderer.gl.*;
 @UsesEngine(EngineType.GL)
 public interface UIRenderableElement extends UIElement, GLRenderable {
 
+    // UI Methods
+
     /**
      * Get the color of this UI element.
      *
@@ -41,5 +43,12 @@ public interface UIRenderableElement extends UIElement, GLRenderable {
      * @param texture the texture
      */
     void setTexture(Texture texture);
+
+    // Renderable Methods
+
+    @Override
+    default boolean isInUI() {
+        return true;
+    }
 
 }

@@ -88,6 +88,8 @@ sealed class Sprite : Component(UpdateOrder.RENDER), Renderable {
 
     final override fun getZIndex(): Int = gameObject.zIndex
 
+    final override fun isInUI(): Boolean = false
+
     // Copy Methods
 
     /**

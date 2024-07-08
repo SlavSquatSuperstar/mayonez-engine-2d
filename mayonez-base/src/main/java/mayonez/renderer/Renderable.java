@@ -15,8 +15,15 @@ public interface Renderable {
     /**
      * Whether this object should be drawn this frame.
      *
-     * @return if enabled
+     * @return if visible
      */
     boolean isEnabled();
+
+    /**
+     * Whether this object should be drawn in the user interface.
+     *
+     * @return if in UI
+     */
+    boolean isInUI();
 
 }

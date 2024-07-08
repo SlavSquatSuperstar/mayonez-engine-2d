@@ -1,8 +1,6 @@
 package mayonez.graphics.font;
 
-import mayonez.*;
 import mayonez.graphics.*;
-import mayonez.graphics.ui.*;
 import mayonez.math.*;
 
 /**
@@ -20,10 +18,8 @@ public class UITextLabel extends TextLabel {
     }
 
     @Override
-    protected Component getRenderedGlyphSprite(GlyphSprite glyphSprite) {
-        var sprite = new UISprite(glyphSprite.position(), glyphSprite.size(), glyphSprite.texture());
-        sprite.setColor(color);
-        return sprite;
+    public boolean isInUI() {
+        return true;
     }
 
 }

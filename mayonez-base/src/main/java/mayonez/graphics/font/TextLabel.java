@@ -21,7 +21,6 @@ public abstract class TextLabel extends Script implements Renderable {
     protected final Color color;
     protected final int fontSize, lineSpacing;
     private final List<GlyphSprite> glyphSprites;
-    private final List<Component> renderedGlyphSprites;
 
     public TextLabel(String message, Vec2 position, Font font, Color color, int fontSize, int lineSpacing) {
         this.message = message;
@@ -31,11 +30,15 @@ public abstract class TextLabel extends Script implements Renderable {
         this.fontSize = fontSize;
         this.lineSpacing = lineSpacing;
         glyphSprites = new ArrayList<>();
-        renderedGlyphSprites = new ArrayList<>();
     }
 
     @Override
     protected void init() {
+        generateGlyphs();
+    }
+
+    // Generate glyph positions and textures from message
+    private void generateGlyphs() {
         var lineOffset = new Vec2(0, (float) fontSize * (1 + (float) lineSpacing / font.getGlyphHeight()));
         var lines = message.split("\n");
 
@@ -46,7 +49,7 @@ public abstract class TextLabel extends Script implements Renderable {
         }
     }
 
-    protected void addSpritesForLine(String line, Vec2 linePos, int glyphSpacing) {
+    private void addSpritesForLine(String line, Vec2 linePos, int glyphSpacing) {
         var lastCharPos = linePos;
         for (int i = 0; i < line.length(); i++) {
             var charCode = line.charAt(i);
@@ -56,9 +59,6 @@ public abstract class TextLabel extends Script implements Renderable {
             // Add the character glyph
             var glyphSprite = createGlyphSprite(glyph, fontSize, lastCharPos, color);
             glyphSprites.add(glyphSprite);
-            var renderedSprite = getRenderedGlyphSprite(glyphSprite);
-            renderedGlyphSprites.add(renderedSprite);
-            gameObject.addComponent(renderedSprite);
 
             // Move to the next character's position
             var charOffset = getCharOffset(glyphSpacing, glyph);
@@ -73,29 +73,15 @@ public abstract class TextLabel extends Script implements Renderable {
 
     // Get Sprite Methods
 
-    protected Vec2 getInitialCharPosition() {
+    private Vec2 getInitialCharPosition() {
         return position;
     }
 
-    protected GlyphSprite createGlyphSprite(Glyph glyph, int fontSize, Vec2 charPos, Color color) {
+    private GlyphSprite createGlyphSprite(Glyph glyph, int fontSize, Vec2 charPos, Color color) {
         var percentWidth = (float) glyph.getWidth() / glyph.getHeight();
         var spritePos = charPos.add(new Vec2(0.5f * percentWidth * fontSize, 0f));
         var spriteScale = new Vec2(percentWidth * fontSize, fontSize);
         return new GlyphSprite(spritePos, spriteScale, glyph.getTexture(), color, this);
-    }
-
-    protected abstract Component getRenderedGlyphSprite(GlyphSprite glyphSprite);
-
-    // Script Callbacks
-
-    @Override
-    protected void onEnable() {
-//        renderedGlyphSprites.forEach(c -> c.setEnabled(true));
-    }
-
-    @Override
-    protected void onDisable() {
-//        renderedGlyphSprites.forEach(c -> c.setEnabled(false));
     }
 
     // Text Methods
@@ -106,10 +92,6 @@ public abstract class TextLabel extends Script implements Renderable {
 
     public List<GlyphSprite> getGlyphSprites() {
         return glyphSprites;
-    }
-
-    public List<Component> getRenderedGlyphSprites() {
-        return renderedGlyphSprites;
     }
 
     // Renderable Methods

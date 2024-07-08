@@ -115,6 +115,8 @@ internal data class DebugShape(internal val shape: MShape, private val brush: Sh
 
     override fun isEnabled(): Boolean = true
 
+    override fun isInUI(): Boolean = false
+
     override fun toString(): String {
         return "Debug ${shape.javaClass.simpleName}, $brush"
     }

@@ -3,7 +3,6 @@ package mayonez.renderer;
 import mayonez.*;
 import mayonez.graphics.debug.*;
 import mayonez.graphics.sprites.*;
-import mayonez.graphics.ui.*;
 import mayonez.math.*;
 import mayonez.renderer.awt.*;
 import mayonez.renderer.gl.*;
@@ -44,13 +43,13 @@ public final class RendererFactory {
         return new RenderLayer(List.of(sceneRenderer, uiRenderer), debugDraw) {
             @Override
             public void addRenderable(Renderable r) {
-                if (r instanceof UIRenderableElement e) uiRenderer.addUIElement(e);
+                if (r.isInUI()) uiRenderer.addUIElement(r);
                 else sceneRenderer.addRenderable(r);
             }
 
             @Override
             public void removeRenderable(Renderable r) {
-                if (r instanceof UIRenderableElement e) uiRenderer.removeUIElement(e);
+                if (r.isInUI()) uiRenderer.removeUIElement(r);
                 else sceneRenderer.removeRenderable(r);
             }
         };
