@@ -3,6 +3,7 @@ package mayonez.graphics.font;
 import mayonez.*;
 import mayonez.graphics.*;
 import mayonez.math.*;
+import mayonez.renderer.*;
 
 import java.util.*;
 
@@ -12,7 +13,7 @@ import java.util.*;
  *
  * @author SlavSquatSuperstar
  */
-public abstract class TextLabel extends Script {
+public abstract class TextLabel extends Script implements Renderable {
 
     protected final String message;
     protected final Vec2 position;
@@ -70,7 +71,7 @@ public abstract class TextLabel extends Script {
         return (float) fontSize * (glyph.getWidth() + glyphSpacing) / glyph.getHeight();
     }
 
-    // Abstract Methods
+    // Get Sprite Methods
 
     protected Vec2 getInitialCharPosition() {
         return position;
@@ -80,19 +81,21 @@ public abstract class TextLabel extends Script {
         var percentWidth = (float) glyph.getWidth() / glyph.getHeight();
         var spritePos = charPos.add(new Vec2(0.5f * percentWidth * fontSize, 0f));
         var spriteScale = new Vec2(percentWidth * fontSize, fontSize);
-        return new GlyphSprite(spritePos, spriteScale, glyph.getTexture(), color);
+        return new GlyphSprite(spritePos, spriteScale, glyph.getTexture(), color, this);
     }
 
     protected abstract Component getRenderedGlyphSprite(GlyphSprite glyphSprite);
 
+    // Script Callbacks
+
     @Override
     protected void onEnable() {
-        renderedGlyphSprites.forEach(c -> c.setEnabled(true));
+//        renderedGlyphSprites.forEach(c -> c.setEnabled(true));
     }
 
     @Override
     protected void onDisable() {
-        renderedGlyphSprites.forEach(c -> c.setEnabled(false));
+//        renderedGlyphSprites.forEach(c -> c.setEnabled(false));
     }
 
     // Text Methods
@@ -101,8 +104,19 @@ public abstract class TextLabel extends Script {
         return message;
     }
 
+    public List<GlyphSprite> getGlyphSprites() {
+        return glyphSprites;
+    }
+
     public List<Component> getRenderedGlyphSprites() {
         return renderedGlyphSprites;
+    }
+
+    // Renderable Methods
+
+    @Override
+    public int getZIndex() {
+        return gameObject.getZIndex();
     }
 
 }

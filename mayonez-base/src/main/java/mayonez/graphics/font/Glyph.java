@@ -27,7 +27,6 @@ public class Glyph {
         return width;
     }
 
-
     /**
      * The height of the glyph, in pixels.
      *

@@ -74,7 +74,7 @@ internal class GLSprite private constructor(
 
         val texCoords = texture?.texCoords ?: GLTexture.DEFAULT_TEX_COORDS
         val texID = batch.getTextureSlot(texture)
-        batch.pushSprite(sprVertices, this.color, texCoords, texID)
+        batch.pushSprite(sprVertices, color, texCoords, texID)
     }
 
     // Renderable Methods

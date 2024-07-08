@@ -2,7 +2,6 @@ package mayonez.graphics.font;
 
 import mayonez.*;
 import mayonez.graphics.*;
-import mayonez.graphics.sprites.*;
 import mayonez.math.*;
 
 /**
@@ -21,11 +20,12 @@ public class WorldTextLabel extends TextLabel {
 
     @Override
     protected Component getRenderedGlyphSprite(GlyphSprite glyphSprite) {
-        var sprite = Sprites.createSprite(glyphSprite.texture());
-        sprite.setColor(glyphSprite.color());
-        sprite.setSpriteTransform(new Transform(glyphSprite.position(),
-                0f, glyphSprite.size()));
-        return sprite;
+//        var sprite = Sprites.createSprite(glyphSprite.texture());
+//        sprite.setColor(glyphSprite.color());
+//        sprite.setSpriteTransform(new Transform(glyphSprite.position(),
+//                0f, glyphSprite.size()));
+//        return sprite;
+        return null;
     }
 
 }

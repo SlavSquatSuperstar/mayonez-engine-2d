@@ -3,6 +3,7 @@ package mayonez.renderer.gl
 import mayonez.*
 import mayonez.graphics.*
 import mayonez.graphics.debug.*
+import mayonez.graphics.font.*
 import mayonez.graphics.sprites.*
 import mayonez.math.*
 import mayonez.math.shapes.*
@@ -26,6 +27,7 @@ internal class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"),
     // Renderer Objects
     private val objects: MutableList<GLRenderable> = ArrayList() // Drawable objects
     private val shapes: MutableList<DebugShape> = ArrayList() // Temporary shapes
+    private val textObjects: MutableList<TextLabel> = ArrayList() // Text objects
 
     // Scene Background
     private lateinit var background: Sprite
@@ -41,10 +43,12 @@ internal class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"),
 
     override fun addRenderable(r: Renderable?) {
         if (r is GLRenderable) objects.add(r)
+        else if (r is TextLabel) textObjects.add(r)
     }
 
     override fun removeRenderable(r: Renderable?) {
         if (r is GLRenderable) objects.remove(r)
+        else if (r is TextLabel) textObjects.remove(r)
     }
 
     // Debug Renderer Methods
@@ -65,6 +69,7 @@ internal class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"),
         super.clear()
         objects.clear()
         shapes.clear()
+        textObjects.clear()
         bgBatch.clearVertices()
     }
 
@@ -109,6 +114,14 @@ internal class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"),
         // Push shapes
         shapes.sortBy { it.zIndex }
         shapes.forEach { it.pushToBatch(it.getAvailableBatch()) }
+        // Push text
+        textObjects.sortBy { it.zIndex }
+        textObjects.filter { it.isEnabled }
+            .forEach {
+                it.glyphSprites.forEach { glyph ->
+                    glyph.pushToBatch(glyph.getAvailableBatch())
+                }
+            }
     }
 
     override fun postRender() {
