@@ -68,16 +68,9 @@ public class PlayerUI extends GameObject {
         if (font == null) return;
 
         // Hints Text
-        TextLabel showHintsText;
-        addComponent(showHintsText = new UITextLabel(
+        TextLabel hintsText;
+        addComponent(hintsText = new UITextLabel(
                 "Show Hints (H)", new Vec2(1040, 25),
-                font, Colors.WHITE,
-                16, 2
-        ));
-
-        TextLabel hideHintsText;
-        addComponent(hideHintsText = new UITextLabel(
-                "Hide Hints (H)", new Vec2(1040, 25),
                 font, Colors.WHITE,
                 16, 2
         ));
@@ -107,10 +100,7 @@ public class PlayerUI extends GameObject {
 
             private void toggleHints(boolean hintsShown) {
                 this.hintsShown = hintsShown;
-                // Hints hidden
-                showHintsText.setEnabled(!hintsShown);
-                // Hints shown
-                hideHintsText.setEnabled(hintsShown);
+                hintsText.setMessage(hintsShown ? "Hide Hints (H)" : "Show Hints (H)");
                 hotbarText.setEnabled(hintsShown);
             }
         });

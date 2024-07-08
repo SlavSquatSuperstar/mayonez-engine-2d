@@ -90,7 +90,8 @@ public class FontTestScene extends Scene {
 
                     @Override
                     protected void debugRender() {
-                        getScene().getDebugDraw().drawPoint(new Vec2(-5, 30), Colors.GREEN);
+                        // Check glyph positions
+//                        getScene().getDebugDraw().drawPoint(new Vec2(-5, 30), Colors.BLACK);
                     }
                 });
             }

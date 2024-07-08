@@ -15,7 +15,7 @@ import java.util.*;
  */
 public abstract class TextLabel extends Script implements Renderable {
 
-    protected final String message;
+    protected String message;
     protected final Vec2 position;
     protected final Font font;
     protected final Color color;
@@ -39,17 +39,22 @@ public abstract class TextLabel extends Script implements Renderable {
 
     // Generate glyph positions and textures from message
     private void generateGlyphs() {
+        glyphSprites.clear();
         var lineOffset = new Vec2(0, (float) fontSize * (1 + (float) lineSpacing / font.getGlyphHeight()));
         var lines = message.split("\n");
 
-        var linePos = getInitialCharPosition();
+        var linePos = getInitialGlyphPosition();
         for (String line : lines) {
-            addSpritesForLine(line, linePos, font.getGlyphSpacing());
+            generateGlyphsForLine(line, linePos, font.getGlyphSpacing());
             linePos = linePos.sub(lineOffset); // Move to the next line
         }
     }
 
-    private void addSpritesForLine(String line, Vec2 linePos, int glyphSpacing) {
+    private Vec2 getInitialGlyphPosition() {
+        return position;
+    }
+
+    private void generateGlyphsForLine(String line, Vec2 linePos, int glyphSpacing) {
         var lastCharPos = linePos;
         for (int i = 0; i < line.length(); i++) {
             var charCode = line.charAt(i);
@@ -61,20 +66,9 @@ public abstract class TextLabel extends Script implements Renderable {
             glyphSprites.add(glyphSprite);
 
             // Move to the next character's position
-            var charOffset = getCharOffset(glyphSpacing, glyph);
+            var charOffset = getGlyphOffset(glyphSpacing, glyph);
             lastCharPos = lastCharPos.add(new Vec2(charOffset, 0));
         }
-    }
-
-    private float getCharOffset(int glyphSpacing, Glyph glyph) {
-        if (glyph.getWidth() == 0) return 0;
-        return (float) fontSize * (glyph.getWidth() + glyphSpacing) / glyph.getHeight();
-    }
-
-    // Get Sprite Methods
-
-    private Vec2 getInitialCharPosition() {
-        return position;
     }
 
     private GlyphSprite createGlyphSprite(Glyph glyph, int fontSize, Vec2 charPos, Color color) {
@@ -84,10 +78,20 @@ public abstract class TextLabel extends Script implements Renderable {
         return new GlyphSprite(spritePos, spriteScale, glyph.getTexture(), color, this);
     }
 
+    private float getGlyphOffset(int glyphSpacing, Glyph glyph) {
+        if (glyph.getWidth() == 0) return 0;
+        return (float) fontSize * (glyph.getWidth() + glyphSpacing) / glyph.getHeight();
+    }
+
     // Text Methods
 
     public String getMessage() {
         return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+        generateGlyphs();
     }
 
     public List<GlyphSprite> getGlyphSprites() {
