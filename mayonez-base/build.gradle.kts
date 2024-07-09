@@ -51,7 +51,7 @@ tasks {
         into("build/classes/java/main")
         include("**/*.class", "**/*.kotlin_module")
         doLast {
-            delete("build/classes/java/main/module-info.class")
+            delete("build/classes/java/main/module-info.class") // Mark compileJava as out-of-date
         }
     }
 }

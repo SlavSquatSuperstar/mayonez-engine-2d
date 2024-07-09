@@ -41,16 +41,17 @@ This fully-operational game engine includes:
 | Operating System      |   Status   |
 |:----------------------|:----------:|
 | macOS (Intel)         | Supported  |
-| Windows               | Supported  | 
-| macOS (Apple silicon) | Not Tested |
+| Windows (64-bit)      | Supported  | 
+| macOS (Apple Silicon) | Not Tested |
 | GNU/Linux             | Not Tested |
+| BSD                   | Not Tested |
 
 ## Quick Start Guide
 
 ### System Requirements
 
-- 64-bit operating system
-- Graphics card supporting OpenGL 3.3
+- 64-bit operating system (newer Java versions may not be available for 32-bit systems)
+- Graphics card supporting OpenGL 3.3 or above
 - Java 17 or above (see further instructions)
 
 ### Instructions for Players
@@ -102,12 +103,12 @@ Development Tools and Libraries
 - Recommended IDE: [Intellij IDEA CE 2024+](https://www.jetbrains.com/idea/download/)
     - [Eclipse Java IDE](https://www.eclipse.org/downloads/) may also be used, but IntelliJ has better Kotlin and Gradle
       integration
-- Build System: [Gradle 8.7+](https://gradle.org/install/)
+- Build System: [Gradle 8.8+](https://gradle.org/install/)
 
 Dependencies (automatically downloaded by Gradle and bundled in JAR)
 
 - [Kotlin Standard Library](https://kotlinlang.org/docs/getting-started.html)
-- [LWJGL 3.3.2](https://www.lwjgl.org/customize) (user OS & architecture specific)
+- [LWJGL 3.3.3](https://www.lwjgl.org/customize) (user OS & architecture specific)
     - Libraries: [JOML](https://joml-ci.github.io/JOML/), GLFW, OpenGL, and STB
 - [JSON in Java](https://github.com/stleary/JSON-java) (org.json)
 - [Java Reflections](https://github.com/ronmamo/reflections) (org.reflections, custom implementation)
