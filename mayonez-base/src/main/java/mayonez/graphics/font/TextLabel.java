@@ -23,10 +23,8 @@ public abstract class TextLabel extends Script implements Renderable {
     protected final int fontSize, lineSpacing;
 
     // Glyph Fields
-    // TODO store lines
     private final List<GlyphSprite> glyphSprites;
-    private final List<List<Float>> glyphOffsets; // X-offset, glyph width plus spacing
-    private final List<Float> lineWidths; // Widths of each line
+    private final List<TextLine> lines;
     private Vec2 textSize; // Text bounding box dimension
 
     public TextLabel(String message, Vec2 position, Font font, Color color, int fontSize, int lineSpacing) {
@@ -36,9 +34,9 @@ public abstract class TextLabel extends Script implements Renderable {
         this.color = color;
         this.fontSize = fontSize;
         this.lineSpacing = lineSpacing;
+
         glyphSprites = new ArrayList<>();
-        glyphOffsets = new ArrayList<>();
-        lineWidths = new ArrayList<>();
+        lines = new ArrayList<>();
     }
 
     @Override
@@ -46,57 +44,77 @@ public abstract class TextLabel extends Script implements Renderable {
         generateGlyphs();
     }
 
-    // (Re-)Generate glyph positions and textures from message
+    // (Re-)Generate glyph positions and sizes from message
     private void generateGlyphs() {
         glyphSprites.clear();
-        glyphOffsets.clear();
-        lineWidths.clear();
+        lines.clear();
 
-        // Calculate text height
-        var lines = message.split("\n");
-        var lineOffset = new Vec2(0, (float) fontSize * (1 + (float) lineSpacing / font.getGlyphHeight()));
-
-        // Get glyph positions
-        var linePos = getInitialGlyphPosition();
-        for (String line : lines) {
-            generateGlyphsForLine(line, linePos, font.getGlyphSpacing());
-            linePos = linePos.sub(lineOffset); // Move to the next line
+        // Get glyph offsets
+        var strLines = message.split("\n");
+        for (var strLine : strLines) {
+            var line = getGlyphOffsets(strLine, font.getGlyphSpacing());
+            lines.add(line);
         }
-        lineWidths.addAll(glyphOffsets.stream()
-                .map(ls -> ls.stream().reduce(Float::sum)) // Sum each sub-list
-                .map(opt -> opt.orElse(0f)).toList());
-        System.out.println("widths = " + lineWidths);
 
         // Calculate text size
+        var lineWidths = lines.stream().map(TextLine::getLineWidth).toList();
         var maxWidth = lineWidths.stream().max(Comparator.naturalOrder()).orElse(0f); // Get max line width
-        var textHeight = lines.length * lineOffset.y; // Get height of all lines
+        var lineOffset = new Vec2(0, (float) fontSize * (1 + (float) lineSpacing / font.getGlyphHeight()));
+        var textHeight = strLines.length * lineOffset.y; // Get height of all lines
+        textSize = new Vec2(maxWidth, textHeight);
+
+        System.out.println("widths = " + lineWidths);
         System.out.println("max width = " + maxWidth);
         System.out.println("height = " + textHeight);
-        textSize = new Vec2(maxWidth, textHeight);
+
+        // Add glyph sprites
+        var linePos = getInitialGlyphPosition();
+        for (var line : lines) {
+            addLineSprites(line, linePos);
+            linePos = linePos.sub(lineOffset); // Move to the next line
+        }
     }
+
+    // Glyph Width Methods
+
+    private TextLine getGlyphOffsets(String line, int glyphSpacing) {
+        List<Glyph> glyphs = new ArrayList<>();
+        List<Float> glyphOffsets = new ArrayList<>();
+
+        for (int i = 0; i < line.length(); i++) {
+            var glyph = font.getGlyph(line.charAt(i));
+            if (glyph == null) continue; // Don't make glyphs for non-printable characters
+
+            // Calculate glyph offset
+            glyphs.add(glyph);
+            glyphOffsets.add(getGlyphOffset(glyphSpacing, glyph));
+        }
+        return new TextLine(glyphs, glyphOffsets);
+    }
+
+    private float getGlyphOffset(int glyphSpacing, Glyph glyph) {
+        if (glyph.getWidth() == 0) return 0; // If zero-width return 0
+        // Glyph width plus spacing
+        return (float) fontSize * (glyph.getWidth() + glyphSpacing) / glyph.getHeight();
+    }
+
+    // Glyph Sprite Methods
 
     private Vec2 getInitialGlyphPosition() {
         return new Vec2(position.x, position.y - fontSize * 0.5f);
     }
 
-    private void generateGlyphsForLine(String line, Vec2 linePos, int glyphSpacing) {
-        List<Float> offsets = new ArrayList<>();
-        var lastCharPos = linePos;
-        for (int i = 0; i < line.length(); i++) {
-            var charCode = line.charAt(i);
-            var glyph = font.getGlyph(charCode);
-            if (glyph == null) continue; // Don't make glyphs for non-printable characters
+    private void addLineSprites(TextLine line, Vec2 linePos) {
+        var charPos = linePos;
+        for (int i = 0; i < line.numGlyphs(); i++) {
+            var glyph = line.getGlyph(i);
+            var offset = line.getGlyphOffset(i);
 
             // Add the character glyph
-            var glyphSprite = createGlyphSprite(glyph, fontSize, lastCharPos, color);
+            var glyphSprite = createGlyphSprite(glyph, fontSize, charPos, color);
             glyphSprites.add(glyphSprite);
-
-            // Move to the next character's position
-            var glyphOffset = getGlyphOffset(glyphSpacing, glyph);
-            lastCharPos = lastCharPos.add(new Vec2(glyphOffset, 0));
-            offsets.add(glyphOffset);
+            charPos = charPos.add(new Vec2(offset, 0)); // Move to the next glyph
         }
-        glyphOffsets.add(offsets);
     }
 
     private GlyphSprite createGlyphSprite(Glyph glyph, int fontSize, Vec2 charPos, Color color) {
@@ -104,11 +122,6 @@ public abstract class TextLabel extends Script implements Renderable {
         var spritePos = charPos.add(new Vec2(0.5f * percentWidth * fontSize, 0f));
         var spriteScale = new Vec2(percentWidth * fontSize, fontSize);
         return new GlyphSprite(spritePos, spriteScale, glyph.getTexture(), color, this);
-    }
-
-    private float getGlyphOffset(int glyphSpacing, Glyph glyph) {
-        if (glyph.getWidth() == 0) return 0; // If zero-width return 0
-        return (float) fontSize * (glyph.getWidth() + glyphSpacing) / glyph.getHeight();
     }
 
     // Text Methods
