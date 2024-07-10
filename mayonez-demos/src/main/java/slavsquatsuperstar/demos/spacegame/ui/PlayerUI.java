@@ -70,14 +70,14 @@ public class PlayerUI extends GameObject {
         // Hints Text
         TextLabel hintsText;
         addComponent(hintsText = new UITextLabel(
-                "Show Hints (H)", new Vec2(1040, 25),
+                "Show Hints (H)", new Vec2(1040, 30),
                 font, Colors.WHITE,
                 16, 2
         ));
 
         TextLabel hotbarText;
         addComponent(hotbarText = new UITextLabel(
-                "(1)   (2)   (3)", new Vec2(20, 65),
+                "(1)   (2)   (3)", new Vec2(18, 70),
                 font, Colors.WHITE,
                 16, 2
         ));

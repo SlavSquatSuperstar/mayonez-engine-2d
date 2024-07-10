@@ -61,13 +61,13 @@ public class FontTestScene extends Scene {
             protected void init() {
                 TextLabel worldText1;
                 addComponent(worldText1 = new WorldTextLabel(
-                        message1, new Vec2(-5, 30), font,
+                        message1, new Vec2(-5, 35), font,
                         Colors.BLUE, fontSize, lineSpacing)
                 );
 
                 TextLabel worldText2;
                 addComponent(worldText2 = new WorldTextLabel(
-                        message2, new Vec2(-55, 5), font,
+                        message2, new Vec2(-55, 7.5f), font,
                         Colors.GREEN, fontSize, lineSpacing)
                 );
 
@@ -91,7 +91,8 @@ public class FontTestScene extends Scene {
                     @Override
                     protected void debugRender() {
                         // Check glyph positions
-//                        getScene().getDebugDraw().drawPoint(new Vec2(-5, 30), Colors.BLACK);
+                        getScene().getDebugDraw().drawPoint(new Vec2(-5, 35), Colors.BLACK);
+                        getScene().getDebugDraw().drawPoint(new Vec2(-55, 7.5f), Colors.BLACK);
                     }
                 });
             }
