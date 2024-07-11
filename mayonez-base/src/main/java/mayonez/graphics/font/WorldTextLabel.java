@@ -2,6 +2,7 @@ package mayonez.graphics.font;
 
 import mayonez.graphics.*;
 import mayonez.math.*;
+import mayonez.math.shapes.*;
 
 /**
  * Draws text inside the world using a font.
@@ -22,4 +23,11 @@ public class WorldTextLabel extends TextLabel {
         return false;
     }
 
+    @Override
+    protected void debugRender() {
+        // Check glyph positions
+        getScene().getDebugDraw().drawShape(
+                new Rectangle(bounds.getCenter(), getSize()), Colors.BLACK
+        );
+    }
 }

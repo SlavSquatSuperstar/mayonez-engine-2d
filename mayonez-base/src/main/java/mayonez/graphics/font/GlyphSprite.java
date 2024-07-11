@@ -10,7 +10,7 @@ import mayonez.renderer.gl.*;
 /**
  * A sprite used to render an instance of a font glyph.
  *
- * @param position the position of the sprite
+ * @param position the center of the sprite
  * @param size     the size of the sprite
  * @param texture  the texture of the sprite
  * @param color    the color of the sprite

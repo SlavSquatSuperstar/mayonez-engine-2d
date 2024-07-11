@@ -53,7 +53,7 @@ public class FontTestScene extends Scene {
         var lineSpacing = 2; // px
 
         // UI font
-        var uiFontSize = 30; // pt
+        var uiFontSize = 32; // pt
         var uiLineSpacing = 2; // px
 
         addObject(new GameObject("Text Holder") {
@@ -61,19 +61,19 @@ public class FontTestScene extends Scene {
             protected void init() {
                 TextLabel worldText1;
                 addComponent(worldText1 = new WorldTextLabel(
-                        message1, new Vec2(-5, 35), font,
+                        message1, new Vec2(14, 10), font,
                         Colors.BLUE, fontSize, lineSpacing)
                 );
 
                 TextLabel worldText2;
                 addComponent(worldText2 = new WorldTextLabel(
-                        message2, new Vec2(-55, 7.5f), font,
+                        message2, new Vec2(-38, -14), font,
                         Colors.GREEN, fontSize, lineSpacing)
                 );
 
                 TextLabel uiText;
                 addComponent(uiText = new UITextLabel(
-                        message1, new Vec2(25, 775), font,
+                        message1, new Vec2(165, 650), font,
                         Colors.RED, uiFontSize, uiLineSpacing
                 ));
 
@@ -86,13 +86,6 @@ public class FontTestScene extends Scene {
                             worldText2.setEnabled(textVisible);
                             uiText.setEnabled(textVisible);
                         }
-                    }
-
-                    @Override
-                    protected void debugRender() {
-                        // Check glyph positions
-                        getScene().getDebugDraw().drawPoint(new Vec2(-5, 35), Colors.BLACK);
-                        getScene().getDebugDraw().drawPoint(new Vec2(-55, 7.5f), Colors.BLACK);
                     }
                 });
             }

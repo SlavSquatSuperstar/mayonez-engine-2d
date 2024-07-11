@@ -77,7 +77,7 @@ public class UIBounds {
         center = anchorPos.sub(size.mul(anchorDir.getDirection())); // Recalculate center
     }
 
-    Vec2 getPosition(Anchor anchor) {
+    public Vec2 getPosition(Anchor anchor) {
         return center.add(size.mul(anchor.getDirection()));
     }
 

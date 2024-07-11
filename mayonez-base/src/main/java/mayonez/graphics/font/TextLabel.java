@@ -2,6 +2,7 @@ package mayonez.graphics.font;
 
 import mayonez.*;
 import mayonez.graphics.*;
+import mayonez.graphics.ui.*;
 import mayonez.math.*;
 import mayonez.renderer.*;
 
@@ -17,7 +18,7 @@ public abstract class TextLabel extends Script implements Renderable {
 
     // Font Fields
     protected String message;
-    protected final Vec2 position;
+    protected final UIBounds bounds; // Text bounding box
     protected final Font font;
     protected final Color color;
     protected final int fontSize, lineSpacing;
@@ -25,16 +26,15 @@ public abstract class TextLabel extends Script implements Renderable {
     // Glyph Fields
     private final List<GlyphSprite> glyphSprites;
     private final List<TextLine> lines;
-    private Vec2 textSize; // Text bounding box dimension
 
     public TextLabel(String message, Vec2 position, Font font, Color color, int fontSize, int lineSpacing) {
         this.message = message;
-        this.position = position;
         this.font = font;
         this.color = color;
         this.fontSize = fontSize;
         this.lineSpacing = lineSpacing;
 
+        bounds = new UIBounds(position, new Vec2(), Anchor.CENTER);
         glyphSprites = new ArrayList<>();
         lines = new ArrayList<>();
     }
@@ -61,11 +61,8 @@ public abstract class TextLabel extends Script implements Renderable {
         var maxWidth = lineWidths.stream().max(Comparator.naturalOrder()).orElse(0f); // Get max line width
         var lineOffset = new Vec2(0, (float) fontSize * (1 + (float) lineSpacing / font.getGlyphHeight()));
         var textHeight = strLines.length * lineOffset.y; // Get height of all lines
-        textSize = new Vec2(maxWidth, textHeight);
-
-        System.out.println("widths = " + lineWidths);
-        System.out.println("max width = " + maxWidth);
-        System.out.println("height = " + textHeight);
+        var boundsSize = new Vec2(maxWidth, textHeight); // Get text bounding box dimensions
+        bounds.setSize(boundsSize);
 
         // Add glyph sprites
         var linePos = getInitialGlyphPosition();
@@ -101,7 +98,9 @@ public abstract class TextLabel extends Script implements Renderable {
     // Glyph Sprite Methods
 
     private Vec2 getInitialGlyphPosition() {
-        return new Vec2(position.x, position.y - fontSize * 0.5f);
+        // Render from top left
+        return bounds.getPosition(Anchor.TOP_LEFT) // Get top left
+                .sub(new Vec2(0f, fontSize * 0.5f));  // Move down by half glyph height
     }
 
     private void addLineSprites(TextLine line, Vec2 linePos) {
@@ -119,7 +118,7 @@ public abstract class TextLabel extends Script implements Renderable {
 
     private GlyphSprite createGlyphSprite(Glyph glyph, int fontSize, Vec2 charPos, Color color) {
         var percentWidth = (float) glyph.getWidth() / glyph.getHeight();
-        var spritePos = charPos.add(new Vec2(0.5f * percentWidth * fontSize, 0f));
+        var spritePos = charPos.add(new Vec2(0.5f * percentWidth * fontSize, 0f)); // Move right by half glyph width
         var spriteScale = new Vec2(percentWidth * fontSize, fontSize);
         return new GlyphSprite(spritePos, spriteScale, glyph.getTexture(), color, this);
     }
@@ -135,11 +134,25 @@ public abstract class TextLabel extends Script implements Renderable {
         generateGlyphs();
     }
 
+    public Vec2 getPosition() {
+        return bounds.getAnchorPos();
+    }
+
+    public void setPosition(Vec2 position) {
+        bounds.setAnchorPos(position);
+    }
+
+    public Vec2 getSize() {
+        return bounds.getSize();
+    }
+
+    // TODO anchor direction methods
+
+    // Renderable Methods
+
     public List<GlyphSprite> getGlyphSprites() {
         return glyphSprites;
     }
-
-    // Renderable Methods
 
     @Override
     public int getZIndex() {

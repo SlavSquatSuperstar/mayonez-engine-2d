@@ -4,7 +4,7 @@ import mayonez.math.*;
 
 /**
  * A basic user interface element with position and size but no renderable components.
- * This component may still be a container for renderable elements.
+ * This component may be used as a container for renderable elements.
  *
  * @author SlavSquatSuperstar
  */
