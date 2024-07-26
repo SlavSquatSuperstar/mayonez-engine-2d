@@ -95,6 +95,14 @@ public class PlayerUI extends GameObject {
                 if (KeyInput.keyPressed("h")) {
                     toggleHints(!hintsShown);
                 }
+                if (KeyInput.keyPressed("l")) {
+                    hpLabel.setPosition(hpLabel.getPosition().add(new Vec2(10, -10)));
+                    shLabel.setPosition(shLabel.getPosition().add(new Vec2(10, -10)));
+                }
+                if (KeyInput.keyPressed("m")) {
+                    hpLabel.setSize(hpLabel.getSize().add(new Vec2(5)));
+                    shLabel.setSize(shLabel.getSize().add(new Vec2(5)));
+                }
             }
 
             private void toggleHints(boolean hintsShown) {

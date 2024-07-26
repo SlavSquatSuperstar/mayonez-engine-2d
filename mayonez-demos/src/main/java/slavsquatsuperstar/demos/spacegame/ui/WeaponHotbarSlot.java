@@ -7,7 +7,7 @@ import mayonez.math.*;
 import slavsquatsuperstar.demos.spacegame.combat.projectiles.ProjectilePrefabs;
 
 /**
- * A label representing an individual weapon hotbar slot, with additional cooldown
+ * An image label representing an individual weapon hotbar slot, with additional cooldown
  * overlay.
  *
  * @author SlavSquatSuperstar
@@ -24,15 +24,12 @@ public class WeaponHotbarSlot extends ImageLabel {
     private static final float BORDER_MARGIN = 4f;
 
     // Fields
-    private final Vec2 position, size;
     private UISprite cooldownOverlaySprite;
 
     public WeaponHotbarSlot(Vec2 position, Vec2 size, int weaponIndex) {
         super(position, size,
                 ProjectilePrefabs.PROJECTILE_SPRITES.getTexture(weaponIndex),
                 BACKGROUND_TEXTURE, UNSELECTED_BORDER_TEXTURE);
-        this.position = position;
-        this.size = size;
     }
 
     @Override
@@ -43,7 +40,7 @@ public class WeaponHotbarSlot extends ImageLabel {
 
         // Cooldown overlay
         cooldownOverlaySprite = new UISprite(
-                position, size.add(new Vec2(BORDER_MARGIN)), Color.grayscale(76, 180)
+                getPosition(), getSize().add(new Vec2(BORDER_MARGIN)), Color.grayscale(76, 180)
         ) {
             @Override
             public int getZIndex() {
@@ -65,16 +62,7 @@ public class WeaponHotbarSlot extends ImageLabel {
     public void setCooldownPercent(float cooldownPercent) {
         // Clamp percent between 0%-100%
         var clamped = MathUtils.clamp(cooldownPercent, 0f, 1f);
-        cooldownOverlaySprite.setSize(size.mul(new Vec2(1f, clamped)));
-    }
-
-    /**
-     * Get the position of the hotbar slot's UI element.
-     *
-     * @return the UI position
-     */
-    public Vec2 getPosition() {
-        return position;
+        cooldownOverlaySprite.setSize(getSize().mul(new Vec2(1f, clamped)));
     }
 
 }

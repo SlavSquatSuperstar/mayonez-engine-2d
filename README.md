@@ -170,7 +170,7 @@ A massive, heartfelt thanks goes out to the following people, groups, and resour
 
 - [GamesWithGabe](https://youtube.com/c/GamesWithGabe) and [The Cherno](https://youtube.com/c/TheChernoProject): For
   keeping me motivated to work on my engine, no matter how much frustration debugging causes me.
-- [CodeNMore](https://www.youtube.com/playlist?list=PLah6faXAgguMnTBs3JnEJY0shAc18XYQZ): For creating first game engine
+- [CodeNMore](https://www.youtube.com/playlist?list=PLah6faXAgguMnTBs3JnEJY0shAc18XYQZ): For creating the first game engine
   tutorial I ever followed and starting me on this crazy and amazing journey.
 - [Unity Engine](https://docs.unity3d.com/ScriptReference/): ~~Who I'm ripping off~~ For making game dev
   accessible for everybody and providing excellent documentation.
@@ -196,7 +196,7 @@ or any later version, which grants copyleft protections. In true ~~communist~~ ~
 code of this program is freely available to access, run, share, and modify forever.
 
 Any forks of this project must also be distributed under the same license and may not be used in or made into any
-proprietary (closed-source) applications. Forks may still be monetized, as long as the code is open to the public.
+proprietary (closed-source) applications. Forks may still be monetized, as long as the code is open to end users.
 See [LICENSE.txt](LICENSE.txt) or read the [online version]((https://www.gnu.org/licenses/gpl-3.0.html)) for
 more details.
 
@@ -204,6 +204,6 @@ This software may not be redistributed without the license file. If your downloa
 you should ask the distributor to include it. The [.txt version](https://www.gnu.org/licenses/gpl-3.0.txt) is available
 on the GNU website.
 
-Copyright © 2020-2024 SlavSquatSuperstar GPLv3
+For email inquiries, contact [slavsquatsuperstar@gmail.com](mailto:slavsquatsuperstar@gmail.com)
 
-Email: [slavsquatsuperstar@gmail.com](mailto:slavsquatsuperstar@gmail.com)
+Copyright © 2020-2024 SlavSquatSuperstar GPLv3

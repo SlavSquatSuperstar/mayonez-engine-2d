@@ -16,16 +16,12 @@ public class FontTestScene extends Scene {
 
     private static final boolean CAMERA_DEBUG_MODE = true;
 
-    private boolean textVisible;
-
     public FontTestScene(String name) {
         super(name, 0, 0, 10);
     }
 
     @Override
     protected void init() {
-        textVisible = true;
-
         var font = DemosAssets.getFont();
         if (font == null) return;
 
@@ -68,23 +64,26 @@ public class FontTestScene extends Scene {
                 TextLabel worldText2;
                 addComponent(worldText2 = new WorldTextLabel(
                         message2, new Vec2(-38, -14), font,
-                        Colors.GREEN, fontSize, lineSpacing)
+                        Colors.BLUE, fontSize, lineSpacing)
                 );
 
                 TextLabel uiText;
                 addComponent(uiText = new UITextLabel(
                         message1, new Vec2(165, 650), font,
-                        Colors.RED, uiFontSize, uiLineSpacing
+                        Colors.BLUE, uiFontSize, uiLineSpacing
                 ));
 
                 addComponent(new Script() {
+                    private boolean useAltColor = false;
+
                     @Override
                     protected void update(float dt) {
                         if (KeyInput.keyPressed("space")) {
-                            textVisible = !textVisible;
-                            worldText1.setEnabled(textVisible);
-                            worldText2.setEnabled(textVisible);
-                            uiText.setEnabled(textVisible);
+                            useAltColor = !useAltColor;
+                            var color = useAltColor ? Colors.RED : Colors.BLUE;
+                            worldText1.setColor(color);
+                            worldText2.setColor(color);
+                            uiText.setColor(color);
                         }
                     }
                 });

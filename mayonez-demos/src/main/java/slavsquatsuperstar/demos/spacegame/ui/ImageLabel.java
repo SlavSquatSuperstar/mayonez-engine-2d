@@ -12,14 +12,15 @@ import slavsquatsuperstar.demos.spacegame.objects.SpaceGameZIndex;
  *
  * @author SlavSquatSuperstar
  */
-public class ImageLabel extends Script {
+public class ImageLabel extends Script implements UIElement {
 
-    private final Vec2 position, size;
+    private Vec2 position, size;
     private float backgroundPadding, borderThickness;
     private UISprite iconSprite, backgroundSprite, borderSprite;
     private Texture iconTexture, backgroundTexture, borderTexture;
 
     public ImageLabel(Vec2 position, Vec2 size, Texture iconTexture, Texture backgroundTexture, Texture borderTexture) {
+        super(UpdateOrder.RENDER);
         this.position = position;
         this.size = size;
         this.iconTexture = iconTexture;
@@ -31,11 +32,11 @@ public class ImageLabel extends Script {
     protected void init() {
         gameObject.setZIndex(SpaceGameZIndex.UI);
 
-        // Uses the size of the label
+        // Background uses label size
         backgroundSprite = new UISprite(position, size, backgroundTexture);
         gameObject.addComponent(backgroundSprite);
 
-        // Can be made smaller by setting padding
+        // Icon can be made smaller by setting padding
         iconSprite = new UISprite(position, size.sub(new Vec2(backgroundPadding)), iconTexture) {
             @Override
             public int getZIndex() {
@@ -44,7 +45,7 @@ public class ImageLabel extends Script {
         };
         gameObject.addComponent(iconSprite);
 
-        // Can be made larger by setting thickness
+        // Border can be made larger by setting thickness
         borderSprite = new UISprite(position, size.add(new Vec2(borderThickness)), borderTexture) {
             @Override
             public int getZIndex() {
@@ -118,6 +119,34 @@ public class ImageLabel extends Script {
      */
     public void setBorderThickness(float borderThickness) {
         this.borderThickness = borderThickness;
+        borderSprite.setSize(size.add(new Vec2(borderThickness)));
+    }
+
+    // UI Element Methods
+
+    @Override
+    public Vec2 getPosition() {
+        return position;
+    }
+
+    @Override
+    public void setPosition(Vec2 position) {
+        this.position = position;
+        iconSprite.setPosition(position);
+        backgroundSprite.setPosition(position);
+        borderSprite.setPosition(position);
+    }
+
+    @Override
+    public Vec2 getSize() {
+        return size;
+    }
+
+    @Override
+    public void setSize(Vec2 size) {
+        this.size = size;
+        iconSprite.setSize(size);
+        backgroundSprite.setSize(size.sub(new Vec2(backgroundPadding)));
         borderSprite.setSize(size.add(new Vec2(borderThickness)));
     }
 
