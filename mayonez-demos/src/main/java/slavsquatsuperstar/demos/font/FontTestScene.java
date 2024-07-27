@@ -3,6 +3,7 @@ package slavsquatsuperstar.demos.font;
 import mayonez.*;
 import mayonez.graphics.*;
 import mayonez.graphics.font.*;
+import mayonez.graphics.ui.*;
 import mayonez.input.*;
 import mayonez.math.*;
 import slavsquatsuperstar.demos.DemosAssets;
@@ -72,18 +73,34 @@ public class FontTestScene extends Scene {
                         message1, new Vec2(165, 650), font,
                         Colors.BLUE, uiFontSize, uiLineSpacing
                 ));
+                uiText.setAnchor(Anchor.TOP_LEFT);
 
                 addComponent(new Script() {
-                    private boolean useAltColor = false;
+                    private boolean useAltStyle = false;
 
                     @Override
                     protected void update(float dt) {
                         if (KeyInput.keyPressed("space")) {
-                            useAltColor = !useAltColor;
-                            var color = useAltColor ? Colors.RED : Colors.BLUE;
+                            useAltStyle = !useAltStyle;
+
+                            // Set color
+                            var color = useAltStyle ? Colors.RED : Colors.BLUE;
                             worldText1.setColor(color);
                             worldText2.setColor(color);
                             uiText.setColor(color);
+
+                            // Set font size
+                            var size = useAltStyle ? 3 : 6;
+                            var uiSize = useAltStyle ? 16 : 32;
+                            worldText1.setFontSize(size);
+                            worldText2.setFontSize(size);
+                            uiText.setFontSize(uiSize);
+
+                            // Set line spacing
+                            var spacing = useAltStyle ? 4 : 2;
+                            worldText1.setLineSpacing(spacing);
+                            worldText2.setLineSpacing(spacing);
+                            uiText.setLineSpacing(spacing);
                         }
                     }
                 });

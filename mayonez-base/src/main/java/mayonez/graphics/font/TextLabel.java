@@ -14,15 +14,17 @@ import java.util.*;
  *
  * @author SlavSquatSuperstar
  */
-// TODO set font size, set color, set alignment
+// TODO set alignment
 public abstract class TextLabel extends Script implements Renderable {
 
-    // Font Fields
+    // Text Fields
     protected String message;
-    protected final UIBounds bounds; // Text bounding box
     protected final Font font;
+    protected final UIBounds bounds; // Text bounding box
+
+    // Text Style
     protected Color color;
-    protected final int fontSize, lineSpacing;
+    protected int fontSize, lineSpacing;
 
     // Glyph Fields
     private final List<GlyphSprite> glyphSprites;
@@ -154,6 +156,14 @@ public abstract class TextLabel extends Script implements Renderable {
         return bounds.getSize();
     }
 
+    public Anchor getAnchor() {
+        return bounds.getAnchorDir();
+    }
+
+    public void setAnchor(Anchor anchor) {
+        bounds.setAnchorDir(anchor);
+    }
+
     // Text Style Methods
 
     public Color getColor() {
@@ -165,7 +175,24 @@ public abstract class TextLabel extends Script implements Renderable {
         generateGlyphSprites();
     }
 
-    // TODO anchor direction methods
+    public int getFontSize() {
+        return fontSize;
+    }
+
+    public void setFontSize(int fontSize) {
+        this.fontSize = fontSize;
+        generateGlyphs();
+    }
+
+    public int getLineSpacing() {
+        return lineSpacing;
+    }
+
+    public void setLineSpacing(int lineSpacing) {
+        this.lineSpacing = lineSpacing;
+        calculateTextBounds();
+        generateGlyphSprites();
+    }
 
     // Renderable Methods
 

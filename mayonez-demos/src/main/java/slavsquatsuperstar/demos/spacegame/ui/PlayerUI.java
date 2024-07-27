@@ -4,6 +4,7 @@ import mayonez.*;
 import mayonez.graphics.*;
 import mayonez.graphics.font.*;
 import mayonez.graphics.textures.*;
+import mayonez.graphics.ui.*;
 import mayonez.input.*;
 import mayonez.math.*;
 import slavsquatsuperstar.demos.DemosAssets;
@@ -74,6 +75,7 @@ public class PlayerUI extends GameObject {
                 font, Colors.WHITE,
                 16, 2
         ));
+        hintsText.setAnchor(Anchor.LEFT);
 
         TextLabel hotbarText;
         addComponent(hotbarText = new UITextLabel(
@@ -94,14 +96,6 @@ public class PlayerUI extends GameObject {
             protected void update(float dt) {
                 if (KeyInput.keyPressed("h")) {
                     toggleHints(!hintsShown);
-                }
-                if (KeyInput.keyPressed("l")) {
-                    hpLabel.setPosition(hpLabel.getPosition().add(new Vec2(10, -10)));
-                    shLabel.setPosition(shLabel.getPosition().add(new Vec2(10, -10)));
-                }
-                if (KeyInput.keyPressed("m")) {
-                    hpLabel.setSize(hpLabel.getSize().add(new Vec2(5)));
-                    shLabel.setSize(shLabel.getSize().add(new Vec2(5)));
                 }
             }
 
