@@ -59,7 +59,7 @@ public class FontTestScene extends Scene {
                 TextLabel worldText1;
                 addComponent(worldText1 = new WorldTextLabel(
                         message1, new Vec2(14, 10), font,
-                        Colors.BLUE, fontSize, lineSpacing)
+                        Colors.GREEN, fontSize, lineSpacing)
                 );
 
                 TextLabel worldText2;
@@ -71,36 +71,26 @@ public class FontTestScene extends Scene {
                 TextLabel uiText;
                 addComponent(uiText = new UITextLabel(
                         message1, new Vec2(165, 650), font,
-                        Colors.BLUE, uiFontSize, uiLineSpacing
+                        Colors.RED, uiFontSize, uiLineSpacing
                 ));
                 uiText.setAnchor(Anchor.TOP_LEFT);
 
                 addComponent(new Script() {
-                    private boolean useAltStyle = false;
+                    private TextAlignment align = TextAlignment.LEFT;
 
                     @Override
                     protected void update(float dt) {
                         if (KeyInput.keyPressed("space")) {
-                            useAltStyle = !useAltStyle;
+                            switch (align) {
+                                case LEFT -> align = TextAlignment.CENTER;
+                                case CENTER -> align = TextAlignment.RIGHT;
+                                case RIGHT -> align = TextAlignment.LEFT;
+                            }
 
-                            // Set color
-                            var color = useAltStyle ? Colors.RED : Colors.BLUE;
-                            worldText1.setColor(color);
-                            worldText2.setColor(color);
-                            uiText.setColor(color);
-
-                            // Set font size
-                            var size = useAltStyle ? 3 : 6;
-                            var uiSize = useAltStyle ? 16 : 32;
-                            worldText1.setFontSize(size);
-                            worldText2.setFontSize(size);
-                            uiText.setFontSize(uiSize);
-
-                            // Set line spacing
-                            var spacing = useAltStyle ? 4 : 2;
-                            worldText1.setLineSpacing(spacing);
-                            worldText2.setLineSpacing(spacing);
-                            uiText.setLineSpacing(spacing);
+                            // Set alignment
+                            worldText1.setAlignment(align);
+                            worldText2.setAlignment(align);
+                            uiText.setAlignment(align);
                         }
                     }
                 });
