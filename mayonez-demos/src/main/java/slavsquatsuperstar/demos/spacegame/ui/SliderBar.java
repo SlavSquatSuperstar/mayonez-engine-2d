@@ -12,14 +12,16 @@ import slavsquatsuperstar.demos.spacegame.objects.SpaceGameZIndex;
  *
  * @author SlavSquatSuperstar
  */
-public class SliderBar extends Script {
+public class SliderBar extends Script implements UIElement {
 
     private static final Texture BORDER_TEXTURE = Textures.getTexture(
             "assets/spacegame/textures/ui/gray_border_wide.png");
-    private final Vec2 position, size;
+    private Vec2 position, size;
     private final Color backgroundColor, sliderColor;
 
-    private UISprite sliderSprite;
+    // Slider Fields
+    private UISprite backgroundSprite, sliderSprite, outlineSprite;
+    private float value;
 
     public SliderBar(Vec2 position, Vec2 size, Color backgroundColor, Color sliderColor) {
         this.position = position;
@@ -32,7 +34,7 @@ public class SliderBar extends Script {
     protected void init() {
         gameObject.setZIndex(SpaceGameZIndex.UI);
 
-        var backgroundSprite = new UISprite(position, size, backgroundColor) {
+        backgroundSprite = new UISprite(position, size, backgroundColor) {
             @Override
             public int getZIndex() {
                 return super.getZIndex();
@@ -48,8 +50,9 @@ public class SliderBar extends Script {
         };
         sliderSprite.setAnchor(Anchor.LEFT);
         gameObject.addComponent(sliderSprite);
+        value = 1;
 
-        var outlineSprite = new UISprite(position, size, BORDER_TEXTURE) {
+        outlineSprite = new UISprite(position, size, BORDER_TEXTURE) {
             @Override
             public int getZIndex() {
                 return super.getZIndex() + 2; // display above foreground
@@ -58,15 +61,65 @@ public class SliderBar extends Script {
         gameObject.addComponent(outlineSprite);
     }
 
+    // Slider Methods
+
     /**
-     * Sets the fill value of the slider, from left to right.
+     * Get the fill value of the slider, from left to right.
      *
-     * @param healthPercent the percent health to display
+     * @return the percent value of the slider
      */
-    public void setSliderValue(float healthPercent) {
+    public float getSliderValue() {
+        return value;
+    }
+
+    /**
+     * Set the fill value of the slider, from left to right.
+     *
+     * @param value the percent value of the slider
+     */
+    public void setSliderValue(float value) {
         // Clamp percent between 0%-100%
-        var clamped = MathUtils.clamp(healthPercent, 0f, 1f);
-        sliderSprite.setSize(size.mul(new Vec2(clamped, 1f)));
+        this.value = MathUtils.clamp(value, 0f, 1f);
+        updateSliderSize();
+    }
+
+    private void updateSliderPosition() {
+        sliderSprite.setPosition(
+                backgroundSprite.getBounds().getPosition(Anchor.LEFT)
+        );
+    }
+
+    private void updateSliderSize() {
+        sliderSprite.setSize(size.mul(new Vec2(value, 1f)));
+    }
+
+    // UI Element Methods
+
+    @Override
+    public Vec2 getPosition() {
+        return position;
+    }
+
+    @Override
+    public void setPosition(Vec2 position) {
+        this.position = position;
+        backgroundSprite.setPosition(position);
+        updateSliderPosition();
+        outlineSprite.setPosition(position);
+    }
+
+    @Override
+    public Vec2 getSize() {
+        return size;
+    }
+
+    @Override
+    public void setSize(Vec2 size) {
+        this.size = size;
+        backgroundSprite.setSize(size);
+        updateSliderSize();
+        updateSliderPosition();
+        outlineSprite.setSize(size);
     }
 
 }

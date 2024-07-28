@@ -37,25 +37,25 @@ public class PlayerUI extends GameObject {
         var uiSpacingX = 12f;
         var uiSpacingY = 12f;
         var labelSize = new Vec2(32, 32);
-        var barSize = new Vec2(192, 32);
+        var sliderSize = new Vec2(192, 32);
 
         // Player Health
-        var hpLabelPosition = new Vec2(32, Preferences.getScreenHeight() - 32);
-        var hpLabel = new ImageLabel(hpLabelPosition, labelSize, HEALTH_ICON_TEXTURE, LABEL_BACKGROUND_TEXTURE, LABEL_BORDER_TEXTURE);
+        var hpLabelPos = new Vec2(32, Preferences.getScreenHeight() - 32);
+        var hpLabel = new ImageLabel(hpLabelPos, labelSize, HEALTH_ICON_TEXTURE, LABEL_BACKGROUND_TEXTURE, LABEL_BORDER_TEXTURE);
         addComponent(hpLabel);
 
-        var hpBarPosition = hpLabelPosition.add(new Vec2(labelSize.x * 0.5f + uiSpacingX + barSize.x * 0.5f, 0));
-        var healthBar = new SliderBar(hpBarPosition, barSize, new Color(192, 0, 0), Colors.GREEN);
-        addComponent(healthBar);
+        var hpSliderPos = hpLabelPos.add(new Vec2(labelSize.x * 0.5f + uiSpacingX + sliderSize.x * 0.5f, 0));
+        var hpSlider = new SliderBar(hpSliderPos, sliderSize, new Color(192, 0, 0), Colors.GREEN);
+        addComponent(hpSlider);
 
         // Player Shield
-        var shLabelPosition = hpLabelPosition.sub(new Vec2(0, labelSize.y + uiSpacingY));
-        var shLabel = new ImageLabel(shLabelPosition, labelSize, SHIELD_ICON_TEXTURE, LABEL_BACKGROUND_TEXTURE, LABEL_BORDER_TEXTURE);
+        var shLabelPos = hpLabelPos.sub(new Vec2(0, labelSize.y + uiSpacingY));
+        var shLabel = new ImageLabel(shLabelPos, labelSize, SHIELD_ICON_TEXTURE, LABEL_BACKGROUND_TEXTURE, LABEL_BORDER_TEXTURE);
         addComponent(shLabel);
 
-        var shBarPosition = shLabelPosition.add(new Vec2(labelSize.x * 0.5f + uiSpacingX + barSize.x * 0.5f, 0));
-        var shieldBar = new SliderBar(shBarPosition, barSize, new Color(96, 96, 96), Colors.LIGHT_BLUE);
-        addComponent(shieldBar);
+        var shSliderPos = shLabelPos.add(new Vec2(labelSize.x * 0.5f + uiSpacingX + sliderSize.x * 0.5f, 0));
+        var shSlider = new SliderBar(shSliderPos, sliderSize, new Color(96, 96, 96), Colors.LIGHT_BLUE);
+        addComponent(shSlider);
 
         // Weapon Hotbar
         var wpHbPosition = new Vec2(32, 32);
@@ -63,7 +63,7 @@ public class PlayerUI extends GameObject {
         var weaponHotbar = new WeaponHotbar(wpHbPosition, wpHbSize, ProjectilePrefabs.NUM_PROJECTILES);
         addComponent(weaponHotbar);
 
-        addComponent(new PlayerUIController(healthBar, shieldBar, weaponHotbar));
+        addComponent(new PlayerUIController(hpSlider, shSlider, weaponHotbar));
 
         var font = DemosAssets.getFont();
         if (font == null) return;
@@ -96,6 +96,14 @@ public class PlayerUI extends GameObject {
             protected void update(float dt) {
                 if (KeyInput.keyPressed("h")) {
                     toggleHints(!hintsShown);
+                }
+                if (KeyInput.keyPressed("l")) {
+                    hpSlider.setPosition(hpSlider.getPosition().add(new Vec2(10, -10)));
+                    shSlider.setPosition(shSlider.getPosition().add(new Vec2(10, -10)));
+                }
+                if (KeyInput.keyPressed("m")) {
+                    hpSlider.setSize(hpSlider.getSize().add(new Vec2(5)));
+                    shSlider.setSize(shSlider.getSize().add(new Vec2(5)));
                 }
             }
 

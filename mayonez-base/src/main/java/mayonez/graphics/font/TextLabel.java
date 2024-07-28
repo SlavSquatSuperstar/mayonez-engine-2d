@@ -14,7 +14,7 @@ import java.util.*;
  *
  * @author SlavSquatSuperstar
  */
-// TODO set alignment
+// TODO set size
 public abstract class TextLabel extends Script implements Renderable {
 
     // Text Fields
