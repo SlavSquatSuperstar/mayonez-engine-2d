@@ -28,6 +28,7 @@ Demo Scene Controls
    - Space to brake
    - Left Mouse and hold to fire weapons
    - 1/2 to switch ammo types
+   - H to toggle hints (WIP)
    - Controls can be set in user_config.json
 3. Mario
    - W to jump

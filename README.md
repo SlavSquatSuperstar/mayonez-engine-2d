@@ -38,13 +38,13 @@ This fully-operational game engine includes:
 
 ## Platforms
 
-| Operating System      |   Status   |
-|:----------------------|:----------:|
-| macOS (Intel)         | Supported  |
-| Windows (64-bit)      | Supported  | 
-| macOS (Apple Silicon) | Not Tested |
-| GNU/Linux             | Not Tested |
-| BSD                   | Not Tested |
+| Operating System      | Architecture | Status     | Tested On    |
+|:----------------------|:-------------|:-----------|:-------------|
+| macOS (Intel)         | x86-64       | Supported  | macos Sonoma |
+| Windows               | x86-64       | Supported  | Windows 10   | 
+| macOS (Apple Silicon) | ARM64        | Not Tested | None         |
+| GNU/Linux             | N/A          | Not Tested | None         |
+| BSD                   | N/A          | Not Tested | None         |
 
 ## Quick Start Guide
 
@@ -103,7 +103,7 @@ Development Tools and Libraries
 - Recommended IDE: [Intellij IDEA CE 2024+](https://www.jetbrains.com/idea/download/)
     - [Eclipse Java IDE](https://www.eclipse.org/downloads/) may also be used, but IntelliJ has better Kotlin and Gradle
       integration
-- Build System: [Gradle 8.8+](https://gradle.org/install/)
+- Build System: [Gradle 8.10+](https://gradle.org/install/)
 
 Dependencies (automatically downloaded by Gradle and bundled in JAR)
 
@@ -133,6 +133,7 @@ and a Pool Balls scene.
     - **Space** to brake
     - **Left Mouse** and _hold_ to fire weapons
     - **1**/**2** to switch ammo types
+    - **H** to toggle hints (WIP)
     - Controls can be set in user_config.json
 - Mario:
     - **W** to jump
@@ -170,7 +171,8 @@ A massive, heartfelt thanks goes out to the following people, groups, and resour
 
 - [GamesWithGabe](https://youtube.com/c/GamesWithGabe) and [The Cherno](https://youtube.com/c/TheChernoProject): For
   keeping me motivated to work on my engine, no matter how much frustration debugging causes me.
-- [CodeNMore](https://www.youtube.com/playlist?list=PLah6faXAgguMnTBs3JnEJY0shAc18XYQZ): For creating the first game engine
+- [CodeNMore](https://www.youtube.com/playlist?list=PLah6faXAgguMnTBs3JnEJY0shAc18XYQZ): For creating the first game
+  engine
   tutorial I ever followed and starting me on this crazy and amazing journey.
 - [Unity Engine](https://docs.unity3d.com/ScriptReference/): ~~Who I'm ripping off~~ For making game dev
   accessible for everybody and providing excellent documentation.
