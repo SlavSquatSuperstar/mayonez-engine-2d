@@ -1,7 +1,6 @@
 plugins {
     id("mayonez.java-conventions")
 
-    id(shadowPlugin) version "8.1.1" apply false
     id(kotlinPlugin) version kotlinVersion apply false
     id(dokkaPlugin) version "1.9.20" apply true
 }
