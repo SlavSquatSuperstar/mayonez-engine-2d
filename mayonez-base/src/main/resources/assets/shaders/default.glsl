@@ -1,5 +1,5 @@
 #type vertex
-#version 330 core
+#version 400 core
 
 // Sprites with 4 vertices and a texture
 
@@ -28,7 +28,7 @@ void main()
 }
 
 #type fragment
-#version 330 core
+#version 400 core
 
 // in vec2 fPosition;
 in vec4 fColor;
