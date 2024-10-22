@@ -85,6 +85,9 @@ Editing the Project
 - In an IDE, open the extracted folder or create a new project from existing sources, then tell the IDE to import a
   Gradle project if prompted.
     - You can also create a new project from version control using the repository link above if your editor supports it.
+- The Gradle wrapper (`gradlew`/`gradlew.bat`) is configured to automatically download the newest version of Gradle.
+    - To change the Gradle version, simply edit the `wrapper` task in the root `build.gradle.kts` and run 
+      `./gradlew wrapper`/`.\gradlew.bat wrapper`.
 - There are several preset Gradle run configurations to facilitate development:
     - Run: Launches the program with the demo scenes
     - Test: Runs the unit tests
