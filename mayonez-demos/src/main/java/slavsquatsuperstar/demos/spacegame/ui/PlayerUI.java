@@ -98,12 +98,10 @@ public class PlayerUI extends GameObject {
                     toggleHints(!hintsShown);
                 }
                 if (KeyInput.keyPressed("l")) {
-                    hpSlider.setPosition(hpSlider.getPosition().add(new Vec2(10, -10)));
-                    shSlider.setPosition(shSlider.getPosition().add(new Vec2(10, -10)));
+                    weaponHotbar.setPosition(weaponHotbar.getPosition().add(new Vec2(10, 10)));
                 }
                 if (KeyInput.keyPressed("m")) {
-                    hpSlider.setSize(hpSlider.getSize().add(new Vec2(5)));
-                    shSlider.setSize(shSlider.getSize().add(new Vec2(5)));
+                    weaponHotbar.setSize(weaponHotbar.getSize().add(new Vec2(5)));
                 }
             }
 

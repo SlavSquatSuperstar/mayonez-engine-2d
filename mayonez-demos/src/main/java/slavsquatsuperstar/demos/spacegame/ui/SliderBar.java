@@ -50,7 +50,7 @@ public class SliderBar extends Script implements UIElement {
         };
         sliderSprite.setAnchor(Anchor.LEFT);
         gameObject.addComponent(sliderSprite);
-        value = 1;
+        value = 1f;
 
         outlineSprite = new UISprite(position, size, BORDER_TEXTURE) {
             @Override

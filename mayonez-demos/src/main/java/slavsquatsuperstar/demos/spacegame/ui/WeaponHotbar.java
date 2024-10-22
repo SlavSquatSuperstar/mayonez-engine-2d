@@ -11,7 +11,7 @@ import slavsquatsuperstar.demos.spacegame.objects.SpaceGameZIndex;
  *
  * @author SlavSquatSuperstar
  */
-public class WeaponHotbar extends Script {
+public class WeaponHotbar extends Script implements UIElement {
 
     // Constants
     private static final Texture SELECTED_BORDER_TEXTURE = Textures.getTexture(
@@ -19,18 +19,19 @@ public class WeaponHotbar extends Script {
     private static final float BORDER_MARGIN = 8f;
 
     // Fields
-    private final Vec2 position, size;
-    private final int numWeapons;
+    private Vec2 position, size; // TODO rename slot size
+    private final int numSlots;
+    private final float boxSpacing = 16; // TODO get/set
 
     // UI Elements
     private final WeaponHotbarSlot[] hotbarSlots;
     private UISprite selectedBorder;
 
-    public WeaponHotbar(Vec2 position, Vec2 size, int numWeapons) {
+    public WeaponHotbar(Vec2 position, Vec2 size, int numSlots) {
         this.position = position;
-        this.size = size;
-        this.numWeapons = numWeapons;
-        hotbarSlots = new WeaponHotbarSlot[numWeapons];
+        this.size = size; // Size of slots
+        this.numSlots = numSlots;
+        hotbarSlots = new WeaponHotbarSlot[numSlots];
     }
 
     @Override
@@ -38,9 +39,9 @@ public class WeaponHotbar extends Script {
         gameObject.setZIndex(SpaceGameZIndex.UI);
 
         // Create hotbar slots
-        var boxSpacing = new Vec2(size.x + 16, 0);
-        for (int i = 0; i < numWeapons; i++) {
-            hotbarSlots[i] = new WeaponHotbarSlot(position.add(boxSpacing.mul(i)), size, i);
+        var boxOffset = size.x + boxSpacing;
+        for (int i = 0; i < numSlots; i++) {
+            hotbarSlots[i] = new WeaponHotbarSlot(position.add(new Vec2(boxOffset * i, 0)), size, i);
             gameObject.addComponent(hotbarSlots[i]);
         }
 
@@ -56,7 +57,7 @@ public class WeaponHotbar extends Script {
         setSelection(0);
     }
 
-    // UI Helper Methods
+    // Hotbar Methods
 
     /**
      * Sets the selected element of the weapon panel and display it as highlighted.
@@ -64,7 +65,7 @@ public class WeaponHotbar extends Script {
      * @param index the index to select
      */
     public void setSelection(int index) {
-        if (!MathUtils.inRange(index, 0, numWeapons - 1)) return;
+        if (!MathUtils.inRange(index, 0, numSlots - 1)) return;
         // Move border to selected slot
         selectedBorder.setPosition(hotbarSlots[index].getPosition());
     }
@@ -76,7 +77,7 @@ public class WeaponHotbar extends Script {
      * @param cooldownPercent the percent cooldown to display
      */
     public void setCooldownPercent(int weaponIndex, float cooldownPercent) {
-        if (!MathUtils.inRange(weaponIndex, 0, numWeapons - 1)) return;
+        if (!MathUtils.inRange(weaponIndex, 0, numSlots - 1)) return;
         // Clamp percent between 0%-100%
         var clamped = MathUtils.clamp(cooldownPercent, 0f, 1f);
         hotbarSlots[weaponIndex].setCooldownPercent(clamped);
@@ -88,7 +89,43 @@ public class WeaponHotbar extends Script {
      * @param cooldownPercent the percent cooldown to display
      */
     public void setAllCooldownPercents(float cooldownPercent) {
-        for (int i = 0; i < numWeapons; i++) setCooldownPercent(i, cooldownPercent);
+        for (int i = 0; i < numSlots; i++) setCooldownPercent(i, cooldownPercent);
+    }
+
+    // UI Element Methods
+
+    @Override
+    public Vec2 getPosition() {
+        return position;
+    }
+
+    @Override
+    public void setPosition(Vec2 position) {
+        this.position = position;
+
+        // Adjust slot positions
+        var boxOffset = size.x + boxSpacing;
+        for (int i = 0; i < numSlots; i++) {
+            hotbarSlots[i].setPosition(position.add(new Vec2(boxOffset * i, 0)));
+        }
+    }
+
+    @Override
+    public Vec2 getSize() {
+        return size;
+    }
+
+    @Override
+    public void setSize(Vec2 size) {
+        this.size = size;
+
+        // Adjust slot positions and sizes
+        var boxOffset = size.x + boxSpacing;
+        for (int i = 0; i < numSlots; i++) {
+            hotbarSlots[i].setSize(size);
+            hotbarSlots[i].setPosition(position.add(new Vec2(boxOffset * i, 0)));
+        }
+        selectedBorder.setSize(size.add(new Vec2(BORDER_MARGIN)));
     }
 
 }

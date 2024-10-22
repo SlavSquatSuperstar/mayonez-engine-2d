@@ -25,6 +25,7 @@ public class WeaponHotbarSlot extends ImageLabel {
 
     // Fields
     private UISprite cooldownOverlaySprite;
+    private float cooldownPercent;
 
     public WeaponHotbarSlot(Vec2 position, Vec2 size, int weaponIndex) {
         super(position, size,
@@ -54,15 +55,40 @@ public class WeaponHotbarSlot extends ImageLabel {
 
     // Helper Methods
 
+
     /**
-     * Set the fill value of the given weapon recharge overlay, from bottom to top.
+     * Get the fill value of the weapon reload overlay, from bottom to top.
+     *
+     * @return the percent value of the slider
+     */
+    public float getCooldownPercent() {
+        return cooldownPercent;
+    }
+
+    /**
+     * Set the fill value of the weapon reload overlay, from bottom to top.
      *
      * @param cooldownPercent the percent cooldown to display
      */
     public void setCooldownPercent(float cooldownPercent) {
         // Clamp percent between 0%-100%
-        var clamped = MathUtils.clamp(cooldownPercent, 0f, 1f);
-        cooldownOverlaySprite.setSize(getSize().mul(new Vec2(1f, clamped)));
+        this.cooldownPercent = MathUtils.clamp(cooldownPercent, 0f, 1f);
+        cooldownOverlaySprite.setSize(getSize().mul(new Vec2(1f, this.cooldownPercent)));
     }
 
+    // UIElement Methods
+
+    @Override
+    public void setPosition(Vec2 position) {
+        super.setPosition(position);
+        cooldownOverlaySprite.setPosition(
+                position.sub(new Vec2(0, 0.5f * getSize().y))
+        );
+    }
+
+    @Override
+    public void setSize(Vec2 size) {
+        super.setSize(size);
+        cooldownOverlaySprite.setSize(getSize().mul(new Vec2(1f, this.cooldownPercent)));
+    }
 }
