@@ -48,7 +48,7 @@ final class GLFWHelper {
      * @return the window id
      */
     static long createGLFWWindow(int width, int height, String title) throws GLFWException {
-        configureWindowSettings();
+        configureWindowHints();
         var windowID = glfwCreateWindow(width, height, title, NULL, NULL);
         if (windowID == NULL) {
             throw new GLFWException("Could not create the GLFW window");
@@ -61,15 +61,19 @@ final class GLFWHelper {
     /**
      * Set the GLFW window hints for the application window.
      */
-    private static void configureWindowSettings() {
+    private static void configureWindowHints() {
         glfwDefaultWindowHints(); // Reset window settings
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // Don't stay hidden after creation
         glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE); // Don't allow resizing
-        // Set proper version for macOS
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
-        // Scale screen properly for Windows
-        glfwWindowHint(GLFW_SCALE_TO_MONITOR, GLFW_TRUE);
+        glfwWindowHint(GLFW_SCALE_TO_MONITOR, GLFW_TRUE); // Scale screen properly for Windows
+
+        // Set GLFW context version to 4.0 core
+        // macOS only supports OpenGL versions 3.2-4.1, inclusive
+        // Source: https://www.glfw.org/docs/latest/window.html
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
     }
 
     /**
