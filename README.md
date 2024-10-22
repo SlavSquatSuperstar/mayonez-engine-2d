@@ -4,13 +4,14 @@ The ultimate made-from-scratch and open-source 2D Java game engine to fit your S
 
 <img src="https://img.shields.io/badge/platform-macOS-lightgrey"></img>
 <img src="https://img.shields.io/badge/platform-Windows-lightgrey"></img>
+<img src="https://img.shields.io/badge/platform-Linux-lightgrey"></img>
 <img src="https://img.shields.io/badge/release-v0.7.10-brightgreen"></img>
 <img src=https://img.shields.io/badge/build-passing-brightgreen></img>
 
 <img src="https://img.shields.io/badge/Made%20with-Java-red"></img>
 <img src="https://img.shields.io/badge/Made%20with-Kotlin-red"></img>
 <img src="https://img.shields.io/badge/Made%20with-LWJGL-blue"></img>
-<img src=https://img.shields.io/badge/license-GPL3-blue></img>
+<img src=https://img.shields.io/badge/license-GPLv3-blue></img>
 
 ## Features
 
@@ -38,13 +39,13 @@ This fully-operational game engine includes:
 
 ## Platforms
 
-| Operating System      | Architecture | Status     | Tested On    |
-|:----------------------|:-------------|:-----------|:-------------|
-| macOS (Intel)         | x86-64       | Supported  | macos Sonoma |
-| Windows               | x86-64       | Supported  | Windows 10   | 
-| macOS (Apple Silicon) | ARM64        | Not Tested | None         |
-| GNU/Linux             | N/A          | Not Tested | None         |
-| BSD                   | N/A          | Not Tested | None         |
+| Operating System        | Architecture | Status     | Tested On        |
+|:------------------------|:-------------|:-----------|:-----------------|
+| macOS (Intel)           | x86_64       | Supported  | macos Sequoia 15 |
+| Windows                 | x86_64       | Supported  | Windows 10       | 
+| GNU/Linux               | x86_64       | Supported  | Pop!_OS 22.04    |              |            |                  |
+| macOS (Apple Silicon)   | ARM64        | Not Tested | None             |
+| BSD                     | N/A          | Not Tested | None             |
 
 ## Quick Start Guide
 
