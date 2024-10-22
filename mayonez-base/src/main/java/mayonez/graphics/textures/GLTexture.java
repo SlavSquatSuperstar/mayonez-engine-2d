@@ -81,7 +81,7 @@ public sealed class GLTexture extends Texture permits GLSpriteSheetTexture {
 
     private void createTexture() {
         // Create Texture on GPU
-        if (imageData != null) {
+        if (imageData != null && GLHelper.isGLInitialized()) {
             texID = glGenTextures();
             glBindTexture(GL_TEXTURE_2D, texID);
             uploadImageToTexture(imageData, texID);
@@ -130,8 +130,10 @@ public sealed class GLTexture extends Texture permits GLSpriteSheetTexture {
 
     @Override
     public void free() {
-        glDeleteTextures(texID);
-        texID = GL_NONE;
+        if (texID != GL_NONE && GLHelper.isGLInitialized()) {
+            glDeleteTextures(texID);
+            texID = GL_NONE;
+        }
     }
 
     // Image Getters

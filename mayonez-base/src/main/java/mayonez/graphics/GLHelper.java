@@ -24,7 +24,7 @@ public final class GLHelper {
      * Loads the OpenGL library and creates the capabilities in the current thread.
      */
     public static void loadOpenGL() {
-        Logger.debug("Creating OpenGL Capabilities");
+        Logger.debug("Creating OpenGL capabilities");
         createCapabilities();
         enableBlending();
     }
@@ -47,7 +47,7 @@ public final class GLHelper {
      * Unloads the OpenGL library and destroys the capabilities in the current thread.
      */
     public static void unloadOpenGL() {
-        Logger.debug("Destroying OpenGL Capabilities");
+        Logger.debug("Destroying OpenGL capabilities");
         destroy();
     }
 

@@ -26,12 +26,13 @@ import kotlin.system.exitProcess
 // TODO move to launcher/config pkg
 object Mayonez {
 
-    // Run Fields
-    private var initialized: Boolean = false
-    private lateinit var game: GameEngine
-    private var started: Boolean = false
+    // Application Fields
+    private lateinit var game: GameEngine // Main application
+    private var initialized: Boolean = false // Are singletons initialized
+    private var started: Boolean = false // Is application running
 
     // Config Properties
+
     private var config: RunConfig = RunConfig.DEFAULT_CONFIG
 
     /**
@@ -81,7 +82,7 @@ object Mayonez {
         if (!initialized) {
             this.config = config
             initializeSingletons()
-            initializeGame()
+            initializeGame(useGL)
             initialized = true
         }
     }
@@ -91,7 +92,7 @@ object Mayonez {
      * initializer and null pointer errors.
      */
     private fun initializeSingletons() {
-        // Start counting
+        // Start tracking time
         Time.startTrackingTime()
         Logger.debug("Starting program...")
         val now = Time.getStartupDateTime()
@@ -100,20 +101,29 @@ object Mayonez {
         // Set preferences
         Preferences.setPreferences()
         Time.setTimeStepSecs(1f / Preferences.fps)
+
+        // Create logger instance
         Logger.setConfig(Preferences.getLoggerConfig())
         Logger.log("Started ${Preferences.title} ${Preferences.version}")
-
-        // load assets
-        Assets.initialize()
-        Assets.loadResources()
     }
 
-    private fun initializeGame() {
+    /**
+     * Initialize the game engine and input instances of the application.
+     */
+    private fun initializeGame(useGL: Boolean) {
         if (!this::game.isInitialized) {
+            // Create input instances
             KeyInput.setUseGL(useGL)
             MouseInput.setUseGL(useGL)
+
+            // Create game engine instances
             game = EngineFactory.createGameEngine(useGL)
             Logger.debug("Using \"%s\" engine", if (useGL) "GL" else "AWT")
+
+            // Load assets
+            // TODO handle from scene manager
+            Assets.initialize()
+            Assets.loadResources()
         }
     }
 
@@ -151,9 +161,10 @@ object Mayonez {
     fun stop(status: Int) {
         if (started) {
             started = false
-            game.stop()
-            Assets.clearAssets()
+            SceneManager.stopScene()
             SceneManager.clearScenes()
+            Assets.clearAssets()
+            game.stop()
             exitProgram(status)
         }
     }

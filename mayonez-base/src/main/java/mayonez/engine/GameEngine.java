@@ -4,7 +4,7 @@ import mayonez.*;
 import mayonez.input.*;
 
 /**
- * An application that manages the window and input and continuously updates and renders the game.
+ * An application that displays a window, receives input, and continuously updates and renders a scene.
  *
  * @author SlavSquatSuperstar
  */
@@ -102,7 +102,6 @@ public abstract sealed class GameEngine permits JGameEngine, GLGameEngine {
     public final void stop() {
         if (running) {
             running = false;
-            SceneManager.stopScene();
             window.stop();
             Logger.debug("Closed window");
         }

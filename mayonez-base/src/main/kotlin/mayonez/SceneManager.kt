@@ -147,7 +147,10 @@ object SceneManager {
 
     /** Clears all stored scenes from the scene pool. */
     @JvmStatic
-    fun clearScenes() = scenes.clear()
+    fun clearScenes() {
+        scenes.clear()
+        Logger.debug("Cleared scene pool")
+    }
 
     /**
      * Saves a scene to the scene pool without initializing it and allows it to
