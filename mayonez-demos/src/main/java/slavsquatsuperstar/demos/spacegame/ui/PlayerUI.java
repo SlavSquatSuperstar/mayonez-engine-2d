@@ -97,12 +97,6 @@ public class PlayerUI extends GameObject {
                 if (KeyInput.keyPressed("h")) {
                     toggleHints(!hintsShown);
                 }
-                if (KeyInput.keyPressed("l")) {
-                    weaponHotbar.setPosition(weaponHotbar.getPosition().add(new Vec2(10, 10)));
-                }
-                if (KeyInput.keyPressed("m")) {
-                    weaponHotbar.setSize(weaponHotbar.getSize().add(new Vec2(5)));
-                }
             }
 
             private void toggleHints(boolean hintsShown) {
