@@ -28,6 +28,7 @@ tasks {
     }
 
     jar {
+        // Build the runnable jar in demos instead
         enabled = false
     }
 }
