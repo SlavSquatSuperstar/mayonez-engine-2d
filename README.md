@@ -90,10 +90,9 @@ Editing the Project
     - To change the Gradle version, simply edit the `wrapper` task in the root `build.gradle.kts` and run 
       `./gradlew wrapper`/`.\gradlew.bat wrapper`.
 - There are several preset Gradle run configurations to facilitate development:
-    - Run: Launches the program with the demo scenes
+    - Run: Launches the demo scenes
     - Test: Runs the unit tests
-    - Build: Builds the fat .jar file with dependencies
-    - Javadoc: Build the .jar and generates JavaDoc
+    - Javadoc: Builds the fat .jar and generates JavaDoc
 - There are also several scripts to help automate production:
     - `run`: Builds and runs the project
     - `package`: Packages the project into the `dist/` folder
