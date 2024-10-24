@@ -1,9 +1,10 @@
 {
     "title": "Mayonez Engine",
-    "version": "v0.7.10-fix1",
+    "version": "v0.8.0",
     "screen_width": 1200,
     "screen_height": 800,
     "fps": 60,
+    "frame_skip": true,
     "log_level": 2,
     "save_logs": true,
     "log_directory": "logs"

@@ -1,0 +1,48 @@
+package slavsquatsuperstar.demos.spacegame.combat.projectiles;
+
+import mayonez.*;
+import mayonez.math.*;
+
+/**
+ * Allows ships to fire damaging projectiles repeatedly and defines criteria for when
+ * ships may fire.
+ *
+ * @author SlavSquatSuperstar
+ */
+// TODO fire multiple projectiles
+public abstract class FireProjectile extends Script {
+
+    @Override
+    protected void update(float dt) {
+        if (shouldFire()) fireProjectiles();
+    }
+
+    /**
+     * Decide whether to fire the projectile if the weapon is reloaded and other
+     * conditions are met
+     *
+     * @return if able and ready to fire
+     */
+    protected abstract boolean shouldFire();
+
+    /**
+     * Instantiate the projectile(s) to be fired and update the weapon cooldown
+     * and other state variables after firing.
+     */
+    protected abstract void fireProjectiles();
+
+    /**
+     * Instantiates a projectile prefab object and spawns it in the world.
+     *
+     * @param projectileIndex the index of the {@link ProjectileType}
+     * @param offsetPos       the projectile spawn position in relation to the source
+     * @param offsetAngle     the projectile spawn angle in relation to the source
+     */
+    protected void spawnPrefab(int projectileIndex, Vec2 offsetPos, float offsetAngle) {
+        var prefabObject = ProjectilePrefabs.createPrefab(
+                projectileIndex, gameObject, offsetPos, offsetAngle
+        );
+        getScene().addObject(prefabObject);
+    }
+
+}

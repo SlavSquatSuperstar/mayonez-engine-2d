@@ -1,5 +1,5 @@
 /**
- * Defines primitive collider components for the physics engine.
+ * Primitive collider shapes for game objects to use.
  *
  * @author SlavSquatSuperstar
  */

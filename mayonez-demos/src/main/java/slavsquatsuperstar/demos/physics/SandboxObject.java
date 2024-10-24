@@ -4,12 +4,11 @@ import mayonez.*;
 import mayonez.graphics.*;
 import mayonez.graphics.debug.*;
 import mayonez.math.*;
-import mayonez.physics.*;
 import mayonez.physics.colliders.*;
+import mayonez.physics.dynamics.*;
 import mayonez.scripts.*;
 import mayonez.scripts.mouse.*;
 import mayonez.scripts.movement.*;
-import mayonez.util.*;
 import slavsquatsuperstar.demos.physics.scripts.DrawPhysicsInformation;
 import slavsquatsuperstar.demos.physics.scripts.MouseFlick;
 

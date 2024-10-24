@@ -28,19 +28,20 @@ public class ShapeSprite extends Component {
      * @param fill  whether to fill the shape interior
      */
     public ShapeSprite(Color color, boolean fill) {
+        super(UpdateOrder.RENDER);
         this.color = color;
         this.fill = fill;
     }
 
     @Override
-    public void start() {
+    protected void start() {
         collider = gameObject.getComponent(Collider.class);
         if (collider == null) this.setEnabled(false);
         shape = getColliderShape();
     }
 
     @Override
-    public void debugRender() {
+    protected void debugRender() {
         shape = getColliderShape();
 
         if (fill) {
@@ -62,7 +63,7 @@ public class ShapeSprite extends Component {
         if (collider == null) {
             return new Rectangle(transform.getPosition(), transform.getScale());
         } else {
-            return collider.transformToWorld();
+            return collider.getShape();
         }
     }
 

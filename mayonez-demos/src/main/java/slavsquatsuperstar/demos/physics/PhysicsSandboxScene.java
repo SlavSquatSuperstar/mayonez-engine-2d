@@ -1,14 +1,15 @@
 package slavsquatsuperstar.demos.physics;
 
 import mayonez.*;
+import mayonez.graphics.*;
 import mayonez.input.*;
 import mayonez.math.*;
 import mayonez.physics.*;
 import mayonez.physics.colliders.*;
-import mayonez.util.*;
+import mayonez.physics.dynamics.*;
 
 /**
- * For testing dynamic movement and collision resolution.
+ * A scene for testing dynamic movement and collision resolution.
  *
  * @author SlavSquatSupertar
  */
@@ -45,26 +46,23 @@ public class PhysicsSandboxScene extends Scene {
     protected void onUserUpdate(float dt) {
         // Toggle Gravity
         if (KeyInput.keyPressed("space")) {
-            enabledGravity = !enabledGravity;
-            setGravityEnabled(enabledGravity);
+            setGravityEnabled(!enabledGravity);
         }
 
         // Create Random Shapes
         if (!KeyInput.keyDown("left shift")) {
-            if (KeyInput.keyPressed("1")) {
-                addObject(createRandomShape(MouseInput.getPosition(), 1));
-            } else if (KeyInput.keyPressed("2")) {
-                addObject(createRandomShape(MouseInput.getPosition(), 2));
-            } else if (KeyInput.keyPressed("3")) {
-                addObject(createRandomShape(MouseInput.getPosition(), 3));
-            } else if (KeyInput.keyPressed("4")) {
-                addObject(createRandomShape(MouseInput.getPosition(), 4));
+            for (int i = 1; i <= 4; i++) {
+                if (KeyInput.keyPressed(String.valueOf(i))) {
+                    addObject(createRandomShape(MouseInput.getPosition(), i));
+                    return;
+                }
             }
         }
     }
 
     private void setGravityEnabled(boolean enabled) {
-        if (enabled) setGravity(new Vec2(-0, -PhysicsWorld.GRAVITY_CONSTANT));
+        enabledGravity = enabled;
+        if (enabledGravity) setGravity(new Vec2(-0, -PhysicsWorld.GRAVITY_CONSTANT));
         else setGravity(new Vec2());
     }
 
@@ -93,7 +91,7 @@ public class PhysicsSandboxScene extends Scene {
         var col = getColliderFromType(type);
 
         return new SandboxObject(name, position, rotation)
-                .addPhysics(col, Random.randomColor(), false, randomMaterial())
+                .addPhysics(col, Colors.randomColor(), false, randomMaterial())
                 .addMouseMovement()
                 .setLifetime(Random.randomFloat(15f, 20f));
     }
@@ -101,10 +99,11 @@ public class PhysicsSandboxScene extends Scene {
     private static String getNameFromType(int type) {
         String name;
         switch (type) {
-            case 1 -> name = "Random Ball";
-            case 2 -> name = "Random Box";
+            case 1 -> name = "Random Box";
+            case 2 -> name = "Random Ball";
             case 3 -> name = "Random Triangle";
             case 4 -> name = "Random Polygon";
+            case 5 -> name = "Random Edge";
             default -> name = "Unknown Shape";
         }
         return name;
@@ -113,16 +112,17 @@ public class PhysicsSandboxScene extends Scene {
     private static Collider getColliderFromType(int type) {
         Collider col;
         switch (type) {
-            case 1 -> col = new BallCollider(Random.randomVector(new Vec2(4f), new Vec2(10f)));
-            case 2 -> col = new BoxCollider(Random.randomVector(new Vec2(4f), new Vec2(10f)));
+            case 1 -> col = new BoxCollider(Random.randomVector(new Vec2(4f), new Vec2(10f)));
+            case 2 -> col = new BallCollider(Random.randomVector(new Vec2(4f), new Vec2(10f)));
             case 3 -> col = new PolygonCollider(3, Random.randomFloat(3f, 6f));
             case 4 -> col = new PolygonCollider(Random.randomInt(5, 8), Random.randomFloat(3f, 6f));
+            case 5 -> col = new EdgeCollider(Random.randomInt(4, 12));
             default -> col = new BoxCollider(new Vec2(1f));
         }
         return col;
     }
 
-    private PhysicsMaterial randomMaterial() {
+    private static PhysicsMaterial randomMaterial() {
         return new PhysicsMaterial(Random.randomFloat(0f, 1f), Random.randomFloat(0f, 1f), Random.randomFloat(0f, 1f));
     }
 

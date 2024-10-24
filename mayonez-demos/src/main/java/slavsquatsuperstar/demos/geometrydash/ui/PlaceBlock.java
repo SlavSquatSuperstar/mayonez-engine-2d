@@ -16,24 +16,26 @@ import slavsquatsuperstar.demos.geometrydash.Block;
 // TODO don't place blocks when clicking button
 public class PlaceBlock extends Script {
 
+    // Constants
+    private static final float PLACE_BLOCK_DELAY = 0.2f;
+
+    // Field
     private PlaceBlockCursor cursor;
     private Texture cursorTexture;
     private Timer timer;
 
     @Override
-    public void init() {
-        timer = new Timer(0.2f);
-        gameObject.addComponent(timer);
-    }
-
-    @Override
-    public void start() {
+    protected void start() {
+        timer = new Timer(PLACE_BLOCK_DELAY);
+        timer.reset();
         cursor = new PlaceBlockCursor("Place Block Cursor");
         getScene().addObject(cursor);
     }
 
     @Override
-    public void update(float dt) {
+    protected void update(float dt) {
+        timer.countDown(dt);
+
         // add 0.5 to x/y to center the block
         var mousePos = MouseInput.getPosition().add(new Vec2(0.5f)).floor();
         cursor.setPosition(mousePos);

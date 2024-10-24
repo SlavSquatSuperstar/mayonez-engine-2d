@@ -58,6 +58,8 @@ function Set-Engine-Type {
     }
 }
 
+## Script Start ##
+
 # Initialize variables
 $USE_GL = $true
 

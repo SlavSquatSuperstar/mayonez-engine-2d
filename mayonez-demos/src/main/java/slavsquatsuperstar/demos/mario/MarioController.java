@@ -3,7 +3,7 @@ package slavsquatsuperstar.demos.mario;
 import mayonez.*;
 import mayonez.input.*;
 import mayonez.math.*;
-import mayonez.physics.*;
+import mayonez.physics.dynamics.*;
 
 /**
  * Provides basic move, jump, and ground pound controls for Mario.
@@ -20,13 +20,13 @@ public class MarioController extends Script {
     private Rigidbody rb;
 
     @Override
-    public void start() {
+    protected void start() {
         rb = getRigidbody();
         onGround = false;
     }
 
     @Override
-    public void update(float dt) {
+    protected void update(float dt) {
         // Move
         var xInput = KeyInput.getAxis("horizontal");
         transform.move(new Vec2(xInput * MOVE_SPEED * dt, 0));
@@ -47,8 +47,8 @@ public class MarioController extends Script {
     }
 
     @Override
-    public void onCollisionEnter(GameObject other, Vec2 direction) {
-        if (other.hasTag("Ground") && isDirectionDownward(direction)) {
+    protected void onCollisionEnter(GameObject other, Vec2 direction, Vec2 velocity) {
+        if (other.hasLayer(MarioScene.GROUND_LAYER) && isDirectionDownward(direction)) {
             onGround = true;
             rb.getVelocity().y = 0;
         }
@@ -59,8 +59,10 @@ public class MarioController extends Script {
     }
 
     @Override
-    public void onCollisionExit(GameObject other) {
-        if (other.hasTag("Ground")) onGround = false;
+    protected void onCollisionExit(GameObject other) {
+        if (other.hasLayer(MarioScene.GROUND_LAYER)) {
+            onGround = false;
+        }
     }
 
 }

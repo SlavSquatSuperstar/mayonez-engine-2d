@@ -1,51 +1,74 @@
 package slavsquatsuperstar.demos.spacegame.objects.asteroids;
 
+import mayonez.*;
 import mayonez.graphics.*;
+import mayonez.graphics.sprites.*;
+import mayonez.graphics.textures.*;
 import mayonez.math.*;
-import slavsquatsuperstar.demos.spacegame.combat.Damageable;
-import slavsquatsuperstar.demos.spacegame.objects.SpawnManager;
+import mayonez.physics.colliders.*;
+import mayonez.physics.dynamics.*;
+import mayonez.scripts.*;
+import slavsquatsuperstar.demos.spacegame.objects.SpaceGameLayer;
+import slavsquatsuperstar.demos.spacegame.objects.SpaceGameZIndex;
 
 /**
- * An asteroid in space that can be destroyed.
+ * An asteroid in space that can be destroyed and spawn fragments.
  *
  * @author SlavSquatSuperstar
  */
-public class Asteroid extends BaseAsteroid {
+public abstract class Asteroid extends GameObject {
 
-    private final SpawnManager obstacleSpawner;
+    // Constants
+    static final int NUM_TEXTURES = 2;
+    private static final Texture[] ASTEROID_TEXTURES = getAsteroidTextures();
 
-    public Asteroid(String name, SpawnManager obstacleSpawner) {
-        super(name, new Vec2(), getRandomProperties());
-        this.obstacleSpawner = obstacleSpawner;
+    // Instance Fields
+    protected final AsteroidProperties properties;
+
+    public Asteroid(String name, Vec2 position, AsteroidProperties properties) {
+        super(name, position);
+        this.properties = properties;
     }
 
     @Override
     protected void init() {
-        super.init();
+        setLayer(getScene().getLayer(SpaceGameLayer.ASTEROIDS));
+        setZIndex(SpaceGameZIndex.ASTEROID);
 
-        var radius = properties.radius();
-        var startingHealth = Math.round(radius * 3f);
+        transform.setRotation(Random.randomAngle());
+        transform.setScale(properties.getScale());
 
-        transform.setPosition(getScene().getRandomPosition());
-        addRigidbody(startingHealth)
-                .setVelocity(transform.getUp().mul(Random.randomFloat(0f, 3f)));
-
-        addComponent(new Damageable(startingHealth) {
-            @Override
-            public void onDestroy() {
-                if (obstacleSpawner != null) {
-                    obstacleSpawner.markObjectDestroyed();
-                }
-            }
-        });
-        addComponent(new AsteroidDestruction(properties));
+        addSprite(properties.color(), properties.spriteIndex());
     }
 
-    private static AsteroidProperties getRandomProperties() {
-        var radius = Random.randomFloat(1f, 4f);
-        var tint = Random.randomInt(96, 176);
-        var color = new Color(tint, tint, tint);
-        return new AsteroidProperties(radius, color, 0);
+    private void addSprite(Color color, int spriteIndex) {
+        var sprite = Sprites.createSprite(ASTEROID_TEXTURES[spriteIndex]);
+        sprite.setColor(color);
+        addComponent(sprite);
+    }
+
+    protected void addCollider() {
+        addComponent(new BallCollider(new Vec2(1f)));
+        addComponent(new KeepInScene(KeepInScene.Mode.WRAP));
+    }
+
+    protected Rigidbody addRigidbody(float mass) {
+        Rigidbody rb;
+        addComponent(rb = new Rigidbody(mass, 0.01f, 0.01f));
+        return rb;
+    }
+
+    // Static Methods
+
+    private static Texture[] getAsteroidTextures() {
+        var asteroidTextures = new Texture[NUM_TEXTURES];
+        for (int i = 0; i < NUM_TEXTURES; i++) {
+            asteroidTextures[i] = Textures.getTexture(
+                    "assets/spacegame/textures/asteroids/asteroid%d.png"
+                            .formatted(i + 1)
+            );
+        }
+        return asteroidTextures;
     }
 
 }

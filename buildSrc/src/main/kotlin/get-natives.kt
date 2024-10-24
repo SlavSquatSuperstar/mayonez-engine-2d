@@ -11,28 +11,32 @@ private fun getNatives(): String {
     val osArch = System.getProperty("os.arch")
     return when {
         osName.startsWith("Linux") -> {
-            if (osArch.startsWith("arm") || osArch.startsWith("aarch64")) {
-                if (osArch.contains("64") || osArch.startsWith("armv8")) "natives-linux-arm64"
-                else "natives-linux-arm32"
+            if (osArch.isARM()) {
+                if (osArch.contains("64") || osArch.startsWith("armv8")) "natives-linux-arm64" // Linux 64-bit ARM
+                else "natives-linux-arm32" // Linux 32-bit ARM
             } else {
-                "natives-linux"
+                "natives-linux" // Linux x86
             }
         }
 
         osName.startsWith("Mac") -> {
-            if (osArch.contains("arm")) "natives-macos-arm64"
-            else "natives-macos"
+            if (osArch.isARM()) "natives-macos-arm64" // macOS Apple Silicon
+            else "natives-macos" // macOS Intel
         }
 
         osName.startsWith("Windows") -> {
             if (osArch.contains("64")) {
-                if (osArch.startsWith("aarch64")) "natives-windows-arm64"
-                else "natives-windows"
+                if (osArch.isARM()) "natives-windows-arm64" // Windows 64-bit ARM
+                else "natives-windows" // Windows 64-bit
             } else {
-                "natives-windows-x86"
+                "natives-windows-x86" // Windows 32-bit
             }
         }
 
         else -> "natives-linux"
     }
+}
+
+private fun String.isARM(): Boolean {
+    return this.startsWith("arm") || this.startsWith("aarch64")
 }

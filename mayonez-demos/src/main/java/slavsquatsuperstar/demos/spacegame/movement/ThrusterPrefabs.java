@@ -1,12 +1,12 @@
 package slavsquatsuperstar.demos.spacegame.movement;
 
 import mayonez.*;
+import mayonez.assets.*;
+import mayonez.assets.text.*;
 import mayonez.graphics.sprites.*;
-import mayonez.io.*;
-import mayonez.io.text.*;
 import mayonez.math.*;
 import mayonez.util.Record;
-import slavsquatsuperstar.demos.spacegame.objects.ZIndex;
+import slavsquatsuperstar.demos.spacegame.objects.SpaceGameZIndex;
 
 import java.util.*;
 
@@ -20,7 +20,7 @@ public final class ThrusterPrefabs {
     // Constants
 
     private static final SpriteSheet EXHAUST_TEXTURES = Sprites.createSpriteSheet(
-            "assets/spacegame/textures/exhaust.png",
+            "assets/spacegame/textures/ships/exhaust.png",
             16, 16, 4, 0);
     private static final CSVFile THRUSTER_DATA = Assets.getAsset(
             "assets/spacegame/data/thrusters.csv", CSVFile.class);
@@ -49,6 +49,25 @@ public final class ThrusterPrefabs {
         return thrusters;
     }
 
+    private static void addThrusterObject(
+            GameObject parent, Thruster thruster, String name, Transform offsetXf
+    ) {
+        parent.getScene().addObject(new GameObject(name) {
+            @Override
+            protected void init() {
+                setZIndex(SpaceGameZIndex.EXHAUST);
+                addComponent(thruster);
+                addComponent(new Animator(EXHAUST_TEXTURES, 0.15f));
+                addComponent(new Script() {
+                    @Override
+                    protected void debugRender() {
+                        transform.set(parent.transform.combine(offsetXf));
+                    }
+                });
+            }
+        });
+    }
+
     private static Thruster getThruster(Record record) throws IllegalArgumentException {
         var moveDir = ThrustDirection.valueOf(record.getString("moveDir").toUpperCase());
         var turnDir = getTurnDir(record);
@@ -74,25 +93,6 @@ public final class ThrusterPrefabs {
         var rotation = record.getFloat("rotation");
         var scale = new Vec2(record.getFloat("scale"));
         return new Transform(position, rotation, scale);
-    }
-
-    private static void addThrusterObject(
-            GameObject parent, Thruster thruster, String name, Transform offsetXf
-    ) {
-        parent.getScene().addObject(new GameObject(name) {
-            @Override
-            protected void init() {
-                setZIndex(ZIndex.EXHAUST);
-                addComponent(thruster);
-                addComponent(new Animator(EXHAUST_TEXTURES, 0.15f));
-                addComponent(new Script() {
-                    @Override
-                    public void debugRender() {
-                        transform.set(parent.transform.combine(offsetXf));
-                    }
-                });
-            }
-        });
     }
 
 }

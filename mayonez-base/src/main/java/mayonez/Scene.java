@@ -1,19 +1,19 @@
 package mayonez;
 
-import mayonez.graphics.Color;
+import mayonez.graphics.*;
 import mayonez.graphics.camera.*;
 import mayonez.graphics.debug.*;
-import mayonez.graphics.renderer.*;
 import mayonez.graphics.sprites.*;
 import mayonez.graphics.textures.*;
 import mayonez.math.Random;
 import mayonez.math.*;
 import mayonez.physics.*;
+import mayonez.physics.colliders.*;
+import mayonez.physics.dynamics.*;
+import mayonez.renderer.*;
 import mayonez.util.*;
 
-import java.awt.*;
-import java.util.List;
-import java.util.Queue;
+import java.awt.Graphics2D;
 import java.util.*;
 
 /**
@@ -30,9 +30,10 @@ import java.util.*;
  * @author SlavSquatSuperstar
  */
 // TODO current cursor object
-// TODO maybe don't spam "add/remove object" in log
 public abstract class Scene {
 
+    // Static Fields
+    private static final boolean LOG_SCENE_CHANGES = false;
     private static int sceneCounter = 0; // total number of scenes created
 
     // Scene Information
@@ -40,19 +41,19 @@ public abstract class Scene {
     private final String name;
     private final float scale; // scene scale, or how many pixels correspond to a world unit
     private final Vec2 size; // scene size, or zero if unbounded
-    protected Sprite background;
-
-    // Scene Layers
-    private final List<GameObject> objects;
-    private final SceneRenderer renderer;
-    private final DebugRenderer debugRenderer;
-    private final DebugDraw debugDraw;
-    private final PhysicsWorld physics;
-    private Camera camera;
-
-    // Scene State
-    private final Queue<Runnable> changesToScene; // Use a separate list to avoid concurrent exceptions
     private SceneState state; // if paused or running
+
+    // Scene Objects
+    private final BufferedList<GameObject> objects;
+    private final SceneLayer[] layers;
+
+    // Renderers
+    private Camera camera;
+    protected final Sprite background;
+    private final RenderLayer renderLayer;
+
+    // Physics
+    private final PhysicsWorld physics;
 
     /**
      * Creates an empty scene with size of 0x0 and a scale of 1.
@@ -74,42 +75,44 @@ public abstract class Scene {
         this.name = name;
         this.size = new Vec2(width, height).div(scale);
         this.scale = scale;
+        state = SceneState.STOPPED;
         background = Sprites.createSprite(Colors.WHITE);
 
-        // Scene state
-        state = SceneState.STOPPED;
-
         // Initialize layers
-        objects = new ArrayList<>();
-        renderer = RendererFactory.createSceneRenderer();
-        debugRenderer = (DebugRenderer) renderer;
-        debugDraw = new DebugDraw(scale, debugRenderer);
-        physics = new PhysicsWorld();
-
-        // Scene changes
-        changesToScene = new LinkedList<>();
+        objects = new BufferedList<>();
+        layers = new SceneLayer[SceneLayer.NUM_LAYERS];
+        renderLayer = RendererFactory.createRenderLayer(background, size, scale);
+        physics = new DefaultPhysicsWorld();
     }
 
     // Initialization Methods
 
     /**
-     * Initialize all objects and begin updating the scene.
+     * Initialize all objects and begin updating the scene. Calls {@link GameObject#start()}
+     * for all objects added on start.
      */
     final void start() {
-        addCameraToScene();
-        init();
-        startSceneLayers();
-        state = SceneState.RUNNING;
-        addObjectsToLayers();
-    }
+        // Set up layers
+        for (int i = 0; i < layers.length; i++) {
+            layers[i] = new SceneLayer(i);
+        }
 
-    private void addCameraToScene() {
+        // Add camera
         camera = CameraFactory.createCamera(scale);
         addObject(CameraFactory.createCameraObject(camera));
+
+        // Add objects
+        init();
+
+        // Start objects
+        state = SceneState.RUNNING;
+        objects.forEach(this::startObject);
+        objects.processBuffer();
     }
 
     /**
-     * Add game objects to this scene or initialize fields after this scene has been loaded.
+     * Add game objects to this scene before the scene starts or initialize fields
+     * after this scene has been loaded.
      * The method {@link #getCamera()} is accessible here.
      * <p>
      * Usage: Subclasses may override this method and can also call {@code super.init()}.
@@ -120,17 +123,6 @@ public abstract class Scene {
     protected void init() {
     }
 
-    private void startSceneLayers() {
-        renderer.start();
-        if (separateDebugRenderer()) debugRenderer.start();
-        physics.start();
-    }
-
-    private void addObjectsToLayers() {
-        renderer.setScene(this);
-        physics.setScene(this);
-    }
-
     // Update Methods
 
     /**
@@ -138,11 +130,10 @@ public abstract class Scene {
      *
      * @param dt seconds since the last frame
      */
-    // TODO Make hidden and call from SceneManager
     final void update(float dt) {
         onUserUpdate(dt);
         if (isRunning()) updateSceneObjects(dt);
-        processSceneChanges();
+        objects.processBuffer();
     }
 
     /**
@@ -154,19 +145,12 @@ public abstract class Scene {
     }
 
     private void updateSceneObjects(float dt) {
-        objects.forEach(o -> {
-            o.update(dt);
-            if (o.isDestroyed()) removeObject(o);
+        objects.forEach(obj -> {
+            obj.update(dt);
+            if (obj.isDestroyed()) removeObject(obj);
         });
         physics.step(dt);
         camera.gameObject.update(dt); // Update camera last
-    }
-
-    private void processSceneChanges() {
-        // Remove destroyed objects or add new
-        while (!changesToScene.isEmpty()) {
-            changesToScene.poll().run();
-        }
     }
 
     // Render Methods
@@ -179,8 +163,7 @@ public abstract class Scene {
     final void render(Graphics2D g2) {
         onUserRender();
         objects.forEach(GameObject::debugRender);
-        renderer.render(g2);
-        if (separateDebugRenderer()) debugRenderer.render(g2);
+        renderLayer.render(g2);
     }
 
     /**
@@ -195,79 +178,75 @@ public abstract class Scene {
      * Destroys all objects and stop updating the scene.
      */
     final void stop() {
-        destroySceneObjects();
-        clearSceneLayers();
-    }
-
-    private void clearSceneLayers() {
-        renderer.stop();
-        if (separateDebugRenderer()) debugRenderer.stop();
-        physics.stop();
-        state = SceneState.STOPPED;
-    }
-
-    private void destroySceneObjects() {
+        // Destroy all objects
         camera.setSubject(null);
         objects.forEach(GameObject::onDestroy);
+
+        // Clear all objects
         objects.clear();
+        renderLayer.clear();
+        physics.clear();
+
+        state = SceneState.STOPPED;
     }
 
     // Object Methods
 
     /**
-     * Adds an object to this scene and all its layers and initializes the object if the
-     * scene is running.
+     * Adds an object to this scene and initializes the object if the scene is
+     * running. The object will not be added if it already has a parent scene.
      *
      * @param obj a {@link GameObject}
      */
     public final void addObject(GameObject obj) {
-        if (obj == null) return;
-        if (state == SceneState.STOPPED) {
-            // Static add: when not loaded
-            addObjectToStoppedScene(obj);
-        } else {
-            // Dynamic add: when loaded (running or paused)
-            changesToScene.offer(() -> this.addObjectToRunningScene(obj));
+        if (obj == null || obj.getScene() != null) return;
+        if (isStopped()) { // Static add: when not loaded
+            objects.addUnbuffered(obj);
+            addObjectToScene(obj);
+        } else { // Dynamic add: when loaded (running or paused)
+            objects.add(obj, () -> this.addObjectToScene(obj));
         }
     }
 
-    private void addAndStartObject(GameObject o) {
-        o.setScene(this);
-        objects.add(o);
-        o.start(); // add components first so renderer and physics can access it
+    private void addObjectToScene(GameObject obj) {
+        obj.setScene(this);
+        if (!isStopped()) startObject(obj);
+        if (LOG_SCENE_CHANGES) {
+            Logger.debug("Added object \"%s\" to scene \"%s\"",
+                    obj.getNameAndID(), this.name);
+        }
     }
 
-    private void addObjectToStoppedScene(GameObject o) {
-        addAndStartObject(o);
-        Logger.debug("Added object \"%s\" to scene \"%s\"",
-                o.getNameAndID(), this.name);
-    }
-
-    private void addObjectToRunningScene(GameObject o) {
-        addAndStartObject(o);
-        renderer.addObject(o);
-        physics.addObject(o);
-        Logger.debug("Added object \"%s\" to scene \"%s\"",
-                o.getNameAndID(), this.name);
+    private void startObject(GameObject obj) {
+        obj.start(); // Add components first so renderer and physics can access it
+        for (var comp : obj.getComponents()) {
+            if (comp instanceof Renderable r) renderLayer.addRenderable(r);
+            if (comp instanceof PhysicsBody b) physics.addPhysicsBody(b);
+            if (comp instanceof CollisionBody b) physics.addCollisionBody(b);
+        }
     }
 
     /**
-     * Removes an object from this scene and its layers and destroys it.
+     * Removes an object from this scene and destroys it.
      *
      * @param obj a {@link GameObject}
      */
-    public final void removeObject(GameObject obj) {
+    final void removeObject(GameObject obj) {
         if (obj == null) return;
-        changesToScene.offer(() -> this.removeObjectFromLayers(obj));
+        objects.remove(obj, () -> this.removeObjectFromScene(obj));
     }
 
-    private void removeObjectFromLayers(GameObject o) {
-        objects.remove(o);
-        renderer.removeObject(o);
-        physics.removeObject(o);
-        o.onDestroy();
-        Logger.debug("Removed object \"%s\" from scene \"%s\"",
-                o.getNameAndID(), this.name);
+    private void removeObjectFromScene(GameObject obj) {
+        for (var comp : obj.getComponents()) {
+            if (comp instanceof Renderable r) renderLayer.removeRenderable(r);
+            if (comp instanceof PhysicsBody b) physics.removePhysicsBody(b);
+            if (comp instanceof CollisionBody b) physics.removeCollisionBody(b);
+        }
+        obj.onDestroy();
+        if (LOG_SCENE_CHANGES) {
+            Logger.debug("Removed object \"%s\" from scene \"%s\"",
+                    obj.getNameAndID(), this.name);
+        }
     }
 
     /**
@@ -277,10 +256,7 @@ public abstract class Scene {
      * @return the object
      */
     public GameObject getObject(String name) {
-        for (var obj : objects) {
-            if (obj.getName().equals(name)) return obj;
-        }
-        return null;
+        return objects.find(obj -> obj.getName().equals(name));
     }
 
     /**
@@ -289,7 +265,7 @@ public abstract class Scene {
      * @return the list of objects
      */
     public List<GameObject> getObjects() {
-        return new ArrayList<>(objects);
+        return objects.copy();
     }
 
     /**
@@ -299,6 +275,31 @@ public abstract class Scene {
      */
     public int numObjects() {
         return objects.size();
+    }
+
+    // Scene Layer Methods
+
+    /**
+     * Get the {@link mayonez.SceneLayer} by its numerical index.
+     *
+     * @param index the layer index
+     * @return the layer, or null if the index is invalid
+     */
+    public SceneLayer getLayer(int index) {
+        if (index >= 0 && index < layers.length) return layers[index];
+        else return null;
+    }
+
+    /**
+     * Get the {@link mayonez.SceneLayer} by its name.
+     *
+     * @param name the layer name
+     * @return the layer, or null if the name is invalid
+     */
+    public SceneLayer getLayer(String name) {
+        return Arrays.stream(layers)
+                .filter(layer -> layer.getName().equals(name))
+                .findFirst().orElse(null);
     }
 
     // Scene Properties
@@ -344,26 +345,24 @@ public abstract class Scene {
 
     // Getters and Setters
 
-    public Sprite getBackground() {
-        return background;
-    }
-
     /**
-     * Sets the background color of this scene. Defaults to white.
+     * Sets the background color of this scene, white by default.
      *
      * @param background a color
      */
     public void setBackground(Color background) {
-        this.background = Sprites.createSprite(background);
+        this.background.setColor(background);
+        this.background.setTexture(null);
     }
 
     /**
-     * Sets the background image of this scene.
+     * Sets the background image of this scene, none by default.
      *
      * @param background a texture
      */
     public void setBackground(Texture background) {
-        this.background = Sprites.createSprite(background);
+        this.background.setColor(null);
+        this.background.setTexture(background);
     }
 
     /**
@@ -382,23 +381,23 @@ public abstract class Scene {
      * @return the scene debug draw
      */
     public final DebugDraw getDebugDraw() {
-        return debugDraw;
-    }
-
-    private boolean separateDebugRenderer() { // if scene renderer is also debug renderer
-        return renderer != debugRenderer;
+        return renderLayer.getDebugDraw();
     }
 
     public void setGravity(Vec2 gravity) {
         physics.setGravity(gravity);
     }
 
-    SceneState getState() {
-        return state;
+    boolean isRunning() {
+        return state == SceneState.RUNNING;
     }
 
-    public boolean isRunning() {
-        return state == SceneState.RUNNING;
+    boolean isPaused() {
+        return state == SceneState.PAUSED;
+    }
+
+    boolean isStopped() {
+        return state == SceneState.STOPPED;
     }
 
     /**

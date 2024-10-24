@@ -1,5 +1,5 @@
 /**
- * Stores input from keyboard and mouse devices and makes it accessible for use by other classes
+ * Handles input from keyboard and mouse devices and makes it accessible to other classes
  *
  * @author SlavSquatSuperstar
  */

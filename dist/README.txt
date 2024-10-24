@@ -1,4 +1,4 @@
-Thank you for downloading Mayonez Engine v0.7.10-fix1!
+Thank you for downloading Mayonez Engine v0.8.0!
 Find the latest release at https://github.com/SlavSquatSuperstar/mayonez-engine-2d/releases.
 
 Running the Program
@@ -28,6 +28,7 @@ Demo Scene Controls
    - Space to brake
    - Left Mouse and hold to fire weapons
    - 1/2 to switch ammo types
+   - H to toggle hints (WIP)
    - Controls can be set in user_config.json
 3. Mario
    - W to jump
@@ -45,7 +46,7 @@ Demo Scene Controls
    - WASD to move
    - Left Mouse on buttons to select a brush
    - Left Mouse on an empty space, with a brush selected, to place a block
-*Note: Right mouse is known to not work with some trackpads.
+*Note: Right mouse is known to not work on Windows with some trackpads.
 
 Changing User Preferences
 1. Program settings are stored in "preferences.json" next to the .jar file.
@@ -61,4 +62,4 @@ This software is licensed under the GNU General Public License, version 3 (GPLv3
 See LICENSE.txt for more information.
 
 For email inquiries, contact slavsquatsuperstar@gmail.com.
-Copyright SlavSquatSuperstar 2023 GPLv3 License
+Copyright © 2020-2024 SlavSquatSuperstar GPLv3

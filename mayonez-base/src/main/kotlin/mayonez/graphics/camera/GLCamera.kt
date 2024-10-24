@@ -1,12 +1,18 @@
 package mayonez.graphics.camera
 
-import mayonez.*
-import mayonez.annotations.*
+import mayonez.engine.*
+import mayonez.graphics.*
 import mayonez.math.*
 import org.joml.*
 
 /**
  * A scene camera for the GL engine.
+ *
+ * Sources:
+ * - https://learnopengl.com/Getting-started/Camera
+ * - https://www.opengl-tutorial.org/beginners-tutorials/tutorial-3-matrices/
+ * - https://www.khronos.org/opengl/wiki/Viewing_and_Transformations
+ * - https://gamedevbeginner.com/how-to-zoom-a-camera-in-unity-3-methods-with-examples/
  *
  * @author SlavSquatSuperstar
  */
@@ -14,21 +20,76 @@ import org.joml.*
 class GLCamera(screenSize: Vec2?, sceneScale: Float) : Camera(screenSize, sceneScale) {
 
     // Matrix Fields
-    private val projectionMatrix: Matrix4f = Matrix4f() // coordinates from camera's perspective
-    private val inverseProjection: Matrix4f = Matrix4f()
-    private val viewMatrix: Matrix4f = Matrix4f() // normalized device screen coordinates
+    private val viewMatrix: Matrix4f = Matrix4f()
     private val inverseView: Matrix4f = Matrix4f()
+    private val projectionMatrix: Matrix4f = Matrix4f()
+    private val inverseProjection: Matrix4f = Matrix4f()
 
     // Plane Fields
     private val nearPlane = -100f // closest object visible
     private val farPlane = 100f // farthest object visible
-    private val zPosition = 0f // how far forward/back the camera is
+    private val cameraZ = 0f // how far forward/back the camera is
 
     // Camera Methods
 
+    override fun getScreenOffset(): Vec2 = viewCenter - (screenSize * 0.5f)
+
+    // Matrix Methods
+
+    /**
+     * The view matrix of the camera, which transforms objects from world space
+     * into camera view space.
+     */
+    override fun getViewMatrix(): Matrix4f {
+        viewMatrix
+            .translateView(screenOffset, cameraZ)
+            .rotateView(-rotation, viewCenter, cameraZ)
+            .zoomView(zoom, viewCenter, cameraZ)
+            .invert(inverseView)
+        return viewMatrix
+    }
+
+    /**
+     * The projection matrix of the camera, which transforms objects from view
+     * space into normalized screen space.
+     */
+    // TODO don't zoom UI with scene
+    override fun getProjectionMatrix(): Matrix4f {
+//        GL11.glViewport()
+        projectionMatrix
+            .setOrtho(0f, screenSize.x, 0f, screenSize.y, nearPlane, farPlane)
+            .invert(inverseProjection)
+        return projectionMatrix
+    }
+
+    // Matrix Helper Methods
+
+    private fun Matrix4f.translateView(offset: Vec2, cameraZ: Float): Matrix4f {
+        val cameraFront = Vector3f(0f, 0f, -1f)
+        val cameraUp = Vector3f(0f, 1f, 0f)
+        return this.setLookAt(
+            Vector3f(offset.x, offset.y, cameraZ),
+            cameraFront.add(offset.x, offset.y, 0f), cameraUp
+        )
+    }
+
+    private fun Matrix4f.rotateView(angle: Float, cameraPos: Vec2, cameraZ: Float): Matrix4f {
+        val rotation = Quaternionf()
+        rotation.rotationAxis(MathUtils.toRadians(angle), 0f, 0f, 1f)
+        return this.rotateAround(rotation, cameraPos.x, cameraPos.y, cameraZ)
+    }
+
+    private fun Matrix4f.zoomView(zoom: Float, cameraPos: Vec2, cameraZ: Float): Matrix4f {
+        // Orthographic zoom
+        // TODO try perspective zoom
+        return this.scaleAround(zoom, zoom, 1f, cameraPos.x, cameraPos.y, cameraZ)
+    }
+
+    // Screen to World Methods
+
     override fun toWorld(screen: Vec2): Vec2 {
         // Divide the raw screen coordinates by the window scaling
-        return getViewPos(getClipPos(screen / Mayonez.windowScale)) + position
+        return getViewPos(getClipPos(screen / WindowProperties.getWindowScaling())) + position
     }
 
     /** Normalize screen position into clip space. */
@@ -42,47 +103,6 @@ class GLCamera(screenSize: Vec2?, sceneScale: Float) : Camera(screenSize, sceneS
         val view = Vector4f(clip.x, clip.y, 0f, 0f)
             .mul(inverseProjection).mul(inverseView)
         return Vec2(view.x, view.y)
-    }
-
-    // Matrix Properties
-
-    /**
-     * The projection matrix of the camera, which transforms objects from view
-     * space into normalized screen space.
-     */
-    fun getProjectionMatrix(): Matrix4f {
-        val projSize = screenSize.div(zoom)
-        projectionMatrix.setOrtho(0f, projSize.x, 0f, projSize.y, nearPlane, farPlane)
-        projectionMatrix.invert(inverseProjection)
-        return projectionMatrix
-    }
-
-    /**
-     * The view matrix of the camera, which transforms objects from world space
-     * into camera view space.
-     */
-    fun getViewMatrix(): Matrix4f {
-        translateViewMatrix()
-        rotateViewMatrix()
-        viewMatrix.invert(inverseView)
-        return viewMatrix
-    }
-
-    private fun rotateViewMatrix() {
-        val cameraPos = position * SceneManager.currentScene.scale
-        val rotation = Quaternionf()
-        rotation.rotationAxis(FloatMath.toRadians(-getRotation()), 0f, 0f, 1f)
-        viewMatrix.rotateAround(rotation, cameraPos.x, cameraPos.y, 0f)
-    }
-
-    private fun translateViewMatrix() {
-        val cameraFront = Vector3f(0f, 0f, -1f)
-        val cameraUp = Vector3f(0f, 1f, 0f)
-        val offset = screenOffset
-        viewMatrix.setLookAt(
-            Vector3f(offset.x, offset.y, zPosition),
-            cameraFront.add(offset.x, offset.y, 0f), cameraUp
-        )
     }
 
 }

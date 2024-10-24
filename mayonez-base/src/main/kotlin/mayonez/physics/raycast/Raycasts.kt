@@ -65,7 +65,7 @@ object Raycasts {
 
         // If ray is parallel, then raycast is undefined
         // Ray either misses or hits endpoint (no normal)
-        if (FloatMath.equals(cross, 0f)) return null
+        if (MathUtils.equals(cross, 0f)) return null
 
         // Calculate intersection point
         val startToOrigin = ray.origin - edge.start
@@ -73,7 +73,7 @@ object Raycasts {
         val dist2 = startToOrigin.cross(dir1) / cross
 
         // Contact must be inside edge and inside ray if limit is enabled
-        if (!FloatMath.inRange(dist1, 0f, edge.length) || dist2 < 0
+        if (!MathUtils.inRange(dist1, 0f, edge.length) || dist2 < 0
             || (limit > 0 && dist2 > limit)
         ) return null
 
@@ -83,18 +83,16 @@ object Raycasts {
 
     private fun raycastPolygon(poly: Polygon, ray: Ray, limit: Float): RaycastInfo? {
         val edges = poly.edges
-        // Find raycast distance to closest edge
-        val distances = FloatArray(edges.size)
-        for (i in distances.indices) {
-            val rc = raycastEdge(edges[i], ray, limit)
-            distances[i] = rc?.distance ?: Float.POSITIVE_INFINITY
-        }
+        // Find raycast distance to the closest edge
+        val distances = edges.map { raycastEdge(it, ray, limit) }
+            .map { it?.distance ?: Float.POSITIVE_INFINITY }
+            .toFloatArray()
 
-        val minIndex = FloatMath.minIndex(*distances)
+        val minIndex = MathUtils.minIndex(*distances)
         val minDist = distances[minIndex]
-        if (minDist == Float.POSITIVE_INFINITY) return null // no successful raycasts
+        if (minDist == Float.POSITIVE_INFINITY) return null // No successful raycasts
 
-        return RaycastInfo(ray.getPoint(minDist), edges[minIndex].unitNormal(), minDist)
+        return RaycastInfo(ray.getPoint(minDist), edges[minIndex].unitNormalRight(), minDist)
     }
 
 }

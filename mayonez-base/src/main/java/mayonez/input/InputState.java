@@ -5,7 +5,7 @@ package mayonez.input;
  *
  * @author SlavSquatSuperstar
  */
-public enum InputState {
+enum InputState {
     /**
      * The input mapping is not pressed or held.
      */

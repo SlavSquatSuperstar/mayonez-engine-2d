@@ -1,5 +1,5 @@
 /**
- * A barebones recreation of Super Mario.
+ * A bare-bones recreation of Super Mario.
  *
  * @author SlavSquatSuperstar
  */

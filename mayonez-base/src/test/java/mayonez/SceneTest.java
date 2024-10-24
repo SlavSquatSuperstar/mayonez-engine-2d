@@ -11,20 +11,23 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class SceneTest {
 
-    @Test
-    void sceneIDsAreUnique() {
-        var scene1 = new Scene("Test Scene") {
+    private Scene scene;
+
+    @BeforeEach
+    void getScene() {
+        scene = new Scene("Test Scene") {
         };
-        var scene2 = new Scene("Test Scene") {
-        };
-        assertNotEquals(scene1.sceneID, scene2.sceneID);
     }
 
     @Test
-    void addObjectChangesObjectCount() {
-        var scene = new Scene("Test Scene") {
+    void sceneIDsAreUnique() {
+        var scene2 = new Scene("Test Scene") {
         };
+        assertNotEquals(scene.sceneID, scene2.sceneID);
+    }
 
+    @Test
+    void addObjectChangesNumObjects() {
         var obj1 = new GameObject("");
         scene.addObject(obj1);
 
@@ -35,9 +38,28 @@ class SceneTest {
     }
 
     @Test
-    void getObjectByNameSuccess() {
-        var scene = new Scene("Test Scene") {
+    void cannotAddObjectTwice() {
+        var obj = new GameObject("");
+        scene.addObject(obj);
+        scene.addObject(obj);
+
+        assertEquals(1, scene.numObjects());
+    }
+
+    @Test
+    void cannotAddObjectToDifferentScenes() {
+        var scene2 = new Scene("Test Scene") {
         };
+        var obj = new GameObject("");
+
+        scene2.addObject(obj);
+        scene.addObject(obj);
+
+        assertEquals(0, scene.numObjects());
+    }
+
+    @Test
+    void getObjectByNameSuccess() {
         assertNull(scene.getObject("Test Object 1"));
 
         var obj1 = new GameObject("Test Object 1");

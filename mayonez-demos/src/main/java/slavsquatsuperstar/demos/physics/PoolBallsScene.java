@@ -31,7 +31,7 @@ public class PoolBallsScene extends Scene {
             var radius = PoolBall.BALL_RADIUS;
             for (var col = 0; col <= row; col++) {
                 // x = x0 + √3r * i
-                var x = xStart + (float) row * FloatMath.sqrt(3f) * radius;
+                var x = xStart + (float) row * MathUtils.sqrt(3f) * radius;
                 // y = y0 + 2r * i
                 var y = yStart + (float) col * 2 * radius;
 

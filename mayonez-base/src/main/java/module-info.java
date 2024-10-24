@@ -1,42 +1,57 @@
 /**
- * The core library of MayonezEngine which contains all the base classes needed to create and run a game.
+ * The foundational module of Mayonez Engine, which contains all the base classes needed
+ * to run an application and develop a game.
  *
  * @author SlavSquatSuperstar
  */
 module mayonez.base {
     // JVM
-    requires transitive java.desktop;
+    requires java.desktop;
+
+    // Other Dependencies
     requires kotlin.stdlib;
+    requires org.joml;
 
     // LWJGL
     requires org.lwjgl;
     requires org.lwjgl.glfw;
     requires org.lwjgl.opengl;
     requires org.lwjgl.stb;
-    requires org.joml;
 
-    // Other Dependencies
-    requires org.json;
+    // Subprojects
+    requires transitive mayonez.tools;
 
-    // Public API
+    // Base Application
     exports mayonez;
-    exports mayonez.annotations;
+    exports mayonez.config;
+    exports mayonez.event;
+    exports mayonez.input;
+
+    // Assets
+    exports mayonez.assets;
+    exports mayonez.assets.image;
+    exports mayonez.assets.text;
+
+    // Graphics
     exports mayonez.graphics;
     exports mayonez.graphics.camera;
     exports mayonez.graphics.debug;
+    exports mayonez.graphics.font;
     exports mayonez.graphics.sprites;
     exports mayonez.graphics.textures;
-    exports mayonez.init;
-    exports mayonez.io;
-    exports mayonez.io.image;
-    exports mayonez.io.text;
-    exports mayonez.input;
-    exports mayonez.math;
-    exports mayonez.math.shapes;
+    exports mayonez.graphics.ui;
+
+    // Renderer
+    exports mayonez.renderer.batch;
+
+    // Physics
     exports mayonez.physics;
     exports mayonez.physics.colliders;
+    exports mayonez.physics.dynamics;
+
+    // Addons
     exports mayonez.scripts;
+    exports mayonez.scripts.camera;
     exports mayonez.scripts.mouse;
     exports mayonez.scripts.movement;
-    exports mayonez.util;
 }

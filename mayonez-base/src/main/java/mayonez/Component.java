@@ -13,10 +13,12 @@ import java.util.*;
  * Any component fields through the constructor should be initialized through the
  * {@link #start} method, which allows them to be restored when the scene is reloaded.
  * Update component fields in {@link #update} or draw debug information in {@link #debugRender}.
+ * <p></p>
  * The component's parent scene can be accessed through the {@link #getScene()} method,
  * and its {@link mayonez.GameObject} and transform can be accessed through the
  * {@link #gameObject} and {@link #transform} fields. To remove the component from its
- * object, call {@link #destroy}.
+ * object, call {@link #destroy}. Components may also be given an {@link mayonez.UpdateOrder}
+ * to tell the game object when to update it using {@link #Component(UpdateOrder)}.
  * <p>
  * See {@link mayonez.GameObject} and {@link mayonez.Script} for more information.
  *
@@ -39,10 +41,17 @@ public abstract class Component {
 
     private boolean enabled; // whether this component is being updated
 
+    private final UpdateOrder updateOrder;
+
     protected Component() {
+        this(UpdateOrder.SCRIPT);
+    }
+
+    public Component(UpdateOrder updateOrder) {
         componentID = componentCounter++;
         transform = new Transform();
         enabled = true;
+        this.updateOrder = updateOrder;
     }
 
     // Game Loop Methods
@@ -80,18 +89,18 @@ public abstract class Component {
     protected void debugRender() {
     }
 
+    // Scene Methods
+
     /**
      * Destroy this component, disabling it and removing it from its parent {@link GameObject}.
      * The fields {@link #gameObject} and {@link #transform} will be set to null.
      * <p>
      * Warning: Destroying a component is permanent and cannot be reversed!
      */
-    public void destroy() {
+    void destroy() {
         gameObject = null;
         transform = null;
     }
-
-    // Getters and Setters
 
     /**
      * Whether this component should be updated.
@@ -115,6 +124,8 @@ public abstract class Component {
         return (T) this;
     }
 
+    // Getters and Setters
+
     /**
      * Returns the parent {@link GameObject} this Component is attached to.
      *
@@ -124,10 +135,9 @@ public abstract class Component {
         return gameObject;
     }
 
-    // should only be used by Scene class
-
     /**
-     * Adds this component to a parent {@link mayonez.GameObject}.
+     * Adds this component to a parent {@link mayonez.GameObject}. Should only
+     * be used by the {@link mayonez.GameObject}.
      *
      * @param gameObject a game object
      */
@@ -152,6 +162,12 @@ public abstract class Component {
     public void setTransform(Transform transform) {
         this.transform = (transform != null) ? transform : new Transform();
     }
+
+    int getUpdateOrder() {
+        return updateOrder.order;
+    }
+
+    // Object Overrides
 
     @Override
     public boolean equals(Object obj) {

@@ -10,6 +10,6 @@ SCRIPT_DIR=$(dirname "$0")
 cd "$SCRIPT_DIR" || exit
 
 # Delete log outputs
-rm -r -- logs/ **/logs/
-rm -- hs_err_pid*.log **/hs_err_pid*.log
+rm -r -- logs/ **/logs/ 2> /dev/null
+rm -- hs_err_pid*.log **/hs_err_pid*.log 2> /dev/null
 echo "Cleared all log files."

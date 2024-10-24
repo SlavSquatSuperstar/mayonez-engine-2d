@@ -2,7 +2,7 @@ package mayonez.physics.detection
 
 import mayonez.math.*
 import mayonez.math.shapes.*
-import mayonez.test.TestUtils.*
+import mayonez.physics.CollisionTestUtils.*
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -36,13 +36,13 @@ internal class GJKTest {
 
     @Test
     fun getRectanglesSimplex() {
-        val r1 = Rectangle(Vec2(2f, 2f), Vec2(4f, 4f))
-        val r2 = Rectangle(Vec2(5f, 5f), Vec2(4f, 4f), 45f)
-        val r3 = Rectangle(Vec2(5.5f, 5.5f), Vec2(4f, 4f), 45f)
-        
+        val r1 = Rectangle(Vec2(2f), Vec2(4f))
+        val r2 = Rectangle(Vec2(5f), Vec2(4f), 45f)
+        val r3 = Rectangle(Vec2(5.5f), Vec2(4f), 45f)
+
         assertNotNull(gjk.getSimplex(r1, r2))
-        assertNull(gjk.getSimplex(r1, r3))
         testPenetration(r1, r2, 0.585788f)
+        assertNull(gjk.getSimplex(r1, r3))
     }
 
     @Test

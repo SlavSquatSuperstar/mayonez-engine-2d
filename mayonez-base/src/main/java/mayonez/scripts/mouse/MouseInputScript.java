@@ -1,6 +1,6 @@
 package mayonez.scripts.mouse;
 
-import mayonez.Script;
+import mayonez.*;
 import mayonez.input.Button;
 import mayonez.input.MouseInput;
 import mayonez.math.Vec2;
@@ -26,6 +26,7 @@ public abstract class MouseInputScript extends Script {
      * @param button the button name, or null for any
      */
     public MouseInputScript(String button) {
+        super(UpdateOrder.INPUT);
         this.button = button;
         lastMouse = new Vec2();
         mouseDown = false;
@@ -39,12 +40,12 @@ public abstract class MouseInputScript extends Script {
     }
 
     @Override
-    public void start() {
+    protected void start() {
         collider = getCollider();
     }
 
     @Override
-    public void update(float dt) {
+    protected void update(float dt) {
         if (!mouseDown) {
             checkMouseDown();
         } else {

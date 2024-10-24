@@ -1,10 +1,9 @@
 package mayonez.physics.resolution
 
-import mayonez.physics.*
+import mayonez.physics.dynamics.*
 
 /**
- * A data structure that stores the masses of two objects involved in a
- * collision.
+ * Stores the masses of two bodies involved in a collision.
  *
  * @author SlavSquatSuperstar
  */
@@ -17,11 +16,10 @@ internal data class MassData(
     internal val inverseAngMass2: Float
 ) {
     companion object {
-        internal fun getMassData(r1: Rigidbody, r2: Rigidbody): MassData {
+        internal fun getFrom(b1: PhysicsBody?, b2: PhysicsBody?): MassData {
             return MassData(
-                r1.invMass + r2.invMass,
-                r1.invAngMass,
-                r2.invAngMass
+                b1.invMass + b2.invMass,
+                b1.invAngMass, b2.invAngMass
             )
         }
     }

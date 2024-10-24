@@ -3,9 +3,11 @@ package mayonez.physics.detection
 import mayonez.math.*
 import mayonez.math.shapes.*
 import mayonez.physics.manifold.*
-import mayonez.test.*
-import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.*
+import mayonez.physics.CollisionTestUtils.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 /**
  * Unit Tests for the [mayonez.physics.detection.SATDetector] class.
@@ -32,12 +34,12 @@ internal class SATTest {
         val r1 = Rectangle(Vec2(0f, 0f), Vec2(4f, 4f))
         val r2 = Rectangle(Vec2(4f, 1f), Vec2(4f, 4f))
         val pen = testPenetration(r1, r2, Vec2(1f, 0f))
-        TestUtils.assertFloatEquals(0f, pen!!.depth)
+        assertFloatEquals(0f, pen!!.depth)
 
         val man = testContacts(pen, r1, r2, 2)
         val pts1 = arrayOf(man!!.getContact(0), man.getContact(1))
         val pts2 = arrayOf(Vec2(2f, -1f), Vec2(2f, 2f))
-        assertArrayEquals(pts1, pts2)
+        assertVerticesEqual(pts1, pts2)
     }
 
     @Test
@@ -45,12 +47,12 @@ internal class SATTest {
         val r1 = Rectangle(Vec2(0f, 0f), Vec2(4f, 4f))
         val r2 = Rectangle(Vec2(3.9f, 0.9f), Vec2(4f, 4f))
         val pen = testPenetration(r1, r2, Vec2(1f, 0f))
-        TestUtils.assertFloatEquals(0.1f, pen!!.depth)
+        assertFloatEquals(0.1f, pen!!.depth)
 
         val man = testContacts(pen, r1, r2, 2)
         val pts1 = arrayOf(man!!.getContact(0), man.getContact(1))
         val pts2 = arrayOf(Vec2(1.9f, -1.1f), Vec2(1.9f, 2f))
-        assertArrayEquals(pts1, pts2)
+        assertVerticesEqual(pts1, pts2)
     }
 
     @Test
@@ -68,6 +70,8 @@ internal class SATTest {
         val pen = testPenetration(r1, r2, Vec2(1f, 0f))
         testContacts(pen, r1, r2, 2)
     }
+
+    // Helper Methods
 
     private fun testPenetration(shape1: Shape, shape2: Shape, normal: Vec2): Penetration? {
         val pen = sat.getPenetration(shape1, shape2)

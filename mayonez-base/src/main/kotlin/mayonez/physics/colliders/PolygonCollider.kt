@@ -9,8 +9,7 @@ import mayonez.math.shapes.*
  *
  * @author SlavSquatSuperstar
  */
-open class PolygonCollider(shapeData: Polygon) :
-    Collider(shapeData.translate(-shapeData.center())) {
+open class PolygonCollider(shape: Polygon) : Collider(shape.translate(-shape.center())) {
 
     /**
      * Constructs a convex polygon from an array of vertices in clockwise
@@ -32,9 +31,9 @@ open class PolygonCollider(shapeData: Polygon) :
 
     // Shape Data
 
-    val numVertices: Int = shapeData.numVertices
+    val numVertices: Int = shape.numVertices
 
     // vertices transformed to world space
-    open fun getVertices(): Array<Vec2> = (transformToWorld() as Polygon).vertices
+    open fun getVertices(): Array<Vec2> = (getShape() as Polygon).vertices
 
 }

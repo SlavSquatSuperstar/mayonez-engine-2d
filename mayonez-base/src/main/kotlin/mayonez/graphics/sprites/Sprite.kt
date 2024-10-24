@@ -1,9 +1,9 @@
 package mayonez.graphics.sprites
 
 import mayonez.*
-import mayonez.graphics.renderer.*
+import mayonez.graphics.*
 import mayonez.graphics.textures.*
-import mayonez.util.*
+import mayonez.renderer.*
 
 /**
  * Draws a [Texture] at a [GameObject]'s position. To instantiate a sprite,
@@ -11,7 +11,7 @@ import mayonez.util.*
  *
  * @author SlavSquatSuperstar
  */
-sealed class Sprite : Component(), Renderable {
+sealed class Sprite : Component(UpdateOrder.RENDER), Renderable {
 
     companion object {
         @JvmStatic
@@ -46,7 +46,7 @@ sealed class Sprite : Component(), Renderable {
     abstract fun getColor(): MColor
 
     /**
-     * Set the color of this sprite, or recolors the current texture.
+     * Set the color of this sprite, or recolor the current texture.
      *
      * @param color the color
      */
@@ -57,14 +57,13 @@ sealed class Sprite : Component(), Renderable {
      *
      * @return the sprite transform
      */
-    fun getSpriteTransform(): Transform? {
-        return spriteXf
-    }
+    fun getSpriteTransform(): Transform? = spriteXf
 
     /**
      * Set additional position, rotation, and size modifiers for the sprite.
      *
      * @param spriteXf the transform
+     * @return this sprite
      */
     fun setSpriteTransform(spriteXf: Transform?): Sprite {
         this.spriteXf = spriteXf
@@ -72,14 +71,14 @@ sealed class Sprite : Component(), Renderable {
     }
 
     /**
-     * Returns the texture this sprite draws.
+     * Get the texture this sprite draws.
      *
      * @return the texture, or null if drawing a color
      */
     abstract fun getTexture(): Texture?
 
     /**
-     * Sets the texture this sprite draws.
+     * Set the texture this sprite draws.
      *
      * @param texture the new texture
      */
@@ -87,14 +86,14 @@ sealed class Sprite : Component(), Renderable {
 
     // Renderable Methods
 
-    final override fun getZIndex(): Int {
-        return gameObject.zIndex
-    }
+    final override fun getZIndex(): Int = gameObject.zIndex
+
+    final override fun isInUI(): Boolean = false
 
     // Copy Methods
 
     /**
-     * Returns a new sprite with the same image but not attached to any
+     * Construct a new sprite with the same image but not attached to any
      * [mayonez.GameObject].
      *
      * @return a copy of this image

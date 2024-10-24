@@ -4,8 +4,8 @@ import mayonez.*;
 import mayonez.graphics.sprites.*;
 import mayonez.graphics.textures.*;
 import mayonez.math.*;
-import mayonez.physics.*;
 import mayonez.physics.colliders.*;
+import mayonez.physics.dynamics.*;
 
 /**
  * A grid-aligned tile placed in the world.

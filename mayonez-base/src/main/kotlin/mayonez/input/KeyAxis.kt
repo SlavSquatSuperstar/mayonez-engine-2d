@@ -6,7 +6,6 @@ package mayonez.input
  * @author SlavSquatSuperstar
  */
 // TODO allow storing input mappings
-// TODO allow adding custom axes
 data class KeyAxis(
     /**
      * The negative key of this axis (down, left, counterclockwise, etc.).

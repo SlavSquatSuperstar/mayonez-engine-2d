@@ -1,17 +1,17 @@
 package mayonez.engine;
 
 import mayonez.*;
-import mayonez.annotations.*;
+import mayonez.graphics.*;
+import mayonez.io.*;
 import mayonez.math.*;
-import mayonez.util.*;
 import org.lwjgl.BufferUtils;
-import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.system.MemoryStack;
 
 import java.nio.IntBuffer;
 
 import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.glfw.GLFWErrorCallback.createPrint;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
@@ -30,7 +30,7 @@ final class GLFWHelper {
      * Initializes the GLFW library.
      */
     static void initGLFW() throws GLFWException {
-        GLFWErrorCallback.createPrint(System.err).set(); // Setup error callback
+        createPrint(System.err).set(); // Setup error callback
         if (!glfwInit()) {
             if (OperatingSystem.getCurrentOS() == OperatingSystem.MAC_OS) {
                 Logger.error("GLFW must run with the \"-XstartOnFirstThread\" VM argument on macOS");
@@ -48,7 +48,7 @@ final class GLFWHelper {
      * @return the window id
      */
     static long createGLFWWindow(int width, int height, String title) throws GLFWException {
-        configureWindowSettings();
+        configureWindowHints();
         var windowID = glfwCreateWindow(width, height, title, NULL, NULL);
         if (windowID == NULL) {
             throw new GLFWException("Could not create the GLFW window");
@@ -61,15 +61,19 @@ final class GLFWHelper {
     /**
      * Set the GLFW window hints for the application window.
      */
-    private static void configureWindowSettings() {
+    private static void configureWindowHints() {
         glfwDefaultWindowHints(); // Reset window settings
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // Don't stay hidden after creation
         glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE); // Don't allow resizing
-        // Set proper version for macOS
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
-        // Scale screen properly for Windows
-        glfwWindowHint(GLFW_SCALE_TO_MONITOR, GLFW_TRUE);
+        glfwWindowHint(GLFW_SCALE_TO_MONITOR, GLFW_TRUE); // Scale screen properly for Windows
+
+        // Set GLFW context version to 4.0 core
+        // macOS only supports OpenGL versions 3.2-4.1, inclusive
+        // Source: https://www.glfw.org/docs/latest/window.html
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
     }
 
     /**
@@ -81,8 +85,8 @@ final class GLFWHelper {
         // Source: https://github.com/glfw/glfw/issues/845
         var contentScale = getWindowContentScaling(windowID);
         var ratio = getWindowFramebufferRatio(windowID);
-        Mayonez.setWindowScale(contentScale.mul(ratio));
-        Logger.debug("Window scale has been set to %s", Mayonez.getWindowScale());
+        WindowProperties.setWindowScaling(contentScale.mul(ratio));
+        Logger.debug("Window scale has been set to %s", WindowProperties.getWindowScaling());
     }
 
     /**

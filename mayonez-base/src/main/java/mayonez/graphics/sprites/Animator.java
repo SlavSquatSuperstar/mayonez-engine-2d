@@ -27,6 +27,7 @@ public class Animator extends Script {
      * @param secondsPerFrame how much time to spend on each frame
      */
     public Animator(SpriteSheet sprites, float secondsPerFrame) {
+        super(UpdateOrder.RENDER);
         this.textures = sprites.getTextures();
         this.numFrames = textures.length;
         currentFrame = 0;
@@ -34,21 +35,21 @@ public class Animator extends Script {
     }
 
     @Override
-    public void init() {
+    protected void init() {
         sprite = Sprites.createSprite(textures[0]);
         gameObject.addComponent(sprite.setEnabled(false));
-        gameObject.addComponent(animTimer);
     }
 
     @Override
-    public void start() {
+    protected void start() {
         animTimer.reset();
         setSpriteTexture(0);
     }
 
     @Override
-    public void update(float dt) {
-        if (animTimer.isEnabled() && animTimer.isReady()) {
+    protected void update(float dt) {
+        animTimer.countDown(dt);
+        if (!animTimer.isPaused() && animTimer.isReady()) {
             // update frame count
             if (currentFrame == numFrames - 1) {
                 currentFrame = 0;
@@ -99,19 +100,19 @@ public class Animator extends Script {
      * @param enabled if the animation should play, true by default
      */
     public void setAnimationEnabled(boolean enabled) {
-        animTimer.setEnabled(enabled);
+        animTimer.setPaused(!enabled);
     }
 
     // Callback Methods
 
     @Override
-    public void onEnable() {
+    protected void onEnable() {
         setSpriteVisible(true);
         setAnimationEnabled(true);
     }
 
     @Override
-    public void onDisable() {
+    protected void onDisable() {
         setSpriteVisible(false);
         setAnimationEnabled(false);
     }

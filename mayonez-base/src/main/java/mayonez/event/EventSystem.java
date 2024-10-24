@@ -1,30 +1,43 @@
 package mayonez.event;
 
-import mayonez.annotations.*;
-
 import java.util.*;
 
 /**
- * The central node that links event listeners and event generators.
+ * A common node that links multiple event listeners and event generators.
  *
+ * @param <T> the type of event to send
  * @author SlavSquatSuperstar
  */
-@ExperimentalFeature
 // TODO multiple event nodes
 // TODO or subscribe to event types and filter onEvent
-public final class EventSystem {
+public class EventSystem<T extends Event> {
 
-    private final static List<EventListener> listeners = new ArrayList<>();
+    private final List<EventListener<T>> listeners = new ArrayList<>();
 
-    private EventSystem() {
-    }
-
-    public static void subscribe(EventListener l) {
+    /**
+     * Subscribes a listener to all events passed through this event system.
+     *
+     * @param l the event observer
+     */
+    public void subscribe(EventListener<T> l) {
         listeners.add(l);
     }
 
-    public static void broadcast(Event e) {
-//        System.out.println(e);
+    /**
+     * Unsubscribes a listener to all events passed through this event system.
+     *
+     * @param l the event observer
+     */
+    public void unsubscribe(EventListener<T> l) {
+        listeners.remove(l);
+    }
+
+    /**
+     * Notifies all subscribed listeners of an event.
+     *
+     * @param e the event data
+     */
+    public void broadcast(T e) {
         listeners.forEach(l -> l.onEvent(e));
     }
 

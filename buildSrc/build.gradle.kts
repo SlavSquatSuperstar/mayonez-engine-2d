@@ -3,5 +3,5 @@ plugins {
 }
 
 repositories {
-    mavenCentral()
+    mavenCentral() // Required for kotlin-dsl plugin
 }

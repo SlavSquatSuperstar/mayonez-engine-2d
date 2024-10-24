@@ -2,9 +2,15 @@ package mayonez.graphics.debug
 
 import mayonez.math.*
 import mayonez.math.shapes.*
-import mayonez.util.*
 import java.awt.geom.*
 import kotlin.math.*
+
+// Java AWT Type Aliases
+
+/** The [java.awt.Shape] class defined by the JDK. */
+private typealias JShape = java.awt.Shape
+/** The [java.awt.Polygon] class defined by the JDK. */
+private typealias JPolygon = java.awt.Polygon
 
 // AWT Shape Conversion Methods
 
@@ -14,7 +20,7 @@ internal fun MShape.toAWTShape(): JShape? {
         is Edge -> Line2D.Float(start.x, start.y, end.x, end.y)
         is Ellipse -> this.toAWTEllipse()
         is Rectangle -> this.toAWTRectangle()
-        is Polygon -> toAWTPolygon()
+        is MPolygon -> toAWTPolygon()
         else -> null
     }
 }

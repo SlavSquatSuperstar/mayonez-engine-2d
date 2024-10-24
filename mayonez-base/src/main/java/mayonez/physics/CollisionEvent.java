@@ -27,18 +27,29 @@ public class CollisionEvent extends Event {
      * The direction of the collision from the object's center.
      */
     public final Vec2 direction;
+    /**
+     * The relative velocity of the objects.
+     */
+    public final Vec2 velocity;
 
-    public CollisionEvent(GameObject other, boolean trigger, CollisionEventType type, Vec2 direction) {
+    public CollisionEvent(
+            GameObject other, boolean trigger, CollisionEventType type,
+            Vec2 direction, Vec2 velocity
+    ) {
         super(formatCollisionEventMessage(other, trigger, type));
         this.other = other;
         this.type = type;
         this.trigger = trigger;
         this.direction = direction;
+        this.velocity = velocity;
     }
 
-    private static String formatCollisionEventMessage(GameObject other, boolean trigger, CollisionEventType type) {
-        return "%s %s with %s"
-                .formatted(trigger ? "Trigger" : "Collision", type.name().toLowerCase(), other);
+    private static String formatCollisionEventMessage(
+            GameObject other, boolean trigger, CollisionEventType type
+    ) {
+        return "%s %s with %s".formatted(
+                trigger ? "Trigger" : "Collision", type.toString(), other
+        );
     }
 
 }
