@@ -46,7 +46,7 @@ Demo Scene Controls
    - WASD to move
    - Left Mouse on buttons to select a brush
    - Left Mouse on an empty space, with a brush selected, to place a block
-*Note: Right mouse is known to not work with some trackpads.
+*Note: Right mouse is known to not work on Windows with some trackpads.
 
 Changing User Preferences
 1. Program settings are stored in "preferences.json" next to the .jar file.
@@ -62,4 +62,4 @@ This software is licensed under the GNU General Public License, version 3 (GPLv3
 See LICENSE.txt for more information.
 
 For email inquiries, contact slavsquatsuperstar@gmail.com.
-Copyright SlavSquatSuperstar 2023 GPLv3 License
+Copyright © 2020-2024 SlavSquatSuperstar GPLv3
