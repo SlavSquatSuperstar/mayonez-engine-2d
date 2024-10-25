@@ -1,10 +1,11 @@
 package mayonez.event;
 
 import mayonez.annotations.*;
+import mayonez.util.*;
 
 /**
- * An action or milestone that occurs in this program. Events are a form of communication between different objects
- * or systems of the application.
+ * An action or milestone that occurs in this program. Events may be exchanged asynchronously
+ * between objects from different systems of the application.
  *
  * @author SlavSquatSuperstar
  */
@@ -27,9 +28,11 @@ public class Event {
 
     @Override
     public String toString() {
-        String className = getClass().isAnonymousClass() ? "Event" : getClass().getSimpleName();
-        if (message.isEmpty()) return className;
-        else return String.format("%s (%s)", className, message);
+        return String.format(
+                "%s (%s)",
+                StringUtils.getObjectClassName(this),
+                message.isEmpty() ? "<No Message>" : message
+        );
     }
 
 }

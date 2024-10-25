@@ -21,7 +21,7 @@ enum class DefaultKeyAxis(negKey: Key, posKey: Key) : InputAxis {
     companion object {
         @JvmStatic
         fun findWithName(axisName: String): DefaultKeyAxis? {
-            return StringUtils.findConstantWithName(entries, axisName)
+            return StringUtils.findWithName(entries, axisName)
         }
     }
 

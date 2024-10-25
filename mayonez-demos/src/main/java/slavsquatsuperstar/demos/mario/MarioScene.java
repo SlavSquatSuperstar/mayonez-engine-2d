@@ -1,14 +1,13 @@
 package slavsquatsuperstar.demos.mario;
 
 import mayonez.*;
+import mayonez.graphics.*;
 import mayonez.graphics.sprites.*;
 import mayonez.graphics.textures.*;
 import mayonez.input.*;
-import mayonez.io.*;
 import mayonez.math.*;
-import mayonez.physics.*;
 import mayonez.physics.colliders.*;
-import mayonez.util.*;
+import mayonez.physics.dynamics.*;
 
 /**
  * For testing the renderer, camera, and coordinate conversions.
@@ -16,6 +15,9 @@ import mayonez.util.*;
  * @author SlavSquatSupertar
  */
 public class MarioScene extends Scene {
+
+    public static final int CHARACTER_LAYER = 0;
+    public static final int GROUND_LAYER = 1;
 
     private static final int BACKGROUND_WIDTH = 1920;
     private static final int BACKGROUND_HEIGHT = 1024;
@@ -28,17 +30,23 @@ public class MarioScene extends Scene {
         sprites = Sprites.createSpriteSheet(
                 "assets/mario/textures/spritesheet.png",
                 16, 16, 26, 0);
-        background = Assets.getTexture("assets/mario/textures/background.png");
+        background = Textures.getTexture("assets/mario/textures/background.png");
         // Size = 60 x 32
         // Resolution = 1920x1024 (15:8), cropped from 1920x1080 (16:9)
     }
 
     @Override
-    public void init() {
+    protected void init() {
         setBackground(Colors.LIGHT_GRAY);
         setBackground(background);
         setGravity(new Vec2(0, -SCENE_GRAVITY));
         getCamera().zoom(0.8f);
+
+        var charLayer = getLayer(CHARACTER_LAYER);
+        charLayer.setName("Characters");
+
+        var groundLayer = getLayer(GROUND_LAYER);
+        groundLayer.setName("Ground");
 
         addObject(new Mario(new Vec2(-21f, -11f), sprites.getSprite(0)));
 
@@ -85,7 +93,7 @@ public class MarioScene extends Scene {
         return new GameObject(name, position) {
             @Override
             protected void init() {
-                addTag("Ground");
+                setLayer(getScene().getLayer(MarioScene.GROUND_LAYER));
                 addComponent(new Rigidbody(0f));
                 addComponent(new BoxCollider(size));
 //                addComponent(new ShapeSprite(Colors.WHITE, false));

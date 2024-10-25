@@ -4,7 +4,7 @@ import mayonez.*;
 import mayonez.graphics.sprites.*;
 
 /**
- * A script representing a spaceship engine and assigns it a direction.
+ * An individual engine on a spaceship with a thrust direction.
  *
  * @author SlavSquatSuperstar
  */
@@ -35,7 +35,7 @@ public class Thruster extends Script {
     }
 
     @Override
-    public void start() {
+    protected void start() {
         moveEnabled = false;
         turnEnabled = false;
         exhaustAnim = gameObject.getComponent(Animator.class);
@@ -43,7 +43,7 @@ public class Thruster extends Script {
     }
 
     @Override
-    public void update(float dt) {
+    protected void update(float dt) {
         exhaustAnim.setEnabled(moveEnabled || turnEnabled);
     }
 
@@ -56,7 +56,7 @@ public class Thruster extends Script {
     }
 
     @Override
-    public void onDisable() {
+    protected void onDisable() {
         exhaustAnim.setEnabled(false);
     }
 

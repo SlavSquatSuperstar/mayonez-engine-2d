@@ -4,6 +4,7 @@ import mayonez.annotations.*;
 
 import java.awt.event.*;
 
+@SuppressWarnings({"Unused", "FieldCanBeLocal"})
 @ExperimentalFeature
 public class KeyboardEvent extends Event {
 
@@ -43,4 +44,5 @@ public class KeyboardEvent extends Event {
         this.action = action;
         this.mods = mods;
     }
+
 }

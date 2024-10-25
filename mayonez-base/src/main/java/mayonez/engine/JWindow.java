@@ -1,8 +1,9 @@
 package mayonez.engine;
 
 import mayonez.*;
-import mayonez.annotations.*;
-import mayonez.input.*;
+import mayonez.graphics.*;
+import mayonez.input.keyboard.*;
+import mayonez.input.mouse.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,8 +29,8 @@ final class JWindow extends JFrame implements Window {
     private boolean closedByUser;
 
     // Input Fields
-    private KeyInput keyboard;
-    private MouseInput mouse;
+    private KeyManager keyboard;
+    private MouseManager mouse;
 
     JWindow(String title, int width, int height) {
         super(title);
@@ -72,8 +73,8 @@ final class JWindow extends JFrame implements Window {
 
     @Override
     public void endFrame() {
-        keyboard.endFrame();
-        mouse.endFrame();
+        keyboard.updateKeys();
+        mouse.updateMouse();
     }
 
     // Render Methods
@@ -90,7 +91,7 @@ final class JWindow extends JFrame implements Window {
             do {
                 clearScreen();
                 flipScreenVertically();
-                SceneManager.renderCurrentScene(g2);
+                SceneManager.renderScene(g2);
                 flushResources();
             } while (bs.contentsLost());
         } catch (IllegalStateException e) {
@@ -127,13 +128,13 @@ final class JWindow extends JFrame implements Window {
     // Input Methods
 
     @Override
-    public void setKeyInput(KeyInput keyboard) {
+    public void setKeyInput(KeyManager keyboard) {
         this.keyboard = keyboard;
         addKeyListener(keyboard);
     }
 
     @Override
-    public void setMouseInput(MouseInput mouse) {
+    public void setMouseInput(MouseManager mouse) {
         this.mouse = mouse;
         addMouseListener(mouse);
         addMouseMotionListener(mouse);

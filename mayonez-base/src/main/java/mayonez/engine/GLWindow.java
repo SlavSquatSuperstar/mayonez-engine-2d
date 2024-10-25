@@ -1,14 +1,12 @@
 package mayonez.engine;
 
 import mayonez.*;
-import mayonez.annotations.*;
-import mayonez.input.*;
-import org.lwjgl.opengl.GL;
+import mayonez.graphics.*;
+import mayonez.input.keyboard.*;
+import mayonez.input.mouse.*;
 
-import static mayonez.engine.GLFWHelper.*;
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11.*;
 
 /**
  * The display component for the game, using LWJGL.
@@ -24,8 +22,8 @@ final class GLWindow implements Window {
     private final int width, height;
 
     // Input Fields
-    private KeyInput keyboard;
-    private MouseInput mouse;
+    private KeyManager keyboard;
+    private MouseManager mouse;
 
     GLWindow(String title, int width, int height) {
         this.title = title;
@@ -52,17 +50,13 @@ final class GLWindow implements Window {
      * Source: <a href="https://www.lwjgl.org/guide">LWJGL starter guide</a>
      */
     private void initWindow() throws GLFWException {
-        initGLFW();
-        windowID = createGLFWWindow(width, height, title);
+        GLFWHelper.initGLFW();
+        windowID = GLFWHelper.createGLFWWindow(width, height, title);
 
         // Important! Detect current context and integrate LWJGL with OpenGL bindings
         glfwMakeContextCurrent(windowID); // Make the OpenGL context current
         glfwSwapInterval(1); // Enable v-sync
-        GL.createCapabilities();
-
-        // Set renderer settings
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        GLHelper.loadOpenGL();
     }
 
     @Override
@@ -74,11 +68,12 @@ final class GLWindow implements Window {
     @Override
     public void stop() {
         glfwFreeCallbacks(windowID);
-//        glfwSetWindowShouldClose(window, true);
+        glfwSetWindowShouldClose(windowID, true);
         glfwDestroyWindow(windowID);
         glfwTerminate();
         var oldCbFun = glfwSetErrorCallback(null);
         if (oldCbFun != null) oldCbFun.free();
+        GLHelper.unloadOpenGL();
     }
 
     // Game Loop Methods
@@ -90,28 +85,27 @@ final class GLWindow implements Window {
 
     @Override
     public void render() {
-        glClearColor(1f, 1f, 1f, 1f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear screen
-        SceneManager.renderCurrentScene(null); // Don't pass G2D
+        GLHelper.clearScreen(1f, 1f, 1f, 1f);
+        SceneManager.renderScene(null); // Don't pass G2D
         glfwSwapBuffers(windowID);
     }
 
     @Override
     public void endFrame() {
-        keyboard.endFrame();
-        mouse.endFrame();
+        keyboard.updateKeys();
+        mouse.updateMouse();
     }
 
     // Input Methods
 
     @Override
-    public void setKeyInput(KeyInput keyboard) {
+    public void setKeyInput(KeyManager keyboard) {
         this.keyboard = keyboard;
         glfwSetKeyCallback(windowID, keyboard::keyCallback);
     }
 
     @Override
-    public void setMouseInput(MouseInput mouse) {
+    public void setMouseInput(MouseManager mouse) {
         this.mouse = mouse;
         glfwSetMouseButtonCallback(windowID, mouse::mouseButtonCallback);
         glfwSetCursorPosCallback(windowID, mouse::mousePosCallback);

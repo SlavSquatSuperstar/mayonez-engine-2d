@@ -1,32 +1,43 @@
 package slavsquatsuperstar.demos.spacegame.objects.asteroids;
 
 import mayonez.math.*;
-import mayonez.scripts.*;
 import slavsquatsuperstar.demos.spacegame.combat.Damageable;
 
 /**
- * A fragment of a destroyed asteroid.
+ * A fragment of a destroyed asteroid that either crates more fragments or despawns.
  *
  * @author SlavSquatSuperstar
  */
-public class AsteroidFragment extends BaseAsteroid {
+// TODO make sure we don't infinitely spawn fragments
+public class AsteroidFragment extends Asteroid {
 
-    private final Vec2 offsetNormal;
+    private static final float MIN_SPAWN_FRAGMENTS_RADIUS = 1.25f;
 
-    public AsteroidFragment(String name, Vec2 position, AsteroidProperties properties, Vec2 offsetDirection) {
+    private final Vec2 startImpulse;
+
+    public AsteroidFragment(String name, Vec2 position, AsteroidProperties properties, Vec2 startImpulse) {
         super(name, position, properties);
-        this.offsetNormal = offsetDirection;
+        this.startImpulse = startImpulse;
     }
 
     @Override
     protected void init() {
         super.init();
+        var startingHealth = properties.getHealth();
+        addRigidbody(startingHealth).applyImpulse(startImpulse);
+        addComponent(new Damageable(startingHealth));
 
-        var startingHealth = Math.round(properties.radius() * 3f);
-        addRigidbody(startingHealth).applyImpulse(offsetNormal.mul(6f));
-
-        addComponent(new Damageable(startingHealth)); 
-        addComponent(new DestroyAfterDuration(Random.randomFloat(10, 15)));
+        var radius = properties.radius();
+        if (radius > MIN_SPAWN_FRAGMENTS_RADIUS) {
+            // Create more fragments
+            addCollider();
+            addComponent(new AsteroidDestruction(startingHealth, properties));
+        } else {
+            // Don't create any fragments
+            addComponent(new DespawnAsteroid(
+                    Math.max(0.5f, Random.randomFloat(radius * 3f, radius * 5f)), properties.color()
+            ));
+        }
     }
 
 }

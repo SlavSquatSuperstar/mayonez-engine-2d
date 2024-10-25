@@ -1,12 +1,12 @@
 package mayonez.graphics.camera;
 
-import mayonez.GameObject;
-import mayonez.Script;
-import mayonez.math.FloatMath;
-import mayonez.math.Vec2;
+import mayonez.*;
+import mayonez.math.*;
+import mayonez.math.shapes.*;
+import mayonez.renderer.*;
 
 /**
- * The viewport into the scene. The camera may be adjusted through scripts
+ * The main viewport into the scene. The camera may be adjusted through scripts
  * by accessing {@code Script.getScene().getCamera()}. This class should not be
  * directly instantiated. Instead, call {@link CameraFactory#createCamera}.
  * <p>
@@ -14,56 +14,58 @@ import mayonez.math.Vec2;
  *
  * @author SlavSquatSuperstar
  */
-// TODO elastic/smooth movement
-// TODO allow drag, but snap back to subject
-public abstract class Camera extends Script {
+public abstract class Camera extends Component implements Viewport {
 
-    // Camera Fields
-    final Vec2 screenSize;
-    final float sceneScale;
+    // Size Fields
+    protected final Vec2 screenSize;
+    protected final float sceneScale;
 
     // Camera Movement
-    private boolean followAngle;
-    private Script keepInScene, dragAndDrop; // Reference to parent scripts
-    private CameraMode mode;
+    private CameraMode mode; // TODO remove
     private GameObject subject;
+    private boolean followAngle;
+    private Script keepInScene; // Reference to parent scripts
 
     // Camera Effects
-    private float zoom, rotation; // magnification of objects
+    private float zoom, rotation;
 
-    public Camera(Vec2 screenSize, float sceneScale) {
+    protected Camera(Vec2 screenSize, float sceneScale) {
+        super(UpdateOrder.PHYSICS);
         this.screenSize = screenSize;
         this.sceneScale = sceneScale;
+
         mode = CameraMode.FIXED;
         subject = null;
         followAngle = false;
+
         zoom = 1f;
         rotation = 0f;
     }
 
     @Override
-    public void start() {
+    protected void start() {
         resetZoom();
         resetRotation();
     }
 
     @Override
-    public void update(float dt) {
-        if (getSubject() != null) {
+    protected void update(float dt) {
+        // Follow subject
+        // TODO smooth follow
+        if (getSubject() != null && mode == CameraMode.FOLLOW) {
             transform.setPosition(getSubject().transform.getPosition());
             if (followAngle) rotation = getSubject().transform.getRotation();
         }
     }
 
-    // Factory Method
-
-    // Camera Location
+    // Camera Location Methods
 
     /**
      * The position of the camera's center in the scene in world units.
      *
      * @return the position
      */
+    @Override
     public final Vec2 getPosition() {
         return new Vec2(transform.getPosition());
     }
@@ -78,22 +80,22 @@ public abstract class Camera extends Script {
     }
 
     /**
+     * The position in pixels of the camera's center position.
+     *
+     * @return the camera's screen position
+     */
+    @Override
+    public final Vec2 getViewCenter() {
+        return getPosition().mul(sceneScale);
+    }
+
+    /**
      * The position in screen units of the camera's bottom left corner (the canvas origin).
      *
      * @return the camera's offset
      */
-    public final Vec2 getScreenOffset() {
-        // (position * scene_scale) - (0.5 * screen_size / zoom)
-        return getPosition().mul(sceneScale).sub(screenSize.mul(0.5f / getZoom()));
-    }
-
-    /**
-     * Transform screen coordinates into world coordinates.
-     *
-     * @param screen a pixel on the screen
-     * @return the world position of the pixel
-     */
-    public abstract Vec2 toWorld(Vec2 screen);
+    @Override
+    public abstract Vec2 getScreenOffset(); // zoom offset
 
     // Camera Effects
 
@@ -102,6 +104,7 @@ public abstract class Camera extends Script {
      *
      * @return the zoom
      */
+    @Override
     public float getZoom() {
         return zoom;
     }
@@ -112,9 +115,8 @@ public abstract class Camera extends Script {
      * @param zoom the magnification
      */
     public void zoom(float zoom) {
-        if (FloatMath.equals(zoom, 0f)) return; // don't set zoom to zero
+        if (MathUtils.equals(zoom, 0f)) return; // don't set zoom to zero
         this.zoom *= zoom;
-        transform.scale(new Vec2(1f / zoom));
     }
 
     /**
@@ -122,7 +124,6 @@ public abstract class Camera extends Script {
      */
     public void resetZoom() {
         zoom = 1f;
-        transform.setScale(new Vec2(1f));
     }
 
     /**
@@ -130,6 +131,7 @@ public abstract class Camera extends Script {
      *
      * @return the rotation
      */
+    @Override
     public float getRotation() {
         return rotation;
     }
@@ -141,7 +143,6 @@ public abstract class Camera extends Script {
      */
     public void rotate(float rotation) {
         this.rotation += rotation;
-//        transform.rotate(rotation);
     }
 
     /**
@@ -151,10 +152,21 @@ public abstract class Camera extends Script {
         rotation = 0f;
     }
 
-    // Camera Movement
+    // Camera Collision Methods
 
     /**
-     * Toggles whether the camera should rotate with the subject.
+     * Gets the bounding box of the camera in the world.
+     *
+     * @return the camera bounds
+     */
+    public BoundingBox getBounds() {
+        return new BoundingBox(getPosition(), screenSize.div(sceneScale * zoom));
+    }
+
+    // Camera Movement Methods
+
+    /**
+     * Sets whether the camera should rotate with the subject.
      *
      * @param enabled rotate the camera with the subject
      * @return the camera
@@ -166,7 +178,7 @@ public abstract class Camera extends Script {
     }
 
     /**
-     * Toggles whether the camera should stay within the scene bounds.
+     * Sets whether the camera should stay within the scene bounds.
      *
      * @param enabled keep the camera inside the scene
      * @return the camera
@@ -193,7 +205,6 @@ public abstract class Camera extends Script {
      */
     public final Camera setMode(CameraMode mode) {
         this.mode = mode;
-        dragAndDrop.setEnabled(mode == CameraMode.FREE);
         return this;
     }
 
@@ -221,11 +232,6 @@ public abstract class Camera extends Script {
     }
 
     // Script Setters
-
-    Script  setDragAndDropScript(Script dragAndDrop) {
-        this.dragAndDrop = dragAndDrop;
-        return dragAndDrop;
-    }
 
     Script setKeepInSceneScript(Script keepInScene) {
         this.keepInScene = keepInScene;

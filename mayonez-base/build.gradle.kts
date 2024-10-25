@@ -7,15 +7,14 @@ plugins {
     id(dokkaPlugin)
 }
 
-description = "The library project for Mayonez Engine that contains the core and API classes."
+description = "The core library for Mayonez Engine that contains the API classes."
 
 dependencies {
     // Code Dependencies
     implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
-    implementation("org.json:json:20240303")
+    implementation("org.joml:joml:1.10.8")
 
     // LWJGL Modules
-    implementation("org.joml:joml:1.10.5")
     implementation(platform("org.lwjgl:lwjgl-bom:$lwjglVersion")) // Bill of materials: set version for all libs
 
     implementation("org.lwjgl:lwjgl")
@@ -27,13 +26,16 @@ dependencies {
     implementation("org.lwjgl:lwjgl-glfw::$lwjglNatives")
     implementation("org.lwjgl:lwjgl-opengl::$lwjglNatives")
     implementation("org.lwjgl:lwjgl-stb::$lwjglNatives")
+
+    // Subprojects
+    api(project(":mayonez-tools"))
 }
 
 // Plugins and Tasks
 
 tasks {
     compileJava {
-        dependsOn(copyKotlinClasses) // Compile Kotlin sources before Java sources
+        dependsOn("copyKotlinClasses") // Compile Kotlin sources before Java sources
     }
 
     withType<KotlinCompile> {
@@ -41,15 +43,15 @@ tasks {
             suppressWarnings.set(true)
         }
     }
-}
 
-// Copy outputs into java build folder
-val copyKotlinClasses = tasks.register<Copy>("copyKotlinClasses") {
-    dependsOn(tasks.compileKotlin) // Compile Kotlin sources before Java sources
-    from("build/classes/kotlin/main")
-    into("build/classes/java/main")
-    include("**/*.class", "**/*.kotlin_module")
-    doLast {
-        delete("build/classes/java/main/module-info.class")
+    // Copy outputs into java build folder
+    register<Copy>("copyKotlinClasses") {
+        dependsOn(compileKotlin) // Compile Kotlin sources before Java sources
+        from("build/classes/kotlin/main")
+        into("build/classes/java/main")
+        include("**/*.class", "**/*.kotlin_module")
+        doLast {
+            delete("build/classes/java/main/module-info.class") // Mark compileJava as out-of-date
+        }
     }
 }

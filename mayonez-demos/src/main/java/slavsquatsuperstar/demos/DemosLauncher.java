@@ -1,8 +1,9 @@
 package slavsquatsuperstar.demos;
 
 import mayonez.*;
-import mayonez.init.*;
+import mayonez.config.*;
 import mayonez.input.*;
+import slavsquatsuperstar.demos.font.FontTestScene;
 import slavsquatsuperstar.demos.geometrydash.GDEditorScene;
 import slavsquatsuperstar.demos.mario.MarioScene;
 import slavsquatsuperstar.demos.physics.PhysicsSandboxScene;
@@ -19,8 +20,8 @@ public class DemosLauncher {
     private final static int START_SCENE_INDEX = 0;
 
     private final static String[] SCENE_NAMES = {
-            "Space Game", "Mario Level", "Physics Sandbox",
-            "Pool Balls", "Geometry Dash Editor"
+            "Space Game", "Font Test", "Physics Sandbox",
+            "Pool Balls", "Mario Level", "Geometry Dash Editor",
     };
 
     public static void main(String[] args) {
@@ -38,7 +39,7 @@ public class DemosLauncher {
                         pollSceneControls();
                     }
                 },
-                new MarioScene(SCENE_NAMES[1]) {
+                new FontTestScene(SCENE_NAMES[1]) {
                     @Override
                     protected void onUserUpdate(float dt) {
                         super.onUserUpdate(dt);
@@ -59,13 +60,20 @@ public class DemosLauncher {
                         pollSceneControls();
                     }
                 },
-                new GDEditorScene(SCENE_NAMES[4]) {
+                new MarioScene(SCENE_NAMES[4]) {
                     @Override
                     protected void onUserUpdate(float dt) {
                         super.onUserUpdate(dt);
                         pollSceneControls();
                     }
                 },
+                new GDEditorScene(SCENE_NAMES[5]) {
+                    @Override
+                    protected void onUserUpdate(float dt) {
+                        super.onUserUpdate(dt);
+                        pollSceneControls();
+                    }
+                }
         };
     }
 
@@ -75,7 +83,7 @@ public class DemosLauncher {
         } else if (KeyInput.keyPressed("r")) {
             SceneManager.restartScene();
         } else if (KeyInput.keyPressed("p")) {
-            SceneManager.toggleScenePaused(); // this is being run twice per frame in SpaceGameScene
+            SceneManager.toggleScenePaused();
         } else if (KeyInput.keyDown("left shift")) {
             for (var i = 0; i < SCENE_NAMES.length; i++) {
                 if (KeyInput.keyPressed(String.valueOf(i + 1))) {

@@ -1,5 +1,5 @@
 name=Mayonez Engine
-version=0.7
+version=0.8
 author=Slavic Superstar
 birthday=12-26-1991
 in_progress=true

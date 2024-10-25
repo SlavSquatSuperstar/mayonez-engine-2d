@@ -1,28 +1,35 @@
 package mayonez.graphics.textures;
 
-import mayonez.io.*;
+import mayonez.assets.*;
+import mayonez.assets.image.*;
 import mayonez.math.*;
 
 /**
  * An image file used by this program. To instantiate a texture, call
- * {@link mayonez.io.Assets#getTexture}. See {@link mayonez.graphics.sprites.Sprite}
- * for more information.
+ * {@link mayonez.graphics.textures.Textures#getTexture}. See
+ * {@link mayonez.graphics.sprites.Sprite} for more information.
  *
  * @author SlavSquatSuperstar
  */
 public abstract sealed class Texture extends Asset permits GLTexture, JTexture {
 
-    private int spriteSheetIndex;
-
     public Texture(String filename) {
         super(filename);
-        spriteSheetIndex = -1;
     }
 
     /**
-     * Creates a texture from an image file. Called during instantiation.
+     * Create a texture from an image file. Called during instantiation.
+     *
+     * @return the image file data
      */
-    protected abstract void readImage();
+    protected abstract ImageData readImage();
+
+    /**
+     * Get the underlying image data associated with this texture.
+     *
+     * @return the image data
+     */
+    public abstract ImageData getImageData();
 
     /**
      * The width of the image in pixels.
@@ -45,21 +52,6 @@ public abstract sealed class Texture extends Asset permits GLTexture, JTexture {
      */
     public Vec2 getSize() {
         return new Vec2(getWidth(), getHeight());
-    }
-
-    @SuppressWarnings("unchecked")
-    public final <T extends Texture> T setSpriteSheetIndex(int spriteSheetIndex) {
-        this.spriteSheetIndex = spriteSheetIndex;
-        return (T) this;
-    }
-
-    @Override
-    public String toString() {
-        var str = super.toString();
-        if (spriteSheetIndex >= 0) {
-            str += " (Sprite %d)".formatted(spriteSheetIndex);
-        }
-        return str;
     }
 
 }

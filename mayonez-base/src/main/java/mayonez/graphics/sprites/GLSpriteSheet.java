@@ -1,10 +1,8 @@
 package mayonez.graphics.sprites;
 
-import mayonez.annotations.*;
+import mayonez.graphics.*;
 import mayonez.graphics.textures.*;
-import mayonez.io.*;
 import mayonez.math.*;
-import mayonez.math.shapes.*;
 
 import java.util.*;
 
@@ -17,21 +15,21 @@ import java.util.*;
 public final class GLSpriteSheet extends SpriteSheet {
 
     private final GLTexture sheetTexture;
-    private final List<GLSprite> sprites;
     private final Vec2 spriteSize;
+    private final List<GLTexture> textures;
 
     /**
-     * Creates a sprite sheet from the given image file.
+     * Creates a sprite sheet from the given texture.
      *
-     * @param filename   the name of the parent texture
-     * @param spriteSize the dimensions of each sprite, in pixels
-     * @param numSprites how many sprites to create
-     * @param spacing    the padding in between sprites
+     * @param sheetTexture the parent texture
+     * @param spriteSize   the dimensions of each sprite, in pixels
+     * @param numSprites   how many sprites to create
+     * @param spacing      the padding between sprites, in pixels
      */
-    GLSpriteSheet(String filename, Vec2 spriteSize, int numSprites, int spacing) {
-        sheetTexture = Assets.getGLTexture(filename);
-        sprites = new ArrayList<>();
+    GLSpriteSheet(GLTexture sheetTexture, Vec2 spriteSize, int numSprites, int spacing) {
+        this.sheetTexture = sheetTexture;
         this.spriteSize = spriteSize;
+        textures = new ArrayList<>(numSprites);
         createSprites(numSprites, spacing);
     }
 
@@ -40,32 +38,15 @@ public final class GLSpriteSheet extends SpriteSheet {
     @Override
     protected void createSprites(int numSprites, int spacing) {
         // GL uses bottom left as image origin
-        Vec2 spriteTopLeft = getSpriteTopLeft();
+        var sheetTopLeft = new Vec2(0, getSheetSize().y);
+        var spriteBottomLeft = sheetTopLeft.sub(new Vec2(0, spriteSize.y));
 
         // Read sprites from top left of sheet
         for (var i = 0; i < numSprites; i++) {
-            addCurrentSprite(spriteTopLeft);
-            moveToNextSprite(spriteTopLeft, spacing);
+            // Add current sprite
+            textures.add(new GLSpriteSheetTexture(sheetTexture, i, spriteBottomLeft, spriteSize));
+            moveToNextSprite(spriteBottomLeft, spacing);
         }
-    }
-
-    private Vec2 getSpriteTopLeft() {
-        var sheetTopLeft = new Vec2(0, getSheetSize().y);
-        return sheetTopLeft.sub(new Vec2(0, spriteSize.y));
-    }
-
-    private void addCurrentSprite(Vec2 spriteBottomLeft) {
-        var texCoords = getSubimageCoords(spriteBottomLeft);
-        sprites.add(new GLSprite(new GLTexture(sheetTexture, texCoords)));
-    }
-
-    private Vec2[] getSubimageCoords(Vec2 spriteBottomLeft) {
-        // Normalize image coordinates to between 0-1
-        var texSize = sheetTexture.getSize();
-        var imgMin = spriteBottomLeft.div(texSize);
-        var imgMax = spriteBottomLeft.add(spriteSize).div(texSize);
-        var imgSize = imgMax.sub(imgMin);
-        return Rectangle.rectangleVertices(imgMin.midpoint(imgMax), imgSize, 0);
     }
 
     @Override
@@ -79,28 +60,26 @@ public final class GLSpriteSheet extends SpriteSheet {
         }
     }
 
-    // Getters
+    // Sheet Getters
 
     @Override
-    protected Vec2 getSheetSize() {
+    public Vec2 getSheetSize() {
         return sheetTexture.getSize();
     }
 
     @Override
+    public int numSprites() {
+        return textures.size();
+    }
+
+    @Override
     public Sprite getSprite(int index) {
-        return sprites.get(index).copy();
+        return new GLSprite(getTexture(index));
     }
 
     @Override
     public GLTexture getTexture(int index) {
-        var subSprite = sprites.get(index);
-        if (subSprite == null) return null;
-        else return new GLTexture(subSprite.getTexture(), subSprite.getTexCoords())
-                .setSpriteSheetIndex(index);
+        return textures.get(index);
     }
 
-    @Override
-    public int size() {
-        return sprites.size();
-    }
 }

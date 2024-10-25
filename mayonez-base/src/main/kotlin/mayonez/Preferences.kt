@@ -1,7 +1,6 @@
 package mayonez
 
-import mayonez.init.*
-import mayonez.util.*
+import mayonez.config.*
 
 private const val PREFS_FILENAME = "preferences.json"
 
@@ -10,6 +9,7 @@ private const val PREFS_FILENAME = "preferences.json"
  *
  * @author SlavSquatSuperstar
  */
+// TODO make editable, need events
 object Preferences : GameConfig(PREFS_FILENAME, Defaults.preferences) {
 
     private var initialized = false
@@ -28,6 +28,7 @@ object Preferences : GameConfig(PREFS_FILENAME, Defaults.preferences) {
     private fun getRules(): Array<PreferenceValidator<*>> {
         return arrayOf(
             StringValidator("title", "version", "log_directory"),
+            BooleanValidator("save_logs", "frame_skip"),
             IntValidator(240, 3840, "screen_height", "screen_width"),
             IntValidator(10, 250, "fps"),
             IntValidator(0, 5, "log_level")
@@ -54,10 +55,17 @@ object Preferences : GameConfig(PREFS_FILENAME, Defaults.preferences) {
     val screenHeight: Int
         get() = getInt("screen_height")
 
-    // TODO effects timestep but doesn't limit render rate yet
     @JvmStatic
     val fps: Int
         get() = getInt("fps")
+
+    /**
+     * Update the game as many times as possible before rendering (fast),
+     * rather than rendering once per update (slow).
+     */
+    @JvmStatic
+    val frameSkip: Boolean
+        get() = getBoolean("frame_skip")
 
     // Logging
     internal fun getLoggerConfig(): LoggerConfig {

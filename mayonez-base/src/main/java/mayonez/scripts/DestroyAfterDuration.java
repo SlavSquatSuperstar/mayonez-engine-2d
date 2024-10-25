@@ -18,14 +18,30 @@ public class DestroyAfterDuration extends Script {
     }
 
     @Override
-    public void start() {
+    protected void start() {
         lifetime = maxLifetime;
     }
 
     @Override
-    public void update(float dt) {
+    protected void update(float dt) {
         lifetime -= dt;
         if (lifetime <= 0) gameObject.destroy();
+    }
+
+    /**
+     * Get the remaining lifetime in seconds of this object.
+     * @return the lifetime
+     */
+    public float getLifetime() {
+        return lifetime;
+    }
+
+    /**
+     * Get the total lifetime in seconds of this object.
+     * @return the max lifetime
+     */
+    public float getMaxLifetime() {
+        return maxLifetime;
     }
 
 }

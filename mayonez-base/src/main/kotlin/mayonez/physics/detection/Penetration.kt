@@ -9,5 +9,5 @@ import mayonez.math.*
  * @author SlavSquatSuperstar
  */
 internal data class Penetration(internal val normal: Vec2, internal val depth: Float) {
-    override fun toString(): String = "Penetration $normal, $depth"
+    override fun toString(): String = "Penetration ($normal, $depth)"
 }

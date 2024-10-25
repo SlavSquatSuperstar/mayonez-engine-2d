@@ -1,6 +1,6 @@
 package mayonez.engine;
 
-import mayonez.annotations.*;
+import mayonez.graphics.*;
 
 import static org.lwjgl.glfw.GLFW.glfwGetTime;
 

@@ -1,7 +1,7 @@
 package mayonez
 
-import mayonez.init.*
-import mayonez.io.text.*
+import mayonez.assets.text.*
+import mayonez.config.*
 import java.io.File
 import java.time.LocalDate
 import java.util.*
@@ -41,7 +41,8 @@ object Logger {
 
     internal fun setConfig(config: LoggerConfig) {
         if (!initialized) {
-            this.config = config
+            Logger.config = config
+            debug("The log level has been set to ${config.logLevel}")
             createLogFile()
             initialized = true
         }
@@ -82,7 +83,7 @@ object Logger {
      */
     private fun printFormattedMessage(msg: Any?, vararg args: Any?, level: LogLevel) {
         val message = msg.formatMessage(args, level)
-        if (level.ordinal >= config.logLevel) message.printToConsole(level)
+        if (level.level >= config.logLevel) message.printToConsole(level)
         if (config.saveLogs) message.appendToFile()
     }
 

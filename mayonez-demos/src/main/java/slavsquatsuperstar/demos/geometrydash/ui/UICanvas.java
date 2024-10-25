@@ -35,7 +35,7 @@ public class UICanvas extends GameObject {
     @Override
     protected void init() {
         addComponent(placeBlock = new PlaceBlock());
-        for (var i = 0; i < BLOCK_ICONS.size(); i++) {
+        for (var i = 0; i < BLOCK_ICONS.numSprites(); i++) {
             addButton(i);
         }
     }

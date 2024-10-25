@@ -2,11 +2,10 @@ package slavsquatsuperstar.demos.geometrydash;
 
 import mayonez.*;
 import mayonez.graphics.*;
-import mayonez.graphics.camera.*;
 import mayonez.graphics.sprites.*;
 import mayonez.math.*;
-import mayonez.physics.*;
 import mayonez.physics.colliders.*;
+import mayonez.physics.dynamics.*;
 import mayonez.scripts.*;
 import mayonez.scripts.movement.*;
 
@@ -21,21 +20,25 @@ public class GDPlayer extends GameObject {
 
     public GDPlayer(String name, Vec2 position) {
         super(name, position);
-        setZIndex(ZIndex.PLAYER);
+
     }
 
     @Override
     protected void init() {
+        setZIndex(ZIndex.PLAYER);
         createPlayerAvatar();
 
-        getScene().getCamera().setKeepInScene(false).setMode(CameraMode.FREE);
-
-        float thrustForce = 10f;
+        float speed = 10f;
         addComponent(new BoxCollider(new Vec2(1, 1)));
         addComponent(new Rigidbody(1f).setDrag(0.2f).setFixedRotation(true));
-        addComponent(new KeyMovement(thrustForce, MoveMode.POSITION).setTopSpeed(thrustForce));
+//        addComponent(new KeyMovement(speed, MoveMode.POSITION).setTopSpeed(speed));
+        addComponent(new KeyMovement(speed, MoveMode.POSITION) {
+            @Override
+            public Vec2 getUserInput() {
+                return super.getUserInput().unit(); // Normalize so don't move faster diagonally
+            }
+        });
         addComponent(new KeepInScene(KeepInScene.Mode.STOP));
-//        addComponent(new ShapeSprite(Colors.DARK_GRAY, false));
     }
 
     private void createPlayerAvatar() {

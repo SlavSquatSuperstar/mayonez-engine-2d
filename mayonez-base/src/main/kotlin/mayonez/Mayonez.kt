@@ -1,77 +1,88 @@
 package mayonez
 
+import mayonez.assets.*
+import mayonez.config.*
 import mayonez.engine.*
-import mayonez.init.*
-import mayonez.io.*
-import mayonez.math.*
+import mayonez.input.*
 import kotlin.system.exitProcess
 
 /**
- * An instance of Mayonez Engine. Upon startup, the application loads resources,
- * configures other engine components, and tells the scene manager to load a scene.
+ * Acts as the entry point into the Mayonez Engine and stores the instance
+ * of the game. Upon startup, the application loads resources, configures
+ * other engine components, and tells the scene manager to load a scene.
  *
- * Usage: To start an instance of Mayonez Engine, create a [Launcher] and set
- * the "Use GL" property through [Launcher.setRunConfig]. Then, load any number
- * of scenes through [Launcher.loadScenesToManager] or [SceneManager.addScene].
- * Finally, start the game with a scene by calling [Launcher.startGame].
+ * Usage: To start an instance of Mayonez Engine, create a [Launcher]
+ * and set the "Use GL" property through [Launcher.setRunConfig]. Then,
+ * load any number of scenes through [Launcher.loadScenesToManager] or
+ * [SceneManager.addScene]. Finally, start the game with a scene by calling
+ * [Launcher.startGame].
  *
- * To exit the program, call [Mayonez.stop] with an [ExitCode] (0 for success,
- * anything else for failure).
+ * To exit the program, call [Mayonez.stop] with an integer exit code (0
+ * for success, anything else for failure).
  *
  * See [Launcher] for more information.
  */
+// TODO rename to application manager
+// TODO move to launcher/config pkg
 object Mayonez {
 
-    // Run Fields
-    private var initialized: Boolean = false
-    private lateinit var game: GameEngine
-    private var started: Boolean = false
+    // Application Fields
+    private lateinit var game: GameEngine // Main application
+    private var initialized: Boolean = false // Are singletons initialized
+    private var started: Boolean = false // Is application running
 
-    // Properties
+    // Config Properties
 
-    /**
-     * The size of the application window, in pixels.
-     */
-    @JvmStatic
-    val screenSize: Vec2
-        get() = Vec2(
-            Preferences.screenWidth.toFloat(),
-            Preferences.screenHeight.toFloat()
-        )
+    private var config: RunConfig = RunConfig.DEFAULT_CONFIG
 
     /**
-     * The content scaling of the application window, usually 1x1 (100%). The value
-     * may be different if the current display has changed its screen scaling or
-     * resolution.
-     *
-     * For example, if the window scale is 2x2 (200%), then the window
-     * size will appear twice as large as the value stated in the user preferences.
+     * Whether to use LWJGL for creating the window and rendering instead of
+     * Java AWT.
      */
     @JvmStatic
-    internal var windowScale: Vec2 = Vec2(1f)
-        @JvmName("getWindowScale") get
-        @JvmName("setWindowScale") set
+    internal val useGL: Boolean
+        @JvmName("getUseGL") get() = config.useGL
 
-    /**
-     * Whether to use OpenGL for rendering instead of Java AWT.
-     */
+    // Time Properties
+    // TODO move to time
+
     @JvmStatic
-    internal var useGL: Boolean = false // crashes tests when set to true :\
-        @JvmName("getUseGL") get
-        private set
+    val deltaTime: Float
+        @JvmName("getDeltaTime") get() {
+            return if (this::game.isInitialized) game.deltaTime else 0f
+        }
+
+    @JvmStatic
+    val fps: Int
+        @JvmName("getFPS") get() {
+            return if (this::game.isInitialized) game.fps else 0
+        }
+
+    @JvmStatic
+    val updateFPS: Int
+        get() {
+            return if (this::game.isInitialized) game.updateFPS else 0
+        }
+
+    @JvmStatic
+    val renderFPS: Int
+        get() {
+            return if (this::game.isInitialized) game.renderFPS else 0
+        }
 
     // Init Methods
 
     /**
-     * Sets the run configuration for the program. Must be called before [start].
+     * Sets the run configuration for the program. Must be called before
+     * [start].
      */
     @JvmStatic
     @JvmName("setConfig")
     internal fun setConfig(config: RunConfig) {
         if (!initialized) {
-            this.useGL = config.useGL
+            this.config = config
             initializeSingletons()
-            initializeGame()
+            initializeGame(useGL)
             initialized = true
         }
     }
@@ -81,22 +92,38 @@ object Mayonez {
      * initializer and null pointer errors.
      */
     private fun initializeSingletons() {
-        Logger.log("Starting program...")
-        Time.debugCurrentDateTime()
+        // Start tracking time
+        Time.startTrackingTime()
+        Logger.debug("Starting program...")
+        val now = Time.getStartupDateTime()
+        Logger.debug("The current date time is %s %s", now.toLocalDate(), now.toLocalTime())
 
+        // Set preferences
         Preferences.setPreferences()
-        Time.timeStepSecs = (1f / Preferences.fps)
+        Time.setTimeStepSecs(1f / Preferences.fps)
+
+        // Create logger instance
         Logger.setConfig(Preferences.getLoggerConfig())
         Logger.log("Started ${Preferences.title} ${Preferences.version}")
-
-        Assets.initialize()
-        Assets.loadResources()
     }
 
-    private fun initializeGame() {
+    /**
+     * Initialize the game engine and input instances of the application.
+     */
+    private fun initializeGame(useGL: Boolean) {
         if (!this::game.isInitialized) {
+            // Create input instances
+            KeyInput.setUseGL(useGL)
+            MouseInput.setUseGL(useGL)
+
+            // Create game engine instances
             game = EngineFactory.createGameEngine(useGL)
             Logger.debug("Using \"%s\" engine", if (useGL) "GL" else "AWT")
+
+            // Load assets
+            // TODO handle from scene manager
+            Assets.initialize()
+            Assets.loadResources()
         }
     }
 
@@ -118,12 +145,15 @@ object Mayonez {
         if (!started) {
             started = true
             SceneManager.setScene(scene)
-            startGame()
+            // Start game
+            if (this::game.isInitialized) game.start()
+            else exitWithErrorMessage("Cannot start without configuring program \"Use GL\" option")
         }
     }
 
     /**
-     * Stop the game with an exit code and terminate the application.
+     * Stop the game with an exit code and terminate the application. See
+     * [ExitCode] for reserved codes.
      *
      * @param status an exit code (zero for success, non-zero for error)
      */
@@ -131,43 +161,33 @@ object Mayonez {
     fun stop(status: Int) {
         if (started) {
             started = false
-            game.stop()
+            SceneManager.stopScene()
+            SceneManager.clearScenes()
             Assets.clearAssets()
+            game.stop()
             exitProgram(status)
         }
     }
 
+    // Exit Helper Methods
+
     /**
-     * Stop the game with a reserved exit code.
-     *
-     * @param status an exit code constant
+     * Terminate the program with the given error message with exit code 1.
      */
-    @JvmStatic
-    fun stop(status: ExitCode) = this.stop(status.code)
-
-    // Helper Methods
-
-    private fun startGame() {
-        if (this::game.isInitialized) game.start()
-        else exitWithErrorMessage("Cannot start without configuring program \"Use GL\" option")
-    }
-
-    private fun exitWithErrorMessage(message: String) {
+    private fun exitWithErrorMessage(message: String): Nothing {
         Logger.error(message)
-        val status = ExitCode.ERROR.code
-        exitProgram(status)
+        exitProgram(ExitCode.ERROR)
     }
 
-    /** Print an exit message and immediately terminate the program. */
+    /**
+     * Print an exit message and immediately terminate the program with the
+     * given status.
+     */
     private fun exitProgram(status: Int): Nothing {
-        Logger.logExitMessage(status)
-        exitProcess(status)
-    }
-
-    private fun Logger.logExitMessage(status: Int) {
         val message = "Exited program with code $status"
-        if (status == 0) this.log("$message (Success)")
-        else this.error("$message (Error)")
+        if (status == 0) Logger.log("$message (Success)")
+        else Logger.error("$message (Error)")
+        exitProcess(status)
     }
 
 }

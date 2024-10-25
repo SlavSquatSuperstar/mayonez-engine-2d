@@ -13,14 +13,14 @@ internal object CircleDetector: CollisionDetector<Circle> {
     /**
      * Checks whether two circles are touching or overlapping.
      *
-     * @param circle1 the first circle
-     * @param circle2 the second circle
+     * @param shape1 the first circle
+     * @param shape2 the second circle
      * @return if the two circles intersect
      */
-    override fun checkIntersection(circle1: Circle?, circle2: Circle?): Boolean {
-        if (circle1 == null || circle2 == null) return false
-        val sumRadii = circle1.radius + circle2.radius
-        val distSq = circle2.center().distanceSq(circle1.center())
+    override fun checkIntersection(shape1: Circle?, shape2: Circle?): Boolean {
+        if (shape1 == null || shape2 == null) return false
+        val sumRadii = shape1.radius + shape2.radius
+        val distSq = shape2.center().distanceSq(shape1.center())
         return distSq <= sumRadii * sumRadii
     }
 

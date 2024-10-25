@@ -11,11 +11,12 @@ class EventTest {
 
     @Test
     void broadcastEventTest() {
-        EventListener l1 = e -> System.out.println("I can't believe that " + e.getMessage());
-        EventListener l2 = e -> System.out.println("I just heard that " + e.getMessage());
-        EventSystem.subscribe(l1);
-        EventSystem.subscribe(l2);
-        EventSystem.broadcast(new Event("you found 69,420 bugs in your code."));
+        var system = new EventSystem<>();
+        EventListener<Event> l1 = e -> System.out.println("I can't believe that " + e.getMessage());
+        EventListener<Event> l2 = e -> System.out.println("I just heard that " + e.getMessage());
+        system.subscribe(l1);
+        system.subscribe(l2);
+        system.broadcast(new Event("you found 69,420 bugs in your code."));
     }
 
 }

@@ -1,6 +1,6 @@
 package mayonez.engine;
 
-import mayonez.annotations.*;
+import mayonez.graphics.*;
 
 /**
  * An exception occurring when LWJGL cannot create the GLFW window.

@@ -1,19 +1,17 @@
 package mayonez.graphics.sprites
 
-import mayonez.*
-import mayonez.annotations.*
 import mayonez.graphics.*
-import mayonez.graphics.batch.*
-import mayonez.graphics.renderer.*
 import mayonez.graphics.textures.*
-import mayonez.math.*
 import mayonez.math.shapes.*
-import mayonez.util.*
+import mayonez.renderer.batch.*
+import mayonez.renderer.batch.BatchPushHelper.pushSprite
+import mayonez.renderer.gl.*
 
 
 /**
- * Draws a [GLTexture] using the GL engine. This class should not be directly
- * instantiated. Instead, call [Sprites.createSprite]. See [Sprite] for more information.
+ * Draws a [GLTexture] using the GL engine. This class should not be
+ * directly instantiated. Instead, call [Sprites.createSprite]. See
+ * [Sprite] for more information.
  *
  * @author SlavSquatSuperstar
  */
@@ -66,25 +64,17 @@ internal class GLSprite private constructor(
      * @param batch the batch
      */
     override fun pushToBatch(batch: RenderBatch) {
-        // Add sprite vertex data
-        val objXf = transform.combine(getSpriteTransform())
-        val color = this.color.toGL()
-        val texCoords = getTexCoords()
-        val texID = batch.addTextureAndGetID(texture)
-
         // Render sprite at object center and rotate according to object
-        val sprRect = Rectangle(objXf.position.toWorld(), objXf.scale.toWorld(), objXf.rotation)
-        val sprVertices = sprRect.vertices
-        for (i in sprVertices.indices) {
-            batch.pushVertex(sprVertices[i], color, texCoords[i], texID)
-        }
-    }
+        // Background sprite will not have scale but will use spriteXf instead
+        val objXf = transform.combine(getSpriteTransform())
+        val sceneScale = gameObject?.scene?.scale ?: 1f
+        val sprVertices = Rectangle(
+            objXf.position * sceneScale, objXf.scale * sceneScale, objXf.rotation
+        ).vertices
 
-    private fun RenderBatch.pushVertex(vertex: Vec2, color: GLColor, texPos: Vec2, texID: Int) {
-        pushVec2(vertex)
-        pushVec4(color)
-        pushVec2(texPos)
-        pushInt(texID)
+        val texCoords = texture?.texCoords ?: GLTexture.DEFAULT_TEX_COORDS
+        val texID = batch.getTextureSlot(texture)
+        batch.pushSprite(sprVertices, color, texCoords, texID)
     }
 
     // Renderable Methods
@@ -93,13 +83,4 @@ internal class GLSprite private constructor(
 
     override fun getPrimitive(): DrawPrimitive = DrawPrimitive.SPRITE
 
-    fun getTexCoords(): Array<Vec2> {
-        return texture?.texCoords ?: GLTexture.DEFAULT_TEX_COORDS
-    }
-
-}
-
-private fun Vec2.toWorld(): Vec2 {
-    // can't use this.scene.scale as it will return null
-    return this * SceneManager.currentScene.scale
 }

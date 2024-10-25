@@ -1,18 +1,20 @@
 package mayonez.graphics.debug
 
-import mayonez.graphics.renderer.*
+import mayonez.graphics.*
 import mayonez.math.*
 import mayonez.math.shapes.*
-import mayonez.util.*
+import mayonez.renderer.*
 
 /**
  * Allows colliders and shapes to be manually drawn onto the screen through
- * the scene's [mayonez.graphics.renderer.DebugRenderer]. All shapes are specified using world
- * coordinates, and colliders are centered around an object's position.
+ * the scene's [mayonez.renderer.DebugRenderer]. All shapes are
+ * specified using world coordinates, and colliders are centered around an
+ * object's position.
  *
- * Note: Due to how shapes are drawn in OpenGL, transparency is disabled, and all
- * colors will have their alpha set to 255. To draw debug shapes in the GL engine,
- * use a [mayonez.graphics.sprites.Sprite] instead.
+ * Note: Due to how shapes are drawn in OpenGL, transparency is disabled,
+ * and all colors will have their alpha set to 255. To draw transparent
+ * shapes in the GL engine, use a [mayonez.graphics.sprites.Sprite]
+ * instead.
  *
  * @author SlavSquatSuperstar
  */
@@ -36,9 +38,9 @@ class DebugDraw internal constructor(
      */
     fun drawPoint(position: Vec2, color: MColor?) {
         // Fill a circle with radius "STROKE_SIZE" in pixels
-        addShapeToRenderer(
+        debugRenderer.addShape(
             Circle(position.toScreen(scale), DEFAULT_STROKE_SIZE),
-            createPointBrush(color)
+            ShapeBrush.createSolidBrush(color).setZIndex(DrawPriority.POINT.zIndex)
         )
     }
 
@@ -64,7 +66,7 @@ class DebugDraw internal constructor(
      */
     fun drawLine(start: Vec2?, end: Vec2?, brush: ShapeBrush?) {
         if (start == null || end == null) return
-        addShapeToRenderer(
+        debugRenderer.addShape(
             Edge(start.toScreen(scale), end.toScreen(scale)),
             brush ?: ShapeBrush.createLineBrush(DEFAULT_COLOR)
         )
@@ -115,7 +117,7 @@ class DebugDraw internal constructor(
      * @param brush the brush to use
      */
     fun drawShape(shape: Shape?, brush: ShapeBrush?) {
-        addShapeToRenderer(
+        debugRenderer.addShape(
             shape?.toScreen(scale) ?: return,
             brush ?: ShapeBrush.createOutlineBrush(DEFAULT_COLOR)
         )
@@ -138,25 +140,19 @@ class DebugDraw internal constructor(
      * @param brush the brush to use
      */
     fun fillShape(shape: Shape?, brush: ShapeBrush?) {
-        addShapeToRenderer(
+        debugRenderer.addShape(
             shape?.toScreen(scale) ?: return,
             brush ?: ShapeBrush.createSolidBrush(DEFAULT_COLOR)
         )
     }
 
-    // Private Draw methods
-
-    private fun addShapeToRenderer(shape: Shape, brush: ShapeBrush) {
-        debugRenderer.addShape(DebugShape(shape, brush))
-    }
-
-    private fun createPointBrush(color: MColor?): ShapeBrush {
-        return ShapeBrush.createSolidBrush(color).setZIndex(DrawPriority.POINT.zIndex)
-    }
-
 }
 
 // Helper Methods
+
+private fun DebugRenderer.addShape(shape: Shape, brush: ShapeBrush) {
+    this.addShape(DebugShape(shape, brush))
+}
 
 /**
  * Converts a pair of coordinates from world to screen units.

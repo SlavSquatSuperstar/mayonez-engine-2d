@@ -1,7 +1,7 @@
 package slavsquatsuperstar.demos.physics.scripts;
 
 import mayonez.math.*;
-import mayonez.physics.*;
+import mayonez.physics.dynamics.*;
 import mayonez.scripts.mouse.*;
 import mayonez.scripts.movement.*;
 
@@ -35,7 +35,7 @@ public class MouseFlick extends MouseInputScript {
     // Overrides
 
     @Override
-    public void start() {
+    protected void start() {
         super.start();
         rb = getRigidbody();
         mouseStart = new Vec2();
@@ -72,7 +72,7 @@ public class MouseFlick extends MouseInputScript {
     }
 
     @Override
-    public void onDestroy() {
+    protected void onDestroy() {
         if (activeInstance == this) {
             activeInstance = null;
         }

@@ -10,19 +10,24 @@ import mayonez.math.*;
  * @param color       the asteroid's color
  * @param spriteIndex the asteroid's sprite number
  */
+// TODO store area instead of radius
 public record AsteroidProperties(float radius, Color color, int spriteIndex) {
 
+    public float getHealth() {
+        return Math.round(radius * radius);
+    }
+
     public Vec2 getScale() {
-        var width = addRandomError(radius, 0.2f);
-        var height = addRandomError(radius, 0.2f);
+        var width = getRandomError(radius, 0.2f);
+        var height = getRandomError(radius, 0.2f);
         return new Vec2(width, height);
     }
 
-    public AsteroidProperties setRadius(float radius) {
+    public AsteroidProperties copyWithRadius(float radius) {
         return new AsteroidProperties(radius, this.color, this.spriteIndex);
     }
 
-    public static float addRandomError(float value, float percentError) {
+    public static float getRandomError(float value, float percentError) {
         return value + Random.randomFloat(-value * percentError, value * percentError);
     }
 

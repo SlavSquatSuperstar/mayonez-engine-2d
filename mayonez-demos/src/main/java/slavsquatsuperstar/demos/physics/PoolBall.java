@@ -4,12 +4,11 @@ import mayonez.*;
 import mayonez.graphics.*;
 import mayonez.graphics.debug.*;
 import mayonez.math.*;
-import mayonez.physics.*;
 import mayonez.physics.colliders.*;
+import mayonez.physics.dynamics.*;
 import mayonez.scripts.*;
 import mayonez.scripts.mouse.*;
 import mayonez.scripts.movement.*;
-import mayonez.util.*;
 import slavsquatsuperstar.demos.physics.scripts.MouseFlick;
 
 /**
@@ -48,7 +47,7 @@ class PoolBall extends GameObject {
 
     // Create the cue ball
     public PoolBall(Vec2 position) {
-        this("Cue Ball", position, new Color(232, 232, 232), true, true);
+        this("Cue Ball", position, Color.grayscale(232), true, true);
     }
 
     // Create a numbered ball

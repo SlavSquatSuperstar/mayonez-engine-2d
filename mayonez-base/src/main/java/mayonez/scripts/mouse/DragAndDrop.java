@@ -1,7 +1,7 @@
 package mayonez.scripts.mouse;
 
 import mayonez.math.*;
-import mayonez.physics.*;
+import mayonez.physics.dynamics.*;
 
 /**
  * Allows objects to be moved by clicking on them and dragging around the mouse.
@@ -20,14 +20,14 @@ public class DragAndDrop extends MouseInputScript {
     }
 
     @Override
-    public void start() {
+    protected void start() {
         super.start();
         lastMouse = new Vec2();
         rb = getRigidbody();
     }
 
     @Override
-    public void update(float dt) {
+    protected void update(float dt) {
         super.update(dt);
         lastMouse = getMousePos().add(getMouseDisp());
     }
@@ -64,7 +64,7 @@ public class DragAndDrop extends MouseInputScript {
     }
 
     @Override
-    public void onDestroy() {
+    protected void onDestroy() {
         onMouseUp(); // If object destroyed while this instance is active, free up active instance
     }
 

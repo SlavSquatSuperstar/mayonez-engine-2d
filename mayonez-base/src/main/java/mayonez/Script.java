@@ -1,8 +1,8 @@
 package mayonez;
 
 import mayonez.math.*;
-import mayonez.physics.*;
 import mayonez.physics.colliders.*;
+import mayonez.physics.dynamics.*;
 
 /**
  * A controllable and reusable behavior for a {@link mayonez.GameObject} which provides
@@ -13,11 +13,22 @@ import mayonez.physics.colliders.*;
  * callback functions, such as {@link #onEnable()} and {@link #onCollisionEnter}, which are
  * called during game and collision events.
  * <p>
+ * Scripts receive an order of {@link mayonez.UpdateOrder#SCRIPT} by default, but the order
+ * can be changed using {@link #Script(UpdateOrder)}.
+ * <p>
  * See {@link mayonez.GameObject} and {@link mayonez.Script} for more information.
  *
  * @author SlavSquatSuperstar
  */
 public abstract class Script extends Component {
+
+    public Script() {
+        super(UpdateOrder.SCRIPT);
+    }
+
+    public Script(UpdateOrder updateOrder) {
+        super(updateOrder);
+    }
 
     // Game Loop Methods
 
@@ -31,7 +42,7 @@ public abstract class Script extends Component {
      * Warning: Calling {@code init()} at any other point in time may lead to unintended errors
      * and should be avoided!
      */
-    public void init() {
+    protected void init() {
     }
 
     // Component Methods
@@ -50,7 +61,7 @@ public abstract class Script extends Component {
         return (T) this;
     }
 
-    public final void destroy() {
+    final void destroy() {
         setEnabled(false);
         onDestroy();
         super.destroy();
@@ -60,18 +71,18 @@ public abstract class Script extends Component {
 
     /**
      * Custom user behavior for when this script is enabled. Calling {@code onEnable()}
-     * directly can lead to unpredictable behavior. It is better to call {@link #setEnabled}
-     * with {@code true} as the parameter instead.
+     * directly can lead to unpredictable behavior. It is better to call
+     * {@link #setEnabled}({@code true}) instead.
      */
-    public void onEnable() {
+    protected void onEnable() {
     }
 
     /**
      * Custom user behavior for when this script is disabled. Calling {@code onDisable()}
-     * directly can lead to unpredictable behavior. It is better to call {@link #setEnabled}
-     * with {@code false} as the parameter instead.
+     * directly can lead to unpredictable behavior. It is better to call
+     * {@link #setEnabled}({@code false}) instead.
      */
-    public void onDisable() {
+    protected void onDisable() {
     }
 
     /**
@@ -80,7 +91,7 @@ public abstract class Script extends Component {
      * {@code onDestroy()}  directly can lead to unpredictable behavior. It is better to
      * call {@link #destroy} instead.
      */
-    public void onDestroy() {
+    protected void onDestroy() {
     }
 
     // Collision Callbacks
@@ -90,16 +101,17 @@ public abstract class Script extends Component {
      *
      * @param other     the other object in the collision
      * @param direction the direction the collision is happening
+     * @param velocity  the relative velocity of the objects.
      */
-    public void onCollisionEnter(GameObject other, Vec2 direction) {
+    protected void onCollisionEnter(GameObject other, Vec2 direction, Vec2 velocity) {
     }
 
     /**
-     * Custom user behavior after staying in contact with another physical object.
+     * Custom user behavior while staying in contact with another physical object.
      *
      * @param other the other object in the collision
      */
-    public void onCollisionStay(GameObject other) {
+    protected void onCollisionStay(GameObject other) {
     }
 
     /**
@@ -107,7 +119,7 @@ public abstract class Script extends Component {
      *
      * @param other the other object in the collision
      */
-    public void onCollisionExit(GameObject other) {
+    protected void onCollisionExit(GameObject other) {
     }
 
     /**
@@ -115,15 +127,15 @@ public abstract class Script extends Component {
      *
      * @param other the other game object
      */
-    public void onTriggerEnter(GameObject other) {
+    protected void onTriggerEnter(GameObject other) {
     }
 
     /**
-     * Custom user behavior after staying with a trigger area.
+     * Custom user behavior while staying inside a trigger area.
      *
      * @param other the other game object
      */
-    public void onTriggerStay(GameObject other) {
+    protected void onTriggerStay(GameObject other) {
     }
 
     /**
@@ -131,7 +143,7 @@ public abstract class Script extends Component {
      *
      * @param other the other game object
      */
-    public void onTriggerExit(GameObject other) {
+    protected void onTriggerExit(GameObject other) {
     }
 
     // Component Getters
@@ -141,16 +153,16 @@ public abstract class Script extends Component {
      *
      * @return the collider, if it exists
      */
-    public Collider getCollider() {
+    protected Collider getCollider() {
         return gameObject.getComponent(Collider.class);
     }
 
     /**
-     * Provides a reference to the parent object's {@link Rigidbody} component.
+     * Provides a reference to the parent object's {@link mayonez.physics.dynamics.Rigidbody} component.
      *
      * @return the rigidbody, if it exists
      */
-    public Rigidbody getRigidbody() {
+    protected Rigidbody getRigidbody() {
         return gameObject.getComponent(Rigidbody.class);
     }
 
@@ -162,4 +174,5 @@ public abstract class Script extends Component {
                 gameObject == null ? "<No GameObject>" : gameObject.getNameAndID()
         );
     }
+
 }

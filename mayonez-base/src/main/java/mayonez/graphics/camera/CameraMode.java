@@ -6,11 +6,11 @@ package mayonez.graphics.camera;
 public enum CameraMode {
 
     /**
-     * Limit the camera to one location.
+     * Limit the camera to one location or control its movement with a script.
      */
     FIXED,
     /**
-     * Center the camera around an object's position.
+     * Center the camera around a subject's position.
      */
     FOLLOW,
     /**

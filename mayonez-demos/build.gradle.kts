@@ -14,7 +14,7 @@ dependencies {
 // Plugins and Tasks
 
 application {
-//    mainModule = mainModuleName // Leave blank to prevent module ResolutionError
+    // mainModule = mainModuleName // Leave blank to prevent module ResolutionError
     mainClass = mainClassName
     applicationDefaultJvmArgs = jvmArgs
 }

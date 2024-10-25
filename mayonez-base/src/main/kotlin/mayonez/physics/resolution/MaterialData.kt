@@ -1,6 +1,6 @@
 package mayonez.physics.resolution
 
-import mayonez.physics.*
+import mayonez.physics.dynamics.*
 import kotlin.math.*
 
 /**
@@ -18,22 +18,22 @@ internal data class MaterialData(
     internal val kineticFriction: Float
 ) {
     companion object {
-        internal fun combineMaterials(mat1: PhysicsMaterial, mat2: PhysicsMaterial): MaterialData {
+        internal fun combine(mat1: PhysicsMaterial, mat2: PhysicsMaterial): MaterialData {
             return MaterialData(
                 geometricMean(mat1.kineticFriction, mat2.kineticFriction),
                 geometricMean(mat1.staticFriction, mat2.staticFriction),
                 average(mat1.bounce, mat2.bounce)
             )
         }
-
-        // Friction combine: Geometric average, but could also multiply instead
-        private fun geometricMean(num1: Float, num2: Float): Float {
-            return sqrt(num1 * num2)
-        }
-
-        // Bounce combine: Arithmetic average, but could also take min
-        private fun average(num1: Float, num2: Float): Float {
-            return 0.5f * (num1 + num2)
-        }
     }
+}
+
+// Friction combine: Geometric average, but could also multiply instead
+private fun geometricMean(num1: Float, num2: Float): Float {
+    return sqrt(num1 * num2)
+}
+
+// Bounce combine: Arithmetic average, but could also take min
+private fun average(num1: Float, num2: Float): Float {
+    return 0.5f * (num1 + num2)
 }

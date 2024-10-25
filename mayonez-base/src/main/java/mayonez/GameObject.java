@@ -1,10 +1,7 @@
 package mayonez;
 
-import mayonez.graphics.sprites.*;
 import mayonez.math.*;
 import mayonez.physics.*;
-import mayonez.physics.colliders.*;
-import mayonez.scripts.movement.*;
 import mayonez.util.*;
 
 import java.util.*;
@@ -37,15 +34,14 @@ public class GameObject {
     final long objectID; // UUID for this game object
     private final String name;
     public final Transform transform; // transform in world
-    //    final Transform localTransform; // transform offset from parent
+//    final Transform localTransform; // transform offset from parent
     private Scene scene;
     private boolean destroyed;
     private int zIndex; // controls 3D "layering" of objects
-    private final Set<String> tags;
+    private SceneLayer layer;
 
     // Component Fields
     private final List<Component> components;
-    private List<Class<?>> updateOrder;
 
     // Connected Objects
 //    private GameObject parent; // parent object
@@ -70,13 +66,11 @@ public class GameObject {
         this.transform = transform;
 //        localTransform = new Transform();
         this.zIndex = zIndex;
+        this.layer = null;
 
         destroyed = false;
-        tags = new HashSet<>(3);
 
         components = new ArrayList<>();
-        updateOrder = null;
-//        changesToObject = new LinkedList<>();
 //        parent = null;
 //        children = new LinkedList<>();
     }
@@ -84,12 +78,17 @@ public class GameObject {
     // Game Loop Methods
 
     /**
-     * Adds all components to this object and then initializes them.
+     * Adds all components to this object and then initializes them. Calls
+     * {@link mayonez.Component#start()} for all components added on start.
+     * The method {@link mayonez.Scene#getObject} is accessible here.
      */
     final void start() {
+        // Add all components
         init();
+        // TODO Maybe separate init from start
 //        children.forEach(getScene()::addObject);
-        setUpdateOrder(Component.class, MovementScript.class, Script.class, Collider.class, Sprite.class);
+        // Start all components
+        components.sort(Comparator.comparingInt(Component::getUpdateOrder));
         components.forEach(Component::start);
     }
 
@@ -106,7 +105,6 @@ public class GameObject {
         components.stream()
                 .filter(Component::isEnabled)
                 .forEach(c -> c.update(dt));
-//        while (!changesToObject.isEmpty()) changesToObject.poll().run();
 //        transform.set(oldXf); // Reset transform
     }
 
@@ -137,22 +135,17 @@ public class GameObject {
 
     /**
      * Adds a component to this game object if the component is not null.
+     * The component will not be added if it already has a parent object.
+     * <p>
+     * Warning: Calling {@code addComponent()} while a scene is running is not
+     * supported and should be avoided!
      *
      * @param comp the {@link mayonez.Component} instance
      */
     public final void addComponent(Component comp) {
-        if (comp == null) return;
-        checkForDuplicateComponentClass(comp);
+        if (comp == null || comp.getGameObject() != null) return;
         comp.setGameObject(this);
         components.add(comp);
-    }
-
-    private void checkForDuplicateComponentClass(Component comp) {
-        var anonymous = comp.getClass().isAnonymousClass();
-        var hasComponentOfSameClass = getComponent(comp.getClass()) != null;
-        if (!anonymous && hasComponentOfSameClass) {
-            Logger.debug("GameObject %s already has a %s", getNameAndID(), comp.getClass().getSimpleName());
-        }
     }
 
 //    /**
@@ -181,14 +174,17 @@ public class GameObject {
     }
 
     /**
-     * Finds the first component of the specified class or any of its subclasses, or null if none exists.
+     * Finds the first component of the specified class or any of its subclasses,
+     * or null if none exists.
      *
      * @param cls a {@link mayonez.Component} subclass
      * @param <T> the component type
      * @return the component, or null if not present
      */
     public <T extends Component> T getComponent(Class<T> cls) {
+        if (cls == null) return null;
         for (var comp : components) {
+            // Component has same class or is subclass
             if (cls.isAssignableFrom(comp.getClass())) return cls.cast(comp);
         }
         return null;
@@ -201,11 +197,11 @@ public class GameObject {
      * @param <T> the component type
      * @return the list of components, or empty if none are present
      */
-    @SuppressWarnings("unchecked")
     public <T extends Component> List<T> getComponents(Class<T> cls) {
+        if (cls == null) return null;
         return components.stream()
-                .filter(c -> cls != null && cls.isInstance(c))
-                .map(c -> (T) c)
+                .filter(cls::isInstance)
+                .map(cls::cast)
                 .collect(Collectors.toList());
     }
 
@@ -216,32 +212,6 @@ public class GameObject {
      */
     public List<Component> getComponents() {
         return List.copyOf(components);
-    }
-
-    /**
-     * Sets the update order of this object's components from first to last. A subclass's order will override the order
-     * of its superclass.
-     *
-     * @param order an array of component subclasses
-     */
-    public void setUpdateOrder(Class<?>... order) {
-        if (updateOrder == null) { // if not defined
-            updateOrder = new ArrayList<>(filterComponentSubclasses(order));
-        }
-        components.sort(Comparator.comparingInt(c -> getComponentUpdateOrder(c.getClass())));
-    }
-
-    private static List<Class<?>> filterComponentSubclasses(Class<?>[] order) {
-        return Arrays.stream(order)
-                .filter(cls -> (cls != null) && Component.class.isAssignableFrom(cls))
-                .toList();
-    }
-
-    private int getComponentUpdateOrder(Class<?> componentCls) {
-        var i = updateOrder.indexOf(componentCls);
-        if (i > -1) return i; // class present
-        i = getComponentUpdateOrder(componentCls.getSuperclass()); // keep searching for super
-        return (i > -1) ? i : updateOrder.size(); // just update last
     }
 
     // Child Object Methods
@@ -291,7 +261,7 @@ public class GameObject {
     final void onDestroy() {
         components.forEach(Component::destroy);
         components.clear();
-        tags.clear();
+        layer = null;
         scene = null;
     }
 
@@ -306,7 +276,7 @@ public class GameObject {
             switch (event.type) {
                 case ENTER -> {
                     if (event.trigger) script.onTriggerEnter(event.other);
-                    else script.onCollisionEnter(event.other, event.direction);
+                    else script.onCollisionEnter(event.other, event.direction, event.velocity);
                 }
                 case STAY -> {
                     if (event.trigger) script.onTriggerStay(event.other);
@@ -365,6 +335,49 @@ public class GameObject {
 //        return parent != null;
 //    }
 
+
+    /**
+     * Get the game object's {@link mayonez.SceneLayer}, which specifies which objects
+     * it interacts with. If the layer is null, the object will interact with all other
+     * objects.
+     *
+     * @return the layer
+     */
+    public SceneLayer getLayer() {
+        return layer;
+    }
+
+    /**
+     * If game object has the layer with the given name.
+     *
+     * @param layerName the layer name
+     * @return if the layer matches the name
+     */
+    public boolean hasLayer(String layerName) {
+        return layer != null && layer.getName().equals(layerName);
+    }
+
+    /**
+     * If game object has the layer with the given index.
+     *
+     * @param layerIndex the layer index
+     * @return if the layer matches the index
+     */
+    public boolean hasLayer(int layerIndex) {
+        return layer != null && layer.getIndex() == layerIndex;
+    }
+
+    /**
+     * Set the game object's {@link mayonez.SceneLayer}, which specifies which objects
+     * it interacts with. If the layer is null, the object will interact with all other
+     * objects.
+     *
+     * @param layer the layer
+     */
+    public void setLayer(SceneLayer layer) {
+        this.layer = layer;
+    }
+
     /**
      * Get the {@link mayonez.Scene} that contains this game object.
      *
@@ -381,14 +394,6 @@ public class GameObject {
      */
     final void setScene(Scene scene) {
         this.scene = scene;
-    }
-
-    public boolean hasTag(String tag) {
-        return tags.contains(tag);
-    }
-
-    public void addTag(String tag) {
-        tags.add(tag);
     }
 
     public int getZIndex() {
@@ -427,8 +432,7 @@ public class GameObject {
     public String toString() {
         // Use GameObject for class name if anonymous instance
         return String.format(
-                "%s (%s)",
-                getNameAndID(), StringUtils.getObjectClassName(this)
+                "%s (%s)", getNameAndID(), StringUtils.getObjectClassName(this)
         );
     }
 

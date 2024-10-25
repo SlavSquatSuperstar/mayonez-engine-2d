@@ -5,7 +5,7 @@ import mayonez.annotations.*;
 import mayonez.input.*;
 import mayonez.math.*;
 import mayonez.math.shapes.*;
-import mayonez.physics.*;
+import mayonez.physics.dynamics.*;
 import mayonez.scripts.movement.*;
 
 /**
@@ -42,21 +42,21 @@ public class ClickToMove extends Script {
     }
 
     @Override
-    public void init() {
+    protected void init() {
         lastPos.set(transform.getPosition());
         destPos.set(lastPos);
         moving = turning = false;
     }
 
     @Override
-    public void start() {
+    protected void start() {
         rb = getRigidbody();
     }
 
     // TODO will break with KeepInScene
     // TODO will break if has velocity
     @Override
-    public void update(float dt) {
+    protected void update(float dt) {
         if (MouseInput.buttonPressed(button)) {
             updateLastPosition(); // Save old destination
             setDestination(MouseInput.getPosition()); // Set new destination and calculate displacement

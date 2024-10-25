@@ -2,14 +2,16 @@ package mayonez
 
 /**
  * An integer value that indicates the termination status of a program.
- * This enum contains reserved exit codes.
+ * This class contains commonly used exit codes.
  *
  * @author SlavSquatSuperstar
  */
-enum class ExitCode(val code: Int) {
+object ExitCode {
+
     /** The program has successfully completed (0). */
-    SUCCESS(0),
+    const val SUCCESS: Int = 0
 
     /** The program has terminated due to some error (1). */
-    ERROR(1)
+    const val ERROR: Int = 1
+
 }
