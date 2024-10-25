@@ -1,3 +1,6 @@
+/** The default JDK version for the toolchain. */
+const val javaVersion: Int = 21
+
 /** The default Kotlin version for libraries and plugins. */
 const val kotlinVersion: String = "1.9.25"
 
