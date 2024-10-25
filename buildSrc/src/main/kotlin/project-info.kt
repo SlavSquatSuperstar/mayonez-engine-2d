@@ -1,5 +1,5 @@
 /** The default JDK version for the toolchain. */
-const val javaVersion: Int = 17
+const val javaVersion: Int = 21
 
 /** The main module for the .jar file. */
 const val mainModuleName: String = "mayonez.demos"
