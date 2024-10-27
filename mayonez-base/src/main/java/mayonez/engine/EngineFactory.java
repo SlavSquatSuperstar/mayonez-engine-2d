@@ -22,8 +22,9 @@ public final class EngineFactory {
      * @param useGL whether to use OpenGL instead of Java's AWT library
      * @return the game engine
      */
-    public static GameEngine createGameEngine(boolean useGL) {
-        return useGL ? new GLGameEngine() : new JGameEngine();
+    public static GameEngine createGameEngine(boolean useGL) throws EngineInitException {
+        var window = createWindow(useGL);
+        return useGL ? new GLGameEngine(window) : new JGameEngine(window);
     }
 
     // Window Methods
@@ -35,7 +36,7 @@ public final class EngineFactory {
      * @param useGL whether to use OpenGL instead of Java's AWT library
      * @return the game engine
      */
-    static Window createWindow(boolean useGL) {
+    private static Window createWindow(boolean useGL) throws EngineInitException {
         var title = String.format("%s (%s) %s",
                 Preferences.getTitle(), (useGL ? "GL" : "AWT"), Preferences.getVersion()
         );

@@ -16,7 +16,7 @@ import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 /**
- * Contains methods to assist in GLFW window creation.
+ * Assists in GLFW window creation for the OpenGL engine.
  *
  * @author SlavSquatSuperstar
  */
@@ -31,11 +31,16 @@ final class GLFWHelper {
      */
     static void initGLFW() throws GLFWException {
         createPrint(System.err).set(); // Setup error callback
-        if (!glfwInit()) {
-            if (OperatingSystem.getCurrentOS() == OperatingSystem.MAC_OS) {
-                Logger.error("GLFW must run with the \"-XstartOnFirstThread\" VM argument on macOS");
+        try {
+            if (!glfwInit()) {
+                throw new GLFWException("Unable to initialize GLFW");
             }
-            throw new GLFWException("Unable to initialize GLFW");
+        } catch (IllegalStateException e) {
+            Logger.error("GLFW was not initialized on the main thread");
+            if (OperatingSystem.getCurrentOS() == OperatingSystem.MAC_OS) {
+                Logger.error("Java must run with the \"-XstartOnFirstThread\" VM argument on macOS");
+            }
+            throw new GLFWException("Aborting GLFW initialization because \"XstartOnFirstThread\" was not enabled");
         }
     }
 

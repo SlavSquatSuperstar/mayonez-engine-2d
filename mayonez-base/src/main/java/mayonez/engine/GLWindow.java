@@ -25,15 +25,14 @@ final class GLWindow implements Window {
     private KeyManager keyboard;
     private MouseManager mouse;
 
-    GLWindow(String title, int width, int height) {
+    GLWindow(String title, int width, int height) throws EngineInitException {
         this.title = title;
         this.width = width;
         this.height = height;
         try {
             initWindow();
         } catch (GLFWException e) {
-            Logger.printStackTrace(e);
-            Mayonez.stop(ExitCode.ERROR);
+            throw(new EngineInitException(e.getMessage()));
         }
     }
 

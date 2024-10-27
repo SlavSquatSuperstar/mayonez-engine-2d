@@ -117,8 +117,13 @@ object Mayonez {
             MouseInput.setUseGL(useGL)
 
             // Create game engine instances
-            game = EngineFactory.createGameEngine(useGL)
-            Logger.debug("Using \"%s\" engine", if (useGL) "GL" else "AWT")
+            try {
+                game = EngineFactory.createGameEngine(useGL)
+                Logger.debug("Using \"%s\" engine", if (useGL) "GL" else "AWT")
+            } catch (e: EngineInitException) {
+                Logger.printStackTrace(e)
+                exitWithErrorMessage("Fatal error while initializing engine")
+            }
 
             // Load assets
             // TODO handle from scene manager

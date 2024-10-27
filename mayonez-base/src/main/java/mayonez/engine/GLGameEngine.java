@@ -10,10 +10,10 @@ import static org.lwjgl.glfw.GLFW.glfwGetTime;
  * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.GL)
-final class GLGameEngine extends GameEngine { // can't implement runnable otherwise GLFW will crash
+final class GLGameEngine extends GameEngine {
 
-    GLGameEngine() {
-        super(EngineFactory.createWindow(true));
+    GLGameEngine(Window window) {
+        super(window);
     }
 
     // Game Engine Methods

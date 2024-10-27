@@ -11,8 +11,8 @@ import mayonez.graphics.*;
 @UsesEngine(EngineType.AWT)
 final class JGameEngine extends GameEngine {
 
-    JGameEngine() {
-        super(EngineFactory.createWindow(false));
+    JGameEngine(Window window) {
+        super(window);
     }
 
     // Game Engine Methods
