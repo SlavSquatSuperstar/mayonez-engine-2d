@@ -2,7 +2,7 @@
 const val javaVersion: Int = 21
 
 /** The default Kotlin version for libraries and plugins. */
-const val kotlinVersion: String = "1.9.25"
+const val kotlinVersion: String = "2.0.21"
 
 /** The version for the JUnit testing libraries. */
 const val junitVersion = "5.11.3"

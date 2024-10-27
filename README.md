@@ -104,7 +104,7 @@ Development Tools and Libraries
 
 - Java Version: [Eclipse Temurin 21+](https://adoptium.net)
   or [Oracle OpenJDK 21+](https://www.oracle.com/java/technologies/downloads/#java21)
-- Kotlin Version: [1.9+](https://kotlinlang.org/docs/whatsnew1920.html)
+- Kotlin Version: [1.9+](https://kotlinlang.org/docs/whatsnew20.html)
 - Recommended IDE: [Intellij IDEA CE 2024+](https://www.jetbrains.com/idea/download/)
     - [Eclipse Java IDE](https://www.eclipse.org/downloads/) may also be used, but IntelliJ has better Kotlin and Gradle
       integration
