@@ -5,7 +5,7 @@ The ultimate made-from-scratch and open-source 2D Java game engine to fit your S
 <img src="https://img.shields.io/badge/platform-macOS-lightgrey"></img>
 <img src="https://img.shields.io/badge/platform-Windows-lightgrey"></img>
 <img src="https://img.shields.io/badge/platform-Linux-lightgrey"></img>
-<img src="https://img.shields.io/badge/release-v0.7.10-brightgreen"></img>
+<img src="https://img.shields.io/badge/release-v0.8.0-brightgreen"></img>
 <img src=https://img.shields.io/badge/build-passing-brightgreen></img>
 
 <img src="https://img.shields.io/badge/Made%20with-Java-red"></img>
@@ -113,7 +113,7 @@ Development Tools and Libraries
 Dependencies (automatically downloaded by Gradle and bundled in .jar)
 
 - [Kotlin Standard Library](https://kotlinlang.org/docs/getting-started.html)
-- [LWJGL 3.3.3](https://www.lwjgl.org/customize): User OS & architecture specific
+- [LWJGL 3.3.4](https://www.lwjgl.org/customize): User OS & architecture specific
     - Libraries: [JOML](https://joml-ci.github.io/JOML/), GLFW, OpenGL, and STB
 - [JSON in Java (org.json)](https://github.com/stleary/JSON-java)
 - [Java Reflections (org.reflections)](https://github.com/ronmamo/reflections): Some code taken under Apache 2.0

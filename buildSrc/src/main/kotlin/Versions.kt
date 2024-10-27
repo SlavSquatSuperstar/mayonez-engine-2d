@@ -8,4 +8,4 @@ const val kotlinVersion: String = "2.0.21"
 const val junitVersion = "5.11.3"
 
 /** The version for the LWJGL framework. */
-const val lwjglVersion = "3.3.3"
+const val lwjglVersion = "3.3.4"
