@@ -32,6 +32,13 @@ final class JWindow extends JFrame implements Window {
     private KeyManager keyboard;
     private MouseManager mouse;
 
+    /**
+     * Create the AWT window.
+     *
+     * @param title the window title
+     * @param width the window width
+     * @param height the window height
+     */
     JWindow(String title, int width, int height) {
         super(title);
         setSize(width, height);

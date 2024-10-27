@@ -25,12 +25,29 @@ final class GLWindow implements Window {
     private KeyManager keyboard;
     private MouseManager mouse;
 
+    /**
+     * Initialize GLFW and create the GLFW window.
+     * <p>
+     * Source: <a href="https://www.lwjgl.org/guide">LWJGL starter guide</a>
+     *
+     * @param title the window title
+     * @param width the window width
+     * @param height the window height
+     * @throws mayonez.engine.EngineInitException if GLFW cannot be initialized
+     */
     GLWindow(String title, int width, int height) throws EngineInitException {
         this.title = title;
         this.width = width;
         this.height = height;
         try {
-            initWindow();
+            // Initialize window
+            GLFWHelper.initGLFW();
+            windowID = GLFWHelper.createGLFWWindow(width, height, title);
+
+            // Important! Detect current context and integrate LWJGL with OpenGL bindings
+            glfwMakeContextCurrent(windowID); // Make the OpenGL context current
+            glfwSwapInterval(1); // Enable v-sync
+            GLHelper.loadOpenGL();
         } catch (GLFWException e) {
             throw(new EngineInitException(e.getMessage()));
         }
@@ -41,21 +58,6 @@ final class GLWindow implements Window {
     @Override
     public boolean notClosedByUser() {
         return !glfwWindowShouldClose(windowID);
-    }
-
-    /**
-     * Initialize the GLFW window and its features.
-     * <p>
-     * Source: <a href="https://www.lwjgl.org/guide">LWJGL starter guide</a>
-     */
-    private void initWindow() throws GLFWException {
-        GLFWHelper.initGLFW();
-        windowID = GLFWHelper.createGLFWWindow(width, height, title);
-
-        // Important! Detect current context and integrate LWJGL with OpenGL bindings
-        glfwMakeContextCurrent(windowID); // Make the OpenGL context current
-        glfwSwapInterval(1); // Enable v-sync
-        GLHelper.loadOpenGL();
     }
 
     @Override

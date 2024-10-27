@@ -2,7 +2,6 @@ package mayonez.engine;
 
 import mayonez.*;
 import mayonez.graphics.*;
-import mayonez.io.*;
 import mayonez.math.*;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFWVidMode;
@@ -31,16 +30,8 @@ final class GLFWHelper {
      */
     static void initGLFW() throws GLFWException {
         createPrint(System.err).set(); // Setup error callback
-        try {
-            if (!glfwInit()) {
-                throw new GLFWException("Unable to initialize GLFW");
-            }
-        } catch (IllegalStateException e) {
-            Logger.error("GLFW was not initialized on the main thread");
-            if (OperatingSystem.getCurrentOS() == OperatingSystem.MAC_OS) {
-                Logger.error("Java must run with the \"-XstartOnFirstThread\" VM argument on macOS");
-            }
-            throw new GLFWException("Aborting GLFW initialization because \"XstartOnFirstThread\" was not enabled");
+        if (!glfwInit()) {
+            throw new GLFWException("Unable to initialize GLFW");
         }
     }
 

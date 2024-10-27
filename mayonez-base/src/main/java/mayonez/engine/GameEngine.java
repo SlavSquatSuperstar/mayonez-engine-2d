@@ -42,6 +42,7 @@ public abstract sealed class GameEngine permits JGameEngine, GLGameEngine {
         halfTimeStepSecs = timeStepSecs * 0.5f;
 
         // Add input listeners
+        // TODO move elsewhere
         window.setKeyInput(KeyInput.getInstance());
         window.setMouseInput(MouseInput.getInstance());
     }
