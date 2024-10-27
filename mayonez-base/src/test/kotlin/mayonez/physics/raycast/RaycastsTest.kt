@@ -14,11 +14,9 @@ import kotlin.math.*
  */
 internal class RaycastsTest {
 
-    companion object {
-        private val circle = Circle(Vec2(5f, 0f), 2f) // 4x4 circle at (5, 0)
-        private val rect = Rectangle(Vec2(0f, 0f), Vec2(4f, 4f)) // 4x4 box at (0, 0)
-        private val root2 = sqrt(2f)
-    }
+    private val circle = Circle(Vec2(5f, 0f), 2f) // 4x4 circle at (5, 0)
+    private val rect = Rectangle(Vec2(0f, 0f), Vec2(4f, 4f)) // 4x4 box at (0, 0)
+    private val root2 = sqrt(2f)
 
     @Test
     fun rayVsCircleHitOutside() {

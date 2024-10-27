@@ -10,7 +10,7 @@ import java.awt.event.KeyEvent.*
  *
  * @author SlavSquatSuperstar
  */
-enum class Key(internal val awtCode: Int, internal val glCode: Int, private val keyName: String? = null) {
+enum class Key(val awtCode: Int, val glCode: Int, private val keyName: String? = null) {
 
     UNKNOWN(VK_UNDEFINED, GLFW_KEY_UNKNOWN),
 

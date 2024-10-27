@@ -100,7 +100,7 @@ open class Rectangle(private val center: Vec2, private val size: Vec2, val angle
 
     /**
      * A description of the rectangle in the form "Rectangle (x, y), Size: (b,
-     * h), Rotation: theta
+     * h), Rotation: theta"
      */
     override fun toString(): String = String.format("Rectangle $center, Size: $size, Rotation: %.2f°", angle)
 

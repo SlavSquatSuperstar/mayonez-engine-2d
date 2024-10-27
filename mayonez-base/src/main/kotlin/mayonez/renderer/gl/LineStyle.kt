@@ -6,7 +6,7 @@ package mayonez.renderer.gl
  *
  * @author SlavSquatSuperstar
  */
-internal enum class LineStyle(internal val fill: Boolean) {
+internal enum class LineStyle(val fill: Boolean) {
 
     /** Draw a single line and set the thickness using glLineWidth(). */
     @Deprecated("Not supported on some platforms.")

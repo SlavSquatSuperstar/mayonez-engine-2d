@@ -12,6 +12,8 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class Vec2Test {
 
+    // Vector Equals
+
     @Test
     void equivalentVectorEquals() {
         var v1 = new Vec2(5, 5);
@@ -37,8 +39,57 @@ class Vec2Test {
     void nullVectorNotEquals() {
         var v = new Vec2(5, 5);
         assertNotEquals(v, null);
-        assertNotEquals(null, v);
     }
+
+    // Vector Arithmetic
+
+    @Test
+    void vectorAdditionCorrect() {
+        var v1 = new Vec2(1, 2);
+        var v2 = new Vec2(3, 4);
+        assertEquals(new Vec2(4, 6), v1.add(v2));
+    }
+
+    @Test
+    void vectorSubtractionCorrect() {
+        var v1 = new Vec2(1, 2);
+        var v2 = new Vec2(3, 4);
+        assertEquals(new Vec2(-2, -2), v1.sub(v2));
+    }
+
+    @Test
+    void vectorMultiplicationCorrect() {
+        var v1 = new Vec2(1, 2);
+        var v2 = new Vec2(3, 4);
+        assertEquals(new Vec2(3, 8), v1.mul(v2));
+    }
+
+    @Test
+    void vectorDivisionCorrect() {
+        var v1 = new Vec2(3, 4);
+        var v2 = new Vec2(1, 2);
+        assertEquals(new Vec2(3, 2), v1.div(v2));
+    }
+
+    @Test
+    void scalarMultiplicationCorrect() {
+        var v = new Vec2(3, 4);
+        assertEquals(new Vec2(-6, -8), v.mul(-2));
+    }
+
+    @Test
+    void scalarDivisionCorrect() {
+        var v = new Vec2(3, 4);
+        assertEquals(new Vec2(-1.5f, -2), v.div(-2));
+    }
+
+    @Test
+    void vectorDivideByZeroIsZero() {
+        var v = new Vec2(3, 4);
+        assertEquals(v.div(0), new Vec2(0));
+    }
+
+    // Unit Vectors
 
     @Test
     void unitVectorLengthIsOne() {
@@ -50,12 +101,6 @@ class Vec2Test {
     void unitVectorOfZeroIsZero() {
         var v = new Vec2();
         assertEquals(v.unit(), v);
-    }
-
-    @Test
-    void vectorDivideByZeroIsZero() {
-        var v = new Vec2();
-        assertEquals(v.div(0), v);
     }
 
     // Cross Product
@@ -145,6 +190,7 @@ class Vec2Test {
     }
 
     // Clamping
+
     @Test
     void clampVectorSameSuccess() {
         var min = new Vec2(-2, -2);

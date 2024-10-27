@@ -5,8 +5,6 @@ package mayonez.math
  * a uniform distribution, where all valid values have an equal chance of
  * occurring.
  *
- * To generate random colors, see [mayonez.graphics.Colors.randomColor]
- *
  * @author SlavSquatSuperstar
  */
 object Random {

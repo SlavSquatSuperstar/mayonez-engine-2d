@@ -1,6 +1,5 @@
 package mayonez.io
 
-import mayonez.io.*
 import mayonez.util.*
 import java.io.*
 import java.net.MalformedURLException

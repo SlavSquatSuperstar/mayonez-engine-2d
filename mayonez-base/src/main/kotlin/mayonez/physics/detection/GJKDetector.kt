@@ -3,6 +3,9 @@ package mayonez.physics.detection
 import mayonez.math.*
 import mayonez.math.shapes.*
 
+const val MAX_GJK_ITERATIONS: Int = 20
+
+
 /**
  * Detects if two shapes are colliding and finds the Minkowski sum using
  * the GJK (Gilbert-Johnson-Keerthi) distance algorithm. This class
@@ -12,10 +15,6 @@ import mayonez.math.shapes.*
  * @author SlavSquatSuperstar
  */
 internal class GJKDetector : CollisionDetector<Shape>, PenetrationSolver {
-
-    companion object {
-        private const val MAX_GJK_ITERATIONS: Int = 20
-    }
 
     override fun checkIntersection(shape1: Shape?, shape2: Shape?): Boolean {
         return getSimplex(shape1, shape2) != null
@@ -52,7 +51,7 @@ internal class GJKDetector : CollisionDetector<Shape>, PenetrationSolver {
         var searchDir = -startPt // Search toward origin to surround it
         val simplex = Simplex(startPt) // Create simplex with first point
 
-        for (loop in 1..MAX_GJK_ITERATIONS) {
+        for (i in 1..MAX_GJK_ITERATIONS) {
             val ptA = Shape.support(shape1, shape2, searchDir) // Get new support point
             if (ptA.dot(searchDir) < 0f) return null // Continue only if next point passes origin
             simplex.add(ptA) // Add point to simplex

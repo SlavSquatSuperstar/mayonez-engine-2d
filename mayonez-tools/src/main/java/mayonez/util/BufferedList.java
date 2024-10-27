@@ -110,7 +110,7 @@ public class BufferedList<E> {
 
     /**
      * Get an immutable list containing all the elements already in the list.
-     * Does not include lements in the buffer.
+     * Does not include elements in the buffer.
      *
      * @return the list copy
      */

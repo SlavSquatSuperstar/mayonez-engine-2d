@@ -8,7 +8,7 @@ package mayonez
  *
  * @author SlavSquatSuperstar
  */
-enum class LogLevel(internal val level: Int) {
+enum class LogLevel(val level: Int) {
 
     /** Denotes that all log messages should be printed to the console. */
     ALL(0),

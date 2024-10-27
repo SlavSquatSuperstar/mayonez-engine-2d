@@ -53,7 +53,7 @@ class ShapeIntersectionTest {
         assertNoShapeCollision(r1, r2); // one axis
 
         var r3 = new Rectangle(new Vec2(4, 4), new Vec2(3, 3)); // 3x3 rect at (4, 4)
-        assertNoShapeCollision(r1, r2); // both axes
+        assertNoShapeCollision(r1, r3); // both axes
     }
 
     // Rectangle vs Rectangle (Non-Rotated)

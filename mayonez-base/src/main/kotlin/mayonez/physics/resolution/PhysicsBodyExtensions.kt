@@ -15,7 +15,7 @@ internal val PhysicsBody?.invAngMass: Float
     get() = this?.invAngMass ?: 0f
 
 internal val PhysicsBody?.static: Boolean
-    get() = this?.static ?: true
+    get() = this?.static != false
 
 internal val PhysicsBody?.position: Vec2
     get() = this?.position ?: Vec2()

@@ -9,7 +9,7 @@ import java.awt.event.MouseEvent.*
  *
  * @author SlavSquatSuperstar
  */
-enum class Button(internal val awtCode: Int, internal val glCode: Int) {
+enum class Button(val awtCode: Int, val glCode: Int) {
 
     UNKNOWN(NOBUTTON, GLFW_KEY_UNKNOWN),
     LEFT_MOUSE(BUTTON1, GLFW_MOUSE_BUTTON_LEFT),

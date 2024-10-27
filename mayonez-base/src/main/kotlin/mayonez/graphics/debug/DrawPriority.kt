@@ -7,7 +7,7 @@ package mayonez.graphics.debug
  *
  * @author SlavSquatSuperstar
  */
-internal enum class DrawPriority(internal val zIndex: Int, internal val fill: Boolean) {
+internal enum class DrawPriority(val zIndex: Int, val fill: Boolean) {
 
     /** Solid shapes, drawn first. */
     SOLID_SHAPE(-5, true),

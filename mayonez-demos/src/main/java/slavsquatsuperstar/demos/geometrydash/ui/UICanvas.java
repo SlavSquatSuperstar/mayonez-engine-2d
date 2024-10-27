@@ -44,7 +44,7 @@ public class UICanvas extends GameObject {
         // 0 1 2 3  4 5
         // 6 7 8 9 10 11
         var x = BUTTON_SPACING * (i % NUM_COLS);
-        var y = -BUTTON_SPACING * (i / NUM_COLS);
+        var y = -BUTTON_SPACING * ((float) i / NUM_COLS);
         addElement(new UIButton(
                 "Button " + (i + 1),
                 new Transform(new Vec2(x, y), 0f, new Vec2(1.25f)),

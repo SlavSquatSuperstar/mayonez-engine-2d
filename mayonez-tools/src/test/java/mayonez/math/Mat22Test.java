@@ -11,6 +11,55 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class Mat22Test {
 
+    // Determinant
+
+    @Test
+    void determinantIsPositive() {
+        var m = new Mat22(2, 1, 4, 3);
+        assertEquals(2f, m.determinant());
+    }
+
+    @Test
+    void determinantIsNegative() {
+        var m = new Mat22(1, 2, 3, 4);
+        assertEquals(-2f, m.determinant());
+    }
+
+    @Test
+    void determinantIsZero() {
+        var m = new Mat22(1, 2, 2, 4);
+        assertEquals(0f, m.determinant());
+    }
+
+    // Matrix Arithmetic
+
+    @Test
+    void matrixAdditionCorrect() {
+        var m1 = new Mat22(1, 2, 3, 4);
+        var m2 = new Mat22(5, 6, 7, 8);
+        assertEquals(new Mat22(6, 8, 10, 12), m1.plus(m2));
+    }
+
+    @Test
+    void matrixSubtractionCorrect() {
+        var m1 = new Mat22(5, 6, 7, 8);
+        var m2 = new Mat22(1, 2, 3, 4);
+        assertEquals(new Mat22(4, 4, 4, 4), m1.minus(m2));
+    }
+
+    @Test
+    void scalarMultiplicationCorrect() {
+        var m = new Mat22(1, 2, 3, 4);
+        assertEquals(new Mat22(-2, -4, -6, -8), m.times(-2f));
+    }
+
+    @Test
+    void matrixMultiplicationCorrect() {
+        var m1 = new Mat22(1, 2, 3, 4);
+        var m2 = new Mat22(1, 3, 2, 4);
+        assertEquals(new Mat22(5, 11, 11, 25), m1.times(m2));
+    }
+
     // Vector Transformation
 
     @Test

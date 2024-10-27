@@ -4,7 +4,6 @@ import mayonez.io.*
 import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
-import java.nio.file.*
 
 /**
  * A resource or file used by this program. Stores a [FilePath] and opens

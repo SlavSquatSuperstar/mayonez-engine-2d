@@ -2,6 +2,7 @@ package mayonez.util;
 
 import org.junit.jupiter.api.*;
 
+import static mayonez.util.Bitmask.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -11,7 +12,6 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class BitmaskTest {
 
-    private static final int NUM_BITS = Bitmask.NUM_BITS;
     private static final int ALT_BITS = 0xaaaaaaaa; // 0b1010…1010
 
     @Test
@@ -44,6 +44,26 @@ class BitmaskTest {
             mask.setBit(i, i % 2 != 0);
         }
         assertEquals(ALT_BITS, mask.getValue());
+    }
+
+    @Test
+    void setAllBitsTrueCorrect() {
+        var mask = new Bitmask(ALT_BITS);
+        mask.setAllTrue();
+        for (int i = 0; i < NUM_BITS; i++) {
+            // All bits true
+            assertTrue(mask.getBit(i));
+        }
+    }
+
+    @Test
+    void setAllBitsFalseCorrect() {
+        var mask = new Bitmask(ALT_BITS);
+        mask.setAllFalse();
+        for (int i = 0; i < NUM_BITS; i++) {
+            // All bits false
+            assertFalse(mask.getBit(i));
+        }
     }
 
 }
