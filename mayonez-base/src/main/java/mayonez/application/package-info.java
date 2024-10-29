@@ -4,4 +4,4 @@
  *
  * @author SlavSquatSuperstar
  */
-package mayonez.engine;
+package mayonez.application;

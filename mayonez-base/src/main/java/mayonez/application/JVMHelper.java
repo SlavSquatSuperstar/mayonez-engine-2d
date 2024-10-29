@@ -1,4 +1,4 @@
-package mayonez.engine;
+package mayonez.application;
 
 /**
  * Assists in checking JVM environment variables.

@@ -1,4 +1,4 @@
-package mayonez.engine;
+package mayonez.application;
 
 import mayonez.*;
 import mayonez.input.keyboard.*;

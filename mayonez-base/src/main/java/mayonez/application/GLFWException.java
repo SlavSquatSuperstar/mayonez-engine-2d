@@ -1,4 +1,4 @@
-package mayonez.engine;
+package mayonez.application;
 
 import mayonez.graphics.*;
 

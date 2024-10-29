@@ -1,8 +1,8 @@
 package mayonez
 
+import mayonez.application.*
 import mayonez.assets.*
 import mayonez.config.*
-import mayonez.engine.*
 import mayonez.input.*
 import kotlin.system.exitProcess
 

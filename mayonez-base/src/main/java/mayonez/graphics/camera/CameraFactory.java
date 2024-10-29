@@ -1,7 +1,7 @@
 package mayonez.graphics.camera;
 
 import mayonez.*;
-import mayonez.engine.*;
+import mayonez.application.*;
 import mayonez.scripts.camera.*;
 
 /**

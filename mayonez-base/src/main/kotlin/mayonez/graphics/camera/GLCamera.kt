@@ -1,6 +1,6 @@
 package mayonez.graphics.camera
 
-import mayonez.engine.*
+import mayonez.application.*
 import mayonez.graphics.*
 import mayonez.math.*
 import org.joml.*

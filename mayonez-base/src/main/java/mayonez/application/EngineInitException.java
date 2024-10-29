@@ -1,4 +1,4 @@
-package mayonez.engine;
+package mayonez.application;
 
 /**
  * An exception occurring when the game engine or its frameworks cannot be

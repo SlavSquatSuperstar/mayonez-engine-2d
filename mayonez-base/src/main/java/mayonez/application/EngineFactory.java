@@ -1,4 +1,4 @@
-package mayonez.engine;
+package mayonez.application;
 
 import mayonez.*;
 import mayonez.input.keyboard.KeyManager;
@@ -6,8 +6,8 @@ import mayonez.input.mouse.MouseManager;
 import mayonez.io.*;
 
 /**
- * A factory class that constructs {@link mayonez.engine.GameEngine} and
- * {@link mayonez.engine.Window} objects depending on the run configuration.
+ * A factory class that constructs {@link GameEngine} and
+ * {@link Window} objects depending on the run configuration.
  *
  * @author SlavSquatSuperstar
  */
@@ -19,14 +19,14 @@ public final class EngineFactory {
     // Game Engine Methods
 
     /**
-     * Creates a new {@link mayonez.engine.GameEngine} object with the given
+     * Creates a new {@link GameEngine} object with the given
      * engine type.
      *
      * @param useGL      whether to use OpenGL instead of Java's AWT library
      * @param keyInput   the key input instance
      * @param mouseInput the mouse input instance
      * @return the game engine
-     * @throws mayonez.engine.EngineInitException if the wrong thread is used on macOS
+     * @throws EngineInitException if the wrong thread is used on macOS
      */
     public static GameEngine createGameEngine(
             boolean useGL, KeyManager keyInput, MouseManager mouseInput
@@ -47,7 +47,7 @@ public final class EngineFactory {
     // Window Methods
 
     /**
-     * Creates a new {@link mayonez.engine.Window} object with the given engine
+     * Creates a new {@link Window} object with the given engine
      * type.
      *
      * @param useGL  whether to use OpenGL instead of Java's AWT library
@@ -55,7 +55,7 @@ public final class EngineFactory {
      * @param width  the window width
      * @param height the window height
      * @return the window
-     * @throws mayonez.engine.EngineInitException if the wrong thread is used on macOS
+     * @throws EngineInitException if the wrong thread is used on macOS
      */
     private static Window createWindow(
             boolean useGL, String title, int width, int height

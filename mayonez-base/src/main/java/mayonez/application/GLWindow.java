@@ -1,4 +1,4 @@
-package mayonez.engine;
+package mayonez.application;
 
 import mayonez.*;
 import mayonez.graphics.*;
@@ -33,7 +33,7 @@ final class GLWindow implements Window {
      * @param title the window title
      * @param width the window width
      * @param height the window height
-     * @throws mayonez.engine.EngineInitException if GLFW cannot be initialized
+     * @throws EngineInitException if GLFW cannot be initialized
      */
     GLWindow(String title, int width, int height) throws EngineInitException {
         this.title = title;
