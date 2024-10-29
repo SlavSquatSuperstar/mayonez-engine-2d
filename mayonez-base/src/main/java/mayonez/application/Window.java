@@ -4,7 +4,7 @@ import mayonez.input.keyboard.*;
 import mayonez.input.mouse.*;
 
 /**
- * The main application window that renders the game to the screen and detects
+ * The main window that renders the application to the screen and detects
  * input events.
  *
  * @author SlavSquatSuperstar

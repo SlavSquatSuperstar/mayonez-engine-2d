@@ -7,18 +7,18 @@ import mayonez.input.mouse.*;
 import static org.lwjgl.glfw.GLFW.glfwGetTime;
 
 /**
- * An instance of this game using OpenGL's GLFW and OpenGL libraries.
+ * An instance of the application using OpenGL's GLFW and OpenGL libraries.
  *
  * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.GL)
-final class GLGameEngine extends GameEngine {
+final class GLApplication extends Application {
 
-    public GLGameEngine(Window window, KeyManager keyInput, MouseManager mouse) {
+    public GLApplication(Window window, KeyManager keyInput, MouseManager mouse) {
         super(window, keyInput, mouse);
     }
 
-    // Game Engine Methods
+    // Application Methods
 
     @Override
     public float getCurrentTimeSecs() {

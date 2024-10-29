@@ -28,10 +28,10 @@ final class GLFWHelper {
     /**
      * Initializes the GLFW library.
      */
-    static void initGLFW() throws GLFWException {
+    static void initGLFW() throws WindowInitException {
         createPrint(System.err).set(); // Setup error callback
         if (!glfwInit()) {
-            throw new GLFWException("Unable to initialize GLFW");
+            throw new WindowInitException("Unable to initialize GLFW");
         }
     }
 
@@ -43,11 +43,11 @@ final class GLFWHelper {
      * @param title  the window's title
      * @return the window id
      */
-    static long createGLFWWindow(int width, int height, String title) throws GLFWException {
+    static long createGLFWWindow(int width, int height, String title) throws WindowInitException {
         configureWindowHints();
         var windowID = glfwCreateWindow(width, height, title, NULL, NULL);
         if (windowID == NULL) {
-            throw new GLFWException("Could not create the GLFW window");
+            throw new WindowInitException("Could not create the GLFW window");
         }
         setWindowScale(windowID);
         setWindowPosition(windowID);
@@ -129,7 +129,7 @@ final class GLFWHelper {
      *
      * @param windowID the GLFW window pointer
      */
-    private static void setWindowPosition(long windowID) throws GLFWException {
+    private static void setWindowPosition(long windowID) throws WindowInitException {
         // Push a new frame to the thread stack
         try (MemoryStack stack = stackPush()) {
             IntBuffer windowWidth = stack.mallocInt(1);
@@ -138,7 +138,7 @@ final class GLFWHelper {
 
             GLFWVidMode screenResolution = glfwGetVideoMode(glfwGetPrimaryMonitor());
             if (screenResolution == null) {
-                throw new GLFWException("Could not get the video mode");
+                throw new WindowInitException("Could not get the video mode");
             }
             glfwSetWindowPos(
                     windowID,

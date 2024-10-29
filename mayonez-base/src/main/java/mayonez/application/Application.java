@@ -9,7 +9,7 @@ import mayonez.input.mouse.*;
  *
  * @author SlavSquatSuperstar
  */
-public abstract sealed class GameEngine permits JGameEngine, GLGameEngine {
+public abstract sealed class Application permits JApplication, GLApplication {
 
     // Constants
     private static final float DEBUG_INTERVAL_SECS = 1f;
@@ -34,7 +34,7 @@ public abstract sealed class GameEngine permits JGameEngine, GLGameEngine {
     private int averageUPS;
     private int averageFPS;
 
-    protected GameEngine(Window window, KeyManager keyInput, MouseManager mouse) {
+    protected Application(Window window, KeyManager keyInput, MouseManager mouse) {
         this.window = window;
         running = false;
 

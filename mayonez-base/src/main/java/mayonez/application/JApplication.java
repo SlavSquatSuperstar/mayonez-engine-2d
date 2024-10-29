@@ -6,18 +6,18 @@ import mayonez.input.keyboard.*;
 import mayonez.input.mouse.*;
 
 /**
- * An instance of this game using Java's AWT and Swing libraries.
+ * An instance of the application using Java's AWT and Swing libraries.
  *
  * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.AWT)
-final class JGameEngine extends GameEngine {
+final class JApplication extends Application {
 
-    public JGameEngine(Window window, KeyManager keyInput, MouseManager mouse) {
+    public JApplication(Window window, KeyManager keyInput, MouseManager mouse) {
         super(window, keyInput, mouse);
     }
 
-    // Game Engine Methods
+    // Application Methods
 
     @Override
     public float getCurrentTimeSecs() {

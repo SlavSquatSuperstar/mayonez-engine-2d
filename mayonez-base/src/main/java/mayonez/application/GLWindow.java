@@ -33,24 +33,20 @@ final class GLWindow implements Window {
      * @param title the window title
      * @param width the window width
      * @param height the window height
-     * @throws EngineInitException if GLFW cannot be initialized
+     * @throws WindowInitException if GLFW cannot be initialized
      */
-    GLWindow(String title, int width, int height) throws EngineInitException {
+    GLWindow(String title, int width, int height) throws WindowInitException {
         this.title = title;
         this.width = width;
         this.height = height;
-        try {
-            // Initialize window
-            GLFWHelper.initGLFW();
-            windowID = GLFWHelper.createGLFWWindow(width, height, title);
+        // Initialize window
+        GLFWHelper.initGLFW();
+        windowID = GLFWHelper.createGLFWWindow(width, height, title);
 
-            // Important! Detect current context and integrate LWJGL with OpenGL bindings
-            glfwMakeContextCurrent(windowID); // Make the OpenGL context current
-            glfwSwapInterval(1); // Enable v-sync
-            GLHelper.loadOpenGL();
-        } catch (GLFWException e) {
-            throw(new EngineInitException(e.getMessage()));
-        }
+        // Important! Detect current context and integrate LWJGL with OpenGL bindings
+        glfwMakeContextCurrent(windowID); // Make the OpenGL context current
+        glfwSwapInterval(1); // Enable v-sync
+        GLHelper.loadOpenGL();
     }
 
     // Engine methods
