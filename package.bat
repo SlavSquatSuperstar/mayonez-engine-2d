@@ -26,7 +26,8 @@ copy mayonez-demos\build\libs\mayonez*.jar dist\mayonez*.jar
 
 rem Copy resource files
 copy LICENSE.txt dist\LICENSE.txt
-copy mayonez-demos\*.json dist\*.json
+copy release-assets\resources\* dist\*.json
+copy release-assets\scripts\* dist\*.json
 
 rem Zip the dist folder
 rem (Not available for Batch >:C)

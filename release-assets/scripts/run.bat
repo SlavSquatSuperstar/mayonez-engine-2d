@@ -71,7 +71,7 @@ rem Functions
 
 :show_help
 rem Show help and exit with a code
-echo Usage: run [-h/--help] [-e/--engine gl/awt]
+echo Usage: run.bat [-h/--help] [-e/--engine gl/awt]
 exit /b 0
 
 :set_engine

@@ -43,7 +43,8 @@ Copy-Item mayonez-demos\build\libs\mayonez*.jar dist\
 
 # Copy resource files
 Copy-Item LICENSE.txt dist\
-Copy-Item mayonez-demos\*.json dist\
+Copy-Item release-assets\resources\* dist\
+Copy-Item release-assets\scripts\* dist\
 
 # Zip the dist folder
 Set-Location dist

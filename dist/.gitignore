@@ -7,8 +7,11 @@ logs/
 *.log
 hs_err_pid*
 
+# Scripts
+run*
+
 # Duplicate resource files
-LICENSE*
+*.txt
 *.json
 
 # MacOS files

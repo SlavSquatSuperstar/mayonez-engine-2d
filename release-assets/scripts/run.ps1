@@ -1,5 +1,5 @@
-# Script Name: run
-# Purpose:     Runs the project for Windows users with PowerShell installed.
+# Script Name: run.ps1
+# Purpose:     Runs the project for Windows users through Powershell.
 # Usage:       .\run.ps1 [-h/--help] [-e/--engine gl/awt]"
 # Author:      SlavSquatSuperstar
 
@@ -30,7 +30,7 @@ function Show-Help {
     param (
         $ExitCode
     )
-    Write-Output "Usage: run [-h/--help] [-e/--engine gl/awt]"
+    Write-Output "Usage: run.ps1 [-h/--help] [-e/--engine gl/awt]"
     Exit-Script $ExitCode
 }
 

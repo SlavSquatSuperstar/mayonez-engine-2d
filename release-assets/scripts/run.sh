@@ -1,9 +1,9 @@
 #!/bin/sh
 
-# Script Name: run
+# Script Name: run.sh
 # Purpose:     Runs the project for Unix (macOS/Linux) users or
 #              Windows users with Windows Subsystem for Linux installed.
-# Usage:       ./run [-h/--help] [-e/--engine gl/awt]"
+# Usage:       ./run.sh [-h/--help] [-e/--engine gl/awt]"
 # Author:      SlavSquatSuperstar
 
 # Navigate to the project directory
@@ -11,14 +11,14 @@ SCRIPT_DIR=$(dirname "$0")
 cd "$SCRIPT_DIR" || exit
 
 # Initialize variables
-use_gl=true
-is_mac_os=false
+USE_GL=true
+IS_MAC=false
 
 ## Functions ##
 
 # Show help and exit with a code
 show_help() {
-  echo "Usage: run [-h/--help] [-e/--engine gl/awt]"
+  echo "Usage: run.sh [-h/--help] [-e/--engine gl/awt]"
   exit "$1"
 }
 
@@ -26,10 +26,10 @@ show_help() {
 set_engine_type() {
   case $1 in
   "gl")
-    use_gl=true
+    USE_GL=true
     ;;
   "awt")
-    use_gl=false
+    USE_GL=false
     ;;
   "")
     echo "Option \"--engine\" requires one argument"
@@ -94,7 +94,7 @@ case "$OSTYPE" in
   ;;
 "darwin"*)
   echo "Detecting macOS."
-  is_mac_os=true
+  IS_MAC=true
   ;;
 "cygwin"* | "msys"* | "mingw"*)
   echo "Detecting Windows Subsystem for Linux."
@@ -105,9 +105,9 @@ case "$OSTYPE" in
 esac
 
 # Run the compiled .jar file
-if $use_gl; then
+if $USE_GL; then
   echo "Launching with OpenGL Engine."
-  if $is_mac_os; then
+  if $IS_MAC; then
     # Make GLFW start on first thread on macOS
     run_jar "gl" "-XstartOnFirstThread"
   else
