@@ -1,6 +1,8 @@
 package mayonez.engine;
 
 import mayonez.*;
+import mayonez.input.keyboard.KeyManager;
+import mayonez.input.mouse.MouseManager;
 import mayonez.io.*;
 
 /**
@@ -20,13 +22,26 @@ public final class EngineFactory {
      * Creates a new {@link mayonez.engine.GameEngine} object with the given
      * engine type.
      *
-     * @param useGL whether to use OpenGL instead of Java's AWT library
+     * @param useGL      whether to use OpenGL instead of Java's AWT library
+     * @param keyInput   the key input instance
+     * @param mouseInput the mouse input instance
      * @return the game engine
      * @throws mayonez.engine.EngineInitException if the wrong thread is used on macOS
      */
-    public static GameEngine createGameEngine(boolean useGL) throws EngineInitException {
-        var window = createWindow(useGL);
-        return useGL ? new GLGameEngine(window) : new JGameEngine(window);
+    public static GameEngine createGameEngine(
+            boolean useGL, KeyManager keyInput, MouseManager mouseInput
+    ) throws EngineInitException {
+        // Create window
+        var title = String.format("%s (%s) %s",
+                Preferences.getTitle(), (useGL ? "GL" : "AWT"), Preferences.getVersion()
+        );
+        var width = Preferences.getScreenWidth();
+        var height = Preferences.getScreenHeight();
+        var window = createWindow(useGL, title, width, height);
+
+        return useGL
+                ? new GLGameEngine(window, keyInput, mouseInput)
+                : new JGameEngine(window, keyInput, mouseInput);
     }
 
     // Window Methods
@@ -35,17 +50,16 @@ public final class EngineFactory {
      * Creates a new {@link mayonez.engine.Window} object with the given engine
      * type.
      *
-     * @param useGL whether to use OpenGL instead of Java's AWT library
+     * @param useGL  whether to use OpenGL instead of Java's AWT library
+     * @param title  the window title
+     * @param width  the window width
+     * @param height the window height
      * @return the window
      * @throws mayonez.engine.EngineInitException if the wrong thread is used on macOS
      */
-    private static Window createWindow(boolean useGL) throws EngineInitException {
-        var title = String.format("%s (%s) %s",
-                Preferences.getTitle(), (useGL ? "GL" : "AWT"), Preferences.getVersion()
-        );
-        var width = Preferences.getScreenWidth();
-        var height = Preferences.getScreenHeight();
-
+    private static Window createWindow(
+            boolean useGL, String title, int width, int height
+    ) throws EngineInitException {
         // Check that correct thread is used on macOS
         if (useGL) {
             if (OperatingSystem.getCurrentOS() == OperatingSystem.MAC_OS

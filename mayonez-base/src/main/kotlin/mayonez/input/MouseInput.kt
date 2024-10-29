@@ -10,22 +10,26 @@ import mayonez.math.*
  */
 object MouseInput {
 
-    // Mouse Fields
+    // Singleton Properties
+
     private lateinit var instance: MouseManager
 
-    // Game Fields
+    /**
+     * Create the [MouseManager] instance if it does not exist.
+     *
+     * @param useGL whether to use GLFW instead of AWT.
+     * @return the mouse input instance
+     */
+    internal fun createInstance(useGL: Boolean): MouseManager {
+        if (this::instance.isInitialized) return instance
+        instance = if (useGL) GLMouseManager() else JMouseManager()
+        return instance
+    }
+
+    // Scene Properties
+
     private var invSceneScale: Float = 1f
     private var pointXf: PointTransformer? = null
-
-    // Game Methods
-
-    @JvmStatic
-    fun getInstance(): MouseManager = instance
-
-    // Game Methods
-    fun setUseGL(useGL: Boolean) {
-        instance = if (useGL) GLMouseManager() else JMouseManager()
-    }
 
     fun setSceneScale(sceneScale: Float) {
         this.invSceneScale = 1f / sceneScale

@@ -1,7 +1,8 @@
 package mayonez.engine;
 
 import mayonez.*;
-import mayonez.input.*;
+import mayonez.input.keyboard.*;
+import mayonez.input.mouse.*;
 
 /**
  * An application that displays a window, receives input, and continuously updates and renders a scene.
@@ -33,7 +34,7 @@ public abstract sealed class GameEngine permits JGameEngine, GLGameEngine {
     private int averageUPS;
     private int averageFPS;
 
-    protected GameEngine(Window window) {
+    protected GameEngine(Window window, KeyManager keyInput, MouseManager mouse) {
         this.window = window;
         running = false;
 
@@ -42,9 +43,8 @@ public abstract sealed class GameEngine permits JGameEngine, GLGameEngine {
         halfTimeStepSecs = timeStepSecs * 0.5f;
 
         // Add input listeners
-        // TODO move elsewhere
-        window.setKeyInput(KeyInput.getInstance());
-        window.setMouseInput(MouseInput.getInstance());
+        window.setKeyInput(keyInput);
+        window.setMouseInput(mouse);
     }
 
     // Main Game Loop Methods

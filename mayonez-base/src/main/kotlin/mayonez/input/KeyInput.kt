@@ -13,15 +13,20 @@ import mayonez.input.keyboard.*
  */
 object KeyInput {
 
-    // Key Fields
+    // Singleton Properties
+
     private lateinit var instance: KeyManager
 
-    @JvmStatic
-    fun getInstance(): KeyManager = instance
-
-    // Game Methods
-    fun setUseGL(useGL: Boolean) {
+    /**
+     * Create the [KeyManager] instance if it does not exist.
+     *
+     * @param useGL whether to use GLFW instead of AWT.
+     * @return the key input instance
+     */
+    internal fun createInstance(useGL: Boolean): KeyManager {
+        if (this::instance.isInitialized) return instance
         instance = if (useGL) GLKeyManager() else JKeyManager()
+        return instance
     }
 
     // Key Getters

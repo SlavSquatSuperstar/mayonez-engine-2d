@@ -113,12 +113,12 @@ object Mayonez {
     private fun initializeGame(useGL: Boolean) {
         if (!this::game.isInitialized) {
             // Create input instances
-            KeyInput.setUseGL(useGL)
-            MouseInput.setUseGL(useGL)
+            val keyInput = KeyInput.createInstance(useGL)
+            val mouseInput = MouseInput.createInstance(useGL)
 
-            // Create game engine instances
+            // Create game engine instance
             try {
-                game = EngineFactory.createGameEngine(useGL)
+                game = EngineFactory.createGameEngine(useGL, keyInput, mouseInput)
                 Logger.debug("Using \"%s\" engine", if (useGL) "GL" else "AWT")
             } catch (e: EngineInitException) {
                 Logger.printStackTrace(e)

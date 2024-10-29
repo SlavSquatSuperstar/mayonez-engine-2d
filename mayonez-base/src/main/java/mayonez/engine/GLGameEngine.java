@@ -1,6 +1,8 @@
 package mayonez.engine;
 
 import mayonez.graphics.*;
+import mayonez.input.keyboard.*;
+import mayonez.input.mouse.*;
 
 import static org.lwjgl.glfw.GLFW.glfwGetTime;
 
@@ -12,8 +14,8 @@ import static org.lwjgl.glfw.GLFW.glfwGetTime;
 @UsesEngine(EngineType.GL)
 final class GLGameEngine extends GameEngine {
 
-    GLGameEngine(Window window) {
-        super(window);
+    public GLGameEngine(Window window, KeyManager keyInput, MouseManager mouse) {
+        super(window, keyInput, mouse);
     }
 
     // Game Engine Methods
