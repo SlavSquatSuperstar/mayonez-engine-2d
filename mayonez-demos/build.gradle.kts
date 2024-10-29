@@ -30,4 +30,26 @@ tasks {
         from(configurations.runtimeClasspath.get()
             .map { if (it.isDirectory) it else zipTree(it) })
     }
+
+    withType<ProcessResources> {
+        dependsOn("copyDefaultPreferences")
+    }
+
+    withType<JavaCompile> {
+        dependsOn("copyDefaultPreferences")
+    }
+
+    /*
+     * Copy default config files if not present in this directory.
+     * Sources:
+     * - https://discuss.gradle.org/t/gradle-copy-task-dont-overrite-uptodatewhen/26785/2
+     * - https://docs.gradle.org/current/userguide/working_with_files.html
+     */
+    register<Copy>("copyDefaultPreferences") {
+        println("Copied preferences")
+        from("../release-assets/resources")
+        into("./")
+        include("*.json")
+        eachFile { if (relativePath.getFile(destinationDir).exists()) exclude() }
+    }
 }
