@@ -32,52 +32,38 @@ tasks {
         enabled = false
     }
 
-    /*
-     * Package the release for all operating systems.
-     */
     register<Copy>("packageAll") {
+        description = "Packages the release for all operating systems."
         dependsOn("packageMac")
         dependsOn("packageWindows")
         dependsOn("packageLinux")
     }
 
-    /*
-     * Package the release for macOS.
-     */
     register<Copy>("packageMac") {
-        dependsOn(":mayonez-demos:jar")
-
-        // Copy jar and resources
-        from(project(":mayonez-demos").tasks.named("jar").map { it.outputs })
-        from("./LICENSE.txt", "./release-assets/resources", "./release-assets/mac")
-        into("./dist/mac")
-        include("*.jar", "*.json", "*.txt", "run*")
+        description = "Packages the release for macOS."
+        configurePackageTask("mac")
     }
 
-    /*
-     * Package the release for Windows.
-     */
     register<Copy>("packageWindows") {
-        dependsOn(":mayonez-demos:jar")
-
-        // Copy jar and resources
-        from(project(":mayonez-demos").tasks.named("jar").map { it.outputs })
-        from("./LICENSE.txt", "./release-assets/resources", "./release-assets/windows")
-        into("./dist/windows")
-        include("*.jar", "*.json", "*.txt", "run*")
+        description = "Packages the release for Windows."
+        configurePackageTask("windows")
     }
 
-    /*
-     * Package the release for Linux.
-     */
     register<Copy>("packageLinux") {
-        dependsOn(":mayonez-demos:jar")
-
-        // Copy jar and resources
-        from(project(":mayonez-demos").tasks.named("jar").map { it.outputs })
-        from("./LICENSE.txt", "./release-assets/resources", "./release-assets/linux")
-        into("./dist/linux")
-        include("*.jar", "*.json", "*.txt", "run*")
+        description = "Packages the release for Linux."
+        configurePackageTask("linux")
     }
 }
+
+/**
+ * Configure the package task for a specific OS.
+ */
+fun Copy.configurePackageTask(platform: String) {
+    dependsOn(":mayonez-demos:jar")
+
+    // Copy jar and OS-specific resources
+    from(project(":mayonez-demos").tasks.named("jar").map { it.outputs })
+    from("./LICENSE.txt", "./release-assets/resources", "./release-assets/$platform")
+    into("./dist/$platform")
+    include("*.jar", "*.json", "*.txt", "run*")
 }

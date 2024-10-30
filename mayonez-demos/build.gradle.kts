@@ -14,7 +14,7 @@ dependencies {
 // Plugins and Tasks
 
 application {
-    // mainModule = mainModuleName // Leave blank to prevent module ResolutionError
+    // Leave mainModule blank to prevent ModuleResolutionError
     mainClass = mainClassName
     applicationDefaultJvmArgs = jvmArgs
 }
@@ -39,13 +39,11 @@ tasks {
         dependsOn("copyDefaultPreferences")
     }
 
-    /*
-     * Copy default config files if not present in this directory.
-     * Sources:
-     * - https://discuss.gradle.org/t/gradle-copy-task-dont-overrite-uptodatewhen/26785/2
-     * - https://docs.gradle.org/current/userguide/working_with_files.html
-     */
+    // Source: https://discuss.gradle.org/t/gradle-copy-task-dont-overrite-uptodatewhen/26785/2
     register<Copy>("copyDefaultPreferences") {
+        group = "Custom"
+        description = "Copy default config files to this directory, if not present."
+
         from("../release-assets/resources")
         into("./")
         include("*.json")
