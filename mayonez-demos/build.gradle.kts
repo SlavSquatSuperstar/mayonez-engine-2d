@@ -26,16 +26,16 @@ tasks {
             attributes(mapOf("Main-Class" to mainClassName))
         }
 
-        // Build a fatjar with all the dependencies
+        // Build a fat jar with all the dependencies
         from(configurations.runtimeClasspath.get()
             .map { if (it.isDirectory) it else zipTree(it) })
     }
 
-    withType<ProcessResources> {
+    compileJava {
         dependsOn("copyDefaultPreferences")
     }
 
-    withType<JavaCompile> {
+    processResources {
         dependsOn("copyDefaultPreferences")
     }
 
