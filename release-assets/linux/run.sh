@@ -1,8 +1,8 @@
 #!/bin/sh
 
 # Script Name: run.sh
-# Purpose:     Runs the project for Unix (macOS/Linux) users or
-#              Windows users with Windows Subsystem for Linux installed.
+# Purpose:     Runs the project for users on any non-Mac Unix system, including
+#              Linux and Windows Subsystem for Linux.
 # Usage:       ./run.sh [-h/--help] [-e/--engine gl/awt]"
 # Author:      SlavSquatSuperstar
 
@@ -12,7 +12,6 @@ cd "$SCRIPT_DIR" || exit
 
 # Initialize variables
 USE_GL=true
-IS_MAC=false
 
 ## Functions ##
 
@@ -42,13 +41,9 @@ set_engine_type() {
   esac
 }
 
-# Launch the jar with VM and CL args
+# Launch the jar with CL args
 run_jar() {
-  if [ "$2" ]; then
-    java "$2" -jar mayonez*.jar "--engine" "$1"
-  else
-    java -jar mayonez*.jar "--engine" "$1"
-  fi
+  java -jar mayonez*.jar "--engine" "$1"
   exit $?
 }
 
@@ -84,35 +79,10 @@ else
   exit 1
 fi
 
-# Check operating system
-# Source: https://stackoverflow.com/questions/394230/how-to-detect-the-os-from-a-bash-script
-# Note: Not available in Bourne shell (sh)
-# shellcheck disable=SC3028
-case "$OSTYPE" in
-"linux-gnu"*)
-  echo "Detecting GNU/Linux."
-  ;;
-"darwin"*)
-  echo "Detecting macOS."
-  IS_MAC=true
-  ;;
-"cygwin"* | "msys"* | "mingw"*)
-  echo "Detecting Windows Subsystem for Linux."
-  ;;
-*)
-  echo "Unknown operating system or shell detected."
-  ;;
-esac
-
 # Run the compiled .jar file
 if $USE_GL; then
   echo "Launching with OpenGL Engine."
-  if $IS_MAC; then
-    # Make GLFW start on first thread on macOS
-    run_jar "gl" "-XstartOnFirstThread"
-  else
-    run_jar "gl"
-  fi
+  run_jar "gl"
 else
   echo "Launching with AWT Engine."
   run_jar "awt"

@@ -46,7 +46,6 @@ tasks {
      * - https://docs.gradle.org/current/userguide/working_with_files.html
      */
     register<Copy>("copyDefaultPreferences") {
-        println("Copied preferences")
         from("../release-assets/resources")
         into("./")
         include("*.json")
