@@ -15,17 +15,11 @@ dependencies {
     implementation("org.joml:joml:1.10.8")
 
     // LWJGL Modules
-    implementation(platform("org.lwjgl:lwjgl-bom:$lwjglVersion")) // Bill of materials: set version for all libs
-
+    implementation(platform("org.lwjgl:lwjgl-bom:$lwjglVersion"))
     implementation("org.lwjgl:lwjgl")
     implementation("org.lwjgl:lwjgl-glfw")
     implementation("org.lwjgl:lwjgl-opengl")
     implementation("org.lwjgl:lwjgl-stb")
-
-    implementation("org.lwjgl:lwjgl::$lwjglNatives")
-    implementation("org.lwjgl:lwjgl-glfw::$lwjglNatives")
-    implementation("org.lwjgl:lwjgl-opengl::$lwjglNatives")
-    implementation("org.lwjgl:lwjgl-stb::$lwjglNatives")
 
     // Subprojects
     api(project(":mayonez-tools"))
