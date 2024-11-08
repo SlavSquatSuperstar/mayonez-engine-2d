@@ -23,9 +23,9 @@ object Natives {
     const val WINDOWS_ARM64 = "natives-windows-arm64"
 
     /**
-     * Get the LWJGL natives string for the user's OS and architecture.
+     * Get the LWJGL natives string for the user's current OS and architecture.
      */
-    fun getCurrentNatives(): String {
+    fun getDefaultNatives(): String {
         val osArch = System.getProperty("os.arch")
         return when (OperatingSystem.current()) {
             OperatingSystem.FREE_BSD -> {

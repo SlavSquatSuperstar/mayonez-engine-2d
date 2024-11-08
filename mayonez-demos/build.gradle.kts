@@ -19,18 +19,14 @@ application {
     applicationDefaultJvmArgs = jvmArgs
 
     // Default LWJGL natives for run
-    setNatives(Natives.getCurrentNatives(), "runtimeOnlyDefault")
+    setNatives(Natives.getDefaultNatives(), "runtimeOnlyDefault")
 }
 
 tasks {
-    named<JavaExec>("run") {
-        // Set the run classpath
-        classpath += configurations["runtimeOnlyDefault"]
-    }
-
     jar {
         useJarDefaults()
-        from(configurations["runtimeOnlyDefault"])
+        from(configurations.runtimeClasspath.get()
+            .map { if (it.isDirectory) it else zipTree(it) })
     }
 
     // Register the jar tasks
@@ -80,9 +76,15 @@ fun Jar.configureJarTask(natives: String, platform: String) {
 
     // Set dependencies to include in fat jar
     useJarDefaults()
+
     setNatives(natives, "runtimeOnly$platform")
     from(sourceSets["main"].output)
     from(configurations["runtimeOnly$platform"]
+        .map { if (it.isDirectory) it else zipTree(it) })
+
+    // Don't copy default natives
+    from(configurations.runtimeClasspath.get()
+        .filter { !it.name.contains("natives") }
         .map { if (it.isDirectory) it else zipTree(it) })
 
     // Move it to the dist directory
@@ -97,8 +99,6 @@ fun Jar.useJarDefaults() {
     manifest {
         attributes(mapOf("Main-Class" to mainClassName))
     }
-    from(configurations.runtimeClasspath.get()
-        .map { if (it.isDirectory) it else zipTree(it) })
 }
 
 /**

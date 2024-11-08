@@ -37,30 +37,38 @@ tasks {
         "Mac" to "macOS", "Windows" to null, "Linux" to null
     )
 
+    packagePlatforms.forEach { platform, platformDesc ->
+        registerCopyZipTasks(platform, platformDesc = platformDesc)
+    }
+
     register("packageAll") {
         description = "Packages the release for all operating systems."
         packagePlatforms.keys.forEach { dependsOn("package$it") }
     }
-
-    packagePlatforms.forEach { platform, platformDesc ->
-        registerCopyZipTasks(platform, platformDesc = platformDesc)
-    }
 }
 
 /**
- * Register the copy and zip tasks for a specific OS.
+ * Register and configure the copy and zip tasks for a specific OS.
  */
 fun TaskContainer.registerCopyZipTasks(platform: String, platformDesc: String? = null) {
     register<Copy>("copy$platform") {
         group = "Packaging"
         description = "Copies the release assets for ${platformDesc ?: platform}."
-        configureCopyTask(platform)
+
+        dependsOn(project(":mayonez-demos").tasks.named("jar$platform"))
+        from("./LICENSE.txt", "./release-assets/resources", "./release-assets/${platform.lowercase()}")
+        into("./dist/${platform.lowercase()}")
+        include("*.json", "*.txt", "run*")
     }
 
     register<Zip>("zip$platform") {
         group = "Packaging"
         description = "Zips the release assets for ${platformDesc ?: platform}."
-        configureZipTask(platform)
+
+        from(named("copy$platform").map { it.outputs })
+        include("*.jar", "*.json", "*.txt", "run*")
+        destinationDirectory = file("./dist")
+        archiveFileName = "mayonez-engine-${project.version}-${platform.lowercase()}.zip"
     }
 
     register("package$platform") {
@@ -69,27 +77,4 @@ fun TaskContainer.registerCopyZipTasks(platform: String, platformDesc: String? =
         dependsOn("copy$platform")
         dependsOn("zip$platform")
     }
-}
-
-/**
- * Configure the copy task for a specific OS.
- */
-fun Copy.configureCopyTask(platform: String) {
-    // Copy OS-specific resources
-    dependsOn(project(":mayonez-demos").tasks.named("jar$platform"))
-    from("./LICENSE.txt", "./release-assets/resources", "./release-assets/${platform.lowercase()}")
-    into("./dist/${platform.lowercase()}")
-    include("*.json", "*.txt", "run*")
-}
-
-/**
- * Configure the zip task for a specific OS.
- */
-fun Zip.configureZipTask(platform: String) {
-    // Zip copied files
-    from(tasks.named("copy$platform")
-        .map { it.outputs })
-    include("*.jar", "*.json", "*.txt", "run*")
-    destinationDirectory = file("./dist")
-    archiveFileName = "mayonez-engine-${project.version}-${platform.lowercase()}.zip"
 }
