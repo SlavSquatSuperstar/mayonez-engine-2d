@@ -31,8 +31,10 @@ tasks {
         enabled = false // Build the runnable jar in demos instead
     }
 
+    // Register the package tasks
+
     val packagePlatforms = mapOf<String, String?>(
-        "Mac" to "macos", "Windows" to null, "Linux" to null
+        "Mac" to "macOS", "Windows" to null, "Linux" to null
     )
 
     register("packageAll") {
@@ -74,14 +76,10 @@ fun TaskContainer.registerCopyZipTasks(platform: String, platformDesc: String? =
  */
 fun Copy.configureCopyTask(platform: String) {
     // Copy OS-specific resources
-    from(project(":mayonez-demos")
-        .tasks.named("jar")
-        .map { it.outputs })
-//    dependsOn(project(":mayonez-demos").tasks.named("jar$platform"))
+    dependsOn(project(":mayonez-demos").tasks.named("jar$platform"))
     from("./LICENSE.txt", "./release-assets/resources", "./release-assets/${platform.lowercase()}")
     into("./dist/${platform.lowercase()}")
-    include("*.jar", "*.json", "*.txt", "run*")
-//    include(*.json", "*.txt", "run*")
+    include("*.json", "*.txt", "run*")
 }
 
 /**

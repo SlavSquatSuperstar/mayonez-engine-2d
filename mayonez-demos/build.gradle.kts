@@ -18,26 +18,38 @@ application {
     mainClass = mainClassName
     applicationDefaultJvmArgs = jvmArgs
 
-    // TODO resolves dependencies twice
-    setNatives(Natives.getCurrentNatives()) // Default LWJGL natives for run
+    // Default LWJGL natives for run
+    setNatives(Natives.getCurrentNatives(), "runtimeOnlyDefault")
 }
 
 tasks {
+    named<JavaExec>("run") {
+        // Set the run classpath
+        classpath += configurations["runtimeOnlyDefault"]
+    }
+
     jar {
         useJarDefaults()
+        from(configurations["runtimeOnlyDefault"])
     }
 
-    register<Jar>("jarMac") {
-        configureJarTask(Natives.MAC_OS_X64, "mac")
+    // Register the jar tasks
+
+    val packagePlatforms = mapOf<String, String>(
+        Natives.MAC_OS_X64 to "Mac",
+        Natives.WINDOWS_X64 to "Windows",
+        Natives.LINUX_X64 to "Linux"
+    )
+
+    packagePlatforms.forEach { natives, platform ->
+        register<Jar>("jar$platform") {
+            group = "Packaging"
+            description = "Copies the release assets for ${platform}."
+            configureJarTask(natives, platform)
+        }
     }
 
-    register<Jar>("jarWindows") {
-        configureJarTask(Natives.WINDOWS_X64, "windows")
-    }
-
-    register<Jar>("jarLinux") {
-        configureJarTask(Natives.LINUX_X64, "linux")
-    }
+    // Copy preference files
 
     compileJava {
         dependsOn("copyDefaultPreferences")
@@ -50,7 +62,7 @@ tasks {
     // Source: https://discuss.gradle.org/t/gradle-copy-task-dont-overrite-uptodatewhen/26785/2
     register<Copy>("copyDefaultPreferences") {
         group = "Custom"
-        description = "Copy default config files to this directory, if not present."
+        description = "Copy default config files to the subproject directory, if not present."
 
         from("../release-assets/resources")
         into("./")
@@ -59,35 +71,46 @@ tasks {
     }
 }
 
+/**
+ * Configure the jar task for a specific OS.
+ */
 fun Jar.configureJarTask(natives: String, platform: String) {
-    // Set the natives to use for compilation
-    setNatives(natives)
+    group = "Packaging"
+    description = "Builds the release jar for ${platform}."
 
     // Set dependencies to include in fat jar
     useJarDefaults()
-    from(tasks.compileJava)
-    from(tasks.processResources)
+    setNatives(natives, "runtimeOnly$platform")
+    from(sourceSets["main"].output)
+    from(configurations["runtimeOnly$platform"]
+        .map { if (it.isDirectory) it else zipTree(it) })
 
     // Move it to the dist directory
-    destinationDirectory = file("../dist/$platform")
+    destinationDirectory = file("../dist/${platform.lowercase()}")
 }
 
+/**
+ * Set the default parameters to use for every jar task.
+ */
 fun Jar.useJarDefaults() {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     manifest {
         attributes(mapOf("Main-Class" to mainClassName))
     }
-
     from(configurations.runtimeClasspath.get()
         .map { if (it.isDirectory) it else zipTree(it) })
 }
 
-fun setNatives(natives: String) {
+/**
+ * Set the native libraries to include in a fat jar.
+ */
+fun setNatives(natives: String, configuration: String) {
+    val config = configurations.create(configuration)
     dependencies {
-        println("demos natives = $natives")
-        runtimeOnly("org.lwjgl:lwjgl::$natives")
-        runtimeOnly("org.lwjgl:lwjgl-glfw::$natives")
-        runtimeOnly("org.lwjgl:lwjgl-opengl::$natives")
-        runtimeOnly("org.lwjgl:lwjgl-stb::$natives")
+        config(platform("org.lwjgl:lwjgl-bom:$lwjglVersion"))
+        config("org.lwjgl:lwjgl::$natives")
+        config("org.lwjgl:lwjgl-glfw::$natives")
+        config("org.lwjgl:lwjgl-opengl::$natives")
+        config("org.lwjgl:lwjgl-stb::$natives")
     }
 }
