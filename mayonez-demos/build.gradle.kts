@@ -57,7 +57,7 @@ tasks {
 
     // Source: https://discuss.gradle.org/t/gradle-copy-task-dont-overrite-uptodatewhen/26785/2
     register<Copy>("copyDefaultPreferences") {
-        group = "Custom"
+        group = "Packaging"
         description = "Copy default config files to the subproject directory, if not present."
 
         from("../release-assets/resources")

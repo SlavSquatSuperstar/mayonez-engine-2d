@@ -10,7 +10,7 @@ description = "The root project for Mayonez Engine that contains all modules."
 
 allprojects {
     group = "slavsquatsuperstar"
-    version = "0.8.1-pre2-snapshot"
+    version = "0.8.1-pre2"
 }
 
 // Subprojects
@@ -42,8 +42,26 @@ tasks {
     }
 
     register("packageAll") {
+        group = "Packaging"
         description = "Packages the release for all operating systems."
+        dependsOn("deletePackages")
         packagePlatforms.keys.forEach { dependsOn("package$it") }
+    }
+
+    register("deletePackages") {
+        group = "Packaging"
+        description = "Deletes all outdated package files."
+
+        /*
+         * Delete all jar/zip files who do not have filename format
+         * <project>-<version>.zip or <project>-<version>-<os>.zip.
+         */
+        file("./dist/").walk()
+            .filter { it.isFile }
+            .filter { it.name.contains(Regex("\\.(zip|jar)")) }
+            .filter { !it.name.contains(Regex("${project.version}\\.jar")) }
+            .filter { !it.name.contains(Regex("${project.version}-[a-z]+\\.zip")) }
+            .forEach { delete(it) }
     }
 }
 
