@@ -1,7 +1,6 @@
 package mayonez.io.text;
 
 import mayonez.assets.*;
-import mayonez.io.*;
 import org.junit.jupiter.api.*;
 
 import java.io.IOException;
@@ -18,7 +17,7 @@ class LinesIOManagerTest {
 
     @Test
     void readLinesFromFileSuccess() {
-        var filePath = new FilePath("testassets/text/foo.txt", LocationType.CLASSPATH);
+        var filePath = new ClasspathFilePath("testassets/text/foo.txt");
         try {
             var input = filePath.openInputStream();
             var lines = new LinesIOManager().read(input);
@@ -31,7 +30,7 @@ class LinesIOManagerTest {
 
     @Test
     void writeTextToFileSuccess() {
-        var filePath = new FilePath("src/test/resources/testassets/out/out2.txt", LocationType.EXTERNAL);
+        var filePath = new ExternalFilePath("src/test/resources/testassets/out/out2.txt");
         IOTestUtils.checkFileExists(filePath.getFilename());
 
         var lines = """

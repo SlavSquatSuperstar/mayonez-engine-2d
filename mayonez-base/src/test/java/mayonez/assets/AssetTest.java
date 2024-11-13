@@ -1,6 +1,5 @@
 package mayonez.assets;
 
-import mayonez.io.*;
 import org.junit.jupiter.api.*;
 
 import java.io.*;
@@ -20,13 +19,13 @@ class AssetTest {
     @Test
     void assetIsClasspath() {
         var asset = new Asset(classpathImg);
-        assertEquals(LocationType.CLASSPATH, asset.getLocationType());
+        assertInstanceOf(ClasspathFilePath.class, asset.getFilePath());
     }
 
     @Test
     void assetIsExternal() {
         var asset = new Asset(externalImg);
-        assertEquals(LocationType.EXTERNAL, asset.getLocationType());
+        assertInstanceOf(ExternalFilePath.class, asset.getFilePath());
     }
 
     @Test

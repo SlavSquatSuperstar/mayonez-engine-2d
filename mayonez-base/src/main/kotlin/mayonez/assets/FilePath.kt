@@ -1,6 +1,5 @@
 package mayonez.assets
 
-import mayonez.io.LocationType
 import java.io.File
 import java.io.IOException
 import java.io.InputStream
@@ -9,65 +8,53 @@ import java.net.URL
 
 /**
  * Represents the location of an [mayonez.assets.Asset] on the computer's
- * file system and describes whether it is readable or writable.
+ * file system and describes its read and write permissions.
  *
  * @author SlavSquatSuperstar
  */
-class FilePath(filename: String, val locationType: LocationType) {
+// TODO runtime
+abstract class FilePath(val filename: String) {
 
-    /**
-     * Create a FilePath and automatically determines the location type.
-     * Attempts to locate a classpath resource at this path, or otherwise defaults
-     * to an external file.
-     */
-    constructor(filename: String) : this(filename, filename.getLocationType())
-
-    // Create filename with correct separators
-    val filename: String = locationType.getFilename(filename)
-
-    // I/O Status Methods
-
-    /**
-     * Whether this there a file or directory that currently exists at this
-     * location.
-     *
-     * @return if there is a valid file at this path
-     */
-    fun exists(): Boolean {
-        return when (locationType) {
-            LocationType.CLASSPATH -> getURL() != null
-            LocationType.EXTERNAL -> getFile().exists()
+    companion object {
+        /**
+         * Creates a FilePath and automatically determines the location type.
+         * Returns a classpath resource if one exists at this path, or otherwise
+         * defaults to an external file.
+         *
+         * @param filename the asset filename
+         */
+        @JvmStatic
+        fun fromFilename(filename: String): FilePath {
+            val classpathFilePath = ClasspathFilePath(filename)
+            return if (classpathFilePath.exists()) classpathFilePath
+            else ExternalFilePath(filename)
         }
     }
 
-    /**
-     * Whether this there a file with this filename that exists and can be read
-     * from. Returns false if the file is a directory.
-     *
-     * @return if there is a readable file at this path
-     */
-    fun isReadable(): Boolean {
-        return when (locationType) {
-            LocationType.CLASSPATH -> getURL() != null
-            LocationType.EXTERNAL -> getFile().isFile
-        }
-    }
+    // File Status Methods
 
     /**
-     * Whether this there a file with this filename that can be written to.
-     * Classpath files and all directories are not writable, and non-existing
-     * external files may be created.
+     * Whether a file or directory that currently exists at this path.
      *
-     * @return if there is a readable file at this path
+     * @return if this path leads to a valid file
      */
-    fun isWritable(): Boolean {
-        return when (locationType) {
-            LocationType.CLASSPATH -> false
-            LocationType.EXTERNAL -> !getFile().isDirectory
-        }
-    }
+    abstract fun exists(): Boolean
+
+    /**
+     * Whether there is a file at this path  can be read from.
+     *
+     * @return if this path has a readable file
+     */
+    abstract fun isReadable(): Boolean
 
     // Stream Methods
+
+    /**
+     * Whether there is a file at this path that can be written to.
+     *
+     * @return if this path has a writable file
+     */
+    abstract fun isWritable(): Boolean
 
     /**
      * Creates an [InputStream] that allows data to be read from the given
@@ -77,12 +64,7 @@ class FilePath(filename: String, val locationType: LocationType) {
      * @throws IOException if the file cannot be read from
      */
     @Throws(IOException::class)
-    fun openInputStream(): InputStream {
-        if (!isReadable()) {
-            throw IOException("$locationType asset $filename is not readable")
-        }
-        return locationType.openInputStream(filename)
-    }
+    abstract fun openInputStream(): InputStream
 
     /**
      * Creates an [OutputStream] that allows data to be saved to the given
@@ -94,27 +76,35 @@ class FilePath(filename: String, val locationType: LocationType) {
      * @return the output stream
      * @throws IOException if the file cannot be written to
      */
-    fun openOutputStream(append: Boolean): OutputStream {
-        if (!isWritable()) {
-            throw IOException("$locationType path $filename is not writable")
-        }
-        return locationType.openOutputStream(filename, append)
+    @Throws(IOException::class)
+    abstract fun openOutputStream(append: Boolean): OutputStream
+
+    // Helper Methods
+
+    /**
+     * Gets the URL represented by this path, if it exists.
+     *
+     * @return the path's URL
+     */
+    abstract fun getURL(): URL?
+
+    /**
+     * Gets the file represented by this path.
+     *
+     * @return the path's URL
+     */
+    fun getFile(): File = File(filename)
+
+    protected fun assertReadable() {
+        if (!isReadable()) throw IOException("$this is not readable")
     }
 
-    // Conversion Methods
-
-    private fun getFile(): File = File(filename) // Should only be called when external
-
-    private fun getURL(): URL? = locationType.getURL(filename) // Should only be called when classpath
-
-    override fun toString(): String = "$locationType FilePath $filename"
-
-}
-
-private fun String.getLocationType(): LocationType {
-    return if (LocationType.CLASSPATH.getURL(this) != null) {
-        LocationType.CLASSPATH
-    } else {
-        LocationType.EXTERNAL
+    protected fun assertWritable() {
+        if (!isWritable()) throw IOException("$this is not writable")
     }
+
+    internal abstract val typeName: String
+
+    override fun toString(): String = "${javaClass.simpleName} \"$filename\""
+
 }

@@ -31,12 +31,12 @@ public final class IOTestUtils {
         }
     }
 
-    public static void openInputStream(FilePath2 filePath) throws IOException {
+    public static void openInputStream(FilePath filePath) throws IOException {
         var stream = filePath.openInputStream();
         stream.close();
     }
 
-    public static void openOutputStream(FilePath2 filePath) throws IOException {
+    public static void openOutputStream(FilePath filePath) throws IOException {
         var stream = filePath.openOutputStream(false);
         stream.close();
     }

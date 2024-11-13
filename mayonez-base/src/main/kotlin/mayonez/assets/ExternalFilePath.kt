@@ -18,7 +18,7 @@ import java.nio.file.StandardOpenOption
  *
  * @author SlavSquatSuperstar
  */
-class ExternalFilePath(filename: String) : FilePath2(filename.toExternal()) {
+class ExternalFilePath(filename: String) : FilePath(filename.toExternal()) {
 
     override fun exists(): Boolean = getFile().exists()
 
@@ -58,6 +58,9 @@ class ExternalFilePath(filename: String) : FilePath2(filename.toExternal()) {
             null
         }
     }
+
+    override val typeName: String
+        get() = "External"
 
 }
 

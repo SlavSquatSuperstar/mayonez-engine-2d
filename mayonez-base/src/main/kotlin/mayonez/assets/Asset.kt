@@ -1,6 +1,5 @@
 package mayonez.assets
 
-import mayonez.io.*
 import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
@@ -16,9 +15,8 @@ import java.io.OutputStream
 // TODO hold streams, close on free
 open class Asset(filename: String) {
 
-    private val filePath: FilePath = FilePath(filename)
+    val filePath: FilePath = FilePath.fromFilename(filename)
     val filename: String = filePath.filename
-    val locationType: LocationType = filePath.locationType
 
     // I/O Methods
 
@@ -56,6 +54,8 @@ open class Asset(filename: String) {
 
     protected fun getFilenameInQuotes(): String = "\"$filename\""
 
-    override fun toString(): String = "$locationType ${javaClass.simpleName} \"$filename\""
+    override fun toString(): String {
+        return "${filePath.typeName} ${javaClass.simpleName} \"$filename\""
+    }
 
 }

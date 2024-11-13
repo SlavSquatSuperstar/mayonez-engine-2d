@@ -14,10 +14,18 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class ExternalFilePathTest {
 
-    private final FilePath2 filePathValid = new ExternalFilePath("src/test/resources/testassets/text/foo.txt");
-    private final FilePath2 filePathInvalid = new ExternalFilePath("src/test/resources/testassets/text/bar.txt");
+    private final FilePath filePathValid = new ExternalFilePath("src/test/resources/testassets/text/foo.txt");
+    private final FilePath filePathInvalid = new ExternalFilePath("src/test/resources/testassets/text/bar.txt");
 
-    // File Path Tests
+    // File URL Tests
+
+    @Test
+    void anyExternalURLNotNull() {
+        assertNotNull(filePathValid.getURL());
+        assertNotNull(filePathInvalid.getURL());
+    }
+
+    // File Permission Tests
 
     @Test
     void validExternalPathIsReadableAndWritable() {

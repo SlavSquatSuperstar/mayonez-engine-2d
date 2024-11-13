@@ -1,7 +1,6 @@
 package mayonez.assets;
 
 import mayonez.assets.text.*;
-import mayonez.io.*;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -54,12 +53,12 @@ class AssetsTest {
         var asset = Assets.getAsset(filename);
         assertNotNull(asset);
         assertInstanceOf(Asset.class, asset);
-        assertEquals(asset.getLocationType(), LocationType.CLASSPATH);
+        assertInstanceOf(ClasspathFilePath.class, asset.getFilePath());
 
         var textFile = Assets.getAsset(filename, TextFile.class);
         assertNotNull(textFile);
         assertInstanceOf(TextFile.class, textFile);
-        assertEquals(textFile.getLocationType(), LocationType.CLASSPATH);
+        assertInstanceOf(ClasspathFilePath.class, asset.getFilePath());
         assertEquals(filename, textFile.getFilename());
     }
 

@@ -1,7 +1,6 @@
 package mayonez.assets;
 
 import mayonez.assets.text.*;
-import mayonez.io.*;
 import org.junit.jupiter.api.*;
 
 import java.lang.reflect.Constructor;
@@ -22,7 +21,7 @@ class ConstructorTest {
         var inst = instantiateAsset(Asset.class, TEST_FILENAME);
         assertInstanceOf(Asset.class, inst);
         assertEquals(TEST_FILENAME, inst.getFilename());
-        assertEquals(inst.getLocationType(), LocationType.EXTERNAL);
+        assertInstanceOf(ExternalFilePath.class, inst.getFilePath());
     }
 
     @Test
@@ -30,7 +29,7 @@ class ConstructorTest {
         var inst = instantiateAsset(TextFile.class, TEST_FILENAME);
         assertInstanceOf(TextFile.class, inst);
         assertEquals(TEST_FILENAME, inst.getFilename());
-        assertEquals(inst.getLocationType(), LocationType.EXTERNAL);
+        assertInstanceOf(ExternalFilePath.class, inst.getFilePath());
         assertNotEquals(0, inst.readLines().length);
     }
 

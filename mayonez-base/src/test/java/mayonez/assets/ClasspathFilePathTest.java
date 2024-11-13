@@ -14,16 +14,29 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class ClasspathFilePathTest {
 
-    private final FilePath2 filePathValid = new ClasspathFilePath("testassets/text/foo.txt");
-    private final FilePath2 filePathInvalid = new ClasspathFilePath("testassets/text/bar.txt");
+    private final FilePath filePathValid = new ClasspathFilePath("testassets/text/foo.txt");
+    private final FilePath filePathInvalid = new ClasspathFilePath("testassets/text/bar.txt");
 
-    // File Path Tests
+    // Filename Tests
 
     @Test
     void classpathFilenameIsAlwaysSame() {
         var windowsFilePath = new ClasspathFilePath("testassets\\text\\foo.txt");
         assertEquals(filePathValid.getFilename(), windowsFilePath.getFilename());
     }
+
+    // File URL Tests
+    @Test
+    void validClasspathURLNotNull() {
+        assertNotNull(filePathValid.getURL());
+    }
+
+    @Test
+    void invalidClasspathURLIsNull() {
+        assertNull(filePathInvalid.getURL());
+    }
+
+    // File Permissions Tests
 
     @Test
     void validClasspathPathIsOnlyReadable() {

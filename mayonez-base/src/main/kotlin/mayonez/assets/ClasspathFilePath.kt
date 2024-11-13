@@ -12,7 +12,7 @@ import java.net.URL
  *
  * @author SlavSquatSuperstar
  */
-class ClasspathFilePath(filename: String): FilePath2(filename.toClasspath()) {
+class ClasspathFilePath(filename: String): FilePath(filename.toClasspath()) {
 
     override fun exists(): Boolean = getURL() != null
 
@@ -33,6 +33,9 @@ class ClasspathFilePath(filename: String): FilePath2(filename.toClasspath()) {
     override fun getURL(): URL? {
         return ClassLoader.getSystemResource(filename)
     }
+
+    override val typeName: String
+        get() = "Classpath"
 
 }
 
