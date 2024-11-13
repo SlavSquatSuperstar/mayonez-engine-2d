@@ -1,7 +1,10 @@
 package mayonez.assets
 
-import mayonez.io.*
+import mayonez.io.LocationType
 import java.io.File
+import java.io.IOException
+import java.io.InputStream
+import java.io.OutputStream
 import java.net.URL
 
 /**
@@ -10,24 +13,18 @@ import java.net.URL
  *
  * @author SlavSquatSuperstar
  */
-class FilePath(filename: String) {
-
-    // Filename Fields
+// TODO subclass?
+class FilePath(filename: String, val locationType: LocationType) {
 
     /**
-     * The OS-independent filename separated by forward slashes ('/'), used to
-     * store files in the asset system.
+     * Create a FilePath and automatically determines the location type.
+     * Attempts to locate a classpath resource at this path, or otherwise defaults
+     * to an external file.
      */
-    val filename: String = LocationType.CLASSPATH.getFilename(filename)
-    private val osFilename: String = LocationType.EXTERNAL.getFilename(filename)
-    var locationType: LocationType = getLocationType(this.filename)
-        private set
+    constructor(filename: String) : this(filename, filename.getLocationType())
 
-
-    // Test Constructor
-    internal constructor(filename: String, locationType: LocationType) : this(filename) {
-        this.locationType = locationType
-    }
+    // Create filename with correct separators
+    val filename: String = locationType.getFilename(filename)
 
     // I/O Status Methods
 
@@ -71,25 +68,52 @@ class FilePath(filename: String) {
         }
     }
 
+    // Stream Methods
+
+    /**
+     * Creates an [InputStream] that allows data to be read from the given
+     * file. The input stream should be closed after use.
+     *
+     * @return the input stream
+     * @throws IOException if the file cannot be read from
+     */
+    @Throws(IOException::class)
+    fun openInputStream(): InputStream {
+        if (!isReadable()) {
+            throw IOException("$locationType asset $filename is not readable")
+        }
+        return locationType.openInputStream(filename)
+    }
+
+    /**
+     * Creates an [OutputStream] that allows data to be saved to the given
+     * file. If the file does not yet exist, then a new file is created. The
+     * output stream should be closed after use.
+     *
+     * @param append whether to add data to an existing file's contents instead
+     *     of overwriting it
+     * @return the output stream
+     * @throws IOException if the file cannot be written to
+     */
+    fun openOutputStream(append: Boolean): OutputStream {
+        if (!isWritable()) {
+            throw IOException("$locationType path $filename is not writable")
+        }
+        return locationType.openOutputStream(filename, append)
+    }
+
     // Conversion Methods
 
-    private fun getFile(): File = File(osFilename)
+    private fun getFile(): File = File(filename) // Should only be called when external
 
-    private fun getURL(): URL? = locationType.getURL(filename)
+    private fun getURL(): URL? = locationType.getURL(filename) // Should only be called when classpath
 
-    override fun toString(): String = filename
+    override fun toString(): String = "$locationType FilePath $filename"
 
 }
 
-// Helper Methods
-
-/**
- * Automatically determines the file's location type. Attempts to locate a
- * classpath resource at this path, or otherwise defaults to an external
- * file.
- */
-private fun getLocationType(filename: String): LocationType {
-    return if (LocationType.CLASSPATH.getURL(filename) != null) {
+private fun String.getLocationType(): LocationType {
+    return if (LocationType.CLASSPATH.getURL(this) != null) {
         LocationType.CLASSPATH
     } else {
         LocationType.EXTERNAL

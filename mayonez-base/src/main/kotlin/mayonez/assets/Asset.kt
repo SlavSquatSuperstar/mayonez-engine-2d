@@ -13,6 +13,7 @@ import java.io.OutputStream
  *
  * @author SlavSquatSuperstar
  */
+// TODO hold streams, close on free
 open class Asset(filename: String) {
 
     private val filePath: FilePath = FilePath(filename)
@@ -26,13 +27,11 @@ open class Asset(filename: String) {
      * The input stream should be closed after use.
      *
      * @return the input stream
+     * @throws IOException if the asset cannot be read from
      */
     @Throws(IOException::class)
     fun openInputStream(): InputStream {
-        if (!filePath.isReadable()) {
-            throw IOException("$locationType asset $filename is not readable")
-        }
-        return locationType.openInputStream(filename)
+        return filePath.openInputStream()
     }
 
     /**
@@ -43,13 +42,11 @@ open class Asset(filename: String) {
      * @param append whether to add data to an existing file's contents instead
      *     of overwriting it
      * @return the output stream
+     * @throws IOException if the file cannot be written to
      */
     @Throws(IOException::class)
     fun openOutputStream(append: Boolean): OutputStream {
-        if (!filePath.isWritable()) {
-            throw IOException("$locationType asset $filename is not writable")
-        }
-        return locationType.openOutputStream(filename, append)
+        return filePath.openOutputStream(append)
     }
 
     /** Frees any resources used by this asset after use. */

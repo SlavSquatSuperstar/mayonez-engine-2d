@@ -1,5 +1,6 @@
 package mayonez.io.text;
 
+import mayonez.assets.*;
 import mayonez.io.*;
 import org.junit.jupiter.api.*;
 
@@ -17,9 +18,9 @@ class TextIOManagerTest {
 
     @Test
     void readTextFromFileSuccess() {
-        var filename = "testassets/text/foo.txt";
+        var filePath = new FilePath("testassets/text/foo.txt", LocationType.CLASSPATH);
         try {
-            var input = LocationType.CLASSPATH.openInputStream(filename);
+            var input = filePath.openInputStream();
             var text = new TextIOManager().read(input);
             assertFalse(text.isEmpty());
             assertThrows(IOException.class, input::readAllBytes); // make sure stream closed
@@ -30,16 +31,16 @@ class TextIOManagerTest {
 
     @Test
     void writeTextToFileSuccess() {
-        var filename = "src/test/resources/testassets/out/out2.txt";
-        IOTestUtils.checkFileExists(filename);
+        var filePath = new FilePath("src/test/resources/testassets/out/out2.txt", LocationType.EXTERNAL);
+        IOTestUtils.checkFileExists(filePath.getFilename());
 
-        String text = """
+        var text = """
                 Hello there!
                 General Kenobi, you are a bold one!
                 Your move.
                 """;
         try {
-            var output = LocationType.EXTERNAL.openOutputStream(filename, false);
+            var output = filePath.openOutputStream(false);
             new TextIOManager().write(output, text);
             // make sure stream closed
             assertThrows(IOException.class,

@@ -83,12 +83,12 @@ enum class LocationType {
 
     // Filename Methods
 
-    abstract fun getFilename(filename: String): String
+    internal abstract fun getFilename(filename: String): String
 
     /**
      * Locates file according to the given location type.
      *
-     * @param filename the file's OS name
+     * @param filename the file's current OS name
      * @return the file's URL, if it exists
      */
     abstract fun getURL(filename: String): URL?
@@ -99,26 +99,26 @@ enum class LocationType {
      * Creates an [InputStream] that allows data to be read from the given
      * file. The input stream should be closed after use.
      *
-     * @param filename the file's OS name
+     * @param filename the file's current OS name
      * @return the input stream
      * @throws IOException if the file cannot be read from
      */
     @Throws(IOException::class)
-    abstract fun openInputStream(filename: String): InputStream
+    internal abstract fun openInputStream(filename: String): InputStream
 
     /**
      * Creates an [OutputStream] that allows data to be saved to the given
      * file. If the file does not yet exist, then a new file is created. The
      * output stream should be closed after use.
      *
-     * @param filename the file's OS name
+     * @param filename the file's current OS name
      * @param append whether to add data to an existing file's contents instead
      *     of overwriting it
      * @return the output stream
      * @throws IOException if the file cannot be written to
      */
     @Throws(IOException::class)
-    abstract fun openOutputStream(filename: String, append: Boolean): OutputStream
+    internal abstract fun openOutputStream(filename: String, append: Boolean): OutputStream
 
     override fun toString(): String = StringUtils.capitalizeFirstWord(name)
 

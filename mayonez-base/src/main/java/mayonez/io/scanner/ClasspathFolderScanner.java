@@ -28,6 +28,7 @@ public class ClasspathFolderScanner implements FolderScanner {
     public List<String> getFiles(String directoryName) {
         var resources = new ArrayList<String>();
 
+        // Check folder exists
         var url = LocationType.CLASSPATH.getURL(directoryName);
         if (url == null) return resources;
 
