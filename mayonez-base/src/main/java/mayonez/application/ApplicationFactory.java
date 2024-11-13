@@ -3,7 +3,7 @@ package mayonez.application;
 import mayonez.*;
 import mayonez.input.keyboard.KeyManager;
 import mayonez.input.mouse.MouseManager;
-import mayonez.io.*;
+import mayonez.util.OperatingSystem;
 
 /**
  * A factory class that constructs {@link Application} and
@@ -60,7 +60,7 @@ public final class ApplicationFactory {
     ) throws WindowInitException {
         // Check that correct thread is used on macOS
         if (useGL) {
-            if (OperatingSystem.getCurrentOS() == OperatingSystem.MAC_OS
+            if (OperatingSystem.getCurrent() == OperatingSystem.MAC_OS
                     && !JVMHelper.isStartedOnFirstThread()) {
                 Logger.error("GLFW must be initialized from the main thread on macOS");
                 Logger.error("Make sure to run Java with the \"-XstartOnFirstThread\" VM argument");
@@ -69,7 +69,7 @@ public final class ApplicationFactory {
             return new GLWindow(title, width, height);
         } else {
             // VM args must be checked before AWT classes are used
-            if (OperatingSystem.getCurrentOS() == OperatingSystem.MAC_OS
+            if (OperatingSystem.getCurrent() == OperatingSystem.MAC_OS
                     && JVMHelper.isStartedOnFirstThread()) {
                 Logger.error("AWT cannot be used from the main thread on macOS");
                 Logger.error("Make sure to run Java without the \"-XstartOnFirstThread\" VM argument");

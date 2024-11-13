@@ -11,9 +11,10 @@ import java.nio.file.StandardOpenOption
 /**
  * The location of a file on the computer, which defines its file
  * permissions.
+ *
+ * @author SlavSquatSuperstar
  */
 // TODO runtime
-// TODO tests
 enum class LocationType {
 
     /**
