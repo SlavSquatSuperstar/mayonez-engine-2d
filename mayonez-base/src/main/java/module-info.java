@@ -19,9 +19,6 @@ module mayonez.base {
     requires org.joml;
     requires org.json;
 
-    // Subprojects
-    requires transitive mayonez.tools;
-
     // Utilities
     exports mayonez.annotations;
     exports mayonez.util;

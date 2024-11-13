@@ -26,9 +26,6 @@ dependencies {
     runtimeOnly("org.lwjgl:lwjgl-glfw::$lwjglNatives")
     runtimeOnly("org.lwjgl:lwjgl-opengl::$lwjglNatives")
     runtimeOnly("org.lwjgl:lwjgl-stb::$lwjglNatives")
-
-    // Subprojects
-    api(project(":mayonez-tools"))
 }
 
 // Plugins and Tasks
