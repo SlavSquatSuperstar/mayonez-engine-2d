@@ -11,47 +11,45 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class OperatingSystemTest {
 
-    private final String unixFile = "src/test/resources/testassets/out/readme.txt";
-    private final String windowsFile = "src\\test\\resources\\testassets\\out\\readme.txt";
+    private final String unixFileCleaned = "src/test/resources/testassets/out/readme.txt";
+    private final String windowsFileCleaned = "src\\test\\resources\\testassets\\out\\readme.txt";
 
     @Test
     void unixToUnixFileCorrect() {
-        var filename = OperatingSystem.LINUX.getOSFilename(unixFile);
-        assertEquals(unixFile, filename);
+        var filename = OperatingSystem.LINUX.getOSFilename("./src/test/resources/testassets/out/readme.txt");
+        assertEquals(unixFileCleaned, filename);
     }
 
     @Test
     void unixToWindowsFileCorrect() {
-        var filename = OperatingSystem.WINDOWS.getOSFilename(unixFile);
-        assertEquals(windowsFile, filename);
+        var filename = OperatingSystem.WINDOWS.getOSFilename("./src/test/resources/testassets/out/readme.txt");
+        assertEquals(windowsFileCleaned, filename);
     }
 
     @Test
     void unixToWindowsFolderCorrect() {
-        String unixFolder = "src/test/resources/testassets/";
-        var filename = OperatingSystem.WINDOWS.getOSFilename(unixFolder);
-        String windowsFolderNormalized = "src\\test\\resources\\testassets";
-        assertEquals(windowsFolderNormalized, filename);
+        var filename = OperatingSystem.WINDOWS.getOSFilename("./src/test/resources/testassets/");
+        String windowsDirCleaned = "src\\test\\resources\\testassets";
+        assertEquals(windowsDirCleaned, filename);
     }
 
     @Test
     void windowsToWindowsFilenameCorrect() {
-        var filename = OperatingSystem.WINDOWS.getOSFilename(windowsFile);
-        assertEquals(windowsFile, filename);
+        var filename = OperatingSystem.WINDOWS.getOSFilename(".\\src\\test\\resources\\testassets\\out\\readme.txt");
+        assertEquals(windowsFileCleaned, filename);
     }
 
     @Test
     void windowsToUnixFileCorrect() {
-        var filename = OperatingSystem.LINUX.getOSFilename(windowsFile);
-        assertEquals(unixFile, filename);
+        var filename = OperatingSystem.LINUX.getOSFilename(".\\src\\test\\resources\\testassets\\out\\readme.txt");
+        assertEquals(unixFileCleaned, filename);
     }
 
     @Test
     void windowsToUnixFolderCorrect() {
-        String windowsFolder = "src\\test\\resources\\testassets\\";
-        var filename = OperatingSystem.LINUX.getOSFilename(windowsFolder);
-        String unixFolderNormalized = "src/test/resources/testassets";
-        assertEquals(unixFolderNormalized, filename);
+        var filename = OperatingSystem.LINUX.getOSFilename(".\\src\\test\\resources\\testassets\\");
+        String unixDirCleaned = "src/test/resources/testassets";
+        assertEquals(unixDirCleaned, filename);
     }
 
 }
