@@ -13,7 +13,6 @@ import java.net.URL
  *
  * @author SlavSquatSuperstar
  */
-// TODO subclass?
 class FilePath(filename: String, val locationType: LocationType) {
 
     /**

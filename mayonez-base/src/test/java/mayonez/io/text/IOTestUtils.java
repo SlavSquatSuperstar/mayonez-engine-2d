@@ -1,5 +1,7 @@
 package mayonez.io.text;
 
+import mayonez.assets.*;
+
 import java.io.File;
 import java.io.IOException;
 
@@ -27,6 +29,16 @@ public final class IOTestUtils {
         } catch (IOException e) {
             fail(e.getMessage());
         }
+    }
+
+    public static void openInputStream(FilePath2 filePath) throws IOException {
+        var stream = filePath.openInputStream();
+        stream.close();
+    }
+
+    public static void openOutputStream(FilePath2 filePath) throws IOException {
+        var stream = filePath.openOutputStream(false);
+        stream.close();
     }
 
 }
