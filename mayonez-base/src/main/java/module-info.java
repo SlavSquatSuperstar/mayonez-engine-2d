@@ -22,6 +22,10 @@ module mayonez.base {
     // Subprojects
     requires transitive mayonez.tools;
 
+    // Utilities
+    exports mayonez.annotations;
+    exports mayonez.util;
+
     // Base Application
     exports mayonez;
     exports mayonez.config;

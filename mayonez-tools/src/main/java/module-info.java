@@ -7,8 +7,4 @@ module mayonez.tools {
     // Dependencies
     requires kotlin.stdlib;
     requires org.json;
-
-    // Shared API
-    exports mayonez.annotations;
-    exports mayonez.util;
 }
