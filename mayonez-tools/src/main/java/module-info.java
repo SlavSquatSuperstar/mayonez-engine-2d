@@ -11,10 +11,4 @@ module mayonez.tools {
     // Shared API
     exports mayonez.annotations;
     exports mayonez.util;
-
-    // File IO
-    exports mayonez.io;
-    exports mayonez.io.image;
-    exports mayonez.io.scanner;
-    exports mayonez.io.text;
 }

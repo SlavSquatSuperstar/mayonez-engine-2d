@@ -8,15 +8,16 @@ module mayonez.base {
     // JVM
     requires java.desktop;
 
-    // Other Dependencies
-    requires kotlin.stdlib;
-    requires org.joml;
-
     // LWJGL
     requires org.lwjgl;
     requires org.lwjgl.glfw;
     requires org.lwjgl.opengl;
     requires org.lwjgl.stb;
+
+    // Other Dependencies
+    requires kotlin.stdlib;
+    requires org.joml;
+    requires org.json;
 
     // Subprojects
     requires transitive mayonez.tools;
@@ -27,6 +28,17 @@ module mayonez.base {
     exports mayonez.event;
     exports mayonez.input;
 
+    // File IO
+    exports mayonez.io;
+    exports mayonez.io.image;
+    exports mayonez.io.scanner;
+    exports mayonez.io.text;
+
+    // Assets
+    exports mayonez.assets;
+    exports mayonez.assets.image;
+    exports mayonez.assets.text;
+
     // Math
     exports mayonez.math;
     exports mayonez.math.shapes;
@@ -35,11 +47,6 @@ module mayonez.base {
     exports mayonez.physics;
     exports mayonez.physics.colliders;
     exports mayonez.physics.dynamics;
-
-    // Assets
-    exports mayonez.assets;
-    exports mayonez.assets.image;
-    exports mayonez.assets.text;
 
     // Graphics
     exports mayonez.graphics;
