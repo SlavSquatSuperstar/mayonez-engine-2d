@@ -7,6 +7,7 @@ import java.io.OutputStream;
  * Saves or appends data to a file in a specified format.
  *
  * @param <T> what data type to read
+ * @author SlavSquatSuperstar
  */
 @FunctionalInterface
 public interface AssetWriter<T> {

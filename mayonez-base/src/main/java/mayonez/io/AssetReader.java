@@ -7,6 +7,7 @@ import java.io.InputStream;
  * Reads data from a file in a specified format.
  *
  * @param <T> what data type to read
+ * @author SlavSquatSuperstar
  */
 @FunctionalInterface
 public interface AssetReader<T> {

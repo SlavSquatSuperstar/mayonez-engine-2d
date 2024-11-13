@@ -3,7 +3,6 @@ package mayonez.io.text;
 import mayonez.io.*;
 import org.junit.jupiter.api.*;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
@@ -32,14 +31,7 @@ class TextIOManagerTest {
     @Test
     void writeTextToFileSuccess() {
         var filename = "src/test/resources/testassets/out/out2.txt";
-
-        // Make sure file is present so the test works
-        var file = new File(filename);
-        try {
-            if (!file.exists()) file.createNewFile();
-        } catch (IOException e) {
-            fail(e.getMessage());
-        }
+        IOTestUtils.checkFileExists(filename);
 
         String text = """
                 Hello there!
