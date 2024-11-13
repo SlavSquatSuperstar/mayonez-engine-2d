@@ -27,6 +27,15 @@ module mayonez.base {
     exports mayonez.event;
     exports mayonez.input;
 
+    // Math
+    exports mayonez.math;
+    exports mayonez.math.shapes;
+
+    // Physics
+    exports mayonez.physics;
+    exports mayonez.physics.colliders;
+    exports mayonez.physics.dynamics;
+
     // Assets
     exports mayonez.assets;
     exports mayonez.assets.image;
@@ -44,12 +53,7 @@ module mayonez.base {
     // Renderer
     exports mayonez.renderer.batch;
 
-    // Physics
-    exports mayonez.physics;
-    exports mayonez.physics.colliders;
-    exports mayonez.physics.dynamics;
-
-    // Addons
+    // Extras
     exports mayonez.scripts;
     exports mayonez.scripts.camera;
     exports mayonez.scripts.mouse;

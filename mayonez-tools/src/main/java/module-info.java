@@ -10,8 +10,6 @@ module mayonez.tools {
 
     // Shared API
     exports mayonez.annotations;
-    exports mayonez.math;
-    exports mayonez.math.shapes;
     exports mayonez.util;
 
     // File IO
