@@ -1,6 +1,5 @@
 package mayonez.assets;
 
-import mayonez.assets.text.*;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -46,20 +45,31 @@ class AssetsTest {
     }
     
     @Test
-    void createAssetAsType() {
+    void createAssetAsSubclass() {
         reloadAssets();
-
         var filename = "testassets/text/properties.txt";
+
         var asset = Assets.getAsset(filename);
         assertNotNull(asset);
         assertInstanceOf(Asset.class, asset);
-        assertInstanceOf(ClasspathFilePath.class, asset.getFilePath());
+        assertFalse(asset instanceof TestAssetA);
 
-        var textFile = Assets.getAsset(filename, TextFile.class);
+        var textFile = Assets.getAsset(filename, TestAssetA.class);
         assertNotNull(textFile);
-        assertInstanceOf(TextFile.class, textFile);
-        assertInstanceOf(ClasspathFilePath.class, asset.getFilePath());
-        assertEquals(filename, textFile.getFilename());
+        assertInstanceOf(TestAssetA.class, textFile);
+        assertFalse(asset instanceof TestAssetB);
+    }
+
+    private static class TestAssetA extends Asset {
+        public TestAssetA(String filename) {
+            super(filename);
+        }
+    }
+
+    private static class TestAssetB extends Asset {
+        public TestAssetB(String filename) {
+            super(filename);
+        }
     }
 
 }

@@ -15,7 +15,7 @@ import java.io.OutputStream
 // TODO hold streams, close on free
 open class Asset(filename: String) {
 
-    val filePath: FilePath = FilePath.fromFilename(filename)
+    private val filePath: FilePath = FilePath.fromFilename(filename)
     val filename: String = filePath.filename
 
     // I/O Methods
