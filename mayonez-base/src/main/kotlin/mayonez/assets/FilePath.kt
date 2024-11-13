@@ -7,6 +7,8 @@ import java.net.URL
 /**
  * Represents the location of an [mayonez.assets.Asset] on the computer's
  * file system and describes whether it is readable or writable.
+ *
+ * @author SlavSquatSuperstar
  */
 class FilePath(filename: String) {
 
@@ -16,8 +18,8 @@ class FilePath(filename: String) {
      * The OS-independent filename separated by forward slashes ('/'), used to
      * store files in the asset system.
      */
-    val filename: String = getClasspathFilename(filename)
-    private val osFilename: String = getOSFilename(filename)
+    val filename: String = LocationType.CLASSPATH.getFilename(filename)
+    private val osFilename: String = LocationType.EXTERNAL.getFilename(filename)
     var locationType: LocationType = getLocationType(this.filename)
         private set
 
@@ -80,14 +82,6 @@ class FilePath(filename: String) {
 }
 
 // Helper Methods
-
-private fun getOSFilename(filename: String): String {
-    return OperatingSystem.getCurrentOSFilename(filename)
-}
-
-private fun getClasspathFilename(filename: String): String {
-    return OperatingSystem.LINUX.getOSFilename(filename)
-}
 
 /**
  * Automatically determines the file's location type. Attempts to locate a

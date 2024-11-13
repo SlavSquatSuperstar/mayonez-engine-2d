@@ -52,4 +52,14 @@ public final class PathUtil {
         return currentPathCleaned.replace(CURRENT_SEPARATOR, fileSeparator);
     }
 
+    /**
+     * Gets the path with the correct file separators for the current OS.
+     *
+     * @param path the path string
+     * @return the current OS path string
+     */
+    public static String convertPath(String path) {
+        return convertPath(path, CURRENT_SEPARATOR);
+    }
+
 }

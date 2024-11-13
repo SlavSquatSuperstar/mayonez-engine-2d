@@ -22,7 +22,7 @@ class ExternalFolderScannerTest {
     }
 
     private static boolean doesFolderContain(List<String> files, String filename) {
-        return files.contains(OperatingSystem.getCurrentOSFilename(filename));
+        return files.contains(PathUtil.convertPath(filename));
     }
 
     @Test

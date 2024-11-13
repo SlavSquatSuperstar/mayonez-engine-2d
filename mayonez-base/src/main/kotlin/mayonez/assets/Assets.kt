@@ -174,6 +174,6 @@ object Assets {
         return "Assets (Size = ${assets.size})"
     }
 
-    private fun String.toOS() = OperatingSystem.getCurrentOSFilename(this)
-
 }
+
+private fun String.toOS() = PathUtil.convertPath(this)

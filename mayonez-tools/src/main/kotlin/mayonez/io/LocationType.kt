@@ -12,6 +12,8 @@ import java.nio.file.StandardOpenOption
  * The location of a file on the computer, which defines its file
  * permissions.
  */
+// TODO runtime
+// TODO tests
 enum class LocationType {
 
     /**
@@ -20,7 +22,7 @@ enum class LocationType {
      */
     CLASSPATH {
         override fun getFilename(filename: String): String {
-            return OperatingSystem.LINUX.getOSFilename(filename)
+            return PathUtil.convertPath(filename, PathUtil.CLASSPATH_SEPARATOR)
         }
 
         override fun getURL(filename: String): URL? {
@@ -44,7 +46,7 @@ enum class LocationType {
      */
     EXTERNAL {
         override fun getFilename(filename: String): String {
-            return OperatingSystem.getCurrentOSFilename(filename)
+            return PathUtil.convertPath(filename)
         }
 
         override fun getURL(filename: String): URL? {

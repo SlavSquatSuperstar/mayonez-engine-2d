@@ -27,7 +27,7 @@ public class ExternalFolderScanner implements FolderScanner {
      */
     @Override
     public List<String> getFiles(String directoryName) {
-        var directory = OperatingSystem.getCurrentOSFilename(directoryName);
+        var directory = PathUtil.convertPath(directoryName);
         if (!(new File(directory).isDirectory())) return new ArrayList<>(); // If not directory return empty list
 
         // Use Files.walk() to get recursive tree
