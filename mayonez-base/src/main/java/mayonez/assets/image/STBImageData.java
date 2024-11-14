@@ -2,7 +2,7 @@ package mayonez.assets.image;
 
 import mayonez.*;
 import mayonez.graphics.*;
-import mayonez.io.image.*;
+import mayonez.io.*;
 import mayonez.math.*;
 import org.lwjgl.BufferUtils;
 
@@ -54,7 +54,7 @@ public class STBImageData extends ImageData {
     // Read Image Methods
 
     private ByteBuffer readImageBytes() throws ImageReadException, IOException {
-        var imageBytes = new ImageIOManager().read(openInputStream());
+        var imageBytes = BinaryIOUtils.readBytes(openInputStream());
         if (imageBytes == null) {
             throw new ImageReadException("Image byte array is null");
         }

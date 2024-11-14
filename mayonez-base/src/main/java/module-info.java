@@ -31,7 +31,6 @@ module mayonez.base {
 
     // File IO
     exports mayonez.io;
-    exports mayonez.io.image;
     exports mayonez.io.scanner;
     exports mayonez.io.text;
 

@@ -4,7 +4,7 @@ import java.io.*;
 import java.util.*;
 
 /**
- * Utility functions for reading to and writing from plain text files.
+ * Reads and writes strings or lines from plain text files.
  *
  * @author SlavSquatSuperstar
  */
@@ -63,7 +63,7 @@ public final class TextIOUtils {
     }
 
     /**
-     * Writes any number of lines of text to a stream file. A new line character
+     * Writes any number of lines of text to a stream. A new line character
      * ('\n') is inserted after every line.
      *
      * @param output the output stream
