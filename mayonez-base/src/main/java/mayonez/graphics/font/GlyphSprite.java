@@ -21,21 +21,23 @@ public record GlyphSprite(
         Vec2 position, Vec2 size,
         Texture texture, Color color,
         TextLabel text
-) implements GLRenderable {
+) implements GLQuad {
 
-    // Renderable Methods
+    // Quad Methods
 
     @Override
-    public void pushToBatch(RenderBatch batch) {
-        if (texture instanceof GLTexture glTex) {
-            var sceneScale = isInUI() ? 1 : text.getScene().getScale();
-            var sprVertices = new BoundingBox(position.mul(sceneScale), size.mul(sceneScale))
-                    .getVertices();
-            var texCoords = glTex.getTexCoords();
-            var texID = batch.getTextureSlot(glTex);
-            BatchPushHelper.pushSprite(batch, sprVertices, color, texCoords, texID);
-        }
+    public Color getColor() {
+        return color;
     }
+
+    @Override
+    public Vec2[] getVertexPositions() {
+        var sceneScale = isInUI() ? 1 : text.getScene().getScale();
+        return new BoundingBox(position.mul(sceneScale), size.mul(sceneScale))
+                .getVertices();
+    }
+
+    // GL Methods
 
     @Override
     public int getBatchSize() {
@@ -46,6 +48,13 @@ public record GlyphSprite(
     public DrawPrimitive getPrimitive() {
         return DrawPrimitive.SPRITE;
     }
+
+    @Override
+    public GLTexture getTexture() {
+        return (texture instanceof GLTexture glTex) ? glTex : null;
+    }
+
+    // Quad Methods
 
     @Override
     public int getZIndex() {

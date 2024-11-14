@@ -2,9 +2,9 @@ package mayonez.graphics.sprites
 
 import mayonez.graphics.*
 import mayonez.graphics.textures.*
+import mayonez.math.*
 import mayonez.math.shapes.*
 import mayonez.renderer.batch.*
-import mayonez.renderer.batch.BatchPushHelper.pushSprite
 import mayonez.renderer.gl.*
 
 
@@ -18,7 +18,7 @@ import mayonez.renderer.gl.*
 @UsesEngine(EngineType.GL)
 internal class GLSprite private constructor(
     private var texture: GLTexture?, private var color: Color
-) : Sprite(), GLRenderable {
+) : Sprite(), GLQuad {
 
     /**
      * Create a new GLSprite that renders an entire texture.
@@ -56,28 +56,17 @@ internal class GLSprite private constructor(
 
     override fun copy(): GLSprite = GLSprite(texture, color)
 
-    // Renderer Methods
+    // Renderable Methods
 
-    /**
-     * Pushes a sprite's vertices and texture to a render batch.
-     *
-     * @param batch the batch
-     */
-    override fun pushToBatch(batch: RenderBatch) {
+    override fun getVertexPositions(): Array<out Vec2?>? {
         // Render sprite at object center and rotate according to object
         // Background sprite will not have scale but will use spriteXf instead
         val objXf = transform.combine(getSpriteTransform())
         val sceneScale = gameObject?.scene?.scale ?: 1f
-        val sprVertices = Rectangle(
+        return Rectangle(
             objXf.position * sceneScale, objXf.scale * sceneScale, objXf.rotation
         ).vertices
-
-        val texCoords = texture?.texCoords ?: GLTexture.DEFAULT_TEX_COORDS
-        val texID = batch.getTextureSlot(texture)
-        batch.pushSprite(sprVertices, color, texCoords, texID)
     }
-
-    // Renderable Methods
 
     override fun getBatchSize(): Int = RenderBatch.MAX_SPRITES
 

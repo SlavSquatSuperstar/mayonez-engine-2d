@@ -46,3 +46,10 @@ internal fun MColor.toAWT(): JColor = JColor(red, green, blue, alpha)
  * GL engine, normalizing the values to between 0.0-1.0.
  */
 internal fun MColor.toGL(): GLColor = GLColor(red.norm(), green.norm(), blue.norm(), alpha.norm())
+
+// Needed for GLQuad
+object ColorHelpers {
+    @JvmStatic
+    @JvmName("toGLColor")
+    internal fun toGLColor(color: MColor): GLColor = color.toGL()
+}

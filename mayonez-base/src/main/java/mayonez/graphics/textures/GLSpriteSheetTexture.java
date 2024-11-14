@@ -44,14 +44,6 @@ public final class GLSpriteSheetTexture extends GLTexture {
         return parentTexture;
     }
 
-    public int getParentWidth() {
-        return parentTexture.getWidth();
-    }
-
-    public int getParentHeight() {
-        return parentTexture.getHeight();
-    }
-
     @Override
     public int getWidth() {
         return width;

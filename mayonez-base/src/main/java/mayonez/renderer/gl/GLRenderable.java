@@ -13,7 +13,7 @@ import mayonez.renderer.batch.*;
 @UsesEngine(EngineType.GL)
 public interface GLRenderable extends Renderable {
 
-    // TODO store shader
+    // TODO store shader ID
 
     // Render Batch Methods
 
@@ -34,14 +34,15 @@ public interface GLRenderable extends Renderable {
     int getBatchSize();
 
     /**
-     * What primitive object should be used to draw this object.
+     * Which GL primitive should be used to draw this object.
      *
      * @return the primitive type
      */
     DrawPrimitive getPrimitive();
 
     /**
-     * What texture this object should be drawn with. Defaults to null (draw color only).
+     * What texture this object should be drawn with. May be null if drawing a
+     * solid color.
      *
      * @return the texture
      */
