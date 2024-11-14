@@ -1,9 +1,6 @@
 package mayonez.assets
 
-import java.io.File
-import java.io.IOException
-import java.io.InputStream
-import java.io.OutputStream
+import java.io.*
 import java.net.URL
 
 /**
@@ -91,7 +88,7 @@ abstract class FilePath(val filename: String) {
     /**
      * Gets the file represented by this path.
      *
-     * @return the path's URL
+     * @return the file
      */
     fun getFile(): File = File(filename)
 

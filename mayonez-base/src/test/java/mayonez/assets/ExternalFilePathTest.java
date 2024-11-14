@@ -61,13 +61,22 @@ class ExternalFilePathTest {
     }
 
     @Test
-    void externalOutputStreamAlwaysSucceeds() {
+    void validExternalOutputStreamSucceeds() {
         assertDoesNotThrow(() -> IOTestUtils.assertOutputStreamExists(filePathValid));
+    }
+
+    @Test
+    void invalidOutputStreamWithDirSucceeds() {
         assertDoesNotThrow(() -> IOTestUtils.assertOutputStreamExists(filePathInvalid));
         // Delete created file so tests pass
         var file = filePathInvalid.getFile();
         file.delete();
     }
 
+    @Test
+    void invalidOutputStreamWithoutDirFails() {
+        var filePathInvalid2 = new ExternalFilePath("src/test/resources/testassets/text/baz/bar.txt");
+        assertThrows(IOException.class, () -> IOTestUtils.assertOutputStreamExists(filePathInvalid2));
+    }
 
 }

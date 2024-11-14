@@ -1,9 +1,6 @@
 package mayonez.assets
 
-import java.io.File
-import java.io.IOException
-import java.io.InputStream
-import java.io.OutputStream
+import java.io.*
 import java.net.MalformedURLException
 import java.net.URL
 import java.nio.file.Files
@@ -23,29 +20,30 @@ class ExternalFilePath(filename: String) : FilePath(filename.toExternal()) {
 
     override fun isReadable(): Boolean = getFile().isFile
 
-    override fun isWritable(): Boolean = !getFile().isDirectory
+    override fun isWritable(): Boolean {
+        val file = getFile() // Check that parent folder exists
+        return file.parentFile.isDirectory && !file.isDirectory
+    }
 
     override fun openInputStream(): InputStream {
         assertReadable()
         try {
             return Files.newInputStream(Paths.get(filename))
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             throw IOException("Could not open input stream for $this")
         }
     }
 
     override fun openOutputStream(append: Boolean): OutputStream {
         assertWritable()
-
         val options = if (append) {
             arrayOf(StandardOpenOption.CREATE, StandardOpenOption.APPEND)
         } else {
             arrayOf(StandardOpenOption.CREATE)
         }
-
         try {
             return Files.newOutputStream(Paths.get(filename), *options)
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             throw IOException("Could not open output stream for $this")
         }
     }
@@ -53,7 +51,7 @@ class ExternalFilePath(filename: String) : FilePath(filename.toExternal()) {
     override fun getURL(): URL? {
         return try {
             File(filename).toURI().toURL()
-        } catch (e: MalformedURLException) {
+        } catch (_: MalformedURLException) {
             null
         }
     }

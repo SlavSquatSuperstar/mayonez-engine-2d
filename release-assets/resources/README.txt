@@ -1,4 +1,4 @@
-Thank you for downloading Mayonez Engine v0.8.1-pre3!
+Thank you for downloading Mayonez Engine v0.8.1-pre4-snapshot!
 Find the latest release at https://github.com/SlavSquatSuperstar/mayonez-engine-2d/releases.
 
 Running the Program
