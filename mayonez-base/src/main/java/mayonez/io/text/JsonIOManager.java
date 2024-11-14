@@ -1,6 +1,5 @@
 package mayonez.io.text;
 
-import kotlin.io.TextStreamsKt;
 import mayonez.io.*;
 import mayonez.util.Record;
 import org.json.JSONException;
@@ -24,9 +23,17 @@ public class JsonIOManager implements AssetReader<Record>, AssetWriter<Record> {
             throw new FileNotFoundException("File does not exist");
         }
 
-        try (var reader = new BufferedReader(new InputStreamReader(input))) {
-            var text = TextStreamsKt.readText(reader);
-            return new Record(new JSONObject(text).toMap());
+        try {
+            var reader = new BufferedReader(new InputStreamReader(input));
+            StringBuilder contents = new StringBuilder();
+
+            var line = reader.readLine();
+            while (line != null) {
+                contents.append(line);
+                contents.append('\n');
+                line = reader.readLine();
+            }
+            return new Record(new JSONObject(contents.toString()).toMap());
         } catch (JSONException e) {
             throw new IOException("Could not parse JSON text");
         } catch (IOException e) {
@@ -41,7 +48,8 @@ public class JsonIOManager implements AssetReader<Record>, AssetWriter<Record> {
         }
         if (json == null) return;
 
-        try (var writer = new BufferedWriter(new OutputStreamWriter(output))) {
+        try {
+            var writer = new BufferedWriter(new OutputStreamWriter(output));
             var jsonString = new JSONObject(json.toMap()).toString(INDENT_SPACES);
             writer.write(jsonString);
         } catch (JSONException e) {

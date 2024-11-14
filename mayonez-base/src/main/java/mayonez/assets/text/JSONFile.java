@@ -24,8 +24,8 @@ public class JSONFile extends Asset {
      * @return a record, or blank if it does not exist
      */
     public Record readJSON() {
-        try {
-            return new JsonIOManager().read(openInputStream());
+        try (var stream = openInputStream()) {
+            return new JsonIOManager().read(stream);
         } catch (IOException e) {
             Logger.error("Could not read file %s", getFilename());
             return new Record();
@@ -38,8 +38,8 @@ public class JSONFile extends Asset {
      * @param json a record object
      */
     public void saveJSON(Record json) {
-        try {
-            new JsonIOManager().write(openOutputStream(false), json);
+        try (var stream = openOutputStream(false)) {
+            new JsonIOManager().write(stream, json);
         } catch (IOException e) {
             Logger.error("Could not save to file %s", getFilename());
         }

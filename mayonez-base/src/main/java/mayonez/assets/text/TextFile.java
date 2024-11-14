@@ -23,8 +23,8 @@ public class TextFile extends Asset {
      * @return the text as a string, empty if the file does not exist
      */
     public String readText() {
-        try {
-            return new TextIOManager().read(openInputStream());
+        try (var stream = openInputStream()) {
+            return new TextIOManager().read(stream);
         } catch (IOException e) {
             Logger.error("Could not read file %s", getFilenameInQuotes());
             return "";
@@ -37,8 +37,8 @@ public class TextFile extends Asset {
      * @return the text as an array, empty if the file does not exist
      */
     public String[] readLines() {
-        try {
-            return new LinesIOManager().read(openInputStream());
+        try (var stream = openInputStream()) {
+            return new LinesIOManager().read(stream);
         } catch (IOException e) {
             Logger.error("Could not read file %s", getFilenameInQuotes());
             return new String[0];
@@ -64,11 +64,11 @@ public class TextFile extends Asset {
     }
 
     private void saveText(String[] text, boolean append) {
-        try {
+        try (var stream = openOutputStream(append)) {
             if (text.length == 1) {
-                new TextIOManager().write(openOutputStream(append), text[0] + '\n');
+                new TextIOManager().write(stream, text[0] + '\n');
             } else {
-                new LinesIOManager().write(openOutputStream(append), text);
+                new LinesIOManager().write(stream, text);
             }
         } catch (IOException e) {
             Logger.error("Could not save to file %s", getFilenameInQuotes());

@@ -1,6 +1,5 @@
 package mayonez.io.text;
 
-import kotlin.io.TextStreamsKt;
 import mayonez.io.*;
 
 import java.io.*;
@@ -18,8 +17,17 @@ public class TextIOManager implements AssetReader<String>, AssetWriter<String> {
             throw new FileNotFoundException("File does not exist");
         }
 
-        try (var reader = new BufferedReader(new InputStreamReader(input))) {
-            return TextStreamsKt.readText(reader);
+        try {
+            var reader = new BufferedReader(new InputStreamReader(input));
+            StringBuilder contents = new StringBuilder();
+
+            var line = reader.readLine();
+            while (line != null) {
+                contents.append(line);
+                contents.append('\n');
+                line = reader.readLine();
+            }
+            return contents.toString();
         } catch (IOException e) {
             throw new IOException("Error while reading file");
         }
@@ -32,7 +40,8 @@ public class TextIOManager implements AssetReader<String>, AssetWriter<String> {
         }
         if (text == null) return;
 
-        try (var writer = new BufferedWriter(new OutputStreamWriter(output))) {
+        try {
+            var writer = new BufferedWriter(new OutputStreamWriter(output));
             writer.write(text);
         } catch (IOException e) {
             throw new IOException("Error while writing to file");

@@ -4,7 +4,6 @@ import mayonez.assets.*;
 import org.junit.jupiter.api.*;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -22,7 +21,8 @@ class LinesIOManagerTest {
             var input = filePath.openInputStream();
             var lines = new LinesIOManager().read(input);
             assertTrue(lines.length > 0);
-            assertThrows(IOException.class, input::readAllBytes); // make sure stream closed
+            IOTestUtils.assertInputStreamOpen(input);
+            input.close();
         } catch (IOException e) {
             fail();
         }
@@ -41,9 +41,8 @@ class LinesIOManagerTest {
         try {
             var output = filePath.openOutputStream(false);
             new LinesIOManager().write(output, lines);
-            // make sure stream closed
-            assertThrows(IOException.class,
-                    () -> output.write(lines[0].getBytes(StandardCharsets.UTF_8)));
+            IOTestUtils.assertOutputStreamOpen(output);
+            output.close();
         } catch (IOException e) {
             fail();
         }

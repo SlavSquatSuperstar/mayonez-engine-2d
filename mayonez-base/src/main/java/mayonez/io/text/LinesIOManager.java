@@ -1,11 +1,11 @@
 package mayonez.io.text;
 
-import kotlin.io.TextStreamsKt;
 import mayonez.io.*;
 
 import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.*;
 
 /**
  * Reads, writes, and appends lines of text to files as string arrays.
@@ -23,8 +23,16 @@ public class LinesIOManager implements AssetReader<String[]>, AssetWriter<String
             throw new FileNotFoundException("File does not exist");
         }
 
-        try (var reader = new BufferedReader(new InputStreamReader(input))) {
-            return TextStreamsKt.readLines(reader).toArray(new String[0]);
+        try {
+            var reader = new BufferedReader(new InputStreamReader(input));
+            List<String> lines = new ArrayList<>();
+
+            var line = reader.readLine();
+            while (line != null) {
+                lines.add(line);
+                line = reader.readLine();
+            }
+            return lines.toArray(new String[0]);
         } catch (IOException e) {
             throw new IOException("Error while reading file");
         }
@@ -38,7 +46,7 @@ public class LinesIOManager implements AssetReader<String[]>, AssetWriter<String
         }
         if (lines == null) return;
 
-        try (output) {
+        try {
             for (var line : lines) {
                 output.write(line.getBytes(TEXT_CHARSET));
                 output.write(NEW_LINE);

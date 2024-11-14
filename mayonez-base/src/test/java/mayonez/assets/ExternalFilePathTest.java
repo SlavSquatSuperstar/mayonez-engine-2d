@@ -53,18 +53,18 @@ class ExternalFilePathTest {
 
     @Test
     void validExternalInputStreamSucceeds() {
-        assertDoesNotThrow(() -> IOTestUtils.openInputStream(filePathValid));
+        assertDoesNotThrow(() -> IOTestUtils.assertInputStreamExists(filePathValid));
     }
 
     @Test
     void invalidExternalInputStreamFails() {
-        assertThrows(IOException.class, () -> IOTestUtils.openInputStream(filePathInvalid));
+        assertThrows(IOException.class, () -> IOTestUtils.assertInputStreamExists(filePathInvalid));
     }
 
     @Test
     void externalOutputStreamAlwaysSucceeds() {
-        assertDoesNotThrow(() -> IOTestUtils.openOutputStream(filePathValid));
-        assertDoesNotThrow(() -> IOTestUtils.openOutputStream(filePathInvalid));
+        assertDoesNotThrow(() -> IOTestUtils.assertOutputStreamExists(filePathValid));
+        assertDoesNotThrow(() -> IOTestUtils.assertOutputStreamExists(filePathInvalid));
         // Delete created file so tests pass
         var file = filePathInvalid.getFile();
         file.delete();

@@ -2,8 +2,8 @@ package mayonez.io.text;
 
 import mayonez.assets.*;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -22,7 +22,7 @@ public final class IOTestUtils {
      *
      * @param filename the filename
      */
-    static void checkFileExists(String filename) {
+    public static void checkFileExists(String filename) {
         var file = new File(filename);
         try {
             if (!file.exists()) file.createNewFile();
@@ -31,14 +31,44 @@ public final class IOTestUtils {
         }
     }
 
-    public static void openInputStream(FilePath filePath) throws IOException {
+    /**
+     * Attempt to open an input stream from a file path and close it.
+     *
+     * @param filePath the file path to use
+     * @throws IOException if the stream cannot be opened
+     */
+    public static void assertInputStreamExists(FilePath filePath) throws IOException {
         var stream = filePath.openInputStream();
         stream.close();
     }
 
-    public static void openOutputStream(FilePath filePath) throws IOException {
+    /**
+     * Attempt to open an output stream from a file path and close it.
+     *
+     * @param filePath the file path to use
+     * @throws IOException if the stream cannot be opened
+     */
+    public static void assertOutputStreamExists(FilePath filePath) throws IOException {
         var stream = filePath.openOutputStream(false);
         stream.close();
+    }
+
+    /**
+     * Check that an input stream is still open.
+     *
+     * @param stream the stream to check
+     */
+    public static void assertInputStreamOpen(InputStream stream) {
+        assertDoesNotThrow(() -> stream.read());
+    }
+
+    /**
+     * Check that an output stream is still open.
+     *
+     * @param stream the stream to check
+     */
+    public static void assertOutputStreamOpen(OutputStream stream) {
+        assertDoesNotThrow(() -> stream.write("foo\n".getBytes(StandardCharsets.UTF_8)));
     }
 
 }

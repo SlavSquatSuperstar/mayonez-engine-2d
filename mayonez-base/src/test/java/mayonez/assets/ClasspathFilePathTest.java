@@ -56,18 +56,18 @@ class ClasspathFilePathTest {
 
     @Test
     void validClasspathInputStreamSucceeds() {
-        assertDoesNotThrow(() -> IOTestUtils.openInputStream(filePathValid));
+        assertDoesNotThrow(() -> IOTestUtils.assertInputStreamExists(filePathValid));
     }
 
     @Test
     void invalidClasspathInputStreamFails() {
-        assertThrows(IOException.class, () -> IOTestUtils.openInputStream(filePathInvalid));
+        assertThrows(IOException.class, () -> IOTestUtils.assertInputStreamExists(filePathInvalid));
     }
 
     @Test
     void classpathOutputStreamAlwaysFails() {
-        assertThrows(IOException.class, () -> IOTestUtils.openOutputStream(filePathValid));
-        assertThrows(IOException.class, () -> IOTestUtils.openOutputStream(filePathInvalid));
+        assertThrows(IOException.class, () -> IOTestUtils.assertOutputStreamExists(filePathValid));
+        assertThrows(IOException.class, () -> IOTestUtils.assertOutputStreamExists(filePathInvalid));
     }
 
 }
