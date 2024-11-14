@@ -1,4 +1,4 @@
-package mayonez.io;
+package mayonez.assets.text;
 
 import mayonez.assets.*;
 import org.junit.jupiter.api.*;
@@ -8,7 +8,7 @@ import java.io.IOException;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit tests for the {@link mayonez.io.TextIOUtils} class.
+ * Unit tests for the {@link mayonez.assets.text.TextIOUtils} class.
  *
  * @author SlavSquatSuperstar
  */

@@ -1,4 +1,4 @@
-package mayonez.io.scanner;
+package mayonez.assets.scanner;
 
 import java.util.*;
 

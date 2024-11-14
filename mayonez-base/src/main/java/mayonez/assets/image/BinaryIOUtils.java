@@ -1,4 +1,4 @@
-package mayonez.io;
+package mayonez.assets.image;
 
 import java.io.IOException;
 import java.io.InputStream;

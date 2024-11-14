@@ -1,6 +1,6 @@
-package mayonez.io.scanner;
+package mayonez.assets.scanner;
 
-import mayonez.io.*;
+import mayonez.assets.*;
 import org.junit.jupiter.api.*;
 
 import java.util.*;
@@ -8,7 +8,7 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit tests for the {@link mayonez.io.scanner.ExternalFolderScanner} class.
+ * Unit tests for the {@link mayonez.assets.scanner.ExternalFolderScanner} class.
  *
  * @author SlavSquatSuperstar
  */

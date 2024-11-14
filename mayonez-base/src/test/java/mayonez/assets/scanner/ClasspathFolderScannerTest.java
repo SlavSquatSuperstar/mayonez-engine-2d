@@ -1,11 +1,11 @@
-package mayonez.io.scanner;
+package mayonez.assets.scanner;
 
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit tests for the {@link mayonez.io.scanner.ClasspathFolderScanner} class.
+ * Unit tests for the {@link mayonez.assets.scanner.ClasspathFolderScanner} class.
  *
  * @author SlavSquatSuperstar
  */

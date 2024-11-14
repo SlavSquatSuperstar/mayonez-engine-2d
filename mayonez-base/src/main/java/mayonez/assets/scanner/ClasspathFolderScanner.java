@@ -1,4 +1,4 @@
-package mayonez.io.scanner;
+package mayonez.assets.scanner;
 
 import mayonez.assets.*;
 import org.reflections.vfs.Vfs;

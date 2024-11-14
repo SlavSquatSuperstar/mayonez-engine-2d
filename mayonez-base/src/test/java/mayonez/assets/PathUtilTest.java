@@ -1,11 +1,11 @@
-package mayonez.io;
+package mayonez.assets;
 
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit tests for the {@link mayonez.io.PathUtil} class.
+ * Unit tests for the {@link mayonez.assets.PathUtil} class.
  *
  * @author SlavSquatSuperstar
  */

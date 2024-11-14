@@ -1,5 +1,5 @@
 /**
- * Common text file types usable by the application.
+ * Common text file types usable by the application, such as CSV and JSON.
  *
  * @author SlavSquatSuperstar
  */

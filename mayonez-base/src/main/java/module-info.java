@@ -29,10 +29,6 @@ module mayonez.base {
     exports mayonez.event;
     exports mayonez.input;
 
-    // File IO
-    exports mayonez.io;
-    exports mayonez.io.scanner;
-
     // Assets
     exports mayonez.assets;
     exports mayonez.assets.image;

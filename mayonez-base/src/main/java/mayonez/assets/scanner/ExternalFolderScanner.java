@@ -1,6 +1,6 @@
-package mayonez.io.scanner;
+package mayonez.assets.scanner;
 
-import mayonez.io.*;
+import mayonez.assets.*;
 
 import java.io.File;
 import java.io.IOException;

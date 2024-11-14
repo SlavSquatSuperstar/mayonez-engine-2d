@@ -2,7 +2,6 @@ package mayonez.assets.image;
 
 import mayonez.*;
 import mayonez.graphics.*;
-import mayonez.io.*;
 import mayonez.math.*;
 import org.lwjgl.BufferUtils;
 

@@ -1,6 +1,5 @@
 package mayonez.assets;
 
-import mayonez.io.*;
 import org.junit.jupiter.api.*;
 
 import java.io.IOException;

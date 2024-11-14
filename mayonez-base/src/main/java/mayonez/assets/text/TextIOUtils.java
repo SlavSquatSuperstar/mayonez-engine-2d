@@ -1,4 +1,4 @@
-package mayonez.io;
+package mayonez.assets.text;
 
 import java.io.*;
 import java.util.*;

@@ -1,8 +1,8 @@
 package mayonez.assets
 
 import mayonez.*
-import mayonez.io.*
-import mayonez.io.scanner.*
+import mayonez.assets.scanner.ClasspathFolderScanner
+import mayonez.assets.scanner.ExternalFolderScanner
 
 /**
  * Manages the application's resources and allows users to create and

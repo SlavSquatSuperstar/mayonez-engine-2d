@@ -3,4 +3,4 @@
  *
  * @author SlavSquatSuperstar
  */
-package mayonez.io.scanner;
+package mayonez.assets.scanner;

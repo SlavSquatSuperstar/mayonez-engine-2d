@@ -1,5 +1,5 @@
 /**
- * Common image file types usable by the application.
+ * Common image file types usable by the application, such as textures.
  *
  * @author SlavSquatSuperstar
  */
