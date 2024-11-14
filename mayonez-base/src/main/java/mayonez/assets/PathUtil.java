@@ -30,6 +30,8 @@ public final class PathUtil {
      */
     public static final String CLASSPATH_SEPARATOR = UNIX_SEPARATOR;
 
+    private static final String[] SEPARATORS = {UNIX_SEPARATOR, WINDOWS_SEPARATOR};
+
     private PathUtil() {
     }
 
@@ -44,8 +46,12 @@ public final class PathUtil {
      * @return the converted path string
      */
     public static String convertPath(String path, String fileSeparator) {
-        // Get the path string on the current file system
-        var currentPath = path.replaceAll("[/\\\\]", CURRENT_SEPARATOR);
+        // Replace all separators with current separator
+        var currentPath = path;
+        for (var sep : SEPARATORS) {
+            if (sep.equals(CURRENT_SEPARATOR)) continue;
+            currentPath = currentPath.replace(sep, CURRENT_SEPARATOR);
+        }
         // Need to remove trailing separators so ClassLoader doesn't give error
         var currentPathCleaned = Path.of(currentPath).normalize().toString();
         // Get the path string on the target file system
