@@ -43,6 +43,7 @@ public class TextIOManager implements AssetReader<String>, AssetWriter<String> {
         try {
             var writer = new BufferedWriter(new OutputStreamWriter(output));
             writer.write(text);
+            writer.flush();
         } catch (IOException e) {
             throw new IOException("Error while writing to file");
         }

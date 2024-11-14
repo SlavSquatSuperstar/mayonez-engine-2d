@@ -51,6 +51,7 @@ public class LinesIOManager implements AssetReader<String[]>, AssetWriter<String
                 output.write(line.getBytes(TEXT_CHARSET));
                 output.write(NEW_LINE);
             }
+            output.flush();
         } catch (IOException e) {
             throw new IOException("Error while saving file");
         }

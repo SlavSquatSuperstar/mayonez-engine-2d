@@ -52,6 +52,7 @@ public class JsonIOManager implements AssetReader<Record>, AssetWriter<Record> {
             var writer = new BufferedWriter(new OutputStreamWriter(output));
             var jsonString = new JSONObject(json.toMap()).toString(INDENT_SPACES);
             writer.write(jsonString);
+            writer.flush();
         } catch (JSONException e) {
             throw new IOException("Could not convert to JSON text");
         } catch (IOException e) {

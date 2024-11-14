@@ -17,12 +17,10 @@ class LinesIOManagerTest {
     @Test
     void readLinesFromFileSuccess() {
         var filePath = new ClasspathFilePath("testassets/text/foo.txt");
-        try {
-            var input = filePath.openInputStream();
+        try (var input = filePath.openInputStream()) {
             var lines = new LinesIOManager().read(input);
             assertTrue(lines.length > 0);
             IOTestUtils.assertInputStreamOpen(input);
-            input.close();
         } catch (IOException e) {
             fail();
         }
@@ -38,11 +36,9 @@ class LinesIOManagerTest {
                 General Kenobi, you are a bold one!
                 Your move.
                 """.split("\n");
-        try {
-            var output = filePath.openOutputStream(false);
+        try (var output = filePath.openOutputStream(false)) {
             new LinesIOManager().write(output, lines);
             IOTestUtils.assertOutputStreamOpen(output);
-            output.close();
         } catch (IOException e) {
             fail();
         }

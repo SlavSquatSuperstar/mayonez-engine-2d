@@ -13,29 +13,29 @@ import java.io.OutputStream
  * @author SlavSquatSuperstar
  */
 // TODO hold streams, close on free
-open class Asset(filename: String) {
+open class Asset(private val filePath: FilePath) {
 
-    private val filePath: FilePath = FilePath.fromFilename(filename)
+    constructor(filename: String) : this(FilePath.fromFilename(filename))
+
     val filename: String = filePath.filename
 
     // I/O Methods
 
     /**
-     * Creates an [InputStream] that allows data to be read from this asset.
-     * The input stream should be closed after use.
+     * Opens the [InputStream] for this asset. The input stream should be closed
+     * after use.
      *
      * @return the input stream
      * @throws IOException if the asset cannot be read from
      */
     @Throws(IOException::class)
-    fun openInputStream(): InputStream {
+    protected fun openInputStream(): InputStream {
         return filePath.openInputStream()
     }
 
     /**
-     * Creates an [OutputStream] that allows data to be saved to this asset,
-     * and creates the file on the computer if it doesn't exist. The output
-     * stream should be closed after use.
+     * Opens the [OutputStream] for this asset. The output stream should be closed
+     * after use.
      *
      * @param append whether to add data to an existing file's contents instead
      *     of overwriting it
@@ -43,7 +43,7 @@ open class Asset(filename: String) {
      * @throws IOException if the file cannot be written to
      */
     @Throws(IOException::class)
-    fun openOutputStream(append: Boolean): OutputStream {
+    protected fun openOutputStream(append: Boolean): OutputStream {
         return filePath.openOutputStream(append)
     }
 

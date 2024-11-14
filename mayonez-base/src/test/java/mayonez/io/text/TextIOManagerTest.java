@@ -17,12 +17,10 @@ class TextIOManagerTest {
     @Test
     void readTextFromFileSuccess() {
         var filePath = new ClasspathFilePath("testassets/text/foo.txt");
-        try {
-            var input = filePath.openInputStream();
+        try (var input = filePath.openInputStream()) {
             var text = new TextIOManager().read(input);
             assertFalse(text.isEmpty());
             IOTestUtils.assertInputStreamOpen(input);
-            input.close();
         } catch (IOException e) {
             fail();
         }
@@ -38,11 +36,9 @@ class TextIOManagerTest {
                 General Kenobi, you are a bold one!
                 Your move.
                 """;
-        try {
-            var output = filePath.openOutputStream(false);
+        try (var output = filePath.openOutputStream(false)) {
             new TextIOManager().write(output, text);
             IOTestUtils.assertOutputStreamOpen(output);
-            output.close();
         } catch (IOException e) {
             fail();
         }

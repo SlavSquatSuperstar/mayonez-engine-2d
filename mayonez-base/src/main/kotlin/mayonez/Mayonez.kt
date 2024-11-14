@@ -189,9 +189,7 @@ object Mayonez {
      * given status.
      */
     private fun exitProgram(status: Int): Nothing {
-        val message = "Exited program with code $status"
-        if (status == 0) Logger.log("$message (Success)")
-        else Logger.error("$message (Error)")
+        Logger.shutdown(status)
         exitProcess(status)
     }
 

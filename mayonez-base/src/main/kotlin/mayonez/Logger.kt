@@ -48,10 +48,20 @@ object Logger {
         }
     }
 
+    internal fun shutdown(status: Int) {
+        if (!initialized) return
+        val message = "Exited program with code $status"
+        if (status == 0) log("$message (Success)")
+        else error("$message (Error)")
+        logFile.free()
+        initialized = false
+    }
+
     private fun createLogFile() {
         if (this::logFile.isInitialized) return
         if (config.saveLogs) {
             logFile = TextFile(getLogFilename())
+            logFile.setAutoClose(false)
             while (printQueue.isNotEmpty()) {
                 logFile.append(printQueue.poll()) // log everything in print queue
             }
