@@ -16,12 +16,12 @@ public final class IOTestUtils {
     }
 
     /**
-     * Make sure a given file is present so a test succeeds.
+     * Make sure a file is present at a given path so a test succeeds.
      *
-     * @param filename the filename
+     * @param path the path
      */
-    public static void checkFileExists(String filename) {
-        var file = new File(filename);
+    public static void checkFileExists(FilePath path) {
+        var file = path.getFile();
         try {
             if (!file.exists()) file.createNewFile();
         } catch (IOException e) {

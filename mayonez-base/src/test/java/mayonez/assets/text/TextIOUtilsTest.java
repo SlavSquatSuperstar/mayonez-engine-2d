@@ -49,7 +49,7 @@ class TextIOUtilsTest {
     @Test
     void writeTextToFileSuccess() {
         var outputFilePath = new ExternalFilePath("src/test/resources/testassets/out/out2.txt");
-        IOTestUtils.checkFileExists(outputFilePath.getFilename());
+        IOTestUtils.checkFileExists(outputFilePath);
 
         try (var output = outputFilePath.openOutputStream(false)) {
             TextIOUtils.write(output, outputText);
@@ -62,7 +62,7 @@ class TextIOUtilsTest {
     @Test
     void writeLinesToFileSuccess() {
         var outputFilePath = new ExternalFilePath("src/test/resources/testassets/out/out3.txt");
-        IOTestUtils.checkFileExists(outputFilePath.getFilename());
+        IOTestUtils.checkFileExists(outputFilePath);
 
         try (var output = outputFilePath.openOutputStream(false)) {
             TextIOUtils.write(output, outputText.split("\n"));
