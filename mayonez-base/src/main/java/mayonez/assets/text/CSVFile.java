@@ -2,7 +2,7 @@ package mayonez.assets.text;
 
 import mayonez.*;
 import mayonez.assets.*;
-import mayonez.io.text.*;
+import mayonez.io.*;
 import mayonez.util.Record;
 
 import java.io.IOException;
