@@ -4,6 +4,8 @@ import mayonez.*;
 import mayonez.assets.*;
 import mayonez.io.text.*;
 import mayonez.util.Record;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 
@@ -13,6 +15,8 @@ import java.io.IOException;
  * @author SlavSquatSuperstar
  */
 public class JSONFile extends Asset {
+
+    private static final int INDENT_SPACES = 4;
 
     public JSONFile(String filename) {
         super(filename);
@@ -25,11 +29,14 @@ public class JSONFile extends Asset {
      */
     public Record readJSON() {
         try (var stream = openInputStream()) {
-            return new JsonIOManager().read(stream);
+            var jsonString = TextIOUtils.readText(stream);
+            return new Record(new JSONObject(jsonString).toMap());
+        } catch (JSONException e) {
+            Logger.error("Could not parse JSON from %s", getFilename());
         } catch (IOException e) {
             Logger.error("Could not read file %s", getFilename());
-            return new Record();
         }
+        return new Record();
     }
 
     /**
@@ -39,7 +46,10 @@ public class JSONFile extends Asset {
      */
     public void saveJSON(Record json) {
         try (var stream = openOutputStream(false)) {
-            new JsonIOManager().write(stream, json);
+            var jsonString = new JSONObject(json.toMap()).toString(INDENT_SPACES);
+            TextIOUtils.write(stream, jsonString);
+        } catch (JSONException e) {
+            Logger.error("Could not convert %s to JSON", getFilename());
         } catch (IOException e) {
             Logger.error("Could not save to file %s", getFilename());
         }

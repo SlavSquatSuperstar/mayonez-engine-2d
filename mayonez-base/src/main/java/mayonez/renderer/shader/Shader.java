@@ -47,7 +47,7 @@ public class Shader extends Asset {
 
     private List<ShaderProgram> readShaderPrograms() throws ShaderException {
         try {
-            var source = new TextIOManager().read(openInputStream());
+            var source = TextIOUtils.readText(openInputStream());
             var shaders = source.split("(#type)( )+"); // shaders indicated by "#type <shader_type>"
             return parseShaderPrograms(shaders);
         } catch (Exception e) {

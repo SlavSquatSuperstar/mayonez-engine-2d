@@ -14,7 +14,7 @@ import java.io.OutputStream;
  */
 public class TextFile extends Asset {
 
-    private OutputStream stream;
+    private OutputStream output;
     private boolean autoClose;
 
     public TextFile(String filename) {
@@ -40,7 +40,7 @@ public class TextFile extends Asset {
      */
     public String readText() {
         try (var stream = openInputStream()) {
-            return new TextIOManager().read(stream);
+            return TextIOUtils.readText(stream);
         } catch (IOException e) {
             Logger.error("Could not read file %s", getFilenameInQuotes());
             return "";
@@ -54,7 +54,7 @@ public class TextFile extends Asset {
      */
     public String[] readLines() {
         try (var stream = openInputStream()) {
-            return new LinesIOManager().read(stream);
+            return TextIOUtils.readLines(stream);
         } catch (IOException e) {
             Logger.error("Could not read file %s", getFilenameInQuotes());
             return new String[0];
@@ -81,15 +81,11 @@ public class TextFile extends Asset {
 
     private void saveText(String[] text, boolean append) {
         try {
-            if (stream == null) stream = openOutputStream(append);
-            if (text.length == 1) {
-                new TextIOManager().write(stream, text[0] + '\n');
-            } else {
-                new LinesIOManager().write(stream, text);
-            }
+            if (output == null) output = openOutputStream(append);
+            TextIOUtils.write(output, text);
             if (autoClose) {
-                stream.close();
-                stream = null;
+                output.close();
+                output = null;
             }
         } catch (IOException e) {
             Logger.error("Could not save to file %s", getFilenameInQuotes());
@@ -98,9 +94,9 @@ public class TextFile extends Asset {
 
     @Override
     public void free() {
-        if (!autoClose && stream != null) {
+        if (!autoClose && output != null) {
             try {
-                stream.close();
+                output.close();
             } catch (IOException ignored) {
             }
         }

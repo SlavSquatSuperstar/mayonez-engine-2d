@@ -29,7 +29,7 @@ public class CSVFile extends Asset {
     public List<Record> readCSV() {
         var records = new ArrayList<Record>();
         try (var stream = openInputStream()) {
-            var lines = new LinesIOManager().read(stream);
+            var lines = TextIOUtils.readLines(stream);
             this.headers = lines[0].split(","); // Get headers
             for (var row = 1; row < lines.length; row++) {
                 records.add(addRecordFromLine(lines[row]));
@@ -65,7 +65,7 @@ public class CSVFile extends Asset {
             csvLines[row + 1] = getCSVLineFromRecord(records, headers, row);
         }
         try (var stream = openOutputStream(false)) {
-            new LinesIOManager().write(stream, csvLines);
+            TextIOUtils.write(stream, csvLines);
         } catch (IOException e) {
             Logger.error("Could not save to file %s", getFilename());
         }
