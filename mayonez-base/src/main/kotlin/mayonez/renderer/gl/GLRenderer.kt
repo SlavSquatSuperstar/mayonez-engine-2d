@@ -68,18 +68,23 @@ abstract class GLRenderer(shaderFile: String) : Renderer {
     // TODO see Cherno renderer class
     // TODO track current batch
     /**
-     * Gets an available batch for this object or creates a new one it all
+     * Gets an available render batch for this object or creates a new one it all
      * batches are full.
      */
     protected fun GLRenderable.getAvailableBatch(): RenderBatch {
-        return batches.find { it.canFitObject(this) }
-            ?: this.createNewBatch()
+        val batch = batches.find { it.canFitObject(this) }
+        if (batch != null) {
+            return batch
+        } else {
+            val newBatch = this.createNewBatch()
+            batches.add(newBatch)
+            return newBatch
+        }
     }
 
-    private fun GLRenderable.createNewBatch(): RenderBatch {
-        val batch = SingleZRenderBatch(batchSize, primitive, zIndex)
-        batches.add(batch)
-        return batch
-    }
+    /**
+     * Creates a new render batch that can draw this object.
+     */
+    abstract fun GLRenderable.createNewBatch(): RenderBatch
 
 }

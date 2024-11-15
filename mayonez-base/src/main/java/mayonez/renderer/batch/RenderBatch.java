@@ -20,6 +20,7 @@ import static org.lwjgl.opengl.GL11.*;
 public class RenderBatch {
 
     // Batch Constants
+    // TODO move
     public static final int MAX_SPRITES = 100;
     public static final int MAX_LINES = 500;
     public static final int MAX_TRIANGLES = 1000;
@@ -176,7 +177,7 @@ public class RenderBatch {
      *
      * @return if there are unused texture slots
      */
-    public boolean hasTextureRoom() {
+    protected boolean hasTextureRoom() {
         return textures.hasRoom();
     }
 
@@ -185,7 +186,7 @@ public class RenderBatch {
      *
      * @return if there are still unused vertices
      */
-    public boolean hasVertexRoom() {
+    protected boolean hasVertexRoom() {
         return vertices.hasRoom();
     }
 

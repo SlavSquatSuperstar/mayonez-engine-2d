@@ -101,10 +101,9 @@ internal class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"),
 
     override fun createBatches() {
         /*
-         * TODO
          * - sort all objects by z-index and primitive
          * - for each object:
-         *   - check that last batch:
+         *   - check that last used batch:
          *     - has vertex room,
          *     - has texture room, and
          *     - has same primitive
@@ -124,9 +123,20 @@ internal class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"),
             .forEach { it.process() }
 
         // Push objects
+        var lastBatch: RenderBatch? = null
+        drawObjects.sortBy { it.zIndex }
         drawObjects.sortBy { it.primitive }
-
-        drawObjects.forEach { it.pushToBatch(it.getAvailableBatch()) }
+        drawObjects.forEach {
+            // Get available batch
+            if (lastBatch == null || !lastBatch.canFitObject(it)) {
+                lastBatch = it.getAvailableBatch()
+            }
+            // Push to batch
+            it.pushToBatch(lastBatch)
+            if (lastBatch is MultiZRenderBatch) {
+                lastBatch.maxZIndex = it.zIndex // Update max z-index
+            }
+        }
     }
 
     override fun postRender() {
@@ -137,8 +147,16 @@ internal class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"),
 
     // Helper Methods
 
-    private fun Renderable?.isAccepted(): Boolean {
-        return (this is GLRenderable) || (this is TextLabel)
+    override fun GLRenderable.createNewBatch(): RenderBatch {
+        val batch: RenderBatch
+        if (this.primitive == DrawPrimitive.SPRITE) {
+            batch = MultiZRenderBatch(batchSize, primitive)
+            batch.minZIndex = this.zIndex // Set min z-index
+            batch.maxZIndex = this.zIndex // Set initial max z-index
+        } else {
+            batch = SingleZRenderBatch(batchSize, primitive, zIndex)
+        }
+        return batch
     }
 
     private fun Renderable.process() {
@@ -157,6 +175,10 @@ internal class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"),
                 drawObjects.add(this.copy(shape = shapePart))
             }
         }
+    }
+
+    private fun Renderable?.isAccepted(): Boolean {
+        return (this is GLRenderable) || (this is TextLabel)
     }
 
 }

@@ -4,6 +4,7 @@ import mayonez.graphics.*
 import mayonez.graphics.debug.*
 import mayonez.graphics.font.*
 import mayonez.renderer.*
+import mayonez.renderer.batch.*
 import org.lwjgl.opengl.GL11.glLineWidth
 
 /**
@@ -65,8 +66,9 @@ internal class GLUIRenderer : GLRenderer("assets/shaders/ui.glsl"),
 
     // Helper Functions
 
-    private fun Renderable?.isAccepted(): Boolean {
-        return (this is GLRenderable) || (this is TextLabel)
+    override fun GLRenderable.createNewBatch(): RenderBatch {
+        val batch = SingleZRenderBatch(batchSize, primitive, zIndex)
+        return batch
     }
 
     private fun Renderable.pushToBatch() {
@@ -76,6 +78,10 @@ internal class GLUIRenderer : GLRenderer("assets/shaders/ui.glsl"),
                 glyph.pushToBatch(glyph.getAvailableBatch())
             }
         }
+    }
+
+    private fun Renderable?.isAccepted(): Boolean {
+        return (this is GLRenderable) || (this is TextLabel)
     }
 
 }

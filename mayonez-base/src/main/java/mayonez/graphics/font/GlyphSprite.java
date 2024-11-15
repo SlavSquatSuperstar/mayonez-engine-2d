@@ -17,7 +17,7 @@ import mayonez.renderer.gl.*;
  * @param text     the parent text component
  * @author SlavSquatSuperstar
  */
-public record GlyphSprite(
+record GlyphSprite(
         Vec2 position, Vec2 size,
         Texture texture, Color color,
         TextLabel text
