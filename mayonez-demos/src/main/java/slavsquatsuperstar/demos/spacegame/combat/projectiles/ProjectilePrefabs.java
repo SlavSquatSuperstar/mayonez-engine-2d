@@ -105,7 +105,7 @@ public final class ProjectilePrefabs {
                 addComponent(new Projectile(source, type.damage(), type.speed(), type.lifetime()));
                 addComponent(PROJECTILE_SPRITES.getSprite(type.spriteIndex()));
 
-                addComponent(new BallCollider(type.colliderSize()).setTrigger(true));
+                addComponent(new BoxCollider(type.colliderSize()).setTrigger(true));
                 addComponent(new Rigidbody(0.001f));
             }
         };

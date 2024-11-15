@@ -18,7 +18,7 @@ internal data class DebugShape(internal val shape: MShape, private val brush: Sh
     private val color: MColor
         get() = brush.color
 
-    private val fill: Boolean
+    internal val fill: Boolean
         get() = brush.fill
 
     internal val strokeSize: Float
@@ -77,26 +77,6 @@ internal data class DebugShape(internal val shape: MShape, private val brush: Sh
             pushVec2(v)
             pushVec4(color)
         }
-    }
-
-    // GL Shape Conversion Methods
-
-    /**
-     * Break down this shape into its simplest components (lines or triangles).
-     *
-     * @return an array of primitive shapes
-     */
-    internal fun splitIntoParts(): Array<out MShape> {
-        return when (val shape = this.shape) {
-            is Edge -> arrayOf(shape) // add line directly
-            is MPolygon -> shape.splitIntoParts(this.fill) // else break into lines or triangles
-            is Ellipse -> shape.toPolygon().splitIntoParts(this.fill)
-            else -> emptyArray()
-        }
-    }
-
-    private fun MPolygon.splitIntoParts(fill: Boolean): Array<out MShape> {
-        return if (fill) this.triangles else this.edges
     }
 
     // Renderable Methods

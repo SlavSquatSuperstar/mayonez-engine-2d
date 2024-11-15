@@ -25,14 +25,17 @@ internal class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"),
     private val lineStyle: LineStyle = LineStyle.QUADS
 
     // Renderer Objects
-    private val objects: MutableList<GLRenderable> = ArrayList() // Drawable objects
-    private val shapes: MutableList<DebugShape> = ArrayList() // Temporary shapes
-    private val textObjects: MutableList<TextLabel> = ArrayList() // Text objects
+    /*
+     * - sprites are permanent
+     * - debug shapes are temporary and need to be broken up
+     * - texts are permanent and need to be broken up
+     */
+    private val objects: MutableList<Renderable> = ArrayList() // Sprites and text
+    private val tempObjects: MutableList<Renderable> = ArrayList() // Debug shapes
 
     // Scene Background
     private lateinit var background: Sprite
-    private val bgBatch: RenderBatch =
-        RenderBatch(1, 0, DrawPrimitive.SPRITE)
+    private val bgBatch: RenderBatch = RenderBatch(1, 0, DrawPrimitive.SPRITE)
 
     // Scene Renderer Methods
 
@@ -42,35 +45,26 @@ internal class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"),
     }
 
     override fun addRenderable(r: Renderable?) {
-        if (r is GLRenderable) objects.add(r)
-        else if (r is TextLabel) textObjects.add(r)
+        if (r is Renderable) objects.add(r)
     }
 
     override fun removeRenderable(r: Renderable?) {
-        if (r is GLRenderable) objects.remove(r)
-        else if (r is TextLabel) textObjects.remove(r)
+        if (r is Renderable) objects.remove(r)
     }
 
     // Debug Renderer Methods
 
     override fun addShape(shape: DebugShape) {
-        for (shapePart in shape.splitIntoParts()) {
-            if (shapePart is Edge) {
-                shapes.addLine(shapePart, shape, lineStyle)
-            } else if (shapePart is Triangle) {
-                shapes.addShapeAndCopyBrush(shapePart, shape)
-            }
-        }
+        tempObjects.add(shape)
     }
 
     // Renderer Methods
 
     override fun clear() {
         super.clear()
-        objects.clear()
-        shapes.clear()
-        textObjects.clear()
         bgBatch.clearVertices()
+        objects.clear()
+        tempObjects.clear()
     }
 
     override fun preRender() {
@@ -83,8 +77,17 @@ internal class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"),
         shader.uploadIntArray("uTextures", textureSlots)
 
         // Draw background
-        if (background.getTexture() == null) drawBackgroundColor()
-        else drawBackgroundImage()
+        if (background.getTexture() == null) {
+            // Draw background color
+            val bgColor = background.getColor().toGL()
+            GLHelper.clearScreen(bgColor.x, bgColor.y, bgColor.z, 1f)
+        } else {
+            // Draw background sprite
+            bgBatch.clearVertices()
+            (background as GLSprite).pushToBatch(bgBatch)
+            bgBatch.uploadVertices()
+            bgBatch.drawBatch()
+        }
 
         // Set GL Properties
         when (lineStyle) {
@@ -94,41 +97,57 @@ internal class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"),
         }
     }
 
-    private fun drawBackgroundImage() {
-        bgBatch.clearVertices()
-        (background as GLSprite).pushToBatch(bgBatch)
-        bgBatch.uploadVertices()
-        bgBatch.drawBatch()
-    }
-
-    private fun drawBackgroundColor() {
-        val bgColor = background.getColor().toGL()
-        GLHelper.clearScreen(bgColor.x, bgColor.y, bgColor.z, 1f)
-    }
-
     override fun createBatches() {
-        // Push objects
+        /*
+         * TODO
+         * - sort objects by z-index and primitive
+         * - for each object:
+         *   - check that last batch:
+         *     - has vertex room,
+         *     - has texture room, and
+         *     - has same primitive
+         *   - else create new batch with primitive
+         *   - push object into batch
+         * - delete empty leftover batches?
+         */
+
+        // Sort objects
         objects.sortBy { it.zIndex }
+        tempObjects.sortBy { it.zIndex }
+
+        // Pre-process and objects
         objects.filter { it.isEnabled }
-            .forEach { it.pushToBatch(it.getAvailableBatch()) }
-
-        // Push shapes
-        shapes.sortBy { it.zIndex }
-        shapes.forEach { it.pushToBatch(it.getAvailableBatch()) }
-
-        // Push text
-        textObjects.sortBy { it.zIndex }
-        textObjects.filter { it.isEnabled }
-            .forEach {
-                it.glyphSprites.forEach { glyph ->
-                    glyph.pushToBatch(glyph.getAvailableBatch())
-                }
-            }
+            .forEach { it.pushToBatch() }
+        tempObjects.filter { it.isEnabled }
+            .forEach { it.pushToBatch() }
     }
 
     override fun postRender() {
         super.postRender()
-        shapes.clear() // Clear primitives after each frame
+        tempObjects.clear() // Clear debug shapes after each frame
+    }
+
+    private fun Renderable.pushToBatch() {
+        when (this) {
+            is DebugShape -> this.processShape()
+            is GLRenderable -> this.pushToBatch(this.getAvailableBatch())
+            is TextLabel -> this.glyphSprites.forEach { glyph ->
+                glyph.pushToBatch(glyph.getAvailableBatch())
+            }
+        }
+    }
+
+    private fun DebugShape.processShape() {
+        getParts().forEach { shapePart ->
+            if (shapePart is Edge) {
+                getLines(shapePart, this, lineStyle).forEach {
+                    line -> line.pushToBatch(line.getAvailableBatch())
+                }
+            } else if (shapePart is Triangle) {
+                val tri = this.copy(shape = shapePart)
+                tri.pushToBatch(tri.getAvailableBatch())
+            }
+        }
     }
 
 }

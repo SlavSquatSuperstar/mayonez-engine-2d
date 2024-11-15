@@ -20,8 +20,7 @@ internal class GLUIRenderer : GLRenderer("assets/shaders/ui.glsl"),
     private val lineStyle: LineStyle = LineStyle.QUADS
 
     // Renderer Objects
-    private val objects: MutableList<GLRenderable> = ArrayList() // Drawable objects
-    private val textObjects: MutableList<TextLabel> = ArrayList() // Text objects
+    private val objects: MutableList<Renderable> = ArrayList()
 
     // Scene Renderer Methods
 
@@ -40,7 +39,6 @@ internal class GLUIRenderer : GLRenderer("assets/shaders/ui.glsl"),
     override fun clear() {
         super.clear()
         objects.clear()
-        textObjects.clear()
     }
 
     override fun preRender() {
@@ -59,19 +57,23 @@ internal class GLUIRenderer : GLRenderer("assets/shaders/ui.glsl"),
     }
 
     override fun createBatches() {
-        // Push objects
+        // Sort objects
         objects.sortBy { it.zIndex }
-        objects.filter { it.isEnabled }
-            .forEach { it.pushToBatch(it.getAvailableBatch()) }
 
-        // Push text
-        textObjects.sortBy { it.zIndex }
-        textObjects.filter { it.isEnabled }
-            .forEach {
-                it.glyphSprites.forEach { glyph ->
-                    glyph.pushToBatch(glyph.getAvailableBatch())
-                }
+        // Process and push objects
+        objects.filter { it.isEnabled }
+            .forEach { it.pushToBatch() }
+    }
+
+    // Helper Functions
+
+    private fun Renderable.pushToBatch() {
+        when (this) {
+            is GLRenderable -> this.pushToBatch(this.getAvailableBatch())
+            is TextLabel -> this.glyphSprites.forEach { glyph ->
+                glyph.pushToBatch(glyph.getAvailableBatch())
             }
+        }
     }
 
 }
