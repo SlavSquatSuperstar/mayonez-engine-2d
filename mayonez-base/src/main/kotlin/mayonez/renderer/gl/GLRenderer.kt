@@ -33,6 +33,7 @@ abstract class GLRenderer(shaderFile: String) : Renderer {
         preRender()
         rebuffer()
         batches.forEach(RenderBatch::drawBatch)
+        batches.forEach { println(it) }
         postRender()
     }
 
@@ -46,7 +47,7 @@ abstract class GLRenderer(shaderFile: String) : Renderer {
         batches.forEach(RenderBatch::clearVertices) // Prepare batches
         createBatches()
         batches.forEach(RenderBatch::uploadVertices) // Finalize batches
-        batches.sortBy(RenderBatch::getZIndex) // Sort batches by z-index
+        batches.sortBy(RenderBatch::getDrawOrder) // Sort batches by z-index
     }
 
     /** Sort image data into render batches. */
@@ -66,22 +67,17 @@ abstract class GLRenderer(shaderFile: String) : Renderer {
     // TODO may be better to sort by z-index, and put as many things in batches as possible
     // TODO see Cherno renderer class
     // TODO track current batch
+    /**
+     * Gets an available batch for this object or creates a new one it all
+     * batches are full.
+     */
     protected fun GLRenderable.getAvailableBatch(): RenderBatch {
-        return batches.find { this.fitsInBatch(it) }
-            ?: this.createNewBatch() // If all batches full
-    }
-
-    private fun GLRenderable.fitsInBatch(batch: RenderBatch): Boolean {
-        return batch.hasVertexRoom() && (batch.primitive == this.primitive)
-                && (batch.zIndex == this.zIndex) && batch.canFitTexture(this)
-    }
-
-    private fun RenderBatch.canFitTexture(renderable: GLRenderable): Boolean {
-        return this.hasTexture(renderable.texture) || this.hasTextureRoom()
+        return batches.find { it.canFitObject(this) }
+            ?: this.createNewBatch()
     }
 
     private fun GLRenderable.createNewBatch(): RenderBatch {
-        val batch = RenderBatch(batchSize, zIndex, primitive)
+        val batch = SingleZRenderBatch(batchSize, primitive, zIndex)
         batches.add(batch)
         return batch
     }

@@ -3,19 +3,21 @@ package mayonez.renderer.batch;
 import mayonez.graphics.*;
 import mayonez.graphics.textures.*;
 import mayonez.math.*;
+import mayonez.renderer.gl.*;
 import org.joml.*;
 
 import static org.lwjgl.opengl.GL11.*;
 
 /**
- * Stores vertex information for many similar drawable objects and combines them into one large mesh,
- * allowing many sprites and shapes to be drawn in fewer GPU calls. Roughly analog to the {@link java.awt.Graphics2D}
- * class from the AWT engine.
+ * Stores vertex information for many similar drawable objects and combines them
+ * into one large mesh, allowing many sprites and shapes to be drawn in fewer
+ * GPU calls. Roughly analogous to the {@link java.awt.Graphics2D} class from
+ * the AWT engine.
  *
  * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.GL)
-public final class RenderBatch {
+public class RenderBatch {
 
     // Batch Constants
     public static final int MAX_SPRITES = 100;
@@ -27,7 +29,6 @@ public final class RenderBatch {
     // Batch Characteristics
     private final int maxBatchObjects;
     private final DrawPrimitive primitive;
-    private final int zIndex;
 
     // Renderer Data
     private final VertexBufferArray vertices;
@@ -38,9 +39,8 @@ public final class RenderBatch {
     private final VertexBuffer vbo; // VBO for this batch
     private final IndexBuffer ibo; // EBO/IBO for this batch
 
-    public RenderBatch(int maxBatchObjects, int zIndex, DrawPrimitive primitive) {
+    public RenderBatch(int maxBatchObjects, DrawPrimitive primitive) {
         this.maxBatchObjects = maxBatchObjects;
-        this.zIndex = zIndex;
         this.primitive = primitive;
 
         // Renderer Fields
@@ -96,8 +96,8 @@ public final class RenderBatch {
         textures.bindTextures();
 
         // Draw
-        glDrawElements(primitive.getPrimitiveType(), vertices.getNumIndices(), GL_UNSIGNED_INT, GL_NONE);
-//        glDrawElements(primitive.getPrimitiveType(), ebo.getNumIndices(), GL_UNSIGNED_INT, GL_NONE);
+        glDrawElements(primitive.getPrimitiveType(), vertices.getNumIndices(),
+                GL_UNSIGNED_INT, GL_NONE);
     }
 
     /**
@@ -118,20 +118,6 @@ public final class RenderBatch {
         vao.delete();
     }
 
-    // Helper Methods
-
-    /**
-     * Adds a texture to this render batch if the texture is not present and returns
-     * the texture slot for the batch's shader, which is not necessarily the OpenGL texture ID.
-     *
-     * @param tex the texture
-     * @return the batch texture ID, 0 if color, otherwise 1-8
-     */
-    public int getTextureSlot(GLTexture tex) {
-        if (!hasTexture(tex)) textures.addTexture(tex); // add if don't have texture
-        return textures.getTextureSlot(tex);
-    }
-
     // Push Vertex Methods
 
     public void pushInt(int i) {
@@ -146,18 +132,37 @@ public final class RenderBatch {
         vertices.push(v.x, v.y, v.z, v.w);
     }
 
-    // Getters
-
-    public DrawPrimitive getPrimitive() {
-        return primitive;
+    /**
+     * Adds a texture to this render batch if the texture is not present and returns
+     * the texture slot for the batch's shader, which is not necessarily the OpenGL texture ID.
+     *
+     * @param tex the texture
+     * @return the batch texture ID, 0 if color, otherwise 1-8
+     */
+    public int getTextureSlot(GLTexture tex) {
+        if (!hasTexture(tex)) textures.addTexture(tex); // add if don't have texture
+        return textures.getTextureSlot(tex);
     }
 
-    public int getZIndex() {
-        return zIndex;
+    // Capacity Getters
+
+    /**
+     * If this render batch can fit the given object. An object fits
+     * if it uses the same primitive as this batch and this batch has room
+     * for more vertices and the object's texture.
+     *
+     * @param r the renderable object
+     * @return if the object fits
+     */
+    public boolean canFitObject(GLRenderable r) {
+        return hasVertexRoom()
+                && (this.primitive == r.getPrimitive())
+                && (this.hasTexture(r.getTexture()) || this.hasTextureRoom());
     }
 
     /**
-     * If the render batch contains this texture (can always render colors)
+     * If this render batch uses the given texture. Null textures (drawing
+     * colors only) always return true.
      *
      * @param tex the texture, or null if drawing a color
      * @return if this texture is used by the batch
@@ -167,7 +172,7 @@ public final class RenderBatch {
     }
 
     /**
-     * If the render batch has capacity for another texture.
+     * If this render batch has capacity for another texture.
      *
      * @return if there are unused texture slots
      */
@@ -176,7 +181,7 @@ public final class RenderBatch {
     }
 
     /**
-     * If the render batch has capacity for another primitive object.
+     * If this render batch has capacity for another primitive object.
      *
      * @return if there are still unused vertices
      */
@@ -184,11 +189,35 @@ public final class RenderBatch {
         return vertices.hasRoom();
     }
 
+    // Batch Getters
+
+    public DrawPrimitive getPrimitive() {
+        return primitive;
+    }
+
+    public int getNumBatchObjects() {
+        return vertices.size() /
+                (primitive.getVertexCount() * primitive.getTotalComponents());
+    }
+
+    public int getMaxBatchObjects() {
+        return maxBatchObjects;
+    }
+
+    /**
+     * The draw order of this render batch. Batches with lower draw orders are
+     * drawn first, and batches with higher orders are layered on top of others.
+     *
+     * @return the draw order
+     */
+    public int getDrawOrder() {
+        return 0;
+    }
+
     @Override
     public String toString() {
-        return String.format("Render Batch (Type: %s, Capacity: %d/%d, Z-Index: %d)",
-                primitive, (vertices.size() / primitive.getTotalComponents()), maxBatchObjects, zIndex);
-        // TODO this seems wrong
+        return String.format("RenderBatch (Type: %s, Capacity: %d/%d)",
+                primitive, getNumBatchObjects(), maxBatchObjects);
     }
 
 }

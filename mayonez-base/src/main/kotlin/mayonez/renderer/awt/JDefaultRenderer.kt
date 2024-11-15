@@ -22,9 +22,8 @@ internal class JDefaultRenderer : SceneRenderer,
     DebugRenderer {
 
     // Renderer Objects
-    private val objects: MutableList<JRenderable> = ArrayList() // permanent components
-    private val shapes: MutableList<DebugShape> = ArrayList() // temporary shapes
-    private val batches: MutableList<JRenderable> = ArrayList()
+    private val objects: MutableList<JRenderable> = ArrayList() // Sprites and shapes
+    private val drawObjects: MutableList<JRenderable> = ArrayList() // Enabled objects
 
     // Scene Information
     private lateinit var background: Sprite
@@ -48,16 +47,15 @@ internal class JDefaultRenderer : SceneRenderer,
 
     // Debug Renderer Methods
 
-    override fun addShape(shape: DebugShape) {
-        shapes.add(shape)
+    override fun addShape(shape: DebugShape?) {
+        if (shape != null) objects.add(shape)
     }
 
     // Renderer Methods
 
     override fun clear() {
-        batches.clear()
+        drawObjects.clear()
         objects.clear()
-        shapes.clear()
     }
 
     override fun render(g2: Graphics2D?) {
@@ -67,8 +65,18 @@ internal class JDefaultRenderer : SceneRenderer,
         transformScreen(g2)
         drawBackgroundImage(g2)
 
-        createBatches()
-        drawBatches(g2)
+        // Crate "batches" from objects and shapes
+        drawObjects.clear()
+        objects.filter { it.isEnabled }
+            .forEach { drawObjects.add(it) }
+
+        // Draw batches
+        g2.stroke = DEFAULT_STROKE
+        drawObjects.sortBy { it.zIndex }
+        drawObjects.forEach { it.render(g2) }
+
+        // Remove all shapes after drawing
+        objects.removeIf { it is DebugShape }
 
         g2.transform = oldXf // Reset the transform to its previous state
     }
@@ -94,7 +102,7 @@ internal class JDefaultRenderer : SceneRenderer,
 
     /** Transform the screen and render everything at the new position. */
     private fun transformScreen(g2: Graphics2D) {
-        val cam = this.viewport ?: return
+        val cam = this.viewport
         translateAndScaleScreen(cam, g2)
         rotateScreen(cam, g2)
     }
@@ -115,32 +123,5 @@ internal class JDefaultRenderer : SceneRenderer,
     // Camera Methods
 
     override fun getViewport(): Viewport = SceneManager.currentScene.camera
-
-    // Batch Helper Methods
-
-    /** Sort drawable objects into render "batches". */
-    private fun createBatches() {
-        batches.clear()
-        pushObjectsToBatches()
-        pushShapesToBatches()
-        batches.sortBy(JRenderable::getZIndex)
-    }
-
-    private fun pushObjectsToBatches() {
-        objects.filter { it.isEnabled }
-            .forEach { batches.add(it) }
-    }
-
-    private fun pushShapesToBatches() {
-        if (shapes.isNotEmpty()) {
-            batches.addAll(shapes)
-            shapes.clear()
-        }
-    }
-
-    private fun drawBatches(g2: Graphics2D) {
-        g2.stroke = DEFAULT_STROKE
-        batches.forEach { it.render(g2) }
-    }
 
 }

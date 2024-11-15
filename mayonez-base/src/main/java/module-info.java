@@ -52,9 +52,6 @@ module mayonez.base {
     exports mayonez.graphics.textures;
     exports mayonez.graphics.ui;
 
-    // Renderer
-    exports mayonez.renderer.batch;
-
     // Extras
     exports mayonez.scripts;
     exports mayonez.scripts.camera;

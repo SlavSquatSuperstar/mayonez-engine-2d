@@ -32,10 +32,11 @@ internal class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"),
      */
     private val objects: MutableList<Renderable> = ArrayList() // Sprites and text
     private val tempObjects: MutableList<Renderable> = ArrayList() // Debug shapes
+    private val drawObjects: MutableList<GLRenderable> = ArrayList() // Objects to batch
 
     // Scene Background
     private lateinit var background: Sprite
-    private val bgBatch: RenderBatch = RenderBatch(1, 0, DrawPrimitive.SPRITE)
+    private val bgBatch: RenderBatch = RenderBatch(1, DrawPrimitive.SPRITE)
 
     // Scene Renderer Methods
 
@@ -45,17 +46,17 @@ internal class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"),
     }
 
     override fun addRenderable(r: Renderable?) {
-        if (r is Renderable) objects.add(r)
+        if (r.isAccepted()) objects.add(r!!)
     }
 
     override fun removeRenderable(r: Renderable?) {
-        if (r is Renderable) objects.remove(r)
+        if (r.isAccepted()) objects.remove(r!!)
     }
 
     // Debug Renderer Methods
 
-    override fun addShape(shape: DebugShape) {
-        tempObjects.add(shape)
+    override fun addShape(shape: DebugShape?) {
+        if (shape != null) tempObjects.add(shape)
     }
 
     // Renderer Methods
@@ -65,6 +66,7 @@ internal class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"),
         bgBatch.clearVertices()
         objects.clear()
         tempObjects.clear()
+        drawObjects.clear()
     }
 
     override fun preRender() {
@@ -100,7 +102,7 @@ internal class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"),
     override fun createBatches() {
         /*
          * TODO
-         * - sort objects by z-index and primitive
+         * - sort all objects by z-index and primitive
          * - for each object:
          *   - check that last batch:
          *     - has vertex room,
@@ -115,37 +117,44 @@ internal class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"),
         objects.sortBy { it.zIndex }
         tempObjects.sortBy { it.zIndex }
 
-        // Pre-process and objects
+        // Process objects
         objects.filter { it.isEnabled }
-            .forEach { it.pushToBatch() }
+            .forEach { it.process() }
         tempObjects.filter { it.isEnabled }
-            .forEach { it.pushToBatch() }
+            .forEach { it.process() }
+
+        // Push objects
+        drawObjects.sortBy { it.primitive }
+
+        drawObjects.forEach { it.pushToBatch(it.getAvailableBatch()) }
     }
 
     override fun postRender() {
         super.postRender()
         tempObjects.clear() // Clear debug shapes after each frame
+        drawObjects.clear() // Clear batch objects after each frame
     }
 
-    private fun Renderable.pushToBatch() {
+    // Helper Methods
+
+    private fun Renderable?.isAccepted(): Boolean {
+        return (this is GLRenderable) || (this is TextLabel)
+    }
+
+    private fun Renderable.process() {
         when (this) {
             is DebugShape -> this.processShape()
-            is GLRenderable -> this.pushToBatch(this.getAvailableBatch())
-            is TextLabel -> this.glyphSprites.forEach { glyph ->
-                glyph.pushToBatch(glyph.getAvailableBatch())
-            }
+            is GLRenderable -> drawObjects.add(this)
+            is TextLabel -> drawObjects.addAll(this.glyphSprites)
         }
     }
 
     private fun DebugShape.processShape() {
         getParts().forEach { shapePart ->
             if (shapePart is Edge) {
-                getLines(shapePart, this, lineStyle).forEach {
-                    line -> line.pushToBatch(line.getAvailableBatch())
-                }
+                drawObjects.addAll(getLines(shapePart, this, lineStyle))
             } else if (shapePart is Triangle) {
-                val tri = this.copy(shape = shapePart)
-                tri.pushToBatch(tri.getAvailableBatch())
+                drawObjects.add(this.copy(shape = shapePart))
             }
         }
     }

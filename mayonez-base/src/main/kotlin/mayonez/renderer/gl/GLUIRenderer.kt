@@ -25,13 +25,11 @@ internal class GLUIRenderer : GLRenderer("assets/shaders/ui.glsl"),
     // Scene Renderer Methods
 
     override fun addUIElement(r: Renderable?) {
-        if (r is GLRenderable) objects.add(r)
-        else if (r is TextLabel) textObjects.add(r)
+        if (r.isAccepted()) objects.add(r!!)
     }
 
     override fun removeUIElement(r: Renderable?) {
-        if (r is GLRenderable) objects.remove(r)
-        else if (r is TextLabel) textObjects.remove(r)
+        if (r.isAccepted()) objects.remove(r!!)
     }
 
     // Renderer Methods
@@ -66,6 +64,10 @@ internal class GLUIRenderer : GLRenderer("assets/shaders/ui.glsl"),
     }
 
     // Helper Functions
+
+    private fun Renderable?.isAccepted(): Boolean {
+        return (this is GLRenderable) || (this is TextLabel)
+    }
 
     private fun Renderable.pushToBatch() {
         when (this) {
