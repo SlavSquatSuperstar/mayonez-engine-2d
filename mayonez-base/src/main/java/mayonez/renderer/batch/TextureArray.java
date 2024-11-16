@@ -23,11 +23,11 @@ class TextureArray {
     private static final int NO_TEXTURE_ID = GL_NONE;
 
     // Array Fields
-    private final int[] texIDs;
+    private final int[] texIDs; // OpenGL texture IDs
     private int size; // Current number of textures
 
     TextureArray(int textureCapacity) {
-        this.texIDs = new int[textureCapacity];
+        this.texIDs = new int[textureCapacity - 1]; // Leave one slot for no texture
         size = 0;
     }
 
@@ -42,6 +42,7 @@ class TextureArray {
         if (size < capacity()) {
             texIDs[size++] = tex.getTexID();
         }
+        System.out.println("texIDs = " + Arrays.toString(texIDs));
     }
 
     boolean containsTexture(GLTexture tex) {

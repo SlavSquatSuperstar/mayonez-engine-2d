@@ -63,14 +63,23 @@ internal class GLUIRenderer : GLRenderer("assets/shaders/ui.glsl"),
 
         // Process objects
         objects.filter { it.isEnabled }
-            .forEach { it.pushToBatch() }
-//            .forEach { it.process() }
+//            .forEach { it.pushToBatch() }
+            .forEach { it.process() }
 
         // Push objects
-//        drawObjects.sortBy { it.zIndex }
-//        drawObjects.forEach {
-//            it.pushToBatch(it.getAvailableBatch())
-//        }
+        var lastBatch: RenderBatch? = null
+        // Already sorted by z-index
+        drawObjects.forEach {
+            // Create new batch
+            if (lastBatch == null || !lastBatch.canFitObject(it)) {
+                lastBatch = it.getAvailableBatch()
+            }
+            // Push to batch
+            it.pushToBatch(lastBatch)
+            if (lastBatch is MultiZRenderBatch) {
+                lastBatch.maxZIndex = it.zIndex // Update max z-index
+            }
+        }
     }
 
     override fun postRender() {
@@ -80,7 +89,11 @@ internal class GLUIRenderer : GLRenderer("assets/shaders/ui.glsl"),
     // Helper Functions
 
     override fun GLRenderable.createNewBatch(): RenderBatch {
-        return SingleZRenderBatch(batchSize, primitive, zIndex)
+//        return SingleZRenderBatch(batchSize, primitive, zIndex)
+        val batch = MultiZRenderBatch(batchSize, primitive)
+        batch.minZIndex = this.zIndex // Set min z-index
+        batch.maxZIndex = this.zIndex // Set initial max z-index
+        return batch
     }
 
     private fun Renderable.pushToBatch() {

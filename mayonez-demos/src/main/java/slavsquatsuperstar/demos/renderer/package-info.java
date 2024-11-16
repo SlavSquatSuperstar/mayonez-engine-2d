@@ -3,4 +3,4 @@
  *
  * @author SlavSquatSuperstar
  */
-package slavsquatsuperstar.demos.font;
+package slavsquatsuperstar.demos.renderer;

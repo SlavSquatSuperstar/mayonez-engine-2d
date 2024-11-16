@@ -1,4 +1,4 @@
-package slavsquatsuperstar.demos.font;
+package slavsquatsuperstar.demos.renderer;
 
 import mayonez.*;
 import mayonez.graphics.*;

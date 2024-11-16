@@ -107,6 +107,7 @@ internal class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"),
 
         // Push objects
         var lastBatch: RenderBatch? = null
+        // Already sorted by primitive
         drawObjects.sortBy { it.zIndex }
         drawObjects.forEach {
 //            it.pushToBatch(it.getAvailableBatch())
