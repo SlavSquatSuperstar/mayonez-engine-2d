@@ -86,7 +86,7 @@ public class RenderTestScene extends Scene {
             @Override
             protected void init() {
                 setZIndex(zIndex);
-                addComponent(new Animator(sheet, 0.25f));
+                addComponent(new Animator(sheet, 0.125f));
             }
         });
     }
