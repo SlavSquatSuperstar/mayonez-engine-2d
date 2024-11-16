@@ -2,11 +2,12 @@ package slavsquatsuperstar.demos.spacegame.objects.ships;
 
 import mayonez.*;
 import mayonez.input.*;
+import mayonez.math.*;
 import mayonez.physics.dynamics.*;
 import mayonez.scripts.movement.*;
 import slavsquatsuperstar.demos.spacegame.combat.Damageable;
 import slavsquatsuperstar.demos.spacegame.combat.projectiles.PlayerFireController;
-import slavsquatsuperstar.demos.spacegame.movement.*;
+import slavsquatsuperstar.demos.spacegame.movement.PlayerKeyMovement;
 
 /**
  * A player-controlled spaceship.
@@ -19,7 +20,7 @@ public class PlayerSpaceship extends Spaceship {
     private static final float PLAYER_HEALTH = 8f;
 
     public PlayerSpaceship(String name, String spriteName) {
-        super(name, new SpaceshipProperties(spriteName, PLAYER_HEALTH, PLAYER_HEALTH * 0.5f));
+        super(name, new Vec2(), new SpaceshipProperties(spriteName, PLAYER_HEALTH, PLAYER_HEALTH * 0.5f));
     }
 
     @Override

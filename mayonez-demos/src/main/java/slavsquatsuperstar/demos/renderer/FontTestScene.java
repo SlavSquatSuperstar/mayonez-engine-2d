@@ -18,7 +18,7 @@ public class FontTestScene extends Scene {
     private static final boolean CAMERA_DEBUG_MODE = true;
 
     public FontTestScene(String name) {
-        super(name, 0, 0, 10);
+        super(name, 10);
     }
 
     @Override

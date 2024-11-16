@@ -22,8 +22,8 @@ public abstract class Spaceship extends GameObject {
 
     private final SpaceshipProperties properties;
 
-    public Spaceship(String name, SpaceshipProperties properties) {
-        super(name, Transform.scaleInstance(new Vec2(2f)), SpaceGameZIndex.SPACESHIP);
+    public Spaceship(String name, Vec2 position, SpaceshipProperties properties) {
+        super(name, new Transform(position, 0f, new Vec2(2f)), SpaceGameZIndex.SPACESHIP);
         this.properties = properties;
     }
 

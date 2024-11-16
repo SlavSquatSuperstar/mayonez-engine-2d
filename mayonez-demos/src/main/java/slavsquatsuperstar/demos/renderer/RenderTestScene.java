@@ -17,7 +17,7 @@ import mayonez.math.shapes.*;
 public class RenderTestScene extends Scene {
 
     public RenderTestScene(String name) {
-        super(name, 0, 0, 100);
+        super(name, 100);
     }
 
     @Override

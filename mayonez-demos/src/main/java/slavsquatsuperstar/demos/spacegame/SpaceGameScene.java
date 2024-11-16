@@ -24,7 +24,7 @@ public class SpaceGameScene extends Scene {
 
     // Constants
     private static final int SCENE_SIZE = 4;
-    private static final int NUM_STARS = 2000;
+    private static final int NUM_STARS = 3000;
     private static final boolean CAMERA_DEBUG_MODE = false;
 
     // Objects
@@ -32,15 +32,14 @@ public class SpaceGameScene extends Scene {
 
     public SpaceGameScene(String name) {
         super(name, Preferences.getScreenWidth() * SCENE_SIZE,
-                Preferences.getScreenHeight() * SCENE_SIZE, 32f);
-        setBackground(Color.grayscale(14));
-        backgroundObjects = new ArrayList<>();
-
+                Preferences.getScreenHeight() * SCENE_SIZE, 32);
         SpaceGameConfig.readConfig();
+        backgroundObjects = new ArrayList<>();
     }
 
     @Override
     protected void init() {
+        setBackground(Color.grayscale(14));
         setGravity(new Vec2());
         getCamera().setKeepInScene(true);
         setLayers();
@@ -85,15 +84,17 @@ public class SpaceGameScene extends Scene {
     }
 
     private void addSolarSystem() {
-        addBackgroundObject(new Circle(new Vec2(-10, -8), 16), Colors.DARK_BLUE, SpaceGameZIndex.BACKGROUND); // Earth
-        addBackgroundObject(new Circle(new Vec2(12.5f, 7.5f), 2.5f), Colors.DARK_GRAY, SpaceGameZIndex.BACKGROUND); // Moon
-        addBackgroundObject(new Circle(new Vec2(-20, 16), 1.5f), Colors.YELLOW, SpaceGameZIndex.BACKGROUND); // Sun
+        addBackgroundObject(new Circle(new Vec2(-10, -8), 16),
+                Colors.DARK_BLUE, SpaceGameZIndex.BACKGROUND); // Earth
+        addBackgroundObject(new Circle(new Vec2(12.5f, 7.5f), 2.5f),
+                Colors.DARK_GRAY, SpaceGameZIndex.BACKGROUND); // Moon
+        addBackgroundObject(new Circle(new Vec2(-20, 16), 1.5f),
+                Colors.YELLOW, SpaceGameZIndex.BACKGROUND); // Sun
     }
 
     private void addBackgroundStars() {
         // TODO parallax
         for (var i = 0; i < NUM_STARS; i++) {
-            var starPos = this.getRandomPosition().mul(2);
 
             float starSize;
             boolean isDwarfStar = Random.randomPercent(2f / 3f);
@@ -101,9 +102,12 @@ public class SpaceGameScene extends Scene {
             else starSize = Random.randomGaussianRange(4f, 10f);
             if (starSize > 1) starSize = 1;
 
-            var starDist = Random.randomFloat(20, 60);
+            var starDist = Random.randomFloat(15, 45);
             var starColor = Colors.randomColor(192, 255);
-            addBackgroundObject(new Circle(starPos, starSize / starDist), starColor, SpaceGameZIndex.BACKGROUND_STAR);
+            addBackgroundObject(
+                    new Rectangle(getRandomPosition(), new Vec2(starSize / starDist)),
+                    starColor, SpaceGameZIndex.BACKGROUND_STAR
+            );
         }
     }
 

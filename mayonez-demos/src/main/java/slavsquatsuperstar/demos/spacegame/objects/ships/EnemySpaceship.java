@@ -14,16 +14,13 @@ public class EnemySpaceship extends Spaceship {
 
     private static final float ENEMY_HEALTH = 5f;
 
-    public EnemySpaceship(String name, String spriteName) {
-        super(name, new SpaceshipProperties(spriteName, ENEMY_HEALTH, 0f));
+    public EnemySpaceship(String name, Vec2 position, String spriteName) {
+        super(name, position, new SpaceshipProperties(spriteName, ENEMY_HEALTH, 0f));
     }
 
     @Override
     protected void init() {
         super.init();
-
-        // Position
-        transform.setPosition(getScene().getRandomPosition());
         transform.setRotation(Random.randomAngle());
 
         // Movement

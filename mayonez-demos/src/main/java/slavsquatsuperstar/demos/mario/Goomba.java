@@ -28,9 +28,9 @@ class Goomba extends GameObject {
         addComponent(sprite);
         addComponent(new BoxCollider(new Vec2(0.8f, 1)));
         addComponent(new Rigidbody(1f, 0.5f, 0f).setFixedRotation(true));
-        var sceneMin = getScene().getSize().mul(-0.5f).add(new Vec2(0, 4));
-        var sceneMax = getScene().getSize().mul(0.5f);
-        addComponent(new KeepInScene(sceneMin, sceneMax, KeepInScene.Mode.STOP));
+        var sceneHalfSize = getScene().getHalfSize();
+        var sceneMin = sceneHalfSize.mul(-1f).add(new Vec2(0, 4));
+        addComponent(new KeepInScene(sceneMin, sceneHalfSize, KeepInScene.Mode.STOP));
         addComponent(new Script() {
             @Override
             protected void onCollisionEnter(GameObject other, Vec2 direction, Vec2 velocity) {

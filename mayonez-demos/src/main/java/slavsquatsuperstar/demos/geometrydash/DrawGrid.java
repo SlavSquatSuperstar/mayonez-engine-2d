@@ -17,16 +17,21 @@ public class DrawGrid extends Component {
     private static final ShapeBrush GRID_BRUSH = ShapeBrush.createLineBrush(GRID_COLOR)
             .setStrokeSize(GRID_LINE_WIDTH);
 
+    private Vec2 sceneHalfSize;
+
+    @Override
+    protected void start() {
+        sceneHalfSize = getScene().getHalfSize();
+    }
+
     @Override
     protected void debugRender() {
         var debugDraw = getScene().getDebugDraw();
-
         var camPos = getScene().getCamera().getPosition();
-        var screenHalfSize = getScene().getSize().mul(0.5f);
 
         // Which world coordinates are we at?
-        var start = camPos.sub(screenHalfSize).floor().sub(new Vec2(0.5f));
-        var end = camPos.add(screenHalfSize).ceil().add(new Vec2(0.5f));
+        var start = camPos.sub(sceneHalfSize).floor().sub(new Vec2(0.5f));
+        var end = camPos.add(sceneHalfSize).ceil().add(new Vec2(0.5f));
 
         // Either bottom of screen or top of ground
         // Vertical Lines
@@ -37,16 +42,6 @@ public class DrawGrid extends Component {
         for (var drawY = start.y; drawY <= end.y; drawY += 1) {
             debugDraw.drawLine(new Vec2(start.x, drawY), new Vec2(end.x, drawY), GRID_BRUSH);
         }
-    }
-
-    public static GameObject createGridObject() {
-        return new GameObject("Grid") {
-            @Override
-            protected void init() {
-                setZIndex(ZIndex.GRID);
-                addComponent(new DrawGrid());
-            }
-        };
     }
 
 }

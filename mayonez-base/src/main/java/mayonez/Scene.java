@@ -30,6 +30,7 @@ import java.util.*;
  * @author SlavSquatSuperstar
  */
 // TODO current cursor object
+// TODO camera size
 public abstract class Scene {
 
     // Static Fields
@@ -56,10 +57,22 @@ public abstract class Scene {
     private final PhysicsWorld physics;
 
     /**
-     * Creates an empty scene with size of 0x0 and a scale of 1.
+     * Creates an empty scene with size of (0, 0) and a scale of 1.
+     *
+     * @param name the name of the scene
      */
     public Scene(String name) {
         this(name, 0, 0, 1);
+    }
+
+    /**
+     * Creates an empty scene with a size of (0, 0) sets the scale.
+     *
+     * @param name  the name of the scene
+     * @param scale the scale of the scene
+     */
+    public Scene(String name, float scale) {
+        this(name, 0, 0, scale);
     }
 
     /**
@@ -313,14 +326,38 @@ public abstract class Scene {
         return name;
     }
 
+    /**
+     * Get the size of the scene, useful for setting an arbitrary boundary.
+     *
+     * @return the scene size
+     */
     public Vec2 getSize() {
         return size;
     }
 
+    /**
+     * Get the half size of the scene, useful for setting an arbitrary boundary.
+     *
+     * @return the scene half size
+     */
+    public Vec2 getHalfSize() {
+        return size.mul(0.5f);
+    }
+
+    /**
+     * Get the width of the scene, useful for setting an arbitrary boundary.
+     *
+     * @return the scene width.
+     */
     public float getWidth() {
         return size.x;
     }
 
+    /**
+     * Get the height of the scene, useful for setting an arbitrary boundary.
+     *
+     * @return the scene height.
+     */
     public float getHeight() {
         return size.y;
     }
@@ -331,7 +368,8 @@ public abstract class Scene {
      * @return a random position
      */
     public Vec2 getRandomPosition() {
-        return Random.randomVector(getSize().mul(-0.5f), getSize().mul(0.5f));
+        var halfSize = getHalfSize();
+        return Random.randomVector(halfSize.mul(-1f), halfSize);
     }
 
     /**

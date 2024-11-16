@@ -22,6 +22,7 @@ public class MarioScene extends Scene {
     private static final int BACKGROUND_WIDTH = 1920;
     private static final int BACKGROUND_HEIGHT = 1024;
     private static final float SCENE_GRAVITY = 20;
+
     private final SpriteSheet sprites;
     private final Texture background;
 
@@ -48,7 +49,7 @@ public class MarioScene extends Scene {
         var groundLayer = getLayer(GROUND_LAYER);
         groundLayer.setName("Ground");
 
-        addObject(new Mario(new Vec2(-21f, -11f), sprites.getSprite(0)));
+        addObject(new Mario(new Vec2(-23f, -11f), sprites.getSprite(0)));
 
         addEnemiesToScene();
         addObstaclesToScene();
@@ -96,7 +97,6 @@ public class MarioScene extends Scene {
                 setLayer(getScene().getLayer(MarioScene.GROUND_LAYER));
                 addComponent(new Rigidbody(0f));
                 addComponent(new BoxCollider(size));
-//                addComponent(new ShapeSprite(Colors.WHITE, false));
             }
         };
     }
@@ -105,7 +105,7 @@ public class MarioScene extends Scene {
     public Vec2 getRandomPosition() {
         var halfWidth = getWidth() * 0.5f;
         var halfHeight = getHeight() * 0.5f;
-        return Random.randomVector(-halfWidth, halfWidth, -halfHeight + 2, halfHeight - 6);
+        return Random.randomVector(-halfWidth + 12, halfWidth - 12, -halfHeight + 4, halfHeight - 20);
     }
 
 }
