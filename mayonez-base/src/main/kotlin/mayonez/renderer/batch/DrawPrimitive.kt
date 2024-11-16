@@ -53,7 +53,8 @@ enum class DrawPrimitive(
      */
     SPRITE(
         4, 6, GL11.GL_TRIANGLES,
-        VertexAttribute.POSITION, VertexAttribute.COLOR, VertexAttribute.TEX_COORD, VertexAttribute.TEX_ID
+        VertexAttribute.POSITION, VertexAttribute.COLOR,
+        VertexAttribute.TEX_COORD, VertexAttribute.TEX_SLOT
     ) {
         override fun addIndices(elements: IntBuffer, index: Int) {
             // Split quad into two triangles so 6 vertices

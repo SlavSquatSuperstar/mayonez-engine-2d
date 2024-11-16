@@ -40,13 +40,15 @@ public interface GLQuad extends GLRenderable {
                 texCoords, batch.getTextureSlot(glTex));
     }
 
-    private static void pushSprite(RenderBatch batch, Vec2[] positions, Color color, Vec2[] texCoords, int texID) {
+    private static void pushSprite(
+            RenderBatch batch, Vec2[] positions, Color color, Vec2[] texCoords, int texSlot
+    ) {
         var glColor = ColorHelpers.toGLColor(color);
         for (int i = 0; i < positions.length; i++) {
             batch.pushVec2(positions[i]);
             batch.pushVec4(glColor);
             batch.pushVec2(texCoords[i]);
-            batch.pushInt(texID);
+            batch.pushInt(texSlot);
         }
     }
 

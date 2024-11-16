@@ -63,7 +63,6 @@ internal class GLUIRenderer : GLRenderer("assets/shaders/ui.glsl"),
 
         // Process objects
         objects.filter { it.isEnabled }
-//            .forEach { it.pushToBatch() }
             .forEach { it.process() }
 
         // Push objects
@@ -89,20 +88,10 @@ internal class GLUIRenderer : GLRenderer("assets/shaders/ui.glsl"),
     // Helper Functions
 
     override fun GLRenderable.createNewBatch(): RenderBatch {
-//        return SingleZRenderBatch(batchSize, primitive, zIndex)
         val batch = MultiZRenderBatch(batchSize, primitive)
         batch.minZIndex = this.zIndex // Set min z-index
         batch.maxZIndex = this.zIndex // Set initial max z-index
         return batch
-    }
-
-    private fun Renderable.pushToBatch() {
-        when (this) {
-            is GLRenderable -> this.pushToBatch(this.getAvailableBatch())
-            is TextLabel -> this.glyphSprites.forEach { glyph ->
-                glyph.pushToBatch(glyph.getAvailableBatch())
-            }
-        }
     }
 
     private fun Renderable.process() {

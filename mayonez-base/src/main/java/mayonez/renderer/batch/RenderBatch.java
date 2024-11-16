@@ -81,18 +81,13 @@ public class RenderBatch {
     }
 
     /**
-     * Upload all vertex data to the GPU after buffering.
-     */
-    public void uploadVertices() {
-        vbo.bind();
-        vertices.upload();
-    }
-
-    /**
-     * Sends a draw call to the GPU and draws all vertices in the batch.
+     * Upload all vertex data and tell the GPU to draw all images buffered to
+     * this batch.
      */
     public void drawBatch() {
-        // Bind the VAO and textures
+        // Finalize batch
+        vbo.bind();
+        vertices.upload();
         vao.bind();
         textures.bindTextures();
 

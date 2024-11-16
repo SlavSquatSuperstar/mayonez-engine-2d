@@ -31,26 +31,22 @@ abstract class GLRenderer(shaderFile: String) : Renderer {
 
     override fun render(g2: Graphics2D?) {
         preRender()
-        rebuffer()
+
+        // Re-buffer objects
+        batches.forEach(RenderBatch::clearVertices) // Prepare batches
+        createBatches()
+
+        // Draw objects
+        batches.sortBy(RenderBatch::getDrawOrder) // Sort batches by z-index
         batches.forEach {
             it.drawBatch()
-            println(it)
         }
-        println("----")
         postRender()
     }
 
     /** Clear the screen and upload resources to the GPU. */
     protected open fun preRender() {
         shader.bind() // TODO may be better to bind shader for each object
-    }
-
-    /** Sort all image data into batches. */
-    protected open fun rebuffer() {
-        batches.forEach(RenderBatch::clearVertices) // Prepare batches
-        createBatches()
-        batches.forEach(RenderBatch::uploadVertices) // Finalize batches
-        batches.sortBy(RenderBatch::getDrawOrder) // Sort batches by z-index
     }
 
     /** Sort image data into render batches. */

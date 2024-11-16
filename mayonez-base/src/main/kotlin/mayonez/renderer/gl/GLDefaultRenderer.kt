@@ -82,7 +82,6 @@ internal class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"),
             // Draw background sprite
             bgBatch.clearVertices()
             (background as GLSprite).pushToBatch(bgBatch)
-            bgBatch.uploadVertices()
             bgBatch.drawBatch()
         }
 
@@ -110,8 +109,6 @@ internal class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"),
         // Already sorted by primitive
         drawObjects.sortBy { it.zIndex }
         drawObjects.forEach {
-//            it.pushToBatch(it.getAvailableBatch())
-
             // Create new batch
             if (lastBatch == null || !lastBatch.canFitObject(it)) {
                 if (lastBatch is MultiZRenderBatch) {
@@ -136,8 +133,6 @@ internal class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"),
     // Helper Methods
 
     override fun GLRenderable.createNewBatch(): RenderBatch {
-//        return SingleZRenderBatch(batchSize, primitive, zIndex)
-
         val batch: RenderBatch
         if (this.primitive == DrawPrimitive.SPRITE) {
             batch = MultiZRenderBatch(batchSize, primitive)
