@@ -16,9 +16,14 @@ import java.awt.*
 @UsesEngine(EngineType.GL)
 abstract class GLRenderer(protected val shader: Shader) : Renderer {
 
+    companion object {
+        @JvmStatic
+        protected val MAX_TEXTURE_SLOTS: Int = 8
+    }
+
     // GPU Resources
     private val batches: MutableList<RenderBatch> = ArrayList()
-    protected val textureSlots: IntArray = IntArray(RenderBatch.MAX_TEXTURE_SLOTS) { it }
+    protected val textureSlots: IntArray = IntArray(MAX_TEXTURE_SLOTS) { it }
 
     // Renderer Methods
 

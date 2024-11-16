@@ -14,8 +14,8 @@ public class SingleZRenderBatch extends RenderBatch {
 
     private final int zIndex;
 
-    public SingleZRenderBatch(int maxBatchObjects, DrawPrimitive primitive, int zIndex) {
-        super(maxBatchObjects, primitive);
+    public SingleZRenderBatch(DrawPrimitive primitive, int maxBatchObjects, int maxTextureSlots, int zIndex) {
+        super(primitive, maxBatchObjects, maxTextureSlots);
         this.zIndex = zIndex;
     }
 

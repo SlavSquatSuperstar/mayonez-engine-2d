@@ -19,13 +19,11 @@ import static org.lwjgl.opengl.GL11.*;
 @UsesEngine(EngineType.GL)
 public class RenderBatch {
 
-    // Batch Constants
-    // TODO move
-    public static final int MAX_TEXTURE_SLOTS = 8;
+    // TODO store shader per batch
 
     // Batch Characteristics
-    private final int maxBatchObjects;
     private final DrawPrimitive primitive;
+    private final int maxBatchObjects;
 
     // Renderer Data
     private final VertexBufferArray vertices;
@@ -36,12 +34,12 @@ public class RenderBatch {
     private final VertexBuffer vbo; // VBO for this batch
     private final IndexBuffer ibo; // EBO/IBO for this batch
 
-    public RenderBatch(int maxBatchObjects, DrawPrimitive primitive) {
-        this.maxBatchObjects = maxBatchObjects;
+    public RenderBatch(DrawPrimitive primitive, int maxBatchObjects, int maxTextureSlots) {
         this.primitive = primitive;
+        this.maxBatchObjects = maxBatchObjects;
 
         // Renderer Fields
-        textures = new TextureArray(MAX_TEXTURE_SLOTS);
+        textures = new TextureArray(maxTextureSlots);
         vertices = new VertexBufferArray(primitive, maxBatchObjects);
 
         // GPU Fields
@@ -159,7 +157,7 @@ public class RenderBatch {
      * @param tex the texture, or null if drawing a color
      * @return if this texture is used by the batch
      */
-    public boolean hasTexture(GLTexture tex) {
+    protected boolean hasTexture(GLTexture tex) {
         return textures.containsTexture(tex);
     }
 

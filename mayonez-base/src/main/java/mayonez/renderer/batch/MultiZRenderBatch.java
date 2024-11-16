@@ -15,8 +15,8 @@ public class MultiZRenderBatch extends RenderBatch {
     private int minZIndex, maxZIndex;
     private boolean closed;
 
-    public MultiZRenderBatch(int maxBatchObjects, DrawPrimitive primitive) {
-        super(maxBatchObjects, primitive);
+    public MultiZRenderBatch(DrawPrimitive primitive, int maxBatchObjects, int maxTextureSlots) {
+        super(primitive, maxBatchObjects, maxTextureSlots);
     }
 
     // Z-Index Methods

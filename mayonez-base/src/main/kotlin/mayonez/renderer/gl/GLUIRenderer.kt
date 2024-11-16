@@ -88,7 +88,7 @@ internal class GLUIRenderer(shader: Shader) : GLRenderer(shader), UIRenderer {
     // Helper Functions
 
     override fun GLRenderable.createNewBatch(): RenderBatch {
-        val batch = MultiZRenderBatch(batchSize, primitive)
+        val batch = MultiZRenderBatch(primitive, batchSize, MAX_TEXTURE_SLOTS)
         batch.minZIndex = this.zIndex // Set min z-index
         batch.maxZIndex = this.zIndex // Set initial max z-index
         return batch

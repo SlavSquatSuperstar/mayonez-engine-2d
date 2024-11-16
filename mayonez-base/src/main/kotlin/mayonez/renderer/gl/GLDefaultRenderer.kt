@@ -32,7 +32,7 @@ internal class GLDefaultRenderer(shader: Shader) : GLRenderer(shader),
 
     // Scene Background
     private lateinit var background: Sprite
-    private val bgBatch: RenderBatch = RenderBatch(1, DrawPrimitive.SPRITE)
+    private val bgBatch: RenderBatch = RenderBatch(DrawPrimitive.SPRITE, 1, 1)
 
     // Scene Renderer Methods
 
@@ -135,12 +135,12 @@ internal class GLDefaultRenderer(shader: Shader) : GLRenderer(shader),
 
     override fun GLRenderable.createNewBatch(): RenderBatch {
         val batch: RenderBatch
-        if (this.primitive == DrawPrimitive.SPRITE) {
-            batch = MultiZRenderBatch(batchSize, primitive)
+        if (primitive == DrawPrimitive.SPRITE) {
+            batch = MultiZRenderBatch(primitive, batchSize, MAX_TEXTURE_SLOTS)
             batch.minZIndex = this.zIndex // Set min z-index
             batch.maxZIndex = this.zIndex // Set initial max z-index
         } else {
-            batch = SingleZRenderBatch(batchSize, primitive, zIndex)
+            batch = SingleZRenderBatch(primitive, batchSize, MAX_TEXTURE_SLOTS, zIndex)
         }
         return batch
     }
