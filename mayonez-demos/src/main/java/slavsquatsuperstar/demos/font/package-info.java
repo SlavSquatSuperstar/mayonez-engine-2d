@@ -1,5 +1,5 @@
 /**
- * Example scenes for testing font rendering.
+ * Example scenes for testing the renderer.
  *
  * @author SlavSquatSuperstar
  */

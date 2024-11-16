@@ -32,8 +32,11 @@ abstract class GLRenderer(shaderFile: String) : Renderer {
     override fun render(g2: Graphics2D?) {
         preRender()
         rebuffer()
-        batches.forEach(RenderBatch::drawBatch)
-        batches.forEach { println(it) }
+        batches.forEach {
+            it.drawBatch()
+            println(it)
+        }
+        println("----")
         postRender()
     }
 
@@ -64,9 +67,7 @@ abstract class GLRenderer(shaderFile: String) : Renderer {
 
     // Batch Helper Methods
 
-    // TODO may be better to sort by z-index, and put as many things in batches as possible
     // TODO see Cherno renderer class
-    // TODO track current batch
     /**
      * Gets an available render batch for this object or creates a new one it all
      * batches are full.

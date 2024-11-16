@@ -13,6 +13,7 @@ import mayonez.renderer.gl.*;
 public class MultiZRenderBatch extends RenderBatch {
 
     private int minZIndex, maxZIndex;
+    private boolean closed;
 
     public MultiZRenderBatch(int maxBatchObjects, DrawPrimitive primitive) {
         super(maxBatchObjects, primitive);
@@ -36,6 +37,14 @@ public class MultiZRenderBatch extends RenderBatch {
         this.maxZIndex = maxZIndex;
     }
 
+    public boolean isClosed() {
+        return closed;
+    }
+
+    public void setClosed(boolean closed) {
+        this.closed = closed;
+    }
+
     // Batch Overrides
 
 
@@ -43,11 +52,12 @@ public class MultiZRenderBatch extends RenderBatch {
     public void clearVertices() {
         super.clearVertices();
         maxZIndex = minZIndex;
+        closed = false;
     }
 
     @Override
     public boolean canFitObject(GLRenderable r) {
-        return (r.getZIndex() >= this.minZIndex)
+        return !closed && (r.getZIndex() >= this.minZIndex)
 //                && (r.getZIndex() <= this.maxZIndex)
                 && super.canFitObject(r);
     }

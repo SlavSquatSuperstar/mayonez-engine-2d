@@ -22,6 +22,7 @@ internal class GLUIRenderer : GLRenderer("assets/shaders/ui.glsl"),
 
     // Renderer Objects
     private val objects: MutableList<Renderable> = ArrayList()
+    private val drawObjects: MutableList<GLRenderable> = ArrayList()
 
     // Scene Renderer Methods
 
@@ -38,6 +39,7 @@ internal class GLUIRenderer : GLRenderer("assets/shaders/ui.glsl"),
     override fun clear() {
         super.clear()
         objects.clear()
+        drawObjects.clear()
     }
 
     override fun preRender() {
@@ -59,16 +61,26 @@ internal class GLUIRenderer : GLRenderer("assets/shaders/ui.glsl"),
         // Sort objects
         objects.sortBy { it.zIndex }
 
-        // Process and push objects
+        // Process objects
         objects.filter { it.isEnabled }
             .forEach { it.pushToBatch() }
+//            .forEach { it.process() }
+
+        // Push objects
+//        drawObjects.sortBy { it.zIndex }
+//        drawObjects.forEach {
+//            it.pushToBatch(it.getAvailableBatch())
+//        }
+    }
+
+    override fun postRender() {
+        drawObjects.clear()
     }
 
     // Helper Functions
 
     override fun GLRenderable.createNewBatch(): RenderBatch {
-        val batch = SingleZRenderBatch(batchSize, primitive, zIndex)
-        return batch
+        return SingleZRenderBatch(batchSize, primitive, zIndex)
     }
 
     private fun Renderable.pushToBatch() {
@@ -77,6 +89,13 @@ internal class GLUIRenderer : GLRenderer("assets/shaders/ui.glsl"),
             is TextLabel -> this.glyphSprites.forEach { glyph ->
                 glyph.pushToBatch(glyph.getAvailableBatch())
             }
+        }
+    }
+
+    private fun Renderable.process() {
+        when (this) {
+            is GLRenderable -> drawObjects.add(this)
+            is TextLabel -> drawObjects.addAll(this.glyphSprites)
         }
     }
 

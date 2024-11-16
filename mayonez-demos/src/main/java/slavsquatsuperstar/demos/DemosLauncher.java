@@ -4,6 +4,7 @@ import mayonez.*;
 import mayonez.config.*;
 import mayonez.input.*;
 import slavsquatsuperstar.demos.font.FontTestScene;
+import slavsquatsuperstar.demos.font.RenderTestScene;
 import slavsquatsuperstar.demos.geometrydash.GDEditorScene;
 import slavsquatsuperstar.demos.mario.MarioScene;
 import slavsquatsuperstar.demos.physics.PhysicsSandboxScene;
@@ -17,11 +18,12 @@ import slavsquatsuperstar.demos.spacegame.SpaceGameScene;
  */
 public class DemosLauncher {
 
-    private final static int START_SCENE_INDEX = 0;
+    private final static int START_SCENE_INDEX = 1;
 
     private final static String[] SCENE_NAMES = {
-            "Space Game", "Font Test", "Physics Sandbox",
-            "Pool Balls", "Mario Level", "Geometry Dash Editor",
+            "Space Game", "Render Batch Test", "Font Test",
+            "Physics Sandbox", "Pool Balls",
+            "Mario Level", "Geometry Dash Editor",
     };
 
     public static void main(String[] args) {
@@ -39,41 +41,48 @@ public class DemosLauncher {
                         pollSceneControls();
                     }
                 },
-                new FontTestScene(SCENE_NAMES[1]) {
+                new RenderTestScene(SCENE_NAMES[1]) {
                     @Override
                     protected void onUserUpdate(float dt) {
                         super.onUserUpdate(dt);
                         pollSceneControls();
                     }
                 },
-                new PhysicsSandboxScene(SCENE_NAMES[2]) {
+                new FontTestScene(SCENE_NAMES[2]) {
                     @Override
                     protected void onUserUpdate(float dt) {
                         super.onUserUpdate(dt);
                         pollSceneControls();
                     }
                 },
-                new PoolBallsScene(SCENE_NAMES[3]) {
+                new PhysicsSandboxScene(SCENE_NAMES[3]) {
                     @Override
                     protected void onUserUpdate(float dt) {
                         super.onUserUpdate(dt);
                         pollSceneControls();
                     }
                 },
-                new MarioScene(SCENE_NAMES[4]) {
+                new PoolBallsScene(SCENE_NAMES[4]) {
                     @Override
                     protected void onUserUpdate(float dt) {
                         super.onUserUpdate(dt);
                         pollSceneControls();
                     }
                 },
-                new GDEditorScene(SCENE_NAMES[5]) {
+                new MarioScene(SCENE_NAMES[5]) {
                     @Override
                     protected void onUserUpdate(float dt) {
                         super.onUserUpdate(dt);
                         pollSceneControls();
                     }
-                }
+                },
+                new GDEditorScene(SCENE_NAMES[6]) {
+                    @Override
+                    protected void onUserUpdate(float dt) {
+                        super.onUserUpdate(dt);
+                        pollSceneControls();
+                    }
+                },
         };
     }
 

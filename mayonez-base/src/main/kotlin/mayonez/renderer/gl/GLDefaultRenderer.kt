@@ -25,11 +25,6 @@ internal class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"),
     private val lineStyle: LineStyle = LineStyle.QUADS
 
     // Renderer Objects
-    /*
-     * - sprites are permanent
-     * - debug shapes are temporary and need to be broken up
-     * - texts are permanent and need to be broken up
-     */
     private val objects: MutableList<Renderable> = ArrayList() // Sprites and text
     private val tempObjects: MutableList<Renderable> = ArrayList() // Debug shapes
     private val drawObjects: MutableList<GLRenderable> = ArrayList() // Objects to batch
@@ -100,18 +95,6 @@ internal class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"),
     }
 
     override fun createBatches() {
-        /*
-         * - sort all objects by z-index and primitive
-         * - for each object:
-         *   - check that last used batch:
-         *     - has vertex room,
-         *     - has texture room, and
-         *     - has same primitive
-         *   - else create new batch with primitive
-         *   - push object into batch
-         * - delete empty leftover batches?
-         */
-
         // Sort objects
         objects.sortBy { it.zIndex }
         tempObjects.sortBy { it.zIndex }
@@ -125,10 +108,14 @@ internal class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"),
         // Push objects
         var lastBatch: RenderBatch? = null
         drawObjects.sortBy { it.zIndex }
-        drawObjects.sortBy { it.primitive }
         drawObjects.forEach {
-            // Get available batch
+//            it.pushToBatch(it.getAvailableBatch())
+
+            // Create new batch
             if (lastBatch == null || !lastBatch.canFitObject(it)) {
+                if (lastBatch is MultiZRenderBatch) {
+                    lastBatch.isClosed = true // Don't use this batch anymore
+                }
                 lastBatch = it.getAvailableBatch()
             }
             // Push to batch
@@ -148,6 +135,8 @@ internal class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"),
     // Helper Methods
 
     override fun GLRenderable.createNewBatch(): RenderBatch {
+//        return SingleZRenderBatch(batchSize, primitive, zIndex)
+
         val batch: RenderBatch
         if (this.primitive == DrawPrimitive.SPRITE) {
             batch = MultiZRenderBatch(batchSize, primitive)
