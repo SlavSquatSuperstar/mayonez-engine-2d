@@ -7,6 +7,9 @@ import mayonez.renderer.batch.*
 import mayonez.renderer.gl.*
 import java.awt.*
 
+private const val MAX_BATCH_LINES: Int = 500
+private const val MAX_BATCH_TRIANGLES: Int = 1000
+
 /**
  * Passes shape and color information to a [mayonez.renderer.DebugRenderer].
  *
@@ -82,8 +85,8 @@ internal data class DebugShape(internal val shape: MShape, private val brush: Sh
     // Renderable Methods
 
     override fun getBatchSize(): Int {
-        return if (fill) RenderBatch.MAX_TRIANGLES
-        else RenderBatch.MAX_LINES
+        return if (fill) MAX_BATCH_TRIANGLES
+        else MAX_BATCH_LINES
     }
 
     override fun getPrimitive(): DrawPrimitive {

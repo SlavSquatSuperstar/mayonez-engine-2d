@@ -71,7 +71,6 @@ class TextureArray {
     // Bind Methods
 
     void bindTextures() {
-        System.out.println("texIDs = " + Arrays.toString(texIDs));
         for (var i = 0; i < size; i++) {
             glActiveTexture(GL_TEXTURE0 + i);
             glBindTexture(GL_TEXTURE_2D, texIDs[i]);

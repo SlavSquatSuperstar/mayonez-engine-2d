@@ -4,7 +4,6 @@ import mayonez.graphics.*;
 import mayonez.graphics.textures.*;
 import mayonez.math.*;
 import mayonez.math.shapes.*;
-import mayonez.renderer.batch.*;
 import mayonez.renderer.gl.*;
 
 /**
@@ -22,6 +21,8 @@ record GlyphSprite(
         Texture texture, Color color,
         TextLabel text
 ) implements GLQuad {
+
+    private static final int MAX_BATCH_GLYPHS = 200; // currently does nothing
 
     // Quad Methods
 
@@ -41,12 +42,7 @@ record GlyphSprite(
 
     @Override
     public int getBatchSize() {
-        return RenderBatch.MAX_GLYPHS;
-    }
-
-    @Override
-    public DrawPrimitive getPrimitive() {
-        return DrawPrimitive.SPRITE;
+        return MAX_BATCH_GLYPHS;
     }
 
     @Override
@@ -54,7 +50,7 @@ record GlyphSprite(
         return (texture instanceof GLTexture glTex) ? glTex : null;
     }
 
-    // Quad Methods
+    // Renderable Methods
 
     @Override
     public int getZIndex() {

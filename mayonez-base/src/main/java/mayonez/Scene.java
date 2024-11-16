@@ -81,7 +81,7 @@ public abstract class Scene {
         // Initialize layers
         objects = new BufferedList<>();
         layers = new SceneLayer[SceneLayer.NUM_LAYERS];
-        renderLayer = RendererFactory.createRenderLayer(background, size, scale);
+        renderLayer = RendererFactory.createRenderLayer(Mayonez.getUseGL(), background, size, scale);
         physics = new DefaultPhysicsWorld();
     }
 

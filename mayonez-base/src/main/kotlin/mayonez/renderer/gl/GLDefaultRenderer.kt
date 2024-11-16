@@ -9,6 +9,7 @@ import mayonez.math.*
 import mayonez.math.shapes.*
 import mayonez.renderer.*
 import mayonez.renderer.batch.*
+import mayonez.renderer.shader.*
 import org.lwjgl.opengl.GL11.glLineWidth
 
 /**
@@ -18,7 +19,7 @@ import org.lwjgl.opengl.GL11.glLineWidth
  * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.GL)
-internal class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"),
+internal class GLDefaultRenderer(shader: Shader) : GLRenderer(shader),
     SceneRenderer, DebugRenderer {
 
     // Renderer Parameters

@@ -5,7 +5,6 @@ import mayonez.graphics.*;
 import mayonez.graphics.textures.*;
 import mayonez.math.*;
 import mayonez.math.shapes.*;
-import mayonez.renderer.batch.*;
 import mayonez.renderer.gl.*;
 
 /**
@@ -101,23 +100,11 @@ public class UISprite extends Component implements UIRenderableElement, GLQuad {
         this.texture = texture;
     }
 
-    // GL Methods
+    // Renderable Methods
 
     @Override
     public Vec2[] getVertexPositions() {
         return new BoundingBox(bounds.getCenter(), bounds.getSize()).getVertices();
-    }
-
-    // Renderable Methods
-
-    @Override
-    public int getBatchSize() {
-        return RenderBatch.MAX_SPRITES;
-    }
-
-    @Override
-    public DrawPrimitive getPrimitive() {
-        return DrawPrimitive.SPRITE;
     }
 
     @Override

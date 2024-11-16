@@ -1,11 +1,12 @@
 package mayonez.renderer;
 
-import mayonez.*;
+import mayonez.assets.*;
 import mayonez.graphics.debug.*;
 import mayonez.graphics.sprites.*;
 import mayonez.math.*;
 import mayonez.renderer.awt.*;
 import mayonez.renderer.gl.*;
+import mayonez.renderer.shader.*;
 
 import java.util.*;
 
@@ -17,16 +18,19 @@ import java.util.*;
  */
 public final class RendererFactory {
 
+    private static final Shader defaultShader = Objects.requireNonNull
+            (Assets.getAsset("assets/shaders/default.glsl", Shader.class));
+    private static final Shader uiShader = Objects.requireNonNull(
+            Assets.getAsset("assets/shaders/ui.glsl", Shader.class));
+
     private RendererFactory() {
     }
 
     // Render Layer Methods
 
-    public static RenderLayer createRenderLayer(Sprite background, Vec2 sceneSize, float sceneScale) {
-        var useGL = Mayonez.getUseGL();
-
+    public static RenderLayer createRenderLayer(boolean useGL, Sprite background, Vec2 sceneSize, float sceneScale) {
         // Scene
-        var sceneRenderer = useGL ? new GLDefaultRenderer() : new JDefaultRenderer();
+        var sceneRenderer = useGL ? new GLDefaultRenderer(defaultShader) : new JDefaultRenderer();
         sceneRenderer.setBackground(background, sceneSize, sceneScale);
 
         // Debug
@@ -38,7 +42,7 @@ public final class RendererFactory {
     }
 
     private static RenderLayer createGLRenderLayer(SceneRenderer sceneRenderer, DebugDraw debugDraw) {
-        var uiRenderer = new GLUIRenderer();
+        var uiRenderer = new GLUIRenderer(uiShader);
 
         return new RenderLayer(List.of(sceneRenderer, uiRenderer), debugDraw) {
             @Override

@@ -4,7 +4,6 @@ import mayonez.graphics.*
 import mayonez.graphics.textures.*
 import mayonez.math.*
 import mayonez.math.shapes.*
-import mayonez.renderer.batch.*
 import mayonez.renderer.gl.*
 
 
@@ -67,9 +66,5 @@ internal class GLSprite private constructor(
             objXf.position * sceneScale, objXf.scale * sceneScale, objXf.rotation
         ).vertices
     }
-
-    override fun getBatchSize(): Int = RenderBatch.MAX_SPRITES
-
-    override fun getPrimitive(): DrawPrimitive = DrawPrimitive.SPRITE
 
 }

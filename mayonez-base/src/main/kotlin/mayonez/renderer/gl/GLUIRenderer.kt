@@ -5,6 +5,7 @@ import mayonez.graphics.debug.*
 import mayonez.graphics.font.*
 import mayonez.renderer.*
 import mayonez.renderer.batch.*
+import mayonez.renderer.shader.*
 import org.lwjgl.opengl.GL11.glLineWidth
 
 /**
@@ -14,8 +15,7 @@ import org.lwjgl.opengl.GL11.glLineWidth
  * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.GL)
-internal class GLUIRenderer : GLRenderer("assets/shaders/ui.glsl"),
-    UIRenderer {
+internal class GLUIRenderer(shader: Shader) : GLRenderer(shader), UIRenderer {
 
     // Renderer Parameters
     private val lineStyle: LineStyle = LineStyle.QUADS

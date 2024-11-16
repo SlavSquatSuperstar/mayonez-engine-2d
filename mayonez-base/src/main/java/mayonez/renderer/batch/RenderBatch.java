@@ -21,10 +21,6 @@ public class RenderBatch {
 
     // Batch Constants
     // TODO move
-    public static final int MAX_SPRITES = 100;
-    public static final int MAX_LINES = 500;
-    public static final int MAX_TRIANGLES = 1000;
-    public static final int MAX_GLYPHS = 200;
     public static final int MAX_TEXTURE_SLOTS = 8;
 
     // Batch Characteristics

@@ -14,6 +14,10 @@ import mayonez.renderer.batch.*;
 @UsesEngine(EngineType.GL)
 public interface GLQuad extends GLRenderable {
 
+    int MAX_BATCH_SPRITES = 100;
+
+    // Quad Getters
+
     /**
      * The color of this object ,which should not be null.
      *
@@ -50,6 +54,18 @@ public interface GLQuad extends GLRenderable {
             batch.pushVec2(texCoords[i]);
             batch.pushInt(texSlot);
         }
+    }
+
+    // GL Getters
+
+    @Override
+    default int getBatchSize() {
+        return MAX_BATCH_SPRITES;
+    }
+
+    @Override
+    default DrawPrimitive getPrimitive() {
+        return DrawPrimitive.SPRITE;
     }
 
 }

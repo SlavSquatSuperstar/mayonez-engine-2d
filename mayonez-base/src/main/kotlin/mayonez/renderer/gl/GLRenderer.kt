@@ -1,7 +1,6 @@
 package mayonez.renderer.gl
 
 import mayonez.*
-import mayonez.assets.*
 import mayonez.graphics.*
 import mayonez.renderer.*
 import mayonez.renderer.batch.*
@@ -15,11 +14,10 @@ import java.awt.*
  * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.GL)
-abstract class GLRenderer(shaderFile: String) : Renderer {
+abstract class GLRenderer(protected val shader: Shader) : Renderer {
 
     // GPU Resources
     private val batches: MutableList<RenderBatch> = ArrayList()
-    protected val shader: Shader = Assets.getAsset(shaderFile, Shader::class.java)!!
     protected val textureSlots: IntArray = IntArray(RenderBatch.MAX_TEXTURE_SLOTS) { it }
 
     // Renderer Methods
@@ -30,17 +28,14 @@ abstract class GLRenderer(shaderFile: String) : Renderer {
     }
 
     override fun render(g2: Graphics2D?) {
-        preRender()
-
         // Re-buffer objects
-        batches.forEach(RenderBatch::clearVertices) // Prepare batches
+        preRender() // Prepare batches
+        batches.forEach(RenderBatch::clearVertices)
         createBatches()
 
         // Draw objects
         batches.sortBy(RenderBatch::getDrawOrder) // Sort batches by z-index
-        batches.forEach {
-            it.drawBatch()
-        }
+        batches.forEach(RenderBatch::drawBatch)
         postRender()
     }
 
