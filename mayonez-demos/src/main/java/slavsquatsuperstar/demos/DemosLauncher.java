@@ -7,7 +7,7 @@ import slavsquatsuperstar.demos.geometrydash.GDEditorScene;
 import slavsquatsuperstar.demos.mario.MarioScene;
 import slavsquatsuperstar.demos.physics.PhysicsSandboxScene;
 import slavsquatsuperstar.demos.physics.PoolBallsScene;
-import slavsquatsuperstar.demos.renderer.RenderTestScene;
+import slavsquatsuperstar.demos.renderer.RendererTestScene;
 import slavsquatsuperstar.demos.spacegame.SpaceGameScene;
 
 /**
@@ -17,7 +17,7 @@ import slavsquatsuperstar.demos.spacegame.SpaceGameScene;
  */
 public class DemosLauncher {
 
-    private final static int START_SCENE_INDEX = 1;
+    private final static int START_SCENE_INDEX = 0;
 
     private final static String[] SCENE_NAMES = {
             "Space Game", "Render Batch Test",
@@ -40,7 +40,7 @@ public class DemosLauncher {
                         pollSceneControls();
                     }
                 },
-                new RenderTestScene(SCENE_NAMES[1]) {
+                new RendererTestScene(SCENE_NAMES[1]) {
                     @Override
                     protected void onUserUpdate(float dt) {
                         super.onUserUpdate(dt);

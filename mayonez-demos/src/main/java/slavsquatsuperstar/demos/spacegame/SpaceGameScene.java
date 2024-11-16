@@ -7,6 +7,7 @@ import mayonez.math.Random;
 import mayonez.math.*;
 import mayonez.math.shapes.*;
 import slavsquatsuperstar.demos.spacegame.objects.BackgroundObject;
+import slavsquatsuperstar.demos.spacegame.objects.BackgroundStarPrefabs;
 import slavsquatsuperstar.demos.spacegame.objects.SpaceGameZIndex;
 import slavsquatsuperstar.demos.spacegame.objects.spawners.SpaceObjectSpawner;
 import slavsquatsuperstar.demos.spacegame.ui.PlayerUI;
@@ -85,34 +86,33 @@ public class SpaceGameScene extends Scene {
 
     private void addSolarSystem() {
         addBackgroundObject(new Circle(new Vec2(-10, -8), 16),
-                Colors.DARK_BLUE, SpaceGameZIndex.BACKGROUND); // Earth
+                new Color(8, 104, 232)); // Earth
         addBackgroundObject(new Circle(new Vec2(12.5f, 7.5f), 2.5f),
-                Colors.DARK_GRAY, SpaceGameZIndex.BACKGROUND); // Moon
+                Color.grayscale(144)); // Moon
         addBackgroundObject(new Circle(new Vec2(-20, 16), 1.5f),
-                Colors.YELLOW, SpaceGameZIndex.BACKGROUND); // Sun
+                new Color(255, 232, 80)); // Sun
     }
 
     private void addBackgroundStars() {
         // TODO parallax
         for (var i = 0; i < NUM_STARS; i++) {
+//            float starSize;
+//            boolean isDwarfStar = Random.randomPercent(2f / 3f);
+//            if (isDwarfStar) starSize = Random.randomGaussianRange(1f, 4f);
+//            else starSize = Random.randomGaussianRange(4f, 10f);
 
-            float starSize;
-            boolean isDwarfStar = Random.randomPercent(2f / 3f);
-            if (isDwarfStar) starSize = Random.randomGaussianRange(1f, 4f); // 1-4
-            else starSize = Random.randomGaussianRange(4f, 10f);
-            if (starSize > 1) starSize = 1;
-
-            var starDist = Random.randomFloat(15, 45);
-            var starColor = Colors.randomColor(192, 255);
-            addBackgroundObject(
-                    new Rectangle(getRandomPosition(), new Vec2(starSize / starDist)),
-                    starColor, SpaceGameZIndex.BACKGROUND_STAR
-            );
+//            var starDist = Random.randomFloat(10, 50);
+            var starRadius = Random.randomFloat(0.01f, 0.05f);
+            var starTemp = BackgroundStarPrefabs.getRandomColorType().getRandomTemp();
+            backgroundObjects.add(BackgroundStarPrefabs.createBackgroundStar(
+                    getRandomPosition(), starRadius, starTemp
+            ));
         }
     }
 
-    private void addBackgroundObject(Shape shape, Color color, int zIndex) {
-        backgroundObjects.add(new BackgroundObject(shape, color, zIndex));
+
+    private void addBackgroundObject(Shape shape, Color color) {
+        backgroundObjects.add(new BackgroundObject(shape, color, SpaceGameZIndex.BACKGROUND));
     }
 
 }

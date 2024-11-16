@@ -1,0 +1,9 @@
+class,color,minTemp,maxTemp,weight
+O,blue,30000,40000,5
+B,blue-white,10000,30000,5
+A,white,7200,10000,15
+F,yellow-white,5700,7200,10
+G,yellow,5000,5700,10
+K,orange,3500,5000,15
+M,red,2000,3500,30
+LT,brown,1000,2000,10

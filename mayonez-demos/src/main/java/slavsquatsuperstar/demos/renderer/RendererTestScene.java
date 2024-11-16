@@ -17,11 +17,11 @@ import slavsquatsuperstar.demos.DemosAssets;
  *
  * @author SlavSquatSuperstar
  */
-public class RenderTestScene extends Scene {
+public class RendererTestScene extends Scene {
 
     private static final boolean CAMERA_DEBUG_MODE = true;
 
-    public RenderTestScene(String name) {
+    public RendererTestScene(String name) {
         super(name, 10);
     }
 

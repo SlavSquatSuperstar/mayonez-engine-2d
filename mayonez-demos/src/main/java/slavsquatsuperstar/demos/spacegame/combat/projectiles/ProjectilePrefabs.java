@@ -21,15 +21,21 @@ import java.util.*;
 public final class ProjectilePrefabs {
 
     // Constants
-    private static final CSVFile PROJECTILE_DATA = Assets.getAsset(
-            "assets/spacegame/data/projectiles.csv", CSVFile.class);
+    private static final CSVFile PROJECTILE_DATA;
     private static final List<ProjectileType> PROJECTILE_TYPES;
     public static final int NUM_PROJECTILES;
     public static final SpriteSheet PROJECTILE_SPRITES;
 
     static {
-        PROJECTILE_TYPES = readProjectileTypes();
+        // Read CSV file
+        PROJECTILE_DATA = Assets.getAsset("assets/spacegame/data/projectiles.csv",
+                CSVFile.class);
+        if (PROJECTILE_DATA == null) PROJECTILE_TYPES = Collections.emptyList();
+        else PROJECTILE_TYPES = PROJECTILE_DATA.readCSV().stream()
+                .map(ProjectileType::new).toList();
         NUM_PROJECTILES = PROJECTILE_TYPES.size();
+
+        // Read sprite sheet
         PROJECTILE_SPRITES = Sprites.createSpriteSheet(
                 "assets/spacegame/textures/combat/projectiles.png",
                 16, 16, NUM_PROJECTILES, 0);
@@ -58,12 +64,6 @@ public final class ProjectilePrefabs {
     public static ProjectileType getProjectileType(int projectileIndex) {
         if (projectileIndex < 0 || projectileIndex >= NUM_PROJECTILES) return null;
         return PROJECTILE_TYPES.get(projectileIndex);
-    }
-
-    private static List<ProjectileType> readProjectileTypes() {
-        if (PROJECTILE_DATA == null) return Collections.emptyList();
-        return PROJECTILE_DATA.readCSV().stream()
-                .map(ProjectileType::new).toList();
     }
 
     // Create Prefab Methods
