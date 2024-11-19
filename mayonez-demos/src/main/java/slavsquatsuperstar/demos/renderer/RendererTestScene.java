@@ -42,26 +42,31 @@ public class RendererTestScene extends Scene {
 
         var font = DemosAssets.getFont();
 
-        addTextureObject("ship1-1", new Vec2(-10, 10), 0, tex1);
-        addTextureObject("ship1-2", new Vec2(0, 10), 2, tex1);
-        addTextureObject("ship1-3", new Vec2(10, 10), 4, tex1);
+        addTextureObject("ship1-1", new Vec2(-10, 10), 0, tex1, Colors.YELLOW);
+        addTextureObject("ship1-2", new Vec2(0, 10), 2, tex1, Colors.WHITE);
+        addTextureObject("ship1-3", new Vec2(10, 10), 4, tex1, Colors.LIGHT_BLUE);
 
-        addTextureObject("ship2-1", new Vec2(-10, 0), 0, tex2);
-        addTextureObject("ship2-2", new Vec2(0, 0), 2, tex2);
-        addTextureObject("ship2-3", new Vec2(10, 0), 4, tex2);
+        addTextureObject("ship2-1", new Vec2(-10, 0), 0, tex2, Colors.YELLOW);
+        addTextureObject("ship2-2", new Vec2(0, 0), 2, tex2, Colors.WHITE);
+        addTextureObject("ship2-3", new Vec2(10, 0), 4, tex2, Colors.LIGHT_BLUE);
 
-        addTextureObject("sat-1", new Vec2(-10, -10), 0, tex3);
-        addTextureObject("sat-2", new Vec2(0, -10), 2, tex3);
-        addTextureObject("sat-3", new Vec2(10, -10), 4, tex3);
+        addTextureObject("sat-1", new Vec2(-10, -10), 0, tex3, Colors.YELLOW);
+        addTextureObject("sat-2", new Vec2(0, -10), 2, tex3, Colors.WHITE);
+        addTextureObject("sat-3", new Vec2(10, -10), 4, tex3, Colors.LIGHT_BLUE);
 
-        addTextureObject("proj-1", new Vec2(-10, -30), 0, sheet2.getTexture(0));
-        addTextureObject("proj-2", new Vec2(0, -30), 2, sheet2.getTexture(1));
-        addTextureObject("proj-3", new Vec2(10, -30), 4, sheet2.getTexture(2));
+        addTextureObject("proj-1", new Vec2(-10, -30), 0, sheet2.getTexture(0), Colors.WHITE);
+        addTextureObject("proj-2", new Vec2(0, -30), 2, sheet2.getTexture(1), Colors.WHITE);
+        addTextureObject("proj-3", new Vec2(10, -30), 4, sheet2.getTexture(2), Colors.WHITE);
 
-        addShapeObject("square-1", new Vec2(5, 5), 3, Colors.RED);
-        addShapeObject("square-2", new Vec2(-5, 5), 1, Colors.GREEN);
-        addShapeObject("square-3", new Vec2(-5, -5), 1, Colors.BLUE);
-        addShapeObject("square-3", new Vec2(5, -5), 3, Colors.ORANGE);
+        addSquareObject("square-1", new Vec2(5, 5), 3, Colors.RED);
+        addSquareObject("square-2", new Vec2(-5, 5), 1, Colors.GREEN);
+        addSquareObject("square-3", new Vec2(-5, -5), 1, Colors.BLUE);
+        addSquareObject("square-3", new Vec2(5, -5), 3, Colors.ORANGE);
+
+        addCircleObject("circle-solid-1", new Vec2(30, 7.5f), 2.5f, 3, Colors.BLUE);
+        addCircleObject("circle-solid-2", new Vec2(30, 5), 5, 2, Colors.GREEN);
+        addCircleObject("circle-solid-3", new Vec2(30, 2.5f), 7.5f, 1, Colors.ORANGE);
+        addCircleObject("circle-solid-4", new Vec2(30, 0), 10, 0, Colors.RED);
 
         addAnimatedObject("anim-1", new Vec2(0, 15), 3, sheet1);
         addAnimatedObject("anim-2", new Vec2(0, -15), 1, sheet1);
@@ -82,12 +87,14 @@ public class RendererTestScene extends Scene {
         addObject(new FontTestObject("text-1", font));
     }
 
-    private void addTextureObject(String name, Vec2 pos, int zIndex, Texture tex) {
+    private void addTextureObject(String name, Vec2 pos, int zIndex, Texture tex, Color color) {
         addObject(new GameObject(name, new Transform(pos, 0f, new Vec2(10f))) {
             @Override
             protected void init() {
                 setZIndex(zIndex);
-                addComponent(Sprites.createSprite(tex));
+                var sprite = Sprites.createSprite(tex);
+                sprite.setColor(color);
+                addComponent(sprite);
             }
         });
     }
@@ -102,7 +109,7 @@ public class RendererTestScene extends Scene {
         });
     }
 
-    private void addShapeObject(String name, Vec2 pos, int zIndex, Color color) {
+    private void addSquareObject(String name, Vec2 pos, int zIndex, Color color) {
         addObject(new GameObject(name, pos) {
             @Override
             protected void init() {
@@ -112,6 +119,24 @@ public class RendererTestScene extends Scene {
                     protected void debugRender() {
                         getDebugDraw().fillShape(
                                 new Rectangle(pos, new Vec2(10, 10)),
+                                new ShapeBrush(color, true, zIndex, 1)
+                        );
+                    }
+                });
+            }
+        });
+    }
+
+    private void addCircleObject(String name, Vec2 pos, float radius, int zIndex, Color color) {
+        addObject(new GameObject(name, pos) {
+            @Override
+            protected void init() {
+                setZIndex(zIndex);
+                addComponent(new Script() {
+                    @Override
+                    protected void debugRender() {
+                        getDebugDraw().fillShape(
+                                new Circle(pos, radius),
                                 new ShapeBrush(color, true, zIndex, 1)
                         );
                     }

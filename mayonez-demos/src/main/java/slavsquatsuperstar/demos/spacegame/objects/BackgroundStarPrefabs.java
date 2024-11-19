@@ -54,13 +54,17 @@ public final class BackgroundStarPrefabs {
     public static BackgroundObject createBackgroundStar(
             Vec2 position, float radius, int temperature
     ) {
-//        Shape shape;
-//        if (radius < 0.05f) shape = new Rectangle(position, new Vec2(radius * 2f));
-//        else shape = new Circle(position, radius);
-        // TODO circles too expensive to draw
-        // TODO use LOD or texture
-        // TODO use pixel radius when converting to triangles
-        var shape = new Rectangle(position, new Vec2(radius * 2f));
+        // "LOD" system for sides vs radius
+        Shape shape;
+        if (radius < 0.02f) {
+            shape = new Rectangle(position, new Vec2(radius * 2f));
+        } else if (radius < 0.04f) {
+            shape = new Polygon(position, 8, radius);
+        } else if (radius < 0.06f) {
+            shape = new Polygon(position, 16, radius);
+        } else {
+            shape = new Circle(position, radius);
+        }
         return new BackgroundObject(
                 shape, getStarColor(temperature), SpaceGameZIndex.BACKGROUND_STAR
         );

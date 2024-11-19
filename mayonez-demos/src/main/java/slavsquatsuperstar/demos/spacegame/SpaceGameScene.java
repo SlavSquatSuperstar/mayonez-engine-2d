@@ -96,13 +96,15 @@ public class SpaceGameScene extends Scene {
     private void addBackgroundStars() {
         // TODO parallax
         for (var i = 0; i < NUM_STARS; i++) {
-//            float starSize;
-//            boolean isDwarfStar = Random.randomPercent(2f / 3f);
-//            if (isDwarfStar) starSize = Random.randomGaussianRange(1f, 4f);
-//            else starSize = Random.randomGaussianRange(4f, 10f);
-
-//            var starDist = Random.randomFloat(10, 50);
-            var starRadius = Random.randomFloat(0.01f, 0.05f);
+            float starRadius;
+            float invCDF = Random.randomFloat(0f, 100f);
+            if (invCDF < 60f) {
+                starRadius = Random.randomFloat(0.01f, 0.04f); // Dwarf
+            } else if (invCDF < 90f) {
+                starRadius = Random.randomFloat(0.04f, 0.07f); // Giant
+            } else {
+                starRadius = Random.randomFloat(0.07f, 0.08f); // Supergiant
+            }
             var starTemp = BackgroundStarPrefabs.getRandomColorType().getRandomTemp();
             backgroundObjects.add(BackgroundStarPrefabs.createBackgroundStar(
                     getRandomPosition(), starRadius, starTemp

@@ -34,9 +34,11 @@ class Circle(
 
     override fun boundingRectangle(): BoundingBox = BoundingBox(center, Vec2(radius * 2f))
 
-    /** Returns a polygon approximation of this ellipse with 2πr vertices. */
+    /** Returns a polygon approximation of this ellipse with πr vertices. */
     override fun toPolygon(): Polygon {
-        val numEdges: Int = (MathUtils.TWO_PI * radius).roundToInt() // use 2πr for # edges
+        // TODO see midpoint circle algorithm
+        // TODO use pixel radius when converting to triangles
+        val numEdges: Int = (MathUtils.PI * radius).roundToInt() // use πr for # edges
         return Polygon(center, numEdges, radius)
     }
 

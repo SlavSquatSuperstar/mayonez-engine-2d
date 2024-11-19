@@ -56,9 +56,9 @@ open class Ellipse(protected val center: Vec2, val size: Vec2, val angle: Float)
         return BoundingBox(center, Vec2(boxHalfWidth, boxHalfHeight) * 2f)
     }
 
-    /** Returns a polygon approximation of this ellipse with 2πa vertices. */
+    /** Returns a polygon approximation of this ellipse with πa vertices. */
     open fun toPolygon(): Polygon {
-        val numEdges: Int = (MathUtils.TWO_PI * halfWidth).roundToInt() // use πa for # edges
+        val numEdges: Int = (MathUtils.PI * halfWidth).roundToInt() // use πa for # edges
         val unitCircle = Polygon(center, numEdges, 1f)
         return unitCircle.scale(Vec2(halfWidth, halfHeight), center).rotate(this.angle, center)
     }
