@@ -28,12 +28,7 @@ object MouseInput {
 
     // Scene Properties
 
-    private var invSceneScale: Float = 1f
-    private var pointXf: PointTransformer? = null
-
-    fun setSceneScale(sceneScale: Float) {
-        this.invSceneScale = 1f / sceneScale
-    }
+    private lateinit var pointXf: PointTransformer
 
     fun setPointTransformer(pointXf: PointTransformer) {
         this.pointXf = pointXf
@@ -101,7 +96,9 @@ object MouseInput {
      * @return the world position
      */
     @JvmStatic
-    fun getPosition(): Vec2 = pointXf?.toWorld(getScreenPosition()) ?: Vec2()
+    fun getPosition(): Vec2 {
+        return pointXf.toWorldPosition(getScreenPosition())
+    }
 
     /**
      * Get the drag displacement of the cursor on the screen, in pixels.
@@ -117,7 +114,9 @@ object MouseInput {
      * @return the world displacement
      */
     @JvmStatic
-    fun getDisplacement(): Vec2 = getScreenDisplacement().invertY().toWorld()
+    fun getDisplacement(): Vec2 {
+        return pointXf.toWorldDisplacement(getScreenDisplacement())
+    }
 
     // Mouse Scroll Getters
 
@@ -133,11 +132,5 @@ object MouseInput {
 
     @JvmStatic
     fun getClicks(): Int = instance.clicks
-
-    // Mouse Button Helper Methods
-
-    private fun Vec2.invertY(): Vec2 = this * Vec2(1f, -1f)
-
-    private fun Vec2.toWorld(): Vec2 = this * invSceneScale
 
 }

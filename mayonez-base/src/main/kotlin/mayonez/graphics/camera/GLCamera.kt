@@ -87,22 +87,28 @@ class GLCamera(screenSize: Vec2?, sceneScale: Float) : Camera(screenSize, sceneS
 
     // Screen to World Methods
 
-    override fun toWorld(screen: Vec2): Vec2 {
+    override fun toWorldPosition(screenPos: Vec2): Vec2 {
         // Divide the raw screen coordinates by the window scaling
-        return getViewPos(getClipPos(screen / WindowProperties.getWindowScaling())) + position
+        val windowPos = getClipPos(screenPos / WindowProperties.getWindowScaling())
+        return getViewPos(windowPos) + position
     }
 
     /** Normalize screen position into clip space. */
-    private fun getClipPos(screen: Vec2): Vec2 {
-        val flipped = Vec2(screen.x, screenSize.y - screen.y) // Mirror y
-        return ((flipped / screenSize * 2f) - Vec2(1f)) / sceneScale
+    private fun getClipPos(screenPos: Vec2): Vec2 {
+        val flipped = Vec2(screenPos.x, screenSize.y - screenPos.y) // Mirror y
+        return ((flipped / screenSize * 2f) - Vec2(1f)) * invSceneScale
     }
 
     /** Transform clip position into camera view space. */
-    private fun getViewPos(clip: Vec2): Vec2 {
-        val view = Vector4f(clip.x, clip.y, 0f, 0f)
+    private fun getViewPos(clipPos: Vec2): Vec2 {
+        val view = Vector4f(clipPos.x, clipPos.y, 0f, 0f)
             .mul(inverseProjection).mul(inverseView)
         return Vec2(view.x, view.y)
+    }
+
+    override fun toWorldDisplacement(screenDisp: Vec2): Vec2 {
+        val flippedDisp = Vec2(screenDisp.x, -screenDisp.y)
+        return flippedDisp.mul(invSceneScale)
     }
 
 }

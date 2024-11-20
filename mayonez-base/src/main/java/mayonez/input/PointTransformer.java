@@ -3,19 +3,27 @@ package mayonez.input;
 import mayonez.math.*;
 
 /**
- * Transforms a point on the screen into a point in the world.
+ * Transforms positions and directions on the screen to positions and directions
+ * in the world.
  *
  * @author SlavSquatSuperstar
  */
-@FunctionalInterface
 public interface PointTransformer {
 
     /**
-     * Transform screen coordinates into world coordinates.
+     * Transform a screen position point into world position point.
      *
-     * @param screen a pixel on the screen
-     * @return the world position of the pixel
+     * @param screenPos the position, in pixels
+     * @return the position, in world units
      */
-    Vec2 toWorld(Vec2 screen);
+    Vec2 toWorldPosition(Vec2 screenPos);
+
+    /**
+     * Transform a screen displacement vector into world displacement vector.
+     *
+     * @param screenDisp the displacement, in pixels
+     * @return the displacement, in world units
+     */
+    Vec2 toWorldDisplacement(Vec2 screenDisp);
 
 }

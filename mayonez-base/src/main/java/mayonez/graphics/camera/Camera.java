@@ -19,6 +19,7 @@ public abstract class Camera extends Component implements Viewport {
     // Size Fields
     protected final Vec2 screenSize;
     protected final float sceneScale;
+    protected final float invSceneScale;
 
     // Camera Movement
     private CameraMode mode; // TODO remove
@@ -33,6 +34,7 @@ public abstract class Camera extends Component implements Viewport {
         super(UpdateOrder.PHYSICS);
         this.screenSize = screenSize;
         this.sceneScale = sceneScale;
+        invSceneScale = 1f / sceneScale;
 
         mode = CameraMode.FIXED;
         subject = null;
