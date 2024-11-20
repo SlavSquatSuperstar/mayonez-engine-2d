@@ -10,7 +10,6 @@ import mayonez.math.shapes.*
 import mayonez.renderer.*
 import mayonez.renderer.batch.*
 import mayonez.renderer.shader.*
-import org.lwjgl.opengl.GL11.glLineWidth
 
 /**
  * Draws all sprites and debug information onto the screen using LWJGL's
@@ -21,9 +20,6 @@ import org.lwjgl.opengl.GL11.glLineWidth
 @UsesEngine(EngineType.GL)
 internal class GLDefaultRenderer(shader: Shader) : GLRenderer(shader),
     SceneRenderer, DebugRenderer {
-
-    // Renderer Parameters
-    private val lineStyle: LineStyle = LineStyle.QUADS
 
     // Renderer Objects
     private val objects: MutableList<Renderable> = ArrayList() // Sprites and text
@@ -84,13 +80,6 @@ internal class GLDefaultRenderer(shader: Shader) : GLRenderer(shader),
             bgBatch.clearVertices()
             (background as GLSprite).pushToBatch(bgBatch)
             bgBatch.drawBatch()
-        }
-
-        // Set GL Properties
-        when (lineStyle) {
-            LineStyle.SINGLE -> glLineWidth(DebugDraw.DEFAULT_STROKE_SIZE)
-            LineStyle.MULTIPLE -> glLineWidth(1f)
-            else -> return
         }
     }
 
@@ -156,7 +145,7 @@ internal class GLDefaultRenderer(shader: Shader) : GLRenderer(shader),
     private fun DebugShape.processShape() {
         getParts().forEach { shapePart ->
             if (shapePart is Edge) {
-                drawObjects.addAll(getLines(shapePart, this, lineStyle))
+                drawObjects.addAll(getLines(shapePart, this))
             } else if (shapePart is Triangle) {
                 drawObjects.add(this.copy(shape = shapePart))
             }

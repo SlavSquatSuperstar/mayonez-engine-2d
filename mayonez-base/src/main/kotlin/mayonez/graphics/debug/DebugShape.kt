@@ -29,9 +29,7 @@ internal data class DebugShape(internal val shape: MShape, private val brush: Sh
 
     // Copy Methods
 
-    internal fun copyBrushToStyle(lineStyle: LineStyle): ShapeBrush {
-        return ShapeBrush(this.color, lineStyle.fill, this.zIndex, this.strokeSize)
-    }
+    internal fun copyBrush(fill: Boolean): ShapeBrush = brush.copy(fill = fill)
 
     // AWT Renderer Methods
 

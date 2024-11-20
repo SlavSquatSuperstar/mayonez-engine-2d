@@ -42,6 +42,8 @@ public class RendererTestScene extends Scene {
 
         var font = DemosAssets.getFont();
 
+        // Sprites
+
         addTextureObject("ship1-1", new Vec2(-10, 10), 0, tex1, Colors.YELLOW);
         addTextureObject("ship1-2", new Vec2(0, 10), 2, tex1, Colors.WHITE);
         addTextureObject("ship1-3", new Vec2(10, 10), 4, tex1, Colors.LIGHT_BLUE);
@@ -58,6 +60,11 @@ public class RendererTestScene extends Scene {
         addTextureObject("proj-2", new Vec2(0, -30), 2, sheet2.getTexture(1), Colors.WHITE);
         addTextureObject("proj-3", new Vec2(10, -30), 4, sheet2.getTexture(2), Colors.WHITE);
 
+        addAnimatedObject("anim-1", new Vec2(0, 15), 3, sheet1);
+        addAnimatedObject("anim-2", new Vec2(0, -15), 1, sheet1);
+
+        // Shapes
+
         addSquareObject("square-1", new Vec2(5, 5), 3, Colors.RED);
         addSquareObject("square-2", new Vec2(-5, 5), 1, Colors.GREEN);
         addSquareObject("square-3", new Vec2(-5, -5), 1, Colors.BLUE);
@@ -68,8 +75,12 @@ public class RendererTestScene extends Scene {
         addCircleObject("circle-solid-3", new Vec2(30, 2.5f), 7.5f, 1, Colors.ORANGE);
         addCircleObject("circle-solid-4", new Vec2(30, 0), 10, 0, Colors.RED);
 
-        addAnimatedObject("anim-1", new Vec2(0, 15), 3, sheet1);
-        addAnimatedObject("anim-2", new Vec2(0, -15), 1, sheet1);
+        addLineObject("line-1", new Vec2(20, -23), new Vec2(40, -30), 0, Colors.RED);
+        addLineObject("line-2", new Vec2(20, -22), new Vec2(40, -31), 1, Colors.ORANGE);
+        addLineObject("line-2", new Vec2(20, -21), new Vec2(40, -32), 2, Colors.GREEN);
+        addLineObject("line-2", new Vec2(20, -20), new Vec2(40, -33), 3, Colors.BLUE);
+
+        // UI
 
         float uiStartPos = 64;
         addUIObject("ui-1a", new Vec2(uiStartPos, uiStartPos), 10, tex4);
@@ -86,6 +97,8 @@ public class RendererTestScene extends Scene {
 
         addObject(new FontTestObject("text-1", font));
     }
+
+    // Sprites
 
     private void addTextureObject(String name, Vec2 pos, int zIndex, Texture tex, Color color) {
         addObject(new GameObject(name, new Transform(pos, 0f, new Vec2(10f))) {
@@ -109,8 +122,10 @@ public class RendererTestScene extends Scene {
         });
     }
 
+    // Shapes
+
     private void addSquareObject(String name, Vec2 pos, int zIndex, Color color) {
-        addObject(new GameObject(name, pos) {
+        addObject(new GameObject(name) {
             @Override
             protected void init() {
                 setZIndex(zIndex);
@@ -128,7 +143,7 @@ public class RendererTestScene extends Scene {
     }
 
     private void addCircleObject(String name, Vec2 pos, float radius, int zIndex, Color color) {
-        addObject(new GameObject(name, pos) {
+        addObject(new GameObject(name) {
             @Override
             protected void init() {
                 setZIndex(zIndex);
@@ -144,6 +159,26 @@ public class RendererTestScene extends Scene {
             }
         });
     }
+
+    private void addLineObject(String name, Vec2 start, Vec2 end, int zIndex, Color color) {
+        addObject(new GameObject(name) {
+            @Override
+            protected void init() {
+                setZIndex(zIndex);
+                addComponent(new Script() {
+                    @Override
+                    protected void debugRender() {
+                        getDebugDraw().drawLine(
+                                start, end,
+                                new ShapeBrush(color, false, zIndex, 10)
+                        );
+                    }
+                });
+            }
+        });
+    }
+
+    // UI Objects
 
     private void addUIObject(String obj1, Vec2 pos, int zIndex, Texture tex) {
         addObject(new GameObject(obj1, pos) {
