@@ -4,6 +4,7 @@ import mayonez.graphics.*;
 
 import java.util.*;
 
+import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
 import static org.lwjgl.opengl.GL15.glBufferSubData;
 
@@ -13,24 +14,21 @@ import static org.lwjgl.opengl.GL15.glBufferSubData;
  *
  * @author SlavSquatSuperstar
  */
-// TODO merge with VertexBuffer?
 @UsesEngine(EngineType.GL)
 class VertexBufferArray {
 
     // Primitive Fields
-    private final int elementCount;
-    private final int totalComponentCount; // Components per primitive
+    private final DrawPrimitive primitive;
+    private final int totalComponentCount; // Precompute components per primitive
 
     // Array Fields
     private final float[] vertexData;
     private int size; // Current vertex index
 
     VertexBufferArray(DrawPrimitive primitive, int maxBatchObjects) {
-        elementCount = primitive.getElementCount();
+        this.primitive = primitive;
         totalComponentCount = primitive.getVertexCount() * primitive.getTotalComponents();
-
-        var capacity = totalComponentCount * maxBatchObjects;
-        vertexData = new float[capacity];
+        vertexData = new float[totalComponentCount * maxBatchObjects];
         size = 0;
     }
 
@@ -45,10 +43,13 @@ class VertexBufferArray {
     }
 
     /**
-     * Uploads all vertices in the buffer to the GPU.
+     * Upload all vertices in the buffer to the GPU and draw them.
      */
-    void upload() {
+    void draw() {
         glBufferSubData(GL_ARRAY_BUFFER, 0, vertexData);
+        var numIndices = (size * primitive.getElementCount()) / totalComponentCount;
+        glDrawElements(primitive.getDrawMode(), numIndices,
+                GL_UNSIGNED_INT, GL_NONE);
     }
 
     /**
@@ -83,15 +84,6 @@ class VertexBufferArray {
      */
     long getSizeBytes() {
         return (long) vertexData.length * Float.BYTES;
-    }
-
-    /**
-     * Get the number of indices to draw.
-     *
-     * @return the number of indices
-     */
-    int getNumIndices() {
-        return (size * elementCount) / totalComponentCount;
     }
 
 }

@@ -6,8 +6,6 @@ import mayonez.math.*;
 import mayonez.renderer.gl.*;
 import org.joml.*;
 
-import static org.lwjgl.opengl.GL11.*;
-
 /**
  * Stores vertex information for many similar drawable objects and combines them
  * into one large mesh, allowing many sprites and shapes to be drawn in fewer
@@ -81,13 +79,9 @@ public class RenderBatch {
     public void drawBatch() {
         // Finalize batch
         vbo.bind();
-        vertices.upload();
         vao.bind();
         textures.bindTextures();
-
-        // Draw
-        glDrawElements(primitive.getPrimitiveType(), vertices.getNumIndices(),
-                GL_UNSIGNED_INT, GL_NONE);
+        vertices.draw();
     }
 
     /**

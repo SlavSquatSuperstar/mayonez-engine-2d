@@ -1,10 +1,7 @@
 package mayonez.renderer.batch
 
 import mayonez.graphics.*
-import org.lwjgl.opengl.GL11
 import java.nio.IntBuffer
-
-private val QUAD_ELEMENT_ORDER = intArrayOf(0, 1, 2, 0, 2, 3)
 
 /**
  * Types of OpenGL primitive objects that can be submitted to the GPU. Each
@@ -14,55 +11,31 @@ private val QUAD_ELEMENT_ORDER = intArrayOf(0, 1, 2, 0, 2, 3)
  */
 @UsesEngine(EngineType.GL)
 enum class DrawPrimitive(
-    val vertexCount: Int, // Vertices defined by primitive
-    val elementCount: Int, // Vertices needed by GL to draw
-    val primitiveType: Int, // Primitive ID used by OpenGL
-    vararg val attributes: VertexAttribute // Floats inside each attribute
+    val layout: ElementLayout, vararg val attributes: VertexAttribute
 ) {
+    /** An object with 2 vertices, each with attributes position and color. */
+    LINE(ElementLayout.LINE, VertexAttribute.POSITION, VertexAttribute.COLOR),
 
-    /** An object with 2 vertices with attributes position and color. */
-    LINE(
-        2, 2, GL11.GL_LINES,
-        VertexAttribute.POSITION, VertexAttribute.COLOR
-    ) {
-        override fun addIndices(elements: IntBuffer, index: Int) {
-            for (e in 0..<elementCount) {
-                elements.put(vertexCount * index + e)
-            }
-        }
-    },
-
-    /** An object with 3 vertices with attributes position and color. */
-    TRIANGLE(
-        3, 3, GL11.GL_TRIANGLES,
-        VertexAttribute.POSITION, VertexAttribute.COLOR
-    ) {
-        override fun addIndices(elements: IntBuffer, index: Int) {
-            // Use counterclockwise winding
-            for (e in 0..<elementCount) {
-                elements.put(vertexCount * index + e)
-            }
-        }
-    },
-
-    // TODO no texture quad
+    /** An object with 3 vertices, each with attributes position and color. */
+    TRIANGLE(ElementLayout.TRIANGLE, VertexAttribute.POSITION, VertexAttribute.COLOR),
 
     /**
-     * An object with 4 vertices with attributes position, color, tex coords,
-     * and tex ID.
+     * An object with 4 vertices, each with attributes position, color, tex coords,
+     * and tex slot.
      */
     SPRITE(
-        4, 6, GL11.GL_TRIANGLES,
-        VertexAttribute.POSITION, VertexAttribute.COLOR,
+        ElementLayout.QUAD, VertexAttribute.POSITION, VertexAttribute.COLOR,
         VertexAttribute.TEX_COORD, VertexAttribute.TEX_SLOT
-    ) {
-        override fun addIndices(elements: IntBuffer, index: Int) {
-            // Split quad into two triangles so 6 vertices
-            for (e in QUAD_ELEMENT_ORDER) {
-                elements.put(vertexCount * index + e)
-            }
-        }
-    };
+    );
+
+    val vertexCount: Int
+        get() = layout.vertexCount
+
+    val elementCount: Int
+        get() = layout.elementCount
+
+    val drawMode: Int
+        get() = layout.drawMode
 
     /** The number of components for all attributes per vertex. */
     val totalComponents: Int = attributes.sumOf { it.components }
@@ -73,6 +46,10 @@ enum class DrawPrimitive(
      * @param elements an int buffer
      * @param index the vertex index
      */
-    abstract fun addIndices(elements: IntBuffer, index: Int)
+    fun addIndices(elements: IntBuffer, index: Int) {
+        for (e in layout.elementOrder) {
+            elements.put(vertexCount * index + e)
+        }
+    }
 
 }
