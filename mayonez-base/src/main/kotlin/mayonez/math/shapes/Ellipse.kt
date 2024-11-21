@@ -31,6 +31,11 @@ open class Ellipse(protected val center: Vec2, val size: Vec2, val angle: Float)
     val isAxisAligned: Boolean
         get() = MathUtils.equals(angle % 360f, 0f)
 
+    open fun circumference(): Float {
+        // Euler approximation: C = 2π * √[(a^2+b^2)/2]
+        return MathUtils.TWO_PI * sqrt(MathUtils.hypotSq(halfWidth, halfHeight) * 0.5f)
+    }
+
     /**
      * The area of an ellipse, equal to πab, where a is half the width
      * (semi-major axis) and b is half the height (semi-minor axis).
@@ -56,11 +61,13 @@ open class Ellipse(protected val center: Vec2, val size: Vec2, val angle: Float)
         return BoundingBox(center, Vec2(boxHalfWidth, boxHalfHeight) * 2f)
     }
 
-    /** Returns a polygon approximation of this ellipse with πa vertices. */
-    open fun toPolygon(): Polygon {
-        val numEdges: Int = (MathUtils.PI * halfWidth).roundToInt() // use πa for # edges
+    /**
+     * Returns a polygon approximation of this ellipse with the specified number
+     * of vertices.
+     */
+    open fun toPolygon(numEdges: Int): Polygon {
         val unitCircle = Polygon(center, numEdges, 1f)
-        return unitCircle.scale(Vec2(halfWidth, halfHeight), center).rotate(this.angle, center)
+        return unitCircle.scale(Vec2(halfWidth, halfHeight)).rotate(this.angle)
     }
 
     // Physical Properties

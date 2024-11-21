@@ -2,7 +2,6 @@ package mayonez.math.shapes
 
 import mayonez.math.*
 import java.util.*
-import kotlin.math.*
 
 /**
  * A round shape defined by a center and radius. The distance between every
@@ -25,6 +24,8 @@ class Circle(
     override val isCircle: Boolean
         get() = true
 
+    override fun circumference(): Float = MathUtils.TWO_PI * radius
+
     /** The area of a circle, equal to πr^2. */
     override fun area(): Float = MathUtils.PI * radiusSq
 
@@ -34,11 +35,7 @@ class Circle(
 
     override fun boundingRectangle(): BoundingBox = BoundingBox(center, Vec2(radius * 2f))
 
-    /** Returns a polygon approximation of this ellipse with πr vertices. */
-    override fun toPolygon(): Polygon {
-        // TODO see midpoint circle algorithm
-        // TODO use pixel radius when converting to triangles
-        val numEdges: Int = (MathUtils.PI * radius).roundToInt() // use πr for # edges
+    override fun toPolygon(numEdges: Int): Polygon {
         return Polygon(center, numEdges, radius)
     }
 

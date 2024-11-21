@@ -143,9 +143,10 @@ internal class GLDefaultRenderer(shader: Shader) : GLRenderer(shader),
     }
 
     private fun DebugShape.processShape() {
-        getParts().forEach { shapePart ->
+        val zoom = viewport.zoom
+        getParts(zoom).forEach { shapePart ->
             if (shapePart is Edge) {
-                drawObjects.addAll(getLines(shapePart, this))
+                drawObjects.addAll(shapePart.getLines(this, zoom))
             } else if (shapePart is Triangle) {
                 drawObjects.add(this.copy(shape = shapePart))
             }
