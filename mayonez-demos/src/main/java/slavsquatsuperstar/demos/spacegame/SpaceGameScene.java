@@ -86,7 +86,7 @@ public class SpaceGameScene extends Scene {
 
     private void addSolarSystem() {
         addBackgroundObject(new Circle(new Vec2(-10, -8), 16),
-                new Color(8, 104, 232)); // Earth
+                new Color(8, 64, 192)); // Earth
         addBackgroundObject(new Circle(new Vec2(12.5f, 7.5f), 2.5f),
                 Color.grayscale(144)); // Moon
         addBackgroundObject(new Circle(new Vec2(-20, 16), 1.5f),

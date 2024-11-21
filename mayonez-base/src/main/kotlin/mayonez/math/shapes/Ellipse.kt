@@ -66,8 +66,9 @@ open class Ellipse(protected val center: Vec2, val size: Vec2, val angle: Float)
      * of vertices.
      */
     open fun toPolygon(numEdges: Int): Polygon {
-        val unitCircle = Polygon(center, numEdges, 1f)
-        return unitCircle.scale(Vec2(halfWidth, halfHeight)).rotate(this.angle)
+        return Polygon(center, numEdges, 1f)
+            .scale(Vec2(halfWidth, halfHeight), center)
+            .rotate(angle, center)
     }
 
     // Physical Properties

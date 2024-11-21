@@ -43,7 +43,6 @@ public final class BackgroundStarPrefabs {
             lastCDF = cdf;
         }
         TOTAL_WEIGHT = lastCDF;
-        System.out.println(Arrays.toString(TYPE_CDFS));
     }
 
     private BackgroundStarPrefabs() {

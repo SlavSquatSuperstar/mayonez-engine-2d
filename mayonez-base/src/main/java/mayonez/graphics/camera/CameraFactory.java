@@ -41,7 +41,6 @@ public final class CameraFactory {
                 .setEnabled(false));
 
         return new GameObject("Camera") {
-            // TODO custom camera factory
             @Override
             protected void init() {
                 addComponent(camera);

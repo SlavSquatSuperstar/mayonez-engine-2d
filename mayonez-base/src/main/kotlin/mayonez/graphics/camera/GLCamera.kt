@@ -53,7 +53,6 @@ class GLCamera(screenSize: Vec2?, sceneScale: Float) : Camera(screenSize, sceneS
      * The projection matrix of the camera, which transforms objects from view
      * space into normalized screen space.
      */
-    // TODO don't zoom UI with scene
     override fun getProjectionMatrix(): Matrix4f {
 //        GL11.glViewport()
         projectionMatrix
