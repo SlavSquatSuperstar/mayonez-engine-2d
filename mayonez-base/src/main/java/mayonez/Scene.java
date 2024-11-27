@@ -30,7 +30,6 @@ import java.util.*;
  * @author SlavSquatSuperstar
  */
 // TODO current cursor object
-// TODO camera size
 public abstract class Scene {
 
     // Static Fields
@@ -111,7 +110,7 @@ public abstract class Scene {
         }
 
         // Add camera
-        camera = CameraFactory.createCamera(scale);
+        camera = CameraFactory.createCamera();
         camera.setCameraScale(scale);
         addObject(CameraFactory.createCameraObject(camera));
 
@@ -371,15 +370,6 @@ public abstract class Scene {
     public Vec2 getRandomPosition() {
         var halfSize = getHalfSize();
         return Random.randomVector(halfSize.mul(-1f), halfSize);
-    }
-
-    /**
-     * Returns the number pixels on the screen for every unit in the world. Defaults to a 1:1 scale.
-     *
-     * @return the scene scale
-     */
-    public float getScale() {
-        return scale;
     }
 
     // Getters and Setters

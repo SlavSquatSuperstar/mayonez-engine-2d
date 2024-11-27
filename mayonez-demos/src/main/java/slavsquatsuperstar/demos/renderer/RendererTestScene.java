@@ -188,7 +188,7 @@ public class RendererTestScene extends Scene {
             var moveInput = new Vec2(KeyInput.getAxis("horizontal"), KeyInput.getAxis("vertical"));
             var translation = moveInput.unit()
                     .rotate(getCamera().getRotation())
-                    .div(getCamera().getZoom() * getScale() / 10f);
+                    .div(getCamera().getZoom());
 
             getCamera().getTransform().move(translation);
             getCamera().rotate(KeyInput.getAxis("arrows horizontal"));

@@ -31,7 +31,7 @@ public interface Viewport extends PointTransformer {
      *
      * @return the camera's screen position
      */
-    Vec2 getViewCenter();
+    Vec2 getScreenCenter();
 
     /**
      * The position in pixels of the viewport's bottom-left corner (canvas origin).
@@ -40,7 +40,7 @@ public interface Viewport extends PointTransformer {
      */
     Vec2 getScreenOffset();
 
-    // Camera Effects
+    // Rotation Methods
 
     /**
      * The viewport's rotation in the scene.
@@ -49,12 +49,22 @@ public interface Viewport extends PointTransformer {
      */
     float getRotation();
 
+    // Size Methods
+
     /**
      * How zoomed in or out the viewport is.
      *
      * @return the zoom, a positive number
      */
     float getZoom();
+
+    /**
+     * The size of the viewport relative to the screen, or the pixels to draw on the
+     * screen per world unit.
+     *
+     * @return the scale
+     */
+    float getCameraScale();
 
     // Camera Transformations
 

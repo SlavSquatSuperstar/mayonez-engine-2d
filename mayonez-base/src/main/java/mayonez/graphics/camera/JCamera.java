@@ -12,8 +12,8 @@ import org.joml.*;
 @UsesEngine(EngineType.AWT)
 final class JCamera extends Camera {
 
-    JCamera(Vec2 screenSize, float sceneScale) {
-        super(screenSize, sceneScale);
+    JCamera(Vec2 screenSize) {
+        super(screenSize);
     }
 
     // Camera Methods
@@ -22,7 +22,7 @@ final class JCamera extends Camera {
     public Vec2 getScreenOffset() {
         // view center - zoom offset
         // (position * scene_scale) - (0.5 * screen_size / zoom)
-        return getViewCenter().sub(screenSize.mul(0.5f / getZoom()));
+        return getScreenCenter().sub(screenSize.mul(0.5f / getZoom()));
     }
 
     @Override

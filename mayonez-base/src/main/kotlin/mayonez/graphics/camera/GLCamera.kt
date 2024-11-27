@@ -17,7 +17,7 @@ import org.joml.*
  * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.GL)
-class GLCamera(screenSize: Vec2?, sceneScale: Float) : Camera(screenSize, sceneScale) {
+class GLCamera(screenSize: Vec2) : Camera(screenSize) {
 
     // Matrix Fields
     private val viewMatrix: Matrix4f = Matrix4f()
@@ -32,7 +32,7 @@ class GLCamera(screenSize: Vec2?, sceneScale: Float) : Camera(screenSize, sceneS
 
     // Camera Methods
 
-    override fun getScreenOffset(): Vec2 = viewCenter - (screenSize * 0.5f)
+    override fun getScreenOffset(): Vec2 = screenCenter - (screenSize * 0.5f)
 
     // Matrix Methods
 
@@ -43,8 +43,8 @@ class GLCamera(screenSize: Vec2?, sceneScale: Float) : Camera(screenSize, sceneS
     override fun getViewMatrix(): Matrix4f {
         viewMatrix
             .translateView(screenOffset, cameraZ)
-            .rotateView(-rotation, viewCenter, cameraZ)
-            .zoomView(zoom, viewCenter, cameraZ)
+            .rotateView(-rotation, screenCenter, cameraZ)
+            .zoomView(zoom, screenCenter, cameraZ)
             .zoomView(cameraScale, Vec2(), cameraZ)
             .invert(inverseView)
         return viewMatrix

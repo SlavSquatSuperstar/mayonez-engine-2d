@@ -109,13 +109,13 @@ internal class JDefaultRenderer : SceneRenderer,
 
     private fun rotateScreen(cam: Viewport, g2: Graphics2D) {
         val camAngleRad = Math.toRadians(cam.rotation.toDouble())
-        val camCenter = cam.viewCenter
+        val camCenter = cam.screenCenter
         g2.rotate(-camAngleRad, camCenter.x.toDouble(), camCenter.y.toDouble())
     }
 
     private fun translateAndScaleScreen(cam: Viewport, g2: Graphics2D) {
         val camOffset = cam.screenOffset
-        val camZoom = cam.zoom.toDouble() // the zoom
+        val camZoom = cam.zoom.toDouble()
         g2.translate(-camOffset.x * camZoom, -camOffset.y * camZoom)
         g2.scale(camZoom, camZoom)
     }

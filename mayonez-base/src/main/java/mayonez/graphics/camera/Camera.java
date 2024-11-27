@@ -29,7 +29,7 @@ public abstract class Camera extends Component implements Viewport {
     // Camera Effects
     private float zoom, rotation;
 
-    protected Camera(Vec2 screenSize, float sceneScale) {
+    protected Camera(Vec2 screenSize) {
         super(UpdateOrder.PHYSICS);
         this.screenSize = screenSize;
 
@@ -60,7 +60,7 @@ public abstract class Camera extends Component implements Viewport {
         }
     }
 
-    // Camera Location Methods
+    // Camera Position Methods
 
     /**
      * The position of the camera's center in the scene in world units.
@@ -82,32 +82,12 @@ public abstract class Camera extends Component implements Viewport {
     }
 
     /**
-     * The size of the camera viewport relative to the screen, or the pixels to draw
-     * per world unit.
-     *
-     * @return the camera's scale
-     */
-    public float getCameraScale() {
-        return cameraScale;
-    }
-
-    public void setCameraScale(float cameraScale) {
-        this.cameraScale = cameraScale;
-        invCameraScale = 1f / cameraScale;
-        System.out.printf("scale = %f, inv scale = %f\n", cameraScale, invCameraScale);
-    }
-
-    public float getInvCameraScale() {
-        return invCameraScale;
-    }
-
-    /**
      * The position in pixels of the camera's center position.
      *
      * @return the camera's screen position
      */
     @Override
-    public final Vec2 getViewCenter() {
+    public final Vec2 getScreenCenter() {
         return getPosition().mul(cameraScale);
     }
 
@@ -119,7 +99,7 @@ public abstract class Camera extends Component implements Viewport {
     @Override
     public abstract Vec2 getScreenOffset(); // zoom offset
 
-    // Camera Effects
+    // Camera Size Methods
 
     /**
      * Get the magnification of the camera, or how larger objects appear to be.
@@ -147,6 +127,22 @@ public abstract class Camera extends Component implements Viewport {
     public void resetZoom() {
         zoom = 1f;
     }
+
+    @Override
+    public float getCameraScale() {
+        return cameraScale;
+    }
+
+    public void setCameraScale(float cameraScale) {
+        this.cameraScale = cameraScale;
+        invCameraScale = 1f / cameraScale;
+    }
+
+    protected float getInvCameraScale() {
+        return invCameraScale;
+    }
+
+    // Camera Rotation Methods
 
     /**
      * Get the camera's rotation in degrees, or how tilted objects appear to be.

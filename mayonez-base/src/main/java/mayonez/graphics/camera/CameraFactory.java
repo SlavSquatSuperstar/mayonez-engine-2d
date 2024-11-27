@@ -20,11 +20,11 @@ public final class CameraFactory {
      *
      * @return the game engine
      */
-    public static Camera createCamera(float sceneScale) {
+    public static Camera createCamera() {
         if (Mayonez.getUseGL()) {
-            return new GLCamera(WindowProperties.getScreenSize(), sceneScale);
+            return new GLCamera(WindowProperties.getScreenSize());
         } else {
-            return new JCamera(WindowProperties.getScreenSize(), sceneScale);
+            return new JCamera(WindowProperties.getScreenSize());
         }
     }
 
