@@ -61,10 +61,7 @@ internal class GLSprite private constructor(
         // Render sprite at object center and rotate according to object
         // Background sprite will not have scale but will use spriteXf instead
         val objXf = transform.combine(getSpriteTransform())
-        val sceneScale = gameObject?.scene?.scale ?: 1f
-        return Rectangle(
-            objXf.position * sceneScale, objXf.scale * sceneScale, objXf.rotation
-        ).vertices
+        return Rectangle(objXf.position, objXf.scale, objXf.rotation).vertices
     }
 
 }

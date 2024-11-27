@@ -35,7 +35,7 @@ public final class RendererFactory {
 
         // Debug
         var debugRenderer = (DebugRenderer) sceneRenderer;
-        var debugDraw = new DebugDraw(sceneScale, debugRenderer);
+        var debugDraw = new DebugDraw(1f, debugRenderer);
 
         return useGL ? createGLRenderLayer(sceneRenderer, debugDraw)
                 : createJRenderLayer(sceneRenderer, debugDraw);

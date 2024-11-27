@@ -2,6 +2,7 @@ package mayonez.renderer.gl
 
 import mayonez.*
 import mayonez.graphics.*
+import mayonez.graphics.camera.*
 import mayonez.graphics.debug.*
 import mayonez.graphics.font.*
 import mayonez.graphics.sprites.*
@@ -143,7 +144,7 @@ internal class GLDefaultRenderer(shader: Shader) : GLRenderer(shader),
     }
 
     private fun DebugShape.processShape() {
-        val zoom = viewport.zoom
+        val zoom = viewport.zoom * (viewport as Camera).cameraScale
         getParts(zoom).forEach { shapePart ->
             if (shapePart is Edge) {
                 drawObjects.addAll(shapePart.getLines(this, zoom))

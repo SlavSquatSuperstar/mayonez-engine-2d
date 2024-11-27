@@ -18,8 +18,7 @@ public abstract class Camera extends Component implements Viewport {
 
     // Size Fields
     protected final Vec2 screenSize;
-    protected final float sceneScale;
-    protected final float invSceneScale;
+    private float cameraScale, invCameraScale; // Pixels per unit
 
     // Camera Movement
     private CameraMode mode; // TODO remove
@@ -33,8 +32,9 @@ public abstract class Camera extends Component implements Viewport {
     protected Camera(Vec2 screenSize, float sceneScale) {
         super(UpdateOrder.PHYSICS);
         this.screenSize = screenSize;
-        this.sceneScale = sceneScale;
-        invSceneScale = 1f / sceneScale;
+
+        cameraScale = 1f;
+        invCameraScale = 1f;
 
         mode = CameraMode.FIXED;
         subject = null;
@@ -82,13 +82,33 @@ public abstract class Camera extends Component implements Viewport {
     }
 
     /**
+     * The size of the camera viewport relative to the screen, or the pixels to draw
+     * per world unit.
+     *
+     * @return the camera's scale
+     */
+    public float getCameraScale() {
+        return cameraScale;
+    }
+
+    public void setCameraScale(float cameraScale) {
+        this.cameraScale = cameraScale;
+        invCameraScale = 1f / cameraScale;
+        System.out.printf("scale = %f, inv scale = %f\n", cameraScale, invCameraScale);
+    }
+
+    public float getInvCameraScale() {
+        return invCameraScale;
+    }
+
+    /**
      * The position in pixels of the camera's center position.
      *
      * @return the camera's screen position
      */
     @Override
     public final Vec2 getViewCenter() {
-        return getPosition().mul(sceneScale);
+        return getPosition().mul(cameraScale);
     }
 
     /**
@@ -162,7 +182,7 @@ public abstract class Camera extends Component implements Viewport {
      * @return the camera bounds
      */
     public BoundingBox getBounds() {
-        return new BoundingBox(getPosition(), screenSize.div(sceneScale * zoom));
+        return new BoundingBox(getPosition(), screenSize.div(cameraScale * zoom));
     }
 
     // Camera Movement Methods

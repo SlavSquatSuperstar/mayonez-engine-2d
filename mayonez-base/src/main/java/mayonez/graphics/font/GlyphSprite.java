@@ -33,9 +33,7 @@ record GlyphSprite(
 
     @Override
     public Vec2[] getVertexPositions() {
-        var sceneScale = isInUI() ? 1 : text.getScene().getScale();
-        return new BoundingBox(position.mul(sceneScale), size.mul(sceneScale))
-                .getVertices();
+        return new BoundingBox(position, size).getVertices();
     }
 
     // GL Methods

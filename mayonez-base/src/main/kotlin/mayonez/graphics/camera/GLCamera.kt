@@ -45,6 +45,7 @@ class GLCamera(screenSize: Vec2?, sceneScale: Float) : Camera(screenSize, sceneS
             .translateView(screenOffset, cameraZ)
             .rotateView(-rotation, viewCenter, cameraZ)
             .zoomView(zoom, viewCenter, cameraZ)
+            .zoomView(cameraScale, Vec2(), cameraZ)
             .invert(inverseView)
         return viewMatrix
     }
@@ -95,7 +96,7 @@ class GLCamera(screenSize: Vec2?, sceneScale: Float) : Camera(screenSize, sceneS
     /** Normalize screen position into clip space. */
     private fun getClipPos(screenPos: Vec2): Vec2 {
         val flipped = Vec2(screenPos.x, screenSize.y - screenPos.y) // Mirror y
-        return ((flipped / screenSize * 2f) - Vec2(1f)) * invSceneScale
+        return ((flipped / screenSize * 2f) - Vec2(1f)) * invCameraScale
     }
 
     /** Transform clip position into camera view space. */
@@ -107,7 +108,7 @@ class GLCamera(screenSize: Vec2?, sceneScale: Float) : Camera(screenSize, sceneS
 
     override fun toWorldDisplacement(screenDisp: Vec2): Vec2 {
         val flippedDisp = Vec2(screenDisp.x, -screenDisp.y)
-        return flippedDisp.mul(invSceneScale)
+        return flippedDisp.mul(invCameraScale)
     }
 
 }

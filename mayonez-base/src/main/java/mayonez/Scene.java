@@ -112,6 +112,7 @@ public abstract class Scene {
 
         // Add camera
         camera = CameraFactory.createCamera(scale);
+        camera.setCameraScale(scale);
         addObject(CameraFactory.createCameraObject(camera));
 
         // Add objects
