@@ -96,7 +96,7 @@ class GLCamera(screenSize: Vec2?, sceneScale: Float) : Camera(screenSize, sceneS
     /** Normalize screen position into clip space. */
     private fun getClipPos(screenPos: Vec2): Vec2 {
         val flipped = Vec2(screenPos.x, screenSize.y - screenPos.y) // Mirror y
-        return ((flipped / screenSize * 2f) - Vec2(1f)) * invCameraScale
+        return (flipped / screenSize * 2f) - Vec2(1f)
     }
 
     /** Transform clip position into camera view space. */

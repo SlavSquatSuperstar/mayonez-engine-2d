@@ -15,7 +15,7 @@ private const val MAX_BATCH_TRIANGLES: Int = 1000
  *
  * @author SlavSquatSuperstar
  */
-internal data class DebugShape(internal val shape: MShape, private val brush: ShapeBrush) :
+internal data class DebugShape(internal val shape: MShape, internal val brush: ShapeBrush) :
     JRenderable, GLRenderable {
 
     private val color: MColor
@@ -26,10 +26,6 @@ internal data class DebugShape(internal val shape: MShape, private val brush: Sh
 
     internal val strokeSize: Float
         get() = brush.strokeSize
-
-    // Copy Methods
-
-    internal fun copyBrush(fill: Boolean): ShapeBrush = brush.copy(fill = fill)
 
     // AWT Renderer Methods
 

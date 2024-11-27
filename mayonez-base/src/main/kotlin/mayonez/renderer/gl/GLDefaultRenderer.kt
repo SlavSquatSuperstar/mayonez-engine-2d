@@ -147,7 +147,7 @@ internal class GLDefaultRenderer(shader: Shader) : GLRenderer(shader),
         val zoom = viewport.zoom * (viewport as Camera).cameraScale
         getParts(zoom).forEach { shapePart ->
             if (shapePart is Edge) {
-                drawObjects.addAll(shapePart.getLines(this, zoom))
+                drawObjects.addAll(shapePart.getDrawParts(this.brush, zoom))
             } else if (shapePart is Triangle) {
                 drawObjects.add(this.copy(shape = shapePart))
             }

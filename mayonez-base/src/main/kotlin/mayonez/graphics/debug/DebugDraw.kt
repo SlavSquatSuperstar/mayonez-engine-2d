@@ -19,7 +19,7 @@ import mayonez.renderer.*
  * @author SlavSquatSuperstar
  */
 class DebugDraw internal constructor(
-    private val scale: Float, private val debugRenderer: DebugRenderer
+    private val pixelScale: Float, private val debugRenderer: DebugRenderer
 ) {
 
     companion object {
@@ -39,7 +39,7 @@ class DebugDraw internal constructor(
     fun drawPoint(position: Vec2, color: MColor?) {
         // Fill a circle with radius "STROKE_SIZE" in pixels
         debugRenderer.addShape(
-            Circle(position.toScreen(scale), DEFAULT_STROKE_SIZE),
+            Circle(position, DEFAULT_STROKE_SIZE / pixelScale),
             ShapeBrush.createSolidBrush(color).setZIndex(DrawPriority.POINT.zIndex)
         )
     }
@@ -67,7 +67,7 @@ class DebugDraw internal constructor(
     fun drawLine(start: Vec2?, end: Vec2?, brush: ShapeBrush?) {
         if (start == null || end == null) return
         debugRenderer.addShape(
-            Edge(start.toScreen(scale), end.toScreen(scale)),
+            Edge(start, end),
             brush ?: ShapeBrush.createLineBrush(DEFAULT_COLOR)
         )
     }
@@ -118,7 +118,7 @@ class DebugDraw internal constructor(
      */
     fun drawShape(shape: Shape?, brush: ShapeBrush?) {
         debugRenderer.addShape(
-            shape?.toScreen(scale) ?: return,
+            shape ?: return,
             brush ?: ShapeBrush.createOutlineBrush(DEFAULT_COLOR)
         )
     }
@@ -141,7 +141,7 @@ class DebugDraw internal constructor(
      */
     fun fillShape(shape: Shape?, brush: ShapeBrush?) {
         debugRenderer.addShape(
-            shape?.toScreen(scale) ?: return,
+            shape ?: return,
             brush ?: ShapeBrush.createSolidBrush(DEFAULT_COLOR)
         )
     }
@@ -152,20 +152,4 @@ class DebugDraw internal constructor(
 
 private fun DebugRenderer.addShape(shape: Shape, brush: ShapeBrush) {
     this.addShape(DebugShape(shape, brush))
-}
-
-/**
- * Converts a pair of coordinates from world to screen units.
- *
- * @return the corresponding screen pixels
- */
-private fun Vec2.toScreen(screenScale: Float): Vec2 = this * screenScale
-
-/**
- * Converts all points on a shape to screen units.
- *
- * @return the corresponding screen pixels
- */
-private fun Shape.toScreen(screenScale: Float): Shape {
-    return this.scale(Vec2(screenScale), Vec2(0f))
 }

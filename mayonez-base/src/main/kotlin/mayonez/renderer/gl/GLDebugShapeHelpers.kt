@@ -16,32 +16,27 @@ internal fun DebugShape.getParts(zoom: Float): Array<out MShape> {
     return when (val shape = this.shape) {
         is Edge -> arrayOf(shape) // add line directly
         is MPolygon -> shape.getParts(this.fill) // else break into lines or triangles
-        is Ellipse -> shape.toPolygon(shape.getNumEdges(zoom)).getParts(this.fill)
+        is Ellipse -> shape.toPolygon(zoom).getParts(this.fill)
         else -> emptyArray()
     }
 }
 
+// Poly > Lines/Tris
 private fun MPolygon.getParts(fill: Boolean): Array<out MShape> {
     return if (fill) this.triangles else this.edges
 }
 
-private fun Ellipse.getNumEdges(zoom: Float): Int {
+// Circle > Poly > Lines/Tris
+private fun Ellipse.toPolygon(zoom: Float): MPolygon {
     // Apparent circumference in pixels
-    return (this.circumference() * 0.1f * zoom).roundToInt().coerceAtLeast(8)
+    val numEdges = (this.circumference() * 0.1f * zoom).roundToInt().coerceAtLeast(8)
+    return this.toPolygon(numEdges)
 }
 
 // GL Lines Shape Methods
 
-internal fun Edge.getLines(shape: DebugShape, zoom: Float): List<DebugShape> {
-    val list = ArrayList<DebugShape>()
-    val len = this.length
-    val stroke = shape.strokeSize / zoom // Apparent width in pixels
-
-    val stretchedLen = len + stroke - 1f
-    val rect = Rectangle(this.center(), Vec2(stretchedLen, stroke), this.toVector().angle())
-    for (tri in rect.triangles) {
-        // Change brush fill to "true" since using quads
-        list.add(DebugShape(tri, shape.copyBrush(true)))
-    }
-    return list
+internal fun Edge.getDrawParts(brush: ShapeBrush, zoom: Float): List<DebugShape> {
+    val stroke = brush.strokeSize / zoom // Apparent width in pixels
+    val rect = Rectangle(this.center(), Vec2(this.length, stroke), this.toVector().angle())
+    return rect.triangles.map { tri -> DebugShape(tri, brush.copy(fill = true)) }
 }
