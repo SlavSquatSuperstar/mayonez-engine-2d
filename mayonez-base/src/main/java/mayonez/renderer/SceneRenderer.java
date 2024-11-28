@@ -16,9 +16,8 @@ public interface SceneRenderer extends Renderer {
      *
      * @param background the background sprite
      * @param sceneSize  the scene dimensions
-     * @param sceneScale the scene scale
      */
-    void setBackground(Sprite background, Vec2 sceneSize, float sceneScale);
+    void setBackground(Sprite background, Vec2 sceneSize);
 
     /**
      * Adds a drawable object to the render.

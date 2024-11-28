@@ -31,7 +31,7 @@ public final class RendererFactory {
     public static RenderLayer createRenderLayer(boolean useGL, Sprite background, Vec2 sceneSize, float sceneScale) {
         // Scene
         var sceneRenderer = useGL ? new GLDefaultRenderer(defaultShader) : new JDefaultRenderer();
-        sceneRenderer.setBackground(background, sceneSize, sceneScale);
+        sceneRenderer.setBackground(background, sceneSize);
 
         // Debug
         var debugRenderer = (DebugRenderer) sceneRenderer;

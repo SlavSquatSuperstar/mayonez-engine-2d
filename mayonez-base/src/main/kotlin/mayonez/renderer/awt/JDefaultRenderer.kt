@@ -9,8 +9,6 @@ import mayonez.math.*
 import mayonez.renderer.*
 import java.awt.*
 
-private val DEFAULT_STROKE: Stroke = BasicStroke(DebugDraw.DEFAULT_STROKE_SIZE)
-
 /**
  * Draws all sprites and debug information onto the screen with Java's AWT
  * library.
@@ -32,9 +30,9 @@ internal class JDefaultRenderer : SceneRenderer,
 
     // Scene Renderer Methods
 
-    override fun setBackground(background: Sprite, sceneSize: Vec2, sceneScale: Float) {
+    override fun setBackground(background: Sprite, sceneSize: Vec2) {
         this.background = background
-            .setSpriteTransform(Transform.scaleInstance(sceneSize * sceneScale))
+            .setSpriteTransform(Transform.scaleInstance(sceneSize))
     }
 
     override fun addRenderable(r: Renderable?) {
@@ -66,12 +64,13 @@ internal class JDefaultRenderer : SceneRenderer,
         drawBackgroundImage(g2)
 
         // Crate "batches" from objects and shapes
+        val scale = viewport.cameraScale
         drawObjects.clear()
         objects.filter { it.isEnabled }
+            .map { if (it is DebugShape) it.adjustStrokeSize(scale) else it }
             .forEach { drawObjects.add(it) }
 
         // Draw batches
-        g2.stroke = DEFAULT_STROKE
         drawObjects.sortBy { it.zIndex }
         drawObjects.forEach { it.render(g2) }
 
@@ -94,10 +93,7 @@ internal class JDefaultRenderer : SceneRenderer,
     /** Render the background image, if the scene has one. */
     private fun drawBackgroundImage(g2: Graphics2D) {
         val tex = background.getTexture() as? JTexture ?: return // Only if image is set
-        tex.draw(
-            g2, background.getSpriteTransform(), null,
-            background.getColor(), 1f
-        )
+        tex.draw(g2, background.getSpriteTransform(), null, background.getColor())
     }
 
     /** Transform the screen and render everything at the new position. */
@@ -116,12 +112,18 @@ internal class JDefaultRenderer : SceneRenderer,
     private fun translateAndScaleScreen(cam: Viewport, g2: Graphics2D) {
         val camOffset = cam.screenOffset
         val camZoom = cam.zoom.toDouble()
+        val camScale = cam.cameraScale.toDouble()
         g2.translate(-camOffset.x * camZoom, -camOffset.y * camZoom)
-        g2.scale(camZoom, camZoom)
+        g2.scale(camZoom * camScale, camZoom * camScale)
     }
 
     // Camera Methods
 
     override fun getViewport(): Viewport = SceneManager.currentScene.camera
 
+}
+
+private fun DebugShape.adjustStrokeSize(cameraScale: Float): DebugShape {
+    val newBrush = this.brush.copy(strokeSize = this.brush.strokeSize / cameraScale)
+    return this.copy(brush = newBrush)
 }

@@ -31,19 +31,14 @@ internal data class DebugShape(internal val shape: MShape, internal val brush: S
 
     override fun render(g2: Graphics2D?) {
         if (g2 == null) return
-        g2.setBrushProperties(color, strokeSize)
-        g2.drawShape(shape, fill)
-    }
 
-    private fun Graphics2D.setBrushProperties(color: MColor, strokeSize: Float) {
-        this.color = color.toAWT()
-        this.stroke = BasicStroke(strokeSize)
-    }
+        // Set brush properties
+        g2.color = color.toAWT()
+        g2.stroke = BasicStroke(strokeSize)
 
-    private fun Graphics2D.drawShape(shape: MShape, fill: Boolean) {
+        // Draw shape
         val awtShape = shape.toAWTShape()
-        if (fill) fill(awtShape)
-        else draw(awtShape)
+        if (fill) g2.fill(awtShape) else g2.draw(awtShape)
     }
 
     // GL Renderer Methods
