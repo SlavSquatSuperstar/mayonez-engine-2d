@@ -14,16 +14,16 @@ import mayonez.renderer.*
  * Note: Due to how shapes are drawn in OpenGL, transparency is disabled,
  * and all colors will have their alpha set to 255. To draw transparent
  * shapes in the GL engine, use a [mayonez.graphics.sprites.Sprite]
- * instead.
+ * with a shape texture instead.
  *
  * @author SlavSquatSuperstar
  */
 class DebugDraw internal constructor(
-    private val pixelScale: Float, private val debugRenderer: DebugRenderer
+    private val debugRenderer: DebugRenderer
 ) {
 
     companion object {
-        /** How many pixels wide a curve should be drawn. */
+        /** How many pixels wide a line or curve should be drawn. */
         internal const val DEFAULT_STROKE_SIZE: Float = 2f
         internal val DEFAULT_COLOR: MColor = Colors.BLACK
     }
@@ -38,6 +38,7 @@ class DebugDraw internal constructor(
      */
     fun drawPoint(position: Vec2, color: MColor?) {
         // Fill a circle with radius "STROKE_SIZE" in pixels
+        val pixelScale = debugRenderer.viewport.cameraScale
         debugRenderer.addShape(
             Circle(position, DEFAULT_STROKE_SIZE / pixelScale),
             ShapeBrush.createSolidBrush(color).setZIndex(DrawPriority.POINT.zIndex)
@@ -149,7 +150,6 @@ class DebugDraw internal constructor(
 }
 
 // Helper Methods
-
 private fun DebugRenderer.addShape(shape: Shape, brush: ShapeBrush) {
     this.addShape(DebugShape(shape, brush))
 }

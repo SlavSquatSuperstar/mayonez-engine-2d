@@ -149,7 +149,7 @@ internal class GLDefaultRenderer(shader: Shader) : GLRenderer(shader),
             if (shapePart is Edge) {
                 drawObjects.addAll(shapePart.getDrawParts(this.brush, zoom))
             } else if (shapePart is Triangle) {
-                drawObjects.add(this.copy(shape = shapePart))
+                drawObjects.add(shapePart.getDrawShape(this.brush))
             }
         }
     }

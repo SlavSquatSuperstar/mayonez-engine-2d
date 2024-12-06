@@ -67,7 +67,8 @@ public class SpaceGameScene extends Scene {
 
     @Override
     protected void onUserRender() {
-        backgroundObjects.forEach(obj -> obj.debugDraw(getDebugDraw()));
+        var debugDraw = getDebugDraw();
+        backgroundObjects.forEach(obj -> obj.debugDraw(debugDraw));
     }
 
     // Helper Methods

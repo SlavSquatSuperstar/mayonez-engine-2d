@@ -64,7 +64,7 @@ internal class JDefaultRenderer : SceneRenderer,
         drawBackgroundImage(g2)
 
         // Crate "batches" from objects and shapes
-        val scale = viewport.cameraScale
+        val scale = viewport.cameraScale * viewport.zoom
         drawObjects.clear()
         objects.filter { it.isEnabled }
             .map { if (it is DebugShape) it.adjustStrokeSize(scale) else it }

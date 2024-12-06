@@ -65,11 +65,19 @@ public class RendererTestScene extends Scene {
 
         // Shapes
 
+        addShapeObject("tri-1",
+                new Triangle(new Vec2(27, 15), new Vec2(33, 15), new Vec2(30, 20)),
+                1, Colors.DARK_GREEN);
+
+        addShapeObject("poly-1",
+                new Polygon(new Vec2(30, 17), 5, 5f).rotate(90, null),
+                0, Colors.DARK_BLUE);
+
         addSquareObject("square-1", new Vec2(5, 5), 3, Colors.RED);
         addSquareObject("square-2", new Vec2(-5, 5), 1, Colors.GREEN);
         addSquareObject("square-3", new Vec2(-5, -5), 1, Colors.BLUE);
         addSquareObject("square-3", new Vec2(5, -5), 3, Colors.ORANGE);
-        
+
         addCircleObject("circle-1", new Vec2(30, 7.5f), 2.5f, 3, Colors.BLUE);
         addCircleObject("circle-2", new Vec2(30, 5), 5, 2, Colors.GREEN);
         addCircleObject("circle-3", new Vec2(30, 2.5f), 7.5f, 1, Colors.ORANGE);
@@ -139,18 +147,32 @@ public class RendererTestScene extends Scene {
         });
     }
 
-    private void addSquareObject(String name, Vec2 pos, int zIndex, Color color) {
-        var shape = new Rectangle(pos, new Vec2(10, 10));
+    private void addShapeObject(String name, Shape shape, int zIndex, Color color) {
         var fillBrush = ShapeBrush.createSolidBrush(color).setZIndex(zIndex);
         var drawBrush = ShapeBrush.createOutlineBrush(Colors.BLACK).setZIndex(zIndex).setStrokeSize(2);
-        addShapeObject(name, shape, fillBrush, drawBrush);
+
+        addObject(new GameObject(name) {
+            @Override
+            protected void init() {
+                addComponent(new Script() {
+                    @Override
+                    protected void debugRender() {
+                        getDebugDraw().fillShape(shape, fillBrush);
+                        getDebugDraw().drawShape(shape, drawBrush);
+                    }
+                });
+            }
+        });
+    }
+
+    private void addSquareObject(String name, Vec2 pos, int zIndex, Color color) {
+        var shape = new Rectangle(pos, new Vec2(10, 10));
+        addShapeObject(name, shape, zIndex, color);
     }
 
     private void addCircleObject(String name, Vec2 pos, float radius, int zIndex, Color color) {
         var shape = new Circle(pos, radius);
-        var fillBrush = ShapeBrush.createSolidBrush(color).setZIndex(zIndex);
-        var drawBrush = ShapeBrush.createOutlineBrush(Colors.BLACK).setZIndex(zIndex).setStrokeSize(2);
-        addShapeObject(name, shape, fillBrush, drawBrush);
+        addShapeObject(name, shape, zIndex, color);
     }
 
     private void addLineObject(String name, Vec2 start, Vec2 end, int zIndex, Color color) {

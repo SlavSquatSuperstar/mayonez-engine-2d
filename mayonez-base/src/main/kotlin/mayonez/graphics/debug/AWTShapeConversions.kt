@@ -3,14 +3,11 @@ package mayonez.graphics.debug
 import mayonez.math.*
 import mayonez.math.shapes.*
 import java.awt.geom.*
-import kotlin.math.*
 
 // Java AWT Type Aliases
 
 /** The [java.awt.Shape] class defined by the JDK. */
 private typealias JShape = java.awt.Shape
-/** The [java.awt.Polygon] class defined by the JDK. */
-private typealias JPolygon = java.awt.Polygon
 
 // AWT Shape Conversion Methods
 
@@ -20,7 +17,7 @@ internal fun MShape.toAWTShape(): JShape? {
         is Edge -> Line2D.Float(start.x, start.y, end.x, end.y)
         is Ellipse -> this.toAWTEllipse()
         is Rectangle -> this.toAWTRectangle()
-        is MPolygon -> toAWTPolygon()
+        is MPolygon -> this.toAWTPolygon()
         else -> null
     }
 }
@@ -40,11 +37,18 @@ private fun Rectangle.toAWTRectangle(): JShape {
 }
 
 private fun Polygon.toAWTPolygon(): JShape {
-    val poly = JPolygon()
-    this.vertices.forEach {
-        poly.addPoint(it.x.roundToInt(), it.y.roundToInt())
+    // Add first point
+    var path = Path2D.Float(Path2D.WIND_NON_ZERO, this.numVertices)
+    val point1 = this.vertices[0]
+    path.moveTo(point1.x, point1.y)
+    // Add edges
+    for (i in 1 until this.numVertices) {
+        val point = this.vertices[i]
+        path.lineTo(point.x, point.y)
     }
-    return poly
+    // Add last edge
+    path.lineTo(point1.x, point1.y)
+    return path
 }
 
 /**

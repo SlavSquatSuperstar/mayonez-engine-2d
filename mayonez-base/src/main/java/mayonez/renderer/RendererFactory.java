@@ -28,14 +28,14 @@ public final class RendererFactory {
 
     // Render Layer Methods
 
-    public static RenderLayer createRenderLayer(boolean useGL, Sprite background, Vec2 sceneSize, float sceneScale) {
+    public static RenderLayer createRenderLayer(boolean useGL, Sprite background, Vec2 sceneSize) {
         // Scene
         var sceneRenderer = useGL ? new GLDefaultRenderer(defaultShader) : new JDefaultRenderer();
         sceneRenderer.setBackground(background, sceneSize);
 
         // Debug
         var debugRenderer = (DebugRenderer) sceneRenderer;
-        var debugDraw = new DebugDraw(sceneScale, debugRenderer);
+        var debugDraw = new DebugDraw(debugRenderer);
 
         return useGL ? createGLRenderLayer(sceneRenderer, debugDraw)
                 : createJRenderLayer(sceneRenderer, debugDraw);
