@@ -51,11 +51,11 @@ class GLCamera(screenSize: Vec2) : Camera(screenSize) {
     }
 
     /**
-     * The projection matrix of the camera, which transforms objects from view
-     * space into normalized screen space.
+     * The projection matrix of the camera, which transforms objects from camera
+     * view space into normalized screen space.
      */
     override fun getProjectionMatrix(): Matrix4f {
-//        GL11.glViewport()
+        // TODO only recalculate if changed
         projectionMatrix
             .setOrtho(0f, screenSize.x, 0f, screenSize.y, nearPlane, farPlane)
             .invert(inverseProjection)
@@ -80,8 +80,8 @@ class GLCamera(screenSize: Vec2) : Camera(screenSize) {
     }
 
     private fun Matrix4f.zoomView(zoom: Float, cameraPos: Vec2, cameraZ: Float): Matrix4f {
-        // Orthographic zoom
-        // TODO try perspective zoom
+        // Orthographic zoom changes orthographic size
+        // TODO try perspective, movement zoom
         return this.scaleAround(zoom, zoom, 1f, cameraPos.x, cameraPos.y, cameraZ)
     }
 

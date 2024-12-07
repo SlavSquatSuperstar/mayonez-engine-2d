@@ -6,7 +6,9 @@ import mayonez.graphics.*;
 import static org.lwjgl.opengl.GL20.*;
 
 /**
- * An individual sub-program within a .glsl shader file.
+ * An individual sub-program within a .glsl shader file. Technically, a
+ * ShaderProgram is considered an OpenGL shader, while a {@link Shader} is
+ * considered an OpenGL program.
  *
  * @author SlavSquatSuperstar
  */

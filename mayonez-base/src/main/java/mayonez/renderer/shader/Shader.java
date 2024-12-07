@@ -12,7 +12,7 @@ import java.util.*;
 import static org.lwjgl.opengl.GL20.*;
 
 /**
- * A compiled OpenGL Shader program (.glsl) used by the GL engine. A shader tells
+ * A compiled OpenGL shader program (.glsl) used by the GL engine. A shader tells
  * the GPU how to draw an image, specifying the colors, brightness, and texture.
  *
  * @author SlavSquatSuperstar
@@ -21,17 +21,22 @@ import static org.lwjgl.opengl.GL20.*;
 public class Shader extends Asset {
 
     private final int shaderID;
+    private final Map<String, Integer> uniformLocations;
 
     public Shader(String filename) {
         super(filename);
-
         if (GLHelper.isGLInitialized()) {
             shaderID = glCreateProgram();
+            create();
         } else {
             shaderID = GL_NONE;
-            return;
         }
+        uniformLocations = new HashMap<>();
+    }
 
+    // Read Shader Methods
+
+    private void create() {
         try {
             Logger.debug("Creating shader from file %s", getFilenameInQuotes());
             List<ShaderProgram> programs = readShaderPrograms();
@@ -42,8 +47,6 @@ public class Shader extends Asset {
             Logger.printStackTrace(e);
         }
     }
-
-    // Read Shader Methods
 
     private List<ShaderProgram> readShaderPrograms() throws ShaderException {
         try {
@@ -124,10 +127,11 @@ public class Shader extends Asset {
     /**
      * Delete this shader program from the GPU.
      */
-    public void delete() {
+    private void delete() {
         if (GLHelper.isGLInitialized()) {
             glDeleteProgram(shaderID);
         }
+        uniformLocations.clear();
     }
 
     // Uniform Methods
@@ -149,7 +153,13 @@ public class Shader extends Asset {
      * @return the variable location
      */
     private int getVariableLocation(String varName) {
-        return glGetUniformLocation(shaderID, varName);
+        if (uniformLocations.containsKey(varName)) {
+            return uniformLocations.get(varName);
+        } else {
+            var location = glGetUniformLocation(shaderID, varName);
+            uniformLocations.put(varName, location);
+            return location;
+        }
     }
 
     // Asset Methods
