@@ -26,7 +26,7 @@ public class CameraKeepInScene extends KeepInScene {
 
     @Override
     protected BoundingBox getObjectBounds() {
-        return camera.getBounds();
+        return new BoundingBox(camera.getPosition(), camera.getSize());
     }
 
     // KeepInScene Overrides

@@ -2,7 +2,6 @@ package mayonez.graphics.camera;
 
 import mayonez.*;
 import mayonez.math.*;
-import mayonez.math.shapes.*;
 import mayonez.renderer.*;
 import mayonez.util.*;
 
@@ -22,7 +21,6 @@ public abstract class Camera extends Script implements Viewport {
     private float cameraScale, invCameraScale; // Pixels per unit
 
     // Camera Movement
-    private CameraMode mode; // TODO remove
     private GameObject subject;
     private final BufferedList<Component> cameraScripts;
 
@@ -36,7 +34,6 @@ public abstract class Camera extends Script implements Viewport {
         cameraScale = 1f;
         invCameraScale = 1f;
 
-        mode = CameraMode.FIXED;
         subject = null;
         cameraScripts = new BufferedList<>();
 
@@ -59,7 +56,7 @@ public abstract class Camera extends Script implements Viewport {
     protected void update(float dt) {
         // Follow subject
         // TODO smooth follow
-        if (getSubject() != null && mode == CameraMode.FOLLOW) {
+        if (getSubject() != null) {
             transform.setPosition(getSubject().transform.getPosition());
         }
     }
@@ -103,49 +100,6 @@ public abstract class Camera extends Script implements Viewport {
     @Override
     public abstract Vec2 getScreenOffset(); // zoom offset
 
-    // Camera Size Methods
-
-    /**
-     * Get the magnification of the camera, or how larger objects appear to be.
-     *
-     * @return the zoom
-     */
-    @Override
-    public float getZoom() {
-        return zoom;
-    }
-
-    /**
-     * Zoom the camera in or out by the given factor.
-     *
-     * @param zoom the magnification
-     */
-    public void zoom(float zoom) {
-        if (MathUtils.equals(zoom, 0f)) return; // don't set zoom to zero
-        this.zoom *= zoom;
-    }
-
-    /**
-     * Reset the camera's zoom back to 1x.
-     */
-    public void resetZoom() {
-        zoom = 1f;
-    }
-
-    @Override
-    public float getCameraScale() {
-        return cameraScale;
-    }
-
-    public void setCameraScale(float cameraScale) {
-        this.cameraScale = cameraScale;
-        invCameraScale = 1f / cameraScale;
-    }
-
-    protected float getInvCameraScale() {
-        return invCameraScale;
-    }
-
     // Camera Rotation Methods
 
     /**
@@ -174,36 +128,61 @@ public abstract class Camera extends Script implements Viewport {
         rotation = 0f;
     }
 
-    // Camera Collision Methods
+    // Camera Zoom Methods
 
     /**
-     * Gets the bounding box of the camera in the world.
+     * Get the magnification of the camera, or how larger objects appear to be.
      *
-     * @return the camera bounds
+     * @return the zoom
      */
-    public BoundingBox getBounds() {
-        return new BoundingBox(getPosition(), screenSize.div(cameraScale * zoom));
-    }
-
-    // Camera Movement Methods
-
-    /**
-     * The movement mode of the camera, which is fixed in one place by default.
-     *
-     * @return the mode
-     */
-    public final CameraMode getMode() {
-        return mode;
+    @Override
+    public float getZoom() {
+        return zoom;
     }
 
     /**
-     * Sets the movement mode of the camera.
+     * Zoom the camera in or out by the given factor.
      *
-     * @param mode the mode
+     * @param zoom the magnification
      */
-    public final void setMode(CameraMode mode) {
-        this.mode = mode;
+    public void zoom(float zoom) {
+        if (MathUtils.equals(zoom, 0f)) return; // don't set zoom to zero
+        this.zoom *= zoom;
     }
+
+    /**
+     * Reset the camera's zoom back to 1x.
+     */
+    public void resetZoom() {
+        zoom = 1f;
+    }
+
+    // Camera Scale Methods
+
+    @Override
+    public float getCameraScale() {
+        return cameraScale;
+    }
+
+    public void setCameraScale(float cameraScale) {
+        this.cameraScale = cameraScale;
+        invCameraScale = 1f / cameraScale;
+    }
+
+    protected float getInvCameraScale() {
+        return invCameraScale;
+    }
+
+    /**
+     * Get the size bounding box of the camera in the world.
+     *
+     * @return the camera size
+     */
+    public Vec2 getSize() {
+        return screenSize.div(cameraScale * zoom);
+    }
+
+    // Camera Subject Methods
 
     /**
      * The object that the camera is following, or null if none is set.
@@ -222,8 +201,6 @@ public abstract class Camera extends Script implements Viewport {
      */
     public final void setSubject(GameObject subject) {
         this.subject = subject;
-        resetRotation();
-        mode = CameraMode.FOLLOW;
     }
 
     // Camera Script Methods
