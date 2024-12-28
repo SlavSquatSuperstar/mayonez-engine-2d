@@ -8,8 +8,6 @@ import java.util.*;
  * @param <T> the type of event to send
  * @author SlavSquatSuperstar
  */
-// TODO multiple event nodes
-// TODO or subscribe to event types and filter onEvent
 public class EventSystem<T extends Event> {
 
     private final List<EventListener<T>> listeners = new ArrayList<>();

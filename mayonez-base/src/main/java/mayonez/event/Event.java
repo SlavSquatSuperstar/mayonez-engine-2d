@@ -1,6 +1,5 @@
 package mayonez.event;
 
-import mayonez.annotations.*;
 import mayonez.util.*;
 
 /**
@@ -9,10 +8,9 @@ import mayonez.util.*;
  *
  * @author SlavSquatSuperstar
  */
-@ExperimentalFeature
 public class Event {
 
-    private final String message;
+    public final String message;
 
     public Event() {
         this("");
@@ -21,11 +19,7 @@ public class Event {
     public Event(String message) {
         this.message = message;
     }
-
-    public String getMessage() {
-        return message;
-    }
-
+    
     @Override
     public String toString() {
         return String.format(

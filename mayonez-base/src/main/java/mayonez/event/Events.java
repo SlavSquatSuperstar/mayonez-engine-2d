@@ -8,6 +8,7 @@ import mayonez.annotations.*;
  * @author SlavSquatSuperstar
  */
 @ExperimentalFeature
+// TODO subscribe to event types and check parameter before onEvent
 public final class Events {
 
     public static final EventSystem<KeyboardEvent> KEYBOARD_EVENTS;
