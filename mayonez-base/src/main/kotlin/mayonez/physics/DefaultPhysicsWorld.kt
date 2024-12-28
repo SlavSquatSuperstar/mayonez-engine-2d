@@ -25,6 +25,7 @@ class DefaultPhysicsWorld : PhysicsWorld {
     private val bodies: MutableList<PhysicsBody> // physical objects in the world
     private val colliders: MutableList<CollisionBody> // shapes in the world
     private val listeners: MutableSet<CollisionListener> // all collision listeners
+
     // TODO use adjacency list?
     private val collisions: MutableList<CollisionSolver> // confirmed narrowphase collisions
 
@@ -65,32 +66,21 @@ class DefaultPhysicsWorld : PhysicsWorld {
 
     // Game Object Methods
 
-    /*
-     * Pre-collision optimizations
-     * Detect collisions x1
-     * Resolve static collisions x1
-     * Send collision events x2
-     * Resolve dynamic collisions x2
-     *
-     * Integrate forces and velocities
-     */
     override fun step(dt: Float) {
-        collisions.clear()
-
-        updateBodies(dt)
-
-        // TODO Pre-collision optimizations and spatial partitioning
-        detectBroadPhase()
-        detectNarrowPhase()
-
-        collisions.forEach(CollisionSolver::solveCollision)
-    }
-
-    private fun updateBodies(dt: Float) {
+        // Update bodies
         bodies.forEach {
             it.integrateForce(dt, gravity)
             it.integrateVelocity(dt)
         }
+
+        // Detect collisions
+        // TODO Pre-collision optimizations and spatial partitioning
+        collisions.clear()
+        detectBroadPhase()
+        detectNarrowPhase()
+
+        // Resolve Collisions
+        collisions.forEach(CollisionSolver::solveCollision)
     }
 
     // Collision Detection Methods
@@ -111,22 +101,12 @@ class DefaultPhysicsWorld : PhysicsWorld {
                 c2.collisionResolved = false
 
                 if (c1.canCollide(c2)) {
-                    val lis = getListener(c1, c2)
+                    val lis = listeners.find { it.match(c1, c2) }
+                        ?: CollisionListener(c1, c2)
                     if (lis.checkBroadphase()) listeners.add(lis)
                 }
             }
         }
-    }
-
-    /**
-     * Get the collision listener that matches the with two colliders
-     *
-     * @param c1 the first collider
-     * @param c2 the second collider
-     * @return an existing listener or a new listener
-     */
-    private fun getListener(c1: CollisionBody, c2: CollisionBody): CollisionListener {
-        return listeners.find { it.match(c1, c2) } ?: CollisionListener(c1, c2)
     }
 
     /** Check broadphase pairs for collisions and calculate contact points. */

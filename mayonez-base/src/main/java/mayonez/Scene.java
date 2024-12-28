@@ -135,7 +135,16 @@ public abstract class Scene {
      */
     final void update(float dt) {
         onUserUpdate(dt);
-        if (isRunning()) updateSceneObjects(dt);
+        // Update all objects
+        // TODO physics update, late update
+        if (isRunning()) {
+            objects.forEach(obj -> {
+                obj.update(dt);
+                if (obj.isDestroyed()) removeObject(obj);
+            });
+            physics.step(dt);
+            camera.gameObject.update(dt); // Update camera last
+        }
         objects.processBuffer();
     }
 
@@ -145,15 +154,6 @@ public abstract class Scene {
      * @param dt seconds since the last frame
      */
     protected void onUserUpdate(float dt) {
-    }
-
-    private void updateSceneObjects(float dt) {
-        objects.forEach(obj -> {
-            obj.update(dt);
-            if (obj.isDestroyed()) removeObject(obj);
-        });
-        physics.step(dt);
-        camera.gameObject.update(dt); // Update camera last
     }
 
     // Render Methods
