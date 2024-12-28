@@ -4,6 +4,7 @@ import mayonez.*;
 import mayonez.math.*;
 import mayonez.math.shapes.*;
 import mayonez.renderer.*;
+import mayonez.util.*;
 
 /**
  * The main viewport into the scene. The camera may be adjusted through scripts
@@ -14,7 +15,7 @@ import mayonez.renderer.*;
  *
  * @author SlavSquatSuperstar
  */
-public abstract class Camera extends Component implements Viewport {
+public abstract class Camera extends Script implements Viewport {
 
     // Size Fields
     protected final Vec2 screenSize;
@@ -23,8 +24,7 @@ public abstract class Camera extends Component implements Viewport {
     // Camera Movement
     private CameraMode mode; // TODO remove
     private GameObject subject;
-    private boolean followAngle;
-    private Script keepInScene; // Reference to parent scripts
+    private final BufferedList<Component> cameraScripts;
 
     // Camera Effects
     private float zoom, rotation;
@@ -38,10 +38,15 @@ public abstract class Camera extends Component implements Viewport {
 
         mode = CameraMode.FIXED;
         subject = null;
-        followAngle = false;
+        cameraScripts = new BufferedList<>();
 
         zoom = 1f;
         rotation = 0f;
+    }
+
+    @Override
+    protected void init() {
+        cameraScripts.processBuffer();
     }
 
     @Override
@@ -56,7 +61,6 @@ public abstract class Camera extends Component implements Viewport {
         // TODO smooth follow
         if (getSubject() != null && mode == CameraMode.FOLLOW) {
             transform.setPosition(getSubject().transform.getPosition());
-            if (followAngle) rotation = getSubject().transform.getRotation();
         }
     }
 
@@ -184,29 +188,6 @@ public abstract class Camera extends Component implements Viewport {
     // Camera Movement Methods
 
     /**
-     * Sets whether the camera should rotate with the subject.
-     *
-     * @param enabled rotate the camera with the subject
-     * @return the camera
-     */
-    public Camera setFollowAngle(boolean enabled) {
-        followAngle = enabled;
-        if (!followAngle) resetRotation();
-        return this;
-    }
-
-    /**
-     * Sets whether the camera should stay within the scene bounds.
-     *
-     * @param enabled keep the camera inside the scene
-     * @return the camera
-     */
-    public final Camera setKeepInScene(boolean enabled) {
-        keepInScene.setEnabled(enabled);
-        return this;
-    }
-
-    /**
      * The movement mode of the camera, which is fixed in one place by default.
      *
      * @return the mode
@@ -219,11 +200,9 @@ public abstract class Camera extends Component implements Viewport {
      * Sets the movement mode of the camera.
      *
      * @param mode the mode
-     * @return this camera
      */
-    public final Camera setMode(CameraMode mode) {
+    public final void setMode(CameraMode mode) {
         this.mode = mode;
-        return this;
     }
 
     /**
@@ -240,20 +219,22 @@ public abstract class Camera extends Component implements Viewport {
      * is changed, the camera will remember the last subject.
      *
      * @param subject a {@link mayonez.GameObject} in the scene
-     * @return this object
      */
-    public final Camera setSubject(GameObject subject) {
+    public final void setSubject(GameObject subject) {
         this.subject = subject;
         resetRotation();
-        setMode(CameraMode.FOLLOW);
-        return this;
+        mode = CameraMode.FOLLOW;
     }
 
-    // Script Setters
+    // Camera Script Methods
 
-    Script setKeepInSceneScript(Script keepInScene) {
-        this.keepInScene = keepInScene;
-        return keepInScene;
+    /**
+     * Add a script to this camera's object that may be used to control camera movement.
+     *
+     * @param script the script
+     */
+    public final void addCameraScript(Script script) {
+        cameraScripts.add(script, () -> getGameObject().addComponent(script));
     }
 
 }

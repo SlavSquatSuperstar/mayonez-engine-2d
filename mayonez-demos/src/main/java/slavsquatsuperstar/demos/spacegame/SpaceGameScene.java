@@ -6,6 +6,7 @@ import mayonez.input.*;
 import mayonez.math.Random;
 import mayonez.math.*;
 import mayonez.math.shapes.*;
+import mayonez.scripts.camera.*;
 import slavsquatsuperstar.demos.spacegame.objects.BackgroundObject;
 import slavsquatsuperstar.demos.spacegame.objects.BackgroundStarPrefabs;
 import slavsquatsuperstar.demos.spacegame.objects.SpaceGameZIndex;
@@ -42,7 +43,7 @@ public class SpaceGameScene extends Scene {
     protected void init() {
         setBackground(Color.grayscale(14));
         setGravity(new Vec2());
-        getCamera().setKeepInScene(true);
+        getCamera().addCameraScript(new CameraKeepInScene());
         setLayers();
 
         // Background

@@ -24,11 +24,12 @@ class Mario extends GameObject {
     @Override
     protected void init() {
         setLayer(getScene().getLayer(MarioScene.CHARACTER_LAYER));
+        getScene().getCamera().setSubject(this);
 
-        getScene().getCamera().setSubject(this).setKeepInScene(true);
         addComponent(sprite);
         addComponent(new BoxCollider(new Vec2(0.8f, 1)));
         addComponent(new Rigidbody(1f, 0.1f, 0f).setFixedRotation(true));
+
         var sceneHalfSize = getScene().getHalfSize();
         var sceneMin = sceneHalfSize.mul(-1f).add(new Vec2(0, 4));
         addComponent(new KeepInScene(sceneMin, sceneHalfSize, KeepInScene.Mode.STOP));

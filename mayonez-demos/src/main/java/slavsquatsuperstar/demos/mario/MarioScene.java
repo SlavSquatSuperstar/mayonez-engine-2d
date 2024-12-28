@@ -8,6 +8,7 @@ import mayonez.input.*;
 import mayonez.math.*;
 import mayonez.physics.colliders.*;
 import mayonez.physics.dynamics.*;
+import mayonez.scripts.camera.*;
 
 /**
  * For testing the renderer, camera, and coordinate conversions.
@@ -49,6 +50,7 @@ public class MarioScene extends Scene {
         var groundLayer = getLayer(GROUND_LAYER);
         groundLayer.setName("Ground");
 
+        getCamera().addCameraScript(new CameraKeepInScene());
         addObject(new Mario(new Vec2(-23f, -11f), sprites.getSprite(0)));
 
         addEnemiesToScene();

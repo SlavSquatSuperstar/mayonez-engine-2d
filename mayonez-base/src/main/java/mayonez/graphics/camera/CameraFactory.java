@@ -2,7 +2,6 @@ package mayonez.graphics.camera;
 
 import mayonez.*;
 import mayonez.application.*;
-import mayonez.scripts.camera.*;
 
 /**
  * A factory class that constructs {@link mayonez.graphics.camera.Camera} objects
@@ -35,14 +34,10 @@ public final class CameraFactory {
      * @return the camera object
      */
     public static GameObject createCameraObject(Camera camera) {
-        var keepInScene = camera.setKeepInSceneScript(new CameraKeepInScene()
-                .setEnabled(false));
-
         return new GameObject("Camera") {
             @Override
             protected void init() {
                 addComponent(camera);
-                addComponent(keepInScene);
             }
 
             // Don't want to get rid of the camera!

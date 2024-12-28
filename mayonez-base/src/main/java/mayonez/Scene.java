@@ -65,16 +65,6 @@ public abstract class Scene {
     }
 
     /**
-     * Creates an empty scene with a size of (0, 0) sets the scale.
-     *
-     * @param name  the name of the scene
-     * @param scale the scale of the scene
-     */
-    public Scene(String name, float scale) {
-        this(name, 0, 0, scale);
-    }
-
-    /**
      * Creates an empty scene and sets the bounds and scale.
      *
      * @param name   the name of the scene

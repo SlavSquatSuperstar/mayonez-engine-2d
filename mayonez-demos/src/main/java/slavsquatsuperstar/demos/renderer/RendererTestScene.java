@@ -22,11 +22,12 @@ public class RendererTestScene extends Scene {
     private static final boolean CAMERA_DEBUG_MODE = true;
 
     public RendererTestScene(String name) {
-        super(name, 10);
+        super(name);
     }
 
     @Override
     protected void init() {
+        getCamera().setCameraScale(10);
         setBackground(Color.grayscale(96));
 
         var tex1 = Textures.getTexture("assets/spacegame/textures/ships/spaceship1.png");
@@ -131,21 +132,6 @@ public class RendererTestScene extends Scene {
     }
 
     // Shapes
-
-    private void addShapeObject(String name, Shape shape, ShapeBrush fillBrush, ShapeBrush drawBrush) {
-        addObject(new GameObject(name) {
-            @Override
-            protected void init() {
-                addComponent(new Script() {
-                    @Override
-                    protected void debugRender() {
-                        getDebugDraw().fillShape(shape, fillBrush);
-                        getDebugDraw().drawShape(shape, drawBrush);
-                    }
-                });
-            }
-        });
-    }
 
     private void addShapeObject(String name, Shape shape, int zIndex, Color color) {
         var fillBrush = ShapeBrush.createSolidBrush(color).setZIndex(zIndex);
