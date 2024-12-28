@@ -38,7 +38,7 @@ public class KeepInScene extends Script {
      * @param mode   what to do when reaching boundaries
      */
     public KeepInScene(Vec2 minPos, Vec2 maxPos, Mode mode) {
-        super(UpdateOrder.COLLISION);
+        super(UpdateOrder.SCRIPT);
         this.minPos = minPos;
         this.maxPos = maxPos;
         this.mode = mode;
@@ -46,7 +46,7 @@ public class KeepInScene extends Script {
 
     @Override
     protected void start() {
-        setMoveBounds();
+        useSceneBounds();
 
         objectCollider = getCollider();
         if (objectCollider == null) {
@@ -81,8 +81,8 @@ public class KeepInScene extends Script {
 
     // Bounds Helper Methods
 
-    protected void setMoveBounds() {
-        var sceneHalfSize = getScene().getSize(); // Use scene bounds if any are null
+    protected void useSceneBounds() {
+        var sceneHalfSize = getScene().getSize();
         if (minPos == null) minPos = sceneHalfSize.mul(-0.5f);
         if (maxPos == null) maxPos = sceneHalfSize.mul(0.5f);
     }

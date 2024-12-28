@@ -28,7 +28,7 @@ public abstract class Camera extends Script implements Viewport {
     private float zoom, rotation;
 
     protected Camera(Vec2 screenSize) {
-        super(UpdateOrder.PHYSICS);
+        super(UpdateOrder.PRE_RENDER);
         this.screenSize = screenSize;
 
         cameraScale = 1f;
