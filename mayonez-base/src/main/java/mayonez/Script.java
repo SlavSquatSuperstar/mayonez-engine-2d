@@ -1,6 +1,5 @@
 package mayonez;
 
-import mayonez.math.*;
 import mayonez.physics.colliders.*;
 import mayonez.physics.dynamics.*;
 
@@ -92,58 +91,6 @@ public abstract class Script extends Component {
      * call {@link #destroy} instead.
      */
     protected void onDestroy() {
-    }
-
-    // Collision Callbacks
-
-    /**
-     * Custom user behavior after starting contact with another physical object.
-     *
-     * @param other     the other object in the collision
-     * @param direction the direction the collision is happening
-     * @param velocity  the relative velocity of the objects.
-     */
-    protected void onCollisionEnter(GameObject other, Vec2 direction, Vec2 velocity) {
-    }
-
-    /**
-     * Custom user behavior while staying in contact with another physical object.
-     *
-     * @param other the other object in the collision
-     */
-    protected void onCollisionStay(GameObject other) {
-    }
-
-    /**
-     * Custom user behavior after stopping contact with another physical object.
-     *
-     * @param other the other object in the collision
-     */
-    protected void onCollisionExit(GameObject other) {
-    }
-
-    /**
-     * Custom user behavior after entering a trigger area.
-     *
-     * @param other the other game object
-     */
-    protected void onTriggerEnter(GameObject other) {
-    }
-
-    /**
-     * Custom user behavior while staying inside a trigger area.
-     *
-     * @param other the other game object
-     */
-    protected void onTriggerStay(GameObject other) {
-    }
-
-    /**
-     * Custom user behavior after exiting a trigger area.
-     *
-     * @param other the other game object
-     */
-    protected void onTriggerExit(GameObject other) {
     }
 
     // Component Getters

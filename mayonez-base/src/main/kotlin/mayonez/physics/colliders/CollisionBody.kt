@@ -1,6 +1,5 @@
 package mayonez.physics.colliders
 
-import mayonez.math.*
 import mayonez.math.shapes.*
 import mayonez.physics.*
 import mayonez.physics.dynamics.*
@@ -95,20 +94,6 @@ interface CollisionBody {
      */
     fun onCollisionEvent(event: CollisionEvent) {}
     // TODO allow adding callbacks from script
-
-    /**
-     * Sends an event if a collision occurs between this object and another.
-     *
-     * @param other the other object in the collision
-     * @param trigger if this interaction involved a trigger
-     * @param type the type of this interaction
-     * @param direction the direction the collision came from
-     * @param velocity the relative velocity of the objects
-     */
-    fun sendCollisionEvent(
-        other: CollisionBody, trigger: Boolean, type: CollisionEventType,
-        direction: Vec2?, velocity: Vec2?
-    )
 
     // Object Overrides
 

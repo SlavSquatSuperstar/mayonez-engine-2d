@@ -1,7 +1,6 @@
 package mayonez;
 
 import mayonez.math.*;
-import mayonez.physics.*;
 import mayonez.util.*;
 
 import java.util.*;
@@ -34,7 +33,7 @@ public class GameObject {
     final long objectID; // UUID for this game object
     private final String name;
     public final Transform transform; // transform in world
-//    final Transform localTransform; // transform offset from parent
+    //    final Transform localTransform; // transform offset from parent
     private Scene scene;
     private boolean destroyed;
     private int zIndex; // controls 3D "layering" of objects
@@ -263,31 +262,6 @@ public class GameObject {
         components.clear();
         layer = null;
         scene = null;
-    }
-
-    /**
-     * Send an event to all components when a collision occurs between this object and another.
-     *
-     * @param event the collision event
-     */
-    // TODO make into event callback
-    public final void onCollisionEvent(CollisionEvent event) {
-        for (var script : getComponents(Script.class)) {
-            switch (event.type) {
-                case ENTER -> {
-                    if (event.trigger) script.onTriggerEnter(event.other);
-                    else script.onCollisionEnter(event.other, event.direction, event.velocity);
-                }
-                case STAY -> {
-                    if (event.trigger) script.onTriggerStay(event.other);
-                    else script.onCollisionStay(event.other);
-                }
-                case EXIT -> {
-                    if (event.trigger) script.onTriggerExit(event.other);
-                    else script.onCollisionExit(event.other);
-                }
-            }
-        }
     }
 
     // Property Getters and Setters

@@ -109,20 +109,4 @@ abstract class Collider(private val shape: Shape) :
         return (this.layer == null) || this.layer.canInteract(other.layer)
     }
 
-    // Callback Methods
-
-    override fun sendCollisionEvent(
-        other: CollisionBody, trigger: Boolean, type: CollisionEventType,
-        direction: Vec2?, velocity: Vec2?
-    ) {
-        if (gameObject == null) return
-        if (other is Collider && other.gameObject != null) {
-            this.gameObject.onCollisionEvent(
-                CollisionEvent(
-                    other.gameObject, trigger, type, direction, velocity
-                )
-            )
-        }
-    }
-
 }
