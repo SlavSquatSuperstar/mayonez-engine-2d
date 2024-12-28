@@ -19,6 +19,10 @@ public class MarioController extends Script {
     private boolean onGround;
     private Rigidbody rb;
 
+    public MarioController() {
+        super(UpdateOrder.INPUT);
+    }
+
     @Override
     protected void start() {
         rb = getRigidbody();
@@ -46,23 +50,15 @@ public class MarioController extends Script {
         }
     }
 
-    @Override
-    protected void onCollisionEnter(GameObject other, Vec2 direction, Vec2 velocity) {
-        if (other.hasLayer(MarioScene.GROUND_LAYER) && isDirectionDownward(direction)) {
+    protected void onTouchGround() {
+        if (!onGround) {
             onGround = true;
             rb.getVelocity().y = 0;
         }
     }
 
-    private static boolean isDirectionDownward(Vec2 direction) {
-        return direction.dot(new Vec2(0, -1)) > 0;
-    }
-
-    @Override
-    protected void onCollisionExit(GameObject other) {
-        if (other.hasLayer(MarioScene.GROUND_LAYER)) {
-            onGround = false;
-        }
+    protected void onLeaveGround() {
+        if (onGround) onGround = false;
     }
 
 }

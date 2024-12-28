@@ -1,9 +1,6 @@
 package slavsquatsuperstar.demos.spacegame.combat;
 
-import mayonez.*;
 import mayonez.scripts.*;
-import slavsquatsuperstar.demos.spacegame.combat.projectiles.Projectile;
-import slavsquatsuperstar.demos.spacegame.objects.SpaceGameLayer;
 
 /**
  * Gives a {@link mayonez.GameObject} a rechargeable shield on top of a health bar.
@@ -29,16 +26,6 @@ public class ShieldedDamageable extends Damageable {
     @Override
     protected void start() {
         shieldWaitTimer.setValue(0f);
-    }
-
-    @Override
-    protected void onTriggerEnter(GameObject other) {
-        if (other.hasLayer(SpaceGameLayer.PROJECTILES)) {
-            var p = other.getComponent(Projectile.class);
-            if (p != null && !gameObject.equals(p.getSource())) {
-                onObjectDamaged(p.getDamage());
-            }
-        }
     }
 
     @Override

@@ -40,10 +40,8 @@ public class Projectile extends Script {
         rb.addVelocity(transform.getUp().mul(speed));
     }
 
-    @Override
-    protected void onTriggerEnter(GameObject other) {
-        if (other == source) return; // don't collide with source
-        gameObject.destroy();
+    protected void onImpactObject(GameObject object) {
+        if (!object.equals(source)) gameObject.destroy(); // Don't collide with source
     }
 
     public float getDamage() {

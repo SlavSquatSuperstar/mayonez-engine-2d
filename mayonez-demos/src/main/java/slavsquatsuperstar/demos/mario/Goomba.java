@@ -3,6 +3,7 @@ package slavsquatsuperstar.demos.mario;
 import mayonez.*;
 import mayonez.graphics.sprites.*;
 import mayonez.math.*;
+import mayonez.physics.*;
 import mayonez.physics.colliders.*;
 import mayonez.physics.dynamics.*;
 import mayonez.scripts.*;
@@ -26,16 +27,20 @@ class Goomba extends GameObject {
         setLayer(getScene().getLayer(MarioScene.CHARACTER_LAYER));
 
         addComponent(sprite);
-        addComponent(new BoxCollider(new Vec2(0.8f, 1)));
+        addComponent(new BoxCollider(new Vec2(0.8f, 1)) {
+            @Override
+            public void onCollisionEvent(CollisionEvent event) {
+                // On collision
+                if (!event.trigger
+                        && event.type.equals(CollisionEventType.ENTER)
+                        && event.other.getName().equals("Mario")) {
+                    gameObject.destroy();
+                }
+            }
+        });
         addComponent(new Rigidbody(1f, 0.5f, 0f).setFixedRotation(true));
         var sceneHalfSize = getScene().getHalfSize();
         var sceneMin = sceneHalfSize.mul(-1f).add(new Vec2(0, 4));
         addComponent(new KeepInScene(sceneMin, sceneHalfSize, KeepInScene.Mode.STOP));
-        addComponent(new Script() {
-            @Override
-            protected void onCollisionEnter(GameObject other, Vec2 direction, Vec2 velocity) {
-                if (other.getName().equals("Mario")) gameObject.destroy();
-            }
-        });
     }
 }

@@ -24,8 +24,7 @@ public class Damageable extends Script {
         if (healthPoints.isAtMin()) onHealthDepleted();
     }
 
-    @Override
-    protected void onTriggerEnter(GameObject other) {
+    public void onImpactObject(GameObject other) {
         if (other.hasLayer(SpaceGameLayer.PROJECTILES)) {
             var p = other.getComponent(Projectile.class);
             if (p != null && !gameObject.equals(p.getSource())) {

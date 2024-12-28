@@ -24,8 +24,10 @@ public class RandomAsteroid extends Asteroid {
         addRigidbody(startingHealth)
                 .setVelocity(transform.getUp().mul(Random.randomFloat(0f, 3f)));
 
-        addCollider();
-        addComponent(new AsteroidDestruction(startingHealth, properties));
+        // Create more fragments
+        var script = new AsteroidDestruction(startingHealth, properties);
+        addComponent(script);
+        addCollider(script);
     }
 
     private static AsteroidProperties getRandomProperties() {
