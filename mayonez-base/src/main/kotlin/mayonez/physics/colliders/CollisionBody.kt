@@ -88,6 +88,15 @@ interface CollisionBody {
     // Collision Event Methods
 
     /**
+     * A callback method triggered when this object collides with another.
+     * Instances can override this to provide custom behavior.
+     *
+     * @param event the information about the collision
+     */
+    fun onCollisionEvent(event: CollisionEvent) {}
+    // TODO allow adding callbacks from script
+
+    /**
      * Sends an event if a collision occurs between this object and another.
      *
      * @param other the other object in the collision

@@ -61,8 +61,18 @@ internal class CollisionListener(val c1: CollisionBody, val c2: CollisionBody) {
     private fun sendCollisionEvents(
         type: CollisionEventType, direction: Vec2? = null, velocity: Vec2? = null
     ) {
-        c1.sendCollisionEvent(c2, trigger, type, direction, velocity)
-        c2.sendCollisionEvent(c1, trigger, type, direction?.unaryMinus(), velocity?.unaryMinus())
+        c1.onCollisionEvent(
+            CollisionEvent(
+                (c2 as Collider).gameObject, trigger, type,
+                direction, velocity
+            )
+        )
+        c2.onCollisionEvent(
+            CollisionEvent(
+                (c1 as Collider).gameObject, trigger, type,
+                direction?.unaryMinus(), velocity?.unaryMinus()
+            )
+        )
     }
 
     fun match(col: CollisionBody?): Boolean = (c1 == col) || (c2 == col)
