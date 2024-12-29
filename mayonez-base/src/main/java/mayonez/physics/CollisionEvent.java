@@ -16,11 +16,11 @@ public class CollisionEvent extends Event {
      */
     public final GameObject other;
     /**
-     * If interacting with a trigger.
+     * The type of the collision which can be "enter", "stay", or "exit".
      */
     public final CollisionEventType type;
     /**
-     * The type of the collision which can be "enter", "stay", or "exit".
+     * If interacting with a trigger rather than a physical object.
      */
     public final boolean trigger;
     /**
