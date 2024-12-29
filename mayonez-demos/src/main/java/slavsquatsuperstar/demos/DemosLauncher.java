@@ -17,7 +17,7 @@ import slavsquatsuperstar.demos.spacegame.SpaceGameScene;
  */
 public class DemosLauncher {
 
-    private final static int START_SCENE_INDEX = 4;
+    private final static int START_SCENE_INDEX = 0;
 
     private final static String[] SCENE_NAMES = {
             "Space Game", "Render Batch Test",

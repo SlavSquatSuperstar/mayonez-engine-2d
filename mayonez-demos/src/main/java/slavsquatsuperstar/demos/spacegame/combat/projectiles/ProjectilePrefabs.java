@@ -4,9 +4,8 @@ import mayonez.*;
 import mayonez.assets.*;
 import mayonez.assets.text.*;
 import mayonez.graphics.sprites.*;
-import mayonez.math.*;
 import mayonez.math.Random;
-import mayonez.physics.*;
+import mayonez.math.*;
 import mayonez.physics.colliders.*;
 import mayonez.physics.dynamics.*;
 import slavsquatsuperstar.demos.spacegame.objects.SpaceGameLayer;
@@ -103,19 +102,10 @@ public final class ProjectilePrefabs {
             @Override
             protected void init() {
                 setLayer(getScene().getLayer(SpaceGameLayer.PROJECTILES));
-                var script = new Projectile(source, type.damage(), type.speed(), type.lifetime());
-                addComponent(script);
+                addComponent(new Projectile(source, type.damage(), type.speed(), type.lifetime()));
                 addComponent(PROJECTILE_SPRITES.getSprite(type.spriteIndex()));
 
-                addComponent(new BoxCollider(type.colliderSize()) {
-                    @Override
-                    public void onCollisionEvent(CollisionEvent event) {
-                        // On trigger
-                        if (event.trigger && event.type == CollisionEventType.ENTER) {
-                            script.onImpactObject(event.other);
-                        }
-                    }
-                }.setTrigger(true));
+                addComponent(new BoxCollider(type.colliderSize()).setTrigger(true));
                 addComponent(new Rigidbody(0.001f));
             }
         };

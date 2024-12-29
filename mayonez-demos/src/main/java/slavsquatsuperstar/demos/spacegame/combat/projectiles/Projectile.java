@@ -1,6 +1,7 @@
 package slavsquatsuperstar.demos.spacegame.combat.projectiles;
 
 import mayonez.*;
+import mayonez.physics.*;
 import mayonez.physics.dynamics.*;
 import mayonez.scripts.*;
 
@@ -38,9 +39,16 @@ public class Projectile extends Script {
         var sourceRb = source.getComponent(Rigidbody.class);
         if (sourceRb != null) rb.setVelocity(sourceRb.getVelocity());
         rb.addVelocity(transform.getUp().mul(speed));
+
+        getCollider().addCollisionCallback(event -> {
+            // On trigger
+            if (event.trigger && event.type == CollisionEventType.ENTER) {
+                onImpactObject(event.other);
+            }
+        });
     }
 
-    protected void onImpactObject(GameObject object) {
+    private void onImpactObject(GameObject object) {
         if (!object.equals(source)) gameObject.destroy(); // Don't collide with source
     }
 

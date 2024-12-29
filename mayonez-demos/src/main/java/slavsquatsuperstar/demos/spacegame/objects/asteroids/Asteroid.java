@@ -5,11 +5,9 @@ import mayonez.graphics.*;
 import mayonez.graphics.sprites.*;
 import mayonez.graphics.textures.*;
 import mayonez.math.*;
-import mayonez.physics.*;
 import mayonez.physics.colliders.*;
 import mayonez.physics.dynamics.*;
 import mayonez.scripts.*;
-import slavsquatsuperstar.demos.spacegame.combat.Damageable;
 import slavsquatsuperstar.demos.spacegame.objects.SpaceGameLayer;
 import slavsquatsuperstar.demos.spacegame.objects.SpaceGameZIndex;
 
@@ -49,16 +47,8 @@ public abstract class Asteroid extends GameObject {
         addComponent(sprite);
     }
 
-    protected void addCollider(Damageable script) {
-        addComponent(new BallCollider(new Vec2(1f)) {
-            @Override
-            public void onCollisionEvent(CollisionEvent event) {
-                // On trigger
-                if (event.trigger && event.type == CollisionEventType.ENTER) {
-                    script.onImpactObject(event.other);
-                }
-            }
-        });
+    protected void addCollider() {
+        addComponent(new BallCollider(new Vec2(1f)));
         addComponent(new KeepInScene(KeepInScene.Mode.WRAP));
     }
 

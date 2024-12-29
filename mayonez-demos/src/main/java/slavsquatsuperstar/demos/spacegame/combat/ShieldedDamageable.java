@@ -25,6 +25,7 @@ public class ShieldedDamageable extends Damageable {
 
     @Override
     protected void start() {
+        super.start();
         shieldWaitTimer.setValue(0f);
     }
 

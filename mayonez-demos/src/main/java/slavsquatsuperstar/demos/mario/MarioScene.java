@@ -4,7 +4,6 @@ import mayonez.*;
 import mayonez.graphics.*;
 import mayonez.graphics.sprites.*;
 import mayonez.graphics.textures.*;
-import mayonez.input.*;
 import mayonez.math.*;
 import mayonez.physics.colliders.*;
 import mayonez.physics.dynamics.*;
@@ -17,22 +16,21 @@ import mayonez.scripts.camera.*;
  */
 public class MarioScene extends Scene {
 
-    public static final int CHARACTER_LAYER = 0;
-    public static final int GROUND_LAYER = 1;
+    protected static final int CHARACTER_LAYER = 0;
+    protected static final int GROUND_LAYER = 1;
+
+    protected static final SpriteSheet SPRITES = Sprites.createSpriteSheet(
+            "assets/mario/textures/spritesheet.png",
+            16, 16, 26, 0);
+    protected static final Texture BACKGROUND =
+            Textures.getTexture("assets/mario/textures/background.png");
 
     private static final int BACKGROUND_WIDTH = 1920;
     private static final int BACKGROUND_HEIGHT = 1024;
-    private static final float SCENE_GRAVITY = 20;
-
-    private final SpriteSheet sprites;
-    private final Texture background;
+    private static final float SCENE_GRAVITY = 70;
 
     public MarioScene(String name) {
         super(name, BACKGROUND_WIDTH, BACKGROUND_HEIGHT, 32);
-        sprites = Sprites.createSpriteSheet(
-                "assets/mario/textures/spritesheet.png",
-                16, 16, 26, 0);
-        background = Textures.getTexture("assets/mario/textures/background.png");
         // Size = 60 x 32
         // Resolution = 1920x1024 (15:8), cropped from 1920x1080 (16:9)
     }
@@ -40,7 +38,7 @@ public class MarioScene extends Scene {
     @Override
     protected void init() {
         setBackground(Colors.LIGHT_GRAY);
-        setBackground(background);
+        setBackground(BACKGROUND);
         setGravity(new Vec2(0, -SCENE_GRAVITY));
         getCamera().zoom(0.8f);
 
@@ -51,28 +49,13 @@ public class MarioScene extends Scene {
         groundLayer.setName("Ground");
 
         getCamera().addCameraScript(new CameraKeepInScene());
-        addObject(new Mario(new Vec2(-23f, -11f), sprites.getSprite(0)));
+        addObject(new Mario(new Vec2(-23f, -11f)));
 
-        addEnemiesToScene();
-        addObstaclesToScene();
-    }
-
-    @Override
-    protected void onUserUpdate(float dt) {
-        if (MouseInput.isPressed()) {
-            Logger.log(MouseInput.getPosition());
-        }
-    }
-
-    private void addEnemiesToScene() {
+        // Add Enemies
         for (var i = 0; i < 16; i++) {
-            switch (i % 4) {
-                case 0 -> addObject(new Goomba("Goomba", sprites.getSprite(14), getRandomPosition()));
-                case 1 -> addObject(new Goomba("Cool Goomba", sprites.getSprite(17), getRandomPosition()));
-                case 2 -> addObject(new Goomba("Vintage Goomba", sprites.getSprite(20), getRandomPosition()));
-                case 3 -> addObject(new Goomba("Vintage Cool Goomba", sprites.getSprite(23), getRandomPosition()));
-            }
+            addObject(Goomba.createRandomGoomba(i % 4, getRandomPosition()));
         }
+        addObstaclesToScene();
     }
 
     private void addObstaclesToScene() {

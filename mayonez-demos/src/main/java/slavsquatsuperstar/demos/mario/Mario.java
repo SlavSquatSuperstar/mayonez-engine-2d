@@ -1,9 +1,7 @@
 package slavsquatsuperstar.demos.mario;
 
 import mayonez.*;
-import mayonez.graphics.sprites.*;
 import mayonez.math.*;
-import mayonez.physics.*;
 import mayonez.physics.colliders.*;
 import mayonez.physics.dynamics.*;
 import mayonez.scripts.*;
@@ -15,38 +13,18 @@ import mayonez.scripts.*;
  */
 class Mario extends GameObject {
 
-    private final Sprite sprite;
-
-    public Mario(Vec2 position, Sprite sprite) {
+    Mario(Vec2 position) {
         super("Mario", new Transform(position, 0f, new Vec2(2f)), 1);
-        this.sprite = sprite;
     }
 
     @Override
     protected void init() {
         setLayer(getScene().getLayer(MarioScene.CHARACTER_LAYER));
         getScene().getCamera().setSubject(this);
+        addComponent(new MarioController());
 
-        var script = new MarioController();
-        addComponent(script);
-
-        addComponent(sprite);
-        addComponent(new BoxCollider(new Vec2(0.8f, 1)) {
-            @Override
-            public void onCollisionEvent(CollisionEvent event) {
-                // On collision
-                if (!event.trigger
-                        && event.other.hasLayer(MarioScene.GROUND_LAYER)) {
-                    if (event.type == CollisionEventType.ENTER
-                            && event.direction.dot(new Vec2(0, -1)) > 0) {
-                        // Direction is downward
-                        script.onTouchGround();
-                    } else if (event.type == CollisionEventType.EXIT) {
-                        script.onLeaveGround();
-                    }
-                }
-            }
-        });
+        addComponent(MarioScene.SPRITES.getSprite(0));
+        addComponent(new BoxCollider(new Vec2(0.8f, 1)));
         addComponent(new Rigidbody(1f, 0.1f, 0f).setFixedRotation(true));
 
         var sceneHalfSize = getScene().getHalfSize();
