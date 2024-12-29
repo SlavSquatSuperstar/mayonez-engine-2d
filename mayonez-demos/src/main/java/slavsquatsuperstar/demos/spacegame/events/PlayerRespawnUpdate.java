@@ -1,13 +1,11 @@
 package slavsquatsuperstar.demos.spacegame.events;
 
-import mayonez.event.*;
-
 /**
  * Indicates how long the player has until respawning.
  *
  * @author SlavSquatSuperstar
  */
-public class PlayerRespawnUpdate extends Event {
+public class PlayerRespawnUpdate extends SpaceGameEvent {
 
     private final float respawnPercent;
 

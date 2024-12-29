@@ -11,7 +11,7 @@ import slavsquatsuperstar.demos.spacegame.events.*;
  *
  * @author SlavSquatSuperstar
  */
-public class PlayerUIController extends Script implements EventListener<Event> {
+public class PlayerUIController extends Script implements EventListener<SpaceGameEvent> {
 
     // UI Components
     private final SliderBar healthBar, shieldBar;
@@ -73,7 +73,7 @@ public class PlayerUIController extends Script implements EventListener<Event> {
     // Script Callbacks
 
     @Override
-    public void onEvent(Event event) {
+    public void onEvent(SpaceGameEvent event) {
         if (event instanceof PlayerSpawnedEvent e) {
             setPlayer(e.getPlayer());
         } else if (event instanceof PlayerDestroyedEvent) {
