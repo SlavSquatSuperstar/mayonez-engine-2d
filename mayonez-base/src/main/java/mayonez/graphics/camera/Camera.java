@@ -14,7 +14,7 @@ import mayonez.util.*;
  *
  * @author SlavSquatSuperstar
  */
-public abstract class Camera extends Script implements Viewport {
+public abstract class Camera extends Component implements Viewport {
 
     // Size Fields
     protected final Vec2 screenSize;
