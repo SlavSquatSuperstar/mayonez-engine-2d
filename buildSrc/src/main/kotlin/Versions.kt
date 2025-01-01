@@ -5,7 +5,7 @@ const val javaVersion: Int = 21
 const val kotlinVersion: String = "2.0.21"
 
 /** The version for the JUnit testing libraries. */
-const val junitVersion = "5.11.3"
+const val junitVersion = "5.11.4"
 
 /** The version for the LWJGL framework. */
 const val lwjglVersion = "3.3.4"

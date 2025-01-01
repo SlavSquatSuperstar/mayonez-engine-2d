@@ -1,6 +1,4 @@
-import gradle.kotlin.dsl.accessors._8c47cae829ea3d03260d5ff13fb2398e.test
-import gradle.kotlin.dsl.accessors._8c47cae829ea3d03260d5ff13fb2398e.testImplementation
-import gradle.kotlin.dsl.accessors._8c47cae829ea3d03260d5ff13fb2398e.testRuntimeOnly
+import gradle.kotlin.dsl.accessors._2c95f20277cbe6143532f6e8d67e36cc.*
 
 // Plugin for creating testable library projects
 plugins {
@@ -15,13 +13,14 @@ dependencies {
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
-// Enable JUnit testing
 tasks {
+    // Enable JUnit testing
     test {
         useJUnitPlatform()
     }
 
+    // Don't copy Kotlin module
     jar {
-        duplicatesStrategy = DuplicatesStrategy.EXCLUDE // Don't copy Kotlin module
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     }
 }
