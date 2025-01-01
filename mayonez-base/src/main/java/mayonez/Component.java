@@ -13,7 +13,7 @@ import java.util.*;
  * Any component fields through the constructor should be initialized through the
  * {@link #start} method, which allows them to be restored when the scene is reloaded.
  * Update component fields in {@link #update} or draw debug information in {@link #debugRender}.
- * <p></p>
+ * <p>
  * The component's parent scene can be accessed through the {@link #getScene()} method,
  * and its {@link mayonez.GameObject} and transform can be accessed through the
  * {@link #gameObject} and {@link #transform} fields. To remove the component from its
@@ -41,6 +41,7 @@ public abstract class Component {
 
     private boolean enabled; // whether this component is being updated
 
+    // TODO make changeable
     private final UpdateOrder updateOrder;
 
     protected Component() {
@@ -51,27 +52,43 @@ public abstract class Component {
         componentID = componentCounter++;
         transform = new Transform();
         enabled = true;
-        this.updateOrder = updateOrder;
+        this.updateOrder = Objects.requireNonNullElse(updateOrder, UpdateOrder.SCRIPT);
     }
 
     // Game Loop Methods
 
     /**
-     * Initialize fields after all components have been added to the parent object, meaning
-     * {@link #gameObject}, {@link #transform}, and {@link mayonez.GameObject#getComponent}
-     * will be accessible. The start method will be called even if this component has been
-     * disabled through {@link #setEnabled}.
+     * Add any necessary components to the game object before other components have
+     * been added. This method is called before {@link mayonez.GameObject#init} and
+     * {@link mayonez.Component#start}. The fields {@link #gameObject} and
+     * {@link #transform} are accessible here.
+     * <p>
+     * Usage: Subclasses may override this method and can also call {@code super.init()}.
+     * <p>
+     * Warning: Calling {@code init()} at any other point in time may lead to unintended
+     * errors and should be avoided!
+     */
+    protected void init() {
+    }
+
+    /**
+     * Initialize fields after all components have been added to the parent object. The
+     * fields {@link #gameObject} and {@link #transform} and the method
+     * {@link mayonez.GameObject#getComponent} are accessible here. The start method
+     * will be called even if this component has been disabled through
+     * {@link #setEnabled}.
      * <p>
      * Usage: Subclasses may override this method and can also call {@code super.start()}.
      * <p>
-     * Warning: Calling {@code start()} at any other point in time may lead to unintended errors
-     * and should be avoided!
+     * Warning: Calling {@code start()} at any other point in time may lead to unintended
+     * errors and should be avoided!
      */
     protected void start() {
     }
 
     /**
-     * Refresh the component's state and game logic. The update method is called each frame.
+     * Refresh the component's state and game logic. The update method is called each
+     * frame.
      * <p>
      * Usage: Subclasses may override this method and can also call {@code super.update()}.
      *
@@ -81,8 +98,9 @@ public abstract class Component {
     }
 
     /**
-     * Draw debug information to the screen during this frame. Any {@link mayonez.graphics.debug.DebugDraw}
-     * method calls should be made here for consistent visual results.<p>
+     * Draw debug information to the screen during this frame after all objects have
+     * been updated. Any {@link mayonez.graphics.debug.DebugDraw} method calls should
+     * be made here for consistent visual results. Also serves as a "late update" method.
      * <p>
      * Usage: Subclasses may override this method and can also call {@code super.debugRender()}.
      */
@@ -97,9 +115,20 @@ public abstract class Component {
      * <p>
      * Warning: Destroying a component is permanent and cannot be reversed!
      */
-    void destroy() {
+    final void destroy() {
+        setEnabled(false);
+        onDestroy();
         gameObject = null;
         transform = null;
+    }
+
+    /**
+     * Custom behavior for when this component or its game object is destroyed. The fields
+     * {@link #gameObject} and {@link #transform} will still be accessible. Calling
+     * {@code onDestroy()}  directly can lead to unpredictable behavior. It is better to
+     * call {@link #destroy} instead.
+     */
+    protected void onDestroy() {
     }
 
     /**
@@ -141,9 +170,10 @@ public abstract class Component {
      *
      * @param gameObject a game object
      */
-    void setGameObject(GameObject gameObject) {
+    final void setGameObject(GameObject gameObject) {
         this.gameObject = gameObject;
         this.transform = gameObject.transform;
+        init();
     }
 
     /**

@@ -58,6 +58,10 @@ abstract class Collider(private val shape: Shape) :
         physicsBody = gameObject.getComponent(Rigidbody::class.java)
     }
 
+    override fun onDestroy() {
+        collisionCallbacks.unsubscribeAll()
+    }
+
     // Shape Properties
 
     // TODO convert to property
@@ -129,7 +133,5 @@ abstract class Collider(private val shape: Shape) :
     fun addCollisionCallback(callback: EventListener<CollisionEvent>) {
         collisionCallbacks.subscribe(callback)
     }
-
-    // TODO unsubscribe all when destroyed
 
 }

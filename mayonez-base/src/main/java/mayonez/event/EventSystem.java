@@ -31,6 +31,13 @@ public class EventSystem<T extends Event> {
     }
 
     /**
+     * Unsubscribes all listeners subscribed to this event system.
+     */
+    public void unsubscribeAll() {
+        listeners.clear();
+    }
+
+    /**
      * Notifies all subscribed listeners of an event.
      *
      * @param e the event data

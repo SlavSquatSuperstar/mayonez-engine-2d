@@ -9,7 +9,7 @@ import mayonez.physics.dynamics.*;
  * <p>
  * Usage: Scripts have an additional {@link #init} function, which allows them to add
  * additional components to the game object before the scene starts. Scripts also receive
- * callback functions, such as {@link #onEnable()} and {@link #onCollisionEnter}, which are
+ * callback functions, such as {@link #onEnable()} and {@link #onDestroy}, which are
  * called during game and collision events.
  * <p>
  * Scripts receive an order of {@link mayonez.UpdateOrder#SCRIPT} by default, but the order
@@ -29,28 +29,7 @@ public abstract class Script extends Component {
         super(updateOrder);
     }
 
-    // Game Loop Methods
-
-    /**
-     * Add any necessary components to the game object before other components have been added.
-     * This method is called before {@link mayonez.GameObject#init} and {@link mayonez.Component#start}.
-     * The fields {@link #gameObject} and {@link #transform} are accessible here.
-     * <p>
-     * Usage: Subclasses may override this method and can also call {@code super.init()}.
-     * <p>
-     * Warning: Calling {@code init()} at any other point in time may lead to unintended errors
-     * and should be avoided!
-     */
-    protected void init() {
-    }
-
-    // Component Methods
-
-    @Override
-    final void setGameObject(GameObject gameObject) {
-        super.setGameObject(gameObject);
-        init();
-    }
+    // Component Callbacks
 
     @SuppressWarnings("unchecked")
     public final <T extends Component> T setEnabled(boolean enabled) {
@@ -59,14 +38,6 @@ public abstract class Script extends Component {
         else onDisable();
         return (T) this;
     }
-
-    final void destroy() {
-        setEnabled(false);
-        onDestroy();
-        super.destroy();
-    }
-
-    // Scene Callbacks
 
     /**
      * Custom user behavior for when this script is enabled. Calling {@code onEnable()}
@@ -82,15 +53,6 @@ public abstract class Script extends Component {
      * {@link #setEnabled}({@code false}) instead.
      */
     protected void onDisable() {
-    }
-
-    /**
-     * Custom behavior for when this script or its game object is destroyed. The fields
-     * {@link #gameObject} and {@link #transform} will still be accessible. Calling
-     * {@code onDestroy()}  directly can lead to unpredictable behavior. It is better to
-     * call {@link #destroy} instead.
-     */
-    protected void onDestroy() {
     }
 
     // Component Getters
