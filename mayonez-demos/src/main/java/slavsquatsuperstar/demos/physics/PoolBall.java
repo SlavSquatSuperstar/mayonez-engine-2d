@@ -6,7 +6,6 @@ import mayonez.graphics.debug.*;
 import mayonez.math.*;
 import mayonez.physics.colliders.*;
 import mayonez.physics.dynamics.*;
-import mayonez.scripts.*;
 import mayonez.scripts.mouse.*;
 import mayonez.scripts.movement.*;
 import slavsquatsuperstar.demos.physics.scripts.MouseFlick;
@@ -23,9 +22,10 @@ import slavsquatsuperstar.demos.physics.scripts.MouseFlick;
  */
 class PoolBall extends GameObject {
 
-    private static final PhysicsMaterial POOL_BALL_MAT = new PhysicsMaterial(0.05f, 0.05f, 0.95f);
-    public static final float BALL_RADIUS = 5.70f * 0.5f;
-    public static final float BALL_MASS = 0.165f;
+    private static final PhysicsMaterial POOL_BALL_MAT
+            = new PhysicsMaterial(0.05f, 0.05f, 0.95f);
+    static final float BALL_RADIUS = 5.70f * 0.5f;
+    static final float BALL_MASS = 0.165f;
 
     private static final Color[] ballColors = new Color[]{
             Colors.YELLOW, Colors.BLUE, Colors.RED, Colors.PURPLE,
@@ -46,12 +46,12 @@ class PoolBall extends GameObject {
     }
 
     // Create the cue ball
-    public PoolBall(Vec2 position) {
+    PoolBall(Vec2 position) {
         this("Cue Ball", position, Color.grayscale(232), true, true);
     }
 
     // Create a numbered ball
-    public PoolBall(Vec2 position, int ballNum) {
+    PoolBall(Vec2 position, int ballNum) {
         this(String.format("%d Ball", ballNum), position,
                 ballColors[Math.abs(ballNum - 1) % 8], ballNum <= 8, false);
     }
@@ -66,7 +66,6 @@ class PoolBall extends GameObject {
             addComponent(new ShapeSprite(color, false));
         }
         addComponent(new Rigidbody(BALL_MASS).setMaterial(POOL_BALL_MAT).setDrag(0.1f));
-        addComponent(new KeepInScene(KeepInScene.Mode.BOUNCE));
         addComponent(new DragAndDrop("left mouse"));
         if (isCue) {
             addComponent(new MouseFlick("right mouse", 20, MoveMode.IMPULSE, false));
