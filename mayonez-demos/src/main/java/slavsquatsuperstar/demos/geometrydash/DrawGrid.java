@@ -19,8 +19,8 @@ public class DrawGrid extends Component {
 
     private final Vec2 sceneHalfSize;
 
-    public DrawGrid(Vec2 sceneHalfSize) {
-        this.sceneHalfSize = sceneHalfSize;
+    public DrawGrid() {
+        this.sceneHalfSize = GDEditorScene.SCENE_SIZE.mul(0.5f);
     }
 
     @Override

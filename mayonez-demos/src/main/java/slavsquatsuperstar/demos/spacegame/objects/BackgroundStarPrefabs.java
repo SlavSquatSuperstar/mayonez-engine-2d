@@ -3,7 +3,7 @@ package slavsquatsuperstar.demos.spacegame.objects;
 import mayonez.assets.*;
 import mayonez.assets.text.*;
 import mayonez.math.Random;
-import mayonez.math.*;
+import slavsquatsuperstar.demos.spacegame.SpaceGameScene;
 
 import java.util.*;
 
@@ -47,7 +47,8 @@ public final class BackgroundStarPrefabs {
 
     // Create Prefab Methods
 
-    public static BackgroundObject createRandomStar(Vec2 position) {
+    public static BackgroundObject createRandomStar() {
+        var position = SpaceGameScene.getRandomPosition();
         var radius = getRandomStarRadius();
         var temp = getRandomColorType().getRandomTemp();
         return new BackgroundStar(position, radius, temp);

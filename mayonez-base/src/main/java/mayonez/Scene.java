@@ -5,7 +5,6 @@ import mayonez.graphics.camera.*;
 import mayonez.graphics.debug.*;
 import mayonez.graphics.sprites.*;
 import mayonez.graphics.textures.*;
-import mayonez.math.Random;
 import mayonez.math.*;
 import mayonez.physics.*;
 import mayonez.physics.colliders.*;
@@ -323,16 +322,6 @@ public abstract class Scene {
      */
     public Vec2 getSize() {
         return size;
-    }
-
-    /**
-     * Returns a random vector within the scene's bounds.
-     *
-     * @return a random position
-     */
-    public Vec2 getRandomPosition() {
-        var halfSize = size.mul(0.5f);
-        return Random.randomVector(halfSize.mul(-1f), halfSize);
     }
 
     // Getters and Setters

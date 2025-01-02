@@ -28,6 +28,7 @@ public class SpaceGameScene extends Scene {
     private static final int SCENE_SCALE = 32;
     private static final Vec2 SCENE_SIZE_PX
             = new Vec2(Preferences.getScreenWidth(), Preferences.getScreenHeight()).mul(4f);
+    static final Vec2 SCENE_HALF_SIZE = SCENE_SIZE_PX.div(SCENE_SCALE * 2f);
     private static final int NUM_STARS = 3000;
     private static final boolean CAMERA_DEBUG_MODE = false;
 
@@ -58,7 +59,7 @@ public class SpaceGameScene extends Scene {
 
         // Background Stars
         for (var i = 0; i < NUM_STARS; i++) {
-            backgroundObjects.add(BackgroundStarPrefabs.createRandomStar(getRandomPosition()));
+            backgroundObjects.add(BackgroundStarPrefabs.createRandomStar());
         }
 
         // Scene Objects
@@ -99,6 +100,15 @@ public class SpaceGameScene extends Scene {
 
     private void addBackgroundObject(Shape shape, Color color) {
         backgroundObjects.add(new BackgroundObject(shape, color, SpaceGameZIndex.BACKGROUND));
+    }
+
+    /**
+     * Returns a random vector within the scene's bounds.
+     *
+     * @return a random position
+     */
+    public static Vec2 getRandomPosition() {
+        return Random.randomVector(SCENE_HALF_SIZE.mul(-1f), SCENE_HALF_SIZE);
     }
 
 }
