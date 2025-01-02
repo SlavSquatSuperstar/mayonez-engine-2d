@@ -326,39 +326,12 @@ public abstract class Scene {
     }
 
     /**
-     * Get the half size of the scene, useful for setting an arbitrary boundary.
-     *
-     * @return the scene half size
-     */
-    public Vec2 getHalfSize() {
-        return size.mul(0.5f);
-    }
-
-    /**
-     * Get the width of the scene, useful for setting an arbitrary boundary.
-     *
-     * @return the scene width.
-     */
-    public float getWidth() {
-        return size.x;
-    }
-
-    /**
-     * Get the height of the scene, useful for setting an arbitrary boundary.
-     *
-     * @return the scene height.
-     */
-    public float getHeight() {
-        return size.y;
-    }
-
-    /**
      * Returns a random vector within the scene's bounds.
      *
      * @return a random position
      */
     public Vec2 getRandomPosition() {
-        var halfSize = getHalfSize();
+        var halfSize = size.mul(0.5f);
         return Random.randomVector(halfSize.mul(-1f), halfSize);
     }
 

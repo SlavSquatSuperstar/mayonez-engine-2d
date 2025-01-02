@@ -17,11 +17,10 @@ public class DrawGrid extends Component {
     private static final ShapeBrush GRID_BRUSH = ShapeBrush.createLineBrush(GRID_COLOR)
             .setStrokeSize(GRID_LINE_WIDTH);
 
-    private Vec2 sceneHalfSize;
+    private final Vec2 sceneHalfSize;
 
-    @Override
-    protected void start() {
-        sceneHalfSize = getScene().getHalfSize();
+    public DrawGrid(Vec2 sceneHalfSize) {
+        this.sceneHalfSize = sceneHalfSize;
     }
 
     @Override

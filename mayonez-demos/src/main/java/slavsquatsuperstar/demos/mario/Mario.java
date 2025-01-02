@@ -27,9 +27,8 @@ class Mario extends GameObject {
         addComponent(new BoxCollider(new Vec2(0.8f, 1)));
         addComponent(new Rigidbody(1f, 0.1f, 0f).setFixedRotation(true));
 
-        var sceneHalfSize = getScene().getHalfSize();
-        var sceneMin = sceneHalfSize.mul(-1f).add(new Vec2(0, 4));
-        addComponent(new KeepInScene(sceneMin, sceneHalfSize, KeepInScene.Mode.STOP));
-
+        var sceneMin = MarioScene.SCENE_HALF_SIZE.mul(-1f).add(new Vec2(0, 4));
+        addComponent(new KeepInScene(sceneMin, MarioScene.SCENE_HALF_SIZE, KeepInScene.Mode.STOP));
     }
+
 }
