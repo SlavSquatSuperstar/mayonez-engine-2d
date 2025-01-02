@@ -8,7 +8,6 @@ import mayonez.physics.colliders.*;
 import mayonez.physics.dynamics.*;
 import mayonez.scripts.mouse.*;
 import mayonez.scripts.movement.*;
-import slavsquatsuperstar.demos.physics.scripts.MouseFlick;
 
 /**
  * A simulated  billiard (pool) ball.

@@ -9,8 +9,6 @@ import mayonez.physics.dynamics.*;
 import mayonez.scripts.*;
 import mayonez.scripts.mouse.*;
 import mayonez.scripts.movement.*;
-import slavsquatsuperstar.demos.physics.scripts.DrawPhysicsInformation;
-import slavsquatsuperstar.demos.physics.scripts.MouseFlick;
 
 /**
  * A prefab shape with a collider and rigid body that can be moved with the mouse.

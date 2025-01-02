@@ -11,7 +11,7 @@ import mayonez.physics.dynamics.*;
 import java.util.*;
 
 /**
- * For testing the physics engine with simulated pool balls.
+ * A simulation of eight-ball pool using the physics engine.
  *
  * @author SlavSquatSuperstar
  */

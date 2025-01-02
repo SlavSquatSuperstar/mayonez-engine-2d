@@ -5,8 +5,9 @@ import mayonez.graphics.*;
 import mayonez.input.*;
 import mayonez.math.*;
 import mayonez.physics.*;
-import mayonez.physics.colliders.*;
 import mayonez.physics.dynamics.*;
+
+import static slavsquatsuperstar.demos.physics.SandboxObjectPrefabs.*;
 
 /**
  * A scene for testing dynamic movement and collision resolution.
@@ -21,7 +22,7 @@ public class PhysicsSandboxScene extends Scene {
     static final PhysicsMaterial BOUNCY_MATERIAL = new PhysicsMaterial(0.1f, 0.1f, 1f);
     static final PhysicsMaterial STICKY_MATERIAL = new PhysicsMaterial(0.9f, 0.9f, 0f);
     private static final float SCENE_SCALE = 10f;
-    
+
     // Fields
     private final float width = Preferences.getScreenWidth() / SCENE_SCALE;
     private final float height =  Preferences.getScreenHeight() / SCENE_SCALE;
@@ -81,66 +82,6 @@ public class PhysicsSandboxScene extends Scene {
         enabledGravity = enabled;
         if (enabledGravity) setGravity(new Vec2(-0, -PhysicsWorld.GRAVITY_CONSTANT));
         else setGravity(new Vec2());
-    }
-
-    // GameObject Helper Methods
-
-    protected final GameObject createBall(Vec2 size, Vec2 position, PhysicsMaterial material) {
-        return new SandboxObject("Ball", position, 0f)
-                .addPhysics(new BallCollider(size), Colors.BLUE, material)
-                .addMouseMovement();
-    }
-
-    protected final GameObject createBox(Vec2 size, Vec2 position, float rotation, PhysicsMaterial material) {
-        return new SandboxObject("Box", position, rotation)
-                .addPhysics(new BoxCollider(size), Colors.ORANGE, material)
-                .addMouseMovement();
-    }
-
-    protected final GameObject createStaticBox(String name, Vec2 position, Vec2 size, float rotation) {
-        return new SandboxObject(name, position, rotation)
-                .addStaticPhysics(size);
-    }
-
-    protected final GameObject createRandomShape(Vec2 position, int type) {
-        var name = getNameFromType(type);
-        var rotation = Random.randomAngle();
-        var col = getColliderFromType(type);
-
-        return new SandboxObject(name, position, rotation)
-                .addPhysics(col, Colors.randomColor(), randomMaterial())
-                .addMouseMovement()
-                .setLifetime(Random.randomFloat(15f, 20f));
-    }
-
-    private static String getNameFromType(int type) {
-        String name;
-        switch (type) {
-            case 1 -> name = "Random Box";
-            case 2 -> name = "Random Ball";
-            case 3 -> name = "Random Triangle";
-            case 4 -> name = "Random Polygon";
-            case 5 -> name = "Random Edge";
-            default -> name = "Unknown Shape";
-        }
-        return name;
-    }
-
-    private static Collider getColliderFromType(int type) {
-        Collider col;
-        switch (type) {
-            case 1 -> col = new BoxCollider(Random.randomVector(new Vec2(4f), new Vec2(10f)));
-            case 2 -> col = new BallCollider(Random.randomVector(new Vec2(4f), new Vec2(10f)));
-            case 3 -> col = new PolygonCollider(3, Random.randomFloat(3f, 6f));
-            case 4 -> col = new PolygonCollider(Random.randomInt(5, 8), Random.randomFloat(3f, 6f));
-            case 5 -> col = new EdgeCollider(Random.randomInt(4, 12));
-            default -> col = new BoxCollider(new Vec2(1f));
-        }
-        return col;
-    }
-
-    private static PhysicsMaterial randomMaterial() {
-        return new PhysicsMaterial(Random.randomFloat(0f, 1f), Random.randomFloat(0f, 1f), Random.randomFloat(0f, 1f));
     }
 
 }

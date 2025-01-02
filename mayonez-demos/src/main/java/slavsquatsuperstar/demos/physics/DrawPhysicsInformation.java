@@ -1,4 +1,4 @@
-package slavsquatsuperstar.demos.physics.scripts;
+package slavsquatsuperstar.demos.physics;
 
 import mayonez.*;
 import mayonez.graphics.*;
@@ -10,7 +10,7 @@ import mayonez.physics.colliders.*;
  *
  * @author SlavSquatSuperstar
  */
-public class DrawPhysicsInformation extends Script {
+class DrawPhysicsInformation extends Script {
 
     private Collider collider;
     private ShapeSprite sprite;
