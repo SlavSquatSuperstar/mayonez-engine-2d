@@ -17,6 +17,8 @@ import slavsquatsuperstar.demos.geometrydash.ui.UICanvas;
 public class GDEditorScene extends Scene {
 
     final static int TILE_SIZE = 42;
+    final static Vec2 SCENE_SIZE = new Vec2(Preferences.getScreenWidth(),
+            Preferences.getScreenHeight()).div(TILE_SIZE);
 
     public GDEditorScene(String name) {
         super(name);
@@ -52,7 +54,7 @@ public class GDEditorScene extends Scene {
             @Override
             protected void init() {
                 setZIndex(ZIndex.GRID);
-                addComponent(new DrawGrid(size.mul(0.5f)));
+                addComponent(new DrawGrid());
             }
         });
 

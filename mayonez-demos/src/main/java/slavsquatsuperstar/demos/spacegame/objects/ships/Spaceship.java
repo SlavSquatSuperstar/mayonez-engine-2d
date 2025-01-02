@@ -5,6 +5,7 @@ import mayonez.graphics.sprites.*;
 import mayonez.math.*;
 import mayonez.physics.colliders.*;
 import mayonez.scripts.*;
+import slavsquatsuperstar.demos.spacegame.SpaceGameScene;
 import slavsquatsuperstar.demos.spacegame.combat.CollisionDamage;
 import slavsquatsuperstar.demos.spacegame.combat.Damageable;
 import slavsquatsuperstar.demos.spacegame.combat.ShieldedDamageable;
@@ -33,7 +34,8 @@ public abstract class Spaceship extends GameObject {
 
         // Collision
         addComponent(new BoxCollider(new Vec2(0.85f, 1f)));
-        addComponent(new KeepInScene(KeepInScene.Mode.WRAP));
+        addComponent(new KeepInScene(SpaceGameScene.SCENE_HALF_SIZE.mul(-1f),
+                SpaceGameScene.SCENE_HALF_SIZE, KeepInScene.Mode.WRAP));
 
         // Movement
         var thrusters = ThrusterPrefabs.addThrustersToObject(this);

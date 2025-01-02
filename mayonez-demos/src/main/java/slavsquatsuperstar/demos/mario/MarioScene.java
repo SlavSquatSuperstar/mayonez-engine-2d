@@ -55,7 +55,7 @@ public class MarioScene extends Scene {
         var groundLayer = getLayer(GROUND_LAYER);
         groundLayer.setName("Ground");
 
-        getCamera().addCameraScript(new CameraKeepInScene());
+        getCamera().addCameraScript(new CameraKeepInScene(SCENE_HALF_SIZE.mul(-1f), SCENE_HALF_SIZE));
         addObject(new Mario(new Vec2(-23f, -11f)));
 
         // Add Enemies

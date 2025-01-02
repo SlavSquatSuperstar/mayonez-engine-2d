@@ -8,6 +8,7 @@ import mayonez.math.*;
 import mayonez.physics.colliders.*;
 import mayonez.physics.dynamics.*;
 import mayonez.scripts.*;
+import slavsquatsuperstar.demos.spacegame.SpaceGameScene;
 import slavsquatsuperstar.demos.spacegame.objects.SpaceGameLayer;
 import slavsquatsuperstar.demos.spacegame.objects.SpaceGameZIndex;
 
@@ -49,7 +50,8 @@ public abstract class Asteroid extends GameObject {
 
     protected void addCollider() {
         addComponent(new BallCollider(new Vec2(1f)));
-        addComponent(new KeepInScene(KeepInScene.Mode.WRAP));
+        addComponent(new KeepInScene(SpaceGameScene.SCENE_HALF_SIZE.mul(-1f),
+                SpaceGameScene.SCENE_HALF_SIZE, KeepInScene.Mode.WRAP));
     }
 
     protected Rigidbody addRigidbody(float mass) {

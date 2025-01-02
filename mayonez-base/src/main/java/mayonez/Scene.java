@@ -38,8 +38,6 @@ public abstract class Scene {
     // Scene Information
     final int sceneID; // UUID for this scene
     private final String name;
-    private final float scale; // scene scale, or how many pixels correspond to a world unit
-    private final Vec2 size; // scene size, or zero if unbounded
     private SceneState state; // if paused or running
 
     // Scene Objects
@@ -74,8 +72,9 @@ public abstract class Scene {
     public Scene(String name, int width, int height, float scale) {
         sceneID = sceneCounter++;
         this.name = name;
-        this.size = new Vec2(width, height).div(scale);
-        this.scale = scale;
+        // scene size, or zero if unbounded
+        var size = new Vec2(width, height).div(scale);
+        // scene scale, or how many pixels correspond to a world unit
         state = SceneState.STOPPED;
         background = Sprites.createSprite(Colors.WHITE);
 
@@ -100,7 +99,6 @@ public abstract class Scene {
 
         // Add camera
         camera = CameraFactory.createCamera();
-        camera.setCameraScale(scale);
         addObject(CameraFactory.createCameraObject(camera));
 
         // Add objects
@@ -313,15 +311,6 @@ public abstract class Scene {
      */
     public String getName() {
         return name;
-    }
-
-    /**
-     * Get the size of the scene, useful for setting an arbitrary boundary.
-     *
-     * @return the scene size
-     */
-    public Vec2 getSize() {
-        return size;
     }
 
     // Getters and Setters

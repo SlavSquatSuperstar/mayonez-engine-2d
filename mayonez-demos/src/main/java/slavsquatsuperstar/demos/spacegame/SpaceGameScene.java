@@ -25,18 +25,18 @@ import static slavsquatsuperstar.demos.spacegame.objects.SpaceGameLayer.*;
 public class SpaceGameScene extends Scene {
 
     // Constants
-    private static final int SCENE_SCALE = 32;
-    private static final Vec2 SCENE_SIZE_PX
-            = new Vec2(Preferences.getScreenWidth(), Preferences.getScreenHeight()).mul(4f);
-    static final Vec2 SCENE_HALF_SIZE = SCENE_SIZE_PX.div(SCENE_SCALE * 2f);
     private static final int NUM_STARS = 3000;
     private static final boolean CAMERA_DEBUG_MODE = false;
+    private static final int SCENE_SCALE = 32;
+    public static final Vec2 SCENE_HALF_SIZE
+            = new Vec2(Preferences.getScreenWidth(), Preferences.getScreenHeight())
+            .mul(4f / (SCENE_SCALE * 2f));
 
-    // Objects
+    // Fields
     private final List<BackgroundObject> backgroundObjects;
 
     public SpaceGameScene(String name) {
-        super(name, (int) SCENE_SIZE_PX.x, (int) SCENE_SIZE_PX.y, SCENE_SCALE);
+        super(name);
         SpaceGameConfig.readConfig();
         backgroundObjects = new ArrayList<>();
     }
@@ -45,7 +45,8 @@ public class SpaceGameScene extends Scene {
     protected void init() {
         setBackground(Color.grayscale(14));
         setGravity(new Vec2());
-        getCamera().addCameraScript(new CameraKeepInScene());
+        getCamera().setCameraScale(SCENE_SCALE);
+        getCamera().addCameraScript(new CameraKeepInScene(SCENE_HALF_SIZE.mul(-1f), SCENE_HALF_SIZE));
         setLayers();
 
         // Background Objects

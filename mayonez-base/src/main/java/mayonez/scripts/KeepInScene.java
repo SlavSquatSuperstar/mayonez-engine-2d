@@ -22,16 +22,7 @@ public class KeepInScene extends Script {
     private float bounce = 0f;
 
     /**
-     * Create a new KeepInScene script and use the scene bounds.
-     *
-     * @param mode what to do when reaching boundaries
-     */
-    public KeepInScene(Mode mode) { // Use scene bounds
-        this(null, null, mode);
-    }
-
-    /**
-     * Create a new KeepInScene script and define an object's bounds.
+     * Create a new KeepInScene script with the given bounds
      *
      * @param minPos the minimum coordinates the object's collider should reach
      * @param maxPos the maximum coordinates the object's collider should reach
@@ -46,8 +37,6 @@ public class KeepInScene extends Script {
 
     @Override
     protected void start() {
-        useSceneBounds();
-
         objectCollider = getCollider();
         if (objectCollider == null) {
             Logger.warn("%s needs a collider to function!", this);
@@ -80,12 +69,6 @@ public class KeepInScene extends Script {
     }
 
     // Bounds Helper Methods
-
-    protected void useSceneBounds() {
-        var sceneHalfSize = getScene().getSize();
-        if (minPos == null) minPos = sceneHalfSize.mul(-0.5f);
-        if (maxPos == null) maxPos = sceneHalfSize.mul(0.5f);
-    }
 
     protected BoundingBox getObjectBounds() {
         return objectCollider.getMinBounds();

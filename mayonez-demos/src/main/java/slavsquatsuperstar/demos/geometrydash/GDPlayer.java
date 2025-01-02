@@ -20,7 +20,6 @@ public class GDPlayer extends GameObject {
 
     public GDPlayer(String name, Vec2 position) {
         super(name, position);
-
     }
 
     @Override
@@ -28,17 +27,18 @@ public class GDPlayer extends GameObject {
         setZIndex(ZIndex.PLAYER);
         createPlayerAvatar();
 
-        float speed = 10f;
+        var speed = 10f;
         addComponent(new BoxCollider(new Vec2(1, 1)));
         addComponent(new Rigidbody(1f).setDrag(0.2f).setFixedRotation(true));
-//        addComponent(new KeyMovement(speed, MoveMode.POSITION).setTopSpeed(speed));
         addComponent(new KeyMovement(speed, MoveMode.POSITION) {
             @Override
             public Vec2 getUserInput() {
                 return super.getUserInput().unit(); // Normalize so don't move faster diagonally
             }
         });
-        addComponent(new KeepInScene(KeepInScene.Mode.STOP));
+
+        var halfSize = GDEditorScene.SCENE_SIZE.mul(0.5f);
+        addComponent(new KeepInScene(halfSize.mul(-1f), halfSize, KeepInScene.Mode.STOP));
     }
 
     private void createPlayerAvatar() {

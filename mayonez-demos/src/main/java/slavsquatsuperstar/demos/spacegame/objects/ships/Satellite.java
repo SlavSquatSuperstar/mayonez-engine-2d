@@ -6,6 +6,7 @@ import mayonez.math.*;
 import mayonez.physics.colliders.*;
 import mayonez.physics.dynamics.*;
 import mayonez.scripts.*;
+import slavsquatsuperstar.demos.spacegame.SpaceGameScene;
 import slavsquatsuperstar.demos.spacegame.combat.CollisionDamage;
 import slavsquatsuperstar.demos.spacegame.combat.Damageable;
 import slavsquatsuperstar.demos.spacegame.objects.SpaceGameLayer;
@@ -32,7 +33,8 @@ public class Satellite extends GameObject {
 
         // Collision
         addComponent(new BoxCollider(new Vec2(1f, 0.44f)));
-        addComponent(new KeepInScene(KeepInScene.Mode.WRAP));
+        addComponent(new KeepInScene(SpaceGameScene.SCENE_HALF_SIZE.mul(-1f),
+                SpaceGameScene.SCENE_HALF_SIZE, KeepInScene.Mode.WRAP));
         addComponent(new CollisionDamage());
 
         // Initial Velocity
