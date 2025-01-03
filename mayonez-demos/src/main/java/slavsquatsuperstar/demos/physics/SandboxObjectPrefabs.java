@@ -11,7 +11,7 @@ import mayonez.physics.dynamics.*;
  *
  * @author SlavSquatSuperstar
  */
-public final class SandboxObjectPrefabs {
+final class SandboxObjectPrefabs {
 
     private SandboxObjectPrefabs() {
     }

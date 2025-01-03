@@ -4,8 +4,8 @@ import mayonez.*;
 import mayonez.graphics.*;
 import mayonez.input.*;
 import mayonez.math.*;
-import mayonez.physics.*;
 import mayonez.physics.dynamics.*;
+import slavsquatsuperstar.demos.physics.sandbox.SandboxUI;
 
 import static slavsquatsuperstar.demos.physics.SandboxObjectPrefabs.*;
 
@@ -25,8 +25,7 @@ public class PhysicsSandboxScene extends Scene {
 
     // Fields
     private final float width = Preferences.getScreenWidth() / SCENE_SCALE;
-    private final float height =  Preferences.getScreenHeight() / SCENE_SCALE;
-    private boolean enabledGravity;
+    private final float height = Preferences.getScreenHeight() / SCENE_SCALE;
 
     public PhysicsSandboxScene(String name) {
         super(name);
@@ -36,7 +35,6 @@ public class PhysicsSandboxScene extends Scene {
     protected void init() {
         setBackground(Colors.WHITE);
         getCamera().setCameraScale(SCENE_SCALE);
-        setGravityEnabled(true);
 
         // Add Static Objects
         addObject(createStaticBox("Left Ramp", new Vec2(-25, 20), new Vec2(36, 4), -20));
@@ -58,15 +56,13 @@ public class PhysicsSandboxScene extends Scene {
                 new Vec2(1, height), 0));
         addObject(createStaticBox("Right Wall", new Vec2(0.5f * (width + 1), 0),
                 new Vec2(1, height), 0));
+
+        // Add UI
+        addObject(new SandboxUI("Scene UI"));
     }
 
     @Override
     protected void onUserUpdate(float dt) {
-        // Toggle Gravity
-        if (KeyInput.keyPressed("space")) {
-            setGravityEnabled(!enabledGravity);
-        }
-
         // Create Random Shapes
         if (!KeyInput.keyDown("left shift")) {
             for (int i = 1; i <= 4; i++) {
@@ -76,12 +72,6 @@ public class PhysicsSandboxScene extends Scene {
                 }
             }
         }
-    }
-
-    private void setGravityEnabled(boolean enabled) {
-        enabledGravity = enabled;
-        if (enabledGravity) setGravity(new Vec2(-0, -PhysicsWorld.GRAVITY_CONSTANT));
-        else setGravity(new Vec2());
     }
 
 }
