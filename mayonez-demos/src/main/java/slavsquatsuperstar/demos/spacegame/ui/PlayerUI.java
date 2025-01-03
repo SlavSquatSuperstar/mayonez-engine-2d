@@ -5,7 +5,6 @@ import mayonez.graphics.*;
 import mayonez.graphics.font.*;
 import mayonez.graphics.textures.*;
 import mayonez.graphics.ui.*;
-import mayonez.input.*;
 import mayonez.math.*;
 import slavsquatsuperstar.demos.DemosAssets;
 import slavsquatsuperstar.demos.spacegame.combat.projectiles.ProjectilePrefabs;
@@ -41,7 +40,8 @@ public class PlayerUI extends GameObject {
 
         // Player Health
         var hpLabelPos = new Vec2(32, Preferences.getScreenHeight() - 32);
-        var hpLabel = new ImageLabel(hpLabelPos, labelSize, HEALTH_ICON_TEXTURE, LABEL_BACKGROUND_TEXTURE, LABEL_BORDER_TEXTURE);
+        var hpLabel = new ImageLabel(hpLabelPos, labelSize,
+                HEALTH_ICON_TEXTURE, LABEL_BACKGROUND_TEXTURE, LABEL_BORDER_TEXTURE);
         addComponent(hpLabel);
 
         var hpSliderPos = hpLabelPos.add(new Vec2(labelSize.x * 0.5f + uiSpacingX + sliderSize.x * 0.5f, 0));
@@ -50,7 +50,8 @@ public class PlayerUI extends GameObject {
 
         // Player Shield
         var shLabelPos = hpLabelPos.sub(new Vec2(0, labelSize.y + uiSpacingY));
-        var shLabel = new ImageLabel(shLabelPos, labelSize, SHIELD_ICON_TEXTURE, LABEL_BACKGROUND_TEXTURE, LABEL_BORDER_TEXTURE);
+        var shLabel = new ImageLabel(shLabelPos, labelSize,
+                SHIELD_ICON_TEXTURE, LABEL_BACKGROUND_TEXTURE, LABEL_BORDER_TEXTURE);
         addComponent(shLabel);
 
         var shSliderPos = shLabelPos.add(new Vec2(labelSize.x * 0.5f + uiSpacingX + sliderSize.x * 0.5f, 0));
@@ -68,43 +69,58 @@ public class PlayerUI extends GameObject {
         var font = DemosAssets.getFont();
         if (font == null) return;
 
-        // Hints Text
-        TextLabel hintsText;
-        addComponent(hintsText = new UITextLabel(
-                "Show Hints (H)", new Vec2(1110, 18),
+        // Hints
+        var hintsTooltip = new UITextLabel(
+                "Show Hints (H)",
+                new Vec2(Preferences.getScreenWidth() - 80, 20),
                 font, Colors.WHITE,
                 16, 2
-        ));
-        hintsText.setAnchor(Anchor.LEFT);
+        );
+        addComponent(hintsTooltip);
+        hintsTooltip.setAnchor(Anchor.RIGHT);
 
-        TextLabel hotbarText;
-        addComponent(hotbarText = new UITextLabel(
+        var hpShHint = new UITextLabel(
+                "Health\n\nShield",
+                new Vec2(295, Preferences.getScreenHeight() - 55),
+                font, Colors.WHITE,
+                16, 2
+        );
+        addComponent(hpShHint);
+
+        var hotbarHints = new UITextLabel(
                 "(1)   (2)   (3)", new Vec2(82, 68),
                 font, Colors.WHITE,
                 16, 2
-        ));
+        );
+        addComponent(hotbarHints);
 
-        addComponent(new Script() {
-            private boolean hintsShown;
+        var controlText = new UITextLabel(
+                """
+                        Controls:
+                        
+                        Movement
+                        - (W) Forward
+                        - (S) Backward
+                        - (Q) Left
+                        - (E) Right
+                        - (A) Turn Left
+                        - (D) Turn Right
+                        - (Space) Break
+                        
+                        Weapons
+                        - (Mouse 1) Fire
+                        - (1/2/3) Select
+                        """,
+                new Vec2(Preferences.getScreenWidth() - 105,
+                        Preferences.getScreenHeight() - 155),
+                font, Colors.WHITE,
+                16, 2
+        );
+        addComponent(controlText);
+        hintsTooltip.setAnchor(Anchor.TOP_RIGHT);
 
-            @Override
-            protected void start() {
-                toggleHints(false);
-            }
-
-            @Override
-            protected void update(float dt) {
-                if (KeyInput.keyPressed("h")) {
-                    toggleHints(!hintsShown);
-                }
-            }
-
-            private void toggleHints(boolean hintsShown) {
-                this.hintsShown = hintsShown;
-                hintsText.setMessage(hintsShown ? "Hide Hints (H)" : "Show Hints (H)");
-                hotbarText.setEnabled(hintsShown);
-            }
-        });
+        addComponent(new ToggleHints(hintsTooltip,
+                new TextLabel[]{hotbarHints, controlText, hpShHint}));
     }
 
 }

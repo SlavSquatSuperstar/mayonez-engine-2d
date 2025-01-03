@@ -8,7 +8,7 @@ import slavsquatsuperstar.demos.spacegame.SpaceGameScene;
 import java.util.*;
 
 /**
- * A background star in outer space.
+ * Creates prefab background star objects.
  *
  * @author SlavSquatSuperstar
  */

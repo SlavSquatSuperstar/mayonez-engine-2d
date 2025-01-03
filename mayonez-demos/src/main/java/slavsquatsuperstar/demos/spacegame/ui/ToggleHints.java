@@ -1,4 +1,4 @@
-package slavsquatsuperstar.demos.physics.sandbox;
+package slavsquatsuperstar.demos.spacegame.ui;
 
 import mayonez.*;
 import mayonez.graphics.font.*;
@@ -9,14 +9,15 @@ import mayonez.input.*;
  *
  * @author SlavSquatSupertar
  */
-class ToggleHints extends Script {
+public class ToggleHints extends Script {
 
-    private final TextLabel hintsTooltip, controlHints;
+    private final TextLabel hintsTooltip;
+    private final TextLabel[] hintLabels;
     private boolean hintsShown;
 
-    ToggleHints(TextLabel hintsTooltip, TextLabel controlHints) {
+    public ToggleHints(TextLabel hintsTooltip, TextLabel[] hintLabels) {
         this.hintsTooltip = hintsTooltip;
-        this.controlHints = controlHints;
+        this.hintLabels = hintLabels;
     }
 
     @Override
@@ -33,8 +34,8 @@ class ToggleHints extends Script {
 
     private void toggleHints(boolean hintsShown) {
         this.hintsShown = hintsShown;
-        hintsTooltip.setMessage(hintsShown ? "Hide Controls (H)" : "Show Controls (H)");
-        controlHints.setEnabled(hintsShown);
+        hintsTooltip.setMessage(hintsShown ? "Hide Hints (H)" : "Show Hints (H)");
+        for (var text : hintLabels) text.setEnabled(hintsShown);
     }
 
 }
