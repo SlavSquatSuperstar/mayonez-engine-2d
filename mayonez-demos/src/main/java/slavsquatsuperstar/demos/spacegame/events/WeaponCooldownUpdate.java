@@ -11,7 +11,8 @@ public class WeaponCooldownUpdate extends SpaceGameEvent {
     private final float cooldownPercent;
 
     public WeaponCooldownUpdate(int weaponIndex, float cooldownPercent) {
-        super("Recharge progress for slot %d: %.2f%%".formatted(weaponIndex, cooldownPercent * 100f));
+        super("Slot %d recharge progress: %.2f%%"
+                .formatted(weaponIndex, cooldownPercent * 100f));
         this.weaponIndex = weaponIndex;
         this.cooldownPercent = cooldownPercent;
     }

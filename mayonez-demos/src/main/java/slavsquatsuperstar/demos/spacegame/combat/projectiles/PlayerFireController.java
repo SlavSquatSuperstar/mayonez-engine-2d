@@ -5,6 +5,7 @@ import mayonez.math.*;
 import mayonez.scripts.*;
 import slavsquatsuperstar.demos.spacegame.events.SpaceGameEvents;
 import slavsquatsuperstar.demos.spacegame.events.WeaponCooldownUpdate;
+import slavsquatsuperstar.demos.spacegame.events.WeaponSelectedEvent;
 
 /**
  * Allows the player's ship to fire different weapons.
@@ -73,7 +74,8 @@ public class PlayerFireController extends FireProjectile {
             var fireTimer = fireTimers[i];
             if (fireTimer.getValue() > -dt) { // Don't send event if timer is too negative
                 var timerRemainingPercent = fireTimer.getValue() / fireTimer.getDuration();
-                SpaceGameEvents.getPlayerEventSystem().broadcast(new WeaponCooldownUpdate(i, timerRemainingPercent));
+                SpaceGameEvents.getPlayerEventSystem()
+                        .broadcast(new WeaponCooldownUpdate(i, timerRemainingPercent));
             }
         }
     }
@@ -88,12 +90,10 @@ public class PlayerFireController extends FireProjectile {
         return fireTimers;
     }
 
-    public int getSelectedWeapon() {
-        return selectedWeapon;
-    }
-
-    private void setSelectedWeapon(int i) {
-        selectedWeapon = i;
+    private void setSelectedWeapon(int index) {
+        if (index == selectedWeapon) return;
+        selectedWeapon = index;
+        SpaceGameEvents.getPlayerEventSystem().broadcast(new WeaponSelectedEvent(index));
     }
 
 }
