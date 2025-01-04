@@ -1,7 +1,6 @@
 package mayonez.application;
 
 import mayonez.*;
-import mayonez.input.keyboard.*;
 import mayonez.input.mouse.*;
 
 /**
@@ -34,7 +33,7 @@ public abstract sealed class Application permits JApplication, GLApplication {
     private int averageUPS;
     private int averageFPS;
 
-    protected Application(Window window, KeyManager keyInput, MouseManager mouse) {
+    protected Application(Window window, MouseManager mouse) {
         this.window = window;
         running = false;
 

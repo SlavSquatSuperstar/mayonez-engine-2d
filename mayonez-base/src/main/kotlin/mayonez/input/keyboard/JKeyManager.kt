@@ -12,7 +12,7 @@ import java.awt.event.*
  * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.AWT)
-internal class JKeyManager : KeyManager(), KeyInputHandler {
+internal class JKeyManager : KeyAdapter(), KeyInputHandler {
 
     // Key Callbacks
 
@@ -31,17 +31,5 @@ internal class JKeyManager : KeyManager(), KeyInputHandler {
     }
 
     override fun getKeyCode(key: Key): Int = key.awtCode
-
-    // Key Getters
-
-    override fun keyDown(key: Key?): Boolean {
-        return if (key == null) false
-        else keyDown(key.awtCode)
-    }
-
-    override fun keyPressed(key: Key?): Boolean {
-        return if (key == null) false
-        else keyPressed(key.awtCode)
-    }
 
 }

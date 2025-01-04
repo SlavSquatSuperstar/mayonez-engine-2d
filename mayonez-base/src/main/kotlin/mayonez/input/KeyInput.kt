@@ -13,9 +13,6 @@ import mayonez.input.keyboard.*
  */
 object KeyInput {
 
-    // Singleton Properties
-    private lateinit var instance: KeyManager
-
     // Constants
     // Around 80 keys on a US ANSI keyboard, round down to 2^6
     private const val INITIAL_NUM_KEYS = 64
@@ -27,18 +24,6 @@ object KeyInput {
 
     // Event Fields
     private var handler: KeyInputHandler? = null
-
-    /**
-     * Create the [KeyManager] instance if it does not exist.
-     *
-     * @param useGL whether to use GLFW instead of AWT.
-     * @return the key input instance
-     */
-    internal fun createInstance(useGL: Boolean): KeyManager {
-        if (this::instance.isInitialized) return instance
-        instance = if (useGL) GLKeyManager() else JKeyManager()
-        return instance
-    }
 
     /**
      * Set the key event generator instance for the application.

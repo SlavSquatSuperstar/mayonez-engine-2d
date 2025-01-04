@@ -2,7 +2,6 @@ package mayonez.application;
 
 import mayonez.*;
 import mayonez.graphics.*;
-import mayonez.input.keyboard.*;
 import mayonez.input.mouse.*;
 
 /**
@@ -13,8 +12,8 @@ import mayonez.input.mouse.*;
 @UsesEngine(EngineType.AWT)
 final class JApplication extends Application {
 
-    public JApplication(Window window, KeyManager keyInput, MouseManager mouse) {
-        super(window, keyInput, mouse);
+    public JApplication(Window window, MouseManager mouse) {
+        super(window, mouse);
     }
 
     // Application Methods

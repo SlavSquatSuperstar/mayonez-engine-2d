@@ -1,7 +1,6 @@
 package mayonez.application;
 
 import mayonez.graphics.*;
-import mayonez.input.keyboard.*;
 import mayonez.input.mouse.*;
 
 import static org.lwjgl.glfw.GLFW.glfwGetTime;
@@ -14,8 +13,8 @@ import static org.lwjgl.glfw.GLFW.glfwGetTime;
 @UsesEngine(EngineType.GL)
 final class GLApplication extends Application {
 
-    public GLApplication(Window window, KeyManager keyInput, MouseManager mouse) {
-        super(window, keyInput, mouse);
+    public GLApplication(Window window, MouseManager mouse) {
+        super(window, mouse);
     }
 
     // Application Methods

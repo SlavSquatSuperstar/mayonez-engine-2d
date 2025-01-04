@@ -13,9 +13,8 @@ import org.lwjgl.glfw.GLFW
  *
  * @author SlavSquatSuperstar
  */
-// TODO GLFW sticky keys?
 @UsesEngine(EngineType.GL)
-internal class GLKeyManager : KeyManager(), KeyInputHandler {
+internal class GLKeyManager : KeyInputHandler {
 
     // Key Callbacks
 
@@ -28,7 +27,7 @@ internal class GLKeyManager : KeyManager(), KeyInputHandler {
      * @param action the event type
      * @param mods any modifier keys
      */
-    override fun keyCallback(window: Long, key: Int, scancode: Int, action: Int, mods: Int) {
+    fun keyCallback(window: Long, key: Int, scancode: Int, action: Int, mods: Int) {
         val keyDown = when (action) {
             GLFW.GLFW_PRESS -> true
             GLFW.GLFW_RELEASE -> false
@@ -45,17 +44,5 @@ internal class GLKeyManager : KeyManager(), KeyInputHandler {
     }
 
     override fun getKeyCode(key: Key): Int = key.glCode
-
-    // Key Getters
-
-    override fun keyDown(key: Key?): Boolean {
-        return if (key == null) false
-        else keyDown(key.glCode)
-    }
-
-    override fun keyPressed(key: Key?): Boolean {
-        return if (key == null) false
-        else keyPressed(key.glCode)
-    }
 
 }

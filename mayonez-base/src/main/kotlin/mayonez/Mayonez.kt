@@ -1,5 +1,7 @@
 package mayonez
 
+import mayonez.Mayonez.setConfig
+import mayonez.Mayonez.start
 import mayonez.application.*
 import mayonez.assets.*
 import mayonez.config.*
@@ -113,12 +115,11 @@ object Mayonez {
     private fun initializeGame(useGL: Boolean) {
         if (!this::application.isInitialized) {
             // Create input instances
-            val keyInput = KeyInput.createInstance(useGL)
             val mouseInput = MouseInput.createInstance(useGL)
 
             // Create game engine instance
             try {
-                application = ApplicationFactory.createApplication(useGL, keyInput, mouseInput)
+                application = ApplicationFactory.createApplication(useGL, mouseInput)
                 Logger.debug("Using \"%s\" engine", if (useGL) "GL" else "AWT")
             } catch (e: WindowInitException) {
                 Logger.printStackTrace(e)
