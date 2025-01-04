@@ -2,6 +2,7 @@ package mayonez.application;
 
 import mayonez.*;
 import mayonez.graphics.*;
+import mayonez.input.*;
 import mayonez.input.keyboard.*;
 import mayonez.input.mouse.*;
 
@@ -29,7 +30,7 @@ final class JWindow extends JFrame implements Window {
     private boolean closedByUser;
 
     // Input Fields
-    private KeyManager keyboard;
+    private JKeyManager keyboard;
     private MouseManager mouse;
 
     /**
@@ -49,6 +50,10 @@ final class JWindow extends JFrame implements Window {
                 closedByUser = true; // red 'x' button will notify game to exit
             }
         });
+
+        // Add input listeners
+        keyboard = new JKeyManager();
+        addKeyListener(keyboard);
     }
 
     // Engine Methods
@@ -80,7 +85,7 @@ final class JWindow extends JFrame implements Window {
 
     @Override
     public void endFrame() {
-        keyboard.updateKeys();
+        KeyInput.updateKeys();
         mouse.updateMouse();
     }
 
@@ -135,9 +140,8 @@ final class JWindow extends JFrame implements Window {
     // Input Methods
 
     @Override
-    public void setKeyInput(KeyManager keyboard) {
-        this.keyboard = keyboard;
-        addKeyListener(keyboard);
+    public KeyInputHandler getKeyInputHandler() {
+        return keyboard;
     }
 
     @Override

@@ -43,7 +43,6 @@ public abstract sealed class Application permits JApplication, GLApplication {
         halfTimeStepSecs = timeStepSecs * 0.5f;
 
         // Add input listeners
-        window.setKeyInput(keyInput);
         window.setMouseInput(mouse);
     }
 

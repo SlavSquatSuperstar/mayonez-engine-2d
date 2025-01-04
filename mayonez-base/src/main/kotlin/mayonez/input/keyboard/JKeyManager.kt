@@ -3,6 +3,7 @@ package mayonez.input.keyboard
 import mayonez.event.*
 import mayonez.graphics.*
 import mayonez.input.*
+import mayonez.input.events.*
 import java.awt.event.*
 
 /**
@@ -11,19 +12,25 @@ import java.awt.event.*
  * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.AWT)
-internal class JKeyManager : KeyManager() {
+internal class JKeyManager : KeyManager(), KeyInputHandler {
 
     // Key Callbacks
 
     override fun keyPressed(e: KeyEvent) {
-        setKeyDown(e.keyCode, true)
-        Events.KEYBOARD_EVENTS.broadcast(KeyboardEvent(e.keyCode, true, e.modifiersEx))
+        eventSystem.broadcast(KeyInputEvent(e.keyCode, true))
     }
 
     override fun keyReleased(e: KeyEvent) {
-        setKeyDown(e.keyCode, false)
-        Events.KEYBOARD_EVENTS.broadcast(KeyboardEvent(e.keyCode, false, e.modifiersEx))
+        eventSystem.broadcast(KeyInputEvent(e.keyCode, false))
     }
+
+    // Event Handler Overrides
+
+    override fun getEventSystem(): EventSystem<KeyInputEvent> {
+        return InputEvents.KEYBOARD_EVENTS
+    }
+
+    override fun getKeyCode(key: Key): Int = key.awtCode
 
     // Key Getters
 

@@ -3,6 +3,7 @@ package mayonez.input.keyboard
 import mayonez.event.*
 import mayonez.graphics.*
 import mayonez.input.*
+import mayonez.input.events.*
 import org.lwjgl.glfw.GLFW
 
 /**
@@ -14,7 +15,7 @@ import org.lwjgl.glfw.GLFW
  */
 // TODO GLFW sticky keys?
 @UsesEngine(EngineType.GL)
-internal class GLKeyManager : KeyManager() {
+internal class GLKeyManager : KeyManager(), KeyInputHandler {
 
     // Key Callbacks
 
@@ -28,13 +29,22 @@ internal class GLKeyManager : KeyManager() {
      * @param mods any modifier keys
      */
     override fun keyCallback(window: Long, key: Int, scancode: Int, action: Int, mods: Int) {
-        when (action) {
-            GLFW.GLFW_PRESS, GLFW.GLFW_REPEAT -> setKeyDown(key, true)
-            // According to docs, GLFW_REPEAT should not be relied upon
-            GLFW.GLFW_RELEASE -> setKeyDown(key, false)
+        val keyDown = when (action) {
+            GLFW.GLFW_PRESS -> true
+            GLFW.GLFW_RELEASE -> false
+            // According to docs, GLFW_REPEAT should not be used if multiple keys are held
+            else -> return
         }
-        Events.KEYBOARD_EVENTS.broadcast(KeyboardEvent(key, scancode, action, mods))
+        eventSystem.broadcast(KeyInputEvent(key, keyDown))
     }
+
+    // Event Handler Overrides
+
+    override fun getEventSystem(): EventSystem<KeyInputEvent> {
+        return InputEvents.KEYBOARD_EVENTS
+    }
+
+    override fun getKeyCode(key: Key): Int = key.glCode
 
     // Key Getters
 

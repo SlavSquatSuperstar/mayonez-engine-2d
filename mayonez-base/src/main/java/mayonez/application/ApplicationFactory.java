@@ -1,6 +1,7 @@
 package mayonez.application;
 
 import mayonez.*;
+import mayonez.input.*;
 import mayonez.input.keyboard.KeyManager;
 import mayonez.input.mouse.MouseManager;
 import mayonez.util.OperatingSystem;
@@ -38,6 +39,8 @@ public final class ApplicationFactory {
         var width = Preferences.getScreenWidth();
         var height = Preferences.getScreenHeight();
         var window = createWindow(useGL, title, width, height);
+
+        KeyInput.setHandler(window.getKeyInputHandler());
 
         return useGL
                 ? new GLApplication(window, keyInput, mouseInput)

@@ -2,6 +2,7 @@ package mayonez.application;
 
 import mayonez.*;
 import mayonez.graphics.*;
+import mayonez.input.*;
 import mayonez.input.keyboard.*;
 import mayonez.input.mouse.*;
 
@@ -17,12 +18,12 @@ import static org.lwjgl.glfw.GLFW.*;
 final class GLWindow implements Window {
 
     // Window Fields
-    private long windowID;
+    private final long windowID;
     private final String title;
     private final int width, height;
 
     // Input Fields
-    private KeyManager keyboard;
+    private final GLKeyManager keyboard;
     private MouseManager mouse;
 
     /**
@@ -39,6 +40,7 @@ final class GLWindow implements Window {
         this.title = title;
         this.width = width;
         this.height = height;
+
         // Initialize window
         GLFWHelper.initGLFW();
         windowID = GLFWHelper.createGLFWWindow(width, height, title);
@@ -47,6 +49,10 @@ final class GLWindow implements Window {
         glfwMakeContextCurrent(windowID); // Make the OpenGL context current
         glfwSwapInterval(1); // Enable v-sync
         GLHelper.loadOpenGL();
+
+        // Add input handlers
+        keyboard = new GLKeyManager();
+        glfwSetKeyCallback(windowID, keyboard::keyCallback);
     }
 
     // Engine methods
@@ -89,16 +95,15 @@ final class GLWindow implements Window {
 
     @Override
     public void endFrame() {
-        keyboard.updateKeys();
+        KeyInput.updateKeys();
         mouse.updateMouse();
     }
 
     // Input Methods
 
     @Override
-    public void setKeyInput(KeyManager keyboard) {
-        this.keyboard = keyboard;
-        glfwSetKeyCallback(windowID, keyboard::keyCallback);
+    public KeyInputHandler getKeyInputHandler() {
+        return keyboard;
     }
 
     @Override

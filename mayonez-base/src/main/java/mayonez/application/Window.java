@@ -51,19 +51,18 @@ public sealed interface Window permits JWindow, GLWindow {
     void render();
 
     /**
-     * Reset events and input listeners.
+     * Reset events and update input listeners.
      */
     void endFrame();
 
     // Input Methods
 
     /**
-     * Set the keyboard listener for this window and mark it as the active
-     * instance for the input manager.
+     * The keyboard listener for this window, used to pass events to the application.
      *
-     * @param keyboard a {@link mayonez.input.keyboard.KeyManager} instance
+     * @return the key input handler
      */
-    void setKeyInput(KeyManager keyboard);
+    KeyInputHandler getKeyInputHandler();
 
     /**
      * Set the mouse listener for this window and mark it as the active
