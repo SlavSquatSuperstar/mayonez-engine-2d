@@ -21,7 +21,6 @@ class GLMouseManager : MouseManager() {
      * @param mods any modifier keys
      */
     override fun mouseButtonCallback(window: Long, button: Int, action: Int, mods: Int) {
-        if (!button.isValidIndex()) return
         when (action) {
             GLFW.GLFW_PRESS -> {
                 setButtonDown(button, true)

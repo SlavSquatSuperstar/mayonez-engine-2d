@@ -10,11 +10,10 @@ private const val INITIAL_NUM_KEYS = 64
  *
  * @author SlavSquatSuperstar
  */
-// TODO concurrent modification sometimes happens
 sealed class KeyManager : KeyAdapter() {
 
     // Key Fields
-    private val keys: MutableMap<Int, MappingStatus?> = HashMap(INITIAL_NUM_KEYS) // All key states
+    private val keys: MutableMap<Int, InputState> = HashMap(INITIAL_NUM_KEYS) // All key states
     private val keysDown: MutableSet<Int> = HashSet(INITIAL_NUM_KEYS) // Keys down this frame
 
     internal var anyKeyDown: Boolean = false
@@ -24,12 +23,11 @@ sealed class KeyManager : KeyAdapter() {
 
     /** Poll key events from the window. */
     fun updateKeys() {
-        for (key in keys.values) {
-            when {
-                key == null -> continue
-                key.down -> key.updateIfDown()
-                else -> key.setReleased()
-            }
+        for ((key, value) in keys) {
+            // Update key state
+            val keyDown = key in keysDown
+            val newState = value.getNextState(keyDown)
+            keys[key] = newState
         }
         anyKeyDown = keysDown.isNotEmpty()
     }
@@ -68,27 +66,24 @@ sealed class KeyManager : KeyAdapter() {
      */
     internal abstract fun keyPressed(key: Key?): Boolean
 
-    // Helper Methods
+    // Key Getters and Setters
 
     protected fun setKeyDown(keyCode: Int, keyDown: Boolean) {
-        val status = keys[keyCode]
-        if (status == null) { // Track new key
-            val newStatus = MappingStatus()
-            newStatus.down = keyDown
-            keys[keyCode] = newStatus
+        if (keyDown) {
+            keysDown.add(keyCode)
+            // Track new key
+            if (!keys.containsKey(keyCode)) keys[keyCode] = InputState.NONE
         } else {
-            status.down = keyDown
+            keysDown.remove(keyCode)
         }
-        if (keyDown) keysDown.add(keyCode)
-        else keysDown.remove(keyCode)
     }
 
     protected fun keyDown(keyCode: Int): Boolean {
-        return keys[keyCode]?.pressed == true || keys[keyCode]?.held == true
+        return keyCode in keysDown
     }
 
     protected fun keyPressed(keyCode: Int): Boolean {
-        return keys[keyCode]?.pressed == true
+        return keys[keyCode] == InputState.PRESSED
     }
 
 }

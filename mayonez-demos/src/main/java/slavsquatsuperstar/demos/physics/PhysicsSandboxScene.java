@@ -64,6 +64,7 @@ public class PhysicsSandboxScene extends Scene {
     @Override
     protected void onUserUpdate(float dt) {
         // Create Random Shapes
+        // TODO mouse pos gets out of sync
         if (!KeyInput.keyDown("left shift")) {
             for (int i = 1; i <= 4; i++) {
                 if (KeyInput.keyPressed(String.valueOf(i))) {

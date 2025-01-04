@@ -14,8 +14,7 @@ private const val NUM_BUTTONS: Int = 8
 sealed class MouseManager : MouseAdapter() {
 
     // Mouse Button Fields
-    // Use arrays instead of hashmaps because very few buttons, GLFW uses max 8
-    private val buttons: Array<MappingStatus> = Array(NUM_BUTTONS) { MappingStatus() } // All button states
+    private val buttons: MutableMap<Int, InputState> = HashMap(NUM_BUTTONS) // All button states
     private val buttonsDown: MutableSet<Int> = HashSet(NUM_BUTTONS) // Buttons down this frame
 
     // Mouse State Fields
@@ -44,9 +43,11 @@ sealed class MouseManager : MouseAdapter() {
     }
 
     protected fun updateButtons() {
-        for (buttonState in buttons) {
-            if (buttonState.down) buttonState.updateIfDown()
-            else buttonState.setReleased()
+        for ((button, value) in buttons) {
+            // Update button state
+            val buttonDown = button in buttonsDown
+            val newState = value.getNextState(buttonDown)
+            buttons[button] = newState
         }
         anyButtonDown = buttonsDown.isNotEmpty()
     }
@@ -108,23 +109,27 @@ sealed class MouseManager : MouseAdapter() {
      */
     internal abstract fun buttonPressed(button: Button?): Boolean
 
-    // Mouse Button Helper Methods
+    // Mouse Button Getters and Setters
+
+    protected fun setButtonDown(button: Int, buttonDown: Boolean) {
+        if (buttonDown) {
+            buttonsDown.add(button)
+            // Track new button
+            if (!buttons.containsKey(button)) buttons[button] = InputState.NONE
+        } else {
+            buttonsDown.remove(button)
+        }
+    }
 
     protected fun buttonDown(button: Int): Boolean {
-        return button.isValidIndex() && !buttons[button].released
+        return button in buttonsDown
     }
 
     protected fun buttonPressed(button: Int): Boolean {
-        return button.isValidIndex() && buttons[button].pressed
+        return buttons[button] == InputState.PRESSED
     }
 
-    protected fun setButtonDown(button: Int, down: Boolean) {
-        buttons[button].down = down
-        if (down) buttonsDown.add(button)
-        else buttonsDown.remove(button)
-    }
-
-    // Mouse Movement Helper Methods
+    // Mouse Movement Setters
 
     protected fun setMousePos(x: Number, y: Number) {
         mousePosPx.set(x.toFloat(), y.toFloat())
@@ -134,12 +139,10 @@ sealed class MouseManager : MouseAdapter() {
         mouseDispPx.set(dx.toFloat(), dy.toFloat())
     }
 
-    // Mouse Scroll Helper Methods
+    // Mouse Scroll Setters
 
     protected fun setScrollPos(scrollX: Number, scrollY: Number) {
         scroll.set(scrollX.toFloat(), scrollY.toFloat())
     }
-
-    protected fun Int.isValidIndex(): Boolean = this in 0..<NUM_BUTTONS
 
 }

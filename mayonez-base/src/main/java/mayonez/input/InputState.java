@@ -1,21 +1,55 @@
 package mayonez.input;
 
 /**
- * Represents the state of a {@link mayonez.input.MappingStatus}.
+ * Represents the state of an input mapping (key or button).
  *
  * @author SlavSquatSuperstar
  */
-enum InputState {
+public enum InputState {
+
     /**
-     * The input mapping is not pressed or held.
+     * The input mapping is not held this frame, the default state.
      */
-    RELEASED,
+    NONE {
+        @Override
+        public InputState getNextState(boolean down) {
+            return down ? PRESSED : NONE;
+        }
+    },
     /**
-     * The input mapping is newly pressed this frame.
+     * The input mapping was newly pressed this frame.
      */
-    PRESSED,
+    PRESSED {
+        @Override
+        public InputState getNextState(boolean down) {
+            return down ? HELD : RELEASED;
+        }
+    },
     /**
      * The input mapping is continuously held this frame.
      */
-    HELD
+    HELD {
+        @Override
+        public InputState getNextState(boolean down) {
+            return down ? HELD : RELEASED;
+        }
+    },
+    /**
+     * The input mapping was newly released this frame.
+     */
+    RELEASED {
+        @Override
+        public InputState getNextState(boolean down) {
+            return down ? PRESSED : NONE;
+        }
+    };
+
+    /**
+     * Transition to the next input state based on this frame's actions.
+     *
+     * @param down if the input mapping is down
+     * @return the next state
+     */
+    public abstract InputState getNextState(boolean down);
+
 }
