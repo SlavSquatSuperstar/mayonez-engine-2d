@@ -20,7 +20,8 @@ sealed class MouseManager : MouseAdapter() {
     // Mouse State Fields
     internal var anyButtonDown: Boolean = false
         private set
-    internal var clicks: Int = 1
+    internal var doubleClick: Boolean = false
+        private set
 
     // Mouse Movement Fields
     internal var mousePosPx = Vec2()
@@ -36,6 +37,9 @@ sealed class MouseManager : MouseAdapter() {
     fun updateMouse() {
         // Update mouse input
         updateButtons()
+
+        // Reset double click
+        doubleClick = false
 
         // Reset motion
         setMouseDisp(0, 0)
@@ -127,6 +131,10 @@ sealed class MouseManager : MouseAdapter() {
 
     protected fun buttonPressed(button: Int): Boolean {
         return buttons[button] == InputState.PRESSED
+    }
+
+    protected fun setDoubleClick(doubleClick: Boolean) {
+        this.doubleClick = doubleClick
     }
 
     // Mouse Movement Setters

@@ -8,6 +8,8 @@ import org.lwjgl.glfw.GLFW
 /**
  * Receives keyboard input events from GLFW.
  *
+ * Source: [GLFW Input Guide § Key Input](https://www.glfw.org/docs/latest/input_guide.html#input_key)
+ *
  * @author SlavSquatSuperstar
  */
 // TODO GLFW sticky keys?
@@ -27,8 +29,8 @@ internal class GLKeyManager : KeyManager() {
      */
     override fun keyCallback(window: Long, key: Int, scancode: Int, action: Int, mods: Int) {
         when (action) {
-            GLFW.GLFW_PRESS -> setKeyDown(key, true)
-            GLFW.GLFW_REPEAT -> setKeyDown(key, true)
+            GLFW.GLFW_PRESS, GLFW.GLFW_REPEAT -> setKeyDown(key, true)
+            // According to docs, GLFW_REPEAT should not be relied upon
             GLFW.GLFW_RELEASE -> setKeyDown(key, false)
         }
         Events.KEYBOARD_EVENTS.broadcast(KeyboardEvent(key, scancode, action, mods))

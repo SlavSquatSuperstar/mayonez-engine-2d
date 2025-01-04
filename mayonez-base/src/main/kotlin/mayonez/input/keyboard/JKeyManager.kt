@@ -18,7 +18,6 @@ internal class JKeyManager : KeyManager() {
     override fun keyPressed(e: KeyEvent) {
         setKeyDown(e.keyCode, true)
         Events.KEYBOARD_EVENTS.broadcast(KeyboardEvent(e.keyCode, true, e.modifiersEx))
-//        println("${KeyEvent.getModifiersExText(e.modifiersEx)}${e.keyLocation}")
     }
 
     override fun keyReleased(e: KeyEvent) {

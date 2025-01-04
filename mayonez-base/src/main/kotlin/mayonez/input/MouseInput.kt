@@ -132,7 +132,12 @@ object MouseInput {
     @JvmStatic
     fun isAnyDown(): Boolean = instance.anyButtonDown
 
+    /**
+     * If any two (or more) mouse button pressed were registered in rapid succession.
+     *
+     * @return if the mouse is double-clicked
+     */
     @JvmStatic
-    fun getClicks(): Int = instance.clicks
+    fun isDoubleClick(): Boolean = instance.doubleClick
 
 }

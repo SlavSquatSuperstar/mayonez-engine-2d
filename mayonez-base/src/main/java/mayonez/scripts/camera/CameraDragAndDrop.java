@@ -34,7 +34,7 @@ public class CameraDragAndDrop extends DragAndDrop {
     public void onMouseDown() {
         if (MouseInput.buttonPressed(getButton())) {
             // Reset camera position by double-clicking
-            if (MouseInput.getClicks() > 1) {
+            if (MouseInput.isDoubleClick()) {
                 camera.getTransform().setPosition(new Vec2(0, 0));
             }
         }

@@ -14,13 +14,12 @@ class JMouseManager : MouseManager() {
 
     override fun mousePressed(e: MouseEvent) {
         setButtonDown(e.button, true)
-        clicks = e.clickCount
+        setDoubleClick(e.clickCount > 1)
     }
 
     override fun mouseReleased(e: MouseEvent) {
         setButtonDown(e.button, false)
         setMouseDisp(0, 0)
-        clicks = e.clickCount
     }
 
     // Mouse Movement Callbacks
