@@ -92,6 +92,8 @@ public class DemosLauncher {
                 }
             }
         }
+        System.out.println("any key: " + KeyInput.isAnyDown());
+        System.out.println("any button: " + MouseInput.isAnyDown());
     }
 
 }

@@ -3,7 +3,6 @@ package mayonez.input.mouse
 import mayonez.input.*
 import mayonez.math.*
 import java.awt.event.*
-import kotlin.math.*
 
 private const val NUM_BUTTONS: Int = 8
 
@@ -16,11 +15,11 @@ sealed class MouseManager : MouseAdapter() {
 
     // Mouse Button Fields
     // Use arrays instead of hashmaps because very few buttons, GLFW uses max 8
-    private val buttons: Array<MappingStatus> = Array(NUM_BUTTONS) { MappingStatus() }
+    private val buttons: Array<MappingStatus> = Array(NUM_BUTTONS) { MappingStatus() } // All button states
+    private val buttonsDown: MutableSet<Int> = HashSet(NUM_BUTTONS) // Buttons down this frame
 
     // Mouse State Fields
-    protected var pressed: Boolean = false
-    internal var buttonsPressed: Int = 0 // track number of buttons pressed
+    internal var anyButtonDown: Boolean = false
         private set
     internal var clicks: Int = 1
 
@@ -45,15 +44,11 @@ sealed class MouseManager : MouseAdapter() {
     }
 
     protected fun updateButtons() {
-        for (button in buttons) {
-            if (button.down) {
-                button.updateIfDown()
-                if (button.released) buttonsPressed += 1 // notify pressed
-            } else {
-                button.setReleased()
-                buttonsPressed = max(0, buttonsPressed - 1) // notify released
-            }
+        for (buttonState in buttons) {
+            if (buttonState.down) buttonState.updateIfDown()
+            else buttonState.setReleased()
         }
+        anyButtonDown = buttonsDown.isNotEmpty()
     }
 
     // Mouse Button Callbacks
@@ -125,6 +120,8 @@ sealed class MouseManager : MouseAdapter() {
 
     protected fun setButtonDown(button: Int, down: Boolean) {
         buttons[button].down = down
+        if (down) buttonsDown.add(button)
+        else buttonsDown.remove(button)
     }
 
     // Mouse Movement Helper Methods

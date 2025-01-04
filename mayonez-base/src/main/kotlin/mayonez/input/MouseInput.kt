@@ -124,11 +124,13 @@ object MouseInput {
 
     // Mouse State Getters
 
+    /**
+     * If any mouse buttons are held down.
+     *
+     * @return if the mouse is pressed
+     */
     @JvmStatic
-    fun isPressed(): Boolean = (instance.buttonsPressed > 0)
-
-    @JvmStatic
-    fun isReleased(): Boolean = (instance.buttonsPressed == 0)
+    fun isAnyDown(): Boolean = instance.anyButtonDown
 
     @JvmStatic
     fun getClicks(): Int = instance.clicks

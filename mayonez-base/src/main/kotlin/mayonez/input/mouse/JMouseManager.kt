@@ -15,7 +15,6 @@ class JMouseManager : MouseManager() {
     override fun mousePressed(e: MouseEvent) {
         if (e.button.isValidIndex()) {
             setButtonDown(e.button, true)
-            pressed = true
             clicks = e.clickCount
         }
     }
@@ -23,7 +22,6 @@ class JMouseManager : MouseManager() {
     override fun mouseReleased(e: MouseEvent) {
         if (e.button.isValidIndex()) {
             setButtonDown(e.button, false)
-            pressed = false
             setMouseDisp(0, 0)
             clicks = e.clickCount
         }
@@ -36,7 +34,6 @@ class JMouseManager : MouseManager() {
     }
 
     override fun mouseDragged(e: MouseEvent) {
-        pressed = true
         setMouseDisp(e.x - mousePosPx.x, e.y - mousePosPx.y)
         setMousePos(e.x, e.y)
     }

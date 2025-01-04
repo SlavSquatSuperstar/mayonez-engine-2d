@@ -14,7 +14,11 @@ private const val INITIAL_NUM_KEYS = 64
 sealed class KeyManager : KeyAdapter() {
 
     // Key Fields
-    private val keys: MutableMap<Int, MappingStatus?> = HashMap(INITIAL_NUM_KEYS)
+    private val keys: MutableMap<Int, MappingStatus?> = HashMap(INITIAL_NUM_KEYS) // All key states
+    private val keysDown: MutableSet<Int> = HashSet(INITIAL_NUM_KEYS) // Keys down this frame
+
+    internal var anyKeyDown: Boolean = false
+        private set
 
     // Game Loop Methods
 
@@ -27,6 +31,7 @@ sealed class KeyManager : KeyAdapter() {
                 else -> key.setReleased()
             }
         }
+        anyKeyDown = keysDown.isNotEmpty()
     }
 
     // Keyboard Callbacks
@@ -74,6 +79,8 @@ sealed class KeyManager : KeyAdapter() {
         } else {
             status.down = keyDown
         }
+        if (keyDown) keysDown.add(keyCode)
+        else keysDown.remove(keyCode)
     }
 
     protected fun keyDown(keyCode: Int): Boolean {

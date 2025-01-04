@@ -90,4 +90,12 @@ object KeyInput {
     @JvmStatic
     fun getAxis(axisName: String): Int = getAxis(DefaultKeyAxis.findWithName(axisName))
 
+    /**
+     * If any keyboard keys are held down.
+     *
+     * @return if the keyboard is pressed
+     */
+    @JvmStatic
+    fun isAnyDown(): Boolean = instance.anyKeyDown
+
 }
