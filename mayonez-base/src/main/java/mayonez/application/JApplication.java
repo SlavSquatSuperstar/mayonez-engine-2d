@@ -11,7 +11,7 @@ import mayonez.graphics.*;
 @UsesEngine(EngineType.AWT)
 final class JApplication extends Application {
 
-    public JApplication(Window window) {
+    JApplication(Window window) {
         super(window);
     }
 
