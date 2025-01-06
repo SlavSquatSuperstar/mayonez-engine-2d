@@ -58,7 +58,7 @@ public class GDEditorScene extends Scene {
             }
         });
 
-        addObject(new UICanvas("Canvas", new Transform(new Vec2(-3f, -5f))));
+        addObject(new UICanvas("Block Palette", new Transform(new Vec2(-3f, -5f))));
     }
 
 }
