@@ -1,6 +1,8 @@
 package mayonez.input.mouse
 
-import mayonez.input.*
+import mayonez.input.Button
+import mayonez.input.events.*
+import java.awt.*
 import java.awt.event.*
 
 private const val NANOS_TO_SECS = 1.0e-9
@@ -15,33 +17,29 @@ class JMouseManager : MouseManager() {
     // Mouse Button Callbacks
 
     override fun mousePressed(e: MouseEvent) {
-        setButtonDown(e.button, true)
-        setLastClickTimeSecs(System.nanoTime() * NANOS_TO_SECS)
-        updateButtons()
+        onMouseInputEvent(MouseButtonEvent(e.button, true, System.nanoTime() * NANOS_TO_SECS))
         // Not relying on MouseEvent.clickCount since want to be similar to GL input
     }
 
     override fun mouseReleased(e: MouseEvent) {
-        setButtonDown(e.button, false)
-        setMouseDisp(0, 0)
-        updateButtons()
+        onMouseInputEvent(MouseButtonEvent(e.button, false))
     }
 
     // Mouse Movement Callbacks
 
     override fun mouseMoved(e: MouseEvent) {
-        setMousePos(e.x, e.y)
+        onMouseInputEvent(MouseMoveEvent(e.x.toFloat(), e.y.toFloat()))
     }
 
     override fun mouseDragged(e: MouseEvent) {
-        setMouseDisp(e.x - mousePosPx.x, e.y - mousePosPx.y)
-        setMousePos(e.x, e.y)
+        onMouseInputEvent(MouseMoveEvent(e.x.toFloat(), e.y.toFloat()))
     }
 
     // Mouse Scroll Callbacks
 
     override fun mouseWheelMoved(e: MouseWheelEvent) {
-        setScrollPos(0, e.wheelRotation) // AWT only supports one direction of scroll
+        // AWT only supports one direction of scroll
+        onMouseInputEvent(MouseScrollEvent(0f, e.wheelRotation.toFloat()))
     }
 
     // Mouse Button Getters

@@ -1,6 +1,7 @@
 package mayonez.input.mouse
 
 import mayonez.input.*
+import mayonez.input.events.*
 import org.lwjgl.glfw.GLFW
 
 /**
@@ -25,13 +26,14 @@ class GLMouseManager : MouseManager() {
     override fun mouseButtonCallback(window: Long, button: Int, action: Int, mods: Int) {
         when (action) {
             GLFW.GLFW_PRESS -> {
-                setButtonDown(button, true)
-                setLastClickTimeSecs(GLFW.glfwGetTime())
+                onMouseInputEvent(MouseButtonEvent(button, true, GLFW.glfwGetTime()))
+            }
+
+            GLFW.GLFW_RELEASE -> {
+                onMouseInputEvent(MouseButtonEvent(button, false))
             }
             // According to docs, GLFW_REPEAT never occurs with mouse
-            GLFW.GLFW_RELEASE -> setButtonDown(button, false)
         }
-        updateButtons()
     }
 
     /**
@@ -42,10 +44,7 @@ class GLMouseManager : MouseManager() {
      * @param yPos the y position of the cursor
      */
     override fun mousePosCallback(window: Long, xPos: Double, yPos: Double) {
-        if (anyButtonDown) {
-            setMouseDisp(xPos - mousePosPx.x, yPos - mousePosPx.y)
-        }
-        setMousePos(xPos, yPos)
+        onMouseInputEvent(MouseMoveEvent(xPos.toFloat(), yPos.toFloat()))
     }
 
     /**
@@ -56,7 +55,7 @@ class GLMouseManager : MouseManager() {
      * @param yOffset the y offset of the scroll wheel
      */
     override fun mouseScrollCallback(window: Long, xOffset: Double, yOffset: Double) {
-        setScrollPos(xOffset, yOffset)
+        onMouseInputEvent(MouseScrollEvent(xOffset.toFloat(), yOffset.toFloat()))
     }
 
     // Mouse Button Getters

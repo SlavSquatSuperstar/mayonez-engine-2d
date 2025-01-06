@@ -1,14 +1,15 @@
 package mayonez.input.mouse
 
 import mayonez.input.*
+import mayonez.input.events.*
 import mayonez.math.*
 import java.awt.event.*
 
 private const val NUM_BUTTONS: Int = 8 // GLFW supports eight mouse buttons
-private const val DOUBLE_CLICK_TIME_SECS: Float = 0.20f
+private const val DOUBLE_CLICK_TIME_SECS: Float = 0.40f
 
 /**
- * Receives mouse input events.
+ * Receives and stores mouse input events from the window.
  *
  * @author SlavSquatSuperstar
  */
@@ -34,6 +35,8 @@ sealed class MouseManager : MouseAdapter() {
     internal var scroll = Vec2()
         private set
 
+    // Event Methods
+
     /** Poll mouse events from the window. */
     fun updateMouse() {
         // Update mouse input
@@ -43,8 +46,8 @@ sealed class MouseManager : MouseAdapter() {
         doubleClick = false
 
         // Reset motion
-        setMouseDisp(0, 0)
-        setScrollPos(0, 0)
+        setMouseDisp(0f, 0f)
+        setScrollPos(0f, 0f)
     }
 
     protected fun updateButtons() {
@@ -55,6 +58,46 @@ sealed class MouseManager : MouseAdapter() {
             buttons[button] = newState
         }
         anyButtonDown = buttonsDown.isNotEmpty()
+    }
+
+    protected fun onMouseInputEvent(event: MouseInputEvent) {
+        when (event) {
+            is MouseButtonEvent -> onMouseButtonEvent(event)
+            is MouseMoveEvent -> onMouseMoveEvent(event)
+            is MouseScrollEvent -> setScrollPos(event.xOffset, event.yOffset)
+        }
+    }
+
+    private fun onMouseButtonEvent(event: MouseButtonEvent) {
+        // Set button down
+        val button = event.button
+        if (event.isButtonDown) {
+            buttonsDown.add(button)
+            // Track new button
+            if (!buttons.containsKey(button)) buttons[button] = InputState.NONE
+        } else {
+            buttonsDown.remove(button)
+        }
+        updateButtons()
+
+        // Set click time
+        if (event.isButtonDown) {
+            // Detect double click
+            // Source: https://www.youtube.com/watch?v=k3rVEIr0Z7w
+            if (event.eventTime - lastClickTimeSecs <= DOUBLE_CLICK_TIME_SECS)
+                doubleClick = true
+            lastClickTimeSecs = event.eventTime
+        } else {
+            setMouseDisp(0f, 0f)
+        }
+    }
+
+    private fun onMouseMoveEvent(event: MouseMoveEvent) {
+        if (anyButtonDown) {
+            // Set drag displacement
+            setMouseDisp(event.mouseX - mousePosPx.x, event.mouseY - mousePosPx.y)
+        }
+        mousePosPx.set(event.mouseX, event.mouseY)
     }
 
     // Mouse Button Callbacks
@@ -114,17 +157,7 @@ sealed class MouseManager : MouseAdapter() {
      */
     internal abstract fun buttonPressed(button: Button?): Boolean
 
-    // Mouse Button Getters and Setters
-
-    protected fun setButtonDown(button: Int, buttonDown: Boolean) {
-        if (buttonDown) {
-            buttonsDown.add(button)
-            // Track new button
-            if (!buttons.containsKey(button)) buttons[button] = InputState.NONE
-        } else {
-            buttonsDown.remove(button)
-        }
-    }
+    // Mouse Getters and Setters
 
     protected fun buttonDown(button: Int): Boolean {
         return button in buttonsDown
@@ -134,28 +167,12 @@ sealed class MouseManager : MouseAdapter() {
         return buttons[button] == InputState.PRESSED
     }
 
-    protected fun setLastClickTimeSecs(currentClickTimeSecs: Double) {
-        // Detect double click
-        // Source: https://www.youtube.com/watch?v=k3rVEIr0Z7w
-        if (currentClickTimeSecs - lastClickTimeSecs <= DOUBLE_CLICK_TIME_SECS)
-            doubleClick = true
-        lastClickTimeSecs = currentClickTimeSecs
+    private fun setMouseDisp(dx: Float, dy: Float) {
+        mouseDispPx.set(dx, dy)
     }
 
-    // Mouse Movement Setters
-
-    protected fun setMousePos(x: Number, y: Number) {
-        mousePosPx.set(x.toFloat(), y.toFloat())
-    }
-
-    protected fun setMouseDisp(dx: Number, dy: Number) {
-        mouseDispPx.set(dx.toFloat(), dy.toFloat())
-    }
-
-    // Mouse Scroll Setters
-
-    protected fun setScrollPos(scrollX: Number, scrollY: Number) {
-        scroll.set(scrollX.toFloat(), scrollY.toFloat())
+    private fun setScrollPos(scrollX: Float, scrollY: Float) {
+        scroll.set(scrollX, scrollY)
     }
 
 }
