@@ -12,46 +12,34 @@ private const val NANOS_TO_SECS = 1.0e-9
  *
  * @author SlavSquatSuperstar
  */
-class JMouseManager : MouseManager(), MouseInputHandler {
+class JMouseManager : MouseAdapter(), MouseInputHandler {
 
     // Mouse Button Callbacks
 
     override fun mousePressed(e: MouseEvent) {
-        onMouseInputEvent(MouseButtonEvent(e.button, true, System.nanoTime() * NANOS_TO_SECS))
+        eventSystem.broadcast(MouseButtonEvent(e.button, true, System.nanoTime() * NANOS_TO_SECS))
         // Not relying on MouseEvent.clickCount since want to be similar to GL input
     }
 
     override fun mouseReleased(e: MouseEvent) {
-        onMouseInputEvent(MouseButtonEvent(e.button, false))
+        eventSystem.broadcast(MouseButtonEvent(e.button, false))
     }
 
     // Mouse Movement Callbacks
 
     override fun mouseMoved(e: MouseEvent) {
-        onMouseInputEvent(MouseMoveEvent(e.x.toFloat(), e.y.toFloat()))
+        eventSystem.broadcast(MouseMoveEvent(e.x.toFloat(), e.y.toFloat()))
     }
 
     override fun mouseDragged(e: MouseEvent) {
-        onMouseInputEvent(MouseMoveEvent(e.x.toFloat(), e.y.toFloat()))
+        eventSystem.broadcast(MouseMoveEvent(e.x.toFloat(), e.y.toFloat()))
     }
 
     // Mouse Scroll Callbacks
 
     override fun mouseWheelMoved(e: MouseWheelEvent) {
         // AWT only supports one direction of scroll
-        onMouseInputEvent(MouseScrollEvent(0f, e.wheelRotation.toFloat()))
-    }
-
-    // Mouse Button Getters
-
-    override fun buttonDown(button: Button?): Boolean {
-        return if (button == null) false
-        else buttonDown(button.awtCode)
-    }
-
-    override fun buttonPressed(button: Button?): Boolean {
-        return if (button == null) false
-        else buttonPressed(button.awtCode)
+        eventSystem.broadcast(MouseScrollEvent(0f, e.wheelRotation.toFloat()))
     }
 
     // Event Handler Overrides

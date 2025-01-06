@@ -29,22 +29,6 @@ object MouseInput {
     // Mouse Scroll Fields
     private var scroll = Vec2()
 
-    // Singleton Properties
-
-    private lateinit var instance: MouseManager
-
-    /**
-     * Create the [MouseManager] instance if it does not exist.
-     *
-     * @param useGL whether to use GLFW instead of AWT.
-     * @return the mouse input instance
-     */
-    internal fun createInstance(useGL: Boolean): MouseManager {
-        if (this::instance.isInitialized) return instance
-        instance = if (useGL) GLMouseManager() else JMouseManager()
-        return instance
-    }
-
     // Scene Properties
 
     private lateinit var pointXf: PointTransformer

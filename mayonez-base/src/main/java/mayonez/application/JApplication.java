@@ -2,7 +2,6 @@ package mayonez.application;
 
 import mayonez.*;
 import mayonez.graphics.*;
-import mayonez.input.mouse.*;
 
 /**
  * An instance of the application using Java's AWT and Swing libraries.
@@ -12,8 +11,8 @@ import mayonez.input.mouse.*;
 @UsesEngine(EngineType.AWT)
 final class JApplication extends Application {
 
-    public JApplication(Window window, MouseManager mouse) {
-        super(window, mouse);
+    public JApplication(Window window) {
+        super(window);
     }
 
     // Application Methods

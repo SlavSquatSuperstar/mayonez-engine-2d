@@ -1,7 +1,6 @@
 package mayonez.application;
 
 import mayonez.*;
-import mayonez.input.mouse.*;
 
 /**
  * An application that displays a window, receives input, and continuously updates and renders a scene.
@@ -33,16 +32,13 @@ public abstract sealed class Application permits JApplication, GLApplication {
     private int averageUPS;
     private int averageFPS;
 
-    protected Application(Window window, MouseManager mouse) {
+    protected Application(Window window) {
         this.window = window;
         running = false;
 
         frameSkip = Preferences.getFrameSkip();
         timeStepSecs = Time.getTimeStepSecs();
         halfTimeStepSecs = timeStepSecs * 0.5f;
-
-        // Add input listeners
-        window.setMouseInput(mouse);
     }
 
     // Main Game Loop Methods

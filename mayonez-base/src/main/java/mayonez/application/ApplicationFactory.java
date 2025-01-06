@@ -2,7 +2,6 @@ package mayonez.application;
 
 import mayonez.*;
 import mayonez.input.*;
-import mayonez.input.mouse.MouseManager;
 import mayonez.util.OperatingSystem;
 
 /**
@@ -23,12 +22,11 @@ public final class ApplicationFactory {
      * engine type.
      *
      * @param useGL      whether to use OpenGL instead of Java's AWT library
-     * @param mouseInput the mouse input instance
      * @return the game engine
      * @throws WindowInitException if the wrong thread is used on macOS
      */
     public static Application createApplication(
-            boolean useGL, MouseManager mouseInput
+            boolean useGL
     ) throws WindowInitException {
         // Create window
         var title = String.format("%s (%s) %s",
@@ -42,8 +40,8 @@ public final class ApplicationFactory {
         MouseInput.setHandler(window.getMouseInputHandler());
 
         return useGL
-                ? new GLApplication(window, mouseInput)
-                : new JApplication(window, mouseInput);
+                ? new GLApplication(window)
+                : new JApplication(window);
     }
 
     /**

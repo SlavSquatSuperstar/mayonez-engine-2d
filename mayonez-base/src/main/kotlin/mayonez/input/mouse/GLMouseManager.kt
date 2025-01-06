@@ -12,7 +12,7 @@ import org.lwjgl.glfw.GLFW
  *
  * @author SlavSquatSuperstar
  */
-class GLMouseManager : MouseManager(), MouseInputHandler {
+class GLMouseManager : MouseInputHandler {
 
     // Mouse Callbacks
 
@@ -24,17 +24,14 @@ class GLMouseManager : MouseManager(), MouseInputHandler {
      * @param action the event type
      * @param mods any modifier keys
      */
-    override fun mouseButtonCallback(window: Long, button: Int, action: Int, mods: Int) {
-        when (action) {
-            GLFW.GLFW_PRESS -> {
-                onMouseInputEvent(MouseButtonEvent(button, true, GLFW.glfwGetTime()))
-            }
-
-            GLFW.GLFW_RELEASE -> {
-                onMouseInputEvent(MouseButtonEvent(button, false))
-            }
+    fun mouseButtonCallback(window: Long, button: Int, action: Int, mods: Int) {
+        val event = when (action) {
+            GLFW.GLFW_PRESS -> MouseButtonEvent(button, true, GLFW.glfwGetTime())
+            GLFW.GLFW_RELEASE -> MouseButtonEvent(button, false)
             // According to docs, GLFW_REPEAT never occurs with mouse
+            else -> return
         }
+        eventSystem.broadcast(event)
     }
 
     /**
@@ -44,8 +41,8 @@ class GLMouseManager : MouseManager(), MouseInputHandler {
      * @param xPos the x position of the cursor
      * @param yPos the y position of the cursor
      */
-    override fun mousePosCallback(window: Long, xPos: Double, yPos: Double) {
-        onMouseInputEvent(MouseMoveEvent(xPos.toFloat(), yPos.toFloat()))
+    fun mousePosCallback(window: Long, xPos: Double, yPos: Double) {
+        eventSystem.broadcast(MouseMoveEvent(xPos.toFloat(), yPos.toFloat()))
     }
 
     /**
@@ -55,20 +52,8 @@ class GLMouseManager : MouseManager(), MouseInputHandler {
      * @param xOffset the x offset of the scroll wheel
      * @param yOffset the y offset of the scroll wheel
      */
-    override fun mouseScrollCallback(window: Long, xOffset: Double, yOffset: Double) {
-        onMouseInputEvent(MouseScrollEvent(xOffset.toFloat(), yOffset.toFloat()))
-    }
-
-    // Mouse Button Getters
-
-    override fun buttonDown(button: Button?): Boolean {
-        return if (button == null) false
-        else buttonDown(button.glCode)
-    }
-
-    override fun buttonPressed(button: Button?): Boolean {
-        return if (button == null) false
-        else buttonPressed(button.glCode)
+    fun mouseScrollCallback(window: Long, xOffset: Double, yOffset: Double) {
+        eventSystem.broadcast(MouseScrollEvent(xOffset.toFloat(), yOffset.toFloat()))
     }
 
     // Event Handler Overrides
