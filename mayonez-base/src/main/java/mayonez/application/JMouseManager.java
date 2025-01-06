@@ -4,7 +4,6 @@ import mayonez.event.*;
 import mayonez.graphics.*;
 import mayonez.input.*;
 import mayonez.input.events.*;
-import mayonez.input.mouse.*;
 
 import java.awt.event.*;
 

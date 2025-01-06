@@ -1,7 +1,6 @@
 package mayonez.input
 
 import mayonez.input.events.*
-import mayonez.input.keyboard.*
 
 /**
  * Receives and stores keyboard input events from the window.

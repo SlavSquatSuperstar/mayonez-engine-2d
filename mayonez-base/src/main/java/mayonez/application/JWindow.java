@@ -3,8 +3,6 @@ package mayonez.application;
 import mayonez.*;
 import mayonez.graphics.*;
 import mayonez.input.*;
-import mayonez.input.keyboard.*;
-import mayonez.input.mouse.*;
 
 import javax.swing.*;
 import java.awt.*;

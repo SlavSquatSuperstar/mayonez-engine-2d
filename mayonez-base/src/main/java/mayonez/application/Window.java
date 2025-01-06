@@ -1,7 +1,6 @@
 package mayonez.application;
 
-import mayonez.input.keyboard.*;
-import mayonez.input.mouse.*;
+import mayonez.input.*;
 
 /**
  * The main window that renders the application to the screen and detects

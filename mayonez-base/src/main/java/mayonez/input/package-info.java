@@ -1,5 +1,5 @@
 /**
- * Handles input from keyboard and mouse devices and makes it accessible to other classes
+ * Process keyboard and mouse input from the window and makes it accessible to other classes.
  *
  * @author SlavSquatSuperstar
  */

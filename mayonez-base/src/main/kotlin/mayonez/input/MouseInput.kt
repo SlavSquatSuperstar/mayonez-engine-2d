@@ -1,7 +1,6 @@
 package mayonez.input
 
 import mayonez.input.events.*
-import mayonez.input.mouse.*
 import mayonez.math.*
 
 /**

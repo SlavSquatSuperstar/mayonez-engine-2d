@@ -1,7 +1,6 @@
-package mayonez.input.keyboard;
+package mayonez.input;
 
 import mayonez.event.*;
-import mayonez.input.*;
 import mayonez.input.events.*;
 
 /**
