@@ -31,7 +31,7 @@ class GLMouseManager implements MouseInputHandler {
     void mouseButtonCallback(long window, int button, int action, int mods) {
         MouseButtonEvent event;
         switch (action) {
-            case GLFW.GLFW_PRESS -> event = new MouseButtonEvent(button, true, GLFW.glfwGetTime());
+            case GLFW.GLFW_PRESS -> event = new MouseButtonEvent(button, true, (float) GLFW.glfwGetTime());
             case GLFW.GLFW_RELEASE -> event = new MouseButtonEvent(button, false);
             // According to docs, GLFW_REPEAT never occurs with mouse
             default -> {

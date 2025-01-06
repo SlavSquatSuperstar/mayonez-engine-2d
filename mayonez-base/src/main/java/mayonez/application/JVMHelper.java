@@ -15,8 +15,10 @@ final class JVMHelper {
      * <p>
      * Sources:
      * <ul>
-     * <li>https://jvm-gaming.org/t/starting-jvm-on-mac-with-xstartonfirstthread-programmatically/57547</li>
-     * <li>https://stackoverflow.com/questions/35842/how-can-a-java-program-get-its-own-process-id</li>
+     * <li><a href="https://jvm-gaming.org/t/starting-jvm-on-mac-with-xstartonfirstthread-programmatically/57547">
+     *     jvm-gaming.org</a></li>
+     * <li><a href="https://stackoverflow.com/questions/35842/how-can-a-java-program-get-its-own-process-id">
+     *     StackOverflow</a></li>
      * </ul>
      *
      * @return if -XstartOnFirstThread is enabled

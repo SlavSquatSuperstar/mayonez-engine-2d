@@ -23,7 +23,7 @@ object MouseInput {
     private val anyButtonDown: Boolean
         get() = buttonsDown.isNotEmpty()
     private var doubleClick: Boolean = false // TODO double click with same button
-    private var lastClickTimeSecs: Double = 0.0
+    private var lastClickTimeSecs: Float = 0f
 
     // Mouse Movement Fields
     private var mousePosPx = Vec2()

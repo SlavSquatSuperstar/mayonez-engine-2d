@@ -1,5 +1,6 @@
 package mayonez.application;
 
+import mayonez.*;
 import mayonez.event.*;
 import mayonez.graphics.*;
 import mayonez.input.*;
@@ -15,14 +16,11 @@ import java.awt.event.*;
 @UsesEngine(EngineType.AWT)
 class JMouseManager extends MouseAdapter implements MouseInputHandler {
 
-    private static final double NANOS_TO_SECS = 1.0e-9;
-
     // Mouse Button Callbacks
 
     @Override
     public void mousePressed(MouseEvent e) {
-        // TODO get time utils
-        var time = System.nanoTime() * NANOS_TO_SECS;
+        var time = Time.getTotalProgramSeconds();
         getEventSystem().broadcast(new MouseButtonEvent(e.getButton(), true, time));
         // Not relying on MouseEvent.clickCount since want to be similar to GL input
         // Can query double click interval with AWT, but not with GLFW

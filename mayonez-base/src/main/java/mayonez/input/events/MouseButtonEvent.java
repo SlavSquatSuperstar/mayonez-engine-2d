@@ -9,9 +9,9 @@ public class MouseButtonEvent extends MouseInputEvent {
 
     private final int button;
     private final boolean buttonDown;
-    private final double eventTime;
+    private final float eventTime;
 
-    public MouseButtonEvent(int button, boolean buttonDown, double eventTime) {
+    public MouseButtonEvent(int button, boolean buttonDown, float eventTime) {
         super("Button %d down: %s, time = %.4f".formatted(button, buttonDown, eventTime));
         this.button = button;
         this.buttonDown = buttonDown;
@@ -22,7 +22,7 @@ public class MouseButtonEvent extends MouseInputEvent {
         super("Button %d down: %s".formatted(button, buttonDown));
         this.button = button;
         this.buttonDown = buttonDown;
-        eventTime = 0.0;
+        eventTime = 0f;
     }
 
     /**
@@ -49,7 +49,7 @@ public class MouseButtonEvent extends MouseInputEvent {
      *
      * @return the event time
      */
-    public double getEventTime() {
+    public float getEventTime() {
         return eventTime;
     }
 
