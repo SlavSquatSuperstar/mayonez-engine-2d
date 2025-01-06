@@ -4,7 +4,8 @@ import mayonez.input.*
 import mayonez.math.*
 import java.awt.event.*
 
-private const val NUM_BUTTONS: Int = 8
+private const val NUM_BUTTONS: Int = 8 // GLFW supports eight mouse buttons
+private const val DOUBLE_CLICK_TIME_SECS: Float = 0.20f
 
 /**
  * Receives mouse input events.
@@ -17,11 +18,11 @@ sealed class MouseManager : MouseAdapter() {
     private val buttons: MutableMap<Int, InputState> = HashMap(NUM_BUTTONS) // All button states
     private val buttonsDown: MutableSet<Int> = HashSet(NUM_BUTTONS) // Buttons down this frame
 
-    // Mouse State Fields
     internal var anyButtonDown: Boolean = false
         private set
     internal var doubleClick: Boolean = false
         private set
+    private var lastClickTimeSecs: Double = 0.0
 
     // Mouse Movement Fields
     internal var mousePosPx = Vec2()
@@ -133,8 +134,12 @@ sealed class MouseManager : MouseAdapter() {
         return buttons[button] == InputState.PRESSED
     }
 
-    protected fun setDoubleClick(doubleClick: Boolean) {
-        this.doubleClick = doubleClick
+    protected fun setLastClickTimeSecs(currentClickTimeSecs: Double) {
+        // Detect double click
+        // Source: https://www.youtube.com/watch?v=k3rVEIr0Z7w
+        if (currentClickTimeSecs - lastClickTimeSecs <= DOUBLE_CLICK_TIME_SECS)
+            doubleClick = true
+        lastClickTimeSecs = currentClickTimeSecs
     }
 
     // Mouse Movement Setters

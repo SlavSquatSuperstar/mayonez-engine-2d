@@ -3,6 +3,8 @@ package mayonez.input.mouse
 import mayonez.input.*
 import java.awt.event.*
 
+private const val NANOS_TO_SECS = 1.0e-9
+
 /**
  * Receives mouse input events from AWT.
  *
@@ -14,12 +16,15 @@ class JMouseManager : MouseManager() {
 
     override fun mousePressed(e: MouseEvent) {
         setButtonDown(e.button, true)
-        setDoubleClick(e.clickCount > 1)
+        setLastClickTimeSecs(System.nanoTime() * NANOS_TO_SECS)
+        updateButtons()
+        // Not relying on MouseEvent.clickCount since want to be similar to GL input
     }
 
     override fun mouseReleased(e: MouseEvent) {
         setButtonDown(e.button, false)
         setMouseDisp(0, 0)
+        updateButtons()
     }
 
     // Mouse Movement Callbacks
@@ -36,7 +41,7 @@ class JMouseManager : MouseManager() {
     // Mouse Scroll Callbacks
 
     override fun mouseWheelMoved(e: MouseWheelEvent) {
-        setScrollPos(e.x, e.y)
+        setScrollPos(0, e.wheelRotation) // AWT only supports one direction of scroll
     }
 
     // Mouse Button Getters

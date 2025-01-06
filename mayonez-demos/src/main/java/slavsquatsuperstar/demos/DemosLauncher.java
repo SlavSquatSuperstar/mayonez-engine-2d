@@ -92,8 +92,12 @@ public class DemosLauncher {
                 }
             }
         }
-        if (MouseInput.isAnyDown() && MouseInput.isDoubleClick())
+        if (MouseInput.isAnyDown())
+            System.out.println("any button");
+        if (MouseInput.isDoubleClick())
             System.out.println("double click");
+        if (MouseInput.getScroll().lenSq() > 0f)
+            System.out.println("scroll = " + MouseInput.getScroll());
     }
 
 }

@@ -43,7 +43,6 @@ public class CameraDragAndDrop extends DragAndDrop {
     @Override
     public void onMouseHeld() {
         if (MouseInput.buttonDown(getButton())) {
-            System.out.println("button held");
             camera.getTransform().move(getMouseDisp().mul(-1f)); // drags slowly on AWT
         }
     }

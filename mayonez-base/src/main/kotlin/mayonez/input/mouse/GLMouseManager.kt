@@ -3,8 +3,6 @@ package mayonez.input.mouse
 import mayonez.input.*
 import org.lwjgl.glfw.GLFW
 
-private const val DOUBLE_CLICK_TIME_SECS: Float = 0.20f
-
 /**
  * Receives mouse input events from GLFW.
  *
@@ -13,8 +11,6 @@ private const val DOUBLE_CLICK_TIME_SECS: Float = 0.20f
  * @author SlavSquatSuperstar
  */
 class GLMouseManager : MouseManager() {
-
-    private var lastClickTimeSecs: Double = 0.0
 
     // Mouse Callbacks
 
@@ -30,12 +26,7 @@ class GLMouseManager : MouseManager() {
         when (action) {
             GLFW.GLFW_PRESS -> {
                 setButtonDown(button, true)
-                // Detect double click
-                // Source: https://www.youtube.com/watch?v=k3rVEIr0Z7w
-                val currentClickTimeSecs = GLFW.glfwGetTime()
-                if (currentClickTimeSecs - lastClickTimeSecs <= DOUBLE_CLICK_TIME_SECS)
-                    setDoubleClick(true)
-                lastClickTimeSecs = currentClickTimeSecs
+                setLastClickTimeSecs(GLFW.glfwGetTime())
             }
             // According to docs, GLFW_REPEAT never occurs with mouse
             GLFW.GLFW_RELEASE -> setButtonDown(button, false)

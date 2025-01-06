@@ -120,6 +120,12 @@ object MouseInput {
 
     // Mouse Scroll Getters
 
+    /**
+     * Get the scroll displacement of the mouse.
+     *
+     * @return the scroll
+     */
+    @JvmStatic
     fun getScroll(): Vec2 = instance.scroll
 
     // Mouse State Getters
