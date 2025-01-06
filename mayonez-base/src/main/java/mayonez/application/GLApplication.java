@@ -12,7 +12,7 @@ import static org.lwjgl.glfw.GLFW.glfwGetTime;
 @UsesEngine(EngineType.GL)
 final class GLApplication extends Application {
 
-    public GLApplication(Window window) {
+    GLApplication(Window window) {
         super(window);
     }
 
