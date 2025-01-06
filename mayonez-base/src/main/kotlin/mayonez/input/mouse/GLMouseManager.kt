@@ -58,9 +58,7 @@ class GLMouseManager : MouseInputHandler {
 
     // Event Handler Overrides
 
-    override fun getEventSystem(): EventSystem<MouseInputEvent> {
-        return InputEvents.MOUSE_EVENTS
-    }
+    override fun getEventSystem(): EventSystem<MouseInputEvent> = InputEvents.MOUSE_EVENTS
 
     override fun getButtonCode(button: Button): Int = button.glCode
 

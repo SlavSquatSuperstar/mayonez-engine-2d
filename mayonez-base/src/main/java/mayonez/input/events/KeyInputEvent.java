@@ -13,7 +13,7 @@ public class KeyInputEvent extends Event {
     private final boolean keyDown;
 
     public KeyInputEvent(int keyCode, boolean keyDown) {
-        super("Key %d is down: %s".formatted(keyCode, keyDown));
+        super("Key %d down: %s".formatted(keyCode, keyDown));
         this.keyCode = keyCode;
         this.keyDown = keyDown;
     }

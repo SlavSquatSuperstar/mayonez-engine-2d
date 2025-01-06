@@ -1,5 +1,6 @@
 package mayonez.input
 
+import mayonez.input.events.*
 import mayonez.input.keyboard.*
 
 /**
@@ -14,16 +15,18 @@ import mayonez.input.keyboard.*
 object KeyInput {
 
     // Constants
-    // Around 80 keys on a US ANSI keyboard, round down to 2^6
-    private const val INITIAL_NUM_KEYS = 64
+    private const val INITIAL_NUM_KEYS = 64 // Around 80 keys on a US ANSI keyboard, round down to 2^6
 
     // Key Fields
     private val keys: MutableMap<Int, InputState> = HashMap(INITIAL_NUM_KEYS) // All key states
     private val keysDown: MutableSet<Int> = HashSet(INITIAL_NUM_KEYS) // Keys down this frame
-    private var anyKeyDown: Boolean = false
+    private val anyKeyDown: Boolean
+        get() = keysDown.isNotEmpty()
 
     // Event Fields
-    private var handler: KeyInputHandler? = null
+    private lateinit var handler: KeyInputHandler
+
+    // Event Methods
 
     /**
      * Set the key event generator instance for the application.
@@ -33,15 +36,14 @@ object KeyInput {
     @JvmStatic
     fun setHandler(handler: KeyInputHandler) {
         // Replace event generator
-        this.handler?.eventSystem?.unsubscribeAll()
+        if (this::handler.isInitialized) this.handler.eventSystem.unsubscribeAll()
         this.handler = handler
-        handler.eventSystem?.subscribe { event ->
-            onKeyInputEvent(event.keyCode, event.isKeyDown)
-        }
+        handler.eventSystem.subscribe { event -> onKeyInputEvent(event) }
     }
 
-    private fun onKeyInputEvent(keyCode: Int, keyDown: Boolean) {
-        if (keyDown) {
+    private fun onKeyInputEvent(event: KeyInputEvent) {
+        val keyCode = event.keyCode
+        if (event.isKeyDown) {
             keysDown.add(keyCode)
             // Track new key
             if (!keys.containsKey(keyCode)) keys[keyCode] = InputState.NONE
@@ -49,6 +51,8 @@ object KeyInput {
             keysDown.remove(keyCode)
         }
     }
+
+    // Update Methods
 
     /**
      * Update input states for all keys.
@@ -61,8 +65,9 @@ object KeyInput {
             val newState = value.getNextState(keyDown)
             keys[key] = newState
         }
-        anyKeyDown = keysDown.isNotEmpty()
     }
+
+    // Key Getters
 
     /**
      * Whether the user is continuously holding down the specified
@@ -74,8 +79,7 @@ object KeyInput {
     @JvmStatic
     fun keyDown(key: Key?): Boolean {
         return if (key == null) false
-        else if (handler == null) false
-        else keyDown(handler!!.getKeyCode(key))
+        else keyDown(handler.getKeyCode(key))
     }
 
     /**
@@ -88,8 +92,7 @@ object KeyInput {
     @JvmStatic
     fun keyPressed(key: Key?): Boolean {
         return if (key == null) false
-        else if (handler == null) false
-        else keyPressed(handler!!.getKeyCode(key))
+        else keyPressed(handler.getKeyCode(key))
     }
 
     /**
@@ -126,7 +129,7 @@ object KeyInput {
     @JvmStatic
     fun isAnyDown(): Boolean = anyKeyDown
 
-    // Key Axis Methods
+    // Key Axis Getters
 
     /**
      * Get the value of the specified [mayonez.input.InputAxis].

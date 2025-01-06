@@ -39,9 +39,7 @@ internal class GLKeyManager : KeyInputHandler {
 
     // Event Handler Overrides
 
-    override fun getEventSystem(): EventSystem<KeyInputEvent> {
-        return InputEvents.KEYBOARD_EVENTS
-    }
+    override fun getEventSystem(): EventSystem<KeyInputEvent> = InputEvents.KEYBOARD_EVENTS
 
     override fun getKeyCode(key: Key): Int = key.glCode
 

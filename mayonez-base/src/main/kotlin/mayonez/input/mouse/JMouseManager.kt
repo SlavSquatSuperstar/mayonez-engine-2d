@@ -19,6 +19,8 @@ class JMouseManager : MouseAdapter(), MouseInputHandler {
     override fun mousePressed(e: MouseEvent) {
         eventSystem.broadcast(MouseButtonEvent(e.button, true, System.nanoTime() * NANOS_TO_SECS))
         // Not relying on MouseEvent.clickCount since want to be similar to GL input
+        // Can query double click interval with AWT, but not with GLFW
+        // Toolkit.getDefaultToolkit().getDesktopProperty("awt.multiClickInterval")
     }
 
     override fun mouseReleased(e: MouseEvent) {
@@ -44,9 +46,7 @@ class JMouseManager : MouseAdapter(), MouseInputHandler {
 
     // Event Handler Overrides
 
-    override fun getEventSystem(): EventSystem<MouseInputEvent> {
-        return InputEvents.MOUSE_EVENTS
-    }
+    override fun getEventSystem(): EventSystem<MouseInputEvent> = InputEvents.MOUSE_EVENTS
 
     override fun getButtonCode(button: Button): Int = button.awtCode
 

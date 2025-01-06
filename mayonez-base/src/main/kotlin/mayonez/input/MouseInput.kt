@@ -5,7 +5,10 @@ import mayonez.input.mouse.*
 import mayonez.math.*
 
 /**
- * Receives mouse input events.
+ * Receives and stores mouse input events from the window.
+ *
+ * Usage: To query if a button is held, call [MouseInput.buttonDown]. To query if a
+ * button was just pressed this frame, call [MouseInput.buttonPressed].
  *
  * @author SlavSquatSuperstar
  */
@@ -18,8 +21,9 @@ object MouseInput {
     // Mouse Button Fields
     private val buttons: MutableMap<Int, InputState> = HashMap(NUM_BUTTONS) // All button states
     private val buttonsDown: MutableSet<Int> = HashSet(NUM_BUTTONS) // Buttons down this frame
-    private var anyButtonDown: Boolean = false
-    private var doubleClick: Boolean = false
+    private val anyButtonDown: Boolean
+        get() = buttonsDown.isNotEmpty()
+    private var doubleClick: Boolean = false // TODO double click with same button
     private var lastClickTimeSecs: Double = 0.0
 
     // Mouse Movement Fields
@@ -29,16 +33,16 @@ object MouseInput {
     // Mouse Scroll Fields
     private var scroll = Vec2()
 
-    // Scene Properties
+    // Event Fields
+    private lateinit var handler: MouseInputHandler
+
+    // Transform Properties
 
     private lateinit var pointXf: PointTransformer
 
     fun setPointTransformer(pointXf: PointTransformer) {
         this.pointXf = pointXf
     }
-
-    // Event Fields
-    private var handler: MouseInputHandler? = null
 
     // Event Methods
 
@@ -50,42 +54,16 @@ object MouseInput {
     @JvmStatic
     fun setHandler(handler: MouseInputHandler) {
         // Replace event generator
-        this.handler?.eventSystem?.unsubscribeAll()
+        if (this::handler.isInitialized) this.handler.eventSystem.unsubscribeAll()
         this.handler = handler
-        handler.eventSystem?.subscribe { event -> onMouseInputEvent(event) }
-    }
-
-    /**
-     * Poll mouse events from the window.
-     */
-    @JvmStatic
-    fun updateMouse() {
-        // Update mouse input
-        updateButtons()
-
-        // Reset double click
-        doubleClick = false
-
-        // Reset motion
-        setMouseDisp(0f, 0f)
-        setScrollPos(0f, 0f)
-    }
-
-    private fun updateButtons() {
-        for ((button, value) in buttons) {
-            // Update button state
-            val buttonDown = button in buttonsDown
-            val newState = value.getNextState(buttonDown)
-            buttons[button] = newState
-        }
-        anyButtonDown = buttonsDown.isNotEmpty()
+        handler.eventSystem.subscribe { event -> onMouseInputEvent(event) }
     }
 
     private fun onMouseInputEvent(event: MouseInputEvent) {
         when (event) {
             is MouseButtonEvent -> onMouseButtonEvent(event)
             is MouseMoveEvent -> onMouseMoveEvent(event)
-            is MouseScrollEvent -> setScrollPos(event.xOffset, event.yOffset)
+            is MouseScrollEvent -> scroll.set(event.xOffset, event.yOffset)
         }
     }
 
@@ -99,7 +77,6 @@ object MouseInput {
         } else {
             buttonsDown.remove(button)
         }
-        updateButtons()
 
         // Set click time
         if (event.isButtonDown) {
@@ -109,24 +86,37 @@ object MouseInput {
                 doubleClick = true
             lastClickTimeSecs = event.eventTime
         } else {
-            setMouseDisp(0f, 0f)
+            mouseDispPx.set(0f, 0f)
         }
     }
 
     private fun onMouseMoveEvent(event: MouseMoveEvent) {
         if (anyButtonDown) {
             // Set drag displacement
-            setMouseDisp(event.mouseX - mousePosPx.x, event.mouseY - mousePosPx.y)
+            mouseDispPx.set(event.mouseX - mousePosPx.x, event.mouseY - mousePosPx.y)
         }
         mousePosPx.set(event.mouseX, event.mouseY)
     }
 
-    private fun setMouseDisp(dx: Float, dy: Float) {
-        mouseDispPx.set(dx, dy)
-    }
+    // Update Methods
 
-    private fun setScrollPos(scrollX: Float, scrollY: Float) {
-        scroll.set(scrollX, scrollY)
+    /**
+     * Update input states for all buttons and reset click and motion states.
+     */
+    @JvmStatic
+    fun updateMouse() {
+        // Update mouse buttons
+        for ((button, value) in buttons) {
+            // Update button state
+            val buttonDown = button in buttonsDown
+            val newState = value.getNextState(buttonDown)
+            buttons[button] = newState
+        }
+
+        // Reset other states
+        doubleClick = false
+        mouseDispPx.set(0f, 0f)
+        scroll.set(0f, 0f)
     }
 
     // Mouse Button Getters
@@ -141,8 +131,7 @@ object MouseInput {
     @JvmStatic
     fun buttonDown(button: Button?): Boolean {
         return if (button == null) false
-        else if (handler == null) false
-        else buttonDown(handler!!.getButtonCode(button))
+        else buttonDown(handler.getButtonCode(button))
     }
 
     /**
@@ -155,8 +144,7 @@ object MouseInput {
     @JvmStatic
     fun buttonPressed(button: Button?): Boolean {
         return if (button == null) false
-        else if (handler == null) false
-        else buttonPressed(handler!!.getButtonCode(button))
+        else buttonPressed(handler.getButtonCode(button))
     }
 
     /**
