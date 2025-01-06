@@ -39,6 +39,7 @@ public final class ApplicationFactory {
         var window = createWindow(useGL, title, width, height);
 
         KeyInput.setHandler(window.getKeyInputHandler());
+        MouseInput.setHandler(window.getMouseInputHandler());
 
         return useGL
                 ? new GLApplication(window, mouseInput)

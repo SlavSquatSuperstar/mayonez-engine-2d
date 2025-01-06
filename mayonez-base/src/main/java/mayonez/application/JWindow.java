@@ -30,8 +30,8 @@ final class JWindow extends JFrame implements Window {
     private boolean closedByUser;
 
     // Input Fields
-    private JKeyManager keyboard;
-    private MouseManager mouse;
+    private final JKeyManager keyboard;
+    private final JMouseManager mouse;
 
     /**
      * Create the AWT window.
@@ -54,6 +54,11 @@ final class JWindow extends JFrame implements Window {
         // Add input listeners
         keyboard = new JKeyManager();
         addKeyListener(keyboard);
+
+        mouse = new JMouseManager();
+        addMouseListener(mouse);
+        addMouseMotionListener(mouse);
+        addMouseWheelListener(mouse);
     }
 
     // Engine Methods
@@ -86,7 +91,7 @@ final class JWindow extends JFrame implements Window {
     @Override
     public void endFrame() {
         KeyInput.updateKeys();
-        mouse.updateMouse();
+        MouseInput.updateMouse();
     }
 
     // Render Methods
@@ -145,11 +150,8 @@ final class JWindow extends JFrame implements Window {
     }
 
     @Override
-    public void setMouseInput(MouseManager mouse) {
-        this.mouse = mouse;
-        addMouseListener(mouse);
-        addMouseMotionListener(mouse);
-        addMouseWheelListener(mouse);
+    public MouseInputHandler getMouseInputHandler() {
+        return mouse;
     }
 
     // Getters

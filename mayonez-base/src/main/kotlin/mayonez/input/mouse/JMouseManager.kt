@@ -1,8 +1,8 @@
 package mayonez.input.mouse
 
-import mayonez.input.Button
+import mayonez.event.*
+import mayonez.input.*
 import mayonez.input.events.*
-import java.awt.*
 import java.awt.event.*
 
 private const val NANOS_TO_SECS = 1.0e-9
@@ -12,7 +12,7 @@ private const val NANOS_TO_SECS = 1.0e-9
  *
  * @author SlavSquatSuperstar
  */
-class JMouseManager : MouseManager() {
+class JMouseManager : MouseManager(), MouseInputHandler {
 
     // Mouse Button Callbacks
 
@@ -53,5 +53,13 @@ class JMouseManager : MouseManager() {
         return if (button == null) false
         else buttonPressed(button.awtCode)
     }
+
+    // Event Handler Overrides
+
+    override fun getEventSystem(): EventSystem<MouseInputEvent> {
+        return InputEvents.MOUSE_EVENTS
+    }
+
+    override fun getButtonCode(button: Button): Int = button.awtCode
 
 }

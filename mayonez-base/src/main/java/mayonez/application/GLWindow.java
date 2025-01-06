@@ -24,7 +24,7 @@ final class GLWindow implements Window {
 
     // Input Fields
     private final GLKeyManager keyboard;
-    private MouseManager mouse;
+    private final GLMouseManager mouse;
 
     /**
      * Initialize GLFW and create the GLFW window.
@@ -53,6 +53,11 @@ final class GLWindow implements Window {
         // Add input handlers
         keyboard = new GLKeyManager();
         glfwSetKeyCallback(windowID, keyboard::keyCallback);
+
+        mouse = new GLMouseManager();
+        glfwSetMouseButtonCallback(windowID, mouse::mouseButtonCallback);
+        glfwSetCursorPosCallback(windowID, mouse::mousePosCallback);
+        glfwSetScrollCallback(windowID, mouse::mouseScrollCallback);
     }
 
     // Engine methods
@@ -96,7 +101,7 @@ final class GLWindow implements Window {
     @Override
     public void endFrame() {
         KeyInput.updateKeys();
-        mouse.updateMouse();
+        MouseInput.updateMouse();
     }
 
     // Input Methods
@@ -107,11 +112,8 @@ final class GLWindow implements Window {
     }
 
     @Override
-    public void setMouseInput(MouseManager mouse) {
-        this.mouse = mouse;
-        glfwSetMouseButtonCallback(windowID, mouse::mouseButtonCallback);
-        glfwSetCursorPosCallback(windowID, mouse::mousePosCallback);
-        glfwSetScrollCallback(windowID, mouse::mouseScrollCallback);
+    public MouseInputHandler getMouseInputHandler() {
+        return mouse;
     }
 
     // Getters

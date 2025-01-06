@@ -2,7 +2,6 @@ package mayonez.input.mouse
 
 import mayonez.input.*
 import mayonez.input.events.*
-import mayonez.math.*
 import java.awt.event.*
 
 private const val NUM_BUTTONS: Int = 8 // GLFW supports eight mouse buttons
@@ -19,85 +18,10 @@ sealed class MouseManager : MouseAdapter() {
     private val buttons: MutableMap<Int, InputState> = HashMap(NUM_BUTTONS) // All button states
     private val buttonsDown: MutableSet<Int> = HashSet(NUM_BUTTONS) // Buttons down this frame
 
-    internal var anyButtonDown: Boolean = false
-        private set
-    internal var doubleClick: Boolean = false
-        private set
-    private var lastClickTimeSecs: Double = 0.0
-
-    // Mouse Movement Fields
-    internal var mousePosPx = Vec2()
-        private set
-    internal var mouseDispPx = Vec2() // drag displacement
-        private set
-
-    // Mouse Scroll Fields
-    internal var scroll = Vec2()
-        private set
-
     // Event Methods
 
-    /** Poll mouse events from the window. */
-    fun updateMouse() {
-        // Update mouse input
-        updateButtons()
-
-        // Reset double click
-        doubleClick = false
-
-        // Reset motion
-        setMouseDisp(0f, 0f)
-        setScrollPos(0f, 0f)
-    }
-
-    protected fun updateButtons() {
-        for ((button, value) in buttons) {
-            // Update button state
-            val buttonDown = button in buttonsDown
-            val newState = value.getNextState(buttonDown)
-            buttons[button] = newState
-        }
-        anyButtonDown = buttonsDown.isNotEmpty()
-    }
-
     protected fun onMouseInputEvent(event: MouseInputEvent) {
-        when (event) {
-            is MouseButtonEvent -> onMouseButtonEvent(event)
-            is MouseMoveEvent -> onMouseMoveEvent(event)
-            is MouseScrollEvent -> setScrollPos(event.xOffset, event.yOffset)
-        }
-    }
-
-    private fun onMouseButtonEvent(event: MouseButtonEvent) {
-        // Set button down
-        val button = event.button
-        if (event.isButtonDown) {
-            buttonsDown.add(button)
-            // Track new button
-            if (!buttons.containsKey(button)) buttons[button] = InputState.NONE
-        } else {
-            buttonsDown.remove(button)
-        }
-        updateButtons()
-
-        // Set click time
-        if (event.isButtonDown) {
-            // Detect double click
-            // Source: https://www.youtube.com/watch?v=k3rVEIr0Z7w
-            if (event.eventTime - lastClickTimeSecs <= DOUBLE_CLICK_TIME_SECS)
-                doubleClick = true
-            lastClickTimeSecs = event.eventTime
-        } else {
-            setMouseDisp(0f, 0f)
-        }
-    }
-
-    private fun onMouseMoveEvent(event: MouseMoveEvent) {
-        if (anyButtonDown) {
-            // Set drag displacement
-            setMouseDisp(event.mouseX - mousePosPx.x, event.mouseY - mousePosPx.y)
-        }
-        mousePosPx.set(event.mouseX, event.mouseY)
+        InputEvents.MOUSE_EVENTS.broadcast(event)
     }
 
     // Mouse Button Callbacks
@@ -165,14 +89,6 @@ sealed class MouseManager : MouseAdapter() {
 
     protected fun buttonPressed(button: Int): Boolean {
         return buttons[button] == InputState.PRESSED
-    }
-
-    private fun setMouseDisp(dx: Float, dy: Float) {
-        mouseDispPx.set(dx, dy)
-    }
-
-    private fun setScrollPos(scrollX: Float, scrollY: Float) {
-        scroll.set(scrollX, scrollY)
     }
 
 }

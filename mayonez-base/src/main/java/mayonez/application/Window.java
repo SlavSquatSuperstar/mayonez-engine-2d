@@ -65,11 +65,18 @@ public sealed interface Window permits JWindow, GLWindow {
     KeyInputHandler getKeyInputHandler();
 
     /**
+     * The mouse listener for this window, used to pass events to the application.
+     *
+     * @return the mouse input handler
+     */
+    MouseInputHandler getMouseInputHandler();
+
+    /**
      * Set the mouse listener for this window and mark it as the active
      * instance for the input manager.
      *
      * @param mouse a {@link mayonez.input.mouse.MouseManager} instance
      */
-    void setMouseInput(MouseManager mouse);
+    default void setMouseInput(MouseManager mouse) {}
 
 }

@@ -1,5 +1,6 @@
 package mayonez.input.mouse
 
+import mayonez.event.*
 import mayonez.input.*
 import mayonez.input.events.*
 import org.lwjgl.glfw.GLFW
@@ -11,7 +12,7 @@ import org.lwjgl.glfw.GLFW
  *
  * @author SlavSquatSuperstar
  */
-class GLMouseManager : MouseManager() {
+class GLMouseManager : MouseManager(), MouseInputHandler {
 
     // Mouse Callbacks
 
@@ -69,5 +70,13 @@ class GLMouseManager : MouseManager() {
         return if (button == null) false
         else buttonPressed(button.glCode)
     }
+
+    // Event Handler Overrides
+
+    override fun getEventSystem(): EventSystem<MouseInputEvent> {
+        return InputEvents.MOUSE_EVENTS
+    }
+
+    override fun getButtonCode(button: Button): Int = button.glCode
 
 }
