@@ -92,9 +92,6 @@ public class DemosLauncher {
                 }
             }
         }
-
-        if (MouseInput.isAnyDown() && MouseInput.isDoubleClick())
-            System.out.println("double click");
     }
 
 }

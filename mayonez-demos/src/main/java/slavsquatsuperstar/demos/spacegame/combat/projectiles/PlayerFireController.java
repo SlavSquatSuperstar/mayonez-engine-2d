@@ -13,8 +13,9 @@ import slavsquatsuperstar.demos.spacegame.events.WeaponSelectedEvent;
  * @author SlavSquatSuperstar
  */
 // TODO click to target
-// TODO save choice between deaths
 public class PlayerFireController extends FireProjectile {
+
+    private static int savedChoice = 0; // Keep choice between deaths
 
     private final int numWeapons;
     private final Timer[] fireTimers;
@@ -28,8 +29,8 @@ public class PlayerFireController extends FireProjectile {
 
     @Override
     protected void start() {
-        for (int i = 0; i < numWeapons; i++) fireTimers[i].reset();
-        setSelectedWeapon(0);
+        for (int i = 0; i < numWeapons; i++) fireTimers[i].setValue(0f); // Start off cooldown
+        setSelectedWeapon(savedChoice);
     }
 
     @Override
@@ -42,6 +43,11 @@ public class PlayerFireController extends FireProjectile {
         }
         updateCooldowns(dt);
         super.update(dt);
+    }
+
+    @Override
+    protected void onDestroy() {
+        savedChoice = selectedWeapon;
     }
 
     @Override
