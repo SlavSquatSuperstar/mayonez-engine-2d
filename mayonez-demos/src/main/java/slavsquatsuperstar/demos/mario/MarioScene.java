@@ -1,7 +1,6 @@
 package slavsquatsuperstar.demos.mario;
 
 import mayonez.*;
-import mayonez.graphics.*;
 import mayonez.graphics.sprites.*;
 import mayonez.graphics.textures.*;
 import mayonez.math.*;
@@ -27,6 +26,7 @@ public class MarioScene extends Scene {
     private static final Texture BACKGROUND_TEXTURE =
             Textures.getTexture("assets/mario/textures/background.png");
 
+    // Constants
     // Size = 1920 x 1024 px = 60 x 32 units
     private static final int BACKGROUND_WIDTH = 1920;
     private static final int BACKGROUND_HEIGHT = 1024;
@@ -41,19 +41,25 @@ public class MarioScene extends Scene {
 
     @Override
     protected void init() {
-        setBackground(Colors.LIGHT_GRAY);
-        setBackground(BACKGROUND_TEXTURE);
-
-        setGravity(new Vec2(0, -SCENE_GRAVITY));
-
         getCamera().setCameraScale(SCENE_SCALE);
-        getCamera().zoom(0.8f);
+        setGravity(new Vec2(0, -SCENE_GRAVITY));
 
         var charLayer = getLayer(CHARACTER_LAYER);
         charLayer.setName("Characters");
 
         var groundLayer = getLayer(GROUND_LAYER);
         groundLayer.setName("Ground");
+
+        // Background
+        addObject(new GameObject("Background",
+                Transform.scaleInstance(new Vec2(BACKGROUND_WIDTH, BACKGROUND_HEIGHT).div(SCENE_SCALE))) {
+            @Override
+            protected void init() {
+                setZIndex(-10);
+                var sprite = Sprites.createSprite(BACKGROUND_TEXTURE);
+                addComponent(sprite);
+            }
+        });
 
         getCamera().addCameraScript(new CameraKeepInScene(SCENE_HALF_SIZE.mul(-1f), SCENE_HALF_SIZE));
         addObject(new Mario(new Vec2(-23f, -11f)));

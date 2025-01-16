@@ -20,6 +20,7 @@ import slavsquatsuperstar.demos.DemosAssets;
 public class RendererTestScene extends Scene {
 
     private static final boolean CAMERA_DEBUG_MODE = true;
+    private static final int SCENE_SCALE = 10;
 
     public RendererTestScene(String name) {
         super(name);
@@ -27,8 +28,10 @@ public class RendererTestScene extends Scene {
 
     @Override
     protected void init() {
-        getCamera().setCameraScale(10);
+        getCamera().setCameraScale(SCENE_SCALE);
         setBackground(Color.grayscale(96));
+
+        var bgTex = Textures.getTexture("assets/mario/textures/background.png");
 
         var tex1 = Textures.getTexture("assets/spacegame/textures/ships/spaceship1.png");
         var tex2 = Textures.getTexture("assets/spacegame/textures/ships/spaceship2.png");
@@ -44,6 +47,16 @@ public class RendererTestScene extends Scene {
         var font = DemosAssets.getFont();
 
         // Sprites
+
+        addObject(new GameObject("background-1",
+                Transform.scaleInstance(new Vec2(1920, 1024).div(SCENE_SCALE))) {
+            @Override
+            protected void init() {
+                setZIndex(-10);
+                var sprite = Sprites.createSprite(bgTex);
+                addComponent(sprite);
+            }
+        });
 
         addTextureObject("ship1-1", new Vec2(-10, 10), 0, tex1, Colors.YELLOW);
         addTextureObject("ship1-2", new Vec2(0, 10), 2, tex1, Colors.WHITE);
