@@ -3,9 +3,6 @@ package mayonez.renderer.awt
 import mayonez.*
 import mayonez.graphics.*
 import mayonez.graphics.debug.*
-import mayonez.graphics.sprites.*
-import mayonez.graphics.textures.*
-import mayonez.math.*
 import mayonez.renderer.*
 import java.awt.*
 
@@ -24,15 +21,14 @@ internal class JDefaultRenderer : SceneRenderer,
     private val drawObjects: MutableList<JRenderable> = ArrayList() // Enabled objects
 
     // Scene Information
-    private lateinit var background: Sprite
+    private lateinit var backgroundColor: MColor
     private val windowWidth: Int = Preferences.screenWidth
     private val windowHeight: Int = Preferences.screenHeight
 
     // Scene Renderer Methods
 
-    override fun setBackground(background: Sprite, sceneSize: Vec2) {
-        this.background = background
-            .setSpriteTransform(Transform.scaleInstance(sceneSize))
+    override fun setBackgroundColor(backgroundColor: MColor) {
+        this.backgroundColor = backgroundColor
     }
 
     override fun addRenderable(r: Renderable?) {
@@ -59,9 +55,10 @@ internal class JDefaultRenderer : SceneRenderer,
     override fun render(g2: Graphics2D?) {
         val oldXf = g2?.transform ?: return // Save a copy of the unmodified transform
 
-        drawBackgroundColor(g2)
+        // Draw background
+        g2.color = backgroundColor.toAWT()
+        g2.fillRect(0, 0, windowWidth, windowHeight)
         transformScreen(g2)
-        drawBackgroundImage(g2)
 
         // Crate "batches" from objects and shapes
         val scale = viewport.cameraScale * viewport.zoom
@@ -81,20 +78,6 @@ internal class JDefaultRenderer : SceneRenderer,
     }
 
     // Pre-Render Methods
-
-    /** Clear the screen and fill it with a background color. */
-    private fun drawBackgroundColor(g2: Graphics2D) {
-        if (background.getTexture() == null) { // Only if no image set
-            g2.color = background.getColor().toAWT()
-            g2.fillRect(0, 0, windowWidth, windowHeight)
-        }
-    }
-
-    /** Render the background image, if the scene has one. */
-    private fun drawBackgroundImage(g2: Graphics2D) {
-        val tex = background.getTexture() as? JTexture ?: return // Only if image is set
-        tex.draw(g2, background.getSpriteTransform(), null, background.getColor())
-    }
 
     /** Transform the screen and render everything at the new position. */
     private fun transformScreen(g2: Graphics2D) {

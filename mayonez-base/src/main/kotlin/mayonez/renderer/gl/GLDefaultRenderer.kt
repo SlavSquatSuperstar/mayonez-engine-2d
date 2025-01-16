@@ -1,11 +1,8 @@
 package mayonez.renderer.gl
 
-import mayonez.*
 import mayonez.graphics.*
 import mayonez.graphics.debug.*
 import mayonez.graphics.font.*
-import mayonez.graphics.sprites.*
-import mayonez.math.*
 import mayonez.math.shapes.*
 import mayonez.renderer.*
 import mayonez.renderer.batch.*
@@ -27,14 +24,13 @@ internal class GLDefaultRenderer(shader: Shader) : GLRenderer(shader),
     private val drawObjects: MutableList<GLRenderable> = ArrayList() // Objects to batch
 
     // Scene Background
-    private lateinit var background: Sprite
+    private lateinit var backgroundColor: MColor
     private val bgBatch: RenderBatch = RenderBatch(DrawPrimitive.SPRITE, 1, 1)
 
     // Scene Renderer Methods
 
-    override fun setBackground(background: Sprite, sceneSize: Vec2) {
-        this.background = background
-            .setSpriteTransform(Transform.scaleInstance(sceneSize))
+    override fun setBackgroundColor(backgroundColor: MColor) {
+        this.backgroundColor = backgroundColor
     }
 
     override fun addRenderable(r: Renderable?) {
@@ -70,17 +66,9 @@ internal class GLDefaultRenderer(shader: Shader) : GLRenderer(shader),
         shader.uploadMat4("uProjection", cam.projectionMatrix)
         shader.uploadIntArray("uTextures", textureSlots)
 
-        // Draw background
-        if (background.getTexture() == null) {
-            // Draw background color
-            val bgColor = background.getColor().toGL()
-            GLHelper.clearScreen(bgColor.x, bgColor.y, bgColor.z, 1f)
-        } else {
-            // Draw background sprite
-            bgBatch.clearVertices()
-            (background as GLSprite).pushToBatch(bgBatch)
-            bgBatch.drawBatch()
-        }
+        // Draw background color
+        val bgColor = backgroundColor.toGL()
+        GLHelper.clearScreen(bgColor.x, bgColor.y, bgColor.z, 1f)
     }
 
     override fun createBatches() {

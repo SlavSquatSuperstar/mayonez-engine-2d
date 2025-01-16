@@ -1,9 +1,8 @@
 package mayonez.renderer;
 
 import mayonez.assets.*;
+import mayonez.graphics.*;
 import mayonez.graphics.debug.*;
-import mayonez.graphics.sprites.*;
-import mayonez.math.*;
 import mayonez.renderer.awt.*;
 import mayonez.renderer.gl.*;
 import mayonez.renderer.shader.*;
@@ -28,10 +27,10 @@ public final class RendererFactory {
 
     // Render Layer Methods
 
-    public static RenderLayer createRenderLayer(boolean useGL, Sprite background, Vec2 sceneSize) {
+    public static RenderLayer createRenderLayer(boolean useGL, Color backgroundColor) {
         // Scene
         var sceneRenderer = useGL ? new GLDefaultRenderer(defaultShader) : new JDefaultRenderer();
-        sceneRenderer.setBackground(background, sceneSize);
+        sceneRenderer.setBackgroundColor(backgroundColor);
 
         // Debug
         var debugRenderer = (DebugRenderer) sceneRenderer;

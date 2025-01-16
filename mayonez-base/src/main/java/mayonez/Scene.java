@@ -1,10 +1,9 @@
 package mayonez;
 
+import mayonez.graphics.Color;
 import mayonez.graphics.*;
 import mayonez.graphics.camera.*;
 import mayonez.graphics.debug.*;
-import mayonez.graphics.sprites.*;
-import mayonez.graphics.textures.*;
 import mayonez.math.*;
 import mayonez.physics.*;
 import mayonez.physics.colliders.*;
@@ -12,7 +11,8 @@ import mayonez.physics.dynamics.*;
 import mayonez.renderer.*;
 import mayonez.util.*;
 
-import java.awt.Graphics2D;
+import java.awt.*;
+import java.util.List;
 import java.util.*;
 
 /**
@@ -46,7 +46,7 @@ public abstract class Scene {
 
     // Renderers
     private Camera camera;
-    protected final Sprite background;
+    protected Color backgroundColor;
     private final RenderLayer renderLayer;
 
     // Physics
@@ -72,16 +72,13 @@ public abstract class Scene {
     public Scene(String name, int width, int height, float scale) {
         sceneID = sceneCounter++;
         this.name = name;
-        // scene size, or zero if unbounded
-        var size = new Vec2(width, height).div(scale);
-        // scene scale, or how many pixels correspond to a world unit
         state = SceneState.STOPPED;
-        background = Sprites.createSprite(Colors.WHITE);
+        backgroundColor = Colors.WHITE;
 
         // Initialize layers
         objects = new BufferedList<>();
         layers = new SceneLayer[SceneLayer.NUM_LAYERS];
-        renderLayer = RendererFactory.createRenderLayer(Mayonez.getUseGL(), background, size);
+        renderLayer = RendererFactory.createRenderLayer(Mayonez.getUseGL(), backgroundColor);
         physics = new DefaultPhysicsWorld();
     }
 
@@ -318,21 +315,10 @@ public abstract class Scene {
     /**
      * Sets the background color of this scene, white by default.
      *
-     * @param background a color
+     * @param backgroundColor the background color
      */
-    public void setBackground(Color background) {
-        this.background.setColor(background);
-        this.background.setTexture(null);
-    }
-
-    /**
-     * Sets the background image of this scene, none by default.
-     *
-     * @param background a texture
-     */
-    public void setBackground(Texture background) {
-        this.background.setColor(null);
-        this.background.setTexture(background);
+    public void setBackground(Color backgroundColor) {
+        this.backgroundColor = Objects.requireNonNullElse(backgroundColor, Colors.WHITE);
     }
 
     /**
