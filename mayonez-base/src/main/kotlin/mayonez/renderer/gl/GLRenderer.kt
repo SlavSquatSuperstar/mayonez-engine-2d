@@ -59,6 +59,7 @@ abstract class GLRenderer(protected val shader: Shader) : Renderer {
 
     // Camera Methods
 
+    // TODO maybe make field
     override fun getViewport(): Viewport = SceneManager.currentScene.camera
 
     // Batch Helper Methods

@@ -53,23 +53,11 @@ public abstract class Scene {
     private final PhysicsWorld physics;
 
     /**
-     * Creates an empty scene with size of (0, 0) and a scale of 1.
+     * Creates an empty scene with a name.
      *
      * @param name the name of the scene
      */
     public Scene(String name) {
-        this(name, 0, 0, 1);
-    }
-
-    /**
-     * Creates an empty scene and sets the bounds and scale.
-     *
-     * @param name   the name of the scene
-     * @param width  the width of the scene, in pixels
-     * @param height the height of the scene, in pixels
-     * @param scale  the scale of the scene
-     */
-    public Scene(String name, int width, int height, float scale) {
         sceneID = sceneCounter++;
         this.name = name;
         state = SceneState.STOPPED;

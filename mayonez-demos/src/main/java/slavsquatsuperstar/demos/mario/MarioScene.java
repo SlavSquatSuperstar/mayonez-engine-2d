@@ -36,7 +36,7 @@ public class MarioScene extends Scene {
             .div(SCENE_SCALE * 2f);
 
     public MarioScene(String name) {
-        super(name, BACKGROUND_WIDTH, BACKGROUND_HEIGHT, SCENE_SCALE);
+        super(name);
     }
 
     @Override
