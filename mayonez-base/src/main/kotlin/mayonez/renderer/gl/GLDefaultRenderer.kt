@@ -23,15 +23,7 @@ internal class GLDefaultRenderer(shader: Shader) : GLRenderer(shader),
     private val tempObjects: MutableList<Renderable> = ArrayList() // Debug shapes
     private val drawObjects: MutableList<GLRenderable> = ArrayList() // Objects to batch
 
-    // Scene Background
-    private lateinit var backgroundColor: MColor
-    private val bgBatch: RenderBatch = RenderBatch(DrawPrimitive.SPRITE, 1, 1)
-
     // Scene Renderer Methods
-
-    override fun setBackgroundColor(backgroundColor: MColor) {
-        this.backgroundColor = backgroundColor
-    }
 
     override fun addRenderable(r: Renderable?) {
         if (r.isAccepted()) objects.add(r!!)
@@ -51,7 +43,6 @@ internal class GLDefaultRenderer(shader: Shader) : GLRenderer(shader),
 
     override fun clear() {
         super.clear()
-        bgBatch.clearVertices()
         objects.clear()
         tempObjects.clear()
         drawObjects.clear()
@@ -67,7 +58,7 @@ internal class GLDefaultRenderer(shader: Shader) : GLRenderer(shader),
         shader.uploadIntArray("uTextures", textureSlots)
 
         // Draw background color
-        val bgColor = backgroundColor.toGL()
+        val bgColor = cam.backgroundColor.toGL()
         GLHelper.clearScreen(bgColor.x, bgColor.y, bgColor.z, 1f)
     }
 

@@ -21,15 +21,10 @@ internal class JDefaultRenderer : SceneRenderer,
     private val drawObjects: MutableList<JRenderable> = ArrayList() // Enabled objects
 
     // Scene Information
-    private lateinit var backgroundColor: MColor
     private val windowWidth: Int = Preferences.screenWidth
     private val windowHeight: Int = Preferences.screenHeight
 
     // Scene Renderer Methods
-
-    override fun setBackgroundColor(backgroundColor: MColor) {
-        this.backgroundColor = backgroundColor
-    }
 
     override fun addRenderable(r: Renderable?) {
         if (r is JRenderable) objects.add(r)
@@ -56,7 +51,7 @@ internal class JDefaultRenderer : SceneRenderer,
         val oldXf = g2?.transform ?: return // Save a copy of the unmodified transform
 
         // Draw background
-        g2.color = backgroundColor.toAWT()
+        g2.color = viewport.backgroundColor.toAWT()
         g2.fillRect(0, 0, windowWidth, windowHeight)
         transformScreen(g2)
 

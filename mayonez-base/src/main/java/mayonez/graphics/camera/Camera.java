@@ -1,9 +1,12 @@
 package mayonez.graphics.camera;
 
 import mayonez.*;
+import mayonez.graphics.*;
 import mayonez.math.*;
 import mayonez.renderer.*;
 import mayonez.util.*;
+
+import java.util.*;
 
 /**
  * The main viewport into the scene. The camera may be adjusted through scripts
@@ -20,12 +23,13 @@ public abstract class Camera extends Component implements Viewport {
     protected final Vec2 screenSize;
     private float cameraScale, invCameraScale; // Pixels per unit
 
-    // Camera Movement
+    // Camera Fields
+    private Color backgroundColor;
+    private float zoom, rotation;
+
+    // GameObject Fields
     private GameObject subject;
     private final BufferedList<Component> cameraScripts;
-
-    // Camera Effects
-    private float zoom, rotation;
 
     protected Camera(Vec2 screenSize) {
         super(UpdateOrder.PRE_RENDER);
@@ -34,11 +38,12 @@ public abstract class Camera extends Component implements Viewport {
         cameraScale = 1f;
         invCameraScale = 1f;
 
-        subject = null;
-        cameraScripts = new BufferedList<>();
-
+        backgroundColor = Colors.WHITE;
         zoom = 1f;
         rotation = 0f;
+
+        subject = null;
+        cameraScripts = new BufferedList<>();
     }
 
     @Override
@@ -59,6 +64,27 @@ public abstract class Camera extends Component implements Viewport {
         if (getSubject() != null) {
             transform.setPosition(getSubject().transform.getPosition());
         }
+    }
+
+    // Camera Color Methods
+
+    /**
+     * The background color of the camera, white by default
+     *
+     * @return the background color
+     */
+    @Override
+    public Color getBackgroundColor() {
+        return backgroundColor;
+    }
+
+    /**
+     * Sets the background color of the camera.
+     *
+     * @param backgroundColor the background color
+     */
+    public void setBackgroundColor(Color backgroundColor) {
+        this.backgroundColor = Objects.requireNonNullElse(backgroundColor, Colors.WHITE);
     }
 
     // Camera Position Methods

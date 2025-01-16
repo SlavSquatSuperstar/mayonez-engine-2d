@@ -1,7 +1,6 @@
 package mayonez;
 
 import mayonez.graphics.Color;
-import mayonez.graphics.*;
 import mayonez.graphics.camera.*;
 import mayonez.graphics.debug.*;
 import mayonez.math.*;
@@ -46,7 +45,6 @@ public abstract class Scene {
 
     // Renderers
     private Camera camera;
-    protected Color backgroundColor;
     private final RenderLayer renderLayer;
 
     // Physics
@@ -61,12 +59,11 @@ public abstract class Scene {
         sceneID = sceneCounter++;
         this.name = name;
         state = SceneState.STOPPED;
-        backgroundColor = Colors.WHITE;
 
         // Initialize layers
         objects = new BufferedList<>();
         layers = new SceneLayer[SceneLayer.NUM_LAYERS];
-        renderLayer = RendererFactory.createRenderLayer(Mayonez.getUseGL(), backgroundColor);
+        renderLayer = RendererFactory.createRenderLayer(Mayonez.getUseGL());
         physics = new DefaultPhysicsWorld();
     }
 
@@ -306,7 +303,7 @@ public abstract class Scene {
      * @param backgroundColor the background color
      */
     public void setBackground(Color backgroundColor) {
-        this.backgroundColor = Objects.requireNonNullElse(backgroundColor, Colors.WHITE);
+        camera.setBackgroundColor(backgroundColor);
     }
 
     /**

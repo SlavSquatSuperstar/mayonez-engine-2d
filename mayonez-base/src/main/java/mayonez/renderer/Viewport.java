@@ -1,5 +1,6 @@
 package mayonez.renderer;
 
+import mayonez.graphics.*;
 import mayonez.input.*;
 import mayonez.math.*;
 import org.joml.*;
@@ -16,6 +17,15 @@ import org.joml.*;
 public interface Viewport extends PointTransformer {
 
     // TODO more transform methods
+
+    // Color Methods
+
+    /**
+     * The background color of this viewport's screen.
+     *
+     * @return the color
+     */
+    Color getBackgroundColor();
 
     // Position Methods
 
