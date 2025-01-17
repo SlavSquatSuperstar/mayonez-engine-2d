@@ -19,15 +19,10 @@ public class PlayerKeyMovement extends SpaceshipMovement {
 
     // Movement Fields
     private final float moveSpeed, turnSpeed;
-    private final InputAxis xAxis, yAxis, turnAxis;
 
     public PlayerKeyMovement(float moveSpeed, float turnSpeed) {
         this.moveSpeed = moveSpeed;
-        xAxis = HORIZONTAL_MOVE_AXIS;
-        yAxis = VERTICAL_MOVE_AXIS;
-
         this.turnSpeed = turnSpeed;
-        turnAxis = TURN_AXIS;
     }
 
     @Override
@@ -79,12 +74,12 @@ public class PlayerKeyMovement extends SpaceshipMovement {
 
     @Override
     public Vec2 getUserInput() {
-        return new Vec2(KeyInput.getAxis(xAxis), KeyInput.getAxis(yAxis));
+        return new Vec2(KeyInput.getAxis(HORIZONTAL_MOVE_AXIS), KeyInput.getAxis(VERTICAL_MOVE_AXIS));
     }
 
     @Override
     public float getUserInputValue() {
-        return -KeyInput.getAxis(turnAxis);
+        return -KeyInput.getAxis(TURN_AXIS);
     }
 
 }

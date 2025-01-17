@@ -30,15 +30,18 @@ public abstract class SpaceshipMovement extends MovementScript {
         var moveInput = getUserInput();
         var turnInput = getUserInputValue();
 
-        // Slow spaceship motion
-        var braking = isBraking();
+        // Determine brake amount
         Vec2 brakeDir;
         float angBrakeDir;
-
-        if (braking) {
+        if (isBraking()) {
             brakeDir = getBrakeDir();
             angBrakeDir = getAngBrakeDir();
-            brake(brakeDir, angBrakeDir); // TODO lower brake when moving
+
+            // Lower brake amount when moving
+            if (!MathUtils.equals(moveInput.x, 0f)) brakeDir.x *= 0.5f;
+            if (!MathUtils.equals(moveInput.y, 0f)) brakeDir.y *= 0.5f;
+            if (!MathUtils.equals(turnInput, 0f)) angBrakeDir *= 0.5f;
+            brake(brakeDir, angBrakeDir);
         } else {
             brakeDir = new Vec2();
             angBrakeDir = 0f;
@@ -56,7 +59,7 @@ public abstract class SpaceshipMovement extends MovementScript {
 
     protected abstract void brake(Vec2 brakeDir, float angBrakeDir);
 
-    protected Vec2 getBrakeDir() {
+    private Vec2 getBrakeDir() {
         // Don't burn when moving very slow
         if (rb.getSpeed() > BRAKE_THRESHOLD_SPEED) {
             return rb.getVelocity().mul(-1f).unit();
@@ -64,7 +67,7 @@ public abstract class SpaceshipMovement extends MovementScript {
         return new Vec2();
     }
 
-    protected float getAngBrakeDir() {
+    private float getAngBrakeDir() {
         // Don't burn when turning very slow
         if (rb.getAngSpeed() > TURN_BRAKE_THRESHOLD_SPEED) {
             return -Math.signum(rb.getAngVelocity());
