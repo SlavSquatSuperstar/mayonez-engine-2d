@@ -7,7 +7,6 @@ import mayonez.math.*;
 import mayonez.physics.colliders.*;
 import mayonez.physics.dynamics.*;
 import mayonez.scripts.mouse.*;
-import mayonez.scripts.movement.*;
 
 /**
  * A simulated  billiard (pool) ball.
@@ -67,7 +66,12 @@ class PoolBall extends GameObject {
         addComponent(new Rigidbody(BALL_MASS).setMaterial(POOL_BALL_MAT).setDrag(0.1f));
         addComponent(new DragAndDrop("left mouse"));
         if (isCue) {
-            addComponent(new MouseFlick("right mouse", 20, MoveMode.IMPULSE, false));
+            addComponent(new MouseFlick("right mouse", 20f) {
+                @Override
+                protected void flickGameObject(Vec2 input, Rigidbody rb) {
+                    rb.applyImpulse(input);
+                }
+            });
         }
     }
 

@@ -8,7 +8,6 @@ import mayonez.physics.colliders.*;
 import mayonez.physics.dynamics.*;
 import mayonez.scripts.*;
 import mayonez.scripts.mouse.*;
-import mayonez.scripts.movement.*;
 
 /**
  * A prefab shape with a collider and rigid body that can be moved with the mouse.
@@ -44,8 +43,12 @@ class SandboxObject extends GameObject {
 
     SandboxObject addMouseMovement() {
         addComponent(new DragAndDrop("left mouse"));
-        addComponent(new MouseFlick("right mouse", 25f,
-                MoveMode.VELOCITY, false));
+        addComponent(new MouseFlick("right mouse", 25f) {
+            @Override
+            protected void flickGameObject(Vec2 input, Rigidbody rb) {
+                rb.addVelocity(input);
+            }
+        });
         return this;
     }
 
