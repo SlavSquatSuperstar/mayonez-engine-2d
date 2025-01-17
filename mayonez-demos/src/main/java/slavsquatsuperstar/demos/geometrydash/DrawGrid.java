@@ -10,7 +10,7 @@ import mayonez.math.*;
  *
  * @author SlavSquatSuperstar
  */
-public class DrawGrid extends Component {
+class DrawGrid extends Component {
 
     private static final float GRID_LINE_WIDTH = 1f;
     private static final Color GRID_COLOR = Color.grayscale(77, 127);
@@ -19,7 +19,7 @@ public class DrawGrid extends Component {
 
     private final Vec2 sceneHalfSize;
 
-    public DrawGrid() {
+    DrawGrid() {
         this.sceneHalfSize = GDEditorScene.SCENE_SIZE.mul(0.5f);
     }
 

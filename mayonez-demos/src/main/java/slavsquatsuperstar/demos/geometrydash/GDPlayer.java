@@ -3,47 +3,45 @@ package slavsquatsuperstar.demos.geometrydash;
 import mayonez.*;
 import mayonez.graphics.*;
 import mayonez.graphics.sprites.*;
+import mayonez.input.*;
 import mayonez.math.*;
 import mayonez.physics.colliders.*;
 import mayonez.physics.dynamics.*;
 import mayonez.scripts.*;
-import mayonez.scripts.movement.*;
 
 /**
  * The Geometry Dash player character.
  *
  * @author SlavSquatSuperstar
  */
-public class GDPlayer extends GameObject {
+class GDPlayer extends GameObject {
 
+    // Constants
     private static final int NUM_SPRITES = 12 * 4;
+    private static final float PLAYER_SPEED = 12f;
+    private static final InputAxis HORIZ_AXIS
+            = DefaultKeyAxis.findWithName("horizontal");
+    private static final InputAxis VERT_AXIS
+            = DefaultKeyAxis.findWithName("vertical");
 
-    public GDPlayer(String name, Vec2 position) {
+    GDPlayer(String name, Vec2 position) {
         super(name, position);
     }
 
     @Override
     protected void init() {
         setZIndex(ZIndex.PLAYER);
-        createPlayerAvatar();
 
-        var speed = 10f;
+        // Player Avatar
+        var spriteSheets = createSpriteSheets();
+        addSpriteLayers(spriteSheets);
+
         addComponent(new BoxCollider(new Vec2(1, 1)));
         addComponent(new Rigidbody(1f).setDrag(0.2f).setFixedRotation(true));
-        addComponent(new KeyMovement(speed, MoveMode.POSITION) {
-            @Override
-            public Vec2 getUserInput() {
-                return super.getUserInput().unit(); // Normalize so don't move faster diagonally
-            }
-        });
+        addComponent(new GDPlayerMovement(PLAYER_SPEED, HORIZ_AXIS, VERT_AXIS));
 
         var halfSize = GDEditorScene.SCENE_SIZE.mul(0.5f);
         addComponent(new KeepInScene(halfSize.mul(-1f), halfSize, KeepInScene.Mode.STOP));
-    }
-
-    private void createPlayerAvatar() {
-        var spriteSheets = createSpriteSheets();
-        addSpriteLayers(spriteSheets);
     }
 
     private SpriteSheet[] createSpriteSheets() {
