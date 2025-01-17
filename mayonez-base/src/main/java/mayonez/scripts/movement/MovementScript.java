@@ -5,7 +5,9 @@ import mayonez.math.*;
 import mayonez.physics.dynamics.*;
 
 /**
- * Provides basic methods for moving game objects using input devices.
+ * Provides basic methods for moving and rotating game objects using input devices.
+ * This class does not move the object by itself, so subclasses should override and
+ * call the {@link #moveObject} or {@link #rotateObject} methods.
  *
  * @author SlavSquatSuperstar
  */
@@ -15,10 +17,6 @@ public abstract class MovementScript extends Script {
 
     public MovementScript() {
         super(UpdateOrder.INPUT);
-    }
-
-    public MovementScript(UpdateOrder updateOrder) {
-        super(updateOrder);
     }
 
     @Override
@@ -32,37 +30,21 @@ public abstract class MovementScript extends Script {
     // Move Methods
 
     /**
-     * Move the game object by the specified amount following the specified
-     * {@link mayonez.scripts.movement.MoveMode}.
+     * Move the game object by the specified amount.
      *
      * @param amount the move input
-     * @param mode   how to move the object
      * @param dt     the duration of the frame
      */
-    public void moveObject(Vec2 amount, MoveMode mode, float dt) {
-        switch (mode) {
-            case POSITION -> transform.move(amount.mul(dt));
-            case VELOCITY -> rb.addVelocity(amount.mul(dt));
-            case IMPULSE -> rb.applyImpulse(amount);
-            case FORCE -> rb.applyForce(amount);
-        }
+    public void moveObject(Vec2 amount, float dt) {
     }
 
     /**
-     * Rotate the game object by the specified amount following the specified
-     * {@link mayonez.scripts.movement.MoveMode}.
+     * Rotate the game object by the specified amount.
      *
      * @param amount the turn input
-     * @param mode   how to turn the object
      * @param dt     the duration of the frame
      */
-    public void rotateObject(float amount, MoveMode mode, float dt) {
-        switch (mode) {
-            case POSITION -> transform.rotate(amount * dt);
-            case VELOCITY -> rb.addAngularVelocity(amount * dt);
-            case IMPULSE -> rb.applyAngularImpulse(amount);
-            case FORCE -> rb.applyTorque(amount);
-        }
+    public void rotateObject(float amount, float dt) {
     }
 
     // Clamp Speed Methods

@@ -4,7 +4,6 @@ import mayonez.*;
 import mayonez.input.*;
 import mayonez.math.*;
 import mayonez.physics.dynamics.*;
-import mayonez.scripts.movement.*;
 import slavsquatsuperstar.demos.spacegame.combat.Damageable;
 import slavsquatsuperstar.demos.spacegame.combat.projectiles.PlayerFireController;
 import slavsquatsuperstar.demos.spacegame.movement.PlayerKeyMovement;
@@ -29,10 +28,9 @@ public class PlayerSpaceship extends Spaceship {
         getScene().getCamera().setSubject(this);
 
         // Movement
-        addComponent(new Rigidbody(1f));
-        addComponent(new PlayerKeyMovement(
-                12f, MoveMode.FORCE, 3f, MoveMode.FORCE
-        ));
+        var rb = new Rigidbody(1f);
+        addComponent(rb);
+        addComponent(new PlayerKeyMovement(12f, 3f));
 //        addComponent(new ClickToMove(10f, MoveMode.VELOCITY, true));
 
         // Weapons

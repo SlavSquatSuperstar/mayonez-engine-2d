@@ -2,7 +2,6 @@ package slavsquatsuperstar.demos.spacegame.movement;
 
 import mayonez.input.*;
 import mayonez.math.*;
-import mayonez.scripts.movement.*;
 import slavsquatsuperstar.demos.spacegame.SpaceGameConfig;
 
 /**
@@ -20,19 +19,14 @@ public class PlayerKeyMovement extends SpaceshipMovement {
 
     // Movement Fields
     private final float moveSpeed, turnSpeed;
-    private final MoveMode moveMove, turnMode;
     private final InputAxis xAxis, yAxis, turnAxis;
 
-    public PlayerKeyMovement(
-            float moveSpeed, MoveMode moveMove, float turnSpeed, MoveMode turnMode
-    ) {
+    public PlayerKeyMovement(float moveSpeed, float turnSpeed) {
         this.moveSpeed = moveSpeed;
-        this.moveMove = moveMove;
         xAxis = HORIZONTAL_MOVE_AXIS;
         yAxis = VERTICAL_MOVE_AXIS;
 
         this.turnSpeed = turnSpeed;
-        this.turnMode = turnMode;
         turnAxis = TURN_AXIS;
     }
 
@@ -43,8 +37,20 @@ public class PlayerKeyMovement extends SpaceshipMovement {
         // Move player
         var moveDirection = getUserInput().mul(moveSpeed)
                 .rotate(transform.getRotation()); // Align with object direction
-        moveObject(moveDirection, moveMove, dt);
-        rotateObject(-getUserInputValue() * turnSpeed, turnMode, dt);
+        moveObject(moveDirection, dt);
+        rotateObject(-getUserInputValue() * turnSpeed, dt);
+    }
+
+    // Movement Script Overrides
+
+    @Override
+    public void moveObject(Vec2 amount, float dt) {
+        rb.applyForce(amount);
+    }
+
+    @Override
+    public void rotateObject(float amount, float dt) {
+        rb.applyTorque(amount);
     }
 
     @Override

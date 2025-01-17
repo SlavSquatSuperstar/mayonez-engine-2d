@@ -22,7 +22,12 @@ class GDPlayerMovement extends MovementScript {
 
     @Override
     protected void update(float dt) {
-        moveObject(getUserInput().mul(speed), MoveMode.POSITION, dt);
+        moveObject(getUserInput(), dt);
+    }
+
+    @Override
+    public void moveObject(Vec2 amount, float dt) {
+        transform.move(amount.mul(speed * dt));
     }
 
     @Override
