@@ -60,8 +60,19 @@ public class PlayerKeyMovement extends SpaceshipMovement {
 
     @Override
     protected void brake(Vec2 brakeDir, float angBrakeDir) {
-        rb.applyForce(brakeDir.mul(moveSpeed));
-        rb.applyTorque(angBrakeDir * turnSpeed);
+        moveObject(brakeDir.mul(moveSpeed), 0f);
+        rotateObject(angBrakeDir * turnSpeed, 0f);
+
+        // Stop moving if too slow
+        if (Math.abs(rb.getVelocity().x) < BRAKE_THRESHOLD_SPEED) {
+            rb.getVelocity().x = 0f;
+        }
+        if (Math.abs(rb.getVelocity().y) < BRAKE_THRESHOLD_SPEED) {
+            rb.getVelocity().y = 0f;
+        }
+        if (rb.getAngSpeed() < TURN_BRAKE_THRESHOLD_SPEED) {
+            rb.setAngVelocity(0f);
+        }
     }
 
     // Input Overrides
