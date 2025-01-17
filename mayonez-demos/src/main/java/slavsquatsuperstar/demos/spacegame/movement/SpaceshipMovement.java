@@ -28,7 +28,7 @@ public abstract class SpaceshipMovement extends MovementScript {
     protected void update(float dt) {
         // Get move input
         var moveInput = getUserInput();
-        var turnInput = -getUserInputValue();
+        var turnInput = getUserInputValue();
 
         // Slow spaceship motion
         var braking = isBraking();
@@ -67,7 +67,7 @@ public abstract class SpaceshipMovement extends MovementScript {
     protected float getAngBrakeDir() {
         // Don't burn when turning very slow
         if (rb.getAngSpeed() > TURN_BRAKE_THRESHOLD_SPEED) {
-            return Math.signum(rb.getAngVelocity());
+            return -Math.signum(rb.getAngVelocity());
         }
         return 0f;
     }

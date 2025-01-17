@@ -33,7 +33,7 @@ public class EnemyMovement extends SpaceshipMovement {
     @Override
     public float getUserInputValue() {
         if (isBraking()) return 0;
-        else return -rb.getAngVelocity();
+        else return rb.getAngVelocity();
     }
 
     @Override

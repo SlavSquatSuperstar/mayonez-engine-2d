@@ -15,13 +15,13 @@ public enum ThrustDirection {
     LEFT(new Vec2(-1f, 0f), 0f),
     RIGHT(new Vec2(1f, 0f), 0f),
 
-    TURN_LEFT(new Vec2(), -1f), // counter-clockwise
-    TURN_RIGHT(new Vec2(), 1f), // clockwise
+    TURN_LEFT(new Vec2(), 1f), // counter-clockwise
+    TURN_RIGHT(new Vec2(), -1f), // clockwise
 
     NONE(new Vec2(), 0f); // sentinel
 
-    public final Vec2 moveDir;
-    public final float turnDir;
+    private final Vec2 moveDir;
+    private final float turnDir;
 
     ThrustDirection(Vec2 moveDir, float turnDir) {
         this.moveDir = moveDir;

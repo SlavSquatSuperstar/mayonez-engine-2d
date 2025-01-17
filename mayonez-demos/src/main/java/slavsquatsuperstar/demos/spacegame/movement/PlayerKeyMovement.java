@@ -38,7 +38,7 @@ public class PlayerKeyMovement extends SpaceshipMovement {
         var moveDirection = getUserInput().mul(moveSpeed)
                 .rotate(transform.getRotation()); // Align with object direction
         moveObject(moveDirection, dt);
-        rotateObject(-getUserInputValue() * turnSpeed, dt);
+        rotateObject(getUserInputValue() * turnSpeed, dt);
     }
 
     // Movement Script Overrides
@@ -61,7 +61,7 @@ public class PlayerKeyMovement extends SpaceshipMovement {
     @Override
     protected void brake(Vec2 brakeDir, float angBrakeDir) {
         rb.applyForce(brakeDir.mul(moveSpeed));
-        rb.applyTorque(-angBrakeDir * turnSpeed);
+        rb.applyTorque(angBrakeDir * turnSpeed);
     }
 
     // Input Overrides
@@ -73,7 +73,7 @@ public class PlayerKeyMovement extends SpaceshipMovement {
 
     @Override
     public float getUserInputValue() {
-        return KeyInput.getAxis(turnAxis);
+        return -KeyInput.getAxis(turnAxis);
     }
 
 }
