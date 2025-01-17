@@ -54,6 +54,19 @@ public class PlayerKeyMovement extends SpaceshipMovement {
     }
 
     @Override
+    protected boolean isBraking() {
+        return KeyInput.keyDown(BRAKE_KEY);
+    }
+
+    @Override
+    protected void brake(Vec2 brakeDir, float angBrakeDir) {
+        rb.applyForce(brakeDir.mul(moveSpeed));
+        rb.applyTorque(-angBrakeDir * turnSpeed);
+    }
+
+    // Input Overrides
+
+    @Override
     public Vec2 getUserInput() {
         return new Vec2(KeyInput.getAxis(xAxis), KeyInput.getAxis(yAxis));
     }
@@ -61,11 +74,6 @@ public class PlayerKeyMovement extends SpaceshipMovement {
     @Override
     public float getUserInputValue() {
         return KeyInput.getAxis(turnAxis);
-    }
-
-    @Override
-    protected boolean isBraking() {
-        return KeyInput.keyDown(BRAKE_KEY);
     }
 
 }

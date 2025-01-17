@@ -22,7 +22,7 @@ public class EnemyMovement extends SpaceshipMovement {
 
     // TODO Move spaceship
 
-    // Movement Script Methods
+    // Movement Script Other
 
     @Override
     public Vec2 getUserInput() {
@@ -51,6 +51,10 @@ public class EnemyMovement extends SpaceshipMovement {
         }
         // Keep braking
         return brakesActive;
+    }
+
+    @Override
+    protected void brake(Vec2 brakeDir, float angBrakeDir) {
     }
 
 }

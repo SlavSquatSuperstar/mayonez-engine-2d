@@ -13,8 +13,6 @@ public abstract class SpaceshipMovement extends MovementScript {
     // Constants
     private final static float BRAKE_THRESHOLD_SPEED = 0.1f;
     private final static float TURN_BRAKE_THRESHOLD_SPEED = 5f;
-    private final static float MOVE_DRAG = 0f;
-    private final static float BRAKE_DRAG = 0.2f;
 
     // Script References
     private ThrustController thrustController;
@@ -34,34 +32,42 @@ public abstract class SpaceshipMovement extends MovementScript {
 
         // Slow spaceship motion
         var braking = isBraking();
+        Vec2 brakeDir;
+        float angBrakeDir;
+
         if (braking) {
-            rb.setDrag(BRAKE_DRAG).setAngDrag(BRAKE_DRAG);
+            brakeDir = getBrakeDir();
+            angBrakeDir = getAngBrakeDir();
+            brake(brakeDir, angBrakeDir); // TODO lower brake when moving
         } else {
-            rb.setDrag(MOVE_DRAG).setAngDrag(MOVE_DRAG);
+            brakeDir = new Vec2();
+            angBrakeDir = 0f;
         }
 
         // Calculate brake direction and fire thrusters
-        thrustController.fireMoveThrusters(moveInput, getBrakeDir(braking));
-        thrustController.fireTurnThrusters(turnInput, getAngBrakeDir(braking));
+        thrustController.fireMoveThrusters(moveInput, brakeDir
+                .rotate(-transform.getRotation())); // Orient with ship
+        thrustController.fireTurnThrusters(turnInput, angBrakeDir);
     }
 
-    // Brake Helper Methods
+    // Brake Methods
 
     protected abstract boolean isBraking();
 
-    private Vec2 getBrakeDir(boolean braking) {
+    protected abstract void brake(Vec2 brakeDir, float angBrakeDir);
+
+    protected Vec2 getBrakeDir() {
         // Don't burn when moving very slow
-        if (braking && rb.getSpeed() > BRAKE_THRESHOLD_SPEED) {
-            return rb.getVelocity().mul(-1f)
-                    .rotate(-transform.getRotation()); // Orient with ship
+        if (rb.getSpeed() > BRAKE_THRESHOLD_SPEED) {
+            return rb.getVelocity().mul(-1f).unit();
         }
         return new Vec2();
     }
 
-    private float getAngBrakeDir(boolean braking) {
+    protected float getAngBrakeDir() {
         // Don't burn when turning very slow
-        if (braking && rb.getAngSpeed() > TURN_BRAKE_THRESHOLD_SPEED) {
-            return rb.getAngVelocity();
+        if (rb.getAngSpeed() > TURN_BRAKE_THRESHOLD_SPEED) {
+            return Math.signum(rb.getAngVelocity());
         }
         return 0f;
     }
