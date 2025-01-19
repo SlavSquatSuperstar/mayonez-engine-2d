@@ -1,8 +1,6 @@
 package slavsquatsuperstar.demos.spacegame.objects.ships;
 
 import mayonez.*;
-import mayonez.assets.*;
-import mayonez.assets.text.*;
 import mayonez.graphics.sprites.*;
 import mayonez.math.*;
 import mayonez.physics.colliders.*;
@@ -11,12 +9,9 @@ import slavsquatsuperstar.demos.spacegame.SpaceGameScene;
 import slavsquatsuperstar.demos.spacegame.combat.CollisionDamage;
 import slavsquatsuperstar.demos.spacegame.combat.Damageable;
 import slavsquatsuperstar.demos.spacegame.combat.ShieldedDamageable;
-import slavsquatsuperstar.demos.spacegame.combat.projectiles.WeaponHardpoint;
 import slavsquatsuperstar.demos.spacegame.movement.ThrustController;
 import slavsquatsuperstar.demos.spacegame.objects.SpaceGameLayer;
 import slavsquatsuperstar.demos.spacegame.objects.SpaceGameZIndex;
-
-import java.util.*;
 
 /**
  * A spaceship that can move, fire projectiles, and be destroyed.
@@ -24,19 +19,6 @@ import java.util.*;
  * @author SlavSquatSuperstar
  */
 public abstract class Spaceship extends GameObject {
-
-    // Assets
-    private static final CSVFile HARDPOINTS_DATA;
-    static final List<WeaponHardpoint> HARDPOINTS;
-
-    static {
-        HARDPOINTS_DATA = Assets.getAsset(
-                "assets/spacegame/data/shuttle_hardpoints.csv", CSVFile.class
-        );
-        if (HARDPOINTS_DATA == null) HARDPOINTS = Collections.emptyList();
-        else HARDPOINTS = HARDPOINTS_DATA.readCSV().stream()
-                .map(WeaponHardpoint::new).toList();
-    }
 
     protected final SpaceshipProperties properties;
 

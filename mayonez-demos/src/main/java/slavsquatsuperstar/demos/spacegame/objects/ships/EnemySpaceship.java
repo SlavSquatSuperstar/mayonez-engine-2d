@@ -1,12 +1,11 @@
 package slavsquatsuperstar.demos.spacegame.objects.ships;
 
-import mayonez.math.*;
 import mayonez.math.Random;
+import mayonez.math.*;
 import mayonez.physics.dynamics.*;
 import slavsquatsuperstar.demos.spacegame.combat.projectiles.EnemyFireController;
 import slavsquatsuperstar.demos.spacegame.combat.projectiles.WeaponHardpoint;
 import slavsquatsuperstar.demos.spacegame.movement.EnemyMovement;
-import slavsquatsuperstar.demos.spacegame.movement.ThrusterPrefabs;
 
 import java.util.*;
 
@@ -17,12 +16,8 @@ import java.util.*;
  */
 public class EnemySpaceship extends Spaceship {
 
-    private static final float ENEMY_HEALTH = 5f;
-
-    public EnemySpaceship(String name, Vec2 position, String spriteName) {
-        super(name, position, new SpaceshipProperties(spriteName,
-                ENEMY_HEALTH, 0f,
-                ThrusterPrefabs.THRUSTER_PROPERTIES, HARDPOINTS));
+    public EnemySpaceship(String name, Vec2 position) {
+        super(name, position, SpaceshipPrefabs.SHUTTLE_PROPERTIES2);
     }
 
     @Override

@@ -7,7 +7,6 @@ import mayonez.physics.dynamics.*;
 import slavsquatsuperstar.demos.spacegame.combat.Damageable;
 import slavsquatsuperstar.demos.spacegame.combat.projectiles.PlayerFireController;
 import slavsquatsuperstar.demos.spacegame.movement.PlayerKeyMovement;
-import slavsquatsuperstar.demos.spacegame.movement.ThrusterPrefabs;
 
 /**
  * A player-controlled spaceship.
@@ -17,13 +16,8 @@ import slavsquatsuperstar.demos.spacegame.movement.ThrusterPrefabs;
 // TODO flash spawn immunity
 public class PlayerSpaceship extends Spaceship {
 
-    // Constants
-    private static final float PLAYER_HEALTH = 8f;
-
-    public PlayerSpaceship(String name, String spriteName) {
-        super(name, new Vec2(), new SpaceshipProperties(spriteName,
-                PLAYER_HEALTH, PLAYER_HEALTH * 0.5f,
-                ThrusterPrefabs.THRUSTER_PROPERTIES, HARDPOINTS));
+    public PlayerSpaceship(String name, Vec2 position) {
+        super(name, position, SpaceshipPrefabs.SHUTTLE_PROPERTIES1);
     }
 
     @Override

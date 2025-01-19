@@ -35,8 +35,7 @@ public class SpaceObjectSpawner extends GameObject {
         addComponent(new MultiSpawnManager(NUM_ENEMIES, ENEMY_RESPAWN_COOLDOWN) {
             @Override
             public GameObject createSpawnedObject() {
-                return new EnemySpaceship("Enemy Spaceship", SpaceGameScene.getRandomPosition(),
-                        "assets/spacegame/textures/ships/shuttle_rusty.png") {
+                return new EnemySpaceship("Enemy Spaceship", SpaceGameScene.getRandomPosition()) {
                     @Override
                     protected void init() {
                         super.init();

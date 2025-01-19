@@ -1,6 +1,7 @@
 package slavsquatsuperstar.demos.spacegame.objects.spawners;
 
 import mayonez.*;
+import mayonez.math.*;
 import mayonez.scripts.*;
 import slavsquatsuperstar.demos.spacegame.events.*;
 import slavsquatsuperstar.demos.spacegame.objects.ships.PlayerSpaceship;
@@ -46,9 +47,7 @@ public class PlayerSpawnManager extends SpawnManager {
 
     @Override
     public GameObject createSpawnedObject() {
-        return new PlayerSpaceship("Player Spaceship",
-                "assets/spacegame/textures/ships/shuttle.png"
-        ) {
+        return new PlayerSpaceship("Player Spaceship", new Vec2()) {
             @Override
             protected void init() {
                 super.init();
