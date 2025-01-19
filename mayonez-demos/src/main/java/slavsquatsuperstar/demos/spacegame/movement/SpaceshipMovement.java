@@ -26,11 +26,6 @@ public abstract class SpaceshipMovement extends MovementScript {
 
     // Brake Methods
 
-    // TODO delete this
-    protected boolean isBraking() {
-        return false;
-    }
-
     protected void brake(Vec2 brakeDir, float angBrakeDir) {
     }
 
