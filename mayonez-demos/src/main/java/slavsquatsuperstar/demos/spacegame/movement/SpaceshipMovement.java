@@ -24,6 +24,18 @@ public abstract class SpaceshipMovement extends MovementScript {
         thrustController = gameObject.getComponent(ThrustController.class);
     }
 
+    // Movement Script Overrides
+
+    @Override
+    public void moveObject(Vec2 amount, float dt) {
+        rb.applyForce(amount);
+    }
+
+    @Override
+    public void rotateObject(float amount, float dt) {
+        rb.applyTorque(amount);
+    }
+
     // Brake Methods
 
     protected void brake(Vec2 brakeDir, float angBrakeDir) {

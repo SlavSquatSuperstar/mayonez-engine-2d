@@ -29,7 +29,7 @@ public class PlayerKeyMovement extends SpaceshipMovement {
     @Override
     protected void start() {
         super.start();
-        autoBrake = true;
+        autoBrake = false;
     }
 
     @Override
@@ -55,22 +55,6 @@ public class PlayerKeyMovement extends SpaceshipMovement {
         // Fire thrusters
         getThrustController().fireMoveThrusters(moveInput, brakeDir);
         getThrustController().fireTurnThrusters(turnInput, turnBrakeDir);
-
-//        getScene().getDebugDraw().drawVector(transform.getPosition(), moveInput.unit().rotate(transform.getRotation()), Colors.BLUE);
-//        getScene().getDebugDraw().drawVector(transform.getPosition(), brakeDir.rotate(transform.getRotation()), Colors.RED);
-//        getScene().getDebugDraw().drawVector(transform.getPosition(), rb.getVelocity(), Colors.GREEN);
-    }
-
-    // Movement Script Overrides
-
-    @Override
-    public void moveObject(Vec2 amount, float dt) {
-        rb.applyForce(amount);
-    }
-
-    @Override
-    public void rotateObject(float amount, float dt) {
-        rb.applyTorque(amount);
     }
 
     @Override
