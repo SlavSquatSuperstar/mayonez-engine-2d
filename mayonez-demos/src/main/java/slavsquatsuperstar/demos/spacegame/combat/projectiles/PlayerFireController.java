@@ -21,24 +21,27 @@ public class PlayerFireController extends FireProjectile {
     private final int numWeapons;
     private final Timer[] fireTimers;
     private final List<WeaponHardpoint> hardpoints;
+    private final List<ProjectileType> projectiles;
     private int selectedWeapon;
 
-    public PlayerFireController(List<WeaponHardpoint> hardpoints) {
-        numWeapons = ProjectilePrefabs.count();
-        fireTimers = initializeFireTimers();
+    public PlayerFireController(List<WeaponHardpoint> hardpoints, List<ProjectileType> projectiles) {
         this.hardpoints = hardpoints;
+        this.projectiles = projectiles;
+        numWeapons = projectiles.size();
+        fireTimers = initializeFireTimers();
     }
 
     @Override
     protected void start() {
         for (int i = 0; i < numWeapons; i++) fireTimers[i].setValue(0f); // Start off cooldown
+        savedChoice = Math.min(savedChoice, numWeapons); // In case loadout changed
         setSelectedWeapon(savedChoice);
     }
 
     @Override
     protected void update(float dt) {
         // Select weapon from keyboard
-        for (var projIdx = 0; projIdx < ProjectilePrefabs.count(); projIdx++) {
+        for (var projIdx = 0; projIdx < numWeapons; projIdx++) {
             if (KeyInput.keyPressed(String.valueOf(projIdx + 1))) {
                 setSelectedWeapon(projIdx);
             }
@@ -61,7 +64,7 @@ public class PlayerFireController extends FireProjectile {
     @Override
     protected void fireProjectiles() {
         for (var hardPoint : hardpoints) {
-            spawnPrefab(selectedWeapon, hardPoint.offset(), hardPoint.angle());
+            spawnPrefab(projectiles.get(selectedWeapon), hardPoint.offset(), hardPoint.angle());
         }
         fireTimers[selectedWeapon].reset();
     }
@@ -85,7 +88,7 @@ public class PlayerFireController extends FireProjectile {
     private Timer[] initializeFireTimers() {
         final Timer[] fireTimers = new Timer[numWeapons];
         for (int i = 0; i < numWeapons; i++) {
-            var type = ProjectilePrefabs.getProjectileType(i);
+            var type = projectiles.get(i);
             var duration = (type != null) ? type.fireCooldown() : 0f;
             fireTimers[i] = new Timer(duration);
         }

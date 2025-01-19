@@ -51,37 +51,7 @@ public final class ProjectilePrefabs {
         return Math.min(NUM_PROJECTILES, PROJECTILE_TYPES.size());
     }
 
-    /**
-     * Get the {@link ProjectileType} stored at the specified index.
-     *
-     * @param projectileIndex the index of the {@link ProjectileType}
-     * @return the projectile type, or null if the index is invalid
-     */
-    public static ProjectileType getProjectileType(int projectileIndex) {
-        if (projectileIndex < 0 || projectileIndex >= NUM_PROJECTILES) return null;
-        return PROJECTILE_TYPES.get(projectileIndex);
-    }
-
     // Create Prefab Methods
-
-    /**
-     * Creates a prefab {@link Projectile} object with the specified projectile type.
-     *
-     * @param projectileIndex the index of the {@link ProjectileType}
-     * @param source          the object that fired the projectile
-     * @param offsetPos       the projectile spawn position in relation to the source
-     * @param offsetAngle     the projectile spawn angle in relation to the source
-     * @return the projectile object, or null if the index is invalid
-     */
-    public static GameObject createPrefab(
-            int projectileIndex, GameObject source, Vec2 offsetPos, float offsetAngle
-    ) {
-        var type = getProjectileType(projectileIndex);
-        if (type == null) return null;
-
-        var projXf = getProjectileTransform(type, source.transform, offsetPos, offsetAngle);
-        return createProjectileObject(type, source, projXf);
-    }
 
     /**
      * Creates a prefab {@link Projectile} object with the specified projectile type.

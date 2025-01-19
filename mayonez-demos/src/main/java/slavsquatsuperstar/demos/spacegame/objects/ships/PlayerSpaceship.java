@@ -6,6 +6,7 @@ import mayonez.math.*;
 import mayonez.physics.dynamics.*;
 import slavsquatsuperstar.demos.spacegame.combat.Damageable;
 import slavsquatsuperstar.demos.spacegame.combat.projectiles.PlayerFireController;
+import slavsquatsuperstar.demos.spacegame.combat.projectiles.ProjectilePrefabs;
 import slavsquatsuperstar.demos.spacegame.movement.PlayerKeyMovement;
 
 /**
@@ -32,7 +33,8 @@ public class PlayerSpaceship extends Spaceship {
 //        addComponent(new ClickToMove(10f, MoveMode.VELOCITY, true));
 
         // Weapons
-        addComponent(new PlayerFireController(properties.hardpoints()));
+        var loadout = ProjectilePrefabs.PROJECTILE_TYPES;
+        addComponent(new PlayerFireController(properties.hardpoints(), loadout));
 
         addComponent(new Script() {
             @Override
