@@ -36,9 +36,13 @@ public class SpaceObjectSpawner extends GameObject {
         addComponent(new MultiSpawnManager(NUM_ENEMIES, ENEMY_RESPAWN_COOLDOWN) {
             @Override
             public GameObject createSpawnedObject() {
+                var isFighter = Random.randomPercent(0.75f);
+                var name = isFighter ? "Enemy Fighter" : "Enemy Spaceship";
+                var properties = isFighter ? SpaceshipPrefabs.SHUTTLE_PROPERTIES2
+                        : SpaceshipPrefabs.FIGHTER_PROPERTIES;
+
                 return new EnemySpaceship(
-                        "Enemy Spaceship", SpaceGameScene.getRandomPosition(),
-                        SpaceshipPrefabs.SHUTTLE_PROPERTIES2
+                        name, SpaceGameScene.getRandomPosition(), properties
                 ) {
                     @Override
                     protected void init() {

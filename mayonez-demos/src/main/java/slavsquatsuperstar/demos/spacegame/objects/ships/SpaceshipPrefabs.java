@@ -17,6 +17,7 @@ public final class SpaceshipPrefabs {
 
     public static final SpaceshipProperties SHUTTLE_PROPERTIES1;
     public static final SpaceshipProperties SHUTTLE_PROPERTIES2;
+    public static final SpaceshipProperties FIGHTER_PROPERTIES;
 
     static {
         SHUTTLE_PROPERTIES1 = new SpaceshipProperties(
@@ -30,6 +31,12 @@ public final class SpaceshipPrefabs {
                 6, 0,
                 getThrusters("assets/spacegame/data/shuttle_thrusters.csv"),
                 getHardpoints("assets/spacegame/data/shuttle_hardpoints.csv")
+        );
+        FIGHTER_PROPERTIES = new SpaceshipProperties(
+                "assets/spacegame/textures/ships/fighter.png",
+                5, 10,
+                getThrusters("assets/spacegame/data/fighter_thrusters.csv"),
+                getHardpoints("assets/spacegame/data/fighter_hardpoints.csv")
         );
     }
 

@@ -34,7 +34,7 @@ public class RendererTestScene extends Scene {
         var bgTex = Textures.getTexture("assets/mario/textures/background.png");
 
         var tex1 = Textures.getTexture("assets/spacegame/textures/ships/shuttle.png");
-        var tex2 = Textures.getTexture("assets/spacegame/textures/ships/shuttle_rusty.png");
+        var tex2 = Textures.getTexture("assets/spacegame/textures/ships/fighter.png");
         var tex3 = Textures.getTexture("assets/spacegame/textures/ships/satellite.png");
         var tex4 = Textures.getTexture("assets/spacegame/textures/ui/gray_background.png");
         var tex5 = Textures.getTexture("assets/spacegame/textures/ui/black_border.png");
