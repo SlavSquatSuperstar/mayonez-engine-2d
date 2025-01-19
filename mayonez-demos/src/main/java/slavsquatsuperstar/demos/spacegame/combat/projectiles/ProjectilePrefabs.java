@@ -1,8 +1,6 @@
 package slavsquatsuperstar.demos.spacegame.combat.projectiles;
 
 import mayonez.*;
-import mayonez.assets.*;
-import mayonez.assets.text.*;
 import mayonez.graphics.sprites.*;
 import mayonez.math.Random;
 import mayonez.math.*;
@@ -10,6 +8,7 @@ import mayonez.physics.colliders.*;
 import mayonez.physics.dynamics.*;
 import slavsquatsuperstar.demos.spacegame.objects.SpaceGameLayer;
 import slavsquatsuperstar.demos.spacegame.objects.SpaceGameZIndex;
+import slavsquatsuperstar.demos.spacegame.objects.ships.SpaceshipPrefabs;
 
 import java.util.*;
 
@@ -21,18 +20,15 @@ import java.util.*;
 public final class ProjectilePrefabs {
 
     // Constants
-    private static final CSVFile PROJECTILE_DATA;
-    private static final List<ProjectileType> PROJECTILE_TYPES;
+    public static final List<ProjectileType> PROJECTILE_TYPES;
     public static final int NUM_PROJECTILES;
     public static final SpriteSheet PROJECTILE_SPRITES;
 
     static {
-        // Read CSV file
-        PROJECTILE_DATA = Assets.getAsset("assets/spacegame/data/projectiles.csv",
-                CSVFile.class);
-        if (PROJECTILE_DATA == null) PROJECTILE_TYPES = Collections.emptyList();
-        else PROJECTILE_TYPES = PROJECTILE_DATA.readCSV().stream()
-                .map(ProjectileType::new).toList();
+        // Read projectile types
+        var records = SpaceshipPrefabs
+                .getRecordsFromFile("assets/spacegame/data/projectiles.csv");
+        PROJECTILE_TYPES = records.stream().map(ProjectileType::new).toList();
         NUM_PROJECTILES = PROJECTILE_TYPES.size();
 
         // Read sprite sheet
@@ -83,6 +79,22 @@ public final class ProjectilePrefabs {
         var type = getProjectileType(projectileIndex);
         if (type == null) return null;
 
+        var projXf = getProjectileTransform(type, source.transform, offsetPos, offsetAngle);
+        return createProjectileObject(type, source, projXf);
+    }
+
+    /**
+     * Creates a prefab {@link Projectile} object with the specified projectile type.
+     *
+     * @param type        the projectile type
+     * @param source      the object that fired the projectile
+     * @param offsetPos   the projectile spawn position in relation to the source
+     * @param offsetAngle the projectile spawn angle in relation to the source
+     * @return the projectile object, or null if the index is invalid
+     */
+    public static GameObject createPrefab(
+            ProjectileType type, GameObject source, Vec2 offsetPos, float offsetAngle
+    ) {
         var projXf = getProjectileTransform(type, source.transform, offsetPos, offsetAngle);
         return createProjectileObject(type, source, projXf);
     }

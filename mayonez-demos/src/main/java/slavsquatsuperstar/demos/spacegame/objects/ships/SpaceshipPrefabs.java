@@ -53,7 +53,7 @@ public final class SpaceshipPrefabs {
                 .stream().map(WeaponHardpoint::new).toList();
     }
 
-    private static List<Record> getRecordsFromFile(String csvFileName) {
+    public static List<Record> getRecordsFromFile(String csvFileName) {
         var csvFile = Assets.getAsset(csvFileName, CSVFile.class);
         if (csvFile == null) return Collections.emptyList();
         else return csvFile.readCSV();

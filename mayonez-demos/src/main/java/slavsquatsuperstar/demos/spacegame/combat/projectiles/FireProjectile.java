@@ -44,4 +44,18 @@ public abstract class FireProjectile extends Script {
         getScene().addObject(prefabObject);
     }
 
+    /**
+     * Instantiates a projectile prefab object and spawns it in the world.
+     *
+     * @param type        the projectile type
+     * @param offsetPos   the projectile spawn position in relation to the source
+     * @param offsetAngle the projectile spawn angle in relation to the source
+     */
+    protected void spawnPrefab(ProjectileType type, Vec2 offsetPos, float offsetAngle) {
+        var prefabObject = ProjectilePrefabs.createPrefab(
+                type, gameObject, offsetPos, offsetAngle
+        );
+        getScene().addObject(prefabObject);
+    }
+
 }
