@@ -9,7 +9,6 @@ import mayonez.math.*;
  *
  * @author SlavSquatSuperstar
  */
-// TODO fire multiple projectiles
 public abstract class FireProjectile extends Script {
 
     @Override

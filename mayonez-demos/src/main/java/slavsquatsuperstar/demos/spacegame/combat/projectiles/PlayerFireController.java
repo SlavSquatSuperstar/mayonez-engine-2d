@@ -1,11 +1,12 @@
 package slavsquatsuperstar.demos.spacegame.combat.projectiles;
 
 import mayonez.input.*;
-import mayonez.math.*;
-import mayonez.scripts.*;
+import mayonez.scripts.Timer;
 import slavsquatsuperstar.demos.spacegame.events.SpaceGameEvents;
 import slavsquatsuperstar.demos.spacegame.events.WeaponCooldownUpdate;
 import slavsquatsuperstar.demos.spacegame.events.WeaponSelectedEvent;
+
+import java.util.*;
 
 /**
  * Allows the player's ship to fire different weapons.
@@ -19,12 +20,13 @@ public class PlayerFireController extends FireProjectile {
 
     private final int numWeapons;
     private final Timer[] fireTimers;
+    private final List<WeaponHardpoint> hardpoints;
     private int selectedWeapon;
 
-    public PlayerFireController() {
-        super();
+    public PlayerFireController(List<WeaponHardpoint> hardpoints) {
         numWeapons = ProjectilePrefabs.count();
         fireTimers = initializeFireTimers();
+        this.hardpoints = hardpoints;
     }
 
     @Override
@@ -58,14 +60,8 @@ public class PlayerFireController extends FireProjectile {
 
     @Override
     protected void fireProjectiles() {
-        Vec2[] offsetPositions = {
-                new Vec2(0, 0.4f),
-                new Vec2(-0.2f, 0.2f),
-                new Vec2(0.2f, 0.2f)
-        };
-        float offsetAngle = 0f;
-        for (var pos : offsetPositions) {
-            spawnPrefab(selectedWeapon, pos, offsetAngle);
+        for (var hardPoint : hardpoints) {
+            spawnPrefab(selectedWeapon, hardPoint.offset(), hardPoint.angle());
         }
         fireTimers[selectedWeapon].reset();
     }
