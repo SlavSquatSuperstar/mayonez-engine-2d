@@ -23,7 +23,7 @@ public final class ThrusterPrefabs {
             "assets/spacegame/textures/ships/exhaust.png",
             16, 16, 4, 0);
     private static final CSVFile THRUSTER_DATA = Assets.getAsset(
-            "assets/spacegame/data/thrusters.csv", CSVFile.class);
+            "assets/spacegame/data/shuttle_thrusters.csv", CSVFile.class);
 
     private ThrusterPrefabs() {
     }
