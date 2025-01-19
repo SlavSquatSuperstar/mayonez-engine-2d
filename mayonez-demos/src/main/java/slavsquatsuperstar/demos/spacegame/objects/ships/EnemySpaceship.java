@@ -1,9 +1,13 @@
 package slavsquatsuperstar.demos.spacegame.objects.ships;
 
 import mayonez.math.*;
+import mayonez.math.Random;
 import mayonez.physics.dynamics.*;
 import slavsquatsuperstar.demos.spacegame.combat.projectiles.EnemyFireController;
+import slavsquatsuperstar.demos.spacegame.combat.projectiles.WeaponHardpoint;
 import slavsquatsuperstar.demos.spacegame.movement.EnemyMovement;
+
+import java.util.*;
 
 /**
  * A computer-controlled enemy spaceship.
@@ -29,8 +33,17 @@ public class EnemySpaceship extends Spaceship {
         rb.setVelocity(transform.getUp().mul(Random.randomFloat(2f, 15f)));
         addComponent(new EnemyMovement());
 
-        // Weapons
-        addComponent(new EnemyFireController());
+        // Weapons (Randomly Select Hardpoints)
+        addComponent(new EnemyFireController(getHardpoints()));
+    }
+
+    private static List<WeaponHardpoint> getHardpoints() {
+        var rand = Random.randomInt(1, 10);
+        List<WeaponHardpoint> hardpoints;
+        if (rand < 6) hardpoints = HARDPOINTS.subList(0, 1);
+        else if (rand < 9) hardpoints = HARDPOINTS.subList(0, 2);
+        else hardpoints = HARDPOINTS.subList(0, 3);
+        return hardpoints;
     }
 
 }

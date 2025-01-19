@@ -1,17 +1,12 @@
 package slavsquatsuperstar.demos.spacegame.objects.ships;
 
 import mayonez.*;
-import mayonez.assets.*;
-import mayonez.assets.text.*;
 import mayonez.input.*;
 import mayonez.math.*;
 import mayonez.physics.dynamics.*;
 import slavsquatsuperstar.demos.spacegame.combat.Damageable;
-import slavsquatsuperstar.demos.spacegame.combat.projectiles.WeaponHardpoint;
 import slavsquatsuperstar.demos.spacegame.combat.projectiles.PlayerFireController;
 import slavsquatsuperstar.demos.spacegame.movement.PlayerKeyMovement;
-
-import java.util.*;
 
 /**
  * A player-controlled spaceship.
@@ -20,20 +15,6 @@ import java.util.*;
  */
 // TODO flash spawn immunity
 public class PlayerSpaceship extends Spaceship {
-
-    // Assets
-    private static final CSVFile HARDPOINTS_DATA;
-    private static final List<WeaponHardpoint> HARDPOINTS;
-
-    static {
-        HARDPOINTS_DATA = Assets.getAsset(
-                "assets/spacegame/data/shuttle_hardpoints.csv", CSVFile.class
-        );
-        if (HARDPOINTS_DATA == null) HARDPOINTS = Collections.emptyList();
-        else HARDPOINTS = HARDPOINTS_DATA.readCSV().stream()
-                .map(WeaponHardpoint::new).toList();
-
-    }
 
     // Constants
     private static final float PLAYER_HEALTH = 8f;

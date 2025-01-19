@@ -1,7 +1,9 @@
 package slavsquatsuperstar.demos.spacegame.combat.projectiles;
 
-import mayonez.math.*;
-import mayonez.scripts.*;
+import mayonez.math.Random;
+import mayonez.scripts.Timer;
+
+import java.util.*;
 
 /**
  * Allows enemy ships to fire different weapons.
@@ -14,11 +16,12 @@ public class EnemyFireController extends FireProjectile {
     private FiringState state;
     private final Timer fireTimer;
     private final Timer waitTimer; // Time between shoot bursts
+    private final List<WeaponHardpoint> hardpoints;
 
-    public EnemyFireController() {
-        super();
+    public EnemyFireController(List<WeaponHardpoint> hardpoints) {
         fireTimer = new Timer(0f);
         waitTimer = new Timer(0f);
+        this.hardpoints = hardpoints;
     }
 
     @Override
@@ -44,8 +47,9 @@ public class EnemyFireController extends FireProjectile {
 
     @Override
     protected void fireProjectiles() {
-        spawnPrefab(weaponChoice, new Vec2(0f, 0.4f), 0f);
-
+        for (var hardPoint : hardpoints) {
+            spawnPrefab(weaponChoice, hardPoint.offset(), hardPoint.angle());
+        }
         fireTimer.reset();
         shotsLeft -= 1;
     }
