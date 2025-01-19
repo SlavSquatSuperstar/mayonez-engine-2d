@@ -16,37 +16,41 @@ Running the Program
       "Set-ExecutionPolicy -Scope CurrentUsed RemoteSigned" in PowerShell first.
 
 Demo Scene Controls
-1. All Scenes
+- All Scenes
    - R to reload the current scene
    - P to pause/unpause the scene (may be buggy)
    - Shift + 1-5 to switch scenes
    - Esc to exit the program
-2. Space Shooter
+- Space Shooter (1)
    - W/S to fly forward/backwards
    - A/D to turn left/right
    - Q/E to strafe left/right
    - Space to brake
    - Left Mouse and hold to fire weapons
-   - 1/2 to switch ammo types
-   - H to toggle hints (WIP)
+   - 1-3 to switch weapons
+   - B to toggle auto-brake
+   - H to toggle hints
    - Controls can be set in user_config.json
-3. Mario
-   - W to jump
-   - A/D to move side to side
-   - S to ground pound
-4. Physics Sandbox
+- Renderer Test (2)
+- Physics Sandbox (3)
    - Left Mouse and drag on objects to move them around
-   - Right Mouse*, drag, and release on objects to flick them
+   - Right Mouse, drag, and release on objects to flick them
    - 1-4 to spawn shapes at the mouse cursor
    - Space to toggle gravity
-5. Pool Balls
+   - H to toggle hints
+- Pool Balls (4)
    - Left Mouse and drag on objects to move them around
-   - Right Mouse*, drag, and release on objects to flick them
-6. Geometry Dash Editor
+   - Right Mouse†, drag, and release on objects to flick them
+- Mario (5)
+  - W to jump
+  - A/D to move side to side
+  - S to ground pound
+- Geometry Dash Editor (6)
    - WASD to move
    - Left Mouse on buttons to select a brush
    - Left Mouse on an empty space, with a brush selected, to place a block
-*Note: Right mouse is known to not work on Windows with some trackpads.
+
+†Note: Right mouse is known to not work on Windows with some trackpads.
 
 Changing User Preferences
 1. Program settings are stored in "preferences.json" next to the .jar file.
