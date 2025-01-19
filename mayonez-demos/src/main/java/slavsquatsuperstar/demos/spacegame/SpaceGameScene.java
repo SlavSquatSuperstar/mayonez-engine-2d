@@ -43,9 +43,9 @@ public class SpaceGameScene extends Scene {
 
     @Override
     protected void init() {
-        setBackground(Color.grayscale(14));
         setGravity(new Vec2());
         getCamera().setCameraScale(SCENE_SCALE);
+        getCamera().setBackgroundColor(Color.grayscale(14));
         getCamera().addCameraScript(new CameraKeepInScene(SCENE_HALF_SIZE.mul(-1f), SCENE_HALF_SIZE));
         setLayers();
 

@@ -33,7 +33,7 @@ public class PhysicsSandboxScene extends Scene {
 
     @Override
     protected void init() {
-        setBackground(Colors.WHITE);
+        getCamera().setBackgroundColor(Colors.WHITE);
         getCamera().setCameraScale(SCENE_SCALE);
 
         // Add Static Objects

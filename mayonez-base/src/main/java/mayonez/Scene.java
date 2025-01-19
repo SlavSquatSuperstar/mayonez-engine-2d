@@ -1,6 +1,5 @@
 package mayonez;
 
-import mayonez.graphics.Color;
 import mayonez.graphics.camera.*;
 import mayonez.graphics.debug.*;
 import mayonez.math.*;
@@ -296,15 +295,6 @@ public abstract class Scene {
     }
 
     // Getters and Setters
-
-    /**
-     * Sets the background color of this scene, white by default.
-     *
-     * @param backgroundColor the background color
-     */
-    public void setBackground(Color backgroundColor) {
-        camera.setBackgroundColor(backgroundColor);
-    }
 
     /**
      * Get the scene's {@link Camera} instance. The camera is initialized before

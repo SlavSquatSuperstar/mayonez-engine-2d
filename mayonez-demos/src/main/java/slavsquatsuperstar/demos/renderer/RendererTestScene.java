@@ -29,7 +29,7 @@ public class RendererTestScene extends Scene {
     @Override
     protected void init() {
         getCamera().setCameraScale(SCENE_SCALE);
-        setBackground(Color.grayscale(96));
+        getCamera().setBackgroundColor(Color.grayscale(96));
 
         var bgTex = Textures.getTexture("assets/mario/textures/background.png");
 
