@@ -56,8 +56,10 @@ public abstract class Spaceship extends GameObject {
                 SpaceGameScene.SCENE_HALF_SIZE, KeepInScene.Mode.WRAP));
 
         // Movement
-        var thrusters = ThrusterPrefabs.addThrustersToObject(this);
+        var thrusters = ThrusterPrefabs.getThrusters();
         addComponent(new ThrustController(thrusters));
+        var thrusterObjects = ThrusterPrefabs.getThrusterObjects(thrusters, transform);
+        thrusterObjects.forEach(getScene()::addObject);
 
         // Combat
         addComponent(new SpaceshipDestruction());

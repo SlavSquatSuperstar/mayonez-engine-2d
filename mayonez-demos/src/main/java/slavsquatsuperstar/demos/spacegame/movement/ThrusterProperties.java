@@ -1,5 +1,6 @@
 package slavsquatsuperstar.demos.spacegame.movement;
 
+import mayonez.*;
 import mayonez.math.*;
 import mayonez.util.Record;
 
@@ -9,20 +10,15 @@ import mayonez.util.Record;
  * @author SlavSquatSuperstar
  */
 public record ThrusterProperties(
-        ThrustDirection moveDir, ThrustDirection turnDir,
-        Vec2 position, float rotation, Vec2 scale
+        String name, ThrustDirection moveDir, ThrustDirection turnDir, Transform offsetXf
 ) {
 
     // Create from record object
     public ThrusterProperties(Record record) {
-        this(
+        this(record.getString("name"),
                 getThrustDirection(record.getString("moveDir")),
                 getThrustDirection(record.getString("turnDir")),
-
-                new Vec2(record.getFloat("posX"), record.getFloat("posY")),
-                record.getFloat("rotation"),
-                new Vec2(record.getFloat("scale"))
-        );
+                getOffsetXf(record));
     }
 
     private static ThrustDirection getThrustDirection(String value) {
@@ -31,6 +27,14 @@ public record ThrusterProperties(
         } catch (IllegalArgumentException e) {
             return ThrustDirection.NONE;
         }
+    }
+
+    private static Transform getOffsetXf(Record record) {
+        return new Transform(
+                new Vec2(record.getFloat("posX"), record.getFloat("posY")),
+                record.getFloat("rotation"),
+                new Vec2(record.getFloat("scale"))
+        );
     }
 
 }

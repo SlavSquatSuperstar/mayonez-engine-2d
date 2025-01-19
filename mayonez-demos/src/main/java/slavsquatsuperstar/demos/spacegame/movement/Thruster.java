@@ -12,7 +12,7 @@ public class Thruster extends Script {
 
     private final ThrusterProperties properties;
     private boolean moveEnabled, turnEnabled;
-    private Component exhaustAnim;
+    private Animator exhaustAnim;
 
     public Thruster(ThrusterProperties properties) {
         this.properties = properties;
@@ -23,6 +23,7 @@ public class Thruster extends Script {
         moveEnabled = false;
         turnEnabled = false;
         exhaustAnim = gameObject.getComponent(Animator.class);
+        exhaustAnim.setSpriteTransform(properties.offsetXf());
     }
 
     @Override

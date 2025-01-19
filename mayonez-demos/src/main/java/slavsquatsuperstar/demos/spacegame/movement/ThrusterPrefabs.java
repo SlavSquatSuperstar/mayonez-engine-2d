@@ -39,36 +39,28 @@ public final class ThrusterPrefabs {
 
     // Factory Methods
 
-    public static List<Thruster> addThrustersToObject(GameObject parent) {
-        var thrusters = new ArrayList<Thruster>();
-        for (var property : THRUSTER_PROPERTIES) {
-            var thruster = new Thruster(property);
-            thrusters.add(thruster);
-
-            var offsetXf = new Transform(property.position(), property.rotation(), property.scale());
-            addThrusterObject(parent, thruster, offsetXf);
-        }
-        return thrusters;
+    public static List<Thruster> getThrusters() {
+        return THRUSTER_PROPERTIES.stream().map(Thruster::new).toList();
     }
 
-    // TODO no more objects
-    private static void addThrusterObject(
-            GameObject parent, Thruster thruster, Transform offsetXf
-    ) {
-        parent.getScene().addObject(new GameObject("Thruster") {
-            @Override
-            protected void init() {
-                setZIndex(SpaceGameZIndex.EXHAUST);
-                addComponent(thruster);
-                addComponent(new Animator(EXHAUST_TEXTURES, 0.15f));
-                addComponent(new Script() {
-                    @Override
-                    protected void debugRender() {
-                        transform.set(parent.transform.combine(offsetXf));
-                    }
-                });
-            }
-        });
+    public static List<GameObject> getThrusterObjects(List<Thruster> thrusters, Transform parentXf) {
+        var objects = new ArrayList<GameObject>();
+        for (var thruster : thrusters) {
+            objects.add(new GameObject("Thruster") {
+                @Override
+                protected void init() {
+                    setZIndex(SpaceGameZIndex.EXHAUST);
+                    addComponent(thruster);
+                    addComponent(new Animator(EXHAUST_TEXTURES, 0.15f) {
+                        @Override
+                        protected void debugRender() {
+                            transform.set(parentXf);
+                        }
+                    });
+                }
+            });
+        }
+        return objects;
     }
 
 }
