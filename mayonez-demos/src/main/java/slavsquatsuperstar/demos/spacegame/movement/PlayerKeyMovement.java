@@ -34,18 +34,27 @@ public class PlayerKeyMovement extends SpaceshipMovement {
 
     @Override
     protected void update(float dt) {
-        super.update(dt);
-
         // Toggle auto-brake
         if (KeyInput.keyPressed("b")) {
             autoBrake = !autoBrake;
         }
 
-        // Move player
-        var moveDirection = getUserInput().mul(moveSpeed)
-                .rotate(transform.getRotation()); // Align with object direction
-        moveObject(moveDirection, dt);
-        rotateObject(getUserInputValue() * turnSpeed, dt);
+        // Get move input (relative to ship)
+        var moveInput = getUserInput().mul(moveSpeed);
+        var turnInput = getUserInputValue() * turnSpeed;
+
+        // Calculate brake amount
+        var brakeDir = getBrakeDir(moveInput);
+        var turnBrakeDir = getTurnBrakeDir(turnInput);
+
+        // Move and brake
+        moveObject(moveInput.rotate(transform.getRotation()), dt); // Align with object direction
+        rotateObject(turnInput, dt);
+        brake(brakeDir, turnBrakeDir);
+
+        // Fire thrusters
+        getThrustController().fireMoveThrusters(moveInput, brakeDir.rotate(-transform.getRotation()));
+        getThrustController().fireTurnThrusters(turnInput, turnBrakeDir);
     }
 
     // Movement Script Overrides
@@ -58,16 +67,6 @@ public class PlayerKeyMovement extends SpaceshipMovement {
     @Override
     public void rotateObject(float amount, float dt) {
         rb.applyTorque(amount);
-    }
-
-    @Override
-    protected boolean isBraking() {
-        // Auto brake when no input
-        // TODO split into move and turn
-        if (autoBrake && getUserInput().equals(new Vec2())
-                && MathUtils.equals(getUserInputValue(), 0f))
-            return true;
-        return KeyInput.keyDown(BRAKE_KEY);
     }
 
     @Override
@@ -84,6 +83,41 @@ public class PlayerKeyMovement extends SpaceshipMovement {
         }
         if (rb.getAngSpeed() < TURN_BRAKE_THRESHOLD_SPEED) {
             rb.setAngVelocity(0f);
+        }
+    }
+
+    @Override
+    protected Vec2 getBrakeDir(Vec2 moveInput) {
+        var shouldBrake = (KeyInput.keyDown(BRAKE_KEY) ||
+                // Auto-brake if no move input
+                (autoBrake && moveInput.equals(new Vec2()))) &&
+                // Don't burn when turning very slow
+                rb.getSpeed() > BRAKE_THRESHOLD_SPEED;
+
+        if (!shouldBrake) return new Vec2();
+        else {
+            var brakeDir = rb.getVelocity().mul(-1f).unit();
+            // Lower brake amount when moving
+            if (!MathUtils.equals(moveInput.x, 0f)) brakeDir.x *= 0.5f;
+            if (!MathUtils.equals(moveInput.y, 0f)) brakeDir.y *= 0.5f;
+            return brakeDir;
+        }
+    }
+
+    @Override
+    protected float getTurnBrakeDir(float turnInput) {
+        var shouldBrake = (KeyInput.keyDown(BRAKE_KEY) ||
+                // Auto-brake if no turn input
+                (autoBrake && MathUtils.equals(turnInput, 0f))) &&
+                // Don't burn when turning very slow
+                rb.getAngSpeed() > TURN_BRAKE_THRESHOLD_SPEED;
+
+        if (!shouldBrake) return 0f;
+        else {
+            var angBrakeDir = -Math.signum(rb.getAngVelocity());
+            // Lower brake amount when input down
+            if (!MathUtils.equals(turnInput, 0f)) angBrakeDir *= 0.5f;
+            return angBrakeDir;
         }
     }
 
