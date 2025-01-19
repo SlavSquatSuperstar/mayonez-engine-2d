@@ -21,7 +21,6 @@ public final class ProjectilePrefabs {
 
     // Constants
     public static final List<ProjectileType> PROJECTILE_TYPES;
-    public static final int NUM_PROJECTILES;
     public static final SpriteSheet PROJECTILE_SPRITES;
 
     static {
@@ -29,26 +28,14 @@ public final class ProjectilePrefabs {
         var records = SpaceshipPrefabs
                 .getRecordsFromFile("assets/spacegame/data/projectiles.csv");
         PROJECTILE_TYPES = records.stream().map(ProjectileType::new).toList();
-        NUM_PROJECTILES = PROJECTILE_TYPES.size();
 
         // Read sprite sheet
         PROJECTILE_SPRITES = Sprites.createSpriteSheet(
                 "assets/spacegame/textures/combat/projectiles.png",
-                16, 16, NUM_PROJECTILES, 0);
+                16, 16, PROJECTILE_TYPES.size(), 0);
     }
 
     private ProjectilePrefabs() {
-    }
-
-    // Projectile Data Methods
-
-    /**
-     * Get the number of projectile types.
-     *
-     * @return the count
-     */
-    public static int count() {
-        return Math.min(NUM_PROJECTILES, PROJECTILE_TYPES.size());
     }
 
     // Create Prefab Methods
@@ -107,7 +94,6 @@ public final class ProjectilePrefabs {
     ) {
         var weaponSpreadAngle = Random.randomFloat(-type.weaponSpread(), type.weaponSpread());
         return new Transform(
-//                sourceXf.getPosition().add(offsetPos.rotate(sourceXf.getRotation())),
                 sourceXf.toWorld(offsetPos),
                 sourceXf.getRotation() + offsetAngle + weaponSpreadAngle,
                 type.scale()
