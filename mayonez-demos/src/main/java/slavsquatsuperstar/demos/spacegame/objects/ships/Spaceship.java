@@ -13,7 +13,6 @@ import slavsquatsuperstar.demos.spacegame.combat.Damageable;
 import slavsquatsuperstar.demos.spacegame.combat.ShieldedDamageable;
 import slavsquatsuperstar.demos.spacegame.combat.projectiles.WeaponHardpoint;
 import slavsquatsuperstar.demos.spacegame.movement.ThrustController;
-import slavsquatsuperstar.demos.spacegame.movement.ThrusterPrefabs;
 import slavsquatsuperstar.demos.spacegame.objects.SpaceGameLayer;
 import slavsquatsuperstar.demos.spacegame.objects.SpaceGameZIndex;
 
@@ -39,7 +38,7 @@ public abstract class Spaceship extends GameObject {
                 .map(WeaponHardpoint::new).toList();
     }
 
-    private final SpaceshipProperties properties;
+    protected final SpaceshipProperties properties;
 
     public Spaceship(String name, Vec2 position, SpaceshipProperties properties) {
         super(name, new Transform(position, 0f, new Vec2(2f)), SpaceGameZIndex.SPACESHIP);
@@ -56,10 +55,7 @@ public abstract class Spaceship extends GameObject {
                 SpaceGameScene.SCENE_HALF_SIZE, KeepInScene.Mode.WRAP));
 
         // Movement
-        var thrusters = ThrusterPrefabs.getThrusters();
-        addComponent(new ThrustController(thrusters));
-        var thrusterObjects = ThrusterPrefabs.getThrusterObjects(thrusters, transform);
-        thrusterObjects.forEach(getScene()::addObject);
+        addComponent(new ThrustController(properties.thrusters()));
 
         // Combat
         addComponent(new SpaceshipDestruction());

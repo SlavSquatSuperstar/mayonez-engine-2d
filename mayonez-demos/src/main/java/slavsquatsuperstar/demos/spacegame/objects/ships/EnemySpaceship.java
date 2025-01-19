@@ -6,6 +6,7 @@ import mayonez.physics.dynamics.*;
 import slavsquatsuperstar.demos.spacegame.combat.projectiles.EnemyFireController;
 import slavsquatsuperstar.demos.spacegame.combat.projectiles.WeaponHardpoint;
 import slavsquatsuperstar.demos.spacegame.movement.EnemyMovement;
+import slavsquatsuperstar.demos.spacegame.movement.ThrusterPrefabs;
 
 import java.util.*;
 
@@ -19,7 +20,9 @@ public class EnemySpaceship extends Spaceship {
     private static final float ENEMY_HEALTH = 5f;
 
     public EnemySpaceship(String name, Vec2 position, String spriteName) {
-        super(name, position, new SpaceshipProperties(spriteName, ENEMY_HEALTH, 0f));
+        super(name, position, new SpaceshipProperties(spriteName,
+                ENEMY_HEALTH, 0f,
+                ThrusterPrefabs.THRUSTER_PROPERTIES, HARDPOINTS));
     }
 
     @Override
@@ -34,16 +37,14 @@ public class EnemySpaceship extends Spaceship {
         addComponent(new EnemyMovement());
 
         // Weapons (Randomly Select Hardpoints)
-        addComponent(new EnemyFireController(getHardpoints()));
+        addComponent(new EnemyFireController(getHardpoints(properties.hardpoints())));
     }
 
-    private static List<WeaponHardpoint> getHardpoints() {
+    private static List<WeaponHardpoint> getHardpoints(List<WeaponHardpoint> hardpoints) {
         var rand = Random.randomInt(1, 10);
-        List<WeaponHardpoint> hardpoints;
-        if (rand < 6) hardpoints = HARDPOINTS.subList(0, 1);
-        else if (rand < 9) hardpoints = HARDPOINTS.subList(0, 2);
-        else hardpoints = HARDPOINTS.subList(0, 3);
-        return hardpoints;
+        if (rand < 6) return hardpoints.subList(0, 1);
+        else if (rand < 9) return  hardpoints.subList(0, 2);
+        else return hardpoints.subList(0, 3);
     }
 
 }

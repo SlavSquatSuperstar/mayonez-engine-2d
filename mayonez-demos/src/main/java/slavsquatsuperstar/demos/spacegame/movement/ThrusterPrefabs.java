@@ -17,7 +17,7 @@ public final class ThrusterPrefabs {
 
     // Assets
     private static final CSVFile THRUSTER_DATA;
-    private static final List<ThrusterProperties> THRUSTER_PROPERTIES;
+    public static final List<ThrusterProperties> THRUSTER_PROPERTIES;
     private static final SpriteSheet EXHAUST_TEXTURES;
 
     static {
@@ -39,28 +39,30 @@ public final class ThrusterPrefabs {
 
     // Factory Methods
 
-    public static List<Thruster> getThrusters() {
-        return THRUSTER_PROPERTIES.stream().map(Thruster::new).toList();
+    public static List<Thruster> getThrusters(List<ThrusterProperties> thrusterProperties) {
+        return thrusterProperties.stream().map(Thruster::new).toList();
     }
 
     public static List<GameObject> getThrusterObjects(List<Thruster> thrusters, Transform parentXf) {
-        var objects = new ArrayList<GameObject>();
-        for (var thruster : thrusters) {
-            objects.add(new GameObject("Thruster") {
-                @Override
-                protected void init() {
-                    setZIndex(SpaceGameZIndex.EXHAUST);
-                    addComponent(thruster);
-                    addComponent(new Animator(EXHAUST_TEXTURES, 0.15f) {
-                        @Override
-                        protected void debugRender() {
-                            transform.set(parentXf);
-                        }
-                    });
-                }
-            });
-        }
-        return objects;
+        return thrusters.stream()
+                .map(thruster -> getThrusterObject(thruster, parentXf))
+                .toList();
+    }
+
+    private static GameObject getThrusterObject(Thruster thruster, Transform parentXf) {
+        return new GameObject("%s Thruster".formatted(thruster.getName())) {
+            @Override
+            protected void init() {
+                setZIndex(SpaceGameZIndex.EXHAUST);
+                addComponent(thruster);
+                addComponent(new Animator(EXHAUST_TEXTURES, 0.15f) {
+                    @Override
+                    protected void debugRender() {
+                        transform.set(parentXf);
+                    }
+                });
+            }
+        };
     }
 
 }

@@ -13,10 +13,19 @@ import java.util.*;
 public class ThrustController extends Script {
 
     // Movement Fields
-    private final List<Thruster> thrusters;
+    private final List<ThrusterProperties> thrusterProperties;
+    private List<Thruster> thrusters;
 
-    public ThrustController(List<Thruster> thrusters) {
-        this.thrusters = thrusters;
+    public ThrustController(List<ThrusterProperties> thrusterProperties) {
+        this.thrusterProperties = thrusterProperties;
+    }
+
+    @Override
+    protected void start() {
+        // Add thruster objects to scene
+        thrusters = ThrusterPrefabs.getThrusters(thrusterProperties);
+        var thrusterObjects = ThrusterPrefabs.getThrusterObjects(thrusters, transform);
+        thrusterObjects.forEach(getScene()::addObject);
     }
 
     // Thruster Methods

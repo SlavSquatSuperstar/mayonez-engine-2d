@@ -38,6 +38,10 @@ public class Thruster extends Script {
 
     // Getters and Setters
 
+    String getName() {
+        return properties.name();
+    }
+
     ThrustDirection getMoveDir() {
         return properties.moveDir();
     }
