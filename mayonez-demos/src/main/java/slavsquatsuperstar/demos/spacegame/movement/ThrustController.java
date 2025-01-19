@@ -29,8 +29,8 @@ public class ThrustController extends Script {
      */
     public void fireMoveThrusters(Vec2 moveDir, Vec2 brakeDir) {
         for (var thr : thrusters) {
-            thr.setMoveEnabled(thr.moveDir.faces(moveDir)
-                    || thr.moveDir.faces(brakeDir));
+            thr.setMoveEnabled(thr.getMoveDir().faces(moveDir)
+                    || thr.getMoveDir().faces(brakeDir));
         }
     }
 
@@ -42,8 +42,8 @@ public class ThrustController extends Script {
      */
     public void fireTurnThrusters(float turnDir, float angBrakeDir) {
         for (var thr : thrusters) {
-            thr.setTurnEnabled(thr.turnDir.faces(turnDir)
-                    || thr.turnDir.faces(angBrakeDir));
+            thr.setTurnEnabled(thr.getTurnDir().faces(turnDir)
+                    || thr.getTurnDir().faces(angBrakeDir));
         }
     }
 

@@ -7,7 +7,6 @@ import mayonez.math.*;
  *
  * @author SlavSquatSuperstar
  */
-@SuppressWarnings("unused")
 public enum ThrustDirection {
 
     FORWARD(new Vec2(0f, 1f), 0f),

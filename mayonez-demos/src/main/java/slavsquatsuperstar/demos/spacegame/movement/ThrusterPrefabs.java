@@ -4,8 +4,6 @@ import mayonez.*;
 import mayonez.assets.*;
 import mayonez.assets.text.*;
 import mayonez.graphics.sprites.*;
-import mayonez.math.*;
-import mayonez.util.Record;
 import slavsquatsuperstar.demos.spacegame.objects.SpaceGameZIndex;
 
 import java.util.*;
@@ -17,13 +15,24 @@ import java.util.*;
  */
 public final class ThrusterPrefabs {
 
-    // Constants
+    // Assets
+    private static final CSVFile THRUSTER_DATA;
+    private static final List<ThrusterProperties> THRUSTER_PROPERTIES;
+    private static final SpriteSheet EXHAUST_TEXTURES;
 
-    private static final SpriteSheet EXHAUST_TEXTURES = Sprites.createSpriteSheet(
-            "assets/spacegame/textures/ships/exhaust.png",
-            16, 16, 4, 0);
-    private static final CSVFile THRUSTER_DATA = Assets.getAsset(
-            "assets/spacegame/data/shuttle_thrusters.csv", CSVFile.class);
+    static {
+        THRUSTER_DATA = Assets.getAsset(
+                "assets/spacegame/data/shuttle_thrusters.csv", CSVFile.class);
+        if (THRUSTER_DATA == null) {
+            THRUSTER_PROPERTIES = Collections.emptyList();
+        } else {
+            THRUSTER_PROPERTIES = THRUSTER_DATA.readCSV().stream()
+                    .map(ThrusterProperties::new).toList();
+        }
+        EXHAUST_TEXTURES = Sprites.createSpriteSheet(
+                "assets/spacegame/textures/ships/exhaust.png",
+                16, 16, 4, 0);
+    }
 
     private ThrusterPrefabs() {
     }
@@ -31,28 +40,22 @@ public final class ThrusterPrefabs {
     // Factory Methods
 
     public static List<Thruster> addThrustersToObject(GameObject parent) {
-        List<Thruster> thrusters = new ArrayList<>();
-        if (THRUSTER_DATA == null) return thrusters;
+        var thrusters = new ArrayList<Thruster>();
+        for (var property : THRUSTER_PROPERTIES) {
+            var thruster = new Thruster(property);
+            thrusters.add(thruster);
 
-        for (var record : THRUSTER_DATA.readCSV()) {
-            Thruster thruster;
-            try {
-                thruster = getThruster(record);
-                thrusters.add(thruster);
-            } catch (IllegalArgumentException e) {
-                continue;
-            }
-
-            var objName = "%s Thruster".formatted(record.getString("name"));
-            addThrusterObject(parent, thruster, objName, getOffsetXf(record));
+            var offsetXf = new Transform(property.position(), property.rotation(), property.scale());
+            addThrusterObject(parent, thruster, offsetXf);
         }
         return thrusters;
     }
 
+    // TODO no more objects
     private static void addThrusterObject(
-            GameObject parent, Thruster thruster, String name, Transform offsetXf
+            GameObject parent, Thruster thruster, Transform offsetXf
     ) {
-        parent.getScene().addObject(new GameObject(name) {
+        parent.getScene().addObject(new GameObject("Thruster") {
             @Override
             protected void init() {
                 setZIndex(SpaceGameZIndex.EXHAUST);
@@ -66,33 +69,6 @@ public final class ThrusterPrefabs {
                 });
             }
         });
-    }
-
-    private static Thruster getThruster(Record record) throws IllegalArgumentException {
-        var moveDir = ThrustDirection.valueOf(record.getString("moveDir").toUpperCase());
-        var turnDir = getTurnDir(record);
-
-        if (turnDir == null) {
-            return new Thruster(moveDir);
-        } else {
-            return new Thruster(moveDir, turnDir);
-        }
-    }
-
-    private static ThrustDirection getTurnDir(Record record) throws IllegalArgumentException {
-        var turnDirStr = record.getString("turnDir");
-        if (turnDirStr.equals("none")) {
-            return null;
-        } else {
-            return ThrustDirection.valueOf(turnDirStr.toUpperCase());
-        }
-    }
-
-    private static Transform getOffsetXf(Record record) {
-        var position = new Vec2(record.getFloat("posX"), record.getFloat("posY"));
-        var rotation = record.getFloat("rotation");
-        var scale = new Vec2(record.getFloat("scale"));
-        return new Transform(position, rotation, scale);
     }
 
 }
