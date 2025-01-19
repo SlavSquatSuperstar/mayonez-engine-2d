@@ -111,10 +111,11 @@ public class PlayerUI extends GameObject {
         addComponent(hpShHint);
 
         var hotbarHints = new UITextLabel(
-                "(1)   (2)   (3)", new Vec2(82, 68),
+                "(1)   (2)   (3)   (4)", new Vec2(106, 68),
                 font, Colors.WHITE,
                 16, 2
         );
+        hintsTooltip.setAnchor(Anchor.LEFT);
         addComponent(hotbarHints);
 
         var controlText = new UITextLabel(
@@ -133,7 +134,7 @@ public class PlayerUI extends GameObject {
                         
                         Weapons
                         - (Mouse 1) Fire
-                        - (1/2/3) Select
+                        - (1-4) Select
                         """,
                 new Vec2(Preferences.getScreenWidth() - 105,
                         Preferences.getScreenHeight() - 165),

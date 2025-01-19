@@ -145,7 +145,7 @@ The demos can be accessed by running the project through Gradle (developers) or 
     - **Q**/**E** to strafe left/right
     - **Space** to brake
     - **Left Mouse** and _hold_ to fire weapons
-    - **1**-**3** to switch weapons
+    - **1**-**4** to switch weapons
     - **B** to toggle auto-brake
     - **H** to toggle hints
     - Controls can be set in user_config.json
