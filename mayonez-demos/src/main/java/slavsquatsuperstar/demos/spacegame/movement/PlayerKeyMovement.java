@@ -19,6 +19,7 @@ public class PlayerKeyMovement extends SpaceshipMovement {
 
     // Movement Fields
     private final float moveSpeed, turnSpeed;
+    private boolean autoBrake; // TODO add UI label
 
     public PlayerKeyMovement(float moveSpeed, float turnSpeed) {
         this.moveSpeed = moveSpeed;
@@ -26,8 +27,19 @@ public class PlayerKeyMovement extends SpaceshipMovement {
     }
 
     @Override
+    protected void start() {
+        super.start();
+        autoBrake = true;
+    }
+
+    @Override
     protected void update(float dt) {
         super.update(dt);
+
+        // Toggle auto-brake
+        if (KeyInput.keyPressed("b")) {
+            autoBrake = !autoBrake;
+        }
 
         // Move player
         var moveDirection = getUserInput().mul(moveSpeed)
@@ -50,6 +62,11 @@ public class PlayerKeyMovement extends SpaceshipMovement {
 
     @Override
     protected boolean isBraking() {
+        // Auto brake when no input
+        // TODO split into move and turn
+        if (autoBrake && getUserInput().equals(new Vec2())
+                && MathUtils.equals(getUserInputValue(), 0f))
+            return true;
         return KeyInput.keyDown(BRAKE_KEY);
     }
 
