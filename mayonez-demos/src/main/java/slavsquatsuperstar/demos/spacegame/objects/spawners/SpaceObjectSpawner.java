@@ -6,6 +6,7 @@ import slavsquatsuperstar.demos.spacegame.SpaceGameScene;
 import slavsquatsuperstar.demos.spacegame.objects.asteroids.RandomAsteroid;
 import slavsquatsuperstar.demos.spacegame.objects.ships.EnemySpaceship;
 import slavsquatsuperstar.demos.spacegame.objects.ships.Satellite;
+import slavsquatsuperstar.demos.spacegame.objects.ships.SpaceshipPrefabs;
 
 /**
  * Automatically populates the scene with prefabs and respawns them when they are
@@ -35,7 +36,10 @@ public class SpaceObjectSpawner extends GameObject {
         addComponent(new MultiSpawnManager(NUM_ENEMIES, ENEMY_RESPAWN_COOLDOWN) {
             @Override
             public GameObject createSpawnedObject() {
-                return new EnemySpaceship("Enemy Spaceship", SpaceGameScene.getRandomPosition()) {
+                return new EnemySpaceship(
+                        "Enemy Spaceship", SpaceGameScene.getRandomPosition(),
+                        SpaceshipPrefabs.SHUTTLE_PROPERTIES2
+                ) {
                     @Override
                     protected void init() {
                         super.init();

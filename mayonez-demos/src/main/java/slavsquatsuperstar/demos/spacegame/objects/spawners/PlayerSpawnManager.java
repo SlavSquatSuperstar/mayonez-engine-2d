@@ -5,6 +5,7 @@ import mayonez.math.*;
 import mayonez.scripts.*;
 import slavsquatsuperstar.demos.spacegame.events.*;
 import slavsquatsuperstar.demos.spacegame.objects.ships.PlayerSpaceship;
+import slavsquatsuperstar.demos.spacegame.objects.ships.SpaceshipPrefabs;
 
 /**
  * Spawns the player's ship at the start of the game and respawns it when it is
@@ -47,7 +48,9 @@ public class PlayerSpawnManager extends SpawnManager {
 
     @Override
     public GameObject createSpawnedObject() {
-        return new PlayerSpaceship("Player Spaceship", new Vec2()) {
+        return new PlayerSpaceship(
+                "Player Spaceship", new Vec2(), SpaceshipPrefabs.SHUTTLE_PROPERTIES1
+        ) {
             @Override
             protected void init() {
                 super.init();

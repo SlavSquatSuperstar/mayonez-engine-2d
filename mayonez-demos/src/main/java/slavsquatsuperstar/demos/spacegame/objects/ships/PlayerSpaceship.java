@@ -16,8 +16,8 @@ import slavsquatsuperstar.demos.spacegame.movement.PlayerKeyMovement;
 // TODO flash spawn immunity
 public class PlayerSpaceship extends Spaceship {
 
-    public PlayerSpaceship(String name, Vec2 position) {
-        super(name, position, SpaceshipPrefabs.SHUTTLE_PROPERTIES1);
+    public PlayerSpaceship(String name, Vec2 position, SpaceshipProperties properties) {
+        super(name, position, properties);
     }
 
     @Override
