@@ -8,6 +8,8 @@ import mayonez.graphics.ui.*;
 import mayonez.math.*;
 import slavsquatsuperstar.demos.DemosAssets;
 import slavsquatsuperstar.demos.spacegame.combat.projectiles.ProjectilePrefabs;
+import slavsquatsuperstar.demos.spacegame.events.AutoBrakeToggleEvent;
+import slavsquatsuperstar.demos.spacegame.events.SpaceGameEvents;
 
 /**
  * Displays the player's GUI elements.
@@ -69,6 +71,27 @@ public class PlayerUI extends GameObject {
         var font = DemosAssets.getFont();
         if (font == null) return;
 
+        // Auto-Brake Indicator
+        var autoBrakeText = new UITextLabel(
+                "Auto-Brake: Off",
+                new Vec2(100, Preferences.getScreenHeight() - 120),
+                font, Colors.WHITE,
+                16, 2
+        );
+        autoBrakeText.setAlignment(TextAlignment.LEFT);
+        addComponent(autoBrakeText);
+        SpaceGameEvents.getPlayerEventSystem().subscribe(
+                event -> {
+                    if (event instanceof AutoBrakeToggleEvent e) {
+                        if (e.isEnabled()) {
+                            autoBrakeText.setMessage("Auto-Brake: On");
+                        } else {
+                            autoBrakeText.setMessage("Auto-Brake: Off");
+                        }
+                    }
+                }
+        );
+
         // Hints
         var hintsTooltip = new UITextLabel(
                 "Show Hints (H)",
@@ -105,14 +128,15 @@ public class PlayerUI extends GameObject {
                         - (E) Right
                         - (A) Turn Left
                         - (D) Turn Right
-                        - (Space) Break
+                        - (Space) Brake
+                        - (B) Auto-Brake
                         
                         Weapons
                         - (Mouse 1) Fire
                         - (1/2/3) Select
                         """,
                 new Vec2(Preferences.getScreenWidth() - 105,
-                        Preferences.getScreenHeight() - 155),
+                        Preferences.getScreenHeight() - 165),
                 font, Colors.WHITE,
                 16, 2
         );

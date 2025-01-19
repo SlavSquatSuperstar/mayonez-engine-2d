@@ -3,6 +3,8 @@ package slavsquatsuperstar.demos.spacegame.movement;
 import mayonez.input.*;
 import mayonez.math.*;
 import slavsquatsuperstar.demos.spacegame.SpaceGameConfig;
+import slavsquatsuperstar.demos.spacegame.events.AutoBrakeToggleEvent;
+import slavsquatsuperstar.demos.spacegame.events.SpaceGameEvents;
 
 /**
  * Controls the player spaceship's movement using the keyboard.
@@ -19,7 +21,7 @@ public class PlayerKeyMovement extends SpaceshipMovement {
 
     // Movement Fields
     private final float moveSpeed, turnSpeed;
-    private boolean autoBrake; // TODO add UI label
+    private boolean autoBrake;
 
     public PlayerKeyMovement(float moveSpeed, float turnSpeed) {
         this.moveSpeed = moveSpeed;
@@ -37,6 +39,8 @@ public class PlayerKeyMovement extends SpaceshipMovement {
         // Toggle auto-brake
         if (KeyInput.keyPressed("b")) {
             autoBrake = !autoBrake;
+            SpaceGameEvents.getPlayerEventSystem()
+                    .broadcast(new AutoBrakeToggleEvent(autoBrake));
         }
 
         // Get move input (relative to ship)
