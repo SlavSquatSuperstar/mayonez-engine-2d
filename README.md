@@ -184,29 +184,24 @@ GIMP 2.10.
 
 ### Acknowledgements
 
-A massive, heartfelt thanks goes out to the following people, groups, and resources for inspiration and guidance.
+The following individuals, communities, or projects were instrumental for inspiration and guidance.
 
-- [GamesWithGabe](https://youtube.com/c/GamesWithGabe) and [The Cherno](https://youtube.com/c/TheChernoProject): For
-  keeping me motivated to work on my engine, no matter how much frustration debugging causes me.
-- [CodeNMore](https://www.youtube.com/playlist?list=PLah6faXAgguMnTBs3JnEJY0shAc18XYQZ): For creating the first game
-  engine
-  tutorial I ever followed and starting me on this crazy and amazing journey.
-- [Unity Engine](https://docs.unity3d.com/ScriptReference/): ~~Who I'm ripping off~~ For making game dev
-  accessible for everybody and providing excellent documentation.
-- [Box2D](https://box2d.org/), [dyn4j](https://dyn4j.org/), and [Iain Winter](https://github.com/IainWinter/IwEngine):
-  For demonstrating that implementing a complete physics engine from scratch isn't as intimidating as it sounds.
-- [Two-Bit Coding](https://www.youtube.com/@two-bitcoding8018),
-  [javidx9/OneLoneCoder](https://www.youtube.com/c/javidx9),
-  and [Michel Van Bizen](https://www.youtube.com/c/MichelvanBiezen): For working though the difficult math concepts
-  behind game physics in a simple manner.
-- [Azurite Community](https://azurite-engine.github.io/): For proving that LWJGL and computer graphics isn't black
-  magic and is learnable.
-- [Greenfoot Developers](https://www.greenfoot.org/files/javadoc/): For proving you **can** use Java for game dev and
-  showing the beauty of simplicity.
-- [Life of Boris](https://www.youtube.com/c/LifeofBoris/featured): For showing me the Slav way in my time of need.
-  🥔🤘🥃
-- Stack Overflow/Reddit: For answering questions I never knew I had.
-- …And many more!
+- GamesWithGabe [2D game engine](https://www.youtube.com/playlist?list=PLtrSb4XxIVbp8AKuEAlwNXDxr99e3woGE)
+  and [Geometry Dash](https://www.youtube.com/playlist?list=PLtrSb4XxIVbpSD7Gv0GLtMtKxrFmmS3K2) tutorials
+- The Cherno [OpenGL](https://www.youtube.com/playlist?list=PLlrATfBNZ98foTJPJ_Ev03o2oq3-GGOS2) and
+  [game engine](https://www.youtube.com/playlist?list=PLlrATfBNZ98dC-V-N3m0Go4deliWHPFwT) tutorials
+- CodeNMore [2D game engine](https://www.youtube.com/playlist?list=PLah6faXAgguMnTBs3JnEJY0shAc18XYQZ) tutorial
+- [Unity](https://docs.unity3d.com/ScriptReference/) and [Godot](https://docs.godotengine.org/en/stable/)
+  game engine documentations
+- [Azurite](https://azurite-engine.github.io/), [OneLoneCoder](https://github.com/OneLoneCoder/olcPixelGameEngine),
+  and [Greenfoot](https://www.greenfoot.org/door) game engines
+- [Box2D](https://box2d.org/), [dyn4j](https://dyn4j.org/), and [IainWinter](https://github.com/IainWinter/IwEngine)
+  physics engines
+- [javidx9](https://www.youtube.com/@javidx9), [Michel Van Bizen](https://www.youtube.com/@MichelvanBiezen),
+  [Iain Winter](https://winter.dev/), and [Two-Bit Coding](https://www.youtube.com/@two-bitcoding8018)
+  physics and math tutorials
+- [Life of Boris](https://www.youtube.com/@LifeofBoris) life advice
+- Random [Stack Overflow](https://stackoverflow.com/) and [Reddit](https://www.reddit.com/) threads
 
 ## License
 
