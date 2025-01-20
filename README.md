@@ -41,17 +41,17 @@ This fully-operational game engine includes:
 
 | Operating System      | Architecture | Status     | Tested On        |
 |:----------------------|:-------------|:-----------|:-----------------|
-| macOS (Intel)         | x86_64       | Supported  | macos Sequoia 15 |
-| Windows               | x86_64       | Supported  | Windows 10       | 
-| GNU/Linux             | x86_64       | Supported  | Pop!\_OS 22.04   |
-| macOS (Apple Silicon) | ARM64        | Not Tested | N/A              |
-| BSD                   | x86_x64      | Not Tested | N/A              |
+| macOS (Intel)         | x64          | Supported  | macos Sequoia 15 |
+| Windows               | x64          | Supported  | Windows 10       | 
+| GNU/Linux             | x64          | Supported  | Pop!\_OS 22.04   |
+| macOS (Apple Silicon) | arm64        | Not Tested | N/A              |
+| FreeBSD               | x64          | Not Tested | N/A              |
 
 ## Quick Start Guide
 
 ### System Requirements
 
-- 64-bit operating system (newer Java versions may not be available for 32-bit systems)
+- 64-bit operating system
 - Graphics card supporting OpenGL 4.0 or above
 - Java 21 or above (see further instructions)
 
