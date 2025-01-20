@@ -28,6 +28,7 @@ module mayonez.base {
     exports mayonez.config;
     exports mayonez.event;
     exports mayonez.input;
+    exports mayonez.input.events;
 
     // Assets
     exports mayonez.assets;
