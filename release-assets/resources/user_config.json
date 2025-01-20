@@ -5,5 +5,6 @@
 	"move_right": "e",
 	"turn_left": "a",
 	"turn_right": "d",
-	"break": "space"
+	"brake": "space",
+	"auto_brake": "b"
 }

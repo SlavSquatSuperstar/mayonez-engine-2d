@@ -4,24 +4,27 @@ import mayonez.config.*;
 import mayonez.input.*;
 import mayonez.util.Record;
 
+/**
+ * The controls for the space game.
+ *
+ * @author SlavSquatSuperstar
+ */
 public final class SpaceGameConfig extends GameConfig {
 
     public static final String CONFIG_FILE_NAME = "user_config.json";
+    private static final Record DEFAULTS;
     private static SpaceGameConfig config;
 
-    private static class Defaults {
-        static final Record config;
-
-        static {
-            config = new Record();
-            config.set("move_forward", "w");
-            config.set("move_backward", "s");
-            config.set("move_left", "q");
-            config.set("move_right", "e");
-            config.set("turn_left", "a");
-            config.set("turn_right", "d");
-            config.set("break", "space");
-        }
+    static {
+        DEFAULTS = new Record();
+        DEFAULTS.set("move_forward", "w");
+        DEFAULTS.set("move_backward", "s");
+        DEFAULTS.set("move_left", "q");
+        DEFAULTS.set("move_right", "e");
+        DEFAULTS.set("turn_left", "a");
+        DEFAULTS.set("turn_right", "d");
+        DEFAULTS.set("brake", "space");
+        DEFAULTS.set("auto_brake", "space");
     }
 
     private SpaceGameConfig(String filename, Record defaults) {
@@ -29,7 +32,7 @@ public final class SpaceGameConfig extends GameConfig {
     }
 
     public static void readConfig() {
-        config = new SpaceGameConfig(CONFIG_FILE_NAME, Defaults.config);
+        config = new SpaceGameConfig(CONFIG_FILE_NAME, DEFAULTS);
         config.readFromFile();
         config.validateUserPreferences(getRules());
     }
@@ -40,7 +43,7 @@ public final class SpaceGameConfig extends GameConfig {
                         "move_forward", "move_backward",
                         "move_left", "move_right",
                         "turn_left", "turn_right",
-                        "break"
+                        "brake"
                 )
         };
     }
@@ -66,8 +69,12 @@ public final class SpaceGameConfig extends GameConfig {
         );
     }
 
-    public static Key getBreakKey() {
-        return Key.findWithName(config.getString("break"));
+    public static Key getBrakeKey() {
+        return Key.findWithName(config.getString("brake"));
+    }
+
+    public static Key getAutoBrakeKey() {
+        return Key.findWithName(config.getString("auto_brake"));
     }
 
 }

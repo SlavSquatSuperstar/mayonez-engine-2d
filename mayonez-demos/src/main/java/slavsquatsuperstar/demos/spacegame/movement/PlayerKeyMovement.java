@@ -17,27 +17,34 @@ public class PlayerKeyMovement extends SpaceshipMovement {
     private static final InputAxis HORIZONTAL_MOVE_AXIS = SpaceGameConfig.getHorizontalMoveAxis();
     private static final InputAxis VERTICAL_MOVE_AXIS = SpaceGameConfig.getVerticalMoveAxis();
     private static final InputAxis TURN_AXIS = SpaceGameConfig.getTurnAxis();
-    private static final Key BRAKE_KEY = SpaceGameConfig.getBreakKey();
+    private static final Key BRAKE_KEY = SpaceGameConfig.getBrakeKey();
 
     // Movement Fields
+    private static boolean lastAutoBrake = false;
+
     private final float moveThrust, turnThrust;
+//    private final float maxMoveSpeed, maxTurnSpeed;
     private boolean autoBrake;
 
     public PlayerKeyMovement(float moveThrust, float turnThrust) {
         this.moveThrust = moveThrust;
         this.turnThrust = turnThrust;
+//        this.maxMoveSpeed = moveThrust * 3f;
+//        this.maxTurnSpeed = turnThrust * 60f;
     }
 
     @Override
     protected void start() {
         super.start();
-        autoBrake = false;
+        autoBrake = lastAutoBrake;
+        SpaceGameEvents.getPlayerEventSystem()
+                .broadcast(new AutoBrakeToggleEvent(autoBrake));
     }
 
     @Override
     protected void update(float dt) {
         // Toggle auto-brake
-        if (KeyInput.keyPressed("b")) {
+        if (KeyInput.keyPressed(SpaceGameConfig.getAutoBrakeKey())) {
             autoBrake = !autoBrake;
             SpaceGameEvents.getPlayerEventSystem()
                     .broadcast(new AutoBrakeToggleEvent(autoBrake));
@@ -56,10 +63,25 @@ public class PlayerKeyMovement extends SpaceshipMovement {
         rotateObject(turnInput, dt);
         brake(brakeDir.rotate(transform.getRotation()), turnBrakeDir);
 
+//        // Enforce max speed
+//        if (rb.getSpeed() > maxMoveSpeed) {
+//            moveObject(rb.getVelocity().unit().mul(-moveThrust), dt);
+//        }
+//        if (rb.getAngSpeed() > maxTurnSpeed) {
+//            rotateObject(Math.signum(rb.getAngVelocity()) * -turnThrust, dt);
+//        }
+
         // Fire thrusters
         getThrustController().fireMoveThrusters(moveInput, brakeDir);
         getThrustController().fireTurnThrusters(turnInput, turnBrakeDir);
     }
+
+    @Override
+    protected void onDestroy() {
+        lastAutoBrake = autoBrake;
+    }
+
+    // Brake Overrides
 
     @Override
     protected void brake(Vec2 brakeDir, float angBrakeDir) {

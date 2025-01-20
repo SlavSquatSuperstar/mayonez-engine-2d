@@ -72,21 +72,21 @@ public class PlayerUI extends GameObject {
         if (font == null) return;
 
         // Auto-Brake Indicator
-        var autoBrakeText = new UITextLabel(
+        var autoBrakeToolTip = new UITextLabel(
                 "Auto-Brake: Off",
-                new Vec2(100, Preferences.getScreenHeight() - 120),
+                new Vec2(20, Preferences.getScreenHeight() - 120),
                 font, Colors.WHITE,
                 16, 2
         );
-        autoBrakeText.setAlignment(TextAlignment.LEFT);
-        addComponent(autoBrakeText);
+        autoBrakeToolTip.setAnchor(Anchor.LEFT);
+        addComponent(autoBrakeToolTip);
         SpaceGameEvents.getPlayerEventSystem().subscribe(
                 event -> {
                     if (event instanceof AutoBrakeToggleEvent e) {
                         if (e.isEnabled()) {
-                            autoBrakeText.setMessage("Auto-Brake: On");
+                            autoBrakeToolTip.setMessage("Auto-Brake: On");
                         } else {
-                            autoBrakeText.setMessage("Auto-Brake: Off");
+                            autoBrakeToolTip.setMessage("Auto-Brake: Off");
                         }
                     }
                 }
