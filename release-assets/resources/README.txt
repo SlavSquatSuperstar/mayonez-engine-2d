@@ -1,4 +1,4 @@
-Thank you for downloading Mayonez Engine v0.8.1-pre9!
+Thank you for downloading Mayonez Engine v0.8.1!
 Find the latest release at https://github.com/SlavSquatSuperstar/mayonez-engine-2d/releases.
 
 Running the Program
@@ -40,7 +40,7 @@ Demo Scene Controls
    - H to toggle hints
 - Pool Balls (4)
    - Left Mouse and drag on objects to move them around
-   - Right Mouse†, drag, and release on objects to flick them
+   - Right Mouse*, drag, and release on objects to flick them
 - Mario (5)
   - W to jump
   - A/D to move side to side
@@ -50,7 +50,7 @@ Demo Scene Controls
    - Left Mouse on buttons to select a brush
    - Left Mouse on an empty space, with a brush selected, to place a block
 
-†Note: Right mouse is known to not work on Windows with some trackpads.
+*Note: Right mouse is known to not work on Windows with some trackpads.
 
 Changing User Preferences
 1. Program settings are stored in "preferences.json" next to the .jar file.

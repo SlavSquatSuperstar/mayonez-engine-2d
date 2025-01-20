@@ -5,7 +5,7 @@ The ultimate made-from-scratch and open-source 2D Java game engine to fit your S
 <img src="https://img.shields.io/badge/platform-macOS-lightgrey"></img>
 <img src="https://img.shields.io/badge/platform-Windows-lightgrey"></img>
 <img src="https://img.shields.io/badge/platform-Linux-lightgrey"></img>
-<img src="https://img.shields.io/badge/release-v0.8.0-brightgreen"></img>
+<img src="https://img.shields.io/badge/release-v0.8.1-brightgreen"></img>
 <img src=https://img.shields.io/badge/build-passing-brightgreen></img>
 
 <img src="https://img.shields.io/badge/Made%20with-Java-red"></img>
@@ -158,7 +158,7 @@ The demos can be accessed by running the project through Gradle (developers) or 
     - **H** to toggle hints
 - Pool Balls (4):
     - **Left Mouse** and *drag* on objects to move them around
-    - **Right Mouse**†, *drag*, and *release* on objects to flick them
+    - **Right Mouse***, *drag*, and *release* on objects to flick them
 - Mario (5):
     - **W** to jump
     - **A**/**D** to move side to side
@@ -168,7 +168,7 @@ The demos can be accessed by running the project through Gradle (developers) or 
     - **Left Mouse** on _buttons_ to select a brush
     - **Left Mouse** on an _empty space_, with a brush selected, to place a block
 
-†Note: Right mouse is known to not work on Windows with some trackpads.
+*Note: Right mouse is known to not work on Windows with some trackpads.
 
 ## Additional Info
 
