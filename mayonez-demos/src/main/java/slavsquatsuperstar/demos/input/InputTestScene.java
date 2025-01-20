@@ -33,6 +33,13 @@ public class InputTestScene extends Scene {
                 }
             });
         }
+
+        addObject(new GameObject("Mouse Input Detector") {
+            @Override
+            protected void init() {
+                addComponent(new MouseInputTester());
+            }
+        });
     }
 
 }
