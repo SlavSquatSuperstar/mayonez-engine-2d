@@ -20,12 +20,12 @@ public class PlayerKeyMovement extends SpaceshipMovement {
     private static final Key BRAKE_KEY = SpaceGameConfig.getBreakKey();
 
     // Movement Fields
-    private final float moveSpeed, turnSpeed;
+    private final float moveThrust, turnThrust;
     private boolean autoBrake;
 
-    public PlayerKeyMovement(float moveSpeed, float turnSpeed) {
-        this.moveSpeed = moveSpeed;
-        this.turnSpeed = turnSpeed;
+    public PlayerKeyMovement(float moveThrust, float turnThrust) {
+        this.moveThrust = moveThrust;
+        this.turnThrust = turnThrust;
     }
 
     @Override
@@ -44,8 +44,8 @@ public class PlayerKeyMovement extends SpaceshipMovement {
         }
 
         // Get move input (relative to ship)
-        var moveInput = getUserInput().mul(moveSpeed);
-        var turnInput = getUserInputValue() * turnSpeed;
+        var moveInput = getUserInput().mul(moveThrust);
+        var turnInput = getUserInputValue() * turnThrust;
 
         // Calculate brake amount (relative to ship)
         var brakeDir = getBrakeDir(moveInput);
@@ -63,8 +63,8 @@ public class PlayerKeyMovement extends SpaceshipMovement {
 
     @Override
     protected void brake(Vec2 brakeDir, float angBrakeDir) {
-        moveObject(brakeDir.mul(moveSpeed), 0f);
-        rotateObject(angBrakeDir * turnSpeed, 0f);
+        moveObject(brakeDir.mul(moveThrust), 0f);
+        rotateObject(angBrakeDir * turnThrust, 0f);
 
         // Zero out velocity if too slow
         if (Math.abs(rb.getVelocity().x) < BRAKE_THRESHOLD_SPEED) {

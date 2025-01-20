@@ -10,17 +10,18 @@ import mayonez.scripts.*;
 public class ShieldedDamageable extends Damageable {
 
     // Constants
-    private static final float SHIELD_REGEN_RATE = 0.6f;
     private static final float SHIELD_WAIT_TIME = 1.2f;
 
     // Fields
     private final Counter shieldPoints;
     private final Timer shieldWaitTimer; // Wait to recharge after getting hit
+    private final float shieldRegen; // Shield hp per second
 
-    public ShieldedDamageable(float maxHealth, float maxShield) {
+    public ShieldedDamageable(float maxHealth, float maxShield, float shieldRegen) {
         super(maxHealth);
         shieldPoints = new Counter(0, maxShield, maxShield);
         shieldWaitTimer = new Timer(SHIELD_WAIT_TIME);
+        this.shieldRegen = shieldRegen;
     }
 
     @Override
@@ -35,7 +36,7 @@ public class ShieldedDamageable extends Damageable {
 
         // Regenerate shield
         if (canRegenShield() && !shieldPoints.isAtMax()) {
-            shieldPoints.count(SHIELD_REGEN_RATE * dt);
+            shieldPoints.count(shieldRegen * dt);
             shieldPoints.clampValue();
         } else {
             shieldWaitTimer.countDown(dt);

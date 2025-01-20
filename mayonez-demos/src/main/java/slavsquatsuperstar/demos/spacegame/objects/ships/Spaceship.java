@@ -32,7 +32,7 @@ public abstract class Spaceship extends GameObject {
         setLayer(getScene().getLayer(SpaceGameLayer.SHIPS));
 
         // Collision
-        addComponent(new BoxCollider(new Vec2(0.85f, 1f)));
+        addComponent(new BoxCollider(properties.colliderSize())); // TODO in file
         addComponent(new KeepInScene(SpaceGameScene.SCENE_HALF_SIZE.mul(-1f),
                 SpaceGameScene.SCENE_HALF_SIZE, KeepInScene.Mode.WRAP));
 
@@ -41,16 +41,16 @@ public abstract class Spaceship extends GameObject {
 
         // Combat
         addComponent(new SpaceshipDestruction());
-        addComponent(getDamageable(properties.maxHealth(), properties.maxShieldHealth()));
+        addComponent(getDamageable(properties.maxHull(), properties.maxShield(), properties.shieldRegen()));
         addComponent(new CollisionDamage());
 
         // Visuals
-        addComponent(Sprites.createSprite(properties.spriteName()));
+        addComponent(Sprites.createSprite(properties.texture()));
     }
 
-    private static Damageable getDamageable(float maxHealth, float shieldHealth) {
-        if (shieldHealth > 0f) {
-            return new ShieldedDamageable(maxHealth, shieldHealth) {
+    private static Damageable getDamageable(float maxHull, float maxShield, float shieldRegen) {
+        if (maxShield > 0f) {
+            return new ShieldedDamageable(maxHull, maxShield, shieldRegen) {
                 @Override
                 public void onHealthDepleted() {
                     var shipDestruction = gameObject.getComponent(SpaceshipDestruction.class);
@@ -58,7 +58,7 @@ public abstract class Spaceship extends GameObject {
                 }
             };
         } else {
-            return new Damageable(maxHealth) {
+            return new Damageable(maxHull) {
                 @Override
                 public void onHealthDepleted() {
                     var shipDestruction = gameObject.getComponent(SpaceshipDestruction.class);

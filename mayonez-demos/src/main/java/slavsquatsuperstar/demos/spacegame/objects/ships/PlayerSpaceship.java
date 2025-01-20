@@ -29,7 +29,7 @@ public class PlayerSpaceship extends Spaceship {
         // Movement
         var rb = new Rigidbody(1f);
         addComponent(rb);
-        addComponent(new PlayerKeyMovement(12f, 3f));
+        addComponent(new PlayerKeyMovement(properties.moveThrust(), properties.turnThrust()));
 //        addComponent(new ClickToMove(10f, MoveMode.VELOCITY, true));
 
         // Weapons
