@@ -13,7 +13,6 @@ public class DespawnAsteroid extends DestroyAfterDuration {
     private final Color color;
     private Sprite sprite;
     private Vec2 startScale;
-    private boolean reachedHalfLife;
 
     public DespawnAsteroid(float lifetime, Color color) {
         super(lifetime);
@@ -24,20 +23,23 @@ public class DespawnAsteroid extends DestroyAfterDuration {
     protected void start() {
         sprite = gameObject.getComponent(Sprite.class);
         startScale = transform.getScale();
-        reachedHalfLife = false;
     }
 
     @Override
     protected void update(float dt) {
         super.update(dt);
 
+        /*
+         * Shrink the fragment quadratically until it disappears.
+         *
+         * S(l) = s_0(1 - (1 - l/l_0)^2)
+         * S = scale, S_0 = start scale
+         * l = remaining lifetime, l_0 = max lifetime
+         */
         var lifetimeRemaining = this.getLifetime() / this.getMaxLifetime();
-        if (reachedHalfLife) {
-            // Shrink the fragment until it disappears
-            transform.setScale(startScale.mul(2f * lifetimeRemaining));
-        } else {
-            if (lifetimeRemaining < 0.5f) reachedHalfLife = true;
-        }
+        var scaleFunction = 1 - MathUtils.squared(1 - lifetimeRemaining);
+
+        transform.setScale(startScale.mul(scaleFunction));
 
         if (sprite != null) {
             // Fade the fragment until it disappears

@@ -74,24 +74,23 @@ public sealed class JTexture extends Texture permits JSpriteSheetTexture {
      * @param parentXf the transform of the parent object
      * @param spriteXf any additional transformations on the image
      * @param color    any recoloring of the image
-     * @param scale    the scale of the scene
      */
-    public void draw(Graphics2D g2, Transform parentXf, Transform spriteXf, Color color, float scale) {
+    public void draw(Graphics2D g2, Transform parentXf, Transform spriteXf, Color color) {
         if (imageData == null) return;
 
         // Draw sprite at parent center with parent rotation and scale
         var texXf = parentXf.combine(spriteXf);
-        var g2Xf = getImageTransform(texXf, scale);
+        var g2Xf = getImageTransform(texXf);
 
         // Recolor the image (without modifying the original)
         var recoloredImage = getRecoloredImage(color);
         g2.drawImage(recoloredImage, g2Xf, null); // Draw buffered image
     }
 
-    private AffineTransform getImageTransform(Transform texXf, float scale) {
+    private AffineTransform getImageTransform(Transform texXf) {
         // Measurements are in screen coordinates (pixels)
-        var parentCenter = texXf.getPosition().mul(scale);
-        var parentSize = texXf.getScale().mul(scale);
+        var parentCenter = texXf.getPosition();
+        var parentSize = texXf.getScale();
         var parentHalfSize = parentSize.mul(0.5f);
 
         var g2Xf = AffineTransform.getTranslateInstance(

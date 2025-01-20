@@ -5,7 +5,7 @@ import mayonez.graphics.*;
 import mayonez.graphics.textures.*;
 import mayonez.math.*;
 import mayonez.math.shapes.*;
-import mayonez.renderer.batch.*;
+import mayonez.renderer.gl.*;
 
 /**
  * A rectangular sprite with a texture and color that is drawn to the UI.
@@ -13,7 +13,7 @@ import mayonez.renderer.batch.*;
  * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.GL)
-public class UISprite extends Component implements UIRenderableElement {
+public class UISprite extends Component implements UIRenderableElement, GLQuad {
 
     // Constants
     private static final Color DEFAULT_COLOR = Colors.WHITE;
@@ -38,7 +38,7 @@ public class UISprite extends Component implements UIRenderableElement {
         this(position, size, null, color);
     }
 
-    // UI Bounds Getters and Setters
+    // UI Bounds Methods
 
     @Override
     public Vec2 getPosition() {
@@ -78,7 +78,7 @@ public class UISprite extends Component implements UIRenderableElement {
         this.bounds = bounds;
     }
 
-    // UI Renderable Getters and Setters
+    // UI Renderable Methods
 
     @Override
     public Color getColor() {
@@ -90,14 +90,9 @@ public class UISprite extends Component implements UIRenderableElement {
         this.color = color;
     }
 
-    // TODO better encapsulate
     @Override
     public GLTexture getTexture() {
-        if (texture instanceof GLTexture glTexture) {
-            return glTexture;
-        } else {
-            return null;
-        }
+        return (texture instanceof GLTexture glTex) ? glTex : null;
     }
 
     @Override
@@ -105,27 +100,11 @@ public class UISprite extends Component implements UIRenderableElement {
         this.texture = texture;
     }
 
-    // Renderer Methods
+    // Renderable Methods
 
     @Override
-    public void pushToBatch(RenderBatch batch) {
-        var sprVertices = new BoundingBox(bounds.getCenter(), bounds.getSize())
-                .getVertices();
-        var texCoords = (texture != null)
-                ? ((GLTexture) texture).getTexCoords()
-                : GLTexture.DEFAULT_TEX_COORDS;
-        var texID = batch.getTextureSlot((GLTexture) texture);
-        BatchPushHelper.pushSprite(batch, sprVertices, color, texCoords, texID);
-    }
-
-    @Override
-    public int getBatchSize() {
-        return RenderBatch.MAX_SPRITES;
-    }
-
-    @Override
-    public DrawPrimitive getPrimitive() {
-        return DrawPrimitive.SPRITE;
+    public Vec2[] getVertexPositions() {
+        return new BoundingBox(bounds.getCenter(), bounds.getSize()).getVertices();
     }
 
     @Override

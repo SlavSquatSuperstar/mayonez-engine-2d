@@ -5,6 +5,7 @@ import mayonez.graphics.*;
 import mayonez.graphics.ui.*;
 import mayonez.math.*;
 import mayonez.renderer.*;
+import mayonez.renderer.gl.*;
 
 import java.util.*;
 
@@ -28,7 +29,7 @@ public abstract class TextLabel extends Script implements Renderable {
     private TextAlignment alignment;
 
     // Glyph Fields
-    private final List<GlyphSprite> glyphSprites;
+    private final List<GLRenderable> glyphSprites;
     private final List<TextLine> lines;
     private float lineOffset;
 
@@ -221,7 +222,7 @@ public abstract class TextLabel extends Script implements Renderable {
 
     // Renderable Methods
 
-    public List<GlyphSprite> getGlyphSprites() {
+    public List<GLRenderable> getGlyphSprites() {
         return glyphSprites;
     }
 

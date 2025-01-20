@@ -1,8 +1,7 @@
 package mayonez.graphics.camera;
 
 import mayonez.*;
-import mayonez.engine.*;
-import mayonez.scripts.camera.*;
+import mayonez.application.*;
 
 /**
  * A factory class that constructs {@link mayonez.graphics.camera.Camera} objects
@@ -16,17 +15,15 @@ public final class CameraFactory {
     }
 
     /**
-     * Creates a new {@link mayonez.graphics.camera.Camera} object with the given
-     * scene scale.
+     * Creates a new {@link mayonez.graphics.camera.Camera} object.
      *
-     * @param sceneScale many pixels correspond to one world unit in the scene
      * @return the game engine
      */
-    public static Camera createCamera(float sceneScale) {
+    public static Camera createCamera() {
         if (Mayonez.getUseGL()) {
-            return new GLCamera(WindowProperties.getScreenSize(), sceneScale);
+            return new GLCamera(WindowProperties.getScreenSize());
         } else {
-            return new JCamera(WindowProperties.getScreenSize(), sceneScale);
+            return new JCamera(WindowProperties.getScreenSize());
         }
     }
 
@@ -37,15 +34,10 @@ public final class CameraFactory {
      * @return the camera object
      */
     public static GameObject createCameraObject(Camera camera) {
-        var keepInScene = camera.setKeepInSceneScript(new CameraKeepInScene()
-                .setEnabled(false));
-
         return new GameObject("Camera") {
-            // TODO custom camera factory
             @Override
             protected void init() {
                 addComponent(camera);
-                addComponent(keepInScene);
             }
 
             // Don't want to get rid of the camera!

@@ -1,10 +1,8 @@
 package mayonez.assets
 
-import mayonez.io.*
 import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
-import java.nio.file.*
 
 /**
  * A resource or file used by this program. Stores a [FilePath] and opens
@@ -14,43 +12,39 @@ import java.nio.file.*
  *
  * @author SlavSquatSuperstar
  */
-open class Asset(filename: String) {
+// TODO hold streams, close on free
+open class Asset(private val filePath: FilePath) {
 
-    private val filePath: FilePath = FilePath(filename)
+    constructor(filename: String) : this(FilePath.fromFilename(filename))
+
     val filename: String = filePath.filename
-    val locationType: LocationType = filePath.locationType
 
     // I/O Methods
 
     /**
-     * Creates an [InputStream] that allows data to be read from this asset.
-     * The input stream should be closed after use.
+     * Opens the [InputStream] for this asset. The input stream should be closed
+     * after use.
      *
      * @return the input stream
+     * @throws IOException if the asset cannot be read from
      */
     @Throws(IOException::class)
-    fun openInputStream(): InputStream {
-        if (!filePath.isReadable()) {
-            throw IOException("$locationType asset $filename is not readable")
-        }
-        return locationType.openInputStream(filename)
+    protected fun openInputStream(): InputStream {
+        return filePath.openInputStream()
     }
 
     /**
-     * Creates an [OutputStream] that allows data to be saved to this asset,
-     * and creates the file on the computer if it doesn't exist. The output
-     * stream should be closed after use.
+     * Opens the [OutputStream] for this asset. The output stream should be closed
+     * after use.
      *
      * @param append whether to add data to an existing file's contents instead
      *     of overwriting it
      * @return the output stream
+     * @throws IOException if the file cannot be written to
      */
     @Throws(IOException::class)
-    fun openOutputStream(append: Boolean): OutputStream {
-        if (!filePath.isWritable()) {
-            throw IOException("$locationType asset $filename is not writable")
-        }
-        return locationType.openOutputStream(filename, append)
+    protected fun openOutputStream(append: Boolean): OutputStream {
+        return filePath.openOutputStream(append)
     }
 
     /** Frees any resources used by this asset after use. */
@@ -60,6 +54,8 @@ open class Asset(filename: String) {
 
     protected fun getFilenameInQuotes(): String = "\"$filename\""
 
-    override fun toString(): String = "$locationType ${javaClass.simpleName} \"$filename\""
+    override fun toString(): String {
+        return "${filePath.typeName} ${javaClass.simpleName} \"$filename\""
+    }
 
 }

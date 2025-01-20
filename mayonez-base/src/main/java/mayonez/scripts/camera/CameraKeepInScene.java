@@ -1,6 +1,7 @@
 package mayonez.scripts.camera;
 
 import mayonez.graphics.camera.*;
+import mayonez.math.*;
 import mayonez.math.shapes.*;
 import mayonez.scripts.*;
 
@@ -13,20 +14,19 @@ public class CameraKeepInScene extends KeepInScene {
 
     private Camera camera;
 
-    public CameraKeepInScene() {
-        super(Mode.STOP);
+    public CameraKeepInScene(Vec2 minPos, Vec2 maxPos) {
+        super(minPos, maxPos, Mode.STOP);
     }
 
     @Override
     protected void start() {
-        setMoveBounds();
         camera = getScene().getCamera();
         if (camera == null) setEnabled(false);
     }
 
     @Override
     protected BoundingBox getObjectBounds() {
-        return camera.getBounds();
+        return new BoundingBox(camera.getPosition(), camera.getSize());
     }
 
     // KeepInScene Overrides

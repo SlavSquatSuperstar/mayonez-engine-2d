@@ -6,6 +6,8 @@ import mayonez.math.shapes.*;
 import mayonez.physics.colliders.*;
 import mayonez.physics.dynamics.*;
 
+import java.util.*;
+
 /**
  * Detects when an object reaches the edge of or exits a given boundary
  * and sets custom behavior.
@@ -14,31 +16,21 @@ import mayonez.physics.dynamics.*;
  */
 public class KeepInScene extends Script {
 
-    private Vec2 minPos, maxPos;
+    private final Vec2 minPos, maxPos;
     private Mode mode;
     private Collider objectCollider = null;
     private BoundingBox objectBounds;
     private Rigidbody rb = null;
-    private float bounce = 0f;
 
     /**
-     * Create a new KeepInScene script and use the scene bounds.
-     *
-     * @param mode what to do when reaching boundaries
-     */
-    public KeepInScene(Mode mode) { // Use scene bounds
-        this(null, null, mode);
-    }
-
-    /**
-     * Create a new KeepInScene script and define an object's bounds.
+     * Create a new KeepInScene script with the given bounds
      *
      * @param minPos the minimum coordinates the object's collider should reach
      * @param maxPos the maximum coordinates the object's collider should reach
      * @param mode   what to do when reaching boundaries
      */
     public KeepInScene(Vec2 minPos, Vec2 maxPos, Mode mode) {
-        super(UpdateOrder.COLLISION);
+        super(UpdateOrder.SCRIPT);
         this.minPos = minPos;
         this.maxPos = maxPos;
         this.mode = mode;
@@ -46,24 +38,13 @@ public class KeepInScene extends Script {
 
     @Override
     protected void start() {
-        setMoveBounds();
-
         objectCollider = getCollider();
         if (objectCollider == null) {
             Logger.warn("%s needs a collider to function!", this);
             mode = null;
-            setEnabled(false); // disable script if no collider
+            setEnabled(false);
         }
-
         rb = getRigidbody();
-        if (rb == null) {
-            if (mode == Mode.BOUNCE) {
-                Logger.warn("%s needs a rigidbody to bounce!", this);
-                mode = Mode.STOP; // need rb to bounce
-            }
-        } else {
-            bounce = -rb.getMaterial().getBounce();
-        }
     }
 
     @Override
@@ -80,12 +61,6 @@ public class KeepInScene extends Script {
     }
 
     // Bounds Helper Methods
-
-    protected void setMoveBounds() {
-        var sceneHalfSize = getScene().getSize(); // Use scene bounds if any are null
-        if (minPos == null) minPos = sceneHalfSize.mul(-0.5f);
-        if (maxPos == null) maxPos = sceneHalfSize.mul(0.5f);
-    }
 
     protected BoundingBox getObjectBounds() {
         return objectCollider.getMinBounds();
@@ -121,15 +96,9 @@ public class KeepInScene extends Script {
      * @param direction which edge the object has crossed
      */
     protected void onCrossBounds(Direction direction) {
-        switch (mode) {
-            case STOP -> {
-                alignInside(direction);
-                stop(direction);
-            }
-            case BOUNCE -> {
-                alignInside(direction);
-                bounce(direction);
-            }
+        if (Objects.requireNonNull(mode) == Mode.STOP) {
+            alignInside(direction);
+            stop(direction);
         }
     }
 
@@ -140,9 +109,8 @@ public class KeepInScene extends Script {
      * @param direction which edge the object has crossed
      */
     protected void onExitBounds(Direction direction) {
-        switch (mode) {
-            case WRAP -> alignOutside(direction);
-            case DESTROY -> gameObject.destroy();
+        if (Objects.requireNonNull(mode) == Mode.WRAP) {
+            alignOutside(direction);
         }
     }
 
@@ -182,14 +150,6 @@ public class KeepInScene extends Script {
         }
     }
 
-    private void bounce(Direction dir) {
-        if (rb == null) return;
-        switch (dir) {
-            case LEFT, RIGHT -> rb.getVelocity().x *= bounce;
-            case TOP, BOTTOM -> rb.getVelocity().y *= bounce;
-        }
-    }
-
     // Enums
 
     /**
@@ -201,17 +161,9 @@ public class KeepInScene extends Script {
          */
         STOP,
         /**
-         * Make an object bounce back when touching an edge. Requires a rigidbody and depends on the physics material.
-         */
-        BOUNCE,
-        /**
          * Move an object to the opposite side of the scene when passing an edge.
          */
-        WRAP,
-        /**
-         * Remove an object from the scene when passing an edge.
-         */
-        DESTROY
+        WRAP
     }
 
     /**

@@ -1,9 +1,10 @@
 package mayonez
 
+import mayonez.Mayonez.setConfig
+import mayonez.Mayonez.start
+import mayonez.application.*
 import mayonez.assets.*
 import mayonez.config.*
-import mayonez.engine.*
-import mayonez.input.*
 import kotlin.system.exitProcess
 
 /**
@@ -27,7 +28,7 @@ import kotlin.system.exitProcess
 object Mayonez {
 
     // Application Fields
-    private lateinit var game: GameEngine // Main application
+    private lateinit var application: Application // Application instance
     private var initialized: Boolean = false // Are singletons initialized
     private var started: Boolean = false // Is application running
 
@@ -49,25 +50,25 @@ object Mayonez {
     @JvmStatic
     val deltaTime: Float
         @JvmName("getDeltaTime") get() {
-            return if (this::game.isInitialized) game.deltaTime else 0f
+            return if (this::application.isInitialized) application.deltaTime else 0f
         }
 
     @JvmStatic
     val fps: Int
         @JvmName("getFPS") get() {
-            return if (this::game.isInitialized) game.fps else 0
+            return if (this::application.isInitialized) application.fps else 0
         }
 
     @JvmStatic
     val updateFPS: Int
         get() {
-            return if (this::game.isInitialized) game.updateFPS else 0
+            return if (this::application.isInitialized) application.updateFPS else 0
         }
 
     @JvmStatic
     val renderFPS: Int
         get() {
-            return if (this::game.isInitialized) game.renderFPS else 0
+            return if (this::application.isInitialized) application.renderFPS else 0
         }
 
     // Init Methods
@@ -111,14 +112,15 @@ object Mayonez {
      * Initialize the game engine and input instances of the application.
      */
     private fun initializeGame(useGL: Boolean) {
-        if (!this::game.isInitialized) {
-            // Create input instances
-            KeyInput.setUseGL(useGL)
-            MouseInput.setUseGL(useGL)
-
-            // Create game engine instances
-            game = EngineFactory.createGameEngine(useGL)
-            Logger.debug("Using \"%s\" engine", if (useGL) "GL" else "AWT")
+        if (!this::application.isInitialized) {
+            // Create game engine instance
+            try {
+                application = ApplicationFactory.createApplication(useGL)
+                Logger.debug("Using \"%s\" engine", if (useGL) "GL" else "AWT")
+            } catch (e: WindowInitException) {
+                Logger.printStackTrace(e)
+                exitWithErrorMessage("Fatal error while initializing engine")
+            }
 
             // Load assets
             // TODO handle from scene manager
@@ -146,7 +148,7 @@ object Mayonez {
             started = true
             SceneManager.setScene(scene)
             // Start game
-            if (this::game.isInitialized) game.start()
+            if (this::application.isInitialized) application.start()
             else exitWithErrorMessage("Cannot start without configuring program \"Use GL\" option")
         }
     }
@@ -164,7 +166,7 @@ object Mayonez {
             SceneManager.stopScene()
             SceneManager.clearScenes()
             Assets.clearAssets()
-            game.stop()
+            application.stop()
             exitProgram(status)
         }
     }
@@ -184,9 +186,7 @@ object Mayonez {
      * given status.
      */
     private fun exitProgram(status: Int): Nothing {
-        val message = "Exited program with code $status"
-        if (status == 0) Logger.log("$message (Success)")
-        else Logger.error("$message (Error)")
+        Logger.shutdown(status)
         exitProcess(status)
     }
 

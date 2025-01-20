@@ -1,6 +1,7 @@
 package mayonez.physics.colliders
 
 import mayonez.*
+import mayonez.event.*
 import mayonez.math.*
 import mayonez.math.shapes.*
 import mayonez.physics.*
@@ -19,6 +20,10 @@ import mayonez.physics.manifold.*
  */
 abstract class Collider(private val shape: Shape) :
     Component(UpdateOrder.COLLISION), CollisionBody {
+
+    // Collision Event Fields
+
+    private var collisionCallbacks: EventSystem<CollisionEvent> = EventSystem()
 
     // Component References
 
@@ -51,6 +56,10 @@ abstract class Collider(private val shape: Shape) :
 
     override fun start() {
         physicsBody = gameObject.getComponent(Rigidbody::class.java)
+    }
+
+    override fun onDestroy() {
+        collisionCallbacks.unsubscribeAll()
     }
 
     // Shape Properties
@@ -109,20 +118,20 @@ abstract class Collider(private val shape: Shape) :
         return (this.layer == null) || this.layer.canInteract(other.layer)
     }
 
-    // Callback Methods
+    // Collision Event Methods
 
-    override fun sendCollisionEvent(
-        other: CollisionBody, trigger: Boolean, type: CollisionEventType,
-        direction: Vec2?, velocity: Vec2?
-    ) {
-        if (gameObject == null) return
-        if (other is Collider && other.gameObject != null) {
-            this.gameObject.onCollisionEvent(
-                CollisionEvent(
-                    other.gameObject, trigger, type, direction, velocity
-                )
-            )
-        }
+    override fun onCollisionEvent(event: CollisionEvent) {
+        collisionCallbacks.broadcast(event)
+    }
+
+    /**
+     * Add a collision callback to this collider that will be notified when this object
+     * receives a collision event.
+     *
+     * @param callback the callback method or object
+     */
+    fun addCollisionCallback(callback: EventListener<CollisionEvent>) {
+        collisionCallbacks.subscribe(callback)
     }
 
 }

@@ -1,0 +1,9 @@
+name,moveDir,turnDir,posX,posY,rotation,scale
+Left Aft,forward,none,-0.1,-0.59,0,0.3
+Right Aft,forward,none,0.1,-0.59,0,0.3
+Left Fore,backward,none,-0.075,0.455,180,0.1
+Right Fore,backward,none,0.075,0.455,180,0.1
+Left Nose,right,turn_right,-0.135,0.39,-90,0.08
+Right Nose,left,turn_left,0.135,0.39,90,0.08
+Left Tail,right,turn_left,-0.195,-0.36,-90,0.08
+Right Tail,left,turn_right,0.195,-0.36,90,0.08

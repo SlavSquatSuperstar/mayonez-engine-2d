@@ -10,6 +10,7 @@ import java.util.*
  * @constructor Construct a color from red, green, blue, and alpha values
  *     between 0-255.
  */
+// TODO sRGB gamma correction
 class Color(red: Int, green: Int, blue: Int, alpha: Int) {
 
     // Constructors

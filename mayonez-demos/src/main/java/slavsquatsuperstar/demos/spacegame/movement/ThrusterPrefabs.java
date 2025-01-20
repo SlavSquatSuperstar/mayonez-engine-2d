@@ -1,11 +1,7 @@
 package slavsquatsuperstar.demos.spacegame.movement;
 
 import mayonez.*;
-import mayonez.assets.*;
-import mayonez.assets.text.*;
 import mayonez.graphics.sprites.*;
-import mayonez.math.*;
-import mayonez.util.Record;
 import slavsquatsuperstar.demos.spacegame.objects.SpaceGameZIndex;
 
 import java.util.*;
@@ -17,82 +13,40 @@ import java.util.*;
  */
 public final class ThrusterPrefabs {
 
-    // Constants
-
+    // Assets
     private static final SpriteSheet EXHAUST_TEXTURES = Sprites.createSpriteSheet(
             "assets/spacegame/textures/ships/exhaust.png",
             16, 16, 4, 0);
-    private static final CSVFile THRUSTER_DATA = Assets.getAsset(
-            "assets/spacegame/data/thrusters.csv", CSVFile.class);
 
     private ThrusterPrefabs() {
     }
 
     // Factory Methods
 
-    public static List<Thruster> addThrustersToObject(GameObject parent) {
-        List<Thruster> thrusters = new ArrayList<>();
-        if (THRUSTER_DATA == null) return thrusters;
-
-        for (var record : THRUSTER_DATA.readCSV()) {
-            Thruster thruster;
-            try {
-                thruster = getThruster(record);
-                thrusters.add(thruster);
-            } catch (IllegalArgumentException e) {
-                continue;
-            }
-
-            var objName = "%s Thruster".formatted(record.getString("name"));
-            addThrusterObject(parent, thruster, objName, getOffsetXf(record));
-        }
-        return thrusters;
+    static List<Thruster> getThrusters(List<ThrusterProperties> thrusterProperties) {
+        return thrusterProperties.stream().map(Thruster::new).toList();
     }
 
-    private static void addThrusterObject(
-            GameObject parent, Thruster thruster, String name, Transform offsetXf
-    ) {
-        parent.getScene().addObject(new GameObject(name) {
+    static List<GameObject> getThrusterObjects(List<Thruster> thrusters, Transform parentXf) {
+        return thrusters.stream()
+                .map(thruster -> getThrusterObject(thruster, parentXf))
+                .toList();
+    }
+
+    private static GameObject getThrusterObject(Thruster thruster, Transform parentXf) {
+        return new GameObject("%s Thruster".formatted(thruster.getName())) {
             @Override
             protected void init() {
                 setZIndex(SpaceGameZIndex.EXHAUST);
                 addComponent(thruster);
-                addComponent(new Animator(EXHAUST_TEXTURES, 0.15f));
-                addComponent(new Script() {
+                addComponent(new Animator(EXHAUST_TEXTURES, 0.15f) {
                     @Override
                     protected void debugRender() {
-                        transform.set(parent.transform.combine(offsetXf));
+                        transform.set(parentXf);
                     }
                 });
             }
-        });
-    }
-
-    private static Thruster getThruster(Record record) throws IllegalArgumentException {
-        var moveDir = ThrustDirection.valueOf(record.getString("moveDir").toUpperCase());
-        var turnDir = getTurnDir(record);
-
-        if (turnDir == null) {
-            return new Thruster(moveDir);
-        } else {
-            return new Thruster(moveDir, turnDir);
-        }
-    }
-
-    private static ThrustDirection getTurnDir(Record record) throws IllegalArgumentException {
-        var turnDirStr = record.getString("turnDir");
-        if (turnDirStr.equals("none")) {
-            return null;
-        } else {
-            return ThrustDirection.valueOf(turnDirStr.toUpperCase());
-        }
-    }
-
-    private static Transform getOffsetXf(Record record) {
-        var position = new Vec2(record.getFloat("posX"), record.getFloat("posY"));
-        var rotation = record.getFloat("rotation");
-        var scale = new Vec2(record.getFloat("scale"));
-        return new Transform(position, rotation, scale);
+        };
     }
 
 }

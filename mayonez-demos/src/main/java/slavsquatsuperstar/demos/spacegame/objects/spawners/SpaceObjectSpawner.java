@@ -2,9 +2,11 @@ package slavsquatsuperstar.demos.spacegame.objects.spawners;
 
 import mayonez.*;
 import mayonez.math.*;
+import slavsquatsuperstar.demos.spacegame.SpaceGameScene;
 import slavsquatsuperstar.demos.spacegame.objects.asteroids.RandomAsteroid;
 import slavsquatsuperstar.demos.spacegame.objects.ships.EnemySpaceship;
 import slavsquatsuperstar.demos.spacegame.objects.ships.Satellite;
+import slavsquatsuperstar.demos.spacegame.objects.ships.SpaceshipPrefabs;
 
 /**
  * Automatically populates the scene with prefabs and respawns them when they are
@@ -34,8 +36,14 @@ public class SpaceObjectSpawner extends GameObject {
         addComponent(new MultiSpawnManager(NUM_ENEMIES, ENEMY_RESPAWN_COOLDOWN) {
             @Override
             public GameObject createSpawnedObject() {
-                return new EnemySpaceship("Enemy Spaceship",
-                        "assets/spacegame/textures/ships/spaceship2.png") {
+                var isFighter = Random.randomPercent(0.75f);
+                var name = isFighter ? "Enemy Fighter" : "Enemy Spaceship";
+                var properties = isFighter ? SpaceshipPrefabs.SHUTTLE_PROPERTIES2
+                        : SpaceshipPrefabs.FIGHTER_PROPERTIES;
+
+                return new EnemySpaceship(
+                        name, SpaceGameScene.getRandomPosition(), properties
+                ) {
                     @Override
                     protected void init() {
                         super.init();
@@ -55,7 +63,7 @@ public class SpaceObjectSpawner extends GameObject {
             @Override
             public GameObject createSpawnedObject() {
                 if (Random.randomBoolean()) {
-                    return new RandomAsteroid("Asteroid", getScene().getRandomPosition()) {
+                    return new RandomAsteroid("Asteroid", SpaceGameScene.getRandomPosition()) {
                         @Override
                         protected void init() {
                             super.init();
@@ -68,7 +76,7 @@ public class SpaceObjectSpawner extends GameObject {
                         }
                     };
                 } else {
-                    return new Satellite("Satellite", getScene().getRandomPosition()) {
+                    return new Satellite("Satellite", SpaceGameScene.getRandomPosition()) {
                         @Override
                         protected void init() {
                             super.init();

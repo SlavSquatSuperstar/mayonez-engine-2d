@@ -42,7 +42,7 @@ internal class JSprite private constructor(
 
     override fun render(g2: Graphics2D) {
         if (texture != null) {
-            texture!!.draw(g2, transform, getSpriteTransform(), color, scene.scale)
+            texture!!.draw(g2, transform, getSpriteTransform(), color)
         } else {
             scene.debugDraw.fillShape(
                 Rectangle(transform.position, transform.scale), color

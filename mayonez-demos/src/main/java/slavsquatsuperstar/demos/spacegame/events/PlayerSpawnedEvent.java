@@ -1,14 +1,13 @@
 package slavsquatsuperstar.demos.spacegame.events;
 
 import mayonez.*;
-import mayonez.event.*;
 
 /**
  * Indicates that the player ship has been added to the scene.
  *
  * @author SlavSquatSuperstar
  */
-public class PlayerSpawnedEvent extends Event {
+public class PlayerSpawnedEvent extends SpaceGameEvent {
 
     private final GameObject player;
 

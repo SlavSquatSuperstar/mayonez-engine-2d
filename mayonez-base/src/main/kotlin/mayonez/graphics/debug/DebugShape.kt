@@ -7,46 +7,38 @@ import mayonez.renderer.batch.*
 import mayonez.renderer.gl.*
 import java.awt.*
 
+private const val MAX_BATCH_LINES: Int = 500
+private const val MAX_BATCH_TRIANGLES: Int = 1000
+
 /**
  * Passes shape and color information to a [mayonez.renderer.DebugRenderer].
  *
  * @author SlavSquatSuperstar
  */
-internal data class DebugShape(internal val shape: MShape, private val brush: ShapeBrush) :
+internal data class DebugShape(internal val shape: MShape, internal val brush: ShapeBrush) :
     JRenderable, GLRenderable {
 
     private val color: MColor
         get() = brush.color
 
-    private val fill: Boolean
+    internal val fill: Boolean
         get() = brush.fill
 
     internal val strokeSize: Float
         get() = brush.strokeSize
 
-    // Copy Methods
-
-    internal fun copyBrushToStyle(lineStyle: LineStyle): ShapeBrush {
-        return ShapeBrush(this.color, lineStyle.fill, this.zIndex, this.strokeSize)
-    }
-
     // AWT Renderer Methods
 
     override fun render(g2: Graphics2D?) {
         if (g2 == null) return
-        g2.setBrushProperties(color, strokeSize)
-        g2.drawShape(shape, fill)
-    }
 
-    private fun Graphics2D.setBrushProperties(color: MColor, strokeSize: Float) {
-        this.color = color.toAWT()
-        this.stroke = BasicStroke(strokeSize)
-    }
+        // Set brush properties
+        g2.color = color.toAWT()
+        g2.stroke = BasicStroke(strokeSize)
 
-    private fun Graphics2D.drawShape(shape: MShape, fill: Boolean) {
+        // Draw shape
         val awtShape = shape.toAWTShape()
-        if (fill) fill(awtShape)
-        else draw(awtShape)
+        if (fill) g2.fill(awtShape) else g2.draw(awtShape)
     }
 
     // GL Renderer Methods
@@ -79,31 +71,11 @@ internal data class DebugShape(internal val shape: MShape, private val brush: Sh
         }
     }
 
-    // GL Shape Conversion Methods
-
-    /**
-     * Break down this shape into its simplest components (lines or triangles).
-     *
-     * @return an array of primitive shapes
-     */
-    internal fun splitIntoParts(): Array<out MShape> {
-        return when (val shape = this.shape) {
-            is Edge -> arrayOf(shape) // add line directly
-            is MPolygon -> shape.splitIntoParts(this.fill) // else break into lines or triangles
-            is Ellipse -> shape.toPolygon().splitIntoParts(this.fill)
-            else -> emptyArray()
-        }
-    }
-
-    private fun MPolygon.splitIntoParts(fill: Boolean): Array<out MShape> {
-        return if (fill) this.triangles else this.edges
-    }
-
     // Renderable Methods
 
     override fun getBatchSize(): Int {
-        return if (fill) RenderBatch.MAX_TRIANGLES
-        else RenderBatch.MAX_LINES
+        return if (fill) MAX_BATCH_TRIANGLES
+        else MAX_BATCH_LINES
     }
 
     override fun getPrimitive(): DrawPrimitive {

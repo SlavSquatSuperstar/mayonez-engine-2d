@@ -14,6 +14,7 @@ import mayonez.math.*;
 public final class JSpriteSheetTexture extends JTexture {
 
     private final JTexture parentTexture;
+    private final int width, height;
     // TODO uvCoords
 
     public JSpriteSheetTexture(JTexture parentTexture, int spriteSheetIndex, Vec2 spritePos, Vec2 spriteSize) {
@@ -24,6 +25,8 @@ public final class JSpriteSheetTexture extends JTexture {
     private JSpriteSheetTexture(String filename, JTexture parentTexture, Vec2 spritePos, Vec2 spriteSize) {
         super(filename, getSubImageData(filename, parentTexture.getImageData(), spritePos, spriteSize));
         this.parentTexture = parentTexture;
+        this.width = (int) spriteSize.x; // get new image size in px
+        this.height = (int) spriteSize.y; // get new image size in px
     }
 
     // Asset Methods
@@ -32,18 +35,20 @@ public final class JSpriteSheetTexture extends JTexture {
     public void free() { // Don't do anything since we may need the parent texture
     }
 
-    // Parent Texture Getters
+    // Image Getters
 
     public JTexture getParentTexture() {
         return parentTexture;
     }
 
-    public int getParentWidth() {
-        return parentTexture.getWidth();
+    @Override
+    public int getWidth() {
+        return width;
     }
 
-    public int getParentHeight() {
-        return parentTexture.getHeight();
+    @Override
+    public int getHeight() {
+        return height;
     }
 
     // Helper Methods

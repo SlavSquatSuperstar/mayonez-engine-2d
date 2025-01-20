@@ -87,7 +87,7 @@ public abstract class MouseInputScript extends Script {
 
     protected boolean isMouseButtonDown() {
         if (button == null) {
-            return MouseInput.isPressed();
+            return MouseInput.isAnyDown();
         } else {
             // TODO down vs pressed
             return MouseInput.buttonDown(button);

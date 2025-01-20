@@ -1,8 +1,8 @@
 package mayonez.assets
 
 import mayonez.*
-import mayonez.io.*
-import mayonez.io.scanner.*
+import mayonez.assets.scanner.ClasspathFolderScanner
+import mayonez.assets.scanner.ExternalFolderScanner
 
 /**
  * Manages the application's resources and allows users to create and
@@ -174,6 +174,6 @@ object Assets {
         return "Assets (Size = ${assets.size})"
     }
 
-    private fun String.toOS() = OperatingSystem.getCurrentOSFilename(this)
-
 }
+
+private fun String.toOS() = PathUtil.convertPath(this)

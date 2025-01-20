@@ -39,8 +39,9 @@ void main()
     // Apply color to texture
     if (fTexID > 0)
     {
-        color = fColor * texture(uTextures[int(fTexID)], fTexCoords);
+        color = fColor * texture(uTextures[int(fTexID) - 1], fTexCoords);
     }
+    // Draw plain color
     else
     {
         color = fColor;

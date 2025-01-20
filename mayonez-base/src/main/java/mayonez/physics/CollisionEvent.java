@@ -16,19 +16,20 @@ public class CollisionEvent extends Event {
      */
     public final GameObject other;
     /**
-     * If interacting with a trigger.
+     * The type of the collision which can be "enter", "stay", or "exit".
      */
     public final CollisionEventType type;
     /**
-     * The type of the collision given by the listener.
+     * If interacting with a trigger rather than a physical object.
      */
     public final boolean trigger;
     /**
-     * The direction of the collision from the object's center.
+     * The direction of the collision from the object's center, null if the type
+     * is not "enter".
      */
     public final Vec2 direction;
     /**
-     * The relative velocity of the objects.
+     * The relative velocity of the objects, null if the type is not "enter".
      */
     public final Vec2 velocity;
 

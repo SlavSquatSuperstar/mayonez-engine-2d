@@ -1,38 +1,121 @@
 package mayonez.input
 
-import mayonez.input.mouse.*
+import mayonez.input.events.*
 import mayonez.math.*
 
 /**
- * Receives mouse input events.
+ * Receives and stores mouse input events from the window.
+ *
+ * Usage: To query if a button is held, call [MouseInput.buttonDown]. To query if a
+ * button was just pressed this frame, call [MouseInput.buttonPressed].
  *
  * @author SlavSquatSuperstar
  */
 object MouseInput {
 
-    // Mouse Fields
-    private lateinit var instance: MouseManager
+    // Constants
+    private const val NUM_BUTTONS: Int = 8 // GLFW supports eight mouse buttons
+    private const val DOUBLE_CLICK_TIME_SECS: Float = 0.40f
 
-    // Game Fields
-    private var invSceneScale: Float = 1f
-    private var pointXf: PointTransformer? = null
+    // Mouse Button Fields
+    private val buttons: MutableMap<Int, InputState> = HashMap(NUM_BUTTONS) // All button states
+    private val buttonsDown: MutableSet<Int> = HashSet(NUM_BUTTONS) // Buttons down this frame
+    private val anyButtonDown: Boolean
+        get() = buttonsDown.isNotEmpty()
+    private var doubleClick: Boolean = false // TODO double click with same button
+    private var lastClickTimeSecs: Float = 0f
 
-    // Game Methods
+    // Mouse Movement Fields
+    private var mousePosPx = Vec2()
+    private var mouseDispPx = Vec2() // drag displacement
 
-    @JvmStatic
-    fun getInstance(): MouseManager = instance
+    // Mouse Scroll Fields
+    private var scroll = Vec2()
 
-    // Game Methods
-    fun setUseGL(useGL: Boolean) {
-        instance = if (useGL) GLMouseManager() else JMouseManager()
-    }
+    // Event Fields
+    private lateinit var handler: MouseInputHandler
 
-    fun setSceneScale(sceneScale: Float) {
-        this.invSceneScale = 1f / sceneScale
-    }
+    // Transform Properties
+
+    private lateinit var pointXf: PointTransformer
 
     fun setPointTransformer(pointXf: PointTransformer) {
         this.pointXf = pointXf
+    }
+
+    // Event Methods
+
+    /**
+     * Set the mouse event generator instance for the application.
+     *
+     * @param handler the key input handler
+     */
+    @JvmStatic
+    fun setHandler(handler: MouseInputHandler) {
+        // Replace event generator
+        if (this::handler.isInitialized) this.handler.eventSystem.unsubscribeAll()
+        this.handler = handler
+        handler.eventSystem.subscribe { event -> onMouseInputEvent(event) }
+    }
+
+    private fun onMouseInputEvent(event: MouseInputEvent) {
+        when (event) {
+            is MouseButtonEvent -> onMouseButtonEvent(event)
+            is MouseMoveEvent -> onMouseMoveEvent(event)
+            is MouseScrollEvent -> scroll.set(event.xOffset, event.yOffset)
+        }
+    }
+
+    private fun onMouseButtonEvent(event: MouseButtonEvent) {
+        // Set button down
+        val button = event.button
+        if (event.isButtonDown) {
+            buttonsDown.add(button)
+            // Track new button
+            if (!buttons.containsKey(button)) buttons[button] = InputState.NONE
+        } else {
+            buttonsDown.remove(button)
+        }
+
+        // Set click time
+        if (event.isButtonDown) {
+            // Detect double click
+            // Source: https://www.youtube.com/watch?v=k3rVEIr0Z7w
+            if (event.eventTime - lastClickTimeSecs <= DOUBLE_CLICK_TIME_SECS)
+                doubleClick = true
+            lastClickTimeSecs = event.eventTime
+        } else {
+            mouseDispPx.set(0f, 0f)
+        }
+    }
+
+    private fun onMouseMoveEvent(event: MouseMoveEvent) {
+        if (anyButtonDown) {
+            // Set drag displacement
+            mouseDispPx.set(event.mouseX - mousePosPx.x, event.mouseY - mousePosPx.y)
+        }
+        mousePosPx.set(event.mouseX, event.mouseY)
+    }
+
+    // Update Methods
+
+    /**
+     * Update input states for all buttons and reset click and motion states.
+     */
+    @JvmStatic
+    fun updateMouse() {
+        // Update mouse buttons
+        for ((button, value) in buttons) {
+            // Update button state
+            val buttonDown = button in buttonsDown
+            val newState = value.getNextState(buttonDown)
+            buttons[button] = newState
+        }
+
+        // Reset other states
+        doubleClick = false
+        mouseDispPx.set(0f, 0f)
+        scroll.set(0f, 0f)
     }
 
     // Mouse Button Getters
@@ -45,7 +128,10 @@ object MouseInput {
      * @return if the specified button is held
      */
     @JvmStatic
-    fun buttonDown(button: Button?): Boolean = instance.buttonDown(button)
+    fun buttonDown(button: Button?): Boolean {
+        return if (button == null) false
+        else buttonDown(handler.getButtonCode(button))
+    }
 
     /**
      * Whether the user has started pressing the specified
@@ -55,7 +141,10 @@ object MouseInput {
      * @return if the specified button is pressed
      */
     @JvmStatic
-    fun buttonPressed(button: Button?): Boolean = instance.buttonPressed(button)
+    fun buttonPressed(button: Button?): Boolean {
+        return if (button == null) false
+        else buttonPressed(handler.getButtonCode(button))
+    }
 
     /**
      * Whether the user is continuously holding down the [mayonez.input.Button]
@@ -65,9 +154,7 @@ object MouseInput {
      * @return if the specified button is held
      */
     @JvmStatic
-    fun buttonDown(buttonName: String): Boolean {
-        return buttonDown(Button.findWithName(buttonName))
-    }
+    fun buttonDown(buttonName: String): Boolean = buttonDown(Button.findWithName(buttonName))
 
     /**
      * Whether the user is started pressing the [mayonez.input.Button] with the
@@ -77,9 +164,29 @@ object MouseInput {
      * @return if the specified button is pressed
      */
     @JvmStatic
-    fun buttonPressed(buttonName: String): Boolean {
-        return buttonPressed(Button.findWithName(buttonName))
-    }
+    fun buttonPressed(buttonName: String): Boolean = buttonPressed(Button.findWithName(buttonName))
+
+    @JvmStatic
+    fun buttonDown(button: Int): Boolean = button in buttonsDown
+
+    @JvmStatic
+    fun buttonPressed(button: Int): Boolean = (buttons[button] == InputState.PRESSED)
+
+    /**
+     * If any mouse buttons are held down.
+     *
+     * @return if the mouse is pressed
+     */
+    @JvmStatic
+    fun isAnyDown(): Boolean = anyButtonDown
+
+    /**
+     * If any two (or more) mouse button pressed were registered in rapid succession.
+     *
+     * @return if the mouse is double-clicked
+     */
+    @JvmStatic
+    fun isDoubleClick(): Boolean = doubleClick
 
     // Mouse Movement Getters
 
@@ -89,7 +196,7 @@ object MouseInput {
      * @return the screen position
      */
     @JvmStatic
-    fun getScreenPosition(): Vec2 = instance.mousePosPx
+    fun getScreenPosition(): Vec2 = mousePosPx
 
     /**
      * Get the position of the cursor in the scene, in world units.
@@ -97,7 +204,7 @@ object MouseInput {
      * @return the world position
      */
     @JvmStatic
-    fun getPosition(): Vec2 = pointXf?.toWorld(getScreenPosition()) ?: Vec2()
+    fun getPosition(): Vec2 = pointXf.toWorldPosition(getScreenPosition())
 
     /**
      * Get the drag displacement of the cursor on the screen, in pixels.
@@ -105,7 +212,7 @@ object MouseInput {
      * @return the screen displacement
      */
     @JvmStatic
-    fun getScreenDisplacement(): Vec2 = instance.mouseDispPx
+    fun getScreenDisplacement(): Vec2 = mouseDispPx
 
     /**
      * Get the drag displacement of the cursor in the scene, in world units.
@@ -113,27 +220,16 @@ object MouseInput {
      * @return the world displacement
      */
     @JvmStatic
-    fun getDisplacement(): Vec2 = getScreenDisplacement().invertY().toWorld()
+    fun getDisplacement(): Vec2 = pointXf.toWorldDisplacement(getScreenDisplacement())
 
     // Mouse Scroll Getters
 
-    fun getScroll(): Vec2 = instance.scroll
-
-    // Mouse State Getters
-
+    /**
+     * Get the scroll displacement of the mouse.
+     *
+     * @return the scroll
+     */
     @JvmStatic
-    fun isPressed(): Boolean = (instance.buttonsPressed > 0)
-
-    @JvmStatic
-    fun isReleased(): Boolean = (instance.buttonsPressed == 0)
-
-    @JvmStatic
-    fun getClicks(): Int = instance.clicks
-
-    // Mouse Button Helper Methods
-
-    private fun Vec2.invertY(): Vec2 = this * Vec2(1f, -1f)
-
-    private fun Vec2.toWorld(): Vec2 = this * invSceneScale
+    fun getScroll(): Vec2 = scroll
 
 }

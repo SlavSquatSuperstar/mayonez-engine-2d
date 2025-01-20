@@ -10,7 +10,7 @@ import mayonez.math.shapes.*
  * @constructor Constructs an ellipse with the given dimensions (not radii)
  * @author SlavSquatSuperstar
  */
-class BallCollider(val size: Vec2) : Collider(Ellipse(Vec2(), size)) {
+open class BallCollider(val size: Vec2) : Collider(Ellipse(Vec2(), size)) {
 
     /** Constructs a circle with the given radius (not diameter)q */
     constructor(radius: Float) : this(Vec2(radius * 2f))

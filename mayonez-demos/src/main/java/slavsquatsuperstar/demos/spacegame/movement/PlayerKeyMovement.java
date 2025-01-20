@@ -2,8 +2,9 @@ package slavsquatsuperstar.demos.spacegame.movement;
 
 import mayonez.input.*;
 import mayonez.math.*;
-import mayonez.scripts.movement.*;
 import slavsquatsuperstar.demos.spacegame.SpaceGameConfig;
+import slavsquatsuperstar.demos.spacegame.events.AutoBrakeToggleEvent;
+import slavsquatsuperstar.demos.spacegame.events.SpaceGameEvents;
 
 /**
  * Controls the player spaceship's movement using the keyboard.
@@ -16,50 +17,139 @@ public class PlayerKeyMovement extends SpaceshipMovement {
     private static final InputAxis HORIZONTAL_MOVE_AXIS = SpaceGameConfig.getHorizontalMoveAxis();
     private static final InputAxis VERTICAL_MOVE_AXIS = SpaceGameConfig.getVerticalMoveAxis();
     private static final InputAxis TURN_AXIS = SpaceGameConfig.getTurnAxis();
-    private static final Key BRAKE_KEY = SpaceGameConfig.getBreakKey();
+    private static final Key BRAKE_KEY = SpaceGameConfig.getBrakeKey();
 
     // Movement Fields
-    private final float moveSpeed, turnSpeed;
-    private final MoveMode moveMove, turnMode;
-    private final InputAxis xAxis, yAxis, turnAxis;
+    private static boolean lastAutoBrake = false;
 
-    public PlayerKeyMovement(
-            float moveSpeed, MoveMode moveMove, float turnSpeed, MoveMode turnMode
-    ) {
-        this.moveSpeed = moveSpeed;
-        this.moveMove = moveMove;
-        xAxis = HORIZONTAL_MOVE_AXIS;
-        yAxis = VERTICAL_MOVE_AXIS;
+    private final float moveThrust, turnThrust;
+//    private final float maxMoveSpeed, maxTurnSpeed;
+    private boolean autoBrake;
 
-        this.turnSpeed = turnSpeed;
-        this.turnMode = turnMode;
-        turnAxis = TURN_AXIS;
+    public PlayerKeyMovement(float moveThrust, float turnThrust) {
+        this.moveThrust = moveThrust;
+        this.turnThrust = turnThrust;
+//        this.maxMoveSpeed = moveThrust * 3f;
+//        this.maxTurnSpeed = turnThrust * 60f;
+    }
+
+    @Override
+    protected void start() {
+        super.start();
+        autoBrake = lastAutoBrake;
+        SpaceGameEvents.getPlayerEventSystem()
+                .broadcast(new AutoBrakeToggleEvent(autoBrake));
     }
 
     @Override
     protected void update(float dt) {
-        super.update(dt);
+        // Toggle auto-brake
+        if (KeyInput.keyPressed(SpaceGameConfig.getAutoBrakeKey())) {
+            autoBrake = !autoBrake;
+            SpaceGameEvents.getPlayerEventSystem()
+                    .broadcast(new AutoBrakeToggleEvent(autoBrake));
+        }
 
-        // Move player
-        var moveDirection = getUserInput().mul(moveSpeed)
-                .rotate(transform.getRotation()); // Align with object direction
-        moveObject(moveDirection, moveMove, dt);
-        rotateObject(-getUserInputValue() * turnSpeed, turnMode, dt);
+        // Get move input (relative to ship)
+        var moveInput = getUserInput().mul(moveThrust);
+        var turnInput = getUserInputValue() * turnThrust;
+
+        // Calculate brake amount (relative to ship)
+        var brakeDir = getBrakeDir(moveInput);
+        var turnBrakeDir = getTurnBrakeDir(turnInput);
+
+        // Move and brake (relative to world)
+        moveObject(moveInput.rotate(transform.getRotation()), dt);
+        rotateObject(turnInput, dt);
+        brake(brakeDir.rotate(transform.getRotation()), turnBrakeDir);
+
+//        // Enforce max speed
+//        if (rb.getSpeed() > maxMoveSpeed) {
+//            moveObject(rb.getVelocity().unit().mul(-moveThrust), dt);
+//        }
+//        if (rb.getAngSpeed() > maxTurnSpeed) {
+//            rotateObject(Math.signum(rb.getAngVelocity()) * -turnThrust, dt);
+//        }
+
+        // Fire thrusters
+        getThrustController().fireMoveThrusters(moveInput, brakeDir);
+        getThrustController().fireTurnThrusters(turnInput, turnBrakeDir);
     }
 
     @Override
+    protected void onDestroy() {
+        lastAutoBrake = autoBrake;
+    }
+
+    // Brake Overrides
+
+    @Override
+    protected void brake(Vec2 brakeDir, float angBrakeDir) {
+        moveObject(brakeDir.mul(moveThrust), 0f);
+        rotateObject(angBrakeDir * turnThrust, 0f);
+
+        // Zero out velocity if too slow
+        if (Math.abs(rb.getVelocity().x) < BRAKE_THRESHOLD_SPEED) {
+            rb.getVelocity().x = 0f;
+        }
+        if (Math.abs(rb.getVelocity().y) < BRAKE_THRESHOLD_SPEED) {
+            rb.getVelocity().y = 0f;
+        }
+        if (rb.getAngSpeed() < TURN_BRAKE_THRESHOLD_SPEED) {
+            rb.setAngVelocity(0f);
+        }
+    }
+
+    @Override
+    protected Vec2 getBrakeDir(Vec2 moveInput) {
+        var localVelocity = rb.getVelocity().rotate(-transform.getRotation());
+
+        // Auto-brake if no move input
+        // Don't burn when turning very slow
+        var shouldBrakeX = (KeyInput.keyDown(BRAKE_KEY) ||
+                (autoBrake && MathUtils.equals(moveInput.x, 0f))) &&
+                Math.abs(localVelocity.x) > BRAKE_THRESHOLD_SPEED;
+        var shouldBrakeY = (KeyInput.keyDown(BRAKE_KEY) ||
+                (autoBrake && MathUtils.equals(moveInput.y, 0f))) &&
+                Math.abs(localVelocity.y) > BRAKE_THRESHOLD_SPEED;
+
+        // Lower brake amount when input down
+        var brakeDir = localVelocity.mul(-1f).unit();
+        if (!shouldBrakeX) brakeDir.x = 0f;
+        else if (!MathUtils.equals(moveInput.x, 0f)) brakeDir.x *= 0.5f;
+        if (!shouldBrakeY) brakeDir.y = 0f;
+        else if (!MathUtils.equals(moveInput.y, 0f)) brakeDir.y *= 0.5f;
+
+        return brakeDir;
+    }
+
+    @Override
+    protected float getTurnBrakeDir(float turnInput) {
+        var shouldBrake = (KeyInput.keyDown(BRAKE_KEY) ||
+                // Auto-brake if no turn input
+                (autoBrake && MathUtils.equals(turnInput, 0f))) &&
+                // Don't burn when turning very slow
+                rb.getAngSpeed() > TURN_BRAKE_THRESHOLD_SPEED;
+
+        if (!shouldBrake) return 0f;
+        else {
+            var angBrakeDir = -Math.signum(rb.getAngVelocity());
+            // Lower brake amount when input down
+            if (!MathUtils.equals(turnInput, 0f)) angBrakeDir *= 0.5f;
+            return angBrakeDir;
+        }
+    }
+
+    // Input Overrides
+
+    @Override
     public Vec2 getUserInput() {
-        return new Vec2(KeyInput.getAxis(xAxis), KeyInput.getAxis(yAxis));
+        return new Vec2(KeyInput.getAxis(HORIZONTAL_MOVE_AXIS), KeyInput.getAxis(VERTICAL_MOVE_AXIS));
     }
 
     @Override
     public float getUserInputValue() {
-        return KeyInput.getAxis(turnAxis);
-    }
-
-    @Override
-    protected boolean isBraking() {
-        return KeyInput.keyDown(BRAKE_KEY);
+        return -KeyInput.getAxis(TURN_AXIS);
     }
 
 }

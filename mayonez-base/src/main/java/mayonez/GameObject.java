@@ -1,7 +1,6 @@
 package mayonez;
 
 import mayonez.math.*;
-import mayonez.physics.*;
 import mayonez.util.*;
 
 import java.util.*;
@@ -34,7 +33,6 @@ public class GameObject {
     final long objectID; // UUID for this game object
     private final String name;
     public final Transform transform; // transform in world
-//    final Transform localTransform; // transform offset from parent
     private Scene scene;
     private boolean destroyed;
     private int zIndex; // controls 3D "layering" of objects
@@ -42,10 +40,6 @@ public class GameObject {
 
     // Component Fields
     private final List<Component> components;
-
-    // Connected Objects
-//    private GameObject parent; // parent object
-//    private final List<GameObject> children; // child (nested) objects
 
     public GameObject(String name) {
         this(name, new Vec2());
@@ -64,15 +58,12 @@ public class GameObject {
 
         this.name = (name == null) ? "GameObject" : name;
         this.transform = transform;
-//        localTransform = new Transform();
         this.zIndex = zIndex;
         this.layer = null;
 
         destroyed = false;
 
         components = new ArrayList<>();
-//        parent = null;
-//        children = new LinkedList<>();
     }
 
     // Game Loop Methods
@@ -85,8 +76,6 @@ public class GameObject {
     final void start() {
         // Add all components
         init();
-        // TODO Maybe separate init from start
-//        children.forEach(getScene()::addObject);
         // Start all components
         components.sort(Comparator.comparingInt(Component::getUpdateOrder));
         components.forEach(Component::start);
@@ -98,14 +87,9 @@ public class GameObject {
      * @param dt seconds since the last frame
      */
     final void update(float dt) {
-        // Combine with parent transform
-//        Transform oldXf = transform.copy();
-//        if (parent != null) transform.set(parent.transform.combine(localTransform));
-        // Update
         components.stream()
                 .filter(Component::isEnabled)
                 .forEach(c -> c.update(dt));
-//        transform.set(oldXf); // Reset transform
     }
 
     /**
@@ -214,48 +198,6 @@ public class GameObject {
         return List.copyOf(components);
     }
 
-    // Child Object Methods
-
-//    /**
-//     * Adds a child GameObject, connecting its transform to this object's transform and setting its parent as this.
-//     *
-//     * @param child the child object
-//     */
-//    public void addChild(GameObject child) {
-//        children.add(child.setParent(this));
-//        if (scene != null) scene.addObject(child);
-//    }
-
-//    public void removeChild(GameObject child) {
-//        children.remove(child.setParent(null));
-//        if (scene != null) scene.addObject(child);
-//    }
-
-//    /**
-//     * Finds the child GameObject at the given index, or null if the index is invalid.
-//     * The index is the same as the order the child was added.
-//     *
-//     * @param index the child index
-//     * @return the child object
-//     */
-//    public GameObject getChild(int index) {
-//        if (index < 0 || index >= children.size()) return null;
-//        else return children.get(index);
-//    }
-
-//    /**
-//     * Finds the first child GameObject with the given name, or null if none exists.
-//     *
-//     * @param name the child name
-//     * @return the child object
-//     */
-//    public GameObject getChild(String name) {
-//        for (var child : children) {
-//            if (child.name.equals(name)) return child;
-//        }
-//        return null;
-//    }
-
     // Callback Methods
 
     final void onDestroy() {
@@ -263,31 +205,6 @@ public class GameObject {
         components.clear();
         layer = null;
         scene = null;
-    }
-
-    /**
-     * Send an event to all components when a collision occurs between this object and another.
-     *
-     * @param event the collision event
-     */
-    // TODO make into event callback
-    public final void onCollisionEvent(CollisionEvent event) {
-        for (var script : getComponents(Script.class)) {
-            switch (event.type) {
-                case ENTER -> {
-                    if (event.trigger) script.onTriggerEnter(event.other);
-                    else script.onCollisionEnter(event.other, event.direction, event.velocity);
-                }
-                case STAY -> {
-                    if (event.trigger) script.onTriggerStay(event.other);
-                    else script.onCollisionStay(event.other);
-                }
-                case EXIT -> {
-                    if (event.trigger) script.onTriggerExit(event.other);
-                    else script.onCollisionExit(event.other);
-                }
-            }
-        }
     }
 
     // Property Getters and Setters
@@ -311,7 +228,7 @@ public class GameObject {
     }
 
     /**
-     * Remove this object from the scene and destroy all its components and children.
+     * Remove this object from the scene and destroy all its components.
      * The {@link #scene} field will be set to null.
      * <p>
      * Warning: Destroying a game object is permanent and cannot be reversed!
@@ -319,22 +236,6 @@ public class GameObject {
     public void destroy() {
         destroyed = true;
     }
-
-//    public GameObject getParent() {
-//        return parent;
-//    }
-
-//    final GameObject setParent(GameObject parent) {
-//        this.parent = parent;
-//        if (parent != null) localTransform.set(transform);
-//        else localTransform.set(new Transform());
-//        return this;
-//    }
-
-//    final boolean isChild() {
-//        return parent != null;
-//    }
-
 
     /**
      * Get the game object's {@link mayonez.SceneLayer}, which specifies which objects
@@ -397,8 +298,6 @@ public class GameObject {
     }
 
     public int getZIndex() {
-//        if (parent != null) return parent.getZIndex() + this.zIndex;
-//        else return zIndex;
         return zIndex;
     }
 

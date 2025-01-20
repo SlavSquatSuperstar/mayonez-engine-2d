@@ -4,6 +4,8 @@ import mayonez.math.*
 import mayonez.math.shapes.*
 import kotlin.math.*
 
+const val MAX_EPA_ITERATIONS: Int = 40
+
 /**
  * Calculates the penetration between two shapes from their Minkowski sum
  * (simplex) by performing the expanding polytope/polygon algorithm (EPA).
@@ -17,10 +19,6 @@ import kotlin.math.*
  * @author SlavSquatSuperstar
  */
 internal class EPASolver(private val shape1: Shape?, private val shape2: Shape?) {
-
-    companion object {
-        private const val MAX_EPA_ITERATIONS: Int = 40
-    }
 
     /**
      * Calculate the penetration between the two shapes from their simplex.

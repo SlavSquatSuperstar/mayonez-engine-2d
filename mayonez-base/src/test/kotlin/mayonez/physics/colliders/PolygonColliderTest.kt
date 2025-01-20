@@ -15,10 +15,7 @@ import org.junit.jupiter.api.Test
  */
 internal class PolygonColliderTest {
 
-    companion object {
-        private val vertices = Rectangle.rectangleVertices(Vec2(0f), Vec2(2f), 0f)
-    }
-
+    private val vertices = Rectangle.rectangleVertices(Vec2(0f), Vec2(2f), 0f)
     private lateinit var box: PolygonCollider
 
     @BeforeEach

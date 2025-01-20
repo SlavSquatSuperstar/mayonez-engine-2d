@@ -5,6 +5,7 @@ import mayonez.graphics.textures.*;
 import mayonez.graphics.ui.*;
 import mayonez.math.*;
 import slavsquatsuperstar.demos.spacegame.combat.projectiles.ProjectilePrefabs;
+import slavsquatsuperstar.demos.spacegame.combat.projectiles.ProjectileType;
 
 /**
  * An image label representing an individual weapon hotbar slot, with additional cooldown
@@ -27,9 +28,9 @@ public class WeaponHotbarSlot extends ImageLabel {
     private UISprite cooldownOverlaySprite;
     private float cooldownPercent;
 
-    public WeaponHotbarSlot(Vec2 position, Vec2 size, int weaponIndex) {
+    public WeaponHotbarSlot(Vec2 position, Vec2 size, ProjectileType type) {
         super(position, size,
-                ProjectilePrefabs.PROJECTILE_SPRITES.getTexture(weaponIndex),
+                ProjectilePrefabs.PROJECTILE_SPRITES.getTexture(type.spriteIndex()),
                 BACKGROUND_TEXTURE, UNSELECTED_BORDER_TEXTURE);
     }
 

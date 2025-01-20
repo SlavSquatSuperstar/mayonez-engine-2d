@@ -103,7 +103,6 @@ object SceneManager {
     internal fun startScene() {
         if (currentScene.isStopped) {
             currentScene.start()
-            MouseInput.setSceneScale(currentScene.scale)
             MouseInput.setPointTransformer(currentScene.camera)
             Logger.debug("Started scene \"${currentScene.name}\"")
         }

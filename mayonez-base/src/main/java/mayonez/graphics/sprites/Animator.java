@@ -62,7 +62,7 @@ public class Animator extends Script {
         }
     }
 
-    // Set Frame Methods
+    // Animation Methods
 
     /**
      * Switches the animation to the given frame.
@@ -78,10 +78,24 @@ public class Animator extends Script {
         }
     }
 
-    private void setSpriteTexture(int frame) {
-        if (sprite == null) return; // not initialized yet
-        sprite.setTexture(textures[frame]);
-        setSpriteVisible(true);
+    /**
+     * Resumes or pauses the animation.
+     *
+     * @param enabled if the animation should play, true by default
+     */
+    public void setAnimationEnabled(boolean enabled) {
+        animTimer.setPaused(!enabled);
+    }
+
+    // Sprite Methods
+
+    /**
+     * Sets the transform of this component's animated sprite.
+     *
+     * @param spriteXf the sprite transform
+     */
+    public void setSpriteTransform(Transform spriteXf) {
+        this.sprite.setSpriteTransform(spriteXf);
     }
 
     /**
@@ -94,13 +108,10 @@ public class Animator extends Script {
         sprite.setEnabled(visible);
     }
 
-    /**
-     * Resumes or pauses the animation.
-     *
-     * @param enabled if the animation should play, true by default
-     */
-    public void setAnimationEnabled(boolean enabled) {
-        animTimer.setPaused(!enabled);
+    private void setSpriteTexture(int frame) {
+        if (sprite == null) return; // not initialized yet
+        sprite.setTexture(textures[frame]);
+        setSpriteVisible(true);
     }
 
     // Callback Methods

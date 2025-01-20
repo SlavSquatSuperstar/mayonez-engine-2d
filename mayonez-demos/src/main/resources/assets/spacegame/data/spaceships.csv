@@ -1,0 +1,4 @@
+name,sizeX,sizeY,moveThrust,turnThrust,maxHull,maxShield,shieldRegen,spriteFile,thrustersFile,hardpointsFile
+Shuttle,0.75,0.8,12,3,8,4,0.6,assets/spacegame/textures/ships/shuttle.png,assets/spacegame/data/shuttle_thrusters.csv,assets/spacegame/data/shuttle_hardpoints.csv
+Rusty Shuttle,0.75,0.8,10,2,6,0,0,assets/spacegame/textures/ships/shuttle_rusty.png,assets/spacegame/data/shuttle_thrusters.csv,assets/spacegame/data/shuttle_hardpoints.csv
+Fighter,0.94,0.94,14,4,5,10,0.8,assets/spacegame/textures/ships/fighter.png,assets/spacegame/data/fighter_thrusters.csv,assets/spacegame/data/fighter_hardpoints.csv

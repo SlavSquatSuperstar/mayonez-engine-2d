@@ -1,6 +1,7 @@
 package slavsquatsuperstar.demos.spacegame.combat;
 
 import mayonez.*;
+import mayonez.physics.*;
 import mayonez.scripts.*;
 import slavsquatsuperstar.demos.spacegame.combat.projectiles.Projectile;
 import slavsquatsuperstar.demos.spacegame.objects.SpaceGameLayer;
@@ -20,12 +21,24 @@ public class Damageable extends Script {
     }
 
     @Override
+    protected void start() {
+        var collider = getCollider();
+        if (collider != null) {
+            collider.addCollisionCallback(event -> {
+                // On trigger
+                if (event.trigger && event.type == CollisionEventType.ENTER) {
+                    onImpactObject(event.other);
+                }
+            });
+        }
+    }
+
+    @Override
     protected void update(float dt) {
         if (healthPoints.isAtMin()) onHealthDepleted();
     }
 
-    @Override
-    protected void onTriggerEnter(GameObject other) {
+    private void onImpactObject(GameObject other) {
         if (other.hasLayer(SpaceGameLayer.PROJECTILES)) {
             var p = other.getComponent(Projectile.class);
             if (p != null && !gameObject.equals(p.getSource())) {

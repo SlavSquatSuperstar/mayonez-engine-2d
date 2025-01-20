@@ -4,7 +4,10 @@ import mayonez.*;
 import mayonez.graphics.textures.*;
 import mayonez.graphics.ui.*;
 import mayonez.math.*;
+import slavsquatsuperstar.demos.spacegame.combat.projectiles.ProjectileType;
 import slavsquatsuperstar.demos.spacegame.objects.SpaceGameZIndex;
+
+import java.util.*;
 
 /**
  * Displays all weapons available to the player and highlights the currently selected weapon.
@@ -24,13 +27,15 @@ public class WeaponHotbar extends Script implements UIElement {
     private final float boxSpacing = 16; // TODO get/set
 
     // UI Elements
+    private final List<ProjectileType> loadout;
     private final WeaponHotbarSlot[] hotbarSlots;
     private UISprite selectedBorder;
 
-    public WeaponHotbar(Vec2 position, Vec2 size, int numSlots) {
+    public WeaponHotbar(Vec2 position, Vec2 size, List<ProjectileType> loadout) {
         this.position = position;
         this.size = size; // Size of slots
-        this.numSlots = numSlots;
+        this.loadout = loadout;
+        this.numSlots = loadout.size();
         hotbarSlots = new WeaponHotbarSlot[numSlots];
     }
 
@@ -39,21 +44,23 @@ public class WeaponHotbar extends Script implements UIElement {
         gameObject.setZIndex(SpaceGameZIndex.UI);
 
         // Create hotbar slots
+        // TODO recreate on loadout change
         var boxOffset = size.x + boxSpacing;
         for (int i = 0; i < numSlots; i++) {
-            hotbarSlots[i] = new WeaponHotbarSlot(position.add(new Vec2(boxOffset * i, 0)), size, i);
+            hotbarSlots[i] = new WeaponHotbarSlot(
+                    position.add(new Vec2(boxOffset * i, 0)), size, loadout.get(i));
             gameObject.addComponent(hotbarSlots[i]);
         }
 
         // Border over selected hotbar element
-        selectedBorder = new UISprite(position, size.add(new Vec2(BORDER_MARGIN)), SELECTED_BORDER_TEXTURE) {
+        selectedBorder = new UISprite(position, size.add(new Vec2(BORDER_MARGIN)),
+                SELECTED_BORDER_TEXTURE) {
             @Override
             public int getZIndex() {
                 return super.getZIndex() + 3; // display above overlay
             }
         };
         gameObject.addComponent(selectedBorder);
-
         setSelection(0);
     }
 
@@ -65,9 +72,14 @@ public class WeaponHotbar extends Script implements UIElement {
      * @param index the index to select
      */
     public void setSelection(int index) {
-        if (!MathUtils.inRange(index, 0, numSlots - 1)) return;
-        // Move border to selected slot
-        selectedBorder.setPosition(hotbarSlots[index].getPosition());
+        if (!MathUtils.inRange(index, 0, numSlots - 1)) {
+            // Hide border if out of bounds
+            selectedBorder.setEnabled(false);
+        } else {
+            // Move border to selected slot
+            selectedBorder.setEnabled(true);
+            selectedBorder.setPosition(hotbarSlots[index].getPosition());
+        }
     }
 
     /**

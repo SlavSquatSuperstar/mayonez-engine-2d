@@ -1,0 +1,10 @@
+{
+	"move_forward": "w",
+	"move_backward": "s",
+	"move_left": "q",
+	"move_right": "e",
+	"turn_left": "a",
+	"turn_right": "d",
+	"brake": "space",
+	"auto_brake": "b"
+}

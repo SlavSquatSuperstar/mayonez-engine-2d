@@ -1,7 +1,6 @@
 package slavsquatsuperstar.demos.mario;
 
 import mayonez.*;
-import mayonez.graphics.sprites.*;
 import mayonez.math.*;
 import mayonez.physics.colliders.*;
 import mayonez.physics.dynamics.*;
@@ -14,24 +13,22 @@ import mayonez.scripts.*;
  */
 class Mario extends GameObject {
 
-    private final Sprite sprite;
-
-    public Mario(Vec2 position, Sprite sprite) {
+    Mario(Vec2 position) {
         super("Mario", new Transform(position, 0f, new Vec2(2f)), 1);
-        this.sprite = sprite;
     }
 
     @Override
     protected void init() {
         setLayer(getScene().getLayer(MarioScene.CHARACTER_LAYER));
+        getScene().getCamera().setSubject(this);
+        addComponent(new MarioController());
 
-        getScene().getCamera().setSubject(this).setKeepInScene(true);
-        addComponent(sprite);
+        addComponent(MarioScene.SPRITES.getSprite(0));
         addComponent(new BoxCollider(new Vec2(0.8f, 1)));
         addComponent(new Rigidbody(1f, 0.1f, 0f).setFixedRotation(true));
-        var sceneMin = getScene().getSize().mul(-0.5f).add(new Vec2(0, 4));
-        var sceneMax = getScene().getSize().mul(0.5f);
-        addComponent(new KeepInScene(sceneMin, sceneMax, KeepInScene.Mode.STOP));
-        addComponent(new MarioController());
+
+        var sceneMin = MarioScene.SCENE_HALF_SIZE.mul(-1f).add(new Vec2(0, 4));
+        addComponent(new KeepInScene(sceneMin, MarioScene.SCENE_HALF_SIZE, KeepInScene.Mode.STOP));
     }
+
 }

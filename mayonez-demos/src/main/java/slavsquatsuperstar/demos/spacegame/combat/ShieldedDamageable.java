@@ -1,9 +1,6 @@
 package slavsquatsuperstar.demos.spacegame.combat;
 
-import mayonez.*;
 import mayonez.scripts.*;
-import slavsquatsuperstar.demos.spacegame.combat.projectiles.Projectile;
-import slavsquatsuperstar.demos.spacegame.objects.SpaceGameLayer;
 
 /**
  * Gives a {@link mayonez.GameObject} a rechargeable shield on top of a health bar.
@@ -13,32 +10,24 @@ import slavsquatsuperstar.demos.spacegame.objects.SpaceGameLayer;
 public class ShieldedDamageable extends Damageable {
 
     // Constants
-    private static final float SHIELD_REGEN_RATE = 0.6f;
     private static final float SHIELD_WAIT_TIME = 1.2f;
 
     // Fields
     private final Counter shieldPoints;
     private final Timer shieldWaitTimer; // Wait to recharge after getting hit
+    private final float shieldRegen; // Shield hp per second
 
-    public ShieldedDamageable(float maxHealth, float maxShield) {
+    public ShieldedDamageable(float maxHealth, float maxShield, float shieldRegen) {
         super(maxHealth);
         shieldPoints = new Counter(0, maxShield, maxShield);
         shieldWaitTimer = new Timer(SHIELD_WAIT_TIME);
+        this.shieldRegen = shieldRegen;
     }
 
     @Override
     protected void start() {
+        super.start();
         shieldWaitTimer.setValue(0f);
-    }
-
-    @Override
-    protected void onTriggerEnter(GameObject other) {
-        if (other.hasLayer(SpaceGameLayer.PROJECTILES)) {
-            var p = other.getComponent(Projectile.class);
-            if (p != null && !gameObject.equals(p.getSource())) {
-                onObjectDamaged(p.getDamage());
-            }
-        }
     }
 
     @Override
@@ -47,7 +36,7 @@ public class ShieldedDamageable extends Damageable {
 
         // Regenerate shield
         if (canRegenShield() && !shieldPoints.isAtMax()) {
-            shieldPoints.count(SHIELD_REGEN_RATE * dt);
+            shieldPoints.count(shieldRegen * dt);
             shieldPoints.clampValue();
         } else {
             shieldWaitTimer.countDown(dt);

@@ -1,11 +1,7 @@
 package mayonez;
 
-import mayonez.graphics.*;
 import mayonez.graphics.camera.*;
 import mayonez.graphics.debug.*;
-import mayonez.graphics.sprites.*;
-import mayonez.graphics.textures.*;
-import mayonez.math.Random;
 import mayonez.math.*;
 import mayonez.physics.*;
 import mayonez.physics.colliders.*;
@@ -13,7 +9,8 @@ import mayonez.physics.dynamics.*;
 import mayonez.renderer.*;
 import mayonez.util.*;
 
-import java.awt.Graphics2D;
+import java.awt.*;
+import java.util.List;
 import java.util.*;
 
 /**
@@ -39,8 +36,6 @@ public abstract class Scene {
     // Scene Information
     final int sceneID; // UUID for this scene
     private final String name;
-    private final float scale; // scene scale, or how many pixels correspond to a world unit
-    private final Vec2 size; // scene size, or zero if unbounded
     private SceneState state; // if paused or running
 
     // Scene Objects
@@ -49,39 +44,25 @@ public abstract class Scene {
 
     // Renderers
     private Camera camera;
-    protected final Sprite background;
     private final RenderLayer renderLayer;
 
     // Physics
     private final PhysicsWorld physics;
 
     /**
-     * Creates an empty scene with size of 0x0 and a scale of 1.
+     * Creates an empty scene with a name.
+     *
+     * @param name the name of the scene
      */
     public Scene(String name) {
-        this(name, 0, 0, 1);
-    }
-
-    /**
-     * Creates an empty scene and sets the bounds and scale.
-     *
-     * @param name   the name of the scene
-     * @param width  the width of the scene, in pixels
-     * @param height the height of the scene, in pixels
-     * @param scale  the scale of the scene
-     */
-    public Scene(String name, int width, int height, float scale) {
         sceneID = sceneCounter++;
         this.name = name;
-        this.size = new Vec2(width, height).div(scale);
-        this.scale = scale;
         state = SceneState.STOPPED;
-        background = Sprites.createSprite(Colors.WHITE);
 
         // Initialize layers
         objects = new BufferedList<>();
         layers = new SceneLayer[SceneLayer.NUM_LAYERS];
-        renderLayer = RendererFactory.createRenderLayer(background, size, scale);
+        renderLayer = RendererFactory.createRenderLayer(Mayonez.getUseGL());
         physics = new DefaultPhysicsWorld();
     }
 
@@ -98,7 +79,7 @@ public abstract class Scene {
         }
 
         // Add camera
-        camera = CameraFactory.createCamera(scale);
+        camera = CameraFactory.createCamera();
         addObject(CameraFactory.createCameraObject(camera));
 
         // Add objects
@@ -132,7 +113,16 @@ public abstract class Scene {
      */
     final void update(float dt) {
         onUserUpdate(dt);
-        if (isRunning()) updateSceneObjects(dt);
+        // Update all objects
+        // TODO physics update, late update
+        if (isRunning()) {
+            objects.forEach(obj -> {
+                obj.update(dt);
+                if (obj.isDestroyed()) removeObject(obj);
+            });
+            physics.step(dt);
+            camera.gameObject.update(dt); // Update camera last
+        }
         objects.processBuffer();
     }
 
@@ -142,15 +132,6 @@ public abstract class Scene {
      * @param dt seconds since the last frame
      */
     protected void onUserUpdate(float dt) {
-    }
-
-    private void updateSceneObjects(float dt) {
-        objects.forEach(obj -> {
-            obj.update(dt);
-            if (obj.isDestroyed()) removeObject(obj);
-        });
-        physics.step(dt);
-        camera.gameObject.update(dt); // Update camera last
     }
 
     // Render Methods
@@ -313,57 +294,7 @@ public abstract class Scene {
         return name;
     }
 
-    public Vec2 getSize() {
-        return size;
-    }
-
-    public float getWidth() {
-        return size.x;
-    }
-
-    public float getHeight() {
-        return size.y;
-    }
-
-    /**
-     * Returns a random vector within the scene's bounds.
-     *
-     * @return a random position
-     */
-    public Vec2 getRandomPosition() {
-        return Random.randomVector(getSize().mul(-0.5f), getSize().mul(0.5f));
-    }
-
-    /**
-     * Returns the number pixels on the screen for every unit in the world. Defaults to a 1:1 scale.
-     *
-     * @return the scene scale
-     */
-    public float getScale() {
-        return scale;
-    }
-
     // Getters and Setters
-
-    /**
-     * Sets the background color of this scene, white by default.
-     *
-     * @param background a color
-     */
-    public void setBackground(Color background) {
-        this.background.setColor(background);
-        this.background.setTexture(null);
-    }
-
-    /**
-     * Sets the background image of this scene, none by default.
-     *
-     * @param background a texture
-     */
-    public void setBackground(Texture background) {
-        this.background.setColor(null);
-        this.background.setTexture(background);
-    }
 
     /**
      * Get the scene's {@link Camera} instance. The camera is initialized before

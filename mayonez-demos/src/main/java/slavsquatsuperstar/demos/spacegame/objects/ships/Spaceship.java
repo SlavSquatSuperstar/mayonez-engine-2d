@@ -5,11 +5,11 @@ import mayonez.graphics.sprites.*;
 import mayonez.math.*;
 import mayonez.physics.colliders.*;
 import mayonez.scripts.*;
+import slavsquatsuperstar.demos.spacegame.SpaceGameScene;
 import slavsquatsuperstar.demos.spacegame.combat.CollisionDamage;
 import slavsquatsuperstar.demos.spacegame.combat.Damageable;
 import slavsquatsuperstar.demos.spacegame.combat.ShieldedDamageable;
 import slavsquatsuperstar.demos.spacegame.movement.ThrustController;
-import slavsquatsuperstar.demos.spacegame.movement.ThrusterPrefabs;
 import slavsquatsuperstar.demos.spacegame.objects.SpaceGameLayer;
 import slavsquatsuperstar.demos.spacegame.objects.SpaceGameZIndex;
 
@@ -20,10 +20,10 @@ import slavsquatsuperstar.demos.spacegame.objects.SpaceGameZIndex;
  */
 public abstract class Spaceship extends GameObject {
 
-    private final SpaceshipProperties properties;
+    protected final SpaceshipProperties properties;
 
-    public Spaceship(String name, SpaceshipProperties properties) {
-        super(name, Transform.scaleInstance(new Vec2(2f)), SpaceGameZIndex.SPACESHIP);
+    public Spaceship(String name, Vec2 position, SpaceshipProperties properties) {
+        super(name, new Transform(position, 0f, new Vec2(2f)), SpaceGameZIndex.SPACESHIP);
         this.properties = properties;
     }
 
@@ -32,25 +32,25 @@ public abstract class Spaceship extends GameObject {
         setLayer(getScene().getLayer(SpaceGameLayer.SHIPS));
 
         // Collision
-        addComponent(new BoxCollider(new Vec2(0.85f, 1f)));
-        addComponent(new KeepInScene(KeepInScene.Mode.WRAP));
-        addComponent(new CollisionDamage());
+        addComponent(new BoxCollider(properties.colliderSize())); // TODO in file
+        addComponent(new KeepInScene(SpaceGameScene.SCENE_HALF_SIZE.mul(-1f),
+                SpaceGameScene.SCENE_HALF_SIZE, KeepInScene.Mode.WRAP));
 
         // Movement
-        var thrusters = ThrusterPrefabs.addThrustersToObject(this);
-        addComponent(new ThrustController(thrusters));
+        addComponent(new ThrustController(properties.thrusters()));
 
         // Combat
         addComponent(new SpaceshipDestruction());
-        addComponent(getDamageable(properties.maxHealth(), properties.maxShieldHealth()));
+        addComponent(getDamageable(properties.maxHull(), properties.maxShield(), properties.shieldRegen()));
+        addComponent(new CollisionDamage());
 
         // Visuals
-        addComponent(Sprites.createSprite(properties.spriteName()));
+        addComponent(Sprites.createSprite(properties.texture()));
     }
 
-    private static Component getDamageable(float maxHealth, float shieldHealth) {
-        if (shieldHealth > 0f) {
-            return new ShieldedDamageable(maxHealth, shieldHealth) {
+    private static Damageable getDamageable(float maxHull, float maxShield, float shieldRegen) {
+        if (maxShield > 0f) {
+            return new ShieldedDamageable(maxHull, maxShield, shieldRegen) {
                 @Override
                 public void onHealthDepleted() {
                     var shipDestruction = gameObject.getComponent(SpaceshipDestruction.class);
@@ -58,7 +58,7 @@ public abstract class Spaceship extends GameObject {
                 }
             };
         } else {
-            return new Damageable(maxHealth) {
+            return new Damageable(maxHull) {
                 @Override
                 public void onHealthDepleted() {
                     var shipDestruction = gameObject.getComponent(SpaceshipDestruction.class);

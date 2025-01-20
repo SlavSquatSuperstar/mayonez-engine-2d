@@ -1,4 +1,4 @@
-# Class files
+# Compiled files
 *.class
 
 # Gradle files
@@ -8,6 +8,7 @@ build/
 
 # IntelliJ files
 .idea/
+.kotlin/
 
 # Eclipse files
 .classpath
@@ -15,9 +16,12 @@ build/
 .settings/
 
 # Log files
-*.log
 logs/
+*.log
 hs_err_pid*
 
-# MacOS files
+# Package files
+dist/
+
+# macOS files
 .DS_Store

@@ -32,23 +32,32 @@ public abstract sealed class Texture extends Asset permits GLTexture, JTexture {
     public abstract ImageData getImageData();
 
     /**
-     * The width of the image in pixels.
+     * The parent texture of this texture, if any.
      *
-     * @return the image width
+     * @return the parent texture, by default none
+     */
+    public Texture getParentTexture() {
+        return null;
+    }
+
+    /**
+     * The width of the texture in pixels.
+     *
+     * @return the texture width
      */
     public abstract int getWidth();
 
     /**
-     * The height of the image in pixels.
+     * The height of the texture in pixels.
      *
-     * @return the image height
+     * @return the texture height
      */
     public abstract int getHeight();
 
     /**
-     * The dimensions of the image in pixels.
+     * The dimensions of the texture in pixels.
      *
-     * @return the image size
+     * @return the texture size
      */
     public Vec2 getSize() {
         return new Vec2(getWidth(), getHeight());

@@ -10,4 +10,4 @@ import mayonez.math.shapes.*
  * @constructor Constructs a box with the given dimensions
  * @author SlavSquatSuperstar
  */
-class BoxCollider(val size: Vec2) : PolygonCollider(Rectangle(Vec2(), size))
+open class BoxCollider(val size: Vec2) : PolygonCollider(Rectangle(Vec2(), size))

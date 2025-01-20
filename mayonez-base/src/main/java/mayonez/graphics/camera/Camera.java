@@ -1,9 +1,12 @@
 package mayonez.graphics.camera;
 
 import mayonez.*;
+import mayonez.graphics.*;
 import mayonez.math.*;
-import mayonez.math.shapes.*;
 import mayonez.renderer.*;
+import mayonez.util.*;
+
+import java.util.*;
 
 /**
  * The main viewport into the scene. The camera may be adjusted through scripts
@@ -18,28 +21,34 @@ public abstract class Camera extends Component implements Viewport {
 
     // Size Fields
     protected final Vec2 screenSize;
-    protected final float sceneScale;
+    private float cameraScale, invCameraScale; // Pixels per unit
 
-    // Camera Movement
-    private CameraMode mode; // TODO remove
-    private GameObject subject;
-    private boolean followAngle;
-    private Script keepInScene; // Reference to parent scripts
-
-    // Camera Effects
+    // Camera Fields
+    private Color backgroundColor;
     private float zoom, rotation;
 
-    protected Camera(Vec2 screenSize, float sceneScale) {
-        super(UpdateOrder.PHYSICS);
+    // GameObject Fields
+    private GameObject subject;
+    private final BufferedList<Component> cameraScripts;
+
+    protected Camera(Vec2 screenSize) {
+        super(UpdateOrder.PRE_RENDER);
         this.screenSize = screenSize;
-        this.sceneScale = sceneScale;
 
-        mode = CameraMode.FIXED;
-        subject = null;
-        followAngle = false;
+        cameraScale = 1f;
+        invCameraScale = 1f;
 
+        backgroundColor = Colors.WHITE;
         zoom = 1f;
         rotation = 0f;
+
+        subject = null;
+        cameraScripts = new BufferedList<>();
+    }
+
+    @Override
+    protected void init() {
+        cameraScripts.processBuffer();
     }
 
     @Override
@@ -52,13 +61,33 @@ public abstract class Camera extends Component implements Viewport {
     protected void update(float dt) {
         // Follow subject
         // TODO smooth follow
-        if (getSubject() != null && mode == CameraMode.FOLLOW) {
+        if (getSubject() != null) {
             transform.setPosition(getSubject().transform.getPosition());
-            if (followAngle) rotation = getSubject().transform.getRotation();
         }
     }
 
-    // Camera Location Methods
+    // Camera Color Methods
+
+    /**
+     * The background color of the camera, white by default
+     *
+     * @return the background color
+     */
+    @Override
+    public Color getBackgroundColor() {
+        return backgroundColor;
+    }
+
+    /**
+     * Sets the background color of the camera.
+     *
+     * @param backgroundColor the background color
+     */
+    public void setBackgroundColor(Color backgroundColor) {
+        this.backgroundColor = Objects.requireNonNullElse(backgroundColor, Colors.WHITE);
+    }
+
+    // Camera Position Methods
 
     /**
      * The position of the camera's center in the scene in world units.
@@ -85,8 +114,8 @@ public abstract class Camera extends Component implements Viewport {
      * @return the camera's screen position
      */
     @Override
-    public final Vec2 getViewCenter() {
-        return getPosition().mul(sceneScale);
+    public final Vec2 getScreenCenter() {
+        return getPosition().mul(cameraScale);
     }
 
     /**
@@ -97,7 +126,35 @@ public abstract class Camera extends Component implements Viewport {
     @Override
     public abstract Vec2 getScreenOffset(); // zoom offset
 
-    // Camera Effects
+    // Camera Rotation Methods
+
+    /**
+     * Get the camera's rotation in degrees, or how tilted objects appear to be.
+     *
+     * @return the rotation
+     */
+    @Override
+    public float getRotation() {
+        return rotation;
+    }
+
+    /**
+     * Rotate the camera by a given angle.
+     *
+     * @param rotation the angle in degrees
+     */
+    public void rotate(float rotation) {
+        this.rotation += rotation;
+    }
+
+    /**
+     * Reset the camera's rotation back to 0 degrees.
+     */
+    public void resetRotation() {
+        rotation = 0f;
+    }
+
+    // Camera Zoom Methods
 
     /**
      * Get the magnification of the camera, or how larger objects appear to be.
@@ -126,87 +183,32 @@ public abstract class Camera extends Component implements Viewport {
         zoom = 1f;
     }
 
-    /**
-     * Get the camera's rotation in degrees, or how tilted objects appear to be.
-     *
-     * @return the rotation
-     */
+    // Camera Scale Methods
+
     @Override
-    public float getRotation() {
-        return rotation;
+    public float getCameraScale() {
+        return cameraScale;
+    }
+
+    public void setCameraScale(float cameraScale) {
+        this.cameraScale = cameraScale;
+        invCameraScale = 1f / cameraScale;
+    }
+
+    protected float getInvCameraScale() {
+        return invCameraScale;
     }
 
     /**
-     * Rotate the camera by a given angle.
+     * Get the size bounding box of the camera in the world.
      *
-     * @param rotation the angle in degrees
+     * @return the camera size
      */
-    public void rotate(float rotation) {
-        this.rotation += rotation;
+    public Vec2 getSize() {
+        return screenSize.div(cameraScale * zoom);
     }
 
-    /**
-     * Reset the camera's rotation back to 0 degrees.
-     */
-    public void resetRotation() {
-        rotation = 0f;
-    }
-
-    // Camera Collision Methods
-
-    /**
-     * Gets the bounding box of the camera in the world.
-     *
-     * @return the camera bounds
-     */
-    public BoundingBox getBounds() {
-        return new BoundingBox(getPosition(), screenSize.div(sceneScale * zoom));
-    }
-
-    // Camera Movement Methods
-
-    /**
-     * Sets whether the camera should rotate with the subject.
-     *
-     * @param enabled rotate the camera with the subject
-     * @return the camera
-     */
-    public Camera setFollowAngle(boolean enabled) {
-        followAngle = enabled;
-        if (!followAngle) resetRotation();
-        return this;
-    }
-
-    /**
-     * Sets whether the camera should stay within the scene bounds.
-     *
-     * @param enabled keep the camera inside the scene
-     * @return the camera
-     */
-    public final Camera setKeepInScene(boolean enabled) {
-        keepInScene.setEnabled(enabled);
-        return this;
-    }
-
-    /**
-     * The movement mode of the camera, which is fixed in one place by default.
-     *
-     * @return the mode
-     */
-    public final CameraMode getMode() {
-        return mode;
-    }
-
-    /**
-     * Sets the movement mode of the camera.
-     *
-     * @param mode the mode
-     * @return this camera
-     */
-    public final Camera setMode(CameraMode mode) {
-        this.mode = mode;
-        return this;
-    }
+    // Camera Subject Methods
 
     /**
      * The object that the camera is following, or null if none is set.
@@ -222,20 +224,20 @@ public abstract class Camera extends Component implements Viewport {
      * is changed, the camera will remember the last subject.
      *
      * @param subject a {@link mayonez.GameObject} in the scene
-     * @return this object
      */
-    public final Camera setSubject(GameObject subject) {
+    public final void setSubject(GameObject subject) {
         this.subject = subject;
-        resetRotation();
-        setMode(CameraMode.FOLLOW);
-        return this;
     }
 
-    // Script Setters
+    // Camera Script Methods
 
-    Script setKeepInSceneScript(Script keepInScene) {
-        this.keepInScene = keepInScene;
-        return keepInScene;
+    /**
+     * Add a script to this camera's object that may be used to control camera movement.
+     *
+     * @param script the script
+     */
+    public final void addCameraScript(Script script) {
+        cameraScripts.add(script, () -> getGameObject().addComponent(script));
     }
 
 }

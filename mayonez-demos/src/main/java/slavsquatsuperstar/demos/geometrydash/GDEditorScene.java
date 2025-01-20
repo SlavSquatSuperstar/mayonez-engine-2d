@@ -17,14 +17,19 @@ import slavsquatsuperstar.demos.geometrydash.ui.UICanvas;
 public class GDEditorScene extends Scene {
 
     final static int TILE_SIZE = 42;
+    final static Vec2 SCENE_SIZE = new Vec2(Preferences.getScreenWidth(),
+            Preferences.getScreenHeight()).div(TILE_SIZE);
 
     public GDEditorScene(String name) {
-        super(name, Preferences.getScreenWidth(), Preferences.getScreenHeight(), TILE_SIZE);
-        setGravity(new Vec2());
+        super(name);
     }
 
     @Override
     protected void init() {
+        setGravity(new Vec2());
+        getCamera().setCameraScale(TILE_SIZE);
+        var size = new Vec2(Preferences.getScreenWidth(), Preferences.getScreenHeight()).div(TILE_SIZE);
+
         addObject(new GameObject("Camera Controls") {
             @Override
             protected void init() {
@@ -32,12 +37,12 @@ public class GDEditorScene extends Scene {
             }
         });
 
-        addObject(new GameObject("Ground", new Vec2(0, getHeight() * -0.5f)) {
+        addObject(new GameObject("Ground", new Vec2(0, size.y * -0.5f)) {
             @Override
             protected void init() {
                 setZIndex(ZIndex.BLOCK);
                 addComponent(new Rigidbody(0f).setFixedRotation(true));
-                addComponent(new BoxCollider(new Vec2(getWidth() + 2f, 2f)));
+                addComponent(new BoxCollider(new Vec2(size.x + 2f, 2f)));
                 addComponent(new ShapeSprite(Colors.BLACK, true));
             }
         });
@@ -53,7 +58,7 @@ public class GDEditorScene extends Scene {
             }
         });
 
-        addObject(new UICanvas("Canvas", new Transform(new Vec2(-3f, -5f))));
+        addObject(new UICanvas("Block Palette", new Transform(new Vec2(-3f, -5f))));
     }
 
 }

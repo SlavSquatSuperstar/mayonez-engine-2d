@@ -1,6 +1,6 @@
 package mayonez.graphics.camera
 
-import mayonez.engine.*
+import mayonez.application.*
 import mayonez.graphics.*
 import mayonez.math.*
 import org.joml.*
@@ -17,7 +17,7 @@ import org.joml.*
  * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.GL)
-class GLCamera(screenSize: Vec2?, sceneScale: Float) : Camera(screenSize, sceneScale) {
+class GLCamera(screenSize: Vec2) : Camera(screenSize) {
 
     // Matrix Fields
     private val viewMatrix: Matrix4f = Matrix4f()
@@ -32,7 +32,7 @@ class GLCamera(screenSize: Vec2?, sceneScale: Float) : Camera(screenSize, sceneS
 
     // Camera Methods
 
-    override fun getScreenOffset(): Vec2 = viewCenter - (screenSize * 0.5f)
+    override fun getScreenOffset(): Vec2 = screenCenter - (screenSize * 0.5f)
 
     // Matrix Methods
 
@@ -43,19 +43,19 @@ class GLCamera(screenSize: Vec2?, sceneScale: Float) : Camera(screenSize, sceneS
     override fun getViewMatrix(): Matrix4f {
         viewMatrix
             .translateView(screenOffset, cameraZ)
-            .rotateView(-rotation, viewCenter, cameraZ)
-            .zoomView(zoom, viewCenter, cameraZ)
+            .rotateView(-rotation, screenCenter, cameraZ)
+            .zoomView(zoom, screenCenter, cameraZ)
+            .zoomView(cameraScale, Vec2(), cameraZ)
             .invert(inverseView)
         return viewMatrix
     }
 
     /**
-     * The projection matrix of the camera, which transforms objects from view
-     * space into normalized screen space.
+     * The projection matrix of the camera, which transforms objects from camera
+     * view space into normalized screen space.
      */
-    // TODO don't zoom UI with scene
     override fun getProjectionMatrix(): Matrix4f {
-//        GL11.glViewport()
+        // TODO only recalculate if changed
         projectionMatrix
             .setOrtho(0f, screenSize.x, 0f, screenSize.y, nearPlane, farPlane)
             .invert(inverseProjection)
@@ -80,29 +80,35 @@ class GLCamera(screenSize: Vec2?, sceneScale: Float) : Camera(screenSize, sceneS
     }
 
     private fun Matrix4f.zoomView(zoom: Float, cameraPos: Vec2, cameraZ: Float): Matrix4f {
-        // Orthographic zoom
-        // TODO try perspective zoom
+        // Orthographic zoom changes orthographic size
+        // TODO try perspective, movement zoom
         return this.scaleAround(zoom, zoom, 1f, cameraPos.x, cameraPos.y, cameraZ)
     }
 
     // Screen to World Methods
 
-    override fun toWorld(screen: Vec2): Vec2 {
+    override fun toWorldPosition(screenPos: Vec2): Vec2 {
         // Divide the raw screen coordinates by the window scaling
-        return getViewPos(getClipPos(screen / WindowProperties.getWindowScaling())) + position
+        val windowPos = getClipPos(screenPos / WindowProperties.getWindowScaling())
+        return getViewPos(windowPos) + position
     }
 
     /** Normalize screen position into clip space. */
-    private fun getClipPos(screen: Vec2): Vec2 {
-        val flipped = Vec2(screen.x, screenSize.y - screen.y) // Mirror y
-        return ((flipped / screenSize * 2f) - Vec2(1f)) / sceneScale
+    private fun getClipPos(screenPos: Vec2): Vec2 {
+        val flipped = Vec2(screenPos.x, screenSize.y - screenPos.y) // Mirror y
+        return (flipped / screenSize * 2f) - Vec2(1f)
     }
 
     /** Transform clip position into camera view space. */
-    private fun getViewPos(clip: Vec2): Vec2 {
-        val view = Vector4f(clip.x, clip.y, 0f, 0f)
+    private fun getViewPos(clipPos: Vec2): Vec2 {
+        val view = Vector4f(clipPos.x, clipPos.y, 0f, 0f)
             .mul(inverseProjection).mul(inverseView)
         return Vec2(view.x, view.y)
+    }
+
+    override fun toWorldDisplacement(screenDisp: Vec2): Vec2 {
+        val flippedDisp = Vec2(screenDisp.x, -screenDisp.y)
+        return flippedDisp.mul(invCameraScale)
     }
 
 }

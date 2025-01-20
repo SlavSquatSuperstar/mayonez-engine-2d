@@ -8,8 +8,6 @@ import java.util.*;
  * @param <T> the type of event to send
  * @author SlavSquatSuperstar
  */
-// TODO multiple event nodes
-// TODO or subscribe to event types and filter onEvent
 public class EventSystem<T extends Event> {
 
     private final List<EventListener<T>> listeners = new ArrayList<>();
@@ -30,6 +28,13 @@ public class EventSystem<T extends Event> {
      */
     public void unsubscribe(EventListener<T> l) {
         listeners.remove(l);
+    }
+
+    /**
+     * Unsubscribes all listeners subscribed to this event system.
+     */
+    public void unsubscribeAll() {
+        listeners.clear();
     }
 
     /**

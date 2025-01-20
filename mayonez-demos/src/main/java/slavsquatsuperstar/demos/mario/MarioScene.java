@@ -1,13 +1,12 @@
 package slavsquatsuperstar.demos.mario;
 
 import mayonez.*;
-import mayonez.graphics.*;
 import mayonez.graphics.sprites.*;
 import mayonez.graphics.textures.*;
-import mayonez.input.*;
 import mayonez.math.*;
 import mayonez.physics.colliders.*;
 import mayonez.physics.dynamics.*;
+import mayonez.scripts.camera.*;
 
 /**
  * For testing the renderer, camera, and coordinate conversions.
@@ -16,31 +15,34 @@ import mayonez.physics.dynamics.*;
  */
 public class MarioScene extends Scene {
 
-    public static final int CHARACTER_LAYER = 0;
-    public static final int GROUND_LAYER = 1;
+    // Layers
+    static final int CHARACTER_LAYER = 0;
+    static final int GROUND_LAYER = 1;
 
+    // Assets
+    static final SpriteSheet SPRITES = Sprites.createSpriteSheet(
+            "assets/mario/textures/spritesheet.png",
+            16, 16, 26, 0);
+    private static final Texture BACKGROUND_TEXTURE =
+            Textures.getTexture("assets/mario/textures/background.png");
+
+    // Constants
+    // Size = 1920 x 1024 px = 60 x 32 units
     private static final int BACKGROUND_WIDTH = 1920;
     private static final int BACKGROUND_HEIGHT = 1024;
-    private static final float SCENE_GRAVITY = 20;
-    private final SpriteSheet sprites;
-    private final Texture background;
+    private static final int SCENE_SCALE = 32;
+    private static final float SCENE_GRAVITY = 70f;
+    static final Vec2 SCENE_HALF_SIZE = new Vec2(BACKGROUND_WIDTH, BACKGROUND_HEIGHT)
+            .div(SCENE_SCALE * 2f);
 
     public MarioScene(String name) {
-        super(name, BACKGROUND_WIDTH, BACKGROUND_HEIGHT, 32);
-        sprites = Sprites.createSpriteSheet(
-                "assets/mario/textures/spritesheet.png",
-                16, 16, 26, 0);
-        background = Textures.getTexture("assets/mario/textures/background.png");
-        // Size = 60 x 32
-        // Resolution = 1920x1024 (15:8), cropped from 1920x1080 (16:9)
+        super(name);
     }
 
     @Override
     protected void init() {
-        setBackground(Colors.LIGHT_GRAY);
-        setBackground(background);
+        getCamera().setCameraScale(SCENE_SCALE);
         setGravity(new Vec2(0, -SCENE_GRAVITY));
-        getCamera().zoom(0.8f);
 
         var charLayer = getLayer(CHARACTER_LAYER);
         charLayer.setName("Characters");
@@ -48,28 +50,29 @@ public class MarioScene extends Scene {
         var groundLayer = getLayer(GROUND_LAYER);
         groundLayer.setName("Ground");
 
-        addObject(new Mario(new Vec2(-21f, -11f), sprites.getSprite(0)));
-
-        addEnemiesToScene();
-        addObstaclesToScene();
-    }
-
-    @Override
-    protected void onUserUpdate(float dt) {
-        if (MouseInput.isPressed()) {
-            Logger.log(MouseInput.getPosition());
-        }
-    }
-
-    private void addEnemiesToScene() {
-        for (var i = 0; i < 16; i++) {
-            switch (i % 4) {
-                case 0 -> addObject(new Goomba("Goomba", sprites.getSprite(14), getRandomPosition()));
-                case 1 -> addObject(new Goomba("Cool Goomba", sprites.getSprite(17), getRandomPosition()));
-                case 2 -> addObject(new Goomba("Vintage Goomba", sprites.getSprite(20), getRandomPosition()));
-                case 3 -> addObject(new Goomba("Vintage Cool Goomba", sprites.getSprite(23), getRandomPosition()));
+        // Background
+        addObject(new GameObject("Background",
+                Transform.scaleInstance(new Vec2(BACKGROUND_WIDTH, BACKGROUND_HEIGHT).div(SCENE_SCALE))) {
+            @Override
+            protected void init() {
+                setZIndex(-10);
+                var sprite = Sprites.createSprite(BACKGROUND_TEXTURE);
+                addComponent(sprite);
             }
+        });
+
+        getCamera().addCameraScript(new CameraKeepInScene(SCENE_HALF_SIZE.mul(-1f), SCENE_HALF_SIZE));
+        addObject(new Mario(new Vec2(-23f, -11f)));
+
+        // Add Enemies
+        var halfWidth = SCENE_HALF_SIZE.x - 12;
+        var halfHeight = SCENE_HALF_SIZE.y;
+        for (var i = 0; i < 16; i++) {
+            var randPos = Random.randomVector(-halfWidth, halfWidth,
+                    -halfHeight + 4, halfHeight - 20);
+            addObject(Goomba.createRandomGoomba(i % 4, randPos));
         }
+        addObstaclesToScene();
     }
 
     private void addObstaclesToScene() {
@@ -96,16 +99,8 @@ public class MarioScene extends Scene {
                 setLayer(getScene().getLayer(MarioScene.GROUND_LAYER));
                 addComponent(new Rigidbody(0f));
                 addComponent(new BoxCollider(size));
-//                addComponent(new ShapeSprite(Colors.WHITE, false));
             }
         };
-    }
-
-    @Override
-    public Vec2 getRandomPosition() {
-        var halfWidth = getWidth() * 0.5f;
-        var halfHeight = getHeight() * 0.5f;
-        return Random.randomVector(-halfWidth, halfWidth, -halfHeight + 2, halfHeight - 6);
     }
 
 }

@@ -14,11 +14,9 @@ if (-not$?)
     exit
 }
 
-# Delete log outputs
-Remove-Item -ErrorAction SilentlyContinue -Recurse logs\
-Remove-Item -ErrorAction SilentlyContinue -Recurse **\logs\
-Remove-Item -ErrorAction SilentlyContinue hs_err_pid*.log
-Remove-Item -ErrorAction SilentlyContinue **\hs_err_pid*.log
+# Delete log outputs and crash reports
+Get-ChildItem -Recurse -Directory -Filter "logs" | Remove-Item -Recurse
+Get-ChildItem -Recurse -File -Filter "hs_err_pid*.log" | Remove-Item
 Write-Output "Cleared all log files."
 
 # Exit and navigate to the previous directory

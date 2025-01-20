@@ -36,7 +36,6 @@ public class ShapeSprite extends Component {
     @Override
     protected void start() {
         collider = gameObject.getComponent(Collider.class);
-        if (collider == null) this.setEnabled(false);
         shape = getColliderShape();
     }
 

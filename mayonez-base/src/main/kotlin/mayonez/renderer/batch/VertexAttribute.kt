@@ -28,8 +28,8 @@ enum class VertexAttribute(
     /** The texture (UV) coordinates of a vertex, (u, v). */
     TEX_COORD(2, Float.SIZE_BYTES, GL_FLOAT),
 
-    /** The texture ID of a vertex, id. */
-    TEX_ID(1, Float.SIZE_BYTES, GL_FLOAT);
+    /** The texture slot of a vertex, i. */
+    TEX_SLOT(1, Float.SIZE_BYTES, GL_FLOAT);
 
     /** The total size in bytes of this attribute. */
     val totalBytes: Int

@@ -3,6 +3,7 @@ package slavsquatsuperstar.demos.mario;
 import mayonez.*;
 import mayonez.input.*;
 import mayonez.math.*;
+import mayonez.physics.*;
 import mayonez.physics.dynamics.*;
 
 /**
@@ -10,19 +11,39 @@ import mayonez.physics.dynamics.*;
  *
  * @author SlavSquatSuperstar
  */
-public class MarioController extends Script {
+class MarioController extends Script {
 
+    // Constants
     private static final float MOVE_SPEED = 15;
-    private static final float JUMP_SPEED = 30;
-    private static final float JUMP_GRAVITY = 30;
+    private static final float JUMP_SPEED = 35;
     private static final float SLAM_SPEED = 5;
+
+    // Fields
     private boolean onGround;
     private Rigidbody rb;
+
+    MarioController() {
+        super(UpdateOrder.INPUT);
+    }
 
     @Override
     protected void start() {
         rb = getRigidbody();
         onGround = false;
+
+        getCollider().addCollisionCallback(event -> {
+            // On collision
+            if (!event.trigger
+                    && event.other.hasLayer(MarioScene.GROUND_LAYER)) {
+                if (event.type == CollisionEventType.ENTER
+                        && event.direction.dot(new Vec2(0, -1)) > 0) {
+                    // Direction is downward
+                    onTouchGround();
+                } else if (event.type == CollisionEventType.EXIT) {
+                    onLeaveGround();
+                }
+            }
+        });
     }
 
     @Override
@@ -36,9 +57,6 @@ public class MarioController extends Script {
         if (KeyInput.keyDown("w") && onGround) {
             rb.applyImpulse(new Vec2(0, JUMP_SPEED));
         }
-        if (!onGround) { // Fall faster while jumping
-            rb.addVelocity(new Vec2(0, -JUMP_GRAVITY * dt));
-        }
 
         // Ground pound
         if (KeyInput.keyDown("s") && !onGround) {
@@ -46,23 +64,15 @@ public class MarioController extends Script {
         }
     }
 
-    @Override
-    protected void onCollisionEnter(GameObject other, Vec2 direction, Vec2 velocity) {
-        if (other.hasLayer(MarioScene.GROUND_LAYER) && isDirectionDownward(direction)) {
+    private void onTouchGround() {
+        if (!onGround) {
             onGround = true;
             rb.getVelocity().y = 0;
         }
     }
 
-    private static boolean isDirectionDownward(Vec2 direction) {
-        return direction.dot(new Vec2(0, -1)) > 0;
-    }
-
-    @Override
-    protected void onCollisionExit(GameObject other) {
-        if (other.hasLayer(MarioScene.GROUND_LAYER)) {
-            onGround = false;
-        }
+    private void onLeaveGround() {
+        if (onGround) onGround = false;
     }
 
 }

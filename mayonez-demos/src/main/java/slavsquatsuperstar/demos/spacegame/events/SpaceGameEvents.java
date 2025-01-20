@@ -9,12 +9,13 @@ import mayonez.event.*;
  */
 public final class SpaceGameEvents {
 
-    private static final EventSystem<Event> PLAYER_EVENTS = new EventSystem<>();
+    private static final EventSystem<SpaceGameEvent> PLAYER_EVENTS = new EventSystem<>();
 
     private SpaceGameEvents() {
     }
 
-    public static EventSystem<Event> getPlayerEventSystem() {
+    public static EventSystem<SpaceGameEvent> getPlayerEventSystem() {
         return PLAYER_EVENTS;
     }
+
 }

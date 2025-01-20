@@ -32,18 +32,15 @@ public class CameraDragAndDrop extends DragAndDrop {
 
     @Override
     public void onMouseDown() {
-        if (MouseInput.buttonPressed(getButton())) {
+        if (MouseInput.buttonDown(getButton()) && MouseInput.isDoubleClick()) {
             // Reset camera position by double-clicking
-            if (MouseInput.getClicks() > 1) {
-                camera.getTransform().setPosition(new Vec2(0, 0));
-            }
+            camera.getTransform().setPosition(new Vec2(0, 0));
         }
     }
 
     @Override
     public void onMouseHeld() {
         if (MouseInput.buttonDown(getButton())) {
-            System.out.println("button held");
             camera.getTransform().move(getMouseDisp().mul(-1f)); // drags slowly on AWT
         }
     }

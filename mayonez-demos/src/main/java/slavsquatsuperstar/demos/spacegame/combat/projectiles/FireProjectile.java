@@ -9,7 +9,6 @@ import mayonez.math.*;
  *
  * @author SlavSquatSuperstar
  */
-// TODO fire multiple projectiles
 public abstract class FireProjectile extends Script {
 
     @Override
@@ -34,13 +33,13 @@ public abstract class FireProjectile extends Script {
     /**
      * Instantiates a projectile prefab object and spawns it in the world.
      *
-     * @param projectileIndex the index of the {@link ProjectileType}
-     * @param offsetPos       the projectile spawn position in relation to the source
-     * @param offsetAngle     the projectile spawn angle in relation to the source
+     * @param type        the projectile type
+     * @param offsetPos   the projectile spawn position in relation to the source
+     * @param offsetAngle the projectile spawn angle in relation to the source
      */
-    protected void spawnPrefab(int projectileIndex, Vec2 offsetPos, float offsetAngle) {
+    protected void spawnPrefab(ProjectileType type, Vec2 offsetPos, float offsetAngle) {
         var prefabObject = ProjectilePrefabs.createPrefab(
-                projectileIndex, gameObject, offsetPos, offsetAngle
+                type, gameObject, offsetPos, offsetAngle
         );
         getScene().addObject(prefabObject);
     }

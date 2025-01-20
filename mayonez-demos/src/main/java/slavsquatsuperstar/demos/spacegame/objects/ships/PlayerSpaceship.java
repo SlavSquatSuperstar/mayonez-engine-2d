@@ -2,11 +2,12 @@ package slavsquatsuperstar.demos.spacegame.objects.ships;
 
 import mayonez.*;
 import mayonez.input.*;
+import mayonez.math.*;
 import mayonez.physics.dynamics.*;
-import mayonez.scripts.movement.*;
 import slavsquatsuperstar.demos.spacegame.combat.Damageable;
 import slavsquatsuperstar.demos.spacegame.combat.projectiles.PlayerFireController;
-import slavsquatsuperstar.demos.spacegame.movement.*;
+import slavsquatsuperstar.demos.spacegame.combat.projectiles.ProjectilePrefabs;
+import slavsquatsuperstar.demos.spacegame.movement.PlayerKeyMovement;
 
 /**
  * A player-controlled spaceship.
@@ -16,10 +17,8 @@ import slavsquatsuperstar.demos.spacegame.movement.*;
 // TODO flash spawn immunity
 public class PlayerSpaceship extends Spaceship {
 
-    private static final float PLAYER_HEALTH = 8f;
-
-    public PlayerSpaceship(String name, String spriteName) {
-        super(name, new SpaceshipProperties(spriteName, PLAYER_HEALTH, PLAYER_HEALTH * 0.5f));
+    public PlayerSpaceship(String name, Vec2 position, SpaceshipProperties properties) {
+        super(name, position, properties);
     }
 
     @Override
@@ -28,14 +27,14 @@ public class PlayerSpaceship extends Spaceship {
         getScene().getCamera().setSubject(this);
 
         // Movement
-        addComponent(new Rigidbody(1f));
-        addComponent(new PlayerKeyMovement(
-                12f, MoveMode.FORCE, 3f, MoveMode.FORCE
-        ));
+        var rb = new Rigidbody(1f);
+        addComponent(rb);
+        addComponent(new PlayerKeyMovement(properties.moveThrust(), properties.turnThrust()));
 //        addComponent(new ClickToMove(10f, MoveMode.VELOCITY, true));
 
         // Weapons
-        addComponent(new PlayerFireController());
+        var loadout = ProjectilePrefabs.PROJECTILE_TYPES;
+        addComponent(new PlayerFireController(properties.hardpoints(), loadout));
 
         addComponent(new Script() {
             @Override

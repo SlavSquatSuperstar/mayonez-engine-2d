@@ -1,24 +1,32 @@
 package slavsquatsuperstar.demos.spacegame.combat.projectiles;
 
-import mayonez.math.*;
-import mayonez.scripts.*;
+import mayonez.math.Random;
+import mayonez.scripts.Timer;
+
+import java.util.*;
 
 /**
  * Allows enemy ships to fire different weapons.
  *
  * @author SlavSquatSuperstar
  */
+// TODO restrict projectile types
 public class EnemyFireController extends FireProjectile {
 
-    private int weaponChoice, shotsLeft;
+    private ProjectileType selectedWeapon;
     private FiringState state;
+    private int shotsLeft;
+
     private final Timer fireTimer;
     private final Timer waitTimer; // Time between shoot bursts
+    private final List<WeaponHardpoint> hardpoints;
+    private final List<ProjectileType> projectiles;
 
-    public EnemyFireController() {
-        super();
+    public EnemyFireController(List<WeaponHardpoint> hardpoints, List<ProjectileType> projectiles) {
         fireTimer = new Timer(0f);
         waitTimer = new Timer(0f);
+        this.hardpoints = hardpoints;
+        this.projectiles = projectiles;
     }
 
     @Override
@@ -39,13 +47,14 @@ public class EnemyFireController extends FireProjectile {
     @Override
     protected boolean shouldFire() {
         return fireTimer.isReady()
-        && state == FiringState.FIRING;
+                && state == FiringState.FIRING;
     }
 
     @Override
     protected void fireProjectiles() {
-        spawnPrefab(weaponChoice, new Vec2(0f, 0.4f), 0f);
-
+        for (var hardPoint : hardpoints) {
+            spawnPrefab(selectedWeapon, hardPoint.offset(), hardPoint.angle());
+        }
         fireTimer.reset();
         shotsLeft -= 1;
     }
@@ -82,12 +91,10 @@ public class EnemyFireController extends FireProjectile {
     }
 
     private void selectRandomWeapon() {
-        weaponChoice = Random.randomInt(0, ProjectilePrefabs.count() - 1);
-        var type = ProjectilePrefabs.getProjectileType(weaponChoice);
-        if (type != null) {
-            setCooldown(type.fireCooldown()); // Update fire cooldown
-            shotsLeft = Random.randomInt(1, 10);
-        }
+        var index = Random.randomInt(0, projectiles.size() - 1);
+        selectedWeapon = projectiles.get(index);
+        setCooldown(selectedWeapon.fireCooldown()); // Update fire cooldown
+        shotsLeft = Random.randomInt(1, 10);
     }
 
     private void setCooldown(float cooldown) {

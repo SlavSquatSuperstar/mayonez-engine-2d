@@ -15,7 +15,7 @@ import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
 @UsesEngine(EngineType.GL)
 class VertexBuffer {
 
-    private final DrawPrimitive primitive; // TODO make fields method arguments
+    private final DrawPrimitive primitive;
     private final VertexBufferArray vertices;
     private int vboID;
 

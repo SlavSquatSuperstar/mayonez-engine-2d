@@ -10,8 +10,8 @@ import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 
 /**
- * Stores several integer {@link mayonez.graphics.textures.GLTexture} texture IDs for a
- * {@link RenderBatch}.
+ * Stores several integer {@link mayonez.graphics.textures.GLTexture} texture IDs
+ * for a {@link RenderBatch}.
  *
  * @author SlavSquatSuperstar
  */
@@ -23,7 +23,7 @@ class TextureArray {
     private static final int NO_TEXTURE_ID = GL_NONE;
 
     // Array Fields
-    private final int[] texIDs;
+    private final int[] texIDs; // OpenGL texture IDs
     private int size; // Current number of textures
 
     TextureArray(int textureCapacity) {
@@ -49,6 +49,13 @@ class TextureArray {
         else return indexOfTexture(tex) > -1;
     }
 
+    /**
+     * Get the slot (not ID) of the given texture to use in the shader.
+     * If the texture is null, returns 0, otherwise returns the index + 1.
+     *
+     * @param tex the texture
+     * @return the texture slot
+     */
     int getTextureSlot(GLTexture tex) {
         if (tex == COLOR_TEXTURE) return NO_TEXTURE_ID;
         else return indexOfTexture(tex) + 1;
@@ -65,7 +72,7 @@ class TextureArray {
 
     void bindTextures() {
         for (var i = 0; i < size; i++) {
-            glActiveTexture(GL_TEXTURE0 + i + 1); // count from 1
+            glActiveTexture(GL_TEXTURE0 + i);
             glBindTexture(GL_TEXTURE_2D, texIDs[i]);
         }
     }

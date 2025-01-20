@@ -1,15 +1,12 @@
 package mayonez.renderer.gl
 
-import mayonez.*
 import mayonez.graphics.*
 import mayonez.graphics.debug.*
 import mayonez.graphics.font.*
-import mayonez.graphics.sprites.*
-import mayonez.math.*
 import mayonez.math.shapes.*
 import mayonez.renderer.*
 import mayonez.renderer.batch.*
-import org.lwjgl.opengl.GL11.glLineWidth
+import mayonez.renderer.shader.*
 
 /**
  * Draws all sprites and debug information onto the screen using LWJGL's
@@ -18,49 +15,28 @@ import org.lwjgl.opengl.GL11.glLineWidth
  * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.GL)
-internal class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"),
+internal class GLDefaultRenderer(shader: Shader) : GLRenderer(shader),
     SceneRenderer, DebugRenderer {
 
-    // Renderer Parameters
-    private val lineStyle: LineStyle = LineStyle.QUADS
-
     // Renderer Objects
-    private val objects: MutableList<GLRenderable> = ArrayList() // Drawable objects
-    private val shapes: MutableList<DebugShape> = ArrayList() // Temporary shapes
-    private val textObjects: MutableList<TextLabel> = ArrayList() // Text objects
-
-    // Scene Background
-    private lateinit var background: Sprite
-    private val bgBatch: RenderBatch =
-        RenderBatch(1, 0, DrawPrimitive.SPRITE)
+    private val objects: MutableList<Renderable> = ArrayList() // Sprites and text
+    private val tempObjects: MutableList<Renderable> = ArrayList() // Debug shapes
+    private val drawObjects: MutableList<GLRenderable> = ArrayList() // Objects to batch
 
     // Scene Renderer Methods
 
-    override fun setBackground(background: Sprite, sceneSize: Vec2, sceneScale: Float) {
-        this.background = background
-            .setSpriteTransform(Transform.scaleInstance(sceneSize * sceneScale))
-    }
-
     override fun addRenderable(r: Renderable?) {
-        if (r is GLRenderable) objects.add(r)
-        else if (r is TextLabel) textObjects.add(r)
+        if (r.isAccepted()) objects.add(r!!)
     }
 
     override fun removeRenderable(r: Renderable?) {
-        if (r is GLRenderable) objects.remove(r)
-        else if (r is TextLabel) textObjects.remove(r)
+        if (r.isAccepted()) objects.remove(r!!)
     }
 
     // Debug Renderer Methods
 
-    override fun addShape(shape: DebugShape) {
-        for (shapePart in shape.splitIntoParts()) {
-            if (shapePart is Edge) {
-                shapes.addLine(shapePart, shape, lineStyle)
-            } else if (shapePart is Triangle) {
-                shapes.addShapeAndCopyBrush(shapePart, shape)
-            }
-        }
+    override fun addShape(shape: DebugShape?) {
+        if (shape != null) tempObjects.add(shape)
     }
 
     // Renderer Methods
@@ -68,9 +44,8 @@ internal class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"),
     override fun clear() {
         super.clear()
         objects.clear()
-        shapes.clear()
-        textObjects.clear()
-        bgBatch.clearVertices()
+        tempObjects.clear()
+        drawObjects.clear()
     }
 
     override fun preRender() {
@@ -82,53 +57,84 @@ internal class GLDefaultRenderer : GLRenderer("assets/shaders/default.glsl"),
         shader.uploadMat4("uProjection", cam.projectionMatrix)
         shader.uploadIntArray("uTextures", textureSlots)
 
-        // Draw background
-        if (background.getTexture() == null) drawBackgroundColor()
-        else drawBackgroundImage()
-
-        // Set GL Properties
-        when (lineStyle) {
-            LineStyle.SINGLE -> glLineWidth(DebugDraw.DEFAULT_STROKE_SIZE)
-            LineStyle.MULTIPLE -> glLineWidth(1f)
-            else -> return
-        }
-    }
-
-    private fun drawBackgroundImage() {
-        bgBatch.clearVertices()
-        (background as GLSprite).pushToBatch(bgBatch)
-        bgBatch.uploadVertices()
-        bgBatch.drawBatch()
-    }
-
-    private fun drawBackgroundColor() {
-        val bgColor = background.getColor().toGL()
+        // Draw background color
+        val bgColor = cam.backgroundColor.toGL()
         GLHelper.clearScreen(bgColor.x, bgColor.y, bgColor.z, 1f)
     }
 
     override fun createBatches() {
-        // Push objects
+        // Sort objects
         objects.sortBy { it.zIndex }
+        tempObjects.sortBy { it.zIndex }
+
+        // Process objects
         objects.filter { it.isEnabled }
-            .forEach { it.pushToBatch(it.getAvailableBatch()) }
+            .forEach { it.process() }
+        tempObjects.filter { it.isEnabled }
+            .forEach { it.process() }
 
-        // Push shapes
-        shapes.sortBy { it.zIndex }
-        shapes.forEach { it.pushToBatch(it.getAvailableBatch()) }
-
-        // Push text
-        textObjects.sortBy { it.zIndex }
-        textObjects.filter { it.isEnabled }
-            .forEach {
-                it.glyphSprites.forEach { glyph ->
-                    glyph.pushToBatch(glyph.getAvailableBatch())
+        // Push objects
+        var lastBatch: RenderBatch? = null
+        // Already sorted by primitive
+        drawObjects.sortBy { it.zIndex }
+        drawObjects.forEach {
+            // Create new batch
+            if (lastBatch == null || !lastBatch.canFitObject(it)) {
+                if (lastBatch is MultiZRenderBatch) {
+                    lastBatch.isClosed = true // Don't use this batch anymore
                 }
+                lastBatch = it.getAvailableBatch()
             }
+            // Push to batch
+            it.pushToBatch(lastBatch)
+            if (lastBatch is MultiZRenderBatch) {
+                lastBatch.maxZIndex = it.zIndex // Update max z-index
+            }
+        }
     }
 
     override fun postRender() {
         super.postRender()
-        shapes.clear() // Clear primitives after each frame
+        tempObjects.clear() // Clear debug shapes after each frame
+        drawObjects.clear() // Clear batch objects after each frame
+    }
+
+    // Helper Methods
+
+    override fun GLRenderable.createNewBatch(): RenderBatch {
+        val batch: RenderBatch
+        if (primitive == DrawPrimitive.SPRITE) {
+            batch = MultiZRenderBatch(primitive, batchSize, MAX_TEXTURE_SLOTS)
+            batch.minZIndex = this.zIndex // Set min z-index
+            batch.maxZIndex = this.zIndex // Set initial max z-index
+        } else {
+            batch = SingleZRenderBatch(primitive, batchSize, MAX_TEXTURE_SLOTS, zIndex)
+        }
+        return batch
+    }
+
+    private fun Renderable.process() {
+        when (this) {
+            is DebugShape -> this.processShape()
+            is GLRenderable -> drawObjects.add(this)
+            is TextLabel -> drawObjects.addAll(this.glyphSprites)
+        }
+    }
+
+    private fun DebugShape.processShape() {
+        val cam = viewport
+        val zoom = cam.zoom * cam.cameraScale
+        getParts(zoom).forEach { shapePart ->
+            if (shapePart is Edge) {
+                drawObjects.addAll(shapePart.getDrawParts(this.brush, zoom))
+            } else if (shapePart is Triangle) {
+                drawObjects.add(shapePart.getDrawShape(this.brush))
+            }
+        }
+    }
+
+    private fun Renderable?.isAccepted(): Boolean {
+        return (this is GLRenderable) || (this is TextLabel)
     }
 
 }

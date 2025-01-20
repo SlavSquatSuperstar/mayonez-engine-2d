@@ -3,7 +3,6 @@ package slavsquatsuperstar.demos.spacegame.ui;
 import mayonez.*;
 import mayonez.event.*;
 import slavsquatsuperstar.demos.spacegame.combat.ShieldedDamageable;
-import slavsquatsuperstar.demos.spacegame.combat.projectiles.PlayerFireController;
 import slavsquatsuperstar.demos.spacegame.events.*;
 
 /**
@@ -11,7 +10,7 @@ import slavsquatsuperstar.demos.spacegame.events.*;
  *
  * @author SlavSquatSuperstar
  */
-public class PlayerUIController extends Script implements EventListener<Event> {
+public class PlayerUIController extends Script implements EventListener<SpaceGameEvent> {
 
     // UI Components
     private final SliderBar healthBar, shieldBar;
@@ -19,7 +18,6 @@ public class PlayerUIController extends Script implements EventListener<Event> {
 
     // Ship Components
     private ShieldedDamageable damageable;
-    private PlayerFireController fireController;
 
     // Player Status
     private float respawnPercent;
@@ -53,37 +51,37 @@ public class PlayerUIController extends Script implements EventListener<Event> {
             // Recharge health bar
             healthBar.setSliderValue(respawnPercent);
         }
-
-        // Update weapons selection
-        if (fireController != null) {
-            weaponHotbar.setSelection(fireController.getSelectedWeapon());
-        }
     }
 
     private void setPlayer(GameObject player) {
         if (player == null) {
             damageable = null;
-            fireController = null;
         } else {
             damageable = player.getComponent(ShieldedDamageable.class);
-            fireController = player.getComponent(PlayerFireController.class);
         }
     }
 
     // Script Callbacks
 
     @Override
-    public void onEvent(Event event) {
+    public void onEvent(SpaceGameEvent event) {
         if (event instanceof PlayerSpawnedEvent e) {
+            // Player has (re)spawned
             setPlayer(e.getPlayer());
         } else if (event instanceof PlayerDestroyedEvent) {
+            // Player was destroyed
             setPlayer(null);
             weaponHotbar.setAllCooldownPercents(0f);
             // cooldown overlay doesn't vanish until explosion animation is finished
         } else if (event instanceof PlayerRespawnUpdate u) {
+            // Update respawn percent
             respawnPercent = u.getRespawnPercent();
         } else if (event instanceof WeaponCooldownUpdate u) {
+            // Update weapon cooldown
             weaponHotbar.setCooldownPercent(u.getWeaponIndex(), u.getCooldownPercent());
+        } else if (event instanceof WeaponSelectedEvent e) {
+            // Update weapon selection
+            weaponHotbar.setSelection(e.getWeaponIndex());
         }
     }
 

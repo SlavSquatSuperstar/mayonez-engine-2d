@@ -28,7 +28,7 @@ public class SpaceshipDestruction extends TimerScript {
 
     public SpaceshipDestruction() {
         super(DESTRUCTION_DURATION);
-        shipSystems = new LinkedList<>();
+        shipSystems = new ArrayList<>();
     }
 
     @Override

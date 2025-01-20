@@ -4,7 +4,6 @@ import mayonez.graphics.*;
 import mayonez.graphics.textures.*;
 import mayonez.math.*;
 import mayonez.math.shapes.*;
-import mayonez.renderer.batch.*;
 import mayonez.renderer.gl.*;
 
 /**
@@ -17,35 +16,39 @@ import mayonez.renderer.gl.*;
  * @param text     the parent text component
  * @author SlavSquatSuperstar
  */
-public record GlyphSprite(
+record GlyphSprite(
         Vec2 position, Vec2 size,
         Texture texture, Color color,
         TextLabel text
-) implements GLRenderable {
+) implements GLQuad {
 
-    // Renderable Methods
+    private static final int MAX_BATCH_GLYPHS = 200; // currently does nothing
+
+    // Quad Methods
 
     @Override
-    public void pushToBatch(RenderBatch batch) {
-        if (texture instanceof GLTexture glTex) {
-            var sceneScale = isInUI() ? 1 : text.getScene().getScale();
-            var sprVertices = new BoundingBox(position.mul(sceneScale), size.mul(sceneScale))
-                    .getVertices();
-            var texCoords = glTex.getTexCoords();
-            var texID = batch.getTextureSlot(glTex);
-            BatchPushHelper.pushSprite(batch, sprVertices, color, texCoords, texID);
-        }
+    public Color getColor() {
+        return color;
     }
+
+    @Override
+    public Vec2[] getVertexPositions() {
+        return new BoundingBox(position, size).getVertices();
+    }
+
+    // GL Methods
 
     @Override
     public int getBatchSize() {
-        return RenderBatch.MAX_GLYPHS;
+        return MAX_BATCH_GLYPHS;
     }
 
     @Override
-    public DrawPrimitive getPrimitive() {
-        return DrawPrimitive.SPRITE;
+    public GLTexture getTexture() {
+        return (texture instanceof GLTexture glTex) ? glTex : null;
     }
+
+    // Renderable Methods
 
     @Override
     public int getZIndex() {

@@ -7,7 +7,6 @@ package mayonez.event;
  * @author SlavSquatSuperstar
  */
 @FunctionalInterface
-// TODO parameterize listener and nodes
 public interface EventListener<T extends Event> {
 
     /**

@@ -30,8 +30,8 @@ public class AsteroidFragment extends Asteroid {
         var radius = properties.radius();
         if (radius > MIN_SPAWN_FRAGMENTS_RADIUS) {
             // Create more fragments
-            addCollider();
             addComponent(new AsteroidDestruction(startingHealth, properties));
+            addCollider();
         } else {
             // Don't create any fragments
             addComponent(new DespawnAsteroid(
