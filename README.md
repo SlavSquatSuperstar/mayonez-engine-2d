@@ -17,24 +17,24 @@ The ultimate made-from-scratch and open-source 2D Java game engine to fit your S
 
 This fully-operational game engine includes:
 
-- A physics system with force-based movement, multiple collider shapes, linear and angular impulse resolution, and
-  friction
 - A 2D renderer that can draw sprites and shapes with both Java AWT and LWJGL OpenGL libraries
-- An entity-component system that allows you to create modular, reusable game objects and components
-- An asset system that can read from classpath resources and read and write to local files
+- Rigidbody physics with force-based movement, multiple collider shapes, linear and angular impulse resolution,
+  and friction
+- An entity-component system that for creating modular, reusable game objects and components
+- An asset system that can load classpath resources and read from and write to local files
 - Keyboard and mouse input that supports key presses, mouse clicks and movement, and key axes
-- Scene management that allows you to load multiple scenes and save their states when switching
+- A scene manager that allows you to load multiple scenes and save their states when switching
 - Logging with different message priorities and automatic log file generation
 - Debug rendering capabilities for drawing and filling shapes, lines, and points
+- An extensible event system for keyboard and mouse inputs and custom game events
+- Font rendering for both world and UI text that supports user-created fonts
 - Customizable game preferences that you can set yourself
 
 ### Planned
 
 - A UI system with reusable components such as buttons and labels
-- An event system for keyboard and mouse inputs
-- Font rendering for displaying text on UI
 - Playable in-game sound effects
-- Nestable game objects that will be fixed to the parent object's position
+- Nestable game objects that are fixed to the parent object's transform
 - And much more to come later!
 
 ## Platforms
