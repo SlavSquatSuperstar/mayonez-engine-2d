@@ -17,7 +17,6 @@ import static slavsquatsuperstar.demos.physics.SandboxObjectPrefabs.*;
 public class PhysicsSandboxScene extends Scene {
 
     // Constants
-    // TODO 0 static friction makes objects slide up ramp
     static final PhysicsMaterial NORMAL_MATERIAL = new PhysicsMaterial(0.4f, 0.4f, 0.3f);
     static final PhysicsMaterial BOUNCY_MATERIAL = new PhysicsMaterial(0f, 0f, 1f);
     static final PhysicsMaterial STICKY_MATERIAL = new PhysicsMaterial(1f, 1f, 0f);

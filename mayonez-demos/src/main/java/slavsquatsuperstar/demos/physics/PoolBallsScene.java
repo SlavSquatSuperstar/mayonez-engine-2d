@@ -36,8 +36,6 @@ public class PoolBallsScene extends Scene {
         getCamera().setCameraScale(SCENE_SCALE);
 
         // Add Boundary Objects
-        // TODO bouncing at wrong angle
-        // TODO friction/bonce applied incorrectly
         addObject(createBoundaryObject("Upper Wall", new Vec2(0, -0.5f * (height + 1)),
                 new Vec2(width, 10)));
         addObject(createBoundaryObject("Lower Wall", new Vec2(0, 0.5f * (height + 1)),

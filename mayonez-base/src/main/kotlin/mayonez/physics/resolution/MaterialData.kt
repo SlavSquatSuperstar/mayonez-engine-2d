@@ -20,9 +20,9 @@ internal data class MaterialData(
     companion object {
         internal fun combine(mat1: PhysicsMaterial, mat2: PhysicsMaterial): MaterialData {
             return MaterialData(
+                average(mat1.bounce, mat2.bounce),
                 geometricMean(mat1.kineticFriction, mat2.kineticFriction),
                 geometricMean(mat1.staticFriction, mat2.staticFriction),
-                average(mat1.bounce, mat2.bounce)
             )
         }
     }
