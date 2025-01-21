@@ -6,25 +6,27 @@ import mayonez.input.*;
 import slavsquatsuperstar.demos.geometrydash.GDEditorScene;
 import slavsquatsuperstar.demos.input.InputTestScene;
 import slavsquatsuperstar.demos.mario.MarioScene;
+import slavsquatsuperstar.demos.physics.CollisionTestScene;
 import slavsquatsuperstar.demos.physics.PhysicsSandboxScene;
 import slavsquatsuperstar.demos.physics.PoolBallsScene;
 import slavsquatsuperstar.demos.renderer.RendererTestScene;
 import slavsquatsuperstar.demos.spacegame.SpaceGameScene;
 
 /**
- * A class with a main method that can be used to launch and switch between the different demo scenes.
+ * The entry point into the demos application. Launches and switches between the
+ * different demo scenes.
  *
  * @author SlavSquatSuperstar
  */
 public class DemosLauncher {
 
-    private final static int START_SCENE_INDEX = 6;
+    private final static int START_SCENE_INDEX = 7;
 
     private final static String[] SCENE_NAMES = {
             "Space Game", "Render Batch Test",
             "Physics Sandbox", "Pool Balls",
             "Mario Level", "Geometry Dash Editor",
-            "Input Test"
+            "Input Test", "Collision Test"
     };
 
     public static void main(String[] args) {
@@ -83,7 +85,14 @@ public class DemosLauncher {
                         super.onUserUpdate(dt);
                         pollSceneControls();
                     }
-                }
+                },
+                new CollisionTestScene(SCENE_NAMES[7]) {
+                    @Override
+                    protected void onUserUpdate(float dt) {
+                        super.onUserUpdate(dt);
+                        pollSceneControls();
+                    }
+                },
         };
     }
 

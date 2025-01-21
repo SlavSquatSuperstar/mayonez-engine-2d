@@ -58,7 +58,7 @@ public class SandboxUI extends GameObject {
         // Gravity Text
         TextLabel gravityText;
         addComponent(gravityText = new UITextLabel(
-                "Gravity On",
+                "Gravity: On",
                 new Vec2(Preferences.getScreenWidth() - 80, 32),
                 font, Colors.BLACK,
                 16, 2

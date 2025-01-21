@@ -19,8 +19,8 @@ public class PhysicsSandboxScene extends Scene {
     // Constants
     // TODO 0 static friction makes objects slide up ramp
     static final PhysicsMaterial NORMAL_MATERIAL = new PhysicsMaterial(0.4f, 0.4f, 0.3f);
-    static final PhysicsMaterial BOUNCY_MATERIAL = new PhysicsMaterial(0.1f, 0.1f, 1f);
-    static final PhysicsMaterial STICKY_MATERIAL = new PhysicsMaterial(0.9f, 0.9f, 0f);
+    static final PhysicsMaterial BOUNCY_MATERIAL = new PhysicsMaterial(0f, 0f, 1f);
+    static final PhysicsMaterial STICKY_MATERIAL = new PhysicsMaterial(1f, 1f, 0f);
     private static final float SCENE_SCALE = 10f;
 
     // Fields
@@ -41,10 +41,10 @@ public class PhysicsSandboxScene extends Scene {
         addObject(createStaticBox("Right Ramp", new Vec2(15, -5), new Vec2(60, 4), 15));
 
         // Add Dynamic Objects
-        addObject(createBall(new Vec2(8), new Vec2(-35, 30), STICKY_MATERIAL));
-        addObject(createBall(new Vec2(10), new Vec2(35, 15), BOUNCY_MATERIAL));
-        addObject(createBox(new Vec2(6, 6), new Vec2(0, 5), 30, STICKY_MATERIAL));
-        addObject(createBox(new Vec2(10, 6), new Vec2(-30, -5), -45, BOUNCY_MATERIAL));
+        addObject(createBall(new Vec2(8), new Vec2(-35, 35), STICKY_MATERIAL));
+        addObject(createBall(new Vec2(10), new Vec2(35, 15), NORMAL_MATERIAL));
+        addObject(createBox(new Vec2(6, 6), new Vec2(0, 5), 30, BOUNCY_MATERIAL));
+        addObject(createBox(new Vec2(10, 6), new Vec2(-30, -5), -45, STICKY_MATERIAL));
 
         // Add Boundary Objects
         // Only ground is visible

@@ -36,10 +36,10 @@ class ToggleGravity extends Script {
         enabledGravity = enabled;
         if (enabledGravity) {
             getScene().setGravity(new Vec2(-0, -PhysicsWorld.GRAVITY_CONSTANT));
-            gravityText.setMessage("Gravity On");
+            gravityText.setMessage("Gravity: On");
         } else {
             getScene().setGravity(new Vec2());
-            gravityText.setMessage("Gravity Off");
+            gravityText.setMessage("Gravity: Off");
         }
     }
 
