@@ -26,7 +26,7 @@ public class KeyInputTester extends Script {
         var axes = new Vec2(KeyInput.getAxis("horizontal"),
                 KeyInput.getAxis("vertical"));
         getScene().getDebugDraw().drawVector(
-                new Vec2(-30, 15), axes.unit().mul(8), Colors.BLACK);
+                new Vec2(-30, 15), axes.unit().mul(8), Colors.GREEN);
 
         getScene().getDebugDraw().drawShape(
                 new Circle(new Vec2(-30, 15), 9f), Colors.BLACK);
@@ -39,9 +39,7 @@ public class KeyInputTester extends Script {
                 new Vec2(-30, -11),
                 new Vec2(-24, -11),
         };
-        var keyNames = new String[]{
-                "w", "a", "s", "d",
-        };
+        var keyNames = new String[]{"w", "a", "s", "d"};
 
         for (var i = 0; i < keyPositions.length; i++) {
             Color fillColor;

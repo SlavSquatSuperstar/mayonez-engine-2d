@@ -35,14 +35,26 @@ public class MouseInputTester extends Script {
             dragStart = null;
         }
 
-        Color color;
-        if (MouseInput.buttonDown("left mouse")) {
-            color = Colors.BLUE;
-        } else if (MouseInput.buttonDown("right mouse")) {
-            color = Colors.GREEN;
-        } else {
-            color = Colors.WHITE;
+        // Draw buttons held
+        var buttonSize = new Vec2(6, 12);
+        var buttonPositions = new Vec2[]{
+                new Vec2(30, -11),
+                new Vec2(36, -11),
+        };
+        var buttonNames = new String[]{"left mouse", "right mouse"};
+
+        for (var i = 0; i < buttonPositions.length; i++) {
+            Color fillColor;
+            if (MouseInput.buttonDown(buttonNames[i])) fillColor = Colors.GRAY;
+            else fillColor = Colors.LIGHT_GRAY;
+            getScene().getDebugDraw().fillShape(
+                    new Rectangle(buttonPositions[i], buttonSize), fillColor);
+
+            getScene().getDebugDraw().drawShape(
+                    new Rectangle(buttonPositions[i], buttonSize), Colors.BLACK);
         }
+
+        var color = Colors.ORANGE;
 
         // Draw circle(s) at click positions
         getScene().getDebugDraw().drawShape(new Circle(pos, 1), color);
@@ -52,7 +64,7 @@ public class MouseInputTester extends Script {
 
         // Draw move displacement
         getScene().getDebugDraw().drawVector(pos,
-                MouseInput.getDisplacement().mul(-1), Colors.RED);
+                MouseInput.getDisplacement().mul(-1), color);
 
         // Draw drag displacement
         if (dragged) {
@@ -62,8 +74,12 @@ public class MouseInputTester extends Script {
         // Draw scroll displacement
         var scroll = MouseInput.getScroll();
         if (scroll.len() > 0f) {
-            getScene().getDebugDraw().drawVector(pos, scroll, Colors.ORANGE);
+            getScene().getDebugDraw().drawVector(
+                    new Vec2(30, 15), scroll, Colors.GREEN);
         }
+
+        getScene().getDebugDraw().drawShape(
+                new Circle(new Vec2(30, 15), 9f), Colors.BLACK);
     }
 
 }
