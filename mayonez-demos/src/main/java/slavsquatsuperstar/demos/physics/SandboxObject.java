@@ -27,18 +27,25 @@ class SandboxObject extends GameObject {
         addComponent(new DrawPhysicsInformation());
     }
 
-    SandboxObject addPhysics(Collider collider, Color color, PhysicsMaterial material) {
+    private SandboxObject addCollider(Collider collider, Color color, boolean fill) {
         addComponent(collider);
-        addComponent(new Rigidbody(collider.getMass(DENSITY)).setMaterial(material));
-        addComponent(new ShapeSprite(color, false));
+        addComponent(new ShapeSprite(color, fill));
         return this;
     }
 
-    SandboxObject addStaticPhysics(Vec2 size) {
-        addComponent(new BoxCollider(size));
-        addComponent(new Rigidbody(0f).setMaterial(PhysicsSandboxScene.NORMAL_MATERIAL));
-        addComponent(new ShapeSprite(Colors.DARK_GRAY, true));
+    private SandboxObject addRigidbody(float mass, PhysicsMaterial material) {
+        addComponent(new Rigidbody(mass).setMaterial(material));
         return this;
+    }
+
+    SandboxObject addPhysics(Collider collider, Color color, PhysicsMaterial material) {
+        return addCollider(collider, color, false)
+                .addRigidbody(collider.getMass(DENSITY), material);
+    }
+
+    SandboxObject addStaticPhysics(Vec2 size, PhysicsMaterial material) {
+        return addCollider(new BoxCollider(size), Colors.DARK_GRAY, true)
+                .addRigidbody(0f, material);
     }
 
     SandboxObject addMouseMovement() {
@@ -47,6 +54,17 @@ class SandboxObject extends GameObject {
             @Override
             protected void flickGameObject(Vec2 input, Rigidbody rb) {
                 rb.addVelocity(input);
+            }
+        });
+        return this;
+    }
+
+    SandboxObject addInitialVelocity(Vec2 velocity) {
+        addComponent(new Script() {
+            @Override
+            protected void start() {
+                var rb = getRigidbody();
+                if (rb != null) rb.setVelocity(velocity);
             }
         });
         return this;

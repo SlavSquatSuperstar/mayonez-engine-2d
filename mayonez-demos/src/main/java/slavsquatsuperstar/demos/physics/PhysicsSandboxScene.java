@@ -17,9 +17,9 @@ import static slavsquatsuperstar.demos.physics.SandboxObjectPrefabs.*;
 public class PhysicsSandboxScene extends Scene {
 
     // Constants
-    static final PhysicsMaterial NORMAL_MATERIAL = new PhysicsMaterial(0.4f, 0.4f, 0.3f);
-    static final PhysicsMaterial BOUNCY_MATERIAL = new PhysicsMaterial(0f, 0f, 1f);
-    static final PhysicsMaterial STICKY_MATERIAL = new PhysicsMaterial(1f, 1f, 0f);
+    private static final PhysicsMaterial NORMAL_MATERIAL = new PhysicsMaterial(0.4f, 0.4f, 0.2f);
+    private static final PhysicsMaterial BOUNCY_MATERIAL = new PhysicsMaterial(0f, 0f, 1f);
+    private static final PhysicsMaterial STICKY_MATERIAL = new PhysicsMaterial(1f, 1f, 0f);
     private static final float SCENE_SCALE = 10f;
 
     // Fields
@@ -36,25 +36,27 @@ public class PhysicsSandboxScene extends Scene {
         getCamera().setCameraScale(SCENE_SCALE);
 
         // Add Static Objects
-        addObject(createStaticBox("Left Ramp", new Vec2(-25, 20), new Vec2(36, 4), -20));
-        addObject(createStaticBox("Right Ramp", new Vec2(15, -5), new Vec2(60, 4), 15));
+        addObject(createStaticBox("Left Ramp",
+                new Vec2(-25, 20), new Vec2(36, 4), -20, NORMAL_MATERIAL));
+        addObject(createStaticBox("Right Ramp",
+                new Vec2(15, -5), new Vec2(60, 4), 15, NORMAL_MATERIAL));
 
         // Add Dynamic Objects
-        addObject(createBall(new Vec2(8), new Vec2(-35, 35), STICKY_MATERIAL));
-        addObject(createBall(new Vec2(10), new Vec2(35, 15), NORMAL_MATERIAL));
-        addObject(createBox(new Vec2(6, 6), new Vec2(0, 5), 30, BOUNCY_MATERIAL));
-        addObject(createBox(new Vec2(10, 6), new Vec2(-30, -5), -45, STICKY_MATERIAL));
+        addObject(createBall(new Vec2(-35, 35), new Vec2(8), STICKY_MATERIAL));
+        addObject(createBall(new Vec2(35, 15), new Vec2(10), BOUNCY_MATERIAL));
+        addObject(createBox(new Vec2(0, 5), new Vec2(6, 6), 30, BOUNCY_MATERIAL));
+        addObject(createBox(new Vec2(-30, -5), new Vec2(10, 6), -45, STICKY_MATERIAL));
 
         // Add Boundary Objects
         // Only ground is visible
         addObject(createStaticBox("Ground", new Vec2(0, -0.5f * (height - 2)),
-                new Vec2(width, 2), 0));
+                new Vec2(width, 2), 0, NORMAL_MATERIAL));
         addObject(createStaticBox("Ceiling", new Vec2(0, 0.5f * (height + 1)),
-                new Vec2(width, 1), 0));
+                new Vec2(width, 1), 0, NORMAL_MATERIAL));
         addObject(createStaticBox("Left Wall", new Vec2(-0.5f * (width + 1), 0),
-                new Vec2(1, height), 0));
+                new Vec2(1, height), 0, NORMAL_MATERIAL));
         addObject(createStaticBox("Right Wall", new Vec2(0.5f * (width + 1), 0),
-                new Vec2(1, height), 0));
+                new Vec2(1, height), 0, NORMAL_MATERIAL));
 
         // Add UI
         addObject(new SandboxUI("Scene UI"));

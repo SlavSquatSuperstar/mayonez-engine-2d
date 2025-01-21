@@ -16,21 +16,25 @@ final class SandboxObjectPrefabs {
     private SandboxObjectPrefabs() {
     }
 
-    static GameObject createBall(Vec2 size, Vec2 position, PhysicsMaterial material) {
+    static SandboxObject createBall(Vec2 position, Vec2 size, PhysicsMaterial material) {
         return new SandboxObject("Ball", position, 0f)
                 .addPhysics(new BallCollider(size), Colors.BLUE, material)
                 .addMouseMovement();
     }
 
-    static GameObject createBox(Vec2 size, Vec2 position, float rotation, PhysicsMaterial material) {
+    static SandboxObject createBox(
+            Vec2 position, Vec2 size, float rotation, PhysicsMaterial material
+    ) {
         return new SandboxObject("Box", position, rotation)
                 .addPhysics(new BoxCollider(size), Colors.ORANGE, material)
                 .addMouseMovement();
     }
 
-    static GameObject createStaticBox(String name, Vec2 position, Vec2 size, float rotation) {
+    static SandboxObject createStaticBox(
+            String name, Vec2 position, Vec2 size, float rotation, PhysicsMaterial material
+    ) {
         return new SandboxObject(name, position, rotation)
-                .addStaticPhysics(size);
+                .addStaticPhysics(size, material);
     }
 
     static GameObject createRandomShape(Vec2 position, int type) {

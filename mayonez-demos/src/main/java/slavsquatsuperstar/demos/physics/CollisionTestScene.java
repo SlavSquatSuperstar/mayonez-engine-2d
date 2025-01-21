@@ -1,11 +1,10 @@
 package slavsquatsuperstar.demos.physics;
 
 import mayonez.*;
-import mayonez.graphics.*;
-import mayonez.graphics.debug.*;
 import mayonez.math.*;
-import mayonez.physics.colliders.*;
 import mayonez.physics.dynamics.*;
+
+import static slavsquatsuperstar.demos.physics.SandboxObjectPrefabs.*;
 
 /**
  * A scene for testing collision detection and resolution.
@@ -23,40 +22,26 @@ public class CollisionTestScene extends Scene {
         getCamera().setCameraScale(10f);
 
         // Test ball bouncing at different angles
-        addObject(createStaticBox("Balls Box", new Vec2(0f, -30f), new Vec2(100f, 5f)));
+        var boxMat = new PhysicsMaterial(0.1f, 0.1f, 0.25f);
+        addObject(createStaticBox("Box 1",
+                new Vec2(0f, -30f), new Vec2(100f, 5f), 0f, boxMat));
 
         var ballMat = new PhysicsMaterial(0.1f, 0.1f, 0.9f);
-        addObject(createBall("Ball 1", new Vec2(-30f, 0f), new Vec2(-5f, -25f), ballMat));
-        addObject(createBall("Ball 2", new Vec2(-15f, 1f), new Vec2(-1f, -25f), ballMat));
-        addObject(createBall("Ball 3", new Vec2(0f, 2f), new Vec2(0f, -25f), ballMat));
-        addObject(createBall("Ball 4", new Vec2(15f, 3f), new Vec2(1f, -25f), ballMat));
-        addObject(createBall("Ball 5", new Vec2(30f, 4f), new Vec2(5f, -25f), ballMat));
+        for (var i = 0; i < 5; i++) {
+            var pos = new Vec2(-30f + 15f * i, 0f);
+            var vel = new Vec2(-4f + 2f * i, -25f);
+            addObject(createBall(pos, new Vec2(5f), ballMat).addInitialVelocity(vel));
+        }
 
-    }
+        // Test box balancing at different angles
+        addObject(createStaticBox("Box 2",
+                new Vec2(0f, 5f), new Vec2(100f, 5f), 0f, boxMat));
 
-    private static GameObject createStaticBox(String name, Vec2 pos, Vec2 size) {
-        return new GameObject(name, pos) {
-            @Override
-            protected void init() {
-                addComponent(new BoxCollider(size));
-                addComponent(new ShapeSprite(Colors.DARK_GRAY, true));
-                addComponent(new Rigidbody(0f));
-            }
-        };
-    }
-
-    private static GameObject createBall(String name, Vec2 pos, Vec2 vel, PhysicsMaterial mat) {
-        return new GameObject(name, pos) {
-            @Override
-            protected void init() {
-                addComponent(new BallCollider(new Vec2(5f)));
-                addComponent(new ShapeSprite(Colors.BLUE, false));
-                addComponent(new DrawPhysicsInformation());
-                var rb = new Rigidbody(1f).setMaterial(mat);
-                addComponent(rb);
-                rb.setVelocity(vel);
-            }
-        };
+        for (var i = 0; i < 5; i++) {
+            var pos = new Vec2(-40f + 20f * i, 20f + i);
+            var rot = 15f * i;
+            addObject(createBox(pos, new Vec2(10, 5), rot, boxMat));
+        }
     }
 
 }
