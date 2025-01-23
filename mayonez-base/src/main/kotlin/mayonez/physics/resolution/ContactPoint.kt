@@ -13,12 +13,14 @@ import mayonez.physics.dynamics.*
  *
  * @author SlavSquatSuperstar
  */
-internal class ContactPoint(private val contactPos: Vec2, b1Pos: Vec2, b2Pos: Vec2) {
+internal class ContactPoint(
+    /** Location of contact point, c. */
+    private val contactPos: Vec2,
     /** Distance to first body center, r1. */
-    private val rad1: Vec2 = contactPos - b1Pos
-
+    private val rad1: Vec2,
     /** Distance to second body center, r2. */
-    private val rad2: Vec2 = contactPos - b2Pos
+    private val rad2: Vec2
+) {
 
     /** Normal impulse magnitude, J_n. */
     internal var normImp: Float = 0f
@@ -26,7 +28,9 @@ internal class ContactPoint(private val contactPos: Vec2, b1Pos: Vec2, b2Pos: Ve
     /** Tangent impulse magnitude, J_t. */
     internal var tanImp: Float = 0f
 
-    /** Calculate the relative velocity of two bodies at this contact point. */
+    /**
+     * Calculate the relative velocity of two bodies at this contact point.
+     */
     fun getRelativeVelocity(b1: PhysicsBody?, b2: PhysicsBody?): Vec2 {
         val vel1 = b1.getPointVelocity(contactPos)
         val vel2 = b2.getPointVelocity(contactPos)
@@ -48,10 +52,12 @@ internal class ContactPoint(private val contactPos: Vec2, b1Pos: Vec2, b2Pos: Ve
      * Apply an impulse to two bodies at this contact point to resolve a
      * collision.
      */
-    fun applyImpulse(b1: PhysicsBody?, b2: PhysicsBody?, impulse: Vec2) {
-        b1?.applyImpulse(-impulse)
-        b1?.applyAngularImpulse(rad1.cross(-impulse))
-        b2?.applyImpulse(impulse)
-        b2?.applyAngularImpulse(rad2.cross(impulse))
+    fun applyImpulse(b1: PhysicsBody?, b2: PhysicsBody?, normal: Vec2, tangent: Vec2) {
+        val totalImpulse = (normal * normImp) + (tangent * tanImp)
+        b1?.applyImpulse(-totalImpulse)
+        b1?.applyAngularImpulse(rad1.cross(-totalImpulse))
+        b2?.applyImpulse(totalImpulse)
+        b2?.applyAngularImpulse(rad2.cross(totalImpulse))
     }
+
 }

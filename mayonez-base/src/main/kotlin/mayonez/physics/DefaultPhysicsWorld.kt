@@ -75,6 +75,7 @@ class DefaultPhysicsWorld : PhysicsWorld {
 
         // Detect collisions
         // TODO Pre-collision optimizations and spatial partitioning
+        // TODO broadphase strategy returns possible collision (n^2 vs quadtree)
         collisions.clear()
         detectBroadPhase()
         detectNarrowPhase()
