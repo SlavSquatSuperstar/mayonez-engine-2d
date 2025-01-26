@@ -115,8 +115,12 @@ object Mayonez {
         if (!this::application.isInitialized) {
             // Create game engine instance
             try {
-                application = ApplicationFactory.createApplication(useGL)
-                Logger.debug("Using \"%s\" engine", if (useGL) "GL" else "AWT")
+                val engineString = if (useGL) "GL" else "AWT"
+                application = ApplicationFactory.createApplication(
+                    useGL, "${Preferences.title} ($engineString)",
+                    Preferences.screenWidth, Preferences.screenHeight
+                )
+                Logger.debug("Using \"%s\" engine", engineString)
             } catch (e: WindowInitException) {
                 Logger.printStackTrace(e)
                 exitWithErrorMessage("Fatal error while initializing engine")

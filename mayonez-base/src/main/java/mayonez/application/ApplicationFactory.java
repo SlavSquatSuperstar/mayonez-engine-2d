@@ -1,6 +1,6 @@
 package mayonez.application;
 
-import mayonez.*;
+import mayonez.Logger;
 import mayonez.input.*;
 import mayonez.util.OperatingSystem;
 
@@ -21,21 +21,18 @@ public final class ApplicationFactory {
      * Creates a new {@link Application} object with the given
      * engine type.
      *
-     * @param useGL      whether to use OpenGL instead of Java's AWT library
+     * @param useGL  whether to use OpenGL instead of AWT
+     * @param title  the window title
+     * @param width  the window width
+     * @param height the window height
      * @return the game engine
      * @throws WindowInitException if the wrong thread is used on macOS
      */
     public static Application createApplication(
-            boolean useGL
+            boolean useGL, String title, int width, int height
     ) throws WindowInitException {
         // Create window
-        var title = String.format("%s (%s) %s",
-                Preferences.getTitle(), (useGL ? "GL" : "AWT"), Preferences.getVersion()
-        );
-        var width = Preferences.getScreenWidth();
-        var height = Preferences.getScreenHeight();
         var window = createWindow(useGL, title, width, height);
-
         KeyInput.setHandler(window.getKeyInputHandler());
         MouseInput.setHandler(window.getMouseInputHandler());
 
