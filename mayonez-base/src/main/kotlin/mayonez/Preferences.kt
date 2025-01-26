@@ -27,7 +27,7 @@ object Preferences : GameConfig(PREFS_FILENAME, Defaults.preferences) {
 
     private fun getRules(): Array<PreferenceValidator<*>> {
         return arrayOf(
-            StringValidator("title", "version", "log_directory"),
+            StringValidator("title", "log_directory"),
             BooleanValidator("save_logs", "frame_skip"),
             IntValidator(240, 3840, "screen_height", "screen_width"),
             IntValidator(10, 250, "fps"),
@@ -40,10 +40,6 @@ object Preferences : GameConfig(PREFS_FILENAME, Defaults.preferences) {
     @JvmStatic
     val title: String
         get() = getString("title")
-
-    @JvmStatic
-    val version: String
-        get() = getString("version")
 
     // Graphical
 

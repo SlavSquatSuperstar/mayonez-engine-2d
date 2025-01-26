@@ -30,7 +30,7 @@ abstract class PreferenceValidator<T> protected constructor(
         for (prefKey in keys) {
             val prefValue = getValue(prefKey, preferences)
             if (!isValid.test(prefValue)) {
-                Logger.debug("Invalid value \"$prefValue\" for preference $prefKey, resetting to default")
+                Logger.debug("Invalid value \"$prefValue\" for preference \"$prefKey\", resetting to default")
                 preferences.setFrom(defaults, prefKey)
             }
         }

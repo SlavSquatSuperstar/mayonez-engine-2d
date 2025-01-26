@@ -10,8 +10,7 @@ import mayonez.util.*
 object Defaults {
 
     // Application
-    private const val TITLE: String = "<No Title>"
-    private const val VERSION: String = "<Unknown Version>"
+    private const val TITLE: String = "Mayonez Engine"
 
     // Graphical
     private const val SCREEN_WIDTH: Int = 800
@@ -24,7 +23,6 @@ object Defaults {
     init {
         // Application
         preferences["title"] = TITLE
-        preferences["version"] = VERSION
 
         // Graphical
         preferences["screen_width"] = SCREEN_WIDTH

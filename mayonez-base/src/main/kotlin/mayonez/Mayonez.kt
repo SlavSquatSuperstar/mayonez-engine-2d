@@ -105,7 +105,7 @@ object Mayonez {
 
         // Create logger instance
         Logger.setConfig(Preferences.getLoggerConfig())
-        Logger.log("Started ${Preferences.title} ${Preferences.version}")
+        Logger.log("Started ${Preferences.title}")
     }
 
     /**
@@ -120,7 +120,7 @@ object Mayonez {
                     useGL, "${Preferences.title} ($engineString)",
                     Preferences.screenWidth, Preferences.screenHeight
                 )
-                Logger.debug("Using \"%s\" engine", engineString)
+                Logger.log("Using engine type \"%s\"", engineString)
             } catch (e: WindowInitException) {
                 Logger.printStackTrace(e)
                 exitWithErrorMessage("Fatal error while initializing engine")
