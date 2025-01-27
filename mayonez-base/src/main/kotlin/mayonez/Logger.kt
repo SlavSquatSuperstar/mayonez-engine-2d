@@ -90,7 +90,7 @@ object Logger {
      * @param level the log priority level
      */
     private fun printFormattedMessage(msg: Any?, vararg args: Any?, level: LogLevel) {
-        if (level.level < config.logLevel) return // Check log level high enough
+        if (level < config.logLevel) return // Check log level high enough
         val message = msg.formatMessage(args, level)
         message.printToConsole(level)
         if (config.saveLogs) message.appendToFile()

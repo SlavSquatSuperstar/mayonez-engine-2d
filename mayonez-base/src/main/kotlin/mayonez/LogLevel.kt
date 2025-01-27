@@ -34,6 +34,4 @@ enum class LogLevel(val level: Int) {
     /** Denotes that no log messages should be printed to the console. */
     NONE(10);
 
-    override fun toString(): String = "$name ($level)"
-
 }

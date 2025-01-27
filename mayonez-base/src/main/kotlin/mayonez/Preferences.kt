@@ -27,11 +27,10 @@ object Preferences : GameConfig(PREFS_FILENAME, Defaults.preferences) {
 
     private fun getRules(): Array<PreferenceValidator<*>> {
         return arrayOf(
-            StringValidator("title", "log_directory"),
+            StringValidator("title", "log_level", "log_directory"),
             BooleanValidator("save_logs", "frame_skip"),
             IntValidator(240, 3840, "screen_height", "screen_width"),
             IntValidator(10, 250, "fps"),
-            IntValidator(0, 5, "log_level")
         )
     }
 
@@ -67,7 +66,7 @@ object Preferences : GameConfig(PREFS_FILENAME, Defaults.preferences) {
     internal fun getLoggerConfig(): LoggerConfig {
         return LoggerConfig(
             getBoolean("save_logs"),
-            getInt("log_level"),
+            getString("log_level"),
             getString("log_directory")
         )
     }

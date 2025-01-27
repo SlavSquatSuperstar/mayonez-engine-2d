@@ -31,7 +31,7 @@ object Defaults {
         preferences["frame_skip"] = FRAME_SKIP
 
         // Logging
-        preferences["log_level"] = LoggerConfig.DEFAULT_LOG_LEVEL
+        preferences["log_level"] = LoggerConfig.DEFAULT_LOG_LEVEL.name
         preferences["save_logs"] = LoggerConfig.DEFAULT_SAVE_LOGS
         preferences["log_directory"] = LoggerConfig.DEFAULT_LOG_DIRECTORY
     }

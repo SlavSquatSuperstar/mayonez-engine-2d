@@ -4,7 +4,7 @@
     "screen_height": 800,
     "fps": 60,
     "frame_skip": true,
-    "log_level": 3,
+    "log_level": "info'",
     "save_logs": true,
     "log_directory": "logs"
 }
