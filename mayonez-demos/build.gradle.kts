@@ -45,17 +45,7 @@ tasks {
         }
     }
 
-    // Copy preference files
-
-    compileJava {
-        dependsOn("copyDefaultPreferences")
-    }
-
-    processResources {
-        dependsOn("copyDefaultPreferences")
-    }
-
-    // Source: https://discuss.gradle.org/t/gradle-copy-task-dont-overrite-uptodatewhen/26785/2
+    // Copy user preference files
     register<Copy>("copyDefaultPreferences") {
         group = "Packaging"
         description = "Copy default config files to the subproject directory, if not present."
@@ -64,6 +54,26 @@ tasks {
         into("./")
         include("*.json")
         eachFile { if (relativePath.getFile(destinationDir).exists()) exclude() }
+        outputs.upToDateWhen { false }
+    }
+
+    // Force copy user preference files
+    register<Copy>("resetDefaultPreferences") {
+        group = "Packaging"
+        description = "Overwrite default config files to the subproject directory."
+
+        from("../release-assets/resources")
+        into("./")
+        include("*.json")
+        outputs.upToDateWhen { false }
+    }
+
+    compileJava {
+        dependsOn("copyDefaultPreferences")
+    }
+
+    processResources {
+        dependsOn("copyDefaultPreferences")
     }
 }
 
