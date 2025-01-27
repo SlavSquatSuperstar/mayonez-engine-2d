@@ -44,11 +44,24 @@ abstract class PreferenceValidator<T> protected constructor(
  *
  * @author SlavSquatSuperstar
  */
-class StringValidator(vararg keys: String?) :
+class StringValidator(vararg keys: String) :
     PreferenceValidator<String>(*keys, isValid = Predicate<String> { str -> str.isNotEmpty() }) {
 
     override fun getValue(key: String?, preferences: Record): String {
         return preferences.getString(key)
+    }
+}
+
+/**
+ * Forces a float preference to between two values.
+ *
+ * @author SlavSquatSuperstar
+ */
+class FloatValidator(min: Float, max: Float, vararg keys: String) :
+    PreferenceValidator<Float>(*keys, isValid = Predicate<Float> { n -> n in Interval(min, max) }) {
+
+    override fun getValue(key: String?, preferences: Record): Float {
+        return preferences.getFloat(key)
     }
 }
 

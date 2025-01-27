@@ -12,23 +12,21 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class PreferenceValidatorTest {
 
-    private static final String NAME = "Mayonez Engine";
-    private static final String VERSION = "0.7.10";
+    private static Record defaults;
 
-    private static mayonez.util.Record defaults;
-
-    private mayonez.util.Record preferences;
+    private Record preferences;
 
     @BeforeAll
     static void getDefaults() {
-        defaults = new mayonez.util.Record();
-        defaults.set("name", NAME);
-        defaults.set("version", VERSION);
-        defaults.set("width", 800);
-        defaults.set("height", 600);
-        defaults.set("height", 600);
-        defaults.set("saveLogs", true);
-        defaults.set("useGL", false);
+        defaults = new Record();
+        defaults.set("str1", "foo");
+        defaults.set("str2", "bar");
+        defaults.set("int1", 800);
+        defaults.set("int2", 600);
+        defaults.set("float1", 1f);
+        defaults.set("float2", 2f);
+        defaults.set("bool1", true);
+        defaults.set("bool2", false);
     }
 
     @BeforeEach
@@ -39,94 +37,118 @@ class PreferenceValidatorTest {
     // String
 
     @Test
-    void stringCannotBeEmpty() {
-        var rule = new StringValidator("name", "version");
+    void stringEmptyIsNotValid() {
+        var rule = new StringValidator("str1", "str2");
         rule.validate(preferences, defaults);
-        assertEquals(NAME, preferences.getString("name"));
-        assertEquals(VERSION, preferences.getString("version"));
+
+        assertEquals("foo", preferences.getString("str1"));
+        assertEquals("bar", preferences.getString("str2"));
     }
 
     @Test
-    void stringIsNotEmpty() {
-        final var name = "Mayonez Demos";
-        final var version = "0.0.1-alpha";
+    void strongNonEmptyIsValid() {
+        final var name = "spam";
+        final var version = "eggs";
 
-        preferences.set("name", name);
-        preferences.set("version", version);
+        preferences.set("str1", name);
+        preferences.set("str2", version);
 
-        var rule = new StringValidator("name", "version");
+        var rule = new StringValidator("str1", "str2");
         rule.validate(preferences, defaults);
-        assertEquals(name, preferences.getString("name"));
-        assertEquals(version, preferences.getString("version"));
+        assertEquals(name, preferences.getString("str1"));
+        assertEquals(version, preferences.getString("str2"));
+    }
+
+    // Float
+
+    @Test
+    void floatOutOfRangeIsNotValid() {
+        preferences.set("float1", -1f);
+        preferences.set("float2", 10f);
+
+        var rule = new FloatValidator(0f, 5f, "float1", "float2");
+        rule.validate(preferences, defaults);
+        assertEquals(1f, preferences.getFloat("float1"));
+        assertEquals(2f, preferences.getFloat("float2"));
+    }
+
+    @Test
+    void floatInRangeIsValid() {
+        preferences.set("float1", 3f);
+        preferences.set("float2", 4f);
+        var rule = new FloatValidator(0f, 5f, "float1", "float2");
+        rule.validate(preferences, defaults);
+        assertEquals(3f, preferences.getFloat("float1"));
+        assertEquals(4f, preferences.getFloat("float2"));
     }
 
     // Int
 
     @Test
-    void intCannotBeOutOfRange() {
-        preferences.set("width", 0);
-        preferences.set("height", 2000);
+    void intOutOfRangeIsNotValid() {
+        preferences.set("int1", 0);
+        preferences.set("int2", 2000);
 
-        var rule = new IntValidator(100, 1000, "width", "height");
+        var rule = new IntValidator(100, 1000, "int1", "int2");
         rule.validate(preferences, defaults);
-        assertEquals(800, preferences.getInt("width"));
-        assertEquals(600, preferences.getInt("height"));
+        assertEquals(800, preferences.getInt("int1"));
+        assertEquals(600, preferences.getInt("int2"));
     }
 
     @Test
-    void intIsInRange() {
-        preferences.set("width", 400);
-        preferences.set("height", 300);
-        var rule = new IntValidator(100, 1000, "width", "height");
+    void intInRangeIsValid() {
+        preferences.set("int1", 400);
+        preferences.set("int2", 300);
+        var rule = new IntValidator(100, 1000, "int1", "int2");
         rule.validate(preferences, defaults);
-        assertEquals(400, preferences.getInt("width"));
-        assertEquals(300, preferences.getInt("height"));
+        assertEquals(400, preferences.getInt("int1"));
+        assertEquals(300, preferences.getInt("int2"));
     }
 
     // Boolean
 
     @Test
-    void booleanIsTrueOrFalse() {
-        preferences.set("saveLogs", "false");
-        preferences.set("useGL", "true");
+    void booleanTrueOrFalseIsValid() {
+        preferences.set("bool1", "false");
+        preferences.set("bool2", "true");
 
-        var rule = new BooleanValidator("saveLogs", "useGL");
+        var rule = new BooleanValidator("bool1", "bool2");
         rule.validate(preferences, defaults);
-        assertFalse(preferences.getBoolean("saveLogs"));
-        assertTrue(preferences.getBoolean("useGL"));
+        assertFalse(preferences.getBoolean("bool1"));
+        assertTrue(preferences.getBoolean("bool2"));
     }
 
     @Test
-    void booleanIsYesOrNo() {
-        preferences.set("saveLogs", "no");
-        preferences.set("useGL", "yes");
+    void booleanIsYesOrNoIsValid() {
+        preferences.set("bool1", "no");
+        preferences.set("bool2", "yes");
 
-        var rule = new BooleanValidator("saveLogs", "useGL");
+        var rule = new BooleanValidator("bool1", "bool2");
         rule.validate(preferences, defaults);
-        assertFalse(preferences.getBoolean("saveLogs"));
-        assertTrue(preferences.getBoolean("useGL"));
+        assertFalse(preferences.getBoolean("bool1"));
+        assertTrue(preferences.getBoolean("bool2"));
     }
 
     @Test
-    void invalidBooleanString() {
-        preferences.set("saveLogs", "nah");
-        preferences.set("useGL", "yeah");
+    void booleanOtherStringIsNotValid() {
+        preferences.set("bool1", "nah");
+        preferences.set("bool2", "yeah");
 
-        var rule = new BooleanValidator("saveLogs", "useGL");
+        var rule = new BooleanValidator("bool1", "bool2");
         rule.validate(preferences, defaults);
-        assertTrue(preferences.getBoolean("saveLogs"));
-        assertFalse(preferences.getBoolean("useGL"));
+        assertTrue(preferences.getBoolean("bool1"));
+        assertFalse(preferences.getBoolean("bool2"));
     }
 
     @Test
-    void booleanIs1Or0() {
-        preferences.set("saveLogs", 0);
-        preferences.set("useGL", 1);
+    void booleanOneOrZeroIsValid() {
+        preferences.set("bool1", 0);
+        preferences.set("bool2", 1);
 
-        var rule = new BooleanValidator("saveLogs", "useGL");
+        var rule = new BooleanValidator("bool1", "bool2");
         rule.validate(preferences, defaults);
-        assertFalse(preferences.getBoolean("saveLogs"));
-        assertTrue(preferences.getBoolean("useGL"));
+        assertFalse(preferences.getBoolean("bool1"));
+        assertTrue(preferences.getBoolean("bool2"));
     }
 
 }
