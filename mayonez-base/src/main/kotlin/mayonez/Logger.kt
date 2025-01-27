@@ -49,11 +49,8 @@ object Logger {
         }
     }
 
-    internal fun shutdown(status: Int) {
+    internal fun shutdown() {
         if (!initialized) return
-        val message = "Exited program with code $status"
-        if (status == 0) log("$message (Success)")
-        else error("$message (Error)")
         logFile.free()
         initialized = false
     }

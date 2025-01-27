@@ -30,7 +30,6 @@ import java.util.*;
 public abstract class Scene {
 
     // Static Fields
-    private static final boolean LOG_SCENE_CHANGES = false;
     private static int sceneCounter = 0; // total number of scenes created
 
     // Scene Information
@@ -192,10 +191,8 @@ public abstract class Scene {
     private void addObjectToScene(GameObject obj) {
         obj.setScene(this);
         if (!isStopped()) startObject(obj);
-        if (LOG_SCENE_CHANGES) {
-            Logger.debug("Added object \"%s\" to scene \"%s\"",
-                    obj.getNameAndID(), this.name);
-        }
+        Logger.trace("Added object \"%s\" to scene \"%s\"",
+                obj.getNameAndID(), this.name);
     }
 
     private void startObject(GameObject obj) {
@@ -224,10 +221,8 @@ public abstract class Scene {
             if (comp instanceof CollisionBody b) physics.removeCollisionBody(b);
         }
         obj.onDestroy();
-        if (LOG_SCENE_CHANGES) {
-            Logger.debug("Removed object \"%s\" from scene \"%s\"",
-                    obj.getNameAndID(), this.name);
-        }
+        Logger.trace("Removed object \"%s\" from scene \"%s\"",
+                obj.getNameAndID(), this.name);
     }
 
     /**

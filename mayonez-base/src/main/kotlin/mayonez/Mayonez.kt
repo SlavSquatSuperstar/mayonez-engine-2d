@@ -95,7 +95,7 @@ object Mayonez {
     private fun initializeSingletons() {
         // Start tracking time
         Time.startTrackingTime()
-        Logger.debug("Starting program...")
+        Logger.log("Starting program...")
         val now = Time.getStartupDateTime()
         Logger.debug("The current date time is %s %s", now.toLocalDate(), now.toLocalTime())
 
@@ -181,7 +181,7 @@ object Mayonez {
      * Terminate the program with the given error message with exit code 1.
      */
     private fun exitWithErrorMessage(message: String): Nothing {
-        Logger.error(message)
+        Logger.fatal(message)
         exitProgram(ExitCode.ERROR)
     }
 
@@ -190,7 +190,11 @@ object Mayonez {
      * given status.
      */
     private fun exitProgram(status: Int): Nothing {
-        Logger.shutdown(status)
+        val message = "Exited program with code $status"
+        if (status == 0) Logger.log("$message (Success)")
+        else Logger.error("$message (Failure)")
+
+        Logger.shutdown()
         exitProcess(status)
     }
 
