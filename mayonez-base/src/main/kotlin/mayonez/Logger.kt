@@ -15,7 +15,7 @@ import java.util.*
  * Different log priorities are also available through the [Logger.debug], [Logger.warn],
  * and [Logger.error] methods.
  *
- * The log level indicates the severity of a message. Messages with level [LogLevel.WARNING]
+ * The log level indicates the severity of a message. Messages with level [LogLevel.WARN]
  * and above are printed to standard output. The user can set the minimum log level,
  * [LogLevel.INFO] by default, required for a message to be displayed in `preferences.json`. The special log levels
  * [LogLevel.ALL] allows messages to be printed, and [LogLevel.NONE] disables all log
@@ -119,7 +119,7 @@ object Logger {
 
     /** Prints a message to stdout or stderr. */
     private fun String.printToConsole(level: LogLevel) {
-        if (level >= LogLevel.WARNING) System.err.println(this) // red text for errors
+        if (level >= LogLevel.WARN) System.err.println(this) // red text for errors
         else println(this)
     }
 
@@ -131,13 +131,15 @@ object Logger {
     // Public Log Methods
 
     /**
-     * Prints a normal-priority informational message to the console.
+     * Prints a minor debug message to the console.
      *
      * @param msg an object or formatted string
      * @param args (optional) string format arguments
      */
     @JvmStatic
-    fun log(msg: Any?, vararg args: Any?) = printFormattedMessage(msg, *args, level = LogLevel.INFO)
+    fun trace(msg: Any?, vararg args: Any?) {
+        printFormattedMessage(msg, *args, level = LogLevel.TRACE)
+    }
 
     /**
      * Prints a low-priority debug message to the console.
@@ -146,7 +148,20 @@ object Logger {
      * @param args (optional) string format arguments
      */
     @JvmStatic
-    fun debug(msg: Any?, vararg args: Any?) = printFormattedMessage(msg, *args, level = LogLevel.DEBUG)
+    fun debug(msg: Any?, vararg args: Any?) {
+        printFormattedMessage(msg, *args, level = LogLevel.DEBUG)
+    }
+
+    /**
+     * Prints a normal-priority informational message to the console.
+     *
+     * @param msg an object or formatted string
+     * @param args (optional) string format arguments
+     */
+    @JvmStatic
+    fun log(msg: Any?, vararg args: Any?) {
+        printFormattedMessage(msg, *args, level = LogLevel.INFO)
+    }
 
     /**
      * Prints a high-priority warning to the console.
@@ -155,7 +170,9 @@ object Logger {
      * @param args (optional) string format arguments
      */
     @JvmStatic
-    fun warn(msg: Any?, vararg args: Any?) = printFormattedMessage(msg, *args, level = LogLevel.WARNING)
+    fun warn(msg: Any?, vararg args: Any?) {
+        printFormattedMessage(msg, *args, level = LogLevel.WARN)
+    }
 
     /**
      * Prints a severe-priority error to the console.
@@ -164,7 +181,20 @@ object Logger {
      * @param args (optional) string format arguments
      */
     @JvmStatic
-    fun error(msg: Any?, vararg args: Any?) = printFormattedMessage(msg, *args, level = LogLevel.ERROR)
+    fun error(msg: Any?, vararg args: Any?) {
+        printFormattedMessage(msg, *args, level = LogLevel.ERROR)
+    }
+
+    /**
+     * Prints a critical-priority error to the console.
+     *
+     * @param msg an object or formatted string
+     * @param args (optional) string format arguments
+     */
+    @JvmStatic
+    fun fatal(msg: Any?, vararg args: Any?) {
+        printFormattedMessage(msg, *args, level = LogLevel.FATAL)
+    }
 
     // Stack Helper Methods
 

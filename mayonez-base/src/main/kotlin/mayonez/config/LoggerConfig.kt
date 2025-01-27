@@ -15,7 +15,7 @@ data class LoggerConfig(
 ) {
     companion object {
         internal const val DEFAULT_SAVE_LOGS: Boolean = true
-        internal const val DEFAULT_LOG_LEVEL: Int = 2
+        internal const val DEFAULT_LOG_LEVEL: Int = 3
         internal const val DEFAULT_LOG_DIRECTORY: String = "logs/"
 
         val DEFAULT_CONFIG: LoggerConfig = LoggerConfig(

@@ -13,21 +13,27 @@ enum class LogLevel(val level: Int) {
     /** Denotes that all log messages should be printed to the console. */
     ALL(0),
 
+    /** A minor debug message for tracking detailed program flow. */
+    TRACE(1),
+
     /** A low-priority debug message for developers. */
-    DEBUG(1),
+    DEBUG(2),
 
     /** A normal-priority informational message for end-users. */
-    INFO(2),
+    INFO(3),
 
     /** A high-priority alert that indicates a potentially harmful situation. */
-    WARNING(3),
+    WARN(4),
 
     /** A severe alert that indicates an issue that may crash the program. */
-    ERROR(4),
+    ERROR(5),
+
+    /** A critical alert that indicates the program will crash. */
+    FATAL(6),
 
     /** Denotes that no log messages should be printed to the console. */
-    NONE(5);
+    NONE(10);
 
-    override fun toString(): String = "$name (Level $level)"
+    override fun toString(): String = "$name ($level)"
 
 }
