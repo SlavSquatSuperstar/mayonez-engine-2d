@@ -31,16 +31,15 @@ object Preferences : GameConfig(PREFS_FILENAME, Defaults.preferences) {
             BooleanValidator("save_logs", "frame_skip"),
             IntValidator(240, 3840, "screen_height", "screen_width"),
             IntValidator(10, 250, "fps"),
+            FloatValidator(0f, 5f, "double_click_time"),
         )
     }
 
-    // Application
+    // Window
 
     @JvmStatic
     val title: String
         get() = getString("title")
-
-    // Graphical
 
     @JvmStatic
     val screenWidth: Int
@@ -55,12 +54,19 @@ object Preferences : GameConfig(PREFS_FILENAME, Defaults.preferences) {
         get() = getInt("fps")
 
     /**
-     * Update the game as many times as possible before rendering (fast),
-     * rather than rendering once per update (slow).
+     * Whether to update the game as many times as possible before rendering (faster),
+     * rather than rendering once per update (slower).
      */
     @JvmStatic
     val frameSkip: Boolean
         get() = getBoolean("frame_skip")
+
+    /**
+     * The delay in seconds between the first and second mouse presses of a double click.
+     */
+    @JvmStatic
+    val doubleClickTime: Float
+        get() = getFloat("double_click_time")
 
     // Logging
     internal fun getLoggerConfig(): LoggerConfig {

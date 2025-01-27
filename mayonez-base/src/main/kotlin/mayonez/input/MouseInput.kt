@@ -1,5 +1,6 @@
 package mayonez.input
 
+import mayonez.*
 import mayonez.input.events.*
 import mayonez.math.*
 
@@ -15,7 +16,7 @@ object MouseInput {
 
     // Constants
     private const val NUM_BUTTONS: Int = 8 // GLFW supports eight mouse buttons
-    private const val DOUBLE_CLICK_TIME_SECS: Float = 0.40f
+    private val DOUBLE_CLICK_TIME_SECS: Float = Preferences.doubleClickTime
 
     // Mouse Button Fields
     private val buttons: MutableMap<Int, InputState> = HashMap(NUM_BUTTONS) // All button states

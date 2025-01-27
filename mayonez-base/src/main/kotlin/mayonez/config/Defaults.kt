@@ -9,26 +9,24 @@ import mayonez.util.*
  */
 object Defaults {
 
-    // Application
+    // Window
     private const val TITLE: String = "Mayonez Engine"
-
-    // Graphical
     private const val SCREEN_WIDTH: Int = 800
     private const val SCREEN_HEIGHT: Int = 600
     private const val FPS: Int = 60
     private const val FRAME_SKIP: Boolean = true
+    private const val DOUBLE_CLICK_TIME: Float = 0.50f
 
     val preferences: Record = Record()
 
     init {
-        // Application
+        // Window
         preferences["title"] = TITLE
-
-        // Graphical
         preferences["screen_width"] = SCREEN_WIDTH
         preferences["screen_height"] = SCREEN_HEIGHT
         preferences["fps"] = FPS
         preferences["frame_skip"] = FRAME_SKIP
+        preferences["double_click_time"] = DOUBLE_CLICK_TIME
 
         // Logging
         preferences["log_level"] = LoggerConfig.DEFAULT_LOG_LEVEL.name
