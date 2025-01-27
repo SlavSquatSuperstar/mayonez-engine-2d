@@ -4,6 +4,7 @@ import mayonez.Mayonez.setConfig
 import mayonez.Mayonez.start
 import mayonez.application.*
 import mayonez.assets.*
+import mayonez.assets.text.*
 import mayonez.config.*
 import kotlin.system.exitProcess
 
@@ -25,7 +26,15 @@ import kotlin.system.exitProcess
  */
 // TODO rename to application manager
 // TODO move to launcher/config pkg
+// TODO separate engine title with window title
+// TODO application init events
 object Mayonez {
+
+    // Application Info
+    lateinit var name: String
+        private set
+    lateinit var version: String
+        private set
 
     // Application Fields
     private lateinit var application: Application // Application instance
@@ -99,13 +108,19 @@ object Mayonez {
         val now = Time.getStartupDateTime()
         Logger.debug("The current date time is %s %s", now.toLocalDate(), now.toLocalTime())
 
+        // Read application info
+        val nameFile = TextFile("assets/info/name.txt")
+        name = nameFile.readText().trim()
+        val versionFile = TextFile("assets/info/version.txt")
+        version = versionFile.readText().trim()
+
         // Set preferences
         Preferences.setPreferences()
         Time.setTimeStepSecs(1f / Preferences.fps)
 
         // Create logger instance
         Logger.setConfig(Preferences.getLoggerConfig())
-        Logger.log("Started ${Preferences.title}")
+        Logger.log("Started $name $version")
     }
 
     /**
@@ -115,6 +130,7 @@ object Mayonez {
         if (!this::application.isInitialized) {
             // Create game engine instance
             try {
+                Logger.log("Creating application \"${Preferences.title}\"...")
                 val engineString = if (useGL) "GL" else "AWT"
                 application = ApplicationFactory.createApplication(
                     useGL, "${Preferences.title} ($engineString)",

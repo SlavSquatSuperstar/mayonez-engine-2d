@@ -3,14 +3,14 @@ package mayonez.config
 import mayonez.util.*
 
 /**
- * The default, hardcoded settings for the game engine.
+ * The hardcoded, fallback settings for the game engine.
  *
  * @author SlavSquatSuperstar
  */
 object Defaults {
 
     // Window
-    private const val TITLE: String = "Mayonez Engine"
+    private const val TITLE: String = "Untitled"
     private const val SCREEN_WIDTH: Int = 800
     private const val SCREEN_HEIGHT: Int = 600
     private const val FPS: Int = 60
