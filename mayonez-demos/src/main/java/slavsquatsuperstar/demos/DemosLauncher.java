@@ -6,9 +6,7 @@ import mayonez.input.*;
 import slavsquatsuperstar.demos.geometrydash.GDEditorScene;
 import slavsquatsuperstar.demos.input.InputTestScene;
 import slavsquatsuperstar.demos.mario.MarioScene;
-import slavsquatsuperstar.demos.physics.CollisionTestScene;
-import slavsquatsuperstar.demos.physics.PhysicsSandboxScene;
-import slavsquatsuperstar.demos.physics.PoolBallsScene;
+import slavsquatsuperstar.demos.physics.*;
 import slavsquatsuperstar.demos.renderer.RendererTestScene;
 import slavsquatsuperstar.demos.spacegame.SpaceGameScene;
 
@@ -20,13 +18,13 @@ import slavsquatsuperstar.demos.spacegame.SpaceGameScene;
  */
 public class DemosLauncher {
 
-    private final static int START_SCENE_INDEX = 0;
+    private final static int START_SCENE_INDEX = 8;
 
     private final static String[] SCENE_NAMES = {
             "Space Game", "Render Batch Test",
             "Physics Sandbox", "Pool Balls",
             "Mario Level", "Geometry Dash Editor",
-            "Input Test", "Collision Test"
+            "Input Test", "Collision Test", "Projectile Test"
     };
 
     public static void main(String[] args) {
@@ -87,6 +85,13 @@ public class DemosLauncher {
                     }
                 },
                 new CollisionTestScene(SCENE_NAMES[7]) {
+                    @Override
+                    protected void onUserUpdate(float dt) {
+                        super.onUserUpdate(dt);
+                        pollSceneControls();
+                    }
+                },
+                new ProjectileTestScene(SCENE_NAMES[8]) {
                     @Override
                     protected void onUserUpdate(float dt) {
                         super.onUserUpdate(dt);
