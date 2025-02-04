@@ -18,8 +18,8 @@ public class ShapeSprite extends Component {
 
     // Shape Draw Fields
     private Shape shape;
-    private final Color color;
-    private final boolean fill;
+    private Color color;
+    private boolean fill;
 
     /**
      * Create a new ShapeSprite that draws the object's collider.
@@ -52,11 +52,25 @@ public class ShapeSprite extends Component {
         }
     }
 
-    // Getter Methods
+    // Getter and Setter Methods
 
     public Color getColor() {
         return color;
     }
+
+    public void setColor(Color color) {
+        this.color = color;
+    }
+
+    public boolean isFill() {
+        return fill;
+    }
+
+    public void setFill(boolean fill) {
+        this.fill = fill;
+    }
+
+    // Shape Helper Methods
 
     private Shape getColliderShape() {
         if (collider == null) {

@@ -38,7 +38,17 @@ public class ProjectileTestScene extends Scene {
         addObject(new GameObject("Target Controller") {
             @Override
             protected void init() {
+                var flashCounter = new Counter(0, 5, 5);
+
                 addComponent(new Script() {
+                    @Override
+                    protected void start() {
+                        targetBox.getComponent(Collider.class)
+                                .addCollisionCallback(event -> {
+                                    flashCounter.resetToMin();
+                                });
+                    }
+
                     @Override
                     protected void update(float dt) {
                         var yInput = KeyInput.getAxis("arrows vertical");
@@ -49,6 +59,12 @@ public class ProjectileTestScene extends Scene {
 
                         var x2Input = KeyInput.getAxis(new KeyAxis(Key.MINUS, Key.PLUS));
                         targetBox.transform.scale(new Vec2(1f + 0.5f * x2Input * dt));
+
+                        // Flash red when hit
+                        var shapeSprite = targetBox.getComponent(ShapeSprite.class);
+                        flashCounter.count(1);
+                        if (!flashCounter.isAtMax()) shapeSprite.setColor(Colors.RED);
+                        else shapeSprite.setColor(Colors.DARK_GRAY);
                     }
                 });
             }
