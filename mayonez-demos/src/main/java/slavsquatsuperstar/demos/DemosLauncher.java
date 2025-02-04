@@ -2,7 +2,6 @@ package slavsquatsuperstar.demos;
 
 import mayonez.*;
 import mayonez.config.*;
-import mayonez.input.*;
 import slavsquatsuperstar.demos.geometrydash.GDEditorScene;
 import slavsquatsuperstar.demos.input.InputTestScene;
 import slavsquatsuperstar.demos.mario.MarioScene;
@@ -35,85 +34,21 @@ public class DemosLauncher {
 
     private static Scene[] getScenesToLoad() {
         return new Scene[]{
-                new SpaceGameScene(SCENE_NAMES[0]) {
-                    @Override
-                    protected void onUserUpdate(float dt) {
-                        super.onUserUpdate(dt);
-                        pollSceneControls();
-                    }
-                },
-                new RendererTestScene(SCENE_NAMES[1]) {
-                    @Override
-                    protected void onUserUpdate(float dt) {
-                        super.onUserUpdate(dt);
-                        pollSceneControls();
-                    }
-                },
-                new PhysicsSandboxScene(SCENE_NAMES[2]) {
-                    @Override
-                    protected void onUserUpdate(float dt) {
-                        super.onUserUpdate(dt);
-                        pollSceneControls();
-                    }
-                },
-                new PoolBallsScene(SCENE_NAMES[3]) {
-                    @Override
-                    protected void onUserUpdate(float dt) {
-                        super.onUserUpdate(dt);
-                        pollSceneControls();
-                    }
-                },
-                new MarioScene(SCENE_NAMES[4]) {
-                    @Override
-                    protected void onUserUpdate(float dt) {
-                        super.onUserUpdate(dt);
-                        pollSceneControls();
-                    }
-                },
-                new GDEditorScene(SCENE_NAMES[5]) {
-                    @Override
-                    protected void onUserUpdate(float dt) {
-                        super.onUserUpdate(dt);
-                        pollSceneControls();
-                    }
-                },
-                new InputTestScene(SCENE_NAMES[6]) {
-                    @Override
-                    protected void onUserUpdate(float dt) {
-                        super.onUserUpdate(dt);
-                        pollSceneControls();
-                    }
-                },
-                new CollisionTestScene(SCENE_NAMES[7]) {
-                    @Override
-                    protected void onUserUpdate(float dt) {
-                        super.onUserUpdate(dt);
-                        pollSceneControls();
-                    }
-                },
-                new ProjectileTestScene(SCENE_NAMES[8]) {
-                    @Override
-                    protected void onUserUpdate(float dt) {
-                        super.onUserUpdate(dt);
-                        pollSceneControls();
-                    }
-                },
+                new SpaceGameScene(SCENE_NAMES[0]),
+                new RendererTestScene(SCENE_NAMES[1]),
+                new PhysicsSandboxScene(SCENE_NAMES[2]),
+                new PoolBallsScene(SCENE_NAMES[3]),
+                new MarioScene(SCENE_NAMES[4]),
+                new GDEditorScene(SCENE_NAMES[5]),
+                new InputTestScene(SCENE_NAMES[6]),
+                new CollisionTestScene(SCENE_NAMES[7]),
+                new ProjectileTestScene(SCENE_NAMES[8]),
         };
     }
 
-    private static void pollSceneControls() {
-        if (KeyInput.keyDown(Key.ESCAPE)) {
-            Mayonez.stop(ExitCode.SUCCESS); // Exit program by pressing escape
-        } else if (KeyInput.keyPressed("r")) {
-            SceneManager.restartScene();
-        } else if (KeyInput.keyPressed("p")) {
-            SceneManager.toggleScenePaused();
-        } else if (KeyInput.keyDown("left shift")) {
-            for (var i = 0; i < SCENE_NAMES.length; i++) {
-                if (KeyInput.keyPressed(String.valueOf(i + 1))) {
-                    SceneManager.loadScene(SCENE_NAMES[i]);
-                }
-            }
+    static void switchToScene(int sceneIndex) {
+        if (sceneIndex < SCENE_NAMES.length) {
+            SceneManager.loadScene(SCENE_NAMES[sceneIndex]);
         }
     }
 

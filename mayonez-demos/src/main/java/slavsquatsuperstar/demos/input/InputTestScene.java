@@ -4,6 +4,7 @@ import mayonez.*;
 import mayonez.graphics.*;
 import mayonez.graphics.font.*;
 import mayonez.math.*;
+import slavsquatsuperstar.demos.DemoScene;
 import slavsquatsuperstar.demos.DemosAssets;
 
 /**
@@ -11,7 +12,7 @@ import slavsquatsuperstar.demos.DemosAssets;
  *
  * @author SlavSquatSuperstar
  */
-public class InputTestScene extends Scene {
+public class InputTestScene extends DemoScene {
 
     public InputTestScene(String name) {
         super(name);

@@ -7,6 +7,7 @@ import mayonez.math.Random;
 import mayonez.math.*;
 import mayonez.physics.colliders.*;
 import mayonez.physics.dynamics.*;
+import slavsquatsuperstar.demos.DemoScene;
 
 import java.util.*;
 
@@ -15,7 +16,7 @@ import java.util.*;
  *
  * @author SlavSquatSuperstar
  */
-public class PoolBallsScene extends Scene {
+public class PoolBallsScene extends DemoScene {
 
     // Constants
     private static final PhysicsMaterial WALL_MAT

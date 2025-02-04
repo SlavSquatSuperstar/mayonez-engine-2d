@@ -3,6 +3,7 @@ package slavsquatsuperstar.demos.physics;
 import mayonez.*;
 import mayonez.math.*;
 import mayonez.physics.dynamics.*;
+import slavsquatsuperstar.demos.DemoScene;
 
 import static slavsquatsuperstar.demos.physics.SandboxObjectPrefabs.createStaticBox;
 
@@ -11,7 +12,7 @@ import static slavsquatsuperstar.demos.physics.SandboxObjectPrefabs.createStatic
  *
  * @author SlavSquatSupertar
  */
-public class ProjectileTestScene extends Scene {
+public class ProjectileTestScene extends DemoScene {
 
     public ProjectileTestScene(String name) {
         super(name);

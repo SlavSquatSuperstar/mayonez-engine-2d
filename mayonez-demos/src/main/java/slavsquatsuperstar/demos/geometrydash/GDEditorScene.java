@@ -7,6 +7,7 @@ import mayonez.math.*;
 import mayonez.physics.colliders.*;
 import mayonez.physics.dynamics.*;
 import mayonez.scripts.camera.*;
+import slavsquatsuperstar.demos.DemoScene;
 import slavsquatsuperstar.demos.geometrydash.ui.UICanvas;
 
 /**
@@ -14,7 +15,7 @@ import slavsquatsuperstar.demos.geometrydash.ui.UICanvas;
  *
  * @author SlavSquatSuperstar
  */
-public class GDEditorScene extends Scene {
+public class GDEditorScene extends DemoScene {
 
     final static int TILE_SIZE = 42;
     final static Vec2 SCENE_SIZE = new Vec2(Preferences.getScreenWidth(),

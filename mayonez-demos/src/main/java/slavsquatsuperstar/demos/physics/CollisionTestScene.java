@@ -1,8 +1,8 @@
 package slavsquatsuperstar.demos.physics;
 
-import mayonez.*;
 import mayonez.math.*;
 import mayonez.physics.dynamics.*;
+import slavsquatsuperstar.demos.DemoScene;
 
 import static slavsquatsuperstar.demos.physics.SandboxObjectPrefabs.*;
 
@@ -11,7 +11,7 @@ import static slavsquatsuperstar.demos.physics.SandboxObjectPrefabs.*;
  *
  * @author SlavSquatSupertar
  */
-public class CollisionTestScene extends Scene {
+public class CollisionTestScene extends DemoScene {
 
     public CollisionTestScene(String name) {
         super(name);

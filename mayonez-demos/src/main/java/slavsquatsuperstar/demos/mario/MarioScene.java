@@ -7,13 +7,14 @@ import mayonez.math.*;
 import mayonez.physics.colliders.*;
 import mayonez.physics.dynamics.*;
 import mayonez.scripts.camera.*;
+import slavsquatsuperstar.demos.DemoScene;
 
 /**
  * For testing the renderer, camera, and coordinate conversions.
  *
  * @author SlavSquatSupertar
  */
-public class MarioScene extends Scene {
+public class MarioScene extends DemoScene {
 
     // Layers
     static final int CHARACTER_LAYER = 0;

@@ -9,6 +9,7 @@ import mayonez.graphics.ui.*;
 import mayonez.input.*;
 import mayonez.math.*;
 import mayonez.math.shapes.*;
+import slavsquatsuperstar.demos.DemoScene;
 import slavsquatsuperstar.demos.DemosAssets;
 
 /**
@@ -17,7 +18,7 @@ import slavsquatsuperstar.demos.DemosAssets;
  *
  * @author SlavSquatSuperstar
  */
-public class RendererTestScene extends Scene {
+public class RendererTestScene extends DemoScene {
 
     private static final boolean CAMERA_DEBUG_MODE = true;
     private static final int SCENE_SCALE = 10;
@@ -205,6 +206,7 @@ public class RendererTestScene extends Scene {
 
     @Override
     protected void onUserUpdate(float dt) {
+        super.onUserUpdate(dt);
         if (CAMERA_DEBUG_MODE) {
             var moveInput = new Vec2(KeyInput.getAxis("horizontal"), KeyInput.getAxis("vertical"));
             var translation = moveInput.unit()

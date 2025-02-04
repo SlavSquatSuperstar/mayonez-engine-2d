@@ -7,6 +7,7 @@ import mayonez.math.Random;
 import mayonez.math.*;
 import mayonez.math.shapes.*;
 import mayonez.scripts.camera.*;
+import slavsquatsuperstar.demos.DemoScene;
 import slavsquatsuperstar.demos.spacegame.objects.BackgroundObject;
 import slavsquatsuperstar.demos.spacegame.objects.BackgroundStarPrefabs;
 import slavsquatsuperstar.demos.spacegame.objects.SpaceGameZIndex;
@@ -22,7 +23,7 @@ import static slavsquatsuperstar.demos.spacegame.objects.SpaceGameLayer.*;
  *
  * @author SlavSquatSuperstar
  */
-public class SpaceGameScene extends Scene {
+public class SpaceGameScene extends DemoScene {
 
     // Constants
     private static final int NUM_STARS = 3000;
@@ -72,6 +73,7 @@ public class SpaceGameScene extends Scene {
 
     @Override
     protected void onUserUpdate(float dt) {
+        super.onUserUpdate(dt);
         if (CAMERA_DEBUG_MODE) {
             getCamera().rotate(KeyInput.getAxis("arrows horizontal"));
             getCamera().zoom(1 + 0.01f * KeyInput.getAxis("arrows vertical"));

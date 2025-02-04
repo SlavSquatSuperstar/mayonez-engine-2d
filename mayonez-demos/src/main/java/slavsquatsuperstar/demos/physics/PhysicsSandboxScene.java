@@ -5,6 +5,7 @@ import mayonez.graphics.*;
 import mayonez.input.*;
 import mayonez.math.*;
 import mayonez.physics.dynamics.*;
+import slavsquatsuperstar.demos.DemoScene;
 import slavsquatsuperstar.demos.physics.sandbox.SandboxUI;
 
 import static slavsquatsuperstar.demos.physics.SandboxObjectPrefabs.*;
@@ -14,7 +15,7 @@ import static slavsquatsuperstar.demos.physics.SandboxObjectPrefabs.*;
  *
  * @author SlavSquatSupertar
  */
-public class PhysicsSandboxScene extends Scene {
+public class PhysicsSandboxScene extends DemoScene {
 
     // Constants
     private static final PhysicsMaterial NORMAL_MATERIAL = new PhysicsMaterial(0.4f, 0.4f, 0.2f);
@@ -64,6 +65,7 @@ public class PhysicsSandboxScene extends Scene {
 
     @Override
     protected void onUserUpdate(float dt) {
+        super.onUserUpdate(dt);
         // Create Random Shapes
         // TODO mouse pos gets out of sync
         if (!KeyInput.keyDown("left shift")) {
