@@ -2,13 +2,9 @@ package slavsquatsuperstar.demos.physics;
 
 import mayonez.*;
 import mayonez.graphics.*;
-import mayonez.graphics.debug.*;
 import mayonez.input.*;
 import mayonez.math.*;
 import mayonez.math.shapes.*;
-import mayonez.physics.colliders.*;
-import mayonez.physics.dynamics.*;
-import mayonez.scripts.*;
 
 /**
  * Controls the size, angle, and speed of launched projectiles.
@@ -17,7 +13,7 @@ import mayonez.scripts.*;
  */
 class ProjectileLauncher extends Script {
 
-    private final Vec2 projSize = new Vec2(4f, 2f);
+    static final Vec2 PROJ_SIZE = new Vec2(4f, 2f);
     private float angle, speed, size;
 
     @Override
@@ -54,33 +50,14 @@ class ProjectileLauncher extends Script {
         getScene().getDebugDraw()
                 .drawVector(objPos, velocity, Colors.BLACK);
         getScene().getDebugDraw()
-                .drawShape(new Rectangle(objPos, projSize.times(size), angle),
+                .drawShape(new Rectangle(objPos, PROJ_SIZE.times(size), angle),
                         Colors.GRAY);
     }
 
     private void launchProjectile() {
         var projXf = new Transform(transform.getPosition(), angle, new Vec2(size));
-        getScene().addObject(new GameObject("Test Projectile", projXf) {
-            @Override
-            protected void init() {
-                setLayer(getScene().getLayer(ProjectileTestScene.PROJECTILE_LAYER));
-
-                var col = new BoxCollider(projSize);
-                addComponent(col);
-                col.addCollisionCallback(event -> {
-                    if (event.other.getName().equals("Target Box")) {
-                        col.getGameObject().destroy();
-                    }
-                });
-
-                var rb = new Rigidbody(1);
-                addComponent(rb);
-                rb.setVelocity(new Vec2(20f * speed, 0).rotate(angle));
-
-                addComponent(new ShapeSprite(Colors.BLUE, false));
-                addComponent(new DestroyAfterDuration(5f));
-            }
-        });
+        var projVel = new Vec2(20f * speed, 0).rotate(angle);
+        getScene().addObject(new TestProjectile("Test Projectile", projXf, projVel));
     }
 
 }
