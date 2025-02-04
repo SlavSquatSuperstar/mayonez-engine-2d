@@ -14,19 +14,28 @@ import static slavsquatsuperstar.demos.physics.SandboxObjectPrefabs.createStatic
  */
 public class ProjectileTestScene extends DemoScene {
 
+    public static int PROJECTILE_LAYER = 0;
+    public static int TARGET_LAYER = 1;
+
     public ProjectileTestScene(String name) {
         super(name);
     }
 
     @Override
     protected void init() {
+        // Don't make projectiles collide with each other
+        getLayer(PROJECTILE_LAYER).setName("Projectiles");
+        getLayer(PROJECTILE_LAYER).setLayerInteract(PROJECTILE_LAYER, false);
+        getLayer(TARGET_LAYER).setName("Targets");
+
         getCamera().setCameraScale(10f);
         setGravity(new Vec2());
 
         // Add target
         var targetBox = createStaticBox("Target Box",
-                new Vec2(50f, 0f), new Vec2(5f, 15f), 0f,
+                new Vec2(50f, 0f), new Vec2(10f, 12f), 0f,
                 PhysicsMaterial.DEFAULT_MATERIAL);
+        targetBox.setLayer(getLayer(TARGET_LAYER));
         addObject(targetBox);
 
         // Control target

@@ -63,6 +63,8 @@ class ProjectileLauncher extends Script {
         getScene().addObject(new GameObject("Test Projectile", projXf) {
             @Override
             protected void init() {
+                setLayer(getScene().getLayer(ProjectileTestScene.PROJECTILE_LAYER));
+
                 var col = new BoxCollider(projSize);
                 addComponent(col);
                 col.addCollisionCallback(event -> {

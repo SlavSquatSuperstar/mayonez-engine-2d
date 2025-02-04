@@ -5,6 +5,7 @@ import mayonez.graphics.*;
 import mayonez.graphics.debug.*;
 import mayonez.input.*;
 import mayonez.math.*;
+import mayonez.physics.*;
 import mayonez.physics.colliders.*;
 import mayonez.scripts.*;
 
@@ -25,11 +26,12 @@ class TargetController extends Script {
 
     @Override
     protected void start() {
-        flashCounter = new Counter(0, 5, 5);
+        flashCounter = new Counter(0, 10, 10);
         shapeSprite = targetBox.getComponent(ShapeSprite.class);
         targetBox.getComponent(Collider.class)
                 .addCollisionCallback(event -> {
-                    flashCounter.resetToMin();
+                    if (event.type == CollisionEventType.ENTER)
+                        flashCounter.resetToMin();
                 });
     }
 
