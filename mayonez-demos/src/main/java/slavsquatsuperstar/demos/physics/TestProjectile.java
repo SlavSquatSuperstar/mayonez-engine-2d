@@ -7,6 +7,7 @@ import mayonez.math.*;
 import mayonez.physics.colliders.*;
 import mayonez.physics.dynamics.*;
 import mayonez.scripts.*;
+import mayonez.physics.colliders.BulletBoxCollider;
 
 /**
  * A test projectile fired in the scene.
@@ -28,7 +29,7 @@ public class TestProjectile extends GameObject {
     protected void init() {
         setLayer(getScene().getLayer(ProjectileTestScene.PROJECTILE_LAYER));
 
-        var col = new BoxCollider(ProjectileLauncher.PROJ_SIZE);
+        var col = new BulletBoxCollider(ProjectileLauncher.PROJ_SIZE);
         addComponent(col);
         col.addCollisionCallback(event -> {
             if (event.other.getName().equals("Target Box")) {
