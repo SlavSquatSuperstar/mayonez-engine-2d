@@ -34,7 +34,7 @@ final class SandboxObjectPrefabs {
             String name, Vec2 position, Vec2 size, float rotation, PhysicsMaterial material
     ) {
         return new SandboxObject(name, position, rotation)
-                .addStaticPhysics(size, material);
+                .addStaticPhysics(new BoxCollider(size), material);
     }
 
     static GameObject createRandomShape(Vec2 position, int type) {

@@ -43,8 +43,8 @@ class SandboxObject extends GameObject {
                 .addRigidbody(collider.getMass(DENSITY), material);
     }
 
-    SandboxObject addStaticPhysics(Vec2 size, PhysicsMaterial material) {
-        return addCollider(new BoxCollider(size), Colors.DARK_GRAY, true)
+    SandboxObject addStaticPhysics(Collider collider, PhysicsMaterial material) {
+        return addCollider(collider, Colors.DARK_GRAY, true)
                 .addRigidbody(0f, material);
     }
 

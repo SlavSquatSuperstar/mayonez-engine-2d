@@ -37,14 +37,15 @@ public class PoolBallsScene extends DemoScene {
         getCamera().setCameraScale(SCENE_SCALE);
 
         // Add Boundary Objects
+        var wallThickness = 5;
         addObject(createBoundaryObject("Upper Wall", new Vec2(0, -0.5f * (height + 1)),
-                new Vec2(width, 10)));
+                new Vec2(width, wallThickness)));
         addObject(createBoundaryObject("Lower Wall", new Vec2(0, 0.5f * (height + 1)),
-                new Vec2(width, 10)));
+                new Vec2(width, wallThickness)));
         addObject(createBoundaryObject("Left Wall", new Vec2(-0.5f * (width + 1), 0),
-                new Vec2(10, height)));
+                new Vec2(wallThickness, height)));
         addObject(createBoundaryObject("Right Wall", new Vec2(0.5f * (width + 1), 0),
-                new Vec2(10, height)));
+                new Vec2(wallThickness, height)));
 
         // Add Cue Ball
         addObject(new PoolBall(new Vec2(-40, 0)));
