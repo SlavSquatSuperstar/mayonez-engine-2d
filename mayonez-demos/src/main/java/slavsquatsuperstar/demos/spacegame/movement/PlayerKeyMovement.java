@@ -20,7 +20,7 @@ public class PlayerKeyMovement extends SpaceshipMovement {
     private static final Key BRAKE_KEY = SpaceGameConfig.getBrakeKey();
 
     // Movement Fields
-    private static boolean lastAutoBrake = false;
+    private static boolean lastAutoBrake = true;
 
     private final float moveThrust, turnThrust;
 //    private final float maxMoveSpeed, maxTurnSpeed;

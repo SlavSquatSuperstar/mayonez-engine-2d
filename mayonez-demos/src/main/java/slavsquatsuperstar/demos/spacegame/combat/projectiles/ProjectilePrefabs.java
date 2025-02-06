@@ -76,6 +76,7 @@ public final class ProjectilePrefabs {
 
                 var col = new BulletBoxCollider(type.colliderSize());
                 col.setPrimaryAxisX(false);
+                col.setSweepFactor(1.5f);
                 addComponent(col.setTrigger(true));
                 addComponent(new Rigidbody(0.001f));
             }

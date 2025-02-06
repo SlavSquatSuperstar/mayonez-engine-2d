@@ -15,7 +15,8 @@ class BulletBoxCollider(size: Vec2) : BoxCollider(size) {
     private lateinit var displacement: Vec2
     private var rb: PhysicsBody? = null
 
-    // Getter and Setter Methods
+    // Collider Properties
+    var sweepFactor: Float = 1f // How much to stretch swept box
     var isPrimaryAxisX: Boolean = true // Whether 0º is at +x or +y
 
     override fun start() {
@@ -28,7 +29,7 @@ class BulletBoxCollider(size: Vec2) : BoxCollider(size) {
         // Assume velocity direction is along object orientation
         // Assume no rotational velocity
         if (rb != null) {
-            displacement.set(rb!!.velocity * dt)
+            displacement.set(rb!!.velocity * dt * sweepFactor)
         }
     }
 

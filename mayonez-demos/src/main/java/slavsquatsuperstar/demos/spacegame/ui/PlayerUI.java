@@ -73,7 +73,7 @@ public class PlayerUI extends GameObject {
 
         // Auto-Brake Indicator
         var autoBrakeToolTip = new UITextLabel(
-                "Auto-Brake: Off",
+                "Auto-Brake: On",
                 new Vec2(20, Preferences.getScreenHeight() - 120),
                 font, Colors.WHITE,
                 16, 2
