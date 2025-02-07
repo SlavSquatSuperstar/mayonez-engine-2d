@@ -1,0 +1,5 @@
+sceneClass,name
+slavsquatsuperstar.demos.spacegame.SpaceGameScene,Space Game
+slavsquatsuperstar.demos.renderer.RendererTestScene,Renderer Test
+slavsquatsuperstar.demos.physics.PhysicsSandboxScene,Physics Sandbox
+slavsquatsuperstar.demos.physics.PoolBallsScene,Pool Balls

@@ -1,13 +1,10 @@
 package slavsquatsuperstar.demos;
 
 import mayonez.*;
+import mayonez.assets.text.*;
 import mayonez.config.*;
-import slavsquatsuperstar.demos.geometrydash.GDEditorScene;
-import slavsquatsuperstar.demos.input.InputTestScene;
-import slavsquatsuperstar.demos.mario.MarioScene;
-import slavsquatsuperstar.demos.physics.*;
-import slavsquatsuperstar.demos.renderer.RendererTestScene;
-import slavsquatsuperstar.demos.spacegame.SpaceGameScene;
+
+import java.util.*;
 
 /**
  * The entry point into the demos application. Launches and switches between the
@@ -17,37 +14,40 @@ import slavsquatsuperstar.demos.spacegame.SpaceGameScene;
  */
 public class DemosLauncher {
 
-    private final static int START_SCENE_INDEX = 0;
+    private static final int START_SCENE_INDEX = 0;
+    private static final boolean ALLOW_LEGACY_SCENES = false;
+    private static final boolean ALLOW_DEBUG_SCENES = true;
 
-    private final static String[] SCENE_NAMES = {
-            "Space Game", "Render Batch Test",
-            "Physics Sandbox", "Pool Balls",
-            "Mario Level", "Geometry Dash Editor",
-            "Input Test", "Collision Test", "Projectile Test"
-    };
+    private static List<Scene> scenes;
 
     public static void main(String[] args) {
         var launcher = new Launcher(args).setRunConfig();
-        launcher.loadScenesToManager(getScenesToLoad());
+
+        // Read scene files
+        scenes = new ArrayList<>(getScenesFromFile("assets/demos/scenes/main_scenes.csv"));
+        if (ALLOW_LEGACY_SCENES) {
+            scenes.addAll(getScenesFromFile("assets/demos/scenes/legacy_scenes.csv"));
+        }
+        if (ALLOW_DEBUG_SCENES) {
+            scenes.addAll(getScenesFromFile("assets/demos/scenes/debug_scenes.csv"));
+        }
+
+        // Load scenes and start
+        launcher.loadScenesToManager(scenes.toArray(new Scene[0]));
         launcher.startGame(START_SCENE_INDEX);
     }
 
-    private static Scene[] getScenesToLoad() {
-        return new Scene[]{
-                new SpaceGameScene(SCENE_NAMES[0]),
-                new RendererTestScene(SCENE_NAMES[1]),
-                new PhysicsSandboxScene(SCENE_NAMES[2]),
-                new PoolBallsScene(SCENE_NAMES[3]),
-                new MarioScene(SCENE_NAMES[4]),
-                new GDEditorScene(SCENE_NAMES[5]),
-                new InputTestScene(SCENE_NAMES[6]),
-                new CollisionTestScene(SCENE_NAMES[7]),
-                new ProjectileTestScene(SCENE_NAMES[8]),
-        };
+    private static List<Scene> getScenesFromFile(String filename) {
+        var csvData = new CSVFile(filename).readCSV();
+        if (csvData == null) return List.of();
+        return csvData.stream()
+                .map(SceneInfo::new)
+                .map(SceneInfo::instantiate)
+                .toList();
     }
 
     static void switchToScene(int sceneIndex) {
-        if (sceneIndex < SCENE_NAMES.length) {
+        if (sceneIndex < scenes.size()) {
             SceneManager.changeScene(SceneManager.getScene(sceneIndex));
         }
     }
