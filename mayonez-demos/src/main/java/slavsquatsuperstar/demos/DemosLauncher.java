@@ -48,7 +48,7 @@ public class DemosLauncher {
 
     static void switchToScene(int sceneIndex) {
         if (sceneIndex < SCENE_NAMES.length) {
-            SceneManager.loadScene(SCENE_NAMES[sceneIndex]);
+            SceneManager.changeScene(SceneManager.getScene(SCENE_NAMES[sceneIndex]));
         }
     }
 
