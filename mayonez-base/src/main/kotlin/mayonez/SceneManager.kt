@@ -2,7 +2,7 @@ package mayonez
 
 import mayonez.config.*
 import mayonez.input.*
-import java.awt.Graphics2D
+import java.awt.*
 
 /**
  * Store multiple scenes for later use and helps the user reload and switch between
@@ -23,12 +23,12 @@ import java.awt.Graphics2D
  */
 // TODO rework
 // TODO allow null scene?
-// TODO get by index
 object SceneManager {
 
     // Scene Fields
 
     private val scenes: MutableMap<String, Scene> = HashMap() // The scene pool
+    private val sceneNames: MutableList<String> = ArrayList() // The scene order
 
     /** The scene that is currently loaded by the game. */
     @JvmStatic
@@ -151,6 +151,7 @@ object SceneManager {
     @JvmStatic
     fun clearScenes() {
         scenes.clear()
+        sceneNames.clear()
         Logger.debug("Cleared scene pool")
     }
 
@@ -165,6 +166,7 @@ object SceneManager {
     fun addScene(scene: Scene?) {
         if (scene != null) {
             scenes[scene.name] = scene
+            sceneNames.add(scene.name)
             Logger.debug("Added scene \"${scene.name}\"")
         }
     }
@@ -178,5 +180,17 @@ object SceneManager {
     @JvmStatic
     fun getScene(name: String?): Scene? = scenes[name]
 
+    /**
+     * Retrieves the scene stored in the scene pool with the given name.
+     *
+     * @param index the order of the stored scene
+     * @return the scene, or null if the index is invalid
+     */
+    @JvmStatic
+    fun getScene(index: Int): Scene? {
+        if (index !in sceneNames.indices) return null
+        val name = sceneNames[index]
+        return scenes[name]
+    }
 
 }

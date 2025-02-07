@@ -29,7 +29,7 @@ public class DemosLauncher {
     public static void main(String[] args) {
         var launcher = new Launcher(args).setRunConfig();
         launcher.loadScenesToManager(getScenesToLoad());
-        launcher.startGame(SCENE_NAMES[START_SCENE_INDEX]);
+        launcher.startGame(START_SCENE_INDEX);
     }
 
     private static Scene[] getScenesToLoad() {
@@ -48,7 +48,7 @@ public class DemosLauncher {
 
     static void switchToScene(int sceneIndex) {
         if (sceneIndex < SCENE_NAMES.length) {
-            SceneManager.changeScene(SceneManager.getScene(SCENE_NAMES[sceneIndex]));
+            SceneManager.changeScene(SceneManager.getScene(sceneIndex));
         }
     }
 

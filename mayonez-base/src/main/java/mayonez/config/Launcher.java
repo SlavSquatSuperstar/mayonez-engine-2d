@@ -11,7 +11,7 @@ import mayonez.util.Record;
  * command-line arguments. First, call {@link #setRunConfig()} to parse the
  * {@link RunConfig} from the arguments. Then, preload in any number
  * of scenes using {@link #loadScenesToManager(Scene...)} and then start the game with
- * {@link #startGame(Scene)} or {@link #startGame(String)}.
+ * {@link #startGame}.
  * <p>
  * See {@link mayonez.SceneManager} for more information.
  *
@@ -97,6 +97,16 @@ public class Launcher {
      */
     public void startGame(String sceneName) {
         Mayonez.start(SceneManager.getScene(sceneName));
+    }
+
+    /**
+     * Start the game with the scene stored with the given index. Will crash
+     * the program if the index is out of bounds.
+     *
+     * @param sceneIndex the starting scene's index
+     */
+    public void startGame(int sceneIndex) {
+        Mayonez.start(SceneManager.getScene(sceneIndex));
     }
 
     // TODO auto start with first loaded scene
