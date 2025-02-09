@@ -108,8 +108,8 @@ open class Polygon(sort: Boolean, vararg vertices: Vec2) : Shape() {
     override fun boundingRectangle(): BoundingBox {
         val verticesX = vertices.map { it.x }.toFloatArray()
         val verticesY = vertices.map { it.y }.toFloatArray()
-        val boxMin = Vec2(MathUtils.min(*verticesX), MathUtils.min(*verticesY))
-        val boxMax = Vec2(MathUtils.max(*verticesX), MathUtils.max(*verticesY))
+        val boxMin = Vec2(verticesX.min(), verticesY.min())
+        val boxMax = Vec2(verticesX.max(), verticesY.max())
         return BoundingBox.fromMinAndMax(boxMin, boxMax)
     }
 

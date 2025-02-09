@@ -1,7 +1,5 @@
 package mayonez
 
-import mayonez.Mayonez.setConfig
-import mayonez.Mayonez.start
 import mayonez.application.*
 import mayonez.assets.*
 import mayonez.assets.text.*
@@ -186,7 +184,7 @@ object Mayonez {
             SceneManager.stopScene()
             SceneManager.clearScenes()
             Assets.clearAssets()
-            application.stop()
+            application.stop() // Do everything before GL deleted
             exitProgram(status)
         }
     }

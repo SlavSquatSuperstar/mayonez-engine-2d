@@ -46,6 +46,7 @@ object SceneManager {
 
     @JvmStatic
     @JvmName("renderScene")
+    // TODO remove g2 from param?
     internal fun renderScene(g2: Graphics2D?) {
         currentScene.render(g2)
     }
@@ -61,6 +62,7 @@ object SceneManager {
     /** Restarts the current scene and reinitializes all its game objects. */
     @JvmStatic
     fun restartScene() {
+        Logger.debug("Restarting current scene")
         stopScene()
         startScene()
     }
@@ -75,9 +77,13 @@ object SceneManager {
     fun changeSceneAsNew(scene: Scene?) {
         if (scene == null) return  // Don't set a null scene
         if (hasCurrentScene) {
+            Logger.debug("Switching scenes as new")
             stopScene()
         }
         currentScene = scene
+        if (scene.name !in scenes) {
+            addScene(scene) // Auto-add scene if new
+        }
         startScene()
     }
 
@@ -91,9 +97,13 @@ object SceneManager {
     fun changeScene(scene: Scene?) {
         if (scene == null) return  // Don't set a null scene
         if (hasCurrentScene) {
+            Logger.debug("Switching scenes")
             pauseScene()
         }
         currentScene = scene
+        if (scene.name !in scenes) {
+            addScene(scene) // Auto-add scene if new
+        }
         startScene()
         resumeScene()
     }
@@ -164,11 +174,14 @@ object SceneManager {
      */
     @JvmStatic
     fun addScene(scene: Scene?) {
-        if (scene != null) {
-            scenes[scene.name] = scene
-            sceneNames.add(scene.name)
+        if (scene == null) return
+        if (scene.name in scenes) {
+            Logger.debug("Replaced scene \"${scene.name}\"")
+        } else {
+            sceneNames.add(scene.name) // Add scene name if new
             Logger.debug("Added scene \"${scene.name}\"")
         }
+        scenes[scene.name] = scene
     }
 
     /**
