@@ -14,21 +14,18 @@ import java.util.*;
  */
 public class DemosLauncher {
 
-    private static final int START_SCENE_INDEX = 0;
-    private static final boolean ALLOW_LEGACY_SCENES = false;
-    private static final boolean ALLOW_DEBUG_SCENES = true;
-
     private static List<Scene> scenes;
 
     public static void main(String[] args) {
         var launcher = new Launcher(args).setRunConfig();
+        DemosConfig.readConfig();
 
         // Read scene files
         scenes = new ArrayList<>(getScenesFromFile("assets/demos/scenes/main_scenes.csv"));
-        if (ALLOW_LEGACY_SCENES) {
+        if (DemosConfig.shouldAllowLegacyScenes()) {
             scenes.addAll(getScenesFromFile("assets/demos/scenes/legacy_scenes.csv"));
         }
-        if (ALLOW_DEBUG_SCENES) {
+        if (DemosConfig.shouldAllowDebugScenes()) {
             scenes.addAll(getScenesFromFile("assets/demos/scenes/debug_scenes.csv"));
         }
 
