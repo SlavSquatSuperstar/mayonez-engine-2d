@@ -32,9 +32,11 @@ This fully-operational game engine includes:
 
 ### Planned
 
-- A UI system with reusable components such as buttons and labels
+- A UI system with interactable components such as buttons and menus
 - Playable in-game sound effects
+- Physics joints letting you attach objects to one another
 - Nestable game objects that are fixed to the parent object's transform
+- An editor that allows you to construct your own scenes and objects
 - And much more to come later!
 
 ## Platforms
