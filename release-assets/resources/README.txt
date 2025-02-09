@@ -19,7 +19,7 @@ Demo Scene Controls
 - All Scenes
    - R to reload the current scene
    - P to pause/unpause the scene (may be buggy)
-   - Shift + 1-5 to switch scenes
+   - Shift + 1-3 to switch scenes
    - Esc to exit the program
 - Space Shooter (1)
    - W/S to fly forward/backwards
@@ -31,24 +31,15 @@ Demo Scene Controls
    - B to toggle auto-brake
    - H to toggle hints
    - Controls can be set in user_config.json
-- Renderer Test (2)
-- Physics Sandbox (3)
+- Physics Sandbox (2)
    - Left Mouse and drag on objects to move them around
    - Right Mouse, drag, and release on objects to flick them
    - 1-4 to spawn shapes at the mouse cursor
    - Space to toggle gravity
    - H to toggle hints
-- Pool Balls (4)
+- Pool Balls (3)
    - Left Mouse and drag on objects to move them around
    - Right Mouse*, drag, and release on objects to flick them
-- Mario (5)
-  - W to jump
-  - A/D to move side to side
-  - S to ground pound
-- Geometry Dash Editor (6)
-   - WASD to move
-   - Left Mouse on buttons to select a brush
-   - Left Mouse on an empty space, with a brush selected, to place a block
 
 *Note: Right mouse is known to not work on Windows with some trackpads.
 

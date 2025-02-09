@@ -1,4 +1,5 @@
 sceneClass,name
+slavsquatsuperstar.demos.renderer.RendererTestScene,Renderer Test
 slavsquatsuperstar.demos.input.InputTestScene,Input Test
 slavsquatsuperstar.demos.physics.CollisionTestScene,Collision Test
 slavsquatsuperstar.demos.physics.ProjectileTestScene,Projectile Test
