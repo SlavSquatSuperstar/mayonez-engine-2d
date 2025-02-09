@@ -33,8 +33,8 @@ public class DemosLauncher {
         }
 
         // Load scenes and start
-        launcher.loadScenesToManager(scenes.toArray(new Scene[0]));
-        launcher.startGame(START_SCENE_INDEX);
+        launcher.addScenesToManager(scenes);
+        launcher.startGame(DemosConfig.getStartSceneIndex());
     }
 
     private static List<Scene> getScenesFromFile(String filename) {

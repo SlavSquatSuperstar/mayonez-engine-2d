@@ -13,7 +13,7 @@ import kotlin.system.exitProcess
  *
  * Usage: To start an instance of Mayonez Engine, create a [Launcher]
  * and set the "Use GL" property through [Launcher.setRunConfig]. Then,
- * load any number of scenes through [Launcher.loadScenesToManager] or
+ * load any number of scenes through [Launcher.addScenesToManager] or
  * [SceneManager.addScene]. Finally, start the game with a scene by calling
  * [Launcher.startGame].
  *

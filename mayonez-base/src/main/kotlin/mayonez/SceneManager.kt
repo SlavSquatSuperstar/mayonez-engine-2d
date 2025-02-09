@@ -10,7 +10,7 @@ import java.awt.*
  * at once.
  *
  * Usage: Scenes can be preloaded into the SceneManager through the
- * [Launcher.loadScenesToManager] method before the application starts
+ * [Launcher.addScenesToManager] method before the application starts
  * running. Scenes can be added at any time with [SceneManager.addScene]
  * and retrieved with [SceneManager.getScene] using their name or the order in which
  * they were added. To switch scenes, use the [SceneManager.changeSceneAsNew] method

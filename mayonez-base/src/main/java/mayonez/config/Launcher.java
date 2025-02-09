@@ -3,6 +3,8 @@ package mayonez.config;
 import mayonez.*;
 import mayonez.util.Record;
 
+import java.util.*;
+
 /**
  * Initializes all engine components, parses the main method program arguments,
  * and starts the application.
@@ -10,7 +12,7 @@ import mayonez.util.Record;
  * Usage: Construct a {@link Launcher} object and optionally pass in
  * command-line arguments. First, call {@link #setRunConfig()} to parse the
  * {@link RunConfig} from the arguments. Then, preload in any number
- * of scenes using {@link #loadScenesToManager(Scene...)} and then start the game with
+ * of scenes using {@link #addScenesToManager(Scene...)} and then start the game with
  * {@link #startGame}.
  * <p>
  * See {@link mayonez.SceneManager} for more information.
@@ -73,7 +75,18 @@ public class Launcher {
      *
      * @param scenes the scenes to add
      */
-    public void loadScenesToManager(Scene... scenes) {
+    public void addScenesToManager(Scene... scenes) {
+        for (var scene : scenes) {
+            SceneManager.addScene(scene);
+        }
+    }
+
+    /**
+     * Preload one or multiple scenes to the scene manager.
+     *
+     * @param scenes the scenes to add
+     */
+    public void addScenesToManager(List<Scene> scenes) {
         for (var scene : scenes) {
             SceneManager.addScene(scene);
         }
