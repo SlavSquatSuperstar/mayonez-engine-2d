@@ -33,6 +33,9 @@ final class DemosConfig extends GameConfig {
 
     private static PreferenceValidator<?>[] getRules() {
         return new PreferenceValidator<?>[]{
+                new ValueNotNullValidator(
+                        "start_scene_index"
+                ),
                 new BooleanValidator(
                         "allow_legacy_scenes", "allow_debug_scenes"
                 )

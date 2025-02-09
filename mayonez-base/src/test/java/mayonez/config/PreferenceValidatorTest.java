@@ -34,29 +34,53 @@ class PreferenceValidatorTest {
         preferences = new Record();
     }
 
+    // Not Null
+
+    @Test
+    void nullValuesNotValid() {
+        preferences.set("str1", (String) null);
+        preferences.set("int1", (Integer) null);
+        preferences.set("bool1", (Boolean) null);
+
+        var rule = new ValueNotNullValidator("str1", "int1", "bool1");
+        rule.validate(preferences, defaults);
+        assertEquals("foo", preferences.getString("str1"));
+        assertEquals(800, preferences.getInt("int1"));
+        assertTrue(preferences.getBoolean("bool1"));
+    }
+
+    @Test
+    void notNullValuesValid() {
+        preferences.set("str1", "spam");
+        preferences.set("int1", 100);
+        preferences.set("bool1", false);
+
+        var rule = new ValueNotNullValidator("str1", "int1", "bool1");
+        rule.validate(preferences, defaults);
+        assertEquals("spam", preferences.getString("str1"));
+        assertEquals(100, preferences.getInt("int1"));
+        assertFalse(preferences.getBoolean("bool1"));
+    }
+
     // String
 
     @Test
     void stringEmptyIsNotValid() {
         var rule = new StringValidator("str1", "str2");
         rule.validate(preferences, defaults);
-
         assertEquals("foo", preferences.getString("str1"));
         assertEquals("bar", preferences.getString("str2"));
     }
 
     @Test
     void strongNonEmptyIsValid() {
-        final var name = "spam";
-        final var version = "eggs";
-
-        preferences.set("str1", name);
-        preferences.set("str2", version);
+        preferences.set("str1", "spam");
+        preferences.set("str2", "eggs");
 
         var rule = new StringValidator("str1", "str2");
         rule.validate(preferences, defaults);
-        assertEquals(name, preferences.getString("str1"));
-        assertEquals(version, preferences.getString("str2"));
+        assertEquals("spam", preferences.getString("str1"));
+        assertEquals("eggs", preferences.getString("str2"));
     }
 
     // Float
@@ -76,6 +100,7 @@ class PreferenceValidatorTest {
     void floatInRangeIsValid() {
         preferences.set("float1", 3f);
         preferences.set("float2", 4f);
+
         var rule = new FloatValidator(0f, 5f, "float1", "float2");
         rule.validate(preferences, defaults);
         assertEquals(3f, preferences.getFloat("float1"));
@@ -99,6 +124,7 @@ class PreferenceValidatorTest {
     void intInRangeIsValid() {
         preferences.set("int1", 400);
         preferences.set("int2", 300);
+
         var rule = new IntValidator(100, 1000, "int1", "int2");
         rule.validate(preferences, defaults);
         assertEquals(400, preferences.getInt("int1"));
