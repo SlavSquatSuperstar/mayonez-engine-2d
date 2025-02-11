@@ -12,19 +12,16 @@ import mayonez.scripts.*;
 public class Projectile extends Script {
 
     private final GameObject source;
-    private final float damage, speed;
-    private final float lifetime;
+    private final ProjectileType type;
 
-    public Projectile(GameObject source, float damage, float speed, float lifetime) {
+    public Projectile(GameObject source, ProjectileType type) {
         this.source = source;
-        this.damage = damage;
-        this.speed = speed;
-        this.lifetime = lifetime;
+        this.type = type;
     }
 
     @Override
     protected void init() {
-        gameObject.addComponent(new DestroyAfterDuration(lifetime));
+        gameObject.addComponent(new DestroyAfterDuration(type.lifetime()));
     }
 
     @Override
@@ -38,7 +35,7 @@ public class Projectile extends Script {
         // Set initial velocity
         var sourceRb = source.getComponent(Rigidbody.class);
         if (sourceRb != null) rb.setVelocity(sourceRb.getVelocity());
-        rb.addVelocity(transform.getUp().mul(speed));
+        rb.addVelocity(transform.getUp().mul(type.speed()));
 
         getCollider().addCollisionCallback(event -> {
             // On trigger
@@ -49,11 +46,14 @@ public class Projectile extends Script {
     }
 
     private void onImpactObject(GameObject object) {
-        if (!object.equals(source)) gameObject.destroy(); // Don't collide with source
+        if (object.equals(source)) return; // Don't collide with source
+        // Spawn particle
+        getScene().addObject(ProjectilePrefabs.createImpactPrefab(type, transform.copy()));
+        gameObject.destroy();
     }
 
     public float getDamage() {
-        return damage;
+        return type.damage();
     }
 
     public GameObject getSource() {
