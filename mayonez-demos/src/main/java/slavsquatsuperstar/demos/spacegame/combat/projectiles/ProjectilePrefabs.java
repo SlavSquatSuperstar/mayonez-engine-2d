@@ -98,15 +98,41 @@ public final class ProjectilePrefabs {
      *
      * @param type       the projectile type
      * @param particleXf the particle transform
+     * @param target     the impacted object
      * @return the particle object
      */
-    public static GameObject createImpactPrefab(ProjectileType type, Transform particleXf) {
+    public static GameObject createImpactPrefab(
+            ProjectileType type, Transform particleXf, GameObject target
+    ) {
         return new GameObject("%s Impact".formatted(type.name()), particleXf) {
             @Override
             protected void init() {
                 var duration = Random.randomFloat(0.1f, 0.4f);
                 addComponent(new DestroyAfterDuration(duration));
                 addComponent(PARTICLE_SPRITES.getSprite(type.spriteIndex()));
+                addComponent(new Script() {
+                    private Vec2 targetPositionOffset;
+                    private float targetRotationOffset;
+
+                    @Override
+                    protected void start() {
+                        targetPositionOffset = particleXf.getPosition()
+                                .sub(target.transform.getPosition());
+                        targetRotationOffset = particleXf.getRotation()
+                                - target.transform.getRotation();
+                    }
+
+                    @Override
+                    protected void debugRender() {
+                        if (target.isDestroyed()) return;
+
+                        // Follow target
+                        this.transform.setPosition(target.transform.getPosition()
+                                .add(targetPositionOffset));
+                        this.transform.setRotation(target.transform.getRotation()
+                                + (targetRotationOffset));
+                    }
+                });
             }
         };
     }

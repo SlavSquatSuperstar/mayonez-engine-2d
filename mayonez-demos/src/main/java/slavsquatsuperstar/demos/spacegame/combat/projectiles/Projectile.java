@@ -58,7 +58,7 @@ public class Projectile extends Script {
         }
 
         // Spawn particle
-        getScene().addObject(ProjectilePrefabs.createImpactPrefab(type, particleXf));
+        getScene().addObject(ProjectilePrefabs.createImpactPrefab(type, particleXf, event.other));
         gameObject.destroy();
     }
 
