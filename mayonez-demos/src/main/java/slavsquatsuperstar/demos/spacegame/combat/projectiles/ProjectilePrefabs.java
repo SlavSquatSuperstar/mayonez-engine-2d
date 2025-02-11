@@ -66,7 +66,7 @@ public final class ProjectilePrefabs {
 
                 var col = new BulletBoxCollider(type.colliderSize());
                 col.setPrimaryAxisX(false);
-                col.setSweepFactor(1.5f);
+                col.setSweepFactor(type.sweepFactor());
                 addComponent(col.setTrigger(true));
                 addComponent(new Rigidbody(0.001f));
             }
@@ -124,7 +124,10 @@ public final class ProjectilePrefabs {
 
                     @Override
                     protected void debugRender() {
-                        if (target.isDestroyed()) return;
+                        if (target.isDestroyed()) {
+                            gameObject.destroy();
+                            return;
+                        }
 
                         // Follow target
                         this.transform.setPosition(target.transform.getPosition()
