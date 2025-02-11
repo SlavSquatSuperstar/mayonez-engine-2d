@@ -11,8 +11,8 @@ import mayonez.scripts.movement.*;
 public abstract class SpaceshipMovement extends MovementScript {
 
     // Constants
-    protected final static float BRAKE_THRESHOLD_SPEED = 0.1f;
-    protected final static float TURN_BRAKE_THRESHOLD_SPEED = 2f;
+    public final static float BRAKE_THRESHOLD_SPEED = 0.1f;
+    public final static float TURN_BRAKE_THRESHOLD_SPEED = 2f;
 
     // Script References
     private ThrustController thrustController;

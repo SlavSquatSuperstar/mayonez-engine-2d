@@ -28,11 +28,12 @@ public enum ThrustDirection {
     }
 
     public boolean faces(Vec2 moveDir) {
-        return this.moveDir.dot(moveDir) > 0f;
+        return this.moveDir.dot(moveDir) > SpaceshipMovement.BRAKE_THRESHOLD_SPEED;
     }
 
     public boolean faces(float turnDir) {
-        return this.turnDir * turnDir > 0f; // simulate dot product with z-components
+        // Simulate dot product with z-components
+        return this.turnDir * turnDir > SpaceshipMovement.TURN_BRAKE_THRESHOLD_SPEED;
     }
 
 }
