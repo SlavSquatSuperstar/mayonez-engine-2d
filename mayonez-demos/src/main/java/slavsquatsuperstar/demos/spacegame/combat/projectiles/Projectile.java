@@ -40,15 +40,25 @@ public class Projectile extends Script {
         getCollider().addCollisionCallback(event -> {
             // On trigger
             if (event.trigger && event.type == CollisionEventType.ENTER) {
-                onImpactObject(event.other);
+                onImpactObject(event);
             }
         });
     }
 
-    private void onImpactObject(GameObject object) {
-        if (object.equals(source)) return; // Don't collide with source
+    private void onImpactObject(CollisionEvent event) {
+        if (event.other.equals(source)) return; // Don't collide with source
+
+        // Get particle position
+        var particleXf = transform.copy();
+        var contacts = event.contacts;
+        if (contacts.size() == 1) {
+            particleXf.setPosition(contacts.getFirst());
+        } else if (contacts.size() == 2) {
+            particleXf.setPosition(contacts.get(0).midpoint(contacts.get(1)));
+        }
+
         // Spawn particle
-        getScene().addObject(ProjectilePrefabs.createImpactPrefab(type, transform.copy()));
+        getScene().addObject(ProjectilePrefabs.createImpactPrefab(type, particleXf));
         gameObject.destroy();
     }
 
