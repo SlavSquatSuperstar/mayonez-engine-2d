@@ -36,7 +36,8 @@ public class AsteroidDestruction extends Damageable {
                         transform.getPosition(), Random.randomAngle(),
                         new Vec2(properties.radius() * 0.5f)
                 ),
-                EXPLOSION_DURATION
+                EXPLOSION_DURATION,
+                properties.color()
         ));
     }
 

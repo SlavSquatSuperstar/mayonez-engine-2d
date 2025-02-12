@@ -1,6 +1,7 @@
 package slavsquatsuperstar.demos.spacegame.combat;
 
 import mayonez.*;
+import mayonez.graphics.*;
 import mayonez.graphics.sprites.*;
 import slavsquatsuperstar.demos.spacegame.objects.SpaceGameZIndex;
 
@@ -50,13 +51,19 @@ public class ExplosionPrefabs {
     }
 
     public static GameObject createAsteroidExplosionPrefab(
-            String name, Transform transform, float duration
+            String name, Transform transform, float duration, Color color
     ) {
         return new GameObject(name, transform, SpaceGameZIndex.EXPLOSION) {
             @Override
             protected void init() {
                 addComponent(new Animator(ASTEROID_EXPLOSION_SPRITESHEET,
                         duration / ASTEROID_EXPLOSION_SPRITES) {
+                    @Override
+                    protected void start() {
+                        super.start();
+                        setSpriteColor(color);
+                    }
+
                     @Override
                     public void onFinishAnimation() {
                         gameObject.destroy(); // destroy after finishing animation
