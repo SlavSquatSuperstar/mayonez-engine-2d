@@ -3,6 +3,7 @@ package slavsquatsuperstar.demos.spacegame.objects.ships;
 import mayonez.graphics.textures.*;
 import mayonez.math.*;
 import mayonez.util.Record;
+import slavsquatsuperstar.demos.spacegame.PrefabUtils;
 import slavsquatsuperstar.demos.spacegame.combat.projectiles.WeaponHardpoint;
 import slavsquatsuperstar.demos.spacegame.movement.ThrusterProperties;
 
@@ -12,6 +13,7 @@ import java.util.*;
  * A set of properties for spaceships.
  *
  * @param name         the spaceship's name
+ * @param scale        the spaceship's transform scale
  * @param colliderSize the spaceship's relative hitbox size
  * @param moveThrust   the spaceship's move thrust power
  * @param turnThrust   the spaceship's turn thrust power
@@ -26,7 +28,7 @@ import java.util.*;
 // TODO shield and thruster properties
 public record SpaceshipProperties(
         String name,
-        Vec2 colliderSize,
+        Vec2 scale, Vec2 colliderSize,
         float moveThrust, float turnThrust,
         float maxHull, float maxShield, float shieldRegen,
         Texture texture,
@@ -36,23 +38,24 @@ public record SpaceshipProperties(
     public SpaceshipProperties(Record record) {
         this(
                 record.getString("name"),
-                new Vec2(record.getFloat("sizeX"), record.getFloat("sizeY")),
+                new Vec2(record.getFloat("scale")),
+                new Vec2(record.getFloat("colliderSizeX"), record.getFloat("colliderSizeY")),
                 record.getFloat("moveThrust"), record.getFloat("turnThrust"),
                 record.getFloat("maxHull"),
                 record.getFloat("maxShield"), record.getFloat("shieldRegen"),
-                Textures.getTexture(record.getString("spriteFile")),
+                Textures.getTexture(record.getString("textureFile")),
                 getThrusters(record.getString("thrustersFile")),
                 getHardpoints(record.getString("hardpointsFile"))
         );
     }
 
     private static List<ThrusterProperties> getThrusters(String csvFileName) {
-        return SpaceshipPrefabs.getRecordsFromFile(csvFileName)
+        return PrefabUtils.getRecordsFromFile(csvFileName)
                 .stream().map(ThrusterProperties::new).toList();
     }
 
     private static List<WeaponHardpoint> getHardpoints(String csvFileName) {
-        return SpaceshipPrefabs.getRecordsFromFile(csvFileName)
+        return PrefabUtils.getRecordsFromFile(csvFileName)
                 .stream().map(WeaponHardpoint::new).toList();
     }
 

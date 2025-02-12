@@ -76,7 +76,8 @@ public class SpaceObjectSpawner extends GameObject {
                         }
                     };
                 } else {
-                    return new Satellite("Satellite", SpaceGameScene.getRandomPosition()) {
+                    return new Satellite("Satellite", SpaceGameScene.getRandomPosition(),
+                            Satellite.SATELLITE_PROPERTIES) {
                         @Override
                         protected void init() {
                             super.init();
