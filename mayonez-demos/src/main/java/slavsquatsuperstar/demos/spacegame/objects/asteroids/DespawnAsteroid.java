@@ -10,13 +10,13 @@ import mayonez.scripts.*;
  *
  * @author SlavSquatSuperstar
  */
-public class DespawnAsteroid extends DestroyAfterDuration {
+class DespawnAsteroid extends DestroyAfterDuration {
 
     private final Color color;
     private Sprite sprite;
     private Vec2 startScale;
 
-    public DespawnAsteroid(float lifetime, Color color) {
+    DespawnAsteroid(float lifetime, Color color) {
         super(lifetime);
         this.color = color;
     }

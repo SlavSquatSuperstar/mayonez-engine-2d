@@ -21,7 +21,18 @@ public abstract class Asteroid extends GameObject {
 
     // Constants
     static final int NUM_TEXTURES = 2;
-    private static final Texture[] ASTEROID_TEXTURES = getAsteroidTextures();
+    private static final Texture[] ASTEROID_TEXTURES;
+
+    static {
+        var ASTEROID_TEXTURE_FILES = new String[] {
+                "assets/spacegame/textures/asteroids/asteroid1.png",
+                "assets/spacegame/textures/asteroids/asteroid2.png"
+        };
+        ASTEROID_TEXTURES = new Texture[NUM_TEXTURES];
+        for (int i = 0; i < NUM_TEXTURES; i++) {
+            ASTEROID_TEXTURES[i] = Textures.getTexture(ASTEROID_TEXTURE_FILES[i]);
+        }
+    }
 
     // Instance Fields
     protected final AsteroidProperties properties;
@@ -43,7 +54,11 @@ public abstract class Asteroid extends GameObject {
     }
 
     private void addSprite(Color color, int spriteIndex) {
-        var sprite = Sprites.createSprite(ASTEROID_TEXTURES[spriteIndex]);
+        addSprite(ASTEROID_TEXTURES[spriteIndex], color);
+    }
+
+    private void addSprite(Texture texture, Color color) {
+        var sprite = Sprites.createSprite(texture);
         sprite.setColor(color);
         addComponent(sprite);
     }
@@ -60,17 +75,12 @@ public abstract class Asteroid extends GameObject {
         return rb;
     }
 
-    // Static Methods
-
-    private static Texture[] getAsteroidTextures() {
-        var asteroidTextures = new Texture[NUM_TEXTURES];
-        for (int i = 0; i < NUM_TEXTURES; i++) {
-            asteroidTextures[i] = Textures.getTexture(
-                    "assets/spacegame/textures/asteroids/asteroid%d.png"
-                            .formatted(i + 1)
-            );
-        }
-        return asteroidTextures;
+    protected Rigidbody addRigidbody(float mass, Vec2 startImpulse, float startAngularImpulse) {
+        Rigidbody rb;
+        addComponent(rb = new Rigidbody(mass, 0.01f, 0.01f));
+        rb.applyImpulse(startImpulse);
+        rb.applyAngularImpulse(startAngularImpulse);
+        return rb;
     }
 
 }

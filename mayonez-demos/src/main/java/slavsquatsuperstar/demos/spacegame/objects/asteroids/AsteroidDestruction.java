@@ -10,15 +10,15 @@ import slavsquatsuperstar.demos.spacegame.combat.ExplosionPrefabs;
  *
  * @author SlavSquatSuperstar
  */
-public class AsteroidDestruction extends Damageable {
+class AsteroidDestruction extends Damageable {
 
     // Constants
     private static final float EXPLOSION_DURATION = 0.25f;
-    private static final float MIN_SPAWN_FRAGMENTS_RADIUS = 1f;
+    static final float MIN_SPAWN_FRAGMENTS_RADIUS = 1.5f;
 
     private final AsteroidProperties properties;
 
-    public AsteroidDestruction(float startingHealth, AsteroidProperties properties) {
+    AsteroidDestruction(float startingHealth, AsteroidProperties properties) {
         super(startingHealth);
         this.properties = properties;
     }
@@ -43,7 +43,10 @@ public class AsteroidDestruction extends Damageable {
 
     private void spawnAsteroidFragments() {
         var radius = properties.radius();
-        if (radius < MIN_SPAWN_FRAGMENTS_RADIUS) return; // Don't spawn fragments if too small
+        if (radius < MIN_SPAWN_FRAGMENTS_RADIUS) {
+            // Prevent infinitely spawning fragments
+            return;
+        }
 
         var fragmentCount = MathUtils.clamp(
                 (int) Random.randomFloat(radius * 0.5f, radius * 1.5f), 2, 4
@@ -55,12 +58,15 @@ public class AsteroidDestruction extends Damageable {
 
         for (var i = 0; i < fragmentCount; i++) {
             offsetAngle += AsteroidProperties.getRandomError(angle, 0.5f);
-            var impulse = Random.randomFloat(fragmentRadius * 3f, fragmentRadius * 6f);
+            var impulse = fragmentRadius * Random.randomFloat(3f, 6f);
+            var angularImpulse = fragmentRadius * Random.randomFloat(-5f, 5f);
+            // Large fragment
             getScene().addObject(new AsteroidFragment(
                     "Asteroid Fragment",
                     transform.getPosition(),
                     properties.copyWithRadius(fragmentRadius),
-                    new Vec2(impulse, 0).rotate(offsetAngle)
+                    new Vec2(impulse, 0).rotate(offsetAngle),
+                    angularImpulse
             ));
         }
     }
