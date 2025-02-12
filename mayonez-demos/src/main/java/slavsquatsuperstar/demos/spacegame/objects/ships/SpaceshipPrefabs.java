@@ -19,7 +19,7 @@ public final class SpaceshipPrefabs {
 
     static {
         var spaceshipTypes =
-                getRecordsFromFile("assets/spacegame/data/spaceships.csv")
+                getRecordsFromFile("assets/spacegame/data/ships/spaceships.csv")
                         .stream().map(SpaceshipProperties::new).toList();
 
         SHUTTLE_PROPERTIES1 = spaceshipTypes.get(0);
