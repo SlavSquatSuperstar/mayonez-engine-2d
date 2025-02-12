@@ -6,7 +6,6 @@ import mayonez.math.*;
 import mayonez.physics.colliders.*;
 import mayonez.physics.dynamics.*;
 import mayonez.scripts.*;
-import slavsquatsuperstar.demos.spacegame.PrefabUtils;
 import slavsquatsuperstar.demos.spacegame.SpaceGameScene;
 import slavsquatsuperstar.demos.spacegame.combat.CollisionDamage;
 import slavsquatsuperstar.demos.spacegame.combat.Damageable;
@@ -19,15 +18,6 @@ import slavsquatsuperstar.demos.spacegame.objects.SpaceGameZIndex;
  * @author SlavSquatSuperstar
  */
 public class Satellite extends GameObject {
-
-    public static final SatelliteProperties SATELLITE_PROPERTIES;
-
-    static {
-        var satelliteTypes = PrefabUtils
-                .getRecordsFromFile("assets/spacegame/data/ships/satellites.csv")
-                .stream().map(SatelliteProperties::new).toList();
-        SATELLITE_PROPERTIES = satelliteTypes.getFirst();
-    }
 
     private final SatelliteProperties properties;
 

@@ -6,7 +6,7 @@ import slavsquatsuperstar.demos.spacegame.SpaceGameScene;
 import slavsquatsuperstar.demos.spacegame.objects.asteroids.RandomAsteroid;
 import slavsquatsuperstar.demos.spacegame.objects.ships.EnemySpaceship;
 import slavsquatsuperstar.demos.spacegame.objects.ships.Satellite;
-import slavsquatsuperstar.demos.spacegame.objects.ships.SpaceshipPrefabs;
+import slavsquatsuperstar.demos.spacegame.objects.ships.ShipPrefabs;
 
 /**
  * Automatically populates the scene with prefabs and respawns them when they are
@@ -38,8 +38,8 @@ public class SpaceObjectSpawner extends GameObject {
             public GameObject createSpawnedObject() {
                 var isFighter = Random.randomPercent(0.75f);
                 var name = isFighter ? "Enemy Fighter" : "Enemy Spaceship";
-                var properties = isFighter ? SpaceshipPrefabs.SHUTTLE_PROPERTIES2
-                        : SpaceshipPrefabs.FIGHTER_PROPERTIES;
+                var properties = isFighter ? ShipPrefabs.SHUTTLE_PROPERTIES2
+                        : ShipPrefabs.FIGHTER_PROPERTIES;
 
                 return new EnemySpaceship(
                         name, SpaceGameScene.getRandomPosition(), properties
@@ -77,7 +77,7 @@ public class SpaceObjectSpawner extends GameObject {
                     };
                 } else {
                     return new Satellite("Satellite", SpaceGameScene.getRandomPosition(),
-                            Satellite.SATELLITE_PROPERTIES) {
+                            ShipPrefabs.SATELLITE_PROPERTIES) {
                         @Override
                         protected void init() {
                             super.init();
