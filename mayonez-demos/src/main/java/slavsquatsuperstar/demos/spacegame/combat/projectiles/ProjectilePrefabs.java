@@ -7,9 +7,9 @@ import mayonez.math.*;
 import mayonez.physics.colliders.*;
 import mayonez.physics.dynamics.*;
 import mayonez.scripts.*;
+import slavsquatsuperstar.demos.spacegame.PrefabUtils;
 import slavsquatsuperstar.demos.spacegame.objects.SpaceGameLayer;
 import slavsquatsuperstar.demos.spacegame.objects.SpaceGameZIndex;
-import slavsquatsuperstar.demos.spacegame.objects.ships.SpaceshipPrefabs;
 
 import java.util.*;
 
@@ -26,7 +26,7 @@ public final class ProjectilePrefabs {
 
     static {
         // Read projectile types
-        var records = SpaceshipPrefabs
+        var records = PrefabUtils
                 .getRecordsFromFile("assets/spacegame/data/projectiles.csv");
         PROJECTILE_TYPES = records.stream().map(ProjectileType::new).toList();
 

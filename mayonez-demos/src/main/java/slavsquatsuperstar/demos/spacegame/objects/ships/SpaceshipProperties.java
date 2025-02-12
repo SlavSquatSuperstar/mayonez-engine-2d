@@ -39,7 +39,7 @@ public record SpaceshipProperties(
         this(
                 record.getString("name"),
                 new Vec2(record.getFloat("scale")),
-                new Vec2(record.getFloat("colliderSizeX"), record.getFloat("colliderSizeY")),
+                PrefabUtils.getColliderSize(record),
                 record.getFloat("moveThrust"), record.getFloat("turnThrust"),
                 record.getFloat("maxHull"),
                 record.getFloat("maxShield"), record.getFloat("shieldRegen"),

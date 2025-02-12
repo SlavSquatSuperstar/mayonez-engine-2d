@@ -1,8 +1,7 @@
 package slavsquatsuperstar.demos.spacegame.objects;
 
-import mayonez.assets.*;
-import mayonez.assets.text.*;
 import mayonez.math.Random;
+import slavsquatsuperstar.demos.spacegame.PrefabUtils;
 import slavsquatsuperstar.demos.spacegame.SpaceGameScene;
 
 import java.util.*;
@@ -15,7 +14,6 @@ import java.util.*;
 public final class BackgroundStarPrefabs {
 
     // Constants
-    private static final CSVFile TYPE_DATA;
     private static final List<StarSpectralType> SPECTRAL_TYPES;
     private static final int NUM_TYPES;
     private static final float[] TYPE_CDFS;
@@ -23,11 +21,9 @@ public final class BackgroundStarPrefabs {
 
     static {
         // Read CSV file
-        TYPE_DATA = Assets.getAsset("assets/spacegame/data/star_spectral_types.csv",
-                CSVFile.class);
-        if (TYPE_DATA == null) SPECTRAL_TYPES = Collections.emptyList();
-        else SPECTRAL_TYPES = TYPE_DATA.readCSV().stream()
-                .map(StarSpectralType::new).toList();
+        SPECTRAL_TYPES = PrefabUtils
+                .getRecordsFromFile("assets/spacegame/data/star_spectral_types.csv")
+                .stream().map(StarSpectralType::new).toList();;
         NUM_TYPES = SPECTRAL_TYPES.size();
 
         // Create CDF table

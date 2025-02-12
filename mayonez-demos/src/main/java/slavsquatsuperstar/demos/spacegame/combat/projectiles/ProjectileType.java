@@ -2,6 +2,7 @@ package slavsquatsuperstar.demos.spacegame.combat.projectiles;
 
 import mayonez.math.*;
 import mayonez.util.Record;
+import slavsquatsuperstar.demos.spacegame.PrefabUtils;
 
 /**
  * Defines characteristics for a type of projectile fired from a weapon.
@@ -35,13 +36,10 @@ public record ProjectileType(
         this(
                 record.getString("name"), record.getFloat("damage"),
                 record.getFloat("speed"), record.getFloat("lifetime"),
-
                 record.getFloat("fireCooldown"), record.getFloat("weaponSpread"),
-
                 new Vec2(record.getFloat("scale")),
-                new Vec2(record.getFloat("colliderSizeX"), record.getFloat("colliderSizeY")),
+                PrefabUtils.getColliderSize(record),
                 record.getFloat("sweepFactor"),
-
                 record.getInt("spriteIndex")
         );
     }

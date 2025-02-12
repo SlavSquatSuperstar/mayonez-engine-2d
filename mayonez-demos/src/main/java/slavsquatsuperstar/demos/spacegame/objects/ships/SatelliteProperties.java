@@ -3,6 +3,7 @@ package slavsquatsuperstar.demos.spacegame.objects.ships;
 import mayonez.graphics.textures.*;
 import mayonez.math.*;
 import mayonez.util.Record;
+import slavsquatsuperstar.demos.spacegame.PrefabUtils;
 
 /**
  * A set of properties for satellites.
@@ -24,7 +25,7 @@ public record SatelliteProperties(
         this(
                 record.getString("name"),
                 new Vec2(record.getFloat("scale")),
-                new Vec2(record.getFloat("colliderSizeX"), record.getFloat("colliderSizeY")),
+                PrefabUtils.getColliderSize(record),
                 record.getFloat("maxHull"),
                 Textures.getTexture(record.getString("textureFile"))
         );
