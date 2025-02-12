@@ -32,7 +32,8 @@ public class RandomAsteroid extends Asteroid {
     private static AsteroidProperties getRandomProperties() {
         var radius = Random.randomFloat(MIN_RADIUS, MAX_RADIUS);
         var color = Color.grayscale(Random.randomInt(96, 176));
-        return new AsteroidProperties(radius, color, Random.randomInt(0, Asteroid.NUM_TEXTURES - 1));
+        var texture = Asteroid.getRandomLargeTexture();
+        return new AsteroidProperties(radius, texture, color);
     }
 
 }

@@ -20,18 +20,26 @@ import slavsquatsuperstar.demos.spacegame.objects.SpaceGameZIndex;
 public abstract class Asteroid extends GameObject {
 
     // Constants
-    static final int NUM_TEXTURES = 2;
-    private static final Texture[] ASTEROID_TEXTURES;
+    private static final int NUM_LARGE_TEXTURES = 2;
+    private static final Texture[] LARGE_ASTEROID_TEXTURES;
+    private static final int NUM_SMALL_TEXTURES = 4;
+    private static final SpriteSheet SMALL_ASTEROID_TEXTURES;
 
     static {
+        // Read textures
         var ASTEROID_TEXTURE_FILES = new String[] {
                 "assets/spacegame/textures/asteroids/asteroid1.png",
                 "assets/spacegame/textures/asteroids/asteroid2.png"
         };
-        ASTEROID_TEXTURES = new Texture[NUM_TEXTURES];
-        for (int i = 0; i < NUM_TEXTURES; i++) {
-            ASTEROID_TEXTURES[i] = Textures.getTexture(ASTEROID_TEXTURE_FILES[i]);
+        LARGE_ASTEROID_TEXTURES = new Texture[NUM_LARGE_TEXTURES];
+        for (int i = 0; i < NUM_LARGE_TEXTURES; i++) {
+            LARGE_ASTEROID_TEXTURES[i] = Textures.getTexture(ASTEROID_TEXTURE_FILES[i]);
         }
+
+        // Read spritesheet
+        SMALL_ASTEROID_TEXTURES = Sprites.createSpriteSheet(
+                "assets/spacegame/textures/asteroids/asteroids_small.png",
+                8, 8, NUM_SMALL_TEXTURES, 0);
     }
 
     // Instance Fields
@@ -50,11 +58,7 @@ public abstract class Asteroid extends GameObject {
         transform.setRotation(Random.randomAngle());
         transform.setScale(properties.getScale());
 
-        addSprite(properties.color(), properties.spriteIndex());
-    }
-
-    private void addSprite(Color color, int spriteIndex) {
-        addSprite(ASTEROID_TEXTURES[spriteIndex], color);
+        addSprite(properties.texture(), properties.color());
     }
 
     private void addSprite(Texture texture, Color color) {
@@ -81,6 +85,16 @@ public abstract class Asteroid extends GameObject {
         rb.applyImpulse(startImpulse);
         rb.applyAngularImpulse(startAngularImpulse);
         return rb;
+    }
+
+    // Static Methods
+
+    static Texture getRandomLargeTexture() {
+        return LARGE_ASTEROID_TEXTURES[Random.randomInt(0, NUM_LARGE_TEXTURES - 1)];
+    }
+
+    static Texture getRandomSmallTexture() {
+        return SMALL_ASTEROID_TEXTURES.getTexture(Random.randomInt(0, NUM_SMALL_TEXTURES - 1));
     }
 
 }

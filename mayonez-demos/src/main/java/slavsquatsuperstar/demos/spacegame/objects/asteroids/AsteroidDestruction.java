@@ -1,6 +1,7 @@
 package slavsquatsuperstar.demos.spacegame.objects.asteroids;
 
 import mayonez.*;
+import mayonez.graphics.textures.*;
 import mayonez.math.*;
 import slavsquatsuperstar.demos.spacegame.combat.Damageable;
 import slavsquatsuperstar.demos.spacegame.combat.ExplosionPrefabs;
@@ -57,14 +58,21 @@ class AsteroidDestruction extends Damageable {
         var offsetAngle = transform.getRotation();
 
         for (var i = 0; i < fragmentCount; i++) {
-            offsetAngle += AsteroidProperties.getRandomError(angle, 0.5f);
+            Texture fragmentTexture;
+            if (fragmentRadius > MIN_SPAWN_FRAGMENTS_RADIUS) {
+                fragmentTexture = Asteroid.getRandomLargeTexture();
+            } else {
+                fragmentTexture = Asteroid.getRandomSmallTexture();
+            }
+
             var impulse = fragmentRadius * Random.randomFloat(3f, 6f);
             var angularImpulse = fragmentRadius * Random.randomFloat(-5f, 5f);
-            // Large fragment
+            offsetAngle += AsteroidProperties.getRandomError(angle, 0.5f);
+
             getScene().addObject(new AsteroidFragment(
                     "Asteroid Fragment",
                     transform.getPosition(),
-                    properties.copyWithRadius(fragmentRadius),
+                    new AsteroidProperties(fragmentRadius, fragmentTexture, properties.color()),
                     new Vec2(impulse, 0).rotate(offsetAngle),
                     angularImpulse
             ));
