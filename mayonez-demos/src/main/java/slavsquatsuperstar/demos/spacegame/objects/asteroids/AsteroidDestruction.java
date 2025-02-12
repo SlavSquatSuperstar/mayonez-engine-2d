@@ -13,7 +13,7 @@ import slavsquatsuperstar.demos.spacegame.combat.ExplosionPrefabs;
 public class AsteroidDestruction extends Damageable {
 
     // Constants
-    private static final float EXPLOSION_DURATION = 0.5f;
+    private static final float EXPLOSION_DURATION = 0.25f;
     private static final float MIN_SPAWN_FRAGMENTS_RADIUS = 1f;
 
     private final AsteroidProperties properties;
@@ -25,16 +25,16 @@ public class AsteroidDestruction extends Damageable {
 
     @Override
     protected void onDestroy() {
-        // createExplosion();
+        createExplosion();
         spawnAsteroidFragments();
     }
 
     private void createExplosion() {
-        getScene().addObject(ExplosionPrefabs.createPrefab(
+        getScene().addObject(ExplosionPrefabs.createAsteroidExplosionPrefab(
                 "Asteroid Explosion",
                 new Transform(
                         transform.getPosition(), Random.randomAngle(),
-                        new Vec2(properties.radius() * 0.75f)
+                        new Vec2(properties.radius() * 0.5f)
                 ),
                 EXPLOSION_DURATION
         ));
