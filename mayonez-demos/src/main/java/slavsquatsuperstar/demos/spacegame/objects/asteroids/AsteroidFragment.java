@@ -8,7 +8,6 @@ import slavsquatsuperstar.demos.spacegame.combat.Damageable;
  *
  * @author SlavSquatSuperstar
  */
-// TODO make sure we don't infinitely spawn fragments
 public class AsteroidFragment extends Asteroid {
 
     private static final float MIN_SPAWN_FRAGMENTS_RADIUS = 1.25f;

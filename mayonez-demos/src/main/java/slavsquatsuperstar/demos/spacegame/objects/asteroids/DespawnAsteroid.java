@@ -7,6 +7,8 @@ import mayonez.scripts.*;
 
 /**
  * Shrinks and fades an asteroid fragment until it automatically despawns.
+ *
+ * @author SlavSquatSuperstar
  */
 public class DespawnAsteroid extends DestroyAfterDuration {
 
