@@ -11,6 +11,7 @@ import java.util.*;
 /**
  * A set of properties for spaceships.
  *
+ * @param name         the spaceship's name
  * @param colliderSize the spaceship's relative hitbox size
  * @param moveThrust   the spaceship's move thrust power
  * @param turnThrust   the spaceship's turn thrust power
@@ -22,7 +23,9 @@ import java.util.*;
  * @param hardpoints   the spaceship's hardpoint configuration
  * @author SlavSquatSuperstar
  */
+// TODO shield and thruster properties
 public record SpaceshipProperties(
+        String name,
         Vec2 colliderSize,
         float moveThrust, float turnThrust,
         float maxHull, float maxShield, float shieldRegen,
@@ -32,6 +35,7 @@ public record SpaceshipProperties(
 
     public SpaceshipProperties(Record record) {
         this(
+                record.getString("name"),
                 new Vec2(record.getFloat("sizeX"), record.getFloat("sizeY")),
                 record.getFloat("moveThrust"), record.getFloat("turnThrust"),
                 record.getFloat("maxHull"),
