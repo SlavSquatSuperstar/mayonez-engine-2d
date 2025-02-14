@@ -1,6 +1,5 @@
 package slavsquatsuperstar.demos.spacegame.objects.asteroids;
 
-import mayonez.graphics.*;
 import mayonez.math.*;
 
 /**
@@ -10,11 +9,8 @@ import mayonez.math.*;
  */
 public class RandomAsteroid extends Asteroid {
 
-    private static final float MIN_RADIUS = 1f;
-    private static final float MAX_RADIUS = 4f;
-
-    public RandomAsteroid(String name, Vec2 position) {
-        super(name, position, getRandomProperties());
+    public RandomAsteroid(String name, Vec2 position, AsteroidProperties properties) {
+        super(name, position, properties);
     }
 
     @Override
@@ -27,13 +23,6 @@ public class RandomAsteroid extends Asteroid {
         // Create more fragments
         addComponent(new AsteroidDestruction(startingHealth, properties));
         addCollider();
-    }
-
-    private static AsteroidProperties getRandomProperties() {
-        var radius = Random.randomFloat(MIN_RADIUS, MAX_RADIUS);
-        var color = Color.grayscale(Random.randomInt(96, 176));
-        var texture = Asteroid.getRandomLargeTexture();
-        return new AsteroidProperties(radius, texture, color);
     }
 
 }

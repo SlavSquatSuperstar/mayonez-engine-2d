@@ -3,6 +3,7 @@ package slavsquatsuperstar.demos.spacegame.objects.spawners;
 import mayonez.*;
 import mayonez.math.*;
 import slavsquatsuperstar.demos.spacegame.SpaceGameScene;
+import slavsquatsuperstar.demos.spacegame.objects.asteroids.AsteroidPrefabs;
 import slavsquatsuperstar.demos.spacegame.objects.asteroids.RandomAsteroid;
 import slavsquatsuperstar.demos.spacegame.objects.ships.EnemySpaceship;
 import slavsquatsuperstar.demos.spacegame.objects.ships.Satellite;
@@ -64,6 +65,9 @@ public class SpaceObjectSpawner extends GameObject {
             public GameObject createSpawnedObject() {
                 if (Random.randomBoolean()) {
                     return new RandomAsteroid("Asteroid", SpaceGameScene.getRandomPosition()) {
+                            "Asteroid", SpaceGameScene.getRandomPosition(),
+                            AsteroidPrefabs.getRandomProperties()
+                    ) {
                         @Override
                         protected void init() {
                             super.init();

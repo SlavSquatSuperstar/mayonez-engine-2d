@@ -30,15 +30,14 @@ class AsteroidFragment extends Asteroid {
         addComponent(new Damageable(startingHealth));
 
         var radius = properties.radius();
-        if (radius > AsteroidDestruction.MIN_SPAWN_FRAGMENTS_RADIUS) {
+        if (radius > AsteroidPrefabs.MIN_FRAG_RADIUS) {
             // Create more fragments
             addComponent(new AsteroidDestruction(startingHealth, properties));
             addCollider();
         } else {
             // Don't create any fragments
-            addComponent(new DespawnAsteroid(
-                    Math.max(0.5f, Random.randomFloat(radius * 3f, radius * 5f)), properties.color()
-            ));
+            var lifetime = Random.randomFloat(2f, 5f);
+            addComponent(new DespawnAsteroid(lifetime, properties.color()));
         }
     }
 
