@@ -1,10 +1,8 @@
 package slavsquatsuperstar.demos.spacegame.objects.asteroids;
 
-import mayonez.*;
 import mayonez.graphics.textures.*;
 import mayonez.math.*;
 import slavsquatsuperstar.demos.spacegame.combat.Damageable;
-import slavsquatsuperstar.demos.spacegame.combat.ExplosionPrefabs;
 
 /**
  * Makes an asteroid destructible and spawns fragments after it is destroyed.
@@ -13,8 +11,6 @@ import slavsquatsuperstar.demos.spacegame.combat.ExplosionPrefabs;
  */
 class AsteroidDestruction extends Damageable {
 
-    // Constants
-    private static final float EXPLOSION_DURATION = 0.25f;
     static final float MIN_SPAWN_FRAGMENTS_RADIUS = 1.5f;
 
     private final AsteroidProperties properties;
@@ -26,20 +22,7 @@ class AsteroidDestruction extends Damageable {
 
     @Override
     protected void onDestroy() {
-        createExplosion();
         spawnAsteroidFragments();
-    }
-
-    private void createExplosion() {
-        getScene().addObject(ExplosionPrefabs.createAsteroidExplosionPrefab(
-                "Asteroid Explosion",
-                new Transform(
-                        transform.getPosition(), Random.randomAngle(),
-                        new Vec2(properties.radius() * 0.5f)
-                ),
-                EXPLOSION_DURATION,
-                properties.color()
-        ));
     }
 
     private void spawnAsteroidFragments() {
