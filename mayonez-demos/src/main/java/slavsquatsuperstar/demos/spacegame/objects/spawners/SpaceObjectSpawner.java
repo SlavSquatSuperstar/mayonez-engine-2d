@@ -4,7 +4,7 @@ import mayonez.*;
 import mayonez.math.*;
 import slavsquatsuperstar.demos.spacegame.SpaceGameScene;
 import slavsquatsuperstar.demos.spacegame.objects.asteroids.AsteroidPrefabs;
-import slavsquatsuperstar.demos.spacegame.objects.asteroids.RandomAsteroid;
+import slavsquatsuperstar.demos.spacegame.objects.asteroids.BaseAsteroid;
 import slavsquatsuperstar.demos.spacegame.objects.ships.EnemySpaceship;
 import slavsquatsuperstar.demos.spacegame.objects.ships.Satellite;
 import slavsquatsuperstar.demos.spacegame.objects.ships.ShipPrefabs;
@@ -63,14 +63,15 @@ public class SpaceObjectSpawner extends GameObject {
         addComponent(new MultiSpawnManager(NUM_OBSTACLES, OBSTACLE_RESPAWN_COOLDOWN) {
             @Override
             public GameObject createSpawnedObject() {
-                if (Random.randomBoolean()) {
-                    return new RandomAsteroid("Asteroid", SpaceGameScene.getRandomPosition()) {
+                if (true) {
+                    return new BaseAsteroid(
                             "Asteroid", SpaceGameScene.getRandomPosition(),
                             AsteroidPrefabs.getRandomProperties()
                     ) {
                         @Override
                         protected void init() {
                             super.init();
+                            // Notify spawner when destroyed
                             addComponent(new Script() {
                                 @Override
                                 protected void onDestroy() {
@@ -85,6 +86,7 @@ public class SpaceObjectSpawner extends GameObject {
                         @Override
                         protected void init() {
                             super.init();
+                            // Notify spawner when destroyed
                             addComponent(new Script() {
                                 @Override
                                 protected void onDestroy() {

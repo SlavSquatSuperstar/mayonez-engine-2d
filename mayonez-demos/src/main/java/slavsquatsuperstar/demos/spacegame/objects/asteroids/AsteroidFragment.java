@@ -1,7 +1,6 @@
 package slavsquatsuperstar.demos.spacegame.objects.asteroids;
 
 import mayonez.math.*;
-import slavsquatsuperstar.demos.spacegame.combat.Damageable;
 
 /**
  * A fragment of a destroyed asteroid that either creates more fragments or despawns.
@@ -26,10 +25,11 @@ class AsteroidFragment extends Asteroid {
     protected void init() {
         super.init();
         var startingHealth = properties.getHealth();
-        addRigidbody(startingHealth, startImpulse, startAngularImpulse);
-        addComponent(new Damageable(startingHealth));
-
         var radius = properties.radius();
+
+        // Need to keep mass high enough to make sure fragments move
+        addRigidbody(radius, startImpulse, startAngularImpulse);
+
         if (radius > AsteroidPrefabs.MIN_FRAG_RADIUS) {
             // Create more fragments
             addComponent(new AsteroidDestruction(startingHealth, properties));

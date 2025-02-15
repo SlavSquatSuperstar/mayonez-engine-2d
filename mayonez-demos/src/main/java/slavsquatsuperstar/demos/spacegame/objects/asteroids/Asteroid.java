@@ -50,15 +50,14 @@ public abstract class Asteroid extends GameObject {
                 SpaceGameScene.SCENE_HALF_SIZE, KeepInScene.Mode.WRAP));
     }
 
-    protected Rigidbody addRigidbody(float mass) {
-        Rigidbody rb;
-        addComponent(rb = new Rigidbody(mass, 0.01f, 0.01f));
+    protected Rigidbody addRigidbody(float radius) {
+        var rb = new Rigidbody(radius, 0, 0);
+        addComponent(rb);
         return rb;
     }
 
-    protected Rigidbody addRigidbody(float mass, Vec2 startImpulse, float startAngularImpulse) {
-        Rigidbody rb;
-        addComponent(rb = new Rigidbody(mass, 0.01f, 0.01f));
+    protected Rigidbody addRigidbody(float radius, Vec2 startImpulse, float startAngularImpulse) {
+        var rb = addRigidbody(radius);
         rb.applyImpulse(startImpulse);
         rb.applyAngularImpulse(startAngularImpulse);
         return rb;

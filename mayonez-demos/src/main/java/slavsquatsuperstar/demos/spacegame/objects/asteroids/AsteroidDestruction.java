@@ -45,8 +45,8 @@ class AsteroidDestruction extends Damageable {
 
     private GameObject createAsteroidFragment(float fragmentRadius, float offsetAngle) {
         Texture fragmentTexture = AsteroidPrefabs.getAsteroidTexture(fragmentRadius);
-        var impulse = fragmentRadius * Random.randomFloat(3f, 6f);
-        var angularImpulse = fragmentRadius * Random.randomFloat(-5f, 5f);
+        var impulse = Random.randomFloat(3f, 6f);
+        var angularImpulse = Random.randomFloat(-5f, 5f);
 
         return new AsteroidFragment(
                 "Asteroid Fragment",
