@@ -26,7 +26,7 @@ class AsteroidDestruction extends Damageable {
 
     private void spawnAsteroidFragments() {
         var radius = properties.radius();
-        if (radius < AsteroidPrefabs.MIN_FRAG_RADIUS) {
+        if (radius < AsteroidPrefabs.MIN_SMALL_RADIUS) {
             // Prevent infinitely spawning fragments
             return;
         }

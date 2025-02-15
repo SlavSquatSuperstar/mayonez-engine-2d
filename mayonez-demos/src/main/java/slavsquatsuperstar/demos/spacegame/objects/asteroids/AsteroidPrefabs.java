@@ -13,14 +13,17 @@ import mayonez.math.*;
 public final class AsteroidPrefabs {
 
     // Constants
-    static final float MIN_FRAG_RADIUS = 1f;
-    static final float MIN_BASE_RADIUS = 1.5f;
-    static final float MAX_BASE_RADIUS = 4f;
+    static final float MIN_SMALL_RADIUS = 1f;
+    static final float MIN_MEDIUM_RADIUS = 1.5f;
+    static final float MIN_LARGE_RADIUS = 2.5f;
+    static final float MAX_LARGE_RADIUS = 4f;
 
     // Assets
     // TODO medium asteroid textures
     private static final int NUM_LARGE_TEXTURES = 2;
     private static final Texture[] LARGE_ASTEROID_TEXTURES;
+    private static final int NUM_MED_TEXTURES = 4;
+    private static final SpriteSheet MED_ASTEROID_TEXTURES;
     private static final int NUM_SMALL_TEXTURES = 4;
     private static final SpriteSheet SMALL_ASTEROID_TEXTURES;
 
@@ -35,7 +38,11 @@ public final class AsteroidPrefabs {
             LARGE_ASTEROID_TEXTURES[i] = Textures.getTexture(ASTEROID_TEXTURE_FILES[i]);
         }
 
-        // Read spritesheet
+        // Read spritesheets
+        MED_ASTEROID_TEXTURES = Sprites.createSpriteSheet(
+                "assets/spacegame/textures/asteroids/asteroids_medium.png",
+                16, 16, NUM_MED_TEXTURES, 0);
+
         SMALL_ASTEROID_TEXTURES = Sprites.createSpriteSheet(
                 "assets/spacegame/textures/asteroids/asteroids_small.png",
                 8, 8, NUM_SMALL_TEXTURES, 0);
@@ -49,7 +56,7 @@ public final class AsteroidPrefabs {
     // Prefab Helper Methods
 
     public static AsteroidProperties getRandomProperties() {
-        var radius = Random.randomFloat(MIN_BASE_RADIUS, MAX_BASE_RADIUS);
+        var radius = Random.randomFloat(MIN_LARGE_RADIUS, MAX_LARGE_RADIUS);
         var color = Color.grayscale(Random.randomInt(96, 176));
         var texture = getAsteroidTexture(radius);
         return new AsteroidProperties(radius, texture, color);
@@ -57,8 +64,10 @@ public final class AsteroidPrefabs {
 
     static Texture getAsteroidTexture(float radius) {
         Texture fragmentTexture;
-        if (radius > MIN_BASE_RADIUS) {
+        if (radius > MIN_LARGE_RADIUS) {
             fragmentTexture = getRandomLargeTexture();
+        } else if (radius > MIN_MEDIUM_RADIUS) {
+            fragmentTexture = getRandomMediumTexture();
         } else {
             fragmentTexture = getRandomSmallTexture();
         }
@@ -67,6 +76,10 @@ public final class AsteroidPrefabs {
 
     private static Texture getRandomLargeTexture() {
         return LARGE_ASTEROID_TEXTURES[Random.randomInt(0, NUM_LARGE_TEXTURES - 1)];
+    }
+
+    private static Texture getRandomMediumTexture() {
+        return MED_ASTEROID_TEXTURES.getTexture(Random.randomInt(0, NUM_MED_TEXTURES - 1));
     }
 
     private static Texture getRandomSmallTexture() {

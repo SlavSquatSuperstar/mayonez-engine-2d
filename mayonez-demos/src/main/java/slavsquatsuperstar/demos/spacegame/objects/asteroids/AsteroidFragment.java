@@ -30,7 +30,7 @@ class AsteroidFragment extends Asteroid {
         // Need to keep mass high enough to make sure fragments move
         addRigidbody(radius, startImpulse, startAngularImpulse);
 
-        if (radius > AsteroidPrefabs.MIN_FRAG_RADIUS) {
+        if (radius > AsteroidPrefabs.MIN_MEDIUM_RADIUS) {
             // Create more fragments
             addComponent(new AsteroidDestruction(startingHealth, properties));
             addCollider();
