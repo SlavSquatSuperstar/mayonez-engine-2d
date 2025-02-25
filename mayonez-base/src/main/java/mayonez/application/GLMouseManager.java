@@ -10,7 +10,7 @@ import org.lwjgl.glfw.GLFW;
  * Receives mouse input events from GLFW.
  * <p>
  * Source: <a href="https://www.glfw.org/docs/latest/input_guide.html#input_mouse">
- * GLFW Input Guide § Mouse Input</a>
+ *     GLFW Input Guide § Mouse Input</a>
  *
  * @author SlavSquatSuperstar
  */

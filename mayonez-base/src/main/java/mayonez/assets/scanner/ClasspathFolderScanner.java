@@ -18,7 +18,8 @@ public class ClasspathFolderScanner implements FolderScanner {
      * <p>
      * Sources:
      * <ul>
-     *     <li><a href="https://stackoverflow.com/questions/3923129/get-a-list-of-resources-from-classpath-directory">StackOverflow</a></li>
+     *     <li><a href="https://stackoverflow.com/questions/3923129/get-a-list-of-resources-from-classpath-directory">
+     *         StackOverflow - Get resources from classpath directory</a></li>
      *     <li><a href="https://github.com/ronmamo/reflections"></a>org.reflections</li>
      * </ul>
      *

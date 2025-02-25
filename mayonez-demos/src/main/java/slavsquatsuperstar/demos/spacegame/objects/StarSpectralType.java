@@ -5,9 +5,9 @@ import mayonez.util.Record;
 
 /**
  * The spectral class of a star, corresponding to its temperature and color.
- * <br>
+ * <p>
  * Source: <a href="https://en.wikipedia.org/wiki/Stellar_classification">
- * Wikipedia</a>
+ *     Wikipedia - Stellar classification</a>
  *
  * @author SlavSquatSuperstar
  */

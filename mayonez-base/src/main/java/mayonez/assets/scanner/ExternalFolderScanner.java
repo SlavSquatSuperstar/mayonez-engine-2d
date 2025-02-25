@@ -21,7 +21,8 @@ public class ExternalFolderScanner implements FolderScanner {
      * Recursively searches an external directory inside the JAR and adds all
      * assets.
      * <p>
-     * Source: <a href="https://www.logicbig.com/how-to/java/find-classpath-files-under-folder-and-sub-folder.html">LogicBig</a>
+     * Source: <a href="https://www.logicbig.com/how-to/java/find-classpath-files-under-folder-and-sub-folder.html">
+     *     LogicBig - Find classpath files recursively</a>
      *
      * @param directoryName a folder inside the jar
      */

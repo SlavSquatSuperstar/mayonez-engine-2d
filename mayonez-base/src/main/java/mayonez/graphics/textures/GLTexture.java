@@ -19,9 +19,12 @@ import static org.lwjgl.opengl.GL12.GL_TEXTURE_WRAP_R;
  * <p>
  * Sources:
  * <ul>
- *    <li><a href="https://github.com/LWJGL/lwjgl3/blob/master/modules/samples/src/test/java/org/lwjgl/demo/stb/Image.java">org.lwjgl.demo.stb.Image</a></li>
- *    <li><a href="https://github.com/LWJGL/lwjgl3/blob/master/modules/samples/src/test/java/org/lwjgl/demo/util/IOUtil.java">org.lwjgl.demo.stb.IOUtil</a></li>
- *    <li><a href="https://github.com/LWJGL/lwjgl3/blob/master/modules/samples/src/test/java/org/lwjgl/demo/glfw/GLFWUtil.java">org.lwjgl.demo.glfw.GLFWUtil</a></li>
+ *    <li><a href="https://github.com/LWJGL/lwjgl3/blob/master/modules/samples/src/test/java/org/lwjgl/demo/stb/Image.java">
+ *        GitHub - org.lwjgl.demo.stb.Image</a></li>
+ *    <li><a href="https://github.com/LWJGL/lwjgl3/blob/master/modules/samples/src/test/java/org/lwjgl/demo/util/IOUtil.java">
+ *        GitHub - org.lwjgl.demo.stb.IOUtil</a></li>
+ *    <li><a href="https://github.com/LWJGL/lwjgl3/blob/master/modules/samples/src/test/java/org/lwjgl/demo/glfw/GLFWUtil.java">
+ *        GitHub - org.lwjgl.demo.glfw.GLFWUtil</a></li>
  * </ul>
  *
  * @author SlavSquatSuperstar

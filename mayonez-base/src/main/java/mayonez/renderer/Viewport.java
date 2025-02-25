@@ -8,9 +8,9 @@ import org.joml.*;
 /**
  * Defines from what perspective to render the scene and what transformations
  * to apply.
- * <br>
+ * <p>
  * Source: <a href="https://learnopengl.com/Getting-started/Coordinate-Systems">
- * Learn OpenGL</a>
+ *     Learn OpenGL - Coordinate Systems</a>
  *
  * @author SlavSquatSuperstar
  */

@@ -30,12 +30,27 @@ public class BackgroundStar extends BackgroundObject {
     }
 
     /**
-     * Converts a color temperature to its approximate RGB color.
-     * <br>
-     * Source: <a href="https://tannerhelland.com/2012/09/18/convert-temperature-rgb-algorithm-code.html">
-     * Tanner Helland</a>
+     * Converts a color temperature to its approximate RGB color. Note that this is the
+     * effective black-body temperature, which may differ from the surface temperature.
+     * <p>
+     * Sources:
+     * <ul>
+     *     <li><a href="https://tannerhelland.com/2012/09/18/convert-temperature-rgb-algorithm-code.html">
+     *         Tanner Helland - Convert temperature to RGB</a></li>
+     *     <li><a href="http://www.vendian.org/mncharity/dir3/starcolor/">
+     *         Vendian - What color are the stars?</a></li>
+     *     <li><a href="http://www.vendian.org/mncharity/dir3/starcolor/details.html">
+     *         Vendian - Star color details?</a></li>
+     * </ul>
+     * See Also:
+     * <ul>
+     *     <li><a href="https://en.wikipedia.org/wiki/Color_temperature">
+     *         Wikipedia - Color temperature</a></li>
+     *     <li><a href="https://en.wikipedia.org/wiki/Color_index">
+     *         Wikipedia - Color index</a></li>
+     * </ul>
      *
-     * @param temperature the start temperature, in Kelvins
+     * @param temperature the star's temperature, in Kelvins
      */
     private static Color getStarColor(int temperature) {
         int temp2 = temperature / 100;
