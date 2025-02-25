@@ -36,7 +36,7 @@ object Logger {
 
     // Log File Output
     private lateinit var logFile: TextFile
-    private val printQueue: Queue<String> = LinkedList() // Save log messages in case log file isn't created
+    private val printQueue: Queue<String> = ArrayDeque() // Save log messages in case log file isn't created
 
     // Logger Init Methods
 

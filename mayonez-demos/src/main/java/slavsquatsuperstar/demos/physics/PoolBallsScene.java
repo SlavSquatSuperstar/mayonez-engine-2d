@@ -22,10 +22,13 @@ public class PoolBallsScene extends DemoScene {
     private static final PhysicsMaterial WALL_MAT
             = new PhysicsMaterial(0.05f, 0.05f, 0.95f);
     private static final float SCENE_SCALE = 8f;
+    private static final int NUM_BALLS = 15;
+    private static final int EIGHT_BALL_NUM = 8;
+    private static final int EIGHT_BALL_INDEX = 4;
 
     // Fields
     private final float width = Preferences.getScreenWidth() / SCENE_SCALE;
-    private final float height =  Preferences.getScreenHeight() / SCENE_SCALE;
+    private final float height = Preferences.getScreenHeight() / SCENE_SCALE;
 
     public PoolBallsScene(String name) {
         super(name);
@@ -53,9 +56,9 @@ public class PoolBallsScene extends DemoScene {
         // Add Pool Balls
         var xStart = -5f;
         var yStart = 0f;
-        var ballCount = 0;
-        var ballNums = randomizeBalls();
+        var ballNums = getRandomBallNums();
 
+        var ballCount = 0;
         for (var row = 0; row < 5; row++) {
             var radius = PoolBall.BALL_RADIUS;
             for (var col = 0; col <= row; col++) {
@@ -86,14 +89,22 @@ public class PoolBallsScene extends DemoScene {
         };
     }
 
-    private int[] randomizeBalls() {
-        var ballNums = new int[15];
+    private int[] getRandomBallNums() {
         var nums = new LinkedList<Integer>();
-        for (var i = 1; i <= 7; i++) nums.add(i);
-        for (var i = 9; i <= 15; i++) nums.add(i);
+
+        for (var i = 1; i <= EIGHT_BALL_NUM - 1; i++) {
+            nums.add(i); // Add solid balls
+        }
+        for (var i = EIGHT_BALL_NUM + 1; i <= NUM_BALLS; i++) {
+            nums.add(i); // Add striped balls
+        }
+
+        // Randomize ball order
+        var ballNums = new int[NUM_BALLS];
         for (var i = 0; i < ballNums.length; i++) {
-            if (i == 4) ballNums[i] = 8; // always put 8-ball in middle
-            else {
+            if (i == EIGHT_BALL_INDEX) {
+                ballNums[i] = EIGHT_BALL_NUM; // Always put 8-ball in middle
+            } else {
                 var index = Random.randomInt(0, nums.size() - 1);
                 ballNums[i] = nums.remove(index);
             }

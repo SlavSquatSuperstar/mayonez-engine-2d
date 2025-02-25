@@ -18,7 +18,7 @@ public class BufferedList<E> {
 
     public BufferedList() {
         list = new ArrayList<>();
-        buffer = new LinkedList<>();
+        buffer = new ArrayDeque<>();
     }
 
     // Add/Remove Methods
