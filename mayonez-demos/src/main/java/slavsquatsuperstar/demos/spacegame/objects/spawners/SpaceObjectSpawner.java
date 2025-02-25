@@ -5,9 +5,7 @@ import mayonez.math.*;
 import slavsquatsuperstar.demos.spacegame.SpaceGameScene;
 import slavsquatsuperstar.demos.spacegame.objects.asteroids.AsteroidPrefabs;
 import slavsquatsuperstar.demos.spacegame.objects.asteroids.BaseAsteroid;
-import slavsquatsuperstar.demos.spacegame.objects.ships.EnemySpaceship;
-import slavsquatsuperstar.demos.spacegame.objects.ships.Satellite;
-import slavsquatsuperstar.demos.spacegame.objects.ships.ShipPrefabs;
+import slavsquatsuperstar.demos.spacegame.objects.ships.*;
 
 /**
  * Automatically populates the scene with prefabs and respawns them when they are
@@ -37,11 +35,17 @@ public class SpaceObjectSpawner extends GameObject {
         addComponent(new MultiSpawnManager(NUM_ENEMIES, ENEMY_RESPAWN_COOLDOWN) {
             @Override
             public GameObject createSpawnedObject() {
-                var isFighter = Random.randomPercent(0.75f);
-                var name = isFighter ? "Enemy Fighter" : "Enemy Spaceship";
-                var properties = isFighter ? ShipPrefabs.SHUTTLE_PROPERTIES2
-                        : ShipPrefabs.FIGHTER_PROPERTIES;
+                SpaceshipProperties properties;
+                var invCDF = Random.randomFloat(0f, 100f);
+                if (invCDF < 30f) {
+                    properties = ShipPrefabs.SHUTTLE_PROPERTIES1;
+                } else if (invCDF < 60f) {
+                    properties = ShipPrefabs.SHUTTLE_PROPERTIES2;
+                } else {
+                    properties = ShipPrefabs.FIGHTER_PROPERTIES;
+                }
 
+                var name = "Enemy " + properties.name();
                 return new EnemySpaceship(
                         name, SpaceGameScene.getRandomPosition(), properties
                 ) {
@@ -63,7 +67,7 @@ public class SpaceObjectSpawner extends GameObject {
         addComponent(new MultiSpawnManager(NUM_OBSTACLES, OBSTACLE_RESPAWN_COOLDOWN) {
             @Override
             public GameObject createSpawnedObject() {
-                if (true) {
+                if (Random.randomBoolean()) {
                     return new BaseAsteroid(
                             "Asteroid", SpaceGameScene.getRandomPosition(),
                             AsteroidPrefabs.getRandomProperties()
