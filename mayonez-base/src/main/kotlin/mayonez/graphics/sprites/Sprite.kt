@@ -21,6 +21,7 @@ sealed class Sprite : Component(UpdateOrder.RENDER), Renderable {
     // Sprite Properties
 
     private var spriteXf: Transform? = null
+    private var zIndexOverride: Int? = null
 
     /**
      * Get the width of this sprite's stored texture in pixels.
@@ -86,7 +87,20 @@ sealed class Sprite : Component(UpdateOrder.RENDER), Renderable {
 
     // Renderable Methods
 
-    final override fun getZIndex(): Int = gameObject.zIndex
+    final override fun getZIndex(): Int {
+        return zIndexOverride ?: gameObject.zIndex
+    }
+
+    /**
+     * Set the z-index for the sprite, overriding its parent object's z-index.
+     *
+     * @param zIndex the global z-index
+     * @return this sprite
+     */
+    fun setZIndex(zIndex: Int): Sprite {
+        zIndexOverride = zIndex
+        return this
+    }
 
     final override fun isInUI(): Boolean = false
 
