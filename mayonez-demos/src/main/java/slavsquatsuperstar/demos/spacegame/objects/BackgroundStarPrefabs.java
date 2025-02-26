@@ -14,28 +14,18 @@ import java.util.*;
 public final class BackgroundStarPrefabs {
 
     // Constants
-    private static final List<StarSpectralType> SPECTRAL_TYPES;
-    private static final int NUM_TYPES;
-    private static final float[] TYPE_CDFS;
-    private static final float TOTAL_WEIGHT;
+    private static final RandomVariable<StarSpectralType> SPECTRAL_TYPE_GENERATOR;
 
     static {
-        // Read CSV file
-        SPECTRAL_TYPES = PrefabUtils
+        // Read CSV files
+        var spectralTypes = PrefabUtils
                 .getRecordsFromFile("assets/spacegame/data/star_spectral_types.csv")
-                .stream().map(StarSpectralType::new).toList();;
-        NUM_TYPES = SPECTRAL_TYPES.size();
+                .stream().map(StarSpectralType::new).toList();
 
-        // Create CDF table
-        var lastCDF = 0f;
-        TYPE_CDFS = new float[NUM_TYPES];
-        for (int i = 0; i < NUM_TYPES; i++) {
-            var pmf = SPECTRAL_TYPES.get(i).weight();
-            var cdf = lastCDF + pmf;
-            TYPE_CDFS[i] = cdf;
-            lastCDF = cdf;
-        }
-        TOTAL_WEIGHT = lastCDF;
+        // Create random variables
+        var spectralTypeWeights = spectralTypes.stream()
+                .map(StarSpectralType::weight).toList();
+        SPECTRAL_TYPE_GENERATOR = new RandomVariable<>(spectralTypes, spectralTypeWeights);
     }
 
     private BackgroundStarPrefabs() {
@@ -62,12 +52,45 @@ public final class BackgroundStarPrefabs {
     }
 
     private static StarSpectralType getRandomColorType() {
-        var invCDF = Random.randomFloat(0f, TOTAL_WEIGHT);
-        for (int i = 0; i < NUM_TYPES; i++) {
-            // Return the category with the smallest cdf still greater than the probability
-            if (invCDF < TYPE_CDFS[i]) return SPECTRAL_TYPES.get(i);
+        return SPECTRAL_TYPE_GENERATOR.getRandomOutcome();
+    }
+
+    // Helper Class
+
+    private static class RandomVariable<T> {
+
+        private final List<T> outcomes;
+        private final int numOutcomes;
+        private float[] cdfValues;
+        private float maxCDFValue;
+
+        public RandomVariable(List<T> outcomes, List<Float> weights) {
+            this.outcomes = outcomes;
+            numOutcomes = outcomes.size();
+            calculateCDFValues(weights);
         }
-        return SPECTRAL_TYPES.get(NUM_TYPES - 1); // Should always return
+
+        private void calculateCDFValues(List<Float> weights) {
+            var lastCDF = 0f;
+            cdfValues = new float[numOutcomes];
+            for (int i = 0; i < numOutcomes; i++) {
+                var pmf = weights.get(i); // Not technically a pmf since can be >1
+                var cdf = lastCDF + pmf;
+                cdfValues[i] = cdf;
+                lastCDF = cdf;
+            }
+            maxCDFValue = lastCDF;
+        }
+
+        public T getRandomOutcome() {
+            var invCDF = Random.randomFloat(0f, maxCDFValue);
+            for (int i = 0; i < numOutcomes; i++) {
+                // Return the category with the smallest cdf still greater than the probability
+                if (invCDF < cdfValues[i]) return outcomes.get(i);
+            }
+            return outcomes.get(numOutcomes - 1); // Should always return
+        }
+
     }
 
 }

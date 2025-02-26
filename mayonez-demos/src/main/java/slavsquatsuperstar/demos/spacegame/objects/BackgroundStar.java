@@ -53,25 +53,25 @@ public class BackgroundStar extends BackgroundObject {
      * @param temperature the star's temperature, in Kelvins
      */
     private static Color getStarColor(int temperature) {
-        int temp2 = temperature / 100;
+        float tempDiv100 = temperature / 100f;
         int red, green, blue;
 
         // Red, Green
-        if (temp2 <= 66) {
+        if (tempDiv100 <= 66) {
             red = 255;
-            green = (int) (100 * Math.log(temp2) - 161);
+            green = (int) (100 * Math.log(tempDiv100) - 161);
         } else {
-            red = (int) (330 * Math.pow(temp2 - 60, -0.13));
-            green = (int) (288 * Math.pow(temp2 - 60, -0.076));
+            red = (int) (330 * Math.pow(tempDiv100 - 60, -0.13));
+            green = (int) (288 * Math.pow(tempDiv100 - 60, -0.076));
         }
 
         // Blue
-        if (temp2 >= 66) {
+        if (tempDiv100 >= 66) {
             blue = 255;
-        } else if (temp2 <= 19) {
+        } else if (tempDiv100 <= 19) {
             blue = 0;
         } else {
-            blue = (int) (139 * Math.log(temp2 - 10) - 305);
+            blue = (int) (139 * Math.log(tempDiv100 - 10) - 305);
         }
 
         return new Color(red, green, blue);
