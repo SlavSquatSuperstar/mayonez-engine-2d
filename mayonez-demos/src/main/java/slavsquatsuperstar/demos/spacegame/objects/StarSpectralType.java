@@ -14,7 +14,8 @@ import mayonez.util.Record;
  */
 public record StarSpectralType(
         String type, String description,
-        int minTemp, int maxTemp, float weight
+        int minTemp, int maxTemp,
+        float weight
 ) {
 
     StarSpectralType(Record record) {

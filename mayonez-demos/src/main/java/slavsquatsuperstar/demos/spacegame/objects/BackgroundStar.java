@@ -11,8 +11,8 @@ import mayonez.math.shapes.*;
  */
 public class BackgroundStar extends BackgroundObject {
 
-    public BackgroundStar(Vec2 position, float radius, int temp) {
-        super(getStarShape(position, radius), getStarColor(temp),
+    public BackgroundStar(Vec2 position, float radius, int temperature, float brightness) {
+        super(getStarShape(position, radius), getStarColor(temperature, brightness),
                 SpaceGameZIndex.BACKGROUND_STAR);
     }
 
@@ -27,6 +27,32 @@ public class BackgroundStar extends BackgroundObject {
         } else {
             return new Circle(position, radius);
         }
+    }
+
+    /*
+     * TODO: Brightness to RGB
+     *
+     * Angular Diam (rad) = Linear Diam / Distance
+     * Relative Size = Angular Diam * Focal Length
+     *
+     * Actual Color = (Luminosity / Distance^2) * Color
+     * Mag vs Brightness: 1 step = (100)^1/5 times
+     * Abs Mag vs App Mag: M = m - 5*log_10(d_pc) + 5
+     * Abs Mag vs Lum: M = M_S - 2.5*log_10(L/L_S)
+     * Lum vs Mass (Main-Seq): L/L_S = (M/M_S)^3.5
+     *
+     * https://en.wikipedia.org/wiki/Stellar_classification
+     * https://en.wikipedia.org/wiki/Hertzsprung%E2%80%93Russell_diagram
+     *
+     * https://en.wikipedia.org/wiki/Magnitude_(astronomy)
+     * https://en.wikipedia.org/wiki/Absolute_magnitude
+     * https://en.wikipedia.org/wiki/Apparent_magnitude
+     * https://en.wikipedia.org/wiki/Luminosity
+     * https://en.wikipedia.org/wiki/Mass%E2%80%93luminosity_relation
+     */
+    private static Color getStarColor(int temperature, float brightness) {
+        return getStarColor(temperature)
+                .combine(Color.grayscale((int) (brightness * 255)));
     }
 
     /**

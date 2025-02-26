@@ -15,6 +15,7 @@ public final class BackgroundStarPrefabs {
 
     // Constants
     private static final RandomVariable<StarSpectralType> SPECTRAL_TYPE_GENERATOR;
+    private static final RandomVariable<StarLuminosityType> LUMINOSITY_TYPE_GENERATOR;
 
     static {
         // Read CSV files
@@ -22,10 +23,18 @@ public final class BackgroundStarPrefabs {
                 .getRecordsFromFile("assets/spacegame/data/star_spectral_types.csv")
                 .stream().map(StarSpectralType::new).toList();
 
+        var luminosityTypes = PrefabUtils
+                .getRecordsFromFile("assets/spacegame/data/star_luminosity_types.csv")
+                .stream().map(StarLuminosityType::new).toList();
+
         // Create random variables
         var spectralTypeWeights = spectralTypes.stream()
                 .map(StarSpectralType::weight).toList();
         SPECTRAL_TYPE_GENERATOR = new RandomVariable<>(spectralTypes, spectralTypeWeights);
+
+        var luminosityTypeWeights = luminosityTypes.stream()
+                .map(StarLuminosityType::weight).toList();
+        LUMINOSITY_TYPE_GENERATOR = new RandomVariable<>(luminosityTypes, luminosityTypeWeights);
     }
 
     private BackgroundStarPrefabs() {
@@ -34,25 +43,12 @@ public final class BackgroundStarPrefabs {
     // Create Prefab Methods
 
     public static BackgroundObject createRandomStar() {
+        var luminosity = LUMINOSITY_TYPE_GENERATOR.getRandomOutcome();
         var position = SpaceGameScene.getRandomPosition();
-        var radius = getRandomStarRadius();
-        var temp = getRandomColorType().getRandomTemp();
-        return new BackgroundStar(position, radius, temp);
-    }
-
-    private static float getRandomStarRadius() {
-        float invCDF = Random.randomFloat(0f, 100f);
-        if (invCDF < 60f) {
-            return Random.randomFloat(0.01f, 0.04f); // Dwarf
-        } else if (invCDF < 90f) {
-            return Random.randomFloat(0.04f, 0.07f); // Giant
-        } else {
-            return Random.randomFloat(0.07f, 0.08f); // Supergiant
-        }
-    }
-
-    private static StarSpectralType getRandomColorType() {
-        return SPECTRAL_TYPE_GENERATOR.getRandomOutcome();
+        var radius = luminosity.getRandomRadius();
+        var temp = SPECTRAL_TYPE_GENERATOR.getRandomOutcome().getRandomTemp();
+        var brightness = luminosity.getRandomBrightness();
+        return new BackgroundStar(position, radius, temp, brightness);
     }
 
     // Helper Class
