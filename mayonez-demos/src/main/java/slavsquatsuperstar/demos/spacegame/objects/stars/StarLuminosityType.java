@@ -1,4 +1,4 @@
-package slavsquatsuperstar.demos.spacegame.objects;
+package slavsquatsuperstar.demos.spacegame.objects.stars;
 
 import mayonez.math.*;
 import mayonez.util.Record;
@@ -12,7 +12,7 @@ import mayonez.util.Record;
  *
  * @author SlavSquatSuperstar
  */
-public record StarLuminosityType(
+record StarLuminosityType(
         String type, String description,
         float minBrightness, float maxBrightness,
         float minRadius, float maxRadius,
@@ -28,11 +28,11 @@ public record StarLuminosityType(
         );
     }
 
-    public float getRandomBrightness() {
+    float getRandomBrightness() {
         return Random.randomFloat(minBrightness, maxBrightness);
     }
 
-    public float getRandomRadius() {
+    float getRandomRadius() {
         return Random.randomFloat(minRadius, maxRadius);
     }
 

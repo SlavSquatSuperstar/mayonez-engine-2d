@@ -9,7 +9,7 @@ import mayonez.math.shapes.*;
 import mayonez.scripts.camera.*;
 import slavsquatsuperstar.demos.DemoScene;
 import slavsquatsuperstar.demos.spacegame.objects.BackgroundObject;
-import slavsquatsuperstar.demos.spacegame.objects.BackgroundStarPrefabs;
+import slavsquatsuperstar.demos.spacegame.objects.stars.BackgroundStarPrefabs;
 import slavsquatsuperstar.demos.spacegame.objects.SpaceGameZIndex;
 import slavsquatsuperstar.demos.spacegame.objects.spawners.SpaceObjectSpawner;
 import slavsquatsuperstar.demos.spacegame.ui.PlayerUI;

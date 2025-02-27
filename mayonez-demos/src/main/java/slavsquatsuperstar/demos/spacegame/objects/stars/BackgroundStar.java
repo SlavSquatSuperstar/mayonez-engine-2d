@@ -1,17 +1,19 @@
-package slavsquatsuperstar.demos.spacegame.objects;
+package slavsquatsuperstar.demos.spacegame.objects.stars;
 
 import mayonez.graphics.*;
 import mayonez.math.*;
 import mayonez.math.shapes.*;
+import slavsquatsuperstar.demos.spacegame.objects.BackgroundObject;
+import slavsquatsuperstar.demos.spacegame.objects.SpaceGameZIndex;
 
 /**
  * A background star in outer space.
  *
  * @author SlavSquatSuperstar
  */
-public class BackgroundStar extends BackgroundObject {
+class BackgroundStar extends BackgroundObject {
 
-    public BackgroundStar(Vec2 position, float radius, int temperature, float brightness) {
+    BackgroundStar(Vec2 position, float radius, int temperature, float brightness) {
         super(getStarShape(position, radius), getStarColor(temperature, brightness),
                 SpaceGameZIndex.BACKGROUND_STAR);
     }
@@ -32,8 +34,8 @@ public class BackgroundStar extends BackgroundObject {
     /*
      * TODO: Brightness to RGB
      *
-     * Angular Diam (rad) = Linear Diam / Distance
-     * Relative Size = Angular Diam * Focal Length
+     * Angular Diam = Linear Diam / Distance
+     * Relative Diam = Angular Diam * Focal Length
      *
      * Actual Color = (Luminosity / Distance^2) * Color
      * Mag vs Brightness: 1 step = (100)^1/5 times

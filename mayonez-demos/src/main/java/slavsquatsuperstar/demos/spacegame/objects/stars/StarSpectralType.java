@@ -1,4 +1,4 @@
-package slavsquatsuperstar.demos.spacegame.objects;
+package slavsquatsuperstar.demos.spacegame.objects.stars;
 
 import mayonez.math.*;
 import mayonez.util.Record;
@@ -12,7 +12,7 @@ import mayonez.util.Record;
  *
  * @author SlavSquatSuperstar
  */
-public record StarSpectralType(
+record StarSpectralType(
         String type, String description,
         int minTemp, int maxTemp,
         float weight
@@ -26,7 +26,7 @@ public record StarSpectralType(
         );
     }
 
-    public int getRandomTemp() {
+    int getRandomTemp() {
         return Random.randomInt(minTemp, maxTemp);
     }
 

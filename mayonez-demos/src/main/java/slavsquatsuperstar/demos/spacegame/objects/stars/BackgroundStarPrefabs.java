@@ -1,8 +1,9 @@
-package slavsquatsuperstar.demos.spacegame.objects;
+package slavsquatsuperstar.demos.spacegame.objects.stars;
 
 import mayonez.math.Random;
 import slavsquatsuperstar.demos.spacegame.PrefabUtils;
 import slavsquatsuperstar.demos.spacegame.SpaceGameScene;
+import slavsquatsuperstar.demos.spacegame.objects.BackgroundObject;
 
 import java.util.*;
 
@@ -20,11 +21,11 @@ public final class BackgroundStarPrefabs {
     static {
         // Read CSV files
         var spectralTypes = PrefabUtils
-                .getRecordsFromFile("assets/spacegame/data/star_spectral_types.csv")
+                .getRecordsFromFile("assets/spacegame/data/stars/star_spectral_types.csv")
                 .stream().map(StarSpectralType::new).toList();
 
         var luminosityTypes = PrefabUtils
-                .getRecordsFromFile("assets/spacegame/data/star_luminosity_types.csv")
+                .getRecordsFromFile("assets/spacegame/data/stars/star_luminosity_types.csv")
                 .stream().map(StarLuminosityType::new).toList();
 
         // Create random variables
