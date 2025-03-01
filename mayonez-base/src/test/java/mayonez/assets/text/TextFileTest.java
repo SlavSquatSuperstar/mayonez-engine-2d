@@ -1,6 +1,5 @@
 package mayonez.assets.text;
 
-import mayonez.assets.*;
 import org.junit.jupiter.api.*;
 
 import java.time.LocalDate;
@@ -17,23 +16,27 @@ class TextFileTest {
 
     @Test
     void readClasspathTextFile() {
-        Assets.clearAssets();
-        Assets.scanResources("testassets");
-
-        var properties = new TextFile("testassets/text/properties.txt").readLines();
-        assertEquals("Mayonez Engine", properties[0].split("=")[1]);
+        var lines = new TextFile("testassets/text/in.txt").readLines();
+        testReadTextFile(lines);
     }
 
     @Test
     void readLocalTextFile() {
-        var properties = new TextFile("src/test/resources/testassets/text/properties.txt").readLines();
-        assertEquals("Mayonez Engine", properties[0].split("=")[1]);
+        var lines = new TextFile("src/test/resources/testassets/text/in.txt").readLines();
+        testReadTextFile(lines);
     }
 
     @Test
     void saveToLocalTextFile() {
         var textFile = new TextFile("src/test/resources/testassets/out/out.txt");
-        textFile.write("date=" + LocalDate.now(), "time=" + LocalTime.now());
+        assertDoesNotThrow(() ->
+                textFile.write("date=" + LocalDate.now(), "time=" + LocalTime.now()));
+    }
+
+    private static void testReadTextFile(String[] lines) {
+        assertEquals(3, lines.length);
+        assertEquals("foo.bar", lines[0]);
+        assertArrayEquals(new String[] {"quux", "baz"}, lines[1].split("\\."));
     }
 
 }

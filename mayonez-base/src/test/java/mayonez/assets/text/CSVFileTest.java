@@ -17,47 +17,35 @@ import static org.junit.jupiter.api.Assertions.*;
 class CSVFileTest {
 
     @Test
-    void readLocalCSVFile1() {
-        var file = new CSVFile("src/test/resources/testassets/text/engines.csv");
+    void readLocalCSVFile() {
+        var file = new CSVFile("src/test/resources/testassets/text/in.csv");
         var recs = file.readCSV();
 
         // Check headers
         var headers = file.getHeaders();
-        assertArrayEquals(headers, new String[]{"name", "version", "author"});
+        assertArrayEquals(new String[]{"str1", "int1", "float1", "bool1"}, headers);
 
         // Check records
         assertNotNull(recs);
+
+        // All good
         var rec1 = recs.get(0);
-        assertEquals("Mayonez Engine", rec1.getString("name"));
-        assertEquals(0.8f, rec1.getFloat("version"));
-        assertEquals("SlavSquatSuperstar", rec1.getString("author"));
-    }
+        assertEquals("foo", rec1.getString("str1"));
+        assertEquals(420, rec1.getInt("int1"));
+        assertEquals(6.9f, rec1.getFloat("float1"));
+        assertTrue(rec1.getBoolean("bool1"));
 
-    @Test
-    void readLocalCSVFile2() {
-        var file = new CSVFile("src/test/resources/testassets/text/languages.csv");
-        var recs = file.readCSV();
-
-        // Check headers
-        var headers = file.getHeaders();
-        assertArrayEquals(headers, new String[]{"name", "type", "difficulty", "version", "extension"});
-
-        // Check records
-        assertNotNull(recs);
-        var rec1 = recs.get(0);
-        assertEquals("Java", rec1.getString("name"));
-        assertEquals(17, rec1.getInt("version"));
-        assertEquals(".java", rec1.getString("extension"));
-
-        var rec2 = recs.get(2);
-        assertEquals("C++", rec2.getString("name"));
-        assertEquals(20, rec2.getInt("version"));
-        assertEquals(".cpp/.h", rec2.getString("extension"));
+        // Missing values
+        var rec2 = recs.get(1);
+        assertEquals("", rec2.getString("str1"));
+        assertEquals(0, rec2.getInt("int1"));
+        assertEquals(0, rec2.getFloat("float1"));
+        assertFalse(rec2.getBoolean("bool1"));
     }
 
     @Test
     void readClasspathCSVFile() {
-        var recs = new CSVFile("testassets/text/engines.csv").readCSV();
+        var recs = new CSVFile("testassets/text/in.csv").readCSV();
         assertNotNull(recs);
         assertFalse(recs.isEmpty());
     }
@@ -74,7 +62,7 @@ class CSVFileTest {
 
         var recs = List.of(new Record[]{rec1, rec2});
         var csv = new CSVFile("src/test/resources/testassets/out/out.csv");
-        csv.saveCSV(recs, new String[]{"name", "value"});
+        assertDoesNotThrow(() -> csv.saveCSV(recs, new String[]{"name", "value"}));
     }
 
 }

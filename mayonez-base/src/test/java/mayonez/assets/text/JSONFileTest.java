@@ -5,6 +5,7 @@ import org.junit.jupiter.api.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -17,13 +18,28 @@ class JSONFileTest {
 
     @Test
     void readLocalJSONFile() {
-        var rec = new JSONFile("src/test/resources/testassets/text/properties.json").readJSON();
+        var rec = new JSONFile("src/test/resources/testassets/text/in.json").readJSON();
         assertNotNull(rec);
+
+        // All good
+        assertEquals("foo", rec.getString("str1"));
+        assertEquals(420, rec.getInt("int1"));
+        assertEquals(6.9f, rec.getFloat("float1"));
+        assertTrue(rec.getBoolean("bool1"));
+        assertEquals(List.of("item1", "item2"), rec.getArray("list1"));
+        assertNull(rec.get("null1"));
+
+        // Missing values
+        assertEquals(0, rec.getInt("null1"));
+        assertEquals(0f, rec.getFloat("null1"));
+        assertFalse(rec.getBoolean("null1"));
+        assertEquals("", rec.getString("null1"));
+        assertNull(rec.get("not_a_key"));
     }
 
     @Test
     void readClasspathJSONFile() {
-        var rec = new JSONFile("testassets/text/properties.json").readJSON();
+        var rec = new JSONFile("testassets/text/in.json").readJSON();
         assertNotNull(rec);
     }
 
@@ -33,34 +49,7 @@ class JSONFileTest {
         var rec = new Record();
         rec.set("time", LocalTime.now().toString());
         rec.set("date", LocalDate.now().toString());
-        json.saveJSON(rec);
-    }
-
-    @Test
-    void getJSONPropertiesSuccess() {
-        var rec = new JSONFile("src/test/resources/testassets/text/properties.json").readJSON();
-
-        assertTrue(rec.getBoolean("in_progress")); // booleans
-        assertTrue(rec.getBoolean("uses_dependencies"));
-
-        assertEquals("Java", rec.getArray("languages").get(0)); // array
-        assertEquals("Mayonez Engine", rec.getString("name")); // string
-
-        assertEquals("0.8", rec.getString("version")); // string
-        assertEquals(0.8f, rec.getFloat("version")); // string to float
-        assertEquals(0, rec.getInt("version")); // string to int
-
-    }
-
-    @Test
-    void getJSONPropertiesDefaultValues() {
-        var rec = new JSONFile("src/test/resources/testassets/text/properties.json").readJSON();
-
-        assertEquals(0, rec.getInt("version")); // int default
-        assertEquals(0f, rec.getFloat("name")); // float default
-        assertFalse(rec.getBoolean("languages")); // boolean default
-        assertEquals(rec.getString("date"), ""); // string default
-        assertNull(rec.get(null)); // not a key
+        assertDoesNotThrow(() -> json.saveJSON(rec));
     }
 
 }

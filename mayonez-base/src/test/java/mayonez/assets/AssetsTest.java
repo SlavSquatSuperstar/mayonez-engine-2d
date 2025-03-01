@@ -47,7 +47,7 @@ class AssetsTest {
     @Test
     void createAssetAsSubclass() {
         reloadAssets();
-        var filename = "testassets/text/properties.txt";
+        var filename = "testassets/text/foo.txt";
 
         var asset = Assets.getAsset(filename);
         assertNotNull(asset);
