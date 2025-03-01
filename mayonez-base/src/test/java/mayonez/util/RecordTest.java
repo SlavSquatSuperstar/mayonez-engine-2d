@@ -154,6 +154,41 @@ class RecordTest {
         assertNull(rec1.getObject("null1"));
     }
 
+    @Test
+    void createWithMapGetRecord() {
+        // Pass map in constructor, get record
+        var map = Map.of(
+                "quux", "baz",
+                "meaning", "42"
+        );
+        var record = new Record(Map.of("rec1", map));
+        assertEquals(rec1.getObject("rec1"), record.getObject("rec1"));
+    }
+
+    @Test
+    void setMapGetRecord() {
+        // Set map, get record
+        var map = Map.of(
+                "quux", "baz",
+                "meaning", "42"
+        );
+        var record = new Record();
+        record.set("rec1", map);
+        assertEquals(rec1.getObject("rec1"), record.getObject("rec1"));
+    }
+
+    @Test
+    void setRecordGetRecord() {
+        // Set map, get record
+        var innerRecord = new Record(Map.of(
+                "quux", "baz",
+                "meaning", "42"
+        ));
+        var record = new Record();
+        record.set("rec1", innerRecord);
+        assertEquals(rec1.getObject("rec1"), record.getObject("rec1"));
+    }
+
     // Set From Tests
 
     @Test

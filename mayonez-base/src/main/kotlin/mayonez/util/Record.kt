@@ -40,15 +40,10 @@ open class Record(map: Map<String?, Any?>) {
      * does not exist.
      */
     fun getObject(key: String?): Record? {
-        when (val value = map[key]) {
-            is Record -> return value
-            is Map<*, *> -> {
-                val newMap = HashMap<String?, Any?>()
-                value.forEach { newMap[it.key?.toString()] = it.value }
-                return Record(newMap)
-            }
-
-            else -> return null
+        return when (val value = map[key]) {
+            is Record -> value
+            is Map<*, *> -> value.toRecord()
+            else -> null
         }
     }
 
@@ -143,12 +138,12 @@ open class Record(map: Map<String?, Any?>) {
 
     /** Stores or updates a record under this key. */
     operator fun set(key: String?, value: Record?) {
-        map[key] = value?.map?.toMap()
+        map[key] = value
     }
 
     /** Stores or updates a map under this key. */
     operator fun set(key: String?, value: Map<*, *>?) {
-        map[key] = value?.toMap()
+        map[key] = value?.toRecord()
     }
 
     // Copy Methods
@@ -158,7 +153,7 @@ open class Record(map: Map<String?, Any?>) {
      *
      * @return the copy
      */
-    fun copy(): Record = Record(this.map)
+    fun copy(): Record = Record(HashMap(this.map))
 
     /**
      * Adds all key-value pairs from another record. Any keys that exist in
@@ -197,13 +192,28 @@ open class Record(map: Map<String?, Any?>) {
      *
      * @return a map
      */
-    fun toMap(): Map<Any?, Any?> = map.toMap()
+    fun toMap(): Map<Any?, Any?> = map.toMap<Any?, Any?>()
 
     // Object Overrides
 
     /** Whether any value is stored in the record under the given key. */
     operator fun contains(key: String?): Boolean = map.containsKey(key)
 
+    override fun equals(other: Any?): Boolean {
+        return other is Record &&
+                other.size() == this.size() &&
+                other.map == this.map
+    }
+
+    override fun hashCode(): Int = (map as HashMap).hashCode()
+
     override fun toString(): String = map.toString()
 
+}
+
+private fun Map<*, *>.toRecord(): Record {
+    val newMap = HashMap<String?, Any?>()
+    this.forEach { newMap[it.key?.toString()] = it.value }
+    // TODO recursive convert
+    return Record(newMap)
 }
