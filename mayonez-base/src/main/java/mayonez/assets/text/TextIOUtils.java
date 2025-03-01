@@ -10,8 +10,6 @@ import java.util.*;
  */
 public final class TextIOUtils {
 
-    private static final char NEW_LINE = '\n';
-
     private TextIOUtils() {
     }
 
@@ -45,7 +43,7 @@ public final class TextIOUtils {
         StringBuilder contents = new StringBuilder();
         read(input).forEach(line -> {
             contents.append(line);
-            contents.append(NEW_LINE);
+            contents.append(System.lineSeparator());
         });
         return contents.toString();
     }
@@ -81,7 +79,7 @@ public final class TextIOUtils {
             for (var line : lines) {
                 if (line == null) continue;
                 writer.write(line);
-                writer.write(NEW_LINE);
+                writer.newLine();
             }
             writer.flush();
         } catch (IOException e) {
