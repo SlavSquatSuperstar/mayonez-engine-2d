@@ -54,7 +54,7 @@ class RecordTest {
         assertEquals(0, rec1.getInt("str1"));
         assertEquals(420, rec1.getInt("int1"));
         assertEquals(6, rec1.getInt("float1"));
-        assertEquals(0, rec1.getInt("bool1"));
+        assertEquals(1, rec1.getInt("bool1"));
         assertEquals(0, rec1.getInt("null1"));
     }
 
@@ -63,8 +63,20 @@ class RecordTest {
         assertEquals(0f, rec1.getFloat("str1"));
         assertEquals(420f, rec1.getFloat("int1"));
         assertEquals(6.9f, rec1.getFloat("float1"));
-        assertEquals(0f, rec1.getFloat("bool1"));
+        assertEquals(1f, rec1.getFloat("bool1"));
         assertEquals(0f, rec1.getFloat("null1"));
+    }
+
+    @Test
+    void getStringAsNumber() {
+        var record = new Record(Map.of(
+                "num1", "420",
+                "num2", "6.9"
+        ));
+        assertEquals(420, record.getInt("num1"));
+        assertEquals(6, record.getInt("num2"));
+        assertEquals(420f, record.getFloat("num1"));
+        assertEquals(6.9f, record.getFloat("num2"));
     }
 
     @Test

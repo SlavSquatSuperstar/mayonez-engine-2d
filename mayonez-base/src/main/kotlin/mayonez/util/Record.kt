@@ -59,13 +59,16 @@ open class Record(map: Map<String?, Any?>) {
      * number, then it will also be considered true.
      */
     fun getBoolean(key: String?): Boolean {
-        return map[key] as? Boolean
-            ?: when {
-                getString(key).equals("true", ignoreCase = true) -> true
-                getString(key).equals("yes", ignoreCase = true) -> true
-                getInt(key) != 0 -> true
-                else -> false
+        return when (val value = map[key]) {
+            is Boolean -> value
+            is Number -> value.toInt() != 0
+            is String -> {
+                value.equals("true", ignoreCase = true) ||
+                        value.equals("yes", ignoreCase = true)
             }
+
+            else -> false
+        }
     }
 
     /**
@@ -76,12 +79,8 @@ open class Record(map: Map<String?, Any?>) {
     fun getInt(key: String?): Int {
         return when (val value = map[key]) {
             is Number -> value.toInt()
-            is String -> try {
-                value.toInt()
-            } catch (e: NumberFormatException) {
-                0
-            }
-
+            is Boolean -> if (value) 1 else 0
+            is String -> value.parseFloat()?.toInt() ?: 0
             else -> 0
         }
     }
@@ -94,12 +93,8 @@ open class Record(map: Map<String?, Any?>) {
     fun getFloat(key: String?): Float {
         return when (val value = map[key]) {
             is Number -> value.toFloat()
-            is String -> try {
-                value.toFloat()
-            } catch (e: NumberFormatException) {
-                0f
-            }
-
+            is Boolean -> if (value) 1f else 0f
+            is String -> value.parseFloat() ?: 0f
             else -> 0f
         }
     }
@@ -209,6 +204,16 @@ open class Record(map: Map<String?, Any?>) {
 
     override fun toString(): String = map.toString()
 
+}
+
+// Helper Functions
+
+private fun String.parseFloat(): Float? {
+    return try {
+        this.toFloat()
+    } catch (_: NumberFormatException) {
+        null
+    }
 }
 
 private fun Map<*, *>.toRecord(): Record {
