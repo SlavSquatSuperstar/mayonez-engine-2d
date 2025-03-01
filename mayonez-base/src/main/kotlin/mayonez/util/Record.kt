@@ -28,7 +28,11 @@ open class Record(map: Map<String?, Any?>) {
      * does not exist.
      */
     fun getArray(key: String?): List<Any?>? {
-        return map[key] as? List<*>
+        return when (val value = map[key]) {
+            is List<*> -> value
+            is Array<*> -> value.asList<Any?>()
+            else -> null
+        }
     }
 
     /**
@@ -134,7 +138,7 @@ open class Record(map: Map<String?, Any?>) {
 
     /** Stores or updates an array under this key. */
     operator fun set(key: String?, value: Array<*>?) {
-        map[key] = value?.asList()
+        map[key] = value?.asList<Any?>()
     }
 
     /** Stores or updates a record under this key. */

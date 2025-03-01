@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class RecordTest {
 
-    private Record rec1, rec2;
+    private Record rec1;
 
     @BeforeEach
     void createRecords() {
@@ -30,14 +30,6 @@ class RecordTest {
                 "rec1", innerRecord
         ));
         rec1.set("null1", (String) null);
-
-        rec2 = new Record(Map.of(
-                "str1", "foobar",
-                "str2", "spam eggs",
-                "bool2", false
-        ));
-        rec2.set("int1", (String) null);
-        rec2.set("null2", (String) null);
     }
 
     // Get Single Tests
@@ -116,6 +108,31 @@ class RecordTest {
         assertNull(rec1.getArray("null1"));
     }
 
+    @Test
+    void createWithArrayGetList() {
+        var array = new Object[]{"bar", 123, 4.5f, true};
+        var record = new Record(Map.of("list1", array));
+        assertEquals(rec1.getArray("list1"), record.getArray("list1"));
+    }
+
+    @Test
+    void setArrayGetList() {
+        var array = new Object[]{"bar", 123, 4.5f, true};
+        var record = new Record();
+        record.set("list1", array);
+        assertEquals(rec1.getArray("list1"), record.getArray("list1"));
+    }
+
+    @Test
+    void setListGetGenericList() {
+        // Set specific list, get generic list
+        List<String> list = List.of("item1", "item2", "item3");
+        var record = new Record();
+        record.set("list1", list);
+        List<Object> expected = List.of("item1", "item2", "item3");
+        assertEquals(expected, record.getArray("list1"));
+    }
+
     // Get Object Tests
 
     @Test
@@ -141,6 +158,14 @@ class RecordTest {
 
     @Test
     void addAllSuccess() {
+        var rec2 = new Record(Map.of(
+                "str1", "foobar",
+                "str2", "spam eggs",
+                "bool2", false
+        ));
+        rec2.set("int1", (String) null);
+        rec2.set("null2", (String) null);
+
         rec1.setFrom(rec2);
         assertEquals("foobar", rec1.getString("str1")); // overridden
         assertEquals("spam eggs", rec1.getString("str2")); // added
