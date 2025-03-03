@@ -1,0 +1,5 @@
+str1,list1,str2,list2,str3
+foo,"item1,item2",baz,"item3
+item4",spam
+bar,"""item5"",item6",quux,"item7
+""item8""",eggs

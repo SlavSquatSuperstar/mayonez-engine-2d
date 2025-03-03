@@ -16,6 +16,7 @@ module mayonez.base {
 
     // Other Dependencies
     requires kotlin.stdlib;
+    requires org.apache.commons.csv;
     requires org.joml;
     requires org.json;
 

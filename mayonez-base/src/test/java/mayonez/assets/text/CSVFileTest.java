@@ -51,6 +51,28 @@ class CSVFileTest {
     }
 
     @Test
+    void readComplexCSVFile() {
+        var rec1 = new Record(Map.of(
+                "str1", "foo",
+                "list1", "item1,item2",
+                "str2", "baz",
+                "list2", "item3\nitem4",
+                "str3", "spam"
+        ));
+        var rec2 = new Record(Map.of(
+                "str1", "bar",
+                "list1", "\"item5\",item6",
+                "str2", "quux",
+                "list2", "item7\n\"item8\"",
+                "str3", "eggs"
+        ));
+
+        // Has commas, quotes, and newlines
+        var recs = new CSVFile("testassets/text/test.csv").readCSV();
+        assertEquals(List.of(rec1, rec2), recs);
+    }
+
+    @Test
     void saveToLocalCSVFile() {
         var rec1 = new Record();
         rec1.set("name", "time");
