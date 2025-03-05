@@ -257,6 +257,7 @@ open class Record(map: Map<String?, Any?>) {
      *
      * @return a map
      */
+    // TODO convert records to maps
     fun toMap(): Map<Any?, Any?> = map.toMap<Any?, Any?>()
 
     // Object Overrides
