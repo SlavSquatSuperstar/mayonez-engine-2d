@@ -14,9 +14,9 @@ import java.util.*;
  */
 public final class BackgroundStarPrefabs {
 
-    // Constants
-    private static final RandomVariable<StarSpectralType> SPECTRAL_TYPE_GENERATOR;
     private static final RandomVariable<StarLuminosityType> LUMINOSITY_TYPE_GENERATOR;
+    private static final Map<StarLuminosityType, RandomVariable<StarSpectralType>>
+            SPECTRAL_TYPE_GENERATORS;
 
     static {
         // Read CSV files
@@ -28,14 +28,23 @@ public final class BackgroundStarPrefabs {
                 .getRecordsFromFile("assets/spacegame/data/stars/star_luminosity_types.csv")
                 .stream().map(StarLuminosityType::new).toList();
 
-        // Create random variables
-        var spectralTypeWeights = spectralTypes.stream()
-                .map(StarSpectralType::weight).toList();
-        SPECTRAL_TYPE_GENERATOR = new RandomVariable<>(spectralTypes, spectralTypeWeights);
+        var luminosityToSpectra = PrefabUtils
+                .getRecordsFromFile("assets/spacegame/data/stars/star_luminosity_to_spectra.csv")
+                .stream().map(StarLuminosityToSpectra::new).toList();
 
+        // Create random variables
         var luminosityTypeWeights = luminosityTypes.stream()
                 .map(StarLuminosityType::weight).toList();
         LUMINOSITY_TYPE_GENERATOR = new RandomVariable<>(luminosityTypes, luminosityTypeWeights);
+
+        SPECTRAL_TYPE_GENERATORS = new HashMap<>();
+        luminosityToSpectra.forEach(
+                obj -> {
+                    var luminosity = obj.getLuminosity(luminosityTypes);
+                    var generator = obj.getSpectralGenerator(spectralTypes);
+                    SPECTRAL_TYPE_GENERATORS.put(luminosity, generator);
+                }
+        );
     }
 
     private BackgroundStarPrefabs() {
@@ -45,16 +54,19 @@ public final class BackgroundStarPrefabs {
 
     public static BackgroundObject createRandomStar() {
         var luminosity = LUMINOSITY_TYPE_GENERATOR.getRandomOutcome();
+        var spectrum = SPECTRAL_TYPE_GENERATORS.get(luminosity)
+                .getRandomOutcome();
+
         var position = SpaceGameScene.getRandomPosition();
         var radius = luminosity.getRandomRadius();
-        var temp = SPECTRAL_TYPE_GENERATOR.getRandomOutcome().getRandomTemp();
+        var temp = spectrum.getRandomTemp();
         var brightness = luminosity.getRandomBrightness();
         return new BackgroundStar(position, radius, temp, brightness);
     }
 
     // Helper Class
 
-    private static class RandomVariable<T> {
+    static class RandomVariable<T> {
 
         private final List<T> outcomes;
         private final int numOutcomes;
