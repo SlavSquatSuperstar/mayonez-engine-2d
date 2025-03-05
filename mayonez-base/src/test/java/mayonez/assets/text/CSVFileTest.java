@@ -74,17 +74,55 @@ class CSVFileTest {
 
     @Test
     void saveToLocalCSVFile() {
-        var rec1 = new Record();
-        rec1.set("name", "time");
-        rec1.set("value", LocalTime.now().toString());
+        var rec1 = new Record(Map.of(
+                "name", "time",
+                "value", LocalTime.now().toString()
+        ));
+        var rec2 = new Record(Map.of(
+                "name", "date",
+                "value", LocalDate.now().toString()
+        ));
 
-        var rec2 = new Record();
-        rec2.set("name", "date");
-        rec2.set("value", LocalDate.now().toString());
-
-        var recs = List.of(new Record[]{rec1, rec2});
+        var headers = new String[]{"name", "value"};
+        var recs = List.of(rec1, rec2);
         var csv = new CSVFile("src/test/resources/testassets/out/out.csv");
-        assertDoesNotThrow(() -> csv.saveCSV(recs, new String[]{"name", "value"}));
+        assertDoesNotThrow(() -> csv.saveCSV(recs, headers));
+
+        // Ensure records can be read again
+        var recs2 = csv.readCSV();
+        var headers2 = csv.getHeaders();
+        assertArrayEquals(headers, headers2);
+        assertEquals(recs, recs2);
+    }
+
+    @Test
+    void saveToComplexCSVFile() {
+        var rec1 = new Record(Map.of(
+                "\"str1\"", "foo",
+                "list1,comma", "item1,item2",
+                "str2", "baz",
+                "list2,nl", "item3\nitem4",
+                "str3", "spam"
+        ));
+        var rec2 = new Record(Map.of(
+                "\"str1\"", "bar",
+                "list1,comma", "\"item5\",item6",
+                "str2", "quux",
+                "list2,nl", "item7\n\"item8\"",
+                "str3", "eggs"
+        ));
+        var headers = new String[]{"\"str1\"", "list1,comma", "str2", "list2,nl", "str3"};
+        var recs = List.of(rec1, rec2);
+
+        // Has commas, quotes, and newlines
+        var csv = new CSVFile("src/test/resources/testassets/out/test2.csv");
+        csv.saveCSV(recs, headers);
+
+        // Ensure records can be read again
+        var recs2 = csv.readCSV();
+        var headers2 = csv.getHeaders();
+        assertArrayEquals(headers, headers2);
+        assertEquals(recs, recs2);
     }
 
 }

@@ -10,6 +10,12 @@ import java.io.IOException;
 
 /**
  * A JavaScript Object Notation (.json) file that stores an object record.
+ * The official JSON specification can be found under the
+ * <a href="https://www.json.org/json-en.html">ECMA-404 standard</a>.
+ * <p>
+ * Usage: The root JSON element is an object, array, or single value.
+ * Objects contain key-value pairs, where the key is a string and the value
+ * has any type. Arrays can also contain values of any type.
  *
  * @author SlavSquatSuperstar
  */
