@@ -26,9 +26,10 @@ public final class ProjectilePrefabs {
 
     static {
         // Read projectile types
-        var records = PrefabUtils
-                .getRecordsFromFile("assets/spacegame/data/projectiles.csv");
-        PROJECTILE_TYPES = records.stream().map(ProjectileType::new).toList();
+        PROJECTILE_TYPES = PrefabUtils.getObjectsFromFile(
+                "assets/spacegame/data/projectiles.csv",
+                ProjectileType::new
+        );
 
         // Read sprite sheets
         PROJECTILE_SPRITES = Sprites.createSpriteSheet(

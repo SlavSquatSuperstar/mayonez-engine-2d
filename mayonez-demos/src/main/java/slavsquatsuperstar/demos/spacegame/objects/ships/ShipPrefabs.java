@@ -16,18 +16,20 @@ public final class ShipPrefabs {
 
     static {
         // Read spaceship data file
-        var spaceshipTypes = PrefabUtils
-                .getRecordsFromFile("assets/spacegame/data/ships/spaceships.csv")
-                .stream().map(SpaceshipProperties::new).toList();
+        var spaceshipTypes = PrefabUtils.getObjectsFromFile(
+                "assets/spacegame/data/ships/spaceships.csv",
+                SpaceshipProperties::new
+        );
 
         SHUTTLE_PROPERTIES1 = spaceshipTypes.get(0);
         SHUTTLE_PROPERTIES2 = spaceshipTypes.get(1);
         FIGHTER_PROPERTIES = spaceshipTypes.get(2);
 
         // Read satellite data file
-        var satelliteTypes = PrefabUtils
-                .getRecordsFromFile("assets/spacegame/data/ships/satellites.csv")
-                .stream().map(SatelliteProperties::new).toList();
+        var satelliteTypes = PrefabUtils.getObjectsFromFile(
+                "assets/spacegame/data/ships/satellites.csv",
+                SatelliteProperties::new
+        );
         SATELLITE_PROPERTIES = satelliteTypes.getFirst();
     }
 

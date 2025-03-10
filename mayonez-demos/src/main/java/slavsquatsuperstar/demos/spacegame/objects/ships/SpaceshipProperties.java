@@ -50,13 +50,11 @@ public record SpaceshipProperties(
     }
 
     private static List<ThrusterProperties> getThrusters(String csvFileName) {
-        return PrefabUtils.getRecordsFromFile(csvFileName)
-                .stream().map(ThrusterProperties::new).toList();
+        return PrefabUtils.getObjectsFromFile(csvFileName, ThrusterProperties::new);
     }
 
     private static List<WeaponHardpoint> getHardpoints(String csvFileName) {
-        return PrefabUtils.getRecordsFromFile(csvFileName)
-                .stream().map(WeaponHardpoint::new).toList();
+        return PrefabUtils.getObjectsFromFile(csvFileName, WeaponHardpoint::new);
     }
 
 }

@@ -20,17 +20,18 @@ public final class BackgroundStarPrefabs {
 
     static {
         // Read CSV files
-        var spectralTypes = PrefabUtils
-                .getRecordsFromFile("assets/spacegame/data/stars/star_spectral_types.csv")
-                .stream().map(StarSpectralType::new).toList();
-
-        var luminosityTypes = PrefabUtils
-                .getRecordsFromFile("assets/spacegame/data/stars/star_luminosity_types.csv")
-                .stream().map(StarLuminosityType::new).toList();
-
-        var luminosityToSpectra = PrefabUtils
-                .getRecordsFromFile("assets/spacegame/data/stars/star_luminosity_to_spectra.csv")
-                .stream().map(StarLuminosityToSpectra::new).toList();
+        var spectralTypes = PrefabUtils.getObjectsFromFile(
+                "assets/spacegame/data/stars/star_spectral_types.csv",
+                StarSpectralType::new
+        );
+        var luminosityTypes = PrefabUtils.getObjectsFromFile(
+                "assets/spacegame/data/stars/star_luminosity_types.csv",
+                StarLuminosityType::new
+        );
+        var luminosityToSpectra = PrefabUtils.getObjectsFromFile(
+                "assets/spacegame/data/stars/star_luminosity_to_spectra.csv",
+                StarLuminosityToSpectra::new
+        );
 
         // Create random variables
         var luminosityTypeWeights = luminosityTypes.stream()
@@ -54,8 +55,7 @@ public final class BackgroundStarPrefabs {
 
     public static BackgroundObject createRandomStar() {
         var luminosity = LUMINOSITY_TYPE_GENERATOR.getRandomOutcome();
-        var spectrum = SPECTRAL_TYPE_GENERATORS.get(luminosity)
-                .getRandomOutcome();
+        var spectrum = SPECTRAL_TYPE_GENERATORS.get(luminosity).getRandomOutcome();
 
         var position = SpaceGameScene.getRandomPosition();
         var radius = luminosity.getRandomRadius();
