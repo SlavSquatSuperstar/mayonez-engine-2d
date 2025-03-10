@@ -14,18 +14,19 @@ public class RandomVariable<T> {
 
     private final List<T> outcomes;
     private final int numOutcomes;
-    private float[] cdfValues;
-    private float maxCDFValue;
+    private final float[] cdfValues;
+    private final float maxCDFValue;
 
     public RandomVariable(List<T> outcomes, List<Float> weights) {
         this.outcomes = outcomes;
         numOutcomes = outcomes.size();
-        calculateCDFValues(weights);
+        cdfValues = calculateCDFValues(weights);
+        maxCDFValue = cdfValues[numOutcomes - 1];
     }
 
-    private void calculateCDFValues(List<Float> weights) {
+    private float[] calculateCDFValues(List<Float> weights) {
         var lastCDF = 0f;
-        cdfValues = new float[numOutcomes];
+        var cdfValues = new float[numOutcomes];
         for (int i = 0; i < numOutcomes; i++) {
             if (i >= weights.size()) {
                 cdfValues[i] = lastCDF;
@@ -36,7 +37,7 @@ public class RandomVariable<T> {
             cdfValues[i] = cdf;
             lastCDF = cdf;
         }
-        maxCDFValue = lastCDF;
+        return cdfValues;
     }
 
     public T getRandomOutcome() {
@@ -46,6 +47,14 @@ public class RandomVariable<T> {
             if (invCDF < cdfValues[i]) return outcomes.get(i);
         }
         return outcomes.get(numOutcomes - 1); // Should always return
+    }
+
+    float[] getCDFValues() {
+        return cdfValues;
+    }
+
+    float getMaxCDFValue() {
+        return maxCDFValue;
     }
 
 }
