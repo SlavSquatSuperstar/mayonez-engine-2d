@@ -1,5 +1,6 @@
 package slavsquatsuperstar.demos.spacegame.objects.stars;
 
+import mayonez.math.*;
 import mayonez.util.Record;
 
 import java.util.*;
@@ -36,7 +37,7 @@ class StarLuminosityToSpectra {
                 .toList();
     }
 
-    BackgroundStarPrefabs.RandomVariable<StarSpectralType> getSpectralGenerator(
+    RandomVariable<StarSpectralType> getSpectralGenerator(
             List<StarSpectralType> spectralTypes
     ) {
         var outcomes = getSpectra(spectralTypes);
@@ -50,7 +51,7 @@ class StarLuminosityToSpectra {
                     .map(type -> 1f).toList();
         }
 
-        return new BackgroundStarPrefabs.RandomVariable<>(outcomes, weights);
+        return new RandomVariable<>(outcomes, weights);
     }
 
 }
