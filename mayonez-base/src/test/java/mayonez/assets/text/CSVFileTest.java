@@ -1,5 +1,6 @@
 package mayonez.assets.text;
 
+import mayonez.util.*;
 import mayonez.util.Record;
 import org.junit.jupiter.api.*;
 
@@ -15,6 +16,35 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author SlavSquatSuperstar
  */
 class CSVFileTest {
+
+    private static Record rec1, rec2;
+    private static String[] headers;
+
+    @BeforeAll
+    static void getRecords() {
+        var rec1List2 = """
+                item3
+                item4""";
+        var rec2List2 = """
+                item7
+                "item8\"""";
+
+        rec1 = new Record(Map.of(
+                "\"str1\"", "\"foo\"",
+                "list1,sep", "item1,item2",
+                "str2", "baz",
+                "list2,nl", rec1List2,
+                "str3", "spam"
+        ));
+        rec2 = new Record(Map.of(
+                "\"str1\"", "\"bar\"",
+                "list1,sep", "\"item5\",item6",
+                "str2", "quux",
+                "list2,nl", rec2List2,
+                "str3", "eggs"
+        ));
+        headers = new String[]{"\"str1\"", "list1,sep", "str2", "list2,nl", "str3"};
+    }
 
     @Test
     void readLocalCSVFile() {
@@ -52,21 +82,6 @@ class CSVFileTest {
 
     @Test
     void readComplexCSVFile() {
-        var rec1 = new Record(Map.of(
-                "str1", "foo",
-                "list1", "item1,item2",
-                "str2", "baz",
-                "list2", "item3\nitem4",
-                "str3", "spam"
-        ));
-        var rec2 = new Record(Map.of(
-                "str1", "bar",
-                "list1", "\"item5\",item6",
-                "str2", "quux",
-                "list2", "item7\n\"item8\"",
-                "str3", "eggs"
-        ));
-
         // Has commas, quotes, and newlines
         var recs = new CSVFile("testassets/text/test.csv").readCSV();
         assertEquals(List.of(rec1, rec2), recs);
@@ -97,21 +112,6 @@ class CSVFileTest {
 
     @Test
     void saveToComplexCSVFile() {
-        var rec1 = new Record(Map.of(
-                "\"str1\"", "foo",
-                "list1,comma", "item1,item2",
-                "str2", "baz",
-                "list2,nl", "item3\nitem4",
-                "str3", "spam"
-        ));
-        var rec2 = new Record(Map.of(
-                "\"str1\"", "bar",
-                "list1,comma", "\"item5\",item6",
-                "str2", "quux",
-                "list2,nl", "item7\n\"item8\"",
-                "str3", "eggs"
-        ));
-        var headers = new String[]{"\"str1\"", "list1,comma", "str2", "list2,nl", "str3"};
         var recs = List.of(rec1, rec2);
 
         // Has commas, quotes, and newlines
