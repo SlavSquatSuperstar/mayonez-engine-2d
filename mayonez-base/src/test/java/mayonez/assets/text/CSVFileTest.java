@@ -1,6 +1,5 @@
 package mayonez.assets.text;
 
-import mayonez.util.*;
 import mayonez.util.Record;
 import org.junit.jupiter.api.*;
 
@@ -22,12 +21,9 @@ class CSVFileTest {
 
     @BeforeAll
     static void getRecords() {
-        var rec1List2 = """
-                item3
-                item4""";
-        var rec2List2 = """
-                item7
-                "item8\"""";
+        var lineSeparator = TextIOUtils.LINE_SEPARATOR;
+        var rec1List2 = "item3%sitem4".formatted(lineSeparator);
+        var rec2List2 = "item7%s\"item8\"".formatted(lineSeparator);
 
         rec1 = new Record(Map.of(
                 "\"str1\"", "\"foo\"",

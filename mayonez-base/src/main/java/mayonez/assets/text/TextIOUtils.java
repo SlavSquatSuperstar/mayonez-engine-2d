@@ -10,6 +10,11 @@ import java.util.*;
  */
 public final class TextIOUtils {
 
+    /**
+     * The file separator on the user's current operating system.
+     */
+    public static final String LINE_SEPARATOR = System.lineSeparator();
+
     private TextIOUtils() {
     }
 
@@ -50,7 +55,7 @@ public final class TextIOUtils {
         StringBuilder contents = new StringBuilder();
         read(input).forEach(line -> {
             contents.append(line);
-            contents.append(System.lineSeparator());
+            contents.append(LINE_SEPARATOR);
         });
         return contents.toString();
     }
