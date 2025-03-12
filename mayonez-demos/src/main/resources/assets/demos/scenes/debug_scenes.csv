@@ -1,4 +1,5 @@
 sceneClass,name
+slavsquatsuperstar.demos.renderer.CirclesTestScene,Circles Test
 slavsquatsuperstar.demos.renderer.RendererTestScene,Renderer Test
 slavsquatsuperstar.demos.input.InputTestScene,Input Test
 slavsquatsuperstar.demos.physics.CollisionTestScene,Collision Test
