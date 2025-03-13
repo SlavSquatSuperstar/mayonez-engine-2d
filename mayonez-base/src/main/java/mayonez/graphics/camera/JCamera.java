@@ -2,7 +2,6 @@ package mayonez.graphics.camera;
 
 import mayonez.graphics.*;
 import mayonez.math.*;
-import org.joml.*;
 
 /**
  * A scene camera for the AWT engine.
@@ -23,16 +22,6 @@ final class JCamera extends Camera {
         // view center - zoom offset
         // (position * scene_scale) - (0.5 * screen_size / zoom)
         return getScreenCenter().sub(screenSize.mul(0.5f / getZoom()));
-    }
-
-    @Override
-    public Matrix4f getViewMatrix() {
-        return new Matrix4f(); // unused
-    }
-
-    @Override
-    public Matrix4f getProjectionMatrix() {
-        return new Matrix4f(); // unused
     }
 
     @Override

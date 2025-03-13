@@ -49,8 +49,12 @@ internal class GLDefaultRenderer(shader: Shader) : GLRenderer(shader),
     }
 
     override fun preRender() {
+        // Update view matrix
+        val cam = viewport
+        cam.updateViewMatrix()
+
         // Draw background color
-        val bgColor = viewport.backgroundColor.toGL()
+        val bgColor = cam.backgroundColor.toGL()
         GLHelper.clearScreen(bgColor.x, bgColor.y, bgColor.z, 1f)
     }
 

@@ -10,7 +10,7 @@ import org.joml.*;
  * to apply.
  * <p>
  * Source: <a href="https://learnopengl.com/Getting-started/Coordinate-Systems">
- *     Learn OpenGL - Coordinate Systems</a>
+ * Learn OpenGL - Coordinate Systems</a>
  *
  * @author SlavSquatSuperstar
  */
@@ -69,29 +69,46 @@ public interface Viewport extends PointTransformer {
     float getZoom();
 
     /**
-     * The size of the viewport relative to the screen, or the pixels to draw on the
-     * screen per world unit.
+     * The size of the viewport relative to the screen, or the number of screen
+     * pixels per world unit.
      *
      * @return the scale
      */
     float getCameraScale();
 
-    // Camera Transformations
+    // Camera Transformation Methods
 
     /**
-     * The view matrix, which transforms world space into view space, or the camera's
-     * point of view.
+     * The view matrix, which transforms world space into view space, or the
+     * camera's point of view.
      *
-     * @return the 4x4 view matrix
+     * @return the 4x4 view matrix, identity by default
      */
-    Matrix4f getViewMatrix();
+    default Matrix4f getViewMatrix() {
+        return new Matrix4f();
+    }
 
     /**
-     * The projection matrix, which transforms view space into clip space, or normalized
-     * screen coordinates.
+     * The projection matrix, which transforms view space into clip space, or the
+     * normalized screen coordinates.
      *
-     * @return the 4x4 projection matrix
+     * @return the 4x4 projection matrix, identity by default
      */
-    Matrix4f getProjectionMatrix();
+    default Matrix4f getProjectionMatrix() {
+        return new Matrix4f();
+    }
+
+    /**
+     * Adjust the view matrix after the camera has been moved, rotated, or zoomed.
+     */
+    default void updateViewMatrix() {
+    }
+
+    /**
+     * Adjust the projection matrix after the screen size or aspect ratio has
+     * been changed.
+     */
+    default void updateProjectionMatrix() {
+    }
 
 }
