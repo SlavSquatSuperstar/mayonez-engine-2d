@@ -4,6 +4,7 @@ import mayonez.graphics.*;
 import mayonez.graphics.textures.*;
 import mayonez.math.*;
 import mayonez.renderer.gl.*;
+import mayonez.renderer.shader.*;
 import org.joml.*;
 
 /**
@@ -20,6 +21,7 @@ public class RenderBatch {
     // TODO store shader per batch
 
     // Batch Characteristics
+    private final Shader shader;
     private final DrawPrimitive primitive;
     private final int maxBatchObjects;
 
@@ -32,7 +34,9 @@ public class RenderBatch {
     private final VertexBuffer vbo; // VBO for this batch
     private final IndexBuffer ibo; // EBO/IBO for this batch
 
-    public RenderBatch(DrawPrimitive primitive, int maxBatchObjects, int maxTextureSlots) {
+    public RenderBatch(Shader shader, DrawPrimitive primitive,
+                       int maxBatchObjects, int maxTextureSlots) {
+        this.shader = shader;
         this.primitive = primitive;
         this.maxBatchObjects = maxBatchObjects;
 
@@ -174,6 +178,10 @@ public class RenderBatch {
     }
 
     // Batch Getters
+
+    public Shader getShader() {
+        return shader;
+    }
 
     public DrawPrimitive getPrimitive() {
         return primitive;

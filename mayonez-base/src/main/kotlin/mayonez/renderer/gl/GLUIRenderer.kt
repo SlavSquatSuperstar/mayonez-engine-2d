@@ -37,14 +37,6 @@ internal class GLUIRenderer(shader: Shader) : GLRenderer(shader), UIRenderer {
         drawObjects.clear()
     }
 
-    override fun preRender() {
-        super.preRender()
-
-        // Upload uniforms
-        shader.uploadMat4("uProjection", viewport.projectionMatrix)
-        shader.uploadIntArray("uTextures", textureSlots)
-    }
-
     override fun createBatches() {
         // Sort objects
         objects.sortBy { it.zIndex }
@@ -75,8 +67,15 @@ internal class GLUIRenderer(shader: Shader) : GLRenderer(shader), UIRenderer {
 
     // Helper Functions
 
+    override fun RenderBatch.uploadUniforms(viewport: Viewport, textureSlots: IntArray) {
+        // Upload uniforms
+        shader.bind()
+        shader.uploadMat4("uProjection", viewport.projectionMatrix)
+        shader.uploadIntArray("uTextures", textureSlots)
+    }
+
     override fun GLRenderable.createNewBatch(): RenderBatch {
-        val batch = MultiZRenderBatch(primitive, batchSize, MAX_TEXTURE_SLOTS)
+        val batch = MultiZRenderBatch(shader, primitive, batchSize, MAX_TEXTURE_SLOTS)
         batch.minZIndex = this.zIndex // Set min z-index
         batch.maxZIndex = this.zIndex // Set initial max z-index
         return batch

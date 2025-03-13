@@ -49,16 +49,8 @@ internal class GLDefaultRenderer(shader: Shader) : GLRenderer(shader),
     }
 
     override fun preRender() {
-        super.preRender()
-
-        // Upload uniforms
-        val cam = viewport
-        shader.uploadMat4("uView", cam.viewMatrix)
-        shader.uploadMat4("uProjection", cam.projectionMatrix)
-        shader.uploadIntArray("uTextures", textureSlots)
-
         // Draw background color
-        val bgColor = cam.backgroundColor.toGL()
+        val bgColor = viewport.backgroundColor.toGL()
         GLHelper.clearScreen(bgColor.x, bgColor.y, bgColor.z, 1f)
     }
 
@@ -101,14 +93,22 @@ internal class GLDefaultRenderer(shader: Shader) : GLRenderer(shader),
 
     // Helper Methods
 
+    override fun RenderBatch.uploadUniforms(viewport: Viewport, textureSlots: IntArray) {
+        // Upload uniforms
+        shader.bind()
+        shader.uploadMat4("uView", viewport.viewMatrix)
+        shader.uploadMat4("uProjection", viewport.projectionMatrix)
+        shader.uploadIntArray("uTextures", textureSlots)
+    }
+
     override fun GLRenderable.createNewBatch(): RenderBatch {
         val batch: RenderBatch
         if (primitive == DrawPrimitive.SPRITE) {
-            batch = MultiZRenderBatch(primitive, batchSize, MAX_TEXTURE_SLOTS)
+            batch = MultiZRenderBatch(shader, primitive, batchSize, MAX_TEXTURE_SLOTS)
             batch.minZIndex = this.zIndex // Set min z-index
             batch.maxZIndex = this.zIndex // Set initial max z-index
         } else {
-            batch = SingleZRenderBatch(primitive, batchSize, MAX_TEXTURE_SLOTS, zIndex)
+            batch = SingleZRenderBatch(shader, primitive, batchSize, MAX_TEXTURE_SLOTS, zIndex)
         }
         return batch
     }
