@@ -22,7 +22,7 @@ public final class AsteroidPrefabs {
     // TODO medium asteroid textures
     private static final int NUM_LARGE_TEXTURES = 2;
     private static final Texture[] LARGE_ASTEROID_TEXTURES;
-    private static final int NUM_MED_TEXTURES = 4;
+    private static final int NUM_MED_TEXTURES = 3;
     private static final SpriteSheet MED_ASTEROID_TEXTURES;
     private static final int NUM_SMALL_TEXTURES = 4;
     private static final SpriteSheet SMALL_ASTEROID_TEXTURES;
