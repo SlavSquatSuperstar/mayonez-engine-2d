@@ -13,7 +13,7 @@ import mayonez.renderer.shader.*
  * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.GL)
-internal class GLUIRenderer(shader: Shader) : GLRenderer(shader), UIRenderer {
+internal class GLUIRenderer() : GLRenderer(), UIRenderer {
 
     // Renderer Objects
     private val objects: MutableList<Renderable> = ArrayList()
@@ -75,7 +75,9 @@ internal class GLUIRenderer(shader: Shader) : GLRenderer(shader), UIRenderer {
     }
 
     override fun GLRenderable.createNewBatch(): RenderBatch {
-        val batch = MultiZRenderBatch(shader, primitive, batchSize, MAX_TEXTURE_SLOTS)
+        val batch = MultiZRenderBatch(
+            Shaders.UI_SHADER, primitive, batchSize, MAX_TEXTURE_SLOTS
+        )
         batch.minZIndex = this.zIndex // Set min z-index
         batch.maxZIndex = this.zIndex // Set initial max z-index
         return batch

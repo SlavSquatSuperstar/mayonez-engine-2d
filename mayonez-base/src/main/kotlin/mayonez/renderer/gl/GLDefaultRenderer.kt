@@ -15,7 +15,7 @@ import mayonez.renderer.shader.*
  * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.GL)
-internal class GLDefaultRenderer(shader: Shader) : GLRenderer(shader),
+internal class GLDefaultRenderer() : GLRenderer(),
     SceneRenderer, DebugRenderer {
 
     // Renderer Objects
@@ -108,11 +108,15 @@ internal class GLDefaultRenderer(shader: Shader) : GLRenderer(shader),
     override fun GLRenderable.createNewBatch(): RenderBatch {
         val batch: RenderBatch
         if (primitive == DrawPrimitive.SPRITE) {
-            batch = MultiZRenderBatch(shader, primitive, batchSize, MAX_TEXTURE_SLOTS)
+            batch = MultiZRenderBatch(
+                Shaders.DEFAULT_SHADER, primitive, batchSize, MAX_TEXTURE_SLOTS
+            )
             batch.minZIndex = this.zIndex // Set min z-index
             batch.maxZIndex = this.zIndex // Set initial max z-index
         } else {
-            batch = SingleZRenderBatch(shader, primitive, batchSize, MAX_TEXTURE_SLOTS, zIndex)
+            batch = SingleZRenderBatch(
+                Shaders.DEBUG_SHADER, primitive, batchSize, MAX_TEXTURE_SLOTS, zIndex
+            )
         }
         return batch
     }

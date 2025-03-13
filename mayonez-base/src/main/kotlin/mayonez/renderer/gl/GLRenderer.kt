@@ -4,7 +4,6 @@ import mayonez.*
 import mayonez.graphics.*
 import mayonez.renderer.*
 import mayonez.renderer.batch.*
-import mayonez.renderer.shader.*
 import java.awt.*
 
 /**
@@ -14,7 +13,7 @@ import java.awt.*
  * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.GL)
-abstract class GLRenderer(protected val shader: Shader) : Renderer {
+abstract class GLRenderer() : Renderer {
 
     companion object {
         @JvmStatic
@@ -54,9 +53,7 @@ abstract class GLRenderer(protected val shader: Shader) : Renderer {
     protected abstract fun createBatches()
 
     /** Finish drawing and free resources from the GPU. */
-    protected open fun postRender() {
-        shader.unbind() // Unbind everything
-    }
+    protected open fun postRender() {}
 
     // Camera Methods
 
