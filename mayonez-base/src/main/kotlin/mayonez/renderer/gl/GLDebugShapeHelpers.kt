@@ -14,6 +14,7 @@ internal fun DebugShape.getParts(zoom: Float): Array<out MShape> {
     return when (val shape = this.shape) {
         is Edge -> arrayOf(shape) // Add line directly
         is MPolygon -> shape.getParts(this.fill) // Break polys into lines or triangles
+        is Circle -> shape.getParts(zoom, this.fill) // Add circle directly if full
         is Ellipse -> shape.toPolygon(zoom).getParts(this.fill) // Convert circles to polys
         else -> emptyArray()
     }
@@ -22,6 +23,11 @@ internal fun DebugShape.getParts(zoom: Float): Array<out MShape> {
 // Poly > Lines/Tris
 private fun MPolygon.getParts(fill: Boolean): Array<out MShape> {
     return if (fill) this.triangles else this.edges
+}
+
+private fun Circle.getParts(zoom: Float, fill: Boolean): Array<out MShape> {
+    return if (fill) arrayOf(this)
+    else this.toPolygon(zoom).getParts(false)
 }
 
 // Circle > Poly
@@ -38,6 +44,6 @@ internal fun Edge.getDrawParts(brush: ShapeBrush, zoom: Float): List<DebugShape>
     return rect.triangles.map { tri -> tri.getDrawShape(brush) }
 }
 
-internal fun Triangle.getDrawShape(brush: ShapeBrush): DebugShape {
+internal fun MShape.getDrawShape(brush: ShapeBrush): DebugShape {
     return DebugShape(this, brush.copy(fill = true))
 }

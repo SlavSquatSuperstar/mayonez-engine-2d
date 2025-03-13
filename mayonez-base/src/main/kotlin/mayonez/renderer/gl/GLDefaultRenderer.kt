@@ -113,6 +113,10 @@ internal class GLDefaultRenderer() : GLRenderer(),
             )
             batch.minZIndex = this.zIndex // Set min z-index
             batch.maxZIndex = this.zIndex // Set initial max z-index
+        } else if (primitive == DrawPrimitive.CIRCLE) {
+            batch = SingleZRenderBatch(
+                Shaders.CIRCLE_SHADER, primitive, batchSize, MAX_TEXTURE_SLOTS, zIndex
+            )
         } else {
             batch = SingleZRenderBatch(
                 Shaders.DEBUG_SHADER, primitive, batchSize, MAX_TEXTURE_SLOTS, zIndex
@@ -135,7 +139,7 @@ internal class GLDefaultRenderer() : GLRenderer(),
         getParts(zoom).forEach { shapePart ->
             if (shapePart is Edge) {
                 drawObjects.addAll(shapePart.getDrawParts(this.brush, zoom))
-            } else if (shapePart is Triangle) {
+            } else if (shapePart is Triangle || shapePart is Circle) {
                 drawObjects.add(shapePart.getDrawShape(this.brush))
             }
         }

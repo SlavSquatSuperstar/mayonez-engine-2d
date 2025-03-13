@@ -18,6 +18,8 @@ public final class Shaders {
             getShaderFromFile("assets/shaders/default.glsl");
     public static final Shader DEBUG_SHADER =
             getShaderFromFile("assets/shaders/debug.glsl");
+    public static final Shader CIRCLE_SHADER =
+            getShaderFromFile("assets/shaders/circle.glsl");
     public static final Shader UI_SHADER =
             getShaderFromFile("assets/shaders/ui.glsl");
 

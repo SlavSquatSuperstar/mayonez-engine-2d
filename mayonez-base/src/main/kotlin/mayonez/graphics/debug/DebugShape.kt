@@ -1,7 +1,9 @@
 package mayonez.graphics.debug
 
 import mayonez.graphics.*
+import mayonez.math.*
 import mayonez.math.shapes.*
+import mayonez.math.shapes.Rectangle
 import mayonez.renderer.awt.*
 import mayonez.renderer.batch.*
 import mayonez.renderer.gl.*
@@ -9,6 +11,11 @@ import java.awt.*
 
 private const val MAX_BATCH_LINES: Int = 500
 private const val MAX_BATCH_TRIANGLES: Int = 1000
+
+private val GLOBAL_CIRCLE_VERTICES: Array<Vec2> =
+    Rectangle.rectangleVerticesMinMax(Vec2(-0.5f), Vec2(0.5f))
+private val LOCAL_CIRCLE_VERTICES: Array<Vec2> =
+    Rectangle.rectangleVerticesMinMax(Vec2(-1f), Vec2(1f))
 
 /**
  * Passes shape and color information to a [mayonez.renderer.DebugRenderer].
@@ -54,6 +61,7 @@ internal data class DebugShape(internal val shape: MShape, internal val brush: S
         when (val shape = this.shape) {
             is Edge -> batch.pushLine(shape, color)
             is Triangle -> batch.pushTriangle(shape, color)
+            is Circle -> batch.pushCircle(shape, color)
         }
     }
 
@@ -71,6 +79,14 @@ internal data class DebugShape(internal val shape: MShape, internal val brush: S
         }
     }
 
+    private fun RenderBatch.pushCircle(circle: Circle, color: GLColor) {
+        for (i in 0..<ElementLayout.QUAD.vertexCount) {
+            pushVec2((GLOBAL_CIRCLE_VERTICES[i] * circle.radius * 2f) + circle.center())
+            pushVec2(LOCAL_CIRCLE_VERTICES[i])
+            pushVec4(color)
+        }
+    }
+
     // Renderable Methods
 
     override fun getBatchSize(): Int {
@@ -79,8 +95,11 @@ internal data class DebugShape(internal val shape: MShape, internal val brush: S
     }
 
     override fun getPrimitive(): DrawPrimitive {
-        return if (fill) DrawPrimitive.TRIANGLE
-        else DrawPrimitive.LINE
+        return when {
+            fill && shape is Circle -> DrawPrimitive.CIRCLE
+            fill -> DrawPrimitive.TRIANGLE
+            else -> DrawPrimitive.LINE
+        }
     }
 
     override fun getZIndex(): Int = brush.zIndex

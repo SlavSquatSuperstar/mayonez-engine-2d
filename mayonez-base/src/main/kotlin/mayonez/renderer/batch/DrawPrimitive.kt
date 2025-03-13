@@ -13,18 +13,38 @@ import java.nio.IntBuffer
 enum class DrawPrimitive(
     val layout: ElementLayout, vararg val attributes: VertexAttribute
 ) {
-    /** An object with 2 vertices, each with attributes position and color. */
+    /**
+     * An object with 2 vertices, each with attributes position and color.
+     */
     LINE(ElementLayout.LINE, VertexAttribute.POSITION, VertexAttribute.COLOR),
 
-    /** An object with 3 vertices, each with attributes position and color. */
+    /**
+     * An object with 3 vertices, each with attributes position and color.
+     */
     TRIANGLE(ElementLayout.TRIANGLE, VertexAttribute.POSITION, VertexAttribute.COLOR),
+
+    /**
+     * An object with 4 vertices, each with attributes position, local position,
+     * and color.
+     *
+     * Sources:
+     * - [Drawing circles as triangles](https://www.youtube.com/watch?v=VEnglRKNHjU)
+     * - [Drawing circles as quads](https://stackoverflow.com/questions/22444450/drawing-circle-with-opengl/50408198#50408198)
+     * - [TheCherno Hazel Engine circle shader](https://github.com/TheCherno/Hazel/blob/master/Hazelnut/assets/shaders/Renderer2D_Circle.glsl)
+     */
+    CIRCLE(
+        ElementLayout.QUAD,
+        VertexAttribute.POSITION, VertexAttribute.TEX_COORD,
+        VertexAttribute.COLOR
+    ),
 
     /**
      * An object with 4 vertices, each with attributes position, color, tex coords,
      * and tex slot.
      */
     SPRITE(
-        ElementLayout.QUAD, VertexAttribute.POSITION, VertexAttribute.COLOR,
+        ElementLayout.QUAD,
+        VertexAttribute.POSITION, VertexAttribute.COLOR,
         VertexAttribute.TEX_COORD, VertexAttribute.TEX_SLOT
     );
 
