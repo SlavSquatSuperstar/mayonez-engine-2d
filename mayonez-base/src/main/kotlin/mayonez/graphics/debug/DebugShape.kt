@@ -9,6 +9,7 @@ import mayonez.renderer.batch.*
 import mayonez.renderer.gl.*
 import java.awt.*
 
+private const val MAX_BATCH_CIRCLES: Int = 200
 private const val MAX_BATCH_LINES: Int = 500
 private const val MAX_BATCH_TRIANGLES: Int = 1000
 
@@ -80,23 +81,30 @@ internal data class DebugShape(internal val shape: MShape, internal val brush: S
     }
 
     private fun RenderBatch.pushCircle(circle: Circle, color: GLColor) {
+        var totalWidth = circle.radius * 2f
+        val relativeStroke = strokeSize / circle.radius
         for (i in 0..<ElementLayout.QUAD.vertexCount) {
-            pushVec2((GLOBAL_CIRCLE_VERTICES[i] * circle.radius * 2f) + circle.center())
+            pushVec2((GLOBAL_CIRCLE_VERTICES[i] * totalWidth) + circle.center())
             pushVec2(LOCAL_CIRCLE_VERTICES[i])
             pushVec4(color)
+            pushFloat(relativeStroke)
+            pushInt(if (fill) 1 else 0)
         }
     }
 
     // Renderable Methods
 
     override fun getBatchSize(): Int {
-        return if (fill) MAX_BATCH_TRIANGLES
-        else MAX_BATCH_LINES
+        return when {
+            shape is Circle -> MAX_BATCH_CIRCLES
+            fill -> MAX_BATCH_TRIANGLES
+            else -> MAX_BATCH_LINES
+        }
     }
 
     override fun getPrimitive(): DrawPrimitive {
         return when {
-            fill && shape is Circle -> DrawPrimitive.CIRCLE
+            shape is Circle -> DrawPrimitive.CIRCLE
             fill -> DrawPrimitive.TRIANGLE
             else -> DrawPrimitive.LINE
         }

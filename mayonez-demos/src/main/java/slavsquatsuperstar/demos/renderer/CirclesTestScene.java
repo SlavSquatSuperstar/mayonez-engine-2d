@@ -30,6 +30,7 @@ public class CirclesTestScene extends DemoScene {
     @Override
     protected void init() {
         getCamera().setCameraScale(SCENE_SCALE);
+
         for (int i = 0; i < NUM_CIRCLES; i++) {
             var position = Random.randomVector(
                     SCENE_HALF_SIZE.mul(-1f), SCENE_HALF_SIZE

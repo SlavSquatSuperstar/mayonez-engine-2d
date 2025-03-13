@@ -139,8 +139,10 @@ internal class GLDefaultRenderer() : GLRenderer(),
         getParts(zoom).forEach { shapePart ->
             if (shapePart is Edge) {
                 drawObjects.addAll(shapePart.getDrawParts(this.brush, zoom))
-            } else if (shapePart is Triangle || shapePart is Circle) {
+            } else if (shapePart is Triangle) {
                 drawObjects.add(shapePart.getDrawShape(this.brush))
+            } else if (shapePart is Circle) {
+                drawObjects.add(shapePart.getDrawShape(this.brush, zoom))
             }
         }
     }

@@ -112,6 +112,10 @@ public class RenderBatch {
         vertices.push((float) i);
     }
 
+    public void pushFloat(float f) {
+        vertices.push(f);
+    }
+
     public void pushVec2(Vec2 v) {
         vertices.push(v.x, v.y);
     }
