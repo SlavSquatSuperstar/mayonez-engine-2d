@@ -1,6 +1,7 @@
 package mayonez.graphics.debug
 
 import mayonez.graphics.*
+import java.util.*
 
 /**
  * Defines what parameters to use while drawing a
@@ -51,6 +52,20 @@ data class ShapeBrush internal constructor(
             return ShapeBrush(color, DrawPriority.SOLID_SHAPE)
         }
 
+    }
+
+    // Object Overrides
+
+    override fun equals(other: Any?): Boolean {
+        return other is ShapeBrush &&
+                this.color == other.color &&
+                this.fill == other.fill &&
+                this.zIndex == other.zIndex &&
+                this.strokeSize == other.strokeSize
+    }
+
+    override fun hashCode(): Int {
+        return Objects.hash(color, fill, zIndex, strokeSize)
     }
 
 }

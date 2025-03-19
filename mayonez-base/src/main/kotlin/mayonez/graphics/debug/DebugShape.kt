@@ -8,6 +8,7 @@ import mayonez.renderer.awt.*
 import mayonez.renderer.batch.*
 import mayonez.renderer.gl.*
 import java.awt.*
+import java.util.*
 
 private const val MAX_BATCH_CIRCLES: Int = 200
 private const val MAX_BATCH_LINES: Int = 500
@@ -32,7 +33,7 @@ internal data class DebugShape(internal val shape: MShape, internal val brush: S
     internal val fill: Boolean
         get() = brush.fill
 
-    internal val strokeSize: Float
+    private val strokeSize: Float
         get() = brush.strokeSize
 
     // AWT Renderer Methods
@@ -115,6 +116,18 @@ internal data class DebugShape(internal val shape: MShape, internal val brush: S
     override fun isEnabled(): Boolean = true
 
     override fun isInUI(): Boolean = false
+
+    // Object Overrides
+
+    override fun equals(other: Any?): Boolean {
+        return other is DebugShape &&
+                this.shape == other.shape &&
+                this.brush == other.brush
+    }
+
+    override fun hashCode(): Int {
+        return Objects.hash(shape, brush)
+    }
 
     override fun toString(): String {
         return "Debug ${shape.javaClass.simpleName}, $brush"

@@ -43,7 +43,7 @@ public class CirclesTestScene extends DemoScene {
                 protected void init() {
                     addComponent(new BallCollider(new Vec2(1f)));
                     var color = Colors.randomColor();
-                    var fill = true;
+                    var fill = Random.randomBoolean();
                     addComponent(new ShapeSprite(color, fill));
                 }
             });

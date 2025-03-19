@@ -35,6 +35,7 @@ private fun Ellipse.toPolygon(zoom: Float): MPolygon {
 // Line > Tris
 internal fun Edge.getDrawParts(brush: ShapeBrush, zoom: Float): List<DebugShape> {
     val stroke = brush.strokeSize / zoom // Apparent width in pixels
+    // TODO looks bad for large strokes
     val rect = Rectangle(this.center(), Vec2(this.length, stroke), this.toVector().angle())
     return rect.triangles.map { tri -> tri.getDrawShape(brush) }
 }
@@ -45,7 +46,8 @@ internal fun Triangle.getDrawShape(brush: ShapeBrush): DebugShape {
 
 internal fun Circle.getDrawShape(brush: ShapeBrush, zoom: Float): DebugShape {
     val stroke = brush.strokeSize / zoom // Apparent width in pixels
-    var totalRadius = this.radius + stroke * 0.5f
+    val totalRadius = if (brush.fill) this.radius
+    else this.radius + stroke * 0.5f // Increase diameter by stroke
     return DebugShape(Circle(this.center(), totalRadius), brush.copy(strokeSize = stroke))
 }
 
