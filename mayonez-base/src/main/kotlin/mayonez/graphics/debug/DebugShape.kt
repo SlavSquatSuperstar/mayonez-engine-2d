@@ -1,9 +1,7 @@
 package mayonez.graphics.debug
 
 import mayonez.graphics.*
-import mayonez.math.*
 import mayonez.math.shapes.*
-import mayonez.math.shapes.Rectangle
 import mayonez.renderer.awt.*
 import mayonez.renderer.batch.*
 import mayonez.renderer.gl.*
@@ -14,10 +12,6 @@ private const val MAX_BATCH_CIRCLES: Int = 200
 private const val MAX_BATCH_LINES: Int = 500
 private const val MAX_BATCH_TRIANGLES: Int = 1000
 
-private val GLOBAL_CIRCLE_VERTICES: Array<Vec2> =
-    Rectangle.rectangleVerticesMinMax(Vec2(-0.5f), Vec2(0.5f))
-private val LOCAL_CIRCLE_VERTICES: Array<Vec2> =
-    Rectangle.rectangleVerticesMinMax(Vec2(-1f), Vec2(1f))
 
 /**
  * Passes shape and color information to a [mayonez.renderer.DebugRenderer].
@@ -59,38 +53,8 @@ internal data class DebugShape(internal val shape: MShape, internal val brush: S
      */
     override fun pushToBatch(batch: RenderBatch) {
         val color = color.toGL()
-        color.w = 1f // disable transparency
-        when (val shape = this.shape) {
-            is Edge -> batch.pushLine(shape, color)
-            is Triangle -> batch.pushTriangle(shape, color)
-            is Circle -> batch.pushCircle(shape, color)
-        }
-    }
-
-    private fun RenderBatch.pushLine(line: Edge, color: GLColor) {
-        pushVec2(line.start)
-        pushVec4(color)
-        pushVec2(line.end)
-        pushVec4(color)
-    }
-
-    private fun RenderBatch.pushTriangle(tri: Triangle, color: GLColor) {
-        for (v in tri.vertices) {
-            pushVec2(v)
-            pushVec4(color)
-        }
-    }
-
-    private fun RenderBatch.pushCircle(circle: Circle, color: GLColor) {
-        var totalWidth = circle.radius * 2f
-        val relativeStroke = strokeSize / circle.radius
-        for (i in 0..<ElementLayout.QUAD.vertexCount) {
-            pushVec2((GLOBAL_CIRCLE_VERTICES[i] * totalWidth) + circle.center())
-            pushVec2(LOCAL_CIRCLE_VERTICES[i])
-            pushVec4(color)
-            pushFloat(relativeStroke)
-            pushInt(if (fill) 1 else 0)
-        }
+        color.w = 1f // Disable transparency due to reused vertices
+        batch.pushShape(shape, color, brush)
     }
 
     // Renderable Methods
