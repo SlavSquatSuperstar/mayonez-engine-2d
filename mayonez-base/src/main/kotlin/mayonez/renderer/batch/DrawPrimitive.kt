@@ -39,6 +39,16 @@ enum class DrawPrimitive(
     ),
 
     /**
+     * An object with 4 vertices, each with attributes position, local position,
+     * color, and inner radii.
+     */
+    ELLIPSE(
+        ElementLayout.QUAD,
+        VertexAttribute.POSITION, VertexAttribute.TEX_COORD,
+        VertexAttribute.COLOR, VertexAttribute.TEX_COORD
+    ),
+
+    /**
      * An object with 4 vertices, each with attributes position, color, tex coords,
      * and tex slot.
      */
