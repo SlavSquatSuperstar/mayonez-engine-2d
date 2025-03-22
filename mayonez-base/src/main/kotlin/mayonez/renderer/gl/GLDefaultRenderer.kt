@@ -117,6 +117,10 @@ internal class GLDefaultRenderer() : GLRenderer(),
             batch = SingleZRenderBatch(
                 Shaders.CIRCLE_SHADER, primitive, batchSize, MAX_TEXTURE_SLOTS, zIndex
             )
+        } else if (primitive == DrawPrimitive.ELLIPSE) {
+            batch = SingleZRenderBatch(
+                Shaders.ELLIPSE_SHADER, primitive, batchSize, MAX_TEXTURE_SLOTS, zIndex
+            )
         } else {
             batch = SingleZRenderBatch(
                 Shaders.DEBUG_SHADER, primitive, batchSize, MAX_TEXTURE_SLOTS, zIndex
@@ -136,12 +140,14 @@ internal class GLDefaultRenderer() : GLRenderer(),
     private fun DebugShape.processShape() {
         val cam = viewport
         val zoom = cam.zoom * cam.cameraScale
-        getParts(zoom).forEach { shapePart ->
+        getParts().forEach { shapePart ->
             if (shapePart is Edge) {
                 drawObjects.addAll(shapePart.getDrawParts(this.brush, zoom))
             } else if (shapePart is Triangle) {
                 drawObjects.add(shapePart.getDrawShape(this.brush))
             } else if (shapePart is Circle) {
+                drawObjects.add(shapePart.getDrawShape(this.brush, zoom))
+            } else if (shapePart is Ellipse) {
                 drawObjects.add(shapePart.getDrawShape(this.brush, zoom))
             }
         }

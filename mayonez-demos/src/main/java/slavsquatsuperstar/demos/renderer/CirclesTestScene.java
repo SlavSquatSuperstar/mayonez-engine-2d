@@ -35,8 +35,20 @@ public class CirclesTestScene extends DemoScene {
             var position = Random.randomVector(
                     SCENE_HALF_SIZE.mul(-1f), SCENE_HALF_SIZE
             );
-            var scale = new Vec2(Random.randomFloat(0.1f, 1.0f));
-            var transform = new Transform(position, 0, scale);
+            float rotation;
+            Vec2 scale;
+
+            var isEllipse = Random.randomPercent(0.60f);
+            if (isEllipse) {
+                rotation = Random.randomAngle();
+                var width = Random.randomFloat(0.125f, 1.0f);
+                var height = width * Random.randomFloat(0.8f, 1f);
+                scale = new Vec2(width, height);
+            } else {
+                rotation = 0f;
+                scale = new Vec2(Random.randomFloat(0.1f, 1.0f));
+            }
+            var transform = new Transform(position, rotation, scale);
 
             addObject(new GameObject("Ball " + (i + 1), transform) {
                 @Override

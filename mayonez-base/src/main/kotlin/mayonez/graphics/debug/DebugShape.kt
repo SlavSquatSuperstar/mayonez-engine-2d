@@ -62,6 +62,7 @@ internal data class DebugShape(internal val shape: MShape, internal val brush: S
     override fun getBatchSize(): Int {
         return when {
             shape is Circle -> MAX_BATCH_CIRCLES
+            shape is Ellipse -> MAX_BATCH_CIRCLES
             fill -> MAX_BATCH_TRIANGLES
             else -> MAX_BATCH_LINES
         }
@@ -70,6 +71,7 @@ internal data class DebugShape(internal val shape: MShape, internal val brush: S
     override fun getPrimitive(): DrawPrimitive {
         return when {
             shape is Circle -> DrawPrimitive.CIRCLE
+            shape is Ellipse -> DrawPrimitive.ELLIPSE
             fill -> DrawPrimitive.TRIANGLE
             else -> DrawPrimitive.LINE
         }

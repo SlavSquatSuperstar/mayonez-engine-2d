@@ -3,19 +3,18 @@ package mayonez.renderer.gl
 import mayonez.graphics.debug.*
 import mayonez.math.*
 import mayonez.math.shapes.*
-import kotlin.math.*
 
 /**
  * Break down this shape into its simplest components (lines or triangles).
  *
  * @return an array of primitive shapes
  */
-internal fun DebugShape.getParts(zoom: Float): Array<out MShape> {
+internal fun DebugShape.getParts(): Array<out MShape> {
     return when (val shape = this.shape) {
-        is Edge -> arrayOf(shape) // Add line directly
+        is Edge -> arrayOf(shape) // Add lines directly
         is MPolygon -> shape.getParts(this.fill) // Break polys into lines or triangles
-        is Circle -> arrayOf(shape) // Add circle directly
-        is Ellipse -> shape.toPolygon(zoom).getParts(this.fill) // Convert circles to polys
+        is Circle -> arrayOf(shape) // Add circles directly
+        is Ellipse -> arrayOf(shape) // Add ellipses directly
         else -> emptyArray()
     }
 }
@@ -23,13 +22,6 @@ internal fun DebugShape.getParts(zoom: Float): Array<out MShape> {
 // Poly > Lines/Tris
 private fun MPolygon.getParts(fill: Boolean): Array<out MShape> {
     return if (fill) this.triangles else this.edges
-}
-
-// Circle > Poly
-private fun Ellipse.toPolygon(zoom: Float): MPolygon {
-    // Apparent circumference in pixels
-    val numEdges = (this.circumference() * 0.1f * zoom).roundToInt().coerceAtLeast(8)
-    return this.toPolygon(numEdges)
 }
 
 // Line > Tris
@@ -51,3 +43,12 @@ internal fun Circle.getDrawShape(brush: ShapeBrush, zoom: Float): DebugShape {
     return DebugShape(Circle(this.center(), totalRadius), brush.copy(strokeSize = stroke))
 }
 
+internal fun Ellipse.getDrawShape(brush: ShapeBrush, zoom: Float): DebugShape {
+    val stroke = brush.strokeSize / zoom // Apparent width in pixels
+    val totalSize = if (brush.fill) this.size
+    else this.size + Vec2(stroke) // Increase dimensions by stroke
+    return DebugShape(
+        Ellipse(this.center(), totalSize, this.angle),
+        brush.copy(strokeSize = stroke)
+    )
+}

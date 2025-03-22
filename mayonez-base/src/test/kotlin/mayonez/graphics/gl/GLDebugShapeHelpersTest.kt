@@ -37,4 +37,22 @@ internal class GLDebugShapeHelpersTest {
         assertEquals(expected, result)
     }
 
+    @Test
+    fun getDrawnSolidEllipseCorrect() {
+        val ellipse = Ellipse(Vec2(5f), Vec2(20f, 16f), 30f)
+        val brush = ShapeBrush.createSolidBrush(DEFAULT_COlOR).setStrokeSize(TEST_STROKE)
+        val result = ellipse.getDrawShape(brush, TEST_ZOOM)
+        val expected = DebugShape(Ellipse(Vec2(5f), Vec2(20f, 16f), 30f), brush)
+        assertEquals(expected, result)
+    }
+
+    @Test
+    fun getDrawnOutlineEllipseCorrect() {
+        val ellipse = Ellipse(Vec2(5f), Vec2(20f, 16f), 30f)
+        val brush = ShapeBrush.createOutlineBrush(DEFAULT_COlOR).setStrokeSize(TEST_STROKE)
+        val result = ellipse.getDrawShape(brush, TEST_ZOOM)
+        val expected = DebugShape(Ellipse(Vec2(5f), Vec2(22f, 18f), 30f), brush)
+        assertEquals(expected, result)
+    }
+
 }
