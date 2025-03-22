@@ -94,7 +94,7 @@ internal data class DebugShape(internal val shape: MShape, internal val brush: S
     }
 
     override fun toString(): String {
-        return "Debug ${shape.javaClass.simpleName}, $brush"
+        return "Debug $shape, $brush"
     }
 
 }

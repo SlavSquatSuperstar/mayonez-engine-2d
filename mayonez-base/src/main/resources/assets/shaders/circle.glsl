@@ -6,23 +6,20 @@
 layout (location=0) in vec3 aPosition;
 layout (location=1) in vec2 aLocalPosition;
 layout (location=2) in vec4 aColor;
-layout (location=3) in float aStroke;
-layout (location=4) in float aFill;
+layout (location=3) in float aInnerRadius;
 
 uniform mat4 uView;
 uniform mat4 uProjection;
 
-out vec4 fColor;
 out vec2 fLocalPosition;
-out float fStroke;
-out float fFill;
+out vec4 fColor;
+out float fInnerRadius;
 
 void main()
 {
     fLocalPosition = aLocalPosition;
     fColor = aColor;
-    fStroke = aStroke;
-    fFill = aFill;
+    fInnerRadius = aInnerRadius;
 
     gl_Position = uProjection * uView * vec4(aPosition, 1.0);
 }
@@ -32,26 +29,21 @@ void main()
 
 in vec2 fLocalPosition;
 in vec4 fColor;
-in float fStroke;
-in float fFill;
+in float fInnerRadius;
 
 out vec4 color;
 
 void main()
 {
-    float rad = 1.0;
+    // Outer radius is always circle radius
+    float outerRadiusSq = 1.0;
 
-    if (fFill > 0.5) { // Solid
-        float distSq = dot(fLocalPosition, fLocalPosition);
-        if (distSq >= rad) {
-            discard; // Pixel is outside of circle
-        }
-    } else { // Outline
-        // Handle stroke
-        float dist = length(fLocalPosition);
-        if (dist >= rad || dist <= rad - fStroke) {
-            discard; // Pixel is outside of border
-        }
+    // Circle/Annulus Equation: r_i^2 ≤ x^2 + y^2 ≤ r_o^2
+    float distSq = dot(fLocalPosition, fLocalPosition);
+
+    // Check pixel is between outer and inner radii
+    if (distSq > outerRadiusSq || distSq < fInnerRadius * fInnerRadius) {
+        discard;
     }
 
     // Set output color

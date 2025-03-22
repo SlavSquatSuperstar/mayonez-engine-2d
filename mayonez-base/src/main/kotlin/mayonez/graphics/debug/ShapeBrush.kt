@@ -13,11 +13,14 @@ data class ShapeBrush internal constructor(
     internal val color: MColor,
     internal val fill: Boolean,
     internal val zIndex: Int,
-    internal val strokeSize: Float
+    internal val strokeSize: Float // TODO stroke is twice as wide as it should be
 ) {
 
     private constructor(color: MColor?, priority: DrawPriority) :
-            this(color ?: DebugDraw.DEFAULT_COLOR, priority.fill, priority.zIndex, DebugDraw.DEFAULT_STROKE_SIZE)
+            this(
+                color ?: DebugDraw.DEFAULT_COLOR, priority.fill,
+                priority.zIndex, DebugDraw.DEFAULT_STROKE_SIZE
+            )
 
     // Copy Methods
 

@@ -36,13 +36,14 @@ private fun RenderBatch.pushTriangle(tri: Triangle, color: GLColor) {
 }
 
 private fun RenderBatch.pushCircle(circle: Circle, color: GLColor, brush: ShapeBrush) {
-    var totalWidth = circle.radius * 2f
-    val relativeStroke = brush.strokeSize / circle.radius
+    val outerWidth = circle.radius * 2f
+    val innerWidth = if (brush.fill) 0f else outerWidth - brush.strokeSize * 2f
+    // Temporarily set stroke to double until fixed
+    val relativeInnerWidth = innerWidth / outerWidth
     for (i in 0..<ElementLayout.QUAD.vertexCount) {
-        pushVec2((GLOBAL_CIRCLE_VERTICES[i] * totalWidth) + circle.center())
+        pushVec2((GLOBAL_CIRCLE_VERTICES[i] * outerWidth) + circle.center())
         pushVec2(LOCAL_CIRCLE_VERTICES[i])
         pushVec4(color)
-        pushFloat(relativeStroke)
-        pushInt(if (brush.fill) 1 else 0)
+        pushFloat(relativeInnerWidth)
     }
 }

@@ -25,7 +25,7 @@ enum class DrawPrimitive(
 
     /**
      * An object with 4 vertices, each with attributes position, local position,
-     * color, fill, and stroke size.
+     * color, and inner radius.
      *
      * Sources:
      * - [Drawing circles as triangles](https://www.youtube.com/watch?v=VEnglRKNHjU)
@@ -35,7 +35,7 @@ enum class DrawPrimitive(
     CIRCLE(
         ElementLayout.QUAD,
         VertexAttribute.POSITION, VertexAttribute.TEX_COORD,
-        VertexAttribute.COLOR, VertexAttribute.TEX_SLOT, VertexAttribute.TEX_SLOT
+        VertexAttribute.COLOR, VertexAttribute.TEX_SLOT
     ),
 
     /**
