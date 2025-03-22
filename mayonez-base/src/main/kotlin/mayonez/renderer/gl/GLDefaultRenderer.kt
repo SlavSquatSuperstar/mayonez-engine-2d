@@ -3,7 +3,6 @@ package mayonez.renderer.gl
 import mayonez.graphics.*
 import mayonez.graphics.debug.*
 import mayonez.graphics.font.*
-import mayonez.math.shapes.*
 import mayonez.renderer.*
 import mayonez.renderer.batch.*
 import mayonez.renderer.shader.*
@@ -65,9 +64,9 @@ internal class GLDefaultRenderer() : GLRenderer(),
 
         // Process objects
         objects.filter { it.isEnabled }
-            .forEach { it.process() }
+            .forEach { it.getDrawParts() }
         tempObjects.filter { it.isEnabled }
-            .forEach { it.process() }
+            .forEach { it.getDrawParts() }
 
         // Push objects
         var lastBatch: RenderBatch? = null
@@ -115,41 +114,27 @@ internal class GLDefaultRenderer() : GLRenderer(),
             batch.maxZIndex = this.zIndex // Set initial max z-index
         } else if (primitive == DrawPrimitive.CIRCLE) {
             batch = SingleZRenderBatch(
-                Shaders.CIRCLE_SHADER, primitive, batchSize, MAX_TEXTURE_SLOTS, zIndex
+                Shaders.CIRCLE_SHADER, primitive, batchSize, 0, zIndex
             )
         } else if (primitive == DrawPrimitive.ELLIPSE) {
             batch = SingleZRenderBatch(
-                Shaders.ELLIPSE_SHADER, primitive, batchSize, MAX_TEXTURE_SLOTS, zIndex
+                Shaders.ELLIPSE_SHADER, primitive, batchSize, 0, zIndex
             )
         } else {
             batch = SingleZRenderBatch(
-                Shaders.DEBUG_SHADER, primitive, batchSize, MAX_TEXTURE_SLOTS, zIndex
+                Shaders.DEBUG_SHADER, primitive, batchSize, 0, zIndex
             )
         }
         return batch
     }
 
-    private fun Renderable.process() {
-        when (this) {
-            is DebugShape -> this.processShape()
-            is GLRenderable -> drawObjects.add(this)
-            is TextLabel -> drawObjects.addAll(this.glyphSprites)
-        }
-    }
-
-    private fun DebugShape.processShape() {
+    private fun Renderable.getDrawParts() {
         val cam = viewport
         val zoom = cam.zoom * cam.cameraScale
-        getParts().forEach { shapePart ->
-            if (shapePart is Edge) {
-                drawObjects.addAll(shapePart.getDrawParts(this.brush, zoom))
-            } else if (shapePart is Triangle) {
-                drawObjects.add(shapePart.getDrawShape(this.brush))
-            } else if (shapePart is Circle) {
-                drawObjects.add(shapePart.getDrawShape(this.brush, zoom))
-            } else if (shapePart is Ellipse) {
-                drawObjects.add(shapePart.getDrawShape(this.brush, zoom))
-            }
+        when (this) {
+            is DebugShape -> drawObjects.addAll(this.getDrawParts(zoom))
+            is GLRenderable -> drawObjects.add(this)
+            is TextLabel -> drawObjects.addAll(this.glyphSprites)
         }
     }
 
