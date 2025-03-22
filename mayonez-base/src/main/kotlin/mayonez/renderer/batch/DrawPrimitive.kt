@@ -3,9 +3,15 @@ package mayonez.renderer.batch
 import mayonez.graphics.*
 import java.nio.IntBuffer
 
+// Vertex Attribute Aliases
+private val POSITION: VertexAttribute = VertexAttribute.FLOAT2 // (x, y, 0)
+private val TEX_COORD: VertexAttribute = VertexAttribute.FLOAT2 // (u, v)
+private val COLOR: VertexAttribute = VertexAttribute.FLOAT4 // (r, g, b, a)
+private val TEX_SLOT: VertexAttribute = VertexAttribute.INT // i
+
 /**
  * Types of OpenGL primitive objects that can be submitted to the GPU. Each
- * object defines the attribute layout and count of vertices.
+ * object defines the element and attribute layout.
  *
  * @author SlavSquatSuperstar
  */
@@ -14,17 +20,32 @@ enum class DrawPrimitive(
     val layout: ElementLayout, vararg val attributes: VertexAttribute
 ) {
     /**
-     * An object with 2 vertices, each with attributes position and color.
+     * A line segment with 2 vertices, each with attributes position and color.
      */
-    LINE(ElementLayout.LINE, VertexAttribute.POSITION, VertexAttribute.COLOR),
+    LINE(
+        ElementLayout.LINE,
+        POSITION, COLOR
+    ),
 
     /**
-     * An object with 3 vertices, each with attributes position and color.
+     * A triangle with 3 vertices, each with attributes position and color.
      */
-    TRIANGLE(ElementLayout.TRIANGLE, VertexAttribute.POSITION, VertexAttribute.COLOR),
+    TRIANGLE(
+        ElementLayout.TRIANGLE,
+        POSITION, COLOR
+    ),
 
     /**
-     * An object with 4 vertices, each with attributes position, local position,
+     * A quadrangle with 4 vertices, each with attributes position, color, texture
+     * coordinate, and texture slot.
+     */
+    SPRITE(
+        ElementLayout.QUAD,
+        POSITION, COLOR, TEX_COORD, TEX_SLOT
+    ),
+
+    /**
+     * A quadrangle with 4 vertices, each with attributes position, local position,
      * color, and inner radius.
      *
      * Sources:
@@ -34,28 +55,16 @@ enum class DrawPrimitive(
      */
     CIRCLE(
         ElementLayout.QUAD,
-        VertexAttribute.POSITION, VertexAttribute.TEX_COORD,
-        VertexAttribute.COLOR, VertexAttribute.TEX_SLOT
+        POSITION, POSITION, COLOR, VertexAttribute.FLOAT
     ),
 
     /**
-     * An object with 4 vertices, each with attributes position, local position,
-     * color, and inner radii.
+     * A quadrangle with 4 vertices, each with attributes position, local position,
+     * color, and two inner radii.
      */
     ELLIPSE(
         ElementLayout.QUAD,
-        VertexAttribute.POSITION, VertexAttribute.TEX_COORD,
-        VertexAttribute.COLOR, VertexAttribute.TEX_COORD
-    ),
-
-    /**
-     * An object with 4 vertices, each with attributes position, color, tex coords,
-     * and tex slot.
-     */
-    SPRITE(
-        ElementLayout.QUAD,
-        VertexAttribute.POSITION, VertexAttribute.COLOR,
-        VertexAttribute.TEX_COORD, VertexAttribute.TEX_SLOT
+        POSITION, POSITION, COLOR, VertexAttribute.FLOAT2
     );
 
     val vertexCount: Int
