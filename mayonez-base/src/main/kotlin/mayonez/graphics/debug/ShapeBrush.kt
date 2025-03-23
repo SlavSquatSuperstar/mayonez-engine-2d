@@ -9,52 +9,49 @@ import java.util.*
  *
  * @author SlavSquatSuperstar
  */
-data class ShapeBrush internal constructor(
-    internal val color: MColor,
-    internal val fill: Boolean,
-    internal val zIndex: Int,
-    internal val strokeSize: Float // TODO stroke is twice as wide as it should be
+data class ShapeBrush(
+    val color: MColor,
+    val fill: Boolean,
+    val zIndex: Int,
+    val strokeSize: Float // TODO stroke looks twice as wide as it should be
 ) {
-
-    private constructor(color: MColor?, priority: DrawPriority) :
-            this(
-                color ?: DebugDraw.DEFAULT_COLOR, priority.fill,
-                priority.zIndex, DebugDraw.DEFAULT_STROKE_SIZE
-            )
 
     // Copy Methods
 
+    /**
+     * Create a copy of this brush with a new color.
+     *
+     * @param color the new color
+     */
+    fun setColor(color: MColor): ShapeBrush {
+        return this.copy(color = color)
+    }
+
+    /**
+     * Create a copy of this brush with a new fill.
+     *
+     * @param fill the new fill
+     */
+    fun setFill(fill: Boolean): ShapeBrush {
+        return this.copy(fill = fill)
+    }
+
+    /**
+     * Create a copy of this brush with a new z-index.
+     *
+     * @param zIndex the new z-index
+     */
     fun setZIndex(zIndex: Int): ShapeBrush {
         return this.copy(zIndex = zIndex)
     }
 
+    /**
+     * Create a copy of this brush with a new stroke size.
+     *
+     * @param strokeSize the new stroke size
+     */
     fun setStrokeSize(strokeSize: Float): ShapeBrush {
         return this.copy(strokeSize = strokeSize)
-    }
-
-    override fun toString(): String {
-        return "Brush (color = $color, fill = $fill, z-index = $zIndex, stroke size = $strokeSize)"
-    }
-
-    companion object {
-
-        // Factory Methods
-
-        @JvmStatic
-        fun createLineBrush(color: MColor?): ShapeBrush {
-            return ShapeBrush(color, DrawPriority.LINE)
-        }
-
-        @JvmStatic
-        fun createOutlineBrush(color: MColor?): ShapeBrush {
-            return ShapeBrush(color, DrawPriority.SHAPE_OUTLINE)
-        }
-
-        @JvmStatic
-        fun createSolidBrush(color: MColor?): ShapeBrush {
-            return ShapeBrush(color, DrawPriority.SOLID_SHAPE)
-        }
-
     }
 
     // Object Overrides
@@ -69,6 +66,31 @@ data class ShapeBrush internal constructor(
 
     override fun hashCode(): Int {
         return Objects.hash(color, fill, zIndex, strokeSize)
+    }
+
+    override fun toString(): String {
+        return "Brush (color = $color, fill = $fill, z-index = $zIndex, stroke size = $strokeSize)"
+    }
+
+    companion object {
+
+        // Factory Methods
+
+        @JvmStatic
+        fun createLineBrush(color: MColor?): ShapeBrush {
+            return DrawPriority.LINE.createBrush(color)
+        }
+
+        @JvmStatic
+        fun createOutlineBrush(color: MColor?): ShapeBrush {
+            return DrawPriority.SHAPE_OUTLINE.createBrush(color)
+        }
+
+        @JvmStatic
+        fun createSolidBrush(color: MColor?): ShapeBrush {
+            return DrawPriority.SOLID_SHAPE.createBrush(color)
+        }
+
     }
 
 }

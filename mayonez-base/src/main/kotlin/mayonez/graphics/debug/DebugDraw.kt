@@ -41,7 +41,7 @@ class DebugDraw internal constructor(
         val pixelScale = debugRenderer.viewport.cameraScale
         debugRenderer.addShape(
             Circle(position, DEFAULT_STROKE_SIZE / pixelScale),
-            ShapeBrush.createSolidBrush(color).setZIndex(DrawPriority.POINT.zIndex)
+            DrawPriority.POINT.createBrush(color)
         )
     }
 

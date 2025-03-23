@@ -18,6 +18,7 @@ public final class Shaders {
             getShaderFromFile("assets/shaders/default.glsl");
     public static final Shader DEBUG_SHADER =
             getShaderFromFile("assets/shaders/debug.glsl");
+    // TODO draw circles with ellipses if not too many
     public static final Shader CIRCLE_SHADER =
             getShaderFromFile("assets/shaders/circle.glsl");
     public static final Shader ELLIPSE_SHADER =

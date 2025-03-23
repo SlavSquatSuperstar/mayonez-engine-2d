@@ -6,7 +6,7 @@ import mayonez.graphics.debug.*;
 import mayonez.graphics.font.*;
 import mayonez.graphics.ui.*;
 import mayonez.math.*;
-import mayonez.physics.colliders.*;
+import mayonez.math.shapes.*;
 import slavsquatsuperstar.demos.DemoScene;
 import slavsquatsuperstar.demos.DemosAssets;
 
@@ -17,11 +17,14 @@ import slavsquatsuperstar.demos.DemosAssets;
  */
 public class CirclesTestScene extends DemoScene {
 
-    private static final int SCENE_SCALE = 32;
+    private static final int SCENE_SCALE = 16;
     private static final Vec2 SCENE_HALF_SIZE
             = new Vec2(Preferences.getScreenWidth(), Preferences.getScreenHeight())
             .div(SCENE_SCALE * 2f);
-    private static final int NUM_CIRCLES = 1500;
+
+    private static final int NUM_CIRCLES = 2000;
+    private static final float MIN_RADIUS = 0.1f;
+    private static final float MAX_RADIUS = 1.0f;
 
     public CirclesTestScene(String name) {
         super(name);
@@ -35,28 +38,18 @@ public class CirclesTestScene extends DemoScene {
             var position = Random.randomVector(
                     SCENE_HALF_SIZE.mul(-1f), SCENE_HALF_SIZE
             );
-            float rotation;
-            Vec2 scale;
 
-            var isEllipse = Random.randomPercent(0.60f);
-            if (isEllipse) {
-                rotation = Random.randomAngle();
-                var width = Random.randomFloat(0.125f, 1.0f);
-                var height = width * Random.randomFloat(0.8f, 1f);
-                scale = new Vec2(width, height);
-            } else {
-                rotation = 0f;
-                scale = new Vec2(Random.randomFloat(0.1f, 1.0f));
-            }
-            var transform = new Transform(position, rotation, scale);
-
-            addObject(new GameObject("Ball " + (i + 1), transform) {
+            addObject(new GameObject("Ball " + (i + 1), position) {
                 @Override
                 protected void init() {
-                    addComponent(new BallCollider(new Vec2(1f)));
                     var color = Colors.randomColor();
                     var fill = Random.randomBoolean();
-                    addComponent(new ShapeSprite(color, fill));
+                    var stroke = Random.randomInt(1, 3);
+
+                    var shape = getShape(Random.randomBoolean());
+                    var sprite = new ShapeSprite(shape, color, fill);
+                    sprite.setStrokeSize(stroke);
+                    addComponent(sprite);
                 }
             });
         }
@@ -85,6 +78,19 @@ public class CirclesTestScene extends DemoScene {
                 fpsText.setAnchor(Anchor.TOP_LEFT);
             }
         });
+    }
+
+    private static Shape getShape(boolean isEllipse) {
+        if (isEllipse) {
+            var width = Random.randomFloat(MIN_RADIUS, MAX_RADIUS) * 2f;
+            var height = width * Random.randomFloat(0.75f, 1.25f);
+            var size = new Vec2(width, height);
+            var rotation = Random.randomAngle();
+            return new Ellipse(new Vec2(0f), size, rotation);
+        } else {
+            var radius = Random.randomFloat(MIN_RADIUS, MAX_RADIUS);
+            return new Circle(new Vec2(0f), radius);
+        }
     }
 
 }
