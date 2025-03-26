@@ -38,19 +38,19 @@ internal class GLUIRenderer() : GLRenderer(), UIRenderer {
     }
 
     override fun createBatches() {
-        // Sort objects
+        // Sort objects by z-index
         objects.sortBy { it.zIndex }
 
         // Process objects
         objects.filter { it.isEnabled }
-            .forEach { it.process() }
+            .forEach { it.addDrawParts() }
 
         // Push objects
         var lastBatch: RenderBatch? = null
-        // Already sorted by z-index
         drawObjects.forEach {
             // Create new batch
             if (lastBatch == null || !lastBatch.canFitObject(it)) {
+                // Don't need to check if batch is closed
                 lastBatch = it.getAvailableBatch()
             }
             // Push to batch
@@ -83,10 +83,10 @@ internal class GLUIRenderer() : GLRenderer(), UIRenderer {
         return batch
     }
 
-    private fun Renderable.process() {
+    private fun Renderable.addDrawParts() {
         when (this) {
-            is GLRenderable -> drawObjects.add(this)
             is TextLabel -> drawObjects.addAll(this.glyphSprites)
+            is GLRenderable -> drawObjects.add(this)
         }
     }
 

@@ -58,20 +58,19 @@ internal class GLDefaultRenderer() : GLRenderer(),
     }
 
     override fun createBatches() {
-        // Sort objects
+        // Sort objects by z-index
         objects.sortBy { it.zIndex }
         tempObjects.sortBy { it.zIndex }
 
         // Process objects
         objects.filter { it.isEnabled }
-            .forEach { it.getDrawParts() }
+            .forEach { it.addDrawParts() }
         tempObjects.filter { it.isEnabled }
-            .forEach { it.getDrawParts() }
+            .forEach { it.addDrawParts() }
+        drawObjects.sortBy { it.zIndex }
 
         // Push objects
         var lastBatch: RenderBatch? = null
-        // Already sorted by primitive
-        drawObjects.sortBy { it.zIndex }
         drawObjects.forEach {
             // Create new batch
             if (lastBatch == null || !lastBatch.canFitObject(it)) {
@@ -128,13 +127,13 @@ internal class GLDefaultRenderer() : GLRenderer(),
         return batch
     }
 
-    private fun Renderable.getDrawParts() {
+    private fun Renderable.addDrawParts() {
         val cam = viewport
         val zoom = cam.zoom * cam.cameraScale
         when (this) {
             is DebugShape -> drawObjects.addAll(this.getDrawParts(zoom))
-            is GLRenderable -> drawObjects.add(this)
             is TextLabel -> drawObjects.addAll(this.glyphSprites)
+            is GLRenderable -> drawObjects.add(this)
         }
     }
 

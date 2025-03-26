@@ -38,6 +38,7 @@ abstract class GLRenderer() : Renderer {
         createBatches()
 
         // Draw objects
+        batches.sortBy(RenderBatch::getPrimitive) // Group batches by shader
         batches.sortBy(RenderBatch::getDrawOrder) // Sort batches by z-index
         batches.forEach {
             it.uploadUniforms(viewport, textureSlots)
