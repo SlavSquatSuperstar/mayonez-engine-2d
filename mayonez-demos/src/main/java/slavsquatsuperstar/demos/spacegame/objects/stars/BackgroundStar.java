@@ -14,21 +14,8 @@ import slavsquatsuperstar.demos.spacegame.objects.SpaceGameZIndex;
 class BackgroundStar extends BackgroundObject {
 
     BackgroundStar(Vec2 position, float radius, int temperature, float brightness) {
-        super(getStarShape(position, radius), getStarColor(temperature, brightness),
+        super(new Circle(position, radius), getStarColor(temperature, brightness),
                 SpaceGameZIndex.BACKGROUND_STAR);
-    }
-
-    // "LOD" system for sides vs radius
-    private static Shape getStarShape(Vec2 position, float radius) {
-        if (radius < 0.02f) {
-            return new Rectangle(position, new Vec2(radius * 2f));
-        } else if (radius < 0.04f) {
-            return new Polygon(position, 8, radius);
-        } else if (radius < 0.06f) {
-            return new Polygon(position, 16, radius);
-        } else {
-            return new Circle(position, radius);
-        }
     }
 
     /*
