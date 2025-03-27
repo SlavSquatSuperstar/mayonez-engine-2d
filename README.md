@@ -2,16 +2,16 @@
 
 The ultimate made-from-scratch and open-source 2D Java game engine to fit your Slavic (and non-Slavic) needs!
 
-<img src="https://img.shields.io/badge/platform-macOS-lightgrey"></img>
-<img src="https://img.shields.io/badge/platform-Windows-lightgrey"></img>
-<img src="https://img.shields.io/badge/platform-Linux-lightgrey"></img>
-<img src="https://img.shields.io/badge/release-v0.8.1-brightgreen"></img>
-<img src=https://img.shields.io/badge/build-passing-brightgreen></img>
+![GitHub actions badge](https://github.com/SlavSquatSuperstar/mayonez-engine-2d/actions/workflows/gradle.yml/badge.svg)
+![Release version badge](https://img.shields.io/badge/release-v0.8.1-brightgreen)
+![macOS platform badge](https://img.shields.io/badge/platform-macOS-lightgrey)
+![Window platform badge](https://img.shields.io/badge/platform-Windows-lightgrey)
+![Linux platform badge](https://img.shields.io/badge/platform-Linux-lightgrey)
 
-<img src="https://img.shields.io/badge/Made%20with-Java-red"></img>
-<img src="https://img.shields.io/badge/Made%20with-Kotlin-red"></img>
-<img src="https://img.shields.io/badge/Made%20with-LWJGL-blue"></img>
-<img src=https://img.shields.io/badge/license-GPLv3-blue></img>
+![Java language badge](https://img.shields.io/badge/Made%20with-Java-red)
+![Kotlin language badge](https://img.shields.io/badge/Made%20with-Kotlin-red)
+![LWJGL framework badge](https://img.shields.io/badge/Made%20with-LWJGL-blue)
+![GPLv3 license badge](https://img.shields.io/badge/license-GPLv3-blue)
 
 ## Features
 
