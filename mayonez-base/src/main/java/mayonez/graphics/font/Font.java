@@ -8,19 +8,21 @@ import java.io.IOException;
 
 /**
  * A bitmap font created from a spritesheet of a set of characters with contiguous code points.
+ * <p>
+ * See also: <a href="https://minecraft.wiki/w/Font">Font - Minecraft Wiki</a>
  *
  * @author SlavSquatSuperstar
  */
 // TODO make asset
 public class Font {
 
-    private final GLTexture fontTexture;
     private final FontMetadata metadata;
+    private final GLTexture fontTexture;
     private final Glyph[] glyphs;
 
-    public Font(GLTexture fontTexture, FontMetadata metadata) {
-        this.fontTexture = fontTexture;
+    public Font(FontMetadata metadata, GLTexture fontTexture) {
         this.metadata = metadata;
+        this.fontTexture = fontTexture;
         var widths = getGlyphWidths(metadata, fontTexture);
         glyphs = createGlyphs(widths);
     }

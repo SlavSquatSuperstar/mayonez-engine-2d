@@ -46,7 +46,7 @@ class FontTest {
     @Test
     void glyphWidthsFromImageIsCorrect() {
         // Font widths
-        var fontTexture = Textures.getJTexture("assets/fonts/font_pixel.png");
+        var fontTexture = Textures.getJTexture(metadata.fontFile());
         var imgWidths = Font.getGlyphWidths(metadata, fontTexture);
         assertArrayEquals(fileWidths, imgWidths);
     }

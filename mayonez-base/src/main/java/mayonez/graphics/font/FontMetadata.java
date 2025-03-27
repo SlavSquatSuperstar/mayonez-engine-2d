@@ -6,6 +6,7 @@ import mayonez.util.Record;
  * Contains characteristics about a font, including the name, characters, and dimensions.
  *
  * @param name                the name of the font
+ * @param fontFile           the filename of the font texture
  * @param startCharacter      the start character value
  * @param endCharacter        the end character value
  * @param glyphHeight         the total height of a character glyph in pixels
@@ -18,7 +19,7 @@ import mayonez.util.Record;
 // TODO specify characters (for non-contiguous)
 // TODO specify space characters
 public record FontMetadata(
-        String name,
+        String name, String fontFile,
         char startCharacter, char endCharacter,
         int glyphHeight, int glyphAscent, int glyphSpacing,
         char whitespaceCharacter, int whitespaceWidth
@@ -28,7 +29,7 @@ public record FontMetadata(
 
     public FontMetadata(Record record) {
         this(
-                record.getString("name"),
+                record.getString("name"), record.getString("font_file"),
                 (char) record.getInt("start_character"), (char) record.getInt("end_character"),
                 record.getInt("glyph_height"), record.getInt("glyph_ascent"), record.getInt("glyph_spacing"),
                 (char) record.getInt("whitespace_character"), record.getInt("whitespace_width")

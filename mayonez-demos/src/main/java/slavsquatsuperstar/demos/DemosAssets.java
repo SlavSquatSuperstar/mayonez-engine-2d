@@ -26,13 +26,12 @@ public final class DemosAssets {
     private static Font createFont() {
         // Font files
         var json = new JSONFile("assets/fonts/font_pixel.json");
-        var record = json.readJSON();
-        var metadata = new FontMetadata(record);
+        var metadata = new FontMetadata(json.readJSON());
 
         // Create font
-        var fontTexture = Textures.getTexture("assets/fonts/font_pixel.png");
+        var fontTexture = Textures.getTexture(metadata.fontFile());
         if (fontTexture instanceof GLTexture glTexture) {
-            return new Font(glTexture, metadata);
+            return new Font(metadata, glTexture);
         } else {
             return null;
         }
