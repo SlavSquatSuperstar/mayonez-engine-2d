@@ -56,14 +56,17 @@ public sealed class GLTexture extends Texture permits GLSpriteSheetTexture {
     /**
      * Create a GLTexture from a portion of another texture.
      *
-     * @param filename  the file location
-     * @param texCoords the sub-image coordinates
+     * @param filename      the file location
+     * @param parentTexture the parent texture
+     * @param region        the sub-image region
      */
-    protected GLTexture(String filename, GLTexture texture, Vec2[] texCoords) {
+    protected GLTexture(String filename, GLTexture parentTexture, ImageRegion region) {
         super(filename);
-        this.imageData = texture.imageData; // todo crop image data
-        this.texID = texture.texID;
-        this.texCoords = texCoords;
+        this.imageData = parentTexture.imageData.getSubImageData(region); // Crop image data
+        System.out.println(parentTexture.imageData.isImageFreed());
+        // Error: parent buffer has already been freed
+        this.texID = parentTexture.texID;
+        this.texCoords = getSubImageCoords(parentTexture.getSize(), region);
     }
 
     // Read Image Methods
@@ -172,6 +175,15 @@ public sealed class GLTexture extends Texture permits GLSpriteSheetTexture {
      */
     public int getTexID() {
         return texID;
+    }
+
+    // Helper Methods
+
+    private static Vec2[] getSubImageCoords(Vec2 sheetSize, ImageRegion region) {
+        // Normalize image coordinates to between 0-1
+        var subImgMin = region.origin().div(sheetSize);
+        var subImgMax = region.origin().add(region.size()).div(sheetSize);
+        return Rectangle.rectangleVerticesMinMax(subImgMin, subImgMax);
     }
 
 }

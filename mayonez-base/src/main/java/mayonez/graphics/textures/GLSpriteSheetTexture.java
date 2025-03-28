@@ -2,8 +2,6 @@ package mayonez.graphics.textures;
 
 import mayonez.assets.image.*;
 import mayonez.graphics.*;
-import mayonez.math.*;
-import mayonez.math.shapes.*;
 
 /**
  * A GL texture created from a sprite sheet that represents a portion of another
@@ -19,8 +17,7 @@ final class GLSpriteSheetTexture extends GLTexture {
 
     GLSpriteSheetTexture(GLTexture parentTexture, ImageRegion region, String description) {
         super("%s (%s)".formatted(parentTexture.getFilename(), description),
-                parentTexture,
-                getSubImageCoords(parentTexture.getSize(), region));
+                parentTexture, region);
         this.parentTexture = parentTexture;
         this.width = region.getWidth(); // Get new image size in px
         this.height = region.getHeight(); // Get new image size in px
@@ -46,15 +43,6 @@ final class GLSpriteSheetTexture extends GLTexture {
     @Override
     public int getHeight() {
         return height;
-    }
-
-    // Helper Methods
-
-    private static Vec2[] getSubImageCoords(Vec2 sheetSize, ImageRegion region) {
-        // Normalize image coordinates to between 0-1
-        var subImgMin = region.origin().div(sheetSize);
-        var subImgMax = region.origin().add(region.size()).div(sheetSize);
-        return Rectangle.rectangleVerticesMinMax(subImgMin, subImgMax);
     }
 
 }
