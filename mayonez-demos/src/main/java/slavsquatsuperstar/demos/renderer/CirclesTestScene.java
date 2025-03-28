@@ -59,7 +59,6 @@ public class CirclesTestScene extends DemoScene {
             protected void init() {
                 TextLabel fpsText;
                 var font = DemosAssets.getFont();
-                if (font == null) return;
 
                 addComponent(new UISprite(
                         new Vec2(110, Preferences.getScreenHeight() - 50),

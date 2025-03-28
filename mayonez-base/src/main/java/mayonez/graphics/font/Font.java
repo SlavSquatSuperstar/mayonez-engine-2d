@@ -17,10 +17,10 @@ import java.io.IOException;
 public class Font {
 
     private final FontMetadata metadata;
-    private final GLTexture fontTexture;
+    private final Texture fontTexture;
     private final Glyph[] glyphs;
 
-    public Font(FontMetadata metadata, GLTexture fontTexture) {
+    public Font(FontMetadata metadata, Texture fontTexture) {
         this.metadata = metadata;
         this.fontTexture = fontTexture;
         var widths = getGlyphWidths(metadata, fontTexture);
@@ -31,12 +31,13 @@ public class Font {
 
     private Glyph[] createGlyphs(int[] widths) {
         var glyphs = new Glyph[metadata.numCharacters()];
-        var texSize = fontTexture.getSize();
-        var glyphSize = metadata.glyphHeight();
+        // TODO Don't create if AWT for now
+        if (!(fontTexture instanceof GLTexture)) return glyphs;
 
         // GL uses bottom left as image origin
-        var texTopLeft = new Vec2(0, texSize.y);
-        var glyphBottomLeft = texTopLeft.sub(new Vec2(0, glyphSize));
+        var texSize = fontTexture.getSize();
+        var glyphSize = metadata.glyphHeight();
+        var glyphBottomLeft = new Vec2(0, texSize.y - glyphSize);
 
         // Create glyph textures
         for (int i = 0; i < glyphs.length; i++) {

@@ -10,9 +10,9 @@ import mayonez.graphics.textures.*;
 public class Glyph {
 
     private final int width, height;
-    private final GLTexture glyphTexture;
+    private final Texture glyphTexture;
 
-    public Glyph(int width, int height, GLTexture glyphTexture) {
+    public Glyph(int width, int height, Texture glyphTexture) {
         this.width = width;
         this.height = height;
         this.glyphTexture = glyphTexture;
@@ -41,7 +41,7 @@ public class Glyph {
      *
      * @return the glyph texture
      */
-    public GLTexture getTexture() {
+    public Texture getTexture() {
         return glyphTexture;
     }
 

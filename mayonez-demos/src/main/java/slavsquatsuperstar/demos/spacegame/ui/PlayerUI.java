@@ -69,7 +69,6 @@ public class PlayerUI extends GameObject {
         addComponent(new PlayerUIController(hpSlider, shSlider, weaponHotbar));
 
         var font = DemosAssets.getFont();
-        if (font == null) return;
 
         // Auto-Brake Indicator
         var autoBrakeToolTip = new UITextLabel(

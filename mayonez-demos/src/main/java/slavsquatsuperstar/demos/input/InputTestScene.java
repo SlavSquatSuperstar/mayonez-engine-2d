@@ -23,17 +23,15 @@ public class InputTestScene extends DemoScene {
         getCamera().setCameraScale(10);
 
         var font = DemosAssets.getFont();
-        if (font != null) {
-            addObject(new GameObject("Scene Title Text") {
-                @Override
-                protected void init() {
-                    addComponent(new UITextLabel(getScene().getName(),
-                            new Vec2(Preferences.getScreenWidth() * 0.5f,
-                                    Preferences.getScreenHeight() - 50),
-                            font, Colors.BLACK, 32, 1));
-                }
-            });
-        }
+        addObject(new GameObject("Scene Title Text") {
+            @Override
+            protected void init() {
+                addComponent(new UITextLabel(getScene().getName(),
+                        new Vec2(Preferences.getScreenWidth() * 0.5f,
+                                Preferences.getScreenHeight() - 50),
+                        font, Colors.BLACK, 32, 1));
+            }
+        });
 
         addObject(new GameObject("Input Detector") {
             @Override

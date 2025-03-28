@@ -42,8 +42,6 @@ class FontTestObject extends GameObject {
 
     @Override
     protected void init() {
-        if (font == null) return;
-
         // Scene font
         var fontSize = 5; // pt
         var lineSpacing = 2; // px

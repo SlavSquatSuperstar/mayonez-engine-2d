@@ -30,11 +30,7 @@ public final class DemosAssets {
 
         // Create font
         var fontTexture = Textures.getTexture(metadata.fontFile());
-        if (fontTexture instanceof GLTexture glTexture) {
-            return new Font(metadata, glTexture);
-        } else {
-            return null;
-        }
+        return new Font(metadata, fontTexture);
     }
 
 }

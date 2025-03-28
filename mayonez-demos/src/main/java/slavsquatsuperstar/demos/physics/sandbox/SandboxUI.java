@@ -16,7 +16,6 @@ public class SandboxUI extends GameObject {
     @Override
     protected void init() {
         var font = DemosAssets.getFont();
-        if (font == null) return;
 
         // Toggle Hints
         TextLabel hintsTooltip;
