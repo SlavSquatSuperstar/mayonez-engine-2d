@@ -40,7 +40,10 @@ public class Font {
 
         // Create glyph textures
         for (int i = 0; i < glyphs.length; i++) {
-            var glyphTex = new GLSpriteSheetTexture(fontTexture, i, glyphBottomLeft, new Vec2(widths[i], glyphSize));
+            var glyphTex = fontTexture.getSubTexture(
+                    new ImageRegion(glyphBottomLeft, new Vec2(widths[i], glyphSize)),
+                    "Sprite " + i
+            );
             glyphs[i] = new Glyph(widths[i], glyphSize, glyphTex);
 
             // Move to next glyph

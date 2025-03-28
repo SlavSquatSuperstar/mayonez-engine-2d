@@ -1,5 +1,6 @@
 package mayonez.graphics.textures;
 
+import mayonez.assets.image.*;
 import mayonez.graphics.*;
 import mayonez.math.*;
 import mayonez.math.shapes.*;
@@ -11,25 +12,18 @@ import mayonez.math.shapes.*;
  * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.GL)
-public final class GLSpriteSheetTexture extends GLTexture {
+final class GLSpriteSheetTexture extends GLTexture {
 
     private final GLTexture parentTexture;
     private final int width, height;
 
-    /**
-     * Create a sprite sheet texture from a portion of another texture.
-     *
-     * @param parentTexture    another texture
-     * @param spriteSheetIndex the index of this texture on the atlas
-     * @param spritePos        the bottom left corner of the sprite
-     * @param spriteSize       the dimensions of the sprite
-     */
-    public GLSpriteSheetTexture(GLTexture parentTexture, int spriteSheetIndex, Vec2 spritePos, Vec2 spriteSize) {
-        super(getSubSpriteFilename(parentTexture.getFilename(), spriteSheetIndex),
-                parentTexture, getSubImageCoords(parentTexture, spritePos, spriteSize));
+    GLSpriteSheetTexture(GLTexture parentTexture, ImageRegion region, String description) {
+        super("%s (%s)".formatted(parentTexture.getFilename(), description),
+                parentTexture,
+                getSubImageCoords(parentTexture.getSize(), region));
         this.parentTexture = parentTexture;
-        this.width = (int) spriteSize.x; // get new image size in px
-        this.height = (int) spriteSize.y; // get new image size in px
+        this.width = region.getWidth(); // Get new image size in px
+        this.height = region.getHeight(); // Get new image size in px
     }
 
     // Asset Methods
@@ -56,15 +50,10 @@ public final class GLSpriteSheetTexture extends GLTexture {
 
     // Helper Methods
 
-    private static String getSubSpriteFilename(String parentFilename, int spriteSheetIndex) {
-        return "%s (Sprite %d)".formatted(parentFilename, spriteSheetIndex);
-    }
-
-    private static Vec2[] getSubImageCoords(GLTexture sheetTexture, Vec2 spriteBottomLeft, Vec2 spriteSize) {
+    private static Vec2[] getSubImageCoords(Vec2 sheetSize, ImageRegion region) {
         // Normalize image coordinates to between 0-1
-        var texSize = sheetTexture.getSize();
-        var subImgMin = spriteBottomLeft.div(texSize);
-        var subImgMax = spriteBottomLeft.add(spriteSize).div(texSize);
+        var subImgMin = region.origin().div(sheetSize);
+        var subImgMax = region.origin().add(region.size()).div(sheetSize);
         return Rectangle.rectangleVerticesMinMax(subImgMin, subImgMax);
     }
 

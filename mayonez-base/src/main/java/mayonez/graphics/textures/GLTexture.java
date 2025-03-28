@@ -142,6 +142,11 @@ public sealed class GLTexture extends Texture permits GLSpriteSheetTexture {
     // Image Getters
 
     @Override
+    public GLTexture getSubTexture(ImageRegion region, String description) {
+        return new GLSpriteSheetTexture(this, region, description);
+    }
+
+    @Override
     public STBImageData getImageData() {
         return imageData;
     }

@@ -48,9 +48,7 @@ public abstract sealed class Texture extends Asset permits GLTexture, JTexture {
      * @param region      the sub-region of this texture to use
      * @param description a description of the sub-region
      */
-    public Texture getSubTexture(ImageRegion region, String description) {
-        return null;
-    }
+    public abstract Texture getSubTexture(ImageRegion region, String description);
 
     // Size Getters
 

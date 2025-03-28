@@ -30,7 +30,7 @@ public class STBImageData extends ImageData {
         try {
             var fileBuffer = readImageBytes();
             buffer = loadImage(fileBuffer);
-        } catch (ImageReadException | IOException e) {
+        } catch (ImageReadException e) {
             throw new IOException("Error reading STB image");
         }
     }
@@ -51,14 +51,14 @@ public class STBImageData extends ImageData {
 
     // Read Image Methods
 
-    private ByteBuffer readImageBytes() throws ImageReadException, IOException {
-        var imageBytes = BinaryIOUtils.readBytes(openInputStream());
-        if (imageBytes == null) {
-            throw new ImageReadException("Image byte array is null");
+    private ByteBuffer readImageBytes() throws ImageReadException {
+        try {
+            var imageBytes = BinaryIOUtils.readBytes(openInputStream());
+            var imageBuffer = BufferUtils.createByteBuffer(imageBytes.length);
+            return memSlice(imageBuffer.put(imageBytes).flip());
+        } catch (IOException e) {
+            throw new ImageReadException("Image bytes cannot be read");
         }
-
-        var imageBuffer = BufferUtils.createByteBuffer(imageBytes.length);
-        return memSlice(imageBuffer.put(imageBytes).flip());
     }
 
     private ByteBuffer loadImage(ByteBuffer fileBuffer) throws ImageReadException {
@@ -181,15 +181,16 @@ public class STBImageData extends ImageData {
     }
 
     @Override
-    public ImageData getSubImageData(ImageRegion region) {
+    public STBImageData getSubImageData(ImageRegion region) {
         try {
-            var filename = "%s Sub-Image (%s, %s)"
-                    .formatted(getFilename(), region.origin(), region.size());
+            // Not technically filename, but use to distinguish from parent
+            var filename = "%s %s".formatted(getFilename(), region);
             return new STBImageData(filename, getSubBuffer(region), region.getWidth(), region.getHeight());
         } catch (IOException e) {
-            Logger.error("Could not create sub-image from %s with position %s and size %s",
+            Logger.error("Could not create sub-image from %s with origin %s and size %s",
                     toString(), region.origin(), region.size());
             return null;
         }
     }
+
 }
