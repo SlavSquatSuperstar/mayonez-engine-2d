@@ -94,14 +94,19 @@ public class AWTImageData extends ImageData {
         return image;
     }
 
+    public BufferedImage getSubImage(ImageRegion region) {
+        return image.getSubimage(region.getX(), region.getY(), region.getWidth(), region.getHeight());
+    }
+
     public BufferedImage getSubImage(Vec2 topLeft, Vec2 size) {
-        return image.getSubimage((int) topLeft.x, (int) topLeft.y, (int) size.x, (int) size.y);
+        return getSubImage(new ImageRegion(topLeft, size));
     }
 
     @Override
-    public AWTImageData getSubImageData(Vec2 topLeft, Vec2 size) {
-        var filename = "%s Sub-Image (%s, %s)".formatted(getFilename(), topLeft, size);
-        return new AWTImageData(filename, getSubImage(topLeft, size));
+    public ImageData getSubImageData(ImageRegion region) {
+        var filename = "%s Sub-Image (%s, %s)"
+                .formatted(getFilename(), region.origin(), region.size());
+        return new AWTImageData(filename, getSubImage(region));
     }
 
 }

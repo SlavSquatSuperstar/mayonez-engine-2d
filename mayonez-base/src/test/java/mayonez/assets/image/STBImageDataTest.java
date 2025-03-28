@@ -106,14 +106,15 @@ class STBImageDataTest {
 
     @Test
     void subImagePixelsCorrect() {
-        var length = 8;
+        var subImageLength = 8;
         var subImageCoords = new Vec2[]{
-                new Vec2(0, 0), new Vec2(length - 1, 0),
-                new Vec2(0, length - 1), new Vec2(length - 1, length - 1)
+                new Vec2(0, 0), new Vec2(subImageLength - 1, 0),
+                new Vec2(0, subImageLength - 1), new Vec2(subImageLength - 1, subImageLength - 1)
         };
 
         var image = getImage(TRANSPARENT_PNG);
-        var subImage = image.getSubImageData(new Vec2(4, 4), new Vec2(length, length));
+        var region = new ImageRegion(new Vec2(4), new Vec2(subImageLength));
+        var subImage = image.getSubImageData(region);
         assertNotNull(subImage);
         testPixelColors(subImage, TEST_COLORS, subImageCoords, 128);
     }

@@ -2,7 +2,6 @@ package mayonez.assets.image;
 
 import mayonez.*;
 import mayonez.graphics.*;
-import mayonez.math.*;
 import org.lwjgl.BufferUtils;
 
 import java.io.IOException;
@@ -161,11 +160,11 @@ public class STBImageData extends ImageData {
         return buffer;
     }
 
-    public ByteBuffer getSubBuffer(Vec2 topLeft, Vec2 size) {
-        var subImgX = (int) topLeft.x;
-        var subImgY = (int) topLeft.y;
-        var subImgWidth = (int) size.x;
-        var subImgHeight = (int) size.y;
+    public ByteBuffer getSubBuffer(ImageRegion region) {
+        var subImgX = region.getX();
+        var subImgY = region.getY();
+        var subImgWidth = region.getWidth();
+        var subImgHeight = region.getHeight();
 
         var buffer = BufferUtils.createByteBuffer(subImgWidth * subImgHeight * channels);
         for (var y = subImgY; y < subImgY + subImgHeight; y++) {
@@ -182,15 +181,15 @@ public class STBImageData extends ImageData {
     }
 
     @Override
-    public STBImageData getSubImageData(Vec2 topLeft, Vec2 size) {
+    public ImageData getSubImageData(ImageRegion region) {
         try {
-            var filename = "%s Sub-Image (%s, %s)".formatted(getFilename(), topLeft, size);
-            return new STBImageData(filename, getSubBuffer(topLeft, size), (int) size.x, (int) size.y);
+            var filename = "%s Sub-Image (%s, %s)"
+                    .formatted(getFilename(), region.origin(), region.size());
+            return new STBImageData(filename, getSubBuffer(region), region.getWidth(), region.getHeight());
         } catch (IOException e) {
             Logger.error("Could not create sub-image from %s with position %s and size %s",
-                    toString(), topLeft, size);
+                    toString(), region.origin(), region.size());
             return null;
         }
     }
-
 }
