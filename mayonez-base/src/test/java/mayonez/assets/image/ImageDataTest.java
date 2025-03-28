@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * @author SlavSquatSuperstar
  */
-abstract class ImageTestUtils {
+abstract class ImageDataTest {
 
     // Image Fields
     static final int IMAGE_LENGTH = 16;
@@ -62,6 +62,7 @@ abstract class ImageTestUtils {
     }
 
     static void assertColorsRoughlyEqual(Color expected, Color actual) {
+        // Need tolerance due JPG compression
         assertEquals(expected.getRed(), actual.getRed(), 1);
         assertEquals(expected.getGreen(), actual.getGreen(), 1);
         assertEquals(expected.getBlue(), actual.getBlue(), 1);

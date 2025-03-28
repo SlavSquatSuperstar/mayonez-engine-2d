@@ -66,7 +66,12 @@ final class JSpriteSheet extends SpriteSheet {
     // Sheet Getters
 
     @Override
-    public Vec2 getSheetSize() {
+    public Texture getSheetTexture() {
+        return sheetTexture;
+    }
+
+    @Override
+    protected Vec2 getSheetSize() {
         return sheetTexture.getSize();
     }
 
@@ -76,13 +81,13 @@ final class JSpriteSheet extends SpriteSheet {
     }
 
     @Override
-    public Sprite getSprite(int index) {
-        return new JSprite(getTexture(index));
+    public JTexture getTexture(int index) {
+        return textures.get(index);
     }
 
     @Override
-    public JTexture getTexture(int index) {
-        return textures.get(index);
+    public String toString() {
+        return "JSpriteSheet (%s)".formatted(sheetTexture);
     }
 
 }

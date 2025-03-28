@@ -8,8 +8,10 @@ import mayonez.math.*;
  * To instantiate a sprite sheet, use {@link Sprites#createSpriteSheet}.
  * <p>
  * Sprite sheets (also known as texture atlases) are often used to
- * store an animation or many frequently used textures in one file.
- * This increases batch performance by requiring fewer textures per draw call.
+ * store an animation or many frequently used textures in one file, which
+ * reduces the number of file reads required by the application.
+ * Sprite sheets also increase batch performance by requiring fewer textures
+ * per draw call.
  *
  * @author SlavSquatSuperstar
  */
@@ -37,11 +39,18 @@ public abstract sealed class SpriteSheet permits JSpriteSheet, GLSpriteSheet {
     // Sprite Sheet Getters
 
     /**
+     * Get the parent texture for this sprite sheet, from which sub-images are created.
+     *
+     * @return the sheet texture
+     */
+    public abstract Texture getSheetTexture();
+
+    /**
      * The dimensions of the sprite sheet texture in pixels.
      *
      * @return the sheet size
      */
-    public abstract Vec2 getSheetSize();
+    protected abstract Vec2 getSheetSize();
 
     /**
      * Get the number of sprites/textures in this sprite sheet.
@@ -58,7 +67,9 @@ public abstract sealed class SpriteSheet permits JSpriteSheet, GLSpriteSheet {
      * @param index the image index, from 0 to numSprites - 1
      * @return the sprite
      */
-    public abstract Sprite getSprite(int index);
+    public Sprite getSprite(int index) {
+        return Sprites.createSprite(getTexture(index));
+    }
 
     /**
      * Get all the sprites in this spritesheet as an array.

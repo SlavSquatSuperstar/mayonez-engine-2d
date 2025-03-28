@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * @author SlavSquatSuperstar
  */
-class STBImageDataTest extends ImageTestUtils {
+class STBImageDataTest extends ImageDataTest {
 
     // Has Alpha
 

@@ -30,4 +30,5 @@ public record ImageRegion(Vec2 origin, Vec2 size) {
     public String toString() {
         return "Region (%s, %s)".formatted(origin, size);
     }
+
 }
