@@ -1,5 +1,6 @@
 package mayonez.graphics.sprites;
 
+import mayonez.assets.image.*;
 import mayonez.graphics.*;
 import mayonez.graphics.textures.*;
 import mayonez.math.*;
@@ -12,7 +13,7 @@ import java.util.*;
  * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.AWT)
-public final class JSpriteSheet extends SpriteSheet {
+final class JSpriteSheet extends SpriteSheet {
 
     private final JTexture sheetTexture;
     private final Vec2 spriteSize;
@@ -43,7 +44,10 @@ public final class JSpriteSheet extends SpriteSheet {
         // Read sprites from top left of sheet
         for (var i = 0; i < numSprites; i++) {
             // Add current sprite
-            textures.add(new JSpriteSheetTexture(sheetTexture, i, spriteTopLeft, spriteSize));
+            textures.add(sheetTexture.getSubTexture(
+                    new ImageRegion(spriteTopLeft, spriteSize),
+                    "Sprite " + i
+            ));
             moveToNextSprite(spriteTopLeft, spacing);
         }
     }

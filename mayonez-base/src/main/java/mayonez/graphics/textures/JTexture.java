@@ -116,6 +116,11 @@ public sealed class JTexture extends Texture permits JSpriteSheetTexture {
     // Image Getters
 
     @Override
+    public JTexture getSubTexture(ImageRegion region, String description) {
+        return new JSpriteSheetTexture(this, region, description);
+    }
+
+    @Override
     public AWTImageData getImageData() {
         return imageData;
     }

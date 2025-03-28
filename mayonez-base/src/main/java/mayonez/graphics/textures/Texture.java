@@ -17,6 +17,8 @@ public abstract sealed class Texture extends Asset permits GLTexture, JTexture {
         super(filename);
     }
 
+    // Image Data Methods
+
     /**
      * Create a texture from an image file. Called during instantiation.
      *
@@ -39,6 +41,18 @@ public abstract sealed class Texture extends Asset permits GLTexture, JTexture {
     public Texture getParentTexture() {
         return null;
     }
+
+    /**
+     * Create a smaller texture from a portion of this texture.
+     *
+     * @param region      the sub-region of this texture to use
+     * @param description a description of the sub-region
+     */
+    public Texture getSubTexture(ImageRegion region, String description) {
+        return null;
+    }
+
+    // Size Getters
 
     /**
      * The width of the texture in pixels.

@@ -1,7 +1,6 @@
 package mayonez.assets.image;
 
 import mayonez.graphics.*;
-import mayonez.math.*;
 
 import javax.imageio.ImageIO;
 import java.awt.image.*;
@@ -98,14 +97,10 @@ public class AWTImageData extends ImageData {
         return image.getSubimage(region.getX(), region.getY(), region.getWidth(), region.getHeight());
     }
 
-    public BufferedImage getSubImage(Vec2 topLeft, Vec2 size) {
-        return getSubImage(new ImageRegion(topLeft, size));
-    }
-
     @Override
-    public ImageData getSubImageData(ImageRegion region) {
-        var filename = "%s Sub-Image (%s, %s)"
-                .formatted(getFilename(), region.origin(), region.size());
+    public AWTImageData getSubImageData(ImageRegion region) {
+        // Not technically filename, but use to distinguish from parent
+        var filename = "%s %s".formatted(getFilename(), region);
         return new AWTImageData(filename, getSubImage(region));
     }
 
