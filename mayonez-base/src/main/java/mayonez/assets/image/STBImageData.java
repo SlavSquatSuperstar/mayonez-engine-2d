@@ -104,6 +104,10 @@ public class STBImageData extends ImageData {
         }
     }
 
+    public boolean isImageFreed() {
+        return imageFreed;
+    }
+
     @Override
     public void free() {
         freeImage();
@@ -135,6 +139,8 @@ public class STBImageData extends ImageData {
 
     @Override
     public Color getPixelColor(int x, int y) {
+        if (imageFreed) return Colors.BLACK; // Avoid segfault if freed
+
         var flippedY = (height - 1) - y;
         var index = (x + flippedY * width) * channels;
         int r = buffer.get(index) & SELECT_8_BYTES;
@@ -146,6 +152,8 @@ public class STBImageData extends ImageData {
 
     @Override
     public void setPixelColor(int x, int y, Color color) {
+        if (imageFreed) return; // Avoid segfault if freed
+
         var flippedY = (height - 1) - y;
         var index = (x + flippedY * width) * channels;
         buffer.put(index, (byte) color.getRed());

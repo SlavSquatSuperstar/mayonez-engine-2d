@@ -63,8 +63,7 @@ public sealed class GLTexture extends Texture permits GLSpriteSheetTexture {
     protected GLTexture(String filename, GLTexture parentTexture, ImageRegion region) {
         super(filename);
         this.imageData = parentTexture.imageData.getSubImageData(region); // Crop image data
-        System.out.println(parentTexture.imageData.isImageFreed());
-        // Error: parent buffer has already been freed
+        // Danger: parent buffer has already been freed
         this.texID = parentTexture.texID;
         this.texCoords = getSubImageCoords(parentTexture.getSize(), region);
     }

@@ -17,12 +17,16 @@ import mayonez.scripts.*;
 class GDPlayer extends GameObject {
 
     // Constants
-    private static final int NUM_SPRITES = 12 * 4;
     private static final float PLAYER_SPEED = 12f;
     private static final InputAxis HORIZ_AXIS
             = DefaultKeyAxis.findWithName("horizontal");
     private static final InputAxis VERT_AXIS
             = DefaultKeyAxis.findWithName("vertical");
+
+    private static final int NUM_LAYERS = 2;
+    private static final int NUM_SPRITES = 12 * 4;
+    private static final SpriteSheet[] PLAYER_SPRITE_SHEETS
+            = createSpriteSheets();
 
     GDPlayer(String name, Vec2 position) {
         super(name, position);
@@ -33,8 +37,7 @@ class GDPlayer extends GameObject {
         setZIndex(ZIndex.PLAYER);
 
         // Player Avatar
-        var spriteSheets = createSpriteSheets();
-        addSpriteLayers(spriteSheets);
+        addSpriteLayers();
 
         addComponent(new BoxCollider(new Vec2(1, 1)));
         addComponent(new Rigidbody(1f).setDrag(0.2f).setFixedRotation(true));
@@ -44,33 +47,35 @@ class GDPlayer extends GameObject {
         addComponent(new KeepInScene(halfSize.mul(-1f), halfSize, KeepInScene.Mode.STOP));
     }
 
-    private SpriteSheet[] createSpriteSheets() {
-        var numLayers = 2;
+    private void addSpriteLayers() {
+        var spriteIndex = Random.randomInt(0, NUM_SPRITES - 1);
+
+        var layers = new Sprite[NUM_LAYERS];
+        for (int i = 0; i < layers.length; i++) {
+            layers[i] = PLAYER_SPRITE_SHEETS[i].getSprite(spriteIndex);
+        }
+
+        Color[] colors = {
+                new Color(255, 0, 0),
+                new Color(0, 255, 0)
+        };
+        for (var i = 0; i < layers.length; i++) {
+            layers[i].setColor(colors[i]);
+            addComponent(layers[i]);
+        }
+    }
+
+    private static SpriteSheet[] createSpriteSheets() {
         var tileSize = GDEditorScene.TILE_SIZE;
         var numSprites = 12 * 4;
 
-        var spriteSheets = new SpriteSheet[numLayers];
+        var spriteSheets = new SpriteSheet[NUM_LAYERS];
         for (int i = 0; i < spriteSheets.length; i++) {
             spriteSheets[i] = Sprites.createSpriteSheet(
                     "assets/geometrydash/textures/player_layer%d.png".formatted(i),
                     tileSize, tileSize, numSprites, 2);
         }
         return spriteSheets;
-    }
-
-    private void addSpriteLayers(SpriteSheet[] spriteSheets) {
-        var spriteIndex = Random.randomInt(0, NUM_SPRITES - 1);
-
-        var layers = new Sprite[spriteSheets.length];
-        for (int i = 0; i < layers.length; i++) {
-            layers[i] = spriteSheets[i].getSprite(spriteIndex);
-        }
-
-        Color[] colors = {new Color(255, 0, 0), new Color(0, 255, 0)};
-        for (var i = 0; i < layers.length; i++) {
-            layers[i].setColor(colors[i]);
-            addComponent(layers[i]);
-        }
     }
 
 }
