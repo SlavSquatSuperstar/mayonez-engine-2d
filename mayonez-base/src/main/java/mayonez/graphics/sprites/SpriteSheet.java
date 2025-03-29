@@ -1,5 +1,6 @@
 package mayonez.graphics.sprites;
 
+import mayonez.assets.image.*;
 import mayonez.graphics.textures.*;
 import mayonez.math.*;
 
@@ -20,21 +21,27 @@ public abstract sealed class SpriteSheet permits JSpriteSheet, GLSpriteSheet {
     // Create Sprite Methods
 
     /**
-     * Create individual sprites from the sprite sheet, reading from left to right
-     * then top to bottom.
+     * Get the origin position of the first sub-sprite on this sprite sheet.
      *
-     * @param numSprites the number of sprites on the sheet
-     * @param spacing    the space between each sprite in pixels
+     * @return the first sprite origin
      */
-    protected abstract void createSprites(int numSprites, int spacing);
+    protected abstract Vec2 getFirstSpriteOrigin();
 
     /**
-     * Move to the next sprite on the sprite sheet.
+     * Get the origin position of the next sub-sprite given the current origin.
      *
-     * @param imgOrigin the origin of the current sprite on the sprite sheet in pixels
-     * @param spacing   the space between each sprite in pixels
+     * @param spriteOrigin the current sprite origin
+     * @return the next sprite origin
      */
-    protected abstract void moveToNextSprite(Vec2 imgOrigin, int spacing);
+    protected abstract Vec2 getNextSpriteOrigin(Vec2 spriteOrigin);
+
+    /**
+     * Get the regions of all the sub-sprites on this sprite sheet, starting form
+     * the top left and reading row by row.
+     *
+     * @return the sprite regions
+     */
+    protected abstract ImageRegion[] getSpriteRegions();
 
     // Sprite Sheet Getters
 
@@ -46,16 +53,9 @@ public abstract sealed class SpriteSheet permits JSpriteSheet, GLSpriteSheet {
     public abstract Texture getSheetTexture();
 
     /**
-     * The dimensions of the sprite sheet texture in pixels.
-     *
-     * @return the sheet size
-     */
-    protected abstract Vec2 getSheetSize();
-
-    /**
      * Get the number of sprites/textures in this sprite sheet.
      *
-     * @return the sheet size
+     * @return the sprite count
      */
     public abstract int numSprites();
 
