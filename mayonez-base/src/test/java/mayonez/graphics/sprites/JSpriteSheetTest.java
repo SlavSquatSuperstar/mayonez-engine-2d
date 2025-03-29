@@ -22,16 +22,28 @@ class JSpriteSheetTest extends SpriteSheetTest {
     }
 
     @Test
-    void subTexturesInCorrectOrder() {
+    void subTextureContentsCorrect() {
         var textures = spriteSheet.getTextures();
         assertEquals(NUM_SPRITES, textures.length);
 
         for (int i = 0; i < NUM_SPRITES; i++) {
             var texture = textures[i];
-            assertEquals(SPRITE_COLORS[i],
+            assertEquals(new Vec2(SPRITE_LENGTH), texture.getSize());
+            assertEquals(MARKER_COLOR,
                     texture.getImageData().getPixelColor(0, 0));
             assertEquals(SPRITE_COLORS[i],
                     texture.getImageData().getPixelColor(SPRITE_LENGTH - 1, SPRITE_LENGTH - 1));
+        }
+    }
+
+    @Test
+    void subTextureOriginsCorrect() {
+        var regions = spriteSheet.getSpriteRegions();
+        assertEquals(NUM_SPRITES, regions.length);
+
+        for (int i = 0; i < NUM_SPRITES; i++) {
+            assertEquals(SPRITE_ORIGINS[i], regions[i].origin());
+            assertEquals(new Vec2(SPRITE_LENGTH), regions[i].size());
         }
     }
 

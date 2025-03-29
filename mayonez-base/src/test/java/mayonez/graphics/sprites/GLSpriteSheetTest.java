@@ -22,16 +22,30 @@ class GLSpriteSheetTest extends SpriteSheetTest {
     }
 
     @Test
-    void subTexturesInCorrectOrder() {
+    void subTextureContentsCorrect() {
         var textures = spriteSheet.getTextures();
         assertEquals(SpriteSheetTest.NUM_SPRITES, textures.length);
 
         for (int i = 0; i < SpriteSheetTest.NUM_SPRITES; i++) {
             var texture = textures[i];
-            assertEquals(SPRITE_COLORS[i],
+            assertEquals(new Vec2(SPRITE_LENGTH), texture.getSize());
+            assertEquals(MARKER_COLOR,
                     texture.getImageData().getPixelColor(0, 0));
             assertEquals(SPRITE_COLORS[i],
                     texture.getImageData().getPixelColor(SpriteSheetTest.SPRITE_LENGTH - 1, SpriteSheetTest.SPRITE_LENGTH - 1));
+        }
+    }
+
+    @Test
+    void subTextureOriginsCorrect() {
+        var regions = spriteSheet.getSpriteRegions();
+        assertEquals(NUM_SPRITES, regions.length);
+
+        var start = spriteSheet.getSheetTexture().getHeight() - SPRITE_LENGTH;
+        for (int i = 0; i < NUM_SPRITES; i++) {
+            var origin = new Vec2(SPRITE_ORIGINS[i].x, start - SPRITE_ORIGINS[i].y);
+            assertEquals(origin, regions[i].origin());
+            assertEquals(new Vec2(SPRITE_LENGTH), regions[i].size());
         }
     }
 

@@ -19,6 +19,7 @@ abstract class SpriteSheetTest {
 
     static Vec2[] SPRITE_ORIGINS;
     static Color[] SPRITE_COLORS;
+    static Color MARKER_COLOR = Color.grayscale(128);
 
     @BeforeAll
     static void setup() {
