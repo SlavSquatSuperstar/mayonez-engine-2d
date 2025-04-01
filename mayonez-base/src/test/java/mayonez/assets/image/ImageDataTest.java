@@ -20,9 +20,9 @@ abstract class ImageDataTest {
     static Vec2[] TEST_COORDS;
 
     // Image Filenames
-    static final String TRANSPARENT_PNG = "testassets/images/squares-transparent.png";
-    static final String OPAQUE_PNG = "testassets/images/squares-opaque.png";
-    static final String OPAQUE_JPG = "testassets/images/squares-opaque.jpg";
+    static final String TRANSPARENT_PNG = "testassets/images/squares4_transparent.png";
+    static final String OPAQUE_PNG = "testassets/images/squares4_opaque.png";
+    static final String OPAQUE_JPG = "testassets/images/squares4_opaque.jpg";
 
     @BeforeAll
     static void setup() {
