@@ -51,35 +51,25 @@ final class JSpriteSheet extends SpriteSheet {
 
     @Override
     protected ImageRegion[] getSpriteRegions() {
-        var regions = new ImageRegion[numSprites];
-        var spriteOrigin = getFirstSpriteOrigin();
+        var spacing = new Vec2(this.spacing);
+        var spriteMove = spriteSize.add(spacing);
+        var shape = getSheetShape(spriteMove, spacing);
+        var cols = (int) shape.x;
+        var rows = (int) shape.y;
 
         // Read sprites from top left of sheet
-        for (var i = 0; i < numSprites; i++) {
-            regions[i] = new ImageRegion(spriteOrigin, spriteSize);
-            // Move to next sprite
-            spriteOrigin = getNextSpriteOrigin(spriteOrigin);
+        var regions = new ImageRegion[numSprites];
+        for (var y = 0; y < rows; y++) {
+            for (var x = 0; x < cols; x++) {
+                var spriteIdx = y * cols + x;
+                // Check index doesn't go out of bounds
+                if (spriteIdx >= numSprites) return regions;
+
+                var spriteOrigin = new Vec2(x, y).mul(spriteMove);
+                regions[spriteIdx] = new ImageRegion(spriteOrigin, spriteSize);
+            }
         }
         return regions;
-    }
-
-    @Override
-    protected Vec2 getFirstSpriteOrigin() {
-        // AWT uses top left as image origin
-        return new Vec2(0, 0);
-    }
-
-    @Override
-    protected Vec2 getNextSpriteOrigin(Vec2 spriteOrigin) {
-        var nextSpriteOrigin = new Vec2(
-                spriteOrigin.x + (spriteSize.x + spacing), spriteOrigin.y
-        );
-        if (nextSpriteOrigin.x >= sheetTexture.getSize().x) {
-            // Go to next row
-            nextSpriteOrigin.x = 0;
-            nextSpriteOrigin.y += spriteSize.y + spacing;
-        }
-        return nextSpriteOrigin;
     }
 
     // Sheet Getters
