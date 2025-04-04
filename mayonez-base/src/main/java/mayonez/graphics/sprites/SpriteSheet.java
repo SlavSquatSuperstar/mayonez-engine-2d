@@ -2,7 +2,6 @@ package mayonez.graphics.sprites;
 
 import mayonez.assets.image.*;
 import mayonez.graphics.textures.*;
-import mayonez.math.*;
 
 /**
  * Stores multiple textures and creates multiple sprites from a larger image.
@@ -20,7 +19,6 @@ public abstract sealed class SpriteSheet permits JSpriteSheet, GLSpriteSheet {
 
     // Create Sprite Methods
 
-    // TODO add origin and move to method
     /**
      * Get the regions of all the sub-sprites on this sprite sheet, starting form
      * the top left and reading row by row.
@@ -28,23 +26,6 @@ public abstract sealed class SpriteSheet permits JSpriteSheet, GLSpriteSheet {
      * @return the sprite regions
      */
     protected abstract ImageRegion[] getSpriteRegions();
-
-    /**
-     * Get the number of sprites on this sprite sheet in each dimension.
-     *
-     * @param spriteMove the distances to the next sprite, in pixels
-     * @param spacing    the spacing along each dimension, in pixels
-     * @return the sheet shape
-     */
-    protected Vec2 getSheetShape(Vec2 spriteMove, Vec2 spacing) {
-        var shape1 = getSheetTexture().getSize().div(spriteMove);
-        var shape2 = (getSheetTexture().getSize().add(spacing)).div(spriteMove);
-
-        // Check if extra spacing on right/bottom
-        var cols = Math.max(shape1.x, shape2.x);
-        var rows = Math.max(shape1.y, shape2.y);
-        return new Vec2(cols, rows);
-    }
 
     // Sprite Sheet Getters
 
