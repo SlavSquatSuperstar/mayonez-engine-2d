@@ -33,20 +33,17 @@ public class Font {
     private Glyph[] createGlyphs(int[] widths) {
         var numGlyphs = metadata.numCharacters();
         var glyphs = new Glyph[numGlyphs];
-        // TODO Don't create if AWT for now
-        if (!(fontTexture instanceof GLTexture)) return glyphs;
 
-        // Get GL glyph regions
-        var texSize = fontTexture.getSize();
+        // Get glyph regions
         var glyphSize = metadata.glyphHeight();
-        var splitter = SpriteSplitters.getGLSpriteSplitter(
-                texSize, new Vec2(glyphSize),
+        var splitter = SpriteSplitters.getSpriteSplitter(
+                fontTexture, new Vec2(glyphSize),
                 new Vec2(0), numGlyphs
         );
         var regions = splitter.getSpriteRegions();
 
         // Create glyph textures
-        for (var i = 0; i < numGlyphs; i++) {
+        for (var i = 0; i < regions.length; i++) {
             var glyphRegion = new ImageRegion(
                     regions[i].origin(), new Vec2(widths[i], glyphSize)
             );
@@ -60,7 +57,13 @@ public class Font {
 
     // Glyph Widths Methods
 
-    // Automatically detect glyph widths from image file
+    /**
+     * Automatically detect glyph widths from a font sprite sheet.
+     *
+     * @param metadata    the font metadata
+     * @param fontTexture the font texture
+     * @return the glyph widths
+     */
     static int[] getGlyphWidths(FontMetadata metadata, Texture fontTexture) {
         var widths = new int[metadata.numCharacters()];
 
@@ -122,12 +125,14 @@ public class Font {
         return metadata.glyphSpacing();
     }
 
-    public int numGlyphs() {
-        return metadata.numCharacters();
-    }
-
     // Glyph Getters
 
+    /**
+     * Get the glyph with the given ASCII char code, if the font supports it.
+     *
+     * @param charCode the char code
+     * @return the glyph, null if unsupported
+     */
     public Glyph getGlyph(int charCode) {
         var index = charCode - metadata.startCharacter();
         if (!MathUtils.inRange(index, 0, metadata.numCharacters() - 1)) {

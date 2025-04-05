@@ -20,33 +20,23 @@ public final class Sprites {
     // Sprite Methods
 
     /**
-     * Automatically creates an AWT or GL sprite with a given filename based on the
-     * current engine instance.
-     *
-     * @param filename the texture location
-     * @return a sprite
-     */
-    public static Sprite createSprite(String filename) {
-        return Mayonez.getUseGL()
-                ? new GLSprite(Textures.getGLTexture(filename))
-                : new JSprite(Textures.getJTexture(filename));
-    }
-
-    /**
-     * Automatically creates an AWT or GL sprite with a given texture based on the
-     * current engine instance.
+     * Creates a sprite from the given texture with color white.
      *
      * @param texture an existing texture
      * @return a sprite
      */
     public static Sprite createSprite(Texture texture) {
-        if (texture instanceof GLTexture glTexture) return new GLSprite(glTexture);
-        else if (texture instanceof JTexture jTexture) return new JSprite(jTexture);
-        else return createSprite(Colors.WHITE);
+        if (texture instanceof GLTexture glTexture) {
+            return new GLSprite(glTexture);
+        } else if (texture instanceof JTexture jTexture) {
+            return new JSprite(jTexture);
+        } else {
+            return createSprite(Colors.WHITE);
+        }
     }
 
     /**
-     * Automatically creates a AWT or GL sprite with a given color depending on the current engine instance.
+     * Creates a sprite from the given color with no texture.
      *
      * @param color the color
      * @return a sprite
