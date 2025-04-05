@@ -38,6 +38,30 @@ class JSONFileTest {
     }
 
     @Test
+    void readComplexJSONFile() {
+        var rec = new JSONFile("testassets/text/test.json").readJSON();
+        assertNotNull(rec);
+
+        // Get record
+        var rec1 = new Record(Map.of("str1", "baz", "int1", 42));
+        assertEquals(rec1, rec.getObject("rec1"));
+
+        // Get list of records
+        var arr1 = rec.getArray("list1"); // Stored as maps
+        assertNotNull(arr1);
+        assertEquals(2, arr1.size());
+
+        var items = List.of(
+                new Record(Map.of("str1", "foo", "int1", 420)),
+                new Record(Map.of("str1", "bar", "int1", 69))
+        );
+        for (int i = 0; i < 2; i++) {
+            assertInstanceOf(Map.class, arr1.get(i));
+            assertEquals(items.get(i), Record.from(arr1.get(i)));
+        }
+    }
+
+    @Test
     void readClasspathJSONFile() {
         var rec = new JSONFile("testassets/text/in.json").readJSON();
         assertNotNull(rec);

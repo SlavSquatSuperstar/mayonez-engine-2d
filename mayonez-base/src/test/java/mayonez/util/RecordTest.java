@@ -104,10 +104,7 @@ class RecordTest {
         var array = rec1.getArray("list1");
         assertNotNull(array);
         assertEquals(4, array.size());
-        assertEquals("bar", array.get(0));
-        assertEquals(123, array.get(1));
-        assertEquals(4.5f, array.get(2));
-        assertEquals(true, array.get(3));
+        assertEquals(List.of("bar", 123, 4.5f, true), array);
     }
 
     @Test
@@ -141,6 +138,7 @@ class RecordTest {
         List<String> list = List.of("item1", "item2", "item3");
         var record = new Record();
         record.set("list1", list);
+
         List<Object> expected = List.of("item1", "item2", "item3");
         assertEquals(expected, record.getArray("list1"));
     }
@@ -219,6 +217,68 @@ class RecordTest {
         assertFalse(rec1.getBoolean("bool2"));
         assertEquals(420, rec1.getInt("int1")); // not replaced
         assertNull(rec1.get("null2")); // added null
+    }
+
+    // Equals Tests
+
+    @Test
+    void recordsDifferentKeysNotEqual() {
+        var rec1 = new Record(Map.of(
+                "str1", "foo",
+                "int1", 420,
+                "bool1", true
+        ));
+        var rec2 = new Record(Map.of(
+                "str2", "bar",
+                "int2", 69,
+                "bool2", false
+        ));
+        assertNotEquals(rec1, rec2);
+    }
+
+    @Test
+    void recordsDifferentTypeNotEqual() {
+        var rec1 = new Record(Map.of(
+                "str1", "foo",
+                "int1", 420,
+                "bool1", true
+        ));
+        var rec2 = new Record(Map.of(
+                "str1", "bar",
+                "int1", "420",
+                "bool1", "true"
+        ));
+        assertNotEquals(rec1, rec2);
+    }
+
+    @Test
+    void recordsSameKeysValuesEqual() {
+        var rec1 = new Record(Map.of(
+                "str1", "foo",
+                "int1", 420,
+                "bool1", true
+        ));
+        var rec2 = new Record(Map.of(
+                "str1", "foo",
+                "int1", 420,
+                "bool1", true
+        ));
+        assertEquals(rec1, rec2);
+    }
+
+    @Test
+    void recordsDifferentKeyOrdersEqual() {
+        var rec1 = new Record(Map.of(
+                "str1", "foo",
+                "int1", 420,
+                "bool1", true
+        ));
+        var rec2 = new Record(Map.of(
+                "int1", 420,
+                "bool1", true,
+                "str1", "foo"
+        ));
+        assertEquals(rec1, rec2);
     }
 
 }

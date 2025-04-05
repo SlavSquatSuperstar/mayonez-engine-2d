@@ -4,7 +4,7 @@ package mayonez.util
  * Stores information under key-value pairs, similar to how objects store
  * data in fields. This class is intended to store simple data types, including
  * numbers, texts, booleans, arrays, and other records, similar to SQL records
- * and JavaScript objects The [mayonez.assets.text.JSONFile] class can also
+ * and JavaScript objects. The [mayonez.assets.text.JSONFile] class can also
  * convert Records to and from JSONObjects.
  *
  * Storing other data types in a Record may  make (de-)serialization difficult,
@@ -13,6 +13,27 @@ package mayonez.util
  * @author SlavSquatSuperstar
  */
 open class Record(map: Map<String?, Any?>) {
+
+    companion object {
+
+        // TODO generic array class
+
+        /**
+         * Create a record from an object that may be a string-to-object map,
+         * if possible.
+         *
+         * @param map the object
+         * @return the record
+         */
+        @Suppress("unchecked_cast")
+        @JvmStatic
+        fun from(map: Any?): Record? {
+            val foo = map as? Map<String?, Any?>
+            return if (foo == null) null
+            else Record(foo)
+        }
+
+    }
 
     /** Creates an empty record with no data. */
     constructor() : this(HashMap())
