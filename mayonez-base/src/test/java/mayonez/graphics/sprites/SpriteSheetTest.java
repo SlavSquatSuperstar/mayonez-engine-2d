@@ -1,5 +1,6 @@
 package mayonez.graphics.sprites;
 
+import mayonez.assets.image.*;
 import mayonez.graphics.*;
 import mayonez.graphics.textures.*;
 import mayonez.math.*;
@@ -8,7 +9,8 @@ import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Constant values and helper functions for the {@link mayonez.graphics.sprites} tests.
+ * Constant values and helper functions for the {@link mayonez.graphics.sprites}
+ * tests.
  *
  * @author SlavSquatSuperstar
  */
@@ -35,6 +37,8 @@ abstract class SpriteSheetTest {
         };
     }
 
+    // Sprite Sheet Helpers
+
     protected static void testSubTexture(Texture texture, Color spriteColor) {
         assertEquals(new Vec2(SPRITE_LENGTH), texture.getSize());
         assertEquals(MARKER_COLOR, texture.getImageData()
@@ -43,4 +47,26 @@ abstract class SpriteSheetTest {
                 .getPixelColor(SPRITE_LENGTH - 1, SPRITE_LENGTH - 1));
     }
 
+    // Sprite Splitter Helpers
+
+    static Vec2[] getSpriteOrigins(float[] spriteXs, float[] spriteYs) {
+        var cols = spriteXs.length;
+        var rows = spriteYs.length;
+
+        var spriteOrigins = new Vec2[cols * rows];
+        for (int y = 0; y < rows; y++) {
+            for (int x = 0; x < cols; x++) {
+                spriteOrigins[y * cols + x] = new Vec2(spriteXs[x], spriteYs[y]);
+            }
+        }
+        return spriteOrigins;
+    }
+
+    static void testRegionsCorrect(ImageRegion[] regions, Vec2[] spriteOrigins) {
+        assertEquals(NUM_SPRITES, regions.length);
+        for (int i = 0; i < NUM_SPRITES; i++) {
+            assertEquals(spriteOrigins[i], regions[i].origin());
+            assertEquals(new Vec2(SPRITE_LENGTH), regions[i].size());
+        }
+    }
 }
