@@ -51,12 +51,9 @@ final class GLSpriteSheet extends SpriteSheet {
 
     @Override
     protected ImageRegion[] getSpriteRegions() {
-        // GL uses bottom left as origin
-        var spriteStart = new Vec2(0, sheetTexture.getSize().y - spriteSize.y);
-        var splitter = new TiledSpriteSplitter(
+        var splitter = SpriteSplitters.getGLSpriteSplitter(
                 sheetTexture.getSize(), spriteSize,
-                new Vec2(spacing), numSprites,
-                spriteStart, new Vec2(1, -1)
+                new Vec2(spacing), numSprites
         );
         return splitter.getSpriteRegions();
     }

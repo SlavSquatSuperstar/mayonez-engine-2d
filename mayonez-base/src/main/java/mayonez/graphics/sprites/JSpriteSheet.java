@@ -51,11 +51,9 @@ final class JSpriteSheet extends SpriteSheet {
 
     @Override
     protected ImageRegion[] getSpriteRegions() {
-        // AWT uses top left as origin
-        var splitter = new TiledSpriteSplitter(
+        var splitter = SpriteSplitters.getJSpriteSplitter(
                 sheetTexture.getSize(), spriteSize,
-                new Vec2(spacing), numSprites,
-                new Vec2(0), new Vec2(1)
+                new Vec2(spacing), numSprites
         );
         return splitter.getSpriteRegions();
     }

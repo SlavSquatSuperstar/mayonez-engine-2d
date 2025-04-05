@@ -39,11 +39,9 @@ public class Font {
         // Get GL glyph regions
         var texSize = fontTexture.getSize();
         var glyphSize = metadata.glyphHeight();
-        var spriteStart = new Vec2(0, texSize.y - glyphSize);
-        var splitter = new TiledSpriteSplitter(
+        var splitter = SpriteSplitters.getGLSpriteSplitter(
                 texSize, new Vec2(glyphSize),
-                new Vec2(0), numGlyphs,
-                spriteStart, new Vec2(1, -1)
+                new Vec2(0), numGlyphs
         );
         var regions = splitter.getSpriteRegions();
 
@@ -76,10 +74,9 @@ public class Font {
 
         // Get AWT glyph regions
         var glyphSize = metadata.glyphHeight();
-        var splitter = new TiledSpriteSplitter(
+        var splitter = SpriteSplitters.getJSpriteSplitter(
                 fontTexture.getSize(), new Vec2(glyphSize),
-                new Vec2(0), metadata.numCharacters(),
-                new Vec2(0), new Vec2(1)
+                new Vec2(0), metadata.numCharacters()
         );
         var regions = splitter.getSpriteRegions();
 
