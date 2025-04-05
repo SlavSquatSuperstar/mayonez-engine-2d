@@ -1,8 +1,5 @@
 package mayonez.graphics.sprites;
 
-import mayonez.assets.image.*;
-import mayonez.graphics.textures.*;
-import mayonez.math.*;
 import org.junit.jupiter.api.*;
 
 import static mayonez.graphics.sprites.SpriteSheetTest.*;
@@ -21,7 +18,7 @@ class JTiledSpriteSplitterTest {
         var spriteYs = new float[]{0, 8};
         var spriteOrigins = getSpriteOrigins(spriteXs, spriteYs);
 
-        var regions = getSpriteRegions(SPRITE_SHEET_FILENAME, NO_SPACING);
+        var regions = getSpriteRegions(false, false);
         testRegionsCorrect(regions, spriteOrigins);
     }
 
@@ -31,17 +28,8 @@ class JTiledSpriteSplitterTest {
         var spriteYs = new float[]{0, 9};
         var spriteOrigins = getSpriteOrigins(spriteXs, spriteYs);
 
-        var regions = getSpriteRegions(SPACED_SPRITE_SHEET_FILENAME, SPACING);
+        var regions = getSpriteRegions(true, false);
         testRegionsCorrect(regions, spriteOrigins);
-    }
-
-    private static ImageRegion[] getSpriteRegions(String filename, int spacing) {
-        var texture = Textures.getJTexture(filename);
-        var splitter = SpriteSplitters.getJSpriteSplitter(
-                texture.getSize(), new Vec2(SPRITE_LENGTH),
-                new Vec2(spacing), NUM_SPRITES
-        );
-        return splitter.getSpriteRegions();
     }
 
 }
