@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * @author SlavSquatSuperstar
  */
-abstract class SpriteSheetTest {
+abstract class SpriteTestUtils {
 
     // Sprite Sheet Files
     private static final String SPRITE_SHEET_FILENAME = "testassets/images/squares8.png";
