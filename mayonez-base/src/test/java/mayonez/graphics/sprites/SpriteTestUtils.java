@@ -57,13 +57,9 @@ abstract class SpriteTestUtils {
     static Texture[] getTextures(boolean spaced, boolean useGL) {
         var sheetTexture = getTexture(spaced, useGL);
         var spacing = spaced ? SPACING : NO_SPACING;
-
-        SpriteSheet spriteSheet;
-        if (useGL) {
-            spriteSheet = new GLSpriteSheet((GLTexture) sheetTexture, new Vec2(SPRITE_LENGTH), NUM_SPRITES, spacing);
-        } else {
-            spriteSheet = new JSpriteSheet((JTexture) sheetTexture, new Vec2(SPRITE_LENGTH), NUM_SPRITES, spacing);
-        }
+        var spriteSheet = Sprites.createSpriteSheet(
+                sheetTexture, SPRITE_LENGTH, SPRITE_LENGTH, NUM_SPRITES, spacing
+        );
         return spriteSheet.getTextures();
     }
 
@@ -98,18 +94,10 @@ abstract class SpriteTestUtils {
         var sheetTexture = getTexture(spaced, useGL);
         var spacing = spaced ? SPACING : NO_SPACING;
 
-        SpriteSplitter splitter;
-        if (useGL) {
-            splitter = SpriteSplitters.getGLSpriteSplitter(
-                    sheetTexture.getSize(), new Vec2(SPRITE_LENGTH),
-                    new Vec2(spacing), NUM_SPRITES
-            );
-        } else {
-            splitter = SpriteSplitters.getJSpriteSplitter(
-                    sheetTexture.getSize(), new Vec2(SPRITE_LENGTH),
-                    new Vec2(spacing), NUM_SPRITES
-            );
-        }
+        var splitter = SpriteSplitters.getSpriteSplitter(
+                sheetTexture, new Vec2(SPRITE_LENGTH),
+                new Vec2(spacing), NUM_SPRITES
+        );
         return splitter.getSpriteRegions();
     }
 
