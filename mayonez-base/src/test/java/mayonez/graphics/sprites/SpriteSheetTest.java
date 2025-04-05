@@ -9,7 +9,7 @@ import static mayonez.graphics.sprites.SpriteTestUtils.*;
  *
  * @author SlavSquatSuperstar
  */
-class SpriteSheetTests {
+class SpriteSheetTest {
 
     @Test
     void awtSubTextureContentsCorrect() {
