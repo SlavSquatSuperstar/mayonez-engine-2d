@@ -2,7 +2,6 @@ package slavsquatsuperstar.demos;
 
 import mayonez.assets.text.*;
 import mayonez.graphics.font.*;
-import mayonez.graphics.textures.*;
 
 /**
  * Stores the shared resources used by the demo scenes.
@@ -29,8 +28,7 @@ public final class DemosAssets {
         var metadata = new FontMetadata(json.readJSON());
 
         // Create font
-        var fontTexture = Textures.getTexture(metadata.fontFile());
-        return new Font(metadata, fontTexture);
+        return new Font(metadata);
     }
 
 }
