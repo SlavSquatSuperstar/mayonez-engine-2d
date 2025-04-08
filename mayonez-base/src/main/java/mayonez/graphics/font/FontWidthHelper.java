@@ -53,6 +53,32 @@ final class FontWidthHelper {
         return widths;
     }
 
+    static int[] getGlyphWidths(FontBlockMetadata metadata, Texture fontTexture) {
+        var numGlyphs = metadata.numCharacters();
+        var widths = new int[numGlyphs];
+
+        // Look at AWT image since no flipping or freeing
+        ImageData imgData;
+        try {
+            imgData = new AWTImageData(fontTexture.getFilename());
+        } catch (IOException e) {
+            return widths;
+        }
+
+        // Get AWT glyph regions
+        var splitter = SpriteSplitters.getJSpriteSplitter(
+                fontTexture.getSize(),
+                new Vec2(metadata.spriteWidth(), metadata.spriteHeight()),
+                new Vec2(0), numGlyphs
+        );
+        var regions = splitter.getSpriteRegions();
+
+        for (var i = 0; i < widths.length; i++) {
+            widths[i] = getGlyphWidth(imgData, regions[i]);
+        }
+        return widths;
+    }
+
     // Get glyph width by finding the last column with any filled pixels
     private static int getGlyphWidth(ImageData imageData, ImageRegion region) {
         var startX = region.getX();

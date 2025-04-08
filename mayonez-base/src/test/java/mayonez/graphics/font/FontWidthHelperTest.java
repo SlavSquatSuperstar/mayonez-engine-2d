@@ -13,22 +13,22 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class FontWidthHelperTest {
 
-    private static FontMetadata metadata;
+    private static FontBlockMetadata metadata;
     private static int[] fileWidths;
 
     @BeforeAll
     static void readFontFiles() {
         // Font metadata
-        var json = new JSONFile("assets/fonts/font_pixel.json");
+        var json = new JSONFile("testassets/font/test_ascii_block.json");
         var record = json.readJSON();
-        metadata = new FontMetadata(record);
+        metadata = new FontBlockMetadata(record);
 
         // Widths file
         readGlyphWidths();
     }
 
     private static void readGlyphWidths() {
-        var widthsFile = new TextFile("testassets/text/font_pixel_widths.txt");
+        var widthsFile = new TextFile("testassets/font/test_ascii_widths.txt");
         var widthsLines = widthsFile.readLines();
         var widthsStr = String.join("", widthsLines);
 
@@ -47,7 +47,7 @@ class FontWidthHelperTest {
     @Test
     void glyphWidthsFromImageIsCorrect() {
         // Font widths
-        var fontTexture = Textures.getJTexture(metadata.fontFile());
+        var fontTexture = Textures.getJTexture(metadata.textureFile());
         var imgWidths = FontWidthHelper.getGlyphWidths(metadata, fontTexture);
         assertArrayEquals(fileWidths, imgWidths);
     }
