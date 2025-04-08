@@ -3,9 +3,10 @@
 	"font_file": "assets/fonts/font_pixel_ascii.png",
 	"start_character": 32,
 	"end_character": 126,
-	"glyph_height": 8,
-	"glyph_max_width": 8,
+	"sprite_height": 8,
+	"sprite_width": 8,
 	"glyph_ascent": 7,
+	"glyph_height": 8,
 	"glyph_spacing": 1,
 	"whitespace_character": 32,
 	"whitespace_width": 3

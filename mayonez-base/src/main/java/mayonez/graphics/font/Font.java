@@ -32,10 +32,10 @@ public class Font {
         var numGlyphs = metadata.numCharacters();
 
         // Get glyph regions
-        var glyphHeight = metadata.glyphHeight();
+        var spriteHeight = metadata.spriteHeight();
         var splitter = SpriteSplitters.getSpriteSplitter(
                 fontTexture,
-                new Vec2(metadata.glyphMaxWidth(), glyphHeight),
+                new Vec2(metadata.spriteWidth(), spriteHeight),
                 new Vec2(0), numGlyphs
         );
         var regions = splitter.getSpriteRegions();
@@ -44,12 +44,12 @@ public class Font {
         var glyphs = new Glyph[numGlyphs];
         for (var i = 0; i < regions.length; i++) {
             var glyphRegion = new ImageRegion(
-                    regions[i].origin(), new Vec2(widths[i], glyphHeight)
+                    regions[i].origin(), new Vec2(widths[i], spriteHeight)
             );
             var glyphTex = fontTexture.getSubTexture(
                     glyphRegion, "Sprite " + i
             );
-            glyphs[i] = new Glyph(widths[i], glyphHeight, glyphTex);
+            glyphs[i] = new Glyph(widths[i], spriteHeight, glyphTex);
         }
         return glyphs;
     }

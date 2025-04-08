@@ -36,9 +36,8 @@ final class FontWidthHelper {
         }
 
         // Get AWT glyph regions
-        var glyphSize = metadata.glyphHeight();
         var splitter = SpriteSplitters.getJSpriteSplitter(
-                fontTexture.getSize(), new Vec2(glyphSize),
+                fontTexture.getSize(), new Vec2(metadata.spriteWidth()),
                 new Vec2(0), metadata.numCharacters()
         );
         var regions = splitter.getSpriteRegions();

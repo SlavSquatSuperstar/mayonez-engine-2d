@@ -9,10 +9,11 @@ import mayonez.util.Record;
  * @param fontFile            the filename of the font texture
  * @param startCharacter      the start character value
  * @param endCharacter        the end character value
- * @param glyphHeight         the total height of a character glyph in pixels
- * @param glyphMaxWidth       the maximum width of a character glyph in pixels
- * @param glyphAscent         the height of a character glyph above the baseline in pixels
- * @param glyphSpacing        the space between adjacent glyphs in pixels
+ * @param spriteWidth         the height of a glyph sprite in pixels
+ * @param spriteHeight        the width of a glyph sprite in pixels
+ * @param glyphAscent         the height of a character glyph above the baseline, in pixels
+ * @param glyphHeight         the cap height of a character glyph, in pixels
+ * @param glyphSpacing        the space between adjacent glyphs, in pixels
  * @param whitespaceCharacter the character value used for whitespace
  * @param whitespaceWidth     the width of the whitespace glyph
  * @author SlavSquatSuperstar
@@ -21,8 +22,8 @@ import mayonez.util.Record;
 public record FontMetadata(
         String name, String fontFile,
         char startCharacter, char endCharacter,
-        int glyphHeight, int glyphMaxWidth,
-        int glyphAscent, int glyphSpacing,
+        int spriteWidth, int spriteHeight, int glyphAscent,
+        int glyphHeight, int glyphSpacing,
         char whitespaceCharacter, int whitespaceWidth
 ) {
 
@@ -33,10 +34,9 @@ public record FontMetadata(
                 record.getString("name"), record.getString("font_file"),
                 (char) record.getInt("start_character"),
                 (char) record.getInt("end_character"),
-                record.getInt("glyph_height"),
-                record.getInt("glyph_max_width"),
+                record.getInt("sprite_height"), record.getInt("sprite_width"),
                 record.getInt("glyph_ascent"),
-                record.getInt("glyph_spacing"),
+                record.getInt("glyph_height"), record.getInt("glyph_spacing"),
                 (char) record.getInt("whitespace_character"),
                 record.getInt("whitespace_width")
         );
