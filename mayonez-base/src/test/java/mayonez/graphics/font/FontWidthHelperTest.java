@@ -7,11 +7,11 @@ import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit tests for the {@link Font} class.
+ * Unit tests for the {@link mayonez.graphics.font.FontWidthHelper} class.
  *
  * @author SlavSquatSuperstar
  */
-class FontTest {
+class FontWidthHelperTest {
 
     private static FontMetadata metadata;
     private static int[] fileWidths;
@@ -43,11 +43,12 @@ class FontTest {
         assertEquals(metadata.numCharacters(), fileWidths.length);
     }
 
+    // TODO GL tests
     @Test
     void glyphWidthsFromImageIsCorrect() {
         // Font widths
         var fontTexture = Textures.getJTexture(metadata.fontFile());
-        var imgWidths = Font.getGlyphWidths(metadata, fontTexture);
+        var imgWidths = FontWidthHelper.getGlyphWidths(metadata, fontTexture);
         assertArrayEquals(fileWidths, imgWidths);
     }
 
