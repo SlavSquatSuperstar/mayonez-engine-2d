@@ -6,10 +6,11 @@ import mayonez.util.Record;
  * Contains characteristics about a font, including the name, characters, and dimensions.
  *
  * @param name                the name of the font
- * @param fontFile           the filename of the font texture
+ * @param fontFile            the filename of the font texture
  * @param startCharacter      the start character value
  * @param endCharacter        the end character value
  * @param glyphHeight         the total height of a character glyph in pixels
+ * @param glyphMaxWidth       the maximum width of a character glyph in pixels
  * @param glyphAscent         the height of a character glyph above the baseline in pixels
  * @param glyphSpacing        the space between adjacent glyphs in pixels
  * @param whitespaceCharacter the character value used for whitespace
@@ -21,7 +22,8 @@ import mayonez.util.Record;
 public record FontMetadata(
         String name, String fontFile,
         char startCharacter, char endCharacter,
-        int glyphHeight, int glyphAscent, int glyphSpacing,
+        int glyphHeight, int glyphMaxWidth,
+        int glyphAscent, int glyphSpacing,
         char whitespaceCharacter, int whitespaceWidth
 ) {
 
@@ -30,9 +32,14 @@ public record FontMetadata(
     public FontMetadata(Record record) {
         this(
                 record.getString("name"), record.getString("font_file"),
-                (char) record.getInt("start_character"), (char) record.getInt("end_character"),
-                record.getInt("glyph_height"), record.getInt("glyph_ascent"), record.getInt("glyph_spacing"),
-                (char) record.getInt("whitespace_character"), record.getInt("whitespace_width")
+                (char) record.getInt("start_character"),
+                (char) record.getInt("end_character"),
+                record.getInt("glyph_height"),
+                record.getInt("glyph_max_width"),
+                record.getInt("glyph_ascent"),
+                record.getInt("glyph_spacing"),
+                (char) record.getInt("whitespace_character"),
+                record.getInt("whitespace_width")
         );
     }
 
