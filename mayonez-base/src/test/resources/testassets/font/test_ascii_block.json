@@ -1,6 +1,6 @@
 {
     "name": "Test ASCII Block",
-    "texture_file": "assets/fonts/font_pixel.png",
+    "texture_file": "assets/fonts/font_pixel_ascii.png",
     "start_character": 32,
     "end_character": 126,
     "glyph_height": 8,

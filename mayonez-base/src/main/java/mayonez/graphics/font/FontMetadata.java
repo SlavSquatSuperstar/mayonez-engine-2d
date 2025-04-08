@@ -17,7 +17,6 @@ import mayonez.util.Record;
  * @param whitespaceWidth     the width of the whitespace glyph
  * @author SlavSquatSuperstar
  */
-// TODO specify characters (for non-contiguous)
 // TODO specify space characters
 public record FontMetadata(
         String name, String fontFile,
