@@ -81,9 +81,9 @@ public abstract class TextLabel extends Script implements Renderable {
     }
 
     private float getGlyphOffset(int glyphSpacing, Glyph glyph) {
-        if (glyph.getWidth() == 0) return 0; // If zero-width return 0
+        if (glyph.width() == 0) return 0; // If zero-width return 0
         // Glyph width plus spacing
-        return (float) fontSize * (glyph.getWidth() + glyphSpacing) / glyph.getHeight();
+        return (float) fontSize * (glyph.width() + glyphSpacing) / glyph.height();
     }
 
     private void calculateTextBounds() {
@@ -130,20 +130,22 @@ public abstract class TextLabel extends Script implements Renderable {
         var charPos = lineStartPos;
         for (int i = 0; i < line.numGlyphs(); i++) {
             var glyph = line.getGlyph(i);
+            // Add the character glyph if not whitespace
+            if (!glyph.isWhitespace()) {
+                var glyphSprite = createGlyphSprite(glyph, fontSize, charPos, color);
+                glyphSprites.add(glyphSprite);
+            }
+            // Move to the next glyph
             var offset = line.getGlyphOffset(i);
-
-            // Add the character glyph
-            var glyphSprite = createGlyphSprite(glyph, fontSize, charPos, color);
-            glyphSprites.add(glyphSprite);
-            charPos = charPos.add(new Vec2(offset, 0)); // Move to the next glyph
+            charPos = charPos.add(new Vec2(offset, 0));
         }
     }
 
     private GlyphSprite createGlyphSprite(Glyph glyph, int fontSize, Vec2 charPos, Color color) {
-        var percentWidth = (float) glyph.getWidth() / glyph.getHeight();
+        var percentWidth = (float) glyph.width() / glyph.height();
         var spritePos = charPos.add(new Vec2(0.5f * percentWidth * fontSize, 0f)); // Move right by half glyph width
         var spriteScale = new Vec2(percentWidth * fontSize, fontSize);
-        return new GlyphSprite(spritePos, spriteScale, glyph.getTexture(), color, this);
+        return new GlyphSprite(spritePos, spriteScale, glyph.texture(), color, this);
     }
 
     // Text Methods

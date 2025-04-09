@@ -18,12 +18,16 @@ public class Font {
     private final FontMetadata metadata;
     private final Texture fontTexture;
     private final Glyph[] glyphs;
+    private final Glyph whitespaceGlyph;
 
     public Font(FontMetadata metadata) {
         this.metadata = metadata;
         this.fontTexture = Textures.getTexture(metadata.fontFile());
         var widths = FontWidthHelper.getGlyphWidths(metadata, fontTexture);
         glyphs = createGlyphs(widths);
+        whitespaceGlyph = new Glyph(
+                metadata.whitespaceWidth(), metadata.spriteHeight()
+        );
     }
 
     // Create Glyphs Methods
@@ -43,6 +47,8 @@ public class Font {
         // Create glyph textures
         var glyphs = new Glyph[numGlyphs];
         for (var i = 0; i < regions.length; i++) {
+            if (widths[i] == 0) continue; // Non-print/whitespace
+
             var glyphRegion = new ImageRegion(
                     regions[i].origin(), new Vec2(widths[i], spriteHeight)
             );
@@ -73,6 +79,10 @@ public class Font {
      * @return the glyph, null if unsupported
      */
     public Glyph getGlyph(int charCode) {
+        if (charCode == metadata.whitespaceCharacter()) {
+            return whitespaceGlyph;
+        }
+
         var index = charCode - metadata.startCharacter();
         if (!MathUtils.inRange(index, 0, metadata.numCharacters() - 1)) {
             return null;

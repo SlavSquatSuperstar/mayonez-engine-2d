@@ -43,11 +43,7 @@ final class FontWidthHelper {
         var regions = splitter.getSpriteRegions();
 
         for (var i = 0; i < widths.length; i++) {
-            if (metadata.startCharacter() + i == metadata.whitespaceCharacter()) {
-                widths[i] = metadata.whitespaceWidth();
-            } else {
-                widths[i] = getGlyphWidth(imgData, regions[i]);
-            }
+            widths[i] = getGlyphWidth(imgData, regions[i]);
         }
         return widths;
     }

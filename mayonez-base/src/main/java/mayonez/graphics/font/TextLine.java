@@ -26,7 +26,7 @@ class TextLine {
         return glyphs.get(index);
     }
 
-    Float getGlyphOffset(int index) {
+    float getGlyphOffset(int index) {
         return glyphOffsets.get(index);
     }
 

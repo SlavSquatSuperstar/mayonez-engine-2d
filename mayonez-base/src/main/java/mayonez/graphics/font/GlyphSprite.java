@@ -4,6 +4,7 @@ import mayonez.graphics.*;
 import mayonez.graphics.textures.*;
 import mayonez.math.*;
 import mayonez.math.shapes.*;
+import mayonez.renderer.*;
 import mayonez.renderer.gl.*;
 
 /**
@@ -19,7 +20,7 @@ import mayonez.renderer.gl.*;
 record GlyphSprite(
         Vec2 position, Vec2 size,
         Texture texture, Color color,
-        TextLabel text
+        Renderable text
 ) implements GLQuad {
 
     private static final int MAX_BATCH_GLYPHS = 200; // currently does nothing
