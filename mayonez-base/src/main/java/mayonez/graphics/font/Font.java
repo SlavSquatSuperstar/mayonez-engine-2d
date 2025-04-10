@@ -5,6 +5,8 @@ import mayonez.graphics.sprites.*;
 import mayonez.graphics.textures.*;
 import mayonez.math.*;
 
+import java.util.*;
+
 /**
  * A bitmap font created from a spritesheet of a set of characters with contiguous code points.
  * <p>
@@ -17,22 +19,26 @@ public class Font {
 
     private final FontMetadata metadata;
     private final Texture fontTexture;
-    private final Glyph[] glyphs;
-    private final Glyph whitespaceGlyph;
+    private final Map<Character, Glyph> glyphs;
 
     public Font(FontMetadata metadata) {
         this.metadata = metadata;
         this.fontTexture = Textures.getTexture(metadata.fontFile());
-        var widths = FontWidthHelper.getGlyphWidths(metadata, fontTexture);
-        glyphs = createGlyphs(widths);
-        whitespaceGlyph = new Glyph(
+        glyphs = new HashMap<>();
+
+        var whitespaceGlyph = new Glyph(
                 metadata.whitespaceWidth(), metadata.spriteHeight()
         );
+        glyphs.put(metadata.whitespaceCharacter(), whitespaceGlyph);
+
+        var widths = FontWidthHelper.getGlyphWidths(metadata, fontTexture);
+        var blockGlyphs = createGlyphs(widths);
+        blockGlyphs.forEach(glyphs::putIfAbsent); // Don't glyph override if already defined
     }
 
     // Create Glyphs Methods
 
-    private Glyph[] createGlyphs(int[] widths) {
+    private Map<Character, Glyph> createGlyphs(int[] widths) {
         var numGlyphs = metadata.numCharacters();
 
         // Get glyph regions
@@ -45,7 +51,7 @@ public class Font {
         var regions = splitter.getSpriteRegions();
 
         // Create glyph textures
-        var glyphs = new Glyph[numGlyphs];
+        var glyphs = new HashMap<Character, Glyph>(numGlyphs);
         for (var i = 0; i < regions.length; i++) {
             if (widths[i] == 0) continue; // Non-print/whitespace
 
@@ -55,7 +61,10 @@ public class Font {
             var glyphTex = fontTexture.getSubTexture(
                     glyphRegion, "Sprite " + i
             );
-            glyphs[i] = new Glyph(widths[i], spriteHeight, glyphTex);
+
+            var glyph = new Glyph(widths[i], spriteHeight, glyphTex);
+            var charCode = (char) (metadata.startCharacter() + i);
+            glyphs.put(charCode, glyph);
         }
         return glyphs;
     }
@@ -73,22 +82,23 @@ public class Font {
     // Glyph Getters
 
     /**
+     * Whether this font block supports the glyph with the given char code.
+     *
+     * @param charCode the char code
+     * @return if the glyph is supported
+     */
+    public boolean hasGlyph(char charCode) {
+        return glyphs.containsKey(charCode);
+    }
+
+    /**
      * Get the glyph with the given ASCII char code, if the font supports it.
      *
      * @param charCode the char code
      * @return the glyph, null if unsupported
      */
-    public Glyph getGlyph(int charCode) {
-        if (charCode == metadata.whitespaceCharacter()) {
-            return whitespaceGlyph;
-        }
-
-        var index = charCode - metadata.startCharacter();
-        if (!MathUtils.inRange(index, 0, metadata.numCharacters() - 1)) {
-            return null;
-        } else {
-            return glyphs[charCode - metadata.startCharacter()];
-        }
+    public Glyph getGlyph(char charCode) {
+        return glyphs.get(charCode);
     }
 
 }
