@@ -1,13 +1,27 @@
 {
-	"name": "Pixel",
-	"font_file": "assets/fonts/font_pixel_ascii.png",
-	"start_character": 32,
-	"end_character": 126,
-	"sprite_height": 8,
-	"sprite_width": 8,
-	"glyph_ascent": 7,
-	"glyph_height": 8,
-	"glyph_spacing": 1,
-	"whitespace_character": 32,
-	"whitespace_width": 3
+    "name": "Pixel",
+    "blocks": [
+        {
+            "name": "Basic Latin",
+            "texture_file": "assets/fonts/font_pixel_ascii.png",
+            "start_character": 32,
+            "end_character": 126,
+            "sprite_width": 8,
+            "sprite_height": 8,
+            "glyph_ascent": 7
+        },
+        {
+            "name": "Latin-1 Supplement",
+            "texture_file": "assets/fonts/font_pixel_latin_sup.png",
+            "start_character": 160,
+            "end_character": 255,
+            "sprite_width": 8,
+            "sprite_height": 10,
+            "glyph_ascent": 9
+        }
+    ],
+    "glyph_height": 8,
+    "glyph_spacing": 1,
+    "whitespace_character": 32,
+    "whitespace_width": 3
 }

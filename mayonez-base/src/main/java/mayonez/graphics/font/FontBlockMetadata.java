@@ -25,10 +25,12 @@ public record FontBlockMetadata(
 
     public FontBlockMetadata(Record record) {
         this(
-                record.getString("name"), record.getString("texture_file"),
+                record.getString("name"),
+                record.getString("texture_file"),
                 (char) record.getInt("start_character"),
                 (char) record.getInt("end_character"),
-                record.getInt("sprite_width"), record.getInt("sprite_height"),
+                record.getInt("sprite_width"),
+                record.getInt("sprite_height"),
                 record.getInt("glyph_ascent")
         );
     }

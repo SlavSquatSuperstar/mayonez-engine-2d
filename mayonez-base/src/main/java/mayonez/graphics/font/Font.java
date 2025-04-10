@@ -3,7 +3,7 @@ package mayonez.graphics.font;
 import java.util.*;
 
 /**
- * A bitmap font created from a spritesheet of a set of characters with contiguous code points.
+ * A bitmap font created from one or more sprite sheets of character glyphs.
  * <p>
  * See also: <a href="https://minecraft.wiki/w/Font">Font - Minecraft Wiki</a>
  *
@@ -19,20 +19,19 @@ public class Font {
         this.metadata = metadata;
         glyphs = new HashMap<>();
 
+        // Create whitespace glyph
         var whitespaceGlyph = new Glyph(
-                metadata.whitespaceWidth(), metadata.spriteHeight()
+                metadata.whitespaceWidth(), metadata.glyphHeight()
         );
         glyphs.put(metadata.whitespaceCharacter(), whitespaceGlyph);
 
-        var blockMetadata = new FontBlockMetadata(
-                "Default block", metadata.fontFile(),
-                metadata.startCharacter(), metadata.endCharacter(),
-                metadata.spriteWidth(), metadata.spriteHeight(),
-                metadata.glyphAscent()
-        ) ;
-        var block = new FontBlock(blockMetadata);
-        var blockGlyphs = block.getGlyphs();
-        blockGlyphs.forEach(glyphs::putIfAbsent); // Don't glyph override if already defined
+        // Read glyphs from blocks
+        var blockMetadatas = metadata.blocks();
+        for (var blockMetadata : blockMetadatas) {
+            var block = new FontBlock(blockMetadata);
+            var blockGlyphs = block.getGlyphs();
+            blockGlyphs.forEach(glyphs::putIfAbsent); // Don't glyph override if already defined
+        }
     }
 
     // Metadata Getters
