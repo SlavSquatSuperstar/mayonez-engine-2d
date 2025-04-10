@@ -38,7 +38,7 @@ public record FontBlockMetadata(
      *
      * @return the number of characters
      */
-    public int numCharacters() {
+    int numCharacters() {
         return endCharacter - startCharacter + 1;
     }
 
