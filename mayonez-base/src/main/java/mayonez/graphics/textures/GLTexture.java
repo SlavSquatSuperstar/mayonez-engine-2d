@@ -39,6 +39,7 @@ public sealed class GLTexture extends Texture permits GLSpriteSheetTexture {
     // Image Fields
     private final STBImageData imageData;
     private int texID;
+    private final int width, height;
     private final Vec2[] texCoords;
 
     /**
@@ -50,6 +51,8 @@ public sealed class GLTexture extends Texture permits GLSpriteSheetTexture {
         super(filename);
         texCoords = DEFAULT_TEX_COORDS;
         imageData = readImage();
+        width = imageData.getWidth();
+        height = imageData.getHeight();
         createTexture();
     }
 
@@ -62,10 +65,13 @@ public sealed class GLTexture extends Texture permits GLSpriteSheetTexture {
      */
     protected GLTexture(String filename, GLTexture parentTexture, ImageRegion region) {
         super(filename);
-        this.imageData = parentTexture.imageData.getSubImageData(region); // Crop image data
         // Danger: parent buffer has already been freed
+        this.imageData = parentTexture.imageData.getSubImageData(region); // Crop image data
         this.texID = parentTexture.texID;
         this.texCoords = getSubImageCoords(parentTexture.getSize(), region);
+        // Get new image size in px
+        this.width = region.getWidth();
+        this.height = region.getHeight();
     }
 
     // Read Image Methods
@@ -91,6 +97,7 @@ public sealed class GLTexture extends Texture permits GLSpriteSheetTexture {
             glBindTexture(GL_TEXTURE_2D, texID);
             uploadImageToTexture(imageData, texID);
         } else {
+            // Make sure GL tests don't crash
             texID = GL_NONE;
         }
     }
@@ -155,12 +162,12 @@ public sealed class GLTexture extends Texture permits GLSpriteSheetTexture {
 
     @Override
     public int getWidth() {
-        return imageData.getWidth();
+        return width;
     }
 
     @Override
     public int getHeight() {
-        return imageData.getHeight();
+        return height;
     }
 
     public Vec2[] getTexCoords() {

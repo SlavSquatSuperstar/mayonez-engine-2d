@@ -1,6 +1,7 @@
 package mayonez.assets.image;
 
 import mayonez.graphics.*;
+import mayonez.math.*;
 
 import javax.imageio.ImageIO;
 import java.awt.image.*;
@@ -68,13 +69,19 @@ public class AWTImageData extends ImageData {
 
     @Override
     public Color getPixelColor(int x, int y) {
+        // Check pixel in bounds
+        if (!MathUtils.inRange(x, 0, image.getWidth() - 1)) return null;
+        if (!MathUtils.inRange(y, 0, image.getHeight() - 1)) return null;
         return new Color(image.getRGB(x, y));
     }
 
     @Override
     public void setPixelColor(int x, int y, Color color) {
-        image.setRGB(x, y, color.getRGBAValue());
+        // Check pixel in bounds
+        if (!MathUtils.inRange(x, 0, image.getWidth() - 1)) return;
+        if (!MathUtils.inRange(y, 0, image.getHeight() - 1)) return;
         // AWT already restricts setting alpha for non-transparent images
+        image.setRGB(x, y, color.getRGBAValue());
     }
 
     public int[] getPixels() {

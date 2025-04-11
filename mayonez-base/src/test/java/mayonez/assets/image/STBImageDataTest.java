@@ -52,6 +52,13 @@ class STBImageDataTest extends ImageDataTest {
         testPixelColors(image, TEST_COLORS, TEST_COORDS, 255);
     }
 
+    @Test
+    void getOutOfBoundsPixelNoCrash() {
+        var image = getImage(TRANSPARENT_PNG);
+        assertNull(image.getPixelColor(-1, -1));
+        assertNull(image.getPixelColor(IMAGE_LENGTH, IMAGE_LENGTH));
+    }
+
     // Set Pixel
 
     @Test
@@ -73,6 +80,15 @@ class STBImageDataTest extends ImageDataTest {
         var image = getImage(OPAQUE_JPG);
         image.setPixelColor(0, 0, Color.grayscale(0, 128));
         assertEquals(Colors.BLACK, image.getPixelColor(0, 0));
+    }
+
+    @Test
+    void setOutOfBoundsPixelNoCrash() {
+        var image = getImage(TRANSPARENT_PNG);
+        assertDoesNotThrow(() ->
+                image.setPixelColor(-1, -1, Colors.WHITE));
+        assertDoesNotThrow(() ->
+                image.setPixelColor(IMAGE_LENGTH, IMAGE_LENGTH, Colors.WHITE));
     }
 
     // Sub-Image

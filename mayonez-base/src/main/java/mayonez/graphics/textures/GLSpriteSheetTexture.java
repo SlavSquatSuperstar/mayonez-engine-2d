@@ -13,14 +13,11 @@ import mayonez.graphics.*;
 final class GLSpriteSheetTexture extends GLTexture {
 
     private final GLTexture parentTexture;
-    private final int width, height;
 
     GLSpriteSheetTexture(GLTexture parentTexture, ImageRegion region, String description) {
         super("%s (%s)".formatted(parentTexture.getFilename(), description),
                 parentTexture, region);
         this.parentTexture = parentTexture;
-        this.width = region.getWidth(); // Get new image size in px
-        this.height = region.getHeight(); // Get new image size in px
     }
 
     // Asset Methods
@@ -33,16 +30,6 @@ final class GLSpriteSheetTexture extends GLTexture {
 
     public GLTexture getParentTexture() {
         return parentTexture;
-    }
-
-    @Override
-    public int getWidth() {
-        return width;
-    }
-
-    @Override
-    public int getHeight() {
-        return height;
     }
 
 }

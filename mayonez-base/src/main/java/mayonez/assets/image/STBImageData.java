@@ -2,6 +2,7 @@ package mayonez.assets.image;
 
 import mayonez.*;
 import mayonez.graphics.*;
+import mayonez.math.*;
 import org.lwjgl.BufferUtils;
 
 import java.io.IOException;
@@ -139,7 +140,10 @@ public class STBImageData extends ImageData {
 
     @Override
     public Color getPixelColor(int x, int y) {
-        if (imageFreed) return Colors.BLACK; // Avoid segfault if freed
+        if (imageFreed) return null; // Avoid segfault if freed
+        // Check pixel in bounds
+        if (!MathUtils.inRange(x, 0, width - 1)) return null;
+        if (!MathUtils.inRange(y, 0, height - 1)) return null;
 
         var flippedY = (height - 1) - y;
         var index = (x + flippedY * width) * channels;
@@ -153,6 +157,9 @@ public class STBImageData extends ImageData {
     @Override
     public void setPixelColor(int x, int y, Color color) {
         if (imageFreed) return; // Avoid segfault if freed
+        // Check pixel in bounds
+        if (!MathUtils.inRange(x, 0, width - 1)) return;
+        if (!MathUtils.inRange(y, 0, height - 1)) return;
 
         var flippedY = (height - 1) - y;
         var index = (x + flippedY * width) * channels;
@@ -169,6 +176,8 @@ public class STBImageData extends ImageData {
     }
 
     public ByteBuffer getSubBuffer(ImageRegion region) {
+        if (imageFreed) return null;
+
         var subImgX = region.getX();
         var subImgY = region.getY();
         var subImgWidth = region.getWidth();
@@ -191,6 +200,7 @@ public class STBImageData extends ImageData {
     @Override
     public STBImageData getSubImageData(ImageRegion region) {
         try {
+            if (imageFreed) return null;
             // Not technically filename, but use to distinguish from parent
             var filename = "%s %s".formatted(getFilename(), region);
             return new STBImageData(filename, getSubBuffer(region), region.getWidth(), region.getHeight());
