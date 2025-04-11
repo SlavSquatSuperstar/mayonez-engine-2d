@@ -30,16 +30,19 @@ import static org.lwjgl.opengl.GL12.GL_TEXTURE_WRAP_R;
  * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.GL)
-public sealed class GLTexture extends Texture permits GLSpriteSheetTexture {
+public final class GLTexture extends Texture {
 
     // Constants
     public static final Vec2[] DEFAULT_TEX_COORDS
             = Rectangle.rectangleVerticesMinMax(new Vec2(0f), new Vec2(1f));
 
-    // Image Fields
+    // Image Data Fields
     private final STBImageData imageData;
-    private int texID;
     private final int width, height;
+    private final GLTexture parentTexture;
+
+    // GPU Fields
+    private int texID;
     private final Vec2[] texCoords;
 
     /**
@@ -47,31 +50,40 @@ public sealed class GLTexture extends Texture permits GLSpriteSheetTexture {
      *
      * @param filename the file location
      */
+    @SuppressWarnings("unused") // Needed for Assets.getGLTexture()
     public GLTexture(String filename) {
         super(filename);
-        texCoords = DEFAULT_TEX_COORDS;
         imageData = readImage();
-        width = imageData.getWidth();
-        height = imageData.getHeight();
-        createTexture();
+        if (imageData != null) {
+            width = imageData.getWidth();
+            height = imageData.getHeight();
+        } else {
+            width = 0;
+            height = 0;
+        }
+        parentTexture = null;
+        texID = createTexture();
+        texCoords = DEFAULT_TEX_COORDS;
     }
 
     /**
      * Create a GLTexture from a portion of another texture.
      *
-     * @param filename      the file location
      * @param parentTexture the parent texture
      * @param region        the sub-image region
+     * @param description   the description of the sub-image
      */
-    protected GLTexture(String filename, GLTexture parentTexture, ImageRegion region) {
-        super(filename);
-        // Danger: parent buffer has already been freed
-        this.imageData = parentTexture.imageData.getSubImageData(region); // Crop image data
-        this.texID = parentTexture.texID;
-        this.texCoords = getSubImageCoords(parentTexture.getSize(), region);
+    private GLTexture(GLTexture parentTexture, ImageRegion region, String description) {
+        super("%s (%s)".formatted(parentTexture.getFilename(), description));
+        // Parent buffer is already freed if not testing
+        this.imageData = parentTexture.getImageData().getSubImageData(region); // Crop image data
         // Get new image size in px
         this.width = region.getWidth();
         this.height = region.getHeight();
+        this.parentTexture = parentTexture;
+
+        this.texID = parentTexture.texID;
+        this.texCoords = getSubImageCoords(parentTexture.getSize(), region);
     }
 
     // Read Image Methods
@@ -90,15 +102,16 @@ public sealed class GLTexture extends Texture permits GLSpriteSheetTexture {
         }
     }
 
-    private void createTexture() {
+    private int createTexture() {
         // Create Texture on GPU
         if (imageData != null && GLHelper.isGLInitialized()) {
-            texID = glGenTextures();
+            var texID = glGenTextures();
             glBindTexture(GL_TEXTURE_2D, texID);
             uploadImageToTexture(imageData, texID);
+            return texID;
         } else {
             // Make sure GL tests don't crash
-            texID = GL_NONE;
+            return GL_NONE;
         }
     }
 
@@ -142,6 +155,7 @@ public sealed class GLTexture extends Texture permits GLSpriteSheetTexture {
 
     @Override
     public void free() {
+        if (getParentTexture() != null) return; // Don't free parent texture
         if (texID != GL_NONE && GLHelper.isGLInitialized()) {
             glDeleteTextures(texID);
             texID = GL_NONE;
@@ -152,12 +166,17 @@ public sealed class GLTexture extends Texture permits GLSpriteSheetTexture {
 
     @Override
     public GLTexture getSubTexture(ImageRegion region, String description) {
-        return new GLSpriteSheetTexture(this, region, description);
+        return new GLTexture(this, region, description);
     }
 
     @Override
     public STBImageData getImageData() {
         return imageData;
+    }
+
+    @Override
+    public GLTexture getParentTexture() {
+        return parentTexture;
     }
 
     @Override
