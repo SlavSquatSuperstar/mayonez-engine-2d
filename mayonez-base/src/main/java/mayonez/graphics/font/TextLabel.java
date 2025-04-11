@@ -82,8 +82,8 @@ public abstract class TextLabel extends Script implements Renderable {
 
     private float getGlyphOffset(int glyphSpacing, Glyph glyph) {
         if (glyph.width() == 0) return 0; // If zero-width return 0
-        // Glyph width plus spacing
-        return (float) fontSize * (glyph.width() + glyphSpacing) / glyph.height();
+        // Glyph width plus spacing relative to cap height
+        return (float) fontSize * (glyph.width() + glyphSpacing) / font.getGlyphHeight();
     }
 
     private void calculateTextBounds() {
@@ -142,9 +142,10 @@ public abstract class TextLabel extends Script implements Renderable {
     }
 
     private GlyphSprite createGlyphSprite(Glyph glyph, int fontSize, Vec2 charPos, Color color) {
-        var percentWidth = (float) glyph.width() / glyph.height();
-        var spritePos = charPos.add(new Vec2(0.5f * percentWidth * fontSize, 0f)); // Move right by half glyph width
-        var spriteScale = new Vec2(percentWidth * fontSize, fontSize);
+        var relativeSize = (float) fontSize / font.getGlyphHeight(); // Percent of cap height
+        var spriteScale = new Vec2(glyph.width() * relativeSize, glyph.height() * relativeSize);
+        // Move glyph center to right position
+        var spritePos = charPos.add(spriteScale.mul(0.5f));
         return new GlyphSprite(spritePos, spriteScale, glyph.texture(), color, this);
     }
 

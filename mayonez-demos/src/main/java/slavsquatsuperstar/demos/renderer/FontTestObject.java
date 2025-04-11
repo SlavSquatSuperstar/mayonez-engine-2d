@@ -14,23 +14,25 @@ import mayonez.math.*;
  */
 class FontTestObject extends GameObject {
 
+    // See https://en.wikipedia.org/wiki/Pangram for more pangrams
+
     private static final String MESSAGE1 = """
-            ABCDEFGHIJKLM
-            NOPQRSTUVWXYZ
-            abcdefghijklm
-            nopqrstuvwxyz
-            `1234567890-=
-            ~!@#$%^&*()_+
-            /|\\[]{}<>;',?:".
+            The quick brown
+            fox jumps over
+            the lazy dog.
+            Pack my box
+            with five dozen
+            liquor jugs.
             """;
 
-    private static final String MESSAGE_2 = """
+    private static final String MESSAGE2 = """
             (ABC)[DEF]
             {GHI}<JKL>
+            \\MNO/"PQR"
+            |STU|'VWX'
             1+2-3=0
             7*7=49
-            ~m,n;w_
-            ~M.N:W_
+            AÁÀaäå
             """;
 
     private final Font font;
@@ -49,22 +51,17 @@ class FontTestObject extends GameObject {
         // UI font
         var uiFontSize = 32; // pt
         var uiLineSpacing = 2; // px
+        // TODO spacing in line height
 
-        TextLabel worldText1;
-        addComponent(worldText1 = new WorldTextLabel(
-                MESSAGE_2, new Vec2(-42, -10), font,
+        TextLabel worldText;
+        addComponent(worldText = new WorldTextLabel(
+                MESSAGE2, new Vec2(-41, -10), font,
                 Colors.BLUE, fontSize, lineSpacing)
         );
 
-//        TextLabel worldText2;
-//        addComponent(worldText2 = new WorldTextLabel(
-//                message1, new Vec2(32, 15), font,
-//                Colors.GREEN, fontSize, lineSpacing)
-//        );
-
         TextLabel uiText;
         addComponent(uiText = new UITextLabel(
-                MESSAGE1, new Vec2(165, 650), font,
+                MESSAGE1, new Vec2(180, 660), font,
                 Colors.RED, uiFontSize, uiLineSpacing
         ));
         uiText.setAnchor(Anchor.TOP_LEFT);
@@ -83,8 +80,7 @@ class FontTestObject extends GameObject {
                     }
 
                     // Set alignment
-                    worldText1.setAlignment(align);
-//                    worldText2.setAlignment(align);
+                    worldText.setAlignment(align);
                     uiText.setAlignment(align);
                 }
             }

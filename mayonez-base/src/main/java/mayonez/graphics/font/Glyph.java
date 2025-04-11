@@ -17,7 +17,7 @@ public record Glyph(
 ) {
 
     /**
-     * Create a whitespace glyph that does use a texture.
+     * Create a whitespace glyph that does not use a texture.
      */
     public Glyph(int width, int height) {
         this(width, height, null);
