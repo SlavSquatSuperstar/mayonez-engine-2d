@@ -48,7 +48,7 @@ final class FontWidthHelper {
         return widths;
     }
 
-    static int[] getGlyphWidths(FontBlockMetadata metadata, Texture fontTexture) {
+    static int[] getGlyphWidths(FontBlock metadata, Texture fontTexture) {
         var numGlyphs = metadata.numCharacters();
         var widths = new int[numGlyphs];
 

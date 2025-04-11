@@ -26,9 +26,8 @@ public class Font {
         glyphs.put(metadata.whitespaceCharacter(), whitespaceGlyph);
 
         // Read glyphs from blocks
-        var blockMetadatas = metadata.blocks();
-        for (var blockMetadata : blockMetadatas) {
-            var block = new FontBlock(blockMetadata);
+        var blocks = metadata.blocks();
+        for (var block : blocks) {
             var blockGlyphs = block.getGlyphs();
             blockGlyphs.forEach(glyphs::putIfAbsent); // Don't glyph override if already defined
         }

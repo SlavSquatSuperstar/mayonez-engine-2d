@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class FontWidthHelperTest {
 
-    private static FontBlockMetadata metadata;
+    private static FontBlock metadata;
     private static int[] fileWidths;
 
     @BeforeAll
@@ -21,7 +21,7 @@ class FontWidthHelperTest {
         // Font metadata
         var json = new JSONFile("testassets/font/test_ascii_block.json");
         var record = json.readJSON();
-        metadata = new FontBlockMetadata(record);
+        metadata = new FontBlock(record);
 
         // Widths file
         readGlyphWidths();

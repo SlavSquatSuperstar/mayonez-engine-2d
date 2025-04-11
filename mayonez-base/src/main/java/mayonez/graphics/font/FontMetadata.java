@@ -17,7 +17,7 @@ import java.util.*;
  */
 // TODO multiple space characters
 public record FontMetadata(
-        String name, FontBlockMetadata[] blocks,
+        String name, List<FontBlock> blocks,
         int glyphHeight, int glyphSpacing,
         char whitespaceCharacter, int whitespaceWidth
 ) {
@@ -37,13 +37,13 @@ public record FontMetadata(
 
     // Getters
 
-    private static FontBlockMetadata[] getBlocks(List<Object> blocks) {
-        if (blocks == null) return new FontBlockMetadata[0];
+    private static List<FontBlock> getBlocks(List<Object> blocks) {
+        if (blocks == null) return List.of();
         return blocks.stream()
                 .map(Record::from)
                 .filter(Objects::nonNull)
-                .map(FontBlockMetadata::new)
-                .toList().toArray(new FontBlockMetadata[0]);
+                .map(FontBlock::new)
+                .toList();
     }
 
 }
