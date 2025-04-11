@@ -13,7 +13,7 @@ import java.util.*;
  * textures.
  *
  * @param name           the name or description of the block
- * @param textureFile    the filename of the glyph texture atlas
+ * @param fontTexture    the glyph texture atlas
  * @param startCharacter the start character value
  * @param endCharacter   the end character value
  * @param spriteWidth    the width of a glyph sprite, in pixels
@@ -24,7 +24,7 @@ import java.util.*;
 // TODO specify characters (for non-contiguous)
 // TODO specify unicode
 public record FontBlock(
-        String name, String textureFile,
+        String name, Texture fontTexture,
         char startCharacter, char endCharacter,
         int spriteWidth, int spriteHeight, int glyphAscent
 ) {
@@ -32,7 +32,7 @@ public record FontBlock(
     public FontBlock(Record record) {
         this(
                 record.getString("name"),
-                record.getString("texture_file"),
+                Textures.getTexture(record.getString("texture_file")),
                 (char) record.getInt("start_character"),
                 (char) record.getInt("end_character"),
                 record.getInt("sprite_width"),
@@ -44,25 +44,24 @@ public record FontBlock(
     // Create Glyphs Methods
 
     Map<Character, Glyph> getGlyphs() {
-        var fontTexture = Textures.getTexture(textureFile());
-        var widths = FontWidthHelper.getGlyphWidths(this, fontTexture);
-        return createGlyphs(fontTexture, widths);
+        var widths = FontWidthHelper.getGlyphWidths(this);
+        var regions = getGlyphRegions(this);
+        return getGlyphTextures(widths, regions);
     }
 
-    private Map<Character, Glyph> createGlyphs(Texture fontTexture, int[] widths) {
-        var numGlyphs = numCharacters();
-
+    private static ImageRegion[] getGlyphRegions(FontBlock block) {
         // Get glyph regions
-        var spriteHeight = spriteHeight();
         var splitter = SpriteSplitters.getSpriteSplitter(
-                fontTexture,
-                new Vec2(spriteWidth(), spriteHeight),
-                new Vec2(0), numGlyphs
+                block.fontTexture,
+                new Vec2(block.spriteWidth, block.spriteHeight),
+                new Vec2(0), block.numCharacters()
         );
-        var regions = splitter.getSpriteRegions();
+        return splitter.getSpriteRegions();
+    }
 
+    private Map<Character, Glyph> getGlyphTextures(int[] widths, ImageRegion[] regions) {
         // Create glyph textures
-        var glyphs = new HashMap<Character, Glyph>(numGlyphs);
+        var glyphs = new HashMap<Character, Glyph>(regions.length);
         for (var i = 0; i < regions.length; i++) {
             if (widths[i] == 0) continue; // Non-print/whitespace
 
@@ -72,9 +71,9 @@ public record FontBlock(
             var glyphTex = fontTexture.getSubTexture(
                     glyphRegion, "Sprite " + i
             );
-
             var glyph = new Glyph(widths[i], spriteHeight, glyphTex);
-            var charCode = (char) (startCharacter() + i);
+
+            var charCode = (char) (startCharacter + i);
             glyphs.put(charCode, glyph);
         }
         return glyphs;

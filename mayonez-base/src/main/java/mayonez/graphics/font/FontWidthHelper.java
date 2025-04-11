@@ -2,7 +2,6 @@ package mayonez.graphics.font;
 
 import mayonez.assets.image.*;
 import mayonez.graphics.sprites.*;
-import mayonez.graphics.textures.*;
 import mayonez.math.*;
 
 import java.io.IOException;
@@ -17,40 +16,10 @@ final class FontWidthHelper {
     private FontWidthHelper() {
     }
 
-    /**
-     * Automatically detect glyph widths from a font sprite sheet.
-     *
-     * @param metadata    the font metadata
-     * @param fontTexture the font texture
-     * @return the glyph widths
-     */
-    static int[] getGlyphWidths(FontMetadata metadata, Texture fontTexture) {
-        var widths = new int[metadata.numCharacters()];
-
-        // Look at AWT image since no flipping or freeing
-        ImageData imgData;
-        try {
-            imgData = new AWTImageData(fontTexture.getFilename());
-        } catch (IOException e) {
-            return widths;
-        }
-
-        // Get AWT glyph regions
-        var splitter = SpriteSplitters.getJSpriteSplitter(
-                fontTexture.getSize(), new Vec2(metadata.spriteWidth()),
-                new Vec2(0), metadata.numCharacters()
-        );
-        var regions = splitter.getSpriteRegions();
-
-        for (var i = 0; i < widths.length; i++) {
-            widths[i] = getGlyphWidth(imgData, regions[i]);
-        }
-        return widths;
-    }
-
-    static int[] getGlyphWidths(FontBlock metadata, Texture fontTexture) {
-        var numGlyphs = metadata.numCharacters();
+    static int[] getGlyphWidths(FontBlock block) {
+        var numGlyphs = block.numCharacters();
         var widths = new int[numGlyphs];
+        var fontTexture = block.fontTexture();
 
         // Look at AWT image since no flipping or freeing
         ImageData imgData;
@@ -61,9 +30,10 @@ final class FontWidthHelper {
         }
 
         // Get AWT glyph regions
+        // TODO try GL widths
         var splitter = SpriteSplitters.getJSpriteSplitter(
                 fontTexture.getSize(),
-                new Vec2(metadata.spriteWidth(), metadata.spriteHeight()),
+                new Vec2(block.spriteWidth(), block.spriteHeight()),
                 new Vec2(0), numGlyphs
         );
         var regions = splitter.getSpriteRegions();

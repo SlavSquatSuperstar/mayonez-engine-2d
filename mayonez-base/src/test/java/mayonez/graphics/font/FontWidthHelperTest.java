@@ -1,7 +1,6 @@
 package mayonez.graphics.font;
 
 import mayonez.assets.text.*;
-import mayonez.graphics.textures.*;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -13,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class FontWidthHelperTest {
 
-    private static FontBlock metadata;
+    private static FontBlock block;
     private static int[] fileWidths;
 
     @BeforeAll
@@ -21,7 +20,7 @@ class FontWidthHelperTest {
         // Font metadata
         var json = new JSONFile("testassets/font/test_ascii_block.json");
         var record = json.readJSON();
-        metadata = new FontBlock(record);
+        block = new FontBlock(record);
 
         // Widths file
         readGlyphWidths();
@@ -40,15 +39,14 @@ class FontWidthHelperTest {
 
     @Test
     void numGlyphsIsCorrect() {
-        assertEquals(metadata.numCharacters(), fileWidths.length);
+        assertEquals(block.numCharacters(), fileWidths.length);
     }
 
     // TODO GL tests
     @Test
     void glyphWidthsFromImageIsCorrect() {
         // Font widths
-        var fontTexture = Textures.getJTexture(metadata.textureFile());
-        var imgWidths = FontWidthHelper.getGlyphWidths(metadata, fontTexture);
+        var imgWidths = FontWidthHelper.getGlyphWidths(block);
         assertArrayEquals(fileWidths, imgWidths);
     }
 
