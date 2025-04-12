@@ -4,6 +4,7 @@ import mayonez.graphics.*
 import mayonez.math.*
 import mayonez.math.shapes.*
 import mayonez.renderer.batch.*
+import mayonez.renderer.gl.*
 
 // Constants
 private val GLOBAL_CIRCLE_VERTICES: Array<Vec2> =
@@ -15,22 +16,15 @@ private val LOCAL_CIRCLE_VERTICES: Array<Vec2> =
 
 internal fun RenderBatch.pushShape(shape: MShape, color: GLColor, brush: ShapeBrush) {
     when (shape) {
-        is Edge -> this.pushLine(shape, color)
-        is Triangle -> this.pushTriangle(shape, color)
+        is Triangle -> this.pushPolygon(shape, color)
+        is Quadrangle -> this.pushPolygon(shape, color)
         is Circle -> this.pushCircle(shape, color, brush)
         is Ellipse -> this.pushEllipse(shape, color, brush)
     }
 }
 
-private fun RenderBatch.pushLine(line: Edge, color: GLColor) {
-    pushVec2(line.start)
-    pushVec4(color)
-    pushVec2(line.end)
-    pushVec4(color)
-}
-
-private fun RenderBatch.pushTriangle(tri: Triangle, color: GLColor) {
-    for (v in tri.vertices) {
+private fun RenderBatch.pushPolygon(poly: MPolygon, color: GLColor) {
+    for (v in poly.vertices) {
         pushVec2(v)
         pushVec4(color)
     }

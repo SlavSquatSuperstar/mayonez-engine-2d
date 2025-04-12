@@ -31,6 +31,14 @@ enum class DrawPrimitive(
     /**
      * An untextured textured quadrangle with 4 vertices, each with attributes
      * position and color.
+     *
+     * Note that lines are drawn using quads, since glLineWidth() does not support
+     * line widths above 1 on all platforms.
+     *
+     * Sources:
+     * - [Drawing lines with shaders](https://stackoverflow.com/questions/3484260/opengl-line-width)
+     * - [Drawing lines as triangles](https://stackoverflow.com/questions/101718/drawing-a-variable-width-line-in-opengl-no-gllinewidth)
+     * - [Drawing OpenGL lines](https://stackoverflow.com/questions/14486291/how-to-draw-line-in-opengl)
      */
     QUAD(
         ElementLayout.QUAD,

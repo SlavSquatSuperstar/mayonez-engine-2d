@@ -22,24 +22,21 @@ internal class GLDebugShapeHelpersTest {
     // Line Test Methods
 
     @Test
-    fun getDrawnLineCorrect() {
+    fun getQuadFromLineCorrect() {
         val line = Edge(Vec2(1f, 1f), Vec2(4f, 1f))
         val brush = ShapeBrush.createSolidBrush(DEFAULT_COlOR).setStrokeSize(TEST_STROKE)
-        val results = line.getTriangles(brush, TEST_ZOOM)
-        val expected = listOf(
-            Triangle(Vec2(0f, 0f), Vec2(5f, 0f), Vec2(5f, 2f)),
-            Triangle(Vec2(0f, 0f), Vec2(5f, 2f), Vec2(0f, 2f)),
-        )
+        val results = line.getQuad(brush, TEST_ZOOM)
+        val expected = Quadrangle(Vec2(0f, 0f), Vec2(5f, 0f), Vec2(5f, 2f), Vec2(0f, 2f))
         assertEquals(expected, results)
     }
 
     // Polygon Test Methods
 
     @Test
-    fun getDrawnOutlinePolygonCorrect() {
+    fun getQuadsFromOutlinePolygonCorrect() {
         val poly = Rectangle.fromMinAndMax(Vec2(1f, 1f), Vec2(9f, 7f))
         val brush = ShapeBrush.createSolidBrush(DEFAULT_COlOR).setStrokeSize(TEST_STROKE)
-        val results = poly.getEdgeTriangles(brush, TEST_ZOOM)
+        val results = poly.getEdgeQuads(brush, TEST_ZOOM)
 
         val outerVertices = arrayOf(
             Vec2(0f, 0f), Vec2(10f, 0f), Vec2(10f, 8f), Vec2(0f, 8f)
@@ -48,14 +45,10 @@ internal class GLDebugShapeHelpersTest {
             Vec2(2f, 2f), Vec2(8f, 2f), Vec2(8f, 6f), Vec2(2f, 6f)
         )
         val expected = listOf(
-            Triangle(outerVertices[0], outerVertices[1], innerVertices[1]),
-            Triangle(outerVertices[0], innerVertices[1], innerVertices[0]),
-            Triangle(outerVertices[1], outerVertices[2], innerVertices[2]),
-            Triangle(outerVertices[1], innerVertices[2], innerVertices[1]),
-            Triangle(outerVertices[2], outerVertices[3], innerVertices[3]),
-            Triangle(outerVertices[2], innerVertices[3], innerVertices[2]),
-            Triangle(outerVertices[3], outerVertices[0], innerVertices[0]),
-            Triangle(outerVertices[3], innerVertices[0], innerVertices[3]),
+            Quadrangle(outerVertices[0], outerVertices[1], innerVertices[1], innerVertices[0]),
+            Quadrangle(outerVertices[1], outerVertices[2], innerVertices[2], innerVertices[1]),
+            Quadrangle(outerVertices[2], outerVertices[3], innerVertices[3], innerVertices[2]),
+            Quadrangle(outerVertices[3], outerVertices[0], innerVertices[0], innerVertices[3]),
         )
         assertEquals(expected, results)
     }

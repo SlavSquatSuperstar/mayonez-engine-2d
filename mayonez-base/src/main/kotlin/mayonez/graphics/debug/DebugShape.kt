@@ -8,10 +8,10 @@ import mayonez.renderer.gl.*
 import java.awt.*
 import java.util.*
 
+// Constants
 private const val MAX_BATCH_CIRCLES: Int = 200
 private const val MAX_BATCH_LINES: Int = 500
 private const val MAX_BATCH_TRIANGLES: Int = 1000
-
 
 /**
  * Passes shape and color information to a [mayonez.renderer.DebugRenderer].
@@ -72,7 +72,7 @@ internal data class DebugShape(internal val shape: MShape, internal val brush: S
         return when (shape) {
             is Circle -> DrawPrimitive.CIRCLE
             is Ellipse -> DrawPrimitive.ELLIPSE
-            // TODO quad if edge
+            is Quadrangle -> DrawPrimitive.QUAD
             else -> DrawPrimitive.TRIANGLE
         }
     }
