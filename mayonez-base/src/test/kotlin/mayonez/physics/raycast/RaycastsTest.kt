@@ -3,8 +3,10 @@ package mayonez.physics.raycast
 import mayonez.math.*
 import mayonez.math.shapes.*
 import mayonez.physics.*
-import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertNotNull
+import org.junit.jupiter.api.assertNull
 import kotlin.math.*
 
 /**
@@ -84,14 +86,14 @@ internal class RaycastsTest {
     }
 
     private fun assertRaycastHit(rc: RaycastInfo?, contact: Vec2, normal: Vec2, distance: Float) {
-        Assertions.assertNotNull(rc)
-        Assertions.assertEquals(contact, rc!!.contact)
-        Assertions.assertEquals(normal, rc.normal)
+        assertNotNull(rc)
+        assertEquals(contact, rc.contact)
+        assertEquals(normal, rc.normal)
         CollisionTestUtils.assertFloatEquals(distance, rc.distance)
     }
 
     private fun assertRaycastMiss(s: Shape, start: Vec2, direction: Vec2, limit: Float) {
-        Assertions.assertNull(Raycasts.raycast(s, Ray(start, direction), limit))
+        assertNull(Raycasts.raycast(s, Ray(start, direction), limit))
     }
 
 }
