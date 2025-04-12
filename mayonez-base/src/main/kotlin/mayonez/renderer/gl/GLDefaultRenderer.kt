@@ -111,17 +111,14 @@ internal class GLDefaultRenderer() : GLRenderer(),
             )
             batch.minZIndex = this.zIndex // Set min z-index
             batch.maxZIndex = this.zIndex // Set initial max z-index
-        } else if (primitive == DrawPrimitive.CIRCLE) {
-            batch = SingleZRenderBatch(
-                Shaders.CIRCLE_SHADER, primitive, batchSize, 0, zIndex
-            )
-        } else if (primitive == DrawPrimitive.ELLIPSE) {
-            batch = SingleZRenderBatch(
-                Shaders.ELLIPSE_SHADER, primitive, batchSize, 0, zIndex
-            )
         } else {
+            val shader = when (primitive) {
+                DrawPrimitive.CIRCLE -> Shaders.CIRCLE_SHADER
+                DrawPrimitive.ELLIPSE -> Shaders.ELLIPSE_SHADER
+                else -> Shaders.DEBUG_SHADER
+            }
             batch = SingleZRenderBatch(
-                Shaders.DEBUG_SHADER, primitive, batchSize, 0, zIndex
+                shader, primitive, batchSize, 0, zIndex
             )
         }
         return batch

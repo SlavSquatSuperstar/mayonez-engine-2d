@@ -19,13 +19,6 @@ private val TEX_SLOT: VertexAttribute = VertexAttribute.INT // i
 enum class DrawPrimitive(
     val layout: ElementLayout, vararg val attributes: VertexAttribute
 ) {
-    /**
-     * A line segment with 2 vertices, each with attributes position and color.
-     */
-    LINE(
-        ElementLayout.LINE,
-        POSITION, COLOR
-    ),
 
     /**
      * A triangle with 3 vertices, each with attributes position and color.
@@ -36,8 +29,17 @@ enum class DrawPrimitive(
     ),
 
     /**
-     * A quadrangle with 4 vertices, each with attributes position, color, texture
-     * coordinate, and texture slot.
+     * An untextured textured quadrangle with 4 vertices, each with attributes
+     * position and color.
+     */
+    QUAD(
+        ElementLayout.QUAD,
+        POSITION, COLOR
+    ),
+
+    /**
+     * A textured quadrangle with 4 vertices, each with attributes position, color,
+     * texture coordinate, and texture slot.
      */
     SPRITE(
         ElementLayout.QUAD,
@@ -45,7 +47,7 @@ enum class DrawPrimitive(
     ),
 
     /**
-     * A quadrangle with 4 vertices, each with attributes position, local position,
+     * A circle with 4 vertices, each with attributes position, local position,
      * color, and inner radius.
      *
      * Sources:
@@ -59,7 +61,7 @@ enum class DrawPrimitive(
     ),
 
     /**
-     * A quadrangle with 4 vertices, each with attributes position, local position,
+     * An ellipse with 4 vertices, each with attributes position, local position,
      * color, and two inner radii.
      */
     ELLIPSE(

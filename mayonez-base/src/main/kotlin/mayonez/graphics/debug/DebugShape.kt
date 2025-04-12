@@ -69,11 +69,11 @@ internal data class DebugShape(internal val shape: MShape, internal val brush: S
     }
 
     override fun getPrimitive(): DrawPrimitive {
-        return when {
-            shape is Circle -> DrawPrimitive.CIRCLE
-            shape is Ellipse -> DrawPrimitive.ELLIPSE
-            fill -> DrawPrimitive.TRIANGLE
-            else -> DrawPrimitive.LINE
+        return when (shape) {
+            is Circle -> DrawPrimitive.CIRCLE
+            is Ellipse -> DrawPrimitive.ELLIPSE
+            // TODO quad if edge
+            else -> DrawPrimitive.TRIANGLE
         }
     }
 

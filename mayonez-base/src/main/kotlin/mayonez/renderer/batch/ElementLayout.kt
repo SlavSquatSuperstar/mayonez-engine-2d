@@ -16,16 +16,6 @@ enum class ElementLayout(
     val elementOrder: IntArray
 ) {
 
-    /**
-     * A line segment with 2 vertices.
-     *
-     * Note: Wide lines should be drawn as quads since glLineWidth() is not supported
-     * on many platforms for line widths > 1. Additionally, drawing each line as
-     * multiple adjacent lines does not work because individual lines are too
-     * transparent.
-     */
-    LINE(2, 2, GL11.GL_LINES, intArrayOf(0, 1)),
-
     /** A triangle with 3 vertices. */
     TRIANGLE(3, 3, GL11.GL_TRIANGLES, intArrayOf(0, 1, 2)),
 
