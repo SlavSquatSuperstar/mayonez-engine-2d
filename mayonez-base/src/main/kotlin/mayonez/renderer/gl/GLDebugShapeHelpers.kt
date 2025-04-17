@@ -18,6 +18,8 @@ internal class Quadrangle(
 
 }
 
+private class VertexPair(val outer: Vec2, val inner: Vec2)
+
 // Shape to Parts Methods
 
 /**
@@ -66,27 +68,27 @@ private fun MPolygon.getDrawShapes(brush: ShapeBrush, zoom: Float): List<DebugSh
 
 internal fun MPolygon.getEdgeQuads(brush: ShapeBrush, zoom: Float): List<MPolygon> {
     val halfStroke = 0.5f * brush.strokeSize / zoom // Apparent width in pixels
-    return this.edges.map { it.getCutQuad(halfStroke) }
+    // Get left faces
+    val faces = this.edges.map { it.getStartFace(halfStroke) }
+    return faces.indices.map {
+        val start = faces[it] // Vertices 0, 3
+        val end = faces[(it + 1) % this.numVertices] // Vertices 1, 2
+        Quadrangle(start.outer, end.outer, end.inner, start.inner)
+    }
 }
 
-// TODO don't reuse points
 // TODO need to cut for different angles
 // TODO find ray intersection
-private fun Edge.getCutQuad(halfStroke: Float): Quadrangle {
+private fun Edge.getStartFace(halfStroke: Float): VertexPair {
     // Get edge directions
     val dir = this.toVector().unit() // CCW facing
     val normal = -dir.normal() // Outward facing
 
     // Cut the inner corners (miter joint)
-    val moveStart = (dir - normal) * halfStroke
-    val moveEnd = (dir + normal) * halfStroke
-
-    // Get quad
-    val outerStart = this.start - moveStart // Vertex 0
-    val outerEnd = this.end + moveEnd // Vertex 1
-    val innerEnd = this.end - moveEnd // Vertex 2
-    val innerStart = this.start + moveStart // Vertex 3
-    return Quadrangle(outerStart, outerEnd, innerEnd, innerStart)
+    val moveStart = (normal - dir) * halfStroke
+    val outerStart = this.start + moveStart // Vertex 0
+    val innerStart = this.start - moveStart // Vertex 3
+    return VertexPair(outerStart, innerStart)
 }
 
 // Circle/Ellipse to Parts Methods
