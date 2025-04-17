@@ -9,8 +9,14 @@ import mayonez.math.shapes.*
 /**
  * A four-sided polygon able to be divided into two triangles.
  */
-internal class Quadrangle(v1: Vec2, v2: Vec2, v3: Vec2, v4: Vec2) :
-    MPolygon(false, *orderedVertices(arrayOf(v1, v2, v3, v4)))
+internal class Quadrangle(
+    private val v1: Vec2, private val v2: Vec2, private val v3: Vec2, private val v4: Vec2
+) :
+    MPolygon(false, *orderedVertices(arrayOf(v1, v2, v3, v4))) {
+
+    override fun toString(): String = "Quadrangle ($v1, $v2, $v3, $v4)"
+
+}
 
 // Shape to Parts Methods
 
@@ -59,23 +65,28 @@ private fun MPolygon.getDrawShapes(brush: ShapeBrush, zoom: Float): List<DebugSh
 }
 
 internal fun MPolygon.getEdgeQuads(brush: ShapeBrush, zoom: Float): List<MPolygon> {
-    // Get edge directions
-    val edges = this.edges
-    val normals = edges.map { it.unitNormalRight() } // Outward facing
-    val dirs = edges.map { it.toVector().unit() } // CCW facing
     val halfStroke = 0.5f * brush.strokeSize / zoom // Apparent width in pixels
+    return this.edges.map { it.getCutQuad(halfStroke) }
+}
 
-    // Get quads
+// TODO don't reuse points
+// TODO need to cut for different angles
+// TODO find ray intersection
+private fun Edge.getCutQuad(halfStroke: Float): Quadrangle {
+    // Get edge directions
+    val dir = this.toVector().unit() // CCW facing
+    val normal = -dir.normal() // Outward facing
+
     // Cut the inner corners (miter joint)
-    val quads = ArrayList<Quadrangle>()
-    for (i in edges.indices) {
-        val outerStart = edges[i].start + (-dirs[i] + normals[i]) * halfStroke // Vertex 0
-        val outerEnd = edges[i].end + (dirs[i] + normals[i]) * halfStroke // Vertex 1
-        val innerEnd = edges[i].end + (-dirs[i] - normals[i]) * halfStroke // Vertex 2
-        val innerStart = edges[i].start + (dirs[i] - normals[i]) * halfStroke // Vertex 3
-        quads.add(Quadrangle(outerStart, outerEnd, innerEnd, innerStart))
-    }
-    return quads
+    val moveStart = (dir - normal) * halfStroke
+    val moveEnd = (dir + normal) * halfStroke
+
+    // Get quad
+    val outerStart = this.start - moveStart // Vertex 0
+    val outerEnd = this.end + moveEnd // Vertex 1
+    val innerEnd = this.end - moveEnd // Vertex 2
+    val innerStart = this.start + moveStart // Vertex 3
+    return Quadrangle(outerStart, outerEnd, innerEnd, innerStart)
 }
 
 // Circle/Ellipse to Parts Methods
