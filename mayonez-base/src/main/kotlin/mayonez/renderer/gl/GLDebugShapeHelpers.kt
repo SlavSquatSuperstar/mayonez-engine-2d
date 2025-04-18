@@ -69,7 +69,12 @@ private fun MPolygon.getDrawShapes(brush: ShapeBrush, zoom: Float): List<DebugSh
 internal fun MPolygon.getEdgeQuads(brush: ShapeBrush, zoom: Float): List<MPolygon> {
     val halfStroke = 0.5f * brush.strokeSize / zoom // Apparent width in pixels
     // Get left faces
-    val faces = this.edges.map { it.getStartFace(halfStroke) }
+    val faces = this.edges.indices.map {
+        val curr = this.edges[it]
+        val prev = this.edges[(it - 1 + this.numVertices) % this.numVertices]
+        // Cut the inner corners (miter joint)
+        curr.getStartFace(prev, halfStroke)
+    }
     return faces.indices.map {
         val start = faces[it] // Vertices 0, 3
         val end = faces[(it + 1) % this.numVertices] // Vertices 1, 2
@@ -77,18 +82,29 @@ internal fun MPolygon.getEdgeQuads(brush: ShapeBrush, zoom: Float): List<MPolygo
     }
 }
 
-// TODO need to cut for different angles
-// TODO find ray intersection
-private fun Edge.getStartFace(halfStroke: Float): VertexPair {
+private fun Edge.getStartFace(prev: Edge, halfStroke: Float): VertexPair {
     // Get edge directions
-    val dir = this.toVector().unit() // CCW facing
-    val normal = -dir.normal() // Outward facing
+    val currDir = -this.toVector().unit() // CW facing
+    val currNorm = currDir.normal() // Outward facing
+    val prevDir = prev.toVector().unit() // CCW facing
+    val prevNorm = -prevDir.normal() // Outward facing
 
-    // Cut the inner corners (miter joint)
-    val moveStart = (normal - dir) * halfStroke
-    val outerStart = this.start + moveStart // Vertex 0
-    val innerStart = this.start - moveStart // Vertex 3
-    return VertexPair(outerStart, innerStart)
+    // Find edge intersections
+    val currOuterOrig = this.end + currNorm * halfStroke
+    val prevOuterOrig = prev.start + prevNorm * halfStroke
+    val currOuterRay = Ray(currOuterOrig, currDir)
+    val prevOuterRay = Ray(prevOuterOrig, prevDir)
+    val faceOuter = currOuterRay.getIntersection(prevOuterRay)
+        ?: (this.start + (currDir + prevDir) * halfStroke) // Vertex 0
+
+    val currInnerOrig = this.end - currNorm * halfStroke
+    val prevInnerOrig = prev.start - prevNorm * halfStroke
+    val currInnerRay = Ray(currInnerOrig, currDir)
+    val prevInnerRay = Ray(prevInnerOrig, prevDir)
+    val faceInner = currInnerRay.getIntersection(prevInnerRay)
+        ?: (this.start - (currDir + prevDir) * halfStroke) // Vertex 3
+
+    return VertexPair(faceOuter, faceInner)
 }
 
 // Circle/Ellipse to Parts Methods
