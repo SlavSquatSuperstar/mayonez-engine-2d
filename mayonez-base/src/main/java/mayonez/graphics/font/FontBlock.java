@@ -71,7 +71,7 @@ public record FontBlock(
             var glyphTex = fontTexture.getSubTexture(
                     glyphRegion, "Sprite " + i
             );
-            var glyph = new Glyph(widths[i], spriteHeight, glyphTex);
+            var glyph = new Glyph(widths[i], spriteHeight, glyphAscent, glyphTex);
 
             var charCode = (char) (startCharacter + i);
             glyphs.put(charCode, glyph);

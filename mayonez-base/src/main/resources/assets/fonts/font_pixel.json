@@ -7,7 +7,7 @@
             "start_character": 32,
             "end_character": 126,
             "sprite_width": 8,
-            "sprite_height": 8,
+            "sprite_height": 10,
             "glyph_ascent": 7
         },
         {
