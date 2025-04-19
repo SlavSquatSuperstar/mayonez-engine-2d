@@ -1,6 +1,6 @@
 {
     "name": "Test ASCII Block",
-    "texture_file": "assets/fonts/font_pixel_ascii.png",
+    "texture_file": "testassets/font/test_ascii_font.png",
     "start_character": 32,
     "end_character": 126,
     "sprite_height": 8,
