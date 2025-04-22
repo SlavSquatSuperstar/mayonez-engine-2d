@@ -55,14 +55,14 @@ class FontTestObject extends GameObject {
 
         TextLabel worldText;
         addComponent(worldText = new WorldTextLabel(
-                MESSAGE2, new Vec2(-41, -10), font,
-                Colors.BLUE, fontSize, lineSpacing)
+                MESSAGE2, new Vec2(-41, -10.5f),
+                font, Colors.BLUE, fontSize, lineSpacing)
         );
 
         TextLabel uiText;
         addComponent(uiText = new UITextLabel(
-                MESSAGE1, new Vec2(180, 660), font,
-                Colors.RED, uiFontSize, uiLineSpacing
+                MESSAGE1, new Vec2(180, Preferences.getScreenHeight() - 145),
+                font, Colors.RED, uiFontSize, uiLineSpacing
         ));
         uiText.setAnchor(Anchor.TOP_LEFT);
 

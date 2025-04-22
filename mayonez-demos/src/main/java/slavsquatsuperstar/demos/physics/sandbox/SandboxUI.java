@@ -22,7 +22,7 @@ public class SandboxUI extends GameObject {
         addComponent(hintsTooltip = new UITextLabel(
                 "Show Controls (H)",
                 new Vec2(Preferences.getScreenWidth() - 100,
-                        Preferences.getScreenHeight() - 24),
+                        Preferences.getScreenHeight() - 30),
                 font, Colors.BLACK,
                 16, 2
         ));
@@ -47,7 +47,7 @@ public class SandboxUI extends GameObject {
                         Throw Object
                         """,
                 new Vec2(Preferences.getScreenWidth() - 90,
-                        Preferences.getScreenHeight() - 180),
+                        Preferences.getScreenHeight() - 190),
                 font, Colors.BLACK,
                 16, 2
         ));

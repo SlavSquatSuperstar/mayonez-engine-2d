@@ -62,19 +62,20 @@ public class CirclesTestScene extends DemoScene {
 
                 addComponent(new UISprite(
                         new Vec2(110, Preferences.getScreenHeight() - 50),
-                        new Vec2(180, 50), Colors.LIGHT_GRAY
+                        new Vec2(200, 50), Colors.LIGHT_GRAY
                 ));
 
-                addComponent(fpsText = new UITextLabel(
-                        "FPS: _", new Vec2(100, Preferences.getScreenHeight() - 50),
+                fpsText = new UITextLabel(
+                        "FPS: _", new Vec2(20, Preferences.getScreenHeight() - 50),
                         font, Colors.BLACK, 36, 1
                 ) {
                     @Override
                     protected void update(float dt) {
                         setMessage("FPS: " + Mayonez.getRenderFPS());
                     }
-                });
+                };
                 fpsText.setAnchor(Anchor.TOP_LEFT);
+                addComponent(fpsText);
             }
         });
     }

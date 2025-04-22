@@ -38,8 +38,8 @@ public class MouseInputTester extends Script {
         // Draw buttons held
         var buttonSize = new Vec2(6, 12);
         var buttonPositions = new Vec2[]{
-                new Vec2(30, -11),
-                new Vec2(36, -11),
+                new Vec2(27, -11),
+                new Vec2(33, -11),
         };
         var buttonNames = new String[]{"left mouse", "right mouse"};
 
