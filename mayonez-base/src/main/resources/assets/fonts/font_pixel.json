@@ -8,7 +8,7 @@
             "end_character": 126,
             "sprite_width": 8,
             "sprite_height": 10,
-            "glyph_ascent": 7
+            "glyph_ascent": 8
         },
         {
             "name": "Latin-1 Supplement",
@@ -17,7 +17,7 @@
             "end_character": 255,
             "sprite_width": 8,
             "sprite_height": 12,
-            "glyph_ascent": 9
+            "glyph_ascent": 10
         }
     ],
     "glyph_height": 8,

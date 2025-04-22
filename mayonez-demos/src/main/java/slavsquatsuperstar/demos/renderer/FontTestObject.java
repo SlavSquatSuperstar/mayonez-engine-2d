@@ -30,9 +30,9 @@ class FontTestObject extends GameObject {
             {GHI}<JKL>
             \\MNO/"PQR"
             |STU|'VWX'
-            1+2-3=0
-            7*7=49
-            AÁÀaäå
+            1+2-3*4÷5
+            Agpqxy
+            ÁÄÅáäå
             """;
 
     private final Font font;
