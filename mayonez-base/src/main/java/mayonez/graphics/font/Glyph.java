@@ -7,14 +7,14 @@ import mayonez.graphics.textures.*;
  *
  * @param width   the width of the glyph, in pixels
  * @param height  the height of the glyph, in pixels
- * @param ascent  the height of the glyph above the baseline, in pixels
+ * @param baseline  the height of the glyph baseline, in pixels
  * @param texture the sprite sheet texture used to draw the glyph, null if whitespace
  * @author SlavSquatSuperstar
  */
 public record Glyph(
         int width,
         int height,
-        int ascent,
+        int baseline,
         Texture texture
 ) {
 

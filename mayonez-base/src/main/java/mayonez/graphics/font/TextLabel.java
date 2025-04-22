@@ -145,7 +145,7 @@ public abstract class TextLabel extends Script implements Renderable {
         var relativeSize = (float) fontSize / font.getGlyphHeight(); // Percent of cap height
         var spriteScale = new Vec2(glyph.width() * relativeSize, glyph.height() * relativeSize);
         // Line up glyph baselines
-        var spriteAscent = new Vec2(0, (glyph.ascent() - glyph.height()) * relativeSize);
+        var spriteAscent = new Vec2(0, -glyph.baseline() * relativeSize);
         // Move glyph center to correct position
         var spritePos = charPos.add(spriteScale.mul(0.5f)).add(spriteAscent);
         return new GlyphSprite(spritePos, spriteScale, glyph.texture(), color, this);

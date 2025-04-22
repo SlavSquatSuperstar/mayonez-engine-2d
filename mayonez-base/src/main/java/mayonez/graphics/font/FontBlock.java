@@ -18,7 +18,7 @@ import java.util.*;
  * @param endCharacter   the end character value
  * @param spriteWidth    the width of a glyph sprite, in pixels
  * @param spriteHeight   the height of a glyph sprite, in pixels
- * @param glyphAscent    the height of a character glyph above the baseline, in pixels
+ * @param baselineHeight the distance from sprite bottom to the baseline, in pixels
  * @author SlavSquatSuperstar
  */
 // TODO specify characters (for non-contiguous)
@@ -26,7 +26,7 @@ import java.util.*;
 public record FontBlock(
         String name, Texture fontTexture,
         char startCharacter, char endCharacter,
-        int spriteWidth, int spriteHeight, int glyphAscent
+        int spriteWidth, int spriteHeight, int baselineHeight
 ) {
 
     public FontBlock(Record record) {
@@ -37,7 +37,7 @@ public record FontBlock(
                 (char) record.getInt("end_character"),
                 record.getInt("sprite_width"),
                 record.getInt("sprite_height"),
-                record.getInt("glyph_ascent")
+                record.getInt("baseline_height")
         );
     }
 
@@ -71,7 +71,7 @@ public record FontBlock(
             var glyphTex = fontTexture.getSubTexture(
                     glyphRegion, "Sprite " + i
             );
-            var glyph = new Glyph(widths[i], spriteHeight, glyphAscent, glyphTex);
+            var glyph = new Glyph(widths[i], spriteHeight, baselineHeight, glyphTex);
 
             var charCode = (char) (startCharacter + i);
             glyphs.put(charCode, glyph);
