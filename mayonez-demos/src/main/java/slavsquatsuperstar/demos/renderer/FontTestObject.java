@@ -45,11 +45,11 @@ class FontTestObject extends GameObject {
     @Override
     protected void init() {
         // Scene font
-        var fontSize = 5; // wu
+        var fontSize = 6; // wu
         var lineSpacing = 1; // ln
 
         // UI font
-        var uiFontSize = 32; // px
+        var uiFontSize = 40; // px
         var uiLineSpacing = 1; // ln
 
         TextLabel worldText;

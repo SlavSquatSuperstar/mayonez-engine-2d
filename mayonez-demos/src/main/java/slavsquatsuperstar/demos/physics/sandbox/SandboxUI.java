@@ -16,6 +16,8 @@ public class SandboxUI extends GameObject {
     @Override
     protected void init() {
         var font = DemosAssets.getFont();
+        var fontSize = 20;
+        var lineSpacing = 1;
 
         // Toggle Hints
         TextLabel hintsTooltip;
@@ -23,8 +25,7 @@ public class SandboxUI extends GameObject {
                 "Show Controls (H)",
                 new Vec2(Preferences.getScreenWidth() - 100,
                         Preferences.getScreenHeight() - 30),
-                font, Colors.BLACK,
-                16, 2
+                font, Colors.BLACK, fontSize, lineSpacing
         ));
         hintsTooltip.setAnchor(Anchor.RIGHT);
 
@@ -48,8 +49,7 @@ public class SandboxUI extends GameObject {
                         """,
                 new Vec2(Preferences.getScreenWidth() - 90,
                         Preferences.getScreenHeight() - 190),
-                font, Colors.BLACK,
-                16, 2
+                font, Colors.BLACK, fontSize, lineSpacing
         ));
         controlHints.setAnchor(Anchor.TOP_RIGHT);
         addComponent(new ToggleHints(hintsTooltip, controlHints));
@@ -59,8 +59,7 @@ public class SandboxUI extends GameObject {
         addComponent(gravityText = new UITextLabel(
                 "Gravity: On",
                 new Vec2(Preferences.getScreenWidth() - 80, 32),
-                font, Colors.BLACK,
-                16, 2
+                font, Colors.BLACK, fontSize, lineSpacing
         ));
         gravityText.setAnchor(Anchor.RIGHT);
         addComponent(new ToggleGravity(gravityText));

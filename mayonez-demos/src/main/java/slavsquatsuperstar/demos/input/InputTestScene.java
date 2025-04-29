@@ -29,7 +29,7 @@ public class InputTestScene extends DemoScene {
                 addComponent(new UITextLabel(getScene().getName(),
                         new Vec2(Preferences.getScreenWidth() * 0.5f,
                                 Preferences.getScreenHeight() - 50),
-                        font, Colors.BLACK, 32, 1));
+                        font, Colors.BLACK, 40, 1));
             }
         });
 

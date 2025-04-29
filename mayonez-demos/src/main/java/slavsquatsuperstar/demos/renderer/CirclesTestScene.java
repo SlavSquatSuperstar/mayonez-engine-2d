@@ -66,8 +66,8 @@ public class CirclesTestScene extends DemoScene {
                 ));
 
                 fpsText = new UITextLabel(
-                        "FPS: _", new Vec2(20, Preferences.getScreenHeight() - 50),
-                        font, Colors.BLACK, 36, 1
+                        "FPS: _", new Vec2(20, Preferences.getScreenHeight() - 45),
+                        font, Colors.BLACK, 45, 1
                 ) {
                     @Override
                     protected void update(float dt) {

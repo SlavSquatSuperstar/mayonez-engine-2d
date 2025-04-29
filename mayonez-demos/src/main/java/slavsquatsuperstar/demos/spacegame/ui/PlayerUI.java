@@ -69,13 +69,14 @@ public class PlayerUI extends GameObject {
         addComponent(new PlayerUIController(hpSlider, shSlider, weaponHotbar));
 
         var font = DemosAssets.getFont();
+        var fontSize = 20;
+        var lineSpacing = 1;
 
         // Auto-Brake Indicator
         var autoBrakeToolTip = new UITextLabel(
                 "Auto-Brake: On",
                 new Vec2(20, Preferences.getScreenHeight() - 125),
-                font, Colors.WHITE,
-                16, 2
+                font, Colors.WHITE, fontSize, lineSpacing
         );
         autoBrakeToolTip.setAnchor(Anchor.LEFT);
         addComponent(autoBrakeToolTip);
@@ -95,8 +96,7 @@ public class PlayerUI extends GameObject {
         var hintsTooltip = new UITextLabel(
                 "Show Hints (H)",
                 new Vec2(Preferences.getScreenWidth() - 80, 15),
-                font, Colors.WHITE,
-                16, 2
+                font, Colors.WHITE, fontSize, lineSpacing
         );
         addComponent(hintsTooltip);
         hintsTooltip.setAnchor(Anchor.RIGHT);
@@ -104,15 +104,13 @@ public class PlayerUI extends GameObject {
         var hpShHint = new UITextLabel(
                 "Health\n\nShield",
                 new Vec2(295, Preferences.getScreenHeight() - 65),
-                font, Colors.WHITE,
-                16, 2
+                font, Colors.WHITE, fontSize, lineSpacing
         );
         addComponent(hpShHint);
 
         var hotbarHints = new UITextLabel(
                 "(1)   (2)   (3)   (4)", new Vec2(106, 65),
-                font, Colors.WHITE,
-                16, 2
+                font, Colors.WHITE, fontSize, lineSpacing
         );
         hintsTooltip.setAnchor(Anchor.LEFT);
         addComponent(hotbarHints);
@@ -137,8 +135,7 @@ public class PlayerUI extends GameObject {
                         """,
                 new Vec2(Preferences.getScreenWidth() - 105,
                         Preferences.getScreenHeight() - 170),
-                font, Colors.WHITE,
-                16, 2
+                font, Colors.WHITE, fontSize, lineSpacing
         );
         addComponent(controlText);
         hintsTooltip.setAnchor(Anchor.TOP_RIGHT);
