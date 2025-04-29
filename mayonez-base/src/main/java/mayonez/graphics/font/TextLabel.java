@@ -25,7 +25,8 @@ public abstract class TextLabel extends Script implements Renderable {
 
     // Text Style
     private Color color;
-    private int fontSize, lineSpacing;
+    private int fontSize; // Glyph height in pixels/world units
+    private int lineSpacing; // Leading in line heights
     private TextAlignment alignment;
 
     // Glyph Fields
@@ -89,7 +90,7 @@ public abstract class TextLabel extends Script implements Renderable {
     private void calculateTextBounds() {
         var lineWidths = lines.stream().map(TextLine::getLineWidth).toList();
         var maxWidth = lineWidths.stream().max(Comparator.naturalOrder()).orElse(0f); // Get max line width
-        lineOffset = (float) fontSize * (1 + (float) lineSpacing / font.getGlyphHeight());
+        lineOffset = (float) fontSize * lineSpacing;
         var textHeight = lines.size() * lineOffset; // Get height of all lines
         var boundsSize = new Vec2(maxWidth, textHeight); // Get text bounding box dimensions
         bounds.setSize(boundsSize);

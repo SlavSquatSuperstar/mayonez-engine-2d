@@ -5,7 +5,19 @@ import java.util.*;
 /**
  * A bitmap font created from one or more sprite sheets of character glyphs.
  * <p>
- * See also: <a href="https://minecraft.wiki/w/Font">Font - Minecraft Wiki</a>
+ * See also:
+ * <ul>
+ *     <li><a href="https://minecraft.wiki/w/Font#Bitmap_provider">
+ *         Font § Bitmap - Minecraft Wiki</a></li>
+ *     <li><a href="https://en.wikipedia.org/wiki/Font#Metrics">
+ *         Font § Metrics - Wikipedia</a></li>
+ *     <li><a href="https://en.wikipedia.org/wiki/Leading">
+ *         Leading - Wikipedia</a></li>
+ *     <li><a href="https://en.wikipedia.org/wiki/Typeface">
+ *         Typeface - Wikipedia</a></li>
+ *     <li><a href="https://en.wikipedia.org/wiki/Typeface_anatomy">
+ *         Typeface Anatomy - Wikipedia</a></li>
+ * </ul>
  *
  * @author SlavSquatSuperstar
  */

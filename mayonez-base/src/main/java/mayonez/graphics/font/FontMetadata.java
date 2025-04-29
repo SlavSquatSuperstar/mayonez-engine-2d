@@ -9,10 +9,10 @@ import java.util.*;
  *
  * @param name                the name of the font
  * @param blocks              the metadata of the font blocks
- * @param glyphHeight         the cap height of a character glyph, in pixels
- * @param glyphSpacing        the space between adjacent glyphs, in pixels
+ * @param glyphHeight         the cap height of a character glyph, in texels
+ * @param glyphSpacing        the space between adjacent glyphs, in texels
  * @param whitespaceCharacter the character value used for whitespace
- * @param whitespaceWidth     the width of the whitespace glyph, in pixels
+ * @param whitespaceWidth     the width of the whitespace glyph, in texels
  * @author SlavSquatSuperstar
  */
 // TODO multiple space characters

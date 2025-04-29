@@ -16,9 +16,9 @@ import java.util.*;
  * @param fontTexture    the glyph texture atlas
  * @param startCharacter the start character value
  * @param endCharacter   the end character value
- * @param spriteWidth    the width of a glyph sprite, in pixels
- * @param spriteHeight   the height of a glyph sprite, in pixels
- * @param baselineHeight the distance from sprite bottom to the baseline, in pixels
+ * @param spriteWidth    the width of a glyph sprite, in texels
+ * @param spriteHeight   the height of a glyph sprite, in texels
+ * @param baselineHeight the distance from sprite bottom to the baseline, in texels
  * @author SlavSquatSuperstar
  */
 // TODO specify characters (for non-contiguous)
