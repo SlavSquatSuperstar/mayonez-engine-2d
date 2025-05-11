@@ -26,7 +26,7 @@ public abstract class TextLabel extends Script implements Renderable {
     // Text Style
     private Color color;
     private int fontSize; // Glyph height in pixels/world units
-    private int lineSpacing; // Leading in line heights
+    private float lineSpacing; // Leading in line heights
     private TextAlignment alignment;
 
     // Glyph Fields
@@ -34,7 +34,7 @@ public abstract class TextLabel extends Script implements Renderable {
     private final List<TextLine> lines;
     private float lineOffset;
 
-    public TextLabel(String message, Vec2 position, Font font, Color color, int fontSize, int lineSpacing) {
+    public TextLabel(String message, Vec2 position, Font font, Color color, int fontSize, float lineSpacing) {
         this.message = message;
         this.font = font;
         this.color = color;
@@ -50,8 +50,12 @@ public abstract class TextLabel extends Script implements Renderable {
     @Override
     protected void init() {
         // (Re-)Generate glyph positions and sizes from message
+        regenerateGlyphs();
+    }
+
+    private void regenerateGlyphs() {
         calculateGlyphSizes();
-        calculateTextBounds();
+        calculateBoundsSize();
         generateGlyphSprites();
     }
 
@@ -87,10 +91,10 @@ public abstract class TextLabel extends Script implements Renderable {
         return (float) fontSize * (glyph.width() + glyphSpacing) / font.getGlyphHeight();
     }
 
-    private void calculateTextBounds() {
+    private void calculateBoundsSize() {
         var lineWidths = lines.stream().map(TextLine::getLineWidth).toList();
         var maxWidth = lineWidths.stream().max(Comparator.naturalOrder()).orElse(0f); // Get max line width
-        lineOffset = (float) fontSize * lineSpacing;
+        lineOffset = fontSize * lineSpacing;
         var textHeight = lines.size() * lineOffset; // Get height of all lines
         var boundsSize = new Vec2(maxWidth, textHeight); // Get text bounding box dimensions
         bounds.setSize(boundsSize);
@@ -160,9 +164,7 @@ public abstract class TextLabel extends Script implements Renderable {
 
     public void setMessage(String message) {
         this.message = message;
-        calculateGlyphSizes();
-        calculateTextBounds();
-        generateGlyphSprites();
+        regenerateGlyphs();
     }
 
     public Vec2 getPosition() {
@@ -171,6 +173,7 @@ public abstract class TextLabel extends Script implements Renderable {
 
     public void setPosition(Vec2 position) {
         bounds.setAnchorPos(position);
+        generateGlyphSprites();
     }
 
     public Vec2 getSize() {
@@ -202,18 +205,16 @@ public abstract class TextLabel extends Script implements Renderable {
 
     public void setFontSize(int fontSize) {
         this.fontSize = fontSize;
-        calculateGlyphSizes();
-        calculateTextBounds();
-        generateGlyphSprites();
+        regenerateGlyphs();
     }
 
-    public int getLineSpacing() {
+    public float getLineSpacing() {
         return lineSpacing;
     }
 
-    public void setLineSpacing(int lineSpacing) {
+    public void setLineSpacing(float lineSpacing) {
         this.lineSpacing = lineSpacing;
-        calculateTextBounds();
+        calculateBoundsSize();
         generateGlyphSprites();
     }
 

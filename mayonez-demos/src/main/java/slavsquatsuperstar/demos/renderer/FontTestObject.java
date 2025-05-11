@@ -57,6 +57,7 @@ class FontTestObject extends GameObject {
                 MESSAGE2, new Vec2(-41, -10.5f),
                 font, Colors.BLUE, fontSize, lineSpacing)
         );
+        worldText.setAnchor(Anchor.TOP_LEFT);
 
         TextLabel uiText;
         addComponent(uiText = new UITextLabel(
@@ -81,6 +82,15 @@ class FontTestObject extends GameObject {
                     // Set alignment
                     worldText.setAlignment(align);
                     uiText.setAlignment(align);
+                } else if (KeyInput.keyPressed("m")) {
+                    worldText.setPosition(worldText.getPosition().add(new Vec2(1, -1)));
+                    uiText.setPosition(uiText.getPosition().add(new Vec2(5, -5)));
+                } else if (KeyInput.keyPressed("l")) {
+                    worldText.setLineSpacing(worldText.getLineSpacing() + 0.25f);
+                    uiText.setLineSpacing(uiText.getLineSpacing() + 0.25f);
+                } else if (KeyInput.keyPressed("k")) {
+                    worldText.setFontSize(worldText.getFontSize() + 1);
+                    uiText.setFontSize(uiText.getFontSize() + 1);
                 }
             }
         });
