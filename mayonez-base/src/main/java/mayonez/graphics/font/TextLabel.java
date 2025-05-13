@@ -10,18 +10,19 @@ import mayonez.renderer.gl.*;
 import java.util.*;
 
 /**
- * Renders a string using a font. Use {@link WorldTextLabel} to draw text inside the game world,
- * and {@link UITextLabel} to draw text in the UI.
+ * Renders a text string to the game world or user interface.
+ * The font and style of the text can be controlled.
  *
  * @author SlavSquatSuperstar
  */
 // TODO font transform, set size
-public abstract class TextLabel extends Script implements Renderable {
+public class TextLabel extends Script implements Renderable {
 
     // Text Fields
     private String message;
-    protected final Font font;
-    protected final UIBounds bounds; // Text bounding box
+    private final Font font;
+    private final UIBounds bounds; // Text bounding box
+    private boolean inUI;
 
     // Text Style
     private Color color;
@@ -45,6 +46,7 @@ public abstract class TextLabel extends Script implements Renderable {
         bounds = new UIBounds(position, new Vec2(), Anchor.CENTER);
         glyphSprites = new ArrayList<>();
         lines = new ArrayList<>();
+        inUI = true;
     }
 
     @Override
@@ -236,6 +238,15 @@ public abstract class TextLabel extends Script implements Renderable {
     @Override
     public int getZIndex() {
         return gameObject.getZIndex();
+    }
+
+    @Override
+    public boolean isInUI() {
+        return inUI;
+    }
+
+    public void setInUI(boolean inUI) {
+        this.inUI = inUI;
     }
 
 }

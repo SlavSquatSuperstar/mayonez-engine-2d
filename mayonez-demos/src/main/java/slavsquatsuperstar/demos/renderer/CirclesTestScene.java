@@ -65,7 +65,7 @@ public class CirclesTestScene extends DemoScene {
                         new Vec2(200, 50), Colors.LIGHT_GRAY
                 ));
 
-                fpsText = new UITextLabel(
+                fpsText = new TextLabel(
                         "FPS: _", new Vec2(20, Preferences.getScreenHeight() - 45),
                         font, Colors.BLACK, 45, 1
                 ) {

@@ -21,7 +21,7 @@ public class SandboxUI extends GameObject {
 
         // Toggle Hints
         TextLabel hintsTooltip;
-        addComponent(hintsTooltip = new UITextLabel(
+        addComponent(hintsTooltip = new TextLabel(
                 "Show Controls (H)",
                 new Vec2(Preferences.getScreenWidth() - 100,
                         Preferences.getScreenHeight() - 30),
@@ -30,7 +30,7 @@ public class SandboxUI extends GameObject {
         hintsTooltip.setAnchor(Anchor.RIGHT);
 
         TextLabel controlHints;
-        addComponent(controlHints = new UITextLabel(
+        addComponent(controlHints = new TextLabel(
                 """
                         Spawn Object
                         - (1) Box
@@ -56,7 +56,7 @@ public class SandboxUI extends GameObject {
 
         // Gravity Text
         TextLabel gravityText;
-        addComponent(gravityText = new UITextLabel(
+        addComponent(gravityText = new TextLabel(
                 "Gravity: On",
                 new Vec2(Preferences.getScreenWidth() - 80, 32),
                 font, Colors.BLACK, fontSize, lineSpacing

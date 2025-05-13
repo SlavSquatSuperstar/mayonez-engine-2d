@@ -73,7 +73,7 @@ public class PlayerUI extends GameObject {
         var lineSpacing = 1;
 
         // Auto-Brake Indicator
-        var autoBrakeToolTip = new UITextLabel(
+        var autoBrakeToolTip = new TextLabel(
                 "Auto-Brake: On",
                 new Vec2(20, Preferences.getScreenHeight() - 125),
                 font, Colors.WHITE, fontSize, lineSpacing
@@ -93,7 +93,7 @@ public class PlayerUI extends GameObject {
         );
 
         // Hints
-        var hintsTooltip = new UITextLabel(
+        var hintsTooltip = new TextLabel(
                 "Show Hints (H)",
                 new Vec2(Preferences.getScreenWidth() - 80, 15),
                 font, Colors.WHITE, fontSize, lineSpacing
@@ -101,21 +101,21 @@ public class PlayerUI extends GameObject {
         addComponent(hintsTooltip);
         hintsTooltip.setAnchor(Anchor.RIGHT);
 
-        var hpShHint = new UITextLabel(
+        var hpShHint = new TextLabel(
                 "Health\n\nShield",
                 new Vec2(295, Preferences.getScreenHeight() - 65),
                 font, Colors.WHITE, fontSize, lineSpacing
         );
         addComponent(hpShHint);
 
-        var hotbarHints = new UITextLabel(
+        var hotbarHints = new TextLabel(
                 "(1)   (2)   (3)   (4)", new Vec2(106, 65),
                 font, Colors.WHITE, fontSize, lineSpacing
         );
         hintsTooltip.setAnchor(Anchor.LEFT);
         addComponent(hotbarHints);
 
-        var controlText = new UITextLabel(
+        var controlText = new TextLabel(
                 """
                         Controls:
                         

@@ -26,7 +26,7 @@ public class InputTestScene extends DemoScene {
         addObject(new GameObject("Scene Title Text") {
             @Override
             protected void init() {
-                addComponent(new UITextLabel(getScene().getName(),
+                addComponent(new TextLabel(getScene().getName(),
                         new Vec2(Preferences.getScreenWidth() * 0.5f,
                                 Preferences.getScreenHeight() - 50),
                         font, Colors.BLACK, 40, 1));
