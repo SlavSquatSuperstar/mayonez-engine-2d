@@ -1,12 +1,29 @@
 package slavsquatsuperstar.demos.physics.sandbox;
 
 import mayonez.*;
-import mayonez.graphics.*;
 import mayonez.graphics.font.*;
 import mayonez.graphics.ui.*;
 import mayonez.math.*;
 
 public class SandboxUI extends GameObject {
+
+    private static final int FONT_SIZE = 20;
+    private static final String CONTROL_HINTS_MESSAGE = """
+            Spawn Object
+            - (1) Box
+            - (2) Ball
+            - (3) Triangle
+            - (4) Polygon
+            
+            (Space)
+            Toggle Gravity
+            
+            (Left Mouse)
+            Drag Object
+            
+            (Right Mouse)
+            Throw Object
+            """;
 
     public SandboxUI(String name) {
         super(name);
@@ -14,53 +31,35 @@ public class SandboxUI extends GameObject {
 
     @Override
     protected void init() {
-        var font = Fonts.DEFAULT_FONT;
-        var fontSize = 20;
-        var lineSpacing = 1;
 
         // Toggle Hints
-        TextLabel hintsTooltip;
-        addComponent(hintsTooltip = new TextLabel(
+        TextLabel hintsTooltip = new TextLabel(
                 "Show Controls (H)",
                 new Vec2(Preferences.getScreenWidth() - 100,
-                        Preferences.getScreenHeight() - 30),
-                font, Colors.BLACK, fontSize, lineSpacing
-        ));
+                        Preferences.getScreenHeight() - 30)
+        );
+        hintsTooltip.setFontSize(FONT_SIZE);
         hintsTooltip.setAnchor(Anchor.RIGHT);
+        addComponent(hintsTooltip);
 
-        TextLabel controlHints;
-        addComponent(controlHints = new TextLabel(
-                """
-                        Spawn Object
-                        - (1) Box
-                        - (2) Ball
-                        - (3) Triangle
-                        - (4) Polygon
-                        
-                        (Space)
-                        Toggle Gravity
-                        
-                        (Left Mouse)
-                        Drag Object
-                        
-                        (Right Mouse)
-                        Throw Object
-                        """,
+        TextLabel controlHints = new TextLabel(
+                CONTROL_HINTS_MESSAGE,
                 new Vec2(Preferences.getScreenWidth() - 90,
-                        Preferences.getScreenHeight() - 190),
-                font, Colors.BLACK, fontSize, lineSpacing
-        ));
+                        Preferences.getScreenHeight() - 190)
+        );
+        controlHints.setFontSize(FONT_SIZE);
         controlHints.setAnchor(Anchor.TOP_RIGHT);
+        addComponent(controlHints);
         addComponent(new ToggleHints(hintsTooltip, controlHints));
 
         // Gravity Text
-        TextLabel gravityText;
-        addComponent(gravityText = new TextLabel(
+        TextLabel gravityText = new TextLabel(
                 "Gravity: On",
-                new Vec2(Preferences.getScreenWidth() - 80, 32),
-                font, Colors.BLACK, fontSize, lineSpacing
-        ));
+                new Vec2(Preferences.getScreenWidth() - 80, 32)
+        );
+        gravityText.setFontSize(FONT_SIZE);
         gravityText.setAnchor(Anchor.RIGHT);
+        addComponent(gravityText);
         addComponent(new ToggleGravity(gravityText));
     }
 

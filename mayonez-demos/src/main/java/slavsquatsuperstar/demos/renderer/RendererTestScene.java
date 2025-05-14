@@ -3,7 +3,6 @@ package slavsquatsuperstar.demos.renderer;
 import mayonez.*;
 import mayonez.graphics.*;
 import mayonez.graphics.debug.*;
-import mayonez.graphics.font.*;
 import mayonez.graphics.sprites.*;
 import mayonez.graphics.textures.*;
 import mayonez.graphics.ui.*;
@@ -44,8 +43,6 @@ public class RendererTestScene extends DemoScene {
                 32, 32, 8, 0);
         var sheet2 = Sprites.createSpriteSheet("assets/spacegame/textures/combat/projectiles.png",
                 16, 16, 3, 0);
-
-        var font = Fonts.DEFAULT_FONT;
 
         // Sprites
 
@@ -118,7 +115,7 @@ public class RendererTestScene extends DemoScene {
         addUIObject("ui-3b", new Vec2(uiStartPos + 128, uiStartPos), 11, tex5);
         addUIObject("ui-3c", new Vec2(uiStartPos + 128, uiStartPos), 12, sheet2.getTexture(2));
 
-        addObject(new FontTestObject("text-1", font));
+        addObject(new FontTestObject("text-1"));
     }
 
     // Sprites

@@ -1,7 +1,6 @@
 package slavsquatsuperstar.demos.input;
 
 import mayonez.*;
-import mayonez.graphics.*;
 import mayonez.graphics.font.*;
 import mayonez.math.*;
 import slavsquatsuperstar.demos.DemoScene;
@@ -21,14 +20,14 @@ public class InputTestScene extends DemoScene {
     protected void init() {
         getCamera().setCameraScale(10);
 
-        var font = Fonts.DEFAULT_FONT;
         addObject(new GameObject("Scene Title Text") {
             @Override
             protected void init() {
-                addComponent(new TextLabel(getScene().getName(),
+                var titleText = new TextLabel(getScene().getName(),
                         new Vec2(Preferences.getScreenWidth() * 0.5f,
-                                Preferences.getScreenHeight() - 50),
-                        font, Colors.BLACK, 40, 1));
+                                Preferences.getScreenHeight() - 50));
+                titleText.setFontSize(40);
+                addComponent(titleText);
             }
         });
 

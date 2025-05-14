@@ -3,7 +3,6 @@ package slavsquatsuperstar.demos.renderer;
 import mayonez.*;
 import mayonez.graphics.*;
 import mayonez.graphics.font.*;
-import mayonez.graphics.ui.*;
 import mayonez.input.*;
 import mayonez.math.*;
 
@@ -12,11 +11,13 @@ import mayonez.math.*;
  *
  * @author SlavSquatSuperstar
  */
-class FontTestObject extends GameObject {
+class FontTestObject extends GameObject {// wu
+    public static final int WORLD_FONT_SIZE = 6;// px
+    public static final int UI_FONT_SIZE = 40;
 
     // See https://en.wikipedia.org/wiki/Pangram for more pangrams
 
-    private static final String MESSAGE1 = """
+    private static final String UI_MESSAGE = """
             The quick brown
             fox jumps over
             the lazy dog.
@@ -25,7 +26,7 @@ class FontTestObject extends GameObject {
             liquor jugs.
             """;
 
-    private static final String MESSAGE2 = """
+    private static final String WORLD_MESSAGE = """
             (ABC)[DEF]
             {GHI}<JKL>
             \\MNO/"PQR"
@@ -35,37 +36,27 @@ class FontTestObject extends GameObject {
             ÁÄÅáäå
             """;
 
-    private final Font font;
-
-    public FontTestObject(String name, Font font) {
+    public FontTestObject(String name) {
         super(name);
-        this.font = font;
     }
 
     @Override
     protected void init() {
-        // Scene font
-        var fontSize = 6; // wu
-        var lineSpacing = 1; // ln
-
-        // UI font
-        var uiFontSize = 40; // px
-        var uiLineSpacing = 1; // ln
-
-        TextLabel worldText;
-        addComponent(worldText = new TextLabel(
-                MESSAGE2, new Vec2(-41, -10.5f),
-                font, Colors.BLUE, fontSize, lineSpacing)
+        var worldText = new TextLabel(
+                WORLD_MESSAGE, new Vec2(-41, -10.5f)
         );
+        worldText.setFontSize(WORLD_FONT_SIZE);
+        worldText.setColor(Colors.BLUE);
         worldText.setInUI(false);
-        worldText.setAnchor(Anchor.TOP_LEFT);
+        addComponent(worldText);
 
-        TextLabel uiText;
-        addComponent(uiText = new TextLabel(
-                MESSAGE1, new Vec2(180, Preferences.getScreenHeight() - 145),
-                font, Colors.RED, uiFontSize, uiLineSpacing
-        ));
-        uiText.setAnchor(Anchor.TOP_LEFT);
+        var uiText = new TextLabel(
+                UI_MESSAGE,  new Vec2(180, Preferences.getScreenHeight() - 145)
+        );
+        uiText.setFontSize(UI_FONT_SIZE);
+        uiText.setColor(Colors.RED);
+        uiText.setInUI(true);
+        addComponent(uiText);
 
         addComponent(new Script() {
             private TextAlignment align = TextAlignment.LEFT;

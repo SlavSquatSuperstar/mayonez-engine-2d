@@ -56,17 +56,15 @@ public class CirclesTestScene extends DemoScene {
         addObject(new GameObject("FPS Counter") {
             @Override
             protected void init() {
-                TextLabel fpsText;
-
+                // Background
                 addComponent(new UISprite(
                         new Vec2(110, Preferences.getScreenHeight() - 50),
                         new Vec2(200, 50), Colors.LIGHT_GRAY
                 ));
 
-                var font = Fonts.DEFAULT_FONT;
-                fpsText = new TextLabel(
-                        "FPS: _", new Vec2(20, Preferences.getScreenHeight() - 45),
-                        font, Colors.BLACK, 45, 1
+                var fpsText = new TextLabel(
+                        "FPS: _",
+                        new Vec2(20, Preferences.getScreenHeight() - 45)
                 ) {
                     @Override
                     protected void update(float dt) {
@@ -74,6 +72,7 @@ public class CirclesTestScene extends DemoScene {
                     }
                 };
                 fpsText.setAnchor(Anchor.TOP_LEFT);
+                fpsText.setFontSize(45);
                 addComponent(fpsText);
             }
         });

@@ -20,11 +20,11 @@ public class TextLabel extends Script implements Renderable {
 
     // Text Fields
     private String message;
-    private final Font font;
     private final UIBounds bounds; // Text bounding box
     private boolean inUI;
 
     // Text Style
+    private Font font;
     private Color color;
     private int fontSize; // Glyph height in pixels/world units
     private float lineSpacing; // Leading in line heights
@@ -34,6 +34,10 @@ public class TextLabel extends Script implements Renderable {
     private final List<GLRenderable> glyphSprites;
     private final List<TextLine> lines;
     private float lineOffset;
+
+    public TextLabel(String message, Vec2 position) {
+        this(message, position, Fonts.DEFAULT_FONT, Colors.BLACK, 12, 1);
+    }
 
     public TextLabel(String message, Vec2 position, Font font, Color color, int fontSize, float lineSpacing) {
         this.message = message;
@@ -191,6 +195,15 @@ public class TextLabel extends Script implements Renderable {
     }
 
     // Text Style Methods
+
+    public Font getFont() {
+        return font;
+    }
+
+    public void setFont(Font font) {
+        this.font = font;
+        regenerateGlyphs();
+    }
 
     public Color getColor() {
         return color;
