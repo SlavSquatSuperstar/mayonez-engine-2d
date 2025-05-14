@@ -5,7 +5,6 @@ import mayonez.graphics.*;
 import mayonez.graphics.font.*;
 import mayonez.math.*;
 import slavsquatsuperstar.demos.DemoScene;
-import slavsquatsuperstar.demos.DemosAssets;
 
 /**
  * A scene for testing all keyboard and mouse input work correctly.
@@ -22,7 +21,7 @@ public class InputTestScene extends DemoScene {
     protected void init() {
         getCamera().setCameraScale(10);
 
-        var font = DemosAssets.getFont();
+        var font = Fonts.DEFAULT_FONT;
         addObject(new GameObject("Scene Title Text") {
             @Override
             protected void init() {

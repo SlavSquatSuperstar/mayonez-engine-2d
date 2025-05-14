@@ -6,7 +6,6 @@ import mayonez.graphics.font.*;
 import mayonez.graphics.textures.*;
 import mayonez.graphics.ui.*;
 import mayonez.math.*;
-import slavsquatsuperstar.demos.DemosAssets;
 import slavsquatsuperstar.demos.spacegame.combat.projectiles.ProjectilePrefabs;
 import slavsquatsuperstar.demos.spacegame.events.AutoBrakeToggleEvent;
 import slavsquatsuperstar.demos.spacegame.events.SpaceGameEvents;
@@ -68,7 +67,7 @@ public class PlayerUI extends GameObject {
 
         addComponent(new PlayerUIController(hpSlider, shSlider, weaponHotbar));
 
-        var font = DemosAssets.getFont();
+        var font = Fonts.DEFAULT_FONT;
         var fontSize = 20;
         var lineSpacing = 1;
 

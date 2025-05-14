@@ -8,7 +8,6 @@ import mayonez.graphics.ui.*;
 import mayonez.math.*;
 import mayonez.math.shapes.*;
 import slavsquatsuperstar.demos.DemoScene;
-import slavsquatsuperstar.demos.DemosAssets;
 
 /**
  * A scene for testing the efficiency of circle rendering.
@@ -58,13 +57,13 @@ public class CirclesTestScene extends DemoScene {
             @Override
             protected void init() {
                 TextLabel fpsText;
-                var font = DemosAssets.getFont();
 
                 addComponent(new UISprite(
                         new Vec2(110, Preferences.getScreenHeight() - 50),
                         new Vec2(200, 50), Colors.LIGHT_GRAY
                 ));
 
+                var font = Fonts.DEFAULT_FONT;
                 fpsText = new TextLabel(
                         "FPS: _", new Vec2(20, Preferences.getScreenHeight() - 45),
                         font, Colors.BLACK, 45, 1

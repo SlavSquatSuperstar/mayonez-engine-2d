@@ -3,6 +3,7 @@ package slavsquatsuperstar.demos.renderer;
 import mayonez.*;
 import mayonez.graphics.*;
 import mayonez.graphics.debug.*;
+import mayonez.graphics.font.*;
 import mayonez.graphics.sprites.*;
 import mayonez.graphics.textures.*;
 import mayonez.graphics.ui.*;
@@ -10,7 +11,6 @@ import mayonez.input.*;
 import mayonez.math.*;
 import mayonez.math.shapes.*;
 import slavsquatsuperstar.demos.DemoScene;
-import slavsquatsuperstar.demos.DemosAssets;
 
 /**
  * A scene for testing renderer functions, such as camera transformation, batch
@@ -45,7 +45,7 @@ public class RendererTestScene extends DemoScene {
         var sheet2 = Sprites.createSpriteSheet("assets/spacegame/textures/combat/projectiles.png",
                 16, 16, 3, 0);
 
-        var font = DemosAssets.getFont();
+        var font = Fonts.DEFAULT_FONT;
 
         // Sprites
 

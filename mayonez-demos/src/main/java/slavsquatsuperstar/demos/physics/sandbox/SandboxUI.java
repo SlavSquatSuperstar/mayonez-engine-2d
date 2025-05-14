@@ -5,7 +5,6 @@ import mayonez.graphics.*;
 import mayonez.graphics.font.*;
 import mayonez.graphics.ui.*;
 import mayonez.math.*;
-import slavsquatsuperstar.demos.DemosAssets;
 
 public class SandboxUI extends GameObject {
 
@@ -15,7 +14,7 @@ public class SandboxUI extends GameObject {
 
     @Override
     protected void init() {
-        var font = DemosAssets.getFont();
+        var font = Fonts.DEFAULT_FONT;
         var fontSize = 20;
         var lineSpacing = 1;
 

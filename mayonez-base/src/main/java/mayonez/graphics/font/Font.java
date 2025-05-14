@@ -1,5 +1,8 @@
 package mayonez.graphics.font;
 
+import mayonez.assets.*;
+import mayonez.assets.text.*;
+
 import java.util.*;
 
 /**
@@ -23,14 +26,22 @@ import java.util.*;
  *
  * @author SlavSquatSuperstar
  */
-// TODO make asset
-public class Font {
+public class Font extends Asset {
 
     private final FontMetadata metadata;
     private final Map<Character, Glyph> glyphs;
 
-    public Font(FontMetadata metadata) {
-        this.metadata = metadata;
+    public Font(String filename) {
+        super(filename);
+
+        // Read font metadata
+        var json = new JSONFile(filename);
+        this.metadata = new FontMetadata(json.readJSON());
+        glyphs = readFontGlyphs(metadata);
+    }
+
+    private Map<Character, Glyph> readFontGlyphs(FontMetadata metadata) {
+        final Map<Character, Glyph> glyphs;
         glyphs = new HashMap<>();
 
         // Create whitespace glyph
@@ -45,7 +56,10 @@ public class Font {
             var blockGlyphs = block.getGlyphs();
             blockGlyphs.forEach(glyphs::putIfAbsent); // Don't glyph override if already defined
         }
+        return glyphs;
     }
+
+    // TODO free block textures
 
     // Metadata Getters
 
