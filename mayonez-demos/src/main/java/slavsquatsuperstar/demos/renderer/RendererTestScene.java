@@ -3,6 +3,7 @@ package slavsquatsuperstar.demos.renderer;
 import mayonez.*;
 import mayonez.graphics.*;
 import mayonez.graphics.debug.*;
+import mayonez.graphics.font.*;
 import mayonez.graphics.sprites.*;
 import mayonez.graphics.textures.*;
 import mayonez.graphics.ui.*;
@@ -21,6 +22,25 @@ public class RendererTestScene extends DemoScene {
 
     private static final boolean CAMERA_DEBUG_MODE = true;
     private static final int SCENE_SCALE = 10;
+
+    // See https://en.wikipedia.org/wiki/Pangram for more pangrams
+    private static final String UI_MESSAGE = """
+            The quick brown
+            fox jumps over
+            the lazy dog.
+            Pack my box
+            with five dozen
+            liquor jugs.
+            """;
+    private static final String WORLD_MESSAGE = """
+            (ABC)[DEF]
+            {GHI}<JKL>
+            \\MNO/"PQR"
+            |STU|'VWX'
+            1+2-3*4÷5
+            Agpqxy
+            ÁÄÅáäå
+            """;
 
     public RendererTestScene(String name) {
         super(name);
@@ -115,13 +135,55 @@ public class RendererTestScene extends DemoScene {
         addUIObject("ui-3b", new Vec2(uiStartPos + 128, uiStartPos), 11, tex5);
         addUIObject("ui-3c", new Vec2(uiStartPos + 128, uiStartPos), 12, sheet2.getTexture(2));
 
-        addObject(new FontTestObject("text-1"));
+        addObject(new GameObject("text-1") {
+            @Override
+            protected void init() {
+                var worldText = new TextLabel(
+                        WORLD_MESSAGE, new Vec2(-41, -10.5f)
+                );
+                worldText.setInUI(false);
+                worldText.setColor(Colors.BLUE);
+                worldText.setFontSize(6);
+                addComponent(worldText);
+//                worldText.setAnchor(Anchor.TOP_LEFT);
+
+                var uiText = new TextLabel(
+                        UI_MESSAGE, new Vec2(180, Preferences.getScreenHeight() - 145)
+                );
+                uiText.setInUI(true);
+                uiText.setColor(Colors.RED);
+                uiText.setFontSize(40);
+                addComponent(uiText);
+//                uiText.setAnchor(Anchor.TOP_LEFT);
+
+                addComponent(new Script() {
+                    private TextAlignment align = TextAlignment.LEFT;
+
+                    @Override
+                    protected void update(float dt) {
+                        // Toggle font alignment
+                        if (KeyInput.keyPressed("space")) {
+                            switch (align) {
+                                case LEFT -> align = TextAlignment.CENTER;
+                                case CENTER -> align = TextAlignment.RIGHT;
+                                case RIGHT -> align = TextAlignment.LEFT;
+                            }
+
+                            // Set alignment
+                            worldText.setAlignment(align);
+                            uiText.setAlignment(align);
+                        }
+                    }
+                });
+            }
+        });
     }
 
     // Sprites
 
     private void addTextureObject(String name, Vec2 pos, int zIndex, Texture tex, Color color) {
-        addObject(new GameObject(name, new Transform(pos, 0f, new Vec2(10f))) {
+        addObject(new GameObject(name,
+                new Transform(pos, 0f, new Vec2(10f))) {
             @Override
             protected void init() {
                 setZIndex(zIndex);
@@ -133,7 +195,8 @@ public class RendererTestScene extends DemoScene {
     }
 
     private void addAnimatedObject(String name, Vec2 pos, int zIndex, SpriteSheet sheet) {
-        addObject(new GameObject(name, new Transform(pos, 0f, new Vec2(10f))) {
+        addObject(new GameObject(name,
+                new Transform(pos, 0f, new Vec2(10f))) {
             @Override
             protected void init() {
                 setZIndex(zIndex);
