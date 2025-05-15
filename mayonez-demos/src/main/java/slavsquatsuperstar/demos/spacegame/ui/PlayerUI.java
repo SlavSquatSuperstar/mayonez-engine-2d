@@ -85,15 +85,15 @@ public class PlayerUI extends GameObject {
 
         addComponent(new PlayerUIController(hpSlider, shSlider, weaponHotbar));
 
-        var fontColor = Colors.WHITE;
-        var fontSize = 20;
+        var style = TextStyle.DEFAULT_STYLE
+                .setColor(Colors.WHITE)
+                .setFontSize(20);
 
         // Auto-Brake Indicator
         var autoBrakeToolTip = new TextLabel(
                 "Auto-Brake (B): On",
                 new Vec2(20, Preferences.getScreenHeight() - 125))
-                .setColor(fontColor)
-                .setFontSize(fontSize)
+                .setStyle(style)
                 .setAnchor(Anchor.LEFT);
         addComponent(autoBrakeToolTip);
 
@@ -113,31 +113,28 @@ public class PlayerUI extends GameObject {
         var hintsTooltip = new TextLabel(
                 "Show Hints (H)",
                 new Vec2(Preferences.getScreenWidth() - 20, 15))
-                .setColor(fontColor)
-                .setFontSize(fontSize)
+                .setStyle(style)
                 .setAnchor(Anchor.BOTTOM_RIGHT);
         addComponent(hintsTooltip);
 
         var healthShieldHint = new TextLabel(
                 "Health\n\nShield",
                 new Vec2(270, Preferences.getScreenHeight() - 32))
-                .setColor(fontColor)
-                .setFontSize(fontSize)
+                .setStyle(style)
                 .setAnchor(Anchor.TOP_LEFT);
         addComponent(healthShieldHint);
 
         var hotbarHints = new TextLabel(
-                "(1)   (2)   (3)   (4)", new Vec2(106, 65))
-                .setColor(fontColor)
-                .setFontSize(fontSize);
+                "(1)   (2)   (3)   (4)", new Vec2(15, 60))
+                .setStyle(style)
+                .setAnchor(Anchor.BOTTOM_LEFT);
         addComponent(hotbarHints);
 
         var controlText = new TextLabel(
                 CONTROL_HINTS_MESSAGE,
                 new Vec2(Preferences.getScreenWidth() - 20,
                         Preferences.getScreenHeight() - 20))
-                .setColor(fontColor)
-                .setFontSize(fontSize)
+                .setStyle(style)
                 .setAnchor(Anchor.TOP_RIGHT);
         addComponent(controlText);
 

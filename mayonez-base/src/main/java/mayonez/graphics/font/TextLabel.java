@@ -42,17 +42,11 @@ public class TextLabel extends Script implements Renderable {
         bounds = new UIBounds(position, new Vec2(), Anchor.CENTER);
         inUI = true;
 
-        this.font = Fonts.DEFAULT_FONT;
-        this.color = Colors.BLACK;
-        this.fontSize = 12;
-        this.lineSpacing = 1;
-        alignment = TextAlignment.LEFT;
+        setStyle(TextStyle.DEFAULT_STYLE);
 
         glyphSprites = new ArrayList<>();
         lines = new ArrayList<>();
         lineOffset = fontSize * lineSpacing;
-
-        widthAndCharsChanged = heightChanged = posAndColorChanged = false;
     }
 
     @Override
@@ -263,8 +257,40 @@ public class TextLabel extends Script implements Renderable {
         return this;
     }
 
+    /**
+     * Get all style attributes of this label.
+     *
+     * @return the style
+     */
+    public TextStyle getStyle() {
+        return new TextStyle(font, color, fontSize, lineSpacing, alignment);
+    }
+
+    /**
+     * Set all style attributes from the given style.
+     *
+     * @param style the style
+     * @return this label
+     */
+    public TextLabel setStyle(TextStyle style) {
+        this.font = style.font();
+        this.color = style.color();
+        this.fontSize = style.fontSize();
+        this.lineSpacing = style.lineSpacing();
+        this.alignment = style.alignment();
+
+        widthAndCharsChanged = heightChanged = posAndColorChanged = true;
+        return this;
+    }
+
     // Renderable Methods
 
+    /**
+     * Get the list of glyph sprites used to draw this label and regenerate them
+     * if the label has been modified.
+     *
+     * @return the glyph sprites
+     */
     public List<GLRenderable> getGlyphSprites() {
         regenerateGlyphs();
         return glyphSprites;
@@ -280,6 +306,13 @@ public class TextLabel extends Script implements Renderable {
         return inUI;
     }
 
+    /**
+     * Set whether to draw this label in the UI rather than the world,
+     * true by default.
+     *
+     * @param inUI if in the UI
+     * @return this label
+     */
     public TextLabel setInUI(boolean inUI) {
         this.inUI = inUI;
         return this;
