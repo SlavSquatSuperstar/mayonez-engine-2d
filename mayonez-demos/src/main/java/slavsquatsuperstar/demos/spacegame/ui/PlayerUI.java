@@ -27,6 +27,24 @@ public class PlayerUI extends GameObject {
     private static final Texture LABEL_BORDER_TEXTURE = Textures.getTexture(
             "assets/spacegame/textures/ui/gray_border.png");
 
+    private static final String CONTROL_HINTS_MESSAGE = """
+            Controls:
+            
+            Movement
+            - (W) Forward
+            - (S) Backward
+            - (Q) Left
+            - (E) Right
+            - (A) Turn Left
+            - (D) Turn Right
+            - (Space) Brake
+            - (B) Auto-Brake
+            
+            Weapons
+            - (Mouse 1) Fire
+            - (1-4) Select
+            """;
+
     public PlayerUI(String name) {
         super(name);
     }
@@ -67,25 +85,26 @@ public class PlayerUI extends GameObject {
 
         addComponent(new PlayerUIController(hpSlider, shSlider, weaponHotbar));
 
-        var font = Fonts.DEFAULT_FONT;
+        var fontColor = Colors.WHITE;
         var fontSize = 20;
-        var lineSpacing = 1;
 
         // Auto-Brake Indicator
         var autoBrakeToolTip = new TextLabel(
-                "Auto-Brake: On",
-                new Vec2(20, Preferences.getScreenHeight() - 125),
-                font, Colors.WHITE, fontSize, lineSpacing
+                "Auto-Brake (B): On",
+                new Vec2(20, Preferences.getScreenHeight() - 125)
         );
+        autoBrakeToolTip.setColor(fontColor);
+        autoBrakeToolTip.setFontSize(fontSize);
         autoBrakeToolTip.setAnchor(Anchor.LEFT);
         addComponent(autoBrakeToolTip);
+
         SpaceGameEvents.getPlayerEventSystem().subscribe(
                 event -> {
                     if (event instanceof AutoBrakeToggleEvent e) {
                         if (e.isEnabled()) {
-                            autoBrakeToolTip.setMessage("Auto-Brake: On");
+                            autoBrakeToolTip.setMessage("Auto-Brake (B): On");
                         } else {
-                            autoBrakeToolTip.setMessage("Auto-Brake: Off");
+                            autoBrakeToolTip.setMessage("Auto-Brake (B): Off");
                         }
                     }
                 }
@@ -94,53 +113,41 @@ public class PlayerUI extends GameObject {
         // Hints
         var hintsTooltip = new TextLabel(
                 "Show Hints (H)",
-                new Vec2(Preferences.getScreenWidth() - 80, 15),
-                font, Colors.WHITE, fontSize, lineSpacing
+                new Vec2(Preferences.getScreenWidth() - 20, 15)
         );
+        hintsTooltip.setColor(fontColor);
+        hintsTooltip.setFontSize(fontSize);
+        hintsTooltip.setAnchor(Anchor.BOTTOM_RIGHT);
         addComponent(hintsTooltip);
-        hintsTooltip.setAnchor(Anchor.RIGHT);
 
-        var hpShHint = new TextLabel(
+        var healthShieldHint = new TextLabel(
                 "Health\n\nShield",
-                new Vec2(295, Preferences.getScreenHeight() - 65),
-                font, Colors.WHITE, fontSize, lineSpacing
+                new Vec2(270, Preferences.getScreenHeight() - 32)
         );
-        addComponent(hpShHint);
+        healthShieldHint.setColor(fontColor);
+        healthShieldHint.setFontSize(fontSize);
+        healthShieldHint.setAnchor(Anchor.TOP_LEFT);
+        addComponent(healthShieldHint);
 
         var hotbarHints = new TextLabel(
-                "(1)   (2)   (3)   (4)", new Vec2(106, 65),
-                font, Colors.WHITE, fontSize, lineSpacing
+                "(1)   (2)   (3)   (4)", new Vec2(106, 65)
         );
-        hintsTooltip.setAnchor(Anchor.LEFT);
+        hotbarHints.setColor(fontColor);
+        hotbarHints.setFontSize(fontSize);
         addComponent(hotbarHints);
 
         var controlText = new TextLabel(
-                """
-                        Controls:
-                        
-                        Movement
-                        - (W) Forward
-                        - (S) Backward
-                        - (Q) Left
-                        - (E) Right
-                        - (A) Turn Left
-                        - (D) Turn Right
-                        - (Space) Brake
-                        - (B) Auto-Brake
-                        
-                        Weapons
-                        - (Mouse 1) Fire
-                        - (1-4) Select
-                        """,
-                new Vec2(Preferences.getScreenWidth() - 105,
-                        Preferences.getScreenHeight() - 170),
-                font, Colors.WHITE, fontSize, lineSpacing
+                CONTROL_HINTS_MESSAGE,
+                new Vec2(Preferences.getScreenWidth() - 20,
+                        Preferences.getScreenHeight() - 20)
         );
+        controlText.setColor(fontColor);
+        controlText.setFontSize(fontSize);
+        controlText.setAnchor(Anchor.TOP_RIGHT);
         addComponent(controlText);
-        hintsTooltip.setAnchor(Anchor.TOP_RIGHT);
 
         addComponent(new ToggleHints(hintsTooltip,
-                new TextLabel[]{hotbarHints, controlText, hpShHint}));
+                new TextLabel[]{hotbarHints, controlText, healthShieldHint}));
     }
 
 }

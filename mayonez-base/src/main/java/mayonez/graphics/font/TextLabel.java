@@ -39,18 +39,14 @@ public class TextLabel extends Script implements Renderable {
     private boolean widthAndCharsChanged, heightChanged, posAndColorChanged;
 
     public TextLabel(String message, Vec2 position) {
-        this(message, position, Fonts.DEFAULT_FONT, Colors.BLACK, 12, 1);
-    }
-
-    public TextLabel(String message, Vec2 position, Font font, Color color, int fontSize, float lineSpacing) {
         this.message = message;
         bounds = new UIBounds(position, new Vec2(), Anchor.CENTER);
         inUI = true;
 
-        this.font = font;
-        this.color = color;
-        this.fontSize = fontSize;
-        this.lineSpacing = lineSpacing;
+        this.font = Fonts.DEFAULT_FONT;
+        this.color = Colors.BLACK;
+        this.fontSize = 12;
+        this.lineSpacing = 1;
         alignment = TextAlignment.LEFT;
 
         glyphSprites = new ArrayList<>();
