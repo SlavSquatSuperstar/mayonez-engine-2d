@@ -45,18 +45,20 @@ class FontTestObject extends GameObject {// wu
         var worldText = new TextLabel(
                 WORLD_MESSAGE, new Vec2(-41, -10.5f)
         );
-        worldText.setFontSize(WORLD_FONT_SIZE);
-        worldText.setColor(Colors.BLUE);
         worldText.setInUI(false);
+        worldText.setColor(Colors.BLUE);
+        worldText.setFontSize(WORLD_FONT_SIZE);
         addComponent(worldText);
+//        worldText.setAnchor(Anchor.TOP_LEFT);
 
         var uiText = new TextLabel(
                 UI_MESSAGE,  new Vec2(180, Preferences.getScreenHeight() - 145)
         );
-        uiText.setFontSize(UI_FONT_SIZE);
-        uiText.setColor(Colors.RED);
         uiText.setInUI(true);
+        uiText.setColor(Colors.RED);
+        uiText.setFontSize(UI_FONT_SIZE);
         addComponent(uiText);
+//        uiText.setAnchor(Anchor.TOP_LEFT);
 
         addComponent(new Script() {
             private TextAlignment align = TextAlignment.LEFT;

@@ -35,30 +35,30 @@ public class SandboxUI extends GameObject {
         // Toggle Hints
         TextLabel hintsTooltip = new TextLabel(
                 "Show Controls (H)",
-                new Vec2(Preferences.getScreenWidth() - 100,
-                        Preferences.getScreenHeight() - 30)
+                new Vec2(Preferences.getScreenWidth() - 20,
+                        Preferences.getScreenHeight() - 20)
         );
+        hintsTooltip.setAnchor(Anchor.TOP_RIGHT);
         hintsTooltip.setFontSize(FONT_SIZE);
-        hintsTooltip.setAnchor(Anchor.RIGHT);
         addComponent(hintsTooltip);
 
         TextLabel controlHints = new TextLabel(
                 CONTROL_HINTS_MESSAGE,
-                new Vec2(Preferences.getScreenWidth() - 90,
-                        Preferences.getScreenHeight() - 190)
+                new Vec2(Preferences.getScreenWidth() - 30,
+                        Preferences.getScreenHeight() - 70)
         );
-        controlHints.setFontSize(FONT_SIZE);
         controlHints.setAnchor(Anchor.TOP_RIGHT);
+        controlHints.setFontSize(FONT_SIZE);
         addComponent(controlHints);
         addComponent(new ToggleHints(hintsTooltip, controlHints));
 
         // Gravity Text
         TextLabel gravityText = new TextLabel(
                 "Gravity: On",
-                new Vec2(Preferences.getScreenWidth() - 80, 32)
+                new Vec2(Preferences.getScreenWidth() - 20, 20)
         );
+        gravityText.setAnchor(Anchor.BOTTOM_RIGHT);
         gravityText.setFontSize(FONT_SIZE);
-        gravityText.setAnchor(Anchor.RIGHT);
         addComponent(gravityText);
         addComponent(new ToggleGravity(gravityText));
     }

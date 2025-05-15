@@ -35,22 +35,29 @@ public class TextLabel extends Script implements Renderable {
     private final List<TextLine> lines;
     private float lineOffset;
 
+    // Dirty Flags
+    private boolean widthAndCharsChanged, heightChanged, posAndColorChanged;
+
     public TextLabel(String message, Vec2 position) {
         this(message, position, Fonts.DEFAULT_FONT, Colors.BLACK, 12, 1);
     }
 
     public TextLabel(String message, Vec2 position, Font font, Color color, int fontSize, float lineSpacing) {
         this.message = message;
+        bounds = new UIBounds(position, new Vec2(), Anchor.CENTER);
+        inUI = true;
+
         this.font = font;
         this.color = color;
         this.fontSize = fontSize;
         this.lineSpacing = lineSpacing;
         alignment = TextAlignment.LEFT;
 
-        bounds = new UIBounds(position, new Vec2(), Anchor.CENTER);
         glyphSprites = new ArrayList<>();
         lines = new ArrayList<>();
-        inUI = true;
+        lineOffset = fontSize * lineSpacing;
+
+        widthAndCharsChanged = heightChanged = posAndColorChanged = false;
     }
 
     @Override
@@ -60,23 +67,30 @@ public class TextLabel extends Script implements Renderable {
     }
 
     private void regenerateGlyphs() {
-        calculateGlyphSizes();
-        calculateBoundsSize();
-        generateGlyphSprites();
+        lineOffset = fontSize * lineSpacing;
+        if (widthAndCharsChanged) {
+            calculateLineWidths(); // Depends on message, font, and font size
+        }
+        if (widthAndCharsChanged || heightChanged) {
+            calculateTextBounds(); // Depends on line spacing
+        }
+        if (widthAndCharsChanged || heightChanged || posAndColorChanged) {
+            generateGlyphSprites(); // Depends on position, anchor, alignment, and color
+        }
+        widthAndCharsChanged = heightChanged = posAndColorChanged = false;
     }
 
     // Glyph Size Methods
 
-    private void calculateGlyphSizes() {
+    private void calculateLineWidths() {
         lines.clear();
         var strLines = message.split("\n");
         for (var strLine : strLines) {
-            var line = getGlyphOffsets(strLine, font.getGlyphSpacing());
-            lines.add(line);
+            lines.add(getGlyphOffsets(strLine));
         }
     }
 
-    private TextLine getGlyphOffsets(String line, int glyphSpacing) {
+    private TextLine getGlyphOffsets(String line) {
         List<Glyph> glyphs = new ArrayList<>();
         List<Float> glyphOffsets = new ArrayList<>();
 
@@ -86,24 +100,26 @@ public class TextLabel extends Script implements Renderable {
 
             // Calculate glyph offset
             glyphs.add(glyph);
-            glyphOffsets.add(getGlyphOffset(glyphSpacing, glyph));
+            glyphOffsets.add(getGlyphOffset(glyph));
         }
         return new TextLine(glyphs, glyphOffsets);
     }
 
-    private float getGlyphOffset(int glyphSpacing, Glyph glyph) {
+    private float getGlyphOffset(Glyph glyph) {
         if (glyph.width() == 0) return 0; // If zero-width return 0
         // Glyph width plus spacing relative to cap height
-        return (float) fontSize * (glyph.width() + glyphSpacing) / font.getGlyphHeight();
+        return (float) fontSize * (glyph.width() + font.getGlyphSpacing()) / font.getGlyphHeight();
     }
 
-    private void calculateBoundsSize() {
-        var lineWidths = lines.stream().map(TextLine::getLineWidth).toList();
-        var maxWidth = lineWidths.stream().max(Comparator.naturalOrder()).orElse(0f); // Get max line width
-        lineOffset = fontSize * lineSpacing;
+    // Text Bounds Methods
+
+    private void calculateTextBounds() {
+        var maxLineWidth = lines.stream()
+                .map(TextLine::getLineWidth)
+                .max(Comparator.naturalOrder())
+                .orElse(0f); // Get max line width
         var textHeight = lines.size() * lineOffset; // Get height of all lines
-        var boundsSize = new Vec2(maxWidth, textHeight); // Get text bounding box dimensions
-        bounds.setSize(boundsSize);
+        bounds.setSize(new Vec2(maxLineWidth, textHeight)); // Get text bounding box dimensions
     }
 
     // Glyph Sprite Methods
@@ -170,7 +186,7 @@ public class TextLabel extends Script implements Renderable {
 
     public void setMessage(String message) {
         this.message = message;
-        regenerateGlyphs();
+        widthAndCharsChanged = true;
     }
 
     public Vec2 getPosition() {
@@ -179,7 +195,7 @@ public class TextLabel extends Script implements Renderable {
 
     public void setPosition(Vec2 position) {
         bounds.setAnchorPos(position);
-        generateGlyphSprites();
+        posAndColorChanged = true;
     }
 
     public Vec2 getSize() {
@@ -192,6 +208,7 @@ public class TextLabel extends Script implements Renderable {
 
     public void setAnchor(Anchor anchor) {
         bounds.setAnchorDir(anchor);
+//        posAndColorChanged = true;
     }
 
     // Text Style Methods
@@ -202,7 +219,7 @@ public class TextLabel extends Script implements Renderable {
 
     public void setFont(Font font) {
         this.font = font;
-        regenerateGlyphs();
+        widthAndCharsChanged = true;
     }
 
     public Color getColor() {
@@ -211,7 +228,7 @@ public class TextLabel extends Script implements Renderable {
 
     public void setColor(Color color) {
         this.color = (color == null) ? Colors.WHITE : color;
-        generateGlyphSprites();
+        posAndColorChanged = true;
     }
 
     public int getFontSize() {
@@ -220,7 +237,7 @@ public class TextLabel extends Script implements Renderable {
 
     public void setFontSize(int fontSize) {
         this.fontSize = fontSize;
-        regenerateGlyphs();
+        widthAndCharsChanged = true;
     }
 
     public float getLineSpacing() {
@@ -229,8 +246,7 @@ public class TextLabel extends Script implements Renderable {
 
     public void setLineSpacing(float lineSpacing) {
         this.lineSpacing = lineSpacing;
-        calculateBoundsSize();
-        generateGlyphSprites();
+        heightChanged = true;
     }
 
     public TextAlignment getAlignment() {
@@ -239,12 +255,13 @@ public class TextLabel extends Script implements Renderable {
 
     public void setAlignment(TextAlignment alignment) {
         this.alignment = alignment;
-        generateGlyphSprites();
+        posAndColorChanged = true;
     }
 
     // Renderable Methods
 
     public List<GLRenderable> getGlyphSprites() {
+        regenerateGlyphs();
         return glyphSprites;
     }
 
