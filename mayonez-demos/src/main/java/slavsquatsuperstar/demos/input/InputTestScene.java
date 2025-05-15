@@ -23,11 +23,10 @@ public class InputTestScene extends DemoScene {
         addObject(new GameObject("Scene Title Text") {
             @Override
             protected void init() {
-                var titleText = new TextLabel(getScene().getName(),
+                addComponent(new TextLabel(getScene().getName(),
                         new Vec2(Preferences.getScreenWidth() * 0.5f,
-                                Preferences.getScreenHeight() - 50));
-                titleText.setFontSize(40);
-                addComponent(titleText);
+                                Preferences.getScreenHeight() - 50))
+                        .setFontSize(40));
             }
         });
 

@@ -139,22 +139,20 @@ public class RendererTestScene extends DemoScene {
             @Override
             protected void init() {
                 var worldText = new TextLabel(
-                        WORLD_MESSAGE, new Vec2(-41, -10.5f)
-                );
-                worldText.setInUI(false);
-                worldText.setColor(Colors.BLUE);
-                worldText.setFontSize(6);
+                        WORLD_MESSAGE, new Vec2(-58, 12))
+                        .setInUI(false)
+                        .setColor(Colors.BLUE)
+                        .setFontSize(6)
+                        .setAnchor(Anchor.TOP_LEFT);
                 addComponent(worldText);
-//                worldText.setAnchor(Anchor.TOP_LEFT);
 
                 var uiText = new TextLabel(
-                        UI_MESSAGE, new Vec2(180, Preferences.getScreenHeight() - 145)
-                );
-                uiText.setInUI(true);
-                uiText.setColor(Colors.RED);
-                uiText.setFontSize(40);
+                        UI_MESSAGE, new Vec2(20, Preferences.getScreenHeight() - 20))
+                        .setInUI(true)
+                        .setColor(Colors.RED)
+                        .setFontSize(40)
+                        .setAnchor(Anchor.TOP_LEFT);
                 addComponent(uiText);
-//                uiText.setAnchor(Anchor.TOP_LEFT);
 
                 addComponent(new Script() {
                     private TextAlignment align = TextAlignment.LEFT;

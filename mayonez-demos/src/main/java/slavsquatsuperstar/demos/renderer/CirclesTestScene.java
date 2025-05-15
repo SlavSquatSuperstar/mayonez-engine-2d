@@ -71,9 +71,9 @@ public class CirclesTestScene extends DemoScene {
                         setMessage("FPS: " + Mayonez.getRenderFPS());
                     }
                 };
-                fpsText.setAnchor(Anchor.TOP_LEFT);
-                fpsText.setFontSize(45);
-                addComponent(fpsText);
+                addComponent(fpsText
+                        .setAnchor(Anchor.TOP_LEFT)
+                        .setFontSize(45));
             }
         });
     }

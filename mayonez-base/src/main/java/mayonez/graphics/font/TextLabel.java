@@ -15,7 +15,6 @@ import java.util.*;
  *
  * @author SlavSquatSuperstar
  */
-// TODO font transform, set size
 public class TextLabel extends Script implements Renderable {
 
     // Text Fields
@@ -63,11 +62,11 @@ public class TextLabel extends Script implements Renderable {
     }
 
     private void regenerateGlyphs() {
-        lineOffset = fontSize * lineSpacing;
         if (widthAndCharsChanged) {
             calculateLineWidths(); // Depends on message, font, and font size
         }
         if (widthAndCharsChanged || heightChanged) {
+            lineOffset = fontSize * lineSpacing;
             calculateTextBounds(); // Depends on line spacing
         }
         if (widthAndCharsChanged || heightChanged || posAndColorChanged) {
@@ -180,31 +179,36 @@ public class TextLabel extends Script implements Renderable {
         return message;
     }
 
-    public void setMessage(String message) {
+    public TextLabel setMessage(String message) {
         this.message = message;
         widthAndCharsChanged = true;
+        return this;
     }
 
     public Vec2 getPosition() {
         return bounds.getAnchorPos();
     }
 
-    public void setPosition(Vec2 position) {
+    public TextLabel setPosition(Vec2 position) {
         bounds.setAnchorPos(position);
         posAndColorChanged = true;
+        return this;
     }
 
     public Vec2 getSize() {
         return bounds.getSize();
     }
 
+    // Can't change size without auto resize font or clip lines
+
     public Anchor getAnchor() {
         return bounds.getAnchorDir();
     }
 
-    public void setAnchor(Anchor anchor) {
+    public TextLabel setAnchor(Anchor anchor) {
         bounds.setAnchorDir(anchor);
-//        posAndColorChanged = true;
+        // Doesn't actually change position
+        return this;
     }
 
     // Text Style Methods
@@ -213,45 +217,50 @@ public class TextLabel extends Script implements Renderable {
         return font;
     }
 
-    public void setFont(Font font) {
+    public TextLabel setFont(Font font) {
         this.font = font;
         widthAndCharsChanged = true;
+        return this;
     }
 
     public Color getColor() {
         return color;
     }
 
-    public void setColor(Color color) {
+    public TextLabel setColor(Color color) {
         this.color = (color == null) ? Colors.WHITE : color;
         posAndColorChanged = true;
+        return this;
     }
 
     public int getFontSize() {
         return fontSize;
     }
 
-    public void setFontSize(int fontSize) {
+    public TextLabel setFontSize(int fontSize) {
         this.fontSize = fontSize;
         widthAndCharsChanged = true;
+        return this;
     }
 
     public float getLineSpacing() {
         return lineSpacing;
     }
 
-    public void setLineSpacing(float lineSpacing) {
+    public TextLabel setLineSpacing(float lineSpacing) {
         this.lineSpacing = lineSpacing;
         heightChanged = true;
+        return this;
     }
 
     public TextAlignment getAlignment() {
         return alignment;
     }
 
-    public void setAlignment(TextAlignment alignment) {
+    public TextLabel setAlignment(TextAlignment alignment) {
         this.alignment = alignment;
         posAndColorChanged = true;
+        return this;
     }
 
     // Renderable Methods
@@ -271,8 +280,9 @@ public class TextLabel extends Script implements Renderable {
         return inUI;
     }
 
-    public void setInUI(boolean inUI) {
+    public TextLabel setInUI(boolean inUI) {
         this.inUI = inUI;
+        return this;
     }
 
 }

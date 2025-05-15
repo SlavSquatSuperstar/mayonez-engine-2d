@@ -33,32 +33,29 @@ public class SandboxUI extends GameObject {
     protected void init() {
 
         // Toggle Hints
-        TextLabel hintsTooltip = new TextLabel(
+        var hintsTooltip = new TextLabel(
                 "Show Controls (H)",
                 new Vec2(Preferences.getScreenWidth() - 20,
-                        Preferences.getScreenHeight() - 20)
-        );
-        hintsTooltip.setAnchor(Anchor.TOP_RIGHT);
-        hintsTooltip.setFontSize(FONT_SIZE);
+                        Preferences.getScreenHeight() - 20))
+                .setAnchor(Anchor.TOP_RIGHT)
+                .setFontSize(FONT_SIZE);
         addComponent(hintsTooltip);
 
-        TextLabel controlHints = new TextLabel(
+        var controlHints = new TextLabel(
                 CONTROL_HINTS_MESSAGE,
                 new Vec2(Preferences.getScreenWidth() - 30,
-                        Preferences.getScreenHeight() - 70)
-        );
-        controlHints.setAnchor(Anchor.TOP_RIGHT);
-        controlHints.setFontSize(FONT_SIZE);
+                        Preferences.getScreenHeight() - 70))
+                .setAnchor(Anchor.TOP_RIGHT)
+                .setFontSize(FONT_SIZE);
         addComponent(controlHints);
         addComponent(new ToggleHints(hintsTooltip, controlHints));
 
         // Gravity Text
-        TextLabel gravityText = new TextLabel(
+        var gravityText = new TextLabel(
                 "Gravity: On",
-                new Vec2(Preferences.getScreenWidth() - 20, 20)
-        );
-        gravityText.setAnchor(Anchor.BOTTOM_RIGHT);
-        gravityText.setFontSize(FONT_SIZE);
+                new Vec2(Preferences.getScreenWidth() - 20, 20))
+                .setAnchor(Anchor.BOTTOM_RIGHT)
+                .setFontSize(FONT_SIZE);
         addComponent(gravityText);
         addComponent(new ToggleGravity(gravityText));
     }
