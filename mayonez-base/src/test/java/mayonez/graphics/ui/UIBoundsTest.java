@@ -12,6 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class UIBoundsTest {
 
+    // 2x2 square centered at (0, 0)
     private static final Vec2 POSITION = new Vec2(0, 0);
     private static final Vec2 SIZE = new Vec2(2, 2);
 
@@ -112,6 +113,40 @@ class UIBoundsTest {
         bounds.setSize(new Vec2(4, 2));
         testAnchorPoints(bounds, new Vec2(-2, 1), new Vec2(-4, 1),
                 new Vec2(-2, 2), POSITION);
+    }
+
+    // Anchor Direction Methods
+
+    @Test
+    void setAnchorDirectionCenterIsCorrect() {
+        var bounds = new UIBounds(POSITION, SIZE);
+        bounds.setAnchorDir(Anchor.CENTER);
+        assertEquals(POSITION, bounds.getCenter());
+        assertEquals(POSITION, bounds.getAnchorPos());
+    }
+
+    @Test
+    void setAnchorDirectionLeftIsCorrect() {
+        var bounds = new UIBounds(POSITION, SIZE);
+        bounds.setAnchorDir(Anchor.LEFT);
+        assertEquals(POSITION, bounds.getCenter());
+        assertEquals(new Vec2(-1, 0), bounds.getAnchorPos());
+    }
+
+    @Test
+    void setAnchorDirectionTopIsCorrect() {
+        var bounds = new UIBounds(POSITION, SIZE);
+        bounds.setAnchorDir(Anchor.TOP);
+        assertEquals(POSITION, bounds.getCenter());
+        assertEquals(new Vec2(0, 1), bounds.getAnchorPos());
+    }
+
+    @Test
+    void setAnchorDirectionBottomRightIsCorrect() {
+        var bounds = new UIBounds(POSITION, SIZE);
+        bounds.setAnchorDir(Anchor.BOTTOM_RIGHT);
+        assertEquals(POSITION, bounds.getCenter());
+        assertEquals(new Vec2(1, -1), bounds.getAnchorPos());
     }
 
     private static void testAnchorPoints(UIBounds bounds, Vec2 center, Vec2 left, Vec2 top, Vec2 bottomRight) {

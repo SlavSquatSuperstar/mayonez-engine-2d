@@ -112,4 +112,8 @@ public class UIBounds {
         size.y = height;
     }
 
+    @Override
+    public String toString() {
+        return "UIBounds %s/%s, %s, %s".formatted(center, anchorPos, size, anchorDir);
+    }
 }
