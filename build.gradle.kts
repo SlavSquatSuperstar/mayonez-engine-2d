@@ -10,7 +10,7 @@ description = "The root project for Mayonez Engine that contains all modules."
 
 allprojects {
     group = "slavsquatsuperstar"
-    version = "0.8.2-pre10"
+    version = "0.8.2-pre11"
 }
 
 // Subprojects
