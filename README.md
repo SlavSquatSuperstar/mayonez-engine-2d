@@ -3,7 +3,7 @@
 The ultimate made-from-scratch and open-source 2D Java game engine to fit your Slavic (and non-Slavic) needs!
 
 ![GitHub actions badge](https://github.com/SlavSquatSuperstar/mayonez-engine-2d/actions/workflows/gradle.yml/badge.svg)
-![Release version badge](https://img.shields.io/badge/release-v0.8.1-brightgreen)
+![Release version badge](https://img.shields.io/badge/release-v0.8.2-brightgreen)
 ![macOS platform badge](https://img.shields.io/badge/platform-macOS-lightgrey)
 ![Window platform badge](https://img.shields.io/badge/platform-Windows-lightgrey)
 ![Linux platform badge](https://img.shields.io/badge/platform-Linux-lightgrey)
