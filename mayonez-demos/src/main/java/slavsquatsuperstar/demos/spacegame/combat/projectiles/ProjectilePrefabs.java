@@ -6,9 +6,10 @@ import mayonez.math.Random;
 import mayonez.math.*;
 import mayonez.physics.colliders.*;
 import mayonez.physics.dynamics.*;
+import mayonez.scripts.*;
+import slavsquatsuperstar.demos.spacegame.PrefabUtils;
 import slavsquatsuperstar.demos.spacegame.objects.SpaceGameLayer;
 import slavsquatsuperstar.demos.spacegame.objects.SpaceGameZIndex;
-import slavsquatsuperstar.demos.spacegame.objects.ships.SpaceshipPrefabs;
 
 import java.util.*;
 
@@ -21,17 +22,21 @@ public final class ProjectilePrefabs {
 
     // Constants
     public static final List<ProjectileType> PROJECTILE_TYPES;
-    public static final SpriteSheet PROJECTILE_SPRITES;
+    public static final SpriteSheet PROJECTILE_SPRITES, PARTICLE_SPRITES;
 
     static {
         // Read projectile types
-        var records = SpaceshipPrefabs
-                .getRecordsFromFile("assets/spacegame/data/projectiles.csv");
-        PROJECTILE_TYPES = records.stream().map(ProjectileType::new).toList();
+        PROJECTILE_TYPES = PrefabUtils.getObjectsFromFile(
+                "assets/spacegame/data/projectiles.csv",
+                ProjectileType::new
+        );
 
-        // Read sprite sheet
+        // Read sprite sheets
         PROJECTILE_SPRITES = Sprites.createSpriteSheet(
                 "assets/spacegame/textures/combat/projectiles.png",
+                16, 16, PROJECTILE_TYPES.size(), 0);
+        PARTICLE_SPRITES = Sprites.createSpriteSheet(
+                "assets/spacegame/textures/combat/impacts.png",
                 16, 16, PROJECTILE_TYPES.size(), 0);
     }
 
@@ -41,7 +46,7 @@ public final class ProjectilePrefabs {
     // Create Prefab Methods
 
     /**
-     * Creates a prefab {@link Projectile} object with the specified projectile type.
+     * Create a prefab {@link Projectile} object with the specified projectile type.
      *
      * @param type        the projectile type
      * @param source      the object that fired the projectile
@@ -49,32 +54,21 @@ public final class ProjectilePrefabs {
      * @param offsetAngle the projectile spawn angle in relation to the source
      * @return the projectile object, or null if the index is invalid
      */
-    public static GameObject createPrefab(
+    public static GameObject createProjectilePrefab(
             ProjectileType type, GameObject source, Vec2 offsetPos, float offsetAngle
     ) {
         var projXf = getProjectileTransform(type, source.transform, offsetPos, offsetAngle);
-        return createProjectileObject(type, source, projXf);
-    }
-
-    /**
-     * Create a projectile object to be fired.
-     *
-     * @param type   the projectile type
-     * @param source the object that fired the projectile
-     * @param projXf the projectile transform
-     * @return the projectile object
-     */
-    private static GameObject createProjectileObject(
-            ProjectileType type, GameObject source, Transform projXf
-    ) {
         return new GameObject(type.name(), projXf, SpaceGameZIndex.PROJECTILE) {
             @Override
             protected void init() {
                 setLayer(getScene().getLayer(SpaceGameLayer.PROJECTILES));
-                addComponent(new Projectile(source, type.damage(), type.speed(), type.lifetime()));
+                addComponent(new Projectile(source, type));
                 addComponent(PROJECTILE_SPRITES.getSprite(type.spriteIndex()));
 
-                addComponent(new BoxCollider(type.colliderSize()).setTrigger(true));
+                var col = new BulletBoxCollider(type.colliderSize());
+                col.setPrimaryAxisX(false);
+                col.setSweepFactor(type.sweepFactor());
+                addComponent(col.setTrigger(true));
                 addComponent(new Rigidbody(0.001f));
             }
         };
@@ -98,6 +92,28 @@ public final class ProjectilePrefabs {
                 sourceXf.getRotation() + offsetAngle + weaponSpreadAngle,
                 type.scale()
         );
+    }
+
+    /**
+     * Create an impact particle caused by a projectile impacting an object.
+     *
+     * @param type       the projectile type
+     * @param particleXf the particle transform
+     * @param target     the impacted object
+     * @return the particle object
+     */
+    public static GameObject createImpactPrefab(
+            ProjectileType type, Transform particleXf, GameObject target
+    ) {
+        return new GameObject("%s Impact".formatted(type.name()), particleXf) {
+            @Override
+            protected void init() {
+                var duration = Random.randomFloat(0.1f, 0.4f);
+                addComponent(new DestroyAfterDuration(duration));
+                addComponent(PARTICLE_SPRITES.getSprite(type.spriteIndex()));
+                addComponent(new ParticleFollowTarget(target));
+            }
+        };
     }
 
 }

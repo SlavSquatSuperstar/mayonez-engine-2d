@@ -21,7 +21,7 @@ class Manifold(
         normal.set(normal.unit())
     }
 
-    private val contacts = ArrayList<Vec2>(2)
+    private val contacts: MutableList<Vec2> = ArrayList<Vec2>(2)
 
     // Contact Methods
 
@@ -33,5 +33,7 @@ class Manifold(
 
     fun addContact(contactPoint: Vec2) = contacts.add(contactPoint)
 
-    override fun toString(): String = "Collision ($shape1 and $shape2, ${numContacts()} points)"
+    override fun toString(): String {
+        return "Collision ($shape1 and $shape2, ${numContacts()} points)"
+    }
 }

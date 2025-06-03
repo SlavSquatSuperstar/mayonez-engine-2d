@@ -1,11 +1,8 @@
 package mayonez.assets.image;
 
 import mayonez.graphics.*;
-import mayonez.math.*;
 import org.junit.jupiter.api.*;
 
-import static mayonez.assets.image.ImageData.*;
-import static mayonez.assets.image.ImageTestUtils.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -13,50 +10,26 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * @author SlavSquatSuperstar
  */
-class STBImageDataTest {
-
-    private static Color[] TEST_COLORS;
-    private static Vec2[] TEST_COORDS;
-
-    @BeforeAll
-    static void setup() {
-        TEST_COLORS = new Color[]{
-                new Color(255, 0, 0), new Color(0, 255, 0),
-                new Color(0, 0, 255), Color.grayscale(255)
-        };
-        TEST_COORDS = new Vec2[]{
-                new Vec2(0, 0), new Vec2(IMAGE_LENGTH - 1, 0),
-                new Vec2(0, IMAGE_LENGTH - 1), new Vec2(IMAGE_LENGTH - 1, IMAGE_LENGTH - 1)
-        };
-    }
+class STBImageDataTest extends ImageDataTest {
 
     // Has Alpha
 
     @Test
     void transparentPngHasAlpha() {
         var image = getImage(TRANSPARENT_PNG);
-        assertEquals(IMAGE_LENGTH, image.getWidth());
-        assertEquals(IMAGE_LENGTH, image.getHeight());
-        assertEquals(RGBA_CHANNELS, image.getChannels());
-        assertTrue(image.hasAlpha());
+        testImageSizeAndChannels(image, true);
     }
 
     @Test
     void opaquePngHasNoAlpha() {
         var image = getImage(OPAQUE_PNG);
-        assertEquals(IMAGE_LENGTH, image.getWidth());
-        assertEquals(IMAGE_LENGTH, image.getHeight());
-        assertEquals(RGB_CHANNELS, image.getChannels());
-        assertFalse(image.hasAlpha());
+        testImageSizeAndChannels(image, false);
     }
 
     @Test
     void opaqueJpgHasNoAlpha() {
         var image = getImage(OPAQUE_JPG);
-        assertEquals(IMAGE_LENGTH, image.getWidth());
-        assertEquals(IMAGE_LENGTH, image.getHeight());
-        assertEquals(RGB_CHANNELS, image.getChannels());
-        assertFalse(image.hasAlpha());
+        testImageSizeAndChannels(image, false);
     }
 
     // Get Pixel
@@ -77,6 +50,13 @@ class STBImageDataTest {
     void opaqueJpgGetPixelCorrect() {
         var image = getImage(OPAQUE_JPG);
         testPixelColors(image, TEST_COLORS, TEST_COORDS, 255);
+    }
+
+    @Test
+    void getOutOfBoundsPixelNoCrash() {
+        var image = getImage(TRANSPARENT_PNG);
+        assertNull(image.getPixelColor(-1, -1));
+        assertNull(image.getPixelColor(IMAGE_LENGTH, IMAGE_LENGTH));
     }
 
     // Set Pixel
@@ -102,20 +82,21 @@ class STBImageDataTest {
         assertEquals(Colors.BLACK, image.getPixelColor(0, 0));
     }
 
+    @Test
+    void setOutOfBoundsPixelNoCrash() {
+        var image = getImage(TRANSPARENT_PNG);
+        assertDoesNotThrow(() ->
+                image.setPixelColor(-1, -1, Colors.WHITE));
+        assertDoesNotThrow(() ->
+                image.setPixelColor(IMAGE_LENGTH, IMAGE_LENGTH, Colors.WHITE));
+    }
+
     // Sub-Image
 
     @Test
     void subImagePixelsCorrect() {
-        var length = 8;
-        var subImageCoords = new Vec2[]{
-                new Vec2(0, 0), new Vec2(length - 1, 0),
-                new Vec2(0, length - 1), new Vec2(length - 1, length - 1)
-        };
-
         var image = getImage(TRANSPARENT_PNG);
-        var subImage = image.getSubImageData(new Vec2(4, 4), new Vec2(length, length));
-        assertNotNull(subImage);
-        testPixelColors(subImage, TEST_COLORS, subImageCoords, 128);
+        testSubImagePixels(image, TEST_COLORS);
     }
 
     private static STBImageData getImage(String filename) {

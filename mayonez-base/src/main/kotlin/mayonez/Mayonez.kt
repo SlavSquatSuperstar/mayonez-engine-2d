@@ -1,9 +1,8 @@
 package mayonez
 
-import mayonez.Mayonez.setConfig
-import mayonez.Mayonez.start
 import mayonez.application.*
 import mayonez.assets.*
+import mayonez.assets.text.*
 import mayonez.config.*
 import kotlin.system.exitProcess
 
@@ -14,7 +13,7 @@ import kotlin.system.exitProcess
  *
  * Usage: To start an instance of Mayonez Engine, create a [Launcher]
  * and set the "Use GL" property through [Launcher.setRunConfig]. Then,
- * load any number of scenes through [Launcher.loadScenesToManager] or
+ * load any number of scenes through [Launcher.addScenesToManager] or
  * [SceneManager.addScene]. Finally, start the game with a scene by calling
  * [Launcher.startGame].
  *
@@ -25,7 +24,15 @@ import kotlin.system.exitProcess
  */
 // TODO rename to application manager
 // TODO move to launcher/config pkg
+// TODO separate engine title with window title
+// TODO application init events
 object Mayonez {
+
+    // Application Info
+    lateinit var name: String
+        private set
+    lateinit var version: String
+        private set
 
     // Application Fields
     private lateinit var application: Application // Application instance
@@ -95,9 +102,15 @@ object Mayonez {
     private fun initializeSingletons() {
         // Start tracking time
         Time.startTrackingTime()
-        Logger.debug("Starting program...")
+        Logger.log("Starting program...")
         val now = Time.getStartupDateTime()
         Logger.debug("The current date time is %s %s", now.toLocalDate(), now.toLocalTime())
+
+        // Read application info
+        val nameFile = TextFile("assets/info/name.txt")
+        name = nameFile.readText().trim()
+        val versionFile = TextFile("assets/info/version.txt")
+        version = versionFile.readText().trim()
 
         // Set preferences
         Preferences.setPreferences()
@@ -105,7 +118,7 @@ object Mayonez {
 
         // Create logger instance
         Logger.setConfig(Preferences.getLoggerConfig())
-        Logger.log("Started ${Preferences.title} ${Preferences.version}")
+        Logger.log("Started $name $version")
     }
 
     /**
@@ -115,8 +128,13 @@ object Mayonez {
         if (!this::application.isInitialized) {
             // Create game engine instance
             try {
-                application = ApplicationFactory.createApplication(useGL)
-                Logger.debug("Using \"%s\" engine", if (useGL) "GL" else "AWT")
+                Logger.log("Creating application \"${Preferences.title}\"...")
+                val engineString = if (useGL) "GL" else "AWT"
+                application = ApplicationFactory.createApplication(
+                    useGL, "${Preferences.title} ($engineString)",
+                    Preferences.screenWidth, Preferences.screenHeight
+                )
+                Logger.log("Using engine type \"%s\"", engineString)
             } catch (e: WindowInitException) {
                 Logger.printStackTrace(e)
                 exitWithErrorMessage("Fatal error while initializing engine")
@@ -146,7 +164,7 @@ object Mayonez {
         }
         if (!started) {
             started = true
-            SceneManager.setScene(scene)
+            SceneManager.changeSceneAsNew(scene)
             // Start game
             if (this::application.isInitialized) application.start()
             else exitWithErrorMessage("Cannot start without configuring program \"Use GL\" option")
@@ -166,7 +184,7 @@ object Mayonez {
             SceneManager.stopScene()
             SceneManager.clearScenes()
             Assets.clearAssets()
-            application.stop()
+            application.stop() // Do everything before GL deleted
             exitProgram(status)
         }
     }
@@ -177,7 +195,7 @@ object Mayonez {
      * Terminate the program with the given error message with exit code 1.
      */
     private fun exitWithErrorMessage(message: String): Nothing {
-        Logger.error(message)
+        Logger.fatal(message)
         exitProgram(ExitCode.ERROR)
     }
 
@@ -186,7 +204,11 @@ object Mayonez {
      * given status.
      */
     private fun exitProgram(status: Int): Nothing {
-        Logger.shutdown(status)
+        val message = "Exited program with code $status"
+        if (status == 0) Logger.log("$message (Success)")
+        else Logger.error("$message (Failure)")
+
+        Logger.shutdown()
         exitProcess(status)
     }
 

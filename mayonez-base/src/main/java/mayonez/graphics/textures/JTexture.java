@@ -18,36 +18,46 @@ import java.awt.image.*;
  * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.AWT)
-public sealed class JTexture extends Texture permits JSpriteSheetTexture {
+public final class JTexture extends Texture {
 
+    // Image Data Fields
     private final AWTImageData imageData;
-    private final Vec2 imageSize;
+    private final int width, height;
+    private final JTexture parentTexture;
 
     /**
      * Create a brand-new JTexture with the given filename.
      *
      * @param filename the file location
      */
-    public JTexture(String filename) { // Needed for Assets.getJTexture()
+    @SuppressWarnings("unused") // Needed for Assets.getJTexture()
+    public JTexture(String filename) {
         super(filename);
         imageData = readImage();
-        if (imageData == null) {
-            imageSize = new Vec2();
+        if (imageData != null) {
+            width = imageData.getWidth();
+            height = imageData.getHeight();
         } else {
-            imageSize = new Vec2(imageData.getWidth(), imageData.getHeight());
+            width = 0;
+            height = 0;
         }
+        parentTexture = null;
     }
 
     /**
      * Create a JTexture from a portion of another texture.
      *
-     * @param filename  the file location
-     * @param imageData the sub-image
+     * @param parentTexture the parent texture
+     * @param region        the sub-image region
+     * @param description   the description of the sub-image
      */
-    protected JTexture(String filename, AWTImageData imageData) {
-        super(filename);
-        this.imageData = imageData;
-        imageSize = new Vec2(imageData.getWidth(), imageData.getHeight());
+    private JTexture(JTexture parentTexture, ImageRegion region, String description) {
+        super("%s (%s)".formatted(parentTexture.getFilename(), description));
+        this.imageData = parentTexture.getImageData().getSubImageData(region);
+        // Get new image size in px
+        width = region.getWidth();
+        height = region.getHeight();
+        this.parentTexture = parentTexture;
     }
 
     // Image Methods
@@ -97,8 +107,8 @@ public sealed class JTexture extends Texture permits JSpriteSheetTexture {
                 parentCenter.x - parentHalfSize.x,
                 parentCenter.y - parentHalfSize.y); // Move to object min
         g2Xf.rotate(MathUtils.toRadians(texXf.getRotation()), parentHalfSize.x, parentHalfSize.y);
-        g2Xf.scale(parentSize.x / imageSize.x, -parentSize.y / imageSize.y); // Flip image vertically like GL
-        g2Xf.translate(0.0, -imageSize.y); // Move to object center
+        g2Xf.scale(parentSize.x / width, -parentSize.y / height); // Flip image vertically like GL
+        g2Xf.translate(0.0, -height); // Move to object center
         return g2Xf;
     }
 
@@ -116,18 +126,28 @@ public sealed class JTexture extends Texture permits JSpriteSheetTexture {
     // Image Getters
 
     @Override
+    public JTexture getSubTexture(ImageRegion region, String description) {
+        return new JTexture(this, region, description);
+    }
+
+    @Override
     public AWTImageData getImageData() {
         return imageData;
     }
 
     @Override
+    public Texture getParentTexture() {
+        return super.getParentTexture();
+    }
+
+    @Override
     public int getWidth() {
-        return (int) imageSize.x;
+        return width;
     }
 
     @Override
     public int getHeight() {
-        return (int) imageSize.y;
+        return height;
     }
 
 }

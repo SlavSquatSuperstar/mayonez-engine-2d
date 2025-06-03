@@ -2,25 +2,23 @@ package mayonez.graphics.font;
 
 import mayonez.util.Record;
 
+import java.util.*;
+
 /**
- * Contains characteristics about a font, including the name, characters, and dimensions.
+ * Specifies the name and character blocks of a bitmap font.
  *
  * @param name                the name of the font
- * @param startCharacter      the start character value
- * @param endCharacter        the end character value
- * @param glyphHeight         the total height of a character glyph in pixels
- * @param glyphAscent         the height of a character glyph above the baseline in pixels
- * @param glyphSpacing        the space between adjacent glyphs in pixels
+ * @param blocks              the metadata of the font blocks
+ * @param glyphHeight         the cap height of a character glyph, in texels
+ * @param glyphSpacing        the space between adjacent glyphs, in texels
  * @param whitespaceCharacter the character value used for whitespace
- * @param whitespaceWidth     the width of the whitespace glyph
+ * @param whitespaceWidth     the width of the whitespace glyph, in texels
  * @author SlavSquatSuperstar
  */
-// TODO specify characters (for non-contiguous)
-// TODO specify space characters
+// TODO multiple space characters
 public record FontMetadata(
-        String name,
-        char startCharacter, char endCharacter,
-        int glyphHeight, int glyphAscent, int glyphSpacing,
+        String name, List<FontBlock> blocks,
+        int glyphHeight, int glyphSpacing,
         char whitespaceCharacter, int whitespaceWidth
 ) {
 
@@ -29,21 +27,23 @@ public record FontMetadata(
     public FontMetadata(Record record) {
         this(
                 record.getString("name"),
-                (char) record.getInt("start_character"), (char) record.getInt("end_character"),
-                record.getInt("glyph_height"), record.getInt("glyph_ascent"), record.getInt("glyph_spacing"),
-                (char) record.getInt("whitespace_character"), record.getInt("whitespace_width")
+                getBlocks(record.getArray("blocks")),
+                record.getInt("glyph_height"),
+                record.getInt("glyph_spacing"),
+                (char) record.getInt("whitespace_character"),
+                record.getInt("whitespace_width")
         );
     }
 
     // Getters
 
-    /**
-     * Get the number of characters this font provides.
-     *
-     * @return the number of characters
-     */
-    public int numCharacters() {
-        return endCharacter - startCharacter + 1;
+    private static List<FontBlock> getBlocks(List<Object> blocks) {
+        if (blocks == null) return List.of();
+        return blocks.stream()
+                .map(Record::from)
+                .filter(Objects::nonNull)
+                .map(FontBlock::new)
+                .toList();
     }
 
 }

@@ -19,22 +19,29 @@ import static org.lwjgl.opengl.GL12.GL_TEXTURE_WRAP_R;
  * <p>
  * Sources:
  * <ul>
- *    <li><a href="https://github.com/LWJGL/lwjgl3/blob/master/modules/samples/src/test/java/org/lwjgl/demo/stb/Image.java">org.lwjgl.demo.stb.Image</a></li>
- *    <li><a href="https://github.com/LWJGL/lwjgl3/blob/master/modules/samples/src/test/java/org/lwjgl/demo/util/IOUtil.java">org.lwjgl.demo.stb.IOUtil</a></li>
- *    <li><a href="https://github.com/LWJGL/lwjgl3/blob/master/modules/samples/src/test/java/org/lwjgl/demo/glfw/GLFWUtil.java">org.lwjgl.demo.glfw.GLFWUtil</a></li>
+ *    <li><a href="https://github.com/LWJGL/lwjgl3/blob/master/modules/samples/src/test/java/org/lwjgl/demo/stb/Image.java">
+ *        GitHub - org.lwjgl.demo.stb.Image</a></li>
+ *    <li><a href="https://github.com/LWJGL/lwjgl3/blob/master/modules/samples/src/test/java/org/lwjgl/demo/util/IOUtil.java">
+ *        GitHub - org.lwjgl.demo.stb.IOUtil</a></li>
+ *    <li><a href="https://github.com/LWJGL/lwjgl3/blob/master/modules/samples/src/test/java/org/lwjgl/demo/glfw/GLFWUtil.java">
+ *        GitHub - org.lwjgl.demo.glfw.GLFWUtil</a></li>
  * </ul>
  *
  * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.GL)
-public sealed class GLTexture extends Texture permits GLSpriteSheetTexture {
+public final class GLTexture extends Texture {
 
     // Constants
     public static final Vec2[] DEFAULT_TEX_COORDS
             = Rectangle.rectangleVerticesMinMax(new Vec2(0f), new Vec2(1f));
 
-    // Image Fields
+    // Image Data Fields
     private final STBImageData imageData;
+    private final int width, height;
+    private final GLTexture parentTexture;
+
+    // GPU Fields
     private int texID;
     private final Vec2[] texCoords;
 
@@ -43,24 +50,40 @@ public sealed class GLTexture extends Texture permits GLSpriteSheetTexture {
      *
      * @param filename the file location
      */
+    @SuppressWarnings("unused") // Needed for Assets.getGLTexture()
     public GLTexture(String filename) {
         super(filename);
-        texCoords = DEFAULT_TEX_COORDS;
         imageData = readImage();
-        createTexture();
+        if (imageData != null) {
+            width = imageData.getWidth();
+            height = imageData.getHeight();
+        } else {
+            width = 0;
+            height = 0;
+        }
+        parentTexture = null;
+        texID = createTexture();
+        texCoords = DEFAULT_TEX_COORDS;
     }
 
     /**
      * Create a GLTexture from a portion of another texture.
      *
-     * @param filename  the file location
-     * @param texCoords the sub-image coordinates
+     * @param parentTexture the parent texture
+     * @param region        the sub-image region
+     * @param description   the description of the sub-image
      */
-    protected GLTexture(String filename, GLTexture texture, Vec2[] texCoords) {
-        super(filename);
-        this.imageData = texture.imageData; // todo crop image data
-        this.texID = texture.texID;
-        this.texCoords = texCoords;
+    private GLTexture(GLTexture parentTexture, ImageRegion region, String description) {
+        super("%s (%s)".formatted(parentTexture.getFilename(), description));
+        // Parent buffer is already freed if not testing
+        this.imageData = parentTexture.getImageData().getSubImageData(region); // Crop image data
+        // Get new image size in px
+        this.width = region.getWidth();
+        this.height = region.getHeight();
+        this.parentTexture = parentTexture;
+
+        this.texID = parentTexture.texID;
+        this.texCoords = getSubImageCoords(parentTexture.getSize(), region);
     }
 
     // Read Image Methods
@@ -79,23 +102,25 @@ public sealed class GLTexture extends Texture permits GLSpriteSheetTexture {
         }
     }
 
-    private void createTexture() {
+    private int createTexture() {
         // Create Texture on GPU
         if (imageData != null && GLHelper.isGLInitialized()) {
-            texID = glGenTextures();
+            var texID = glGenTextures();
             glBindTexture(GL_TEXTURE_2D, texID);
             uploadImageToTexture(imageData, texID);
+            return texID;
         } else {
-            texID = GL_NONE;
+            // Make sure GL tests don't crash
+            return GL_NONE;
         }
     }
 
     private static void setTextureParameters() {
-        // wrap if too big
+        // Wrap if too big
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-        // pixelate when scaling
+        // Pixelate when scaling
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     }
@@ -130,6 +155,7 @@ public sealed class GLTexture extends Texture permits GLSpriteSheetTexture {
 
     @Override
     public void free() {
+        if (getParentTexture() != null) return; // Don't free parent texture
         if (texID != GL_NONE && GLHelper.isGLInitialized()) {
             glDeleteTextures(texID);
             texID = GL_NONE;
@@ -139,18 +165,28 @@ public sealed class GLTexture extends Texture permits GLSpriteSheetTexture {
     // Image Getters
 
     @Override
+    public GLTexture getSubTexture(ImageRegion region, String description) {
+        return new GLTexture(this, region, description);
+    }
+
+    @Override
     public STBImageData getImageData() {
         return imageData;
     }
 
     @Override
+    public GLTexture getParentTexture() {
+        return parentTexture;
+    }
+
+    @Override
     public int getWidth() {
-        return imageData.getWidth();
+        return width;
     }
 
     @Override
     public int getHeight() {
-        return imageData.getHeight();
+        return height;
     }
 
     public Vec2[] getTexCoords() {
@@ -164,6 +200,15 @@ public sealed class GLTexture extends Texture permits GLSpriteSheetTexture {
      */
     public int getTexID() {
         return texID;
+    }
+
+    // Helper Methods
+
+    private static Vec2[] getSubImageCoords(Vec2 sheetSize, ImageRegion region) {
+        // Normalize image coordinates to between 0-1
+        var subImgMin = region.origin().div(sheetSize);
+        var subImgMax = region.origin().add(region.size()).div(sheetSize);
+        return Rectangle.rectangleVerticesMinMax(subImgMin, subImgMax);
     }
 
 }

@@ -19,17 +19,17 @@ enum class VertexAttribute(
     val glType: Int
 ) {
 
-    /** The position of a vertex, (x, y). */
-    POSITION(2, Float.SIZE_BYTES, GL_FLOAT),
+    /** A single integer. */
+    INT(1, Float.SIZE_BYTES, GL_FLOAT),
 
-    /** The color of a vertex, (r, g, b, a). */
-    COLOR(4, Float.SIZE_BYTES, GL_FLOAT),
+    /** A single float. */
+    FLOAT(1, Float.SIZE_BYTES, GL_FLOAT),
 
-    /** The texture (UV) coordinates of a vertex, (u, v). */
-    TEX_COORD(2, Float.SIZE_BYTES, GL_FLOAT),
+    /** Two related floats. */
+    FLOAT2(2, Float.SIZE_BYTES, GL_FLOAT),
 
-    /** The texture slot of a vertex, i. */
-    TEX_SLOT(1, Float.SIZE_BYTES, GL_FLOAT);
+    /** Four related floats. */
+    FLOAT4(4, Float.SIZE_BYTES, GL_FLOAT);
 
     /** The total size in bytes of this attribute. */
     val totalBytes: Int

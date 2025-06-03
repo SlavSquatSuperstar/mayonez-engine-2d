@@ -83,8 +83,8 @@ public abstract sealed class Application permits JApplication, GLApplication {
                 frameCount = 0;
 
                 if (LOG_FRAME_COUNTS) {
-                    Logger.debug("Updates per second: %d", averageUPS);
-                    Logger.debug("Frames per second: %d", averageFPS);
+                    Logger.trace("Updates per second: %d", averageUPS);
+                    Logger.trace("Frames per second: %d", averageFPS);
                 }
                 debugTimerSecs -= DEBUG_INTERVAL_SECS;
             }

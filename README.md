@@ -2,16 +2,16 @@
 
 The ultimate made-from-scratch and open-source 2D Java game engine to fit your Slavic (and non-Slavic) needs!
 
-<img src="https://img.shields.io/badge/platform-macOS-lightgrey"></img>
-<img src="https://img.shields.io/badge/platform-Windows-lightgrey"></img>
-<img src="https://img.shields.io/badge/platform-Linux-lightgrey"></img>
-<img src="https://img.shields.io/badge/release-v0.8.1-brightgreen"></img>
-<img src=https://img.shields.io/badge/build-passing-brightgreen></img>
+![GitHub actions badge](https://github.com/SlavSquatSuperstar/mayonez-engine-2d/actions/workflows/gradle.yml/badge.svg)
+![Release version badge](https://img.shields.io/badge/release-v0.8.2-brightgreen)
+![macOS platform badge](https://img.shields.io/badge/platform-macOS-lightgrey)
+![Window platform badge](https://img.shields.io/badge/platform-Windows-lightgrey)
+![Linux platform badge](https://img.shields.io/badge/platform-Linux-lightgrey)
 
-<img src="https://img.shields.io/badge/Made%20with-Java-red"></img>
-<img src="https://img.shields.io/badge/Made%20with-Kotlin-red"></img>
-<img src="https://img.shields.io/badge/Made%20with-LWJGL-blue"></img>
-<img src=https://img.shields.io/badge/license-GPLv3-blue></img>
+![Java language badge](https://img.shields.io/badge/Made%20with-Java-red)
+![Kotlin language badge](https://img.shields.io/badge/Made%20with-Kotlin-red)
+![LWJGL framework badge](https://img.shields.io/badge/Made%20with-LWJGL-blue)
+![GPLv3 license badge](https://img.shields.io/badge/license-GPLv3-blue)
 
 ## Features
 
@@ -32,9 +32,11 @@ This fully-operational game engine includes:
 
 ### Planned
 
-- A UI system with reusable components such as buttons and labels
+- A UI system with interactable components such as buttons and menus
 - Playable in-game sound effects
+- Physics joints letting you attach objects to one another
 - Nestable game objects that are fixed to the parent object's transform
+- An editor that allows you to construct your own scenes and objects
 - And much more to come later!
 
 ## Platforms
@@ -111,10 +113,10 @@ Development Tools and Libraries
 - Java Version: [Eclipse Temurin 21+](https://adoptium.net)
   or [Oracle OpenJDK 21+](https://www.oracle.com/java/technologies/downloads/#java21)
 - Kotlin Version: [2.0+](https://kotlinlang.org/docs/whatsnew20.html)
-- Recommended IDE: [Intellij IDEA CE 2024+](https://www.jetbrains.com/idea/download/)
+- Recommended IDE: [Intellij IDEA CE 2025+](https://www.jetbrains.com/idea/download/)
     - [Eclipse Java IDE](https://www.eclipse.org/downloads/) may also be used, but IntelliJ has better Kotlin and Gradle
       integration
-- Build System: [Gradle 8.10+](https://gradle.org/install/)
+- Build System: [Gradle 8.12+](https://gradle.org/install/)
 
 Dependencies (automatically downloaded by Gradle and bundled in .jar)
 
@@ -127,17 +129,17 @@ Dependencies (automatically downloaded by Gradle and bundled in .jar)
 
 ## Demo Scenes
 
-The current demo includes 4 scenes: a Space Shooter scene, a Mario scene, a Physics Sandbox scene,
-and a Pool Balls scene.
+The current demo includes 3 scenes: a Space Shooter scene, a Physics Sandbox scene, and a Pool Balls scene.
 
 The demos can be accessed by running the project through Gradle (developers) or the release .jar (players).
+There are several bonus scenes with cut features or meant for testing. Can you find them?
 
 ### Demo Controls
 
 - All Scenes:
     - **R** to reload the current scene
     - **P** to pause/unpause the scene (may be buggy)
-    - **Shift** + **1**-**5** to switch scenes
+    - **Shift** + **1**-**3** to switch scenes
     - **Esc** to exit the program
 - Space Shooter (1):
     - **W**/**S** to fly forward/backwards
@@ -149,24 +151,15 @@ The demos can be accessed by running the project through Gradle (developers) or 
     - **B** to toggle auto-brake
     - **H** to toggle hints
     - Controls can be set in user_config.json
-- Renderer Test (2):
-- Physics Sandbox (3):
+- Physics Sandbox (2):
     - **Left Mouse** and *drag* on objects to move them around
     - **Right Mouse***, *drag*, and *release* on objects to flick them
     - **1**-**4** to spawn shapes at the moues cursor
     - **Space** to toggle gravity
     - **H** to toggle hints
-- Pool Balls (4):
+- Pool Balls (3):
     - **Left Mouse** and *drag* on objects to move them around
     - **Right Mouse***, *drag*, and *release* on objects to flick them
-- Mario (5):
-    - **W** to jump
-    - **A**/**D** to move side to side
-    - **S** to ground pound
-- Geometry Dash Editor (6):
-    - **WASD** to move
-    - **Left Mouse** on _buttons_ to select a brush
-    - **Left Mouse** on an _empty space_, with a brush selected, to place a block
 
 *Note: Right mouse is known to not work on Windows with some trackpads.
 

@@ -96,53 +96,56 @@ internal class CollisionSolver(
         val massData = MassData.getFrom(b1, b2)
         val matData = MaterialData.combine(b1.material, b2.material)
 
-        val contacts = Array(manifold.numContacts()) { ContactPoint(manifold.getContact(it), b1.position, b2.position) }
-        calculateNormalImpulse(contacts, massData, matData)
-        calculateTangentImpulse(contacts, massData, matData)
+        val contacts = manifold.getContacts().map {
+            // Store contact pos, radii, impulses
+            // Apply impulse to bodies using contact data
+            ContactPoint(it, it - b1.position, it - b2.position)
+        }
 
+        // Calculate Impulses
         for (contact in contacts) {
-            val totalImpulse = (normal * contact.normImp) + (tangent * contact.tanImp)
-            contact.applyImpulse(b1, b2, totalImpulse)
+            contact.normImp = contact.calculateNormalImpulse(massData, matData)
+            contact.tanImp = contact.calculateTangentImpulse(massData, matData)
+        }
+
+        // Apply Impulses
+        for (contact in contacts) {
+            contact.applyImpulse(b1, b2, normal, tangent)
         }
     }
 
-    private fun calculateNormalImpulse(contacts: Array<ContactPoint>, massData: MassData, matData: MaterialData) {
+    private fun ContactPoint.calculateNormalImpulse(
+        massData: MassData, matData: MaterialData
+    ): Float {
         val cRest = matData.coeffRestitution
+        val relVel = this.getRelativeVelocity(b1, b2) // Relative velocity, v_rel
+        val normVel = relVel.dot(normal) // Velocity along collision normal, v_n
+        if (normVel > 0f) return 0f // Skip this point if moving away or stationary
 
-        for (contact in contacts) {
-            val relVel = contact.getRelativeVelocity(b1, b2) // Relative velocity, v_rel
-            val normVel = relVel.dot(normal) // Velocity along collision normal, v_n
-            if (normVel > 0f) continue // Skip this point if moving away or stationary
-
-            // Normal (separation) impulse, J_n
-            val denom = contact.getDenominator(normal, massData)
-            contact.normImp = -(1f + cRest) * normVel / (denom * manifold.numContacts())
-        }
+        // Normal (separation) impulse, J_n
+        val denom = this.getDenominator(normal, massData)
+        return -(1f + cRest) * normVel / (denom * manifold.numContacts())
     }
 
-    private fun calculateTangentImpulse(contacts: Array<ContactPoint>, massData: MassData, matData: MaterialData) {
+    private fun ContactPoint.calculateTangentImpulse(
+        massData: MassData, matData: MaterialData
+    ): Float {
         val (_, sFric, kFric) = matData
 
-        for (contact in contacts) {
-            val relVel = contact.getRelativeVelocity(b1, b2) // Relative velocity, v_rel (will have changed)
-            val tanVel = relVel.dot(tangent) // Velocity along collision tangent, v_t
-            if (abs(tanVel) < 0.00005f) continue // Ignore tiny friction impulses
+        val relVel = this.getRelativeVelocity(b1, b2) // Relative velocity, v_rel (will have changed)
+        val tanVel = relVel.dot(tangent) // Velocity along collision tangent, v_t
+        if (abs(tanVel) < 0.00005f) return 0f // Ignore tiny friction impulses
 
-            // Tangent (friction) impulse, J_t
-            val denom = contact.getDenominator(tangent, massData)
-            var tanImp = -tanVel / (denom * manifold.numContacts())
+        // Tangent (friction) impulse, J_t (F_f)
+        val denom = this.getDenominator(tangent, massData)
+        val tanImp = -tanVel / (denom * manifold.numContacts())
 
-            // Coulomb's Law: if exceed static friction, use kinetic friction
-            val normImp = contact.normImp
-            if (isStaticFrictionExceeded(tanImp, normImp, sFric)) {
-                tanImp = sign(tanImp) * normImp * kFric
-            }
-            contact.tanImp = tanImp
+        // Coulomb's Law: If static friction exceeded, use kinetic friction
+        return if (abs(tanImp) > abs(this.normImp * sFric)) {
+            sign(tanImp) * this.normImp * kFric // F_f = µ_s * F_n
+        } else {
+            tanImp // F_f = µ_k * F_n
         }
     }
 
-}
-
-private fun isStaticFrictionExceeded(tanImp: Float, normImp: Float, sFric: Float): Boolean {
-    return abs(tanImp) > abs(normImp * sFric)
 }

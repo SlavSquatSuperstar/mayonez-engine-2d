@@ -69,13 +69,19 @@ public class AWTImageData extends ImageData {
 
     @Override
     public Color getPixelColor(int x, int y) {
+        // Check pixel in bounds
+        if (!MathUtils.inRange(x, 0, image.getWidth() - 1)) return null;
+        if (!MathUtils.inRange(y, 0, image.getHeight() - 1)) return null;
         return new Color(image.getRGB(x, y));
     }
 
     @Override
     public void setPixelColor(int x, int y, Color color) {
-        image.setRGB(x, y, color.getRGBAValue());
+        // Check pixel in bounds
+        if (!MathUtils.inRange(x, 0, image.getWidth() - 1)) return;
+        if (!MathUtils.inRange(y, 0, image.getHeight() - 1)) return;
         // AWT already restricts setting alpha for non-transparent images
+        image.setRGB(x, y, color.getRGBAValue());
     }
 
     public int[] getPixels() {
@@ -94,14 +100,15 @@ public class AWTImageData extends ImageData {
         return image;
     }
 
-    public BufferedImage getSubImage(Vec2 topLeft, Vec2 size) {
-        return image.getSubimage((int) topLeft.x, (int) topLeft.y, (int) size.x, (int) size.y);
+    public BufferedImage getSubImage(ImageRegion region) {
+        return image.getSubimage(region.getX(), region.getY(), region.getWidth(), region.getHeight());
     }
 
     @Override
-    public AWTImageData getSubImageData(Vec2 topLeft, Vec2 size) {
-        var filename = "%s Sub-Image (%s, %s)".formatted(getFilename(), topLeft, size);
-        return new AWTImageData(filename, getSubImage(topLeft, size));
+    public AWTImageData getSubImageData(ImageRegion region) {
+        // Not technically filename, but use to distinguish from parent
+        var filename = "%s %s".formatted(getFilename(), region);
+        return new AWTImageData(filename, getSubImage(region));
     }
 
 }

@@ -2,7 +2,6 @@ package mayonez.assets.image;
 
 import mayonez.assets.*;
 import mayonez.graphics.*;
-import mayonez.math.*;
 
 /**
  * Stores the rasterized image contents of an image file used by the program.
@@ -55,7 +54,7 @@ public abstract class ImageData extends Asset {
 
     /**
      * Get the pixel's RBG color on this sprite's stored texture at the
-     * specific coordinates.  If the image format supports transparency,
+     * specific coordinates. If the image format supports transparency,
      * then the alpha value will also be returned.
      *
      * @param x the pixel x's coordinate, from the top left, in pixels
@@ -80,11 +79,10 @@ public abstract class ImageData extends Asset {
     /**
      * Create an image resource from a sub-region of this image.
      *
-     * @param topLeft the sub-image top left corner, in pixels
-     * @param size    the sub-image dimensions, in pixels
+     * @param region the sub-image region
      * @return the sub-image
      */
-    public abstract ImageData getSubImageData(Vec2 topLeft, Vec2 size);
+    public abstract ImageData getSubImageData(ImageRegion region);
 
     // TODO Copy Methods
 

@@ -1,0 +1,12 @@
+type,description,minTemp,maxTemp,weight
+WR,wolf-rayet,30000,200000,0
+O,blue,25000,50000,5
+B,blue-white,10000,25000,5
+A,white,7500,10000,10
+F,yellow-white,6000,7500,15
+G,yellow,5000,6000,15
+K,orange,3500,5000,15
+M,red,2000,3500,30
+LTY,brown dwarf,100,2000,5
+D,white dwarf,5000,100000,0
+SC,cool red giant,3000,5000,0

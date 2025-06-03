@@ -30,7 +30,7 @@ abstract class PreferenceValidator<T> protected constructor(
         for (prefKey in keys) {
             val prefValue = getValue(prefKey, preferences)
             if (!isValid.test(prefValue)) {
-                Logger.debug("Invalid value \"$prefValue\" for preference $prefKey, resetting to default")
+                Logger.debug("Invalid value \"$prefValue\" for preference \"$prefKey\", resetting to default")
                 preferences.setFrom(defaults, prefKey)
             }
         }
@@ -40,15 +40,39 @@ abstract class PreferenceValidator<T> protected constructor(
 // Subclass Definitions
 
 /**
+ * Forces any preference value to not be null.
+ */
+class ValueNotNullValidator(vararg keys: String) :
+    PreferenceValidator<Any?>(*keys, isValid = Predicate<Any?> { it != null }) {
+
+    override fun getValue(key: String?, preferences: Record): Any? {
+        return preferences[key]
+    }
+}
+
+/**
  * Forces a string preference to not be empty.
  *
  * @author SlavSquatSuperstar
  */
-class StringValidator(vararg keys: String?) :
+class StringValidator(vararg keys: String) :
     PreferenceValidator<String>(*keys, isValid = Predicate<String> { str -> str.isNotEmpty() }) {
 
     override fun getValue(key: String?, preferences: Record): String {
         return preferences.getString(key)
+    }
+}
+
+/**
+ * Forces a float preference to between two values.
+ *
+ * @author SlavSquatSuperstar
+ */
+class FloatValidator(min: Float, max: Float, vararg keys: String) :
+    PreferenceValidator<Float>(*keys, isValid = Predicate<Float> { n -> n in Interval(min, max) }) {
+
+    override fun getValue(key: String?, preferences: Record): Float {
+        return preferences.getFloat(key)
     }
 }
 
@@ -72,8 +96,8 @@ class IntValidator(min: Int, max: Int, vararg keys: String) :
  * @author SlavSquatSuperstar
  */
 class BooleanValidator(vararg keys: String) :
-    PreferenceValidator<String>(*keys, isValid = Predicate<String> {
-        str -> str.isBooleanString().or(str.isBitNumber())
+    PreferenceValidator<String>(*keys, isValid = Predicate<String> { str ->
+        str.isBooleanString() || str.isBitNumber()
     }) {
 
     override fun getValue(key: String?, preferences: Record): String {

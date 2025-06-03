@@ -1,6 +1,7 @@
 package mayonez.graphics.sprites;
 
 import mayonez.*;
+import mayonez.graphics.*;
 import mayonez.graphics.textures.*;
 import mayonez.scripts.*;
 
@@ -90,16 +91,25 @@ public class Animator extends Script {
     // Sprite Methods
 
     /**
-     * Sets the transform of this component's animated sprite.
+     * Sets the color of the animated sprite
+     *
+     * @param color the sprite color
+     */
+    public void setSpriteColor(Color color) {
+        sprite.setColor(color);
+    }
+
+    /**
+     * Sets the transform of the animated sprite.
      *
      * @param spriteXf the sprite transform
      */
     public void setSpriteTransform(Transform spriteXf) {
-        this.sprite.setSpriteTransform(spriteXf);
+        sprite.setSpriteTransform(spriteXf);
     }
 
     /**
-     * Sets the visibility of the sprite.
+     * Sets the visibility of the animated sprite.
      *
      * @param visible if the sprite should be enabled
      */

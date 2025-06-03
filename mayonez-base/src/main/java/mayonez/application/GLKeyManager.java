@@ -10,7 +10,7 @@ import org.lwjgl.glfw.GLFW;
  * Receives keyboard input events from GLFW.
  * <p>
  * Source: <a href="https://www.glfw.org/docs/latest/input_guide.html#input_key">
- * GLFW Input Guide § Key Input</a>
+ *      GLFW Input Guide § Key Input</a>
  *
  * @author SlavSquatSuperstar
  */

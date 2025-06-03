@@ -31,7 +31,7 @@ public class STBImageData extends ImageData {
         try {
             var fileBuffer = readImageBytes();
             buffer = loadImage(fileBuffer);
-        } catch (ImageReadException | IOException e) {
+        } catch (ImageReadException e) {
             throw new IOException("Error reading STB image");
         }
     }
@@ -52,14 +52,14 @@ public class STBImageData extends ImageData {
 
     // Read Image Methods
 
-    private ByteBuffer readImageBytes() throws ImageReadException, IOException {
-        var imageBytes = BinaryIOUtils.readBytes(openInputStream());
-        if (imageBytes == null) {
-            throw new ImageReadException("Image byte array is null");
+    private ByteBuffer readImageBytes() throws ImageReadException {
+        try {
+            var imageBytes = BinaryIOUtils.readBytes(openInputStream());
+            var imageBuffer = BufferUtils.createByteBuffer(imageBytes.length);
+            return memSlice(imageBuffer.put(imageBytes).flip());
+        } catch (IOException e) {
+            throw new ImageReadException("Image bytes cannot be read");
         }
-
-        var imageBuffer = BufferUtils.createByteBuffer(imageBytes.length);
-        return memSlice(imageBuffer.put(imageBytes).flip());
     }
 
     private ByteBuffer loadImage(ByteBuffer fileBuffer) throws ImageReadException {
@@ -105,6 +105,10 @@ public class STBImageData extends ImageData {
         }
     }
 
+    public boolean isImageFreed() {
+        return imageFreed;
+    }
+
     @Override
     public void free() {
         freeImage();
@@ -136,6 +140,11 @@ public class STBImageData extends ImageData {
 
     @Override
     public Color getPixelColor(int x, int y) {
+        if (imageFreed) return null; // Avoid segfault if freed
+        // Check pixel in bounds
+        if (!MathUtils.inRange(x, 0, width - 1)) return null;
+        if (!MathUtils.inRange(y, 0, height - 1)) return null;
+
         var flippedY = (height - 1) - y;
         var index = (x + flippedY * width) * channels;
         int r = buffer.get(index) & SELECT_8_BYTES;
@@ -147,6 +156,11 @@ public class STBImageData extends ImageData {
 
     @Override
     public void setPixelColor(int x, int y, Color color) {
+        if (imageFreed) return; // Avoid segfault if freed
+        // Check pixel in bounds
+        if (!MathUtils.inRange(x, 0, width - 1)) return;
+        if (!MathUtils.inRange(y, 0, height - 1)) return;
+
         var flippedY = (height - 1) - y;
         var index = (x + flippedY * width) * channels;
         buffer.put(index, (byte) color.getRed());
@@ -161,11 +175,13 @@ public class STBImageData extends ImageData {
         return buffer;
     }
 
-    public ByteBuffer getSubBuffer(Vec2 topLeft, Vec2 size) {
-        var subImgX = (int) topLeft.x;
-        var subImgY = (int) topLeft.y;
-        var subImgWidth = (int) size.x;
-        var subImgHeight = (int) size.y;
+    public ByteBuffer getSubBuffer(ImageRegion region) {
+        if (imageFreed) return null;
+
+        var subImgX = region.getX();
+        var subImgY = region.getY();
+        var subImgWidth = region.getWidth();
+        var subImgHeight = region.getHeight();
 
         var buffer = BufferUtils.createByteBuffer(subImgWidth * subImgHeight * channels);
         for (var y = subImgY; y < subImgY + subImgHeight; y++) {
@@ -182,13 +198,15 @@ public class STBImageData extends ImageData {
     }
 
     @Override
-    public STBImageData getSubImageData(Vec2 topLeft, Vec2 size) {
+    public STBImageData getSubImageData(ImageRegion region) {
         try {
-            var filename = "%s Sub-Image (%s, %s)".formatted(getFilename(), topLeft, size);
-            return new STBImageData(filename, getSubBuffer(topLeft, size), (int) size.x, (int) size.y);
+            if (imageFreed) return null;
+            // Not technically filename, but use to distinguish from parent
+            var filename = "%s %s".formatted(getFilename(), region);
+            return new STBImageData(filename, getSubBuffer(region), region.getWidth(), region.getHeight());
         } catch (IOException e) {
-            Logger.error("Could not create sub-image from %s with position %s and size %s",
-                    toString(), topLeft, size);
+            Logger.error("Could not create sub-image from %s with origin %s and size %s",
+                    toString(), region.origin(), region.size());
             return null;
         }
     }

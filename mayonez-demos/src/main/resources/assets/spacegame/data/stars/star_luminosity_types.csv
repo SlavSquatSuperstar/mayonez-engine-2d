@@ -1,0 +1,7 @@
+type,description,minBrightness,maxBrightness,minRadius,maxRadius,weight
+WR,wolf-rayet,0.875,1.375,0.10,0.14,1
+I,supergiant,0.875,1.25,0.09,0.12,4
+III,giant,0.5,0.875,0.06,0.09,10
+V,main-sequence,0.375,0.75,0.03,0.06,80
+LTY,brown dwarf,0.125,0.375,0.01,0.03,3
+D,white dwarf,0.125,0.375,0.01,0.03,2

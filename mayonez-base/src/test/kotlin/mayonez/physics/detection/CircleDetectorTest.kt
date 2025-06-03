@@ -2,8 +2,11 @@ package mayonez.physics.detection
 
 import mayonez.math.*
 import mayonez.math.shapes.*
-import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertNotNull
+import org.junit.jupiter.api.assertNull
 
 /**
  * Unit Tests for the [mayonez.physics.detection.CircleDetector] class.
@@ -46,7 +49,7 @@ internal class CircleDetectorTest {
         val contacts = CircleDetector.getContacts(c1, c2)
 
         assertNotNull(contacts)
-        assertEquals(1, contacts!!.numContacts())
+        assertEquals(1, contacts.numContacts())
         assertEquals(contact, contacts.getContact(0))
     }
 

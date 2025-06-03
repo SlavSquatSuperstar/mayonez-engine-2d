@@ -13,127 +13,272 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class RecordTest {
 
-    private Record rec1, rec2;
+    private Record rec1;
 
     @BeforeEach
     void createRecords() {
-        Map<String, Object> map1 = Map.of("name", "Linus Torvalds", "age", 53, "version", "0.7.6", "height", 1.78f);
-        map1 = new HashMap<>(map1);
-        rec1 = new Record(map1);
+        var innerRecord = new Record(Map.of(
+                "quux", "baz",
+                "meaning", "42"
+        ));
+        rec1 = new Record(Map.of(
+                "str1", "foo",
+                "int1", 420,
+                "float1", 6.9f,
+                "bool1", true,
+                "list1", List.of("bar", 123, 4.5f, true),
+                "rec1", innerRecord
+        ));
+        rec1.set("null1", (String) null);
+    }
 
-        Map<String, Object> map2 = Map.of("name", "James Gosling", "age", 69, "useGL", true, "saveLogs", "no");
-        rec2 = new Record(map2);
+    // Get Single Tests
+
+    @Test
+    void getNullCorrect() {
+        assertTrue(rec1.contains("null1"));
+        assertNull(rec1.get("null1"));
     }
 
     @Test
     void getStringCorrect() {
-        assertEquals("Linus Torvalds", rec1.getString("name"));
-        assertEquals("53", rec1.getString("age"));
-        assertEquals("0.7.6", rec1.getString("version"));
-        assertEquals("1.78", rec1.getString("height"));
-        assertEquals("", rec1.getString("date"));
-        assertEquals("true", rec2.getString("useGL"));
-        assertEquals("no", rec2.getString("saveLogs"));
+        assertEquals("foo", rec1.getString("str1"));
+        assertEquals("420", rec1.getString("int1"));
+        assertEquals("6.9", rec1.getString("float1"));
+        assertEquals("true", rec1.getString("bool1"));
+        assertEquals("", rec1.getString("null1"));
     }
-
-    // Get Primitive Tests
 
     @Test
     void getIntCorrect() {
-        assertEquals(0, rec1.getInt("name"));
-        assertEquals(53, rec1.getInt("age"));
-        assertEquals(1, rec1.getInt("height"));
-        assertEquals(0, rec1.getInt("version"));
-        assertEquals(0, rec2.getInt("useGL"));
+        assertEquals(0, rec1.getInt("str1"));
+        assertEquals(420, rec1.getInt("int1"));
+        assertEquals(6, rec1.getInt("float1"));
+        assertEquals(1, rec1.getInt("bool1"));
+        assertEquals(0, rec1.getInt("null1"));
     }
 
     @Test
     void getFloatCorrect() {
-        assertEquals(0f, rec1.getFloat("name"));
-        assertEquals(53f, rec1.getFloat("age"));
-        assertEquals(1.78f, rec1.getFloat("height"));
-        assertEquals(0f, rec1.getFloat("version"));
-        assertEquals(0f, rec2.getFloat("useGL"));
+        assertEquals(0f, rec1.getFloat("str1"));
+        assertEquals(420f, rec1.getFloat("int1"));
+        assertEquals(6.9f, rec1.getFloat("float1"));
+        assertEquals(1f, rec1.getFloat("bool1"));
+        assertEquals(0f, rec1.getFloat("null1"));
+    }
+
+    @Test
+    void getStringAsNumber() {
+        var record = new Record(Map.of(
+                "num1", "420",
+                "num2", "6.9"
+        ));
+        assertEquals(420, record.getInt("num1"));
+        assertEquals(6, record.getInt("num2"));
+        assertEquals(420f, record.getFloat("num1"));
+        assertEquals(6.9f, record.getFloat("num2"));
     }
 
     @Test
     void getBooleanCorrect() {
-        assertFalse(rec1.getBoolean("name"));
-        assertTrue(rec1.getBoolean("age"));
-        assertTrue(rec1.getBoolean("height"));
-        assertTrue(rec2.getBoolean("useGL"));
-        assertFalse(rec2.getBoolean("saveLogs"));
+        assertFalse(rec1.getBoolean("str1"));
+        assertTrue(rec1.getBoolean("int1"));
+        assertTrue(rec1.getBoolean("float1"));
+        assertTrue(rec1.getBoolean("bool1"));
+        assertFalse(rec1.getBoolean("null1"));
     }
 
-    // Get Compound Tests
+    @Test
+    void getMissingValuesCorrect() {
+        assertEquals("", rec1.getString("missing"));
+        assertEquals(0, rec1.getInt("missing"));
+        assertEquals(0f, rec1.getFloat("missing"));
+        assertFalse(rec1.getBoolean("missing"));
+        assertNull(rec1.get("missing"));
+    }
+
+    // Get Array Tests
 
     @Test
     void getArrayCorrect() {
-        var list = List.of("One", '2', 3, 4.0);
-        var record = new Record();
-        record.set("nums", list);
-        var numsArray = record.getArray("nums");
-
-        assertNotNull(numsArray);
-        assertEquals(4, numsArray.size());
-        assertEquals("One", numsArray.get(0));
-        assertEquals('2', numsArray.get(1));
-        assertEquals(3, numsArray.get(2));
-        assertEquals(4.0, numsArray.get(3));
+        var array = rec1.getArray("list1");
+        assertNotNull(array);
+        assertEquals(4, array.size());
+        assertEquals(List.of("bar", 123, 4.5f, true), array);
     }
 
     @Test
-    void getArrayIncorrect() {
-        var record = new Record();
-        record.set("num", 1234);
-        record.set("str", "1, 2, 3, 4");
-
-        assertNull(record.getArray("num"));
-        assertNull(record.getArray("str"));
+    void getNonArrayNull() {
+        assertNull(rec1.getArray("str1"));
+        assertNull(rec1.getArray("int1"));
+        assertNull(rec1.getArray("float"));
+        assertNull(rec1.getArray("bool1"));
+        assertNull(rec1.getArray("rec1"));
+        assertNull(rec1.getArray("null1"));
     }
+
+    @Test
+    void createWithArrayGetList() {
+        var array = new Object[]{"bar", 123, 4.5f, true};
+        var record = new Record(Map.of("list1", array));
+        assertEquals(rec1.getArray("list1"), record.getArray("list1"));
+    }
+
+    @Test
+    void setArrayGetList() {
+        var array = new Object[]{"bar", 123, 4.5f, true};
+        var record = new Record();
+        record.set("list1", array);
+        assertEquals(rec1.getArray("list1"), record.getArray("list1"));
+    }
+
+    @Test
+    void setListGetGenericList() {
+        // Set specific list, get generic list
+        List<String> list = List.of("item1", "item2", "item3");
+        var record = new Record();
+        record.set("list1", list);
+
+        List<Object> expected = List.of("item1", "item2", "item3");
+        assertEquals(expected, record.getArray("list1"));
+    }
+
+    // Get Object Tests
 
     @Test
     void getObjectCorrect() {
-        var profile = new HashMap<String, Object>();
-        profile.put("name", "Steve Jobs");
-        profile.put("age", 56);
-        profile.put("companies", List.of("Apple", "Pixar", "NeXT"));
-
-        var record = new Record();
-        record.set("id", 1955);
-        record.set("profile", profile);
-
-        var object = record.getObject("profile");
-        assertNotNull(object);
-        assertEquals("Steve Jobs", object.getString("name"));
-        assertEquals(56, object.getInt("age"));
-        assertEquals(List.of("Apple", "Pixar", "NeXT"), object.getArray("companies"));
+        var record = rec1.getObject("rec1");
+        assertNotNull(record);
+        assertEquals(2, record.size());
+        assertEquals("baz", record.get("quux"));
+        assertEquals("42", record.get("meaning"));
     }
 
     @Test
-    void getObjectIncorrect() {
-        var profile = new Record();
-        profile.set("name", "Steve Jobs");
-        profile.set("age", 56);
-        profile.set("companies", List.of("Apple", "Pixar", "NeXT"));
+    void getNonObjectNull() {
+        assertNull(rec1.getObject("str1"));
+        assertNull(rec1.getObject("int1"));
+        assertNull(rec1.getObject("float"));
+        assertNull(rec1.getObject("bool1"));
+        assertNull(rec1.getObject("list1"));
+        assertNull(rec1.getObject("null1"));
+    }
 
-        assertNull(profile.getObject("name"));
-        assertNull(profile.getObject("age"));
-        assertNull(profile.getObject("companies"));
+    @Test
+    void createWithMapGetRecord() {
+        // Pass map in constructor, get record
+        var map = Map.of(
+                "quux", "baz",
+                "meaning", "42"
+        );
+        var record = new Record(Map.of("rec1", map));
+        assertEquals(rec1.getObject("rec1"), record.getObject("rec1"));
+    }
+
+    @Test
+    void setMapGetRecord() {
+        // Set map, get record
+        var map = Map.of(
+                "quux", "baz",
+                "meaning", "42"
+        );
+        var record = new Record();
+        record.set("rec1", map);
+        assertEquals(rec1.getObject("rec1"), record.getObject("rec1"));
+    }
+
+    @Test
+    void setRecordGetRecord() {
+        // Set map, get record
+        var innerRecord = new Record(Map.of(
+                "quux", "baz",
+                "meaning", "42"
+        ));
+        var record = new Record();
+        record.set("rec1", innerRecord);
+        assertEquals(rec1.getObject("rec1"), record.getObject("rec1"));
     }
 
     // Set From Tests
 
     @Test
     void addAllSuccess() {
+        var rec2 = new Record(Map.of(
+                "str1", "foobar",
+                "str2", "spam eggs",
+                "bool2", false
+        ));
+        rec2.set("int1", (String) null);
+        rec2.set("null2", (String) null);
+
         rec1.setFrom(rec2);
-        assertEquals(6, rec1.size());
-        assertEquals("James Gosling", rec1.getString("name"));
-        assertEquals(69, rec1.getInt("age"));
-        assertEquals("0.7.6", rec1.getString("version"));
-        assertEquals(1.78f, rec1.getFloat("height"));
-        assertTrue(rec1.getBoolean("useGL"));
-        assertFalse(rec1.getBoolean("saveLogs"));
+        assertEquals("foobar", rec1.getString("str1")); // overridden
+        assertEquals("spam eggs", rec1.getString("str2")); // added
+        assertFalse(rec1.getBoolean("bool2"));
+        assertEquals(420, rec1.getInt("int1")); // not replaced
+        assertNull(rec1.get("null2")); // added null
+    }
+
+    // Equals Tests
+
+    @Test
+    void recordsDifferentKeysNotEqual() {
+        var rec1 = new Record(Map.of(
+                "str1", "foo",
+                "int1", 420,
+                "bool1", true
+        ));
+        var rec2 = new Record(Map.of(
+                "str2", "bar",
+                "int2", 69,
+                "bool2", false
+        ));
+        assertNotEquals(rec1, rec2);
+    }
+
+    @Test
+    void recordsDifferentTypeNotEqual() {
+        var rec1 = new Record(Map.of(
+                "str1", "foo",
+                "int1", 420,
+                "bool1", true
+        ));
+        var rec2 = new Record(Map.of(
+                "str1", "bar",
+                "int1", "420",
+                "bool1", "true"
+        ));
+        assertNotEquals(rec1, rec2);
+    }
+
+    @Test
+    void recordsSameKeysValuesEqual() {
+        var rec1 = new Record(Map.of(
+                "str1", "foo",
+                "int1", 420,
+                "bool1", true
+        ));
+        var rec2 = new Record(Map.of(
+                "str1", "foo",
+                "int1", 420,
+                "bool1", true
+        ));
+        assertEquals(rec1, rec2);
+    }
+
+    @Test
+    void recordsDifferentKeyOrdersEqual() {
+        var rec1 = new Record(Map.of(
+                "str1", "foo",
+                "int1", 420,
+                "bool1", true
+        ));
+        var rec2 = new Record(Map.of(
+                "int1", 420,
+                "bool1", true,
+                "str1", "foo"
+        ));
+        assertEquals(rec1, rec2);
     }
 
 }

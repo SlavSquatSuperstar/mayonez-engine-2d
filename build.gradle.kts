@@ -10,7 +10,7 @@ description = "The root project for Mayonez Engine that contains all modules."
 
 allprojects {
     group = "slavsquatsuperstar"
-    version = "0.8.1"
+    version = "0.8.2"
 }
 
 // Subprojects
@@ -22,7 +22,7 @@ dependencies {
 // Plugins and Tasks
 tasks {
     wrapper {
-        gradleVersion = "8.12"
+        gradleVersion = "8.12.1"
         distributionType = Wrapper.DistributionType.BIN
     }
 

@@ -17,8 +17,8 @@ public final class Textures {
     // Texture Methods
 
     /**
-     * Retrieves the asset at the given location as a AWT or GL texture based on the
-     * current engine instance.
+     * Retrieves the asset at the given location as a AWT or GL texture based on
+     * the current engine instance.
      *
      * @param filename the texture location
      * @return a texture
@@ -28,7 +28,8 @@ public final class Textures {
     }
 
     /**
-     * Retrieves the asset at the given location as a {@link mayonez.graphics.textures.GLTexture}.
+     * Retrieves the asset at the given location as a
+     * {@link mayonez.graphics.textures.GLTexture}.
      *
      * @param filename the texture location
      * @return a texture
@@ -38,7 +39,8 @@ public final class Textures {
     }
 
     /**
-     * Retrieves the asset at the given location as a {@link mayonez.graphics.textures.JTexture}.
+     * Retrieves the asset at the given location as a
+     * {@link mayonez.graphics.textures.JTexture}.
      *
      * @param filename the texture location
      * @return a texture

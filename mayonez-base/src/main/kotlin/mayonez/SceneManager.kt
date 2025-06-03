@@ -2,34 +2,39 @@ package mayonez
 
 import mayonez.config.*
 import mayonez.input.*
-import java.awt.Graphics2D
+import java.awt.*
 
 /**
- * Provides an interface to the user for reloading and switching scenes.
- * Only one scene may be active at once.
+ * Store multiple scenes for later use and helps the user reload and switch between
+ * scenes. Stored scenes must have a unique name, and only one scene may be active
+ * at once.
  *
  * Usage: Scenes can be preloaded into the SceneManager through the
- * [Launcher.loadScenesToManager] method before the application starts
+ * [Launcher.addScenesToManager] method before the application starts
  * running. Scenes can be added at any time with [SceneManager.addScene]
- * and retrieved with [SceneManager.getScene]. To switch scenes,
- * use the [SceneManager.setScene] method to set a new scene or the
- * [SceneManager.loadScene] method to resume an existing scene.
+ * and retrieved with [SceneManager.getScene] using their name or the order in which
+ * they were added. To switch scenes, use the [SceneManager.changeSceneAsNew] method
+ * to set a new scene or the [SceneManager.changeScene] method to resume an existing
+ * scene.
  *
  * See [Launcher] and [Scene] for more information.
  *
  * @author SlavSquatSuperstar
  */
+// TODO rework
+// TODO allow null scene?
 object SceneManager {
 
     // Scene Fields
 
     private val scenes: MutableMap<String, Scene> = HashMap() // The scene pool
+    private val sceneNames: MutableList<String> = ArrayList() // The scene order
 
     /** The scene that is currently loaded by the game. */
     @JvmStatic
     lateinit var currentScene: Scene
 
-    private val startedFirstScene: Boolean
+    private val hasCurrentScene: Boolean
         get() = this::currentScene.isInitialized
 
     // Game Loop Methods
@@ -41,6 +46,7 @@ object SceneManager {
 
     @JvmStatic
     @JvmName("renderScene")
+    // TODO remove g2 from param?
     internal fun renderScene(g2: Graphics2D?) {
         currentScene.render(g2)
     }
@@ -56,41 +62,48 @@ object SceneManager {
     /** Restarts the current scene and reinitializes all its game objects. */
     @JvmStatic
     fun restartScene() {
+        Logger.debug("Restarting current scene")
         stopScene()
         startScene()
     }
 
     /**
-     * Switches the active scene to the given scene. If the scene is running,
-     * it will be restarted.
+     * Stops the current scene and switches over to the given scene. If the new scene
+     * was already loaded, it will be restarted.
      *
      * @param scene a scene instance
      */
     @JvmStatic
-    fun setScene(scene: Scene?) {
-        if (scene == null) return  // don't set a null scene
-        if (startedFirstScene) {
+    fun changeSceneAsNew(scene: Scene?) {
+        if (scene == null) return  // Don't set a null scene
+        if (hasCurrentScene) {
+            Logger.debug("Switching scenes as new")
             stopScene()
-            saveCurrentSceneToPool()
         }
         currentScene = scene
+        if (scene.name !in scenes) {
+            addScene(scene) // Auto-add scene if new
+        }
         startScene()
     }
 
     /**
-     * Pauses the current scene, and then resumes or starts an existing scene
-     * with the given name.
+     * Pauses the current scene and switches over to the given scene without restarting
+     * the new scene.
      *
-     * @param name the scene's name
+     * @param scene a scene instance
      */
     @JvmStatic
-    fun loadScene(name: String?) {
-        val scene = getScene(name) ?: return // don't set a null scene
-        if (startedFirstScene) {
+    fun changeScene(scene: Scene?) {
+        if (scene == null) return  // Don't set a null scene
+        if (hasCurrentScene) {
+            Logger.debug("Switching scenes")
             pauseScene()
-            saveCurrentSceneToPool()
         }
         currentScene = scene
+        if (scene.name !in scenes) {
+            addScene(scene) // Auto-add scene if new
+        }
         startScene()
         resumeScene()
     }
@@ -126,7 +139,7 @@ object SceneManager {
     fun resumeScene() {
         if (currentScene.isPaused) {
             currentScene.resume()
-            Logger.debug("Loaded scene \"${currentScene.name}\"")
+            Logger.debug("Resumed scene \"${currentScene.name}\"")
         }
     }
 
@@ -138,7 +151,7 @@ object SceneManager {
     fun pauseScene() {
         if (currentScene.isRunning) {
             currentScene.pause()
-            Logger.debug("Unloaded scene \"${currentScene.name}\"")
+            Logger.debug("Paused scene \"${currentScene.name}\"")
         }
     }
 
@@ -148,6 +161,7 @@ object SceneManager {
     @JvmStatic
     fun clearScenes() {
         scenes.clear()
+        sceneNames.clear()
         Logger.debug("Cleared scene pool")
     }
 
@@ -160,10 +174,14 @@ object SceneManager {
      */
     @JvmStatic
     fun addScene(scene: Scene?) {
-        if (scene != null) {
-            scenes[scene.name] = scene
+        if (scene == null) return
+        if (scene.name in scenes) {
+            Logger.debug("Replaced scene \"${scene.name}\"")
+        } else {
+            sceneNames.add(scene.name) // Add scene name if new
             Logger.debug("Added scene \"${scene.name}\"")
         }
+        scenes[scene.name] = scene
     }
 
     /**
@@ -175,10 +193,17 @@ object SceneManager {
     @JvmStatic
     fun getScene(name: String?): Scene? = scenes[name]
 
-    private fun saveCurrentSceneToPool() {
-        if (currentScene.name !in scenes) {
-            addScene(currentScene)
-        }
+    /**
+     * Retrieves the scene stored in the scene pool with the given name.
+     *
+     * @param index the order of the stored scene
+     * @return the scene, or null if the index is invalid
+     */
+    @JvmStatic
+    fun getScene(index: Int): Scene? {
+        if (index !in sceneNames.indices) return null
+        val name = sceneNames[index]
+        return scenes[name]
     }
 
 }

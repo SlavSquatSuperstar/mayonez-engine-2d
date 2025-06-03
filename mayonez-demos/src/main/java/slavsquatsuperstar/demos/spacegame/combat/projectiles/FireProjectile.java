@@ -38,10 +38,9 @@ public abstract class FireProjectile extends Script {
      * @param offsetAngle the projectile spawn angle in relation to the source
      */
     protected void spawnPrefab(ProjectileType type, Vec2 offsetPos, float offsetAngle) {
-        var prefabObject = ProjectilePrefabs.createPrefab(
+        getScene().addObject(ProjectilePrefabs.createProjectilePrefab(
                 type, gameObject, offsetPos, offsetAngle
-        );
-        getScene().addObject(prefabObject);
+        ));
     }
 
 }

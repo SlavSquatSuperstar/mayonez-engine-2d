@@ -19,12 +19,12 @@ import slavsquatsuperstar.demos.spacegame.objects.SpaceGameZIndex;
  */
 public class Satellite extends GameObject {
 
-    private static final float SATELLITE_HEALTH = 6f;
-    private static final String SATELLITE_SPRITE_NAME
-            = "assets/spacegame/textures/ships/satellite.png";
+    private final SatelliteProperties properties;
 
-    public Satellite(String name, Vec2 position) {
-        super(name, new Transform(position, Random.randomAngle(), new Vec2(4f)), SpaceGameZIndex.SPACESHIP);
+    public Satellite(String name, Vec2 position, SatelliteProperties properties) {
+        super(name, new Transform(position, Random.randomAngle(), properties.scale()),
+                SpaceGameZIndex.SPACESHIP);
+        this.properties = properties;
     }
 
     @Override
@@ -44,7 +44,7 @@ public class Satellite extends GameObject {
 
         // Combat
         addComponent(new SpaceshipDestruction());
-        addComponent(new Damageable(SATELLITE_HEALTH) {
+        addComponent(new Damageable(properties.maxHull()) {
             @Override
             public void onHealthDepleted() {
                 var shipDestruction = gameObject.getComponent(SpaceshipDestruction.class);
@@ -54,7 +54,7 @@ public class Satellite extends GameObject {
         addComponent(new CollisionDamage());
 
         // Visuals
-        addComponent(Sprites.createSprite(SATELLITE_SPRITE_NAME));
+        addComponent(Sprites.createSprite(properties.texture()));
     }
 
 }

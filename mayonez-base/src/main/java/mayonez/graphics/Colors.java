@@ -7,12 +7,12 @@ import mayonez.math.*;
  * <p>
  * Sources:
  * <ul>
- * <li><a href="https://html-color.codes/">Basic HTML</a></li>
- * <li><a href="https://www.w3schools.com/colors/colors_x11.asp">X11</a></li>
- * <li><a href="https://htmlcolorcodes.com/color-names/">Extended HTML (HTMLColorCodes)</a></li>
- * <li><a href="https://en.wikipedia.org/wiki/Web_colors#Extended_colors">Extended HTML (Wikipedia)</a></li>
- * <li><a href="https://www.ralcolorchart.com/ral-classic">RAL Classic</a></li>
- * <li><a href="https://en.wikipedia.org/wiki/ISCC">ISCC-NBS</a></li>
+ *     <li><a href="https://html-color.codes/">Basic HTML color codes</a></li>
+ *     <li><a href="https://www.w3schools.com/colors/colors_x11.asp">X11 color codes</a></li>
+ *     <li><a href="https://htmlcolorcodes.com/color-names/">Extended HTML color codes</a></li>
+ *     <li><a href="https://en.wikipedia.org/wiki/Web_colors#Extended_colors">Wikipedia - Extended HTML colors</a></li>
+ *     <li><a href="https://www.ralcolorchart.com/ral-classic">RAL Classic color chart</a></li>
+ *     <li><a href="https://en.wikipedia.org/wiki/ISCC">Wikipedia - ISCC-NBS</a></li>
  * </ul>
  *
  * @author SlavSquatSuperstar

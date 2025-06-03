@@ -26,7 +26,7 @@ internal class PolygonColliderTest {
     // Properties
     @Test
     fun polygonVerticesReturnsWorld() {
-        Assertions.assertEquals(4, box.numVertices)
+        Assertions.assertEquals(4, box.numVertices())
         CollisionTestUtils.assertVerticesEqual(vertices, box.getVertices())
     }
 
@@ -62,4 +62,13 @@ internal class PolygonColliderTest {
         CollisionTestUtils.assertVerticesEqual(worldVertices, box.getVertices())
     }
 
+}
+
+// Shape Vertex Methods
+
+private fun PolygonCollider.numVertices(): Int = this.getShape().numVertices
+
+private fun PolygonCollider.getVertices(): Array<Vec2> {
+    // Vertices transformed to world space
+    return (this.getShape() as Polygon).vertices
 }

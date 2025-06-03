@@ -6,15 +6,14 @@
  * <a href = https://apache.org/licenses/LICENSE-2.0>Apache v2.0</a> licenses.
  * A copy of both the licenses are available in the source in the resources package
  * {@code org.reflections.vfs}.
- * <br>
+ * <p>
  * The changes to the library are as follows:
  * <ul>
  *     <li>Included only the {@code org.reflections.vfs} package.</li>
  *     <li>Removed all UrlTypes except for {@code directory} and {@code jarInput}.</li>
- *     <li>Extracted inner classes to top-level.</li>
- *     <li>Re-licensed copied code under GPLv3 like the rest of the engine</li>
+ *     <li>Elevated inner classes to top-level.</li>
+ *     <li>Re-licensed copied code under GPLv3 like the rest of the engine.</li>
  * </ul>
- * <br>
  * This package is not exported to the public API.
  *
  * @author ronmamo

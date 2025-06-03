@@ -3,9 +3,8 @@ package mayonez.physics.detection
 import mayonez.math.*
 import mayonez.math.shapes.*
 import mayonez.physics.CollisionTestUtils.*
-import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.*
+import org.junit.jupiter.api.Assertions.assertTrue
 
 /**
  * Unit Tests for the [mayonez.physics.detection.GJKDetector] class.
@@ -66,7 +65,7 @@ internal class GJKTest {
         assertNotNull(simplex)
         testPenetration(p1, p2, 0.937044f)
 
-        val simplexPoly = simplex!!.toPolygon()
+        val simplexPoly = simplex.toPolygon()
         assertVerticesEqual(simplexPoly.vertices, arrayOf(Vec2(4f, 2f), Vec2(-8f, -2f), Vec2(-1f, -2f)))
         assertTrue(simplexPoly.contains(Vec2(0f, 0f)))
     }
@@ -74,7 +73,7 @@ internal class GJKTest {
     private fun testPenetration(shape1: Shape, shape2: Shape, depth: Float) {
         val pen = gjk.getPenetration(shape1, shape2)
         assertNotNull(pen)
-        assertFloatEquals(depth, pen!!.depth)
+        assertFloatEquals(depth, pen.depth)
     }
     
 }

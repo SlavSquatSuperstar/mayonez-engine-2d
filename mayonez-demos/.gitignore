@@ -1,2 +1,3 @@
 # User Config Files
-*.json
+preferences.json
+user_config.json

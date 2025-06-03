@@ -1,0 +1,11 @@
+{
+    "str1": "foo",
+    "int1": 420,
+    "float1": 6.9,
+    "bool1": true,
+    "list1": [
+        "item1",
+        "item2"
+    ],
+    "null1": null
+}

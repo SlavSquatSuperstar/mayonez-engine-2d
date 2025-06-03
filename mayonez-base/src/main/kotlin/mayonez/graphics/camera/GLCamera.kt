@@ -30,36 +30,38 @@ class GLCamera(screenSize: Vec2) : Camera(screenSize) {
     private val farPlane = 100f // farthest object visible
     private val cameraZ = 0f // how far forward/back the camera is
 
+    init {
+        updateProjectionMatrix()
+    }
+
     // Camera Methods
 
     override fun getScreenOffset(): Vec2 = screenCenter - (screenSize * 0.5f)
 
     // Matrix Methods
 
-    /**
-     * The view matrix of the camera, which transforms objects from world space
-     * into camera view space.
-     */
     override fun getViewMatrix(): Matrix4f {
+        return viewMatrix
+    }
+
+    override fun getProjectionMatrix(): Matrix4f {
+        return projectionMatrix
+    }
+
+    override fun updateViewMatrix() {
         viewMatrix
+            .identity()
             .translateView(screenOffset, cameraZ)
             .rotateView(-rotation, screenCenter, cameraZ)
             .zoomView(zoom, screenCenter, cameraZ)
             .zoomView(cameraScale, Vec2(), cameraZ)
             .invert(inverseView)
-        return viewMatrix
     }
 
-    /**
-     * The projection matrix of the camera, which transforms objects from camera
-     * view space into normalized screen space.
-     */
-    override fun getProjectionMatrix(): Matrix4f {
-        // TODO only recalculate if changed
+    override fun updateProjectionMatrix() {
         projectionMatrix
             .setOrtho(0f, screenSize.x, 0f, screenSize.y, nearPlane, farPlane)
             .invert(inverseProjection)
-        return projectionMatrix
     }
 
     // Matrix Helper Methods
@@ -67,7 +69,7 @@ class GLCamera(screenSize: Vec2) : Camera(screenSize) {
     private fun Matrix4f.translateView(offset: Vec2, cameraZ: Float): Matrix4f {
         val cameraFront = Vector3f(0f, 0f, -1f)
         val cameraUp = Vector3f(0f, 1f, 0f)
-        return this.setLookAt(
+        return this.lookAt(
             Vector3f(offset.x, offset.y, cameraZ),
             cameraFront.add(offset.x, offset.y, 0f), cameraUp
         )

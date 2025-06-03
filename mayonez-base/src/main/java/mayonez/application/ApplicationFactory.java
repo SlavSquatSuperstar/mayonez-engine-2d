@@ -1,6 +1,6 @@
 package mayonez.application;
 
-import mayonez.*;
+import mayonez.Logger;
 import mayonez.input.*;
 import mayonez.util.OperatingSystem;
 
@@ -21,21 +21,18 @@ public final class ApplicationFactory {
      * Creates a new {@link Application} object with the given
      * engine type.
      *
-     * @param useGL      whether to use OpenGL instead of Java's AWT library
+     * @param useGL  whether to use OpenGL instead of AWT
+     * @param title  the window title
+     * @param width  the window width
+     * @param height the window height
      * @return the game engine
      * @throws WindowInitException if the wrong thread is used on macOS
      */
     public static Application createApplication(
-            boolean useGL
+            boolean useGL, String title, int width, int height
     ) throws WindowInitException {
         // Create window
-        var title = String.format("%s (%s) %s",
-                Preferences.getTitle(), (useGL ? "GL" : "AWT"), Preferences.getVersion()
-        );
-        var width = Preferences.getScreenWidth();
-        var height = Preferences.getScreenHeight();
         var window = createWindow(useGL, title, width, height);
-
         KeyInput.setHandler(window.getKeyInputHandler());
         MouseInput.setHandler(window.getMouseInputHandler());
 
@@ -62,8 +59,8 @@ public final class ApplicationFactory {
         if (useGL) {
             if (OperatingSystem.getCurrent() == OperatingSystem.MAC_OS
                     && !JVMHelper.isStartedOnFirstThread()) {
-                Logger.error("GLFW must be initialized from the main thread on macOS");
-                Logger.error("Make sure to run Java with the \"-XstartOnFirstThread\" VM argument");
+                Logger.fatal("GLFW must be initialized from the main thread on macOS");
+                Logger.fatal("Make sure to run Java with the \"-XstartOnFirstThread\" VM argument");
                 throw new WindowInitException("Aborting GLFW initialization due to main thread not used");
             }
             return new GLWindow(title, width, height);
@@ -71,8 +68,8 @@ public final class ApplicationFactory {
             // VM args must be checked before AWT classes are used
             if (OperatingSystem.getCurrent() == OperatingSystem.MAC_OS
                     && JVMHelper.isStartedOnFirstThread()) {
-                Logger.error("AWT cannot be used from the main thread on macOS");
-                Logger.error("Make sure to run Java without the \"-XstartOnFirstThread\" VM argument");
+                Logger.fatal("AWT cannot be used from the main thread on macOS");
+                Logger.fatal("Make sure to run Java without the \"-XstartOnFirstThread\" VM argument");
                 throw new WindowInitException("Aborting AWT window creation due to main thread used");
             }
             return new JWindow(title, width, height);

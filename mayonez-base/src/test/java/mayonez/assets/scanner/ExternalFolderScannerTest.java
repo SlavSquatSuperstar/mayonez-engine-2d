@@ -30,7 +30,7 @@ class ExternalFolderScannerTest {
         var files = scanner.getFiles("src/test/resources/testassets");
         assertFalse(files.isEmpty());
         assertTrue(doesFolderContain(files, "src/test/resources/testassets/text/foo.txt"));
-        assertTrue(doesFolderContain(files, "src/test/resources/testassets/out/readme.txt"));
+        assertTrue(doesFolderContain(files, "src/test/resources/testassets/images/mario.png"));
         assertFalse(doesFolderContain(files, "src/test/java/mayonez/io/AssetsTest.class"));
         assertFalse(doesFolderContain(files, "src/test/resources/.DS_Store"));
     }

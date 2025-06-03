@@ -3,7 +3,6 @@ package mayonez.renderer.gl
 import mayonez.graphics.*
 import mayonez.graphics.debug.*
 import mayonez.graphics.font.*
-import mayonez.math.shapes.*
 import mayonez.renderer.*
 import mayonez.renderer.batch.*
 import mayonez.renderer.shader.*
@@ -15,7 +14,7 @@ import mayonez.renderer.shader.*
  * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.GL)
-internal class GLDefaultRenderer(shader: Shader) : GLRenderer(shader),
+internal class GLDefaultRenderer() : GLRenderer(),
     SceneRenderer, DebugRenderer {
 
     // Renderer Objects
@@ -49,13 +48,9 @@ internal class GLDefaultRenderer(shader: Shader) : GLRenderer(shader),
     }
 
     override fun preRender() {
-        super.preRender()
-
-        // Upload uniforms
+        // Update view matrix
         val cam = viewport
-        shader.uploadMat4("uView", cam.viewMatrix)
-        shader.uploadMat4("uProjection", cam.projectionMatrix)
-        shader.uploadIntArray("uTextures", textureSlots)
+        cam.updateViewMatrix()
 
         // Draw background color
         val bgColor = cam.backgroundColor.toGL()
@@ -63,20 +58,19 @@ internal class GLDefaultRenderer(shader: Shader) : GLRenderer(shader),
     }
 
     override fun createBatches() {
-        // Sort objects
+        // Sort objects by z-index
         objects.sortBy { it.zIndex }
         tempObjects.sortBy { it.zIndex }
 
         // Process objects
         objects.filter { it.isEnabled }
-            .forEach { it.process() }
+            .forEach { it.addDrawParts() }
         tempObjects.filter { it.isEnabled }
-            .forEach { it.process() }
+            .forEach { it.addDrawParts() }
+        drawObjects.sortBy { it.zIndex }
 
         // Push objects
         var lastBatch: RenderBatch? = null
-        // Already sorted by primitive
-        drawObjects.sortBy { it.zIndex }
         drawObjects.forEach {
             // Create new batch
             if (lastBatch == null || !lastBatch.canFitObject(it)) {
@@ -101,35 +95,42 @@ internal class GLDefaultRenderer(shader: Shader) : GLRenderer(shader),
 
     // Helper Methods
 
+    override fun RenderBatch.uploadUniforms(viewport: Viewport, textureSlots: IntArray) {
+        // Upload uniforms
+        shader.bind()
+        shader.uploadMat4("uView", viewport.viewMatrix)
+        shader.uploadMat4("uProjection", viewport.projectionMatrix)
+        shader.uploadIntArray("uTextures", textureSlots)
+    }
+
     override fun GLRenderable.createNewBatch(): RenderBatch {
         val batch: RenderBatch
         if (primitive == DrawPrimitive.SPRITE) {
-            batch = MultiZRenderBatch(primitive, batchSize, MAX_TEXTURE_SLOTS)
+            batch = MultiZRenderBatch(
+                Shaders.DEFAULT_SHADER, primitive, batchSize, MAX_TEXTURE_SLOTS
+            )
             batch.minZIndex = this.zIndex // Set min z-index
             batch.maxZIndex = this.zIndex // Set initial max z-index
         } else {
-            batch = SingleZRenderBatch(primitive, batchSize, MAX_TEXTURE_SLOTS, zIndex)
+            val shader = when (primitive) {
+                DrawPrimitive.CIRCLE -> Shaders.CIRCLE_SHADER
+                DrawPrimitive.ELLIPSE -> Shaders.ELLIPSE_SHADER
+                else -> Shaders.DEBUG_SHADER
+            }
+            batch = SingleZRenderBatch(
+                shader, primitive, batchSize, 0, zIndex
+            )
         }
         return batch
     }
 
-    private fun Renderable.process() {
-        when (this) {
-            is DebugShape -> this.processShape()
-            is GLRenderable -> drawObjects.add(this)
-            is TextLabel -> drawObjects.addAll(this.glyphSprites)
-        }
-    }
-
-    private fun DebugShape.processShape() {
+    private fun Renderable.addDrawParts() {
         val cam = viewport
         val zoom = cam.zoom * cam.cameraScale
-        getParts(zoom).forEach { shapePart ->
-            if (shapePart is Edge) {
-                drawObjects.addAll(shapePart.getDrawParts(this.brush, zoom))
-            } else if (shapePart is Triangle) {
-                drawObjects.add(shapePart.getDrawShape(this.brush))
-            }
+        when (this) {
+            is DebugShape -> drawObjects.addAll(this.getDrawParts(zoom))
+            is TextLabel -> drawObjects.addAll(this.glyphSprites)
+            is GLRenderable -> drawObjects.add(this)
         }
     }
 

@@ -19,10 +19,6 @@ import slavsquatsuperstar.demos.spacegame.objects.SpaceGameZIndex;
  */
 public abstract class Asteroid extends GameObject {
 
-    // Constants
-    static final int NUM_TEXTURES = 2;
-    private static final Texture[] ASTEROID_TEXTURES = getAsteroidTextures();
-
     // Instance Fields
     protected final AsteroidProperties properties;
 
@@ -39,11 +35,11 @@ public abstract class Asteroid extends GameObject {
         transform.setRotation(Random.randomAngle());
         transform.setScale(properties.getScale());
 
-        addSprite(properties.color(), properties.spriteIndex());
+        addSprite(properties.texture(), properties.color());
     }
 
-    private void addSprite(Color color, int spriteIndex) {
-        var sprite = Sprites.createSprite(ASTEROID_TEXTURES[spriteIndex]);
+    private void addSprite(Texture texture, Color color) {
+        var sprite = Sprites.createSprite(texture);
         sprite.setColor(color);
         addComponent(sprite);
     }
@@ -54,23 +50,17 @@ public abstract class Asteroid extends GameObject {
                 SpaceGameScene.SCENE_HALF_SIZE, KeepInScene.Mode.WRAP));
     }
 
-    protected Rigidbody addRigidbody(float mass) {
-        Rigidbody rb;
-        addComponent(rb = new Rigidbody(mass, 0.01f, 0.01f));
+    protected Rigidbody addRigidbody(float radius) {
+        var rb = new Rigidbody(radius, 0, 0);
+        addComponent(rb);
         return rb;
     }
 
-    // Static Methods
-
-    private static Texture[] getAsteroidTextures() {
-        var asteroidTextures = new Texture[NUM_TEXTURES];
-        for (int i = 0; i < NUM_TEXTURES; i++) {
-            asteroidTextures[i] = Textures.getTexture(
-                    "assets/spacegame/textures/asteroids/asteroid%d.png"
-                            .formatted(i + 1)
-            );
-        }
-        return asteroidTextures;
+    protected Rigidbody addRigidbody(float radius, Vec2 startImpulse, float startAngularImpulse) {
+        var rb = addRigidbody(radius);
+        rb.applyImpulse(startImpulse);
+        rb.applyAngularImpulse(startAngularImpulse);
+        return rb;
     }
 
 }

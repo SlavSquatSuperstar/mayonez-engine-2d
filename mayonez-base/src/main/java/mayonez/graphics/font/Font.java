@@ -1,116 +1,65 @@
 package mayonez.graphics.font;
 
-import mayonez.assets.image.*;
-import mayonez.graphics.textures.*;
-import mayonez.math.*;
+import mayonez.assets.*;
+import mayonez.assets.text.*;
 
-import java.io.IOException;
+import java.util.*;
 
 /**
- * A bitmap font created from a spritesheet of a set of characters with contiguous code points.
+ * A bitmap font created from one or more sprite sheets of character glyphs.
+ * <p>
+ * See also:
+ * <ul>
+ *     <li><a href="https://minecraft.wiki/w/Font#Bitmap_provider">
+ *         Font § Bitmap - Minecraft Wiki</a></li>
+ *     <li><a href="https://en.wikipedia.org/wiki/Font#Metrics">
+ *         Font § Metrics - Wikipedia</a></li>
+ *     <li><a href="https://en.wikipedia.org/wiki/Leading">
+ *         Leading - Wikipedia</a></li>
+ *     <li><a href="https://en.wikipedia.org/wiki/Point_(typography)">
+ *         Point - Wikipedia</a></li>
+ *     <li><a href="https://en.wikipedia.org/wiki/Typeface">
+ *         Typeface - Wikipedia</a></li>
+ *     <li><a href="https://en.wikipedia.org/wiki/Typeface_anatomy">
+ *         Typeface Anatomy - Wikipedia</a></li>
+ * </ul>
  *
  * @author SlavSquatSuperstar
  */
-// TODO make asset
-public class Font {
+public class Font extends Asset {
 
-    private final GLTexture fontTexture;
     private final FontMetadata metadata;
-    private final Glyph[] glyphs;
+    private final Map<Character, Glyph> glyphs;
 
-    public Font(GLTexture fontTexture, FontMetadata metadata) {
-        this.fontTexture = fontTexture;
-        this.metadata = metadata;
-        var widths = getGlyphWidths(metadata, fontTexture);
-        glyphs = createGlyphs(widths);
+    public Font(String filename) {
+        super(filename);
+
+        // Read font metadata
+        var json = new JSONFile(filename);
+        this.metadata = new FontMetadata(json.readJSON());
+        glyphs = readFontGlyphs(metadata);
     }
 
-    // Create Glyphs Methods
+    private Map<Character, Glyph> readFontGlyphs(FontMetadata metadata) {
+        final Map<Character, Glyph> glyphs;
+        glyphs = new HashMap<>();
 
-    private Glyph[] createGlyphs(int[] widths) {
-        var glyphs = new Glyph[metadata.numCharacters()];
-        var texSize = fontTexture.getSize();
-        var glyphSize = metadata.glyphHeight();
+        // Create whitespace glyph
+        var whitespaceGlyph = new Glyph(
+                metadata.whitespaceWidth(), metadata.glyphHeight()
+        );
+        glyphs.put(metadata.whitespaceCharacter(), whitespaceGlyph);
 
-        // GL uses bottom left as image origin
-        var texTopLeft = new Vec2(0, texSize.y);
-        var glyphBottomLeft = texTopLeft.sub(new Vec2(0, glyphSize));
-
-        // Create glyph textures
-        for (int i = 0; i < glyphs.length; i++) {
-            var glyphTex = new GLSpriteSheetTexture(fontTexture, i, glyphBottomLeft, new Vec2(widths[i], glyphSize));
-            glyphs[i] = new Glyph(widths[i], glyphSize, glyphTex);
-
-            // Move to next glyph
-            // Origin at bottom left
-            glyphBottomLeft.x += glyphSize;
-            if (glyphBottomLeft.x >= fontTexture.getWidth()) {
-                // If at end of row, go to next row
-                glyphBottomLeft.x = 0;
-                glyphBottomLeft.y -= glyphSize;
-            }
+        // Read glyphs from blocks
+        var blocks = metadata.blocks();
+        for (var block : blocks) {
+            var blockGlyphs = block.getGlyphs();
+            blockGlyphs.forEach(glyphs::putIfAbsent); // Don't glyph override if already defined
         }
         return glyphs;
     }
 
-    // Glyph Widths Methods
-
-    // Auto figure out glyph widths from image file
-    static int[] getGlyphWidths(FontMetadata metadata, Texture fontTexture) {
-        var widths = new int[metadata.numCharacters()];
-
-        // Look at AWT image since no flipping or freeing
-        ImageData imgData;
-        try {
-            imgData = new AWTImageData(fontTexture.getFilename());
-        } catch (IOException e) {
-            return widths;
-        }
-
-        var glyphSize = metadata.glyphHeight();
-        var glyphTopLeft = new Vec2(0, 0);
-
-        for (int i = 0; i < widths.length; i++) {
-            if (metadata.startCharacter() + i == metadata.whitespaceCharacter()) {
-                widths[i] = metadata.whitespaceWidth();
-            } else {
-                widths[i] = getGlyphWidth(imgData, glyphTopLeft, glyphSize);
-            }
-
-            // Move to next glyph
-            // Origin at bottom left
-            glyphTopLeft.x += glyphSize;
-            if (glyphTopLeft.x >= fontTexture.getWidth()) {
-                // If at end of row, go to next row
-                glyphTopLeft.x = 0;
-                glyphTopLeft.y += glyphSize;
-            }
-        }
-        return widths;
-    }
-
-    // Auto set glyph width by finding the last filled column
-    private static int getGlyphWidth(ImageData imageData, Vec2 glyphBottomLeft, int glyphSize) {
-        var startX = (int) glyphBottomLeft.x;
-        var startY = (int) glyphBottomLeft.y;
-
-        // Find last column with all filled pixels
-        var lastFilled = -1;
-        for (var col = 0; col < glyphSize; col++) {
-            if (!isColumnBlank(imageData, startX, startY, glyphSize, col)) {
-                lastFilled = col;
-            }
-        }
-        return lastFilled + 1; // Get column after last filled
-    }
-
-    private static boolean isColumnBlank(ImageData imageData, int startX, int startY, int glyphHeight, int col) {
-        for (var row = 0; row < glyphHeight; row++) {
-            var pixAlpha = imageData.getPixelColor(startX + col, startY + row).getAlpha();
-            if (pixAlpha > 0) return false; // Found a filled pixel
-        }
-        return true; // Found only blank pixels
-    }
+    // TODO free block textures
 
     // Metadata Getters
 
@@ -122,19 +71,26 @@ public class Font {
         return metadata.glyphSpacing();
     }
 
-    public int numGlyphs() {
-        return metadata.numCharacters();
-    }
-
     // Glyph Getters
 
-    public Glyph getGlyph(int charCode) {
-        var index = charCode - metadata.startCharacter();
-        if (!MathUtils.inRange(index, 0, metadata.numCharacters() - 1)) {
-            return null;
-        } else {
-            return glyphs[charCode - metadata.startCharacter()];
-        }
+    /**
+     * Whether this font block supports the glyph with the given char code.
+     *
+     * @param charCode the char code
+     * @return if the glyph is supported
+     */
+    public boolean hasGlyph(char charCode) {
+        return glyphs.containsKey(charCode);
+    }
+
+    /**
+     * Get the glyph with the given ASCII char code, if the font supports it.
+     *
+     * @param charCode the char code
+     * @return the glyph, null if unsupported
+     */
+    public Glyph getGlyph(char charCode) {
+        return glyphs.get(charCode);
     }
 
 }

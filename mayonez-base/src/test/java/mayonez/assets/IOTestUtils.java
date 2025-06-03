@@ -66,7 +66,7 @@ public final class IOTestUtils {
      * @param stream the stream to check
      */
     public static void assertOutputStreamOpen(OutputStream stream) {
-        assertDoesNotThrow(() -> stream.write("foo\n".getBytes(StandardCharsets.UTF_8)));
+        assertDoesNotThrow(() -> stream.write("\n".getBytes(StandardCharsets.UTF_8)));
     }
 
 }

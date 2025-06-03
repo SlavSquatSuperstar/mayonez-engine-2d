@@ -1,4 +1,7 @@
 {
+	"start_scene_index": 0,
+	"allow_legacy_scenes": false,
+	"allow_debug_scenes": false,
 	"move_forward": "w",
 	"move_backward": "s",
 	"move_left": "q",

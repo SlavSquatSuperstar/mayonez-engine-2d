@@ -2,6 +2,7 @@ package mayonez.renderer.batch;
 
 import mayonez.graphics.*;
 import mayonez.renderer.gl.*;
+import mayonez.renderer.shader.*;
 
 /**
  * A render batch that draws objects with the same z-index and uses the z-index
@@ -14,8 +15,11 @@ public class SingleZRenderBatch extends RenderBatch {
 
     private final int zIndex;
 
-    public SingleZRenderBatch(DrawPrimitive primitive, int maxBatchObjects, int maxTextureSlots, int zIndex) {
-        super(primitive, maxBatchObjects, maxTextureSlots);
+    public SingleZRenderBatch(
+            Shader shader, DrawPrimitive primitive,
+            int maxBatchObjects, int maxTextureSlots, int zIndex
+    ) {
+        super(shader, primitive, maxBatchObjects, maxTextureSlots);
         this.zIndex = zIndex;
     }
 

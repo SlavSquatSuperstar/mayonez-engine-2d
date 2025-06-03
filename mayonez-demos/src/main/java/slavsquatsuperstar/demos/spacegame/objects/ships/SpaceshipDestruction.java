@@ -69,7 +69,7 @@ public class SpaceshipDestruction extends TimerScript {
         }
         shipSystems.clear();
 
-        getScene().addObject(explosion = ExplosionPrefabs.createPrefab(
+        getScene().addObject(explosion = ExplosionPrefabs.createShipExplosionPrefab(
                 "Ship Explosion",
                 new Transform(transform.getPosition(), Random.randomAngle(), transform.getScale()),
                 EXPLOSION_DURATION

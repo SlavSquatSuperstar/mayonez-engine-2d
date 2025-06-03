@@ -43,7 +43,7 @@ public final class SpaceGameConfig extends GameConfig {
                         "move_forward", "move_backward",
                         "move_left", "move_right",
                         "turn_left", "turn_right",
-                        "brake"
+                        "brake", "auto_brake"
                 )
         };
     }

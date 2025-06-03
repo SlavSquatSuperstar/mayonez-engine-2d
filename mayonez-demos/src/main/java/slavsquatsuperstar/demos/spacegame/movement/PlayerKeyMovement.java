@@ -20,10 +20,10 @@ public class PlayerKeyMovement extends SpaceshipMovement {
     private static final Key BRAKE_KEY = SpaceGameConfig.getBrakeKey();
 
     // Movement Fields
-    private static boolean lastAutoBrake = false;
+    private static boolean lastAutoBrake = true;
 
     private final float moveThrust, turnThrust;
-//    private final float maxMoveSpeed, maxTurnSpeed;
+    // private final float maxMoveSpeed, maxTurnSpeed;
     private boolean autoBrake;
 
     public PlayerKeyMovement(float moveThrust, float turnThrust) {
@@ -58,10 +58,40 @@ public class PlayerKeyMovement extends SpaceshipMovement {
         var brakeDir = getBrakeDir(moveInput);
         var turnBrakeDir = getTurnBrakeDir(turnInput);
 
-        // Move and brake (relative to world)
-        moveObject(moveInput.rotate(transform.getRotation()), dt);
+        // Check whether to zero out velocity
+        // TODO Maybe compare against frame delta-v instead
+        // Zero out velocity if braking and too slow
+        // Due to float imprecision brake/local velocity is not always zero
+        var localVelocity = rb.getVelocity().rotate(-transform.getRotation());
+        var brakeMod = new Vec2(1f);
+        if (shouldZeroVelocity(brakeDir.x, localVelocity.x, BRAKE_THRESHOLD_SPEED)) {
+            brakeMod.x = 0f;
+        }
+        if (shouldZeroVelocity(brakeDir.y, localVelocity.y, BRAKE_THRESHOLD_SPEED)) {
+            brakeMod.y = 0f;
+        }
+        var turnBrakeMod = 1f;
+        if (shouldZeroVelocity(turnBrakeDir, rb.getAngVelocity(), TURN_BRAKE_THRESHOLD_SPEED)) {
+            turnBrakeMod = 0f;
+        }
+
+        // Move (relative to world)
+        var worldMoveInput = moveInput.rotate(transform.getRotation());
+        moveObject(worldMoveInput, dt);
         rotateObject(turnInput, dt);
-        brake(brakeDir.rotate(transform.getRotation()), turnBrakeDir);
+
+        // Brake (relative to world)
+        // Don't brake if component too small
+        if (Math.abs(brakeDir.x) < 1e-5) brakeDir.x = 0f;
+        if (Math.abs(brakeDir.y) < 1e-5) brakeDir.y = 0f;
+        var worldBrakeDir = brakeDir.mul(brakeMod).rotate(transform.getRotation());
+
+        // Should either zero or thrust
+        moveObject(worldBrakeDir.mul(moveThrust), 0f);
+        rb.setVelocity(localVelocity.mul(brakeMod).rotate(transform.getRotation()));
+
+        rotateObject(turnBrakeDir * turnBrakeMod * turnThrust, 0f);
+        rb.setAngVelocity(rb.getAngVelocity() * turnBrakeMod);
 
 //        // Enforce max speed
 //        if (rb.getSpeed() > maxMoveSpeed) {
@@ -72,8 +102,8 @@ public class PlayerKeyMovement extends SpaceshipMovement {
 //        }
 
         // Fire thrusters
-        getThrustController().fireMoveThrusters(moveInput, brakeDir);
-        getThrustController().fireTurnThrusters(turnInput, turnBrakeDir);
+        getThrustController().fireMoveThrusters(moveInput, brakeDir.mul(brakeMod));
+        getThrustController().fireTurnThrusters(turnInput, turnBrakeDir * turnBrakeMod);
     }
 
     @Override
@@ -84,60 +114,47 @@ public class PlayerKeyMovement extends SpaceshipMovement {
     // Brake Overrides
 
     @Override
-    protected void brake(Vec2 brakeDir, float angBrakeDir) {
-        moveObject(brakeDir.mul(moveThrust), 0f);
-        rotateObject(angBrakeDir * turnThrust, 0f);
-
-        // Zero out velocity if too slow
-        if (Math.abs(rb.getVelocity().x) < BRAKE_THRESHOLD_SPEED) {
-            rb.getVelocity().x = 0f;
-        }
-        if (Math.abs(rb.getVelocity().y) < BRAKE_THRESHOLD_SPEED) {
-            rb.getVelocity().y = 0f;
-        }
-        if (rb.getAngSpeed() < TURN_BRAKE_THRESHOLD_SPEED) {
-            rb.setAngVelocity(0f);
-        }
-    }
-
-    @Override
     protected Vec2 getBrakeDir(Vec2 moveInput) {
+        // Velocity relative to ship
         var localVelocity = rb.getVelocity().rotate(-transform.getRotation());
-
-        // Auto-brake if no move input
-        // Don't burn when turning very slow
-        var shouldBrakeX = (KeyInput.keyDown(BRAKE_KEY) ||
-                (autoBrake && MathUtils.equals(moveInput.x, 0f))) &&
-                Math.abs(localVelocity.x) > BRAKE_THRESHOLD_SPEED;
-        var shouldBrakeY = (KeyInput.keyDown(BRAKE_KEY) ||
-                (autoBrake && MathUtils.equals(moveInput.y, 0f))) &&
-                Math.abs(localVelocity.y) > BRAKE_THRESHOLD_SPEED;
-
-        // Lower brake amount when input down
         var brakeDir = localVelocity.mul(-1f).unit();
-        if (!shouldBrakeX) brakeDir.x = 0f;
-        else if (!MathUtils.equals(moveInput.x, 0f)) brakeDir.x *= 0.5f;
-        if (!shouldBrakeY) brakeDir.y = 0f;
-        else if (!MathUtils.equals(moveInput.y, 0f)) brakeDir.y *= 0.5f;
 
+        // Lower brake power when input down
+        if (!shouldBrake(moveInput.x)) {
+            brakeDir.x = 0f;
+        } else if (!MathUtils.equals(moveInput.x, 0f)) {
+            brakeDir.x *= 0.5f;
+        }
+        if (!shouldBrake(moveInput.y)) {
+            brakeDir.y = 0f;
+        } else if (!MathUtils.equals(moveInput.y, 0f)) {
+            brakeDir.y *= 0.5f;
+        }
         return brakeDir;
     }
 
     @Override
     protected float getTurnBrakeDir(float turnInput) {
-        var shouldBrake = (KeyInput.keyDown(BRAKE_KEY) ||
-                // Auto-brake if no turn input
-                (autoBrake && MathUtils.equals(turnInput, 0f))) &&
-                // Don't burn when turning very slow
-                rb.getAngSpeed() > TURN_BRAKE_THRESHOLD_SPEED;
+        if (!shouldBrake(turnInput)) return 0f;
 
-        if (!shouldBrake) return 0f;
-        else {
-            var angBrakeDir = -Math.signum(rb.getAngVelocity());
-            // Lower brake amount when input down
-            if (!MathUtils.equals(turnInput, 0f)) angBrakeDir *= 0.5f;
-            return angBrakeDir;
-        }
+        var angBrakeDir = -Math.signum(rb.getAngVelocity());
+        // Lower brake amount when input down
+        if (!MathUtils.equals(turnInput, 0f)) angBrakeDir *= 0.5f;
+        return angBrakeDir;
+    }
+
+    private boolean shouldBrake(float moveInputComp) {
+        // Always brake if brake key down
+        return (KeyInput.keyDown(BRAKE_KEY) ||
+                // Auto-brake if no move input
+                (autoBrake && MathUtils.equals(moveInputComp, 0f)));
+    }
+
+    private boolean shouldZeroVelocity(
+            float brakeDirComp, float velocityComp, float thresholdSpeedComp
+    ) {
+//        return !MathUtils.equals(brakeDirComp, 0f) && Math.abs(velocityComp) < thresholdSpeedComp;
+        return Math.abs(brakeDirComp) > 1e-5f && Math.abs(velocityComp) < thresholdSpeedComp;
     }
 
     // Input Overrides

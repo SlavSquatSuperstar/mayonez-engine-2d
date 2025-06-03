@@ -10,29 +10,39 @@ import java.util.*;
  */
 public final class TextIOUtils {
 
-    private static final char NEW_LINE = '\n';
+    /**
+     * The file separator on the user's current operating system.
+     */
+    public static final String LINE_SEPARATOR = System.lineSeparator();
 
     private TextIOUtils() {
     }
 
-    private static List<String> read(InputStream input) throws IOException {
-        if (input == null) {
-            throw new IOException("File does not exist or is not readable");
-        }
-        try {
-            var reader = new BufferedReader(new InputStreamReader(input));
-            List<String> lines = new ArrayList<>();
+    // Reader/Writer Methods
 
-            var line = reader.readLine();
-            while (line != null) {
-                lines.add(line);
-                line = reader.readLine();
-            }
-            return lines;
-        } catch (IOException e) {
-            throw new IOException("Error while reading file");
-        }
+    /**
+     * Create a {@link BufferedReader} that will read text from the given
+     * input stream.
+     *
+     * @param input the input stream
+     * @return the buffered reader
+     */
+    public static BufferedReader getReader(InputStream input) {
+        return new BufferedReader(new InputStreamReader(input));
     }
+
+    /**
+     * Create a {@link BufferedWriter} that will write or append text to the
+     * given input stream.
+     *
+     * @param output the output stream
+     * @return the buffered writer
+     */
+    public static BufferedWriter getWriter(OutputStream output) {
+        return new BufferedWriter(new OutputStreamWriter(output));
+    }
+
+    // Read/Write Text Methods
 
     /**
      * Reads text from a stream as a single string.
@@ -45,7 +55,7 @@ public final class TextIOUtils {
         StringBuilder contents = new StringBuilder();
         read(input).forEach(line -> {
             contents.append(line);
-            contents.append(NEW_LINE);
+            contents.append(LINE_SEPARATOR);
         });
         return contents.toString();
     }
@@ -62,12 +72,32 @@ public final class TextIOUtils {
         return read(input).toArray(new String[0]);
     }
 
+    private static List<String> read(InputStream input) throws IOException {
+        if (input == null) {
+            throw new IOException("File does not exist or is not readable");
+        }
+        try {
+            var reader = getReader(input);
+            List<String> lines = new ArrayList<>();
+
+            var line = reader.readLine();
+            while (line != null) {
+                lines.add(line);
+                line = reader.readLine();
+            }
+            // Keep stream open
+            return lines;
+        } catch (IOException e) {
+            throw new IOException("Error while reading file");
+        }
+    }
+
     /**
-     * Writes any number of lines of text to a stream. A new line character
-     * ('\n') is inserted after every line.
+     * Writes or appends any number of lines of text to a stream. A new line
+     * character is inserted after every line.
      *
      * @param output the output stream
-     * @param lines the lines of text
+     * @param lines  the lines of text
      * @throws java.io.FileNotFoundException if the file cannot be written to
      */
     public static void write(OutputStream output, String... lines) throws IOException {
@@ -77,11 +107,11 @@ public final class TextIOUtils {
             return;
         }
         try {
-            var writer = new BufferedWriter(new OutputStreamWriter(output));
+            var writer = getWriter(output);
             for (var line : lines) {
                 if (line == null) continue;
                 writer.write(line);
-                writer.write(NEW_LINE);
+                writer.newLine();
             }
             writer.flush();
         } catch (IOException e) {

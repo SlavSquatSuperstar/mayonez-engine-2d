@@ -5,44 +5,34 @@ import mayonez.graphics.textures.*;
 /**
  * A symbol in a font used to represent a printable character.
  *
+ * @param width   the width of the glyph, in pixels
+ * @param height  the height of the glyph, in pixels
+ * @param baseline  the height of the glyph baseline, in pixels
+ * @param texture the sprite sheet texture used to draw the glyph, null if whitespace
  * @author SlavSquatSuperstar
  */
-public class Glyph {
+public record Glyph(
+        int width,
+        int height,
+        int baseline,
+        Texture texture
+) {
 
-    private final int width, height;
-    private final GLTexture glyphTexture;
-
-    public Glyph(int width, int height, GLTexture glyphTexture) {
-        this.width = width;
-        this.height = height;
-        this.glyphTexture = glyphTexture;
+    /**
+     * Create a whitespace glyph that does not use a texture.
+     */
+    public Glyph(int width, int height) {
+        this(width, height, height, null);
     }
 
     /**
-     * The width of the glyph, in pixels.
+     * If this glyph represents a whitespace character and should be invisible.
+     * Not the same as a non-print (control) character.
      *
-     * @return the glyph width
+     * @return if whitespace
      */
-    public int getWidth() {
-        return width;
-    }
-
-    /**
-     * The height of the glyph, in pixels.
-     *
-     * @return the glyph height
-     */
-    public int getHeight() {
-        return height;
-    }
-
-    /**
-     * The sprite sheet texture used to draw the glyph.
-     *
-     * @return the glyph texture
-     */
-    public GLTexture getTexture() {
-        return glyphTexture;
+    public boolean isWhitespace() {
+        return texture == null;
     }
 
 }

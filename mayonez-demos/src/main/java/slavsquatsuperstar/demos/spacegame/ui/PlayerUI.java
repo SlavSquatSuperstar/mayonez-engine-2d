@@ -6,7 +6,6 @@ import mayonez.graphics.font.*;
 import mayonez.graphics.textures.*;
 import mayonez.graphics.ui.*;
 import mayonez.math.*;
-import slavsquatsuperstar.demos.DemosAssets;
 import slavsquatsuperstar.demos.spacegame.combat.projectiles.ProjectilePrefabs;
 import slavsquatsuperstar.demos.spacegame.events.AutoBrakeToggleEvent;
 import slavsquatsuperstar.demos.spacegame.events.SpaceGameEvents;
@@ -27,6 +26,24 @@ public class PlayerUI extends GameObject {
             "assets/spacegame/textures/ui/gray_background.png");
     private static final Texture LABEL_BORDER_TEXTURE = Textures.getTexture(
             "assets/spacegame/textures/ui/gray_border.png");
+
+    private static final String CONTROL_HINTS_MESSAGE = """
+            Controls:
+            
+            Movement
+            - (W) Forward
+            - (S) Backward
+            - (Q) Left
+            - (E) Right
+            - (A) Turn Left
+            - (D) Turn Right
+            - (Space) Brake
+            - (B) Auto-Brake
+            
+            Weapons
+            - (Mouse 1) Fire
+            - (1-4) Select
+            """;
 
     public PlayerUI(String name) {
         super(name);
@@ -68,84 +85,61 @@ public class PlayerUI extends GameObject {
 
         addComponent(new PlayerUIController(hpSlider, shSlider, weaponHotbar));
 
-        var font = DemosAssets.getFont();
-        if (font == null) return;
+        var style = TextStyle.DEFAULT_STYLE
+                .setColor(Colors.WHITE)
+                .setFontSize(20);
 
         // Auto-Brake Indicator
-        var autoBrakeToolTip = new UITextLabel(
-                "Auto-Brake: Off",
-                new Vec2(20, Preferences.getScreenHeight() - 120),
-                font, Colors.WHITE,
-                16, 2
-        );
-        autoBrakeToolTip.setAnchor(Anchor.LEFT);
+        var autoBrakeToolTip = new TextLabel(
+                "Auto-Brake (B): On",
+                new Vec2(20, Preferences.getScreenHeight() - 125))
+                .setStyle(style)
+                .setAnchor(Anchor.LEFT);
         addComponent(autoBrakeToolTip);
+
         SpaceGameEvents.getPlayerEventSystem().subscribe(
                 event -> {
                     if (event instanceof AutoBrakeToggleEvent e) {
                         if (e.isEnabled()) {
-                            autoBrakeToolTip.setMessage("Auto-Brake: On");
+                            autoBrakeToolTip.setMessage("Auto-Brake (B): On");
                         } else {
-                            autoBrakeToolTip.setMessage("Auto-Brake: Off");
+                            autoBrakeToolTip.setMessage("Auto-Brake (B): Off");
                         }
                     }
                 }
         );
 
         // Hints
-        var hintsTooltip = new UITextLabel(
+        var hintsTooltip = new TextLabel(
                 "Show Hints (H)",
-                new Vec2(Preferences.getScreenWidth() - 80, 20),
-                font, Colors.WHITE,
-                16, 2
-        );
+                new Vec2(Preferences.getScreenWidth() - 20, 15))
+                .setStyle(style)
+                .setAnchor(Anchor.BOTTOM_RIGHT);
         addComponent(hintsTooltip);
-        hintsTooltip.setAnchor(Anchor.RIGHT);
 
-        var hpShHint = new UITextLabel(
+        var healthShieldHint = new TextLabel(
                 "Health\n\nShield",
-                new Vec2(295, Preferences.getScreenHeight() - 55),
-                font, Colors.WHITE,
-                16, 2
-        );
-        addComponent(hpShHint);
+                new Vec2(270, Preferences.getScreenHeight() - 32))
+                .setStyle(style)
+                .setAnchor(Anchor.TOP_LEFT);
+        addComponent(healthShieldHint);
 
-        var hotbarHints = new UITextLabel(
-                "(1)   (2)   (3)   (4)", new Vec2(106, 68),
-                font, Colors.WHITE,
-                16, 2
-        );
-        hintsTooltip.setAnchor(Anchor.LEFT);
+        var hotbarHints = new TextLabel(
+                "(1)   (2)   (3)   (4)", new Vec2(15, 60))
+                .setStyle(style)
+                .setAnchor(Anchor.BOTTOM_LEFT);
         addComponent(hotbarHints);
 
-        var controlText = new UITextLabel(
-                """
-                        Controls:
-                        
-                        Movement
-                        - (W) Forward
-                        - (S) Backward
-                        - (Q) Left
-                        - (E) Right
-                        - (A) Turn Left
-                        - (D) Turn Right
-                        - (Space) Brake
-                        - (B) Auto-Brake
-                        
-                        Weapons
-                        - (Mouse 1) Fire
-                        - (1-4) Select
-                        """,
-                new Vec2(Preferences.getScreenWidth() - 105,
-                        Preferences.getScreenHeight() - 165),
-                font, Colors.WHITE,
-                16, 2
-        );
+        var controlText = new TextLabel(
+                CONTROL_HINTS_MESSAGE,
+                new Vec2(Preferences.getScreenWidth() - 20,
+                        Preferences.getScreenHeight() - 20))
+                .setStyle(style)
+                .setAnchor(Anchor.TOP_RIGHT);
         addComponent(controlText);
-        hintsTooltip.setAnchor(Anchor.TOP_RIGHT);
 
         addComponent(new ToggleHints(hintsTooltip,
-                new TextLabel[]{hotbarHints, controlText, hpShHint}));
+                new TextLabel[]{hotbarHints, controlText, healthShieldHint}));
     }
 
 }

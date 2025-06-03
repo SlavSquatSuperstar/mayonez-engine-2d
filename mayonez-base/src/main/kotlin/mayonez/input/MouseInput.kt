@@ -1,5 +1,6 @@
 package mayonez.input
 
+import mayonez.*
 import mayonez.input.events.*
 import mayonez.math.*
 
@@ -15,7 +16,7 @@ object MouseInput {
 
     // Constants
     private const val NUM_BUTTONS: Int = 8 // GLFW supports eight mouse buttons
-    private const val DOUBLE_CLICK_TIME_SECS: Float = 0.40f
+    private val DOUBLE_CLICK_TIME_SECS: Float = Preferences.doubleClickTime
 
     // Mouse Button Fields
     private val buttons: MutableMap<Int, InputState> = HashMap(NUM_BUTTONS) // All button states
@@ -84,16 +85,12 @@ object MouseInput {
             if (event.eventTime - lastClickTimeSecs <= DOUBLE_CLICK_TIME_SECS)
                 doubleClick = true
             lastClickTimeSecs = event.eventTime
-        } else {
-            mouseDispPx.set(0f, 0f)
         }
     }
 
     private fun onMouseMoveEvent(event: MouseMoveEvent) {
-        if (anyButtonDown) {
-            // Set drag displacement
-            mouseDispPx.set(event.mouseX - mousePosPx.x, event.mouseY - mousePosPx.y)
-        }
+        // Set mouse displacement with last mouse position
+        mouseDispPx.set(event.mouseX - mousePosPx.x, event.mouseY - mousePosPx.y)
         mousePosPx.set(event.mouseX, event.mouseY)
     }
 
@@ -173,7 +170,7 @@ object MouseInput {
     fun buttonPressed(button: Int): Boolean = (buttons[button] == InputState.PRESSED)
 
     /**
-     * If any mouse buttons are held down.
+     * If any mouse buttons are held down this frame.
      *
      * @return if the mouse is pressed
      */
@@ -181,7 +178,8 @@ object MouseInput {
     fun isAnyDown(): Boolean = anyButtonDown
 
     /**
-     * If any two (or more) mouse button pressed were registered in rapid succession.
+     * If any two (or more) mouse button presses were registered in rapid succession
+     * this frame.
      *
      * @return if the mouse is double-clicked
      */
@@ -191,7 +189,8 @@ object MouseInput {
     // Mouse Movement Getters
 
     /**
-     * Get the position of the cursor on the screen, in pixels.
+     * Get the position of the cursor on the screen for the current frame,
+     * in pixels.
      *
      * @return the screen position
      */
@@ -199,7 +198,8 @@ object MouseInput {
     fun getScreenPosition(): Vec2 = mousePosPx
 
     /**
-     * Get the position of the cursor in the scene, in world units.
+     * Get the position of the cursor in the scene for the current frame,
+     * in world units.
      *
      * @return the world position
      */
@@ -207,7 +207,8 @@ object MouseInput {
     fun getPosition(): Vec2 = pointXf.toWorldPosition(getScreenPosition())
 
     /**
-     * Get the drag displacement of the cursor on the screen, in pixels.
+     * Get the displacement of the cursor on the screen for the current frame,
+     * in pixels.
      *
      * @return the screen displacement
      */
@@ -215,7 +216,8 @@ object MouseInput {
     fun getScreenDisplacement(): Vec2 = mouseDispPx
 
     /**
-     * Get the drag displacement of the cursor in the scene, in world units.
+     * Get the displacement of the cursor in the scene for the current frame,
+     * in world units.
      *
      * @return the world displacement
      */
@@ -225,7 +227,7 @@ object MouseInput {
     // Mouse Scroll Getters
 
     /**
-     * Get the scroll displacement of the mouse.
+     * Get the scroll displacement of the mouse for the current frame.
      *
      * @return the scroll
      */

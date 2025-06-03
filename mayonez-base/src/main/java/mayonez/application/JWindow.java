@@ -110,7 +110,7 @@ final class JWindow extends JFrame implements Window {
                 flushResources();
             } while (bs.contentsLost());
         } catch (IllegalStateException e) {
-            Logger.warn("Error rendering current frame; retrying next frame.");
+            Logger.error("Error rendering current frame; retrying next frame.");
         }
     }
 
@@ -120,7 +120,7 @@ final class JWindow extends JFrame implements Window {
             createBufferStrategy(BUFFER_COUNT);
             bs = getBufferStrategy();
         } catch (IllegalStateException e) {
-            Logger.warn("Error initializing window graphics; retrying next frame.");
+            Logger.error("Error initializing window graphics; retrying next frame.");
         }
     }
 

@@ -29,25 +29,25 @@ internal class CollisionListener(val c1: CollisionBody, val c2: CollisionBody) {
         val manifold = c1.getContacts(c2)
         when {
             (manifold == null) -> stopCollision() // no longer colliding
-            !colliding -> startCollision(manifold.normal) // has not collided before
-            else -> continueCollision() // has collided before
+            !colliding -> startCollision(manifold) // has not collided before
+            else -> continueCollision(manifold) // has collided before
         }
 
         trigger = c1.trigger || c2.trigger // if either is trigger then call but don't resolve
         return if (trigger) null else manifold
     }
 
-    private fun startCollision(direction: Vec2) {
+    private fun startCollision(manifold: Manifold) {
         if (!colliding) {
             colliding = true
             val velocity = c2.physicsBody.velocity - c1.physicsBody.velocity
-            sendCollisionEvents(CollisionEventType.ENTER, direction = direction, velocity = velocity)
+            sendCollisionEvents(CollisionEventType.ENTER, manifold = manifold, velocity = velocity)
         }
     }
 
-    private fun continueCollision() {
+    private fun continueCollision(manifold: Manifold) {
         if (colliding) {
-            sendCollisionEvents(CollisionEventType.STAY)
+            sendCollisionEvents(CollisionEventType.STAY, manifold = manifold)
         }
     }
 
@@ -59,18 +59,21 @@ internal class CollisionListener(val c1: CollisionBody, val c2: CollisionBody) {
     }
 
     private fun sendCollisionEvents(
-        type: CollisionEventType, direction: Vec2? = null, velocity: Vec2? = null
+        type: CollisionEventType, manifold: Manifold? = null, velocity: Vec2? = null
     ) {
+        val direction = manifold?.normal
+        val contacts = manifold?.getContacts()
+
         c1.onCollisionEvent(
             CollisionEvent(
                 (c2 as Collider).gameObject, trigger, type,
-                direction, velocity
+                direction, velocity, contacts
             )
         )
         c2.onCollisionEvent(
             CollisionEvent(
                 (c1 as Collider).gameObject, trigger, type,
-                direction?.unaryMinus(), velocity?.unaryMinus()
+                direction?.unaryMinus(), velocity?.unaryMinus(), contacts
             )
         )
     }

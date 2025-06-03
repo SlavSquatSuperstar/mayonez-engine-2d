@@ -16,6 +16,7 @@ module mayonez.base {
 
     // Other Dependencies
     requires kotlin.stdlib;
+    requires org.apache.commons.csv;
     requires org.joml;
     requires org.json;
 
@@ -28,6 +29,7 @@ module mayonez.base {
     exports mayonez.config;
     exports mayonez.event;
     exports mayonez.input;
+    exports mayonez.input.events;
 
     // Assets
     exports mayonez.assets;

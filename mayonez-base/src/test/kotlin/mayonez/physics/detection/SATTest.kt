@@ -2,12 +2,12 @@ package mayonez.physics.detection
 
 import mayonez.math.*
 import mayonez.math.shapes.*
-import mayonez.physics.manifold.*
 import mayonez.physics.CollisionTestUtils.*
+import mayonez.physics.manifold.*
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertNotNull
 
 /**
  * Unit Tests for the [mayonez.physics.detection.SATDetector] class.
@@ -15,11 +15,6 @@ import org.junit.jupiter.api.Test
  * @author SlavSquatSuperstar
  */
 internal class SATTest {
-
-//    companion object {
-//        private val p1: Polygon = Triangle(Vec2(4f, 5f), Vec2(9f, 9f), Vec2(4f, 11f))
-//        private val p2 = Polygon(Vec2(5f, 7f), Vec2(7f, 3f), Vec2(10f, 2f), Vec2(12f, 7f))
-//    }
 
     private lateinit var sat: SATDetector
 
@@ -76,14 +71,14 @@ internal class SATTest {
     private fun testPenetration(shape1: Shape, shape2: Shape, normal: Vec2): Penetration? {
         val pen = sat.getPenetration(shape1, shape2)
         assertNotNull(pen)
-        assertEquals(pen!!.normal, normal)
+        assertEquals(pen.normal, normal)
         return pen
     }
 
     private fun testContacts(pen: Penetration?, shape1: Shape, shape2: Shape, count: Int): Manifold? {
         val man = ClippingManifoldSolver().getContacts(shape1, shape2, pen)
         assertNotNull(man)
-        assertEquals(count, man!!.numContacts())
+        assertEquals(count, man.numContacts())
         return man
     }
 

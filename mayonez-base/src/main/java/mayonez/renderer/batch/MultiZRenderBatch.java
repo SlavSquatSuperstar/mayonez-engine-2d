@@ -2,6 +2,7 @@ package mayonez.renderer.batch;
 
 import mayonez.graphics.*;
 import mayonez.renderer.gl.*;
+import mayonez.renderer.shader.*;
 
 /**
  * A render batch that draws objects with a range of z-indices and uses the minimum
@@ -15,8 +16,11 @@ public class MultiZRenderBatch extends RenderBatch {
     private int minZIndex, maxZIndex;
     private boolean closed;
 
-    public MultiZRenderBatch(DrawPrimitive primitive, int maxBatchObjects, int maxTextureSlots) {
-        super(primitive, maxBatchObjects, maxTextureSlots);
+    public MultiZRenderBatch(
+            Shader shader, DrawPrimitive primitive,
+            int maxBatchObjects, int maxTextureSlots
+    ) {
+        super(shader, primitive, maxBatchObjects, maxTextureSlots);
     }
 
     // Z-Index Methods

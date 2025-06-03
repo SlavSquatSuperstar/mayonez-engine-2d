@@ -6,7 +6,10 @@ import mayonez.renderer.awt.*
 import mayonez.renderer.batch.*
 import mayonez.renderer.gl.*
 import java.awt.*
+import java.util.*
 
+// Constants
+private const val MAX_BATCH_CIRCLES: Int = 200
 private const val MAX_BATCH_LINES: Int = 500
 private const val MAX_BATCH_TRIANGLES: Int = 1000
 
@@ -24,7 +27,7 @@ internal data class DebugShape(internal val shape: MShape, internal val brush: S
     internal val fill: Boolean
         get() = brush.fill
 
-    internal val strokeSize: Float
+    private val strokeSize: Float
         get() = brush.strokeSize
 
     // AWT Renderer Methods
@@ -50,37 +53,28 @@ internal data class DebugShape(internal val shape: MShape, internal val brush: S
      */
     override fun pushToBatch(batch: RenderBatch) {
         val color = color.toGL()
-        color.w = 1f // disable transparency
-        when (val shape = this.shape) {
-            is Edge -> batch.pushLine(shape, color)
-            is Triangle -> batch.pushTriangle(shape, color)
-        }
-    }
-
-    private fun RenderBatch.pushLine(line: Edge, color: GLColor) {
-        pushVec2(line.start)
-        pushVec4(color)
-        pushVec2(line.end)
-        pushVec4(color)
-    }
-
-    private fun RenderBatch.pushTriangle(tri: Triangle, color: GLColor) {
-        for (v in tri.vertices) {
-            pushVec2(v)
-            pushVec4(color)
-        }
+        color.w = 1f // Disable transparency due to reused vertices
+        batch.pushShape(shape, color, brush)
     }
 
     // Renderable Methods
 
     override fun getBatchSize(): Int {
-        return if (fill) MAX_BATCH_TRIANGLES
-        else MAX_BATCH_LINES
+        return when {
+            shape is Circle -> MAX_BATCH_CIRCLES
+            shape is Ellipse -> MAX_BATCH_CIRCLES
+            fill -> MAX_BATCH_TRIANGLES
+            else -> MAX_BATCH_LINES
+        }
     }
 
     override fun getPrimitive(): DrawPrimitive {
-        return if (fill) DrawPrimitive.TRIANGLE
-        else DrawPrimitive.LINE
+        return when (shape) {
+            is Circle -> DrawPrimitive.CIRCLE
+            is Ellipse -> DrawPrimitive.ELLIPSE
+            is Quadrangle -> DrawPrimitive.QUAD
+            else -> DrawPrimitive.TRIANGLE
+        }
     }
 
     override fun getZIndex(): Int = brush.zIndex
@@ -89,8 +83,20 @@ internal data class DebugShape(internal val shape: MShape, internal val brush: S
 
     override fun isInUI(): Boolean = false
 
+    // Object Overrides
+
+    override fun equals(other: Any?): Boolean {
+        return other is DebugShape &&
+                this.shape == other.shape &&
+                this.brush == other.brush
+    }
+
+    override fun hashCode(): Int {
+        return Objects.hash(shape, brush)
+    }
+
     override fun toString(): String {
-        return "Debug ${shape.javaClass.simpleName}, $brush"
+        return "Debug $shape, $brush"
     }
 
 }
