@@ -16,13 +16,33 @@ dependencies {
 application {
     // Leave mainModule blank to prevent ModuleResolutionError
     mainClass = mainClassName
-    applicationDefaultJvmArgs = jvmArgs
+    applicationDefaultJvmArgs = defaultJvmArgs
 
     // Default LWJGL natives for run
     setNatives(Natives.getDefaultNatives(), "runtimeOnlyDefault")
 }
 
 tasks {
+    // Run using the GL engine (same as default run)
+    register<JavaExec>("runGl") {
+        group = "Application"
+        description = "Runs this project using the GL engine."
+
+        classpath = files(jar)
+        jvmArgs = defaultJvmArgs
+        args = listOf("--engine", "gl")
+    }
+
+    // Run using the AWT engine
+    register<JavaExec>("runAwt") {
+        group = "Application"
+        description = "Runs this project using the AWT engine."
+
+        classpath = files(jar)
+        jvmArgs = emptyList()
+        args = listOf("--engine", "awt")
+    }
+
     jar {
         useJarDefaults()
         from(configurations.runtimeClasspath.get()
@@ -30,14 +50,11 @@ tasks {
     }
 
     // Register the jar tasks
-
-    val packagePlatforms = mapOf<String, String>(
+    mapOf(
         Natives.MAC_OS_X64 to "Mac",
         Natives.WINDOWS_X64 to "Windows",
         Natives.LINUX_X64 to "Linux"
-    )
-
-    packagePlatforms.forEach { natives, platform ->
+    ).forEach { natives, platform ->
         register<Jar>("jar$platform") {
             group = "Packaging"
             description = "Copies the release assets for ${platform}."

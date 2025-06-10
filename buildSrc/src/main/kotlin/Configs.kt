@@ -8,7 +8,7 @@ const val mainClassName: String = "slavsquatsuperstar.demos.DemosLauncher"
 val lwjglNatives: String = Natives.getDefaultNatives()
 
 /** The default JVM args for running the .jar file. */
-val jvmArgs: List<String>
+val defaultJvmArgs: List<String>
     get() {
         return if (Natives.isMacOS()) listOf("-XstartOnFirstThread")
         else emptyList()

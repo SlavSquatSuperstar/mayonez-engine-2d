@@ -32,7 +32,7 @@ tasks {
 
     // Register the package tasks
 
-    val packagePlatforms = mapOf<String, String?>(
+    val packagePlatforms = mapOf(
         "Mac" to "macOS", "Windows" to null, "Linux" to null
     )
 
