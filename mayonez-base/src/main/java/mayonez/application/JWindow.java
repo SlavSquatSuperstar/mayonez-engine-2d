@@ -20,7 +20,11 @@ final class JWindow extends JFrame implements Window {
 
     // Constants
     private final static int BUFFER_COUNT = 2;
-    private final static AffineTransform FLIP_XF = AffineTransform.getScaleInstance(1.0, -1.0);
+    private final static AffineTransform FLIP_XF =
+            AffineTransform.getScaleInstance(1.0, -1.0);
+    private final static GraphicsDevice SCREEN_DEVICE = GraphicsEnvironment
+            .getLocalGraphicsEnvironment()
+            .getDefaultScreenDevice();
 
     // Window Fields
     private BufferStrategy bs;
@@ -34,18 +38,20 @@ final class JWindow extends JFrame implements Window {
     /**
      * Create the AWT window.
      *
-     * @param title the window title
-     * @param width the window width
+     * @param title  the window title
+     * @param width  the window width
      * @param height the window height
      */
     JWindow(String title, int width, int height) {
         super(title);
         setSize(width, height);
         setResizable(false);
+
+        // Set close operation
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                closedByUser = true; // red 'x' button will notify game to exit
+                closedByUser = true; // Red 'x' button should notify game to exit
             }
         });
 
@@ -63,13 +69,15 @@ final class JWindow extends JFrame implements Window {
 
     @Override
     public void start() {
-        setLocationRelativeTo(null); // center in screen
+        if (isVisible()) return;
+        setLocationRelativeTo(null); // Center in screen
         setVisible(true);
-        initGraphics(); // initialize graphics resources
+        initGraphics(); // Initialize graphics resources
     }
 
     @Override
     public void stop() {
+        if (!isVisible()) return;
         setVisible(false);
         g2.dispose();
         dispose();
@@ -152,6 +160,35 @@ final class JWindow extends JFrame implements Window {
         return mouse;
     }
 
+    // Full Screen Methods
+
+    @Override
+    public boolean isFullScreen() {
+        return SCREEN_DEVICE.getFullScreenWindow() != null;
+    }
+
+    @Override
+    public void setFullScreen(boolean fullScreen) {
+        stop();
+        if (fullScreen) setFullScreen();
+        else setWindowed();
+        start();
+    }
+
+    // Note that macOS native full screen is different from Swing full screen
+    public void setFullScreen() {
+        if (isDisplayable()) return;
+        setUndecorated(true);
+        if (!SCREEN_DEVICE.isFullScreenSupported()) return;
+        SCREEN_DEVICE.setFullScreenWindow(this);
+    }
+
+    public void setWindowed() {
+        if (isDisplayable()) return;
+        setUndecorated(false);
+        SCREEN_DEVICE.setFullScreenWindow(null);
+    }
+
     // Getters
 
     @Override
@@ -168,12 +205,6 @@ final class JWindow extends JFrame implements Window {
     public int getHeight() {
         return super.getHeight();
     }
-
-//    public boolean isFullScreen() {
-//        var env = GraphicsEnvironment.getLocalGraphicsEnvironment();
-//        var device = env.getDefaultScreenDevice();
-//        return device.getFullScreenWindow() != null;
-//    }
 
     @Override
     public String toString() {

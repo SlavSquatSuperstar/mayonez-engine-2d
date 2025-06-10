@@ -6,6 +6,7 @@ import mayonez.input.*;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.system.MemoryUtil.NULL;
 
 /**
  * The display component for the game, using LWJGL.
@@ -29,8 +30,8 @@ final class GLWindow implements Window {
      * <p>
      * Source: <a href="https://www.lwjgl.org/guide">LWJGL starter guide</a>
      *
-     * @param title the window title
-     * @param width the window width
+     * @param title  the window title
+     * @param width  the window width
      * @param height the window height
      * @throws WindowInitException if GLFW cannot be initialized
      */
@@ -112,6 +113,38 @@ final class GLWindow implements Window {
     @Override
     public MouseInputHandler getMouseInputHandler() {
         return mouse;
+    }
+
+    // Full Screen Methods
+
+    @Override
+    public boolean isFullScreen() {
+        return glfwGetWindowMonitor(windowID) != NULL;
+    }
+
+    @Override
+    public void setFullScreen(boolean fullScreen) {
+        if (fullScreen) setFullScreen();
+        else setWindowed();
+    }
+
+    public void setFullScreen() {
+        glfwSetWindowMonitor(
+                windowID,
+                glfwGetPrimaryMonitor(), 0, 0,
+                Preferences.getScreenWidth(), Preferences.getScreenHeight(),
+                GLFW_DONT_CARE
+        );
+        // TODO use full resolution
+    }
+
+    public void setWindowed() {
+        glfwSetWindowMonitor(
+                windowID,
+                NULL, 0, 0,
+                Preferences.getScreenWidth(), Preferences.getScreenHeight(),
+                GLFW_DONT_CARE
+        );
     }
 
     // Getters

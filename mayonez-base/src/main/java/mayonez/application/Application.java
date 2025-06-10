@@ -1,6 +1,7 @@
 package mayonez.application;
 
 import mayonez.*;
+import mayonez.input.*;
 
 /**
  * An application that displays a window, receives input, and continuously updates and renders a scene.
@@ -123,6 +124,10 @@ public abstract sealed class Application permits JApplication, GLApplication {
 
             // TODO multi-thread physics with shorter fixed time step
             window.beginFrame();
+            // For testing
+            if (KeyInput.keyPressed("f")) {
+                window.setFullScreen(!window.isFullScreen());
+            }
             SceneManager.updateScene(deltaTimeSecs);
             window.endFrame();
             updateCount += 1;

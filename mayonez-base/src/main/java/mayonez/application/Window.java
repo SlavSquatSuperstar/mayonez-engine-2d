@@ -70,4 +70,20 @@ public sealed interface Window permits JWindow, GLWindow {
      */
     MouseInputHandler getMouseInputHandler();
 
+    // Full Screen Methods
+
+    /**
+     * Whether this window is in full screen mode.
+     *
+     * @return if the window is full screen
+     */
+    boolean isFullScreen();
+
+    /**
+     * Set whether this window should be in full screen mode.
+     *
+     * @param fullScreen whether to use full screen
+     */
+    void setFullScreen(boolean fullScreen);
+
 }
