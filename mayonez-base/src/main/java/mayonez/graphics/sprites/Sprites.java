@@ -60,7 +60,7 @@ public final class Sprites {
     public static SpriteSheet createSpriteSheet(
             String filename, int spriteWidth, int spriteHeight, int numSprites, int spacing
     ) {
-        var texture = Textures.getGLTexture(filename);
+        var texture = Textures.getTexture(filename);
         return createSpriteSheet(
                 texture, spriteWidth, spriteHeight, numSprites, spacing
         );
