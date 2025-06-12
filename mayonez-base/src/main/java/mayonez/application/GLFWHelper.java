@@ -16,6 +16,9 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 
 /**
  * Assists in GLFW window creation for the OpenGL engine.
+ * <p>
+ * Source: <a href="https://www.glfw.org/docs/latest/window_guide.html">
+ * GLFW Window Guide</a>
  *
  * @author SlavSquatSuperstar
  */
@@ -60,7 +63,8 @@ final class GLFWHelper {
     private static void configureWindowHints() {
         glfwDefaultWindowHints(); // Reset window settings
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // Don't stay hidden after creation
-        glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE); // Don't allow resizing
+        glfwWindowHint(GLFW_DECORATED, GLFW_TRUE); // Enable title bar
+        glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // Allow user and OS resizing
         glfwWindowHint(GLFW_SCALE_TO_MONITOR, GLFW_TRUE); // Scale screen properly for Windows
 
         // Set GLFW context version to 4.0 core

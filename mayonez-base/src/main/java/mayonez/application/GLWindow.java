@@ -57,6 +57,10 @@ final class GLWindow implements Window {
         glfwSetMouseButtonCallback(windowID, mouse::mouseButtonCallback);
         glfwSetCursorPosCallback(windowID, mouse::mousePosCallback);
         glfwSetScrollCallback(windowID, mouse::mouseScrollCallback);
+
+        // Set resize callback
+        glfwSetFramebufferSizeCallback(windowID, this::onFrameBufferResized); // Pixels (larger on macOS)
+        glfwSetWindowSizeCallback(windowID, this::onWindowResized); // Screen coords
     }
 
     // Engine methods
@@ -116,6 +120,16 @@ final class GLWindow implements Window {
     }
 
     // Full Screen Methods
+
+    private void onWindowResized(long windowID, int width, int height) {
+        System.out.println("window resized");
+        System.out.printf("size = %dx%d\n", width, height);
+    }
+
+    private void onFrameBufferResized(long windowID, int width, int height) {
+        System.out.println("frame buffer resized");
+        System.out.printf("size = %dx%d\n", width, height);
+    }
 
     @Override
     public boolean isFullScreen() {

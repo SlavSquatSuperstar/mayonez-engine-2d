@@ -45,13 +45,21 @@ final class JWindow extends JFrame implements Window {
     JWindow(String title, int width, int height) {
         super(title);
         setSize(width, height);
-        setResizable(false);
+        setResizable(true);
 
         // Set close operation
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
                 closedByUser = true; // Red 'x' button should notify game to exit
+            }
+        });
+
+        // Set resize listener
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                onWindowResized();
             }
         });
 
@@ -161,6 +169,12 @@ final class JWindow extends JFrame implements Window {
     }
 
     // Full Screen Methods
+
+    private void onWindowResized() {
+        System.out.println("resized");
+        System.out.printf("window = %dx%d\n", getSize().width, getSize().height);
+        System.out.printf("content = %dx%d\n", getContentPane().getSize().width, getContentPane().getSize().height);
+    }
 
     @Override
     public boolean isFullScreen() {
