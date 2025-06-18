@@ -30,6 +30,8 @@ final class JWindow extends JFrame implements Window {
     private BufferStrategy bs;
     private Graphics2D g2;
     private boolean closedByUser;
+    private Point lastPos;
+    private Dimension lastSize;
 
     // Input Fields
     private final JKeyManager keyboard;
@@ -46,6 +48,10 @@ final class JWindow extends JFrame implements Window {
         super(title);
         setSize(width, height);
         setResizable(true);
+        setLocationRelativeTo(null); // Center in screen
+
+        lastPos = getLocation();
+        lastSize = getSize();
 
         // Set close operation
         addWindowListener(new WindowAdapter() {
@@ -78,7 +84,6 @@ final class JWindow extends JFrame implements Window {
     @Override
     public void start() {
         if (isVisible()) return;
-        setLocationRelativeTo(null); // Center in screen
         setVisible(true);
         initGraphics(); // Initialize graphics resources
     }
@@ -174,6 +179,7 @@ final class JWindow extends JFrame implements Window {
         System.out.println("resized");
         System.out.printf("window = %dx%d\n", getSize().width, getSize().height);
         System.out.printf("content = %dx%d\n", getContentPane().getSize().width, getContentPane().getSize().height);
+        System.out.printf("location = %d, %d\n", getLocation().x, getLocation().y);
     }
 
     @Override
@@ -191,16 +197,30 @@ final class JWindow extends JFrame implements Window {
 
     // Note that macOS native full screen is different from Swing full screen
     public void setFullScreen() {
-        if (isDisplayable()) return;
+        // Save previous position and size
+        lastPos = getLocation();
+        System.out.println("last pos = " + lastPos);
+        lastSize = getSize();
+        System.out.println("last size = " + lastSize);
+
+        if (isDisplayable()) return; // Must not be visible
         setUndecorated(true);
+
         if (!SCREEN_DEVICE.isFullScreenSupported()) return;
         SCREEN_DEVICE.setFullScreenWindow(this);
     }
 
     public void setWindowed() {
-        if (isDisplayable()) return;
+        if (isDisplayable()) return; // Must not be visible
         setUndecorated(false);
         SCREEN_DEVICE.setFullScreenWindow(null);
+
+        // Restore previous size and position
+        // Works rather inconsistently
+        setLocation(lastPos);
+        System.out.println("new pos = " + getLocation());
+        setSize(lastSize);
+        System.out.println("new size = " + getSize());
     }
 
     // Getters

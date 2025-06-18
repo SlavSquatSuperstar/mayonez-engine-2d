@@ -3,6 +3,8 @@ package mayonez.application;
 import mayonez.*;
 import mayonez.graphics.*;
 import mayonez.input.*;
+import mayonez.math.*;
+import org.lwjgl.BufferUtils;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
@@ -20,6 +22,7 @@ final class GLWindow implements Window {
     private final long windowID;
     private final String title;
     private final int width, height;
+    private Vec2 lastPos, lastSize;
 
     // Input Fields
     private final GLKeyManager keyboard;
@@ -74,6 +77,8 @@ final class GLWindow implements Window {
     public void start() {
         glfwShowWindow(windowID);
         glfwFocusWindow(windowID);
+        lastPos = new Vec2();
+        lastSize = WindowProperties.getScreenSize();
     }
 
     @Override
@@ -143,6 +148,19 @@ final class GLWindow implements Window {
     }
 
     public void setFullScreen() {
+        // Save previous position and size
+        var posX = BufferUtils.createIntBuffer(1);
+        var posY = BufferUtils.createIntBuffer(1);
+        glfwGetWindowPos(windowID, posX, posY);
+        lastPos = new Vec2(posX.get(), posY.get());
+        System.out.println("last pos = " + lastPos);
+
+        var sizeX = BufferUtils.createIntBuffer(1);
+        var sizeY = BufferUtils.createIntBuffer(1);
+        glfwGetWindowSize(windowID, sizeX, sizeY);
+        lastSize = new Vec2(sizeX.get(), sizeY.get());
+        System.out.println("last size = " + lastSize);
+
         glfwSetWindowMonitor(
                 windowID,
                 glfwGetPrimaryMonitor(), 0, 0,
@@ -153,12 +171,17 @@ final class GLWindow implements Window {
     }
 
     public void setWindowed() {
+        // Restore previous size and position
         glfwSetWindowMonitor(
                 windowID,
-                NULL, 0, 0,
-                Preferences.getScreenWidth(), Preferences.getScreenHeight(),
+                NULL, (int) lastPos.x, (int) lastPos.y,
+                (int) lastSize.x, (int) lastSize.y,
                 GLFW_DONT_CARE
         );
+        // Do this until projection is updated
+        glfwRestoreWindow(windowID);
+        glfwSetWindowPos(windowID, (int) lastPos.x, (int) lastPos.y);
+        glfwSetWindowSize(windowID, (int) lastSize.x, (int) lastSize.y);
     }
 
     // Getters
