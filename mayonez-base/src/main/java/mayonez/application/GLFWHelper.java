@@ -3,11 +3,6 @@ package mayonez.application;
 import mayonez.*;
 import mayonez.graphics.*;
 import mayonez.math.*;
-import org.lwjgl.BufferUtils;
-import org.lwjgl.glfw.GLFWVidMode;
-import org.lwjgl.system.MemoryStack;
-
-import java.nio.IntBuffer;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.glfw.GLFWErrorCallback.createPrint;
@@ -17,8 +12,11 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 /**
  * Assists in GLFW window creation for the OpenGL engine.
  * <p>
- * Source: <a href="https://www.glfw.org/docs/latest/window_guide.html">
- * GLFW Window Guide</a>
+ * Sources:
+ * <li><a href="https://www.glfw.org/docs/latest/window_guide.html">
+ * GLFW Window Guide</a></li>
+ * <li><a href="https://github.com/LWJGL/lwjgl3-wiki/wiki/1.3.-Memory-FAQ">
+ * LWJGL Memory FAQ</a></li>
  *
  * @author SlavSquatSuperstar
  */
@@ -53,7 +51,7 @@ final class GLFWHelper {
             throw new WindowInitException("Could not create the GLFW window");
         }
         setWindowScale(windowID);
-        setWindowPosition(windowID);
+        centerWindowPosition(windowID);
         return windowID;
     }
 
@@ -69,7 +67,6 @@ final class GLFWHelper {
 
         // Set GLFW context version to 4.0 core
         // macOS only supports OpenGL versions 3.2-4.1, inclusive
-        // Source: https://www.glfw.org/docs/latest/window.html
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -83,7 +80,7 @@ final class GLFWHelper {
      */
     private static void setWindowScale(long windowID) {
         // Source: https://github.com/glfw/glfw/issues/845
-        var contentScale = getWindowContentScaling(windowID);
+        var contentScale = getWindowContentScale(windowID);
         var ratio = getWindowFramebufferRatio(windowID);
         WindowProperties.setWindowScaling(contentScale.mul(ratio));
         Logger.debug("Window scale has been set to %s", WindowProperties.getWindowScaling());
@@ -95,11 +92,13 @@ final class GLFWHelper {
      * @param windowID the GLFW window pointer
      * @return the content scale
      */
-    private static Vec2 getWindowContentScaling(long windowID) {
-        var xScale = BufferUtils.createFloatBuffer(1);
-        var yScale = BufferUtils.createFloatBuffer(2);
-        glfwGetWindowContentScale(windowID, xScale, yScale);
-        return new Vec2(xScale.get(0), yScale.get(0));
+    private static Vec2 getWindowContentScale(long windowID) {
+        try (var stack = stackPush()) {
+            var xScale = stack.mallocFloat(1);
+            var yScale = stack.mallocFloat(1);
+            glfwGetWindowContentScale(windowID, xScale, yScale);
+            return new Vec2(xScale.get(0), yScale.get(0));
+        }
     }
 
     /**
@@ -111,21 +110,11 @@ final class GLFWHelper {
      * @return the ratio
      */
     private static Vec2 getWindowFramebufferRatio(long windowID) {
-        var xIntBuff = BufferUtils.createIntBuffer(1);
-        var yIntBuff = BufferUtils.createIntBuffer(1);
+        var windowSize = getWindowSize(windowID);
+        var framebufferSize = getFramebufferSize(windowID);
 
-        // Size of the actual image in the display's apparent scale
-        glfwGetWindowSize(windowID, xIntBuff, yIntBuff);
-        var xWindowSize = xIntBuff.get(0);
-        var yWindowSize = yIntBuff.get(0);
-
-        // Size of the rendered image in the display's native scale
-        glfwGetFramebufferSize(windowID, xIntBuff, yIntBuff);
-        var xFramebuffSize = xIntBuff.get(0);
-        var yFramebuffSize = yIntBuff.get(0);
-
-        return new Vec2((float) xWindowSize / xFramebuffSize,
-                (float) yWindowSize / yFramebuffSize);
+        return new Vec2(windowSize.x / framebufferSize.x,
+                windowSize.y / framebufferSize.y);
     }
 
     /**
@@ -133,23 +122,50 @@ final class GLFWHelper {
      *
      * @param windowID the GLFW window pointer
      */
-    private static void setWindowPosition(long windowID) throws WindowInitException {
-        // Push a new frame to the thread stack
-        try (MemoryStack stack = stackPush()) {
-            IntBuffer windowWidth = stack.mallocInt(1);
-            IntBuffer windowHeight = stack.mallocInt(1);
-            glfwGetWindowSize(windowID, windowWidth, windowHeight);
+    private static void centerWindowPosition(long windowID) throws WindowInitException {
+        var windowSize = getWindowSize(windowID);
 
-            GLFWVidMode screenResolution = glfwGetVideoMode(glfwGetPrimaryMonitor());
-            if (screenResolution == null) {
-                throw new WindowInitException("Could not get the video mode");
-            }
-            glfwSetWindowPos(
-                    windowID,
-                    (screenResolution.width() - windowWidth.get(0)) / 2,
-                    (screenResolution.height() - windowHeight.get(0)) / 2
-            );
-        } // Pop the stack frame automatically
+        var vidMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+        if (vidMode == null) {
+            throw new WindowInitException("Could not get the video mode");
+        }
+        glfwSetWindowPos(
+                windowID,
+                (vidMode.width() - (int) windowSize.x) / 2,
+                (vidMode.height() - (int) windowSize.y) / 2
+        );
+    }
+
+    /**
+     * The dimensions of the application window content area in screen units.
+     * On macOS, this is different from the framebuffer size.
+     *
+     * @param windowID the GLFW window pointer
+     * @return the window size
+     */
+    private static Vec2 getWindowSize(long windowID) {
+        try (var stack = stackPush()) {
+            var xSize = stack.mallocInt(1);
+            var ySize = stack.mallocInt(1);
+            glfwGetWindowSize(windowID, xSize, ySize);
+            return new Vec2(xSize.get(0), ySize.get(0));
+        }
+    }
+
+    /**
+     * The dimensions of the rendered framebuffer in pixels.
+     * On macOS, this is different from the window size.
+     *
+     * @param windowID the GLFW window pointer
+     * @return the framebuffer size
+     */
+    private static Vec2 getFramebufferSize(long windowID) {
+        try (var stack = stackPush()) {
+            var xSize = stack.mallocInt(1);
+            var ySize = stack.mallocInt(1);
+            glfwGetFramebufferSize(windowID, xSize, ySize);
+            return new Vec2(xSize.get(0), ySize.get(0));
+        }
     }
 
 }
