@@ -4,7 +4,6 @@ import mayonez.*;
 import mayonez.graphics.*;
 import mayonez.input.*;
 import mayonez.math.*;
-import org.lwjgl.BufferUtils;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
@@ -149,17 +148,8 @@ final class GLWindow implements Window {
 
     public void setFullScreen() {
         // Save previous position and size
-        var posX = BufferUtils.createIntBuffer(1);
-        var posY = BufferUtils.createIntBuffer(1);
-        glfwGetWindowPos(windowID, posX, posY);
-        lastPos = new Vec2(posX.get(), posY.get());
-        System.out.println("last pos = " + lastPos);
-
-        var sizeX = BufferUtils.createIntBuffer(1);
-        var sizeY = BufferUtils.createIntBuffer(1);
-        glfwGetWindowSize(windowID, sizeX, sizeY);
-        lastSize = new Vec2(sizeX.get(), sizeY.get());
-        System.out.println("last size = " + lastSize);
+        lastPos = GLFWHelper.getWindowPos(windowID);
+        lastSize = GLFWHelper.getWindowSize(windowID);
 
         glfwSetWindowMonitor(
                 windowID,

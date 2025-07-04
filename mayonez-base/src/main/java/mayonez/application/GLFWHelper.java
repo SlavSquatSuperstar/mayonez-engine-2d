@@ -137,13 +137,28 @@ final class GLFWHelper {
     }
 
     /**
+     * The dimensions of the top-left corner of the window content area in screen units.
+     *
+     * @param windowID the GLFW window pointer
+     * @return the window size
+     */
+    static Vec2 getWindowPos(long windowID) {
+        try (var stack = stackPush()) {
+            var xSize = stack.mallocInt(1);
+            var ySize = stack.mallocInt(1);
+            glfwGetWindowPos(windowID, xSize, ySize);
+            return new Vec2(xSize.get(0), ySize.get(0));
+        }
+    }
+
+    /**
      * The dimensions of the application window content area in screen units.
      * On macOS, this is different from the framebuffer size.
      *
      * @param windowID the GLFW window pointer
      * @return the window size
      */
-    private static Vec2 getWindowSize(long windowID) {
+    static Vec2 getWindowSize(long windowID) {
         try (var stack = stackPush()) {
             var xSize = stack.mallocInt(1);
             var ySize = stack.mallocInt(1);
@@ -159,7 +174,7 @@ final class GLFWHelper {
      * @param windowID the GLFW window pointer
      * @return the framebuffer size
      */
-    private static Vec2 getFramebufferSize(long windowID) {
+    static Vec2 getFramebufferSize(long windowID) {
         try (var stack = stackPush()) {
             var xSize = stack.mallocInt(1);
             var ySize = stack.mallocInt(1);

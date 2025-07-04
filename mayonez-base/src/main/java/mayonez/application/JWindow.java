@@ -199,9 +199,7 @@ final class JWindow extends JFrame implements Window {
     public void setFullScreen() {
         // Save previous position and size
         lastPos = getLocation();
-        System.out.println("last pos = " + lastPos);
         lastSize = getSize();
-        System.out.println("last size = " + lastSize);
 
         if (isDisplayable()) return; // Must not be visible
         setUndecorated(true);
@@ -218,9 +216,7 @@ final class JWindow extends JFrame implements Window {
         // Restore previous size and position
         // Works rather inconsistently
         setLocation(lastPos);
-        System.out.println("new pos = " + getLocation());
         setSize(lastSize);
-        System.out.println("new size = " + getSize());
     }
 
     // Getters
