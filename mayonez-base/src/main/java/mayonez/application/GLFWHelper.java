@@ -5,6 +5,7 @@ import mayonez.graphics.*;
 import mayonez.math.*;
 
 import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.glfw.GLFW.glfwGetPrimaryMonitor;
 import static org.lwjgl.glfw.GLFWErrorCallback.createPrint;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
@@ -15,6 +16,8 @@ import static org.lwjgl.system.MemoryUtil.NULL;
  * Sources:
  * <li><a href="https://www.glfw.org/docs/latest/window_guide.html">
  * GLFW Window Guide</a></li>
+ * <li><a href="https://www.glfw.org/docs/latest/group__monitor.html">
+ * GLFW Monitor Reference</a></li>
  * <li><a href="https://github.com/LWJGL/lwjgl3-wiki/wiki/1.3.-Memory-FAQ">
  * LWJGL Memory FAQ</a></li>
  *
@@ -45,13 +48,21 @@ final class GLFWHelper {
      * @return the window id
      */
     static long createGLFWWindow(int width, int height, String title) throws WindowInitException {
+        // Create window
         configureWindowHints();
         var windowID = glfwCreateWindow(width, height, title, NULL, NULL);
         if (windowID == NULL) {
             throw new WindowInitException("Could not create the GLFW window");
         }
+
+        // Set window scale and position
         setWindowScale(windowID);
         centerWindowPosition(windowID);
+
+        // Very important!
+        glfwMakeContextCurrent(windowID); // Make the OpenGL context current
+        glfwSwapInterval(GLFW_TRUE); // Enable v-sync
+        GLHelper.loadOpenGL(); // Integrate LWJGL with OpenGL bindings
         return windowID;
     }
 
@@ -122,18 +133,20 @@ final class GLFWHelper {
      *
      * @param windowID the GLFW window pointer
      */
-    private static void centerWindowPosition(long windowID) throws WindowInitException {
-        var windowSize = getWindowSize(windowID);
+    private static void centerWindowPosition(long windowID) {
+        try (var stack = stackPush()) {
+            var xPos = stack.mallocInt(1);
+            var yPos = stack.mallocInt(1);
+            var width = stack.mallocInt(1);
+            var height = stack.mallocInt(1);
+            // Use this over glfwGetVideoMode to account for menu bars
+            glfwGetMonitorWorkarea(glfwGetPrimaryMonitor(), xPos, yPos, width, height);
 
-        var vidMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-        if (vidMode == null) {
-            throw new WindowInitException("Could not get the video mode");
+            var windowSize = getWindowSize(windowID);
+            var xCenterPos = xPos.get(0) + (width.get(0) - (int) windowSize.x) / 2;
+            var yCenterPos = yPos.get(0) + (height.get(0) - (int) windowSize.y) / 2;
+            glfwSetWindowPos(windowID, xCenterPos, yCenterPos);
         }
-        glfwSetWindowPos(
-                windowID,
-                (vidMode.width() - (int) windowSize.x) / 2,
-                (vidMode.height() - (int) windowSize.y) / 2
-        );
     }
 
     /**

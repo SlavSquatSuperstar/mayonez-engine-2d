@@ -47,12 +47,6 @@ final class GLWindow implements Window {
         // Initialize window
         initGLFW();
         windowID = createGLFWWindow(width, height, title);
-
-        // Important! Detect current context and integrate LWJGL with OpenGL bindings
-        glfwMakeContextCurrent(windowID); // Make the OpenGL context current
-        glfwSwapInterval(1); // Enable v-sync
-        GLHelper.loadOpenGL();
-
         lastPos = getWindowPos(windowID);
         lastSize = getWindowSize(windowID);
 
