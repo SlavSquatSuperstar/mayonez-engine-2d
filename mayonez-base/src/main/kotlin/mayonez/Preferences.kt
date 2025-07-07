@@ -28,7 +28,7 @@ object Preferences : GameConfig(PREFS_FILENAME, Defaults.preferences) {
     private fun getRules(): Array<PreferenceValidator<*>> {
         return arrayOf(
             StringValidator("title", "log_level", "log_directory"),
-            BooleanValidator("save_logs", "frame_skip"),
+            BooleanValidator("fullscreen", "save_logs", "frame_skip"),
             IntValidator(240, 3840, "screen_height", "screen_width"),
             IntValidator(10, 250, "fps"),
             FloatValidator(0f, 5f, "double_click_time"),
@@ -48,6 +48,11 @@ object Preferences : GameConfig(PREFS_FILENAME, Defaults.preferences) {
     @JvmStatic
     val screenHeight: Int
         get() = getInt("screen_height")
+
+    @JvmStatic
+    val fullscreen: Boolean
+        @JvmName("isFullscreen")
+        get() = getBoolean("fullscreen")
 
     @JvmStatic
     val fps: Int

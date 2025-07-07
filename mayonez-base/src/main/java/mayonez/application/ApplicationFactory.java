@@ -1,6 +1,6 @@
 package mayonez.application;
 
-import mayonez.Logger;
+import mayonez.*;
 import mayonez.input.*;
 import mayonez.util.OperatingSystem;
 
@@ -31,8 +31,11 @@ public final class ApplicationFactory {
     public static Application createApplication(
             boolean useGL, String title, int width, int height
     ) throws WindowInitException {
+        // TODO Pass fullscreen parameter
         // Create window
         var window = createWindow(useGL, title, width, height);
+        // TODO In AWT, this doesn't update camera screen size
+        window.setFullScreen(Preferences.isFullscreen());
         KeyInput.setHandler(window.getKeyInputHandler());
         MouseInput.setHandler(window.getMouseInputHandler());
 

@@ -207,6 +207,7 @@ final class JWindow extends JFrame implements Window {
 
         if (!SCREEN_DEVICE.isFullScreenSupported()) return;
         SCREEN_DEVICE.setFullScreenWindow(this);
+        // Note that AWT fullscreen uses native resolution instead of windowed resolution
     }
 
     public void setWindowed() {

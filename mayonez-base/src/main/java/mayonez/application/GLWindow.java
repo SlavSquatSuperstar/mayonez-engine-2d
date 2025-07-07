@@ -5,6 +5,7 @@ import mayonez.graphics.*;
 import mayonez.input.*;
 import mayonez.math.*;
 
+import static mayonez.application.GLFWHelper.*;
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.glViewport;
@@ -44,13 +45,16 @@ final class GLWindow implements Window {
         this.height = height;
 
         // Initialize window
-        GLFWHelper.initGLFW();
-        windowID = GLFWHelper.createGLFWWindow(width, height, title);
+        initGLFW();
+        windowID = createGLFWWindow(width, height, title);
 
         // Important! Detect current context and integrate LWJGL with OpenGL bindings
         glfwMakeContextCurrent(windowID); // Make the OpenGL context current
         glfwSwapInterval(1); // Enable v-sync
         GLHelper.loadOpenGL();
+
+        lastPos = getWindowPos(windowID);
+        lastSize = getWindowSize(windowID);
 
         // Add input handlers
         keyboard = new GLKeyManager();
@@ -77,8 +81,6 @@ final class GLWindow implements Window {
     public void start() {
         glfwShowWindow(windowID);
         glfwFocusWindow(windowID);
-        lastPos = new Vec2();
-        lastSize = WindowProperties.getScreenSize();
     }
 
     @Override
@@ -150,8 +152,8 @@ final class GLWindow implements Window {
 
     public void setFullScreen() {
         // Save previous position and size
-        lastPos = GLFWHelper.getWindowPos(windowID);
-        lastSize = GLFWHelper.getWindowSize(windowID);
+        lastPos = getWindowPos(windowID);
+        lastSize = getWindowSize(windowID);
 
         glfwSetWindowMonitor(
                 windowID,

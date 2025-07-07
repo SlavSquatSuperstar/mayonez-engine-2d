@@ -1,7 +1,8 @@
 {
     "title": "Mayonez Engine Demos",
-    "screen_width": 1200,
+    "screen_width": 1280,
     "screen_height": 800,
+    "fullscreen": false,
     "fps": 60,
     "frame_skip": true,
     "double_click_time": 0.5,
