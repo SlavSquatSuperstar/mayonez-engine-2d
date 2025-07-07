@@ -20,10 +20,6 @@ internal class JDefaultRenderer : SceneRenderer,
     private val objects: MutableList<JRenderable> = ArrayList() // Sprites and shapes
     private val drawObjects: MutableList<JRenderable> = ArrayList() // Enabled objects
 
-    // Scene Information
-    private val windowWidth: Int = Preferences.screenWidth
-    private val windowHeight: Int = Preferences.screenHeight
-
     // Scene Renderer Methods
 
     override fun addRenderable(r: Renderable?) {
@@ -51,8 +47,9 @@ internal class JDefaultRenderer : SceneRenderer,
         val oldXf = g2?.transform ?: return // Save a copy of the unmodified transform
 
         // Draw background
+        val screenSize = viewport.screenSize
         g2.color = viewport.backgroundColor.toAWT()
-        g2.fillRect(0, 0, windowWidth, windowHeight)
+        g2.fillRect(0, 0, screenSize.x.toInt(), screenSize.y.toInt())
         transformScreen(g2)
 
         // Crate "batches" from objects and shapes

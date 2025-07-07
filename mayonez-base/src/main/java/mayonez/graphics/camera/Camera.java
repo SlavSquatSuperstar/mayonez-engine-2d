@@ -1,6 +1,8 @@
 package mayonez.graphics.camera;
 
 import mayonez.*;
+import mayonez.application.*;
+import mayonez.event.EventListener;
 import mayonez.graphics.*;
 import mayonez.math.*;
 import mayonez.renderer.*;
@@ -20,7 +22,8 @@ import java.util.*;
 public abstract class Camera extends Component implements Viewport {
 
     // Size Fields
-    protected final Vec2 screenSize;
+    protected final Vec2 screenSize; // TODO update when switching scenes
+    private final EventListener<WindowResizeEvent> resizeHandler;
     private float cameraScale, invCameraScale; // Pixels per unit
 
     // Camera Fields
@@ -34,6 +37,10 @@ public abstract class Camera extends Component implements Viewport {
     protected Camera(Vec2 screenSize) {
         super(UpdateOrder.PRE_RENDER);
         this.screenSize = screenSize;
+        resizeHandler = e -> {
+            this.screenSize.set(e.getWidth(), e.getHeight());
+            updateProjectionMatrix();
+        };
 
         cameraScale = 1f;
         invCameraScale = 1f;
@@ -49,6 +56,7 @@ public abstract class Camera extends Component implements Viewport {
     @Override
     protected void init() {
         cameraScripts.processBuffer();
+        WindowEvents.WINDOW_EVENTS.subscribe(resizeHandler);
     }
 
     @Override
@@ -64,6 +72,11 @@ public abstract class Camera extends Component implements Viewport {
         if (getSubject() != null) {
             transform.setPosition(getSubject().transform.getPosition());
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        WindowEvents.WINDOW_EVENTS.unsubscribe(resizeHandler);
     }
 
     // Camera Color Methods
@@ -181,6 +194,11 @@ public abstract class Camera extends Component implements Viewport {
      */
     public void resetZoom() {
         zoom = 1f;
+    }
+
+    @Override
+    public Vec2 getScreenSize() {
+        return screenSize;
     }
 
     // Camera Scale Methods

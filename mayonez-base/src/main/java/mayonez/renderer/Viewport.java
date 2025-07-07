@@ -76,6 +76,13 @@ public interface Viewport extends PointTransformer {
      */
     float getCameraScale();
 
+    /**
+     * The viewport's dimensions in pixels.
+     *
+     * @return the camera's screen suze
+     */
+    Vec2 getScreenSize();
+
     // Camera Transformation Methods
 
     /**
