@@ -181,9 +181,6 @@ final class JWindow extends JFrame implements Window {
         WindowEvents.WINDOW_EVENTS.broadcast(new WindowResizeEvent(
                 getContentPane().getWidth(), getContentPane().getHeight()
         ));
-        System.out.printf("window = %dx%d\n", getWidth(), getHeight());
-        System.out.printf("content = %dx%d\n", getContentPane().getWidth(), getContentPane().getHeight());
-        System.out.printf("location = %d, %d\n", getLocation().x, getLocation().y);
     }
 
     @Override

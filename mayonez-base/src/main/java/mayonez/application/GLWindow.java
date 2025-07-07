@@ -7,6 +7,7 @@ import mayonez.math.*;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.opengl.GL11.glViewport;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 /**
@@ -129,11 +130,11 @@ final class GLWindow implements Window {
         this.width = width;
         this.height = height;
         WindowEvents.WINDOW_EVENTS.broadcast(new WindowResizeEvent(width, height));
-        System.out.printf("window = %dx%d\n", width, height);
     }
 
     private void onFrameBufferResized(long windowID, int width, int height) {
-        System.out.printf("frame buffer = %dx%d\n", width, height);
+        // Resize the viewport on Windows and Linux
+        glViewport(0, 0, width, height);
     }
 
     @Override
@@ -158,7 +159,6 @@ final class GLWindow implements Window {
                 Preferences.getScreenWidth(), Preferences.getScreenHeight(),
                 GLFW_DONT_CARE
         );
-        // TODO use full resolution
     }
 
     public void setWindowed() {
@@ -169,7 +169,8 @@ final class GLWindow implements Window {
                 (int) lastSize.x, (int) lastSize.y,
                 GLFW_DONT_CARE
         );
-        // Do this until projection is updated
+
+        // This is necessary for when the windowed size is equal to the screen resolution
         glfwRestoreWindow(windowID);
         glfwSetWindowPos(windowID, (int) lastPos.x, (int) lastPos.y);
         glfwSetWindowSize(windowID, (int) lastSize.x, (int) lastSize.y);
