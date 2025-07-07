@@ -20,7 +20,7 @@ final class GLWindow implements Window {
     // Window Fields
     private final long windowID;
     private final String title;
-    private final int width, height;
+    private int width, height;
     private Vec2 lastPos, lastSize;
 
     // Input Fields
@@ -126,13 +126,14 @@ final class GLWindow implements Window {
     // Full Screen Methods
 
     private void onWindowResized(long windowID, int width, int height) {
-        System.out.println("window resized");
-        System.out.printf("size = %dx%d\n", width, height);
+        this.width = width;
+        this.height = height;
+        WindowEvents.WINDOW_EVENTS.broadcast(new WindowResizeEvent(width, height));
+        System.out.printf("window = %dx%d\n", width, height);
     }
 
     private void onFrameBufferResized(long windowID, int width, int height) {
-        System.out.println("frame buffer resized");
-        System.out.printf("size = %dx%d\n", width, height);
+        System.out.printf("frame buffer = %dx%d\n", width, height);
     }
 
     @Override

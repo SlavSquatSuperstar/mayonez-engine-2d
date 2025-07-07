@@ -57,7 +57,9 @@ final class JWindow extends JFrame implements Window {
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                closedByUser = true; // Red 'x' button should notify game to exit
+                closedByUser = true;
+                // The close button on the toolbar will notify the game to exit
+                // Note that quitting the JVM will not trigger this handler, unlike GLFW
             }
         });
 
@@ -176,9 +178,11 @@ final class JWindow extends JFrame implements Window {
     // Full Screen Methods
 
     private void onWindowResized() {
-        System.out.println("resized");
-        System.out.printf("window = %dx%d\n", getSize().width, getSize().height);
-        System.out.printf("content = %dx%d\n", getContentPane().getSize().width, getContentPane().getSize().height);
+        WindowEvents.WINDOW_EVENTS.broadcast(new WindowResizeEvent(
+                getContentPane().getWidth(), getContentPane().getHeight()
+        ));
+        System.out.printf("window = %dx%d\n", getWidth(), getHeight());
+        System.out.printf("content = %dx%d\n", getContentPane().getWidth(), getContentPane().getHeight());
         System.out.printf("location = %d, %d\n", getLocation().x, getLocation().y);
     }
 
