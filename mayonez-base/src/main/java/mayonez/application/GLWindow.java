@@ -34,19 +34,20 @@ final class GLWindow implements Window {
      * <p>
      * Source: <a href="https://www.lwjgl.org/guide">LWJGL starter guide</a>
      *
-     * @param title  the window title
-     * @param width  the window width
-     * @param height the window height
+     * @param title      the window title
+     * @param width      the window width in pixels
+     * @param height     the window height in pixels
+     * @param fullScreen if the window should be full screen
      * @throws WindowInitException if GLFW cannot be initialized
      */
-    GLWindow(String title, int width, int height) throws WindowInitException {
+    GLWindow(String title, int width, int height, boolean fullScreen) throws WindowInitException {
         this.title = title;
         this.width = width;
         this.height = height;
 
         // Initialize window
         initGLFW();
-        windowID = createGLFWWindow(width, height, title);
+        windowID = createGLFWWindow(title, width, height, fullScreen);
         lastPos = getWindowPos(windowID);
         lastSize = getWindowSize(windowID);
 

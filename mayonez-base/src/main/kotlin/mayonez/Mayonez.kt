@@ -132,7 +132,8 @@ object Mayonez {
                 val engineString = if (useGL) "GL" else "AWT"
                 application = ApplicationFactory.createApplication(
                     useGL, "${Preferences.title} ($engineString)",
-                    Preferences.screenWidth, Preferences.screenHeight
+                    Preferences.screenWidth, Preferences.screenHeight,
+                    Preferences.fullscreen
                 )
                 Logger.log("Using engine type \"%s\"", engineString)
             } catch (e: WindowInitException) {

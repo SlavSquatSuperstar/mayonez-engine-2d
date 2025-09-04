@@ -42,15 +42,17 @@ final class GLFWHelper {
     /**
      * Create a new window and return its GLFW pointer.
      *
-     * @param width  the window's width
-     * @param height the window's height
-     * @param title  the window's title
+     * @param title      the window title
+     * @param width      the window width in pixels
+     * @param height     the window height in pixels
+     * @param fullScreen if the window should be full screen
      * @return the window id
      */
-    static long createGLFWWindow(int width, int height, String title) throws WindowInitException {
+    static long createGLFWWindow(String title, int width, int height, boolean fullScreen) throws WindowInitException {
         // Create window
         configureWindowHints();
-        var windowID = glfwCreateWindow(width, height, title, NULL, NULL);
+        var monitor = fullScreen ? glfwGetPrimaryMonitor() : NULL;
+        var windowID = glfwCreateWindow(width, height, title, monitor, NULL);
         if (windowID == NULL) {
             throw new WindowInitException("Could not create the GLFW window");
         }
@@ -61,7 +63,7 @@ final class GLFWHelper {
 
         // Very important!
         glfwMakeContextCurrent(windowID); // Make the OpenGL context current
-        glfwSwapInterval(GLFW_TRUE); // Enable v-sync
+        glfwSwapInterval(1); // Enable v-sync
         GLHelper.loadOpenGL(); // Integrate LWJGL with OpenGL bindings
         return windowID;
     }
