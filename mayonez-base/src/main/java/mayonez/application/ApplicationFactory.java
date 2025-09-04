@@ -20,18 +20,15 @@ public final class ApplicationFactory {
     /**
      * Creates a new {@link Application} with the given engine type.
      *
-     * @param useGL      whether to use OpenGL instead of Java's AWT library
-     * @param title      the window title
-     * @param width      the window width in pixels
-     * @param height     the window height in pixels
-     * @param fullScreen if the window should be full screen
+     * @param useGL  whether to use OpenGL instead of Java's AWT library
+     * @param config the window's initialization parameters
      * @return the application
      * @throws WindowInitException if the wrong thread is used on macOS
      */
-    public static Application createApplication(
-            boolean useGL, String title, int width, int height, boolean fullScreen
-    ) throws WindowInitException {
-        var window = createWindow(useGL, title, width, height, fullScreen);
+    public static Application createApplication(boolean useGL, WindowConfig config)
+            throws WindowInitException {
+        // TODO window config record
+        var window = createWindow(useGL, config);
         // TODO In AWT, this doesn't update camera screen size
         KeyInput.setHandler(window.getKeyInputHandler());
         MouseInput.setHandler(window.getMouseInputHandler());
@@ -42,17 +39,13 @@ public final class ApplicationFactory {
     /**
      * Creates a new {@link Window} with the given engine type.
      *
-     * @param useGL      whether to use OpenGL instead of Java's AWT library
-     * @param title      the window title
-     * @param width      the window width in pixels
-     * @param height     the window height in pixels
-     * @param fullScreen if the window should be full screen
+     * @param useGL  whether to use OpenGL instead of Java's AWT library
+     * @param config the window's initialization parameters
      * @return the window
      * @throws WindowInitException if the wrong thread is used on macOS
      */
-    private static Window createWindow(
-            boolean useGL, String title, int width, int height, boolean fullScreen
-    ) throws WindowInitException {
+    private static Window createWindow(boolean useGL, WindowConfig config)
+            throws WindowInitException {
         // Check that correct thread is used on macOS
         var isMacOS = OperatingSystem.getCurrent() == OperatingSystem.MAC_OS;
         if (useGL) {
@@ -61,7 +54,7 @@ public final class ApplicationFactory {
                 Logger.fatal("Make sure to run Java with the \"-XstartOnFirstThread\" VM argument");
                 throw new WindowInitException("Aborting GLFW initialization due to main thread not used");
             }
-            return new GLWindow(title, width, height, fullScreen);
+            return new GLWindow(config);
         } else {
             // VM args must be checked before AWT classes are used
             if (isMacOS && JVMHelper.isStartedOnFirstThread()) {
@@ -69,7 +62,7 @@ public final class ApplicationFactory {
                 Logger.fatal("Make sure to run Java without the \"-XstartOnFirstThread\" VM argument");
                 throw new WindowInitException("Aborting AWT window creation due to main thread used");
             }
-            return new JWindow(title, width, height, fullScreen);
+            return new JWindow(config);
         }
     }
 

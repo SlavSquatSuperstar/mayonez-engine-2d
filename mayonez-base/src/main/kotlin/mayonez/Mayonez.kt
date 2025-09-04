@@ -82,7 +82,7 @@ object Mayonez {
 
     /**
      * Sets the run configuration for the program. Must be called before
-     * [start].
+     * [Mayonez.start].
      */
     @JvmStatic
     @JvmName("setConfig")
@@ -129,12 +129,15 @@ object Mayonez {
             // Create game engine instance
             try {
                 Logger.log("Creating application \"${Preferences.title}\"...")
+
                 val engineString = if (useGL) "GL" else "AWT"
-                application = ApplicationFactory.createApplication(
-                    useGL, "${Preferences.title} ($engineString)",
+                val config = WindowConfig(
+                    "${Preferences.title} ($engineString)",
                     Preferences.screenWidth, Preferences.screenHeight,
                     Preferences.fullscreen
-                )
+                ).validate()
+                application = ApplicationFactory.createApplication(useGL, config)
+
                 Logger.log("Using engine type \"%s\"", engineString)
             } catch (e: WindowInitException) {
                 Logger.printStackTrace(e)
@@ -151,7 +154,7 @@ object Mayonez {
     // Game Loop Methods
 
     /**
-     * Start the game and load a scene. Must be called after [setConfig].
+     * Start the game and load a scene. Must be called after [Mayonez.setConfig].
      *
      * @param scene the starting scene
      */

@@ -40,14 +40,11 @@ final class JWindow extends JFrame implements Window {
     /**
      * Create the AWT window.
      *
-     * @param title      the window title
-     * @param width      the window width in pixels
-     * @param height     the window height in pixels
-     * @param fullScreen if the window should be full screen
+     * @param config the initialization parameters
      */
-    JWindow(String title, int width, int height, boolean fullScreen) {
-        super(title);
-        setSize(width, height);
+    JWindow(WindowConfig config) {
+        super(config.title());
+        setSize(config.width(), config.height());
         setResizable(true);
         setLocationRelativeTo(null); // Center in screen
 
@@ -55,9 +52,9 @@ final class JWindow extends JFrame implements Window {
         lastSize = getSize();
 
         // Init as fullscreen or windowed
-        setUndecorated(fullScreen);
+        setUndecorated(config.fullScreen());
         if (SCREEN_DEVICE.isFullScreenSupported()) {
-            SCREEN_DEVICE.setFullScreenWindow(fullScreen ? this : null);
+            SCREEN_DEVICE.setFullScreenWindow(config.fullScreen() ? this : null);
         }
 
         // Set close operation
