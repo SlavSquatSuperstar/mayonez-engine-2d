@@ -39,9 +39,7 @@ public final class ApplicationFactory {
         KeyInput.setHandler(window.getKeyInputHandler());
         MouseInput.setHandler(window.getMouseInputHandler());
 
-        return useGL
-                ? new GLApplication(window)
-                : new JApplication(window);
+        return new Application(window);
     }
 
     /**
@@ -59,9 +57,9 @@ public final class ApplicationFactory {
             boolean useGL, String title, int width, int height
     ) throws WindowInitException {
         // Check that correct thread is used on macOS
+        var isMacOS = OperatingSystem.getCurrent() == OperatingSystem.MAC_OS;
         if (useGL) {
-            if (OperatingSystem.getCurrent() == OperatingSystem.MAC_OS
-                    && !JVMHelper.isStartedOnFirstThread()) {
+            if (isMacOS && !JVMHelper.isStartedOnFirstThread()) {
                 Logger.fatal("GLFW must be initialized from the main thread on macOS");
                 Logger.fatal("Make sure to run Java with the \"-XstartOnFirstThread\" VM argument");
                 throw new WindowInitException("Aborting GLFW initialization due to main thread not used");
@@ -69,8 +67,7 @@ public final class ApplicationFactory {
             return new GLWindow(title, width, height);
         } else {
             // VM args must be checked before AWT classes are used
-            if (OperatingSystem.getCurrent() == OperatingSystem.MAC_OS
-                    && JVMHelper.isStartedOnFirstThread()) {
+            if (isMacOS && JVMHelper.isStartedOnFirstThread()) {
                 Logger.fatal("AWT cannot be used from the main thread on macOS");
                 Logger.fatal("Make sure to run Java without the \"-XstartOnFirstThread\" VM argument");
                 throw new WindowInitException("Aborting AWT window creation due to main thread used");

@@ -8,7 +8,7 @@ import mayonez.input.*;
  *
  * @author SlavSquatSuperstar
  */
-public abstract sealed class Application permits JApplication, GLApplication {
+public class Application {
 
     // Constants
     private static final float DEBUG_INTERVAL_SECS = 1f;
@@ -19,7 +19,7 @@ public abstract sealed class Application permits JApplication, GLApplication {
     private boolean running;
 
     // Time Fields (Seconds)
-    private final boolean frameSkip;
+    private final boolean frameSkip; // Update only once per draw
     private final float timeStepSecs; // Target delta time
     private final float halfTimeStepSecs;
     private float lastLoopTimeSecs; // Last update time
@@ -58,7 +58,7 @@ public abstract sealed class Application permits JApplication, GLApplication {
     }
 
     private void run() {
-        lastLoopTimeSecs = getCurrentTimeSecs();
+        lastLoopTimeSecs = window.getCurrentTimeSecs();
         unprocessedTime = 0f;
         deltaTimeSecs = 0f;
         debugTimerSecs = 0f;
@@ -113,7 +113,7 @@ public abstract sealed class Application permits JApplication, GLApplication {
      */
     private void updateGame() {
         // Calculate frame time
-        var currentLoopTimeSecs = getCurrentTimeSecs();
+        var currentLoopTimeSecs = window.getCurrentTimeSecs();
         var frameElapsedTimeSecs = currentLoopTimeSecs - lastLoopTimeSecs; // Time since last update
         unprocessedTime += frameElapsedTimeSecs;
         debugTimerSecs += frameElapsedTimeSecs;
@@ -137,20 +137,6 @@ public abstract sealed class Application permits JApplication, GLApplication {
 
             if (!frameSkip) break;
         }
-    }
-
-    // Engine Getters
-
-    /**
-     * Get the current time of the application in seconds. The time relative to an
-     * arbitrary point, which is not guaranteed to be when the program started.
-     *
-     * @return the time in seconds
-     */
-    protected abstract float getCurrentTimeSecs();
-
-    protected final String getRunningString() {
-        return running ? "running" : "not running";
     }
 
     // Time Getters
@@ -190,6 +176,13 @@ public abstract sealed class Application permits JApplication, GLApplication {
      */
     public int getRenderFPS() {
         return averageFPS;
+    }
+
+    // Object Overrides
+
+    @Override
+    public String toString() {
+        return String.format("Application %s", running ? "running" : "not running");
     }
 
 }

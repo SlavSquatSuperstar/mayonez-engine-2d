@@ -12,7 +12,7 @@ import static org.lwjgl.opengl.GL11.glViewport;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 /**
- * The display component for the game, using LWJGL.
+ * A window created using LWJGL's GLFW and OpenGL libraries.
  *
  * @author SlavSquatSuperstar
  */
@@ -67,11 +67,6 @@ final class GLWindow implements Window {
     // Engine methods
 
     @Override
-    public boolean notClosedByUser() {
-        return !glfwWindowShouldClose(windowID);
-    }
-
-    @Override
     public void start() {
         glfwShowWindow(windowID);
         glfwFocusWindow(windowID);
@@ -89,6 +84,16 @@ final class GLWindow implements Window {
     }
 
     // Game Loop Methods
+
+    @Override
+    public boolean notClosedByUser() {
+        return !glfwWindowShouldClose(windowID);
+    }
+
+    @Override
+    public float getCurrentTimeSecs() {
+        return (float) glfwGetTime();
+    }
 
     @Override
     public void beginFrame() {

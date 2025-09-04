@@ -11,7 +11,7 @@ import java.awt.geom.*;
 import java.awt.image.*;
 
 /**
- * The display component for the game, using AWT.
+ * A window created using Java's AWT and Swing libraries.
  *
  * @author SlavSquatSuperstar
  */
@@ -99,6 +99,11 @@ final class JWindow extends JFrame implements Window {
     }
 
     // Game Loop Methods
+
+    @Override
+    public float getCurrentTimeSecs() {
+        return Time.getTotalProgramSeconds();
+    }
 
     @Override
     public boolean notClosedByUser() {

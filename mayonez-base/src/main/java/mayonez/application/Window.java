@@ -33,6 +33,14 @@ public sealed interface Window permits JWindow, GLWindow {
     // Game Loop Methods
 
     /**
+     * Get the current time of the application in seconds. The time relative to an
+     * arbitrary point, which is not guaranteed to be when the program started.
+     *
+     * @return the time in seconds
+     */
+    float getCurrentTimeSecs();
+
+    /**
      * Whether the window is still open or has been closed (x-ed out) by the user.
      *
      * @return if the window is not closed
