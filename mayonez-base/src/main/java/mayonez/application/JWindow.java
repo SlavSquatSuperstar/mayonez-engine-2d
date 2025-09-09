@@ -99,6 +99,7 @@ final class JWindow extends JFrame implements Window {
         if (!isVisible()) return;
         setVisible(false);
         g2.dispose();
+        // Java Docs say the BS doesn't need to be disposed
         dispose();
     }
 
@@ -130,20 +131,32 @@ final class JWindow extends JFrame implements Window {
     public void render() {
         if (bs == null) {
             initGraphics();
-            return;
+            return; // Need to return or else crashes
         }
-        try {
-            // Use a do-while loop to avoid losing buffer frames
-            // Source: https://stackoverflow.com/questions/13590002/understand-bufferstrategy
-            do {
-                clearScreen();
-                flipScreenVertically();
+
+        // Use a do-while loop to avoid losing buffer frames
+        // Source: https://stackoverflow.com/questions/13590002/understand-bufferstrategy
+        do {
+            try {
+                // Fetch resources
+                g2 = (Graphics2D) bs.getDrawGraphics(); // Current buffer's graphics context
+
+                // Clear screen
+                g2.clipRect(0, 0, getWidth(), getHeight()); // Render things only in the screen
+                g2.clearRect(0, 0, getWidth(), getHeight());
+
+                // Draw
+                g2.transform(FLIP_XF); // Flip screen vertically
+                g2.translate(0, -getHeight());
                 SceneManager.renderScene(g2);
-                flushResources();
-            } while (bs.contentsLost());
-        } catch (IllegalStateException e) {
-            Logger.error("Error rendering current frame; retrying next frame.");
-        }
+            } catch (IllegalStateException e) {
+                Logger.error("Error rendering current frame; retrying next frame.");
+            } finally {
+                // Always flush resources
+                g2.dispose();
+                bs.show();
+            }
+        } while (bs.contentsLost());
     }
 
     private void initGraphics() {
@@ -154,22 +167,6 @@ final class JWindow extends JFrame implements Window {
         } catch (IllegalStateException e) {
             Logger.error("Error initializing window graphics; retrying next frame.");
         }
-    }
-
-    private void clearScreen() {
-        g2 = (Graphics2D) bs.getDrawGraphics();
-        g2.clipRect(0, 0, getWidth(), getHeight()); // Render things only in the screen
-        g2.clearRect(0, 0, getWidth(), getHeight());
-    }
-
-    private void flipScreenVertically() {
-        g2.transform(FLIP_XF);
-        g2.translate(0, -getHeight());
-    }
-
-    private void flushResources() {
-        g2.dispose();
-        bs.show();
     }
 
     // Input Methods
