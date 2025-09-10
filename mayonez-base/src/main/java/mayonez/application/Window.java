@@ -89,6 +89,9 @@ public sealed interface Window permits JWindow, GLWindow {
 
     /**
      * Set whether this window should be in full screen mode.
+     * <p>
+     * Note that native macOS (Cocoa) full screen is different from either
+     * GLFW or AWT full screen.
      *
      * @param fullScreen whether to use full screen
      */

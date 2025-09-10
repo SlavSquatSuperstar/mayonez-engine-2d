@@ -10,6 +10,8 @@ import java.awt.event.*;
 import java.awt.geom.*;
 import java.awt.image.*;
 
+import static mayonez.application.AWTHelper.*;
+
 /**
  * A window created using Java's AWT and Swing libraries.
  *
@@ -20,9 +22,6 @@ final class JWindow extends JFrame implements Window {
 
     // Constants
     private final static int BUFFER_COUNT = 2;
-    private final static GraphicsDevice SCREEN_DEVICE = GraphicsEnvironment
-            .getLocalGraphicsEnvironment()
-            .getDefaultScreenDevice();
 
     // Graphics Fields
     private BufferStrategy bs;
@@ -206,7 +205,6 @@ final class JWindow extends JFrame implements Window {
         start();
     }
 
-    // Note that macOS native full screen is different from Swing full screen
     public void setFullScreen() {
         // Save previous position and size
         lastPos = getLocation();
@@ -217,7 +215,7 @@ final class JWindow extends JFrame implements Window {
 
         if (!SCREEN_DEVICE.isFullScreenSupported()) return;
         SCREEN_DEVICE.setFullScreenWindow(this);
-        // Note that AWT fullscreen uses native resolution instead of windowed resolution
+        AWTHelper.setFullScreenDisplayMode();
     }
 
     public void setWindowed() {
