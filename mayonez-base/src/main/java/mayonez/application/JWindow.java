@@ -20,15 +20,16 @@ final class JWindow extends JFrame implements Window {
 
     // Constants
     private final static int BUFFER_COUNT = 2;
-    private final static AffineTransform FLIP_XF =
-            AffineTransform.getScaleInstance(1.0, -1.0);
     private final static GraphicsDevice SCREEN_DEVICE = GraphicsEnvironment
             .getLocalGraphicsEnvironment()
             .getDefaultScreenDevice();
 
-    // Window Fields
+    // Graphics Fields
     private BufferStrategy bs;
     private Graphics2D g2;
+    private final AffineTransform windowFlipXf;
+
+    // Window Fields
     private boolean closedByUser;
     private Point lastPos;
     private Dimension lastSize;
@@ -50,6 +51,7 @@ final class JWindow extends JFrame implements Window {
 
         lastPos = getLocation();
         lastSize = getSize();
+        windowFlipXf = AWTHelper.getWindowFlipXf(getHeight());
 
         // Init as fullscreen or windowed
         setUndecorated(config.fullScreen());
@@ -146,8 +148,7 @@ final class JWindow extends JFrame implements Window {
                 g2.clearRect(0, 0, getWidth(), getHeight());
 
                 // Draw
-                g2.transform(FLIP_XF); // Flip screen vertically
-                g2.translate(0, -getHeight());
+                g2.transform(windowFlipXf); // Flip screen vertically
                 SceneManager.renderScene(g2);
             } catch (IllegalStateException e) {
                 Logger.error("Error rendering current frame; retrying next frame.");
@@ -187,6 +188,9 @@ final class JWindow extends JFrame implements Window {
         WindowEvents.WINDOW_EVENTS.broadcast(new WindowResizeEvent(
                 getContentPane().getWidth(), getContentPane().getHeight()
         ));
+
+        // Adjust window transform
+        windowFlipXf.setTransform(AWTHelper.getWindowFlipXf(getHeight()));
     }
 
     @Override
