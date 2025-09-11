@@ -12,24 +12,26 @@ import java.util.*;
 import static org.lwjgl.opengl.GL20.*;
 
 /**
- * A compiled OpenGL shader program (.glsl) used by the GL engine. A shader tells
- * the GPU how to draw an image, specifying the colors, brightness, and texture.
+ * A compiled program written in the OpenGL Shading Language (GLSL) composed of multiple
+ * {@link ShaderStage}s. A <a href="https://www.khronos.org/opengl/wiki/Shader">shader</a>
+ * tells the GPU how to draw an image, specifying the colors, brightness, and texture.
+ * Shaders require at least a vertex and fragment stage.
  *
  * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.GL)
 public class Shader extends Asset {
 
-    private final int shaderID;
+    private final int programID;
     private final Map<String, Integer> uniformLocations;
 
     public Shader(String filename) {
         super(filename);
         if (GLHelper.isGLInitialized()) {
-            shaderID = glCreateProgram();
+            programID = glCreateProgram();
             create();
         } else {
-            shaderID = GL_NONE;
+            programID = GL_NONE;
         }
         uniformLocations = new HashMap<>();
     }
@@ -39,16 +41,16 @@ public class Shader extends Asset {
     private void create() {
         try {
             Logger.debug("Creating shader from file %s", getFilenameInQuotes());
-            List<ShaderProgram> programs = readShaderPrograms();
+            List<ShaderStage> programs = readShaderPrograms();
             programs.forEach(this::compileShader);
-            linkShaderPrograms(programs);
-            programs.forEach(ShaderProgram::delete); // Clean up intermediate programs
+            linkShaderStages(programs);
+            programs.forEach(ShaderStage::delete); // Clean up intermediate programs
         } catch (ShaderException e) {
             Logger.printStackTrace(e);
         }
     }
 
-    private List<ShaderProgram> readShaderPrograms() throws ShaderException {
+    private List<ShaderStage> readShaderPrograms() throws ShaderException {
         try {
             var source = TextIOUtils.readText(openInputStream());
             var shaders = source.split("(#type)( )+"); // shaders indicated by "#type <shader_type>"
@@ -59,8 +61,8 @@ public class Shader extends Asset {
         }
     }
 
-    private static List<ShaderProgram> parseShaderPrograms(String[] subPrograms) throws ShaderException {
-        var programs = new ArrayList<ShaderProgram>();
+    private static List<ShaderStage> parseShaderPrograms(String[] subPrograms) throws ShaderException {
+        var programs = new ArrayList<ShaderStage>();
         for (var shader : subPrograms) {
             var src = shader.strip();
             if (src.isEmpty()) continue;
@@ -69,42 +71,42 @@ public class Shader extends Asset {
         return programs;
     }
 
-    private static ShaderProgram readShaderProgram(String shaderSource) throws ShaderException {
-        var firstNewLine = shaderSource.indexOf("\n");
-        var typeName = shaderSource.substring(0, firstNewLine).trim();
+    private static ShaderStage readShaderProgram(String stageSource) throws ShaderException {
+        var firstNewLine = stageSource.indexOf("\n");
+        var typeName = stageSource.substring(0, firstNewLine).trim();
 
-        var programSource = shaderSource.substring(firstNewLine + 1);
+        var programSource = stageSource.substring(firstNewLine + 1);
         var shaderType = ShaderType.findWithName(typeName);
-        return new ShaderProgram(programSource, shaderType);
+        return new ShaderStage(programSource, shaderType);
     }
 
     // Compile Shader Methods
 
-    private void compileShader(ShaderProgram shader) throws ShaderException {
+    private void compileShader(ShaderStage stage) throws ShaderException {
         try {
-            shader.compileSource();
+            stage.compileSource();
         } catch (ShaderException e) {
-            Logger.error("OpenGL: " + glGetShaderInfoLog(shaderID));
+            Logger.error("OpenGL: " + glGetShaderInfoLog(programID));
             throw e;
         }
     }
 
-    private void linkShaderPrograms(List<ShaderProgram> programs) throws ShaderException {
-        programs.forEach(p -> p.linkToProgram(shaderID));
-        glLinkProgram(shaderID);
-        glValidateProgram(shaderID);
+    private void linkShaderStages(List<ShaderStage> stages) throws ShaderException {
+        stages.forEach(p -> p.linkToProgram(programID));
+        glLinkProgram(programID);
+        glValidateProgram(programID);
 
         // Check link status
-        if (shaderLinkedSuccessfully(shaderID)) {
+        if (programLinkedSuccessfully(programID)) {
             Logger.debug("OpenGL: Finished linking shader file %s", getFilenameInQuotes());
         } else {
             Logger.error("OpenGL: Could not link shader file %s", getFilenameInQuotes());
-            Logger.error("OpenGL: " + glGetProgramInfoLog(shaderID));
+            Logger.error("OpenGL: " + glGetProgramInfoLog(programID));
             throw new ShaderException("Error linking shader file");
         }
     }
 
-    private static boolean shaderLinkedSuccessfully(int shaderID) {
+    private static boolean programLinkedSuccessfully(int shaderID) {
         return glGetProgrami(shaderID, GL_LINK_STATUS) != GL_FALSE;
     }
 
@@ -114,7 +116,7 @@ public class Shader extends Asset {
      * Bind this shader to the GPU.
      */
     public void bind() {
-        glUseProgram(shaderID);
+        glUseProgram(programID);
     }
 
     /**
@@ -129,7 +131,7 @@ public class Shader extends Asset {
      */
     private void delete() {
         if (GLHelper.isGLInitialized()) {
-            glDeleteProgram(shaderID);
+            glDeleteProgram(programID);
         }
         uniformLocations.clear();
     }
@@ -156,7 +158,7 @@ public class Shader extends Asset {
         if (uniformLocations.containsKey(varName)) {
             return uniformLocations.get(varName);
         } else {
-            var location = glGetUniformLocation(shaderID, varName);
+            var location = glGetUniformLocation(programID, varName);
             uniformLocations.put(varName, location);
             return location;
         }

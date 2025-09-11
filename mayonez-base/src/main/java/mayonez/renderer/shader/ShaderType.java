@@ -7,7 +7,7 @@ import static org.lwjgl.opengl.GL20.GL_FRAGMENT_SHADER;
 import static org.lwjgl.opengl.GL20.GL_VERTEX_SHADER;
 
 /**
- * The type of .glsl shader program used by the GPU.
+ * The type of .glsl shader stage used by the GPU.
  *
  * @author SlavSquatSuperstar
  */
@@ -40,7 +40,7 @@ enum ShaderType {
      * Returns the ShaderType constant matching the given name,
      * case-insensitive.
      *
-     * @param shaderName the name of the shader program
+     * @param shaderName the name of the shader stage
      * @return the shader type
      * @throws ShaderException if the shader name is invalid
      */
