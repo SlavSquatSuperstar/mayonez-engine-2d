@@ -8,11 +8,8 @@ layout (location=1) in vec4 aColor;
 layout (location=2) in vec2 aTexCoords;
 layout (location=3) in float aTexID;
 
-uniform mat4 uView;
-uniform mat4 uProjection;
+uniform mat4 uViewProjection;
 
-// needed for lightmap
-// out vec2 fPosition;
 out vec4 fColor;
 out vec2 fTexCoords;
 out float fTexID;
@@ -23,14 +20,12 @@ void main()
     fTexCoords = aTexCoords;
     fTexID = aTexID;
 
-    gl_Position = uProjection * uView * vec4(aPosition, 1.0);
-    // fPosition = gl_Position.xy;
+    gl_Position = uViewProjection * vec4(aPosition, 1.0);
 }
 
 #type fragment
 #version 400 core
 
-// in vec2 fPosition;
 in vec4 fColor;
 in vec2 fTexCoords;
 in float fTexID;
@@ -44,6 +39,13 @@ void main()
     // Apply color to texture
     if (fTexID > 0)
     {
+        /*
+         * Note: Indexing sampler2D arrays with non-constant expressions on
+         * GLSL versions 3.3 and earlier is not allowed on some platforms.
+         *
+         * Known platforms to give an compilation error are AMD and macOS (ARM64).
+         * The workaround is to use a if-else/switch statement.
+         */
         color = fColor * texture(uTextures[int(fTexID) - 1], fTexCoords);
     }
     // Draw plain color

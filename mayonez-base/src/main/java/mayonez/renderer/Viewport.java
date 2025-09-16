@@ -106,6 +106,17 @@ public interface Viewport extends PointTransformer {
     }
 
     /**
+     * The combined view-projection matrix, which transforms world space directly
+     * into clip space.
+     *
+     * @return the 4x4 view-projection matrix
+     */
+    default Matrix4f getViewProjectionMatrix() {
+        // Apply the view matrix first, so put it on the right
+        return new Matrix4f(getProjectionMatrix()).mul(getViewMatrix());
+    }
+
+    /**
      * Adjust the view matrix after the camera has been moved, rotated, or zoomed.
      */
     default void updateViewMatrix() {

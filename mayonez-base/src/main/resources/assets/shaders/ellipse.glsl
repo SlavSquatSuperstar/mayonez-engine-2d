@@ -8,8 +8,7 @@ layout (location=1) in vec2 aLocalPosition;
 layout (location=2) in vec4 aColor;
 layout (location=3) in vec2 aInnerRadius;
 
-uniform mat4 uView;
-uniform mat4 uProjection;
+uniform mat4 uViewProjection;
 
 out vec2 fLocalPosition;
 out vec4 fColor;
@@ -21,7 +20,7 @@ void main()
     fColor = aColor;
     fInnerRadius = aInnerRadius;
 
-    gl_Position = uProjection * uView * vec4(aPosition, 1.0);
+    gl_Position = uViewProjection * vec4(aPosition, 1.0);
 }
 
 #type fragment
