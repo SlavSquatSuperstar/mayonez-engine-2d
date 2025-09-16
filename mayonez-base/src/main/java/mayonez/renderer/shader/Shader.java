@@ -15,63 +15,76 @@ import static org.lwjgl.opengl.GL20.*;
  * A compiled program written in the OpenGL Shading Language (GLSL) composed of multiple
  * {@link ShaderStage}s. A <a href="https://www.khronos.org/opengl/wiki/Shader">shader</a>
  * tells the GPU how to draw an image, specifying the colors, brightness, and texture.
- * Shaders require at least a vertex and fragment stage.
+ * Shaders require at least a vertex and a fragment stage.
  *
  * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.GL)
 public class Shader extends Asset {
 
-    private final int programID;
+    private int programID;
     private final Map<String, Integer> uniformLocations;
 
     public Shader(String filename) {
         super(filename);
-        if (GLHelper.isGLInitialized()) {
-            programID = glCreateProgram();
-            create();
-        } else {
-            programID = GL_NONE;
-        }
         uniformLocations = new HashMap<>();
+        createShader();
     }
 
     // Read Shader Methods
 
-    private void create() {
+    private void createShader() {
+        Logger.debug("Creating shader from file %s", getFilenameInQuotes());
+
+        if (!GLHelper.isGLInitialized()) {
+            Logger.warn("OpenGL capabilities are not initialized");
+            programID = GL_NONE;
+            return;
+        }
+
+        List<ShaderStage> stages = Collections.emptyList();
         try {
-            Logger.debug("Creating shader from file %s", getFilenameInQuotes());
-            List<ShaderStage> programs = readShaderPrograms();
-            programs.forEach(this::compileShader);
-            linkShaderStages(programs);
-            programs.forEach(ShaderStage::delete); // Clean up intermediate programs
+            programID = glCreateProgram();
+            stages = readShaderStages();
+            stages.forEach(ShaderStage::compileSource);
+            linkShaderStages(stages);
         } catch (ShaderException e) {
             Logger.printStackTrace(e);
+            delete();
+        } finally {
+            // Clean up intermediate stages
+            stages.forEach(s -> s.detachFromProgram(programID));
+            stages.forEach(ShaderStage::delete);
         }
     }
 
-    private List<ShaderStage> readShaderPrograms() throws ShaderException {
-        try {
-            var source = TextIOUtils.readText(openInputStream());
-            var shaders = source.split("(#type)( )+"); // shaders indicated by "#type <shader_type>"
-            return parseShaderPrograms(shaders);
+    // Read stages from file
+    private List<ShaderStage> readShaderStages() throws ShaderException {
+        try (var stream = openInputStream()) {
+            var source = TextIOUtils.readText(stream);
+            // Shaders indicated by "#type <shader_type>"
+            // This is not valid GLSL, just a convention
+            var shaderSources = source.split("(#type)( )+");
+            return parseShaderStages(shaderSources);
         } catch (Exception e) {
             Logger.error("Could not parse shader file %s", getFilenameInQuotes());
             throw new ShaderException(e);
         }
     }
 
-    private static List<ShaderStage> parseShaderPrograms(String[] subPrograms) throws ShaderException {
-        var programs = new ArrayList<ShaderStage>();
-        for (var shader : subPrograms) {
+    // Get stages from sources
+    private static List<ShaderStage> parseShaderStages(String[] shaderSources) throws ShaderException {
+        var stages = new ArrayList<ShaderStage>();
+        for (var shader : shaderSources) {
             var src = shader.strip();
             if (src.isEmpty()) continue;
-            programs.add(readShaderProgram(src));
+            stages.add(readShaderStage(src));
         }
-        return programs;
+        return stages;
     }
 
-    private static ShaderStage readShaderProgram(String stageSource) throws ShaderException {
+    // Get stage from source
+    private static ShaderStage readShaderStage(String stageSource) throws ShaderException {
         var firstNewLine = stageSource.indexOf("\n");
         var typeName = stageSource.substring(0, firstNewLine).trim();
 
@@ -82,17 +95,8 @@ public class Shader extends Asset {
 
     // Compile Shader Methods
 
-    private void compileShader(ShaderStage stage) throws ShaderException {
-        try {
-            stage.compileSource();
-        } catch (ShaderException e) {
-            Logger.error("OpenGL: " + glGetShaderInfoLog(programID));
-            throw e;
-        }
-    }
-
     private void linkShaderStages(List<ShaderStage> stages) throws ShaderException {
-        stages.forEach(p -> p.linkToProgram(programID));
+        stages.forEach(s -> s.attachToProgram(programID));
         glLinkProgram(programID);
         glValidateProgram(programID);
 
@@ -102,6 +106,7 @@ public class Shader extends Asset {
         } else {
             Logger.error("OpenGL: Could not link shader file %s", getFilenameInQuotes());
             Logger.error("OpenGL: " + glGetProgramInfoLog(programID));
+            Logger.error("Shaders must have least a vertex and fragment stage");
             throw new ShaderException("Error linking shader file");
         }
     }
@@ -133,6 +138,7 @@ public class Shader extends Asset {
         if (GLHelper.isGLInitialized()) {
             glDeleteProgram(programID);
         }
+        programID = GL_NONE;
         uniformLocations.clear();
     }
 

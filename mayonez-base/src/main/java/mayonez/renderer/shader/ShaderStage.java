@@ -18,7 +18,7 @@ class ShaderStage {
 
     private final String sourceCode; // Source code of GLSL shader
     private final ShaderType type; // Type of shader stage
-    private final int shaderID; // ID of shader stage in OpenGL
+    private int shaderID; // ID of shader stage in OpenGL
 
     ShaderStage(String sourceCode, ShaderType type) {
         this.sourceCode = sourceCode;
@@ -39,30 +39,42 @@ class ShaderStage {
 
         if (!checkCompiledCorrectly(shaderID)) {
             Logger.error("OpenGL: Could not compile %s shader", type.toString());
-            throw new ShaderException("Error compiling shader program");
+            Logger.error("OpenGL: " + glGetShaderInfoLog(shaderID));
+            throw new ShaderException("Error compiling shader stage");
         } else {
             Logger.debug("OpenGL: Compiled %s shader", type.toString());
         }
     }
 
-    private static boolean checkCompiledCorrectly(int programID) {
-        return glGetShaderi(programID, GL_COMPILE_STATUS) != GL_FALSE;
+    private static boolean checkCompiledCorrectly(int shaderID) {
+        return glGetShaderi(shaderID, GL_COMPILE_STATUS) != GL_FALSE;
     }
 
     /**
-     * Links this shader to a parent program.
+     * Attaches this shader to a parent program.
      *
      * @param programID the parent program ID
      */
-    void linkToProgram(int programID) {
+    void attachToProgram(int programID) {
         glAttachShader(programID, this.shaderID);
+    }
+
+    /**
+     * Detaches this shader to a parent program.
+     *
+     * @param programID the parent program ID
+     */
+    void detachFromProgram(int programID) {
+        glDetachShader(programID, this.shaderID);
     }
 
     /**
      * Cleans up the object compiled from this shader stage.
      */
     void delete() {
+        // The shader must be detached first
         glDeleteShader(shaderID);
+        shaderID = GL_NONE;
     }
 
 }
