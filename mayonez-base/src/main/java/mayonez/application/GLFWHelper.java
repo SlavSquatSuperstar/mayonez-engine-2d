@@ -5,7 +5,6 @@ import mayonez.graphics.*;
 import mayonez.math.*;
 
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.glfw.GLFW.glfwGetPrimaryMonitor;
 import static org.lwjgl.glfw.GLFWErrorCallback.createPrint;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
@@ -72,17 +71,17 @@ final class GLFWHelper {
      */
     private static void configureWindowHints() {
         glfwDefaultWindowHints(); // Reset window settings
-        glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // Don't stay hidden after creation
+        glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // Stay hidden until after creation
         glfwWindowHint(GLFW_DECORATED, GLFW_TRUE); // Enable title bar
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // Allow user and OS resizing
         glfwWindowHint(GLFW_SCALE_TO_MONITOR, GLFW_TRUE); // Scale screen properly for Windows
 
-        // Set GLFW context version to 4.0 core
+        // Set GLFW context version to 3.3 core (forward compatible)
         // macOS only supports OpenGL versions 3.2-4.1, inclusive
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     }
 
     /**
