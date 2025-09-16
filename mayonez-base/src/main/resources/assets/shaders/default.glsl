@@ -1,7 +1,7 @@
 #type vertex
-#version 400 core
+#version 330 core
 
-// Sprites with 4 vertices and a texture
+// Sprites with 4 vertices and a texture (GLSL 3.3)
 
 layout (location=0) in vec3 aPosition;
 layout (location=1) in vec4 aColor;
@@ -24,7 +24,7 @@ void main()
 }
 
 #type fragment
-#version 400 core
+#version 330 core
 
 in vec4 fColor;
 in vec2 fTexCoords;
@@ -36,21 +36,33 @@ out vec4 color;
 
 void main()
 {
-    // Apply color to texture
-    if (fTexID > 0)
-    {
-        /*
-         * Note: Indexing sampler2D arrays with non-constant expressions on
-         * GLSL versions 3.3 and earlier is not allowed on some platforms.
-         *
-         * Known platforms to give an compilation error are AMD and macOS (ARM64).
-         * The workaround is to use a if-else/switch statement.
-         */
-        color = fColor * texture(uTextures[int(fTexID) - 1], fTexCoords);
-    }
-    // Draw plain color
-    else
-    {
-        color = fColor;
+    int texIdx = int(fTexID) - 1;
+
+    // Apply color to texture or draw plain color
+    /*
+     * Note: Indexing sampler2D arrays with non-constant expressions on
+     * GLSL versions 3.3 and earlier is not allowed on some platforms.
+     *
+     * Known platforms to give an compilation error are AMD and macOS (ARM64).
+     * The workaround is to use a if-else/switch statement.
+     */
+    switch (texIdx) {
+        case 0: color = fColor * texture(uTextures[0], fTexCoords);
+        break;
+        case 1: color = fColor * texture(uTextures[1], fTexCoords);
+        break;
+        case 2: color = fColor * texture(uTextures[2], fTexCoords);
+        break;
+        case 3: color = fColor * texture(uTextures[3], fTexCoords);
+        break;
+        case 4: color = fColor * texture(uTextures[4], fTexCoords);
+        break;
+        case 5: color = fColor * texture(uTextures[5], fTexCoords);
+        break;
+        case 6: color = fColor * texture(uTextures[6], fTexCoords);
+        break;
+        case 7: color = fColor * texture(uTextures[7], fTexCoords);
+        break;
+        default : color = fColor;
     }
 }

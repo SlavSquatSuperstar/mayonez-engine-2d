@@ -1,5 +1,5 @@
 #type vertex
-#version 400 core
+#version 330 core
 
 // Circles with 4 vertices and a color
 
@@ -24,7 +24,7 @@ void main()
 }
 
 #type fragment
-#version 400 core
+#version 330 core
 
 in vec2 fLocalPosition;
 in vec4 fColor;

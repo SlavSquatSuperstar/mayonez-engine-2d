@@ -1,5 +1,5 @@
 #type vertex
-#version 400 core
+#version 330 core
 
 // Shapes made up of triangles
 
@@ -17,7 +17,7 @@ void main()
 }
 
 #type fragment
-#version 400 core
+#version 330 core
 
 in vec4 fColor;
 
