@@ -6,6 +6,7 @@ import org.lwjgl.opengl.GL;
 import static org.lwjgl.opengl.GL.createCapabilities;
 import static org.lwjgl.opengl.GL.destroy;
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL20.GL_SHADING_LANGUAGE_VERSION;
 
 /**
  * Manages OpenGL capabilities and performs error checking and debugging.
@@ -26,7 +27,7 @@ public final class GLHelper {
     public static void loadOpenGL() {
         Logger.debug("Creating OpenGL capabilities");
         createCapabilities();
-        enableBlending();
+        printGLInfo();
     }
 
     /**
@@ -66,6 +67,19 @@ public final class GLHelper {
 
     // Debug Methods
 
+    // TODO allow specify log level
+
+    /**
+     * Prints the OpenGL/GLSL version number and graphics card manufacturer of
+     * the current device.
+     */
+    public static void printGLInfo() {
+        Logger.log("OpenGL Version: " + glGetString(GL_VERSION));
+        Logger.log("GLSL Version: " + glGetString(GL_SHADING_LANGUAGE_VERSION));
+        Logger.log("OpenGL Renderer: " + glGetString(GL_RENDERER));
+        Logger.log("OpenGL Vendor: " + glGetString(GL_VENDOR));
+    }
+
     /**
      * Clears all accumulated OpenGL error codes.
      */
@@ -91,12 +105,12 @@ public final class GLHelper {
      * @param glFunction the function to run
      */
     public static void runWithErrorLogging(Runnable glFunction) {
-//        var location = Thread.currentThread().getStackTrace()[2];
-//        Logger.log("Started error logging at: %s", location);
+        var location = Thread.currentThread().getStackTrace()[2];
+        Logger.log("Started OpenGL error logging at: %s", location);
         clearGLErrors();
         glFunction.run();
         printGLErrors();
-//        Logger.log("Finished error logging");
+        Logger.log("Finished OpenGL error logging");
     }
 
 }
