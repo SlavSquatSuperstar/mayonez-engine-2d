@@ -7,6 +7,7 @@ import mayonez.graphics.*;
 import org.joml.*;
 import org.lwjgl.BufferUtils;
 
+import java.io.IOException;
 import java.util.*;
 
 import static org.lwjgl.opengl.GL20.*;
@@ -44,13 +45,14 @@ public class Shader extends Asset {
 
         List<ShaderStage> stages = Collections.emptyList();
         try {
-            programID = glCreateProgram();
-            stages = readShaderStages();
+            var source = readShaderSource();
+            stages = parseShaderStages(source);
             stages.forEach(ShaderStage::compileSource);
+            programID = glCreateProgram();
             linkShaderStages(stages);
         } catch (ShaderException e) {
             Logger.printStackTrace(e);
-            delete();
+            programID = GL_NONE;
         } finally {
             // Clean up intermediate stages
             stages.forEach(s -> s.detachFromProgram(programID));
@@ -58,39 +60,28 @@ public class Shader extends Asset {
         }
     }
 
-    // Read stages from file
-    private List<ShaderStage> readShaderStages() throws ShaderException {
+    // Read program source from file
+    private String readShaderSource() throws ShaderException {
         try (var stream = openInputStream()) {
-            var source = TextIOUtils.readText(stream);
-            // Shaders indicated by "#type <shader_type>"
-            // This is not valid GLSL, just a convention
-            var shaderSources = source.split("(#type)( )+");
-            return parseShaderStages(shaderSources);
-        } catch (Exception e) {
-            Logger.error("Could not parse shader file %s", getFilenameInQuotes());
+            return TextIOUtils.readText(stream);
+        } catch (IOException e) {
+            Logger.error("Could not read source from %s", getFilenameInQuotes());
             throw new ShaderException(e);
         }
     }
 
-    // Get stages from sources
-    private static List<ShaderStage> parseShaderStages(String[] shaderSources) throws ShaderException {
-        var stages = new ArrayList<ShaderStage>();
-        for (var shader : shaderSources) {
-            var src = shader.strip();
-            if (src.isEmpty()) continue;
-            stages.add(readShaderStage(src));
+    // Split and get stages from source
+    private List<ShaderStage> parseShaderStages(String source) throws ShaderException {
+        try {
+            var stageSources = ShaderParser.splitShaderSource(source);
+            return Arrays.stream(stageSources)
+                    .map(ShaderParser::parseShaderStage)
+                    .filter(Objects::nonNull)
+                    .toList();
+        } catch (ShaderException e) {
+            Logger.error("Could not parse shader from %s", getFilenameInQuotes());
+            throw new ShaderException(e);
         }
-        return stages;
-    }
-
-    // Get stage from source
-    private static ShaderStage readShaderStage(String stageSource) throws ShaderException {
-        var firstNewLine = stageSource.indexOf("\n");
-        var typeName = stageSource.substring(0, firstNewLine).trim();
-
-        var programSource = stageSource.substring(firstNewLine + 1);
-        var shaderType = ShaderType.findWithName(typeName);
-        return new ShaderStage(programSource, shaderType);
     }
 
     // Compile Shader Methods
