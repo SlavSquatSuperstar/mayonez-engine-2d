@@ -17,6 +17,8 @@ import static org.junit.jupiter.api.Assertions.*;
 class ShaderParserTest {
 
     private static final String shaderPath = "testassets/shaders/test.glsl";
+    private static final String fragmentPath = "testassets/shaders/test.frag";
+    private static final String vertexPath = "testassets/shaders/test.vert";
 
     @Test
     void readWholeShader() {
@@ -31,6 +33,34 @@ class ShaderParserTest {
             assertEquals(2, stages.size());
             assertEquals(ShaderType.VERTEX, stages.get(0).getType());
             assertEquals(ShaderType.FRAGMENT, stages.get(1).getType());
+        } catch (IOException e) {
+            fail();
+        }
+    }
+
+    @Test
+    void readVertexShader() {
+        try (var input = FilePath.fromFilename(vertexPath).openInputStream()) {
+            var shaderSource = TextIOUtils.readText(input);
+            var stageSources = ShaderParser.splitShaderSource(shaderSource);
+            var stages = ShaderParser.parseShaderStages(stageSources);
+
+            assertEquals(1, stages.size());
+            assertEquals(ShaderType.VERTEX, stages.getFirst().getType());
+        } catch (IOException e) {
+            fail();
+        }
+    }
+
+    @Test
+    void readFragmentShader() {
+        try (var input = FilePath.fromFilename(fragmentPath).openInputStream()) {
+            var shaderSource = TextIOUtils.readText(input);
+            var stageSources = ShaderParser.splitShaderSource(shaderSource);
+            var stages = ShaderParser.parseShaderStages(stageSources);
+
+            assertEquals(1, stages.size());
+            assertEquals(ShaderType.FRAGMENT, stages.getFirst().getType());
         } catch (IOException e) {
             fail();
         }

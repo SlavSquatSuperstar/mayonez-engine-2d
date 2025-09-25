@@ -23,7 +23,7 @@ class ShaderStage {
     ShaderStage(String sourceCode, ShaderType type) {
         this.sourceCode = sourceCode;
         this.type = type;
-        shaderID = glCreateShader(type.glShaderType);
+        shaderID = GL_NONE;
     }
 
     // Shader Methods
@@ -34,6 +34,7 @@ class ShaderStage {
      * @throws ShaderException if the shader could not be compiled
      */
     void compileSource() {
+        shaderID = glCreateShader(type.glShaderType);
         glShaderSource(shaderID, sourceCode);
         glCompileShader(shaderID);
 
@@ -77,4 +78,9 @@ class ShaderStage {
         shaderID = GL_NONE;
     }
 
+    // Getter Methods
+
+    ShaderType getType() {
+        return type;
+    }
 }
