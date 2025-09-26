@@ -2,12 +2,10 @@ package mayonez.renderer.shader;
 
 import mayonez.*;
 import mayonez.assets.*;
-import mayonez.assets.text.*;
 import mayonez.graphics.*;
 import org.joml.*;
 import org.lwjgl.BufferUtils;
 
-import java.io.IOException;
 import java.util.*;
 
 import static org.lwjgl.opengl.GL20.*;
@@ -32,6 +30,12 @@ public class Shader extends Asset {
         createShader();
     }
 
+    public Shader(String[] stageFilenames) {
+        super(String.join("+", stageFilenames));
+        uniformLocations = new HashMap<>();
+        createShader2(stageFilenames);
+    }
+
     // Read Shader Methods
 
     private void createShader() {
@@ -43,10 +47,11 @@ public class Shader extends Asset {
             return;
         }
 
-        List<ShaderStage> stages = Collections.emptyList();
+        List<ShaderStage> stages = new ArrayList<>();
         try {
-            var source = readShaderSource();
-            stages = parseShaderStages(source);
+            var source = ShaderParser.readShaderSource(FilePath.fromFilename(getFilename()));
+            var stageSources = ShaderParser.splitShaderSource(source);
+            stages.addAll(ShaderParser.parseShaderStages(stageSources));
             stages.forEach(ShaderStage::compileSource);
             programID = glCreateProgram();
             linkShaderStages(stages);
@@ -60,27 +65,33 @@ public class Shader extends Asset {
         }
     }
 
-    // Read program source from file
-    private String readShaderSource() throws ShaderException {
-        try (var stream = openInputStream()) {
-            return TextIOUtils.readText(stream);
-        } catch (IOException e) {
-            Logger.error("Could not read source from %s", getFilenameInQuotes());
-            throw new ShaderException(e);
-        }
-    }
+    // TODO don't delete stages if from multiple files
+    private void createShader2(String[] stageFilenames) {
+        Logger.debug("Creating shader from files %s", Arrays.toString(stageFilenames));
 
-    // Split and get stages from source
-    private List<ShaderStage> parseShaderStages(String source) throws ShaderException {
+        if (!GLHelper.isGLInitialized()) {
+            Logger.warn("OpenGL capabilities are not initialized");
+            programID = GL_NONE;
+            return;
+        }
+
+        List<ShaderStage> stages = new ArrayList<>();
         try {
-            var stageSources = ShaderParser.splitShaderSource(source);
-            return Arrays.stream(stageSources)
-                    .map(ShaderParser::parseShaderStage)
-                    .filter(Objects::nonNull)
-                    .toList();
+            for (var filename : stageFilenames) {
+                var source = ShaderParser.readShaderSource(FilePath.fromFilename(filename));
+                var stageSources = ShaderParser.splitShaderSource(source);
+                stages.addAll(ShaderParser.parseShaderStages(stageSources));
+            }
+            stages.forEach(ShaderStage::compileSource);
+            programID = glCreateProgram();
+            linkShaderStages(stages);
         } catch (ShaderException e) {
-            Logger.error("Could not parse shader from %s", getFilenameInQuotes());
-            throw new ShaderException(e);
+            Logger.printStackTrace(e);
+            programID = GL_NONE;
+        } finally {
+            // Clean up intermediate stages
+            stages.forEach(s -> s.detachFromProgram(programID));
+            stages.forEach(ShaderStage::delete);
         }
     }
 

@@ -24,9 +24,9 @@ class ShaderParserTest {
     void readWholeShader() {
         try (var input = FilePath.fromFilename(shaderPath).openInputStream()) {
             var shaderSource = TextIOUtils.readText(input);
-            var stageSources = ShaderParser.splitShaderSource(shaderSource);
+            var stageSources = ShaderParser.splitShaderSource2(shaderSource);
             var stages = Arrays.stream(stageSources)
-                    .map(ShaderParser::parseShaderStage)
+                    .map(ShaderParser::parseShaderStage2)
                     .filter(Objects::nonNull)
                     .toList();
 
@@ -42,11 +42,10 @@ class ShaderParserTest {
     void readVertexShader() {
         try (var input = FilePath.fromFilename(vertexPath).openInputStream()) {
             var shaderSource = TextIOUtils.readText(input);
-            var stageSources = ShaderParser.splitShaderSource(shaderSource);
-            var stages = ShaderParser.parseShaderStages(stageSources);
+            var stage = ShaderParser.parseShaderStage2(shaderSource);
 
-            assertEquals(1, stages.size());
-            assertEquals(ShaderType.VERTEX, stages.getFirst().getType());
+            assertNotNull(stage);
+            assertEquals(ShaderType.VERTEX, stage.getType());
         } catch (IOException e) {
             fail();
         }
@@ -56,11 +55,10 @@ class ShaderParserTest {
     void readFragmentShader() {
         try (var input = FilePath.fromFilename(fragmentPath).openInputStream()) {
             var shaderSource = TextIOUtils.readText(input);
-            var stageSources = ShaderParser.splitShaderSource(shaderSource);
-            var stages = ShaderParser.parseShaderStages(stageSources);
+            var stage = ShaderParser.parseShaderStage2(shaderSource);
 
-            assertEquals(1, stages.size());
-            assertEquals(ShaderType.FRAGMENT, stages.getFirst().getType());
+            assertNotNull(stage);
+            assertEquals(ShaderType.FRAGMENT, stage.getType());
         } catch (IOException e) {
             fail();
         }
