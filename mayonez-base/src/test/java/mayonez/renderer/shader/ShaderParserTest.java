@@ -16,9 +16,9 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class ShaderParserTest {
 
-    private static final String shaderPath = "testassets/shaders/test.glsl";
-    private static final String fragmentPath = "testassets/shaders/test.frag";
-    private static final String vertexPath = "testassets/shaders/test.vert";
+    private static final String shaderPath = "testassets/shaders/test1.glsl";
+    private static final String fragmentPath = "testassets/shaders/test1.frag";
+    private static final String vertexPath = "testassets/shaders/test1.vert";
 
     @Test
     void readWholeShader() {
