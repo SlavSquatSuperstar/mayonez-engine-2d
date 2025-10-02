@@ -1,14 +1,14 @@
+// Ellipses with color, radius, and fill
+
 #type vertex
 #version 330 core
-
-// Ellipses with 4 vertices and a color
 
 layout (location=0) in vec3 aPosition;
 layout (location=1) in vec2 aLocalPosition;
 layout (location=2) in vec4 aColor;
 layout (location=3) in vec2 aInnerRadius;
 
-uniform mat4 uViewProjection;
+uniform mat4 uTransform;
 
 out vec2 fLocalPosition;
 out vec4 fColor;
@@ -20,7 +20,7 @@ void main()
     fColor = aColor;
     fInnerRadius = aInnerRadius;
 
-    gl_Position = uViewProjection * vec4(aPosition, 1.0);
+    gl_Position = uTransform * vec4(aPosition, 1.0);
 }
 
 #type fragment

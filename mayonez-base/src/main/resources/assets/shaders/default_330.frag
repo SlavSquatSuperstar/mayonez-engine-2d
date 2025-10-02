@@ -1,4 +1,4 @@
-// Sprites with 4 vertices and a texture (GLSL 3.3)
+// Sprites with texture and color (GLSL 3.3)
 
 #type fragment
 #version 330 core

@@ -1,4 +1,4 @@
-// Sprites with 4 vertices and a texture
+// Sprites with texture and color (GLSL 3.3/4.0)
 
 #type vertex
 #version 330 core

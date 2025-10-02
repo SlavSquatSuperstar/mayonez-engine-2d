@@ -1,4 +1,4 @@
-// Sprites with 4 vertices and a texture (GLSL 4.0)
+// Sprites with texture and color (GLSL 4.0)
 
 #type fragment
 #version 400 core
