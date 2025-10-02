@@ -4,8 +4,6 @@ import mayonez.assets.*;
 import mayonez.assets.text.*;
 import org.junit.jupiter.api.*;
 
-import java.util.*;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -26,7 +24,7 @@ class ShaderParserTest {
     void readWholeShader() {
         try (var input = FilePath.fromFilename(shaderPath).openInputStream()) {
             var shaderSource = TextIOUtils.readText(input);
-            var stages = ShaderParser.parseShaderStages2(shaderSource);
+            var stages = ShaderParser.parseShaderStages(shaderSource);
 
             assertEquals(2, stages.size());
             assertEquals(ShaderType.VERTEX, stages.get(0).getType());
@@ -40,7 +38,7 @@ class ShaderParserTest {
     void readVertexShader() {
         try (var input = FilePath.fromFilename(vertexPath).openInputStream()) {
             var shaderSource = TextIOUtils.readText(input);
-            var stage = ShaderParser.parseShaderStage2(shaderSource);
+            var stage = ShaderParser.parseShaderStage(shaderSource);
 
             assertNotNull(stage);
             assertEquals(ShaderType.VERTEX, stage.getType());
@@ -53,7 +51,7 @@ class ShaderParserTest {
     void readFragmentShader() {
         try (var input = FilePath.fromFilename(fragmentPath).openInputStream()) {
             var shaderSource = TextIOUtils.readText(input);
-            var stage = ShaderParser.parseShaderStage2(shaderSource);
+            var stage = ShaderParser.parseShaderStage(shaderSource);
 
             assertNotNull(stage);
             assertEquals(ShaderType.FRAGMENT, stage.getType());
@@ -66,7 +64,7 @@ class ShaderParserTest {
     void readMessyWholeShader() {
         try (var input = FilePath.fromFilename(messyShaderPath).openInputStream()) {
             var shaderSource = TextIOUtils.readText(input);
-            var stages = ShaderParser.parseShaderStages2(shaderSource);
+            var stages = ShaderParser.parseShaderStages(shaderSource);
 
             assertNotNull(stages);
             assertEquals(2, stages.size());
@@ -81,7 +79,7 @@ class ShaderParserTest {
     void readMessyVertexShader() {
         try (var input = FilePath.fromFilename(messyVertexPath).openInputStream()) {
             var shaderSource = TextIOUtils.readText(input);
-            var stage = ShaderParser.parseShaderStage2(shaderSource);
+            var stage = ShaderParser.parseShaderStage(shaderSource);
 
             assertNotNull(stage);
             assertEquals(ShaderType.VERTEX, stage.getType());
@@ -94,7 +92,7 @@ class ShaderParserTest {
     void readMessyFragmentShader() {
         try (var input = FilePath.fromFilename(messyFragmentPath).openInputStream()) {
             var shaderSource = TextIOUtils.readText(input);
-            var stage = ShaderParser.parseShaderStage2(shaderSource);
+            var stage = ShaderParser.parseShaderStage(shaderSource);
 
             assertNotNull(stage);
             assertEquals(ShaderType.FRAGMENT, stage.getType());

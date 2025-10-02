@@ -27,46 +27,19 @@ public class Shader extends Asset {
     public Shader(String filename) {
         super(filename);
         uniformLocations = new HashMap<>();
-        createShader();
+        createShader(filename);
     }
 
     public Shader(String[] stageFilenames) {
         super(String.join("+", stageFilenames));
         uniformLocations = new HashMap<>();
-        createShader2(stageFilenames);
+        createShader(stageFilenames);
     }
 
     // Read Shader Methods
 
-    private void createShader() {
-        Logger.debug("Creating shader from file %s", getFilenameInQuotes());
-
-        if (!GLHelper.isGLInitialized()) {
-            Logger.warn("OpenGL capabilities are not initialized");
-            programID = GL_NONE;
-            return;
-        }
-
-        List<ShaderStage> stages = new ArrayList<>();
-        try {
-            var source = ShaderParser.readShaderSource(FilePath.fromFilename(getFilename()));
-            var stageSources = ShaderParser.splitShaderSource(source);
-            stages.addAll(ShaderParser.parseShaderStages(stageSources));
-            stages.forEach(ShaderStage::compileSource);
-            programID = glCreateProgram();
-            linkShaderStages(stages);
-        } catch (ShaderException e) {
-            Logger.printStackTrace(e);
-            programID = GL_NONE;
-        } finally {
-            // Clean up intermediate stages
-            stages.forEach(s -> s.detachFromProgram(programID));
-            stages.forEach(ShaderStage::delete);
-        }
-    }
-
     // TODO don't delete stages if from multiple files
-    private void createShader2(String[] stageFilenames) {
+    private void createShader(String... stageFilenames) {
         Logger.debug("Creating shader from files %s", Arrays.toString(stageFilenames));
 
         if (!GLHelper.isGLInitialized()) {
@@ -79,8 +52,8 @@ public class Shader extends Asset {
         try {
             for (var filename : stageFilenames) {
                 var source = ShaderParser.readShaderSource(FilePath.fromFilename(filename));
-                var stageSources = ShaderParser.splitShaderSource(source);
-                stages.addAll(ShaderParser.parseShaderStages(stageSources));
+                var stageSources = ShaderParser.parseShaderStages(source);
+                stages.addAll(stageSources);
             }
             stages.forEach(ShaderStage::compileSource);
             programID = glCreateProgram();

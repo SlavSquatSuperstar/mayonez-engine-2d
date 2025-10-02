@@ -12,8 +12,13 @@ final class ShaderParser {
     private ShaderParser() {
     }
 
-
-    // Read source code from file
+    /**
+     * Read the GLSL source code from a shader file.
+     *
+     * @param shaderFile the shader file path
+     * @return the source code
+     * @throws ShaderException if the shader file could not be read
+     */
     static String readShaderSource(FilePath shaderFile) throws ShaderException {
         try (var input = shaderFile.openInputStream()) {
             return TextIOUtils.readText(input);
@@ -23,25 +28,15 @@ final class ShaderParser {
         }
     }
 
-    // Split program source into stage sources
-    static String[] splitShaderSource(String source) {
-        // Shaders indicated by "#type <shader_type>"
-        // Must match whitespace exactly (for now)
-        // This is not valid a GLSL directive, just a convention
-        return source.split("(#type)( )+");
-    }
-
-    // Get all stages from source codes
-    static List<ShaderStage> parseShaderStages(String[] stageSources) throws ShaderException {
-        return Arrays.stream(stageSources)
-                .map(ShaderParser::parseShaderStage)
-                .filter(Objects::nonNull)
-                .toList();
-    }
-
-    // Get many stages from source code
-    static List<ShaderStage> parseShaderStages2(String source) throws ShaderException {
-        var stages = new ArrayList<ShaderStage>();
+    /**
+     * Parses multiple shaders stage from the given GLSL source code.
+     *
+     * @param source the shader source code
+     * @return the shader stages
+     * @throws ShaderException if no stages were found
+     */
+    static List<ShaderStage> parseShaderStages(String source) throws ShaderException {
+        List<ShaderStage> stages = new ArrayList<>();
 
         var matcher = getHeaderMatcher(source);
         var lastMatch = matcher.find();
@@ -65,20 +60,14 @@ final class ShaderParser {
         return stages;
     }
 
-    // Get one stage from source code
+    /**
+     * Parses one shader stage from the given GLSL source code.
+     *
+     * @param stageSource the stage source code
+     * @return the shader stage
+     * @throws ShaderException if no stage was found
+     */
     static ShaderStage parseShaderStage(String stageSource) throws ShaderException {
-        var stripped = stageSource.strip();
-        if (stripped.isEmpty()) return null;
-
-        var firstNewLine = stripped.indexOf("\n");
-        var typeName = stripped.substring(0, firstNewLine).trim();
-
-        var programSource = stripped.substring(firstNewLine + 1);
-        var shaderType = ShaderType.findWithName(typeName);
-        return new ShaderStage(programSource, shaderType);
-    }
-
-    static ShaderStage parseShaderStage2(String stageSource) throws ShaderException {
         var matcher = getHeaderMatcher(stageSource);
         if (!matcher.find()) {
             throw new ShaderException("No #type directive at shader start");
