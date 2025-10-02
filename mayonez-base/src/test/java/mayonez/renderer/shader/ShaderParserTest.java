@@ -26,11 +26,7 @@ class ShaderParserTest {
     void readWholeShader() {
         try (var input = FilePath.fromFilename(shaderPath).openInputStream()) {
             var shaderSource = TextIOUtils.readText(input);
-            var stageSources = ShaderParser.splitShaderSource2(shaderSource);
-            var stages = Arrays.stream(stageSources)
-                    .map(ShaderParser::parseShaderStage2)
-                    .filter(Objects::nonNull)
-                    .toList();
+            var stages = ShaderParser.parseShaderStages2(shaderSource);
 
             assertEquals(2, stages.size());
             assertEquals(ShaderType.VERTEX, stages.get(0).getType());
@@ -61,6 +57,21 @@ class ShaderParserTest {
 
             assertNotNull(stage);
             assertEquals(ShaderType.FRAGMENT, stage.getType());
+        } catch (Exception e) {
+            fail();
+        }
+    }
+
+    @Test
+    void readMessyWholeShader() {
+        try (var input = FilePath.fromFilename(messyShaderPath).openInputStream()) {
+            var shaderSource = TextIOUtils.readText(input);
+            var stages = ShaderParser.parseShaderStages2(shaderSource);
+
+            assertNotNull(stages);
+            assertEquals(2, stages.size());
+            assertEquals(ShaderType.VERTEX, stages.get(0).getType());
+            assertEquals(ShaderType.FRAGMENT, stages.get(1).getType());
         } catch (Exception e) {
             fail();
         }

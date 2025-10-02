@@ -31,20 +31,6 @@ final class ShaderParser {
         return source.split("(#type)( )+");
     }
 
-    static String[] splitShaderSource2(String source) {
-        // Shaders indicated by "#type <shader_type>"
-        // Must match whitespace exactly (for now)
-        // This is not valid a GLSL directive, just a convention
-        var split = source.splitWithDelimiters("#type", 0);
-        // TODO Read first vs read all
-        // TODO Read without splitting
-        var sources = new String[split.length / 2];
-        for (int i = 0; i < sources.length; i++) {
-            sources[i] = split[1 + (2 * i)] + " " + split[1 + (2 * i + 1)];
-        }
-        return sources;
-    }
-
     // Get all stages from source codes
     static List<ShaderStage> parseShaderStages(String[] stageSources) throws ShaderException {
         return Arrays.stream(stageSources)
@@ -53,7 +39,33 @@ final class ShaderParser {
                 .toList();
     }
 
-    // Get one stage from source code, null if empty
+    // Get many stages from source code
+    static List<ShaderStage> parseShaderStages2(String source) throws ShaderException {
+        var stages = new ArrayList<ShaderStage>();
+
+        var matcher = getHeaderMatcher(source);
+        var lastMatch = matcher.find();
+        while (lastMatch) {
+            var typeName = matcher.group(1); // Query the (\w+) capture group
+            var shaderType = ShaderType.findWithName(typeName);
+
+            var bodyStart = matcher.end() + 1;
+            lastMatch = matcher.find(); // Check if there is another stage
+            var bodyEnd = lastMatch
+                    ? matcher.start() // Another stage
+                    : source.length(); // No more stages
+
+            var body = source.substring(bodyStart, bodyEnd).strip();
+            stages.add(new ShaderStage(body, shaderType));
+        }
+
+        if (stages.isEmpty()) {
+            throw new ShaderException("No shaders found in source file");
+        }
+        return stages;
+    }
+
+    // Get one stage from source code
     static ShaderStage parseShaderStage(String stageSource) throws ShaderException {
         var stripped = stageSource.strip();
         if (stripped.isEmpty()) return null;
@@ -67,26 +79,26 @@ final class ShaderParser {
     }
 
     static ShaderStage parseShaderStage2(String stageSource) throws ShaderException {
-        var stripped = stageSource.strip();
-        if (stripped.isEmpty()) return null;
-
-         /*
-          * Look for header "\n # type <shader_type> \n"
-          * All spaces optional except between type and <shader_type>
-          * First newline optional
-          * Use multiline mode so ^ and $ mean line boundaries
-          */
-        var headerPat = Pattern.compile("^\\s*#\\s*type\\s+(\\w+)\\s*$", Pattern.MULTILINE);
-        var matcher = headerPat.matcher(stripped);
+        var matcher = getHeaderMatcher(stageSource);
         if (!matcher.find()) {
-            System.out.println("No match");
             throw new ShaderException("No #type directive at shader start");
         }
 
         var typeName = matcher.group(1); // Query the (\w+) capture group
         var shaderType = ShaderType.findWithName(typeName);
-        var body = stripped.substring(matcher.end() + 1);
+        var body = stageSource.substring(matcher.end() + 1).strip();
         return new ShaderStage(body, shaderType);
+    }
+
+    private static Matcher getHeaderMatcher(String stageSource) {
+        /*
+         * Look for header "\n # type <shader_type> \n"
+         * All spaces optional except between type and <shader_type>
+         * First newline optional
+         * Use multiline mode so ^ and $ mean line boundaries
+         */
+        var headerPat = Pattern.compile("^\\s*#\\s*type\\s+(\\w+)\\s*$", Pattern.MULTILINE);
+        return headerPat.matcher(stageSource);
     }
 
 }
