@@ -16,6 +16,9 @@ import static org.lwjgl.opengl.GL20.GL_SHADING_LANGUAGE_VERSION;
 @UsesEngine(EngineType.GL)
 public final class GLHelper {
 
+    // TODO pass in CL args
+    private final static boolean USE_OLD_GL_VERSION = false; // Use OpenGL 3.3 instead of 4.0
+
     private GLHelper() {
     }
 
@@ -65,7 +68,16 @@ public final class GLHelper {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
 
-    // Debug Methods
+    // Version Methods
+
+    /**
+     * Whether to use the fallback OpenGL version 3.3 instead of the default 4.0.
+     * @return if using the old OpenGL version
+     */
+    public static boolean isUseOldGlVersion() {
+        return USE_OLD_GL_VERSION;
+    }
+
 
     // TODO allow specify log level
 
@@ -74,11 +86,13 @@ public final class GLHelper {
      * the current device.
      */
     public static void printGLInfo() {
-        Logger.log("OpenGL Version: " + glGetString(GL_VERSION));
-        Logger.log("GLSL Version: " + glGetString(GL_SHADING_LANGUAGE_VERSION));
-        Logger.log("OpenGL Renderer: " + glGetString(GL_RENDERER));
-        Logger.log("OpenGL Vendor: " + glGetString(GL_VENDOR));
+        Logger.debug("OpenGL Version: " + glGetString(GL_VERSION));
+        Logger.debug("GLSL Version: " + glGetString(GL_SHADING_LANGUAGE_VERSION));
+        Logger.debug("OpenGL Renderer: " + glGetString(GL_RENDERER));
+        Logger.debug("OpenGL Vendor: " + glGetString(GL_VENDOR));
     }
+
+    // Error Logging Methods
 
     /**
      * Clears all accumulated OpenGL error codes.

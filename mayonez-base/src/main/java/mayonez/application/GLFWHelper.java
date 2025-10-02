@@ -77,12 +77,22 @@ final class GLFWHelper {
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // Allow user and OS resizing
         glfwWindowHint(GLFW_SCALE_TO_MONITOR, GLFW_TRUE); // Scale screen properly for Windows
 
-        // Set GLFW context version to 3.3 core (forward compatible)
+        // Set GLFW context profile to core (forward compatible)
         // macOS only supports OpenGL versions 3.2-4.1, inclusive
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+        if (GLHelper.isUseOldGlVersion()) {
+            // Fallback version 3.3
+            Logger.debug("Creating OpenGL 3.3 context");
+            glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+            glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+        } else {
+            // Default version 4.0
+            Logger.debug("Creating OpenGL 4.0 context");
+            glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+            glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+        }
+
     }
 
     /**
