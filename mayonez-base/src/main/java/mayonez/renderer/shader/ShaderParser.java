@@ -5,6 +5,7 @@ import mayonez.assets.text.*;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.regex.*;
 
 final class ShaderParser {
 
@@ -69,15 +70,23 @@ final class ShaderParser {
         var stripped = stageSource.strip();
         if (stripped.isEmpty()) return null;
 
-        // Find type then new line, then split into header and body
-        var typeIdx = stripped.indexOf("#type");
-        var startIdx = typeIdx + "#type".length();
-        var newLineIdx = stripped.indexOf("\n", startIdx);
-        var typeName = stripped.substring(startIdx, newLineIdx).trim();
+         /*
+          * Look for header "\n # type <shader_type> \n"
+          * All spaces optional except between type and <shader_type>
+          * First newline optional
+          * Use multiline mode so ^ and $ mean line boundaries
+          */
+        var headerPat = Pattern.compile("^\\s*#\\s*type\\s+(\\w+)\\s*$", Pattern.MULTILINE);
+        var matcher = headerPat.matcher(stripped);
+        if (!matcher.find()) {
+            System.out.println("No match");
+            throw new ShaderException("No #type directive at shader start");
+        }
 
-        var sourceBody = stripped.substring(newLineIdx + 1);
+        var typeName = matcher.group(1); // Query the (\w+) capture group
         var shaderType = ShaderType.findWithName(typeName);
-        return new ShaderStage(sourceBody, shaderType);
+        var body = stripped.substring(matcher.end() + 1);
+        return new ShaderStage(body, shaderType);
     }
 
 }
