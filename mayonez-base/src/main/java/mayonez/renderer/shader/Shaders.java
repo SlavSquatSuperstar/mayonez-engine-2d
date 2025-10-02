@@ -19,6 +19,7 @@ public final class Shaders {
                     "assets/shaders/default.vert",
                     "assets/shaders/default_330.frag"
             });
+    public static final Shader UI_SHADER = DEFAULT_SHADER;
     public static final Shader DEBUG_SHADER =
             getShaderFromFile("assets/shaders/debug.glsl");
     // TODO draw circles with ellipses if not too many
@@ -26,8 +27,6 @@ public final class Shaders {
             getShaderFromFile("assets/shaders/circle.glsl");
     public static final Shader ELLIPSE_SHADER =
             getShaderFromFile("assets/shaders/ellipse.glsl");
-    public static final Shader UI_SHADER =
-            getShaderFromFile("assets/shaders/ui.glsl");
 
     private Shaders() {
     }

@@ -8,7 +8,7 @@ layout (location=1) in vec4 aColor;
 layout (location=2) in vec2 aTexCoords;
 layout (location=3) in float aTexID;
 
-uniform mat4 uViewProjection;
+uniform mat4 uTransform;
 
 out vec4 fColor;
 out vec2 fTexCoords;
@@ -20,5 +20,5 @@ void main()
     fTexCoords = aTexCoords;
     fTexID = aTexID;
 
-    gl_Position = uViewProjection * vec4(aPosition, 1.0);
+    gl_Position = uTransform * vec4(aPosition, 1.0);
 }

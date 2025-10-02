@@ -98,7 +98,7 @@ internal class GLDefaultRenderer() : GLRenderer(),
     override fun RenderBatch.uploadUniforms(viewport: Viewport, textureSlots: IntArray) {
         // Upload uniforms
         shader.bind()
-        shader.uploadMat4("uViewProjection", viewport.viewProjectionMatrix)
+        shader.uploadMat4("uTransform", viewport.viewProjectionMatrix)
         shader.uploadIntArray("uTextures", textureSlots)
     }
 

@@ -70,7 +70,7 @@ internal class GLUIRenderer() : GLRenderer(), UIRenderer {
     override fun RenderBatch.uploadUniforms(viewport: Viewport, textureSlots: IntArray) {
         // Upload uniforms
         shader.bind()
-        shader.uploadMat4("uProjection", viewport.projectionMatrix)
+        shader.uploadMat4("uTransform", viewport.projectionMatrix)
         shader.uploadIntArray("uTextures", textureSlots)
     }
 
