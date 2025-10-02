@@ -15,7 +15,10 @@ public final class Shaders {
 
     // TODO read shader names from file
     public static final Shader DEFAULT_SHADER =
-            getShaderFromFile("assets/shaders/default.glsl");
+            getShaderFromFiles(new String[] {
+                    "assets/shaders/default.vert",
+                    "assets/shaders/default_330.frag"
+            });
     public static final Shader DEBUG_SHADER =
             getShaderFromFile("assets/shaders/debug.glsl");
     // TODO draw circles with ellipses if not too many
@@ -31,6 +34,10 @@ public final class Shaders {
 
     private static Shader getShaderFromFile(String filename) {
         return Objects.requireNonNull(Assets.getAsset(filename, Shader.class));
+    }
+
+    private static Shader getShaderFromFiles(String[] filenames) {
+        return new Shader(filenames);
     }
 
 }
