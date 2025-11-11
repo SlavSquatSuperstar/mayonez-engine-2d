@@ -22,7 +22,7 @@ dependencies {
 // Plugins and Tasks
 tasks {
     wrapper {
-        gradleVersion = "8.12.1"
+        gradleVersion = "9.2.0"
         distributionType = Wrapper.DistributionType.BIN
     }
 
@@ -36,7 +36,7 @@ tasks {
         "Mac" to "macOS", "Windows" to null, "Linux" to null
     )
 
-    packagePlatforms.forEach { platform, platformDesc ->
+    packagePlatforms.forEach { (platform, platformDesc) ->
         registerCopyZipTasks(platform, platformDesc = platformDesc)
     }
 
