@@ -6,10 +6,10 @@ const val javaVersion: Int = 21
 // Libraries
 
 /** The default Kotlin version for libraries and plugins. */
-const val kotlinVersion: String = "2.1.20"
+const val kotlinVersion: String = "2.2.20"
 
 /** The version for the JUnit testing libraries. */
-const val junitVersion: String = "5.12.2"
+const val junitVersion: String = "6.0.0"
 
 /** The version for the LWJGL framework. */
 const val lwjglVersion: String = "3.3.4"
