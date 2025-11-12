@@ -19,11 +19,9 @@ val lwjglNatives: String = Natives.getDefaultNatives()
 
 // Plugins
 
-/**
- * The Dokka plugin for creating Kotlin documentation, must be applied
- * individually to all projects.
- */
+/** The Dokka plugin for creating Kotlin documentation. */
 const val dokkaPlugin: String = "org.jetbrains.dokka"
+// Javadoc plugin does not correctly aggregate, so use HTML for now
 
 /** The Kotlin plugin for compiling Kotlin files to the JVM. */
 const val kotlinPlugin: String = "org.jetbrains.kotlin.jvm"

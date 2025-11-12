@@ -2,7 +2,7 @@ plugins {
     id("mayonez.java-conventions")
 
     id(kotlinPlugin) version kotlinVersion apply false
-    id(dokkaPlugin) version "1.9.20" apply true
+    id(dokkaPlugin) version "2.1.0" apply true
 }
 
 // Project Info
@@ -17,6 +17,8 @@ allprojects {
 dependencies {
     implementation(project(":mayonez-base"))
     implementation(project(":mayonez-demos"))
+    dokka(project(":mayonez-base"))
+    dokka(project(":mayonez-demos"))
 }
 
 // Plugins and Tasks
