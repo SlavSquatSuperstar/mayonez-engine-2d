@@ -45,6 +45,10 @@ final class GLWindow implements Window {
         // Initialize window
         initGLFW();
         windowID = createGLFWWindow(config);
+
+        // Set window scale and position
+        setWindowScale(windowID);
+        centerWindowPosition(windowID);
         lastPos = getWindowPos(windowID);
         lastSize = getWindowSize(windowID);
 

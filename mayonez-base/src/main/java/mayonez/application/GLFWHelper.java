@@ -55,10 +55,6 @@ final class GLFWHelper {
             throw new WindowInitException("Could not create the GLFW window");
         }
 
-        // Set window scale and position
-        setWindowScale(windowID);
-        centerWindowPosition(windowID);
-
         // Very important!
         glfwMakeContextCurrent(windowID); // Make the OpenGL context current
         glfwSwapInterval(1); // Enable v-sync
@@ -100,12 +96,13 @@ final class GLFWHelper {
      *
      * @param windowID the GLFW window pointer
      */
-    private static void setWindowScale(long windowID) {
+    static void setWindowScale(long windowID) {
         // Source: https://github.com/glfw/glfw/issues/845
         var contentScale = getWindowContentScale(windowID);
-        var ratio = getWindowFramebufferRatio(windowID);
-        WindowProperties.setWindowScaling(contentScale.mul(ratio));
-        Logger.debug("Window scale has been set to %s", WindowProperties.getWindowScaling());
+        var framebufferRatio = getWindowFramebufferRatio(windowID);
+        var windowScale = contentScale.mul(framebufferRatio);
+        WindowProperties.setWindowScale(windowScale);
+        Logger.debug("Window scale has been set to %s", windowScale);
     }
 
     /**
@@ -125,7 +122,7 @@ final class GLFWHelper {
 
     /**
      * The ratio between the window size and the framebuffer (rendered image) size.
-     * On Windows, the ratio should equal 1, and on Unix, the ratio should be
+     * On Windows, the ratio should equal 1:1, and on Unix, the ratio should be
      * the reciprocal of the content scale.
      *
      * @param windowID the GLFW window pointer
@@ -134,17 +131,15 @@ final class GLFWHelper {
     private static Vec2 getWindowFramebufferRatio(long windowID) {
         var windowSize = getWindowSize(windowID);
         var framebufferSize = getFramebufferSize(windowID);
-
-        return new Vec2(windowSize.x / framebufferSize.x,
-                windowSize.y / framebufferSize.y);
+        return windowSize.div(framebufferSize);
     }
 
     /**
-     * Center the window inside the computer display.
+     * Center the window inside the current display.
      *
      * @param windowID the GLFW window pointer
      */
-    private static void centerWindowPosition(long windowID) {
+    static void centerWindowPosition(long windowID) {
         try (var stack = stackPush()) {
             var xPos = stack.mallocInt(1);
             var yPos = stack.mallocInt(1);
@@ -161,7 +156,8 @@ final class GLFWHelper {
     }
 
     /**
-     * The dimensions of the top-left corner of the window content area in screen units.
+     * The dimensions of the top-left corner of the window content area in
+     * screen units.
      *
      * @param windowID the GLFW window pointer
      * @return the window size
@@ -177,7 +173,8 @@ final class GLFWHelper {
 
     /**
      * The dimensions of the application window content area in screen units.
-     * On macOS, this is different from the framebuffer size.
+     * On a macOS device with a Retina display, this is different from the
+     * framebuffer size.
      *
      * @param windowID the GLFW window pointer
      * @return the window size
@@ -192,8 +189,8 @@ final class GLFWHelper {
     }
 
     /**
-     * The dimensions of the rendered framebuffer in pixels.
-     * On macOS, this is different from the window size.
+     * The dimensions of the rendered framebuffer in pixels. On a macOS device
+     * with a Retina display, this is different from the window size.
      *
      * @param windowID the GLFW window pointer
      * @return the framebuffer size

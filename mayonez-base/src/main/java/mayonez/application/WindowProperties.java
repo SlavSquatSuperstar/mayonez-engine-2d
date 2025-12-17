@@ -10,7 +10,7 @@ import mayonez.math.*;
  */
 public final class WindowProperties {
 
-    private static Vec2 windowScaling = new Vec2(1);
+    private static Vec2 windowScale = new Vec2(1);
 
     private WindowProperties() {
     }
@@ -34,12 +34,12 @@ public final class WindowProperties {
      *
      * @return the window scaling
      */
-    public static Vec2 getWindowScaling() {
-        return windowScaling;
+    public static Vec2 getWindowScale() {
+        return windowScale;
     }
 
-    static void setWindowScaling(Vec2 windowScaling) {
-        WindowProperties.windowScaling = windowScaling;
+    static void setWindowScale(Vec2 windowScale) {
+        WindowProperties.windowScale = windowScale;
     }
 
 }

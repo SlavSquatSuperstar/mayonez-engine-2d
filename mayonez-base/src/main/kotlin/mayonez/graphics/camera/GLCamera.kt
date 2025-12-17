@@ -1,6 +1,5 @@
 package mayonez.graphics.camera
 
-import mayonez.application.*
 import mayonez.graphics.*
 import mayonez.math.*
 import org.joml.*
@@ -17,7 +16,7 @@ import org.joml.*
  * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.GL)
-class GLCamera(screenSize: Vec2) : Camera(screenSize) {
+class GLCamera(screenSize: Vec2, private val windowScale: Vec2) : Camera(screenSize) {
 
     // Matrix Fields
     private val viewMatrix: Matrix4f = Matrix4f()
@@ -91,7 +90,7 @@ class GLCamera(screenSize: Vec2) : Camera(screenSize) {
 
     override fun toWorldPosition(screenPos: Vec2): Vec2 {
         // Divide the raw screen coordinates by the window scaling
-        val windowPos = getClipPos(screenPos / WindowProperties.getWindowScaling())
+        val windowPos = getClipPos(screenPos / windowScale)
         return getViewPos(windowPos) + position
     }
 
