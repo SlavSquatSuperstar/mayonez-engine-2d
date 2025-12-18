@@ -1,7 +1,7 @@
 package mayonez.graphics.camera;
 
 import mayonez.*;
-import mayonez.application.*;
+import mayonez.math.*;
 
 /**
  * A factory class that constructs {@link mayonez.graphics.camera.Camera} objects
@@ -20,10 +20,11 @@ public final class CameraFactory {
      * @return the game engine
      */
     public static Camera createCamera() {
+        var screenSize = new Vec2(Preferences.getScreenWidth(), Preferences.getScreenHeight());
         if (Mayonez.getUseGL()) {
-            return new GLCamera(WindowProperties.getScreenSize());
+            return new GLCamera(screenSize);
         } else {
-            return new JCamera(WindowProperties.getScreenSize());
+            return new JCamera(screenSize);
         }
     }
 
