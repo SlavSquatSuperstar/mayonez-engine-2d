@@ -48,7 +48,7 @@ final class GLWindow implements Window {
 
         // Center window position
         centerWindowPosition(windowID);
-        lastPos = getWindowPos(windowID);
+        lastPos = getWindowPosition(windowID);
         lastSize = getWindowSize(windowID);
 
         // Add input handlers
@@ -152,7 +152,7 @@ final class GLWindow implements Window {
 
     public void setFullScreen() {
         // Save previous position and size
-        lastPos = getWindowPos(windowID);
+        lastPos = getWindowPosition(windowID);
         lastSize = getWindowSize(windowID);
 
         glfwSetWindowMonitor(
@@ -193,6 +193,11 @@ final class GLWindow implements Window {
     @Override
     public int getHeight() {
         return height;
+    }
+
+    @Override
+    public Vec2 contentScale() {
+        return GLFWHelper.getWindowContentScale(windowID);
     }
 
     @Override

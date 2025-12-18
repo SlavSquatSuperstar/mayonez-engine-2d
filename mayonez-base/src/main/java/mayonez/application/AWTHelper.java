@@ -2,6 +2,7 @@ package mayonez.application;
 
 
 import mayonez.*;
+import mayonez.math.*;
 
 import java.awt.*;
 import java.awt.geom.*;
@@ -36,6 +37,14 @@ final class AWTHelper {
             }
         }
         // Could also find the resolution closest to desired resolution
+    }
+
+    static Vec2 getWindowContentScale() {
+        // Source: https://stackoverflow.com/questions/32586883/windows-scaling
+        var screenXf = SCREEN_DEVICE
+                .getDefaultConfiguration()
+                .getDefaultTransform();
+        return new Vec2((float) screenXf.getScaleX(), (float) screenXf.getScaleY());
     }
 
     // Transform Methods

@@ -99,43 +99,6 @@ final class GLFWHelper {
     }
 
     /**
-     * How much the window's contents has been scaled by. The content scale
-     * primarily affects the size and position scaling of UI and text elements
-     * on high-DPI screens. On Windows and Linux, changing the scaling in the
-     * OS settings affects the content scale, but fractional scaling may not be
-     * supported (scale rounds up). On macOS Retina devices, the content scale
-     * is typically 2x2 unless the resolution is set very high or very low.
-     * In full-screen mode, then content scale is usually 1x1.
-     *
-     * @param windowID the GLFW window pointer
-     * @return the content scale
-     */
-    static Vec2 getWindowContentScale(long windowID) {
-        try (var stack = stackPush()) {
-            var xScale = stack.mallocFloat(1);
-            var yScale = stack.mallocFloat(1);
-            glfwGetWindowContentScale(windowID, xScale, yScale);
-            return new Vec2(xScale.get(0), yScale.get(0));
-        }
-    }
-
-    /**
-     * The ratio between the framebuffer size and window size, measured in pixels
-     * to screen units. On most devices, the ratio equals 1:1, but on high-DPI
-     * monitors such as macOS Retina displays, the ratio may be higher when in
-     * windowed mode. On macOS with Retina, the ratio also equals the content
-     * scale.
-     *
-     * @param windowID the GLFW window pointer
-     * @return the ratio
-     */
-    static Vec2 getFramebufferWindowRatio(long windowID) {
-        var framebufferSize = getFramebufferSize(windowID);
-        var windowSize = getWindowSize(windowID);
-        return framebufferSize.div(windowSize);
-    }
-
-    /**
      * Center the window inside the current display.
      *
      * @param windowID the GLFW window pointer
@@ -163,7 +126,7 @@ final class GLFWHelper {
      * @param windowID the GLFW window pointer
      * @return the window size
      */
-    static Vec2 getWindowPos(long windowID) {
+    static Vec2 getWindowPosition(long windowID) {
         try (var stack = stackPush()) {
             var xSize = stack.mallocInt(1);
             var ySize = stack.mallocInt(1);
@@ -204,6 +167,43 @@ final class GLFWHelper {
             glfwGetFramebufferSize(windowID, xSize, ySize);
             return new Vec2(xSize.get(0), ySize.get(0));
         }
+    }
+
+    /**
+     * How much the window's contents has been scaled by. The content scale
+     * primarily affects the size and position scaling of UI and text elements
+     * on high-DPI screens. On Windows and Linux, changing the scaling in the
+     * OS settings affects the content scale, but fractional scaling may not be
+     * supported (scale rounds up). On macOS Retina devices, the content scale
+     * is typically 2x2 unless the resolution is set very high or very low.
+     * In full-screen mode, then content scale is usually 1x1.
+     *
+     * @param windowID the GLFW window pointer
+     * @return the content scale
+     */
+    static Vec2 getWindowContentScale(long windowID) {
+        try (var stack = stackPush()) {
+            var xScale = stack.mallocFloat(1);
+            var yScale = stack.mallocFloat(1);
+            glfwGetWindowContentScale(windowID, xScale, yScale);
+            return new Vec2(xScale.get(0), yScale.get(0));
+        }
+    }
+
+    /**
+     * The ratio between the framebuffer size and window size, measured in pixels
+     * to screen units. On most devices, the ratio equals 1:1, but on high-DPI
+     * monitors such as macOS Retina displays, the ratio may be higher when in
+     * windowed mode. On macOS with Retina, the ratio also equals the content
+     * scale.
+     *
+     * @param windowID the GLFW window pointer
+     * @return the ratio
+     */
+    static Vec2 getFramebufferWindowRatio(long windowID) {
+        var framebufferSize = getFramebufferSize(windowID);
+        var windowSize = getWindowSize(windowID);
+        return framebufferSize.div(windowSize);
     }
 
 }

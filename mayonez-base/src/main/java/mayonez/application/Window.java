@@ -1,6 +1,7 @@
 package mayonez.application;
 
 import mayonez.input.*;
+import mayonez.math.*;
 
 /**
  * The main window that renders the application to the screen and detects
@@ -17,6 +18,15 @@ public sealed interface Window permits JWindow, GLWindow {
     int getWidth();
 
     int getHeight();
+
+    /**
+     * How much the window's UI and text elements should be scaled by.
+     * The content scale is usually 1x1, but may be higher on high-DPI displays
+     * or if OS display  scaling is active.
+     *
+     * @return the content scale
+     */
+    Vec2 contentScale();
 
     // Resource Management Methods
 

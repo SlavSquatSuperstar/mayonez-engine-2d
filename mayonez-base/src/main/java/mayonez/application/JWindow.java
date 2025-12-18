@@ -3,6 +3,7 @@ package mayonez.application;
 import mayonez.*;
 import mayonez.graphics.*;
 import mayonez.input.*;
+import mayonez.math.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -100,7 +101,7 @@ final class JWindow extends JFrame implements Window {
         if (!isVisible()) return;
         setVisible(false);
         g2.dispose();
-        // Java Docs say the BS doesn't need to be disposed
+        // Java API docs say the BS doesn't need to be disposed
         dispose();
     }
 
@@ -244,6 +245,11 @@ final class JWindow extends JFrame implements Window {
     @Override
     public int getHeight() {
         return super.getHeight();
+    }
+
+    @Override
+    public Vec2 contentScale() {
+        return AWTHelper.getWindowContentScale();
     }
 
     @Override
