@@ -21,8 +21,7 @@ public final class CameraFactory {
      */
     public static Camera createCamera() {
         if (Mayonez.getUseGL()) {
-            return new GLCamera(WindowProperties.getScreenSize(),
-                    WindowProperties.getWindowScale());
+            return new GLCamera(WindowProperties.getScreenSize());
         } else {
             return new JCamera(WindowProperties.getScreenSize());
         }

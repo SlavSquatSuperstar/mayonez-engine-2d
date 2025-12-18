@@ -71,7 +71,14 @@ final class GLFWHelper {
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // Stay hidden until after creation
         glfwWindowHint(GLFW_DECORATED, GLFW_TRUE); // Enable title bar
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // Allow user and OS resizing
-        glfwWindowHint(GLFW_SCALE_TO_MONITOR, GLFW_TRUE); // Scale screen properly for Windows
+        /*
+         * Note: If GLFW_SCALE_TO_MONITOR is set to true (false by default),
+         * then the window size (in screen coordinates) is scaled with the OS
+         * settings on Windows and Linux. Then, all mouse coordinates need to
+         * be scaled by contentScale / (framebufferSize / windowSize)
+         *
+         * Source: https://github.com/glfw/glfw/issues/845
+         */
 
         // Set GLFW context profile to core (forward compatible)
         // macOS only supports OpenGL versions 3.2-4.1, inclusive
@@ -92,26 +99,18 @@ final class GLFWHelper {
     }
 
     /**
-     * Set the application's window scale parameter.
-     *
-     * @param windowID the GLFW window pointer
-     */
-    static void setWindowScale(long windowID) {
-        // Source: https://github.com/glfw/glfw/issues/845
-        var contentScale = getWindowContentScale(windowID);
-        var framebufferRatio = getWindowFramebufferRatio(windowID);
-        var windowScale = contentScale.mul(framebufferRatio);
-        WindowProperties.setWindowScale(windowScale);
-        Logger.debug("Window scale has been set to %s", windowScale);
-    }
-
-    /**
-     * How much the display has been scaled by.
+     * How much the window's contents has been scaled by. The content scale
+     * primarily affects the size and position scaling of UI and text elements
+     * on high-DPI screens. On Windows and Linux, changing the scaling in the
+     * OS settings affects the content scale, but fractional scaling may not be
+     * supported (scale rounds up). On macOS Retina devices, the content scale
+     * is typically 2x2 unless the resolution is set very high or very low.
+     * In full-screen mode, then content scale is usually 1x1.
      *
      * @param windowID the GLFW window pointer
      * @return the content scale
      */
-    private static Vec2 getWindowContentScale(long windowID) {
+    static Vec2 getWindowContentScale(long windowID) {
         try (var stack = stackPush()) {
             var xScale = stack.mallocFloat(1);
             var yScale = stack.mallocFloat(1);
@@ -121,17 +120,19 @@ final class GLFWHelper {
     }
 
     /**
-     * The ratio between the window size and the framebuffer (rendered image) size.
-     * On Windows, the ratio should equal 1:1, and on Unix, the ratio should be
-     * the reciprocal of the content scale.
+     * The ratio between the framebuffer size and window size, measured in pixels
+     * to screen units. On most devices, the ratio equals 1:1, but on high-DPI
+     * monitors such as macOS Retina displays, the ratio may be higher when in
+     * windowed mode. On macOS with Retina, the ratio also equals the content
+     * scale.
      *
      * @param windowID the GLFW window pointer
      * @return the ratio
      */
-    private static Vec2 getWindowFramebufferRatio(long windowID) {
-        var windowSize = getWindowSize(windowID);
+    static Vec2 getFramebufferWindowRatio(long windowID) {
         var framebufferSize = getFramebufferSize(windowID);
-        return windowSize.div(framebufferSize);
+        var windowSize = getWindowSize(windowID);
+        return framebufferSize.div(windowSize);
     }
 
     /**
@@ -172,9 +173,9 @@ final class GLFWHelper {
     }
 
     /**
-     * The dimensions of the application window content area in screen units.
+     * The dimensions of the window content area in screen units.
      * On a macOS device with a Retina display, this is different from the
-     * framebuffer size.
+     * framebuffer size. Also see {@link #getFramebufferWindowRatio}.
      *
      * @param windowID the GLFW window pointer
      * @return the window size
@@ -190,7 +191,8 @@ final class GLFWHelper {
 
     /**
      * The dimensions of the rendered framebuffer in pixels. On a macOS device
-     * with a Retina display, this is different from the window size.
+     * with a Retina display, this is different from the window size. Also see
+     * {@link #getFramebufferWindowRatio}.
      *
      * @param windowID the GLFW window pointer
      * @return the framebuffer size
