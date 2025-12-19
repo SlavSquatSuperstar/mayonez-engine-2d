@@ -46,7 +46,7 @@ final class GLFWHelper {
      */
     static long createGLFWWindow(WindowConfig config) throws WindowInitException {
         // Create window
-        configureWindowHints();
+        configureWindowHints(config);
         var monitor = config.fullScreen() ? glfwGetPrimaryMonitor() : NULL;
         var windowID = glfwCreateWindow(
                 config.width(), config.height(), config.title(), monitor, NULL
@@ -65,12 +65,14 @@ final class GLFWHelper {
 
     /**
      * Set the GLFW window hints for the application window.
+     *
+     * @param config the initialization parameters
      */
-    private static void configureWindowHints() {
+    private static void configureWindowHints(WindowConfig config) {
         glfwDefaultWindowHints(); // Reset window settings
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // Stay hidden until after creation
         glfwWindowHint(GLFW_DECORATED, GLFW_TRUE); // Enable title bar
-        glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // Allow user and OS resizing
+        glfwWindowHint(GLFW_RESIZABLE, config.resizable() ? GLFW_TRUE : GLFW_FALSE); // Allow user and OS resizing
         /*
          * Note: If GLFW_SCALE_TO_MONITOR is set to true (false by default),
          * then the window size (in screen coordinates) is scaled with the OS

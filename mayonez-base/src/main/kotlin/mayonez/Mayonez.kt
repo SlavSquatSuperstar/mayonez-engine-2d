@@ -158,7 +158,7 @@ object Mayonez {
                 val config = WindowConfig(
                     "${Preferences.title} ($engineString)",
                     Preferences.screenWidth, Preferences.screenHeight,
-                    Preferences.fullscreen
+                    Preferences.fullscreen, Preferences.resizable
                 ).validate()
                 window = ApplicationFactory.createWindow(useGL, config)
                 application = ApplicationFactory.createApplication(window)

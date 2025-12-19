@@ -46,7 +46,7 @@ final class JWindow extends JFrame implements Window {
     JWindow(WindowConfig config) {
         super(config.title());
         setSize(config.width(), config.height());
-        setResizable(true);
+        setResizable(config.resizable());
         setLocationRelativeTo(null); // Center in screen
 
         lastPos = getLocation();
