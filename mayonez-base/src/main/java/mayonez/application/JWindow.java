@@ -248,6 +248,16 @@ final class JWindow extends JFrame implements Window {
     }
 
     @Override
+    public int getContentWidth() {
+        return getContentPane().getWidth();
+    }
+
+    @Override
+    public int getContentHeight() {
+        return getContentPane().getHeight();
+    }
+
+    @Override
     public Vec2 getContentScale() {
         return AWTHelper.getWindowContentScale();
     }

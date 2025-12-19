@@ -57,13 +57,13 @@ object Mayonez {
     @JvmStatic
     val screenWidth: Int
         get() {
-            return if (this::window.isInitialized) window.width else 0
+            return if (this::window.isInitialized) window.contentWidth else 0
         }
 
     @JvmStatic
     val screenHeight: Int
         get() {
-            return if (this::window.isInitialized) window.height else 0
+            return if (this::window.isInitialized) window.contentHeight else 0
         }
 
     @JvmStatic

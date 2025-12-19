@@ -13,16 +13,49 @@ public sealed interface Window permits JWindow, GLWindow {
 
     // Property Getters
 
+    /**
+     * The title of the window, shown in the title bar.
+     *
+     * @return the title
+     */
     String getTitle();
 
+    /**
+     * The total width of the window with the decorations, in screen
+     * units. Also see {@link #getContentWidth()}.
+     *
+     * @return the total width
+     */
     int getWidth();
 
+    /**
+     * The total height of the window with the decorations, in screen
+     * units. Also see {@link #getContentHeight()}.
+     *
+     * @return the total height
+     */
     int getHeight();
+
+    /**
+     * The unobscured width of the window content area without the
+     * decorations, in screen units. Also see {@link #getWidth()}
+     *
+     * @return the content width
+     */
+    int getContentWidth();
+
+    /**
+     * The unobscured height of the window content area without the
+     * decorations, in screen units. Also see {@link #getHeight()}
+     *
+     * @return the content height
+     */
+    int getContentHeight();
 
     /**
      * How much the window's UI and text elements should be scaled by.
      * The content scale is usually 1x1, but may be higher on high-DPI displays
-     * or if OS display  scaling is active.
+     * or if OS display scaling is active.
      *
      * @return the content scale
      */
@@ -43,7 +76,7 @@ public sealed interface Window permits JWindow, GLWindow {
     // Game Loop Methods
 
     /**
-     * Get the current time of the application in seconds. The time relative to an
+     * Get the current time of the application in seconds. The time is relative to an
      * arbitrary point, which is not guaranteed to be when the program started.
      *
      * @return the time in seconds
@@ -100,8 +133,8 @@ public sealed interface Window permits JWindow, GLWindow {
     /**
      * Set whether this window should be in full screen mode.
      * <p>
-     * Note that native macOS (Cocoa) full screen is different from either
-     * GLFW or AWT full screen.
+     * Note that native macOS (Cocoa) full screen is not considered
+     * full screen by either GLFW or AWT libaries.
      *
      * @param fullScreen whether to use full screen
      */

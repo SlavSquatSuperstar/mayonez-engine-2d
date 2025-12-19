@@ -22,8 +22,9 @@ final class GLWindow implements Window {
     // Window Fields
     private final long windowID;
     private final String title;
-    private int width, height;
+    private int width, height; // GLFW uses content size, not total size
     private Vec2 lastPos, lastSize;
+    private final int frameWidth, frameHeight; // Extra padding of decorations
 
     // Input Fields
     private final GLKeyManager keyboard;
@@ -45,6 +46,9 @@ final class GLWindow implements Window {
         // Initialize window
         initGLFW();
         windowID = createGLFWWindow(config);
+        var frameSize = getWindowFrameSize(windowID);
+        frameWidth = (int) frameSize.x;
+        frameHeight = (int) frameSize.y;
 
         // Center window position
         centerWindowPosition(windowID);
@@ -187,11 +191,21 @@ final class GLWindow implements Window {
 
     @Override
     public int getWidth() {
-        return width;
+        return width + frameWidth;
     }
 
     @Override
     public int getHeight() {
+        return height + frameHeight;
+    }
+
+    @Override
+    public int getContentWidth() {
+        return width;
+    }
+
+    @Override
+    public int getContentHeight() {
         return height;
     }
 
