@@ -18,21 +18,15 @@ public final class ApplicationFactory {
     // Factory Methods
 
     /**
-     * Creates a new {@link Application} with the given engine type.
+     * Creates a new {@link Application} with the given window.
      *
-     * @param useGL  whether to use OpenGL instead of Java's AWT library
-     * @param config the window's initialization parameters
+     * @param window the application window
      * @return the application
-     * @throws WindowInitException if the wrong thread is used on macOS
      */
-    public static Application createApplication(boolean useGL, WindowConfig config)
-            throws WindowInitException {
-        // TODO window config record
-        var window = createWindow(useGL, config);
+    public static Application createApplication(Window window) {
         // TODO In AWT, this doesn't update camera screen size
         KeyInput.setHandler(window.getKeyInputHandler());
         MouseInput.setHandler(window.getMouseInputHandler());
-
         return new Application(window);
     }
 
@@ -44,7 +38,7 @@ public final class ApplicationFactory {
      * @return the window
      * @throws WindowInitException if the wrong thread is used on macOS
      */
-    private static Window createWindow(boolean useGL, WindowConfig config)
+    public static Window createWindow(boolean useGL, WindowConfig config)
             throws WindowInitException {
         // Check that correct thread is used on macOS
         var isMacOS = OperatingSystem.getCurrent() == OperatingSystem.MAC_OS;

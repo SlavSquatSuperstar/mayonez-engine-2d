@@ -196,7 +196,7 @@ final class GLWindow implements Window {
     }
 
     @Override
-    public Vec2 contentScale() {
+    public Vec2 getContentScale() {
         return GLFWHelper.getWindowContentScale(windowID);
     }
 

@@ -26,7 +26,7 @@ public sealed interface Window permits JWindow, GLWindow {
      *
      * @return the content scale
      */
-    Vec2 contentScale();
+    Vec2 getContentScale();
 
     // Resource Management Methods
 

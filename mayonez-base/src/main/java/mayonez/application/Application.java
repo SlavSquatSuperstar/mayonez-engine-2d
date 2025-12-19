@@ -124,10 +124,6 @@ public class Application {
 
             // TODO multi-thread physics with shorter fixed time step
             window.beginFrame();
-            // For testing
-            if (KeyInput.keyPressed("f")) {
-                window.setFullScreen(!window.isFullScreen());
-            }
             SceneManager.updateScene(deltaTimeSecs);
             window.endFrame();
             updateCount += 1;

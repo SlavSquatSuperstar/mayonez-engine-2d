@@ -36,6 +36,7 @@ object Mayonez {
 
     // Application Fields
     private lateinit var application: Application // Application instance
+    private lateinit var window: Window // Window instance
     private var initialized: Boolean = false // Are singletons initialized
     private var started: Boolean = false // Is application running
 
@@ -51,12 +52,35 @@ object Mayonez {
     internal val useGL: Boolean
         @JvmName("getUseGL") get() = config.useGL
 
+    // Window Properties
+    // TODO non-game-loop window interface
+    @JvmStatic
+    val screenWidth: Int
+        get() {
+            return if (this::window.isInitialized) window.width else 0
+        }
+
+    @JvmStatic
+    val screenHeight: Int
+        get() {
+            return if (this::window.isInitialized) window.height else 0
+        }
+
+    @JvmStatic
+    var fullScreen: Boolean
+        @JvmName("isFullScreen") get() {
+            return if (this::window.isInitialized) window.isFullScreen else false
+        }
+        set(field) {
+            if (this::window.isInitialized) window.isFullScreen = field
+        }
+
     // Time Properties
     // TODO move to time
 
     @JvmStatic
     val deltaTime: Float
-        @JvmName("getDeltaTime") get() {
+        get() {
             return if (this::application.isInitialized) application.deltaTime else 0f
         }
 
@@ -136,7 +160,8 @@ object Mayonez {
                     Preferences.screenWidth, Preferences.screenHeight,
                     Preferences.fullscreen
                 ).validate()
-                application = ApplicationFactory.createApplication(useGL, config)
+                window = ApplicationFactory.createWindow(useGL, config)
+                application = ApplicationFactory.createApplication(window)
 
                 Logger.log("Using engine type \"%s\"", engineString)
             } catch (e: WindowInitException) {
