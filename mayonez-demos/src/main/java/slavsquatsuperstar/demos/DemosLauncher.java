@@ -17,7 +17,7 @@ public class DemosLauncher {
     private static List<Scene> scenes;
 
     public static void main(String[] args) {
-        var launcher = new Launcher(args).setRunConfig();
+        var launcher = new Launcher(args);
         DemosConfig.readConfig();
 
         // Read scene files

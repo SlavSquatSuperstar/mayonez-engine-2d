@@ -12,10 +12,9 @@ import kotlin.system.exitProcess
  * other engine components, and tells the scene manager to load a scene.
  *
  * Usage: To start an instance of Mayonez Engine, create a [Launcher]
- * and set the "Use GL" property through [Launcher.setRunConfig]. Then,
- * load any number of scenes through [Launcher.addScenesToManager] or
- * [SceneManager.addScene]. Finally, start the game with a scene by calling
- * [Launcher.startGame].
+ * and pass in the program arguments. Then, load any number of scenes
+ * through [Launcher.addScenesToManager] or [SceneManager.addScene].
+ * Finally, start the game with a scene by calling [Launcher.startGame].
  *
  * To exit the program, call [Mayonez.stop] with an integer exit code (0
  * for success, anything else for failure).

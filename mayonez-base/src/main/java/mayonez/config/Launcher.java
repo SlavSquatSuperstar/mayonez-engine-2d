@@ -8,10 +8,10 @@ import java.util.*;
  * Initializes all engine components, parses the main method program arguments,
  * and starts the application.
  * <p>
- * Usage: Construct a {@link Launcher} object and optionally pass in
- * command-line arguments. First, call {@link #setRunConfig()} to parse the
- * {@link RunConfig} from the arguments. Then, preload in any number
- * of scenes using {@link #addScenesToManager(Scene...)} and then start the game with
+ * Usage: First, construct a {@link Launcher} object and optionally pass in
+ * command-line  arguments. The constructor will automatically configure the application
+ * or use the defaults if the arguments are blank. Next, preload in any number of scenes
+ * using {@link #addScenesToManager(Scene...)} and then start the game with
  * {@link #startGame}.
  * <p>
  * See {@link mayonez.SceneManager} for more information.
@@ -19,8 +19,6 @@ import java.util.*;
  * @author SlavSquatSuperstar
  */
 public class Launcher {
-
-    private final RunConfig config;
 
     /**
      * Create a launcher for the application without passing in any program arguments.
@@ -30,27 +28,18 @@ public class Launcher {
     }
 
     /**
-     * Create a launcher for the application and pass in the program arguments.
+     * Create a launcher and automatically configure the application using the provided
+     * arguments.
      *
      * @param args a string array
      */
     public Launcher(String[] args) {
         var parser = new ArgumentsParser();
-        config = parser.getRunConfig(parser.parse(args));
+        var config = parser.getRunConfig(parser.parse(args));
+        Mayonez.setConfig(config);
     }
 
     // Run Config Methods
-
-    /**
-     * Automatically set the run config using the provided arguments
-     * after constructing the launcher.
-     *
-     * @return this object
-     */
-    public Launcher setRunConfig() {
-        Mayonez.setConfig(config);
-        return this;
-    }
 
     // Scene Manager Methods
 
