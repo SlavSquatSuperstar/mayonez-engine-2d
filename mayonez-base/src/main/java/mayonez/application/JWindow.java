@@ -11,7 +11,7 @@ import java.awt.event.*;
 import java.awt.geom.*;
 import java.awt.image.*;
 
-import static mayonez.application.AWTHelper.*;
+import static mayonez.application.AWTHelper.SCREEN_DEVICE;
 
 /**
  * A window created using Java's AWT and Swing libraries.
@@ -33,6 +33,7 @@ final class JWindow extends JFrame implements Window {
     private boolean closedByUser;
     private Point lastPos;
     private Dimension lastSize;
+    private final DisplayMode displayMode;
 
     // Input Fields
     private final JKeyManager keyboard;
@@ -46,19 +47,22 @@ final class JWindow extends JFrame implements Window {
     JWindow(WindowConfig config) {
         super(config.title());
         setSize(config.width(), config.height()); // AWT uses total size, unlike GLFW
+        getContentPane().setSize(getSize());  // Set content pane size before visible
+        // Resizing the content pane plus the window to the preferred size is too buggy
 
         setResizable(config.resizable());
         setLocationRelativeTo(null); // Center in screen
 
+        closedByUser = false;
         lastPos = getLocation();
         lastSize = getSize();
+        displayMode = AWTHelper.getNearestDisplayMode(config);
         windowFlipXf = AWTHelper.getWindowFlipXf(getHeight());
 
         // Init as fullscreen or windowed
         setUndecorated(config.fullScreen());
-        if (SCREEN_DEVICE.isFullScreenSupported()) {
-            SCREEN_DEVICE.setFullScreenWindow(config.fullScreen() ? this : null);
-            AWTHelper.setFullScreenDisplayMode();
+        if (config.fullScreen()) {
+            AWTHelper.setDisplayMode(this, displayMode);
         }
 
         // Set close operation
@@ -215,10 +219,7 @@ final class JWindow extends JFrame implements Window {
 
         if (isDisplayable()) return; // Must not be visible
         setUndecorated(true);
-
-        if (!SCREEN_DEVICE.isFullScreenSupported()) return;
-        SCREEN_DEVICE.setFullScreenWindow(this);
-        AWTHelper.setFullScreenDisplayMode();
+        AWTHelper.setDisplayMode(this, displayMode);
     }
 
     public void setWindowed() {

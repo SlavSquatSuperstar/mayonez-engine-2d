@@ -4,7 +4,9 @@ package mayonez.application;
 import mayonez.*;
 import mayonez.math.*;
 
+import javax.swing.*;
 import java.awt.*;
+import java.awt.Window;
 import java.awt.geom.*;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -28,22 +30,35 @@ final class AWTHelper {
     // Display Methods
 
     /**
-     * Attempts to use the specified windowed resolution for full screen
-     * instead of the native resolution.
+     * The nearest available full screen resolution to the preferred one, or otherwise the current
+     * resolution.
+     *
+     * @return the best display mode
      */
-    static void setFullScreenDisplayMode() {
-        if (!SCREEN_DEVICE.isDisplayChangeSupported()) return;
-
-        // Find the available resolution closest to the desired one
-        var mode = Arrays.stream(SCREEN_DEVICE.getDisplayModes())
-                .min(Comparator.comparingInt(AWTHelper::distanceSquared));
-        mode.ifPresent(SCREEN_DEVICE::setDisplayMode);
+    static DisplayMode getNearestDisplayMode(WindowConfig config) {
+        return Arrays.stream(SCREEN_DEVICE.getDisplayModes())
+                .min(Comparator.comparingInt(mode -> getDistanceSquared(mode, config)))
+                .orElse(SCREEN_DEVICE.getDisplayMode());
     }
 
-    private static int distanceSquared(DisplayMode mode) {
-        var xDiff = mode.getWidth() - Preferences.getScreenWidth();
-        var yDiff = mode.getHeight() - Preferences.getScreenHeight();
+    private static int getDistanceSquared(DisplayMode mode, WindowConfig config) {
+        var xDiff = mode.getWidth() - config.width();
+        var yDiff = mode.getHeight() - config.height();
         return (xDiff * xDiff) + (yDiff * yDiff);
+    }
+
+    /**
+     * Set the window fullscreen with the given display mode. The display mode must be valid.
+     *
+     * @param window the window
+     * @param mode   the display mode
+     */
+    static void setDisplayMode(Window window, DisplayMode mode) {
+        if (!SCREEN_DEVICE.isFullScreenSupported()) return;
+        SCREEN_DEVICE.setFullScreenWindow(window);
+
+        if (!SCREEN_DEVICE.isDisplayChangeSupported()) return;
+        SCREEN_DEVICE.setDisplayMode(mode);
     }
 
     static Vec2 getWindowContentScale() {
