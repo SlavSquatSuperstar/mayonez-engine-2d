@@ -41,6 +41,7 @@ final class GLFWHelper {
         if (!glfwInit()) {
             throw new WindowInitException("Unable to initialize GLFW");
         }
+        Logger.debug("Initialized the GLFW library");
     }
 
     /**
@@ -68,7 +69,7 @@ final class GLFWHelper {
         GLHelper.loadOpenGL(); // Integrate LWJGL with OpenGL bindings
         GLHelper.enableBlending();
 
-        return new GLFWWindow(windowID, vidMode.width(), vidMode.height());
+        return new GLFWWindow(windowID, vidMode);
     }
 
     /**
@@ -119,12 +120,12 @@ final class GLFWHelper {
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
         if (GLHelper.isUseOldGlVersion()) {
             // Fallback version 3.3
-            Logger.debug("Creating OpenGL 3.3 context");
+            Logger.debug("Using OpenGL 3.3 context");
             glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
             glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         } else {
             // Default version 4.0
-            Logger.debug("Creating OpenGL 4.0 context");
+            Logger.debug("Using OpenGL 4.0 context");
             glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
             glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
         }
@@ -263,7 +264,7 @@ final class GLFWHelper {
 
     // Helper Class
 
-    record GLFWWindow(long windowID, int vidModeWidth, int vidModeHeight) {
+    record GLFWWindow(long windowID, GLFWVidMode vidMode) {
     }
 
 }

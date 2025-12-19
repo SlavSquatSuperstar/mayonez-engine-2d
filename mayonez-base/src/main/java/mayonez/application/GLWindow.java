@@ -4,6 +4,7 @@ import mayonez.*;
 import mayonez.graphics.*;
 import mayonez.input.*;
 import mayonez.math.*;
+import org.lwjgl.glfw.GLFWVidMode;
 
 import static mayonez.application.GLFWHelper.*;
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
@@ -25,7 +26,7 @@ final class GLWindow implements Window {
     private int width, height; // GLFW uses content size, unlike AWT
     private Vec2 lastPos, lastSize;
     private int frameWidth, frameHeight; // Extra padding of decorations
-    private final int vidModeWidth, vidModeHeight;
+    private final GLFWVidMode vidMode;
 
     // Input Fields
     private final GLKeyManager keyboard;
@@ -48,8 +49,7 @@ final class GLWindow implements Window {
         initGLFW();
         var window = createGLFWWindow(config);
         windowID = window.windowID();
-        vidModeWidth = window.vidModeWidth();
-        vidModeHeight = window.vidModeHeight();
+        vidMode = window.vidMode();
 
         var frameSize = getWindowFrameSize(windowID);
         frameWidth = (int) frameSize.x;
@@ -72,6 +72,10 @@ final class GLWindow implements Window {
         // Set resize callback
         glfwSetFramebufferSizeCallback(windowID, this::onFrameBufferResized); // Pixels (larger on macOS)
         glfwSetWindowSizeCallback(windowID, this::onWindowResized); // Screen units
+
+        Logger.debug("Created the GLFW window");
+        Logger.debug("Starting in %s mode", config.fullScreen() ? "full screen" : "windowed");
+        Logger.debug("Using full screen size %dx%d", vidMode.width(), vidMode.height());
     }
 
     // Engine methods
@@ -162,6 +166,8 @@ final class GLWindow implements Window {
         var frameSize = getWindowFrameSize(windowID);
         frameWidth = (int) frameSize.x;
         frameHeight = (int) frameSize.y;
+
+        Logger.debug("Set window to %s mode", fullScreen ? "full screen" : "windowed");
     }
 
     public void setFullScreen() {
@@ -172,7 +178,7 @@ final class GLWindow implements Window {
         glfwSetWindowMonitor(
                 windowID,
                 glfwGetPrimaryMonitor(), 0, 0,
-                vidModeWidth, vidModeHeight, GLFW_DONT_CARE
+                vidMode.width(), vidMode.height(), GLFW_DONT_CARE
         );
     }
 

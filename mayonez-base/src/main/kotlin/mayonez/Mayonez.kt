@@ -154,6 +154,9 @@ object Mayonez {
                 Logger.log("Creating application \"${Preferences.title}\"...")
 
                 val engineString = if (useGL) "GL" else "AWT"
+                Logger.log("Using engine type \"%s\"", engineString)
+
+                Logger.debug("Creating window...")
                 val config = WindowConfig(
                     "${Preferences.title} ($engineString)",
                     Preferences.screenWidth, Preferences.screenHeight,
@@ -161,8 +164,6 @@ object Mayonez {
                 ).validate()
                 window = ApplicationFactory.createWindow(useGL, config)
                 application = ApplicationFactory.createApplication(window)
-
-                Logger.log("Using engine type \"%s\"", engineString)
             } catch (e: WindowInitException) {
                 Logger.printStackTrace(e)
                 exitWithErrorMessage("Fatal error while initializing engine")
@@ -192,7 +193,7 @@ object Mayonez {
         }
         if (!started) {
             started = true
-            SceneManager.changeSceneAsNew(scene)
+            SceneManager.changeSceneAsNew(scene) // TODO don't start scene until window visible
             // Start game
             if (this::application.isInitialized) application.start()
             else exitWithErrorMessage("Cannot start without configuring program \"Use GL\" option")

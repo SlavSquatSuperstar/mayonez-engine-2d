@@ -91,6 +91,10 @@ final class JWindow extends JFrame implements Window {
         addMouseListener(mouse);
         addMouseMotionListener(mouse);
         addMouseWheelListener(mouse);
+
+        Logger.debug("Created the AWT window");
+        Logger.debug("Starting in %s mode", config.fullScreen() ? "full screen" : "windowed");
+        Logger.debug("Using full screen size %dx%d", displayMode.getWidth(), displayMode.getHeight());
     }
 
     // Engine Methods
@@ -210,6 +214,8 @@ final class JWindow extends JFrame implements Window {
         if (fullScreen) setFullScreen();
         else setWindowed();
         start();
+
+        Logger.debug("Set window to %s mode", fullScreen ? "full screen" : "windowed");
     }
 
     public void setFullScreen() {
