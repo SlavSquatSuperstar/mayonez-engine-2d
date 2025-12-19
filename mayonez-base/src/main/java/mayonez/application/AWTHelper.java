@@ -6,6 +6,8 @@ import mayonez.math.*;
 
 import java.awt.*;
 import java.awt.geom.*;
+import java.util.Arrays;
+import java.util.Comparator;
 
 /**
  * Assists in graphics context creation and operations for the AWT engine.
@@ -30,13 +32,18 @@ final class AWTHelper {
      * instead of the native resolution.
      */
     static void setFullScreenDisplayMode() {
-        for (var mode : SCREEN_DEVICE.getDisplayModes()) {
-            if (mode.getWidth() == Preferences.getScreenWidth()
-                    && mode.getHeight() == Preferences.getScreenHeight()) {
-                SCREEN_DEVICE.setDisplayMode(mode);
-            }
-        }
-        // Could also find the resolution closest to desired resolution
+        if (!SCREEN_DEVICE.isDisplayChangeSupported()) return;
+
+        // Find the available resolution closest to the desired one
+        var mode = Arrays.stream(SCREEN_DEVICE.getDisplayModes())
+                .min(Comparator.comparingInt(AWTHelper::distanceSquared));
+        mode.ifPresent(SCREEN_DEVICE::setDisplayMode);
+    }
+
+    private static int distanceSquared(DisplayMode mode) {
+        var xDiff = mode.getWidth() - Preferences.getScreenWidth();
+        var yDiff = mode.getHeight() - Preferences.getScreenHeight();
+        return (xDiff * xDiff) + (yDiff * yDiff);
     }
 
     static Vec2 getWindowContentScale() {

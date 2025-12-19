@@ -22,7 +22,7 @@ final class GLWindow implements Window {
     // Window Fields
     private final long windowID;
     private final String title;
-    private int width, height; // GLFW uses content size, not total size
+    private int width, height; // GLFW uses content size, unlike AWT
     private Vec2 lastPos, lastSize;
     private final int frameWidth, frameHeight; // Extra padding of decorations
 
@@ -66,7 +66,7 @@ final class GLWindow implements Window {
 
         // Set resize callback
         glfwSetFramebufferSizeCallback(windowID, this::onFrameBufferResized); // Pixels (larger on macOS)
-        glfwSetWindowSizeCallback(windowID, this::onWindowResized); // Screen coords
+        glfwSetWindowSizeCallback(windowID, this::onWindowResized); // Screen units
     }
 
     // Engine methods
@@ -216,7 +216,8 @@ final class GLWindow implements Window {
 
     @Override
     public String toString() {
-        return String.format("GL Window (%s, %dx%d)", getTitle(), getWidth(), getHeight());
+        return String.format("GLFW Window (%s, %dx%d, %s)",
+                getTitle(), getWidth(), getHeight(), isFullScreen() ? "Full Screen" : "Windowed");
     }
 
 }

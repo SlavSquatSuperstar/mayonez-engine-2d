@@ -45,7 +45,8 @@ final class JWindow extends JFrame implements Window {
      */
     JWindow(WindowConfig config) {
         super(config.title());
-        setSize(config.width(), config.height());
+        setSize(config.width(), config.height()); // AWT uses total size, unlike GLFW
+
         setResizable(config.resizable());
         setLocationRelativeTo(null); // Center in screen
 
@@ -57,6 +58,7 @@ final class JWindow extends JFrame implements Window {
         setUndecorated(config.fullScreen());
         if (SCREEN_DEVICE.isFullScreenSupported()) {
             SCREEN_DEVICE.setFullScreenWindow(config.fullScreen() ? this : null);
+            AWTHelper.setFullScreenDisplayMode();
         }
 
         // Set close operation
@@ -239,12 +241,12 @@ final class JWindow extends JFrame implements Window {
 
     @Override
     public int getWidth() {
-        return super.getWidth();
+        return super.getWidth(); // AWT messes up if this is changed
     }
 
     @Override
     public int getHeight() {
-        return super.getHeight();
+        return super.getHeight(); // AWT messes up if this is changed
     }
 
     @Override
@@ -264,7 +266,8 @@ final class JWindow extends JFrame implements Window {
 
     @Override
     public String toString() {
-        return String.format("AWT Window (%s, %dx%d)", getTitle(), getWidth(), getHeight());
+        return String.format("AWT Window (%s, %dx%d, %s)",
+                getTitle(), getWidth(), getHeight(), isFullScreen() ? "Full Screen" : "Windowed");
     }
 
 }
