@@ -24,7 +24,8 @@ final class GLWindow implements Window {
     private final String title;
     private int width, height; // GLFW uses content size, unlike AWT
     private Vec2 lastPos, lastSize;
-    private final int frameWidth, frameHeight; // Extra padding of decorations
+    private int frameWidth, frameHeight; // Extra padding of decorations
+    private final int vidModeWidth, vidModeHeight;
 
     // Input Fields
     private final GLKeyManager keyboard;
@@ -45,7 +46,11 @@ final class GLWindow implements Window {
 
         // Initialize window
         initGLFW();
-        windowID = createGLFWWindow(config);
+        var window = createGLFWWindow(config);
+        windowID = window.windowID();
+        vidModeWidth = window.vidModeWidth();
+        vidModeHeight = window.vidModeHeight();
+
         var frameSize = getWindowFrameSize(windowID);
         frameWidth = (int) frameSize.x;
         frameHeight = (int) frameSize.y;
@@ -152,6 +157,11 @@ final class GLWindow implements Window {
     public void setFullScreen(boolean fullScreen) {
         if (fullScreen) setFullScreen();
         else setWindowed();
+
+        // Update frame size
+        var frameSize = getWindowFrameSize(windowID);
+        frameWidth = (int) frameSize.x;
+        frameHeight = (int) frameSize.y;
     }
 
     public void setFullScreen() {
@@ -162,8 +172,7 @@ final class GLWindow implements Window {
         glfwSetWindowMonitor(
                 windowID,
                 glfwGetPrimaryMonitor(), 0, 0,
-                Preferences.getScreenWidth(), Preferences.getScreenHeight(),
-                GLFW_DONT_CARE
+                vidModeWidth, vidModeHeight, GLFW_DONT_CARE
         );
     }
 
@@ -172,8 +181,7 @@ final class GLWindow implements Window {
         glfwSetWindowMonitor(
                 windowID,
                 NULL, (int) lastPos.x, (int) lastPos.y,
-                (int) lastSize.x, (int) lastSize.y,
-                GLFW_DONT_CARE
+                (int) lastSize.x, (int) lastSize.y, GLFW_DONT_CARE
         );
 
         // This is necessary for when the windowed size is equal to the screen resolution

@@ -3,6 +3,9 @@ package mayonez.application;
 import mayonez.*;
 import mayonez.graphics.*;
 import mayonez.math.*;
+import org.lwjgl.glfw.GLFWVidMode;
+
+import java.util.Comparator;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.glfw.GLFWErrorCallback.createPrint;
@@ -46,12 +49,14 @@ final class GLFWHelper {
      * @param config the initialization parameters
      * @return the window id
      */
-    static long createGLFWWindow(WindowConfig config) throws WindowInitException {
+    static GLFWWindow createGLFWWindow(WindowConfig config) throws WindowInitException {
         // Create window
         configureWindowHints(config);
+        var vidMode = getNearestVideoMode(config);
         var monitor = config.fullScreen() ? glfwGetPrimaryMonitor() : NULL;
+
         var windowID = glfwCreateWindow(
-                config.width(), config.height(), config.title(), monitor, NULL
+                vidMode.width(), vidMode.height(), config.title(), monitor, NULL
         );
         if (windowID == NULL) {
             throw new WindowInitException("Could not create the GLFW window");
@@ -62,7 +67,31 @@ final class GLFWHelper {
         glfwSwapInterval(1); // Enable v-sync
         GLHelper.loadOpenGL(); // Integrate LWJGL with OpenGL bindings
         GLHelper.enableBlending();
-        return windowID;
+
+        return new GLFWWindow(windowID, vidMode.width(), vidMode.height());
+    }
+
+    /**
+     * The nearest available full screen resolution to the preferred one, or otherwise the current
+     * resolution.
+     *
+     * @return the best video mode
+     */
+    static GLFWVidMode getNearestVideoMode(WindowConfig config) {
+        var monitor = glfwGetPrimaryMonitor();
+        var currentVidMode = glfwGetVideoMode(monitor);
+        var vidModes = glfwGetVideoModes(monitor);
+
+        if (vidModes == null) return currentVidMode;
+        return vidModes.stream()
+                .min(Comparator.comparingInt(mode -> getDistanceSquared(mode, config)))
+                .orElse(glfwGetVideoMode(monitor));
+    }
+
+    private static int getDistanceSquared(GLFWVidMode mode, WindowConfig config) {
+        var xDiff = mode.width() - config.width();
+        var yDiff = mode.height() - config.height();
+        return (xDiff * xDiff) + (yDiff * yDiff);
     }
 
     /**
@@ -99,7 +128,6 @@ final class GLFWHelper {
             glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
             glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
         }
-
     }
 
     // Window Position Methods
@@ -231,6 +259,11 @@ final class GLFWHelper {
         var framebufferSize = getFramebufferSize(windowID);
         var windowSize = getWindowSize(windowID);
         return framebufferSize.div(windowSize);
+    }
+
+    // Helper Class
+
+    record GLFWWindow(long windowID, int vidModeWidth, int vidModeHeight) {
     }
 
 }
