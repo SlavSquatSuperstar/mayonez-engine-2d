@@ -1,7 +1,6 @@
 package mayonez.config;
 
 import mayonez.*;
-import mayonez.util.Record;
 
 import java.util.*;
 
@@ -21,7 +20,7 @@ import java.util.*;
  */
 public class Launcher {
 
-    private final Record programArgs;
+    private final RunConfig config;
 
     /**
      * Create a launcher for the application without passing in any program arguments.
@@ -36,7 +35,8 @@ public class Launcher {
      * @param args a string array
      */
     public Launcher(String[] args) {
-        programArgs = new ArgumentsParser(args).getProgramArgs();
+        var parser = new ArgumentsParser2();
+        config = parser.getRunConfig(parser.parse(args));
     }
 
     // Run Config Methods
@@ -48,24 +48,8 @@ public class Launcher {
      * @return this object
      */
     public Launcher setRunConfig() {
-        Mayonez.setConfig(getRunConfigFromArgs());
+        Mayonez.setConfig(config);
         return this;
-    }
-
-    private RunConfig getRunConfigFromArgs() {
-        return new RunConfig(getUseGL());
-    }
-
-    boolean getUseGL() throws IllegalArgumentException {
-        if (!programArgs.contains("engine")) return RunConfig.DEFAULT_USE_GL;
-
-        var engineArg = programArgs.getString("engine");
-        return switch (engineArg) {
-            case "" -> throw new IllegalArgumentException("Missing value for option \"engine\"");
-            case "gl" -> true;
-            case "awt" -> false;
-            default -> throw new IllegalArgumentException("Invalid value for option \"engine\"");
-        };
     }
 
     // Scene Manager Methods
