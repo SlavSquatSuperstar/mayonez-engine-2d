@@ -30,7 +30,7 @@ public class SpaceGameScene extends DemoScene {
     private static final boolean CAMERA_DEBUG_MODE = false;
     private static final int SCENE_SCALE = 32;
     public static final Vec2 SCENE_HALF_SIZE
-            = new Vec2(Preferences.getScreenWidth(), Preferences.getScreenHeight())
+            = new Vec2(Mayonez.getScreenWidth(), Mayonez.getScreenHeight())
             .mul(4f / (SCENE_SCALE * 2f));
 
     // Fields

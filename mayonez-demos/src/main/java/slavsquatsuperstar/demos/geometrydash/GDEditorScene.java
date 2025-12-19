@@ -18,8 +18,8 @@ import slavsquatsuperstar.demos.geometrydash.ui.UICanvas;
 public class GDEditorScene extends DemoScene {
 
     final static int TILE_SIZE = 42;
-    final static Vec2 SCENE_SIZE = new Vec2(Preferences.getScreenWidth(),
-            Preferences.getScreenHeight()).div(TILE_SIZE);
+    final static Vec2 SCENE_SIZE = new Vec2(Mayonez.getScreenWidth(),
+            Mayonez.getScreenHeight()).div(TILE_SIZE);
 
     public GDEditorScene(String name) {
         super(name);
@@ -29,7 +29,7 @@ public class GDEditorScene extends DemoScene {
     protected void init() {
         setGravity(new Vec2());
         getCamera().setCameraScale(TILE_SIZE);
-        var size = new Vec2(Preferences.getScreenWidth(), Preferences.getScreenHeight()).div(TILE_SIZE);
+        var size = new Vec2(Mayonez.getScreenWidth(), Mayonez.getScreenHeight()).div(TILE_SIZE);
 
         addObject(new GameObject("Camera Controls") {
             @Override

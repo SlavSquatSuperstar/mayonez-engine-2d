@@ -147,7 +147,7 @@ public class RendererTestScene extends DemoScene {
                 addComponent(worldText);
 
                 var uiText = new TextLabel(
-                        UI_MESSAGE, new Vec2(20, Preferences.getScreenHeight() - 20))
+                        UI_MESSAGE, new Vec2(20, Mayonez.getScreenHeight() - 20))
                         .setInUI(true)
                         .setColor(Colors.RED)
                         .setFontSize(40)

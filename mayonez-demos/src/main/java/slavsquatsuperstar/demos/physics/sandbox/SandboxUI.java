@@ -35,16 +35,16 @@ public class SandboxUI extends GameObject {
         // Toggle Hints
         var hintsTooltip = new TextLabel(
                 "Show Controls (H)",
-                new Vec2(Preferences.getScreenWidth() - 20,
-                        Preferences.getScreenHeight() - 20))
+                new Vec2(Mayonez.getScreenWidth() - 20,
+                        Mayonez.getScreenHeight() - 20))
                 .setAnchor(Anchor.TOP_RIGHT)
                 .setFontSize(FONT_SIZE);
         addComponent(hintsTooltip);
 
         var controlHints = new TextLabel(
                 CONTROL_HINTS_MESSAGE,
-                new Vec2(Preferences.getScreenWidth() - 30,
-                        Preferences.getScreenHeight() - 70))
+                new Vec2(Mayonez.getScreenWidth() - 30,
+                        Mayonez.getScreenHeight() - 70))
                 .setAnchor(Anchor.TOP_RIGHT)
                 .setFontSize(FONT_SIZE);
         addComponent(controlHints);
@@ -53,7 +53,7 @@ public class SandboxUI extends GameObject {
         // Gravity Text
         var gravityText = new TextLabel(
                 "Gravity: On",
-                new Vec2(Preferences.getScreenWidth() - 20, 20))
+                new Vec2(Mayonez.getScreenWidth() - 20, 20))
                 .setAnchor(Anchor.BOTTOM_RIGHT)
                 .setFontSize(FONT_SIZE);
         addComponent(gravityText);

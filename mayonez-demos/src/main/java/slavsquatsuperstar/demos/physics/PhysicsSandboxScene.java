@@ -23,16 +23,15 @@ public class PhysicsSandboxScene extends DemoScene {
     private static final PhysicsMaterial STICKY_MATERIAL = new PhysicsMaterial(1f, 1f, 0f);
     private static final float SCENE_SCALE = 10f;
 
-    // Fields
-    private final float width = Preferences.getScreenWidth() / SCENE_SCALE;
-    private final float height = Preferences.getScreenHeight() / SCENE_SCALE;
-
     public PhysicsSandboxScene(String name) {
         super(name);
     }
 
     @Override
     protected void init() {
+        var width = Mayonez.getScreenWidth() / SCENE_SCALE;
+        var height = Mayonez.getScreenHeight() / SCENE_SCALE;
+
         getCamera().setBackgroundColor(Colors.WHITE);
         getCamera().setCameraScale(SCENE_SCALE);
 

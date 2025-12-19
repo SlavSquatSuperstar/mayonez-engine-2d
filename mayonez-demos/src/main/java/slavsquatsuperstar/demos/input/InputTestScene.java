@@ -24,8 +24,8 @@ public class InputTestScene extends DemoScene {
             @Override
             protected void init() {
                 addComponent(new TextLabel(getScene().getName(),
-                        new Vec2(Preferences.getScreenWidth() * 0.5f,
-                                Preferences.getScreenHeight() - 50))
+                        new Vec2(Mayonez.getScreenWidth() * 0.5f,
+                                Mayonez.getScreenHeight() - 50))
                         .setFontSize(40));
             }
         });

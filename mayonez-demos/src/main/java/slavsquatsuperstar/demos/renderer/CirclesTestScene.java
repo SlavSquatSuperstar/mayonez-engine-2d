@@ -18,7 +18,7 @@ public class CirclesTestScene extends DemoScene {
 
     private static final int SCENE_SCALE = 16;
     private static final Vec2 SCENE_HALF_SIZE
-            = new Vec2(Preferences.getScreenWidth(), Preferences.getScreenHeight())
+            = new Vec2(Mayonez.getScreenWidth(), Mayonez.getScreenHeight())
             .div(SCENE_SCALE * 2f);
 
     private static final int NUM_CIRCLES = 2000;
@@ -58,13 +58,13 @@ public class CirclesTestScene extends DemoScene {
             protected void init() {
                 // Background
                 addComponent(new UISprite(
-                        new Vec2(110, Preferences.getScreenHeight() - 50),
+                        new Vec2(110, Mayonez.getScreenHeight() - 50),
                         new Vec2(200, 50), Colors.LIGHT_GRAY
                 ));
 
                 var fpsText = new TextLabel(
                         "FPS: _",
-                        new Vec2(20, Preferences.getScreenHeight() - 45)
+                        new Vec2(20, Mayonez.getScreenHeight() - 45)
                 ) {
                     @Override
                     protected void update(float dt) {

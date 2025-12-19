@@ -26,16 +26,15 @@ public class PoolBallsScene extends DemoScene {
     private static final int EIGHT_BALL_NUM = 8;
     private static final int EIGHT_BALL_INDEX = 4;
 
-    // Fields
-    private final float width = Preferences.getScreenWidth() / SCENE_SCALE;
-    private final float height = Preferences.getScreenHeight() / SCENE_SCALE;
-
     public PoolBallsScene(String name) {
         super(name);
     }
 
     @Override
     protected void init() {
+        var width = Mayonez.getScreenWidth() / SCENE_SCALE;
+        var height = Mayonez.getScreenHeight() / SCENE_SCALE;
+
         setGravity(new Vec2());
         getCamera().setCameraScale(SCENE_SCALE);
 

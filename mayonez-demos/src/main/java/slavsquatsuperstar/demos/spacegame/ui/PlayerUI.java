@@ -58,7 +58,7 @@ public class PlayerUI extends GameObject {
         var sliderSize = new Vec2(192, 32);
 
         // Player Health
-        var hpLabelPos = new Vec2(32, Preferences.getScreenHeight() - 32);
+        var hpLabelPos = new Vec2(32, Mayonez.getScreenHeight() - 32);
         var hpLabel = new ImageLabel(hpLabelPos, labelSize,
                 HEALTH_ICON_TEXTURE, LABEL_BACKGROUND_TEXTURE, LABEL_BORDER_TEXTURE);
         addComponent(hpLabel);
@@ -92,7 +92,7 @@ public class PlayerUI extends GameObject {
         // Auto-Brake Indicator
         var autoBrakeToolTip = new TextLabel(
                 "Auto-Brake (B): On",
-                new Vec2(20, Preferences.getScreenHeight() - 125))
+                new Vec2(20, Mayonez.getScreenHeight() - 125))
                 .setStyle(style)
                 .setAnchor(Anchor.LEFT);
         addComponent(autoBrakeToolTip);
@@ -112,14 +112,14 @@ public class PlayerUI extends GameObject {
         // Hints
         var hintsTooltip = new TextLabel(
                 "Show Hints (H)",
-                new Vec2(Preferences.getScreenWidth() - 20, 15))
+                new Vec2(Mayonez.getScreenWidth() - 20, 15))
                 .setStyle(style)
                 .setAnchor(Anchor.BOTTOM_RIGHT);
         addComponent(hintsTooltip);
 
         var healthShieldHint = new TextLabel(
                 "Health\n\nShield",
-                new Vec2(270, Preferences.getScreenHeight() - 32))
+                new Vec2(270, Mayonez.getScreenHeight() - 32))
                 .setStyle(style)
                 .setAnchor(Anchor.TOP_LEFT);
         addComponent(healthShieldHint);
@@ -132,8 +132,8 @@ public class PlayerUI extends GameObject {
 
         var controlText = new TextLabel(
                 CONTROL_HINTS_MESSAGE,
-                new Vec2(Preferences.getScreenWidth() - 20,
-                        Preferences.getScreenHeight() - 20))
+                new Vec2(Mayonez.getScreenWidth() - 20,
+                        Mayonez.getScreenHeight() - 20))
                 .setStyle(style)
                 .setAnchor(Anchor.TOP_RIGHT);
         addComponent(controlText);

@@ -20,7 +20,7 @@ public final class CameraFactory {
      * @return the game engine
      */
     public static Camera createCamera() {
-        var screenSize = new Vec2(Preferences.getScreenWidth(), Preferences.getScreenHeight());
+        var screenSize = new Vec2(Mayonez.getScreenWidth(), Mayonez.getScreenHeight());
         if (Mayonez.getUseGL()) {
             return new GLCamera(screenSize);
         } else {
