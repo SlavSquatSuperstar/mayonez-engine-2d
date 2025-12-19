@@ -8,12 +8,12 @@ import org.apache.commons.cli.*;
  *
  * @author SlavSquatSuperstar
  */
-public class ArgumentsParser2 {
+class ArgumentsParser {
 
     private final CommandLineParser parser;
     private final Options options;
 
-    public ArgumentsParser2() {
+    ArgumentsParser() {
         parser = new DefaultParser();
 
         options = new Options();
@@ -32,7 +32,7 @@ public class ArgumentsParser2 {
      * @param args the arguments
      * @return the command line
      */
-    public CommandLine parse(String[] args) {
+    CommandLine parse(String[] args) {
         try {
             return parser.parse(options, args);
         } catch (ParseException e) {
@@ -46,7 +46,7 @@ public class ArgumentsParser2 {
      * @param cl the command line
      * @return the run config
      */
-    public RunConfig getRunConfig(CommandLine cl) {
+    RunConfig getRunConfig(CommandLine cl) {
         var useGL = parseUseGL(cl.getOptionValue("engine"));
         return new RunConfig(useGL);
     }
@@ -57,7 +57,7 @@ public class ArgumentsParser2 {
      * @param cl the command line
      * @return the record
      */
-    public Record serialize(CommandLine cl) {
+    Record serialize(CommandLine cl) {
         var record = new Record();
         for (var opt : cl.getOptions()) {
             var values = cl.getOptionValues(opt);

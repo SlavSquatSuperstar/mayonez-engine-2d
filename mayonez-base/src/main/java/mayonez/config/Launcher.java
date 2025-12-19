@@ -35,7 +35,7 @@ public class Launcher {
      * @param args a string array
      */
     public Launcher(String[] args) {
-        var parser = new ArgumentsParser2();
+        var parser = new ArgumentsParser();
         config = parser.getRunConfig(parser.parse(args));
     }
 

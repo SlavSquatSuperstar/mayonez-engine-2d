@@ -9,17 +9,17 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit tests for the {@link mayonez.config.ArgumentsParser2} class.
+ * Unit tests for the {@link ArgumentsParser} class.
  *
  * @author SlavSquatSuperstar
  */
-class ArgumentsParser2Test {
+class ArgumentsParserTest {
 
-    private ArgumentsParser2 parser;
+    private ArgumentsParser parser;
 
     @BeforeEach
     void createLauncher() {
-        parser = new ArgumentsParser2();
+        parser = new ArgumentsParser();
     }
 
     @Test
