@@ -7,7 +7,7 @@
     "fps": 60,
     "frame_skip": true,
     "double_click_time": 0.5,
-    "log_level": "info'",
+    "log_level": "info",
     "save_logs": true,
     "log_directory": "logs"
 }

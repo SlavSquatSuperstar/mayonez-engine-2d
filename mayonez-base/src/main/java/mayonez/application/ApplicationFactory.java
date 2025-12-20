@@ -25,7 +25,6 @@ public final class ApplicationFactory {
      * @return the application
      */
     public static Application createApplication(Window window) {
-        // TODO In AWT, this doesn't update camera screen size
         KeyInput.setHandler(window.getKeyInputHandler());
         MouseInput.setHandler(window.getMouseInputHandler());
         return new Application(window);
