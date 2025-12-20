@@ -22,6 +22,8 @@ class ArgumentsParserTest {
         parser = new ArgumentsParser();
     }
 
+    // One-Argument Options
+
     @Test
     void longOptionCorrect() {
         try {
@@ -31,7 +33,7 @@ class ArgumentsParserTest {
             assertNotNull(parser.getRunConfig(cl));
 
             var rec = parser.serialize(cl);
-            assertEquals(new Record(Map.of("e", "gl")), rec);
+            assertEquals(new Record(Map.of("engine", "gl")), rec);
         } catch (Exception e) {
             fail();
         }
@@ -46,7 +48,7 @@ class ArgumentsParserTest {
             assertNotNull(parser.getRunConfig(cl));
 
             var rec = parser.serialize(cl);
-            assertEquals(new Record(Map.of("e", "awt")), rec);
+            assertEquals(new Record(Map.of("engine", "awt")), rec);
         } catch (Exception e) {
             fail();
         }
@@ -65,6 +67,24 @@ class ArgumentsParserTest {
             fail();
         }
     }
+
+    // Flag Options
+
+    @Test
+    void flagPresentCorrect() {
+        try {
+            var cl = parser.parse(new String[]{"--glfallback"});
+            assertTrue(cl.hasOption("glfallback"));
+            assertNotNull(parser.getRunConfig(cl));
+
+            var rec = parser.serialize(cl);
+            assertEquals(new Record(Map.of("glfallback", true)), rec);
+        } catch (Exception e) {
+            fail();
+        }
+    }
+
+    // Wrong Arguments
 
     @Test
     void invalidArgumentWrong() {

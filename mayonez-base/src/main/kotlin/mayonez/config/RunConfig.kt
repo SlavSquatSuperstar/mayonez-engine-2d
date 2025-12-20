@@ -8,10 +8,13 @@ package mayonez.config
 @JvmRecord
 data class RunConfig(
     /** Whether to use the LWJGL engine. */
-    internal val useGL: Boolean,
+    val useGL: Boolean,
+    /** Whether to use the old OpenGL version. */
+    val glFallback: Boolean,
 ) {
     companion object {
         const val DEFAULT_USE_GL: Boolean = true
-        val DEFAULT_CONFIG: RunConfig = RunConfig(DEFAULT_USE_GL)
+        const val DEFAULT_GL_FALLBACK: Boolean = false
+        val DEFAULT_CONFIG: RunConfig = RunConfig(DEFAULT_USE_GL, DEFAULT_GL_FALLBACK)
     }
 }

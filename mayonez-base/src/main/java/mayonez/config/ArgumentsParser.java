@@ -22,6 +22,11 @@ class ArgumentsParser {
                 .hasArg()
                 .desc("The engine windowing/rendering backend")
                 .get());
+        options.addOption(Option.builder("g")
+                .longOpt("glfallback")
+                .hasArg(false)
+                .desc("Use the old OpenGL version")
+                .get());
     }
 
     // Parser Methods
@@ -48,7 +53,8 @@ class ArgumentsParser {
      */
     RunConfig getRunConfig(CommandLine cl) {
         var useGL = parseUseGL(cl.getOptionValue("engine"));
-        return new RunConfig(useGL);
+        var glFallback = cl.hasOption("glfallback");
+        return new RunConfig(useGL, glFallback);
     }
 
     /**
@@ -60,11 +66,16 @@ class ArgumentsParser {
     Record serialize(CommandLine cl) {
         var record = new Record();
         for (var opt : cl.getOptions()) {
+            // Prefer long option name as key
+            var key = opt.getLongOpt() != null ? opt.getLongOpt() : opt.getOpt();
             var values = cl.getOptionValues(opt);
-            if (values.length == 1) {
-                record.set(opt.getKey(), values[0]);
+
+            if (values == null) {
+                record.set(key, true);  // Flag
+            } else if (values.length == 1) {
+                record.set(key, values[0]); // One arg
             } else {
-                record.set(opt.getKey(), values);
+                record.set(key, values); // Var args
             }
         }
         return record;
