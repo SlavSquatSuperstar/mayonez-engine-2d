@@ -113,7 +113,7 @@ object Mayonez {
         if (!initialized) {
             this.config = config
             initializeSingletons()
-            initializeGame(useGL)
+            initializeGame(config)
             initialized = true
         }
     }
@@ -147,22 +147,22 @@ object Mayonez {
     /**
      * Initialize the game engine and input instances of the application.
      */
-    private fun initializeGame(useGL: Boolean) {
+    private fun initializeGame(runConfig: RunConfig) {
         if (!this::application.isInitialized) {
             // Create game engine instance
             try {
                 Logger.log("Creating application \"${Preferences.title}\"...")
 
-                val engineString = if (useGL) "GL" else "AWT"
+                val engineString = if (runConfig.useGL) "GL" else "AWT"
                 Logger.log("Using engine type \"%s\"", engineString)
 
                 Logger.debug("Creating window...")
-                val config = WindowConfig(
+                val windowConfig = WindowConfig(
                     "${Preferences.title} ($engineString)",
                     Preferences.screenWidth, Preferences.screenHeight,
                     Preferences.fullscreen, Preferences.resizable
                 ).validate()
-                window = ApplicationFactory.createWindow(useGL, config)
+                window = ApplicationFactory.createWindow(runConfig, windowConfig)
                 application = ApplicationFactory.createApplication(window)
             } catch (e: WindowInitException) {
                 Logger.printStackTrace(e)

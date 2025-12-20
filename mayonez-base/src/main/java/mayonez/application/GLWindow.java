@@ -1,6 +1,7 @@
 package mayonez.application;
 
 import mayonez.*;
+import mayonez.config.RunConfig;
 import mayonez.graphics.*;
 import mayonez.input.*;
 import mayonez.math.*;
@@ -37,17 +38,18 @@ final class GLWindow implements Window {
      * <p>
      * Source: <a href="https://www.lwjgl.org/guide">LWJGL starter guide</a>
      *
-     * @param config the initialization parameters
+     * @param windowConfig the window initialization parameters
+     * @param runConfig    the backend initialization parameters
      * @throws WindowInitException if GLFW cannot be initialized
      */
-    GLWindow(WindowConfig config) throws WindowInitException {
-        this.title = config.title();
-        this.width = config.width();
-        this.height = config.height();
+    GLWindow(WindowConfig windowConfig, RunConfig runConfig) throws WindowInitException {
+        this.title = windowConfig.title();
+        this.width = windowConfig.width();
+        this.height = windowConfig.height();
 
         // Initialize window
         initGLFW();
-        var window = createGLFWWindow(config);
+        var window = createGLFWWindow(windowConfig, runConfig);
         windowID = window.windowID();
         vidMode = window.vidMode();
 
@@ -74,7 +76,7 @@ final class GLWindow implements Window {
         glfwSetWindowSizeCallback(windowID, this::onWindowResized); // Screen units
 
         Logger.debug("Created the GLFW window");
-        Logger.debug("Starting in %s mode", config.fullScreen() ? "full screen" : "windowed");
+        Logger.debug("Starting in %s mode", windowConfig.fullScreen() ? "full screen" : "windowed");
         Logger.debug("Using full screen size %dx%d", vidMode.width(), vidMode.height());
     }
 

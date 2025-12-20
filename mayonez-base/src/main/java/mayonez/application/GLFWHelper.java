@@ -1,6 +1,7 @@
 package mayonez.application;
 
 import mayonez.*;
+import mayonez.config.RunConfig;
 import mayonez.graphics.*;
 import mayonez.math.*;
 import org.lwjgl.glfw.GLFWVidMode;
@@ -47,17 +48,20 @@ final class GLFWHelper {
     /**
      * Create a new window and return its GLFW pointer.
      *
-     * @param config the initialization parameters
+     * @param windowConfig the initialization parameters
+     * @param runConfig    the backend initialization parameters
      * @return the window id
      */
-    static GLFWWindow createGLFWWindow(WindowConfig config) throws WindowInitException {
+    static GLFWWindow createGLFWWindow(WindowConfig windowConfig, RunConfig runConfig) throws WindowInitException {
         // Create window
-        configureWindowHints(config);
-        var vidMode = getNearestVideoMode(config);
-        var monitor = config.fullScreen() ? glfwGetPrimaryMonitor() : NULL;
+        configureWindowHints(windowConfig);
+        configureContextHints(runConfig);
+
+        var vidMode = getNearestVideoMode(windowConfig);
+        var monitor = windowConfig.fullScreen() ? glfwGetPrimaryMonitor() : NULL;
 
         var windowID = glfwCreateWindow(
-                vidMode.width(), vidMode.height(), config.title(), monitor, NULL
+                vidMode.width(), vidMode.height(), windowConfig.title(), monitor, NULL
         );
         if (windowID == NULL) {
             throw new WindowInitException("Could not create the GLFW window");
@@ -113,12 +117,19 @@ final class GLFWHelper {
          *
          * Source: https://github.com/glfw/glfw/issues/845
          */
+    }
 
+    /**
+     * Set the OpenGL context hints for the application window.
+     *
+     * @param runConfig the context configuration
+     */
+    private static void configureContextHints(RunConfig runConfig) {
         // Set GLFW context profile to core (forward compatible)
         // macOS only supports OpenGL versions 3.2-4.1, inclusive
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
-        if (GLHelper.isUseOldGlVersion()) {
+        if (runConfig.glFallback()) {
             // Fallback version 3.3
             Logger.debug("Using OpenGL 3.3 context");
             glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -129,6 +140,7 @@ final class GLFWHelper {
             glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
             glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
         }
+        GLHelper.setUseOldGLVersion(runConfig.glFallback());
     }
 
     // Window Position Methods

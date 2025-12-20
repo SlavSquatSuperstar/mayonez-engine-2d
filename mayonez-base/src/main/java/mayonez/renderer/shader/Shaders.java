@@ -17,7 +17,7 @@ public final class Shaders {
     public static final Shader DEFAULT_SHADER =
             getShaderFromFiles(new String[]{
                     "assets/shaders/default.vert",
-                    GLHelper.isUseOldGlVersion()
+                    GLHelper.isUseOldGLVersion()
                             ? "assets/shaders/default_330.frag"
                             : "assets/shaders/default_400.frag"
             });
