@@ -39,8 +39,6 @@ public class Launcher {
         Mayonez.setConfig(config);
     }
 
-    // Run Config Methods
-
     // Scene Manager Methods
 
     /**
@@ -64,6 +62,8 @@ public class Launcher {
             SceneManager.addScene(scene);
         }
     }
+
+    // Start Game Methods
 
     /**
      * Start the game with the given scene. Will crash the program if the scene
@@ -95,6 +95,12 @@ public class Launcher {
         Mayonez.start(SceneManager.getScene(sceneIndex));
     }
 
-    // TODO auto start with first loaded scene
+    /**
+     * Start the game with the first added scene. Will crash the program if no
+     * scenes have been added.
+     */
+    public void startGame() {
+        Mayonez.start(SceneManager.getScene(0));
+    }
 
 }
