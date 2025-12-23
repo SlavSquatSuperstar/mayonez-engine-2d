@@ -30,7 +30,7 @@ final class JWindow extends JFrame implements Window {
     private final AffineTransform windowFlipXf;
 
     // Window Fields
-    private boolean closedByUser;
+    private boolean initialized, closedByUser;
     private Point lastPos;
     private Dimension lastSize;
     private final DisplayMode displayMode;
@@ -49,10 +49,13 @@ final class JWindow extends JFrame implements Window {
         setSize(config.width(), config.height()); // AWT uses total size, unlike GLFW
         getContentPane().setSize(getSize());  // Set content pane size before visible
         // Resizing the content pane plus the window to the preferred size is too buggy
+        // TODO mouse coords are off in windowed possibly due to content pane size
+        // TODO mouse coords mess up after switching scenes in full screen
 
         setResizable(config.resizable());
         setLocationRelativeTo(null); // Center in screen
 
+        initialized = false;
         closedByUser = false;
         lastPos = getLocation();
         lastSize = getSize();
@@ -104,6 +107,14 @@ final class JWindow extends JFrame implements Window {
         if (isVisible()) return;
         setVisible(true);
         initGraphics(); // Initialize graphics resources
+
+        if (!initialized) {
+            // Resizing the content pane to the desired size now that it is visible
+            // Only do this once
+            var titleBarHeight = getHeight() - getContentHeight();
+            setSize(getWidth(), getHeight() + titleBarHeight);
+            initialized = true;
+        }
     }
 
     @Override
@@ -196,7 +207,7 @@ final class JWindow extends JFrame implements Window {
 
     private void onWindowResized() {
         WindowEvents.WINDOW_EVENTS.broadcast(new WindowResizeEvent(
-                getContentPane().getWidth(), getContentPane().getHeight()
+                getWidth(), getHeight()
         ));
 
         // Adjust window transform
