@@ -193,7 +193,7 @@ object Mayonez {
         }
         if (!started) {
             started = true
-            SceneManager.changeSceneAsNew(scene)
+            SceneManager.setScene(scene)
             // Start game
             if (this::application.isInitialized) application.start()
             else exitWithErrorMessage("Cannot start without configuring program \"Use GL\" option")
