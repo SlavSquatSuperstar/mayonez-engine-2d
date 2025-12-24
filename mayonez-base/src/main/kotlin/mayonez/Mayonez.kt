@@ -23,7 +23,6 @@ import kotlin.system.exitProcess
  */
 // TODO rename to application manager
 // TODO move to launcher/config pkg
-// TODO separate engine title with window title
 // TODO application init events
 object Mayonez {
 

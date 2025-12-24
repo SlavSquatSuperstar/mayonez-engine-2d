@@ -1,13 +1,13 @@
 package mayonez;
 
 /**
- * The gameplay state of a scene that dictates whether it is active or updating.
+ * The gameplay state of a {@link SceneManager} that dictates whether it is initialized and updating.
  *
  * @author SlavSquatSuperstar
  */
 enum SceneState {
     /**
-     * A scene that has not been initialized.
+     * A scene that has not been initialized or has been unloaded.
      */
     STOPPED,
     /**
@@ -17,5 +17,9 @@ enum SceneState {
     /**
      * A scene that has been initialized and is active.
      */
-    RUNNING
+    RUNNING,
+    /**
+     * A scene that is running and has been signaled to stop.
+     */
+    DESTROYED
 }

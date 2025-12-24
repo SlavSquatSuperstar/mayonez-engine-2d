@@ -111,7 +111,9 @@ public abstract class Scene {
      * @param dt seconds since the last frame
      */
     final void update(float dt) {
-        onUserUpdate(dt);
+        if (!isStopped()) {
+            onUserUpdate(dt); // Move input to window
+        }
         // Update all objects
         // TODO physics update, late update
         if (isRunning()) {
@@ -123,6 +125,7 @@ public abstract class Scene {
             camera.gameObject.update(dt); // Update camera last
         }
         objects.processBuffer();
+        if (isDestroyed()) stop();
     }
 
     /**
@@ -141,9 +144,11 @@ public abstract class Scene {
      * @param g2 the window's graphics object
      */
     final void render(Graphics2D g2) {
-        onUserRender();
-        objects.forEach(GameObject::debugRender);
-        renderLayer.render(g2);
+        if (!isStopped()) {
+            onUserRender();
+            objects.forEach(GameObject::debugRender);
+            renderLayer.render(g2);
+        }
     }
 
     /**
@@ -155,9 +160,17 @@ public abstract class Scene {
     // Stop Methods
 
     /**
-     * Destroys all objects and stop updating the scene.
+     * signal the scene to stop updating and destroy all objects after this frame.
      */
-    final void stop() {
+    final void destroy() {
+        // Make sure the scene finishes updating so component transforms aren't null
+        state = SceneState.DESTROYED;
+    }
+
+    /**
+     * Destroy all objects in the scene.
+     */
+    private void stop() {
         // Destroy all objects
         camera.setSubject(null);
         objects.forEach(GameObject::onDestroy);
@@ -320,6 +333,10 @@ public abstract class Scene {
 
     boolean isPaused() {
         return state == SceneState.PAUSED;
+    }
+
+    boolean isDestroyed() {
+        return state == SceneState.DESTROYED;
     }
 
     boolean isStopped() {

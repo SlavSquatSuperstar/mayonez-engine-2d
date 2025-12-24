@@ -88,7 +88,6 @@ public final class GLHelper {
      */
     public static void setUseOldGLVersion(boolean useOldGLVersion) {
         GLHelper.useOldGLVersion = useOldGLVersion;
-        System.out.println(useOldGLVersion);
     }
 
     // TODO allow specify log level

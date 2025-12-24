@@ -29,7 +29,7 @@ object SceneManager {
     private val scenes: MutableMap<String, Scene> = HashMap() // The scene pool
     private val sceneNames: MutableList<String> = ArrayList() // The scene order
 
-    /** The scene that is currently loaded by the game. */
+    /** The scene that the application is actively running. */
     @JvmStatic
     lateinit var currentScene: Scene
 
@@ -114,7 +114,7 @@ object SceneManager {
     @JvmStatic
     @JvmName("startScene")
     internal fun startScene() {
-        if (currentScene.isStopped) {
+        if (currentScene.isStopped || currentScene.isDestroyed) {
             currentScene.start()
             MouseInput.setPointTransformer(currentScene.camera)
             Logger.debug("Started scene \"${currentScene.name}\"")
