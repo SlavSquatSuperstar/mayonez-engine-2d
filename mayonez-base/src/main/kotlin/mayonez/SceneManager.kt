@@ -1,8 +1,10 @@
 package mayonez
 
 import mayonez.config.*
+import mayonez.event.*
 import mayonez.input.*
 import java.awt.*
+import java.util.*
 
 /**
  * Store multiple scenes for later use and helps the user reload and switch between
@@ -29,6 +31,15 @@ object SceneManager {
     private val scenes: MutableMap<String, Scene> = HashMap() // The scene pool
     private val sceneNames: MutableList<String> = ArrayList() // The scene order
 
+    @JvmField
+    internal val SCENE_EVENTS: EventSystem<SceneEvent> = EventSystem()
+    private val sceneEventBuffer: Queue<SceneEvent> = ArrayDeque()
+    private val sceneEventCallbacks: Queue<SceneEventCallback> = ArrayDeque()
+
+    init {
+        SCENE_EVENTS.subscribe { event -> sceneEventBuffer.offer(event) }
+    }
+
     /** The scene that the application is actively running. */
     @JvmStatic
     lateinit var currentScene: Scene
@@ -38,6 +49,15 @@ object SceneManager {
     @JvmName("updateScene")
     internal fun updateScene(dt: Float) {
         currentScene.update(dt)
+
+        // Execute all queued callbacks
+        while (sceneEventBuffer.isNotEmpty()) {
+            val event = sceneEventBuffer.poll()
+            if (event?.state == SceneState.STOPPED) {  // TODO better event checking
+                val callback = sceneEventCallbacks.poll()
+                callback?.execute(event)
+            }
+        }
     }
 
     @JvmStatic
@@ -69,10 +89,10 @@ object SceneManager {
      */
     @JvmStatic
     fun restartScene() {
-        Logger.debug("Restarting current scene")
-        stopScene()
-        // TODO wait to start
-        startScene()
+        destroyScene()
+
+        // Start scene later
+        sceneEventCallbacks.offer { startScene() }
     }
 
     /**
@@ -89,18 +109,26 @@ object SceneManager {
         if (scene == null) return  // Don't set a null scene
         else if (!this::currentScene.isInitialized) return // Don't switch if no scene
 
-        // Old scene behavior
         Logger.debug("Switching scenes (stop old = %s, restart new = %s)", stopOld, restartNew)
-        if (stopOld) stopScene()
-        else pauseScene()
 
-        // TODO wait to switch/start
+        // Old scene behavior
+        // Switch and start later
+        if (stopOld) {
+            destroyScene()
+            sceneEventCallbacks.offer { setNewSceneAndStart(scene, restartNew) }
+        } else {
+            pauseScene()
+            setNewSceneAndStart(scene, restartNew)
+        }
+    }
+
+    private fun setNewSceneAndStart(scene: Scene, restartNew: Boolean) {
         // Switch Scene
         setScene(scene)
 
-        // New Scene behavior
+        // New scene behavior
         if (restartNew) {
-            stopScene()
+            stopScene() // Should stop, not destroy, and no callback
             startScene()
         } else {
             startScene()
@@ -121,12 +149,21 @@ object SceneManager {
         }
     }
 
+    /** Signals the current scene to stop. */
+    internal fun destroyScene() {
+        if (!currentScene.isStopped) {
+            currentScene.destroy()
+            Logger.debug("Stopped scene \"${currentScene.name}\"")
+        }
+    }
+
     /** Stops the current scene and destroys all its game objects. */
     @JvmStatic
     @JvmName("stopScene")
     internal fun stopScene() {
         if (!currentScene.isStopped) {
-            currentScene.destroy()
+            currentScene.stop()
+            sceneEventCallbacks.offer { } // Do nothing
             Logger.debug("Stopped scene \"${currentScene.name}\"")
         }
     }

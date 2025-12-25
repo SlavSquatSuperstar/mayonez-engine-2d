@@ -160,7 +160,7 @@ public abstract class Scene {
     // Stop Methods
 
     /**
-     * signal the scene to stop updating and destroy all objects after this frame.
+     * Signal the scene to stop updating and destroy all objects after this frame.
      */
     final void destroy() {
         // Make sure the scene finishes updating so component transforms aren't null
@@ -168,9 +168,9 @@ public abstract class Scene {
     }
 
     /**
-     * Destroy all objects in the scene.
+     * Destroy all objects in the scene immediately.
      */
-    private void stop() {
+    final void stop() {
         // Destroy all objects
         camera.setSubject(null);
         objects.forEach(GameObject::onDestroy);
@@ -181,6 +181,7 @@ public abstract class Scene {
         physics.clear();
 
         state = SceneState.STOPPED;
+        SceneManager.SCENE_EVENTS.broadcast(new SceneEvent(this, SceneState.STOPPED));
     }
 
     // Object Methods
