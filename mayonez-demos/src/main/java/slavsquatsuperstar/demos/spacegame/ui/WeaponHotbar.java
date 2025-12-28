@@ -22,18 +22,19 @@ public class WeaponHotbar extends Script implements UIElement {
     private static final float BORDER_MARGIN = 8f;
 
     // Fields
-    private Vec2 position, size; // TODO rename slot size
+    private Vec2 position, slotSize;
+    private float slotSpacing;
     private final int numSlots;
-    private final float boxSpacing = 16; // TODO get/set
 
     // UI Elements
     private final List<ProjectileType> loadout;
     private final WeaponHotbarSlot[] hotbarSlots;
     private UISprite selectedBorder;
 
-    public WeaponHotbar(Vec2 position, Vec2 size, List<ProjectileType> loadout) {
-        this.position = position;
-        this.size = size; // Size of slots
+    public WeaponHotbar(Vec2 position, Vec2 slotSize, float slotSpacing, List<ProjectileType> loadout) {
+        this.position = position; // Position of first slot center
+        this.slotSize = slotSize;
+        this.slotSpacing = slotSpacing;
         this.loadout = loadout;
         this.numSlots = loadout.size();
         hotbarSlots = new WeaponHotbarSlot[numSlots];
@@ -45,19 +46,20 @@ public class WeaponHotbar extends Script implements UIElement {
 
         // Create hotbar slots
         // TODO recreate on loadout change
-        var boxOffset = size.x + boxSpacing;
+        // TODO create components then add
+        var slotOffset = slotSize.x + slotSpacing;
         for (int i = 0; i < numSlots; i++) {
             hotbarSlots[i] = new WeaponHotbarSlot(
-                    position.add(new Vec2(boxOffset * i, 0)), size, loadout.get(i));
+                    position.add(new Vec2(slotOffset * i, 0)), slotSize, loadout.get(i));
             gameObject.addComponent(hotbarSlots[i]);
         }
 
         // Border over selected hotbar element
-        selectedBorder = new UISprite(position, size.add(new Vec2(BORDER_MARGIN)),
+        selectedBorder = new UISprite(position, slotSize.add(new Vec2(BORDER_MARGIN)),
                 SELECTED_BORDER_TEXTURE) {
             @Override
             public int getZIndex() {
-                return super.getZIndex() + 3; // display above overlay
+                return super.getZIndex() + 3; // Display above overlay
             }
         };
         gameObject.addComponent(selectedBorder);
@@ -116,7 +118,7 @@ public class WeaponHotbar extends Script implements UIElement {
         this.position = position;
 
         // Adjust slot positions
-        var boxOffset = size.x + boxSpacing;
+        var boxOffset = slotSize.x + slotSpacing;
         for (int i = 0; i < numSlots; i++) {
             hotbarSlots[i].setPosition(position.add(new Vec2(boxOffset * i, 0)));
         }
@@ -124,20 +126,64 @@ public class WeaponHotbar extends Script implements UIElement {
 
     @Override
     public Vec2 getSize() {
-        return size;
+        var hotbarWidth = slotSize.x * numSlots + slotSpacing * (numSlots - 1);
+        var hotbarHeight = slotSize.y;
+        return new Vec2(hotbarWidth, hotbarHeight);
     }
 
     @Override
     public void setSize(Vec2 size) {
-        this.size = size;
+        // Do nothing, set slot size instead
+    }
 
+    /**
+     * Gets the size of an individual hotbar slot.
+     *
+     * @return the slot size
+     */
+    public Vec2 getSlotSize() {
+        return slotSize;
+    }
+
+    /**
+     * Sets the size of an individual hotbar slot and readjusts all element positions.
+     *
+     * @param slotSize the slot size
+     */
+    public void setSlotSize(Vec2 slotSize) {
+        this.slotSize = slotSize;
+        adjustSlots();
+    }
+
+    /**
+     * Gets the spacing between each individual hotbar slot.
+     *
+     * @return the slot spacing
+     */
+    public float getSlotSpacing() {
+        return slotSpacing;
+    }
+
+    /**
+     * Sets the spacing between each individual hotbar slot and readjusts all element positions.
+     *
+     * @param slotSpacing the slot spacing
+     */
+    public void setSlotSpacing(float slotSpacing) {
+        this.slotSpacing = slotSpacing;
+        adjustSlots();
+    }
+
+    // Helper Methods
+
+    private void adjustSlots() {
         // Adjust slot positions and sizes
-        var boxOffset = size.x + boxSpacing;
+        var slotOffset = slotSize.x + slotSpacing;
         for (int i = 0; i < numSlots; i++) {
-            hotbarSlots[i].setSize(size);
-            hotbarSlots[i].setPosition(position.add(new Vec2(boxOffset * i, 0)));
+            hotbarSlots[i].setSize(slotSize);
+            hotbarSlots[i].setPosition(position.add(new Vec2(slotOffset * i, 0)));
         }
-        selectedBorder.setSize(size.add(new Vec2(BORDER_MARGIN)));
+        selectedBorder.setSize(slotSize.add(new Vec2(BORDER_MARGIN)));
     }
 
 }

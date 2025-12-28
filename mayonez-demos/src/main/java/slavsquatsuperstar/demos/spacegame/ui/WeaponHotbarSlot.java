@@ -56,7 +56,6 @@ public class WeaponHotbarSlot extends ImageLabel {
 
     // Helper Methods
 
-
     /**
      * Get the fill value of the weapon reload overlay, from bottom to top.
      *

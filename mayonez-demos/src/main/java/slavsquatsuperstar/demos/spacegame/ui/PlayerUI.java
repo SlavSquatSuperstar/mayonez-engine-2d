@@ -78,9 +78,7 @@ public class PlayerUI extends GameObject {
         addComponent(shSlider);
 
         // Weapon Hotbar
-        var wpHbPosition = new Vec2(32, 32);
-        var wpHbSize = new Vec2(32, 32);
-        var weaponHotbar = new WeaponHotbar(wpHbPosition, wpHbSize, ProjectilePrefabs.PROJECTILE_TYPES);
+        var weaponHotbar = new WeaponHotbar(new Vec2(32, 32), new Vec2(32, 32), 16, ProjectilePrefabs.PROJECTILE_TYPES);
         addComponent(weaponHotbar);
 
         addComponent(new PlayerUIController(hpSlider, shSlider, weaponHotbar));
