@@ -17,16 +17,6 @@ import slavsquatsuperstar.demos.spacegame.events.SpaceGameEvents;
  */
 public class PlayerUI extends GameObject {
 
-    private static final Texture HEALTH_ICON_TEXTURE = Textures.getTexture(
-            "assets/spacegame/textures/ui/health_bar_icon.png");
-    private static final Texture SHIELD_ICON_TEXTURE = Textures.getTexture(
-            "assets/spacegame/textures/ui/shield_bar_icon.png");
-
-    private static final Texture LABEL_BACKGROUND_TEXTURE = Textures.getTexture(
-            "assets/spacegame/textures/ui/gray_background.png");
-    private static final Texture LABEL_BORDER_TEXTURE = Textures.getTexture(
-            "assets/spacegame/textures/ui/gray_border.png");
-
     private static final String CONTROL_HINTS_MESSAGE = """
             Controls:
             
@@ -52,37 +42,19 @@ public class PlayerUI extends GameObject {
     @Override
     protected void init() {
         // TODO UI containers
-        var uiSpacingX = 12f;
-        var uiSpacingY = 12f;
-        var labelSize = new Vec2(32, 32);
-        var sliderSize = new Vec2(192, 32);
-
-        // Player Health
-        var hpLabelPos = new Vec2(32, Mayonez.getScreenHeight() - 32);
-        var hpLabel = new ImageLabel(hpLabelPos, labelSize,
-                HEALTH_ICON_TEXTURE, LABEL_BACKGROUND_TEXTURE, LABEL_BORDER_TEXTURE);
-        addComponent(hpLabel);
-
-        var hpSliderPos = hpLabelPos.add(new Vec2(labelSize.x * 0.5f + uiSpacingX + sliderSize.x * 0.5f, 0));
-        var hpSlider = new SliderBar(hpSliderPos, sliderSize, new Color(192, 0, 0), Colors.GREEN);
-        addComponent(hpSlider);
-
-        // Player Shield
-        var shLabelPos = hpLabelPos.sub(new Vec2(0, labelSize.y + uiSpacingY));
-        var shLabel = new ImageLabel(shLabelPos, labelSize,
-                SHIELD_ICON_TEXTURE, LABEL_BACKGROUND_TEXTURE, LABEL_BORDER_TEXTURE);
-        addComponent(shLabel);
-
-        var shSliderPos = shLabelPos.add(new Vec2(labelSize.x * 0.5f + uiSpacingX + sliderSize.x * 0.5f, 0));
-        var shSlider = new SliderBar(shSliderPos, sliderSize, new Color(96, 96, 96), Colors.LIGHT_BLUE);
-        addComponent(shSlider);
+        // Player Status
+        var playerStatus = new PlayerStatus(new Vec2(32, Mayonez.getScreenHeight() - 32),
+                new Vec2(32, 32), new Vec2(192, 32), 12f);
+        addComponent(playerStatus);
 
         // Weapon Hotbar
-        var weaponHotbar = new WeaponHotbar(new Vec2(32, 32), new Vec2(32, 32), 16, ProjectilePrefabs.PROJECTILE_TYPES);
+        var weaponHotbar = new WeaponHotbar(new Vec2(32, 32), new Vec2(32, 32), 16,
+                ProjectilePrefabs.PROJECTILE_TYPES);
         addComponent(weaponHotbar);
 
-        addComponent(new PlayerUIController(hpSlider, shSlider, weaponHotbar));
+        addComponent(new PlayerUIController(playerStatus, weaponHotbar));
 
+        // Tet Elements
         var style = TextStyle.DEFAULT_STYLE
                 .setColor(Colors.WHITE)
                 .setFontSize(20);
@@ -108,6 +80,7 @@ public class PlayerUI extends GameObject {
         );
 
         // Hints
+        // TODO text in containers
         var hintsTooltip = new TextLabel(
                 "Show Hints (H)",
                 new Vec2(Mayonez.getScreenWidth() - 20, 15))

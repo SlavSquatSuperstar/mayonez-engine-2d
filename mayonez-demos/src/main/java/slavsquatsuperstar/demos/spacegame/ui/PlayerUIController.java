@@ -22,9 +22,9 @@ public class PlayerUIController extends Script implements EventListener<SpaceGam
     // Player Status
     private float respawnPercent;
 
-    public PlayerUIController(SliderBar healthBar, SliderBar shieldBar, WeaponHotbar weaponHotbar) {
-        this.healthBar = healthBar;
-        this.shieldBar = shieldBar;
+    public PlayerUIController(PlayerStatus playerStatus, WeaponHotbar weaponHotbar) {
+        this.healthBar = playerStatus.getHealthSlider();
+        this.shieldBar = playerStatus.getShieldSlider();
         this.weaponHotbar = weaponHotbar;
     }
 
