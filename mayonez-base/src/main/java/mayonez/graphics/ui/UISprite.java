@@ -8,12 +8,12 @@ import mayonez.math.shapes.*;
 import mayonez.renderer.gl.*;
 
 /**
- * A rectangular sprite with a texture and color that is drawn to the UI.
+ * A visible user interface element that draws a rectangular sprite texture and color to the UI.
  *
  * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.GL)
-public class UISprite extends Component implements UIRenderableElement, GLQuad {
+public class UISprite extends Component implements UIElement, GLQuad {
 
     // Constants
     private static final Color DEFAULT_COLOR = Colors.WHITE;
@@ -80,22 +80,40 @@ public class UISprite extends Component implements UIRenderableElement, GLQuad {
 
     // UI Renderable Methods
 
+    /**
+     * Get the color of this UI element.
+     *
+     * @return the color
+     */
     @Override
     public Color getColor() {
         return color;
     }
 
-    @Override
+    /**
+     * Set the color of this UI element.
+     *
+     * @param color the color
+     */
     public void setColor(Color color) {
         this.color = color;
     }
 
+    /**
+     * Get the texture of this UI element.
+     *
+     * @return the texture
+     */
     @Override
     public GLTexture getTexture() {
         return (texture instanceof GLTexture glTex) ? glTex : null;
     }
 
-    @Override
+    /**
+     * Set the texture of this UI element.
+     *
+     * @param texture the texture
+     */
     public void setTexture(Texture texture) {
         this.texture = texture;
     }
@@ -112,4 +130,8 @@ public class UISprite extends Component implements UIRenderableElement, GLQuad {
         return gameObject.getZIndex();
     }
 
+    @Override
+    public boolean isInUI() {
+        return true;
+    }
 }
