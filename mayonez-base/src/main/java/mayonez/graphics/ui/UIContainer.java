@@ -10,13 +10,12 @@ import java.util.*;
  *
  * @author SlavSquatSuperstar
  */
-public abstract class UIContainer extends Script implements UIElement {
+public abstract class UIContainer extends UIElement {
 
     protected final List<UIElement> elements;
     private boolean started; // Don't arrange until all elements added
 
     public UIContainer() {
-        super(UpdateOrder.RENDER);
         elements = new ArrayList<>();
         started = false;
     }
@@ -35,7 +34,15 @@ public abstract class UIContainer extends Script implements UIElement {
         started = false;
     }
 
-    // TODO onEnable/onDisable
+    @Override
+    protected void onEnable() {
+        elements.forEach(e -> setEnabled(true));
+    }
+
+    @Override
+    protected void onDisable() {
+        elements.forEach(e -> setEnabled(false));
+    }
 
     // Layout Methods
 
@@ -85,7 +92,7 @@ public abstract class UIContainer extends Script implements UIElement {
      */
     public void addElement(UIElement element) {
         if (gameObject != null) {
-            gameObject.addComponent((Component) element);
+            gameObject.addComponent(element);
         }
         elements.add(element);
         if (started) arrangeElements();
@@ -97,6 +104,7 @@ public abstract class UIContainer extends Script implements UIElement {
      * @param element the element
      */
     public void removeElement(UIElement element) {
+        // TODO destroy element
         elements.remove(element);
         if (started) arrangeElements();
     }

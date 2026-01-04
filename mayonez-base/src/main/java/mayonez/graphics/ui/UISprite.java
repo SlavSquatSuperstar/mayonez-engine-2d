@@ -13,7 +13,7 @@ import mayonez.renderer.gl.*;
  * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.GL)
-public class UISprite extends Component implements UIElement, GLQuad {
+public class UISprite extends UIElement implements GLQuad {
 
     // Constants
     private static final Color DEFAULT_COLOR = Colors.WHITE;
@@ -24,7 +24,6 @@ public class UISprite extends Component implements UIElement, GLQuad {
     private Color color;
 
     private UISprite(Vec2 position, Vec2 size, Texture texture, Color color) {
-        super(UpdateOrder.RENDER);
         bounds = new UIBounds(position, size);
         this.texture = texture;
         this.color = color;

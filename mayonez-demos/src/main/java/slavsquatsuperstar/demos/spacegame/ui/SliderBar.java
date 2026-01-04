@@ -12,7 +12,7 @@ import slavsquatsuperstar.demos.spacegame.objects.SpaceGameZIndex;
  *
  * @author SlavSquatSuperstar
  */
-public class SliderBar extends Script implements UIElement {
+public class SliderBar extends UIElement {
 
     private static final Texture BORDER_TEXTURE = Textures.getTexture(
             "assets/spacegame/textures/ui/gray_border_wide.png");

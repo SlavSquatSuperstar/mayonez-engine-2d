@@ -1,5 +1,6 @@
 package mayonez.graphics.ui;
 
+import mayonez.*;
 import mayonez.math.*;
 
 /**
@@ -8,14 +9,18 @@ import mayonez.math.*;
  *
  * @author SlavSquatSuperstar
  */
-public interface UIElement {
+public abstract class UIElement extends Script {
+
+    public UIElement() {
+        super(UpdateOrder.RENDER);
+    }
 
     /**
      * Get the position of this UI element's anchor point.
      *
      * @return the position
      */
-    Vec2 getPosition();
+    public abstract Vec2 getPosition();
 
     /**
      * Set the position of this UI element's anchor point while keeping
@@ -23,14 +28,14 @@ public interface UIElement {
      *
      * @param position the position
      */
-    void setPosition(Vec2 position);
+    public abstract void setPosition(Vec2 position);
 
     /**
      * Get the dimensions of this UI element.
      *
      * @return the size
      */
-    Vec2 getSize();
+    public abstract Vec2 getSize();
 
     /**
      * Set the dimensions of this UI element while keeping the anchor point
@@ -38,14 +43,14 @@ public interface UIElement {
      *
      * @param size the size
      */
-    void setSize(Vec2 size);
+    public abstract void setSize(Vec2 size);
 
     /**
      * Get the anchor direction for this UI element. Defaults to center.
      *
      * @return the anchor direction
      */
-    default Anchor getAnchor() {
+    public Anchor getAnchor() {
         return Anchor.CENTER;
     }
 
@@ -55,7 +60,7 @@ public interface UIElement {
      *
      * @param anchor the direction to anchor
      */
-    default void setAnchor(Anchor anchor) {
+    public void setAnchor(Anchor anchor) {
     }
 
 }

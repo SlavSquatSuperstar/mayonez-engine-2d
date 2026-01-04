@@ -12,7 +12,7 @@ import slavsquatsuperstar.demos.spacegame.objects.SpaceGameZIndex;
  *
  * @author SlavSquatSuperstar
  */
-public class ImageLabel extends Script implements UIElement {
+public class ImageLabel extends UIElement {
 
     private Vec2 position, size;
     private float backgroundPadding, borderThickness;
@@ -20,7 +20,6 @@ public class ImageLabel extends Script implements UIElement {
     private Texture iconTexture, backgroundTexture, borderTexture;
 
     public ImageLabel(Vec2 position, Vec2 size, Texture iconTexture, Texture backgroundTexture, Texture borderTexture) {
-        super(UpdateOrder.RENDER);
         this.position = position;
         this.size = size;
         this.iconTexture = iconTexture;
