@@ -72,7 +72,6 @@ public class BoxContainer extends UIContainer {
     @Override
     protected void arrangeElements() {
         UIElement lastElem = null; // Position and size of last element
-        // todo save offset instead
 
         for (int i = 0; i < numElements(); i++) {
             var elem = getElement(i);

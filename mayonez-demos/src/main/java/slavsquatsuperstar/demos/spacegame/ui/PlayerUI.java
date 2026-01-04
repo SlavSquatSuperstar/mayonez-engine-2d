@@ -44,7 +44,7 @@ public class PlayerUI extends GameObject {
         // TODO UI containers
         // Player Status
         var playerStatus = new PlayerStatus(new Vec2(32, Mayonez.getScreenHeight() - 32),
-                new Vec2(32, 32), new Vec2(192, 32), 12f);
+                new Vec2(32, 32), new Vec2(192, 32), 12);
         addComponent(playerStatus);
 
         // Weapon Hotbar
