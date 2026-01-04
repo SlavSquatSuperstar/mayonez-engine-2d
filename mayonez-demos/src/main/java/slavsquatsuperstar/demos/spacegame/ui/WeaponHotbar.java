@@ -1,6 +1,5 @@
 package slavsquatsuperstar.demos.spacegame.ui;
 
-import mayonez.*;
 import mayonez.graphics.textures.*;
 import mayonez.graphics.ui.*;
 import mayonez.math.*;
@@ -14,7 +13,7 @@ import java.util.*;
  *
  * @author SlavSquatSuperstar
  */
-public class WeaponHotbar extends Script implements UIElement {
+public class WeaponHotbar extends BoxContainer {
 
     // Constants
     private static final Texture SELECTED_BORDER_TEXTURE = Textures.getTexture(
@@ -22,22 +21,18 @@ public class WeaponHotbar extends Script implements UIElement {
     private static final float BORDER_MARGIN = 8f;
 
     // Fields
-    private Vec2 position, slotSize;
-    private float slotSpacing;
+    private Vec2 slotSize;
     private final int numSlots;
 
     // UI Elements
     private final List<ProjectileType> loadout;
-    private final WeaponHotbarSlot[] hotbarSlots;
     private UISprite selectedBorder;
 
-    public WeaponHotbar(Vec2 position, Vec2 slotSize, float slotSpacing, List<ProjectileType> loadout) {
-        this.position = position; // Position of first slot center
+    public WeaponHotbar(Vec2 position, Vec2 slotSize, int spacing, List<ProjectileType> loadout) {
+        super(position, spacing, true);
         this.slotSize = slotSize;
-        this.slotSpacing = slotSpacing;
         this.loadout = loadout;
         this.numSlots = loadout.size();
-        hotbarSlots = new WeaponHotbarSlot[numSlots];
     }
 
     @Override
@@ -46,12 +41,10 @@ public class WeaponHotbar extends Script implements UIElement {
 
         // Create hotbar slots
         // TODO recreate on loadout change
-        // TODO create components then add
-        var slotOffset = slotSize.x + slotSpacing;
         for (int i = 0; i < numSlots; i++) {
-            hotbarSlots[i] = new WeaponHotbarSlot(
-                    position.add(new Vec2(slotOffset * i, 0)), slotSize, loadout.get(i));
-            gameObject.addComponent(hotbarSlots[i]);
+            var hotbarSlot = new WeaponHotbarSlot(position, slotSize, loadout.get(i));
+            elements.add(hotbarSlot);
+            gameObject.addComponent(hotbarSlot);
         }
 
         // Border over selected hotbar element
@@ -80,7 +73,7 @@ public class WeaponHotbar extends Script implements UIElement {
         } else {
             // Move border to selected slot
             selectedBorder.setEnabled(true);
-            selectedBorder.setPosition(hotbarSlots[index].getPosition());
+            selectedBorder.setPosition(getElement(index).getPosition());
         }
     }
 
@@ -94,7 +87,7 @@ public class WeaponHotbar extends Script implements UIElement {
         if (!MathUtils.inRange(weaponIndex, 0, numSlots - 1)) return;
         // Clamp percent between 0%-100%
         var clamped = MathUtils.clamp(cooldownPercent, 0f, 1f);
-        hotbarSlots[weaponIndex].setCooldownPercent(clamped);
+        ((WeaponHotbarSlot) getElement(weaponIndex)).setCooldownPercent(clamped);
     }
 
     /**
@@ -106,34 +99,31 @@ public class WeaponHotbar extends Script implements UIElement {
         for (int i = 0; i < numSlots; i++) setCooldownPercent(i, cooldownPercent);
     }
 
-    // UI Element Methods
+    // UI Container Methods
 
     @Override
-    public Vec2 getPosition() {
-        return position;
-    }
-
-    @Override
-    public void setPosition(Vec2 position) {
-        this.position = position;
-
-        // Adjust slot positions
-        var boxOffset = slotSize.x + slotSpacing;
+    protected void arrangeElements() {
+        // Adjust slot positions and sizes
+        var slotOffset = slotSize.x + spacing;
         for (int i = 0; i < numSlots; i++) {
-            hotbarSlots[i].setPosition(position.add(new Vec2(boxOffset * i, 0)));
+            getElement(i).setSize(slotSize.add(new Vec2(0)));
+            getElement(i).setPosition(new Vec2(position.x + slotOffset * i, position.y));
         }
+        selectedBorder.setSize(slotSize.add(new Vec2(BORDER_MARGIN)));
     }
+
+    // UI Container Methods
 
     @Override
     public Vec2 getSize() {
-        var hotbarWidth = slotSize.x * numSlots + slotSpacing * (numSlots - 1);
+        var hotbarWidth = slotSize.x * numSlots + spacing * (numSlots - 1);
         var hotbarHeight = slotSize.y;
         return new Vec2(hotbarWidth, hotbarHeight);
     }
 
     @Override
-    public void setSize(Vec2 size) {
-        // Do nothing, set slot size instead
+    public void setVertical(boolean vertical) {
+        // Do nothing
     }
 
     /**
@@ -152,38 +142,7 @@ public class WeaponHotbar extends Script implements UIElement {
      */
     public void setSlotSize(Vec2 slotSize) {
         this.slotSize = slotSize;
-        adjustSlots();
-    }
-
-    /**
-     * Gets the spacing between each individual hotbar slot.
-     *
-     * @return the slot spacing
-     */
-    public float getSlotSpacing() {
-        return slotSpacing;
-    }
-
-    /**
-     * Sets the spacing between each individual hotbar slot and readjusts all element positions.
-     *
-     * @param slotSpacing the slot spacing
-     */
-    public void setSlotSpacing(float slotSpacing) {
-        this.slotSpacing = slotSpacing;
-        adjustSlots();
-    }
-
-    // Helper Methods
-
-    private void adjustSlots() {
-        // Adjust slot positions and sizes
-        var slotOffset = slotSize.x + slotSpacing;
-        for (int i = 0; i < numSlots; i++) {
-            hotbarSlots[i].setSize(slotSize);
-            hotbarSlots[i].setPosition(position.add(new Vec2(slotOffset * i, 0)));
-        }
-        selectedBorder.setSize(slotSize.add(new Vec2(BORDER_MARGIN)));
+        arrangeElements();
     }
 
 }
