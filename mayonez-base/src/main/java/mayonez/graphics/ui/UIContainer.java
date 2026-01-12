@@ -36,12 +36,13 @@ public abstract class UIContainer extends UIElement {
 
     @Override
     protected void onEnable() {
-        elements.forEach(e -> setEnabled(true));
+        elements.forEach(e -> e.setEnabled(true));
     }
 
     @Override
     protected void onDisable() {
-        elements.forEach(e -> setEnabled(false));
+        elements.forEach(e -> e.setEnabled(false));
+        // TODO disabling twice due to component + element children
     }
 
     // Layout Methods
