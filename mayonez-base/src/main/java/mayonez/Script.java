@@ -2,6 +2,7 @@ package mayonez;
 
 import mayonez.physics.colliders.*;
 import mayonez.physics.dynamics.*;
+import mayonez.util.*;
 
 /**
  * A controllable and reusable behavior for a {@link mayonez.GameObject} which provides
@@ -73,15 +74,6 @@ public abstract class Script extends Component {
      */
     protected Rigidbody getRigidbody() {
         return gameObject.getComponent(Rigidbody.class);
-    }
-
-    @Override
-    public String toString() {
-        return String.format(
-                "%s (%s)",
-                getClass().isAnonymousClass() ? "Script" : getClass().getSimpleName(),
-                gameObject == null ? "<No GameObject>" : gameObject.getNameAndID()
-        );
     }
 
 }

@@ -206,7 +206,7 @@ public abstract class Scene {
         obj.setScene(this);
         if (!isStopped()) startObject(obj);
         Logger.trace("Added object \"%s\" to scene \"%s\"",
-                obj.getNameAndID(), this.name);
+                obj, this.name);
     }
 
     private void startObject(GameObject obj) {
@@ -236,7 +236,7 @@ public abstract class Scene {
         }
         obj.onDestroy();
         Logger.trace("Removed object \"%s\" from scene \"%s\"",
-                obj.getNameAndID(), this.name);
+                obj, this.name);
     }
 
     /**
@@ -373,9 +373,8 @@ public abstract class Scene {
 
     @Override
     public String toString() {
-        // Use Scene for class name if anonymous instance
         return String.format(
-                "%s [ID = %d] (%s)",
+                "%s [%d] (%s)",
                 name, sceneID,
                 StringUtils.getObjectClassName(this)
         );

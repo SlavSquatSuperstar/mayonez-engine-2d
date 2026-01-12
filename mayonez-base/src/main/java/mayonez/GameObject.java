@@ -318,21 +318,9 @@ public class GameObject {
         return Objects.hash(objectID, name, scene);
     }
 
-    /**
-     * Get this object's name and ID as a single string.
-     *
-     * @return the name and ID
-     */
-    String getNameAndID() {
-        return String.format("%s [ID %d]", name, objectID);
-    }
-
     @Override
     public String toString() {
-        // Use GameObject for class name if anonymous instance
-        return String.format(
-                "%s (%s)", getNameAndID(), StringUtils.getObjectClassName(this)
-        );
+        return String.format("%s [%d]", name, objectID);
     }
 
 }

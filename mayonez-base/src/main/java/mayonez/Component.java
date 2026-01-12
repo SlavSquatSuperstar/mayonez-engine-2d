@@ -211,11 +211,10 @@ public abstract class Component {
 
     @Override
     public String toString() {
-        // Use Component for class name if anonymous instance
         return String.format(
-                "%s (%s)",
-                StringUtils.getObjectClassName(this),
-                gameObject == null ? "<No GameObject>" : gameObject.getNameAndID()
+                "%s [%d] (%s)",
+                StringUtils.getObjectClassName(this), componentID,
+                gameObject == null ? "<No GameObject>" : gameObject
         );
     }
 
