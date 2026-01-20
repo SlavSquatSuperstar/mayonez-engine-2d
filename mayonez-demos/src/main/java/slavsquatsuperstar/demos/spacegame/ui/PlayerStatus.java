@@ -1,6 +1,5 @@
 package slavsquatsuperstar.demos.spacegame.ui;
 
-import mayonez.*;
 import mayonez.graphics.*;
 import mayonez.graphics.textures.*;
 import mayonez.graphics.ui.*;
@@ -46,8 +45,10 @@ public class PlayerStatus extends BoxContainer {
         shieldSlider = new SliderBar(new Vec2(), sliderSize,
                 new Color(96, 96, 96), Colors.LIGHT_BLUE);
 
-        // Divide into rows
-        var statusRows = new UIElement[][]{{healthLabel, healthSlider}, {shieldLabel, shieldSlider}};
+        // Store elements in a grid
+        var statusRows = new UIElement[][]{
+                {healthLabel, healthSlider}, {shieldLabel, shieldSlider}
+        };
         for (var row : statusRows) {
             var rowContainer = new BoxContainer(position, spacing, false);
             this.addElement(rowContainer);

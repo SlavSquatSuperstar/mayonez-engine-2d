@@ -1,7 +1,5 @@
 package mayonez.graphics.ui;
 
-import mayonez.*;
-
 import java.util.*;
 
 /**
@@ -14,6 +12,7 @@ public abstract class UIContainer extends UIElement {
 
     protected final List<UIElement> elements;
     private boolean started; // Don't arrange until all elements added
+    // TODO dirty flag or child events instead
 
     public UIContainer() {
         elements = new ArrayList<>();
@@ -53,8 +52,7 @@ public abstract class UIContainer extends UIElement {
      */
     protected abstract void arrangeElements();
 
-
-    // Element Methods
+    // Container Methods
 
     /**
      * Gets the child elements in the order they were added.
@@ -114,6 +112,7 @@ public abstract class UIContainer extends UIElement {
      * Removes all UI elements from this container.
      */
     public void clearElements() {
+        // TODO destroy elements
         elements.clear();
     }
 

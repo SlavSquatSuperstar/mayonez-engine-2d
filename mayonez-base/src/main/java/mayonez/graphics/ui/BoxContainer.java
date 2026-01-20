@@ -3,7 +3,8 @@ package mayonez.graphics.ui;
 import mayonez.math.*;
 
 /**
- * Stores UI elements in a single row or column, with optional spacing. Elements may be of different sizes.
+ * Stores UI elements in a single row or column, with optional spacing.
+ * Elements may be of different sizes.
  *
  * @author SlavSquatSuperstar
  */
@@ -73,8 +74,11 @@ public class BoxContainer extends UIContainer {
     protected void arrangeElements() {
         UIElement lastElem = null; // Position and size of last element
 
-        for (int i = 0; i < numElements(); i++) {
-            var elem = getElement(i);
+        for (var elem : elements) {
+            if (elem instanceof UIContainer container) {
+                container.arrangeElements(); // Recursive arrange to get size
+            }
+
             if (vertical) {
                 float elemY;
                 if (lastElem != null) {
@@ -96,14 +100,11 @@ public class BoxContainer extends UIContainer {
                 elem.setPosition(new Vec2(elemX, position.y));
             }
 
-            if (elem instanceof UIContainer container) {
-                container.arrangeElements(); // Recursive arrange
-            }
             lastElem = elem;
         }
     }
 
-    // Container Methods
+    // Box Methods
 
     /**
      * The minimum spacing between each child element.
