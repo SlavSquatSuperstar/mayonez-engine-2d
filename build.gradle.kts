@@ -24,7 +24,7 @@ dependencies {
 // Plugins and Tasks
 tasks {
     wrapper {
-        gradleVersion = "9.2.0"
+        gradleVersion = "9.5.0"
         distributionType = Wrapper.DistributionType.BIN
     }
 
