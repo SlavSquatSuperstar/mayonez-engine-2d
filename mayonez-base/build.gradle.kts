@@ -1,8 +1,12 @@
+import net.ltgt.gradle.errorprone.errorprone
+
 plugins {
     id("mayonez.library-conventions")
 
     id(kotlinPlugin)
     id(dokkaPlugin)
+    id(errorPronePlugin)
+    id(nullAwayPlugin)
 }
 
 description = "The core library for Mayonez Engine that contains the API classes."
@@ -26,6 +30,12 @@ dependencies {
     runtimeOnly("org.lwjgl:lwjgl-glfw::$lwjglNatives")
     runtimeOnly("org.lwjgl:lwjgl-opengl::$lwjglNatives")
     runtimeOnly("org.lwjgl:lwjgl-stb::$lwjglNatives")
+
+    // Static Analysis
+    errorprone("com.google.errorprone:error_prone_core:2.49.0")
+    errorprone("com.uber.nullaway:nullaway:$nullAwayVersion")
+    compileOnly("com.uber.nullaway:nullaway-annotations:$nullAwayVersion")
+    compileOnly("org.jspecify:jspecify:1.0.0")
 }
 
 // Plugins and Tasks
@@ -51,6 +61,25 @@ tasks {
 
     compileJava {
         dependsOn("copyKotlinClasses")
+    }
+
+    // Configure Error Prone and NullAway
+    withType<JavaCompile> {
+        options.errorprone {
+            disableAllChecks = true // Only do NullAway checks
+            nullaway {
+                error() // Set severity level
+                onlyNullMarked = true // Only check in null-marked code
+                jspecifyMode = true // JSpecify Mode
+            }
+        }
+    }
+
+    // Disable on test code
+    compileTestJava {
+        options.errorprone {
+            enabled = false
+        }
     }
 
 }

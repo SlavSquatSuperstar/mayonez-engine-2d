@@ -3,6 +3,8 @@ plugins {
 
     id(kotlinPlugin) version kotlinVersion apply false
     id(dokkaPlugin) version "2.1.0" apply true
+    id(errorPronePlugin) version "5.1.0" apply false
+    id(nullAwayPlugin) version "3.0.0" apply false
 }
 
 // Project Info
@@ -13,10 +15,12 @@ allprojects {
     version = "0.8.3-pre4"
 }
 
-// Subprojects
 dependencies {
+    // Subprojects
     implementation(project(":mayonez-base"))
     implementation(project(":mayonez-demos"))
+
+    // Documentation
     dokka(project(":mayonez-base"))
     dokka(project(":mayonez-demos"))
 }

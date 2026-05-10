@@ -15,10 +15,12 @@ module mayonez.base {
     requires org.lwjgl.stb;
 
     // Other Dependencies
+    requires com.uber.nullaway.annotations;
     requires kotlin.stdlib;
     requires org.apache.commons.cli;
     requires org.apache.commons.csv;
     requires org.joml;
+    requires org.jspecify;
     requires org.json;
 
     // Utilities
