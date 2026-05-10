@@ -4,6 +4,7 @@ import mayonez.*;
 import mayonez.graphics.*;
 import mayonez.input.*;
 import mayonez.math.*;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,7 +12,7 @@ import java.awt.event.*;
 import java.awt.geom.*;
 import java.awt.image.*;
 
-import static mayonez.application.AWTHelper.SCREEN_DEVICE;
+import static mayonez.application.AWTHelper.*;
 
 /**
  * A window created using Java's AWT and Swing libraries.
@@ -25,8 +26,7 @@ final class JWindow extends JFrame implements Window {
     private final static int BUFFER_COUNT = 2;
 
     // Graphics Fields
-    private BufferStrategy bs;
-    private Graphics2D g2;
+    private @Nullable BufferStrategy bs;
     private final AffineTransform windowFlipXf;
 
     // Window Fields
@@ -106,7 +106,7 @@ final class JWindow extends JFrame implements Window {
     public void start() {
         if (isVisible()) return;
         setVisible(true);
-        initGraphics(); // Initialize graphics resources
+        initBufferStrategy(); // Initialize graphics resources
 
         if (!initialized) {
             // Resizing the content pane to the desired size now that it is visible
@@ -121,9 +121,8 @@ final class JWindow extends JFrame implements Window {
     public void stop() {
         if (!isVisible()) return;
         setVisible(false);
-        g2.dispose();
-        // Java API docs say the BS doesn't need to be disposed
-        dispose();
+        dispose(); // Dispose window and buffer strategy
+        bs = null;
     }
 
     // Game Loop Methods
@@ -153,41 +152,47 @@ final class JWindow extends JFrame implements Window {
     @Override
     public void render() {
         if (bs == null) {
-            initGraphics();
-            return; // Need to return or else crashes
+            initBufferStrategy();
+            return; // Need to return or else may crash
         }
 
-        // Use a do-while loop to avoid losing buffer frames
-        // Source: https://stackoverflow.com/questions/13590002/understand-bufferstrategy
+        // Use two do-while loops to avoid losing buffer frames
+        // Sources
+        // - https://stackoverflow.com/questions/13590002/understand-bufferstrategy
+        // - https://docs.oracle.com/en/java/javase/21/docs/api/java.desktop/java/awt/image/BufferStrategy.html
+        Graphics2D g2;
         do {
             try {
-                // Fetch resources
-                g2 = (Graphics2D) bs.getDrawGraphics(); // Current buffer's graphics context
+                do {
+                    // Fetch resources
+                    g2 = (Graphics2D) bs.getDrawGraphics(); // Current buffer's graphics context
 
-                // Clear screen
-                g2.clipRect(0, 0, getWidth(), getHeight()); // Render things only in the screen
-                g2.clearRect(0, 0, getWidth(), getHeight());
+                    // Clear screen
+                    g2.clipRect(0, 0, getWidth(), getHeight()); // Render things only in the screen
+                    g2.clearRect(0, 0, getWidth(), getHeight());
 
-                // Draw
-                g2.transform(windowFlipXf); // Flip screen vertically
-                SceneManager.renderScene(g2);
+                    // Draw
+                    g2.transform(windowFlipXf); // Flip screen vertically
+                    SceneManager.renderScene(g2);
+
+                    // Flush resources
+                    g2.dispose();
+                } while (bs.contentsRestored());
             } catch (IllegalStateException e) {
                 Logger.error("Error rendering current frame; retrying next frame.");
             } finally {
-                // Always flush resources
-                g2.dispose();
                 bs.show();
             }
         } while (bs.contentsLost());
     }
 
-    private void initGraphics() {
+    private void initBufferStrategy() {
         if (!isVisible()) return;
         try {
             createBufferStrategy(BUFFER_COUNT);
             bs = getBufferStrategy();
         } catch (IllegalStateException e) {
-            Logger.error("Error initializing window graphics; retrying next frame.");
+            Logger.error("Error initializing buffer strategy; retrying next frame.");
         }
     }
 

@@ -4,6 +4,7 @@ import mayonez.*;
 import mayonez.config.RunConfig;
 import mayonez.graphics.*;
 import mayonez.math.*;
+import org.jspecify.annotations.Nullable;
 import org.lwjgl.glfw.GLFWVidMode;
 
 import java.util.Comparator;
@@ -58,8 +59,11 @@ final class GLFWHelper {
         configureContextHints(runConfig);
 
         var vidMode = getNearestVideoMode(windowConfig);
-        var monitor = windowConfig.fullScreen() ? glfwGetPrimaryMonitor() : NULL;
+        if (vidMode == null) {
+            throw new WindowInitException("Could not set the GLFW video mode");
+        }
 
+        var monitor = windowConfig.fullScreen() ? glfwGetPrimaryMonitor() : NULL;
         var windowID = glfwCreateWindow(
                 vidMode.width(), vidMode.height(), windowConfig.title(), monitor, NULL
         );
@@ -80,9 +84,9 @@ final class GLFWHelper {
      * The nearest available full screen resolution to the preferred one, or otherwise the current
      * resolution.
      *
-     * @return the best video mode
+     * @return the best video mode, or null on error
      */
-    static GLFWVidMode getNearestVideoMode(WindowConfig config) {
+    static @Nullable GLFWVidMode getNearestVideoMode(WindowConfig config) {
         var monitor = glfwGetPrimaryMonitor();
         var currentVidMode = glfwGetVideoMode(monitor);
         var vidModes = glfwGetVideoModes(monitor);
@@ -90,7 +94,7 @@ final class GLFWHelper {
         if (vidModes == null) return currentVidMode;
         return vidModes.stream()
                 .min(Comparator.comparingInt(mode -> getDistanceSquared(mode, config)))
-                .orElse(glfwGetVideoMode(monitor));
+                .orElse(currentVidMode);
     }
 
     private static int getDistanceSquared(GLFWVidMode mode, WindowConfig config) {
