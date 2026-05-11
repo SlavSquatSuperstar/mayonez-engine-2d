@@ -9,7 +9,7 @@ import java.util.*
 /**
  * Store multiple scenes for later use and helps the user reload and switch between
  * scenes. Stored scenes must have a unique name, and only one scene may be active
- * at once.
+ * at once. Scenes are also tracked by the order in which they were added, or index.
  *
  * Usage: Scenes can be preloaded into the SceneManager through the
  * [Launcher.addScenesToManager] method before the application starts
@@ -24,6 +24,7 @@ import java.util.*
  */
 // TODO rework
 // TODO allow null scene?
+// TODO remove scene?
 object SceneManager {
 
     // Scene Fields
@@ -48,12 +49,13 @@ object SceneManager {
     @JvmStatic
     @JvmName("updateScene")
     internal fun updateScene(dt: Float) {
+        // Finish updating current scene
         currentScene.update(dt)
 
         // Execute all queued callbacks
         while (sceneEventBuffer.isNotEmpty()) {
             val event = sceneEventBuffer.poll()
-            if (event?.state == SceneState.STOPPED) {  // TODO better event checking
+            if (event.state == SceneState.STOPPED) {  // TODO better event checking
                 val callback = sceneEventCallbacks.poll()
                 callback?.execute(event)
             }
@@ -203,9 +205,17 @@ object SceneManager {
     }
 
     /**
+     * Get the number of scenes stored in the scene pool.
+     *
+     * @return the number of scenes
+     */
+    @JvmStatic
+    fun numScenes(): Int = scenes.size
+
+    /**
      * Saves a scene to the scene pool without initializing it and allows it to
      * be retrieved later. If any scene is stored under the same name, it will
-     * be overwritten.
+     * be overwritten, but the index will not be updated.
      *
      * @param scene the scene to add
      */
@@ -228,7 +238,7 @@ object SceneManager {
      * @return the scene, or null if the name did not match
      */
     @JvmStatic
-    fun getScene(name: String?): Scene? = scenes[name]
+    fun getScene(name: String?): Scene? = scenes[name ?: "null"]
 
     /**
      * Retrieves the scene stored in the scene pool with the given name.
@@ -238,9 +248,8 @@ object SceneManager {
      */
     @JvmStatic
     fun getScene(index: Int): Scene? {
-        if (index !in sceneNames.indices) return null
-        val name = sceneNames[index]
-        return scenes[name]
+        return if (index !in sceneNames.indices) null
+        else scenes[sceneNames[index]]
     }
 
     /**
