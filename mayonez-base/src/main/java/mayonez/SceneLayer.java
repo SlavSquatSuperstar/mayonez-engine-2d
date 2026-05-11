@@ -1,6 +1,7 @@
 package mayonez;
 
 import mayonez.util.*;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A grouping of game objects inside a scene with common properties.
@@ -65,7 +66,7 @@ public class SceneLayer {
      * @param other the other layer
      * @return if the layers interact
      */
-    public boolean canInteract(SceneLayer other) {
+    public boolean canInteract(@Nullable SceneLayer other) {
         if (other == null) return true;
         return this.getLayerInteract(other.index) || other.getLayerInteract(this.index);
     }

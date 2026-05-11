@@ -44,7 +44,7 @@ internal class JSprite private constructor(
         if (texture != null) {
             texture!!.draw(g2, transform, getSpriteTransform(), color)
         } else {
-            scene.debugDraw.fillShape(
+            scene!!.debugDraw.fillShape(
                 Rectangle(transform.position, transform.scale), color
             )
         }

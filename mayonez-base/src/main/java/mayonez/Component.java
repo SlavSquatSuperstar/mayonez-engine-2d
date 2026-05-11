@@ -1,6 +1,7 @@
 package mayonez;
 
 import mayonez.util.*;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -30,9 +31,11 @@ public abstract class Component {
     final long componentID; // internal UUID for this component
 
     /**
-     * The parent {@link mayonez.GameObject} this component belongs to.
+     * The parent {@link mayonez.GameObject} this component belongs to. The parent
+     * object will be non-null from the start of {@link #init} to the end of
+     * {@link #onDestroy()}.
      */
-    protected GameObject gameObject;
+    protected @Nullable GameObject gameObject;
 
     /**
      * A reference to the parent object's {@link mayonez.Transform}.
@@ -48,7 +51,7 @@ public abstract class Component {
         this(UpdateOrder.SCRIPT);
     }
 
-    public Component(UpdateOrder updateOrder) {
+    public Component(@Nullable UpdateOrder updateOrder) {
         componentID = componentCounter++;
         transform = new Transform();
         enabled = true;
@@ -61,7 +64,7 @@ public abstract class Component {
      * Add any necessary components to the game object before other components have
      * been added. This method is called before {@link mayonez.GameObject#init} and
      * {@link mayonez.Component#start}. The fields {@link #gameObject} and
-     * {@link #transform} are accessible here.
+     * {@link #transform} are non-null here.
      * <p>
      * Usage: Subclasses may override this method and can also call {@code super.init()}.
      * <p>
@@ -119,7 +122,7 @@ public abstract class Component {
         setEnabled(false);
         onDestroy();
         gameObject = null;
-        transform = null;
+        transform = new Transform();;
     }
 
     /**
@@ -160,7 +163,7 @@ public abstract class Component {
      *
      * @return the game object
      */
-    public GameObject getGameObject() {
+    public @Nullable GameObject getGameObject() {
         return gameObject;
     }
 
@@ -177,20 +180,22 @@ public abstract class Component {
     }
 
     /**
-     * Get a reference to the {@link mayonez.Scene} the parent object belongs to.
+     * Get a reference to the parent object's {@link mayonez.Scene}
      *
      * @return the parent scene
      */
-    public Scene getScene() {
-        return gameObject.getScene();
+    public @Nullable Scene getScene() {
+        if (gameObject == null) return null;
+        else return gameObject.getScene();
     }
 
+    /**
+     * Get a reference to the parent object's {@link mayonez.Transform}.
+     *
+     * @return the parent transform
+     */
     public Transform getTransform() {
         return transform;
-    }
-
-    public void setTransform(Transform transform) {
-        this.transform = (transform != null) ? transform : new Transform();
     }
 
     int getUpdateOrder() {

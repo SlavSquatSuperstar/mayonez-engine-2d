@@ -33,10 +33,10 @@ public class GameObject {
     final long objectID; // UUID for this game object
     private final String name;
     public final Transform transform; // transform in world
-    private Scene scene;
+    private @Nullable Scene scene;
     private boolean destroyed;
     private int zIndex; // controls 3D "layering" of objects
-    private SceneLayer layer;
+    private @Nullable SceneLayer layer;
 
     // Component Fields
     private final List<Component> components;
@@ -91,7 +91,6 @@ public class GameObject {
         this.layer = null;
 
         destroyed = false;
-
         components = new ArrayList<>();
     }
 
@@ -100,7 +99,6 @@ public class GameObject {
     /**
      * Adds all components to this object and then initializes them. Calls
      * {@link mayonez.Component#start()} for all components added on start.
-     * The method {@link mayonez.GameObject#getScene} is accessible here.
      */
     final void start() {
         // Add all components
@@ -134,7 +132,7 @@ public class GameObject {
 
     /**
      * Add components and initializes fields after this object has been added to the scene.
-     * The {@link #transform} field and {@link #scene} method are accessible here.
+     * The {@link #transform} field and {@link #getScene} method will return non-null here.
      * <p>
      * Usage: Subclasses may override this method and can also call {@code super.init()}.
      * <p>
@@ -258,7 +256,7 @@ public class GameObject {
 
     /**
      * Remove this object from the scene and destroy all its components.
-     * The {@link #scene} field will be set to null.
+     * The {@link #getScene} method will return after the object is destroyed.
      * <p>
      * Warning: Destroying a game object is permanent and cannot be reversed!
      */
@@ -273,7 +271,7 @@ public class GameObject {
      *
      * @return the layer
      */
-    public SceneLayer getLayer() {
+    public @Nullable SceneLayer getLayer() {
         return layer;
     }
 
@@ -304,16 +302,17 @@ public class GameObject {
      *
      * @param layer the layer
      */
-    public void setLayer(SceneLayer layer) {
+    public void setLayer(@Nullable SceneLayer layer) {
         this.layer = layer;
     }
 
     /**
-     * Get the {@link mayonez.Scene} that contains this game object.
+     * Get the {@link mayonez.Scene} that contains this game object. The parent scene
+     * will be non-null from the start of {@link #init} to the end of {@link #destroy}
      *
      * @return the parent scene
      */
-    public final Scene getScene() {
+    public final @Nullable Scene getScene() {
         return scene;
     }
 

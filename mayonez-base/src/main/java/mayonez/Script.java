@@ -2,7 +2,7 @@ package mayonez;
 
 import mayonez.physics.colliders.*;
 import mayonez.physics.dynamics.*;
-import mayonez.util.*;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A controllable and reusable behavior for a {@link mayonez.GameObject} which provides
@@ -63,8 +63,9 @@ public abstract class Script extends Component {
      *
      * @return the collider, if it exists
      */
-    protected Collider getCollider() {
-        return gameObject.getComponent(Collider.class);
+    protected @Nullable Collider getCollider() {
+        if (gameObject == null) return null;
+        else return gameObject.getComponent(Collider.class);
     }
 
     /**
@@ -72,8 +73,9 @@ public abstract class Script extends Component {
      *
      * @return the rigidbody, if it exists
      */
-    protected Rigidbody getRigidbody() {
-        return gameObject.getComponent(Rigidbody.class);
+    protected @Nullable Rigidbody getRigidbody() {
+        if (gameObject == null) return null;
+        else return gameObject.getComponent(Rigidbody.class);
     }
 
 }

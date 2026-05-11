@@ -88,7 +88,7 @@ sealed class Sprite : Component(UpdateOrder.RENDER), Renderable {
     // Renderable Methods
 
     final override fun getZIndex(): Int {
-        return zIndexOverride ?: gameObject.zIndex
+        return zIndexOverride ?: gameObject!!.zIndex
     }
 
     /**
