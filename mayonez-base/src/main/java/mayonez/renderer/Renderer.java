@@ -1,5 +1,7 @@
 package mayonez.renderer;
 
+import org.jspecify.annotations.Nullable;
+
 import java.awt.*;
 
 /**
@@ -21,7 +23,7 @@ public interface Renderer {
      *
      * @param g2 a {@link java.awt.Graphics2D} object for the AWT engine
      */
-    void render(Graphics2D g2);
+    void render(@Nullable Graphics2D g2);
 
     // Camera Methods
 

@@ -1,6 +1,7 @@
 package mayonez.renderer;
 
 import mayonez.graphics.debug.*;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.util.List;
@@ -26,9 +27,9 @@ public abstract class RenderLayer {
     /**
      * Redraws all objects in the scene.
      *
-     * @param g2 the window's graphics object
+     * @param g2 the window's graphics object, if using the AWT engine
      */
-    public void render(Graphics2D g2) {
+    public void render(@Nullable Graphics2D g2) {
         for (var r : renderers) r.render(g2);
     }
 

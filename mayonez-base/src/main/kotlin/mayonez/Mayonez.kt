@@ -123,7 +123,7 @@ object Mayonez {
      */
     private fun initializeSingletons() {
         // Start tracking time
-        Time.startTrackingTime()
+        Time.resetStartupTime()
         Logger.log("Starting program...")
         val now = Time.getStartupDateTime()
         Logger.debug("The current date time is %s %s", now.toLocalDate(), now.toLocalTime())

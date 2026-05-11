@@ -1,5 +1,6 @@
 package mayonez;
 
+import com.uber.nullaway.annotations.Initializer;
 import mayonez.graphics.camera.*;
 import mayonez.graphics.debug.*;
 import mayonez.math.*;
@@ -8,10 +9,11 @@ import mayonez.physics.colliders.*;
 import mayonez.physics.dynamics.*;
 import mayonez.renderer.*;
 import mayonez.util.*;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 
 /**
  * An in-game world or level that holds multiple {@link mayonez.GameObject}s. Each scene
@@ -53,9 +55,9 @@ public abstract class Scene {
      *
      * @param name the name of the scene
      */
-    public Scene(String name) {
+    public Scene(@Nullable String name) {
         sceneID = sceneCounter++;
-        this.name = name;
+        this.name = name == null ? "null" : name;
         state = SceneState.STOPPED;
 
         // Initialize layers
@@ -71,6 +73,7 @@ public abstract class Scene {
      * Initialize all objects and begin updating the scene. Calls {@link GameObject#start()}
      * for all objects added on start.
      */
+    @Initializer
     final void start() {
         // Set up layers
         for (int i = 0; i < layers.length; i++) {
@@ -141,9 +144,9 @@ public abstract class Scene {
     /**
      * Redraws everything in the current scene, including backgrounds, sprites, and UI.
      *
-     * @param g2 the window's graphics object
+     * @param g2 the window's graphics object, if using the AWT engine
      */
-    final void render(Graphics2D g2) {
+    final void render(@Nullable Graphics2D g2) {
         if (!isStopped()) {
             onUserRender();
             objects.forEach(GameObject::debugRender);
@@ -192,7 +195,7 @@ public abstract class Scene {
      *
      * @param obj a {@link GameObject}
      */
-    public final void addObject(GameObject obj) {
+    public final void addObject(@Nullable GameObject obj) {
         if (obj == null || obj.getScene() != null) return;
         if (isStopped()) { // Static add: when not loaded
             objects.addUnbuffered(obj);
@@ -223,7 +226,7 @@ public abstract class Scene {
      *
      * @param obj a {@link GameObject}
      */
-    final void removeObject(GameObject obj) {
+    final void removeObject(@Nullable GameObject obj) {
         if (obj == null) return;
         objects.remove(obj, () -> this.removeObjectFromScene(obj));
     }
@@ -242,11 +245,11 @@ public abstract class Scene {
     /**
      * Finds the first {@link GameObject} with the given name, or null if none exists.
      *
-     * @param name the object name
+     * @param name the object's name
      * @return the object
      */
-    public GameObject getObject(String name) {
-        return objects.find(obj -> obj.getName().equals(name));
+    public @Nullable GameObject getObject(@Nullable String name) {
+        return objects.find(obj -> Objects.equals(obj.getName(), name));
     }
 
     /**
@@ -275,7 +278,7 @@ public abstract class Scene {
      * @param index the layer index
      * @return the layer, or null if the index is invalid
      */
-    public SceneLayer getLayer(int index) {
+    public @Nullable SceneLayer getLayer(int index) {
         if (index >= 0 && index < layers.length) return layers[index];
         else return null;
     }
@@ -286,7 +289,7 @@ public abstract class Scene {
      * @param name the layer name
      * @return the layer, or null if the name is invalid
      */
-    public SceneLayer getLayer(String name) {
+    public @Nullable SceneLayer getLayer(String name) {
         return Arrays.stream(layers)
                 .filter(layer -> layer.getName().equals(name))
                 .findFirst().orElse(null);
