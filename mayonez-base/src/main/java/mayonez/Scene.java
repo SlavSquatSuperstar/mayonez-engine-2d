@@ -51,13 +51,14 @@ public abstract class Scene {
     private final PhysicsWorld physics;
 
     /**
-     * Creates an empty scene with a name.
+     * Creates an empty scene with a name. If the name is {@code null}, it will be
+     * coerced into the string "null".
      *
-     * @param name the name of the scene
+     * @param name the scene name
      */
     public Scene(@Nullable String name) {
         sceneID = sceneCounter++;
-        this.name = name == null ? "null" : name;
+        this.name = Objects.requireNonNullElse(name, "null");
         state = SceneState.STOPPED;
 
         // Initialize layers
@@ -243,13 +244,15 @@ public abstract class Scene {
     }
 
     /**
-     * Finds the first {@link GameObject} with the given name, or null if none exists.
+     * Finds the first {@link GameObject} with the given name (case sensitive), or null if none exists.
      *
      * @param name the object's name
      * @return the object
      */
     public @Nullable GameObject getObject(@Nullable String name) {
-        return objects.find(obj -> Objects.equals(obj.getName(), name));
+        return objects.find(obj -> obj.getName().equals(
+                Objects.requireNonNullElse(name, "null")
+        ));
     }
 
     /**
@@ -298,7 +301,7 @@ public abstract class Scene {
     // Scene Properties
 
     /**
-     * Returns the name of this scene.
+     * Returns the name of this scene, which is not null and need not be unique.
      *
      * @return the scene name
      */

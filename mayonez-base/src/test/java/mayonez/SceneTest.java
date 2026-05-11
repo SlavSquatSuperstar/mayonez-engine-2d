@@ -11,65 +11,84 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class SceneTest {
 
-    private Scene scene;
+    private Scene scene1, scene2;
+    private GameObject obj1, obj2;
 
     @BeforeEach
-    void getScene() {
-        scene = new Scene("Test Scene") {
+    void getScenes() {
+        scene1 = new Scene("Test Scene") {
         };
+        scene2 = new Scene("Test Scene") {
+        };
+    }
+
+    @BeforeEach
+    void getObjects() {
+        obj1 = new GameObject("Test Object 1");
+        obj2 = new GameObject("Test Object 2");
     }
 
     @Test
     void sceneIDsAreUnique() {
-        var scene2 = new Scene("Test Scene") {
-        };
-        assertNotEquals(scene.sceneID, scene2.sceneID);
+        assertNotEquals(scene1.sceneID, scene2.sceneID);
+        assertNotEquals(scene1, scene2);
     }
 
     @Test
     void addObjectChangesNumObjects() {
-        var obj1 = new GameObject("");
-        scene.addObject(obj1);
+        assertEquals(0, scene1.numObjects());
 
-        var obj2 = new GameObject("");
-        scene.addObject(obj2);
+        scene1.addObject(obj1);
+        assertEquals(1, scene1.numObjects());
 
-        assertEquals(2, scene.numObjects());
+        scene1.addObject(obj2);
+        assertEquals(2, scene1.numObjects());
+    }
+
+    @Test
+    void cannotAddNullObject() {
+        scene1.addObject(null);
+        assertEquals(0, scene1.numObjects());
     }
 
     @Test
     void cannotAddObjectTwice() {
-        var obj = new GameObject("");
-        scene.addObject(obj);
-        scene.addObject(obj);
+        scene1.addObject(obj1);
+        scene1.addObject(obj1);
 
-        assertEquals(1, scene.numObjects());
+        assertSame(scene1, obj1.getScene());
+        assertEquals(1, scene1.numObjects());
     }
 
     @Test
     void cannotAddObjectToDifferentScenes() {
-        var scene2 = new Scene("Test Scene") {
-        };
-        var obj = new GameObject("");
+        scene1.addObject(obj1);
+        scene2.addObject(obj1);
 
-        scene2.addObject(obj);
-        scene.addObject(obj);
-
-        assertEquals(0, scene.numObjects());
+        assertSame(scene1, obj1.getScene());
+        assertEquals(1, scene1.numObjects());
+        assertEquals(0, scene2.numObjects());
     }
 
     @Test
     void getObjectByNameSuccess() {
-        assertNull(scene.getObject("Test Object 1"));
+        assertNull(scene1.getObject("Test Object 1"));
 
-        var obj1 = new GameObject("Test Object 1");
-        scene.addObject(obj1);
+        scene1.addObject(obj1);
+        scene1.addObject(obj2);
 
-        var obj2 = new GameObject("Test Object 2");
-        scene.addObject(obj2);
+        assertSame(obj1, scene1.getObject("Test Object 1"));
+        assertSame(obj2, scene1.getObject("Test Object 2"));
+        assertNull(scene1.getObject("Test Object 3"));
+    }
 
-        assertSame(obj1, scene.getObject("Test Object 1"));
-        assertNull(scene.getObject("Test Object"));
+    @Test
+    void getObjectWithNullNameSuccess() {
+        var obj = new GameObject(null);
+        scene1.addObject(obj);
+
+        assertSame(obj, scene1.getObject(null));
+        assertSame(obj, scene1.getObject("null"));
     }
 
 }

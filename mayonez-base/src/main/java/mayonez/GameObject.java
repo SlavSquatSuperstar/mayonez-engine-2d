@@ -1,7 +1,7 @@
 package mayonez;
 
 import mayonez.math.*;
-import mayonez.util.*;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.stream.*;
@@ -41,22 +41,51 @@ public class GameObject {
     // Component Fields
     private final List<Component> components;
 
-    public GameObject(String name) {
+    /**
+     * Creates an empty game object with a name and default transform. If the name
+     * is {@code null}, it will be coerced into the string "null".
+     *
+     * @param name the object name
+     */
+    public GameObject(@Nullable String name) {
         this(name, new Vec2());
     }
 
-    public GameObject(String name, Vec2 position) {
+    /**
+     * Creates an empty game object with a name position, and a default rotation
+     * and scale. If the name is {@code null}, it will be coerced into the string
+     * "null".
+     *
+     * @param name     the object name
+     * @param position the object starting position
+     */
+    public GameObject(@Nullable String name, Vec2 position) {
         this(name, new Transform(position));
     }
 
-    public GameObject(String name, Transform transform) {
+    /**
+     * Creates an empty game object with a name, transform, and a z-index of zero.
+     * If the name is {@code null}, it will be coerced into the string "null".
+     *
+     * @param name      the object name
+     * @param transform the object starting transform
+     */
+    public GameObject(@Nullable String name, Transform transform) {
         this(name, transform, 0);
     }
 
-    public GameObject(String name, Transform transform, int zIndex) {
+    /**
+     * Creates an empty game object with a name, transform, and z-index. If the name
+     * is {@code null}, it will be coerced into the string "null".
+     *
+     * @param name      the object name
+     * @param transform the object starting transform
+     * @param zIndex    the object z-index
+     */
+    public GameObject(@Nullable String name, Transform transform, int zIndex) {
         objectID = objectCounter++;
 
-        this.name = (name == null) ? "GameObject" : name;
+        this.name = Objects.requireNonNullElse(name, "null");
         this.transform = transform;
         this.zIndex = zIndex;
         this.layer = null;
@@ -71,7 +100,7 @@ public class GameObject {
     /**
      * Adds all components to this object and then initializes them. Calls
      * {@link mayonez.Component#start()} for all components added on start.
-     * The method {@link mayonez.Scene#getObject} is accessible here.
+     * The method {@link mayonez.GameObject#getScene} is accessible here.
      */
     final void start() {
         // Add all components
@@ -126,7 +155,7 @@ public class GameObject {
      *
      * @param comp the {@link mayonez.Component} instance
      */
-    public final void addComponent(Component comp) {
+    public final void addComponent(@Nullable Component comp) {
         if (comp == null || comp.getGameObject() != null) return;
         comp.setGameObject(this);
         components.add(comp);
@@ -165,7 +194,7 @@ public class GameObject {
      * @param <T> the component type
      * @return the component, or null if not present
      */
-    public <T extends Component> T getComponent(Class<T> cls) {
+    public <T extends Component> @Nullable T getComponent(@Nullable Class<T> cls) {
         if (cls == null) return null;
         for (var comp : components) {
             // Component has same class or is subclass
@@ -181,8 +210,8 @@ public class GameObject {
      * @param <T> the component type
      * @return the list of components, or empty if none are present
      */
-    public <T extends Component> List<T> getComponents(Class<T> cls) {
-        if (cls == null) return null;
+    public <T extends Component> List<T> getComponents(@Nullable Class<T> cls) {
+        if (cls == null) return List.of();
         return components.stream()
                 .filter(cls::isInstance)
                 .map(cls::cast)
@@ -210,9 +239,9 @@ public class GameObject {
     // Property Getters and Setters
 
     /**
-     * Get the object's name, which does not have to be unique.
+     * Get the object's name, which is not null and need not be unique.
      *
-     * @return the name
+     * @return the object name
      */
     public String getName() {
         return name;
