@@ -28,18 +28,9 @@ import java.util.*
 object SceneManager {
 
     // Scene Fields
-
     private val scenes: MutableMap<String, Scene> = HashMap() // The scene pool
     private val sceneNames: MutableList<String> = ArrayList() // The scene order
-
-    @JvmField
-    internal val SCENE_EVENTS: EventSystem<SceneEvent> = EventSystem()
-    private val sceneEventBuffer: Queue<SceneEvent> = ArrayDeque()
-    private val sceneEventCallbacks: Queue<SceneEventCallback> = ArrayDeque()
-
-    init {
-        SCENE_EVENTS.subscribe { event -> sceneEventBuffer.offer(event) }
-    }
+    private val sceneCallbacks: Queue<Runnable> = ArrayDeque(4)
 
     /** The scene that the application is actively running. */
     @JvmStatic
@@ -52,13 +43,9 @@ object SceneManager {
         // Finish updating current scene
         currentScene.update(dt)
 
-        // Execute all queued callbacks
-        while (sceneEventBuffer.isNotEmpty()) {
-            val event = sceneEventBuffer.poll()
-            if (event.state == SceneState.STOPPED) {  // TODO better event checking
-                val callback = sceneEventCallbacks.poll()
-                callback?.execute(event)
-            }
+        // Execute queued callbacks if waiting
+        while (sceneCallbacks.isNotEmpty()) {
+            sceneCallbacks.poll().run()
         }
     }
 
@@ -91,15 +78,16 @@ object SceneManager {
      */
     @JvmStatic
     fun restartScene() {
+        Logger.debug("Restarting current scene")
         destroyScene()
 
-        // Start scene later
-        sceneEventCallbacks.offer { startScene() }
+        // Wait for scene to stop, then start scene
+        sceneCallbacks.offer { startScene() }
     }
 
     /**
      * Switches the active scene to the given scene. The old scene may be paused or stopped,
-     * and the new scene may be started or resumed. If the new scene was not in the scene pool,
+     * and the new scene may be started or resumed. If the new scene is not in the scene pool,
      * It will automatically be added.
      *
      * @param scene the new scene, does nothing if null
@@ -111,17 +99,16 @@ object SceneManager {
         if (scene == null) return  // Don't set a null scene
         else if (!this::currentScene.isInitialized) return // Don't switch if no scene
 
-        Logger.debug("Switching scenes (stop old = %s, restart new = %s)", stopOld, restartNew)
+        Logger.debug("Switching scenes (stop old = $stopOld, restart new = $restartNew)")
 
         // Old scene behavior
-        // Switch and start later
         if (stopOld) {
             destroyScene()
-            sceneEventCallbacks.offer { setNewSceneAndStart(scene, restartNew) }
         } else {
             pauseScene()
-            setNewSceneAndStart(scene, restartNew)
         }
+        // Wait for scene to stop, then switch and start
+        sceneCallbacks.offer { setNewSceneAndStart(scene, restartNew) }
     }
 
     private fun setNewSceneAndStart(scene: Scene, restartNew: Boolean) {
@@ -130,11 +117,24 @@ object SceneManager {
 
         // New scene behavior
         if (restartNew) {
-            stopScene() // Should stop, not destroy, and no callback
+            stopScene() // Since not updating, just stop with no callback
             startScene()
         } else {
-            startScene()
-            resumeScene()
+            startScene() // Start if stopped
+            resumeScene() // Resume if paused
+        }
+    }
+
+    internal fun setInitialScene(scene: Scene) {
+        if (this::currentScene.isInitialized) return // Scene must be uninitialized
+        Logger.debug("Setting initial scene \"${scene.name}\"")
+        setScene(scene)
+    }
+
+    private fun setScene(scene: Scene) {
+        currentScene = scene
+        if (scene.name !in sceneNames) {
+            addScene(scene) // Auto-add scene if new
         }
     }
 
@@ -151,7 +151,7 @@ object SceneManager {
         }
     }
 
-    /** Signals the current scene to stop. */
+    /** Signals the current scene to stop after the current update. */
     internal fun destroyScene() {
         if (!currentScene.isStopped) {
             currentScene.destroy()
@@ -159,13 +159,10 @@ object SceneManager {
         }
     }
 
-    /** Stops the current scene and destroys all its game objects. */
-    @JvmStatic
-    @JvmName("stopScene")
+    /** Stops the current scene and destroys all its game objects immediately. */
     internal fun stopScene() {
         if (!currentScene.isStopped) {
             currentScene.stop()
-            sceneEventCallbacks.offer { } // Do nothing
             Logger.debug("Stopped scene \"${currentScene.name}\"")
         }
     }
@@ -250,18 +247,6 @@ object SceneManager {
     fun getScene(index: Int): Scene? {
         return if (index !in sceneNames.indices) null
         else scenes[sceneNames[index]]
-    }
-
-    /**
-     * Sets the current scene.
-     *
-     * @param scene the new scene
-     */
-    internal fun setScene(scene: Scene) {
-        currentScene = scene
-        if (scene.name !in sceneNames) {
-            addScene(scene) // Auto-add scene if new
-        }
     }
 
 }

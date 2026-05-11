@@ -185,7 +185,6 @@ public abstract class Scene {
         physics.clear();
 
         state = SceneState.STOPPED;
-        SceneManager.SCENE_EVENTS.broadcast(new SceneEvent(this, SceneState.STOPPED));
     }
 
     // Object Methods
