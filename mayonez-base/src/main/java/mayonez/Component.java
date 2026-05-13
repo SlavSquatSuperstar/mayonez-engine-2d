@@ -199,7 +199,7 @@ public abstract class Component {
     }
 
     int getUpdateOrder() {
-        return updateOrder.order;
+        return updateOrder.order();
     }
 
     // Object Overrides
