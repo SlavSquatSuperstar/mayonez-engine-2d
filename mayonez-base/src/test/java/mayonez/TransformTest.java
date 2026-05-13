@@ -14,6 +14,8 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class TransformTest {
 
+    private static final float FLOAT_DELTA = 1e-4f;
+
     // Transform Equality
 
     @Test
@@ -49,50 +51,64 @@ class TransformTest {
     // Transform Application
 
     @Test
-    void applyTransformSuccess1() {
+    void applyTransformSuccess() {
+        // Generate random case
+        // Use Java AffineTransform as oracle
         /*
-         * [[ 0.5 0  1 ]  [[ 3 ]
-         *  [ 0   2 -1 ]   [ 4 ]
-         *  [ 0   0  1 ]]  [ 1 ]]
+         * Example
+         * [[ 0.5 0  1 ]  • [[ 3 ]  = [[ -7   ]
+         *  [ 0   2 -1 ]]    [ 4 ]]    [  0.5 ]]
          */
-        var t = new Transform(
-                new Vec2(1, -1),
-                90,
-                new Vec2(0.5f, 2)
-        );
-        var x = new Vec2(3, 4); // Should result in (-7, 0.5f)
-        testTransform(t, x);
-    }
-
-    @Test
-    void applyTransformSuccess2() {
-        var t = new Transform(
-                new Vec2(1, -1),
-                -30,
-                new Vec2(0.5f, 2)
-        );
-        var x = new Vec2(3, 4);
-        testTransform(t, x);
+        var t = randomTransform();
+        var x = randomVector();
+        var y = getTransformedPoint(t, x);
+        assertVec2Equals(y, t.apply(x));
+        assertVec2Equals(x, t.applyInverse(y));
     }
 
     // Helper Methods
 
-    private static void testTransform(Transform t, Vec2 x) {
-        var y = getTransformed(t, x);
-        assertEquals(y, t.apply(x));
-        assertEquals(x, t.applyInverse(y));
+    private Transform randomTransform() {
+        return new Transform(
+                randomVector(),
+                randomRange(-360, 360, 15f),
+                randomVector()
+        );
     }
 
-    private static Vec2 getTransformed(Transform t, Vec2 x) {
-        // Call order backwards due to matrix multiplication right-to-left
-        var affXf = new AffineTransform();
-        affXf.translate(t.getPosition().x, t.getPosition().y);
-        affXf.rotate(MathUtils.toRadians(t.getRotation()));
-        affXf.scale(t.getScale().x, t.getScale().y);
+    private Vec2 randomVector() {
+        return new Vec2(
+                randomRange(-10, 10, 0.5f),
+                randomRange(-10, 10, 0.5f)
+        );
+    }
 
+    private float randomRange(float min, float max, float inc) {
+        var range = max - min;
+        var numVals = (int) (range / inc);
+        var bucket = Random.randomInt(0, numVals);
+        return min + bucket * inc;
+    }
+
+    private static Vec2 getTransformedPoint(Transform t, Vec2 x) {
+        var affXf = getAffineTransform(t);
         var xPt = new Point2D.Float(x.x, x.y);
         var yPt = affXf.transform(xPt, null);
         return new Vec2((float) yPt.getX(), (float) yPt.getY());
+    }
+
+    private static AffineTransform getAffineTransform(Transform t) {
+        // Call order backwards due to matrix multiplication right-to-left
+        var affXf = AffineTransform
+                .getTranslateInstance(t.getPosition().x, t.getPosition().y);
+        affXf.rotate(MathUtils.toRadians(t.getRotation()));
+        affXf.scale(t.getScale().x, t.getScale().y);
+        return affXf;
+    }
+
+    private static void assertVec2Equals(Vec2 expected, Vec2 actual) {
+        assertEquals(expected.x, actual.x, FLOAT_DELTA);
+        assertEquals(expected.y, actual.y, FLOAT_DELTA);
     }
 
 }
