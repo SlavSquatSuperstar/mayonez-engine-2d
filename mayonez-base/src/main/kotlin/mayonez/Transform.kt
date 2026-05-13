@@ -5,8 +5,18 @@ import mayonez.math.*
 import java.util.*
 
 /**
- * Stores the position, rotation and scale of a GameObject and provides
- * additional methods.
+ * Stores the position, rotation and scale of a [GameObject] and converts points
+ * between different coordinate systems. An object's local coordinate system has
+ * an origin, angle, and two perpendicular basis vectors, each with their own length.
+ *
+ * An affine transform (see [java.awt.geom.AffineTransform]) such as this class is
+ * equivalent to a linear transformation `A` (the rotation applied after the scale, `R•S`)
+ * plus a translation `b`. Affine transforms can also be represented as 2x3 matrices
+ * or 3x3 augmented matrices.
+ *
+ * Applying a transform yields `y = Ax + b`. Each transform is invertible, assuming
+ * none of the scale components are 0. Applying the inverse of a transform yields
+ * `x = A^(-1) (y - b)`.
  *
  * @author SlavSquatSuperstar
  */
@@ -33,7 +43,7 @@ class Transform(position: Vec2, rotation: Float, scale: Vec2) {
      * identity.
      *
      * @param position the position
-     * @param rotation the rotation
+     * @param rotation the rotation, in degrees
      */
     constructor(position: Vec2, rotation: Float) : this(position, rotation, Vec2(1f))
 
@@ -41,17 +51,17 @@ class Transform(position: Vec2, rotation: Float, scale: Vec2) {
         // Factory Methods
 
         /**
-         * Creates a transform that will rotate anything by given angle but
+         * Creates a transform that will rotate anything by a given angle but
          * preserve position and scale.
          *
-         * @param rotation the rotation angle
+         * @param rotation the rotation angle, in degrees
          * @return the rotation transform
          */
         @JvmStatic
         fun rotateInstance(rotation: Float) = Transform(Vec2(), rotation, Vec2(1f))
 
         /**
-         * Creates a transform that will scale anything by given factor but
+         * Creates a transform that will scale anything by a given factor but
          * preserve position and rotation.
          *
          * @param scale the scale factor
@@ -71,6 +81,8 @@ class Transform(position: Vec2, rotation: Float, scale: Vec2) {
 
     // Internal field
     private var angle: Angle = Angle.createDegrees(rotation)
+    // Affine transform = linear transform + translation
+    // Inverse
 
     /** The angle the object is oriented, in degrees. */
     var rotation: Float
@@ -165,22 +177,30 @@ class Transform(position: Vec2, rotation: Float, scale: Vec2) {
         get() = angle.rotation * Vec2(0f, 1f)
 
     /**
-     * Transforms a point from world space to the object's local space, with
-     * this Transform's position serving as the origin.
-     *
-     * @param world a 2D point in the world
-     * @return the localized point
-     */
-    fun toLocal(world: Vec2): Vec2 = ((world - position) / scale).rotate(-rotation)
-
-    /**
-     * Transforms a point from the object's local space to world space, with
-     * this Transform's position serving as the * origin.
+     * Applies this transform to the given point. In other words, transforms a point
+     * from world space to the object's local space, with this transform's position
+     * serving as the origin.
      *
      * @param local a localized 2D point
      * @return the point in the world
      */
-    fun toWorld(local: Vec2): Vec2 = (local.rotate(rotation) * scale) + position
+    fun apply(local: Vec2): Vec2 {
+        // Scale, rotate, then translate (preserves length of basis vectors)
+        return (local * scale).rotate(rotation) + position
+    }
+
+    /**
+     * Applies this transform's inverse to the given point. In other words,
+     * transforms a point from the object's local space to world space, with
+     * this transform's position serving as the origin.
+     *
+     * @param world a 2D point in the world
+     * @return the localized point
+     */
+    fun applyInverse(world: Vec2): Vec2 {
+        // Translate, rotate, then scale
+        return (world - position).rotate(-rotation) / scale
+    }
 
     // Copy Methods
 
@@ -196,11 +216,8 @@ class Transform(position: Vec2, rotation: Float, scale: Vec2) {
     // Object Overrides
 
     override fun equals(other: Any?): Boolean {
-        return (other is Transform) && this.equalsTransform(other)
-    }
-
-    private fun equalsTransform(other: Transform): Boolean {
-        return (this.position == other.position)
+        return (other is Transform)
+                && (this.position == other.position)
                 && MathUtils.equals(this.rotation, other.rotation)
                 && (this.scale == other.scale)
     }

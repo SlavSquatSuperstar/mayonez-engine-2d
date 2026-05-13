@@ -64,7 +64,7 @@ public final class ProjectilePrefabs {
                 var weaponSpreadAngle = Random.randomFloat(-type.weaponSpread(), type.weaponSpread());
                 var sourceXf = source.getTransform();
                 var projXf = new Transform(
-                        sourceXf.toWorld(hardpoint.offset()),
+                        sourceXf.apply(hardpoint.offset()),
                         sourceXf.getRotation() + hardpoint.angle() + weaponSpreadAngle,
                         type.scale()
                 );
@@ -111,7 +111,7 @@ public final class ProjectilePrefabs {
     ) {
         var weaponSpreadAngle = Random.randomFloat(-type.weaponSpread(), type.weaponSpread());
         return new Transform(
-                sourceXf.toWorld(hardpoint.offset()),
+                sourceXf.apply(hardpoint.offset()),
                 sourceXf.getRotation() + hardpoint.angle() + weaponSpreadAngle,
                 type.scale()
         );
