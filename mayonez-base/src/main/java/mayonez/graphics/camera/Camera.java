@@ -31,7 +31,7 @@ public abstract class Camera extends Component implements Viewport {
     private float zoom, rotation;
 
     // GameObject Fields
-    private GameObject subject;
+    private GameObject subject; // Object to follow
     private final BufferedList<Component> cameraScripts;
 
     protected Camera(Vec2 screenSize) {

@@ -121,12 +121,11 @@ public abstract class Scene {
         // Update all objects
         // TODO physics update, late update
         if (isRunning()) {
+            physics.step(dt);
             objects.forEach(obj -> {
                 obj.update(dt);
                 if (obj.isDestroyed()) removeObject(obj);
             });
-            physics.step(dt);
-            camera.gameObject.update(dt); // Update camera last
         }
         objects.processBuffer();
         if (isDestroyed()) stop();
