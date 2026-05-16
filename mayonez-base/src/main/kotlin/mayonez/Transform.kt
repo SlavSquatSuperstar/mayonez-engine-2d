@@ -18,6 +18,10 @@ import java.util.*
  * none of the scale components are 0. Applying the inverse of a transform yields
  * `x = A^(-1) (y - b)`.
  *
+ * See also
+ * - [Godot: Matrices and transforms](https://docs.godotengine.org/en/stable/tutorials/math/matrices_and_transforms.html)
+ * - [Wikipedia: Affine transformation](https://en.wikipedia.org/wiki/Affine_transformation)
+ *
  * @author SlavSquatSuperstar
  */
 class Transform(position: Vec2, rotation: Float, scale: Vec2) {
@@ -80,6 +84,7 @@ class Transform(position: Vec2, rotation: Float, scale: Vec2) {
         }
 
     // Internal field
+    // Store matrix
     private var angle: Angle = Angle.createDegrees(rotation)
     // Affine transform = linear transform + translation
     // Inverse
@@ -142,7 +147,11 @@ class Transform(position: Vec2, rotation: Float, scale: Vec2) {
 
     /**
      * Applies this transform to another transform, combining the position,
-     * rotation, and scale of both.
+     * rotation, and scale of both. Like matrix, multiplication, applying a
+     * combined transform is the same as applying the other transform first and
+     * then this one. The combined transform is may differ if the order is reversed.
+     * Note that unlike [java.awt.geom.AffineTransform], no shearing/skewing
+     * of the basis occurs if the first scale is not uniform.
      *
      * @param other another transform
      * @return the combined transformation, or a copy if other is null
@@ -150,10 +159,17 @@ class Transform(position: Vec2, rotation: Float, scale: Vec2) {
     fun combine(other: Transform?): Transform {
         return if (other == null) copy()
         else Transform(
-            this.position + (other.position * this.scale).rotate(this.rotation),
+            this.apply(other.position),
             this.rotation + other.rotation,
-            this.scale * other.scale
+            this.scale * other.scale.rotate(this.rotation) // Normally causes shearing if first scale isn't uniform
         )
+    }
+
+    // todo inverse test
+    fun invert(): Transform {
+        // Invert basis: A^-1
+        // Invert translation: A^-1 * -b
+        return copy()
     }
 
     // Space Transform Methods
