@@ -24,6 +24,18 @@ import kotlin.system.exitProcess
 // TODO rename to application manager
 // TODO move to launcher/config pkg
 // TODO application init events
+/*
+ * Resources/singletons are initialized in the following order:
+ * 1. Time
+ * 2. Preferences
+ * 3. Logger
+ * 4. Window/GLFW/OpenGL
+ * 5. Application
+ * 6. Assets
+ * 7. Open/Close Window
+ * 8. Start/Stop Scene
+ * Resources (except time and preferences) are terminated in reverse order.
+ */
 object Mayonez {
 
     // Application Info
@@ -193,7 +205,7 @@ object Mayonez {
         if (!started) {
             started = true
             SceneManager.setInitialScene(scene)
-            // Start game
+            // Start game and show window
             if (this::application.isInitialized) application.start()
             else exitWithErrorMessage("Cannot start without configuring program \"Use GL\" option")
         }

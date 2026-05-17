@@ -93,10 +93,7 @@ final class GLWindow implements Window {
         glfwFreeCallbacks(windowID);
         glfwSetWindowShouldClose(windowID, true);
         glfwDestroyWindow(windowID);
-        glfwTerminate();
-        var oldCbFun = glfwSetErrorCallback(null);
-        if (oldCbFun != null) oldCbFun.free();
-        GLHelper.unloadOpenGL();
+        freeGLFW();
     }
 
     // Game Loop Methods

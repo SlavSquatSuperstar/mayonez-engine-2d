@@ -39,7 +39,7 @@ final class GLFWHelper {
      * Initializes the GLFW library.
      */
     static void initGLFW() throws WindowInitException {
-        createPrint(System.err).set(); // Setup error callback
+        glfwSetErrorCallback(createPrint(System.err)); // Setup error callback
         if (!glfwInit()) {
             throw new WindowInitException("Unable to initialize GLFW");
         }
@@ -75,7 +75,6 @@ final class GLFWHelper {
         glfwMakeContextCurrent(windowID); // Make the OpenGL context current
         glfwSwapInterval(1); // Enable v-sync
         GLHelper.loadOpenGL(); // Integrate LWJGL with OpenGL bindings
-        GLHelper.enableBlending();
 
         return new GLFWWindow(windowID, vidMode);
     }
@@ -276,6 +275,19 @@ final class GLFWHelper {
         var framebufferSize = getFramebufferSize(windowID);
         var windowSize = getWindowSize(windowID);
         return framebufferSize.div(windowSize);
+    }
+
+    // Termination Methods
+
+    /**
+     * Terminates the GLFW library.
+     */
+    static void freeGLFW() {
+        glfwTerminate();
+        Logger.debug("Terminated the GLFW library");
+        var oldCbFun = glfwSetErrorCallback(null);
+        if (oldCbFun != null) oldCbFun.free(); // Free callback function
+        GLHelper.unloadOpenGL();
     }
 
     // Helper Class

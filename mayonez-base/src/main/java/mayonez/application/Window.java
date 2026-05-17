@@ -64,12 +64,12 @@ public sealed interface Window permits JWindow, GLWindow {
     // Resource Management Methods
 
     /**
-     * Setup system resources and show the window.
+     * Show the window and acquire its graphics resources.
      */
     void start();
 
     /**
-     * Free system resources and destroy the window.
+     * Destroy the window and release its graphics resources.
      */
     void stop();
 

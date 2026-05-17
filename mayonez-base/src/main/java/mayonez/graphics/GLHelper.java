@@ -28,11 +28,13 @@ public final class GLHelper {
 
     /**
      * Loads the OpenGL library and creates the capabilities in the current thread.
+     * Requires an active GLFW window.
      */
     public static void loadOpenGL() {
         Logger.debug("Creating OpenGL capabilities");
         createCapabilities();
         printGLInfo();
+        enableBlending();
     }
 
     /**
@@ -66,8 +68,10 @@ public final class GLHelper {
 
     public static void enableBlending() {
         // Note: complex transparent shapes don't work well, better to use textures
+        // Can be solved with on-demand triangle fans
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        // Blending computes a weighted average of two colors
     }
 
     // Version Methods
