@@ -11,7 +11,7 @@ import mayonez.renderer.*
  *
  * @author SlavSquatSuperstar
  */
-sealed class Sprite : Component(UpdateOrder.RENDER), Renderable {
+sealed class Sprite : Component(), Renderable {
 
     companion object {
         @JvmStatic

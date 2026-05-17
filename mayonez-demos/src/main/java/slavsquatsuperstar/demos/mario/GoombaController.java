@@ -10,10 +10,6 @@ import mayonez.physics.*;
  */
 class GoombaController extends Script {
 
-    GoombaController() {
-        super(UpdateOrder.COLLISION);
-    }
-
     @Override
     protected void start() {
         getCollider().addCollisionCallback(event -> {

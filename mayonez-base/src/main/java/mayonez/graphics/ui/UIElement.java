@@ -11,10 +11,6 @@ import mayonez.math.*;
  */
 public abstract class UIElement extends Script {
 
-    public UIElement() {
-        super(UpdateOrder.RENDER);
-    }
-
     /**
      * Get the position of this UI element's anchor point.
      *

@@ -35,7 +35,7 @@ public abstract class Camera extends Component implements Viewport {
     private final BufferedList<Component> cameraScripts;
 
     protected Camera(Vec2 screenSize) {
-        super(UpdateOrder.PRE_RENDER);
+        super(UpdateOrder.MOVEMENT);
         this.screenSize = screenSize;
         resizeHandler = e -> {
             this.screenSize.set(e.getWidth(), e.getHeight());

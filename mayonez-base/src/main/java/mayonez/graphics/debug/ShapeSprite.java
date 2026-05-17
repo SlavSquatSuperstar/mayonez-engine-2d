@@ -29,7 +29,6 @@ public class ShapeSprite extends Component {
      * @param fill  whether to fill the shape interior
      */
     public ShapeSprite(Shape shape, Color color, boolean fill) {
-        super(UpdateOrder.RENDER);
         this.shape = shape;
         if (fill) {
             brush = ShapeBrush.createSolidBrush(color);
