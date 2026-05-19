@@ -1,7 +1,6 @@
 package mayonez.application;
 
 import mayonez.*;
-import mayonez.input.*;
 
 /**
  * An application that displays a window, receives input, and continuously updates and renders a scene.
@@ -20,11 +19,12 @@ public class Application {
 
     // Time Fields (Seconds)
     private final boolean frameSkip; // Update only once per draw
-    private final float timeStepSecs; // Target delta time
-    private final float halfTimeStepSecs;
+    private final float timeStepSecs; // Target render delta time
+    private final float fixedTimeStepSecs; // Target physics delta time
     private float lastLoopTimeSecs; // Last update time
-    private float unprocessedTime;
-    private float deltaTimeSecs; // Time processed this update
+    private float unprocessedTime; // Timer for render
+    private float fixedUnprocessedTime; // Timer for physics
+    private float deltaTimeSecs; // Time processed this frame
     private boolean hasUpdatedThisFrame; // If window should redraw
 
     // Debug Info Fields
@@ -38,8 +38,8 @@ public class Application {
         running = false;
 
         frameSkip = Preferences.getFrameSkip();
-        timeStepSecs = Time.getTimeStepSecs();
-        halfTimeStepSecs = timeStepSecs * 0.5f;
+        timeStepSecs = 1 / 60f; // Render
+        fixedTimeStepSecs = 1 / 60f; // Physics
     }
 
     // Main Game Loop Methods
@@ -60,6 +60,7 @@ public class Application {
     private void run() {
         lastLoopTimeSecs = window.getCurrentTimeSecs();
         unprocessedTime = 0f;
+        fixedUnprocessedTime = 0f;
         deltaTimeSecs = 0f;
         debugTimerSecs = 0f;
         averageFPS = 0;
@@ -70,10 +71,12 @@ public class Application {
             hasUpdatedThisFrame = false;
             updateGame();
 
-            // Render if updated
-            if (hasUpdatedThisFrame) {
+            // Render as often as possible
+            // TODO do frame skip here
+            if (unprocessedTime >= timeStepSecs) {
                 window.render();
                 frameCount += 1;
+                unprocessedTime = 0;
             }
 
             // Print frame count
@@ -111,24 +114,28 @@ public class Application {
      * - https://gafferongames.com/post/fix_your_timestep/
      * - https://gameprogrammingpatterns.com/game-loop.html
      */
+    // TODO separate physics and render rate
+    // TODO call updated and fixed update separately
+    // TODO limit max physics updates per frame (replace frameskip)
+    // TODO interpolate between physics frames
     private void updateGame() {
         // Calculate frame time
         var currentLoopTimeSecs = window.getCurrentTimeSecs();
         var frameElapsedTimeSecs = currentLoopTimeSecs - lastLoopTimeSecs; // Time since last update
         unprocessedTime += frameElapsedTimeSecs;
+        fixedUnprocessedTime += frameElapsedTimeSecs;
         debugTimerSecs += frameElapsedTimeSecs;
-        lastLoopTimeSecs = currentLoopTimeSecs;  // Reset last time
+        lastLoopTimeSecs = currentLoopTimeSecs; // Reset last time
 
-        while (unprocessedTime > halfTimeStepSecs) { // Carry small slivers of time to next frame
-            deltaTimeSecs = Math.min(unprocessedTime, timeStepSecs);
+        while (fixedUnprocessedTime > fixedTimeStepSecs) { // Always update with fixed delta-t
+            deltaTimeSecs = fixedTimeStepSecs;
 
-            // TODO multi-thread physics with shorter fixed time step
             window.beginFrame();
-            SceneManager.updateScene(deltaTimeSecs);
+            SceneManager.updateScene(deltaTimeSecs); // TODO should be fixed update
             window.endFrame();
             updateCount += 1;
 
-            unprocessedTime -= deltaTimeSecs;
+            fixedUnprocessedTime -= deltaTimeSecs;
             hasUpdatedThisFrame = true;
 
             if (!frameSkip) break;
