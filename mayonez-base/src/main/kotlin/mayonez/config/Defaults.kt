@@ -16,6 +16,7 @@ object Defaults {
     private const val FULLSCREEN: Boolean = false
     private const val RESIZABLE: Boolean = true
     private const val FPS: Int = 60
+    private const val FIXED_TPS: Int = 60
     private const val FRAME_SKIP: Boolean = true
     private const val DOUBLE_CLICK_TIME: Float = 0.50f
 
@@ -29,6 +30,7 @@ object Defaults {
         preferences["fullscreen"] = FULLSCREEN
         preferences["resizable"] = RESIZABLE
         preferences["fps"] = FPS
+        preferences["fixed_tps"] = FIXED_TPS
         preferences["frame_skip"] = FRAME_SKIP
         preferences["double_click_time"] = DOUBLE_CLICK_TIME
 

@@ -5,6 +5,7 @@
     "fullscreen": false,
     "resizable": true,
     "fps": 60,
+    "fixed_tps": 60,
     "frame_skip": true,
     "double_click_time": 0.5,
     "log_level": "info",

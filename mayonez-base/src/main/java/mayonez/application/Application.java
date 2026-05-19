@@ -19,18 +19,18 @@ public class Application {
 
     // Time Fields (Seconds)
     private final boolean frameSkip; // Update only once per draw
-    private final float timeStepSecs; // Target render delta time
-    private final float fixedTimeStepSecs; // Target physics delta time
-    private float lastLoopTimeSecs; // Last update time
+    private final float renderDt; // Target render delta time
+    private final float fixedDt; // Target physics delta time
+    private float lastTime; // Last update time
     private float unprocessedTime; // Timer for render
     private float fixedUnprocessedTime; // Timer for physics
-    private float deltaTimeSecs; // Time processed this frame
+    private float currentDt; // Time processed this frame
     private boolean hasUpdatedThisFrame; // If window should redraw
 
     // Debug Info Fields
-    private float debugTimerSecs;
-    private int updateCount;
-    private int averageUPS;
+    private float debugTimer;
+    private int fixedTickCount;
+    private int averageFixedTPS;
     private int averageFPS;
 
     protected Application(Window window) {
@@ -38,8 +38,8 @@ public class Application {
         running = false;
 
         frameSkip = Preferences.getFrameSkip();
-        timeStepSecs = 1 / 60f; // Render
-        fixedTimeStepSecs = 1 / 60f; // Physics
+        renderDt = 1f / Preferences.getFps(); // Render
+        fixedDt = 1f / Preferences.getFixedTps(); // Physics
     }
 
     // Main Game Loop Methods
@@ -58,13 +58,13 @@ public class Application {
     }
 
     private void run() {
-        lastLoopTimeSecs = window.getCurrentTimeSecs();
+        lastTime = window.getCurrentTimeSecs();
         unprocessedTime = 0f;
         fixedUnprocessedTime = 0f;
-        deltaTimeSecs = 0f;
-        debugTimerSecs = 0f;
+        currentDt = 0f;
+        debugTimer = 0f;
         averageFPS = 0;
-        updateCount = 0;
+        fixedTickCount = 0;
         int frameCount = 0;
 
         while (running && window.notClosedByUser()) {
@@ -73,24 +73,25 @@ public class Application {
 
             // Render as often as possible
             // TODO do frame skip here
-            if (unprocessedTime >= timeStepSecs) {
+            if (unprocessedTime >= renderDt) {
+                currentDt = unprocessedTime;
                 window.render();
                 frameCount += 1;
                 unprocessedTime = 0;
             }
 
             // Print frame count
-            if (debugTimerSecs >= DEBUG_INTERVAL_SECS) {
-                averageUPS = updateCount;
+            if (debugTimer >= DEBUG_INTERVAL_SECS) {
+                averageFixedTPS = fixedTickCount;
                 averageFPS = frameCount;
-                updateCount = 0;
+                fixedTickCount = 0;
                 frameCount = 0;
 
                 if (LOG_FRAME_COUNTS) {
-                    Logger.trace("Updates per second: %d", averageUPS);
+                    Logger.trace("Ticks per second: %d", averageFixedTPS);
                     Logger.trace("Frames per second: %d", averageFPS);
                 }
-                debugTimerSecs -= DEBUG_INTERVAL_SECS;
+                debugTimer -= DEBUG_INTERVAL_SECS;
             }
         }
         Mayonez.stop(ExitCode.SUCCESS);
@@ -120,22 +121,20 @@ public class Application {
     // TODO interpolate between physics frames
     private void updateGame() {
         // Calculate frame time
-        var currentLoopTimeSecs = window.getCurrentTimeSecs();
-        var frameElapsedTimeSecs = currentLoopTimeSecs - lastLoopTimeSecs; // Time since last update
-        unprocessedTime += frameElapsedTimeSecs;
-        fixedUnprocessedTime += frameElapsedTimeSecs;
-        debugTimerSecs += frameElapsedTimeSecs;
-        lastLoopTimeSecs = currentLoopTimeSecs; // Reset last time
+        var currentTime = window.getCurrentTimeSecs();
+        var frameElapsedTime = currentTime - lastTime; // Time since last update
+        unprocessedTime += frameElapsedTime;
+        fixedUnprocessedTime += frameElapsedTime;
+        debugTimer += frameElapsedTime;
+        lastTime = currentTime; // Reset last time
 
-        while (fixedUnprocessedTime > fixedTimeStepSecs) { // Always update with fixed delta-t
-            deltaTimeSecs = fixedTimeStepSecs;
-
+        while (fixedUnprocessedTime > fixedDt) { // Always update with fixed delta-t
             window.beginFrame();
-            SceneManager.updateScene(deltaTimeSecs); // TODO should be fixed update
+            SceneManager.updateScene(fixedDt); // TODO should be fixed update
             window.endFrame();
-            updateCount += 1;
+            fixedTickCount += 1;
 
-            fixedUnprocessedTime -= deltaTimeSecs;
+            fixedUnprocessedTime -= fixedDt;
             hasUpdatedThisFrame = true;
 
             if (!frameSkip) break;
@@ -150,7 +149,7 @@ public class Application {
      * @return the FPS now
      */
     public float getDeltaTime() {
-        return deltaTimeSecs;
+        return currentDt;
     }
 
     /**
@@ -160,7 +159,7 @@ public class Application {
      * @return the FPS now
      */
     public int getFPS() {
-        return Math.round(1f / deltaTimeSecs);
+        return Math.round(1f / currentDt);
     }
 
     /**
@@ -169,7 +168,7 @@ public class Application {
      * @return the average update FPS
      */
     public int getUpdateFPS() {
-        return averageUPS;
+        return averageFixedTPS;
     }
 
     /**

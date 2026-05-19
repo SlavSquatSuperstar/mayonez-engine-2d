@@ -63,10 +63,16 @@ object Preferences : GameConfig(PREFS_FILENAME, Defaults.preferences) {
     val fps: Int
         get() = getInt("fps")
 
+    @JvmStatic
+    val fixedTps: Int
+        get() = getInt("fixed_tps")
+
     /**
      * Whether to update the game as many times as possible before rendering (faster),
      * rather than rendering once per update (slower).
      */
+    // TODO idk what this does
+    // TODO enable only frame if fixed tick
     @JvmStatic
     val frameSkip: Boolean
         get() = getBoolean("frame_skip")
