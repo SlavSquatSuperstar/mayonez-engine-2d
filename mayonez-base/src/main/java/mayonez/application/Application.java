@@ -116,9 +116,10 @@ public class Application {
      * - https://gameprogrammingpatterns.com/game-loop.html
      */
     // TODO separate physics and render rate
-    // TODO call updated and fixed update separately
+    // TODO call render/update and fixed update separately
     // TODO limit max physics updates per frame (replace frameskip)
     // TODO interpolate between physics frames
+    // TODO class for elapsed timers and last/curr times
     private void updateGame() {
         // Calculate frame time
         var currentTime = window.getCurrentTimeSecs();
@@ -167,7 +168,7 @@ public class Application {
      *
      * @return the average update FPS
      */
-    public int getUpdateFPS() {
+    public int getFixedTPS() {
         return averageFixedTPS;
     }
 

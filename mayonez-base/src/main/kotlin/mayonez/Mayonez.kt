@@ -101,9 +101,9 @@ object Mayonez {
         }
 
     @JvmStatic
-    val updateFPS: Int
+    val fixedTPS: Int
         get() {
-            return if (this::application.isInitialized) application.updateFPS else 0
+            return if (this::application.isInitialized) application.fixedTPS else 0
         }
 
     @JvmStatic

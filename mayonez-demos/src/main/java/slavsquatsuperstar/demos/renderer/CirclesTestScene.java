@@ -58,8 +58,8 @@ public class CirclesTestScene extends DemoScene {
             protected void init() {
                 // Background
                 addComponent(new UISprite(
-                        new Vec2(110, Mayonez.getScreenHeight() - 50),
-                        new Vec2(200, 50), Colors.LIGHT_GRAY
+                        new Vec2(110, Mayonez.getScreenHeight() - 75),
+                        new Vec2(200, 100), Colors.LIGHT_GRAY
                 ));
 
                 var fpsText = new TextLabel(
@@ -72,6 +72,18 @@ public class CirclesTestScene extends DemoScene {
                     }
                 };
                 addComponent(fpsText
+                        .setAnchor(Anchor.TOP_LEFT)
+                        .setFontSize(45));
+                var tpsText = new TextLabel(
+                        "TPS: _",
+                        new Vec2(20, Mayonez.getScreenHeight() - 95)
+                ) {
+                    @Override
+                    protected void debugRender() {
+                        setMessage("TPS: " + Mayonez.getFixedTPS());
+                    }
+                };
+                addComponent(tpsText
                         .setAnchor(Anchor.TOP_LEFT)
                         .setFontSize(45));
             }
