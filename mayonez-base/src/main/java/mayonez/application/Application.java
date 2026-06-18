@@ -21,15 +21,9 @@ public class Application {
     private final boolean frameSkip; // Update only once per draw
     private final float renderDt; // Target render delta time
     private final float fixedDt; // Target physics delta time
-    private float lastTime; // Last update time
-    private float unprocessedTime; // Timer for render
-    private float fixedUnprocessedTime; // Timer for physics
     private float currentDt; // Time processed this frame
-    private boolean hasUpdatedThisFrame; // If window should redraw
 
     // Debug Info Fields
-    private float debugTimer;
-    private int fixedTickCount;
     private int averageFixedTPS;
     private int averageFPS;
 
@@ -57,19 +51,48 @@ public class Application {
         }
     }
 
+    /*
+     * Sources:
+     * - https://gafferongames.com/post/fix_your_timestep/
+     * - https://gameprogrammingpatterns.com/game-loop.html
+     */
+    // TODO separate physics and render rate
+    // TODO call render/update and fixed update separately
+    // TODO limit max physics updates per frame (replace frameskip)
+    // TODO interpolate between physics frames
+    // TODO class for elapsed timers and last/curr times
     private void run() {
-        lastTime = window.getCurrentTimeSecs();
-        unprocessedTime = 0f;
-        fixedUnprocessedTime = 0f;
+        // Frame time variables
+        var lastTime = window.getCurrentTimeSecs(); // Last update time
+        var unprocessedTime = 0f; // Timer for render
+        var fixedUnprocessedTime = 0f; // Timer for physics
         currentDt = 0f;
-        debugTimer = 0f;
+
+        // Debug variables
+        var debugTimer = 0f;
+        var fixedTickCount = 0;
+        var frameCount = 0;
         averageFPS = 0;
-        fixedTickCount = 0;
-        int frameCount = 0;
 
         while (running && window.notClosedByUser()) {
-            hasUpdatedThisFrame = false;
-            updateGame();
+            // Update game
+            var currentTime = window.getCurrentTimeSecs();
+            var frameElapsedTime = currentTime - lastTime; // Time since last update
+            unprocessedTime += frameElapsedTime;
+            fixedUnprocessedTime += frameElapsedTime;
+            debugTimer += frameElapsedTime;
+            lastTime = currentTime; // Reset last time
+
+            while (fixedUnprocessedTime > fixedDt) { // Always update with fixed delta-t
+                window.beginFrame();
+                SceneManager.updateScene(fixedDt); // TODO should be fixed update
+                window.endFrame();
+                fixedTickCount += 1;
+
+                fixedUnprocessedTime -= fixedDt;
+
+                if (!frameSkip) break;
+            }
 
             // Render as often as possible
             // TODO do frame skip here
@@ -105,40 +128,6 @@ public class Application {
             running = false;
             window.stop();
             Logger.debug("Closed window");
-        }
-    }
-
-    // Game Loop Helper Methods
-
-    /*
-     * Sources:
-     * - https://gafferongames.com/post/fix_your_timestep/
-     * - https://gameprogrammingpatterns.com/game-loop.html
-     */
-    // TODO separate physics and render rate
-    // TODO call render/update and fixed update separately
-    // TODO limit max physics updates per frame (replace frameskip)
-    // TODO interpolate between physics frames
-    // TODO class for elapsed timers and last/curr times
-    private void updateGame() {
-        // Calculate frame time
-        var currentTime = window.getCurrentTimeSecs();
-        var frameElapsedTime = currentTime - lastTime; // Time since last update
-        unprocessedTime += frameElapsedTime;
-        fixedUnprocessedTime += frameElapsedTime;
-        debugTimer += frameElapsedTime;
-        lastTime = currentTime; // Reset last time
-
-        while (fixedUnprocessedTime > fixedDt) { // Always update with fixed delta-t
-            window.beginFrame();
-            SceneManager.updateScene(fixedDt); // TODO should be fixed update
-            window.endFrame();
-            fixedTickCount += 1;
-
-            fixedUnprocessedTime -= fixedDt;
-            hasUpdatedThisFrame = true;
-
-            if (!frameSkip) break;
         }
     }
 
@@ -186,6 +175,14 @@ public class Application {
     @Override
     public String toString() {
         return String.format("Application %s", running ? "running" : "not running");
+    }
+
+    // Helper Class
+
+    private static class LoopTimer {
+        float value = 0f; // Current value
+        float limit = 0f; // Max value
+        int count = 0; // How many times reached max
     }
 
 }
