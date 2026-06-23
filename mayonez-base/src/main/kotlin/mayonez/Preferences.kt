@@ -30,7 +30,7 @@ object Preferences : GameConfig(PREFS_FILENAME, Defaults.preferences) {
             StringValidator("title", "log_level", "log_directory"),
             BooleanValidator("fullscreen", "resizable", "save_logs", "frame_skip"),
             IntValidator(240, 3840, "screen_height", "screen_width"),
-            IntValidator(10, 250, "fps"),
+            IntValidator(10, 250, "fps", "fixed_tps"),
             FloatValidator(0f, 5f, "double_click_time"),
         )
     }
