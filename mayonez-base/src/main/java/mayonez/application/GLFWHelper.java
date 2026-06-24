@@ -58,14 +58,26 @@ final class GLFWHelper {
         configureWindowHints(windowConfig);
         configureContextHints(runConfig);
 
+        // Get closest video mode
         var vidMode = getNearestVideoMode(windowConfig);
         if (vidMode == null) {
             throw new WindowInitException("Could not set the GLFW video mode");
         }
 
+        int width, height;
+        if (windowConfig.fullScreen()) {
+            // Use video mode dimensions if fullscreen
+            width = vidMode.width();
+            height = vidMode.height();
+        } else {
+            // Otherwise use provided dimensions
+            width = windowConfig.width();
+            height = windowConfig.height();
+        }
+
         var monitor = windowConfig.fullScreen() ? glfwGetPrimaryMonitor() : NULL;
         var windowID = glfwCreateWindow(
-                vidMode.width(), vidMode.height(), windowConfig.title(), monitor, NULL
+               width, height, windowConfig.title(), monitor, NULL
         );
         if (windowID == NULL) {
             throw new WindowInitException("Could not create the GLFW window");
