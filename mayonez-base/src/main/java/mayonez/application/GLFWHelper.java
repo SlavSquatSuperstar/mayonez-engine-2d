@@ -5,12 +5,15 @@ import mayonez.config.RunConfig;
 import mayonez.graphics.*;
 import mayonez.math.*;
 import org.jspecify.annotations.Nullable;
+import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWVidMode;
 
 import java.util.Comparator;
+import java.util.Map;
 
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.glfw.GLFWErrorCallback.createPrint;
+import static org.lwjgl.glfw.GLFWErrorCallback.getDescription;
+import static org.lwjgl.system.APIUtil.apiClassTokens;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
@@ -30,6 +33,12 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 @UsesEngine(EngineType.GL)
 final class GLFWHelper {
 
+    private static final Map<Integer, String> ERROR_CODES = apiClassTokens(
+            (field, value) -> 0x10000 < value && value < 0x20000, null, GLFW.class
+    );
+    private static int platform = GLFW_ANY_PLATFORM;
+
+
     private GLFWHelper() {
     }
 
@@ -39,11 +48,26 @@ final class GLFWHelper {
      * Initializes the GLFW library.
      */
     static void initGLFW() throws WindowInitException {
-        glfwSetErrorCallback(createPrint(System.err)); // Setup error callback
+        // noinspection resource
+        glfwSetErrorCallback(GLFWHelper::logGLFWError); // Use logger for error callback
         if (!glfwInit()) {
             throw new WindowInitException("Unable to initialize GLFW");
         }
         Logger.debug("Initialized the GLFW library");
+    }
+
+    // From GLFWErrorCallback.createPrint
+    private static void logGLFWError(int code, long description) {
+        var trace = Thread.currentThread().getStackTrace();
+        var msg = new StringBuilder("GLFW: ")
+                .append(ERROR_CODES.get(code))
+                .append("\n\t")
+                .append(getDescription(description));
+        for (int i = 4; i < trace.length; i++) {
+            msg.append("\n\t\t");
+            msg.append(trace[i]);
+        }
+        Logger.error(msg.toString());
     }
 
     /**
@@ -177,6 +201,7 @@ final class GLFWHelper {
             var windowSize = getWindowSize(windowID);
             var xCenterPos = xPos.get(0) + (width.get(0) - (int) windowSize.x) / 2;
             var yCenterPos = yPos.get(0) + (height.get(0) - (int) windowSize.y) / 2;
+            // Raises GLFW_FEATURE_UNAVAILABLE on Wayland
             glfwSetWindowPos(windowID, xCenterPos, yCenterPos);
         }
     }
@@ -192,6 +217,7 @@ final class GLFWHelper {
         try (var stack = stackPush()) {
             var xSize = stack.mallocInt(1);
             var ySize = stack.mallocInt(1);
+            // Raises GLFW_FEATURE_UNAVAILABLE on Wayland
             glfwGetWindowPos(windowID, xSize, ySize);
             return new Vec2(xSize.get(0), ySize.get(0));
         }
