@@ -191,7 +191,9 @@ final class GLWindow implements Window {
 
         // This is necessary for when the windowed size is equal to the screen resolution
         glfwRestoreWindow(windowID);
-        glfwSetWindowPos(windowID, (int) lastPos.x, (int) lastPos.y);
+        if (platform != GLFW_PLATFORM_WAYLAND) {
+            glfwSetWindowPos(windowID, (int) lastPos.x, (int) lastPos.y);
+        }
         glfwSetWindowSize(windowID, (int) lastSize.x, (int) lastSize.y);
     }
 

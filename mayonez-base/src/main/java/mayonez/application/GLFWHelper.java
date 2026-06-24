@@ -33,10 +33,14 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 @UsesEngine(EngineType.GL)
 final class GLFWHelper {
 
+    // Map GLFW constant values to field names
     private static final Map<Integer, String> ERROR_CODES = apiClassTokens(
             (field, value) -> 0x10000 < value && value < 0x20000, null, GLFW.class
     );
-    private static int platform = GLFW_ANY_PLATFORM;
+    private static final Map<Integer, String> PLATFORMS = apiClassTokens(
+            (field, value) -> 0x60000 < value && value < 0x70000, null, GLFW.class
+    );
+    static int platform = GLFW_ANY_PLATFORM;
 
 
     private GLFWHelper() {
@@ -54,6 +58,8 @@ final class GLFWHelper {
             throw new WindowInitException("Unable to initialize GLFW");
         }
         Logger.debug("Initialized the GLFW library");
+        platform = glfwGetPlatform();
+        Logger.debug("Detecting platform " + PLATFORMS.get(platform));
     }
 
     // From GLFWErrorCallback.createPrint
@@ -190,6 +196,9 @@ final class GLFWHelper {
      * @param windowID the GLFW window pointer
      */
     static void centerWindowPosition(long windowID) {
+        // GLFW_FEATURE_UNAVAILABLE on Wayland
+        if (platform == GLFW_PLATFORM_WAYLAND) return;
+
         try (var stack = stackPush()) {
             var xPos = stack.mallocInt(1);
             var yPos = stack.mallocInt(1);
@@ -201,7 +210,6 @@ final class GLFWHelper {
             var windowSize = getWindowSize(windowID);
             var xCenterPos = xPos.get(0) + (width.get(0) - (int) windowSize.x) / 2;
             var yCenterPos = yPos.get(0) + (height.get(0) - (int) windowSize.y) / 2;
-            // Raises GLFW_FEATURE_UNAVAILABLE on Wayland
             glfwSetWindowPos(windowID, xCenterPos, yCenterPos);
         }
     }
@@ -214,12 +222,14 @@ final class GLFWHelper {
      * @return the window size
      */
     static Vec2 getWindowPosition(long windowID) {
+        // GLFW_FEATURE_UNAVAILABLE on Wayland
+        if (platform == GLFW_PLATFORM_WAYLAND) return new Vec2(0, 0);
+
         try (var stack = stackPush()) {
-            var xSize = stack.mallocInt(1);
-            var ySize = stack.mallocInt(1);
-            // Raises GLFW_FEATURE_UNAVAILABLE on Wayland
-            glfwGetWindowPos(windowID, xSize, ySize);
-            return new Vec2(xSize.get(0), ySize.get(0));
+            var xPos = stack.mallocInt(1);
+            var yPos = stack.mallocInt(1);
+            glfwGetWindowPos(windowID, xPos, yPos);
+            return new Vec2(xPos.get(0), yPos.get(0));
         }
     }
 
