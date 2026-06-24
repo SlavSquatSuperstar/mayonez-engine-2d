@@ -73,7 +73,6 @@ final class GLWindow implements Window {
 
         // Set resize callback
         glfwSetFramebufferSizeCallback(windowID, this::onFrameBufferResized); // Pixels (larger on macOS)
-        glfwSetWindowSizeCallback(windowID, this::onWindowResized); // Screen units
 
         Logger.debug("Created the GLFW window");
         Logger.debug("Starting in %s mode", windowConfig.fullScreen() ? "full screen" : "windowed");
@@ -140,15 +139,20 @@ final class GLWindow implements Window {
 
     // Full Screen Methods
 
-    private void onWindowResized(long windowID, int width, int height) {
-        this.width = width;
-        this.height = height;
-        WindowEvents.WINDOW_EVENTS.broadcast(new WindowResizeEvent(width, height));
-    }
-
     private void onFrameBufferResized(long windowID, int width, int height) {
         // Resize the viewport on Windows and Linux
         glViewport(0, 0, width, height);
+
+        /*
+         * Detecting framebuffer resizes is more reliable than detecting window resizes
+         * Sometimes framebuffer size may change while window size stays the same
+         * May happen if toggling fullscreen or changing monitor DPI
+         * Convert from framebuffer pixels to window screen units
+         */
+        var scale = GLFWHelper.getWindowContentScale(windowID);
+        this.width = width / (int) scale.x;
+        this.height = height / (int) scale.y;
+        WindowEvents.WINDOW_EVENTS.broadcast(new WindowResizeEvent(this.width, this.height));
     }
 
     @Override
