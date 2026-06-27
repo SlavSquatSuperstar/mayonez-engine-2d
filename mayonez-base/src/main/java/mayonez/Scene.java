@@ -110,21 +110,30 @@ public abstract class Scene {
     // Update Methods
 
     /**
-     * Moves everything in the scene forward in time by a small increment, including physics, scripts, and UI.
+     * Processes physics and updates all objects on a fixed tick.
+     *
+     * @param dt seconds between fixed ticks
+     */
+    final void fixedUpdate(float dt) {
+        if (isRunning()) {
+            physics.step(dt);
+            objects.forEach(obj -> obj.fixedUpdate(dt));
+        }
+    }
+
+    /**
+     * Updates all objects on a render frame.
      *
      * @param dt seconds since the last frame
      */
     final void update(float dt) {
         if (!isStopped()) {
-            onUserUpdate(dt); // Move input to window
+            onUserUpdate(dt); // TODO move input to window
         }
-        // Update all objects
-        // TODO physics update, late update
         if (isRunning()) {
-            physics.step(dt);
             objects.forEach(obj -> {
                 obj.update(dt);
-                if (obj.isDestroyed()) removeObject(obj);
+                if (obj.isDestroyed()) removeObject(obj); // Check for removals
             });
         }
         objects.processBuffer();

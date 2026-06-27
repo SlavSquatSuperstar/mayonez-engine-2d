@@ -109,7 +109,18 @@ public class GameObject {
     }
 
     /**
-     * Updates all enabled components.
+     * Updates all enabled components on a fixed tick.
+     *
+     * @param dt seconds between fixed ticks
+     */
+    final void fixedUpdate(float dt) {
+        components.stream()
+                .filter(Component::isEnabled)
+                .forEach(c -> c.fixedUpdate(dt));
+    }
+
+    /**
+     * Updates all enabled components on a render frame.
      *
      * @param dt seconds since the last frame
      */

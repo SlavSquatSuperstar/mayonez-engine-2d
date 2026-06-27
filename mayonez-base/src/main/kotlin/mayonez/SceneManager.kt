@@ -37,6 +37,13 @@ object SceneManager {
     lateinit var currentScene: Scene
 
     // Game Loop Methods
+
+    @JvmStatic
+    @JvmName("fixedUpdateScene")
+    internal fun fixedUpdateScene(dt: Float) {
+        currentScene.fixedUpdate(dt)
+    }
+
     @JvmStatic
     @JvmName("updateScene")
     internal fun updateScene(dt: Float) {

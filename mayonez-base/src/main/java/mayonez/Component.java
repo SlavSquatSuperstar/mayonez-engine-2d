@@ -13,7 +13,7 @@ import java.util.*;
  * Usage: Create a component by instantiating a subclass of {@link mayonez.Component}.
  * Any component fields through the constructor should be initialized through the
  * {@link #start} method, which allows them to be restored when the scene is reloaded.
- * Update component fields in {@link #update} or draw debug information in {@link #debugRender}.
+ * Update component fields in {@link #fixedUpdate} or {@link #update}.
  * <p>
  * The component's parent scene can be accessed through the {@link #getScene()} method,
  * and its {@link mayonez.GameObject} and transform can be accessed through the
@@ -90,8 +90,23 @@ public abstract class Component {
     }
 
     /**
-     * Refresh the component's state and game logic. The update method is called each
-     * frame.
+     * Refresh the component's state and game logic. This method is called each fixed
+     * tick, before {@link #update} and rendering, and {@code dt} is generally consistent.
+     * The {@code fixedUpdate} method should be used for time-sensitive behavior, such as
+     * movement, collision, and AI.
+     * <p>
+     * Usage: Subclasses may override this method and can also call {@code super.fixedUpdate()}.
+     *
+     * @param dt seconds between fixed ticks
+     */
+    protected void fixedUpdate(float dt) {
+    }
+
+    /**
+     * Refresh the component's state and game logic. This method is called each drawn
+     * frame, between {@link #fixedUpdate} and rendering, and {@code dt} may vary. The
+     * {@code update} method may be used for general behavior, such as input, timers,
+     * and animations.
      * <p>
      * Usage: Subclasses may override this method and can also call {@code super.update()}.
      *
@@ -122,7 +137,7 @@ public abstract class Component {
         setEnabled(false);
         onDestroy();
         gameObject = null;
-        transform = new Transform();;
+        transform = new Transform();
     }
 
     /**

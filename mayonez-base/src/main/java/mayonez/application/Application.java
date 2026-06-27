@@ -60,7 +60,6 @@ public class Application {
     // TODO call render/update and fixed update separately
     // TODO limit max physics updates per frame (replace frameskip)
     // TODO interpolate between physics frames
-    // TODO class for elapsed timers and last/curr times
     private void run() {
         // Frame time variables
         var lastTime = window.getCurrentTimeSecs(); // Last update time
@@ -75,7 +74,7 @@ public class Application {
         averageFPS = 0;
 
         while (running && window.notClosedByUser()) {
-            // Update game
+            // Update game at constant rate
             var currentTime = window.getCurrentTimeSecs();
             var frameElapsedTime = currentTime - lastTime; // Time since last update
             unprocessedTime += frameElapsedTime;
@@ -85,7 +84,7 @@ public class Application {
 
             while (fixedUnprocessedTime > fixedDt) { // Always update with fixed delta-t
                 window.beginFrame();
-                SceneManager.updateScene(fixedDt); // TODO should be fixed update
+                SceneManager.fixedUpdateScene(fixedDt); // TODO should be fixed update
                 window.endFrame();
                 fixedTickCount += 1;
 
@@ -98,6 +97,7 @@ public class Application {
             // TODO do frame skip here
             if (unprocessedTime >= renderDt) {
                 currentDt = unprocessedTime;
+                SceneManager.updateScene(currentDt);
                 window.render();
                 frameCount += 1;
                 unprocessedTime = 0;
@@ -179,10 +179,10 @@ public class Application {
 
     // Helper Class
 
-    private static class LoopTimer {
-        float value = 0f; // Current value
-        float limit = 0f; // Max value
-        int count = 0; // How many times reached max
-    }
+//    private static class LoopTimer {
+//        float value = 0f; // Current value
+//        float limit = 0f; // Max value
+//        int count = 0; // How many times reached max
+//    }
 
 }
