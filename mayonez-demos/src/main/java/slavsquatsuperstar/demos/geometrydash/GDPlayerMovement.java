@@ -21,7 +21,7 @@ class GDPlayerMovement extends MovementScript {
     }
 
     @Override
-    protected void update(float dt) {
+    protected void fixedUpdate(float dt) {
         moveObject(getUserInput(), dt);
     }
 

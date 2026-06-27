@@ -56,7 +56,7 @@ public class ClickToMove extends Script {
     // TODO will break with KeepInScene
     // TODO will break if has velocity
     @Override
-    protected void update(float dt) {
+    protected void fixedUpdate(float dt) {
         if (MouseInput.buttonPressed(button)) {
             updateLastPosition(); // Save old destination
             setDestination(MouseInput.getPosition()); // Set new destination and calculate displacement

@@ -42,7 +42,7 @@ public class PlayerKeyMovement extends SpaceshipMovement {
     }
 
     @Override
-    protected void update(float dt) {
+    protected void fixedUpdate(float dt) {
         // Toggle auto-brake
         if (KeyInput.keyPressed(SpaceGameConfig.getAutoBrakeKey())) {
             autoBrake = !autoBrake;

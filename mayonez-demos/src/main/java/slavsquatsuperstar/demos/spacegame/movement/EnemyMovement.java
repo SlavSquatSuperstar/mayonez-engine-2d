@@ -26,7 +26,7 @@ public class EnemyMovement extends SpaceshipMovement {
     }
 
     @Override
-    protected void update(float dt) {
+    protected void fixedUpdate(float dt) {
         // Update thruster states
         moveState = getNextThrusterState(moveState, rb.getSpeed(), MOVE_PARAMETERS);
         turnState = getNextThrusterState(turnState, rb.getAngSpeed(), TURN_PARAMETERS);

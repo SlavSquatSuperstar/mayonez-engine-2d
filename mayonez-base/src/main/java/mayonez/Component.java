@@ -91,8 +91,8 @@ public abstract class Component {
 
     /**
      * Refresh the component's state and game logic. This method is called each fixed
-     * tick, before {@link #update} and rendering, and {@code dt} is generally consistent.
-     * The {@code fixedUpdate} method should be used for time-sensitive behavior, such as
+     * tick, between physics and  {@link #update}, and {@code dt} is generally consistent.
+     * The {@code fixedUpdate} method should be used for frame rate-sensitive behavior, such as
      * movement, collision, and AI.
      * <p>
      * Usage: Subclasses may override this method and can also call {@code super.fixedUpdate()}.

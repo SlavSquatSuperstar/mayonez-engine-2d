@@ -28,7 +28,7 @@ class ParticleFollowTarget extends Script {
 
     @Override
     protected void update(float dt) {
-        // Destroy of target destroyed
+        // Destroy if target destroyed
         if (target.isDestroyed()) {
             gameObject.destroy();
             return;

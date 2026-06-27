@@ -47,7 +47,7 @@ class MarioController extends Script {
     }
 
     @Override
-    protected void update(float dt) {
+    protected void fixedUpdate(float dt) {
         // Move
         var xInput = KeyInput.getAxis("horizontal");
         transform.move(new Vec2(xInput * MOVE_SPEED * dt, 0));

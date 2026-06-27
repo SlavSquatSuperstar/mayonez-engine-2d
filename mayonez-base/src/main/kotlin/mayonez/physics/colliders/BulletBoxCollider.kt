@@ -25,7 +25,7 @@ class BulletBoxCollider(size: Vec2) : BoxCollider(size) {
         rb = physicsBody
     }
 
-    protected override fun update(dt: Float) {
+    protected override fun fixedUpdate(dt: Float) {
         // Assume velocity direction is along object orientation
         // Assume no rotational velocity
         if (rb != null) {
