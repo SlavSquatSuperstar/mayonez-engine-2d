@@ -25,6 +25,7 @@ class ProjectileLauncher extends Script {
 
     @Override
     protected void update(float dt) {
+        // Adjust launch parameters
         var yInput = KeyInput.getAxis("vertical");
         speed += 5f * yInput * dt;
         if (speed < 0f) speed = 0f;
@@ -38,10 +39,8 @@ class ProjectileLauncher extends Script {
         if (KeyInput.keyPressed("space")) {
             launchProjectile();
         }
-    }
 
-    @Override
-    protected void debugRender() {
+        // Draw trajectory
         var velocity = new Vec2(speed, 0f).rotate(angle);
         var objPos = transform.getPosition();
 

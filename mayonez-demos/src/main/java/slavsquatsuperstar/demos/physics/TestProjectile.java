@@ -47,7 +47,7 @@ public class TestProjectile extends GameObject {
         if (DRAW_TRAILS) {
             addComponent(new Script() {
                 @Override
-                protected void debugRender() {
+                protected void update(float dt) {
                     // Add trail
                     getScene().addObject(new GameObject("Trail", transform.copy()) {
                         @Override

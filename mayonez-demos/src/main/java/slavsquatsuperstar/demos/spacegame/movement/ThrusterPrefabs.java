@@ -41,7 +41,7 @@ public final class ThrusterPrefabs {
                 addComponent(thruster);
                 addComponent(new Animator(EXHAUST_TEXTURES, 0.15f) {
                     @Override
-                    protected void debugRender() {
+                    protected void update(float dt) {
                         transform.set(parentXf);
                     }
                 });

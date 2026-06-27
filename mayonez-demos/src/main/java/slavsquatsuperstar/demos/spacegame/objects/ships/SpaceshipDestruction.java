@@ -45,15 +45,11 @@ public class SpaceshipDestruction extends TimerScript {
     @Override
     protected void update(float dt) {
         super.update(dt);
-        if (this.isReady()) gameObject.destroy();
-    }
-
-    @Override
-    protected void debugRender() {
         if (explosion != null) {
             // Have the explosion follow the ship until it is destroyed
             explosion.transform.setPosition(transform.getPosition());
         }
+        if (this.isReady()) gameObject.destroy();
     }
 
     /**

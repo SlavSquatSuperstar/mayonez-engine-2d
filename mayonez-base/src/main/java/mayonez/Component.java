@@ -118,7 +118,8 @@ public abstract class Component {
     /**
      * Draw debug information to the screen during this frame after all objects have
      * been updated. Any {@link mayonez.graphics.debug.DebugDraw} method calls should
-     * be made here for consistent visual results. Also serves as a "late update" method.
+     * be made here. This method is called even if the scene is paused or the component
+     * is not enabled.
      * <p>
      * Usage: Subclasses may override this method and can also call {@code super.debugRender()}.
      */
