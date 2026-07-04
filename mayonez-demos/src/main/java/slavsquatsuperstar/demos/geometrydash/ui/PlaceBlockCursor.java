@@ -25,12 +25,12 @@ public class PlaceBlockCursor extends GameObject {
     @Override
     protected void init() {
         cursorSprite = Sprites.createSprite(CURSOR_COLOR);
-        addComponent(cursorSprite.setEnabled(false));
+        addComponent(cursorSprite.setVisible(false));
     }
 
     public void setCursorTexture(Texture cursor) {
         cursorSprite.setTexture(cursor);
-        cursorSprite.setEnabled(cursor != null); // only show if not null
+        cursorSprite.setVisible(cursor != null); // only show if not null
     }
 
     public void setPosition(Vec2 position) {

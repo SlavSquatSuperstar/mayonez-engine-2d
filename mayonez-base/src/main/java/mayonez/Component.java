@@ -7,8 +7,9 @@ import java.util.*;
 
 /**
  * Defines traits and behaviors of a {@link mayonez.GameObject}. Each component can be
- * enabled or disabled through {@link mayonez.Component#setEnabled}. Generally, most
- * user-defined components will be a {@link mayonez.Script} subclass.
+ * enabled or disabled through {@link #setEnabled}. Any rendering behavior can be toggled
+ * through {@link #setVisible}. Generally, most user-defined components will be a
+ * {@link mayonez.Script} subclass.
  * <p>
  * Usage: Create a component by instantiating a subclass of {@link mayonez.Component}.
  * Any component fields through the constructor should be initialized through the
@@ -176,6 +177,7 @@ public abstract class Component {
         return (T) this;
     }
     // TODO fix UI usages
+    // TODO fix animator usages
 
     /**
      * Whether this component should be rendered. If the parent object is

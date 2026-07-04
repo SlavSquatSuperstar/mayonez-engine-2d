@@ -37,7 +37,7 @@ public class Animator extends Script {
     @Override
     protected void init() {
         sprite = Sprites.createSprite(textures[0]);
-        gameObject.addComponent(sprite.setEnabled(false));
+        gameObject.addComponent(sprite.setVisible(false));
     }
 
     @Override
@@ -74,7 +74,7 @@ public class Animator extends Script {
             currentFrame = frame;
             setSpriteTexture(currentFrame);
         } else {
-            setSpriteVisible(false);
+            setVisible(false);
         }
     }
 
@@ -107,33 +107,30 @@ public class Animator extends Script {
         sprite.setSpriteTransform(spriteXf);
     }
 
-    /**
-     * Sets the visibility of the animated sprite.
-     *
-     * @param visible if the sprite should be enabled
-     */
-    public void setSpriteVisible(boolean visible) {
-        if (sprite == null) return; // not initialized yet
-        sprite.setEnabled(visible);
+    @Override
+    public <T extends Component> T setVisible(boolean visible) {
+        // make sure sprite is initialized
+        if (sprite != null) sprite.setVisible(visible);
+        return super.setVisible(visible);
     }
 
     private void setSpriteTexture(int frame) {
         if (sprite == null) return; // not initialized yet
         sprite.setTexture(textures[frame]);
-        setSpriteVisible(true);
+        setVisible(true);
     }
 
     // Callback Methods
 
     @Override
     protected void onEnable() {
-        setSpriteVisible(true);
+        setVisible(true);
         setAnimationEnabled(true);
     }
 
     @Override
     protected void onDisable() {
-        setSpriteVisible(false);
+        setVisible(false);
         setAnimationEnabled(false);
     }
 

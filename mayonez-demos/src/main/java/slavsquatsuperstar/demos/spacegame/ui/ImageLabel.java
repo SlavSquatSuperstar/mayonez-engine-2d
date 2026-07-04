@@ -56,8 +56,8 @@ public class ImageLabel extends UIElement {
 
     @Override
     protected void start() {
-        if (backgroundTexture == null) backgroundSprite.setEnabled(false);
-        if (borderTexture == null) borderSprite.setEnabled(false);
+        if (backgroundTexture == null) backgroundSprite.setVisible(false);
+        if (borderTexture == null) borderSprite.setVisible(false);
     }
 
     // Set Texture Methods
@@ -81,7 +81,7 @@ public class ImageLabel extends UIElement {
     public void setBackgroundTexture(Texture backgroundTexture) {
         this.backgroundTexture = backgroundTexture;
         backgroundSprite.setTexture(backgroundTexture);
-        backgroundSprite.setEnabled(backgroundTexture != null);
+        backgroundSprite.setVisible(backgroundTexture != null);
     }
 
     /**
@@ -93,7 +93,7 @@ public class ImageLabel extends UIElement {
     public void setBorderTexture(Texture borderTexture) {
         this.borderTexture = borderTexture;
         borderSprite.setTexture(borderTexture);
-        borderSprite.setEnabled(borderTexture != null);
+        borderSprite.setVisible(borderTexture != null);
     }
 
 

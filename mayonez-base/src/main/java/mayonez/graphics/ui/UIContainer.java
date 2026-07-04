@@ -1,5 +1,7 @@
 package mayonez.graphics.ui;
 
+import mayonez.Component;
+
 import java.util.*;
 
 /**
@@ -25,6 +27,12 @@ public abstract class UIContainer extends UIElement {
     protected void start() {
         started = true;
         arrangeElements();
+    }
+
+    @Override
+    public <T extends Component> T setVisible(boolean visible) {
+        elements.forEach(e -> e.setEnabled(visible));
+        return super.setVisible(visible);
     }
 
     @Override

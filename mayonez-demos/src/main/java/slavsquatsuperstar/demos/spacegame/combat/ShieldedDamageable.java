@@ -41,7 +41,7 @@ public class ShieldedDamageable extends Damageable {
                 .setSpriteTransform(Transform.scaleInstance(new Vec2(1.1f)))
                 .setZIndex(gameObject.getZIndex() + 1);
         gameObject.addComponent(shieldEffect);
-        shieldEffect.setEnabled(false);
+        shieldEffect.setVisible(false);
     }
 
     @Override
@@ -65,7 +65,7 @@ public class ShieldedDamageable extends Damageable {
 
         // Wait to hide shield effect
         if (shieldFlashTimer.isReady()) {
-            shieldEffect.setEnabled(false);
+            shieldEffect.setVisible(false);
         } else {
             shieldFlashTimer.countDown(dt);
         }
@@ -93,7 +93,7 @@ public class ShieldedDamageable extends Damageable {
 
             // Flash shield
             shieldFlashTimer.reset();
-            shieldEffect.setEnabled(true);
+            shieldEffect.setVisible(true);
         }
     }
 

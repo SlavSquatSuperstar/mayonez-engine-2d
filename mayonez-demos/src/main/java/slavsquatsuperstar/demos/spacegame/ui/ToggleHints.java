@@ -35,7 +35,7 @@ public class ToggleHints extends Script {
     private void toggleHints(boolean hintsShown) {
         this.hintsShown = hintsShown;
         hintsTooltip.setMessage(hintsShown ? "Hide Hints (H)" : "Show Hints (H)");
-        for (var text : hintLabels) text.setEnabled(hintsShown);
+        for (var text : hintLabels) text.setVisible(hintsShown);
     }
 
 }

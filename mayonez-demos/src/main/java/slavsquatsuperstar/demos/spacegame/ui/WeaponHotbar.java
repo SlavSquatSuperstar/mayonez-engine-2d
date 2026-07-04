@@ -68,10 +68,10 @@ public class WeaponHotbar extends BoxContainer {
     public void setSelection(int index) {
         if (!MathUtils.inRange(index, 0, numSlots - 1)) {
             // Hide border if out of bounds
-            selectedBorder.setEnabled(false);
+            selectedBorder.setVisible(false);
         } else {
             // Move border to selected slot
-            selectedBorder.setEnabled(true);
+            selectedBorder.setVisible(true);
             selectedBorder.setPosition(getElement(index).getPosition());
         }
     }
