@@ -117,9 +117,16 @@ public abstract class Scene {
     final void fixedUpdate(float dt) {
         if (isRunning()) {
             physics.step(dt);
-            objects.forEach(obj -> obj.fixedUpdate(dt));
+            objects.forEach(obj -> {
+                if (obj.isEnabled()) obj.fixedUpdate(dt);
+            });
         }
     }
+
+    // Input and UI need to run when paused
+    // TODO process mode: enable/disable
+    // Rendering needs to continue when paused
+    // TODO have batch draw last data
 
     /**
      * Updates all objects on a render frame.
@@ -132,8 +139,10 @@ public abstract class Scene {
         }
         if (isRunning()) {
             objects.forEach(obj -> {
-                obj.update(dt);
-                if (obj.isDestroyed()) removeObject(obj); // Check for removals
+                if (obj.isEnabled()) {
+                    obj.update(dt);
+                    if (obj.isDestroyed()) removeObject(obj); // Check for removals
+                }
             });
         }
         objects.processBuffer();

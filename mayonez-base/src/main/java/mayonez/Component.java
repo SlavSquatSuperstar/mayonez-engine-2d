@@ -151,16 +151,19 @@ public abstract class Component {
     }
 
     /**
-     * Whether this component should be updated.
+     * Whether this component should be updated. If the parent object is
+     * disabled, then this component will not be updated.
      *
      * @return if this component is enabled and not destroyed
      */
     public final boolean isEnabled() {
-        return enabled && gameObject != null;
+        return enabled && gameObject != null && gameObject.isEnabled();
+        // TODO only check object if non null
     }
 
     /**
-     * Enable or disable whether this component should be updated.
+     * Enable or disable whether this component should be updated. Will not
+     * affect whether the parent object is enabled.
      *
      * @param enabled if the component is enabled
      * @param <T>     the component subclass type

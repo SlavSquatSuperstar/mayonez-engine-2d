@@ -24,7 +24,7 @@ import java.util.stream.*;
  *
  * @author SlavSquatSuperstar
  */
-// TODO enable/disable object
+// TODO remove component
 public class GameObject {
 
     private static long objectCounter = 0L; // total number of game objects created across all scenes
@@ -34,6 +34,7 @@ public class GameObject {
     private final String name;
     public final Transform transform; // transform in world
     private @Nullable Scene scene;
+    private boolean enabled;
     private boolean destroyed;
     private int zIndex; // controls 3D "layering" of objects
     private @Nullable SceneLayer layer;
@@ -90,6 +91,7 @@ public class GameObject {
         this.zIndex = zIndex;
         this.layer = null;
 
+        enabled = true;
         destroyed = false;
         components = new ArrayList<>();
     }
@@ -273,6 +275,24 @@ public class GameObject {
      */
     public void destroy() {
         destroyed = true;
+    }
+
+    /**
+     * Whether this object and all its components should be updated.
+     *
+     * @return if this object is enabled
+     */
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    /**
+     * Enable or disable whether this object and all its components should be updated.
+     *
+     * @param enabled if the object is enabled
+     */
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     /**

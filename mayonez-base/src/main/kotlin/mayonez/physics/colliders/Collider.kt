@@ -117,6 +117,7 @@ abstract class Collider(private val shape: Shape) :
     private fun GameObject.canInteract(other: GameObject): Boolean {
         return this.layer == null || this.layer!!.canInteract(other.layer)
     }
+    // TODO move layer to physics
 
     // Collision Event Methods
 
