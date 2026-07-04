@@ -34,8 +34,7 @@ public class GameObject {
     private final String name;
     public final Transform transform; // transform in world
     private @Nullable Scene scene;
-    private boolean enabled;
-    private boolean destroyed;
+    private boolean destroyed, enabled, visible;
     private int zIndex; // controls 3D "layering" of objects
     private @Nullable SceneLayer layer;
 
@@ -91,8 +90,9 @@ public class GameObject {
         this.zIndex = zIndex;
         this.layer = null;
 
-        enabled = true;
         destroyed = false;
+        enabled = true;
+        visible = true;
         components = new ArrayList<>();
     }
 
@@ -137,7 +137,7 @@ public class GameObject {
      */
     final void debugRender() {
         components.stream()
-                .filter(Component::isEnabled)
+                .filter(Component::isVisible)
                 .forEach(Component::debugRender);
     }
 
@@ -293,6 +293,24 @@ public class GameObject {
      */
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    /**
+     * Whether this object and all its components should be rendered.
+     *
+     * @return if this object is visible
+     */
+    public boolean isVisible() {
+        return visible;
+    }
+
+    /**
+     * Enable or disable whether this object and all its components should be rendered.
+     *
+     * @param visible if the object is visible
+     */
+    public void setVisible(boolean visible) {
+        this.visible = visible;
     }
 
     /**

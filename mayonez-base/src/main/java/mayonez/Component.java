@@ -42,7 +42,7 @@ public abstract class Component {
      */
     protected Transform transform; // use blank transform in case no parent
 
-    private boolean enabled; // whether this component is being updated
+    private boolean enabled, visible;
 
     // TODO make changeable
     private final UpdateOrder updateOrder;
@@ -55,6 +55,7 @@ public abstract class Component {
         componentID = componentCounter++;
         transform = new Transform();
         enabled = true;
+        visible = true;
         this.updateOrder = Objects.requireNonNullElse(updateOrder, UpdateOrder.SCRIPT);
     }
 
@@ -172,6 +173,33 @@ public abstract class Component {
     @SuppressWarnings("unchecked")
     public <T extends Component> T setEnabled(boolean enabled) {
         this.enabled = enabled;
+        return (T) this;
+    }
+    // TODO fix UI usages
+
+    /**
+     * Whether this component should be rendered. If the parent object is
+     * visible, then this component will not be rendered.
+     *
+     * @return if this component is visible
+     */
+    public final boolean isVisible() {
+        // Check parent visible if parent exists
+        return this.visible &&
+                (gameObject == null || gameObject.isVisible());
+    }
+
+    /**
+     * Enable or disable whether this component should be rendered. Will not
+     * affect whether the parent object is visible.
+     *
+     * @param visible if the component is visible
+     * @param <T>     the component subclass type
+     * @return this component
+     */
+    @SuppressWarnings("unchecked")
+    public <T extends Component> T setVisible(boolean visible) {
+        this.visible = visible;
         return (T) this;
     }
 

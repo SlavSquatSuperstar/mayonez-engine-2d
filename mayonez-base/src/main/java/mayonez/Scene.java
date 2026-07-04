@@ -167,7 +167,9 @@ public abstract class Scene {
     final void render(@Nullable Graphics2D g2) {
         if (!isStopped()) {
             onUserRender();
-            objects.forEach(GameObject::debugRender);
+            objects.forEach(obj -> {
+                if (obj.isVisible()) obj.debugRender();
+            });
             renderLayer.render(g2);
         }
     }
