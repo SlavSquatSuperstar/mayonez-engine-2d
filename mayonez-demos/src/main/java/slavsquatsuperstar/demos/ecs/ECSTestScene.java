@@ -24,7 +24,10 @@ public class ECSTestScene extends DemoScene {
     private TextLabel objCount, compCount;
     private List<GameObject> testObjects;
     private List<Component> testComponents;
-    private boolean refresh = true;
+
+    // Make sure only one addition/removal per press
+    private boolean removedObject;
+    private boolean addedComponent, removedComponent;
 
     public ECSTestScene(String name) {
         super(name);
@@ -35,7 +38,11 @@ public class ECSTestScene extends DemoScene {
         testObjects = new ArrayList<>();
         testComponents = new ArrayList<>();
 
-        addObject(new GameObject("Display") {
+        removedObject = false;
+        addedComponent = false;
+        removedComponent = false;
+
+        addObject(new GameObject("Manager") {
             @Override
             protected void init() {
                 var fontSize = 20;
@@ -49,70 +56,32 @@ public class ECSTestScene extends DemoScene {
                 addComponent(compCount);
                 addComponent(new Script() {
                     @Override
-                    protected void debugRender() {
-                        if (refresh) {
-                            var numComponents = getObjects().stream()
-                                    .map(GameObject::numComponents)
-                                    .reduce(0, Integer::sum);
-                            objCount.setMessage("GameObjects: " + numObjects());
-                            compCount.setMessage("Components: " + numComponents);
-                            refresh = false;
-                        }
-                    }
-                });
-            }
-        });
-
-        addObject(new GameObject("Spawner") {
-            @Override
-            protected void init() {
-                addComponent(new Script() {
-                    @Override
-                    protected void start() {
-                        refresh = true;
-                    }
-
-                    @Override
                     protected void update(float dt) {
                         if (KeyInput.keyPressed("=")) {
                             // Add object with components
                             testObjects.addLast(new TestObject());
                             getScene().addObject(testObjects.getLast());
-                            refresh = true;
                         }
-                        if (KeyInput.keyPressed("-")) {
-                            // Remove object and components
-                            if (!testObjects.isEmpty()) {
-                                var obj = testObjects.removeFirst();
-                                obj.getComponents().forEach(testComponents::remove);
-                                obj.destroy();
-                                Logger.log("Removed %s with %d components", obj, obj.numComponents());
-                                refresh = true;
-                            }
-                        }
+                    }
 
-                        if (KeyInput.keyPressed("]")) {
-                            // Add component to object
-                            if (!testObjects.isEmpty()) {
-                                var comp = new TestComponent();
-                                var obj = testObjects.getLast();
-                                testComponents.addLast(comp);
-                                obj.addComponent(comp);
-                                Logger.log("Added component %s to %s", comp, obj);
+                    @Override
+                    protected void debugRender() {
+                        var numComponents = getObjects().stream()
+                                .map(GameObject::numComponents)
+                                .reduce(0, Integer::sum);
+                        objCount.setMessage("GameObjects: " + numObjects());
+                        compCount.setMessage("Components: " + numComponents);
 
-                            }
-                            refresh = true;
-                        }
-                        if (KeyInput.keyPressed("[")) {
-                            // Remove component from object
-                            if (!testComponents.isEmpty()) {
-                                var comp = testComponents.removeFirst();
-                                var obj = comp.getGameObject();
-                                obj.removeComponent(comp);
-                                Logger.log("Removed %s from %s", comp, obj);
-                                refresh = true;
-                            }
-                        }
+                        // Clean up empty objects
+                        getObjects().stream()
+                                .filter(obj -> obj.numComponents() == 0)
+                                .forEach(obj -> {
+                                    obj.destroy();
+                                    testObjects.remove(obj);
+                                });
+                        removedObject = false;
+                        addedComponent = false;
+                        removedComponent = false;
                     }
                 });
             }
@@ -128,7 +97,7 @@ public class ECSTestScene extends DemoScene {
 
         @Override
         protected void init() {
-            var numComponents = Random.randomInt(1, 5);
+            var numComponents = Random.randomInt(1, 3);
             for (int i = 0; i < numComponents; i++) {
                 testComponents.addLast(new TestComponent());
                 addComponent(testComponents.getLast());
@@ -137,7 +106,57 @@ public class ECSTestScene extends DemoScene {
         }
     }
 
-    private static class TestComponent extends Component {
+    private class TestComponent extends Component {
+        private static int componentCount = 0;
+        private final int componentId;
+
+        public TestComponent() {
+            this.componentId = componentCount++;
+        }
+
+        // Test calling add/remove object within child component
+        @Override
+        protected void update(float dt) {
+            if (KeyInput.keyPressed("-")) {
+                // Remove object and components
+                if (!removedObject && gameObject.equals(testObjects.getFirst())) {
+                    testObjects.removeFirst();
+                    gameObject.getComponents().forEach(testComponents::remove);
+                    gameObject.destroy();
+                    Logger.log("Removed %s with %d components", gameObject, gameObject.numComponents());
+                    removedObject = true;
+                }
+            }
+
+            if (KeyInput.keyPressed("]")) {
+                // Add component to object
+                if (gameObject.equals(testObjects.getFirst()) && !addedComponent) {
+                    var comp = new TestComponent();
+                    testComponents.addLast(comp);
+                    gameObject.addComponent(comp);
+                    Logger.log("Added %s to %s", comp, gameObject);
+                    addedComponent = true;
+                }
+            }
+            if (KeyInput.keyPressed("[")) {
+                // Remove component from object
+                if (this.equals(testComponents.getFirst()) && !removedComponent) {
+                    testComponents.removeFirst();
+                    gameObject.removeComponent(this);
+                    removedComponent = true;
+                }
+            }
+        }
+
+        @Override
+        protected void onDestroy() {
+            Logger.log("Removed %s from %s", this, gameObject);
+        }
+
+        @Override
+        public String toString() {
+            return "Test Component [%d]".formatted(componentId);
+        }
     }
 
 }
