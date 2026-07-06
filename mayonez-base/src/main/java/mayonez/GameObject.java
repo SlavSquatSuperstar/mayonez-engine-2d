@@ -17,14 +17,13 @@ import java.util.stream.*;
  * Usage: Create a game object by instantiating a subclass or anonymous instance of
  * {@link mayonez.GameObject}. Add components to the object by calling {@link #addComponent}
  * inside the {@link #init} method. The object's transform can be referenced through the field
- * {@link #transform}. To remove the object from the scene, call {@link #destroy} from any
- * of its components.
+ * {@link #transform}. To remove the object from the scene, call {@link GameObject#destroy}.
+ * To remove a component from the object, call {@link GameObject#removeComponent}.
  * <p>
  * See {@link mayonez.Component} and {@link mayonez.Scene} for more information.
  *
  * @author SlavSquatSuperstar
  */
-// TODO remove component
 public class GameObject {
 
     private static long objectCounter = 0L; // total number of game objects created across all scenes
@@ -40,6 +39,7 @@ public class GameObject {
 
     // Component Fields
     private final List<Component> components;
+    private final Queue<Runnable> componentCallbacks;
 
     /**
      * Creates an empty game object with a name and default transform. If the name
@@ -94,6 +94,7 @@ public class GameObject {
         enabled = true;
         visible = true;
         components = new ArrayList<>();
+        componentCallbacks = new ArrayDeque<>();
     }
 
     // Game Loop Methods
@@ -105,6 +106,9 @@ public class GameObject {
     final void start() {
         // Add all components
         init();
+        while (!componentCallbacks.isEmpty()) {
+            componentCallbacks.poll().run();
+        }
         // Start all components
         components.sort(Comparator.comparingInt(Component::getUpdateOrder));
         components.forEach(Component::start);
@@ -130,6 +134,10 @@ public class GameObject {
         components.stream()
                 .filter(Component::isEnabled)
                 .forEach(c -> c.update(dt));
+        // Add or remove components
+        while (!componentCallbacks.isEmpty()) {
+            componentCallbacks.poll().run();
+        }
     }
 
     /**
@@ -160,33 +168,34 @@ public class GameObject {
     /**
      * Adds a component to this game object if the component is not null.
      * The component will not be added if it already has a parent object.
-     * <p>
-     * Warning: Calling {@code addComponent()} while a scene is running is not
-     * supported and should be avoided!
      *
-     * @param comp the {@link mayonez.Component} instance
+     * @param comp the component
      */
     public final void addComponent(@Nullable Component comp) {
         if (comp == null || comp.getGameObject() != null) return;
         comp.setGameObject(this);
-        components.add(comp);
+        if (scene != null && scene.isRunning()) {
+            componentCallbacks.add(() -> components.add(comp)); // Add component later if scene running
+        } else {
+            components.add(comp); // Add component now
+        }
     }
 
-//    /**
-//     * Removes the component of the specified class from this game object.
-//     *
-//     * @param cls the component class
-//     * @param <T> a subclass of {@link mayonez.Component}
-//     */
-//    public <T extends Component> void removeComponent(Class<T> cls) {
-//        for (var comp : components) {
-//            if (cls.isInstance(comp)) {
-//                comp.destroy();
-//                components.remove(comp); // will cause concurrent exception
-//                return;
-//            }
-//        }
-//    }
+    /**
+     * Removes and destroys a component from this game object if the component is not null.
+     * The component will only be removed if its parent is this object.
+     *
+     * @param comp the component
+     */
+    public final void removeComponent(@Nullable Component comp) {
+        if (comp == null || comp.getGameObject() != this) return;
+        comp.destroy();
+        if (scene != null && scene.isRunning()) {
+            componentCallbacks.add(() -> components.remove(comp)); // Remove component later if scene running
+        } else {
+            components.remove(comp); // Remove component now
+        }
+    }
 
     /**
      * Counts how many components this object has.

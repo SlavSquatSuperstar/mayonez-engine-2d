@@ -75,15 +75,16 @@ public class ECSTestScene extends DemoScene {
                     @Override
                     protected void update(float dt) {
                         if (KeyInput.keyPressed("=")) {
-                            // Add object
+                            // Add object with components
                             testObjects.addLast(new TestObject());
                             getScene().addObject(testObjects.getLast());
                             refresh = true;
                         }
                         if (KeyInput.keyPressed("-")) {
-                            // Remove object
+                            // Remove object and components
                             if (!testObjects.isEmpty()) {
                                 var obj = testObjects.removeFirst();
+                                obj.getComponents().forEach(testComponents::remove);
                                 obj.destroy();
                                 Logger.log("Removed %s with %d components", obj, obj.numComponents());
                                 refresh = true;
@@ -91,7 +92,7 @@ public class ECSTestScene extends DemoScene {
                         }
 
                         if (KeyInput.keyPressed("]")) {
-                            // Add component
+                            // Add component to object
                             if (!testObjects.isEmpty()) {
                                 var comp = new TestComponent();
                                 var obj = testObjects.getLast();
@@ -103,7 +104,7 @@ public class ECSTestScene extends DemoScene {
                             refresh = true;
                         }
                         if (KeyInput.keyPressed("[")) {
-                            // Remove component
+                            // Remove component from object
                             if (!testComponents.isEmpty()) {
                                 var comp = testComponents.removeFirst();
                                 var obj = comp.getGameObject();
