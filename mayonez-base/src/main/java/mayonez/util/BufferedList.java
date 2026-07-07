@@ -5,32 +5,41 @@ import java.util.function.*;
 
 /**
  * An ordered, modifiable list that uses an add/remove queue to prevent
- * {@link java.util.ConcurrentModificationException}s. Useful if the list needs
- * to be modified and iterated through simultaneously.
+ * {@link java.util.ConcurrentModificationException}s if the list needs
+ * to be modified and iterated through simultaneously. Note that the
+ * default {@link java.util.List} methods are not overridden and the list
+ * is modified with the {@code add/removeUnbuffered} and
+ * {@code add/removeBuffered} methods. The {@link CallbackBuffer}
+ * itself is also protected and may be appended to in a callback.
  *
  * @param <E> the type of element contained by this list
  * @author SlavSquatSuperstar
  */
-public class BufferedList<E> {
+public class BufferedList<E> extends ArrayList<E> {
 
-    private final List<E> list;
-    private final Queue<Runnable> buffer;
+    private final CallbackBuffer callbacks;
 
     public BufferedList() {
-        list = new ArrayList<>();
-        buffer = new ArrayDeque<>();
+        super();
+        callbacks = new CallbackBuffer();
+    }
+
+    public BufferedList(int initialCapacity) {
+        super(initialCapacity);
+        callbacks = new CallbackBuffer(initialCapacity);
     }
 
     // Add/Remove Methods
 
     /**
-     * Add an element directly to the list later without putting it in the buffer.
-     * This action should only be performed is the list is not being iterated through.
+     * Add an element directly to the list now without putting it in the buffer
+     * (same as {@link List#add}). This action should only be performed if the
+     * list is not being iterated through.
      *
      * @param elem the element to add
      */
     public void addUnbuffered(E elem) {
-        list.add(elem);
+        add(elem);
     }
 
     /**
@@ -38,8 +47,8 @@ public class BufferedList<E> {
      *
      * @param elem the element to add
      */
-    public void add(E elem) {
-        buffer.offer(() -> list.add(elem));
+    public void addBuffered(E elem) {
+        callbacks.offer(() -> add(elem));
     }
 
     /**
@@ -47,23 +56,24 @@ public class BufferedList<E> {
      * additional instructions.
      *
      * @param elem    the element to remove
-     * @param doLater what to do after adding the element
+     * @param andThen what to do after adding the element
      */
-    public void add(E elem, Runnable doLater) {
-        buffer.offer(() -> {
-            list.add(elem);
-            doLater.run();
+    public void addBuffered(E elem, Runnable andThen) {
+        callbacks.offer(() -> {
+            add(elem);
+            andThen.run();
         });
     }
 
     /**
-     * Remove an element directly from the list later without putting it in the buffer.
-     * This action should only be performed is the list is not being iterated through.
+     * Remove an element directly from the list now without putting it in the buffer
+     * (same as {@link List#remove}). This action should only be performed if the
+     * list is not being iterated through.
      *
-     * @param elem the element to add
+     * @param elem the element to remove
      */
     public void removeUnbuffered(E elem) {
-        list.remove(elem);
+        remove(elem);
     }
 
     /**
@@ -71,8 +81,8 @@ public class BufferedList<E> {
      *
      * @param elem the element to remove
      */
-    public void remove(E elem) {
-        buffer.offer(() -> list.remove(elem));
+    public void removeBuffered(E elem) {
+        callbacks.offer(() -> remove(elem));
     }
 
     /**
@@ -80,12 +90,12 @@ public class BufferedList<E> {
      * additional instructions.
      *
      * @param elem    the element to remove
-     * @param doLater what to do after removing the element
+     * @param andThen what to do after removing the element
      */
-    public void remove(E elem, Runnable doLater) {
-        buffer.offer(() -> {
-            list.remove(elem);
-            doLater.run();
+    public void removeBuffered(E elem, Runnable andThen) {
+        callbacks.offer(() -> {
+            remove(elem);
+            andThen.run();
         });
     }
 
@@ -93,60 +103,16 @@ public class BufferedList<E> {
      * Add or remove all objects pending in the buffer until the buffer is empty.
      */
     public void processBuffer() {
-        while (!buffer.isEmpty()) {
-            buffer.poll().run();
-        }
+        callbacks.executeCallbacks();
     }
 
     /**
      * Remove all objects from the list and clear the buffer.
      */
+    @Override
     public void clear() {
-        list.clear();
-        buffer.clear();
-    }
-
-    // Collection Methods
-
-    /**
-     * Get an immutable list containing all the elements already in the list.
-     * Does not include elements in the buffer.
-     *
-     * @return the list copy
-     */
-    public List<E> copy() {
-        return List.copyOf(list);
-    }
-
-    /**
-     * Find an element already in the list matching the given search criteria.
-     * Does not search for elements in the buffer.
-     *
-     * @param predicate the search query
-     * @return the element, or null if not present
-     */
-    public E find(Predicate<? super E> predicate) {
-        return list.stream().filter(predicate).findFirst().orElse(null);
-    }
-
-    /**
-     * Perform an action for each element already in the list. Does not affect
-     * elements in the buffer.
-     *
-     * @param action the action to perform
-     */
-    public void forEach(Consumer<? super E> action) {
-        list.forEach(action);
-    }
-
-    /**
-     * Get the number of elements already in the list. Does not count elements
-     * in the buffer.
-     *
-     * @return the size
-     */
-    public int size() {
-        return list.size();
+        super.clear();
+        callbacks.clear();
     }
 
 }
