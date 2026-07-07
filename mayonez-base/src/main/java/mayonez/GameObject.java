@@ -1,6 +1,7 @@
 package mayonez;
 
 import mayonez.math.*;
+import mayonez.util.BufferedList;
 import mayonez.util.CallbackBuffer;
 import org.jspecify.annotations.Nullable;
 
@@ -39,8 +40,7 @@ public class GameObject {
     private @Nullable SceneLayer layer;
 
     // Component Fields
-    private final List<Component> components;
-    private final CallbackBuffer componentCallbacks;
+    private final BufferedList<Component> components;
 
     /**
      * Creates an empty game object with a name and default transform. If the name
@@ -94,8 +94,7 @@ public class GameObject {
         destroyed = false;
         enabled = true;
         visible = true;
-        components = new ArrayList<>();
-        componentCallbacks = new CallbackBuffer();
+        components = new BufferedList<>();
     }
 
     // Game Loop Methods
@@ -107,7 +106,7 @@ public class GameObject {
     final void start() {
         // Add all components
         init();
-        componentCallbacks.executeCallbacks();
+        components.processBuffer();
         // Start all components
         components.sort(Comparator.comparingInt(Component::getUpdateOrder));
         components.forEach(Component::start);
@@ -134,7 +133,7 @@ public class GameObject {
                 .filter(Component::isEnabled)
                 .forEach(c -> c.update(dt));
         // Add or remove components
-        componentCallbacks.executeCallbacks();
+        components.processBuffer();
     }
 
     /**
@@ -172,9 +171,9 @@ public class GameObject {
         if (comp == null || comp.getGameObject() != null) return;
         comp.setGameObject(this);
         if (scene != null && scene.isRunning()) {
-            componentCallbacks.add(() -> components.add(comp)); // Add component later if scene running
+            components.addBuffered(comp); // Add component later if scene running
         } else {
-            components.add(comp); // Add component now
+            components.addUnbuffered(comp); // Add component now
         }
     }
 
@@ -188,9 +187,9 @@ public class GameObject {
         if (comp == null || comp.getGameObject() != this) return;
         comp.destroy();
         if (scene != null && scene.isRunning()) {
-            componentCallbacks.add(() -> components.remove(comp)); // Remove component later if scene running
+            components.removeBuffered((comp)); // Remove component later if scene running
         } else {
-            components.remove(comp); // Remove component now
+            components.removeUnbuffered(comp); // Remove component now
         }
     }
 

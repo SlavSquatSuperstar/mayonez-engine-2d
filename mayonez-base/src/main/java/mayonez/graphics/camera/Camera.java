@@ -255,6 +255,7 @@ public abstract class Camera extends Component implements Viewport {
      * @param script the script
      */
     public final void addCameraScript(Script script) {
+        // Need to buffer because camera object is null during Scene.init
         cameraCallbacks.add(() -> getGameObject().addComponent(script));
     }
 
