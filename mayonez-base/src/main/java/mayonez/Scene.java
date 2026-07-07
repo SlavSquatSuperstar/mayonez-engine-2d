@@ -22,7 +22,8 @@ import java.util.List;
  * Usage: Create a scene by instantiating a subclass or anonymous instance of
  * {@link mayonez.Scene}. Add objects to the scene by calling {@link #addObject}
  * inside the {@link #init()} method. Scenes may also define custom game logic
- * and graphics inside {@link #onUserUpdate} and {@link #onUserRender}.
+ * and graphics inside {@link #onUserUpdate} and {@link #onUserRender}. To remove an
+ * object from the scene, call {@link GameObject#destroy()}.
  * <p>
  * See {@link mayonez.GameObject} and {@link mayonez.SceneManager} for more information.
  *
@@ -40,7 +41,9 @@ public abstract class Scene {
     private SceneState state; // if paused or running
 
     // Scene Objects
-    private final BufferedList<GameObject> objects;
+    private final List<GameObject> objects;
+    private final CallbackBuffer objectCallbacks;
+    // TODO add/remove, queue callbacks
     private final SceneLayer[] layers;
 
     // Renderers
@@ -62,7 +65,8 @@ public abstract class Scene {
         state = SceneState.STOPPED;
 
         // Initialize layers
-        objects = new BufferedList<>();
+        objects = new ArrayList<>();
+        objectCallbacks = new CallbackBuffer();
         layers = new SceneLayer[SceneLayer.NUM_LAYERS];
         renderLayer = RendererFactory.createRenderLayer(Mayonez.getUseGL());
         physics = new DefaultPhysicsWorld();
@@ -91,7 +95,9 @@ public abstract class Scene {
         // Start objects
         state = SceneState.RUNNING;
         objects.forEach(this::startObject);
-        objects.processBuffer();
+
+        // Add objects added through child init/start
+        objectCallbacks.executeCallbacks();
     }
 
     /**
@@ -145,7 +151,8 @@ public abstract class Scene {
                 }
             });
         }
-        objects.processBuffer();
+        // Add or remove objects
+        objectCallbacks.executeCallbacks();
         if (isDestroyed()) stop();
     }
 
@@ -217,14 +224,14 @@ public abstract class Scene {
     public final void addObject(@Nullable GameObject obj) {
         if (obj == null || obj.getScene() != null) return;
         if (isStopped()) { // Static add: when not loaded
-            objects.addUnbuffered(obj);
             addObjectToScene(obj);
         } else { // Dynamic add: when loaded (running or paused)
-            objects.add(obj, () -> this.addObjectToScene(obj));
+            objectCallbacks.add(() -> this.addObjectToScene(obj));
         }
     }
 
     private void addObjectToScene(GameObject obj) {
+        objects.add(obj);
         obj.setScene(this);
         if (!isStopped()) startObject(obj);
         Logger.trace("Added object \"%s\" to scene \"%s\"",
@@ -247,10 +254,11 @@ public abstract class Scene {
      */
     final void removeObject(@Nullable GameObject obj) {
         if (obj == null) return;
-        objects.remove(obj, () -> this.removeObjectFromScene(obj));
+        objectCallbacks.add(() -> this.removeObjectFromScene(obj));
     }
 
     private void removeObjectFromScene(GameObject obj) {
+        objects.remove(obj);
         for (var comp : obj.getComponents()) {
             if (comp instanceof Renderable r) renderLayer.removeRenderable(r);
             if (comp instanceof PhysicsBody b) physics.removePhysicsBody(b);
@@ -268,9 +276,9 @@ public abstract class Scene {
      * @return the object
      */
     public @Nullable GameObject getObject(@Nullable String name) {
-        return objects.find(obj -> obj.getName().equals(
+        return objects.stream().filter(obj -> obj.getName().equals(
                 Objects.requireNonNullElse(name, "null")
-        ));
+        )).findFirst().orElse(null);
     }
 
     /**
@@ -279,7 +287,7 @@ public abstract class Scene {
      * @return the list of objects
      */
     public List<GameObject> getObjects() {
-        return objects.copy();
+        return List.copyOf(objects);
     }
 
     /**

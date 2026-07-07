@@ -32,7 +32,7 @@ public abstract class Camera extends Component implements Viewport {
 
     // GameObject Fields
     private GameObject subject; // Object to follow
-    private final BufferedList<Component> cameraScripts;
+    private final CallbackBuffer cameraCallbacks;
 
     protected Camera(Vec2 screenSize) {
         super(UpdateOrder.MOVEMENT);
@@ -50,12 +50,12 @@ public abstract class Camera extends Component implements Viewport {
         rotation = 0f;
 
         subject = null;
-        cameraScripts = new BufferedList<>();
+        cameraCallbacks = new CallbackBuffer(4);
     }
 
     @Override
     protected void init() {
-        cameraScripts.processBuffer();
+        cameraCallbacks.executeCallbacks();
         WindowEvents.WINDOW_EVENTS.subscribe(resizeHandler);
     }
 
@@ -255,7 +255,7 @@ public abstract class Camera extends Component implements Viewport {
      * @param script the script
      */
     public final void addCameraScript(Script script) {
-        cameraScripts.add(script, () -> getGameObject().addComponent(script));
+        cameraCallbacks.add(() -> getGameObject().addComponent(script));
     }
 
 }

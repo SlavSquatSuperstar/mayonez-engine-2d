@@ -1,6 +1,7 @@
 package mayonez;
 
 import mayonez.math.*;
+import mayonez.util.CallbackBuffer;
 import org.jspecify.annotations.Nullable;
 
 import java.util.*;
@@ -39,7 +40,7 @@ public class GameObject {
 
     // Component Fields
     private final List<Component> components;
-    private final Queue<Runnable> componentCallbacks;
+    private final CallbackBuffer componentCallbacks;
 
     /**
      * Creates an empty game object with a name and default transform. If the name
@@ -94,7 +95,7 @@ public class GameObject {
         enabled = true;
         visible = true;
         components = new ArrayList<>();
-        componentCallbacks = new ArrayDeque<>();
+        componentCallbacks = new CallbackBuffer();
     }
 
     // Game Loop Methods
@@ -106,9 +107,7 @@ public class GameObject {
     final void start() {
         // Add all components
         init();
-        while (!componentCallbacks.isEmpty()) {
-            componentCallbacks.poll().run();
-        }
+        componentCallbacks.executeCallbacks();
         // Start all components
         components.sort(Comparator.comparingInt(Component::getUpdateOrder));
         components.forEach(Component::start);
@@ -135,9 +134,7 @@ public class GameObject {
                 .filter(Component::isEnabled)
                 .forEach(c -> c.update(dt));
         // Add or remove components
-        while (!componentCallbacks.isEmpty()) {
-            componentCallbacks.poll().run();
-        }
+        componentCallbacks.executeCallbacks();
     }
 
     /**

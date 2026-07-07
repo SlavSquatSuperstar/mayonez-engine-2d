@@ -3,6 +3,7 @@ package mayonez
 import mayonez.config.*
 import mayonez.event.*
 import mayonez.input.*
+import mayonez.util.CallbackBuffer
 import java.awt.*
 import java.util.*
 
@@ -30,7 +31,7 @@ object SceneManager {
     // Scene Fields
     private val scenes: MutableMap<String, Scene> = HashMap() // The scene pool
     private val sceneNames: MutableList<String> = ArrayList() // The scene order
-    private val sceneCallbacks: Queue<Runnable> = ArrayDeque(4)
+    private val sceneCallbacks: CallbackBuffer = CallbackBuffer(4)
 
     /** The scene that the application is actively running. */
     @JvmStatic
@@ -51,9 +52,7 @@ object SceneManager {
         currentScene.update(dt)
 
         // Execute queued callbacks if waiting
-        while (sceneCallbacks.isNotEmpty()) {
-            sceneCallbacks.poll().run()
-        }
+        sceneCallbacks.executeCallbacks()
     }
 
     @JvmStatic
