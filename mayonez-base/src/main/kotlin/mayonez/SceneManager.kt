@@ -241,7 +241,10 @@ object SceneManager {
      * @return the scene, or null if the name did not match
      */
     @JvmStatic
-    fun getScene(name: String?): Scene? = scenes[name ?: "null"]
+    fun getScene(name: String?): Scene? {
+        return if (name == null) null
+        else scenes[name]
+    }
 
     /**
      * Retrieves the scene stored in the scene pool with the given name.

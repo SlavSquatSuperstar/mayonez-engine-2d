@@ -2,6 +2,7 @@ package mayonez;
 
 import org.junit.jupiter.api.*;
 
+import static mayonez.ECSTestUtils.TestScene;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -15,15 +16,9 @@ class SceneTest {
     private GameObject obj1, obj2;
 
     @BeforeEach
-    void getScenes() {
-        scene1 = new Scene("Test Scene") {
-        };
-        scene2 = new Scene("Test Scene") {
-        };
-    }
-
-    @BeforeEach
-    void getObjects() {
+    void setUp() {
+        scene1 = new TestScene("Test Scene");
+        scene2 = new TestScene("Test Scene");
         obj1 = new GameObject("Test Object 1");
         obj2 = new GameObject("Test Object 2");
     }
@@ -83,12 +78,13 @@ class SceneTest {
     }
 
     @Test
-    void getObjectWithNullNameSuccess() {
+    void objectNullNameRevertsToDefault() {
         var obj = new GameObject(null);
         scene1.addObject(obj);
 
-        assertSame(obj, scene1.getObject(null));
-        assertSame(obj, scene1.getObject("null"));
+        assertEquals("GameObject", obj.getName());
+        assertSame(obj, scene1.getObject("GameObject"));
+        assertNull(scene1.getObject(null));
     }
 
 }

@@ -2,6 +2,7 @@ package mayonez;
 
 import org.junit.jupiter.api.*;
 
+import static mayonez.ECSTestUtils.TestScene;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -16,10 +17,8 @@ class SceneManagerTest {
     @BeforeEach
     void getScenes() {
         SceneManager.clearScenes();
-        scene1 = new Scene("Test Scene 1") {
-        };
-        scene2 = new Scene("Test Scene 2") {
-        };
+        scene1 = new TestScene("Test Scene 1");
+        scene2 = new TestScene("Test Scene 2");
     }
 
     @Test
@@ -60,21 +59,19 @@ class SceneManagerTest {
     }
 
     @Test
-    void getSceneWithNullNameSuccess() {
-        var scene = new Scene(null) {
-        };
+    void sceneNullNameRevertsToDefault() {
+        var scene = new TestScene(null);
         SceneManager.addScene(scene);
 
-        assertSame(scene, SceneManager.getScene(null));
-        assertSame(scene, SceneManager.getScene("null"));
+        assertEquals("TestScene", scene.getName());
+        assertSame(scene, SceneManager.getScene("TestScene"));
+        assertNull(SceneManager.getScene(null));
     }
 
     @Test
     void addSceneSameNameReplacedExisting() {
-        var scene1 = new Scene("Test Scene") {
-        };
-        var scene2 = new Scene("Test Scene") {
-        };
+        var scene1 = new TestScene("Test Scene");
+        var scene2 = new TestScene("Test Scene");
 
         SceneManager.addScene(scene1);
         assertEquals(1, SceneManager.numScenes());
