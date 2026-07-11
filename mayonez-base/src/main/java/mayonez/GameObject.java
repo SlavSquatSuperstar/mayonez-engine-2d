@@ -3,6 +3,7 @@ package mayonez;
 import mayonez.math.*;
 import mayonez.util.BufferedList;
 import mayonez.util.CallbackBuffer;
+import mayonez.util.StringUtils;
 import org.jspecify.annotations.Nullable;
 
 import java.util.*;
@@ -32,7 +33,7 @@ public class GameObject {
 
     // Object Information and State
     final long objectID; // UUID for this game object
-    private final String name;
+    private String name;
     public final Transform transform; // transform in world
     private @Nullable Scene scene;
     private boolean destroyed, enabled, visible;
@@ -44,7 +45,7 @@ public class GameObject {
 
     /**
      * Creates an empty game object with a name and default transform. If the name
-     * is {@code null}, it will be coerced into the string "null".
+     * is {@code null}, it will default to the class name.
      *
      * @param name the object name
      */
@@ -54,8 +55,7 @@ public class GameObject {
 
     /**
      * Creates an empty game object with a name position, and a default rotation
-     * and scale. If the name is {@code null}, it will be coerced into the string
-     * "null".
+     * and scale. If the name is {@code null}, it will default to the class name.
      *
      * @param name     the object name
      * @param position the object starting position
@@ -66,7 +66,7 @@ public class GameObject {
 
     /**
      * Creates an empty game object with a name, transform, and a z-index of zero.
-     * If the name is {@code null}, it will be coerced into the string "null".
+     * If the name is {@code null}, it will default to the class name.
      *
      * @param name      the object name
      * @param transform the object starting transform
@@ -77,7 +77,7 @@ public class GameObject {
 
     /**
      * Creates an empty game object with a name, transform, and z-index. If the name
-     * is {@code null}, it will be coerced into the string "null".
+     * is {@code null}, it will default to the class name.
      *
      * @param name      the object name
      * @param transform the object starting transform
@@ -86,7 +86,7 @@ public class GameObject {
     public GameObject(@Nullable String name, Transform transform, int zIndex) {
         objectID = objectCounter++;
 
-        this.name = Objects.requireNonNullElse(name, "null");
+        this.name = validateName(name);
         this.transform = transform;
         this.zIndex = zIndex;
         this.layer = null;
@@ -212,11 +212,11 @@ public class GameObject {
      */
     public <T extends Component> @Nullable T getComponent(@Nullable Class<T> cls) {
         if (cls == null) return null;
-        for (var comp : components) {
-            // Component has same class or is subclass
-            if (cls.isAssignableFrom(comp.getClass())) return cls.cast(comp);
-        }
-        return null;
+        return components.stream()
+                .filter(cls::isInstance)
+                .map(cls::cast)
+                .findFirst()
+                .orElse(null);
     }
 
     /**
@@ -255,12 +255,26 @@ public class GameObject {
     // Property Getters and Setters
 
     /**
-     * Get the object's name, which is not null and need not be unique.
+     * Get this object's name, which is non-null and does not need to be unique.
      *
      * @return the object name
      */
     public String getName() {
         return name;
+    }
+
+    /**
+     * Set this object's name, which does not need to be unique. If the parameter is null,
+     * then the name will be set to the object's class name.
+     *
+     * @param name the object name
+     */
+    public void setName(@Nullable String name) {
+        this.name = validateName(name);
+    }
+
+    private String validateName(@Nullable String name) {
+        return Objects.requireNonNullElse(name, StringUtils.getObjectClassName(this));
     }
 
     /**

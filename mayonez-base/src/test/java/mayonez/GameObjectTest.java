@@ -20,13 +20,9 @@ class GameObjectTest {
     private Component comp1, comp2;
 
     @BeforeEach
-    void getObjects() {
+    void setUp() {
         obj1 = new GameObject("Test Object");
         obj2 = new GameObject("Test Object");
-    }
-
-    @BeforeEach
-    void getComponents() {
         comp1 = new ComponentA();
         comp2 = new ComponentB();
     }
@@ -126,7 +122,7 @@ class GameObjectTest {
         obj1.addComponent(comp1);
         obj1.addComponent(comp2);
 
-        assertNull(obj1.getComponent(null));
+        assertNull(obj1.getComponent((Class<? extends Component>) null));
         assertTrue(obj1.getComponents(null).isEmpty());
     }
 
