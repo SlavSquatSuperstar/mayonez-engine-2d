@@ -34,7 +34,7 @@ public final class ThrusterPrefabs {
     }
 
     private static GameObject getThrusterObject(Thruster thruster, Transform parentXf) {
-        return new GameObject("%s Thruster".formatted(thruster.getName())) {
+        return new GameObject("%s Thruster".formatted(thruster.getDescription())) {
             @Override
             protected void init() {
                 setZIndex(SpaceGameZIndex.EXHAUST);

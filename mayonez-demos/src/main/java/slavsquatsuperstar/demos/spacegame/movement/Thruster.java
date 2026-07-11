@@ -38,7 +38,7 @@ public class Thruster extends Script {
 
     // Getters and Setters
 
-    String getName() {
+    String getDescription() {
         return properties.name();
     }
 

@@ -126,6 +126,17 @@ class GameObjectTest {
         assertTrue(obj1.getComponents(null).isEmpty());
     }
 
+    @Test
+    void getComponentByNameSuccess() {
+        comp1.setName("Test Component");
+        comp2.setName("Test Component");
+
+        obj1.addComponent(comp1);
+        obj1.addComponent(comp2);
+
+        assertSame(comp1, obj1.getComponent("Test Component"));
+    }
+
     // Subclasses
 
     private static class ComponentA extends Component {

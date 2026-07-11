@@ -203,6 +203,20 @@ public class GameObject {
     }
 
     /**
+     * Finds the first component with the specified name (case-sensitive), or null if none exists.
+     *
+     * @param name the component's name
+     * @return the component, or null if not present
+     */
+    public @Nullable Component getComponent(@Nullable String name) {
+        if (name == null) return null;
+        return components.stream()
+                .filter(c -> c.getName().equals(name))
+                .findFirst()
+                .orElse(null);
+    }
+
+    /**
      * Finds the first component of the specified class or any of its subclasses,
      * or null if none exists.
      *
