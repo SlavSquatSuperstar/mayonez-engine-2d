@@ -245,7 +245,7 @@ public class GameObject {
         return components.stream()
                 .filter(cls::isInstance)
                 .map(cls::cast)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     /**

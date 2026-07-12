@@ -41,6 +41,7 @@ public abstract class Scene {
     private SceneState state; // if paused or running
 
     // Scene Objects
+    protected boolean uniqueObjectNames = false;
     private final BufferedList<GameObject> objects;
     // TODO add/remove, queue callbacks
     private final SceneLayer[] layers;
@@ -221,6 +222,21 @@ public abstract class Scene {
      */
     public final void addObject(@Nullable GameObject obj) {
         if (obj == null || obj.getScene() != null) return;
+        if (uniqueObjectNames) {
+            // Rename object to "Name (n)"
+            // Sequence numbers may not be contiguous
+            var sameNames = objects.stream()
+                    .map(GameObject::getName)
+                    .filter(name -> name.startsWith(obj.getName()))
+                    .toList();
+            var newName = obj.getName();
+            var count = 1;
+            while (sameNames.contains(newName)) {
+                newName = "%s (%d)".formatted(obj.getName(), count);
+                count++;
+            }
+            obj.setName(newName);
+        }
         if (isStopped()) { // Static add: when not loaded
             objects.addUnbuffered(obj);
             addObjectToScene(obj);

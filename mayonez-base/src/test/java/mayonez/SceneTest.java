@@ -23,11 +23,15 @@ class SceneTest {
         obj2 = new GameObject("Test Object 2");
     }
 
+    // Scene ID
+
     @Test
     void sceneIDsAreUnique() {
         assertNotEquals(scene1.sceneID, scene2.sceneID);
         assertNotEquals(scene1, scene2);
     }
+
+    // Add/Remove Object
 
     @Test
     void addObjectChangesNumObjects() {
@@ -65,6 +69,8 @@ class SceneTest {
         assertEquals(0, scene2.numObjects());
     }
 
+    // Get Object
+
     @Test
     void getObjectByNameSuccess() {
         assertNull(scene1.getObject("Test Object 1"));
@@ -85,6 +91,43 @@ class SceneTest {
         assertEquals("GameObject", obj.getName());
         assertSame(obj, scene1.getObject("GameObject"));
         assertNull(scene1.getObject(null));
+    }
+
+    // Object Renaming
+
+    @Test
+    void objectRenamingContiguousSuccess() {
+        var obj1 = new GameObject("Test Object");
+        var obj2 = new GameObject("Test Object");
+        var obj3 = new GameObject("Test Object");
+
+        scene1.uniqueObjectNames = true;
+        scene1.addObject(obj1);
+        scene1.addObject(obj2);
+        scene1.addObject(obj3);
+
+        assertEquals("Test Object", obj1.getName());
+        assertEquals("Test Object (1)", obj2.getName());
+        assertEquals("Test Object (2)", obj3.getName());
+    }
+
+    @Test
+    void objectRenamingNonContiguousSuccess() {
+        var obj1 = new GameObject("Test Object");
+        var obj2 = new GameObject("Test Object (1)");
+        var obj3 = new GameObject("Test Object (3)");
+        var obj4 = new GameObject("Test Object");
+
+        scene1.uniqueObjectNames = true;
+        scene1.addObject(obj1);
+        scene1.addObject(obj2);
+        scene1.addObject(obj3);
+        scene1.addObject(obj4);
+
+        assertEquals("Test Object", obj1.getName());
+        assertEquals("Test Object (1)", obj2.getName());
+        assertEquals("Test Object (3)", obj3.getName());
+        assertEquals("Test Object (2)", obj4.getName());
     }
 
 }

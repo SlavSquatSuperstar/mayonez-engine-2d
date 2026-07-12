@@ -27,11 +27,15 @@ class GameObjectTest {
         comp2 = new ComponentB();
     }
 
+    // Object ID
+
     @Test
     void objectIDsAreUnique() {
         assertNotEquals(obj1.objectID, obj2.objectID);
         assertNotEquals(obj1, obj2);
     }
+
+    // Add/Remove Component
 
     @Test
     void addComponentChangesNumComponents() {
@@ -68,6 +72,8 @@ class GameObjectTest {
         assertEquals(1, obj1.numComponents());
         assertEquals(0, obj2.numComponents());
     }
+
+    // Get Component
 
     @Test
     void getOneComponentSameClass() {
