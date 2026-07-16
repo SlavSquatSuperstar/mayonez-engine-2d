@@ -37,7 +37,8 @@ public class Animator extends Script {
     @Override
     protected void init() {
         sprite = Sprites.createSprite(textures[0]);
-        gameObject.addComponent(sprite.setVisible(false));
+        sprite.setVisible(false);
+        gameObject.addComponent(sprite);
     }
 
     @Override
@@ -108,10 +109,10 @@ public class Animator extends Script {
     }
 
     @Override
-    public <T extends Component> T setVisible(boolean visible) {
+    public void setVisible(boolean visible) {
+        super.setVisible(visible);
         // make sure sprite is initialized
         if (sprite != null) sprite.setVisible(visible);
-        return super.setVisible(visible);
     }
 
     private void setSpriteTexture(int frame) {

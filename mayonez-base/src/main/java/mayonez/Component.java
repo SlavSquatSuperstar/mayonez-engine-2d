@@ -40,8 +40,6 @@ public abstract class Component extends Node {
      */
     protected Transform transform; // use blank transform in case no parent
 
-    private boolean enabled, visible;
-
     // TODO make changeable
     private final UpdateOrder updateOrder;
 
@@ -56,8 +54,6 @@ public abstract class Component extends Node {
     public Component(@Nullable String name, @Nullable UpdateOrder updateOrder) {
         super(name);
         transform = new Transform();
-        enabled = true;
-        visible = true;
         this.updateOrder = Objects.requireNonNullElse(updateOrder, UpdateOrder.SCRIPT);
     }
 
@@ -138,7 +134,7 @@ public abstract class Component extends Node {
      * Warning: Destroying a component is permanent and cannot be reversed!
      */
     final void destroy() {
-        setEnabled(false);
+        setDestroyed();
         onDestroy();
         gameObject = null;
         transform = new Transform();
@@ -159,26 +155,13 @@ public abstract class Component extends Node {
      *
      * @return if this component is enabled and not destroyed
      */
+    @Override
     public final boolean isEnabled() {
-        return enabled && gameObject != null && gameObject.isEnabled();
+        return super.isEnabled() && gameObject != null && gameObject.isEnabled();
         // TODO only check object if non null
+        // TODO fix UI usages
+        // TODO fix animator usages
     }
-
-    /**
-     * Enable or disable whether this component should be updated. Will not
-     * affect whether the parent object is enabled.
-     *
-     * @param enabled if the component is enabled
-     * @param <T>     the component subclass type
-     * @return this component
-     */
-    @SuppressWarnings("unchecked")
-    public <T extends Component> T setEnabled(boolean enabled) {
-        this.enabled = enabled;
-        return (T) this;
-    }
-    // TODO fix UI usages
-    // TODO fix animator usages
 
     /**
      * Whether this component should be rendered. If the parent object is
@@ -186,25 +169,14 @@ public abstract class Component extends Node {
      *
      * @return if this component is visible
      */
+    @Override
     public final boolean isVisible() {
         // Check parent visible if parent exists
-        return this.visible &&
+        return super.isVisible() &&
                 (gameObject == null || gameObject.isVisible());
     }
 
     /**
-     * Enable or disable whether this component should be rendered. Will not
-     * affect whether the parent object is visible.
-     *
-     * @param visible if the component is visible
-     * @param <T>     the component subclass type
-     * @return this component
-     */
-    @SuppressWarnings("unchecked")
-    public <T extends Component> T setVisible(boolean visible) {
-        this.visible = visible;
-        return (T) this;
-    }
 
     // Property Getters and Setters
 

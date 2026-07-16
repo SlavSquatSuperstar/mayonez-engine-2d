@@ -30,9 +30,9 @@ public abstract class UIContainer extends UIElement {
     }
 
     @Override
-    public <T extends Component> T setVisible(boolean visible) {
+    public void setVisible(boolean visible) {
+        super.setVisible(visible);
         elements.forEach(e -> e.setEnabled(visible));
-        return super.setVisible(visible);
     }
 
     @Override

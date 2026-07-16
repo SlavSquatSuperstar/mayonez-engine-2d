@@ -32,7 +32,6 @@ public class GameObject extends Node {
     // Object Information and State
     public final Transform transform; // transform in world
     private @Nullable Scene scene;
-    private boolean destroyed, enabled, visible;
     private int zIndex; // controls 3D "layering" of objects
     private @Nullable SceneLayer layer;
 
@@ -86,9 +85,6 @@ public class GameObject extends Node {
         this.zIndex = zIndex;
         this.layer = null;
 
-        destroyed = false;
-        enabled = true;
-        visible = true;
         components = new BufferedList<>();
     }
 
@@ -264,58 +260,13 @@ public class GameObject extends Node {
     // Property Getters and Setters
 
     /**
-     * Whether this object has been removed from the scene.
-     *
-     * @return if the object is destroyed
-     */
-    public boolean isDestroyed() {
-        return destroyed;
-    }
-
-    /**
      * Remove this object from the scene and destroy all its components.
      * The {@link #getScene} method will return after the object is destroyed.
      * <p>
      * Warning: Destroying a game object is permanent and cannot be reversed!
      */
     public void destroy() {
-        destroyed = true;
-    }
-
-    /**
-     * Whether this object and all its components should be updated.
-     *
-     * @return if this object is enabled
-     */
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    /**
-     * Enable or disable whether this object and all its components should be updated.
-     *
-     * @param enabled if the object is enabled
-     */
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    /**
-     * Whether this object and all its components should be rendered.
-     *
-     * @return if this object is visible
-     */
-    public boolean isVisible() {
-        return visible;
-    }
-
-    /**
-     * Enable or disable whether this object and all its components should be rendered.
-     *
-     * @param visible if the object is visible
-     */
-    public void setVisible(boolean visible) {
-        this.visible = visible;
+        setDestroyed();
     }
 
     /**

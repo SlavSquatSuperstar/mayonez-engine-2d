@@ -32,12 +32,10 @@ public abstract class Script extends Component {
 
     // Component Callbacks
 
-    @SuppressWarnings("unchecked")
-    public final <T extends Component> T setEnabled(boolean enabled) {
+    public final void setEnabled(boolean enabled) {
         super.setEnabled(enabled);
         if (enabled) onEnable();
         else onDisable();
-        return (T) this;
     }
 
     /**

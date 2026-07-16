@@ -37,9 +37,30 @@ public abstract class Node {
     final long nodeID;
     private String name;
 
+    // Node State
+    private boolean destroyed;
+    private boolean enabled, visible;
+
+    /**
+     * Create an empty node with name defaulting to the class name.
+     */
+    public Node() {
+        this(null);
+    }
+
+    /**
+     * Create an empty node with a name. If the name is {@code null} or blank,
+     * it will default to the class name.
+     *
+     * @param name the node name
+     */
     public Node(@Nullable String name) {
         nodeID = nodeCounter++;
         this.name = validateName(name);
+
+        destroyed = false;
+        enabled = true;
+        visible = true;
     }
 
     // Property Getters and Setters
@@ -61,6 +82,7 @@ public abstract class Node {
      */
     public void setName(@Nullable String name) {
         this.name = validateName(name);
+        // TODO notify parent object
     }
 
     String validateName(@Nullable String name) {
@@ -70,6 +92,65 @@ public abstract class Node {
             return name;
         }
     }
+
+    /**
+     * Whether this node has been removed from the scene tree.
+     *
+     * @return if the node is destroyed
+     */
+    public boolean isDestroyed() {
+        return destroyed;
+    }
+
+    /**
+     * Remove this object its parent and destroy all its children.
+     * <p>
+     * <b>Warning:</b> Destroying a node is permanent and cannot be reversed!
+     */
+    public void setDestroyed() {
+        this.destroyed = true;
+    }
+
+    /**
+     * Get whether this node and all its children should be updated. If any ancestor
+     * node is disabled, then this node will not be enabled.
+     *
+     * @return if this node is enabled
+     */
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    /**
+     * Set whether this node should be updated. Will not affect whether the parent
+     * node is enabled.
+     *
+     * @param enabled if the node is enabled
+     */
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    /**
+     * Get whether this node and all its children should be rendered. If any ancestor
+     * node is invisible, then this node will not be visible.
+     *
+     * @return if this node is visible
+     */
+    public boolean isVisible() {
+        return visible;
+    }
+
+    /**
+     * Set whether this node should be rendered. Will not affect whether the parent
+     * node is visible.
+     *
+     * @param visible if the node is visible
+     */
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+    }
+
 
     // Object Overrides
 
