@@ -31,7 +31,7 @@ class GameObjectTest {
 
     @Test
     void objectIDsAreUnique() {
-        assertNotEquals(obj1.objectID, obj2.objectID);
+        assertNotEquals(obj1.nodeID, obj2.nodeID);
         assertNotEquals(obj1, obj2);
     }
 

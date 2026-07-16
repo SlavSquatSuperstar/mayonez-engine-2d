@@ -27,13 +27,9 @@ import java.util.stream.*;
  *
  * @author SlavSquatSuperstar
  */
-public class GameObject {
-
-    private static long objectCounter = 0L; // total number of game objects created across all scenes
+public class GameObject extends Node {
 
     // Object Information and State
-    final long objectID; // UUID for this game object
-    private String name;
     public final Transform transform; // transform in world
     private @Nullable Scene scene;
     private boolean destroyed, enabled, visible;
@@ -84,9 +80,8 @@ public class GameObject {
      * @param zIndex    the object z-index
      */
     public GameObject(@Nullable String name, Transform transform, int zIndex) {
-        objectID = objectCounter++;
+        super(name);
 
-        this.name = validateName(name);
         this.transform = transform;
         this.zIndex = zIndex;
         this.layer = null;
@@ -269,29 +264,6 @@ public class GameObject {
     // Property Getters and Setters
 
     /**
-     * Get this object's name, which is non-null and does not need to be unique.
-     *
-     * @return the object name
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * Set this object's name, which does not need to be unique. If the parameter is null,
-     * then the name will be set to the object's class name.
-     *
-     * @param name the object name
-     */
-    public void setName(@Nullable String name) {
-        this.name = validateName(name);
-    }
-
-    private String validateName(@Nullable String name) {
-        return Objects.requireNonNullElse(name, StringUtils.getObjectClassName(this));
-    }
-
-    /**
      * Whether this object has been removed from the scene.
      *
      * @return if the object is destroyed
@@ -414,23 +386,6 @@ public class GameObject {
     public GameObject setZIndex(int zIndex) {
         this.zIndex = zIndex;
         return this;
-    }
-
-    // Object Overrides
-
-    @Override
-    public boolean equals(Object obj) {
-        return (obj instanceof GameObject o) && (o.objectID == this.objectID);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(objectID, name, scene);
-    }
-
-    @Override
-    public String toString() {
-        return String.format("%s [%d]", name, objectID);
     }
 
 }

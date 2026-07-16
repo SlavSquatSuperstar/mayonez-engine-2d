@@ -26,11 +26,7 @@ import java.util.*;
  *
  * @author SlavSquatSuperstar
  */
-public abstract class Component {
-
-    private static long componentCounter = 0L; // total number of components created across all scenes
-    final long componentID; // internal UUID for this component
-    private String name;
+public abstract class Component extends Node {
 
     /**
      * The parent {@link mayonez.GameObject} this component belongs to. The parent
@@ -54,8 +50,11 @@ public abstract class Component {
     }
 
     public Component(@Nullable UpdateOrder updateOrder) {
-        componentID = componentCounter++;
-        name = StringUtils.getObjectClassName(this);
+        this(null, updateOrder);
+    }
+
+    public Component(@Nullable String name, @Nullable UpdateOrder updateOrder) {
+        super(name);
         transform = new Transform();
         enabled = true;
         visible = true;
@@ -210,25 +209,6 @@ public abstract class Component {
     // Property Getters and Setters
 
     /**
-     * Get the component's name, which is non-null and does not need to be unique.
-     *
-     * @return the component name
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * Set this component's name, which does not need to be unique. If the parameter is null,
-     * then the name will be set to the component's class name.
-     *
-     * @param name the component name
-     */
-    public void setName(@Nullable String name) {
-        this.name = Objects.requireNonNullElse(name, StringUtils.getObjectClassName(this));
-    }
-
-    /**
      * Returns the parent {@link GameObject} this Component is attached to.
      *
      * @return the game object
@@ -270,27 +250,6 @@ public abstract class Component {
 
     int getUpdateOrder() {
         return updateOrder.order();
-    }
-
-    // Object Overrides
-
-    @Override
-    public boolean equals(Object obj) {
-        return (obj instanceof Component c) && (c.componentID == this.componentID);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(componentID, gameObject);
-    }
-
-    @Override
-    public String toString() {
-        return String.format(
-                "%s [%d] (%s)",
-                name, componentID,
-                gameObject == null ? "<No GameObject>" : gameObject
-        );
     }
 
 }
