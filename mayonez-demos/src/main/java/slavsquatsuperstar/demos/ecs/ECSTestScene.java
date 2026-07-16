@@ -31,6 +31,7 @@ public class ECSTestScene extends DemoScene {
 
     public ECSTestScene(String name) {
         super(name);
+        uniqueObjectNames = true;
     }
 
     @Override
@@ -107,11 +108,7 @@ public class ECSTestScene extends DemoScene {
     }
 
     private class TestComponent extends Component {
-        private static int componentCount = 0;
-        private final int componentId;
-
         public TestComponent() {
-            this.componentId = componentCount++;
         }
 
         // Test calling add/remove object within child component
@@ -153,10 +150,6 @@ public class ECSTestScene extends DemoScene {
             Logger.log("Removed %s from %s", this, gameObject);
         }
 
-        @Override
-        public String toString() {
-            return "Test Component [%d]".formatted(componentId);
-        }
     }
 
 }

@@ -112,6 +112,25 @@ class SceneTest {
     }
 
     @Test
+    void objectRenamingMultipleContiguousSuccess() {
+        var obj1 = new GameObject("Test Object");
+        var obj2 = new GameObject("Test Object");
+        var obj3 = new GameObject("Test Object");
+        var obj4 = new GameObject("Test Object");
+
+        scene1.uniqueObjectNames = true;
+        scene1.addObject(obj1);
+        scene1.addObject(obj2);
+        scene1.addObject(obj3);
+        scene1.addObject(obj4);
+
+        assertEquals("Test Object", obj1.getName());
+        assertEquals("Test Object (1)", obj2.getName());
+        assertEquals("Test Object (2)", obj3.getName());
+        assertEquals("Test Object (3)", obj4.getName());
+    }
+
+    @Test
     void objectRenamingNonContiguousSuccess() {
         var obj1 = new GameObject("Test Object");
         var obj2 = new GameObject("Test Object (1)");

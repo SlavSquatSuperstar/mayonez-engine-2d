@@ -222,21 +222,6 @@ public abstract class Scene {
      */
     public final void addObject(@Nullable GameObject obj) {
         if (obj == null || obj.getScene() != null) return;
-        if (uniqueObjectNames) {
-            // Rename object to "Name (n)"
-            // Sequence numbers may not be contiguous
-            var sameNames = objects.stream()
-                    .map(GameObject::getName)
-                    .filter(name -> name.startsWith(obj.getName()))
-                    .toList();
-            var newName = obj.getName();
-            var count = 1;
-            while (sameNames.contains(newName)) {
-                newName = "%s (%d)".formatted(obj.getName(), count);
-                count++;
-            }
-            obj.setName(newName);
-        }
         if (isStopped()) { // Static add: when not loaded
             objects.addUnbuffered(obj);
             addObjectToScene(obj);
@@ -246,10 +231,28 @@ public abstract class Scene {
     }
 
     private void addObjectToScene(GameObject obj) {
+        if (uniqueObjectNames) renameObjectUnique(obj);
         obj.setScene(this);
         if (!isStopped()) startObject(obj);
         Logger.trace("Added object \"%s\" to scene \"%s\"",
                 obj, this.name);
+    }
+
+    private void renameObjectUnique(GameObject obj) {
+        // Rename object to "Name (n)"
+        // If sequence numbers are not contiguous, then choose the least free number
+        // Make sure not to count the object being added
+        var sameNames = objects.stream()
+                .filter(o -> !o.equals(obj) && o.getName().startsWith(obj.getName()))
+                .map(GameObject::getName)
+                .toList();
+        var newName = obj.getName();
+        var count = 0;
+        while (sameNames.contains(newName)) {
+            count++;
+            newName = "%s (%d)".formatted(obj.getName(), count);
+        }
+        obj.setName(newName);
     }
 
     private void startObject(GameObject obj) {
