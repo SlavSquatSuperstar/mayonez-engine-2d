@@ -38,9 +38,9 @@ public class SpaceObjectSpawner extends Node {
                 SpaceshipProperties properties;
                 var invCDF = Random.randomFloat(0f, 100f);
                 if (invCDF < 30f) {
-                    properties = ShipPrefabs.SHUTTLE_PROPERTIES1;
+                    properties = ShipPrefabs.SHUTTLE1_PROPERTIES;
                 } else if (invCDF < 60f) {
-                    properties = ShipPrefabs.SHUTTLE_PROPERTIES2;
+                    properties = ShipPrefabs.SHUTTLE2_PROPERTIES;
                 } else {
                     properties = ShipPrefabs.FIGHTER_PROPERTIES;
                 }

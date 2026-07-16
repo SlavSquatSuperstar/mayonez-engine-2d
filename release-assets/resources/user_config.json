@@ -9,5 +9,6 @@
 	"turn_left": "a",
 	"turn_right": "d",
 	"brake": "space",
-	"auto_brake": "b"
+	"auto_brake": "b",
+	"player_ship_index": 0
 }

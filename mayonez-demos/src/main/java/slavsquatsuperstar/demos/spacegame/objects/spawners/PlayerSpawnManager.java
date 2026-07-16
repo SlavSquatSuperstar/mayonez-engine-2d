@@ -3,6 +3,7 @@ package slavsquatsuperstar.demos.spacegame.objects.spawners;
 import mayonez.*;
 import mayonez.math.*;
 import mayonez.scripts.*;
+import slavsquatsuperstar.demos.spacegame.SpaceGameConfig;
 import slavsquatsuperstar.demos.spacegame.events.*;
 import slavsquatsuperstar.demos.spacegame.objects.ships.PlayerSpaceship;
 import slavsquatsuperstar.demos.spacegame.objects.ships.ShipPrefabs;
@@ -49,7 +50,8 @@ public class PlayerSpawnManager extends SpawnManager {
     @Override
     public Node createSpawnedObject() {
         return new PlayerSpaceship(
-                "Player Spaceship", new Vec2(), ShipPrefabs.SHUTTLE_PROPERTIES1
+                "Player Spaceship", new Vec2(),
+                ShipPrefabs.getSpaceShipProperty(SpaceGameConfig.getPlayerShipIndex())
         ) {
             @Override
             protected void start() {

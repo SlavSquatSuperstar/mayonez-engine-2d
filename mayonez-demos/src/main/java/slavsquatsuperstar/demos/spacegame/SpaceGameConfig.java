@@ -3,6 +3,7 @@ package slavsquatsuperstar.demos.spacegame;
 import mayonez.config.*;
 import mayonez.input.*;
 import mayonez.util.Record;
+import slavsquatsuperstar.demos.spacegame.objects.ships.ShipPrefabs;
 
 /**
  * The controls for the space game.
@@ -25,6 +26,7 @@ public final class SpaceGameConfig extends GameConfig {
         DEFAULTS.set("turn_right", "d");
         DEFAULTS.set("brake", "space");
         DEFAULTS.set("auto_brake", "space");
+        DEFAULTS.set("player_ship_index", 0);
     }
 
     private SpaceGameConfig(String path, Record defaults) {
@@ -44,6 +46,9 @@ public final class SpaceGameConfig extends GameConfig {
                         "move_left", "move_right",
                         "turn_left", "turn_right",
                         "brake", "auto_brake"
+                ),
+                new IntValidator(
+                        0, ShipPrefabs.NUM_SHIP_TYPES, "player_ship_index"
                 )
         };
     }
@@ -75,6 +80,10 @@ public final class SpaceGameConfig extends GameConfig {
 
     public static Key getAutoBrakeKey() {
         return Key.findWithName(config.getString("auto_brake"));
+    }
+
+    public static int getPlayerShipIndex() {
+        return config.getInt("player_ship_index");
     }
 
 }
