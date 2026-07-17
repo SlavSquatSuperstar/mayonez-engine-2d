@@ -4,6 +4,7 @@ plugins {
     id("mayonez.library-conventions")
 
     id(kotlinPlugin)
+    id(kaptPlugin)
     id(dokkaPlugin)
     id(errorPronePlugin)
     id(nullAwayPlugin)
@@ -51,8 +52,10 @@ tasks {
         }
     }
 
-    // Copy Kotlin outputs into Java build folder
     register<Copy>("copyKotlinClasses") {
+        group = "Build"
+        description = "Copy Kotlin outputs into Java build folder."
+
         dependsOn(compileKotlin)
         from("build/classes/kotlin/main")
         into("build/classes/java/main")

@@ -29,6 +29,9 @@ const val dokkaPlugin: String = "org.jetbrains.dokka"
 /** The Kotlin plugin for compiling Kotlin files to the JVM. */
 const val kotlinPlugin: String = "org.jetbrains.kotlin.jvm"
 
+/** The kapt plugin for processing Kotlin annotations. */
+const val kaptPlugin: String = "org.jetbrains.kotlin.kapt"
+
 /** The Error Prone plugin for compile-time static analysis. */
 const val errorPronePlugin: String = "net.ltgt.errorprone"
 
