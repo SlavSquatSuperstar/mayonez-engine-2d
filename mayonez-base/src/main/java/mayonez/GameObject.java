@@ -31,7 +31,6 @@ public class GameObject extends Node {
 
     // Object Information and State
     public final Transform transform; // transform in world
-    private @Nullable Scene scene;
     private int zIndex; // controls 3D "layering" of objects
     private @Nullable SceneLayer layer;
 
@@ -309,25 +308,6 @@ public class GameObject extends Node {
      */
     public void setLayer(@Nullable SceneLayer layer) {
         this.layer = layer;
-    }
-
-    /**
-     * Get the {@link mayonez.Scene} that contains this game object. The parent scene
-     * will be non-null from the start of {@link #init} to the end of {@link #destroy}
-     *
-     * @return the parent scene
-     */
-    public final @Nullable Scene getScene() {
-        return scene;
-    }
-
-    /**
-     * Adds this GameObject to a parent {@link mayonez.Scene}.
-     *
-     * @param scene a scene
-     */
-    final void setScene(Scene scene) {
-        this.scene = scene;
     }
 
     public int getZIndex() {

@@ -176,8 +176,6 @@ public abstract class Component extends Node {
                 (gameObject == null || gameObject.isVisible());
     }
 
-    /**
-
     // Property Getters and Setters
 
     /**
@@ -198,17 +196,8 @@ public abstract class Component extends Node {
     final void setGameObject(GameObject gameObject) {
         this.gameObject = gameObject;
         this.transform = gameObject.transform;
+        setScene(gameObject.getScene()); // Scene will be non-null here
         init();
-    }
-
-    /**
-     * Get a reference to the parent object's {@link mayonez.Scene}
-     *
-     * @return the parent scene
-     */
-    public @Nullable Scene getScene() {
-        if (gameObject == null) return null;
-        else return gameObject.getScene();
     }
 
     /**

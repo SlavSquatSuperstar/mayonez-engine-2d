@@ -41,6 +41,9 @@ public abstract class Node {
     private String name;
     private final Set<String> tags;
 
+    // Node Hierarchy
+    @Nullable Scene scene;
+
     // Node State
     private boolean destroyed;
     private boolean enabled, visible;
@@ -63,12 +66,14 @@ public abstract class Node {
         this.name = validateName(name);
         tags = new HashSet<>();
 
+        scene = null;
+
         destroyed = false;
         enabled = true;
         visible = true;
     }
 
-    // Property Getters and Setters
+    // Node Information Getters and Setters
 
     /**
      * Get this node's name, which is non-null and does not need to be unique.
@@ -142,6 +147,29 @@ public abstract class Node {
         tags.clear();
     }
 
+    // Node Hierarchy Getters and Setters
+
+    /**
+     * Get the {@link mayonez.Scene} that contains this node. The parent scene
+     * will be non-null from the start of {@code init} to the end of {@code destroy}.
+     *
+     * @return the parent scene
+     */
+    public @Nullable Scene getScene() {
+        return scene;
+    }
+
+    /**
+     * Add this node to a parent {@link mayonez.Scene}.
+     *
+     * @param scene a scene
+     */
+    void setScene(Scene scene) {
+        this.scene = scene;
+    }
+
+    // Node State Getters and Setters
+
     /**
      * Whether this node has been removed from the scene tree.
      *
@@ -152,7 +180,8 @@ public abstract class Node {
     }
 
     /**
-     * Remove this object its parent and destroy all its children.
+     * Remove this object its parent and destroy all its children. The {@link #getScene}
+     * method will return after the object is destroyed.
      * <p>
      * <b>Warning:</b> Destroying a node is permanent and cannot be reversed!
      */
