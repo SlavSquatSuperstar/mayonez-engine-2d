@@ -18,7 +18,7 @@ public class SceneLayer {
     private final Bitmask mask;
 
     /**
-     * Constructs a scene layer with the index that interacts with all other layers.
+     * Constructs a scene layer with an index that interacts with all layers.
      *
      * @param index the layer index
      */
@@ -49,7 +49,7 @@ public class SceneLayer {
     }
 
     /**
-     * Changes the name of the layer. Names can be used to describe the layer's function.
+     * Changes the name of the layer to something more human-readable.
      *
      * @param name the name
      */
@@ -61,14 +61,13 @@ public class SceneLayer {
 
     /**
      * Whether this layer should interact with another. Two layers interact if at least one
-     * has set the other to "true" in its layer mask, or if at least one is null.
+     * has set the other's index to "true" in its layer mask, or if at least one is null.
      *
      * @param other the other layer
      * @return if the layers interact
      */
     public boolean canInteract(@Nullable SceneLayer other) {
-        if (other == null) return true;
-        return this.getLayerInteract(other.index) || other.getLayerInteract(this.index);
+        return (other == null) || this.getLayerInteract(other.index) || other.getLayerInteract(this.index);
     }
 
     public boolean getLayerInteract(int layer) {
@@ -79,7 +78,7 @@ public class SceneLayer {
         mask.setBit(layer, interact);
     }
 
-    public void setLayerMask(int value) {
+    public void setMaskValue(int value) {
         mask.setValue(value);
     }
 

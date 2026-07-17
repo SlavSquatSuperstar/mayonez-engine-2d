@@ -2,7 +2,9 @@ package mayonez.util;
 
 /**
  * A bitmask (boolean array) represented by a 32-bit integer. Each bit represents a
- * boolean value (1 for true, 0 for false). Bits are numbered 0-31, from right to left.
+ * boolean value (1 for true, 0 for false). Bits are indexed 0-31, from right (least
+ * significant) to left (most significant). If the bitmask is indexed with a value
+ * outside the valid range, the Java will first modulo the index by 32.
  *
  * @author SlavSquatSuperstar
  */
@@ -11,7 +13,7 @@ public class Bitmask {
     // Constants
 
     /**
-     * A bitmask with all bits true, equal to -1.
+     * A bitmask with all bits true, equal to 0xffffffff (-1).
      */
     public static final int ALL_TRUE = -1;
 
@@ -29,10 +31,18 @@ public class Bitmask {
 
     private int value;
 
+    /**
+     * Create a new bitmask with all bits set to true.
+     */
     public Bitmask() {
         this(ALL_TRUE);
     }
 
+    /**
+     * Create a new bitmask with the given value.
+     *
+     * @param value the bitmask value
+     */
     public Bitmask(int value) {
         this.value = value;
     }
@@ -102,4 +112,5 @@ public class Bitmask {
     public String toString() {
         return "Bitmask (%b)".formatted(value);
     }
+
 }

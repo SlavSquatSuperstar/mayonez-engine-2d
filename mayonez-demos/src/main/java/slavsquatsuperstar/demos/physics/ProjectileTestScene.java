@@ -21,9 +21,12 @@ public class ProjectileTestScene extends DemoScene {
     @Override
     protected void init() {
         // Don't make projectiles collide with each other
-        getLayer(PROJECTILE_LAYER).setName("Projectiles");
-        getLayer(PROJECTILE_LAYER).setLayerInteract(PROJECTILE_LAYER, false);
-        getLayer(TARGET_LAYER).setName("Targets");
+        var projectileLayer = getLayer(PROJECTILE_LAYER);
+        projectileLayer.setName("Projectiles");
+        projectileLayer.setLayerInteract(PROJECTILE_LAYER, false);
+
+        var targetLayer = getLayer(TARGET_LAYER);
+        targetLayer.setName("Targets");
 
         getCamera().setCameraScale(10f);
         setGravity(new Vec2());

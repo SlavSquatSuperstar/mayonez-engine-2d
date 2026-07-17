@@ -11,31 +11,33 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class SceneLayerTest {
 
+    private SceneLayer layer0, layer1;
+
+    @BeforeEach
+    void setUp() {
+        layer0 = new SceneLayer(0);
+        layer1 = new SceneLayer(1);
+    }
+
     @Test
     void canInteractWithNullLayer() {
-        var layer = new SceneLayer(0);
-        assertTrue(layer.canInteract(null));
+        assertTrue(layer0.canInteract(null));
     }
 
     @Test
     void doesInteractWithSelf() {
-        var layer = new SceneLayer(0);
-        layer.setLayerInteract(0, true);
-        assertTrue(layer.canInteract(layer));
+        layer0.setLayerInteract(0, true);
+        assertTrue(layer0.canInteract(layer0));
     }
 
     @Test
     void doesNotInteractWithSelf() {
-        var layer = new SceneLayer(0);
-        layer.setLayerInteract(0, false);
-        assertFalse(layer.canInteract(layer));
+        layer0.setLayerInteract(0, false);
+        assertFalse(layer0.canInteract(layer0));
     }
 
     @Test
-    void doesInteractWithOther() {
-        var layer0 = new SceneLayer(0);
-        var layer1 = new SceneLayer(1);
-
+    void doesBothInteractWithOther() {
         layer0.setLayerInteract(1, true);
         layer1.setLayerInteract(0, true);
 
@@ -44,10 +46,16 @@ class SceneLayerTest {
     }
 
     @Test
-    void doesNotInteractWithOther() {
-        var layer0 = new SceneLayer(0);
-        var layer1 = new SceneLayer(1);
+    void doesOneInteractWithOther() {
+        layer0.setLayerInteract(1, false);
+        layer1.setLayerInteract(0, true);
 
+        assertTrue(layer0.canInteract(layer1));
+        assertTrue(layer1.canInteract(layer0));
+    }
+
+    @Test
+    void doesNotInteractWithOther() {
         layer0.setLayerInteract(1, false);
         layer1.setLayerInteract(0, false);
 

@@ -29,6 +29,9 @@ abstract class Collider(private val shape: Shape) :
 
     override var physicsBody: PhysicsBody? = null
 
+    // TODO store layer in physics
+    private var layer: SceneLayer? = null
+
     /**
      * A reference to the parent object's [mayonez.physics.dynamics.Rigidbody].
      * A collider should have a rigidbody to react to collisions.
@@ -56,6 +59,7 @@ abstract class Collider(private val shape: Shape) :
 
     override fun start() {
         physicsBody = gameObject!!.getComponent(Rigidbody::class.java)
+        layer = gameObject!!.layer
     }
 
     override fun onDestroy() {
@@ -108,16 +112,11 @@ abstract class Collider(private val shape: Shape) :
         // This assumes colliders aren't disabled during a collision
         if (collider is Collider) {
             return (this.isEnabled && collider.isEnabled) // Both enabled
-                    && this.gameObject!!.canInteract(collider.gameObject!!) // Layers interact
-                    && (this.physicsBody != null || collider.physicsBody != null) // At most one is static
+                    && (this.layer?.canInteract(collider.layer) ?: true) // Layers interact
+                    && !(this.physicsBody == null && collider.physicsBody == null) // At most one is static
         }
         return false
     }
-
-    private fun GameObject.canInteract(other: GameObject): Boolean {
-        return this.layer == null || this.layer!!.canInteract(other.layer)
-    }
-    // TODO move layer to physics
 
     // Collision Event Methods
 
