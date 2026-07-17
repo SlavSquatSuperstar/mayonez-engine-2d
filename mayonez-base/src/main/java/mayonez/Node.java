@@ -3,7 +3,10 @@ package mayonez;
 import mayonez.util.StringUtils;
 import org.jspecify.annotations.Nullable;
 
+import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * An object possessing properties and behaviors that belongs within a scene. Each node
@@ -36,6 +39,7 @@ public abstract class Node {
     // Node Information
     final long nodeID;
     private String name;
+    private final Set<String> tags;
 
     // Node State
     private boolean destroyed;
@@ -57,6 +61,7 @@ public abstract class Node {
     public Node(@Nullable String name) {
         nodeID = nodeCounter++;
         this.name = validateName(name);
+        tags = new HashSet<>();
 
         destroyed = false;
         enabled = true;
@@ -91,6 +96,50 @@ public abstract class Node {
         } else {
             return name;
         }
+    }
+
+    /**
+     * Get a copy of the set of tags present in this node.
+     *
+     * @return the set of tags
+     */
+    public Set<String> getTags() {
+        return Set.copyOf(tags);
+    }
+
+    /**
+     * Check if a tag is present in this node.
+     *
+     * @param tag the tag
+     * @return if the tag is present
+     */
+    public boolean hasTag(@Nullable String tag) {
+        return tags.contains(tag);
+    }
+
+    /**
+     * Add a tag to this node. If the tag is a duplicate or null, it will not be added.
+     *
+     * @param tag the tag
+     */
+    public void addTag(@Nullable String tag) {
+        if (tag != null) tags.add(tag);
+    }
+
+    /**
+     * Remove a tag from this node, if the tag is present.
+     *
+     * @param tag the tag
+     */
+    public void removeTag(@Nullable String tag) {
+        tags.remove(tag);
+    }
+
+    /**
+     * Remove all tags from this node.
+     */
+    public void clearTags() {
+        tags.clear();
     }
 
     /**
@@ -150,7 +199,6 @@ public abstract class Node {
     public void setVisible(boolean visible) {
         this.visible = visible;
     }
-
 
     // Object Overrides
 
