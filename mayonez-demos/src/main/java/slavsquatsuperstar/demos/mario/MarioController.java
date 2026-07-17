@@ -34,7 +34,7 @@ class MarioController extends Script {
         getCollider().addCollisionCallback(event -> {
             // On collision
             if (!event.trigger
-                    && event.other.hasLayer(MarioScene.GROUND_LAYER)) {
+                    && event.other.hasTag(MarioScene.GROUND_TAG)) {
                 if (event.type == CollisionEventType.ENTER
                         && event.direction.dot(new Vec2(0, -1)) > 0) {
                     // Direction is downward

@@ -27,7 +27,7 @@ class Goomba extends GameObject {
 
     @Override
     protected void init() {
-        setLayer(getScene().getLayer(MarioScene.CHARACTER_LAYER));
+        addTag(MarioScene.CHARACTERS_TAG);
         addComponent(MarioScene.SPRITES.getSprite(spriteIndex));
 
         addComponent(new GoombaController());

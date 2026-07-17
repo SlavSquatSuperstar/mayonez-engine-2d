@@ -17,8 +17,8 @@ import slavsquatsuperstar.demos.DemoScene;
 public class MarioScene extends DemoScene {
 
     // Layers
-    static final int CHARACTER_LAYER = 0;
-    static final int GROUND_LAYER = 1;
+    static final String CHARACTERS_TAG = "Characters";
+    static final String GROUND_TAG = "Ground";
 
     // Assets
     static final SpriteSheet SPRITES = Sprites.createSpriteSheet(
@@ -44,12 +44,6 @@ public class MarioScene extends DemoScene {
     protected void init() {
         getCamera().setCameraScale(SCENE_SCALE);
         setGravity(new Vec2(0, -SCENE_GRAVITY));
-
-        var charLayer = getLayer(CHARACTER_LAYER);
-        charLayer.setName("Characters");
-
-        var groundLayer = getLayer(GROUND_LAYER);
-        groundLayer.setName("Ground");
 
         // Background
         addObject(new GameObject("Background",
@@ -97,7 +91,7 @@ public class MarioScene extends DemoScene {
         return new GameObject(name, position) {
             @Override
             protected void init() {
-                setLayer(getScene().getLayer(MarioScene.GROUND_LAYER));
+                addTag(MarioScene.GROUND_TAG);
                 addComponent(new Rigidbody(0f));
                 addComponent(new BoxCollider(size));
             }

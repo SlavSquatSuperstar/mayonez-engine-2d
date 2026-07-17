@@ -19,7 +19,7 @@ class Mario extends GameObject {
 
     @Override
     protected void init() {
-        setLayer(getScene().getLayer(MarioScene.CHARACTER_LAYER));
+        addTag(MarioScene.CHARACTERS_TAG);
         getScene().getCamera().setSubject(this);
         addComponent(new MarioController());
 
