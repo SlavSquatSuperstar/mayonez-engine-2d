@@ -1,5 +1,6 @@
 package mayonez;
 
+import mayonez.util.BufferedList;
 import mayonez.util.StringUtils;
 import org.jspecify.annotations.Nullable;
 
@@ -43,6 +44,8 @@ public abstract class Node {
 
     // Node Hierarchy
     @Nullable Scene scene;
+    @Nullable Node parent;
+    private final BufferedList<Node> children;
 
     // Node State
     private boolean destroyed;
@@ -67,6 +70,8 @@ public abstract class Node {
         tags = new HashSet<>();
 
         scene = null;
+        parent = null;
+        children = new BufferedList<>();
 
         destroyed = false;
         enabled = true;
@@ -150,7 +155,7 @@ public abstract class Node {
     // Node Hierarchy Getters and Setters
 
     /**
-     * Get the {@link mayonez.Scene} that contains this node. The parent scene
+     * Get the {@link mayonez.Scene} that contains this node. The scene
      * will be non-null from the start of {@code init} to the end of {@code destroy}.
      *
      * @return the parent scene
@@ -160,12 +165,130 @@ public abstract class Node {
     }
 
     /**
-     * Add this node to a parent {@link mayonez.Scene}.
+     * Add this node to a {@link mayonez.Scene}.
      *
      * @param scene a scene
      */
     void setScene(Scene scene) {
         this.scene = scene;
+    }
+
+    /**
+     * Get the parent node this node belongs to.
+     *
+     * @return the parent node
+     */
+    public @Nullable Node getParent() {
+        return parent;
+    }
+
+    /**
+     * Add this node to a parent node.
+     *
+     * @param parent the parent node
+     */
+    void setParent(Node parent) {
+        this.parent = parent;
+    }
+
+    /**
+     * Find the first child node with the specified name (case-sensitive), or null if none exists.
+     *
+     * @param name the node's name
+     * @return the node, or null if not present
+     */
+    public @Nullable Node getChild(@Nullable String name) {
+        if (name == null) return null;
+        return children.stream()
+                .filter(c -> c.getName().equals(name))
+                .findFirst()
+                .orElse(null);
+    }
+
+    /**
+     * Find the first child node belonging to the specified class or any of its subclasses,
+     * or null if none exists.
+     *
+     * @param cls the node's type
+     * @param <T> the node type
+     * @return the node, or null if not present
+     */
+    public <T extends Node> @Nullable T getChild(@Nullable Class<T> cls) {
+        if (cls == null) return null;
+        return children.stream()
+                .filter(cls::isInstance)
+                .map(cls::cast)
+                .findFirst()
+                .orElse(null);
+    }
+
+    /**
+     * Find the first child node belonging to the specified class or any of its subclasses,
+     * or empty if none exists.
+     *
+     * @param cls the node's type
+     * @param <T> the node type
+     * @return the node, or empty if not present
+     */
+    public <T extends Node> @Nullable List<T> getChildren(@Nullable Class<T> cls) {
+        if (cls == null) return null;
+        return children.stream()
+                .filter(cls::isInstance)
+                .map(cls::cast)
+                .toList();
+    }
+
+    /**
+     * Get a copy of the list of all this object's child nodes.
+     *
+     * @return the list of nodes
+     */
+    public List<Node> getChildren() {
+        return List.copyOf(children);
+    }
+
+    /**
+     * Count how many child nodes this node has.
+     *
+     * @return the number of nodes
+     */
+    public int numChildren() {
+        return children.size();
+    }
+
+    /**
+     * Add a child node to this node. The child will not be added if it is
+     * null or already has a parent node.
+     *
+     * @param child the node
+     */
+    public void addChild(@Nullable Node child) {
+        if (child == null || child.parent != null) return;
+        child.parent = this;
+        if (scene != null && scene.isRunning()) {
+            children.addBuffered(child); // Add child later if scene running
+        } else {
+            children.addUnbuffered(child); // Add child now otherwise
+        }
+    }
+
+    /**
+     * Removes a child component from this node and destroys it. The child will
+     * only be removed it if is not null and its parent is this node.
+     *
+     * @param child the component
+     */
+    public final void removeChild(@Nullable Node child) {
+        if (child == null || child.parent != this) return;
+
+        child.setDestroyed();
+        child.parent = null;
+        child.scene = null;
+        if (scene != null && scene.isRunning()) {
+            children.removeBuffered((child)); // Remove component later if scene running
+        } else {
+            children.removeUnbuffered(child); // Remove component now
+        }
     }
 
     // Node State Getters and Setters
