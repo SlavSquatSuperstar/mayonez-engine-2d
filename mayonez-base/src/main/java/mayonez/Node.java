@@ -230,8 +230,8 @@ public abstract class Node {
      * @param <T> the node type
      * @return the node, or empty if not present
      */
-    public <T extends Node> @Nullable List<T> getChildren(@Nullable Class<T> cls) {
-        if (cls == null) return null;
+    public <T extends Node> List<T> getChildren(@Nullable Class<T> cls) {
+        if (cls == null) return List.of();
         return children.stream()
                 .filter(cls::isInstance)
                 .map(cls::cast)

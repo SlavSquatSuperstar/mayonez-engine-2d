@@ -3,6 +3,7 @@ package mayonez;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -19,11 +20,16 @@ class NodeTest {
     private static final String TAG3 = "Tag 3";
 
     private Node node1, node2;
+    private Node child1, child2, child3;
 
     @BeforeEach
     void setUp() {
         node1 = new NodeA("Test Node 1");
         node2 = new NodeA("Test Node 2");
+
+        child1 = new NodeA("Child Node 1");
+        child2 = new NodeB("Child Node 2");
+        child3 = new NodeB("Child Node 3");
     }
 
     // Node ID
@@ -111,10 +117,160 @@ class NodeTest {
         assertEquals(0, node1.getTags().size());
     }
 
+    // Add/Remove Child
+
+    @Test
+    void addingChildChangesParent() {
+        assertNull(child1.getParent());
+
+        node1.addChild(child1);
+        assertSame(node1, child1.getParent());
+    }
+
+    @Test
+    void addingChildChangesNumChildren() {
+        assertEquals(0, node1.numChildren());
+
+        node1.addChild(child1);
+        assertEquals(1, node1.numChildren());
+
+        node1.addChild(child2);
+        assertEquals(2, node1.numChildren());
+    }
+
+    @Test
+    void cannotAddNullChild() {
+        assertEquals(0, node1.numChildren());
+
+        node1.addChild(null);
+        assertEquals(0, node1.numChildren());
+    }
+
+    @Test
+    void cannotAddChildTwice() {
+        node1.addChild(child1);
+        assertSame(node1, child1.parent);
+        assertEquals(1, node1.numChildren());
+
+        node1.addChild(child1);
+        assertSame(node1, child1.parent);
+        assertEquals(1, node1.numChildren());
+    }
+
+    @Test
+    void cannotAddChildToDifferentParents() {
+        node1.addChild(child1);
+        node2.addChild(child1);
+
+        assertSame(node1, child1.parent);
+        assertEquals(1, node1.numChildren());
+        assertEquals(0, node2.numChildren());
+    }
+
+    // TODO do not add node to descendant
+
+    @Test
+    void removingChildClearsParent() {
+        node1.addChild(child1);
+        assertSame(node1, child1.getParent());
+
+        node1.removeChild(child1);
+        assertNull(child1.getParent());
+    }
+
+    @Test
+    void removingChildChangesNumChildren() {
+        node1.addChild(child1);
+        node1.addChild(child2);
+        assertEquals(2, node1.numChildren());
+
+        node1.removeChild(child1);
+        assertEquals(1, node1.numChildren());
+
+        node1.removeChild(child2);
+        assertEquals(0, node1.numChildren());
+    }
+
+    @Test
+    void cannotRemoveNullChild() {
+        node1.addChild(child1);
+        assertEquals(1, node1.numChildren());
+
+        node1.removeChild(null);
+        assertEquals(1, node1.numChildren());
+    }
+
+    // Get Child
+
+    @Test
+    void getChildByName() {
+        node1.addChild(child1);
+        node1.addChild(child2);
+
+        assertSame(child1, node1.getChild("Child Node 1"));
+        assertSame(child2, node1.getChild("Child Node 2"));
+
+        assertNull(node1.getChild("Child Node 3"));
+        assertNull(node1.getChild((String) null));
+    }
+
+    @Test
+    void getChildrenWithSuperclass() {
+        node1.addChild(child1);
+        node1.addChild(child2);
+        node1.addChild(child3);
+
+        assertSame(child1, node1.getChild(NodeA.class));
+        assertEquals(
+                List.of(child1, child2, child3),
+                node1.getChildren(NodeA.class)
+        );
+
+        assertNull(node1.getChild(NodeC.class));
+        assertTrue(node1.getChildren(NodeC.class).isEmpty());
+    }
+
+    @Test
+    void getChildrenWithSameClass() {
+        node1.addChild(child1);
+        node1.addChild(child2);
+        node1.addChild(child3);
+
+        assertSame(child2, node1.getChild(NodeB.class));
+        assertEquals(
+                List.of(child2, child3),
+                node1.getChildren(NodeB.class)
+        );
+
+        assertNull(node1.getChild(NodeC.class));
+        assertTrue(node1.getChildren(NodeC.class).isEmpty());
+    }
+
+    @Test
+    void getChildrenWithNullClassIsNone() {
+        node1.addChild(child1);
+        node1.addChild(child2);
+
+        assertNull(node1.getChild((Class<? extends Node>) null));
+        assertTrue(node1.getChildren(null).isEmpty());
+    }
+
     // Helper Classes
 
     private static class NodeA extends Node {
         public NodeA(String name) {
+            super(name);
+        }
+    }
+
+    private static class NodeB extends NodeA {
+        public NodeB(String name) {
+            super(name);
+        }
+    }
+
+    private static class NodeC extends NodeA {
+        public NodeC(String name) {
             super(name);
         }
     }
