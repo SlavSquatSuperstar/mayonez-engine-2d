@@ -192,6 +192,29 @@ public abstract class Node {
     }
 
     /**
+     * Whether this node is at the top level of the scene hierarchy, i.e., it belongs to a scene
+     * and has no parent.
+     *
+     * @return if this node is top-level
+     */
+    public boolean isTopLevel() {
+        return parent == null && scene != null;
+    }
+
+    /**
+     * Get the depth of this node in the scene tree, or the number of ancestors, including the scene
+     * itself. If the node is not part of a scene, then the depth is zero. If {@link #isTopLevel} is
+     * true, then the depth is one.
+     *
+     * @return the scene depth
+     */
+    public int getSceneDepth() {
+        if (scene == null) return 0;
+        else if (parent == null) return 1;
+        else return 1 + parent.getSceneDepth();
+    }
+
+    /**
      * Find the first child node with the specified name (case-sensitive), or null if none exists.
      *
      * @param name the node's name
@@ -273,6 +296,8 @@ public abstract class Node {
             children.addUnbuffered(child); // Add child now otherwise
         }
     }
+
+    // TODO rename child
 
     /**
      * Removes a child component from this node and destroys it. The child will

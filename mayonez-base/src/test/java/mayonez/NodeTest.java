@@ -19,11 +19,14 @@ class NodeTest {
     private static final String TAG2 = "Tag 2";
     private static final String TAG3 = "Tag 3";
 
+    private Scene scene;
     private Node node1, node2;
     private Node child1, child2, child3;
 
     @BeforeEach
     void setUp() {
+        scene = new ECSTestUtils.TestScene("Test Scene");
+
         node1 = new NodeA("Test Node 1");
         node2 = new NodeA("Test Node 2");
 
@@ -255,6 +258,36 @@ class NodeTest {
 
         assertNull(node1.getChild((Class<? extends Node>) null));
         assertTrue(node1.getChildren(null).isEmpty());
+    }
+
+    // Node Scene Depth
+
+    @Test
+    void nodeGetSceneDepthCorrect() {
+        node1.setScene(scene);
+
+        node1.addChild(child1);
+        child1.addChild(child2);
+
+        assertEquals(1, node1.getSceneDepth());
+        assertEquals(2, child1.getSceneDepth());
+        assertEquals(3, child2.getSceneDepth());
+
+        assertEquals(0, node2.getSceneDepth());
+    }
+
+    @Test
+    void nodeIsTopLevelCorrect() {
+        node1.setScene(scene);
+
+        node1.addChild(child1);
+        child1.addChild(child2);
+
+        assertTrue(node1.isTopLevel());
+        assertFalse(child1.isTopLevel());
+        assertFalse(child2.isTopLevel());
+
+        assertFalse(node2.isTopLevel());
     }
 
     // Node Enabled/Visible
