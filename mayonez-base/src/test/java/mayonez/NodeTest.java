@@ -136,6 +136,8 @@ class NodeTest {
 
         node1.addChild(child2);
         assertEquals(2, node1.numChildren());
+
+        assertEquals(List.of(child1, child2), node1.getChildren());
     }
 
     @Test
@@ -253,6 +255,46 @@ class NodeTest {
 
         assertNull(node1.getChild((Class<? extends Node>) null));
         assertTrue(node1.getChildren(null).isEmpty());
+    }
+
+    // Node Enabled/Visible
+
+    @Test
+    void nodeShouldUpdateAndRenderCorrect() {
+        node1.addChild(child1);
+        child1.addChild(child2);
+        child1.addChild(child3);
+        setEnabledAndVisible(child3, false);
+
+        assertTrue(shouldUpdateAndRender(node1));
+        assertTrue(shouldUpdateAndRender(child1));
+        assertTrue(shouldUpdateAndRender(child2));
+        assertFalse(shouldUpdateAndRender(child3));
+    }
+
+    @Test
+    void nodeShouldNotUpdateAndRenderCorrect() {
+        node1.addChild(child1);
+        child1.addChild(child2);
+        child1.addChild(child3);
+        setEnabledAndVisible(child1, false);
+        setEnabledAndVisible(child3, false);
+
+        assertTrue(shouldUpdateAndRender(node1));
+        assertFalse(shouldUpdateAndRender(child1));
+        assertFalse(shouldUpdateAndRender(child2));
+        assertFalse(shouldUpdateAndRender(child3));
+    }
+
+    // Helper Methods
+
+    private static void setEnabledAndVisible(Node node, boolean on) {
+        node.setEnabled(on);
+        node.setVisible(on);
+    }
+
+    private static boolean shouldUpdateAndRender(Node node) {
+        return node.shouldUpdate() && node.shouldRender();
     }
 
     // Helper Classes

@@ -165,11 +165,11 @@ public abstract class Node {
     }
 
     /**
-     * Add this node to a {@link mayonez.Scene}.
+     * Add this node to a {@link mayonez.Scene} or remove it from one.
      *
      * @param scene a scene
      */
-    void setScene(Scene scene) {
+    void setScene(@Nullable Scene scene) {
         this.scene = scene;
     }
 
@@ -183,11 +183,11 @@ public abstract class Node {
     }
 
     /**
-     * Add this node to a parent node.
+     * Add this node to a parent node or remove it from one.
      *
      * @param parent the parent node
      */
-    void setParent(Node parent) {
+    void setParent(@Nullable Node parent) {
         this.parent = parent;
     }
 
@@ -258,13 +258,15 @@ public abstract class Node {
 
     /**
      * Add a child node to this node. The child will not be added if it is
-     * null or already has a parent node.
+     * null, already has a parent node, or is part of a scene.
      *
      * @param child the node
      */
     public void addChild(@Nullable Node child) {
-        if (child == null || child.parent != null) return;
-        child.parent = this;
+        if (child == null || child.parent != null || child.scene != null) return;
+
+        child.setParent(this);
+        child.setScene(scene);
         if (scene != null && scene.isRunning()) {
             children.addBuffered(child); // Add child later if scene running
         } else {
@@ -282,8 +284,8 @@ public abstract class Node {
         if (child == null || child.parent != this) return;
 
         child.setDestroyed();
-        child.parent = null;
-        child.scene = null;
+        child.setParent(null);
+        child.setScene(null);
         if (scene != null && scene.isRunning()) {
             children.removeBuffered((child)); // Remove component later if scene running
         } else {
@@ -313,8 +315,8 @@ public abstract class Node {
     }
 
     /**
-     * Get whether this node and all its children should be updated. If any ancestor
-     * node is disabled, then this node will not be enabled.
+     * Whether this node and all its children should be updated. If any ancestor
+     * node is disabled, then this node will not be updated regardless.
      *
      * @return if this node is enabled
      */
@@ -333,8 +335,18 @@ public abstract class Node {
     }
 
     /**
-     * Get whether this node and all its children should be rendered. If any ancestor
-     * node is invisible, then this node will not be visible.
+     * Whether this node should update, meaning it and all of its ancestors are enabled.
+     *
+     * @return if the node should update
+     */
+    public boolean shouldUpdate() {
+        if (parent == null) return enabled;
+        else return enabled && parent.shouldUpdate();
+    }
+
+    /**
+     * Whether this node and all its children should be rendered. If any ancestor
+     * node is invisible, then this node will not be rendered regardless.
      *
      * @return if this node is visible
      */
@@ -350,6 +362,16 @@ public abstract class Node {
      */
     public void setVisible(boolean visible) {
         this.visible = visible;
+    }
+
+    /**
+     * Whether this node should render, meaning it and all of its ancestors are visible.
+     *
+     * @return if the node should render
+     */
+    public boolean shouldRender() {
+        if (parent == null) return visible;
+        else return visible && parent.shouldRender();
     }
 
     // Object Overrides
