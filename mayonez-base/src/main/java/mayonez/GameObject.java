@@ -249,7 +249,7 @@ public class GameObject extends Node {
 
     // Callback Methods
 
-    final void onDestroy() {
+    protected final void onDestroy() {
         components.forEach(Component::destroy);
         components.clear();
         layer = null;

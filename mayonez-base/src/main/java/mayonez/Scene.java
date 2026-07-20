@@ -280,7 +280,7 @@ public abstract class Scene {
             if (comp instanceof PhysicsBody b) physics.removePhysicsBody(b);
             if (comp instanceof CollisionBody b) physics.removeCollisionBody(b);
         }
-        obj.onDestroy();
+        obj.onDestroy(); // TODO should move elsewhere
         Logger.trace("Removed object \"%s\" from scene \"%s\"",
                 obj, this.name);
     }

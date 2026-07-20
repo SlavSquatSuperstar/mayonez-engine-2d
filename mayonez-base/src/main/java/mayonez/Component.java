@@ -141,15 +141,6 @@ public abstract class Component extends Node {
     }
 
     /**
-     * Custom behavior for when this component or its game object is destroyed. The fields
-     * {@link #gameObject} and {@link #transform} will still be accessible. Calling
-     * {@code onDestroy()}  directly can lead to unpredictable behavior. It is better to
-     * call {@link #destroy} instead.
-     */
-    protected void onDestroy() {
-    }
-
-    /**
      * Whether this component should be updated. If the parent object is
      * disabled, then this component will not be updated.
      *

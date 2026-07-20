@@ -156,7 +156,7 @@ public abstract class Node {
 
     /**
      * Get the {@link mayonez.Scene} that contains this node. The scene
-     * will be non-null from the start of {@code init} to the end of {@code destroy}.
+     * will be non-null from the start of {@code init} to the end of {@link onDestroy}.
      *
      * @return the parent scene
      */
@@ -330,13 +330,28 @@ public abstract class Node {
     }
 
     /**
-     * Remove this object its parent and destroy all its children. The {@link #getScene}
-     * method will return after the object is destroyed.
+     * Remove this object its parent and destroy all its descendants. The properties
+     * {@link #getScene}, {@link #getParent}, and {@code transform} will return null
+     * after the object is destroyed.
      * <p>
      * <b>Warning:</b> Destroying a node is permanent and cannot be reversed!
      */
     public void setDestroyed() {
-        this.destroyed = true;
+        if (destroyed) return;
+        destroyed = true;
+//        onDestroy(); // TODO can't place here
+        // TODO destroy children?
+        // TODO clear children
+    }
+
+    /**
+     * Custom behavior for when this node or any of its ancestors is destroyed. The properties
+     * {@link #getScene}, {@link #getParent}, and {@code transform} will still be accessible.
+     * <p>
+     * Warning: Calling {@code onDestroy} directly can lead to unpredictable behavior. It is
+     * better to call {@link #setDestroyed()} instead.
+     */
+    protected void onDestroy() {
     }
 
     /**
@@ -357,6 +372,26 @@ public abstract class Node {
      */
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+        if (enabled) onEnable();
+        else onDisable();
+    }
+
+    /**
+     * Custom user behavior for when this script is enabled.
+     * <p>
+     * Warning: Calling {@code onEnable()} directly can lead to unpredictable behavior.
+     * It is better to call {@code setEnabled(true)} instead.
+     */
+    protected void onEnable() {
+    }
+
+    /**
+     * Custom user behavior for when this script is disabled.
+     * <p>
+     * Warning: Calling {@code onEnable()} directly can lead to unpredictable behavior.
+     * It is better to call {@code setEnabled(false)} instead.
+     */
+    protected void onDisable() {
     }
 
     /**
