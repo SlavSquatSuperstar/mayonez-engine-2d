@@ -2,12 +2,9 @@ package mayonez;
 
 import mayonez.math.*;
 import mayonez.util.BufferedList;
-import mayonez.util.CallbackBuffer;
-import mayonez.util.StringUtils;
 import org.jspecify.annotations.Nullable;
 
 import java.util.*;
-import java.util.stream.*;
 
 /**
  * An object or entity inside a scene whose appearance and behavior can be defined by adding
@@ -20,7 +17,7 @@ import java.util.stream.*;
  * Usage: Create a game object by instantiating a subclass or anonymous instance of
  * {@link mayonez.GameObject}. Add components to the object by calling {@link #addComponent}
  * inside the {@link #init} method. The object's transform can be referenced through the field
- * {@link #transform}. To remove the object from the scene, call {@link GameObject#destroy}.
+ * {@link #transform}. To remove the object from the scene, call {@link GameObject#setDestroyed}.
  * To remove a component from the object, call {@link GameObject#removeComponent}.
  * <p>
  * See {@link mayonez.Component} and {@link mayonez.Scene} for more information.
@@ -175,7 +172,7 @@ public class GameObject extends Node {
      */
     public final void removeComponent(@Nullable Component comp) {
         if (comp == null || comp.getGameObject() != this) return;
-        comp.destroy();
+        comp.setDestroyed();
         if (scene != null && scene.isRunning()) {
             components.removeBuffered((comp)); // Remove component later if scene running
         } else {
@@ -250,23 +247,13 @@ public class GameObject extends Node {
     // Callback Methods
 
     protected final void onDestroy() {
-        components.forEach(Component::destroy);
+        components.forEach(Component::setDestroyed);
         components.clear();
         layer = null;
         scene = null;
     }
 
     // Property Getters and Setters
-
-    /**
-     * Remove this object from the scene and destroy all its components.
-     * The {@link #getScene} method will return after the object is destroyed.
-     * <p>
-     * Warning: Destroying a game object is permanent and cannot be reversed!
-     */
-    public void destroy() {
-        setDestroyed();
-    }
 
     /**
      * Get the game object's {@link mayonez.SceneLayer}, which specifies which objects

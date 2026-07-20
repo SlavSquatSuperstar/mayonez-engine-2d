@@ -33,7 +33,7 @@ public class TestProjectile extends GameObject {
         addComponent(col);
         col.addCollisionCallback(event -> {
             if (event.other.getName().equals("Target Box")) {
-                col.getGameObject().destroy();
+                col.getGameObject().setDestroyed();
             }
         });
 

@@ -70,7 +70,7 @@ public class ThrustController extends Script {
 
     @Override
     protected void onDestroy() {
-        for (var thruster : thrusters) thruster.getGameObject().destroy();
+        for (var thruster : thrusters) thruster.getGameObject().setDestroyed();
     }
 
 }

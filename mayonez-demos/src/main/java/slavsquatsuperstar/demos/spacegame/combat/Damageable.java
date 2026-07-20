@@ -63,7 +63,7 @@ public class Damageable extends Script {
      * by default.
      */
     public void onHealthDepleted() {
-        gameObject.destroy();
+        gameObject.setDestroyed();
     }
 
     // Health Getter Methods

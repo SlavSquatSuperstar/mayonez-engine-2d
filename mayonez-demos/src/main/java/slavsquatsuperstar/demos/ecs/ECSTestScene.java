@@ -77,7 +77,7 @@ public class ECSTestScene extends DemoScene {
                         getObjects().stream()
                                 .filter(obj -> obj.numComponents() == 0)
                                 .forEach(obj -> {
-                                    obj.destroy();
+                                    obj.setDestroyed();
                                     testObjects.remove(obj);
                                 });
                         removedObject = false;
@@ -119,7 +119,7 @@ public class ECSTestScene extends DemoScene {
                 if (!removedObject && gameObject.equals(testObjects.getFirst())) {
                     testObjects.removeFirst();
                     gameObject.getComponents().forEach(testComponents::remove);
-                    gameObject.destroy();
+                    gameObject.setDestroyed();
                     Logger.log("Removed %s with %d components", gameObject, gameObject.numComponents());
                     removedObject = true;
                 }

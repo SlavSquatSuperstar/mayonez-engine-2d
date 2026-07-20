@@ -49,7 +49,7 @@ public class SpaceshipDestruction extends TimerScript {
             // Have the explosion follow the ship until it is destroyed
             explosion.transform.setPosition(transform.getPosition());
         }
-        if (this.isReady()) gameObject.destroy();
+        if (this.isReady()) gameObject.setDestroyed();
     }
 
     /**

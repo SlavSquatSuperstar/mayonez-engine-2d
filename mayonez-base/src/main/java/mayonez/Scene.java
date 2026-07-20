@@ -23,7 +23,7 @@ import java.util.List;
  * {@link mayonez.Scene}. Add objects to the scene by calling {@link #addObject}
  * inside the {@link #init()} method. Scenes may also define custom game logic
  * and graphics inside {@link #onUserUpdate} and {@link #onUserRender}. To remove an
- * object from the scene, call {@link GameObject#destroy()}.
+ * object from the scene, call {@link GameObject#setDestroyed()}.
  * <p>
  * See {@link mayonez.GameObject} and {@link mayonez.SceneManager} for more information.
  *

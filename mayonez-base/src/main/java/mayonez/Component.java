@@ -1,6 +1,5 @@
 package mayonez;
 
-import mayonez.util.*;
 import org.jspecify.annotations.Nullable;
 
 import java.util.*;
@@ -19,7 +18,7 @@ import java.util.*;
  * The component's parent scene can be accessed through the {@link #getScene()} method,
  * and its {@link mayonez.GameObject} and transform can be accessed through the
  * {@link #gameObject} and {@link #transform} fields. To remove the component from its
- * object, call {@link #destroy}. Components may also be given an {@link mayonez.UpdateOrder}
+ * object, call {@link #setDestroyed}. Components may also be given an {@link mayonez.UpdateOrder}
  * to tell the game object when to update it using {@link #Component(UpdateOrder)}.
  * <p>
  * See {@link mayonez.GameObject} and {@link mayonez.Script} for more information.
@@ -133,8 +132,9 @@ public abstract class Component extends Node {
      * <p>
      * Warning: Destroying a component is permanent and cannot be reversed!
      */
-    final void destroy() {
-        setDestroyed();
+    @Override
+    public void setDestroyed() {
+        super.setDestroyed();
         onDestroy();
         gameObject = null;
         transform = new Transform();

@@ -17,7 +17,7 @@ class GoombaController extends Script {
             if (!event.trigger
                     && event.type.equals(CollisionEventType.ENTER)
                     && event.other.getName().equals("Mario")) {
-                gameObject.destroy();
+                gameObject.setDestroyed();
             }
         });
     }

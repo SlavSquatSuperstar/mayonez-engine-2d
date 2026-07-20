@@ -330,7 +330,8 @@ public abstract class Node {
     }
 
     /**
-     * Remove this object its parent and destroy all its descendants. The properties
+     * Delete this node from the scene, removing it from its parent and destroying
+     * all its descendants at the end of the current frame. The properties
      * {@link #getScene}, {@link #getParent}, and {@code transform} will return null
      * after the object is destroyed.
      * <p>

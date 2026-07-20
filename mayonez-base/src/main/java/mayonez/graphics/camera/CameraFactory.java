@@ -48,7 +48,7 @@ public final class CameraFactory {
             }
 
             @Override
-            public void destroy() {
+            public void setDestroyed() {
             }
         };
     }
