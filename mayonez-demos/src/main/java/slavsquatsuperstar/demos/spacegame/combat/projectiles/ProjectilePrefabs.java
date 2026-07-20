@@ -58,12 +58,14 @@ public final class ProjectilePrefabs {
             ProjectileType type, GameObject source, Vec2 offsetPos, float offsetAngle
     ) {
         var projXf = getProjectileTransform(type, source.transform, offsetPos, offsetAngle);
-        return new GameObject(type.name(), projXf, SpaceGameZIndex.PROJECTILE) {
+        return new GameObject(type.name(), projXf) {
             @Override
             protected void init() {
                 setLayer(getScene().getLayer(SpaceGameLayer.PROJECTILES));
                 addComponent(new Projectile(source, type));
-                addComponent(PROJECTILE_SPRITES.getSprite(type.spriteIndex()));
+                var sprite = PROJECTILE_SPRITES.getSprite(type.spriteIndex());
+                sprite.setZIndex(SpaceGameZIndex.PROJECTILE);
+                addComponent(sprite);
 
                 var col = new BulletBoxCollider(type.colliderSize());
                 col.setPrimaryAxisX(false);

@@ -62,24 +62,9 @@ public class GameObject extends Node {
      * @param transform the object starting transform
      */
     public GameObject(@Nullable String name, Transform transform) {
-        this(name, transform, 0);
-    }
-
-    /**
-     * Creates an empty game object with a name, transform, and z-index. If the name
-     * is {@code null}, it will default to the class name.
-     *
-     * @param name      the object name
-     * @param transform the object starting transform
-     * @param zIndex    the object z-index
-     */
-    public GameObject(@Nullable String name, Transform transform, int zIndex) {
         super(name);
-
         this.transform = transform;
-        setZIndex(zIndex);
         this.layer = null;
-
         components = new BufferedList<>();
     }
 

@@ -23,8 +23,7 @@ public abstract class Spaceship extends GameObject {
     protected final SpaceshipProperties properties;
 
     public Spaceship(String name, Vec2 position, SpaceshipProperties properties) {
-        super(name, new Transform(position, 0f, properties.scale()),
-                SpaceGameZIndex.SPACESHIP);
+        super(name, new Transform(position, 0f, properties.scale()));
         this.properties = properties;
     }
 
@@ -46,7 +45,9 @@ public abstract class Spaceship extends GameObject {
         addComponent(new CollisionDamage());
 
         // Visuals
-        addComponent(Sprites.createSprite(properties.texture()));
+        var sprite = Sprites.createSprite(properties.texture());
+        sprite.setZIndex(SpaceGameZIndex.SPACESHIP);
+        addComponent(sprite);
     }
 
     private static Damageable getDamageable(float maxHull, float maxShield, float shieldRegen) {

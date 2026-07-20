@@ -87,19 +87,7 @@ sealed class Sprite : Component(), Renderable {
 
     // Renderable Methods
 
-    final override fun getZIndex(): Int {
-        return zIndexOverride ?: gameObject!!.zIndex
-    }
-
-    /**
-     * Set the z-index for the sprite, overriding its parent object's z-index.
-     *
-     * @param zIndex the global z-index
-     * @return this sprite
-     */
-    override fun setZIndex(zIndex: Int) {
-        zIndexOverride = zIndex
-    }
+    final override fun getZIndex(): Int = super.zIndex
 
     final override fun isInUI(): Boolean = false
 

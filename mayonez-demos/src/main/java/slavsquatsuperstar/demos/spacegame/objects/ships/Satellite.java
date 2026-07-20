@@ -22,8 +22,7 @@ public class Satellite extends GameObject {
     private final SatelliteProperties properties;
 
     public Satellite(String name, Vec2 position, SatelliteProperties properties) {
-        super(name, new Transform(position, Random.randomAngle(), properties.scale()),
-                SpaceGameZIndex.SPACESHIP);
+        super(name, new Transform(position, Random.randomAngle(), properties.scale()));
         this.properties = properties;
     }
 
@@ -54,7 +53,9 @@ public class Satellite extends GameObject {
         addComponent(new CollisionDamage());
 
         // Visuals
-        addComponent(Sprites.createSprite(properties.texture()));
+        var sprite = Sprites.createSprite(properties.texture());
+        sprite.setZIndex(SpaceGameZIndex.SPACESHIP);
+        addComponent(sprite);
     }
 
 }

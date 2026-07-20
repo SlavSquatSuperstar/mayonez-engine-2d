@@ -37,6 +37,7 @@ public class Animator extends Script {
     @Override
     protected void init() {
         sprite = Sprites.createSprite(textures[0]);
+        sprite.setZIndex(getZIndex());
         sprite.setVisible(false);
         gameObject.addComponent(sprite);
     }
@@ -119,6 +120,12 @@ public class Animator extends Script {
         if (sprite == null) return; // not initialized yet
         sprite.setTexture(textures[frame]);
         setVisible(true);
+    }
+
+    @Override
+    public void setZIndex(int zIndex) {
+        super.setZIndex(zIndex);
+        if (sprite != null) sprite.setZIndex(zIndex);
     }
 
     // Callback Methods

@@ -14,7 +14,7 @@ import mayonez.scripts.*;
 class Mario extends GameObject {
 
     Mario(Vec2 position) {
-        super("Mario", new Transform(position, 0f, new Vec2(2f)), 1);
+        super("Mario", new Transform(position, 0f, new Vec2(2f)));
     }
 
     @Override
@@ -23,7 +23,9 @@ class Mario extends GameObject {
         getScene().getCamera().setSubject(this);
         addComponent(new MarioController());
 
-        addComponent(MarioScene.SPRITES.getSprite(0));
+        var sprite = MarioScene.SPRITES.getSprite(0);
+        sprite.setZIndex(1);
+        addComponent(sprite);
         addComponent(new BoxCollider(new Vec2(0.8f, 1)));
         addComponent(new Rigidbody(1f, 0.1f, 0f).setFixedRotation(true));
 
