@@ -9,6 +9,9 @@ import mayonez.physics.dynamics.*;
 import mayonez.scripts.*;
 import mayonez.scripts.mouse.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * A prefab shape with a collider and rigid body that can be moved with the mouse.
  *
@@ -17,24 +20,28 @@ import mayonez.scripts.mouse.*;
 class SandboxObject extends GameObject {
 
     private static final float DENSITY = 2f;
+    private final List<Component> sandboxComponents;
 
     SandboxObject(String name, Vec2 position, float rotation) {
         super(name, new Transform(position, rotation));
+        sandboxComponents = new ArrayList<>();
     }
 
     @Override
     protected void init() {
         addComponent(new DrawPhysicsInformation());
+        sandboxComponents.forEach(this::addComponent);
+        sandboxComponents.clear();
     }
 
     private SandboxObject addCollider(Collider collider, Color color, boolean fill) {
-        addComponent(collider);
-        addComponent(new ShapeSprite(color, fill));
+        sandboxComponents.add(collider);
+        sandboxComponents.add(new ShapeSprite(color, fill));
         return this;
     }
 
     private SandboxObject addRigidbody(float mass, PhysicsMaterial material) {
-        addComponent(new Rigidbody(mass).setMaterial(material));
+        sandboxComponents.add(new Rigidbody(mass).setMaterial(material));
         return this;
     }
 
@@ -49,8 +56,8 @@ class SandboxObject extends GameObject {
     }
 
     SandboxObject addMouseMovement() {
-        addComponent(new DragAndDrop("left mouse"));
-        addComponent(new MouseFlick("right mouse", 25f) {
+        sandboxComponents.add(new DragAndDrop("left mouse"));
+        sandboxComponents.add(new MouseFlick("right mouse", 25f) {
             @Override
             protected void flickGameObject(Vec2 input, Rigidbody rb) {
                 rb.addVelocity(input);
@@ -60,7 +67,7 @@ class SandboxObject extends GameObject {
     }
 
     SandboxObject addInitialVelocity(Vec2 velocity) {
-        addComponent(new Script() {
+        sandboxComponents.add(new Script() {
             @Override
             protected void start() {
                 var rb = getRigidbody();
@@ -71,7 +78,7 @@ class SandboxObject extends GameObject {
     }
 
     SandboxObject setLifetime(float lifeTime) {
-        addComponent(new DestroyAfterDuration(lifeTime));
+        sandboxComponents.add(new DestroyAfterDuration(lifeTime));
         return this;
     }
 
