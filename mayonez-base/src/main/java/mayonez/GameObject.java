@@ -28,7 +28,6 @@ public class GameObject extends Node {
 
     // Object Information and State
     public final Transform transform; // transform in world
-    private int zIndex; // controls 3D "layering" of objects
     private @Nullable SceneLayer layer;
 
     // Component Fields
@@ -78,7 +77,7 @@ public class GameObject extends Node {
         super(name);
 
         this.transform = transform;
-        this.zIndex = zIndex;
+        setZIndex(zIndex);
         this.layer = null;
 
         components = new BufferedList<>();
@@ -295,15 +294,6 @@ public class GameObject extends Node {
      */
     public void setLayer(@Nullable SceneLayer layer) {
         this.layer = layer;
-    }
-
-    public int getZIndex() {
-        return zIndex;
-    }
-
-    public GameObject setZIndex(int zIndex) {
-        this.zIndex = zIndex;
-        return this;
     }
 
 }

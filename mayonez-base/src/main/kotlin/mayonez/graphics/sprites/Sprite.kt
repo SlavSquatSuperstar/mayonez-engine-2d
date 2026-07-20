@@ -97,9 +97,8 @@ sealed class Sprite : Component(), Renderable {
      * @param zIndex the global z-index
      * @return this sprite
      */
-    fun setZIndex(zIndex: Int): Sprite {
+    override fun setZIndex(zIndex: Int) {
         zIndexOverride = zIndex
-        return this
     }
 
     final override fun isInUI(): Boolean = false

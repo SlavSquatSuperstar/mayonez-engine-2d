@@ -47,9 +47,10 @@ public abstract class Node {
     @Nullable Node parent;
     private final BufferedList<Node> children;
 
-    // Node State
-    private boolean destroyed;
-    private boolean enabled, visible;
+    // Node Update and Render
+    private int zIndex;
+    private boolean destroyed, enabled, visible;
+    // TODO update order
 
     /**
      * Create an empty node with name defaulting to the class name.
@@ -76,6 +77,7 @@ public abstract class Node {
         destroyed = false;
         enabled = true;
         visible = true;
+        zIndex = 0;
     }
 
     // Node Information Getters and Setters
@@ -433,6 +435,28 @@ public abstract class Node {
     public boolean shouldRender() {
         if (parent == null) return visible;
         else return visible && parent.shouldRender();
+    }
+
+    /**
+     * The visual ordering of this node, or which order it will be drawn in.
+     * Nodes with greater z-indexes will be drawn on top of nodes with lower
+     * z-indexes.
+     *
+     * @return the z-index
+     */
+    public int getZIndex() {
+        return zIndex;
+    }
+
+    /**
+     * Set the node's z-index, or which order it will be drawn in.
+     * Nodes with greater z-indexes will be drawn on top of nodes with lower
+     * z-indexes.
+     *
+     * @param zIndex the z-index
+     */
+    public void setZIndex(int zIndex) {
+        this.zIndex = zIndex;
     }
 
     // Object Overrides
