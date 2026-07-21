@@ -17,7 +17,7 @@ public abstract class Script extends Component {
         super(UpdateOrder.SCRIPT);
     }
 
-    public Script(UpdateOrder updateOrder) {
+    public Script(int updateOrder) {
         super(updateOrder);
     }
 

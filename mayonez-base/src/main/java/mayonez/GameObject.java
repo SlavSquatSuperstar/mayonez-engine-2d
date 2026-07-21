@@ -32,6 +32,7 @@ public class GameObject extends Node {
 
     // Component Fields
     private final BufferedList<Component> components;
+    private boolean sortComponents;
 
     /**
      * Creates an empty game object with a name and default transform. If the name
@@ -66,6 +67,7 @@ public class GameObject extends Node {
         this.transform = transform;
         this.layer = null;
         components = new BufferedList<>();
+        sortComponents = false;
     }
 
     // Game Loop Methods
@@ -78,9 +80,8 @@ public class GameObject extends Node {
         // Add all components
         init();
         components.processBuffer();
-        // Start all components
-        components.sort(Comparator.comparingInt(Component::getUpdateOrder));
-        components.forEach(Component::start);
+        sortComponents();
+        components.forEach(Component::start); // Start all components
     }
 
     /**
@@ -103,8 +104,14 @@ public class GameObject extends Node {
         components.stream()
                 .filter(Component::isEnabled)
                 .forEach(c -> c.update(dt));
-        // Add or remove components
-        components.processBuffer();
+
+        components.processBuffer(); // Add or remove components
+        if (sortComponents) sortComponents();
+    }
+
+    private void sortComponents() {
+        components.sort(Comparator.comparingInt(Component::getUpdateOrder));
+        sortComponents = false;
     }
 
     /**
@@ -235,6 +242,11 @@ public class GameObject extends Node {
         components.clear();
         layer = null;
         scene = null;
+    }
+
+    @Override
+    void onChildUpdateOrderChanged() {
+        sortComponents = true;
     }
 
     // Property Getters and Setters

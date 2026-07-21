@@ -46,11 +46,12 @@ public abstract class Node {
     @Nullable Scene scene;
     @Nullable Node parent;
     private final BufferedList<Node> children;
+    // TODO transform
 
-    // Node Update and Render
-    private int zIndex;
+    // Node Behavior
     private boolean destroyed, enabled, visible;
-    // TODO update order
+    private int updateOrder, zIndex;
+    // TODO layer
 
     /**
      * Create an empty node with name defaulting to the class name.
@@ -77,6 +78,7 @@ public abstract class Node {
         destroyed = false;
         enabled = true;
         visible = true;
+        updateOrder = 0;
         zIndex = 0;
     }
 
@@ -320,7 +322,7 @@ public abstract class Node {
         }
     }
 
-    // Node State Getters and Setters
+    // Node Behavior Getters and Setters
 
     /**
      * Whether this node has been removed from the scene tree.
@@ -438,8 +440,37 @@ public abstract class Node {
     }
 
     /**
-     * The visual ordering of this node, or which order it will be drawn in.
-     * Nodes with greater z-indexes will be drawn on top of nodes with lower
+     * The update order of this node, or the order in which it will be updated.
+     * Nodes with higher lesser update orders will be updated before those with
+     * greater update orders.
+     *
+     * @return the update order
+     */
+    public int getUpdateOrder() {
+        return updateOrder;
+    }
+
+    /**
+     * Set the node's update order or the order in which it will be updated.
+     * Nodes with higher lesser update orders will be updated before those with
+     * greater update orders.
+     *
+     * @param updateOrder the update order
+     */
+    public void setUpdateOrder(int updateOrder) {
+        this.updateOrder = updateOrder;
+        if (parent != null) parent.onChildUpdateOrderChanged();
+    }
+
+    void onChildUpdateOrderChanged() {
+        // TODO sort next frame
+        // TODO notify scene instead
+        // TODO test
+    }
+
+    /**
+     * The visual ordering of this node, or the order in which it will be drawn.
+     * Nodes with greater z-indexes will be drawn on top of those with lesser
      * z-indexes.
      *
      * @return the z-index
@@ -449,7 +480,7 @@ public abstract class Node {
     }
 
     /**
-     * Set the node's z-index, or which order it will be drawn in.
+     * Set the node's z-index, or the order in which it will be drawn.
      * Nodes with greater z-indexes will be drawn on top of nodes with lower
      * z-indexes.
      *

@@ -2,8 +2,6 @@ package mayonez;
 
 import org.jspecify.annotations.Nullable;
 
-import java.util.*;
-
 /**
  * Defines traits and behaviors of a {@link mayonez.GameObject}. Each component can be
  * enabled or disabled through {@link #setEnabled}. Any rendering behavior can be toggled
@@ -15,11 +13,11 @@ import java.util.*;
  * {@link #start} method, which allows them to be restored when the scene is reloaded.
  * Update component fields in {@link #fixedUpdate} or {@link #update}.
  * <p>
- * The component's parent scene can be accessed through the {@link #getScene()} method,
+ * The component's parent scene can be accessed through the {@link #getScene} method,
  * and its {@link mayonez.GameObject} and transform can be accessed through the
  * {@link #gameObject} and {@link #transform} fields. To remove the component from its
- * object, call {@link #setDestroyed}. Components may also be given an {@link mayonez.UpdateOrder}
- * to tell the game object when to update it using {@link #Component(UpdateOrder)}.
+ * object, call {@link #setDestroyed}. Components may also be given an update order
+ * to tell the game object when to update it using {@link #Component(int)}.
  * <p>
  * See {@link mayonez.GameObject} and {@link mayonez.Script} for more information.
  *
@@ -39,21 +37,18 @@ public abstract class Component extends Node {
      */
     protected Transform transform; // use blank transform in case no parent
 
-    // TODO make changeable
-    private final UpdateOrder updateOrder;
-
     protected Component() {
         this(UpdateOrder.SCRIPT);
     }
 
-    public Component(@Nullable UpdateOrder updateOrder) {
+    public Component(int updateOrder) {
         this(null, updateOrder);
     }
 
-    public Component(@Nullable String name, @Nullable UpdateOrder updateOrder) {
+    public Component(@Nullable String name, int updateOrder) {
         super(name);
         transform = new Transform();
-        this.updateOrder = Objects.requireNonNullElse(updateOrder, UpdateOrder.SCRIPT);
+        setUpdateOrder(updateOrder);
     }
 
     // Game Loop Methods
@@ -200,8 +195,10 @@ public abstract class Component extends Node {
         return transform;
     }
 
-    int getUpdateOrder() {
-        return updateOrder.order();
+    @Override
+    public void setUpdateOrder(int updateOrder) {
+        super.setUpdateOrder(updateOrder);
+        if (gameObject != null) gameObject.onChildUpdateOrderChanged();
     }
 
 }
