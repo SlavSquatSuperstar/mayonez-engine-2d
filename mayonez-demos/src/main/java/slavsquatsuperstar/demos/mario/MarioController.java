@@ -30,20 +30,6 @@ class MarioController extends Script {
     protected void start() {
         rb = getRigidbody();
         onGround = false;
-
-        getCollider().addCollisionCallback(event -> {
-            // On collision
-            if (!event.trigger
-                    && event.other.hasTag(MarioScene.GROUND_TAG)) {
-                if (event.type == CollisionEventType.ENTER
-                        && event.direction.dot(new Vec2(0, -1)) > 0) {
-                    // Direction is downward
-                    onTouchGround();
-                } else if (event.type == CollisionEventType.EXIT) {
-                    onLeaveGround();
-                }
-            }
-        });
     }
 
     @Override
@@ -64,14 +50,14 @@ class MarioController extends Script {
         }
     }
 
-    private void onTouchGround() {
+    public void onTouchGround() {
         if (!onGround) {
             onGround = true;
             rb.getVelocity().y = 0;
         }
     }
 
-    private void onLeaveGround() {
+    public void onLeaveGround() {
         if (onGround) onGround = false;
     }
 
