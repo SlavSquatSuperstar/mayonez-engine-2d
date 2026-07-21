@@ -27,6 +27,9 @@ public final class SpaceGameConfig extends GameConfig {
         DEFAULTS.set("brake", "space");
         DEFAULTS.set("auto_brake", "space");
         DEFAULTS.set("player_ship_index", 0);
+        DEFAULTS.set("num_stars", 5000);
+        DEFAULTS.set("enemy_multiplier", 1f);
+        DEFAULTS.set("obstacle_multiplier", 1f);
     }
 
     private SpaceGameConfig(String path, Record defaults) {
@@ -49,6 +52,12 @@ public final class SpaceGameConfig extends GameConfig {
                 ),
                 new IntValidator(
                         0, ShipPrefabs.NUM_SHIP_TYPES, "player_ship_index"
+                ),
+                new IntValidator(
+                        0, 20000, "num_stars"
+                ),
+                new FloatValidator(
+                        0f, 5f, "enemy_multiplier", "obstacle_multiplier"
                 )
         };
     }
@@ -84,6 +93,18 @@ public final class SpaceGameConfig extends GameConfig {
 
     public static int getPlayerShipIndex() {
         return config.getInt("player_ship_index");
+    }
+
+    public static int getNumStars() {
+        return config.getInt("num_stars");
+    }
+
+    public static float getEnemyMultiplier() {
+        return config.getFloat("enemy_multiplier");
+    }
+
+    public static float getObstacleMultiplier() {
+        return config.getFloat("obstacle_multiplier");
     }
 
 }

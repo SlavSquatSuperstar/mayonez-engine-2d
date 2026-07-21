@@ -26,7 +26,6 @@ import static slavsquatsuperstar.demos.spacegame.objects.SpaceGameLayer.*;
 public class SpaceGameScene extends DemoScene {
 
     // Constants
-    private static final int NUM_STARS = 3000;
     private static final boolean CAMERA_DEBUG_MODE = false;
     private static final int SCENE_SCALE = 32;
     public static final Vec2 SCENE_HALF_SIZE
@@ -44,6 +43,7 @@ public class SpaceGameScene extends DemoScene {
         super(name);
         SpaceGameConfig.readConfig();
         backgroundObjects = new ArrayList<>();
+        System.out.println(SCENE_HALF_SIZE);
     }
 
     @Override
@@ -64,7 +64,7 @@ public class SpaceGameScene extends DemoScene {
                 new Color(255, 232, 80)); // Sun
 
         // Background Stars
-        for (var i = 0; i < NUM_STARS; i++) {
+        for (var i = 0; i < SpaceGameConfig.getNumStars(); i++) {
             backgroundObjects.add(BackgroundStarPrefabs.createRandomStar());
         }
 

@@ -10,5 +10,8 @@
 	"turn_right": "d",
 	"brake": "space",
 	"auto_brake": "b",
-	"player_ship_index": 0
+	"player_ship_index": 0,
+	"enemy_multiplier": 1.0,
+	"obstacle_multiplier": 1.0,
+	"num_stars": 5000
 }

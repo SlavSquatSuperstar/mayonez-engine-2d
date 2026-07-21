@@ -2,6 +2,7 @@ package slavsquatsuperstar.demos.spacegame.objects.spawners;
 
 import mayonez.*;
 import mayonez.math.*;
+import slavsquatsuperstar.demos.spacegame.SpaceGameConfig;
 import slavsquatsuperstar.demos.spacegame.SpaceGameScene;
 import slavsquatsuperstar.demos.spacegame.objects.asteroids.AsteroidPrefabs;
 import slavsquatsuperstar.demos.spacegame.objects.asteroids.BaseAsteroid;
@@ -32,7 +33,10 @@ public class SpaceObjectSpawner extends Node {
         addChild(new PlayerSpawnManager(PLAYER_RESPAWN_COOLDOWN));
 
         // Enemies
-        addChild(new MultiSpawnManager(NUM_ENEMIES, ENEMY_RESPAWN_COOLDOWN) {
+        addChild(new MultiSpawnManager(
+                (int) (NUM_ENEMIES * SpaceGameConfig.getEnemyMultiplier()),
+                ENEMY_RESPAWN_COOLDOWN
+        ) {
             @Override
             public Node createSpawnedObject() {
                 SpaceshipProperties properties;
@@ -59,7 +63,10 @@ public class SpaceObjectSpawner extends Node {
         });
 
         // Obstacles
-        addChild(new MultiSpawnManager(NUM_OBSTACLES, OBSTACLE_RESPAWN_COOLDOWN) {
+        addChild(new MultiSpawnManager(
+                (int) (NUM_OBSTACLES * SpaceGameConfig.getObstacleMultiplier()),
+                OBSTACLE_RESPAWN_COOLDOWN
+        ) {
             @Override
             public Node createSpawnedObject() {
                 if (Random.randomBoolean()) {
