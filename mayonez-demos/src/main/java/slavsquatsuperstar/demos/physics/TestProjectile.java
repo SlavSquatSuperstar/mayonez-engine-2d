@@ -4,6 +4,7 @@ import mayonez.*;
 import mayonez.graphics.*;
 import mayonez.graphics.debug.*;
 import mayonez.math.*;
+import mayonez.physics.CollisionEvent;
 import mayonez.physics.colliders.*;
 import mayonez.physics.dynamics.*;
 import mayonez.scripts.*;
@@ -29,11 +30,12 @@ public class TestProjectile extends GameObject {
     protected void init() {
         setLayer(getScene().getLayer(ProjectileTestScene.PROJECTILE_LAYER));
 
-        var col = new BulletBoxCollider(ProjectileLauncher.PROJ_SIZE);
-        addComponent(col);
-        col.addCollisionCallback(event -> {
-            if (event.other.getName().equals("Target Box")) {
-                col.getGameObject().setDestroyed();
+        addComponent(new BulletBoxCollider(ProjectileLauncher.PROJ_SIZE) {
+            @Override
+            public void onCollisionEvent(CollisionEvent event) {
+                if (event.other.getName().equals("Target Box")) {
+                    getGameObject().setDestroyed();
+                }
             }
         });
 

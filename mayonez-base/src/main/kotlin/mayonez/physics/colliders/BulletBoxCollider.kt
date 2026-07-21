@@ -10,7 +10,7 @@ import mayonez.physics.dynamics.*
  *
  * @author SlavSquatSuperstar
  */
-class BulletBoxCollider(size: Vec2) : BoxCollider(size) {
+open class BulletBoxCollider(size: Vec2) : BoxCollider(size) {
 
     private lateinit var displacement: Vec2
     private var rb: PhysicsBody? = null

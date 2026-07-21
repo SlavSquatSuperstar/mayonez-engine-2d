@@ -6,7 +6,6 @@ import mayonez.graphics.debug.*;
 import mayonez.math.*;
 import mayonez.physics.colliders.*;
 import mayonez.physics.dynamics.*;
-import mayonez.scripts.*;
 import mayonez.scripts.mouse.*;
 
 import java.util.ArrayList;
@@ -77,8 +76,8 @@ class SandboxObject extends GameObject {
         return this;
     }
 
-    SandboxObject setLifetime(float lifeTime) {
-        sandboxComponents.add(new DestroyAfterDuration(lifeTime));
+    SandboxObject addSandboxComponent(Component component) {
+        sandboxComponents.add(component);
         return this;
     }
 
