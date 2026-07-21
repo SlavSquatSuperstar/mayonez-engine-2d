@@ -41,6 +41,7 @@ public abstract class Node {
     final long nodeID;
     private String name;
     private final Set<String> tags;
+    private @Nullable SceneLayer layer;
 
     // Node Hierarchy
     @Nullable Scene scene;
@@ -51,7 +52,6 @@ public abstract class Node {
     // Node Behavior
     private boolean destroyed, enabled, visible;
     private int updateOrder, zIndex;
-    // TODO layer
 
     /**
      * Create an empty node with name defaulting to the class name.
@@ -154,6 +154,48 @@ public abstract class Node {
      */
     public void clearTags() {
         tags.clear();
+    }
+
+    /**
+     * Get this node's {@link mayonez.SceneLayer}, which specifies which other nodes
+     * it interacts with. If the layer is null, this node will interact with all other
+     * nodes.
+     *
+     * @return the layer
+     */
+    public @Nullable SceneLayer getLayer() {
+        return layer;
+    }
+
+    /**
+     * If this node has the layer with the given name.
+     *
+     * @param layerName the layer name
+     * @return if the layer matches the name
+     */
+    public boolean hasLayer(String layerName) {
+        return layer != null && layer.getName().equals(layerName);
+    }
+
+    /**
+     * If this node has the layer with the given index.
+     *
+     * @param layerIndex the layer index
+     * @return if the layer matches the index
+     */
+    public boolean hasLayer(int layerIndex) {
+        return layer != null && layer.getIndex() == layerIndex;
+    }
+
+    /**
+     * Set this node's {@link mayonez.SceneLayer}, which specifies which objects
+     * it interacts with. If the layer is null, the object will interact with all other
+     * objects.
+     *
+     * @param layer the layer
+     */
+    public void setLayer(@Nullable SceneLayer layer) {
+        this.layer = layer;
     }
 
     // Node Hierarchy Getters and Setters
@@ -347,6 +389,7 @@ public abstract class Node {
 //        onDestroy(); // TODO can't place here
         // TODO destroy children?
         // TODO clear children
+        layer = null;
     }
 
     /**

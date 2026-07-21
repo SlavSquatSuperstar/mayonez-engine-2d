@@ -28,7 +28,6 @@ public class GameObject extends Node {
 
     // Object Information and State
     public final Transform transform; // transform in world
-    private @Nullable SceneLayer layer;
 
     // Component Fields
     private final BufferedList<Component> components;
@@ -65,7 +64,6 @@ public class GameObject extends Node {
     public GameObject(@Nullable String name, Transform transform) {
         super(name);
         this.transform = transform;
-        this.layer = null;
         components = new BufferedList<>();
         sortComponents = false;
     }
@@ -240,57 +238,12 @@ public class GameObject extends Node {
     protected final void onDestroy() {
         components.forEach(Component::setDestroyed);
         components.clear();
-        layer = null;
         scene = null;
     }
 
     @Override
     void onChildUpdateOrderChanged() {
         sortComponents = true;
-    }
-
-    // Property Getters and Setters
-
-    /**
-     * Get the game object's {@link mayonez.SceneLayer}, which specifies which objects
-     * it interacts with. If the layer is null, the object will interact with all other
-     * objects.
-     *
-     * @return the layer
-     */
-    public @Nullable SceneLayer getLayer() {
-        return layer;
-    }
-
-    /**
-     * If game object has the layer with the given name.
-     *
-     * @param layerName the layer name
-     * @return if the layer matches the name
-     */
-    public boolean hasLayer(String layerName) {
-        return layer != null && layer.getName().equals(layerName);
-    }
-
-    /**
-     * If game object has the layer with the given index.
-     *
-     * @param layerIndex the layer index
-     * @return if the layer matches the index
-     */
-    public boolean hasLayer(int layerIndex) {
-        return layer != null && layer.getIndex() == layerIndex;
-    }
-
-    /**
-     * Set the game object's {@link mayonez.SceneLayer}, which specifies which objects
-     * it interacts with. If the layer is null, the object will interact with all other
-     * objects.
-     *
-     * @param layer the layer
-     */
-    public void setLayer(@Nullable SceneLayer layer) {
-        this.layer = layer;
     }
 
 }
