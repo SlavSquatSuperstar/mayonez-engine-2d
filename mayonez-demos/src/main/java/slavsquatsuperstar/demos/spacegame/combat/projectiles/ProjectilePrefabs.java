@@ -4,6 +4,8 @@ import mayonez.*;
 import mayonez.graphics.sprites.*;
 import mayonez.math.Random;
 import mayonez.math.*;
+import mayonez.physics.CollisionEvent;
+import mayonez.physics.CollisionEventType;
 import mayonez.physics.colliders.*;
 import mayonez.physics.dynamics.*;
 import mayonez.scripts.*;
@@ -63,6 +65,7 @@ public final class ProjectilePrefabs {
             protected void init() {
                 setLayer(getScene().getLayer(SpaceGameLayer.PROJECTILES));
                 addComponent(new Projectile(source, type));
+
                 var sprite = PROJECTILE_SPRITES.getSprite(type.spriteIndex());
                 sprite.setZIndex(SpaceGameZIndex.PROJECTILE);
                 addComponent(sprite);
@@ -70,7 +73,8 @@ public final class ProjectilePrefabs {
                 var col = new BulletBoxCollider(type.colliderSize());
                 col.setPrimaryAxisX(false);
                 col.setSweepFactor(type.sweepFactor());
-                addComponent(col.setTrigger(true));
+                col.setTrigger(true);
+                addComponent(col);
                 addComponent(new Rigidbody(0.001f));
             }
         };

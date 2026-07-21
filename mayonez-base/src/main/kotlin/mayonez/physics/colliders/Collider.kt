@@ -125,6 +125,7 @@ abstract class Collider(private val shape: Shape) :
         collisionCallbacks.broadcast(event)
     }
 
+    // TODO should register collision?
     /**
      * Add a collision callback to this collider that will be notified when this object
      * receives a collision event.

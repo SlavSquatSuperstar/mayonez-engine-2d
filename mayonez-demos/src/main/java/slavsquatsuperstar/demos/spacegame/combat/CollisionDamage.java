@@ -34,18 +34,18 @@ public class CollisionDamage extends Script {
 
         var collider = getCollider();
         if (collider != null) {
-            collider.addCollisionCallback(event -> {
-                // On collision
-                if (!event.trigger && event.type == CollisionEventType.ENTER) {
-                    onObjectCollision(event.other, event.velocity);
-                }
-            });
+            // On collision
+            collider.addCollisionCallback(this::onObjectCollision);
         }
     }
 
-    private void onObjectCollision(GameObject object, Vec2 velocity) {
+    // TODO Should listen to collision
+    public void onObjectCollision(CollisionEvent event) {
+        if (event.trigger || event.type != CollisionEventType.ENTER) return;
+
+        var object = event.other;
         if (object.hasLayer(SpaceGameLayer.SHIPS) || object.hasLayer(SpaceGameLayer.ASTEROIDS)) {
-            var speed = velocity.len();
+            var speed = event.velocity.len();
             if (speed > speedThreshold) {
                 var damage = speed / speedThreshold * collisionDamage;
                 damageable.onObjectDamaged(damage);

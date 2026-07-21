@@ -34,7 +34,6 @@ public class Satellite extends GameObject {
         addComponent(new BoxCollider(new Vec2(1f, 0.44f)));
         addComponent(new KeepInScene(SpaceGameScene.SCENE_HALF_SIZE.mul(-1f),
                 SpaceGameScene.SCENE_HALF_SIZE, KeepInScene.Mode.WRAP));
-        addComponent(new CollisionDamage());
 
         // Initial Velocity
         Rigidbody rb;

@@ -24,12 +24,8 @@ public class Damageable extends Script {
     protected void start() {
         var collider = getCollider();
         if (collider != null) {
-            collider.addCollisionCallback(event -> {
-                // On trigger
-                if (event.trigger && event.type == CollisionEventType.ENTER) {
-                    onImpactObject(event.other);
-                }
-            });
+            // On trigger
+            collider.addCollisionCallback(this::onImpactProjectile);
         }
     }
 
@@ -38,7 +34,11 @@ public class Damageable extends Script {
         if (healthPoints.isAtMin()) onHealthDepleted();
     }
 
-    private void onImpactObject(GameObject other) {
+    // TODO should listen to collision
+    public void onImpactProjectile(CollisionEvent event) {
+        if (!event.trigger || event.type != CollisionEventType.ENTER) return;
+
+        var other = event.other;
         if (other.hasLayer(SpaceGameLayer.PROJECTILES)) {
             var p = other.getComponent(Projectile.class);
             if (p != null && !gameObject.equals(p.getSource())) {
