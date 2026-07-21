@@ -26,9 +26,6 @@ import java.util.*;
  */
 public class GameObject extends Node {
 
-    // Object Information and State
-    public final Transform transform; // transform in world
-
     // Component Fields
     private final BufferedList<Component> components;
     private boolean sortComponents;
@@ -62,8 +59,7 @@ public class GameObject extends Node {
      * @param transform the object starting transform
      */
     public GameObject(@Nullable String name, Transform transform) {
-        super(name);
-        this.transform = transform;
+        super(name, transform);
         components = new BufferedList<>();
         sortComponents = false;
     }
@@ -145,7 +141,10 @@ public class GameObject extends Node {
      */
     public final void addComponent(@Nullable Component comp) {
         if (comp == null || comp.getGameObject() != null) return;
-        comp.setGameObject(this);
+
+        comp.setParent(this);
+        comp.setScene(scene);
+        comp.init();
         if (scene != null && scene.isRunning()) {
             components.addBuffered(comp); // Add component later if scene running
         } else {

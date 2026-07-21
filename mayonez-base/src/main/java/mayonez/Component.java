@@ -32,11 +32,6 @@ public abstract class Component extends Node {
      */
     protected @Nullable GameObject gameObject;
 
-    /**
-     * A reference to the parent object's {@link mayonez.Transform}.
-     */
-    protected Transform transform; // use blank transform in case no parent
-
     protected Component() {
         this(UpdateOrder.SCRIPT);
     }
@@ -147,6 +142,7 @@ public abstract class Component extends Node {
         // TODO only check object if non null
         // TODO fix UI usages
         // TODO fix animator usages
+        // TODO use shouldUpdate
     }
 
     /**
@@ -160,6 +156,7 @@ public abstract class Component extends Node {
         // Check parent visible if parent exists
         return super.isVisible() &&
                 (gameObject == null || gameObject.isVisible());
+        // TODO use shouldRender
     }
 
     // Property Getters and Setters
@@ -173,17 +170,13 @@ public abstract class Component extends Node {
         return gameObject;
     }
 
-    /**
-     * Adds this component to a parent {@link mayonez.GameObject}. Should only
-     * be used by the {@link mayonez.GameObject}.
-     *
-     * @param gameObject a game object
-     */
-    final void setGameObject(GameObject gameObject) {
-        this.gameObject = gameObject;
-        this.transform = gameObject.transform;
-        setScene(gameObject.getScene()); // Scene will be non-null here
-        init();
+    @Override
+    void setParent(@Nullable Node parent) {
+        super.setParent(parent);
+        if (parent instanceof GameObject obj) {
+            this.gameObject = obj;
+            this.transform = obj.transform;
+        }
     }
 
     /**

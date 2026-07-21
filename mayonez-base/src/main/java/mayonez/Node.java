@@ -47,7 +47,12 @@ public abstract class Node {
     @Nullable Scene scene;
     @Nullable Node parent;
     private final BufferedList<Node> children;
-    // TODO transform
+    /**
+     * The node's {@link mayonez.Transform} that defines its space in the world.
+     */
+    public Transform transform;
+    // TODO global transform
+    // TODO getter/setters
 
     // Node Behavior
     private boolean destroyed, enabled, visible;
@@ -67,6 +72,16 @@ public abstract class Node {
      * @param name the node name
      */
     public Node(@Nullable String name) {
+        this(name, new Transform());
+    }
+
+    /**
+     * Create an empty node with a name and transform. If the name is {@code null}
+     * or blank, it will default to the class name.
+     *
+     * @param name the node name
+     */
+    public Node(@Nullable String name, Transform transform) {
         nodeID = nodeCounter++;
         this.name = validateName(name);
         tags = new HashSet<>();
@@ -74,6 +89,7 @@ public abstract class Node {
         scene = null;
         parent = null;
         children = new BufferedList<>();
+        this.transform = transform;
 
         destroyed = false;
         enabled = true;
@@ -327,7 +343,7 @@ public abstract class Node {
 
     /**
      * Add a child node to this node. The child will not be added if it is
-     * null, already has a parent node, or is part of a scene.
+     * null, already has a parent node, or is already part of a scene.
      *
      * @param child the node
      */
@@ -378,7 +394,7 @@ public abstract class Node {
     /**
      * Delete this node from the scene, removing it from its parent and destroying
      * all its descendants at the end of the current frame. The properties
-     * {@link #getScene}, {@link #getParent}, and {@code transform} will return null
+     * {@link #getScene}, {@link #getParent}, and {@link transform} will return null
      * after the object is destroyed.
      * <p>
      * <b>Warning:</b> Destroying a node is permanent and cannot be reversed!
@@ -394,7 +410,7 @@ public abstract class Node {
 
     /**
      * Custom behavior for when this node or any of its ancestors is destroyed. The properties
-     * {@link #getScene}, {@link #getParent}, and {@code transform} will still be accessible.
+     * {@link #getScene}, {@link #getParent}, and {@link transform} will still be accessible.
      * <p>
      * Warning: Calling {@code onDestroy} directly can lead to unpredictable behavior. It is
      * better to call {@link #setDestroyed()} instead.
