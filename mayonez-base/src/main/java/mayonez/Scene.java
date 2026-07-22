@@ -123,7 +123,7 @@ public abstract class Scene {
         if (isRunning()) {
             physics.step(dt);
             objects.forEach(obj -> {
-                if (obj.isEnabled()) obj.fixedUpdate(dt);
+                if (obj.isEnabled()) obj.doFixedUpdate(dt);
             });
         }
     }
@@ -145,7 +145,7 @@ public abstract class Scene {
         if (isRunning()) {
             objects.forEach(obj -> {
                 if (obj.isEnabled()) {
-                    obj.update(dt);
+                    obj.doUpdate(dt);
                     if (obj.isDestroyed()) removeObject(obj); // Check for removals
                 }
             });
@@ -174,7 +174,7 @@ public abstract class Scene {
         if (!isStopped()) {
             onUserRender();
             objects.forEach(obj -> {
-                if (obj.isVisible()) obj.debugRender();
+                if (obj.isVisible()) obj.doDebugRender();
             });
             renderLayer.render(g2);
         }
@@ -256,7 +256,7 @@ public abstract class Scene {
     }
 
     private void startObject(GameObject obj) {
-        obj.start(); // Add components first so renderer and physics can access it
+        obj.doStart(); // Add components first so renderer and physics can access it
         for (var comp : obj.getComponents()) {
             if (comp instanceof Renderable r) renderLayer.addRenderable(r);
             if (comp instanceof PhysicsBody b) physics.addPhysicsBody(b);

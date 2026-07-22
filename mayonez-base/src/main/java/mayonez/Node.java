@@ -98,6 +98,71 @@ public abstract class Node {
         zIndex = 0;
     }
 
+    // Node Game Loop Methods
+
+    /**
+     * Add child components and initializes fields after this node has been added to the scene
+     * or parent node. This method is called before {@code #start} and after {@code parent.init}.
+     * The {@link #transform}, {@link getParent}, and {@link #getScene} properties will return
+     * non-null here. Subclasses may override this method and can also call {@code super.init()}.
+     * <p>
+     * Warning: Calling {@code init()} at any other point in time may lead to unintended errors
+     * and should be avoided!
+     */
+    protected void init() {
+    }
+
+    /**
+     * Initialize fields after all components have been added to the parent object. The
+     * {@link #transform}, {@link #getParent} {@link #getScene} properties and
+     * {@link #getChild} method are accessible here. This method will be called even if this
+     * node has been disabled through {@link #setEnabled}.
+     * <p>
+     * Usage: Subclasses may override this method and can also call {@code super.start()}.
+     * <p>
+     * Warning: Calling {@code start()} at any other point in time may lead to unintended
+     * errors and should be avoided!
+     */
+    protected void start() {
+    }
+
+    /**
+     * Refresh this node's state and game logic. This method is called each fixed
+     * tick, between physics and {@link #update}, and {@code dt} is generally consistent.
+     * The {@code fixedUpdate} method should be used for frame rate-sensitive behavior, such as
+     * movement, collision, and AI.
+     * <p>
+     * Usage: Subclasses may override this method and can also call {@code super.fixedUpdate()}.
+     *
+     * @param dt seconds between fixed ticks
+     */
+    protected void fixedUpdate(float dt) {
+    }
+
+    /**
+     * Refresh this node's state and game logic. This method is called each drawn
+     * frame, between {@link #fixedUpdate} and rendering, and {@code dt} may vary. The
+     * {@code update} method may be used for general behavior, such as input, timers,
+     * and animations.
+     * <p>
+     * Usage: Subclasses may override this method and can also call {@code super.update()}.
+     *
+     * @param dt seconds since the last frame
+     */
+    protected void update(float dt) {
+    }
+
+    /**
+     * Draw debug information for this node to the screen. This method is called each
+     * drawn frame, between {@link update} and rendering. Any {@link mayonez.graphics.debug.DebugDraw}
+     * method calls should be made here. This method is called even if the scene is paused or
+     * the component is not enabled.
+     * <p>
+     * Usage: Subclasses may override this method and can also call {@code super.debugRender()}.
+     */
+    protected void debugRender() {
+    }
+
     // Node Information Getters and Setters
 
     /**
@@ -352,6 +417,8 @@ public abstract class Node {
 
         child.setParent(this);
         child.setScene(scene);
+        child.init();
+
         if (scene != null && scene.isRunning()) {
             children.addBuffered(child); // Add child later if scene running
         } else {

@@ -70,7 +70,7 @@ public class GameObject extends Node {
      * Adds all components to this object and then initializes them. Calls
      * {@link mayonez.Component#start()} for all components added on start.
      */
-    final void start() {
+    final void doStart() {
         // Add all components
         init();
         components.processBuffer();
@@ -83,7 +83,7 @@ public class GameObject extends Node {
      *
      * @param dt seconds between fixed ticks
      */
-    final void fixedUpdate(float dt) {
+    final void doFixedUpdate(float dt) {
         components.stream()
                 .filter(Component::isEnabled)
                 .forEach(c -> c.fixedUpdate(dt));
@@ -94,7 +94,7 @@ public class GameObject extends Node {
      *
      * @param dt seconds since the last frame
      */
-    final void update(float dt) {
+    final void doUpdate(float dt) {
         components.stream()
                 .filter(Component::isEnabled)
                 .forEach(c -> c.update(dt));
@@ -111,24 +111,10 @@ public class GameObject extends Node {
     /**
      * Draws debug information for all enabled components.
      */
-    final void debugRender() {
+    final void doDebugRender() {
         components.stream()
                 .filter(Component::isVisible)
                 .forEach(Component::debugRender);
-    }
-
-    // User Defined Methods
-
-    /**
-     * Add components and initializes fields after this object has been added to the scene.
-     * The {@link #transform} field and {@link #getScene} method will return non-null here.
-     * <p>
-     * Usage: Subclasses may override this method and can also call {@code super.init()}.
-     * <p>
-     * Warning: Calling {@code init()} at any other point in time may lead to unintended errors
-     * and should be avoided!
-     */
-    protected void init() {
     }
 
     // Component Methods
@@ -144,7 +130,7 @@ public class GameObject extends Node {
 
         comp.setParent(this);
         comp.setScene(scene);
-        comp.init();
+        comp.init(); // Add child components
         if (scene != null && scene.isRunning()) {
             components.addBuffered(comp); // Add component later if scene running
         } else {
