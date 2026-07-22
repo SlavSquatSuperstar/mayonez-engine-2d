@@ -46,7 +46,8 @@ public abstract class Node {
     // Node Hierarchy
     @Nullable Scene scene;
     @Nullable Node parent;
-    private final BufferedList<Node> children;
+    final BufferedList<Node> children;
+    // TODO update nodes in scene
     /**
      * The node's {@link mayonez.Transform} that defines its space in the world.
      */
@@ -418,6 +419,8 @@ public abstract class Node {
         child.setParent(this);
         child.setScene(scene);
         child.init();
+        // TODO start child?
+        // TODO rename child
 
         if (scene != null && scene.isRunning()) {
             children.addBuffered(child); // Add child later if scene running
@@ -425,8 +428,6 @@ public abstract class Node {
             children.addUnbuffered(child); // Add child now otherwise
         }
     }
-
-    // TODO rename child
 
     /**
      * Removes a child component from this node and destroys it. The child will

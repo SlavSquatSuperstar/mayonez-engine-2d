@@ -27,7 +27,6 @@ import java.util.*;
 public class GameObject extends Node {
 
     // Component Fields
-    private final BufferedList<Component> components;
     private boolean sortComponents;
 
     /**
@@ -60,7 +59,6 @@ public class GameObject extends Node {
      */
     public GameObject(@Nullable String name, Transform transform) {
         super(name, transform);
-        components = new BufferedList<>();
         sortComponents = false;
     }
 
@@ -73,9 +71,9 @@ public class GameObject extends Node {
     final void doStart() {
         // Add all components
         init();
-        components.processBuffer();
+        children.processBuffer();
         sortComponents();
-        components.forEach(Component::start); // Start all components
+        children.forEach(Node::start); // Start all components
     }
 
     /**
@@ -84,8 +82,8 @@ public class GameObject extends Node {
      * @param dt seconds between fixed ticks
      */
     final void doFixedUpdate(float dt) {
-        components.stream()
-                .filter(Component::isEnabled)
+        children.stream()
+                .filter(Node::isEnabled)
                 .forEach(c -> c.fixedUpdate(dt));
     }
 
@@ -95,16 +93,16 @@ public class GameObject extends Node {
      * @param dt seconds since the last frame
      */
     final void doUpdate(float dt) {
-        components.stream()
-                .filter(Component::isEnabled)
+        children.stream()
+                .filter(Node::isEnabled)
                 .forEach(c -> c.update(dt));
 
-        components.processBuffer(); // Add or remove components
+        children.processBuffer(); // Add or remove components
         if (sortComponents) sortComponents();
     }
 
     private void sortComponents() {
-        components.sort(Comparator.comparingInt(Component::getUpdateOrder));
+        children.sort(Comparator.comparingInt(Node::getUpdateOrder));
         sortComponents = false;
     }
 
@@ -112,9 +110,9 @@ public class GameObject extends Node {
      * Draws debug information for all enabled components.
      */
     final void doDebugRender() {
-        components.stream()
-                .filter(Component::isVisible)
-                .forEach(Component::debugRender);
+        children.stream()
+                .filter(Node::isVisible)
+                .forEach(Node::debugRender);
     }
 
     // Component Methods
@@ -126,16 +124,7 @@ public class GameObject extends Node {
      * @param comp the component
      */
     public final void addComponent(@Nullable Component comp) {
-        if (comp == null || comp.getGameObject() != null) return;
-
-        comp.setParent(this);
-        comp.setScene(scene);
-        comp.init(); // Add child components
-        if (scene != null && scene.isRunning()) {
-            components.addBuffered(comp); // Add component later if scene running
-        } else {
-            components.addUnbuffered(comp); // Add component now
-        }
+        super.addChild(comp);
     }
 
     /**
@@ -145,13 +134,7 @@ public class GameObject extends Node {
      * @param comp the component
      */
     public final void removeComponent(@Nullable Component comp) {
-        if (comp == null || comp.getGameObject() != this) return;
-        comp.setDestroyed();
-        if (scene != null && scene.isRunning()) {
-            components.removeBuffered((comp)); // Remove component later if scene running
-        } else {
-            components.removeUnbuffered(comp); // Remove component now
-        }
+        super.removeChild(comp);
     }
 
     /**
@@ -160,7 +143,7 @@ public class GameObject extends Node {
      * @return the number of components
      */
     public int numComponents() {
-        return components.size();
+        return super.numChildren();
     }
 
     /**
@@ -170,11 +153,7 @@ public class GameObject extends Node {
      * @return the component, or null if not present
      */
     public @Nullable Component getComponent(@Nullable String name) {
-        if (name == null) return null;
-        return components.stream()
-                .filter(c -> c.getName().equals(name))
-                .findFirst()
-                .orElse(null);
+        return (Component) super.getChild(name);
     }
 
     /**
@@ -186,12 +165,7 @@ public class GameObject extends Node {
      * @return the component, or null if not present
      */
     public <T extends Component> @Nullable T getComponent(@Nullable Class<T> cls) {
-        if (cls == null) return null;
-        return components.stream()
-                .filter(cls::isInstance)
-                .map(cls::cast)
-                .findFirst()
-                .orElse(null);
+        return super.getChild(cls);
     }
 
     /**
@@ -202,11 +176,7 @@ public class GameObject extends Node {
      * @return the list of components, or empty if none are present
      */
     public <T extends Component> List<T> getComponents(@Nullable Class<T> cls) {
-        if (cls == null) return List.of();
-        return components.stream()
-                .filter(cls::isInstance)
-                .map(cls::cast)
-                .toList();
+        return super.getChildren(cls);
     }
 
     /**
@@ -215,14 +185,16 @@ public class GameObject extends Node {
      * @return the list of all components
      */
     public List<Component> getComponents() {
-        return List.copyOf(components);
+        return super.getChildren()
+                .stream().map(Component.class::cast)
+                .toList();
     }
 
     // Callback Methods
 
     protected final void onDestroy() {
-        components.forEach(Component::setDestroyed);
-        components.clear();
+        children.forEach(Node::setDestroyed);
+        children.clear();
         scene = null;
     }
 
