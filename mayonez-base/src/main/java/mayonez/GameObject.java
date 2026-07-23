@@ -1,7 +1,6 @@
 package mayonez;
 
 import mayonez.math.*;
-import mayonez.util.BufferedList;
 import org.jspecify.annotations.Nullable;
 
 import java.util.*;
@@ -25,9 +24,6 @@ import java.util.*;
  * @author SlavSquatSuperstar
  */
 public class GameObject extends Node {
-
-    // Component Fields
-    private boolean sortComponents;
 
     /**
      * Creates an empty game object with a name and default transform. If the name
@@ -59,7 +55,6 @@ public class GameObject extends Node {
      */
     public GameObject(@Nullable String name, Transform transform) {
         super(name, transform);
-        sortComponents = false;
     }
 
     // Game Loop Methods
@@ -72,47 +67,11 @@ public class GameObject extends Node {
         // Add all components
         init();
         children.processBuffer();
-        sortComponents();
         children.forEach(Node::start); // Start all components
     }
 
-    /**
-     * Updates all enabled components on a fixed tick.
-     *
-     * @param dt seconds between fixed ticks
-     */
-    final void doFixedUpdate(float dt) {
-        children.stream()
-                .filter(Node::isEnabled)
-                .forEach(c -> c.fixedUpdate(dt));
-    }
-
-    /**
-     * Updates all enabled components on a render frame.
-     *
-     * @param dt seconds since the last frame
-     */
-    final void doUpdate(float dt) {
-        children.stream()
-                .filter(Node::isEnabled)
-                .forEach(c -> c.update(dt));
-
+    final void doUpdate() {
         children.processBuffer(); // Add or remove components
-        if (sortComponents) sortComponents();
-    }
-
-    private void sortComponents() {
-        children.sort(Comparator.comparingInt(Node::getUpdateOrder));
-        sortComponents = false;
-    }
-
-    /**
-     * Draws debug information for all enabled components.
-     */
-    final void doDebugRender() {
-        children.stream()
-                .filter(Node::isVisible)
-                .forEach(Node::debugRender);
     }
 
     // Component Methods
@@ -196,11 +155,6 @@ public class GameObject extends Node {
         children.forEach(Node::setDestroyed);
         children.clear();
         scene = null;
-    }
-
-    @Override
-    void onChildUpdateOrderChanged() {
-        sortComponents = true;
     }
 
 }

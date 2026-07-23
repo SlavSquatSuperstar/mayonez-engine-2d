@@ -43,6 +43,8 @@ public abstract class Scene {
     // Scene Objects
     protected boolean uniqueObjectNames = false;
     private final BufferedList<GameObject> objects;
+    private final BufferedList<Node> sceneNodes;
+    private boolean sceneChanged;
     // TODO add/remove, queue callbacks
     private final SceneLayer[] layers;
 
@@ -66,6 +68,8 @@ public abstract class Scene {
 
         // Initialize layers
         objects = new BufferedList<>();
+        sceneNodes = new BufferedList<>();
+        sceneChanged = false;
         layers = new SceneLayer[SceneLayer.NUM_LAYERS];
         renderLayer = RendererFactory.createRenderLayer(Mayonez.getUseGL());
         physics = new DefaultPhysicsWorld();
@@ -94,9 +98,7 @@ public abstract class Scene {
         // Start objects
         state = SceneState.RUNNING;
         objects.forEach(this::startObject);
-
-        // Add objects added through child init/start
-        objects.processBuffer();
+        sortNodes();
     }
 
     /**
@@ -115,15 +117,15 @@ public abstract class Scene {
     // Update Methods
 
     /**
-     * Processes physics and updates all objects on a fixed tick.
+     * Processes physics and updates all enabled objects on a fixed tick.
      *
      * @param dt seconds between fixed ticks
      */
     final void fixedUpdate(float dt) {
         if (isRunning()) {
             physics.step(dt);
-            objects.forEach(obj -> {
-                if (obj.isEnabled()) obj.doFixedUpdate(dt);
+            sceneNodes.forEach(node -> {
+                if (node.isEnabled()) node.fixedUpdate(dt);
             });
         }
     }
@@ -134,7 +136,7 @@ public abstract class Scene {
     // TODO have batch draw last data
 
     /**
-     * Updates all objects on a render frame.
+     * Updates all enabled nodes on a render frame.
      *
      * @param dt seconds since the last frame
      */
@@ -143,15 +145,19 @@ public abstract class Scene {
             onUserUpdate(dt); // TODO move input to window
         }
         if (isRunning()) {
+            sceneNodes.forEach(node -> {
+                if (node.isEnabled()) node.update(dt);
+            });
             objects.forEach(obj -> {
-                if (obj.isEnabled()) {
-                    obj.doUpdate(dt);
-                    if (obj.isDestroyed()) removeObject(obj); // Check for removals
-                }
+                obj.doUpdate();
+                if (obj.isDestroyed()) removeObject(obj); // Check for removals
             });
         }
+
         // Add or remove objects
         objects.processBuffer();
+        sceneNodes.processBuffer();
+        if (sceneChanged) sortNodes();
         if (isDestroyed()) stop();
     }
 
@@ -166,15 +172,15 @@ public abstract class Scene {
     // Render Methods
 
     /**
-     * Redraws everything in the current scene, including backgrounds, sprites, and UI.
+     * Redraws all visible nodes to the screen on a render frame.
      *
      * @param g2 the window's graphics object, if using the AWT engine
      */
     final void render(@Nullable Graphics2D g2) {
         if (!isStopped()) {
             onUserRender();
-            objects.forEach(obj -> {
-                if (obj.isVisible()) obj.doDebugRender();
+            sceneNodes.forEach(node -> {
+                if (node.isVisible()) node.debugRender();
             });
             renderLayer.render(g2);
         }
@@ -233,10 +239,14 @@ public abstract class Scene {
     private void addObjectToScene(GameObject obj) {
         if (uniqueObjectNames) renameObjectUnique(obj);
         obj.setScene(this);
+        sceneNodes.addUnbuffered(obj);
+        // Start object if running, otherwise wait till all objects added
         if (!isStopped()) startObject(obj);
         Logger.trace("Added object \"%s\" to scene \"%s\"",
                 obj, this.name);
     }
+
+    // TODO on node add/remove for each node, no children
 
     private void renameObjectUnique(GameObject obj) {
         // Rename object to "Name (n)"
@@ -281,8 +291,31 @@ public abstract class Scene {
             if (comp instanceof CollisionBody b) physics.removeCollisionBody(b);
         }
         obj.onDestroy(); // TODO should move elsewhere
+        sceneNodes.removeUnbuffered(obj);
         Logger.trace("Removed object \"%s\" from scene \"%s\"",
                 obj, this.name);
+    }
+
+    void onNodeAdded(Node node) {
+        if (isRunning()) sceneNodes.addBuffered(node);
+        else sceneNodes.addUnbuffered(node);
+        sceneChanged = true;
+    }
+
+    void onNodeRemoved(Node node) {
+        if (isRunning()) sceneNodes.removeBuffered(node);
+        else sceneNodes.removeUnbuffered(node);
+        sceneChanged = true;
+    }
+
+    void setSceneChanged() {
+        this.sceneChanged = true;
+        // TODO test
+    }
+
+    private void sortNodes() {
+        sceneNodes.sort(Comparator.comparingInt(Node::getUpdateOrder));
+        sceneChanged = false;
     }
 
     /**

@@ -120,10 +120,4 @@ public abstract class Component extends Node {
         return transform;
     }
 
-    @Override
-    public void setUpdateOrder(int updateOrder) {
-        super.setUpdateOrder(updateOrder);
-        if (gameObject != null) gameObject.onChildUpdateOrderChanged();
-    }
-
 }

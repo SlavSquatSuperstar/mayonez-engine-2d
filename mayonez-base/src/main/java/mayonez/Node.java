@@ -419,6 +419,7 @@ public abstract class Node {
         child.setParent(this);
         child.setScene(scene);
         child.init();
+        if (scene != null) scene.onNodeAdded(child);
         // TODO start child?
         // TODO rename child
 
@@ -441,6 +442,7 @@ public abstract class Node {
         child.setDestroyed();
         child.setParent(null);
         child.setScene(null);
+        if (scene != null) scene.onNodeRemoved(child);
         if (scene != null && scene.isRunning()) {
             children.removeBuffered((child)); // Remove component later if scene running
         } else {
@@ -586,13 +588,7 @@ public abstract class Node {
      */
     public void setUpdateOrder(int updateOrder) {
         this.updateOrder = updateOrder;
-        if (parent != null) parent.onChildUpdateOrderChanged();
-    }
-
-    void onChildUpdateOrderChanged() {
-        // TODO sort next frame
-        // TODO notify scene instead
-        // TODO test
+        if (scene != null) scene.setSceneChanged();
     }
 
     /**
