@@ -48,6 +48,7 @@ public abstract class Node {
     @Nullable Node parent;
     final BufferedList<Node> children;
     // TODO update nodes in scene
+    private boolean childrenChanged; // Garbage collect destroyed children
     /**
      * The node's {@link mayonez.Transform} that defines its space in the world.
      */
@@ -90,6 +91,7 @@ public abstract class Node {
         scene = null;
         parent = null;
         children = new BufferedList<>();
+        childrenChanged = false;
         this.transform = transform;
 
         destroyed = false;
@@ -432,14 +434,21 @@ public abstract class Node {
     public final void removeChild(@Nullable Node child) {
         if (child == null || child.parent != this) return;
 
+        children.remove(child);
         child.setDestroyed();
-        child.setParent(null);
-        child.setScene(null);
-        if (scene != null) scene.onNodeRemoved(child);
-        if (scene != null && scene.isRunning()) {
-            children.removeBuffered((child)); // Remove component later if scene running
-        } else {
-            children.removeUnbuffered(child); // Remove component now
+    }
+
+    void setChildrenChanged() {
+        this.childrenChanged = true;
+    }
+
+    void garbageCollect() {
+        if (childrenChanged) {
+            var destroyedChildren = children.stream()
+                    .filter(Node::isDestroyed)
+                    .toList();
+            children.removeAll(destroyedChildren);
+            childrenChanged = false;
         }
     }
 
@@ -465,10 +474,10 @@ public abstract class Node {
     public void setDestroyed() {
         if (destroyed) return;
         destroyed = true;
-//        onDestroy(); // TODO can't place here
-        // TODO destroy children?
-        // TODO clear children
-        layer = null;
+        children.forEach(Node::setDestroyed);
+        if (scene != null) scene.onNodeRemoved(this);
+        if (parent != null) parent.setChildrenChanged();
+        children.clear();
     }
 
     /**

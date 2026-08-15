@@ -132,12 +132,4 @@ public class GameObject extends Node {
                 .toList();
     }
 
-    // Callback Methods
-
-    protected final void onDestroy() {
-        children.forEach(Node::setDestroyed);
-        children.clear();
-        scene = null;
-    }
-
 }

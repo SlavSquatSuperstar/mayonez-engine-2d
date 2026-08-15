@@ -139,7 +139,8 @@ public class ECSTestScene extends DemoScene {
                 // Remove component from object
                 if (this.equals(testComponents.getFirst()) && !removedComponent) {
                     testComponents.removeFirst();
-                    gameObject.removeComponent(this);
+                    if (Random.randomBoolean()) gameObject.removeComponent(this);
+                    else this.setDestroyed();
                     removedComponent = true;
                 }
             }

@@ -57,8 +57,6 @@ public abstract class Component extends Node {
     @Override
     public void setDestroyed() {
         super.setDestroyed();
-        onDestroy();
-        gameObject = null;
         transform = new Transform();
     }
 

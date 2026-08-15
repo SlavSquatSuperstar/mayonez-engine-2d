@@ -162,7 +162,10 @@ public abstract class Scene {
         objects.processBuffer();
         sceneNodes.processBuffer();
         newNodes.executeCallbacks(); // Start any new nodes
-        if (sceneChanged) sortNodes();
+        if (sceneChanged) {
+            sceneNodes.forEach(Node::garbageCollect);
+            sortNodes();
+        }
         if (isDestroyed()) stop();
     }
 
@@ -288,19 +291,21 @@ public abstract class Scene {
      */
     final void removeObject(@Nullable GameObject obj) {
         if (obj == null) return;
-        objects.removeBuffered(obj, () -> this.removeObjectFromScene(obj));
+        // Assume scene is running
+        objects.removeBuffered(obj, obj::setDestroyed);
     }
 
-    private void removeObjectFromScene(GameObject obj) {
-        for (var comp : obj.getComponents()) {
-            if (comp instanceof Renderable r) renderLayer.removeRenderable(r);
-            if (comp instanceof PhysicsBody b) physics.removePhysicsBody(b);
-            if (comp instanceof CollisionBody b) physics.removeCollisionBody(b);
-        }
-        obj.onDestroy(); // TODO should move elsewhere
-        sceneNodes.removeUnbuffered(obj);
+    private void removeNodeFromScene(Node node) {
+        if (node instanceof Renderable r) renderLayer.removeRenderable(r);
+        if (node instanceof PhysicsBody b) physics.removePhysicsBody(b);
+        if (node instanceof CollisionBody b) physics.removeCollisionBody(b);
+        sceneNodes.remove(node);
+        node.onDestroy(); // TODO should move elsewhere
+        node.setParent(null);
+        node.setScene(null);
+        node.setLayer(null);
         Logger.trace("Removed object \"%s\" from scene \"%s\"",
-                obj, this.name);
+                node, this.name);
     }
 
     void onNodeAdded(Node node) {
@@ -314,8 +319,12 @@ public abstract class Scene {
     }
 
     void onNodeRemoved(Node node) {
-        if (isRunning()) sceneNodes.removeBuffered(node);
-        else sceneNodes.removeUnbuffered(node);
+        if (isRunning()) {
+            sceneNodes.removeBuffered(node, () -> removeNodeFromScene(node));
+        } else {
+            sceneNodes.removeUnbuffered(node);
+            removeNodeFromScene(node);
+        }
         sceneChanged = true;
     }
 
