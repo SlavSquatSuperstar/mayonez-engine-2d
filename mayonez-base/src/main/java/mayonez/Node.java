@@ -1,13 +1,9 @@
 package mayonez;
 
-import mayonez.util.BufferedList;
 import mayonez.util.StringUtils;
 import org.jspecify.annotations.Nullable;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 /**
  * An object possessing properties and behaviors that belongs within a scene. Each node
@@ -46,8 +42,7 @@ public abstract class Node {
     // Node Hierarchy
     @Nullable Scene scene;
     @Nullable Node parent;
-    final BufferedList<Node> children;
-    // TODO update nodes in scene
+    private final List<Node> children; // Don't need to buffer since scene updates nodes
     private boolean childrenChanged; // Garbage collect destroyed children
     /**
      * The node's {@link mayonez.Transform} that defines its space in the world.
@@ -90,7 +85,7 @@ public abstract class Node {
 
         scene = null;
         parent = null;
-        children = new BufferedList<>();
+        children = new ArrayList<>();
         childrenChanged = false;
         this.transform = transform;
 
@@ -322,25 +317,34 @@ public abstract class Node {
     }
 
     /**
-     * Whether this node is at the top level of the scene hierarchy, i.e., it belongs to a scene
+     * Whether this is the root of the scene hierarchy, i.e., it belongs to a scene
      * and has no parent.
      *
      * @return if this node is top-level
      */
+    public boolean isRoot() {
+        return scene != null && parent == null;
+    }
+
+    /**
+     * Whether this node is at the top level of the scene hierarchy, i.e., it belongs to a scene
+     * and its parent is the scene root.
+     *
+     * @return if this node is top-level
+     */
     public boolean isTopLevel() {
-        return parent == null && scene != null;
+        return parent != null && parent.isRoot();
     }
 
     /**
      * Get the depth of this node in the scene tree, or the number of ancestors, including the scene
-     * itself. If the node is not part of a scene, then the depth is zero. If {@link #isTopLevel} is
-     * true, then the depth is one.
+     * itself. If the node is not part of a scene, or it is the scene root, then the depth is zero.
+     * If {@link #isTopLevel} is true, then the depth is one.
      *
      * @return the scene depth
      */
     public int getSceneDepth() {
-        if (scene == null) return 0;
-        else if (parent == null) return 1;
+        if (scene == null || parent == null) return 0;
         else return 1 + parent.getSceneDepth();
     }
 
@@ -436,6 +440,7 @@ public abstract class Node {
 
         children.remove(child);
         child.setDestroyed();
+        if (scene == null) child.setParent(null);
     }
 
     void setChildrenChanged() {
@@ -475,8 +480,8 @@ public abstract class Node {
         if (destroyed) return;
         destroyed = true;
         children.forEach(Node::setDestroyed);
-        if (scene != null) scene.onNodeRemoved(this);
         if (parent != null) parent.setChildrenChanged();
+        if (scene != null) scene.onNodeRemoved(this);
         children.clear();
     }
 

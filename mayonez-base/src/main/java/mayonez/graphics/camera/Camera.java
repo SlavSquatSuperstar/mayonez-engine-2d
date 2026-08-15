@@ -6,7 +6,6 @@ import mayonez.event.EventListener;
 import mayonez.graphics.*;
 import mayonez.math.*;
 import mayonez.renderer.*;
-import mayonez.util.*;
 
 import java.util.*;
 
@@ -32,7 +31,7 @@ public abstract class Camera extends Component implements Viewport {
 
     // GameObject Fields
     private GameObject subject; // Object to follow
-    private final CallbackBuffer cameraCallbacks;
+    private final List<Script> cameraScripts;
 
     protected Camera(Vec2 screenSize) {
         super(UpdateOrder.MOVEMENT);
@@ -50,12 +49,13 @@ public abstract class Camera extends Component implements Viewport {
         rotation = 0f;
 
         subject = null;
-        cameraCallbacks = new CallbackBuffer(4);
+        cameraScripts = new ArrayList<>();
     }
 
     @Override
     protected void init() {
-        cameraCallbacks.executeCallbacks();
+        cameraScripts.forEach(getGameObject()::addComponent);
+        cameraScripts.clear();
         WindowEvents.WINDOW_EVENTS.subscribe(resizeHandler);
     }
 
@@ -77,6 +77,7 @@ public abstract class Camera extends Component implements Viewport {
     @Override
     protected void onDestroy() {
         WindowEvents.WINDOW_EVENTS.unsubscribe(resizeHandler);
+        subject = null;
     }
 
     // Camera Color Methods
@@ -256,7 +257,7 @@ public abstract class Camera extends Component implements Viewport {
      */
     public final void addCameraScript(Script script) {
         // Need to buffer because camera object is null during Scene.init
-        cameraCallbacks.add(() -> getGameObject().addComponent(script));
+        cameraScripts.add(script);
     }
 
 }

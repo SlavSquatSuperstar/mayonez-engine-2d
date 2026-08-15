@@ -18,6 +18,8 @@ class SceneTest {
     void setUp() {
         scene1 = new TestScene("Test Scene");
         scene2 = new TestScene("Test Scene");
+        scene1.createRootNode();
+        scene2.createRootNode();
     }
 
     // Scene ID

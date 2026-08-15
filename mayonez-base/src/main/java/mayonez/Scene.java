@@ -29,6 +29,8 @@ import java.util.List;
  *
  * @author SlavSquatSuperstar
  */
+// TODO custom camera
+// TODO recreate root node
 // TODO current cursor object
 public abstract class Scene {
 
@@ -42,9 +44,9 @@ public abstract class Scene {
 
     // Scene Objects
     protected boolean uniqueObjectNames = false;
-    private final BufferedList<GameObject> objects;
     private final BufferedList<Node> sceneNodes;
     private final CallbackBuffer newNodes; // Nodes needing to start
+    private final Node rootNode;
     private boolean sceneChanged;
     // TODO add/remove, queue callbacks
     private final SceneLayer[] layers;
@@ -68,9 +70,9 @@ public abstract class Scene {
         state = SceneState.STOPPED;
 
         // Initialize layers
-        objects = new BufferedList<>();
         sceneNodes = new BufferedList<>();
         newNodes = new CallbackBuffer();
+        rootNode = new RootNode();
         sceneChanged = false;
         layers = new SceneLayer[SceneLayer.NUM_LAYERS];
         renderLayer = RendererFactory.createRenderLayer(Mayonez.getUseGL());
@@ -90,6 +92,9 @@ public abstract class Scene {
             layers[i] = new SceneLayer(i);
         }
 
+        // Add root node
+        createRootNode();
+
         // Add camera
         camera = CameraFactory.createCamera();
         addObject(CameraFactory.createCameraObject(camera));
@@ -104,6 +109,11 @@ public abstract class Scene {
 
         // Sort nodes by update order
         sortNodes();
+    }
+
+    void createRootNode() {
+        sceneNodes.add(rootNode);
+        rootNode.setScene(this);
     }
 
     /**
@@ -153,13 +163,9 @@ public abstract class Scene {
             sceneNodes.forEach(node -> {
                 if (node.isEnabled()) node.update(dt);
             });
-            objects.forEach(obj -> {
-                if (obj.isDestroyed()) removeObject(obj); // Check for removals
-            });
         }
 
         // Add or remove nodes
-        objects.processBuffer();
         sceneNodes.processBuffer();
         newNodes.executeCallbacks(); // Start any new nodes
         if (sceneChanged) {
@@ -215,11 +221,9 @@ public abstract class Scene {
      */
     final void stop() {
         // Destroy all objects
-        camera.setSubject(null);
-        objects.forEach(GameObject::onDestroy);
+        rootNode.setDestroyed();
 
         // Clear all objects
-        objects.clear();
         sceneNodes.clear();
         newNodes.clear();
         renderLayer.clear();
@@ -238,17 +242,7 @@ public abstract class Scene {
      */
     public final void addObject(@Nullable GameObject obj) {
         if (obj == null || obj.getScene() != null) return;
-        // Need to add root objects to sceneNodes
-        if (isStopped()) { // Static add: when not loaded
-            sceneNodes.addUnbuffered(obj);
-            objects.addUnbuffered(obj);
-            addNodeToScene(obj);
-        } else { // Dynamic add: when loaded (running or paused)
-            sceneNodes.addBuffered(obj, () -> {
-                this.addNodeToScene(obj);
-                objects.add(obj);
-            });
-        }
+        rootNode.addChild(obj);
     }
 
     private void addNodeToScene(Node node) {
@@ -264,16 +258,14 @@ public abstract class Scene {
                 node, this.name);
     }
 
-    // TODO on node add/remove for each node, no children
-
     private void renameObjectUnique(Node obj) {
         // TODO Change to parent callback
         // Rename object to "Name (n)"
         // If sequence numbers are not contiguous, then choose the least free number
         // Make sure not to count the object being added
-        var sameNames = objects.stream()
+        var sameNames = rootNode.getChildren().stream()
                 .filter(o -> !o.equals(obj) && o.getName().startsWith(obj.getName()))
-                .map(GameObject::getName)
+                .map(Node::getName)
                 .toList();
         var newName = obj.getName();
         var count = 0;
@@ -289,10 +281,9 @@ public abstract class Scene {
      *
      * @param obj a {@link GameObject}
      */
-    final void removeObject(@Nullable GameObject obj) {
+    public final void removeObject(@Nullable GameObject obj) {
         if (obj == null) return;
-        // Assume scene is running
-        objects.removeBuffered(obj, obj::setDestroyed);
+        rootNode.removeChild(obj);
     }
 
     private void removeNodeFromScene(Node node) {
@@ -300,7 +291,7 @@ public abstract class Scene {
         if (node instanceof PhysicsBody b) physics.removePhysicsBody(b);
         if (node instanceof CollisionBody b) physics.removeCollisionBody(b);
         sceneNodes.remove(node);
-        node.onDestroy(); // TODO should move elsewhere
+        node.onDestroy();
         node.setParent(null);
         node.setScene(null);
         node.setLayer(null);
@@ -309,9 +300,9 @@ public abstract class Scene {
     }
 
     void onNodeAdded(Node node) {
-        if (isRunning()) {
+        if (isRunning()) { // Static add: When initializing
             sceneNodes.addBuffered(node, () -> addNodeToScene(node));
-        } else {
+        } else { // Dynamic add: After initialized
             sceneNodes.addUnbuffered(node);
             addNodeToScene(node);
         }
@@ -339,17 +330,17 @@ public abstract class Scene {
     }
 
     /**
-     * Finds the first {@link GameObject} with the given name (case-sensitive), or null if none exists.
+     * Finds the first {@link GameObject} with the given name (case-sensitive),
+     * or null if none exists.
      *
      * @param name the object's name
      * @return the object
      */
     public @Nullable GameObject getObject(@Nullable String name) {
         if (name == null) return null;
-        return objects.stream()
-                .filter(obj -> obj.getName().equals(name))
-                .findFirst()
-                .orElse(null);
+        var node = rootNode.getChild(name);
+        if (node instanceof GameObject obj) return obj;
+        else return null;
     }
 
     /**
@@ -358,16 +349,16 @@ public abstract class Scene {
      * @return the list of objects
      */
     public List<GameObject> getObjects() {
-        return List.copyOf(objects);
+        return rootNode.getChildren(GameObject.class);
     }
 
     /**
-     * Counts the number of objects in the scene.
+     * Counts the number of top-level objects in the scene.
      *
      * @return the amount of objects
      */
     public int numObjects() {
-        return objects.size();
+        return rootNode.numChildren();
     }
 
     // Scene Layer Methods
@@ -481,6 +472,26 @@ public abstract class Scene {
                 name, sceneID,
                 StringUtils.getObjectClassName(this)
         );
+    }
+
+    // Helper Class
+
+    static class RootNode extends Node {
+        public RootNode() {
+            super("Root");
+        }
+
+        @Override
+        public boolean isDestroyed() {
+            return false;
+        }
+
+        @Override
+        public void setDestroyed() {
+            // Don't destroy the root node!
+            getChildren().forEach(this::removeChild);
+            setScene(null);
+        }
     }
 
 }

@@ -26,6 +26,7 @@ class NodeTest {
     @BeforeEach
     void setUp() {
         scene = new ECSTestUtils.TestScene("Test Scene");
+        scene.createRootNode();
 
         node1 = new NodeA("Test Node 1");
         node2 = new NodeA("Test Node 2");
@@ -264,8 +265,7 @@ class NodeTest {
 
     @Test
     void nodeGetSceneDepthCorrect() {
-        node1.setScene(scene);
-
+        scene.addNode(node1);
         node1.addChild(child1);
         child1.addChild(child2);
 
@@ -278,8 +278,7 @@ class NodeTest {
 
     @Test
     void nodeIsTopLevelCorrect() {
-        node1.setScene(scene);
-
+        scene.addNode(node1);
         node1.addChild(child1);
         child1.addChild(child2);
 

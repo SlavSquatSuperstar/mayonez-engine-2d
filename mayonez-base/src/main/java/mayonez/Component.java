@@ -57,7 +57,6 @@ public abstract class Component extends Node {
     @Override
     public void setDestroyed() {
         super.setDestroyed();
-        transform = new Transform();
     }
 
     /**
@@ -106,6 +105,8 @@ public abstract class Component extends Node {
         if (parent instanceof GameObject obj) {
             this.gameObject = obj;
             this.transform = obj.transform;
+        } else if (parent == null) {
+            transform = new Transform();
         }
     }
 
