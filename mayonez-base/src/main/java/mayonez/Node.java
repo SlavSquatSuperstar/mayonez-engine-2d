@@ -284,7 +284,7 @@ public abstract class Node {
 
     /**
      * Get the {@link mayonez.Scene} that contains this node. The scene
-     * will be non-null from the start of {@code init} to the end of {@link onDestroy}.
+     * will be non-null from the start of {@link init} to the end of {@link onDestroy}.
      *
      * @return the parent scene
      */
@@ -418,16 +418,9 @@ public abstract class Node {
 
         child.setParent(this);
         child.setScene(scene);
-        child.init();
+        children.add(child);
         if (scene != null) scene.onNodeAdded(child);
-        // TODO start child?
         // TODO rename child
-
-        if (scene != null && scene.isRunning()) {
-            children.addBuffered(child); // Add child later if scene running
-        } else {
-            children.addUnbuffered(child); // Add child now otherwise
-        }
     }
 
     /**
@@ -480,10 +473,10 @@ public abstract class Node {
 
     /**
      * Custom behavior for when this node or any of its ancestors is destroyed. The properties
-     * {@link #getScene}, {@link #getParent}, and {@link transform} will still be accessible.
+     * {@link getScene}, {@link getParent}, and {@link transform} will still be accessible.
      * <p>
      * Warning: Calling {@code onDestroy} directly can lead to unpredictable behavior. It is
-     * better to call {@link #setDestroyed()} instead.
+     * better to call {@link setDestroyed()} instead.
      */
     protected void onDestroy() {
     }

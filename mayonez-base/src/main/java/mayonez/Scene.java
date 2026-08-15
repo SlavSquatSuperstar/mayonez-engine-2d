@@ -44,6 +44,7 @@ public abstract class Scene {
     protected boolean uniqueObjectNames = false;
     private final BufferedList<GameObject> objects;
     private final BufferedList<Node> sceneNodes;
+    private final CallbackBuffer newNodes; // Nodes needing to start
     private boolean sceneChanged;
     // TODO add/remove, queue callbacks
     private final SceneLayer[] layers;
@@ -69,6 +70,7 @@ public abstract class Scene {
         // Initialize layers
         objects = new BufferedList<>();
         sceneNodes = new BufferedList<>();
+        newNodes = new CallbackBuffer();
         sceneChanged = false;
         layers = new SceneLayer[SceneLayer.NUM_LAYERS];
         renderLayer = RendererFactory.createRenderLayer(Mayonez.getUseGL());
@@ -91,13 +93,16 @@ public abstract class Scene {
         // Add camera
         camera = CameraFactory.createCamera();
         addObject(CameraFactory.createCameraObject(camera));
+        // TODO camera must start last
 
-        // Add objects
+        // Add objects in tree order (top-down)
         init();
 
-        // Start objects
+        // Start nodes in reverse tree order (bottom-up)
         state = SceneState.RUNNING;
-        objects.forEach(this::startObject);
+        sceneNodes.reversed().forEach(Node::start);
+
+        // Sort nodes by update order
         sortNodes();
     }
 
@@ -149,14 +154,14 @@ public abstract class Scene {
                 if (node.isEnabled()) node.update(dt);
             });
             objects.forEach(obj -> {
-                obj.doUpdate();
                 if (obj.isDestroyed()) removeObject(obj); // Check for removals
             });
         }
 
-        // Add or remove objects
+        // Add or remove nodes
         objects.processBuffer();
         sceneNodes.processBuffer();
+        newNodes.executeCallbacks(); // Start any new nodes
         if (sceneChanged) sortNodes();
         if (isDestroyed()) stop();
     }
@@ -212,6 +217,8 @@ public abstract class Scene {
 
         // Clear all objects
         objects.clear();
+        sceneNodes.clear();
+        newNodes.clear();
         renderLayer.clear();
         physics.clear();
 
@@ -228,27 +235,36 @@ public abstract class Scene {
      */
     public final void addObject(@Nullable GameObject obj) {
         if (obj == null || obj.getScene() != null) return;
+        // Need to add root objects to sceneNodes
         if (isStopped()) { // Static add: when not loaded
+            sceneNodes.addUnbuffered(obj);
             objects.addUnbuffered(obj);
-            addObjectToScene(obj);
+            addNodeToScene(obj);
         } else { // Dynamic add: when loaded (running or paused)
-            objects.addBuffered(obj, () -> this.addObjectToScene(obj));
+            sceneNodes.addBuffered(obj, () -> {
+                this.addNodeToScene(obj);
+                objects.add(obj);
+            });
         }
     }
 
-    private void addObjectToScene(GameObject obj) {
-        if (uniqueObjectNames) renameObjectUnique(obj);
-        obj.setScene(this);
-        sceneNodes.addUnbuffered(obj);
-        // Start object if running, otherwise wait till all objects added
-        if (!isStopped()) startObject(obj);
+    private void addNodeToScene(Node node) {
+        if (uniqueObjectNames) renameObjectUnique(node);
+        node.setScene(this);
+        node.init();
+        // Start node later after all nodes added
+        if (!isStopped()) newNodes.add(node::start);
+        if (node instanceof Renderable r) renderLayer.addRenderable(r);
+        if (node instanceof PhysicsBody b) physics.addPhysicsBody(b);
+        if (node instanceof CollisionBody b) physics.addCollisionBody(b);
         Logger.trace("Added object \"%s\" to scene \"%s\"",
-                obj, this.name);
+                node, this.name);
     }
 
     // TODO on node add/remove for each node, no children
 
-    private void renameObjectUnique(GameObject obj) {
+    private void renameObjectUnique(Node obj) {
+        // TODO Change to parent callback
         // Rename object to "Name (n)"
         // If sequence numbers are not contiguous, then choose the least free number
         // Make sure not to count the object being added
@@ -263,15 +279,6 @@ public abstract class Scene {
             newName = "%s (%d)".formatted(obj.getName(), count);
         }
         obj.setName(newName);
-    }
-
-    private void startObject(GameObject obj) {
-        obj.doStart(); // Add components first so renderer and physics can access it
-        for (var comp : obj.getComponents()) {
-            if (comp instanceof Renderable r) renderLayer.addRenderable(r);
-            if (comp instanceof PhysicsBody b) physics.addPhysicsBody(b);
-            if (comp instanceof CollisionBody b) physics.addCollisionBody(b);
-        }
     }
 
     /**
@@ -297,8 +304,12 @@ public abstract class Scene {
     }
 
     void onNodeAdded(Node node) {
-        if (isRunning()) sceneNodes.addBuffered(node);
-        else sceneNodes.addUnbuffered(node);
+        if (isRunning()) {
+            sceneNodes.addBuffered(node, () -> addNodeToScene(node));
+        } else {
+            sceneNodes.addUnbuffered(node);
+            addNodeToScene(node);
+        }
         sceneChanged = true;
     }
 

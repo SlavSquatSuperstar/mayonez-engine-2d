@@ -57,23 +57,6 @@ public class GameObject extends Node {
         super(name, transform);
     }
 
-    // Game Loop Methods
-
-    /**
-     * Adds all components to this object and then initializes them. Calls
-     * {@link mayonez.Component#start()} for all components added on start.
-     */
-    final void doStart() {
-        // Add all components
-        init();
-        children.processBuffer();
-        children.forEach(Node::start); // Start all components
-    }
-
-    final void doUpdate() {
-        children.processBuffer(); // Add or remove components
-    }
-
     // Component Methods
 
     /**
