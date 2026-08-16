@@ -5,12 +5,30 @@ package mayonez;
  *
  * @author SlavSquatSuperstar
  */
-public final class ECSTestUtils {
+final class ECSTestUtils {
 
     private ECSTestUtils() {}
 
-    public static class TestScene extends Scene {
-        public TestScene(String name) {
+    static class TestScene extends Scene {
+        TestScene(String name) {
+            super(name);
+        }
+    }
+
+    static class NodeA extends Node {
+        NodeA(String name) {
+            super(name);
+        }
+    }
+
+    static class NodeB extends NodeA {
+        NodeB(String name) {
+            super(name);
+        }
+    }
+
+    static class NodeC extends NodeA {
+        NodeC(String name) {
             super(name);
         }
     }

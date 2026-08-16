@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.Set;
 
+import static mayonez.ECSTestUtils.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -25,7 +26,7 @@ class NodeTest {
 
     @BeforeEach
     void setUp() {
-        scene = new ECSTestUtils.TestScene("Test Scene");
+        scene = new TestScene("Test Scene");
         scene.createRootNode();
 
         node1 = new NodeA("Test Node 1");
@@ -327,26 +328,6 @@ class NodeTest {
 
     private static boolean shouldUpdateAndRender(Node node) {
         return node.shouldUpdate() && node.shouldRender();
-    }
-
-    // Helper Classes
-
-    private static class NodeA extends Node {
-        public NodeA(String name) {
-            super(name);
-        }
-    }
-
-    private static class NodeB extends NodeA {
-        public NodeB(String name) {
-            super(name);
-        }
-    }
-
-    private static class NodeC extends NodeA {
-        public NodeC(String name) {
-            super(name);
-        }
     }
 
 }

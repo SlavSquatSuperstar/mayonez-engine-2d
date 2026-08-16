@@ -166,11 +166,12 @@ public abstract class Scene {
         }
 
         // Add or remove nodes
-        sceneNodes.processBuffer();
-        newNodes.executeCallbacks(); // Start any new nodes
         if (sceneChanged) {
+            sceneNodes.processBuffer();
+            newNodes.executeCallbacks(); // Start any new nodes
             sceneNodes.forEach(Node::garbageCollect);
             sortNodes();
+            sceneChanged = false;
         }
         if (isDestroyed()) stop();
     }
@@ -241,8 +242,28 @@ public abstract class Scene {
      * @param obj a {@link GameObject}
      */
     public final void addObject(@Nullable GameObject obj) {
-        if (obj == null || obj.getScene() != null) return;
-        rootNode.addChild(obj);
+        addNode(obj);
+    }
+
+    /**
+     * Adds a top-level node to this scene and initializes the node and all its
+     * descendants. The node will not be added if it already has a parent
+     * node.
+     *
+     * @param node a {@link Node}
+     */
+    public final void addNode(@Nullable Node node) {
+        rootNode.addChild(node);
+    }
+
+    void onNodeAdded(Node node) {
+        if (isRunning()) { // Static add: When initializing
+            sceneNodes.addBuffered(node, () -> addNodeToScene(node));
+        } else { // Dynamic add: After initialized
+            sceneNodes.addUnbuffered(node);
+            addNodeToScene(node);
+        }
+        setSceneChanged();
     }
 
     private void addNodeToScene(Node node) {
@@ -282,8 +303,18 @@ public abstract class Scene {
      * @param obj a {@link GameObject}
      */
     public final void removeObject(@Nullable GameObject obj) {
-        if (obj == null) return;
-        rootNode.removeChild(obj);
+        removeNode(obj);
+    }
+
+    /**
+     * Removes a top-level node from this scene and destroys the node and all
+     * its descendants. The node will only be removed if it is a child of the
+     * scene's root node.
+     *
+     * @param node a {@link Node}
+     */
+    public final void removeNode(@Nullable Node node) {
+        rootNode.removeChild(node);
     }
 
     private void removeNodeFromScene(Node node) {
@@ -299,16 +330,6 @@ public abstract class Scene {
                 node, this.name);
     }
 
-    void onNodeAdded(Node node) {
-        if (isRunning()) { // Static add: When initializing
-            sceneNodes.addBuffered(node, () -> addNodeToScene(node));
-        } else { // Dynamic add: After initialized
-            sceneNodes.addUnbuffered(node);
-            addNodeToScene(node);
-        }
-        sceneChanged = true;
-    }
-
     void onNodeRemoved(Node node) {
         if (isRunning()) {
             sceneNodes.removeBuffered(node, () -> removeNodeFromScene(node));
@@ -316,49 +337,71 @@ public abstract class Scene {
             sceneNodes.removeUnbuffered(node);
             removeNodeFromScene(node);
         }
-        sceneChanged = true;
+        setSceneChanged();
     }
 
     void setSceneChanged() {
         this.sceneChanged = true;
-        // TODO test
     }
 
     private void sortNodes() {
         sceneNodes.sort(Comparator.comparingInt(Node::getUpdateOrder));
-        sceneChanged = false;
     }
 
     /**
-     * Finds the first {@link GameObject} with the given name (case-sensitive),
+     * Finds the first {@link Node} with the given name (case-sensitive),
      * or null if none exists.
      *
      * @param name the object's name
      * @return the object
      */
-    public @Nullable GameObject getObject(@Nullable String name) {
+    public @Nullable Node getNode(@Nullable String name) {
         if (name == null) return null;
-        var node = rootNode.getChild(name);
-        if (node instanceof GameObject obj) return obj;
-        else return null;
+        return sceneNodes.stream()
+                .filter(n -> n.getName().equals(name))
+                .findFirst()
+                .orElse(null);
     }
 
     /**
-     * Returns a copy of the all objects in this scene.
+     * Returns the root node of the scene. The root node is the ancestor of all
+     * other nodes in the scene.
      *
-     * @return the list of objects
+     * @return the root node
      */
-    public List<GameObject> getObjects() {
-        return rootNode.getChildren(GameObject.class);
+    Node getRootNode() {
+        return rootNode;
     }
 
     /**
-     * Counts the number of top-level objects in the scene.
+     * Returns a list of all the nodes in this scene that have the given tag.
      *
-     * @return the amount of objects
+     * @param tag the tag
+     * @return the list of nodes with the tag
      */
-    public int numObjects() {
-        return rootNode.numChildren();
+    public List<Node> getNodes(@Nullable String tag) {
+        return sceneNodes.stream()
+                .filter(n -> n.hasTag(tag))
+                .toList();
+    }
+
+    /**
+     * Returns a copy of all the nodes in this scene, including the root node.
+     *
+     * @return the list of nodes
+     */
+    public List<Node> getNodes() {
+        return List.copyOf(sceneNodes);
+    }
+
+    /**
+     * Counts the number of nodes of any level in the scene, including the root
+     * node.
+     *
+     * @return the amount of nodes
+     */
+    public int numNodes() {
+        return sceneNodes.size();
     }
 
     // Scene Layer Methods

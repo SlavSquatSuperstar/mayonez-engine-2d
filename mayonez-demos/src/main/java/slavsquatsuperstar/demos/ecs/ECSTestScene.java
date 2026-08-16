@@ -67,17 +67,22 @@ public class ECSTestScene extends DemoScene {
 
                     @Override
                     protected void debugRender() {
-                        var numComponents = getObjects().stream()
+                        var objects = getNodes().stream()
+                                .filter(n -> n instanceof GameObject)
+                                .map(n -> (GameObject) n)
+                                .toList();
+                        var numComponents = objects.stream()
                                 .map(GameObject::numComponents)
                                 .reduce(0, Integer::sum);
-                        objCount.setMessage("GameObjects: " + numObjects());
+                        objCount.setMessage("GameObjects: " + objects.size());
                         compCount.setMessage("Components: " + numComponents);
 
                         // Clean up empty objects
-                        getObjects().stream()
+                        objects.stream()
                                 .filter(obj -> obj.numComponents() == 0)
                                 .forEach(obj -> {
-                                    obj.setDestroyed();
+                                    if (Random.randomBoolean()) obj.setDestroyed();
+                                    else getScene().removeObject(obj);
                                     testObjects.remove(obj);
                                 });
                         removedObject = false;
