@@ -180,7 +180,7 @@ public abstract class Node {
      */
     public void setName(@Nullable String name) {
         this.name = validateName(name);
-        // TODO notify parent object
+        if (parent != null) parent.renameChildUnique(this);
     }
 
     String validateName(@Nullable String name) {
@@ -189,6 +189,23 @@ public abstract class Node {
         } else {
             return name;
         }
+    }
+
+    void renameChildUnique(Node child) {
+        // Rename object to "Name (n)"
+        // If sequence numbers are not contiguous, then choose the least free number
+        // Make sure not to count the object being added
+        var sameNames = getChildren().stream()
+                .filter(o -> !o.equals(child) && o.getName().startsWith(child.getName()))
+                .map(Node::getName)
+                .toList();
+        var newName = child.getName();
+        var count = 0;
+        while (sameNames.contains(newName)) {
+            count++;
+            newName = "%s (%d)".formatted(child.getName(), count);
+        }
+        child.name = newName; // Don't use setter
     }
 
     /**
@@ -425,8 +442,10 @@ public abstract class Node {
         child.setParent(this);
         child.setScene(scene);
         children.add(child);
-        if (scene != null) scene.onNodeAdded(child);
-        // TODO rename child
+        if (scene != null) {
+            if (scene.uniqueNodeNames) renameChildUnique(child);
+            scene.onNodeAdded(child);
+        }
     }
 
     /**

@@ -1,5 +1,6 @@
 package mayonez;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -35,6 +36,11 @@ class NodeTest {
         child1 = new NodeA("Child Node 1");
         child2 = new NodeB("Child Node 2");
         child3 = new NodeB("Child Node 3");
+    }
+
+    @AfterEach
+    void tearDown() {
+        scene.stop();
     }
 
     // Node ID

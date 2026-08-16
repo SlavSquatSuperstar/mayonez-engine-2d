@@ -43,7 +43,7 @@ public abstract class Scene {
     private SceneState state; // if paused or running
 
     // Scene Objects
-    protected boolean uniqueObjectNames = false;
+    protected boolean uniqueNodeNames;
     private final BufferedList<Node> sceneNodes;
     private final CallbackBuffer newNodes; // Nodes needing to start
     private final Node rootNode;
@@ -74,6 +74,7 @@ public abstract class Scene {
         newNodes = new CallbackBuffer();
         rootNode = new RootNode();
         sceneChanged = false;
+        uniqueNodeNames = false;
         layers = new SceneLayer[SceneLayer.NUM_LAYERS];
         renderLayer = RendererFactory.createRenderLayer(Mayonez.getUseGL());
         physics = new DefaultPhysicsWorld();
@@ -267,7 +268,6 @@ public abstract class Scene {
     }
 
     private void addNodeToScene(Node node) {
-        if (uniqueObjectNames) renameObjectUnique(node);
         node.setScene(this);
         node.init();
         // Start node later after all nodes added
@@ -277,24 +277,6 @@ public abstract class Scene {
         if (node instanceof CollisionBody b) physics.addCollisionBody(b);
         Logger.trace("Added object \"%s\" to scene \"%s\"",
                 node, this.name);
-    }
-
-    private void renameObjectUnique(Node obj) {
-        // TODO Change to parent callback
-        // Rename object to "Name (n)"
-        // If sequence numbers are not contiguous, then choose the least free number
-        // Make sure not to count the object being added
-        var sameNames = rootNode.getChildren().stream()
-                .filter(o -> !o.equals(obj) && o.getName().startsWith(obj.getName()))
-                .map(Node::getName)
-                .toList();
-        var newName = obj.getName();
-        var count = 0;
-        while (sameNames.contains(newName)) {
-            count++;
-            newName = "%s (%d)".formatted(obj.getName(), count);
-        }
-        obj.setName(newName);
     }
 
     /**

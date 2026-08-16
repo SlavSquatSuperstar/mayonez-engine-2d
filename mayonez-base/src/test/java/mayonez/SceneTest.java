@@ -48,6 +48,12 @@ class SceneTest {
         node2.addChild(node6);
     }
 
+    @AfterEach
+    void tearDown() {
+        scene1.stop();
+        scene2.stop();
+    }
+
     // Scene ID
 
     @Test
@@ -64,7 +70,7 @@ class SceneTest {
         var obj2 = new GameObject("Test Object");
         var obj3 = new GameObject("Test Object");
 
-        scene1.uniqueObjectNames = true;
+        scene1.uniqueNodeNames = true;
         scene1.addObject(obj1);
         scene1.addObject(obj2);
         scene1.addObject(obj3);
@@ -81,7 +87,7 @@ class SceneTest {
         var obj3 = new GameObject("Test Object");
         var obj4 = new GameObject("Test Object");
 
-        scene1.uniqueObjectNames = true;
+        scene1.uniqueNodeNames = true;
         scene1.addObject(obj1);
         scene1.addObject(obj2);
         scene1.addObject(obj3);
@@ -100,7 +106,7 @@ class SceneTest {
         var obj3 = new GameObject("Test Object (3)");
         var obj4 = new GameObject("Test Object");
 
-        scene1.uniqueObjectNames = true;
+        scene1.uniqueNodeNames = true;
         scene1.addObject(obj1);
         scene1.addObject(obj2);
         scene1.addObject(obj3);
