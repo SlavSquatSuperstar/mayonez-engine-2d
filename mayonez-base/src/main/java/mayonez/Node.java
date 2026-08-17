@@ -476,6 +476,15 @@ public abstract class Node {
         }
     }
 
+    /**
+     * The node's transform that defines its position, rotation, and scale.
+     *
+     * @return the transform
+     */
+    public Transform getTransform() {
+        return transform;
+    }
+
     // Node Behavior Getters and Setters
 
     /**

@@ -110,13 +110,4 @@ public abstract class Component extends Node {
         }
     }
 
-    /**
-     * Get a reference to the parent object's {@link mayonez.Transform}.
-     *
-     * @return the parent transform
-     */
-    public Transform getTransform() {
-        return transform;
-    }
-
 }

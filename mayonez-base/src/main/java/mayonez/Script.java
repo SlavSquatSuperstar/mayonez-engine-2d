@@ -29,8 +29,8 @@ public abstract class Script extends Component {
      * @return the collider, if it exists
      */
     protected @Nullable Collider getCollider() {
-        if (gameObject == null) return null;
-        else return gameObject.getComponent(Collider.class);
+        if (parent == null) return null;
+        else return parent.getChild(Collider.class);
     }
 
     /**
@@ -39,8 +39,8 @@ public abstract class Script extends Component {
      * @return the rigidbody, if it exists
      */
     protected @Nullable Rigidbody getRigidbody() {
-        if (gameObject == null) return null;
-        else return gameObject.getComponent(Rigidbody.class);
+        if (parent == null) return null;
+        else return parent.getChild(Rigidbody.class);
     }
 
 }
