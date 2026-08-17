@@ -572,6 +572,8 @@ public abstract class Node {
         if (parent == null) return enabled;
         else return enabled && parent.shouldUpdate();
     }
+    // TODO check UI usages
+    // TODO check animator usages
 
     /**
      * Whether this node and all its children should be rendered. If any ancestor

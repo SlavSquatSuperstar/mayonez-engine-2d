@@ -58,8 +58,8 @@ abstract class Collider(private val shape: Shape) :
     // Game Loop Methods
 
     override fun start() {
-        physicsBody = gameObject!!.getComponent(Rigidbody::class.java)
-        layer = gameObject!!.layer
+        physicsBody = parent!!.getChild(Rigidbody::class.java)
+        layer = parent!!.layer
     }
 
     override fun onDestroy() {
@@ -111,7 +111,7 @@ abstract class Collider(private val shape: Shape) :
     override fun canCollide(collider: CollisionBody): Boolean {
         // This assumes colliders aren't disabled during a collision
         if (collider is Collider) {
-            return (this.isEnabled && collider.isEnabled) // Both enabled
+            return (this.shouldUpdate() && collider.shouldUpdate()) // Both enabled
                     && (this.layer?.canInteract(collider.layer) ?: true) // Layers interact
                     && !(this.physicsBody == null && collider.physicsBody == null) // At most one is static
         }

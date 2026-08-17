@@ -60,21 +60,6 @@ public abstract class Component extends Node {
     }
 
     /**
-     * Whether this component should be updated. If the parent object is
-     * disabled, then this component will not be updated.
-     *
-     * @return if this component is enabled and not destroyed
-     */
-    @Override
-    public final boolean isEnabled() {
-        return super.isEnabled() && gameObject != null && gameObject.isEnabled();
-        // TODO only check object if non null
-        // TODO fix UI usages
-        // TODO fix animator usages
-        // TODO use shouldUpdate
-    }
-
-    /**
      * Whether this component should be rendered. If the parent object is
      * visible, then this component will not be rendered.
      *

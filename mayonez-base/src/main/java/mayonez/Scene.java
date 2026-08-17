@@ -140,7 +140,7 @@ public abstract class Scene {
         if (isRunning()) {
             physics.step(dt);
             sceneNodes.forEach(node -> {
-                if (node.isEnabled()) node.fixedUpdate(dt);
+                if (node.shouldUpdate()) node.fixedUpdate(dt);
             });
         }
     }
@@ -161,7 +161,7 @@ public abstract class Scene {
         }
         if (isRunning()) {
             sceneNodes.forEach(node -> {
-                if (node.isEnabled()) node.update(dt);
+                if (node.shouldUpdate()) node.update(dt);
             });
         }
 
