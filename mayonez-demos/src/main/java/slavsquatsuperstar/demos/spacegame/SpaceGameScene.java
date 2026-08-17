@@ -33,6 +33,10 @@ public class SpaceGameScene extends DemoScene {
             = new Vec2(Mayonez.getScreenWidth(), Mayonez.getScreenHeight())
             .mul(4f / (SCENE_SCALE * 2f));
 
+    // Tags
+    public static final String PROJECTILE_TAG = "Projectile";
+    public static final String DAMAGEABLE_TAG = "Damageable";
+
     // Fields
     private final List<BackgroundObject> backgroundObjects;
 

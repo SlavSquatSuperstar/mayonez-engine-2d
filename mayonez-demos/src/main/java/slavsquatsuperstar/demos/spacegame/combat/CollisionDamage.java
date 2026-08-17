@@ -3,6 +3,7 @@ package slavsquatsuperstar.demos.spacegame.combat;
 import mayonez.*;
 import mayonez.math.*;
 import mayonez.physics.*;
+import slavsquatsuperstar.demos.spacegame.SpaceGameScene;
 import slavsquatsuperstar.demos.spacegame.objects.SpaceGameLayer;
 
 /**
@@ -43,8 +44,7 @@ public class CollisionDamage extends Script {
     public void onObjectCollision(CollisionEvent event) {
         if (event.trigger || event.type != CollisionEventType.ENTER) return;
 
-        var object = event.other;
-        if (object.hasLayer(SpaceGameLayer.SHIPS) || object.hasLayer(SpaceGameLayer.ASTEROIDS)) {
+        if (event.other.getParent().hasTag(SpaceGameScene.DAMAGEABLE_TAG)) {
             var speed = event.velocity.len();
             if (speed > speedThreshold) {
                 var damage = speed / speedThreshold * collisionDamage;

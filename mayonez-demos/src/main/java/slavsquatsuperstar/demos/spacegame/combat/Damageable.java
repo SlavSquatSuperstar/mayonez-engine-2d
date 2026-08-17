@@ -3,6 +3,7 @@ package slavsquatsuperstar.demos.spacegame.combat;
 import mayonez.*;
 import mayonez.physics.*;
 import mayonez.scripts.*;
+import slavsquatsuperstar.demos.spacegame.SpaceGameScene;
 import slavsquatsuperstar.demos.spacegame.combat.projectiles.Projectile;
 import slavsquatsuperstar.demos.spacegame.objects.SpaceGameLayer;
 
@@ -38,9 +39,9 @@ public class Damageable extends Script {
     public void onImpactProjectile(CollisionEvent event) {
         if (!event.trigger || event.type != CollisionEventType.ENTER) return;
 
-        var other = event.other;
-        if (other.hasLayer(SpaceGameLayer.PROJECTILES)) {
-            var p = other.getComponent(Projectile.class);
+        var parent = event.other.getParent();
+        if (parent.hasTag(SpaceGameScene.PROJECTILE_TAG)) {
+            var p = parent.getChild(Projectile.class);
             if (p != null && !gameObject.equals(p.getSource())) {
                 onObjectDamaged(p.getDamage());
             }

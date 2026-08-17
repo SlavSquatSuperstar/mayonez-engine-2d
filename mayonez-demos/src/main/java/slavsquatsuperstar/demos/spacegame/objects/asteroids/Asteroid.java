@@ -29,7 +29,7 @@ public abstract class Asteroid extends GameObject {
 
     @Override
     protected void init() {
-        setLayer(getScene().getLayer(SpaceGameLayer.ASTEROIDS));
+        addTag(SpaceGameScene.DAMAGEABLE_TAG);
         setZIndex(SpaceGameZIndex.ASTEROID);
 
         transform.setRotation(Random.randomAngle());
@@ -45,7 +45,9 @@ public abstract class Asteroid extends GameObject {
     }
 
     protected void addCollider() {
-        addComponent(new BallCollider(new Vec2(1f)));
+        var collider = new BallCollider(new Vec2(1f));
+        collider.setLayer(getScene().getLayer(SpaceGameLayer.ASTEROIDS));
+        addComponent(collider);
         addComponent(new KeepInScene(SpaceGameScene.SCENE_HALF_SIZE.mul(-1f),
                 SpaceGameScene.SCENE_HALF_SIZE, KeepInScene.Mode.WRAP));
     }

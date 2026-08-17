@@ -29,10 +29,12 @@ public abstract class Spaceship extends GameObject {
 
     @Override
     protected void init() {
-        setLayer(getScene().getLayer(SpaceGameLayer.SHIPS));
+        addTag(SpaceGameScene.DAMAGEABLE_TAG);
 
         // Collision
-        addComponent(new BoxCollider(properties.colliderSize()));
+        var collider = new BoxCollider(properties.colliderSize());
+        collider.setLayer(getScene().getLayer(SpaceGameLayer.SHIPS));
+        addComponent(collider);
         addComponent(new KeepInScene(SpaceGameScene.SCENE_HALF_SIZE.mul(-1f),
                 SpaceGameScene.SCENE_HALF_SIZE, KeepInScene.Mode.WRAP));
 

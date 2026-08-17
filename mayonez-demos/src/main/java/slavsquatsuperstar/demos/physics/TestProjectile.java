@@ -28,9 +28,12 @@ public class TestProjectile extends GameObject {
 
     @Override
     protected void init() {
-        setLayer(getScene().getLayer(ProjectileTestScene.PROJECTILE_LAYER));
-
         addComponent(new BulletBoxCollider(ProjectileLauncher.PROJ_SIZE) {
+            @Override
+            protected void init() {
+                setLayer(getScene().getLayer(ProjectileTestScene.PROJECTILE_LAYER));
+            }
+
             @Override
             public void onCollisionEvent(CollisionEvent event) {
                 if (event.other.getName().equals("Target Box")) {
@@ -54,8 +57,9 @@ public class TestProjectile extends GameObject {
                     getScene().addObject(new GameObject("Trail", transform.copy()) {
                         @Override
                         protected void init() {
-                            setLayer(getScene().getLayer(ProjectileTestScene.PROJECTILE_LAYER));
-                            addComponent(new BoxCollider(ProjectileLauncher.PROJ_SIZE));
+                            var collider = new BoxCollider(ProjectileLauncher.PROJ_SIZE);
+                            collider.setLayer(getScene().getLayer(ProjectileTestScene.PROJECTILE_LAYER));
+                            addComponent(collider);
                             addComponent(new ShapeSprite(Colors.LIGHT_BLUE, false));
                             addComponent(new DestroyAfterDuration(0.5f));
                         }

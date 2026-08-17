@@ -16,8 +16,6 @@ import mayonez.physics.dynamics.PhysicsMaterial;
 import mayonez.physics.dynamics.Rigidbody;
 import mayonez.scripts.Counter;
 
-import static slavsquatsuperstar.demos.physics.ProjectileTestScene.TARGET_LAYER;
-
 /**
  * A target box with controllable position, rotation, and size.
  *
@@ -35,11 +33,15 @@ public class TargetBox extends GameObject {
     @Override
     protected void init() {
         flashCounter = new Counter(0, 10, 10);
-        setLayer(getScene().getLayer(TARGET_LAYER));
 
         addComponent(new DrawPhysicsInformation());
         addComponent(new Rigidbody(0f).setMaterial(PhysicsMaterial.DEFAULT_MATERIAL));
         addComponent(new BoxCollider(new Vec2(10f, 12f)) {
+            @Override
+            protected void init() {
+                setLayer(getScene().getLayer(ProjectileTestScene.TARGET_LAYER));
+            }
+
             @Override
             public void onCollisionEvent(CollisionEvent event) {
                 if (event.type == CollisionEventType.ENTER) {

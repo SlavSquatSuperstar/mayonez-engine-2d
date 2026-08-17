@@ -29,9 +29,6 @@ abstract class Collider(private val shape: Shape) :
 
     override var physicsBody: PhysicsBody? = null
 
-    // TODO store layer in physics
-    private var layer: SceneLayer? = null
-
     /**
      * A reference to the parent object's [mayonez.physics.dynamics.Rigidbody].
      * A collider should have a rigidbody to react to collisions.
@@ -59,7 +56,6 @@ abstract class Collider(private val shape: Shape) :
 
     override fun start() {
         physicsBody = parent!!.getChild(Rigidbody::class.java)
-        layer = parent!!.layer
     }
 
     override fun onDestroy() {

@@ -10,6 +10,7 @@ import mayonez.physics.colliders.*;
 import mayonez.physics.dynamics.*;
 import mayonez.scripts.*;
 import slavsquatsuperstar.demos.spacegame.PrefabUtils;
+import slavsquatsuperstar.demos.spacegame.SpaceGameScene;
 import slavsquatsuperstar.demos.spacegame.objects.SpaceGameLayer;
 import slavsquatsuperstar.demos.spacegame.objects.SpaceGameZIndex;
 
@@ -63,14 +64,15 @@ public final class ProjectilePrefabs {
         return new GameObject(type.name(), projXf) {
             @Override
             protected void init() {
-                setLayer(getScene().getLayer(SpaceGameLayer.PROJECTILES));
                 addComponent(new Projectile(source, type));
+                addTag(SpaceGameScene.PROJECTILE_TAG);
 
                 var sprite = PROJECTILE_SPRITES.getSprite(type.spriteIndex());
                 sprite.setZIndex(SpaceGameZIndex.PROJECTILE);
                 addComponent(sprite);
 
                 var col = new BulletBoxCollider(type.colliderSize());
+                col.setLayer(getScene().getLayer(SpaceGameLayer.PROJECTILES));
                 col.setPrimaryAxisX(false);
                 col.setSweepFactor(type.sweepFactor());
                 col.setTrigger(true);
