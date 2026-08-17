@@ -46,6 +46,8 @@ abstract class Collider(private val shape: Shape) :
         return this
     }
 
+    override var layer: SceneLayer? = null
+
     /**
      * Whether the position or velocity of this collider has been modified in
      * this frame.
@@ -100,18 +102,16 @@ abstract class Collider(private val shape: Shape) :
 
     // Collision Methods
 
+    override fun shouldUpdate(): Boolean = super.shouldUpdate()
+
     override fun getContacts(collider: CollisionBody?): Manifold? {
         return Collisions.getContacts(this.getShape(), collider?.getShape())
     }
 
     override fun canCollide(collider: CollisionBody): Boolean {
-        // This assumes colliders aren't disabled during a collision
-        if (collider is Collider) {
-            return (this.shouldUpdate() && collider.shouldUpdate()) // Both enabled
-                    && (this.layer?.canInteract(collider.layer) ?: true) // Layers interact
-                    && !(this.physicsBody == null && collider.physicsBody == null) // At most one is static
-        }
-        return false
+        return (this.shouldUpdate() && collider.shouldUpdate()) // Both enabled
+                && (this.layer?.canInteract(collider.layer) ?: true) // Layers interact
+                && !(this.physicsBody == null && collider.physicsBody == null) // At most one is static
     }
 
     // Collision Event Methods

@@ -306,7 +306,6 @@ public abstract class Scene {
         node.onDestroy();
         node.setParent(null);
         node.setScene(null);
-        node.setLayer(null);
         Logger.trace("Removed object \"%s\" from scene \"%s\"",
                 node, this.name);
     }

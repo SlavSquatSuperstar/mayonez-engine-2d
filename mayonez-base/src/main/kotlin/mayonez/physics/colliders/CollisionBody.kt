@@ -1,9 +1,11 @@
 package mayonez.physics.colliders
 
-import mayonez.math.shapes.*
-import mayonez.physics.*
-import mayonez.physics.dynamics.*
-import mayonez.physics.manifold.*
+import mayonez.SceneLayer
+import mayonez.math.shapes.BoundingBox
+import mayonez.math.shapes.Shape
+import mayonez.physics.CollisionEvent
+import mayonez.physics.dynamics.PhysicsBody
+import mayonez.physics.manifold.Manifold
 
 /**
  * An object's physical shape in the world that responds to collisions with
@@ -23,6 +25,13 @@ interface CollisionBody {
      * collisions.
      */
     val trigger: Boolean
+
+    /**
+     * This object's [SceneLayer], which defines with other objects it
+     * interacts with. If the layer is null, the object will interact with
+     * all other objects.
+     */
+    var layer: SceneLayer?
 
     /**
      * Whether the position or velocity of this collider has been modified in
@@ -64,8 +73,14 @@ interface CollisionBody {
      */
     fun getShape(): Shape
 
-
     // Collision Methods
+
+    /**
+     * Whether this object should be updated this frame.
+     *
+     * @return if enabled
+     */
+    fun shouldUpdate(): Boolean
 
     /**
      * If this collision body should be checked against another body.
