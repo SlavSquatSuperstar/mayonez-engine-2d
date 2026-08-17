@@ -63,4 +63,18 @@ class SceneLayerTest {
         assertFalse(layer1.canInteract(layer0));
     }
 
+    @Test
+    void getMaskValueCorrect() {
+        layer0.setLayerInteract(0, true);
+        layer0.setLayerInteract(1, false);
+        assertEquals(~0x2, layer0.getMaskValue());
+    }
+
+    @Test
+    void setMaskValueCorrect() {
+        layer0.setMaskValue(~0x2);
+        assertTrue(layer0.getLayerInteract(0));
+        assertFalse(layer0.getLayerInteract(1));
+    }
+
 }

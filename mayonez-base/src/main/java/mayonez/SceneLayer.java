@@ -4,8 +4,8 @@ import mayonez.util.*;
 import org.jspecify.annotations.Nullable;
 
 /**
- * A grouping of game objects inside a scene with common properties.
- * Layers may be given a {@link mayonez.util.Bitmask}, which defines which layers
+ * A grouping of collidable objects inside a scene with common properties.
+ * Layers contain a {@link mayonez.util.Bitmask} that defines which layers
  * they can interact with.
  *
  * @author SlavSquatSuperstar
@@ -22,7 +22,7 @@ public class SceneLayer {
      *
      * @param index the layer index
      */
-    SceneLayer(int index) {
+    public SceneLayer(int index) {
         this.index = index;
         this.name = "Layer %d".formatted(index);
         mask = new Bitmask();
@@ -60,8 +60,9 @@ public class SceneLayer {
     // Mask Methods
 
     /**
-     * Whether this layer should interact with another. Two layers interact if at least one
-     * has set the other's index to "true" in its layer mask, or if at least one is null.
+     * Whether this layer should interact with another. Two layers interact if
+     * at least one has set the other's index to "true" in its layer mask, or
+     * if at least one is null.
      *
      * @param other the other layer
      * @return if the layers interact
@@ -70,14 +71,44 @@ public class SceneLayer {
         return (other == null) || this.getLayerInteract(other.index) || other.getLayerInteract(this.index);
     }
 
-    public boolean getLayerInteract(int layer) {
-        return mask.getBit(layer);
+    /**
+     * Get whether this layer is allowed to interact with another layer. Note
+     * that it is possible for the other layer to interact with this one, or
+     * a layer to ont interact with itself.
+     *
+     * @param index the layer's index
+     * @return whether this layer interacts with the other
+     */
+    public boolean getLayerInteract(int index) {
+        return mask.getBit(index);
     }
 
-    public void setLayerInteract(int layer, boolean interact) {
-        mask.setBit(layer, interact);
+    /**
+     * Set whether this layer is allowed to interact with another layer. Note
+     * that it is possible for the other layer to interact with this one, or
+     * a layer to not interact with itself.
+     *
+     * @param index    the layer's index
+     * @param interact whether this layer interacts with the other
+     */
+    public void setLayerInteract(int index, boolean interact) {
+        mask.setBit(index, interact);
     }
 
+    /**
+     * Get the layer's raw bitmask value.
+     *
+     * @return the 32-bit bitmask value
+     */
+    public int getMaskValue() {
+        return mask.getValue();
+    }
+
+    /**
+     * Set the layer's raw bitmask value.
+     *
+     * @param value the 32-bit bitmask value
+     */
     public void setMaskValue(int value) {
         mask.setValue(value);
     }

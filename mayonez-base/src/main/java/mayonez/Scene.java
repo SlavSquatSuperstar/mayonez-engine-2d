@@ -49,7 +49,6 @@ public abstract class Scene {
     private boolean sceneChanged;
     private boolean uniqueNodeNames;
     // TODO add/remove, queue callbacks
-    private final SceneLayer[] layers;
 
     // Renderers
     private Camera camera;
@@ -57,6 +56,7 @@ public abstract class Scene {
 
     // Physics
     private final PhysicsWorld physics;
+    private SceneLayer[] layers;
 
     /**
      * Creates an empty scene with a name. If the name is {@code null}, it will
@@ -75,7 +75,6 @@ public abstract class Scene {
         rootNode = new RootNode();
         sceneChanged = false;
         uniqueNodeNames = false;
-        layers = new SceneLayer[SceneLayer.NUM_LAYERS];
         renderLayer = RendererFactory.createRenderLayer(Mayonez.getUseGL());
         physics = new DefaultPhysicsWorld();
     }
@@ -88,11 +87,6 @@ public abstract class Scene {
      */
     @Initializer
     final void start() {
-        // Set up layers
-        for (int i = 0; i < layers.length; i++) {
-            layers[i] = new SceneLayer(i);
-        }
-
         // Add root node
         createRootNode();
 
@@ -407,24 +401,24 @@ public abstract class Scene {
     // Scene Layer Methods
 
     /**
-     * Get the {@link mayonez.SceneLayer} by its numerical index.
+     * Get the {@link SceneLayer} by its numerical index.
      *
      * @param index the layer index
      * @return the layer, or null if the index is invalid
      */
     public @Nullable SceneLayer getLayer(int index) {
-        if (index >= 0 && index < layers.length) return layers[index];
+        if (index >= 0 && index < SceneLayer.NUM_LAYERS) return layers[index];
         else return null;
     }
 
     /**
-     * Get the {@link mayonez.SceneLayer} by its name.
+     * Get the {@link SceneLayer} by its name.
      *
      * @param name the layer name
      * @return the layer, or null if the name is invalid
      */
     public @Nullable SceneLayer getLayer(String name) {
-        return Arrays.stream(layers)
+        return Arrays.stream(physics.getLayers())
                 .filter(layer -> layer.getName().equals(name))
                 .findFirst()
                 .orElse(null);

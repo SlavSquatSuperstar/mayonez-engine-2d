@@ -1,8 +1,9 @@
 package mayonez.physics
 
-import mayonez.math.*
-import mayonez.physics.colliders.*
-import mayonez.physics.dynamics.*
+import mayonez.SceneLayer
+import mayonez.math.Vec2
+import mayonez.physics.colliders.CollisionBody
+import mayonez.physics.dynamics.PhysicsBody
 
 /**
  * A simulation containing bodies that approximate real-world physics.
@@ -13,16 +14,23 @@ interface PhysicsWorld {
 
     companion object {
         /**
-         * The gravitational acceleration on Earth's surface, g, equal to 9.81
-         * m/s/s.
+         * The gravitational acceleration on Earth's surface, g, equal to about
+         * 9.81 m/s^2.
          */
-        const val GRAVITY_CONSTANT = 9.81f
+        const val GRAVITY_CONSTANT = 9.80665f
     }
 
     // Physics Properties
 
-    /** The acceleration due to gravity, in m/s/s. */
+    /**
+     * The acceleration due to gravity, in m/s^2.
+     */
     var gravity: Vec2
+
+    /**
+     * The default physics layers available to collidable objects.
+     */
+    val layers: Array<SceneLayer>
 
     // Game Object Methods
 
