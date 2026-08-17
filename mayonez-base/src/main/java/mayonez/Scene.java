@@ -56,7 +56,6 @@ public abstract class Scene {
 
     // Physics
     private final PhysicsWorld physics;
-    private SceneLayer[] layers;
 
     /**
      * Creates an empty scene with a name. If the name is {@code null}, it will
@@ -401,23 +400,23 @@ public abstract class Scene {
     // Scene Layer Methods
 
     /**
-     * Get the {@link SceneLayer} by its numerical index.
+     * Get the {@link PhysicsLayer} by its numerical index.
      *
      * @param index the layer index
      * @return the layer, or null if the index is invalid
      */
-    public @Nullable SceneLayer getLayer(int index) {
-        if (index >= 0 && index < SceneLayer.NUM_LAYERS) return layers[index];
+    public @Nullable PhysicsLayer getLayer(int index) {
+        if (index >= 0 && index < PhysicsLayer.NUM_LAYERS) return physics.getLayers()[index];
         else return null;
     }
 
     /**
-     * Get the {@link SceneLayer} by its name.
+     * Get the {@link PhysicsLayer} by its name.
      *
      * @param name the layer name
      * @return the layer, or null if the name is invalid
      */
-    public @Nullable SceneLayer getLayer(String name) {
+    public @Nullable PhysicsLayer getLayer(String name) {
         return Arrays.stream(physics.getLayers())
                 .filter(layer -> layer.getName().equals(name))
                 .findFirst()

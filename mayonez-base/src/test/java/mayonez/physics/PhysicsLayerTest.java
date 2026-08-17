@@ -1,22 +1,22 @@
-package mayonez;
+package mayonez.physics;
 
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit tests for {@link mayonez.SceneLayer} class.
+ * Unit tests for {@link PhysicsLayer} class.
  *
  * @author SlavSquatSuperstar
  */
-class SceneLayerTest {
+class PhysicsLayerTest {
 
-    private SceneLayer layer0, layer1;
+    private PhysicsLayer layer0, layer1;
 
     @BeforeEach
     void setUp() {
-        layer0 = new SceneLayer(0);
-        layer1 = new SceneLayer(1);
+        layer0 = new PhysicsLayer(0);
+        layer1 = new PhysicsLayer(1);
     }
 
     @Test

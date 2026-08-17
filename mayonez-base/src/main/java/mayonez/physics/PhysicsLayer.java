@@ -1,4 +1,4 @@
-package mayonez;
+package mayonez.physics;
 
 import mayonez.util.*;
 import org.jspecify.annotations.Nullable;
@@ -10,7 +10,7 @@ import org.jspecify.annotations.Nullable;
  *
  * @author SlavSquatSuperstar
  */
-public class SceneLayer {
+public class PhysicsLayer {
 
     public static final int NUM_LAYERS = Bitmask.NUM_BITS;
     private final int index;
@@ -18,13 +18,13 @@ public class SceneLayer {
     private final Bitmask mask;
 
     /**
-     * Constructs a scene layer with an index that interacts with all layers.
+     * Constructs a physics layer with an index that interacts with all layers.
      *
      * @param index the layer index
      */
-    public SceneLayer(int index) {
+    PhysicsLayer(int index) {
         this.index = index;
-        this.name = "Layer %d".formatted(index);
+        this.name = "Physics Layer %d".formatted(index);
         mask = new Bitmask();
     }
 
@@ -67,7 +67,7 @@ public class SceneLayer {
      * @param other the other layer
      * @return if the layers interact
      */
-    public boolean canInteract(@Nullable SceneLayer other) {
+    public boolean canInteract(@Nullable PhysicsLayer other) {
         return (other == null) || this.getLayerInteract(other.index) || other.getLayerInteract(this.index);
     }
 
@@ -115,7 +115,7 @@ public class SceneLayer {
 
     @Override
     public String toString() {
-        return "SceneLayer (%s)".formatted(name);
+        return name;
     }
 
 }

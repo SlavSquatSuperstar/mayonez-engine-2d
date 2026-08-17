@@ -46,7 +46,7 @@ abstract class Collider(private val shape: Shape) :
         return this
     }
 
-    override var layer: SceneLayer? = null
+    override var layer: PhysicsLayer? = null
 
     /**
      * Whether the position or velocity of this collider has been modified in

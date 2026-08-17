@@ -1,6 +1,5 @@
 package mayonez.physics
 
-import mayonez.SceneLayer
 import mayonez.math.Vec2
 import mayonez.physics.colliders.CollisionBody
 import mayonez.physics.dynamics.PhysicsBody
@@ -30,7 +29,7 @@ interface PhysicsWorld {
     /**
      * The default physics layers available to collidable objects.
      */
-    val layers: Array<SceneLayer>
+    val layers: Array<PhysicsLayer>
 
     // Game Object Methods
 

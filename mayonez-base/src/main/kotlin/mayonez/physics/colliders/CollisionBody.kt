@@ -1,6 +1,6 @@
 package mayonez.physics.colliders
 
-import mayonez.SceneLayer
+import mayonez.physics.PhysicsLayer
 import mayonez.math.shapes.BoundingBox
 import mayonez.math.shapes.Shape
 import mayonez.physics.CollisionEvent
@@ -27,11 +27,11 @@ interface CollisionBody {
     val trigger: Boolean
 
     /**
-     * This object's [SceneLayer], which defines with other objects it
+     * This object's [PhysicsLayer], which defines with other objects it
      * interacts with. If the layer is null, the object will interact with
      * all other objects.
      */
-    var layer: SceneLayer?
+    var layer: PhysicsLayer?
 
     /**
      * Whether the position or velocity of this collider has been modified in

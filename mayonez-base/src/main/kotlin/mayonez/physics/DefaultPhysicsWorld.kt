@@ -21,8 +21,8 @@ class DefaultPhysicsWorld : PhysicsWorld {
     // World Properties
     override var gravity: Vec2 = Vec2()
 
-    override val layers: Array<SceneLayer> =
-        Array(SceneLayer.NUM_LAYERS) { i -> SceneLayer(i) }
+    override val layers: Array<PhysicsLayer> =
+        Array(PhysicsLayer.NUM_LAYERS) { i -> PhysicsLayer(i) }
 
     // Bodies and Collisions
     private val bodies: MutableList<PhysicsBody> // physical objects in the world
@@ -65,7 +65,7 @@ class DefaultPhysicsWorld : PhysicsWorld {
         colliders.clear()
         listeners.clear()
         collisions.clear()
-        for (i in layers.indices) layers[i] = SceneLayer(i)
+        for (i in layers.indices) layers[i] = PhysicsLayer(i)
     }
 
     // Game Object Methods
