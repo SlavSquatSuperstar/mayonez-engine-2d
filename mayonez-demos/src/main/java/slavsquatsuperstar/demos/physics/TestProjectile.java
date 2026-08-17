@@ -36,7 +36,7 @@ public class TestProjectile extends GameObject {
 
             @Override
             public void onCollisionEvent(CollisionEvent event) {
-                if (event.other.getName().equals("Target Box")) {
+                if (event.other.getParent().getName().equals("Target Box")) {
                     getGameObject().setDestroyed();
                 }
             }

@@ -34,7 +34,7 @@ class Mario extends GameObject {
             @Override
             public void onCollisionEvent(CollisionEvent event) {
                 if (!event.trigger
-                        && event.other.hasTag(MarioScene.GROUND_TAG)) {
+                        && event.other.getParent().hasTag(MarioScene.GROUND_TAG)) {
                     if (event.type == CollisionEventType.ENTER
                             && event.direction.dot(new Vec2(0, -1)) > 0) {
                         // Direction is downward

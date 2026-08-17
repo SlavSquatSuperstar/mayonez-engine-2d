@@ -47,7 +47,7 @@ public class Projectile extends Script {
 
     // TODO Should listen to collision
     public void onImpactObject(CollisionEvent event) {
-        if (event.other.equals(source)) return; // Don't collide with source
+        if (event.other.getParent().equals(source)) return; // Don't collide with source
         if (!event.trigger || event.type != CollisionEventType.ENTER) return;
 
         // Get particle position

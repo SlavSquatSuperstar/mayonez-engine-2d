@@ -66,13 +66,13 @@ internal class CollisionListener(val c1: CollisionBody, val c2: CollisionBody) {
 
         c1.onCollisionEvent(
             CollisionEvent(
-                (c2 as Collider).gameObject, trigger, type,
+                (c2 as Collider), trigger, type,
                 direction, velocity, contacts
             )
         )
         c2.onCollisionEvent(
             CollisionEvent(
-                (c1 as Collider).gameObject, trigger, type,
+                (c1 as Collider), trigger, type,
                 direction?.unaryMinus(), velocity?.unaryMinus(), contacts
             )
         )

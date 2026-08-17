@@ -111,7 +111,7 @@ public final class ProjectilePrefabs {
      * @return the particle object
      */
     public static GameObject createImpactPrefab(
-            ProjectileType type, Transform particleXf, GameObject target
+            ProjectileType type, Transform particleXf, Node target
     ) {
         return new GameObject("%s Impact".formatted(type.name()), particleXf) {
             @Override

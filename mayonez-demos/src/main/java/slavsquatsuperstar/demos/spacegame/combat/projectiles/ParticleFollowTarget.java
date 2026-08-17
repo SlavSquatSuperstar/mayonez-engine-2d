@@ -10,11 +10,11 @@ import mayonez.math.*;
  */
 class ParticleFollowTarget extends Script {
 
-    private final GameObject target;
+    private final Node target;
     private Vec2 targetPositionOffset;
     private float targetRotationOffset;
 
-    ParticleFollowTarget(GameObject target) {
+    ParticleFollowTarget(Node target) {
         this.target = target;
     }
 
