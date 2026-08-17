@@ -57,8 +57,8 @@ record GlyphSprite(
     }
 
     @Override
-    public boolean isVisible() {
-        return text.isVisible();
+    public boolean shouldRender() {
+        return text.shouldRender();
     }
 
     @Override

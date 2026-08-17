@@ -55,7 +55,7 @@ internal class JDefaultRenderer : SceneRenderer,
         // Crate "batches" from objects and shapes
         val scale = viewport.cameraScale * viewport.zoom
         drawObjects.clear()
-        objects.filter { it.isVisible }
+        objects.filter { it.shouldRender() }
             .map { if (it is DebugShape) it.adjustStrokeSize(scale) else it }
             .forEach { drawObjects.add(it) }
 

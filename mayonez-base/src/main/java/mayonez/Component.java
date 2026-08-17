@@ -59,20 +59,6 @@ public abstract class Component extends Node {
         super.setDestroyed();
     }
 
-    /**
-     * Whether this component should be rendered. If the parent object is
-     * visible, then this component will not be rendered.
-     *
-     * @return if this component is visible
-     */
-    @Override
-    public final boolean isVisible() {
-        // Check parent visible if parent exists
-        return super.isVisible() &&
-                (gameObject == null || gameObject.isVisible());
-        // TODO use shouldRender
-    }
-
     // Property Getters and Setters
 
     /**

@@ -17,7 +17,7 @@ public interface Renderable {
      *
      * @return if visible
      */
-    boolean isVisible();
+    boolean shouldRender();
 
     /**
      * Whether this object should be drawn in the user interface.

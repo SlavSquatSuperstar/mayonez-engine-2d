@@ -42,7 +42,7 @@ internal class GLUIRenderer() : GLRenderer(), UIRenderer {
         objects.sortBy { it.zIndex }
 
         // Process objects
-        objects.filter { it.isVisible }
+        objects.filter { it.shouldRender() }
             .forEach { it.addDrawParts() }
 
         // Push objects

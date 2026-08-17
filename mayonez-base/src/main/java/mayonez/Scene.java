@@ -195,7 +195,7 @@ public abstract class Scene {
         if (!isStopped()) {
             onUserRender();
             sceneNodes.forEach(node -> {
-                if (node.isVisible()) node.debugRender();
+                if (node.shouldRender()) node.debugRender();
             });
             renderLayer.render(g2);
         }

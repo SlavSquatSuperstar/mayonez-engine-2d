@@ -63,9 +63,9 @@ internal class GLDefaultRenderer() : GLRenderer(),
         tempObjects.sortBy { it.zIndex }
 
         // Process objects
-        objects.filter { it.isVisible }
+        objects.filter { it.shouldRender() }
             .forEach { it.addDrawParts() }
-        tempObjects.filter { it.isVisible }
+        tempObjects.filter { it.shouldRender() }
             .forEach { it.addDrawParts() }
         drawObjects.sortBy { it.zIndex }
 

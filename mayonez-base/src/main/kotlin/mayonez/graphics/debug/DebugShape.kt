@@ -79,7 +79,7 @@ internal data class DebugShape(internal val shape: MShape, internal val brush: S
 
     override fun getZIndex(): Int = brush.zIndex
 
-    override fun isVisible(): Boolean = true
+    override fun shouldRender(): Boolean = true
 
     override fun isInUI(): Boolean = false
 
