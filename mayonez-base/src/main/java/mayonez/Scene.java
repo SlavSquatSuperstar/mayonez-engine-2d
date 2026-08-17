@@ -98,7 +98,7 @@ public abstract class Scene {
 
         // Add camera
         camera = CameraFactory.createCamera();
-        addObject(CameraFactory.createCameraObject(camera));
+        addNode(camera);
 
         // Add objects in tree order (top-down)
         init();
@@ -427,7 +427,8 @@ public abstract class Scene {
     public @Nullable SceneLayer getLayer(String name) {
         return Arrays.stream(layers)
                 .filter(layer -> layer.getName().equals(name))
-                .findFirst().orElse(null);
+                .findFirst()
+                .orElse(null);
     }
 
     // Scene Properties

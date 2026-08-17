@@ -18,7 +18,7 @@ import java.util.*;
  *
  * @author SlavSquatSuperstar
  */
-public abstract class Camera extends Component implements Viewport {
+public abstract class Camera extends Node implements Viewport {
 
     // Size Fields
     protected final Vec2 screenSize; // TODO update when switching scenes
@@ -31,10 +31,11 @@ public abstract class Camera extends Component implements Viewport {
 
     // GameObject Fields
     private GameObject subject; // Object to follow
-    private final List<Script> cameraScripts;
+    private final List<Node> cameraScripts;
 
     protected Camera(Vec2 screenSize) {
-        super(UpdateOrder.MOVEMENT);
+        super("Camera");
+        setUpdateOrder(UpdateOrder.MOVEMENT);
         this.screenSize = screenSize;
         resizeHandler = e -> {
             this.screenSize.set(e.getWidth(), e.getHeight());
@@ -51,6 +52,8 @@ public abstract class Camera extends Component implements Viewport {
         subject = null;
         cameraScripts = new ArrayList<>();
     }
+
+    // Node Methods
 
     @Override
     protected void init() {
@@ -72,6 +75,12 @@ public abstract class Camera extends Component implements Viewport {
         if (getSubject() != null) {
             transform.setPosition(getSubject().transform.getPosition());
         }
+    }
+
+    // Don't want to get rid of the camera!
+    @Override
+    public boolean isDestroyed() {
+        return false;
     }
 
     @Override
@@ -255,7 +264,7 @@ public abstract class Camera extends Component implements Viewport {
      *
      * @param script the script
      */
-    public final void addCameraScript(Script script) {
+    public final void addCameraScript(Node script) {
         // Need to buffer because camera object is null during Scene.init
         cameraScripts.add(script);
     }
