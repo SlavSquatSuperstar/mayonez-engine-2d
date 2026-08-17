@@ -25,6 +25,7 @@ class SceneTest {
         scene2 = new TestScene("Test Scene");
         scene1.createRootNode();
         scene2.createRootNode();
+        scene1.setUniqueNodeNames(true);
 
         node1 = new NodeA("Node 1");
         node1.addTag(TAG1);
@@ -70,7 +71,6 @@ class SceneTest {
         var obj2 = new GameObject("Test Object");
         var obj3 = new GameObject("Test Object");
 
-        scene1.uniqueNodeNames = true;
         scene1.addObject(obj1);
         scene1.addObject(obj2);
         scene1.addObject(obj3);
@@ -87,7 +87,6 @@ class SceneTest {
         var obj3 = new GameObject("Test Object");
         var obj4 = new GameObject("Test Object");
 
-        scene1.uniqueNodeNames = true;
         scene1.addObject(obj1);
         scene1.addObject(obj2);
         scene1.addObject(obj3);
@@ -106,7 +105,6 @@ class SceneTest {
         var obj3 = new GameObject("Test Object (3)");
         var obj4 = new GameObject("Test Object");
 
-        scene1.uniqueNodeNames = true;
         scene1.addObject(obj1);
         scene1.addObject(obj2);
         scene1.addObject(obj3);

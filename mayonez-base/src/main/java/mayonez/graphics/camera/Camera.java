@@ -54,13 +54,13 @@ public abstract class Camera extends Component implements Viewport {
 
     @Override
     protected void init() {
-        cameraScripts.forEach(getGameObject()::addComponent);
-        cameraScripts.clear();
         WindowEvents.WINDOW_EVENTS.subscribe(resizeHandler);
     }
 
     @Override
     protected void start() {
+        cameraScripts.forEach(this::addChild);
+        cameraScripts.clear();
         resetZoom();
         resetRotation();
     }

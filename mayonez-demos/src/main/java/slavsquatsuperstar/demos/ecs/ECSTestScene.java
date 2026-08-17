@@ -31,7 +31,7 @@ public class ECSTestScene extends DemoScene {
 
     public ECSTestScene(String name) {
         super(name);
-        uniqueNodeNames = true;
+        setUniqueNodeNames(true);
     }
 
     @Override

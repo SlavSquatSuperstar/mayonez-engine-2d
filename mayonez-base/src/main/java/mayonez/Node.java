@@ -443,7 +443,7 @@ public abstract class Node {
         child.setScene(scene);
         children.add(child);
         if (scene != null) {
-            if (scene.uniqueNodeNames) renameChildUnique(child);
+            if (scene.hasUniqueNodeNames()) renameChildUnique(child);
             scene.onNodeAdded(child);
         }
     }

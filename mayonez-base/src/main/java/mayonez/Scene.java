@@ -43,11 +43,11 @@ public abstract class Scene {
     private SceneState state; // if paused or running
 
     // Scene Objects
-    protected boolean uniqueNodeNames;
     private final BufferedList<Node> sceneNodes;
     private final CallbackBuffer newNodes; // Nodes needing to start
     private final Node rootNode;
     private boolean sceneChanged;
+    private boolean uniqueNodeNames;
     // TODO add/remove, queue callbacks
     private final SceneLayer[] layers;
 
@@ -99,7 +99,6 @@ public abstract class Scene {
         // Add camera
         camera = CameraFactory.createCamera();
         addObject(CameraFactory.createCameraObject(camera));
-        // TODO camera must start last
 
         // Add objects in tree order (top-down)
         init();
@@ -234,7 +233,7 @@ public abstract class Scene {
         state = SceneState.STOPPED;
     }
 
-    // Object Methods
+    // Node Methods
 
     /**
      * Adds an object to this scene and initializes the object if the scene is
@@ -384,6 +383,26 @@ public abstract class Scene {
      */
     public int numNodes() {
         return sceneNodes.size();
+    }
+
+    /**
+     * Whether newly-added nodes are renamed so no two children of any parent
+     * node have the same name.
+     *
+     * @return  whether to rename nodes
+     */
+    public boolean hasUniqueNodeNames() {
+        return uniqueNodeNames;
+    }
+
+    /**
+     * Set whether to rename new nodes so no two children of any parent node
+     * have the same name. Will not affect existing nodes.
+     *
+     * @param uniqueNodeNames whether to rename nodes
+     */
+    public void setUniqueNodeNames(boolean uniqueNodeNames) {
+        this.uniqueNodeNames = uniqueNodeNames;
     }
 
     // Scene Layer Methods
