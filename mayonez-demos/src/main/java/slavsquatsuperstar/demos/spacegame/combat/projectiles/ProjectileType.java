@@ -38,7 +38,7 @@ public record ProjectileType(
                 record.getFloat("speed"), record.getFloat("lifetime"),
                 record.getFloat("fireCooldown"), record.getFloat("weaponSpread"),
                 new Vec2(record.getFloat("scale")),
-                PrefabUtils.getColliderSize(record),
+                PrefabUtils.getVec2(record, "colliderSizeX", "colliderSizeY"),
                 record.getFloat("sweepFactor"),
                 record.getInt("spriteIndex")
         );

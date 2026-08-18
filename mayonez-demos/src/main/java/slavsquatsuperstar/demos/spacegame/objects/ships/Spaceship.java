@@ -33,7 +33,7 @@ public abstract class Spaceship extends GameObject {
 
         // Collision
         var collider = new BoxCollider(properties.colliderSize());
-        collider.setLayer(getScene().getLayer(SpaceGameLayer.SHIPS));
+        collider.setLayer(getScene().getLayer(SpaceGameLayer.SPACECRAFT));
         addComponent(collider);
         addComponent(new KeepInScene(SpaceGameScene.SCENE_HALF_SIZE.mul(-1f),
                 SpaceGameScene.SCENE_HALF_SIZE, KeepInScene.Mode.WRAP));

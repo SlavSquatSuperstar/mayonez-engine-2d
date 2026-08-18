@@ -25,7 +25,7 @@ public record SatelliteProperties(
         this(
                 record.getString("name"),
                 new Vec2(record.getFloat("scale")),
-                PrefabUtils.getColliderSize(record),
+                PrefabUtils.getVec2(record, "colliderSizeX", "colliderSizeY"),
                 record.getFloat("maxHull"),
                 Textures.getTexture(record.getString("textureFile"))
         );

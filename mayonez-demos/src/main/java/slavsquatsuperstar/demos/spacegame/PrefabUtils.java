@@ -47,8 +47,8 @@ public final class PrefabUtils {
                 .map(objectConstructor).toList();
     }
 
-    public static Vec2 getColliderSize(Record record) {
-        return new Vec2(record.getFloat("colliderSizeX"), record.getFloat("colliderSizeY"));
+    public static Vec2 getVec2(Record record, String xKey, String yKey) {
+        return new Vec2(record.getFloat(xKey), record.getFloat(yKey));
     }
 
 }

@@ -94,7 +94,7 @@ public class SpaceGameScene extends DemoScene {
     // Helper Methods
 
     private void setLayers() {
-        var shipLayer = getLayer(SHIPS);
+        var shipLayer = getLayer(SPACECRAFT);
         shipLayer.setName("Ships");
 
         var asteroidLayer = getLayer(ASTEROIDS);

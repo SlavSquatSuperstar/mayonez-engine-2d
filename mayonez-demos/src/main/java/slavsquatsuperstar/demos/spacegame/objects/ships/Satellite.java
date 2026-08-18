@@ -31,8 +31,8 @@ public class Satellite extends GameObject {
         addTag(SpaceGameScene.DAMAGEABLE_TAG);
 
         // Collision
-        var collider = new BoxCollider(new Vec2(1f, 0.44f));
-        collider.setLayer(getScene().getLayer(SpaceGameLayer.SHIPS));
+        var collider = new BoxCollider(properties.colliderSize());
+        collider.setLayer(getScene().getLayer(SpaceGameLayer.SPACECRAFT));
         addComponent(collider);
         addComponent(new KeepInScene(SpaceGameScene.SCENE_HALF_SIZE.mul(-1f),
                 SpaceGameScene.SCENE_HALF_SIZE, KeepInScene.Mode.WRAP));
