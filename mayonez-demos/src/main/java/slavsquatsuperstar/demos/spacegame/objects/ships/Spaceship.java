@@ -3,6 +3,7 @@ package slavsquatsuperstar.demos.spacegame.objects.ships;
 import mayonez.*;
 import mayonez.graphics.sprites.*;
 import mayonez.math.*;
+import mayonez.physics.CollisionEvent;
 import mayonez.physics.colliders.*;
 import mayonez.scripts.*;
 import slavsquatsuperstar.demos.spacegame.SpaceGameScene;
@@ -31,8 +32,21 @@ public abstract class Spaceship extends GameObject {
     protected void init() {
         addTag(SpaceGameScene.DAMAGEABLE_TAG);
 
+        // Combat
+        addComponent(new SpaceshipDestruction());
+        var damageable = getDamageable(properties.maxHull(), properties.maxShield(), properties.shieldRegen());
+        addComponent(damageable);
+
         // Collision
-        var collider = new BoxCollider(properties.colliderSize());
+        var cd = new CollisionDamage();
+        addComponent(cd);
+        var collider = new BoxCollider(properties.colliderSize()) {
+            @Override
+            public void onCollisionEvent(CollisionEvent event) {
+                cd.onObjectCollision(event); // On collision
+                damageable.onImpactProjectile(event); // On trigger
+            }
+        };
         collider.setLayer(getScene().getLayer(SpaceGameLayer.SPACECRAFT));
         addComponent(collider);
         addComponent(new KeepInScene(SpaceGameScene.SCENE_HALF_SIZE.mul(-1f),
@@ -40,11 +54,6 @@ public abstract class Spaceship extends GameObject {
 
         // Movement
         addComponent(new ThrustController(properties.thrusters()));
-
-        // Combat
-        addComponent(new SpaceshipDestruction());
-        addComponent(getDamageable(properties.maxHull(), properties.maxShield(), properties.shieldRegen()));
-        addComponent(new CollisionDamage());
 
         // Visuals
         var sprite = Sprites.createSprite(properties.texture());

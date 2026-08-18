@@ -32,15 +32,8 @@ public class CollisionDamage extends Script {
     @Override
     protected void start() {
         damageable = gameObject.getComponent(Damageable.class);
-
-        var collider = getCollider();
-        if (collider != null) {
-            // On collision
-            collider.addCollisionCallback(this::onObjectCollision);
-        }
     }
 
-    // TODO Should listen to collision
     public void onObjectCollision(CollisionEvent event) {
         if (event.trigger || event.type != CollisionEventType.ENTER) return;
 

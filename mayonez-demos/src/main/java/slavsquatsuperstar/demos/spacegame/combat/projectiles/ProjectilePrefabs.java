@@ -64,14 +64,20 @@ public final class ProjectilePrefabs {
         return new GameObject(type.name(), projXf) {
             @Override
             protected void init() {
-                addComponent(new Projectile(source, type));
+                var proj = new Projectile(source, type);
+                addComponent(proj);
                 addTag(SpaceGameScene.PROJECTILE_TAG);
 
                 var sprite = PROJECTILE_SPRITES.getSprite(type.spriteIndex());
                 sprite.setZIndex(SpaceGameZIndex.PROJECTILE);
                 addComponent(sprite);
 
-                var col = new BulletBoxCollider(type.colliderSize());
+                var col = new BulletBoxCollider(type.colliderSize()) {
+                    @Override
+                    public void onCollisionEvent(CollisionEvent event) {
+                        proj.onImpactObject(event); // On trigger
+                    }
+                };
                 col.setLayer(getScene().getLayer(SpaceGameLayer.PROJECTILES));
                 col.setPrimaryAxisX(false);
                 col.setSweepFactor(type.sweepFactor());

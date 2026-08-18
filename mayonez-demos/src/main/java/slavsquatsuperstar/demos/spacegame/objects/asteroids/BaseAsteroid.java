@@ -21,8 +21,9 @@ public class BaseAsteroid extends Asteroid {
                 .setVelocity(transform.getUp().mul(Random.randomFloat(0f, 3f)));
 
         // Create more fragments
-        addComponent(new AsteroidDestruction(startingHealth, properties));
-        addCollider();
+        var damageable = new AsteroidDestruction(startingHealth, properties);
+        addComponent(damageable);
+        addCollider(damageable::onImpactProjectile); // On trigger
     }
 
 }

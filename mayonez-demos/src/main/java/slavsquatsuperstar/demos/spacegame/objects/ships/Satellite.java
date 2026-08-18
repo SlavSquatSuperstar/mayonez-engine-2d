@@ -3,6 +3,7 @@ package slavsquatsuperstar.demos.spacegame.objects.ships;
 import mayonez.*;
 import mayonez.graphics.sprites.*;
 import mayonez.math.*;
+import mayonez.physics.CollisionEvent;
 import mayonez.physics.colliders.*;
 import mayonez.physics.dynamics.*;
 import mayonez.scripts.*;
@@ -30,8 +31,27 @@ public class Satellite extends GameObject {
     protected void init() {
         addTag(SpaceGameScene.DAMAGEABLE_TAG);
 
+        // Combat
+        addComponent(new SpaceshipDestruction());
+        var damageable = new Damageable(properties.maxHull()) {
+            @Override
+            public void onHealthDepleted() {
+                var shipDestruction = gameObject.getComponent(SpaceshipDestruction.class);
+                if (shipDestruction != null) shipDestruction.startDestructionSequence();
+            }
+        };
+        addComponent(damageable);
+
         // Collision
-        var collider = new BoxCollider(properties.colliderSize());
+        var cd = new CollisionDamage();
+        addComponent(cd);
+        var collider = new BoxCollider(properties.colliderSize()) {
+            @Override
+            public void onCollisionEvent(CollisionEvent event) {
+                cd.onObjectCollision(event); // On collision
+                damageable.onImpactProjectile(event); // On trigger
+            }
+        };
         collider.setLayer(getScene().getLayer(SpaceGameLayer.SPACECRAFT));
         addComponent(collider);
         addComponent(new KeepInScene(SpaceGameScene.SCENE_HALF_SIZE.mul(-1f),
@@ -41,17 +61,6 @@ public class Satellite extends GameObject {
         Rigidbody rb;
         addComponent(rb = new Rigidbody(1f, 0.01f, 0.01f));
         rb.setVelocity(transform.getUp().mul(Random.randomFloat(0f, 4f)));
-
-        // Combat
-        addComponent(new SpaceshipDestruction());
-        addComponent(new Damageable(properties.maxHull()) {
-            @Override
-            public void onHealthDepleted() {
-                var shipDestruction = gameObject.getComponent(SpaceshipDestruction.class);
-                if (shipDestruction != null) shipDestruction.startDestructionSequence();
-            }
-        });
-        addComponent(new CollisionDamage());
 
         // Visuals
         var sprite = Sprites.createSprite(properties.texture());

@@ -22,15 +22,6 @@ public class Damageable extends Script {
     }
 
     @Override
-    protected void start() {
-        var collider = getCollider();
-        if (collider != null) {
-            // On trigger
-            collider.addCollisionCallback(this::onImpactProjectile);
-        }
-    }
-
-    @Override
     protected void update(float dt) {
         if (healthPoints.isAtMin()) onHealthDepleted();
     }

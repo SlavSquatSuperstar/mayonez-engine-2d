@@ -30,8 +30,7 @@ public class Projectile extends Script {
     @Override
     protected void start() {
         var rb = getRigidbody();
-        var col = getCollider();
-        if (col == null || rb == null) {
+        if (rb == null) {
             this.setEnabled(false);
             return;
         }
@@ -40,12 +39,8 @@ public class Projectile extends Script {
         var sourceRb = source.getComponent(Rigidbody.class);
         if (sourceRb != null) rb.setVelocity(sourceRb.getVelocity());
         rb.addVelocity(transform.getUp().mul(type.speed()));
-
-        // On trigger
-        col.addCollisionCallback(this::onImpactObject);
     }
 
-    // TODO Should listen to collision
     public void onImpactObject(CollisionEvent event) {
         if (event.other.getParent().equals(source)) return; // Don't collide with source
         if (!event.trigger || event.type != CollisionEventType.ENTER) return;
