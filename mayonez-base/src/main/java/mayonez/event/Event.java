@@ -1,10 +1,15 @@
 package mayonez.event;
 
 import mayonez.util.*;
+import org.jspecify.annotations.Nullable;
+
+import java.util.Objects;
 
 /**
- * An action or milestone that occurs in this program. Events may be exchanged asynchronously
- * between objects from different systems of the application.
+ * An action or milestone that occurs in this program. Events may be exchanged
+ * asynchronously between objects from unrelated components of the application.
+ * Events are passed through {@link EventSystem}s and received by
+ * {@link EventListener}s.
  *
  * @author SlavSquatSuperstar
  */
@@ -16,17 +21,16 @@ public class Event {
         this("");
     }
 
-    public Event(String message) {
-        this.message = message;
+    public Event(@Nullable String message) {
+        this.message = Objects.requireNonNullElse(message, "");
     }
-    
+
     @Override
     public String toString() {
-        return String.format(
-                "%s (%s)",
-                StringUtils.getObjectClassName(this),
-                message.isEmpty() ? "<No Message>" : message
-        );
+        var className = StringUtils.getObjectClassName(this);
+        return message.isEmpty()
+                ? className
+                : "%s (%s)".formatted(className, message);
     }
 
 }

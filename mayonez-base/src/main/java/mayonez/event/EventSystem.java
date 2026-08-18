@@ -1,9 +1,13 @@
 package mayonez.event;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.*;
 
 /**
- * A common node that links multiple event listeners and event generators.
+ * A network of objects that can send or receive {@link Event}s. Events are
+ * broadcasted to multiple subscribed {@link EventListener}s that execute
+ * asynchronous and uncoupled behavior.
  *
  * @param <T> the type of event to send
  * @author SlavSquatSuperstar
@@ -17,8 +21,8 @@ public class EventSystem<T extends Event> {
      *
      * @param l the event observer
      */
-    public void subscribe(EventListener<T> l) {
-        listeners.add(l);
+    public void subscribe(@Nullable EventListener<T> l) {
+        if (l != null) listeners.add(l);
     }
 
     /**
@@ -26,8 +30,8 @@ public class EventSystem<T extends Event> {
      *
      * @param l the event observer
      */
-    public void unsubscribe(EventListener<T> l) {
-        listeners.remove(l);
+    public void unsubscribe(@Nullable EventListener<T> l) {
+        if (l != null) listeners.remove(l);
     }
 
     /**
@@ -42,8 +46,8 @@ public class EventSystem<T extends Event> {
      *
      * @param e the event data
      */
-    public void broadcast(T e) {
-        listeners.forEach(l -> l.onEvent(e));
+    public void broadcast(@Nullable T e) {
+        if (e != null) listeners.forEach(l -> l.onEvent(e));
     }
 
 }

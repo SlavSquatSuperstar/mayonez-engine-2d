@@ -1,7 +1,8 @@
 package mayonez.event;
 
 /**
- * An object that receives and reacts to events.
+ * An object that receives and reacts to {@link Event}s. Used in conjunction
+ * with {@link EventSystem}.
  *
  * @param <T> the type of event to listen to
  * @author SlavSquatSuperstar
