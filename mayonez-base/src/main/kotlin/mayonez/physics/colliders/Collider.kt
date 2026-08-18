@@ -21,10 +21,6 @@ import mayonez.physics.manifold.*
 abstract class Collider(private val shape: Shape) :
     Component(), CollisionBody {
 
-    // Collision Event Fields
-
-    private var collisionCallbacks: EventSystem<CollisionEvent> = EventSystem()
-
     // Component References
 
     override var physicsBody: PhysicsBody? = null
@@ -58,10 +54,6 @@ abstract class Collider(private val shape: Shape) :
 
     override fun start() {
         physicsBody = parent!!.getChild(Rigidbody::class.java)
-    }
-
-    override fun onDestroy() {
-        collisionCallbacks.unsubscribeAll()
     }
 
     // Shape Properties
@@ -117,18 +109,6 @@ abstract class Collider(private val shape: Shape) :
     // Collision Event Methods
 
     override fun onCollisionEvent(event: CollisionEvent) {
-        collisionCallbacks.broadcast(event)
-    }
-
-    // TODO should register collision?
-    /**
-     * Add a collision callback to this collider that will be notified when this object
-     * receives a collision event.
-     *
-     * @param callback the callback method or object
-     */
-    fun addCollisionCallback(callback: EventListener<CollisionEvent>) {
-        collisionCallbacks.subscribe(callback)
     }
 
 }

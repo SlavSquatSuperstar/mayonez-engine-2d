@@ -99,8 +99,8 @@ public abstract class Node {
 
     /**
      * Add child components and initializes fields after this node has been added to the scene
-     * or parent node. This method is called before {@code #start} and after {@code parent.init}.
-     * The {@link #transform}, {@link getParent}, and {@link #getScene} properties will return
+     * or parent node. This method is called before {@link #start} and after {@code parent.init}.
+     * The {@link #getTransform}, {@link #getParent}, and {@link #getScene} properties will return
      * non-null here. Subclasses may override this method and can also call {@code super.init()}.
      * <p>
      * Warning: Calling {@code init()} at any other point in time may lead to unintended errors
@@ -111,7 +111,7 @@ public abstract class Node {
 
     /**
      * Initialize fields after all components have been added to the parent object. The
-     * {@link #transform}, {@link #getParent} {@link #getScene} properties and
+     * {@link #getTransform}, {@link #getParent} {@link #getScene} properties and
      * {@link #getChild} method are accessible here. This method will be called even if this
      * node has been disabled through {@link #setEnabled}.
      * <p>
@@ -456,7 +456,7 @@ public abstract class Node {
     /**
      * Delete this node from the scene, removing it from its parent and destroying
      * all its descendants at the end of the current frame. The properties
-     * {@link #getScene}, {@link #getParent}, and {@link transform} will return null
+     * {@link getScene}, {@link getParent}, and {@link getTransform} will return null
      * after the object is destroyed.
      * <p>
      * <b>Warning:</b> Destroying a node is permanent and cannot be reversed!
@@ -472,10 +472,10 @@ public abstract class Node {
 
     /**
      * Custom behavior for when this node or any of its ancestors is destroyed. The properties
-     * {@link getScene}, {@link getParent}, and {@link transform} will still be accessible.
+     * {@link #getScene}, {@link #getParent}, and {@link #getTransform} will still be accessible.
      * <p>
      * Warning: Calling {@code onDestroy} directly can lead to unpredictable behavior. It is
-     * better to call {@link setDestroyed()} instead.
+     * better to call {@link #setDestroyed()} instead.
      */
     protected void onDestroy() {
     }
