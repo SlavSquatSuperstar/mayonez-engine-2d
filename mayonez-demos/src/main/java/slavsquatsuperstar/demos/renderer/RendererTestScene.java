@@ -136,9 +136,12 @@ public class RendererTestScene extends DemoScene {
         addUIObject("ui-3c", new Vec2(uiStartPos + 128, uiStartPos), 12, sheet2.getTexture(2));
 
         addObject(new GameObject("text-1") {
+            private TextAlignment align = TextAlignment.LEFT;
+            private TextLabel worldText, uiText;
+
             @Override
             protected void init() {
-                var worldText = new TextLabel(
+                worldText = new TextLabel(
                         WORLD_MESSAGE, new Vec2(-58, 12))
                         .setInUI(false)
                         .setColor(Colors.BLUE)
@@ -146,33 +149,29 @@ public class RendererTestScene extends DemoScene {
                         .setAnchor(Anchor.TOP_LEFT);
                 addComponent(worldText);
 
-                var uiText = new TextLabel(
+                uiText = new TextLabel(
                         UI_MESSAGE, new Vec2(20, Mayonez.getScreenHeight() - 20))
                         .setInUI(true)
                         .setColor(Colors.RED)
                         .setFontSize(40)
                         .setAnchor(Anchor.TOP_LEFT);
                 addComponent(uiText);
+            }
 
-                addComponent(new Script() {
-                    private TextAlignment align = TextAlignment.LEFT;
-
-                    @Override
-                    protected void update(float dt) {
-                        // Toggle font alignment
-                        if (KeyInput.keyPressed("space")) {
-                            switch (align) {
-                                case LEFT -> align = TextAlignment.CENTER;
-                                case CENTER -> align = TextAlignment.RIGHT;
-                                case RIGHT -> align = TextAlignment.LEFT;
-                            }
-
-                            // Set alignment
-                            worldText.setAlignment(align);
-                            uiText.setAlignment(align);
-                        }
+            @Override
+            protected void update(float dt) {
+                // Toggle font alignment
+                if (KeyInput.keyPressed("space")) {
+                    switch (align) {
+                        case LEFT -> align = TextAlignment.CENTER;
+                        case CENTER -> align = TextAlignment.RIGHT;
+                        case RIGHT -> align = TextAlignment.LEFT;
                     }
-                });
+
+                    // Set alignment
+                    worldText.setAlignment(align);
+                    uiText.setAlignment(align);
+                }
             }
         });
     }
@@ -211,14 +210,9 @@ public class RendererTestScene extends DemoScene {
 
         addObject(new GameObject(name) {
             @Override
-            protected void init() {
-                addComponent(new Script() {
-                    @Override
-                    protected void debugRender() {
-                        getDebugDraw().fillShape(shape, fillBrush);
-                        getDebugDraw().drawShape(shape, drawBrush);
-                    }
-                });
+            protected void debugRender() {
+                getDebugDraw().fillShape(shape, fillBrush);
+                getDebugDraw().drawShape(shape, drawBrush);
             }
         });
     }
@@ -236,16 +230,11 @@ public class RendererTestScene extends DemoScene {
     private void addLineObject(String name, Vec2 start, Vec2 end, int zIndex, Color color) {
         addObject(new GameObject(name) {
             @Override
-            protected void init() {
-                addComponent(new Script() {
-                    @Override
-                    protected void debugRender() {
-                        getDebugDraw().drawLine(
-                                start, end,
-                                new ShapeBrush(color, false, zIndex, 10)
-                        );
-                    }
-                });
+            protected void debugRender() {
+                getDebugDraw().drawLine(
+                        start, end,
+                        new ShapeBrush(color, false, zIndex, 10)
+                );
             }
         });
     }

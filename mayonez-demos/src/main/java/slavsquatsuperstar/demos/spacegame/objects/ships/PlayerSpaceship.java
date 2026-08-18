@@ -35,16 +35,14 @@ public class PlayerSpaceship extends Spaceship {
         // Weapons
         var loadout = ProjectilePrefabs.PROJECTILE_TYPES;
         addComponent(new PlayerFireController(properties.hardpoints(), loadout));
-
-        addComponent(new Script() {
-            @Override
-            protected void update(float dt) {
-                // Destroy the player (debug only)
-                if (KeyInput.keyDown("backspace")) {
-                    getComponent(Damageable.class).onObjectDamaged(100);
-                }
-            }
-        });
     }
 
+    @Override
+    protected void update(float dt) {
+        super.update(dt);
+        // Destroy the player (debug only)
+        if (KeyInput.keyDown("backspace")) {
+            getComponent(Damageable.class).onObjectDamaged(100);
+        }
+    }
 }

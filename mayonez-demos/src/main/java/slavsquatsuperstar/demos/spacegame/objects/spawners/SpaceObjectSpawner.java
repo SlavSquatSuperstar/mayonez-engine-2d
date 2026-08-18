@@ -50,14 +50,9 @@ public class SpaceObjectSpawner extends GameObject {
                         name, SpaceGameScene.getRandomPosition(), properties
                 ) {
                     @Override
-                    protected void init() {
-                        super.init();
-                        addComponent(new Script() {
-                            @Override
-                            protected void onDestroy() {
-                                markObjectDestroyed(gameObject);
-                            }
-                        });
+                    protected void onDestroy() {
+                        super.onDestroy();
+                        markObjectDestroyed(gameObject);
                     }
                 };
             }
@@ -73,30 +68,18 @@ public class SpaceObjectSpawner extends GameObject {
                             AsteroidPrefabs.getRandomProperties()
                     ) {
                         @Override
-                        protected void init() {
-                            super.init();
-                            // Notify spawner when destroyed
-                            addComponent(new Script() {
-                                @Override
-                                protected void onDestroy() {
-                                    markObjectDestroyed(gameObject);
-                                }
-                            });
+                        protected void onDestroy() {
+                            super.onDestroy();
+                            markObjectDestroyed(gameObject);
                         }
                     };
                 } else {
                     return new Satellite("Satellite", SpaceGameScene.getRandomPosition(),
                             ShipPrefabs.SATELLITE_PROPERTIES) {
                         @Override
-                        protected void init() {
-                            super.init();
-                            // Notify spawner when destroyed
-                            addComponent(new Script() {
-                                @Override
-                                protected void onDestroy() {
-                                    markObjectDestroyed(gameObject);
-                                }
-                            });
+                        protected void onDestroy() {
+                            super.onDestroy();
+                            markObjectDestroyed(gameObject);
                         }
                     };
                 }

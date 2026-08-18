@@ -50,25 +50,23 @@ public class TargetBox extends GameObject {
             }
         });
         addComponent(shapeSprite = new ShapeSprite(Colors.DARK_GRAY, true));
+    }
 
-        addComponent(new Script() {
-            @Override
-            protected void update(float dt) {
-                var yInput = KeyInput.getAxis("arrows vertical");
-                transform.move(new Vec2(0f, 20f * yInput * dt));
+    @Override
+    protected void update(float dt) {
+        var yInput = KeyInput.getAxis("arrows vertical");
+        transform.move(new Vec2(0f, 20f * yInput * dt));
 
-                var xInput = KeyInput.getAxis("arrows horizontal");
-                transform.rotate(-90f * xInput * dt);
+        var xInput = KeyInput.getAxis("arrows horizontal");
+        transform.rotate(-90f * xInput * dt);
 
-                var x2Input = KeyInput.getAxis(new KeyAxis(Key.MINUS, Key.PLUS));
-                transform.scale(new Vec2(1f + 0.5f * x2Input * dt));
+        var x2Input = KeyInput.getAxis(new KeyAxis(Key.MINUS, Key.PLUS));
+        transform.scale(new Vec2(1f + 0.5f * x2Input * dt));
 
-                // Flash red when hit
-                flashCounter.count(1);
-                if (!flashCounter.isAtMax()) shapeSprite.setColor(Colors.RED);
-                else shapeSprite.setColor(Colors.DARK_GRAY);
-            }
-        });
+        // Flash red when hit
+        flashCounter.count(1);
+        if (!flashCounter.isAtMax()) shapeSprite.setColor(Colors.RED);
+        else shapeSprite.setColor(Colors.DARK_GRAY);
     }
 
     private void resetFlashCounter() {

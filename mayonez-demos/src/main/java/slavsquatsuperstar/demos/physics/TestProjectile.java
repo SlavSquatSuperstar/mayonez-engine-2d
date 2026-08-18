@@ -48,22 +48,20 @@ public class TestProjectile extends GameObject {
 
         addComponent(new ShapeSprite(Colors.BLUE, false));
         addComponent(new DestroyAfterDuration(5f));
+    }
 
+    @Override
+    protected void fixedUpdate(float dt) {
         if (DRAW_TRAILS) {
-            addComponent(new Script() {
+            // Add trail
+            getScene().addObject(new GameObject("Trail", transform.copy()) {
                 @Override
-                protected void fixedUpdate(float dt) {
-                    // Add trail
-                    getScene().addObject(new GameObject("Trail", transform.copy()) {
-                        @Override
-                        protected void init() {
-                            var collider = new BoxCollider(ProjectileLauncher.PROJ_SIZE);
-                            collider.setLayer(getScene().getLayer(ProjectileTestScene.PROJECTILE_LAYER));
-                            addComponent(collider);
-                            addComponent(new ShapeSprite(Colors.LIGHT_BLUE, false));
-                            addComponent(new DestroyAfterDuration(0.5f));
-                        }
-                    });
+                protected void init() {
+                    var collider = new BoxCollider(ProjectileLauncher.PROJ_SIZE);
+                    collider.setLayer(getScene().getLayer(ProjectileTestScene.PROJECTILE_LAYER));
+                    addComponent(collider);
+                    addComponent(new ShapeSprite(Colors.LIGHT_BLUE, false));
+                    addComponent(new DestroyAfterDuration(0.5f));
                 }
             });
         }

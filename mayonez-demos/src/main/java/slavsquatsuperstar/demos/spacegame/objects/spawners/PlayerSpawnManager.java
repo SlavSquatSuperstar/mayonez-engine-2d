@@ -52,20 +52,16 @@ public class PlayerSpawnManager extends SpawnManager {
                 "Player Spaceship", new Vec2(), ShipPrefabs.SHUTTLE_PROPERTIES1
         ) {
             @Override
-            protected void init() {
-                super.init();
-                addComponent(new Script() {
-                    @Override
-                    protected void start() {
-                        SpaceGameEvents.getPlayerEventSystem()
-                                .broadcast(new PlayerSpawnedEvent(gameObject));
-                    }
+            protected void start() {
+                super.start();
+                SpaceGameEvents.getPlayerEventSystem()
+                        .broadcast(new PlayerSpawnedEvent(gameObject));
+            }
 
-                    @Override
-                    protected void onDestroy() {
-                        markObjectDestroyed(gameObject);
-                    }
-                });
+            @Override
+            protected void onDestroy() {
+                super.onDestroy();
+                markObjectDestroyed(gameObject);
             }
         };
     }

@@ -43,7 +43,7 @@ public class ECSTestScene extends DemoScene {
         addedComponent = false;
         removedComponent = false;
 
-        addObject(new GameObject("Manager") {
+        addObject(new GameObject("Spawn Manager") {
             @Override
             protected void init() {
                 var fontSize = 20;
@@ -55,41 +55,40 @@ public class ECSTestScene extends DemoScene {
                         .setAlignment(TextAlignment.LEFT);
                 addComponent(objCount);
                 addComponent(compCount);
-                addComponent(new Script() {
-                    @Override
-                    protected void update(float dt) {
-                        if (KeyInput.keyPressed("=")) {
-                            // Add object with components
-                            testObjects.addLast(new TestObject());
-                            getScene().addObject(testObjects.getLast());
-                        }
-                    }
+            }
 
-                    @Override
-                    protected void debugRender() {
-                        var objects = getNodes().stream()
-                                .filter(n -> n instanceof GameObject)
-                                .map(n -> (GameObject) n)
-                                .toList();
-                        var numComponents = objects.stream()
-                                .map(GameObject::numComponents)
-                                .reduce(0, Integer::sum);
-                        objCount.setMessage("GameObjects: " + objects.size());
-                        compCount.setMessage("Components: " + numComponents);
+            @Override
+            protected void update(float dt) {
+                if (KeyInput.keyPressed("=")) {
+                    // Add object with components
+                    testObjects.addLast(new TestObject());
+                    getScene().addObject(testObjects.getLast());
+                }
+            }
 
-                        // Clean up empty objects
-                        objects.stream()
-                                .filter(obj -> obj.numComponents() == 0)
-                                .forEach(obj -> {
-                                    if (Random.randomBoolean()) obj.setDestroyed();
-                                    else getScene().removeObject(obj);
-                                    testObjects.remove(obj);
-                                });
-                        removedObject = false;
-                        addedComponent = false;
-                        removedComponent = false;
-                    }
-                });
+            @Override
+            protected void debugRender() {
+                var objects = getNodes().stream()
+                        .filter(n -> n instanceof GameObject)
+                        .map(n -> (GameObject) n)
+                        .toList();
+                var numComponents = objects.stream()
+                        .map(GameObject::numComponents)
+                        .reduce(0, Integer::sum);
+                objCount.setMessage("GameObjects: " + objects.size());
+                compCount.setMessage("Components: " + numComponents);
+
+                // Clean up empty objects
+                objects.stream()
+                        .filter(obj -> obj.numComponents() == 0)
+                        .forEach(obj -> {
+                            if (Random.randomBoolean()) obj.setDestroyed();
+                            else getScene().removeObject(obj);
+                            testObjects.remove(obj);
+                        });
+                removedObject = false;
+                addedComponent = false;
+                removedComponent = false;
             }
         });
     }
