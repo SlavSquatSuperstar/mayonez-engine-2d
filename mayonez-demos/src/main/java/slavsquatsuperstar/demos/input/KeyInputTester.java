@@ -13,6 +13,26 @@ import mayonez.math.shapes.*;
  */
 public class KeyInputTester extends Script {
 
+    private static final Vec2 KEY_SIZE = new Vec2(6);
+    private static final KeySprite[] KEY_SPRITES = {
+            new KeySprite(
+                    "w",
+                    new Vec2(-30, -5), KEY_SIZE
+            ),
+            new KeySprite(
+                    "s",
+                    new Vec2(-30, -11), KEY_SIZE
+            ),
+            new KeySprite(
+                    "a",
+                    new Vec2(-36, -11), KEY_SIZE
+            ),
+            new KeySprite(
+                    "d",
+                    new Vec2(-24, -11), KEY_SIZE
+            ),
+    };
+
     private boolean toggleEnabled;
 
     @Override
@@ -32,24 +52,13 @@ public class KeyInputTester extends Script {
                 new Circle(new Vec2(-30, 15), 9f), Colors.BLACK);
 
         // Draw keys held
-        var keySize = new Vec2(6);
-        var keyPositions = new Vec2[]{
-                new Vec2(-30, -5),
-                new Vec2(-36, -11),
-                new Vec2(-30, -11),
-                new Vec2(-24, -11),
-        };
-        var keyNames = new String[]{"w", "a", "s", "d"};
+        for (var key : KEY_SPRITES) {
+            var keyRect = new Rectangle(key.position, key.size);
 
-        for (var i = 0; i < keyPositions.length; i++) {
-            Color fillColor;
-            if (KeyInput.keyDown(keyNames[i])) fillColor = Colors.GRAY;
-            else fillColor = Colors.LIGHT_GRAY;
-            getScene().getDebugDraw().fillShape(
-                    new Rectangle(keyPositions[i], keySize), fillColor);
-
-            getScene().getDebugDraw().drawShape(
-                    new Rectangle(keyPositions[i], keySize), Colors.BLACK);
+            var fillColor = KeyInput.keyDown(key.name)
+                    ? Colors.GRAY : Colors.LIGHT_GRAY;
+            getScene().getDebugDraw().fillShape(keyRect, fillColor);
+            getScene().getDebugDraw().drawShape(keyRect, Colors.BLACK);
         }
 
         // Test keys pressed
@@ -61,6 +70,13 @@ public class KeyInputTester extends Script {
         var toggleRect = new Rectangle(new Vec2(-30, -20), new Vec2(18, 6));
         getScene().getDebugDraw().fillShape(toggleRect, toggleColor);
         getScene().getDebugDraw().drawShape(toggleRect, Colors.BLACK);
+    }
+
+    // Helper Class
+
+    private record KeySprite(
+            String name, Vec2 position, Vec2 size
+    ) {
     }
 
 }

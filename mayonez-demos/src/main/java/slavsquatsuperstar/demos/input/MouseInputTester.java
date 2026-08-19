@@ -2,9 +2,13 @@ package slavsquatsuperstar.demos.input;
 
 import mayonez.*;
 import mayonez.graphics.*;
+import mayonez.graphics.debug.ShapeBrush;
 import mayonez.input.*;
 import mayonez.math.*;
 import mayonez.math.shapes.*;
+
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 /**
  * Detects that mouse input features work correctly.
@@ -13,13 +17,38 @@ import mayonez.math.shapes.*;
  */
 public class MouseInputTester extends Script {
 
+    private static final ButtonSprite[] MOUSE_BUTTONS = {
+            new ButtonSprite(
+                    "left mouse",
+                    new Vec2(27, -12), new Vec2(6, 15),
+                    0
+            ),
+            new ButtonSprite(
+                    "right mouse",
+                    new Vec2(33, -12), new Vec2(6, 15),
+                    0
+            ),
+            new ButtonSprite(
+                    "middle mouse",
+                    new Vec2(30, -9), new Vec2(2, 4),
+                    1
+            ),
+    };
+    private static final float DOUBLE_CLICK_TIME = 0.5f;
+    private static final float DOUBLE_CLICK_RADIUS = 2f;
+    private static final float MOUSE_DISPLACEMENT_TIME = 0.25f;
+
+    private Deque<MouseMotion> mouseMotions;
     private boolean dragged;
     private Vec2 dragStart;
+    private Deque<DoubleClick> doubleClicks;
 
     @Override
     protected void start() {
+        mouseMotions = new ArrayDeque<>();
         dragged = false;
         dragStart = null;
+        doubleClicks = new ArrayDeque<>();
     }
 
     @Override
@@ -36,35 +65,49 @@ public class MouseInputTester extends Script {
         }
 
         // Draw buttons held
-        var buttonSize = new Vec2(6, 12);
-        var buttonPositions = new Vec2[]{
-                new Vec2(27, -11),
-                new Vec2(33, -11),
-        };
-        var buttonNames = new String[]{"left mouse", "right mouse"};
+        for (var button : MOUSE_BUTTONS) {
+            var buttonRect = new Rectangle(button.position, button.size);
 
-        for (var i = 0; i < buttonPositions.length; i++) {
-            Color fillColor;
-            if (MouseInput.buttonDown(buttonNames[i])) fillColor = Colors.GRAY;
-            else fillColor = Colors.LIGHT_GRAY;
-            getScene().getDebugDraw().fillShape(
-                    new Rectangle(buttonPositions[i], buttonSize), fillColor);
+            var fillColor = MouseInput.buttonDown(button.name)
+                    ? Colors.GRAY : Colors.LIGHT_GRAY;
+            var fillBrush = ShapeBrush.createSolidBrush(fillColor)
+                    .setZIndex(button.zIndex);
+            getScene().getDebugDraw().fillShape(buttonRect, fillBrush);
 
-            getScene().getDebugDraw().drawShape(
-                    new Rectangle(buttonPositions[i], buttonSize), Colors.BLACK);
+            var outlineBrush = ShapeBrush.createOutlineBrush(Colors.BLACK)
+                    .setZIndex(button.zIndex);
+            getScene().getDebugDraw().drawShape(buttonRect, outlineBrush);
         }
 
         var color = Colors.ORANGE;
 
-        // Draw circle(s) at click positions
+        // Draw circle at click position
         getScene().getDebugDraw().drawShape(new Circle(pos, 1), color);
+
+        // Draw last double clicks
         if (MouseInput.isDoubleClick()) {
-            getScene().getDebugDraw().drawShape(new Circle(pos, 2), color);
+            doubleClicks.offer(new DoubleClick(pos));
         }
 
-        // Draw move displacement
-        getScene().getDebugDraw().drawVector(pos,
-                MouseInput.getDisplacement().mul(-1), color);
+        for (var click : doubleClicks) {
+            var percentLeft = click.timer / DOUBLE_CLICK_TIME;
+            var radius = DOUBLE_CLICK_RADIUS * percentLeft * percentLeft;
+            getScene().getDebugDraw().drawShape(new Circle(click.position, radius), color);
+            click.timer -= dt;
+
+            if (click.timer < 0f) doubleClicks.remove(click);
+        }
+
+        // Draw move displacements
+        var disp = MouseInput.getDisplacement().mul(-1);
+        mouseMotions.offer(new MouseMotion(pos, disp));
+
+        for (var motion : mouseMotions) {
+            getScene().getDebugDraw().drawVector(motion.position, motion.displacement.mul(0.8f), Colors.ORANGE);
+            motion.timer -= dt;
+
+            if (motion.timer < 0f) mouseMotions.remove(motion);
+        }
 
         // Draw drag displacement
         if (dragged) {
@@ -73,13 +116,38 @@ public class MouseInputTester extends Script {
 
         // Draw scroll displacement
         var scroll = MouseInput.getScroll();
-        if (scroll.len() > 0f) {
-            getScene().getDebugDraw().drawVector(
-                    new Vec2(30, 15), scroll, Colors.GREEN);
-        }
-
+        getScene().getDebugDraw().drawVector(
+                new Vec2(30, 15), scroll.unit().mul(8), Colors.GREEN);
         getScene().getDebugDraw().drawShape(
                 new Circle(new Vec2(30, 15), 9f), Colors.BLACK);
+    }
+
+    // Helper Classes
+
+    private record ButtonSprite(
+            String name, Vec2 position, Vec2 size, int zIndex
+    ) {
+    }
+
+    private static class DoubleClick {
+        final Vec2 position;
+        float timer;
+
+        DoubleClick(Vec2 position) {
+            this.position = position;
+            timer = DOUBLE_CLICK_TIME;
+        }
+    }
+
+    private static class MouseMotion {
+        final Vec2 position, displacement;
+        float timer;
+
+        MouseMotion(Vec2 position, Vec2 displacement) {
+            this.position = position;
+            this.displacement = displacement;
+            timer = MOUSE_DISPLACEMENT_TIME;
+        }
     }
 
 }
