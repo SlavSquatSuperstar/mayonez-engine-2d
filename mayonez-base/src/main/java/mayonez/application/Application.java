@@ -83,13 +83,9 @@ public class Application {
             lastTime = currentTime; // Reset last time
 
             while (fixedUnprocessedTime > fixedDt) { // Always update with fixed delta-t
-                window.beginFrame();
-                SceneManager.fixedUpdateScene(fixedDt); // TODO should be fixed update
-                window.endFrame();
+                SceneManager.fixedUpdateScene(fixedDt);
                 fixedTickCount += 1;
-
                 fixedUnprocessedTime -= fixedDt;
-
                 if (!frameSkip) break;
             }
 
@@ -97,6 +93,7 @@ public class Application {
             // TODO do frame skip here
             if (unprocessedTime >= renderDt) {
                 currentDt = unprocessedTime;
+                window.pollEvents();
                 SceneManager.updateScene(currentDt);
                 window.render();
                 frameCount += 1;

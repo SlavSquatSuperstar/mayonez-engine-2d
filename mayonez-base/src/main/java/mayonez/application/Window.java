@@ -91,19 +91,14 @@ public sealed interface Window permits JWindow, GLWindow {
     boolean notClosedByUser();
 
     /**
-     * Poll any input or window events.
+     * Poll input and window events and update listeners.
      */
-    void beginFrame();
+    void pollEvents();
 
     /**
      * Redraw the game to the screen.
      */
     void render();
-
-    /**
-     * Reset events and update input listeners.
-     */
-    void endFrame();
 
     // Input Methods
 

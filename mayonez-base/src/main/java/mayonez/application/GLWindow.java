@@ -108,7 +108,12 @@ final class GLWindow implements Window {
     }
 
     @Override
-    public void beginFrame() {
+    public void pollEvents() {
+        // Update input states
+        KeyInput.updateKeys();
+        MouseInput.updateMouse();
+
+        // Fetch new events
         glfwPollEvents();
     }
 
@@ -117,12 +122,6 @@ final class GLWindow implements Window {
         GLHelper.clearScreen(1f, 1f, 1f, 1f);
         SceneManager.renderScene(null); // Don't pass G2D
         glfwSwapBuffers(windowID);
-    }
-
-    @Override
-    public void endFrame() {
-        KeyInput.updateKeys();
-        MouseInput.updateMouse();
     }
 
     // Input Methods

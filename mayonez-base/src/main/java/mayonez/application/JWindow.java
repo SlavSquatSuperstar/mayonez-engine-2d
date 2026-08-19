@@ -138,16 +138,10 @@ final class JWindow extends JFrame implements Window {
     }
 
     @Override
-    public void beginFrame() {
-    }
-
-    @Override
-    public void endFrame() {
+    public void pollEvents() {
         KeyInput.updateKeys();
         MouseInput.updateMouse();
     }
-
-    // Render Methods
 
     @Override
     public void render() {
