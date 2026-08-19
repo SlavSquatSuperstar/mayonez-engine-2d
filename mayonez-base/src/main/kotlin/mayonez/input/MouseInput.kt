@@ -89,8 +89,13 @@ object MouseInput {
     }
 
     private fun onMouseMoveEvent(event: MouseMoveEvent) {
-        // Set mouse displacement with last mouse position
-        mouseDispPx.set(event.mouseX - mousePosPx.x, event.mouseY - mousePosPx.y)
+        // Multiple mouse move events may occur per frame
+        // Better to accumulate mouse motion
+        mouseDispPx.set(
+            mouseDispPx.x + event.mouseX - mousePosPx.x,
+            mouseDispPx.y + event.mouseY - mousePosPx.y
+        )
+        // Okay to overwrite mouse position
         mousePosPx.set(event.mouseX, event.mouseY)
     }
 
