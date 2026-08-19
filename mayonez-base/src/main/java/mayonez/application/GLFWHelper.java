@@ -115,10 +115,15 @@ final class GLFWHelper {
 
         // Very important!
         glfwMakeContextCurrent(windowID); // Make the OpenGL context current
-        glfwSwapInterval(1); // Enable v-sync
         GLHelper.loadOpenGL(); // Integrate LWJGL with OpenGL bindings
 
         return new GLFWWindow(windowID, vidMode);
+    }
+
+    // TODO adaptive vsync
+    static void setVSyncEnabled(boolean enabled) {
+        if (enabled) glfwSwapInterval(1);
+        else glfwSwapInterval(0);
     }
 
     /**

@@ -52,6 +52,7 @@ final class GLWindow implements Window {
         var window = createGLFWWindow(windowConfig, runConfig);
         windowID = window.windowID();
         vidMode = window.vidMode();
+        setVSyncEnabled(Preferences.useVSync());
 
         var frameSize = getWindowFrameSize(windowID);
         frameWidth = (int) frameSize.x;

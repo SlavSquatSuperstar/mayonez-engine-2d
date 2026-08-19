@@ -28,7 +28,7 @@ object Preferences : GameConfig(PREFS_FILENAME, Defaults.preferences) {
     private fun getRules(): Array<PreferenceValidator<*>> {
         return arrayOf(
             StringValidator("title", "log_level", "log_directory"),
-            BooleanValidator("fullscreen", "resizable", "save_logs"),
+            BooleanValidator("fullscreen", "resizable", "vsync", "save_logs"),
             IntValidator(240, 3840, "screen_height", "screen_width"),
             IntValidator(10, 250, "fps", "fixed_tps"),
             IntValidator(1, 20, "max_ticks_per_frame"),
@@ -76,15 +76,27 @@ object Preferences : GameConfig(PREFS_FILENAME, Defaults.preferences) {
         get() = getBoolean("resizable")
 
     /**
+     * If vertical synchronization should be enabled. Using VSync caps the
+     * framerate to the monitor's refresh rate, preventing screen tearing but
+     * increasing input latency. The framerate may still be reduced by setting
+     * [fps] to a lower value.
+     */
+    @JvmStatic
+    val vSync: Boolean
+        @JvmName("useVSync")
+        get() = getBoolean("vsync")
+
+    /**
      * The maximum frames per second, or the frequency of render frames and
-     * non-fixed updates.
+     * non-fixed updates. Window and input events will be polled at this rate.
      */
     @JvmStatic
     val fps: Int
         get() = getInt("fps")
 
     /**
-     * The maximum fixed ticks per second, or the frequency of fixed updates.
+     * The maximum fixed ticks per second, or the frequency of fixed updates
+     * and physics iterations.
      */
     @JvmStatic
     val fixedTps: Int

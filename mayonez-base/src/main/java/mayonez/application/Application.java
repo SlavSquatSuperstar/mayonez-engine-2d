@@ -88,7 +88,6 @@ public class Application {
                 fixedUnprocessedTime -= fixedDt;
                 fixedTickCount += 1;
                 ticksThisFrame += 1;
-                Logger.trace("Ticks this frame: %d", ticksThisFrame);
             }
 
             // Render as often as possible

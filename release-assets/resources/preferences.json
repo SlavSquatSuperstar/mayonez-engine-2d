@@ -4,6 +4,7 @@
     "screen_height": 800,
     "fullscreen": false,
     "resizable": true,
+    "vsync": true,
     "fps": 60,
     "fixed_tps": 60,
     "max_ticks_per_frame": 4,

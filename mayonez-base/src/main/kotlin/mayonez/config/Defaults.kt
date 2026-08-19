@@ -15,6 +15,7 @@ object Defaults {
     private const val SCREEN_HEIGHT: Int = 600
     private const val FULLSCREEN: Boolean = false
     private const val RESIZABLE: Boolean = true
+    private const val VSYNC: Boolean = true
     private const val FPS: Int = 60
     private const val FIXED_TPS: Int = 60
     private const val MAX_TICKS_PER_FRAME: Int = 4
@@ -29,6 +30,7 @@ object Defaults {
         preferences["screen_height"] = SCREEN_HEIGHT
         preferences["fullscreen"] = FULLSCREEN
         preferences["resizable"] = RESIZABLE
+        preferences["vsync"] = VSYNC
         preferences["fps"] = FPS
         preferences["fixed_tps"] = FIXED_TPS
         preferences["max_ticks_per_frame"] = MAX_TICKS_PER_FRAME
