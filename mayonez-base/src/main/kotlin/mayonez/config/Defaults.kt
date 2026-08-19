@@ -17,7 +17,7 @@ object Defaults {
     private const val RESIZABLE: Boolean = true
     private const val FPS: Int = 60
     private const val FIXED_TPS: Int = 60
-    private const val FRAME_SKIP: Boolean = true
+    private const val MAX_TICKS_PER_FRAME: Int = 4
     private const val DOUBLE_CLICK_TIME: Float = 0.50f
 
     val preferences: Record = Record()
@@ -31,7 +31,7 @@ object Defaults {
         preferences["resizable"] = RESIZABLE
         preferences["fps"] = FPS
         preferences["fixed_tps"] = FIXED_TPS
-        preferences["frame_skip"] = FRAME_SKIP
+        preferences["max_ticks_per_frame"] = MAX_TICKS_PER_FRAME
         preferences["double_click_time"] = DOUBLE_CLICK_TIME
 
         // Logging

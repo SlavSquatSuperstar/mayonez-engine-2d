@@ -18,7 +18,7 @@ public class Application {
     private boolean running;
 
     // Time Fields (Seconds)
-    private final boolean frameSkip; // Update only once per draw
+    private final int maxTicksPerFrame; // Limit physics iterations per render
     private final float renderDt; // Target render delta time
     private final float fixedDt; // Target physics delta time
     private float currentDt; // Time processed this frame
@@ -31,7 +31,7 @@ public class Application {
         this.window = window;
         running = false;
 
-        frameSkip = Preferences.getFrameSkip();
+        maxTicksPerFrame = Preferences.getMaxTicksPerFrame();
         renderDt = 1f / Preferences.getFps(); // Render
         fixedDt = 1f / Preferences.getFixedTps(); // Physics
     }
@@ -58,13 +58,13 @@ public class Application {
      */
     // TODO separate physics and render rate
     // TODO call render/update and fixed update separately
-    // TODO limit max physics updates per frame (replace frameskip)
     // TODO interpolate between physics frames
     private void run() {
         // Frame time variables
         var lastTime = window.getCurrentTimeSecs(); // Last update time
         var unprocessedTime = 0f; // Timer for render
         var fixedUnprocessedTime = 0f; // Timer for physics
+        var ticksThisFrame = 0;
         currentDt = 0f;
 
         // Debug variables
@@ -82,11 +82,13 @@ public class Application {
             debugTimer += frameElapsedTime;
             lastTime = currentTime; // Reset last time
 
-            while (fixedUnprocessedTime > fixedDt) { // Always update with fixed delta-t
+            // Always update with fixed delta-t
+            while (fixedUnprocessedTime >= fixedDt && ticksThisFrame < maxTicksPerFrame) {
                 SceneManager.fixedUpdateScene(fixedDt);
-                fixedTickCount += 1;
                 fixedUnprocessedTime -= fixedDt;
-                if (!frameSkip) break;
+                fixedTickCount += 1;
+                ticksThisFrame += 1;
+                Logger.trace("Ticks this frame: %d", ticksThisFrame);
             }
 
             // Render as often as possible
@@ -97,6 +99,7 @@ public class Application {
                 SceneManager.updateScene(currentDt);
                 window.render();
                 frameCount += 1;
+                ticksThisFrame = 0;
                 unprocessedTime = 0;
             }
 

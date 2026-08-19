@@ -6,7 +6,7 @@
     "resizable": true,
     "fps": 60,
     "fixed_tps": 60,
-    "frame_skip": true,
+    "max_ticks_per_frame": 4,
     "double_click_time": 0.5,
     "log_level": "info",
     "save_logs": true,
