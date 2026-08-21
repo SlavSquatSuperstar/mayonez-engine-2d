@@ -22,7 +22,9 @@ import java.util.*;
  * See {@link mayonez.Component} and {@link mayonez.Scene} for more information.
  *
  * @author SlavSquatSuperstar
+ * @deprecated Use {@link Node} instead
  */
+@Deprecated
 public class GameObject extends Node {
 
     /**
@@ -64,7 +66,9 @@ public class GameObject extends Node {
      * The component will not be added if it already has a parent object.
      *
      * @param comp the component
+     * @deprecated Use {@link #addChild} instead
      */
+    @Deprecated
     public final void addComponent(@Nullable Component comp) {
         super.addChild(comp);
     }
@@ -74,7 +78,9 @@ public class GameObject extends Node {
      * The component will only be removed if its parent is this object.
      *
      * @param comp the component
+     * @deprecated Use {@link #removeChild} instead
      */
+    @Deprecated
     public final void removeComponent(@Nullable Component comp) {
         super.removeChild(comp);
     }
@@ -83,7 +89,9 @@ public class GameObject extends Node {
      * Counts how many components this object has.
      *
      * @return the number of components
+     * @deprecated Use {@link #numChildren} instead
      */
+    @Deprecated
     public int numComponents() {
         return super.numChildren();
     }
@@ -93,7 +101,9 @@ public class GameObject extends Node {
      *
      * @param name the component's name
      * @return the component, or null if not present
+     * @deprecated Use {@link #getChild} instead
      */
+    @Deprecated
     public @Nullable Component getComponent(@Nullable String name) {
         return (Component) super.getChild(name);
     }
@@ -105,7 +115,9 @@ public class GameObject extends Node {
      * @param cls a {@link mayonez.Component} subclass
      * @param <T> the component type
      * @return the component, or null if not present
+     * @deprecated Use {@link #getChild} instead
      */
+    @Deprecated
     public <T extends Component> @Nullable T getComponent(@Nullable Class<T> cls) {
         return super.getChild(cls);
     }
@@ -116,7 +128,9 @@ public class GameObject extends Node {
      * @param cls a {@link mayonez.Component} subclass
      * @param <T> the component type
      * @return the list of components, or empty if none are present
+     * @deprecated Use {@link #getChildren} instead
      */
+    @Deprecated
     public <T extends Component> List<T> getComponents(@Nullable Class<T> cls) {
         return super.getChildren(cls);
     }
@@ -125,7 +139,9 @@ public class GameObject extends Node {
      * Get a copy of the list of all this object's components.
      *
      * @return the list of all components
+     * @deprecated Use {@link #getChildren} instead
      */
+    @Deprecated
     public List<Component> getComponents() {
         return super.getChildren()
                 .stream().map(Component.class::cast)

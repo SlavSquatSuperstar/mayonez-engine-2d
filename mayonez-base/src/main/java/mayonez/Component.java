@@ -22,14 +22,18 @@ import org.jspecify.annotations.Nullable;
  * See {@link mayonez.GameObject} and {@link mayonez.Script} for more information.
  *
  * @author SlavSquatSuperstar
+ * @deprecated Use {@link Node} instead
  */
+@Deprecated
 public abstract class Component extends Node {
 
     /**
      * The parent {@link mayonez.GameObject} this component belongs to. The parent
      * object will be non-null from the start of {@link #init} to the end of
      * {@link #onDestroy()}.
+     * @deprecated use {@link #getParent} instead
      */
+    @Deprecated
     protected @Nullable GameObject gameObject;
 
     protected Component() {
@@ -46,26 +50,15 @@ public abstract class Component extends Node {
         setUpdateOrder(updateOrder);
     }
 
-    // Scene Methods
-
-    /**
-     * Destroy this component, disabling it and removing it from its parent {@link GameObject}.
-     * The fields {@link #gameObject} and {@link #transform} will be set to null.
-     * <p>
-     * Warning: Destroying a component is permanent and cannot be reversed!
-     */
-    @Override
-    public void setDestroyed() {
-        super.setDestroyed();
-    }
-
     // Property Getters and Setters
 
     /**
      * Returns the parent {@link GameObject} this Component is attached to.
      *
      * @return the game object
+     * @deprecated Use {@link #getParent} instead
      */
+    @Deprecated
     public @Nullable GameObject getGameObject() {
         return gameObject;
     }

@@ -10,7 +10,9 @@ import org.jspecify.annotations.Nullable;
  * See {@link mayonez.GameObject} and {@link mayonez.Script} for more information.
  *
  * @author SlavSquatSuperstar
+ * @deprecated Use {@link Node} instead
  */
+@Deprecated
 public abstract class Script extends Component {
 
     public Script() {

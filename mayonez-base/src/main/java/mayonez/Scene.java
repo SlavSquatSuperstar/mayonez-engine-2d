@@ -16,16 +16,16 @@ import java.util.*;
 import java.util.List;
 
 /**
- * An in-game world or level that holds multiple {@link mayonez.GameObject}s. Each scene
+ * An in-game world or level that holds multiple {@link mayonez.Node}s. Each scene
  * can  be given a background image or color.
  * <p>
  * Usage: Create a scene by instantiating a subclass or anonymous instance of
- * {@link mayonez.Scene}. Add objects to the scene by calling {@link #addObject}
+ * {@link mayonez.Scene}. Add nodes to the scene by calling {@link #addNode}
  * inside the {@link #init()} method. Scenes may also define custom game logic
- * and graphics inside {@link #onUserUpdate} and {@link #onUserRender}. To remove an
- * object from the scene, call {@link GameObject#setDestroyed()}.
+ * and graphics inside {@link #onUserUpdate} and {@link #onUserRender}. To remove a
+ * node from the scene, call {@link #removeNode} or {@link Node#setDestroyed()}.
  * <p>
- * See {@link mayonez.GameObject} and {@link mayonez.SceneManager} for more information.
+ * See {@link mayonez.Node} and {@link mayonez.SceneManager} for more information.
  *
  * @author SlavSquatSuperstar
  */
@@ -42,7 +42,7 @@ public abstract class Scene {
     private final String name;
     private SceneState state; // if paused or running
 
-    // Scene Objects
+    // Scene Nodes
     private final BufferedList<Node> sceneNodes;
     private final CallbackBuffer newNodes; // Nodes needing to start
     private final Node rootNode;
@@ -81,8 +81,8 @@ public abstract class Scene {
     // Initialization Methods
 
     /**
-     * Initialize all objects and begin updating the scene. Calls {@link GameObject#start()}
-     * for all objects added on start.
+     * Initialize all nodes and begin updating the scene. Calls {@link Node#start()}
+     * for all nodes added on start.
      */
     @Initializer
     final void start() {
@@ -93,7 +93,7 @@ public abstract class Scene {
         camera = CameraFactory.createCamera();
         addNode(camera);
 
-        // Add objects in tree order (top-down)
+        // Add nodes in tree order (top-down)
         init();
 
         // Start nodes in reverse tree order (bottom-up)
@@ -110,7 +110,7 @@ public abstract class Scene {
     }
 
     /**
-     * Add game objects to this scene before the scene starts or initialize fields
+     * Add nodes to this scene before the scene starts or initialize fields
      * after this scene has been loaded.
      * The method {@link #getCamera()} is accessible here.
      * <p>
@@ -125,7 +125,7 @@ public abstract class Scene {
     // Update Methods
 
     /**
-     * Processes physics and updates all enabled objects on a fixed tick.
+     * Processes physics and updates all enabled nodes on a fixed tick.
      *
      * @param dt seconds between fixed ticks
      */
@@ -203,21 +203,21 @@ public abstract class Scene {
     // Stop Methods
 
     /**
-     * Signal the scene to stop updating and destroy all objects after this frame.
+     * Signal the scene to stop updating and destroy all nodes after this frame.
      */
     final void destroy() {
-        // Make sure the scene finishes updating so component transforms aren't null
+        // Make sure the scene finishes updating so node transforms aren't null
         state = SceneState.DESTROYED;
     }
 
     /**
-     * Destroy all objects in the scene immediately.
+     * Destroy all nodes in the scene immediately.
      */
     final void stop() {
-        // Destroy all objects
+        // Destroy all nodes
         rootNode.setDestroyed();
 
-        // Clear all objects
+        // Clear all nodes
         sceneNodes.clear();
         newNodes.clear();
         renderLayer.clear();
@@ -233,7 +233,9 @@ public abstract class Scene {
      * running. The object will not be added if it already has a parent scene.
      *
      * @param obj a {@link GameObject}
+     * @deprecated Use {@link #addNode} instead
      */
+    @Deprecated
     public final void addObject(@Nullable GameObject obj) {
         addNode(obj);
     }
@@ -267,7 +269,7 @@ public abstract class Scene {
         if (node instanceof Renderable r) renderLayer.addRenderable(r);
         if (node instanceof PhysicsBody b) physics.addPhysicsBody(b);
         if (node instanceof CollisionBody b) physics.addCollisionBody(b);
-        Logger.trace("Added object \"%s\" to scene \"%s\"",
+        Logger.trace("Added node \"%s\" to scene \"%s\"",
                 node, this.name);
     }
 
@@ -275,7 +277,9 @@ public abstract class Scene {
      * Removes an object from this scene and destroys it.
      *
      * @param obj a {@link GameObject}
+     * @deprecated Use {@link #removeNode} instead
      */
+    @Deprecated
     public final void removeObject(@Nullable GameObject obj) {
         removeNode(obj);
     }
@@ -299,7 +303,7 @@ public abstract class Scene {
         node.onDestroy();
         node.setParent(null);
         node.setScene(null);
-        Logger.trace("Removed object \"%s\" from scene \"%s\"",
+        Logger.trace("Removed node \"%s\" from scene \"%s\"",
                 node, this.name);
     }
 
@@ -325,8 +329,8 @@ public abstract class Scene {
      * Finds the first {@link Node} with the given name (case-sensitive),
      * or null if none exists.
      *
-     * @param name the object's name
-     * @return the object
+     * @param name the node's name
+     * @return the node
      */
     public @Nullable Node getNode(@Nullable String name) {
         if (name == null) return null;
@@ -438,7 +442,7 @@ public abstract class Scene {
 
     /**
      * Get the scene's {@link Camera} instance. The camera is initialized before
-     * {@link GameObject#start()} is called for all other objects.
+     * {@link Node#start()} is called for all other nodes.
      *
      * @return the scene camera
      */
@@ -476,15 +480,15 @@ public abstract class Scene {
     }
 
     /**
-     * Pauses the scene but does not destroy any game objects. While paused,
-     * objects do not move or update but key inputs can still be polled through onUserUpdate().
+     * Pauses the scene but does not destroy any game nodes. While paused,
+     * nodes do not move or update but key inputs can still be polled through onUserUpdate().
      */
     final void pause() {
         state = SceneState.PAUSED;
     }
 
     /**
-     * Resumes the scene but does not reinitialize any game objects.
+     * Resumes the scene but does not reinitialize any game nodes.
      */
     final void resume() {
         state = SceneState.RUNNING;
