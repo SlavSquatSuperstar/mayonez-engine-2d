@@ -1,9 +1,6 @@
 package slavsquatsuperstar.demos.ecs;
 
-import mayonez.Component;
-import mayonez.GameObject;
-import mayonez.Logger;
-import mayonez.Script;
+import mayonez.*;
 import mayonez.graphics.font.TextAlignment;
 import mayonez.graphics.font.TextLabel;
 import mayonez.input.KeyInput;
@@ -15,15 +12,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A scene for testing the entity-component-system (Scenes, GameObjects, and Components) architecture.
+ * A scene for testing the entity-component-system (Scenes and Nodes) architecture.
  *
  * @author SlavSquatSuperstar
  */
 public class ECSTestScene extends DemoScene {
 
     private TextLabel objCount, compCount;
-    private List<GameObject> testObjects;
-    private List<Component> testComponents;
+    private List<Node> testObjects, testComponents;
 
     // Make sure only one addition/removal per press
     private boolean removedObject;
@@ -43,18 +39,18 @@ public class ECSTestScene extends DemoScene {
         addedComponent = false;
         removedComponent = false;
 
-        addObject(new GameObject("Spawn Manager") {
+        addNode(new GameObject("Spawn Manager") {
             @Override
             protected void init() {
                 var fontSize = 20;
-                objCount = new TextLabel("GameObjects:", new Vec2(100, 60))
+                objCount = new TextLabel("GameObjects:", new Vec2(80, 60))
                         .setFontSize(fontSize)
                         .setAlignment(TextAlignment.LEFT);
-                compCount = new TextLabel("Components:", new Vec2(100, 20))
+                compCount = new TextLabel("Components:", new Vec2(80, 20))
                         .setFontSize(fontSize)
                         .setAlignment(TextAlignment.LEFT);
-                addComponent(objCount);
-                addComponent(compCount);
+                addChild(objCount);
+                addChild(compCount);
             }
 
             @Override
@@ -62,28 +58,27 @@ public class ECSTestScene extends DemoScene {
                 if (KeyInput.keyPressed("=")) {
                     // Add object with components
                     testObjects.addLast(new TestObject());
-                    getScene().addObject(testObjects.getLast());
+                    getScene().addNode(testObjects.getLast());
                 }
             }
 
             @Override
             protected void debugRender() {
-                var objects = getNodes().stream()
-                        .filter(n -> n instanceof GameObject)
-                        .map(n -> (GameObject) n)
+                var objects = getTopLevelNodes().stream()
+                        .filter(n -> n instanceof TestObject)
                         .toList();
                 var numComponents = objects.stream()
-                        .map(GameObject::numComponents)
+                        .map(Node::numChildren)
                         .reduce(0, Integer::sum);
-                objCount.setMessage("GameObjects: " + objects.size());
-                compCount.setMessage("Components: " + numComponents);
+                objCount.setMessage("Parents: " + objects.size());
+                compCount.setMessage("Children: " + numComponents);
 
                 // Clean up empty objects
                 objects.stream()
-                        .filter(obj -> obj.numComponents() == 0)
+                        .filter(obj -> obj instanceof TestObject && obj.numChildren() == 0)
                         .forEach(obj -> {
                             if (Random.randomBoolean()) obj.setDestroyed();
-                            else getScene().removeObject(obj);
+                            else getScene().removeNode(obj);
                             testObjects.remove(obj);
                         });
                 removedObject = false;
@@ -105,7 +100,7 @@ public class ECSTestScene extends DemoScene {
             var numComponents = Random.randomInt(1, 3);
             for (int i = 0; i < numComponents; i++) {
                 testComponents.addLast(new TestComponent());
-                addComponent(testComponents.getLast());
+                addChild(testComponents.getLast());
             }
             Logger.log("Added %s with %d components", this, numComponents);
         }
@@ -118,24 +113,25 @@ public class ECSTestScene extends DemoScene {
         // Test calling add/remove object within child component
         @Override
         protected void update(float dt) {
+            var parent = getParent();
             if (KeyInput.keyPressed("-")) {
                 // Remove object and components
-                if (!removedObject && gameObject.equals(testObjects.getFirst())) {
+                if (!removedObject && parent.equals(testObjects.getFirst())) {
                     testObjects.removeFirst();
-                    gameObject.getComponents().forEach(testComponents::remove);
-                    gameObject.setDestroyed();
-                    Logger.log("Removed %s with %d components", gameObject, gameObject.numComponents());
+                    parent.getChildren().forEach(testComponents::remove);
+                    parent.setDestroyed();
+                    Logger.log("Removed %s with %d components", parent, parent.numChildren());
                     removedObject = true;
                 }
             }
 
             if (KeyInput.keyPressed("]")) {
                 // Add component to object
-                if (gameObject.equals(testObjects.getFirst()) && !addedComponent) {
+                if (parent.equals(testObjects.getFirst()) && !addedComponent) {
                     var comp = new TestComponent();
                     testComponents.addLast(comp);
-                    gameObject.addComponent(comp);
-                    Logger.log("Added %s to %s", comp, gameObject);
+                    parent.addChild(comp);
+                    Logger.log("Added %s to %s", comp, parent);
                     addedComponent = true;
                 }
             }
@@ -143,7 +139,7 @@ public class ECSTestScene extends DemoScene {
                 // Remove component from object
                 if (this.equals(testComponents.getFirst()) && !removedComponent) {
                     testComponents.removeFirst();
-                    if (Random.randomBoolean()) gameObject.removeComponent(this);
+                    if (Random.randomBoolean()) parent.removeChild(this);
                     else this.setDestroyed();
                     removedComponent = true;
                 }
@@ -152,7 +148,7 @@ public class ECSTestScene extends DemoScene {
 
         @Override
         protected void onDestroy() {
-            Logger.log("Removed %s from %s", this, gameObject);
+            Logger.log("Removed %s from %s", this, getParent());
         }
 
     }

@@ -351,6 +351,16 @@ public abstract class Scene {
     }
 
     /**
+     * Returns a list of all the top level nodes, or nodes that are direct
+     * children of the root node.
+     *
+     * @return the list of top level nodes
+     */
+    public List<Node> getTopLevelNodes() {
+        return rootNode.getChildren();
+    }
+
+    /**
      * Returns a list of all the nodes in this scene that have the given tag.
      *
      * @param tag the tag

@@ -138,6 +138,12 @@ class SceneTest {
     }
 
     @Test
+    void getTopLevelNodesSuccess() {
+        var topLevel = scene1.getTopLevelNodes();
+        assertEquals(List.of(node1, node2), topLevel);
+    }
+
+    @Test
     void getRootNodeSuccess() {
         var root = scene1.getRootNode();
         assertTrue(root.isRoot());
