@@ -239,7 +239,8 @@ public abstract class Scene {
      */
     @Deprecated
     public final void addObject(@Nullable GameObject obj) {
-        addNode(obj);
+        // Don't add more nodes if scene is stopping
+        if (!rootNode.isDestroyed()) addNode(obj);
     }
 
     /**
@@ -532,18 +533,6 @@ public abstract class Scene {
     static class RootNode extends Node {
         public RootNode() {
             super("Root");
-        }
-
-        @Override
-        public boolean isDestroyed() {
-            return false;
-        }
-
-        @Override
-        public void setDestroyed() {
-            // Don't destroy the root node!
-            getChildren().forEach(this::removeChild);
-            setScene(null);
         }
     }
 
