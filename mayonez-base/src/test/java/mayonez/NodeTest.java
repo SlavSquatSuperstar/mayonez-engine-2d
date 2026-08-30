@@ -28,7 +28,6 @@ class NodeTest {
     @BeforeEach
     void setUp() {
         scene = new TestScene("Test Scene");
-        scene.createRootNode();
 
         node1 = new NodeA("Test Node 1");
         node2 = new NodeA("Test Node 2");

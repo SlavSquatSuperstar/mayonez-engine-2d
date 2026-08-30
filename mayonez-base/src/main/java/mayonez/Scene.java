@@ -45,7 +45,7 @@ public abstract class Scene {
     // Scene Nodes
     private final BufferedList<Node> sceneNodes;
     private final CallbackBuffer newNodes; // Nodes needing to start
-    private final Node rootNode;
+    private Node rootNode;
     private boolean sceneChanged;
     private boolean uniqueNodeNames;
     // TODO add/remove, queue callbacks
@@ -71,7 +71,7 @@ public abstract class Scene {
         // Initialize layers
         sceneNodes = new BufferedList<>();
         newNodes = new CallbackBuffer();
-        rootNode = new RootNode();
+        rootNode = createRootNode();
         sceneChanged = false;
         uniqueNodeNames = false;
         renderLayer = RendererFactory.createRenderLayer(Mayonez.getUseGL());
@@ -86,8 +86,8 @@ public abstract class Scene {
      */
     @Initializer
     final void start() {
-        // Add root node
-        createRootNode();
+        // Recreate root node if restarting
+        if (rootNode.isDestroyed()) createRootNode();
 
         // Add camera
         camera = CameraFactory.createCamera();
@@ -104,9 +104,11 @@ public abstract class Scene {
         sortNodes();
     }
 
-    void createRootNode() {
+    private Node createRootNode() {
+        rootNode = new RootNode();
         sceneNodes.add(rootNode);
         rootNode.setScene(this);
+        return rootNode;
     }
 
     /**
