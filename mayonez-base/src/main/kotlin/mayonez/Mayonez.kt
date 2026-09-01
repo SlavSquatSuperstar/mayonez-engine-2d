@@ -221,7 +221,7 @@ object Mayonez {
     fun stop(status: Int) {
         if (started) {
             started = false
-            SceneManager.stopScene()
+            SceneManager.requestStopScene(true)
             SceneManager.clearScenes()
             Assets.clearAssets()
             application.stop() // Do everything before GL deleted

@@ -1,7 +1,6 @@
 package mayonez
 
 import mayonez.config.*
-import mayonez.event.*
 import mayonez.input.*
 import mayonez.util.CallbackBuffer
 import java.awt.*
@@ -79,13 +78,13 @@ object SceneManager {
     }
 
     /**
-     * Restarts the current scene and reinitializes all its game objects. If the scene
-     * was stopped, it will simply be started.
+     * Restarts the current scene and reinitializes all its nodes. If the scene
+     * was never initialized, it will simply be started.
      */
     @JvmStatic
     fun restartScene() {
         Logger.debug("Restarting current scene")
-        destroyScene()
+        requestStopScene(false)
 
         // Wait for scene to stop, then start scene
         sceneCallbacks.offer { startScene() }
@@ -108,11 +107,9 @@ object SceneManager {
         Logger.debug("Switching scenes (stop old = $stopOld, restart new = $restartNew)")
 
         // Old scene behavior
-        if (stopOld) {
-            destroyScene()
-        } else {
-            pauseScene()
-        }
+        if (stopOld) requestStopScene(false)
+        else pauseScene()
+
         // Wait for scene to stop, then switch and start
         sceneCallbacks.offer { setNewSceneAndStart(scene, restartNew) }
     }
@@ -123,7 +120,7 @@ object SceneManager {
 
         // New scene behavior
         if (restartNew) {
-            stopScene() // Since not updating, just stop with no callback
+            requestStopScene(true) // Since not updating, just stop with no callback
             startScene()
         } else {
             startScene() // Start if stopped
@@ -146,36 +143,34 @@ object SceneManager {
 
     // Scene State Methods
 
-    /** Starts the current scene and initializes all its game objects. */
+    /** Starts the current scene and initializes all its nodes. */
     @JvmStatic
     @JvmName("startScene")
     internal fun startScene() {
-        if (currentScene.isStopped || currentScene.isDestroyed) {
+        if (currentScene.isStopped || currentScene.isStopping) {
             currentScene.start()
             MouseInput.setPointTransformer(currentScene.camera)
             Logger.debug("Started scene \"${currentScene.name}\"")
         }
     }
 
-    /** Signals the current scene to stop after the current update. */
-    internal fun destroyScene() {
+    /**
+     * Signals the current scene to stop and destroys all its nodes.
+     *
+     * @param now whether to stop the scene immediately (may cause concurrency
+     * errors if `true`)
+     */
+    internal fun requestStopScene(now: Boolean) {
         if (!currentScene.isStopped) {
-            currentScene.destroy()
-            Logger.debug("Stopped scene \"${currentScene.name}\"")
-        }
-    }
-
-    /** Stops the current scene and destroys all its game objects immediately. */
-    internal fun stopScene() {
-        if (!currentScene.isStopped) {
-            currentScene.stop()
+            if (now) currentScene.stop()
+            else currentScene.requestStop()
             Logger.debug("Stopped scene \"${currentScene.name}\"")
         }
     }
 
     /**
      * Resumes the current scene if it is paused without reinitializing any of
-     * its game objects.
+     * its nodes.
      */
     @JvmStatic
     fun resumeScene() {
@@ -187,7 +182,7 @@ object SceneManager {
 
     /**
      * Suspends the current scene if it is running without destroying any of
-     * its game objects.
+     * its nodes.
      */
     @JvmStatic
     fun pauseScene() {

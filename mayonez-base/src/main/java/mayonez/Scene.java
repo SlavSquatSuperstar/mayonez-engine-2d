@@ -168,7 +168,9 @@ public abstract class Scene {
             sortNodes();
             sceneChanged = false;
         }
-        if (isDestroyed()) stop();
+
+        // Stop scene
+        if (isStopping()) stop();
     }
 
     /**
@@ -207,9 +209,9 @@ public abstract class Scene {
     /**
      * Signal the scene to stop updating and destroy all nodes after this frame.
      */
-    final void destroy() {
+    final void requestStop() {
         // Make sure the scene finishes updating so node transforms aren't null
-        state = SceneState.DESTROYED;
+        state = SceneState.STOPPING;
     }
 
     /**
@@ -398,7 +400,7 @@ public abstract class Scene {
      * Whether newly-added nodes are renamed so no two children of any parent
      * node have the same name.
      *
-     * @return  whether to rename nodes
+     * @return whether to rename nodes
      */
     public boolean hasUniqueNodeNames() {
         return uniqueNodeNames;
@@ -484,8 +486,8 @@ public abstract class Scene {
         return state == SceneState.PAUSED;
     }
 
-    boolean isDestroyed() {
-        return state == SceneState.DESTROYED;
+    boolean isStopping() {
+        return state == SceneState.STOPPING;
     }
 
     boolean isStopped() {
