@@ -15,7 +15,8 @@ public class Application {
 
     // Engine Fields
     private final Window window;
-    private boolean running;
+    private boolean running; // Game loop is running
+    private boolean quit; // Scene requested quit
 
     // Time Fields (Seconds)
     private final int maxTicksPerFrame; // Limit physics iterations per render
@@ -30,6 +31,7 @@ public class Application {
     protected Application(Window window) {
         this.window = window;
         running = false;
+        quit = false;
 
         maxTicksPerFrame = Preferences.getMaxTicksPerFrame();
         renderDt = 1f / Preferences.getFps(); // Render
@@ -73,7 +75,7 @@ public class Application {
         var frameCount = 0;
         averageFPS = 0;
 
-        while (running && window.notClosedByUser()) {
+        while (running) {
             // Update game at constant rate
             var currentTime = window.getCurrentTimeSecs();
             var frameElapsedTime = currentTime - lastTime; // Time since last update
@@ -81,6 +83,9 @@ public class Application {
             fixedUnprocessedTime += frameElapsedTime;
             debugTimer += frameElapsedTime;
             lastTime = currentTime; // Reset last time
+
+            // Request to stop if window closed
+            if (!window.notClosedByUser()) Mayonez.stop(ExitCode.SUCCESS);
 
             // Always update with fixed delta-t
             while (fixedUnprocessedTime >= fixedDt && ticksThisFrame < maxTicksPerFrame) {
@@ -115,16 +120,28 @@ public class Application {
                 }
                 debugTimer -= DEBUG_INTERVAL_SECS;
             }
+
+            // Quit if scene stopped or window closed
+            if (quit) running = false;
         }
-        Mayonez.stop(ExitCode.SUCCESS);
+        Mayonez.onStop(ExitCode.SUCCESS);
+    }
+
+    /**
+     * Signal the engine to stop after the current frame.
+     */
+    public final void requestStop() {
+        if (!quit) {
+            quit = true;
+            Logger.debug("Application requested to stop");
+        }
     }
 
     /**
      * Free system resources and quit the application.
      */
     public final void stop() {
-        if (running) {
-            running = false;
+        if (quit && !running) {
             window.stop();
             Logger.debug("Closed window");
         }

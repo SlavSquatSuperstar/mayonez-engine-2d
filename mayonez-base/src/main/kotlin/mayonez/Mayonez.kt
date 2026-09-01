@@ -17,7 +17,7 @@ import kotlin.system.exitProcess
  * Finally, start the game with a scene by calling [Launcher.startGame].
  *
  * To exit the program, call [Mayonez.stop] with an integer exit code (0
- * for success, anything else for failure).
+ * for success, anything else for failure) or close the window.
  *
  * See [Launcher] for more information.
  */
@@ -221,12 +221,17 @@ object Mayonez {
     fun stop(status: Int) {
         if (started) {
             started = false
-            SceneManager.requestStopScene(true)
-            SceneManager.clearScenes()
-            Assets.clearAssets()
-            application.stop() // Do everything before GL deleted
-            exitProgram(status)
+            SceneManager.requestStopScene(false) // Finish updating scene
+            application.requestStop() // Break out of the loop
         }
+    }
+
+    @JvmStatic
+    fun onStop(status: Int) {
+        SceneManager.clearScenes()
+        Assets.clearAssets()
+        application.stop() // Do everything before GL deleted
+        exitProgram(status)
     }
 
     // Exit Helper Methods
