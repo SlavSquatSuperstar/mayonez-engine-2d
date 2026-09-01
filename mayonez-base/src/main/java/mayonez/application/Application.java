@@ -85,7 +85,7 @@ public class Application {
             lastTime = currentTime; // Reset last time
 
             // Request to stop if window closed
-            if (!window.notClosedByUser()) Mayonez.stop(ExitCode.SUCCESS);
+            if (window.isClosedByUser()) Mayonez.stop(ExitCode.SUCCESS);
 
             // Always update with fixed delta-t
             while (fixedUnprocessedTime >= fixedDt && ticksThisFrame < maxTicksPerFrame) {
@@ -124,7 +124,7 @@ public class Application {
             // Quit if scene stopped or window closed
             if (quit) running = false;
         }
-        Mayonez.onStop(ExitCode.SUCCESS);
+        Mayonez.onStop();
     }
 
     /**

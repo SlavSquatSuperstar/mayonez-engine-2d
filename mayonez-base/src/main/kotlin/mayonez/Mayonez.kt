@@ -49,6 +49,7 @@ object Mayonez {
     private lateinit var window: Window // Window instance
     private var initialized: Boolean = false // Are singletons initialized
     private var started: Boolean = false // Is application running
+    private var exitCode: Int = ExitCode.SUCCESS
 
     // Config Properties
 
@@ -221,17 +222,18 @@ object Mayonez {
     fun stop(status: Int) {
         if (started) {
             started = false
+            exitCode = status
             SceneManager.requestStopScene(false) // Finish updating scene
             application.requestStop() // Break out of the loop
         }
     }
 
     @JvmStatic
-    fun onStop(status: Int) {
+    fun onStop() {
         SceneManager.clearScenes()
         Assets.clearAssets()
         application.stop() // Do everything before GL deleted
-        exitProgram(status)
+        exitProgram(exitCode)
     }
 
     // Exit Helper Methods

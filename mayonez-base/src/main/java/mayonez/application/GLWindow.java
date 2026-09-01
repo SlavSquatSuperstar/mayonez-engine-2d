@@ -24,9 +24,9 @@ final class GLWindow implements Window {
     // Window Fields
     private final long windowID;
     private final String title;
-    private int width, height; // GLFW uses content size, unlike AWT
+    private int width, height; // Size of window content
+    private int frameWidth, frameHeight; // Size of window decorations
     private Vec2 lastPos, lastSize;
-    private int frameWidth, frameHeight; // Extra padding of decorations
     private final GLFWVidMode vidMode;
 
     // Input Fields
@@ -80,12 +80,19 @@ final class GLWindow implements Window {
         Logger.debug("Using full screen size %dx%d", vidMode.width(), vidMode.height());
     }
 
-    // Engine methods
+    // Game Loop methods
 
     @Override
     public void start() {
         glfwShowWindow(windowID);
         glfwFocusWindow(windowID);
+    }
+
+    @Override
+    public void render() {
+        GLHelper.clearScreen(1f, 1f, 1f, 1f);
+        SceneManager.renderScene(null); // Don't pass G2D
+        glfwSwapBuffers(windowID);
     }
 
     @Override
@@ -96,17 +103,12 @@ final class GLWindow implements Window {
         freeGLFW();
     }
 
-    // Game Loop Methods
-
-    @Override
-    public boolean notClosedByUser() {
-        return !glfwWindowShouldClose(windowID);
-    }
-
     @Override
     public float getCurrentTimeSecs() {
         return (float) glfwGetTime();
     }
+
+    // Event Methods
 
     @Override
     public void pollEvents() {
@@ -119,10 +121,24 @@ final class GLWindow implements Window {
     }
 
     @Override
-    public void render() {
-        GLHelper.clearScreen(1f, 1f, 1f, 1f);
-        SceneManager.renderScene(null); // Don't pass G2D
-        glfwSwapBuffers(windowID);
+    public boolean isClosedByUser() {
+        return glfwWindowShouldClose(windowID);
+    }
+
+    private void onFrameBufferResized(long windowID, int width, int height) {
+        // Resize the viewport on Windows and Linux
+        glViewport(0, 0, width, height);
+
+        /*
+         * Detecting framebuffer resizes is more reliable than detecting window resizes
+         * Sometimes framebuffer size may change while window size stays the same
+         * May happen if toggling fullscreen or changing monitor DPI
+         * Convert from framebuffer pixels to window screen units
+         */
+        var scale = getContentScale();
+        this.width = width / (int) scale.x;
+        this.height = height / (int) scale.y;
+        WindowEvents.WINDOW_EVENTS.broadcast(new WindowResizeEvent(this.width, this.height));
     }
 
     // Input Methods
@@ -138,22 +154,6 @@ final class GLWindow implements Window {
     }
 
     // Full Screen Methods
-
-    private void onFrameBufferResized(long windowID, int width, int height) {
-        // Resize the viewport on Windows and Linux
-        glViewport(0, 0, width, height);
-
-        /*
-         * Detecting framebuffer resizes is more reliable than detecting window resizes
-         * Sometimes framebuffer size may change while window size stays the same
-         * May happen if toggling fullscreen or changing monitor DPI
-         * Convert from framebuffer pixels to window screen units
-         */
-        var scale = GLFWHelper.getWindowContentScale(windowID);
-        this.width = width / (int) scale.x;
-        this.height = height / (int) scale.y;
-        WindowEvents.WINDOW_EVENTS.broadcast(new WindowResizeEvent(this.width, this.height));
-    }
 
     @Override
     public boolean isFullScreen() {

@@ -61,7 +61,7 @@ public sealed interface Window permits JWindow, GLWindow {
      */
     Vec2 getContentScale();
 
-    // Resource Management Methods
+    // Game Loop Methods
 
     /**
      * Show the window and acquire its graphics resources.
@@ -69,11 +69,14 @@ public sealed interface Window permits JWindow, GLWindow {
     void start();
 
     /**
+     * Redraw the game to the screen.
+     */
+    void render();
+
+    /**
      * Destroy the window and release its graphics resources.
      */
     void stop();
-
-    // Game Loop Methods
 
     /**
      * Get the current time of the application in seconds. The time is relative to an
@@ -83,12 +86,7 @@ public sealed interface Window permits JWindow, GLWindow {
      */
     float getCurrentTimeSecs();
 
-    /**
-     * Whether the window is still open or has been closed (x-ed out) by the user.
-     *
-     * @return if the window is not closed
-     */
-    boolean notClosedByUser();
+    // Event Methods
 
     /**
      * Poll input and window events and update listeners.
@@ -96,9 +94,12 @@ public sealed interface Window permits JWindow, GLWindow {
     void pollEvents();
 
     /**
-     * Redraw the game to the screen.
+     * Whether the window has been closed (x-ed out) by the user or the window
+     * system.
+     *
+     * @return if the window is closed
      */
-    void render();
+    boolean isClosedByUser();
 
     // Input Methods
 

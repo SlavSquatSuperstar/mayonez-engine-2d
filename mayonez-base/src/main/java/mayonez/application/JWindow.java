@@ -82,7 +82,7 @@ final class JWindow extends JFrame implements Window {
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
-                onWindowResized();
+                onWindowResized(e.getComponent().getWidth(), e.getComponent().getHeight());
             }
         });
 
@@ -100,7 +100,7 @@ final class JWindow extends JFrame implements Window {
         Logger.debug("Using full screen size %dx%d", displayMode.getWidth(), displayMode.getHeight());
     }
 
-    // Engine Methods
+    // Game Loop Methods
 
     @Override
     public void start() {
@@ -115,32 +115,6 @@ final class JWindow extends JFrame implements Window {
             setSize(getWidth(), getHeight() + titleBarHeight);
             initialized = true;
         }
-    }
-
-    @Override
-    public void stop() {
-        if (!isVisible()) return;
-        setVisible(false);
-        dispose(); // Dispose window and buffer strategy
-        bs = null;
-    }
-
-    // Game Loop Methods
-
-    @Override
-    public float getCurrentTimeSecs() {
-        return Time.getTotalProgramSeconds();
-    }
-
-    @Override
-    public boolean notClosedByUser() {
-        return !closedByUser;
-    }
-
-    @Override
-    public void pollEvents() {
-        KeyInput.updateKeys();
-        MouseInput.updateMouse();
     }
 
     @Override
@@ -190,6 +164,40 @@ final class JWindow extends JFrame implements Window {
         }
     }
 
+    @Override
+    public void stop() {
+        if (!isVisible()) return;
+        setVisible(false);
+        dispose(); // Dispose window and buffer strategy
+        bs = null;
+    }
+
+    @Override
+    public float getCurrentTimeSecs() {
+        return Time.getTotalProgramSeconds();
+    }
+
+    // Event Methods
+
+    @Override
+    public void pollEvents() {
+        KeyInput.updateKeys();
+        MouseInput.updateMouse();
+    }
+
+    @Override
+    public boolean isClosedByUser() {
+        return closedByUser;
+    }
+
+    private void onWindowResized(int width, int height) {
+        WindowEvents.WINDOW_EVENTS
+                .broadcast(new WindowResizeEvent(width, height));
+
+        // Adjust window transform
+        windowFlipXf.setTransform(AWTHelper.getWindowFlipXf(height));
+    }
+
     // Input Methods
 
     @Override
@@ -203,15 +211,6 @@ final class JWindow extends JFrame implements Window {
     }
 
     // Full Screen Methods
-
-    private void onWindowResized() {
-        WindowEvents.WINDOW_EVENTS.broadcast(new WindowResizeEvent(
-                getWidth(), getHeight()
-        ));
-
-        // Adjust window transform
-        windowFlipXf.setTransform(AWTHelper.getWindowFlipXf(getHeight()));
-    }
 
     @Override
     public boolean isFullScreen() {
