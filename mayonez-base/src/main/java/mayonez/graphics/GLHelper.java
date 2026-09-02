@@ -1,11 +1,10 @@
 package mayonez.graphics;
 
 import mayonez.*;
+import mayonez.application.WindowInitException;
 import mayonez.config.RunConfig;
 import org.lwjgl.opengl.GL;
 
-import static org.lwjgl.opengl.GL.createCapabilities;
-import static org.lwjgl.opengl.GL.destroy;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.GL_SHADING_LANGUAGE_VERSION;
 
@@ -17,7 +16,6 @@ import static org.lwjgl.opengl.GL20.GL_SHADING_LANGUAGE_VERSION;
 @UsesEngine(EngineType.GL)
 public final class GLHelper {
 
-    // TODO pass in CL args
     /* Texture sampling using variable expressions may not work for 3.3 and earlier on some platforms.  */
     private static boolean useOldGLVersion = RunConfig.DEFAULT_GL_FALLBACK; // Use OpenGL 3.3 instead of 4.0
 
@@ -29,10 +27,12 @@ public final class GLHelper {
     /**
      * Loads the OpenGL library and creates the capabilities in the current thread.
      * Requires an active GLFW window.
+     *
+     * @throws IllegalStateException if no GLFW window is active
      */
-    public static void loadOpenGL() {
+    public static void loadOpenGL() throws IllegalStateException {
         Logger.debug("Creating OpenGL capabilities");
-        createCapabilities();
+        GL.createCapabilities();
         printGLInfo();
         enableBlending();
     }
@@ -56,7 +56,7 @@ public final class GLHelper {
      */
     public static void unloadOpenGL() {
         Logger.debug("Destroying OpenGL capabilities");
-        destroy();
+        GL.destroy();
     }
 
     // Draw Methods

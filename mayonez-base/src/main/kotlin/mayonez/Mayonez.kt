@@ -223,16 +223,17 @@ object Mayonez {
         if (started) {
             started = false
             exitCode = status
-            SceneManager.requestStopScene(false) // Finish updating scene
             application.requestStop() // Break out of the loop
         }
     }
 
     @JvmStatic
     fun onStop() {
+        application.stop()
+        SceneManager.requestStopScene(true) // Stop scene now
         SceneManager.clearScenes()
         Assets.clearAssets()
-        application.stop() // Do everything before GL deleted
+        GLFWHelper.freeGLFW() // Do everything before GL deleted
         exitProgram(exitCode)
     }
 

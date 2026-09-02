@@ -31,7 +31,7 @@ import static org.lwjgl.system.MemoryUtil.NULL;
  * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.GL)
-final class GLFWHelper {
+public final class GLFWHelper {
 
     // Map GLFW constant values to field names
     private static final Map<Integer, String> ERROR_CODES = apiClassTokens(
@@ -42,16 +42,16 @@ final class GLFWHelper {
     );
     static int platform = GLFW_ANY_PLATFORM;
 
-
     private GLFWHelper() {
     }
 
     // Initialization Methods
 
     /**
-     * Initializes the GLFW library.
+     * Initializes the GLFW library. Requires the correct thread to be used on
+     * macOS.
      */
-    static void initGLFW() throws WindowInitException {
+    public static void initGLFW() throws WindowInitException {
         // noinspection resource
         glfwSetErrorCallback(GLFWHelper::logGLFWError); // Use logger for error callback
         if (!glfwInit()) {
@@ -83,8 +83,10 @@ final class GLFWHelper {
      * @param runConfig    the backend initialization parameters
      * @return the window id
      */
-    static GLFWWindow createGLFWWindow(WindowConfig windowConfig, RunConfig runConfig) throws WindowInitException {
-        // Create window
+    static GLFWWindow createGLFWWindow(WindowConfig windowConfig, RunConfig runConfig)
+            throws WindowInitException {
+        // Set window hints
+        glfwDefaultWindowHints();
         configureWindowHints(windowConfig);
         configureContextHints(runConfig);
 
@@ -107,16 +109,19 @@ final class GLFWHelper {
 
         var monitor = windowConfig.fullScreen() ? glfwGetPrimaryMonitor() : NULL;
         var windowID = glfwCreateWindow(
-               width, height, windowConfig.title(), monitor, NULL
+                width, height, windowConfig.title(), monitor, NULL
         );
         if (windowID == NULL) {
             throw new WindowInitException("Could not create the GLFW window");
         }
 
         // Very important!
-        glfwMakeContextCurrent(windowID); // Make the OpenGL context current
-        GLHelper.loadOpenGL(); // Integrate LWJGL with OpenGL bindings
-
+        try {
+            glfwMakeContextCurrent(windowID); // Make the window's OpenGL context current
+            GLHelper.loadOpenGL(); // Integrate LWJGL with OpenGL bindings
+        } catch (IllegalStateException e) {
+            throw new WindowInitException("Cannot load OpenGL without active GLFW window");
+        }
         return new GLFWWindow(windowID, vidMode);
     }
 
@@ -155,7 +160,6 @@ final class GLFWHelper {
      * @param config the initialization parameters
      */
     private static void configureWindowHints(WindowConfig config) {
-        glfwDefaultWindowHints(); // Reset window settings
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // Stay hidden until after creation
         glfwWindowHint(GLFW_DECORATED, GLFW_TRUE); // Enable title bar
         glfwWindowHint(GLFW_RESIZABLE, config.resizable() ? GLFW_TRUE : GLFW_FALSE); // Allow user and OS resizing
@@ -333,14 +337,14 @@ final class GLFWHelper {
     // Termination Methods
 
     /**
-     * Terminates the GLFW library.
+     * Terminates the GLFW library and destroys the current OpenGL context.
      */
-    static void freeGLFW() {
+    public static void freeGLFW() {
+        GLHelper.unloadOpenGL();
         glfwTerminate();
         Logger.debug("Terminated the GLFW library");
         var oldCbFun = glfwSetErrorCallback(null);
         if (oldCbFun != null) oldCbFun.free(); // Free callback function
-        GLHelper.unloadOpenGL();
     }
 
     // Helper Class

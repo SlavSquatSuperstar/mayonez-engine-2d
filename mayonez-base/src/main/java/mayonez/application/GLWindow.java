@@ -100,7 +100,6 @@ final class GLWindow implements Window {
         glfwFreeCallbacks(windowID);
         glfwSetWindowShouldClose(windowID, true);
         glfwDestroyWindow(windowID);
-        freeGLFW();
     }
 
     @Override
