@@ -7,8 +7,8 @@ import mayonez.config.*
 import kotlin.system.exitProcess
 
 /**
- * Acts as the entry point into the Mayonez Engine and stores the instance
- * of the game. Upon startup, the application loads resources, configures
+ * Acts as the entry point into the application and stores all singleton
+ * instances. Upon startup, the application loads resources, configures
  * other engine components, and tells the scene manager to load a scene.
  *
  * Usage: To start an instance of Mayonez Engine, create a [Launcher]
@@ -125,7 +125,7 @@ object Mayonez {
         if (!initialized) {
             this.config = config
             initializeSingletons()
-            initializeGame(config)
+            initializeApplication(config)
             initialized = true
         }
     }
@@ -157,11 +157,11 @@ object Mayonez {
     }
 
     /**
-     * Initialize the game engine and input instances of the application.
+     * Initialize the application and input singletons.
      */
-    private fun initializeGame(runConfig: RunConfig) {
+    private fun initializeApplication(runConfig: RunConfig) {
         if (!this::application.isInitialized) {
-            // Create game engine instance
+            // Create application instance
             try {
                 Logger.log("Creating application \"${Preferences.title}\"...")
 
@@ -191,7 +191,7 @@ object Mayonez {
     // Game Loop Methods
 
     /**
-     * Start the game and load a scene. Must be called after [Mayonez.setConfig].
+     * Start the application and load a scene. Must be called after [Mayonez.setConfig].
      *
      * @param scene the starting scene
      */
@@ -206,15 +206,22 @@ object Mayonez {
         if (!started) {
             started = true
             SceneManager.setInitialScene(scene)
-            // Start game and show window
+            // Start application and show window
             if (this::application.isInitialized) application.start()
             else exitWithErrorMessage("Cannot start without configuring program \"Use GL\" option")
+
+            // Called after application stops running
+            SceneManager.requestStopScene(true)
+            SceneManager.clearScenes()
+            Assets.clearAssets()
+            GLFWHelper.freeGLFW() // Do everything before GL deleted
+            exitProgram(exitCode)
         }
     }
 
     /**
-     * Stop the game with an exit code and terminate the application. See
-     * [ExitCode] for reserved codes.
+     * Signal the application to stop with an exit code and free all resources
+     * after the current frame. See [ExitCode] for reserved codes.
      *
      * @param status an exit code (zero for success, non-zero for error)
      */
@@ -223,18 +230,8 @@ object Mayonez {
         if (started) {
             started = false
             exitCode = status
-            application.requestStop() // Break out of the loop
+            application.stop() // Break out of the loop
         }
-    }
-
-    @JvmStatic
-    fun onStop() {
-        application.stop()
-        SceneManager.requestStopScene(true) // Stop scene now
-        SceneManager.clearScenes()
-        Assets.clearAssets()
-        GLFWHelper.freeGLFW() // Do everything before GL deleted
-        exitProgram(exitCode)
     }
 
     // Exit Helper Methods
