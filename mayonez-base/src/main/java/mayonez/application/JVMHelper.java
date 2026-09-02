@@ -1,5 +1,7 @@
 package mayonez.application;
 
+import mayonez.util.OperatingSystem;
+
 /**
  * Assists in checking JVM environment variables.
  *
@@ -8,6 +10,15 @@ package mayonez.application;
 final class JVMHelper {
 
     private JVMHelper() {
+    }
+
+    /**
+     * Detect if the current operating system is macOS.
+     *
+     * @return if running on macOS
+     */
+    static boolean isMacOS() {
+        return OperatingSystem.getCurrent() == OperatingSystem.MAC_OS;
     }
 
     /**

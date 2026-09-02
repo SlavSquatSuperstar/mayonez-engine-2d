@@ -214,7 +214,8 @@ object Mayonez {
             SceneManager.requestStopScene(true)
             SceneManager.clearScenes()
             Assets.clearAssets()
-            GLFWHelper.freeGLFW() // Do everything before GL deleted
+            if (this.config.useGL) WindowLibrary.GLFW.free()
+            else WindowLibrary.AWT.free()
             exitProgram(exitCode)
         }
     }

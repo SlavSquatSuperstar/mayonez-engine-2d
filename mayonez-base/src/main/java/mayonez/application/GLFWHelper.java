@@ -31,7 +31,7 @@ import static org.lwjgl.system.MemoryUtil.NULL;
  * @author SlavSquatSuperstar
  */
 @UsesEngine(EngineType.GL)
-public final class GLFWHelper {
+final class GLFWHelper {
 
     // Map GLFW constant values to field names
     private static final Map<Integer, String> ERROR_CODES = apiClassTokens(
@@ -50,8 +50,10 @@ public final class GLFWHelper {
     /**
      * Initializes the GLFW library. Requires the correct thread to be used on
      * macOS.
+     *
+     * @throws WindowInitException if GLFW could not be initialized
      */
-    public static void initGLFW() throws WindowInitException {
+    static void initGLFW() throws WindowInitException {
         // noinspection resource
         glfwSetErrorCallback(GLFWHelper::logGLFWError); // Use logger for error callback
         if (!glfwInit()) {
@@ -339,7 +341,7 @@ public final class GLFWHelper {
     /**
      * Terminates the GLFW library and destroys the current OpenGL context.
      */
-    public static void freeGLFW() {
+    static void freeGLFW() {
         GLHelper.unloadOpenGL();
         glfwTerminate();
         Logger.debug("Terminated the GLFW library");

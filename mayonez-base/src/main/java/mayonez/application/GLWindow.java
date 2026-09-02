@@ -48,7 +48,6 @@ final class GLWindow implements Window {
         this.height = windowConfig.height();
 
         // Initialize window
-        initGLFW();
         var window = createGLFWWindow(windowConfig, runConfig);
         windowID = window.windowID();
         vidMode = window.vidMode();

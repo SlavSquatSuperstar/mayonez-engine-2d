@@ -1,6 +1,6 @@
 /**
- * Runs the main loop of the application and displays it in a window.
- * Not exported to the API.
+ * Runs the main loop of the application, manages the window and graphics
+ * contexts, and handles input events.
  *
  * @author SlavSquatSuperstar
  */

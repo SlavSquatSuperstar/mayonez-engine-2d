@@ -1,7 +1,6 @@
 package mayonez.graphics;
 
 import mayonez.*;
-import mayonez.application.WindowInitException;
 import mayonez.config.RunConfig;
 import org.lwjgl.opengl.GL;
 
