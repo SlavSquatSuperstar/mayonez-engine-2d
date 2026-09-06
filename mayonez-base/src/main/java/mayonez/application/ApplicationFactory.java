@@ -1,9 +1,7 @@
 package mayonez.application;
 
-import mayonez.*;
 import mayonez.config.RunConfig;
 import mayonez.input.*;
-import mayonez.util.OperatingSystem;
 
 /**
  * A factory class that constructs {@link Application} and
@@ -33,8 +31,8 @@ public final class ApplicationFactory {
     /**
      * Creates a new {@link Window} with the given engine type.
      *
-     * @param runConfig    which windowing framework to use
-     * @param windowConfig the window's initialization parameters
+     * @param runConfig    the backend initialization parameters
+     * @param windowConfig the window initialization parameters
      * @return the window
      * @throws WindowInitException if the wrong thread is used on macOS
      */
@@ -44,7 +42,7 @@ public final class ApplicationFactory {
                 ? WindowLibrary.GLFW : WindowLibrary.AWT;
         windowLibrary.check();
         windowLibrary.init();
-        return windowLibrary.createWindow(runConfig, windowConfig);
+        return windowLibrary.createWindow(windowConfig);
     }
 
 }

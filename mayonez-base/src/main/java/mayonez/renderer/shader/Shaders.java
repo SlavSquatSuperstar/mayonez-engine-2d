@@ -16,10 +16,7 @@ public final class Shaders {
     // TODO read shader names from file
     public static final Shader DEFAULT_SHADER =
             getShaderFromFiles(new String[]{
-                    "assets/shaders/default.vert",
-                    GLHelper.isUseOldGLVersion()
-                            ? "assets/shaders/default_330.frag"
-                            : "assets/shaders/default_400.frag"
+                    "assets/shaders/default.vert", "assets/shaders/default_330.frag"
             });
     public static final Shader UI_SHADER = DEFAULT_SHADER;
     public static final Shader DEBUG_SHADER =

@@ -1,7 +1,6 @@
 package mayonez.application;
 
 import mayonez.*;
-import mayonez.config.RunConfig;
 import mayonez.graphics.*;
 import mayonez.math.*;
 import org.jspecify.annotations.Nullable;
@@ -40,6 +39,9 @@ final class GLFWHelper {
     private static final Map<Integer, String> PLATFORMS = apiClassTokens(
             (field, value) -> 0x60000 < value && value < 0x70000, null, GLFW.class
     );
+    private static final int OPENGL_VERSION_MAJOR = 3;
+    private static final int OPENGL_VERSION_MINOR = 3;
+
     static int platform = GLFW_ANY_PLATFORM;
 
     private GLFWHelper() {
@@ -81,16 +83,15 @@ final class GLFWHelper {
     /**
      * Create a new window and return its GLFW pointer.
      *
-     * @param windowConfig the initialization parameters
-     * @param runConfig    the backend initialization parameters
+     * @param windowConfig the window initialization parameters
      * @return the window id
      */
-    static GLFWWindow createGLFWWindow(WindowConfig windowConfig, RunConfig runConfig)
+    static GLFWWindow createGLFWWindow(WindowConfig windowConfig)
             throws WindowInitException {
         // Set window hints
         glfwDefaultWindowHints();
         configureWindowHints(windowConfig);
-        configureContextHints(runConfig);
+        configureContextHints();
 
         // Get closest video mode
         var vidMode = getNearestVideoMode(windowConfig);
@@ -159,7 +160,7 @@ final class GLFWHelper {
     /**
      * Set the GLFW window hints for the application window.
      *
-     * @param config the initialization parameters
+     * @param config the window initialization parameters
      */
     private static void configureWindowHints(WindowConfig config) {
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // Stay hidden until after creation
@@ -178,25 +179,14 @@ final class GLFWHelper {
     /**
      * Set the OpenGL context hints for the application window.
      *
-     * @param runConfig the context configuration
      */
-    private static void configureContextHints(RunConfig runConfig) {
+    private static void configureContextHints() {
         // Set GLFW context profile to core (forward compatible)
         // macOS only supports OpenGL versions 3.2-4.1, inclusive
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
-        if (runConfig.glFallback()) {
-            // Fallback version 3.3
-            Logger.debug("Using OpenGL 3.3 context");
-            glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-            glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-        } else {
-            // Default version 4.0
-            Logger.debug("Using OpenGL 4.0 context");
-            glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-            glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
-        }
-        GLHelper.setUseOldGLVersion(runConfig.glFallback());
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, OPENGL_VERSION_MAJOR);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, OPENGL_VERSION_MINOR);
     }
 
     // Window Position Methods

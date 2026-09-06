@@ -1,7 +1,6 @@
 package mayonez.graphics;
 
 import mayonez.*;
-import mayonez.config.RunConfig;
 import org.lwjgl.opengl.GL;
 
 import static org.lwjgl.opengl.GL11.*;
@@ -14,9 +13,6 @@ import static org.lwjgl.opengl.GL20.GL_SHADING_LANGUAGE_VERSION;
  */
 @UsesEngine(EngineType.GL)
 public final class GLHelper {
-
-    /* Texture sampling using variable expressions may not work for 3.3 and earlier on some platforms.  */
-    private static boolean useOldGLVersion = RunConfig.DEFAULT_GL_FALLBACK; // Use OpenGL 3.3 instead of 4.0
 
     private GLHelper() {
     }
@@ -74,24 +70,6 @@ public final class GLHelper {
     }
 
     // Version Methods
-
-    /**
-     * Get whether to use the fallback OpenGL version 3.3 instead of the default 4.0.
-     *
-     * @return if using the old OpenGL version
-     */
-    public static boolean isUseOldGLVersion() {
-        return useOldGLVersion;
-    }
-
-    /**
-     * Set whether to use the fallback OpenGL version 3.3 instead of the default 4.0.
-     *
-     * @param useOldGLVersion if using the old OpenGL version
-     */
-    public static void setUseOldGLVersion(boolean useOldGLVersion) {
-        GLHelper.useOldGLVersion = useOldGLVersion;
-    }
 
     // TODO allow specify log level
 

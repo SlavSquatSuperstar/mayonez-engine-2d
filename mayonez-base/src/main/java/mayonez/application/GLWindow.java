@@ -1,7 +1,6 @@
 package mayonez.application;
 
 import mayonez.*;
-import mayonez.config.RunConfig;
 import mayonez.graphics.*;
 import mayonez.input.*;
 import mayonez.math.*;
@@ -39,16 +38,15 @@ final class GLWindow implements Window {
      * Source: <a href="https://www.lwjgl.org/guide">LWJGL starter guide</a>
      *
      * @param windowConfig the window initialization parameters
-     * @param runConfig    the backend initialization parameters
      * @throws WindowInitException if GLFW cannot be initialized
      */
-    GLWindow(WindowConfig windowConfig, RunConfig runConfig) throws WindowInitException {
+    GLWindow(WindowConfig windowConfig) throws WindowInitException {
         this.title = windowConfig.title();
         this.width = windowConfig.width();
         this.height = windowConfig.height();
 
         // Initialize window
-        var window = createGLFWWindow(windowConfig, runConfig);
+        var window = createGLFWWindow(windowConfig);
         windowID = window.windowID();
         vidMode = window.vidMode();
         setVSyncEnabled(Preferences.useVSync());

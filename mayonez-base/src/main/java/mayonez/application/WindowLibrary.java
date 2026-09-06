@@ -1,7 +1,6 @@
 package mayonez.application;
 
 import mayonez.Logger;
-import mayonez.config.RunConfig;
 
 /**
  * A windowing library that manages windows and receives user input.
@@ -27,7 +26,7 @@ public enum WindowLibrary {
         }
 
         @Override
-        public Window createWindow(RunConfig runConfig, WindowConfig windowConfig) {
+        public Window createWindow(WindowConfig windowConfig) {
             return new JWindow(windowConfig);
         }
     },
@@ -52,9 +51,9 @@ public enum WindowLibrary {
         }
 
         @Override
-        public Window createWindow(RunConfig runConfig, WindowConfig windowConfig)
+        public Window createWindow(WindowConfig windowConfig)
                 throws WindowInitException {
-            return new GLWindow(windowConfig, runConfig);
+            return new GLWindow(windowConfig);
         }
 
         @Override
@@ -81,12 +80,11 @@ public enum WindowLibrary {
     /**
      * Create a window using the windowing library.
      *
-     * @param runConfig    the backend parameters
      * @param windowConfig the window parameters
      * @return the window
      * @throws WindowInitException if the window could not be created
      */
-    public abstract Window createWindow(RunConfig runConfig, WindowConfig windowConfig)
+    public abstract Window createWindow(WindowConfig windowConfig)
             throws WindowInitException;
 
     /**
