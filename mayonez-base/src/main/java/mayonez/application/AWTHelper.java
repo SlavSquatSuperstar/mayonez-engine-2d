@@ -1,10 +1,8 @@
 package mayonez.application;
 
-
 import mayonez.*;
 import mayonez.math.*;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.Window;
 import java.awt.geom.*;

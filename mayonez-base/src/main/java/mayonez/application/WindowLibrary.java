@@ -1,16 +1,18 @@
 package mayonez.application;
 
 import mayonez.Logger;
+import mayonez.config.RunConfig;
 
 /**
- * A windowing library or framework that handles window creation and events.
+ * A windowing library that manages windows and receives user input.
  *
  * @author SlavSquatSuperstar
  */
 public enum WindowLibrary {
 
     /**
-     * Java's Abstract Window Toolkit and Swing packages.
+     * Java's built-in Abstract Window Toolkit and Swing packages. Runs on all
+     * platforms.
      */
     AWT {
         @Override
@@ -23,10 +25,15 @@ public enum WindowLibrary {
                 throw new WindowInitException("Cannot create AWT window on main thread");
             }
         }
+
+        @Override
+        public Window createWindow(RunConfig runConfig, WindowConfig windowConfig) {
+            return new JWindow(windowConfig);
+        }
     },
 
     /**
-     * LWJGL's Graphics Library Framework.
+     * LWJGL's low-level Graphics Library Framework. Runs on most platforms.
      */
     GLFW {
         @Override
@@ -42,6 +49,12 @@ public enum WindowLibrary {
         @Override
         public void init() throws WindowInitException {
             GLFWHelper.initGLFW();
+        }
+
+        @Override
+        public Window createWindow(RunConfig runConfig, WindowConfig windowConfig)
+                throws WindowInitException {
+            return new GLWindow(windowConfig, runConfig);
         }
 
         @Override
@@ -64,6 +77,17 @@ public enum WindowLibrary {
      */
     public void init() throws WindowInitException {
     }
+
+    /**
+     * Create a window using the windowing library.
+     *
+     * @param runConfig    the backend parameters
+     * @param windowConfig the window parameters
+     * @return the window
+     * @throws WindowInitException if the window could not be created
+     */
+    public abstract Window createWindow(RunConfig runConfig, WindowConfig windowConfig)
+            throws WindowInitException;
 
     /**
      * Free the windowing library.

@@ -214,8 +214,10 @@ object Mayonez {
             SceneManager.requestStopScene(true)
             SceneManager.clearScenes()
             Assets.clearAssets()
-            if (this.config.useGL) WindowLibrary.GLFW.free()
-            else WindowLibrary.AWT.free()
+
+            val windowLibrary = if (this.config.useGL) WindowLibrary.GLFW
+            else WindowLibrary.AWT
+            windowLibrary.free()
             exitProgram(exitCode)
         }
     }

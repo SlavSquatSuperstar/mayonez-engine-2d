@@ -1,24 +1,19 @@
 package mayonez.graphics;
 
 /**
- * Defines a backend (platform and/or renderer) for the game engine. The
- * platform manages the window and input, while the renderer refers to the
- * graphics API.
- * <p>
- * All backends share the same interface, but the implementation may vary.
- * Backends may also be portable or platform-specific.
+ * A graphics API for rendering a scene to a window. Some APIs may not be
+ * feature-complete.
  *
  * @author SlavsSquatSuperstar
  */
 public enum EngineType {
     /**
-     * Java's default AWT and Swing packages. Multiplatform, but does not
-     * currently support UI rendering.
+     * Java's built-in Abstract Window Toolkit and Swing packages.
+     * Does not currently support UI rendering.
      */
     AWT,
     /**
-     * LWJGL's GLFW and OpenGL libraries. Multiplatform, and supports all
-     * features.
+     * LWJGL's low-level OpenGL library. Runs on top of GLFW.
      */
     GL
 }

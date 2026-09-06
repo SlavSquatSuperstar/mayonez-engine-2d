@@ -12,7 +12,7 @@ import java.awt.event.*;
 import java.awt.geom.*;
 import java.awt.image.*;
 
-import static mayonez.application.AWTHelper.*;
+import static mayonez.application.AWTHelper.SCREEN_DEVICE;
 
 /**
  * A window created using Java's AWT and Swing libraries.

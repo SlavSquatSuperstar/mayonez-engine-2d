@@ -40,15 +40,11 @@ public final class ApplicationFactory {
      */
     public static Window createWindow(RunConfig runConfig, WindowConfig windowConfig)
             throws WindowInitException {
-        if (runConfig.useGL()) {
-            WindowLibrary.GLFW.check();
-            WindowLibrary.GLFW.init();
-            return new GLWindow(windowConfig, runConfig);
-        } else {
-            WindowLibrary.AWT.check();
-            WindowLibrary.AWT.init();
-            return new JWindow(windowConfig);
-        }
+        var windowLibrary = runConfig.useGL()
+                ? WindowLibrary.GLFW : WindowLibrary.AWT;
+        windowLibrary.check();
+        windowLibrary.init();
+        return windowLibrary.createWindow(runConfig, windowConfig);
     }
 
 }
