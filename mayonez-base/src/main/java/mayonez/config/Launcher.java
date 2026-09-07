@@ -35,8 +35,8 @@ public class Launcher {
      */
     public Launcher(String[] args) {
         var parser = new ArgumentsParser();
-        var config = parser.getRunConfig(parser.parse(args));
-        Mayonez.setConfig(config);
+        var backend = parser.getBackend(parser.parse(args));
+        Mayonez.setBackend(backend);
     }
 
     // Scene Manager Methods

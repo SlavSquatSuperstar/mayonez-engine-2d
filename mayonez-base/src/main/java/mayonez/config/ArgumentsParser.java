@@ -1,5 +1,8 @@
 package mayonez.config;
 
+import mayonez.application.Backend;
+import mayonez.application.WindowLibrary;
+import mayonez.graphics.EngineType;
 import mayonez.util.Record;
 import org.apache.commons.cli.*;
 
@@ -9,6 +12,12 @@ import org.apache.commons.cli.*;
  * @author SlavSquatSuperstar
  */
 class ArgumentsParser {
+
+    final static Backend AWT_BACKEND
+            = new Backend("AWT", WindowLibrary.AWT, EngineType.AWT);
+    final static Backend GL_BACKEND
+            = new Backend("GLFW/OpenGL", WindowLibrary.GLFW, EngineType.GL);
+    final static Backend DEFAULT_BACKEND = GL_BACKEND;
 
     private final CommandLineParser parser;
     private final Options options;
@@ -21,11 +30,6 @@ class ArgumentsParser {
                 .longOpt("engine")
                 .hasArg()
                 .desc("The engine windowing/rendering backend")
-                .get());
-        options.addOption(Option.builder("g")
-                .longOpt("glfallback")
-                .hasArg(false)
-                .desc("Use the old OpenGL version")
                 .get());
     }
 
@@ -46,15 +50,22 @@ class ArgumentsParser {
     }
 
     /**
-     * Get the application {@link RunConfig} from the parsed command line.
+     * Parse the application {@link Backend} from the command line.
      *
      * @param cl the command line
-     * @return the run config
+     * @return the backend
      */
-    RunConfig getRunConfig(CommandLine cl) {
-        var useGL = parseUseGL(cl.getOptionValue("engine"));
-        var glFallback = cl.hasOption("glfallback");
-        return new RunConfig(useGL, glFallback);
+    Backend getBackend(CommandLine cl) {
+        var engine = cl.getOptionValue("engine");
+        if (engine == null) {
+            return DEFAULT_BACKEND;
+        } else if (engine.equals("gl")) {
+            return GL_BACKEND;
+        } else if (engine.equals("awt")) {
+            return AWT_BACKEND;
+        } else {
+            throw new IllegalArgumentException("Invalid argument %s for engine".formatted(engine));
+        }
     }
 
     /**
@@ -82,12 +93,5 @@ class ArgumentsParser {
     }
 
     // Helper Methods
-
-    private static boolean parseUseGL(String engine) {
-        if (engine == null) return RunConfig.DEFAULT_USE_GL;
-        else if (engine.equals("gl")) return true;
-        else if (engine.equals("awt")) return false;
-        else throw new IllegalArgumentException("Invalid argument %s for engine".formatted(engine));
-    }
 
 }

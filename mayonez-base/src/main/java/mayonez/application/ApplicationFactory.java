@@ -1,6 +1,5 @@
 package mayonez.application;
 
-import mayonez.config.RunConfig;
 import mayonez.input.*;
 
 /**
@@ -31,15 +30,14 @@ public final class ApplicationFactory {
     /**
      * Creates a new {@link Window} with the given engine type.
      *
-     * @param runConfig    the backend initialization parameters
+     * @param backend      the engine backend
      * @param windowConfig the window initialization parameters
      * @return the window
      * @throws WindowInitException if the wrong thread is used on macOS
      */
-    public static Window createWindow(RunConfig runConfig, WindowConfig windowConfig)
+    public static Window createWindow(Backend backend, WindowConfig windowConfig)
             throws WindowInitException {
-        var windowLibrary = runConfig.useGL()
-                ? WindowLibrary.GLFW : WindowLibrary.AWT;
+        var windowLibrary = backend.window();
         windowLibrary.check();
         windowLibrary.init();
         return windowLibrary.createWindow(windowConfig);

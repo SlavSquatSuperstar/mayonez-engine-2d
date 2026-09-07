@@ -4,6 +4,7 @@ import mayonez.application.*
 import mayonez.assets.*
 import mayonez.assets.text.*
 import mayonez.config.*
+import mayonez.graphics.EngineType
 import kotlin.system.exitProcess
 
 /**
@@ -53,7 +54,7 @@ object Mayonez {
 
     // Config Properties
 
-    private var config: RunConfig = RunConfig.DEFAULT_CONFIG
+    private lateinit var backend: Backend
 
     /**
      * Whether to use LWJGL for creating the window and rendering instead of
@@ -61,7 +62,7 @@ object Mayonez {
      */
     @JvmStatic
     internal val useGL: Boolean
-        @JvmName("getUseGL") get() = config.useGL
+        @JvmName("getUseGL") get() = backend.graphics == EngineType.GL
 
     // Window Properties
     // TODO non-game-loop window interface
@@ -116,16 +117,15 @@ object Mayonez {
     // Init Methods
 
     /**
-     * Sets the run configuration for the program. Must be called before
-     * [Mayonez.start].
+     * The window and graphics backend for the engine. Must be called before [Mayonez.start].
      */
     @JvmStatic
-    @JvmName("setConfig")
-    internal fun setConfig(config: RunConfig) {
+    @JvmName("setBackend")
+    internal fun setBackend(backend: Backend) {
         if (!initialized) {
-            this.config = config
+            this.backend = backend
             initializeSingletons()
-            initializeApplication(config)
+            initializeApplication(backend)
             initialized = true
         }
     }
@@ -159,22 +159,21 @@ object Mayonez {
     /**
      * Initialize the application and input singletons.
      */
-    private fun initializeApplication(runConfig: RunConfig) {
+    private fun initializeApplication(backend: Backend) {
         if (!this::application.isInitialized) {
             // Create application instance
             try {
                 Logger.log("Creating application \"${Preferences.title}\"...")
 
-                val engineString = if (runConfig.useGL) "GL" else "AWT"
-                Logger.log("Using engine type \"%s\"", engineString)
+                Logger.log("Using ${backend.name} backend")
 
                 Logger.debug("Creating window...")
                 val windowConfig = WindowConfig(
-                    "${Preferences.title} ($engineString)",
+                    "${Preferences.title} (${backend.name})",
                     Preferences.screenWidth, Preferences.screenHeight,
                     Preferences.fullscreen, Preferences.resizable
                 ).validate()
-                window = ApplicationFactory.createWindow(runConfig, windowConfig)
+                window = ApplicationFactory.createWindow(backend, windowConfig)
                 application = ApplicationFactory.createApplication(window)
             } catch (e: WindowInitException) {
                 Logger.printStackTrace(e)
@@ -191,7 +190,7 @@ object Mayonez {
     // Game Loop Methods
 
     /**
-     * Start the application and load a scene. Must be called after [Mayonez.setConfig].
+     * Start the application and load a scene. Must be called after [Mayonez.setBackend].
      *
      * @param scene the starting scene
      */
@@ -215,9 +214,7 @@ object Mayonez {
             SceneManager.clearScenes()
             Assets.clearAssets()
 
-            val windowLibrary = if (this.config.useGL) WindowLibrary.GLFW
-            else WindowLibrary.AWT
-            windowLibrary.free()
+            backend.window.free()
             exitProgram(exitCode)
         }
     }

@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 
+import static mayonez.config.ArgumentsParser.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -30,7 +31,7 @@ class ArgumentsParserTest {
             var cl = parser.parse(new String[]{"--engine", "gl"});
             var engine = cl.getOptionValue("e");
             assertEquals("gl", engine);
-            assertNotNull(parser.getRunConfig(cl));
+            assertEquals(GL_BACKEND, parser.getBackend(cl));
 
             var rec = parser.serialize(cl);
             assertEquals(new Record(Map.of("engine", "gl")), rec);
@@ -45,7 +46,7 @@ class ArgumentsParserTest {
             var cl = parser.parse(new String[]{"-e", "awt"});
             var engine = cl.getOptionValue("e");
             assertEquals("awt", engine);
-            assertNotNull(parser.getRunConfig(cl));
+            assertEquals(AWT_BACKEND, parser.getBackend(cl));
 
             var rec = parser.serialize(cl);
             assertEquals(new Record(Map.of("engine", "awt")), rec);
@@ -59,26 +60,10 @@ class ArgumentsParserTest {
         try {
             var cl = parser.parse(new String[]{});
             assertFalse(cl.hasOption("engine"));
-            assertNotNull(parser.getRunConfig(cl));
+            assertEquals(DEFAULT_BACKEND, parser.getBackend(cl));
 
             var rec = parser.serialize(cl);
             assertEquals(new Record(), rec);
-        } catch (Exception e) {
-            fail();
-        }
-    }
-
-    // Flag Options
-
-    @Test
-    void flagPresentCorrect() {
-        try {
-            var cl = parser.parse(new String[]{"--glfallback"});
-            assertTrue(cl.hasOption("glfallback"));
-            assertNotNull(parser.getRunConfig(cl));
-
-            var rec = parser.serialize(cl);
-            assertEquals(new Record(Map.of("glfallback", true)), rec);
         } catch (Exception e) {
             fail();
         }
@@ -90,7 +75,7 @@ class ArgumentsParserTest {
     void invalidArgumentWrong() {
         try {
             var cl = parser.parse(new String[]{"--engine", "vk"});
-            assertThrows(IllegalArgumentException.class, () -> parser.getRunConfig(cl));
+            assertThrows(IllegalArgumentException.class, () -> parser.getBackend(cl));
         } catch (Exception e) {
             fail();
         }
