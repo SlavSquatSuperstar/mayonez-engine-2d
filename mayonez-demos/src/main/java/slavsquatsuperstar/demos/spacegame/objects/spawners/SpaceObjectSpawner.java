@@ -52,7 +52,7 @@ public class SpaceObjectSpawner extends GameObject {
                     @Override
                     protected void onDestroy() {
                         super.onDestroy();
-                        markObjectDestroyed(gameObject);
+                        markObjectDestroyed(this);
                     }
                 };
             }
@@ -70,7 +70,7 @@ public class SpaceObjectSpawner extends GameObject {
                         @Override
                         protected void onDestroy() {
                             super.onDestroy();
-                            markObjectDestroyed(gameObject);
+                            markObjectDestroyed(this);
                         }
                     };
                 } else {
@@ -79,7 +79,7 @@ public class SpaceObjectSpawner extends GameObject {
                         @Override
                         protected void onDestroy() {
                             super.onDestroy();
-                            markObjectDestroyed(gameObject);
+                            markObjectDestroyed(this);
                         }
                     };
                 }

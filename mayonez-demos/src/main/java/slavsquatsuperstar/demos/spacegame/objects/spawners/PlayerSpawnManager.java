@@ -55,13 +55,13 @@ public class PlayerSpawnManager extends SpawnManager {
             protected void start() {
                 super.start();
                 SpaceGameEvents.getPlayerEventSystem()
-                        .broadcast(new PlayerSpawnedEvent(gameObject));
+                        .broadcast(new PlayerSpawnedEvent(this));
             }
 
             @Override
             protected void onDestroy() {
                 super.onDestroy();
-                markObjectDestroyed(gameObject);
+                markObjectDestroyed(this);
             }
         };
     }
