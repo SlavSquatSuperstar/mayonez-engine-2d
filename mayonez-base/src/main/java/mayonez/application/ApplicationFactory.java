@@ -37,10 +37,8 @@ public final class ApplicationFactory {
      */
     public static Window createWindow(Backend backend, WindowConfig windowConfig)
             throws WindowInitException {
-        var windowLibrary = backend.window();
-        windowLibrary.check();
-        windowLibrary.init();
-        return windowLibrary.createWindow(windowConfig);
+        backend.init();
+        return backend.createWindow(windowConfig);
     }
 
 }

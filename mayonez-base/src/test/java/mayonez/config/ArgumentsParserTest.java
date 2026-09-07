@@ -1,12 +1,12 @@
 package mayonez.config;
 
+import mayonez.application.Backend;
 import mayonez.util.Record;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 
-import static mayonez.config.ArgumentsParser.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -31,7 +31,7 @@ class ArgumentsParserTest {
             var cl = parser.parse(new String[]{"--engine", "gl"});
             var engine = cl.getOptionValue("e");
             assertEquals("gl", engine);
-            assertEquals(GL_BACKEND, parser.getBackend(cl));
+            assertEquals(Backend.GL, parser.getBackend(cl));
 
             var rec = parser.serialize(cl);
             assertEquals(new Record(Map.of("engine", "gl")), rec);
@@ -46,7 +46,7 @@ class ArgumentsParserTest {
             var cl = parser.parse(new String[]{"-e", "awt"});
             var engine = cl.getOptionValue("e");
             assertEquals("awt", engine);
-            assertEquals(AWT_BACKEND, parser.getBackend(cl));
+            assertEquals(Backend.AWT, parser.getBackend(cl));
 
             var rec = parser.serialize(cl);
             assertEquals(new Record(Map.of("engine", "awt")), rec);
@@ -60,7 +60,7 @@ class ArgumentsParserTest {
         try {
             var cl = parser.parse(new String[]{});
             assertFalse(cl.hasOption("engine"));
-            assertEquals(DEFAULT_BACKEND, parser.getBackend(cl));
+            assertEquals(ArgumentsParser.DEFAULT_BACKEND, parser.getBackend(cl));
 
             var rec = parser.serialize(cl);
             assertEquals(new Record(), rec);

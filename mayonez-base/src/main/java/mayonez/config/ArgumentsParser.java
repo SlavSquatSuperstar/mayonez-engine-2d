@@ -1,8 +1,6 @@
 package mayonez.config;
 
 import mayonez.application.Backend;
-import mayonez.application.WindowLibrary;
-import mayonez.graphics.EngineType;
 import mayonez.util.Record;
 import org.apache.commons.cli.*;
 
@@ -13,11 +11,7 @@ import org.apache.commons.cli.*;
  */
 class ArgumentsParser {
 
-    final static Backend AWT_BACKEND
-            = new Backend("AWT", WindowLibrary.AWT, EngineType.AWT);
-    final static Backend GL_BACKEND
-            = new Backend("GLFW/OpenGL", WindowLibrary.GLFW, EngineType.GL);
-    final static Backend DEFAULT_BACKEND = GL_BACKEND;
+    final static Backend DEFAULT_BACKEND = Backend.GL;
 
     private final CommandLineParser parser;
     private final Options options;
@@ -60,9 +54,9 @@ class ArgumentsParser {
         if (engine == null) {
             return DEFAULT_BACKEND;
         } else if (engine.equals("gl")) {
-            return GL_BACKEND;
+            return Backend.GL;
         } else if (engine.equals("awt")) {
-            return AWT_BACKEND;
+            return Backend.AWT;
         } else {
             throw new IllegalArgumentException("Invalid argument %s for engine".formatted(engine));
         }
@@ -91,7 +85,5 @@ class ArgumentsParser {
         }
         return record;
     }
-
-    // Helper Methods
 
 }

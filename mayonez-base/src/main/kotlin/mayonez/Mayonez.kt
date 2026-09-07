@@ -4,7 +4,6 @@ import mayonez.application.*
 import mayonez.assets.*
 import mayonez.assets.text.*
 import mayonez.config.*
-import mayonez.graphics.EngineType
 import kotlin.system.exitProcess
 
 /**
@@ -62,7 +61,7 @@ object Mayonez {
      */
     @JvmStatic
     internal val useGL: Boolean
-        @JvmName("getUseGL") get() = backend.graphics == EngineType.GL
+        @JvmName("getUseGL") get() = backend == Backend.GL
 
     // Window Properties
     // TODO non-game-loop window interface
@@ -214,7 +213,7 @@ object Mayonez {
             SceneManager.clearScenes()
             Assets.clearAssets()
 
-            backend.window.free()
+            backend.free()
             exitProgram(exitCode)
         }
     }
