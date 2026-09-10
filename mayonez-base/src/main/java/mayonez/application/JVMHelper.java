@@ -1,7 +1,5 @@
 package mayonez.application;
 
-import mayonez.util.OperatingSystem;
-
 /**
  * Assists in checking JVM environment variables.
  *
