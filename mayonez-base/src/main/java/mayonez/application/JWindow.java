@@ -1,7 +1,6 @@
 package mayonez.application;
 
 import mayonez.*;
-import mayonez.graphics.*;
 import mayonez.input.*;
 import mayonez.math.*;
 import org.jspecify.annotations.Nullable;
@@ -19,7 +18,7 @@ import static mayonez.application.AWTHelper.SCREEN_DEVICE;
  *
  * @author SlavSquatSuperstar
  */
-@UsesEngine(EngineType.AWT)
+@UsesBackend(Backend.AWT)
 final class JWindow extends JFrame implements Window {
 
     // Constants

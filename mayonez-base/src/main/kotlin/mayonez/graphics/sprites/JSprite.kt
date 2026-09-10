@@ -1,5 +1,6 @@
 package mayonez.graphics.sprites
 
+import mayonez.application.*
 import mayonez.graphics.*
 import mayonez.graphics.textures.*
 import mayonez.math.shapes.Rectangle
@@ -13,7 +14,7 @@ import java.awt.*
  *
  * @author SlavSquatSuperstar
  */
-@UsesEngine(EngineType.AWT)
+@UsesBackend(Backend.AWT)
 internal class JSprite private constructor(
     private var texture: JTexture?, private var color: MColor
 ) : Sprite(), JRenderable {

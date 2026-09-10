@@ -1,5 +1,6 @@
 package mayonez.graphics.sprites
 
+import mayonez.application.*
 import mayonez.graphics.*
 import mayonez.graphics.textures.*
 import mayonez.math.*
@@ -14,7 +15,7 @@ import mayonez.renderer.gl.*
  *
  * @author SlavSquatSuperstar
  */
-@UsesEngine(EngineType.GL)
+@UsesBackend(Backend.GL)
 internal class GLSprite private constructor(
     private var texture: GLTexture?, private var color: Color
 ) : Sprite(), GLQuad {
@@ -57,7 +58,7 @@ internal class GLSprite private constructor(
 
     // Renderable Methods
 
-    override fun getVertexPositions(): Array<out Vec2?>? {
+    override fun getVertexPositions(): Array<out Vec2?> {
         // Render sprite at object center and rotate according to object
         // Background sprite will not have scale but will use spriteXf instead
         val objXf = transform.combine(getSpriteTransform())

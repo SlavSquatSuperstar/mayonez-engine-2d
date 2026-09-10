@@ -29,6 +29,7 @@ module mayonez.base {
 
     // Base Application
     exports mayonez;
+    exports mayonez.application;
     exports mayonez.config;
     exports mayonez.event;
     exports mayonez.input;

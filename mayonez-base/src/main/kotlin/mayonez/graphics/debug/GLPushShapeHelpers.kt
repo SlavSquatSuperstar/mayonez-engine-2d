@@ -32,8 +32,8 @@ private fun RenderBatch.pushPolygon(poly: MPolygon, color: GLColor) {
 
 private fun RenderBatch.pushCircle(circle: Circle, color: GLColor, brush: ShapeBrush) {
     val outerWidth = circle.radius * 2f
+    // Need to account for stroke on both sides of center
     val innerWidth = if (brush.fill) 0f else outerWidth - brush.strokeSize * 2f
-    // Temporarily set stroke to double until fixed
     val relativeInnerWidth = innerWidth / outerWidth
     for (i in 0..<ElementLayout.QUAD.vertexCount) {
         pushVec2((GLOBAL_CIRCLE_VERTICES[i] * outerWidth) + circle.center())

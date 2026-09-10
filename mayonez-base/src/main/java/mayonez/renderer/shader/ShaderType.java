@@ -1,6 +1,6 @@
 package mayonez.renderer.shader;
 
-import mayonez.graphics.*;
+import mayonez.application.*;
 import mayonez.util.*;
 
 import static org.lwjgl.opengl.GL20.GL_FRAGMENT_SHADER;
@@ -11,7 +11,7 @@ import static org.lwjgl.opengl.GL20.GL_VERTEX_SHADER;
  *
  * @author SlavSquatSuperstar
  */
-@UsesEngine(EngineType.GL)
+@UsesBackend(Backend.GL)
 enum ShaderType {
 
     /**

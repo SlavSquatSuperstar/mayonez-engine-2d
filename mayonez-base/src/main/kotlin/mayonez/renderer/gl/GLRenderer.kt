@@ -1,7 +1,7 @@
 package mayonez.renderer.gl
 
 import mayonez.*
-import mayonez.graphics.*
+import mayonez.application.*
 import mayonez.renderer.*
 import mayonez.renderer.batch.*
 import java.awt.*
@@ -12,8 +12,8 @@ import java.awt.*
  *
  * @author SlavSquatSuperstar
  */
-@UsesEngine(EngineType.GL)
-abstract class GLRenderer() : Renderer {
+@UsesBackend(Backend.GL)
+abstract class GLRenderer : Renderer {
 
     companion object {
         @JvmStatic

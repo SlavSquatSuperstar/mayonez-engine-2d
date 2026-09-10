@@ -1,6 +1,6 @@
 package mayonez.renderer.batch
 
-import mayonez.graphics.*
+import mayonez.application.*
 import org.lwjgl.opengl.GL11.GL_FLOAT
 
 /**
@@ -9,7 +9,7 @@ import org.lwjgl.opengl.GL11.GL_FLOAT
  *
  * @author SlavSquatSuperstar
  */
-@UsesEngine(EngineType.GL)
+@UsesBackend(Backend.GL)
 enum class VertexAttribute(
     /** The number of components (floats or integers) in the attribute. */
     val components: Int,

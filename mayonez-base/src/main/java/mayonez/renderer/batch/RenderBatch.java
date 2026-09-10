@@ -1,5 +1,6 @@
 package mayonez.renderer.batch;
 
+import mayonez.application.*;
 import mayonez.graphics.*;
 import mayonez.graphics.textures.*;
 import mayonez.math.*;
@@ -15,7 +16,7 @@ import org.joml.*;
  *
  * @author SlavSquatSuperstar
  */
-@UsesEngine(EngineType.GL)
+@UsesBackend(Backend.GL)
 public class RenderBatch {
 
     // TODO store shader per batch

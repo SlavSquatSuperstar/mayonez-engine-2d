@@ -1,6 +1,6 @@
 package mayonez.renderer.batch
 
-import mayonez.graphics.*
+import mayonez.application.*
 import java.nio.IntBuffer
 
 // Vertex Attribute Aliases
@@ -15,7 +15,7 @@ private val TEX_SLOT: VertexAttribute = VertexAttribute.INT // i
  *
  * @author SlavSquatSuperstar
  */
-@UsesEngine(EngineType.GL)
+@UsesBackend(Backend.GL)
 enum class DrawPrimitive(
     val layout: ElementLayout, vararg val attributes: VertexAttribute
 ) {

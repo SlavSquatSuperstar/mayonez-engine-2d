@@ -1,6 +1,6 @@
 package mayonez.renderer.gl
 
-import mayonez.graphics.*
+import mayonez.application.*
 import mayonez.graphics.font.*
 import mayonez.renderer.*
 import mayonez.renderer.batch.*
@@ -12,8 +12,8 @@ import mayonez.renderer.shader.*
  *
  * @author SlavSquatSuperstar
  */
-@UsesEngine(EngineType.GL)
-internal class GLUIRenderer() : GLRenderer(), UIRenderer {
+@UsesBackend(Backend.GL)
+internal class GLUIRenderer : GLRenderer(), UIRenderer {
 
     // Renderer Objects
     private val objects: MutableList<Renderable> = ArrayList()

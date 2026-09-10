@@ -1,7 +1,7 @@
 package mayonez.renderer.shader;
 
+import mayonez.application.*;
 import mayonez.assets.*;
-import mayonez.graphics.*;
 
 import java.util.*;
 
@@ -10,7 +10,7 @@ import java.util.*;
  *
  * @author SlavSquatSuperstar
  */
-@UsesEngine(EngineType.GL)
+@UsesBackend(Backend.GL)
 public final class Shaders {
 
     // TODO read shader names from file

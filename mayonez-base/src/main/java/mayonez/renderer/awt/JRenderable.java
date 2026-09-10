@@ -1,6 +1,6 @@
 package mayonez.renderer.awt;
 
-import mayonez.graphics.*;
+import mayonez.application.*;
 import mayonez.renderer.*;
 
 import java.awt.*;
@@ -10,7 +10,7 @@ import java.awt.*;
  *
  * @author SlavSquatSuperstar
  */
-@UsesEngine(EngineType.AWT)
+@UsesBackend(Backend.AWT)
 public interface JRenderable extends Renderable {
 
     // Renderer Methods

@@ -1,5 +1,6 @@
 package mayonez.renderer.gl;
 
+import mayonez.application.*;
 import mayonez.graphics.*;
 import mayonez.graphics.textures.*;
 import mayonez.math.*;
@@ -11,7 +12,7 @@ import mayonez.renderer.batch.*;
  *
  * @author SlavSquatSuperstar
  */
-@UsesEngine(EngineType.GL)
+@UsesBackend(Backend.GL)
 public interface GLQuad extends GLRenderable {
 
     int MAX_BATCH_SPRITES = 100;

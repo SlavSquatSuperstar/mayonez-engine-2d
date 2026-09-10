@@ -1,6 +1,6 @@
 package mayonez.renderer.gl;
 
-import mayonez.graphics.*;
+import mayonez.application.*;
 import mayonez.graphics.textures.*;
 import mayonez.renderer.*;
 import mayonez.renderer.batch.*;
@@ -10,7 +10,7 @@ import mayonez.renderer.batch.*;
  *
  * @author SlavSquatSuperstar
  */
-@UsesEngine(EngineType.GL)
+@UsesBackend(Backend.GL)
 public interface GLRenderable extends Renderable {
 
     // TODO store shader ID

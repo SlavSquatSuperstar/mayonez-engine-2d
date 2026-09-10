@@ -1,6 +1,6 @@
 package mayonez.graphics.ui;
 
-import mayonez.*;
+import mayonez.application.*;
 import mayonez.graphics.*;
 import mayonez.graphics.textures.*;
 import mayonez.math.*;
@@ -12,7 +12,7 @@ import mayonez.renderer.gl.*;
  *
  * @author SlavSquatSuperstar
  */
-@UsesEngine(EngineType.GL)
+@UsesBackend(Backend.GL)
 public class UISprite extends UIElement implements GLQuad {
 
     // Constants

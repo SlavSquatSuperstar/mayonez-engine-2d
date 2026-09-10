@@ -1,6 +1,7 @@
 package mayonez.graphics.textures;
 
 import mayonez.*;
+import mayonez.application.*;
 import mayonez.assets.image.*;
 import mayonez.graphics.*;
 import mayonez.math.*;
@@ -29,7 +30,7 @@ import static org.lwjgl.opengl.GL12.GL_TEXTURE_WRAP_R;
  *
  * @author SlavSquatSuperstar
  */
-@UsesEngine(EngineType.GL)
+@UsesBackend(Backend.GL)
 public final class GLTexture extends Texture {
 
     // Constants

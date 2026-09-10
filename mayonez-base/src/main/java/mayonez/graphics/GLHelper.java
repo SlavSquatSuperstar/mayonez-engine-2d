@@ -1,6 +1,7 @@
 package mayonez.graphics;
 
 import mayonez.*;
+import mayonez.application.*;
 import org.lwjgl.opengl.GL;
 
 import static org.lwjgl.opengl.GL11.*;
@@ -11,7 +12,7 @@ import static org.lwjgl.opengl.GL20.GL_SHADING_LANGUAGE_VERSION;
  *
  * @author SlavSquatSuperstar
  */
-@UsesEngine(EngineType.GL)
+@UsesBackend(Backend.GL)
 public final class GLHelper {
 
     private GLHelper() {

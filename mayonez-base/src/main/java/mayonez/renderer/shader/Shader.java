@@ -1,6 +1,7 @@
 package mayonez.renderer.shader;
 
 import mayonez.*;
+import mayonez.application.*;
 import mayonez.assets.*;
 import mayonez.graphics.*;
 import org.joml.*;
@@ -18,7 +19,7 @@ import static org.lwjgl.opengl.GL20.*;
  *
  * @author SlavSquatSuperstar
  */
-@UsesEngine(EngineType.GL)
+@UsesBackend(Backend.GL)
 public class Shader extends Asset {
 
     private int programID;

@@ -1,6 +1,7 @@
 package mayonez.renderer.awt
 
 import mayonez.*
+import mayonez.application.*
 import mayonez.graphics.*
 import mayonez.graphics.debug.*
 import mayonez.renderer.*
@@ -12,7 +13,7 @@ import java.awt.*
  *
  * @author SlavSquatSuperstar
  */
-@UsesEngine(EngineType.AWT)
+@UsesBackend(Backend.AWT)
 internal class JDefaultRenderer : SceneRenderer,
     DebugRenderer {
 

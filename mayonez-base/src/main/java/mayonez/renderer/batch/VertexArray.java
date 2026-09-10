@@ -1,6 +1,6 @@
 package mayonez.renderer.batch;
 
-import mayonez.graphics.*;
+import mayonez.application.*;
 
 import static org.lwjgl.opengl.GL30.*;
 
@@ -11,7 +11,7 @@ import static org.lwjgl.opengl.GL30.*;
  * @author SlavSquatSuperstar
  */
 // TODO also create VBO and IBO
-@UsesEngine(EngineType.GL)
+@UsesBackend(Backend.GL)
 class VertexArray {
 
     private int vaoID;

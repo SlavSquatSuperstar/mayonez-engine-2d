@@ -1,6 +1,6 @@
 package mayonez.graphics.camera
 
-import mayonez.graphics.*
+import mayonez.application.*
 import mayonez.math.*
 import org.joml.*
 
@@ -15,7 +15,7 @@ import org.joml.*
  *
  * @author SlavSquatSuperstar
  */
-@UsesEngine(EngineType.GL)
+@UsesBackend(Backend.GL)
 class GLCamera(screenSize: Vec2) : Camera(screenSize) {
 
     // Matrix Fields

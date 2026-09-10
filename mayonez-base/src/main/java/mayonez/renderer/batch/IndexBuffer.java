@@ -1,6 +1,6 @@
 package mayonez.renderer.batch;
 
-import mayonez.graphics.*;
+import mayonez.application.*;
 import org.lwjgl.BufferUtils;
 
 import java.nio.IntBuffer;
@@ -13,7 +13,7 @@ import static org.lwjgl.opengl.GL15.*;
  *
  * @author SlavSquatSuperstar
  */
-@UsesEngine(EngineType.GL)
+@UsesBackend(Backend.GL)
 class IndexBuffer {
 
     private final DrawPrimitive primitive; // TODO make fields method arguments

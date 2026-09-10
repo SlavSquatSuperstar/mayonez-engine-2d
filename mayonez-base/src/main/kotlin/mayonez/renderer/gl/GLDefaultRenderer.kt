@@ -1,5 +1,6 @@
 package mayonez.renderer.gl
 
+import mayonez.application.*
 import mayonez.graphics.*
 import mayonez.graphics.debug.*
 import mayonez.graphics.font.*
@@ -13,8 +14,8 @@ import mayonez.renderer.shader.*
  *
  * @author SlavSquatSuperstar
  */
-@UsesEngine(EngineType.GL)
-internal class GLDefaultRenderer() : GLRenderer(),
+@UsesBackend(Backend.GL)
+internal class GLDefaultRenderer : GLRenderer(),
     SceneRenderer, DebugRenderer {
 
     // Renderer Objects

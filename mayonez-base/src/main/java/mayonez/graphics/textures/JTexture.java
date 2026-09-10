@@ -1,8 +1,8 @@
 package mayonez.graphics.textures;
 
 import mayonez.*;
+import mayonez.application.*;
 import mayonez.assets.image.*;
-import mayonez.graphics.*;
 import mayonez.graphics.Color;
 import mayonez.math.*;
 
@@ -17,7 +17,7 @@ import java.awt.image.*;
  *
  * @author SlavSquatSuperstar
  */
-@UsesEngine(EngineType.AWT)
+@UsesBackend(Backend.AWT)
 public final class JTexture extends Texture {
 
     // Image Data Fields

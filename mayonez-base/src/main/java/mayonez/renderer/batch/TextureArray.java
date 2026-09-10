@@ -1,6 +1,6 @@
 package mayonez.renderer.batch;
 
-import mayonez.graphics.*;
+import mayonez.application.*;
 import mayonez.graphics.textures.*;
 
 import java.util.*;
@@ -15,7 +15,7 @@ import static org.lwjgl.opengl.GL13.glActiveTexture;
  *
  * @author SlavSquatSuperstar
  */
-@UsesEngine(EngineType.GL)
+@UsesBackend(Backend.GL)
 class TextureArray {
 
     // Constants

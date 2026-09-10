@@ -29,7 +29,7 @@ import static org.lwjgl.system.MemoryUtil.NULL;
  *
  * @author SlavSquatSuperstar
  */
-@UsesEngine(EngineType.GL)
+@UsesBackend(Backend.GL)
 final class GLFWHelper {
 
     // Map GLFW constant values to field names

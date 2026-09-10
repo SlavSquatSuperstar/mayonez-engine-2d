@@ -1,7 +1,7 @@
 package mayonez.renderer.shader;
 
 import mayonez.*;
-import mayonez.graphics.*;
+import mayonez.application.*;
 
 import static org.lwjgl.opengl.GL20.*;
 
@@ -13,7 +13,7 @@ import static org.lwjgl.opengl.GL20.*;
  *
  * @author SlavSquatSuperstar
  */
-@UsesEngine(EngineType.GL)
+@UsesBackend(Backend.GL)
 class ShaderStage {
 
     private final String sourceCode; // Source code of GLSL shader

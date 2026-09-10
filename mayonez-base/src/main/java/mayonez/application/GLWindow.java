@@ -17,7 +17,7 @@ import static org.lwjgl.system.MemoryUtil.NULL;
  *
  * @author SlavSquatSuperstar
  */
-@UsesEngine(EngineType.GL)
+@UsesBackend(Backend.GL)
 final class GLWindow implements Window {
 
     // Window Fields
