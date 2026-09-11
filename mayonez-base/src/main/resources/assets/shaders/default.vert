@@ -1,6 +1,5 @@
 /* Default sprite vertex shader */
 
-#type vertex
 #version 330 core
 
 layout (location = 0) in vec3 vPosition;  // Global position

@@ -1,6 +1,5 @@
 /* Default sprite fragment shader */
 
-#type fragment
 #version 330 core
 
 in vec4 fColor;     // Color
