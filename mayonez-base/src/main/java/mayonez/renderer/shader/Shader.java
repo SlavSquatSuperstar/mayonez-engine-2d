@@ -3,7 +3,9 @@ package mayonez.renderer.shader;
 import mayonez.*;
 import mayonez.application.*;
 import mayonez.assets.*;
+import mayonez.assets.text.JSONFile;
 import mayonez.graphics.*;
+import mayonez.util.Record;
 import org.joml.*;
 import org.lwjgl.BufferUtils;
 
@@ -23,18 +25,23 @@ import static org.lwjgl.opengl.GL20.*;
 public class Shader extends Asset {
 
     private int programID;
+    private final Record shaderDefinition;
     private final Map<String, Integer> uniformLocations;
 
     public Shader(String filename) {
         super(filename);
+        shaderDefinition = new JSONFile(filename).readJSON();
+        if (shaderDefinition.contains("shader")) {
+            // One shader
+            createShader(shaderDefinition.getString("shader"));
+        } else {
+            // Multiple shaders
+            createShader(
+                    shaderDefinition.getString("vertex"),
+                    shaderDefinition.getString("fragment")
+            );
+        }
         uniformLocations = new HashMap<>();
-        createShader(filename);
-    }
-
-    public Shader(String[] stageFilenames) {
-        super(String.join("+", stageFilenames));
-        uniformLocations = new HashMap<>();
-        createShader(stageFilenames);
     }
 
     // Read Shader Methods

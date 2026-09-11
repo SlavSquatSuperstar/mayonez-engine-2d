@@ -13,29 +13,21 @@ import java.util.*;
 @UsesBackend(Backend.GL)
 public final class Shaders {
 
-    // TODO read shader names from file
     public static final Shader DEFAULT_SHADER =
-            getShaderFromFiles(new String[]{
-                    "assets/shaders/default.vert", "assets/shaders/default_330.frag"
-            });
+            getShaderFromFile("assets/shaders/default.json");
     public static final Shader UI_SHADER = DEFAULT_SHADER;
     public static final Shader DEBUG_SHADER =
-            getShaderFromFile("assets/shaders/debug.glsl");
-    // TODO draw circles with ellipses if not too many
+            getShaderFromFile("assets/shaders/debug.json");
     public static final Shader CIRCLE_SHADER =
-            getShaderFromFile("assets/shaders/circle.glsl");
+            getShaderFromFile("assets/shaders/circle.json");
     public static final Shader ELLIPSE_SHADER =
-            getShaderFromFile("assets/shaders/ellipse.glsl");
+            getShaderFromFile("assets/shaders/ellipse.json");
 
     private Shaders() {
     }
 
     private static Shader getShaderFromFile(String filename) {
         return Objects.requireNonNull(Assets.getAsset(filename, Shader.class));
-    }
-
-    private static Shader getShaderFromFiles(String[] filenames) {
-        return new Shader(filenames);
     }
 
 }

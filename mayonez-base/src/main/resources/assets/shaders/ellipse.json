@@ -1,0 +1,5 @@
+{
+  "name": "ellipse",
+  "description": "An ellipse with 4 vertices and color",
+  "shader": "assets/shaders/ellipse.glsl"
+}

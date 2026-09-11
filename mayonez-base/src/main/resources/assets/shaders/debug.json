@@ -1,0 +1,5 @@
+{
+  "name": "debug",
+  "description": "A triangle with 3 vertices and color",
+  "shader": "assets/shaders/debug.glsl"
+}

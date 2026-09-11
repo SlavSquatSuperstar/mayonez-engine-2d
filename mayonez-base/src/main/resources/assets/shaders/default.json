@@ -1,0 +1,6 @@
+{
+  "name": "default",
+  "description": "A sprite with 4 vertices, a texture, and color",
+  "vertex": "assets/shaders/default.vert",
+  "fragment": "assets/shaders/default_330.frag"
+}
