@@ -31,16 +31,10 @@ public class Shader extends Asset {
     public Shader(String filename) {
         super(filename);
         shaderDefinition = new JSONFile(filename).readJSON();
-        if (shaderDefinition.contains("shader")) {
-            // One shader
-            createShader(shaderDefinition.getString("shader"));
-        } else {
-            // Multiple shaders
-            createShader(
-                    shaderDefinition.getString("vertex"),
-                    shaderDefinition.getString("fragment")
-            );
-        }
+        createShader(
+                shaderDefinition.getString("vertex"),
+                shaderDefinition.getString("fragment")
+        );
         uniformLocations = new HashMap<>();
     }
 
@@ -48,7 +42,7 @@ public class Shader extends Asset {
 
     // TODO don't delete stages if from multiple files
     private void createShader(String... stageFilenames) {
-        Logger.debug("Creating shader from files %s", Arrays.toString(stageFilenames));
+        Logger.debug("Creating GLSL shader %s", getFilename());
 
         if (!GLHelper.isGLInitialized()) {
             Logger.warn("OpenGL capabilities are not initialized");

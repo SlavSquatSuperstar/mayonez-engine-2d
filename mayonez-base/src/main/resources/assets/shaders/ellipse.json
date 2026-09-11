@@ -1,5 +1,6 @@
 {
   "name": "Ellipse",
   "description": "An ellipse with color, semi-major/-minor axes, and fill axes",
-  "shader": "assets/shaders/ellipse.glsl"
+  "vertex": "assets/shaders/ellipse.vert",
+  "fragment": "assets/shaders/ellipse.frag"
 }

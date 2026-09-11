@@ -1,5 +1,6 @@
 {
   "name": "Debug",
   "description": "A shape with vertices and color",
-  "shader": "assets/shaders/debug.glsl"
+  "vertex": "assets/shaders/debug.vert",
+  "fragment": "assets/shaders/debug.frag"
 }

@@ -1,5 +1,6 @@
 {
   "name": "Circle",
   "description": "A circle with color, radius, and fill radius",
-  "shader": "assets/shaders/circle.glsl"
+  "vertex": "assets/shaders/circle.vert",
+  "fragment": "assets/shaders/circle.frag"
 }
