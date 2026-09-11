@@ -1,6 +1,5 @@
 /* Ellipse fragment shader */
 
-#type fragment
 #version 330 core
 
 in vec2 fLocalPosition; // Position on unit circle

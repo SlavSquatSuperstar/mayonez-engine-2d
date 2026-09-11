@@ -45,7 +45,7 @@ final class ShaderParser {
         var typeName = matcher.group(1); // Query the (\w+) capture group
         var shaderType = ShaderType.findWithName(typeName);
         var body = source.substring(matcher.end() + 1).strip();
-        return new ShaderStage(filename, body, shaderType);
+        return new ShaderStage(filename, shaderType);
     }
 
     private static Matcher getHeaderMatcher(String stageSource) {

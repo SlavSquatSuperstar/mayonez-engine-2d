@@ -31,17 +31,13 @@ public class Shader extends Asset {
     public Shader(String filename) {
         super(filename);
         shaderDefinition = new JSONFile(filename).readJSON();
-        createShader(
-                shaderDefinition.getString("vertex"),
-                shaderDefinition.getString("fragment")
-        );
+        createShader(shaderDefinition);
         uniformLocations = new HashMap<>();
     }
 
-    // Read Shader Methods
+    // Create Shader Methods
 
-    // TODO don't delete stages if from multiple files
-    private void createShader(String... stageFilenames) {
+    private void createShader(Record shaderDefinition) {
         Logger.debug("Creating GLSL shader %s", getFilename());
 
         if (!GLHelper.isGLInitialized()) {
@@ -52,10 +48,15 @@ public class Shader extends Asset {
 
         List<ShaderStage> stages = new ArrayList<>();
         try {
-            for (var filename : stageFilenames) {
-                var stageSources = ShaderParser.parseShaderStage(filename);
-                stages.add(stageSources);
-            }
+            // Read vertex shader
+            var vertexFilename = shaderDefinition.getString("vertex");
+            stages.add(new ShaderStage(vertexFilename, ShaderType.VERTEX));
+
+            // Read fragment shader
+            var fragmentFilename = shaderDefinition.getString("fragment");
+            stages.add(new ShaderStage(fragmentFilename, ShaderType.FRAGMENT));
+
+            // Compile and link program
             stages.forEach(ShaderStage::compileSource);
             programID = glCreateProgram();
             linkShaderStages(stages);
@@ -68,8 +69,6 @@ public class Shader extends Asset {
             stages.forEach(ShaderStage::delete);
         }
     }
-
-    // Compile Shader Methods
 
     private void linkShaderStages(List<ShaderStage> stages) throws ShaderException {
         stages.forEach(s -> s.attachToProgram(programID));
@@ -141,6 +140,7 @@ public class Shader extends Asset {
             return location;
         }
     }
+    // TODO pre-cache uniforms/attributes
 
     // Asset Methods
 

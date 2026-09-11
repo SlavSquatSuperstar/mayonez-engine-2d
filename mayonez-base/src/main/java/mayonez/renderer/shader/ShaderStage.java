@@ -2,33 +2,51 @@ package mayonez.renderer.shader;
 
 import mayonez.*;
 import mayonez.application.*;
+import mayonez.assets.Asset;
+import mayonez.assets.FilePath;
+import mayonez.assets.text.TextIOUtils;
+
+import java.io.IOException;
 
 import static org.lwjgl.opengl.GL20.*;
 
 /**
- * A programmable stage within the Open rendering pipeline. Shader stages may
- * be combined into a single .glsl file or kept in separate files. Officially,
- * a ShaderStage is considered an OpenGL shader, while a {@link Shader} is
+ * A programmable stage within the Open rendering pipeline. Shader stages are
+ * typically read from .glsl, .vert, or .frag source files. Officially, a
+ * ShaderStage is considered an OpenGL shader, while a {@link Shader} is
  * referred to as an OpenGL program.
  *
  * @author SlavSquatSuperstar
  */
 @UsesBackend(Backend.GL)
-class ShaderStage {
+class ShaderStage extends Asset {
 
-    private final String filename;
-    private final String sourceCode; // Source code of GLSL shader
     private final ShaderType type; // Type of shader stage
     private int shaderID; // ID of shader stage in OpenGL
+    // TODO parse uniforms
 
-    ShaderStage(String filename, String sourceCode, ShaderType type) {
-        this.filename = filename;
-        this.sourceCode = sourceCode;
+    ShaderStage(String filename, ShaderType type) {
+        super(filename);
         this.type = type;
         shaderID = GL_NONE;
     }
 
     // Shader Methods
+
+    /**
+     * Read the source code from the .glsl file.
+     *
+     * @return the source code
+     * @throws ShaderException if the file could not be read
+     */
+    String readSource() throws ShaderException {
+        try (var input = openInputStream()) {
+            return TextIOUtils.readText(input);
+        } catch (IOException e) {
+            throw new ShaderException("Could not read shader source: %s"
+                    .formatted(getFilenameInQuotes()));
+        }
+    }
 
     /**
      * Compile the shader from its source code.
@@ -37,14 +55,15 @@ class ShaderStage {
      */
     void compileSource() {
         shaderID = glCreateShader(type.glShaderType);
-        glShaderSource(shaderID, sourceCode);
+        var source = readSource();
+        glShaderSource(shaderID, source);
         glCompileShader(shaderID);
 
         // Check compiled correctly
         if (glGetShaderi(shaderID, GL_COMPILE_STATUS) == GL_TRUE) {
-            Logger.debug("OpenGL: Compiled %s shader %s", type.toString(), filename);
+            Logger.debug("OpenGL: Compiled %s shader %s", type.toString(), getFilename());
         } else {
-            Logger.error("OpenGL: Could not compile %s shader %s", type.toString(), filename);
+            Logger.error("OpenGL: Could not compile %s shader %s", type.toString(), getFilename());
             Logger.error("OpenGL: " + glGetShaderInfoLog(shaderID));
             throw new ShaderException("Error compiling shader stage");
         }
