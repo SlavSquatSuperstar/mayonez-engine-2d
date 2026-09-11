@@ -26,58 +26,96 @@ public class Shader extends Asset {
 
     private int programID;
     private final Record shaderDefinition;
+    private final List<ShaderStage> stages;
     private final Map<String, Integer> uniformLocations;
 
     public Shader(String filename) {
         super(filename);
         shaderDefinition = new JSONFile(filename).readJSON();
-        createShader(shaderDefinition);
+        stages = new ArrayList<>();
         uniformLocations = new HashMap<>();
     }
 
     // Create Shader Methods
 
-    private void createShader(Record shaderDefinition) {
-        Logger.debug("Creating GLSL shader %s", getFilename());
+    /**
+     * Read the shader stages and parse the uniforms without compiling the source code.
+     */
+    void readShader() {
+        Logger.debug("Reading shader definition %s", getFilename());
 
+        // Read shaders and parse uniforms
+        // Don't need OpenGL to be initialized yet
+        stages.clear();
+        uniformLocations.clear();
+
+        // Read vertex shader
+        var vertexFilename = shaderDefinition.getString("vertex");
+        var vertexShader = new ShaderStage(vertexFilename, ShaderType.VERTEX);
+        stages.add(vertexShader);
+
+        // Read fragment shader
+        var fragmentFilename = shaderDefinition.getString("fragment");
+        var fragmentShader = new ShaderStage(fragmentFilename, ShaderType.FRAGMENT);
+        stages.add(fragmentShader);
+
+        stages.forEach(stage -> {
+            stage.readSource();
+            stage.getUniforms().forEach(
+                    // Store locations as -1 for now
+                    uniform -> uniformLocations.put(uniform, -1)
+            );
+        });
+    }
+
+    /**
+     * Compile the shader source code, link the program, and cache the uniform locations.
+     */
+    void createShader() {
+        readShader();
+
+        // Check OpenGL initialized before compiling
         if (!GLHelper.isGLInitialized()) {
             Logger.error("OpenGL capabilities are not initialized");
             programID = GL_NONE;
             return;
         }
 
-        List<ShaderStage> stages = new ArrayList<>();
         try {
-            // Read vertex shader
-            var vertexFilename = shaderDefinition.getString("vertex");
-            stages.add(new ShaderStage(vertexFilename, ShaderType.VERTEX));
-
-            // Read fragment shader
-            var fragmentFilename = shaderDefinition.getString("fragment");
-            stages.add(new ShaderStage(fragmentFilename, ShaderType.FRAGMENT));
-
-            // Compile and link program
+            // Compile shaders
             stages.forEach(ShaderStage::compileSource);
+
+            // Link program
             programID = glCreateProgram();
-            linkShaderStages(stages);
+            linkShaderStages();
+
+            // Cache uniform locations
+            uniformLocations.keySet().forEach(uniform -> {
+                int location = glGetUniformLocation(programID, uniform);
+                uniformLocations.put(uniform, location);
+            });
+            Logger.log("Uniforms: " + uniformLocations);
         } catch (ShaderException e) {
             Logger.printStackTrace(e);
             programID = GL_NONE;
         } finally {
             // Clean up intermediate stages
-            stages.forEach(s -> s.detachFromProgram(programID));
-            stages.forEach(ShaderStage::delete);
+            stages.forEach(stage -> {
+                stage.detachFromProgram(programID);
+                stage.delete();
+            });
+            stages.clear();
         }
     }
 
-    private void linkShaderStages(List<ShaderStage> stages) throws ShaderException {
+    private void linkShaderStages() throws ShaderException {
         stages.forEach(s -> s.attachToProgram(programID));
         glLinkProgram(programID);
         glValidateProgram(programID);
 
         // Check linked correctly
         if (glGetProgrami(programID, GL_LINK_STATUS) == GL_TRUE) {
-            Logger.debug("OpenGL: Finished linking shader file %s", getFilenameInQuotes());
+            Logger.debug("OpenGL: Linked shader file %s", getFilenameInQuotes());
         } else {
             Logger.error("OpenGL: Could not link shader file %s", getFilenameInQuotes());
             Logger.error("OpenGL: " + glGetProgramInfoLog(programID));
@@ -140,13 +178,32 @@ public class Shader extends Asset {
             return location;
         }
     }
-    // TODO pre-cache uniforms/attributes
 
     // Asset Methods
 
     @Override
     public void free() {
         delete();
+    }
+
+    // Getter Methods
+
+    /**
+     * Get the intermediate shader stages in this program.
+     *
+     * @return the list of stages
+     */
+    List<ShaderStage> getStages() {
+        return stages;
+    }
+
+    /**
+     * Get the uniform names and locations in this program.
+     *
+     * @return the map of uniforms
+     */
+    Map<String, Integer> getUniformLocations() {
+        return uniformLocations;
     }
 
 }
