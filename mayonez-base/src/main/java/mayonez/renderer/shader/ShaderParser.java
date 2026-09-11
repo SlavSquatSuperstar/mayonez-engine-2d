@@ -81,9 +81,8 @@ final class ShaderParser {
 
     private static Matcher getHeaderMatcher(String stageSource) {
         /*
-         * Look for header "\n # type <shader_type> \n"
-         * All spaces optional except between type and <shader_type>
-         * First newline optional
+         * Look for header " # type <shader_type>"
+         * All whitespaces optional except between type and <shader_type>
          * Use multiline mode so ^ and $ mean line boundaries
          */
         var headerPat = Pattern.compile("^\\s*#\\s*type\\s+(\\w+)\\s*$", Pattern.MULTILINE);

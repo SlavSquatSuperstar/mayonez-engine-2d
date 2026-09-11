@@ -38,17 +38,14 @@ class ShaderStage {
         glShaderSource(shaderID, sourceCode);
         glCompileShader(shaderID);
 
-        if (!checkCompiledCorrectly(shaderID)) {
+        // Check compiled correctly
+        if (glGetShaderi(shaderID, GL_COMPILE_STATUS) == GL_FALSE) {
             Logger.error("OpenGL: Could not compile %s shader", type.toString());
             Logger.error("OpenGL: " + glGetShaderInfoLog(shaderID));
             throw new ShaderException("Error compiling shader stage");
         } else {
             Logger.debug("OpenGL: Compiled %s shader", type.toString());
         }
-    }
-
-    private static boolean checkCompiledCorrectly(int shaderID) {
-        return glGetShaderi(shaderID, GL_COMPILE_STATUS) != GL_FALSE;
     }
 
     /**

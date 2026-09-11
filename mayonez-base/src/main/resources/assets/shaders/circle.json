@@ -1,5 +1,5 @@
 {
-  "name": "circle",
-  "description": "A circle with 4 vertices and color",
+  "name": "Circle",
+  "description": "A circle with color, radius, and fill radius",
   "shader": "assets/shaders/circle.glsl"
 }

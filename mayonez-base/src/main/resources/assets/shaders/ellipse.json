@@ -1,5 +1,5 @@
 {
-  "name": "ellipse",
-  "description": "An ellipse with 4 vertices and color",
+  "name": "Ellipse",
+  "description": "An ellipse with color, semi-major/-minor axes, and fill axes",
   "shader": "assets/shaders/ellipse.glsl"
 }

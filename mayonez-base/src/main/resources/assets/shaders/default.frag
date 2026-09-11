@@ -1,15 +1,15 @@
-// Sprites with texture and color (GLSL 3.3)
+/* Default sprite fragment shader */
 
 #type fragment
 #version 330 core
 
-in vec4 fColor;
-in vec2 fTexCoords;
-in float fTexID;
+in vec4 fColor;     // Color
+in vec2 fTexCoords; // Texture coordinates (UV)
+in float fTexID;    // Texture slot in uTextures[]
 
-uniform sampler2D uTextures[8];
+uniform sampler2D uTextures[8]; // OpenGL texture IDs
 
-out vec4 color;
+out vec4 color; // Output to framebuffer
 
 void main()
 {
