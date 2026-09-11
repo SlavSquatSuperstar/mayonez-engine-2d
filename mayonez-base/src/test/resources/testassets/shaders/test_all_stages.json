@@ -1,0 +1,6 @@
+{
+  "name": "Test",
+  "description": "Test shader with all stages",
+  "vertex": "testassets/shaders/test.vert",
+  "fragment": "testassets/shaders/test.frag"
+}
