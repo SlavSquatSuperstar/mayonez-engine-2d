@@ -45,7 +45,7 @@ public class Shader extends Asset {
         Logger.debug("Creating GLSL shader %s", getFilename());
 
         if (!GLHelper.isGLInitialized()) {
-            Logger.warn("OpenGL capabilities are not initialized");
+            Logger.error("OpenGL capabilities are not initialized");
             programID = GL_NONE;
             return;
         }
@@ -53,9 +53,8 @@ public class Shader extends Asset {
         List<ShaderStage> stages = new ArrayList<>();
         try {
             for (var filename : stageFilenames) {
-                var source = ShaderParser.readShaderSource(FilePath.fromFilename(filename));
-                var stageSources = ShaderParser.parseShaderStages(source);
-                stages.addAll(stageSources);
+                var stageSources = ShaderParser.parseShaderStage(filename);
+                stages.add(stageSources);
             }
             stages.forEach(ShaderStage::compileSource);
             programID = glCreateProgram();
@@ -77,8 +76,8 @@ public class Shader extends Asset {
         glLinkProgram(programID);
         glValidateProgram(programID);
 
-        // Check link status
-        if (programLinkedSuccessfully(programID)) {
+        // Check linked correctly
+        if (glGetProgrami(programID, GL_LINK_STATUS) == GL_TRUE) {
             Logger.debug("OpenGL: Finished linking shader file %s", getFilenameInQuotes());
         } else {
             Logger.error("OpenGL: Could not link shader file %s", getFilenameInQuotes());
@@ -86,10 +85,6 @@ public class Shader extends Asset {
             Logger.error("Shaders must have least a vertex and fragment stage");
             throw new ShaderException("Error linking shader file");
         }
-    }
-
-    private static boolean programLinkedSuccessfully(int shaderID) {
-        return glGetProgrami(shaderID, GL_LINK_STATUS) != GL_FALSE;
     }
 
     // Renderer Methods

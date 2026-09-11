@@ -29,9 +29,16 @@ enum ShaderType {
      * The shader ID in OpenGL.
      */
     final int glShaderType;
+    final String name;
 
     ShaderType(int glShaderType) {
         this.glShaderType = glShaderType;
+        this.name = name().toLowerCase();
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 
     // Static Methods

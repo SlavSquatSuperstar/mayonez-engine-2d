@@ -4,7 +4,6 @@ import mayonez.assets.*;
 import mayonez.assets.text.*;
 
 import java.io.IOException;
-import java.util.*;
 import java.util.regex.*;
 
 final class ShaderParser {
@@ -29,54 +28,24 @@ final class ShaderParser {
     }
 
     /**
-     * Parses multiple shaders stage from the given GLSL source code.
+     * Parses one GLSL shader from the given filename.
      *
-     * @param source the shader source code
-     * @return the shader stages
-     * @throws ShaderException if no stages were found
-     */
-    static List<ShaderStage> parseShaderStages(String source) throws ShaderException {
-        List<ShaderStage> stages = new ArrayList<>();
-
-        var matcher = getHeaderMatcher(source);
-        var lastMatch = matcher.find();
-        while (lastMatch) {
-            var typeName = matcher.group(1); // Query the (\w+) capture group
-            var shaderType = ShaderType.findWithName(typeName);
-
-            var bodyStart = matcher.end() + 1;
-            lastMatch = matcher.find(); // Check if there is another stage
-            var bodyEnd = lastMatch
-                    ? matcher.start() // Another stage
-                    : source.length(); // No more stages
-
-            var body = source.substring(bodyStart, bodyEnd).strip();
-            stages.add(new ShaderStage(body, shaderType));
-        }
-
-        if (stages.isEmpty()) {
-            throw new ShaderException("No shaders found in source file");
-        }
-        return stages;
-    }
-
-    /**
-     * Parses one shader stage from the given GLSL source code.
-     *
-     * @param stageSource the stage source code
+     * @param filename the stage filename
      * @return the shader stage
      * @throws ShaderException if no stage was found
      */
-    static ShaderStage parseShaderStage(String stageSource) throws ShaderException {
-        var matcher = getHeaderMatcher(stageSource);
+    static ShaderStage parseShaderStage(String filename) throws ShaderException {
+        var source = ShaderParser.readShaderSource(FilePath.fromFilename(filename));
+
+        var matcher = getHeaderMatcher(source);
         if (!matcher.find()) {
             throw new ShaderException("No #type directive at shader start");
         }
 
         var typeName = matcher.group(1); // Query the (\w+) capture group
         var shaderType = ShaderType.findWithName(typeName);
-        var body = stageSource.substring(matcher.end() + 1).strip();
-        return new ShaderStage(body, shaderType);
+        var body = source.substring(matcher.end() + 1).strip();
+        return new ShaderStage(filename, body, shaderType);
     }
 
     private static Matcher getHeaderMatcher(String stageSource) {

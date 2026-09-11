@@ -16,11 +16,13 @@ import static org.lwjgl.opengl.GL20.*;
 @UsesBackend(Backend.GL)
 class ShaderStage {
 
+    private final String filename;
     private final String sourceCode; // Source code of GLSL shader
     private final ShaderType type; // Type of shader stage
     private int shaderID; // ID of shader stage in OpenGL
 
-    ShaderStage(String sourceCode, ShaderType type) {
+    ShaderStage(String filename, String sourceCode, ShaderType type) {
+        this.filename = filename;
         this.sourceCode = sourceCode;
         this.type = type;
         shaderID = GL_NONE;
@@ -39,12 +41,12 @@ class ShaderStage {
         glCompileShader(shaderID);
 
         // Check compiled correctly
-        if (glGetShaderi(shaderID, GL_COMPILE_STATUS) == GL_FALSE) {
-            Logger.error("OpenGL: Could not compile %s shader", type.toString());
+        if (glGetShaderi(shaderID, GL_COMPILE_STATUS) == GL_TRUE) {
+            Logger.debug("OpenGL: Compiled %s shader %s", type.toString(), filename);
+        } else {
+            Logger.error("OpenGL: Could not compile %s shader %s", type.toString(), filename);
             Logger.error("OpenGL: " + glGetShaderInfoLog(shaderID));
             throw new ShaderException("Error compiling shader stage");
-        } else {
-            Logger.debug("OpenGL: Compiled %s shader", type.toString());
         }
     }
 
@@ -80,4 +82,5 @@ class ShaderStage {
     ShaderType getType() {
         return type;
     }
+
 }
