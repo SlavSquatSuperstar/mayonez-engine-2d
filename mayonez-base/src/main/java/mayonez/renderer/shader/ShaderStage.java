@@ -3,15 +3,10 @@ package mayonez.renderer.shader;
 import mayonez.*;
 import mayonez.application.*;
 import mayonez.assets.Asset;
-import mayonez.assets.FilePath;
 import mayonez.assets.text.TextIOUtils;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
+import java.util.*;
 import java.util.regex.Pattern;
 
 import static org.lwjgl.opengl.GL20.*;
@@ -28,26 +23,39 @@ import static org.lwjgl.opengl.GL20.*;
 class ShaderStage extends Asset {
 
     /*
-     * Look for sequence "uniform <type> <name>;"
+     * Look for sequence "uniform <type> <name> ;"
+     * or "uniform <type> <name> [ n ] ;" or "uniform <type> [ n ] <name> ;"
      * May occur across multiple lines
-     * Need at least one whitespace character between each token
-     * Whitespace optional between last token and semicolon
+     * Need at least one whitespace character before <type> and <name>,
+     * Whitespace optional before [, n, ], and ;
      */
-    private static final Pattern UNIFORM_PATTERN =
-            Pattern.compile("uniform\\s+(\\w+)\\s+(\\w+)\\s*;", Pattern.MULTILINE);
+    private static final Pattern UNIFORM_PATTERN;
+
+    static {
+        var typeRegex = "uniform\\s+(\\w+)";
+        var arrayRegex = "\\s*\\[\\s*\\d+\\s*]";
+        var nameRegex = "\\s+(\\w+)";
+        var endRegex = "\\s*;";
+
+        var patterns = new String[]{
+                typeRegex + nameRegex + endRegex,
+                typeRegex + arrayRegex + nameRegex + endRegex,
+                typeRegex + nameRegex + arrayRegex + endRegex,
+        };
+        UNIFORM_PATTERN = Pattern.compile(String.join("|", patterns), Pattern.MULTILINE);
+    }
 
     private final ShaderType type; // Type of shader stage
     private String source; // GLSL source code
     private int shaderID; // ID of shader stage in OpenGL
-    private final List<String> uniforms;
-    // TODO parse uniforms
+    private final Set<String> uniforms;
 
     ShaderStage(String filename, ShaderType type) {
         super(filename);
         this.type = type;
         source = "";
         shaderID = GL_NONE;
-        uniforms = new ArrayList<>();
+        uniforms = new HashSet<>();
     }
 
     // Shader Methods
@@ -72,11 +80,23 @@ class ShaderStage extends Asset {
         // This may find matches inside comments but the location will simply be -1 later on
         var matcher = UNIFORM_PATTERN.matcher(source);
         while (matcher.find()) {
-            // Get the uniform name
-            // Group 0 is the entire pattern
-            // Group 1 is the uniform type
+            /*
+             * Get the uniform name
+             *
+             * Capturing groups are denoted with (<regex>)
+             * Group 0 is the entire pattern
+             * Group 1 is the uniform type
+             * Group 2 is the uniform name
+             *
+             * Specifying alternates with | creates more groups
+             * Non-matching alternates will have null groups
+             * So filter them out at the end
+             */
             uniforms.add(matcher.group(2));
+            uniforms.add(matcher.group(4));
+            uniforms.add(matcher.group(6));
         }
+        uniforms.removeIf(Objects::isNull);
     }
 
     /**
@@ -151,9 +171,9 @@ class ShaderStage extends Asset {
     /**
      * Get the names of the uniforms present in this shader.
      *
-     * @return the list of uniform names
+     * @return the set of uniform names
      */
-    List<String> getUniforms() {
+    Set<String> getUniforms() {
         return uniforms;
     }
 

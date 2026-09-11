@@ -40,20 +40,14 @@ class ShaderTest {
     }
 
     @Test
-    void readShaderWithMessyWhiteSpace() {
-        var shader = new Shader("testassets/shaders/test2.json");
-        shader.readShader();
-        var stages = shader.getStages();
-
-        // Check stages
-        assertNotNull(stages);
-        assertEquals(
-                List.of(ShaderType.VERTEX, ShaderType.FRAGMENT),
-                stages.stream().map(ShaderStage::getType).toList()
+    void parseUniformsOnly() {
+        var stage = new ShaderStage(
+                "testassets/shaders/parse_uniforms.glsl", ShaderType.FRAGMENT
         );
-
-        // Check uniforms
-        assertEquals(UNIFORMS, shader.getUniformLocations().keySet());
+        stage.readSource();
+        assertEquals(Set.of(
+                "uTexID", "uTextures1", "uTextures2", "_uTexID", "uTextures3", "uTextures4"
+        ), stage.getUniforms());
     }
 
 }
