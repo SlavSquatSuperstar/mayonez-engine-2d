@@ -1,7 +1,6 @@
 package mayonez.renderer.shader;
 
 import mayonez.application.*;
-import mayonez.util.*;
 
 import static org.lwjgl.opengl.GL20.GL_FRAGMENT_SHADER;
 import static org.lwjgl.opengl.GL20.GL_VERTEX_SHADER;
@@ -39,24 +38,6 @@ enum ShaderType {
     @Override
     public String toString() {
         return name;
-    }
-
-    // Static Methods
-
-    /**
-     * Returns the ShaderType constant matching the given name,
-     * case-insensitive.
-     *
-     * @param shaderName the name of the shader stage
-     * @return the shader type
-     * @throws ShaderException if the shader name is invalid
-     */
-    static ShaderType findWithName(String shaderName) {
-        var type = StringUtils.findWithName(values(), shaderName);
-        if (type == null) {
-            throw new ShaderException("Unexpected shader type \"$shaderName\"");
-        }
-        return type;
     }
 
 }

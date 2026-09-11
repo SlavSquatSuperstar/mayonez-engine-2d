@@ -40,8 +40,10 @@ public class Shader extends Asset {
 
     /**
      * Read the shader stages and parse the uniforms without compiling the source code.
+     *
+     * @throws ShaderException if any shaders are missing or could not be read
      */
-    void readShader() {
+    void readShader() throws ShaderException {
         Logger.debug("Reading shader definition %s", getFilename());
 
         // Read shaders and parse uniforms
@@ -49,23 +51,23 @@ public class Shader extends Asset {
         stages.clear();
         uniformLocations.clear();
 
-        // Read vertex shader
-        var vertexFilename = shaderDefinition.getString("vertex");
-        var vertexShader = new ShaderStage(vertexFilename, ShaderType.VERTEX);
-        stages.add(vertexShader);
+        var shaderTypes = ShaderType.values();
+        for (var type : shaderTypes) {
+            var filename = shaderDefinition.getString(type.name);
+            // Check if stage present
+            if (filename.isEmpty()) {
+                throw new ShaderException("%s is missing %s shader"
+                        .formatted(getFilename(), type.name));
+            }
 
-        // Read fragment shader
-        var fragmentFilename = shaderDefinition.getString("fragment");
-        var fragmentShader = new ShaderStage(fragmentFilename, ShaderType.FRAGMENT);
-        stages.add(fragmentShader);
-
-        stages.forEach(stage -> {
+            var stage = new ShaderStage(filename, type);
             stage.readSource();
             stage.getUniforms().forEach(
                     // Store locations as -1 for now
                     uniform -> uniformLocations.put(uniform, -1)
             );
-        });
+            stages.add(stage);
+        }
     }
 
     /**

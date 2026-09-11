@@ -14,17 +14,12 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class ShaderTest {
 
-    private static final Set<String> UNIFORMS = Set.of(
-            "uTransform", "uTransformMultiplier",
-            "uTexture", "uUseTexture"
-    );
-
     // TODO read bad JSON missing stage
     // TODO missing files
 
     @Test
-    void readShaderWithCleanWhiteSpace() {
-        var shader = new Shader("testassets/shaders/test1.json");
+    void readShaderWithBothStages() {
+        var shader = new Shader("testassets/shaders/test_all_stages.json");
         shader.readShader();
         var stages = shader.getStages();
 
@@ -36,7 +31,33 @@ class ShaderTest {
         );
 
         // Check uniforms
-        assertEquals(UNIFORMS, shader.getUniformLocations().keySet());
+        assertEquals(Set.of(
+                "uTransform", "uTransformMultiplier", "uTextures", "uTexID"
+        ), shader.getUniformLocations().keySet());
+    }
+
+    @Test
+    void readShaderWithNoVertex() {
+        var shader = new Shader("testassets/shaders/test_no_frag.json");
+        assertThrows(ShaderException.class, shader::readShader);
+    }
+
+    @Test
+    void readShaderWithNoFragment() {
+        var shader = new Shader("testassets/shaders/test_no_vert.json");
+        assertThrows(ShaderException.class, shader::readShader);
+    }
+
+    @Test
+    void readShaderWithNoStages() {
+        var shader = new Shader("testassets/shaders/test_no_stages.json");
+        assertThrows(ShaderException.class, shader::readShader);
+    }
+
+    @Test
+    void readShaderWithMissingFiles() {
+        var shader = new Shader("testassets/shaders/test_missing_files.json");
+        assertThrows(ShaderException.class, shader::readShader);
     }
 
     @Test
