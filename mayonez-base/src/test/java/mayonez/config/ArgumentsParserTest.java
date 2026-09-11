@@ -60,7 +60,7 @@ class ArgumentsParserTest {
         try {
             var cl = parser.parse(new String[]{});
             assertFalse(cl.hasOption("engine"));
-            assertEquals(ArgumentsParser.DEFAULT_BACKEND, parser.getBackend(cl));
+            assertEquals(Backend.DEFAULT, parser.getBackend(cl));
 
             var rec = parser.serialize(cl);
             assertEquals(new Record(), rec);

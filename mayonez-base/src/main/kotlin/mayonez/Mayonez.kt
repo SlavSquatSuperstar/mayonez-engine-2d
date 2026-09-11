@@ -53,7 +53,7 @@ object Mayonez {
 
     // Config Properties
 
-    private lateinit var backend: Backend
+    private var backend: Backend = Backend.DEFAULT
 
     /**
      * Whether to use LWJGL for creating the window and rendering instead of

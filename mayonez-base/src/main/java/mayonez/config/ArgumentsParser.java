@@ -11,8 +11,6 @@ import org.apache.commons.cli.*;
  */
 class ArgumentsParser {
 
-    final static Backend DEFAULT_BACKEND = Backend.GL;
-
     private final CommandLineParser parser;
     private final Options options;
 
@@ -52,7 +50,7 @@ class ArgumentsParser {
     Backend getBackend(CommandLine cl) {
         var engine = cl.getOptionValue("engine");
         if (engine == null) {
-            return DEFAULT_BACKEND;
+            return Backend.DEFAULT;
         } else if (engine.equals("gl")) {
             return Backend.GL;
         } else if (engine.equals("awt")) {

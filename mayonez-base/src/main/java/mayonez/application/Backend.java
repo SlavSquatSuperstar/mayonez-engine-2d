@@ -64,6 +64,8 @@ public enum Backend {
         }
     };
 
+    public static final Backend DEFAULT = Backend.GL;
+
     private final String name;
 
     Backend(String name) {
