@@ -7,6 +7,12 @@ import mayonez.assets.FilePath;
 import mayonez.assets.text.TextIOUtils;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static org.lwjgl.opengl.GL20.*;
 
@@ -21,30 +27,55 @@ import static org.lwjgl.opengl.GL20.*;
 @UsesBackend(Backend.GL)
 class ShaderStage extends Asset {
 
+    /*
+     * Look for sequence "uniform <type> <name>;"
+     * May occur across multiple lines
+     * Need at least one whitespace character between each token
+     * Whitespace optional between last token and semicolon
+     */
+    private static final Pattern UNIFORM_PATTERN =
+            Pattern.compile("uniform\\s+(\\w+)\\s+(\\w+)\\s*;", Pattern.MULTILINE);
+
     private final ShaderType type; // Type of shader stage
+    private String source; // GLSL source code
     private int shaderID; // ID of shader stage in OpenGL
+    private final List<String> uniforms;
     // TODO parse uniforms
 
     ShaderStage(String filename, ShaderType type) {
         super(filename);
         this.type = type;
+        source = "";
         shaderID = GL_NONE;
+        uniforms = new ArrayList<>();
     }
 
     // Shader Methods
 
     /**
-     * Read the source code from the .glsl file.
+     * Read the source code and parse the uniform names from the .glsl file.
      *
-     * @return the source code
      * @throws ShaderException if the file could not be read
      */
-    String readSource() throws ShaderException {
+    void readSource() throws ShaderException {
         try (var input = openInputStream()) {
-            return TextIOUtils.readText(input);
+            source = TextIOUtils.readText(input);
+            parseUniforms();
         } catch (IOException e) {
             throw new ShaderException("Could not read shader source: %s"
                     .formatted(getFilenameInQuotes()));
+        }
+    }
+
+    private void parseUniforms() {
+        uniforms.clear();
+        // This may find matches inside comments but the location will simply be -1 later on
+        var matcher = UNIFORM_PATTERN.matcher(source);
+        while (matcher.find()) {
+            // Get the uniform name
+            // Group 0 is the entire pattern
+            // Group 1 is the uniform type
+            uniforms.add(matcher.group(2));
         }
     }
 
@@ -55,7 +86,6 @@ class ShaderStage extends Asset {
      */
     void compileSource() {
         shaderID = glCreateShader(type.glShaderType);
-        var source = readSource();
         glShaderSource(shaderID, source);
         glCompileShader(shaderID);
 
@@ -93,13 +123,38 @@ class ShaderStage extends Asset {
     void delete() {
         // The shader must be detached first
         glDeleteShader(shaderID);
+        source = "";
         shaderID = GL_NONE;
+        uniforms.clear();
     }
+
+    // Asset Methods
+
+    @Override
+    public void free() {
+        // Automatically deleted after program linked
+        delete();
+    }
+
 
     // Getter Methods
 
+    /**
+     * Get the type of shader this stage represents.
+     *
+     * @return the shader type
+     */
     ShaderType getType() {
         return type;
+    }
+
+    /**
+     * Get the names of the uniforms present in this shader.
+     *
+     * @return the list of uniform names
+     */
+    List<String> getUniforms() {
+        return uniforms;
     }
 
 }

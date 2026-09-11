@@ -27,7 +27,9 @@ public final class Shaders {
     }
 
     private static Shader getShaderFromFile(String filename) {
-        return Objects.requireNonNull(Assets.getAsset(filename, Shader.class));
+        var shader = Objects.requireNonNull(Assets.getAsset(filename, Shader.class));
+        shader.createShader();
+        return shader;
     }
 
 }
