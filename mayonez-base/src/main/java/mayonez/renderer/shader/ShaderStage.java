@@ -83,20 +83,20 @@ class ShaderStage extends Asset {
             /*
              * Get the uniform name
              *
-             * Capturing groups are denoted with (<regex>)
+             * Capturing groups are denoted with ()
              * Group 0 is the entire pattern
              * Group 1 is the uniform type
              * Group 2 is the uniform name
              *
              * Specifying alternates with | creates more groups
              * Non-matching alternates will have null groups
-             * So filter them out at the end
+             * So add the first one that isn't null
              */
-            uniforms.add(matcher.group(2));
-            uniforms.add(matcher.group(4));
-            uniforms.add(matcher.group(6));
+            var uniformName = matcher.group(2);
+            if (uniformName == null) uniformName = matcher.group(4);
+            if (uniformName == null) uniformName = matcher.group(6);
+            uniforms.add(uniformName);
         }
-        uniforms.removeIf(Objects::isNull);
     }
 
     /**
