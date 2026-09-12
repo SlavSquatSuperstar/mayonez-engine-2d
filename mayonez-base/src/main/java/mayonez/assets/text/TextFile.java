@@ -41,7 +41,7 @@ public class TextFile extends Asset {
         try (var stream = openInputStream()) {
             return TextIOUtils.readText(stream);
         } catch (IOException e) {
-            Logger.error("Could not read file %s", getFilenameInQuotes());
+            Logger.error("Could not read file %s", getFilename());
             return "";
         }
     }
@@ -55,7 +55,7 @@ public class TextFile extends Asset {
         try (var stream = openInputStream()) {
             return TextIOUtils.readLines(stream);
         } catch (IOException e) {
-            Logger.error("Could not read file %s", getFilenameInQuotes());
+            Logger.error("Could not read file %s", getFilename());
             return new String[0];
         }
     }
@@ -87,7 +87,7 @@ public class TextFile extends Asset {
                 output = null;
             }
         } catch (IOException e) {
-            Logger.error("Could not save to file %s", getFilenameInQuotes());
+            Logger.error("Could not save to file %s", getFilename());
         }
     }
 

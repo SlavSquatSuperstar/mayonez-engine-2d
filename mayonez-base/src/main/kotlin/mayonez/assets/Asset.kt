@@ -47,15 +47,30 @@ open class Asset(private val filePath: FilePath) {
         return filePath.openOutputStream(append)
     }
 
-    /** Frees any resources used by this asset after use. */
+    /**
+     * Allocates any resources required by this asset after creation.
+     * Automatically called through [Assets.createAsset].
+     */
+    open fun init() {}
+
+    /**
+     * Frees any resources used by this asset after use. Automatically called
+     * through [Assets.clearAssets].
+     */
     open fun free() {}
 
-    // Helper Methods/Classes
+    // Object Overrides
 
-    protected fun getFilenameInQuotes(): String = "\"$filename\""
+    override fun equals(other: Any?): Boolean {
+        return other is Asset && other.filename == this.filename
+    }
+
+    override fun hashCode(): Int {
+        return filename.hashCode()
+    }
 
     override fun toString(): String {
-        return "${filePath.typeName} ${javaClass.simpleName} \"$filename\""
+        return "${filePath.typeName} ${javaClass.simpleName} $filename"
     }
 
 }

@@ -71,7 +71,7 @@ class ShaderStage extends Asset {
             parseUniforms();
         } catch (IOException e) {
             throw new ShaderException("Could not read shader stage %s"
-                    .formatted(getFilenameInQuotes()));
+                    .formatted(getFilename()));
         }
     }
 
