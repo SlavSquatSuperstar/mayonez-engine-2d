@@ -70,7 +70,7 @@ class ShaderStage extends Asset {
             source = TextIOUtils.readText(input);
             parseUniforms();
         } catch (IOException e) {
-            throw new ShaderException("Could not read shader source: %s"
+            throw new ShaderException("Could not read shader stage %s"
                     .formatted(getFilenameInQuotes()));
         }
     }
@@ -111,10 +111,13 @@ class ShaderStage extends Asset {
 
         // Check compiled correctly
         if (glGetShaderi(shaderID, GL_COMPILE_STATUS) == GL_TRUE) {
-            Logger.debug("OpenGL: Compiled %s shader %s", type.toString(), getFilename());
+            Logger.debug("Compiled %s shader stage %s", type.toString(), getFilename());
         } else {
-            Logger.error("OpenGL: Could not compile %s shader %s", type.toString(), getFilename());
-            Logger.error("OpenGL: " + glGetShaderInfoLog(shaderID));
+            Logger.error("Could not compile %s shader stage %s", type.toString(), getFilename());
+            if (glGetShaderi(shaderID, GL_INFO_LOG_LENGTH) > 0) {
+                // Don't print an empty log
+                Logger.error("OpenGL Log: " + glGetShaderInfoLog(shaderID));
+            }
             throw new ShaderException("Error compiling shader stage");
         }
     }

@@ -56,7 +56,7 @@ public class Shader extends Asset {
             var filename = shaderDefinition.getString(type.name);
             // Check if stage present
             if (filename.isEmpty()) {
-                throw new ShaderException("%s is missing %s shader"
+                throw new ShaderException("%s definition is missing %s shader"
                         .formatted(getFilename(), type.name));
             }
 
@@ -72,15 +72,16 @@ public class Shader extends Asset {
 
     /**
      * Compile the shader source code, link the program, and cache the uniform locations.
+     *
+     * @throws ShaderException if an error occurred during compilation and linking
      */
     void createShader() {
         readShader();
 
         // Check OpenGL initialized before compiling
         if (!GLHelper.isGLInitialized()) {
-            Logger.error("OpenGL capabilities are not initialized");
             programID = GL_NONE;
-            return;
+            throw new ShaderException("OpenGL capabilities are not initialized");
         }
 
         try {
@@ -96,10 +97,9 @@ public class Shader extends Asset {
                 int location = glGetUniformLocation(programID, uniform);
                 uniformLocations.put(uniform, location);
             });
-            Logger.log("Uniforms: " + uniformLocations);
         } catch (ShaderException e) {
-            Logger.printStackTrace(e);
             programID = GL_NONE;
+            throw e;
         } finally {
             // Clean up intermediate stages
             stages.forEach(stage -> {
@@ -117,12 +117,15 @@ public class Shader extends Asset {
 
         // Check linked correctly
         if (glGetProgrami(programID, GL_LINK_STATUS) == GL_TRUE) {
-            Logger.debug("OpenGL: Linked shader file %s", getFilenameInQuotes());
+            Logger.debug("Linked shader program %s", getFilename());
         } else {
-            Logger.error("OpenGL: Could not link shader file %s", getFilenameInQuotes());
-            Logger.error("OpenGL: " + glGetProgramInfoLog(programID));
-            Logger.error("Shaders must have least a vertex and fragment stage");
-            throw new ShaderException("Error linking shader file");
+            Logger.error("Could not link shader program %s", getFilename());
+            if (glGetProgrami(programID, GL_INFO_LOG_LENGTH) > 0) {
+                // Don't print an empty log
+                Logger.error("OpenGL Log: " + glGetProgramInfoLog(programID));
+            }
+            Logger.error("Shaders must have a vertex and fragment stage with a main function");
+            throw new ShaderException("Error linking shader program");
         }
     }
 
