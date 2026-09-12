@@ -128,6 +128,7 @@ object Assets {
     fun <T : Asset> createAsset(filename: String, assetClass: Class<T>): T? {
         val ctor = assetClass.getDeclaredConstructor(String::class.java)
         val asset = assetClass.cast(ctor.newInstance(filename)) ?: return null
+        asset.init()
         assets[filename] = asset
         Logger.debug("Loaded asset \"%s\" as %s", filename, assetClass.simpleName)
         return asset
@@ -146,7 +147,8 @@ object Assets {
 
     /**
      * Retrieves the [Asset] under the specified filename and re-instantiates
-     * it under the given Asset subclass.
+     * it under the given Asset subclass. If an asset already existed under
+     * a different subclass, it will be freed first.
      *
      * @param filename the asset location
      * @param cls the asset subclass
@@ -158,11 +160,15 @@ object Assets {
     fun <T : Asset> getAsset(filename: String, cls: Class<T>): T? {
         val asset = getAsset(filename) // check if asset exists and is same class
         val notInitialized = (asset == null || !cls.isInstance(asset))
-        return if (notInitialized) createAsset(filename, cls)
-        else asset as? T
+        if (notInitialized) {
+            asset?.free()
+            return createAsset(filename, cls)
+        } else {
+            return asset as? T
+        }
     }
 
-    /** Empties all Assets from the asset pool. */
+    /** Empties all Assets from the asset pool and frees them. */
     @JvmStatic
     fun clearAssets() {
         assets.values.forEach(Asset::free)

@@ -76,8 +76,6 @@ public class Shader extends Asset {
      * @throws ShaderException if an error occurred during compilation and linking
      */
     void createShader() {
-        readShader();
-
         // Check OpenGL initialized before compiling
         if (!GLHelper.isGLInitialized()) {
             programID = GL_NONE;
@@ -185,6 +183,18 @@ public class Shader extends Asset {
     }
 
     // Asset Methods
+
+    @Override
+    public void init() {
+        try {
+            readShader();
+            createShader();
+        } catch (ShaderException e) {
+            // Print an error but continue the program
+            // The renderer will simply use GL_NONE
+            Logger.printStackTrace(e);
+        }
+    }
 
     @Override
     public void free() {

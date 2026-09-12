@@ -1,6 +1,5 @@
 package mayonez.renderer.shader;
 
-import mayonez.Logger;
 import mayonez.application.*;
 import mayonez.assets.*;
 
@@ -28,14 +27,7 @@ public final class Shaders {
     }
 
     private static Shader getShaderFromFile(String filename) {
-        var shader = Objects.requireNonNull(Assets.getAsset(filename, Shader.class));
-        try {
-            shader.createShader();
-        } catch (ShaderException e) {
-            // Just move on for now
-            Logger.printStackTrace(e);
-        }
-        return shader;
+        return Objects.requireNonNull(Assets.getAsset(filename, Shader.class));
     }
 
 }
