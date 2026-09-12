@@ -12,7 +12,6 @@ import java.io.OutputStream
  *
  * @author SlavSquatSuperstar
  */
-// TODO hold streams, close on free
 open class Asset(private val filePath: FilePath) {
 
     constructor(filename: String) : this(FilePath.fromFilename(filename))

@@ -7,29 +7,18 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 /**
- * A plain-text file (usually .txt) that can be read from and written to.
+ * A plain-text file (usually .txt) that can be read from and written to. This
+ * class automatically closes its I/O streams after each operation. To manage
+ * streams automatically, see the {@link TextIOUtils} class.
  *
  * @author SlavSquatSuperstar
  */
 public class TextFile extends Asset {
 
     private OutputStream output;
-    private boolean autoClose;
 
     public TextFile(String filename) {
         super(filename);
-        autoClose = true;
-    }
-
-    /**
-     * Sets whether this output streams should be closed after every write, true by
-     * default. If false, the stream will be kept open for future write until the
-     * file closes.
-     *
-     * @param autoClose whether to close the output stream
-     */
-    public void setAutoClose(boolean autoClose) {
-        this.autoClose = autoClose;
     }
 
     /**
@@ -82,22 +71,8 @@ public class TextFile extends Asset {
         try {
             if (output == null) output = openOutputStream(append);
             TextIOUtils.write(output, text);
-            if (autoClose) {
-                output.close();
-                output = null;
-            }
         } catch (IOException e) {
             Logger.error("Could not save to file %s", getFilename());
-        }
-    }
-
-    @Override
-    public void free() {
-        if (!autoClose && output != null) {
-            try {
-                output.close();
-            } catch (IOException ignored) {
-            }
         }
     }
 
