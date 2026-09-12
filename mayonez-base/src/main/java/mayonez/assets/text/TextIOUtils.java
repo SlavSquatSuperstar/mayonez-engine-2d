@@ -4,7 +4,9 @@ import java.io.*;
 import java.util.*;
 
 /**
- * Reads and writes strings or lines from plain text files.
+ * Reads and writes plain text to and from {@link InputStream}s and
+ * {@link OutputStream}s. This class does not automatically close streams after
+ * I/O operations, so it the user's responsibility to do so.
  *
  * @author SlavSquatSuperstar
  */
@@ -22,7 +24,7 @@ public final class TextIOUtils {
 
     /**
      * Create a {@link BufferedReader} that will read text from the given
-     * input stream.
+     * {@link InputStream}.
      *
      * @param input the input stream
      * @return the buffered reader
@@ -33,7 +35,7 @@ public final class TextIOUtils {
 
     /**
      * Create a {@link BufferedWriter} that will write or append text to the
-     * given input stream.
+     * given {@link OutputStream}.
      *
      * @param output the output stream
      * @return the buffered writer
@@ -45,11 +47,12 @@ public final class TextIOUtils {
     // Read/Write Text Methods
 
     /**
-     * Reads text from a stream as a single string.
+     * Reads text from an {@link InputStream} as a single string. The stream
+     * remains open after the operation.
      *
      * @param input the input stream
      * @return the text as a string
-     * @throws java.io.IOException if the file cannot be read
+     * @throws java.io.IOException if the stream cannot be read from.
      */
     public static String readText(InputStream input) throws IOException {
         StringBuilder contents = new StringBuilder();
@@ -61,12 +64,13 @@ public final class TextIOUtils {
     }
 
     /**
-     * Reads text from a stream as a list of strings. The line separators
-     * are removed after every line.
+     * Reads text from an {@link InputStream} as an array of strings. The line
+     * separators are removed after each line, and the stream remains open
+     * after the operation
      *
      * @param input the input stream
      * @return the text as lines
-     * @throws java.io.IOException if the file cannot be read
+     * @throws java.io.IOException if the stream cannot be read from
      */
     public static String[] readLines(InputStream input) throws IOException {
         return read(input).toArray(new String[0]);
@@ -74,7 +78,7 @@ public final class TextIOUtils {
 
     private static List<String> read(InputStream input) throws IOException {
         if (input == null) {
-            throw new IOException("File does not exist or is not readable");
+            throw new IOException("Input stream is null");
         }
         try {
             var reader = getReader(input);
@@ -88,21 +92,22 @@ public final class TextIOUtils {
             // Keep stream open
             return lines;
         } catch (IOException e) {
-            throw new IOException("Error while reading file");
+            throw new IOException("Error while reading from stream");
         }
     }
 
     /**
-     * Writes or appends any number of lines of text to a stream. A new line
-     * character is inserted after every line.
+     * Writes or appends any number of lines of text to an
+     * {@link OutputStream}. A new line character is inserted after every line,
+     * and the stream remains open after the operation.
      *
      * @param output the output stream
      * @param lines  the lines of text
-     * @throws java.io.FileNotFoundException if the file cannot be written to
+     * @throws java.io.FileNotFoundException if the stream cannot be written to
      */
     public static void write(OutputStream output, String... lines) throws IOException {
         if (output == null) {
-            throw new IOException("File is not writable");
+            throw new IOException("Output stream is null");
         } else if (lines == null) {
             return;
         }
@@ -115,7 +120,7 @@ public final class TextIOUtils {
             }
             writer.flush();
         } catch (IOException e) {
-            throw new IOException("Error while writing to file");
+            throw new IOException("Error while writing to stream");
         }
     }
 
