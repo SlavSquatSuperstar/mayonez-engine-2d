@@ -29,6 +29,10 @@ class ExternalFilePath(filename: String) : FilePath(PathUtil.convertPath(filenam
         return file.parentFile.isDirectory && !file.isDirectory
     }
 
+    override fun isDirectory(): Boolean = file.isDirectory
+
+    override fun isFile(): Boolean = file.isFile
+
     // File Methods
 
     override fun createFile(): Boolean {

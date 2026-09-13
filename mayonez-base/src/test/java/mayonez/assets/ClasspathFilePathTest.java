@@ -76,11 +76,17 @@ class ClasspathFilePathTest {
 
     @Test
     void deleteClasspathPathFails() {
-        var filePath = new ClasspathFilePath("testassets/out");
-        assertTrue(filePath.exists());
+        var filePath1 = new ClasspathFilePath("testassets/text/");
+        assertTrue(filePath1.isDirectory());
 
-        assertFalse(filePath.delete());
-        assertTrue(filePath.exists());
+        assertFalse(filePath1.delete());
+        assertTrue(filePath1.exists());
+
+        var filePath2 = new ClasspathFilePath("testassets/text/foo.txt");
+        assertFalse(filePath2.isDirectory());
+
+        assertFalse(filePath2.delete());
+        assertTrue(filePath2.exists());
     }
 
     // File Stream Tests

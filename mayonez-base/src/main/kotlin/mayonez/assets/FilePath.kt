@@ -56,6 +56,20 @@ abstract class FilePath(
      */
     abstract fun isWritable(): Boolean
 
+    /**
+     * Whether this exists a directory at this path.
+     *
+     * @return if this path represents a directory
+     */
+    abstract fun isDirectory(): Boolean
+
+    /**
+     * Whether this exists a normal file at this path.
+     *
+     * @return if this path represents a file
+     */
+    abstract fun isFile(): Boolean
+
     protected fun assertReadable() {
         if (!isReadable()) throw IOException("$this is not readable")
     }
