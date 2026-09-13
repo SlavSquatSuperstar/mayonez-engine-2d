@@ -59,6 +59,64 @@ class ExternalFilePathTest {
         assertFalse(folderPath.isWritable());
     }
 
+    // File System Tests
+
+    @Test
+    void createAndDeleteNewFileSuccess() {
+        var filePath = new ExternalFilePath("src/test/resources/testassets/out/test_file");
+        assertFalse(filePath.exists());
+
+        assertTrue(filePath.createFile());
+        assertTrue(filePath.exists());
+
+        assertTrue(filePath.delete());
+        assertFalse(filePath.exists());
+    }
+
+    @Test
+    void createAndDeleteNewDirectorySuccess() {
+        var filePath = new ExternalFilePath("src/test/resources/testassets/out/test_directory");
+        assertFalse(filePath.exists());
+
+        assertTrue(filePath.createDirectory());
+        assertTrue(filePath.exists());
+
+        assertTrue(filePath.delete());
+        assertFalse(filePath.exists());
+    }
+
+    @Test
+    void createExistingPathFails() {
+        var filePath1 = new ExternalFilePath("src/test/resources/testassets/out");
+        assertTrue(filePath1.exists());
+
+        assertFalse(filePath1.createDirectory());
+        assertFalse(filePath1.createFile());
+
+        var filePath2 = new ExternalFilePath("src/test/resources/testassets/out/.gitignore");
+        assertTrue(filePath2.exists());
+
+        assertFalse(filePath2.createDirectory());
+        assertFalse(filePath2.createFile());
+    }
+
+    @Test
+    void createPathWithNoParentFails() {
+        var filePath = new ExternalFilePath("src/test/resources/testassets/out/foo/bar");
+        assertFalse(filePath.exists());
+
+        assertFalse(filePath.createFile());
+        assertFalse(filePath.createDirectory());
+    }
+
+    @Test
+    void deleteNonExistingPathFails() {
+        var filePath = new ExternalFilePath("src/test/resources/testassets/out/test_directory");
+        assertFalse(filePath.exists());
+
+        assertFalse(filePath.delete());
+    }
+
     // File Stream Tests
 
     @Test
@@ -79,9 +137,8 @@ class ExternalFilePathTest {
     @Test
     void invalidOutputStreamWithDirSucceeds() {
         assertDoesNotThrow(() -> IOTestUtils.assertOutputStreamExists(filePathInvalid));
-        // Delete created file so tests pass
-        var file = filePathInvalid.getFile();
-        file.delete();
+        // Delete created file so other tests pass
+        filePathInvalid.delete();
     }
 
     @Test

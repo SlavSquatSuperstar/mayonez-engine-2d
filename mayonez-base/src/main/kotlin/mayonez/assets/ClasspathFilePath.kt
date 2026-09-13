@@ -26,6 +26,14 @@ class ClasspathFilePath(filename: String) :
 
     override fun isWritable(): Boolean = false
 
+    // File Methods
+
+    override fun createFile(): Boolean = false
+
+    override fun createDirectory(): Boolean = false
+
+    override fun delete(): Boolean = false
+
     // Stream Methods
 
     @Throws(IOException::class)

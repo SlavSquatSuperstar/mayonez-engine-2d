@@ -64,6 +64,32 @@ abstract class FilePath(
         if (!isWritable()) throw IOException("$this is not writable")
     }
 
+    // File Methods
+
+    /**
+     * Create an empty normal file at this path if the path is writable, no
+     * file exists, and the parent directory exists.
+     *
+     * @return if the file was created
+     */
+    abstract fun createFile(): Boolean
+
+    /**
+     * Create an empty directory at this path if the path is writable, no
+     * file exists, and the parent directory exists.
+     *
+     * @return if the directory was created
+     */
+    abstract fun createDirectory(): Boolean
+
+    /**
+     * Delete a normal file or empty directory this path if the path is
+     * writable and a file exists.
+     *
+     * @return if the file or directory was deleted
+     */
+    abstract fun delete(): Boolean
+
     // Stream Methods
 
     /**
