@@ -38,7 +38,7 @@ class ExternalFilePathTest {
     // Path Status Tests
 
     @Test
-    void validExternalPathIsReadableAndWritable() {
+    void validExternalFileIsReadableAndWritable() {
         assertTrue(filePathValid.exists());
         assertTrue(filePathValid.isReadable());
         assertTrue(filePathValid.isWritable());
@@ -52,9 +52,10 @@ class ExternalFilePathTest {
     }
 
     @Test
-    void anyFolderNotReadableOrWritable() {
+    void externalDirectoryNeverReadableOrWritable() {
         var folderPath = new ExternalFilePath("src/test/resources/testassets/");
         assertTrue(folderPath.exists());
+        assertTrue(folderPath.isDirectory());
         assertFalse(folderPath.isReadable());
         assertFalse(folderPath.isWritable());
     }
@@ -67,7 +68,7 @@ class ExternalFilePathTest {
         assertFalse(filePath.exists());
 
         assertTrue(filePath.createFile());
-        assertTrue(filePath.exists());
+        assertTrue(filePath.isFile());
 
         assertTrue(filePath.delete());
         assertFalse(filePath.exists());
@@ -79,7 +80,7 @@ class ExternalFilePathTest {
         assertFalse(filePath.exists());
 
         assertTrue(filePath.createDirectory());
-        assertTrue(filePath.exists());
+        assertTrue(filePath.isDirectory());
 
         assertTrue(filePath.delete());
         assertFalse(filePath.exists());
@@ -87,14 +88,14 @@ class ExternalFilePathTest {
 
     @Test
     void createExistingPathFails() {
-        var filePath1 = new ExternalFilePath("src/test/resources/testassets/out");
-        assertTrue(filePath1.exists());
+        var filePath1 = new ExternalFilePath("src/test/resources/testassets/text/");
+        assertTrue(filePath1.isDirectory());
 
         assertFalse(filePath1.createDirectory());
         assertFalse(filePath1.createFile());
 
-        var filePath2 = new ExternalFilePath("src/test/resources/testassets/out/.gitignore");
-        assertTrue(filePath2.exists());
+        var filePath2 = new ExternalFilePath("src/test/resources/testassets/text/foo.txt");
+        assertTrue(filePath2.isFile());
 
         assertFalse(filePath2.createDirectory());
         assertFalse(filePath2.createFile());

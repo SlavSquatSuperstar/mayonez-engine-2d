@@ -5,6 +5,7 @@ import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
 import java.net.URL
+import java.util.jar.JarFile
 
 /**
  * A system resource inside the .jar that is read-only. Classpath filenames
@@ -18,6 +19,9 @@ class ClasspathFilePath(filename: String) :
     // URL non-null iff resource exists
     private val url: URL? = ClassLoader.getSystemResource(filename)
 
+    // Path is local if protocol is not inside jar
+    private val isLocal: Boolean = url?.protocol == "file"
+
     // Path Methods
 
     override fun exists(): Boolean = url != null
@@ -25,6 +29,27 @@ class ClasspathFilePath(filename: String) :
     override fun isReadable(): Boolean = url != null
 
     override fun isWritable(): Boolean = false
+
+    override fun isDirectory(): Boolean {
+        return url != null &&
+                if (isLocal) getFile().isDirectory
+                else getJarFile()!!.getJarEntry(filename)!!.isDirectory
+    }
+
+    override fun isFile(): Boolean {
+        return url != null &&
+                if (isLocal) getFile().isFile
+                else !getJarFile()!!.getJarEntry(filename)!!.isDirectory
+    }
+
+    private fun getJarFile(): JarFile? {
+        // Get the parent jar file
+        val path = url?.path ?: return null // file:/path/to/jar!/name
+        val jarName = path.substring(
+            path.indexOf(":") + 1, path.indexOf("!/")
+        ) // /path/to/jar
+        return JarFile(jarName)
+    }
 
     // File Methods
 
@@ -48,7 +73,10 @@ class ClasspathFilePath(filename: String) :
         throw IOException("Classpath resources are read-only")
     }
 
-    override fun getFile(): File = File(filename)
+    override fun getFile(): File {
+        return if (isLocal) File(url!!.path) // Absolute path
+        else File(filename) // Meaningless
+    }
 
     override fun getURL(): URL? = url
 
