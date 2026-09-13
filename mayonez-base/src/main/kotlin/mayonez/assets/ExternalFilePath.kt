@@ -4,36 +4,44 @@ import java.io.*
 import java.net.MalformedURLException
 import java.net.URL
 import java.nio.file.Files
-import java.nio.file.Paths
 import java.nio.file.StandardOpenOption
 
 /**
- * A file outside the JAR and in the local device that is readable and
+ * A file outside the .jar and in the local file system that is readable and
  * writable. External filenames use the file separators of their parent
  * operating system.
  *
  * @author SlavSquatSuperstar
  */
-class ExternalFilePath(filename: String) : FilePath(filename.toExternal()) {
+class ExternalFilePath(filename: String) : FilePath(PathUtil.convertPath(filename)) {
 
-    override fun exists(): Boolean = getFile().exists()
+    // File exists iff path exists
+    private val file: File = File(filename)
 
-    override fun isReadable(): Boolean = getFile().isFile
+    // Path Methods
+
+    override fun exists(): Boolean = file.exists()
+
+    override fun isReadable(): Boolean = file.isFile
 
     override fun isWritable(): Boolean {
-        val file = getFile() // Check that parent folder exists
+        // Check that parent folder exists
         return file.parentFile.isDirectory && !file.isDirectory
     }
 
+    // Stream Methods
+
+    @Throws(IOException::class)
     override fun openInputStream(): InputStream {
         assertReadable()
         try {
-            return Files.newInputStream(Paths.get(filename))
+            return Files.newInputStream(file.toPath())
         } catch (_: Exception) {
             throw IOException("Could not open input stream for $this")
         }
     }
 
+    @Throws(IOException::class)
     override fun openOutputStream(append: Boolean): OutputStream {
         assertWritable()
         val options = if (append) {
@@ -42,25 +50,23 @@ class ExternalFilePath(filename: String) : FilePath(filename.toExternal()) {
             arrayOf(StandardOpenOption.CREATE)
         }
         try {
-            return Files.newOutputStream(Paths.get(filename), *options)
+            return Files.newOutputStream(file.toPath(), *options)
         } catch (_: Exception) {
             throw IOException("Could not open output stream for $this")
         }
     }
 
+    override fun getFile(): File = file
+
     override fun getURL(): URL? {
         return try {
-            File(filename).toURI().toURL()
+            file.toURI().toURL()
         } catch (_: MalformedURLException) {
-            null
+            null // Should not occur
         }
     }
 
     override val typeName: String
         get() = "External"
 
-}
-
-private fun String.toExternal(): String {
-    return PathUtil.convertPath(this)
 }

@@ -2,15 +2,18 @@ package mayonez.assets
 
 import java.io.*
 import java.net.URL
+import java.util.Objects
 
 /**
- * Represents the location of an [mayonez.assets.Asset] on the computer's
- * file system and describes its read and write permissions.
+ * Represents the location of a resource on the computer's file system or
+ * inside the current .jar file and facilitates read and write operations.
  *
  * @author SlavSquatSuperstar
  */
-// TODO runtime
-abstract class FilePath(val filename: String) {
+abstract class FilePath(
+    /** The string representation of this path. */
+    val filename: String
+) {
 
     companion object {
         /**
@@ -18,7 +21,7 @@ abstract class FilePath(val filename: String) {
          * Returns a classpath resource if one exists at this path, or otherwise
          * defaults to an external file.
          *
-         * @param filename the asset filename
+         * @param filename the path filename
          */
         @JvmStatic
         fun fromFilename(filename: String): FilePath {
@@ -28,69 +31,30 @@ abstract class FilePath(val filename: String) {
         }
     }
 
-    // File Status Methods
+    // Path Methods
 
     /**
-     * Whether a file or directory that currently exists at this path.
+     * Whether there currently exists a file or directory at this path.
      *
-     * @return if this path leads to a valid file
+     * @return if this path is valid
      */
     abstract fun exists(): Boolean
 
     /**
-     * Whether there is a file at this path  can be read from.
+     * Whether there exists a normal file at this path that can be read from,
+     * assuming file system permissions allow.
      *
      * @return if this path has a readable file
      */
     abstract fun isReadable(): Boolean
 
-    // Stream Methods
-
     /**
-     * Whether there is a file at this path that can be written to.
+     * Whether there exists a normal file at this path that can be written to,
+     * assuming file system permissions allow.
      *
      * @return if this path has a writable file
      */
     abstract fun isWritable(): Boolean
-
-    /**
-     * Creates an [InputStream] that allows data to be read from the given
-     * file. The input stream should be closed after use.
-     *
-     * @return the input stream
-     * @throws IOException if the file cannot be read from
-     */
-    @Throws(IOException::class)
-    abstract fun openInputStream(): InputStream
-
-    /**
-     * Creates an [OutputStream] that allows data to be saved to the given
-     * file. If the file does not yet exist, then a new file is created. The
-     * output stream should be closed after use.
-     *
-     * @param append whether to add data to an existing file's contents instead
-     *     of overwriting it
-     * @return the output stream
-     * @throws IOException if the file cannot be written to
-     */
-    @Throws(IOException::class)
-    abstract fun openOutputStream(append: Boolean): OutputStream
-
-    // Helper Methods
-
-    /**
-     * Gets the URL represented by this path, if it exists.
-     *
-     * @return the path's URL
-     */
-    abstract fun getURL(): URL?
-
-    /**
-     * Gets the file represented by this path.
-     *
-     * @return the file
-     */
-    fun getFile(): File = File(filename)
 
     protected fun assertReadable() {
         if (!isReadable()) throw IOException("$this is not readable")
@@ -100,8 +64,60 @@ abstract class FilePath(val filename: String) {
         if (!isWritable()) throw IOException("$this is not writable")
     }
 
+    // Stream Methods
+
+    /**
+     * Open an [InputStream] that allows data to be read from the file at this
+     * path. The input stream should be closed after use.
+     *
+     * @return the input stream
+     * @throws IOException if the file cannot be read from
+     */
+    @Throws(IOException::class)
+    abstract fun openInputStream(): InputStream
+
+    /**
+     * Open an [OutputStream] that allows data to be saved to the file at this
+     * path. If the file does not exist, then it will be created. The output
+     * stream should be closed after use.
+     *
+     * @param append whether to add data to an existing file's contents instead
+     *     of overwriting it
+     * @return the output stream
+     * @throws IOException if the file cannot be written to
+     */
+    @Throws(IOException::class)
+    abstract fun openOutputStream(append: Boolean): OutputStream
+
+    // Conversion Methods
+
+    /**
+     * Get the file represented by this path, which may or may not exist.
+     *
+     * @return the file
+     */
+    abstract fun getFile(): File
+
+    /**
+     * Get the URL represented by this path, which is non-null if the path
+     * exists.
+     *
+     * @return the path's URL, or null
+     */
+    abstract fun getURL(): URL?
+
     internal abstract val typeName: String
 
-    override fun toString(): String = "${javaClass.simpleName} \"$filename\""
+    // Object Overrides
+
+    override fun equals(other: Any?): Boolean {
+        return other is FilePath && other.filename == this.filename
+    }
+
+    override fun hashCode(): Int {
+        return Objects.hash(filename, typeName)
+    }
+
+    override fun toString(): String = "${javaClass.simpleName} $filename"
 
 }

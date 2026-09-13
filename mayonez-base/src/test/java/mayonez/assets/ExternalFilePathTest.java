@@ -16,15 +16,26 @@ class ExternalFilePathTest {
     private final FilePath filePathValid = new ExternalFilePath("src/test/resources/testassets/text/foo.txt");
     private final FilePath filePathInvalid = new ExternalFilePath("src/test/resources/testassets/text/bar.txt");
 
-    // File URL Tests
+    // Path Name Tests
 
     @Test
-    void anyExternalURLNotNull() {
+    void externalFilenameContainsSystemSeparators() {
+        var unixFilePath = new ClasspathFilePath("src/test/resources/testassets/text/foo.txt");
+        assertTrue(unixFilePath.getFilename().contains(PathUtil.CURRENT_SEPARATOR));
+
+        var windowsFilePath = new ClasspathFilePath("src\\test\\resources\\testassets\\text\\foo.txt");
+        assertTrue(windowsFilePath.getFilename().contains(PathUtil.CURRENT_SEPARATOR));
+    }
+
+    // Path URL Tests
+
+    @Test
+    void allExternalURLNotNull() {
         assertNotNull(filePathValid.getURL());
         assertNotNull(filePathInvalid.getURL());
     }
 
-    // File Permission Tests
+    // Path Status Tests
 
     @Test
     void validExternalPathIsReadableAndWritable() {
