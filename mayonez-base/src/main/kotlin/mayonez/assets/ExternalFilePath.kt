@@ -29,6 +29,32 @@ class ExternalFilePath(filename: String) : FilePath(PathUtil.convertPath(filenam
         return file.parentFile.isDirectory && !file.isDirectory
     }
 
+    // File Methods
+
+    override fun createFile(): Boolean {
+        return try {
+            file.createNewFile()
+        } catch (_: Exception) {
+            false
+        }
+    }
+
+    override fun createDirectory(): Boolean {
+        return try {
+            file.mkdir()
+        } catch (_: Exception) {
+            false
+        }
+    }
+
+    override fun delete(): Boolean {
+        return try {
+            file.delete()
+        } catch (_: Exception) {
+            false
+        }
+    }
+
     // Stream Methods
 
     @Throws(IOException::class)

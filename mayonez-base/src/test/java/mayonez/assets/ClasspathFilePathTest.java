@@ -54,6 +54,35 @@ class ClasspathFilePathTest {
         assertFalse(filePathInvalid.isWritable());
     }
 
+    // File System Tests
+
+    @Test
+    void createClasspathFileFails() {
+        var filePath = new ClasspathFilePath("testassets/out/test_file");
+        assertFalse(filePath.exists());
+
+        assertFalse(filePath.createFile());
+        assertFalse(filePath.exists());
+    }
+
+    @Test
+    void createClasspathDirectoryFails() {
+        var filePath = new ClasspathFilePath("testassets/out/test_directory");
+        assertFalse(filePath.exists());
+
+        assertFalse(filePath.createDirectory());
+        assertFalse(filePath.exists());
+    }
+
+    @Test
+    void deleteClasspathPathFails() {
+        var filePath = new ClasspathFilePath("testassets/out");
+        assertTrue(filePath.exists());
+
+        assertFalse(filePath.delete());
+        assertTrue(filePath.exists());
+    }
+
     // File Stream Tests
 
     @Test
