@@ -5,22 +5,22 @@ import mayonez.assets.scanner.ClasspathFolderScanner
 import mayonez.assets.scanner.ExternalFolderScanner
 
 /**
- * Manages the application's resources and allows users to create and
- * retrieve new [Asset] files.
+ * Manages the application's resources and allows users to create and retrieve
+ * new [Asset] files.
  *
- * Usage: Upon startup, the program automatically scans the `assets/`
- * folder under `src/main/resources` or inside the .jar and adds all
- * files to the asset pool. The user can scan any classpath folders using
- * [Assets.scanFiles] or external folders using [Assets.scanResources].
- * All resource paths start inside the jar, while all external paths
- * are relative the folder containing the jar. To create an individual
- * asset, the user may call [Assets.createAsset], and the asset system
- * will first search for a classpath resource, and then an external file.
+ * Usage: Upon startup, the program automatically scans the `assets/` folder
+ * under `src/main/resources` or inside the .jar and adds all files to the
+ * asset pool. The user can scan any classpath or external folders using
+ * [Assets.scanDirectory]. All resource paths start inside the jar, while all
+ * external paths are relative the folder containing the jar. To create an
+ * individual asset, the user may call [Assets.createAsset], and the asset
+ * system will first search for a classpath resource, and then an external
+ * file.
  *
- * To retrieve a created asset, call [Assets.getAsset]. The user may
- * optionally supply a subclass of [Asset] with [Assets.getAsset], which
- * will initialize that asset as an instance of that class. For example,
- * calling `Assets.getAsset("info.txt", TextFile.class)` will return a
+ * To retrieve a created asset, call [Assets.getAsset]. The user may optionally
+ * supply a subclass of [Asset] with [Assets.getAsset], which will initialize
+ * that asset as an instance of that class. For example, calling
+ * `Assets.getAsset("info.txt", TextFile.class)` will return a
  * [mayonez.assets.text.TextFile] with the name `info.txt`.
  *
  * See [Asset] for more details.
@@ -53,7 +53,7 @@ object Assets {
     fun loadResources() {
         if (!loadedResources) {
             Logger.debug("Loading program assets...")
-            scanResources(ASSETS_ROOT_DIR)
+            scanDirectory(ASSETS_ROOT_DIR)
             loadedResources = true
         }
     }
@@ -61,29 +61,24 @@ object Assets {
     // Search Folder Methods
 
     /**
-     * Recursively adds all the resources inside a jar directory to the asset
-     * system.
+     * Recursively adds all the resources inside a jar file or local directory
+     * to the asset pool.
      *
-     * @param directory a folder inside the jar
+     * @param directory a path to a folder
      */
     @JvmStatic
-    fun scanResources(directory: String) {
-        val resources = ClasspathFolderScanner().getFiles(directory)
+    fun scanDirectory(directory: String) {
+        val path = FilePath.fromFilename(directory)
+        val resources =
+            when (path) {
+                is ClasspathFilePath ->
+                    ClasspathFolderScanner().getFiles(directory)
+                is ExternalFilePath ->
+                    ExternalFolderScanner().getFiles(directory)
+                else -> return
+            }
         resources.forEach { createAsset(it) } // Create an asset from each path
-        Logger.debug("Loaded ${resources.size} resources inside \"$directory\"")
-    }
-
-    /**
-     * Recursively adds all the files inside a local folder to the asset
-     * system.
-     *
-     * @param directory a folder outside the jar
-     */
-    @JvmStatic
-    fun scanFiles(directory: String) {
-        val files = ExternalFolderScanner().getFiles(directory)
-        files.forEach { createAsset(it) }
-        Logger.debug("Loaded ${files.size} files inside \"$directory\"")
+        Logger.debug("Scanned ${resources.size} resources inside \"$directory\"")
     }
 
     // Asset Methods
