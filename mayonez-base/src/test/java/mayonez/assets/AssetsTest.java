@@ -13,7 +13,7 @@ class AssetsTest {
 
     private void reloadAssets() {
         Assets.clearAssets();
-        Assets.scanResources("testassets/");
+        Assets.scanDirectory("testassets/");
     }
 
     @Test
@@ -38,7 +38,7 @@ class AssetsTest {
 
     @Test
     void scanExternalFolderAddsToStorage() {
-        Assets.scanFiles("src/test/resources/testassets");
+        Assets.scanDirectory("src/test/resources/testassets");
         assertTrue(Assets.hasAsset("src/test/resources/testassets/images/mario.png"));
         assertFalse(Assets.hasAsset("src/test/resources/testassets/images/luigi.png"));
         assertFalse(Assets.hasAsset("mario.png"));
