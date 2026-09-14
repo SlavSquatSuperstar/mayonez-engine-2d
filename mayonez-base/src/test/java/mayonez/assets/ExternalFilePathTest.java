@@ -3,6 +3,7 @@ package mayonez.assets;
 import org.junit.jupiter.api.*;
 
 import java.io.IOException;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -59,11 +60,11 @@ class ExternalFilePathTest {
 
     @Test
     void externalDirectoryNeverReadableOrWritable() {
-        var folderPath = new ExternalFilePath("src/test/resources/testassets/");
-        assertTrue(folderPath.exists());
-        assertTrue(folderPath.isDirectory());
-        assertFalse(folderPath.isReadable());
-        assertFalse(folderPath.isWritable());
+        var directoryPath = new ExternalFilePath("src/test/resources/testassets/");
+        assertTrue(directoryPath.exists());
+        assertTrue(directoryPath.isDirectory());
+        assertFalse(directoryPath.isReadable());
+        assertFalse(directoryPath.isWritable());
     }
 
     // File System Tests
@@ -152,6 +153,39 @@ class ExternalFilePathTest {
     void invalidOutputStreamWithoutDirFails() {
         var filePathInvalid2 = new ExternalFilePath("src/test/resources/testassets/text/baz/bar.txt");
         assertThrows(IOException.class, () -> IOTestUtils.assertOutputStreamExists(filePathInvalid2));
+    }
+
+    // File Scanner Methods
+
+    @Test
+    void scanValidDirectoryIsNotEmpty() {
+        var files = scanFiles("src/test/resources/testassets");
+        assertFalse(files.isEmpty());
+        assertTrue(directoryContainsFile(files, "src/test/resources/testassets/text/foo.txt"));
+        assertTrue(directoryContainsFile(files, "src/test/resources/testassets/images/mario.png"));
+        assertFalse(directoryContainsFile(files, "src/test/resources/testassets/"));
+        assertFalse(directoryContainsFile(files, "src/test/resources/.DS_Store"));
+        assertFalse(directoryContainsFile(files, "src/test/java/mayonez/assets/ExternalFilePathTest.class"));
+    }
+
+    @Test
+    void scanInvalidDirectoryIsEmpty() {
+        assertTrue(scanFiles("src/test/resources/testasset").isEmpty());
+    }
+
+    @Test
+    void scanFileIsEmpty() {
+        assertTrue(scanFiles("src/test/resources/testassets/images/mario.png").isEmpty());
+    }
+
+    // Helper Methods
+
+    private static List<FilePath> scanFiles(String directoryPath) {
+        return new ExternalFilePath(directoryPath).scanFiles();
+    }
+
+    private static boolean directoryContainsFile(List<FilePath> files, String filename) {
+        return files.contains(new ExternalFilePath(filename));
     }
 
 }

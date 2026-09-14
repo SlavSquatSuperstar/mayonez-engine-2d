@@ -37,4 +37,16 @@ class JarClasspathFilePath(filename: String) : ClasspathFilePath(filename) {
 
     override fun getFile(): File? = null
 
+    // Scanner Methods
+
+    override fun scanFiles(): List<FilePath> {
+        if (!isDirectory()) return emptyList()
+
+        // Search jar entries inside this directory
+        return getJarFile()!!.stream()
+            .filter { !it.isDirectory && it.name.startsWith(filename) }
+            .map { JarClasspathFilePath(it.name) }
+            .toList()
+    }
+
 }

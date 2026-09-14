@@ -1,6 +1,8 @@
 package mayonez.assets
 
 import java.io.File
+import java.io.IOException
+import java.nio.file.Files
 
 /**
  * A classpath resource inside one of the source sets on the local file system.
@@ -27,6 +29,25 @@ class LocalClasspathFilePath(filename: String) : ClasspathFilePath(filename) {
     override fun getFile(): File? {
         return if (url != null) File(url.path) // Absolute path
         else null
+    }
+
+    // Scanner Methods
+
+    override fun scanFiles(): List<FilePath> {
+        if (!isDirectory()) return emptyList() // If not directory return empty list
+
+        // Use Files.walk() to get recursive tree
+        val file = getFile()!!
+        return try {
+            Files.walk(file.toPath())
+                .filter { Files.isRegularFile(it) }
+                .map { it.toFile().relativeTo(file) } // Get relative path
+                .map { "$filename/${it.path}" } // Combine with base
+                .map { LocalClasspathFilePath(it) }
+                .toList()
+        } catch (_: IOException) {
+            emptyList()
+        }
     }
 
 }
