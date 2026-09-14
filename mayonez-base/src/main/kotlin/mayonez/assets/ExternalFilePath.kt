@@ -1,6 +1,9 @@
 package mayonez.assets
 
-import java.io.*
+import java.io.File
+import java.io.IOException
+import java.io.InputStream
+import java.io.OutputStream
 import java.net.MalformedURLException
 import java.net.URL
 import java.nio.file.Files
@@ -83,6 +86,24 @@ class ExternalFilePath(filename: String) : FilePath(PathUtil.convertPath(filenam
             return Files.newOutputStream(file.toPath(), *options)
         } catch (_: Exception) {
             throw IOException("Could not open output stream for $this")
+        }
+    }
+
+    // Scanner Methods
+
+    override fun scanFiles(): List<FilePath> {
+        if (!isDirectory()) return emptyList() // If not directory return empty list
+
+        // Use Files.walk() to get recursive tree
+        return try {
+            Files.walk(file.toPath())
+                .filter { Files.isRegularFile(it) }
+                .map { it.toFile().path }
+                .filter { !it.contains(".DS_Store") }
+                .map { ExternalFilePath(it) }
+                .toList()
+        } catch (_: IOException) {
+            emptyList()
         }
     }
 

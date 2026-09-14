@@ -2,6 +2,8 @@ package mayonez.assets;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -33,6 +35,39 @@ class LocalClasspathFilePathTest {
         assertFalse(filePath.isFile());
         assertFalse(filePath.isDirectory());
         assertNull(filePath.getFile());
+    }
+
+    // File Scanner Methods
+
+    @Test
+    void scanValidDirectoryIsNotEmpty() {
+        var files = scanFiles("testassets");
+        assertFalse(files.isEmpty());
+        assertTrue(directoryContainsFile(files, "testassets/text/foo.txt"));
+        assertTrue(directoryContainsFile(files, "testassets/images/mario.png"));
+        assertFalse(directoryContainsFile(files, "testassets/"));
+        assertFalse(directoryContainsFile(files, ".DS_Store"));
+        assertFalse(directoryContainsFile(files, "mayonez/assets/LocalClasspathFilePathTest.class"));
+    }
+
+    @Test
+    void scanInvalidDirectoryIsEmpty() {
+        assertTrue(scanFiles("testasset/foo").isEmpty());
+    }
+
+    @Test
+    void scanFileIsEmpty() {
+        assertTrue(scanFiles("testassets/images/mario.png").isEmpty());
+    }
+
+    // Helper Methods
+
+    private static List<FilePath> scanFiles(String directoryPath) {
+        return new LocalClasspathFilePath(directoryPath).scanFiles();
+    }
+
+    private static boolean directoryContainsFile(List<FilePath> files, String filename) {
+        return files.contains(new LocalClasspathFilePath(filename));
     }
 
 }

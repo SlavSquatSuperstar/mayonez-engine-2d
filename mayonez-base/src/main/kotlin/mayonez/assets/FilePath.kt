@@ -130,6 +130,17 @@ abstract class FilePath(
     @Throws(IOException::class)
     abstract fun openOutputStream(append: Boolean): OutputStream
 
+    // Scanner Methods
+
+    /**
+     * Recursively searches for files in this directory and all its
+     * subdirectories. If this path represents a file or does not exist,
+     * returns an empty list.
+     *
+     * @return the list of file paths, empty if none found
+     */
+    abstract fun scanFiles(): List<FilePath>
+
     // Conversion Methods
 
     /**

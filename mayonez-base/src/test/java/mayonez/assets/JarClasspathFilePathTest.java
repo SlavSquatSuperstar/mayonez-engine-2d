@@ -2,6 +2,8 @@ package mayonez.assets;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -34,5 +36,40 @@ class JarClasspathFilePathTest {
         assertFalse(filePath.isDirectory());
         assertNull(filePath.getFile());
     }
-    
+
+    // File Scanner Test
+
+    @Test
+    void scanValidDirectoryIsNotEmpty() {
+        var files = scanFiles("foo");
+        assertFalse(files.isEmpty());
+        assertTrue(directoryContainsFile(files, "foo/a.txt"));
+        assertTrue(directoryContainsFile(files, "foo/bar/b.txt"));
+        assertTrue(directoryContainsFile(files, "foo/baz/c.txt"));
+        assertFalse(directoryContainsFile(files, ".DS_Store"));
+        assertFalse(directoryContainsFile(files, "foo/"));
+        assertFalse(directoryContainsFile(files, "Test.class"));
+    }
+
+    @Test
+    void scanInvalidDirectoryIsEmpty() {
+        assertTrue(scanFiles("foo/quux/").isEmpty());
+    }
+
+    @Test
+    void scanFileIsEmpty() {
+        assertTrue(scanFiles("foo/a.txt").isEmpty());
+    }
+
+    // Helper Methods
+
+    private static List<FilePath> scanFiles(String directoryPath) {
+        return new JarClasspathFilePath(directoryPath).scanFiles();
+    }
+
+    private static boolean directoryContainsFile(List<FilePath> files, String filename) {
+        return files.contains(new JarClasspathFilePath(filename));
+    }
+
+
 }
