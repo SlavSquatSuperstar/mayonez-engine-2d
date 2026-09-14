@@ -186,8 +186,6 @@ The following individuals, communities, or projects were instrumental for inspir
 - [javidx9](https://www.youtube.com/@javidx9), [Michel Van Bizen](https://www.youtube.com/@MichelvanBiezen),
   [Iain Winter](https://winter.dev/), and [Two-Bit Coding](https://www.youtube.com/@two-bitcoding8018)
   physics and math tutorials
-- [Java Reflections](https://github.com/ronmamo/reflections) code taken under Apache 2.0
-
 - [Life of Boris](https://www.youtube.com/@LifeofBoris) life advice
 - Random [Stack Overflow](https://stackoverflow.com/) and [Reddit](https://www.reddit.com/) threads
 
