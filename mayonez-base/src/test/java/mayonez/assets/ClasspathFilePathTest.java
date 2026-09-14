@@ -15,14 +15,14 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class ClasspathFilePathTest {
 
-    private final FilePath filePathValid = new ClasspathFilePath("testassets/text/foo.txt");
-    private final FilePath filePathInvalid = new ClasspathFilePath("testassets/text/bar.txt");
+    private final FilePath filePathValid = new LocalClasspathFilePath("testassets/text/foo.txt");
+    private final FilePath filePathInvalid = new LocalClasspathFilePath("testassets/text/bar.txt");
 
     // Path Name Tests
 
     @Test
     void classpathFilenameAlwaysUsesForwardSlashes() {
-        var windowsFilePath = new ClasspathFilePath("testassets\\text\\foo.txt");
+        var windowsFilePath = new LocalClasspathFilePath("testassets\\text\\foo.txt");
         assertEquals(filePathValid.getFilename(), windowsFilePath.getFilename());
     }
 
@@ -58,7 +58,7 @@ class ClasspathFilePathTest {
 
     @Test
     void createClasspathFileFails() {
-        var filePath = new ClasspathFilePath("testassets/out/test_file");
+        var filePath = new LocalClasspathFilePath("testassets/out/test_file");
         assertFalse(filePath.exists());
 
         assertFalse(filePath.createFile());
@@ -67,7 +67,7 @@ class ClasspathFilePathTest {
 
     @Test
     void createClasspathDirectoryFails() {
-        var filePath = new ClasspathFilePath("testassets/out/test_directory");
+        var filePath = new LocalClasspathFilePath("testassets/out/test_directory");
         assertFalse(filePath.exists());
 
         assertFalse(filePath.createDirectory());
@@ -76,13 +76,13 @@ class ClasspathFilePathTest {
 
     @Test
     void deleteClasspathPathFails() {
-        var filePath1 = new ClasspathFilePath("testassets/text/");
+        var filePath1 = new LocalClasspathFilePath("testassets/text/");
         assertTrue(filePath1.isDirectory());
 
         assertFalse(filePath1.delete());
         assertTrue(filePath1.exists());
 
-        var filePath2 = new ClasspathFilePath("testassets/text/foo.txt");
+        var filePath2 = new LocalClasspathFilePath("testassets/text/foo.txt");
         assertFalse(filePath2.isDirectory());
 
         assertFalse(filePath2.delete());

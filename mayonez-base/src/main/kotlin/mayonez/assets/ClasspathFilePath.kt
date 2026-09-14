@@ -1,26 +1,27 @@
 package mayonez.assets
 
-import java.io.File
 import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
 import java.net.URL
-import java.util.jar.JarFile
 
 /**
- * A system resource inside the .jar that is read-only. Classpath filenames
- * must use '/' separators regardless of the parent operating system.
+ * A classpath resource inside a .jar or source set. Classpath resources cannot
+ * be written to, as their location may change depending on the environment.
+ * When running the program using a build system, resources will usually be
+ * [LocalClasspathFilePath]s, and when running the program from a .jar, they
+ * will typically be [JarClasspathFilePath]s.
+ *
+ * Classpath filenames must use '/' separators regardless of the parent
+ * operating system.
  *
  * @author SlavSquatSuperstar
  */
-class ClasspathFilePath(filename: String) :
+abstract class ClasspathFilePath protected constructor(filename: String) :
     FilePath(PathUtil.convertPath(filename, PathUtil.CLASSPATH_SEPARATOR)) {
 
     // URL non-null iff resource exists
-    private val url: URL? = ClassLoader.getSystemResource(filename)
-
-    // Path is local if protocol is not inside jar
-    private val isLocal: Boolean = url?.protocol == "file"
+    protected val url: URL? = PathUtil.getResourceURL(filename)
 
     // Path Methods
 
@@ -29,27 +30,6 @@ class ClasspathFilePath(filename: String) :
     override fun isReadable(): Boolean = url != null
 
     override fun isWritable(): Boolean = false
-
-    override fun isDirectory(): Boolean {
-        return url != null &&
-                if (isLocal) getFile()!!.isDirectory
-                else getJarFile()!!.getJarEntry(filename)!!.isDirectory
-    }
-
-    override fun isFile(): Boolean {
-        return url != null &&
-                if (isLocal) getFile()!!.isFile
-                else !getJarFile()!!.getJarEntry(filename)!!.isDirectory
-    }
-
-    private fun getJarFile(): JarFile? {
-        // Get the parent jar file
-        val path = url?.path ?: return null // file:/path/to/jar!/name
-        val jarName = path.substring(
-            path.indexOf(":") + 1, path.indexOf("!/")
-        ) // /path/to/jar
-        return JarFile(jarName)
-    }
 
     // File Methods
 
@@ -73,10 +53,7 @@ class ClasspathFilePath(filename: String) :
         throw IOException("Classpath resources are read-only")
     }
 
-    override fun getFile(): File? {
-        return if (isLocal) File(url!!.path) // Absolute path
-        else null
-    }
+    // Conversion Methods
 
     override fun getURL(): URL? = url
 
