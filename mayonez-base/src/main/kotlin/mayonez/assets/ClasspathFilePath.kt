@@ -32,13 +32,13 @@ class ClasspathFilePath(filename: String) :
 
     override fun isDirectory(): Boolean {
         return url != null &&
-                if (isLocal) getFile().isDirectory
+                if (isLocal) getFile()!!.isDirectory
                 else getJarFile()!!.getJarEntry(filename)!!.isDirectory
     }
 
     override fun isFile(): Boolean {
         return url != null &&
-                if (isLocal) getFile().isFile
+                if (isLocal) getFile()!!.isFile
                 else !getJarFile()!!.getJarEntry(filename)!!.isDirectory
     }
 
@@ -64,7 +64,7 @@ class ClasspathFilePath(filename: String) :
     @Throws(IOException::class)
     override fun openInputStream(): InputStream {
         assertReadable()
-        return ClassLoader.getSystemResourceAsStream(filename)
+        return url?.openStream()
             ?: throw IOException("Could not open input stream for $this")
     }
 
@@ -73,9 +73,9 @@ class ClasspathFilePath(filename: String) :
         throw IOException("Classpath resources are read-only")
     }
 
-    override fun getFile(): File {
+    override fun getFile(): File? {
         return if (isLocal) File(url!!.path) // Absolute path
-        else File(filename) // Meaningless
+        else null
     }
 
     override fun getURL(): URL? = url

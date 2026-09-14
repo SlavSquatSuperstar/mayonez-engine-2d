@@ -25,8 +25,8 @@ abstract class FilePath(
          */
         @JvmStatic
         fun fromFilename(filename: String): FilePath {
-            val classpathFilePath = ClasspathFilePath(filename)
-            return if (classpathFilePath.exists()) classpathFilePath
+            val url = ClassLoader.getSystemResource(filename)
+            return if (url != null) ClasspathFilePath(filename)
             else ExternalFilePath(filename)
         }
     }
@@ -132,11 +132,12 @@ abstract class FilePath(
     // Conversion Methods
 
     /**
-     * Get the file represented by this path, which may or may not exist.
+     * Get the file represented by this path, which is non-null if the path is
+     * readable or writable on the file system.
      *
      * @return the file
      */
-    abstract fun getFile(): File
+    abstract fun getFile(): File?
 
     /**
      * Get the URL represented by this path, which is non-null if the path
