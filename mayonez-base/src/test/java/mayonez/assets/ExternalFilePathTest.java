@@ -164,7 +164,7 @@ class ExternalFilePathTest {
         assertTrue(directoryContainsFile(files, "src/test/resources/testassets/text/foo.txt"));
         assertTrue(directoryContainsFile(files, "src/test/resources/testassets/images/mario.png"));
         assertFalse(directoryContainsFile(files, "src/test/resources/testassets/"));
-        assertFalse(directoryContainsFile(files, "src/test/resources/.DS_Store"));
+        assertFalse(directoryContainsFile(files, "src/test/resources/testassets/.DS_Store"));
         assertFalse(directoryContainsFile(files, "src/test/java/mayonez/assets/ExternalFilePathTest.class"));
     }
 

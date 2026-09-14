@@ -1,7 +1,7 @@
 package mayonez.assets
 
 import java.io.File
-import java.util.jar.JarFile
+import java.util.jar.*
 
 /**
  * A read-only classpath resource inside the current .jar or a classpath .jar.
@@ -44,7 +44,11 @@ class JarClasspathFilePath(filename: String) : ClasspathFilePath(filename) {
 
         // Search jar entries inside this directory
         return getJarFile()!!.stream()
-            .filter { !it.isDirectory && it.name.startsWith(filename) }
+            .filter {
+                !it.isDirectory
+                        && !it.name.contains(".DS_Store")
+                        && it.name.startsWith(filename)
+            }
             .map { JarClasspathFilePath(it.name) }
             .toList()
     }

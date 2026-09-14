@@ -3,6 +3,7 @@ package mayonez.assets
 import java.io.File
 import java.io.IOException
 import java.nio.file.Files
+import kotlin.io.path.name
 
 /**
  * A classpath resource inside one of the source sets on the local file system.
@@ -37,10 +38,11 @@ class LocalClasspathFilePath(filename: String) : ClasspathFilePath(filename) {
         if (!isDirectory()) return emptyList() // If not directory return empty list
 
         // Use Files.walk() to get recursive tree
+        // Seems to skip .DS_Store, but filter just in case
         val file = getFile()!!
         return try {
             Files.walk(file.toPath())
-                .filter { Files.isRegularFile(it) }
+                .filter { Files.isRegularFile(it) && it.name != ".DS_Store" }
                 .map { it.toFile().relativeTo(file) } // Get relative path
                 .map { "$filename/${it.path}" } // Combine with base
                 .map { LocalClasspathFilePath(it) }

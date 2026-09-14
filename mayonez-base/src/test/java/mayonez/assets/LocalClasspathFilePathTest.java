@@ -46,7 +46,7 @@ class LocalClasspathFilePathTest {
         assertTrue(directoryContainsFile(files, "testassets/text/foo.txt"));
         assertTrue(directoryContainsFile(files, "testassets/images/mario.png"));
         assertFalse(directoryContainsFile(files, "testassets/"));
-        assertFalse(directoryContainsFile(files, ".DS_Store"));
+        assertFalse(directoryContainsFile(files, "testassets/.DS_Store"));
         assertFalse(directoryContainsFile(files, "mayonez/assets/LocalClasspathFilePathTest.class"));
     }
 
