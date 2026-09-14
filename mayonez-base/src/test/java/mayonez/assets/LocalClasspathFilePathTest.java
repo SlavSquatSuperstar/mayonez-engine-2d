@@ -37,6 +37,13 @@ class LocalClasspathFilePathTest {
         assertNull(filePath.getFile());
     }
 
+    @Test
+    void validPathWithSpaceExists() {
+        var filePath = new LocalClasspathFilePath("testassets/text/path with spaces.txt");
+        assertTrue(filePath.exists());
+        assertTrue(filePath.isFile());
+    }
+
     // File Scanner Methods
 
     @Test

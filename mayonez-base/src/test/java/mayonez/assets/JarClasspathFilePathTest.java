@@ -37,6 +37,13 @@ class JarClasspathFilePathTest {
         assertNull(filePath.getFile());
     }
 
+    @Test
+    void validPathWithSpaceExists() {
+        var filePath = new JarClasspathFilePath("foo/path with spaces.txt");
+        assertTrue(filePath.exists());
+        assertTrue(filePath.isFile());
+    }
+
     // File Scanner Test
 
     @Test
