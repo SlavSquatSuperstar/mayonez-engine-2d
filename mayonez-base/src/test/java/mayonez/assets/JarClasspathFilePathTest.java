@@ -46,8 +46,8 @@ class JarClasspathFilePathTest {
         assertTrue(directoryContainsFile(files, "foo/a.txt"));
         assertTrue(directoryContainsFile(files, "foo/bar/b.txt"));
         assertTrue(directoryContainsFile(files, "foo/baz/c.txt"));
-        assertFalse(directoryContainsFile(files, ".DS_Store"));
         assertFalse(directoryContainsFile(files, "foo/"));
+        assertFalse(directoryContainsFile(files, "foo/.DS_Store"));
         assertFalse(directoryContainsFile(files, "Test.class"));
     }
 
