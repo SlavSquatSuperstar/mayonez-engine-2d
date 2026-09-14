@@ -2,6 +2,9 @@ package mayonez.assets
 
 import java.io.File
 import java.io.IOException
+import java.net.URL
+import java.net.URLDecoder
+import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import kotlin.io.path.name
 
@@ -28,8 +31,8 @@ class LocalClasspathFilePath(filename: String) : ClasspathFilePath(filename) {
     // Conversion Methods
 
     override fun getFile(): File? {
-        return if (url != null) File(url.path) // Absolute path
-        else null
+        return if (url == null) null
+        else File(url.decode())
     }
 
     // Scanner Methods
@@ -50,6 +53,11 @@ class LocalClasspathFilePath(filename: String) : ClasspathFilePath(filename) {
         } catch (_: IOException) {
             emptyList()
         }
+    }
+
+    // Unescape URL special characters
+    private fun URL.decode(): String {
+        return URLDecoder.decode(this.path, StandardCharsets.UTF_8)
     }
 
 }

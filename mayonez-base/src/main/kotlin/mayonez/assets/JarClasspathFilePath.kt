@@ -15,13 +15,11 @@ class JarClasspathFilePath(filename: String) : ClasspathFilePath(filename) {
     // Path Methods
 
     override fun isDirectory(): Boolean {
-        return url != null &&
-                getJarFile()!!.getJarEntry(filename)!!.isDirectory
+        return url != null && getJarEntry().isDirectory
     }
 
     override fun isFile(): Boolean {
-        return url != null &&
-                !getJarFile()!!.getJarEntry(filename)!!.isDirectory
+        return url != null && !getJarEntry().isDirectory
     }
 
     private fun getJarFile(): JarFile? {
@@ -31,6 +29,11 @@ class JarClasspathFilePath(filename: String) : ClasspathFilePath(filename) {
             path.indexOf(":") + 1, path.indexOf("!/")
         ) // /path/to/jar
         return JarFile(jarName)
+    }
+
+    private fun getJarEntry(): JarEntry {
+        // No need to decode URL since using filename
+        return getJarFile()!!.getJarEntry(filename)!!
     }
 
     // Conversion Methods
