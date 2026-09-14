@@ -2,6 +2,8 @@ package mayonez.assets;
 
 import java.io.File;
 import java.net.URL;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 
 /**
@@ -77,6 +79,16 @@ public final class PathUtil {
      */
     public static URL getResourceURL(String name) {
         return ClassLoader.getSystemResource(name);
+    }
+
+    /**
+     * Decodes a URL, converting escape sequences back into special characters.
+     *
+     * @param url the url
+     * @return the unescaped URL
+     */
+    public static String decodeURL(URL url) {
+        return URLDecoder.decode(url.getPath(), StandardCharsets.UTF_8);
     }
 
 }
