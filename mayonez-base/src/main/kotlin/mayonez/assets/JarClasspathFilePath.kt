@@ -23,12 +23,15 @@ class JarClasspathFilePath(filename: String) : ClasspathFilePath(filename) {
     }
 
     private fun getJarFile(): JarFile? {
-        // Get the parent jar file
-        val path = url?.path ?: return null // file:/path/to/jar!/name
-        val jarName = path.substring(
+        if (url == null) return null
+
+        // Get the parent jar file path on the external file system
+        // No need to convert / to \
+        val path = PathUtil.decodeURL(url) // file:/path/to/jar!/name
+        val jarPath = path.substring(
             path.indexOf(":") + 1, path.indexOf("!/")
         ) // /path/to/jar
-        return JarFile(jarName)
+        return JarFile(jarPath)
     }
 
     private fun getJarEntry(): JarEntry {
