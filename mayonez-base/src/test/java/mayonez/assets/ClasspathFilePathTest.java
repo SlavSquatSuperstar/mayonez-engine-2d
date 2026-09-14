@@ -15,18 +15,28 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class ClasspathFilePathTest {
 
-    private final FilePath filePathValid = new LocalClasspathFilePath("testassets/text/foo.txt");
-    private final FilePath filePathInvalid = new LocalClasspathFilePath("testassets/text/bar.txt");
+    private final FilePath filePathValid = fromFilename("testassets/text/foo.txt");
+    private final FilePath filePathInvalid = fromFilename("testassets/text/bar.txt");
 
     // Path Name Tests
 
     @Test
     void classpathFilenameAlwaysUsesForwardSlashes() {
-        var windowsFilePath = new LocalClasspathFilePath("testassets\\text\\foo.txt");
+        var windowsFilePath = fromFilename("testassets\\text\\foo.txt");
         assertEquals(filePathValid.getFilename(), windowsFilePath.getFilename());
     }
 
-    // Path URL Tests
+    // Path Conversion Tests
+
+    @Test
+    void validClasspathFileNotNull() {
+        assertNotNull(filePathValid.getFile());
+    }
+
+    @Test
+    void invalidClasspathFileIsNull() {
+        assertNull(filePathInvalid.getFile());
+    }
 
     @Test
     void validClasspathURLNotNull() {
@@ -58,7 +68,7 @@ class ClasspathFilePathTest {
 
     @Test
     void createClasspathFileFails() {
-        var filePath = new LocalClasspathFilePath("testassets/out/test_file");
+        var filePath = fromFilename("testassets/out/test_file");
         assertFalse(filePath.exists());
 
         assertFalse(filePath.createFile());
@@ -67,7 +77,7 @@ class ClasspathFilePathTest {
 
     @Test
     void createClasspathDirectoryFails() {
-        var filePath = new LocalClasspathFilePath("testassets/out/test_directory");
+        var filePath = fromFilename("testassets/out/test_directory");
         assertFalse(filePath.exists());
 
         assertFalse(filePath.createDirectory());
@@ -75,14 +85,17 @@ class ClasspathFilePathTest {
     }
 
     @Test
-    void deleteClasspathPathFails() {
-        var filePath1 = new LocalClasspathFilePath("testassets/text/");
+    void deleteClasspathFileFails() {
+        var filePath1 = fromFilename("testassets/text/");
         assertTrue(filePath1.isDirectory());
 
         assertFalse(filePath1.delete());
         assertTrue(filePath1.exists());
+    }
 
-        var filePath2 = new LocalClasspathFilePath("testassets/text/foo.txt");
+    @Test
+    void deleteClasspathDirectoryFails() {
+        var filePath2 = fromFilename("testassets/text/foo.txt");
         assertFalse(filePath2.isDirectory());
 
         assertFalse(filePath2.delete());
@@ -105,6 +118,17 @@ class ClasspathFilePathTest {
     void classpathOutputStreamAlwaysFails() {
         assertThrows(IOException.class, () -> assertOutputStreamExists(filePathValid));
         assertThrows(IOException.class, () -> assertOutputStreamExists(filePathInvalid));
+    }
+
+    // Helper Method
+
+    private static ClasspathFilePath fromFilename(String filename) {
+        var url = PathUtil.getResourceURL(filename);
+        if (url == null || url.getProtocol().equals("file")) {
+            return new LocalClasspathFilePath(filename);
+        } else {
+            return new JarClasspathFilePath(filename);
+        }
     }
 
 }
