@@ -25,9 +25,10 @@ abstract class FilePath(
          */
         @JvmStatic
         fun fromFilename(filename: String): FilePath {
-            val url = ClassLoader.getSystemResource(filename)
-            return if (url != null) ClasspathFilePath(filename)
-            else ExternalFilePath(filename)
+            val url = PathUtil.getResourceURL(filename)
+            return if (url == null) ExternalFilePath(filename)
+            else if (url.protocol == "file") LocalClasspathFilePath(filename)
+            else JarClasspathFilePath(filename)
         }
     }
 

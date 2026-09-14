@@ -30,7 +30,7 @@ public class ClasspathFolderScanner implements FolderScanner {
         var resources = new ArrayList<String>();
 
         // Check folder exists
-        var dirUrl = new ClasspathFilePath(directoryName).getURL();
+        var dirUrl = PathUtil.getResourceURL(directoryName);
         if (dirUrl == null) return resources;
 
         try (var dir = Vfs.fromURL(dirUrl)) {

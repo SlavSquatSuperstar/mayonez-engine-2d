@@ -1,7 +1,9 @@
 package mayonez.assets;
 
 import java.io.File;
+import java.net.URL;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * Converts file paths for different operating and file systems.
@@ -66,6 +68,16 @@ public final class PathUtil {
      */
     public static String convertPath(String path) {
         return convertPath(path, CURRENT_SEPARATOR);
+    }
+
+    /**
+     * Get the system resource with the given name as a URL.
+     *
+     * @param name the resource name relative to the classpath.
+     * @return the url, or null if no resource exists
+     */
+    public static URL getResourceURL(String name) {
+        return ClassLoader.getSystemResource(name);
     }
 
 }
