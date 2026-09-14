@@ -27,7 +27,13 @@ class ExternalFilePathTest {
         assertTrue(windowsFilePath.getFilename().contains(PathUtil.CURRENT_SEPARATOR));
     }
 
-    // Path URL Tests
+    // Path Conversion Tests
+
+    @Test
+    void allExternalFileNotNull() {
+        assertNotNull(filePathValid.getFile());
+        assertNotNull(filePathInvalid.getFile());
+    }
 
     @Test
     void allExternalURLNotNull() {

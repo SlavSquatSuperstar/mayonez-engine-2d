@@ -21,7 +21,7 @@ class JarClasspathFilePath(filename: String) : ClasspathFilePath(filename) {
 
     override fun isFile(): Boolean {
         return url != null &&
-                getJarFile()!!.getJarEntry(filename)!!.isDirectory
+                !getJarFile()!!.getJarEntry(filename)!!.isDirectory
     }
 
     private fun getJarFile(): JarFile? {
