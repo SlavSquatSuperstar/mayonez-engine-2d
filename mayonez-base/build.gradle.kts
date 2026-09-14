@@ -37,6 +37,8 @@ dependencies {
     errorprone("com.uber.nullaway:nullaway:$nullAwayVersion")
     compileOnly("com.uber.nullaway:nullaway-annotations:$nullAwayVersion")
     compileOnly("org.jspecify:jspecify:1.0.0")
+
+    testImplementation(files("libs/test.jar"))
 }
 
 // Plugins and Tasks
