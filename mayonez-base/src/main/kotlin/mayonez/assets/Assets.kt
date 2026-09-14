@@ -1,8 +1,6 @@
 package mayonez.assets
 
 import mayonez.*
-import mayonez.assets.scanner.ClasspathFolderScanner
-import mayonez.assets.scanner.ExternalFolderScanner
 
 /**
  * Manages the application's resources and allows users to create and retrieve
@@ -69,15 +67,8 @@ object Assets {
     @JvmStatic
     fun scanDirectory(directory: String) {
         val path = FilePath.fromFilename(directory)
-        val resources =
-            when (path) {
-                is ClasspathFilePath ->
-                    ClasspathFolderScanner().getFiles(directory)
-                is ExternalFilePath ->
-                    ExternalFolderScanner().getFiles(directory)
-                else -> return
-            }
-        resources.forEach { createAsset(it) } // Create an asset from each path
+        val resources = path.scanFiles()
+        resources.forEach { createAsset(it.filename) } // Create an asset from each path
         Logger.debug("Scanned ${resources.size} resources inside \"$directory\"")
     }
 
