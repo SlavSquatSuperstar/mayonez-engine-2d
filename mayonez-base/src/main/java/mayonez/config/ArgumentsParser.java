@@ -18,8 +18,8 @@ class ArgumentsParser {
         parser = new DefaultParser();
 
         options = new Options();
-        options.addOption(Option.builder("e")
-                .longOpt("engine")
+        options.addOption(Option.builder("b")
+                .longOpt("backend")
                 .hasArg()
                 .desc("The engine windowing/rendering backend")
                 .get());
@@ -48,15 +48,15 @@ class ArgumentsParser {
      * @return the backend
      */
     Backend getBackend(CommandLine cl) {
-        var engine = cl.getOptionValue("engine");
-        if (engine == null) {
+        var backend = cl.getOptionValue("backend");
+        if (backend == null) {
             return Backend.DEFAULT;
-        } else if (engine.equals("gl")) {
+        } else if (backend.equals("gl")) {
             return Backend.GL;
-        } else if (engine.equals("awt")) {
+        } else if (backend.equals("awt")) {
             return Backend.AWT;
         } else {
-            throw new IllegalArgumentException("Invalid argument %s for engine".formatted(engine));
+            throw new IllegalArgumentException("Invalid argument %s for backend".formatted(backend));
         }
     }
 
