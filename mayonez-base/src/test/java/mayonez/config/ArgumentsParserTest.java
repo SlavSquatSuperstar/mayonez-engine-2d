@@ -28,13 +28,13 @@ class ArgumentsParserTest {
     @Test
     void longOptionCorrect() {
         try {
-            var cl = parser.parse(new String[]{"--engine", "gl"});
-            var engine = cl.getOptionValue("e");
+            var cl = parser.parse(new String[]{"--backend", "gl"});
+            var engine = cl.getOptionValue("b");
             assertEquals("gl", engine);
             assertEquals(Backend.GL, parser.getBackend(cl));
 
             var rec = parser.serialize(cl);
-            assertEquals(new Record(Map.of("engine", "gl")), rec);
+            assertEquals(new Record(Map.of("backend", "gl")), rec);
         } catch (Exception e) {
             fail();
         }
@@ -43,13 +43,13 @@ class ArgumentsParserTest {
     @Test
     void shortOptionCorrect() {
         try {
-            var cl = parser.parse(new String[]{"-e", "awt"});
-            var engine = cl.getOptionValue("e");
+            var cl = parser.parse(new String[]{"-b", "awt"});
+            var engine = cl.getOptionValue("b");
             assertEquals("awt", engine);
             assertEquals(Backend.AWT, parser.getBackend(cl));
 
             var rec = parser.serialize(cl);
-            assertEquals(new Record(Map.of("engine", "awt")), rec);
+            assertEquals(new Record(Map.of("backend", "awt")), rec);
         } catch (Exception e) {
             fail();
         }
@@ -59,7 +59,7 @@ class ArgumentsParserTest {
     void blankOptionCorrect() {
         try {
             var cl = parser.parse(new String[]{});
-            assertFalse(cl.hasOption("engine"));
+            assertFalse(cl.hasOption("backend"));
             assertEquals(Backend.DEFAULT, parser.getBackend(cl));
 
             var rec = parser.serialize(cl);
@@ -74,7 +74,7 @@ class ArgumentsParserTest {
     @Test
     void invalidArgumentWrong() {
         try {
-            var cl = parser.parse(new String[]{"--engine", "vk"});
+            var cl = parser.parse(new String[]{"--backend", "vk"});
             assertThrows(IllegalArgumentException.class, () -> parser.getBackend(cl));
         } catch (Exception e) {
             fail();
@@ -83,7 +83,7 @@ class ArgumentsParserTest {
 
     @Test
     void missingArgumentWrong() {
-        assertThrows(RuntimeException.class, () -> parser.parse(new String[]{"--engine"}));
+        assertThrows(RuntimeException.class, () -> parser.parse(new String[]{"--backend"}));
     }
 
 }

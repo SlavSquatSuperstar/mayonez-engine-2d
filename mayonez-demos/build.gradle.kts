@@ -30,7 +30,7 @@ tasks {
 
         classpath = files(jar)
         jvmArgs = defaultJvmArgs
-        args = listOf("--engine", "gl")
+        args = listOf("--backend", "gl")
     }
 
     // Run using the AWT engine
@@ -40,7 +40,7 @@ tasks {
 
         classpath = files(jar)
         jvmArgs = emptyList()
-        args = listOf("--engine", "awt")
+        args = listOf("--backend", "awt")
     }
 
     jar {
