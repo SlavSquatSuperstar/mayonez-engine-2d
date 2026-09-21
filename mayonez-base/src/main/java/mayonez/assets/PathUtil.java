@@ -49,16 +49,13 @@ public final class PathUtil {
      * @return the converted path string
      */
     public static String convertPath(String path, String fileSeparator) {
-        // Replace all separators with current separator
-        var currentPath = path;
-        for (var sep : SEPARATORS) {
-            if (sep.equals(CURRENT_SEPARATOR)) continue;
-            currentPath = currentPath.replace(sep, CURRENT_SEPARATOR);
-        }
-        // Need to remove trailing separators so ClassLoader doesn't give error
-        var currentPathCleaned = Path.of(currentPath).normalize().toString();
+        var currentPath = convertPath(path);
         // Get the path string on the target file system
-        return currentPathCleaned.replace(CURRENT_SEPARATOR, fileSeparator);
+        if (CURRENT_SEPARATOR.equals(fileSeparator)) {
+            return currentPath;
+        } else {
+            return currentPath.replace(CURRENT_SEPARATOR, fileSeparator);
+        }
     }
 
     /**
@@ -68,7 +65,10 @@ public final class PathUtil {
      * @return the current OS path string
      */
     public static String convertPath(String path) {
-        return convertPath(path, CURRENT_SEPARATOR);
+        // Replace all separators with current separator
+        var currentPath = Path.of("", path.split("[/\\\\]"));
+        // Remove trailing separators so ClassLoader doesn't give error
+        return currentPath.normalize().toString();
     }
 
     /**

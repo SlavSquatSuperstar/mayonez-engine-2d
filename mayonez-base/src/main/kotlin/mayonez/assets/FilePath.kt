@@ -2,18 +2,25 @@ package mayonez.assets
 
 import java.io.*
 import java.net.URL
-import java.util.Objects
 
 /**
  * Represents the location of a resource on the computer's file system or
- * inside the current .jar file and facilitates read and write operations.
+ * inside a classpath .jar file and facilitates read and write operations.
+ * To create a `FilePath`, use [FilePath.of] rather than instantiating
+ * directly.
  *
  * @author SlavSquatSuperstar
  */
-abstract class FilePath(
+abstract class FilePath protected constructor(
     /** The normalized string representation of this path. */
     val path: String
 ) {
+
+    /**
+     * The filename of this path, or the last name in the path without any of
+     * the parent directories.
+     */
+    abstract val filename: String
 
     companion object {
         /**

@@ -16,16 +16,23 @@ class ExternalFilePathTest {
 
     private final FilePath filePathValid = new ExternalFilePath("src/test/resources/testassets/text/foo.txt");
     private final FilePath filePathInvalid = new ExternalFilePath("src/test/resources/testassets/text/bar.txt");
+    private final FilePath unixFilePath = filePathValid;
+    private final FilePath windowsFilePath = new ExternalFilePath("src\\test\\resources\\testassets\\text\\foo.txt");
 
     // Path Name Tests
 
     @Test
-    void externalFilenameContainsSystemSeparators() {
-        var unixFilePath = new ExternalFilePath("src/test/resources/testassets/text/foo.txt");
-        assertTrue(unixFilePath.getPath().contains(PathUtil.CURRENT_SEPARATOR));
+    void externalPathContainsSystemSeparators() {
+        assertTrue(filePathValid.getPath().contains(PathUtil.CURRENT_SEPARATOR));
 
-        var windowsFilePath = new ExternalFilePath("src\\test\\resources\\testassets\\text\\foo.txt");
         assertTrue(windowsFilePath.getPath().contains(PathUtil.CURRENT_SEPARATOR));
+    }
+
+    @Test
+    void externalPathHasCorrectFilename() {
+        assertEquals("foo.txt", unixFilePath.getFilename());
+
+        assertEquals("foo.txt", windowsFilePath.getFilename());
     }
 
     // Path Conversion Tests

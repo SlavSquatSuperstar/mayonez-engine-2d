@@ -21,7 +21,14 @@ abstract class ClasspathFilePath protected constructor(path: String) :
     FilePath(PathUtil.convertPath(path, PathUtil.CLASSPATH_SEPARATOR)) {
 
     /** The URL to this resource, which is non-null iff the resource exists. */
-    protected val url: URL? = PathUtil.getResourceURL(path)
+    protected val url: URL? = PathUtil.getResourceURL(super.path)
+
+    override val filename: String
+        get() {
+            val idx = path.lastIndexOf("/")
+            return if (idx == -1) path
+            else path.substring(idx + 1)
+        }
 
     // File Status Methods
 

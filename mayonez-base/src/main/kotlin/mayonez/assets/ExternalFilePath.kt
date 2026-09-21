@@ -20,7 +20,10 @@ import java.nio.file.StandardOpenOption
 class ExternalFilePath(path: String) : FilePath(PathUtil.convertPath(path)) {
 
     // File exists iff path exists
-    private val file: File = File(path)
+    private val file: File = File(super.path)
+
+    override val filename: String
+        get() = file.name
 
     // File Status Methods
 

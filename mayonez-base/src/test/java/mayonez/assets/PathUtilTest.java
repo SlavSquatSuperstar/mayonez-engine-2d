@@ -16,14 +16,14 @@ class PathUtilTest {
 
     @Test
     void cleanUnixPathSuccess() {
-        var path = "./foo/./bar/baz/";
+        var path = "./foo/./bar//baz/";
         var cleanedPath = PathUtil.convertPath(path, PathUtil.UNIX_SEPARATOR);
         assertEquals(cleanedUnixPath, cleanedPath);
     }
 
     @Test
     void cleanWindowsPathSuccess() {
-        var path = ".\\foo\\.\\bar\\baz\\";
+        var path = ".\\foo\\.\\bar\\\\baz\\";
         var cleanedPath = PathUtil.convertPath(path, PathUtil.WINDOWS_SEPARATOR);
         assertEquals(cleanedWindowsPath, cleanedPath);
     }
