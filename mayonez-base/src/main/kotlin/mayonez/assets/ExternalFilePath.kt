@@ -21,7 +21,7 @@ class ExternalFilePath(filename: String) : FilePath(PathUtil.convertPath(filenam
     // File exists iff path exists
     private val file: File = File(filename)
 
-    // Path Methods
+    // File Status Methods
 
     override fun exists(): Boolean = file.exists()
 
@@ -89,7 +89,11 @@ class ExternalFilePath(filename: String) : FilePath(PathUtil.convertPath(filenam
         }
     }
 
-    // Scanner Methods
+    // File Tree Methods
+
+    override fun getParent(): FilePath? {
+        return ExternalFilePath(file.parent?: return null)
+    }
 
     override fun scanFiles(): List<FilePath> {
         if (!isDirectory()) return emptyList() // If not directory return empty list
@@ -106,6 +110,8 @@ class ExternalFilePath(filename: String) : FilePath(PathUtil.convertPath(filenam
             emptyList()
         }
     }
+
+    // Conversion Methods
 
     override fun getFile(): File = file
 

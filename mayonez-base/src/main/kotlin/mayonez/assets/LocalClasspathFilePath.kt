@@ -15,7 +15,7 @@ import kotlin.io.path.name
  */
 class LocalClasspathFilePath(filename: String) : ClasspathFilePath(filename) {
 
-    // Path Methods
+    // File Status Methods
 
     override fun isDirectory(): Boolean {
         return url != null && getFile()!!.isDirectory
@@ -25,24 +25,16 @@ class LocalClasspathFilePath(filename: String) : ClasspathFilePath(filename) {
         return url != null && getFile()!!.isFile
     }
 
-    // Conversion Methods
+    // File Hierarchy Methods
 
-    override fun getFile(): File? {
-        return if (url == null) null
-        else if (PathUtil.CURRENT_SEPARATOR == PathUtil.UNIX_SEPARATOR) {
-            // Get absolute path, and keep /
-            File(PathUtil.decodeURL(url))
-        } else {
-            // Get absolute path, remove \C:, and convert / to \
-            val decoded = PathUtil.decodeURL(url)
-            val windowsPath = PathUtil.convertPath(
-                decoded.substring(3), PathUtil.WINDOWS_SEPARATOR
-            )
-            File(windowsPath)
-        }
+    override fun getParent(): FilePath? {
+        if (url == null) return null
+
+        // Already normalized
+        val idx = filename.lastIndexOf("/")
+        return if (idx == -1) null
+        else LocalClasspathFilePath(filename.substring(0, idx))
     }
-
-    // Scanner Methods
 
     override fun scanFiles(): List<FilePath> {
         if (!isDirectory()) return emptyList() // If not directory return empty list
@@ -59,6 +51,23 @@ class LocalClasspathFilePath(filename: String) : ClasspathFilePath(filename) {
                 .toList()
         } catch (_: IOException) {
             emptyList()
+        }
+    }
+
+    // Conversion Methods
+
+    override fun getFile(): File? {
+        return if (url == null) null
+        else if (PathUtil.CURRENT_SEPARATOR == PathUtil.UNIX_SEPARATOR) {
+            // Get absolute path, and keep /
+            File(PathUtil.decodeURL(url))
+        } else {
+            // Get absolute path, remove \C:, and convert / to \
+            val decoded = PathUtil.decodeURL(url)
+            val windowsPath = PathUtil.convertPath(
+                decoded.substring(3), PathUtil.WINDOWS_SEPARATOR
+            )
+            File(windowsPath)
         }
     }
 

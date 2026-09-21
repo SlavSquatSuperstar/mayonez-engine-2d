@@ -155,7 +155,21 @@ class ExternalFilePathTest {
         assertThrows(IOException.class, () -> IOTestUtils.assertOutputStreamExists(filePathInvalid2));
     }
 
-    // File Scanner Methods
+    // File Hierarchy Tests
+
+    @Test
+    void parentOfFilePathIsDirectory() {
+        var parent = filePathValid.getParent();
+        assertNotNull(parent);
+        assertEquals("src/test/resources/testassets/text", parent.getFilename());
+        assertTrue(parent.isDirectory());
+    }
+
+    @Test
+    void parentOfRootIsNull() {
+        var path = new ExternalFilePath("/");
+        assertNull(path.getParent());
+    }
 
     @Test
     void scanValidDirectoryIsNotEmpty() {

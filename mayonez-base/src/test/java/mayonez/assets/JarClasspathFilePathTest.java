@@ -44,7 +44,22 @@ class JarClasspathFilePathTest {
         assertTrue(filePath.isFile());
     }
 
-    // File Scanner Test
+    // File Hierarchy Tests
+
+    @Test
+    void parentOfFileIsDirectory() {
+        var path = new JarClasspathFilePath("foo/a.txt");
+        var parent = path.getParent();
+        assertNotNull(parent);
+        assertEquals("foo", parent.getFilename());
+        assertTrue(parent.isDirectory());
+    }
+
+    @Test
+    void parentOfTopLevelIsNull() {
+        var path = new JarClasspathFilePath("foo/");
+        assertNull(path.getParent());
+    }
 
     @Test
     void scanValidDirectoryIsNotEmpty() {
@@ -77,6 +92,5 @@ class JarClasspathFilePathTest {
     private static boolean directoryContainsFile(List<FilePath> files, String filename) {
         return files.contains(new JarClasspathFilePath(filename));
     }
-
 
 }

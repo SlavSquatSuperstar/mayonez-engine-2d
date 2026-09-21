@@ -12,17 +12,17 @@ import java.util.jar.*
  */
 class JarClasspathFilePath(filename: String) : ClasspathFilePath(filename) {
 
-    // Path Methods
+    // File Status Methods
 
     override fun isDirectory(): Boolean {
-        return url != null && getJarEntry().isDirectory
+        return getJarEntry()?.isDirectory == true
     }
 
     override fun isFile(): Boolean {
-        return url != null && !getJarEntry().isDirectory
+        return getJarEntry()?.isDirectory == false
     }
 
-    private fun getJarFile(): JarFile? {
+    private fun getJarPath(): String? {
         if (url == null) return null
 
         // Get the parent jar file path on the external file system
@@ -31,32 +31,48 @@ class JarClasspathFilePath(filename: String) : ClasspathFilePath(filename) {
         val jarPath = path.substring(
             path.indexOf(":") + 1, path.indexOf("!/")
         ) // /path/to/jar
-        return JarFile(jarPath)
+        return jarPath
     }
 
-    private fun getJarEntry(): JarEntry {
+    private fun getJarFile(): JarFile? {
+        return JarFile(getJarPath() ?: return null)
+    }
+
+    private fun getJarEntry(): JarEntry? {
         // No need to decode URL since using filename
-        return getJarFile()!!.getJarEntry(filename)!!
+        return getJarFile()?.getJarEntry(filename)
+    }
+
+    // File Hierarchy Methods
+
+    override fun getParent(): FilePath? {
+        if (url == null) return null
+
+        // Already normalized
+        val idx = filename.lastIndexOf("/")
+        return if (idx == -1) null
+        else JarClasspathFilePath(filename.substring(0, idx))
+    }
+
+    override fun scanFiles(): List<FilePath> {
+        val jarFile = getJarFile()
+        return if (jarFile?.getJarEntry(filename)?.isDirectory != true) {
+            emptyList() // Not a directory
+        } else {
+            // Search jar entries inside this directory
+            jarFile.stream()
+                .filter {
+                    !it.isDirectory
+                            && !it.name.contains(".DS_Store")
+                            && it.name.startsWith(filename)
+                }
+                .map { JarClasspathFilePath(it.name) }
+                .toList()
+        }
     }
 
     // Conversion Methods
 
     override fun getFile(): File? = null
-
-    // Scanner Methods
-
-    override fun scanFiles(): List<FilePath> {
-        if (!isDirectory()) return emptyList()
-
-        // Search jar entries inside this directory
-        return getJarFile()!!.stream()
-            .filter {
-                !it.isDirectory
-                        && !it.name.contains(".DS_Store")
-                        && it.name.startsWith(filename)
-            }
-            .map { JarClasspathFilePath(it.name) }
-            .toList()
-    }
 
 }

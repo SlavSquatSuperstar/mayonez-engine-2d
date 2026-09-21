@@ -32,7 +32,7 @@ abstract class FilePath(
         }
     }
 
-    // Path Methods
+    // File Status Methods
 
     /**
      * Whether there currently exists a file or directory at this path.
@@ -130,14 +130,22 @@ abstract class FilePath(
     @Throws(IOException::class)
     abstract fun openOutputStream(append: Boolean): OutputStream
 
-    // Scanner Methods
+    // File Tree Methods
+
+    /**
+     * Get the parent directory of this path, or null if this path is the root
+     * of its file system.
+     *
+     * @return the parent path, or null
+     */
+    abstract fun getParent(): FilePath?
 
     /**
      * Recursively searches for files in this directory and all its
      * subdirectories. If this path represents a file or does not exist,
      * returns an empty list.
      *
-     * @return the list of file paths, empty if none found
+     * @return the list of file paths, or empty if none found
      */
     abstract fun scanFiles(): List<FilePath>
 

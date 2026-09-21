@@ -44,7 +44,22 @@ class LocalClasspathFilePathTest {
         assertTrue(filePath.isFile());
     }
 
-    // File Scanner Methods
+    // File Hierarchy Methods
+
+    @Test
+    void parentOfFileIsDirectory() {
+        var path = new LocalClasspathFilePath("testassets/text/foo.txt");
+        var parent = path.getParent();
+        assertNotNull(parent);
+        assertEquals("testassets/text", parent.getFilename());
+        assertTrue(parent.isDirectory());
+    }
+
+    @Test
+    void parentOfTopLevelIsNull() {
+        var path = new LocalClasspathFilePath("testassets/");
+        assertNull(path.getParent());
+    }
 
     @Test
     void scanValidDirectoryIsNotEmpty() {
