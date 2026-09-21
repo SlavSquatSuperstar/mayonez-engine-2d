@@ -62,6 +62,33 @@ class JarClasspathFilePathTest {
     }
 
     @Test
+    void combinedPathIsChild() {
+        var path = new JarClasspathFilePath("foo");
+        var combined = path.combine("bar");
+        assertNotNull(combined);
+        assertEquals("foo/bar", combined.getFilename());
+        assertTrue(combined.isDirectory());
+    }
+
+    @Test
+    void combinedPathIsGrandchild() {
+        var path = new JarClasspathFilePath("foo");
+        var combined = path.combine("baz/c.txt");
+        assertNotNull(combined);
+        assertEquals("foo/baz/c.txt", combined.getFilename());
+        assertTrue(combined.isFile());
+    }
+
+    @Test
+    void combinedPathDoesNotExist() {
+        var path = new JarClasspathFilePath("foo");
+        var combined = path.combine("quux");
+        assertNotNull(combined);
+        assertEquals("foo/quux", combined.getFilename());
+        assertFalse(combined.exists());
+    }
+
+    @Test
     void scanValidDirectoryIsNotEmpty() {
         var files = scanFiles("foo");
         assertFalse(files.isEmpty());

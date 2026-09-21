@@ -141,6 +141,15 @@ abstract class FilePath(
     abstract fun getParent(): FilePath?
 
     /**
+     * Combine this path's name with another path segment and get the resulting
+     * path.
+     *
+     * @param path another path, which may contain file separators
+     * @return the combined path, or null if the path is null
+     */
+    abstract fun combine(path: String?): FilePath?
+
+    /**
      * Recursively searches for files in this directory and all its
      * subdirectories. If this path represents a file or does not exist,
      * returns an empty list.

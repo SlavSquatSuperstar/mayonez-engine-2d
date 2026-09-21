@@ -62,6 +62,33 @@ class LocalClasspathFilePathTest {
     }
 
     @Test
+    void combinedPathIsChild() {
+        var path = new LocalClasspathFilePath("testassets");
+        var combined = path.combine("text");
+        assertNotNull(combined);
+        assertEquals("testassets/text", combined.getFilename());
+        assertTrue(combined.isDirectory());
+    }
+
+    @Test
+    void combinedPathIsGrandchild() {
+        var path = new LocalClasspathFilePath("testassets");
+        var combined = path.combine("text/foo.txt");
+        assertNotNull(combined);
+        assertEquals("testassets/text/foo.txt", combined.getFilename());
+        assertTrue(combined.isFile());
+    }
+
+    @Test
+    void combinedPathDoesNotExist() {
+        var path = new LocalClasspathFilePath("testassets");
+        var combined = path.combine("text/bar.txt");
+        assertNotNull(combined);
+        assertEquals("testassets/text/bar.txt", combined.getFilename());
+        assertFalse(combined.exists());
+    }
+
+    @Test
     void scanValidDirectoryIsNotEmpty() {
         var files = scanFiles("testassets");
         assertFalse(files.isEmpty());

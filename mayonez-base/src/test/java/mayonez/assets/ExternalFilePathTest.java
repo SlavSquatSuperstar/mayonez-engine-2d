@@ -172,6 +172,33 @@ class ExternalFilePathTest {
     }
 
     @Test
+    void combinedPathIsChild() {
+        var path = new ExternalFilePath("src/test/resources/testassets");
+        var combined = path.combine("text");
+        assertNotNull(combined);
+        assertPathNameEquals(combined, "src/test/resources/testassets/text");
+        assertTrue(combined.isDirectory());
+    }
+
+    @Test
+    void combinedPathIsGrandchild() {
+        var path = new ExternalFilePath("src/test/resources/testassets");
+        var combined = path.combine("text/foo.txt");
+        assertNotNull(combined);
+        assertPathNameEquals(combined, "src/test/resources/testassets/text/foo.txt");
+        assertTrue(combined.isFile());
+    }
+
+    @Test
+    void combinedPathDoesNotExist() {
+        var path = new ExternalFilePath("src/test/resources/testassets");
+        var combined = path.combine("text/bar.txt");
+        assertNotNull(combined);
+        assertPathNameEquals(combined, "src/test/resources/testassets/text/bar.txt");
+        assertFalse(combined.exists());
+    }
+
+    @Test
     void scanValidDirectoryIsNotEmpty() {
         var files = scanFiles("src/test/resources/testassets");
         assertFalse(files.isEmpty());
@@ -200,6 +227,11 @@ class ExternalFilePathTest {
 
     private static boolean directoryContainsFile(List<FilePath> files, String filename) {
         return files.contains(new ExternalFilePath(filename));
+    }
+
+    private static void assertPathNameEquals(FilePath path, String name) {
+        // OS-independent path name check
+        assertEquals(new ExternalFilePath(name).getFilename(), path.getFilename());
     }
 
 }

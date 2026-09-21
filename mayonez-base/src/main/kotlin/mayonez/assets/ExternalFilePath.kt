@@ -95,6 +95,11 @@ class ExternalFilePath(filename: String) : FilePath(PathUtil.convertPath(filenam
         return ExternalFilePath(file.parent?: return null)
     }
 
+    override fun combine(path: String?): FilePath? {
+        val child = File(file, path ?: return null)
+        return ExternalFilePath(child.path)
+    }
+
     override fun scanFiles(): List<FilePath> {
         if (!isDirectory()) return emptyList() // If not directory return empty list
 

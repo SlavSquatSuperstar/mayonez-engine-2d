@@ -36,6 +36,12 @@ class LocalClasspathFilePath(filename: String) : ClasspathFilePath(filename) {
         else LocalClasspathFilePath(filename.substring(0, idx))
     }
 
+    override fun combine(path: String?): FilePath? {
+        return if (path == null) null
+        // Constructor normalizes path
+        else LocalClasspathFilePath("$filename/$path")
+    }
+
     override fun scanFiles(): List<FilePath> {
         if (!isDirectory()) return emptyList() // If not directory return empty list
 

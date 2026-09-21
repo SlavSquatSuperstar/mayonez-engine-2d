@@ -54,6 +54,12 @@ class JarClasspathFilePath(filename: String) : ClasspathFilePath(filename) {
         else JarClasspathFilePath(filename.substring(0, idx))
     }
 
+    override fun combine(path: String?): FilePath? {
+        return if (path == null) null
+        // Constructor normalizes path
+        else JarClasspathFilePath("$filename/$path")
+    }
+
     override fun scanFiles(): List<FilePath> {
         val jarFile = getJarFile()
         return if (jarFile?.getJarEntry(filename)?.isDirectory != true) {
