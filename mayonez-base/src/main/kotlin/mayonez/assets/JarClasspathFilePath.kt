@@ -5,12 +5,12 @@ import java.util.jar.*
 
 /**
  * A read-only classpath resource inside the current .jar or a classpath .jar.
- * Classpath filenames must use '/' separators regardless of the parent
+ * Classpath paths must use '/' separators regardless of the parent
  * operating system.
  *
  * @author SlavSquatSuperstar
  */
-class JarClasspathFilePath(filename: String) : ClasspathFilePath(filename) {
+class JarClasspathFilePath(path: String) : ClasspathFilePath(path) {
 
     // File Status Methods
 
@@ -39,8 +39,8 @@ class JarClasspathFilePath(filename: String) : ClasspathFilePath(filename) {
     }
 
     private fun getJarEntry(): JarEntry? {
-        // No need to decode URL since using filename
-        return getJarFile()?.getJarEntry(filename)
+        // No need to decode URL since using path
+        return getJarFile()?.getJarEntry(path)
     }
 
     // File Hierarchy Methods
@@ -49,20 +49,20 @@ class JarClasspathFilePath(filename: String) : ClasspathFilePath(filename) {
         if (url == null) return null
 
         // Already normalized
-        val idx = filename.lastIndexOf("/")
+        val idx = path.lastIndexOf("/")
         return if (idx == -1) null
-        else JarClasspathFilePath(filename.substring(0, idx))
+        else JarClasspathFilePath(path.substring(0, idx))
     }
 
     override fun combine(path: String?): FilePath? {
         return if (path == null) null
         // Constructor normalizes path
-        else JarClasspathFilePath("$filename/$path")
+        else JarClasspathFilePath("${this.path}/$path")
     }
 
     override fun scanFiles(): List<FilePath> {
         val jarFile = getJarFile()
-        return if (jarFile?.getJarEntry(filename)?.isDirectory != true) {
+        return if (jarFile?.getJarEntry(path)?.isDirectory != true) {
             emptyList() // Not a directory
         } else {
             // Search jar entries inside this directory
@@ -70,7 +70,7 @@ class JarClasspathFilePath(filename: String) : ClasspathFilePath(filename) {
                 .filter {
                     !it.isDirectory
                             && !it.name.contains(".DS_Store")
-                            && it.name.startsWith(filename)
+                            && it.name.startsWith(path)
                 }
                 .map { JarClasspathFilePath(it.name) }
                 .toList()

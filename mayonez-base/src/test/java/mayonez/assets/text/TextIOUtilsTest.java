@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class TextIOUtilsTest {
 
-    private final FilePath inputFilePath = FilePath.fromFilename("testassets/text/foo.txt");
+    private final FilePath inputFilePath = FilePath.of("testassets/text/foo.txt");
     private final String outputText = """
             Hello there!
             General Kenobi, you are a bold one!

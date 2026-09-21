@@ -7,19 +7,20 @@ import java.io.OutputStream
 import java.net.MalformedURLException
 import java.net.URL
 import java.nio.file.Files
+import java.nio.file.Path
 import java.nio.file.StandardOpenOption
 
 /**
  * A file outside the .jar and in the local file system that is readable and
- * writable. External filenames use the file separators of their parent
+ * writable. External paths use the file separators of their parent
  * operating system.
  *
  * @author SlavSquatSuperstar
  */
-class ExternalFilePath(filename: String) : FilePath(PathUtil.convertPath(filename)) {
+class ExternalFilePath(path: String) : FilePath(PathUtil.convertPath(path)) {
 
     // File exists iff path exists
-    private val file: File = File(filename)
+    private val file: File = File(path)
 
     // File Status Methods
 
@@ -66,7 +67,7 @@ class ExternalFilePath(filename: String) : FilePath(PathUtil.convertPath(filenam
 
     @Throws(IOException::class)
     override fun openInputStream(): InputStream {
-        assertReadable()
+        if (!isReadable()) throw IOException("$this is not readable")
         try {
             return Files.newInputStream(file.toPath())
         } catch (_: Exception) {
@@ -76,7 +77,7 @@ class ExternalFilePath(filename: String) : FilePath(PathUtil.convertPath(filenam
 
     @Throws(IOException::class)
     override fun openOutputStream(append: Boolean): OutputStream {
-        assertWritable()
+        if (!isWritable()) throw IOException("$this is not writable")
         val options = if (append) {
             arrayOf(StandardOpenOption.CREATE, StandardOpenOption.APPEND)
         } else {
@@ -96,8 +97,8 @@ class ExternalFilePath(filename: String) : FilePath(PathUtil.convertPath(filenam
     }
 
     override fun combine(path: String?): FilePath? {
-        val child = File(file, path ?: return null)
-        return ExternalFilePath(child.path)
+        val combined = Path.of(this.path, path ?: return null)
+        return ExternalFilePath(combined.toString())
     }
 
     override fun scanFiles(): List<FilePath> {

@@ -14,9 +14,9 @@ import java.io.OutputStream
  */
 open class Asset(private val filePath: FilePath) {
 
-    constructor(filename: String) : this(FilePath.fromFilename(filename))
+    constructor(path: String) : this(FilePath.of(path))
 
-    val filename: String = filePath.filename
+    val filename: String = filePath.path
 
     // I/O Methods
 

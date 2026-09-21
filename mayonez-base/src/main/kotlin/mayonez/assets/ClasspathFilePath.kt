@@ -12,18 +12,18 @@ import java.net.URL
  * [LocalClasspathFilePath]s, and when running the program from a .jar, they
  * will typically be [JarClasspathFilePath]s.
  *
- * Classpath filenames must use '/' separators regardless of the parent
+ * Classpath paths must use '/' separators regardless of the parent
  * operating system.
  *
  * @author SlavSquatSuperstar
  */
-abstract class ClasspathFilePath protected constructor(filename: String) :
-    FilePath(PathUtil.convertPath(filename, PathUtil.CLASSPATH_SEPARATOR)) {
+abstract class ClasspathFilePath protected constructor(path: String) :
+    FilePath(PathUtil.convertPath(path, PathUtil.CLASSPATH_SEPARATOR)) {
 
-    // URL non-null iff resource exists
-    protected val url: URL? = PathUtil.getResourceURL(filename)
+    /** The URL to this resource, which is non-null iff the resource exists. */
+    protected val url: URL? = PathUtil.getResourceURL(path)
 
-    // Path Methods
+    // File Status Methods
 
     override fun exists(): Boolean = url != null
 
@@ -43,7 +43,7 @@ abstract class ClasspathFilePath protected constructor(filename: String) :
 
     @Throws(IOException::class)
     override fun openInputStream(): InputStream {
-        assertReadable()
+        if (!isReadable()) throw IOException("$this is not readable")
         return url?.openStream()
             ?: throw IOException("Could not open input stream for $this")
     }

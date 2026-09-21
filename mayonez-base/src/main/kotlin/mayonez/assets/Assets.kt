@@ -66,9 +66,9 @@ object Assets {
      */
     @JvmStatic
     fun scanDirectory(directory: String) {
-        val path = FilePath.fromFilename(directory)
+        val path = FilePath.of(directory)
         val resources = path.scanFiles()
-        resources.forEach { createAsset(it.filename) } // Create an asset from each path
+        resources.forEach { createAsset(it.path) } // Create an asset from each path
         Logger.debug("Scanned ${resources.size} resources inside \"$directory\"")
     }
 

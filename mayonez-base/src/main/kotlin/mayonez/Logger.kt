@@ -68,7 +68,7 @@ object Logger {
     private fun createLogFile() {
         if (this::logFileStream.isInitialized) return
         if (config.saveLogs) {
-            val logFilePath = FilePath.fromFilename(getLogFilename())
+            val logFilePath = FilePath.of(getLogFilename())
             logFileStream = logFilePath.openOutputStream(true)
             while (printQueue.isNotEmpty()) {
                 // Log everything in print queue

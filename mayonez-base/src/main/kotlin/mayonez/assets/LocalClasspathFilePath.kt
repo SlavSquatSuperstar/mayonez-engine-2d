@@ -8,12 +8,12 @@ import kotlin.io.path.name
 /**
  * A classpath resource inside one of the source sets on the local file system.
  * Local classpath files should not be written to, as doing so may affect the
- * project build. Classpath filenames must use '/' separators regardless of the
+ * project build. Classpath paths must use '/' separators regardless of the
  * parent operating system.
  *
  * @author SlavSquatSuperstar
  */
-class LocalClasspathFilePath(filename: String) : ClasspathFilePath(filename) {
+class LocalClasspathFilePath(path: String) : ClasspathFilePath(path) {
 
     // File Status Methods
 
@@ -31,15 +31,15 @@ class LocalClasspathFilePath(filename: String) : ClasspathFilePath(filename) {
         if (url == null) return null
 
         // Already normalized
-        val idx = filename.lastIndexOf("/")
+        val idx = path.lastIndexOf("/")
         return if (idx == -1) null
-        else LocalClasspathFilePath(filename.substring(0, idx))
+        else LocalClasspathFilePath(path.substring(0, idx))
     }
 
     override fun combine(path: String?): FilePath? {
         return if (path == null) null
         // Constructor normalizes path
-        else LocalClasspathFilePath("$filename/$path")
+        else LocalClasspathFilePath("${this.path}/$path")
     }
 
     override fun scanFiles(): List<FilePath> {
@@ -52,7 +52,7 @@ class LocalClasspathFilePath(filename: String) : ClasspathFilePath(filename) {
             Files.walk(file.toPath())
                 .filter { Files.isRegularFile(it) && it.name != ".DS_Store" }
                 .map { it.toFile().relativeTo(file) } // Get relative path
-                .map { "$filename/${it.path}" } // Combine with base
+                .map { "$path/${it.path}" } // Combine with base
                 .map { LocalClasspathFilePath(it) }
                 .toList()
         } catch (_: IOException) {

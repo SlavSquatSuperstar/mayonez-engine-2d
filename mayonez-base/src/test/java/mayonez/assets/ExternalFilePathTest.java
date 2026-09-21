@@ -22,10 +22,10 @@ class ExternalFilePathTest {
     @Test
     void externalFilenameContainsSystemSeparators() {
         var unixFilePath = new ExternalFilePath("src/test/resources/testassets/text/foo.txt");
-        assertTrue(unixFilePath.getFilename().contains(PathUtil.CURRENT_SEPARATOR));
+        assertTrue(unixFilePath.getPath().contains(PathUtil.CURRENT_SEPARATOR));
 
         var windowsFilePath = new ExternalFilePath("src\\test\\resources\\testassets\\text\\foo.txt");
-        assertTrue(windowsFilePath.getFilename().contains(PathUtil.CURRENT_SEPARATOR));
+        assertTrue(windowsFilePath.getPath().contains(PathUtil.CURRENT_SEPARATOR));
     }
 
     // Path Conversion Tests
@@ -161,7 +161,7 @@ class ExternalFilePathTest {
     void parentOfFilePathIsDirectory() {
         var parent = filePathValid.getParent();
         assertNotNull(parent);
-        assertEquals("src/test/resources/testassets/text", parent.getFilename());
+        assertEquals("src/test/resources/testassets/text", parent.getPath());
         assertTrue(parent.isDirectory());
     }
 
@@ -231,7 +231,7 @@ class ExternalFilePathTest {
 
     private static void assertPathNameEquals(FilePath path, String name) {
         // OS-independent path name check
-        assertEquals(new ExternalFilePath(name).getFilename(), path.getFilename());
+        assertEquals(new ExternalFilePath(name).getPath(), path.getPath());
     }
 
 }

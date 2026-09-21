@@ -23,7 +23,7 @@ class ClasspathFilePathTest {
     @Test
     void classpathFilenameAlwaysUsesForwardSlashes() {
         var windowsFilePath = fromFilename("testassets\\text\\foo.txt");
-        assertEquals(filePathValid.getFilename(), windowsFilePath.getFilename());
+        assertEquals(filePathValid.getPath(), windowsFilePath.getPath());
     }
 
     // Path Conversion Tests

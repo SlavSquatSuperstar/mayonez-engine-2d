@@ -15,26 +15,26 @@ class FilePathTest {
 
     @Test
     void validClasspathFilenameIsClasspath() {
-        var path = FilePath.fromFilename("testassets/text/foo.txt");
+        var path = FilePath.of("testassets/text/foo.txt");
         assertInstanceOf(ClasspathFilePath.class, path);
     }
 
     @Test
     void invalidClasspathFilenameIsExternal() {
-        var path = FilePath.fromFilename("testassets/text/bar.txt");
+        var path = FilePath.of("testassets/text/bar.txt");
         assertInstanceOf(ExternalFilePath.class, path);
     }
 
 
     @Test
     void validExternalFilenameIsExternal() {
-        var path = FilePath.fromFilename("src/test/resources/testassets/text/foo.txt");
+        var path = FilePath.of("src/test/resources/testassets/text/foo.txt");
         assertInstanceOf(ExternalFilePath.class, path);
     }
 
     @Test
     void invalidExternalFilenameIsExternal() {
-        var path = FilePath.fromFilename("src/test/resources/testassets/text/bar.txt");
+        var path = FilePath.of("src/test/resources/testassets/text/bar.txt");
         assertInstanceOf(ExternalFilePath.class, path);
     }
 

@@ -11,24 +11,24 @@ import java.util.Objects
  * @author SlavSquatSuperstar
  */
 abstract class FilePath(
-    /** The string representation of this path. */
-    val filename: String
+    /** The normalized string representation of this path. */
+    val path: String
 ) {
 
     companion object {
         /**
-         * Creates a FilePath and automatically determines the location type.
-         * Returns a classpath resource if one exists at this path, or otherwise
+         * Create a FilePath that best fits the given path string. Returns a
+         * classpath resource if one exists at this path, or otherwise
          * defaults to an external file.
          *
-         * @param filename the path filename
+         * @param path the path string
          */
         @JvmStatic
-        fun fromFilename(filename: String): FilePath {
-            val url = PathUtil.getResourceURL(filename)
-            return if (url == null) ExternalFilePath(filename)
-            else if (url.protocol == "file") LocalClasspathFilePath(filename)
-            else JarClasspathFilePath(filename)
+        fun of(path: String): FilePath {
+            val url = PathUtil.getResourceURL(path)
+            return if (url == null) ExternalFilePath(path)
+            else if (url.protocol == "file") LocalClasspathFilePath(path)
+            else JarClasspathFilePath(path)
         }
     }
 
@@ -70,14 +70,6 @@ abstract class FilePath(
      * @return if this path represents a file
      */
     abstract fun isFile(): Boolean
-
-    protected fun assertReadable() {
-        if (!isReadable()) throw IOException("$this is not readable")
-    }
-
-    protected fun assertWritable() {
-        if (!isWritable()) throw IOException("$this is not writable")
-    }
 
     // File Methods
 
@@ -181,13 +173,11 @@ abstract class FilePath(
     // Object Overrides
 
     override fun equals(other: Any?): Boolean {
-        return other is FilePath && other.filename == this.filename
+        return other is FilePath && other.path == this.path
     }
 
-    override fun hashCode(): Int {
-        return Objects.hash(filename, typeName)
-    }
+    override fun hashCode(): Int = path.hashCode()
 
-    override fun toString(): String = "${javaClass.simpleName} $filename"
+    override fun toString(): String = "${javaClass.simpleName} $path"
 
 }
