@@ -13,8 +13,8 @@ import mayonez.math.*;
  */
 public abstract sealed class Texture extends Asset permits GLTexture, JTexture {
 
-    public Texture(String filename) {
-        super(filename);
+    public Texture(String path) {
+        super(path);
     }
 
     // Image Data Methods

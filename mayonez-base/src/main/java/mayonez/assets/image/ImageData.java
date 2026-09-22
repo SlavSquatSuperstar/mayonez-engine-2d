@@ -14,8 +14,8 @@ public abstract class ImageData extends Asset {
     protected static final int RGB_CHANNELS = 3;
     protected static final int RGBA_CHANNELS = 4;
 
-    public ImageData(String filename) {
-        super(filename);
+    public ImageData(String path) {
+        super(path);
     }
 
     // Image Getters

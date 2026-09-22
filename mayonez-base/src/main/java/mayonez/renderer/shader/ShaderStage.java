@@ -50,8 +50,8 @@ class ShaderStage extends Asset {
     private int shaderID; // ID of shader stage in OpenGL
     private final Set<String> uniforms;
 
-    ShaderStage(String filename, ShaderType type) {
-        super(filename);
+    ShaderStage(String path, ShaderType type) {
+        super(path);
         this.type = type;
         source = "";
         shaderID = GL_NONE;
@@ -71,7 +71,7 @@ class ShaderStage extends Asset {
             parseUniforms();
         } catch (IOException e) {
             throw new ShaderException("Could not read shader stage %s"
-                    .formatted(getFilename()));
+                    .formatted(getPath()));
         }
     }
 
@@ -111,9 +111,9 @@ class ShaderStage extends Asset {
 
         // Check compiled correctly
         if (glGetShaderi(shaderID, GL_COMPILE_STATUS) == GL_TRUE) {
-            Logger.debug("Compiled %s shader stage %s", type.toString(), getFilename());
+            Logger.debug("Compiled %s shader stage %s", type.toString(), getPath());
         } else {
-            Logger.error("Could not compile %s shader stage %s", type.toString(), getFilename());
+            Logger.error("Could not compile %s shader stage %s", type.toString(), getPath());
             if (glGetShaderi(shaderID, GL_INFO_LOG_LENGTH) > 0) {
                 // Don't print an empty log
                 Logger.error("OpenGL Log: " + glGetShaderInfoLog(shaderID));

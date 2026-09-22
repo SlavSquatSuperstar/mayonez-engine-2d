@@ -48,9 +48,9 @@ public final class Sprites {
     // Sprite Sheet Methods
 
     /**
-     * Creates a spritesheet from the given texture filename and tiling properties.
+     * Creates a spritesheet from the given texture path and tiling properties.
      *
-     * @param filename     the name of the parent texture
+     * @param path     the name of the parent texture
      * @param spriteWidth  how wide each sprite is
      * @param spriteHeight how tall each sprite is
      * @param numSprites   how many sprites to create
@@ -58,9 +58,9 @@ public final class Sprites {
      * @return a sprite sheet
      */
     public static SpriteSheet createSpriteSheet(
-            String filename, int spriteWidth, int spriteHeight, int numSprites, int spacing
+            String path, int spriteWidth, int spriteHeight, int numSprites, int spacing
     ) {
-        var texture = Textures.getTexture(filename);
+        var texture = Textures.getTexture(path);
         return createSpriteSheet(
                 texture, spriteWidth, spriteHeight, numSprites, spacing
         );

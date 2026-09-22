@@ -17,8 +17,8 @@ public class AWTImageData extends ImageData {
 
     private final BufferedImage image;
 
-    public AWTImageData(String filename) throws IOException {
-        super(filename);
+    public AWTImageData(String path) throws IOException {
+        super(path);
         try (var stream = openInputStream()) {
             image = ImageIO.read(new ByteArrayInputStream(stream.readAllBytes()));
         } catch (IOException e) {
@@ -26,8 +26,8 @@ public class AWTImageData extends ImageData {
         }
     }
 
-    public AWTImageData(String filename, BufferedImage image) {
-        super(filename);
+    public AWTImageData(String path, BufferedImage image) {
+        super(path);
         this.image = image;
     }
 
@@ -106,9 +106,9 @@ public class AWTImageData extends ImageData {
 
     @Override
     public AWTImageData getSubImageData(ImageRegion region) {
-        // Not technically filename, but use to distinguish from parent
-        var filename = "%s %s".formatted(getFilename(), region);
-        return new AWTImageData(filename, getSubImage(region));
+        // Not technically path, but use to distinguish from parent
+        var path = "%s %s".formatted(getPath(), region);
+        return new AWTImageData(path, getSubImage(region));
     }
 
 }

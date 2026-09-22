@@ -23,8 +23,8 @@ public class JSONFile extends Asset {
 
     private static final int INDENT_SPACES = 4;
 
-    public JSONFile(String filename) {
-        super(filename);
+    public JSONFile(String path) {
+        super(path);
     }
 
     /**
@@ -37,9 +37,9 @@ public class JSONFile extends Asset {
             var jsonString = TextIOUtils.readText(stream);
             return new Record(new JSONObject(jsonString).toMap());
         } catch (JSONException e) {
-            Logger.error("Could not parse JSON from %s", getFilename());
+            Logger.error("Could not parse JSON from %s", getPath());
         } catch (IOException e) {
-            Logger.error("Could not read file %s", getFilename());
+            Logger.error("Could not read file %s", getPath());
         }
         return new Record();
     }
@@ -54,9 +54,9 @@ public class JSONFile extends Asset {
             var jsonString = new JSONObject(json.toMap()).toString(INDENT_SPACES);
             TextIOUtils.write(stream, jsonString);
         } catch (JSONException e) {
-            Logger.error("Could not convert %s to JSON", getFilename());
+            Logger.error("Could not convert %s to JSON", getPath());
         } catch (IOException e) {
-            Logger.error("Could not save to file %s", getFilename());
+            Logger.error("Could not save to file %s", getPath());
         }
     }
 

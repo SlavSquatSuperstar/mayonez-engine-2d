@@ -31,11 +31,11 @@ public class Font extends Asset {
     private final FontMetadata metadata;
     private final Map<Character, Glyph> glyphs;
 
-    public Font(String filename) {
-        super(filename);
+    public Font(String path) {
+        super(path);
 
         // Read font metadata
-        var json = new JSONFile(filename);
+        var json = new JSONFile(path);
         this.metadata = new FontMetadata(json.readJSON());
         glyphs = readFontGlyphs(metadata);
     }

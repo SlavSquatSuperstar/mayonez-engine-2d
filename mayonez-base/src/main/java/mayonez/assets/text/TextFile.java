@@ -17,8 +17,8 @@ public class TextFile extends Asset {
 
     private OutputStream output;
 
-    public TextFile(String filename) {
-        super(filename);
+    public TextFile(String path) {
+        super(path);
     }
 
     /**
@@ -30,7 +30,7 @@ public class TextFile extends Asset {
         try (var stream = openInputStream()) {
             return TextIOUtils.readText(stream);
         } catch (IOException e) {
-            Logger.error("Could not read file %s", getFilename());
+            Logger.error("Could not read file %s", getPath());
             return "";
         }
     }
@@ -44,7 +44,7 @@ public class TextFile extends Asset {
         try (var stream = openInputStream()) {
             return TextIOUtils.readLines(stream);
         } catch (IOException e) {
-            Logger.error("Could not read file %s", getFilename());
+            Logger.error("Could not read file %s", getPath());
             return new String[0];
         }
     }
@@ -72,7 +72,7 @@ public class TextFile extends Asset {
             if (output == null) output = openOutputStream(append);
             TextIOUtils.write(output, text);
         } catch (IOException e) {
-            Logger.error("Could not save to file %s", getFilename());
+            Logger.error("Could not save to file %s", getPath());
         }
     }
 

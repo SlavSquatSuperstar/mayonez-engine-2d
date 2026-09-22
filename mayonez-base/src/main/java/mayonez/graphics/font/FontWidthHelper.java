@@ -24,7 +24,7 @@ final class FontWidthHelper {
         // Look at AWT image since no flipping or freeing
         ImageData imgData;
         try {
-            imgData = new AWTImageData(fontTexture.getFilename());
+            imgData = new AWTImageData(fontTexture.getPath());
         } catch (IOException e) {
             return widths;
         }

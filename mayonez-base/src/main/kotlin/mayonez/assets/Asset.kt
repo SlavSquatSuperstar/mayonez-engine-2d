@@ -12,11 +12,19 @@ import java.io.OutputStream
  *
  * @author SlavSquatSuperstar
  */
-open class Asset(protected val filePath: FilePath) {
+open class Asset(
+    /** The file path that represents this asset's location. */
+    protected val filePath: FilePath
+) {
 
     constructor(path: String) : this(FilePath.of(path))
 
-    val filename: String = filePath.path
+    /** This asset's path string. */
+    val path: String = filePath.path
+
+    /** This asset's filename. */
+    val filename: String
+        get() = filePath.filename
 
     // I/O Methods
 
@@ -61,11 +69,11 @@ open class Asset(protected val filePath: FilePath) {
     // Object Overrides
 
     override fun equals(other: Any?): Boolean {
-        return other is Asset && other.filename == this.filename
+        return other is Asset && other.path == this.path
     }
 
-    override fun hashCode(): Int = filename.hashCode()
+    override fun hashCode(): Int = path.hashCode()
 
-    override fun toString(): String = "${javaClass.simpleName} $filename"
+    override fun toString(): String = "${javaClass.simpleName} $path"
 
 }

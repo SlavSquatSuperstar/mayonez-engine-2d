@@ -47,13 +47,13 @@ public final class GLTexture extends Texture {
     private final Vec2[] texCoords;
 
     /**
-     * Create a brand-new GLTexture with the given filename.
+     * Create a brand-new GLTexture with the given path.
      *
-     * @param filename the file location
+     * @param path the file location
      */
     @SuppressWarnings("unused") // Needed for Assets.getGLTexture()
-    public GLTexture(String filename) {
-        super(filename);
+    public GLTexture(String path) {
+        super(path);
         imageData = readImage();
         if (imageData != null) {
             width = imageData.getWidth();
@@ -75,7 +75,7 @@ public final class GLTexture extends Texture {
      * @param description   the description of the sub-image
      */
     private GLTexture(GLTexture parentTexture, ImageRegion region, String description) {
-        super("%s (%s)".formatted(parentTexture.getFilename(), description));
+        super("%s (%s)".formatted(parentTexture.getPath(), description));
         // Parent buffer is already freed if not testing
         this.imageData = parentTexture.getImageData().getSubImageData(region); // Crop image data
         // Get new image size in px
@@ -93,11 +93,11 @@ public final class GLTexture extends Texture {
     protected STBImageData readImage() {
         try {
             // Read image from file
-            var imageData = new STBImageData(getFilename());
-            Logger.debug("Loaded image %s", getFilename());
+            var imageData = new STBImageData(getPath());
+            Logger.debug("Loaded image %s", getPath());
             return imageData;
         } catch (IOException e) {
-            Logger.error("Could not read image file %s", getFilename());
+            Logger.error("Could not read image file %s", getPath());
             Logger.printStackTrace(e);
             return null;
         }
@@ -145,7 +145,7 @@ public final class GLTexture extends Texture {
         try {
             // Create image data
             // Set dimensions in case we have tex coords
-            return new STBImageData(getFilename(), buffer, getWidth(), getHeight());
+            return new STBImageData(getPath(), buffer, getWidth(), getHeight());
         } catch (IOException e) {
             Logger.error("Could get image data from texture %s", toString());
             return null;

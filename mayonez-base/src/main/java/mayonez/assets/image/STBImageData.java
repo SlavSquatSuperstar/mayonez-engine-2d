@@ -26,8 +26,8 @@ public class STBImageData extends ImageData {
     private int width, height, channels;
     private boolean alpha, imageFreed;
 
-    public STBImageData(String filename) throws IOException {
-        super(filename);
+    public STBImageData(String path) throws IOException {
+        super(path);
         try {
             var fileBuffer = readImageBytes();
             buffer = loadImage(fileBuffer);
@@ -36,8 +36,8 @@ public class STBImageData extends ImageData {
         }
     }
 
-    public STBImageData(String filename, ByteBuffer buffer, int width, int height) throws IOException {
-        super(filename);
+    public STBImageData(String path, ByteBuffer buffer, int width, int height) throws IOException {
+        super(path);
         this.buffer = buffer;
         this.width = width;
         this.height = height;
@@ -70,7 +70,7 @@ public class STBImageData extends ImageData {
         stbi_set_flip_vertically_on_load(true); // GL uses (0,0) as bottom left, unlike AWT
         var image = stbi_load_from_memory(fileBuffer, widthBuff, heightBuff, channelsBuff, 0);
         if (image == null) {
-            Logger.error("OpenGL: Could not load image file %s", getFilename());
+            Logger.error("OpenGL: Could not load image file %s", getPath());
             String msg = "Reason for failure: " + stbi_failure_reason();
             Logger.error(msg);
             throw new ImageReadException(msg);
@@ -201,9 +201,9 @@ public class STBImageData extends ImageData {
     public STBImageData getSubImageData(ImageRegion region) {
         try {
             if (imageFreed) return null;
-            // Not technically filename, but use to distinguish from parent
-            var filename = "%s %s".formatted(getFilename(), region);
-            return new STBImageData(filename, getSubBuffer(region), region.getWidth(), region.getHeight());
+            // Not technically path, but use to distinguish from parent
+            var path = "%s %s".formatted(getPath(), region);
+            return new STBImageData(path, getSubBuffer(region), region.getWidth(), region.getHeight());
         } catch (IOException e) {
             Logger.error("Could not create sub-image from %s with origin %s and size %s",
                     toString(), region.origin(), region.size());

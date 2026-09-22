@@ -29,9 +29,9 @@ public class Shader extends Asset {
     private final List<ShaderStage> stages;
     private final Map<String, Integer> uniformLocations;
 
-    public Shader(String filename) {
-        super(filename);
-        shaderDefinition = new JSONFile(filename).readJSON();
+    public Shader(String path) {
+        super(path);
+        shaderDefinition = new JSONFile(path).readJSON();
         stages = new ArrayList<>();
         uniformLocations = new HashMap<>();
     }
@@ -44,7 +44,7 @@ public class Shader extends Asset {
      * @throws ShaderException if any shaders are missing or could not be read
      */
     void readShader() throws ShaderException {
-        Logger.debug("Reading shader definition %s", getFilename());
+        Logger.debug("Reading shader definition %s", getPath());
 
         // Read shaders and parse uniforms
         // Don't need OpenGL to be initialized yet
@@ -53,14 +53,14 @@ public class Shader extends Asset {
 
         var shaderTypes = ShaderType.values();
         for (var type : shaderTypes) {
-            var filename = shaderDefinition.getString(type.name);
+            var path = shaderDefinition.getString(type.name);
             // Check if stage present
-            if (filename.isEmpty()) {
+            if (path.isEmpty()) {
                 throw new ShaderException("%s definition is missing %s shader"
-                        .formatted(getFilename(), type.name));
+                        .formatted(getPath(), type.name));
             }
 
-            var stage = new ShaderStage(filename, type);
+            var stage = new ShaderStage(path, type);
             stage.readSource();
             stage.getUniforms().forEach(
                     // Store locations as -1 for now
@@ -115,9 +115,9 @@ public class Shader extends Asset {
 
         // Check linked correctly
         if (glGetProgrami(programID, GL_LINK_STATUS) == GL_TRUE) {
-            Logger.debug("Linked shader program %s", getFilename());
+            Logger.debug("Linked shader program %s", getPath());
         } else {
-            Logger.error("Could not link shader program %s", getFilename());
+            Logger.error("Could not link shader program %s", getPath());
             if (glGetProgrami(programID, GL_INFO_LOG_LENGTH) > 0) {
                 // Don't print an empty log
                 Logger.error("OpenGL Log: " + glGetProgramInfoLog(programID));

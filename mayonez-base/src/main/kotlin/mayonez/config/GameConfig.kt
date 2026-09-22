@@ -7,12 +7,12 @@ import mayonez.util.*
  * Stores user preferences and a set of default values as [Record] objects
  * for later use and performs input validation.
  *
- * @param filename the location of the preferences file
+ * @param path the location of the preferences file
  * @param defaults the default preferences
  * @author SlavSquatSuperstar
  */
 open class GameConfig(
-    private val filename: String, private val defaults: Record
+    private val path: String, private val defaults: Record
 ) : Record() {
 
     /**
@@ -20,7 +20,7 @@ open class GameConfig(
      * read behavior.
      */
     protected open fun readFromFile() {
-        setFrom(JSONFile(filename).readJSON())
+        setFrom(JSONFile(path).readJSON())
     }
 
     /**
@@ -32,6 +32,6 @@ open class GameConfig(
         rules.forEach { rule -> rule.validate(this, defaults) }
     }
 
-    override fun toString(): String = "GameConfig ($filename) ${super.toString()}"
+    override fun toString(): String = "GameConfig ($path) ${super.toString()}"
 
 }

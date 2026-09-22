@@ -25,8 +25,8 @@ public class CSVFile extends Asset {
 
     private String[] headers;
 
-    public CSVFile(String filename) {
-        super(filename);
+    public CSVFile(String path) {
+        super(path);
     }
 
     /**
@@ -54,7 +54,7 @@ public class CSVFile extends Asset {
             }
             return records;
         } catch (IOException e) {
-            Logger.error("Could not read file %s", getFilename());
+            Logger.error("Could not read file %s", getPath());
             return records;
         }
     }
@@ -88,7 +88,7 @@ public class CSVFile extends Asset {
                 printer.printRecord((Object[]) fields);
             }
         } catch (IOException e) {
-            Logger.error("Could not save to file %s", getFilename());
+            Logger.error("Could not save to file %s", getPath());
         }
     }
 

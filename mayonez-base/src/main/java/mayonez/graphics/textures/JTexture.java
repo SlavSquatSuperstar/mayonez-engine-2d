@@ -26,13 +26,13 @@ public final class JTexture extends Texture {
     private final JTexture parentTexture;
 
     /**
-     * Create a brand-new JTexture with the given filename.
+     * Create a brand-new JTexture with the given path.
      *
-     * @param filename the file location
+     * @param path the file location
      */
     @SuppressWarnings("unused") // Needed for Assets.getJTexture()
-    public JTexture(String filename) {
-        super(filename);
+    public JTexture(String path) {
+        super(path);
         imageData = readImage();
         if (imageData != null) {
             width = imageData.getWidth();
@@ -52,7 +52,7 @@ public final class JTexture extends Texture {
      * @param description   the description of the sub-image
      */
     private JTexture(JTexture parentTexture, ImageRegion region, String description) {
-        super("%s (%s)".formatted(parentTexture.getFilename(), description));
+        super("%s (%s)".formatted(parentTexture.getPath(), description));
         this.imageData = parentTexture.getImageData().getSubImageData(region);
         // Get new image size in px
         width = region.getWidth();
@@ -65,11 +65,11 @@ public final class JTexture extends Texture {
     @Override
     protected AWTImageData readImage() {
         try {
-            var imageData = new AWTImageData(getFilename());
-            Logger.debug("Loaded image %s", getFilename());
+            var imageData = new AWTImageData(getPath());
+            Logger.debug("Loaded image %s", getPath());
             return imageData;
         } catch (Exception e) {
-            Logger.error("Could not read image file %s", getFilename());
+            Logger.error("Could not read image file %s", getPath());
             Logger.printStackTrace(e);
             return null;
         }
