@@ -49,12 +49,12 @@ public record SpaceshipProperties(
         );
     }
 
-    private static List<ThrusterProperties> getThrusters(String csvFileName) {
-        return PrefabUtils.getObjectsFromFile(csvFileName, ThrusterProperties::new);
+    private static List<ThrusterProperties> getThrusters(String csvFilePath) {
+        return PrefabUtils.getObjectsFromFile(csvFilePath, ThrusterProperties::new);
     }
 
-    private static List<WeaponHardpoint> getHardpoints(String csvFileName) {
-        return PrefabUtils.getObjectsFromFile(csvFileName, WeaponHardpoint::new);
+    private static List<WeaponHardpoint> getHardpoints(String csvFilePath) {
+        return PrefabUtils.getObjectsFromFile(csvFilePath, WeaponHardpoint::new);
     }
 
 }

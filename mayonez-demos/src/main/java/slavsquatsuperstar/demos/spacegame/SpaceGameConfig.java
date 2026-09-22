@@ -27,8 +27,8 @@ public final class SpaceGameConfig extends GameConfig {
         DEFAULTS.set("auto_brake", "space");
     }
 
-    private SpaceGameConfig(String filename, Record defaults) {
-        super(filename, defaults);
+    private SpaceGameConfig(String path, Record defaults) {
+        super(path, defaults);
     }
 
     public static void readConfig() {

@@ -34,8 +34,8 @@ public class DemosLauncher {
         launcher.startGame(DemosConfig.getStartSceneIndex());
     }
 
-    private static List<Scene> getScenesFromFile(String filename) {
-        var csvData = new CSVFile(filename).readCSV();
+    private static List<Scene> getScenesFromFile(String path) {
+        var csvData = new CSVFile(path).readCSV();
         if (csvData == null) return List.of();
         return csvData.stream()
                 .map(SceneInfo::new)
