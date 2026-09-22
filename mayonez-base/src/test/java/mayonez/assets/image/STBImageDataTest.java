@@ -99,9 +99,9 @@ class STBImageDataTest extends ImageDataTest {
         testSubImagePixels(image, TEST_COLORS);
     }
 
-    private static STBImageData getImage(String filename) {
+    private static STBImageData getImage(String path) {
         try {
-            return new STBImageData(filename);
+            return new STBImageData(path);
         } catch (Exception e) {
             return fail("Could not read image");
         }

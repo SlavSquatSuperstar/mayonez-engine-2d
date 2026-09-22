@@ -16,8 +16,8 @@ import static org.junit.jupiter.api.Assertions.*;
 abstract class SpriteTestUtils {
 
     // Sprite Sheet Files
-    private static final String SPRITE_SHEET_FILENAME = "testassets/images/squares8.png";
-    private static final String SPACED_SPRITE_SHEET_FILENAME
+    private static final String SPRITE_SHEET_PATH = "testassets/images/squares8.png";
+    private static final String SPACED_SPRITE_SHEET_PATH
             = "testassets/images/squares8_spaced.png";
 
     // Sprite Sheet Parameters
@@ -47,9 +47,9 @@ abstract class SpriteTestUtils {
     // Texture Helpers
 
     static Texture getTexture(boolean spaced, boolean useGL) {
-        var filename = spaced ? SPACED_SPRITE_SHEET_FILENAME : SPRITE_SHEET_FILENAME;
-        if (useGL) return Textures.getGLTexture(filename);
-        else return Textures.getJTexture(filename);
+        var path = spaced ? SPACED_SPRITE_SHEET_PATH : SPRITE_SHEET_PATH;
+        if (useGL) return Textures.getGLTexture(path);
+        else return Textures.getJTexture(path);
     }
 
     // Sprite Sheet Helpers

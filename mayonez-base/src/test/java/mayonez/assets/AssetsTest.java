@@ -47,28 +47,28 @@ class AssetsTest {
     @Test
     void createAssetAsSubclass() {
         reloadAssets();
-        var filename = "testassets/text/foo.txt";
+        var path = "testassets/text/foo.txt";
 
-        var asset = Assets.getAsset(filename);
+        var asset = Assets.getAsset(path);
         assertNotNull(asset);
         assertInstanceOf(Asset.class, asset);
         assertFalse(asset instanceof TestAssetA);
 
-        var textFile = Assets.getAsset(filename, TestAssetA.class);
+        var textFile = Assets.getAsset(path, TestAssetA.class);
         assertNotNull(textFile);
         assertInstanceOf(TestAssetA.class, textFile);
         assertFalse(asset instanceof TestAssetB);
     }
 
     private static class TestAssetA extends Asset {
-        public TestAssetA(String filename) {
-            super(filename);
+        public TestAssetA(String path) {
+            super(path);
         }
     }
 
     private static class TestAssetB extends Asset {
-        public TestAssetB(String filename) {
-            super(filename);
+        public TestAssetB(String path) {
+            super(path);
         }
     }
 

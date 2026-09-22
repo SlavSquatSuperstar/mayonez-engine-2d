@@ -116,8 +116,8 @@ class JarClasspathFilePathTest {
         return new JarClasspathFilePath(directoryPath).scanFiles();
     }
 
-    private static boolean directoryContainsFile(List<FilePath> files, String filename) {
-        return files.contains(new JarClasspathFilePath(filename));
+    private static boolean directoryContainsFile(List<FilePath> files, String path) {
+        return files.contains(new JarClasspathFilePath(path));
     }
 
 }

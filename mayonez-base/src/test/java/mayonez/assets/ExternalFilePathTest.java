@@ -232,8 +232,8 @@ class ExternalFilePathTest {
         return new ExternalFilePath(directoryPath).scanFiles();
     }
 
-    private static boolean directoryContainsFile(List<FilePath> files, String filename) {
-        return files.contains(new ExternalFilePath(filename));
+    private static boolean directoryContainsFile(List<FilePath> files, String path) {
+        return files.contains(new ExternalFilePath(path));
     }
 
     private static void assertPathNameEquals(FilePath path, String name) {

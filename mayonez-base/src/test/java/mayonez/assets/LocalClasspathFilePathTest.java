@@ -115,8 +115,8 @@ class LocalClasspathFilePathTest {
         return new LocalClasspathFilePath(directoryPath).scanFiles();
     }
 
-    private static boolean directoryContainsFile(List<FilePath> files, String filename) {
-        return files.contains(new LocalClasspathFilePath(filename));
+    private static boolean directoryContainsFile(List<FilePath> files, String path) {
+        return files.contains(new LocalClasspathFilePath(path));
     }
 
 }
