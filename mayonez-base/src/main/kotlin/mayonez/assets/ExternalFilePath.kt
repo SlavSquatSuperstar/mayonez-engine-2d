@@ -132,7 +132,4 @@ class ExternalFilePath(path: String) : FilePath(PathUtil.convertPath(path)) {
         }
     }
 
-    override val typeName: String
-        get() = "External"
-
 }

@@ -12,7 +12,7 @@ import java.io.OutputStream
  *
  * @author SlavSquatSuperstar
  */
-open class Asset(private val filePath: FilePath) {
+open class Asset(protected val filePath: FilePath) {
 
     constructor(path: String) : this(FilePath.of(path))
 
@@ -64,12 +64,8 @@ open class Asset(private val filePath: FilePath) {
         return other is Asset && other.filename == this.filename
     }
 
-    override fun hashCode(): Int {
-        return filename.hashCode()
-    }
+    override fun hashCode(): Int = filename.hashCode()
 
-    override fun toString(): String {
-        return "${filePath.typeName} ${javaClass.simpleName} $filename"
-    }
+    override fun toString(): String = "${javaClass.simpleName} $filename"
 
 }

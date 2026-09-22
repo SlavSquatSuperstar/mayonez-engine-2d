@@ -64,7 +64,4 @@ abstract class ClasspathFilePath protected constructor(path: String) :
 
     override fun getURL(): URL? = url
 
-    override val typeName: String
-        get() = "Classpath"
-
 }

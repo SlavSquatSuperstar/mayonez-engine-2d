@@ -175,8 +175,6 @@ abstract class FilePath protected constructor(
      */
     abstract fun getURL(): URL?
 
-    internal abstract val typeName: String
-
     // Object Overrides
 
     override fun equals(other: Any?): Boolean {
