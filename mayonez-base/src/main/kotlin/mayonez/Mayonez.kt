@@ -138,13 +138,12 @@ object Mayonez {
         Time.resetStartupTime()
         Logger.log("Starting program...")
         val now = Time.getStartupDateTime()
-        Logger.debug("The current date time is %s %s", now.toLocalDate(), now.toLocalTime())
+        Logger.debug("The current date time is %s %s",
+            now.toLocalDate(), now.toLocalTime())
 
         // Read application info
-        val nameFile = TextFile("assets/info/name.txt")
-        name = nameFile.readText().trim()
-        val versionFile = TextFile("assets/info/version.txt")
-        version = versionFile.readText().trim()
+        name = TextFile("info/name.txt").readText().trim()
+        version = TextFile("info/version.txt").readText().trim()
 
         // Set preferences
         Preferences.setPreferences()
