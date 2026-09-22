@@ -66,7 +66,9 @@ public final class PathUtil {
      */
     public static String convertPath(String path) {
         // Replace all separators with current separator
-        var currentPath = Path.of("", path.split("[/\\\\]"));
+        var pathNames = path.split("[/\\\\]");
+        // Don't remove leading separator
+        var currentPath = Path.of(String.join(CURRENT_SEPARATOR, pathNames));
         // Remove trailing separators so ClassLoader doesn't give error
         return currentPath.normalize().toString();
     }

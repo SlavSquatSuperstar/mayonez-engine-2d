@@ -168,7 +168,7 @@ class ExternalFilePathTest {
     void parentOfFilePathIsDirectory() {
         var parent = filePathValid.getParent();
         assertNotNull(parent);
-        assertEquals("src/test/resources/testassets/text", parent.getPath());
+        assertEquals(PathUtil.convertPath("src/test/resources/testassets/text"), parent.getPath());
         assertTrue(parent.isDirectory());
     }
 

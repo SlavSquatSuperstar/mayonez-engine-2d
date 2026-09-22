@@ -23,14 +23,14 @@ class ClasspathFilePathTest {
     // Path Name Tests
 
     @Test
-    void externalPathContainsSystemSeparators() {
-        assertTrue(filePathValid.getPath().contains(PathUtil.CURRENT_SEPARATOR));
+    void classpathPathAlwaysContainsForwardSlashes() {
+        assertTrue(filePathValid.getPath().contains(PathUtil.CLASSPATH_SEPARATOR));
 
-        assertTrue(windowsFilePath.getPath().contains(PathUtil.CURRENT_SEPARATOR));
+        assertTrue(windowsFilePath.getPath().contains(PathUtil.CLASSPATH_SEPARATOR));
     }
 
     @Test
-    void externalPathHasCorrectFilename() {
+    void classpathPathHasCorrectFilename() {
         assertEquals("foo.txt", unixFilePath.getFilename());
 
         assertEquals("foo.txt", windowsFilePath.getFilename());
@@ -96,20 +96,20 @@ class ClasspathFilePathTest {
 
     @Test
     void deleteClasspathFileFails() {
-        var filePath1 = fromPath("testassets/text/");
-        assertTrue(filePath1.isDirectory());
+        var filePath = fromPath("testassets/text/");
+        assertTrue(filePath.isDirectory());
 
-        assertFalse(filePath1.delete());
-        assertTrue(filePath1.exists());
+        assertFalse(filePath.delete());
+        assertTrue(filePath.exists());
     }
 
     @Test
     void deleteClasspathDirectoryFails() {
-        var filePath2 = fromPath("testassets/text/foo.txt");
-        assertFalse(filePath2.isDirectory());
+        var filePath = fromPath("testassets/text/foo.txt");
+        assertFalse(filePath.isDirectory());
 
-        assertFalse(filePath2.delete());
-        assertTrue(filePath2.exists());
+        assertFalse(filePath.delete());
+        assertTrue(filePath.exists());
     }
 
     // File Stream Tests
