@@ -240,7 +240,7 @@ public abstract class Scene {
      * @deprecated Use {@link #addNode} instead
      */
     @Deprecated
-    public final void addObject(@Nullable GameObject obj) {
+    public final void addObject(@Nullable Node obj) {
         // Don't add more nodes if scene is stopping
         if (!rootNode.isDestroyed()) addNode(obj);
     }
@@ -276,17 +276,6 @@ public abstract class Scene {
         if (node instanceof CollisionBody b) physics.addCollisionBody(b);
         Logger.trace("Added node \"%s\" to scene \"%s\"",
                 node, this.name);
-    }
-
-    /**
-     * Removes an object from this scene and destroys it.
-     *
-     * @param obj a {@link GameObject}
-     * @deprecated Use {@link #removeNode} instead
-     */
-    @Deprecated
-    public final void removeObject(@Nullable GameObject obj) {
-        removeNode(obj);
     }
 
     /**
