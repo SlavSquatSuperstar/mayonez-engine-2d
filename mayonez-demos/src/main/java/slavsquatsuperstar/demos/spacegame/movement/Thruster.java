@@ -22,7 +22,7 @@ public class Thruster extends Script {
     protected void start() {
         moveEnabled = false;
         turnEnabled = false;
-        exhaustAnim = gameObject.getComponent(Animator.class);
+        exhaustAnim = gameObject.getChild(Animator.class);
         exhaustAnim.setSpriteTransform(properties.offsetXf());
     }
 

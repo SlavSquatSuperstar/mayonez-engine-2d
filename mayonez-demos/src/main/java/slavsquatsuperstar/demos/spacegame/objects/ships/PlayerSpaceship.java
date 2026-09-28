@@ -42,7 +42,7 @@ public class PlayerSpaceship extends Spaceship {
         super.update(dt);
         // Destroy the player (debug only)
         if (KeyInput.keyDown("backspace")) {
-            getComponent(Damageable.class).onObjectDamaged(100);
+            getChild(Damageable.class).onObjectDamaged(100);
         }
     }
 }

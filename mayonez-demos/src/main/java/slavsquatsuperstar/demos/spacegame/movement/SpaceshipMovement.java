@@ -21,7 +21,7 @@ public abstract class SpaceshipMovement extends MovementScript {
     protected void start() {
         super.start();
         if (rb == null) setEnabled(false);
-        thrustController = gameObject.getComponent(ThrustController.class);
+        thrustController = gameObject.getChild(ThrustController.class);
     }
 
     // Movement Script Overrides

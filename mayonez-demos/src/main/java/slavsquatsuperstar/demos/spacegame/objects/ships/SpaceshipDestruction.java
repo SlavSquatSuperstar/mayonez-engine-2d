@@ -23,7 +23,7 @@ public class SpaceshipDestruction extends TimerScript {
     private static final float DESTRUCTION_DURATION = 0.6f;
 
     // References
-    private final List<Component> shipSystems;
+    private final List<Node> shipSystems;
     private GameObject explosion;
 
     public SpaceshipDestruction() {
@@ -36,10 +36,10 @@ public class SpaceshipDestruction extends TimerScript {
         shipSystems.clear();
         explosion = null;
 
-        shipSystems.add(gameObject.getComponent(FireProjectile.class));
-        shipSystems.add(gameObject.getComponent(ThrustController.class));
-        shipSystems.add(gameObject.getComponent(MovementScript.class));
-        shipSystems.add(gameObject.getComponent(KeepInScene.class));
+        shipSystems.add(gameObject.getChild(FireProjectile.class));
+        shipSystems.add(gameObject.getChild(ThrustController.class));
+        shipSystems.add(gameObject.getChild(MovementScript.class));
+        shipSystems.add(gameObject.getChild(KeepInScene.class));
     }
 
     @Override

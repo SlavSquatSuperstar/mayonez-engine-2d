@@ -57,7 +57,7 @@ public class PlayerUIController extends Script implements EventListener<SpaceGam
         if (player == null) {
             damageable = null;
         } else {
-            damageable = player.getComponent(ShieldedDamageable.class);
+            damageable = player.getChild(ShieldedDamageable.class);
         }
     }
 

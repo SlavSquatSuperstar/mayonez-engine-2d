@@ -18,7 +18,7 @@ class DrawPhysicsInformation extends Script {
     @Override
     protected void start() {
         collider = getCollider();
-        sprite = gameObject.getComponent(ShapeSprite.class);
+        sprite = gameObject.getChild(ShapeSprite.class);
     }
 
     @Override

@@ -36,7 +36,7 @@ public class Projectile extends Script {
         }
 
         // Set initial velocity
-        var sourceRb = source.getComponent(Rigidbody.class);
+        var sourceRb = source.getChild(Rigidbody.class);
         if (sourceRb != null) rb.setVelocity(sourceRb.getVelocity());
         rb.addVelocity(transform.getUp().mul(type.speed()));
     }

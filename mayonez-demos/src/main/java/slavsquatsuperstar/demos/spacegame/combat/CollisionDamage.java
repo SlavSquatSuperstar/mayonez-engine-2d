@@ -31,7 +31,7 @@ public class CollisionDamage extends Script {
 
     @Override
     protected void start() {
-        damageable = gameObject.getComponent(Damageable.class);
+        damageable = gameObject.getChild(Damageable.class);
     }
 
     public void onObjectCollision(CollisionEvent event) {

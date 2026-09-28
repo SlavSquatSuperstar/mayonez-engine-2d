@@ -49,7 +49,7 @@ public class ShapeSprite extends Component {
 
     @Override
     protected void start() {
-        collider = gameObject.getComponent(Collider.class);
+        collider = gameObject.getChild(Collider.class);
     }
 
     @Override
