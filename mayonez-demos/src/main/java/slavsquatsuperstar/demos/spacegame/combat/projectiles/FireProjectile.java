@@ -39,7 +39,7 @@ public abstract class FireProjectile extends Script {
      */
     protected void spawnPrefab(ProjectileType type, Vec2 offsetPos, float offsetAngle) {
         getScene().addObject(ProjectilePrefabs.createProjectilePrefab(
-                type, gameObject, offsetPos, offsetAngle
+                type, getParent(), offsetPos, offsetAngle
         ));
     }
 

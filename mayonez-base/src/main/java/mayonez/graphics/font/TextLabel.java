@@ -298,7 +298,7 @@ public class TextLabel extends Script implements Renderable {
 
     @Override
     public int getZIndex() {
-        return gameObject.getZIndex();
+        return getParent().getZIndex();
     }
 
     @Override

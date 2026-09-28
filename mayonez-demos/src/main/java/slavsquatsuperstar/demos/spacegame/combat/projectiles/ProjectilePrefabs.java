@@ -57,8 +57,8 @@ public final class ProjectilePrefabs {
      * @param offsetAngle the projectile spawn angle in relation to the source
      * @return the projectile object, or null if the index is invalid
      */
-    public static GameObject createProjectilePrefab(
-            ProjectileType type, GameObject source, Vec2 offsetPos, float offsetAngle
+    public static Node createProjectilePrefab(
+            ProjectileType type, Node source, Vec2 offsetPos, float offsetAngle
     ) {
         var projXf = getProjectileTransform(type, source.transform, offsetPos, offsetAngle);
         return new GameObject(type.name(), projXf) {

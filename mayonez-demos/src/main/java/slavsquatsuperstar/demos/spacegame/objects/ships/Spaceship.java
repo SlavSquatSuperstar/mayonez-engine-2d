@@ -66,7 +66,7 @@ public abstract class Spaceship extends GameObject {
             return new ShieldedDamageable(maxHull, maxShield, shieldRegen) {
                 @Override
                 public void onHealthDepleted() {
-                    var shipDestruction = gameObject.getChild(SpaceshipDestruction.class);
+                    var shipDestruction = getParent().getChild(SpaceshipDestruction.class);
                     if (shipDestruction != null) shipDestruction.startDestructionSequence();
                 }
             };
@@ -74,7 +74,7 @@ public abstract class Spaceship extends GameObject {
             return new Damageable(maxHull) {
                 @Override
                 public void onHealthDepleted() {
-                    var shipDestruction = gameObject.getChild(SpaceshipDestruction.class);
+                    var shipDestruction = getParent().getChild(SpaceshipDestruction.class);
                     if (shipDestruction != null) shipDestruction.startDestructionSequence();
                 }
             };

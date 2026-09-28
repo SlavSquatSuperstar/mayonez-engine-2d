@@ -36,10 +36,10 @@ public class SpaceshipDestruction extends TimerScript {
         shipSystems.clear();
         explosion = null;
 
-        shipSystems.add(gameObject.getChild(FireProjectile.class));
-        shipSystems.add(gameObject.getChild(ThrustController.class));
-        shipSystems.add(gameObject.getChild(MovementScript.class));
-        shipSystems.add(gameObject.getChild(KeepInScene.class));
+        shipSystems.add(getParent().getChild(FireProjectile.class));
+        shipSystems.add(getParent().getChild(ThrustController.class));
+        shipSystems.add(getParent().getChild(MovementScript.class));
+        shipSystems.add(getParent().getChild(KeepInScene.class));
     }
 
     @Override
@@ -49,7 +49,7 @@ public class SpaceshipDestruction extends TimerScript {
             // Have the explosion follow the ship until it is destroyed
             explosion.transform.setPosition(transform.getPosition());
         }
-        if (this.isReady()) gameObject.setDestroyed();
+        if (this.isReady()) getParent().setDestroyed();
     }
 
     /**

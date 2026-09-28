@@ -39,8 +39,8 @@ public class ShieldedDamageable extends Damageable {
     protected void init() {
         shieldEffect = Sprites.createSprite(SHIELD_EFFECT_TEXTURE)
                 .setSpriteTransform(Transform.scaleInstance(new Vec2(1.1f)));
-        gameObject.addComponent(shieldEffect);
-        shieldEffect.setZIndex(gameObject.getZIndex() + 1);
+        getParent().addChild(shieldEffect);
+        shieldEffect.setZIndex(getParent().getZIndex() + 1);
         shieldEffect.setVisible(false);
     }
 

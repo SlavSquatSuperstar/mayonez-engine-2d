@@ -138,7 +138,7 @@ class Rigidbody(mass: Float, drag: Float, angDrag: Float)
     // Game Loop Methods
 
     override fun start() {
-        collider = gameObject!!.getChild(Collider::class.java)
+        collider = parent!!.getChild(Collider::class.java)
     }
 
     override fun integrateForce(dt: Float, gravity: Vec2) {

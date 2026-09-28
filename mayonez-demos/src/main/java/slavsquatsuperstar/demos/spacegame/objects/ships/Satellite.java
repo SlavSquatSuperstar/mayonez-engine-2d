@@ -36,7 +36,7 @@ public class Satellite extends GameObject {
         var damageable = new Damageable(properties.maxHull()) {
             @Override
             public void onHealthDepleted() {
-                var shipDestruction = gameObject.getChild(SpaceshipDestruction.class);
+                var shipDestruction = getParent().getChild(SpaceshipDestruction.class);
                 if (shipDestruction != null) shipDestruction.startDestructionSequence();
             }
         };

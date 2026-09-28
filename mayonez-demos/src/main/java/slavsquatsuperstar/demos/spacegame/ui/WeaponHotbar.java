@@ -37,7 +37,7 @@ public class WeaponHotbar extends BoxContainer {
 
     @Override
     protected void init() {
-        gameObject.setZIndex(SpaceGameZIndex.UI);
+        getParent().setZIndex(SpaceGameZIndex.UI);
 
         // Create hotbar slots
         // TODO recreate on loadout change
@@ -54,7 +54,7 @@ public class WeaponHotbar extends BoxContainer {
                 return super.getZIndex() + 3; // Display above overlay
             }
         };
-        gameObject.addComponent(selectedBorder);
+        getParent().addChild(selectedBorder);
         setSelection(0);
     }
 

@@ -14,17 +14,17 @@ import mayonez.scripts.*;
  */
 public class Projectile extends Script {
 
-    private final GameObject source;
+    private final Node source;
     private final ProjectileType type;
 
-    public Projectile(GameObject source, ProjectileType type) {
+    public Projectile(Node source, ProjectileType type) {
         this.source = source;
         this.type = type;
     }
 
     @Override
     protected void init() {
-        gameObject.addComponent(new DestroyAfterDuration(type.lifetime()));
+        getParent().addChild(new DestroyAfterDuration(type.lifetime()));
     }
 
     @Override
@@ -56,14 +56,14 @@ public class Projectile extends Script {
 
         // Spawn particle
         getScene().addObject(ProjectilePrefabs.createImpactPrefab(type, particleXf, event.other));
-        gameObject.setDestroyed();
+        getParent().setDestroyed();
     }
 
     public float getDamage() {
         return type.damage();
     }
 
-    public GameObject getSource() {
+    public Node getSource() {
         return source;
     }
 

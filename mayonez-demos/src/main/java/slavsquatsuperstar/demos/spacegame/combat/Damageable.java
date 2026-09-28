@@ -33,7 +33,7 @@ public class Damageable extends Script {
         var parent = event.other.getParent();
         if (parent.hasTag(SpaceGameScene.PROJECTILE_TAG)) {
             var p = parent.getChild(Projectile.class);
-            if (p != null && !gameObject.equals(p.getSource())) {
+            if (p != null && !getParent().equals(p.getSource())) {
                 onObjectDamaged(p.getDamage());
             }
         }
@@ -55,7 +55,7 @@ public class Damageable extends Script {
      * by default.
      */
     public void onHealthDepleted() {
-        gameObject.setDestroyed();
+        getParent().setDestroyed();
     }
 
     // Health Getter Methods

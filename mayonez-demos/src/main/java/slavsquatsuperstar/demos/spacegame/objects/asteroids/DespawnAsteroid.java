@@ -23,7 +23,7 @@ class DespawnAsteroid extends DestroyAfterDuration {
 
     @Override
     protected void start() {
-        sprite = gameObject.getChild(Sprite.class);
+        sprite = getParent().getChild(Sprite.class);
         startScale = transform.getScale();
     }
 

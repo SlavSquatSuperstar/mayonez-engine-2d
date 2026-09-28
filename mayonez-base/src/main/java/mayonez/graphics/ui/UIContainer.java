@@ -98,8 +98,8 @@ public abstract class UIContainer extends UIElement {
      * @param element the element
      */
     public void addElement(UIElement element) {
-        if (gameObject != null) {
-            gameObject.addComponent(element);
+        if (getParent() != null) {
+            getParent().addChild(element);
         }
         elements.add(element);
         if (started) arrangeElements();

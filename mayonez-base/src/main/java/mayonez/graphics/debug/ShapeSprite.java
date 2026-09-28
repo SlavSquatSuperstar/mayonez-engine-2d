@@ -49,13 +49,13 @@ public class ShapeSprite extends Component {
 
     @Override
     protected void start() {
-        collider = gameObject.getChild(Collider.class);
+        collider = getParent().getChild(Collider.class);
     }
 
     @Override
     protected void debugRender() {
         var drawShape = (shape == null) ? getColliderShape() : getWorldShape();
-        var drawBrush = brush.setZIndex(gameObject.getZIndex());
+        var drawBrush = brush.setZIndex(getParent().getZIndex());
         if (brush.getFill()) {
             getScene().getDebugDraw().fillShape(drawShape, drawBrush);
         } else {

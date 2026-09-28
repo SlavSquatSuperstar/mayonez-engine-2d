@@ -30,7 +30,7 @@ class ParticleFollowTarget extends Script {
     protected void update(float dt) {
         // Destroy if target destroyed
         if (target.isDestroyed()) {
-            gameObject.setDestroyed();
+            getParent().setDestroyed();
             return;
         }
 

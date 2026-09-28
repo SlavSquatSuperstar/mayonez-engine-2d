@@ -39,7 +39,7 @@ public class Animator extends Script {
         sprite = Sprites.createSprite(textures[0]);
         sprite.setZIndex(getZIndex());
         sprite.setVisible(false);
-        gameObject.addComponent(sprite);
+        getParent().addChild(sprite);
     }
 
     @Override

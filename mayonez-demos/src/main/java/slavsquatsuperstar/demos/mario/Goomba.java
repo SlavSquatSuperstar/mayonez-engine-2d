@@ -38,7 +38,7 @@ class Goomba extends GameObject {
                 if (!event.trigger
                         && event.type.equals(CollisionEventType.ENTER)
                         && event.other.getParent().getName().equals("Mario")) {
-                    gameObject.setDestroyed();
+                    getParent().setDestroyed();
                 }
             }
         });

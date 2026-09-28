@@ -29,11 +29,11 @@ public class ImageLabel extends UIElement {
 
     @Override
     protected void init() {
-        gameObject.setZIndex(SpaceGameZIndex.UI);
+        getParent().setZIndex(SpaceGameZIndex.UI);
 
         // Background uses label size
         backgroundSprite = new UISprite(position, size, backgroundTexture);
-        gameObject.addComponent(backgroundSprite);
+        getParent().addChild(backgroundSprite);
 
         // Icon can be made smaller by setting padding
         iconSprite = new UISprite(position, size.sub(new Vec2(backgroundPadding)), iconTexture) {
@@ -42,7 +42,7 @@ public class ImageLabel extends UIElement {
                 return super.getZIndex() + 1; // Display above background
             }
         };
-        gameObject.addComponent(iconSprite);
+        getParent().addChild(iconSprite);
 
         // Border can be made larger by setting thickness
         borderSprite = new UISprite(position, size.add(new Vec2(borderThickness)), borderTexture) {
@@ -51,7 +51,7 @@ public class ImageLabel extends UIElement {
                 return super.getZIndex() + 2; // Display above icon
             }
         };
-        gameObject.addComponent(borderSprite);
+        getParent().addChild(borderSprite);
     }
 
     @Override

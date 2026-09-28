@@ -36,7 +36,7 @@ public class ExplosionPrefabs {
                         duration / SHIP_EXPLOSION_SPRITES) {
                     @Override
                     public void onFinishAnimation() {
-                        gameObject.setDestroyed(); // destroy after finishing animation
+                        getParent().setDestroyed(); // destroy after finishing animation
                     }
                 };
                 animator.setZIndex(SpaceGameZIndex.EXPLOSION);

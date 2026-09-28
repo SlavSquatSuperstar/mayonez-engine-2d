@@ -15,7 +15,7 @@ import org.jspecify.annotations.Nullable;
  * <p>
  * The component's parent scene can be accessed through the {@link #getScene} method,
  * and its {@link mayonez.GameObject} and transform can be accessed through the
- * {@link #gameObject} and {@link #transform} fields. To remove the component from its
+ * {@link Node#getParent} and {@link Node#getTransform} meehods. To remove the component from its
  * object, call {@link #setDestroyed}. Components may also be given an update order
  * to tell the game object when to update it using {@link #Component(int)}.
  * <p>
@@ -26,15 +26,6 @@ import org.jspecify.annotations.Nullable;
  */
 @Deprecated
 public abstract class Component extends Node {
-
-    /**
-     * The parent {@link mayonez.GameObject} this component belongs to. The parent
-     * object will be non-null from the start of {@link #init} to the end of
-     * {@link #onDestroy()}.
-     * @deprecated use {@link #getParent} instead
-     */
-    @Deprecated
-    protected @Nullable GameObject gameObject;
 
     protected Component() {
         this(UpdateOrder.SCRIPT);
@@ -52,22 +43,10 @@ public abstract class Component extends Node {
 
     // Property Getters and Setters
 
-    /**
-     * Returns the parent {@link GameObject} this Component is attached to.
-     *
-     * @return the game object
-     * @deprecated Use {@link #getParent} instead
-     */
-    @Deprecated
-    public @Nullable GameObject getGameObject() {
-        return gameObject;
-    }
-
     @Override
     void setParent(@Nullable Node parent) {
         super.setParent(parent);
         if (parent instanceof GameObject obj) {
-            this.gameObject = obj;
             this.transform = obj.transform;
         } else if (parent == null) {
             transform = new Transform();
