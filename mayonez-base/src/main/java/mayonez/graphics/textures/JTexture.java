@@ -80,16 +80,14 @@ public final class JTexture extends Texture {
     /**
      * Draws a texture with the given position, rotation and scale qualities.
      *
-     * @param g2       the graphics object of the window
-     * @param parentXf the transform of the parent object
-     * @param spriteXf any additional transformations on the image
-     * @param color    any recoloring of the image
+     * @param g2    the graphics object of the window
+     * @param texXf the global transform of the texture
+     * @param color any recoloring of the image
      */
-    public void draw(Graphics2D g2, Transform parentXf, Transform spriteXf, Color color) {
+    public void draw(Graphics2D g2, Transform texXf, Color color) {
         if (imageData == null) return;
 
         // Draw sprite at parent center with parent rotation and scale
-        var texXf = parentXf.combine(spriteXf);
         var g2Xf = getImageTransform(texXf);
 
         // Recolor the image (without modifying the original)

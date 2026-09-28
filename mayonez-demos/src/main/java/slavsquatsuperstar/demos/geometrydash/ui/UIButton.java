@@ -50,8 +50,10 @@ public class UIButton extends GameObject {
         selected = false;
         addComponent(new BoxCollider(new Vec2(1, 1)).setTrigger(true));
         addComponent(baseSprite);
-        addComponent(Sprites.createSprite(icon)
-                .setSpriteTransform(Transform.scaleInstance(new Vec2(0.8f))));
+
+        var iconSpr = Sprites.createSprite(icon);
+        iconSpr.setTransform(Transform.scaleInstance(new Vec2(0.8f)));
+        addComponent(iconSpr);
         addComponent(new MouseInputScript() {
             @Override
             public void onMouseDown() {

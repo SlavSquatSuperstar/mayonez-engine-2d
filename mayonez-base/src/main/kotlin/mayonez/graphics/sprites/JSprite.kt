@@ -42,11 +42,12 @@ internal class JSprite private constructor(
     // Sprite Methods
 
     override fun render(g2: Graphics2D) {
+        val globalXf = globalTransform
         if (texture != null) {
-            texture!!.draw(g2, transform, getSpriteTransform(), color)
+            texture!!.draw(g2, globalTransform, color)
         } else {
             scene!!.debugDraw.fillShape(
-                Rectangle(transform.position, transform.scale), color
+                Rectangle(globalXf.position, globalXf.scale, globalXf.rotation), color
             )
         }
     }

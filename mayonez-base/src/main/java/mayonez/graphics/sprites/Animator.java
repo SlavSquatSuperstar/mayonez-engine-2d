@@ -34,6 +34,7 @@ public class Animator extends Script {
         animTimer = new Timer(secondsPerFrame);
     }
 
+    // TODO extend or contain sprite
     @Override
     protected void init() {
         sprite = Sprites.createSprite(textures[0]);
@@ -100,13 +101,9 @@ public class Animator extends Script {
         sprite.setColor(color);
     }
 
-    /**
-     * Sets the transform of the animated sprite.
-     *
-     * @param spriteXf the sprite transform
-     */
-    public void setSpriteTransform(Transform spriteXf) {
-        sprite.setSpriteTransform(spriteXf);
+    @Override
+    public void setTransform(Transform transform) {
+        if (sprite != null) sprite.setTransform(transform);
     }
 
     @Override

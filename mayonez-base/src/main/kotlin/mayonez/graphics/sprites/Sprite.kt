@@ -11,7 +11,7 @@ import mayonez.renderer.*
  *
  * @author SlavSquatSuperstar
  */
-sealed class Sprite : Component(), Renderable {
+sealed class Sprite : Node(), Renderable {
 
     companion object {
         @JvmStatic
@@ -19,9 +19,6 @@ sealed class Sprite : Component(), Renderable {
     }
 
     // Sprite Properties
-
-    private var spriteXf: Transform? = null
-    private var zIndexOverride: Int? = null
 
     /**
      * Get the width of this sprite's stored texture in pixels.
@@ -54,24 +51,6 @@ sealed class Sprite : Component(), Renderable {
     abstract fun setColor(color: MColor?)
 
     /**
-     * Get the sprite's transform in the parent object's local space.
-     *
-     * @return the sprite transform
-     */
-    fun getSpriteTransform(): Transform? = spriteXf
-
-    /**
-     * Set additional position, rotation, and size modifiers for the sprite.
-     *
-     * @param spriteXf the transform
-     * @return this sprite
-     */
-    fun setSpriteTransform(spriteXf: Transform?): Sprite {
-        this.spriteXf = spriteXf
-        return this
-    }
-
-    /**
      * Get the texture this sprite draws.
      *
      * @return the texture, or null if drawing a color
@@ -99,6 +78,7 @@ sealed class Sprite : Component(), Renderable {
      *
      * @return a copy of this image
      */
+    @Deprecated("Use Sprites.createSprite(texture)")
     abstract fun copy(): Sprite?
 
 }

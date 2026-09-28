@@ -53,4 +53,11 @@ public abstract class Component extends Node {
         }
     }
 
+    @Override
+    public Transform getGlobalTransform() {
+        if (parent == null) return transform;
+        else return parent.getGlobalTransform();
+        // Don't combine parent transform with itself
+    }
+
 }
