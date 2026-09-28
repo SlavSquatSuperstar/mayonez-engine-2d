@@ -442,6 +442,22 @@ public abstract class Node {
         return transform;
     }
 
+    public void setTransform(@Nullable Transform transform) {
+        if (transform != null) this.transform.set(transform);
+    }
+
+    /**
+     * The node's global transform inside the scene, equal to this node's
+     * transform right-concatenated with all ancestor node transforms until the
+     * root ancestor.
+     *
+     * @return the global transform
+     */
+    public Transform getGlobalTransform() {
+        if (parent == null) return transform;
+        else return parent.getGlobalTransform().combine(transform);
+    }
+
     // Node Behavior Getters and Setters
 
     /**

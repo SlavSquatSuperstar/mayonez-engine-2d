@@ -1,5 +1,6 @@
 package mayonez;
 
+import mayonez.math.Vec2;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -293,6 +294,17 @@ class NodeTest {
         assertFalse(child2.isTopLevel());
 
         assertFalse(node2.isTopLevel());
+    }
+
+    // Node Transform
+
+    @Test
+    void nodeGlobalTransformCorrect() {
+        node1.addChild(child1);
+        node1.setTransform(new Transform(new Vec2(1f), 90f, new Vec2(2f)));
+        child1.setTransform(new Transform(new Vec2(0f, -1f)));
+
+        assertEquals(new Transform(new Vec2(3f, 1f), 90f, new Vec2(2f)), child1.getGlobalTransform());
     }
 
     // Node Enabled/Visible
