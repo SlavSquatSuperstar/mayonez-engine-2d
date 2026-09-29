@@ -1,12 +1,13 @@
 package mayonez.graphics.sprites;
 
 import mayonez.*;
-import mayonez.graphics.*;
 import mayonez.graphics.textures.*;
 import mayonez.scripts.*;
 
 /**
- * Animates a sprite by swapping between different textures.
+ * Animates a sprite by swapping between different textures provided by a
+ * {@link SpriteSheet}. The animation can be toggled using {@link #setEnabled},
+ * and the texture visibility can be set using {@link #setVisible}.
  *
  * @author SlavSquatSuperstar
  */
@@ -34,13 +35,12 @@ public class Animator extends Script {
         animTimer = new Timer(secondsPerFrame);
     }
 
-    // TODO extend or contain sprite
+    // TODO extend sprite
     @Override
     protected void init() {
         sprite = Sprites.createSprite(textures[0]);
         sprite.setZIndex(getZIndex());
-        sprite.setVisible(false);
-        getParent().addChild(sprite);
+        addChild(sprite);
     }
 
     @Override
@@ -81,25 +81,7 @@ public class Animator extends Script {
         }
     }
 
-    /**
-     * Resumes or pauses the animation.
-     *
-     * @param enabled if the animation should play, true by default
-     */
-    public void setAnimationEnabled(boolean enabled) {
-        animTimer.setPaused(!enabled);
-    }
-
     // Sprite Methods
-
-    /**
-     * Sets the color of the animated sprite
-     *
-     * @param color the sprite color
-     */
-    public void setSpriteColor(Color color) {
-        sprite.setColor(color);
-    }
 
     @Override
     public void setTransform(Transform transform) {
@@ -128,15 +110,9 @@ public class Animator extends Script {
     // Callback Methods
 
     @Override
-    protected void onEnable() {
-        setVisible(true);
-        setAnimationEnabled(true);
-    }
-
-    @Override
-    protected void onDisable() {
-        setVisible(false);
-        setAnimationEnabled(false);
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        animTimer.setPaused(!enabled);
     }
 
     /**

@@ -29,6 +29,7 @@ public class Thruster extends Script {
     @Override
     protected void update(float dt) {
         exhaustAnim.setEnabled(moveEnabled || turnEnabled);
+        exhaustAnim.setVisible(moveEnabled || turnEnabled);
     }
 
     @Override
