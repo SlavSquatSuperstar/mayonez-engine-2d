@@ -10,7 +10,7 @@ import java.util.*;
  *
  * @author SlavSquatSuperstar
  */
-public class ThrustController extends Script {
+public class ThrustController extends Node {
 
     // Movement Fields
     private final List<ThrusterProperties> thrusterProperties;
@@ -21,11 +21,10 @@ public class ThrustController extends Script {
     }
 
     @Override
-    protected void start() {
-        // Add thruster objects to scene
-        thrusters = ThrusterPrefabs.getThrusters(thrusterProperties);
-        var thrusterObjects = ThrusterPrefabs.getThrusterObjects(thrusters, transform);
-        thrusterObjects.forEach(getScene()::addObject);
+    protected void init() {
+        // Add thruster nodes to scene
+        thrusters = thrusterProperties.stream().map(Thruster::new).toList();
+        thrusters.forEach(this::addChild);
     }
 
     // Thruster Methods
@@ -70,7 +69,7 @@ public class ThrustController extends Script {
 
     @Override
     protected void onDestroy() {
-        for (var thruster : thrusters) thruster.getParent().setDestroyed();
+        for (var thruster : thrusters) thruster.setDestroyed();
     }
 
 }

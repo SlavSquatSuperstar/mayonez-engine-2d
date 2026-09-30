@@ -11,7 +11,7 @@ import mayonez.scripts.*;
  *
  * @author SlavSquatSuperstar
  */
-public class Animator extends Script {
+public class Animator extends Node {
 
     // Animation Fields
     private final Texture[] textures;
@@ -82,11 +82,6 @@ public class Animator extends Script {
     }
 
     // Sprite Methods
-
-    @Override
-    public void setTransform(Transform transform) {
-        if (sprite != null) sprite.setTransform(transform);
-    }
 
     @Override
     public void setVisible(boolean visible) {
