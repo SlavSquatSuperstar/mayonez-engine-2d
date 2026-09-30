@@ -17,7 +17,7 @@ import org.jspecify.annotations.Nullable;
  * and its {@link mayonez.GameObject} and transform can be accessed through the
  * {@link Node#getParent} and {@link Node#getTransform} meehods. To remove the component from its
  * object, call {@link #setDestroyed}. Components may also be given an update order
- * to tell the game object when to update it using {@link #Component(int)}.
+ * to tell the game object when to update it using {@link Node#setUpdateOrder}.
  * <p>
  * See {@link mayonez.GameObject} and {@link mayonez.Script} for more information.
  *
@@ -28,36 +28,13 @@ import org.jspecify.annotations.Nullable;
 public abstract class Component extends Node {
 
     protected Component() {
-        this(UpdateOrder.SCRIPT);
-    }
-
-    public Component(int updateOrder) {
-        this(null, updateOrder);
+        this(null, UpdateOrder.SCRIPT);
     }
 
     public Component(@Nullable String name, int updateOrder) {
         super(name);
-        transform = new Transform();
         setUpdateOrder(updateOrder);
-    }
-
-    // Property Getters and Setters
-
-    @Override
-    void setParent(@Nullable Node parent) {
-        super.setParent(parent);
-        if (parent instanceof GameObject obj) {
-            this.transform = obj.transform;
-        } else if (parent == null) {
-            transform = new Transform();
-        }
-    }
-
-    @Override
-    public Transform getGlobalTransform() {
-        if (parent == null) return transform;
-        else return parent.getGlobalTransform();
-        // Don't combine parent transform with itself
+        setUseParentTransform(true);
     }
 
 }

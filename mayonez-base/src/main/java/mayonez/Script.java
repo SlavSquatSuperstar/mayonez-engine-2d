@@ -16,11 +16,11 @@ import org.jspecify.annotations.Nullable;
 public abstract class Script extends Component {
 
     public Script() {
-        super(UpdateOrder.SCRIPT);
+        this(UpdateOrder.SCRIPT);
     }
 
     public Script(int updateOrder) {
-        super(updateOrder);
+        super(null, updateOrder);
     }
 
     // Component Getters

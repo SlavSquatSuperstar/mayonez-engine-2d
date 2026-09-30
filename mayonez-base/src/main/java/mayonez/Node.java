@@ -47,8 +47,8 @@ public abstract class Node {
      * The node's {@link mayonez.Transform} that defines its space in the world.
      */
     public Transform transform;
-    // TODO global transform
-    // TODO getter/setters
+    private final Transform originalTransform;
+    private boolean useParentTransform;
 
     // Node Behavior
     private boolean destroyed, enabled, visible;
@@ -77,7 +77,7 @@ public abstract class Node {
      *
      * @param name the node name
      */
-    public Node(@Nullable String name, Transform transform) {
+    public Node(@Nullable String name, @Nullable Transform transform) {
         nodeID = nodeCounter++;
         this.name = validateName(name);
         tags = new HashSet<>();
@@ -86,7 +86,9 @@ public abstract class Node {
         parent = null;
         children = new ArrayList<>();
         childrenChanged = false;
-        this.transform = transform;
+        originalTransform = transform != null ? transform : new Transform();
+        this.transform = originalTransform;
+        useParentTransform = false;
 
         destroyed = false;
         enabled = true;
@@ -288,6 +290,11 @@ public abstract class Node {
      */
     void setParent(@Nullable Node parent) {
         this.parent = parent;
+        if (useParentTransform && parent != null) {
+            this.transform = parent.transform;
+        } else {
+            this.transform = originalTransform;
+        }
     }
 
     /**
@@ -434,7 +441,7 @@ public abstract class Node {
     }
 
     /**
-     * The node's transform that defines its position, rotation, and scale.
+     * The node's {@link Transform} that defines its position, rotation, and scale.
      *
      * @return the transform
      */
@@ -442,8 +449,35 @@ public abstract class Node {
         return transform;
     }
 
+    /**
+     * Set the node's {@link Transform} to the value of the given transform.
+     * Note that this Node's transform will not point to the parent's transform.
+     *
+     * @param transform the transform
+     */
     public void setTransform(@Nullable Transform transform) {
         if (transform != null) this.transform.set(transform);
+    }
+
+    /**
+     * Set whether this Node's {@link Transform} should point to the parent
+     * node's transform. If {@code true}, then modifying this node's transform
+     * will modify the parent's transform. All subclasses of {@link Component}
+     * have this property set to {@code true}.
+     *
+     * @param useParentTransform whether to reference the parent transform
+     * @deprecated This method is a leftover from the old GameObject-Component
+     * architecture, where Components referenced their GameObject's transforms.
+     * The Node whose transform is being updated should be the parent instead.
+     */
+    @Deprecated
+    protected void setUseParentTransform(boolean useParentTransform) {
+        this.useParentTransform = useParentTransform;
+        if (useParentTransform && parent != null) {
+            this.transform = parent.transform;
+        } else {
+            this.transform = originalTransform;
+        }
     }
 
     /**
@@ -455,6 +489,7 @@ public abstract class Node {
      */
     public Transform getGlobalTransform() {
         if (parent == null) return transform;
+        else if (useParentTransform) return parent.getGlobalTransform();
         else return parent.getGlobalTransform().combine(transform);
     }
 
