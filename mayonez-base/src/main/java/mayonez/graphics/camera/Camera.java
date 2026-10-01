@@ -29,8 +29,8 @@ public abstract class Camera extends Node implements Viewport {
     private Color backgroundColor;
     private float zoom, rotation;
 
-    // GameObject Fields
-    private GameObject subject; // Object to follow
+    // Node Fields
+    private Node subject; // Object to follow
     private final List<Node> cameraScripts;
 
     protected Camera(Vec2 screenSize) {
@@ -243,7 +243,7 @@ public abstract class Camera extends Node implements Viewport {
      *
      * @return the subject
      */
-    public final GameObject getSubject() {
+    public final Node getSubject() {
         return subject;
     }
 
@@ -251,9 +251,9 @@ public abstract class Camera extends Node implements Viewport {
      * Tell this camera to start following a subject, or disables subject following. If the camera mode
      * is changed, the camera will remember the last subject.
      *
-     * @param subject a {@link mayonez.GameObject} in the scene
+     * @param subject a {@link mayonez.Node} in the scene
      */
-    public final void setSubject(GameObject subject) {
+    public final void setSubject(Node subject) {
         this.subject = subject;
     }
 
