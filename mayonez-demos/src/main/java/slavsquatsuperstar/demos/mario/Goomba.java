@@ -13,7 +13,7 @@ import mayonez.scripts.*;
  *
  * @author SlavSquatSuperstar
  */
-class Goomba extends GameObject {
+class Goomba extends Node {
 
     private static final int[] SPRITE_SHEET_INDICES = {14, 17, 20, 23};
     private static final String[] GOOMBA_NAMES = {
@@ -30,9 +30,9 @@ class Goomba extends GameObject {
     @Override
     protected void init() {
         addTag(MarioScene.CHARACTERS_TAG);
-        addComponent(MarioScene.SPRITES.getSprite(spriteIndex));
+        addChild(MarioScene.SPRITES.getSprite(spriteIndex));
 
-        addComponent(new BoxCollider(new Vec2(0.8f, 1)) {
+        addChild(new BoxCollider(new Vec2(0.8f, 1)) {
             @Override
             public void onCollisionEvent(CollisionEvent event) {
                 if (!event.trigger
@@ -42,15 +42,15 @@ class Goomba extends GameObject {
                 }
             }
         });
-        addComponent(new Rigidbody(1f, 0.5f, 0f).setFixedRotation(true));
+        addChild(new Rigidbody(1f, 0.5f, 0f).setFixedRotation(true));
 
         var sceneMin = MarioScene.SCENE_HALF_SIZE.mul(-1f).add(new Vec2(0, 4));
-        addComponent(new KeepInScene(sceneMin, MarioScene.SCENE_HALF_SIZE, KeepInScene.Mode.STOP));
+        addChild(new KeepInScene(sceneMin, MarioScene.SCENE_HALF_SIZE, KeepInScene.Mode.STOP));
     }
 
     // Factory Methods
 
-    protected static GameObject createRandomGoomba(int type, Vec2 spawnPosition) {
+    static Node createRandomGoomba(int type, Vec2 spawnPosition) {
         return new Goomba(GOOMBA_NAMES[type], SPRITE_SHEET_INDICES[type], spawnPosition);
     }
 

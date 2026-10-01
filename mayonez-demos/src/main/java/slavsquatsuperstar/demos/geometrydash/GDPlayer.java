@@ -14,7 +14,7 @@ import mayonez.scripts.*;
  *
  * @author SlavSquatSuperstar
  */
-class GDPlayer extends GameObject {
+class GDPlayer extends Node {
 
     // Constants
     private static final float PLAYER_SPEED = 12f;
@@ -29,7 +29,7 @@ class GDPlayer extends GameObject {
             = createSpriteSheets();
 
     GDPlayer(String name, Vec2 position) {
-        super(name, position);
+        super(name, new Transform(position));
     }
 
     @Override
@@ -39,12 +39,12 @@ class GDPlayer extends GameObject {
         // Player Avatar
         addSpriteLayers();
 
-        addComponent(new BoxCollider(new Vec2(1, 1)));
-        addComponent(new Rigidbody(1f).setDrag(0.2f).setFixedRotation(true));
-        addComponent(new GDPlayerMovement(PLAYER_SPEED, HORIZ_AXIS, VERT_AXIS));
+        addChild(new BoxCollider(new Vec2(1, 1)));
+        addChild(new Rigidbody(1f).setDrag(0.2f).setFixedRotation(true));
+        addChild(new GDPlayerMovement(PLAYER_SPEED, HORIZ_AXIS, VERT_AXIS));
 
         var halfSize = GDEditorScene.SCENE_SIZE.mul(0.5f);
-        addComponent(new KeepInScene(halfSize.mul(-1f), halfSize, KeepInScene.Mode.STOP));
+        addChild(new KeepInScene(halfSize.mul(-1f), halfSize, KeepInScene.Mode.STOP));
     }
 
     private void addSpriteLayers() {
@@ -61,7 +61,7 @@ class GDPlayer extends GameObject {
         };
         for (var i = 0; i < layers.length; i++) {
             layers[i].setColor(colors[i]);
-            addComponent(layers[i]);
+            addChild(layers[i]);
         }
     }
 

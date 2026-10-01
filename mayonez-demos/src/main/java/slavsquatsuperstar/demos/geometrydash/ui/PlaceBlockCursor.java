@@ -12,7 +12,7 @@ import slavsquatsuperstar.demos.geometrydash.ZIndex;
  *
  * @author SlavSquatSuperstar
  */
-public class PlaceBlockCursor extends GameObject {
+public class PlaceBlockCursor extends Node {
 
     private static final Color CURSOR_COLOR = Color.grayscale(255, 127);
     private Sprite cursorSprite;
@@ -26,7 +26,7 @@ public class PlaceBlockCursor extends GameObject {
     protected void init() {
         cursorSprite = Sprites.createSprite(CURSOR_COLOR);
         cursorSprite.setVisible(false);
-        addComponent(cursorSprite);
+        addChild(cursorSprite);
     }
 
     public void setCursorTexture(Texture cursor) {

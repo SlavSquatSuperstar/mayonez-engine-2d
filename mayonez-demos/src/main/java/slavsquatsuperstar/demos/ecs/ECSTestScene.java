@@ -39,14 +39,14 @@ public class ECSTestScene extends DemoScene {
         addedComponent = false;
         removedComponent = false;
 
-        addNode(new GameObject("Spawn Manager") {
+        addNode(new Node("Spawn Manager") {
             @Override
             protected void init() {
                 var fontSize = 20;
-                objCount = new TextLabel("GameObjects:", new Vec2(80, 60))
+                objCount = new TextLabel("Parents:", new Vec2(80, 60))
                         .setFontSize(fontSize)
                         .setAlignment(TextAlignment.LEFT);
-                compCount = new TextLabel("Components:", new Vec2(80, 20))
+                compCount = new TextLabel("Children:", new Vec2(80, 20))
                         .setFontSize(fontSize)
                         .setAlignment(TextAlignment.LEFT);
                 addChild(objCount);
@@ -90,7 +90,7 @@ public class ECSTestScene extends DemoScene {
 
     // Helper Classes
 
-    private class TestObject extends GameObject {
+    private class TestObject extends Node {
         public TestObject() {
             super("Test Object");
         }
@@ -106,7 +106,7 @@ public class ECSTestScene extends DemoScene {
         }
     }
 
-    private class TestComponent extends Component {
+    private class TestComponent extends Node {
         public TestComponent() {
         }
 

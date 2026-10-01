@@ -46,18 +46,18 @@ public class MarioScene extends DemoScene {
         setGravity(new Vec2(0, -SCENE_GRAVITY));
 
         // Background
-        addObject(new GameObject("Background",
+        addNode(new Node("Background",
                 Transform.scaleInstance(new Vec2(BACKGROUND_WIDTH, BACKGROUND_HEIGHT).div(SCENE_SCALE))) {
             @Override
             protected void init() {
                 setZIndex(-10);
                 var sprite = Sprites.createSprite(BACKGROUND_TEXTURE);
-                addComponent(sprite);
+                addChild(sprite);
             }
         });
 
         getCamera().addCameraScript(new CameraKeepInScene(SCENE_HALF_SIZE.mul(-1f), SCENE_HALF_SIZE));
-        addObject(new Mario(new Vec2(-23f, -11f)));
+        addNode(new Mario(new Vec2(-23f, -11f)));
 
         // Add Enemies
         var halfWidth = SCENE_HALF_SIZE.x - 12;
@@ -65,7 +65,7 @@ public class MarioScene extends DemoScene {
         for (var i = 0; i < 16; i++) {
             var randPos = Random.randomVector(-halfWidth, halfWidth,
                     -halfHeight + 4, halfHeight - 20);
-            addObject(Goomba.createRandomGoomba(i % 4, randPos));
+            addNode(Goomba.createRandomGoomba(i % 4, randPos));
         }
         addObstaclesToScene();
     }
@@ -73,27 +73,27 @@ public class MarioScene extends DemoScene {
     private void addObstaclesToScene() {
         // Randomly tunneling through ground if scale too small and speed too fast
         // Manually clamp position using KeepInScene
-        addObject(createBoxObstacle("Ground", new Vec2(0, -14), new Vec2(60, 4)));
+        addNode(createBoxObstacle("Ground", new Vec2(0, -14), new Vec2(60, 4)));
 
-        addObject(createBoxObstacle("Mystery Box", new Vec2(-25, -5), new Vec2(2, 2)));
-        addObject(createBoxObstacle("1x1 Platform", new Vec2(-13, -5), new Vec2(2, 2)));
-        addObject(createBoxObstacle("2x1 Platform", new Vec2(10, -5), new Vec2(4, 2)));
-        addObject(createBoxObstacle("3x1 Platform", new Vec2(-5, 3), new Vec2(6, 2)));
-        addObject(createBoxObstacle("4x1 Platform", new Vec2(10, 3), new Vec2(8, 2)));
+        addNode(createBoxObstacle("Mystery Box", new Vec2(-25, -5), new Vec2(2, 2)));
+        addNode(createBoxObstacle("1x1 Platform", new Vec2(-13, -5), new Vec2(2, 2)));
+        addNode(createBoxObstacle("2x1 Platform", new Vec2(10, -5), new Vec2(4, 2)));
+        addNode(createBoxObstacle("3x1 Platform", new Vec2(-5, 3), new Vec2(6, 2)));
+        addNode(createBoxObstacle("4x1 Platform", new Vec2(10, 3), new Vec2(8, 2)));
 
-        addObject(createBoxObstacle("Stairs Step 1", new Vec2(19, -11), new Vec2(2, 2)));
-        addObject(createBoxObstacle("Stairs Step 2", new Vec2(21, -10), new Vec2(2, 4)));
-        addObject(createBoxObstacle("Stairs Step 3", new Vec2(23, -9), new Vec2(2, 6)));
-        addObject(createBoxObstacle("Stairs Step 4", new Vec2(25, -8), new Vec2(2, 8)));
+        addNode(createBoxObstacle("Stairs Step 1", new Vec2(19, -11), new Vec2(2, 2)));
+        addNode(createBoxObstacle("Stairs Step 2", new Vec2(21, -10), new Vec2(2, 4)));
+        addNode(createBoxObstacle("Stairs Step 3", new Vec2(23, -9), new Vec2(2, 6)));
+        addNode(createBoxObstacle("Stairs Step 4", new Vec2(25, -8), new Vec2(2, 8)));
     }
 
-    private GameObject createBoxObstacle(String name, Vec2 position, Vec2 size) {
-        return new GameObject(name, position) {
+    private Node createBoxObstacle(String name, Vec2 position, Vec2 size) {
+        return new Node(name, new Transform(position)) {
             @Override
             protected void init() {
                 addTag(MarioScene.GROUND_TAG);
-                addComponent(new Rigidbody(0f));
-                addComponent(new BoxCollider(size));
+                addChild(new Rigidbody(0f));
+                addChild(new BoxCollider(size));
             }
         };
     }
