@@ -11,7 +11,7 @@ import mayonez.math.shapes.*;
  *
  * @author SlavSquatSuperstar
  */
-public class KeyInputTester extends Script {
+public class KeyInputTester extends Node {
 
     private static final Vec2 KEY_SIZE = new Vec2(6);
     private static final KeySprite[] KEY_SPRITES = {

@@ -38,26 +38,19 @@ public class CirclesTestScene extends DemoScene {
                     SCENE_HALF_SIZE.mul(-1f), SCENE_HALF_SIZE
             );
 
-            addObject(new GameObject("Ball " + (i + 1), position) {
+            addNode(new Node("Ball " + (i + 1), position) {
                 @Override
                 protected void init() {
-                    var color = Colors.randomColor();
-                    var fill = Random.randomBoolean();
-                    var stroke = Random.randomInt(1, 3);
-
-                    var shape = getShape(Random.randomBoolean());
-                    var sprite = new ShapeSprite(shape, color, fill);
-                    sprite.setStrokeSize(stroke);
-                    addComponent(sprite);
+                    addChild(getShapeSprite());
                 }
             });
         }
 
-        addObject(new GameObject("FPS Counter") {
+        addNode(new Node("FPS Counter") {
             @Override
             protected void init() {
                 // Background
-                addComponent(new UISprite(
+                addChild(new UISprite(
                         new Vec2(110, Mayonez.getScreenHeight() - 75),
                         new Vec2(200, 100), Colors.LIGHT_GRAY
                 ));
@@ -71,7 +64,7 @@ public class CirclesTestScene extends DemoScene {
                         setMessage("FPS: " + Mayonez.getRenderFPS());
                     }
                 };
-                addComponent(fpsText
+                addChild(fpsText
                         .setAnchor(Anchor.TOP_LEFT)
                         .setFontSize(45));
                 var tpsText = new TextLabel(
@@ -83,24 +76,36 @@ public class CirclesTestScene extends DemoScene {
                         setMessage("TPS: " + Mayonez.getFixedTPS());
                     }
                 };
-                addComponent(tpsText
+                addChild(tpsText
                         .setAnchor(Anchor.TOP_LEFT)
                         .setFontSize(45));
             }
         });
     }
 
-    private static Shape getShape(boolean isEllipse) {
-        if (isEllipse) {
-            var width = Random.randomFloat(MIN_RADIUS, MAX_RADIUS) * 2f;
-            var height = width * Random.randomFloat(0.75f, 1.25f);
-            var size = new Vec2(width, height);
-            var rotation = Random.randomAngle();
-            return new Ellipse(new Vec2(0f), size, rotation);
-        } else {
-            var radius = Random.randomFloat(MIN_RADIUS, MAX_RADIUS);
-            return new Circle(new Vec2(0f), radius);
-        }
+    private static ShapeSprite getShapeSprite() {
+        var color = Colors.randomColor();
+        var fill = Random.randomBoolean();
+        var stroke = Random.randomInt(1, 3);
+
+        var isEllipse = Random.randomBoolean();
+        var shape = isEllipse ? getRandomEllipse() : getRandomCircle();
+        var sprite = new ShapeSprite(shape, color, fill);
+        sprite.setStrokeSize(stroke);
+        return sprite;
+    }
+
+    private static Shape getRandomEllipse() {
+        var width = Random.randomFloat(MIN_RADIUS, MAX_RADIUS) * 2f;
+        var height = width * Random.randomFloat(0.75f, 1.25f);
+        var size = new Vec2(width, height);
+        var rotation = Random.randomAngle();
+        return new Ellipse(new Vec2(0f), size, rotation);
+    }
+
+    private static Shape getRandomCircle() {
+        var radius = Random.randomFloat(MIN_RADIUS, MAX_RADIUS);
+        return new Circle(new Vec2(0f), radius);
     }
 
 }

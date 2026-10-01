@@ -15,7 +15,7 @@ import java.util.Deque;
  *
  * @author SlavSquatSuperstar
  */
-public class MouseInputTester extends Script {
+public class MouseInputTester extends Node {
 
     private static final ButtonSprite[] MOUSE_BUTTONS = {
             new ButtonSprite(

@@ -66,13 +66,13 @@ public class RendererTestScene extends DemoScene {
 
         // Sprites
 
-        addObject(new GameObject("background-1",
+        addNode(new Node("background-1",
                 Transform.scaleInstance(new Vec2(1920, 1024).div(SCENE_SCALE))) {
             @Override
             protected void init() {
                 setZIndex(-10);
                 var sprite = Sprites.createSprite(bgTex);
-                addComponent(sprite);
+                addChild(sprite);
             }
         });
 
@@ -135,7 +135,7 @@ public class RendererTestScene extends DemoScene {
         addUIObject("ui-3b", new Vec2(uiStartPos + 128, uiStartPos), 11, tex5);
         addUIObject("ui-3c", new Vec2(uiStartPos + 128, uiStartPos), 12, sheet2.getTexture(2));
 
-        addObject(new GameObject("text-1") {
+        addNode(new Node("text-1") {
             private TextAlignment align = TextAlignment.LEFT;
             private TextLabel worldText, uiText;
 
@@ -147,7 +147,7 @@ public class RendererTestScene extends DemoScene {
                         .setColor(Colors.BLUE)
                         .setFontSize(6)
                         .setAnchor(Anchor.TOP_LEFT);
-                addComponent(worldText);
+                addChild(worldText);
 
                 uiText = new TextLabel(
                         UI_MESSAGE, new Vec2(20, Mayonez.getScreenHeight() - 20))
@@ -155,7 +155,7 @@ public class RendererTestScene extends DemoScene {
                         .setColor(Colors.RED)
                         .setFontSize(40)
                         .setAnchor(Anchor.TOP_LEFT);
-                addComponent(uiText);
+                addChild(uiText);
             }
 
             @Override
@@ -179,25 +179,25 @@ public class RendererTestScene extends DemoScene {
     // Sprites
 
     private void addTextureObject(String name, Vec2 pos, int zIndex, Texture tex, Color color) {
-        addObject(new GameObject(name,
+        addNode(new Node(name,
                 new Transform(pos, 0f, new Vec2(10f))) {
             @Override
             protected void init() {
                 setZIndex(zIndex);
                 var sprite = Sprites.createSprite(tex);
                 sprite.setColor(color);
-                addComponent(sprite);
+                addChild(sprite);
             }
         });
     }
 
     private void addAnimatedObject(String name, Vec2 pos, int zIndex, SpriteSheet sheet) {
-        addObject(new GameObject(name,
+        addNode(new Node(name,
                 new Transform(pos, 0f, new Vec2(10f))) {
             @Override
             protected void init() {
                 setZIndex(zIndex);
-                addComponent(new Animator(sheet, 0.125f));
+                addChild(new Animator(sheet, 0.125f));
             }
         });
     }
@@ -208,7 +208,7 @@ public class RendererTestScene extends DemoScene {
         var fillBrush = ShapeBrush.createSolidBrush(color).setZIndex(zIndex);
         var drawBrush = ShapeBrush.createOutlineBrush(Colors.BLACK).setZIndex(zIndex).setStrokeSize(2);
 
-        addObject(new GameObject(name) {
+        addNode(new Node(name) {
             @Override
             protected void debugRender() {
                 getDebugDraw().fillShape(shape, fillBrush);
@@ -228,7 +228,7 @@ public class RendererTestScene extends DemoScene {
     }
 
     private void addLineObject(String name, Vec2 start, Vec2 end, int zIndex, Color color) {
-        addObject(new GameObject(name) {
+        addNode(new Node(name) {
             @Override
             protected void debugRender() {
                 getDebugDraw().drawLine(
@@ -242,11 +242,11 @@ public class RendererTestScene extends DemoScene {
     // UI Objects
 
     private void addUIObject(String obj1, Vec2 pos, int zIndex, Texture tex) {
-        addObject(new GameObject(obj1, pos) {
+        addNode(new Node(obj1, pos) {
             @Override
             protected void init() {
                 setZIndex(zIndex);
-                addComponent(new UISprite(pos, new Vec2(64, 64), tex));
+                addChild(new UISprite(pos, new Vec2(64, 64), tex));
             }
         });
     }

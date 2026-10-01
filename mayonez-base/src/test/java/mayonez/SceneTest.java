@@ -65,13 +65,13 @@ class SceneTest {
 
     @Test
     void objectRenamingContiguousSuccess() {
-        var obj1 = new GameObject("Test Object");
-        var obj2 = new GameObject("Test Object");
-        var obj3 = new GameObject("Test Object");
+        var obj1 = new NodeA("Test Object");
+        var obj2 = new NodeA("Test Object");
+        var obj3 = new NodeA("Test Object");
 
-        scene1.addObject(obj1);
-        scene1.addObject(obj2);
-        scene1.addObject(obj3);
+        scene1.addNode(obj1);
+        scene1.addNode(obj2);
+        scene1.addNode(obj3);
 
         assertEquals("Test Object", obj1.getName());
         assertEquals("Test Object (1)", obj2.getName());
@@ -80,15 +80,15 @@ class SceneTest {
 
     @Test
     void objectRenamingMultipleContiguousSuccess() {
-        var obj1 = new GameObject("Test Object");
-        var obj2 = new GameObject("Test Object");
-        var obj3 = new GameObject("Test Object");
-        var obj4 = new GameObject("Test Object");
+        var obj1 = new NodeA("Test Object");
+        var obj2 = new NodeA("Test Object");
+        var obj3 = new NodeA("Test Object");
+        var obj4 = new NodeA("Test Object");
 
-        scene1.addObject(obj1);
-        scene1.addObject(obj2);
-        scene1.addObject(obj3);
-        scene1.addObject(obj4);
+        scene1.addNode(obj1);
+        scene1.addNode(obj2);
+        scene1.addNode(obj3);
+        scene1.addNode(obj4);
 
         assertEquals("Test Object", obj1.getName());
         assertEquals("Test Object (1)", obj2.getName());
@@ -98,15 +98,15 @@ class SceneTest {
 
     @Test
     void objectRenamingNonContiguousSuccess() {
-        var obj1 = new GameObject("Test Object");
-        var obj2 = new GameObject("Test Object (1)");
-        var obj3 = new GameObject("Test Object (3)");
-        var obj4 = new GameObject("Test Object");
+        var obj1 = new NodeA("Test Object");
+        var obj2 = new NodeA("Test Object (1)");
+        var obj3 = new NodeA("Test Object (3)");
+        var obj4 = new NodeA("Test Object");
 
-        scene1.addObject(obj1);
-        scene1.addObject(obj2);
-        scene1.addObject(obj3);
-        scene1.addObject(obj4);
+        scene1.addNode(obj1);
+        scene1.addNode(obj2);
+        scene1.addNode(obj3);
+        scene1.addNode(obj4);
 
         assertEquals("Test Object", obj1.getName());
         assertEquals("Test Object (1)", obj2.getName());
