@@ -1,5 +1,6 @@
 package mayonez;
 
+import mayonez.math.Vec2;
 import mayonez.util.StringUtils;
 import org.jspecify.annotations.Nullable;
 
@@ -83,10 +84,22 @@ public abstract class Node {
     }
 
     /**
+     * Create an empty node with a name and position. If the name is
+     * {@code null} or blank, it will default to the class name.
+     *
+     * @param name     the node name
+     * @param position the node position
+     */
+    public Node(@Nullable String name, @Nullable Vec2 position) {
+        this(name, new Transform(position != null ? position : new Vec2()));
+    }
+
+    /**
      * Create an empty node with a name and transform. If the name is
      * {@code null} or blank, it will default to the class name.
      *
-     * @param name the node name
+     * @param name      the node name
+     * @param transform the node transform
      */
     public Node(@Nullable String name, @Nullable Transform transform) {
         nodeID = nodeCounter++;

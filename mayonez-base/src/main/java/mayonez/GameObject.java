@@ -32,7 +32,7 @@ public class GameObject extends Node {
      * @param name the object name
      */
     public GameObject(@Nullable String name) {
-        this(name, new Vec2());
+        super(name);
     }
 
     /**
@@ -42,8 +42,8 @@ public class GameObject extends Node {
      * @param name     the object name
      * @param position the object starting position
      */
-    public GameObject(@Nullable String name, Vec2 position) {
-        this(name, new Transform(position));
+    public GameObject(@Nullable String name, @Nullable Vec2 position) {
+        super(name, position);
     }
 
     /**
@@ -53,7 +53,7 @@ public class GameObject extends Node {
      * @param name      the object name
      * @param transform the object starting transform
      */
-    public GameObject(@Nullable String name, Transform transform) {
+    public GameObject(@Nullable String name, @Nullable Transform transform) {
         super(name, transform);
     }
 
