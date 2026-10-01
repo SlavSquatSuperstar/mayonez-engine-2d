@@ -11,7 +11,7 @@ import mayonez.physics.*;
  *
  * @author SlavSquatSupertar
  */
-class ToggleGravity extends Script {
+class ToggleGravity extends Node {
 
     private final TextLabel gravityText;
     private boolean enabledGravity;

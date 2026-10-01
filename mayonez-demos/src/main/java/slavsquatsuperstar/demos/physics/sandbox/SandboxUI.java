@@ -5,7 +5,7 @@ import mayonez.graphics.font.*;
 import mayonez.graphics.ui.*;
 import mayonez.math.*;
 
-public class SandboxUI extends GameObject {
+public class SandboxUI extends Node {
 
     private static final int FONT_SIZE = 20;
     private static final String CONTROL_HINTS_MESSAGE = """
@@ -31,7 +31,6 @@ public class SandboxUI extends GameObject {
 
     @Override
     protected void init() {
-
         // Toggle Hints
         var hintsTooltip = new TextLabel(
                 "Show Controls (H)",
@@ -39,7 +38,7 @@ public class SandboxUI extends GameObject {
                         Mayonez.getScreenHeight() - 20))
                 .setAnchor(Anchor.TOP_RIGHT)
                 .setFontSize(FONT_SIZE);
-        addComponent(hintsTooltip);
+        addChild(hintsTooltip);
 
         var controlHints = new TextLabel(
                 CONTROL_HINTS_MESSAGE,
@@ -47,8 +46,8 @@ public class SandboxUI extends GameObject {
                         Mayonez.getScreenHeight() - 70))
                 .setAnchor(Anchor.TOP_RIGHT)
                 .setFontSize(FONT_SIZE);
-        addComponent(controlHints);
-        addComponent(new ToggleHints(hintsTooltip, controlHints));
+        addChild(controlHints);
+        addChild(new ToggleHints(hintsTooltip, controlHints));
 
         // Gravity Text
         var gravityText = new TextLabel(
@@ -56,8 +55,8 @@ public class SandboxUI extends GameObject {
                 new Vec2(Mayonez.getScreenWidth() - 20, 20))
                 .setAnchor(Anchor.BOTTOM_RIGHT)
                 .setFontSize(FONT_SIZE);
-        addComponent(gravityText);
-        addComponent(new ToggleGravity(gravityText));
+        addChild(gravityText);
+        addChild(new ToggleGravity(gravityText));
     }
 
 }

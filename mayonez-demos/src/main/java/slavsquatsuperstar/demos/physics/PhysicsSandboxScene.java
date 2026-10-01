@@ -36,30 +36,30 @@ public class PhysicsSandboxScene extends DemoScene {
         getCamera().setCameraScale(SCENE_SCALE);
 
         // Add Static Objects
-        addObject(createStaticBox("Left Ramp",
+        addNode(createStaticBox("Left Ramp",
                 new Vec2(-25, 20), new Vec2(36, 4), -20, NORMAL_MATERIAL));
-        addObject(createStaticBox("Right Ramp",
+        addNode(createStaticBox("Right Ramp",
                 new Vec2(15, -5), new Vec2(60, 4), 15, NORMAL_MATERIAL));
 
         // Add Dynamic Objects
-        addObject(createBall(new Vec2(-35, 35), new Vec2(8), STICKY_MATERIAL));
-        addObject(createBall(new Vec2(35, 15), new Vec2(10), BOUNCY_MATERIAL));
-        addObject(createBox(new Vec2(0, 5), new Vec2(6, 6), 30, BOUNCY_MATERIAL));
-        addObject(createBox(new Vec2(-30, -5), new Vec2(10, 6), -45, STICKY_MATERIAL));
+        addNode(createBall(new Vec2(-35, 35), new Vec2(8), STICKY_MATERIAL));
+        addNode(createBall(new Vec2(35, 15), new Vec2(10), BOUNCY_MATERIAL));
+        addNode(createBox(new Vec2(0, 5), new Vec2(6, 6), 30, BOUNCY_MATERIAL));
+        addNode(createBox(new Vec2(-30, -5), new Vec2(10, 6), -45, STICKY_MATERIAL));
 
         // Add Boundary Objects
         // Only ground is visible
-        addObject(createStaticBox("Ground", new Vec2(0, -0.5f * (height - 2)),
+        addNode(createStaticBox("Ground", new Vec2(0, -0.5f * (height - 2)),
                 new Vec2(width, 2), 0, NORMAL_MATERIAL));
-        addObject(createStaticBox("Ceiling", new Vec2(0, 0.5f * (height + 1)),
+        addNode(createStaticBox("Ceiling", new Vec2(0, 0.5f * (height + 1)),
                 new Vec2(width, 1), 0, NORMAL_MATERIAL));
-        addObject(createStaticBox("Left Wall", new Vec2(-0.5f * (width + 1), 0),
+        addNode(createStaticBox("Left Wall", new Vec2(-0.5f * (width + 1), 0),
                 new Vec2(1, height), 0, NORMAL_MATERIAL));
-        addObject(createStaticBox("Right Wall", new Vec2(0.5f * (width + 1), 0),
+        addNode(createStaticBox("Right Wall", new Vec2(0.5f * (width + 1), 0),
                 new Vec2(1, height), 0, NORMAL_MATERIAL));
 
         // Add UI
-        addObject(new SandboxUI("Scene UI"));
+        addNode(new SandboxUI("Scene UI"));
     }
 
     @Override
@@ -70,7 +70,7 @@ public class PhysicsSandboxScene extends DemoScene {
         if (!KeyInput.keyDown("left shift")) {
             for (int i = 1; i <= 4; i++) {
                 if (KeyInput.keyPressed(String.valueOf(i))) {
-                    addObject(createRandomShape(MouseInput.getPosition(), i));
+                    addNode(createRandomShape(MouseInput.getPosition(), i));
                     return;
                 }
             }

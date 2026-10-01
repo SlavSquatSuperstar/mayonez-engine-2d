@@ -11,10 +11,14 @@ import mayonez.math.shapes.*;
  *
  * @author SlavSquatSupertar
  */
-class ProjectileLauncher extends Script {
+class ProjectileLauncher extends Node {
 
     static final Vec2 PROJ_SIZE = new Vec2(4f, 2f);
     private float angle, speed, size;
+
+    public ProjectileLauncher(Vec2 position) {
+        super("Projectile Launcher", position);
+    }
 
     @Override
     protected void start() {
@@ -56,7 +60,7 @@ class ProjectileLauncher extends Script {
     private void launchProjectile() {
         var projXf = new Transform(getTransform().getPosition(), angle, new Vec2(size));
         var projVel = new Vec2(20f * speed, 0).rotate(angle);
-        getScene().addObject(new TestProjectile("Test Projectile", projXf, projVel));
+        getScene().addNode(new TestProjectile("Test Projectile", projXf, projVel));
     }
 
 }

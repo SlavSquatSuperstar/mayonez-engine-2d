@@ -18,7 +18,7 @@ import mayonez.scripts.mouse.*;
  *
  * @author SlavSquatSuperstar
  */
-class PoolBall extends GameObject {
+class PoolBall extends Node {
 
     private static final PhysicsMaterial POOL_BALL_MAT
             = new PhysicsMaterial(0.05f, 0.05f, 0.95f);
@@ -56,17 +56,17 @@ class PoolBall extends GameObject {
 
     @Override
     protected void init() {
-        addComponent(new BallCollider(BALL_RADIUS));
+        addChild(new BallCollider(BALL_RADIUS));
         if (solid) {
-            addComponent(new ShapeSprite(color, true));
+            addChild(new ShapeSprite(color, true));
         } else {
-            addComponent(new ShapeSprite(Colors.WHITE, true));
-            addComponent(new ShapeSprite(color, false));
+            addChild(new ShapeSprite(Colors.WHITE, true));
+            addChild(new ShapeSprite(color, false));
         }
-        addComponent(new Rigidbody(BALL_MASS).setMaterial(POOL_BALL_MAT).setDrag(0.1f));
-        addComponent(new DragAndDrop("left mouse"));
+        addChild(new Rigidbody(BALL_MASS).setMaterial(POOL_BALL_MAT).setDrag(0.1f));
+        addChild(new DragAndDrop("left mouse"));
         if (isCue) {
-            addComponent(new MouseFlick("right mouse", 20f) {
+            addChild(new MouseFlick("right mouse", 20f) {
                 @Override
                 protected void flickGameObject(Vec2 input, Rigidbody rb) {
                     rb.applyImpulse(input);

@@ -9,7 +9,7 @@ import mayonez.input.*;
  *
  * @author SlavSquatSupertar
  */
-class ToggleHints extends Script {
+class ToggleHints extends Node {
 
     private final TextLabel hintsTooltip, controlHints;
     private boolean hintsShown;

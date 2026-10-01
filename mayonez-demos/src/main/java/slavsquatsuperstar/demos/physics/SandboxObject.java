@@ -16,10 +16,10 @@ import java.util.List;
  *
  * @author SlavSquatSuperstar
  */
-class SandboxObject extends GameObject {
+class SandboxObject extends Node {
 
     private static final float DENSITY = 2f;
-    private final List<Component> sandboxComponents;
+    private final List<Node> sandboxComponents;
 
     SandboxObject(String name, Vec2 position, float rotation) {
         super(name, new Transform(position, rotation));
@@ -28,8 +28,8 @@ class SandboxObject extends GameObject {
 
     @Override
     protected void init() {
-        addComponent(new DrawPhysicsInformation());
-        sandboxComponents.forEach(this::addComponent);
+        addChild(new DrawPhysicsInformation());
+        sandboxComponents.forEach(this::addChild);
         sandboxComponents.clear();
     }
 
@@ -66,7 +66,7 @@ class SandboxObject extends GameObject {
     }
 
     SandboxObject addInitialVelocity(Vec2 velocity) {
-        sandboxComponents.add(new Script() {
+        sandboxComponents.add(new Node() {
             @Override
             protected void start() {
                 var rb = getSibling(Rigidbody.class);
@@ -76,7 +76,7 @@ class SandboxObject extends GameObject {
         return this;
     }
 
-    SandboxObject addSandboxComponent(Component component) {
+    SandboxObject addSandboxComponent(Node component) {
         sandboxComponents.add(component);
         return this;
     }

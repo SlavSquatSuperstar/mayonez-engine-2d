@@ -1,19 +1,13 @@
 package slavsquatsuperstar.demos.physics;
 
-import mayonez.GameObject;
-import mayonez.Script;
-import mayonez.Transform;
+import mayonez.*;
 import mayonez.graphics.Colors;
 import mayonez.graphics.debug.ShapeSprite;
-import mayonez.input.Key;
-import mayonez.input.KeyAxis;
-import mayonez.input.KeyInput;
+import mayonez.input.*;
 import mayonez.math.Vec2;
-import mayonez.physics.CollisionEvent;
-import mayonez.physics.CollisionEventType;
+import mayonez.physics.*;
 import mayonez.physics.colliders.BoxCollider;
-import mayonez.physics.dynamics.PhysicsMaterial;
-import mayonez.physics.dynamics.Rigidbody;
+import mayonez.physics.dynamics.*;
 import mayonez.scripts.Counter;
 
 /**
@@ -21,7 +15,7 @@ import mayonez.scripts.Counter;
  *
  * @author SlavSquatSupertar
  */
-public class TargetBox extends GameObject {
+public class TargetBox extends Node {
 
     private Counter flashCounter;
     private ShapeSprite shapeSprite;
@@ -34,9 +28,9 @@ public class TargetBox extends GameObject {
     protected void init() {
         flashCounter = new Counter(0, 10, 10);
 
-        addComponent(new DrawPhysicsInformation());
-        addComponent(new Rigidbody(0f).setMaterial(PhysicsMaterial.DEFAULT_MATERIAL));
-        addComponent(new BoxCollider(new Vec2(10f, 12f)) {
+        addChild(new DrawPhysicsInformation());
+        addChild(new Rigidbody(0f).setMaterial(PhysicsMaterial.DEFAULT_MATERIAL));
+        addChild(new BoxCollider(new Vec2(10f, 12f)) {
             @Override
             protected void init() {
                 setLayer(getScene().getLayer(ProjectileTestScene.TARGET_LAYER));
@@ -49,7 +43,7 @@ public class TargetBox extends GameObject {
                 }
             }
         });
-        addComponent(shapeSprite = new ShapeSprite(Colors.DARK_GRAY, true));
+        addChild(shapeSprite = new ShapeSprite(Colors.DARK_GRAY, true));
     }
 
     @Override

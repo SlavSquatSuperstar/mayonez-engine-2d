@@ -38,7 +38,7 @@ final class SandboxObjectPrefabs {
                 .addStaticPhysics(new BoxCollider(size), material);
     }
 
-    static GameObject createRandomShape(Vec2 position, int type) {
+    static Node createRandomShape(Vec2 position, int type) {
         var name = getNameFromType(type);
         var rotation = Random.randomAngle();
         var col = getColliderFromType(type);

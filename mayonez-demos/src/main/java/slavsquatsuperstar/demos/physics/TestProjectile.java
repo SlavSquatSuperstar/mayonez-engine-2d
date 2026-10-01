@@ -15,7 +15,7 @@ import mayonez.physics.colliders.BulletBoxCollider;
  *
  * @author SlavSquatSupertar
  */
-public class TestProjectile extends GameObject {
+public class TestProjectile extends Node {
 
     private static final boolean DRAW_TRAILS = false;
 
@@ -28,7 +28,7 @@ public class TestProjectile extends GameObject {
 
     @Override
     protected void init() {
-        addComponent(new BulletBoxCollider(ProjectileLauncher.PROJ_SIZE) {
+        addChild(new BulletBoxCollider(ProjectileLauncher.PROJ_SIZE) {
             @Override
             protected void init() {
                 setLayer(getScene().getLayer(ProjectileTestScene.PROJECTILE_LAYER));
@@ -43,25 +43,25 @@ public class TestProjectile extends GameObject {
         });
 
         var rb = new Rigidbody(1);
-        addComponent(rb);
+        addChild(rb);
         rb.setVelocity(velocity);
 
-        addComponent(new ShapeSprite(Colors.BLUE, false));
-        addComponent(new DestroyAfterDuration(5f));
+        addChild(new ShapeSprite(Colors.BLUE, false));
+        addChild(new DestroyAfterDuration(5f));
     }
 
     @Override
     protected void fixedUpdate(float dt) {
         if (DRAW_TRAILS) {
             // Add trail
-            getScene().addObject(new GameObject("Trail", getTransform().copy()) {
+            getScene().addNode(new Node("Trail", getTransform().copy()) {
                 @Override
                 protected void init() {
                     var collider = new BoxCollider(ProjectileLauncher.PROJ_SIZE);
                     collider.setLayer(getScene().getLayer(ProjectileTestScene.PROJECTILE_LAYER));
-                    addComponent(collider);
-                    addComponent(new ShapeSprite(Colors.LIGHT_BLUE, false));
-                    addComponent(new DestroyAfterDuration(0.5f));
+                    addChild(collider);
+                    addChild(new ShapeSprite(Colors.LIGHT_BLUE, false));
+                    addChild(new DestroyAfterDuration(0.5f));
                 }
             });
         }

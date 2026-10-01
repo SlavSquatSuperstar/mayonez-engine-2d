@@ -32,15 +32,10 @@ public class ProjectileTestScene extends DemoScene {
         setGravity(new Vec2());
 
         // Add controllable target
-        addObject(new TargetBox());
+        addNode(new TargetBox());
 
         // Launch projectiles
-        addObject(new GameObject("Projectile Launcher", new Vec2(-50f, 0f)) {
-            @Override
-            protected void init() {
-                addComponent(new ProjectileLauncher());
-            }
-        });
+        addNode(new ProjectileLauncher(new Vec2(-50f, 0f)));
     }
 
 }
