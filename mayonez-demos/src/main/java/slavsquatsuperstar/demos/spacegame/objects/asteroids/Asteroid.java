@@ -34,8 +34,8 @@ public abstract class Asteroid extends GameObject {
         addTag(SpaceGameScene.DAMAGEABLE_TAG);
         setZIndex(SpaceGameZIndex.ASTEROID);
 
-        transform.setRotation(Random.randomAngle());
-        transform.setScale(properties.getScale());
+        getTransform().setRotation(Random.randomAngle());
+        getTransform().setScale(properties.getScale());
 
         addSprite(properties.texture(), properties.color());
     }

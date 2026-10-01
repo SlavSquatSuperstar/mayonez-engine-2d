@@ -135,11 +135,11 @@ public class KeepInScene extends Script {
     }
 
     protected void setX(float x) {
-        transform.getPosition().x = x;
+        getTransform().getPosition().x = x;
     }
 
     protected void setY(float y) {
-        transform.getPosition().y = y;
+        getTransform().getPosition().y = y;
     }
 
     private void stop(Direction dir) {

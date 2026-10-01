@@ -53,7 +53,7 @@ public class UICanvas extends GameObject {
     }
 
     public void addElement(UIButton elem) {
-        elem.transform.set(elem.transform.combine(this.transform));
+        elem.setTransform(elem.getTransform().combine(this.getTransform()));
         elements.add(elem.setContainer(this));
         getScene().addObject(elem);
     }

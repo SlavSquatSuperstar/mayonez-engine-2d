@@ -35,7 +35,7 @@ class AsteroidDestruction extends Damageable {
         var fragmentRadius = radius / fragmentCount;
 
         var angle = 360f / fragmentCount;
-        var offsetAngle = transform.getRotation();
+        var offsetAngle = getTransform().getRotation();
 
         for (var i = 0; i < fragmentCount; i++) {
             getScene().addObject(createAsteroidFragment(fragmentRadius, offsetAngle));
@@ -50,7 +50,7 @@ class AsteroidDestruction extends Damageable {
 
         return new AsteroidFragment(
                 "Asteroid Fragment",
-                transform.getPosition(),
+                getTransform().getPosition(),
                 new AsteroidProperties(fragmentRadius, fragmentTexture, properties.color()),
                 new Vec2(impulse, 0).rotate(offsetAngle),
                 angularImpulse

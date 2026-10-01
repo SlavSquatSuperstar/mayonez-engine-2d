@@ -23,12 +23,12 @@ public class EnemySpaceship extends Spaceship {
     @Override
     protected void init() {
         super.init();
-        transform.setRotation(Random.randomAngle());
+        getTransform().setRotation(Random.randomAngle());
 
         // Movement
         Rigidbody rb;
         addComponent(rb = new Rigidbody(1f, 0.01f, 0.8f));
-        rb.setVelocity(transform.getUp().mul(Random.randomFloat(2f, 15f)));
+        rb.setVelocity(getTransform().getUp().mul(Random.randomFloat(2f, 15f)));
         addComponent(new EnemyMovement());
 
         // Weapons (Randomly Select Projectiles)

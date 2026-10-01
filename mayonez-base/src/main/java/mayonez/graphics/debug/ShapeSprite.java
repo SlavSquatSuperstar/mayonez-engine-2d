@@ -92,14 +92,14 @@ public class ShapeSprite extends Component {
     // Shape Helper Methods
 
     private Shape getWorldShape() {
-        return shape.rotate(transform.getRotation(), null)
-                .scale(transform.getScale(), null)
-                .translate(transform.getPosition());
+        return shape.rotate(getTransform().getRotation(), null)
+                .scale(getTransform().getScale(), null)
+                .translate(getTransform().getPosition());
     }
 
     private Shape getColliderShape() {
         if (collider == null) {
-            return new Rectangle(transform.getPosition(), transform.getScale());
+            return new Rectangle(getTransform().getPosition(), getTransform().getScale(), getTransform().getRotation());
         } else {
             return collider.getShape();
         }

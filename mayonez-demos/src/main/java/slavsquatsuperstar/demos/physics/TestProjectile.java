@@ -54,7 +54,7 @@ public class TestProjectile extends GameObject {
     protected void fixedUpdate(float dt) {
         if (DRAW_TRAILS) {
             // Add trail
-            getScene().addObject(new GameObject("Trail", transform.copy()) {
+            getScene().addObject(new GameObject("Trail", getTransform().copy()) {
                 @Override
                 protected void init() {
                     var collider = new BoxCollider(ProjectileLauncher.PROJ_SIZE);

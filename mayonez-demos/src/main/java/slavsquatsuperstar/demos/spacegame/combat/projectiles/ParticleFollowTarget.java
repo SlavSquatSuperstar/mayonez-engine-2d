@@ -20,10 +20,10 @@ class ParticleFollowTarget extends Script {
 
     @Override
     protected void start() {
-        targetPositionOffset = transform.getPosition()
-                .sub(target.transform.getPosition());
-        targetRotationOffset = transform.getRotation()
-                - target.transform.getRotation();
+        targetPositionOffset = getTransform().getPosition()
+                .sub(target.getTransform().getPosition());
+        targetRotationOffset = getTransform().getRotation()
+                - target.getTransform().getRotation();
     }
 
     @Override
@@ -35,9 +35,9 @@ class ParticleFollowTarget extends Script {
         }
 
         // Follow target
-        this.transform.setPosition(target.transform.getPosition()
+        this.getTransform().setPosition(target.getTransform().getPosition()
                 .add(targetPositionOffset));
-        this.transform.setRotation(target.transform.getRotation()
+        this.getTransform().setRotation(target.getTransform().getRotation()
                 + (targetRotationOffset));
     }
 

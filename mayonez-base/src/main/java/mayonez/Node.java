@@ -43,10 +43,7 @@ public abstract class Node {
     @Nullable Node parent;
     private final List<Node> children; // Don't need to buffer since scene updates nodes
     private boolean childrenChanged; // Garbage collect destroyed children
-    /**
-     * The node's {@link mayonez.Transform} that defines its space in the world.
-     */
-    public Transform transform;
+    private Transform transform;
     private final Transform originalTransform;
     private boolean useParentTransform;
 
@@ -441,7 +438,8 @@ public abstract class Node {
     }
 
     /**
-     * The node's {@link Transform} that defines its position, rotation, and scale.
+     * The node's {@link Transform} that defines its position, rotation, and scale
+     * relative to its parent, or the world, if no parnet exists.
      *
      * @return the transform
      */
@@ -483,7 +481,8 @@ public abstract class Node {
     /**
      * The node's global transform inside the scene, equal to this node's
      * transform right-concatenated with all ancestor node transforms until the
-     * root ancestor.
+     * root ancestor. Note that the return value is read-only, and modifying it
+     * will not change any ancestor transforms.
      *
      * @return the global transform
      */

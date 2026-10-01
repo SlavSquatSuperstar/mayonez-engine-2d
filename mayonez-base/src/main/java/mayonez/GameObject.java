@@ -13,8 +13,8 @@ import org.jspecify.annotations.Nullable;
  * <p>
  * Usage: Create a game object by instantiating a subclass or anonymous instance of
  * {@link mayonez.GameObject}. Add components to the object by calling {@link #addComponent}
- * inside the {@link Node#init} method. The object's transform can be referenced through the field
- * {@link #transform}. To remove the object from the scene, call {@link GameObject#setDestroyed}.
+ * inside the {@link Node#init} method. The object's transform can be accessed through
+ * {@link #getTransform()}. To remove the object from the scene, call {@link GameObject#setDestroyed}.
  * To remove a component from the object, call {@link Node#removeChild}.
  * <p>
  * See {@link mayonez.Component} and {@link mayonez.Scene} for more information.

@@ -36,7 +36,7 @@ class MarioController extends Script {
     protected void fixedUpdate(float dt) {
         // Move
         var xInput = KeyInput.getAxis("horizontal");
-        transform.move(new Vec2(xInput * MOVE_SPEED * dt, 0));
+        getTransform().move(new Vec2(xInput * MOVE_SPEED * dt, 0));
         rb.getVelocity().x = 0;
 
         // Jump

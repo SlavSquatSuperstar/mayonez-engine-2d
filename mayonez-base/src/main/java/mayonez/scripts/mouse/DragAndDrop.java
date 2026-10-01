@@ -49,10 +49,10 @@ public class DragAndDrop extends MouseInputScript {
                 rb.setVelocity(new Vec2());
                 rb.setAngVelocity(0);
             }
-//            transform.setPosition(getMousePos());
+//            getTransform().setPosition(getMousePos());
             var move = getMousePos().sub(lastMouse).add(getMouseDisp());
 //            var move = getMouseDisp();
-            transform.move(move);
+            getTransform().move(move);
         }
     }
 

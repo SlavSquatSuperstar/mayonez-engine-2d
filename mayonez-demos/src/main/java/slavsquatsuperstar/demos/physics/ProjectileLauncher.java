@@ -42,7 +42,7 @@ class ProjectileLauncher extends Script {
 
         // Draw trajectory
         var velocity = new Vec2(speed, 0f).rotate(angle);
-        var objPos = transform.getPosition();
+        var objPos = getTransform().getPosition();
 
         getScene().getDebugDraw()
                 .drawPoint(objPos, Colors.BLACK);
@@ -54,7 +54,7 @@ class ProjectileLauncher extends Script {
     }
 
     private void launchProjectile() {
-        var projXf = new Transform(transform.getPosition(), angle, new Vec2(size));
+        var projXf = new Transform(getTransform().getPosition(), angle, new Vec2(size));
         var projVel = new Vec2(20f * speed, 0).rotate(angle);
         getScene().addObject(new TestProjectile("Test Projectile", projXf, projVel));
     }

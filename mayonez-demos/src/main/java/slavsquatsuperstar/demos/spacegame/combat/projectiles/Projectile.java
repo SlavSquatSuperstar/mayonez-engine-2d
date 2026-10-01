@@ -38,7 +38,7 @@ public class Projectile extends Script {
         // Set initial velocity
         var sourceRb = source.getChild(Rigidbody.class);
         if (sourceRb != null) rb.setVelocity(sourceRb.getVelocity());
-        rb.addVelocity(transform.getUp().mul(type.speed()));
+        rb.addVelocity(getTransform().getUp().mul(type.speed()));
     }
 
     public void onImpactObject(CollisionEvent event) {
@@ -46,7 +46,7 @@ public class Projectile extends Script {
         if (!event.trigger || event.type != CollisionEventType.ENTER) return;
 
         // Get particle position
-        var particleXf = transform.copy();
+        var particleXf = getTransform().copy();
         var contacts = event.contacts;
         if (contacts.size() == 1) {
             particleXf.setPosition(contacts.getFirst());

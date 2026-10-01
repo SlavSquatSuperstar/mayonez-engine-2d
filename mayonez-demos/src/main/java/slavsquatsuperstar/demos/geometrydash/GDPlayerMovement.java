@@ -27,7 +27,7 @@ class GDPlayerMovement extends MovementScript {
 
     @Override
     public void moveObject(Vec2 amount, float dt) {
-        transform.move(amount.mul(speed * dt));
+        getTransform().move(amount.mul(speed * dt));
     }
 
     @Override

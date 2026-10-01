@@ -35,7 +35,7 @@ public class PlaceBlockCursor extends GameObject {
     }
 
     public void setPosition(Vec2 position) {
-        transform.setPosition(position);
+        getTransform().setPosition(position);
     }
 
 }

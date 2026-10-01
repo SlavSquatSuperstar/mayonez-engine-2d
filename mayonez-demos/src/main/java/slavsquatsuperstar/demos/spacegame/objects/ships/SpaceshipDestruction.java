@@ -47,7 +47,7 @@ public class SpaceshipDestruction extends TimerScript {
         super.update(dt);
         if (explosion != null) {
             // Have the explosion follow the ship until it is destroyed
-            explosion.transform.setPosition(transform.getPosition());
+            explosion.getTransform().setPosition(getTransform().getPosition());
         }
         if (this.isReady()) getParent().setDestroyed();
     }
@@ -67,7 +67,7 @@ public class SpaceshipDestruction extends TimerScript {
 
         getScene().addObject(explosion = ExplosionPrefabs.createShipExplosionPrefab(
                 "Ship Explosion",
-                new Transform(transform.getPosition(), Random.randomAngle(), transform.getScale()),
+                new Transform(getTransform().getPosition(), Random.randomAngle(), getTransform().getScale()),
                 EXPLOSION_DURATION
         ));
     }

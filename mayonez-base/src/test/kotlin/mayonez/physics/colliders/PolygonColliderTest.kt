@@ -64,11 +64,6 @@ internal class PolygonColliderTest {
 
 }
 
-// Transform Methods
-private fun Component.setTransform(transform: Transform) {
-    this.transform.set(transform)
-}
-
 // Shape Vertex Methods
 
 private fun PolygonCollider.numVertices(): Int = this.getShape().numVertices

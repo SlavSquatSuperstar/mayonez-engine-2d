@@ -55,13 +55,13 @@ public class TargetBox extends GameObject {
     @Override
     protected void update(float dt) {
         var yInput = KeyInput.getAxis("arrows vertical");
-        transform.move(new Vec2(0f, 20f * yInput * dt));
+        getTransform().move(new Vec2(0f, 20f * yInput * dt));
 
         var xInput = KeyInput.getAxis("arrows horizontal");
-        transform.rotate(-90f * xInput * dt);
+        getTransform().rotate(-90f * xInput * dt);
 
         var x2Input = KeyInput.getAxis(new KeyAxis(Key.MINUS, Key.PLUS));
-        transform.scale(new Vec2(1f + 0.5f * x2Input * dt));
+        getTransform().scale(new Vec2(1f + 0.5f * x2Input * dt));
 
         // Flash red when hit
         flashCounter.count(1);

@@ -60,7 +60,7 @@ public class Satellite extends GameObject {
         // Initial Velocity
         Rigidbody rb;
         addComponent(rb = new Rigidbody(1f, 0.01f, 0.01f));
-        rb.setVelocity(transform.getUp().mul(Random.randomFloat(0f, 4f)));
+        rb.setVelocity(getTransform().getUp().mul(Random.randomFloat(0f, 4f)));
 
         // Visuals
         var sprite = Sprites.createSprite(properties.texture());

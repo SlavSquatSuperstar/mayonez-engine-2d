@@ -73,7 +73,7 @@ public abstract class Camera extends Node implements Viewport {
         // Follow subject
         // TODO smooth follow
         if (getSubject() != null) {
-            transform.setPosition(getSubject().transform.getPosition());
+            getTransform().setPosition(getSubject().getTransform().getPosition());
         }
     }
 
@@ -119,7 +119,7 @@ public abstract class Camera extends Node implements Viewport {
      */
     @Override
     public final Vec2 getPosition() {
-        return new Vec2(transform.getPosition());
+        return getTransform().getPosition();
     }
 
     /**
@@ -128,7 +128,7 @@ public abstract class Camera extends Node implements Viewport {
      * @param position the position
      */
     public final void setPosition(Vec2 position) {
-        transform.setPosition(position);
+        getTransform().setPosition(position);
     }
 
     /**

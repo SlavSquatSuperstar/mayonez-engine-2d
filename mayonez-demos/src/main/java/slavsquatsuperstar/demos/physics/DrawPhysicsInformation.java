@@ -34,7 +34,7 @@ class DrawPhysicsInformation extends Script {
             // Draw center, velocity, direction vector
             getScene().getDebugDraw().drawPoint(col.center(), Colors.BLACK);
             getScene().getDebugDraw().drawVector(col.center(), rb.getVelocity().mul(0.1f), color);
-            getScene().getDebugDraw().drawVector(rb.getPosition(), transform.getRight(), Colors.BLACK);
+            getScene().getDebugDraw().drawVector(rb.getPosition(), getTransform().getRight(), Colors.BLACK);
         }
     }
 

@@ -18,7 +18,7 @@ public class BaseAsteroid extends Asteroid {
         super.init();
         var startingHealth = properties.getHealth();
         addRigidbody(properties.radius())
-                .setVelocity(transform.getUp().mul(Random.randomFloat(0f, 3f)));
+                .setVelocity(getTransform().getUp().mul(Random.randomFloat(0f, 3f)));
 
         // Create more fragments
         var damageable = new AsteroidDestruction(startingHealth, properties);

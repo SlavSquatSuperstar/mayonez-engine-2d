@@ -60,7 +60,7 @@ public final class ProjectilePrefabs {
     public static Node createProjectilePrefab(
             ProjectileType type, Node source, Vec2 offsetPos, float offsetAngle
     ) {
-        var projXf = getProjectileTransform(type, source.transform, offsetPos, offsetAngle);
+        var projXf = getProjectileTransform(type, source.getTransform(), offsetPos, offsetAngle);
         return new GameObject(type.name(), projXf) {
             @Override
             protected void init() {
