@@ -16,14 +16,15 @@ import java.util.*;
 import java.util.List;
 
 /**
- * An in-game world or level that holds multiple {@link mayonez.Node}s. Each scene
- * can  be given a background image or color.
+ * An in-game world or level that updates and renders a tree of
+ * {@link mayonez.Node}s. Each scene can be given a background image or color.
  * <p>
- * Usage: Create a scene by instantiating a subclass or anonymous instance of
+ * Usage: Create a scene by instantiating a subclass of
  * {@link mayonez.Scene}. Add nodes to the scene by calling {@link #addNode}
- * inside the {@link #init()} method. Scenes may also define custom game logic
- * and graphics inside {@link #onUserUpdate} and {@link #onUserRender}. To remove a
- * node from the scene, call {@link #removeNode} or {@link Node#setDestroyed()}.
+ * inside the {@link #init} method. Scenes may also define custom game logic
+ * and graphics inside {@link #onUserUpdate} and {@link #onUserRender}. To
+ * remove a node from the scene, call {@link #removeNode} from the scene or
+ * {@link Node#setDestroyed()} through the node.
  * <p>
  * See {@link mayonez.Node} and {@link mayonez.SceneManager} for more information.
  *
@@ -81,8 +82,8 @@ public abstract class Scene {
     // Initialization Methods
 
     /**
-     * Initialize all nodes and begin updating the scene. Calls {@link Node#start()}
-     * for all nodes added on start.
+     * Initialize all nodes and begin updating the scene. {@link Node#start}
+     * will be called for all nodes added here.
      */
     @Initializer
     final void start() {
@@ -116,10 +117,11 @@ public abstract class Scene {
      * after this scene has been loaded.
      * The method {@link #getCamera()} is accessible here.
      * <p>
-     * Usage: Subclasses may override this method and can also call {@code super.init()}.
+     * Usage: Subclasses may override this method and can also call
+     * {@code super.init()}.
      * <p>
-     * Warning: Calling {@code init()} at any other point in time may lead to unintended errors
-     * and should be avoided!
+     * Warning: Calling {@code init()} at any other point in time may lead to
+     * unintended errors and should be avoided!
      */
     protected void init() {
     }
@@ -186,7 +188,7 @@ public abstract class Scene {
     /**
      * Redraws all visible nodes to the screen on a render frame.
      *
-     * @param g2 the window's graphics object, if using the AWT engine
+     * @param g2 the window's graphics object, if using the AWT backend
      */
     final void render(@Nullable Graphics2D g2) {
         if (!isStopped()) {
@@ -207,7 +209,8 @@ public abstract class Scene {
     // Stop Methods
 
     /**
-     * Signal the scene to stop updating and destroy all nodes after this frame.
+     * Signal the scene to stop updating and destroy all nodes after this
+     * frame.
      */
     final void requestStop() {
         // Make sure the scene finishes updating so node transforms aren't null
@@ -434,7 +437,8 @@ public abstract class Scene {
     // Scene Properties
 
     /**
-     * Returns the name of this scene, which is not null and need not be unique.
+     * Returns the name of this scene, which is not null and need not be
+     * unique.
      *
      * @return the scene name
      */
@@ -445,8 +449,8 @@ public abstract class Scene {
     // Getters and Setters
 
     /**
-     * Get the scene's {@link Camera} instance. The camera is initialized before
-     * {@link Node#start()} is called for all other nodes.
+     * Get the scene's {@link Camera} instance. The camera is initialized
+     * before {@link Node#start()} is called for all other nodes.
      *
      * @return the scene camera
      */
@@ -459,7 +463,7 @@ public abstract class Scene {
      *
      * @return the scene debug draw
      */
-    public final DebugDraw getDebugDraw() {
+    public DebugDraw getDebugDraw() {
         return renderLayer.getDebugDraw();
     }
 
@@ -485,7 +489,8 @@ public abstract class Scene {
 
     /**
      * Pauses the scene but does not destroy any game nodes. While paused,
-     * nodes do not move or update but key inputs can still be polled through onUserUpdate().
+     * nodes do not move or update but key inputs can still be polled through
+     * {@code onUserUpdate}.
      */
     final void pause() {
         state = SceneState.PAUSED;
@@ -522,7 +527,7 @@ public abstract class Scene {
     // Helper Class
 
     static class RootNode extends Node {
-        public RootNode() {
+        RootNode() {
             super("Root");
         }
     }

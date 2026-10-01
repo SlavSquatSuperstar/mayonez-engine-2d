@@ -6,26 +6,40 @@ import org.jspecify.annotations.Nullable;
 import java.util.*;
 
 /**
- * An object possessing properties and behaviors that belongs within a scene. Each node
- * has a name and transform and has update methods. Nodes are structured in a tree,
- * and nodes can be created and destroyed in a scene as needed.
+ * An entity possessing properties and behaviors that belongs to a scene.
+ * Nodes are structured in a tree, and nodes can be created and destroyed while
+ * the scene is initializing or running.
  * <p>
- * Generally, a pure entity-component-system (ECS) architecture favors composition over
- * inheritance, allowing reuse while keeping classes simple and modular. Under pure ECS,
- * entities are a single ID and only components provide data and functionality. Such
- * implementations have high performance but lead to more boilerplate.
+ * Generally, a pure entity-component-system (ECS) architecture favors
+ * composition over inheritance, keeping classes simple and modular. Under pure
+ * ECS, entities are a single ID and only components can provide data and
+ * functionality. Such implementations have higher performance but lead to more
+ * boilerplate.
  * <p>
- * In the Unity Engine, {@code GameObjects} are entities that store a transform, {@code Components},
- * and user defined scripts. {@code GameObjects} may also be nested arbitrarily under each other
- * inside each other or saved to instantiable prefabs.
+ * In the Unity Engine, {@code GameObjects} are entities that store a transform
+ * and multiple {@code Components} and scripts. {@code GameObjects} may also be
+ * nested arbitrarily inside each other or saved to instantiable prefabs.
  * <p>
- * Meanwhile, in the Godot Engine, there is a single {@code Node} class that serves as both entity
- * and component and may be extended with a script. Any tree of nodes is considered a scene and may
- * be saved to a packed scene file for reuse. {@code Nodes} provide greater scene readability and
- * organization at the cost of making inheritance trees larger.
+ * Meanwhile, in the Godot Engine, a single {@code Node} class that serves as
+ * both entity and component and may be extended with a script. Any tree of
+ * nodes is considered a scene and may be saved to a file for reuse.
+ * {@code Nodes} provide greater scene readability and organization at the cost
+ * of making inheritance trees larger.
  * <p>
- * Mayonez Engine uses a one {@code Node} class, similar to Godot, while still keeping the
- * {@link Scene} class.
+ * Mayonez Engine uses a one {@code Node} class for greater flexibility while
+ * keeping the {@link Scene} class for global resources.
+ * <p>
+ * Usage: Nodes can be created by instantiating a subclass of {@code #Node}.
+ * A node's transform, parent, and scene can be accessed through
+ * {@link #getTransform}, {@link #getParent}, and {@link #getScene}. Usually,
+ * Nodes will add child nodes by calling {@link addChild} inside {@link #init}.
+ * Further initialization requiring child or sibling nodes can be done inside
+ * {@link #start}. User behavior can be defined in {@link #update},
+ * {@link #fixedUpdate}, or {@link #debugRender}. To remove a node and its tree
+ * from the scene, call {@link #removeChild} from the parent or
+ * {@link #setDestroyed} through the target node.
+ * <p>
+ * See {@link mayonez.Scene} for more information.
  *
  * @author SlavSquatSuperstar
  */
@@ -69,8 +83,8 @@ public abstract class Node {
     }
 
     /**
-     * Create an empty node with a name and transform. If the name is {@code null}
-     * or blank, it will default to the class name.
+     * Create an empty node with a name and transform. If the name is
+     * {@code null} or blank, it will default to the class name.
      *
      * @param name the node name
      */
@@ -97,38 +111,43 @@ public abstract class Node {
     // Node Game Loop Methods
 
     /**
-     * Add child components and initializes fields after this node has been added to the scene
-     * or parent node. This method is called before {@link #start} and after {@code parent.init}.
-     * The {@link #getTransform}, {@link #getParent}, and {@link #getScene} properties will return
-     * non-null here. Subclasses may override this method and can also call {@code super.init()}.
+     * Add child components and initializes fields after this node has been
+     * added to the scene or parent node. This method is called before
+     * {@link #start} and after {@code parent.init}. The {@link #getTransform},
+     * {@link #getParent}, and {@link #getScene} properties will return
+     * non-null here. Subclasses may override this method and can also call
+     * {@code super.init()}.
      * <p>
-     * Warning: Calling {@code init()} at any other point in time may lead to unintended errors
-     * and should be avoided!
+     * Warning: Calling {@code init()} at any other point in time may lead to
+     * unintended errors and should be avoided!
      */
     protected void init() {
     }
 
     /**
-     * Initialize fields after all components have been added to the parent object. The
-     * {@link #getTransform}, {@link #getParent} {@link #getScene} properties and
-     * {@link #getChild} method are accessible here. This method will be called even if this
-     * node has been disabled through {@link #setEnabled}.
+     * Initialize fields after all components have been added to the parent
+     * node. The {@link #getTransform}, {@link #getParent} {@link #getScene}
+     * properties and {@link #getChild}/{@link #getSibling} methods are
+     * accessible here. This method will be called even if this node has been
+     * disabled through {@link #setEnabled}.
      * <p>
-     * Usage: Subclasses may override this method and can also call {@code super.start()}.
+     * Usage: Subclasses may override this method and can also call
+     * {@code super.start()}.
      * <p>
-     * Warning: Calling {@code start()} at any other point in time may lead to unintended
-     * errors and should be avoided!
+     * Warning: Calling {@code start()} at any other point in time may lead to
+     * unintended errors and should be avoided!
      */
     protected void start() {
     }
 
     /**
-     * Refresh this node's state and game logic. This method is called each fixed
-     * tick, between physics and {@link #update}, and {@code dt} is generally consistent.
-     * The {@code fixedUpdate} method should be used for frame rate-sensitive behavior, such as
-     * movement, collision, and AI.
+     * Refresh this node's state and game logic. This method is called each
+     * fixed tick, between physics and {@link #update}, and {@code dt} is
+     * generally consistent. The {@code fixedUpdate} method should be used for
+     * frame rate-sensitive behavior, such as movement, collision, and AI.
      * <p>
-     * Usage: Subclasses may override this method and can also call {@code super.fixedUpdate()}.
+     * Usage: Subclasses may override this method and can also call
+     * {@code super.fixedUpdate()}.
      *
      * @param dt seconds between fixed ticks
      */
@@ -136,12 +155,13 @@ public abstract class Node {
     }
 
     /**
-     * Refresh this node's state and game logic. This method is called each drawn
-     * frame, between {@link #fixedUpdate} and rendering, and {@code dt} may vary. The
-     * {@code update} method may be used for general behavior, such as input, timers,
-     * and animations.
+     * Refresh this node's state and game logic. This method is called each
+     * drawn frame, between {@link #fixedUpdate} and rendering, and {@code dt}
+     * may vary. The {@code update} method may be used for general behavior,
+     * such as input, timers, and animations.
      * <p>
-     * Usage: Subclasses may override this method and can also call {@code super.update()}.
+     * Usage: Subclasses may override this method and can also call
+     * {@code super.update()}.
      *
      * @param dt seconds since the last frame
      */
@@ -149,12 +169,14 @@ public abstract class Node {
     }
 
     /**
-     * Draw debug information for this node to the screen. This method is called each
-     * drawn frame, between {@link update} and rendering. Any {@link mayonez.graphics.debug.DebugDraw}
-     * method calls should be made here. This method is called even if the scene is paused or
-     * the component is not enabled.
+     * Draw debug information for this node to the screen. This method is
+     * called each drawn frame, between {@link update} and rendering. Any calls
+     * to {@link mayonez.graphics.debug.DebugDraw} should be made here. This
+     * method is called even if the scene is paused or the component is not
+     * enabled.
      * <p>
-     * Usage: Subclasses may override this method and can also call {@code super.debugRender()}.
+     * Usage: Subclasses may override this method and can also call
+     * {@code super.debugRender()}.
      */
     protected void debugRender() {
     }
@@ -171,8 +193,8 @@ public abstract class Node {
     }
 
     /**
-     * Set this node's name, which does not need to be unique. If the parameter is null
-     * or blank, then the name will be set to the node's class name.
+     * Set this node's name, which does not need to be unique. If the parameter
+     * is null or blank, then the name will be set to the node's class name.
      *
      * @param name the node's name
      */
@@ -190,11 +212,12 @@ public abstract class Node {
     }
 
     void renameChildUnique(Node child) {
-        // Rename object to "Name (n)"
+        // Rename node to "Name (n)"
         // If sequence numbers are not contiguous, then choose the least free number
-        // Make sure not to count the object being added
+        // Make sure not to count the node being added
         var sameNames = getChildren().stream()
-                .filter(o -> !o.equals(child) && o.getName().startsWith(child.getName()))
+                .filter(o -> !o.equals(child)
+                        && o.getName().startsWith(child.getName()))
                 .map(Node::getName)
                 .toList();
         var newName = child.getName();
@@ -226,7 +249,8 @@ public abstract class Node {
     }
 
     /**
-     * Add a tag to this node. If the tag is a duplicate or null, it will not be added.
+     * Add a tag to this node. If the tag is a duplicate or null, it will not
+     * be added.
      *
      * @param tag the tag
      */
@@ -253,8 +277,8 @@ public abstract class Node {
     // Node Hierarchy Getters and Setters
 
     /**
-     * Get the {@link mayonez.Scene} that contains this node. The scene
-     * will be non-null from the start of {@link init} to the end of {@link onDestroy}.
+     * Get the {@link mayonez.Scene} that contains this node. The scene will be
+     * non-null from the start of {@link init} to the end of {@link onDestroy}.
      *
      * @return the parent scene
      */
@@ -295,8 +319,8 @@ public abstract class Node {
     }
 
     /**
-     * Whether this is the root of the scene hierarchy, i.e., it belongs to a scene
-     * and has no parent.
+     * Whether this is the root of the scene hierarchy, i.e., it belongs to a
+     * scene and has no parent.
      *
      * @return if this node is top-level
      */
@@ -305,8 +329,8 @@ public abstract class Node {
     }
 
     /**
-     * Whether this node is at the top level of the scene hierarchy, i.e., it belongs to a scene
-     * and its parent is the scene root.
+     * Whether this node is at the top level of the scene hierarchy, i.e., it
+     * belongs to a scene and its parent is the scene root.
      *
      * @return if this node is top-level
      */
@@ -315,9 +339,10 @@ public abstract class Node {
     }
 
     /**
-     * Get the depth of this node in the scene tree, or the number of ancestors, including the scene
-     * itself. If the node is not part of a scene, or it is the scene root, then the depth is zero.
-     * If {@link #isTopLevel} is true, then the depth is one.
+     * Get the depth of this node in the scene tree, or the number of
+     * ancestors, including the scene root. If the node is not part of a scene,
+     * or it is the scene root, then the depth is zero. If {@link #isTopLevel}
+     * is true, then the depth is one.
      *
      * @return the scene depth
      */
@@ -327,7 +352,8 @@ public abstract class Node {
     }
 
     /**
-     * Find the first child node with the specified name (case-sensitive), or null if none exists.
+     * Find the first child node with the specified name (case-sensitive), or
+     * null if none exists.
      *
      * @param name the child node's name
      * @return the child node, or null if not present
@@ -415,7 +441,7 @@ public abstract class Node {
      *
      * @param child the component
      */
-    public final void removeChild(@Nullable Node child) {
+    public void removeChild(@Nullable Node child) {
         if (child == null || child.parent != this) return;
 
         children.remove(child);
@@ -463,8 +489,8 @@ public abstract class Node {
     }
 
     /**
-     * The node's {@link Transform} that defines its position, rotation, and scale
-     * relative to its parent, or the world, if no parnet exists.
+     * The node's {@link Transform} that defines its position, rotation, and
+     * scale relative to its parent, or the world if no parent exists.
      *
      * @return the transform
      */
@@ -474,7 +500,8 @@ public abstract class Node {
 
     /**
      * Set the node's {@link Transform} to the value of the given transform.
-     * Note that this Node's transform will not point to the parent's transform.
+     * Note that this Node's transform will not point to the parent's
+     * transform.
      *
      * @param transform the transform
      */
@@ -529,10 +556,10 @@ public abstract class Node {
     }
 
     /**
-     * Delete this node from the scene, removing it from its parent and destroying
-     * all its descendants at the end of the current frame. The properties
-     * {@link getScene}, {@link getParent}, and {@link getTransform} will return null
-     * after the object is destroyed.
+     * Delete this node from the scene, removing it from its parent and
+     * destroying all its descendants at the end of the current frame. The
+     * properties {@link getScene}, {@link getParent}, and {@link getTransform}
+     * will return null after the node is destroyed.
      * <p>
      * <b>Warning:</b> Destroying a node is permanent and cannot be reversed!
      */
@@ -546,18 +573,19 @@ public abstract class Node {
     }
 
     /**
-     * Custom behavior for when this node or any of its ancestors is destroyed. The properties
-     * {@link #getScene}, {@link #getParent}, and {@link #getTransform} will still be accessible.
+     * Custom behavior for when this node or any of its ancestors is destroyed.
+     * The properties {@link #getScene}, {@link #getParent}, and
+     * {@link #getTransform} will still be accessible.
      * <p>
-     * Warning: Calling {@code onDestroy} directly can lead to unpredictable behavior. It is
-     * better to call {@link #setDestroyed()} instead.
+     * Warning: Calling {@code onDestroy} directly can lead to unpredictable
+     * behavior. It is better to call {@link #setDestroyed()} instead.
      */
     protected void onDestroy() {
     }
 
     /**
-     * Whether this node and all its children should be updated. If any ancestor
-     * node is disabled, then this node will not be updated regardless.
+     * Whether this node and all its descendants should be updated. If any
+     * ancestor node is disabled, then this node will not be updated regardless.
      *
      * @return if this node is enabled
      */
@@ -566,8 +594,8 @@ public abstract class Node {
     }
 
     /**
-     * Set whether this node should be updated. Will not affect whether the parent
-     * node is enabled.
+     * Set whether this node should be updated. Will not affect whether the
+     * parent node is enabled.
      *
      * @param enabled if the node is enabled
      */
@@ -580,8 +608,8 @@ public abstract class Node {
     /**
      * Custom user behavior for when this script is enabled.
      * <p>
-     * Warning: Calling {@code onEnable()} directly can lead to unpredictable behavior.
-     * It is better to call {@code setEnabled(true)} instead.
+     * Warning: Calling {@code onEnable()} directly can lead to unpredictable
+     * behavior. It is better to call {@code setEnabled(true)} instead.
      */
     protected void onEnable() {
     }
@@ -589,14 +617,15 @@ public abstract class Node {
     /**
      * Custom user behavior for when this script is disabled.
      * <p>
-     * Warning: Calling {@code onEnable()} directly can lead to unpredictable behavior.
-     * It is better to call {@code setEnabled(false)} instead.
+     * Warning: Calling {@code onEnable()} directly can lead to unpredictable
+     * behavior. It is better to call {@code setEnabled(false)} instead.
      */
     protected void onDisable() {
     }
 
     /**
-     * Whether this node should update, meaning it and all of its ancestors are enabled.
+     * Whether this node should update, meaning it and all of its ancestors are
+     * enabled.
      *
      * @return if the node should update
      */
@@ -608,8 +637,9 @@ public abstract class Node {
     // TODO check animator usages
 
     /**
-     * Whether this node and all its children should be rendered. If any ancestor
-     * node is invisible, then this node will not be rendered regardless.
+     * Whether this node and all its descendants should be rendered. If any
+     * ancestor node is invisible, then this node will not be rendered
+     * regardless.
      *
      * @return if this node is visible
      */
@@ -618,8 +648,8 @@ public abstract class Node {
     }
 
     /**
-     * Set whether this node should be rendered. Will not affect whether the parent
-     * node is visible.
+     * Set whether this node should be rendered. Will not affect whether the
+     * parent node is visible.
      *
      * @param visible if the node is visible
      */
@@ -628,7 +658,8 @@ public abstract class Node {
     }
 
     /**
-     * Whether this node should render, meaning it and all of its ancestors are visible.
+     * Whether this node should render, meaning it and all of its ancestors are
+     * visible.
      *
      * @return if the node should render
      */
