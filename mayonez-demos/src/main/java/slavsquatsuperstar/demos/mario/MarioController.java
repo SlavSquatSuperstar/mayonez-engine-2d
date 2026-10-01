@@ -28,7 +28,7 @@ class MarioController extends Script {
 
     @Override
     protected void start() {
-        rb = getRigidbody();
+        rb = getSibling(Rigidbody.class);
         onGround = false;
     }
 

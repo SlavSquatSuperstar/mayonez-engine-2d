@@ -29,7 +29,7 @@ public class Projectile extends Script {
 
     @Override
     protected void start() {
-        var rb = getRigidbody();
+        var rb = getSibling(Rigidbody.class);
         if (rb == null) {
             this.setEnabled(false);
             return;

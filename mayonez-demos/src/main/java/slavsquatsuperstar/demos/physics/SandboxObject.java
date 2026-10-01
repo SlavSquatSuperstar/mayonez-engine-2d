@@ -69,7 +69,7 @@ class SandboxObject extends GameObject {
         sandboxComponents.add(new Script() {
             @Override
             protected void start() {
-                var rb = getRigidbody();
+                var rb = getSibling(Rigidbody.class);
                 if (rb != null) rb.setVelocity(velocity);
             }
         });

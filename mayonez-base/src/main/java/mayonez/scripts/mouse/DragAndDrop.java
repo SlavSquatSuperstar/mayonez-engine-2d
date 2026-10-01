@@ -23,7 +23,7 @@ public class DragAndDrop extends MouseInputScript {
     protected void start() {
         super.start();
         lastMouse = new Vec2();
-        rb = getRigidbody();
+        rb = getSibling(Rigidbody.class);
     }
 
     @Override

@@ -41,7 +41,7 @@ public abstract class MouseInputScript extends Script {
 
     @Override
     protected void start() {
-        collider = getCollider();
+        collider = getSibling(Collider.class);
     }
 
     @Override

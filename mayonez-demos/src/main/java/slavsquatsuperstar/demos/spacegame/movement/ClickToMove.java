@@ -50,7 +50,7 @@ public class ClickToMove extends Script {
 
     @Override
     protected void start() {
-        rb = getRigidbody();
+        rb = getSibling(Rigidbody.class);
     }
 
     // TODO will break with KeepInScene
