@@ -213,7 +213,7 @@ class NodeTest {
         assertEquals(1, node1.numChildren());
     }
 
-    // Get Child
+    // Get Child/Sibling
 
     @Test
     void getChildByName() {
@@ -267,6 +267,32 @@ class NodeTest {
         assertNull(node1.getChild((Class<? extends Node>) null));
         assertTrue(node1.getChildren(null).isEmpty());
     }
+
+    @Test
+    void getSiblingByName() {
+        node1.addChild(child1);
+        node1.addChild(child2);
+
+        assertSame(child1, child2.getSibling("Child Node 1"));
+        assertSame(child2, child1.getSibling("Child Node 2"));
+
+        assertNull(node1.getSibling("Child Node 1"));
+        assertNull(child3.getSibling("Child Node 1"));
+    }
+
+    @Test
+    void getSiblingByClass() {
+        node1.addChild(child1);
+        node1.addChild(child2);
+        node1.addChild(child3);
+
+        assertSame(child1, child2.getSibling(NodeA.class));
+        assertSame(child2, child1.getSibling(NodeB.class));
+
+        assertNull(child1.getSibling(NodeC.class));
+        assertNull(node1.getSibling(NodeC.class));
+    }
+
 
     // Node Scene Depth
 

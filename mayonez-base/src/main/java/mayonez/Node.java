@@ -329,8 +329,8 @@ public abstract class Node {
     /**
      * Find the first child node with the specified name (case-sensitive), or null if none exists.
      *
-     * @param name the node's name
-     * @return the node, or null if not present
+     * @param name the child node's name
+     * @return the child node, or null if not present
      */
     public @Nullable Node getChild(@Nullable String name) {
         if (name == null) return null;
@@ -341,11 +341,11 @@ public abstract class Node {
     }
 
     /**
-     * Find the first child node belonging to the specified class or any of its subclasses,
-     * or null if none exists.
+     * Find the first child node belonging to the specified class or any of its
+     * subclasses, or null if none exists.
      *
-     * @param cls the node's type
-     * @param <T> the node type
+     * @param cls the child node's class
+     * @param <T> the child node type
      * @return the node, or null if not present
      */
     public <T extends Node> @Nullable T getChild(@Nullable Class<T> cls) {
@@ -358,12 +358,12 @@ public abstract class Node {
     }
 
     /**
-     * Find the first child node belonging to the specified class or any of its subclasses,
-     * or empty if none exists.
+     * Find all child nodes belonging to the specified class or any of its
+     * subclasses, or empty if none exists.
      *
-     * @param cls the node's type
-     * @param <T> the node type
-     * @return the node, or empty if not present
+     * @param cls the child node's type
+     * @param <T> the child node type
+     * @return the list of nodes, or empty if not present
      */
     public <T extends Node> List<T> getChildren(@Nullable Class<T> cls) {
         if (cls == null) return List.of();
@@ -374,7 +374,7 @@ public abstract class Node {
     }
 
     /**
-     * Get a copy of the list of all this object's child nodes.
+     * Get a copy of the list of all this node's child nodes.
      *
      * @return the list of nodes
      */
@@ -435,6 +435,31 @@ public abstract class Node {
             children.removeAll(destroyedChildren);
             childrenChanged = false;
         }
+    }
+
+    /**
+     * Find the first sibling node with the specified name (case-sensitive), or
+     * null if none exists or the parent is null.
+     *
+     * @param name the sibling node's name
+     * @return the sibling node, or null if not present
+     */
+    public @Nullable Node getSibling(String name) {
+        if (parent == null) return null;
+        else return parent.getChild(name);
+    }
+
+    /**
+     * Find the first sibling node belonging to the specified class or any of
+     * its subclasses, or null if none exists or the parent is null.
+     *
+     * @param cls the sibling node's class
+     * @param <T> the sibling node's type
+     * @return the sibling node, or null if not present
+     */
+    public <T extends Node> @Nullable T getSibling(@Nullable Class<T> cls) {
+        if (parent == null) return null;
+        else return parent.getChild(cls);
     }
 
     /**

@@ -49,7 +49,7 @@ public class ShapeSprite extends Component {
 
     @Override
     protected void start() {
-        collider = getParent().getChild(Collider.class);
+        collider = getSibling(Collider.class);
     }
 
     @Override
