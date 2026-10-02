@@ -256,7 +256,8 @@ public abstract class Scene {
      * @param node a {@link Node}
      */
     public final void addNode(@Nullable Node node) {
-        rootNode.addChild(node);
+        // Don't add more nodes if scene is stopping
+        if (!rootNode.isDestroyed()) rootNode.addChild(node);
     }
 
     void onNodeAdded(Node node) {
