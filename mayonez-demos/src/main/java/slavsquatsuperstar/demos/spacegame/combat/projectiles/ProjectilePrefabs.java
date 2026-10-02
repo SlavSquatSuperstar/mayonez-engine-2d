@@ -84,10 +84,12 @@ public final class ProjectilePrefabs {
                 addChild(col);
 
                 // Set initial velocity
-                var rb = new Rigidbody(0.001f);
-                var initialVelocity = source.getTransform().getUp().mul(type.speed());
-                rb.addVelocity(initialVelocity);
-                addChild(rb);
+                var projRb = new Rigidbody(0.001f);
+                var sourceRb = source.getChild(Rigidbody.class);
+                if (sourceRb != null) projRb.setVelocity(sourceRb.getVelocity());
+                var initialVelocity = getGlobalTransform().getUp().mul(type.speed());
+                projRb.addVelocity(initialVelocity);
+                addChild(projRb);
             }
         };
     }
