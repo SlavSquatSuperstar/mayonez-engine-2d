@@ -236,19 +236,6 @@ public abstract class Scene {
     // Node Methods
 
     /**
-     * Adds an object to this scene and initializes the object if the scene is
-     * running. The object will not be added if it already has a parent scene.
-     *
-     * @param obj a {@link GameObject}
-     * @deprecated Use {@link #addNode} instead
-     */
-    @Deprecated
-    public final void addObject(@Nullable Node obj) {
-        // Don't add more nodes if scene is stopping
-        if (!rootNode.isDestroyed()) addNode(obj);
-    }
-
-    /**
      * Adds a top-level node to this scene and initializes the node and all its
      * descendants. The node will not be added if it already has a parent
      * node.

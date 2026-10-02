@@ -6,7 +6,7 @@ import mayonez.graphics.textures.*
 import mayonez.renderer.*
 
 /**
- * Draws a [Texture] at a [GameObject]'s position. To instantiate a sprite,
+ * Draws a [Texture] at a [Node]'s position. To instantiate a sprite,
  * use [Sprites.createSprite]. See [Texture] for more information.
  *
  * @author SlavSquatSuperstar
@@ -69,16 +69,5 @@ sealed class Sprite : Node(), Renderable {
     final override fun getZIndex(): Int = super.zIndex
 
     final override fun isInUI(): Boolean = false
-
-    // Copy Methods
-
-    /**
-     * Construct a new sprite with the same image but not attached to any
-     * [mayonez.GameObject].
-     *
-     * @return a copy of this image
-     */
-    @Deprecated("Use Sprites.createSprite(texture)")
-    abstract fun copy(): Sprite?
 
 }

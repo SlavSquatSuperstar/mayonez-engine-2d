@@ -79,6 +79,4 @@ internal class JSprite private constructor(
         }
     }
 
-    override fun copy(): JSprite = JSprite(texture, color)
-
 }

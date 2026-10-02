@@ -92,7 +92,7 @@ public abstract class UIContainer extends UIElement {
 
     /**
      * Adds a UI element to this container and refreshes the layout. If this container has been
-     * added to a {@link mayonez.GameObject}, then the element will also be added to that object
+     * added to a {@link mayonez.Node}, then the element will also be added to that object
      * .
      *
      * @param element the element

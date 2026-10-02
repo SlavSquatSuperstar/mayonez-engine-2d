@@ -12,7 +12,7 @@ import org.jspecify.annotations.Nullable;
  * However, the GameObject class may still be extended to provide reusable prefab objects.
  * <p>
  * Usage: Create a game object by instantiating a subclass or anonymous instance of
- * {@link mayonez.GameObject}. Add components to the object by calling {@link #addComponent}
+ * {@link mayonez.GameObject}. Add components to the object by calling {@link Node#addChild}
  * inside the {@link Node#init} method. The object's transform can be accessed through
  * {@link #getTransform()}. To remove the object from the scene, call {@link GameObject#setDestroyed}.
  * To remove a component from the object, call {@link Node#removeChild}.
@@ -55,20 +55,6 @@ public class GameObject extends Node {
      */
     public GameObject(@Nullable String name, @Nullable Transform transform) {
         super(name, transform);
-    }
-
-    // Component Methods
-
-    /**
-     * Adds a component to this game object if the component is not null.
-     * The component will not be added if it already has a parent object.
-     *
-     * @param comp the component
-     * @deprecated Use {@link #addChild} instead
-     */
-    @Deprecated
-    public final void addComponent(@Nullable Node comp) {
-        super.addChild(comp);
     }
 
 }

@@ -54,8 +54,6 @@ internal class GLSprite private constructor(
         this.texture = texture as? GLTexture
     }
 
-    override fun copy(): GLSprite = GLSprite(texture, color)
-
     // Renderable Methods
 
     override fun getVertexPositions(): Array<out Vec2?> {
