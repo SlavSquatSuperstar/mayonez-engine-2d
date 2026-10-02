@@ -138,7 +138,14 @@ class Rigidbody(mass: Float, drag: Float, angDrag: Float)
     // Game Loop Methods
 
     override fun start() {
-        collider = parent!!.getChild(Collider::class.java)
+        // We want the physics body to be the parent of the collider
+        collider = getChild(Collider::class.java)
+
+        // The old architecture has the physics body and collider as siblings
+        if (collider == null) {
+            collider = getSibling(Collider::class.java)
+            setUseParentTransform(true)
+        }
     }
 
     override fun integrateForce(dt: Float, gravity: Vec2) {

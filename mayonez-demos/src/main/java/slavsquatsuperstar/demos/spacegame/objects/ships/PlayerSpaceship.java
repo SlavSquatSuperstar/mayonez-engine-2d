@@ -28,13 +28,13 @@ public class PlayerSpaceship extends Spaceship {
 
         // Movement
         var rb = new Rigidbody(1f);
-        addComponent(rb);
-        addComponent(new PlayerKeyMovement(properties.moveThrust(), properties.turnThrust()));
-//        addComponent(new ClickToMove(10f, MoveMode.VELOCITY, true));
+        addChild(rb);
+        addChild(new PlayerKeyMovement(properties.moveThrust(), properties.turnThrust()));
+//        addChild(new ClickToMove(10f, MoveMode.VELOCITY, true));
 
         // Weapons
         var loadout = ProjectilePrefabs.PROJECTILE_TYPES;
-        addComponent(new PlayerFireController(properties.hardpoints(), loadout));
+        addChild(new PlayerFireController(properties.hardpoints(), loadout));
     }
 
     @Override

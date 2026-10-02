@@ -69,10 +69,10 @@ public class SpaceGameScene extends DemoScene {
         }
 
         // Scene Objects
-        addObject(new SpaceObjectSpawner("Object Spawner"));
+        addNode(new SpaceObjectSpawner("Object Spawner"));
 
         // UI
-        addObject(new PlayerUI("Player UI"));
+        addNode(new PlayerUI("Player UI"));
     }
 
     @Override

@@ -11,7 +11,7 @@ import slavsquatsuperstar.demos.spacegame.objects.SpaceGameLayer;
  *
  * @author SlavSquatSuperstar
  */
-public class CollisionDamage extends Script {
+public class CollisionDamage extends Node {
 
     private static final float DEFAULT_SPEED_THRESHOLD = 8f;
     private static final float DEFAULT_COLLISION_DAMAGE = 1f;

@@ -53,7 +53,7 @@ public class PlayerUIController extends Script implements EventListener<SpaceGam
         }
     }
 
-    private void setPlayer(GameObject player) {
+    private void setPlayer(Node player) {
         if (player == null) {
             damageable = null;
         } else {

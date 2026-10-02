@@ -35,22 +35,22 @@ class AsteroidDestruction extends Damageable {
         var fragmentRadius = radius / fragmentCount;
 
         var angle = 360f / fragmentCount;
-        var offsetAngle = getTransform().getRotation();
+        var offsetAngle = getGlobalTransform().getRotation();
 
         for (var i = 0; i < fragmentCount; i++) {
-            getScene().addObject(createAsteroidFragment(fragmentRadius, offsetAngle));
+            getScene().addNode(createAsteroidFragment(fragmentRadius, offsetAngle));
             offsetAngle += AsteroidProperties.getRandomError(angle, 0.5f);
         }
     }
 
-    private GameObject createAsteroidFragment(float fragmentRadius, float offsetAngle) {
+    private Node createAsteroidFragment(float fragmentRadius, float offsetAngle) {
         Texture fragmentTexture = AsteroidPrefabs.getAsteroidTexture(fragmentRadius);
         var impulse = Random.randomFloat(3f, 6f);
         var angularImpulse = Random.randomFloat(-5f, 5f);
 
         return new AsteroidFragment(
                 "Asteroid Fragment",
-                getTransform().getPosition(),
+                getGlobalTransform().getPosition(),
                 new AsteroidProperties(fragmentRadius, fragmentTexture, properties.color()),
                 new Vec2(impulse, 0).rotate(offsetAngle),
                 angularImpulse

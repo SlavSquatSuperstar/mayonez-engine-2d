@@ -60,30 +60,34 @@ public final class ProjectilePrefabs {
     public static Node createProjectilePrefab(
             ProjectileType type, Node source, Vec2 offsetPos, float offsetAngle
     ) {
-        var projXf = getProjectileTransform(type, source.getTransform(), offsetPos, offsetAngle);
-        return new GameObject(type.name(), projXf) {
+        return new Projectile(type, source) {
             @Override
             protected void init() {
-                var proj = new Projectile(source, type);
-                addComponent(proj);
                 addTag(SpaceGameScene.PROJECTILE_TAG);
+                var projXf = getProjectileTransform(type, source.getTransform(), offsetPos, offsetAngle);
+                setTransform(projXf);
 
                 var sprite = PROJECTILE_SPRITES.getSprite(type.spriteIndex());
                 sprite.setZIndex(SpaceGameZIndex.PROJECTILE);
-                addComponent(sprite);
+                addChild(sprite);
 
                 var col = new BulletBoxCollider(type.colliderSize()) {
                     @Override
                     public void onCollisionEvent(CollisionEvent event) {
-                        proj.onImpactObject(event); // On trigger
+                        onImpactObject(event); // On trigger
                     }
                 };
                 col.setLayer(getScene().getLayer(SpaceGameLayer.PROJECTILES));
                 col.setPrimaryAxisX(false);
                 col.setSweepFactor(type.sweepFactor());
                 col.setTrigger(true);
-                addComponent(col);
-                addComponent(new Rigidbody(0.001f));
+                addChild(col);
+
+                // Set initial velocity
+                var rb = new Rigidbody(0.001f);
+                var initialVelocity = source.getTransform().getUp().mul(type.speed());
+                rb.addVelocity(initialVelocity);
+                addChild(rb);
             }
         };
     }
@@ -116,16 +120,16 @@ public final class ProjectilePrefabs {
      * @param target     the impacted object
      * @return the particle object
      */
-    public static GameObject createImpactPrefab(
+    public static Node createImpactPrefab(
             ProjectileType type, Transform particleXf, Node target
     ) {
-        return new GameObject("%s Impact".formatted(type.name()), particleXf) {
+        return new Node("%s Impact".formatted(type.name()), particleXf) {
             @Override
             protected void init() {
                 var duration = Random.randomFloat(0.1f, 0.4f);
-                addComponent(new DestroyAfterDuration(duration));
-                addComponent(PARTICLE_SPRITES.getSprite(type.spriteIndex()));
-                addComponent(new ParticleFollowTarget(target));
+                addChild(new DestroyAfterDuration(duration));
+                addChild(PARTICLE_SPRITES.getSprite(type.spriteIndex()));
+                addChild(new ParticleFollowTarget(target));
             }
         };
     }

@@ -22,7 +22,7 @@ public class BaseAsteroid extends Asteroid {
 
         // Create more fragments
         var damageable = new AsteroidDestruction(startingHealth, properties);
-        addComponent(damageable);
+        addChild(damageable);
         addCollider(damageable::onImpactProjectile); // On trigger
     }
 

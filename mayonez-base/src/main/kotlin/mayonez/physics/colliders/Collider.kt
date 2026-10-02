@@ -53,24 +53,31 @@ abstract class Collider(private val shape: Shape) :
     // Game Loop Methods
 
     override fun start() {
-        physicsBody = parent!!.getChild(Rigidbody::class.java)
+        // We want the physics body to be the parent of the collider
+        physicsBody = parent as? PhysicsBody?
+
+        // The old architecture has the physics body and collider as siblings
+        if (physicsBody == null) {
+            physicsBody = getSibling(Rigidbody::class.java)
+            setUseParentTransform(true)
+        }
     }
 
     // Shape Properties
 
     // TODO convert to property
-    fun center(): Vec2 = transform!!.position
+    fun center(): Vec2 = transform.position
 
-    open fun getRotation(): Float = transform!!.rotation
+    open fun getRotation(): Float = transform.rotation
 
     override fun getMinBounds(): BoundingBox = getShape().boundingRectangle()
 
     override fun getMass(density: Float): Float {
-        return shape.scale(transform!!.scale).mass(density)
+        return shape.scale(transform.scale).mass(density)
     }
 
     override fun getAngMass(mass: Float): Float {
-        return shape.scale(transform!!.scale).angularMass(mass)
+        return shape.scale(transform.scale).angularMass(mass)
     }
 
     // Transform Methods
@@ -78,7 +85,7 @@ abstract class Collider(private val shape: Shape) :
     // TODO save as mutable field
     override fun getShape(): Shape {
         return shape.rotate(getRotation())
-            .scale(transform!!.scale)
+            .scale(transform.scale)
             .translate(center())
     }
 

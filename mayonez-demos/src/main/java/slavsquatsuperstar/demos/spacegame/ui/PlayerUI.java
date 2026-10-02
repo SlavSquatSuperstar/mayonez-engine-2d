@@ -15,7 +15,7 @@ import slavsquatsuperstar.demos.spacegame.events.SpaceGameEvents;
  *
  * @author SlavSquatSuperstar
  */
-public class PlayerUI extends GameObject {
+public class PlayerUI extends Node {
 
     private static final String CONTROL_HINTS_MESSAGE = """
             Controls:
@@ -45,14 +45,14 @@ public class PlayerUI extends GameObject {
         // Player Status
         var playerStatus = new PlayerStatus(new Vec2(32, Mayonez.getScreenHeight() - 32),
                 new Vec2(32, 32), new Vec2(192, 32), 12);
-        addComponent(playerStatus);
+        addChild(playerStatus);
 
         // Weapon Hotbar
         var weaponHotbar = new WeaponHotbar(new Vec2(32, 32), new Vec2(32, 32), 16,
                 ProjectilePrefabs.PROJECTILE_TYPES);
-        addComponent(weaponHotbar);
+        addChild(weaponHotbar);
 
-        addComponent(new PlayerUIController(playerStatus, weaponHotbar));
+        addChild(new PlayerUIController(playerStatus, weaponHotbar));
 
         // Tet Elements
         var style = TextStyle.DEFAULT_STYLE
@@ -65,7 +65,7 @@ public class PlayerUI extends GameObject {
                 new Vec2(20, Mayonez.getScreenHeight() - 125))
                 .setStyle(style)
                 .setAnchor(Anchor.LEFT);
-        addComponent(autoBrakeToolTip);
+        addChild(autoBrakeToolTip);
 
         SpaceGameEvents.getPlayerEventSystem().subscribe(
                 event -> {
@@ -86,20 +86,20 @@ public class PlayerUI extends GameObject {
                 new Vec2(Mayonez.getScreenWidth() - 20, 15))
                 .setStyle(style)
                 .setAnchor(Anchor.BOTTOM_RIGHT);
-        addComponent(hintsTooltip);
+        addChild(hintsTooltip);
 
         var healthShieldHint = new TextLabel(
                 "Health\n\nShield",
                 new Vec2(270, Mayonez.getScreenHeight() - 32))
                 .setStyle(style)
                 .setAnchor(Anchor.TOP_LEFT);
-        addComponent(healthShieldHint);
+        addChild(healthShieldHint);
 
         var hotbarHints = new TextLabel(
                 "(1)   (2)   (3)   (4)", new Vec2(15, 60))
                 .setStyle(style)
                 .setAnchor(Anchor.BOTTOM_LEFT);
-        addComponent(hotbarHints);
+        addChild(hotbarHints);
 
         var controlText = new TextLabel(
                 CONTROL_HINTS_MESSAGE,
@@ -107,9 +107,9 @@ public class PlayerUI extends GameObject {
                         Mayonez.getScreenHeight() - 20))
                 .setStyle(style)
                 .setAnchor(Anchor.TOP_RIGHT);
-        addComponent(controlText);
+        addChild(controlText);
 
-        addComponent(new ToggleHints(hintsTooltip,
+        addChild(new ToggleHints(hintsTooltip,
                 new TextLabel[]{hotbarHints, controlText, healthShieldHint}));
     }
 

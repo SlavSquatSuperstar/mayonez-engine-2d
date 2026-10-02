@@ -24,7 +24,7 @@ public class SpaceshipDestruction extends TimerScript {
 
     // References
     private final List<Node> shipSystems;
-    private GameObject explosion;
+    private Node explosion;
 
     public SpaceshipDestruction() {
         super(DESTRUCTION_DURATION);
@@ -65,7 +65,7 @@ public class SpaceshipDestruction extends TimerScript {
         }
         shipSystems.clear();
 
-        getScene().addObject(explosion = ExplosionPrefabs.createShipExplosionPrefab(
+        getScene().addNode(explosion = ExplosionPrefabs.createShipExplosionPrefab(
                 "Ship Explosion",
                 new Transform(getTransform().getPosition(), Random.randomAngle(), getTransform().getScale()),
                 EXPLOSION_DURATION

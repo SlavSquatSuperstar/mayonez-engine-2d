@@ -8,12 +8,12 @@ import slavsquatsuperstar.demos.spacegame.combat.projectiles.Projectile;
 import slavsquatsuperstar.demos.spacegame.objects.SpaceGameLayer;
 
 /**
- * Gives a {@link mayonez.GameObject} a health bar that can be damaged by other objects with a {@link Projectile}
+ * Gives a {@link mayonez.Node} a health bar that can be damaged by other objects with a {@link Projectile}
  * component. Once health is depleted, the object is destroyed.
  *
  * @author SlavSquatSuperstar
  */
-public class Damageable extends Script {
+public class Damageable extends Node {
 
     private final Counter healthPoints;
 
@@ -30,11 +30,11 @@ public class Damageable extends Script {
     public void onImpactProjectile(CollisionEvent event) {
         if (!event.trigger || event.type != CollisionEventType.ENTER) return;
 
-        var parent = event.other.getParent();
-        if (parent.hasTag(SpaceGameScene.PROJECTILE_TAG)) {
-            var p = parent.getChild(Projectile.class);
-            if (p != null && !getParent().equals(p.getSource())) {
-                onObjectDamaged(p.getDamage());
+        if (event.other.getParent() instanceof Projectile proj) {
+            if (proj.hasTag(SpaceGameScene.PROJECTILE_TAG)) {
+                if (!getParent().equals(proj.getSource())) {
+                    onObjectDamaged(proj.getDamage());
+                }
             }
         }
     }

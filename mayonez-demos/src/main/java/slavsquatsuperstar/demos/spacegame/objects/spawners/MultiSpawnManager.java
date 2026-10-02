@@ -48,7 +48,7 @@ public abstract class MultiSpawnManager extends SpawnManager {
     }
 
     @Override
-    public void markObjectDestroyed(GameObject object) {
+    public void markObjectDestroyed(Node object) {
         amountSpawned.count(-1);
         spawnTimer.reset(); //Reset so objects don't respawn immediately
     }

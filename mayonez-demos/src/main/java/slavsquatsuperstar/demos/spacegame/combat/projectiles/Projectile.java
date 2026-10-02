@@ -1,44 +1,34 @@
 package slavsquatsuperstar.demos.spacegame.combat.projectiles;
 
 import mayonez.*;
+import mayonez.math.Vec2;
 import mayonez.physics.*;
 import mayonez.physics.dynamics.*;
 import mayonez.scripts.*;
 
+import java.util.List;
+import java.util.Set;
+
 /**
- * Allows a {@link mayonez.GameObject} to be launched with an initial velocity from a source object, and
+ * Allows a {@link mayonez.Node} to be launched with an initial velocity from a source object, and
  * allows it to damage other objects with a
  * {@link slavsquatsuperstar.demos.spacegame.combat.Damageable} component.
  *
  * @author SlavSquatSuperstar
  */
-public class Projectile extends Script {
+public class Projectile extends Node {
 
-    private final Node source;
     private final ProjectileType type;
+    private final Node source;
 
-    public Projectile(Node source, ProjectileType type) {
-        this.source = source;
+    public Projectile(ProjectileType type, Node source) {
         this.type = type;
+        this.source = source;
     }
 
     @Override
     protected void init() {
-        getParent().addChild(new DestroyAfterDuration(type.lifetime()));
-    }
-
-    @Override
-    protected void start() {
-        var rb = getSibling(Rigidbody.class);
-        if (rb == null) {
-            this.setEnabled(false);
-            return;
-        }
-
-        // Set initial velocity
-        var sourceRb = source.getChild(Rigidbody.class);
-        if (sourceRb != null) rb.setVelocity(sourceRb.getVelocity());
-        rb.addVelocity(getTransform().getUp().mul(type.speed()));
+        addChild(new DestroyAfterDuration(type.lifetime()));
     }
 
     public void onImpactObject(CollisionEvent event) {
@@ -55,14 +45,15 @@ public class Projectile extends Script {
         }
 
         // Spawn particle
-        getScene().addObject(ProjectilePrefabs.createImpactPrefab(type, particleXf, event.other));
-        getParent().setDestroyed();
+        getScene().addNode(ProjectilePrefabs.createImpactPrefab(type, particleXf, event.other));
+        setDestroyed();
     }
 
     public float getDamage() {
         return type.damage();
     }
 
+    // TODO change to ignoreCollision
     public Node getSource() {
         return source;
     }

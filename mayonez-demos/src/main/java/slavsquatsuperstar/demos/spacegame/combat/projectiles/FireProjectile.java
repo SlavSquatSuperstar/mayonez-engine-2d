@@ -9,7 +9,7 @@ import mayonez.math.*;
  *
  * @author SlavSquatSuperstar
  */
-public abstract class FireProjectile extends Script {
+public abstract class FireProjectile extends Node {
 
     @Override
     protected void update(float dt) {
@@ -38,7 +38,7 @@ public abstract class FireProjectile extends Script {
      * @param offsetAngle the projectile spawn angle in relation to the source
      */
     protected void spawnPrefab(ProjectileType type, Vec2 offsetPos, float offsetAngle) {
-        getScene().addObject(ProjectilePrefabs.createProjectilePrefab(
+        getScene().addNode(ProjectilePrefabs.createProjectilePrefab(
                 type, getParent(), offsetPos, offsetAngle
         ));
     }

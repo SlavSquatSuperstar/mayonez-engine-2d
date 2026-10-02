@@ -13,7 +13,7 @@ import slavsquatsuperstar.demos.spacegame.objects.ships.*;
  *
  * @author SlavSquatSuperstar
  */
-public class SpaceObjectSpawner extends GameObject {
+public class SpaceObjectSpawner extends Node {
 
     // Constants
     private final static float PLAYER_RESPAWN_COOLDOWN = 3f;
@@ -29,12 +29,12 @@ public class SpaceObjectSpawner extends GameObject {
     @Override
     protected void init() {
         // Player
-        addComponent(new PlayerSpawnManager(PLAYER_RESPAWN_COOLDOWN));
+        addChild(new PlayerSpawnManager(PLAYER_RESPAWN_COOLDOWN));
 
         // Enemies
-        addComponent(new MultiSpawnManager(NUM_ENEMIES, ENEMY_RESPAWN_COOLDOWN) {
+        addChild(new MultiSpawnManager(NUM_ENEMIES, ENEMY_RESPAWN_COOLDOWN) {
             @Override
-            public GameObject createSpawnedObject() {
+            public Node createSpawnedObject() {
                 SpaceshipProperties properties;
                 var invCDF = Random.randomFloat(0f, 100f);
                 if (invCDF < 30f) {
@@ -59,9 +59,9 @@ public class SpaceObjectSpawner extends GameObject {
         });
 
         // Obstacles
-        addComponent(new MultiSpawnManager(NUM_OBSTACLES, OBSTACLE_RESPAWN_COOLDOWN) {
+        addChild(new MultiSpawnManager(NUM_OBSTACLES, OBSTACLE_RESPAWN_COOLDOWN) {
             @Override
-            public GameObject createSpawnedObject() {
+            public Node createSpawnedObject() {
                 if (Random.randomBoolean()) {
                     return new BaseAsteroid(
                             "Asteroid", SpaceGameScene.getRandomPosition(),

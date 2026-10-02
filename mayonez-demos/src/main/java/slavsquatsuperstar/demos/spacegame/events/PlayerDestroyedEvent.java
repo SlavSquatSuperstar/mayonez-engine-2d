@@ -9,7 +9,7 @@ import mayonez.*;
  */
 public class PlayerDestroyedEvent extends SpaceGameEvent {
 
-    public PlayerDestroyedEvent(GameObject player) {
+    public PlayerDestroyedEvent(Node player) {
         super("Destroyed player " + player);
     }
 

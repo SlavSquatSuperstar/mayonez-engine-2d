@@ -47,7 +47,7 @@ public class PlayerSpawnManager extends SpawnManager {
     // Spawner Methods
 
     @Override
-    public GameObject createSpawnedObject() {
+    public Node createSpawnedObject() {
         return new PlayerSpaceship(
                 "Player Spaceship", new Vec2(), ShipPrefabs.SHUTTLE_PROPERTIES1
         ) {
@@ -74,7 +74,7 @@ public class PlayerSpawnManager extends SpawnManager {
     }
 
     @Override
-    public void markObjectDestroyed(GameObject object) {
+    public void markObjectDestroyed(Node object) {
         SpaceGameEvents.getPlayerEventSystem()
                 .broadcast(new PlayerDestroyedEvent(object));
 

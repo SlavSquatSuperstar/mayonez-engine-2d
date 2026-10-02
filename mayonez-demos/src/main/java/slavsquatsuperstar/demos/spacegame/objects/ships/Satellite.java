@@ -18,7 +18,7 @@ import slavsquatsuperstar.demos.spacegame.objects.SpaceGameZIndex;
  *
  * @author SlavSquatSuperstar
  */
-public class Satellite extends GameObject {
+public class Satellite extends Node {
 
     private final SatelliteProperties properties;
 
@@ -32,7 +32,7 @@ public class Satellite extends GameObject {
         addTag(SpaceGameScene.DAMAGEABLE_TAG);
 
         // Combat
-        addComponent(new SpaceshipDestruction());
+        addChild(new SpaceshipDestruction());
         var damageable = new Damageable(properties.maxHull()) {
             @Override
             public void onHealthDepleted() {
@@ -40,11 +40,11 @@ public class Satellite extends GameObject {
                 if (shipDestruction != null) shipDestruction.startDestructionSequence();
             }
         };
-        addComponent(damageable);
+        addChild(damageable);
 
         // Collision
         var cd = new CollisionDamage();
-        addComponent(cd);
+        addChild(cd);
         var collider = new BoxCollider(properties.colliderSize()) {
             @Override
             public void onCollisionEvent(CollisionEvent event) {
@@ -53,19 +53,19 @@ public class Satellite extends GameObject {
             }
         };
         collider.setLayer(getScene().getLayer(SpaceGameLayer.SPACECRAFT));
-        addComponent(collider);
-        addComponent(new KeepInScene(SpaceGameScene.SCENE_HALF_SIZE.mul(-1f),
+        addChild(collider);
+        addChild(new KeepInScene(SpaceGameScene.SCENE_HALF_SIZE.mul(-1f),
                 SpaceGameScene.SCENE_HALF_SIZE, KeepInScene.Mode.WRAP));
 
         // Initial Velocity
         Rigidbody rb;
-        addComponent(rb = new Rigidbody(1f, 0.01f, 0.01f));
+        addChild(rb = new Rigidbody(1f, 0.01f, 0.01f));
         rb.setVelocity(getTransform().getUp().mul(Random.randomFloat(0f, 4f)));
 
         // Visuals
         var sprite = Sprites.createSprite(properties.texture());
         sprite.setZIndex(SpaceGameZIndex.SPACESHIP);
-        addComponent(sprite);
+        addChild(sprite);
     }
 
 }

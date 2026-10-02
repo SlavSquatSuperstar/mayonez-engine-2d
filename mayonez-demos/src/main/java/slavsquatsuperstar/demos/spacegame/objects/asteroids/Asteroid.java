@@ -19,7 +19,7 @@ import slavsquatsuperstar.demos.spacegame.objects.SpaceGameZIndex;
  *
  * @author SlavSquatSuperstar
  */
-public abstract class Asteroid extends GameObject {
+public abstract class Asteroid extends Node {
 
     // Instance Fields
     protected final AsteroidProperties properties;
@@ -43,7 +43,7 @@ public abstract class Asteroid extends GameObject {
     private void addSprite(Texture texture, Color color) {
         var sprite = Sprites.createSprite(texture);
         sprite.setColor(color);
-        addComponent(sprite);
+        addChild(sprite);
     }
 
     protected void addCollider(EventListener<CollisionEvent> listener) {
@@ -54,14 +54,14 @@ public abstract class Asteroid extends GameObject {
             }
         };
         collider.setLayer(getScene().getLayer(SpaceGameLayer.ASTEROIDS));
-        addComponent(collider);
-        addComponent(new KeepInScene(SpaceGameScene.SCENE_HALF_SIZE.mul(-1f),
+        addChild(collider);
+        addChild(new KeepInScene(SpaceGameScene.SCENE_HALF_SIZE.mul(-1f),
                 SpaceGameScene.SCENE_HALF_SIZE, KeepInScene.Mode.WRAP));
     }
 
     protected Rigidbody addRigidbody(float radius) {
         var rb = new Rigidbody(radius, 0, 0);
-        addComponent(rb);
+        addChild(rb);
         return rb;
     }
 

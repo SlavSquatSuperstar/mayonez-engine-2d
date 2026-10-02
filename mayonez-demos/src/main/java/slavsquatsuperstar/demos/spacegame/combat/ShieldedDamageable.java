@@ -7,7 +7,7 @@ import mayonez.math.*;
 import mayonez.scripts.*;
 
 /**
- * Gives a {@link mayonez.GameObject} a rechargeable shield on top of a health bar.
+ * Gives a {@link mayonez.Node} a rechargeable shield on top of a health bar.
  *
  * @author SlavSquatSuperstar
  */
