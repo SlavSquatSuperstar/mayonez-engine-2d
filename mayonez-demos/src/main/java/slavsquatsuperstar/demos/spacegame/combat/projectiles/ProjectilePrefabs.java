@@ -5,12 +5,10 @@ import mayonez.graphics.sprites.*;
 import mayonez.math.Random;
 import mayonez.math.*;
 import mayonez.physics.CollisionEvent;
-import mayonez.physics.CollisionEventType;
 import mayonez.physics.colliders.*;
 import mayonez.physics.dynamics.*;
 import mayonez.scripts.*;
 import slavsquatsuperstar.demos.spacegame.PrefabUtils;
-import slavsquatsuperstar.demos.spacegame.SpaceGameScene;
 import slavsquatsuperstar.demos.spacegame.objects.SpaceGameLayer;
 import slavsquatsuperstar.demos.spacegame.objects.SpaceGameZIndex;
 
@@ -51,20 +49,26 @@ public final class ProjectilePrefabs {
     /**
      * Create a prefab {@link Projectile} object with the specified projectile type.
      *
-     * @param type        the projectile type
-     * @param source      the object that fired the projectile
-     * @param offsetPos   the projectile spawn position in relation to the source
-     * @param offsetAngle the projectile spawn angle in relation to the source
-     * @return the projectile object, or null if the index is invalid
+     * @param type      the projectile type
+     * @param source    the object that fired the projectile
+     * @param hardpoint the projectile spawn offset in relation to the source
+     * @return the projectile object
      */
     public static Node createProjectilePrefab(
-            ProjectileType type, Node source, Vec2 offsetPos, float offsetAngle
+            ProjectileType type, Node source, WeaponHardpoint hardpoint
     ) {
         return new Projectile(type, source) {
             @Override
             protected void init() {
-                addTag(SpaceGameScene.PROJECTILE_TAG);
-                var projXf = getProjectileTransform(type, source.getTransform(), offsetPos, offsetAngle);
+                super.init();
+                var weaponSpreadAngle = Random.randomFloat(-type.weaponSpread(), type.weaponSpread());
+                var sourceXf = source.getTransform();
+                var projXf = new Transform(
+                        sourceXf.toWorld(hardpoint.offset()),
+                        sourceXf.getRotation() + hardpoint.angle() + weaponSpreadAngle,
+                        type.scale()
+                );
+                projXf = getProjectileTransform(type, source.getTransform(), hardpoint);
                 setTransform(projXf);
 
                 var sprite = PROJECTILE_SPRITES.getSprite(type.spriteIndex());
@@ -97,19 +101,18 @@ public final class ProjectilePrefabs {
     /**
      * Get the projectile transform in world space.
      *
-     * @param type        the projectile type
-     * @param sourceXf    the transform of the source object
-     * @param offsetPos   the projectile spawn position in relation to the source
-     * @param offsetAngle the projectile spawn angle in relation to the source
+     * @param type      the projectile type
+     * @param sourceXf  the transform of the source object
+     * @param hardpoint the projectile spawn offset in relation to the source
      * @return the projectile transform
      */
     private static Transform getProjectileTransform(
-            ProjectileType type, Transform sourceXf, Vec2 offsetPos, float offsetAngle
+            ProjectileType type, Transform sourceXf, WeaponHardpoint hardpoint
     ) {
         var weaponSpreadAngle = Random.randomFloat(-type.weaponSpread(), type.weaponSpread());
         return new Transform(
-                sourceXf.toWorld(offsetPos),
-                sourceXf.getRotation() + offsetAngle + weaponSpreadAngle,
+                sourceXf.toWorld(hardpoint.offset()),
+                sourceXf.getRotation() + hardpoint.angle() + weaponSpreadAngle,
                 type.scale()
         );
     }

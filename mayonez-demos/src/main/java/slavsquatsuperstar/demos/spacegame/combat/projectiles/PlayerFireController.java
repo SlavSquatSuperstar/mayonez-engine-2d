@@ -64,7 +64,7 @@ public class PlayerFireController extends FireProjectile {
     @Override
     protected void fireProjectiles() {
         for (var hardPoint : hardpoints) {
-            spawnPrefab(projectiles.get(selectedWeapon), hardPoint.offset(), hardPoint.angle());
+            spawnPrefab(projectiles.get(selectedWeapon), hardPoint);
         }
         fireTimers[selectedWeapon].reset();
     }

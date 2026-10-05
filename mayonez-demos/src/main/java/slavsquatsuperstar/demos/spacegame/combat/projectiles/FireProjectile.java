@@ -1,7 +1,6 @@
 package slavsquatsuperstar.demos.spacegame.combat.projectiles;
 
 import mayonez.*;
-import mayonez.math.*;
 
 /**
  * Allows ships to fire damaging projectiles repeatedly and defines criteria for when
@@ -33,13 +32,12 @@ public abstract class FireProjectile extends Node {
     /**
      * Instantiates a projectile prefab object and spawns it in the world.
      *
-     * @param type        the projectile type
-     * @param offsetPos   the projectile spawn position in relation to the source
-     * @param offsetAngle the projectile spawn angle in relation to the source
+     * @param type      the projectile type
+     * @param hardpoint the projectile spawn offset in relation to the source
      */
-    protected void spawnPrefab(ProjectileType type, Vec2 offsetPos, float offsetAngle) {
+    protected void spawnPrefab(ProjectileType type, WeaponHardpoint hardpoint) {
         getScene().addNode(ProjectilePrefabs.createProjectilePrefab(
-                type, getParent(), offsetPos, offsetAngle
+                type, getParent(), hardpoint
         ));
     }
 

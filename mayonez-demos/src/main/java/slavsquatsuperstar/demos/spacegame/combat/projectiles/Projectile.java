@@ -1,13 +1,11 @@
 package slavsquatsuperstar.demos.spacegame.combat.projectiles;
 
 import mayonez.*;
-import mayonez.math.Vec2;
 import mayonez.physics.*;
 import mayonez.physics.dynamics.*;
 import mayonez.scripts.*;
+import slavsquatsuperstar.demos.spacegame.SpaceGameScene;
 
-import java.util.List;
-import java.util.Set;
 
 /**
  * Allows a {@link mayonez.Node} to be launched with an initial velocity from a source object, and
@@ -28,6 +26,9 @@ public class Projectile extends Node {
 
     @Override
     protected void init() {
+        setName(type.name() + " Projectile");
+        addTag(SpaceGameScene.PROJECTILE_TAG);
+
         addChild(new DestroyAfterDuration(type.lifetime()));
     }
 
