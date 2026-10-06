@@ -1,5 +1,43 @@
 # Mayonez Engine Changelog
 
+## v0.8.3-pre9
+
+Global transform and convert demos to node
+
+### Features
+
+- Add Node getGlobalTransform method
+- Add Node useParentTransform property to point transform to parent's
+- Components set useParentTransform to true by default
+- Add Node getSibling method
+- Add Node constructor with name and position
+- Specify space game player ship index in user config
+- Tweak space game shuttle textures
+- Specify space game enemy/obstacle/star count in user config
+
+### Refactor
+
+- Replace GameObject.getComponent calls with Node.getChild
+- Replace Sprite spriteTransform property with Node transform
+- Remove deprecated ECS methods in Scene/GameObject/Component
+- Sprite now extends node
+- Separate Animator enabled and visible methods
+- BREAKING CHANGE: Make Node transform field private and use getter
+- BREAKING CHANGE: Remove Script getCollider/getRigidbody methods
+- Change Camera subject type to Node
+- Convert ECS to Node in all demo scenes
+
+### Fixes
+
+- Fix thruster sprites not animating
+- Fix Scene addNode concurrent modification
+- Fix Projectiles given correct initial angle and velocity
+- Fix memory leak due to Projectiles not despawning
+
+### Documentation
+
+- Update and format Node/Scene Javadoc
+
 ## v0.8.3-pre8
 
 FilePath improvements and Shader definition files
