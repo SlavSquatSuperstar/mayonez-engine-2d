@@ -640,7 +640,7 @@ Read app version from file
 
 ### Refactor
 
-- Combine version user preference into window title 
+- Combine version user preference into window title
 - Tweak Application and Window log message levels
 - Store LogLevel user preference as a string
 
@@ -666,3 +666,299 @@ Fix incorrect impulse resolution
 
 - Create InputTestScene for key and mouse input
 - Create CollisionTestScene for collision detection and resolution
+
+## v0.8.1
+
+Better batching, packaging, less modules
+
+See pre-release tags for release notes
+
+### Documentation
+
+- Reformat readme acknowledgements
+- Update readme OS table headers
+- Update readme Update engine feature list
+
+## v0.8.1-pre9
+
+Data-driven spaceships
+
+### Features
+
+- Read weapon hardpoints from file
+- Randomly select enemy hardpoint locations and weapon loadout
+- Create ThrusterProperties record
+- Create Animator setSpriteTransform method
+- Store thrusters/hardpoints in SpaceshipProperties
+- Store spaceship properties in SpaceshipPrefabs singleton
+- Add fighter spaceship type
+- Add railgun projectile type
+- Pass player loadout to weapons script
+- Pass player loadout to UI hotbar
+- Read SpaceshipProperties from CSV file
+- Store speed, shield regen, and textures in SpaceshipProperties
+- Save auto-brake option after death
+
+### Refactor
+
+- Rename spaceship assets to shuttle
+- Tweak shuttle hardpoint positions
+
+## v0.8.1-pre8
+
+No more scene background
+
+### Features
+
+- Draw scene backgrounds with normal sprite
+- BREAKING CHANGE: Remove size from scene constructor
+- Save player spaceship weapon choice after death
+- Spaceship now brakes with force instead of drag
+- Clamp player spaceship velocity when braking if speed very small
+- Lower player spaceship brake strength when thrust keys pressed
+- Add control to toggle player spaceship auto-brake
+- Separate enemy spaceship move and turn braking
+- Separate player spaceship horizontal and vertical braking
+- Enemy spaceships can now speed up and slow down
+- Add auto-brake indicator to space game UI
+
+### Refactor
+
+- Change renderer background sprite to background color
+- Move Scene backgroundColor field to viewport
+- Create MouseFlick flickGameObject abstract method define movement
+- Delete old movement and rotation scripts
+- BREAKING CHANGE: Delete MovementScript.MoveMode enum and replace with overrides
+- Move spaceship brake logic to player movement script
+
+### Build
+
+- Run Gradle compileKotln and copy Kotlin sources before running compileJava
+
+### Fixes
+
+- Fix spaceship rotation direction signs
+
+### Documentation
+
+- Update readme controls
+
+## v0.8.1-pre7
+
+Handle key/mouse input with events
+
+### Features
+
+- Create SandboxObjectPrefabs factory class
+- Add more control/UI hints for space game scene
+- Send events for space game weapon selection
+- Create Key/MouseInput isAnyDown method
+- Input stores mapping states and mappings held separately
+- Added NONE constant for InputState to differentiate from released
+- Implement GLFW double-click
+- Create Key/MouseInputManager interfaces for GLFW and AWT to implement
+- Create Key/MouseInputEvent classes for managers to send to singleton
+- MouseInputEvent subclasses track click times
+
+### Refactor
+
+- Create separate classes for physics sandbox scripts
+- Deleted MappingStatus class
+- Renamed MouseInput getClicks method to isDoubleClick
+- Store key/mouse states in Key/MouseInput singletons
+- Delete Key/MouseManager classes
+- Move AWT/GLFW InputManagers to mayonez.application package
+- Merge mayonez.input.keyboard/mouse packages into mayonez.input
+
+## v0.8.1-pre6
+
+Remove scene size and scale
+
+### Features
+
+- Create Camera addCameraScript to attach custom scripts
+- Add PRE_RENDER UpdateOrder constant
+- Collider broadcasts CollisionEvents to subscribed listeners
+- Add walls to physics demos scenes
+- BREAKING CHANGE: Delete Scene width and height getters
+- Create BackgroundStar class
+- Delete Scene getRandomPosition method
+- BREAKING CHANGE: Delete Scene size and scale fields
+
+### Refactor
+
+- Make explosion texture more realistic
+- BREAKING CHANGE: Delete CameraMode enum and replace with overrides
+- BREAKING CHANGE: Move GameObject onCollisionEvent callback to CollisionBody
+- Create SpaceGameEvent superclass
+- Move Script init and onDestroy methods to Component
+
+### Build
+
+- Update Gradle version to 8.12
+
+## v0.8.1-pre5
+
+Move pixel scale to camera
+
+### Features
+
+- Created Scene getHalfSize method
+- Space scene stars use color temperatures
+- Create polygons LOD for space scene background stars
+- Create ElementLayout order to store element count
+- PointTransformer converts mouse displacement from screen to world units
+- Debug line segment width is automatically adjusted with zoom
+- Debug circle resolution is automatically adjusted with zoom
+- Ellipse getPolygon function now takes numEdges parameter
+- Decrease asteroid debris size quadratically
+- Cache shader uniform locations on first upload
+
+### Refactor
+
+- Pass texture slots to RenderBatch constructor
+- Combine font and render test scenes
+- Delete unsupported alternate line styles
+- Replace Camera sceneScale field with cameraScale to specify pixels per unit
+- Remove sceneScale field from DebugDraw
+
+### Fixes
+
+- Debug shapes scale correctly to camera scale
+- Mouse position converts correctly to camera scale
+- Background sprite now follows camera scale
+- AWT shapes are drawn with the correct stroke size
+- Use Path2D to draw AWT polygons with greater precision
+
+### Build
+
+- Update Gradle version to 8.11
+
+## v0.8.1-pre4
+
+Multi z-index render batches
+
+### Features
+
+- External file path checks if parent folder exists before writing
+- Created GLQuad interface to store common sprite pushToBatch method
+- GLQuad has default override for GLRenderable methods
+- Create Texture getParentTexture method for query parent dimensions
+- Shared draw list for sprites and text
+- Create RenderBatch canFitObject and getSortOrder methods
+- Create SingleZRenderBatch class to store one z-index
+- RenderBatch superclass no longer stores z-index
+- Create MultiZRenderBatch class to draw objects in a range of z-indices
+- GLRenderer now divides sprites into MultiZRenderBatches to save on draw calls
+- Plain color no longer takes up the first slot in TextureArray
+- GLRenderer constructor now takes a Shader object instead of filename
+
+### Refactor
+
+- GLSprite, UISprite, and GlyphSprite classes now implement GLQuad
+- Texture getWidth/Height methods now return sub-sprite dimensions
+- Merged BatchPushHelper file into GLQuad
+- GLRenderer now adds sprites and text objects to one list
+- GLRenderer now splits objects during batching instead of after adding
+- Make space game projectile colliders boxes instead of ovals
+
+### Fixes
+
+- Fix incorrect texID uploaded when TextureArray full due to off-by-one-error
+
+### Build
+
+- Don't export renderer.batch package as API
+- Created "Package" run configuration to package all releases
+
+### Test
+
+- Created RenderTestScene scene to test render batch changes
+
+## v0.8.1-pre3
+
+Merge tools module, io package
+
+### Features
+
+- Created PathUtil class to store file separators convert path strings
+- Create FilePath openInput/OutputStream methods
+- Added autoClose property to TextFile class to close streams after writes
+- Logger TextFile now keeps stream open to improve write performance
+
+### Refactor
+
+- Replaced OperatingSystem getFilename methods with PathUtil methods
+- Move OperatingSystem enum to mayonez.util package
+- Move mayonez.math/io/util packages back to mayonez-base module
+- Delete mayonez-tools module
+- Replace LocationType enum with FilePath subclasses
+- Asset subclasses now close streams instead of IOManagers
+- Replace TextIOManager classes with unified TextIOUtils
+- Renamed ImageIOManager class to BinaryIOUtils
+- Deleted AssetReader/Writer interfaces
+- Deleted mayonez.io.image package
+- Merge mayonez.io packages into mayonez.assets
+
+### Test
+
+- Deleted OperatingSystem tests
+- Write tests for LocationType class
+- Clean up I/O test classes
+
+## v0.8.1-pre2
+
+Package releases for each OS
+
+### Refactor
+
+- Move user run scripts from dist folder to release-assets/scripts
+- Move user readme and configs from dist folder to release-assets/resources
+- Move release scripts into separate folders for each OS
+- Split Mac and Linux run scripts into separate files
+- Move LWJGL natives method into Natives object
+- Delete package.X scripts since Gradle package tasks are working
+
+### Build
+
+- Create Gradle copyDefaultPreferences task that runs if demos configs are missing
+- Create Gradle jarX tasks for compiling with correct OS natives
+- Create Gradle packageX tasks for copying release assets
+- Create Gradle zipX tasks to create release archive
+- clearlogs.X scripts now delete log files within dist and mayonez-demos subdirectories
+
+### Chores
+
+- Demos config files are now ignored
+- The whole dist/ folder is now ignored
+
+## v0.8.1-pre1
+
+Detect wrong thread used on macOS
+
+### Features
+
+- Create EngineInitException class to detect wrong JVM configuration
+- Create JVMHelper to check if -XstartOnFirstThread is enabled
+- EngineFactory now throws a fatal exception due to wrong -XstartOnFirstThread on macOS
+
+### Refactor
+
+- Fixed some code inspection issues for new language versions
+- GameEngine subclasses constructors now take a Window instance
+- Pass input instances to EngineFactory createEngine method
+- Make Key/MouseInput getInstance methods internal
+- Pass window properties to Engine Factory createWindow method
+- Rename mayonez.engine package to mayonez.application
+- Rename GameEngine-related classes to Application
+- Merge EngineInitException and GLFWException classes into WindowInitException
+
+### Build
+
+- Update Java version to 21
+- Update Kotlin version to 2.0.x
+- Update LWJGL version to 3.3.4 (no longer supports macOS versions <10.11)
+
+### Test
+
+- Added extra tests to increase code coverage
