@@ -363,3 +363,306 @@ Full screen and resizable window
 
 - Create Gradle runGl and runAwt tasks
 - Merge buildSrc Plugins.kt and Versions.kt into Dependencies.kt
+
+## v0.8.2
+
+Collision fixes, better shaders and sheets
+
+See pre-release tags for release notes
+
+## v0.8.2-pre11
+
+Easier text label styling
+
+### Features
+
+- Merge TextLabel subclasses into one class
+- Store default font asset in Fonts singleton
+- Create TextLabel constructor with default style attributes
+- Text label stores dirty flags
+- Add builder-style setter functions to TextLabel
+- Create TextStyle record
+
+### Test
+
+- Write more UIBounds tests
+
+## v0.8.2-pre10
+
+Better Lines and Font Sizes
+
+### Features
+
+- Cut polygon line corners when drawing
+- Create VertexPair struct to avoid duplicating edge points
+- Find polygon faces through edge intersections
+- Line up glyph baselines based on assent
+- Increase font ascender/descender height
+- Replace glyph ascent with baseline height
+- Specify font line spacing in units of line height
+- Increase pixel font glyph height
+- Regenerate text glyphs when setting TextLabel position
+
+### Refactor
+
+- Remove OpenGL Line DrawPrimitive
+- Draw debug lines as quads
+
+### Test
+
+- JUnit tests use Kotlin contracts
+
+### Build
+
+- Update JUnit version to 5.12.x
+- Update Kotlin version to 2.1.x
+
+### Documentation
+
+- Update readme development tool versions
+
+## v0.8.2-pre9
+
+Font defines multiple character blocks
+
+### Features
+
+- Create SpriteSplitters factory class
+- Font can split glyphs for AWT Textures
+- FontMetadata stores max glyph width
+- Create record FontBlockMetadata
+- Add font texture for Latin-1 Supplement code block
+- Specify glyph height and sprite height metadata separately
+- Read font blocks from file
+- Merge FontBlock and FontBlockMetadata classes
+
+### Refactor
+
+- Font class uses SpriteSplitter to create glyph textures
+- Combine GL/AWT SpriteSheet test classes
+- Combine GL/AWT SpriteSheet subclasses
+- Store Texture and SpriteSplitter in SpriteSheet classclass
+- Move font width methods to new FontWidthHelper utility class
+- Store separate whitespace glyph in font
+- Store font glyphs in map
+- Create and store glyphs per FontBlock
+- Store texture in font block
+- Merge SpriteSheetTexture subclasses into Texture subclasses
+
+### Fixes
+
+- Draw glyphs with different height correctly
+- ImageData getPixel method checks found and freed status
+
+### Test
+
+- Create more utility methods for SpriteSheet tests
+- Test reading Records from JSON Arrays
+
+## v0.8.2-pre8
+
+Sprite sheet splitting and regions
+
+### Features
+
+- Group RenderBatches by shader before draw
+- Don't fire spaceship thrusters when zeroing velocity
+- Zero spaceship velocity using local reference frame
+- Draw space game BackgroundStars using only circles
+- Specify font texture file in metadata
+- Create ImageRegion class to define a rectangular sub-region
+- Create SpriteSheet sub sprites using ImageRegion
+- Use generic texture for Font
+- Create SpriteSheet getSheetTexture and getRegions methods
+- Create SpriteSplitter strategy class for GL and AWT sheets
+
+### Refactor
+
+- Get SpriteSheet regions in one loop
+
+### Fixes
+
+- Crop GL SpriteSheet sub-image buffers correctly
+- Avoid STB ImageData VM segfault after free
+
+### Test
+
+- Reorganize image test classes and assets
+- Create AWT SpriteSheet test cases
+- Write tests for SpriteSheet getRegions and spacing
+
+### Documentation
+
+- Add dynamic build status badge to readme
+
+## v0.8.2-pre7
+
+Fast circles and shader per batch
+
+### Features
+
+- Create PrefabUtils class for demo scenes
+- Store system line separator in text I/O class
+- Store Shader and upload uniforms in batch
+- Update Camera matrices only when accessed
+- Renderer allows using multiple shaders
+- Draw circles/ellipses as quads using fragment shader
+- Draw circle/ellipse outlines using shader
+- Create GLShapeBatchHelpers utility class
+- ShapeSprite allows changing shape and stroke
+
+### Refactor
+
+- Move RandomVariable class to mayonez.math package
+- Infer fill from stroke in circle shader
+- Rename VertexAttribute constants
+- Refactor GLDebugShapeHelpers methods
+
+### Fixes
+
+- Fix line separators in CSV file tests
+- Fix incorrect asteroids sprite sheet size
+
+### Test
+
+- Create scene for measuring circle draw FPS
+- Write tests for RandomVariable class
+- Write tests for drawn circle conversion
+
+## v0.8.2-pre6
+
+New CSV backend and set record types
+
+### Features
+
+- Allow setting z-index for sprite
+- Implement Record equals function
+- Add more Record number conversions
+- Create RandomVariable helper class
+- Create spaceship shield damaged effect
+- Set star brightness and radius from luminosity
+- Define star spectral types per luminosity class
+- Add constants to pool balls scene
+
+### Refactor
+
+- Create spacegame.objects.stars package for classes and assets
+- Record stores arrays as Lists and maps as Records
+- Read and write CSV files with Apache Commons-CSV
+
+### Fixes
+
+- Fix space scene object spawn probabilities
+
+### Build
+
+- Add Apache Commons-CSV dependency
+
+### Test
+
+- Move tests gitignore to output files folder
+- Rewrite Record tests
+
+### Documentation
+
+- Update Record Javadoc
+
+## v0.8.2-pre5
+
+Projectile impacts and small asteroids
+
+### Features
+
+- Spawn projectile impact particles
+- Pass contact points in CollisionEvent
+- Create ParticleFollowTarget script class
+- Add hitbox sweep factor field to ProjectType
+- Update fighter texture
+- Store satellite properties in data files
+- Create PrefabUtils helper class
+- Create Animator setSpriteColor function
+- Create ShipPrefabs, AsteroidPrefabs factory classes
+- Create small asteroid fragment textures
+- Add medium asteroid fragment textures
+
+### Refactor
+
+- Store ship data files in separate folder
+- Reorganize asteroid classes
+
+## v0.8.2-pre4
+
+SceneManager scene index
+
+### Features
+
+- BREAKING CHANGE: Rename SceneManager change scene functions
+- BREAKING CHANGE: Pass scene in changeScene function instead of scene name
+- Add SceneManager get scene by index function
+- Read demo scenes from CSV file
+- Add more SceneManager log messages
+- Launcher preloads scenes as list
+- Create DemosConfig class to read user config constants
+- Add value not null preference validator
+
+### Documentation
+
+- Remove legacy/debug scenes from readme files
+
+## v0.8.2-pre3
+
+Bullet collider to mitigate tunneling
+
+### Features
+
+- Create BulletBoxCollider class with sweep factor to mitigate tunneling
+
+### Refactor
+
+- Move PolygonCollider test-only methods to test module
+
+### Test
+
+- Create projectile test scene with controllable target and launcher
+
+## v0.8.2-pre2
+
+Read app version from file
+
+### Features
+
+- Pass window parameters to ApplicationFactory methods
+- Logger only writes to log file if level high enough
+- Add trace and fatal LogLevels
+- Create FloatValidator for floating-point preferences
+- Add double-click time user preference
+- Read application name and version from resources
+
+### Refactor
+
+- Combine version user preference into window title 
+- Tweak Application and Window log message levels
+- Store LogLevel user preference as a string
+
+### Build
+
+- Create Gradle copyDefaultPreferences task to force copy preference files
+
+## v0.8.2-pre1
+
+Fix incorrect impulse resolution
+
+### Features
+
+- Input detects mouse displacement even if not dragging mouse
+- Fix MaterialData struct having wrong parameters
+
+### Refactor
+
+- Reorganize sandbox object factory methods
+- Clean up collision solver code
+
+### Test
+
+- Create InputTestScene for key and mouse input
+- Create CollisionTestScene for collision detection and resolution
