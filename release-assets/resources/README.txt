@@ -3,9 +3,9 @@ Find the latest release at https://github.com/SlavSquatSuperstar/mayonez-engine-
 
 Running the Program
 1. Install the Java Runtime Environment (JRE) on your system.
-   a) Download the latest LTS release from https://adoptium.net/temurin/releases
+   a) Download the latest LTS release from https://adoptium.net/temurin/releases.
    b) Select "JRE" under "Package Type" and the correct operating system and architecture for your computer.
-   c) Follow the instructions for the package installer
+   c) Follow the instructions for the package installer.
 2. Open your computer's command line app.
    a) On Mac and Linux, the command line is usually Terminal.
    b) On Windows, the command line is usually PowerShell or Command Prompt.
@@ -58,4 +58,4 @@ This software is licensed under the GNU General Public License, version 3 (GPLv3
 See LICENSE.txt for more information.
 
 For email inquiries, contact slavsquatsuperstar@gmail.com.
-Copyright © 2020-2024 SlavSquatSuperstar GPLv3
+Copyright © 2026 SlavSquatSuperstar GPLv3
