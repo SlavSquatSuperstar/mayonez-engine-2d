@@ -54,7 +54,7 @@ This fully-operational game engine includes:
 ### System Requirements
 
 - 64-bit operating system
-- Graphics card supporting OpenGL 3.3 or above
+- Graphics card supporting OpenGL 4.0 or above
 - Java 21 or above (see further instructions)
 
 ### Instructions for Players

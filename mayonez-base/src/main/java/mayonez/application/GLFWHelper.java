@@ -39,8 +39,8 @@ final class GLFWHelper {
     private static final Map<Integer, String> PLATFORMS = apiClassTokens(
             (field, value) -> 0x60000 < value && value < 0x70000, null, GLFW.class
     );
-    private static final int OPENGL_VERSION_MAJOR = 3;
-    private static final int OPENGL_VERSION_MINOR = 3;
+    private static final int OPENGL_VERSION_MAJOR = 4;
+    private static final int OPENGL_VERSION_MINOR = 0;
 
     static int platform = GLFW_ANY_PLATFORM;
 
