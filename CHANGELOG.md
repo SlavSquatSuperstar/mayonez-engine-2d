@@ -1,5 +1,13 @@
 # Mayonez Engine Changelog
 
+## v0.8.3
+
+Node-based entity-component-system
+
+### Build
+
+- Require OpenGL 4.0 due to Windows indexing issues
+
 ## v0.8.3-pre9
 
 Global transform and convert demos to node
