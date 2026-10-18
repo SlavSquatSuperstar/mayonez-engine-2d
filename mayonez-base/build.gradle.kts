@@ -17,7 +17,7 @@ dependencies {
     implementation("commons-cli:commons-cli:1.11.0")
     implementation("org.apache.commons:commons-csv:1.14.1")
     implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
-    implementation("org.joml:joml:1.10.8")
+    implementation("org.joml:joml:1.10.9")
     implementation("org.json:json:20250107")
 
     // LWJGL Modules
