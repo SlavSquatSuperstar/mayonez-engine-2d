@@ -1,12 +1,16 @@
 package mayonez.graphics.ui;
 
-import mayonez.Component;
+import mayonez.Node;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
 /**
- * A user interface element that stores and manages the position and size of other elements
- * according to a layout. Containers may store renderable components or other containers.
+ * A user interface element that stores and manages the position and size of
+ * other {@link UIElement}s according to a layout. Containers may store
+ * renderable components or other containers. All elements in a container are
+ * also child nodes of that container. Adding or removing UI elements to a
+ * container will refresh the container's layout.
  *
  * @author SlavSquatSuperstar
  */
@@ -21,7 +25,7 @@ public abstract class UIContainer extends UIElement {
         started = false;
     }
 
-    // Component Methods
+    // Node Methods
 
     @Override
     protected void start() {
@@ -32,13 +36,7 @@ public abstract class UIContainer extends UIElement {
     @Override
     public void setVisible(boolean visible) {
         super.setVisible(visible);
-        elements.forEach(e -> e.setEnabled(visible));
-    }
-
-    @Override
-    protected void onDestroy() {
-        clearElements();
-        started = false;
+        elements.forEach(e -> e.setVisible(visible));
     }
 
     @Override
@@ -49,7 +47,12 @@ public abstract class UIContainer extends UIElement {
     @Override
     protected void onDisable() {
         elements.forEach(e -> e.setEnabled(false));
-        // TODO disabling twice due to component + element children
+    }
+
+    @Override
+    protected void onDestroy() {
+        elements.clear();
+        started = false;
     }
 
     // Layout Methods
@@ -63,7 +66,7 @@ public abstract class UIContainer extends UIElement {
     // Container Methods
 
     /**
-     * Gets the child elements in the order they were added.
+     * Get the child elements of this container in the order they were added.
      *
      * @return the elements
      */
@@ -72,7 +75,7 @@ public abstract class UIContainer extends UIElement {
     }
 
     /**
-     * Gets the child element at the specified index.
+     * Get the child element at the specified index.
      *
      * @param index the element index
      * @return the element
@@ -82,7 +85,7 @@ public abstract class UIContainer extends UIElement {
     }
 
     /**
-     * Gets the number of child elements in this container.
+     * Get the number of child elements in this container.
      *
      * @return the count
      */
@@ -91,36 +94,36 @@ public abstract class UIContainer extends UIElement {
     }
 
     /**
-     * Adds a UI element to this container and refreshes the layout. If this container has been
-     * added to a {@link mayonez.Node}, then the element will also be added to that object
-     * .
+     * Add a UI element from this container and refresh the layout.
      *
      * @param element the element
      */
     public void addElement(UIElement element) {
-        if (getParent() != null) {
-            getParent().addChild(element);
-        }
+        if (element == null) return;
+        super.addChild(element);
+        element.setContainer(this);
         elements.add(element);
         if (started) arrangeElements();
     }
 
     /**
-     * Removes a UI element from this container and refreshes the layout.
+     * Remove a UI element from this container and refresh the layout.
      *
      * @param element the element
      */
     public void removeElement(UIElement element) {
-        // TODO destroy element
+        if (element == null) return;
+        super.removeChild(element);
+        // UIElement destroy sets container to null
         elements.remove(element);
         if (started) arrangeElements();
     }
 
     /**
-     * Removes all UI elements from this container.
+     * Remove all UI elements from this container.
      */
     public void clearElements() {
-        // TODO destroy elements
+        elements.forEach(this::removeChild);
         elements.clear();
     }
 

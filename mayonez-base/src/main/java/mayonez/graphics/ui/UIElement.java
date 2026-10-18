@@ -4,12 +4,48 @@ import mayonez.*;
 import mayonez.math.*;
 
 /**
- * A basic user interface element with position and size but no renderable components.
- * This component may be used as a container for renderable elements.
+ * A basic user interface element with position and size but no renderable
+ * components. Components may be used as a container for other elements. An
+ * element may also be stored in a {@link UIContainer}, which is also its
+ * parent node.
  *
  * @author SlavSquatSuperstar
  */
-public abstract class UIElement extends Script {
+public abstract class UIElement extends Node {
+
+    private UIContainer container;
+
+    // Node Methods
+
+    @Override
+    protected void start() {
+        container = null;
+    }
+
+    @Override
+    protected void onDestroy() {
+        container = null;
+    }
+
+    // UI Element Properties
+
+    /**
+     * This element's parent {@link UIContainer}.
+     *
+     * @return the container, or null
+     */
+    public UIContainer getContainer() {
+        return container;
+    }
+
+    /**
+     * Set this element's parent {@link UIContainer}.
+     *
+     * @param container the container, or null
+     */
+    void setContainer(UIContainer container) {
+        this.container = container;
+    }
 
     /**
      * Get the position of this UI element's anchor point.
