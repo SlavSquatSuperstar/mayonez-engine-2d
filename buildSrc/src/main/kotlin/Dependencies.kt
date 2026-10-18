@@ -29,9 +29,9 @@ const val nullAwayVersion: String = "0.13.4"
 
 // Plugins
 
-/** The Dokka plugin for creating Kotlin documentation. */
+/** The Dokka plugin for creating Java/Kotlin documentation. */
 const val dokkaPlugin: String = "org.jetbrains.dokka"
-// Javadoc plugin does not correctly aggregate, so use HTML for now
+// Javadoc plugin does not correctly aggregate Kotlin sources, so use HTML for now
 
 /** The Kotlin plugin for compiling Kotlin files to the JVM. */
 const val kotlinPlugin: String = "org.jetbrains.kotlin.jvm"

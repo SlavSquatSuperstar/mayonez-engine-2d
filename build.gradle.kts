@@ -3,7 +3,7 @@ plugins {
 
     id(kotlinPlugin) version kotlinVersion apply false
     id(kaptPlugin) version kotlinVersion apply false
-    id(dokkaPlugin) version "2.1.0" apply true
+    id(dokkaPlugin) version "2.2.0" apply true
     id(errorPronePlugin) version "5.1.0" apply false
     id(nullAwayPlugin) version "3.0.0" apply false
 }
