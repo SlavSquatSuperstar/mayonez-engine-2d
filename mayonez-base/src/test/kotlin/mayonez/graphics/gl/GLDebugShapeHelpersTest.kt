@@ -56,7 +56,7 @@ internal class GLDebugShapeHelpersTest {
 
     @Test
     fun getQuadsFromOutlineTriangle1Correct() {
-        val sqrt3 = sqrt(3f)
+        val sqrt3 = MathUtils.SQRT_3
         val tri = Triangle(
             Vec2(sqrt3, 1f), Vec2(16f - sqrt3, 1f), Vec2(8f, 7 * sqrt3)
         )
@@ -79,7 +79,7 @@ internal class GLDebugShapeHelpersTest {
 
     @Test
     fun getQuadsFromOutlineTriangle2Correct() {
-        val sqrt2 = sqrt(2f)
+        val sqrt2 = MathUtils.SQRT_2
         val tri = Triangle(
             Vec2(1f + sqrt2, 1f), Vec2(16f - (1f + sqrt2), 1f), Vec2(8f, 8f - sqrt2)
         )

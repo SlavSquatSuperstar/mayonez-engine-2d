@@ -1,13 +1,13 @@
 package mayonez.physics.raycast
 
 import mayonez.math.*
+import mayonez.math.MathUtils.SQRT_2
 import mayonez.math.shapes.*
 import mayonez.physics.*
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertNotNull
 import org.junit.jupiter.api.assertNull
-import kotlin.math.*
 
 /**
  * Unit tests for the [mayonez.physics.raycast.Raycasts] class.
@@ -18,7 +18,6 @@ internal class RaycastsTest {
 
     private val circle = Circle(Vec2(5f, 0f), 2f) // 4x4 circle at (5, 0)
     private val rect = Rectangle(Vec2(0f, 0f), Vec2(4f, 4f)) // 4x4 box at (0, 0)
-    private val root2 = sqrt(2f)
 
     @Test
     fun rayVsCircleHitOutside() {
@@ -42,7 +41,7 @@ internal class RaycastsTest {
     fun rayVsEdgeHit() {
         val e = Edge(Vec2(0f, -2f), Vec2(0f, 2f))
         val rc = Raycasts.raycast(e, Ray(Vec2(-2f, 2f), Vec2(1f, -1f)), 0f)
-        assertRaycastHit(rc, Vec2(0f, 0f), Vec2(-1f, 0f), 2f * root2)
+        assertRaycastHit(rc, Vec2(0f, 0f), Vec2(-1f, 0f), 2f * SQRT_2)
     }
 
     @Test
@@ -60,14 +59,14 @@ internal class RaycastsTest {
     @Test
     fun rayVsRectangleHitDiagonal() {
         val rc = Raycasts.raycast(rect, Ray(Vec2(-2f, 4f), Vec2(1f, -1f)), 0f)
-        assertRaycastHit(rc, Vec2(0f, 2f), Vec2(0f, 1f), 2 * root2)
+        assertRaycastHit(rc, Vec2(0f, 2f), Vec2(0f, 1f), 2 * SQRT_2)
     }
 
     @Test
     fun rayVsRotatedRectangleHit() {
         val rc = Raycasts.raycast(rect.rotate(45f), Ray(Vec2(-3f, 3f), Vec2(1f, -1f)), 0f)
-        val dist = (3f - root2) * root2
-        assertRaycastHit(rc, Vec2(-root2, root2), Vec2(-1f, 1f).unit(), dist)
+        val dist = (3f - SQRT_2) * SQRT_2
+        assertRaycastHit(rc, Vec2(-SQRT_2, SQRT_2), Vec2(-1f, 1f).unit(), dist)
     }
 
     @Test

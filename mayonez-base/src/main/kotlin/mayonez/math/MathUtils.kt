@@ -26,6 +26,12 @@ object MathUtils {
     /** The number τ (tau) in float precision, equal to 2π ≈ 6.2832. */
     const val TWO_PI: Float = 6.2831855f
 
+    /** The square root of 2 in float precision, equal to √2 ≈ 1.41. */
+    const val SQRT_2: Float = 1.4142135f
+
+    /** The square root of 2 in float precision, equal to √2 ≈ 1.73. */
+    const val SQRT_3: Float = 1.7320508f
+
     // Equality Methods
 
     /**

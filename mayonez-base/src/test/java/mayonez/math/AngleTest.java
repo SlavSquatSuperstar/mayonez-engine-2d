@@ -2,6 +2,7 @@ package mayonez.math;
 
 import org.junit.jupiter.api.*;
 
+import static mayonez.math.MathUtils.PI;
 import static mayonez.math.MathTestUtils.*;
 
 /**
@@ -11,28 +12,29 @@ import static mayonez.math.MathTestUtils.*;
  */
 class AngleTest {
 
+    private static final float HALF_SQRT_2 = MathUtils.SQRT_2 / 2f; // √2/2 = 1/√2
+    private static final float HALF_SQRT_3 = MathUtils.SQRT_3 / 2f; // √3/2
+
     @Test
     void degreesConstructorCorrect() {
         var ang1 = Angle.createDegrees(45f); // 45º = π/4
-        float f = (float) (1 / Math.sqrt(2.0)); // √2/2 = 1/√2
-        assertFloatEquals(ang1.getSin(), f);
-        assertFloatEquals(ang1.getCos(), f);
+        assertFloatEquals(HALF_SQRT_2, ang1.getSin());
+        assertFloatEquals(HALF_SQRT_2, ang1.getCos());
 
         var ang2 = Angle.createDegrees(30f); // 30º = π/6
-        assertFloatEquals(ang2.getSin(), 0.5f); // sin(30º) = 1/2
-        assertFloatEquals(ang2.getCos(), (float) (Math.sqrt(3.0) * 0.5)); // cos(30º) = √3/2
+        assertFloatEquals(0.5f, ang2.getSin()); // sin(30º) = 1/2
+        assertFloatEquals(HALF_SQRT_3, ang2.getCos()); // cos(30º) = √3/2
     }
 
     @Test
     void radiansConstructorCorrect() {
-        var ang1 = Angle.createRadians((float) (Math.PI * 0.25)); // π/4 = 45º
-        float f = (float) (1.0 / Math.sqrt(2.0)); // √2/2 = 1/√2
-        assertFloatEquals(ang1.getSin(), f);
-        assertFloatEquals(ang1.getCos(), f);
+        var ang1 = Angle.createRadians(PI / 4); // π/4 = 45º
+        assertFloatEquals(HALF_SQRT_2, ang1.getSin());
+        assertFloatEquals(HALF_SQRT_2, ang1.getCos());
 
-        var ang2 = Angle.createRadians((float) (Math.PI / 3.0)); // π/3 = 60º
-        assertFloatEquals(ang2.getSin(), (float) (Math.sqrt(3.0) * 0.5)); // sin(60º) = √3/2
-        assertFloatEquals(ang2.getCos(), 0.5f); // cos(60º) = 1/2
+        var ang2 = Angle.createRadians(PI / 3f); // π/3 = 60º
+        assertFloatEquals(HALF_SQRT_3, ang2.getSin()); // sin(60º) = √3/2
+        assertFloatEquals(0.5f, ang2.getCos()); // cos(60º) = 1/2
     }
 
     @Test
@@ -41,22 +43,21 @@ class AngleTest {
         var ang2 = Angle.createDegrees(30f); // 30º = π/6
         var ang3 = ang1.add(ang2); // 120º = 2π/3
 
-        assertFloatEquals(ang3.getDegrees(), 120f);
-        assertFloatEquals(ang3.getRadians(), (float) (Math.PI * 2.0 / 3.0));
-        assertFloatEquals(ang3.getSin(), (float) (Math.sqrt(3.0) * 0.5)); // sin(120º) = √3/2
-        assertFloatEquals(ang3.getCos(), -0.5f); // cos(120º) = -1/2
+        assertFloatEquals(120f, ang3.getDegrees());
+        assertFloatEquals(PI * 2f / 3f, ang3.getRadians());
+        assertFloatEquals(HALF_SQRT_3, ang3.getSin()); // sin(120º) = √3/2
+        assertFloatEquals(-0.5f, ang3.getCos()); // cos(120º) = -1/2
     }
 
     @Test
     void angleRotationCorrect() {
         var ang = Angle.createDegrees(0f); // 90º = π/2
-        float f = (float) (1.0 / Math.sqrt(2.0)); // √2/2 = 1/√2
 
         ang.rotateDegrees(45f); // 45º
-        assertFloatEquals(ang.getSin(), f); // sin(45º) = 1/√2
-        assertFloatEquals(ang.getCos(), f); // cos(45º) = 1/√2
+        assertFloatEquals(HALF_SQRT_2, ang.getSin()); // sin(45º) = 1/√2
+        assertFloatEquals(HALF_SQRT_2, ang.getCos()); // cos(45º) = 1/√2
 
-        ang.rotateRadians((float) (Math.PI * -0.25)); // π/4 = 45º
+        ang.rotateRadians(-PI / 4f); // π/4 = 45º
         assertFloatEquals(ang.getSin(), 0f); // sin(0) = 0
         assertFloatEquals(ang.getCos(), 1f); // cos(0) = 1
     }

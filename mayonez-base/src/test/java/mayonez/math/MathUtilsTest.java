@@ -2,6 +2,8 @@ package mayonez.math;
 
 import org.junit.jupiter.api.*;
 
+import static mayonez.math.MathUtils.PI;
+import static mayonez.math.MathUtils.SQRT_2;
 import static mayonez.math.MathTestUtils.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -11,8 +13,6 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author SlavSquatSuperstar
  */
 class MathUtilsTest {
-
-    private static final float PI = MathUtils.PI;
 
     // Equals
 
@@ -56,7 +56,7 @@ class MathUtilsTest {
     @Test
     void hypotIsCorrect() {
         assertFloatEquals(5, MathUtils.hypot(3, 4));
-        assertFloatEquals(MathUtils.sqrt(2), MathUtils.hypot(1, 1));
+        assertFloatEquals(SQRT_2, MathUtils.hypot(1, 1));
     }
 
     @Test
@@ -68,7 +68,7 @@ class MathUtilsTest {
     @Test
     void invHypotIsCorrect() {
         assertFloatEquals(4, MathUtils.invHypot(5, 3));
-        assertFloatEquals(1, MathUtils.invHypot(MathUtils.sqrt(2), 1));
+        assertFloatEquals(1, MathUtils.invHypot(SQRT_2, 1));
     }
 
     // Average/Sum
@@ -135,11 +135,11 @@ class MathUtilsTest {
 
     @Test
     void angleConversionIsCorrect() {
-        assertFloatEquals(180f, MathUtils.toDegrees(MathUtils.PI));
-        assertFloatEquals(30f, MathUtils.toDegrees(MathUtils.PI / 6f));
+        assertFloatEquals(180f, MathUtils.toDegrees(PI));
+        assertFloatEquals(30f, MathUtils.toDegrees(PI / 6f));
 
-        assertFloatEquals(MathUtils.PI, MathUtils.toRadians(180f));
-        assertFloatEquals(MathUtils.PI / 6f, MathUtils.toRadians(30f));
+        assertFloatEquals(PI, MathUtils.toRadians(180f));
+        assertFloatEquals(PI / 6f, MathUtils.toRadians(30f));
     }
 
 }
