@@ -1,7 +1,14 @@
+/*
+ * Names and versions of languages and dependencies.
+ *
+ * Note that some symbols may appear unused since build.gradle scripts use
+ * the compiled version of this file.
+ */
+
 // Languages
 
 /** The default JDK version for the toolchain. */
-const val javaVersion: Int = 21
+const val javaVersion: Int = 25
 
 // Libraries
 
