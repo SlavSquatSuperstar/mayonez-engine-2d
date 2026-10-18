@@ -19,7 +19,7 @@ const val kotlinVersion: String = "2.4.21"
 const val junitVersion: String = "6.0.0"
 
 /** The version for the LWJGL framework. */
-const val lwjglVersion: String = "3.3.6"
+const val lwjglVersion: String = "3.4.3"
 
 /** The LWJGL natives for the current OS and architecture. */
 val lwjglNatives: String = Natives.getDefaultNatives()
