@@ -18,7 +18,7 @@ dependencies {
     implementation("org.apache.commons:commons-csv:1.14.1")
     implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
     implementation("org.joml:joml:1.10.9")
-    implementation("org.json:json:20250107")
+    implementation("org.json:json:20260814")
 
     // LWJGL Modules
     implementation(platform("org.lwjgl:lwjgl-bom:$lwjglVersion"))
