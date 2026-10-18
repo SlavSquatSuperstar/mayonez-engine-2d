@@ -28,23 +28,21 @@ public class PlayerSpaceship extends Spaceship {
 
         // Movement
         var rb = new Rigidbody(1f);
-        addComponent(rb);
-        addComponent(new PlayerKeyMovement(properties.moveThrust(), properties.turnThrust()));
-//        addComponent(new ClickToMove(10f, MoveMode.VELOCITY, true));
+        addChild(rb);
+        addChild(new PlayerKeyMovement(properties.moveThrust(), properties.turnThrust()));
+//        addChild(new ClickToMove(10f, MoveMode.VELOCITY, true));
 
         // Weapons
         var loadout = ProjectilePrefabs.PROJECTILE_TYPES;
-        addComponent(new PlayerFireController(properties.hardpoints(), loadout));
-
-        addComponent(new Script() {
-            @Override
-            protected void update(float dt) {
-                // Destroy the player (debug only)
-                if (KeyInput.keyDown("backspace")) {
-                    getComponent(Damageable.class).onObjectDamaged(100);
-                }
-            }
-        });
+        addChild(new PlayerFireController(properties.hardpoints(), loadout));
     }
 
+    @Override
+    protected void update(float dt) {
+        super.update(dt);
+        // Destroy the player (debug only)
+        if (KeyInput.keyDown("backspace")) {
+            getChild(Damageable.class).onObjectDamaged(100);
+        }
+    }
 }

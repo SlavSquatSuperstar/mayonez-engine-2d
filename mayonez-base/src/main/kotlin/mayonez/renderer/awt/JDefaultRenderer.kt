@@ -1,6 +1,7 @@
 package mayonez.renderer.awt
 
 import mayonez.*
+import mayonez.application.*
 import mayonez.graphics.*
 import mayonez.graphics.debug.*
 import mayonez.renderer.*
@@ -12,17 +13,13 @@ import java.awt.*
  *
  * @author SlavSquatSuperstar
  */
-@UsesEngine(EngineType.AWT)
+@UsesBackend(Backend.AWT)
 internal class JDefaultRenderer : SceneRenderer,
     DebugRenderer {
 
     // Renderer Objects
     private val objects: MutableList<JRenderable> = ArrayList() // Sprites and shapes
     private val drawObjects: MutableList<JRenderable> = ArrayList() // Enabled objects
-
-    // Scene Information
-    private val windowWidth: Int = Preferences.screenWidth
-    private val windowHeight: Int = Preferences.screenHeight
 
     // Scene Renderer Methods
 
@@ -51,14 +48,15 @@ internal class JDefaultRenderer : SceneRenderer,
         val oldXf = g2?.transform ?: return // Save a copy of the unmodified transform
 
         // Draw background
+        val screenSize = viewport.screenSize
         g2.color = viewport.backgroundColor.toAWT()
-        g2.fillRect(0, 0, windowWidth, windowHeight)
+        g2.fillRect(0, 0, screenSize.x.toInt(), screenSize.y.toInt())
         transformScreen(g2)
 
         // Crate "batches" from objects and shapes
         val scale = viewport.cameraScale * viewport.zoom
         drawObjects.clear()
-        objects.filter { it.isEnabled }
+        objects.filter { it.shouldRender() }
             .map { if (it is DebugShape) it.adjustStrokeSize(scale) else it }
             .forEach { drawObjects.add(it) }
 

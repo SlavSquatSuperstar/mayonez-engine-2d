@@ -7,7 +7,7 @@ import mayonez.*;
  *
  * @author SlavSquatSuperstar
  */
-public abstract sealed class Application permits JApplication, GLApplication {
+public class Application {
 
     // Constants
     private static final float DEBUG_INTERVAL_SECS = 1f;
@@ -18,33 +18,28 @@ public abstract sealed class Application permits JApplication, GLApplication {
     private boolean running;
 
     // Time Fields (Seconds)
-    private final boolean frameSkip;
-    private final float timeStepSecs; // Target delta time
-    private final float halfTimeStepSecs;
-    private float lastLoopTimeSecs; // Last update time
-    private float unprocessedTime;
-    private float deltaTimeSecs; // Time processed this update
-    private boolean hasUpdatedThisFrame; // If window should redraw
+    private final int maxTicksPerFrame; // Limit physics iterations per render
+    private final float renderDt; // Target render delta time
+    private final float fixedDt; // Target physics delta time
+    private float currentDt; // Time processed this frame
 
     // Debug Info Fields
-    private float debugTimerSecs;
-    private int updateCount;
-    private int averageUPS;
+    private int averageFixedTPS;
     private int averageFPS;
 
     protected Application(Window window) {
         this.window = window;
         running = false;
 
-        frameSkip = Preferences.getFrameSkip();
-        timeStepSecs = Time.getTimeStepSecs();
-        halfTimeStepSecs = timeStepSecs * 0.5f;
+        maxTicksPerFrame = Preferences.getMaxTicksPerFrame();
+        renderDt = 1f / Preferences.getFps(); // Render
+        fixedDt = 1f / Preferences.getFixedTps(); // Physics
     }
 
     // Main Game Loop Methods
 
     /**
-     * Set up system resources and initialize the application.
+     * Initialize the window and start running the application.
      */
     public final void start() {
         if (!running) {
@@ -53,99 +48,89 @@ public abstract sealed class Application permits JApplication, GLApplication {
             Logger.debug("Started window");
             SceneManager.startScene();
             run();
-        }
-    }
 
-    private void run() {
-        lastLoopTimeSecs = getCurrentTimeSecs();
-        unprocessedTime = 0f;
-        deltaTimeSecs = 0f;
-        debugTimerSecs = 0f;
-        averageFPS = 0;
-        updateCount = 0;
-        int frameCount = 0;
-
-        while (running && window.notClosedByUser()) {
-            hasUpdatedThisFrame = false;
-            updateGame();
-
-            // Render if updated
-            if (hasUpdatedThisFrame) {
-                window.render();
-                frameCount += 1;
-            }
-
-            // Print frame count
-            if (debugTimerSecs >= DEBUG_INTERVAL_SECS) {
-                averageUPS = updateCount;
-                averageFPS = frameCount;
-                updateCount = 0;
-                frameCount = 0;
-
-                if (LOG_FRAME_COUNTS) {
-                    Logger.trace("Updates per second: %d", averageUPS);
-                    Logger.trace("Frames per second: %d", averageFPS);
-                }
-                debugTimerSecs -= DEBUG_INTERVAL_SECS;
-            }
-        }
-        Mayonez.stop(ExitCode.SUCCESS);
-    }
-
-    /**
-     * Free system resources and quit the application.
-     */
-    public final void stop() {
-        if (running) {
-            running = false;
             window.stop();
-            Logger.debug("Closed window");
+            Logger.debug("Stopped window");
         }
     }
-
-    // Game Loop Helper Methods
 
     /*
      * Sources:
      * - https://gafferongames.com/post/fix_your_timestep/
      * - https://gameprogrammingpatterns.com/game-loop.html
      */
-    private void updateGame() {
-        // Calculate frame time
-        var currentLoopTimeSecs = getCurrentTimeSecs();
-        var frameElapsedTimeSecs = currentLoopTimeSecs - lastLoopTimeSecs; // Time since last update
-        unprocessedTime += frameElapsedTimeSecs;
-        debugTimerSecs += frameElapsedTimeSecs;
-        lastLoopTimeSecs = currentLoopTimeSecs;  // Reset last time
+    // TODO separate physics and render rate
+    // TODO call render/update and fixed update separately
+    // TODO interpolate between physics frames
+    private void run() {
+        // Frame time variables
+        var lastTime = window.getCurrentTimeSecs(); // Last update time
+        var unprocessedTime = 0f; // Timer for render
+        var fixedUnprocessedTime = 0f; // Timer for physics
+        var ticksThisFrame = 0;
+        currentDt = 0f;
 
-        while (unprocessedTime > halfTimeStepSecs) { // Carry small slivers of time to next frame
-            deltaTimeSecs = Math.min(unprocessedTime, timeStepSecs);
+        // Debug variables
+        var debugTimer = 0f;
+        var fixedTickCount = 0;
+        var frameCount = 0;
+        averageFPS = 0;
 
-            // TODO multi-thread physics with shorter fixed time step
-            window.beginFrame();
-            SceneManager.updateScene(deltaTimeSecs);
-            window.endFrame();
-            updateCount += 1;
+        while (running) {
+            // Update game at constant rate
+            var currentTime = window.getCurrentTimeSecs();
+            var frameElapsedTime = currentTime - lastTime; // Time since last update
+            unprocessedTime += frameElapsedTime;
+            fixedUnprocessedTime += frameElapsedTime;
+            debugTimer += frameElapsedTime;
+            lastTime = currentTime; // Reset last time
 
-            unprocessedTime -= deltaTimeSecs;
-            hasUpdatedThisFrame = true;
+            // Request to stop if window closed
+            if (window.isClosedByUser()) Mayonez.stop(ExitCode.SUCCESS);
 
-            if (!frameSkip) break;
+            // Always update with fixed delta-t
+            while (fixedUnprocessedTime >= fixedDt && ticksThisFrame < maxTicksPerFrame) {
+                SceneManager.fixedUpdateScene(fixedDt);
+                fixedUnprocessedTime -= fixedDt;
+                fixedTickCount += 1;
+                ticksThisFrame += 1;
+            }
+
+            // Render as often as possible
+            if (unprocessedTime >= renderDt) {
+                currentDt = unprocessedTime;
+                window.pollEvents();
+                SceneManager.updateScene(currentDt);
+                window.render();
+                frameCount += 1;
+                ticksThisFrame = 0;
+                unprocessedTime = 0;
+            }
+
+            // Print frame count
+            if (debugTimer >= DEBUG_INTERVAL_SECS) {
+                averageFixedTPS = fixedTickCount;
+                averageFPS = frameCount;
+                fixedTickCount = 0;
+                frameCount = 0;
+
+                if (LOG_FRAME_COUNTS) {
+                    Logger.trace("Ticks per second: %d", averageFixedTPS);
+                    Logger.trace("Frames per second: %d", averageFPS);
+                }
+                debugTimer -= DEBUG_INTERVAL_SECS;
+            }
         }
     }
 
-    // Engine Getters
-
     /**
-     * Get the current time of the application in seconds. The time relative to an
-     * arbitrary point, which is not guaranteed to be when the program started.
-     *
-     * @return the time in seconds
+     * Free the window and stop running the application.
      */
-    protected abstract float getCurrentTimeSecs();
-
-    protected final String getRunningString() {
-        return running ? "running" : "not running";
+    public final void stop() {
+        if (running) {
+            running = false;
+            Logger.debug("Stopping application");
+        }
     }
 
     // Time Getters
@@ -156,7 +141,7 @@ public abstract sealed class Application permits JApplication, GLApplication {
      * @return the FPS now
      */
     public float getDeltaTime() {
-        return deltaTimeSecs;
+        return currentDt;
     }
 
     /**
@@ -166,7 +151,7 @@ public abstract sealed class Application permits JApplication, GLApplication {
      * @return the FPS now
      */
     public int getFPS() {
-        return Math.round(1f / deltaTimeSecs);
+        return Math.round(1f / currentDt);
     }
 
     /**
@@ -174,8 +159,8 @@ public abstract sealed class Application permits JApplication, GLApplication {
      *
      * @return the average update FPS
      */
-    public int getUpdateFPS() {
-        return averageUPS;
+    public int getFixedTPS() {
+        return averageFixedTPS;
     }
 
     /**
@@ -186,5 +171,20 @@ public abstract sealed class Application permits JApplication, GLApplication {
     public int getRenderFPS() {
         return averageFPS;
     }
+
+    // Object Overrides
+
+    @Override
+    public String toString() {
+        return String.format("Application %s", running ? "running" : "not running");
+    }
+
+    // Helper Class
+
+//    private static class LoopTimer {
+//        float value = 0f; // Current value
+//        float limit = 0f; // Max value
+//        int count = 0; // How many times reached max
+//    }
 
 }

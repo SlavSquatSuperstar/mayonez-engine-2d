@@ -10,6 +10,16 @@ java {
     }
 }
 
+// Aggregate Dokka Outputs
+//dokka {
+//    dokkaPublications.javadoc {
+//        outputDirectory.set(
+//            rootProject.layout.buildDirectory
+//                .dir("dokka/javadoc/${project.name}")
+//        )
+//    }
+//}
+
 // Enable Maven repository
 repositories {
     mavenCentral()

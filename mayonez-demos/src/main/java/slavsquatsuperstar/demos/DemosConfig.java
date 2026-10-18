@@ -21,8 +21,8 @@ final class DemosConfig extends GameConfig {
         DEFAULTS.set("allow_debug_scenes", false);
     }
 
-    private DemosConfig(String filename, Record defaults) {
-        super(filename, defaults);
+    private DemosConfig(String path, Record defaults) {
+        super(path, defaults);
     }
 
     static void readConfig() {

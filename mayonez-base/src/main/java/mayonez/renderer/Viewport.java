@@ -76,6 +76,13 @@ public interface Viewport extends PointTransformer {
      */
     float getCameraScale();
 
+    /**
+     * The viewport's dimensions in pixels.
+     *
+     * @return the camera's screen suze
+     */
+    Vec2 getScreenSize();
+
     // Camera Transformation Methods
 
     /**
@@ -96,6 +103,17 @@ public interface Viewport extends PointTransformer {
      */
     default Matrix4f getProjectionMatrix() {
         return new Matrix4f();
+    }
+
+    /**
+     * The combined view-projection matrix, which transforms world space directly
+     * into clip space.
+     *
+     * @return the 4x4 view-projection matrix
+     */
+    default Matrix4f getViewProjectionMatrix() {
+        // Apply the view matrix first, so put it on the right
+        return new Matrix4f(getProjectionMatrix()).mul(getViewMatrix());
     }
 
     /**

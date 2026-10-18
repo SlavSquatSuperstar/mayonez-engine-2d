@@ -1,18 +1,24 @@
+import net.ltgt.gradle.errorprone.errorprone
+
 plugins {
     id("mayonez.library-conventions")
 
     id(kotlinPlugin)
+    id(kaptPlugin)
     id(dokkaPlugin)
+    id(errorPronePlugin)
+    id(nullAwayPlugin)
 }
 
 description = "The core library for Mayonez Engine that contains the API classes."
 
 dependencies {
     // Code Dependencies
+    implementation("commons-cli:commons-cli:1.11.0")
+    implementation("org.apache.commons:commons-csv:1.14.1")
     implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
-    implementation("org.apache.commons:commons-csv:1.14.0")
-    implementation("org.json:json:20250107")
     implementation("org.joml:joml:1.10.8")
+    implementation("org.json:json:20250107")
 
     // LWJGL Modules
     implementation(platform("org.lwjgl:lwjgl-bom:$lwjglVersion"))
@@ -25,6 +31,14 @@ dependencies {
     runtimeOnly("org.lwjgl:lwjgl-glfw::$lwjglNatives")
     runtimeOnly("org.lwjgl:lwjgl-opengl::$lwjglNatives")
     runtimeOnly("org.lwjgl:lwjgl-stb::$lwjglNatives")
+
+    // Static Analysis
+    errorprone("com.google.errorprone:error_prone_core:2.49.0")
+    errorprone("com.uber.nullaway:nullaway:$nullAwayVersion")
+    compileOnly("com.uber.nullaway:nullaway-annotations:$nullAwayVersion")
+    compileOnly("org.jspecify:jspecify:1.0.0")
+
+    testImplementation(files("libs/test.jar"))
 }
 
 // Plugins and Tasks
@@ -40,8 +54,10 @@ tasks {
         }
     }
 
-    // Copy Kotlin outputs into Java build folder
     register<Copy>("copyKotlinClasses") {
+        group = "Build"
+        description = "Copy Kotlin outputs into Java build folder."
+
         dependsOn(compileKotlin)
         from("build/classes/kotlin/main")
         into("build/classes/java/main")
@@ -50,6 +66,25 @@ tasks {
 
     compileJava {
         dependsOn("copyKotlinClasses")
+    }
+
+    // Configure Error Prone and NullAway
+    withType<JavaCompile> {
+        options.errorprone {
+            disableAllChecks = true // Only do NullAway checks
+            nullaway {
+                error() // Set severity level
+                onlyNullMarked = true // Only check in null-marked code
+                jspecifyMode = true // JSpecify Mode
+            }
+        }
+    }
+
+    // Disable on test code
+    compileTestJava {
+        options.errorprone {
+            enabled = false
+        }
     }
 
 }

@@ -10,34 +10,34 @@ import mayonez.math.*;
  */
 class ParticleFollowTarget extends Script {
 
-    private final GameObject target;
+    private final Node target;
     private Vec2 targetPositionOffset;
     private float targetRotationOffset;
 
-    ParticleFollowTarget(GameObject target) {
+    ParticleFollowTarget(Node target) {
         this.target = target;
     }
 
     @Override
     protected void start() {
-        targetPositionOffset = transform.getPosition()
-                .sub(target.transform.getPosition());
-        targetRotationOffset = transform.getRotation()
-                - target.transform.getRotation();
+        targetPositionOffset = getTransform().getPosition()
+                .sub(target.getTransform().getPosition());
+        targetRotationOffset = getTransform().getRotation()
+                - target.getTransform().getRotation();
     }
 
     @Override
-    protected void debugRender() {
-        // Destroy of target destroyed
+    protected void update(float dt) {
+        // Destroy if target destroyed
         if (target.isDestroyed()) {
-            gameObject.destroy();
+            getParent().setDestroyed();
             return;
         }
 
         // Follow target
-        this.transform.setPosition(target.transform.getPosition()
+        this.getTransform().setPosition(target.getTransform().getPosition()
                 .add(targetPositionOffset));
-        this.transform.setRotation(target.transform.getRotation()
+        this.getTransform().setRotation(target.getTransform().getRotation()
                 + (targetRotationOffset));
     }
 

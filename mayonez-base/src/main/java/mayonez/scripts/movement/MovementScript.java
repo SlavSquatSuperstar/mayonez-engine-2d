@@ -21,7 +21,7 @@ public abstract class MovementScript extends Script {
 
     @Override
     protected void start() {
-        rb = getRigidbody();
+        rb = getSibling(Rigidbody.class);
         if (rb == null) {
             Logger.warn("%s has a null rigidbody", this);
         }

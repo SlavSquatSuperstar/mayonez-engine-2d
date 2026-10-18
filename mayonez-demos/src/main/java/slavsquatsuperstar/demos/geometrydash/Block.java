@@ -12,7 +12,7 @@ import mayonez.physics.dynamics.*;
  *
  * @author SlavSquatSuperstar
  */
-public class Block extends GameObject {
+public class Block extends Node {
 
     private final Texture cursorTexture;
 
@@ -24,9 +24,9 @@ public class Block extends GameObject {
 
     @Override
     protected void init() {
-        addComponent(Sprites.createSprite(cursorTexture));
-        addComponent(new BoxCollider(new Vec2(1f)));
-        addComponent(new Rigidbody(0f).setFixedRotation(true));
+        addChild(Sprites.createSprite(cursorTexture));
+        addChild(new BoxCollider(new Vec2(1f)));
+        addChild(new Rigidbody(0f).setFixedRotation(true));
     }
 
 }

@@ -26,12 +26,15 @@ import static slavsquatsuperstar.demos.spacegame.objects.SpaceGameLayer.*;
 public class SpaceGameScene extends DemoScene {
 
     // Constants
-    private static final int NUM_STARS = 3000;
     private static final boolean CAMERA_DEBUG_MODE = false;
     private static final int SCENE_SCALE = 32;
     public static final Vec2 SCENE_HALF_SIZE
-            = new Vec2(Preferences.getScreenWidth(), Preferences.getScreenHeight())
+            = new Vec2(Mayonez.getScreenWidth(), Mayonez.getScreenHeight())
             .mul(4f / (SCENE_SCALE * 2f));
+
+    // Tags
+    public static final String PROJECTILE_TAG = "Projectile";
+    public static final String DAMAGEABLE_TAG = "Damageable";
 
     // Fields
     private final List<BackgroundObject> backgroundObjects;
@@ -40,6 +43,7 @@ public class SpaceGameScene extends DemoScene {
         super(name);
         SpaceGameConfig.readConfig();
         backgroundObjects = new ArrayList<>();
+        System.out.println(SCENE_HALF_SIZE);
     }
 
     @Override
@@ -60,15 +64,15 @@ public class SpaceGameScene extends DemoScene {
                 new Color(255, 232, 80)); // Sun
 
         // Background Stars
-        for (var i = 0; i < NUM_STARS; i++) {
+        for (var i = 0; i < SpaceGameConfig.getNumStars(); i++) {
             backgroundObjects.add(BackgroundStarPrefabs.createRandomStar());
         }
 
         // Scene Objects
-        addObject(new SpaceObjectSpawner("Object Spawner"));
+        addNode(new SpaceObjectSpawner("Object Spawner"));
 
         // UI
-        addObject(new PlayerUI("Player UI"));
+        addNode(new PlayerUI("Player UI"));
     }
 
     @Override
@@ -90,7 +94,7 @@ public class SpaceGameScene extends DemoScene {
     // Helper Methods
 
     private void setLayers() {
-        var shipLayer = getLayer(SHIPS);
+        var shipLayer = getLayer(SPACECRAFT);
         shipLayer.setName("Ships");
 
         var asteroidLayer = getLayer(ASTEROIDS);

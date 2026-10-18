@@ -73,8 +73,8 @@ class GameConfigTest {
         assertEquals(defaults.getInt("height"), config.getInt("height"));
     }
 
-    private GameConfig getConfig(String filename) {
-        var config = new GameConfig(filename, defaults);
+    private GameConfig getConfig(String path) {
+        var config = new GameConfig(path, defaults);
         config.readFromFile();
         config.validateUserPreferences(rules);
         return config;

@@ -5,6 +5,7 @@ import mayonez.graphics.*;
 import mayonez.math.*;
 import mayonez.physics.colliders.*;
 import mayonez.physics.dynamics.*;
+import mayonez.scripts.DestroyAfterDuration;
 
 /**
  * Creates prefab physics sandbox objects.
@@ -37,7 +38,7 @@ final class SandboxObjectPrefabs {
                 .addStaticPhysics(new BoxCollider(size), material);
     }
 
-    static GameObject createRandomShape(Vec2 position, int type) {
+    static Node createRandomShape(Vec2 position, int type) {
         var name = getNameFromType(type);
         var rotation = Random.randomAngle();
         var col = getColliderFromType(type);
@@ -45,7 +46,9 @@ final class SandboxObjectPrefabs {
         return new SandboxObject(name, position, rotation)
                 .addPhysics(col, Colors.randomColor(), randomMaterial())
                 .addMouseMovement()
-                .setLifetime(Random.randomFloat(15f, 20f));
+                .addSandboxComponent(
+                        new DestroyAfterDuration(Random.randomFloat(15f, 20f))
+                );
     }
 
     private static String getNameFromType(int type) {

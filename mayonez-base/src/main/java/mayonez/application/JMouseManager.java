@@ -2,7 +2,6 @@ package mayonez.application;
 
 import mayonez.*;
 import mayonez.event.*;
-import mayonez.graphics.*;
 import mayonez.input.*;
 import mayonez.input.events.*;
 
@@ -13,7 +12,7 @@ import java.awt.event.*;
  *
  * @author SlavSquatSuperstar
  */
-@UsesEngine(EngineType.AWT)
+@UsesBackend(Backend.AWT)
 class JMouseManager extends MouseAdapter implements MouseInputHandler {
 
     // Mouse Button Callbacks

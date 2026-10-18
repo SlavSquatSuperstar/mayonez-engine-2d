@@ -23,8 +23,8 @@ public class SpaceshipDestruction extends TimerScript {
     private static final float DESTRUCTION_DURATION = 0.6f;
 
     // References
-    private final List<Component> shipSystems;
-    private GameObject explosion;
+    private final List<Node> shipSystems;
+    private Node explosion;
 
     public SpaceshipDestruction() {
         super(DESTRUCTION_DURATION);
@@ -36,24 +36,20 @@ public class SpaceshipDestruction extends TimerScript {
         shipSystems.clear();
         explosion = null;
 
-        shipSystems.add(gameObject.getComponent(FireProjectile.class));
-        shipSystems.add(gameObject.getComponent(ThrustController.class));
-        shipSystems.add(gameObject.getComponent(MovementScript.class));
-        shipSystems.add(gameObject.getComponent(KeepInScene.class));
+        shipSystems.add(getSibling(FireProjectile.class));
+        shipSystems.add(getSibling(ThrustController.class));
+        shipSystems.add(getSibling(MovementScript.class));
+        shipSystems.add(getSibling(KeepInScene.class));
     }
 
     @Override
     protected void update(float dt) {
         super.update(dt);
-        if (this.isReady()) gameObject.destroy();
-    }
-
-    @Override
-    protected void debugRender() {
         if (explosion != null) {
             // Have the explosion follow the ship until it is destroyed
-            explosion.transform.setPosition(transform.getPosition());
+            explosion.getTransform().setPosition(getTransform().getPosition());
         }
+        if (this.isReady()) getParent().setDestroyed();
     }
 
     /**
@@ -69,9 +65,9 @@ public class SpaceshipDestruction extends TimerScript {
         }
         shipSystems.clear();
 
-        getScene().addObject(explosion = ExplosionPrefabs.createShipExplosionPrefab(
+        getScene().addNode(explosion = ExplosionPrefabs.createShipExplosionPrefab(
                 "Ship Explosion",
-                new Transform(transform.getPosition(), Random.randomAngle(), transform.getScale()),
+                new Transform(getTransform().getPosition(), Random.randomAngle(), getTransform().getScale()),
                 EXPLOSION_DURATION
         ));
     }

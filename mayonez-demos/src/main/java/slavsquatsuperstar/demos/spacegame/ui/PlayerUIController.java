@@ -22,9 +22,9 @@ public class PlayerUIController extends Script implements EventListener<SpaceGam
     // Player Status
     private float respawnPercent;
 
-    public PlayerUIController(SliderBar healthBar, SliderBar shieldBar, WeaponHotbar weaponHotbar) {
-        this.healthBar = healthBar;
-        this.shieldBar = shieldBar;
+    public PlayerUIController(PlayerStatus playerStatus, WeaponHotbar weaponHotbar) {
+        this.healthBar = playerStatus.getHealthSlider();
+        this.shieldBar = playerStatus.getShieldSlider();
         this.weaponHotbar = weaponHotbar;
     }
 
@@ -53,11 +53,11 @@ public class PlayerUIController extends Script implements EventListener<SpaceGam
         }
     }
 
-    private void setPlayer(GameObject player) {
+    private void setPlayer(Node player) {
         if (player == null) {
             damageable = null;
         } else {
-            damageable = player.getComponent(ShieldedDamageable.class);
+            damageable = player.getChild(ShieldedDamageable.class);
         }
     }
 

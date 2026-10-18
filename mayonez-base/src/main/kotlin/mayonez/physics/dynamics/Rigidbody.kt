@@ -13,7 +13,7 @@ import kotlin.math.*
  * @author SlavSquatSuperstar
  */
 class Rigidbody(mass: Float, drag: Float, angDrag: Float)
-    : Component(UpdateOrder.PHYSICS), PhysicsBody {
+    : Component(), PhysicsBody {
 
     constructor(mass: Float) : this(mass, 0f, 0f)
 
@@ -138,7 +138,14 @@ class Rigidbody(mass: Float, drag: Float, angDrag: Float)
     // Game Loop Methods
 
     override fun start() {
-        collider = gameObject.getComponent(Collider::class.java)
+        // We want the physics body to be the parent of the collider
+        collider = getChild(Collider::class.java)
+
+        // The old architecture has the physics body and collider as siblings
+        if (collider == null) {
+            collider = getSibling(Collider::class.java)
+            setUseParentTransform(true)
+        }
     }
 
     override fun integrateForce(dt: Float, gravity: Vec2) {

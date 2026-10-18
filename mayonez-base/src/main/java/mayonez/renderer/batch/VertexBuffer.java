@@ -1,6 +1,6 @@
 package mayonez.renderer.batch;
 
-import mayonez.graphics.*;
+import mayonez.application.*;
 
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
@@ -12,7 +12,7 @@ import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
  *
  * @author SlavSquatSuperstar
  */
-@UsesEngine(EngineType.GL)
+@UsesBackend(Backend.GL)
 class VertexBuffer {
 
     private final DrawPrimitive primitive;

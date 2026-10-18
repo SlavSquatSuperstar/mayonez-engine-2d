@@ -1,7 +1,7 @@
 package mayonez.renderer.shader;
 
+import mayonez.application.*;
 import mayonez.assets.*;
-import mayonez.graphics.*;
 
 import java.util.*;
 
@@ -10,27 +10,24 @@ import java.util.*;
  *
  * @author SlavSquatSuperstar
  */
-@UsesEngine(EngineType.GL)
+@UsesBackend(Backend.GL)
 public final class Shaders {
 
-    // TODO read shader names from file
     public static final Shader DEFAULT_SHADER =
-            getShaderFromFile("assets/shaders/default.glsl");
+            getShaderFromFile("assets/shaders/default.json");
+    public static final Shader UI_SHADER = DEFAULT_SHADER;
     public static final Shader DEBUG_SHADER =
-            getShaderFromFile("assets/shaders/debug.glsl");
-    // TODO draw circles with ellipses if not too many
+            getShaderFromFile("assets/shaders/debug.json");
     public static final Shader CIRCLE_SHADER =
-            getShaderFromFile("assets/shaders/circle.glsl");
+            getShaderFromFile("assets/shaders/circle.json");
     public static final Shader ELLIPSE_SHADER =
-            getShaderFromFile("assets/shaders/ellipse.glsl");
-    public static final Shader UI_SHADER =
-            getShaderFromFile("assets/shaders/ui.glsl");
+            getShaderFromFile("assets/shaders/ellipse.json");
 
     private Shaders() {
     }
 
-    private static Shader getShaderFromFile(String filename) {
-        return Objects.requireNonNull(Assets.getAsset(filename, Shader.class));
+    private static Shader getShaderFromFile(String path) {
+        return Objects.requireNonNull(Assets.getAsset(path, Shader.class));
     }
 
 }

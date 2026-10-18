@@ -23,8 +23,8 @@ class DespawnAsteroid extends DestroyAfterDuration {
 
     @Override
     protected void start() {
-        sprite = gameObject.getComponent(Sprite.class);
-        startScale = transform.getScale();
+        sprite = getSibling(Sprite.class);
+        startScale = getTransform().getScale();
     }
 
     @Override
@@ -41,7 +41,7 @@ class DespawnAsteroid extends DestroyAfterDuration {
         var lifetimeRemaining = this.getLifetime() / this.getMaxLifetime();
         var scaleFunction = 1 - MathUtils.squared(1 - lifetimeRemaining);
 
-        transform.setScale(startScale.mul(scaleFunction));
+        getTransform().setScale(startScale.mul(scaleFunction));
 
         if (sprite != null) {
             // Fade the fragment until it disappears

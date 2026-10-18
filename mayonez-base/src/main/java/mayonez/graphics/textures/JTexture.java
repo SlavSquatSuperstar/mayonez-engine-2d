@@ -1,8 +1,8 @@
 package mayonez.graphics.textures;
 
 import mayonez.*;
+import mayonez.application.*;
 import mayonez.assets.image.*;
-import mayonez.graphics.*;
 import mayonez.graphics.Color;
 import mayonez.math.*;
 
@@ -17,7 +17,7 @@ import java.awt.image.*;
  *
  * @author SlavSquatSuperstar
  */
-@UsesEngine(EngineType.AWT)
+@UsesBackend(Backend.AWT)
 public final class JTexture extends Texture {
 
     // Image Data Fields
@@ -26,13 +26,13 @@ public final class JTexture extends Texture {
     private final JTexture parentTexture;
 
     /**
-     * Create a brand-new JTexture with the given filename.
+     * Create a brand-new JTexture with the given path.
      *
-     * @param filename the file location
+     * @param path the file location
      */
     @SuppressWarnings("unused") // Needed for Assets.getJTexture()
-    public JTexture(String filename) {
-        super(filename);
+    public JTexture(String path) {
+        super(path);
         imageData = readImage();
         if (imageData != null) {
             width = imageData.getWidth();
@@ -52,7 +52,7 @@ public final class JTexture extends Texture {
      * @param description   the description of the sub-image
      */
     private JTexture(JTexture parentTexture, ImageRegion region, String description) {
-        super("%s (%s)".formatted(parentTexture.getFilename(), description));
+        super("%s (%s)".formatted(parentTexture.getPath(), description));
         this.imageData = parentTexture.getImageData().getSubImageData(region);
         // Get new image size in px
         width = region.getWidth();
@@ -65,11 +65,11 @@ public final class JTexture extends Texture {
     @Override
     protected AWTImageData readImage() {
         try {
-            var imageData = new AWTImageData(getFilename());
-            Logger.debug("Loaded image %s", getFilename());
+            var imageData = new AWTImageData(getPath());
+            Logger.debug("Loaded image %s", getPath());
             return imageData;
         } catch (Exception e) {
-            Logger.error("Could not read image file %s", getFilename());
+            Logger.error("Could not read image file %s", getPath());
             Logger.printStackTrace(e);
             return null;
         }
@@ -80,16 +80,14 @@ public final class JTexture extends Texture {
     /**
      * Draws a texture with the given position, rotation and scale qualities.
      *
-     * @param g2       the graphics object of the window
-     * @param parentXf the transform of the parent object
-     * @param spriteXf any additional transformations on the image
-     * @param color    any recoloring of the image
+     * @param g2    the graphics object of the window
+     * @param texXf the global transform of the texture
+     * @param color any recoloring of the image
      */
-    public void draw(Graphics2D g2, Transform parentXf, Transform spriteXf, Color color) {
+    public void draw(Graphics2D g2, Transform texXf, Color color) {
         if (imageData == null) return;
 
         // Draw sprite at parent center with parent rotation and scale
-        var texXf = parentXf.combine(spriteXf);
         var g2Xf = getImageTransform(texXf);
 
         // Recolor the image (without modifying the original)

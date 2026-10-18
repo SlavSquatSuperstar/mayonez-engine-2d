@@ -1,7 +1,6 @@
 package mayonez.application;
 
 import mayonez.event.*;
-import mayonez.graphics.*;
 import mayonez.input.*;
 import mayonez.input.events.*;
 import org.lwjgl.glfw.GLFW;
@@ -14,7 +13,7 @@ import org.lwjgl.glfw.GLFW;
  *
  * @author SlavSquatSuperstar
  */
-@UsesEngine(EngineType.GL)
+@UsesBackend(Backend.GL)
 class GLKeyManager implements KeyInputHandler {
 
     // Key Callbacks

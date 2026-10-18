@@ -1,6 +1,6 @@
 package mayonez.renderer.batch;
 
-import mayonez.graphics.*;
+import mayonez.application.*;
 import mayonez.renderer.gl.*;
 import mayonez.renderer.shader.*;
 
@@ -10,7 +10,7 @@ import mayonez.renderer.shader.*;
  *
  * @author SlavSquatSuperstar
  */
-@UsesEngine(EngineType.GL)
+@UsesBackend(Backend.GL)
 public class MultiZRenderBatch extends RenderBatch {
 
     private int minZIndex, maxZIndex;

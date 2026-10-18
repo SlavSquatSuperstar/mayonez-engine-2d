@@ -10,15 +10,15 @@ import mayonez.physics.colliders.*;
  *
  * @author SlavSquatSuperstar
  */
-class DrawPhysicsInformation extends Script {
+class DrawPhysicsInformation extends Node {
 
     private Collider collider;
     private ShapeSprite sprite;
 
     @Override
     protected void start() {
-        collider = getCollider();
-        sprite = gameObject.getComponent(ShapeSprite.class);
+        collider = getSibling(Collider.class);
+        sprite = getSibling(ShapeSprite.class);
     }
 
     @Override
@@ -34,7 +34,7 @@ class DrawPhysicsInformation extends Script {
             // Draw center, velocity, direction vector
             getScene().getDebugDraw().drawPoint(col.center(), Colors.BLACK);
             getScene().getDebugDraw().drawVector(col.center(), rb.getVelocity().mul(0.1f), color);
-            getScene().getDebugDraw().drawVector(rb.getPosition(), transform.getRight(), Colors.BLACK);
+            getScene().getDebugDraw().drawVector(rb.getPosition(), getGlobalTransform().getRight(), Colors.BLACK);
         }
     }
 

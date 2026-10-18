@@ -1,16 +1,17 @@
 package mayonez.graphics.sprites;
 
 import mayonez.*;
-import mayonez.graphics.*;
 import mayonez.graphics.textures.*;
 import mayonez.scripts.*;
 
 /**
- * Animates a sprite by swapping between different textures.
+ * Animates a sprite by swapping between different textures provided by a
+ * {@link SpriteSheet}. The animation can be toggled using {@link #setEnabled},
+ * and the texture visibility can be set using {@link #setVisible}.
  *
  * @author SlavSquatSuperstar
  */
-public class Animator extends Script {
+public class Animator extends Node {
 
     // Animation Fields
     private final Texture[] textures;
@@ -28,17 +29,18 @@ public class Animator extends Script {
      * @param secondsPerFrame how much time to spend on each frame
      */
     public Animator(SpriteSheet sprites, float secondsPerFrame) {
-        super(UpdateOrder.RENDER);
         this.textures = sprites.getTextures();
         this.numFrames = textures.length;
         currentFrame = 0;
         animTimer = new Timer(secondsPerFrame);
     }
 
+    // TODO extend sprite
     @Override
     protected void init() {
         sprite = Sprites.createSprite(textures[0]);
-        gameObject.addComponent(sprite.setEnabled(false));
+        sprite.setZIndex(getZIndex());
+        addChild(sprite);
     }
 
     @Override
@@ -75,67 +77,37 @@ public class Animator extends Script {
             currentFrame = frame;
             setSpriteTexture(currentFrame);
         } else {
-            setSpriteVisible(false);
+            setVisible(false);
         }
-    }
-
-    /**
-     * Resumes or pauses the animation.
-     *
-     * @param enabled if the animation should play, true by default
-     */
-    public void setAnimationEnabled(boolean enabled) {
-        animTimer.setPaused(!enabled);
     }
 
     // Sprite Methods
 
-    /**
-     * Sets the color of the animated sprite
-     *
-     * @param color the sprite color
-     */
-    public void setSpriteColor(Color color) {
-        sprite.setColor(color);
-    }
-
-    /**
-     * Sets the transform of the animated sprite.
-     *
-     * @param spriteXf the sprite transform
-     */
-    public void setSpriteTransform(Transform spriteXf) {
-        sprite.setSpriteTransform(spriteXf);
-    }
-
-    /**
-     * Sets the visibility of the animated sprite.
-     *
-     * @param visible if the sprite should be enabled
-     */
-    public void setSpriteVisible(boolean visible) {
-        if (sprite == null) return; // not initialized yet
-        sprite.setEnabled(visible);
+    @Override
+    public void setVisible(boolean visible) {
+        super.setVisible(visible);
+        // make sure sprite is initialized
+        if (sprite != null) sprite.setVisible(visible);
     }
 
     private void setSpriteTexture(int frame) {
         if (sprite == null) return; // not initialized yet
         sprite.setTexture(textures[frame]);
-        setSpriteVisible(true);
+        setVisible(true);
+    }
+
+    @Override
+    public void setZIndex(int zIndex) {
+        super.setZIndex(zIndex);
+        if (sprite != null) sprite.setZIndex(zIndex);
     }
 
     // Callback Methods
 
     @Override
-    protected void onEnable() {
-        setSpriteVisible(true);
-        setAnimationEnabled(true);
-    }
-
-    @Override
-    protected void onDisable() {
-        setSpriteVisible(false);
-        setAnimationEnabled(false);
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        animTimer.setPaused(!enabled);
     }
 
     /**

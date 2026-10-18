@@ -1,7 +1,6 @@
 package mayonez.application;
 
 import mayonez.event.*;
-import mayonez.graphics.*;
 import mayonez.input.*;
 import mayonez.input.events.*;
 
@@ -12,7 +11,7 @@ import java.awt.event.*;
  *
  * @author SlavSquatSuperstar
  */
-@UsesEngine(EngineType.AWT)
+@UsesBackend(Backend.AWT)
 class JKeyManager extends KeyAdapter implements KeyInputHandler {
 
     // Key Callbacks

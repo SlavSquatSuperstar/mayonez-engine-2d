@@ -21,8 +21,8 @@ public class WeaponHotbarSlot extends ImageLabel {
     private static final Texture UNSELECTED_BORDER_TEXTURE = Textures.getTexture(
             "assets/spacegame/textures/ui/gray_border.png");
 
-    private static final float BACKGROUND_MARGIN = 4f;
-    private static final float BORDER_MARGIN = 4f;
+    private static final float BACKGROUND_MARGIN = 3f;
+    private static final float BORDER_MARGIN = 3f;
 
     // Fields
     private UISprite cooldownOverlaySprite;
@@ -50,12 +50,11 @@ public class WeaponHotbarSlot extends ImageLabel {
             }
         };
         cooldownOverlaySprite.setAnchor(Anchor.BOTTOM);
-        gameObject.addComponent(cooldownOverlaySprite);
+        getParent().addChild(cooldownOverlaySprite);
         setCooldownPercent(0f);
     }
 
     // Helper Methods
-
 
     /**
      * Get the fill value of the weapon reload overlay, from bottom to top.

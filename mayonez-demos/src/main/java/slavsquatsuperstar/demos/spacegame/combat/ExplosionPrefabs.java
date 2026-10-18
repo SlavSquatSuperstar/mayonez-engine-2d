@@ -26,21 +26,22 @@ public class ExplosionPrefabs {
 
     // Factory Methods
 
-    public static GameObject createShipExplosionPrefab(
+    public static Node createShipExplosionPrefab(
             String name, Transform transform, float duration
     ) {
-        return new GameObject(name, transform, SpaceGameZIndex.EXPLOSION) {
+        return new Animator(SHIP_EXPLOSION_SPRITESHEET,
+                duration / SHIP_EXPLOSION_SPRITES) {
             @Override
-            protected void init() {
-                addComponent(new Animator(SHIP_EXPLOSION_SPRITESHEET,
-                        duration / SHIP_EXPLOSION_SPRITES) {
-                    @Override
-                    public void onFinishAnimation() {
-                        gameObject.destroy(); // destroy after finishing animation
-                    }
-                });
+            protected void start() {
+                setName(name);
+                setTransform(transform);
+                setZIndex(SpaceGameZIndex.EXPLOSION);
+            }
+
+            @Override
+            public void onFinishAnimation() {
+                setDestroyed(); // Destroy after finishing animation
             }
         };
     }
-
 }

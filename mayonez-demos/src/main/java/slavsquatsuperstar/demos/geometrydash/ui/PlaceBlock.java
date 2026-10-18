@@ -14,7 +14,7 @@ import slavsquatsuperstar.demos.geometrydash.Block;
  */
 // TODO don't place blocks if already exists
 // TODO don't place blocks when clicking button
-public class PlaceBlock extends Script {
+public class PlaceBlock extends Node {
 
     // Constants
     private static final float PLACE_BLOCK_DELAY = 0.2f;
@@ -29,7 +29,7 @@ public class PlaceBlock extends Script {
         timer = new Timer(PLACE_BLOCK_DELAY);
         timer.reset();
         cursor = new PlaceBlockCursor("Place Block Cursor");
-        getScene().addObject(cursor);
+        addChild(cursor);
     }
 
     @Override
@@ -49,7 +49,7 @@ public class PlaceBlock extends Script {
 
     private void placeBlock(Vec2 mousePos) {
         if (cursorTexture == null) return; // only add when selecting
-        getScene().addObject(new Block("Placed Block", mousePos, cursorTexture));
+        getScene().addNode(new Block("Placed Block", mousePos, cursorTexture));
     }
 
     public void setCursorTexture(Texture cursorTexture) {

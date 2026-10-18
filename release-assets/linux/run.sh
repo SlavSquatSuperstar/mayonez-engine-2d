@@ -3,7 +3,7 @@
 # Script Name: run.sh
 # Purpose:     Runs the project for users on any non-Mac Unix system, including
 #              Linux and Windows Subsystem for Linux.
-# Usage:       ./run.sh [-h/--help] [-e/--engine gl/awt]"
+# Usage:       ./run.sh [-h/--help] [-b/--backend gl/awt]"
 # Author:      SlavSquatSuperstar
 
 # Navigate to the project directory
@@ -17,12 +17,12 @@ USE_GL=true
 
 # Show help and exit with a code
 show_help() {
-  echo "Usage: run.sh [-h/--help] [-e/--engine gl/awt]"
+  echo "Usage: run.sh [-h/--help] [-b/--backend gl/awt]"
   exit "$1"
 }
 
 # Configure the program to run using GL/AWT
-set_engine_type() {
+set_backend() {
   case $1 in
   "gl")
     USE_GL=true
@@ -31,11 +31,11 @@ set_engine_type() {
     USE_GL=false
     ;;
   "")
-    echo "Option \"--engine\" requires one argument"
+    echo "Option \"--backend\" requires one argument"
     show_help 1
     ;;
   *)
-    echo "Invalid engine type \"$1\"."
+    echo "Invalid backend \"$1\"."
     show_help 1
     ;;
   esac
@@ -43,7 +43,7 @@ set_engine_type() {
 
 # Launch the jar with CL args
 run_jar() {
-  java -jar mayonez*.jar "--engine" "$1"
+  java -jar mayonez*.jar "--backend" "$1"
   exit $?
 }
 
@@ -55,8 +55,8 @@ while :; do
   --help | -h)
     show_help 0
     ;;
-  --engine | -e)
-    set_engine_type "$2"
+  -b | --backend | -e | --engine)
+    set_backend "$2"
     shift
     ;;
   "")
@@ -81,9 +81,9 @@ fi
 
 # Run the compiled .jar file
 if $USE_GL; then
-  echo "Launching with OpenGL Engine."
+  echo "Launching with OpenGL backend."
   run_jar "gl"
 else
-  echo "Launching with AWT Engine."
+  echo "Launching with AWT backend."
   run_jar "awt"
 fi

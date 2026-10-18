@@ -10,8 +10,7 @@
       </option>
       <option name="taskNames">
         <list>
-          <option value="assemble" />
-          <option value="dokkaJavadocCollector" />
+          <option value="dokkaGenerate" />
         </list>
       </option>
       <option name="vmOptions" />

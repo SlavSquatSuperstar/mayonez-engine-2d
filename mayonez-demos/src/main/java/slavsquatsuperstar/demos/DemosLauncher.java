@@ -17,7 +17,7 @@ public class DemosLauncher {
     private static List<Scene> scenes;
 
     public static void main(String[] args) {
-        var launcher = new Launcher(args).setRunConfig();
+        var launcher = new Launcher(args);
         DemosConfig.readConfig();
 
         // Read scene files
@@ -34,8 +34,8 @@ public class DemosLauncher {
         launcher.startGame(DemosConfig.getStartSceneIndex());
     }
 
-    private static List<Scene> getScenesFromFile(String filename) {
-        var csvData = new CSVFile(filename).readCSV();
+    private static List<Scene> getScenesFromFile(String path) {
+        var csvData = new CSVFile(path).readCSV();
         if (csvData == null) return List.of();
         return csvData.stream()
                 .map(SceneInfo::new)
@@ -45,7 +45,7 @@ public class DemosLauncher {
 
     static void switchToScene(int sceneIndex) {
         if (sceneIndex < scenes.size()) {
-            SceneManager.changeScene(SceneManager.getScene(sceneIndex));
+            SceneManager.changeScene(SceneManager.getScene(sceneIndex), false, false);
         }
     }
 

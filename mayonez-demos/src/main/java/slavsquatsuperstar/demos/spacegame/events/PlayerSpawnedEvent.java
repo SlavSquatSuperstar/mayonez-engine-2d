@@ -9,14 +9,14 @@ import mayonez.*;
  */
 public class PlayerSpawnedEvent extends SpaceGameEvent {
 
-    private final GameObject player;
+    private final Node player;
 
-    public PlayerSpawnedEvent(GameObject player) {
+    public PlayerSpawnedEvent(Node player) {
         super("Spawned player " + player);
         this.player = player;
     }
 
-    public GameObject getPlayer() {
+    public Node getPlayer() {
         return player;
     }
 

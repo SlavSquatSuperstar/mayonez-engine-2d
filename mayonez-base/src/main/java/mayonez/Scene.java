@@ -1,5 +1,6 @@
 package mayonez;
 
+import com.uber.nullaway.annotations.Initializer;
 import mayonez.graphics.camera.*;
 import mayonez.graphics.debug.*;
 import mayonez.math.*;
@@ -8,24 +9,29 @@ import mayonez.physics.colliders.*;
 import mayonez.physics.dynamics.*;
 import mayonez.renderer.*;
 import mayonez.util.*;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 
 /**
- * An in-game world or level that holds multiple {@link mayonez.GameObject}s. Each scene
- * can  be given a background image or color.
+ * An in-game world or level that updates and renders a tree of
+ * {@link mayonez.Node}s. Each scene can be given a background image or color.
  * <p>
- * Usage: Create a scene by instantiating a subclass or anonymous instance of
- * {@link mayonez.Scene}. Add objects to the scene by calling {@link #addObject}
- * inside the {@link #init()} method. Scenes may also define custom game logic
- * and graphics inside {@link #onUserUpdate} and {@link #onUserRender}.
+ * Usage: Create a scene by instantiating a subclass of
+ * {@link mayonez.Scene}. Add nodes to the scene by calling {@link #addNode}
+ * inside the {@link #init} method. Scenes may also define custom game logic
+ * and graphics inside {@link #onUserUpdate} and {@link #onUserRender}. To
+ * remove a node from the scene, call {@link #removeNode} from the scene or
+ * {@link Node#setDestroyed()} through the node.
  * <p>
- * See {@link mayonez.GameObject} and {@link mayonez.SceneManager} for more information.
+ * See {@link mayonez.Node} and {@link mayonez.SceneManager} for more information.
  *
  * @author SlavSquatSuperstar
  */
+// TODO custom camera
+// TODO recreate root node
 // TODO current cursor object
 public abstract class Scene {
 
@@ -37,9 +43,13 @@ public abstract class Scene {
     private final String name;
     private SceneState state; // if paused or running
 
-    // Scene Objects
-    private final BufferedList<GameObject> objects;
-    private final SceneLayer[] layers;
+    // Scene Nodes
+    private final BufferedList<Node> sceneNodes;
+    private final CallbackBuffer newNodes; // Nodes needing to start
+    private Node rootNode;
+    private boolean sceneChanged;
+    private boolean uniqueNodeNames;
+    // TODO add/remove, queue callbacks
 
     // Renderers
     private Camera camera;
@@ -49,18 +59,22 @@ public abstract class Scene {
     private final PhysicsWorld physics;
 
     /**
-     * Creates an empty scene with a name.
+     * Creates an empty scene with a name. If the name is {@code null}, it will
+     * default to the class name.
      *
-     * @param name the name of the scene
+     * @param name the scene name
      */
-    public Scene(String name) {
+    public Scene(@Nullable String name) {
         sceneID = sceneCounter++;
-        this.name = name;
+        this.name = Objects.requireNonNullElse(name, StringUtils.getObjectClassName(this));
         state = SceneState.STOPPED;
 
         // Initialize layers
-        objects = new BufferedList<>();
-        layers = new SceneLayer[SceneLayer.NUM_LAYERS];
+        sceneNodes = new BufferedList<>();
+        newNodes = new CallbackBuffer();
+        rootNode = createRootNode();
+        sceneChanged = false;
+        uniqueNodeNames = false;
         renderLayer = RendererFactory.createRenderLayer(Mayonez.getUseGL());
         physics = new DefaultPhysicsWorld();
     }
@@ -68,37 +82,46 @@ public abstract class Scene {
     // Initialization Methods
 
     /**
-     * Initialize all objects and begin updating the scene. Calls {@link GameObject#start()}
-     * for all objects added on start.
+     * Initialize all nodes and begin updating the scene. {@link Node#start}
+     * will be called for all nodes added here.
      */
+    @Initializer
     final void start() {
-        // Set up layers
-        for (int i = 0; i < layers.length; i++) {
-            layers[i] = new SceneLayer(i);
-        }
+        // Recreate root node if restarting
+        if (rootNode.isDestroyed()) createRootNode();
 
         // Add camera
         camera = CameraFactory.createCamera();
-        addObject(CameraFactory.createCameraObject(camera));
+        addNode(camera);
 
-        // Add objects
+        // Add nodes in tree order (top-down)
         init();
 
-        // Start objects
+        // Start nodes in reverse tree order (bottom-up)
         state = SceneState.RUNNING;
-        objects.forEach(this::startObject);
-        objects.processBuffer();
+        sceneNodes.reversed().forEach(Node::start);
+
+        // Sort nodes by update order
+        sortNodes();
+    }
+
+    private Node createRootNode() {
+        rootNode = new RootNode();
+        sceneNodes.add(rootNode);
+        rootNode.setScene(this);
+        return rootNode;
     }
 
     /**
-     * Add game objects to this scene before the scene starts or initialize fields
+     * Add nodes to this scene before the scene starts or initialize fields
      * after this scene has been loaded.
      * The method {@link #getCamera()} is accessible here.
      * <p>
-     * Usage: Subclasses may override this method and can also call {@code super.init()}.
+     * Usage: Subclasses may override this method and can also call
+     * {@code super.init()}.
      * <p>
-     * Warning: Calling {@code init()} at any other point in time may lead to unintended errors
-     * and should be avoided!
+     * Warning: Calling {@code init()} at any other point in time may lead to
+     * unintended errors and should be avoided!
      */
     protected void init() {
     }
@@ -106,23 +129,50 @@ public abstract class Scene {
     // Update Methods
 
     /**
-     * Moves everything in the scene forward in time by a small increment, including physics, scripts, and UI.
+     * Processes physics and updates all enabled nodes on a fixed tick.
+     *
+     * @param dt seconds between fixed ticks
+     */
+    final void fixedUpdate(float dt) {
+        if (isRunning()) {
+            physics.step(dt);
+            sceneNodes.forEach(node -> {
+                if (node.shouldUpdate()) node.fixedUpdate(dt);
+            });
+        }
+    }
+
+    // Input and UI need to run when paused
+    // TODO process mode: enable/disable
+    // Rendering needs to continue when paused
+    // TODO have batch draw last data
+
+    /**
+     * Updates all enabled nodes on a render frame.
      *
      * @param dt seconds since the last frame
      */
     final void update(float dt) {
-        onUserUpdate(dt);
-        // Update all objects
-        // TODO physics update, late update
-        if (isRunning()) {
-            objects.forEach(obj -> {
-                obj.update(dt);
-                if (obj.isDestroyed()) removeObject(obj);
-            });
-            physics.step(dt);
-            camera.gameObject.update(dt); // Update camera last
+        if (!isStopped()) {
+            onUserUpdate(dt); // TODO move input to window
         }
-        objects.processBuffer();
+        if (isRunning()) {
+            sceneNodes.forEach(node -> {
+                if (node.shouldUpdate()) node.update(dt);
+            });
+        }
+
+        // Add or remove nodes
+        if (sceneChanged) {
+            sceneNodes.processBuffer();
+            newNodes.executeCallbacks(); // Start any new nodes
+            sceneNodes.forEach(Node::garbageCollect);
+            sortNodes();
+            sceneChanged = false;
+        }
+
+        // Stop scene
+        if (isStopping()) stop();
     }
 
     /**
@@ -136,14 +186,18 @@ public abstract class Scene {
     // Render Methods
 
     /**
-     * Redraws everything in the current scene, including backgrounds, sprites, and UI.
+     * Redraws all visible nodes to the screen on a render frame.
      *
-     * @param g2 the window's graphics object
+     * @param g2 the window's graphics object, if using the AWT backend
      */
-    final void render(Graphics2D g2) {
-        onUserRender();
-        objects.forEach(GameObject::debugRender);
-        renderLayer.render(g2);
+    final void render(@Nullable Graphics2D g2) {
+        if (!isStopped()) {
+            onUserRender();
+            sceneNodes.forEach(node -> {
+                if (node.shouldRender()) node.debugRender();
+            });
+            renderLayer.render(g2);
+        }
     }
 
     /**
@@ -155,133 +209,224 @@ public abstract class Scene {
     // Stop Methods
 
     /**
-     * Destroys all objects and stop updating the scene.
+     * Signal the scene to stop updating and destroy all nodes after this
+     * frame.
+     */
+    final void requestStop() {
+        // Make sure the scene finishes updating so node transforms aren't null
+        state = SceneState.STOPPING;
+    }
+
+    /**
+     * Destroy all nodes in the scene immediately.
      */
     final void stop() {
-        // Destroy all objects
-        camera.setSubject(null);
-        objects.forEach(GameObject::onDestroy);
+        // Destroy all nodes
+        rootNode.setDestroyed();
 
-        // Clear all objects
-        objects.clear();
+        // Clear all nodes
+        sceneNodes.clear();
+        newNodes.clear();
         renderLayer.clear();
         physics.clear();
 
         state = SceneState.STOPPED;
     }
 
-    // Object Methods
+    // Node Methods
 
     /**
-     * Adds an object to this scene and initializes the object if the scene is
-     * running. The object will not be added if it already has a parent scene.
+     * Adds a top-level node to this scene and initializes the node and all its
+     * descendants. The node will not be added if it already has a parent
+     * node.
      *
-     * @param obj a {@link GameObject}
+     * @param node a {@link Node}
      */
-    public final void addObject(GameObject obj) {
-        if (obj == null || obj.getScene() != null) return;
-        if (isStopped()) { // Static add: when not loaded
-            objects.addUnbuffered(obj);
-            addObjectToScene(obj);
-        } else { // Dynamic add: when loaded (running or paused)
-            objects.add(obj, () -> this.addObjectToScene(obj));
+    public final void addNode(@Nullable Node node) {
+        // Don't add more nodes if scene is stopping
+        if (!rootNode.isDestroyed()) rootNode.addChild(node);
+    }
+
+    void onNodeAdded(Node node) {
+        if (isRunning()) { // Static add: When initializing
+            sceneNodes.addBuffered(node, () -> addNodeToScene(node));
+        } else { // Dynamic add: After initialized
+            sceneNodes.addUnbuffered(node);
+            addNodeToScene(node);
         }
+        setSceneChanged();
     }
 
-    private void addObjectToScene(GameObject obj) {
-        obj.setScene(this);
-        if (!isStopped()) startObject(obj);
-        Logger.trace("Added object \"%s\" to scene \"%s\"",
-                obj.getNameAndID(), this.name);
+    private void addNodeToScene(Node node) {
+        node.setScene(this);
+        node.init();
+        // Start node later after all nodes added
+        if (!isStopped()) newNodes.add(node::start);
+        if (node instanceof Renderable r) renderLayer.addRenderable(r);
+        if (node instanceof PhysicsBody b) physics.addPhysicsBody(b);
+        if (node instanceof CollisionBody b) physics.addCollisionBody(b);
+        Logger.trace("Added node \"%s\" to scene \"%s\"",
+                node, this.name);
     }
 
-    private void startObject(GameObject obj) {
-        obj.start(); // Add components first so renderer and physics can access it
-        for (var comp : obj.getComponents()) {
-            if (comp instanceof Renderable r) renderLayer.addRenderable(r);
-            if (comp instanceof PhysicsBody b) physics.addPhysicsBody(b);
-            if (comp instanceof CollisionBody b) physics.addCollisionBody(b);
+    /**
+     * Removes a top-level node from this scene and destroys the node and all
+     * its descendants. The node will only be removed if it is a child of the
+     * scene's root node.
+     *
+     * @param node a {@link Node}
+     */
+    public final void removeNode(@Nullable Node node) {
+        rootNode.removeChild(node);
+    }
+
+    private void removeNodeFromScene(Node node) {
+        if (node instanceof Renderable r) renderLayer.removeRenderable(r);
+        if (node instanceof PhysicsBody b) physics.removePhysicsBody(b);
+        if (node instanceof CollisionBody b) physics.removeCollisionBody(b);
+        sceneNodes.remove(node);
+        node.onDestroy();
+        node.setParent(null);
+        node.setScene(null);
+        Logger.trace("Removed node \"%s\" from scene \"%s\"",
+                node, this.name);
+    }
+
+    void onNodeRemoved(Node node) {
+        if (isRunning()) {
+            sceneNodes.removeBuffered(node, () -> removeNodeFromScene(node));
+        } else {
+            sceneNodes.removeUnbuffered(node);
+            removeNodeFromScene(node);
         }
+        setSceneChanged();
+    }
+
+    void setSceneChanged() {
+        this.sceneChanged = true;
+    }
+
+    private void sortNodes() {
+        sceneNodes.sort(Comparator.comparingInt(Node::getUpdateOrder));
     }
 
     /**
-     * Removes an object from this scene and destroys it.
+     * Finds the first {@link Node} with the given name (case-sensitive),
+     * or null if none exists.
      *
-     * @param obj a {@link GameObject}
+     * @param name the node's name
+     * @return the node
      */
-    final void removeObject(GameObject obj) {
-        if (obj == null) return;
-        objects.remove(obj, () -> this.removeObjectFromScene(obj));
-    }
-
-    private void removeObjectFromScene(GameObject obj) {
-        for (var comp : obj.getComponents()) {
-            if (comp instanceof Renderable r) renderLayer.removeRenderable(r);
-            if (comp instanceof PhysicsBody b) physics.removePhysicsBody(b);
-            if (comp instanceof CollisionBody b) physics.removeCollisionBody(b);
-        }
-        obj.onDestroy();
-        Logger.trace("Removed object \"%s\" from scene \"%s\"",
-                obj.getNameAndID(), this.name);
+    public @Nullable Node getNode(@Nullable String name) {
+        if (name == null) return null;
+        return sceneNodes.stream()
+                .filter(n -> n.getName().equals(name))
+                .findFirst()
+                .orElse(null);
     }
 
     /**
-     * Finds the first {@link GameObject} with the given name, or null if none exists.
+     * Returns the root node of the scene. The root node is the ancestor of all
+     * other nodes in the scene.
      *
-     * @param name the object name
-     * @return the object
+     * @return the root node
      */
-    public GameObject getObject(String name) {
-        return objects.find(obj -> obj.getName().equals(name));
+    Node getRootNode() {
+        return rootNode;
     }
 
     /**
-     * Returns a copy of the all objects in this scene.
+     * Returns a list of all the top level nodes, or nodes that are direct
+     * children of the root node.
      *
-     * @return the list of objects
+     * @return the list of top level nodes
      */
-    public List<GameObject> getObjects() {
-        return objects.copy();
+    public List<Node> getTopLevelNodes() {
+        return rootNode.getChildren();
     }
 
     /**
-     * Counts the number of objects in the scene.
+     * Returns a list of all the nodes in this scene that have the given tag.
      *
-     * @return the amount of objects
+     * @param tag the tag
+     * @return the list of nodes with the tag
      */
-    public int numObjects() {
-        return objects.size();
+    public List<Node> getNodes(@Nullable String tag) {
+        return sceneNodes.stream()
+                .filter(n -> n.hasTag(tag))
+                .toList();
+    }
+
+    /**
+     * Returns a copy of all the nodes in this scene, including the root node.
+     *
+     * @return the list of nodes
+     */
+    public List<Node> getNodes() {
+        return List.copyOf(sceneNodes);
+    }
+
+    /**
+     * Counts the number of nodes of any level in the scene, including the root
+     * node.
+     *
+     * @return the amount of nodes
+     */
+    public int numNodes() {
+        return sceneNodes.size();
+    }
+
+    /**
+     * Whether newly-added nodes are renamed so no two children of any parent
+     * node have the same name.
+     *
+     * @return whether to rename nodes
+     */
+    public boolean hasUniqueNodeNames() {
+        return uniqueNodeNames;
+    }
+
+    /**
+     * Set whether to rename new nodes so no two children of any parent node
+     * have the same name. Will not affect existing nodes.
+     *
+     * @param uniqueNodeNames whether to rename nodes
+     */
+    public void setUniqueNodeNames(boolean uniqueNodeNames) {
+        this.uniqueNodeNames = uniqueNodeNames;
     }
 
     // Scene Layer Methods
 
     /**
-     * Get the {@link mayonez.SceneLayer} by its numerical index.
+     * Get the {@link PhysicsLayer} by its numerical index.
      *
      * @param index the layer index
      * @return the layer, or null if the index is invalid
      */
-    public SceneLayer getLayer(int index) {
-        if (index >= 0 && index < layers.length) return layers[index];
+    public @Nullable PhysicsLayer getLayer(int index) {
+        if (index >= 0 && index < PhysicsLayer.NUM_LAYERS) return physics.getLayers()[index];
         else return null;
     }
 
     /**
-     * Get the {@link mayonez.SceneLayer} by its name.
+     * Get the {@link PhysicsLayer} by its name.
      *
      * @param name the layer name
      * @return the layer, or null if the name is invalid
      */
-    public SceneLayer getLayer(String name) {
-        return Arrays.stream(layers)
+    public @Nullable PhysicsLayer getLayer(String name) {
+        return Arrays.stream(physics.getLayers())
                 .filter(layer -> layer.getName().equals(name))
-                .findFirst().orElse(null);
+                .findFirst()
+                .orElse(null);
     }
 
     // Scene Properties
 
     /**
-     * Returns the name of this scene.
+     * Returns the name of this scene, which is not null and need not be
+     * unique.
      *
      * @return the scene name
      */
@@ -292,8 +437,8 @@ public abstract class Scene {
     // Getters and Setters
 
     /**
-     * Get the scene's {@link Camera} instance. The camera is initialized before
-     * {@link GameObject#start()} is called for all other objects.
+     * Get the scene's {@link Camera} instance. The camera is initialized
+     * before {@link Node#start()} is called for all other nodes.
      *
      * @return the scene camera
      */
@@ -306,7 +451,7 @@ public abstract class Scene {
      *
      * @return the scene debug draw
      */
-    public final DebugDraw getDebugDraw() {
+    public DebugDraw getDebugDraw() {
         return renderLayer.getDebugDraw();
     }
 
@@ -322,20 +467,25 @@ public abstract class Scene {
         return state == SceneState.PAUSED;
     }
 
+    boolean isStopping() {
+        return state == SceneState.STOPPING;
+    }
+
     boolean isStopped() {
         return state == SceneState.STOPPED;
     }
 
     /**
-     * Pauses the scene but does not destroy any game objects. While paused,
-     * objects do not move or update but key inputs can still be polled through onUserUpdate().
+     * Pauses the scene but does not destroy any game nodes. While paused,
+     * nodes do not move or update but key inputs can still be polled through
+     * {@code onUserUpdate}.
      */
     final void pause() {
         state = SceneState.PAUSED;
     }
 
     /**
-     * Resumes the scene but does not reinitialize any game objects.
+     * Resumes the scene but does not reinitialize any game nodes.
      */
     final void resume() {
         state = SceneState.RUNNING;
@@ -355,12 +505,19 @@ public abstract class Scene {
 
     @Override
     public String toString() {
-        // Use Scene for class name if anonymous instance
         return String.format(
-                "%s [ID = %d] (%s)",
+                "%s [%d] (%s)",
                 name, sceneID,
                 StringUtils.getObjectClassName(this)
         );
+    }
+
+    // Helper Class
+
+    static class RootNode extends Node {
+        RootNode() {
+            super("Root");
+        }
     }
 
 }

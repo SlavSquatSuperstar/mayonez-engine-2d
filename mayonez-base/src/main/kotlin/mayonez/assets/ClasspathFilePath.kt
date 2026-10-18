@@ -6,38 +6,62 @@ import java.io.OutputStream
 import java.net.URL
 
 /**
- * A system resource inside the JAR that is read-only. Classpath filenames
- * must use '/' separators regardless of the parent operating system.
+ * A classpath resource inside a .jar or source set. Classpath resources cannot
+ * be written to, as their location may change depending on the environment.
+ * When running the program using a build system, resources will usually be
+ * [LocalClasspathFilePath]s, and when running the program from a .jar, they
+ * will typically be [JarClasspathFilePath]s.
+ *
+ * Classpath paths must use '/' separators regardless of the parent
+ * operating system.
  *
  * @author SlavSquatSuperstar
  */
-class ClasspathFilePath(filename: String): FilePath(filename.toClasspath()) {
+abstract class ClasspathFilePath protected constructor(path: String) :
+    FilePath(PathUtil.convertPath(path, PathUtil.CLASSPATH_SEPARATOR)) {
 
-    override fun exists(): Boolean = getURL() != null
+    /** The URL to this resource, which is non-null iff the resource exists. */
+    protected val url: URL? = PathUtil.getResourceURL(super.path)
 
-    override fun isReadable(): Boolean = exists()
+    override val filename: String
+        get() {
+            val idx = path.lastIndexOf("/")
+            return if (idx == -1) path
+            else path.substring(idx + 1)
+        }
+
+    // File Status Methods
+
+    override fun exists(): Boolean = url != null
+
+    override fun isReadable(): Boolean = url != null
 
     override fun isWritable(): Boolean = false
 
+    // File Methods
+
+    override fun createFile(): Boolean = false
+
+    override fun createDirectory(): Boolean = false
+
+    override fun delete(): Boolean = false
+
+    // Stream Methods
+
+    @Throws(IOException::class)
     override fun openInputStream(): InputStream {
-        assertReadable()
-        return ClassLoader.getSystemResourceAsStream(filename)
+        if (!isReadable()) throw IOException("$this is not readable")
+        return url?.openStream()
             ?: throw IOException("Could not open input stream for $this")
     }
 
+    @Throws(IOException::class)
     override fun openOutputStream(append: Boolean): OutputStream {
         throw IOException("Classpath resources are read-only")
     }
 
-    override fun getURL(): URL? {
-        return ClassLoader.getSystemResource(filename)
-    }
+    // Conversion Methods
 
-    override val typeName: String
-        get() = "Classpath"
+    override fun getURL(): URL? = url
 
-}
-
-private fun String.toClasspath(): String {
-    return PathUtil.convertPath(this, PathUtil.CLASSPATH_SEPARATOR)
 }

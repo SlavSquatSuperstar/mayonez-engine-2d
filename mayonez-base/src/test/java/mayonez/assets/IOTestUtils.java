@@ -16,20 +16,6 @@ public final class IOTestUtils {
     }
 
     /**
-     * Make sure a file is present at a given path so a test succeeds.
-     *
-     * @param path the path
-     */
-    public static void checkFileExists(FilePath path) {
-        var file = path.getFile();
-        try {
-            if (!file.exists()) file.createNewFile();
-        } catch (IOException e) {
-            fail(e.getMessage());
-        }
-    }
-
-    /**
      * Attempt to open an input stream from a file path and close it.
      *
      * @param filePath the file path to use

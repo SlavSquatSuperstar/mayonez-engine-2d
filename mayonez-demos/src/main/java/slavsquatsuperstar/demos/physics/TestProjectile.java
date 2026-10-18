@@ -4,6 +4,7 @@ import mayonez.*;
 import mayonez.graphics.*;
 import mayonez.graphics.debug.*;
 import mayonez.math.*;
+import mayonez.physics.CollisionEvent;
 import mayonez.physics.colliders.*;
 import mayonez.physics.dynamics.*;
 import mayonez.scripts.*;
@@ -14,7 +15,7 @@ import mayonez.physics.colliders.BulletBoxCollider;
  *
  * @author SlavSquatSupertar
  */
-public class TestProjectile extends GameObject {
+public class TestProjectile extends Node {
 
     private static final boolean DRAW_TRAILS = false;
 
@@ -27,37 +28,40 @@ public class TestProjectile extends GameObject {
 
     @Override
     protected void init() {
-        setLayer(getScene().getLayer(ProjectileTestScene.PROJECTILE_LAYER));
+        addChild(new BulletBoxCollider(ProjectileLauncher.PROJ_SIZE) {
+            @Override
+            protected void init() {
+                setLayer(getScene().getLayer(ProjectileTestScene.PROJECTILE_LAYER));
+            }
 
-        var col = new BulletBoxCollider(ProjectileLauncher.PROJ_SIZE);
-        addComponent(col);
-        col.addCollisionCallback(event -> {
-            if (event.other.getName().equals("Target Box")) {
-                col.getGameObject().destroy();
+            @Override
+            public void onCollisionEvent(CollisionEvent event) {
+                if (event.other.getParent().getName().equals("Target Box")) {
+                    getParent().setDestroyed();
+                }
             }
         });
 
         var rb = new Rigidbody(1);
-        addComponent(rb);
+        addChild(rb);
         rb.setVelocity(velocity);
 
-        addComponent(new ShapeSprite(Colors.BLUE, false));
-        addComponent(new DestroyAfterDuration(5f));
+        addChild(new ShapeSprite(Colors.BLUE, false));
+        addChild(new DestroyAfterDuration(5f));
+    }
 
+    @Override
+    protected void fixedUpdate(float dt) {
         if (DRAW_TRAILS) {
-            addComponent(new Script() {
+            // Add trail
+            getScene().addNode(new Node("Trail", getTransform().copy()) {
                 @Override
-                protected void debugRender() {
-                    // Add trail
-                    getScene().addObject(new GameObject("Trail", transform.copy()) {
-                        @Override
-                        protected void init() {
-                            setLayer(getScene().getLayer(ProjectileTestScene.PROJECTILE_LAYER));
-                            addComponent(new BoxCollider(ProjectileLauncher.PROJ_SIZE));
-                            addComponent(new ShapeSprite(Colors.LIGHT_BLUE, false));
-                            addComponent(new DestroyAfterDuration(0.5f));
-                        }
-                    });
+                protected void init() {
+                    var collider = new BoxCollider(ProjectileLauncher.PROJ_SIZE);
+                    collider.setLayer(getScene().getLayer(ProjectileTestScene.PROJECTILE_LAYER));
+                    addChild(collider);
+                    addChild(new ShapeSprite(Colors.LIGHT_BLUE, false));
+                    addChild(new DestroyAfterDuration(0.5f));
                 }
             });
         }

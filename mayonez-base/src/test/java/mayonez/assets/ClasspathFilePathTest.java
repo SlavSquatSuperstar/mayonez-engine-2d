@@ -4,6 +4,8 @@ import org.junit.jupiter.api.*;
 
 import java.io.IOException;
 
+import static mayonez.assets.IOTestUtils.assertInputStreamExists;
+import static mayonez.assets.IOTestUtils.assertOutputStreamExists;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -13,18 +15,39 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class ClasspathFilePathTest {
 
-    private final FilePath filePathValid = new ClasspathFilePath("testassets/text/foo.txt");
-    private final FilePath filePathInvalid = new ClasspathFilePath("testassets/text/bar.txt");
+    private final FilePath filePathValid = fromPath("testassets/text/foo.txt");
+    private final FilePath filePathInvalid = fromPath("testassets/text/bar.txt");
+    private final FilePath unixFilePath = filePathValid;
+    private final FilePath windowsFilePath = fromPath("testassets\\text\\foo.txt");
 
-    // Filename Tests
+    // Path Name Tests
 
     @Test
-    void classpathFilenameIsAlwaysSame() {
-        var windowsFilePath = new ClasspathFilePath("testassets\\text\\foo.txt");
-        assertEquals(filePathValid.getFilename(), windowsFilePath.getFilename());
+    void classpathPathAlwaysContainsForwardSlashes() {
+        assertTrue(filePathValid.getPath().contains(PathUtil.CLASSPATH_SEPARATOR));
+
+        assertTrue(windowsFilePath.getPath().contains(PathUtil.CLASSPATH_SEPARATOR));
     }
 
-    // File URL Tests
+    @Test
+    void classpathPathHasCorrectFilename() {
+        assertEquals("foo.txt", unixFilePath.getFilename());
+
+        assertEquals("foo.txt", windowsFilePath.getFilename());
+    }
+
+    // Path Conversion Tests
+
+    @Test
+    void validClasspathFileNotNull() {
+        assertNotNull(filePathValid.getFile());
+    }
+
+    @Test
+    void invalidClasspathFileIsNull() {
+        assertNull(filePathInvalid.getFile());
+    }
+
     @Test
     void validClasspathURLNotNull() {
         assertNotNull(filePathValid.getURL());
@@ -35,7 +58,7 @@ class ClasspathFilePathTest {
         assertNull(filePathInvalid.getURL());
     }
 
-    // File Permissions Tests
+    // Path Status Tests
 
     @Test
     void validClasspathPathIsOnlyReadable() {
@@ -51,22 +74,71 @@ class ClasspathFilePathTest {
         assertFalse(filePathInvalid.isWritable());
     }
 
+    // File System Tests
+
+    @Test
+    void createClasspathFileFails() {
+        var filePath = fromPath("testassets/out/test_file");
+        assertFalse(filePath.exists());
+
+        assertFalse(filePath.createFile());
+        assertFalse(filePath.exists());
+    }
+
+    @Test
+    void createClasspathDirectoryFails() {
+        var filePath = fromPath("testassets/out/test_directory");
+        assertFalse(filePath.exists());
+
+        assertFalse(filePath.createDirectory());
+        assertFalse(filePath.exists());
+    }
+
+    @Test
+    void deleteClasspathFileFails() {
+        var filePath = fromPath("testassets/text/");
+        assertTrue(filePath.isDirectory());
+
+        assertFalse(filePath.delete());
+        assertTrue(filePath.exists());
+    }
+
+    @Test
+    void deleteClasspathDirectoryFails() {
+        var filePath = fromPath("testassets/text/foo.txt");
+        assertFalse(filePath.isDirectory());
+
+        assertFalse(filePath.delete());
+        assertTrue(filePath.exists());
+    }
+
     // File Stream Tests
 
     @Test
     void validClasspathInputStreamSucceeds() {
-        assertDoesNotThrow(() -> IOTestUtils.assertInputStreamExists(filePathValid));
+        assertDoesNotThrow(() -> assertInputStreamExists(filePathValid));
     }
 
     @Test
     void invalidClasspathInputStreamFails() {
-        assertThrows(IOException.class, () -> IOTestUtils.assertInputStreamExists(filePathInvalid));
+        assertThrows(IOException.class, () -> assertInputStreamExists(filePathInvalid));
     }
 
     @Test
     void classpathOutputStreamAlwaysFails() {
-        assertThrows(IOException.class, () -> IOTestUtils.assertOutputStreamExists(filePathValid));
-        assertThrows(IOException.class, () -> IOTestUtils.assertOutputStreamExists(filePathInvalid));
+        assertThrows(IOException.class, () -> assertOutputStreamExists(filePathValid));
+        assertThrows(IOException.class, () -> assertOutputStreamExists(filePathInvalid));
+    }
+
+    // Helper Method
+
+    private static ClasspathFilePath fromPath(String path) {
+        var url = PathUtil.getResourceURL(path);
+        if (url == null || url.getProtocol().equals("file")) {
+            return new LocalClasspathFilePath(path);
+        } else {
+            return new JarClasspathFilePath(path);
+        }
     }
 
 }

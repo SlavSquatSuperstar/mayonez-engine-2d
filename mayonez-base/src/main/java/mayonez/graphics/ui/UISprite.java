@@ -1,6 +1,6 @@
 package mayonez.graphics.ui;
 
-import mayonez.*;
+import mayonez.application.*;
 import mayonez.graphics.*;
 import mayonez.graphics.textures.*;
 import mayonez.math.*;
@@ -8,12 +8,12 @@ import mayonez.math.shapes.*;
 import mayonez.renderer.gl.*;
 
 /**
- * A rectangular sprite with a texture and color that is drawn to the UI.
+ * A visible user interface element that draws a rectangular sprite texture and color to the UI.
  *
  * @author SlavSquatSuperstar
  */
-@UsesEngine(EngineType.GL)
-public class UISprite extends Component implements UIRenderableElement, GLQuad {
+@UsesBackend(Backend.GL)
+public class UISprite extends UIElement implements GLQuad {
 
     // Constants
     private static final Color DEFAULT_COLOR = Colors.WHITE;
@@ -24,7 +24,6 @@ public class UISprite extends Component implements UIRenderableElement, GLQuad {
     private Color color;
 
     private UISprite(Vec2 position, Vec2 size, Texture texture, Color color) {
-        super(UpdateOrder.RENDER);
         bounds = new UIBounds(position, size);
         this.texture = texture;
         this.color = color;
@@ -80,22 +79,40 @@ public class UISprite extends Component implements UIRenderableElement, GLQuad {
 
     // UI Renderable Methods
 
+    /**
+     * Get the color of this UI element.
+     *
+     * @return the color
+     */
     @Override
     public Color getColor() {
         return color;
     }
 
-    @Override
+    /**
+     * Set the color of this UI element.
+     *
+     * @param color the color
+     */
     public void setColor(Color color) {
         this.color = color;
     }
 
+    /**
+     * Get the texture of this UI element.
+     *
+     * @return the texture
+     */
     @Override
     public GLTexture getTexture() {
         return (texture instanceof GLTexture glTex) ? glTex : null;
     }
 
-    @Override
+    /**
+     * Set the texture of this UI element.
+     *
+     * @param texture the texture
+     */
     public void setTexture(Texture texture) {
         this.texture = texture;
     }
@@ -109,7 +126,11 @@ public class UISprite extends Component implements UIRenderableElement, GLQuad {
 
     @Override
     public int getZIndex() {
-        return gameObject.getZIndex();
+        return getParent().getZIndex();
     }
 
+    @Override
+    public boolean isInUI() {
+        return true;
+    }
 }

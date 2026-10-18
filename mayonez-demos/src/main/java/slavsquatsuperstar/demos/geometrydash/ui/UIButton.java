@@ -13,7 +13,7 @@ import slavsquatsuperstar.demos.geometrydash.ZIndex;
  *
  * @author SlavSquatSuperstar
  */
-public class UIButton extends GameObject {
+public class UIButton extends Node {
 
     // Constants
     private static final SpriteSheet BUTTON_TEXTURES;
@@ -42,17 +42,19 @@ public class UIButton extends GameObject {
 
         this.icon = icon;
         baseSprite = new Animator(BUTTON_TEXTURES, 0f);
-        baseSprite.setAnimationEnabled(false);
+        baseSprite.setEnabled(false);
     }
 
     @Override
     protected void init() {
         selected = false;
-        addComponent(new BoxCollider(new Vec2(1, 1)).setTrigger(true));
-        addComponent(baseSprite);
-        addComponent(Sprites.createSprite(icon)
-                .setSpriteTransform(Transform.scaleInstance(new Vec2(0.8f))));
-        addComponent(new MouseInputScript() {
+        addChild(new BoxCollider(new Vec2(1, 1)).setTrigger(true));
+        addChild(baseSprite);
+
+        var iconSpr = Sprites.createSprite(icon);
+        iconSpr.setTransform(Transform.scaleInstance(new Vec2(0.8f)));
+        addChild(iconSpr);
+        addChild(new MouseInputScript() {
             @Override
             public void onMouseDown() {
                 setSelected(!selected);

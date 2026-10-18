@@ -1,7 +1,6 @@
 package mayonez.config;
 
 import mayonez.*;
-import mayonez.util.Record;
 
 import java.util.*;
 
@@ -9,10 +8,10 @@ import java.util.*;
  * Initializes all engine components, parses the main method program arguments,
  * and starts the application.
  * <p>
- * Usage: Construct a {@link Launcher} object and optionally pass in
- * command-line arguments. First, call {@link #setRunConfig()} to parse the
- * {@link RunConfig} from the arguments. Then, preload in any number
- * of scenes using {@link #addScenesToManager(Scene...)} and then start the game with
+ * Usage: First, construct a {@link Launcher} object and optionally pass in
+ * command-line  arguments. The constructor will automatically configure the application
+ * or use the defaults if the arguments are blank. Next, preload in any number of scenes
+ * using {@link #addScenesToManager(Scene...)} and then start the game with
  * {@link #startGame}.
  * <p>
  * See {@link mayonez.SceneManager} for more information.
@@ -20,8 +19,6 @@ import java.util.*;
  * @author SlavSquatSuperstar
  */
 public class Launcher {
-
-    private final Record programArgs;
 
     /**
      * Create a launcher for the application without passing in any program arguments.
@@ -31,41 +28,15 @@ public class Launcher {
     }
 
     /**
-     * Create a launcher for the application and pass in the program arguments.
+     * Create a launcher and automatically configure the application using the provided
+     * arguments.
      *
      * @param args a string array
      */
     public Launcher(String[] args) {
-        programArgs = new ArgumentsParser(args).getProgramArgs();
-    }
-
-    // Run Config Methods
-
-    /**
-     * Automatically set the run config using the provided arguments
-     * after constructing the launcher.
-     *
-     * @return this object
-     */
-    public Launcher setRunConfig() {
-        Mayonez.setConfig(getRunConfigFromArgs());
-        return this;
-    }
-
-    private RunConfig getRunConfigFromArgs() {
-        return new RunConfig(getUseGL());
-    }
-
-    boolean getUseGL() throws IllegalArgumentException {
-        if (!programArgs.contains("engine")) return RunConfig.DEFAULT_USE_GL;
-
-        var engineArg = programArgs.getString("engine");
-        return switch (engineArg) {
-            case "" -> throw new IllegalArgumentException("Missing value for option \"engine\"");
-            case "gl" -> true;
-            case "awt" -> false;
-            default -> throw new IllegalArgumentException("Invalid value for option \"engine\"");
-        };
+        var parser = new ArgumentsParser();
+        var backend = parser.getBackend(parser.parse(args));
+        Mayonez.setBackend(backend);
     }
 
     // Scene Manager Methods
@@ -91,6 +62,8 @@ public class Launcher {
             SceneManager.addScene(scene);
         }
     }
+
+    // Start Game Methods
 
     /**
      * Start the game with the given scene. Will crash the program if the scene
@@ -122,6 +95,12 @@ public class Launcher {
         Mayonez.start(SceneManager.getScene(sceneIndex));
     }
 
-    // TODO auto start with first loaded scene
+    /**
+     * Start the game with the first added scene. Will crash the program if no
+     * scenes have been added.
+     */
+    public void startGame() {
+        Mayonez.start(SceneManager.getScene(0));
+    }
 
 }

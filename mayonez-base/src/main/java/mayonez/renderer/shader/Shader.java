@@ -1,9 +1,11 @@
 package mayonez.renderer.shader;
 
 import mayonez.*;
+import mayonez.application.*;
 import mayonez.assets.*;
-import mayonez.assets.text.*;
+import mayonez.assets.text.JSONFile;
 import mayonez.graphics.*;
+import mayonez.util.Record;
 import org.joml.*;
 import org.lwjgl.BufferUtils;
 
@@ -12,100 +14,117 @@ import java.util.*;
 import static org.lwjgl.opengl.GL20.*;
 
 /**
- * A compiled OpenGL shader program (.glsl) used by the GL engine. A shader tells
- * the GPU how to draw an image, specifying the colors, brightness, and texture.
+ * A compiled program written in the OpenGL Shading Language (GLSL) composed of multiple
+ * {@link ShaderStage}s. A <a href="https://www.khronos.org/opengl/wiki/Shader">shader</a>
+ * tells the GPU how to draw an image, specifying the colors, brightness, and texture.
+ * Shaders require at least a vertex and a fragment stage.
  *
  * @author SlavSquatSuperstar
  */
-@UsesEngine(EngineType.GL)
+@UsesBackend(Backend.GL)
 public class Shader extends Asset {
 
-    private final int shaderID;
+    private int programID;
+    private final Record shaderDefinition;
+    private final List<ShaderStage> stages;
     private final Map<String, Integer> uniformLocations;
 
-    public Shader(String filename) {
-        super(filename);
-        if (GLHelper.isGLInitialized()) {
-            shaderID = glCreateProgram();
-            create();
-        } else {
-            shaderID = GL_NONE;
-        }
+    public Shader(String path) {
+        super(path);
+        shaderDefinition = new JSONFile(path).readJSON();
+        stages = new ArrayList<>();
         uniformLocations = new HashMap<>();
     }
 
-    // Read Shader Methods
+    // Create Shader Methods
 
-    private void create() {
+    /**
+     * Read the shader stages and parse the uniforms without compiling the source code.
+     *
+     * @throws ShaderException if any shaders are missing or could not be read
+     */
+    void readShader() throws ShaderException {
+        Logger.debug("Reading shader definition %s", getPath());
+
+        // Read shaders and parse uniforms
+        // Don't need OpenGL to be initialized yet
+        stages.clear();
+        uniformLocations.clear();
+
+        var shaderTypes = ShaderType.values();
+        for (var type : shaderTypes) {
+            var path = shaderDefinition.getString(type.name);
+            // Check if stage present
+            if (path.isEmpty()) {
+                throw new ShaderException("%s definition is missing %s shader"
+                        .formatted(getPath(), type.name));
+            }
+
+            var stage = new ShaderStage(path, type);
+            stage.readSource();
+            stage.getUniforms().forEach(
+                    // Store locations as -1 for now
+                    uniform -> uniformLocations.put(uniform, -1)
+            );
+            stages.add(stage);
+        }
+    }
+
+    /**
+     * Compile the shader source code, link the program, and cache the uniform locations.
+     *
+     * @throws ShaderException if an error occurred during compilation and linking
+     */
+    void createShader() {
+        // Check OpenGL initialized before compiling
+        if (!GLHelper.isGLInitialized()) {
+            programID = GL_NONE;
+            throw new ShaderException("OpenGL capabilities are not initialized");
+        }
+
         try {
-            Logger.debug("Creating shader from file %s", getFilenameInQuotes());
-            List<ShaderProgram> programs = readShaderPrograms();
-            programs.forEach(this::compileShader);
-            linkShaderPrograms(programs);
-            programs.forEach(ShaderProgram::delete); // Clean up intermediate programs
+            // Compile shaders
+            stages.forEach(ShaderStage::compileSource);
+
+            // Link program
+            programID = glCreateProgram();
+            linkShaderStages();
+
+            // Cache uniform locations
+            uniformLocations.keySet().forEach(uniform -> {
+                int location = glGetUniformLocation(programID, uniform);
+                uniformLocations.put(uniform, location);
+            });
         } catch (ShaderException e) {
-            Logger.printStackTrace(e);
-        }
-    }
-
-    private List<ShaderProgram> readShaderPrograms() throws ShaderException {
-        try {
-            var source = TextIOUtils.readText(openInputStream());
-            var shaders = source.split("(#type)( )+"); // shaders indicated by "#type <shader_type>"
-            return parseShaderPrograms(shaders);
-        } catch (Exception e) {
-            Logger.error("Could not parse shader file %s", getFilenameInQuotes());
-            throw new ShaderException(e);
-        }
-    }
-
-    private static List<ShaderProgram> parseShaderPrograms(String[] subPrograms) throws ShaderException {
-        var programs = new ArrayList<ShaderProgram>();
-        for (var shader : subPrograms) {
-            var src = shader.strip();
-            if (src.isEmpty()) continue;
-            programs.add(readShaderProgram(src));
-        }
-        return programs;
-    }
-
-    private static ShaderProgram readShaderProgram(String shaderSource) throws ShaderException {
-        var firstNewLine = shaderSource.indexOf("\n");
-        var typeName = shaderSource.substring(0, firstNewLine).trim();
-
-        var programSource = shaderSource.substring(firstNewLine + 1);
-        var shaderType = ShaderType.findWithName(typeName);
-        return new ShaderProgram(programSource, shaderType);
-    }
-
-    // Compile Shader Methods
-
-    private void compileShader(ShaderProgram shader) throws ShaderException {
-        try {
-            shader.compileSource();
-        } catch (ShaderException e) {
-            Logger.error("OpenGL: " + glGetShaderInfoLog(shaderID));
+            programID = GL_NONE;
             throw e;
+        } finally {
+            // Clean up intermediate stages
+            stages.forEach(stage -> {
+                stage.detachFromProgram(programID);
+                stage.delete();
+            });
+            stages.clear();
         }
     }
 
-    private void linkShaderPrograms(List<ShaderProgram> programs) throws ShaderException {
-        programs.forEach(p -> p.linkToProgram(shaderID));
-        glLinkProgram(shaderID);
-        glValidateProgram(shaderID);
+    private void linkShaderStages() throws ShaderException {
+        stages.forEach(s -> s.attachToProgram(programID));
+        glLinkProgram(programID);
+        glValidateProgram(programID);
 
-        // Check link status
-        if (shaderLinkedSuccessfully(shaderID)) {
-            Logger.debug("OpenGL: Finished linking shader file %s", getFilenameInQuotes());
+        // Check linked correctly
+        if (glGetProgrami(programID, GL_LINK_STATUS) == GL_TRUE) {
+            Logger.debug("Linked shader program %s", getPath());
         } else {
-            Logger.error("OpenGL: Could not link shader file %s", getFilenameInQuotes());
-            Logger.error("OpenGL: " + glGetProgramInfoLog(shaderID));
-            throw new ShaderException("Error linking shader file");
+            Logger.error("Could not link shader program %s", getPath());
+            if (glGetProgrami(programID, GL_INFO_LOG_LENGTH) > 0) {
+                // Don't print an empty log
+                Logger.error("OpenGL Log: " + glGetProgramInfoLog(programID));
+            }
+            Logger.error("Shaders must have a vertex and fragment stage with a main function");
+            throw new ShaderException("Error linking shader program");
         }
-    }
-
-    private static boolean shaderLinkedSuccessfully(int shaderID) {
-        return glGetProgrami(shaderID, GL_LINK_STATUS) != GL_FALSE;
     }
 
     // Renderer Methods
@@ -114,7 +133,7 @@ public class Shader extends Asset {
      * Bind this shader to the GPU.
      */
     public void bind() {
-        glUseProgram(shaderID);
+        glUseProgram(programID);
     }
 
     /**
@@ -129,8 +148,9 @@ public class Shader extends Asset {
      */
     private void delete() {
         if (GLHelper.isGLInitialized()) {
-            glDeleteProgram(shaderID);
+            glDeleteProgram(programID);
         }
+        programID = GL_NONE;
         uniformLocations.clear();
     }
 
@@ -156,7 +176,7 @@ public class Shader extends Asset {
         if (uniformLocations.containsKey(varName)) {
             return uniformLocations.get(varName);
         } else {
-            var location = glGetUniformLocation(shaderID, varName);
+            var location = glGetUniformLocation(programID, varName);
             uniformLocations.put(varName, location);
             return location;
         }
@@ -165,8 +185,40 @@ public class Shader extends Asset {
     // Asset Methods
 
     @Override
+    public void init() {
+        try {
+            readShader();
+            createShader();
+        } catch (ShaderException e) {
+            // Print an error but continue the program
+            // The renderer will simply use GL_NONE
+            Logger.printStackTrace(e);
+        }
+    }
+
+    @Override
     public void free() {
         delete();
+    }
+
+    // Getter Methods
+
+    /**
+     * Get the intermediate shader stages in this program.
+     *
+     * @return the list of stages
+     */
+    List<ShaderStage> getStages() {
+        return stages;
+    }
+
+    /**
+     * Get the uniform names and locations in this program.
+     *
+     * @return the map of uniforms
+     */
+    Map<String, Integer> getUniformLocations() {
+        return uniformLocations;
     }
 
 }

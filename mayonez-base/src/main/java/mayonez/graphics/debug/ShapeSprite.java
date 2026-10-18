@@ -29,7 +29,6 @@ public class ShapeSprite extends Component {
      * @param fill  whether to fill the shape interior
      */
     public ShapeSprite(Shape shape, Color color, boolean fill) {
-        super(UpdateOrder.RENDER);
         this.shape = shape;
         if (fill) {
             brush = ShapeBrush.createSolidBrush(color);
@@ -50,13 +49,13 @@ public class ShapeSprite extends Component {
 
     @Override
     protected void start() {
-        collider = gameObject.getComponent(Collider.class);
+        collider = getSibling(Collider.class);
     }
 
     @Override
     protected void debugRender() {
         var drawShape = (shape == null) ? getColliderShape() : getWorldShape();
-        var drawBrush = brush.setZIndex(gameObject.getZIndex());
+        var drawBrush = brush.setZIndex(getParent().getZIndex());
         if (brush.getFill()) {
             getScene().getDebugDraw().fillShape(drawShape, drawBrush);
         } else {
@@ -93,14 +92,14 @@ public class ShapeSprite extends Component {
     // Shape Helper Methods
 
     private Shape getWorldShape() {
-        return shape.rotate(transform.getRotation(), null)
-                .scale(transform.getScale(), null)
-                .translate(transform.getPosition());
+        return shape.rotate(getTransform().getRotation(), null)
+                .scale(getTransform().getScale(), null)
+                .translate(getTransform().getPosition());
     }
 
     private Shape getColliderShape() {
         if (collider == null) {
-            return new Rectangle(transform.getPosition(), transform.getScale());
+            return new Rectangle(getTransform().getPosition(), getTransform().getScale(), getTransform().getRotation());
         } else {
             return collider.getShape();
         }

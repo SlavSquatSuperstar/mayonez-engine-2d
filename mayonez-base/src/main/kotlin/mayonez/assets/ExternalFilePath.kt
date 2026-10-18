@@ -1,66 +1,135 @@
 package mayonez.assets
 
-import java.io.*
+import java.io.File
+import java.io.IOException
+import java.io.InputStream
+import java.io.OutputStream
 import java.net.MalformedURLException
 import java.net.URL
 import java.nio.file.Files
-import java.nio.file.Paths
+import java.nio.file.Path
 import java.nio.file.StandardOpenOption
 
 /**
- * A file outside the JAR and in the local device that is readable and
- * writable. External filenames use the file separators of their parent
+ * A file outside the .jar and in the local file system that is readable and
+ * writable. External paths use the file separators of their parent
  * operating system.
  *
  * @author SlavSquatSuperstar
  */
-class ExternalFilePath(filename: String) : FilePath(filename.toExternal()) {
+class ExternalFilePath(path: String) : FilePath(PathUtil.convertPath(path)) {
 
-    override fun exists(): Boolean = getFile().exists()
+    // File exists iff path exists
+    private val file: File = File(super.path)
 
-    override fun isReadable(): Boolean = getFile().isFile
+    override val filename: String
+        get() = file.name
+
+    // File Status Methods
+
+    override fun exists(): Boolean = file.exists()
+
+    override fun isReadable(): Boolean = file.isFile
 
     override fun isWritable(): Boolean {
-        val file = getFile() // Check that parent folder exists
+        // Check that parent folder exists
         return file.parentFile.isDirectory && !file.isDirectory
     }
 
+    override fun isDirectory(): Boolean = file.isDirectory
+
+    override fun isFile(): Boolean = file.isFile
+
+    // File Methods
+
+    override fun createFile(): Boolean {
+        return try {
+            file.createNewFile()
+        } catch (_: Exception) {
+            false
+        }
+    }
+
+    override fun createDirectory(): Boolean {
+        return try {
+            file.mkdir()
+        } catch (_: Exception) {
+            false
+        }
+    }
+
+    override fun delete(): Boolean {
+        return try {
+            file.delete()
+        } catch (_: Exception) {
+            false
+        }
+    }
+
+    // Stream Methods
+
+    @Throws(IOException::class)
     override fun openInputStream(): InputStream {
-        assertReadable()
+        if (!isReadable()) throw IOException("$this is not readable")
         try {
-            return Files.newInputStream(Paths.get(filename))
+            return Files.newInputStream(file.toPath())
         } catch (_: Exception) {
             throw IOException("Could not open input stream for $this")
         }
     }
 
+    @Throws(IOException::class)
     override fun openOutputStream(append: Boolean): OutputStream {
-        assertWritable()
+        if (!isWritable()) throw IOException("$this is not writable")
         val options = if (append) {
             arrayOf(StandardOpenOption.CREATE, StandardOpenOption.APPEND)
         } else {
             arrayOf(StandardOpenOption.CREATE)
         }
         try {
-            return Files.newOutputStream(Paths.get(filename), *options)
+            return Files.newOutputStream(file.toPath(), *options)
         } catch (_: Exception) {
             throw IOException("Could not open output stream for $this")
         }
     }
 
-    override fun getURL(): URL? {
+    // File Tree Methods
+
+    override fun getParent(): FilePath? {
+        return ExternalFilePath(file.parent?: return null)
+    }
+
+    override fun combine(path: String?): FilePath? {
+        val combined = Path.of(this.path, path ?: return null)
+        return ExternalFilePath(combined.toString())
+    }
+
+    override fun scanFiles(): List<FilePath> {
+        if (!isDirectory()) return emptyList() // If not directory return empty list
+
+        // Use Files.walk() to get recursive tree
         return try {
-            File(filename).toURI().toURL()
-        } catch (_: MalformedURLException) {
-            null
+            Files.walk(file.toPath())
+                .filter { Files.isRegularFile(it) }
+                .map { it.toFile().path }
+                .filter { !it.contains(".DS_Store") }
+                .map { ExternalFilePath(it) }
+                .toList()
+        } catch (_: IOException) {
+            emptyList()
         }
     }
 
-    override val typeName: String
-        get() = "External"
+    // Conversion Methods
 
-}
+    override fun getFile(): File = file
 
-private fun String.toExternal(): String {
-    return PathUtil.convertPath(this)
+    override fun getURL(): URL? {
+        return try {
+            file.toURI().toURL()
+        } catch (_: MalformedURLException) {
+            null // Should not occur
+        }
+    }
+
 }

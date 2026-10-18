@@ -2,6 +2,7 @@ package slavsquatsuperstar.demos.spacegame.objects.spawners;
 
 import mayonez.*;
 import mayonez.math.*;
+import slavsquatsuperstar.demos.spacegame.SpaceGameConfig;
 import slavsquatsuperstar.demos.spacegame.SpaceGameScene;
 import slavsquatsuperstar.demos.spacegame.objects.asteroids.AsteroidPrefabs;
 import slavsquatsuperstar.demos.spacegame.objects.asteroids.BaseAsteroid;
@@ -13,7 +14,7 @@ import slavsquatsuperstar.demos.spacegame.objects.ships.*;
  *
  * @author SlavSquatSuperstar
  */
-public class SpaceObjectSpawner extends GameObject {
+public class SpaceObjectSpawner extends Node {
 
     // Constants
     private final static float PLAYER_RESPAWN_COOLDOWN = 3f;
@@ -29,18 +30,21 @@ public class SpaceObjectSpawner extends GameObject {
     @Override
     protected void init() {
         // Player
-        addComponent(new PlayerSpawnManager(PLAYER_RESPAWN_COOLDOWN));
+        addChild(new PlayerSpawnManager(PLAYER_RESPAWN_COOLDOWN));
 
         // Enemies
-        addComponent(new MultiSpawnManager(NUM_ENEMIES, ENEMY_RESPAWN_COOLDOWN) {
+        addChild(new MultiSpawnManager(
+                (int) (NUM_ENEMIES * SpaceGameConfig.getEnemyMultiplier()),
+                ENEMY_RESPAWN_COOLDOWN
+        ) {
             @Override
-            public GameObject createSpawnedObject() {
+            public Node createSpawnedObject() {
                 SpaceshipProperties properties;
                 var invCDF = Random.randomFloat(0f, 100f);
                 if (invCDF < 30f) {
-                    properties = ShipPrefabs.SHUTTLE_PROPERTIES1;
+                    properties = ShipPrefabs.SHUTTLE1_PROPERTIES;
                 } else if (invCDF < 60f) {
-                    properties = ShipPrefabs.SHUTTLE_PROPERTIES2;
+                    properties = ShipPrefabs.SHUTTLE2_PROPERTIES;
                 } else {
                     properties = ShipPrefabs.FIGHTER_PROPERTIES;
                 }
@@ -50,53 +54,39 @@ public class SpaceObjectSpawner extends GameObject {
                         name, SpaceGameScene.getRandomPosition(), properties
                 ) {
                     @Override
-                    protected void init() {
-                        super.init();
-                        addComponent(new Script() {
-                            @Override
-                            protected void onDestroy() {
-                                markObjectDestroyed(gameObject);
-                            }
-                        });
+                    protected void onDestroy() {
+                        super.onDestroy();
+                        markObjectDestroyed(this);
                     }
                 };
             }
         });
 
         // Obstacles
-        addComponent(new MultiSpawnManager(NUM_OBSTACLES, OBSTACLE_RESPAWN_COOLDOWN) {
+        addChild(new MultiSpawnManager(
+                (int) (NUM_OBSTACLES * SpaceGameConfig.getObstacleMultiplier()),
+                OBSTACLE_RESPAWN_COOLDOWN
+        ) {
             @Override
-            public GameObject createSpawnedObject() {
+            public Node createSpawnedObject() {
                 if (Random.randomBoolean()) {
                     return new BaseAsteroid(
                             "Asteroid", SpaceGameScene.getRandomPosition(),
                             AsteroidPrefabs.getRandomProperties()
                     ) {
                         @Override
-                        protected void init() {
-                            super.init();
-                            // Notify spawner when destroyed
-                            addComponent(new Script() {
-                                @Override
-                                protected void onDestroy() {
-                                    markObjectDestroyed(gameObject);
-                                }
-                            });
+                        protected void onDestroy() {
+                            super.onDestroy();
+                            markObjectDestroyed(this);
                         }
                     };
                 } else {
                     return new Satellite("Satellite", SpaceGameScene.getRandomPosition(),
                             ShipPrefabs.SATELLITE_PROPERTIES) {
                         @Override
-                        protected void init() {
-                            super.init();
-                            // Notify spawner when destroyed
-                            addComponent(new Script() {
-                                @Override
-                                protected void onDestroy() {
-                                    markObjectDestroyed(gameObject);
-                                }
-                            });
+                        protected void onDestroy() {
+                            super.onDestroy();
+                            markObjectDestroyed(this);
                         }
                     };
                 }

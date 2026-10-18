@@ -3,16 +3,17 @@ package slavsquatsuperstar.demos.spacegame.combat;
 import mayonez.*;
 import mayonez.physics.*;
 import mayonez.scripts.*;
+import slavsquatsuperstar.demos.spacegame.SpaceGameScene;
 import slavsquatsuperstar.demos.spacegame.combat.projectiles.Projectile;
 import slavsquatsuperstar.demos.spacegame.objects.SpaceGameLayer;
 
 /**
- * Gives a {@link mayonez.GameObject} a health bar that can be damaged by other objects with a {@link Projectile}
+ * Gives a {@link mayonez.Node} a health bar that can be damaged by other objects with a {@link Projectile}
  * component. Once health is depleted, the object is destroyed.
  *
  * @author SlavSquatSuperstar
  */
-public class Damageable extends Script {
+public class Damageable extends Node {
 
     private final Counter healthPoints;
 
@@ -21,28 +22,19 @@ public class Damageable extends Script {
     }
 
     @Override
-    protected void start() {
-        var collider = getCollider();
-        if (collider != null) {
-            collider.addCollisionCallback(event -> {
-                // On trigger
-                if (event.trigger && event.type == CollisionEventType.ENTER) {
-                    onImpactObject(event.other);
-                }
-            });
-        }
-    }
-
-    @Override
     protected void update(float dt) {
         if (healthPoints.isAtMin()) onHealthDepleted();
     }
 
-    private void onImpactObject(GameObject other) {
-        if (other.hasLayer(SpaceGameLayer.PROJECTILES)) {
-            var p = other.getComponent(Projectile.class);
-            if (p != null && !gameObject.equals(p.getSource())) {
-                onObjectDamaged(p.getDamage());
+    // TODO should listen to collision
+    public void onImpactProjectile(CollisionEvent event) {
+        if (!event.trigger || event.type != CollisionEventType.ENTER) return;
+
+        if (event.other.getParent() instanceof Projectile proj) {
+            if (proj.hasTag(SpaceGameScene.PROJECTILE_TAG)) {
+                if (!getParent().equals(proj.getSource())) {
+                    onObjectDamaged(proj.getDamage());
+                }
             }
         }
     }
@@ -63,7 +55,7 @@ public class Damageable extends Script {
      * by default.
      */
     public void onHealthDepleted() {
-        gameObject.destroy();
+        getParent().setDestroyed();
     }
 
     // Health Getter Methods

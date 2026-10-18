@@ -1,0 +1,5 @@
+{
+  "name": "Test",
+  "description": "Test shader missing vertex shader",
+  "frag": "testassets/shaders/test.frag"
+}

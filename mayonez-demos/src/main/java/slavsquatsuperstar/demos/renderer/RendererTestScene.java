@@ -66,13 +66,13 @@ public class RendererTestScene extends DemoScene {
 
         // Sprites
 
-        addObject(new GameObject("background-1",
+        addNode(new Node("background-1",
                 Transform.scaleInstance(new Vec2(1920, 1024).div(SCENE_SCALE))) {
             @Override
             protected void init() {
                 setZIndex(-10);
                 var sprite = Sprites.createSprite(bgTex);
-                addComponent(sprite);
+                addChild(sprite);
             }
         });
 
@@ -135,44 +135,43 @@ public class RendererTestScene extends DemoScene {
         addUIObject("ui-3b", new Vec2(uiStartPos + 128, uiStartPos), 11, tex5);
         addUIObject("ui-3c", new Vec2(uiStartPos + 128, uiStartPos), 12, sheet2.getTexture(2));
 
-        addObject(new GameObject("text-1") {
+        addNode(new Node("text-1") {
+            private TextAlignment align = TextAlignment.LEFT;
+            private TextLabel worldText, uiText;
+
             @Override
             protected void init() {
-                var worldText = new TextLabel(
+                worldText = new TextLabel(
                         WORLD_MESSAGE, new Vec2(-58, 12))
                         .setInUI(false)
                         .setColor(Colors.BLUE)
                         .setFontSize(6)
                         .setAnchor(Anchor.TOP_LEFT);
-                addComponent(worldText);
+                addChild(worldText);
 
-                var uiText = new TextLabel(
-                        UI_MESSAGE, new Vec2(20, Preferences.getScreenHeight() - 20))
+                uiText = new TextLabel(
+                        UI_MESSAGE, new Vec2(20, Mayonez.getScreenHeight() - 20))
                         .setInUI(true)
                         .setColor(Colors.RED)
                         .setFontSize(40)
                         .setAnchor(Anchor.TOP_LEFT);
-                addComponent(uiText);
+                addChild(uiText);
+            }
 
-                addComponent(new Script() {
-                    private TextAlignment align = TextAlignment.LEFT;
-
-                    @Override
-                    protected void update(float dt) {
-                        // Toggle font alignment
-                        if (KeyInput.keyPressed("space")) {
-                            switch (align) {
-                                case LEFT -> align = TextAlignment.CENTER;
-                                case CENTER -> align = TextAlignment.RIGHT;
-                                case RIGHT -> align = TextAlignment.LEFT;
-                            }
-
-                            // Set alignment
-                            worldText.setAlignment(align);
-                            uiText.setAlignment(align);
-                        }
+            @Override
+            protected void update(float dt) {
+                // Toggle font alignment
+                if (KeyInput.keyPressed("space")) {
+                    switch (align) {
+                        case LEFT -> align = TextAlignment.CENTER;
+                        case CENTER -> align = TextAlignment.RIGHT;
+                        case RIGHT -> align = TextAlignment.LEFT;
                     }
-                });
+
+                    // Set alignment
+                    worldText.setAlignment(align);
+                    uiText.setAlignment(align);
+                }
             }
         });
     }
@@ -180,25 +179,25 @@ public class RendererTestScene extends DemoScene {
     // Sprites
 
     private void addTextureObject(String name, Vec2 pos, int zIndex, Texture tex, Color color) {
-        addObject(new GameObject(name,
+        addNode(new Node(name,
                 new Transform(pos, 0f, new Vec2(10f))) {
             @Override
             protected void init() {
                 setZIndex(zIndex);
                 var sprite = Sprites.createSprite(tex);
                 sprite.setColor(color);
-                addComponent(sprite);
+                addChild(sprite);
             }
         });
     }
 
     private void addAnimatedObject(String name, Vec2 pos, int zIndex, SpriteSheet sheet) {
-        addObject(new GameObject(name,
+        addNode(new Node(name,
                 new Transform(pos, 0f, new Vec2(10f))) {
             @Override
             protected void init() {
                 setZIndex(zIndex);
-                addComponent(new Animator(sheet, 0.125f));
+                addChild(new Animator(sheet, 0.125f));
             }
         });
     }
@@ -209,16 +208,11 @@ public class RendererTestScene extends DemoScene {
         var fillBrush = ShapeBrush.createSolidBrush(color).setZIndex(zIndex);
         var drawBrush = ShapeBrush.createOutlineBrush(Colors.BLACK).setZIndex(zIndex).setStrokeSize(2);
 
-        addObject(new GameObject(name) {
+        addNode(new Node(name) {
             @Override
-            protected void init() {
-                addComponent(new Script() {
-                    @Override
-                    protected void debugRender() {
-                        getDebugDraw().fillShape(shape, fillBrush);
-                        getDebugDraw().drawShape(shape, drawBrush);
-                    }
-                });
+            protected void debugRender() {
+                getDebugDraw().fillShape(shape, fillBrush);
+                getDebugDraw().drawShape(shape, drawBrush);
             }
         });
     }
@@ -234,18 +228,13 @@ public class RendererTestScene extends DemoScene {
     }
 
     private void addLineObject(String name, Vec2 start, Vec2 end, int zIndex, Color color) {
-        addObject(new GameObject(name) {
+        addNode(new Node(name) {
             @Override
-            protected void init() {
-                addComponent(new Script() {
-                    @Override
-                    protected void debugRender() {
-                        getDebugDraw().drawLine(
-                                start, end,
-                                new ShapeBrush(color, false, zIndex, 10)
-                        );
-                    }
-                });
+            protected void debugRender() {
+                getDebugDraw().drawLine(
+                        start, end,
+                        new ShapeBrush(color, false, zIndex, 10)
+                );
             }
         });
     }
@@ -253,11 +242,11 @@ public class RendererTestScene extends DemoScene {
     // UI Objects
 
     private void addUIObject(String obj1, Vec2 pos, int zIndex, Texture tex) {
-        addObject(new GameObject(obj1, pos) {
+        addNode(new Node(obj1, pos) {
             @Override
             protected void init() {
                 setZIndex(zIndex);
-                addComponent(new UISprite(pos, new Vec2(64, 64), tex));
+                addChild(new UISprite(pos, new Vec2(64, 64), tex));
             }
         });
     }

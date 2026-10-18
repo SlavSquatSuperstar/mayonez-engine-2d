@@ -7,25 +7,35 @@ import mayonez.config.*
 import kotlin.system.exitProcess
 
 /**
- * Acts as the entry point into the Mayonez Engine and stores the instance
- * of the game. Upon startup, the application loads resources, configures
+ * Acts as the entry point into the application and stores all singleton
+ * instances. Upon startup, the application loads resources, configures
  * other engine components, and tells the scene manager to load a scene.
  *
  * Usage: To start an instance of Mayonez Engine, create a [Launcher]
- * and set the "Use GL" property through [Launcher.setRunConfig]. Then,
- * load any number of scenes through [Launcher.addScenesToManager] or
- * [SceneManager.addScene]. Finally, start the game with a scene by calling
- * [Launcher.startGame].
+ * and pass in the program arguments. Then, load any number of scenes
+ * through [Launcher.addScenesToManager] or [SceneManager.addScene].
+ * Finally, start the game with a scene by calling [Launcher.startGame].
  *
  * To exit the program, call [Mayonez.stop] with an integer exit code (0
- * for success, anything else for failure).
+ * for success, anything else for failure) or close the window.
  *
  * See [Launcher] for more information.
  */
 // TODO rename to application manager
 // TODO move to launcher/config pkg
-// TODO separate engine title with window title
 // TODO application init events
+/*
+ * Resources/singletons are initialized in the following order:
+ * 1. Time
+ * 2. Preferences
+ * 3. Logger
+ * 4. Window/GLFW/OpenGL
+ * 5. Application
+ * 6. Assets
+ * 7. Open/Close Window
+ * 8. Start/Stop Scene
+ * Resources (except time and preferences) are terminated in reverse order.
+ */
 object Mayonez {
 
     // Application Info
@@ -36,12 +46,14 @@ object Mayonez {
 
     // Application Fields
     private lateinit var application: Application // Application instance
+    private lateinit var window: Window // Window instance
     private var initialized: Boolean = false // Are singletons initialized
     private var started: Boolean = false // Is application running
+    private var exitCode: Int = ExitCode.SUCCESS
 
     // Config Properties
 
-    private var config: RunConfig = RunConfig.DEFAULT_CONFIG
+    private var backend: Backend = Backend.DEFAULT
 
     /**
      * Whether to use LWJGL for creating the window and rendering instead of
@@ -49,14 +61,37 @@ object Mayonez {
      */
     @JvmStatic
     internal val useGL: Boolean
-        @JvmName("getUseGL") get() = config.useGL
+        @JvmName("getUseGL") get() = backend == Backend.GL
+
+    // Window Properties
+    // TODO non-game-loop window interface
+    @JvmStatic
+    val screenWidth: Int
+        get() {
+            return if (this::window.isInitialized) window.contentWidth else 0
+        }
+
+    @JvmStatic
+    val screenHeight: Int
+        get() {
+            return if (this::window.isInitialized) window.contentHeight else 0
+        }
+
+    @JvmStatic
+    var fullScreen: Boolean
+        @JvmName("isFullScreen") get() {
+            return if (this::window.isInitialized) window.isFullScreen else false
+        }
+        set(field) {
+            if (this::window.isInitialized) window.isFullScreen = field
+        }
 
     // Time Properties
     // TODO move to time
 
     @JvmStatic
     val deltaTime: Float
-        @JvmName("getDeltaTime") get() {
+        get() {
             return if (this::application.isInitialized) application.deltaTime else 0f
         }
 
@@ -67,9 +102,9 @@ object Mayonez {
         }
 
     @JvmStatic
-    val updateFPS: Int
+    val fixedTPS: Int
         get() {
-            return if (this::application.isInitialized) application.updateFPS else 0
+            return if (this::application.isInitialized) application.fixedTPS else 0
         }
 
     @JvmStatic
@@ -81,16 +116,15 @@ object Mayonez {
     // Init Methods
 
     /**
-     * Sets the run configuration for the program. Must be called before
-     * [start].
+     * The window and graphics backend for the engine. Must be called before [Mayonez.start].
      */
     @JvmStatic
-    @JvmName("setConfig")
-    internal fun setConfig(config: RunConfig) {
+    @JvmName("setBackend")
+    internal fun setBackend(backend: Backend) {
         if (!initialized) {
-            this.config = config
+            this.backend = backend
             initializeSingletons()
-            initializeGame(useGL)
+            initializeApplication(backend)
             initialized = true
         }
     }
@@ -101,16 +135,15 @@ object Mayonez {
      */
     private fun initializeSingletons() {
         // Start tracking time
-        Time.startTrackingTime()
+        Time.resetStartupTime()
         Logger.log("Starting program...")
         val now = Time.getStartupDateTime()
-        Logger.debug("The current date time is %s %s", now.toLocalDate(), now.toLocalTime())
+        Logger.debug("The current date time is %s %s",
+            now.toLocalDate(), now.toLocalTime())
 
         // Read application info
-        val nameFile = TextFile("assets/info/name.txt")
-        name = nameFile.readText().trim()
-        val versionFile = TextFile("assets/info/version.txt")
-        version = versionFile.readText().trim()
+        name = TextFile("info/name.txt").readText().trim()
+        version = TextFile("info/version.txt").readText().trim()
 
         // Set preferences
         Preferences.setPreferences()
@@ -122,19 +155,24 @@ object Mayonez {
     }
 
     /**
-     * Initialize the game engine and input instances of the application.
+     * Initialize the application and input singletons.
      */
-    private fun initializeGame(useGL: Boolean) {
+    private fun initializeApplication(backend: Backend) {
         if (!this::application.isInitialized) {
-            // Create game engine instance
+            // Create application instance
             try {
                 Logger.log("Creating application \"${Preferences.title}\"...")
-                val engineString = if (useGL) "GL" else "AWT"
-                application = ApplicationFactory.createApplication(
-                    useGL, "${Preferences.title} ($engineString)",
-                    Preferences.screenWidth, Preferences.screenHeight
-                )
-                Logger.log("Using engine type \"%s\"", engineString)
+
+                Logger.log("Using ${backend.name} backend")
+
+                Logger.debug("Creating window...")
+                val windowConfig = WindowConfig(
+                    "${Preferences.title} (${backend.name})",
+                    Preferences.screenWidth, Preferences.screenHeight,
+                    Preferences.fullscreen, Preferences.resizable
+                ).validate()
+                window = ApplicationFactory.createWindow(backend, windowConfig)
+                application = ApplicationFactory.createApplication(window)
             } catch (e: WindowInitException) {
                 Logger.printStackTrace(e)
                 exitWithErrorMessage("Fatal error while initializing engine")
@@ -150,7 +188,7 @@ object Mayonez {
     // Game Loop Methods
 
     /**
-     * Start the game and load a scene. Must be called after [setConfig].
+     * Start the application and load a scene. Must be called after [Mayonez.setBackend].
      *
      * @param scene the starting scene
      */
@@ -164,16 +202,24 @@ object Mayonez {
         }
         if (!started) {
             started = true
-            SceneManager.changeSceneAsNew(scene)
-            // Start game
+            SceneManager.setInitialScene(scene)
+            // Start application and show window
             if (this::application.isInitialized) application.start()
             else exitWithErrorMessage("Cannot start without configuring program \"Use GL\" option")
+
+            // Called after application stops running
+            SceneManager.requestStopScene(true)
+            SceneManager.clearScenes()
+            Assets.clearAssets()
+
+            backend.free()
+            exitProgram(exitCode)
         }
     }
 
     /**
-     * Stop the game with an exit code and terminate the application. See
-     * [ExitCode] for reserved codes.
+     * Signal the application to stop with an exit code and free all resources
+     * after the current frame. See [ExitCode] for reserved codes.
      *
      * @param status an exit code (zero for success, non-zero for error)
      */
@@ -181,11 +227,8 @@ object Mayonez {
     fun stop(status: Int) {
         if (started) {
             started = false
-            SceneManager.stopScene()
-            SceneManager.clearScenes()
-            Assets.clearAssets()
-            application.stop() // Do everything before GL deleted
-            exitProgram(status)
+            exitCode = status
+            application.stop() // Break out of the loop
         }
     }
 

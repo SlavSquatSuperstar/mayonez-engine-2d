@@ -1,10 +1,11 @@
 package mayonez.graphics.camera;
 
 import mayonez.*;
+import mayonez.application.*;
+import mayonez.event.EventListener;
 import mayonez.graphics.*;
 import mayonez.math.*;
 import mayonez.renderer.*;
-import mayonez.util.*;
 
 import java.util.*;
 
@@ -17,23 +18,29 @@ import java.util.*;
  *
  * @author SlavSquatSuperstar
  */
-public abstract class Camera extends Component implements Viewport {
+public abstract class Camera extends Node implements Viewport {
 
     // Size Fields
-    protected final Vec2 screenSize;
+    protected final Vec2 screenSize; // TODO update when switching scenes
+    private final EventListener<WindowResizeEvent> resizeHandler;
     private float cameraScale, invCameraScale; // Pixels per unit
 
     // Camera Fields
     private Color backgroundColor;
     private float zoom, rotation;
 
-    // GameObject Fields
-    private GameObject subject;
-    private final BufferedList<Component> cameraScripts;
+    // Node Fields
+    private Node subject; // Object to follow
+    private final List<Node> cameraScripts;
 
     protected Camera(Vec2 screenSize) {
-        super(UpdateOrder.PRE_RENDER);
+        super("Camera");
+        setUpdateOrder(UpdateOrder.MOVEMENT);
         this.screenSize = screenSize;
+        resizeHandler = e -> {
+            this.screenSize.set(e.getWidth(), e.getHeight());
+            updateProjectionMatrix();
+        };
 
         cameraScale = 1f;
         invCameraScale = 1f;
@@ -43,16 +50,20 @@ public abstract class Camera extends Component implements Viewport {
         rotation = 0f;
 
         subject = null;
-        cameraScripts = new BufferedList<>();
+        cameraScripts = new ArrayList<>();
     }
+
+    // Node Methods
 
     @Override
     protected void init() {
-        cameraScripts.processBuffer();
+        WindowEvents.WINDOW_EVENTS.subscribe(resizeHandler);
     }
 
     @Override
     protected void start() {
+        cameraScripts.forEach(this::addChild);
+        cameraScripts.clear();
         resetZoom();
         resetRotation();
     }
@@ -62,8 +73,20 @@ public abstract class Camera extends Component implements Viewport {
         // Follow subject
         // TODO smooth follow
         if (getSubject() != null) {
-            transform.setPosition(getSubject().transform.getPosition());
+            getTransform().setPosition(getSubject().getTransform().getPosition());
         }
+    }
+
+    // Don't want to get rid of the camera!
+    @Override
+    public boolean isDestroyed() {
+        return false;
+    }
+
+    @Override
+    protected void onDestroy() {
+        WindowEvents.WINDOW_EVENTS.unsubscribe(resizeHandler);
+        subject = null;
     }
 
     // Camera Color Methods
@@ -96,7 +119,7 @@ public abstract class Camera extends Component implements Viewport {
      */
     @Override
     public final Vec2 getPosition() {
-        return new Vec2(transform.getPosition());
+        return getTransform().getPosition();
     }
 
     /**
@@ -105,7 +128,7 @@ public abstract class Camera extends Component implements Viewport {
      * @param position the position
      */
     public final void setPosition(Vec2 position) {
-        transform.setPosition(position);
+        getTransform().setPosition(position);
     }
 
     /**
@@ -183,6 +206,11 @@ public abstract class Camera extends Component implements Viewport {
         zoom = 1f;
     }
 
+    @Override
+    public Vec2 getScreenSize() {
+        return screenSize;
+    }
+
     // Camera Scale Methods
 
     @Override
@@ -215,7 +243,7 @@ public abstract class Camera extends Component implements Viewport {
      *
      * @return the subject
      */
-    public final GameObject getSubject() {
+    public final Node getSubject() {
         return subject;
     }
 
@@ -223,9 +251,9 @@ public abstract class Camera extends Component implements Viewport {
      * Tell this camera to start following a subject, or disables subject following. If the camera mode
      * is changed, the camera will remember the last subject.
      *
-     * @param subject a {@link mayonez.GameObject} in the scene
+     * @param subject a {@link mayonez.Node} in the scene
      */
-    public final void setSubject(GameObject subject) {
+    public final void setSubject(Node subject) {
         this.subject = subject;
     }
 
@@ -236,8 +264,9 @@ public abstract class Camera extends Component implements Viewport {
      *
      * @param script the script
      */
-    public final void addCameraScript(Script script) {
-        cameraScripts.add(script, () -> getGameObject().addComponent(script));
+    public final void addCameraScript(Node script) {
+        // Need to buffer because camera object is null during Scene.init
+        cameraScripts.add(script);
     }
 
 }

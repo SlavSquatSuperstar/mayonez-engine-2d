@@ -7,16 +7,17 @@ import mayonez.math.*;
 import java.util.*;
 
 /**
- * Describes a collision or trigger interaction between two {@link mayonez.GameObject}s.
+ * Describes a collision or trigger interaction between two collidable
+ * {@link mayonez.Node}s.
  *
  * @author SlavSquatSuperstar
  */
 public class CollisionEvent extends Event {
 
     /**
-     * The other object in the collision.
+     * The other collidable object in the collision.
      */
-    public final GameObject other;
+    public final Node other;
 
     /**
      * If interacting with a trigger rather than a physical object.
@@ -46,7 +47,7 @@ public class CollisionEvent extends Event {
     public final List<Vec2> contacts;
 
     public CollisionEvent(
-            GameObject other, boolean trigger, CollisionEventType type,
+            Node other, boolean trigger, CollisionEventType type,
             Vec2 direction, Vec2 velocity, List<Vec2> contacts
     ) {
         super(formatCollisionEventMessage(other, trigger, type));
@@ -59,7 +60,7 @@ public class CollisionEvent extends Event {
     }
 
     private static String formatCollisionEventMessage(
-            GameObject other, boolean trigger, CollisionEventType type
+            Node other, boolean trigger, CollisionEventType type
     ) {
         return "%s %s with %s".formatted(
                 trigger ? "Trigger" : "Collision", type.toString(), other

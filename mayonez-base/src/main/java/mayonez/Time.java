@@ -1,5 +1,6 @@
 package mayonez;
 
+import com.uber.nullaway.annotations.Initializer;
 import mayonez.math.*;
 
 import java.time.LocalDateTime;
@@ -41,7 +42,8 @@ public final class Time {
         return startupDateTime;
     }
 
-    static void startTrackingTime() {
+    @Initializer
+    static void resetStartupTime() {
         startupTimeNanos = System.nanoTime();
         startupDateTime = LocalDateTime.now();
     }
@@ -82,6 +84,7 @@ public final class Time {
         Time.timeScale = MathUtils.clamp(timeScale, 0.01f, 100f);
     }
 
+    // TODO min max time scale preferences
     // TODO FPS Methods
 
 }

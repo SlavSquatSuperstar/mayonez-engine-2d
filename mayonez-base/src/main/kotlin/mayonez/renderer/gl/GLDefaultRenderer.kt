@@ -1,5 +1,6 @@
 package mayonez.renderer.gl
 
+import mayonez.application.*
 import mayonez.graphics.*
 import mayonez.graphics.debug.*
 import mayonez.graphics.font.*
@@ -13,8 +14,8 @@ import mayonez.renderer.shader.*
  *
  * @author SlavSquatSuperstar
  */
-@UsesEngine(EngineType.GL)
-internal class GLDefaultRenderer() : GLRenderer(),
+@UsesBackend(Backend.GL)
+internal class GLDefaultRenderer : GLRenderer(),
     SceneRenderer, DebugRenderer {
 
     // Renderer Objects
@@ -63,9 +64,9 @@ internal class GLDefaultRenderer() : GLRenderer(),
         tempObjects.sortBy { it.zIndex }
 
         // Process objects
-        objects.filter { it.isEnabled }
+        objects.filter { it.shouldRender() }
             .forEach { it.addDrawParts() }
-        tempObjects.filter { it.isEnabled }
+        tempObjects.filter { it.shouldRender() }
             .forEach { it.addDrawParts() }
         drawObjects.sortBy { it.zIndex }
 
@@ -98,8 +99,7 @@ internal class GLDefaultRenderer() : GLRenderer(),
     override fun RenderBatch.uploadUniforms(viewport: Viewport, textureSlots: IntArray) {
         // Upload uniforms
         shader.bind()
-        shader.uploadMat4("uView", viewport.viewMatrix)
-        shader.uploadMat4("uProjection", viewport.projectionMatrix)
+        shader.uploadMat4("uTransform", viewport.viewProjectionMatrix)
         shader.uploadIntArray("uTextures", textureSlots)
     }
 

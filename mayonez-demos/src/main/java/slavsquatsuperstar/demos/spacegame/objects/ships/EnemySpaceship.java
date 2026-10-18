@@ -23,13 +23,13 @@ public class EnemySpaceship extends Spaceship {
     @Override
     protected void init() {
         super.init();
-        transform.setRotation(Random.randomAngle());
+        getTransform().setRotation(Random.randomAngle());
 
         // Movement
         Rigidbody rb;
-        addComponent(rb = new Rigidbody(1f, 0.01f, 0.8f));
-        rb.setVelocity(transform.getUp().mul(Random.randomFloat(2f, 15f)));
-        addComponent(new EnemyMovement());
+        addChild(rb = new Rigidbody(1f, 0.01f, 0.8f));
+        rb.setVelocity(getTransform().getUp().mul(Random.randomFloat(2f, 15f)));
+        addChild(new EnemyMovement());
 
         // Weapons (Randomly Select Projectiles)
         var projectiles = new ArrayList<>(ProjectilePrefabs.PROJECTILE_TYPES);
@@ -38,7 +38,7 @@ public class EnemySpaceship extends Spaceship {
             var randomIndex = Random.randomInt(0, projectiles.size() - 1);
             projectiles.remove(randomIndex);
         }
-        addComponent(new EnemyFireController(properties.hardpoints(), projectiles));
+        addChild(new EnemyFireController(properties.hardpoints(), projectiles));
     }
 
 }

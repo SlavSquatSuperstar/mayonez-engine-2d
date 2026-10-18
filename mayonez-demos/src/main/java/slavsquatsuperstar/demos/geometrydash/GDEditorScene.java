@@ -18,8 +18,8 @@ import slavsquatsuperstar.demos.geometrydash.ui.UICanvas;
 public class GDEditorScene extends DemoScene {
 
     final static int TILE_SIZE = 42;
-    final static Vec2 SCENE_SIZE = new Vec2(Preferences.getScreenWidth(),
-            Preferences.getScreenHeight()).div(TILE_SIZE);
+    final static Vec2 SCENE_SIZE = new Vec2(Mayonez.getScreenWidth(),
+            Mayonez.getScreenHeight()).div(TILE_SIZE);
 
     public GDEditorScene(String name) {
         super(name);
@@ -29,37 +29,26 @@ public class GDEditorScene extends DemoScene {
     protected void init() {
         setGravity(new Vec2());
         getCamera().setCameraScale(TILE_SIZE);
-        var size = new Vec2(Preferences.getScreenWidth(), Preferences.getScreenHeight()).div(TILE_SIZE);
+        var size = new Vec2(Mayonez.getScreenWidth(), Mayonez.getScreenHeight()).div(TILE_SIZE);
 
-        addObject(new GameObject("Camera Controls") {
-            @Override
-            protected void init() {
-                addComponent(new CameraDragAndDrop("right mouse"));
-            }
-        });
+        addNode(new CameraDragAndDrop("right mouse"));
 
-        addObject(new GameObject("Ground", new Vec2(0, size.y * -0.5f)) {
+        addNode(new Node("Ground", new Transform(new Vec2(0, size.y * -0.5f))) {
             @Override
             protected void init() {
                 setZIndex(ZIndex.BLOCK);
-                addComponent(new Rigidbody(0f).setFixedRotation(true));
-                addComponent(new BoxCollider(new Vec2(size.x + 2f, 2f)));
-                addComponent(new ShapeSprite(Colors.BLACK, true));
+                addChild(new Rigidbody(0f).setFixedRotation(true));
+                addChild(new BoxCollider(new Vec2(size.x + 2f, 2f)));
+                addChild(new ShapeSprite(Colors.BLACK, true));
             }
         });
 
         // TODO still getting stuck on corners
-        addObject(new GDPlayer("Player", new Vec2(0, 0)));
+        addNode(new GDPlayer("Player", new Vec2(0, 0)));
 
-        addObject(new GameObject("Grid") {
-            @Override
-            protected void init() {
-                setZIndex(ZIndex.GRID);
-                addComponent(new DrawGrid());
-            }
-        });
+        addNode(new DrawGrid());
 
-        addObject(new UICanvas("Block Palette", new Transform(new Vec2(-3f, -5f))));
+        addNode(new UICanvas("Block Palette", new Transform(new Vec2(-3f, -5f))));
     }
 
 }

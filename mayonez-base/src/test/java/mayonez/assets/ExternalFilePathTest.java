@@ -3,6 +3,7 @@ package mayonez.assets;
 import org.junit.jupiter.api.*;
 
 import java.io.IOException;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -15,19 +16,43 @@ class ExternalFilePathTest {
 
     private final FilePath filePathValid = new ExternalFilePath("src/test/resources/testassets/text/foo.txt");
     private final FilePath filePathInvalid = new ExternalFilePath("src/test/resources/testassets/text/bar.txt");
+    private final FilePath unixFilePath = filePathValid;
+    private final FilePath windowsFilePath = new ExternalFilePath("src\\test\\resources\\testassets\\text\\foo.txt");
 
-    // File URL Tests
+    // Path Name Tests
 
     @Test
-    void anyExternalURLNotNull() {
+    void externalPathContainsSystemSeparators() {
+        assertTrue(filePathValid.getPath().contains(PathUtil.CURRENT_SEPARATOR));
+
+        assertTrue(windowsFilePath.getPath().contains(PathUtil.CURRENT_SEPARATOR));
+    }
+
+    @Test
+    void externalPathHasCorrectFilename() {
+        assertEquals("foo.txt", unixFilePath.getFilename());
+
+        assertEquals("foo.txt", windowsFilePath.getFilename());
+    }
+
+    // Path Conversion Tests
+
+    @Test
+    void allExternalFileNotNull() {
+        assertNotNull(filePathValid.getFile());
+        assertNotNull(filePathInvalid.getFile());
+    }
+
+    @Test
+    void allExternalURLNotNull() {
         assertNotNull(filePathValid.getURL());
         assertNotNull(filePathInvalid.getURL());
     }
 
-    // File Permission Tests
+    // Path Status Tests
 
     @Test
-    void validExternalPathIsReadableAndWritable() {
+    void validExternalFileIsReadableAndWritable() {
         assertTrue(filePathValid.exists());
         assertTrue(filePathValid.isReadable());
         assertTrue(filePathValid.isWritable());
@@ -41,11 +66,70 @@ class ExternalFilePathTest {
     }
 
     @Test
-    void anyFolderNotReadableOrWritable() {
-        var folderPath = new ExternalFilePath("src/test/resources/testassets/");
-        assertTrue(folderPath.exists());
-        assertFalse(folderPath.isReadable());
-        assertFalse(folderPath.isWritable());
+    void externalDirectoryNeverReadableOrWritable() {
+        var directoryPath = new ExternalFilePath("src/test/resources/testassets/");
+        assertTrue(directoryPath.exists());
+        assertTrue(directoryPath.isDirectory());
+        assertFalse(directoryPath.isReadable());
+        assertFalse(directoryPath.isWritable());
+    }
+
+    // File System Tests
+
+    @Test
+    void createAndDeleteNewFileSuccess() {
+        var filePath = new ExternalFilePath("src/test/resources/testassets/out/test_file");
+        assertFalse(filePath.exists());
+
+        assertTrue(filePath.createFile());
+        assertTrue(filePath.isFile());
+
+        assertTrue(filePath.delete());
+        assertFalse(filePath.exists());
+    }
+
+    @Test
+    void createAndDeleteNewDirectorySuccess() {
+        var filePath = new ExternalFilePath("src/test/resources/testassets/out/test_directory");
+        assertFalse(filePath.exists());
+
+        assertTrue(filePath.createDirectory());
+        assertTrue(filePath.isDirectory());
+
+        assertTrue(filePath.delete());
+        assertFalse(filePath.exists());
+    }
+
+    @Test
+    void createExistingPathFails() {
+        var filePath1 = new ExternalFilePath("src/test/resources/testassets/text/");
+        assertTrue(filePath1.isDirectory());
+
+        assertFalse(filePath1.createDirectory());
+        assertFalse(filePath1.createFile());
+
+        var filePath2 = new ExternalFilePath("src/test/resources/testassets/text/foo.txt");
+        assertTrue(filePath2.isFile());
+
+        assertFalse(filePath2.createDirectory());
+        assertFalse(filePath2.createFile());
+    }
+
+    @Test
+    void createPathWithNoParentFails() {
+        var filePath = new ExternalFilePath("src/test/resources/testassets/out/foo/bar");
+        assertFalse(filePath.exists());
+
+        assertFalse(filePath.createFile());
+        assertFalse(filePath.createDirectory());
+    }
+
+    @Test
+    void deleteNonExistingPathFails() {
+        var filePath = new ExternalFilePath("src/test/resources/testassets/out/test_directory");
+        assertFalse(filePath.exists());
+
+        assertFalse(filePath.delete());
     }
 
     // File Stream Tests
@@ -68,15 +152,93 @@ class ExternalFilePathTest {
     @Test
     void invalidOutputStreamWithDirSucceeds() {
         assertDoesNotThrow(() -> IOTestUtils.assertOutputStreamExists(filePathInvalid));
-        // Delete created file so tests pass
-        var file = filePathInvalid.getFile();
-        file.delete();
+        // Delete created file so other tests pass
+        filePathInvalid.delete();
     }
 
     @Test
     void invalidOutputStreamWithoutDirFails() {
         var filePathInvalid2 = new ExternalFilePath("src/test/resources/testassets/text/baz/bar.txt");
         assertThrows(IOException.class, () -> IOTestUtils.assertOutputStreamExists(filePathInvalid2));
+    }
+
+    // File Hierarchy Tests
+
+    @Test
+    void parentOfFilePathIsDirectory() {
+        var parent = filePathValid.getParent();
+        assertNotNull(parent);
+        assertEquals(PathUtil.convertPath("src/test/resources/testassets/text"), parent.getPath());
+        assertTrue(parent.isDirectory());
+    }
+
+    @Test
+    void parentOfRootIsNull() {
+        var path = new ExternalFilePath("/");
+        assertNull(path.getParent());
+    }
+
+    @Test
+    void combinedPathIsChild() {
+        var path = new ExternalFilePath("src/test/resources/testassets");
+        var combined = path.combine("text");
+        assertNotNull(combined);
+        assertPathNameEquals(combined, "src/test/resources/testassets/text");
+        assertTrue(combined.isDirectory());
+    }
+
+    @Test
+    void combinedPathIsGrandchild() {
+        var path = new ExternalFilePath("src/test/resources/testassets");
+        var combined = path.combine("text/foo.txt");
+        assertNotNull(combined);
+        assertPathNameEquals(combined, "src/test/resources/testassets/text/foo.txt");
+        assertTrue(combined.isFile());
+    }
+
+    @Test
+    void combinedPathDoesNotExist() {
+        var path = new ExternalFilePath("src/test/resources/testassets");
+        var combined = path.combine("text/bar.txt");
+        assertNotNull(combined);
+        assertPathNameEquals(combined, "src/test/resources/testassets/text/bar.txt");
+        assertFalse(combined.exists());
+    }
+
+    @Test
+    void scanValidDirectoryIsNotEmpty() {
+        var files = scanFiles("src/test/resources/testassets");
+        assertFalse(files.isEmpty());
+        assertTrue(directoryContainsFile(files, "src/test/resources/testassets/text/foo.txt"));
+        assertTrue(directoryContainsFile(files, "src/test/resources/testassets/images/mario.png"));
+        assertFalse(directoryContainsFile(files, "src/test/resources/testassets/"));
+        assertFalse(directoryContainsFile(files, "src/test/resources/testassets/.DS_Store"));
+        assertFalse(directoryContainsFile(files, "src/test/java/mayonez/assets/ExternalFilePathTest.class"));
+    }
+
+    @Test
+    void scanInvalidDirectoryIsEmpty() {
+        assertTrue(scanFiles("src/test/resources/testasset").isEmpty());
+    }
+
+    @Test
+    void scanFileIsEmpty() {
+        assertTrue(scanFiles("src/test/resources/testassets/images/mario.png").isEmpty());
+    }
+
+    // Helper Methods
+
+    private static List<FilePath> scanFiles(String directoryPath) {
+        return new ExternalFilePath(directoryPath).scanFiles();
+    }
+
+    private static boolean directoryContainsFile(List<FilePath> files, String path) {
+        return files.contains(new ExternalFilePath(path));
+    }
+
+    private static void assertPathNameEquals(FilePath path, String name) {
+        // OS-independent path name check
+        assertEquals(new ExternalFilePath(name).getPath(), path.getPath());
     }
 
 }

@@ -21,11 +21,11 @@ public final class PrefabUtils {
     /**
      * Returns a list of {@link mayonez.util.Record}s from the given CSV file.
      *
-     * @param csvFileName the CSV file's name
+     * @param csvFilePath the CSV file's path
      * @return the record list
      */
-    public static List<Record> getRecordsFromFile(String csvFileName) {
-        var csvFile = Assets.getAsset(csvFileName, CSVFile.class);
+    public static List<Record> getRecordsFromFile(String csvFilePath) {
+        var csvFile = Assets.getAsset(csvFilePath, CSVFile.class);
         if (csvFile == null) return Collections.emptyList();
         else return csvFile.readCSV();
     }
@@ -34,21 +34,21 @@ public final class PrefabUtils {
      * Returns a list of Java objects of the specified type from the given CSV
      * file.
      *
-     * @param csvFileName       the CSV file's name
+     * @param csvFilePath       the CSV file's path
      * @param objectConstructor a function creating an object from a record
      * @param <T>               the object's type
      * @return the object list
      */
 
     public static <T> List<T> getObjectsFromFile(
-            String csvFileName, Function<Record, T> objectConstructor
+            String csvFilePath, Function<Record, T> objectConstructor
     ) {
-        return getRecordsFromFile(csvFileName).stream()
+        return getRecordsFromFile(csvFilePath).stream()
                 .map(objectConstructor).toList();
     }
 
-    public static Vec2 getColliderSize(Record record) {
-        return new Vec2(record.getFloat("colliderSizeX"), record.getFloat("colliderSizeY"));
+    public static Vec2 getVec2(Record record, String xKey, String yKey) {
+        return new Vec2(record.getFloat(xKey), record.getFloat(yKey));
     }
 
 }

@@ -1,18 +1,18 @@
 package mayonez.graphics;
 
 import mayonez.*;
+import mayonez.application.*;
 import org.lwjgl.opengl.GL;
 
-import static org.lwjgl.opengl.GL.createCapabilities;
-import static org.lwjgl.opengl.GL.destroy;
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL20.GL_SHADING_LANGUAGE_VERSION;
 
 /**
  * Manages OpenGL capabilities and performs error checking and debugging.
  *
  * @author SlavSquatSuperstar
  */
-@UsesEngine(EngineType.GL)
+@UsesBackend(Backend.GL)
 public final class GLHelper {
 
     private GLHelper() {
@@ -22,10 +22,14 @@ public final class GLHelper {
 
     /**
      * Loads the OpenGL library and creates the capabilities in the current thread.
+     * Requires an active GLFW window.
+     *
+     * @throws IllegalStateException if no GLFW window is active
      */
-    public static void loadOpenGL() {
+    public static void loadOpenGL() throws IllegalStateException {
         Logger.debug("Creating OpenGL capabilities");
-        createCapabilities();
+        GL.createCapabilities();
+        printGLInfo();
         enableBlending();
     }
 
@@ -48,7 +52,7 @@ public final class GLHelper {
      */
     public static void unloadOpenGL() {
         Logger.debug("Destroying OpenGL capabilities");
-        destroy();
+        GL.destroy();
     }
 
     // Draw Methods
@@ -60,11 +64,28 @@ public final class GLHelper {
 
     public static void enableBlending() {
         // Note: complex transparent shapes don't work well, better to use textures
+        // Can be solved with on-demand triangle fans
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        // Blending computes a weighted average of two colors
     }
 
-    // Debug Methods
+    // Version Methods
+
+    // TODO allow specify log level
+
+    /**
+     * Prints the OpenGL/GLSL version number and graphics card manufacturer of
+     * the current device.
+     */
+    public static void printGLInfo() {
+        Logger.debug("OpenGL Version: " + glGetString(GL_VERSION));
+        Logger.debug("GLSL Version: " + glGetString(GL_SHADING_LANGUAGE_VERSION));
+        Logger.debug("OpenGL Renderer: " + glGetString(GL_RENDERER));
+        Logger.debug("OpenGL Vendor: " + glGetString(GL_VENDOR));
+    }
+
+    // Error Logging Methods
 
     /**
      * Clears all accumulated OpenGL error codes.
@@ -91,12 +112,12 @@ public final class GLHelper {
      * @param glFunction the function to run
      */
     public static void runWithErrorLogging(Runnable glFunction) {
-//        var location = Thread.currentThread().getStackTrace()[2];
-//        Logger.log("Started error logging at: %s", location);
+        var location = Thread.currentThread().getStackTrace()[2];
+        Logger.log("Started OpenGL error logging at: %s", location);
         clearGLErrors();
         glFunction.run();
         printGLErrors();
-//        Logger.log("Finished error logging");
+        Logger.log("Finished OpenGL error logging");
     }
 
 }

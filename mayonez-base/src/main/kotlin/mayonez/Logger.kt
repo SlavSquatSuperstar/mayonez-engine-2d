@@ -1,8 +1,11 @@
 package mayonez
 
+import mayonez.assets.FilePath
 import mayonez.assets.text.*
 import mayonez.config.*
 import java.io.File
+import java.io.IOException
+import java.io.OutputStream
 import java.time.LocalDate
 import java.util.*
 
@@ -28,15 +31,15 @@ import java.util.*
  */
 object Logger {
 
-    private const val STACK_TRACE_INDEX = 5 // number of times to jump up stack trace
+    private const val STACK_TRACE_INDEX = 5 // Elements to jump up stack trace
 
     // Logger Config
     private var initialized: Boolean = false
     private var config: LoggerConfig = LoggerConfig.DEFAULT_CONFIG
 
     // Log File Output
-    private lateinit var logFile: TextFile
-    private val printQueue: Queue<String> = ArrayDeque() // Save log messages in case log file isn't created
+    private lateinit var logFileStream: OutputStream
+    private val printQueue: Queue<String> = ArrayDeque()
 
     // Logger Init Methods
 
@@ -44,29 +47,37 @@ object Logger {
         if (!initialized) {
             Logger.config = config
             debug("The log level has been set to ${config.logLevel}")
-            createLogFile()
-            initialized = true
-        }
-    }
-
-    internal fun shutdown() {
-        if (!initialized) return
-        logFile.free()
-        initialized = false
-    }
-
-    private fun createLogFile() {
-        if (this::logFile.isInitialized) return
-        if (config.saveLogs) {
-            logFile = TextFile(getLogFilename())
-            logFile.setAutoClose(false)
-            while (printQueue.isNotEmpty()) {
-                logFile.append(printQueue.poll()) // log everything in print queue
+            try {
+                createLogFile()
+                initialized = true
+            } catch (_: IOException) {
+                // Could not create log file
+                initialized = false
             }
         }
     }
 
-    private fun getLogFilename(): String {
+    internal fun shutdown() {
+        if (initialized) {
+            logFileStream.close()
+            initialized = false
+        }
+    }
+
+    @Throws(IOException::class)
+    private fun createLogFile() {
+        if (this::logFileStream.isInitialized) return
+        if (config.saveLogs) {
+            val logFilePath = FilePath.of(getLogFilePath())
+            logFileStream = logFilePath.openOutputStream(true)
+            while (printQueue.isNotEmpty()) {
+                // Log everything in print queue
+                TextIOUtils.write(logFileStream, printQueue.poll())
+            }
+        }
+    }
+
+    private fun getLogFilePath(): String {
         val logDirectory = File(config.logDirectory)
         if (!logDirectory.exists()) logDirectory.mkdir()
 
@@ -90,7 +101,7 @@ object Logger {
      * @param level the log priority level
      */
     private fun printFormattedMessage(msg: Any?, vararg args: Any?, level: LogLevel) {
-        if (level < config.logLevel) return // Check log level high enough
+        if (level < config.logLevel) return // Check if log level high enough
         val message = msg.formatMessage(args, level)
         message.printToConsole(level)
         if (config.saveLogs) message.appendToFile()
@@ -116,13 +127,15 @@ object Logger {
 
     /** Prints a message to stdout or stderr. */
     private fun String.printToConsole(level: LogLevel) {
-        if (level >= LogLevel.WARN) System.err.println(this) // red text for errors
+        // Use stderr (red text) for errors
+        if (level >= LogLevel.WARN) System.err.println(this)
         else println(this)
     }
 
     private fun String.appendToFile() {
-        if (initialized) logFile.append(this) // has log file been created
-        else printQueue.offer(this) // save to buffer
+        // Check if log file is created
+        if (initialized) TextIOUtils.write(logFileStream, this)
+        else printQueue.offer(this) // Save to buffer
     }
 
     // Public Log Methods

@@ -1,20 +1,21 @@
 package mayonez.config;
 
+import mayonez.application.Backend;
 import mayonez.util.Record;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import java.util.*;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit tests for the {@link mayonez.config.ArgumentsParser} class.
+ * Unit tests for the {@link ArgumentsParser} class.
  *
  * @author SlavSquatSuperstar
  */
 class ArgumentsParserTest {
 
-    private static final boolean DEFAULT_SAVE_LOGS = true;
     private ArgumentsParser parser;
 
     @BeforeEach
@@ -22,57 +23,67 @@ class ArgumentsParserTest {
         parser = new ArgumentsParser();
     }
 
-    // Parse Args Test
+    // One-Argument Options
 
     @Test
-    void readArgsCorrect() {
-        String[] argsIn = {"--engine", "gl", "--log", "on"};
-        List<String> argsOut = List.of("--engine", "gl", "--log", "on");
-        assertEquals(argsOut, parser.readProgramArgs(argsIn));
+    void longOptionCorrect() {
+        try {
+            var cl = parser.parse(new String[]{"--backend", "gl"});
+            var engine = cl.getOptionValue("b");
+            assertEquals("gl", engine);
+            assertEquals(Backend.GL, parser.getBackend(cl));
+
+            var rec = parser.serialize(cl);
+            assertEquals(new Record(Map.of("backend", "gl")), rec);
+        } catch (Exception e) {
+            fail();
+        }
     }
 
     @Test
-    void parseArgsCorrect() {
-        List<String> clArgs = List.of("--engine", "gl", "--log", "on");
-        var programArgs = parser.parseProgramArgs(clArgs);
-        assertEquals("gl", programArgs.getString("engine"));
-        assertEquals("on", programArgs.getString("log"));
+    void shortOptionCorrect() {
+        try {
+            var cl = parser.parse(new String[]{"-b", "awt"});
+            var engine = cl.getOptionValue("b");
+            assertEquals("awt", engine);
+            assertEquals(Backend.AWT, parser.getBackend(cl));
+
+            var rec = parser.serialize(cl);
+            assertEquals(new Record(Map.of("backend", "awt")), rec);
+        } catch (Exception e) {
+            fail();
+        }
     }
 
     @Test
-    void parseArgsMissingParamsCorrect() {
-        List<String> clArgs = List.of("--engine", "--log", "on");
-        var programArgs = parser.parseProgramArgs(clArgs);
-        assertEquals("", programArgs.getString("engine"));
-        assertEquals("on", programArgs.getString("log"));
+    void blankOptionCorrect() {
+        try {
+            var cl = parser.parse(new String[]{});
+            assertFalse(cl.hasOption("backend"));
+            assertEquals(Backend.DEFAULT, parser.getBackend(cl));
+
+            var rec = parser.serialize(cl);
+            assertEquals(new Record(), rec);
+        } catch (Exception e) {
+            fail();
+        }
     }
 
-    // Old tests from LauncherTest
+    // Wrong Arguments
 
     @Test
-    void getSaveLogsTrue() {
-        List<String> clArgs = List.of("--log", "on");
-        var programArgs = parser.parseProgramArgs(clArgs);
-        assertTrue(getSaveLogs(programArgs));
+    void invalidArgumentWrong() {
+        try {
+            var cl = parser.parse(new String[]{"--backend", "vk"});
+            assertThrows(IllegalArgumentException.class, () -> parser.getBackend(cl));
+        } catch (Exception e) {
+            fail();
+        }
     }
 
     @Test
-    void getSaveLogsFalse() {
-        List<String> clArgs = Collections.emptyList();
-        var programArgs = parser.parseProgramArgs(clArgs);
-        assertTrue(getSaveLogs(programArgs));
-    }
-
-    boolean getSaveLogs(Record programArgs) throws IllegalArgumentException {
-        if (!programArgs.contains("log")) return DEFAULT_SAVE_LOGS;
-
-        var logArg = programArgs.getString("log");
-        return switch (logArg) {
-            case "" -> throw new IllegalArgumentException("Missing value for option \"log\"");
-            case "on" -> true;
-            case "off" -> false;
-            default -> throw new IllegalArgumentException("Invalid value for option \"log\"");
-        };
+    void missingArgumentWrong() {
+        assertThrows(RuntimeException.class, () -> parser.parse(new String[]{"--backend"}));
     }
 
 }

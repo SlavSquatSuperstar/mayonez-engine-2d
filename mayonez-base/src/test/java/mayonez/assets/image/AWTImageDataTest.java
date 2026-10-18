@@ -100,9 +100,9 @@ class AWTImageDataTest extends ImageDataTest {
 
     // Helper Methods
 
-    private static AWTImageData getImage(String filename) {
+    private static AWTImageData getImage(String path) {
         try {
-            return new AWTImageData(filename);
+            return new AWTImageData(path);
         } catch (Exception e) {
             return fail("Could not read image");
         }

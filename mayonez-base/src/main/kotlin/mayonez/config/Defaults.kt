@@ -13,8 +13,12 @@ object Defaults {
     private const val TITLE: String = "Untitled"
     private const val SCREEN_WIDTH: Int = 800
     private const val SCREEN_HEIGHT: Int = 600
+    private const val FULLSCREEN: Boolean = false
+    private const val RESIZABLE: Boolean = true
+    private const val VSYNC: Boolean = true
     private const val FPS: Int = 60
-    private const val FRAME_SKIP: Boolean = true
+    private const val FIXED_TPS: Int = 60
+    private const val MAX_TICKS_PER_FRAME: Int = 4
     private const val DOUBLE_CLICK_TIME: Float = 0.50f
 
     val preferences: Record = Record()
@@ -24,8 +28,12 @@ object Defaults {
         preferences["title"] = TITLE
         preferences["screen_width"] = SCREEN_WIDTH
         preferences["screen_height"] = SCREEN_HEIGHT
+        preferences["fullscreen"] = FULLSCREEN
+        preferences["resizable"] = RESIZABLE
+        preferences["vsync"] = VSYNC
         preferences["fps"] = FPS
-        preferences["frame_skip"] = FRAME_SKIP
+        preferences["fixed_tps"] = FIXED_TPS
+        preferences["max_ticks_per_frame"] = MAX_TICKS_PER_FRAME
         preferences["double_click_time"] = DOUBLE_CLICK_TIME
 
         // Logging

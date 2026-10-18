@@ -1,11 +1,15 @@
 {
     "title": "Mayonez Engine Demos",
-    "screen_width": 1200,
+    "screen_width": 1280,
     "screen_height": 800,
+    "fullscreen": false,
+    "resizable": true,
+    "vsync": true,
     "fps": 60,
-    "frame_skip": true,
+    "fixed_tps": 60,
+    "max_ticks_per_frame": 4,
     "double_click_time": 0.5,
-    "log_level": "info'",
+    "log_level": "info",
     "save_logs": true,
     "log_directory": "logs"
 }

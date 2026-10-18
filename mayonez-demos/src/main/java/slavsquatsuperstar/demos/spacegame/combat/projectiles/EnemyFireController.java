@@ -53,7 +53,7 @@ public class EnemyFireController extends FireProjectile {
     @Override
     protected void fireProjectiles() {
         for (var hardPoint : hardpoints) {
-            spawnPrefab(selectedWeapon, hardPoint.offset(), hardPoint.angle());
+            spawnPrefab(selectedWeapon, hardPoint);
         }
         fireTimer.reset();
         shotsLeft -= 1;

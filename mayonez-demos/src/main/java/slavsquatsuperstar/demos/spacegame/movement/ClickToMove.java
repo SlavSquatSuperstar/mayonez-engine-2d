@@ -43,20 +43,20 @@ public class ClickToMove extends Script {
 
     @Override
     protected void init() {
-        lastPos.set(transform.getPosition());
+        lastPos.set(getTransform().getPosition());
         destPos.set(lastPos);
         moving = turning = false;
     }
 
     @Override
     protected void start() {
-        rb = getRigidbody();
+        rb = getSibling(Rigidbody.class);
     }
 
     // TODO will break with KeepInScene
     // TODO will break if has velocity
     @Override
-    protected void update(float dt) {
+    protected void fixedUpdate(float dt) {
         if (MouseInput.buttonPressed(button)) {
             updateLastPosition(); // Save old destination
             setDestination(MouseInput.getPosition()); // Set new destination and calculate displacement
@@ -64,7 +64,7 @@ public class ClickToMove extends Script {
         }
 
 //        getScene().getDebugDraw().drawLine(lastPos, destPos, Colors.RED);
-//        getScene().getDebugDraw().drawVector(transform.getPosition(), transform.getUp(), Colors.LIGHT_GREEN);
+//        getScene().getDebugDraw().drawVector(getTransform().getPosition(), getTransform().getUp(), Colors.LIGHT_GREEN);
 
         if (moving) moveToDestination(dt);
         if (turning) turnToDestination(dt);
@@ -73,14 +73,14 @@ public class ClickToMove extends Script {
     // Move Methods
 
     private void moveToDestination(float dt) {
-        var moveProgress = new Edge(lastPos, destPos).invLerp(transform.getPosition());
+        var moveProgress = new Edge(lastPos, destPos).invLerp(getTransform().getPosition());
 //        System.out.println(moveProgress);
 
         switch (mode) {
             case POSITION -> {
-                if (moveProgress < 1) transform.move(moveDir.mul(speed * dt));
+                if (moveProgress < 1) getTransform().move(moveDir.mul(speed * dt));
                 else {
-                    transform.setPosition(new Edge(lastPos, destPos).lerp(1f));
+                    getTransform().setPosition(new Edge(lastPos, destPos).lerp(1f));
                     moving = false;
                 }
             }
@@ -101,12 +101,12 @@ public class ClickToMove extends Script {
     }
 
     private void turnToDestination(float dt) {
-        var turnProgress = new Interval(destAngle, lastAngle).invLerp(transform.getRotation()) * turnDir;
+        var turnProgress = new Interval(destAngle, lastAngle).invLerp(getTransform().getRotation()) * turnDir;
         if (turnDir < 0) turnProgress += 1f; // if decreasing
 
         switch (mode) {
             case POSITION -> {
-                if (turnProgress < 1) transform.rotate(turnDir * speed * 10 * dt);
+                if (turnProgress < 1) getTransform().rotate(turnDir * speed * 10 * dt);
                 else turning = false;
             }
             case VELOCITY -> {
@@ -128,8 +128,8 @@ public class ClickToMove extends Script {
     // Location Methods
 
     private void updateLastPosition() {
-        lastPos.set(transform.getPosition());
-        lastAngle = transform.getRotation(); // use up as 0
+        lastPos.set(getTransform().getPosition());
+        lastAngle = getTransform().getRotation(); // use up as 0
     }
 
     private void setDestination(Vec2 destination) {

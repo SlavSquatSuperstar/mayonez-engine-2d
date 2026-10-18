@@ -12,12 +12,19 @@ import java.io.OutputStream
  *
  * @author SlavSquatSuperstar
  */
-// TODO hold streams, close on free
-open class Asset(private val filePath: FilePath) {
+open class Asset(
+    /** The file path that represents this asset's location. */
+    protected val filePath: FilePath
+) {
 
-    constructor(filename: String) : this(FilePath.fromFilename(filename))
+    constructor(path: String) : this(FilePath.of(path))
 
-    val filename: String = filePath.filename
+    /** This asset's path string. */
+    val path: String = filePath.path
+
+    /** This asset's filename. */
+    val filename: String
+        get() = filePath.filename
 
     // I/O Methods
 
@@ -47,15 +54,26 @@ open class Asset(private val filePath: FilePath) {
         return filePath.openOutputStream(append)
     }
 
-    /** Frees any resources used by this asset after use. */
+    /**
+     * Allocates any resources required by this asset after creation.
+     * Automatically called through [Assets.createAsset].
+     */
+    open fun init() {}
+
+    /**
+     * Frees any resources used by this asset after use. Automatically called
+     * through [Assets.clearAssets].
+     */
     open fun free() {}
 
-    // Helper Methods/Classes
+    // Object Overrides
 
-    protected fun getFilenameInQuotes(): String = "\"$filename\""
-
-    override fun toString(): String {
-        return "${filePath.typeName} ${javaClass.simpleName} \"$filename\""
+    override fun equals(other: Any?): Boolean {
+        return other is Asset && other.path == this.path
     }
+
+    override fun hashCode(): Int = path.hashCode()
+
+    override fun toString(): String = "${javaClass.simpleName} $path"
 
 }

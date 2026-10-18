@@ -1,6 +1,6 @@
 # Script Name: run.ps1
 # Purpose:     Runs the project for Windows users through Powershell.
-# Usage:       .\run.ps1 [-h/--help] [-e/--engine gl/awt]"
+# Usage:       .\run.ps1 [-h/--help] [-b/--backend gl/awt]"
 # Author:      SlavSquatSuperstar
 
 # Get the original calling directory
@@ -30,17 +30,17 @@ function Show-Help {
     param (
         $ExitCode
     )
-    Write-Output "Usage: run.ps1 [-h/--help] [-e/--engine gl/awt]"
+    Write-Output "Usage: run.ps1 [-h/--help] [-b/--backend gl/awt]"
     Exit-Script $ExitCode
 }
 
 # Configure the program to run using GL/AWT
-function Set-Engine-Type {
+function Set-Backend {
     param (
-        $EngineType
+        $Backend
     )
 
-    switch ($EngineType) {
+    switch ($Backend) {
         "gl" {
             return $true
         }
@@ -48,11 +48,11 @@ function Set-Engine-Type {
             return $false
         }
         "" {
-            Write-Output "Option `"--engine`" requires one argument."
+            Write-Output "Option `"--backend`" requires one argument."
             Show-Help 1
         }
         Default {
-            Write-Output "Invalid engine type `"$EngineType`"."
+            Write-Output "Invalid engine type `"$Backend`"."
             Show-Help 1
         }
     }
@@ -73,12 +73,20 @@ for ($i = 0; $i -lt $args.Count; $i++) {
         "--help" {
             Show-Help 0
         }
+        "-b" {
+            $USE_GL = Set-Backend $args[$i + 1]
+            $i++
+        }
+        "--backend" {
+            $USE_GL = Set-Backend $args[$i + 1]
+            $i++
+        }
         "-e" {
-            $USE_GL = Set-Engine-Type $args[$i + 1]
+            $USE_GL = Set-Backend $args[$i + 1]
             $i++
         }
         "--engine" {
-            $USE_GL = Set-Engine-Type $args[$i + 1]
+            $USE_GL = Set-Backend $args[$i + 1]
             $i++
         }
         Default {
@@ -108,13 +116,13 @@ foreach ($F in Get-ChildItem mayonez*.jar)
 # Run the compiled jar file
 if ($USE_GL)
 {
-    Write-Output "Launching with OpenGL Engine."
-    java -jar $JAR_FILE --engine gl
+    Write-Output "Launching with OpenGL backend."
+    java -jar $JAR_FILE --backend gl
 }
 else
 {
-    Write-Output "Launching with AWT Engine."
-    java -jar $JAR_FILE --engine awt
+    Write-Output "Launching with AWT backend."
+    java -jar $JAR_FILE --backend awt
 }
 
 Exit-Script 0

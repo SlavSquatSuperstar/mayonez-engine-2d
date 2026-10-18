@@ -5,6 +5,9 @@ import mayonez.math.*
 import mayonez.math.shapes.*
 import mayonez.renderer.*
 
+// TODO render server
+// TODO draw sprite on-demand
+// TODO draw text on-demand
 /**
  * Allows colliders and shapes to be manually drawn onto the screen through
  * the scene's [mayonez.renderer.DebugRenderer]. All shapes are

@@ -38,13 +38,13 @@ public class KeepInScene extends Script {
 
     @Override
     protected void start() {
-        objectCollider = getCollider();
+        objectCollider = getSibling(Collider.class);
         if (objectCollider == null) {
             Logger.warn("%s needs a collider to function!", this);
             mode = null;
             setEnabled(false);
         }
-        rb = getRigidbody();
+        rb = getSibling(Rigidbody.class);
     }
 
     @Override
@@ -135,11 +135,11 @@ public class KeepInScene extends Script {
     }
 
     protected void setX(float x) {
-        transform.getPosition().x = x;
+        getTransform().getPosition().x = x;
     }
 
     protected void setY(float y) {
-        transform.getPosition().y = y;
+        getTransform().getPosition().y = y;
     }
 
     private void stop(Direction dir) {

@@ -17,36 +17,36 @@ public final class Textures {
     // Texture Methods
 
     /**
-     * Retrieves the asset at the given location as a AWT or GL texture based on
+     * Retrieves the asset at the given path as a AWT or GL texture based on
      * the current engine instance.
      *
-     * @param filename the texture location
+     * @param path the texture location
      * @return a texture
      */
-    public static Texture getTexture(String filename) {
-        return Mayonez.getUseGL() ? getGLTexture(filename) : getJTexture(filename);
+    public static Texture getTexture(String path) {
+        return Mayonez.getUseGL() ? getGLTexture(path) : getJTexture(path);
     }
 
     /**
-     * Retrieves the asset at the given location as a
+     * Retrieves the asset at the given path as a
      * {@link mayonez.graphics.textures.GLTexture}.
      *
-     * @param filename the texture location
+     * @param path the texture location
      * @return a texture
      */
-    public static GLTexture getGLTexture(String filename) {
-        return Assets.getAsset(filename, GLTexture.class);
+    public static GLTexture getGLTexture(String path) {
+        return Assets.getAsset(path, GLTexture.class);
     }
 
     /**
-     * Retrieves the asset at the given location as a
+     * Retrieves the asset at the given path as a
      * {@link mayonez.graphics.textures.JTexture}.
      *
-     * @param filename the texture location
+     * @param path the texture location
      * @return a texture
      */
-    public static JTexture getJTexture(String filename) {
-        return Assets.getAsset(filename, JTexture.class);
+    public static JTexture getJTexture(String path) {
+        return Assets.getAsset(path, JTexture.class);
     }
 
 }

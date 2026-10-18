@@ -1,5 +1,6 @@
 package mayonez.graphics.sprites
 
+import mayonez.application.*
 import mayonez.graphics.*
 import mayonez.graphics.textures.*
 import mayonez.math.shapes.Rectangle
@@ -13,7 +14,7 @@ import java.awt.*
  *
  * @author SlavSquatSuperstar
  */
-@UsesEngine(EngineType.AWT)
+@UsesBackend(Backend.AWT)
 internal class JSprite private constructor(
     private var texture: JTexture?, private var color: MColor
 ) : Sprite(), JRenderable {
@@ -41,11 +42,12 @@ internal class JSprite private constructor(
     // Sprite Methods
 
     override fun render(g2: Graphics2D) {
+        val globalXf = globalTransform
         if (texture != null) {
-            texture!!.draw(g2, transform, getSpriteTransform(), color)
+            texture!!.draw(g2, globalTransform, color)
         } else {
-            scene.debugDraw.fillShape(
-                Rectangle(transform.position, transform.scale), color
+            scene!!.debugDraw.fillShape(
+                Rectangle(globalXf.position, globalXf.scale, globalXf.rotation), color
             )
         }
     }
@@ -76,7 +78,5 @@ internal class JSprite private constructor(
             this.texture = texture
         }
     }
-
-    override fun copy(): JSprite = JSprite(texture, color)
 
 }

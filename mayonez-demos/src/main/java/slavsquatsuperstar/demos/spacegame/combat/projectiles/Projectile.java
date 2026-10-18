@@ -4,55 +4,40 @@ import mayonez.*;
 import mayonez.physics.*;
 import mayonez.physics.dynamics.*;
 import mayonez.scripts.*;
+import slavsquatsuperstar.demos.spacegame.SpaceGameScene;
+
 
 /**
- * Allows a {@link mayonez.GameObject} to be launched with an initial velocity from a source object, and
+ * Allows a {@link mayonez.Node} to be launched with an initial velocity from a source object, and
  * allows it to damage other objects with a
  * {@link slavsquatsuperstar.demos.spacegame.combat.Damageable} component.
  *
  * @author SlavSquatSuperstar
  */
-public class Projectile extends Script {
+public class Projectile extends Node {
 
-    private final GameObject source;
     private final ProjectileType type;
+    private final Node source;
 
-    public Projectile(GameObject source, ProjectileType type) {
-        this.source = source;
+    public Projectile(ProjectileType type, Node source) {
         this.type = type;
+        this.source = source;
     }
 
     @Override
     protected void init() {
-        gameObject.addComponent(new DestroyAfterDuration(type.lifetime()));
+        setName(type.name() + " Projectile");
+        addTag(SpaceGameScene.PROJECTILE_TAG);
+
+        addChild(new DestroyAfterDuration(type.lifetime()));
     }
 
-    @Override
-    protected void start() {
-        var rb = getRigidbody();
-        if (getCollider() == null || rb == null) {
-            this.setEnabled(false);
-            return;
-        }
-
-        // Set initial velocity
-        var sourceRb = source.getComponent(Rigidbody.class);
-        if (sourceRb != null) rb.setVelocity(sourceRb.getVelocity());
-        rb.addVelocity(transform.getUp().mul(type.speed()));
-
-        getCollider().addCollisionCallback(event -> {
-            // On trigger
-            if (event.trigger && event.type == CollisionEventType.ENTER) {
-                onImpactObject(event);
-            }
-        });
-    }
-
-    private void onImpactObject(CollisionEvent event) {
-        if (event.other.equals(source)) return; // Don't collide with source
+    public void onImpactObject(CollisionEvent event) {
+        if (event.other.getParent().equals(source)) return; // Don't collide with source
+        if (!event.trigger || event.type != CollisionEventType.ENTER) return;
 
         // Get particle position
-        var particleXf = transform.copy();
+        var particleXf = getTransform().copy();
         var contacts = event.contacts;
         if (contacts.size() == 1) {
             particleXf.setPosition(contacts.getFirst());
@@ -61,15 +46,16 @@ public class Projectile extends Script {
         }
 
         // Spawn particle
-        getScene().addObject(ProjectilePrefabs.createImpactPrefab(type, particleXf, event.other));
-        gameObject.destroy();
+        getScene().addNode(ProjectilePrefabs.createImpactPrefab(type, particleXf, event.other));
+        setDestroyed();
     }
 
     public float getDamage() {
         return type.damage();
     }
 
-    public GameObject getSource() {
+    // TODO change to ignoreCollision
+    public Node getSource() {
         return source;
     }
 

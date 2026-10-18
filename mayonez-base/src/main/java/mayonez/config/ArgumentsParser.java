@@ -1,8 +1,8 @@
 package mayonez.config;
 
+import mayonez.application.Backend;
 import mayonez.util.Record;
-
-import java.util.*;
+import org.apache.commons.cli.*;
 
 /**
  * Reads and interprets command-line arguments passed through console commands.
@@ -11,56 +11,77 @@ import java.util.*;
  */
 class ArgumentsParser {
 
-    private final Record programArgs;
+    private final CommandLineParser parser;
+    private final Options options;
 
     ArgumentsParser() {
-        this(new String[0]);
+        parser = new DefaultParser();
+
+        options = new Options();
+        options.addOption(Option.builder("b")
+                .longOpt("backend")
+                .hasArg()
+                .desc("The engine windowing/rendering backend")
+                .get());
     }
 
-    ArgumentsParser(String[] args) {
-        List<String> argsList = readProgramArgs(args);
-        programArgs = parseProgramArgs(argsList);
-    }
+    // Parser Methods
 
     /**
-     * Reads an array of command line in to a list of strings, preserving the order.
+     * Parse the command line from the arguments.
      *
-     * @param args a string array passed in main()
-     * @return the arguments as a list
+     * @param args the arguments
+     * @return the command line
      */
-    List<String> readProgramArgs(String[] args) {
-        return Arrays.asList(args);
-    }
-
-    /**
-     * Parses a {@link mayonez.util.Record} object storing flags and their values from a list of command line arguments.
-     *
-     * @param args a string list
-     * @return the flags and their values
-     */
-    Record parseProgramArgs(List<String> args) {
-        if (args.isEmpty()) return new Record();
-
-        var argMap = new Record();
-        for (var i = 0; i < args.size(); i++) {
-            var arg = args.get(i);
-            if (arg.startsWith("--")) { // is a flag
-                var nextArg = getArg(args, i + 1);
-                if (nextArg != null && nextArg.startsWith("--")) continue;
-                argMap.set(arg.substring(2), nextArg);
-                i += 1;
-            }
-            // Ignore positional args
+    CommandLine parse(String[] args) {
+        try {
+            return parser.parse(options, args);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
         }
-        return argMap;
     }
 
-    private String getArg(List<String> args, int index) {
-        if (index >= args.size()) return null;
-        return args.get(index);
+    /**
+     * Parse the application {@link Backend} from the command line.
+     *
+     * @param cl the command line
+     * @return the backend
+     */
+    Backend getBackend(CommandLine cl) {
+        var backend = cl.getOptionValue("backend");
+        if (backend == null) {
+            return Backend.DEFAULT;
+        } else if (backend.equals("gl")) {
+            return Backend.GL;
+        } else if (backend.equals("awt")) {
+            return Backend.AWT;
+        } else {
+            throw new IllegalArgumentException("Invalid argument %s for backend".formatted(backend));
+        }
     }
 
-    Record getProgramArgs() {
-        return programArgs;
+    /**
+     * Create a {@link Record} storing the parsed command line.
+     *
+     * @param cl the command line
+     * @return the record
+     */
+    Record serialize(CommandLine cl) {
+        var record = new Record();
+        for (var opt : cl.getOptions()) {
+            // Prefer long option name as key
+            var key = opt.getLongOpt() != null ? opt.getLongOpt() : opt.getOpt();
+            var values = cl.getOptionValues(opt);
+
+            if (values == null) {
+                record.set(key, true);  // Flag
+            } else if (values.length == 1) {
+                record.set(key, values[0]); // One arg
+            } else {
+                record.set(key, values); // Var args
+            }
+        }
+        return record;
     }
+
 }

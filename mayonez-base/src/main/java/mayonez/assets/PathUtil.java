@@ -1,6 +1,9 @@
 package mayonez.assets;
 
 import java.io.File;
+import java.net.URL;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 
 /**
@@ -46,16 +49,13 @@ public final class PathUtil {
      * @return the converted path string
      */
     public static String convertPath(String path, String fileSeparator) {
-        // Replace all separators with current separator
-        var currentPath = path;
-        for (var sep : SEPARATORS) {
-            if (sep.equals(CURRENT_SEPARATOR)) continue;
-            currentPath = currentPath.replace(sep, CURRENT_SEPARATOR);
-        }
-        // Need to remove trailing separators so ClassLoader doesn't give error
-        var currentPathCleaned = Path.of(currentPath).normalize().toString();
+        var currentPath = convertPath(path);
         // Get the path string on the target file system
-        return currentPathCleaned.replace(CURRENT_SEPARATOR, fileSeparator);
+        if (CURRENT_SEPARATOR.equals(fileSeparator)) {
+            return currentPath;
+        } else {
+            return currentPath.replace(CURRENT_SEPARATOR, fileSeparator);
+        }
     }
 
     /**
@@ -65,7 +65,32 @@ public final class PathUtil {
      * @return the current OS path string
      */
     public static String convertPath(String path) {
-        return convertPath(path, CURRENT_SEPARATOR);
+        // Replace all separators with current separator
+        var pathNames = path.split("[/\\\\]");
+        // Don't remove leading separator
+        var currentPath = Path.of(String.join(CURRENT_SEPARATOR, pathNames));
+        // Remove trailing separators so ClassLoader doesn't give error
+        return currentPath.normalize().toString();
+    }
+
+    /**
+     * Get the system resource with the given name as a URL.
+     *
+     * @param name the resource name relative to the classpath.
+     * @return the url, or null if no resource exists
+     */
+    public static URL getResourceURL(String name) {
+        return ClassLoader.getSystemResource(name);
+    }
+
+    /**
+     * Decodes a URL, converting escape sequences back into special characters.
+     *
+     * @param url the url
+     * @return the unescaped URL
+     */
+    public static String decodeURL(URL url) {
+        return URLDecoder.decode(url.getPath(), StandardCharsets.UTF_8);
     }
 
 }

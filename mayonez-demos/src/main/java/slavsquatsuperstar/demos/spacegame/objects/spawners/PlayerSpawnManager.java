@@ -3,6 +3,7 @@ package slavsquatsuperstar.demos.spacegame.objects.spawners;
 import mayonez.*;
 import mayonez.math.*;
 import mayonez.scripts.*;
+import slavsquatsuperstar.demos.spacegame.SpaceGameConfig;
 import slavsquatsuperstar.demos.spacegame.events.*;
 import slavsquatsuperstar.demos.spacegame.objects.ships.PlayerSpaceship;
 import slavsquatsuperstar.demos.spacegame.objects.ships.ShipPrefabs;
@@ -47,25 +48,22 @@ public class PlayerSpawnManager extends SpawnManager {
     // Spawner Methods
 
     @Override
-    public GameObject createSpawnedObject() {
+    public Node createSpawnedObject() {
         return new PlayerSpaceship(
-                "Player Spaceship", new Vec2(), ShipPrefabs.SHUTTLE_PROPERTIES1
+                "Player Spaceship", new Vec2(),
+                ShipPrefabs.getSpaceShipProperty(SpaceGameConfig.getPlayerShipIndex())
         ) {
             @Override
-            protected void init() {
-                super.init();
-                addComponent(new Script() {
-                    @Override
-                    protected void start() {
-                        SpaceGameEvents.getPlayerEventSystem()
-                                .broadcast(new PlayerSpawnedEvent(gameObject));
-                    }
+            protected void start() {
+                super.start();
+                SpaceGameEvents.getPlayerEventSystem()
+                        .broadcast(new PlayerSpawnedEvent(this));
+            }
 
-                    @Override
-                    protected void onDestroy() {
-                        markObjectDestroyed(gameObject);
-                    }
-                });
+            @Override
+            protected void onDestroy() {
+                super.onDestroy();
+                markObjectDestroyed(this);
             }
         };
     }
@@ -78,7 +76,7 @@ public class PlayerSpawnManager extends SpawnManager {
     }
 
     @Override
-    public void markObjectDestroyed(GameObject object) {
+    public void markObjectDestroyed(Node object) {
         SpaceGameEvents.getPlayerEventSystem()
                 .broadcast(new PlayerDestroyedEvent(object));
 

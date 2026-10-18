@@ -12,7 +12,7 @@ import slavsquatsuperstar.demos.spacegame.objects.SpaceGameZIndex;
  *
  * @author SlavSquatSuperstar
  */
-public class SliderBar extends Script implements UIElement {
+public class SliderBar extends UIElement {
 
     private static final Texture BORDER_TEXTURE = Textures.getTexture(
             "assets/spacegame/textures/ui/gray_border_wide.png");
@@ -32,7 +32,7 @@ public class SliderBar extends Script implements UIElement {
 
     @Override
     protected void init() {
-        gameObject.setZIndex(SpaceGameZIndex.UI);
+        getParent().setZIndex(SpaceGameZIndex.UI);
 
         backgroundSprite = new UISprite(position, size, backgroundColor) {
             @Override
@@ -40,7 +40,7 @@ public class SliderBar extends Script implements UIElement {
                 return super.getZIndex();
             }
         };
-        gameObject.addComponent(backgroundSprite);
+        getParent().addChild(backgroundSprite);
 
         sliderSprite = new UISprite(position, size, sliderColor) {
             @Override
@@ -49,7 +49,7 @@ public class SliderBar extends Script implements UIElement {
             }
         };
         sliderSprite.setAnchor(Anchor.LEFT);
-        gameObject.addComponent(sliderSprite);
+        getParent().addChild(sliderSprite);
         value = 1f;
 
         outlineSprite = new UISprite(position, size, BORDER_TEXTURE) {
@@ -58,7 +58,7 @@ public class SliderBar extends Script implements UIElement {
                 return super.getZIndex() + 2; // display above foreground
             }
         };
-        gameObject.addComponent(outlineSprite);
+        getParent().addChild(outlineSprite);
     }
 
     // Slider Methods

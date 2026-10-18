@@ -1,6 +1,6 @@
 package mayonez.renderer.gl
 
-import mayonez.graphics.*
+import mayonez.application.*
 import mayonez.graphics.font.*
 import mayonez.renderer.*
 import mayonez.renderer.batch.*
@@ -12,8 +12,8 @@ import mayonez.renderer.shader.*
  *
  * @author SlavSquatSuperstar
  */
-@UsesEngine(EngineType.GL)
-internal class GLUIRenderer() : GLRenderer(), UIRenderer {
+@UsesBackend(Backend.GL)
+internal class GLUIRenderer : GLRenderer(), UIRenderer {
 
     // Renderer Objects
     private val objects: MutableList<Renderable> = ArrayList()
@@ -42,7 +42,7 @@ internal class GLUIRenderer() : GLRenderer(), UIRenderer {
         objects.sortBy { it.zIndex }
 
         // Process objects
-        objects.filter { it.isEnabled }
+        objects.filter { it.shouldRender() }
             .forEach { it.addDrawParts() }
 
         // Push objects
@@ -70,7 +70,7 @@ internal class GLUIRenderer() : GLRenderer(), UIRenderer {
     override fun RenderBatch.uploadUniforms(viewport: Viewport, textureSlots: IntArray) {
         // Upload uniforms
         shader.bind()
-        shader.uploadMat4("uProjection", viewport.projectionMatrix)
+        shader.uploadMat4("uTransform", viewport.projectionMatrix)
         shader.uploadIntArray("uTextures", textureSlots)
     }
 

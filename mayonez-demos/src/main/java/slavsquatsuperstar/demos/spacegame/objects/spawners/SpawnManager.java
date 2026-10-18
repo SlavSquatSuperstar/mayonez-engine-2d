@@ -8,22 +8,22 @@ import mayonez.*;
  *
  * @author SlavSquatSuperstar
  */
-public abstract class SpawnManager extends Script {
+public abstract class SpawnManager extends Node {
 
     /**
-     * Instantiate a prefab {@link mayonez.GameObject} to be spawned. To be defined
+     * Instantiate a prefab {@link mayonez.Node} to be spawned. To be defined
      * by the subclass.
      *
      * @return the spawned object
      */
-    public abstract GameObject createSpawnedObject();
+    public abstract Node createSpawnedObject();
 
     /**
      * Spawns an object into the scene. Can be overridden to run additional
      * user-defined behavior.
      */
     public void spawnObject() {
-        getScene().addObject(createSpawnedObject());
+        getScene().addNode(createSpawnedObject());
     }
 
     /**
@@ -32,7 +32,7 @@ public abstract class SpawnManager extends Script {
      *
      * @param object the spawned object
      */
-    public void markObjectDestroyed(GameObject object) {
+    public void markObjectDestroyed(Node object) {
     }
 
 }

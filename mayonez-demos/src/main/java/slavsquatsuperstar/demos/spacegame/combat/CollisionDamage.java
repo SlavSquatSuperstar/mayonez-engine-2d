@@ -3,6 +3,7 @@ package slavsquatsuperstar.demos.spacegame.combat;
 import mayonez.*;
 import mayonez.math.*;
 import mayonez.physics.*;
+import slavsquatsuperstar.demos.spacegame.SpaceGameScene;
 import slavsquatsuperstar.demos.spacegame.objects.SpaceGameLayer;
 
 /**
@@ -10,7 +11,7 @@ import slavsquatsuperstar.demos.spacegame.objects.SpaceGameLayer;
  *
  * @author SlavSquatSuperstar
  */
-public class CollisionDamage extends Script {
+public class CollisionDamage extends Node {
 
     private static final float DEFAULT_SPEED_THRESHOLD = 8f;
     private static final float DEFAULT_COLLISION_DAMAGE = 1f;
@@ -30,22 +31,14 @@ public class CollisionDamage extends Script {
 
     @Override
     protected void start() {
-        damageable = gameObject.getComponent(Damageable.class);
-
-        var collider = getCollider();
-        if (collider != null) {
-            collider.addCollisionCallback(event -> {
-                // On collision
-                if (!event.trigger && event.type == CollisionEventType.ENTER) {
-                    onObjectCollision(event.other, event.velocity);
-                }
-            });
-        }
+        damageable = getSibling(Damageable.class);
     }
 
-    private void onObjectCollision(GameObject object, Vec2 velocity) {
-        if (object.hasLayer(SpaceGameLayer.SHIPS) || object.hasLayer(SpaceGameLayer.ASTEROIDS)) {
-            var speed = velocity.len();
+    public void onObjectCollision(CollisionEvent event) {
+        if (event.trigger || event.type != CollisionEventType.ENTER) return;
+
+        if (event.other.getParent().hasTag(SpaceGameScene.DAMAGEABLE_TAG)) {
+            var speed = event.velocity.len();
             if (speed > speedThreshold) {
                 var damage = speed / speedThreshold * collisionDamage;
                 damageable.onObjectDamaged(damage);

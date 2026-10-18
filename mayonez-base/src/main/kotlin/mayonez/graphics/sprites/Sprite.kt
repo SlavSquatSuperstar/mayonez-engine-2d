@@ -6,12 +6,12 @@ import mayonez.graphics.textures.*
 import mayonez.renderer.*
 
 /**
- * Draws a [Texture] at a [GameObject]'s position. To instantiate a sprite,
+ * Draws a [Texture] at a [Node]'s position. To instantiate a sprite,
  * use [Sprites.createSprite]. See [Texture] for more information.
  *
  * @author SlavSquatSuperstar
  */
-sealed class Sprite : Component(UpdateOrder.RENDER), Renderable {
+sealed class Sprite : Node(), Renderable {
 
     companion object {
         @JvmStatic
@@ -19,9 +19,6 @@ sealed class Sprite : Component(UpdateOrder.RENDER), Renderable {
     }
 
     // Sprite Properties
-
-    private var spriteXf: Transform? = null
-    private var zIndexOverride: Int? = null
 
     /**
      * Get the width of this sprite's stored texture in pixels.
@@ -54,24 +51,6 @@ sealed class Sprite : Component(UpdateOrder.RENDER), Renderable {
     abstract fun setColor(color: MColor?)
 
     /**
-     * Get the sprite's transform in the parent object's local space.
-     *
-     * @return the sprite transform
-     */
-    fun getSpriteTransform(): Transform? = spriteXf
-
-    /**
-     * Set additional position, rotation, and size modifiers for the sprite.
-     *
-     * @param spriteXf the transform
-     * @return this sprite
-     */
-    fun setSpriteTransform(spriteXf: Transform?): Sprite {
-        this.spriteXf = spriteXf
-        return this
-    }
-
-    /**
      * Get the texture this sprite draws.
      *
      * @return the texture, or null if drawing a color
@@ -87,31 +66,8 @@ sealed class Sprite : Component(UpdateOrder.RENDER), Renderable {
 
     // Renderable Methods
 
-    final override fun getZIndex(): Int {
-        return zIndexOverride ?: gameObject.zIndex
-    }
-
-    /**
-     * Set the z-index for the sprite, overriding its parent object's z-index.
-     *
-     * @param zIndex the global z-index
-     * @return this sprite
-     */
-    fun setZIndex(zIndex: Int): Sprite {
-        zIndexOverride = zIndex
-        return this
-    }
+    final override fun getZIndex(): Int = super.zIndex
 
     final override fun isInUI(): Boolean = false
-
-    // Copy Methods
-
-    /**
-     * Construct a new sprite with the same image but not attached to any
-     * [mayonez.GameObject].
-     *
-     * @return a copy of this image
-     */
-    abstract fun copy(): Sprite?
 
 }

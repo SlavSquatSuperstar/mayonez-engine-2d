@@ -1,6 +1,6 @@
 package mayonez.renderer.batch
 
-import mayonez.graphics.*
+import mayonez.application.*
 import org.lwjgl.opengl.GL11
 
 /**
@@ -8,7 +8,7 @@ import org.lwjgl.opengl.GL11
  *
  * @author SlavSquatSuperstar
  */
-@UsesEngine(EngineType.GL)
+@UsesBackend(Backend.GL)
 enum class ElementLayout(
     val vertexCount: Int, // Vertices defined by primitive
     val elementCount: Int, // Vertices needed by GL to draw

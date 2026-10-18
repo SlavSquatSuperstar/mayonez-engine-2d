@@ -16,28 +16,46 @@ dependencies {
 application {
     // Leave mainModule blank to prevent ModuleResolutionError
     mainClass = mainClassName
-    applicationDefaultJvmArgs = jvmArgs
+    applicationDefaultJvmArgs = defaultJvmArgs
 
     // Default LWJGL natives for run
     setNatives(Natives.getDefaultNatives(), "runtimeOnlyDefault")
 }
 
 tasks {
+    // Run using the GL engine (same as default run)
+    register<JavaExec>("runGl") {
+        group = "Application"
+        description = "Runs this project using the GL engine."
+
+        classpath = files(jar)
+        jvmArgs = defaultJvmArgs
+        args = listOf("--backend", "gl")
+    }
+
+    // Run using the AWT engine
+    register<JavaExec>("runAwt") {
+        group = "Application"
+        description = "Runs this project using the AWT engine."
+
+        classpath = files(jar)
+        jvmArgs = emptyList()
+        args = listOf("--backend", "awt")
+    }
+
     jar {
         useJarDefaults()
-        from(configurations.runtimeClasspath.get()
-            .map { if (it.isDirectory) it else zipTree(it) })
+        from(
+            configurations.runtimeClasspath.get()
+                .map { if (it.isDirectory) it else zipTree(it) })
     }
 
     // Register the jar tasks
-
-    val packagePlatforms = mapOf<String, String>(
+    mapOf(
         Natives.MAC_OS_X64 to "Mac",
         Natives.WINDOWS_X64 to "Windows",
         Natives.LINUX_X64 to "Linux"
-    )
-
-    packagePlatforms.forEach { natives, platform ->
+    ).forEach { (natives, platform) ->
         register<Jar>("jar$platform") {
             group = "Packaging"
             description = "Copies the release assets for ${platform}."
@@ -68,12 +86,12 @@ tasks {
         outputs.upToDateWhen { false }
     }
 
-    compileJava {
-        dependsOn("copyDefaultPreferences")
-    }
-
-    processResources {
-        dependsOn("copyDefaultPreferences")
+    listOf(
+        compileJava, processResources, processTestResources
+    ).forEach {
+        it {
+            dependsOn("copyDefaultPreferences")
+        }
     }
 }
 
@@ -89,13 +107,15 @@ fun Jar.configureJarTask(natives: String, platform: String) {
 
     setNatives(natives, "runtimeOnly$platform")
     from(sourceSets["main"].output)
-    from(configurations["runtimeOnly$platform"]
-        .map { if (it.isDirectory) it else zipTree(it) })
+    from(
+        configurations["runtimeOnly$platform"]
+            .map { if (it.isDirectory) it else zipTree(it) })
 
     // Don't copy default natives
-    from(configurations.runtimeClasspath.get()
-        .filter { !it.name.contains("natives") }
-        .map { if (it.isDirectory) it else zipTree(it) })
+    from(
+        configurations.runtimeClasspath.get()
+            .filter { !it.name.contains("natives") }
+            .map { if (it.isDirectory) it else zipTree(it) })
 
     // Move it to the dist directory
     destinationDirectory = file("../dist/${platform.lowercase()}")

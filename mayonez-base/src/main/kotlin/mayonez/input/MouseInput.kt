@@ -23,8 +23,9 @@ object MouseInput {
     private val buttonsDown: MutableSet<Int> = HashSet(NUM_BUTTONS) // Buttons down this frame
     private val anyButtonDown: Boolean
         get() = buttonsDown.isNotEmpty()
-    private var doubleClick: Boolean = false // TODO double click with same button
+    private var doubleClick: Boolean = false
     private var lastClickTimeSecs: Float = 0f
+    private var lastClickButton: Int = -1
 
     // Mouse Movement Fields
     private var mousePosPx = Vec2()
@@ -80,17 +81,26 @@ object MouseInput {
 
         // Set click time
         if (event.isButtonDown) {
+            // TODO reset double click
             // Detect double click
             // Source: https://www.youtube.com/watch?v=k3rVEIr0Z7w
-            if (event.eventTime - lastClickTimeSecs <= DOUBLE_CLICK_TIME_SECS)
-                doubleClick = true
+            if (
+                event.eventTime - lastClickTimeSecs <= DOUBLE_CLICK_TIME_SECS
+                && event.button == lastClickButton
+            ) doubleClick = true
             lastClickTimeSecs = event.eventTime
+            lastClickButton = event.button
         }
     }
 
     private fun onMouseMoveEvent(event: MouseMoveEvent) {
-        // Set mouse displacement with last mouse position
-        mouseDispPx.set(event.mouseX - mousePosPx.x, event.mouseY - mousePosPx.y)
+        // Multiple mouse move events may occur per frame
+        // Better to accumulate mouse motion
+        mouseDispPx.set(
+            mouseDispPx.x + event.mouseX - mousePosPx.x,
+            mouseDispPx.y + event.mouseY - mousePosPx.y
+        )
+        // Okay to overwrite mouse position
         mousePosPx.set(event.mouseX, event.mouseY)
     }
 

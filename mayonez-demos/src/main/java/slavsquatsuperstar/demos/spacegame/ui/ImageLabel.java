@@ -12,7 +12,7 @@ import slavsquatsuperstar.demos.spacegame.objects.SpaceGameZIndex;
  *
  * @author SlavSquatSuperstar
  */
-public class ImageLabel extends Script implements UIElement {
+public class ImageLabel extends UIElement {
 
     private Vec2 position, size;
     private float backgroundPadding, borderThickness;
@@ -20,7 +20,6 @@ public class ImageLabel extends Script implements UIElement {
     private Texture iconTexture, backgroundTexture, borderTexture;
 
     public ImageLabel(Vec2 position, Vec2 size, Texture iconTexture, Texture backgroundTexture, Texture borderTexture) {
-        super(UpdateOrder.RENDER);
         this.position = position;
         this.size = size;
         this.iconTexture = iconTexture;
@@ -30,11 +29,11 @@ public class ImageLabel extends Script implements UIElement {
 
     @Override
     protected void init() {
-        gameObject.setZIndex(SpaceGameZIndex.UI);
+        getParent().setZIndex(SpaceGameZIndex.UI);
 
         // Background uses label size
         backgroundSprite = new UISprite(position, size, backgroundTexture);
-        gameObject.addComponent(backgroundSprite);
+        getParent().addChild(backgroundSprite);
 
         // Icon can be made smaller by setting padding
         iconSprite = new UISprite(position, size.sub(new Vec2(backgroundPadding)), iconTexture) {
@@ -43,7 +42,7 @@ public class ImageLabel extends Script implements UIElement {
                 return super.getZIndex() + 1; // Display above background
             }
         };
-        gameObject.addComponent(iconSprite);
+        getParent().addChild(iconSprite);
 
         // Border can be made larger by setting thickness
         borderSprite = new UISprite(position, size.add(new Vec2(borderThickness)), borderTexture) {
@@ -52,13 +51,13 @@ public class ImageLabel extends Script implements UIElement {
                 return super.getZIndex() + 2; // Display above icon
             }
         };
-        gameObject.addComponent(borderSprite);
+        getParent().addChild(borderSprite);
     }
 
     @Override
     protected void start() {
-        if (backgroundTexture == null) backgroundSprite.setEnabled(false);
-        if (borderTexture == null) borderSprite.setEnabled(false);
+        if (backgroundTexture == null) backgroundSprite.setVisible(false);
+        if (borderTexture == null) borderSprite.setVisible(false);
     }
 
     // Set Texture Methods
@@ -82,7 +81,7 @@ public class ImageLabel extends Script implements UIElement {
     public void setBackgroundTexture(Texture backgroundTexture) {
         this.backgroundTexture = backgroundTexture;
         backgroundSprite.setTexture(backgroundTexture);
-        backgroundSprite.setEnabled(backgroundTexture != null);
+        backgroundSprite.setVisible(backgroundTexture != null);
     }
 
     /**
@@ -94,7 +93,7 @@ public class ImageLabel extends Script implements UIElement {
     public void setBorderTexture(Texture borderTexture) {
         this.borderTexture = borderTexture;
         borderSprite.setTexture(borderTexture);
-        borderSprite.setEnabled(borderTexture != null);
+        borderSprite.setVisible(borderTexture != null);
     }
 
 

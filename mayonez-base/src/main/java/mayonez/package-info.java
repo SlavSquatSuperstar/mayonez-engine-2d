@@ -3,4 +3,7 @@
  *
  * @author SlavSquatSuperstar
  */
+@NullMarked
 package mayonez;
+
+import org.jspecify.annotations.NullMarked;

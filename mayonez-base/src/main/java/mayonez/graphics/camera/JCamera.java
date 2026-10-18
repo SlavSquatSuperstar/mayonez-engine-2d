@@ -1,6 +1,6 @@
 package mayonez.graphics.camera;
 
-import mayonez.graphics.*;
+import mayonez.application.*;
 import mayonez.math.*;
 
 /**
@@ -8,7 +8,7 @@ import mayonez.math.*;
  *
  * @author SlavSquatSuperstar
  */
-@UsesEngine(EngineType.AWT)
+@UsesBackend(Backend.AWT)
 final class JCamera extends Camera {
 
     JCamera(Vec2 screenSize) {

@@ -15,17 +15,7 @@ import slavsquatsuperstar.demos.spacegame.events.SpaceGameEvents;
  *
  * @author SlavSquatSuperstar
  */
-public class PlayerUI extends GameObject {
-
-    private static final Texture HEALTH_ICON_TEXTURE = Textures.getTexture(
-            "assets/spacegame/textures/ui/health_bar_icon.png");
-    private static final Texture SHIELD_ICON_TEXTURE = Textures.getTexture(
-            "assets/spacegame/textures/ui/shield_bar_icon.png");
-
-    private static final Texture LABEL_BACKGROUND_TEXTURE = Textures.getTexture(
-            "assets/spacegame/textures/ui/gray_background.png");
-    private static final Texture LABEL_BORDER_TEXTURE = Textures.getTexture(
-            "assets/spacegame/textures/ui/gray_border.png");
+public class PlayerUI extends Node {
 
     private static final String CONTROL_HINTS_MESSAGE = """
             Controls:
@@ -52,39 +42,19 @@ public class PlayerUI extends GameObject {
     @Override
     protected void init() {
         // TODO UI containers
-        var uiSpacingX = 12f;
-        var uiSpacingY = 12f;
-        var labelSize = new Vec2(32, 32);
-        var sliderSize = new Vec2(192, 32);
-
-        // Player Health
-        var hpLabelPos = new Vec2(32, Preferences.getScreenHeight() - 32);
-        var hpLabel = new ImageLabel(hpLabelPos, labelSize,
-                HEALTH_ICON_TEXTURE, LABEL_BACKGROUND_TEXTURE, LABEL_BORDER_TEXTURE);
-        addComponent(hpLabel);
-
-        var hpSliderPos = hpLabelPos.add(new Vec2(labelSize.x * 0.5f + uiSpacingX + sliderSize.x * 0.5f, 0));
-        var hpSlider = new SliderBar(hpSliderPos, sliderSize, new Color(192, 0, 0), Colors.GREEN);
-        addComponent(hpSlider);
-
-        // Player Shield
-        var shLabelPos = hpLabelPos.sub(new Vec2(0, labelSize.y + uiSpacingY));
-        var shLabel = new ImageLabel(shLabelPos, labelSize,
-                SHIELD_ICON_TEXTURE, LABEL_BACKGROUND_TEXTURE, LABEL_BORDER_TEXTURE);
-        addComponent(shLabel);
-
-        var shSliderPos = shLabelPos.add(new Vec2(labelSize.x * 0.5f + uiSpacingX + sliderSize.x * 0.5f, 0));
-        var shSlider = new SliderBar(shSliderPos, sliderSize, new Color(96, 96, 96), Colors.LIGHT_BLUE);
-        addComponent(shSlider);
+        // Player Status
+        var playerStatus = new PlayerStatus(new Vec2(32, Mayonez.getScreenHeight() - 32),
+                new Vec2(32, 32), new Vec2(192, 32), 12);
+        addChild(playerStatus);
 
         // Weapon Hotbar
-        var wpHbPosition = new Vec2(32, 32);
-        var wpHbSize = new Vec2(32, 32);
-        var weaponHotbar = new WeaponHotbar(wpHbPosition, wpHbSize, ProjectilePrefabs.PROJECTILE_TYPES);
-        addComponent(weaponHotbar);
+        var weaponHotbar = new WeaponHotbar(new Vec2(32, 32), new Vec2(32, 32), 16,
+                ProjectilePrefabs.PROJECTILE_TYPES);
+        addChild(weaponHotbar);
 
-        addComponent(new PlayerUIController(hpSlider, shSlider, weaponHotbar));
+        addChild(new PlayerUIController(playerStatus, weaponHotbar));
 
+        // Tet Elements
         var style = TextStyle.DEFAULT_STYLE
                 .setColor(Colors.WHITE)
                 .setFontSize(20);
@@ -92,10 +62,10 @@ public class PlayerUI extends GameObject {
         // Auto-Brake Indicator
         var autoBrakeToolTip = new TextLabel(
                 "Auto-Brake (B): On",
-                new Vec2(20, Preferences.getScreenHeight() - 125))
+                new Vec2(20, Mayonez.getScreenHeight() - 125))
                 .setStyle(style)
                 .setAnchor(Anchor.LEFT);
-        addComponent(autoBrakeToolTip);
+        addChild(autoBrakeToolTip);
 
         SpaceGameEvents.getPlayerEventSystem().subscribe(
                 event -> {
@@ -110,35 +80,36 @@ public class PlayerUI extends GameObject {
         );
 
         // Hints
+        // TODO text in containers
         var hintsTooltip = new TextLabel(
                 "Show Hints (H)",
-                new Vec2(Preferences.getScreenWidth() - 20, 15))
+                new Vec2(Mayonez.getScreenWidth() - 20, 15))
                 .setStyle(style)
                 .setAnchor(Anchor.BOTTOM_RIGHT);
-        addComponent(hintsTooltip);
+        addChild(hintsTooltip);
 
         var healthShieldHint = new TextLabel(
                 "Health\n\nShield",
-                new Vec2(270, Preferences.getScreenHeight() - 32))
+                new Vec2(270, Mayonez.getScreenHeight() - 32))
                 .setStyle(style)
                 .setAnchor(Anchor.TOP_LEFT);
-        addComponent(healthShieldHint);
+        addChild(healthShieldHint);
 
         var hotbarHints = new TextLabel(
                 "(1)   (2)   (3)   (4)", new Vec2(15, 60))
                 .setStyle(style)
                 .setAnchor(Anchor.BOTTOM_LEFT);
-        addComponent(hotbarHints);
+        addChild(hotbarHints);
 
         var controlText = new TextLabel(
                 CONTROL_HINTS_MESSAGE,
-                new Vec2(Preferences.getScreenWidth() - 20,
-                        Preferences.getScreenHeight() - 20))
+                new Vec2(Mayonez.getScreenWidth() - 20,
+                        Mayonez.getScreenHeight() - 20))
                 .setStyle(style)
                 .setAnchor(Anchor.TOP_RIGHT);
-        addComponent(controlText);
+        addChild(controlText);
 
-        addComponent(new ToggleHints(hintsTooltip,
+        addChild(new ToggleHints(hintsTooltip,
                 new TextLabel[]{hotbarHints, controlText, healthShieldHint}));
     }
 

@@ -26,7 +26,7 @@ public class EnemyMovement extends SpaceshipMovement {
     }
 
     @Override
-    protected void update(float dt) {
+    protected void fixedUpdate(float dt) {
         // Update thruster states
         moveState = getNextThrusterState(moveState, rb.getSpeed(), MOVE_PARAMETERS);
         turnState = getNextThrusterState(turnState, rb.getAngSpeed(), TURN_PARAMETERS);
@@ -38,9 +38,9 @@ public class EnemyMovement extends SpaceshipMovement {
         var turnBrakeDir = getTurnBrakeDir(0f) * 10f;
 
         // Move and brake (relative to world)
-        moveObject(moveInput.rotate(transform.getRotation()), dt);
+        moveObject(moveInput.rotate(getTransform().getRotation()), dt);
         rotateObject(turnInput, dt);
-        brake(brakeDir.rotate(transform.getRotation()), turnBrakeDir);
+        brake(brakeDir.rotate(getTransform().getRotation()), turnBrakeDir);
 
         // Fire thrusters
         getThrustController().fireMoveThrusters(moveInput, brakeDir);
@@ -58,7 +58,7 @@ public class EnemyMovement extends SpaceshipMovement {
     @Override
     public Vec2 getUserInput() {
         if (moveState == ThrusterState.SPEED_UP) {
-            return rb.getVelocity().rotate(-transform.getRotation()).unit();
+            return rb.getVelocity().rotate(-getTransform().getRotation()).unit();
         } else {
             return new Vec2();
         }
@@ -76,7 +76,7 @@ public class EnemyMovement extends SpaceshipMovement {
     @Override
     protected Vec2 getBrakeDir(Vec2 moveInput) {
         if (moveState == ThrusterState.SLOW_DOWN) {
-            return rb.getVelocity().rotate(-transform.getRotation())
+            return rb.getVelocity().rotate(-getTransform().getRotation())
                     .unit().mul(-1f);
         } else {
             return new Vec2();

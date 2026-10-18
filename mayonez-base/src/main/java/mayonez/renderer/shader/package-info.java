@@ -4,4 +4,7 @@
  *
  * @author SlavSquatSuperstar
  */
+@NullMarked
 package mayonez.renderer.shader;
+
+import org.jspecify.annotations.NullMarked;

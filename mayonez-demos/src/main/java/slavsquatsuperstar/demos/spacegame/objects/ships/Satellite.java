@@ -3,6 +3,7 @@ package slavsquatsuperstar.demos.spacegame.objects.ships;
 import mayonez.*;
 import mayonez.graphics.sprites.*;
 import mayonez.math.*;
+import mayonez.physics.CollisionEvent;
 import mayonez.physics.colliders.*;
 import mayonez.physics.dynamics.*;
 import mayonez.scripts.*;
@@ -17,44 +18,54 @@ import slavsquatsuperstar.demos.spacegame.objects.SpaceGameZIndex;
  *
  * @author SlavSquatSuperstar
  */
-public class Satellite extends GameObject {
+public class Satellite extends Node {
 
     private final SatelliteProperties properties;
 
     public Satellite(String name, Vec2 position, SatelliteProperties properties) {
-        super(name, new Transform(position, Random.randomAngle(), properties.scale()),
-                SpaceGameZIndex.SPACESHIP);
+        super(name, new Transform(position, Random.randomAngle(), properties.scale()));
         this.properties = properties;
     }
 
     @Override
     protected void init() {
-        setLayer(getScene().getLayer(SpaceGameLayer.SHIPS));
+        addTag(SpaceGameScene.DAMAGEABLE_TAG);
+
+        // Combat
+        addChild(new SpaceshipDestruction());
+        var damageable = new Damageable(properties.maxHull()) {
+            @Override
+            public void onHealthDepleted() {
+                var shipDestruction = getSibling(SpaceshipDestruction.class);
+                if (shipDestruction != null) shipDestruction.startDestructionSequence();
+            }
+        };
+        addChild(damageable);
 
         // Collision
-        addComponent(new BoxCollider(new Vec2(1f, 0.44f)));
-        addComponent(new KeepInScene(SpaceGameScene.SCENE_HALF_SIZE.mul(-1f),
+        var cd = new CollisionDamage();
+        addChild(cd);
+        var collider = new BoxCollider(properties.colliderSize()) {
+            @Override
+            public void onCollisionEvent(CollisionEvent event) {
+                cd.onObjectCollision(event); // On collision
+                damageable.onImpactProjectile(event); // On trigger
+            }
+        };
+        collider.setLayer(getScene().getLayer(SpaceGameLayer.SPACECRAFT));
+        addChild(collider);
+        addChild(new KeepInScene(SpaceGameScene.SCENE_HALF_SIZE.mul(-1f),
                 SpaceGameScene.SCENE_HALF_SIZE, KeepInScene.Mode.WRAP));
-        addComponent(new CollisionDamage());
 
         // Initial Velocity
         Rigidbody rb;
-        addComponent(rb = new Rigidbody(1f, 0.01f, 0.01f));
-        rb.setVelocity(transform.getUp().mul(Random.randomFloat(0f, 4f)));
-
-        // Combat
-        addComponent(new SpaceshipDestruction());
-        addComponent(new Damageable(properties.maxHull()) {
-            @Override
-            public void onHealthDepleted() {
-                var shipDestruction = gameObject.getComponent(SpaceshipDestruction.class);
-                if (shipDestruction != null) shipDestruction.startDestructionSequence();
-            }
-        });
-        addComponent(new CollisionDamage());
+        addChild(rb = new Rigidbody(1f, 0.01f, 0.01f));
+        rb.setVelocity(getTransform().getUp().mul(Random.randomFloat(0f, 4f)));
 
         // Visuals
-        addComponent(Sprites.createSprite(properties.texture()));
+        var sprite = Sprites.createSprite(properties.texture());
+        sprite.setZIndex(SpaceGameZIndex.SPACESHIP);
+        addChild(sprite);
     }
 
 }

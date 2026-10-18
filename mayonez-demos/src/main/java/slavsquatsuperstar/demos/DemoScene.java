@@ -27,6 +27,8 @@ public class DemoScene extends Scene {
     private static void pollSceneControls() {
         if (KeyInput.keyDown(Key.ESCAPE)) {
             Mayonez.stop(ExitCode.SUCCESS); // Exit program by pressing escape
+        } else if (KeyInput.keyPressed("f")) {
+            Mayonez.setFullScreen(!Mayonez.isFullScreen()); // Toggle fullscreen
         } else if (KeyInput.keyPressed("r")) {
             SceneManager.restartScene();
         } else if (KeyInput.keyPressed("p")) {

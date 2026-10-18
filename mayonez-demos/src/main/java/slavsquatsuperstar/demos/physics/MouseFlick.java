@@ -30,7 +30,7 @@ public abstract class MouseFlick extends MouseInputScript {
     @Override
     protected void start() {
         super.start();
-        rb = getRigidbody();
+        rb = getSibling(Rigidbody.class);
         mouseStart = new Vec2();
     }
 

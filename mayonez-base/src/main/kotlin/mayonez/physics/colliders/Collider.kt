@@ -19,11 +19,7 @@ import mayonez.physics.manifold.*
  * @author SlavSquatSuperstar
  */
 abstract class Collider(private val shape: Shape) :
-    Component(UpdateOrder.COLLISION), CollisionBody {
-
-    // Collision Event Fields
-
-    private var collisionCallbacks: EventSystem<CollisionEvent> = EventSystem()
+    Component(), CollisionBody {
 
     // Component References
 
@@ -46,6 +42,8 @@ abstract class Collider(private val shape: Shape) :
         return this
     }
 
+    override var layer: PhysicsLayer? = null
+
     /**
      * Whether the position or velocity of this collider has been modified in
      * this frame.
@@ -55,28 +53,31 @@ abstract class Collider(private val shape: Shape) :
     // Game Loop Methods
 
     override fun start() {
-        physicsBody = gameObject.getComponent(Rigidbody::class.java)
-    }
+        // We want the physics body to be the parent of the collider
+        physicsBody = parent as? PhysicsBody?
 
-    override fun onDestroy() {
-        collisionCallbacks.unsubscribeAll()
+        // The old architecture has the physics body and collider as siblings
+        if (physicsBody == null) {
+            physicsBody = getSibling(Rigidbody::class.java)
+            setUseParentTransform(true)
+        }
     }
 
     // Shape Properties
 
     // TODO convert to property
-    fun center(): Vec2 = transform!!.position
+    fun center(): Vec2 = transform.position
 
-    open fun getRotation(): Float = transform!!.rotation
+    open fun getRotation(): Float = transform.rotation
 
     override fun getMinBounds(): BoundingBox = getShape().boundingRectangle()
 
     override fun getMass(density: Float): Float {
-        return shape.scale(transform!!.scale).mass(density)
+        return shape.scale(transform.scale).mass(density)
     }
 
     override fun getAngMass(mass: Float): Float {
-        return shape.scale(transform!!.scale).angularMass(mass)
+        return shape.scale(transform.scale).angularMass(mass)
     }
 
     // Transform Methods
@@ -84,7 +85,7 @@ abstract class Collider(private val shape: Shape) :
     // TODO save as mutable field
     override fun getShape(): Shape {
         return shape.rotate(getRotation())
-            .scale(transform!!.scale)
+            .scale(transform.scale)
             .translate(center())
     }
 
@@ -100,38 +101,21 @@ abstract class Collider(private val shape: Shape) :
 
     // Collision Methods
 
+    override fun shouldUpdate(): Boolean = super.shouldUpdate()
+
     override fun getContacts(collider: CollisionBody?): Manifold? {
         return Collisions.getContacts(this.getShape(), collider?.getShape())
     }
 
     override fun canCollide(collider: CollisionBody): Boolean {
-        // This assumes colliders aren't disabled during a collision
-        if (collider is Collider) {
-            return (this.isEnabled && collider.isEnabled) // Both enabled
-                    && this.gameObject.canInteract(collider.gameObject) // Layers interact
-                    && (this.physicsBody != null || collider.physicsBody != null) // At most one is static
-        }
-        return false
-    }
-
-    private fun GameObject.canInteract(other: GameObject): Boolean {
-        return (this.layer == null) || this.layer.canInteract(other.layer)
+        return (this.shouldUpdate() && collider.shouldUpdate()) // Both enabled
+                && (this.layer?.canInteract(collider.layer) ?: true) // Layers interact
+                && !(this.physicsBody == null && collider.physicsBody == null) // At most one is static
     }
 
     // Collision Event Methods
 
     override fun onCollisionEvent(event: CollisionEvent) {
-        collisionCallbacks.broadcast(event)
-    }
-
-    /**
-     * Add a collision callback to this collider that will be notified when this object
-     * receives a collision event.
-     *
-     * @param callback the callback method or object
-     */
-    fun addCollisionCallback(callback: EventListener<CollisionEvent>) {
-        collisionCallbacks.subscribe(callback)
     }
 
 }

@@ -11,10 +11,14 @@ import mayonez.math.shapes.*;
  *
  * @author SlavSquatSupertar
  */
-class ProjectileLauncher extends Script {
+class ProjectileLauncher extends Node {
 
     static final Vec2 PROJ_SIZE = new Vec2(4f, 2f);
     private float angle, speed, size;
+
+    public ProjectileLauncher(Vec2 position) {
+        super("Projectile Launcher", position);
+    }
 
     @Override
     protected void start() {
@@ -25,6 +29,7 @@ class ProjectileLauncher extends Script {
 
     @Override
     protected void update(float dt) {
+        // Adjust launch parameters
         var yInput = KeyInput.getAxis("vertical");
         speed += 5f * yInput * dt;
         if (speed < 0f) speed = 0f;
@@ -38,12 +43,10 @@ class ProjectileLauncher extends Script {
         if (KeyInput.keyPressed("space")) {
             launchProjectile();
         }
-    }
 
-    @Override
-    protected void debugRender() {
+        // Draw trajectory
         var velocity = new Vec2(speed, 0f).rotate(angle);
-        var objPos = transform.getPosition();
+        var objPos = getTransform().getPosition();
 
         getScene().getDebugDraw()
                 .drawPoint(objPos, Colors.BLACK);
@@ -55,9 +58,9 @@ class ProjectileLauncher extends Script {
     }
 
     private void launchProjectile() {
-        var projXf = new Transform(transform.getPosition(), angle, new Vec2(size));
+        var projXf = new Transform(getTransform().getPosition(), angle, new Vec2(size));
         var projVel = new Vec2(20f * speed, 0).rotate(angle);
-        getScene().addObject(new TestProjectile("Test Projectile", projXf, projVel));
+        getScene().addNode(new TestProjectile("Test Projectile", projXf, projVel));
     }
 
 }

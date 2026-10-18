@@ -28,29 +28,15 @@ class MarioController extends Script {
 
     @Override
     protected void start() {
-        rb = getRigidbody();
+        rb = getSibling(Rigidbody.class);
         onGround = false;
-
-        getCollider().addCollisionCallback(event -> {
-            // On collision
-            if (!event.trigger
-                    && event.other.hasLayer(MarioScene.GROUND_LAYER)) {
-                if (event.type == CollisionEventType.ENTER
-                        && event.direction.dot(new Vec2(0, -1)) > 0) {
-                    // Direction is downward
-                    onTouchGround();
-                } else if (event.type == CollisionEventType.EXIT) {
-                    onLeaveGround();
-                }
-            }
-        });
     }
 
     @Override
-    protected void update(float dt) {
+    protected void fixedUpdate(float dt) {
         // Move
         var xInput = KeyInput.getAxis("horizontal");
-        transform.move(new Vec2(xInput * MOVE_SPEED * dt, 0));
+        getTransform().move(new Vec2(xInput * MOVE_SPEED * dt, 0));
         rb.getVelocity().x = 0;
 
         // Jump
@@ -64,14 +50,14 @@ class MarioController extends Script {
         }
     }
 
-    private void onTouchGround() {
+    public void onTouchGround() {
         if (!onGround) {
             onGround = true;
             rb.getVelocity().y = 0;
         }
     }
 
-    private void onLeaveGround() {
+    public void onLeaveGround() {
         if (onGround) onGround = false;
     }
 

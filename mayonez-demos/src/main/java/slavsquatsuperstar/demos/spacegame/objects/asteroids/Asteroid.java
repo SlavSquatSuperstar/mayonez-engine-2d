@@ -1,10 +1,12 @@
 package slavsquatsuperstar.demos.spacegame.objects.asteroids;
 
 import mayonez.*;
+import mayonez.event.EventListener;
 import mayonez.graphics.*;
 import mayonez.graphics.sprites.*;
 import mayonez.graphics.textures.*;
 import mayonez.math.*;
+import mayonez.physics.CollisionEvent;
 import mayonez.physics.colliders.*;
 import mayonez.physics.dynamics.*;
 import mayonez.scripts.*;
@@ -17,7 +19,7 @@ import slavsquatsuperstar.demos.spacegame.objects.SpaceGameZIndex;
  *
  * @author SlavSquatSuperstar
  */
-public abstract class Asteroid extends GameObject {
+public abstract class Asteroid extends Node {
 
     // Instance Fields
     protected final AsteroidProperties properties;
@@ -29,11 +31,11 @@ public abstract class Asteroid extends GameObject {
 
     @Override
     protected void init() {
-        setLayer(getScene().getLayer(SpaceGameLayer.ASTEROIDS));
+        addTag(SpaceGameScene.DAMAGEABLE_TAG);
         setZIndex(SpaceGameZIndex.ASTEROID);
 
-        transform.setRotation(Random.randomAngle());
-        transform.setScale(properties.getScale());
+        getTransform().setRotation(Random.randomAngle());
+        getTransform().setScale(properties.getScale());
 
         addSprite(properties.texture(), properties.color());
     }
@@ -41,18 +43,25 @@ public abstract class Asteroid extends GameObject {
     private void addSprite(Texture texture, Color color) {
         var sprite = Sprites.createSprite(texture);
         sprite.setColor(color);
-        addComponent(sprite);
+        addChild(sprite);
     }
 
-    protected void addCollider() {
-        addComponent(new BallCollider(new Vec2(1f)));
-        addComponent(new KeepInScene(SpaceGameScene.SCENE_HALF_SIZE.mul(-1f),
+    protected void addCollider(EventListener<CollisionEvent> listener) {
+        var collider = new BallCollider(new Vec2(1f)) {
+            @Override
+            public void onCollisionEvent(CollisionEvent event) {
+                listener.onEvent(event);
+            }
+        };
+        collider.setLayer(getScene().getLayer(SpaceGameLayer.ASTEROIDS));
+        addChild(collider);
+        addChild(new KeepInScene(SpaceGameScene.SCENE_HALF_SIZE.mul(-1f),
                 SpaceGameScene.SCENE_HALF_SIZE, KeepInScene.Mode.WRAP));
     }
 
     protected Rigidbody addRigidbody(float radius) {
         var rb = new Rigidbody(radius, 0, 0);
-        addComponent(rb);
+        addChild(rb);
         return rb;
     }
 

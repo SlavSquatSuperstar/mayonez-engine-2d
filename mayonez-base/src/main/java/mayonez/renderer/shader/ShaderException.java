@@ -1,20 +1,16 @@
 package mayonez.renderer.shader;
 
-import mayonez.graphics.*;
+import mayonez.application.*;
 
 /**
- * An exception occurring when the program cannot successfully parse or
- * compile a shader file.
+ * An exception occurring when the program cannot successfully parse, compile,
+ * or link shader file.
  *
  * @author SlavSquatSuperstar
  */
-@UsesEngine(EngineType.GL)
+@UsesBackend(Backend.GL)
 class ShaderException extends RuntimeException {
     ShaderException(String message) {
         super(message);
-    }
-
-    ShaderException(Throwable cause) {
-        super(cause);
     }
 }

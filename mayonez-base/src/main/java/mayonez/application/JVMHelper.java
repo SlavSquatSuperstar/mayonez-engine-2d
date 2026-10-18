@@ -11,6 +11,15 @@ final class JVMHelper {
     }
 
     /**
+     * Detect if the current operating system is macOS.
+     *
+     * @return if running on macOS
+     */
+    static boolean isMacOS() {
+        return OperatingSystem.getCurrent() == OperatingSystem.MAC_OS;
+    }
+
+    /**
      * Detect if the <code>-XstartOnFirstThread</code> option was passed for this JVM instance (applies to macOS only).
      * <p>
      * Sources:

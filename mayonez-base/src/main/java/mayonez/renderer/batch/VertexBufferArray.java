@@ -1,6 +1,6 @@
 package mayonez.renderer.batch;
 
-import mayonez.graphics.*;
+import mayonez.application.*;
 
 import java.util.*;
 
@@ -14,7 +14,7 @@ import static org.lwjgl.opengl.GL15.glBufferSubData;
  *
  * @author SlavSquatSuperstar
  */
-@UsesEngine(EngineType.GL)
+@UsesBackend(Backend.GL)
 class VertexBufferArray {
 
     // Primitive Fields

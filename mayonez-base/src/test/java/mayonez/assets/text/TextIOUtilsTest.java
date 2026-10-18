@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class TextIOUtilsTest {
 
-    private final FilePath inputFilePath = new ClasspathFilePath("testassets/text/foo.txt");
+    private final FilePath inputFilePath = FilePath.of("testassets/text/foo.txt");
     private final String outputText = """
             Hello there!
             General Kenobi, you are a bold one!
@@ -49,7 +49,7 @@ class TextIOUtilsTest {
     @Test
     void writeTextToFileSuccess() {
         var outputFilePath = new ExternalFilePath("src/test/resources/testassets/out/out2.txt");
-        IOTestUtils.checkFileExists(outputFilePath);
+        outputFilePath.createFile();
 
         try (var output = outputFilePath.openOutputStream(false)) {
             TextIOUtils.write(output, outputText);
@@ -62,7 +62,7 @@ class TextIOUtilsTest {
     @Test
     void writeLinesToFileSuccess() {
         var outputFilePath = new ExternalFilePath("src/test/resources/testassets/out/out3.txt");
-        IOTestUtils.checkFileExists(outputFilePath);
+        outputFilePath.createFile();
 
         try (var output = outputFilePath.openOutputStream(false)) {
             TextIOUtils.write(output, outputText.split("\n"));
