@@ -39,12 +39,8 @@ tasks {
 
     // Register the package tasks
 
-    val packagePlatforms = mapOf(
-        "Mac" to "macOS", "Windows" to null, "Linux" to null
-    )
-
     packagePlatforms.forEach { (platform, platformDesc) ->
-        registerCopyZipTasks(platform, platformDesc = platformDesc)
+        registerCopyZipTasks(platform, platformDesc)
     }
 
     register("packageAll") {
@@ -74,10 +70,10 @@ tasks {
 /**
  * Register and configure the copy and zip tasks for a specific OS.
  */
-fun TaskContainer.registerCopyZipTasks(platform: String, platformDesc: String? = null) {
+fun TaskContainer.registerCopyZipTasks(platform: String, platformDesc: String) {
     register<Copy>("copy$platform") {
         group = "Packaging"
-        description = "Copies the release assets for ${platformDesc ?: platform}."
+        description = "Copies the release assets for $platformDesc."
 
         dependsOn(project(":mayonez-demos").tasks.named("jar$platform"))
         from("./LICENSE.txt", "./release-assets/resources", "./release-assets/${platform.lowercase()}")
@@ -87,7 +83,7 @@ fun TaskContainer.registerCopyZipTasks(platform: String, platformDesc: String? =
 
     register<Zip>("zip$platform") {
         group = "Packaging"
-        description = "Zips the release assets for ${platformDesc ?: platform}."
+        description = "Zips the release assets for $platformDesc."
 
         from(named("copy$platform").map { it.outputs })
         include("*.jar", "*.json", "*.txt", "run*")
@@ -97,7 +93,7 @@ fun TaskContainer.registerCopyZipTasks(platform: String, platformDesc: String? =
 
     register("package$platform") {
         group = "Packaging"
-        description = "Copies and zips the release assets for ${platformDesc ?: platform}."
+        description = "Copies and zips the release assets for $platformDesc."
         dependsOn("copy$platform")
         dependsOn("zip$platform")
     }
