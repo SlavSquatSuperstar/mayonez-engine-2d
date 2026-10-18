@@ -19,12 +19,19 @@ class CircleTest {
         circle = new Circle(new Vec2(2, 2), 2); // center (2, 2), radius 2
     }
 
+    // Circle Properties Tests
+
     @Test
     void areaCorrect() {
-        assertEquals(circle.area(), 4 * MathUtils.PI, MathUtils.FLOAT_EPSILON);
+        assertEquals(4f * MathUtils.PI, circle.area(), MathUtils.FLOAT_EPSILON);
     }
 
-    // Contains Point
+    @Test
+    void circumferenceCorrect() {
+        assertEquals(4f * MathUtils.PI, circle.circumference(), MathUtils.FLOAT_EPSILON);
+    }
+
+    // Contains Point Tests
 
     @Test
     void interiorPointInCircle() {
@@ -47,11 +54,12 @@ class CircleTest {
     @Test
     void circleTransformedProperly() {
         var newCircle = circle.scale(new Vec2(2, 1), null).translate(new Vec2(1, 1));
-        assertEquals(newCircle.center(), new Vec2(3, 3));
+        assertEquals(new Vec2(3, 3), newCircle.center());
         assertEquals(circle.area() * 4f, newCircle.area());
     }
 
-    // Support Point
+    // Support Point Tests
+
     @Test
     void circleSupportPointSuccess() {
         assertEquals(new Vec2(0, 2), circle.supportPoint(new Vec2(-1, 0)));

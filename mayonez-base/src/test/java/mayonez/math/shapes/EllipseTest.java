@@ -19,6 +19,22 @@ class EllipseTest {
         ellipse = new Ellipse(new Vec2(2, 3), new Vec2(4, 6)); // 4x6 at (2, 3)
     }
 
+    // Ellipse Properties Tests
+    // a = 2, b = 3
+
+    @Test
+    void areaCorrect() {
+        assertEquals(6f * MathUtils.PI, ellipse.area(), MathUtils.FLOAT_EPSILON);
+    }
+
+    @Test
+    void circumferenceCorrect() {
+        assertEquals(2f * MathUtils.sqrt(6.5f) * MathUtils.PI, ellipse.circumference(), MathUtils.FLOAT_EPSILON);
+    }
+
+
+    // Contains Point Tests
+
     @Test
     void interiorPointInEllipse() {
         assertTrue(ellipse.contains(new Vec2(1, 3)));
@@ -36,6 +52,8 @@ class EllipseTest {
         assertFalse(ellipse.contains(new Vec2(0, 0)));
         assertFalse(ellipse.contains(new Vec2(4, 1)));
     }
+
+    // Support Point Tests
 
     @Test
     void ellipseSupportPoints() {

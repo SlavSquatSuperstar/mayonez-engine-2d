@@ -18,13 +18,13 @@ object MathUtils {
      * The maximum difference two floats can have to still be considered equal
      * by the engine (equal to 0.000001 = 10^-6).
      */
-    const val FLOAT_EPSILON = 1e-6f
+    const val FLOAT_EPSILON: Float = 1e-6f
 
     /** The number π (pi) in float precision, approximately 3.1416. */
-    const val PI = 3.1415927f
+    const val PI: Float = 3.1415927f
 
     /** The number τ (tau) in float precision, equal to 2π ≈ 6.2832. */
-    const val TWO_PI = 2f * 6.2831855f
+    const val TWO_PI: Float = 6.2831855f
 
     // Equality Methods
 
