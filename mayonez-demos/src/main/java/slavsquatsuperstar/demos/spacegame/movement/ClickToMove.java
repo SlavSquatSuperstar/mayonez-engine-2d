@@ -15,7 +15,7 @@ import mayonez.scripts.movement.*;
  */
 @SuppressWarnings("ALL")
 @ExperimentalFeature
-public class ClickToMove extends Script {
+public class ClickToMove extends Node {
 
     // Component Fields
     private Rigidbody rb;

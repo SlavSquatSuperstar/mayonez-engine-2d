@@ -11,7 +11,7 @@ import mayonez.physics.dynamics.*;
  *
  * @author SlavSquatSuperstar
  */
-class MarioController extends Script {
+class MarioController extends Node {
 
     // Constants
     private static final float MOVE_SPEED = 15;
@@ -22,12 +22,10 @@ class MarioController extends Script {
     private boolean onGround;
     private Rigidbody rb;
 
-    MarioController() {
-        super(UpdateOrder.INPUT);
-    }
-
     @Override
     protected void start() {
+        setUpdateOrder(UpdateOrder.INPUT);
+        setUseParentTransform(true);
         rb = getSibling(Rigidbody.class);
         onGround = false;
     }

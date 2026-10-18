@@ -10,11 +10,11 @@ import java.util.*;
 
 /**
  * Detects when an object reaches the edge of or exits a given boundary
- * and sets custom behavior.
+ * and executes custom behavior.
  *
  * @author SlavSquatSuperstar
  */
-public class KeepInScene extends Script {
+public class KeepInScene extends Node {
 
     private final Vec2 minPos, maxPos;
     private Mode mode;
@@ -30,10 +30,15 @@ public class KeepInScene extends Script {
      * @param mode   what to do when reaching boundaries
      */
     public KeepInScene(Vec2 minPos, Vec2 maxPos, Mode mode) {
-        super(UpdateOrder.SCRIPT);
         this.minPos = minPos;
         this.maxPos = maxPos;
         this.mode = mode;
+    }
+
+    @Override
+    protected void init() {
+        setUpdateOrder(UpdateOrder.SCRIPT);
+        setUseParentTransform(true);
     }
 
     @Override

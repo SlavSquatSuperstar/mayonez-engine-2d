@@ -11,16 +11,14 @@ import mayonez.physics.dynamics.*;
  *
  * @author SlavSquatSuperstar
  */
-public abstract class MovementScript extends Script {
+public abstract class MovementScript extends Node {
 
     protected Rigidbody rb = null; // Reference to object rigidbody
 
-    public MovementScript() {
-        super(UpdateOrder.INPUT);
-    }
-
     @Override
     protected void start() {
+        setUpdateOrder(UpdateOrder.INPUT);
+        setUseParentTransform(true);
         rb = getSibling(Rigidbody.class);
         if (rb == null) {
             Logger.warn("%s has a null rigidbody", this);

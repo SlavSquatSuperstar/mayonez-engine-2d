@@ -8,7 +8,7 @@ import mayonez.math.*;
  *
  * @author SlavSquatSuperstar
  */
-class ParticleFollowTarget extends Script {
+class ParticleFollowTarget extends Node {
 
     private final Node target;
     private Vec2 targetPositionOffset;
@@ -20,6 +20,7 @@ class ParticleFollowTarget extends Script {
 
     @Override
     protected void start() {
+        setUseParentTransform(true);
         targetPositionOffset = getTransform().getPosition()
                 .sub(target.getTransform().getPosition());
         targetRotationOffset = getTransform().getRotation()

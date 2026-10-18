@@ -11,7 +11,7 @@ import mayonez.physics.colliders.*;
  *
  * @author SlavSquatSuperstar
  */
-public class ShapeSprite extends Component {
+public class ShapeSprite extends Node {
 
     // Component References
     private Collider collider;
@@ -92,14 +92,14 @@ public class ShapeSprite extends Component {
     // Shape Helper Methods
 
     private Shape getWorldShape() {
-        return shape.rotate(getTransform().getRotation(), null)
-                .scale(getTransform().getScale(), null)
-                .translate(getTransform().getPosition());
+        return shape.rotate(getGlobalTransform().getRotation(), null)
+                .scale(getGlobalTransform().getScale(), null)
+                .translate(getGlobalTransform().getPosition());
     }
 
     private Shape getColliderShape() {
         if (collider == null) {
-            return new Rectangle(getTransform().getPosition(), getTransform().getScale(), getTransform().getRotation());
+            return new Rectangle(getGlobalTransform().getPosition(), getGlobalTransform().getScale(), getGlobalTransform().getRotation());
         } else {
             return collider.getShape();
         }

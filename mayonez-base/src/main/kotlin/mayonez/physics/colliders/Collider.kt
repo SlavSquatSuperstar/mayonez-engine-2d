@@ -19,7 +19,7 @@ import mayonez.physics.manifold.*
  * @author SlavSquatSuperstar
  */
 abstract class Collider(private val shape: Shape) :
-    Component(), CollisionBody {
+    Node(), CollisionBody {
 
     // Component References
 

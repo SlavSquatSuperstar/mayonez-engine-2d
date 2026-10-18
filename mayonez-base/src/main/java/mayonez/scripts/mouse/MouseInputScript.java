@@ -11,7 +11,7 @@ import mayonez.physics.colliders.Collider;
  *
  * @author SlavSquatSuperstar
  */
-public abstract class MouseInputScript extends Script {
+public abstract class MouseInputScript extends Node {
 
     // Mouse State
     protected Vec2 lastMouse;
@@ -26,7 +26,6 @@ public abstract class MouseInputScript extends Script {
      * @param button the button name, or null for any
      */
     public MouseInputScript(String button) {
-        super(UpdateOrder.INPUT);
         this.button = button;
         lastMouse = new Vec2();
         mouseDown = false;
@@ -41,6 +40,8 @@ public abstract class MouseInputScript extends Script {
 
     @Override
     protected void start() {
+        setUpdateOrder(UpdateOrder.INPUT);
+        setUseParentTransform(true);
         collider = getSibling(Collider.class);
     }
 

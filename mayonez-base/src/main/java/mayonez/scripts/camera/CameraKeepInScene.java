@@ -1,5 +1,6 @@
 package mayonez.scripts.camera;
 
+import mayonez.UpdateOrder;
 import mayonez.graphics.camera.*;
 import mayonez.math.*;
 import mayonez.math.shapes.*;

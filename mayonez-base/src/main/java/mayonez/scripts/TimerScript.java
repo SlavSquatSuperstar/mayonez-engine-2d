@@ -10,7 +10,7 @@ import mayonez.*;
  *
  * @author SlavSquatSuperstar
  */
-public class TimerScript extends Script {
+public class TimerScript extends Node {
 
     private float duration; // max value
     private float value; // current value

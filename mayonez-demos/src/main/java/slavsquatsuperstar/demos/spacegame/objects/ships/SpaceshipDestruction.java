@@ -33,6 +33,7 @@ public class SpaceshipDestruction extends TimerScript {
 
     @Override
     protected void start() {
+        setUseParentTransform(true);
         shipSystems.clear();
         explosion = null;
 

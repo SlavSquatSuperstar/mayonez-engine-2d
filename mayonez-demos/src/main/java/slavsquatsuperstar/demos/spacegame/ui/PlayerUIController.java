@@ -10,7 +10,7 @@ import slavsquatsuperstar.demos.spacegame.events.*;
  *
  * @author SlavSquatSuperstar
  */
-public class PlayerUIController extends Script implements EventListener<SpaceGameEvent> {
+public class PlayerUIController extends Node implements EventListener<SpaceGameEvent> {
 
     // UI Components
     private final SliderBar healthBar, shieldBar;

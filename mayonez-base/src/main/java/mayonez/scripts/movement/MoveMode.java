@@ -1,10 +1,12 @@
 package mayonez.scripts.movement;
 
 /**
- * How a {@link mayonez.Script} should affect the object's position or movement. Not all scripts will make use of all of these.
+ * How a {@link mayonez.Node} should affect the object's position or movement. Not all scripts will make use of all of these.
  *
  * @author SlavSquatSuperstar
+ * @deprecated Use override methods instead
  */
+@Deprecated
 public enum MoveMode {
 
     /**

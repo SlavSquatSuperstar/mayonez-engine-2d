@@ -3,11 +3,11 @@ package mayonez.scripts;
 import mayonez.*;
 
 /**
- * Removes this game object from the scene after some time as passed.
+ * Removes the parent node from the scene after some time as passed.
  *
  * @author SlavSquatSuperstar
  */
-public class DestroyAfterDuration extends Script {
+public class DestroyAfterDuration extends Node {
 
     private final float maxLifetime;
     private float lifetime;
@@ -30,6 +30,7 @@ public class DestroyAfterDuration extends Script {
 
     /**
      * Get the remaining lifetime in seconds of this object.
+     *
      * @return the lifetime
      */
     public float getLifetime() {
@@ -38,6 +39,7 @@ public class DestroyAfterDuration extends Script {
 
     /**
      * Get the total lifetime in seconds of this object.
+     *
      * @return the max lifetime
      */
     public float getMaxLifetime() {

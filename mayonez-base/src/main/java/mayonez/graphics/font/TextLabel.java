@@ -15,7 +15,7 @@ import java.util.*;
  *
  * @author SlavSquatSuperstar
  */
-public class TextLabel extends Script implements Renderable {
+public class TextLabel extends Node implements Renderable {
 
     // Text Fields
     private String message;
