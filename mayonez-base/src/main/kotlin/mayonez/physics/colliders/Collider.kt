@@ -80,13 +80,9 @@ abstract class Collider(private val shape: Shape) :
         return shape.scale(transform.scale).angularMass(mass)
     }
 
-    // Transform Methods
-
     // TODO save as mutable field
     override fun getShape(): Shape {
-        return shape.rotate(getRotation())
-            .scale(transform.scale)
-            .translate(center())
+        return shape.transform(globalTransform) as Shape
     }
 
     // Shape vs Point Collisions
