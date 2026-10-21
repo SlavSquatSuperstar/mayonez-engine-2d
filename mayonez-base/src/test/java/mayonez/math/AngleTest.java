@@ -57,6 +57,8 @@ class AngleTest {
         assertNotEquals(ang1, ang2);
     }
 
+    // Angle Operator Tests
+
     @Test
     void angleAdditionCorrect() {
         var ang1 = Angle.createDegrees(90f); // 90º = π/2
@@ -70,16 +72,73 @@ class AngleTest {
     }
 
     @Test
-    void angleRotationCorrect() {
-        var ang = Angle.createDegrees(0f); // 90º = π/2
+    void angleAdditionCorrectRandom() {
+        var deg1 = randomAngle();
+        var deg2 = randomAngle();
+        var sumDeg = deg1 + deg2;
+        var sum = Angle.createDegrees(deg1).add(Angle.createDegrees(deg2));
+        assertEquals(Angle.createDegrees(sumDeg), sum);
+    }
+
+    @Test
+    void angleSubtractionCorrect() {
+        var ang1 = Angle.createDegrees(90f); // 90º = π/2
+        var ang2 = Angle.createDegrees(30f); // 30º = π/6
+        var ang3 = ang1.sub(ang2); // 60 = π/3
+
+        assertFloatEquals(60f, ang3.getDegrees());
+        assertFloatEquals(PI / 3f, ang3.getRadians());
+        assertFloatEquals(HALF_SQRT_3, ang3.getSin()); // sin(60) = √3/2
+        assertFloatEquals(0.5f, ang3.getCos()); // cos(60) = 1/2
+    }
+
+    @Test
+    void angleSubtractionCorrectRandom() {
+        var deg1 = randomAngle();
+        var deg2 = randomAngle();
+        var diffDeg = deg1 - deg2;
+        var diff = Angle.createDegrees(deg1).sub(Angle.createDegrees(deg2));
+        assertEquals(Angle.createDegrees(diffDeg), diff);
+    }
+
+    @Test
+    void angleNegationCorrectRandom() {
+        var deg = randomAngle();
+        var ang = Angle.createDegrees(deg);
+        assertEquals(Angle.createDegrees(-deg), ang.negate());
+    }
+
+    // Angle Rotation Tests
+
+    @Test
+    void angleRotationDegreesCorrect() {
+        var ang = Angle.createDegrees(0f); // 0º
 
         ang.rotateDegrees(45f); // 45º
         assertFloatEquals(HALF_SQRT_2, ang.getSin()); // sin(45º) = 1/√2
         assertFloatEquals(HALF_SQRT_2, ang.getCos()); // cos(45º) = 1/√2
+    }
 
-        ang.rotateRadians(-PI / 4f); // π/4 = 45º
-        assertFloatEquals(ang.getSin(), 0f); // sin(0) = 0
-        assertFloatEquals(ang.getCos(), 1f); // cos(0) = 1
+    @Test
+    void angleRotationRadiansCorrect() {
+        var ang = Angle.createRadians(PI / 2f); // 90º = π/2
+
+        ang.rotateRadians(-PI / 4f); // -π/4 = -45º
+        assertFloatEquals(HALF_SQRT_2, ang.getSin()); // sin(0) = 0
+        assertFloatEquals(HALF_SQRT_2, ang.getCos()); // cos(0) = 1
+    }
+
+    // Helper Methods
+
+    private float randomAngle() {
+        return randomRange(-360, 360, 15f);
+    }
+
+    private float randomRange(float min, float max, float inc) {
+        var range = max - min;
+        var numVals = (int) (range / inc);
+        var bucket = Random.randomInt(0, numVals);
+        return min + bucket * inc;
     }
 
 }

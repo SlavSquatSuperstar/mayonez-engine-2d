@@ -55,7 +55,7 @@ class Angle private constructor(
     // Addition Methods
 
     /**
-     * Adds this angle to another angle and returns the result.
+     * Adds another angle to this angle.
      *
      * @param angle another angle
      * @return the angle sum
@@ -74,6 +74,40 @@ class Angle private constructor(
             this.cos * angle.cos - this.sin * angle.sin,
             this.sin * angle.cos + angle.sin * this.cos
         )
+    }
+
+    /**
+     * Subtracts another angle from this angle.
+     *
+     * @param angle another angle
+     * @return the angle difference
+     */
+    fun sub(angle: Angle): Angle = this - angle
+
+    operator fun minus(angle: Angle): Angle {
+        /*
+         * Angle subtraction identities:
+         * - cos(a - b) = cos(a) * cos(b) + sin(a) * sin(b)
+         * - sin(a - b) = sin(a) * cos(b) - sin(b) * cos(a)
+         */
+        return Angle(
+            this.degrees - angle.degrees,
+            this.radians - angle.radians,
+            this.cos * angle.cos + this.sin * angle.sin,
+            this.sin * angle.cos - angle.sin * this.cos
+        )
+    }
+
+    /**
+     * Negates this angle.
+     *
+     * @return the additive inverse
+     */
+    fun negate(): Angle = -this
+
+    operator fun unaryMinus(): Angle {
+        // Cosine is even, sine is odd
+        return Angle(-this.degrees,-this.radians, this.cos, -this.sin)
     }
 
     // Mutator Methods
