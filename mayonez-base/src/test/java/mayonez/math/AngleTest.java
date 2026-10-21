@@ -4,6 +4,8 @@ import org.junit.jupiter.api.*;
 
 import static mayonez.math.MathUtils.PI;
 import static mayonez.math.MathTestUtils.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 /**
  * Unit tests for the {@link mayonez.math.Angle} class.
@@ -14,6 +16,8 @@ class AngleTest {
 
     private static final float HALF_SQRT_2 = MathUtils.SQRT_2 / 2f; // √2/2 = 1/√2
     private static final float HALF_SQRT_3 = MathUtils.SQRT_3 / 2f; // √3/2
+
+    // Angle Factory Tests
 
     @Test
     void degreesConstructorCorrect() {
@@ -35,6 +39,22 @@ class AngleTest {
         var ang2 = Angle.createRadians(PI / 3f); // π/3 = 60º
         assertFloatEquals(HALF_SQRT_3, ang2.getSin()); // sin(60º) = √3/2
         assertFloatEquals(0.5f, ang2.getCos()); // cos(60º) = 1/2
+    }
+
+    // Angle Equals Tests
+
+    @Test
+    void angleEqualsCorrect() {
+        var ang1 = Angle.createDegrees(90f);
+        var ang2 = Angle.createDegrees(90f);
+        assertEquals(ang1, ang2);
+    }
+
+    @Test
+    void angleNotEqualsCorrect() {
+        var ang1 = Angle.createDegrees(90f);
+        var ang2 = Angle.createDegrees(450f);
+        assertNotEquals(ang1, ang2);
     }
 
     @Test

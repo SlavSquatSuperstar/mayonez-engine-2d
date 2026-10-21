@@ -121,6 +121,14 @@ class Angle private constructor(
         this.sin = angle.sin
     }
 
+    override fun equals(other: Any?): Boolean {
+        return (other is Angle) && MathUtils.equals(this.degrees, other.degrees)
+    }
+
+    override fun hashCode(): Int {
+        return degrees.hashCode()
+    }
+
     override fun toString(): String {
         return "Angle ($degrees degrees, $radians radians)"
     }
