@@ -1,55 +1,52 @@
 package mayonez.math
 
 import mayonez.annotations.*
-import kotlin.math.*
+import kotlin.math.cos
+import kotlin.math.sin
 
 /**
- * An object representing an angle or other rotational quantity, which can
- * be converted between degrees and radians.
+ * Stores an angle in degrees and radians, as well as its sine and cosine,
+ * using float precision.
  *
  * @author SlavSquatSuperstar
  */
 class Angle private constructor(
-    private var radD: Double, // most math functions use radian values as doubles
-    private var cosD: Double, // cosine as double
-    private var sinD: Double // sine as double
+    deg: Float, rad: Float, cos: Float, sin: Float
 ) {
-
-    private constructor(radD: Double) : this(radD, cos(radD), sin(radD))
 
     companion object {
         // Factory Methods
 
         @JvmStatic
-        fun createDegrees(degrees: Float): Angle = Angle(degrees.toRadiansDouble())
+        fun createDegrees(degrees: Float): Angle {
+            val radians = degrees.toRadians()
+            return Angle(degrees, radians, cos(radians), sin(radians))
+        }
 
         @JvmStatic
-        fun createRadians(radians: Float): Angle = Angle(radians.toDouble())
-
-        // Trig Helpers
-
-        private fun Float.toRadiansDouble(): Double {
-            return Math.toRadians(this.toDouble())
+        fun createRadians(radians: Float): Angle {
+            val degrees = radians.toDegrees()
+            return Angle(degrees, radians, cos(radians), sin(radians))
         }
     }
 
     // Angle Properties
 
     /** The radian value for this angle as a float. */
-    val radians: Float
-        get() = radD.toFloat()
+    var radians: Float = rad
+        private set
 
     /** The degree value for this angle as a float. */
-    val degrees: Float
-        get() = Math.toDegrees(radD).toFloat()
+    var degrees: Float = deg
+        private set
 
     /** The cosine value for this angle as a float. */
-    val cos: Float
-        get() = cosD.toFloat()
+    var cos: Float = cos
+        private set
 
     /** The sine value for this angle as a float. */
-    val sin: Float
-        get() = sinD.toFloat()
+    var sin: Float = sin
+        private set
 
     /** The rotation matrix for this angle. */
     val rotation: Mat22
@@ -67,15 +64,15 @@ class Angle private constructor(
 
     operator fun plus(angle: Angle): Angle {
         /*
-         * When concatenating two transformations with cos/sin values c1/s1 and c2/s2,
-         * the result, through angle addition identities, becomes:
-         * - cos(a+b) c1*c2 - s1*s2
-         * - sin(a+b) s1*c2 + s2*c1
+         * Angle addition identities:
+         * - cos(a + b) = cos(a) * cos(b) - sin(a) * sin(b)
+         * - sin(a + b) = sin(a) * cos(b) + sin(b) * cos(a)
          */
         return Angle(
-            this.radD + angle.radD,
-            this.cosD * angle.cosD - this.sinD * angle.sinD,
-            this.sinD * angle.cosD + angle.sinD * this.cosD
+            this.degrees + angle.degrees,
+            this.radians + angle.radians,
+            this.cos * angle.cos - this.sin * angle.sin,
+            this.sin * angle.cos + angle.sin * this.cos
         )
     }
 
@@ -118,9 +115,24 @@ class Angle private constructor(
 
     @Mutating
     fun set(angle: Angle) {
-        this.radD = angle.radD
-        this.cosD = angle.cosD
-        this.sinD = angle.sinD
+        this.degrees = angle.degrees
+        this.radians = angle.radians
+        this.cos = angle.cos
+        this.sin = angle.sin
     }
 
+    override fun toString(): String {
+        return "Angle ($degrees degrees, $radians radians)"
+    }
+
+}
+
+// Trig Helpers
+
+private fun Float.toRadians(): Float {
+    return MathUtils.toRadians(this)
+}
+
+private fun Float.toDegrees(): Float {
+    return MathUtils.toDegrees(this)
 }
