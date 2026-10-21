@@ -98,6 +98,12 @@ class Transform(position: Vec2, rotation: Float, scale: Vec2) {
             field.set(scale)
         }
 
+    /**
+     * The transform's determinant, equal to its scale components multiplied.
+     */
+    val determinant: Float
+        get() = scale.x * scale.y
+
     // Property Mutator Methods
 
     /**

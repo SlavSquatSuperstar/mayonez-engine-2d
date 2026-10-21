@@ -82,7 +82,7 @@ abstract class Collider(private val shape: Shape) :
 
     // TODO save as mutable field
     override fun getShape(): Shape {
-        return shape.transform(globalTransform) as Shape
+        return shape.transform(globalTransform)
     }
 
     // Shape vs Point Collisions

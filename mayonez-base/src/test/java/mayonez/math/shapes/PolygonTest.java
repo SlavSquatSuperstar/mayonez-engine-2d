@@ -1,5 +1,6 @@
 package mayonez.math.shapes;
 
+import mayonez.Transform;
 import mayonez.math.*;
 import org.junit.jupiter.api.*;
 
@@ -23,7 +24,7 @@ class PolygonTest {
                 new Vec2(7, 2), new Vec2(8, 5), new Vec2(4, 7));
     }
 
-    // Vertices
+    // Vertices Tests
 
     @Test
     void polygonVerticesMinimumCountIs3() {
@@ -41,7 +42,7 @@ class PolygonTest {
         }
     }
 
-    // Subclasses
+    // Subclass Tests
 
     @Test
     void triangleVsPolygon() {
@@ -75,11 +76,12 @@ class PolygonTest {
         assertTrue(rect.contains(p1));
     }
 
-    // Polygon vs Point
+    // Contains Point Tests
+
     @Test
     void polygonContainsInteriorPoints() {
         assertTrue(penta.contains(new Vec2(2, 4)));
-        assertTrue(penta.contains(new Vec2(5,3)));
+        assertTrue(penta.contains(new Vec2(5, 3)));
     }
 
     @Test
@@ -95,7 +97,7 @@ class PolygonTest {
         assertFalse(penta.contains(new Vec2(0, 4.5f)));
     }
 
-    // Properties
+    // Property Tests
 
     // From https://en.wikipedia.org/wiki/Shoelace_formula#Example
     @Test
@@ -117,6 +119,18 @@ class PolygonTest {
         var rect = new Rectangle(new Vec2(0, 0), new Vec2(2, 2));
         var normals = new Vec2[]{new Vec2(0, -1), new Vec2(1, 0), new Vec2(0, 1), new Vec2(-1, 0)};
         assertTrue(Objects.deepEquals(normals, rect.getNormals()));
+    }
+
+    // Transform Tests
+
+    @Test
+    void polygonTransformedProperly() {
+        var xf = new Transform(new Vec2(-2f, 10f), 50f, new Vec2(6f, 4f));
+        var transformed = (Polygon) penta.transform(xf, null);
+        assertEquals(penta.area() * xf.getDeterminant(), transformed.area(), 1e-4);
+        var transformedCenter = penta.center().add(xf.getPosition());
+        assertEquals(transformedCenter.x, transformed.center().x, 1e-4);
+        assertEquals(transformedCenter.y, transformed.center().y, 1e-4);
     }
 
 }

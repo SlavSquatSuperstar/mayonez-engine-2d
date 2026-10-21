@@ -1,5 +1,6 @@
 package mayonez.math.shapes;
 
+import mayonez.Transform;
 import mayonez.math.*;
 import org.junit.jupiter.api.*;
 
@@ -21,6 +22,8 @@ class RectangleTest {
         rect = Rectangle.fromMinAndMax(new Vec2(0, 0), new Vec2(4, 3));
     }
 
+    // Property Tests
+
     @Test
     void verticesCorrect() {
         var verts = rect.getVertices();
@@ -35,6 +38,8 @@ class RectangleTest {
     void areaCorrect() {
         assertFloatEquals(12f, rect.area());
     }
+
+    // Contains Point Tests
 
     @Test
     void interiorPointInRect() {
@@ -55,6 +60,8 @@ class RectangleTest {
         assertFalse(rect.contains(new Vec2(-1, 2)));
     }
 
+    // Transform Tests
+
     @Test
     void rectScaledProperly() {
         var xf1 = rect.scale(new Vec2(2, 2), rect.center()).translate(new Vec2(-1, 0.5f));
@@ -64,13 +71,22 @@ class RectangleTest {
         assertEquals(rect.area() * 12, xf2.area());
     }
 
-//    @Test
-//    void rectRotatedProperly() {
-//        var angle = 45f;
-//        var poly = new Rectangle(new Vec2(3, 1.5f), new Vec2(4, 3)).rotate(angle, null);
-//        var rot = rect.rotate(angle, null);
-//        assertEquals(rot.center(), poly.center());
-//        assertEquals(poly.boundingRectangle(), rot);
-//    }
+    @Test
+    void rectRotatedProperly() {
+        var angle = 45f;
+        var rotated1 = new Rectangle(new Vec2(2, 1.5f), new Vec2(4, 3)).rotate(angle, null);
+        var rotated2 = rect.rotate(angle, null);
+        assertEquals(rotated1.center(), rotated2.center());
+        assertEquals(rotated1.area(), rotated2.area());
+    }
+
+    @Test
+    void rectTransformedProperly() {
+        var xf = new Transform(new Vec2(-2f, 10f), 50f, new Vec2(6f, 4f));
+        var transformed = (Rectangle) rect.transform(xf, null);
+        assertEquals(rect.area() * xf.getDeterminant(), transformed.area(), 1e-4);
+        assertEquals(rect.getAngle() + xf.getRotation(), transformed.getAngle());
+        assertEquals(rect.center().add(xf.getPosition()), transformed.center());
+    }
 
 }

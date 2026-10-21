@@ -45,9 +45,6 @@ interface Transformable {
      */
     fun scale(factor: Vec2, origin: Vec2? = null): Transformable
 
-    // Test area square law
-    // Test position difference
-    // Test rotation difference
     /**
      * Transforms every point on this object by the given [Transform], first
      * scaling, then rotating, and lastly translating.

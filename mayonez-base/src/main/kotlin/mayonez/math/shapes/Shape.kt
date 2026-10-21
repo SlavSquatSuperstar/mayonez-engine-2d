@@ -1,5 +1,6 @@
 package mayonez.math.shapes
 
+import mayonez.Transform
 import mayonez.math.*
 
 /**
@@ -158,6 +159,19 @@ abstract class Shape : Transformable {
      * @return the scaled shape
      */
     abstract override fun scale(factor: Vec2, origin: Vec2?): Shape
+
+    /**
+     * Transforms every point on this object by the given [Transform], first
+     * scaling, then rotating, and lastly translating.
+     *
+     * @param transform an affine transformation
+     * @param origin the transform origin, or a predetermined point if null
+     */
+    override fun transform(transform: Transform, origin: Vec2?): Shape {
+        return this.scale(transform.scale, origin)
+            .rotate(transform.rotation, origin)
+            .translate(transform.position)
+    }
 
     // Overrides
 
