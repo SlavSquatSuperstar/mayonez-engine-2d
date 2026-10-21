@@ -99,7 +99,7 @@ public class ShapeSprite extends Node {
 
     private Shape getColliderShape() {
         if (collider == null) {
-            return new Rectangle(getGlobalTransform().getPosition(), getGlobalTransform().getScale(), getGlobalTransform().getRotation());
+            return getGlobalTransform().getBoundingRectangle();
         } else {
             return collider.getShape();
         }

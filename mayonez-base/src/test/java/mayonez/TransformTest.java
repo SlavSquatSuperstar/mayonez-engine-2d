@@ -66,6 +66,17 @@ class TransformTest {
         assertVec2Equals(x, t.applyInverse(y));
     }
 
+    // Transform Bounds Tests
+
+    @Test
+    void transformBoundingRectangleCorrect() {
+        var xf = randomTransform();
+        var rect = xf.getBoundingRectangle();
+        var det = xf.getScale().x * xf.getScale().y;
+        assertEquals(det, rect.area());
+    }
+
+
     // Helper Methods
 
     private Transform randomTransform() {

@@ -59,8 +59,7 @@ internal class GLSprite private constructor(
     override fun getVertexPositions(): Array<out Vec2?> {
         // Render sprite at object center and rotate according to object
         // Background sprite will not have scale but will use spriteXf instead
-        val globalXf = globalTransform
-        return Rectangle(globalXf.position, globalXf.scale, globalXf.rotation).vertices
+        return globalTransform.getBoundingRectangle().vertices
     }
 
 }

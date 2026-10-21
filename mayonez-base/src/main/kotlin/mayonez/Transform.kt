@@ -2,6 +2,7 @@ package mayonez
 
 import mayonez.annotations.*
 import mayonez.math.*
+import mayonez.math.shapes.Rectangle
 import java.util.*
 
 /**
@@ -175,6 +176,17 @@ class Transform(position: Vec2, rotation: Float, scale: Vec2) {
      */
     val up: Vec2
         get() = angle.rotation * Vec2(0f, 1f)
+
+    /**
+     * Gets the oriented bounding box (OBB) defined by this transform, with
+     * the center equal to the position, size equal to the scale, and angle
+     * equal to the rotation.
+     *
+     * @return the bounding rectangle
+     */
+    fun getBoundingRectangle(): Rectangle {
+        return Rectangle(position, scale, rotation)
+    }
 
     /**
      * Applies this transform to the given point. In other words, transforms a point
