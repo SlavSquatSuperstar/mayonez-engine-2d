@@ -131,14 +131,7 @@ class AngleTest {
     // Helper Methods
 
     private float randomAngle() {
-        return randomRange(-360, 360, 15f);
-    }
-
-    private float randomRange(float min, float max, float inc) {
-        var range = max - min;
-        var numVals = (int) (range / inc);
-        var bucket = Random.randomInt(0, numVals);
-        return min + bucket * inc;
+        return Random.randomRange(-360, 360, 15f);
     }
 
 }

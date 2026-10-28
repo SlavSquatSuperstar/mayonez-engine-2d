@@ -143,23 +143,16 @@ class TransformTest {
         // Scale must be uniform
         return new Transform(
                 randomVector(),
-                randomRange(-180, 180, 5f),
-                new Vec2(randomRange(-5, 5, 0.25f))
+                Random.randomRange(-180, 180, 5f),
+                new Vec2(Random.randomRange(-5, 5, 0.25f))
         );
     }
 
     private Vec2 randomVector() {
         return new Vec2(
-                randomRange(-10, 10, 0.25f),
-                randomRange(-10, 10, 0.25f)
+                Random.randomRange(-10, 10, 0.25f),
+                Random.randomRange(-10, 10, 0.25f)
         );
-    }
-
-    private float randomRange(float min, float max, float inc) {
-        var range = max - min;
-        var numVals = (int) (range / inc);
-        var bucket = Random.randomInt(0, numVals);
-        return min + bucket * inc;
     }
 
     private static Vec2 getTransformedPoint(Transform t, Vec2 x) {

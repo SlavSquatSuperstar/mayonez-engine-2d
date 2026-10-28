@@ -1,5 +1,7 @@
 package mayonez.math
 
+import kotlin.math.floor
+
 /**
  * Generates random numbers, vectors, and characters. Most methods will use
  * a uniform distribution, where all valid values have an equal chance of
@@ -48,6 +50,29 @@ object Random {
     fun randomFloat(min: Float, max: Float): Float {
         val interval = Interval(min, max)
         return (rand.nextFloat() * (interval.difference())) + interval.min
+    }
+
+    /**
+     * Generates a random uniform float inside the range defined by the two
+     * provided bounds and divided into buckets with size equal to the given
+     * increment. The number of possible outputs equals `floor(max - min) + 1`.
+     * All generated values will equal the lower bound plus some multiple of
+     * the increment. If the range is not divisible by the increment, any
+     * leftover numbers past the last bucket will be excluded. If the increment
+     * is less or equal to 0, it will be coerced to 1.
+     *
+     * @param min the lower bound, inclusive
+     * @param max the upper bound, inclusive (mostly)
+     * @param inc the increment between possible values
+     * @return the random float
+     */
+    @JvmStatic
+    fun randomRange(min: Float, max: Float, inc: Float): Float {
+        val safeInc = if (inc > 0) inc else 1f
+        val interval = Interval(min, max)
+        // # buckets = floor(max - min) + 1
+        val bucket = randomInt(0, (interval.difference() / safeInc).toInt())
+        return min + bucket * inc
     }
 
     /**
@@ -100,8 +125,7 @@ object Random {
     fun randomGaussianRange(min: Float, max: Float): Float {
         val interval = Interval(min, max)
         val mean = 0.5f * (interval.min + interval.max)
-        val range = interval.max - interval.min
-        val rand = randomGaussian(mean, range / 6f)
+        val rand = randomGaussian(mean, interval.difference() / 6f)
         return MathUtils.clamp(rand, min, max)
     }
 
@@ -199,7 +223,7 @@ object Random {
      */
     @JvmStatic
     fun randomAlphanumeric(): Char {
-        val rand = randomInt(0, 30) // 62 values
+        val rand = randomInt(0, 30) // 26 + 26 + 10 = 62 values
         return if (rand < 13) randomUppercase() // 26/62 = 13/31 Uppercase
         else if (rand < 26) randomLowercase() // 26/62 = 13/31 Lowercase
         else randomDigit() // 10/62 = 5/31 Number
