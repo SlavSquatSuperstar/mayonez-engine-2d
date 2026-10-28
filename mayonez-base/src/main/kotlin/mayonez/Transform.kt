@@ -164,9 +164,11 @@ class Transform(position: Vec2, rotation: Float, scale: Vec2) {
     // Transform Operations
 
     /**
-     * Applies this transform to the given point. In other words, transforms a point
-     * from world space to the object's local space, with this transform's position
-     * serving as the origin.
+     * Applies this transform `T` to the given point `x`, yielding `T(x)`. In
+     * other words, transforms a point from world space to the node's local
+     * space, with this transform's position serving as the origin.
+     *
+     * Also see [applyInverse].
      *
      * @param local a localized 2D point
      * @return the point in the world
@@ -178,9 +180,11 @@ class Transform(position: Vec2, rotation: Float, scale: Vec2) {
     }
 
     /**
-     * Applies this transform's inverse to the given point. In other words,
-     * transforms a point from the object's local space to world space, with
-     * this transform's position serving as the origin.
+     * Applies this transform's inverse `T^-1` to the given point `x`, yielding
+     * `T^-1(x)`. In other words, transforms a point from the node's local space
+     * to world space, with this transform's position serving as the origin.
+     *
+     * Also see [apply].
      *
      * @param world a 2D point in the world
      * @return the localized point
@@ -192,18 +196,23 @@ class Transform(position: Vec2, rotation: Float, scale: Vec2) {
     }
 
     /**
-     * Concatenates this transform with another transform. The resulting
-     * transform will have position equal to this transform applied to the
-     * other transform's position, rotation equal to the sum of both rotations,
-     * and scale equal to the product of both scales (without rotation).
+     * Concatenates this transform `T1` with another transform `T2`. The
+     * resulting transform `T1 ◦ T2` will have position equal to this transform
+     * applied to the other transform's position, rotation equal to the sum of
+     * both rotations, and scale equal to the product of both scales (without
+     * rotation). Note that this operation is slightly different from affine
+     * concatenation.
      *
-     * Like matrix multiplication, applying the combined transform is the same
-     * as applying the other transform first and then this one. Concatenating
-     * transforms is not commutative, so reversing the order of the transforms
-     * may result in a different result.
+     * Applying the combined transform to a point `x` to get `(T1 ◦ T2)(x)` is
+     * the same as applying the other transform first and then this one to get
+     * `T1(T2(x))`, assuming the scale factors are uniform and angles are
+     * multiples of 90 degrees. Concatenating transforms is not commutative,
+     * so usually `(T1 ◦ T2) != (T2 ◦ T1)`.
      *
      * Note that unlike [java.awt.geom.AffineTransform], no shearing/skewing
      * of the basis vectors occurs if the first scale is not uniform.
+     *
+     * Also see [combineInverse].
      *
      * @param other another transform
      * @return the combined transformation, or a copy if other is null
@@ -214,6 +223,39 @@ class Transform(position: Vec2, rotation: Float, scale: Vec2) {
             this.apply(other.position),
             this.rotation + other.rotation,
             this.scale * other.scale
+        )
+    }
+
+    /**
+     * Concatenates this transform's inverse `T1^-1` with another transform
+     * `T2`. This method can be used to "cancel out" a transform applied to
+     * another transform to obtain the other one, i.e. `T1^-1 ◦ T1 ◦ T = T`.
+     * The resulting transform `T1^-1 ◦ T2` will have position equal to this
+     * transform's inverse applied to the other transform's position, rotation
+     * equal to the difference of both rotations, and scale equal to the
+     * quotient of both scales (without rotation). Note that this operation is
+     * slightly different from affine concatenation.
+     *
+     * Applying the combined transform to a point `x` to get `(T1^-1 ◦ T2)(x)`
+     * is the same as applying the other transform first and then this one to
+     * get `T1^-1(T2(x))`, assuming the scale factors are uniform and angles
+     * are multiples of 90 degrees. Concatenating transforms is not
+     * commutative, so usually `(T1^-1 ◦ T2) != (T2^-1 ◦ T1)`.
+     *
+     * Note that unlike [java.awt.geom.AffineTransform], no shearing/skewing
+     * of the basis vectors occurs if the first scale is not uniform.
+     *
+     * Also see [combine].
+     *
+     * @param other another transform
+     * @return the combined transformation, or a copy if other is null
+     */
+    fun combineInverse(other: Transform?): Transform {
+        return if (other == null) copy()
+        else Transform(
+            this.applyInverse(other.position),
+            other.rotation - this.rotation,
+            other.scale / this.scale
         )
     }
 

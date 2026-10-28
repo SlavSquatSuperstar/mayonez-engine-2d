@@ -127,6 +127,42 @@ class TransformTest {
         assertVec2Equals(t1.apply(t2.apply(x)), yHat);
     }
 
+    @Test
+    void combineInverseTransformWithSelfSuccess() {
+        var t1 = randomTransform();
+        var identity = t1.combineInverse(t1);
+
+        // Check determinant
+        assertEquals(1f, identity.getDeterminant(), FLOAT_DELTA);
+
+        // Check transform correct
+        var x = randomVector();
+        var xHat = identity.apply(x);
+        assertVec2Equals(x, xHat);
+
+        // Check associativity
+        assertVec2Equals(t1.applyInverse(t1.apply(x)), xHat);
+    }
+
+    @Test
+    void combineInverseTransformToCancelOutSuccess() {
+        var t1 = randomTransform();
+        var t2 = randomTransform();
+        var t2Hat = t1.combineInverse(t1.combine(t2));
+
+        // Check determinant
+        assertEquals(t2.getDeterminant(), t2Hat.getDeterminant(), FLOAT_DELTA);
+
+        // Check transform correct
+        var x = randomVector();
+        var y = t2.apply(x);
+        var yHat = t2Hat.apply(x);
+        assertVec2Equals(y, yHat);
+
+        // Check associativity
+        assertVec2Equals(t1.applyInverse(t1.apply(t2.apply(x))), yHat);
+    }
+
     // Transform Space Tests
 
     @Test
