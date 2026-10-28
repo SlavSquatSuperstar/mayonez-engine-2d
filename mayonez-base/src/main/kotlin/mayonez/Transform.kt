@@ -6,18 +6,35 @@ import mayonez.math.shapes.Rectangle
 import java.util.*
 
 /**
- * Stores the position, rotation and scale of a [GameObject] and converts points
- * between different coordinate systems. An object's local coordinate system has
- * an origin, angle, and two perpendicular basis vectors, each with their own length.
+ * Stores the position, rotation and scale of a [Node] and converts points
+ * between different coordinate systems. Each coordinate system has an origin,
+ * rotation, and two scaled basis vectors.
  *
- * An affine transform (see [java.awt.geom.AffineTransform]) such as this class is
- * equivalent to a linear transformation `A` (the rotation applied after the scale, `R•S`)
- * plus a translation `b`. Affine transforms can also be represented as 2x3 matrices
- * or 3x3 augmented matrices.
+ * A transform `T(x) = A•x + b` maps a point `x` from its Node's local space to
+ * a point `T(x)` in the parent Node's space or the global space. Each transform
+ * is equal to a linear transformation `A`, which combines a scale and rotation
+ * `R•S`, and a translation `b`. Transforms can also be represented as 2x3
+ * matrices or 3x3 augmented matrices. For more on matrix multiplication, see
+ * [Mat22].
  *
- * Applying a transform yields `y = Ax + b`. Each transform is invertible, assuming
- * none of the scale components are 0. Applying the inverse of a transform yields
- * `x = A^(-1) (y - b)`.
+ * A transform is invertible if none of the scale components are zero (i.e. the
+ * determinant is non-zero). An inverse transform `T^-1(x)` maps world space
+ * back to local space, such that `T^-1(T(x)) = x` for all `x`. Additionally,
+ * the identity transform is a special transform `I` such that `I(x) = x` for
+ * all `x`.
+ *
+ * Transforms may also be concatenated to get the global transform of any node
+ * inside a tree. Child transforms are applied before parent transforms, such
+ * that `T_glo(x) = T_par(T_ch(x))`.
+ *
+ * Note: This class is a simplified version of [java.awt.geom.AffineTransform],
+ * in that the scale axes are always perpendicular. Normally, concatenating
+ * affine transforms will cause shearing if the outer scale axes have different
+ * lengths and the inner rotation is not a multiple of 90 degrees.
+ *
+ * See also
+ * - [Godot: Matrices and transforms](https://docs.godotengine.org/en/stable/tutorials/math/matrices_and_transforms.html)
+ * - [Wikipedia: Affine transformation](https://en.wikipedia.org/wiki/Affine_transformation)
  *
  * @author SlavSquatSuperstar
  */
@@ -74,7 +91,7 @@ class Transform(position: Vec2, rotation: Float, scale: Vec2) {
 
     // Transform Properties
 
-    /** Where the object is located in the scene. */
+    /** The transform's origin. */
     var position: Vec2 = Vec2(position)
         set(position) {
             field.set(position)
@@ -82,17 +99,15 @@ class Transform(position: Vec2, rotation: Float, scale: Vec2) {
 
     // Internal field
     private var angle: Angle = Angle.createDegrees(rotation)
-    // Affine transform = linear transform + translation
-    // Inverse
 
-    /** The angle the object is oriented, in degrees. */
+    /** The transform's rotation, in degrees. */
     var rotation: Float
         get() = angle.degrees
         set(rotation) {
             angle = Angle.createDegrees(rotation)
         }
 
-    /** How large the object is along each of its axes. */
+    /** The length of each of the transform's basis vectors. */
     var scale: Vec2 = Vec2(scale)
         set(scale) {
             field.set(scale)
@@ -148,8 +163,18 @@ class Transform(position: Vec2, rotation: Float, scale: Vec2) {
     }
 
     /**
-     * Applies this transform to another transform, combining the position,
-     * rotation, and scale of both.
+     * Concatenates this transform with another transform. The resulting
+     * transform will have position equal to this transform applied to the
+     * other transform's position, rotation equal to the sum of both rotations,
+     * and scale equal to the product of both scales.
+     *
+     * Like matrix multiplication, applying the combined transform is the same
+     * as applying the other transform first and then this one. Concatenating
+     * transforms is not commutative, so reversing the order of the transforms
+     * may result in a different result.
+     *
+     * Note that unlike [java.awt.geom.AffineTransform], no shearing/skewing
+     * of the basis vectors occurs if the first scale is not uniform.
      *
      * @param other another transform
      * @return the combined transformation, or a copy if other is null
@@ -157,7 +182,7 @@ class Transform(position: Vec2, rotation: Float, scale: Vec2) {
     fun combine(other: Transform?): Transform {
         return if (other == null) copy()
         else Transform(
-            this.position + (other.position * this.scale).rotate(this.rotation),
+            this.apply(other.position),
             this.rotation + other.rotation,
             this.scale * other.scale
         )
@@ -243,4 +268,5 @@ class Transform(position: Vec2, rotation: Float, scale: Vec2) {
     override fun hashCode(): Int = Objects.hash(position, rotation, scale)
 
     override fun toString() = String.format("Position: %s, Rotation: %.2f, Scale: %s", position, rotation, scale)
+
 }
