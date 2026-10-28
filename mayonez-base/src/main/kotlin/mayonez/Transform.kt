@@ -119,7 +119,7 @@ class Transform(position: Vec2, rotation: Float, scale: Vec2) {
     val determinant: Float
         get() = scale.x * scale.y
 
-    // Property Mutator Methods
+    // Transform Mutators
 
     /**
      * Translates the parent object along the x and y axes.
@@ -161,12 +161,41 @@ class Transform(position: Vec2, rotation: Float, scale: Vec2) {
     fun scale(factor: Vec2) {
         this.scale *= factor
     }
+    // Transform Operations
+
+    /**
+     * Applies this transform to the given point. In other words, transforms a point
+     * from world space to the object's local space, with this transform's position
+     * serving as the origin.
+     *
+     * @param local a localized 2D point
+     * @return the point in the world
+     */
+    fun apply(local: Vec2): Vec2 {
+        // Scale, rotate, then translate (preserves length of basis vectors)
+        // T(x) = A•x + b, where A = R•S
+        return (local * scale).rotate(rotation) + position
+    }
+
+    /**
+     * Applies this transform's inverse to the given point. In other words,
+     * transforms a point from the object's local space to world space, with
+     * this transform's position serving as the origin.
+     *
+     * @param world a 2D point in the world
+     * @return the localized point
+     */
+    fun applyInverse(world: Vec2): Vec2 {
+        // Translate, rotate, then scale
+        // T^1(x) = A^-1•(x - b), where A^-1 = S^-1•R^-1
+        return (world - position).rotate(-rotation) / scale
+    }
 
     /**
      * Concatenates this transform with another transform. The resulting
      * transform will have position equal to this transform applied to the
      * other transform's position, rotation equal to the sum of both rotations,
-     * and scale equal to the product of both scales.
+     * and scale equal to the product of both scales (without rotation).
      *
      * Like matrix multiplication, applying the combined transform is the same
      * as applying the other transform first and then this one. Concatenating
@@ -188,7 +217,7 @@ class Transform(position: Vec2, rotation: Float, scale: Vec2) {
         )
     }
 
-    // Space Transform Methods
+    // Transform Space Methods
 
     /**
      * Returns the positive x-axis, or the vector (1, 0), in this transform's
@@ -219,32 +248,6 @@ class Transform(position: Vec2, rotation: Float, scale: Vec2) {
         return Rectangle(position, scale, rotation)
     }
 
-    /**
-     * Applies this transform to the given point. In other words, transforms a point
-     * from world space to the object's local space, with this transform's position
-     * serving as the origin.
-     *
-     * @param local a localized 2D point
-     * @return the point in the world
-     */
-    fun apply(local: Vec2): Vec2 {
-        // Scale, rotate, then translate (preserves length of basis vectors)
-        return (local * scale).rotate(rotation) + position
-    }
-
-    /**
-     * Applies this transform's inverse to the given point. In other words,
-     * transforms a point from the object's local space to world space, with
-     * this transform's position serving as the origin.
-     *
-     * @param world a 2D point in the world
-     * @return the localized point
-     */
-    fun applyInverse(world: Vec2): Vec2 {
-        // Translate, rotate, then scale
-        return (world - position).rotate(-rotation) / scale
-    }
-
     // Copy Methods
 
     fun copy() = Transform(position, rotation, scale)
@@ -255,6 +258,7 @@ class Transform(position: Vec2, rotation: Float, scale: Vec2) {
         this.rotation = from.rotation
         this.scale.set(from.scale)
     }
+
 
     // Object Overrides
 
