@@ -46,14 +46,18 @@ class Rigidbody(mass: Float, drag: Float, angDrag: Float)
     // Kinematics Properties (Position, Velocity)
 
     override var position: Vec2
-        get() = transform.position
+        get() = globalTransform.position
         set(position) {
-            transform.position.set(position)
+            val nextGlobalTransform = globalTransform
+            nextGlobalTransform.position = position
+            setGlobalTransform(nextGlobalTransform)
         }
     override var rotation: Float
-        get() = transform.rotation
+        get() = globalTransform.rotation
         set(rotation) {
-            transform.rotation = rotation
+            val nextGlobalTransform = globalTransform
+            nextGlobalTransform.rotation = rotation
+            setGlobalTransform(nextGlobalTransform)
         }
 
     override var velocity: Vec2 = Vec2()
@@ -62,7 +66,6 @@ class Rigidbody(mass: Float, drag: Float, angDrag: Float)
         }
     override val speed: Float
         get() = velocity.len()
-
 
     override var angVelocity: Float = 0f
     override val angSpeed: Float
@@ -177,11 +180,12 @@ class Rigidbody(mass: Float, drag: Float, angDrag: Float)
         netTorque = 0f
     }
 
-
     override fun integrateVelocity(dt: Float) {
         if (static) return
-        transform.move(velocity * dt)
-        if (!fixedRotation) transform.rotate(angVelocity * dt)
+        val nextGlobalTransform = globalTransform
+        nextGlobalTransform.move(velocity * dt)
+        if (!fixedRotation) nextGlobalTransform.rotate(angVelocity * dt)
+        setGlobalTransform(nextGlobalTransform)
     }
 
     // Apply Force Methods

@@ -65,22 +65,20 @@ abstract class Collider(private val shape: Shape) :
 
     // Shape Properties
 
-    // TODO convert to property
-    fun center(): Vec2 = transform.position
+    fun center(): Vec2 = globalTransform.position
 
-    open fun getRotation(): Float = transform.rotation
+    open fun getRotation(): Float = globalTransform.rotation
 
     override fun getMinBounds(): BoundingBox = getShape().boundingRectangle()
 
     override fun getMass(density: Float): Float {
-        return shape.scale(transform.scale).mass(density)
+        return shape.scale(globalTransform.scale).mass(density)
     }
 
     override fun getAngMass(mass: Float): Float {
-        return shape.scale(transform.scale).angularMass(mass)
+        return shape.scale(globalTransform.scale).angularMass(mass)
     }
 
-    // TODO save as mutable field
     override fun getShape(): Shape {
         return shape.transform(globalTransform)
     }
