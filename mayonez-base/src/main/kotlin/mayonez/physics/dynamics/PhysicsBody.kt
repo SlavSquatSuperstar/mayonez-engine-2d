@@ -29,11 +29,11 @@ interface PhysicsBody {
 
     // Position Properties
 
-    /** The absolute position of the object in the world, in meters. */
-    val position: Vec2
+    /** The global position of the object in the world, in meters. */
+    var position: Vec2
 
-    /** The absolute rotation of the object in the world, in degrees. */
-    val rotation: Float
+    /** The global rotation of the object in the world, in degrees. */
+    var rotation: Float
 
     // Velocity Properties
 

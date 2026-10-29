@@ -87,7 +87,7 @@ internal class CollisionSolver(
     }
 
     private fun PhysicsBody.move(direction: Vec2) {
-        position.set(position + direction)
+        this.position += direction
     }
 
     /** Transfer linear and angular momentum between objects and apply friction. */
