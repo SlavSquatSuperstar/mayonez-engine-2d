@@ -504,6 +504,7 @@ public abstract class Node {
     /**
      * The node's {@link Transform} that defines its position, rotation, and
      * scale relative to its parent, or the world if no parent exists.
+     * See also {@link #setTransform}.
      *
      * @return the transform
      */
@@ -513,8 +514,8 @@ public abstract class Node {
 
     /**
      * Set the node's {@link Transform} to the value of the given transform.
-     * Note that this Node's transform will not point to the parent's
-     * transform.
+     * Note that this Node's transform will not point to the transform passes
+     * to this method. See also {@link #getTransform}.
      *
      * @param transform the transform
      */
@@ -547,7 +548,8 @@ public abstract class Node {
      * The node's global transform inside the scene, equal to this node's
      * transform right-concatenated with all ancestor node transforms until the
      * root ancestor. Note that the return value is read-only, and modifying it
-     * will not change any ancestor transforms.
+     * will not change any ancestor transforms. See also
+     * {@link #setGlobalTransform}.
      *
      * @return the global transform
      */
@@ -555,6 +557,22 @@ public abstract class Node {
         if (parent == null) return transform;
         else if (useParentTransform) return parent.getGlobalTransform();
         else return parent.getGlobalTransform().combine(transform);
+        // T_glo := T_par * T_ch
+    }
+
+    /**
+     * Set the node's global transform to match the given value. This method
+     * will only modify this node's local transform and will not change any
+     * ancestor transforms. See also {@link #getGlobalTransform}.
+     *
+     * @param globalTransform the global transform
+     */
+    public void setGlobalTransform(@Nullable Transform globalTransform) {
+        if (globalTransform == null) return;
+        if (parent == null) transform = globalTransform;
+        else if (useParentTransform) parent.setGlobalTransform(globalTransform);
+        else transform.set(parent.getGlobalTransform().combineInverse(globalTransform));
+        // T_ch <- T_par^-1 * T_glo
     }
 
     // Node Behavior Getters and Setters

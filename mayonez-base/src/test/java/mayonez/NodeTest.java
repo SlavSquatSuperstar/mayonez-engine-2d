@@ -325,12 +325,23 @@ class NodeTest {
     // Node Transform
 
     @Test
-    void nodeGlobalTransformCorrect() {
+    void nodeGetGlobalTransformCorrect() {
         node1.addChild(child1);
-        node1.setTransform(new Transform(new Vec2(1f), 90f, new Vec2(2f)));
-        child1.setTransform(new Transform(new Vec2(0f, -1f)));
+        node1.setTransform(new Transform(new Vec2(1f, 1f), 90f, new Vec2(2f)));
+        child1.setTransform(new Transform(new Vec2(0f, -1f), 180f, new Vec2(1.5f)));
 
-        assertEquals(new Transform(new Vec2(3f, 1f), 90f, new Vec2(2f)), child1.getGlobalTransform());
+        assertEquals(new Transform(new Vec2(3f, 1f), 270f, new Vec2(3f)),
+                child1.getGlobalTransform());
+    }
+
+    @Test
+    void nodeSetGlobalTransformCorrect() {
+        node1.addChild(child1);
+        node1.setTransform(new Transform(new Vec2(1f, 1f), 90f, new Vec2(2f)));
+        child1.setGlobalTransform(new Transform(new Vec2(3f, 1f), 270f, new Vec2(3f)));
+
+        assertEquals(new Transform(new Vec2(0f, -1f), 180f, new Vec2(1.5f)),
+                child1.getTransform());
     }
 
     // Node Enabled/Visible
