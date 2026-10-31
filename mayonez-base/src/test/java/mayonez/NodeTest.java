@@ -162,11 +162,11 @@ class NodeTest {
     @Test
     void cannotAddChildTwice() {
         node1.addChild(child1);
-        assertSame(node1, child1.parent);
+        assertSame(node1, child1.getParent());
         assertEquals(1, node1.numChildren());
 
         node1.addChild(child1);
-        assertSame(node1, child1.parent);
+        assertSame(node1, child1.getParent());
         assertEquals(1, node1.numChildren());
     }
 
@@ -175,7 +175,7 @@ class NodeTest {
         node1.addChild(child1);
         node2.addChild(child1);
 
-        assertSame(node1, child1.parent);
+        assertSame(node1, child1.getParent());
         assertEquals(1, node1.numChildren());
         assertEquals(0, node2.numChildren());
     }
@@ -267,6 +267,8 @@ class NodeTest {
         assertNull(node1.getChild((Class<? extends Node>) null));
         assertTrue(node1.getChildren(null).isEmpty());
     }
+    
+    // Sibling Node
 
     @Test
     void getSiblingByName() {
@@ -293,6 +295,17 @@ class NodeTest {
         assertNull(node1.getSibling(NodeC.class));
     }
 
+    @Test
+    void addSiblingSuccess() {
+        node1.addChild(child1);
+        child1.addSibling(child2);
+
+        assertSame(child1, child2.getSibling("Child Node 1"));
+        assertSame(child2, child1.getSibling("Child Node 2"));
+
+        assertSame(node1, child1.getParent());
+        assertSame(node1, child2.getParent());
+    }
 
     // Node Scene Depth
 

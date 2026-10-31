@@ -54,7 +54,7 @@ public class WeaponHotbar extends BoxContainer {
                 return super.getZIndex() + 3; // Display above overlay
             }
         };
-        getParent().addChild(selectedBorder);
+        addSibling(selectedBorder);
         setSelection(0);
     }
 

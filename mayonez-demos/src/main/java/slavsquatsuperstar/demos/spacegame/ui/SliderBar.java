@@ -40,7 +40,7 @@ public class SliderBar extends UIElement {
                 return super.getZIndex();
             }
         };
-        getParent().addChild(backgroundSprite);
+        addSibling(backgroundSprite);
 
         sliderSprite = new UISprite(position, size, sliderColor) {
             @Override
@@ -49,7 +49,7 @@ public class SliderBar extends UIElement {
             }
         };
         sliderSprite.setAnchor(Anchor.LEFT);
-        getParent().addChild(sliderSprite);
+        addSibling(sliderSprite);
         value = 1f;
 
         outlineSprite = new UISprite(position, size, BORDER_TEXTURE) {
@@ -58,7 +58,7 @@ public class SliderBar extends UIElement {
                 return super.getZIndex() + 2; // display above foreground
             }
         };
-        getParent().addChild(outlineSprite);
+        addSibling(outlineSprite);
     }
 
     // Slider Methods

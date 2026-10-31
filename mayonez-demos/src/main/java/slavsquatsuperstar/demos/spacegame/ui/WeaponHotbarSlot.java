@@ -50,7 +50,7 @@ public class WeaponHotbarSlot extends ImageLabel {
             }
         };
         cooldownOverlaySprite.setAnchor(Anchor.BOTTOM);
-        getParent().addChild(cooldownOverlaySprite);
+        addSibling(cooldownOverlaySprite);
         setCooldownPercent(0f);
     }
 

@@ -486,7 +486,7 @@ public abstract class Node {
      * @param name the sibling node's name
      * @return the sibling node, or null if not present
      */
-    public @Nullable Node getSibling(String name) {
+    public @Nullable Node getSibling(@Nullable String name) {
         if (parent == null) return null;
         else return parent.getChild(name);
     }
@@ -505,9 +505,19 @@ public abstract class Node {
     }
 
     /**
-     * The node's {@link Transform} that defines its position, rotation, and
-     * scale relative to its parent, or the world if no parent exists.
-     * See also {@link #setTransform}.
+     * Add a sibling node to this node's parent, or do nothing if this node has
+     * no parent node.
+     *
+     * @param sibling the sibling node
+     */
+    public void addSibling(@Nullable Node sibling) {
+        if (parent != null) parent.addChild(sibling);
+    }
+
+    /**
+     * The node's {@link Transform}, which defines its position, rotation, and
+     * scale relative to its parent, or the world if no parent exists. See also
+     * {@link #setTransform}.
      *
      * @return the transform
      */
