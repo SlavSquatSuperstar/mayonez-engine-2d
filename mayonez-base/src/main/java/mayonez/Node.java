@@ -7,15 +7,30 @@ import org.jspecify.annotations.Nullable;
 import java.util.*;
 
 /**
- * An entity possessing properties and behaviors that belongs to a scene.
- * Nodes are structured in a tree, and nodes can be created and destroyed while
- * the scene is initializing or running.
+ * An entity possessing properties and behaviors that belongs to a scene. The
+ * functionality of a Node can be extended by creating subclasses or adding
+ * child nodes. Nodes are structured in a tree, and nodes can be created and
+ * destroyed while the scene is initializing or running.
  * <p>
- * Generally, a pure entity-component-system (ECS) architecture favors
- * composition over inheritance, keeping classes simple and modular. Under pure
- * ECS, entities are a single ID and only components can provide data and
- * functionality. Such implementations have higher performance but lead to more
- * boilerplate.
+ * <b>Usage:</b> Nodes can be created by instantiating a subclass of
+ * {@code Node}. A node's transform, parent, and scene can be accessed through
+ * {@link #getTransform}, {@link #getParent}, and {@link #getScene}. Usually,
+ * Nodes can add child nodes by calling {@link addChild} inside {@link #init}.
+ * Further initialization requiring child or sibling nodes can be done inside
+ * {@link #start}. User behavior can be defined in {@link #update},
+ * {@link #fixedUpdate}, or {@link #debugRender}. To remove a node and its tree
+ * from the scene, call {@link #removeChild} from the parent or
+ * {@link #setDestroyed} through the target node. Nodes can be allowed or
+ * prevented from updating through {@link #setEnabled}, and rendering through
+ * {@link #setVisible}.
+ * <p>
+ * See {@link Scene} for more information.
+ * <p>
+ * <b>Background:</b> Generally, a pure entity-component-system (ECS)
+ * architecture favors composition over inheritance, keeping classes simple and
+ * modular. Under pure ECS, entities are a single ID and only components can
+ * provide data and functionality. Such implementations have higher performance
+ * but lead to more boilerplate.
  * <p>
  * In the Unity Engine, {@code GameObjects} are entities that store a transform
  * and multiple {@code Components} and scripts. {@code GameObjects} may also be
@@ -29,18 +44,6 @@ import java.util.*;
  * <p>
  * Mayonez Engine uses a one {@code Node} class for greater flexibility while
  * keeping the {@link Scene} class for global resources.
- * <p>
- * Usage: Nodes can be created by instantiating a subclass of {@code #Node}.
- * A node's transform, parent, and scene can be accessed through
- * {@link #getTransform}, {@link #getParent}, and {@link #getScene}. Usually,
- * Nodes will add child nodes by calling {@link addChild} inside {@link #init}.
- * Further initialization requiring child or sibling nodes can be done inside
- * {@link #start}. User behavior can be defined in {@link #update},
- * {@link #fixedUpdate}, or {@link #debugRender}. To remove a node and its tree
- * from the scene, call {@link #removeChild} from the parent or
- * {@link #setDestroyed} through the target node.
- * <p>
- * See {@link mayonez.Scene} for more information.
  *
  * @author SlavSquatSuperstar
  */
@@ -131,8 +134,8 @@ public abstract class Node {
      * non-null here. Subclasses may override this method and can also call
      * {@code super.init()}.
      * <p>
-     * Warning: Calling {@code init()} at any other point in time may lead to
-     * unintended errors and should be avoided!
+     * <b>Warning:</b> Calling {@code init()} at any other point in time may
+     * lead to unintended errors and should be avoided!
      */
     protected void init() {
     }
@@ -144,11 +147,11 @@ public abstract class Node {
      * accessible here. This method will be called even if this node has been
      * disabled through {@link #setEnabled}.
      * <p>
-     * Usage: Subclasses may override this method and can also call
+     * <b>Usage:</b> Subclasses may override this method and can also call
      * {@code super.start()}.
      * <p>
-     * Warning: Calling {@code start()} at any other point in time may lead to
-     * unintended errors and should be avoided!
+     * <b>Warning:</b> Calling {@code start()} at any other point in time may
+     * lead to unintended errors and should be avoided!
      */
     protected void start() {
     }
@@ -159,7 +162,7 @@ public abstract class Node {
      * generally consistent. The {@code fixedUpdate} method should be used for
      * frame rate-sensitive behavior, such as movement, collision, and AI.
      * <p>
-     * Usage: Subclasses may override this method and can also call
+     * <b>Usage:</b> Subclasses may override this method and can also call
      * {@code super.fixedUpdate()}.
      *
      * @param dt seconds between fixed ticks
@@ -173,7 +176,7 @@ public abstract class Node {
      * may vary. The {@code update} method may be used for general behavior,
      * such as input, timers, and animations.
      * <p>
-     * Usage: Subclasses may override this method and can also call
+     * <b>Usage:</b> Subclasses may override this method and can also call
      * {@code super.update()}.
      *
      * @param dt seconds since the last frame
@@ -188,7 +191,7 @@ public abstract class Node {
      * method is called even if the scene is paused or the component is not
      * enabled.
      * <p>
-     * Usage: Subclasses may override this method and can also call
+     * <b>Usage:</b> Subclasses may override this method and can also call
      * {@code super.debugRender()}.
      */
     protected void debugRender() {
@@ -526,8 +529,7 @@ public abstract class Node {
     /**
      * Set whether this Node's {@link Transform} should point to the parent
      * node's transform. If {@code true}, then modifying this node's transform
-     * will modify the parent's transform. All subclasses of {@link Component}
-     * have this property set to {@code true}.
+     * will modify the parent's transform.
      *
      * @param useParentTransform whether to reference the parent transform
      * @deprecated This method is a leftover from the old GameObject-Component
@@ -608,7 +610,7 @@ public abstract class Node {
      * The properties {@link #getScene}, {@link #getParent}, and
      * {@link #getTransform} will still be accessible.
      * <p>
-     * Warning: Calling {@code onDestroy} directly can lead to unpredictable
+     * <b>Warning:</b> Calling {@code onDestroy} directly can lead to undefined
      * behavior. It is better to call {@link #setDestroyed()} instead.
      */
     protected void onDestroy() {
@@ -639,8 +641,9 @@ public abstract class Node {
     /**
      * Custom user behavior for when this script is enabled.
      * <p>
-     * Warning: Calling {@code onEnable()} directly can lead to unpredictable
-     * behavior. It is better to call {@code setEnabled(true)} instead.
+     * <b>Warning:</b> Calling {@code onEnable()} directly can lead to
+     * undefined behavior. It is better to call {@code setEnabled(true)}
+     * instead.
      */
     protected void onEnable() {
     }
@@ -648,8 +651,9 @@ public abstract class Node {
     /**
      * Custom user behavior for when this script is disabled.
      * <p>
-     * Warning: Calling {@code onEnable()} directly can lead to unpredictable
-     * behavior. It is better to call {@code setEnabled(false)} instead.
+     * <b>Warning:</b> Calling {@code onDisable()} directly can lead to
+     * undefined behavior. It is better to call {@code setEnabled(false)}
+     * instead.
      */
     protected void onDisable() {
     }

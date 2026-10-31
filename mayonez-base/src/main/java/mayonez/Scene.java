@@ -16,17 +16,19 @@ import java.util.*;
 import java.util.List;
 
 /**
- * An in-game world or level that updates and renders a tree of
- * {@link mayonez.Node}s. Each scene can be given a background image or color.
+ * An in-game world or level that updates and renders a tree of {@link Node}s.
+ * Each scene has its own {@link Camera} node, which is accessible through
+ * {@link #getCamera} and controllable through scripts.
  * <p>
- * Usage: Create a scene by instantiating a subclass of
- * {@link mayonez.Scene}. Add nodes to the scene by calling {@link #addNode}
+ * <b>Usage:</b> Create a scene by instantiating a subclass of {@code Scene}.
+ * Add nodes to the scene during initialization by calling {@link #addNode}
  * inside the {@link #init} method. Scenes may also define custom game logic
  * and graphics inside {@link #onUserUpdate} and {@link #onUserRender}. To
  * remove a node from the scene, call {@link #removeNode} from the scene or
- * {@link Node#setDestroyed()} through the node.
+ * {@link Node#setDestroyed} through the node. Scene switching and controls
+ * are done through the {@link SceneManager} class.
  * <p>
- * See {@link mayonez.Node} and {@link mayonez.SceneManager} for more information.
+ * See {@link Node} and {@link SceneManager} for more information.
  *
  * @author SlavSquatSuperstar
  */
@@ -114,14 +116,14 @@ public abstract class Scene {
 
     /**
      * Add nodes to this scene before the scene starts or initialize fields
-     * after this scene has been loaded.
-     * The method {@link #getCamera()} is accessible here.
+     * after this scene has been loaded. The method {@link #getCamera} is
+     * accessible here.
      * <p>
-     * Usage: Subclasses may override this method and can also call
-     * {@code super.init()}.
+     * <b>Usage:</b> Subclasses may override this method and can also call
+     * {@code super.init}.
      * <p>
-     * Warning: Calling {@code init()} at any other point in time may lead to
-     * unintended errors and should be avoided!
+     * <b>Warning:</b>: Calling {@code init} at any other point in time may
+     * lead to unintended errors and should be avoided!
      */
     protected void init() {
     }
