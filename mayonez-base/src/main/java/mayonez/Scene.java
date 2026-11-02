@@ -38,16 +38,16 @@ import java.util.List;
 public abstract class Scene {
 
     // Static Fields
-    private static int sceneCounter = 0; // total number of scenes created
+    private static int sceneCounter = 0; // Total number of scenes created
 
     // Scene Information
     final int sceneID; // UUID for this scene
     private final String name;
-    private SceneState state; // if paused or running
+    private SceneState state; // If paused or running
 
     // Scene Nodes
     private final BufferedList<Node> sceneNodes;
-    private final CallbackBuffer newNodes; // Nodes needing to start
+    private final CallbackBuffer nodeCallbacks;
     private Node rootNode;
     private boolean sceneChanged;
     private boolean uniqueNodeNames;
@@ -71,10 +71,11 @@ public abstract class Scene {
         this.name = Objects.requireNonNullElse(name, StringUtils.getObjectClassName(this));
         state = SceneState.STOPPED;
 
-        // Initialize layers
+        // Initialize nodes and layers
         sceneNodes = new BufferedList<>();
-        newNodes = new CallbackBuffer();
+        nodeCallbacks = new CallbackBuffer();
         rootNode = createRootNode();
+
         sceneChanged = false;
         uniqueNodeNames = false;
         renderLayer = RendererFactory.createRenderLayer(Mayonez.getUseGL());
@@ -89,14 +90,14 @@ public abstract class Scene {
      */
     @Initializer
     final void start() {
-        // Recreate root node if restarting
-        if (rootNode.isDestroyed()) createRootNode();
-
-        // Add camera
-        camera = CameraFactory.createCamera();
-        addNode(camera);
+        // Recreate root node and camera if restarting
+        if (rootNode.isDestroyed()) {
+            rootNode = createRootNode();
+            camera = createCamera();
+        }
 
         // Add nodes in tree order (top-down)
+        camera = createCamera();
         init();
 
         // Start nodes in reverse tree order (bottom-up)
@@ -105,13 +106,6 @@ public abstract class Scene {
 
         // Sort nodes by update order
         sortNodes();
-    }
-
-    private Node createRootNode() {
-        rootNode = new RootNode();
-        sceneNodes.add(rootNode);
-        rootNode.setScene(this);
-        return rootNode;
     }
 
     /**
@@ -167,7 +161,7 @@ public abstract class Scene {
         // Add or remove nodes
         if (sceneChanged) {
             sceneNodes.processBuffer();
-            newNodes.executeCallbacks(); // Start any new nodes
+            nodeCallbacks.executeCallbacks(); // Start any new nodes
             sceneNodes.forEach(Node::garbageCollect);
             sortNodes();
             sceneChanged = false;
@@ -175,6 +169,18 @@ public abstract class Scene {
 
         // Stop scene
         if (isStopping()) stop();
+        else {
+            // Detect if root node or camera are destroyed still while running
+            if (rootNode.isDestroyed()) {
+                rootNode = createRootNode();
+                Logger.warn("Root node is destroyed; recreating");
+            }
+            // Camera depends on root note
+            if (camera.isDestroyed()) {
+                camera = createCamera();
+                Logger.warn("Camera is destroyed; recreating");
+            }
+        }
     }
 
     /**
@@ -228,7 +234,7 @@ public abstract class Scene {
 
         // Clear all nodes
         sceneNodes.clear();
-        newNodes.clear();
+        nodeCallbacks.clear();
         renderLayer.clear();
         physics.clear();
 
@@ -236,6 +242,20 @@ public abstract class Scene {
     }
 
     // Node Methods
+
+    private Node createRootNode() {
+        var rootNode = new RootNode();
+        sceneNodes.add(rootNode);
+        rootNode.setScene(this);
+        return rootNode;
+    }
+
+    private Camera createCamera() {
+        var camera = CameraFactory.createCamera();
+        // TODO signal input/renderer
+        addNode(camera);
+        return camera;
+    }
 
     /**
      * Adds a top-level node to this scene and initializes the node and all its
@@ -263,7 +283,7 @@ public abstract class Scene {
         node.setScene(this);
         node.init();
         // Start node later after all nodes added
-        if (!isStopped()) newNodes.add(node::start);
+        if (!isStopped()) nodeCallbacks.add(node::start);
         if (node instanceof Renderable r) renderLayer.addRenderable(r);
         if (node instanceof PhysicsBody b) physics.addPhysicsBody(b);
         if (node instanceof CollisionBody b) physics.addCollisionBody(b);

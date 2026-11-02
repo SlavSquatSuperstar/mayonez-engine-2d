@@ -35,6 +35,7 @@ public abstract class Camera extends Node implements Viewport {
 
     protected Camera(Vec2 screenSize) {
         super("Camera");
+        // TODO remove param
         setUpdateOrder(UpdateOrder.MOVEMENT);
         this.screenSize = screenSize;
         resizeHandler = e -> {
@@ -75,12 +76,6 @@ public abstract class Camera extends Node implements Viewport {
         if (getSubject() != null) {
             getTransform().setPosition(getSubject().getTransform().getPosition());
         }
-    }
-
-    // Don't want to get rid of the camera!
-    @Override
-    public boolean isDestroyed() {
-        return false;
     }
 
     @Override

@@ -60,6 +60,14 @@ public class ECSTestScene extends DemoScene {
                     testObjects.addLast(new TestObject());
                     getScene().addNode(testObjects.getLast());
                 }
+                if (KeyInput.keyPressed("backspace")) {
+                    // Destroy root node (very bad)
+                    getScene().getNode("Root").setDestroyed();
+                }
+                if (KeyInput.keyPressed("\\")) {
+                    // Destroy camera (very bad)
+                    getScene().getCamera().setDestroyed();
+                }
             }
 
             @Override
