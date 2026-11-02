@@ -58,13 +58,8 @@ public class ThrustController extends Node {
     // Callback Methods
 
     @Override
-    protected void onEnable() {
-        for (var thruster : thrusters) thruster.setEnabled(true);
-    }
-
-    @Override
-    protected void onDisable() {
-        for (var thruster : thrusters) thruster.setEnabled(false);
+    protected void onEnable(boolean enabled) {
+        for (var thruster : thrusters) thruster.setEnabled(enabled);
     }
 
     @Override

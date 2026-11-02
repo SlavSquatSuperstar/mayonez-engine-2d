@@ -81,15 +81,6 @@ public class Animator extends Node {
         }
     }
 
-    // Sprite Methods
-
-    @Override
-    public void setVisible(boolean visible) {
-        super.setVisible(visible);
-        // make sure sprite is initialized
-        if (sprite != null) sprite.setVisible(visible);
-    }
-
     private void setSpriteTexture(int frame) {
         if (sprite == null) return; // not initialized yet
         sprite.setTexture(textures[frame]);
@@ -105,9 +96,14 @@ public class Animator extends Node {
     // Callback Methods
 
     @Override
-    public void setEnabled(boolean enabled) {
-        super.setEnabled(enabled);
+    public void onEnable(boolean enabled) {
         animTimer.setPaused(!enabled);
+    }
+
+    @Override
+    protected void onVisible(boolean visible) {
+        // make sure sprite is initialized
+        if (sprite != null) sprite.setVisible(visible);
     }
 
     /**

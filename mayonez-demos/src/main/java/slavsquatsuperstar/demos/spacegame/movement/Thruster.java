@@ -44,9 +44,9 @@ public class Thruster extends Node {
     }
 
     @Override
-    protected void onDisable() {
-        exhaustAnim.setEnabled(false);
-        exhaustAnim.setVisible(false);
+    protected void onEnable(boolean enabled) {
+        exhaustAnim.setEnabled(enabled);
+        exhaustAnim.setVisible(enabled);
     }
 
     // Getters and Setters

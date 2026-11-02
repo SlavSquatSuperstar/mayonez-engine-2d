@@ -34,19 +34,13 @@ public abstract class UIContainer extends UIElement {
     }
 
     @Override
-    public void setVisible(boolean visible) {
-        super.setVisible(visible);
+    protected void onEnable(boolean enabled) {
+        elements.forEach(e -> e.setEnabled(enabled));
+    }
+
+    @Override
+    protected void onVisible(boolean visible) {
         elements.forEach(e -> e.setVisible(visible));
-    }
-
-    @Override
-    protected void onEnable() {
-        elements.forEach(e -> e.setEnabled(true));
-    }
-
-    @Override
-    protected void onDisable() {
-        elements.forEach(e -> e.setEnabled(false));
     }
 
     @Override

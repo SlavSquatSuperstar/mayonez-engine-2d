@@ -601,8 +601,9 @@ public abstract class Node {
     /**
      * Delete this node from the scene, removing it from its parent and
      * destroying all its descendants at the end of the current frame. The
-     * properties {@link getScene}, {@link getParent}, and {@link getTransform}
-     * will return null after the node is destroyed.
+     * properties {@link #getScene}, {@link #getParent}, and
+     * {@link #getTransform} will return null after the node is destroyed. See
+     * also {@link #onDestroy}.
      * <p>
      * <b>Warning:</b> Destroying a node is permanent and cannot be reversed!
      */
@@ -618,10 +619,8 @@ public abstract class Node {
     /**
      * Custom behavior for when this node or any of its ancestors is destroyed.
      * The properties {@link #getScene}, {@link #getParent}, and
-     * {@link #getTransform} will still be accessible.
-     * <p>
-     * <b>Warning:</b> Calling {@code onDestroy} directly can lead to undefined
-     * behavior. It is better to call {@link #setDestroyed()} instead.
+     * {@link #getTransform} will still be accessible. See also
+     * {@link #setDestroyed}.
      */
     protected void onDestroy() {
     }
@@ -638,39 +637,27 @@ public abstract class Node {
 
     /**
      * Set whether this node should be updated. Will not affect whether the
-     * parent node is enabled.
+     * parent node is enabled. See also {@link #onEnable}.
      *
      * @param enabled if the node is enabled
      */
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
-        if (enabled) onEnable();
-        else onDisable();
+        onEnable(enabled);
     }
 
     /**
-     * Custom user behavior for when this script is enabled.
-     * <p>
-     * <b>Warning:</b> Calling {@code onEnable()} directly can lead to
-     * undefined behavior. It is better to call {@code setEnabled(true)}
-     * instead.
+     * Custom behavior for when this node is enabled or disabled. See also
+     * {@link #setEnabled}.
+     *
+     * @param enabled if the node is enabled
      */
-    protected void onEnable() {
+    protected void onEnable(boolean enabled) {
     }
 
     /**
-     * Custom user behavior for when this script is disabled.
-     * <p>
-     * <b>Warning:</b> Calling {@code onDisable()} directly can lead to
-     * undefined behavior. It is better to call {@code setEnabled(false)}
-     * instead.
-     */
-    protected void onDisable() {
-    }
-
-    /**
-     * Whether this node should update, meaning it and all of its ancestors are
-     * enabled.
+     * Whether this node is enabled globally in the scene, meaning it and all
+     * of its ancestors are enabled.
      *
      * @return if the node should update
      */
@@ -678,8 +665,6 @@ public abstract class Node {
         if (parent == null) return enabled;
         else return enabled && parent.shouldUpdate();
     }
-    // TODO check UI usages
-    // TODO check animator usages
 
     /**
      * Whether this node and all its descendants should be rendered. If any
@@ -694,17 +679,27 @@ public abstract class Node {
 
     /**
      * Set whether this node should be rendered. Will not affect whether the
-     * parent node is visible.
+     * parent node is visible. See also {@link #onVisible}.
      *
      * @param visible if the node is visible
      */
     public void setVisible(boolean visible) {
         this.visible = visible;
+        onVisible(visible);
     }
 
     /**
-     * Whether this node should render, meaning it and all of its ancestors are
-     * visible.
+     * Custom behavior for when this node is shown or hidden. See also
+     * {@link #setVisible}.
+     *
+     * @param visible if the node is visible
+     */
+    protected void onVisible(boolean visible) {
+    }
+
+    /**
+     * Whether this node is visible globally in the scene, meaning it and all
+     * of its ancestors are visible.
      *
      * @return if the node should render
      */
