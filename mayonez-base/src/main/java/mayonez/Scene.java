@@ -93,7 +93,6 @@ public abstract class Scene {
         // Recreate root node and camera if restarting
         if (rootNode.isDestroyed()) {
             rootNode = createRootNode();
-            camera = createCamera();
         }
 
         // Add nodes in tree order (top-down)
@@ -104,7 +103,7 @@ public abstract class Scene {
         state = SceneState.RUNNING;
         sceneNodes.reversed().forEach(Node::start);
 
-        // Sort nodes by update order
+        // Sort nodes
         sortNodes();
     }
 
@@ -328,8 +327,10 @@ public abstract class Scene {
         this.sceneChanged = true;
     }
 
-    private void sortNodes() {
-        sceneNodes.sort(Comparator.comparingInt(Node::getUpdateOrder));
+    void sortNodes() {
+        // Sort by update order first then depth (tree order)
+        sceneNodes.sort(Comparator.comparingInt(Node::getUpdateOrder)
+                .thenComparingInt(Node::getSceneDepth));
     }
 
     /**

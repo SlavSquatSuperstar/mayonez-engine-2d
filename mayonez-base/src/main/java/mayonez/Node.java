@@ -721,7 +721,7 @@ public abstract class Node {
 
     /**
      * Set the node's update order or the order in which it will be updated.
-     * Nodes with higher lesser update orders will be updated before those with
+     * Nodes with lesser update orders will be updated before those with
      * greater update orders.
      *
      * @param updateOrder the update order

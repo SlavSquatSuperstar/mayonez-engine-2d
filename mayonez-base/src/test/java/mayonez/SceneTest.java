@@ -25,6 +25,15 @@ class SceneTest {
         scene2 = new TestScene("Test Scene");
         scene1.setUniqueNodeNames(true);
 
+        /*
+         * R
+         * - 1
+         *  - 3
+         *   - 4
+         * - 2
+         *  - 5
+         *  - 6
+         */
         node1 = new NodeA("Node 1");
         node1.addTag(TAG1);
         node1.addTag(TAG2);
@@ -146,6 +155,49 @@ class SceneTest {
         var root = scene1.getRootNode();
         assertTrue(root.isRoot());
         assertEquals(0, root.getSceneDepth());
+    }
+
+    // Node Sorting
+
+    @Test
+    void nodesSortedByDepthSuccess() {
+        /*
+         * R: 0
+         * - 1: 1
+         *  - 3: 2
+         *   - 4: 3
+         * - 2: 1
+         *  - 5: 2
+         *  - 6: 2
+         */
+        scene1.sortNodes();
+        assertEquals(
+                List.of(scene1.getRootNode(), node1, node2,
+                        node3, node5, node6, node4),
+                scene1.getNodes()
+        );
+    }
+
+    @Test
+    void nodesSortedByUpdateOrderSuccess() {
+        /*
+         * R: 0, 0
+         * - 1: 1, 0
+         *  - 3: 2, 1
+         *   - 4: 3, -1
+         * - 2: 1, 0
+         *  - 5: 2, -1
+         *  - 6: 2, 0
+         */
+        node3.setUpdateOrder(1);
+        node4.setUpdateOrder(-1);
+        node5.setUpdateOrder(-1);
+        scene1.sortNodes();
+        assertEquals(
+                List.of(node5, node4, scene1.getRootNode(),
+                        node1, node2, node6, node3),
+                scene1.getNodes()
+        );
     }
 
 }
