@@ -2,25 +2,31 @@ package slavsquatsuperstar.demos.spacegame.combat.projectiles;
 
 import mayonez.*;
 import mayonez.math.*;
+import mayonez.scripts.DestroyAfterDuration;
 
 /**
- * Make a particle follow a target object until the target is destroyed.
+ * An impact particle caused by a projectile that follows a target node.
  *
  * @author SlavSquatSuperstar
  */
-class ParticleFollowTarget extends Node {
+class ImpactParticle extends Node {
 
+    private final ProjectileType type;
     private final Node target;
     private Vec2 targetPositionOffset;
     private float targetRotationOffset;
 
-    ParticleFollowTarget(Node target) {
+    ImpactParticle(Transform transform, ProjectileType type, Node target) {
+        super("%s Impact".formatted(type.name()), transform);
+        this.type = type;
         this.target = target;
     }
 
     @Override
-    protected void start() {
-        setUseParentTransform(true);
+    protected void init() {
+        addChild(new DestroyAfterDuration(Random.randomFloat(0.1f, 0.4f)));
+        addChild(ProjectilePrefabs.PARTICLE_SPRITES.getSprite(type.spriteIndex()));
+
         targetPositionOffset = getTransform().getPosition()
                 .sub(target.getTransform().getPosition());
         targetRotationOffset = getTransform().getRotation()
@@ -31,14 +37,14 @@ class ParticleFollowTarget extends Node {
     protected void update(float dt) {
         // Destroy if target destroyed
         if (target.isDestroyed()) {
-            getParent().setDestroyed();
+            setDestroyed();
             return;
         }
 
         // Follow target
-        this.getTransform().setPosition(target.getTransform().getPosition()
+        getTransform().setPosition(target.getTransform().getPosition()
                 .add(targetPositionOffset));
-        this.getTransform().setRotation(target.getTransform().getRotation()
+        getTransform().setRotation(target.getTransform().getRotation()
                 + (targetRotationOffset));
     }
 

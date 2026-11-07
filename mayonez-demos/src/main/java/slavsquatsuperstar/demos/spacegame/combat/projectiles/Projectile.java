@@ -2,7 +2,6 @@ package slavsquatsuperstar.demos.spacegame.combat.projectiles;
 
 import mayonez.*;
 import mayonez.physics.*;
-import mayonez.physics.dynamics.*;
 import mayonez.scripts.*;
 import slavsquatsuperstar.demos.spacegame.SpaceGameScene;
 
@@ -46,7 +45,7 @@ public class Projectile extends Node {
         }
 
         // Spawn particle
-        getScene().addNode(ProjectilePrefabs.createImpactPrefab(type, particleXf, event.other));
+        getScene().addNode(new ImpactParticle(particleXf, type, event.other));
         setDestroyed();
     }
 

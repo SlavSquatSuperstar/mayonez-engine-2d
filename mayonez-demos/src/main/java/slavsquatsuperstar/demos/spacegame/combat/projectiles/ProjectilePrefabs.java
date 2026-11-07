@@ -3,11 +3,9 @@ package slavsquatsuperstar.demos.spacegame.combat.projectiles;
 import mayonez.*;
 import mayonez.graphics.sprites.*;
 import mayonez.math.Random;
-import mayonez.math.*;
 import mayonez.physics.CollisionEvent;
 import mayonez.physics.colliders.*;
 import mayonez.physics.dynamics.*;
-import mayonez.scripts.*;
 import slavsquatsuperstar.demos.spacegame.PrefabUtils;
 import slavsquatsuperstar.demos.spacegame.objects.SpaceGameLayer;
 import slavsquatsuperstar.demos.spacegame.objects.SpaceGameZIndex;
@@ -128,15 +126,7 @@ public final class ProjectilePrefabs {
     public static Node createImpactPrefab(
             ProjectileType type, Transform particleXf, Node target
     ) {
-        return new Node("%s Impact".formatted(type.name()), particleXf) {
-            @Override
-            protected void init() {
-                var duration = Random.randomFloat(0.1f, 0.4f);
-                addChild(new DestroyAfterDuration(duration));
-                addChild(PARTICLE_SPRITES.getSprite(type.spriteIndex()));
-                addChild(new ParticleFollowTarget(target));
-            }
-        };
+        return new ImpactParticle(particleXf, type, target);
     }
 
 }
