@@ -1,18 +1,17 @@
 package slavsquatsuperstar.demos.spacegame.objects.ships;
 
 import mayonez.*;
-import mayonez.math.Random;
 import mayonez.scripts.*;
 import mayonez.scripts.movement.*;
-import slavsquatsuperstar.demos.spacegame.combat.ExplosionPrefabs;
+import slavsquatsuperstar.demos.spacegame.combat.Explosion;
 import slavsquatsuperstar.demos.spacegame.combat.projectiles.FireProjectile;
 import slavsquatsuperstar.demos.spacegame.movement.ThrustController;
 
 import java.util.*;
 
 /**
- * Plays a destruction sequence and disables all ship systems after a spaceship's health
- * is depleted.
+ * Disables all ship systems and creates an explosion after a spaceship's
+ * health is depleted.
  *
  * @author SlavSquatSuperstar
  */
@@ -24,7 +23,6 @@ public class SpaceshipDestruction extends TimerScript {
 
     // References
     private final List<Node> shipSystems;
-    private Node explosion;
 
     public SpaceshipDestruction() {
         super(DESTRUCTION_DURATION);
@@ -33,9 +31,7 @@ public class SpaceshipDestruction extends TimerScript {
 
     @Override
     protected void start() {
-        setUseParentTransform(true);
         shipSystems.clear();
-        explosion = null;
 
         shipSystems.add(getSibling(FireProjectile.class));
         shipSystems.add(getSibling(ThrustController.class));
@@ -46,10 +42,6 @@ public class SpaceshipDestruction extends TimerScript {
     @Override
     protected void update(float dt) {
         super.update(dt);
-        if (explosion != null) {
-            // Have the explosion follow the ship until it is destroyed
-            explosion.getTransform().setPosition(getTransform().getPosition());
-        }
         if (this.isReady()) getParent().setDestroyed();
     }
 
@@ -66,11 +58,7 @@ public class SpaceshipDestruction extends TimerScript {
         }
         shipSystems.clear();
 
-        getScene().addNode(explosion = ExplosionPrefabs.createShipExplosionPrefab(
-                "Ship Explosion",
-                new Transform(getTransform().getPosition(), Random.randomAngle(), getTransform().getScale()),
-                EXPLOSION_DURATION
-        ));
+        getScene().addNode(new Explosion(EXPLOSION_DURATION, this));
     }
 
 }
