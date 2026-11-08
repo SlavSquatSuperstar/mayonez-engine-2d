@@ -32,15 +32,15 @@ public class EnemyMovement extends SpaceshipMovement {
         turnState = getNextThrusterState(turnState, rb.getAngSpeed(), TURN_PARAMETERS);
 
         // Get move and brake direction (relative to ship)
-        var moveInput = getUserInput().mul(5f);
-        var turnInput = getUserInputValue() * 10f;
+        var moveInput = getMoveInput().mul(5f);
+        var turnInput = getTurnInput() * 10f;
         var brakeDir = getBrakeDir(new Vec2()).mul(5f);
         var turnBrakeDir = getTurnBrakeDir(0f) * 10f;
 
         // Move and brake (relative to world)
-        moveObject(moveInput.rotate(getTransform().getRotation()), dt);
+        moveObject(moveInput.rotate(getGlobalTransform().getRotation()), dt);
         rotateObject(turnInput, dt);
-        brake(brakeDir.rotate(getTransform().getRotation()), turnBrakeDir);
+        brake(brakeDir.rotate(getGlobalTransform().getRotation()), turnBrakeDir);
 
         // Fire thrusters
         getThrustController().fireMoveThrusters(moveInput, brakeDir);
@@ -56,16 +56,16 @@ public class EnemyMovement extends SpaceshipMovement {
     // Movement Script Overrides
 
     @Override
-    public Vec2 getUserInput() {
+    protected Vec2 getMoveInput() {
         if (moveState == ThrusterState.SPEED_UP) {
-            return rb.getVelocity().rotate(-getTransform().getRotation()).unit();
+            return rb.getVelocity().rotate(-getGlobalTransform().getRotation()).unit();
         } else {
             return new Vec2();
         }
     }
 
     @Override
-    public float getUserInputValue() {
+    protected float getTurnInput() {
         if (moveState == ThrusterState.SPEED_UP) {
             return Math.signum(rb.getAngVelocity());
         } else {
@@ -76,7 +76,7 @@ public class EnemyMovement extends SpaceshipMovement {
     @Override
     protected Vec2 getBrakeDir(Vec2 moveInput) {
         if (moveState == ThrusterState.SLOW_DOWN) {
-            return rb.getVelocity().rotate(-getTransform().getRotation())
+            return rb.getVelocity().rotate(-getGlobalTransform().getRotation())
                     .unit().mul(-1f);
         } else {
             return new Vec2();

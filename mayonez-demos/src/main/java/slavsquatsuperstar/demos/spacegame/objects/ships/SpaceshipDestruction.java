@@ -5,6 +5,7 @@ import mayonez.scripts.*;
 import mayonez.scripts.movement.*;
 import slavsquatsuperstar.demos.spacegame.combat.Explosion;
 import slavsquatsuperstar.demos.spacegame.combat.projectiles.FireProjectile;
+import slavsquatsuperstar.demos.spacegame.movement.SpaceshipMovement;
 import slavsquatsuperstar.demos.spacegame.movement.ThrustController;
 
 import java.util.*;
@@ -35,7 +36,7 @@ public class SpaceshipDestruction extends TimerScript {
 
         shipSystems.add(getSibling(FireProjectile.class));
         shipSystems.add(getSibling(ThrustController.class));
-        shipSystems.add(getSibling(MovementScript.class));
+        shipSystems.add(getSibling(SpaceshipMovement.class));
         shipSystems.add(getSibling(KeepInScene.class));
     }
 

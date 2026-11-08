@@ -10,7 +10,7 @@ import mayonez.physics.dynamics.*;
 import mayonez.scripts.*;
 
 /**
- * The Geometry Dash player character.
+ * The Geometry Dash player character controlled with the WASD keys.
  *
  * @author SlavSquatSuperstar
  */
@@ -41,10 +41,16 @@ class GDPlayer extends Node {
 
         addChild(new BoxCollider(new Vec2(1, 1)));
         addChild(new Rigidbody(1f).setDrag(0.2f).setFixedRotation(true));
-        addChild(new GDPlayerMovement(PLAYER_SPEED, HORIZ_AXIS, VERT_AXIS));
 
         var halfSize = GDEditorScene.SCENE_SIZE.mul(0.5f);
         addChild(new KeepInScene(halfSize.mul(-1f), halfSize, KeepInScene.Mode.STOP));
+    }
+
+    @Override
+    protected void fixedUpdate(float dt) {
+        // Normalize so don't move faster diagonally
+        var userInput = new Vec2(KeyInput.getAxis(HORIZ_AXIS), KeyInput.getAxis(VERT_AXIS)).unit();
+        getTransform().move(userInput.mul(PLAYER_SPEED * dt));
     }
 
     private void addSpriteLayers() {

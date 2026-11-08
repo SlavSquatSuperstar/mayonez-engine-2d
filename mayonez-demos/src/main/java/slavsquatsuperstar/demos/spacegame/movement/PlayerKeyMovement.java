@@ -51,8 +51,8 @@ public class PlayerKeyMovement extends SpaceshipMovement {
         }
 
         // Get move input (relative to ship)
-        var moveInput = getUserInput().mul(moveThrust);
-        var turnInput = getUserInputValue() * turnThrust;
+        var moveInput = getMoveInput().mul(moveThrust);
+        var turnInput = getTurnInput() * turnThrust;
 
         // Calculate brake amount (relative to ship)
         var brakeDir = getBrakeDir(moveInput);
@@ -62,7 +62,7 @@ public class PlayerKeyMovement extends SpaceshipMovement {
         // TODO Maybe compare against frame delta-v instead
         // Zero out velocity if braking and too slow
         // Due to float imprecision brake/local velocity is not always zero
-        var localVelocity = rb.getVelocity().rotate(-getTransform().getRotation());
+        var localVelocity = rb.getVelocity().rotate(-getGlobalTransform().getRotation());
         var brakeMod = new Vec2(1f);
         if (shouldZeroVelocity(brakeDir.x, localVelocity.x, BRAKE_THRESHOLD_SPEED)) {
             brakeMod.x = 0f;
@@ -76,7 +76,7 @@ public class PlayerKeyMovement extends SpaceshipMovement {
         }
 
         // Move (relative to world)
-        var worldMoveInput = moveInput.rotate(getTransform().getRotation());
+        var worldMoveInput = moveInput.rotate(getGlobalTransform().getRotation());
         moveObject(worldMoveInput, dt);
         rotateObject(turnInput, dt);
 
@@ -84,11 +84,11 @@ public class PlayerKeyMovement extends SpaceshipMovement {
         // Don't brake if component too small
         if (Math.abs(brakeDir.x) < 1e-5) brakeDir.x = 0f;
         if (Math.abs(brakeDir.y) < 1e-5) brakeDir.y = 0f;
-        var worldBrakeDir = brakeDir.mul(brakeMod).rotate(getTransform().getRotation());
+        var worldBrakeDir = brakeDir.mul(brakeMod).rotate(getGlobalTransform().getRotation());
 
         // Should either zero or thrust
         moveObject(worldBrakeDir.mul(moveThrust), 0f);
-        rb.setVelocity(localVelocity.mul(brakeMod).rotate(getTransform().getRotation()));
+        rb.setVelocity(localVelocity.mul(brakeMod).rotate(getGlobalTransform().getRotation()));
 
         rotateObject(turnBrakeDir * turnBrakeMod * turnThrust, 0f);
         rb.setAngVelocity(rb.getAngVelocity() * turnBrakeMod);
@@ -116,7 +116,7 @@ public class PlayerKeyMovement extends SpaceshipMovement {
     @Override
     protected Vec2 getBrakeDir(Vec2 moveInput) {
         // Velocity relative to ship
-        var localVelocity = rb.getVelocity().rotate(-getTransform().getRotation());
+        var localVelocity = rb.getVelocity().rotate(-getGlobalTransform().getRotation());
         var brakeDir = localVelocity.mul(-1f).unit();
 
         // Lower brake power when input down
@@ -160,12 +160,12 @@ public class PlayerKeyMovement extends SpaceshipMovement {
     // Input Overrides
 
     @Override
-    public Vec2 getUserInput() {
+    protected Vec2 getMoveInput() {
         return new Vec2(KeyInput.getAxis(HORIZONTAL_MOVE_AXIS), KeyInput.getAxis(VERTICAL_MOVE_AXIS));
     }
 
     @Override
-    public float getUserInputValue() {
+    protected float getTurnInput() {
         return -KeyInput.getAxis(TURN_AXIS);
     }
 
