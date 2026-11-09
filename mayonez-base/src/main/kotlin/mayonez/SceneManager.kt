@@ -126,6 +126,9 @@ object SceneManager {
             startScene() // Start if stopped
             resumeScene() // Resume if paused
         }
+
+        // Update point transformer
+        MouseInput.setPointTransformer(scene.camera)
     }
 
     internal fun setInitialScene(scene: Scene) {
@@ -149,6 +152,7 @@ object SceneManager {
     internal fun startScene() {
         if (currentScene.isStopped || currentScene.isStopping) {
             currentScene.start()
+            // Set initial update point transformer
             MouseInput.setPointTransformer(currentScene.camera)
             Logger.debug("Started scene \"${currentScene.name}\"")
         }
