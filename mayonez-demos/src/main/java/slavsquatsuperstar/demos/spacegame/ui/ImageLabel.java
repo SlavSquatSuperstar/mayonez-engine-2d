@@ -33,7 +33,7 @@ public class ImageLabel extends UIElement {
 
         // Background uses label size
         backgroundSprite = new UISprite(position, size, backgroundTexture);
-        addSibling(backgroundSprite);
+        addChild(backgroundSprite);
 
         // Icon can be made smaller by setting padding
         iconSprite = new UISprite(position, size.sub(new Vec2(backgroundPadding)), iconTexture) {
@@ -42,7 +42,7 @@ public class ImageLabel extends UIElement {
                 return super.getZIndex() + 1; // Display above background
             }
         };
-        addSibling(iconSprite);
+        addChild(iconSprite);
 
         // Border can be made larger by setting thickness
         borderSprite = new UISprite(position, size.add(new Vec2(borderThickness)), borderTexture) {
@@ -51,7 +51,7 @@ public class ImageLabel extends UIElement {
                 return super.getZIndex() + 2; // Display above icon
             }
         };
-        addSibling(borderSprite);
+        addChild(borderSprite);
     }
 
     @Override
