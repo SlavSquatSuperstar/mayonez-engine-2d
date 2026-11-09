@@ -29,7 +29,7 @@ class BoxContainerTest {
         var size = new Vec2(50, 50);
         var numElements = 5;
         for (int i = 0; i < numElements; i++) {
-            container.addElement(new UISprite(new Vec2(), size, Colors.WHITE));
+            container.addChild(new UISprite(new Vec2(), size, Colors.WHITE));
         }
         container.arrangeElements();
 
@@ -48,7 +48,7 @@ class BoxContainerTest {
         var size = new Vec2(50, 50);
         var numElements = 5;
         for (int i = 0; i < numElements; i++) {
-            container.addElement(new UISprite(new Vec2(), size, Colors.WHITE));
+            container.addChild(new UISprite(new Vec2(), size, Colors.WHITE));
         }
         container.arrangeElements();
 
@@ -73,7 +73,7 @@ class BoxContainerTest {
         };
         var numElements = sizes.length;
         for (Vec2 size : sizes) {
-            container.addElement(new UISprite(new Vec2(), size, Colors.WHITE));
+            container.addChild(new UISprite(new Vec2(), size, Colors.WHITE));
         }
         container.arrangeElements();
 
@@ -98,7 +98,7 @@ class BoxContainerTest {
         };
         var numElements = sizes.length;
         for (Vec2 size : sizes) {
-            container.addElement(new UISprite(new Vec2(), size, Colors.WHITE));
+            container.addChild(new UISprite(new Vec2(), size, Colors.WHITE));
         }
         container.arrangeElements();
 

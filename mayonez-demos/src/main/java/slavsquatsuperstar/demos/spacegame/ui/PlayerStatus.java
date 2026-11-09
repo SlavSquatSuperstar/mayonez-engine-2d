@@ -51,9 +51,9 @@ public class PlayerStatus extends BoxContainer {
         };
         for (var row : statusRows) {
             var rowContainer = new BoxContainer(position, spacing, false);
-            this.addElement(rowContainer);
+            this.addChild(rowContainer);
             for (var elem : row) {
-                rowContainer.addElement(elem);
+                rowContainer.addChild(elem);
             }
         }
     }

@@ -1,7 +1,6 @@
 package mayonez.graphics.ui;
 
 import mayonez.Node;
-import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -34,6 +33,26 @@ public abstract class UIContainer extends UIElement {
     }
 
     @Override
+    public void addChild(Node child) {
+        super.addChild(child);
+        if (child instanceof UIElement element) {
+            element.setContainer(this);
+            elements.add(element);
+            if (started) arrangeElements();
+        }
+    }
+
+    @Override
+    public void removeChild(Node child) {
+        super.removeChild(child);
+        if (child instanceof UIElement element) {
+            // UIElement destroy sets container to null
+            elements.remove(element);
+            if (started) arrangeElements();
+        }
+    }
+
+    @Override
     protected void onEnable(boolean enabled) {
         elements.forEach(e -> e.setEnabled(enabled));
     }
@@ -49,15 +68,13 @@ public abstract class UIContainer extends UIElement {
         started = false;
     }
 
-    // Layout Methods
+    // Container Methods
 
     /**
      * Rearrange all child element positions and sizes. This method will also be recursively called
      * for any child containers.
      */
     protected abstract void arrangeElements();
-
-    // Container Methods
 
     /**
      * Get the child elements of this container in the order they were added.
@@ -85,32 +102,6 @@ public abstract class UIContainer extends UIElement {
      */
     public int numElements() {
         return elements.size();
-    }
-
-    /**
-     * Add a UI element from this container and refresh the layout.
-     *
-     * @param element the element
-     */
-    public void addElement(UIElement element) {
-        if (element == null) return;
-        super.addChild(element);
-        element.setContainer(this);
-        elements.add(element);
-        if (started) arrangeElements();
-    }
-
-    /**
-     * Remove a UI element from this container and refresh the layout.
-     *
-     * @param element the element
-     */
-    public void removeElement(UIElement element) {
-        if (element == null) return;
-        super.removeChild(element);
-        // UIElement destroy sets container to null
-        elements.remove(element);
-        if (started) arrangeElements();
     }
 
     /**

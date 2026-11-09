@@ -43,7 +43,7 @@ public class WeaponHotbar extends BoxContainer {
         // TODO recreate on loadout change
         for (int i = 0; i < numSlots; i++) {
             var hotbarSlot = new WeaponHotbarSlot(position, slotSize, loadout.get(i));
-            addElement(hotbarSlot);
+            addChild(hotbarSlot);
         }
 
         // Border over selected hotbar element
