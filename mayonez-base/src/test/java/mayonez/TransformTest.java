@@ -105,6 +105,7 @@ class TransformTest {
         assertVec2Equals(t1.apply(t2.apply(x)), yHat);
     }
 
+    // TODO scale must be non-zero
     @Test
     void combineTransformSuccessRandom() {
         var t1 = randomTransform();
@@ -176,11 +177,13 @@ class TransformTest {
     // Helper Methods
 
     private Transform randomTransform() {
-        // Scale must be uniform
+        // Scale must be uniform and non-zero
+        var scale = Random.randomRange(-5, 5, 0.25f);
+        if (scale == 0f) scale = 1f;
         return new Transform(
                 randomVector(),
                 Random.randomRange(-180, 180, 5f),
-                new Vec2(Random.randomRange(-5, 5, 0.25f))
+                new Vec2(scale)
         );
     }
 
