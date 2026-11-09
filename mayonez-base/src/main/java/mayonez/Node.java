@@ -42,8 +42,10 @@ import java.util.*;
  * {@code Nodes} provide greater scene readability and organization at the cost
  * of making inheritance trees larger.
  * <p>
- * Mayonez Engine uses a one {@code Node} class for greater flexibility while
- * keeping the {@link Scene} class for global resources.
+ * Mayonez Engine uses one {@code Node} class for greater flexibility while
+ * keeping the {@link Scene} class for global resources. The {@code Node} class
+ * avoids cases where most of the functionality is contained in one Component,
+ * and the GameObject is mostly empty.
  *
  * @author SlavSquatSuperstar
  */
@@ -515,9 +517,9 @@ public abstract class Node {
     }
 
     /**
-     * The node's {@link Transform}, which defines its position, rotation, and
-     * scale relative to its parent, or the world if no parent exists. See also
-     * {@link #setTransform}.
+     * The node's local {@link Transform}, which defines its position,
+     * rotation, and scale relative to its parent, or the world if no parent
+     * exists. See also {@link #setTransform}.
      *
      * @return the transform
      */
@@ -526,9 +528,9 @@ public abstract class Node {
     }
 
     /**
-     * Set the node's {@link Transform} to the value of the given transform.
-     * Note that this Node's transform will not point to the transform passes
-     * to this method. See also {@link #getTransform}.
+     * Set the node's local {@link Transform} to the value of the given
+     * transform. Note that this Node's transform will not point to the
+     * transform passed to this method. See also {@link #getTransform}.
      *
      * @param transform the transform
      */
