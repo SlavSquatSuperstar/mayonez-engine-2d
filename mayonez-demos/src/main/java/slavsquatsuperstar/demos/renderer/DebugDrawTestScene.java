@@ -14,11 +14,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A scene for testing the efficiency of circle rendering.
+ * A scene for testing the performance of debug shape rendering.
  *
  * @author SlavSquatSuperstar
  */
-public class CirclesTestScene extends DemoScene {
+public class DebugDrawTestScene extends DemoScene {
 
     private static final Vec2 SCENE_HALF_SIZE
             = new Vec2(Mayonez.getScreenWidth(), Mayonez.getScreenHeight())
@@ -39,7 +39,7 @@ public class CirclesTestScene extends DemoScene {
 
     TextLabel circlesText, rectanglesText, polygonsText, totalText;
 
-    public CirclesTestScene(String name) {
+    public DebugDrawTestScene(String name) {
         super(name);
     }
 
