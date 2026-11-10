@@ -1,5 +1,58 @@
 # Mayonez Engine Changelog
 
+## v0.8.4-snapshot1
+
+Node global transforms
+
+### Features
+
+- (Math) Transform applies rotation after scale
+- (Math) Add constants for sqrt(2) and sqrt(3)
+- (Math) Add Transform.getBoundingRectangle method
+- (Math) Add Transformable.transform method
+- (Math) Add Angle equals method
+- (Math) Add Angle subtraction method
+- (Math) Add Random.randomRange function
+- (Math) Add Transform.combineInverse method
+- (ECS) Add Node.setGlobalTransform method
+- (ECS) Add Node.addSibling method
+- (ECS) Add Node onEnable(enabled)/onVisible(visible) callbacks
+- (ECS) Recreate scene root node and camera if destroyed
+- (ECS) Sort Scene nodes by update order then depth
+
+### Refactor
+
+- (ECS) UIContainer/Element use Node parent/children properties
+- (ECS) Delete old GameObject/Component/Script classes
+- (Math) Angle stores floats instead of double
+- (Physics) Collider uses global transform
+- (Physics) Make PhysicsBody position/rotation mutable
+- (Physics) Rigidbody uses global transform
+- (Demos) Rename ParticleFollowTarget class to ImpactParticle
+- (Demos) Rename ExplosionPrefabs class to Explosion
+- (Demos) Merge MarioController class into Mario
+- (Demos) Delete MovementScript abstract class
+- (ECS) UIContainer elements use Node add/removeChild methods
+
+### Fixes
+
+- (Math) Set 2 pi constant to correct value
+- (Input) Update MouseInput point transformer every scene switch
+- (ECS) UIElements call addChild instead of addSibling
+
+### Documentation
+
+- (Math) Update Transform Javadoc comments
+- (ECS) Update Node/Scene Javadoc usage sections
+
+### Build
+
+- Update Gradle version to 9.8.x
+- Update Java version to 25
+- Update Kotlin version to 2.4.x
+- Update LWJGL version to 3.4.3
+- Update other dependency versions
+
 ## v0.8.3
 
 Node-based entity-component-system
@@ -1058,7 +1111,7 @@ Editable text label messages
 - Create BooleanValidator class to check boolean preferences
 - Improve Record.getX functions to avoid unnecessary casting
 - Created GlyphSprite class to store position and size for TextLabel classes
-- Added isInUI() property to Renderable interface
+- Added isInUI () property to Renderable interface
 - RendeRLayer now checks if object is in UI before adding
 - GLUIRenderer also draws TextLabel objects
 - TextLabel message can now be changed
@@ -1085,7 +1138,7 @@ UI bounds and toggleable text
 
 - Create Rectangle/BoundingBox.fromMinAndMax factory methods taking min and max corners
 - Create Rectangle.rectangleVerticesMinMax method taking min and max corners
-- Create UIBounds class to encapsulate UI position and size 
+- Create UIBounds class to encapsulate UI position and size
 - UIBounds class now stores anchor position and direction
 - Setting UIBounds anchor direction updates the anchor point
 - Setting UIBounds anchor point or size updates the center
