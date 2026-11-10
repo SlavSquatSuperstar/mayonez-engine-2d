@@ -26,7 +26,7 @@ public class CirclesTestScene extends DemoScene {
     private static final Color BACKGROUND_COLOR
             = new Color(192, 192, 192, 220);
 
-    private static final int SHAPES_PER_ACTION = 2000;
+    private static final int SHAPES_PER_ACTION = 1000;
 
     private static final float MIN_RADIUS = 4f;
     private static final float MAX_RADIUS = 16f;
@@ -34,6 +34,10 @@ public class CirclesTestScene extends DemoScene {
     private static final int MAX_STROKE = 3;
 
     private final List<TestShape> circles = new ArrayList<>();
+    private final List<TestShape> rectangles = new ArrayList<>();
+    private final List<TestShape> polygons = new ArrayList<>();
+
+    TextLabel circlesText, rectanglesText, polygonsText, totalText;
 
     public CirclesTestScene(String name) {
         super(name);
@@ -41,9 +45,6 @@ public class CirclesTestScene extends DemoScene {
 
     @Override
     protected void init() {
-        circles.clear();
-        addShapes();
-
         addNode(new Node("Debug Text") {
             @Override
             protected void init() {
@@ -106,68 +107,55 @@ public class CirclesTestScene extends DemoScene {
                 ));
 
                 // Num circles
-                var circlesText = new TextLabel(
+                circlesText = new TextLabel(
                         "Balls: _",
                         new Vec2(20, Mayonez.getScreenHeight() - 240)
-                ) {
-                    @Override
-                    protected void update(float dt) {
-                        setMessage("Balls: " + circles.size());
-                    }
-                };
+                );
                 addChild(circlesText
                         .setAnchor(Anchor.TOP_LEFT)
                         .setFontSize(32));
 
                 // Num rectangles
-                var rectanglesText = new TextLabel(
+                rectanglesText = new TextLabel(
                         "Boxes: _",
                         new Vec2(20, Mayonez.getScreenHeight() - 280)
-                ) {
-                    @Override
-                    protected void update(float dt) {
-                        setMessage("Boxes: " + 0);
-                    }
-                };
+                );
                 addChild(rectanglesText
                         .setAnchor(Anchor.TOP_LEFT)
                         .setFontSize(32));
 
                 // Num rectangles
-                var polygonsText = new TextLabel(
+                polygonsText = new TextLabel(
                         "Polys: _",
                         new Vec2(20, Mayonez.getScreenHeight() - 320)
-                ) {
-                    @Override
-                    protected void update(float dt) {
-                        setMessage("Polys: " + 0);
-                    }
-                };
+                );
                 addChild(polygonsText
                         .setAnchor(Anchor.TOP_LEFT)
                         .setFontSize(32));
 
                 // Total shapes
-                var totalText = new TextLabel(
+                totalText = new TextLabel(
                         "Total: _",
                         new Vec2(20, Mayonez.getScreenHeight() - 360)
-                ) {
-                    @Override
-                    protected void update(float dt) {
-                        setMessage("Total: " + circles.size());
-                    }
-                };
+                );
                 addChild(totalText
                         .setAnchor(Anchor.TOP_LEFT)
                         .setFontSize(32));
             }
         });
+
+        circles.clear();
+        rectangles.clear();
+        polygons.clear();
+        addShapes();
     }
 
     @Override
     protected void onUserRender() {
         var debugDraw = getDebugDraw();
-        circles.forEach(c -> debugDraw.drawShape(c.shape, c.brush));
+        circles.forEach(shape -> debugDraw.drawShape(shape.shape, shape.brush));
+        rectangles.forEach(shape -> debugDraw.drawShape(shape.shape, shape.brush));
+        polygons.forEach(shape -> debugDraw.drawShape(shape.shape, shape.brush));
     }
 
     @Override
@@ -179,40 +167,69 @@ public class CirclesTestScene extends DemoScene {
         if (KeyInput.keyPressed("-")) {
             // Remove shapes
             if (!circles.isEmpty()) circles.subList(0, SHAPES_PER_ACTION).clear();
+            if (!rectangles.isEmpty()) rectangles.subList(0, SHAPES_PER_ACTION).clear();
+            if (!polygons.isEmpty()) polygons.subList(0, SHAPES_PER_ACTION).clear();
+            updateLabels();
         }
     }
 
     private void addShapes() {
         // Add shapes
         for (int i = 0; i < SHAPES_PER_ACTION; i++) {
-            circles.add(getRandomShape());
+            circles.add(new TestShape(getRandomCircle(), getRandomBrush()));
+            rectangles.add(new TestShape(getRandomRectangle(), getRandomBrush()));
+            polygons.add(new TestShape(getRandomPolygon(), getRandomBrush()));
         }
+        updateLabels();
     }
 
-    private static TestShape getRandomShape() {
+    private void updateLabels() {
+        circlesText.setMessage("Balls: " + circles.size());
+        rectanglesText.setMessage("Boxes: " + rectangles.size());
+        polygonsText.setMessage("Polys: " + polygons.size());
+        totalText.setMessage("Total: " + (circles.size() + rectangles.size() + polygons.size()));
+    }
+
+    // Helper Methods
+
+    private static ShapeBrush getRandomBrush() {
         var color = Colors.randomColor();
-        var fill = Random.randomPercent(0.40f);
+        var fill = Random.randomPercent(0.25f);
         // TODO limit max stroke based on size
         var stroke = Random.randomInt(MIN_STROKE, MAX_STROKE);
         var zIndex = Random.randomInt(-10, 10);
-        var brush = new ShapeBrush(color, fill, zIndex, stroke);
-
-        var isEllipse = Random.randomPercent(0.75f);
-        var shape = isEllipse ? getRandomEllipse() : getRandomCircle();
-        return new TestShape(shape, brush);
+        return new ShapeBrush(color, fill, zIndex, stroke);
     }
 
-    private static Shape getRandomEllipse() {
+    private static Shape getRandomRectangle() {
+        var isSquare = Random.randomPercent(0.25f);
         var width = Random.randomFloat(MIN_RADIUS, MAX_RADIUS) * 2f;
-        var height = width * Random.randomFloat(0.75f, 1.25f);
+        var height = isSquare ? width : width * Random.randomFloat(0.5f, 2f);
         var size = new Vec2(width, height);
         var rotation = Random.randomAngle();
-        return new Ellipse(getRandomPosition(), size, rotation);
+        return new Rectangle(getRandomPosition(), size, rotation);
     }
 
     private static Shape getRandomCircle() {
+        var isEllipse = Random.randomPercent(0.75f);
+        if (isEllipse) {
+            var width = Random.randomFloat(MIN_RADIUS, MAX_RADIUS) * 2f;
+            var height = width * Random.randomFloat(0.75f, 1.25f);
+            var size = new Vec2(width, height);
+            var rotation = Random.randomAngle();
+            return new Ellipse(getRandomPosition(), size, rotation);
+        } else {
+            var radius = Random.randomFloat(MIN_RADIUS, MAX_RADIUS);
+            return new Circle(getRandomPosition(), radius);
+        }
+    }
+
+    private static Shape getRandomPolygon() {
+        var isTriangle = Random.randomPercent(0.20f);
         var radius = Random.randomFloat(MIN_RADIUS, MAX_RADIUS);
-        return new Circle(getRandomPosition(), radius);
+        var vertices = isTriangle ? 3 : Random.randomInt(5, 10);
+        return new Polygon(getRandomPosition(), vertices, radius)
+                .rotate(Random.randomAngle(), null);
     }
 
     private static Vec2 getRandomPosition() {
