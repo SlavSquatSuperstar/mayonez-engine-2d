@@ -194,7 +194,7 @@ public class DebugDrawTestScene extends DemoScene {
         var fill = Random.randomPercent(0.25f);
         // TODO limit max stroke based on size
         var stroke = Random.randomInt(MIN_STROKE, MAX_STROKE);
-        var zIndex = Random.randomInt(-10, 10);
+        var zIndex = Random.randomInt(-25, 25);
         return new ShapeBrush(color, fill, zIndex, stroke);
     }
 

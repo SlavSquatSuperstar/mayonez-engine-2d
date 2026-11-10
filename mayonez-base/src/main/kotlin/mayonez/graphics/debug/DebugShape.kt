@@ -18,33 +18,25 @@ private const val MAX_BATCH_TRIANGLES: Int = 1000
  *
  * @author SlavSquatSuperstar
  */
-internal data class DebugShape(internal val shape: MShape, internal val brush: ShapeBrush) :
+@JvmRecord
+data class DebugShape(val shape: MShape, val brush: ShapeBrush) :
     JRenderable, GLRenderable {
 
-    private val color: MColor
-        get() = brush.color
-
-    internal val fill: Boolean
-        get() = brush.fill
-
-    private val strokeSize: Float
-        get() = brush.strokeSize
-
-    // AWT Renderer Methods
+    // AWT Renderable Methods
 
     override fun render(g2: Graphics2D?) {
         if (g2 == null) return
 
         // Set brush properties
-        g2.color = color.toAWT()
-        g2.stroke = BasicStroke(strokeSize)
+        g2.color = brush.color.toAWT()
+        g2.stroke = BasicStroke(brush.strokeSize)
 
         // Draw shape
         val awtShape = shape.toAWTShape()
-        if (fill) g2.fill(awtShape) else g2.draw(awtShape)
+        if (brush.fill) g2.fill(awtShape) else g2.draw(awtShape)
     }
 
-    // GL Renderer Methods
+    // GL Renderable Methods
 
     /**
      * Pushes a shape's vertices and texture to a render batch.
@@ -52,18 +44,16 @@ internal data class DebugShape(internal val shape: MShape, internal val brush: S
      * @param batch the batch
      */
     override fun pushToBatch(batch: RenderBatch) {
-        val color = color.toGL()
+        val color = brush.color.toGL()
         color.w = 1f // Disable transparency due to reused vertices
         batch.pushShape(shape, color, brush)
     }
-
-    // Renderable Methods
 
     override fun getBatchSize(): Int {
         return when {
             shape is Circle -> MAX_BATCH_CIRCLES
             shape is Ellipse -> MAX_BATCH_CIRCLES
-            fill -> MAX_BATCH_TRIANGLES
+            brush.fill -> MAX_BATCH_TRIANGLES
             else -> MAX_BATCH_LINES
         }
     }
@@ -77,6 +67,8 @@ internal data class DebugShape(internal val shape: MShape, internal val brush: S
         }
     }
 
+    // Renderable Methods
+
     override fun getZIndex(): Int = brush.zIndex
 
     override fun shouldRender(): Boolean = true
@@ -86,17 +78,13 @@ internal data class DebugShape(internal val shape: MShape, internal val brush: S
     // Object Overrides
 
     override fun equals(other: Any?): Boolean {
-        return other is DebugShape &&
-                this.shape == other.shape &&
-                this.brush == other.brush
+        return other is DebugShape
+                && this.shape == other.shape
+                && this.brush == other.brush
     }
 
-    override fun hashCode(): Int {
-        return Objects.hash(shape, brush)
-    }
+    override fun hashCode(): Int = Objects.hash(shape, brush)
 
-    override fun toString(): String {
-        return "Debug $shape, $brush"
-    }
+    override fun toString(): String = "Debug $shape, $brush"
 
 }

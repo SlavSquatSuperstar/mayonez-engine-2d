@@ -1,6 +1,7 @@
 package slavsquatsuperstar.demos.renderer;
 
 import mayonez.graphics.debug.DebugDraw;
+import mayonez.graphics.debug.DebugShape;
 import mayonez.graphics.debug.ShapeBrush;
 import mayonez.graphics.font.TextLabel;
 import mayonez.math.shapes.Shape;
@@ -18,7 +19,7 @@ public class DebugShapeType {
 
     private final String name;
     private final Supplier<Shape> generator;
-    private final List<TestShape> shapes;
+    private final List<DebugShape> shapes;
     TextLabel text;
 
     DebugShapeType(String name, Supplier<Shape> generator) {
@@ -32,7 +33,7 @@ public class DebugShapeType {
     }
 
     void draw(DebugDraw debugDraw) {
-        shapes.forEach(shape -> debugDraw.drawShape(shape.shape, shape.brush));
+        shapes.forEach(debugDraw::drawShape);
     }
 
     void updateText() {
@@ -40,7 +41,7 @@ public class DebugShapeType {
     }
 
     void addOne(ShapeBrush brush) {
-        shapes.add(new TestShape(generator.get(), brush));
+        shapes.add(new DebugShape(generator.get(), brush));
     }
 
     void remove(int amount) {
@@ -49,11 +50,6 @@ public class DebugShapeType {
 
     void clear() {
         shapes.clear();
-    }
-
-    // Helper Class
-
-    private record TestShape(Shape shape, ShapeBrush brush) {
     }
 
 }

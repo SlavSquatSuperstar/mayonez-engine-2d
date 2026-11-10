@@ -150,6 +150,15 @@ class DebugDraw internal constructor(
         )
     }
 
+    /**
+     * Draws a [DebugShape] onto the screen.
+     *
+     * @param shape the shape and its brush
+     */
+    fun drawShape(shape: DebugShape?) {
+        debugRenderer.addShape(shape ?: return)
+    }
+
 }
 
 // Helper Methods
