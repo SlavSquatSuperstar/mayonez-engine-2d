@@ -96,7 +96,7 @@ public class Animator extends Node {
     // Callback Methods
 
     @Override
-    public void onEnable(boolean enabled) {
+    protected void onEnable(boolean enabled) {
         animTimer.setPaused(!enabled);
     }
 

@@ -1,6 +1,5 @@
 package slavsquatsuperstar.demos.spacegame.movement;
 
-import mayonez.*;
 import mayonez.graphics.sprites.*;
 import slavsquatsuperstar.demos.spacegame.objects.SpaceGameZIndex;
 
@@ -9,7 +8,7 @@ import slavsquatsuperstar.demos.spacegame.objects.SpaceGameZIndex;
  *
  * @author SlavSquatSuperstar
  */
-public class Thruster extends Node {
+class Thruster extends Animator {
 
     // Assets
     private static final SpriteSheet EXHAUST_TEXTURES = Sprites.createSpriteSheet(
@@ -19,41 +18,34 @@ public class Thruster extends Node {
     // Fields
     private final ThrusterProperties properties;
     private boolean moveEnabled, turnEnabled;
-    private Animator exhaustAnim;
 
-    public Thruster(ThrusterProperties properties) {
+    Thruster(ThrusterProperties properties) {
+        super(EXHAUST_TEXTURES, 0.15f);
         this.properties = properties;
     }
 
     @Override
     protected void init() {
+        super.init();
+        setName(properties.name() + " Thruster");
         setTransform(properties.offsetXf());
+        setZIndex(SpaceGameZIndex.EXHAUST);
 
         moveEnabled = false;
         turnEnabled = false;
-
-        exhaustAnim = new Animator(EXHAUST_TEXTURES, 0.15f);
-        exhaustAnim.setZIndex(SpaceGameZIndex.EXHAUST);
-        addChild(exhaustAnim);
-    }
-
-    @Override
-    protected void update(float dt) {
-        exhaustAnim.setEnabled(moveEnabled || turnEnabled);
-        exhaustAnim.setVisible(moveEnabled || turnEnabled);
     }
 
     @Override
     protected void onEnable(boolean enabled) {
-        exhaustAnim.setEnabled(enabled);
-        exhaustAnim.setVisible(enabled);
+        /*
+         * Can't set thruster active inside update
+         * since disabling will prevent the check
+         */
+        super.onEnable(enabled);
+        setVisible(enabled);
     }
 
     // Getters and Setters
-
-    String getDescription() {
-        return properties.name();
-    }
 
     ThrustDirection getMoveDir() {
         return properties.moveDir();
@@ -65,10 +57,12 @@ public class Thruster extends Node {
 
     void setMoveEnabled(boolean moveEnabled) {
         this.moveEnabled = moveEnabled;
+        setEnabled(moveEnabled || turnEnabled);
     }
 
     void setTurnEnabled(boolean turnEnabled) {
         this.turnEnabled = turnEnabled;
+        setEnabled(moveEnabled || turnEnabled);
     }
 
 }
