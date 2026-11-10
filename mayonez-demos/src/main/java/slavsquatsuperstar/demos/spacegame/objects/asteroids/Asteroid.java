@@ -32,7 +32,6 @@ public abstract class Asteroid extends Node {
     @Override
     protected void init() {
         addTag(SpaceGameScene.DAMAGEABLE_TAG);
-        setZIndex(SpaceGameZIndex.ASTEROID);
 
         getTransform().setRotation(Random.randomAngle());
         getTransform().setScale(properties.getScale());
@@ -43,6 +42,7 @@ public abstract class Asteroid extends Node {
     private void addSprite(Texture texture, Color color) {
         var sprite = Sprites.createSprite(texture);
         sprite.setColor(color);
+        sprite.setZIndex(SpaceGameZIndex.ASTEROID);
         addChild(sprite);
     }
 

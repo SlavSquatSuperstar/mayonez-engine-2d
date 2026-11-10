@@ -61,8 +61,9 @@ public class RendererTestScene extends DemoScene {
 
         var sheet1 = Sprites.createSpriteSheet("assets/spacegame/textures/combat/explosion.png",
                 32, 32, 8, 0);
+        var sheet2Size = 4;
         var sheet2 = Sprites.createSpriteSheet("assets/spacegame/textures/combat/projectiles.png",
-                16, 16, 3, 0);
+                16, 16, sheet2Size, 0);
 
         // Sprites
 
@@ -70,8 +71,8 @@ public class RendererTestScene extends DemoScene {
                 Transform.scaleInstance(new Vec2(1920, 1024).div(SCENE_SCALE))) {
             @Override
             protected void init() {
-                setZIndex(-10);
                 var sprite = Sprites.createSprite(bgTex);
+                sprite.setZIndex(-10);
                 addChild(sprite);
             }
         });
@@ -88,22 +89,24 @@ public class RendererTestScene extends DemoScene {
         addTextureObject("sat-2", new Vec2(0, -10), 2, tex3, Colors.WHITE);
         addTextureObject("sat-3", new Vec2(10, -10), 4, tex3, Colors.LIGHT_BLUE);
 
-        addTextureObject("proj-1", new Vec2(-10, -30), 0, sheet2.getTexture(0), Colors.WHITE);
-        addTextureObject("proj-2", new Vec2(0, -30), 2, sheet2.getTexture(1), Colors.WHITE);
-        addTextureObject("proj-3", new Vec2(10, -30), 4, sheet2.getTexture(2), Colors.WHITE);
-
         addAnimatedObject("anim-1", new Vec2(0, 15), 3, sheet1);
         addAnimatedObject("anim-2", new Vec2(0, -15), 1, sheet1);
 
         // Shapes
 
+        var center = new Vec2(30, 18);
         addShapeObject("tri-1",
-                new Triangle(new Vec2(27, 15), new Vec2(33, 15), new Vec2(30, 20)),
+                new Polygon(center, 3, 4f).rotate(90, null),
                 1, Colors.DARK_GREEN);
-
         addShapeObject("poly-1",
-                new Polygon(new Vec2(30, 17), 5, 5f).rotate(90, null),
+                new Polygon(center, 5, 5f).rotate(90, null),
                 0, Colors.DARK_BLUE);
+        addShapeObject("poly-2",
+                new Polygon(center, 6, 6f).rotate(90, null),
+                -1, Colors.PURPLE);
+        addShapeObject("poly-3",
+                new Polygon(center, 8, 7f).rotate(90, null),
+                -2, Colors.DARK_RED);
 
         addSquareObject("square-1", new Vec2(5, 5), 3, Colors.RED);
         addSquareObject("square-2", new Vec2(-5, 5), 1, Colors.GREEN);
@@ -123,17 +126,13 @@ public class RendererTestScene extends DemoScene {
         // UI
 
         float uiStartPos = 64;
-        addUIObject("ui-1a", new Vec2(uiStartPos, uiStartPos), 10, tex4);
-        addUIObject("ui-1b", new Vec2(uiStartPos, uiStartPos), 11, tex5);
-        addUIObject("ui-1c", new Vec2(uiStartPos, uiStartPos), 12, sheet2.getTexture(0));
-
-        addUIObject("ui-2a", new Vec2(uiStartPos + 64, uiStartPos), 10, tex4);
-        addUIObject("ui-2b", new Vec2(uiStartPos + 64, uiStartPos), 11, tex5);
-        addUIObject("ui-2c", new Vec2(uiStartPos + 64, uiStartPos), 12, sheet2.getTexture(1));
-
-        addUIObject("ui-3a", new Vec2(uiStartPos + 128, uiStartPos), 10, tex4);
-        addUIObject("ui-3b", new Vec2(uiStartPos + 128, uiStartPos), 11, tex5);
-        addUIObject("ui-3c", new Vec2(uiStartPos + 128, uiStartPos), 12, sheet2.getTexture(2));
+        for (int i = 0; i < sheet2Size; i++) {
+            var prefix = "ui-" + (i + 1);
+            var xPos = uiStartPos + 72 * i;
+            addUIObject(prefix + 'a', new Vec2(xPos, uiStartPos), 10, tex4);
+            addUIObject(prefix + 'b', new Vec2(xPos, uiStartPos), 11, tex5);
+            addUIObject(prefix + 'c', new Vec2(xPos, uiStartPos), 12, sheet2.getTexture(i));
+        }
 
         addNode(new Node("text-1") {
             private TextAlignment align = TextAlignment.LEFT;
@@ -183,9 +182,9 @@ public class RendererTestScene extends DemoScene {
                 new Transform(pos, 0f, new Vec2(10f))) {
             @Override
             protected void init() {
-                setZIndex(zIndex);
                 var sprite = Sprites.createSprite(tex);
                 sprite.setColor(color);
+                sprite.setZIndex(zIndex);
                 addChild(sprite);
             }
         });
@@ -196,8 +195,9 @@ public class RendererTestScene extends DemoScene {
                 new Transform(pos, 0f, new Vec2(10f))) {
             @Override
             protected void init() {
-                setZIndex(zIndex);
-                addChild(new Animator(sheet, 0.125f));
+                var animator = new Animator(sheet, 0.125f);
+                animator.setZIndex(zIndex);
+                addChild(animator);
             }
         });
     }
@@ -241,12 +241,12 @@ public class RendererTestScene extends DemoScene {
 
     // UI Objects
 
-    private void addUIObject(String obj1, Vec2 pos, int zIndex, Texture tex) {
-        addNode(new Node(obj1, pos) {
+    private void addUIObject(String name, Vec2 pos, int zIndex, Texture tex) {
+        addNode(new UISprite(pos, new Vec2(64, 64), tex) {
             @Override
             protected void init() {
+                setName(name);
                 setZIndex(zIndex);
-                addChild(new UISprite(pos, new Vec2(64, 64), tex));
             }
         });
     }

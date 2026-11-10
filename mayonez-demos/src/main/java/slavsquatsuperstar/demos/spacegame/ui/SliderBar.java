@@ -32,32 +32,20 @@ public class SliderBar extends UIElement {
 
     @Override
     protected void init() {
-        getParent().setZIndex(SpaceGameZIndex.UI);
+        setZIndex(SpaceGameZIndex.UI);
 
-        backgroundSprite = new UISprite(position, size, backgroundColor) {
-            @Override
-            public int getZIndex() {
-                return super.getZIndex();
-            }
-        };
+        backgroundSprite = new UISprite(position, size, backgroundColor);
+        backgroundSprite.setZIndex(SpaceGameZIndex.UI);
         addChild(backgroundSprite);
 
-        sliderSprite = new UISprite(position, size, sliderColor) {
-            @Override
-            public int getZIndex() {
-                return super.getZIndex() + 1; // display above background
-            }
-        };
+        sliderSprite = new UISprite(position, size, sliderColor);
+        sliderSprite.setZIndex(SpaceGameZIndex.UI + 1);
         sliderSprite.setAnchor(Anchor.LEFT);
         addChild(sliderSprite);
         value = 1f;
 
-        outlineSprite = new UISprite(position, size, BORDER_TEXTURE) {
-            @Override
-            public int getZIndex() {
-                return super.getZIndex() + 2; // display above foreground
-            }
-        };
+        outlineSprite = new UISprite(position, size, BORDER_TEXTURE);
+        outlineSprite.setZIndex(SpaceGameZIndex.UI + 2);
         addChild(outlineSprite);
     }
 

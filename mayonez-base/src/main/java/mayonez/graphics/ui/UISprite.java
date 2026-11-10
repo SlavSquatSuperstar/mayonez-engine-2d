@@ -126,7 +126,7 @@ public class UISprite extends UIElement implements GLQuad {
 
     @Override
     public int getZIndex() {
-        return getParent().getZIndex();
+        return super.getZIndex();
     }
 
     @Override

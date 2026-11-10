@@ -28,12 +28,12 @@ public class Thruster extends Node {
     @Override
     protected void init() {
         setTransform(properties.offsetXf());
-        setZIndex(SpaceGameZIndex.EXHAUST);
 
         moveEnabled = false;
         turnEnabled = false;
 
         exhaustAnim = new Animator(EXHAUST_TEXTURES, 0.15f);
+        exhaustAnim.setZIndex(SpaceGameZIndex.EXHAUST);
         addChild(exhaustAnim);
     }
 

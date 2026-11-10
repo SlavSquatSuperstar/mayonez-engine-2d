@@ -50,8 +50,8 @@ public class MarioScene extends DemoScene {
                 Transform.scaleInstance(new Vec2(BACKGROUND_WIDTH, BACKGROUND_HEIGHT).div(SCENE_SCALE))) {
             @Override
             protected void init() {
-                setZIndex(-10);
                 var sprite = Sprites.createSprite(BACKGROUND_TEXTURE);
+                sprite.setZIndex(-10);
                 addChild(sprite);
             }
         });

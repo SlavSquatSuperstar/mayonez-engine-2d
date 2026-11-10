@@ -29,28 +29,21 @@ public class ImageLabel extends UIElement {
 
     @Override
     protected void init() {
-        getParent().setZIndex(SpaceGameZIndex.UI);
+        setZIndex(SpaceGameZIndex.UI);
 
         // Background uses label size
         backgroundSprite = new UISprite(position, size, backgroundTexture);
+        backgroundSprite.setZIndex(SpaceGameZIndex.UI);
         addChild(backgroundSprite);
 
         // Icon can be made smaller by setting padding
-        iconSprite = new UISprite(position, size.sub(new Vec2(backgroundPadding)), iconTexture) {
-            @Override
-            public int getZIndex() {
-                return super.getZIndex() + 1; // Display above background
-            }
-        };
+        iconSprite = new UISprite(position, size.sub(new Vec2(backgroundPadding)), iconTexture);
+        iconSprite.setZIndex(SpaceGameZIndex.UI + 1);
         addChild(iconSprite);
 
         // Border can be made larger by setting thickness
-        borderSprite = new UISprite(position, size.add(new Vec2(borderThickness)), borderTexture) {
-            @Override
-            public int getZIndex() {
-                return super.getZIndex() + 2; // Display above icon
-            }
-        };
+        borderSprite = new UISprite(position, size.add(new Vec2(borderThickness)), borderTexture);
+        borderSprite.setZIndex(SpaceGameZIndex.UI + 2);
         addChild(borderSprite);
     }
 

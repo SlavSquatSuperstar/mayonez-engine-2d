@@ -6,6 +6,7 @@ import mayonez.graphics.ui.*;
 import mayonez.math.*;
 import slavsquatsuperstar.demos.spacegame.combat.projectiles.ProjectilePrefabs;
 import slavsquatsuperstar.demos.spacegame.combat.projectiles.ProjectileType;
+import slavsquatsuperstar.demos.spacegame.objects.SpaceGameZIndex;
 
 /**
  * An image label representing an individual weapon hotbar slot, with additional cooldown
@@ -37,18 +38,15 @@ public class WeaponHotbarSlot extends ImageLabel {
     @Override
     protected void init() {
         super.init();
+        setZIndex(SpaceGameZIndex.UI);
         setBackgroundPadding(BACKGROUND_MARGIN);
         setBorderThickness(BORDER_MARGIN);
 
         // Cooldown overlay
         cooldownOverlaySprite = new UISprite(
                 getPosition(), getSize().add(new Vec2(BORDER_MARGIN)), Color.grayscale(76, 180)
-        ) {
-            @Override
-            public int getZIndex() {
-                return super.getZIndex() + 2; // display above icon
-            }
-        };
+        );
+        cooldownOverlaySprite.setZIndex(SpaceGameZIndex.UI + 2); // Display above icon
         cooldownOverlaySprite.setAnchor(Anchor.BOTTOM);
         addChild(cooldownOverlaySprite);
         setCooldownPercent(0f);

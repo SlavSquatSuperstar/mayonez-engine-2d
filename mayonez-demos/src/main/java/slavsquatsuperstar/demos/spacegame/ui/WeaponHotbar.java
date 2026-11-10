@@ -37,7 +37,7 @@ public class WeaponHotbar extends BoxContainer {
 
     @Override
     protected void init() {
-        getParent().setZIndex(SpaceGameZIndex.UI);
+        setZIndex(SpaceGameZIndex.UI);
 
         // Create hotbar slots
         // TODO recreate on loadout change
@@ -48,12 +48,8 @@ public class WeaponHotbar extends BoxContainer {
 
         // Border over selected hotbar element
         selectedBorder = new UISprite(position, slotSize.add(new Vec2(BORDER_MARGIN)),
-                SELECTED_BORDER_TEXTURE) {
-            @Override
-            public int getZIndex() {
-                return super.getZIndex() + 3; // Display above overlay
-            }
-        };
+                SELECTED_BORDER_TEXTURE);
+        selectedBorder.setZIndex(SpaceGameZIndex.UI + 5); // Display above everything
         addChild(selectedBorder);
         setSelection(0);
     }

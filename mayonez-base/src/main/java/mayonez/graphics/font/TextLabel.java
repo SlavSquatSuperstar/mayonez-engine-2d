@@ -298,7 +298,7 @@ public class TextLabel extends Node implements Renderable {
 
     @Override
     public int getZIndex() {
-        return getParent().getZIndex();
+        return super.getZIndex();
     }
 
     @Override
