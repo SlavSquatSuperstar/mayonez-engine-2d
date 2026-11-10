@@ -1,6 +1,5 @@
 package mayonez.graphics.debug;
 
-
 import mayonez.*;
 import mayonez.graphics.*;
 import mayonez.math.shapes.*;
@@ -13,29 +12,8 @@ import mayonez.physics.colliders.*;
  */
 public class ShapeSprite extends Node {
 
-    // Component References
     private Collider collider;
-
-    // Shape Draw Fields
-    private final Shape shape;
     private ShapeBrush brush;
-
-    /**
-     * Create a new ShapeSprite that draws the given shape using the object's
-     * transform.
-     *
-     * @param shape the shape to draw
-     * @param color what color to draw the shape
-     * @param fill  whether to fill the shape interior
-     */
-    public ShapeSprite(Shape shape, Color color, boolean fill) {
-        this.shape = shape;
-        if (fill) {
-            brush = ShapeBrush.createSolidBrush(color);
-        } else {
-            brush = ShapeBrush.createOutlineBrush(color);
-        }
-    }
 
     /**
      * Create a new ShapeSprite that draws the object's collider.
@@ -44,7 +22,11 @@ public class ShapeSprite extends Node {
      * @param fill  whether to fill the shape interior
      */
     public ShapeSprite(Color color, boolean fill) {
-        this(null, color, fill);
+        if (fill) {
+            brush = ShapeBrush.createSolidBrush(color);
+        } else {
+            brush = ShapeBrush.createOutlineBrush(color);
+        }
     }
 
     @Override
@@ -54,13 +36,11 @@ public class ShapeSprite extends Node {
 
     @Override
     protected void debugRender() {
-        var drawShape = (shape == null) ? getColliderShape() : getWorldShape();
+        var colliderShape = (collider == null)
+                ? getGlobalTransform().getBoundingRectangle()
+                : collider.getShape();
         var drawBrush = brush.setZIndex(getParent().getZIndex());
-        if (brush.getFill()) {
-            getScene().getDebugDraw().fillShape(drawShape, drawBrush);
-        } else {
-            getScene().getDebugDraw().drawShape(drawShape, drawBrush);
-        }
+        getScene().getDebugDraw().drawShape(colliderShape, drawBrush);
     }
 
     // Getter and Setter Methods
@@ -90,12 +70,6 @@ public class ShapeSprite extends Node {
     }
 
     // Shape Helper Methods
-
-    private Shape getWorldShape() {
-        return shape.rotate(getGlobalTransform().getRotation(), null)
-                .scale(getGlobalTransform().getScale(), null)
-                .translate(getGlobalTransform().getPosition());
-    }
 
     private Shape getColliderShape() {
         if (collider == null) {

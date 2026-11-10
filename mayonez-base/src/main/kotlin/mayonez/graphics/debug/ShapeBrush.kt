@@ -4,16 +4,19 @@ import mayonez.graphics.*
 import java.util.*
 
 /**
- * Defines what parameters to use while drawing a
- * [mayonez.graphics.debug.DebugShape].
+ * Defines what style to use while drawing a [DebugShape].
  *
  * @author SlavSquatSuperstar
  */
 data class ShapeBrush(
+    /** The color of the shape. */
     val color: MColor,
+    /** Whether the shape interior should be filled. */
     val fill: Boolean,
+    /** The z-index of the shape. */
     val zIndex: Int,
-    val strokeSize: Float // TODO stroke looks twice as wide as it should be
+    /** The stroke width of the shape outline in pixels. */
+    val strokeSize: Float
 ) {
 
     // Copy Methods
@@ -74,21 +77,29 @@ data class ShapeBrush(
 
     companion object {
 
+        internal const val DEFAULT_STROKE_SIZE: Float = 2f
+        internal val DEFAULT_COLOR: MColor = Colors.BLACK
+
         // Factory Methods
 
         @JvmStatic
-        fun createLineBrush(color: MColor?): ShapeBrush {
-            return DrawPriority.LINE.createBrush(color)
+        fun createPointBrush(color: MColor? = DEFAULT_COLOR): ShapeBrush {
+            return DrawPriority.POINT.createBrush(color ?: DEFAULT_COLOR)
         }
 
         @JvmStatic
-        fun createOutlineBrush(color: MColor?): ShapeBrush {
-            return DrawPriority.SHAPE_OUTLINE.createBrush(color)
+        fun createLineBrush(color: MColor? = DEFAULT_COLOR): ShapeBrush {
+            return DrawPriority.LINE.createBrush(color ?: DEFAULT_COLOR)
         }
 
         @JvmStatic
-        fun createSolidBrush(color: MColor?): ShapeBrush {
-            return DrawPriority.SOLID_SHAPE.createBrush(color)
+        fun createOutlineBrush(color: MColor? = DEFAULT_COLOR): ShapeBrush {
+            return DrawPriority.SHAPE_OUTLINE.createBrush(color ?: DEFAULT_COLOR)
+        }
+
+        @JvmStatic
+        fun createSolidBrush(color: MColor? = DEFAULT_COLOR): ShapeBrush {
+            return DrawPriority.SOLID_SHAPE.createBrush(color ?: DEFAULT_COLOR)
         }
 
     }

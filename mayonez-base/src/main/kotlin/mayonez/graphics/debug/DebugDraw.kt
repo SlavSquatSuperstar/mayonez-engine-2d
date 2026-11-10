@@ -10,13 +10,13 @@ import mayonez.renderer.*
 // TODO draw text on-demand
 /**
  * Allows colliders and shapes to be manually drawn onto the screen through
- * the scene's [mayonez.renderer.DebugRenderer]. All shapes are
- * specified using world coordinates, and colliders are centered around an
- * object's position.
+ * the scene's [mayonez.renderer.DebugRenderer]. All shapes are specified
+ * using world coordinates, and all collider shapes are centered around the
+ * collider's position.
  *
- * Note: Due to how shapes are drawn in OpenGL, transparency is disabled,
- * and all colors will have their alpha set to 255. To draw transparent
- * shapes in the GL engine, use a [mayonez.graphics.sprites.Sprite]
+ * Note: Due to how shapes are drawn in OpenGL, transparency is currently
+ * disabled, and all colors will have their alpha set to 255. To draw
+ * transparent shapes in the GL backend, use a [mayonez.graphics.sprites.Sprite]
  * with a shape texture instead.
  *
  * @author SlavSquatSuperstar
@@ -24,12 +24,6 @@ import mayonez.renderer.*
 class DebugDraw internal constructor(
     private val debugRenderer: DebugRenderer
 ) {
-
-    companion object {
-        /** How many pixels wide a line or curve should be drawn. */
-        internal const val DEFAULT_STROKE_SIZE: Float = 2f
-        internal val DEFAULT_COLOR: MColor = Colors.BLACK
-    }
 
     // Draw Point Methods
 
@@ -43,8 +37,8 @@ class DebugDraw internal constructor(
         // Fill a circle with radius "STROKE_SIZE" in pixels
         val pixelScale = debugRenderer.viewport.cameraScale
         debugRenderer.addShape(
-            Circle(position, DEFAULT_STROKE_SIZE / pixelScale),
-            DrawPriority.POINT.createBrush(color)
+            Circle(position, ShapeBrush.DEFAULT_STROKE_SIZE / pixelScale),
+            ShapeBrush.createPointBrush(color)
         )
     }
 
@@ -72,7 +66,7 @@ class DebugDraw internal constructor(
         if (start == null || end == null) return
         debugRenderer.addShape(
             Edge(start, end),
-            brush ?: ShapeBrush.createLineBrush(DEFAULT_COLOR)
+            brush ?: ShapeBrush.createLineBrush()
         )
     }
 
@@ -86,7 +80,7 @@ class DebugDraw internal constructor(
      */
     fun drawVector(origin: Vec2?, direction: Vec2?, color: MColor?) {
         if (origin == null || direction == null) return
-        drawLine(origin, origin.add(direction), color)
+        drawLine(origin, origin + direction, color)
     }
 
     /**
@@ -99,7 +93,7 @@ class DebugDraw internal constructor(
      */
     fun drawVector(origin: Vec2?, direction: Vec2?, brush: ShapeBrush?) {
         if (origin == null || direction == null) return
-        drawLine(origin, origin.add(direction), brush)
+        drawLine(origin, origin + direction, brush)
     }
 
     // Draw Shape Methods
@@ -123,7 +117,7 @@ class DebugDraw internal constructor(
     fun drawShape(shape: Shape?, brush: ShapeBrush?) {
         debugRenderer.addShape(
             shape ?: return,
-            brush ?: ShapeBrush.createOutlineBrush(DEFAULT_COLOR)
+            brush ?: ShapeBrush.createOutlineBrush()
         )
     }
 
@@ -146,7 +140,7 @@ class DebugDraw internal constructor(
     fun fillShape(shape: Shape?, brush: ShapeBrush?) {
         debugRenderer.addShape(
             shape ?: return,
-            brush ?: ShapeBrush.createSolidBrush(DEFAULT_COLOR)
+            brush ?: ShapeBrush.createSolidBrush()
         )
     }
 
