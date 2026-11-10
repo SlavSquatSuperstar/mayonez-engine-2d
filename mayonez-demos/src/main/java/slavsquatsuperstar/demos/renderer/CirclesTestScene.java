@@ -20,6 +20,8 @@ public class CirclesTestScene extends DemoScene {
     private static final Vec2 SCENE_HALF_SIZE
             = new Vec2(Mayonez.getScreenWidth(), Mayonez.getScreenHeight())
             .div(SCENE_SCALE * 2f);
+    private static final Color BACKGROUND_COLOR
+            = new Color(192, 192, 192, 220);
 
     private static final int NUM_CIRCLES = 2000;
     private static final float MIN_RADIUS = 0.1f;
@@ -46,18 +48,19 @@ public class CirclesTestScene extends DemoScene {
             });
         }
 
-        addNode(new Node("FPS Counter") {
+        addNode(new Node("Debug Text") {
             @Override
             protected void init() {
-                // Background
+                // Background 1
                 addChild(new UISprite(
-                        new Vec2(110, Mayonez.getScreenHeight() - 75),
-                        new Vec2(200, 100), Colors.LIGHT_GRAY
+                        new Vec2(110, Mayonez.getScreenHeight() - 110),
+                        new Vec2(200, 180), BACKGROUND_COLOR
                 ));
 
+                // Frames per second
                 var fpsText = new TextLabel(
                         "FPS: _",
-                        new Vec2(20, Mayonez.getScreenHeight() - 45)
+                        new Vec2(20, Mayonez.getScreenHeight() - 40)
                 ) {
                     @Override
                     protected void update(float dt) {
@@ -66,10 +69,12 @@ public class CirclesTestScene extends DemoScene {
                 };
                 addChild(fpsText
                         .setAnchor(Anchor.TOP_LEFT)
-                        .setFontSize(45));
+                        .setFontSize(32));
+
+                // Ticks per second
                 var tpsText = new TextLabel(
                         "TPS: _",
-                        new Vec2(20, Mayonez.getScreenHeight() - 95)
+                        new Vec2(20, Mayonez.getScreenHeight() - 80)
                 ) {
                     @Override
                     protected void debugRender() {
@@ -78,7 +83,87 @@ public class CirclesTestScene extends DemoScene {
                 };
                 addChild(tpsText
                         .setAnchor(Anchor.TOP_LEFT)
-                        .setFontSize(45));
+                        .setFontSize(32));
+
+                // V-Sync
+                var vsyncText = new TextLabel(
+                        "VSync: " + (Preferences.useVSync() ? "On" : "Off"),
+                        new Vec2(20, Mayonez.getScreenHeight() - 120)
+                );
+                addChild(vsyncText
+                        .setAnchor(Anchor.TOP_LEFT)
+                        .setFontSize(32));
+
+                // Max Ticks per Frame
+                var ticksPerFrameText = new TextLabel(
+                        "Max T/F: " + Preferences.getMaxTicksPerFrame(),
+                        new Vec2(20, Mayonez.getScreenHeight() - 160)
+                );
+                addChild(ticksPerFrameText
+                        .setAnchor(Anchor.TOP_LEFT)
+                        .setFontSize(32));
+
+                // Background 2
+                addChild(new UISprite(
+                        new Vec2(120, Mayonez.getScreenHeight() - 310),
+                        new Vec2(220, 180), BACKGROUND_COLOR
+                ));
+
+                // Num circles
+                var circlesText = new TextLabel(
+                        "Balls: _",
+                        new Vec2(20, Mayonez.getScreenHeight() - 240)
+                ) {
+                    @Override
+                    protected void update(float dt) {
+                        setMessage("Balls: " + NUM_CIRCLES);
+                    }
+                };
+                addChild(circlesText
+                        .setAnchor(Anchor.TOP_LEFT)
+                        .setFontSize(32));
+
+                // Num rectangles
+                var rectanglesText = new TextLabel(
+                        "Boxes: _",
+                        new Vec2(20, Mayonez.getScreenHeight() - 280)
+                ) {
+                    @Override
+                    protected void update(float dt) {
+                        setMessage("Boxes: " + 0);
+                    }
+                };
+                addChild(rectanglesText
+                        .setAnchor(Anchor.TOP_LEFT)
+                        .setFontSize(32));
+
+                // Num rectangles
+                var polygonsText = new TextLabel(
+                        "Polys: _",
+                        new Vec2(20, Mayonez.getScreenHeight() - 320)
+                ) {
+                    @Override
+                    protected void update(float dt) {
+                        setMessage("Polys: " + 0);
+                    }
+                };
+                addChild(polygonsText
+                        .setAnchor(Anchor.TOP_LEFT)
+                        .setFontSize(32));
+
+                // Total shapes
+                var totalText = new TextLabel(
+                        "Total: _",
+                        new Vec2(20, Mayonez.getScreenHeight() - 360)
+                ) {
+                    @Override
+                    protected void update(float dt) {
+                        setMessage("Total: " + NUM_CIRCLES);
+                    }
+                };
+                addChild(totalText
+                        .setAnchor(Anchor.TOP_LEFT)
+                        .setFontSize(32));
             }
         });
     }
