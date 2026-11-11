@@ -2,11 +2,10 @@ package mayonez.graphics.debug;
 
 import mayonez.*;
 import mayonez.graphics.*;
-import mayonez.math.shapes.*;
 import mayonez.physics.colliders.*;
 
 /**
- * Draws an object's {@link mayonez.physics.colliders.Collider} to the screen.
+ * Draws the parent node's {@link Collider} to the screen.
  *
  * @author SlavSquatSuperstar
  */
@@ -29,6 +28,8 @@ public class ShapeSprite extends Node {
         }
     }
 
+    // Node Methods
+
     @Override
     protected void start() {
         collider = getSibling(Collider.class);
@@ -39,44 +40,64 @@ public class ShapeSprite extends Node {
         var colliderShape = (collider == null)
                 ? getGlobalTransform().getBoundingRectangle()
                 : collider.getShape();
-        var drawBrush = brush.setZIndex(getParent().getZIndex());
+        var drawBrush = brush.setZIndex(getZIndex());
         getScene().getDebugDraw().drawShape(colliderShape, drawBrush);
     }
 
     // Getter and Setter Methods
 
+    /**
+     * Get the brush's color.
+     *
+     * @return the color
+     */
     public Color getColor() {
-        return brush.getColor();
+        return brush.color();
     }
 
+    /**
+     * Set the brush's color.
+     *
+     * @param color the color
+     */
     public void setColor(Color color) {
         brush = brush.setColor(color);
     }
 
+    /**
+     * Get the brush's fill.
+     *
+     * @return if filled
+     */
     public boolean isFill() {
-        return brush.getFill();
+        return brush.fill();
     }
 
+    /**
+     * Set the brush's fill.
+     *
+     * @param fill if filled
+     */
     public void setFill(boolean fill) {
         brush = brush.setFill(fill);
     }
 
+    /**
+     * Get the brush's stroke size.
+     *
+     * @return the stroke size, in pixels
+     */
     public float getStrokeSize() {
-        return brush.getStrokeSize();
+        return brush.strokeSize();
     }
 
+    /**
+     * Set the brush's stroke size.
+     *
+     * @param strokeSize the stroke size, in pixels
+     */
     public void setStrokeSize(float strokeSize) {
         brush = brush.setStrokeSize(strokeSize);
-    }
-
-    // Shape Helper Methods
-
-    private Shape getColliderShape() {
-        if (collider == null) {
-            return getGlobalTransform().getBoundingRectangle();
-        } else {
-            return collider.getShape();
-        }
     }
 
 }

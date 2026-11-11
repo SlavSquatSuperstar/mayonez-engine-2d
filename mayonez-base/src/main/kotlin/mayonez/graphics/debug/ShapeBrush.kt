@@ -4,10 +4,12 @@ import mayonez.graphics.*
 import java.util.*
 
 /**
- * Defines what style to use while drawing a [DebugShape].
+ * Defines what style to use while drawing a [DebugShape]. Note that this class
+ * is immutable, and the setter methods actually return a copy.
  *
  * @author SlavSquatSuperstar
  */
+@JvmRecord
 data class ShapeBrush(
     /** The color of the shape. */
     val color: MColor,
