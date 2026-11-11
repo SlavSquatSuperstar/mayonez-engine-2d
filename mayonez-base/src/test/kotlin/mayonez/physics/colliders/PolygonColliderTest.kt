@@ -66,7 +66,7 @@ internal class PolygonColliderTest {
 
 // Shape Vertex Methods
 
-private fun PolygonCollider.numVertices(): Int = this.getShape().numVertices
+private fun PolygonCollider.numVertices(): Int = (this.getShape() as Polygon).numVertices
 
 private fun PolygonCollider.getVertices(): Array<Vec2> {
     // Vertices transformed to world space

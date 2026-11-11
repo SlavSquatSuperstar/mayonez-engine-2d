@@ -39,9 +39,6 @@ abstract class Shape : Transformable {
 
     // Geometric Properties
 
-    /** The number of vertices in this shape. Round shapes have zero. */
-    abstract val numVertices: Int
-
     /**
      * The area of the shape, or the amount of space it takes up in the 2D
      * plane.
@@ -187,10 +184,8 @@ abstract class Shape : Transformable {
      */
     abstract override fun equals(other: Any?): Boolean
 
-    /** An integer hashcode function for this shape. */
     abstract override fun hashCode(): Int
 
-    /** A string representation of the shape. */
     abstract override fun toString(): String
 
 }

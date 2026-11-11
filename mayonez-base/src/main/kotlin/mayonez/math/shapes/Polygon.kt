@@ -13,7 +13,7 @@ import kotlin.math.*
  */
 open class Polygon(sort: Boolean, vararg vertices: Vec2) : Shape() {
 
-    // automatically sort the vertices
+    // Automatically sort the vertices
     constructor(vararg vertices: Vec2) : this(true, *vertices)
 
     /**
@@ -24,7 +24,7 @@ open class Polygon(sort: Boolean, vararg vertices: Vec2) : Shape() {
      * @param sides the number of sides and vertices
      * @param radius the distance from the center to each vertex
      */
-    // don't sort the vertices
+    // Vertices already sorted
     constructor(center: Vec2, sides: Int, radius: Float) :
             this(false, *regularPolygonVertices(center, sides, radius))
 
@@ -35,8 +35,8 @@ open class Polygon(sort: Boolean, vararg vertices: Vec2) : Shape() {
         if (sort) orderedConvexHull(arrayOf(*vertices))
         else arrayOf(*vertices)
 
-    /** The number of vertices and edges of this polygon, n. */
-    final override val numVertices: Int = this.vertices.size
+    /** The number of vertices and edges of this polygon, `n`. */
+    val numVertices: Int = this.vertices.size
 
     /** The edges that connect the vertices of this polygon. */
     val edges: Array<Edge> = this.vertices.toEdges()

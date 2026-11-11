@@ -14,8 +14,6 @@ class Edge(val start: Vec2, val end: Vec2) : Shape() {
 
     // Edge Properties
 
-    override val numVertices: Int = 2
-
     /** The length of the edge, l. */
     val length = start.distance(end)
 
@@ -127,7 +125,7 @@ class Edge(val start: Vec2, val end: Vec2) : Shape() {
     // Physical Properties
 
     /**
-     * The mass of the edge, assuming a uniform density throughout the edge.
+     * The mass of the edge `m`, assuming a uniform density throughout the edge.
      *
      * @param density the linear density (mass per length) of the edge
      */

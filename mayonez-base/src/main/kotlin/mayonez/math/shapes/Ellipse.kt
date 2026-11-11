@@ -17,8 +17,6 @@ open class Ellipse(protected val center: Vec2, val size: Vec2, val angle: Float)
 
     // Shape Properties
 
-    override val numVertices: Int = 0
-
     private val halfWidth: Float = size.x * 0.5f
 
     private val halfHeight: Float = size.y * 0.5f
