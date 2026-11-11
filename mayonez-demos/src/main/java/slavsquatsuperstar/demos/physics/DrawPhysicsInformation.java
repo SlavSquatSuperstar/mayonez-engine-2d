@@ -4,37 +4,36 @@ import mayonez.*;
 import mayonez.graphics.*;
 import mayonez.graphics.debug.*;
 import mayonez.physics.colliders.*;
+import mayonez.physics.dynamics.Rigidbody;
 
 /**
- * Debug draws a game object's physics information
+ * Debug draws a {@link Rigidbody}'s physics information to the screen.
  *
  * @author SlavSquatSuperstar
  */
-class DrawPhysicsInformation extends Node {
+class DrawPhysicsInformation extends ShapeSprite {
 
-    private Collider collider;
-    private ShapeSprite sprite;
+    private Rigidbody rigidbody;
+
+    public DrawPhysicsInformation(Color color, boolean fill) {
+        super(color, fill);
+    }
 
     @Override
     protected void start() {
-        collider = getSibling(Collider.class);
-        sprite = getSibling(ShapeSprite.class);
+        super.start();
+        rigidbody = getSibling(Rigidbody.class);
     }
 
     @Override
     protected void debugRender() {
-        if (collider != null && sprite != null) {
-            drawDebugInformation(collider, sprite.getColor());
-        }
-    }
-
-    private void drawDebugInformation(Collider col, Color color) {
-        var rb = col.getRigidbody();
-        if (color != null && rb != null && !rb.getStatic()) {
-            // Draw center, velocity, direction vector
-            getScene().getDebugDraw().drawPoint(col.center(), Colors.BLACK);
-            getScene().getDebugDraw().drawVector(col.center(), rb.getVelocity().mul(0.1f), color);
-            getScene().getDebugDraw().drawVector(rb.getPosition(), getGlobalTransform().getRight(), Colors.BLACK);
+        super.debugRender();
+        var debugDraw = getScene().getDebugDraw();
+        if (!rigidbody.getStatic()) {
+            // Draw center, velocity, and direction vector
+            debugDraw.drawPoint(rigidbody.getPosition(), Colors.BLACK);
+            debugDraw.drawVector(rigidbody.getPosition(), rigidbody.getVelocity().mul(0.1f), getColor());
+            debugDraw.drawVector(rigidbody.getPosition(), getGlobalTransform().getRight(), Colors.BLACK);
         }
     }
 

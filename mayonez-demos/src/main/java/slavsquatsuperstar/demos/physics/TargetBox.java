@@ -28,7 +28,6 @@ public class TargetBox extends Node {
     protected void init() {
         flashCounter = new Counter(0, 10, 10);
 
-        addChild(new DrawPhysicsInformation());
         addChild(new Rigidbody(0f).setMaterial(PhysicsMaterial.DEFAULT_MATERIAL));
         addChild(new BoxCollider(new Vec2(10f, 12f)) {
             @Override
@@ -43,7 +42,7 @@ public class TargetBox extends Node {
                 }
             }
         });
-        addChild(shapeSprite = new ShapeSprite(Colors.DARK_GRAY, true));
+        addChild(shapeSprite = new DrawPhysicsInformation(Colors.DARK_GRAY, true));
     }
 
     @Override

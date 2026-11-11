@@ -28,14 +28,13 @@ class SandboxObject extends Node {
 
     @Override
     protected void init() {
-        addChild(new DrawPhysicsInformation());
         sandboxComponents.forEach(this::addChild);
         sandboxComponents.clear();
     }
 
     private SandboxObject addCollider(Collider collider, Color color, boolean fill) {
         sandboxComponents.add(collider);
-        sandboxComponents.add(new ShapeSprite(color, fill));
+        sandboxComponents.add(new DrawPhysicsInformation(color, fill));
         return this;
     }
 
