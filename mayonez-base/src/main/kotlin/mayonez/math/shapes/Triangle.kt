@@ -14,6 +14,14 @@ import kotlin.math.*
 class Triangle(private val v1: Vec2, private val v2: Vec2, private val v3: Vec2) :
     Polygon(false, *triangleVertices(v1, v2, v3)) {
 
+    /**
+     * Constructs an equilateral triangle with the specified radius.
+     *
+     * @param center the center of the polygon
+     * @param radius the distance from the center to each vertex
+     */
+    constructor(center: Vec2, radius: Float) : this(*regularPolygonVertices(center, 3, radius))
+
     private constructor(vararg vertices: Vec2) : this(vertices[0], vertices[1], vertices[2])
 
     // Triangle Properties

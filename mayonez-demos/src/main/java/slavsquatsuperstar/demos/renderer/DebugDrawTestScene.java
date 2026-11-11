@@ -205,10 +205,13 @@ public class DebugDrawTestScene extends DemoScene {
     }
 
     private static Shape getRandomPolygon() {
-        var isTriangle = Random.randomPercent(0.20f);
-        if (isTriangle) {
+        var rand = Random.randomFloat();
+        if (rand < 0.30f) {
             return ShapeUtils
                     .randomTriangle(getRandomPosition(), MIN_RADIUS, MAX_RADIUS);
+        } else if (rand < 0.60f) {
+            return ShapeUtils
+                    .randomQuadrilateral(getRandomPosition(), MIN_LENGTH, MAX_LENGTH);
         } else {
             return ShapeUtils
                     .randomPolygon(getRandomPosition(), MIN_RADIUS, MAX_RADIUS);

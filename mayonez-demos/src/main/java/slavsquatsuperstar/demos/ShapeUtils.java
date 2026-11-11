@@ -13,9 +13,6 @@ import static mayonez.math.Random.*;
  */
 public final class ShapeUtils {
 
-    private static final float MIN_INTERIOR_ANGLE = 15f;
-    private static final float MAX_INTERIOR_ANGLE = 180f - MIN_INTERIOR_ANGLE;
-
     private ShapeUtils() {
     }
 
@@ -61,17 +58,84 @@ public final class ShapeUtils {
 
     /**
      * Generate a triangle with a random rotation and a 25% chance of being an
-     * equilateral triangle.
+     * equilateral triangle. The radius is the distance from the center to one
+     * of the vertices.
      *
      * @param center    the center
      * @param minRadius the minimum radius
      * @param maxRadius the maximum radius
      * @return the triangle
      */
-    public static Shape randomTriangle(Vec2 center, float minRadius, float maxRadius) {
+    public static Triangle randomTriangle(Vec2 center, float minRadius, float maxRadius) {
+        Triangle triangle;
+        var equilateral = randomPercent(0.25f);
+        if (equilateral) {
+            triangle = new Triangle(
+                    center, randomFloat(minRadius, maxRadius)
+            );
+        } else {
+            triangle = randomTriangleInscribed(center, minRadius, maxRadius);
+        }
+        return triangle.rotate(0, null);
+    }
+
+    private static Triangle randomTriangleInscribed(Vec2 center, float minRadius, float maxRadius) {
+        /*
+         * Inscribe a triangle inside a circle with the given circumcenter,
+         * which should somewhat equal the triangle's centroid. To ensure the
+         * center remains inside the triangle and avoid very thin triangles,
+         * keep the all angles between radii within 90 and 180 degrees. Vary
+         * the radii to allow for obtuse triangles.
+         */
+        float minAngle = 90f, maxAngle = 180f;
+        // a1 = rand(90, 180)
+        var angle1 = randomFloat(minAngle, maxAngle);
+        var max2 = Math.min(maxAngle, 360f - angle1 - minAngle);
+        // a2 = [90, min(180, 360 - 90 - a1)]
+        // Make sure there is third angle meets the minimum
+        var angle2 = randomFloat(minAngle, max2);
+
+        var angles = new float[]{0f, angle1, angle2};
+        var vertices = new Vec2[3];
+        var totalAngle = 0f;
+        for (int i = 0; i < vertices.length; i++) {
+            // Use origin as initial circumcenter
+            var radius = randomFloat(minRadius, maxRadius);
+            totalAngle += angles[i];
+            vertices[i] = new Vec2(radius, 0f).rotate(totalAngle);
+        }
+        return new Triangle(vertices[0], vertices[1], vertices[2]).translate(center);
+    }
+
+    /**
+     * Generate a convex non-rectangle quadrilateral with a random rotation.
+     *
+     * @param center    the center
+     * @param minLength the minimum diagonal length
+     * @param maxLength the maximum diagonal length
+     * @return the rectangle
+     */
+    public static Polygon randomQuadrilateral(Vec2 center, float minLength, float maxLength) {
+        /*
+         * To ensure the generated shape is convex, use two intersecting
+         * diagonals to define the vertices. Move each of the diagonals
+         * along the other to vary the side lengths, and rotate one of the
+         * diagonals to create shapes without parallel edges. Limit the
+         * displacements and rotations to avoid degenerate shapes (triangles)
+         * and very thin shapes.
+         */
+        // Lengths from the center to the vertices
+        var radii = new float[4];
+        for (int i = 0; i < radii.length; i++) {
+            radii[i] = randomFloat(minLength, maxLength) / 2f;
+        }
+        var diagonal1 = new Edge(new Vec2(radii[0], 0), new Vec2(-radii[2], 0));
+        var diagonal2 = new Edge(new Vec2(0, radii[1]), new Vec2(0, -radii[3]))
+                .rotate(randomFloat(-45f, 45f), new Vec2());
         return new Polygon(
-                center, 3, randomFloat(minRadius, maxRadius)
-        ).rotate(0, null);
+                diagonal1.getStart(), diagonal1.getEnd(),
+                diagonal2.getStart(), diagonal2.getEnd()
+        ).translate(center);
     }
 
     /**
