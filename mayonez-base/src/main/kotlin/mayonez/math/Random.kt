@@ -1,7 +1,5 @@
 package mayonez.math
 
-import kotlin.math.floor
-
 /**
  * Generates random numbers, vectors, and characters. Most methods will use
  * a uniform distribution, where all valid values have an equal chance of
@@ -34,16 +32,32 @@ object Random {
     // Random Numbers
 
     /**
+     * Generates a random uniform float between 0 and 1. All values in the
+     * range have an approximately equal chance of occurring.
+     *
+     * Note: In reality, a value of 1 can never occur. However, since the
+     * sample space (floats) is roughly continuous, all elements individually
+     * have a probability of 0. Therefore, ignoring the top value does not
+     * significantly affect the distribution.
+     *
+     * @return the random number
+     */
+    @JvmStatic
+    fun randomFloat(): Float {
+        return rand.nextFloat()
+    }
+
+    /**
      * Generates a random uniform float between the two provided bounds. All
-     * numbers in the range have a roughly equal chance of occurring.
+     * numbers in the range have an approximately equal chance of occurring.
      *
      * Note: In reality, the upper bound is technically excluded and can never
-     * occur. However, since the sample space (floats) is continuous, all
-     * elements individually have a probability of 0. Therefore, ignoring the
-     * bound does not significantly affect the results.
+     * occur. However, since the sample space (floats) is roughly continuous,
+     * all elements individually have a probability of 0. Therefore, ignoring the
+     * bound does not significantly affect the distribution.
      *
      * @param min the lower bound, inclusive
-     * @param max the upper bound, inclusive
+     * @param max the upper bound, inclusive (technically)
      * @return the random float
      */
     @JvmStatic
@@ -67,17 +81,17 @@ object Random {
      * @return the random float
      */
     @JvmStatic
-    fun randomRange(min: Float, max: Float, inc: Float): Float {
+    fun randomFloat(min: Float, max: Float, inc: Float): Float {
         val safeInc = if (inc > 0) inc else 1f
         val interval = Interval(min, max)
-        // # buckets = floor(max - min) + 1
+        // num_buckets := floor(max - min) + 1
         val bucket = randomInt(0, (interval.difference() / safeInc).toInt())
         return min + bucket * inc
     }
 
     /**
      * Generates a random uniform integer between the two provided bounds. All
-     * numbers in the range have a roughly equal chance of occurring.
+     * numbers in the range have an approximately equal chance of occurring.
      *
      * @param min the lower bound, inclusive
      * @param max the upper bound, inclusive
@@ -118,8 +132,8 @@ object Random {
      * helpful for validating input while not significantly affecting the
      * distribution.
      *
-     * @param min the min value
-     * @param max the max value
+     * @param min the lower bound, inclusive
+     * @param max the upper bound, inclusive
      */
     @JvmStatic
     fun randomGaussianRange(min: Float, max: Float): Float {
@@ -132,7 +146,7 @@ object Random {
     // Random Points
 
     /**
-     * Generates a random uniform angle between 0-360 degrees.
+     * Generates a random uniform angle between 0-360 degrees, inclusive.
      *
      * @return the random angle
      */
@@ -141,11 +155,11 @@ object Random {
 
     /**
      * Generates a random uniform [Vec2] between the provided min and max
-     * vectors. All points in the rectangular region have a roughly equal
-     * chance of occurring.
+     * vectors. All points in the rectangular region have an approximately
+     * equal chance of occurring.
      *
-     * @param min the bottom left corner, inclusive
-     * @param max the upper right corner, inclusive
+     * @param min the lower x and y bounds, inclusive
+     * @param max the upper x and y bounds, inclusive (technically)
      * @return the random vector
      */
     @JvmStatic
@@ -155,13 +169,13 @@ object Random {
 
     /**
      * Generates a random uniform [Vec2] between the provided x and y bounds.
-     * All vectors in the rectangular region have a roughly equal chance of
-     * occurring.
+     * All vectors in the rectangular region have an approximately equal chance
+     * of occurring.
      *
      * @param minX the lower x bound, inclusive
-     * @param maxX the upper x bound, inclusive
+     * @param maxX the upper x bound, inclusive (technically)
      * @param minY the lower y bound, inclusive
-     * @param maxY the upper y bound, inclusive
+     * @param maxY the upper y bound, inclusive (technically)
      * @return the random vector
      */
     @JvmStatic
@@ -173,7 +187,7 @@ object Random {
 
     /**
      * Generates a random event with a specified average percent chance of
-     * succeeding, equal to a biased coin flip.
+     * succeeding, equal to a biased coin flip or a Bernoulli process.
      *
      * @param percent the chance of succeeding, between 0-1
      * @return true the given percentage of the time, otherwise false
@@ -217,15 +231,15 @@ object Random {
     fun randomDigit(): Char = randomInt(48, 57).toChar()
 
     /**
-     * Returns a random uniform alphanumeric character.
+     * Generates a random uniform alphanumeric character.
      *
      * @return a random character A-Z, a-z, or 0-9.
      */
     @JvmStatic
     fun randomAlphanumeric(): Char {
-        val rand = randomInt(0, 30) // 26 + 26 + 10 = 62 values
-        return if (rand < 13) randomUppercase() // 26/62 = 13/31 Uppercase
-        else if (rand < 26) randomLowercase() // 26/62 = 13/31 Lowercase
+        val rand = randomFloat(0f, 31f) // 26 + 26 + 10 = 62 values
+        return if (rand < 13f) randomUppercase() // 26/62 = 13/31 Uppercase
+        else if (rand < 26f) randomLowercase() // 26/62 = 13/31 Lowercase
         else randomDigit() // 10/62 = 5/31 Number
     }
 

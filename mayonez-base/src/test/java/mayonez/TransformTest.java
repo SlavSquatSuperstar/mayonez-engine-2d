@@ -178,19 +178,19 @@ class TransformTest {
 
     private Transform randomTransform() {
         // Scale must be uniform and non-zero
-        var scale = Random.randomRange(-5, 5, 0.25f);
+        var scale = Random.randomFloat(-5, 5, 0.25f);
         if (scale == 0f) scale = 1f;
         return new Transform(
                 randomVector(),
-                Random.randomRange(-180, 180, 5f),
+                Random.randomFloat(-180, 180, 5f),
                 new Vec2(scale)
         );
     }
 
     private Vec2 randomVector() {
         return new Vec2(
-                Random.randomRange(-10, 10, 0.25f),
-                Random.randomRange(-10, 10, 0.25f)
+                Random.randomFloat(-10, 10, 0.25f),
+                Random.randomFloat(-10, 10, 0.25f)
         );
     }
 

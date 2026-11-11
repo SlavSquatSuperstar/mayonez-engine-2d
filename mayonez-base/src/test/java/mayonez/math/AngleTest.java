@@ -131,7 +131,7 @@ class AngleTest {
     // Helper Methods
 
     private float randomAngle() {
-        return Random.randomRange(-360, 360, 15f);
+        return Random.randomFloat(-360, 360, 15f);
     }
 
 }
