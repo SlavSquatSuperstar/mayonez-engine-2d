@@ -9,6 +9,7 @@ import mayonez.input.KeyInput;
 import mayonez.math.*;
 import mayonez.math.shapes.*;
 import slavsquatsuperstar.demos.DemoScene;
+import slavsquatsuperstar.demos.ShapeUtils;
 
 import java.util.List;
 
@@ -28,14 +29,19 @@ public class DebugDrawTestScene extends DemoScene {
 
     private static final float MIN_LENGTH = 8f;
     private static final float MAX_LENGTH = 32f;
+    private static final float MIN_RADIUS = MIN_LENGTH / 2f;
+    private static final float MAX_RADIUS = MAX_LENGTH / 2f;
     private static final int MIN_STROKE = 1;
     private static final int MAX_STROKE = 3;
 
     private final List<DebugShapeType> types = List.of(
-            new DebugShapeType("Balls", DebugDrawTestScene::getRandomCircle),
-            new DebugShapeType("Boxes", DebugDrawTestScene::getRandomRectangle),
+            new DebugShapeType("Balls", () -> ShapeUtils
+                    .getRandomEllipse(getRandomPosition(), MIN_LENGTH, MAX_LENGTH)),
+            new DebugShapeType("Boxes", () -> ShapeUtils
+                    .getRandomRectangle(getRandomPosition(), MIN_LENGTH, MAX_LENGTH)),
             new DebugShapeType("Polys", DebugDrawTestScene::getRandomPolygon),
-            new DebugShapeType("Lines", DebugDrawTestScene::getRandomEdge)
+            new DebugShapeType("Lines", () -> ShapeUtils
+                    .getRandomEdge(getRandomPosition(), MIN_LENGTH, MAX_LENGTH))
     );
 
     private TextLabel totalText;
@@ -198,42 +204,15 @@ public class DebugDrawTestScene extends DemoScene {
         return new ShapeBrush(color, fill, zIndex, stroke);
     }
 
-    private static Shape getRandomRectangle() {
-        var isSquare = Random.randomPercent(0.25f);
-        var width = Random.randomFloat(MIN_LENGTH, MAX_LENGTH);
-        var height = isSquare ? width : width * Random.randomFloat(0.5f, 2f);
-        var size = new Vec2(width, height);
-        var rotation = Random.randomAngle();
-        return new Rectangle(getRandomPosition(), size, rotation);
-    }
-
-    private static Shape getRandomCircle() {
-        var isEllipse = Random.randomPercent(0.75f);
-        if (isEllipse) {
-            var width = Random.randomFloat(MIN_LENGTH, MAX_LENGTH);
-            var height = width * Random.randomFloat(0.75f, 1.25f);
-            var size = new Vec2(width, height);
-            var rotation = Random.randomAngle();
-            return new Ellipse(getRandomPosition(), size, rotation);
-        } else {
-            var radius = Random.randomFloat(MIN_LENGTH, MAX_LENGTH) / 2f;
-            return new Circle(getRandomPosition(), radius);
-        }
-    }
-
     private static Shape getRandomPolygon() {
         var isTriangle = Random.randomPercent(0.20f);
-        var radius = Random.randomFloat(MIN_LENGTH, MAX_LENGTH) / 2f;
-        var vertices = isTriangle ? 3 : Random.randomInt(5, 12);
-        return new Polygon(getRandomPosition(), vertices, radius)
-                .rotate(Random.randomAngle(), null);
-    }
-
-    private static Shape getRandomEdge() {
-        var start = getRandomPosition();
-        var length = Random.randomFloat(MIN_LENGTH, MAX_LENGTH) * 2f;
-        var direction = new Vec2(length, 0f).rotate(Random.randomAngle());
-        return new Edge(start, start.add(direction));
+        if (isTriangle) {
+            return ShapeUtils
+                    .randomTriangle(getRandomPosition(), MIN_RADIUS, MAX_RADIUS);
+        } else {
+            return ShapeUtils
+                    .randomPolygon(getRandomPosition(), MIN_RADIUS, MAX_RADIUS);
+        }
     }
 
     private static Vec2 getRandomPosition() {
