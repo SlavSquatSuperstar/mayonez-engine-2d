@@ -70,7 +70,7 @@ abstract class Shape : Transformable {
      *
      * @return the bounding box
      */
-    abstract fun boundingRectangle(): BoundingBox
+    abstract fun boundingBox(): BoundingBox
 
     // Shape vs Point Methods
 

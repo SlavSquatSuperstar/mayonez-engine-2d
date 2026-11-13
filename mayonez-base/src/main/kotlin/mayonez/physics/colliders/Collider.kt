@@ -1,7 +1,6 @@
 package mayonez.physics.colliders
 
 import mayonez.*
-import mayonez.event.*
 import mayonez.math.*
 import mayonez.math.shapes.*
 import mayonez.physics.*
@@ -69,7 +68,7 @@ abstract class Collider(private val shape: Shape) :
 
     open fun getRotation(): Float = globalTransform.rotation
 
-    override fun getMinBounds(): BoundingBox = getShape().boundingRectangle()
+    override fun getMinBounds(): BoundingBox = getShape().boundingBox()
 
     override fun getMass(density: Float): Float {
         return shape.scale(globalTransform.scale).mass(density)

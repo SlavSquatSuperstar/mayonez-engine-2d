@@ -106,7 +106,7 @@ open class Polygon(sort: Boolean, vararg vertices: Vec2) : Shape() {
 
     // Bounds
 
-    override fun boundingRectangle(): BoundingBox {
+    override fun boundingBox(): BoundingBox {
         val verticesX = vertices.map { it.x }.toFloatArray()
         val verticesY = vertices.map { it.y }.toFloatArray()
         val boxMin = Vec2(verticesX.min(), verticesY.min())

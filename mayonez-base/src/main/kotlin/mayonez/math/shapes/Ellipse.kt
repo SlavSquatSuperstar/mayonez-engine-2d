@@ -45,7 +45,7 @@ open class Ellipse(protected val center: Vec2, val size: Vec2, val angle: Float)
 
     // Min Bounds
 
-    override fun boundingRectangle(): BoundingBox {
+    override fun boundingBox(): BoundingBox {
         /*
          * Given center c, semi-major axes vectors a and b, and angle t from 0
          * to 2π, the ellipse equation is r(t) = c + a * cos(t) + b * sin(t).
