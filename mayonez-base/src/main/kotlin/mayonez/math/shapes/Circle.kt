@@ -11,13 +11,13 @@ import java.util.*
  */
 class Circle(
     center: Vec2,
-    /** The circle's radius, r. */
+    /** The circle's radius, `r`. */
     val radius: Float
 ) : Ellipse(center, Vec2(radius * 2f), 0f) {
 
     // Circle Properties
 
-    /** The square of the circle's radius, equal to r^2. */
+    /** The square of the circle's radius, equal to `r^2`. */
     @JvmField
     val radiusSq: Float = radius * radius
 
@@ -26,7 +26,7 @@ class Circle(
 
     override fun circumference(): Float = MathUtils.TWO_PI * radius
 
-    /** The area of a circle, equal to πr^2. */
+    /** The area of a circle, equal to `πr^2`. */
     override fun area(): Float = MathUtils.PI * radiusSq
 
     // Collision Properties
@@ -44,11 +44,10 @@ class Circle(
     // Physical Properties
 
     /**
-     * The circle's centroidal moment of inertia, equal to 1/2*mr^2. This
-     * formula is specifically the second moment of area for a solid circle
-     * (disk).
+     * The circle's centroidal moment of inertia, equal to `1/2 * mr^2`. Note
+     * that this formula for a solid circle (disk).
      *
-     * Polar moment of area: I_z = π/4*r^4 = 1/2*(πr^2)r^2 = 1/2*Ar^2
+     * Polar moment of area: `I_z = π/4 *r^4 = 1/2 * Ar^2`.
      */
     override fun angularMass(mass: Float): Float = 0.5f * mass * radiusSq
 
@@ -73,14 +72,13 @@ class Circle(
 
     /**
      * Scales this circle uniformly using the given vector's x-component as the
-     * scale factor.
+     * scale factor. To scale a circle non-uniformly, use the Ellipse class.
      *
      * @param factor how much to scale the radius by
      * @param origin The point to rotate around. Pass in null to rotate around
      *     the centroid.
      * @return the scaled circle
      */
-    // To scale a circle non-uniformly, use the Ellipse class.
     override fun scale(factor: Vec2, origin: Vec2?): Circle {
         return Circle(
             if (origin == null) center else center.scale(factor, origin),
@@ -116,7 +114,6 @@ class Circle(
 
     override fun hashCode(): Int = Objects.hash(center, radius)
 
-    /** A description of the circle in the form Circle (x, y), r=radius. */
     override fun toString(): String = String.format("Circle $center, r=%.4f", radius)
 
 }

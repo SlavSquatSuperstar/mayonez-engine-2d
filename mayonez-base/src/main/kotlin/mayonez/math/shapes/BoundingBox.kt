@@ -72,10 +72,6 @@ open class BoundingBox(private val center: Vec2, private val size: Vec2) :
 
     override fun hashCode(): Int = Objects.hash(center, size)
 
-    /**
-     * A description of the rectangle in the form "Bounding Box (x, y), Size:
-     * (b, h)"
-     */
     override fun toString(): String = String.format("Bounding Box $center, Size: $size")
 
     companion object {

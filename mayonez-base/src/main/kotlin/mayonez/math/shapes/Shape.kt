@@ -4,10 +4,10 @@ import mayonez.Transform
 import mayonez.math.*
 
 /**
- * A bounded, flat figure that exists in the 2D plane and has no
- * intersecting edges. Can also represent an infinitesimally thin
- * cross-section of a solid (lamina). Shape objects are immutable, meaning
- * their component points and other characteristics cannot change.
+ * A bounded, flat figure that exists in the two-dimensional plane and has no
+ * intersecting edges. Can also represent an infinitesimally thin cross-section
+ * of a solid (lamina). Shape objects are immutable, meaning their component
+ * points and other characteristics cannot change.
  *
  * @author SlavSquatSuperstar
  */
@@ -26,11 +26,11 @@ abstract class Shape : Transformable {
         }
 
         /**
-         * Finds the most extreme points from the Minkowski difference set between
-         * two shapes.
+         * Finds the most extreme points from the Minkowski difference set
+         * between two shapes.
          *
-         * Source: https://blog.winter.dev/2020/gjk-algorithm/ § Abstracting shapes
-         * into supporting points
+         * Source: https://blog.winter.dev/2020/gjk-algorithm/ § Abstracting
+         * shapes into supporting points
          */
         fun support(shape1: Shape, shape2: Shape, dir: Vec2): Vec2 {
             return shape1.supportPoint(dir) - shape2.supportPoint(-dir)
@@ -40,44 +40,55 @@ abstract class Shape : Transformable {
     // Geometric Properties
 
     /**
-     * The area of the shape, or the amount of space it takes up in the 2D
-     * plane.
+     * Calculates the area of the shape `A`, or the amount of space it takes up
+     * in the plane.
+     *
+     * @return the area
      */
     abstract fun area(): Float
 
     /**
-     * The centroid, or geometric center of the shape, calculated by averaging
-     * all the points in the shape. The centroid is also the center of mass for
-     * a shape of uniform density.
+     * Calculates the centroid `C`, or geometric center, of the shape by
+     * averaging all the points in the shape. The centroid is also the center
+     * of mass for a shape of uniform density.
+     *
+     * @return the centroid
      */
     abstract fun center(): Vec2 // TODO move to physics?
 
     // Min Bounds Methods
 
     /**
-     * The axis-aligned minimum bounding rectangle (AABB) of a shape is the
+     * Calculates the minimum axis-aligned bounding box (AABB), which is the
      * smallest rectangle that contains all points in the shape and is aligned
-     * with the cartesian axes. The rectangle may not share the shape's
-     * centroid.
+     * with the Cartesian axes. Useful in broad-phase collision detection to
+     * reduce unnecessary calls to expensive algorithms.
+     *
+     * Note: The rectangle may or may not share the shape's centroid. If the
+     * minimum AABB is not possible, then the result should be as close as
+     * possible while not being smaller.
+     *
+     * @return the bounding box
      */
     abstract fun boundingRectangle(): BoundingBox
 
     // Shape vs Point Methods
 
     /**
-     * The support point in any direction is the farthest point on a shape
-     * towards that direction. Used by the GJK collision algorithm.
+     * Calculates the support point the given direction, which is the farthest
+     * point on a shape towards that direction. Used by the GJK collision
+     * algorithm.
      *
-     * @param direction the direction to search (does not have to be a unit
-     *     vector)
+     * @param direction the direction to check (does not need to be normalized)
+     * @return the support point
      */
     abstract fun supportPoint(direction: Vec2): Vec2
 
     /**
-     * Returns the point on or inside the shape with the least distance to the
-     * given position.
+     * Calculates the point on or inside the shape with the least distance to
+     * the given position.
      *
-     * @param position the point to search
+     * @param position the point to test
      * @return the nearest point
      */
     open fun nearestPoint(position: Vec2): Vec2 {
@@ -85,10 +96,11 @@ abstract class Shape : Transformable {
     }
 
     /**
-     * Whether the specified point lies on or within the boundary of the shape.
+     * Tests whether the specified point lies on or within the boundary of the
+     * shape.
      *
-     * @param point the point to check
-     * @return the scaled shape
+     * @param point the point to test
+     * @return if the point is in the shape
      */
     // TODO boundary vs interior vs exterior
     abstract operator fun contains(point: Vec2): Boolean
@@ -96,24 +108,34 @@ abstract class Shape : Transformable {
     // Physical Properties
 
     /**
-     * The mass of the shape, or its resistance to changes in linear motion,
-     * assuming a uniform density throughout the shape.
+     * The mass of the shape `m`, which measures its resistance to changes in
+     * linear motion, assuming a uniform density throughout the shape.
      *
      * @param density the area density (mass per area) of the shape
      */
     open fun mass(density: Float): Float = density * area()
 
     /**
-     * The two-dimensional moment of inertia (angular mass) of the shape around
-     * its centroid, or its resistance to changes in rotation. This function
-     * specifically calculates the polar moment of area, I_z/J_z, of a lamina
-     * (thin object equivalent to a 2D shape) while assuming a uniform density
-     * throughout the shape. While the second moment of area has units of L^4,
-     * multiplying it by area density (m/L^2) gives it the same units as moment
-     * of inertia (mL^2).
+     * The moment of inertia `I` (rotational mass) of the shape, which measures
+     * its resistance to changes in angular motion assuming a uniform density
+     * throughout the shape. This function calculates the second polar moment
+     * of area `I_z`/`J_z` for a flat shape rotating around its centroid and
+     * inside its plane. The second polar moment of area has units of `L^4`, so
+     * multiplying it by area density (`m/L^2`) gives it the same units as the
+     * moment of inertia (`mL^2`).
+     *
+     * The polar moment of area `I_z` is the sum of the two non-polar moments
+     * of area, `I_x` and `I_y` via the perpendicular axis theorem. For
+     * composite shapes, the moment of area can be calculated by summing those
+     * of the component shapes (geometric decomposition). For shapes not
+     * rotating about their centroid, the parallel axis theorem can be used to
+     * calculate the moment of area, where `I_new = I + Ad^2`, given area `A`
+     * and distance `d`.
      *
      * @param mass the mass of the shape
+     * @return the angular mass
      */
+    // TODO write unit tests
     abstract fun angularMass(mass: Float): Float
 
     // Geometric Transformations
@@ -165,7 +187,7 @@ abstract class Shape : Transformable {
     // Overrides
 
     /**
-     * Whether this shape has the same form, position size, and orientation as
+     * Whether this shape has the same form, position, size, and orientation as
      * another. For this program, equality is not the same as congruency, where
      * translations, rotations, and reflections may be applied. Equivalent
      * shapes have the same area and perimeter, and their constituent parts are

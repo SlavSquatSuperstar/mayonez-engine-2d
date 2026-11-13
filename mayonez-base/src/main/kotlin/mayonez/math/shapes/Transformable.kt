@@ -37,7 +37,7 @@ interface Transformable {
      * Stretches or shrinks every point on this object by the same scale factor
      * from the given origin. This is a non-rigid transformation and alters the
      * distance between points. Scaling may also be non-uniform (anisotropic)
-     * if the separate factor is different along each direction.
+     * if the scale factor is different along each axis.
      *
      * @param factor how much to scale the shape along each axis
      * @param origin the point to scale from, or a predetermined point if null

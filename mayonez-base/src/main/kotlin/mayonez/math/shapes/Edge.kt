@@ -14,10 +14,10 @@ class Edge(val start: Vec2, val end: Vec2) : Shape() {
 
     // Edge Properties
 
-    /** The length of the edge, l. */
+    /** The length of the edge, `l`. */
     val length = start.distance(end)
 
-    /** The square of the edge's length, equal to l^2. */
+    /** The square of the edge's length, equal to `l^2`. */
     private val lengthSq = length * length
 
     /**
@@ -116,7 +116,7 @@ class Edge(val start: Vec2, val end: Vec2) : Shape() {
     override fun contains(point: Vec2): Boolean {
         if (point == start || point == end) return true // point is endpoint
         val projLen = (point - start).component(end - start) // project v1->P onto v1->v2
-        if (projLen < 0 || projLen > length) return false // point outside line
+        if (projLen !in 0f..length) return false // point outside line
         return point == start + (end - start) * (projLen / length)
     }
 
@@ -130,10 +130,10 @@ class Edge(val start: Vec2, val end: Vec2) : Shape() {
     override fun mass(density: Float): Float = density * length
 
     /**
-     * The edge's centroidal moment of inertia, equal to 1/12*ml^2. Equivalent
-     * to that of a very thin rectangle.
+     * The edge's centroidal moment of inertia, equal to `1/12 * ml^2`.
+     * Equivalent to that of a very thin rectangle.
      *
-     * Second moment of area: I_z = 1/12*l^3 = 1/12*l*l^2
+     * Second moment of area: `I_z = 1/12 * l^3 = 1/12 * l * l^2`.
      */
     override fun angularMass(mass: Float): Float = mass / 12f * lengthSq
 
@@ -164,6 +164,5 @@ class Edge(val start: Vec2, val end: Vec2) : Shape() {
 
     override fun hashCode(): Int = Objects.hash(start, end)
 
-    /** A description of the edge in the form Edge (v1, v2) */
     override fun toString(): String = "Edge ($start, $end)"
 }

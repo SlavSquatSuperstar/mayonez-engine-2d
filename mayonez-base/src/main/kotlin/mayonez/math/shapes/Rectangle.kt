@@ -20,15 +20,15 @@ open class Rectangle(private val center: Vec2, private val size: Vec2, val angle
     open val isAxisAligned: Boolean
         get() = MathUtils.equals(angle % 360f, 0f)
 
-    /** The rectangle's width (base), b. */
+    /** The rectangle's width (base), `b`. */
     @JvmField
     val width: Float = size.x
 
-    /** The rectangle's height, h. */
+    /** The rectangle's height, `h`. */
     @JvmField
     val height: Float = size.y
 
-    /** The rectangle's area, equal to b*h */
+    /** The rectangle's area, equal to `b*h`. */
     override fun area(): Float = width * height
 
     /** The center of the rectangle, equal to its position. */
@@ -53,11 +53,10 @@ open class Rectangle(private val center: Vec2, private val size: Vec2, val angle
     // Physical Properties
 
     /**
-     * The rectangle's centroidal moment of inertia, equal to 1/12*m(b^2 +
-     * h^2).
+     * Calculates the rectangle's centroidal moment of inertia, equal to
+     * `1/12 * m(b^2 + h^2)`.
      *
-     * Second moment of area: I_z = 1/12*(hb^3 + bh^3) = 1/12*bh(b^2 + h^2) =
-     * 1/12*A(b^2 + h^2)
+     * Second moment of area: `I_z = 1/12 * (hb^3 + bh^3) = 1/12*A(b^2 + h^2).`
      */
     override fun angularMass(mass: Float): Float = mass / 12f * MathUtils.hypotSq(width, height)
 
@@ -98,10 +97,6 @@ open class Rectangle(private val center: Vec2, private val size: Vec2, val angle
 
     override fun hashCode(): Int = Objects.hash(center, size, angle)
 
-    /**
-     * A description of the rectangle in the form "Rectangle (x, y), Size: (b,
-     * h), Rotation: theta"
-     */
     override fun toString(): String = String.format("Rectangle $center, Size: $size, Rotation: %.2f°", angle)
 
     // Helper Methods

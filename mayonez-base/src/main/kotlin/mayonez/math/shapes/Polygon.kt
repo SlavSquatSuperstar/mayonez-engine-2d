@@ -46,8 +46,8 @@ open class Polygon(sort: Boolean, vararg vertices: Vec2) : Shape() {
         get() = this.edges.map { it.unitNormalRight() }.toTypedArray()
 
     /**
-     * Splits this polygon into n-2 triangular regions, which are guaranteed to
-     * be convex and non-overlapping.
+     * Splits this polygon into `n - 2` triangles, which are guaranteed to be
+     * convex and non-overlapping.
      */
     val triangles: Array<Triangle>
         get() {
@@ -61,9 +61,11 @@ open class Polygon(sort: Boolean, vararg vertices: Vec2) : Shape() {
     // TODO use fields or methods?
 
     /**
-     * The area of the polygon, equal to the combined areas of all the
-     * sub-triangles. This function specifically uses the shoelace
-     * formula (Gauss's area formula), a special case of Green's theorem.
+     * Calculates the area `A` of the polygon, equal to the sum the areas of
+     * all component triangles using the shoelace formula (also called Gauss's
+     * area formula), itself a special case of Green's theorem.
+     *
+     * @return the area
      */
     override fun area(): Float {
         val crosses = FloatArray(numVertices) {
@@ -72,16 +74,20 @@ open class Polygon(sort: Boolean, vararg vertices: Vec2) : Shape() {
         return 0.5f * abs(crosses.sum())
     }
 
+    // Backing field for centroid function
     private lateinit var centroid: Vec2
 
     /**
-     * Finds the centroid of this polygon, assuming the vertices are in sorted
-     * order. equal to the average of the sub-triangle's centroids weighted by
-     * their proportional areas.
+     * Calculates the centroid of the polygon, equal to the average of the
+     * component triangles' centroids weighted by their proportional areas.
+     * The vertices must be sorted first.
      *
-     * Centroid formula: C = 1/6A*∑(v_i + v_i+1)(v_i × v_i+1), where
-     * A is the signed area using the shoelace formula. Source:
-     * https://en.wikipedia.org/wiki/Centroid#Of_a_polygon
+     * Centroid formula: `C = 1/6A * ∑(v_i + v_i+1)(v_i × v_i+1)`, where `A` is
+     * the signed area using the shoelace formula.
+     *
+     * Source: https://en.wikipedia.org/wiki/Centroid#Of_a_polygon
+     *
+     * @return the centroid
      */
     override fun center(): Vec2 {
         if (!this::centroid.isInitialized) {
@@ -139,17 +145,12 @@ open class Polygon(sort: Boolean, vararg vertices: Vec2) : Shape() {
 
     // Physical Properties
 
-    /**
-     * Calculates the centroidal moment of inertia of this polygon using
-     * geometric decomposition. The polygon's MOI is equal to the sum
-     * of the MOI of each sub-triangle around this shape's centroid.
-     */
-    // TODO write unit tests
     override fun angularMass(mass: Float): Float {
         var angMass = 0f
         for (tri in triangles) {
             /*
-             * Parallel axis theorem: I_new = I_cm + md^2
+             * Use geometric decomposition and parallel axis theorem:
+             * I_new = I + md^2
              * I_p = ∑(I_i + m_i*d_i^2)
              * I_i = m_i*kr^2
              * m_i = m_p/A_p * A_i
@@ -171,7 +172,7 @@ open class Polygon(sort: Boolean, vararg vertices: Vec2) : Shape() {
      * convex polygons.
      *
      * @param point the point to check
-     * @return the scaled shape
+     * @return if the point is in the shape
      */
     override fun contains(point: Vec2): Boolean {
         if (point in vertices) return true
@@ -206,8 +207,8 @@ open class Polygon(sort: Boolean, vararg vertices: Vec2) : Shape() {
 
         /**
          * Generate an array of vertices for a regular polygon, ordered
-         * counterclockwise. If the number of sides is insufficient (under 3), then
-         * it will be set to 3.
+         * counterclockwise. If the number of sides is insufficient (under 3),
+         * then it will be set to 3.
          *
          * @param center the center of the polygon
          * @param sides how many sides/vertices the polygon has
