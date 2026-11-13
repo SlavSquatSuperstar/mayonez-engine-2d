@@ -31,8 +31,6 @@ class Circle(
 
     // Collision Properties
 
-    override fun boundingCircle(): Circle = Circle(center, radius)
-
     override fun boundingRectangle(): BoundingBox = BoundingBox(center, Vec2(radius * 2f))
 
     override fun toPolygon(numEdges: Int): Polygon {

@@ -45,9 +45,6 @@ open class Ellipse(protected val center: Vec2, val size: Vec2, val angle: Float)
 
     // Min Bounds
 
-    override fun boundingCircle(): Circle = Circle(center, if (isCircle) halfWidth else max(halfWidth, halfHeight))
-
-    // Source: https://iquilezles.org/articles/ellipses/
     override fun boundingRectangle(): BoundingBox {
         // r(t) = c + a*cos(t) + b*sin(t)
         val rot = Mat22(angle)

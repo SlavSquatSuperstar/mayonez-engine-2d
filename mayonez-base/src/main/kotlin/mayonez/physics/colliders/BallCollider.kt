@@ -15,14 +15,15 @@ open class BallCollider(val size: Vec2) : Collider(Ellipse(Vec2(), size)) {
     /** Constructs a circle with the given radius (not diameter)q */
     constructor(radius: Float) : this(Vec2(radius * 2f))
 
-    override fun getMinBounds(): BoundingBox {
-        return getShape().boundingCircle().boundingRectangle() // max is quicker than trig
-    }
-
     override fun getShape(): Shape { // use circle when possible
         val worldShape = super.getShape()
-        return if (worldShape is Ellipse && worldShape.isCircle) worldShape.boundingCircle()
+        return if (worldShape is Ellipse && worldShape.isCircle) worldShape.toCircle()
         else worldShape
+    }
+
+    private fun Ellipse.toCircle(): Circle {
+        val radius = kotlin.math.max(this.size.x, this.size.y) / 2f
+        return Circle(this.center(), radius)
     }
 
 }

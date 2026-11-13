@@ -55,14 +55,6 @@ abstract class Shape : Transformable {
     // Min Bounds Methods
 
     /**
-     * The bounding circle (sphere) of a shape is the smallest circle that
-     * contains all points in the shape and shares the same centroid. Useful
-     * in broad-phase collision detection since circle collision checks are
-     * simpler.
-     */
-    abstract fun boundingCircle(): Circle
-
-    /**
      * The axis-aligned minimum bounding rectangle (AABB) of a shape is the
      * smallest rectangle that contains all points in the shape and is aligned
      * with the cartesian axes. The rectangle may not share the shape's

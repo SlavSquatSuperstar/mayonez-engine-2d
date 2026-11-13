@@ -100,11 +100,6 @@ open class Polygon(sort: Boolean, vararg vertices: Vec2) : Shape() {
 
     // Bounds
 
-    override fun boundingCircle(): Circle {
-        val distsSq = vertices.map { it.distanceSq(centroid) }.toFloatArray()
-        return Circle(center(), MathUtils.max(*distsSq))
-    }
-
     override fun boundingRectangle(): BoundingBox {
         val verticesX = vertices.map { it.x }.toFloatArray()
         val verticesY = vertices.map { it.y }.toFloatArray()
