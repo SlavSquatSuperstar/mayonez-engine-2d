@@ -6,6 +6,7 @@ import mayonez.math.*;
 import mayonez.physics.colliders.*;
 import mayonez.physics.dynamics.*;
 import mayonez.scripts.DestroyAfterDuration;
+import slavsquatsuperstar.demos.ShapeUtils;
 
 /**
  * Creates prefab physics sandbox objects.
@@ -13,6 +14,11 @@ import mayonez.scripts.DestroyAfterDuration;
  * @author SlavSquatSuperstar
  */
 final class SandboxObjectPrefabs {
+
+    private static final float MIN_LENGTH = 4f;
+    private static final float MAX_LENGTH = 10f;
+    private static final float MIN_RADIUS = MIN_LENGTH / 2f;
+    private static final float MAX_RADIUS = MAX_LENGTH / 2f;
 
     private SandboxObjectPrefabs() {
     }
@@ -56,9 +62,8 @@ final class SandboxObjectPrefabs {
         switch (type) {
             case 1 -> name = "Random Box";
             case 2 -> name = "Random Ball";
-            case 3 -> name = "Random Triangle";
-            case 4 -> name = "Random Polygon";
-            case 5 -> name = "Random Edge";
+            case 3 -> name = "Random Polygon";
+            case 4 -> name = "Random Edge";
             default -> name = "Unknown Shape";
         }
         return name;
@@ -67,11 +72,10 @@ final class SandboxObjectPrefabs {
     private static Collider getColliderFromType(int type) {
         Collider col;
         switch (type) {
-            case 1 -> col = new BoxCollider(Random.randomVector(new Vec2(4f), new Vec2(10f)));
-            case 2 -> col = new BallCollider(Random.randomVector(new Vec2(4f), new Vec2(10f)));
-            case 3 -> col = new PolygonCollider(3, Random.randomFloat(3f, 6f));
-            case 4 -> col = new PolygonCollider(Random.randomInt(5, 8), Random.randomFloat(3f, 6f));
-            case 5 -> col = new EdgeCollider(Random.randomInt(4, 12));
+            case 1 -> col = new BoxCollider(Random.randomVector(new Vec2(MIN_LENGTH), new Vec2(MAX_LENGTH)));
+            case 2 -> col = new BallCollider(Random.randomVector(new Vec2(MIN_LENGTH), new Vec2(MAX_LENGTH)));
+            case 3 -> col = new PolygonCollider(ShapeUtils.getRandomPolygon(new Vec2(), MIN_RADIUS, MAX_RADIUS).getVertices());
+            case 4 -> col = new EdgeCollider(Random.randomFloat(MIN_LENGTH, MAX_LENGTH));
             default -> col = new BoxCollider(new Vec2(1f));
         }
         return col;

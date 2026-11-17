@@ -7,7 +7,6 @@ import mayonez.graphics.font.*;
 import mayonez.graphics.ui.*;
 import mayonez.input.KeyInput;
 import mayonez.math.*;
-import mayonez.math.shapes.*;
 import slavsquatsuperstar.demos.DemoScene;
 import slavsquatsuperstar.demos.ShapeUtils;
 
@@ -29,8 +28,6 @@ public class DebugDrawTestScene extends DemoScene {
 
     private static final float MIN_LENGTH = 8f;
     private static final float MAX_LENGTH = 32f;
-    private static final float MIN_RADIUS = MIN_LENGTH / 2f;
-    private static final float MAX_RADIUS = MAX_LENGTH / 2f;
     private static final int MIN_STROKE = 1;
     private static final int MAX_STROKE = 3;
 
@@ -39,7 +36,8 @@ public class DebugDrawTestScene extends DemoScene {
                     .getRandomEllipse(getRandomPosition(), MIN_LENGTH, MAX_LENGTH)),
             new DebugShapeType("Boxes", () -> ShapeUtils
                     .getRandomRectangle(getRandomPosition(), MIN_LENGTH, MAX_LENGTH)),
-            new DebugShapeType("Polys", DebugDrawTestScene::getRandomPolygon),
+            new DebugShapeType("Polys", () -> ShapeUtils
+                    .getRandomPolygon(getRandomPosition(), MIN_LENGTH / 2f, MAX_LENGTH / 2f)),
             new DebugShapeType("Lines", () -> ShapeUtils
                     .getRandomEdge(getRandomPosition(), MIN_LENGTH, MAX_LENGTH))
     );
@@ -202,20 +200,6 @@ public class DebugDrawTestScene extends DemoScene {
         var stroke = Random.randomInt(MIN_STROKE, MAX_STROKE);
         var zIndex = Random.randomInt(-25, 25);
         return new ShapeBrush(color, fill, zIndex, stroke);
-    }
-
-    private static Shape getRandomPolygon() {
-        var rand = Random.randomFloat();
-        if (rand < 0.30f) {
-            return ShapeUtils
-                    .randomTriangle(getRandomPosition(), MIN_RADIUS, MAX_RADIUS);
-        } else if (rand < 0.60f) {
-            return ShapeUtils
-                    .randomQuadrilateral(getRandomPosition(), MIN_LENGTH, MAX_LENGTH);
-        } else {
-            return ShapeUtils
-                    .randomPolygon(getRandomPosition(), MIN_RADIUS, MAX_RADIUS);
-        }
     }
 
     private static Vec2 getRandomPosition() {

@@ -59,7 +59,7 @@ public class PhysicsSandboxScene extends DemoScene {
                 new Vec2(1, height), 0, NORMAL_MATERIAL));
 
         // Add UI
-        addNode(new SandboxUI("Scene UI"));
+        addNode(new SandboxUI());
     }
 
     @Override

@@ -12,8 +12,8 @@ public class SandboxUI extends Node {
             Spawn Object
             - (1) Box
             - (2) Ball
-            - (3) Triangle
-            - (4) Polygon
+            - (3) Polygon
+            - (4) Edge
             
             (Space)
             Toggle Gravity
@@ -25,8 +25,8 @@ public class SandboxUI extends Node {
             Throw Object
             """;
 
-    public SandboxUI(String name) {
-        super(name);
+    public SandboxUI() {
+        super("Sandbox UI");
     }
 
     @Override

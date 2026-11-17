@@ -17,7 +17,7 @@ public final class ShapeUtils {
     }
 
     /**
-     * Generate an ellipse with a random rotation and a 25% chance of being a
+     * Generates an ellipse with a random rotation and a 25% chance of being a
      * circle.
      *
      * @param center      the center
@@ -37,8 +37,8 @@ public final class ShapeUtils {
     }
 
     /**
-     * Generate a rectangle with a random rotation with a 25% chance of being a
-     * square.
+     * Generates a rectangle with a random rotation with a 25% chance of being
+     * a square.
      *
      * @param center    the center
      * @param minLength the minimum side length
@@ -57,9 +57,9 @@ public final class ShapeUtils {
     }
 
     /**
-     * Generate a triangle with a random rotation and a 25% chance of being an
-     * equilateral triangle. The radius is the distance from the center to one
-     * of the vertices.
+     * Generates an arbitrary triangle with a random rotation and a 25% chance
+     * of being an equilateral triangle. The radius is roughly the distance
+     * from the center to any of the vertices.
      *
      * @param center    the center
      * @param minRadius the minimum radius
@@ -108,14 +108,15 @@ public final class ShapeUtils {
     }
 
     /**
-     * Generate a convex non-rectangle quadrilateral with a random rotation.
+     * Generates an arbitrary convex quadrilateral with a random rotation. The
+     * radius is roughly the distance from the center to any of the vertices.
      *
      * @param center    the center
-     * @param minLength the minimum diagonal length
-     * @param maxLength the maximum diagonal length
+     * @param minRadius the minimum radius
+     * @param maxRadius the maximum radius
      * @return the rectangle
      */
-    public static Polygon randomQuadrilateral(Vec2 center, float minLength, float maxLength) {
+    public static Polygon randomQuadrilateral(Vec2 center, float minRadius, float maxRadius) {
         /*
          * To ensure the generated shape is convex, use two intersecting
          * diagonals to define the vertices. Move each of the diagonals
@@ -127,11 +128,11 @@ public final class ShapeUtils {
         // Lengths from the center to the vertices
         var radii = new float[4];
         for (int i = 0; i < radii.length; i++) {
-            radii[i] = randomFloat(minLength, maxLength) / 2f;
+            radii[i] = randomFloat(minRadius, maxRadius);
         }
         var diagonal1 = new Edge(new Vec2(radii[0], 0), new Vec2(-radii[2], 0));
         var diagonal2 = new Edge(new Vec2(0, radii[1]), new Vec2(0, -radii[3]))
-                .rotate(randomFloat(-45f, 45f), new Vec2());
+                .rotate(randomFloat(-60, 60), new Vec2());
         return new Polygon(
                 diagonal1.getStart(), diagonal1.getEnd(),
                 diagonal2.getStart(), diagonal2.getEnd()
@@ -139,19 +140,44 @@ public final class ShapeUtils {
     }
 
     /**
-     * Generate a regular polygon with 5-8 sides and a random rotation. The
-     * radius is the distance from the center to one of the vertices.
+     * Generates a regular polygon with 5-8 sides and a random rotation. The
+     * radius is roughly the distance from the center to any of the vertices.
      *
      * @param center    the center
      * @param minRadius the minimum radius
      * @param maxRadius the maximum radius
      * @return the polygon
      */
-    public static Polygon randomPolygon(Vec2 center, float minRadius, float maxRadius) {
+    public static Polygon randomRegularPolygon(Vec2 center, float minRadius, float maxRadius) {
         return new Polygon(
                 center, Random.randomInt(5, 8),
                 randomFloat(minRadius, maxRadius)
         ).rotate(randomAngle(), null);
+    }
+
+    /**
+     * Generates an arbitrary polygon with 3-8 sides and a random rotation. The
+     * resulting shape has a 30% chance of being a triangle, 30% of being a
+     * quadrilateral, and a 40% chance of being some other polygon. The radius
+     * is roughly the distance from the center to any of the vertices.
+     *
+     * @param center    the center
+     * @param minRadius the minimum radius
+     * @param maxRadius the maximum radius
+     * @return the polygon
+     */
+    public static Polygon getRandomPolygon(Vec2 center, float minRadius, float maxRadius) {
+        var rand = Random.randomFloat();
+        if (rand < 0.30f) {
+            return ShapeUtils
+                    .randomTriangle(center, minRadius, maxRadius);
+        } else if (rand < 0.60f) {
+            return ShapeUtils
+                    .randomQuadrilateral(center, minRadius, maxRadius);
+        } else {
+            return ShapeUtils
+                    .randomRegularPolygon(center, minRadius, maxRadius);
+        }
     }
 
     /**
