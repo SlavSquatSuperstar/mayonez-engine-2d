@@ -123,19 +123,19 @@ public class KeepInScene extends Node {
 
     private void alignInside(Direction dir) { // Align object to inside of bounds
         switch (dir) {
-            case LEFT -> setX(minPos.x + objectBounds.width * 0.5f);
-            case RIGHT -> setX(maxPos.x - objectBounds.width * 0.5f);
-            case TOP -> setY(minPos.y + objectBounds.height * 0.5f);
-            case BOTTOM -> setY(maxPos.y - objectBounds.height * 0.5f);
+            case LEFT -> setX(minPos.x + objectBounds.getWidth() * 0.5f);
+            case RIGHT -> setX(maxPos.x - objectBounds.getWidth() * 0.5f);
+            case TOP -> setY(minPos.y + objectBounds.getHeight() * 0.5f);
+            case BOTTOM -> setY(maxPos.y - objectBounds.getHeight() * 0.5f);
         }
     }
 
     private void alignOutside(Direction dir) { // Align object to outside of bounds
         switch (dir) {
-            case LEFT -> setX(maxPos.x + objectBounds.width * 0.5f);
-            case RIGHT -> setX(minPos.x - objectBounds.width * 0.5f);
-            case TOP -> setY(maxPos.y + objectBounds.height * 0.5f);
-            case BOTTOM -> setY(minPos.y - objectBounds.height * 0.5f);
+            case LEFT -> setX(maxPos.x + objectBounds.getWidth() * 0.5f);
+            case RIGHT -> setX(minPos.x - objectBounds.getWidth() * 0.5f);
+            case TOP -> setY(maxPos.y + objectBounds.getHeight() * 0.5f);
+            case BOTTOM -> setY(minPos.y - objectBounds.getHeight() * 0.5f);
         }
     }
 

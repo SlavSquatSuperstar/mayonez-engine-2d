@@ -70,7 +70,7 @@ open class BoundingBox(center: Vec2, size: Vec2) :
     }
 
     override fun contains(point: Vec2): Boolean {
-        return point.inRange(center - size * 0.5f, center + size * 0.5f)
+        return point.inRange(min(), max())
     }
 
     // Overrides

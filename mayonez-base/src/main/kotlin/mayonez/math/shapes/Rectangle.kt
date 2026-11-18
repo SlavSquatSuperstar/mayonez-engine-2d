@@ -40,12 +40,14 @@ open class Rectangle(protected val center: Vec2, val size: Vec2, val angle: Floa
         get() = MathUtils.equals(angle % 180, 0f)
 
     /** The rectangle's width (base), `b`. */
-    @JvmField
-    val width: Float = size.x
+    val width: Float
+        get() = size.x
 
     /** The rectangle's height, `h`. */
-    @JvmField
-    val height: Float = size.y
+    val height: Float
+        get() = size.y
+
+    val halfSize: Vec2 = size * 0.5f
 
     /** The rectangle's area, equal to `b*h`. */
     override fun area(): Float = width * height
@@ -59,7 +61,7 @@ open class Rectangle(protected val center: Vec2, val size: Vec2, val angle: Floa
      *
      * @return the rectangle's min vertex
      */
-    fun min(): Vec2 = center - size * 0.5f
+    fun min(): Vec2 = center - halfSize
 
     /**
      * The top right corner of the rectangle, or the point with the largest
@@ -67,7 +69,7 @@ open class Rectangle(protected val center: Vec2, val size: Vec2, val angle: Floa
      *
      * @return the rectangle's max vertex
      */
-    fun max(): Vec2 = center + size * 0.5f
+    fun max(): Vec2 = center + halfSize
 
     // Physical Properties
 
@@ -102,15 +104,14 @@ open class Rectangle(protected val center: Vec2, val size: Vec2, val angle: Floa
     // Rectangle vs Point
 
     override fun contains(point: Vec2): Boolean {
-        return point.rotate(-angle, center)
-            .inRange(center - size * 0.5f, center + size * 0.5f)
+        return point.rotate(-angle, center).inRange(min(), max())
     }
 
     // Overrides
 
     override fun equals(other: Any?): Boolean {
         return (other is Rectangle) && (this.center == other.center)
-                && (this.size == other.size || this.size == other.size.normal())
+                && (this.size == other.size)
                 && (MathUtils.equals(this.angle, other.angle))
     }
 

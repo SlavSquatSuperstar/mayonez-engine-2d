@@ -23,8 +23,8 @@ internal fun MShape.toAWTShape(): JShape? {
 }
 
 private fun Ellipse.toAWTEllipse(): JShape {
-    val min = this.center() - (this.size * 0.5f)
-    val ellipse = Ellipse2D.Float(min.x, min.y, size.x, size.y)
+    val min = this.center() - this.halfSize
+    val ellipse = Ellipse2D.Float(min.x, min.y, this.width, this.height)
     return if (this.isCircle || this.isAxisAligned) ellipse
     else ellipse.rotate(this.angle, this.center())
 }

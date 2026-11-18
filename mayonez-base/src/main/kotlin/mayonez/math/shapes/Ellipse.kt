@@ -9,6 +9,10 @@ import kotlin.math.*
  * focal points. For each point on the ellipse's boundary curve, the sum of
  * the distances to the foci is constant.
  *
+ * Note: Despite both shapes being round, the `Ellipse` class is much slower
+ * to check collisions than [Circle]. Use [Circle] if the collider will never
+ * be scaled non-uniformly.
+ *
  * @constructor Constructs an ellipse with the given center, size, and angle.
  * @param center the center
  * @param size the size
@@ -36,12 +40,21 @@ open class Ellipse(protected val center: Vec2, val size: Vec2, val angle: Float)
 
     // Ellipse Properties
 
+    val width: Float
+        get() = size.x
+
+    val height: Float
+        get() = size.y
+
+    val halfSize: Vec2
+        get() = Vec2(halfWidth, halfHeight)
+
     private val halfWidth: Float = size.x * 0.5f
 
     private val halfHeight: Float = size.y * 0.5f
 
     open val isCircle: Boolean
-        get() = MathUtils.equals(size.x, size.y)
+        get() = MathUtils.equals(width, height)
 
     val isAxisAligned: Boolean
         get() = MathUtils.equals(angle % 180f, 0f)
@@ -167,10 +180,6 @@ open class Ellipse(protected val center: Vec2, val size: Vec2, val angle: Float)
         // radius, r(theta) = b / √[1 - e^2*cos(theta)^2]
         val radius = b / sqrt(1 - (eSq * cos * cos))
         return Vec2(cos, sin).rotate(this.angle) * radius // unit direction times length
-    }
-
-    override fun nearestPoint(position: Vec2): Vec2 {
-        throw UnsupportedOperationException("Not yet implemented")
     }
 
     override fun contains(point: Vec2): Boolean {

@@ -7,6 +7,10 @@ import java.util.*
  * A round shape defined by a center and radius. The distance between every
  * point on the circle's boundary curve and the center equal to the radius.
  *
+ * Note: Despite both shapes being round, the `Circle` class is much quicker
+ * to check collisions than [Ellipse]. Use [Ellipse] only if the collider will
+ * be scaled non-uniformly.
+ *
  * @constructor Constructs a circle with the given center and radius.
  * @param center the center
  * @radius radius the radius
@@ -81,7 +85,7 @@ class Circle(
 
     /**
      * Scales this circle uniformly using the given vector's x-component as the
-     * scale factor. To scale a circle non-uniformly, use the Ellipse class.
+     * scale factor. To scale a circle non-uniformly, use the [Ellipse] class.
      *
      * @param factor how much to scale the radius by
      * @param origin The point to rotate around. Pass in null to rotate around
